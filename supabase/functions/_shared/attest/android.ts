@@ -72,12 +72,15 @@ export async function verifyAndroidKeyAttestation(
   policy: AndroidPolicy,
   nowMs: number,
 ): Promise<AttestResult> {
+  // Where we were when something unexpected threw; goes into the log label, never the message.
+  let stage = "parse";
   try {
     if (chainDer.length < 2 || chainDer.length > MAX_CHAIN) return fail("chain_length");
     const certs = chainDer.map((d) => new x509.X509Certificate(d as Bytes));
     const roots = (policy.rootsPem ?? GOOGLE_ATTESTATION_ROOTS.map((r) => r.pem)).map((p) =>
       new x509.X509Certificate(p)
     );
+    stage = "chain";
     const chainProblem = await verifyChain(certs, roots, new Date(nowMs));
     if (chainProblem) return fail(chainProblem);
 
@@ -85,6 +88,7 @@ export async function verifyAndroidKeyAttestation(
     const leaf = certs[0];
     if (!eq(new Uint8Array(leaf.publicKey.rawData), expected.publicKeySpki)) return fail("key_mismatch");
 
+    stage = "ext";
     const ext = leaf.getExtension(KEY_DESCRIPTION_OID);
     if (!ext) return fail("no_attestation_extension");
     const kd = expect(readTlv(new Uint8Array(ext.value), 0), 0, 16, "KeyDescription");
@@ -102,6 +106,7 @@ export async function verifyAndroidKeyAttestation(
     const software = children(expect(f[6], 0, 16, "softwareEnforced").value);
     const hardware = children(expect(f[7], 0, 16, "teeEnforced").value);
 
+    stage = "hardware";
     // Properties of the key itself, enforced by the secure hardware.
     const algorithm = findTag(hardware, 2);
     const curve = findTag(hardware, 10);
@@ -114,6 +119,7 @@ export async function verifyAndroidKeyAttestation(
       return fail("no_sign_purpose");
     }
 
+    stage = "boot";
     // The phone's own state.
     if (policy.requireVerifiedBoot) {
       const rot = findTag(hardware, 704);
@@ -124,6 +130,7 @@ export async function verifyAndroidKeyAttestation(
       if (!locked || bootState !== 0) return fail("bootloader_unlocked_or_unverified");
     }
 
+    stage = "app";
     // Which app made the key: package name and signing certificate.
     const appId = findTag(software, 709) ?? findTag(hardware, 709);
     if (!appId) return fail("no_app_id");
@@ -148,11 +155,11 @@ export async function verifyAndroidKeyAttestation(
       packageName: packages[0],
     };
   } catch (e) {
-    return fail(
-      e instanceof DerError
-        ? `malformed:${e.message.replace(/[^a-z ]/g, "").replaceAll(" ", "_")}`
-        : "malformed",
-    );
+    // Only the stage and a short label (the DER complaint, or the error's class name) are kept:
+    // never the message of an unexpected error.
+    const what = e instanceof DerError ? e.message : ((e as { name?: unknown })?.name ?? "");
+    const label = String(what).toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+    return fail(`malformed:${stage}:${label}`.slice(0, 48));
   }
 }
 
