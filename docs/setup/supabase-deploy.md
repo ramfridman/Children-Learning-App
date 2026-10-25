@@ -109,6 +109,23 @@ Expected: `{"error":"unauthorized"}`.
 Dashboard > Authentication > Users > **Add user** > **Create new user**, with your email and
 "Auto Confirm User" ticked. Sign-in on the phone is by email code to that address.
 
+### 6a. Set up an SMTP sender (needed before 6b can be used)
+
+Supabase's built-in sender is for trying things out only: it sends to few addresses and a handful
+of emails an hour, and the dashboard asks for your own SMTP before you customise emails. Use a
+sender you control. The simplest is a Gmail app password (no domain needed):
+
+1. Google Account > Security: 2-Step Verification must be on. Then open
+   https://myaccount.google.com/apppasswords, create an app password named `Nitznutz Supabase`, and
+   save the 16 characters in 1Password (item `Nitznutz SMTP app password`). It can be revoked there
+   at any time. (If you own a domain, Resend or Brevo work the same way and are cleaner.)
+2. Dashboard > Authentication > Emails > **SMTP Settings** > turn on **Enable custom SMTP**:
+   - Sender email: your Gmail address; Sender name: `Nitznutz`
+   - Host: `smtp.gmail.com`; Port: `465`; Username: your full Gmail address
+   - Password: the 16-character app password (typed into this form only, never into chat or a file)
+3. Save. Then Authentication > Rate Limits: leave the email limit at its default (it rises once
+   custom SMTP is on).
+
 ### 6b. Make the sign-in email carry a code
 
 Dashboard > Authentication > Emails (Templates) > **Magic Link**. Change the body so it contains
@@ -121,9 +138,12 @@ the code, for example:
 Without `{{ .Token }}` Supabase sends only a link, and the app has nowhere to type it. Also
 check Authentication > Sign In / Providers: **Allow new users to sign up** is off and Email is on.
 
-## 7. Tell the server which app is yours (after the first build)
+## 7. Tell the server which app is yours (any time after step 2)
 
-Once the debug app exists, take its signing-certificate fingerprint:
+The fingerprint comes from the debug key on this PC (`%USERPROFILE%\.android\debug.keystore`), so it
+is the same for every dev build made here and the app does not need to exist yet. Claude read it on
+2026-10-25: `3d5b8c4ab4722dfcf736ce16bdb9a6297bf216307efcf2b5fd5d2a3e1b25ffb9` (it matches the
+built dev APK). To read it yourself:
 
 ```powershell
 keytool -list -v -keystore "$env:USERPROFILE\.android\debug.keystore" -alias androiddebugkey -storepass android -keypass android | Select-String "SHA256"
