@@ -67,7 +67,7 @@ jobs:
       - name: Start the local Supabase stack (only the services the tests need)
         run: npx supabase start -x realtime,storage-api,imgproxy,studio,mailpit,logflare,vector,supavisor,edge-runtime,postgres-meta
       - name: Run the pgTAP tests
-        run: npx supabase test db
+        run: bash tools/ci/run-with-annotations.sh "pgTAP" npx supabase test db
       - name: Stop the stack
         if: always()
         run: npx supabase stop --no-backup
