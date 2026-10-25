@@ -1,0 +1,11 @@
+{
+  "comment": "The only hosts this app may talk to. A test fails if any other URL appears in lib/. Roles: which kind of device may use the host.",
+  "hosts": [
+    {
+      "name": "supabase-gateway",
+      "host": "ungkvkabqxssggttajfs.supabase.co",
+      "scheme": "https",
+      "roles": ["unpaired", "parent", "child"]
+    }
+  ]
+}

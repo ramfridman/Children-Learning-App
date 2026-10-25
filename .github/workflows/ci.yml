@@ -98,3 +98,35 @@ jobs:
           deno-version: 2.9.6
       - name: Format, lint, type-check and test
         run: bash tools/ci/run-with-annotations.sh "Deno" deno task check
+
+  app:
+    name: app (Flutter analyze, tests, Android debug build)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.8
+          cache: true
+      - name: Install the locked packages (fails if pubspec.lock is out of date)
+        working-directory: app
+        run: bash ../tools/ci/run-with-annotations.sh "flutter pub get" flutter pub get --enforce-lockfile
+      - name: Format (prints a patch if anything would change)
+        run: bash tools/ci/format-or-patch.sh app lib test
+      - name: Analyze
+        working-directory: app
+        run: bash ../tools/ci/run-with-annotations.sh "flutter analyze" flutter analyze --fatal-infos
+      - name: Test
+        working-directory: app
+        run: bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test
+      - name: Build the dev flavour (debug APK)
+        working-directory: app
+        run: bash ../tools/ci/run-with-annotations.sh "flutter build apk" flutter build apk --debug --flavor dev

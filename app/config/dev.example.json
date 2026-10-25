@@ -1,0 +1,5 @@
+{
+  "SUPABASE_URL": "https://ungkvkabqxssggttajfs.supabase.co",
+  "SUPABASE_PUBLISHABLE_KEY": "paste the sb_publishable_... key from Supabase > Settings > API Keys",
+  "FLAVOR": "dev"
+}
