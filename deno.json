@@ -27,5 +27,6 @@
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check --frozen supabase/functions/ tools/gen-testvector.ts && deno test --frozen --allow-read=testvectors"
   },
-  "lock": "deno.lock"
+  "lock": "deno.lock",
+  "nodeModulesDir": "none"
 }
