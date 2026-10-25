@@ -1,0 +1,185 @@
+{
+  "schema": "character-lite/v1",
+  "id": "weaver-keshet",
+  "tier": "lite",
+  "name": {
+    "he": "קֶשֶׁת אוֹרֶגֶת הַצְּבָעִים",
+    "en": "Keshet the Rainbow-Weaver",
+    "grammaticalGender": "feminine",
+    "for": "daughter",
+    "role": "older sister"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.4995,
+    0.5044
+  ],
+  "palette": {
+    "dominant": "#FFB89A",
+    "fills": {
+      "skin": "#E9B48F",
+      "skinShade": "#D39A74",
+      "hair": "#7A4E36",
+      "cloak": "#FFB89A",
+      "cloakShade": "#EE9C7E",
+      "lining": "#F6E3C6",
+      "tunic": "#45B3A0",
+      "tunicShade": "#3A9A89",
+      "legs": "#EE9C7E",
+      "legsShade": "#D9846A",
+      "shoe": "#B07A5A",
+      "sole": "#FFE4C8",
+      "clip": "#FFC83D",
+      "pocket": "#EE9C7E",
+      "ribbons": [
+        "#FFB0A0",
+        "#FFE08A",
+        "#B8EBA0",
+        "#A8DDF5",
+        "#D6C6FA"
+      ]
+    },
+    "safeColourCheck": {
+      "cloak": {
+        "nearestTeach": "orange",
+        "dE2000": 17.0
+      },
+      "tunic": {
+        "nearestTeach": "green",
+        "dE2000": 17.0
+      },
+      "lining": {
+        "nearestTeach": "white",
+        "dE2000": 13.3
+      }
+    },
+    "personalise": {
+      "skin": "#E9B48F",
+      "skinShade": "#D39A74",
+      "hair": "#7A4E36",
+      "how": "Skin, skin shade and hair are separate fills tagged class=\"skin\", \"skin-shade(-line)\" and \"hair\" in every SVG. Replace those hex values and re-export the PNGs."
+    }
+  },
+  "motion": {
+    "bounciness": 0.6,
+    "idleSway": 2.0,
+    "entrance": "twirl-hop",
+    "entranceNote": "Two hops and a half-turn so the cloak swings, trailing a ribbon (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "pitch": "medium (girl, about 8)",
+      "rate": "0.95x, warm and flowing",
+      "note": "Designed voice: a kind big-sister voice, encouraging and protective, with a soft sing-song when naming colours. Never shrill."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "בּוֹאִי, אֲחוֹתִי — נֶאֱרֹג קֶשֶׁת!",
+      "en": "Come, sister — let's weave a rainbow!"
+    },
+    {
+      "he": "קְצָת לָבָן — וְהַצֶּבַע מִתְבַּהֵר!",
+      "en": "A little white — and the colour gets lighter!"
+    }
+  ],
+  "power": {
+    "he": "סִרְטֵי צֶבַע",
+    "en": "Colour Ribbons",
+    "domain": "colors",
+    "what": "Pulls colour ribbons out of the air. Twisting two ribbons together weaves the mixed colour; weaving in white or dark thread makes a ribbon lighter or darker, so mixing and shades are shown as a woven gradient with each colour named."
+  },
+  "look": "Older sister (about 8): a short curly honey-brown bob with a star clip, a sea-green tunic, a peach travel cloak with a cream lining, deep pockets and a hood resting on her shoulders, peach leggings and brown walking boots, with pastel ribbons swirling from her hand. No crown, no gown, no braids.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        312,
+        216,
+        711,
+        943
+      ],
+      "talk_closed": [
+        312,
+        216,
+        711,
+        943
+      ],
+      "talk_open": [
+        312,
+        216,
+        711,
+        943
+      ],
+      "celebrate": [
+        312,
+        216,
+        711,
+        943
+      ],
+      "think": [
+        312,
+        216,
+        711,
+        943
+      ],
+      "listen": [
+        312,
+        216,
+        711,
+        943
+      ],
+      "encourage": [
+        312,
+        216,
+        711,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 0,
+    "talkDiffBox": [
+      474,
+      492,
+      549,
+      541
+    ]
+  }
+}

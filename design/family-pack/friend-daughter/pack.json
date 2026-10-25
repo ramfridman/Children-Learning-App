@@ -1,0 +1,175 @@
+{
+  "schema": "character-lite/v1",
+  "id": "friend-daughter",
+  "tier": "lite",
+  "name": {
+    "he": "[שם]",
+    "placeholder": "[שם]",
+    "defaultName": "זוֹהֲרִית",
+    "species": "שׁוּעָלוֹן־כּוֹכָב",
+    "en": "[Name] (default: Zoharit), the starlight fox-dragon",
+    "grammaticalGender": "feminine"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.3906,
+    0.5508
+  ],
+  "palette": {
+    "dominant": "#FFC9A8",
+    "fills": {
+      "fur": "#FFC9A8",
+      "furShade": "#F2A98A",
+      "cream": "#FFE4C8",
+      "coral": "#FF9F8A",
+      "wing": "#D6C6FA",
+      "wingShade": "#B9A2F7",
+      "ribbon": [
+        "#FFB0A0",
+        "#FFE08A",
+        "#B8EBA0",
+        "#A8DDF5",
+        "#D6C6FA"
+      ],
+      "nose": "#7A2E4E"
+    },
+    "safeColourCheck": {
+      "fur": {
+        "nearestTeach": "orange",
+        "dE2000": 18.9
+      },
+      "furShade": {
+        "nearestTeach": "orange",
+        "dE2000": 15.1
+      },
+      "cream": {
+        "nearestTeach": "white",
+        "dE2000": 13.9
+      },
+      "wing": {
+        "nearestTeach": "pink",
+        "dE2000": 20.7
+      }
+    }
+  },
+  "motion": {
+    "bounciness": 0.7,
+    "idleSway": 2.0,
+    "entrance": "flutter-hop",
+    "entranceNote": "Standard 3-hop entrance with a wing flutter on each hop and a sparkle trail from the tail (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "note": "Designed voice: a small magical creature with a young girl's voice. Soft, warm and cuddly with a giggle always close; mischievous sing-song on sound words (\"פְּלִיק־פְלַאק\"), a delighted gasp for new colours, drops to a secret whisper for patterns. Standard Israeli Hebrew, never shrill or baby-talk."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "נִצְנוּץ, נִצְנוּץ — מָה בָּא עַכְשָׁו?",
+      "en": "Sparkle, sparkle — what comes next?"
+    },
+    {
+      "he": "שְׁנֵי צְבָעִים, הוֹפּ — צֶבַע חָדָשׁ!",
+      "en": "Two colours, hop — a new colour!"
+    }
+  ],
+  "power": {
+    "he": "מִכְחוֹל־זָנָב",
+    "en": "Tail-Brush",
+    "domain": "colors",
+    "what": "Her rainbow-ribbon tail paints sparkles in the air. Sparkles repeat to show a pattern (the repeating unit glows), and two sparkles that touch mix into a new colour, shown with its name."
+  },
+  "look": "A small, round \"starlight fox-dragon\": peach fur, a cream fox muzzle and belly with a coral heart, pointed fox ears with coral insides, two tiny lilac horn nubs, a spark star on her forehead, little lilac wings, and a big swirling rainbow-ribbon tail with a fluffy cream tip. A cheeky smile with one tiny fang.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        188,
+        206,
+        837,
+        943
+      ],
+      "talk_closed": [
+        188,
+        206,
+        837,
+        943
+      ],
+      "talk_open": [
+        188,
+        206,
+        837,
+        943
+      ],
+      "celebrate": [
+        188,
+        209,
+        834,
+        943
+      ],
+      "think": [
+        188,
+        197,
+        837,
+        943
+      ],
+      "listen": [
+        179,
+        195,
+        834,
+        943
+      ],
+      "encourage": [
+        188,
+        206,
+        837,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 11,
+    "talkDiffBox": [
+      359,
+      544,
+      440,
+      589
+    ]
+  }
+}

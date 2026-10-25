@@ -1,0 +1,176 @@
+{
+  "schema": "character-lite/v1",
+  "id": "tower-tamir",
+  "tier": "lite",
+  "name": {
+    "he": "תָּמִיר הַמִּגְדָּל",
+    "en": "Tamir the Tower",
+    "grammaticalGender": "masculine",
+    "for": "son"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.4624,
+    0.5044
+  ],
+  "palette": {
+    "dominant": "#D9A441",
+    "fills": {
+      "skin": "#F1C7A5",
+      "skinShade": "#DCAE8A",
+      "hair": "#6B4A3A",
+      "tunic": "#D9A441",
+      "tunicShade": "#B98A33",
+      "pants": "#3A4A8C",
+      "pantsShade": "#2E3B73",
+      "beanie": "#3A4A8C",
+      "beanieShade": "#2E3B73",
+      "pom": "#D9A441",
+      "square": "#FFE4C8",
+      "shoe": "#2E3B73",
+      "sole": "#FFE4C8",
+      "cube1": "#9FDCC4",
+      "cube2": "#FFC79E",
+      "cube3": "#8FD3F4",
+      "cube4": "#D6C6FA"
+    },
+    "safeColourCheck": {
+      "tunic": {
+        "nearestTeach": "yellow",
+        "dE2000": 13.7
+      },
+      "pants": {
+        "nearestTeach": "blue",
+        "dE2000": 13.0
+      }
+    },
+    "personalise": {
+      "skin": "#F1C7A5",
+      "skinShade": "#DCAE8A",
+      "hair": "#6B4A3A",
+      "how": "Skin, skin shade and hair are separate fills tagged class=\"skin\", \"skin-shade(-line)\" and \"hair\" in every SVG. Replace those hex values and re-export the PNGs."
+    }
+  },
+  "motion": {
+    "bounciness": 0.55,
+    "idleSway": 1.0,
+    "entrance": "waddle-hop",
+    "entranceNote": "Slow, heavy-soft hops with an extra squash on landing (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "pitch": "medium-low for a child, warm",
+      "rate": "0.9x, unhurried",
+      "note": "Designed voice: a calm, cuddly boy of about 5 with a smile in the voice; drawn-out wonder on \"גָּבוֹהַּ!\", gentle giggles, never rushed."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "קֻבִּיָּה עַל קֻבִּיָּה — כַּמָּה גָּבוֹהַּ?",
+      "en": "Block on block — how tall?"
+    },
+    {
+      "he": "מִי יוֹתֵר גָּבוֹהַּ? בּוֹאוּ נִבְנֶה וְנִרְאֶה!",
+      "en": "Who is taller? Let's build and see!"
+    }
+  ],
+  "power": {
+    "he": "מִגְדַּל קֻבִּיּוֹת",
+    "en": "Block Tower",
+    "domain": "shapes",
+    "what": "Measures with unit blocks: every correct comparison adds a block to his tower, and he grows a block taller beside it. \"How many blocks tall?\" makes length, height and taller/shorter visible as stacked units."
+  },
+  "look": "A gentle, round, cheerful kid (about 5) in a mustard block-pattern tunic and navy trousers, a soft navy beanie with a mustard pom-pom, rosy cheeks, and a tower of pastel unit blocks standing beside him that grows one block when he celebrates. Not muscular, not green.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        310,
+        176,
+        717,
+        943
+      ],
+      "talk_closed": [
+        310,
+        176,
+        717,
+        943
+      ],
+      "talk_open": [
+        310,
+        176,
+        717,
+        943
+      ],
+      "celebrate": [
+        304,
+        176,
+        717,
+        943
+      ],
+      "think": [
+        310,
+        176,
+        717,
+        943
+      ],
+      "listen": [
+        310,
+        176,
+        717,
+        943
+      ],
+      "encourage": [
+        310,
+        176,
+        717,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 6,
+    "talkDiffBox": [
+      436,
+      492,
+      511,
+      541
+    ]
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "schema": "character-lite/v1",
+  "id": "climber-tzuri",
+  "tier": "lite",
+  "name": {
+    "he": "צוּרִי הַמְּטַפֵּס",
+    "en": "Tzuri the Climber",
+    "grammaticalGender": "masculine",
+    "for": "son"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.4683,
+    0.5044
+  ],
+  "palette": {
+    "dominant": "#F49A7A",
+    "fills": {
+      "skin": "#C68B62",
+      "skinShade": "#AD744F",
+      "hair": "#2E211C",
+      "shirt": "#F49A7A",
+      "shirtShade": "#D9805F",
+      "pants": "#2A9D8F",
+      "pantsShade": "#20807A",
+      "band1": "#2A9D8F",
+      "band2": "#FFE4C8",
+      "band3": "#F49A7A",
+      "shoe": "#2A9D8F",
+      "sole": "#FFE4C8",
+      "rope": "#C99A6B",
+      "ropeShade": "#A97C50",
+      "chalk": "#FFFFFF"
+    },
+    "safeColourCheck": {
+      "shirt": {
+        "nearestTeach": "orange",
+        "dE2000": 14.1
+      },
+      "pants": {
+        "nearestTeach": "green",
+        "dE2000": 19.5
+      }
+    },
+    "personalise": {
+      "skin": "#C68B62",
+      "skinShade": "#AD744F",
+      "hair": "#2E211C",
+      "how": "Skin, skin shade and hair are separate fills tagged class=\"skin\", \"skin-shade(-line)\" and \"hair\" in every SVG. Replace those hex values and re-export the PNGs."
+    }
+  },
+  "motion": {
+    "bounciness": 0.9,
+    "idleSway": 1.5,
+    "entrance": "swing-hop",
+    "entranceNote": "Standard hop-in ending with a little chalk puff from both hands (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "pitch": "medium-high (boy, about 7)",
+      "rate": "1.05x, springy",
+      "note": "Designed voice: energetic, sporty Israeli boy, short punchy phrases with a breath of effort on each climb (\"הוֹפּ!\"), counts in a steady rhythm. Never shouting."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "עוֹד שׁוּרָה לְמַעְלָה — עוֹד עֶשֶׂר!",
+      "en": "One more row up — ten more!"
+    },
+    {
+      "he": "יָד, רֶגֶל, מִסְפָּר — מְטַפְּסִים!",
+      "en": "Hand, foot, number — we climb!"
+    }
+  ],
+  "power": {
+    "he": "קִיר הַמִּסְפָּרִים",
+    "en": "Number Wall",
+    "domain": "numbers",
+    "what": "Climbs a hundreds wall: one hold sideways is +1, one row up is +10. He counts in jumps of 2, 5 and 10 as he climbs, so place value and skip-counting become a route up the wall."
+  },
+  "look": "Kid acrobat (about 7) in a sunset-orange tee and teal climbing trousers, a striped teal-cream-sunset headband knotted at the side, a coiled climbing rope worn across the body, a little number-wall badge, chalk-dust hands and teal climbing shoes. Face fully visible, no mask.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        324,
+        208,
+        703,
+        943
+      ],
+      "talk_closed": [
+        324,
+        208,
+        703,
+        943
+      ],
+      "talk_open": [
+        324,
+        208,
+        703,
+        943
+      ],
+      "celebrate": [
+        318,
+        208,
+        703,
+        943
+      ],
+      "think": [
+        324,
+        208,
+        703,
+        943
+      ],
+      "listen": [
+        324,
+        208,
+        703,
+        943
+      ],
+      "encourage": [
+        320,
+        208,
+        703,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 6,
+    "talkDiffBox": [
+      442,
+      492,
+      517,
+      541
+    ]
+  }
+}

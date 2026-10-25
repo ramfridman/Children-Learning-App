@@ -1,0 +1,178 @@
+{
+  "schema": "character-lite/v1",
+  "id": "hero-son",
+  "tier": "lite",
+  "name": {
+    "he": "[שם] הַמְּזַנֵּק",
+    "placeholder": "[שם]",
+    "template": "{name} הַמְּזַנֵּק",
+    "en": "[Name] the Leaper",
+    "grammaticalGender": "masculine"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.4453,
+    0.5
+  ],
+  "palette": {
+    "dominant": "#3A7FA0",
+    "fills": {
+      "skin": "#E9B48F",
+      "skinShade": "#D39A74",
+      "hair": "#4A3426",
+      "suit": "#3A7FA0",
+      "suitShade": "#2F6E8C",
+      "scarf": "#B6E36A",
+      "scarfShade": "#97C955",
+      "shoe": "#B6E36A",
+      "toe": "#FFFFFF",
+      "sole": "#FFE4C8",
+      "jet": "#8FD3F4",
+      "star": "#FFC83D"
+    },
+    "safeColourCheck": {
+      "suit": {
+        "nearestTeach": "blue",
+        "dE2000": 13.8
+      },
+      "scarf": {
+        "nearestTeach": "green",
+        "dE2000": 18.2
+      },
+      "skin": {
+        "nearestTeach": "orange",
+        "dE2000": 15.5
+      },
+      "hair": {
+        "nearestTeach": "brown",
+        "dE2000": 17.8
+      }
+    },
+    "personalise": {
+      "skin": "#E9B48F",
+      "skinShade": "#D39A74",
+      "hair": "#4A3426",
+      "how": "In every SVG, skin, skin shade and hair are separate fills tagged class=\"skin\", \"skin-shade(-line)\" and \"hair\". Replace those hex values (or re-run the export with new values) to match the child, then re-export the PNGs."
+    }
+  },
+  "motion": {
+    "bounciness": 0.85,
+    "idleSway": 1.5,
+    "entrance": "leap",
+    "entranceNote": "Standard hop-in, but as one long leap on a high arc with jet puffs on take-off (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "note": "Designed voice (not a clone): an Israeli boy of about 7. Bright, sporty and confident, with a big grin in the voice; quick but crisp standard Hebrew, never shouting. Counts with a springy rhythm, a tiny pause before each landing (\"שְׁתַּיִם… אַרְבַּע… שֵׁשׁ!\"). Warm and patient on hints."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "קְפִיצָה, וְעוֹד קְפִיצָה — הִגַּעְנוּ!",
+      "en": "A leap, and another leap — we made it!"
+    },
+    {
+      "he": "קוֹפְצִים בִּשְׁתַּיִם: שְׁתַּיִם, אַרְבַּע, שֵׁשׁ!",
+      "en": "Jumping by twos: two, four, six!"
+    }
+  ],
+  "power": {
+    "he": "קְפִיצַת מִסְפָּרִים",
+    "en": "Number Leap",
+    "domain": "numbers",
+    "what": "Jet sneakers leap along the number line: counting on from any number, and skip-counting in big jumps (2s, 5s, 10s). Each landing lights the number he lands on."
+  },
+  "look": "Kid hero (about 6) in a lagoon-blue suit with a cream belt, a lime scarf-cape whose two long tails fly behind him, a star-visor (headband with a big spark star crest and two speed fins), lime jet sneakers with sky-blue jet puffs, and a number-line hop emblem on his chest.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        272,
+        194,
+        755,
+        943
+      ],
+      "talk_closed": [
+        272,
+        194,
+        755,
+        943
+      ],
+      "talk_open": [
+        272,
+        194,
+        755,
+        943
+      ],
+      "celebrate": [
+        272,
+        194,
+        755,
+        943
+      ],
+      "think": [
+        286,
+        194,
+        755,
+        943
+      ],
+      "listen": [
+        263,
+        194,
+        751,
+        943
+      ],
+      "encourage": [
+        272,
+        194,
+        755,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 14,
+    "talkDiffBox": [
+      418,
+      492,
+      493,
+      541
+    ]
+  }
+}

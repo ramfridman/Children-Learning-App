@@ -1,0 +1,180 @@
+{
+  "schema": "character-lite/v1",
+  "id": "inventor-gali",
+  "tier": "lite",
+  "name": {
+    "he": "גַּלִּי הַמַּמְצִיאָה",
+    "en": "Gali the Inventor",
+    "grammaticalGender": "feminine",
+    "for": "son"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.4995,
+    0.5044
+  ],
+  "palette": {
+    "dominant": "#FF9F8A",
+    "fills": {
+      "skin": "#B97A55",
+      "skinShade": "#9E6444",
+      "hair": "#2E2420",
+      "shirt": "#A8E6CF",
+      "overall": "#FF9F8A",
+      "overallShade": "#E0826E",
+      "cap": "#FF9F8A",
+      "brim": "#A8E6CF",
+      "belt": "#C99A6B",
+      "beltShade": "#A97C50",
+      "pack": "#C99A6B",
+      "packShade": "#A97C50",
+      "wing1": "#FFE4C8",
+      "wing2": "#A8DDF5",
+      "wheel": "#FFFFFF",
+      "shoe": "#A8E6CF",
+      "sole": "#C99A6B"
+    },
+    "safeColourCheck": {
+      "overall": {
+        "nearestTeach": "orange",
+        "dE2000": 18.2
+      },
+      "shirt": {
+        "nearestTeach": "white",
+        "dE2000": 21.4
+      },
+      "pack": {
+        "nearestTeach": "orange",
+        "dE2000": 14.0
+      }
+    },
+    "personalise": {
+      "skin": "#B97A55",
+      "skinShade": "#9E6444",
+      "hair": "#2E2420",
+      "how": "Skin, skin shade and hair are separate fills tagged class=\"skin\", \"skin-shade(-line)\" and \"hair\" in every SVG. Replace those hex values and re-export the PNGs."
+    }
+  },
+  "motion": {
+    "bounciness": 0.75,
+    "idleSway": 1.5,
+    "entrance": "unfold-hop",
+    "entranceNote": "Hop in with the triangle wings folding open on the last landing (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "pitch": "medium (girl, about 7)",
+      "rate": "1.0x, quick bursts with thinking pauses",
+      "note": "Designed voice: bright, curious and a little breathless with ideas; says steps clearly (\"צַעַד רִאשׁוֹן… צַעַד שֵׁנִי…\"), laughs at her own bugs."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "קְלִיק, קְלָאק — צוּרָה!",
+      "en": "Click, clack — a shape!"
+    },
+    {
+      "he": "יֵשׁ לִי רַעְיוֹן! צַעַד רִאשׁוֹן…",
+      "en": "I have an idea! Step one…"
+    }
+  ],
+  "power": {
+    "he": "תִּיק הַצּוּרוֹת",
+    "en": "Shape Pack",
+    "domain": "cs",
+    "what": "Her gadget backpack unfolds shapes — wings of triangles, a wheel of circles. She builds machines from shapes in numbered steps, so composing shapes and following or fixing build instructions (sequences, debugging) happen together."
+  },
+  "look": "Young inventor (about 7) in coral fabric overalls over a mint shirt, a tool belt, a backwards coral cap with a mint brim, a pencil behind her ear and mint sneakers. Her tan gadget backpack fans out triangle wings on both sides and rolls on a circle wheel. Fabric and tools only, no armour.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        247,
+        210,
+        776,
+        943
+      ],
+      "talk_closed": [
+        247,
+        210,
+        776,
+        943
+      ],
+      "talk_open": [
+        247,
+        210,
+        776,
+        943
+      ],
+      "celebrate": [
+        251,
+        210,
+        772,
+        943
+      ],
+      "think": [
+        247,
+        210,
+        776,
+        943
+      ],
+      "listen": [
+        247,
+        210,
+        776,
+        943
+      ],
+      "encourage": [
+        247,
+        210,
+        776,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 4,
+    "talkDiffBox": [
+      474,
+      492,
+      549,
+      541
+    ]
+  }
+}

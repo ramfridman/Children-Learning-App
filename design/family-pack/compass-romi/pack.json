@@ -1,0 +1,180 @@
+{
+  "schema": "character-lite/v1",
+  "id": "compass-romi",
+  "tier": "lite",
+  "name": {
+    "he": "רוֹמִי וְהַמַּצְפֵּן",
+    "en": "Romi and the Compass",
+    "grammaticalGender": "feminine",
+    "for": "daughter",
+    "role": "younger sister"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.4995,
+    0.5464
+  ],
+  "palette": {
+    "dominant": "#F0B2B8",
+    "fills": {
+      "skin": "#C68B62",
+      "skinShade": "#AD744F",
+      "hair": "#2B2026",
+      "poncho": "#F0B2B8",
+      "ponchoShade": "#D9979E",
+      "shirt": "#FFE4C8",
+      "stripe": "#F0B2B8",
+      "hat": "#E3A440",
+      "hatShade": "#C68A30",
+      "trim": "#E3A440",
+      "legging": "#E3A440",
+      "scarf": "#E3A440",
+      "scarfShade": "#C68A30",
+      "boot": "#B07A5A",
+      "bootShade": "#8E6146",
+      "sole": "#FFE4C8",
+      "sock": "#FFE4C8",
+      "compass": "#DDA03A",
+      "face": "#FFF6E8",
+      "needle": "#F0B2B8"
+    },
+    "safeColourCheck": {
+      "poncho": {
+        "nearestTeach": "pink",
+        "dE2000": 12.9
+      },
+      "hat": {
+        "nearestTeach": "orange",
+        "dE2000": 12.4
+      }
+    },
+    "personalise": {
+      "skin": "#C68B62",
+      "skinShade": "#AD744F",
+      "hair": "#2B2026",
+      "how": "Skin, skin shade and hair are separate fills tagged class=\"skin\", \"skin-shade(-line)\" and \"hair\" in every SVG. Replace those hex values and re-export the PNGs."
+    }
+  },
+  "motion": {
+    "bounciness": 1.0,
+    "idleSway": 2.5,
+    "entrance": "stomp-hop",
+    "entranceNote": "Three quick, bold hops with a boot-stomp on landing (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "pitch": "high (girl, about 5)",
+      "rate": "1.1x, bouncy",
+      "note": "Designed voice: brave, giggly little sister, loud-ish excitement but clear diction; big dramatic \"לְכָאן!\". Never baby-talk."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "הַמַּצְפֵּן אוֹמֵר: לְכָאן!",
+      "en": "The compass says: this way!"
+    },
+    {
+      "he": "קֹדֶם זֶה, אַחַר כָּךְ זֶה — וְהִגַּעְנוּ!",
+      "en": "First this, then that — and we're there!"
+    }
+  ],
+  "power": {
+    "he": "מַצְפֵּן הַצַּעַד הַבָּא",
+    "en": "Next-Step Compass",
+    "domain": "logic",
+    "what": "Her magic compass points to the next step: what comes next in a sequence, which step goes first, which path follows the rule. The needle wobbles between choices and settles on the one that fits, so ordering and \"what comes next?\" become a treasure hunt."
+  },
+  "look": "Fearless younger sister (about 5): two bouncy pigtail puffs under a sunflower bucket hat, a rose poncho with a sunflower zig-zag hem over a cream-and-rose striped shirt, sunflower leggings, chunky brown explorer boots, freckles, and a big compass on a strap. Drawn 10% smaller than the others because she is the little one.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        299,
+        281,
+        724,
+        943
+      ],
+      "talk_closed": [
+        299,
+        281,
+        724,
+        943
+      ],
+      "talk_open": [
+        299,
+        281,
+        724,
+        943
+      ],
+      "celebrate": [
+        299,
+        281,
+        724,
+        943
+      ],
+      "think": [
+        299,
+        281,
+        724,
+        943
+      ],
+      "listen": [
+        299,
+        281,
+        724,
+        943
+      ],
+      "encourage": [
+        299,
+        281,
+        724,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 0,
+    "talkDiffBox": [
+      477,
+      537,
+      546,
+      582
+    ]
+  }
+}

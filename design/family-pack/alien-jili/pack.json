@@ -1,0 +1,166 @@
+{
+  "schema": "character-lite/v1",
+  "id": "alien-jili",
+  "tier": "lite",
+  "name": {
+    "he": "גִּ'ילִי",
+    "en": "Jili",
+    "species": "חַיְזָרוֹן־גֶּ'לִי",
+    "grammaticalGender": "masculine",
+    "for": "daughter"
+  },
+  "roles": [
+    "guide_tutor",
+    "activity_helper",
+    "celebration_cameo",
+    "map_companion",
+    "sticker"
+  ],
+  "images": {
+    "idle": "idle.png",
+    "talk_closed": "talk_closed.png",
+    "talk_open": "talk_open.png",
+    "celebrate": "celebrate.png",
+    "think": "think.png",
+    "listen": "listen.png",
+    "encourage": "encourage.png"
+  },
+  "sources": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg"
+  },
+  "canvas": {
+    "size": [
+      1024,
+      1024
+    ],
+    "baselineY": 944,
+    "maxHeight": 800,
+    "safeMargin": 64
+  },
+  "mouth": [
+    0.4937,
+    0.6758
+  ],
+  "palette": {
+    "dominant": "#FFBE8C",
+    "fills": {
+      "body": "#FFBE8C",
+      "bodyShade": "#F49A7A",
+      "rim": "#FFE0C4",
+      "glow": "#FFC83D",
+      "wing": "#B8EBA0",
+      "wingShade": "#8FCF7A",
+      "toe": "#F49A7A",
+      "bubble": "#FFFFFF"
+    },
+    "safeColourCheck": {
+      "body": {
+        "nearestTeach": "orange",
+        "dE2000": 14.5
+      },
+      "bodyShade": {
+        "nearestTeach": "orange",
+        "dE2000": 14.1
+      },
+      "rim": {
+        "nearestTeach": "white",
+        "dE2000": 14.8
+      }
+    }
+  },
+  "motion": {
+    "bounciness": 1.0,
+    "idleSway": 3.0,
+    "entrance": "jelly-bounce",
+    "entranceNote": "Three jelly bounces with extra squash (0.85/1.15) and antennae that spring on each landing (falls back to \"hop\")."
+  },
+  "availability": {
+    "distribution": "personal",
+    "personalUseOnly": true
+  },
+  "tts": {
+    "vendor": "elevenlabs",
+    "voiceId": "",
+    "style": {
+      "pitch": "high, small creature",
+      "rate": "1.1x, wobbly",
+      "note": "Designed voice: mischievous, bubbly creature voice with playful \"בְּלוּבּ\" sounds and giggles; words stay clear Hebrew (no gibberish on key words)."
+    }
+  },
+  "catchphrases": [
+    {
+      "he": "בְּלוּבּ־בְּלוּבּ! לְכָל אֶחָד אוֹתוֹ דָּבָר!",
+      "en": "Blub-blub! The same for everyone!"
+    },
+    {
+      "he": "אֲנִי מִתְפַּצֵּל לִשְׁנַיִם — וְחוֹזֵר!",
+      "en": "I split in two — and come back!"
+    }
+  ],
+  "power": {
+    "he": "בּוּעוֹת שִׁתּוּף",
+    "en": "Sharing Bubbles",
+    "domain": "math",
+    "what": "Wobbles and blows bubbles that each hold the same number of things, so fair sharing, equal groups and halves become visible (\"לְכָל אֶחָד אוֹתוֹ דָּבָר\")."
+  },
+  "look": "A small, cheeky alien friend shaped like an apricot jelly dome with a scalloped cream rim, shiny highlights and floating bubbles inside, two springy antennae with glowing star tips, tiny mint stubby wings, little nub arms, and short legs with three-toed feet. No ears, not blue or purple, not a bear or dog.",
+  "qa": {
+    "alphaBBoxes": {
+      "idle": [
+        200,
+        184,
+        823,
+        943
+      ],
+      "talk_closed": [
+        200,
+        184,
+        823,
+        943
+      ],
+      "talk_open": [
+        200,
+        184,
+        823,
+        943
+      ],
+      "celebrate": [
+        200,
+        176,
+        823,
+        943
+      ],
+      "think": [
+        200,
+        184,
+        823,
+        943
+      ],
+      "listen": [
+        200,
+        176,
+        823,
+        943
+      ],
+      "encourage": [
+        200,
+        184,
+        823,
+        943
+      ]
+    },
+    "maxBBoxDeviationPx": 8,
+    "talkDiffBox": [
+      463,
+      667,
+      548,
+      717
+    ]
+  }
+}
