@@ -109,6 +109,18 @@ Expected: `{"error":"unauthorized"}`.
 Dashboard > Authentication > Users > **Add user** > **Create new user**, with your email and
 "Auto Confirm User" ticked. Sign-in on the phone is by email code to that address.
 
+### 6b. Make the sign-in email carry a code
+
+Dashboard > Authentication > Emails (Templates) > **Magic Link**. Change the body so it contains
+the code, for example:
+
+```html
+<p>Your Nitznutz sign-in code is <strong>{{ .Token }}</strong></p>
+```
+
+Without `{{ .Token }}` Supabase sends only a link, and the app has nowhere to type it. Also
+check Authentication > Sign In / Providers: **Allow new users to sign up** is off and Email is on.
+
 ## 7. Tell the server which app is yours (after the first build)
 
 Once the debug app exists, take its signing-certificate fingerprint:
