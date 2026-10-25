@@ -45,7 +45,47 @@ function inner(t: Tlv): Tlv {
   return readTlv(t.value, 0);
 }
 
+/**
+ * A compact, public description of how `cert` is verified by `issuer`'s key, for the log when the
+ * runtime's WebCrypto cannot do it: key type and size ("ec384", "rsa4096") then the hash ("h256").
+ */
+function algTag(cert: x509.X509Certificate, issuer: x509.X509Certificate): string {
+  try {
+    const k = issuer.publicKey.algorithm as { name?: string; namedCurve?: string; modulusLength?: number };
+    const kind = (k.name ?? "").toLowerCase().startsWith("ec") ? "ec" : "rsa";
+    const size = k.namedCurve ?? String(k.modulusLength ?? "");
+    const h = (cert.signatureAlgorithm as { hash?: { name?: string } }).hash?.name ?? "";
+    return `${kind}${size.replace(/\D/g, "")}h${h.replace(/\D/g, "")}`;
+  } catch {
+    return "unknown";
+  }
+}
+
+/** True/false for a checked signature; throws a label for a signature the runtime cannot check. */
+async function signedBy(cert: x509.X509Certificate, issuer: x509.X509Certificate, at: number, now: Date) {
+  try {
+    return await cert.verify({ publicKey: issuer, date: now });
+  } catch {
+    throw new ChainUnsupported(`chain_alg_${at}_${algTag(cert, issuer)}`);
+  }
+}
+
+class ChainUnsupported extends Error {}
+
 async function verifyChain(certs: x509.X509Certificate[], roots: x509.X509Certificate[], now: Date) {
+  try {
+    return await verifyChainInner(certs, roots, now);
+  } catch (e) {
+    if (e instanceof ChainUnsupported) return e.message;
+    throw e;
+  }
+}
+
+async function verifyChainInner(
+  certs: x509.X509Certificate[],
+  roots: x509.X509Certificate[],
+  now: Date,
+) {
   for (let i = 0; i < certs.length; i++) {
     const c = certs[i];
     if (now < c.notBefore || now > c.notAfter) return "cert_not_valid_now";
@@ -55,13 +95,13 @@ async function verifyChain(certs: x509.X509Certificate[], roots: x509.X509Certif
     }
   }
   for (let i = 0; i < certs.length - 1; i++) {
-    if (!(await certs[i].verify({ publicKey: certs[i + 1], date: now }))) return "bad_chain_signature";
+    if (!(await signedBy(certs[i], certs[i + 1], i, now))) return "bad_chain_signature";
   }
   const top = certs[certs.length - 1];
   for (const root of roots) {
     if (now < root.notBefore || now > root.notAfter) continue;
     if (eq(new Uint8Array(top.rawData), new Uint8Array(root.rawData))) return null;
-    if (await top.verify({ publicKey: root, date: now })) return null;
+    if (await signedBy(top, root, certs.length - 1, now)) return null;
   }
   return "untrusted_root";
 }
