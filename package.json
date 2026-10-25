@@ -1,0 +1,12 @@
+{
+  "name": "nitznutz-tooling",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Repository tooling only (pinned Supabase CLI). The app itself is Flutter; see README.md.",
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "supabase": "2.122.0"
+  }
+}

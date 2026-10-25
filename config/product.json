@@ -1,0 +1,14 @@
+{
+  "$comment": "The one place for the product name and rebrand-able strings. Code reads these values; it never hard-codes them.",
+  "productName": {
+    "he": "נִיצְנוּץ",
+    "en": "Nitznutz",
+    "review": "needs-editor"
+  },
+  "bundleDisplayName": {
+    "he": "נִיצְנוּץ",
+    "en": "Nitznutz",
+    "review": "needs-editor"
+  },
+  "technicalId": "nitznutz"
+}

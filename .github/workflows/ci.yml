@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    name: secrets (gitleaks, full history)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install pinned gitleaks
+        run: bash tools/ci/install-tools.sh gitleaks
+      - name: Scan the full Git history
+        run: gitleaks git --no-banner --redact --verbose --config .gitleaks.toml .
+      - name: Scanner self-test (planted fake secrets must be caught)
+        run: bash tools/ci/canary-test.sh
+
+  hygiene:
+    name: hygiene (forbidden files)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: bash tools/ci/hygiene.sh
+
+  osv:
+    name: osv (dependency vulnerabilities)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install pinned osv-scanner
+        run: bash tools/ci/install-tools.sh osv
+      - name: Scan every lock file in the repository
+        run: osv-scanner scan source --recursive .

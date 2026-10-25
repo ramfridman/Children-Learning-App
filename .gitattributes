@@ -1,0 +1,22 @@
+# One line-ending rule for everyone, including Windows: LF in the repository and in the working tree.
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.riv binary
+*.opus binary
+*.ogg binary
+*.mp3 binary
+*.m4a binary
+*.zip binary
+*.onnx binary
+*.ttf binary
+*.otf binary
+*.woff2 binary

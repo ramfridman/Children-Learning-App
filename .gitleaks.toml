@@ -1,0 +1,38 @@
+title = "Nitznutz gitleaks rules"
+
+[extend]
+# Start from gitleaks' built-in rules, then add rules for the vendors this project uses.
+useDefault = true
+
+[[rules]]
+id = "nitznutz-anthropic-api-key"
+description = "Anthropic API key"
+regex = '''sk-ant-[A-Za-z0-9_\-]{20,}'''
+keywords = ["sk-ant-"]
+
+[[rules]]
+id = "nitznutz-elevenlabs-api-key"
+description = "ElevenLabs API key"
+regex = '''\bsk_[a-f0-9]{40,64}\b'''
+keywords = ["sk_"]
+
+[[rules]]
+id = "nitznutz-supabase-secret-key"
+description = "Supabase secret API key"
+regex = '''sb_secret_[A-Za-z0-9_\-]{20,}'''
+keywords = ["sb_secret_"]
+
+[[rules]]
+id = "nitznutz-database-url-with-password"
+description = "Postgres connection string with an embedded password"
+regex = '''postgres(?:ql)?://[^:\s/@]+:[^@\s]{6,}@[^\s'"]+'''
+keywords = ["postgres"]
+  [[rules.allowlists]]
+  description = "The well-known local Supabase stack defaults are not secrets"
+  regexes = ['''@(127\.0\.0\.1|localhost|host\.docker\.internal)[:/]''']
+
+[[rules]]
+id = "nitznutz-firebase-service-account"
+description = "Google service account key file"
+regex = '''"private_key_id"\s*:\s*"[a-f0-9]{40}"'''
+keywords = ["private_key_id"]

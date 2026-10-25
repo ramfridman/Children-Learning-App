@@ -1,0 +1,61 @@
+# ---- Secrets and signing material: never commit ----
+.env
+.env.*
+!.env.example
+*.p8
+*.p12
+*.pem
+*.key
+*.jks
+*.keystore
+key.properties
+service-account*.json
+supabase/.env
+supabase/functions/.env
+supabase/functions/**/.env
+
+# ---- Local tools (downloaded by tools/install-hooks.ps1) ----
+tools/bin/
+
+# ---- Build output ----
+build/
+dist/
+out/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+**/android/.gradle/
+**/android/local.properties
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/ephemeral/
+DerivedData/
+*.iml
+*.ipa
+*.apk
+*.aab
+*.dSYM.zip
+
+# ---- Node / Deno / Supabase local state ----
+node_modules/
+supabase/.temp/
+supabase/.branches/
+.deno/
+
+# ---- Generated audio (large files stay out of Git; packs are built and published by tools) ----
+tools/voice_gen/output/
+*.wav
+*.flac
+
+# ---- Editors and OS ----
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log

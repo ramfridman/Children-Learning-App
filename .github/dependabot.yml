@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+# The pub (app/) and Deno (supabase/functions/) ecosystems are added in the same commit
+# that creates their first manifest.

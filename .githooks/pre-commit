@@ -1,0 +1,26 @@
+#!/bin/sh
+# Blocks a commit when gitleaks finds a secret in the staged changes.
+# It fails closed: if gitleaks is not installed, the commit is refused.
+# Install with:  powershell -ExecutionPolicy Bypass -File tools/install-hooks.ps1
+
+root="$(git rev-parse --show-toplevel)"
+if [ -f "$root/tools/bin/gitleaks.exe" ]; then
+  gl="$root/tools/bin/gitleaks.exe"
+elif [ -f "$root/tools/bin/gitleaks" ]; then
+  gl="$root/tools/bin/gitleaks"
+elif command -v gitleaks >/dev/null 2>&1; then
+  gl="gitleaks"
+else
+  echo "pre-commit: gitleaks is not installed, so this commit is refused."
+  echo "Run: powershell -ExecutionPolicy Bypass -File tools/install-hooks.ps1"
+  exit 1
+fi
+
+"$gl" git --pre-commit --staged --redact --no-banner --config "$root/.gitleaks.toml"
+status=$?
+if [ $status -ne 0 ]; then
+  echo "pre-commit: gitleaks found a possible secret in the staged changes. Commit refused."
+  echo "Remove the secret (and rotate it if it was real), then commit again."
+  exit 1
+fi
+exit 0
