@@ -7,7 +7,7 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | Milestone | Status |
 |---|---|
 | Reading pass over the plan, docs and design bundle | Done |
-| M0 Foundations | **Approved 2026-10-25** (`docs/milestones/M0.md`; build status in its section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Left: reinstall check, spend-limit screenshots, branch-protection decision, M0 report and the owner's confirmation. Branch `m0-foundations`, not merged to `main`. |
+| M0 Foundations | **Approved 2026-10-25** (`docs/milestones/M0.md`; build status in its section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Reinstall check done. Left: spend-limit screenshots and the owner's confirmation of the M0 report. Branch `m0-foundations`, not merged to `main`. |
 | M1–M9 | Not started |
 
 ## Done
@@ -38,12 +38,9 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 
 ## Waiting on the owner
 
-- Redeploy `signed-ping` (`npx supabase functions deploy signed-ping --use-api`): the live copy still has the experimental `verify_jwt = true`.
-- Reinstall check on the phone: forget, uninstall, reinstall, `Signed ping` says not enrolled; enrol again, then revoke the old entry.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
-- Decide on branch protection (GitHub Pro, or merge by discipline).
-- Confirm M0 after the report.
+- Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
 
 ## Next step
 
-Claude: finish the reinstall check with the owner, write the M0 report (Done / Proof / Security / Plan drift / Needs you / Next), and merge to `main` when the owner confirms. Do not start M1 until he confirms M0.
+Claude: merge `m0-foundations` into `main` when the owner confirms M0 (all six jobs green). Do not start M1 until he confirms M0.
