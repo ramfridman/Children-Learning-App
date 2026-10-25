@@ -120,6 +120,9 @@ select throws_ok($$insert into app.enroll_challenge (challenge, purpose, expires
 
 -- ---- The gateway role works, within its grants ------------------------------------------------
 reset role;
+-- Test-only: let the gateway role call pgTAP helpers. The real gateway needs neither.
+grant usage on schema extensions to app_gateway;
+set local search_path = public, extensions;
 set local role app_gateway;
 select is((select count(*)::int from app.device), 3, 'app_gateway can read devices across families (it filters in code)');
 select lives_ok($$update app.device set last_seen_at = now() where id = 'a2a2a2a2-0000-4000-8000-000000000001'$$, 'app_gateway can update last_seen_at');
