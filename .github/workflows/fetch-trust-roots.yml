@@ -1,11 +1,15 @@
 name: fetch-trust-roots
 
-# Manual only. Downloads the root certificates Google publishes for Android Key Attestation
+# Runs when this file or its script changes (and by hand once it is on the default branch). Downloads the root certificates Google publishes for Android Key Attestation
 # (over TLS, from Google) and prints them with their fingerprints, so a person can compare the
 # fingerprints with Google's documentation before they are committed to supabase/functions/_shared/trust/.
 # Nothing here is a secret, and nothing is written back to the repository.
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/fetch-trust-roots.yml
+      - tools/ci/fetch-google-roots.sh
 
 permissions:
   contents: read
