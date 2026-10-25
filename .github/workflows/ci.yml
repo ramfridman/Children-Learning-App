@@ -68,6 +68,18 @@ jobs:
         run: npx supabase start -x realtime,storage-api,imgproxy,studio,mailpit,logflare,vector,supavisor,edge-runtime,postgres-meta
       - name: Run the pgTAP tests
         run: bash tools/ci/run-with-annotations.sh "pgTAP" npx supabase test db
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: 2.9.6
+      - name: Run the gateway against the real database, as the limited gateway role
+        env:
+          # Local test stack only; these are the stack's throwaway defaults, not secrets.
+          TEST_ADMIN_DB_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+          TEST_GATEWAY_DB_URL: postgresql://app_gateway:ci-only-gateway-pass@127.0.0.1:54322/postgres
+        run: >
+          bash tools/ci/run-with-annotations.sh "Deno integration" deno test --frozen
+          --allow-read=testvectors,supabase --allow-net=127.0.0.1:54322 --allow-env
+          supabase/functions/db_integration_test.ts
       - name: Stop the stack
         if: always()
         run: npx supabase stop --no-backup

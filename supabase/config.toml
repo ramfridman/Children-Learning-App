@@ -415,3 +415,19 @@ enabled = true
 # formatted with uppercase keywords, indent 2, max width 180, trailing commas,
 # and column/key alignment. Set to "null" to emit raw, unformatted SQL.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
+
+# Every function checks the session token itself (JWKS) and the device signature, so the platform's
+# own JWT gate is off: the new publishable key is not a JWT and would be refused by it. The
+# `verify_jwt` experiment on the live project (M0 task C8) records the result in docs/PLAN.md.
+[functions.signed-ping]
+verify_jwt = false
+[functions.app-config]
+verify_jwt = false
+[functions.enroll-challenge]
+verify_jwt = false
+[functions.pairing-code-create]
+verify_jwt = false
+[functions.device-list]
+verify_jwt = false
+[functions.device-revoke]
+verify_jwt = false
