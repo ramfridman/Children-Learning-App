@@ -14,6 +14,10 @@ export interface Services {
   store: Store;
   secrets: Secrets;
   randomBytes(n: number): Bytes;
+  /** True only in the local stack: lets emulators enrol through the dev allowlist. */
+  allowDevEnrolment: boolean;
+  /** Tests only: replaces Google's roots. Always undefined in production. */
+  androidRootsPem?: readonly string[];
 }
 
 export type Access =
@@ -27,6 +31,8 @@ export interface Context {
   svc: Services;
   req: Request;
   body: Record<string, unknown>;
+  /** The exact bytes received, for calls that verify their own signature. */
+  raw: Bytes;
   requestId: string;
   /** Present when access.kind is "device". */
   auth?: Authenticated;
@@ -82,7 +88,7 @@ export function makeHandler(spec: FunctionSpec, getServices: () => Services) {
       }
       const body = parseJsonObject(raw);
       validate(spec.shape, body);
-      const result = await spec.run({ svc, req, body, requestId, auth, userId, issuedAt });
+      const result = await spec.run({ svc, req, body, raw, requestId, auth, userId, issuedAt });
       if (auth) svc.store.touchDevice(auth.device.id).catch(() => {});
       res = jsonResponse(result ?? {});
     } catch (e) {

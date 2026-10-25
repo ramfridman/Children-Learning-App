@@ -62,6 +62,60 @@ export class FakeStore implements Store {
     this.codes.push(c);
     return Promise.resolve(true);
   }
+  usedChallenges = new Set<string>();
+  allowlist = new Set<string>();
+  families = new Map<string, string>(); // user -> family
+  consumeChallenge(c: { challenge: Bytes; purpose: "enroll" | "pair"; userId: string | null }) {
+    const known = this.challenges.find((x) =>
+      b64urlEncode(x.challenge) === b64urlEncode(c.challenge) && x.purpose === c.purpose &&
+      x.userId === c.userId
+    );
+    const key = b64urlEncode(c.challenge);
+    if (!known || this.usedChallenges.has(key) || known.expiresAt.getTime() <= this.nowMs) {
+      return Promise.resolve(false);
+    }
+    this.usedChallenges.add(key);
+    return Promise.resolve(true);
+  }
+  nowMs = NOW;
+  devAllowlistHas(secretHash: Bytes) {
+    return Promise.resolve(this.allowlist.has(b64urlEncode(secretHash)));
+  }
+  enrolParentDevice(e: Parameters<Store["enrolParentDevice"]>[0]) {
+    let family = this.families.get(e.userId);
+    if (!family) {
+      family = crypto.randomUUID();
+      this.families.set(e.userId, family);
+      this.guardians.add(`${e.userId}/${family}`);
+    }
+    if (e.replaceDeviceId) {
+      const old = this.devices.get(e.replaceDeviceId);
+      if (!old || old.familyId !== family || old.revokedAt) {
+        return Promise.resolve({ ok: false as const, reason: "no_such_device" as const });
+      }
+      old.revokedAt = new Date(this.nowMs);
+    }
+    const pk = b64urlEncode(e.publicKey);
+    if ([...this.devices.values()].some((d) => b64urlEncode(d.publicKey) === pk)) {
+      return Promise.resolve({ ok: false as const, reason: "key_in_use" as const });
+    }
+    if ([...this.devices.values()].filter((d) => d.familyId === family && !d.revokedAt).length >= 6) {
+      return Promise.resolve({ ok: false as const, reason: "device_limit" as const });
+    }
+    const id = crypto.randomUUID();
+    this.devices.set(id, {
+      id,
+      familyId: family,
+      role: "parent",
+      publicKey: e.publicKey,
+      revokedAt: null,
+      platform: e.platform,
+      securityLevel: e.securityLevel,
+      createdAt: new Date(this.nowMs),
+      lastSeenAt: null,
+    });
+    return Promise.resolve({ ok: true as const, deviceId: id, familyId: family });
+  }
   listActiveDevices(familyId: string): Promise<DeviceSummary[]> {
     return Promise.resolve(
       [...this.devices.values()].filter((d) => d.familyId === familyId && !d.revokedAt).map((d) => ({
@@ -98,6 +152,7 @@ export function fakeServices(store: FakeStore, nowMs = () => NOW): Services {
       ipHashKey: new Uint8Array(32).fill(9) as Bytes,
     },
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
+    allowDevEnrolment: false,
   };
 }
 
@@ -175,3 +230,37 @@ export const FAMILY_A = uuid("a1a1a1a1", 1);
 export const FAMILY_B = uuid("b1b1b1b1", 1);
 export const USER_A = uuid("aaaaaaaa", 1);
 export const USER_B = uuid("bbbbbbbb", 1);
+
+/** A pre-enrolment request: signed with the new key and the nil device id, carrying a session token. */
+export async function callSelfSigned(
+  handler: (req: Request) => Promise<Response>,
+  priv: CryptoKey,
+  fn: string,
+  body: unknown,
+  o: { token?: string; ts?: number; unsigned?: boolean } = {},
+): Promise<Response> {
+  const text = JSON.stringify(body);
+  const nonce = crypto.randomUUID();
+  const ts = o.ts ?? NOW;
+  const canonical = canonicalString({
+    functionName: fn,
+    timestampMs: ts,
+    nonce,
+    bodyHashB64url: await sha256B64url(utf8(text)),
+    deviceId: "00000000-0000-0000-0000-000000000000",
+  });
+  const raw = new Uint8Array(
+    await crypto.subtle.sign({ name: "ECDSA", hash: "SHA-256" }, priv, utf8(canonical)),
+  );
+  const headers: Record<string, string> = {
+    "x-device-id": "00000000-0000-0000-0000-000000000000",
+    "x-timestamp": String(ts),
+    "x-nonce": nonce,
+    "x-signature": b64urlEncode(rawToDer(raw)),
+  };
+  if (o.token !== "") headers.authorization = `Bearer ${o.token ?? tokenFor(USER_A)}`;
+  if (o.unsigned) {
+    for (const h of ["x-device-id", "x-timestamp", "x-nonce", "x-signature"]) delete headers[h];
+  }
+  return handler(new Request(`https://x.test/functions/v1/${fn}`, { method: "POST", body: text, headers }));
+}

@@ -108,6 +108,8 @@ export interface Built {
   chainDer: Uint8Array[];
   rootPem: string;
   deviceSpki: Bytes;
+  /** Private half of the attested key, so a test can self-sign as the phone would. */
+  devicePrivateKey: CryptoKey;
   nowMs: number;
 }
 
@@ -166,6 +168,7 @@ export async function buildChain(
     chainDer: [leaf, mid, root].map((c) => new Uint8Array(c.rawData)),
     rootPem: root.toString("pem"),
     deviceSpki: other,
+    devicePrivateKey: leafKp.privateKey,
     nowMs,
   };
 }

@@ -16,6 +16,7 @@ Read `CLAUDE.md` and this file at the start of every session.
 - M0 plan written and approved with changes.
 - Phase C part 1: `app` schema, jobs and 79 pgTAP checks, green in CI.
 - Phase C part 2 so far: `supabase/functions/_shared/` (base64url, canonical string, signature check with strict DER and on-curve test, body limits and strict schema, quiet error codes, redacted log), 19 Deno tests, shared vectors in `testvectors/signed-request.json`, Deno CI job.
+- Phase C part 2 (later steps): common handler, Postgres store, entry points for `signed-ping`, `app-config`, `enroll-challenge`, `pairing-code-create`, `device-list`, `device-revoke`, `device-enroll`; Android Key Attestation verifier with Google roots; JWKS token check; 60 Deno tests plus a DB integration test run in CI as the limited gateway role.
 - Accounts: 1Password, Supabase (Frankfurt, ref `ungkvkabqxssggttajfs`), Anthropic Console (workspace, $5 limit, key), ElevenLabs (two keys), Codemagic linked.
 
 ## Open issues
@@ -28,9 +29,6 @@ Read `CLAUDE.md` and this file at the start of every session.
 
 ## Waiting on the owner
 
-- OK (or not) for the four server packages `jose`, `postgres`, `@peculiar/x509`, `cbor-x`.
-- Android SDK 36, Build-Tools 28.0.3 and 36, licences, then `flutter doctor` and `flutter devices` output.
-
 ## Next step
 
-Claude: finish the gateway parts that need no package (auth order, nonce store, function skeletons behind injectable interfaces), then the package-dependent parts once the owner approves. Owner: the Android steps above.
+Claude: `device-pair` (child device, one-time sign-in via the Auth admin API), iOS attestation stays deferred to the iOS gate, the `verify_jwt` experiment and deploy steps (Phase H), then the Flutter harness (Phase D) on the owner's Android phone.

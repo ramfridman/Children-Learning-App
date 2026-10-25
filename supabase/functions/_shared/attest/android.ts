@@ -148,7 +148,11 @@ export async function verifyAndroidKeyAttestation(
       packageName: packages[0],
     };
   } catch (e) {
-    return fail(e instanceof DerError ? `malformed:${e.message.replace(/[^a-z ]/g, "")}` : "malformed");
+    return fail(
+      e instanceof DerError
+        ? `malformed:${e.message.replace(/[^a-z ]/g, "").replaceAll(" ", "_")}`
+        : "malformed",
+    );
   }
 }
 

@@ -94,6 +94,61 @@ export function pgStore(sql: Sql): Store {
       return rows.length === 1;
     },
 
+    async consumeChallenge(c) {
+      const rows = await sql`
+        update app.enroll_challenge set used_at = now()
+         where challenge = ${buf(c.challenge)} and purpose = ${c.purpose}
+           and used_at is null and expires_at > now() and failed_attempts < 5
+           and user_id is not distinct from ${c.userId}
+        returning id`;
+      return rows.length === 1;
+    },
+
+    async devAllowlistHas(secretHash) {
+      const rows = await sql`
+        select 1 from app.dev_device_allowlist
+         where secret_hash = ${buf(secretHash)} and expires_at > now()`;
+      return rows.length === 1;
+    },
+
+    async enrolParentDevice(e) {
+      try {
+        return await sql.begin(async (tx) => {
+          // One enrolment per user at a time, so two phones cannot create two families.
+          await tx`select pg_advisory_xact_lock(hashtextextended(${e.userId}, 1))`;
+          let [g] = await tx`select family_id from app.guardian where user_id = ${e.userId}`;
+          if (!g) {
+            const [f] = await tx`insert into app.family default values returning id`;
+            await tx`insert into app.guardian (user_id, family_id) values (${e.userId}, ${f.id})`;
+            g = { family_id: f.id };
+          }
+          const familyId: string = g.family_id;
+          if (e.replaceDeviceId) {
+            const gone = await tx`
+              update app.device set revoked_at = now(), revoked_reason = 'replaced'
+               where id = ${e.replaceDeviceId} and family_id = ${familyId} and revoked_at is null
+              returning id`;
+            if (gone.length !== 1) return { ok: false as const, reason: "no_such_device" as const };
+          }
+          const [d] = await tx`
+            insert into app.device (family_id, role, public_key, platform, attestation_kind, security_level, app_version)
+            values (${familyId}, 'parent', ${
+            buf(e.publicKey)
+          }, ${e.platform}, ${e.attestationKind}, ${e.securityLevel}, ${e.appVersion})
+            returning id`;
+          return { ok: true as const, deviceId: d.id as string, familyId };
+        });
+      } catch (err) {
+        const code = (err as { code?: string; message?: string }).code;
+        const message = (err as { message?: string }).message ?? "";
+        if (code === "P0001" && message.includes("device_limit")) {
+          return { ok: false as const, reason: "device_limit" as const };
+        }
+        if (code === "23505") return { ok: false as const, reason: "key_in_use" as const };
+        throw err;
+      }
+    },
+
     async listActiveDevices(familyId): Promise<DeviceSummary[]> {
       const rows = await sql`
         select id, role, platform, security_level, created_at, last_seen_at

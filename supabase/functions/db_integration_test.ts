@@ -2,11 +2,20 @@
 // as the least-privilege `app_gateway` role. Skipped unless both URLs are set (CI sets them).
 import { assert } from "./_shared/testassert.ts";
 import { connect, pgStore } from "./_shared/db.ts";
-import { b64urlDecode } from "./_shared/b64.ts";
+import { b64urlDecode, b64urlEncode } from "./_shared/b64.ts";
 import { type FunctionSpec, makeHandler } from "./_shared/handler.ts";
-import { call, fakeServices, FakeStore, plainPost, type TestDevice, tokenFor } from "./_shared/testkit.ts";
+import {
+  call,
+  callSelfSigned,
+  fakeServices,
+  FakeStore,
+  plainPost,
+  type TestDevice,
+  tokenFor,
+} from "./_shared/testkit.ts";
 import { spec as deviceList } from "./device-list/handler.ts";
 import { spec as deviceRevoke } from "./device-revoke/handler.ts";
+import { spec as deviceEnroll } from "./device-enroll/handler.ts";
 import { spec as enrollChallenge } from "./enroll-challenge/handler.ts";
 import { spec as pairingCodeCreate } from "./pairing-code-create/handler.ts";
 import { spec as signedPing } from "./signed-ping/handler.ts";
@@ -149,3 +158,74 @@ Deno.test(
     }
   },
 );
+
+Deno.test({
+  name: "enrolment against the real tables (dev allowlist path)",
+  ignore: !adminUrl || !gatewayUrl,
+}, async () => {
+  const admin = connect(adminUrl!);
+  const sql = connect(gatewayUrl!);
+  const store = pgStore(sql);
+  const user = crypto.randomUUID();
+  const secret = `ci-secret-${crypto.randomUUID()}`;
+  await admin`insert into auth.users (id, email) values (${user}, ${user + "@example.test"})`;
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(secret)));
+  await admin`insert into app.dev_device_allowlist (label, secret_hash, expires_at)
+              values ('ci', ${digest as unknown as Uint8Array}, now() + interval '1 day')`;
+  try {
+    const svc = { ...fakeServices(new FakeStore(), () => Date.now()), store, allowDevEnrolment: true };
+    const h = (s: FunctionSpec) => makeHandler(s, () => svc);
+    const token = () => tokenFor(user, Math.floor(Date.now() / 1000) - 5);
+    const enrol = async (extra: Record<string, unknown> = {}, key?: CryptoKeyPair) => {
+      const pair = key ??
+        await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, ["sign"]);
+      const spki = new Uint8Array(await crypto.subtle.exportKey("spki", pair.publicKey));
+      const c = await h(enrollChallenge)(
+        plainPost("enroll-challenge", { purpose: "enroll" }, { authorization: `Bearer ${token()}` }),
+      );
+      const challenge = (await c.json()).challenge;
+      const r = await callSelfSigned(h(deviceEnroll), pair.privateKey, "device-enroll", {
+        challenge,
+        public_key: b64urlEncode(spki),
+        platform: "android",
+        attestation_kind: "dev_allowlist",
+        dev_secret: secret,
+        ...extra,
+      }, { token: token(), ts: Date.now() });
+      return { r, pair, challenge };
+    };
+
+    const first = await enrol();
+    assert.equal(first.r.status, 200);
+    const firstId = (await first.r.json()).device_id as string;
+    const [fam] = await admin`select count(*)::int as n from app.guardian where user_id = ${user}`;
+    assert.equal(fam.n, 1, "a family and guardian were created");
+
+    // The challenge is single use in the real table too.
+    const [used] =
+      await admin`select used_at from app.enroll_challenge where user_id = ${user} order by created_at limit 1`;
+    assert.ok(used.used_at, "challenge marked used");
+
+    const ids = [firstId];
+    for (let i = 0; i < 5; i++) {
+      const r = await enrol();
+      assert.equal(r.r.status, 200);
+      ids.push((await r.r.json()).device_id);
+    }
+    assert.equal((await enrol()).r.status, 409, "the seventh active device hits the database trigger");
+
+    const replaced = await enrol({ replace_device_id: firstId });
+    assert.equal(replaced.r.status, 200);
+    const [old] = await admin`select revoked_reason from app.device where id = ${firstId}`;
+    assert.equal(old.revoked_reason, "replaced");
+    assert.equal((await enrol({}, replaced.pair)).r.status, 409, "the same key cannot be registered twice");
+    assert.equal((await enrol({ replace_device_id: crypto.randomUUID() })).r.status, 404);
+  } finally {
+    await admin`delete from app.usage_counter where scope like 'challenge_%'`;
+    await admin`delete from app.family where id in (select family_id from app.guardian where user_id = ${user})`;
+    await admin`delete from app.dev_device_allowlist where label = 'ci'`;
+    await admin`delete from auth.users where id = ${user}`;
+    await sql.end();
+    await admin.end();
+  }
+});

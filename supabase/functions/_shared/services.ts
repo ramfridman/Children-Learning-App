@@ -30,6 +30,7 @@ export function realServices(): Services {
     verifyToken: (bearer) => verifyAccessToken(bearer, tokenCfg),
     store: pgStore(connect(need("APP_GATEWAY_DB_URL"))),
     secrets: { pairingCodeKey: key32("PAIRING_CODE_KEY"), ipHashKey: key32("IP_HASH_KEY") },
+    allowDevEnrolment: Deno.env.get("ALLOW_DEV_ENROLMENT") === "true",
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
   };
   return cached;

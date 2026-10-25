@@ -39,6 +39,29 @@ export interface Store {
     c: { familyId: string; byDevice: string; codeHash: Bytes; expiresAt: Date },
   ): Promise<boolean>;
 
+  /** Marks a challenge used if it is live, unused, of this purpose and (for enrolment) this user's. */
+  consumeChallenge(
+    c: { challenge: Bytes; purpose: "enroll" | "pair"; userId: string | null },
+  ): Promise<boolean>;
+  /** Is there an unexpired dev allowlist entry with this secret hash? (Emulators, dev flavour only.) */
+  devAllowlistHas(secretHash: Bytes): Promise<boolean>;
+  /**
+   * In one transaction: find or create the user's family (as guardian), optionally replace one of
+   * its devices, and add the new parent device.
+   */
+  enrolParentDevice(e: {
+    userId: string;
+    replaceDeviceId: string | null;
+    publicKey: Bytes;
+    platform: "android" | "ios";
+    attestationKind: "key_attestation" | "app_attest" | "dev_allowlist";
+    securityLevel: "strongbox" | "tee" | "secure_enclave" | "dev";
+    appVersion: string | null;
+  }): Promise<
+    | { ok: true; deviceId: string; familyId: string }
+    | { ok: false; reason: "device_limit" | "key_in_use" | "no_such_device" }
+  >;
+
   // Family management
   listActiveDevices(familyId: string): Promise<DeviceSummary[]>;
   /** False if the device is not an active device of that family. */
