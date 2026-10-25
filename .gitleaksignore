@@ -1,0 +1,2 @@
+# Fake test string in commit 3799181 (a literal "sk-ant-..." used only to prove logs redact). Removed in the next commit.
+3799181a68365f1b5d91b2a3e1232e2f2b5810cc:supabase/functions/_shared/errors_log_test.ts:nitznutz-anthropic-api-key:30
