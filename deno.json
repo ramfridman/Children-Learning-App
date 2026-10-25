@@ -1,0 +1,8 @@
+{
+  "fmt": { "lineWidth": 110, "include": ["supabase/functions/", "tools/"] },
+  "lint": { "include": ["supabase/functions/", "tools/"] },
+  "test": { "include": ["supabase/functions/"] },
+  "tasks": {
+    "check": "deno fmt --check && deno lint && deno check supabase/functions/ tools/gen-testvector.ts && deno test --allow-read=testvectors"
+  }
+}

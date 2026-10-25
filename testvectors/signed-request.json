@@ -1,0 +1,69 @@
+{
+  "description": "Signed-request test vectors. canonical = v1, POST, /<function>, unix ms, nonce, base64url SHA-256 of the UTF-8 body, device id, joined by LF. Signature: ECDSA P-256 / SHA-256 over the UTF-8 canonical string, DER encoded. Public key: SPKI DER, 91 bytes, base64url without padding.",
+  "cases": [
+    {
+      "name": "typical",
+      "function": "signed-ping",
+      "timestamp_ms": 1793000000000,
+      "nonce": "8202f017-9804-468f-8fe0-329006075f8a",
+      "device_id": "b6f0ed2e-0d4e-4dec-957b-0c0513f36096",
+      "body": "{}",
+      "body_sha256_b64url": "RBNvo1WzZ4oRRq0W9-hknpT7T8If536DEMBg9hyq_4o",
+      "canonical": "v1\nPOST\n/signed-ping\n1793000000000\n8202f017-9804-468f-8fe0-329006075f8a\nRBNvo1WzZ4oRRq0W9-hknpT7T8If536DEMBg9hyq_4o\nb6f0ed2e-0d4e-4dec-957b-0c0513f36096",
+      "public_key_spki_b64url": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEhpML94SZ-HBMmhqjx5cN7byy9-NeTRExgaxqdABlICbopDH5UAtk-KZiHmRLWFeUu2JLHc79PU9VYYYoFrO-Mg",
+      "signature_der_b64url": "MEQCIAKRBiG5VkKk558cDYXnjKWc1Q3HwzTpMGwKe2Zfy6dXAiAhKKzp4Uh3k0WV62eUn47Wei4tbQ2Ee2rcPeFrkDU38w",
+      "der_integer_lengths": [
+        32,
+        32
+      ]
+    },
+    {
+      "name": "r_with_leading_zero_byte",
+      "function": "device-list",
+      "timestamp_ms": 1793000001000,
+      "nonce": "d6e72fe0-3a9e-4598-b72f-8e01512d516a",
+      "device_id": "2b8d785d-20cc-4864-aa32-2c3efcf99c11",
+      "body": "{\"label\":\"abc\"}",
+      "body_sha256_b64url": "ihviqdS8l9uy665_kX5uCkN62UonYJ5zk-vTCuJ8wwY",
+      "canonical": "v1\nPOST\n/device-list\n1793000001000\nd6e72fe0-3a9e-4598-b72f-8e01512d516a\nihviqdS8l9uy665_kX5uCkN62UonYJ5zk-vTCuJ8wwY\n2b8d785d-20cc-4864-aa32-2c3efcf99c11",
+      "public_key_spki_b64url": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEDYpi0WzZL6zHVwnnS8mllbHx14mI84myltlC00x0uTd5iS_Q_EU7jl-FIXl7DLRJsahhhW-nM4wdniNb7mO6_A",
+      "signature_der_b64url": "MEYCIQDdgBDn3ec7hIqqN4h6m3L9mIX60ONDN-3m3QXxzqLx6QIhAPHGI9qR7qEOk-pcMkGOjjlQF4-McuyBLq1FC6qEMUi8",
+      "der_integer_lengths": [
+        33,
+        33
+      ]
+    },
+    {
+      "name": "short_r",
+      "function": "device-revoke",
+      "timestamp_ms": 1793000002000,
+      "nonce": "0d16f1bd-6c2d-4379-9d53-4fea2bf42a8d",
+      "device_id": "bd0b3a49-4b38-4414-a0b1-e6f73b77f7eb",
+      "body": "{\"label\":\"שלום\"}",
+      "body_sha256_b64url": "F3dRBPHpDkQZZ_ABGhHWAxzBxxhFSMZVgIeQNLqNzbk",
+      "canonical": "v1\nPOST\n/device-revoke\n1793000002000\n0d16f1bd-6c2d-4379-9d53-4fea2bf42a8d\nF3dRBPHpDkQZZ_ABGhHWAxzBxxhFSMZVgIeQNLqNzbk\nbd0b3a49-4b38-4414-a0b1-e6f73b77f7eb",
+      "public_key_spki_b64url": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEialsT3sa_eDwFN6iGk0BXix7su2eqDSnH7Ax21hcrASNk6GZelbPvPIW7cnA5zlptig0-0BipJABF54RpYfLZw",
+      "signature_der_b64url": "MEQCHxywmRAvuEkgoLJRCXY9BH9cM1v7wlSOeHMJwGPGy_sCIQDY3pRj-BBvNoojZdW-qRy0GKjXleqS82r3bdG7J9VfkA",
+      "der_integer_lengths": [
+        31,
+        33
+      ]
+    },
+    {
+      "name": "short_s",
+      "function": "app-config",
+      "timestamp_ms": 1793000003000,
+      "nonce": "b5f9eb8f-c432-40cc-a2b2-d3a7776f7d53",
+      "device_id": "0ed4caa5-86f2-4616-87b9-70c5fd3640fc",
+      "body": "{}",
+      "body_sha256_b64url": "RBNvo1WzZ4oRRq0W9-hknpT7T8If536DEMBg9hyq_4o",
+      "canonical": "v1\nPOST\n/app-config\n1793000003000\nb5f9eb8f-c432-40cc-a2b2-d3a7776f7d53\nRBNvo1WzZ4oRRq0W9-hknpT7T8If536DEMBg9hyq_4o\n0ed4caa5-86f2-4616-87b9-70c5fd3640fc",
+      "public_key_spki_b64url": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEgX9XxjjFvfC_-fJGZNdnM8nbEWzKspyMJYmpUUOvtz98txHy3nws9CRmMbCu12ewCOxmYhbmulVOvAuRNX6wHg",
+      "signature_der_b64url": "MEMCIEZ9Hvo358IpVgCHKBNd5HXizH-QLX6uC0aP-J5cW8w3Ah8oqLncW9yqy1LDkPAXH5D-51VGAOUtt2vumSeuadL3",
+      "der_integer_lengths": [
+        32,
+        31
+      ]
+    }
+  ]
+}
