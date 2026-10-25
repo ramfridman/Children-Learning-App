@@ -50,3 +50,24 @@ jobs:
         run: bash tools/ci/install-tools.sh osv
       - name: Scan every lock file in the repository
         run: osv-scanner scan source --recursive .
+
+  database:
+    name: database (Supabase local + pgTAP)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Start the local Supabase stack (only the services the tests need)
+        run: npx supabase start -x realtime,storage-api,imgproxy,studio,mailpit,logflare,vector,supavisor,edge-runtime,postgres-meta
+      - name: Run the pgTAP tests
+        run: npx supabase test db
+      - name: Stop the stack
+        if: always()
+        run: npx supabase stop --no-backup
