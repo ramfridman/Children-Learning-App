@@ -433,3 +433,5 @@ verify_jwt = false
 verify_jwt = false
 [functions.device-enroll]
 verify_jwt = false
+[functions.device-pair]
+verify_jwt = false

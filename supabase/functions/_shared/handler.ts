@@ -16,6 +16,8 @@ export interface Services {
   randomBytes(n: number): Bytes;
   /** True only in the local stack: lets emulators enrol through the dev allowlist. */
   allowDevEnrolment: boolean;
+  /** Creates a one-time sign-in for the family's guardian, for a child device that just paired. */
+  mintSession(guardianUserId: string): Promise<{ tokenHash: string }>;
   /** Tests only: replaces Google's roots. Always undefined in production. */
   androidRootsPem?: readonly string[];
 }

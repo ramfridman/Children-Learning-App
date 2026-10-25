@@ -1,6 +1,7 @@
 // Builds the real services from the function's environment. Anything missing means the function
 // answers "unavailable" and does nothing, rather than running half-configured.
 import { b64urlDecode, type Bytes } from "./b64.ts";
+import { authAdminMinter } from "./auth_admin.ts";
 import { connect, pgStore } from "./db.ts";
 import { GatewayError } from "./errors.ts";
 import type { Services } from "./handler.ts";
@@ -30,6 +31,7 @@ export function realServices(): Services {
     verifyToken: (bearer) => verifyAccessToken(bearer, tokenCfg),
     store: pgStore(connect(need("APP_GATEWAY_DB_URL"))),
     secrets: { pairingCodeKey: key32("PAIRING_CODE_KEY"), ipHashKey: key32("IP_HASH_KEY") },
+    mintSession: (id) => authAdminMinter(need("SUPABASE_URL"), need("AUTH_ADMIN_KEY"))(id),
     allowDevEnrolment: Deno.env.get("ALLOW_DEV_ENROLMENT") === "true",
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
   };

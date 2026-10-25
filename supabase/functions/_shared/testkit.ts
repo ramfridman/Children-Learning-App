@@ -116,6 +116,65 @@ export class FakeStore implements Store {
     });
     return Promise.resolve({ ok: true as const, deviceId: id, familyId: family });
   }
+  failedAttempts = new Map<string, number>();
+  usedCodes = new Set<string>();
+  pairPeek(c: { challenge: Bytes; codeHash: Bytes }) {
+    const ck = b64urlEncode(c.challenge);
+    const ch = this.challenges.find((x) => b64urlEncode(x.challenge) === ck && x.purpose === "pair");
+    if (
+      !ch || this.usedChallenges.has(ck) || ch.expiresAt.getTime() <= this.nowMs ||
+      (this.failedAttempts.get(ck) ?? 0) >= 5
+    ) {
+      return Promise.resolve({ ok: false as const, reason: "challenge_invalid" as const });
+    }
+    const hk = b64urlEncode(c.codeHash);
+    const code = this.codes.find((x) =>
+      b64urlEncode(x.codeHash) === hk && !this.usedCodes.has(hk) && x.expiresAt.getTime() > this.nowMs
+    );
+    if (!code) {
+      this.failedAttempts.set(ck, (this.failedAttempts.get(ck) ?? 0) + 1);
+      return Promise.resolve({ ok: false as const, reason: "bad_code" as const });
+    }
+    const guardian = [...this.guardians].find((g) => g.endsWith(`/${code.familyId}`))!.split("/")[0];
+    return Promise.resolve({ ok: true as const, familyId: code.familyId, guardianUserId: guardian });
+  }
+  pairComplete(c: Parameters<Store["pairComplete"]>[0]) {
+    const peek = this.pairPeekSync(c);
+    if (!peek.ok) return Promise.resolve(peek);
+    const pk = b64urlEncode(c.publicKey);
+    if ([...this.devices.values()].some((d) => b64urlEncode(d.publicKey) === pk)) {
+      return Promise.resolve({ ok: false as const, reason: "key_in_use" as const });
+    }
+    if ([...this.devices.values()].filter((d) => d.familyId === peek.familyId && !d.revokedAt).length >= 6) {
+      return Promise.resolve({ ok: false as const, reason: "device_limit" as const });
+    }
+    this.usedChallenges.add(b64urlEncode(c.challenge));
+    this.usedCodes.add(b64urlEncode(c.codeHash));
+    const id = crypto.randomUUID();
+    this.devices.set(id, {
+      id,
+      familyId: peek.familyId,
+      role: "child",
+      publicKey: c.publicKey,
+      revokedAt: null,
+      platform: c.platform,
+      securityLevel: c.securityLevel,
+      createdAt: new Date(this.nowMs),
+      lastSeenAt: null,
+    });
+    return Promise.resolve({ ok: true as const, deviceId: id, familyId: peek.familyId });
+  }
+  private pairPeekSync(c: { challenge: Bytes; codeHash: Bytes }) {
+    const ck = b64urlEncode(c.challenge);
+    const hk = b64urlEncode(c.codeHash);
+    const ch = this.challenges.find((x) => b64urlEncode(x.challenge) === ck && x.purpose === "pair");
+    if (!ch || this.usedChallenges.has(ck) || ch.expiresAt.getTime() <= this.nowMs) {
+      return { ok: false as const, reason: "challenge_invalid" as const };
+    }
+    const code = this.codes.find((x) => b64urlEncode(x.codeHash) === hk && !this.usedCodes.has(hk));
+    if (!code) return { ok: false as const, reason: "bad_code" as const };
+    return { ok: true as const, familyId: code.familyId };
+  }
   listActiveDevices(familyId: string): Promise<DeviceSummary[]> {
     return Promise.resolve(
       [...this.devices.values()].filter((d) => d.familyId === familyId && !d.revokedAt).map((d) => ({
@@ -153,6 +212,7 @@ export function fakeServices(store: FakeStore, nowMs = () => NOW): Services {
     },
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
     allowDevEnrolment: false,
+    mintSession: (id) => Promise.resolve({ tokenHash: `hash-for-${id}` }),
   };
 }
 

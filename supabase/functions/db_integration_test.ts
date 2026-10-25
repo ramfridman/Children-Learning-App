@@ -16,6 +16,7 @@ import {
 import { spec as deviceList } from "./device-list/handler.ts";
 import { spec as deviceRevoke } from "./device-revoke/handler.ts";
 import { spec as deviceEnroll } from "./device-enroll/handler.ts";
+import { spec as devicePair } from "./device-pair/handler.ts";
 import { spec as enrollChallenge } from "./enroll-challenge/handler.ts";
 import { spec as pairingCodeCreate } from "./pairing-code-create/handler.ts";
 import { spec as signedPing } from "./signed-ping/handler.ts";
@@ -224,6 +225,99 @@ Deno.test({
     await admin`delete from app.usage_counter where scope like 'challenge_%'`;
     await admin`delete from app.family where id in (select family_id from app.guardian where user_id = ${user})`;
     await admin`delete from app.dev_device_allowlist where label = 'ci'`;
+    await admin`delete from auth.users where id = ${user}`;
+    await sql.end();
+    await admin.end();
+  }
+});
+
+Deno.test({ name: "child pairing against the real tables", ignore: !adminUrl || !gatewayUrl }, async () => {
+  const admin = connect(adminUrl!);
+  const sql = connect(gatewayUrl!);
+  const store = pgStore(sql);
+  const user = crypto.randomUUID();
+  const family = crypto.randomUUID();
+  const secret = `ci-pair-${crypto.randomUUID()}`;
+  await admin`insert into auth.users (id, email) values (${user}, ${user + "@example.test"})`;
+  await admin`insert into app.family (id) values (${family})`;
+  await admin`insert into app.guardian (user_id, family_id) values (${user}, ${family})`;
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(secret)));
+  await admin`insert into app.dev_device_allowlist (label, secret_hash, expires_at)
+              values ('ci-pair', ${digest as unknown as Uint8Array}, now() + interval '1 day')`;
+  const parentPair = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, ["sign"]);
+  const parentSpki = new Uint8Array(await crypto.subtle.exportKey("spki", parentPair.publicKey));
+  const parentId = crypto.randomUUID();
+  await admin`insert into app.device (id, family_id, role, public_key, platform, attestation_kind, security_level)
+              values (${parentId}, ${family}, 'parent', ${parentSpki as unknown as Uint8Array}, 'android', 'dev_allowlist', 'dev')`;
+  const parent: TestDevice = { id: parentId, familyId: family, userId: user, priv: parentPair.privateKey };
+  try {
+    const svc = { ...fakeServices(new FakeStore(), () => Date.now()), store, allowDevEnrolment: true };
+    const h = (s: FunctionSpec) => makeHandler(s, () => svc);
+    const makeCode = async () => {
+      await admin`delete from app.usage_counter where scope = 'pairing_code'`;
+      const r = await call(h(pairingCodeCreate), parent, "pairing-code-create", {}, {
+        token: tokenFor(user, Math.floor(Date.now() / 1000) - 5),
+        ts: Date.now(),
+      });
+      return (await r.json()).code as string;
+    };
+    const pairWith = async (code: string, challenge?: string) => {
+      const kp = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, ["sign"]);
+      const spki = new Uint8Array(await crypto.subtle.exportKey("spki", kp.publicKey));
+      const ch = challenge ?? (await (await h(enrollChallenge)(
+        plainPost("enroll-challenge", { purpose: "pair" }, { "x-forwarded-for": "192.0.2.10" }),
+      )).json()).challenge;
+      const r = await callSelfSigned(h(devicePair), kp.privateKey, "device-pair", {
+        challenge: ch,
+        code,
+        public_key: b64urlEncode(spki),
+        platform: "android",
+        attestation_kind: "dev_allowlist",
+        dev_secret: secret,
+      }, { token: "", ts: Date.now() });
+      return { r, challenge: ch as string };
+    };
+
+    // Wrong codes add up on the challenge; the fifth kills it even for the right code.
+    const code = await makeCode();
+    const wrong = code === "000000" ? "000001" : "000000";
+    const first = await pairWith(wrong);
+    assert.equal(first.r.status, 401);
+    for (let i = 0; i < 4; i++) assert.equal((await pairWith(wrong, first.challenge)).r.status, 401);
+    const [counted] =
+      await admin`select failed_attempts from app.enroll_challenge where used_at is null and purpose = 'pair' and failed_attempts >= 5`;
+    assert.ok(counted, "five failed attempts recorded");
+    assert.equal(
+      (await pairWith(code, first.challenge)).r.status,
+      401,
+      "dead challenge refuses the right code",
+    );
+
+    // The right code on a fresh challenge pairs a child; the code is then spent.
+    const ok = await pairWith(code);
+    assert.equal(ok.r.status, 200);
+    const out = await ok.r.json();
+    assert.equal(out.role, "child");
+    const [row] = await admin`select role, family_id from app.device where id = ${out.device_id}`;
+    assert.equal(row.role, "child");
+    assert.equal(row.family_id, family);
+    const [spent] =
+      await admin`select used_by_device from app.pairing_code where used_by_device = ${out.device_id}`;
+    assert.ok(spent, "the code records which device used it");
+    assert.equal((await pairWith(code)).r.status, 401, "a spent code does not work twice");
+
+    // Fill the family (parent + 5 children = 6) and the seventh is refused by the trigger.
+    for (let i = 0; i < 4; i++) assert.equal((await pairWith(await makeCode())).r.status, 200);
+    const last = await makeCode();
+    assert.equal((await pairWith(last)).r.status, 409);
+    const [stillLive] =
+      await admin`select 1 as live from app.pairing_code where used_at is null and family_id = ${family}`;
+    assert.ok(stillLive, "a refused join leaves the code unused");
+  } finally {
+    await admin`delete from app.usage_counter where scope in ('pairing_code', 'pair_try', 'pair_global') or scope like 'challenge_%'`;
+    await admin`delete from app.enroll_challenge where purpose = 'pair'`;
+    await admin`delete from app.family where id = ${family}`;
+    await admin`delete from app.dev_device_allowlist where label = 'ci-pair'`;
     await admin`delete from auth.users where id = ${user}`;
     await sql.end();
     await admin.end();

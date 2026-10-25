@@ -10,6 +10,12 @@ import type { DeviceSummary, RevokeReason, Store } from "./store.ts";
 const bytes = (v: unknown): Bytes => new Uint8Array(v as ArrayLike<number>) as Bytes;
 const buf = (b: Uint8Array) => Buffer.from(b);
 
+class RollbackReason extends Error {
+  constructor(readonly reason: "bad_code") {
+    super(reason);
+  }
+}
+
 export type Sql = ReturnType<typeof postgres>;
 
 export function connect(url: string): Sql {
@@ -140,6 +146,68 @@ export function pgStore(sql: Sql): Store {
         });
       } catch (err) {
         const code = (err as { code?: string; message?: string }).code;
+        const message = (err as { message?: string }).message ?? "";
+        if (code === "P0001" && message.includes("device_limit")) {
+          return { ok: false as const, reason: "device_limit" as const };
+        }
+        if (code === "23505") return { ok: false as const, reason: "key_in_use" as const };
+        throw err;
+      }
+    },
+
+    async pairPeek(c) {
+      return await sql.begin(async (tx) => {
+        const [ch] = await tx`
+          select id from app.enroll_challenge
+           where challenge = ${buf(c.challenge)} and purpose = 'pair' and used_at is null
+             and expires_at > now() and failed_attempts < 5
+           for update`;
+        if (!ch) return { ok: false as const, reason: "challenge_invalid" as const };
+        const [code] = await tx`
+          select p.family_id, (select g.user_id from app.guardian g where g.family_id = p.family_id
+                                order by g.created_at limit 1) as guardian
+            from app.pairing_code p
+           where p.code_hash = ${buf(c.codeHash)} and p.used_at is null and p.burned_at is null
+             and p.expires_at > now()`;
+        if (!code || !code.guardian) {
+          await tx`update app.enroll_challenge set failed_attempts = failed_attempts + 1 where id = ${ch.id}`;
+          return { ok: false as const, reason: "bad_code" as const };
+        }
+        return {
+          ok: true as const,
+          familyId: code.family_id as string,
+          guardianUserId: code.guardian as string,
+        };
+      });
+    },
+
+    async pairComplete(c) {
+      try {
+        return await sql.begin(async (tx) => {
+          const [ch] = await tx`
+            update app.enroll_challenge set used_at = now()
+             where challenge = ${buf(c.challenge)} and purpose = 'pair' and used_at is null
+               and expires_at > now() and failed_attempts < 5
+            returning id`;
+          if (!ch) return { ok: false as const, reason: "challenge_invalid" as const };
+          const [code] = await tx`
+            update app.pairing_code set used_at = now()
+             where code_hash = ${buf(c.codeHash)} and used_at is null and burned_at is null
+               and expires_at > now()
+            returning id, family_id`;
+          if (!code) throw new RollbackReason("bad_code");
+          const [d] = await tx`
+            insert into app.device (family_id, role, public_key, platform, attestation_kind, security_level, app_version)
+            values (${code.family_id}, 'child', ${
+            buf(c.publicKey)
+          }, ${c.platform}, ${c.attestationKind}, ${c.securityLevel}, ${c.appVersion})
+            returning id`;
+          await tx`update app.pairing_code set used_by_device = ${d.id} where id = ${code.id}`;
+          return { ok: true as const, deviceId: d.id as string, familyId: code.family_id as string };
+        });
+      } catch (err) {
+        if (err instanceof RollbackReason) return { ok: false as const, reason: err.reason };
+        const code = (err as { code?: string }).code;
         const message = (err as { message?: string }).message ?? "";
         if (code === "P0001" && message.includes("device_limit")) {
           return { ok: false as const, reason: "device_limit" as const };

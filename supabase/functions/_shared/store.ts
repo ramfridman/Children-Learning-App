@@ -62,6 +62,30 @@ export interface Store {
     | { ok: false; reason: "device_limit" | "key_in_use" | "no_such_device" }
   >;
 
+  /**
+   * Pairing step 1: is the challenge live, and does the code match a live pairing code?
+   * A wrong code adds one to the challenge's failed attempts; at 5 the challenge is dead.
+   */
+  pairPeek(c: { challenge: Bytes; codeHash: Bytes }): Promise<
+    { ok: true; familyId: string; guardianUserId: string } | {
+      ok: false;
+      reason: "challenge_invalid" | "bad_code";
+    }
+  >;
+  /** Pairing step 2, atomically: burn the challenge and the code and add the child device. */
+  pairComplete(c: {
+    challenge: Bytes;
+    codeHash: Bytes;
+    publicKey: Bytes;
+    platform: "android" | "ios";
+    attestationKind: "key_attestation" | "app_attest" | "dev_allowlist";
+    securityLevel: "strongbox" | "tee" | "secure_enclave" | "dev";
+    appVersion: string | null;
+  }): Promise<
+    | { ok: true; deviceId: string; familyId: string }
+    | { ok: false; reason: "challenge_invalid" | "bad_code" | "device_limit" | "key_in_use" }
+  >;
+
   // Family management
   listActiveDevices(familyId: string): Promise<DeviceSummary[]>;
   /** False if the device is not an active device of that family. */
