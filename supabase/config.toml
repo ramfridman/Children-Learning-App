@@ -417,8 +417,8 @@ enabled = true
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":180,\"commaStyle\":\"trailing\"}"
 
 # Every function checks the session token itself (JWKS) and the device signature, so the platform's
-# own JWT gate is off: the new publishable key is not a JWT and would be refused by it. The
-# `verify_jwt` experiment on the live project (M0 task C8) records the result in docs/PLAN.md.
+# own JWT gate is off. The live-project experiment (M0 task C8, result in docs/PLAN.md) showed the
+# gate works with this project's keys but only filters requests that carry no key at all.
 [functions.signed-ping]
 verify_jwt = false
 [functions.app-config]
