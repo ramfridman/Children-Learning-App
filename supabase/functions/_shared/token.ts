@@ -35,7 +35,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 export async function verifyAccessToken(
   bearer: string,
   cfg: TokenConfig,
-): Promise<{ userId: string } | null> {
+): Promise<{ userId: string; issuedAt: number | null } | null> {
   try {
     const { payload } = await jwtVerify(bearer, cfg.keys, {
       issuer: cfg.issuer,
@@ -48,7 +48,7 @@ export async function verifyAccessToken(
     if (payload.role !== "authenticated") return null;
     if (typeof payload.sub !== "string" || !UUID.test(payload.sub)) return null;
     if (payload.is_anonymous === true) return null;
-    return { userId: payload.sub };
+    return { userId: payload.sub, issuedAt: typeof payload.iat === "number" ? payload.iat : null };
   } catch {
     return null;
   }

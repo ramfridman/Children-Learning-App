@@ -33,7 +33,7 @@ export interface DeviceRecord {
 export interface AuthDeps {
   nowMs(): number;
   /** Verifies the bearer token against the project's signing keys. Null if it is not valid. */
-  verifyToken(bearer: string): Promise<{ userId: string } | null>;
+  verifyToken(bearer: string): Promise<{ userId: string; issuedAt: number | null } | null>;
   getDevice(id: string): Promise<DeviceRecord | null>;
   isGuardian(userId: string, familyId: string): Promise<boolean>;
   /** Stores the nonce; returns false if this device has already used it. */
@@ -42,6 +42,7 @@ export interface AuthDeps {
 
 export interface Authenticated {
   userId: string;
+  issuedAt: number | null;
   device: DeviceRecord;
   body: Bytes;
 }
@@ -120,7 +121,7 @@ export async function authenticate(
   // 4. Role.
   if (!allowedRoles.includes(device.role)) throw new GatewayError("forbidden", "role_not_allowed");
 
-  return { userId: claims.userId, device, body };
+  return { userId: claims.userId, issuedAt: claims.issuedAt, device, body };
 }
 
 /**

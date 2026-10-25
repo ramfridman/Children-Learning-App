@@ -42,7 +42,9 @@ async function world(over: { role?: Role; revoked?: boolean; guardian?: boolean;
   const deps: AuthDeps = {
     nowMs: () => NOW,
     verifyToken: (b) =>
-      Promise.resolve(over.tokenOk === false || b === "invalidtoken00" ? null : { userId: USER }),
+      Promise.resolve(
+        over.tokenOk === false || b === "invalidtoken00" ? null : { userId: USER, issuedAt: NOW - 5 },
+      ),
     getDevice: (id) => Promise.resolve(id === DEVICE ? device : null),
     isGuardian: (u, f) => Promise.resolve((over.guardian ?? true) && u === USER && f === FAMILY),
     recordNonce: (d, n) => {

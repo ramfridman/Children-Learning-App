@@ -39,9 +39,9 @@ function token(
 }
 
 Deno.test("a valid ES256 or RS256 token yields the user id", async () => {
-  assert.deepEqual(await verifyAccessToken(await token(), cfg), { userId: USER });
+  assert.deepEqual(await verifyAccessToken(await token(), cfg), { userId: USER, issuedAt: NOW - 10 });
   const t = await token({ alg: "RS256", kid: "rs1", key: rs.privateKey });
-  assert.deepEqual(await verifyAccessToken(t, cfg), { userId: USER });
+  assert.deepEqual(await verifyAccessToken(t, cfg), { userId: USER, issuedAt: NOW - 10 });
 });
 
 Deno.test("expired, wrong issuer, wrong audience, wrong key, unknown kid: all refused", async () => {
