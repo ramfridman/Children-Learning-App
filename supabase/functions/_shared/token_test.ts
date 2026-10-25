@@ -1,4 +1,4 @@
-import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from "jose";
+import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT } from "npm:jose@6.2.13";
 import { assert } from "./testassert.ts";
 import { type TokenConfig, verifyAccessToken } from "./token.ts";
 

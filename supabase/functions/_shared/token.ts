@@ -1,7 +1,7 @@
 // Session-token verification, done inside the function against the project's published signing
 // keys (JWKS). We never trust the platform's own gate alone, and we accept only asymmetric
 // algorithms, so an attacker cannot present an HMAC token "signed" with a public key.
-import { createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from "jose";
+import { createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from "npm:jose@6.2.13";
 
 export const ACCEPTED_ALGORITHMS = ["ES256", "RS256"];
 

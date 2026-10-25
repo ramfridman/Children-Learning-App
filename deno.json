@@ -1,11 +1,4 @@
 {
-  "imports": {
-    "jose": "npm:jose@6.2.13",
-    "postgres": "npm:postgres@3.4.9",
-    "cbor-x": "npm:cbor-x@1.6.8",
-    "@peculiar/x509": "npm:@peculiar/x509@2.2.0",
-    "reflect-metadata": "npm:reflect-metadata@0.2.2"
-  },
   "fmt": {
     "lineWidth": 110,
     "include": [
@@ -17,7 +10,12 @@
     "include": [
       "supabase/functions/",
       "tools/"
-    ]
+    ],
+    "rules": {
+      "exclude": [
+        "no-import-prefix"
+      ]
+    }
   },
   "test": {
     "include": [

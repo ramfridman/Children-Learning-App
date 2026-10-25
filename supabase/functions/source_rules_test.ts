@@ -60,3 +60,16 @@ Deno.serve(makeHandler(spec, realServices));
   const listed = [...config.matchAll(/^\[functions\.([a-z0-9-]+)\]/gm)].map((m) => m[1]).sort();
   assert.deepEqual(listed, [...names].sort(), "config.toml lists exactly the function folders");
 });
+
+Deno.test("npm packages are imported only by exact version, one version per package", async () => {
+  const seen = new Map<string, Set<string>>();
+  for (const u of await sourceFiles()) {
+    const text = await Deno.readTextFile(u);
+    for (const m of text.matchAll(/["']npm:((?:@[\w.-]+\/)?[\w.-]+)(?:@([^"'\/]+))?[^"']*["']/g)) {
+      assert.match(m[2] ?? "", /^\d+\.\d+\.\d+$/, `${rel(u)}: ${m[0]} must pin an exact version`);
+      seen.set(m[1], (seen.get(m[1]) ?? new Set()).add(m[2]));
+    }
+  }
+  assert.deepEqual([...seen.keys()].sort(), ["@peculiar/x509", "jose", "postgres", "reflect-metadata"]);
+  for (const [name, versions] of seen) assert.equal(versions.size, 1, `${name} has more than one version`);
+});

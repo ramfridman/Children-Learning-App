@@ -4,8 +4,8 @@
 //
 // Not yet checked here: Google's revocation list for individual attestation keys
 // (https://android.googleapis.com/attestation/status). Tracked in docs/PLAN.md.
-import "reflect-metadata";
-import * as x509 from "@peculiar/x509";
+import "npm:reflect-metadata@0.2.2";
+import * as x509 from "npm:@peculiar/x509@2.2.0";
 import { type Bytes, sha256 } from "../b64.ts";
 import { children, DerError, expect, readTlv, smallInt, type Tlv } from "../der.ts";
 import { GOOGLE_ATTESTATION_ROOTS } from "../trust/google_roots.ts";

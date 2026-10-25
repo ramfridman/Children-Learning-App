@@ -1,8 +1,8 @@
 // Test-only: builds a structurally faithful Android Key Attestation chain (root, intermediate, leaf
 // carrying the KeyDescription extension) so every refusal can be exercised. Real Google chains are
 // proven on a real phone in Phase G.
-import "reflect-metadata";
-import * as x509 from "@peculiar/x509";
+import "npm:reflect-metadata@0.2.2";
+import * as x509 from "npm:@peculiar/x509@2.2.0";
 import type { Bytes } from "../b64.ts";
 import { KEY_DESCRIPTION_OID } from "./android.ts";
 

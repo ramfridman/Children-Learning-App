@@ -2,7 +2,7 @@
 // cannot see the closed `app` schema, so this direct connection is the only road to it.
 // Every statement is parameterised; nothing from a request is ever pasted into SQL text.
 import { Buffer } from "node:buffer";
-import postgres from "postgres";
+import postgres from "npm:postgres@3.4.9";
 import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
 import type { DeviceSummary, RevokeReason, Store } from "./store.ts";
