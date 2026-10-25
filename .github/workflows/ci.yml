@@ -73,6 +73,7 @@ jobs:
           deno-version: 2.9.6
       - name: Run the gateway against the real database, as the limited gateway role
         env:
+          REQUIRE_DB_TESTS: "1"
           # Local test stack only; these are the stack's throwaway defaults, not secrets.
           TEST_ADMIN_DB_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
           TEST_GATEWAY_DB_URL: postgresql://app_gateway:ci-only-gateway-pass@127.0.0.1:54322/postgres
