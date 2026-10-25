@@ -57,11 +57,22 @@ $testDir = Join-Path ([System.IO.Path]::GetTempPath()) ("gl-selftest-" + [guid]:
 New-Item -ItemType Directory -Path $testDir | Out-Null
 $fakeKey = 'sk-ant-' + 'api03-' + ('A' * 40) + '_fakefakefakefake'
 Set-Content -Path (Join-Path $testDir 'canary.txt') -Value "ANTHROPIC_API_KEY=$fakeKey"
-& $gl dir --no-banner --config (Join-Path $repoRoot '.gitleaks.toml') $testDir 2>&1 | Out-Null
-$caught = ($LASTEXITCODE -ne 0)
+# gitleaks writes progress lines to stderr. Windows PowerShell treats any stderr line from a
+# program as an error when ErrorActionPreference is Stop, so run the scans with it relaxed
+# and judge only by the exit code (0 = nothing found, non-zero = a leak was found).
+function Invoke-Scan([string]$dir) {
+  $previous = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    & $gl dir --no-banner --config (Join-Path $repoRoot '.gitleaks.toml') $dir 2>$null | Out-Null
+    return $LASTEXITCODE
+  } finally {
+    $ErrorActionPreference = $previous
+  }
+}
+$caught = ((Invoke-Scan $testDir) -ne 0)
 Set-Content -Path (Join-Path $testDir 'canary.txt') -Value 'nothing secret here'
-& $gl dir --no-banner --config (Join-Path $repoRoot '.gitleaks.toml') $testDir 2>&1 | Out-Null
-$clean = ($LASTEXITCODE -eq 0)
+$clean = ((Invoke-Scan $testDir) -eq 0)
 Remove-Item -Recurse -Force $testDir
 if ($caught -and $clean) {
   Write-Host 'Self-test passed: a fake key is blocked and a clean file passes.' -ForegroundColor Green
