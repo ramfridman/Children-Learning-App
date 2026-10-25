@@ -10,6 +10,9 @@ List<File> dartFiles(String dir) =>
         .where((File f) => f.path.endsWith('.dart'))
         .toList();
 
+/// Forward slashes on every platform, so the file-name checks below also work on Windows.
+String slashed(File f) => f.path.replaceAll(r'\', '/');
+
 void main() {
   final List<File> lib = dartFiles('lib');
 
@@ -27,7 +30,7 @@ void main() {
   test('print and debugPrint are used only by the log helper', () {
     final RegExp printing = RegExp(r'\b(debugPrint|print)\s*\(');
     for (final File f in lib) {
-      if (f.path.endsWith('core/log.dart')) continue;
+      if (slashed(f).endsWith('core/log.dart')) continue;
       expect(printing.hasMatch(f.readAsStringSync()), isFalse, reason: f.path);
     }
   });
@@ -39,7 +42,7 @@ void main() {
         'source_rules_test.dart',
         'config_and_hosts_test.dart',
         'core/config.dart',
-      ].any(f.path.endsWith);
+      ].any(slashed(f).endsWith);
       if (skipped) {
         continue;
       }
