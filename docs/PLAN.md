@@ -395,7 +395,7 @@ When a hero is the child's companion, the hero animates the "try another way" ex
 - **Every character meets one contract.** The same eight states (idle, talk, listen, think, encourage, celebrate, surprised, sleepy), the same 10 Hebrew mouth shapes, a 512×512 frame with a fixed baseline, and named anchor points for speech bubbles and held objects.
 - **No clash with colour lessons.** Characters keep large areas away from the ten teaching colours and switch to a muted skin during Colours lessons.
 - **The child picks a favourite.** After the first adventure, the child chooses a companion on Friends' Beach. It becomes the guide everywhere: it walks beside them on the map, teaches every lesson, stars in celebrations and presents trophies, and it speaks every line, including the tutor's, in its own ElevenLabs voice.
-- **Your own characters arrive as lite packs.** A lite pack is seven still images on a 1024×1024 transparent canvas (idle, mouth closed, mouth open, celebrate, think, listen, encourage) plus a short manifest with the Hebrew name and a voice choice. The app animates them with breathing, squash-and-stretch hops, a moving mouth and a listening lean. This is how the Marvel and Disney characters you named would come in for family use; the packs are flagged personal-use and blocked from any store build automatically.
+- **Your own characters arrive as lite packs.** A lite pack is seven still images on a 1024×1024 transparent canvas (idle, mouth closed, mouth open, celebrate, think, listen, encourage) plus a short manifest with the Hebrew name and a voice choice. The app animates them with breathing, squash-and-stretch hops, a moving mouth and a listening lean. This is how characters made for family use only come in. The packs are flagged personal-use, are never bundled in a build, and are blocked from any store build automatically. A parent device uploads a family pack to private family storage, and that family's devices download it with short-lived signed links.
 
 &#91;image: The two family characters: the hero for your son and the starlight fox-dragon for your daughter, in all seven poses\]
 
@@ -660,9 +660,9 @@ Build v1 as a local-first Flutter app with one small Supabase backend. Where thi
 - **What a child device may do:** call the tutor, sync learning and settings events, create alerts, and download family packs. Reading alerts or the tutor log, deleting data, revoking or approving devices, and registering characters all need a parent device.
 - **A PIN on every device with a child profile.** The arithmetic gate is only the first step in front of it.
 - **Enrolment with attestation.** `enroll-challenge` gives a 32-byte challenge, single use, valid 5 minutes. The device makes its hardware key and proves it:
-  - **iOS:** App Attest over the SHA-256 of the challenge. The server checks the attestation's certificate chain to Apple's App Attest root, that the app id hash is the SHA-256 of team id plus bundle id, the `appattest` environment, and the challenge.
+  - **iOS:** App Attest over SHA-256(challenge ‖ the signing key's SPKI bytes), so the attestation is bound to the key that signs requests. The server checks the attestation's certificate chain to Apple's App Attest root, that the app id hash is the SHA-256 of team id plus bundle id, the `appattest` environment, and the challenge.
   - **Android:** Key Attestation of the P-256 key itself, with the challenge set as its attestation challenge. The server checks the chain to Google's hardware attestation root, a security level of TEE or StrongBox, the package name, the signing certificate digest, and the challenge. This works for sideloaded builds and needs no Google API.
-  - **Emulators and simulators** can enrol only through a `dev_device_allowlist`, in the `dev` flavour.
+  - **Emulators and simulators** can enrol only through a `dev_device_allowlist`, in the `dev` flavour. The server reads the allowlist only when the function setting `ALLOW_DEV_ENROLMENT=true`, which is on in the local stack and off in the cloud project.
 - **Device lifecycle.** At most 6 active devices; enrolment offers "replace this device", which revokes the old one; devices unseen for 90 days are revoked automatically. On a fresh install, the app deletes any Keychain items left from an earlier install before doing anything else, because iOS keeps them after an uninstall.
 
 ### Signed requests: the exact format
@@ -694,12 +694,13 @@ Every call is an HTTPS POST to `https://<project>.supabase.co/functions/v1/<name
 | `family-pack-url` | Any device | pack id | signed links valid 5 minutes | none |
 | `push-token` | Parent device | APNs or FCM token | done | none |
 | `app-config` | Any device | none | kill switches, minimum app version, limits | cached 15 minutes |
+| `signed-ping` | Any device (a check, used by the dev harness and health checks) | none | device id, role | none |
 | `child-delete`, `family-delete`, `data-export` | Parent device; `family-delete` also needs a sign-in under 10 minutes ago | ids | done or an export file | none |
 | `content-publish` | Your computer only, with a separate publish secret | a signed pack's item index | done | none |
 
 ### Server data model
 
-The app's tables live in a schema called `app` that the Data API doesn't expose, and the `anon` and `authenticated` roles have no grants on it. So a session token can't read or change any table directly; only the functions can, and they filter every query by the family id taken from the verified token and device. Row Level Security stays on as a second layer.
+The app's tables live in a schema called `app` that the Data API doesn't expose, and the `anon` and `authenticated` roles have no grants on it. So a session token can't read or change any table directly; only the functions can, and they filter every query by the family id taken from the verified token and device. Row Level Security stays on as a second layer. Because the Data API cannot see an unexposed schema, even with the secret key, functions reach `app` through a direct Postgres connection as a dedicated least-privilege role (`app_gateway`, via the pooler). The Supabase client with the secret key is used only for the Auth admin API.
 
 | Table | Key fields | Kept for |
 | --- | --- | --- |
@@ -795,7 +796,7 @@ Nothing a child does needs the network. Only four things ever cross it: content 
 **Seven rules the code must follow:**
 
 1. **Secrets never ship.** The app contains only the Supabase URL, the publishable key and the public key that checks content signatures. The Anthropic, ElevenLabs and Supabase secret keys live only in Supabase secrets and your password manager.
-2. **Least data.** The model and the voice service never receive a name, audio, a device identifier, or anything the child typed or said. v1 has no free-text path from the child to the model.
+2. **Least data.** The model never receives a name, audio, a device identifier, or anything the child typed or said; it sees placeholders (`{child}`, `{companion}`) that are replaced after the reply passes the validator. The voice service never receives audio or a device identifier. It may receive a child's first name, spelled and vocalised by a parent, inside a line that is being voiced (owner decision, 2026-10-25). v1 has no free-text path from the child to the model.
 3. **The server writes the prompt.** The device sends ids and enums. The gateway looks up the item's text in its own copy of the signed content, so nothing the device sends becomes prompt text.
 4. **Everything from outside is untrusted until checked.** That covers model output, content packs, imported images, sync events and push messages.
 5. **Fail safe.** Any failed check means RuleTutor and recorded voice; the child sees no error and loses nothing.
@@ -812,7 +813,7 @@ The two most likely harms at family scale are a leaked vendor key running up a b
 
 | Threat | Likely / impact | Controls in v1 |
 | --- | --- | --- |
-| A vendor API key leaks from the repo, a build, a log or a screenshot | Medium / high | Keys only in Supabase secrets; secret scanning before every commit and on GitHub push; ElevenLabs key limited to text-to-speech with a credit limit; Anthropic key in its own workspace with a monthly spend limit; rotation runbook |
+| A vendor API key leaks from the repo, a build, a log or a screenshot | Medium / high | Keys only in Supabase secrets; `gitleaks` before every commit (a hook that refuses the commit if the scanner is missing) and in CI over the full Git history, with a self-test that plants fake keys (GitHub's own secret scanning is not available on a free account's private repo); ElevenLabs key limited to text-to-speech with a credit limit; Anthropic key in its own workspace with a monthly spend limit; rotation runbook |
 | Someone extracts the publishable key and uses the gateway as a free AI or voice service | Medium / high | Every function needs a session token and a request signed by an enrolled, attested device; voice only for lines the gateway just validated; caps per child, per family per day, and at the provider; kill switches |
 | A session token is used to read tables directly, skipping the gateway | Medium / high | App tables sit in a schema the Data API doesn't expose, with no grants for signed-in users; a test proves the Data API returns nothing; RLS as a second layer |
 | A child, or anyone holding a child's tablet, gets into the parent area | High / medium | PIN on every device with a child profile, with growing lock-outs; child-role devices can't read alerts or the tutor log, delete data or manage devices; the parent area locks when left |
@@ -870,7 +871,7 @@ Each control below is a build requirement with a check, not advice. The build pl
 - **Pack manifest.** A SHA-256 for every file, the pack version and the minimum app version. The app refuses a version lower than the one installed, and unpacks safely so no path can land outside the pack folder.
 - **Publishing.** `pack_builder` uploads the signed pack to R2 and its item index to `content_item` through `content-publish`, using a publish secret that exists only on your computer.
 - **Dependencies.** Lock files committed; Dependabot and an OSV vulnerability scan in CI; every new package reviewed before it is added; the speech model checked against a pinned SHA-256.
-- **Repository.** Private; branch protection on `main` with required checks; GitHub secret scanning with push protection, plus a `gitleaks` pre-commit hook.
+- **Repository.** Private; branch protection on `main` with required checks; a fail-closed `gitleaks` pre-commit hook and a full-history `gitleaks` scan in CI. GitHub secret scanning with push protection needs a paid plan on private repositories; switch it on if the plan changes.
 
 **Secrets and accounts**
 
@@ -917,7 +918,7 @@ On a failure the gateway retries once with the reason, but only if at least 1.5 
 | Risk | How it could happen here | Control |
 | --- | --- | --- |
 | LLM01 Prompt injection | Text from a device or a pack reaches the prompt | Ids only from the device; the server builds the prompt from signed content; names are data, limited to Hebrew letters |
-| LLM02 Sensitive information disclosure | Child data reaches the model | No name, audio, transcript or device id ever sent |
+| LLM02 Sensitive information disclosure | Child data reaches the model | No name (placeholders only), audio, transcript or device id ever sent to the model |
 | LLM03 Supply chain | A changed model or dependency | Pinned model id; locked dependencies; a re-run of the evaluation suite before any change |
 | LLM04 Data and model poisoning | Bad content or examples steer replies | Content is signed and reviewed; no fine-tuning; no learning from live chats |
 | LLM05 Improper output handling | Output treated as code or markup | Output is plain text for voice and a caption only, never HTML, Markdown or commands |
@@ -992,7 +993,7 @@ One design rule set covers every regime below. Process on the device, collect th
 
 - A child profile holds only a nickname, avatar, age range and grammatical gender. No date of birth, photo, school or location.
 - No child audio is stored; recognition happens on the device and the audio is released immediately.
-- The tutor never receives the child's name and never asks personal questions.
+- The model never receives the child's name (placeholders only), and the tutor never asks personal questions.
 - No chat, user-generated content, public profiles or push notifications to children.
 - No dark patterns: no countdowns, loss framing, streak pressure or sad-character exits.
 - The microphone opens only when the child taps it, with a visible listening indicator.
@@ -1128,7 +1129,7 @@ Also create a free Firebase project (for push alerts to your phone only), and tu
 5. **Android Studio**, full version, which brings Java with it. In **Tools → SDK Manager** install the Android SDK Platform that `flutter doctor` asks for (the plan targets API 36), plus Command-line Tools, Build-Tools, Platform-Tools and the Emulator.
 6. **Node.js LTS**, for the Supabase CLI and Edge Functions. Check: `node -v`.
 7. **Docker Desktop**, so Supabase can run locally while you develop.
-8. **Supabase CLI**: `npm install -g supabase`, then `supabase login`.
+8. **Supabase CLI**: pinned in the repository as a dev dependency. Run `npm ci`, then `npx supabase login`. A global `npm install -g supabase` is not supported by Supabase.
 
 ### Step 3 — Check the toolchain
 
@@ -1143,7 +1144,7 @@ Also create a free Firebase project (for push alerts to your phone only), and tu
 
 ### Step 5 — Create the project
 
-1. Clone your GitHub repository into `C:\dev\nitznutz` and open it in VS Code.
+1. Clone your GitHub repository into a short path outside OneDrive (this project uses `D:\Children-Learning-App`) and open it in VS Code.
 2. Ask Claude Code to scaffold the app from this plan: the Flutter app, the folder structure, and the packages (Riverpod, Drift, flutter\_soloud, rive, sherpa\_onnx). Then `flutter run` should show the app on the emulator.
 3. `supabase init` and `supabase start` start the local database. Then `supabase link` connects it to your cloud project.
 4. Store your keys as Supabase secrets, never in the app: `supabase secrets set ANTHROPIC_API_KEY=... ELEVENLABS_API_KEY=...`.
@@ -1176,7 +1177,7 @@ Build in this order. Security foundations come first because they are cheap to a
 
 | # | Milestone | What gets built | Done when |
 | --- | --- | --- | --- |
-| M0 | Foundations | Repo layout; CI with lint, tests, `gitleaks` and the OSV scan; Supabase project with the unexposed app schema, RLS and pgTAP tests; the shared token and signed-request checks; device enrolment and pairing, tested on a real iPhone through TestFlight and a real Android device; secrets set; two-factor sign-in on every account | CI is green; every cross-family and direct-access test fails as it should; a real iPhone and Android device enrol and make a signed call; no secret anywhere in the Git history |
+| M0 | Foundations | Repo layout; CI with lint, tests, `gitleaks` and the OSV scan; Supabase project with the unexposed app schema, RLS and pgTAP tests; the shared token and signed-request checks; device enrolment and pairing, tested on a real Android device first and on a real iPhone or iPad through TestFlight at the iOS gate (see `docs/milestones/M0.md`); secrets set; two-factor sign-in on every account | CI is green; every cross-family and direct-access test fails as it should; a real Android device enrols and makes a signed call, and later a real iPhone or iPad does the same at the iOS gate; no secret anywhere in the Git history |
 | M1 | App shell and design system | Flutter app reading `tokens.json`; right-to-left layout; Heebo and Secular One; phone and tablet layouts; separate child and parent areas; parent gate and PIN; encrypted local database | Screenshots match boards 10 and 13; PIN lock-outs work; the database file can't be opened without the key |
 | M2 | Content system and first activity | JSON schemas and the validator; the pack builder that signs packs; pack install with signature checks; the count-and-tap template with misconception tags | The butterflies lesson plays end to end by tap; a pack with one changed byte is refused |
 | M3 | Learning engine | Skill graph, mastery and memory model, misconception evidence, representation switching, session builder, and the simulator | The simulator finds planted gaps within 3 probes in at least 90% of cases; the engine imports no UI code |
@@ -1220,14 +1221,14 @@ The two biggest risks are recognising young children's Hebrew speech, and produc
 | --- | --- | --- | --- |
 | 1 | App name | נִיצְנוּץ (Nitznutz), אִי־פֶּלֶא, הוֹפְּלָה, נִיצִי, סַקְרָנִיָּה | Decided for now: keep the working name נִיצְנוּץ and rebrand later; names live in one config file so a rebrand touches no code |
 | 2 | Voices for the core lines | One narrator (Nitzi's actor), every character records them, or text-to-speech per character | Decided: every character has its own ElevenLabs voice and speaks all lines; the chosen companion is the guide everywhere |
-| 3 | The AI tutor's voice, and saying the child's name | Synthetic voice, or a consented clone of Nitzi's actor; name spoken or shown on screen only | Decided: ElevenLabs. Synthetic or actor clone still open; name on screen until a written consent contract exists |
+| 3 | The AI tutor's voice, and saying the child's name | Synthetic voice, or a consented clone of Nitzi's actor; name spoken or shown on screen only | Decided: ElevenLabs. Synthetic or actor clone still open. The child's first name is spoken in lines (owner decision, 2026-10-25); the model only ever sees a placeholder, and a parent reviews the name's vocalised spelling. A consent contract is still needed before any actor clone |
 | 4 | Voice answers for ages 3–4 at launch | Yes, limited, or not yet | Decide from the speech evaluation data after the discovery phase |
 | 5 | Band C at launch | Full grade 3, or end of grade 2 plus selected grade 3 skills | End of grade 2 plus unit fractions and 10×10 facts; the rest of grade 3 as an update |
-| 6 | School conventions | Decided: division as ÷; = read as שָׁוֶה; × read as כָּפוּל | Use כָּפוּל, the common school word |
+| 6 | School conventions | Decided: division as ÷ by default, with `:` selectable in app settings (2026-10-25); = read as שָׁוֶה; × read as כָּפוּל | Use כָּפוּל, the common school word |
 | 7 | Direction of pattern rows and story strips | Right-to-left (Hebrew reading order) or left-to-right | Right-to-left, confirmed in child tests |
 | 8 | Parent alert when a child says something worrying | Content-free alert, or none | Decided: yes, alerts go to the parent (see Parent controls, analytics & alerts) |
 | 9 | "Beat your own record" games in Band C | Include for durable facts only, or none | Include, off by default, with a parent switch |
-| 10 | Franchise characters if you go commercial | License them (e.g. from Disney), or original characters only | Original characters for any store release; personal packs stay family-only |
+| 10 | Franchise characters if you go commercial | License them from the rights holder, or original characters only | Original characters for any store release; personal packs stay family-only |
 | 11 | Lite-pack import for other parents | Personal builds only, or a "make your own character" feature for everyone | Personal builds only; opening it needs moderation and an IP policy |
 | 12 | Launch markets | Israel only, or Israel plus Hebrew-speaking families abroad | Israel first; abroad turns US and EU child-privacy rules into active obligations |
 | 13 | App-store age band | Kids Category "5 and under" or "6–8", one app or two | One app for all bands; choose the listing band at submission, since both carry the same Kids Category rules |

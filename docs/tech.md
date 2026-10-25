@@ -1460,7 +1460,7 @@ Assumptions:
 10. **Launch markets:** Israel only, or Israel plus the diaspora. The latter turns COPPA and GDPR from preparation into active obligations.
 11. **Phone orientation** (Design). Tablets must support both.
 12. **Business model details** (trial, family plan, free content). These affect pack gating only.
-13. **Licensed characters:** whether to pursue a licence (e.g. with Disney) for any franchise characters before a commercial launch, or launch with original characters only. Until a licence is signed, such characters exist only as owner-supplied personal lite packs, excluded from store builds. Needs the owner and counsel; it affects budget, and possibly the tutor (licensors often bar synthetic voices or AI dialogue).
+13. **Licensed characters:** whether to pursue a licence from the rights holder for any franchise characters before a commercial launch, or launch with original characters only. Until a licence is signed, such characters exist only as owner-supplied personal lite packs, excluded from store builds. Needs the owner and counsel; it affects budget, and possibly the tutor (licensors often bar synthetic voices or AI dialogue).
 14. **Personal-pack capability in production:** keep lite-pack import limited to dev/personal builds (recommended), or offer it to all parents as a "make your own character" feature. The latter needs content moderation and an IP policy for user uploads.
 15. **Retention model:** FSRS-style (default) vs half-life regression, once enough delayed-check data exists to compare them on our learners.
 16. **Explain-back in Band B:** pilot or not, depending on ASR results for 5–6-year-olds.
