@@ -1,0 +1,22 @@
+name: fetch-trust-roots
+
+# Manual only. Downloads the root certificates Google publishes for Android Key Attestation
+# (over TLS, from Google) and prints them with their fingerprints, so a person can compare the
+# fingerprints with Google's documentation before they are committed to supabase/functions/_shared/trust/.
+# Nothing here is a secret, and nothing is written back to the repository.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  google:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Download and print the Google attestation roots
+        run: bash tools/ci/fetch-google-roots.sh
