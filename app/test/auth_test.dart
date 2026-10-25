@@ -17,11 +17,8 @@ AuthClient authFor(Recorder rec, FixedClock clock) => AuthClient(
   clock: clock,
 );
 
-http.Response session(String access, String refresh, {int expiresIn = 3600}) => jsonReply(<String, Object?>{
-  'access_token': access,
-  'refresh_token': refresh,
-  'expires_in': expiresIn,
-});
+http.Response session(String access, String refresh, {int expiresIn = 3600}) =>
+    jsonReply(<String, Object?>{'access_token': access, 'refresh_token': refresh, 'expires_in': expiresIn});
 
 void main() {
   test('the email code request never creates a user', () async {

@@ -11,13 +11,14 @@ import 'package:nitznutz/net/net_gate.dart';
 
 import 'support/fakes.dart';
 
-GatewayClient clientFor(Recorder rec, FakeKeys keys, FixedClock clock, {NetworkHosts? hosts}) => GatewayClient(
-  baseUrl: Uri.parse('https://$testHost'),
-  publishableKey: testKey,
-  gate: NetGate(client: rec.client, hosts: hosts ?? testHosts()),
-  keys: keys,
-  clock: clock,
-);
+GatewayClient clientFor(Recorder rec, FakeKeys keys, FixedClock clock, {NetworkHosts? hosts}) =>
+    GatewayClient(
+      baseUrl: Uri.parse('https://$testHost'),
+      publishableKey: testKey,
+      gate: NetGate(client: rec.client, hosts: hosts ?? testHosts()),
+      keys: keys,
+      clock: clock,
+    );
 
 void main() {
   const String deviceId = 'b6f0ed2e-0d4e-4dec-957b-0c0513f36096';
@@ -90,7 +91,11 @@ void main() {
     });
     final GatewayClient client = clientFor(rec, FakeKeys(), FixedClock(1000));
 
-    final Map<String, Object?> out = await client.call('signed-ping', <String, Object?>{}, deviceId: deviceId);
+    final Map<String, Object?> out = await client.call(
+      'signed-ping',
+      <String, Object?>{},
+      deviceId: deviceId,
+    );
 
     expect(out['ok'], true);
     expect(rec.requests.length, 2);
@@ -112,7 +117,9 @@ void main() {
   });
 
   test('error codes and statuses are passed on', () async {
-    final Recorder rec = Recorder((http.Request r) => jsonReply(<String, Object?>{'error': 'forbidden'}, status: 403));
+    final Recorder rec = Recorder(
+      (http.Request r) => jsonReply(<String, Object?>{'error': 'forbidden'}, status: 403),
+    );
     final GatewayClient client = clientFor(rec, FakeKeys(), FixedClock(1));
 
     await expectLater(

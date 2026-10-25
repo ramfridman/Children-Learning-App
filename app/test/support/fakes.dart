@@ -12,16 +12,11 @@ import 'package:nitznutz/device/secure_store.dart';
 const String testHost = 'example-project.supabase.co';
 const String testKey = 'sb_publishable_test_only';
 
-NetworkHosts testHosts() => NetworkHosts.parse(
-  '{"hosts":[{"name":"t","host":"$testHost","scheme":"https","roles":["parent"]}]}',
-);
+NetworkHosts testHosts() =>
+    NetworkHosts.parse('{"hosts":[{"name":"t","host":"$testHost","scheme":"https","roles":["parent"]}]}');
 
-AppConfig testConfig({bool dev = false}) => AppConfig.parse(
-  url: 'https://$testHost',
-  key: testKey,
-  flavor: dev ? 'dev' : 'prod',
-  hosts: testHosts(),
-);
+AppConfig testConfig({bool dev = false}) =>
+    AppConfig.parse(url: 'https://$testHost', key: testKey, flavor: dev ? 'dev' : 'prod', hosts: testHosts());
 
 class FixedClock implements Clock {
   FixedClock(this.now);

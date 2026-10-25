@@ -120,7 +120,12 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
     if (id == null) throw StateError('this phone is not enrolled');
     final Map<String, Object?> json = await ref
         .read(gatewayProvider)
-        .call('pairing-code-create', const <String, Object?>{}, deviceId: id, accessToken: await _accessToken());
+        .call(
+          'pairing-code-create',
+          const <String, Object?>{},
+          deviceId: id,
+          accessToken: await _accessToken(),
+        );
     final Object? code = json['code'];
     if (mounted) setState(() => _shownCode = code is String ? code : null);
     return 'created (shown below)';
@@ -139,10 +144,13 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
             const SizedBox(height: 16),
             _heading(DevStrings.signIn),
             _field(_email, DevStrings.email, keyboard: TextInputType.emailAddress),
-            _button(DevStrings.sendCode, () => _run('send code', () async {
-              await ref.read(authClientProvider).sendEmailCode(_email.text.trim());
-              return 'requested';
-            })),
+            _button(
+              DevStrings.sendCode,
+              () => _run('send code', () async {
+                await ref.read(authClientProvider).sendEmailCode(_email.text.trim());
+                return 'requested';
+              }),
+            ),
             _field(_emailCode, DevStrings.code, keyboard: TextInputType.number),
             _button(DevStrings.verify, _signIn),
             _heading(DevStrings.enrol),
@@ -156,17 +164,28 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
             _button(DevStrings.ping, () => _run('ping', () => _call('signed-ping'))),
             _button(DevStrings.appConfig, () => _run('app config', () => _call('app-config'))),
             _button(DevStrings.makeCode, _makeCode),
-            if (_shownCode != null) SelectableText('Code: $_shownCode', style: Theme.of(context).textTheme.headlineSmall),
+            if (_shownCode != null)
+              SelectableText('Code: $_shownCode', style: Theme.of(context).textTheme.headlineSmall),
             _button(DevStrings.listDevices, () => _run('devices', () => _call('device-list'))),
             _field(_revokeId, DevStrings.revokeId),
-            _button(DevStrings.revoke, () => _run('revoke', () => _call('device-revoke', body: <String, Object?>{'device_id': _revokeId.text.trim()}))),
-            _button(DevStrings.forget, () => _run('forget', () async {
-              await ref.read(enrolmentProvider).forgetThisDevice();
-              if (mounted) setState(() => _shownCode = null);
-              return 'done';
-            })),
+            _button(
+              DevStrings.revoke,
+              () => _run(
+                'revoke',
+                () => _call('device-revoke', body: <String, Object?>{'device_id': _revokeId.text.trim()}),
+              ),
+            ),
+            _button(
+              DevStrings.forget,
+              () => _run('forget', () async {
+                await ref.read(enrolmentProvider).forgetThisDevice();
+                if (mounted) setState(() => _shownCode = null);
+                return 'done';
+              }),
+            ),
             _heading(DevStrings.output),
-            for (final String line in _lines) Padding(padding: const EdgeInsets.only(bottom: 8), child: SelectableText(line)),
+            for (final String line in _lines)
+              Padding(padding: const EdgeInsets.only(bottom: 8), child: SelectableText(line)),
           ],
         ),
       ),

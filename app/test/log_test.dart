@@ -10,7 +10,14 @@ void main() {
       'Authorization: Bearer abc.def.ghi jwt $jwt publishable $publishable '
       'mail=parent@example.test hash=$long code 123456 ok',
     );
-    for (final String secret in <String>['abc.def.ghi', jwt, publishable, 'parent@example.test', long, '123456']) {
+    for (final String secret in <String>[
+      'abc.def.ghi',
+      jwt,
+      publishable,
+      'parent@example.test',
+      long,
+      '123456',
+    ]) {
       expect(out, isNot(contains(secret)), reason: secret);
     }
     expect(out, contains('ok'));

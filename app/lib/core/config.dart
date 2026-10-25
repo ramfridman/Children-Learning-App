@@ -54,9 +54,7 @@ class AppConfig {
     final List<String> parts = key.split('.');
     if (parts.length != 3) return false;
     try {
-      final Object? payload = jsonDecode(
-        utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))),
-      );
+      final Object? payload = jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
       return payload is Map<String, dynamic> && payload['role'] == 'service_role';
     } on FormatException {
       return false;

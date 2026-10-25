@@ -122,11 +122,14 @@ jobs:
       - name: Format (prints a patch if anything would change)
         run: bash tools/ci/format-or-patch.sh app lib test
       - name: Analyze
+        if: ${{ !cancelled() }}
         working-directory: app
         run: bash ../tools/ci/run-with-annotations.sh "flutter analyze" flutter analyze --fatal-infos
       - name: Test
+        if: ${{ !cancelled() }}
         working-directory: app
         run: bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test
       - name: Build the dev flavour (debug APK)
+        if: ${{ !cancelled() }}
         working-directory: app
         run: bash ../tools/ci/run-with-annotations.sh "flutter build apk" flutter build apk --debug --flavor dev

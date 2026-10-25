@@ -81,19 +81,16 @@ class EnrolmentService {
     if (devSecret != null && !_config.isDev) throw StateError('dev enrolment is dev-flavour only');
     if (await _store.read(StoreKeys.deviceId) != null) throw StateError('already enrolled');
 
-    final Map<String, Object?> issued = await _gateway.call(
-      'enroll-challenge',
-      <String, Object?>{'purpose': 'pair'},
-      signing: Signing.none,
-    );
+    final Map<String, Object?> issued = await _gateway.call('enroll-challenge', <String, Object?>{
+      'purpose': 'pair',
+    }, signing: Signing.none);
     final String challenge = _text(issued, 'challenge');
     final DeviceKeyMaterial key = await _keys.createKey(b64urlDecode(challenge));
 
-    final Map<String, Object?> result = await _gateway.call(
-      'device-pair',
-      <String, Object?>{..._enrolFields(challenge, key, devSecret), 'code': code},
-      signing: Signing.selfSigned,
-    );
+    final Map<String, Object?> result = await _gateway.call('device-pair', <String, Object?>{
+      ..._enrolFields(challenge, key, devSecret),
+      'code': code,
+    }, signing: Signing.selfSigned);
     final Enrolled enrolled = _enrolled(result);
     final AuthSession session = await _auth.signInWithTokenHash(_text(result, 'token_hash'));
     await _sessions.setSession(session);

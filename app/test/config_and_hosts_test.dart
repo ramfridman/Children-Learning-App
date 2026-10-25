@@ -68,7 +68,10 @@ void main() {
 
     test('refuses secret keys', () {
       expect(() => parse(key: 'sb_secret_abcdefghijklmnop'), throwsA(isA<ConfigException>()));
-      expect(() => parse(key: fakeJwt(<String, Object?>{'role': 'service_role'})), throwsA(isA<ConfigException>()));
+      expect(
+        () => parse(key: fakeJwt(<String, Object?>{'role': 'service_role'})),
+        throwsA(isA<ConfigException>()),
+      );
       expect(parse(key: fakeJwt(<String, Object?>{'role': 'anon'})).publishableKey, isNotEmpty);
     });
 

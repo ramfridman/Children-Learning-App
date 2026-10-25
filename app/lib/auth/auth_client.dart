@@ -88,14 +88,14 @@ class AuthClient {
     final Uri uri = _base.replace(path: path, queryParameters: query);
     final http.Response response = await _gate.post(
       uri,
-      headers: <String, String>{
-        'content-type': 'application/json; charset=utf-8',
-        'apikey': _publishableKey,
-      },
+      headers: <String, String>{'content-type': 'application/json; charset=utf-8', 'apikey': _publishableKey},
       body: utf8.encode(jsonEncode(body)),
     );
     if (response.statusCode >= 400) {
-      throw GatewayException(response.statusCode == 429 ? 'rate_limited' : 'auth_failed', status: response.statusCode);
+      throw GatewayException(
+        response.statusCode == 429 ? 'rate_limited' : 'auth_failed',
+        status: response.statusCode,
+      );
     }
     final Object? decoded;
     try {

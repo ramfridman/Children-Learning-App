@@ -17,7 +17,9 @@ class NitznutzApp extends ConsumerWidget {
       title: 'Nitznutz',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.teal),
-      home: isDev ? const DevHomePage() : const Scaffold(body: Center(child: Text(DevStrings.prodPlaceholder))),
+      home: isDev
+          ? const DevHomePage()
+          : const Scaffold(body: Center(child: Text(DevStrings.prodPlaceholder))),
     );
   }
 }

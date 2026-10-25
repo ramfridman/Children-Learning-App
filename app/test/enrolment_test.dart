@@ -27,7 +27,11 @@ class Rig {
         case '/functions/v1/enroll-challenge':
           return jsonReply(<String, Object?>{'challenge': challengeB64, 'expires_at': 1});
         case '/functions/v1/device-enroll':
-          return jsonReply(<String, Object?>{'device_id': newDeviceId, 'role': 'parent', 'security_level': 'tee'});
+          return jsonReply(<String, Object?>{
+            'device_id': newDeviceId,
+            'role': 'parent',
+            'security_level': 'tee',
+          });
         case '/functions/v1/device-pair':
           return jsonReply(<String, Object?>{
             'device_id': newDeviceId,
@@ -37,7 +41,11 @@ class Rig {
           });
         case '/auth/v1/verify':
         case '/auth/v1/token':
-          return jsonReply(<String, Object?>{'access_token': 'access-1', 'refresh_token': 'refresh-1', 'expires_in': 3600});
+          return jsonReply(<String, Object?>{
+            'access_token': 'access-1',
+            'refresh_token': 'refresh-1',
+            'expires_in': 3600,
+          });
       }
       return jsonReply(<String, Object?>{'error': 'not_found'}, status: 404);
     });

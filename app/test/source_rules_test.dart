@@ -3,11 +3,12 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 // Rules from CLAUDE.md that are cheap to enforce by reading the source.
-List<File> dartFiles(String dir) => Directory(dir)
-    .listSync(recursive: true)
-    .whereType<File>()
-    .where((File f) => f.path.endsWith('.dart'))
-    .toList();
+List<File> dartFiles(String dir) =>
+    Directory(dir)
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((File f) => f.path.endsWith('.dart'))
+        .toList();
 
 void main() {
   final List<File> lib = dartFiles('lib');
@@ -34,7 +35,12 @@ void main() {
   test('no secret-looking key in the source tree', () {
     final RegExp secret = RegExp(r'sb_secret_[A-Za-z0-9_-]{8,}|sk-ant-[A-Za-z0-9_-]{8,}|service_role');
     for (final File f in <File>[...lib, ...dartFiles('test')]) {
-      if (<String>['source_rules_test.dart', 'config_and_hosts_test.dart', 'core/config.dart'].any(f.path.endsWith)) continue;
+      if (<String>[
+        'source_rules_test.dart',
+        'config_and_hosts_test.dart',
+        'core/config.dart',
+      ].any(f.path.endsWith))
+        continue;
       expect(secret.hasMatch(f.readAsStringSync()), isFalse, reason: f.path);
     }
   });
