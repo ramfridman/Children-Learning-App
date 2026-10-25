@@ -29,3 +29,16 @@ export function redactedLine(e: LogEntry): string {
 export function log(e: LogEntry): void {
   console.log(redactedLine(e));
 }
+
+/**
+ * The reason label for an unexpected error: only its short machine code (for example a Postgres
+ * SQLSTATE such as `28p01`, or a network code such as `connect_timeout`), or its class name. Never
+ * the message, which can name a host, a user or a value. Lets the owner tell "wrong database
+ * password" from "pooler refused the user" in the function log without exposing anything.
+ */
+export function internalReason(e: unknown): string {
+  const o = (e ?? {}) as { code?: unknown; name?: unknown };
+  const raw = typeof o.code === "string" ? o.code : typeof o.name === "string" ? o.name : "";
+  const s = raw.toLowerCase().replace(/[^a-z0-9_]/g, "_").slice(0, 30);
+  return s ? `internal:${s}` : "internal";
+}

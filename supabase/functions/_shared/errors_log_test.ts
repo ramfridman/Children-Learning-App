@@ -1,6 +1,6 @@
 import { assert } from "./testassert.ts";
 import { errorResponse, GatewayError } from "./errors.ts";
-import { redactedLine } from "./log.ts";
+import { internalReason, redactedLine } from "./log.ts";
 
 Deno.test("error responses carry a short code and nothing else (plus server time for skew)", async () => {
   const r = errorResponse(new GatewayError("unauthorized", "bad_signature"));
@@ -65,4 +65,23 @@ Deno.test("free text in the id, function, outcome or reason is replaced, not log
     latency_ms: -1,
     reason: "invalid",
   });
+});
+
+Deno.test("an unexpected error is logged by its short code only, never its message", () => {
+  const secret = "password authentication failed for user app_gateway at db.example.internal";
+  const pg = Object.assign(new Error(secret), { code: "28P01", name: "PostgresError" });
+  assert.equal(internalReason(pg), "internal:28p01");
+  assert.equal(internalReason(new TypeError(secret)), "internal:typeerror");
+  assert.equal(internalReason("a string"), "internal");
+  assert.equal(internalReason(null), "internal");
+  // The label must pass the log's own reason filter, and carry nothing from the message.
+  const line = redactedLine({
+    requestId: "0d6f3a52-1c1e-4f6b-8c55-3b0a5a6f2d11",
+    fn: "signed-ping",
+    outcome: "error",
+    latencyMs: 1,
+    reason: internalReason(pg),
+  });
+  assert.equal(JSON.parse(line).reason, "internal:28p01");
+  assert.ok(!line.includes("app_gateway"));
 });

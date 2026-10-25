@@ -4,7 +4,7 @@ import { authenticate, type Authenticated, type Role } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
 import { isFunctionName } from "./canonical.ts";
 import { errorResponse, GatewayError, jsonResponse } from "./errors.ts";
-import { log } from "./log.ts";
+import { internalReason, log } from "./log.ts";
 import { parseJsonObject, readBodyBytes, type Shape, validate } from "./schema.ts";
 import type { Secrets, Store } from "./store.ts";
 
@@ -100,7 +100,7 @@ export function makeHandler(spec: FunctionSpec, getServices: () => Services) {
         res = errorResponse(e);
       } else {
         outcome = "error";
-        reason = "internal";
+        reason = internalReason(e);
         res = errorResponse(new GatewayError("internal", "internal"));
       }
     }
