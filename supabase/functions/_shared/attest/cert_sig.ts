@@ -6,6 +6,7 @@
 // Anything else the runtime cannot do is reported by name, so the log says what to add.
 import type * as x509 from "npm:@peculiar/x509@2.2.0";
 import { type CurveName, ecdsaVerifyDigest } from "../ecdsa.ts";
+import type { Bytes } from "../b64.ts";
 import { readTlv } from "../der.ts";
 
 export class ChainUnsupported extends Error {}
@@ -33,9 +34,9 @@ export function algTag(cert: x509.X509Certificate, issuer: x509.X509Certificate)
 }
 
 /** The signed part of a certificate (tbsCertificate): the first element inside the outer SEQUENCE. */
-function tbsOf(cert: x509.X509Certificate): Uint8Array {
+function tbsOf(cert: x509.X509Certificate): Bytes {
   const outer = readTlv(new Uint8Array(cert.rawData), 0);
-  return outer.value.subarray(0, readTlv(outer.value, 0).end);
+  return outer.value.slice(0, readTlv(outer.value, 0).end) as Bytes;
 }
 
 /** Our own check for an ECDSA link WebCrypto refused; null if this link is not one we can do. */
