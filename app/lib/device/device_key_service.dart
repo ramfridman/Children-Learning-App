@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/services.dart';
 
 /// A freshly made signing key: its public half (X.509 SubjectPublicKeyInfo, 91 bytes for P-256)

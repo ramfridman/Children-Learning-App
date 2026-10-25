@@ -19,7 +19,7 @@ const String challengeB64 = 'AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8';
 const String newDeviceId = 'b6f0ed2e-0d4e-4dec-957b-0c0513f36096';
 
 class Rig {
-  Rig({bool dev = false, http.Response Function(http.Request)? extra}) : config = testConfig(dev: dev) {
+  Rig({bool dev = false, http.Response? Function(http.Request)? extra}) : config = testConfig(dev: dev) {
     recorder = Recorder((http.Request r) {
       final http.Response? custom = extra?.call(r);
       if (custom != null) return custom;

@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
 import '../../auth/auth_client.dart';
-import '../../auth/session_manager.dart';
 import '../../core/errors.dart';
 import '../../core/log.dart';
 import '../../device/device_key_service.dart';
 import '../../device/enrolment_service.dart';
 import '../../device/secure_store.dart';
-import '../../net/gateway_client.dart';
 import 'dev_strings.dart';
 
 /// Plain screens for testing the device chain on a real phone: sign in, enrol, pair, signed calls.

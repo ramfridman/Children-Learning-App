@@ -35,11 +35,11 @@ android {
         create("dev") {
             dimension = "env"
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "Nitznutz Dev")
+            manifestPlaceholders["appName"] = "Nitznutz Dev"
         }
         create("prod") {
             dimension = "env"
-            resValue("string", "app_name", "Nitznutz")
+            manifestPlaceholders["appName"] = "Nitznutz"
         }
     }
 

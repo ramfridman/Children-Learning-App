@@ -35,12 +35,14 @@ void main() {
   test('no secret-looking key in the source tree', () {
     final RegExp secret = RegExp(r'sb_secret_[A-Za-z0-9_-]{8,}|sk-ant-[A-Za-z0-9_-]{8,}|service_role');
     for (final File f in <File>[...lib, ...dartFiles('test')]) {
-      if (<String>[
+      final bool skipped = <String>[
         'source_rules_test.dart',
         'config_and_hosts_test.dart',
         'core/config.dart',
-      ].any(f.path.endsWith))
+      ].any(f.path.endsWith);
+      if (skipped) {
         continue;
+      }
       expect(secret.hasMatch(f.readAsStringSync()), isFalse, reason: f.path);
     }
   });

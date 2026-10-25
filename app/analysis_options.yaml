@@ -17,6 +17,8 @@ linter:
     - unawaited_futures
     - always_declare_return_types
     - prefer_single_quotes
+    # Named parameters can not initialise private fields, so the lint would only add noise.
+    prefer_initializing_formals: false
 
 # Same line width as the Deno side of the repo.
 formatter:
