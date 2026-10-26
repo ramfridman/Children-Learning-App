@@ -9,8 +9,9 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | Reading pass over the plan, docs and design bundle | Done |
 | M0 Foundations | **Done, merged to `main` 2026-10-26** (approved 2026-10-25; see `docs/milestones/M0.md`, section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Reinstall check done. Left: spend-limit screenshots and the owner's confirmation of the M0 report. Branch `m0-foundations`, not merged to `main`. |
 | M1 App shell and design system | **Done and merged to `main` on 2026-10-26** (CI green; child screens match the design boards, checked by 16 geometry tests). The on-phone checks (install, wrong-PIN lock-outs, database file pulled with adb, Argon2id timing) are still to do when the Samsung is plugged into the PC. The Hebrew child strings await the owner's review. |
-| M2 Content system and first activity | **Built, green in CI, waiting for the owner's confirmation** (`docs/milestones/M2.md` section 11 is the report; branch `m2-content-system`, not merged). Signed packs, safe installer, the three templates and the butterflies lesson work end to end in tests on phone and tablets. Not yet tried on the Samsung (it was not connected). |
-| M3–M9 | Not started |
+| M2 Content system and first activity | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M2.md` section 11). The owner chose to continue without testing on the phone; the on-phone checks (`docs/setup/android-device-checks.md` section 6) and the Hebrew review come later. |
+| M3 Learning engine | **Plan written, waiting for the owner's OK** (`docs/milestones/M3.md`, branch `m3-learning-engine`). No code yet. |
+| M4–M9 | Not started |
 
 ## Done
 
@@ -31,7 +32,7 @@ itznutz-secretspack-signing.key` (outside the repo).
 
 ## Open issues
 
-- **Signing key backup:** the owner must save `pack-signing.key` in 1Password (M2 report, "Needs you" 1). Until he does, it exists only on this PC.
+- **Signing key backup:** `pack-signing.key` exists only on this PC. The owner is away from it; he will save it in 1Password when he is next at the PC. Do not delete it. If the PC were lost before then, a new key means rebuilding the starter pack and shipping an app with the new public key.
 - **M2 on-phone check** (play the lesson; damaged packs refused) waits for the Samsung to be plugged in; same sitting as the M1 on-phone checks.
 - Packs are proven again when loaded, which reads the whole pack into memory; fine for the 37 KB starter, to be made lazy when packs hold recordings (M4).
 
@@ -47,7 +48,7 @@ itznutz-secretspack-signing.key` (outside the repo).
 
 ## Waiting on the owner
 
-- Confirm M2 after the report; save the pack signing key in 1Password.
+- Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1 and M2; Hebrew review; confirm "OK to M3" (plan written).
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
 - Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
 
@@ -55,4 +56,4 @@ itznutz-secretspack-signing.key` (outside the repo).
 
 ## Next step
 
-Claude: when the owner confirms M2 (all six CI jobs green), merge `m2-content-system` into `main`. Then write the M3 plan (`docs/milestones/M3.md`, the learning engine) and wait for his OK before coding. Do not start M3 before he confirms M2.
+Claude: wait for the owner's "OK to M3" (or changes to `docs/milestones/M3.md`), then build M3 on `m3-learning-engine`. Do not code M3 before that.
