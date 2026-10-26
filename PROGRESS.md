@@ -11,7 +11,7 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M1 App shell and design system | **Done and merged to `main` on 2026-10-26** (CI green; child screens match the design boards, checked by 16 geometry tests). The on-phone checks (install, wrong-PIN lock-outs, database file pulled with adb, Argon2id timing) are still to do when the Samsung is plugged into the PC. The Hebrew child strings await the owner's review. |
 | M2 Content system and first activity | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M2.md` section 11). The owner chose to continue without testing on the phone; the on-phone checks (`docs/setup/android-device-checks.md` section 6) and the Hebrew review come later. |
 | M3 Learning engine | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M3.md` section 11). The simulator names the planted gap within 3 probes in 96.2% of 1,000 invented children (history on 80% of skills; 91.0% at 50%, 51.3% at none). On-phone checks (section 7 of the device checks) come later. |
-| M4 Characters and voice out | **Plan written, waiting for the owner's OK** (`docs/milestones/M4.md`, branch `m4-characters-voice`). No code yet. Needs his OK for `audioplayers` 6.8.1 and the decisions Q1 to Q10. |
+| M4 Characters and voice out | **Built on branch `m4-characters-voice`, waiting for CI and the owner's OK to merge** (report in `docs/milestones/M4.md` section 11). The companion changes picture and voice on every screen (tested with mock voices); real ElevenLabs voices (Phase H) and the phone checks (device checks section 8) come after. 60 fps is measured as cost per frame on the PC only. |
 | M5–M9 | Not started |
 
 ## Done
@@ -29,7 +29,9 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 - **Canary:** a planted fake key on a throwaway branch was refused by the pre-commit hook; CI scans the full history and self-tests the scanner on every push.
 
 - **M2 (2026-10-26):** schemas and validator (61 broken-file cases), canonical zip, Ed25519-signed packs, pack builder (`app/tool/pack_builder.dart`), installer with hidden packs and rollback, database v2 (`installed_pack`, `attempt`), lesson player and templates (`count_tap`, `tap_answer`, `give_n`), the butterflies lesson as a signed pack, goldens for every step, dev-page pack tools, on-phone steps in `docs/setup/android-device-checks.md` section 6. The signing key is at `%USERPROFILE%
-itznutz-secretspack-signing.key` (outside the repo).
+itznutz-secrets\pack-signing.key` (outside the repo).
+
+- **M4 (2026-10-26):** database v4 (`companion_id`), character packs and resolver, `CharacterView`, voice packs and `VoiceDirector` with `audioplayers` 6.8.1, `voice_gen` (plan, mock, audition, generate with a confirmed character count), Friends' Beach, live characters on the map, in lessons and on the celebration card, 587 tests. The 17 packs for the phone are made by `tools/make-m4-device-packs.ps1`.
 
 ## Open issues
 
@@ -52,6 +54,7 @@ itznutz-secretspack-signing.key` (outside the repo).
 
 ## Waiting on the owner
 
+- **M4:** confirm after the report; the phone checks (section 8); choose ElevenLabs voices when ready (Phase H).
 - Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1, M2 and M3; Hebrew review; confirm M3 after the report.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
 - Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
