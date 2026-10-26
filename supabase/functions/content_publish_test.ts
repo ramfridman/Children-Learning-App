@@ -159,3 +159,18 @@ Deno.test("content-publish: the body is capped at 256 KB, and only POST is serve
     assert.equal((await handler(new Request("https://x.test/f", { method }))).status, 400);
   }
 });
+
+Deno.test("content-publish: the index that the app's tool makes for the starter pack is accepted as it is", async () => {
+  // testvectors/publish-starter.json is written by the Dart test of `pack_builder publish`, so the tool and this
+  // function cannot drift apart without one of the two test suites failing.
+  const vector = JSON.parse(
+    await Deno.readTextFile(new URL("../../testvectors/publish-starter.json", import.meta.url)),
+  );
+  const { store, publish } = setup();
+  const r = await publish(vector);
+  assert.equal(r.status, 200, JSON.stringify(await r.clone().json()));
+  const j = await r.json();
+  assert.equal(j.result, "published");
+  assert.equal(j.items, 5);
+  assert.equal(store.packs.get("starter")!.items.length, 5);
+});

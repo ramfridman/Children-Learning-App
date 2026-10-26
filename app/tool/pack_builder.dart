@@ -5,18 +5,21 @@
 //   dart run tool/pack_builder.dart verify <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart inspect <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart build-character <character folder> [--key <key file>] [--out <folder>]
+//   dart run tool/pack_builder.dart publish <pack file>... [--voices <voices.json>] [--url <project url>] [--dry-run]
 //   dart run tool/pack_builder.dart schema [--out <folder>] [--check]
 //   dart run tool/pack_builder.dart damage <pack file> [--source <folder>] [--out <folder>]
 //
 // `keygen` writes the private key to %USERPROFILE%\nitznutz-secrets\pack-signing.key (outside the repo;
 // it refuses a path inside any git working tree) and the public key to assets/pack_signing_public_key.txt.
 // The private key is never printed.
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:nitznutz/content/pack_verify.dart';
 
 import 'pack_builder_lib.dart';
+import 'publish_lib.dart';
 
 const String _publicKeyAsset = 'assets/pack_signing_public_key.txt';
 const String _schemaFolder = '../content/schemas';
@@ -39,6 +42,8 @@ Future<void> main(List<String> args) async {
         await _verify(rest, inspect: false);
       case 'inspect':
         await _verify(rest, inspect: true);
+      case 'publish':
+        await _publish(rest);
       case 'schema':
         _schema(rest);
       case 'damage':
@@ -71,7 +76,7 @@ List<String> _positional(List<String> args) {
   final List<String> out = <String>[];
   for (int i = 0; i < args.length; i++) {
     if (args[i].startsWith('--')) {
-      if (args[i] != '--check' && args[i] != '--replace-public') i++;
+      if (args[i] != '--check' && args[i] != '--replace-public' && args[i] != '--dry-run') i++;
     } else {
       out.add(args[i]);
     }
@@ -160,6 +165,48 @@ Future<void> _damage(List<String> args) async {
   for (final MapEntry<String, Uint8List> v in variants.entries) {
     File('${out.path}${Platform.pathSeparator}${v.key}').writeAsBytesSync(v.value);
     stdout.writeln('wrote ${v.key} (${v.value.length} bytes)');
+  }
+}
+
+/// Sends the item index of verified packs to the gateway (`content-publish`). `--dry-run` only shows what would be sent.
+/// The secret is read from NITZNUTZ_PUBLISH_SECRET and the project from `--url` or app/config/dev.local.json.
+Future<void> _publish(List<String> args) async {
+  final List<String> files = _positional(args);
+  if (files.isEmpty) throw const BuildFailed('publish needs at least one pack file');
+  final bool dry = args.contains('--dry-run');
+  final File voicesFile = File(_option(args, '--voices') ?? '../content/voices.json');
+  final Map<String, String> voices = voicesFile.existsSync() ? readVoices(voicesFile) : <String, String>{};
+  final Uint8List publicKey = readPublicKeyFile(_publicKeyAsset);
+  String? url = _option(args, '--url');
+  String? publishable;
+  final File cfg = File('config/dev.local.json');
+  if (cfg.existsSync()) {
+    final Map<String, Object?> j = jsonDecode(cfg.readAsStringSync()) as Map<String, Object?>;
+    url ??= j['SUPABASE_URL'] as String?;
+    publishable = j['SUPABASE_PUBLISHABLE_KEY'] as String?;
+  }
+  final String secret = Platform.environment['NITZNUTZ_PUBLISH_SECRET'] ?? '';
+  if (!dry && (url == null || secret.length < 24)) {
+    throw const BuildFailed(
+      'set NITZNUTZ_PUBLISH_SECRET (24 characters or more) and a project url (--url or config/dev.local.json)',
+    );
+  }
+  for (final String f in files) {
+    final VerifiedPack pack = await verifyPack(File(f).readAsBytesSync(), publicKey: publicKey);
+    final Map<String, Object?> body = indexOf(pack, voices: voices);
+    stdout.writeln(
+      '${pack.id} ${pack.version}: ${(body['items']! as List<Object?>).length} items, '
+      '${(body['misconceptions']! as List<Object?>).length} misconceptions, '
+      '${(body['characters']! as List<Object?>).length} characters, ${utf8.encode(jsonEncode(body)).length} bytes',
+    );
+    if (dry) continue;
+    final Map<String, Object?> answer = await publish(
+      body,
+      baseUrl: url!,
+      secret: secret,
+      publishableKey: publishable,
+    );
+    stdout.writeln('  server: ${answer['result']}');
   }
 }
 

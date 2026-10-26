@@ -14,7 +14,7 @@ const tag = { t: "string", max: 20, pattern: /^M-[A-Z]{2,5}-[A-Z0-9]{2,12}$/ } a
 const skill = { t: "string", max: 12, pattern: /^[A-Z]{2,5}-[A-Z]-[0-9]{2}$/ } as const;
 
 const answer: Shape = {
-  id: { t: "string", max: 12, pattern: /^[a-z][a-z0-9]{0,11}$/ },
+  id: { t: "string", max: 16, pattern: /^[a-z][a-z0-9-]{0,15}$/ },
   value: { t: "int", min: -999, max: 9999, optional: true },
   label: { ...text(80), optional: true },
   misconception: { ...tag, optional: true },
