@@ -12,7 +12,8 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M2 Content system and first activity | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M2.md` section 11). The owner chose to continue without testing on the phone; the on-phone checks (`docs/setup/android-device-checks.md` section 6) and the Hebrew review come later. |
 | M3 Learning engine | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M3.md` section 11). The simulator names the planted gap within 3 probes in 96.2% of 1,000 invented children (history on 80% of skills; 91.0% at 50%, 51.3% at none). On-phone checks (section 7 of the device checks) come later. |
 | M4 Characters and voice out | **Built on branch `m4-characters-voice`, waiting for CI and the owner's OK to merge** (report in `docs/milestones/M4.md` section 11). The companion changes picture and voice on every screen (tested with mock voices); real ElevenLabs voices (Phase H) and the phone checks (device checks section 8) come after. 60 fps is measured as cost per frame on the PC only. |
-| M5–M9 | Not started |
+| M5 Voice in | **Plan written, waiting for the owner's OK** (`docs/milestones/M5.md`, branch `m5-voice-in`, stacked on the unmerged M4 branch). No code yet. Needs his OK for `sherpa_onnx`, `record` and the model, and an answer on Q6 (recordings of the children). |
+| M6–M9 | Not started |
 
 ## Done
 
@@ -54,7 +55,9 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 ## Waiting on the owner
 
-- **M4:** confirm after the report; the phone checks (section 8); choose ElevenLabs voices when ready (Phase H).
+The full checklist is `docs/owner-todo.md`. In short:
+
+- **M4:** confirm after the report (CI green); **M5:** OK to the plan; the phone checks (section 8); choose ElevenLabs voices when ready (Phase H).
 - Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1, M2 and M3; Hebrew review; confirm M3 after the report.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
 - Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
