@@ -94,7 +94,7 @@ npx supabase functions deploy --use-api
 
 (`--use-api` bundles on Supabase's side, so Docker is not needed.) It lists
 `signed-ping`, `app-config`, `enroll-challenge`, `device-enroll`, `device-pair`,
-`pairing-code-create`, `device-list` and `device-revoke`.
+`pairing-code-create`, `device-list` and `device-revoke`; from M6 also `content-publish`, `tutor-turn` and `tutor-prewarm`.
 
 Quick check that the gateway is closed to strangers:
 
@@ -160,9 +160,88 @@ on conflict (key) do update set value = excluded.value, updated_at = now();
 
 Until this row exists the server refuses every Android enrolment on purpose.
 
+## 8. The AI tutor (M6): keys, rows, publish, pre-warm
+
+Do this only when you are at the PC, have created both keys with their spend limits in the
+consoles (Anthropic: a workspace with a monthly limit; ElevenLabs: a credit limit), and have chosen
+the voice ids (M4 Phase H). Claude never sees a key: each is typed into a hidden prompt.
+
+1. Send the three secrets (no value is shown or kept; the file is deleted at once):
+
+   ```powershell
+   $dir = "$env:USERPROFILE\nitznutz-secrets"
+   New-Item -ItemType Directory -Force -Path $dir | Out-Null
+   function Ask($name) {
+     $s = Read-Host -AsSecureString $name
+     [System.Net.NetworkCredential]::new("", $s).Password
+   }
+   function New-Secret($bytes) {
+     $b = New-Object byte[] $bytes
+     $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+     $rng.GetBytes($b)
+     [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
+   }
+   $publish = New-Secret 32
+   @(
+     "ANTHROPIC_API_KEY=$(Ask 'Anthropic key')",
+     "ELEVENLABS_API_KEY=$(Ask 'ElevenLabs key')",
+     "CONTENT_PUBLISH_SECRET=$publish"
+   ) | Set-Content -Path "$dir\tutor.env" -Encoding ascii
+   npx supabase secrets set --env-file "$dir\tutor.env"
+   Remove-Item -Recurse -Force $dir
+   $publish | Set-Clipboard
+   ```
+
+   The publish secret is now on the clipboard: save it in 1Password as `Nitznutz content publish
+   secret`, then clear the clipboard. Set it for your PowerShell window with
+   `$env:NITZNUTZ_PUBLISH_SECRET = "<paste>"` whenever you run the tools below (never write it in a file).
+
+2. Deploy the functions: `npx supabase functions deploy --use-api`.
+
+3. In the Supabase SQL Editor, set the rows (the model id and prices come from the providers' pages;
+   write what you read there, not a guess):
+
+   ```sql
+   insert into app.config (key, value) values
+     ('elevenlabs_model_id', '"<model id from ElevenLabs>"'::jsonb),
+     ('tutor_cost_cap_micro', '500000'::jsonb),
+     ('tutor_price_micro', '{"in_per_mtok": <micro-dollars per million input tokens>, "out_per_mtok": <same, output>, "voice_per_1k_chars": <micro-dollars per 1,000 characters>}'::jsonb)
+   on conflict (key) do update set value = excluded.value, updated_at = now();
+   ```
+
+   Leave `tutor_enabled` and `live_voice_enabled` off until the lines have been listened to (step 6).
+
+4. Publish the starter pack's item index (from the `app` folder; `--dry-run` first shows only counts):
+
+   ```powershell
+   cd app
+   dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack --dry-run
+   dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack
+   ```
+
+5. Pre-warm. `plan` makes nothing; `make` refuses unless you type back the number `plan` printed:
+
+   ```powershell
+   dart run tool/tutor_prewarm.dart plan assets/packs/starter-0.2.0.nnpack --characters nitzi
+   dart run tool/tutor_prewarm.dart make assets/packs/starter-0.2.0.nnpack --characters nitzi --confirm-lines <N>
+   ```
+
+   The tool prints the number of lines, the voice characters and the estimated cost before it
+   starts, and stops at 1.5 times the estimate. Switch the server on for the measurement:
+   `update app.config set value = 'true'::jsonb where key in ('tutor_enabled', 'live_voice_enabled');`
+   (insert the rows if they do not exist yet), then
+   `dart run tool/tutor_prewarm.dart measure assets/packs/starter-0.2.0.nnpack --characters nitzi --count 10`
+   prints the median server time with the model's and the voice's share.
+
+6. Read every made line before a child can meet one. In the SQL Editor:
+   `select item_id, mistake, band, address_form, line from app.tutor_cache order by 1, 2, 3, 4;`
+   (the lines are vocalised Hebrew). Then listen to them on the phone, in device checks
+   section 10, with the **AI helper** switched on in the dev page. Only after both, tell Claude
+   you are happy for the helper to be offered to the parent in M7.
+
 ## What this does not do
 
 - It does not turn on the AI tutor or voice. `app-config` reports both switches off until you set
-  the rows `tutor_enabled` / `voice_enabled` to `true` in `app.config`.
+  the rows `tutor_enabled` / `live_voice_enabled` to `true` in `app.config` (section 8).
 - It does not enable the dev allowlist. Emulator enrolment works only on the local stack
   (`ALLOW_DEV_ENROLMENT=true`, needs Docker Desktop) or during a short, deliberate test window.

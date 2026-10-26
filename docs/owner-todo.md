@@ -2,7 +2,7 @@
 
 Things only the owner can do, kept in one place so nothing is lost while work moves on. Tick them off here; Claude keeps this file current. Exact steps for each are in the file named in the last column.
 
-Last updated: 2026-10-26 (M5 built).
+Last updated: 2026-10-26 (M6 built, live phase waiting).
 
 ## Decisions waiting
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-26 (M5 built).
 |---|------|--------------|-------|
 | D1 | **Confirm M4 and M5** (characters and voice out; voice in), after the phone test day, so Claude can merge `m4-characters-voice` and then `m5-voice-in` into `main` | CI is green; the owner was away from the PC and could not look at the report | `docs/milestones/M4.md` section 11 |
 | ~~D2~~ | ~~OK for the M5 plan and its packages~~ | Done 2026-10-26: approved, with adult recordings now and the children's accuracy left for a later phase | `docs/milestones/M5.md` |
-| D3 | **OK for the M6 plan** (gateway and AI tutor), and a number for Q9: the most the AI may cost one family per day (my guess is 0.50) | The plan is written, no code yet | `docs/milestones/M6.md` |
+| D3 | **A number for Q9:** the most the AI may cost one family per day (my guess is 0.50, kept until you say otherwise). The M6 plan itself is approved (with the latency request, done) | The server work and the app side are built; the live proof is waiting | `docs/milestones/M6.md` |
 
 M5 work, once approved, is stacked on the M4 branch (`m5-voice-in` starts from `m4-characters-voice`), so nothing is merged to `main` without D1.
 
@@ -27,6 +27,7 @@ Each one is a short list of steps with the expected result. Run them in this ord
 | T3 | M3: what the learning engine concluded about the child who played | 5 min | same file, section 7 |
 | T4 | M4: install the 8 family characters and 9 test voices, pick a friend on Friends' Beach, hear the tones with the mouth moving, celebrate, switch back | 20 min | same file, section 8 (one command builds and pushes the packs: `tools\make-m4-device-packs.ps1 -Push`) |
 | T5 | M4, optional: frame times in profile mode on the Samsung | 5 min | same file, section 8E |
+| T7 | M6: the AI helper on the phone (off by default, a made line on the second mistake, no network, kill switch, Band A without caption); after P7 | 15 min | same file, section 10 |
 | T6 | M5: model on the phone, voice switch, answer by voice, the repair steps, how long the model takes to load | 20 min | same file, section 9 |
 
 ## Things to look at and judge
@@ -46,4 +47,5 @@ Each one is a short list of steps with the expected result. Run them in this ord
 | P3 | **Real voices (M4 Phase H).** Choose a voice for each of the nine characters from short auditions, tell Claude the model id you pick in ElevenLabs, see the plan and the cost, type the exact character count back, and listen to every generated line. About an hour. Claude gives the numbered PowerShell steps when you say you are at the PC. | `docs/milestones/M4.md` Phase H |
 | P4 | **Adult recordings for the M5 speech check** (about 15 minutes, you and your wife; any voice-recorder app; a normal room, phone held as a child would). Say each of these three times, once alone and once in a short phrase ("שלוש פרפרים"): the numbers 1 to 10, the colours אדום, כחול, צהוב, ירוק, and כן, לא, עוד פעם, לא יודע, עזרה. Save them as **16-bit WAV** files named `<speaker>_<word>_<n>.wav` (for example `ram_3_1.wav`) in one folder, and write `labels.csv` beside them with one line per file: `file,type,intended,options` (for example `ram_3_1.wav,number,3,2|3|4` or `dana_red_2.wav,colour,red,red|blue|yellow`). Then run `powershell -ExecutionPolicy Bypass -File tools\run-asr-eval.ps1 <folder>`; it prints how many accepted answers were right (the goal is 97%), how many were asked to confirm or repeat, the speed, and the misses. If you would rather not write the labels by hand, send me the folder and the list of what was said, and I will make them. | `docs/milestones/M5.md` Q6 and section 11 |
 | P5 | **Put the speech model on the phone** (one command, 72 MB, phone plugged in): `tools\make-m5-model.ps1 -Push` | `docs/setup/android-device-checks.md` section 9 |
+| P7 | **Live AI tutor (M6 Phase F).** Create the Anthropic key and the ElevenLabs key (each with its spend limit set first), send them with the hidden-prompt steps, set the ElevenLabs model id and the prices from the providers' pages, deploy, publish the starter pack, then run the pre-warm: it shows the number of lines and the cost and waits for you to type the number back. Then measure the speed, read the made lines in the SQL Editor, listen to them on the phone, and only then leave the helper on in the dev page. About an hour. | `docs/setup/supabase-deploy.md` section 8 |
 | P6 | **Children's recordings** (later phase, same format and tool, with a parent present; the gate "97% for children" stays open until then) | `docs/milestones/M5.md` Q6 |

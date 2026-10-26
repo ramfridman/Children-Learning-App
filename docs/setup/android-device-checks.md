@@ -186,3 +186,16 @@ It downloads the four files, checks each against the hash pinned in the app, and
 
 **F. Parents' side.** Turn voice off: the mic disappears from the lesson at once.
 
+## 10. M6 checks: the AI helper (after the live phase, section 8 of the deploy guide)
+
+Needs the gateway deployed with both keys, the starter pack published and pre-warmed, `tutor_enabled` and `live_voice_enabled` on.
+
+**A. Off by default.** In the dev page the **AI helper** switch is off. Play the counting hills and make the same mistake twice: only the authored lines are said.
+
+**B. A made line.** Turn **AI helper** on. In the counting hills tap the wrong number twice. The first time you hear the authored diagnostic line; the second time the guide says a different sentence in its own voice, with the mouth moving. Report: how long after the tap the voice began (honest feel: instant, a little, long) and whether the sentence was kind and right.
+
+**C. No network.** Switch on airplane mode and make two mistakes: the authored line is said, nothing on the screen mentions an error.
+
+**D. Kill switch.** In the SQL Editor set `tutor_enabled` to `false`, restart the app, make two mistakes: authored lines only. Set it back.
+
+**E. Band A.** For a Band A child no caption appears while the helper speaks.
