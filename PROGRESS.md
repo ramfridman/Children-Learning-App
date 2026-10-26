@@ -42,6 +42,8 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
 - Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
 
+- 2026-10-26: all 8 functions redeployed to the live project by Claude (audited `@noble/curves` is live). It has not yet run against a real attestation; the next enrolment on the phone will exercise it.
+
 ## Next step
 
 Claude: merge `m0-foundations` into `main` when the owner confirms M0 (all six jobs green). Do not start M1 until he confirms M0.
