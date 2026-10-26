@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "butterflies",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "פַּרְפָּרִים בַּגִּנָּה"
+    }
+  ],
+  "skills": [
+    "NUM-A-03",
+    "NUM-A-04",
+    "COL-A-02"
+  ],
+  "items": [
+    "pick.red.flower",
+    "count.butterflies.3",
+    "count.butterflies.4",
+    "count.butterflies.5",
+    "give.butterflies.4"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:celebrate.butterflies",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם לְאַט וּבְדַקְתֶּם כׇּל פַּרְפָּר."
+      }
+    ]
+  }
+}

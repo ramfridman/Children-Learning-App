@@ -5,7 +5,7 @@
 // The owner compares them with the design boards (see docs/milestones/M1.md, E11).
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nitznutz/child/activity_shell.dart';
+import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/child/profile_picker.dart';
 import 'package:nitznutz/parent/gate_screen.dart';
@@ -67,7 +67,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text(He.landCounting.text));
         await tester.pumpAndSettle();
-        expect(find.byType(ActivityShell), findsOneWidget);
+        expect(find.byType(ActivityFrame), findsOneWidget);
         await _shot(tester, 'activity_$n');
       });
     }

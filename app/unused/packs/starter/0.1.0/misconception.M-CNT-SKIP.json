@@ -1,0 +1,13 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CNT-SKIP",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-03"
+  ],
+  "parentText": "הילד מפספס עצם אחד בספירה ולכן מקבל מספר קטן מדי.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete"
+  ]
+}

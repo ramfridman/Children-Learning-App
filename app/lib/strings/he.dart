@@ -45,6 +45,11 @@ abstract final class He {
   static const Str switchChildSemantics = Str('החלפת ילד');
   static const Str bookSemantics = Str('הספר');
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);
+  static const Str replaySemantics = Str('שמיעה חוזרת של השאלה');
+  static const Str giveDoneSemantics = Str('סיימתי');
+  static const Str lessonDoneSemantics = Str('חזרה למפה');
+  static const Str lessonUnavailable = Str('הַשִּׁעוּר לֹא מוּכָן עַכְשָׁו', nikud: true);
+  static const Str counterSemantics = Str('כמה כבר נספרו');
   static const Str showMeSemantics = Str('תראו לי');
   static const Str hintSemantics = Str('רמז');
   static const Str homeSemantics = Str('הביתה');

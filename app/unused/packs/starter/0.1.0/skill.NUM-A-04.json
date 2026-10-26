@@ -1,0 +1,31 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-04",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עונים כמה יש לפי המספר האחרון שנספר (עד 5)"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-CNT-CARD"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

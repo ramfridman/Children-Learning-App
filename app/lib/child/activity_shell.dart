@@ -11,8 +11,10 @@ import '../strings/he.dart';
 /// `right` of its CSS). Boards 13 (phone), 23 (tablet landscape) and 26 (tablet portrait) are the
 /// design; the small phone has no board of its own, so its numbers are a composition of mine that
 /// keeps every touch target at the board's size.
-class _ActivitySpec {
-  const _ActivitySpec({
+class ActivitySpec {
+  const ActivitySpec({
+    required this.bubbleMaxWidth,
+    required this.bubbleMaxHeight,
     required this.homeRight,
     required this.controlsTop,
     required this.eyeLeft,
@@ -38,6 +40,9 @@ class _ActivitySpec {
     required this.tileFont,
   });
 
+  /// The room a long question has: its width and height limits, in board points.
+  final double bubbleMaxWidth;
+  final double bubbleMaxHeight;
   final double homeRight;
   final double controlsTop;
   final double eyeLeft;
@@ -67,7 +72,9 @@ class _ActivitySpec {
   final double tileFont;
 
   // Board 13.
-  static const _ActivitySpec phone = _ActivitySpec(
+  static const ActivitySpec phone = ActivitySpec(
+    bubbleMaxWidth: 190,
+    bubbleMaxHeight: 132,
     homeRight: 59,
     controlsTop: 12,
     eyeLeft: 59,
@@ -93,7 +100,9 @@ class _ActivitySpec {
   );
 
   // No board: board 13 re-composed for 667 by 375 with the same sizes.
-  static const _ActivitySpec phoneSE = _ActivitySpec(
+  static const ActivitySpec phoneSE = ActivitySpec(
+    bubbleMaxWidth: 176,
+    bubbleMaxHeight: 118,
     homeRight: 16,
     controlsTop: 8,
     eyeLeft: 16,
@@ -119,7 +128,9 @@ class _ActivitySpec {
   );
 
   // Board 23.
-  static const _ActivitySpec tabletLandscape = _ActivitySpec(
+  static const ActivitySpec tabletLandscape = ActivitySpec(
+    bubbleMaxWidth: 600,
+    bubbleMaxHeight: 112,
     homeRight: 24,
     controlsTop: 24,
     eyeLeft: 24,
@@ -145,7 +156,9 @@ class _ActivitySpec {
   );
 
   // Board 26.
-  static const _ActivitySpec tabletPortrait = _ActivitySpec(
+  static const ActivitySpec tabletPortrait = ActivitySpec(
+    bubbleMaxWidth: 440,
+    bubbleMaxHeight: 208,
     homeRight: 24,
     controlsTop: 32,
     eyeLeft: 24,
@@ -170,7 +183,7 @@ class _ActivitySpec {
     tileFont: 64,
   );
 
-  static _ActivitySpec of(BoardClass b) => switch (b) {
+  static ActivitySpec of(BoardClass b) => switch (b) {
     BoardClass.phone => phone,
     BoardClass.phoneSE => phoneSE,
     BoardClass.tabletLandscape => tabletLandscape,
@@ -191,7 +204,7 @@ class ActivityShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
-    final _ActivitySpec s = _ActivitySpec.of(board);
+    final ActivitySpec s = ActivitySpec.of(board);
     return Scaffold(
       body: BoardCanvas(
         background: TokenColors.cream,
@@ -284,7 +297,7 @@ class ActivityShell extends StatelessWidget {
     );
   }
 
-  Widget _stage(_ActivitySpec s) {
+  Widget _stage(ActivitySpec s) {
     const BoardSvg flowers = BoardSvg('assets/art/scenes/flowers.svg', key: Key('activity-stage'));
     if (!s.stageIsCard) {
       return Positioned.fromRect(rect: s.stage, child: flowers);

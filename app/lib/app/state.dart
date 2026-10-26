@@ -1,10 +1,20 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:drift/drift.dart' show Value;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../content/content_repository.dart';
+import '../content/models.dart';
+import '../content/pack_installer.dart';
+import '../content/pack_verify.dart';
 import '../core/platform_service.dart';
 import '../data/app_database.dart';
 import '../data/encrypted_storage.dart';
 import '../security/parent_gate.dart';
 import '../security/parent_session.dart';
+import '../play/lesson_controller.dart';
 import '../security/pin_service.dart';
 import 'providers.dart';
 
@@ -92,3 +102,48 @@ class ActiveProfile extends Notifier<Profile?> {
 
 final NotifierProvider<ActiveProfile, Profile?> activeProfileProvider =
     NotifierProvider<ActiveProfile, Profile?>(ActiveProfile.new);
+
+/// The lessons: the pack that ships in the app, installed through the same checks as any pack (signature
+/// against the built-in key, every hash) and read back from disk before use.
+final FutureProvider<PackContent> contentProvider = FutureProvider<PackContent>((Ref ref) async {
+  final String folder = await ref.watch(platformProvider).noBackupDir();
+  final AppDatabase db = await ref.watch(databaseProvider.future);
+  final Uint8List key = unhex(await rootBundle.loadString('assets/pack_signing_public_key.txt'));
+  final PackInstaller installer = PackInstaller(
+    root: Directory('$folder${Platform.pathSeparator}packs'),
+    registry: DbPackRegistry(db),
+    publicKey: key,
+    clock: ref.watch(clockProvider),
+  );
+  return ContentRepository(
+    installer: installer,
+    bundled: () async => (await rootBundle.load('assets/packs/starter-0.1.0.nnpack')).buffer.asUint8List(),
+  ).starter();
+});
+
+/// Where each answer a child gives is written: the `attempt` table of the local database.
+final Provider<AttemptSink> attemptSinkProvider = Provider<AttemptSink>((Ref ref) {
+  return (AttemptRecord r) async {
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    await db.recordAttempt(
+      AttemptsCompanion.insert(
+        at: r.at,
+        profileId: r.profileId,
+        packId: r.packId,
+        packVersion: r.packVersion,
+        lessonId: Value<String>(r.lessonId),
+        activityId: r.activityId,
+        activityRevision: r.activityRevision,
+        template: r.template,
+        templateVersion: r.templateVersion,
+        skillId: r.skillId,
+        result: r.result,
+        attemptNo: r.attemptNo,
+        hintLevel: r.hintLevel,
+        misconceptionTag: Value<String>(r.misconceptionTag),
+        response: Value<String>(r.response),
+        durationMs: Value<int>(r.durationMs),
+      ),
+    );
+  };
+});
