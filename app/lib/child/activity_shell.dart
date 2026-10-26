@@ -42,25 +42,27 @@ class _TopControls extends StatelessWidget {
   final VoidCallback onHome;
 
   @override
+  // Board 13: Home at the start corner (right in Hebrew); the progress trail, then the hint lamp and the
+  // "show me" eye together at the end corner, which is where a child's own pacing controls live.
   Widget build(BuildContext context) => Row(
     children: <Widget>[
       PebbleButton(
-        semanticLabel: He.showMeSemantics.text,
-        icon: const Icon(Icons.visibility_rounded, color: TokenColors.ink, size: 36),
-        onPressed: () {},
+        semanticLabel: He.homeSemantics.text,
+        icon: const Icon(Icons.beach_access_rounded, color: TokenColors.seaDeep, size: 36),
+        onPressed: onHome,
       ),
+      const Spacer(),
+      const ProgressTrail(total: 6, done: 2),
+      const SizedBox(width: 12),
       PebbleButton(
         semanticLabel: He.hintSemantics.text,
         icon: const Icon(Icons.lightbulb_rounded, color: TokenColors.skyDeep, size: 36),
         onPressed: () {},
       ),
-      const SizedBox(width: 12),
-      const ProgressTrail(total: 6, done: 2),
-      const Spacer(),
       PebbleButton(
-        semanticLabel: He.homeSemantics.text,
-        icon: const Icon(Icons.beach_access_rounded, color: TokenColors.seaDeep, size: 36),
-        onPressed: onHome,
+        semanticLabel: He.showMeSemantics.text,
+        icon: const Icon(Icons.visibility_rounded, color: TokenColors.ink, size: 36),
+        onPressed: () {},
       ),
     ],
   );
