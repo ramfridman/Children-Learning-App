@@ -8,8 +8,9 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 |---|---|
 | Reading pass over the plan, docs and design bundle | Done |
 | M0 Foundations | **Done, merged to `main` 2026-10-26** (approved 2026-10-25; see `docs/milestones/M0.md`, section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Reinstall check done. Left: spend-limit screenshots and the owner's confirmation of the M0 report. Branch `m0-foundations`, not merged to `main`. |
-| M1 App shell and design system | **Built and green in CI on branch `m1-app-shell`.** The child screens were rebuilt from the design boards' own coordinates and artwork after the owner's first look (192 Dart tests, 16 of them check positions and sizes against the boards' CSS). Comparison pictures: `docs/milestones/m1-screenshots/`. Still to do: the phone checks with the Samsung plugged in (install, wrong-PIN lock-outs, database file pulled with adb, Argon2id timing), and the owner's OK. |
-| M2–M9 | Not started |
+| M1 App shell and design system | **Done and merged to `main` on 2026-10-26** (CI green; child screens match the design boards, checked by 16 geometry tests). The on-phone checks (install, wrong-PIN lock-outs, database file pulled with adb, Argon2id timing) are still to do when the Samsung is plugged into the PC. The Hebrew child strings await the owner's review. |
+| M2 Content system and first activity | **Plan written, waiting for the owner's OK** (`docs/milestones/M2.md`, branch `m2-content-system`). No code yet. |
+| M3–M9 | Not started |
 
 ## Done
 
