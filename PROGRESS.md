@@ -13,7 +13,7 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M3 Learning engine | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M3.md` section 11). The simulator names the planted gap within 3 probes in 96.2% of 1,000 invented children (history on 80% of skills; 91.0% at 50%, 51.3% at none). On-phone checks (section 7 of the device checks) come later. |
 | M4 Characters and voice out | **Built on branch `m4-characters-voice`, waiting for CI and the owner's OK to merge** (report in `docs/milestones/M4.md` section 11). The companion changes picture and voice on every screen (tested with mock voices); real ElevenLabs voices (Phase H) and the phone checks (device checks section 8) come after. 60 fps is measured as cost per frame on the PC only. |
 | M5 Voice in | **Built on branch `m5-voice-in` (stacked on the unmerged M4 branch), waiting for CI and the owner's checks** (report in `docs/milestones/M5.md` section 11). The matcher, mic states, repair sequence, parent switch and the real model pipeline work and are tested; **accuracy is not measured yet**: adult recordings (to-do P4) next, children's later (stays open, as agreed). |
-| M6 Gateway and AI tutor | **Built on branch `m6-gateway-tutor` (stacked on the unmerged M5), proved with fakes; the live proof (Phase F) has not run** (report in `docs/milestones/M6.md` section 11). Tables, `content-publish`, the lexicon (417 words, unreviewed), the ten checks (451 scenarios: all bad replies refused for their rule, 0 of 170 good ones refused), `tutor-turn`, `tutor-prewarm`, and the app side (prefetch, cache, circuit breaker, 3-second plan, live voice) work. **Speed is not measured**; needs his keys, model id and voice ids (to-do P7) and a number for Q9. |
+| M6 Gateway and AI tutor | **Built on branch `m6-gateway-tutor` (stacked on the unmerged M5), proved with fakes; the live proof (Phase F) has not run** (report in `docs/milestones/M6.md` section 11). Tables, `content-publish`, the lexicon (417 words, unreviewed), the ten checks (451 scenarios: all bad replies refused for their rule, 0 of 170 good ones refused), `tutor-turn`, `tutor-prewarm`, and the app side (prefetch, cache, circuit breaker, 3-second plan, live voice) work. **Speed is not measured**; needs his keys, model id and voice ids (to-do P7) (Q9, the 0.50 USD daily cap, is settled). |
 | M7–M9 | Not started |
 
 ## Done
@@ -63,7 +63,7 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 The full checklist is `docs/owner-todo.md`. In short:
 
-- **M6:** a number for the daily cost cap (Q9); at the PC, the live phase (to-do P7: keys, model id, prices, pre-warm, listening).
+- **M6:** at the PC, the live phase (to-do P7: keys, model id, prices, pre-warm, listening).
 - **M4:** confirm after the report (CI green); **M5:** the adult recordings and the phone checks (to-do P4 to P6, T6); the phone checks (section 8); choose ElevenLabs voices when ready (Phase H).
 - Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1, M2 and M3; Hebrew review; confirm M3 after the report.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
