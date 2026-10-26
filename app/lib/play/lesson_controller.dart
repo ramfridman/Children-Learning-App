@@ -24,6 +24,7 @@ class AttemptRecord {
     required this.misconceptionTag,
     required this.response,
     required this.durationMs,
+    this.sessionId,
   });
 
   final DateTime at;
@@ -48,6 +49,9 @@ class AttemptRecord {
   /// A fixed code: the option id, `n=<number given>`, or empty.
   final String response;
   final int durationMs;
+
+  /// The session (visit) this answer was given in.
+  final int? sessionId;
 }
 
 typedef AttemptSink = Future<void> Function(AttemptRecord record);
@@ -77,6 +81,7 @@ class LessonController extends ChangeNotifier {
     required this.lesson,
     required this.profileId,
     required AttemptSink record,
+    this.sessionId,
     Clock clock = const SystemClock(),
   }) : items = content.itemsOf(lesson),
        _record = record,
@@ -87,6 +92,9 @@ class LessonController extends ChangeNotifier {
   final PackContent content;
   final Lesson lesson;
   final String profileId;
+
+  /// The row of the `session` table for this visit, if one was made.
+  final int? sessionId;
   final List<Activity> items;
   final AttemptSink _record;
   final Clock _clock;
@@ -288,6 +296,7 @@ class LessonController extends ChangeNotifier {
       misconceptionTag: tag,
       response: response,
       durationMs: math.max(0, now - _markMs),
+      sessionId: sessionId,
     );
     _markMs = now;
     return _record(rec);

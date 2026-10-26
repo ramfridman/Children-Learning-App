@@ -250,6 +250,24 @@ final List<Broken> _cases = <Broken>[
     'not in the misconception catalogue',
   ),
   Broken(
+    'activity: contradicts a tag that is not in the catalogue',
+    (SamplePack p) => p.doc(_c)['contradicts'] = 'M-CNT-NOPE',
+    '$_c › contradicts',
+    'not in the misconception catalogue',
+  ),
+  Broken(
+    'skill: a mastery requirement out of range',
+    (SamplePack p) => p.doc(skillFile)['masteryRequires'] = <String, Object?>{'successes': 99},
+    '$skillFile › masteryRequires.successes',
+    'is outside 1 to 20',
+  ),
+  Broken(
+    'skill: an unknown mastery requirement',
+    (SamplePack p) => p.doc(skillFile)['masteryRequires'] = <String, Object?>{'speed': 1},
+    '$skillFile › masteryRequires',
+    'unknown field "speed"',
+  ),
+  Broken(
     'activity: no default feedback rule',
     (SamplePack p) => _l(_m(p.doc(_c)['feedback'])['incorrect']).removeAt(0),
     '$_c › feedback.incorrect',

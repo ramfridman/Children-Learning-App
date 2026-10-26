@@ -133,6 +133,36 @@
         "initialStabilityDays"
       ],
       "additionalProperties": false
+    },
+    "core": {
+      "type": "boolean"
+    },
+    "masteryRequires": {
+      "type": "object",
+      "properties": {
+        "successes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "representations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "checks": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        }
+      },
+      "required": [],
+      "additionalProperties": false
     }
   },
   "required": [

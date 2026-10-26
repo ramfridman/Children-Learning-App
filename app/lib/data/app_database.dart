@@ -4,13 +4,13 @@ import 'tables.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: <Type>[Profiles, AppSettings, LocalEvents, InstalledPacks, Attempts])
+@DriftDatabase(tables: <Type>[Profiles, AppSettings, LocalEvents, InstalledPacks, Attempts, Sessions])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 2;
+  static const int currentSchemaVersion = 3;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -23,6 +23,12 @@ class AppDatabase extends _$AppDatabase {
       if (from < 2) {
         await m.createTable(installedPacks);
         await m.createTable(attempts);
+      }
+      // 2 to 3 (M3): sessions, and the session of each answer.
+      if (from < 3) {
+        await m.createTable(sessions);
+        // A version 1 file just got `attempts` with the column already; only a version 2 file needs it added.
+        if (from >= 2) await m.addColumn(attempts, attempts.sessionId);
       }
     },
     beforeOpen: (OpeningDetails details) async {
@@ -61,6 +67,23 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> saveInstalledPack(InstalledPacksCompanion row) =>
       into(installedPacks).insertOnConflictUpdate(row);
+
+  // ---- sessions ----
+
+  Future<int> startSession(String profileId, DateTime at, {String plan = ''}) =>
+      into(sessions)
+          .insert(SessionsCompanion.insert(profileId: profileId, startedAt: at, plan: Value<String>(plan)));
+
+  Future<void> endSession(int id, DateTime at, String reason) =>
+      (update(sessions)..where((Sessions t) => t.id.equals(id))).write(
+        SessionsCompanion(endedAt: Value<DateTime>(at), endReason: Value<String>(reason)),
+      );
+
+  Future<List<Session>> sessionsOf(String profileId) =>
+      (select(sessions)
+            ..where((Sessions t) => t.profileId.equals(profileId))
+            ..orderBy(<OrderingTerm Function(Sessions)>[(Sessions t) => OrderingTerm.asc(t.id)]))
+          .get();
 
   // ---- attempts ----
 

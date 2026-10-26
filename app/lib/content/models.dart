@@ -93,6 +93,12 @@ sealed class Activity {
         for (final Map<String, Object?> s in _maps(json['skills']))
           Skill(id: s['id']! as String, weight: (s['weight']! as num).toDouble()),
       ],
+      purpose = json['purpose']! as String,
+      checkType = json['checkType']! as String,
+      representation = json['representation']! as String,
+      variantGroup = json['variantGroup']! as String,
+      difficulty = (_map(json['difficulty'])['authored']! as num).toDouble(),
+      contradicts = json['contradicts'] as String?,
       promptLine = Spoken.fromJson(json['prompt']),
       feedback = ActivityFeedback(
         correct: Spoken.fromJson(_map(json['feedback'])['correct']),
@@ -126,6 +132,14 @@ sealed class Activity {
 
   final Map<String, Object?> json;
   final PackAssets assets;
+
+  /// What the learning engine needs to know about the activity.
+  final String purpose;
+  final String checkType;
+  final String representation;
+  final String variantGroup;
+  final double difficulty;
+  final String? contradicts;
   final String id;
   final int revision;
   final String template;
@@ -138,6 +152,10 @@ sealed class Activity {
   final String altText;
 
   String get skillId => skills.first.id;
+
+  /// How many choices the child has (0 for an open task), and the misconceptions the wrong answers can show.
+  int get optionCount;
+  Set<String> get engineTags;
 
   /// The asset reference (`asset:butterfly`) of the scene background, if any.
   String? get background => _map(json['scene'])['background'] as String?;
@@ -176,6 +194,15 @@ class TapAnswerActivity extends Activity {
 
   final List<ChoiceOption> options;
   final String correctId;
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
 }
 
 class CountTapActivity extends Activity {
@@ -215,6 +242,16 @@ class CountTapActivity extends Activity {
 
   /// `same_object_tapped_twice` and `object_never_tapped` to the tag each one is evidence for.
   final Map<String, String> traceTags;
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+    ...traceTags.values,
+  };
 }
 
 class GiveNActivity extends Activity {
@@ -237,6 +274,12 @@ class GiveNActivity extends Activity {
 
   /// `took_all`, `took_more` or `took_fewer` to the tag each one is evidence for.
   final Map<String, String> classifiers;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => classifiers.values.toSet();
 }
 
 class Lesson {
@@ -254,6 +297,53 @@ class Lesson {
   final List<String> itemIds;
   final List<String> skillIds;
   final Spoken celebration;
+}
+
+/// A skill of the pack, for the learning engine.
+class SkillDoc {
+  SkillDoc._(Map<String, Object?> json)
+    : id = json['id']! as String,
+      prerequisites = <String, double>{
+        for (final Map<String, Object?> p in _maps(json['prerequisites']))
+          p['skill']! as String: (p['weight']! as num).toDouble(),
+      },
+      representations = <String>[
+        for (final Object? r in json['representations']! as List<Object?>) r! as String,
+      ],
+      misconceptions = <String>[
+        for (final Object? t in json['misconceptions']! as List<Object?>) t! as String,
+      ],
+      core = (json['core'] as bool?) ?? false,
+      masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
+      initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
+      targetRetention = (_map(json['retention'])['targetRetention']! as num).toDouble();
+
+  final String id;
+  final Map<String, double> prerequisites;
+  final List<String> representations;
+  final List<String> misconceptions;
+  final bool core;
+  final Map<String, Object?> masteryRequires;
+  final double initialStabilityDays;
+  final double targetRetention;
+}
+
+/// A misconception of the pack.
+class TagDoc {
+  TagDoc._(Map<String, Object?> json)
+    : id = json['id']! as String,
+      skills = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
+      repairActivities = <String>[
+        for (final Object? a in json['repairActivities']! as List<Object?>) a! as String,
+      ],
+      preferredRepresentations = <String>[
+        for (final Object? r in json['preferredRepresentations']! as List<Object?>) r! as String,
+      ];
+
+  final String id;
+  final List<String> skills;
+  final List<String> repairActivities;
+  final List<String> preferredRepresentations;
 }
 
 /// The pictures of a pack, by asset id, as SVG text. Nothing else is ever drawn from a pack.
@@ -283,17 +373,27 @@ class PackContent {
     required this.lessons,
     required this.activities,
     required this.assets,
+    required this.skills,
+    required this.tags,
   });
 
   factory PackContent.fromPack(VerifiedPack pack) {
     final PackAssets assets = PackAssets.fromPack(pack);
     final Map<String, Lesson> lessons = <String, Lesson>{};
     final Map<String, Activity> activities = <String, Activity>{};
+    final Map<String, SkillDoc> skills = <String, SkillDoc>{};
+    final Map<String, TagDoc> tags = <String, TagDoc>{};
     for (final MapEntry<String, Object?> d in pack.docs.entries) {
       final Map<String, Object?> doc = _map(d.value);
       if (d.key.startsWith('lesson.')) {
         final Lesson l = Lesson._(doc);
         lessons[l.id] = l;
+      } else if (d.key.startsWith('skill.')) {
+        final SkillDoc s = SkillDoc._(doc);
+        skills[s.id] = s;
+      } else if (d.key.startsWith('misconception.')) {
+        final TagDoc t = TagDoc._(doc);
+        tags[t.id] = t;
       } else if (d.key.startsWith('activity.')) {
         final Activity a = Activity.fromJson(doc, assets);
         activities[a.id] = a;
@@ -305,6 +405,8 @@ class PackContent {
       lessons: lessons,
       activities: activities,
       assets: assets,
+      skills: skills,
+      tags: tags,
     );
   }
 
@@ -313,6 +415,8 @@ class PackContent {
   final Map<String, Lesson> lessons;
   final Map<String, Activity> activities;
   final PackAssets assets;
+  final Map<String, SkillDoc> skills;
+  final Map<String, TagDoc> tags;
 
   /// The activities of a lesson, in order.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[

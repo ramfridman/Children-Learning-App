@@ -48,6 +48,10 @@ class SkillNode {
     this.tags = const <String>{},
     this.initialStabilityDays = 1,
     this.targetRetention,
+    this.needSuccesses,
+    this.needDays,
+    this.needRepresentations,
+    this.needChecks,
   });
 
   final String id;
@@ -63,6 +67,12 @@ class SkillNode {
   final Set<String> tags;
   final double initialStabilityDays;
   final double? targetRetention;
+
+  /// What this skill needs for fresh mastery, when it differs from the engine's defaults.
+  final int? needSuccesses;
+  final int? needDays;
+  final int? needRepresentations;
+  final int? needChecks;
 
   /// The family of a skill for the representation statistics: its id without the number (`NUM-A`).
   String get family => id.contains('-') ? id.substring(0, id.lastIndexOf('-')) : id;

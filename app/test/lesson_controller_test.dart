@@ -54,7 +54,7 @@ void main() {
       final AttemptRecord r = written.single;
       expect(r.profileId, 'p-1');
       expect(r.packId, 'starter');
-      expect(r.packVersion, '0.1.0');
+      expect(r.packVersion, '0.2.0');
       expect(r.lessonId, 'butterflies');
       expect(r.activityId, 'count.butterflies.3');
       expect(r.activityRevision, 1);

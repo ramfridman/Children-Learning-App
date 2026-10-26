@@ -114,4 +114,24 @@ class Attempts extends Table {
   TextColumn get response => text().withDefault(const Constant<String>(''))();
 
   IntColumn get durationMs => integer().withDefault(const Constant<int>(0))();
+
+  /// The session this answer belongs to (a visit with a start and an end), or null for answers from before sessions.
+  IntColumn get sessionId => integer().nullable()();
+}
+
+/// One visit: a lesson or a session the engine planned. It holds no names and no text.
+class Sessions extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  TextColumn get profileId => text()();
+
+  DateTimeColumn get startedAt => dateTime()();
+
+  DateTimeColumn get endedAt => dateTime().nullable()();
+
+  /// What was played, for example `lesson:butterflies` or `session:A`.
+  TextColumn get plan => text().withDefault(const Constant<String>(''))();
+
+  /// A fixed word: `finished`, `home` (the child left), `limit` (the parent's time was up) or empty while it runs.
+  TextColumn get endReason => text().withDefault(const Constant<String>(''))();
 }

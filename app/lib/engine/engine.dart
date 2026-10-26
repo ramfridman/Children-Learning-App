@@ -169,13 +169,17 @@ class Engine {
   void _checkFresh(String id, SkillState s, DateTime at) {
     if (s.freshAt != null || s.p < params.masteryBar) return;
     final bool core = graph.isCore(id);
-    if (s.successes < (core ? params.freshSuccessesCore : params.freshSuccesses)) return;
-    if (s.successDays.length < params.freshDays) return;
-    if (s.representationsPassed.length <
-        (core ? params.freshRepresentationsCore : params.freshRepresentations)) {
+    final SkillNode node = graph.node(id);
+    if (s.successes < (node.needSuccesses ?? (core ? params.freshSuccessesCore : params.freshSuccesses))) {
       return;
     }
-    if (s.checksPassed.length < (core ? params.freshChecksCore : params.freshChecks)) return;
+    if (s.successDays.length < (node.needDays ?? params.freshDays)) return;
+    final int needReps =
+        node.needRepresentations ?? (core ? params.freshRepresentationsCore : params.freshRepresentations);
+    if (s.representationsPassed.length < needReps) return;
+    if (s.checksPassed.length < (node.needChecks ?? (core ? params.freshChecksCore : params.freshChecks))) {
+      return;
+    }
     s.freshAt = at;
     s.itemsAtFresh = Set<String>.of(s.successItems);
   }

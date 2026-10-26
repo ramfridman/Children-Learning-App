@@ -26,6 +26,8 @@ abstract final class DevStrings {
   static const String packs = '5. Content packs';
   static const String installIncoming = 'Install .nnpack files from the incoming folder';
   static const String listPacks = 'List installed packs';
+  static const String engine = '6. Learning engine';
+  static const String engineState = 'Show what the engine knows about each child';
   static const String output = 'Output';
   static const String prodPlaceholder = 'Nitznutz';
   static const String configProblem = 'Build settings are missing or wrong';

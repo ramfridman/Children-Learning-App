@@ -1338,6 +1338,15 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     requiredDuringInsert: false,
     defaultValue: const Constant<int>(0),
   );
+  static const VerificationMeta _sessionIdMeta = const VerificationMeta('sessionId');
+  @override
+  late final GeneratedColumn<int> sessionId = GeneratedColumn<int>(
+    'session_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1357,6 +1366,7 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     misconceptionTag,
     response,
     durationMs,
+    sessionId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1460,6 +1470,9 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
         durationMs.isAcceptableOrUnknown(data['duration_ms']!, _durationMsMeta),
       );
     }
+    if (data.containsKey('session_id')) {
+      context.handle(_sessionIdMeta, sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta));
+    }
     return context;
   }
 
@@ -1504,6 +1517,7 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
       )!,
       response: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}response'])!,
       durationMs: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}duration_ms'])!,
+      sessionId: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}session_id']),
     );
   }
 
@@ -1547,6 +1561,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
   /// What was chosen, as a fixed code: an option id (`o2`), a number (`n=4`) or a classifier word.
   final String response;
   final int durationMs;
+
+  /// The session this answer belongs to (a visit with a start and an end), or null for answers from before sessions.
+  final int? sessionId;
   const Attempt({
     required this.id,
     required this.at,
@@ -1565,6 +1582,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     required this.misconceptionTag,
     required this.response,
     required this.durationMs,
+    this.sessionId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1586,6 +1604,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     map['misconception_tag'] = Variable<String>(misconceptionTag);
     map['response'] = Variable<String>(response);
     map['duration_ms'] = Variable<int>(durationMs);
+    if (!nullToAbsent || sessionId != null) {
+      map['session_id'] = Variable<int>(sessionId);
+    }
     return map;
   }
 
@@ -1608,6 +1629,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       misconceptionTag: Value(misconceptionTag),
       response: Value(response),
       durationMs: Value(durationMs),
+      sessionId: sessionId == null && nullToAbsent ? const Value.absent() : Value(sessionId),
     );
   }
 
@@ -1631,6 +1653,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       misconceptionTag: serializer.fromJson<String>(json['misconceptionTag']),
       response: serializer.fromJson<String>(json['response']),
       durationMs: serializer.fromJson<int>(json['durationMs']),
+      sessionId: serializer.fromJson<int?>(json['sessionId']),
     );
   }
   @override
@@ -1654,6 +1677,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       'misconceptionTag': serializer.toJson<String>(misconceptionTag),
       'response': serializer.toJson<String>(response),
       'durationMs': serializer.toJson<int>(durationMs),
+      'sessionId': serializer.toJson<int?>(sessionId),
     };
   }
 
@@ -1675,6 +1699,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     String? misconceptionTag,
     String? response,
     int? durationMs,
+    Value<int?> sessionId = const Value.absent(),
   }) => Attempt(
     id: id ?? this.id,
     at: at ?? this.at,
@@ -1693,6 +1718,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     misconceptionTag: misconceptionTag ?? this.misconceptionTag,
     response: response ?? this.response,
     durationMs: durationMs ?? this.durationMs,
+    sessionId: sessionId.present ? sessionId.value : this.sessionId,
   );
   Attempt copyWithCompanion(AttemptsCompanion data) {
     return Attempt(
@@ -1713,6 +1739,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       misconceptionTag: data.misconceptionTag.present ? data.misconceptionTag.value : this.misconceptionTag,
       response: data.response.present ? data.response.value : this.response,
       durationMs: data.durationMs.present ? data.durationMs.value : this.durationMs,
+      sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
     );
   }
 
@@ -1735,7 +1762,8 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           ..write('hintLevel: $hintLevel, ')
           ..write('misconceptionTag: $misconceptionTag, ')
           ..write('response: $response, ')
-          ..write('durationMs: $durationMs')
+          ..write('durationMs: $durationMs, ')
+          ..write('sessionId: $sessionId')
           ..write(')'))
         .toString();
   }
@@ -1759,6 +1787,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     misconceptionTag,
     response,
     durationMs,
+    sessionId,
   );
   @override
   bool operator ==(Object other) =>
@@ -1780,7 +1809,8 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           other.hintLevel == this.hintLevel &&
           other.misconceptionTag == this.misconceptionTag &&
           other.response == this.response &&
-          other.durationMs == this.durationMs);
+          other.durationMs == this.durationMs &&
+          other.sessionId == this.sessionId);
 }
 
 class AttemptsCompanion extends UpdateCompanion<Attempt> {
@@ -1801,6 +1831,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
   final Value<String> misconceptionTag;
   final Value<String> response;
   final Value<int> durationMs;
+  final Value<int?> sessionId;
   const AttemptsCompanion({
     this.id = const Value.absent(),
     this.at = const Value.absent(),
@@ -1819,6 +1850,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.misconceptionTag = const Value.absent(),
     this.response = const Value.absent(),
     this.durationMs = const Value.absent(),
+    this.sessionId = const Value.absent(),
   });
   AttemptsCompanion.insert({
     this.id = const Value.absent(),
@@ -1838,6 +1870,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.misconceptionTag = const Value.absent(),
     this.response = const Value.absent(),
     this.durationMs = const Value.absent(),
+    this.sessionId = const Value.absent(),
   }) : at = Value(at),
        profileId = Value(profileId),
        packId = Value(packId),
@@ -1868,6 +1901,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Expression<String>? misconceptionTag,
     Expression<String>? response,
     Expression<int>? durationMs,
+    Expression<int>? sessionId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1887,6 +1921,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       if (misconceptionTag != null) 'misconception_tag': misconceptionTag,
       if (response != null) 'response': response,
       if (durationMs != null) 'duration_ms': durationMs,
+      if (sessionId != null) 'session_id': sessionId,
     });
   }
 
@@ -1908,6 +1943,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Value<String>? misconceptionTag,
     Value<String>? response,
     Value<int>? durationMs,
+    Value<int?>? sessionId,
   }) {
     return AttemptsCompanion(
       id: id ?? this.id,
@@ -1927,6 +1963,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       misconceptionTag: misconceptionTag ?? this.misconceptionTag,
       response: response ?? this.response,
       durationMs: durationMs ?? this.durationMs,
+      sessionId: sessionId ?? this.sessionId,
     );
   }
 
@@ -1984,6 +2021,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     if (durationMs.present) {
       map['duration_ms'] = Variable<int>(durationMs.value);
     }
+    if (sessionId.present) {
+      map['session_id'] = Variable<int>(sessionId.value);
+    }
     return map;
   }
 
@@ -2006,7 +2046,356 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
           ..write('hintLevel: $hintLevel, ')
           ..write('misconceptionTag: $misconceptionTag, ')
           ..write('response: $response, ')
-          ..write('durationMs: $durationMs')
+          ..write('durationMs: $durationMs, ')
+          ..write('sessionId: $sessionId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SessionsTable extends Sessions with TableInfo<$SessionsTable, Session> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SessionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'),
+  );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta('profileId');
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startedAtMeta = const VerificationMeta('startedAt');
+  @override
+  late final GeneratedColumn<DateTime> startedAt = GeneratedColumn<DateTime>(
+    'started_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endedAtMeta = const VerificationMeta('endedAt');
+  @override
+  late final GeneratedColumn<DateTime> endedAt = GeneratedColumn<DateTime>(
+    'ended_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _planMeta = const VerificationMeta('plan');
+  @override
+  late final GeneratedColumn<String> plan = GeneratedColumn<String>(
+    'plan',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant<String>(''),
+  );
+  static const VerificationMeta _endReasonMeta = const VerificationMeta('endReason');
+  @override
+  late final GeneratedColumn<String> endReason = GeneratedColumn<String>(
+    'end_reason',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant<String>(''),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, profileId, startedAt, endedAt, plan, endReason];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sessions';
+  @override
+  VerificationContext validateIntegrity(Insertable<Session> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('profile_id')) {
+      context.handle(_profileIdMeta, profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
+    } else if (isInserting) {
+      context.missing(_profileIdMeta);
+    }
+    if (data.containsKey('started_at')) {
+      context.handle(_startedAtMeta, startedAt.isAcceptableOrUnknown(data['started_at']!, _startedAtMeta));
+    } else if (isInserting) {
+      context.missing(_startedAtMeta);
+    }
+    if (data.containsKey('ended_at')) {
+      context.handle(_endedAtMeta, endedAt.isAcceptableOrUnknown(data['ended_at']!, _endedAtMeta));
+    }
+    if (data.containsKey('plan')) {
+      context.handle(_planMeta, plan.isAcceptableOrUnknown(data['plan']!, _planMeta));
+    }
+    if (data.containsKey('end_reason')) {
+      context.handle(_endReasonMeta, endReason.isAcceptableOrUnknown(data['end_reason']!, _endReasonMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Session map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Session(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      startedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}started_at'],
+      )!,
+      endedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}ended_at']),
+      plan: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}plan'])!,
+      endReason: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}end_reason'],
+      )!,
+    );
+  }
+
+  @override
+  $SessionsTable createAlias(String alias) {
+    return $SessionsTable(attachedDatabase, alias);
+  }
+}
+
+class Session extends DataClass implements Insertable<Session> {
+  final int id;
+  final String profileId;
+  final DateTime startedAt;
+  final DateTime? endedAt;
+
+  /// What was played, for example `lesson:butterflies` or `session:A`.
+  final String plan;
+
+  /// A fixed word: `finished`, `home` (the child left), `limit` (the parent's time was up) or empty while it runs.
+  final String endReason;
+  const Session({
+    required this.id,
+    required this.profileId,
+    required this.startedAt,
+    this.endedAt,
+    required this.plan,
+    required this.endReason,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['started_at'] = Variable<DateTime>(startedAt);
+    if (!nullToAbsent || endedAt != null) {
+      map['ended_at'] = Variable<DateTime>(endedAt);
+    }
+    map['plan'] = Variable<String>(plan);
+    map['end_reason'] = Variable<String>(endReason);
+    return map;
+  }
+
+  SessionsCompanion toCompanion(bool nullToAbsent) {
+    return SessionsCompanion(
+      id: Value(id),
+      profileId: Value(profileId),
+      startedAt: Value(startedAt),
+      endedAt: endedAt == null && nullToAbsent ? const Value.absent() : Value(endedAt),
+      plan: Value(plan),
+      endReason: Value(endReason),
+    );
+  }
+
+  factory Session.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Session(
+      id: serializer.fromJson<int>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      startedAt: serializer.fromJson<DateTime>(json['startedAt']),
+      endedAt: serializer.fromJson<DateTime?>(json['endedAt']),
+      plan: serializer.fromJson<String>(json['plan']),
+      endReason: serializer.fromJson<String>(json['endReason']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'startedAt': serializer.toJson<DateTime>(startedAt),
+      'endedAt': serializer.toJson<DateTime?>(endedAt),
+      'plan': serializer.toJson<String>(plan),
+      'endReason': serializer.toJson<String>(endReason),
+    };
+  }
+
+  Session copyWith({
+    int? id,
+    String? profileId,
+    DateTime? startedAt,
+    Value<DateTime?> endedAt = const Value.absent(),
+    String? plan,
+    String? endReason,
+  }) => Session(
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    startedAt: startedAt ?? this.startedAt,
+    endedAt: endedAt.present ? endedAt.value : this.endedAt,
+    plan: plan ?? this.plan,
+    endReason: endReason ?? this.endReason,
+  );
+  Session copyWithCompanion(SessionsCompanion data) {
+    return Session(
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      startedAt: data.startedAt.present ? data.startedAt.value : this.startedAt,
+      endedAt: data.endedAt.present ? data.endedAt.value : this.endedAt,
+      plan: data.plan.present ? data.plan.value : this.plan,
+      endReason: data.endReason.present ? data.endReason.value : this.endReason,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Session(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('endedAt: $endedAt, ')
+          ..write('plan: $plan, ')
+          ..write('endReason: $endReason')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, profileId, startedAt, endedAt, plan, endReason);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Session &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.startedAt == this.startedAt &&
+          other.endedAt == this.endedAt &&
+          other.plan == this.plan &&
+          other.endReason == this.endReason);
+}
+
+class SessionsCompanion extends UpdateCompanion<Session> {
+  final Value<int> id;
+  final Value<String> profileId;
+  final Value<DateTime> startedAt;
+  final Value<DateTime?> endedAt;
+  final Value<String> plan;
+  final Value<String> endReason;
+  const SessionsCompanion({
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.startedAt = const Value.absent(),
+    this.endedAt = const Value.absent(),
+    this.plan = const Value.absent(),
+    this.endReason = const Value.absent(),
+  });
+  SessionsCompanion.insert({
+    this.id = const Value.absent(),
+    required String profileId,
+    required DateTime startedAt,
+    this.endedAt = const Value.absent(),
+    this.plan = const Value.absent(),
+    this.endReason = const Value.absent(),
+  }) : profileId = Value(profileId),
+       startedAt = Value(startedAt);
+  static Insertable<Session> custom({
+    Expression<int>? id,
+    Expression<String>? profileId,
+    Expression<DateTime>? startedAt,
+    Expression<DateTime>? endedAt,
+    Expression<String>? plan,
+    Expression<String>? endReason,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (startedAt != null) 'started_at': startedAt,
+      if (endedAt != null) 'ended_at': endedAt,
+      if (plan != null) 'plan': plan,
+      if (endReason != null) 'end_reason': endReason,
+    });
+  }
+
+  SessionsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? profileId,
+    Value<DateTime>? startedAt,
+    Value<DateTime?>? endedAt,
+    Value<String>? plan,
+    Value<String>? endReason,
+  }) {
+    return SessionsCompanion(
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      startedAt: startedAt ?? this.startedAt,
+      endedAt: endedAt ?? this.endedAt,
+      plan: plan ?? this.plan,
+      endReason: endReason ?? this.endReason,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (startedAt.present) {
+      map['started_at'] = Variable<DateTime>(startedAt.value);
+    }
+    if (endedAt.present) {
+      map['ended_at'] = Variable<DateTime>(endedAt.value);
+    }
+    if (plan.present) {
+      map['plan'] = Variable<String>(plan.value);
+    }
+    if (endReason.present) {
+      map['end_reason'] = Variable<String>(endReason.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SessionsCompanion(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('startedAt: $startedAt, ')
+          ..write('endedAt: $endedAt, ')
+          ..write('plan: $plan, ')
+          ..write('endReason: $endReason')
           ..write(')'))
         .toString();
   }
@@ -2020,6 +2409,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $LocalEventsTable localEvents = $LocalEventsTable(this);
   late final $InstalledPacksTable installedPacks = $InstalledPacksTable(this);
   late final $AttemptsTable attempts = $AttemptsTable(this);
+  late final $SessionsTable sessions = $SessionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2030,6 +2420,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     localEvents,
     installedPacks,
     attempts,
+    sessions,
   ];
 }
 
@@ -2667,6 +3058,7 @@ typedef $$AttemptsTableCreateCompanionBuilder = AttemptsCompanion Function({
   Value<String> misconceptionTag,
   Value<String> response,
   Value<int> durationMs,
+  Value<int?> sessionId,
 });
 typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<int> id,
@@ -2686,6 +3078,7 @@ typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<String> misconceptionTag,
   Value<String> response,
   Value<int> durationMs,
+  Value<int?> sessionId,
 });
 
 class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -2746,6 +3139,9 @@ class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTab
 
   ColumnFilters<int> get durationMs =>
       $composableBuilder(column: $table.durationMs, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => ColumnFilters(column));
 }
 
 class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -2806,6 +3202,9 @@ class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsT
 
   ColumnOrderings<int> get durationMs =>
       $composableBuilder(column: $table.durationMs, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => ColumnOrderings(column));
 }
 
 class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -2864,6 +3263,9 @@ class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $Attempt
 
   GeneratedColumn<int> get durationMs =>
       $composableBuilder(column: $table.durationMs, builder: (column) => column);
+
+  GeneratedColumn<int> get sessionId =>
+      $composableBuilder(column: $table.sessionId, builder: (column) => column);
 }
 
 class $$AttemptsTableTableManager
@@ -2908,6 +3310,7 @@ class $$AttemptsTableTableManager
                 Value<String> misconceptionTag = const Value.absent(),
                 Value<String> response = const Value.absent(),
                 Value<int> durationMs = const Value.absent(),
+                Value<int?> sessionId = const Value.absent(),
               }) => AttemptsCompanion(
                 id: id,
                 at: at,
@@ -2926,6 +3329,7 @@ class $$AttemptsTableTableManager
                 misconceptionTag: misconceptionTag,
                 response: response,
                 durationMs: durationMs,
+                sessionId: sessionId,
               ),
           createCompanionCallback:
               ({
@@ -2946,6 +3350,7 @@ class $$AttemptsTableTableManager
                 Value<String> misconceptionTag = const Value.absent(),
                 Value<String> response = const Value.absent(),
                 Value<int> durationMs = const Value.absent(),
+                Value<int?> sessionId = const Value.absent(),
               }) => AttemptsCompanion.insert(
                 id: id,
                 at: at,
@@ -2964,6 +3369,7 @@ class $$AttemptsTableTableManager
                 misconceptionTag: misconceptionTag,
                 response: response,
                 durationMs: durationMs,
+                sessionId: sessionId,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -2992,6 +3398,184 @@ typedef $$AttemptsTableProcessedTableManager =
       Attempt,
       PrefetchHooks Function()
     >;
+typedef $$SessionsTableCreateCompanionBuilder = SessionsCompanion Function({
+  Value<int> id,
+  required String profileId,
+  required DateTime startedAt,
+  Value<DateTime?> endedAt,
+  Value<String> plan,
+  Value<String> endReason,
+});
+typedef $$SessionsTableUpdateCompanionBuilder = SessionsCompanion Function({
+  Value<int> id,
+  Value<String> profileId,
+  Value<DateTime> startedAt,
+  Value<DateTime?> endedAt,
+  Value<String> plan,
+  Value<String> endReason,
+});
+
+class $$SessionsTableFilterComposer extends Composer<_$AppDatabase, $SessionsTable> {
+  $$SessionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endedAt =>
+      $composableBuilder(column: $table.endedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get plan =>
+      $composableBuilder(column: $table.plan, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get endReason =>
+      $composableBuilder(column: $table.endReason, builder: (column) => ColumnFilters(column));
+}
+
+class $$SessionsTableOrderingComposer extends Composer<_$AppDatabase, $SessionsTable> {
+  $$SessionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endedAt =>
+      $composableBuilder(column: $table.endedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get plan =>
+      $composableBuilder(column: $table.plan, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get endReason =>
+      $composableBuilder(column: $table.endReason, builder: (column) => ColumnOrderings(column));
+}
+
+class $$SessionsTableAnnotationComposer extends Composer<_$AppDatabase, $SessionsTable> {
+  $$SessionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startedAt =>
+      $composableBuilder(column: $table.startedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endedAt =>
+      $composableBuilder(column: $table.endedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get plan => $composableBuilder(column: $table.plan, builder: (column) => column);
+
+  GeneratedColumn<String> get endReason =>
+      $composableBuilder(column: $table.endReason, builder: (column) => column);
+}
+
+class $$SessionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SessionsTable,
+          Session,
+          $$SessionsTableFilterComposer,
+          $$SessionsTableOrderingComposer,
+          $$SessionsTableAnnotationComposer,
+          $$SessionsTableCreateCompanionBuilder,
+          $$SessionsTableUpdateCompanionBuilder,
+          (Session, BaseReferences<_$AppDatabase, $SessionsTable, Session>),
+          Session,
+          PrefetchHooks Function()
+        > {
+  $$SessionsTableTableManager(_$AppDatabase db, $SessionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$SessionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$SessionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$SessionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> profileId = const Value.absent(),
+                Value<DateTime> startedAt = const Value.absent(),
+                Value<DateTime?> endedAt = const Value.absent(),
+                Value<String> plan = const Value.absent(),
+                Value<String> endReason = const Value.absent(),
+              }) => SessionsCompanion(
+                id: id,
+                profileId: profileId,
+                startedAt: startedAt,
+                endedAt: endedAt,
+                plan: plan,
+                endReason: endReason,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String profileId,
+                required DateTime startedAt,
+                Value<DateTime?> endedAt = const Value.absent(),
+                Value<String> plan = const Value.absent(),
+                Value<String> endReason = const Value.absent(),
+              }) => SessionsCompanion.insert(
+                id: id,
+                profileId: profileId,
+                startedAt: startedAt,
+                endedAt: endedAt,
+                plan: plan,
+                endReason: endReason,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SessionsTable, Session>(table),
+                  BaseReferences<_$AppDatabase, $SessionsTable, Session>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SessionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SessionsTable,
+      Session,
+      $$SessionsTableFilterComposer,
+      $$SessionsTableOrderingComposer,
+      $$SessionsTableAnnotationComposer,
+      $$SessionsTableCreateCompanionBuilder,
+      $$SessionsTableUpdateCompanionBuilder,
+      (Session, BaseReferences<_$AppDatabase, $SessionsTable, Session>),
+      Session,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3002,4 +3586,5 @@ class $AppDatabaseManager {
   $$InstalledPacksTableTableManager get installedPacks =>
       $$InstalledPacksTableTableManager(_db, _db.installedPacks);
   $$AttemptsTableTableManager get attempts => $$AttemptsTableTableManager(_db, _db.attempts);
+  $$SessionsTableTableManager get sessions => $$SessionsTableTableManager(_db, _db.sessions);
 }

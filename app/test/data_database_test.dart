@@ -214,15 +214,16 @@ void main() {
       );
       expect((await db.attemptsOf('p1')).single.activityId, 'count.butterflies.3');
       final rows = await db.customSelect('PRAGMA user_version').get();
-      expect(rows.single.data['user_version'], 2);
+      expect(rows.single.data['user_version'], AppDatabase.currentSchemaVersion);
     });
 
-    test('a new install starts at version 2 with both tables', () async {
+    test('a new install starts at the current version with every table', () async {
       final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: await keys.keyHex());
       addTearDown(db.close);
       expect(await db.allInstalledPacks(), isEmpty);
       expect(await db.attemptsOf('nobody'), isEmpty);
-      expect(AppDatabase.currentSchemaVersion, 2);
+      expect(await db.sessionsOf('nobody'), isEmpty);
+      expect(AppDatabase.currentSchemaVersion, 3);
     });
 
     test('an attempt holds ids, numbers and fixed words only (no column can carry a name or free text of any size)', () async {
@@ -236,6 +237,58 @@ void main() {
       expect(columns, isNot(contains('text')));
       expect(columns, isNot(contains('transcript')));
       expect(columns, isNot(contains('audio')));
+    });
+  });
+
+  group('migration from version 2 to 3 (M3)', () {
+    test('answers keep their rows and gain a session; sessions can be started and ended', () async {
+      final String keyHex = await keys.keyHex();
+      final AppDatabase v3 = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      await v3.recordAttempt(
+        AttemptsCompanion.insert(
+          at: DateTime.utc(2026, 10, 26),
+          profileId: 'p1',
+          packId: 'starter',
+          packVersion: '0.2.0',
+          activityId: 'count.butterflies.3',
+          activityRevision: 1,
+          template: 'count_tap',
+          templateVersion: '1.0',
+          skillId: 'NUM-A-03',
+          result: 'correct',
+          attemptNo: 1,
+          hintLevel: 0,
+        ),
+      );
+      // Make a version 2 file: no sessions table, no session column.
+      await v3.customStatement('DROP TABLE sessions');
+      await v3.customStatement('ALTER TABLE attempts DROP COLUMN session_id');
+      await v3.customStatement('PRAGMA user_version = 2');
+      await v3.close();
+
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      addTearDown(db.close);
+      final List<Attempt> before = await db.attemptsOf('p1');
+      expect(before.single.activityId, 'count.butterflies.3');
+      expect(before.single.sessionId, isNull);
+      final int id = await db.startSession('p1', DateTime.utc(2026, 11, 1, 9), plan: 'lesson:butterflies');
+      await db.endSession(id, DateTime.utc(2026, 11, 1, 9, 4), 'finished');
+      final List<Session> rows = await db.sessionsOf('p1');
+      expect(rows.single.plan, 'lesson:butterflies');
+      expect(rows.single.endReason, 'finished');
+      expect(rows.single.endedAt!.toUtc(), DateTime.utc(2026, 11, 1, 9, 4));
+      final rowsV = await db.customSelect('PRAGMA user_version').get();
+      expect(rowsV.single.data['user_version'], 3);
+    });
+
+    test('a session holds no name and no text', () async {
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: await keys.keyHex());
+      addTearDown(db.close);
+      final List<String> columns = <String>[
+        for (final row in await db.customSelect('PRAGMA table_info(sessions)').get())
+          row.data['name']! as String,
+      ];
+      expect(columns, <String>['id', 'profile_id', 'started_at', 'ended_at', 'plan', 'end_reason']);
     });
   });
 
