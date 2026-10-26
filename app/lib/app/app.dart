@@ -3,6 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
+import '../child/companion_views.dart';
+import '../child/friends_beach.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
 import '../data/app_database.dart';
@@ -95,18 +97,53 @@ class _Root extends ConsumerWidget {
             onAdd: () => openParentArea(context, ref),
           );
         }
-        return HomeScreen(
-          childName: current.name,
-          avatarId: current.avatar,
-          onParents: () => openParentArea(context, ref),
-          onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
-          onOpenActivity: () => Navigator.of(
-            context,
-          ).push(MaterialPageRoute<void>(builder: (BuildContext c) => LessonScreen(profileId: current.id))),
-        );
+        return _Home(profile: current);
       },
     );
   }
+}
+
+/// The home map of the playing child, with the companion on it. After the first lesson the child is taken to
+/// Friends' Beach once, to choose a companion; the plus button next to the companion goes there any time.
+class _Home extends ConsumerStatefulWidget {
+  const _Home({required this.profile});
+
+  final Profile profile;
+
+  @override
+  ConsumerState<_Home> createState() => _HomeState();
+}
+
+class _HomeState extends ConsumerState<_Home> {
+  final GlobalKey<MapCompanionState> _companion = GlobalKey<MapCompanionState>();
+
+  String get _offeredKey => 'friends_offered:${widget.profile.id}';
+
+  Future<void> _openFriends() =>
+      Navigator.of(context).push(MaterialPageRoute<void>(builder: (BuildContext c) => const FriendsBeach()));
+
+  Future<void> _openLesson() async {
+    final bool? finished = await Navigator.of(
+      context,
+    ).push(MaterialPageRoute<bool>(builder: (BuildContext c) => LessonScreen(profileId: widget.profile.id)));
+    if (!mounted || finished != true) return;
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    if (await db.setting(_offeredKey) != null) return;
+    await db.putSetting(_offeredKey, 'yes');
+    if (mounted) await _openFriends();
+  }
+
+  @override
+  Widget build(BuildContext context) => HomeScreen(
+    childName: widget.profile.name,
+    avatarId: widget.profile.avatar,
+    onParents: () => openParentArea(context, ref),
+    onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
+    onOpenActivity: _openLesson,
+    companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
+    onCompanion: () => _companion.currentState?.greet(),
+    onFriends: _openFriends,
+  );
 }
 
 /// Shown instead of the app when the build settings are wrong. Says nothing about the values.

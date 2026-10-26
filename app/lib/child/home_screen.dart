@@ -60,6 +60,8 @@ class _HomeSpec {
     required this.bubbleFont,
     required this.bubblePad,
     required this.signs,
+    required this.companionLeft,
+    required this.companionTop,
     this.pillFrameLeft,
     this.pillFrameWidth,
     this.pillFrameInset = 0,
@@ -94,6 +96,11 @@ class _HomeSpec {
   final EdgeInsets bubblePad;
   final List<_Sign> signs;
 
+  /// Where the companion stands on the map: the place Nitzi's art had in the board, at 0.3 of its 512 point canvas.
+  final double companionLeft;
+  final double companionTop;
+  static const double companionSize = 153.6;
+
   static const _HomeSpec phone = _HomeSpec(
     scene: 'assets/art/scenes/home_phone.svg',
     avatarRight: 59,
@@ -118,6 +125,8 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 18,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+    companionLeft: 609,
+    companionTop: 154,
     signs: <_Sign>[
       _Sign(Land.counting, 360, 320),
       _Sign(Land.colors, 63, 320, centred: false),
@@ -148,6 +157,8 @@ class _HomeSpec {
     bubbleTop: 118,
     bubbleFont: 17,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+    companionLeft: 484,
+    companionTop: 164.6,
     signs: <_Sign>[_Sign(Land.counting, 268, 314), _Sign(Land.nitzi, 520, 314)],
   );
 
@@ -173,6 +184,8 @@ class _HomeSpec {
     bubbleTop: 430,
     bubbleFont: 24,
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    companionLeft: 975,
+    companionTop: 450.4,
     signs: <_Sign>[
       _Sign(Land.nitzi, 1010, 676),
       _Sign(Land.counting, 700, 666),
@@ -206,6 +219,8 @@ class _HomeSpec {
     bubbleTop: 988,
     bubbleFont: 24,
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    companionLeft: 590,
+    companionTop: 889.2,
     signs: <_Sign>[
       _Sign(Land.nitzi, 600, 1110),
       _Sign(Land.counting, 260, 996),
@@ -238,6 +253,9 @@ class HomeScreen extends StatelessWidget {
     required this.onParents,
     required this.onSwitchChild,
     required this.onOpenActivity,
+    this.companion,
+    this.onCompanion,
+    this.onFriends,
   });
 
   final String childName;
@@ -247,6 +265,15 @@ class HomeScreen extends StatelessWidget {
 
   /// Opens the activity frame (the counting hills). Real activities arrive in M2.
   final VoidCallback onOpenActivity;
+
+  /// The character that walks the map with the child (a live [CharacterView]), drawn where the board put Nitzi.
+  final Widget? companion;
+
+  /// The child touched the companion.
+  final VoidCallback? onCompanion;
+
+  /// The child wants to choose another companion (Friends' Beach).
+  final VoidCallback? onFriends;
 
   @override
   Widget build(BuildContext context) {
@@ -267,6 +294,33 @@ class HomeScreen extends StatelessWidget {
               label: He.homeMapSemantics.text,
             ),
           ),
+          if (companion != null)
+            Positioned(
+              left: s.companionLeft,
+              top: s.companionTop,
+              width: _HomeSpec.companionSize,
+              height: _HomeSpec.companionSize,
+              child: GestureDetector(
+                key: const Key('home-companion'),
+                behavior: HitTestBehavior.opaque,
+                onTap: onCompanion,
+                child: companion,
+              ),
+            ),
+          if (companion != null && onFriends != null)
+            Positioned(
+              left: s.companionLeft + _HomeSpec.companionSize - 40,
+              top: s.companionTop + _HomeSpec.companionSize - 48,
+              child: PebbleButton(
+                key: const Key('home-friends'),
+                semanticLabel: He.friendsSemantics.text,
+                size: 48,
+                fill: TokenColors.spark,
+                lip: TokenColors.sparkDeep,
+                onPressed: onFriends,
+                child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
+              ),
+            ),
           // A tap area above the sign of the one land that has somewhere to go.
           for (final _Sign sign in s.signs)
             if (sign.land == Land.counting)

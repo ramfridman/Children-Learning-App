@@ -10,7 +10,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 3;
+  static const int currentSchemaVersion = 4;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -30,6 +30,8 @@ class AppDatabase extends _$AppDatabase {
         // A version 1 file just got `attempts` with the column already; only a version 2 file needs it added.
         if (from >= 2) await m.addColumn(attempts, attempts.sessionId);
       }
+      // 3 to 4 (M4): the companion each child chose.
+      if (from < 4) await m.addColumn(profiles, profiles.companionId);
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -43,6 +45,19 @@ class AppDatabase extends _$AppDatabase {
   )..orderBy(<OrderingTerm Function(Profiles)>[(Profiles t) => OrderingTerm.asc(t.createdAt)])).get();
 
   Future<void> addProfile(ProfilesCompanion profile) => into(profiles).insert(profile);
+
+  /// The companion the child chose, or null for the house character.
+  Future<String?> companionOf(String profileId) async {
+    final Profile? row = await (select(
+      profiles,
+    )..where((Profiles t) => t.id.equals(profileId))).getSingleOrNull();
+    return row?.companionId;
+  }
+
+  Future<void> setCompanion(String profileId, String? characterId) =>
+      (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
+        ProfilesCompanion(companionId: Value<String?>(characterId)),
+      );
 
   Future<void> removeProfile(String id) => (delete(profiles)..where((Profiles t) => t.id.equals(id))).go();
 

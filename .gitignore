@@ -59,3 +59,6 @@ tools/voice_gen/output/
 .DS_Store
 Thumbs.db
 *.log
+
+# Golden comparison output
+app/test/failures/

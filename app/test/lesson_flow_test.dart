@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/child/friends_beach.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
@@ -178,6 +179,10 @@ void main() {
         findsOneWidget,
       );
       await tester.tap(find.byKey(const Key('lesson-done')));
+      await tester.pumpAndSettle();
+      // After the first finished lesson the child is taken once to Friends' Beach to choose a companion.
+      expect(find.byType(FriendsBeach), findsOneWidget);
+      await tester.tap(find.byKey(const Key('friends-home')));
       await tester.pumpAndSettle();
       expect(find.byType(HomeScreen), findsOneWidget);
       expect(tester.takeException(), isNull);

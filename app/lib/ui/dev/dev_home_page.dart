@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/companion.dart';
 import '../../app/providers.dart';
 import '../../app/state.dart';
 import '../../auth/auth_client.dart';
@@ -136,6 +137,9 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
         out.add('$name: REFUSED at ${e.stage}: ${e.reason}');
       }
     }
+    // New characters and voices show up without restarting the app.
+    ref.invalidate(resolverProvider);
+    ref.invalidate(guideProvider);
     return out.isEmpty ? 'no .nnpack files in the folder' : out.join('\n');
   });
 

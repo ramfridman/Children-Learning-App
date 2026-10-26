@@ -28,6 +28,7 @@ class ActivityFrame extends StatelessWidget {
     this.onShowMe,
     this.onReplay,
     this.overlay,
+    this.guide,
   });
 
   /// What the guide says now.
@@ -48,6 +49,10 @@ class ActivityFrame extends StatelessWidget {
 
   /// Drawn over everything (the celebration).
   final Widget? overlay;
+
+  /// The character that teaches (a live character view), drawn where the board puts the guide. Touching it
+  /// asks for the question again.
+  final Widget? guide;
 
   /// The largest font, down to [min], at which [text] fits the room the bubble has.
   static double fitFont(String text, ActivitySpec s, {double min = 14}) {
@@ -101,7 +106,7 @@ class ActivityFrame extends StatelessWidget {
                 key: const Key('lesson-replay'),
                 behavior: HitTestBehavior.opaque,
                 onTap: onReplay,
-                child: const BoardSvg('assets/art/ui/nitzi.svg', key: Key('activity-nitzi')),
+                child: SizedBox(key: const Key('activity-nitzi'), child: guide),
               ),
             ),
           ),
@@ -184,10 +189,13 @@ class ActivityFrame extends StatelessWidget {
 
 /// The calm end of a lesson: the line that praises what the child did, a spark, and one way home.
 class LessonCelebration extends StatelessWidget {
-  const LessonCelebration({super.key, required this.text, required this.onDone});
+  const LessonCelebration({super.key, required this.text, required this.onDone, this.cameo});
 
   final String text;
   final VoidCallback onDone;
+
+  /// The character who celebrates with the child (a live character view); a spark when there is none.
+  final Widget? cameo;
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +217,10 @@ class LessonCelebration extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
+                if (cameo != null)
+                  SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
+                else
+                  const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
                 const SizedBox(height: 8),
                 Text(text, textAlign: TextAlign.center, style: AppText.fixed(size: 26, weight: 600)),
                 const SizedBox(height: 12),
