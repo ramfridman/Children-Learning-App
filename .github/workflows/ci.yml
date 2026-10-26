@@ -132,4 +132,5 @@ jobs:
       - name: Build the dev flavour (debug APK)
         if: ${{ !cancelled() }}
         working-directory: app
-        run: bash ../tools/ci/run-with-annotations.sh "flutter build apk" flutter build apk --debug --flavor dev
+        # arm64 only: the speech libraries of four ABIs together filled the runner's disk (M5). Phones are arm64.
+        run: bash ../tools/ci/run-with-annotations.sh "flutter build apk" flutter build apk --debug --flavor dev --target-platform android-arm64
