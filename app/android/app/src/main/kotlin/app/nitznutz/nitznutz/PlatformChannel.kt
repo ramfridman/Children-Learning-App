@@ -1,15 +1,19 @@
 package app.nitznutz.nitznutz
 
 import android.app.Activity
+import android.os.SystemClock
+import android.provider.Settings
 import android.view.WindowManager
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 /**
- * Two small things Flutter cannot do alone:
+ * Small things Flutter cannot do alone:
  *  - `noBackupDir`: the app's folder that Android never backs up or copies to a new phone, where
  *    the encrypted database lives (the key is in the Keystore, so a copied file would be useless
  *    anyway; this is a second layer).
+ *  - `elapsedRealtime` and `bootCount`: a clock that setting the date cannot move, so a PIN
+ *    lock-out cannot be shortened by changing the time.
  *  - `setSecure`: while true, the window cannot be screenshotted or shown in the recent-apps
  *    preview. Used on every parent screen.
  */
@@ -21,6 +25,11 @@ class PlatformChannel(private val activity: Activity) : MethodChannel.MethodCall
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "noBackupDir" -> result.success(activity.noBackupFilesDir.absolutePath)
+            // Time since the phone started, which a change of the clock cannot move, and which boot it is.
+            "elapsedRealtime" -> result.success(SystemClock.elapsedRealtime())
+            "bootCount" -> result.success(
+                Settings.Global.getInt(activity.contentResolver, Settings.Global.BOOT_COUNT, 0),
+            )
             "setSecure" -> {
                 val secure = call.argument<Boolean>("secure") == true
                 activity.runOnUiThread {

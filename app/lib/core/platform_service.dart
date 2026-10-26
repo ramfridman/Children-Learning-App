@@ -1,12 +1,23 @@
 import 'package:flutter/services.dart';
 
-/// The two things `PlatformChannel.kt` offers. An interface, so tests use a fake.
+/// A reading of the clock that changing the date cannot move: milliseconds since the phone
+/// started, and which start it was (so a restart is noticed).
+class MonotonicReading {
+  const MonotonicReading({required this.elapsedMs, required this.bootId});
+
+  final int elapsedMs;
+  final int bootId;
+}
+
+/// What `PlatformChannel.kt` offers. An interface, so tests use a fake.
 abstract interface class PlatformService {
   /// A folder that is never backed up or copied to another phone.
   Future<String> noBackupDir();
 
   /// While true, screenshots and the recent-apps preview are blocked (parent screens).
   Future<void> setSecure({required bool secure});
+
+  Future<MonotonicReading> monotonic();
 }
 
 class AndroidPlatformService implements PlatformService {
@@ -29,5 +40,12 @@ class AndroidPlatformService implements PlatformService {
     } on MissingPluginException {
       // Tests and platforms without the channel: nothing to block.
     }
+  }
+
+  @override
+  Future<MonotonicReading> monotonic() async {
+    final int? elapsed = await _channel.invokeMethod<int>('elapsedRealtime');
+    final int? boot = await _channel.invokeMethod<int>('bootCount');
+    return MonotonicReading(elapsedMs: elapsed ?? 0, bootId: boot ?? 0);
   }
 }
