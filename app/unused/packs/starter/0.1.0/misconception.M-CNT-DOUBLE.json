@@ -1,0 +1,13 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CNT-DOUBLE",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-03"
+  ],
+  "parentText": "הילד סופר עצם אחד פעמיים ולכן מקבל מספר גדול מדי.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CNT-SEQ",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-01",
+    "NUM-A-02"
+  ],
+  "parentText": "הילד מדלג על מילות ספירה או אומר אותן שלא לפי הסדר.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied"
+  ]
+}

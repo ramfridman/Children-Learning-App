@@ -171,6 +171,74 @@ void main() {
     });
   });
 
+  group('migration from version 1 to 2 (M2)', () {
+    test('a version 1 database keeps its data and gains the pack and attempt tables', () async {
+      final String keyHex = await keys.keyHex();
+      // Make a version 1 file: the current schema without the two M2 tables, marked as version 1.
+      final AppDatabase v2 = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      await _putProfile(v2);
+      await v2.putSetting('voice', 'off');
+      await v2.customStatement('DROP TABLE installed_packs');
+      await v2.customStatement('DROP TABLE attempts');
+      await v2.customStatement('PRAGMA user_version = 1');
+      await v2.close();
+
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      addTearDown(db.close);
+      expect((await db.allProfiles()).single.name, secretName);
+      expect(await db.setting('voice'), 'off');
+      expect(await db.allInstalledPacks(), isEmpty);
+      await db.saveInstalledPack(
+        InstalledPacksCompanion.insert(
+          id: 'starter',
+          version: '0.1.0',
+          manifestSha256: 'a' * 64,
+          installedAt: DateTime.utc(2026, 10, 26),
+        ),
+      );
+      await db.recordAttempt(
+        AttemptsCompanion.insert(
+          at: DateTime.utc(2026, 10, 26),
+          profileId: 'p1',
+          packId: 'starter',
+          packVersion: '0.1.0',
+          activityId: 'count.butterflies.3',
+          activityRevision: 1,
+          template: 'count_tap',
+          templateVersion: '1.0',
+          skillId: 'NUM-A-03',
+          result: 'correct',
+          attemptNo: 1,
+          hintLevel: 0,
+        ),
+      );
+      expect((await db.attemptsOf('p1')).single.activityId, 'count.butterflies.3');
+      final rows = await db.customSelect('PRAGMA user_version').get();
+      expect(rows.single.data['user_version'], 2);
+    });
+
+    test('a new install starts at version 2 with both tables', () async {
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: await keys.keyHex());
+      addTearDown(db.close);
+      expect(await db.allInstalledPacks(), isEmpty);
+      expect(await db.attemptsOf('nobody'), isEmpty);
+      expect(AppDatabase.currentSchemaVersion, 2);
+    });
+
+    test('an attempt holds ids, numbers and fixed words only (no column can carry a name or free text of any size)', () async {
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: await keys.keyHex());
+      addTearDown(db.close);
+      final List<String> columns = <String>[
+        for (final row in await db.customSelect('PRAGMA table_info(attempts)').get())
+          row.data['name']! as String,
+      ];
+      expect(columns, isNot(contains('name')));
+      expect(columns, isNot(contains('text')));
+      expect(columns, isNot(contains('transcript')));
+      expect(columns, isNot(contains('audio')));
+    });
+  });
+
   test('"forget this phone" removes the key and the files, and a new database starts empty', () async {
     final String oldKey = await keys.keyHex();
     final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: oldKey);

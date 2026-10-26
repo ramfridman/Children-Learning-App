@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   crypto: 3.0.7
+  cryptography: 2.9.0
   drift: 2.35.3
   flutter:
     sdk: flutter
@@ -39,6 +40,8 @@ flutter:
   uses-material-design: true
   assets:
     - network_hosts.json
+    - assets/pack_signing_public_key.txt
+    - assets/packs/
     - assets/art/
     - assets/art/scenes/
     - assets/art/ui/

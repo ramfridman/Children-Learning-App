@@ -1,0 +1,31 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-03",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "נוגעים בכל עצם פעם אחת בזמן הספירה (עד 5)"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-CNT-DOUBLE",
+    "M-CNT-SKIP"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

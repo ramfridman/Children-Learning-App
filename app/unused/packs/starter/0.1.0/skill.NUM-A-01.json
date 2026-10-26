@@ -1,0 +1,25 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-01",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אומרים את מילות הספירה 1–5 לפי הסדר"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "embodied",
+    "story"
+  ],
+  "misconceptions": [
+    "M-CNT-SEQ"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

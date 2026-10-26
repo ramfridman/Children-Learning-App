@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nitznutz:schema:misconception",
+  "title": "Nitznutz misconception",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "misconception/v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 20,
+      "pattern": "^(?:M-[A-Z]{2,5}-[A-Z0-9]{2,12})$"
+    },
+    "review": {
+      "type": "string",
+      "enum": [
+        "needs-editor",
+        "approved"
+      ]
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 6,
+        "maxLength": 11,
+        "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2})$"
+      },
+      "minItems": 1,
+      "maxItems": 10
+    },
+    "parentText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "repairActivities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 81,
+        "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
+      },
+      "minItems": 0,
+      "maxItems": 10
+    },
+    "preferredRepresentations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "concrete",
+          "pictorial",
+          "story",
+          "embodied",
+          "symbolic"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 5
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "skills",
+    "parentText",
+    "repairActivities",
+    "preferredRepresentations"
+  ],
+  "additionalProperties": false
+}

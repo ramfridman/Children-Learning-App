@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nitznutz/child/activity_shell.dart';
+import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/child/profile_picker.dart';
 import 'package:nitznutz/data/app_database.dart';
@@ -14,6 +14,7 @@ import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/harness.dart';
+import 'support/starter.dart';
 
 Future<void> _enterGate(WidgetTester tester, AppRig rig) async {
   expect(find.byType(GateScreen), findsOneWidget);
@@ -143,8 +144,11 @@ void main() {
 
       await tester.tap(find.text(He.landCounting.text));
       await tester.pumpAndSettle();
-      expect(find.byType(ActivityShell), findsOneWidget);
-      expect(find.text(He.activityQuestion.text), findsOneWidget);
+      expect(find.byType(ActivityFrame), findsOneWidget);
+      expect(
+        find.text((await loadStarter()).activities['pick.red.flower']!.promptLine.caption),
+        findsOneWidget,
+      );
 
       await tester.tap(find.byKey(const Key('activity-home')));
       await tester.pumpAndSettle();
@@ -378,7 +382,7 @@ void main() {
 
         await tester.tap(find.text(He.landCounting.text));
         await tester.pumpAndSettle();
-        expect(find.byType(ActivityShell), findsOneWidget);
+        expect(find.byType(ActivityFrame), findsOneWidget);
         expect(tester.takeException(), isNull);
         await tester.tap(find.byKey(const Key('activity-home')));
         await tester.pumpAndSettle();

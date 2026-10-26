@@ -18,6 +18,7 @@ import 'package:nitznutz/security/pin_service.dart';
 
 import 'fakes.dart';
 import 'security_fakes.dart';
+import 'starter.dart';
 
 const String testPin = '4831';
 const String testEmailCode = '123456';
@@ -132,6 +133,7 @@ class AppRig {
     platformProvider.overrideWithValue(platform),
     clockProvider.overrideWithValue(clock),
     databaseProvider.overrideWith((Ref ref) async => db),
+    contentProvider.overrideWith((Ref ref) => loadStarter()),
     setupBackendProvider.overrideWithValue(setup),
     devicesBackendProvider.overrideWithValue(devices),
     pinServiceProvider.overrideWith(

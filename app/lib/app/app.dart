@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
-import '../child/activity_shell.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
 import '../data/app_database.dart';
@@ -12,6 +11,7 @@ import '../design/theme.dart';
 import '../design/token_types.dart';
 import '../design/tokens.g.dart';
 import '../parent/entry_flow.dart';
+import '../play/lesson_screen.dart';
 import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
 import 'state.dart';
@@ -100,11 +100,9 @@ class _Root extends ConsumerWidget {
           avatarId: current.avatar,
           onParents: () => openParentArea(context, ref),
           onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
-          onOpenActivity: () => Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              builder: (BuildContext c) => ActivityShell(onHome: () => Navigator.of(c).pop()),
-            ),
-          ),
+          onOpenActivity: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute<void>(builder: (BuildContext c) => LessonScreen(profileId: current.id))),
         );
       },
     );

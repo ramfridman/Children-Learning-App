@@ -89,3 +89,35 @@ A child device needs its own hardware-backed key. Two ways; Claude will ask whic
   does not exist (step 6).
 - For the precise reason: Dashboard > Edge Functions > the function > Logs. It holds a reason label
   such as `attestation_app_not_allowed`, never keys or tokens.
+
+## 6. M2 checks: the butterflies lesson and damaged packs
+
+Use the same dev build (section 3). The lesson needs a finished setup (parent enrolled, PIN, one child), as in M1.
+
+**A. Play the lesson (about 4 minutes).** Pick the child, tap the counting hills. Play all five steps by touch:
+the red flower; three butterflies (touch each once, then the answer); four scattered; five that stay and glow;
+give four of seven (drag, or touch a butterfly and then the flower, then the tick). Try one wrong answer, the
+lamp, and the eye ("show me"): none of them should ever show a cross or a harsh sound. At the end a card praises
+the counting and a gold button goes home. Tell me anything that is hard to touch, too small, or confusing.
+
+**B. Show that a damaged pack is refused.** On the PC (PowerShell, from `D:\Children-Learning-App\app`):
+
+```powershell
+dart run tool/pack_builder.dart damage assets/packs/starter-0.1.0.nnpack --source ../content/starter --out damaged
+$env:Path += ";$env:LOCALAPPDATA\Android\Sdk\platform-tools"
+$pkg = "app.nitznutz.nitznutz.dev"
+adb shell run-as $pkg mkdir -p no_backup/incoming
+foreach ($f in Get-ChildItem damaged\*.nnpack) {
+  adb push $f.FullName /data/local/tmp/$($f.Name)
+  adb shell run-as $pkg cp /data/local/tmp/$($f.Name) no_backup/incoming/$($f.Name)
+  adb shell rm /data/local/tmp/$($f.Name)
+}
+```
+
+Then on the phone: parent area > the dev harness > section 5 **Install .nnpack files from the incoming folder**.
+Expect one line per file, every one of them `REFUSED at <step>: ...` (`damaged-picture`: files, `damaged-manifest`,
+`damaged-signature`, `damaged-one-byte`, `stranger-key`: signature or zip, `truncated`: zip). Then tap **List
+installed packs**: only `starter 0.1.0` is there. Play the lesson again: it still works.
+
+**C. Timing (optional).** Checking a pack's signature happens once when the app starts. If the lesson takes
+noticeably longer than before to open the first time, tell me.

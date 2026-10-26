@@ -120,11 +120,16 @@ class BoardBubble extends StatelessWidget {
     required this.text,
     this.fontSize = 26,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.maxWidth,
   });
 
   final String text;
   final double fontSize;
   final EdgeInsets padding;
+
+  /// When set, a long line wraps inside this width (the bubble of a lesson); when null the line
+  /// stays on one row, as on the design boards.
+  final double? maxWidth;
 
   @override
   Widget build(BuildContext context) => Stack(
@@ -144,13 +149,18 @@ class BoardBubble extends StatelessWidget {
       ),
       Container(
         key: const Key('bubble-body'),
+        constraints: maxWidth == null ? null : BoxConstraints(maxWidth: maxWidth!),
         padding: padding,
         decoration: BoxDecoration(
           color: TokenColors.paper,
           borderRadius: BorderRadius.circular(TokenRadius.lg),
           boxShadow: softShadow,
         ),
-        child: Text(text, style: AppText.fixed(size: fontSize, weight: 500), softWrap: false),
+        child: Text(
+          text,
+          style: AppText.fixed(size: fontSize, weight: 500),
+          softWrap: maxWidth != null,
+        ),
       ),
     ],
   );

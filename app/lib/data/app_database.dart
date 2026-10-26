@@ -4,13 +4,13 @@ import 'tables.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: <Type>[Profiles, AppSettings, LocalEvents])
+@DriftDatabase(tables: <Type>[Profiles, AppSettings, LocalEvents, InstalledPacks, Attempts])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 1;
+  static const int currentSchemaVersion = 2;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -19,7 +19,11 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (Migrator m) => m.createAll(),
     onUpgrade: (Migrator m, int from, int to) async {
-      // Nothing to migrate yet: version 1 is the first schema.
+      // 1 to 2 (M2): installed packs and the answers children gave.
+      if (from < 2) {
+        await m.createTable(installedPacks);
+        await m.createTable(attempts);
+      }
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -47,6 +51,26 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> putSetting(String key, String value) =>
       into(appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: key, value: value));
+
+  // ---- installed content packs ----
+
+  Future<InstalledPack?> installedPack(String id) =>
+      (select(installedPacks)..where((InstalledPacks t) => t.id.equals(id))).getSingleOrNull();
+
+  Future<List<InstalledPack>> allInstalledPacks() => select(installedPacks).get();
+
+  Future<void> saveInstalledPack(InstalledPacksCompanion row) =>
+      into(installedPacks).insertOnConflictUpdate(row);
+
+  // ---- attempts ----
+
+  Future<void> recordAttempt(AttemptsCompanion row) => into(attempts).insert(row);
+
+  Future<List<Attempt>> attemptsOf(String profileId) =>
+      (select(attempts)
+            ..where((Attempts t) => t.profileId.equals(profileId))
+            ..orderBy(<OrderingTerm Function(Attempts)>[(Attempts t) => OrderingTerm.asc(t.id)]))
+          .get();
 
   // ---- security events ----
 

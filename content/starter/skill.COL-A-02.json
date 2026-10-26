@@ -1,0 +1,23 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-A-02",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מצביעים על אדום, כחול, צהוב וירוק כששומעים את שמם"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}
