@@ -37,6 +37,12 @@ abstract interface class SpeechEngine {
   /// The model is loaded and a listen can start now.
   bool get ready;
 
+  /// The model files are on the phone (a quick look; they are checked completely by [prepare]).
+  Future<bool> modelInstalled();
+
+  /// Asks Android for the microphone permission. Only ever called from the parent's voice switch.
+  Future<bool> requestPermission();
+
   /// Loads the model (once). Throws if its files are missing or do not match their pinned hashes.
   Future<void> prepare();
 

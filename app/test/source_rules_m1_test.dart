@@ -58,6 +58,8 @@ void main() {
       for (final File f in lib) {
         final String p = slashed(f);
         if (p.endsWith('strings/he.dart')) continue;
+        // The matcher's word lists are language data for the recogniser, not text a child sees.
+        if (p.startsWith('lib/speech/')) continue;
         for (final String line in f.readAsLinesSync()) {
           if (line.trimLeft().startsWith('//')) continue;
           expect(hebrew.hasMatch(line), isFalse, reason: '$p: $line');

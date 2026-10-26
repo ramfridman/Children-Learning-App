@@ -33,7 +33,7 @@ bool isDigits(String token) => RegExp(r'^[0-9]+$').hasMatch(token);
 const String prefixLetters = 'והבלכשמ';
 
 /// A consonant skeleton that survives how children speak and how recognisers spell: vowel letters inside a word are
-/// dropped, and the letters that are confused (כ ח ק; ת ט; ב ו; ש ס; ר ל; א ע ה) share a class. Used on normalised words.
+/// dropped, and the letters that are confused (כ ח ק; ת ט; ש ס; ר ל; א ע ה; and a vav or yod inside a word is a vowel letter and is dropped) share a class. Used on normalised words.
 String phoneticKey(String word) {
   final StringBuffer out = StringBuffer();
   final List<String> chars = word.split('');
@@ -47,8 +47,11 @@ String phoneticKey(String word) {
         k = 'k';
       case 'ת' || 'ט':
         k = 't';
-      case 'ב' || 'ו':
+      case 'ב':
         k = 'b';
+      case 'ו':
+        // A vav inside a word is a vowel letter (אָדֹם and אדום are the same word); at the start it is "and".
+        k = (i == 0 || chars[i - 1] == ' ') ? 'b' : null;
       case 'ש' || 'ס':
         k = 's';
       case 'ר' || 'ל':

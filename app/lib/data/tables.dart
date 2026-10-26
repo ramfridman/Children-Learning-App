@@ -121,6 +121,9 @@ class Attempts extends Table {
 
   /// The session this answer belongs to (a visit with a start and an end), or null for answers from before sessions.
   IntColumn get sessionId => integer().nullable()();
+
+  /// How the answer was given: `tap`, or `voice` (a spoken answer that was clear, or that the child confirmed).
+  TextColumn get input => text().withDefault(const Constant<String>('tap'))();
 }
 
 /// One visit: a lesson or a session the engine planned. It holds no names and no text.
@@ -138,4 +141,20 @@ class Sessions extends Table {
 
   /// A fixed word: `finished`, `home` (the child left), `limit` (the parent's time was up) or empty while it runs.
   TextColumn get endReason => text().withDefault(const Constant<String>(''))();
+}
+
+/// One time the child tapped the mic, and how it went, as a fixed word. It holds no audio, no words and no text:
+/// only what is needed to see whether voice works for this child (and to stop inviting it when it does not).
+class VoiceListens extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  DateTimeColumn get at => dateTime()();
+
+  TextColumn get profileId => text()();
+
+  /// What kind of answer was expected: `number`, `colour` or `word`.
+  TextColumn get answerType => text()();
+
+  /// `accepted`, `confirmed`, `declined`, `unclear`, `silent`, `intent` or `failed`.
+  TextColumn get outcome => text()();
 }

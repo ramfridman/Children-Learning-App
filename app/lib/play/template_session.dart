@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../child/activity_shell.dart';
+import '../speech/answer_matcher.dart';
 import 'lesson_controller.dart';
 
 /// The state of one activity on screen. A template (count and tap, tap the answer, give N) is a
@@ -77,6 +78,38 @@ abstract class TemplateSession extends ChangeNotifier {
 
   /// The question is asked again: a gentle show of the objects, no help.
   void onReplay();
+
+  // ---- voice ----
+
+  /// The card the voice has understood or half heard: lit like a hint, until the voice lets go of it.
+  String? voiceLit;
+
+  void setVoiceLit(String? id) {
+    if (voiceLit == id) return;
+    voiceLit = id;
+    notify();
+  }
+
+  /// The mic can be used now (the question has been asked and not yet answered).
+  bool get listensNow => false;
+
+  /// `number`, `colour` or `word`: the kind of answer, kept (as that word) with how each listen went.
+  String get voiceAnswerType => 'word';
+
+  /// The answers a child may say now, with the words for each.
+  List<Expected> voiceExpected() => const <Expected>[];
+
+  /// A spoken answer that was clear, or that the child confirmed: it counts exactly like a tap on the card.
+  Future<void> chooseByVoice(String optionId) async {}
+
+  /// Voice did not work: the cards light one after the other, inviting a tap.
+  void inviteTap() {
+    final List<Expected> options = voiceExpected();
+    for (int i = 0; i < options.length; i++) {
+      later(Duration(milliseconds: 450 * i), () => setVoiceLit(options[i].id));
+    }
+    later(Duration(milliseconds: 450 * options.length), () => setVoiceLit(null));
+  }
 
   /// The picture that fills the stage, inside [size].
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec);

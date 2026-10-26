@@ -29,6 +29,9 @@ class ActivityFrame extends StatelessWidget {
     this.onReplay,
     this.overlay,
     this.guide,
+    this.mic,
+    this.onConfirmYes,
+    this.onConfirmAgain,
   });
 
   /// What the guide says now.
@@ -53,6 +56,13 @@ class ActivityFrame extends StatelessWidget {
   /// The character that teaches (a live character view), drawn where the board puts the guide. Touching it
   /// asks for the question again.
   final Widget? guide;
+
+  /// The microphone button (a [MicButton] of the size of the board), or null when voice is off for this child.
+  final Widget? mic;
+
+  /// While the guide asks "did you say ...?": the tick (yes) and the "again" button next to the microphone.
+  final VoidCallback? onConfirmYes;
+  final VoidCallback? onConfirmAgain;
 
   /// The largest font, down to [min], at which [text] fits the room the bubble has.
   static double fitFont(String text, ActivitySpec s, {double min = 14}) {
@@ -110,11 +120,8 @@ class ActivityFrame extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            left: s.micLeft,
-            top: s.micTop,
-            child: MicButton(size: s.micSize, semanticLabel: He.micSemantics.text),
-          ),
+          if (mic != null) Positioned(left: s.micLeft, top: s.micTop, child: mic!),
+          if (mic != null && onConfirmYes != null && onConfirmAgain != null) ..._confirmButtons(board, s),
           _stage(s, room),
           if (tiles != null)
             Positioned(left: s.tilesLeft, top: s.tilesTop - 12, width: s.tilesWidth, child: tiles!),
@@ -162,6 +169,41 @@ class ActivityFrame extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// The tick and the "again" button of "did you say ...?", beside the microphone (below it on the tall tablet).
+  List<Widget> _confirmButtons(BoardClass board, ActivitySpec s) {
+    const double d = 56;
+    final bool below = board == BoardClass.tabletPortrait;
+    final double top = below ? s.micTop + s.micSize + 12 : s.micTop + (s.micSize - d) / 2;
+    final double yesLeft = below ? s.micLeft : s.micLeft - 12 - d;
+    final double againLeft = below ? s.micLeft + d + 12 : s.micLeft + s.micSize + 12;
+    return <Widget>[
+      Positioned(
+        left: yesLeft,
+        top: top,
+        child: PebbleButton(
+          key: const Key('confirm-yes'),
+          size: d,
+          semanticLabel: He.confirmYesSemantics.text,
+          fill: TokenColors.sparkTint,
+          lip: TokenColors.sparkDeep,
+          onPressed: onConfirmYes,
+          child: const Icon(Icons.check_rounded, color: TokenColors.ink, size: 32),
+        ),
+      ),
+      Positioned(
+        left: againLeft,
+        top: top,
+        child: PebbleButton(
+          key: const Key('confirm-again'),
+          size: d,
+          semanticLabel: He.confirmAgainSemantics.text,
+          onPressed: onConfirmAgain,
+          child: const Icon(Icons.refresh_rounded, color: TokenColors.ink, size: 30),
+        ),
+      ),
+    ];
   }
 
   Widget _stage(ActivitySpec s, Size room) {

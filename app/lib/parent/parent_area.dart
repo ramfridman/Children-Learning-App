@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/providers.dart';
 import '../app/state.dart';
+import '../app/voice_input.dart';
 import '../core/config.dart' show appVersion;
 import '../core/errors.dart';
 import '../data/app_database.dart';
@@ -33,6 +34,7 @@ class ParentArea extends ConsumerStatefulWidget {
 class _ParentAreaState extends ConsumerState<ParentArea> {
   List<DeviceInfo>? _devices;
   bool _offline = false;
+  String? _voiceNote;
 
   @override
   void initState() {
@@ -52,6 +54,18 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
     } on Object {
       if (mounted) setState(() => _offline = true);
     }
+  }
+
+  Future<void> _setVoice(bool on) async {
+    final VoiceSwitch r = await ref.read(voiceEnabledProvider.notifier).set(on);
+    if (!mounted) return;
+    setState(
+      () => _voiceNote = switch (r) {
+        VoiceSwitch.modelMissing => He.areaVoiceNoModel.text,
+        VoiceSwitch.permissionDenied => He.areaVoiceNoPermission.text,
+        _ => null,
+      },
+    );
   }
 
   Future<bool> _confirm(String text) async =>
@@ -191,6 +205,26 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                           PinSetupScreen(onDone: () => Navigator.pop(c), onCancel: () => Navigator.pop(c)),
                     ),
                   ),
+                ),
+              ]),
+              _card(He.areaVoice.text, <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(He.areaVoiceHelp.text, style: AppText.parent(TokenType.parentSmall)),
+                    ),
+                    Switch(
+                      key: const Key('voice-switch'),
+                      value: ref.watch(voiceEnabledProvider).value ?? false,
+                      onChanged: _setVoice,
+                    ),
+                  ],
+                ),
+                if (_voiceNote != null) Text(_voiceNote!, style: AppText.parent(TokenType.parentSmall)),
+                const SizedBox(height: 4),
+                Text(
+                  He.areaVoiceCredit.text,
+                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
                 ),
               ]),
               ParentButton(label: He.areaLockNow.text, onPressed: widget.onClose),

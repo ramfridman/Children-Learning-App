@@ -10,11 +10,16 @@ import 'lexicon.dart';
 
 /// One answer the activity expects, with the words that mean it.
 class Expected {
-  Expected.number(this.id, int n, {required this.correct}) : number = n, words = numberWords(n);
+  Expected.number(this.id, int n, {required this.correct, Iterable<String> also = const <String>[]})
+    : number = n,
+      words = <AcceptWord>[...numberWords(n), for (final String w in also) AcceptWord(normalizeHebrew(w))];
 
-  Expected.colour(this.id, String colour, {required this.correct})
+  Expected.colour(this.id, String colour, {required this.correct, Iterable<String> also = const <String>[]})
     : number = null,
-      words = colourWords(colour);
+      words = <AcceptWord>[
+        ...colourWords(colour),
+        for (final String w in also) AcceptWord(normalizeHebrew(w)),
+      ];
 
   /// Free words (with or without niqqud), for the `speech` list an author gives an option.
   Expected.words(this.id, Iterable<String> forms, {required this.correct})
@@ -142,6 +147,15 @@ class AnswerMatcher {
                 best[e.id] = f;
                 bestSoft[e.id] = false;
               }
+            }
+            continue;
+          }
+          // Exactly a near miss (תכלת): whatever else it sounds like, it only asks "did you mean...?".
+          if (e.words.any((AcceptWord w) => w.soft && w.text == c)) {
+            final double capped = math.min(f, config.softCap);
+            if (capped > best[e.id]!) {
+              best[e.id] = capped;
+              bestSoft[e.id] = true;
             }
             continue;
           }

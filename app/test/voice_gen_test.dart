@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/pack_verify.dart';
+import 'package:nitznutz/strings/he.dart';
 import 'package:nitznutz/voice/voice_bank.dart';
 
 import '../tool/pack_builder_lib.dart';
@@ -147,6 +148,18 @@ void main() {
       expect(core.length, greaterThan(10));
       expect(core.first.voId, startsWith('vo:core.'));
     });
+
+    test(
+      'the lines the guide says while listening are in the core file with the same words as the captions',
+      () {
+        final Map<String, String> core = <String, String>{
+          for (final SpokenLine l in coreLines(File('../content/lines/core.he.json'))) l.voId: l.text,
+        };
+        expect(core['vo:core.listen.mixed'], He.listenMixed.text);
+        expect(core['vo:core.listen.confirm'], He.listenConfirm.text);
+        expect(core['vo:core.listen.tap'], He.listenTap.text);
+      },
+    );
 
     test('respelling replaces the listed words and nothing else', () {
       expect(respelled('אבגד', <String, String>{'בג': 'XX'}), 'אXXד');

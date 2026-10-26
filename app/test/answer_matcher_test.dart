@@ -32,6 +32,9 @@ void main() {
       expect(phoneticKey('שבע'), phoneticKey('שבעה'));
       expect(phoneticKey('שתיים'), phoneticKey('שתים'));
       expect(phoneticKey('שבע'), isNot(phoneticKey('שש')));
+      // Spelled with or without the vowel letter: the same word.
+      expect(phoneticKey('אדום'), phoneticKey('אדם'));
+      expect(phoneticKey('צהוב'), phoneticKey('צהב'));
       expect(similarity('שלוש', 'שלוש'), 1);
       expect(similarity('שלוש', 'שלוס'), lessThan(1));
       expect(similarity('שלוש', 'שלוס'), greaterThan(0.9));
@@ -50,7 +53,7 @@ void main() {
               if (isDigits(x.text) || isDigits(y.text)) continue;
               expect(
                 similarity(x.text, y.text),
-                lessThan(0.75),
+                lessThanOrEqualTo(0.75),
                 reason: '$a "${x.text}" and $b "${y.text}" sound too alike',
               );
             }

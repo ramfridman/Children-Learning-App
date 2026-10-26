@@ -69,6 +69,15 @@ class FakeSpeechEngine implements SpeechEngine {
   @override
   bool get ready => _ready;
 
+  bool installed = true;
+  bool permission = true;
+
+  @override
+  Future<bool> modelInstalled() async => installed;
+
+  @override
+  Future<bool> requestPermission() async => permission;
+
   @override
   Future<void> prepare() async {
     prepares++;

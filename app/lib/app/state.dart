@@ -150,6 +150,7 @@ final Provider<AttemptSink> attemptSinkProvider = Provider<AttemptSink>((Ref ref
         response: Value<String>(r.response),
         durationMs: Value<int>(r.durationMs),
         sessionId: Value<int?>(r.sessionId),
+        input: Value<String>(r.input),
       ),
     );
   };

@@ -319,57 +319,169 @@ class _Socket extends StatelessWidget {
   );
 }
 
-/// The microphone button (board 13): a sea-coloured disc with a clay lip and two small ears on top.
-/// In M1 it is only a picture; the microphone opens in M5, and only if a parent turned voice on.
+/// What the microphone button looks like (board 28, "voice states").
+enum MicLook {
+  /// A picture of a microphone, waiting for a tap.
+  ready,
+
+  /// Ears up, bars that follow the voice, a ring that grows with it.
+  listening,
+
+  /// Three dots: matching the words.
+  thinking,
+
+  /// A tick in a gold ring: the word was understood.
+  understood,
+
+  /// A question cloud: the guide did not understand and asks again.
+  notUnderstood,
+
+  /// Faded: voice is not working for this question, the cards can be tapped.
+  faded,
+}
+
+/// The microphone button (board 13 and board 28): a sea-coloured disc with a clay lip and two small ears on top.
+/// It is drawn only when a parent turned voice on; the child taps it to talk.
 class MicButton extends StatelessWidget {
-  const MicButton({super.key, required this.size, required this.semanticLabel});
+  const MicButton({
+    super.key,
+    required this.size,
+    required this.semanticLabel,
+    this.look = MicLook.ready,
+    this.level = 0,
+    this.onPressed,
+  });
 
   final double size;
   final String semanticLabel;
+  final MicLook look;
+
+  /// How loud the child is, 0 to 1 (only while listening).
+  final double level;
+  final VoidCallback? onPressed;
+
+  Widget _face(double k) {
+    switch (look) {
+      case MicLook.ready || MicLook.faded:
+        return BoardSvg('assets/art/ui/mic.svg', width: 36 * k, height: 36 * k);
+      case MicLook.listening:
+        // Five bars that rise and fall with the voice.
+        const List<double> shape = <double>[0.45, 0.8, 1, 0.8, 0.45];
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            for (final (int i, double h) in shape.indexed)
+              Container(
+                key: Key('mic-bar-$i'),
+                width: 6 * k,
+                height: (14 + 26 * h * (0.35 + 0.65 * level)) * k,
+                margin: EdgeInsets.symmetric(horizontal: 2.5 * k),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(3 * k)),
+              ),
+          ],
+        );
+      case MicLook.thinking:
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            for (int i = 0; i < 3; i++)
+              Container(
+                width: 9 * k,
+                height: 9 * k,
+                margin: EdgeInsets.symmetric(horizontal: 3 * k),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: i == 2 ? Colors.white : Colors.white.withValues(alpha: 0.55),
+                ),
+              ),
+          ],
+        );
+      case MicLook.understood:
+        return Icon(Icons.check_rounded, color: Colors.white, size: 46 * k);
+      case MicLook.notUnderstood:
+        return BoardSvg('assets/art/ui/hint.svg', width: 40 * k, height: 40 * k);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final double k = size / 88;
+    final bool up = look == MicLook.listening;
     Widget ear({required bool right}) => Positioned(
-      top: -19 * k,
+      top: (up ? -27 : -19) * k,
       right: right ? 14 * k : null,
       left: right ? null : 14 * k,
       child: Transform.rotate(
-        angle: (right ? 14 : -14) * 0.0174533,
+        angle: (up ? 0 : (right ? 14 : -14)) * 0.0174533,
         child: Container(
           width: 17 * k,
-          height: 33 * k,
+          height: (up ? 41 : 33) * k,
           // The ear is an ellipse (CSS border-radius 50% on a 17 by 33 box).
           decoration: BoxDecoration(
             color: TokenColors.sea,
-            borderRadius: BorderRadius.all(Radius.elliptical(8.5 * k, 16.5 * k)),
+            borderRadius: BorderRadius.all(Radius.elliptical(8.5 * k, (up ? 20.5 : 16.5) * k)),
           ),
         ),
       ),
     );
+    final double ring = up ? (1 + 0.3 * level) : 1;
+    final Widget button = SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: <Widget>[
+          if (up)
+            Positioned.fill(
+              child: Transform.scale(
+                scale: 1.18 * ring,
+                child: DecoratedBox(
+                  key: const Key('mic-ring'),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: TokenColors.seaTint.withValues(alpha: 0.7),
+                  ),
+                ),
+              ),
+            ),
+          if (look == MicLook.understood)
+            Positioned.fill(
+              child: Transform.scale(
+                scale: 1.14,
+                child: const DecoratedBox(
+                  key: Key('mic-gold'),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.fromBorderSide(BorderSide(color: TokenColors.spark, width: 5)),
+                  ),
+                ),
+              ),
+            ),
+          ear(right: true),
+          ear(right: false),
+          Container(
+            width: size,
+            height: size,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: TokenColors.sea,
+              shape: BoxShape.circle,
+              boxShadow: clayShadows(TokenColors.seaDeep, soft16: true),
+            ),
+            child: _face(k),
+          ),
+        ],
+      ),
+    );
     return Semantics(
       label: semanticLabel,
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: <Widget>[
-            ear(right: true),
-            ear(right: false),
-            Container(
-              width: size,
-              height: size,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: TokenColors.sea,
-                shape: BoxShape.circle,
-                boxShadow: clayShadows(TokenColors.seaDeep, soft16: true),
-              ),
-              child: BoardSvg('assets/art/ui/mic.svg', width: 36 * k, height: 36 * k),
-            ),
-          ],
-        ),
+      button: onPressed != null,
+      enabled: look != MicLook.faded,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: look == MicLook.faded ? null : onPressed,
+        child: Opacity(opacity: look == MicLook.faded ? 0.35 : 1, child: button),
       ),
     );
   }

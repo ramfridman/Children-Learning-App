@@ -13,6 +13,7 @@ import 'package:nitznutz/parent/setup_flow.dart';
 import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
+import 'support/fake_speech.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
 
@@ -297,6 +298,51 @@ void main() {
       await _openAreaFromHome(tester, rig);
       return rig;
     }
+
+    testWidgets(
+      'the voice switch is off, needs the model and the microphone permission, and turns on only with both',
+      (WidgetTester tester) async {
+        final AppRig rig = AppRig(speech: FakeSpeechEngine()..installed = false);
+        await rig.seedFinishedSetup();
+        await rig.pump(tester);
+        await tester.tap(find.text('נועה'));
+        await tester.pumpAndSettle();
+        await _openAreaFromHome(tester, rig);
+        final Finder sw = find.byKey(const Key('voice-switch'));
+        await tester.scrollUntilVisible(sw, 200, scrollable: find.byType(Scrollable).first);
+        expect(tester.widget<Switch>(sw).value, isFalse, reason: 'off until a parent turns it on');
+        expect(
+          find.text(He.areaVoiceCredit.text),
+          findsOneWidget,
+          reason: 'the credit of the model is shown',
+        );
+
+        await tester.tap(sw);
+        await tester.pumpAndSettle();
+        expect(tester.widget<Switch>(sw).value, isFalse);
+        expect(find.text(He.areaVoiceNoModel.text), findsOneWidget);
+        expect(await rig.db.setting('voice_enabled'), isNull);
+
+        rig.speech.installed = true;
+        rig.speech.permission = false;
+        await tester.tap(sw);
+        await tester.pumpAndSettle();
+        expect(tester.widget<Switch>(sw).value, isFalse);
+        expect(find.text(He.areaVoiceNoPermission.text), findsOneWidget);
+
+        rig.speech.permission = true;
+        await tester.tap(sw);
+        await tester.pumpAndSettle();
+        expect(tester.widget<Switch>(sw).value, isTrue);
+        expect(find.text(He.areaVoiceNoPermission.text), findsNothing);
+        expect(await rig.db.setting('voice_enabled'), 'on');
+        expect(rig.speech.listens, 0, reason: 'turning it on never opens the microphone');
+
+        await tester.tap(sw);
+        await tester.pumpAndSettle();
+        expect(await rig.db.setting('voice_enabled'), 'off');
+      },
+    );
 
     testWidgets('lists the family\'s devices and revokes another one after a confirmation', (
       WidgetTester tester,

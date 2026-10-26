@@ -25,6 +25,7 @@ class AttemptRecord {
     required this.response,
     required this.durationMs,
     this.sessionId,
+    this.input = 'tap',
   });
 
   final DateTime at;
@@ -52,6 +53,9 @@ class AttemptRecord {
 
   /// The session (visit) this answer was given in.
   final int? sessionId;
+
+  /// `tap`, or `voice` for a spoken answer that was clear or that the child confirmed.
+  final String input;
 }
 
 typedef AttemptSink = Future<void> Function(AttemptRecord record);
@@ -162,6 +166,13 @@ class LessonController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// The guide says one of its own lines (for example while listening): a caption and a voice line.
+  void speak(Spoken line) {
+    if (finished) return;
+    _say(line);
+    notifyListeners();
+  }
+
   /// A count template has seen every object touched: now it asks "how many?".
   void askAnswer(Spoken line) {
     if (finished || guided) return;
@@ -206,7 +217,7 @@ class LessonController extends ChangeNotifier {
 
   /// The child chose answer [optionId] of a choice template. [traceTag] is misconception evidence seen
   /// while counting (the same object touched twice), kept with the answer.
-  Future<Outcome> chooseOption(String optionId, {String? traceTag}) async {
+  Future<Outcome> chooseOption(String optionId, {String? traceTag, bool byVoice = false}) async {
     final Activity a = current;
     final List<ChoiceOption> options = switch (a) {
       CountTapActivity() => a.options,
@@ -221,7 +232,7 @@ class LessonController extends ChangeNotifier {
     final ChoiceOption chosen = options.firstWhere((ChoiceOption o) => o.id == optionId);
     final bool right = optionId == correctId;
     final String tag = right ? (traceTag ?? '') : (chosen.misconception ?? traceTag ?? '');
-    return _answered(right: right, tag: tag, response: optionId);
+    return _answered(right: right, tag: tag, response: optionId, byVoice: byVoice);
   }
 
   /// The child gave [taken] objects in a give-N activity.
@@ -236,17 +247,22 @@ class LessonController extends ChangeNotifier {
     return _answered(right: right, tag: tag, response: 'n=$taken');
   }
 
-  Future<Outcome> _answered({required bool right, required String tag, required String response}) async {
+  Future<Outcome> _answered({
+    required bool right,
+    required String tag,
+    required String response,
+    bool byVoice = false,
+  }) async {
     final Activity a = current;
     if (right) {
-      await _write(result: 'correct', tag: tag, response: response);
+      await _write(result: 'correct', tag: tag, response: response, byVoice: byVoice);
       attemptNo++;
       feedback = FeedbackKind.correct;
       _say(a.feedback.correct);
       notifyListeners();
       return Outcome(correct: true, tag: tag);
     }
-    await _write(result: 'incorrect', tag: tag, response: response);
+    await _write(result: 'incorrect', tag: tag, response: response, byVoice: byVoice);
     attemptNo++;
     errors++;
     feedback = FeedbackKind.notYet;
@@ -287,7 +303,12 @@ class LessonController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _write({required String result, required String tag, required String response}) {
+  Future<void> _write({
+    required String result,
+    required String tag,
+    required String response,
+    bool byVoice = false,
+  }) {
     final Activity a = current;
     final int now = _clock.nowMs();
     final AttemptRecord rec = AttemptRecord(
@@ -308,6 +329,7 @@ class LessonController extends ChangeNotifier {
       response: response,
       durationMs: math.max(0, now - _markMs),
       sessionId: sessionId,
+      input: byVoice ? 'voice' : 'tap',
     );
     _markMs = now;
     return _record(rec);
