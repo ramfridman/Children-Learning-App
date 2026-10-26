@@ -188,6 +188,7 @@ List<Problem> validatePack({
     }
     final Map<String, Object?> prompt = a['prompt']! as Map<String, Object?>;
     checkVo(file, 'prompt.vo', prompt['vo']);
+    checkTag(file, 'contradicts', a['contradicts']);
     final Map<String, Object?> fb = a['feedback']! as Map<String, Object?>;
     checkVo(file, 'feedback.correct.vo', (fb['correct']! as Map<String, Object?>)['vo']);
     checkVo(file, 'feedback.unsure.vo', (fb['unsure']! as Map<String, Object?>)['vo']);

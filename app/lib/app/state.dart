@@ -123,7 +123,7 @@ final FutureProvider<PackContent> contentProvider = FutureProvider<PackContent>(
   final PackInstaller installer = await ref.watch(packInstallerProvider.future);
   return ContentRepository(
     installer: installer,
-    bundled: () async => (await rootBundle.load('assets/packs/starter-0.1.0.nnpack')).buffer.asUint8List(),
+    bundled: () async => (await rootBundle.load('assets/packs/starter-0.2.0.nnpack')).buffer.asUint8List(),
   ).starter();
 });
 
@@ -149,7 +149,35 @@ final Provider<AttemptSink> attemptSinkProvider = Provider<AttemptSink>((Ref ref
         misconceptionTag: Value<String>(r.misconceptionTag),
         response: Value<String>(r.response),
         durationMs: Value<int>(r.durationMs),
+        sessionId: Value<int?>(r.sessionId),
       ),
     );
   };
 });
+
+/// Starts and ends the rows of the `session` table (a visit: a lesson or, later, a planned session).
+class SessionRecorder {
+  const SessionRecorder(this._ref);
+
+  final Ref _ref;
+
+  Future<int> start(String profileId, String plan) async {
+    final AppDatabase db = await _ref.read(databaseProvider.future);
+    return db.startSession(
+      profileId,
+      DateTime.fromMillisecondsSinceEpoch(_ref.read(clockProvider).nowMs(), isUtc: true),
+      plan: plan,
+    );
+  }
+
+  Future<void> end(int id, String reason) async {
+    final AppDatabase db = await _ref.read(databaseProvider.future);
+    await db.endSession(
+      id,
+      DateTime.fromMillisecondsSinceEpoch(_ref.read(clockProvider).nowMs(), isUtc: true),
+      reason,
+    );
+  }
+}
+
+final Provider<SessionRecorder> sessionRecorderProvider = Provider<SessionRecorder>(SessionRecorder.new);

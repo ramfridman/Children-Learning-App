@@ -121,3 +121,12 @@ installed packs**: only `starter 0.1.0` is there. Play the lesson again: it stil
 
 **C. Timing (optional).** Checking a pack's signature happens once when the app starts. If the lesson takes
 noticeably longer than before to open the first time, tell me.
+
+## 7. M3 check: what the learning engine concluded
+
+After you have played the butterflies lesson on the phone (section 6, A), open the dev harness (parent area) and
+tap **Show what the engine knows about each child** (section 6 of the page). Expect, for the child who played:
+`NUM-A-03` and `NUM-A-04` as `learning` with a mastery estimate and a count of answers, `NUM-A-01` and `COL-A-02`
+as `ready`, and nothing about misconceptions or gaps unless you made the same wrong answer on two different counting
+steps (then `misconception M-CNT-DOUBLE` or `M-CNT-SKIP` appears as `suspected` or `active`). Play again on another
+day and the numbers move; nothing is ever taken away. Tell me if a number looks wrong for what you did.

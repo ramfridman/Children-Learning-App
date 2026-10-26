@@ -6,9 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers.dart';
 import '../../app/state.dart';
 import '../../auth/auth_client.dart';
+import '../../content/engine_adapter.dart';
+import '../../content/models.dart';
 import '../../content/pack_installer.dart';
 import '../../content/pack_verify.dart';
 import '../../data/app_database.dart';
+import '../../engine/engine.dart';
 import '../../core/errors.dart';
 import '../../core/log.dart';
 import '../../device/device_key_service.dart';
@@ -148,6 +151,22 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
         .join('\n');
   });
 
+  /// Replays every child's answers through the learning engine and prints what it concluded.
+  void _engineState() => _run('engine', () async {
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final PackContent content = await ref.read(contentProvider.future);
+    final List<Profile> children = await db.allProfiles();
+    if (children.isEmpty) return 'no child profiles';
+    final List<String> out = <String>[];
+    for (final Profile p in children) {
+      final Engine engine = Engine(catalog: engineCatalog(content))
+        ..replay((await db.attemptsOf(p.id)).map(eventOf));
+      final String text = engineSummary(engine, DateTime.now().toUtc());
+      out.add('Child ${p.name}:${String.fromCharCode(10)}$text');
+    }
+    return out.join(String.fromCharCode(10) + String.fromCharCode(10));
+  });
+
   void _pair() => _run('pair', () async {
     final String secret = _devSecret.text.trim();
     final Enrolled e = await ref
@@ -227,6 +246,8 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
             _heading(DevStrings.packs),
             _button(DevStrings.installIncoming, _installIncoming),
             _button(DevStrings.listPacks, _listPacks),
+            _heading(DevStrings.engine),
+            _button(DevStrings.engineState, _engineState),
             _heading(DevStrings.output),
             for (final String line in _lines)
               Padding(padding: const EdgeInsets.only(bottom: 8), child: SelectableText(line)),

@@ -34,9 +34,28 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   LessonController? _controller;
   TemplateSession? _session;
   int _sessionIndex = -1;
+  late final SessionRecorder _recorder;
+  late final Future<int> _visit;
+  int? _visitId;
+  bool _visitEnded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _recorder = ref.read(sessionRecorderProvider);
+    _visit = _recorder.start(widget.profileId, 'lesson:${widget.lessonId}').then((int id) => _visitId = id);
+  }
+
+  void _endVisit(String reason) {
+    final int? id = _visitId;
+    if (id == null || _visitEnded) return;
+    _visitEnded = true;
+    _recorder.end(id, reason).catchError((Object _) {});
+  }
 
   @override
   void dispose() {
+    _endVisit(_controller?.finished ?? false ? 'finished' : 'home');
     _session?.dispose();
     _controller?.dispose();
     super.dispose();
@@ -48,6 +67,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     content: content,
     lesson: content.lessons[widget.lessonId]!,
     profileId: widget.profileId,
+    sessionId: _visitId,
     record: ref.read(attemptSinkProvider),
     clock: ref.read(clockProvider),
   );
@@ -75,33 +95,42 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     return content.when(
       loading: () => const ColoredBox(color: TokenColors.cream),
       error: (Object e, StackTrace s) => _Unavailable(onHome: _home),
-      data: (PackContent c) {
-        final LessonController controller = _controllerFor(c);
-        final ActivitySpec spec = ActivitySpec.of(AppLayout.of(context).board);
-        return ListenableBuilder(
-          listenable: controller,
-          builder: (BuildContext ctx, Widget? _) {
-            final TemplateSession session = _sessionFor(controller);
-            final bool helpOffered =
-                !controller.finished &&
-                controller.errors >= 1 &&
-                controller.hintLevel < controller.current.hints.length;
-            return ActivityFrame(
-              bubbleText: controller.bubble,
-              trailTotal: controller.items.length,
-              trailDone: controller.finished ? controller.items.length : controller.index,
-              onHome: _home,
-              onHint: controller.finished ? null : controller.showHint,
-              hintGlow: helpOffered,
-              onShowMe: controller.finished ? null : () => controller.unsure(),
-              onReplay: controller.finished ? null : controller.replayPrompt,
-              stage: (Size room) => session.buildStage(ctx, room, spec),
-              tiles: controller.finished ? null : session.buildTiles(ctx, spec),
-              overlay: controller.finished
-                  ? LessonCelebration(text: controller.lesson.celebration.caption, onDone: _home)
-                  : null,
-            );
-          },
+      data: (PackContent c) => FutureBuilder<int>(
+        future: _visit,
+        builder: (BuildContext context, AsyncSnapshot<int> visit) {
+          if (!visit.hasData) return const ColoredBox(color: TokenColors.cream);
+          return _lesson(context, c);
+        },
+      ),
+    );
+  }
+
+  Widget _lesson(BuildContext context, PackContent c) {
+    final LessonController controller = _controllerFor(c);
+    final ActivitySpec spec = ActivitySpec.of(AppLayout.of(context).board);
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (BuildContext ctx, Widget? _) {
+        final TemplateSession session = _sessionFor(controller);
+        if (controller.finished) _endVisit('finished');
+        final bool helpOffered =
+            !controller.finished &&
+            controller.errors >= 1 &&
+            controller.hintLevel < controller.current.hints.length;
+        return ActivityFrame(
+          bubbleText: controller.bubble,
+          trailTotal: controller.items.length,
+          trailDone: controller.finished ? controller.items.length : controller.index,
+          onHome: _home,
+          onHint: controller.finished ? null : controller.showHint,
+          hintGlow: helpOffered,
+          onShowMe: controller.finished ? null : () => controller.unsure(),
+          onReplay: controller.finished ? null : controller.replayPrompt,
+          stage: (Size room) => session.buildStage(ctx, room, spec),
+          tiles: controller.finished ? null : session.buildTiles(ctx, spec),
+          overlay: controller.finished
+              ? LessonCelebration(text: controller.lesson.celebration.caption, onDone: _home)
+              : null,
         );
       },
     );

@@ -199,11 +199,18 @@ void main() {
       ]);
       final Attempt first = (await _attempts(rig)).first;
       expect(first.packId, 'starter');
-      expect(first.packVersion, '0.1.0');
+      expect(first.packVersion, '0.2.0');
       expect(first.lessonId, 'butterflies');
       expect(first.activityRevision, 1);
       expect(first.templateVersion, '1.0');
       expect(first.profileId, 'p-1');
+      // The visit is one session, ended as finished, and every answer belongs to it.
+      final List<Session> visits = await rig.db.sessionsOf('p-1');
+      expect(visits, hasLength(1));
+      expect(visits.single.plan, 'lesson:butterflies');
+      expect(visits.single.endReason, 'finished');
+      expect(visits.single.endedAt, isNotNull);
+      expect((await _attempts(rig)).every((Attempt a) => a.sessionId == visits.single.id), isTrue);
     });
   }
 
@@ -225,6 +232,11 @@ void main() {
     expect(rows.single.misconceptionTag, '');
     await tester.tap(find.byKey(const Key('activity-home')));
     await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 100));
+    // Leaving in the middle ends the visit as "home".
+    final List<Session> visits = await rig.db.sessionsOf('p-1');
+    expect(visits.single.endReason, 'home');
+    expect(rows.single.sessionId, visits.single.id);
   });
 
   testWidgets('the guide repeats the question when touched, and leaving the lesson stops everything', (

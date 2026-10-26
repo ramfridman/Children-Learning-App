@@ -94,6 +94,12 @@
         "check"
       ]
     },
+    "contradicts": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 20,
+      "pattern": "^(?:M-[A-Z]{2,5}-[A-Z0-9]{2,12})$"
+    },
     "checkType": {
       "type": "string",
       "enum": [

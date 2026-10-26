@@ -146,6 +146,17 @@ const SObject skillSchema = SObject(<String, SField>{
       'initialStabilityDays': SField(SNum(min: 0, max: 30)),
     }),
   ),
+  // Learning engine (M3). A core skill (three or more skills depend on it) needs more evidence for mastery.
+  'core': SField(SBool(), required: false),
+  'masteryRequires': SField(
+    SObject(<String, SField>{
+      'successes': SField(SInt(min: 1, max: 20), required: false),
+      'days': SField(SInt(min: 1, max: 30), required: false),
+      'representations': SField(SInt(min: 1, max: 5), required: false),
+      'checks': SField(SInt(min: 0, max: 5), required: false),
+    }),
+    required: false,
+  ),
 });
 
 const SObject misconceptionSchema = SObject(<String, SField>{
@@ -238,6 +249,8 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
     ),
   ),
   'purpose': const SField(SEnum(<String>['learn', 'practice', 'probe', 'repair', 'check'])),
+  // The misconception this item is built to expose (used by the session builder after a repair).
+  'contradicts': const SField(_tag, required: false),
   'checkType': const SField(
     SEnum(<String>['practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict']),
   ),
