@@ -23,6 +23,8 @@ export interface Store {
 
   // Settings and limits
   getConfig(key: string): Promise<unknown | undefined>;
+  /** Several settings in one round trip; a missing key is absent from the result. */
+  getConfigs(keys: readonly string[]): Promise<Record<string, unknown>>;
   /** Counts one use in the current window; false means the limit is already reached. */
   rateLimitHit(scope: string, key: string, windowStart: Date, limit: number): Promise<boolean>;
 
@@ -97,6 +99,93 @@ export interface Store {
    * published; `conflict`: this version is published with other contents; `unchanged`: exactly this is published.
    */
   publishContent(p: PublishedPack): Promise<"published" | "unchanged" | "older" | "conflict">;
+
+  // The tutor (M6)
+  /** The item, its misconceptions and the speaking character, or null if the pack version has no such item. */
+  tutorContext(
+    packId: string,
+    packVersion: string,
+    itemId: string,
+    characterId: string,
+  ): Promise<TutorContext | null>;
+  cacheGet(k: CacheKey): Promise<CachedLine | null>;
+  cachePut(k: CacheKey, v: CachedLine): Promise<void>;
+  /** One atomic call for every cap; nothing is counted when a limit is already reached. */
+  tutorTake(p: {
+    familyId: string;
+    childRef: string;
+    sessionRef: string;
+    kind: "turn" | "prefetch";
+    sessionCap: number;
+    dayCap: number;
+    prefetchCap: number;
+    costCapMicro: number;
+    nowMs: number;
+  }): Promise<TakeResult>;
+  tutorCostAdd(familyId: string, micro: number, nowMs: number): Promise<void>;
+  logTutor(row: TutorLogRow): Promise<void>;
+}
+
+// ---- The tutor (M6) ----
+
+export interface TutorContext {
+  itemId: string;
+  band: "A" | "B" | "C";
+  llmAllowed: boolean;
+  goal: string;
+  promptText: string;
+  numberSet: number[];
+  allowedActions: string[];
+  hintThreshold: number;
+  objectIds: string[];
+  answers: PublishedAnswer[];
+  /** Misconception tag to its description, for the prompt. */
+  descriptions: Record<string, string>;
+  character: { nameHe: string; gender: "m" | "f"; voiceId: string | null } | null;
+}
+
+export interface CacheKey {
+  packId: string;
+  packVersion: string;
+  itemId: string;
+  /** A misconception tag, or `default`. */
+  mistake: string;
+  hintLevel: number;
+  band: "A" | "B" | "C";
+  addressForm: "f" | "m" | "n";
+  characterId: string;
+  promptVersion: string;
+  validatorVersion: string;
+}
+
+export interface CachedLine {
+  line: string;
+  caption: string | null;
+  next: string;
+  highlight: string[];
+  audio: Uint8Array | null;
+}
+
+export type TakeResult = "ok" | "session_cap" | "day_cap" | "prefetch_cap" | "cost_cap";
+
+export interface TutorLogRow {
+  familyId: string;
+  childRef: string;
+  sessionRef: string;
+  packId: string;
+  packVersion: string;
+  itemId: string;
+  characterId: string;
+  source: "live" | "cache" | "prefetch" | "rule";
+  outcome: string;
+  line: string | null;
+  validatorOk: boolean | null;
+  validatorFailures: string[];
+  promptVersion: string;
+  totalMs: number;
+  modelMs: number | null;
+  voiceMs: number | null;
+  elevenRequestId: string | null;
 }
 
 export interface PublishedAnswer {

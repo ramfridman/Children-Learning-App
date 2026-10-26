@@ -438,3 +438,6 @@ verify_jwt = false
 
 [functions.content-publish]
 verify_jwt = false
+
+[functions.tutor-turn]
+verify_jwt = false

@@ -1,10 +1,12 @@
 // Builds the real services from the function's environment. Anything missing means the function
 // answers "unavailable" and does nothing, rather than running half-configured.
 import { b64urlDecode, type Bytes } from "./b64.ts";
+import { anthropicClient } from "./anthropic.ts";
 import { authAdminMinter } from "./auth_admin.ts";
+import { elevenLabsClient } from "./elevenlabs.ts";
 import { connect, pgStore } from "./db.ts";
 import { GatewayError } from "./errors.ts";
-import type { Services } from "./handler.ts";
+import { DEFAULT_TUTOR_BUDGET, type Services } from "./handler.ts";
 import { remoteTokenConfig, verifyAccessToken } from "./token.ts";
 
 function need(name: string): string {
@@ -26,6 +28,9 @@ export function realServices(): Services {
   // The project URL is set by the platform. The database login is our own limited role; the
   // platform's own database URL and its all-powerful key are deliberately never read here.
   const tokenCfg = remoteTokenConfig(need("SUPABASE_URL"));
+  // The two vendor keys are optional here: without them the tutor answers with the RuleTutor and costs nothing.
+  const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
+  const elevenKey = Deno.env.get("ELEVENLABS_API_KEY");
   cached = {
     nowMs: () => Date.now(),
     verifyToken: (bearer) => verifyAccessToken(bearer, tokenCfg),
@@ -37,6 +42,13 @@ export function realServices(): Services {
     },
     mintSession: (id) => authAdminMinter(need("SUPABASE_URL"), need("AUTH_ADMIN_KEY"))(id),
     allowDevEnrolment: Deno.env.get("ALLOW_DEV_ENROLMENT") === "true",
+    tutor: anthropicKey && elevenKey
+      ? {
+        model: anthropicClient(anthropicKey),
+        voice: elevenLabsClient(elevenKey),
+        budget: DEFAULT_TUTOR_BUDGET,
+      }
+      : undefined,
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
   };
   return cached;

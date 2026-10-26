@@ -7,7 +7,27 @@ import { errorResponse, GatewayError, jsonResponse } from "./errors.ts";
 import { internalReason, log } from "./log.ts";
 import { verifyPublishSecret } from "./publish_secret.ts";
 import { parseJsonObject, readBodyBytes, type Shape, validate } from "./schema.ts";
+import type { ModelClient } from "./anthropic.ts";
+import type { VoiceClient } from "./elevenlabs.ts";
 import type { Secrets, Store } from "./store.ts";
+
+/** How long each step of a tutor turn may take (milliseconds). The child never waits more than `totalMs`. */
+export interface TutorBudget {
+  modelMs: number;
+  voiceMs: number;
+  /** A refused reply is retried once only if at least this much of the budget is left. */
+  retryMinLeftMs: number;
+  totalMs: number;
+  modelMaxTokens: number;
+}
+
+export const DEFAULT_TUTOR_BUDGET: TutorBudget = {
+  modelMs: 1600,
+  voiceMs: 900,
+  retryMinLeftMs: 1500,
+  totalMs: 3000,
+  modelMaxTokens: 300,
+};
 
 export interface Services {
   nowMs(): number;
@@ -19,6 +39,8 @@ export interface Services {
   allowDevEnrolment: boolean;
   /** Creates a one-time sign-in for the family's guardian, for a child device that just paired. */
   mintSession(guardianUserId: string): Promise<{ tokenHash: string }>;
+  /** The model and the voice. Absent until their keys are set: the tutor then answers with the RuleTutor. */
+  tutor?: { model: ModelClient; voice: VoiceClient; budget: TutorBudget };
   /** Tests only: replaces Google's roots. Always undefined in production. */
   androidRootsPem?: readonly string[];
 }
