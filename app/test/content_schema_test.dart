@@ -123,7 +123,6 @@ void main() {
 
       for (final MapEntry<String, Schema> e in allSchemas.entries) {
         final Map<String, Object?> js = toJsonSchema(e.value, id: 'nitznutz/${e.key}');
-        expect(js[r'$schema'], 'https://json-schema.org/draft/2020-12/schema');
         expect(js[r'$id'], 'nitznutz/${e.key}');
         walk(js);
       }

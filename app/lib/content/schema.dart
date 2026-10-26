@@ -192,15 +192,11 @@ void _check(Schema s, Object? v, String path, List<Problem> out) {
 }
 
 // ---- JSON Schema export (draft 2020-12), for authors' editors ----
+// The `$schema` dialect line is added by the pack builder tool; the app itself holds no web address.
 
 Map<String, Object?> toJsonSchema(Schema s, {String? id, String? title}) {
   final Map<String, Object?> body = _export(s);
-  return <String, Object?>{
-    r'$schema': 'https://json-schema.org/draft/2020-12/schema',
-    r'$id': ?id,
-    'title': ?title,
-    ...body,
-  };
+  return <String, Object?>{r'$id': ?id, 'title': ?title, ...body};
 }
 
 Map<String, Object?> _export(Schema s) {

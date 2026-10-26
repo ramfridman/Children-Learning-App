@@ -326,8 +326,16 @@ void _options(
 }
 
 final RegExp _jsonName = RegExp(r'^([a-z]+)\.(.+)\.json$');
-final RegExp _hebrewWord = RegExp('[א-ת][ְ-ׇא-ת׳״־]*');
-final RegExp _niqqud = RegExp('[ְ-ׇּׁׂ]');
+String _range(int from, int to) => '${String.fromCharCode(from)}-${String.fromCharCode(to)}';
+
+// Letters U+05D0 to U+05EA, points U+05B0 to U+05C7; geresh, gershayim and maqaf may sit inside a word.
+// Built from code points so this file holds no Hebrew text (that lives in strings/he.dart).
+final String _letters = _range(0x05D0, 0x05EA);
+final String _points = _range(0x05B0, 0x05C7);
+final RegExp _hebrewWord = RegExp(
+  '[$_letters][$_points$_letters${String.fromCharCodes(<int>[0x05F3, 0x05F4, 0x05BE])}]*',
+);
+final RegExp _niqqud = RegExp('[$_points]');
 final RegExp _latin = RegExp('[A-Za-z]');
 
 /// The house rules for child-facing Hebrew: Hebrew only, no Latin letters, and in Bands A and B
