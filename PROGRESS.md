@@ -9,7 +9,7 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | Reading pass over the plan, docs and design bundle | Done |
 | M0 Foundations | **Done, merged to `main` 2026-10-26** (approved 2026-10-25; see `docs/milestones/M0.md`, section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Reinstall check done. Left: spend-limit screenshots and the owner's confirmation of the M0 report. Branch `m0-foundations`, not merged to `main`. |
 | M1 App shell and design system | **Done and merged to `main` on 2026-10-26** (CI green; child screens match the design boards, checked by 16 geometry tests). The on-phone checks (install, wrong-PIN lock-outs, database file pulled with adb, Argon2id timing) are still to do when the Samsung is plugged into the PC. The Hebrew child strings await the owner's review. |
-| M2 Content system and first activity | **Plan written, waiting for the owner's OK** (`docs/milestones/M2.md`, branch `m2-content-system`). No code yet. |
+| M2 Content system and first activity | **Built, green in CI, waiting for the owner's confirmation** (`docs/milestones/M2.md` section 11 is the report; branch `m2-content-system`, not merged). Signed packs, safe installer, the three templates and the butterflies lesson work end to end in tests on phone and tablets. Not yet tried on the Samsung (it was not connected). |
 | M3–M9 | Not started |
 
 ## Done
@@ -26,7 +26,14 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 - **Closed schema:** `tools/data-api-closed-check.ps1` run as a signed-in user: 15 of 15 checks pass (every `app` table, insert and function refused with `PGRST106`; storage has no buckets and refuses writes).
 - **Canary:** a planted fake key on a throwaway branch was refused by the pre-commit hook; CI scans the full history and self-tests the scanner on every push.
 
+- **M2 (2026-10-26):** schemas and validator (61 broken-file cases), canonical zip, Ed25519-signed packs, pack builder (`app/tool/pack_builder.dart`), installer with hidden packs and rollback, database v2 (`installed_pack`, `attempt`), lesson player and templates (`count_tap`, `tap_answer`, `give_n`), the butterflies lesson as a signed pack, goldens for every step, dev-page pack tools, on-phone steps in `docs/setup/android-device-checks.md` section 6. The signing key is at `%USERPROFILE%
+itznutz-secretspack-signing.key` (outside the repo).
+
 ## Open issues
+
+- **Signing key backup:** the owner must save `pack-signing.key` in 1Password (M2 report, "Needs you" 1). Until he does, it exists only on this PC.
+- **M2 on-phone check** (play the lesson; damaged packs refused) waits for the Samsung to be plugged in; same sitting as the M1 on-phone checks.
+- Packs are proven again when loaded, which reads the whole pack into memory; fine for the 37 KB starter, to be made lazy when packs hold recordings (M4).
 
 - **Child-device pairing on hardware is not proven.** The owner's children share parent phones and a tablet, so the main model is a parent-role device with a PIN-gated parent area (M1, PLAN.md line 81). The `child` role is for a kid-only device; its server rules are covered by automated tests. Hardware proof (a second phone, or Samsung Secure Folder, which adb cannot install into) is deferred by the owner's choice. The emulator route needs `ALLOW_DEV_ENROLMENT=true`, which must never be set on the cloud project.
 - **Branch protection is unavailable:** GitHub refuses it for a private repo on the free plan (needs GitHub Pro or a public repo). Owner to decide. Until then: merge only with all six jobs green.
@@ -40,6 +47,7 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 
 ## Waiting on the owner
 
+- Confirm M2 after the report; save the pack signing key in 1Password.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
 - Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
 
@@ -47,4 +55,4 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 
 ## Next step
 
-Claude: merge `m0-foundations` into `main` when the owner confirms M0 (all six jobs green). Do not start M1 until he confirms M0.
+Claude: when the owner confirms M2 (all six CI jobs green), merge `m2-content-system` into `main`. Then write the M3 plan (`docs/milestones/M3.md`, the learning engine) and wait for his OK before coding. Do not start M3 before he confirms M2.

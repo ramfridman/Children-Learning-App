@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers.dart';
+import '../../app/state.dart';
 import '../../auth/auth_client.dart';
+import '../../content/pack_installer.dart';
+import '../../content/pack_verify.dart';
+import '../../data/app_database.dart';
 import '../../core/errors.dart';
 import '../../core/log.dart';
 import '../../device/device_key_service.dart';
@@ -105,6 +111,43 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
     return 'device ${e.deviceId} role ${e.role} level ${e.securityLevel}';
   });
 
+  /// Installs every .nnpack file in the `incoming` folder of the no-backup area, one by one, and says what became of each.
+  /// Put files there with `adb shell run-as` (dev build only); this is how a damaged pack is shown to be refused.
+  void _installIncoming() => _run('install packs', () async {
+    final String folder = await ref.read(platformProvider).noBackupDir();
+    final Directory incoming = Directory('$folder${Platform.pathSeparator}incoming');
+    if (!incoming.existsSync()) throw StateError('no folder ${incoming.path}');
+    final PackInstaller installer = await ref.read(packInstallerProvider.future);
+    final List<String> out = <String>[];
+    final List<File> files =
+        incoming.listSync().whereType<File>().where((File f) => f.path.endsWith('.nnpack')).toList()
+          ..sort((File a, File b) => a.path.compareTo(b.path));
+    for (final File f in files) {
+      final String name = f.uri.pathSegments.last;
+      try {
+        final InstallResult r = await installer.install(await f.readAsBytes());
+        out.add(
+          '$name: ${r.outcome.name} ${r.pack.id} ${r.pack.version}${r.hidden ? ' (hidden: ${r.pack.hiddenReason})' : ''}',
+        );
+      } on PackRejected catch (e) {
+        out.add('$name: REFUSED at ${e.stage}: ${e.reason}');
+      }
+    }
+    return out.isEmpty ? 'no .nnpack files in the folder' : out.join('\n');
+  });
+
+  void _listPacks() => _run('packs', () async {
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final List<InstalledPack> rows = await db.allInstalledPacks();
+    if (rows.isEmpty) return 'none installed';
+    return rows
+        .map(
+          (InstalledPack p) =>
+              '${p.id} ${p.version} ${p.manifestSha256.substring(0, 12)}${p.hidden ? ' hidden' : ''}',
+        )
+        .join('\n');
+  });
+
   void _pair() => _run('pair', () async {
     final String secret = _devSecret.text.trim();
     final Enrolled e = await ref
@@ -181,6 +224,9 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
                 return 'done';
               }),
             ),
+            _heading(DevStrings.packs),
+            _button(DevStrings.installIncoming, _installIncoming),
+            _button(DevStrings.listPacks, _listPacks),
             _heading(DevStrings.output),
             for (final String line in _lines)
               Padding(padding: const EdgeInsets.only(bottom: 8), child: SelectableText(line)),

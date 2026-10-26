@@ -103,18 +103,24 @@ class ActiveProfile extends Notifier<Profile?> {
 final NotifierProvider<ActiveProfile, Profile?> activeProfileProvider =
     NotifierProvider<ActiveProfile, Profile?>(ActiveProfile.new);
 
-/// The lessons: the pack that ships in the app, installed through the same checks as any pack (signature
-/// against the built-in key, every hash) and read back from disk before use.
-final FutureProvider<PackContent> contentProvider = FutureProvider<PackContent>((Ref ref) async {
+/// The installer of content packs: its folder is `packs/` in the no-backup area, and it trusts only
+/// the public key built into the app.
+final FutureProvider<PackInstaller> packInstallerProvider = FutureProvider<PackInstaller>((Ref ref) async {
   final String folder = await ref.watch(platformProvider).noBackupDir();
   final AppDatabase db = await ref.watch(databaseProvider.future);
   final Uint8List key = unhex(await rootBundle.loadString('assets/pack_signing_public_key.txt'));
-  final PackInstaller installer = PackInstaller(
+  return PackInstaller(
     root: Directory('$folder${Platform.pathSeparator}packs'),
     registry: DbPackRegistry(db),
     publicKey: key,
     clock: ref.watch(clockProvider),
   );
+});
+
+/// The lessons: the pack that ships in the app, installed through the same checks as any pack (signature
+/// against the built-in key, every hash) and read back from disk before use.
+final FutureProvider<PackContent> contentProvider = FutureProvider<PackContent>((Ref ref) async {
+  final PackInstaller installer = await ref.watch(packInstallerProvider.future);
   return ContentRepository(
     installer: installer,
     bundled: () async => (await rootBundle.load('assets/packs/starter-0.1.0.nnpack')).buffer.asUint8List(),

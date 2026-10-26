@@ -648,10 +648,20 @@ Build v1 as a local-first Flutter app with one small Supabase backend. Where thi
 ### Repository layout
 
 - `app/`: the Flutter app, with the child space and parent area in separate feature folders, and `dev` and `release` flavours.
-- `packages/`: `engine` (learning engine, no UI), `hebrew_text`, `answer_matcher`, `content_schema`, `gateway_client`.
-- `content/`: skills, misconceptions, activities, lines and the child vocabulary lexicon, as JSON with JSON Schemas.
+- `packages/`: `engine` (learning engine, no UI), `hebrew_text`, `answer_matcher`, `gateway_client`. (Built in M2: the content schemas and validator live in `app/lib/content/`, shared by the app and the pack builder, so they cannot disagree; there is no `content_schema` package.)
+- `content/`: the sources of packs (`content/starter/`, built in M2) and the generated JSON Schema files (`content/schemas/`, from the same definitions the validator uses). Skills, misconceptions, activities and lessons are JSON files; lines and the child vocabulary lexicon follow.
 - `supabase/`: migrations, policies, Edge Functions with a shared `auth.ts`, and their tests.
-- `tools/`: `voice_gen`, `pack_builder` (builds, signs and publishes packs), `validate_content`, `tutor_eval`.
+- `tools/`: `voice_gen`, `validate_content`, `tutor_eval`. The pack builder is `app/tool/pack_builder.dart` (built in M2: `keygen`, `build`, `verify`, `inspect`, `schema`, `damage`); publishing to R2 and `content-publish` come with M6.
+
+### Content packs (as built in M2)
+
+- **File.** `<id>-<version>.nnpack`: a canonical, stored-only zip written and read by the app's own code (`zip_store.dart`): `manifest.json`, `manifest.sig` and flat files; no compression, encryption, zip64, extra fields, comments, folders or unsafe names; entries sorted; one fixed time. The reader re-writes what it parsed and compares it with the input byte for byte, so no byte of the container can change unnoticed. Limits: 402 entries, 64 MB.
+- **Signature.** Ed25519 over the label `nitznutz-pack-v1` + a newline + the exact bytes of `manifest.json`, checked with the public key built into the app (`assets/pack_signing_public_key.txt`). The private key is made once by `pack_builder keygen`, written outside the repo (`%USERPROFILE%
+itznutz-secretspack-signing.key`; the command refuses any path inside a git working tree) and kept in the owner's password manager.
+- **Order of checks (`verifyPack`, one function for the app and the builder).** zip container, then signature, then the manifest is read, then every file's size and SHA-256 against it, and only then are the other JSON files read and checked (schemas, then cross-file rules: every reference exists, tags only from the pack's own catalogue, Hebrew house rules, template and version rules). A pack that needs a newer app or template is proven genuine but kept unread and **hidden**.
+- **Install.** Files go to a temporary folder and are moved to `packs/<id>/<version>/` in the no-backup folder in one step, then recorded in `installed_pack`; failure removes the new files and leaves the old pack. Versions only go up; the same version with other bytes is refused; the same bytes do nothing. An installed pack is proven again whenever it is loaded.
+- **Documents.** `activity.<id>.json`, `lesson.<id>.json`, `skill.<id>.json`, `misconception.<tag>.json`, plus pictures (SVG) and, from M4, recordings. Templates in M2: `tap_answer`, `count_tap`, `give_n` (all version 1.0). Every document is closed (an unknown field is refused). Hebrew written by an AI or an engineer carries `"review": "needs-editor"`.
+- **Local data.** Database version 2 adds `installed_pack` and `attempt` (ids, numbers and fixed words only: activity id and revision, pack and template versions, result, hint level, misconception tag, option chosen, duration).
 
 ### Devices, roles and pairing
 

@@ -5,6 +5,7 @@
 //   dart run tool/pack_builder.dart verify <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart inspect <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart schema [--out <folder>] [--check]
+//   dart run tool/pack_builder.dart damage <pack file> [--source <folder>] [--out <folder>]
 //
 // `keygen` writes the private key to %USERPROFILE%\nitznutz-secrets\pack-signing.key (outside the repo;
 // it refuses a path inside any git working tree) and the public key to assets/pack_signing_public_key.txt.
@@ -37,6 +38,8 @@ Future<void> main(List<String> args) async {
         await _verify(rest, inspect: true);
       case 'schema':
         _schema(rest);
+      case 'damage':
+        await _damage(rest);
       default:
         _usage();
         exit(2);
@@ -118,6 +121,31 @@ Future<void> _verify(List<String> args, {required bool inspect}) async {
     stdout.writeln(
       'voice lines recorded: ${(pack.manifest['vo']! as List<Object?>).length}, pending: ${(pack.manifest['voPending']! as List<Object?>).length}',
     );
+  }
+}
+
+/// Writes copies of a pack that the app must refuse (and, with --source, a pack of a newer version signed by
+/// a key the app does not trust), for showing on a phone that they are.
+Future<void> _damage(List<String> args) async {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) throw const BuildFailed('damage needs one pack file');
+  final Directory out = Directory(_option(args, '--out') ?? 'damaged')..createSync(recursive: true);
+  final Uint8List pack = File(pos.single).readAsBytesSync();
+  final Map<String, Uint8List> variants = damagedVariants(pack);
+  final String? source = _option(args, '--source');
+  if (source != null) {
+    // A well-made pack of a newer version, but signed with a key made just now: genuine in form, not from us.
+    final File scratch = File(
+      '${Directory.systemTemp.createTempSync('nn_damage_').path}${Platform.pathSeparator}k.key',
+    );
+    final PackKey stranger = await generateKeyFile(scratch.path);
+    final BuiltPack built = await buildPack(Directory(source), stranger);
+    variants['stranger-key.nnpack'] = built.bytes;
+    scratch.parent.deleteSync(recursive: true);
+  }
+  for (final MapEntry<String, Uint8List> v in variants.entries) {
+    File('${out.path}${Platform.pathSeparator}${v.key}').writeAsBytesSync(v.value);
+    stdout.writeln('wrote ${v.key} (${v.value.length} bytes)');
   }
 }
 

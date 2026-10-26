@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/pack_verify.dart';
@@ -223,6 +224,32 @@ void main() {
         buildPack(Directory(inSource('pack.json').parent.path), key),
         _buildFails('is not used by any asset'),
       );
+    });
+  });
+
+  group('damaged copies for the phone', () {
+    test('every variant is refused by the same check the app runs', () async {
+      final PackKey key = await newTestKey();
+      final BuiltPack built = await buildPack(source(), key);
+      await verifyPack(built.bytes, publicKey: key.publicKey); // the original is fine
+      final Map<String, Uint8List> variants = damagedVariants(built.bytes);
+      expect(
+        variants.keys,
+        containsAll(<String>[
+          'damaged-picture.nnpack',
+          'damaged-manifest.nnpack',
+          'damaged-signature.nnpack',
+          'damaged-one-byte.nnpack',
+          'truncated.nnpack',
+        ]),
+      );
+      for (final MapEntry<String, Uint8List> v in variants.entries) {
+        await expectLater(
+          verifyPack(v.value, publicKey: key.publicKey),
+          throwsA(isA<PackRejected>()),
+          reason: v.key,
+        );
+      }
     });
   });
 

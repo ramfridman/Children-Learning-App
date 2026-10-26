@@ -76,6 +76,23 @@ void main() {
     }
   });
 
+  test('every single byte of the real starter pack, changed in turn, is refused (all bytes with NN_EXHAUSTIVE=1 or in CI)', () async {
+    final bool full = Platform.environment['NN_EXHAUSTIVE'] == '1' || Platform.environment['CI'] == 'true';
+    final Uint8List bytes = File(_packPath).readAsBytesSync();
+    final Uint8List key = _publicKey();
+    int tried = 0;
+    for (int i = 0; i < bytes.length; i += full ? 1 : 97) {
+      final Uint8List bad = Uint8List.fromList(bytes)..[i] ^= 0x01;
+      try {
+        await verifyPack(bad, publicKey: key);
+        fail('byte $i of ${bytes.length} was changed and the pack was accepted');
+      } on PackRejected {
+        tried++;
+      }
+    }
+    expect(tried, full ? bytes.length : greaterThan(300));
+  }, timeout: const Timeout(Duration(minutes: 10)));
+
   test('the lesson has the five items of the script, in order', () {
     final Map<String, Object?> lesson = _m(pack.docs['lesson.butterflies.json']);
     expect(lesson['items'], <String>[

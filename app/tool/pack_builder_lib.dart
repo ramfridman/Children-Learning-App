@@ -318,3 +318,24 @@ Map<String, String> renderSchemas() => <String, String>{
     '${e.key}.schema.json':
         '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{r'$schema': _dialect, ...toJsonSchema(e.value, id: 'urn:nitznutz:schema:${e.key}', title: 'Nitznutz ${e.key}')})}\n',
 };
+
+// ---- damaged copies, for showing on a phone that they are refused ----
+
+/// Copies of [pack] that must each be refused, by name: one changed byte in a picture, in the manifest and in
+/// the signature (with the zip made valid again, so only the signature and hashes can catch it), one raw changed
+/// byte, and a pack cut short.
+Map<String, Uint8List> damagedVariants(Uint8List pack) {
+  final List<ZipEntry> entries = readStoredZip(pack);
+  Uint8List rewritten(String name, int at) => writeStoredZip(<ZipEntry>[
+    for (final ZipEntry e in entries)
+      ZipEntry(e.name, e.name == name ? (Uint8List.fromList(e.data)..[at % e.data.length] ^= 0x01) : e.data),
+  ]);
+  final String picture = entries.firstWhere((ZipEntry e) => e.name.endsWith('.svg')).name;
+  return <String, Uint8List>{
+    'damaged-picture.nnpack': rewritten(picture, 40),
+    'damaged-manifest.nnpack': rewritten(manifestName, 200),
+    'damaged-signature.nnpack': rewritten(signatureName, 10),
+    'damaged-one-byte.nnpack': Uint8List.fromList(pack)..[pack.length ~/ 2] ^= 0x01,
+    'truncated.nnpack': Uint8List.sublistView(pack, 0, pack.length ~/ 2),
+  };
+}
