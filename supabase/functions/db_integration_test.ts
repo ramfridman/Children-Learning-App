@@ -323,3 +323,77 @@ Deno.test({ name: "child pairing against the real tables", ignore: !adminUrl || 
     await admin.end();
   }
 });
+
+Deno.test({ name: "publishing and the tutor caps against the real tables", ignore: !adminUrl || !gatewayUrl }, async () => {
+  const admin = connect(adminUrl!);
+  const password = new URL(gatewayUrl!).password;
+  await admin.unsafe(`alter role app_gateway login password '${password.replaceAll("'", "''")}'`);
+  const sql = connect(gatewayUrl!);
+  const store = pgStore(sql);
+  const family = crypto.randomUUID();
+  await admin`insert into app.family (id) values (${family})`;
+  const item = (id: string) => ({
+    itemId: id,
+    revision: 1,
+    template: "count_tap",
+    band: "A" as const,
+    skillIds: ["NUM-A-03"],
+    llmAllowed: true,
+    goal: "touch each butterfly once",
+    promptText: "כַּמָּה פַּרְפָּרִים?",
+    answers: [
+      { id: "o1", value: 2, misconception: "M-CNT-SKIP", correct: false },
+      { id: "o2", value: 3, correct: true },
+    ],
+    numberSet: [2, 3],
+    allowedActions: ["show_fingers"],
+    hintThreshold: 3,
+    objectIds: ["o1", "o2"],
+  });
+  const pack = (version: string, sha: string, ids: string[]) => ({
+    packId: "ci-pack",
+    packVersion: version,
+    manifestSha256: sha,
+    items: ids.map(item),
+    misconceptions: [{ tag: "M-CNT-SKIP", skillIds: ["NUM-A-03"], description: "skips an object" }],
+    characters: [{ characterId: "ci-char", nameHe: "נִיצִי", gender: "f" as const, voiceId: null, personal: false }],
+  });
+  try {
+    assert.equal(await store.publishContent(pack("0.1.0", "a".repeat(64), ["a.1", "a.2"])), "published");
+    assert.equal(await store.publishContent(pack("0.1.0", "a".repeat(64), ["a.1", "a.2"])), "unchanged");
+    assert.equal(await store.publishContent(pack("0.1.0", "b".repeat(64), ["a.1"])), "conflict");
+    assert.equal(await store.publishContent(pack("0.0.9", "c".repeat(64), ["a.1"])), "older");
+    const items = await admin`select item_id, answers, number_set, skill_ids from app.content_item where pack_id = 'ci-pack' order by item_id`;
+    assert.equal(items.length, 2);
+    assert.equal(items[0].number_set.join(","), "2,3");
+    assert.equal(items[0].skill_ids[0], "NUM-A-03");
+    assert.equal(items[0].answers[1].correct, true);
+    assert.equal(await store.publishContent(pack("0.2.0", "d".repeat(64), ["a.1"])), "published");
+    const after = await admin`select pack_version, count(*)::int as n from app.content_item where pack_id = 'ci-pack' group by 1`;
+    assert.equal(after.length, 1, "only the current version is kept");
+    assert.equal(after[0].pack_version, "0.2.0");
+    await admin`update app.family_character set voice_id = 'abcDEF0123456789' where character_id = 'ci-char'`;
+    await store.publishContent(pack("0.3.0", "e".repeat(64), ["a.1"]));
+    const [ch] = await admin`select voice_id from app.family_character where character_id = 'ci-char'`;
+    assert.equal(ch.voice_id, "abcDEF0123456789", "a publish does not erase a chosen voice");
+
+    // The caps: 30 requests at once against a limit of 20 let exactly 20 through.
+    const now = new Date();
+    const results = await Promise.all(
+      Array.from({ length: 30 }, () =>
+        sql`select app.tutor_take(${family}, 'ci-child', 'ci-session', 'turn', 20, 60, 40, 500000, ${now}) as r`),
+    );
+    const ok = results.filter((r) => r[0].r === "ok").length;
+    assert.equal(ok, 20, "exactly 20 turns are allowed in a session, even in parallel");
+    assert.equal(results.filter((r) => r[0].r === "session_cap").length, 10);
+    const [day] = await admin`select count from app.usage_counter where scope = 'tutor_day' and key = 'ci-child'`;
+    assert.equal(day.count, 20, "refused turns gave their slot back");
+  } finally {
+    await admin`delete from app.content_pack where pack_id = 'ci-pack'`;
+    await admin`delete from app.family_character where character_id = 'ci-char'`;
+    await admin`delete from app.usage_counter where key in ('ci-child', 'ci-session')`;
+    await admin`delete from app.family where id = ${family}`;
+    await sql.end();
+    await admin.end();
+  }
+});

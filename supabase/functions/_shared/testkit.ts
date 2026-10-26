@@ -4,10 +4,14 @@ import type { DeviceRecord } from "./auth.ts";
 import { b64urlEncode, type Bytes, sha256B64url } from "./b64.ts";
 import { canonicalString } from "./canonical.ts";
 import type { Services } from "./handler.ts";
-import type { DeviceSummary, RevokeReason, Store } from "./store.ts";
+import { compareSemver } from "./semver.ts";
+import type { DeviceSummary, PublishedPack, RevokeReason, Store } from "./store.ts";
 import { rawToDer, utf8 } from "./testutil.ts";
 
 export const NOW = 1_800_000_000_000;
+
+/** The publish secret of the fake services (long enough to be accepted). */
+export const PUBLISH_SECRET = ["fake", "value", "for", "tests", "only", "abcdefghijklmnop"].join("-");
 
 export interface StoredDevice extends DeviceRecord {
   platform: "android" | "ios";
@@ -187,6 +191,29 @@ export class FakeStore implements Store {
       })),
     );
   }
+  /** Published packs by id (only the current version is kept), and the characters by id. */
+  packs = new Map<string, PublishedPack>();
+  characters = new Map<string, { nameHe: string; gender: string; voiceId: string | null; personal: boolean }>();
+  publishContent(p: PublishedPack) {
+    const have = this.packs.get(p.packId);
+    if (have) {
+      const order = compareSemver(p.packVersion, have.packVersion);
+      if (order < 0) return Promise.resolve("older" as const);
+      if (order === 0 && have.manifestSha256 !== p.manifestSha256) return Promise.resolve("conflict" as const);
+    }
+    for (const c of p.characters) {
+      const old = this.characters.get(c.characterId);
+      this.characters.set(c.characterId, {
+        nameHe: c.nameHe,
+        gender: c.gender,
+        voiceId: c.voiceId ?? old?.voiceId ?? null,
+        personal: c.personal,
+      });
+    }
+    if (have && have.packVersion === p.packVersion) return Promise.resolve("unchanged" as const);
+    this.packs.set(p.packId, p);
+    return Promise.resolve("published" as const);
+  }
   revokeDevice(familyId: string, deviceId: string, _reason: RevokeReason) {
     const d = this.devices.get(deviceId);
     if (!d || d.familyId !== familyId || d.revokedAt) return Promise.resolve(false);
@@ -209,6 +236,7 @@ export function fakeServices(store: FakeStore, nowMs = () => NOW): Services {
     secrets: {
       pairingCodeKey: new Uint8Array(32).fill(7) as Bytes,
       ipHashKey: new Uint8Array(32).fill(9) as Bytes,
+      publishSecret: PUBLISH_SECRET,
     },
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
     allowDevEnrolment: false,

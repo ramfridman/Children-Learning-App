@@ -90,10 +90,60 @@ export interface Store {
   listActiveDevices(familyId: string): Promise<DeviceSummary[]>;
   /** False if the device is not an active device of that family. */
   revokeDevice(familyId: string, deviceId: string, reason: RevokeReason): Promise<boolean>;
+
+  // Content (M6)
+  /**
+   * Publishes one pack version's item index in one transaction. `older`: a higher version of the pack is already
+   * published; `conflict`: this version is published with other contents; `unchanged`: exactly this is published.
+   */
+  publishContent(p: PublishedPack): Promise<"published" | "unchanged" | "older" | "conflict">;
+}
+
+export interface PublishedAnswer {
+  id: string;
+  value?: number;
+  label?: string;
+  misconception?: string;
+  correct: boolean;
+}
+
+export interface PublishedItem {
+  itemId: string;
+  revision: number;
+  template: string;
+  band: "A" | "B" | "C";
+  skillIds: string[];
+  llmAllowed: boolean;
+  goal: string;
+  promptText: string;
+  answers: PublishedAnswer[];
+  numberSet: number[];
+  allowedActions: string[];
+  hintThreshold: number;
+  objectIds: string[];
+}
+
+export interface PublishedCharacter {
+  characterId: string;
+  nameHe: string;
+  gender: "m" | "f";
+  voiceId: string | null;
+  personal: boolean;
+}
+
+export interface PublishedPack {
+  packId: string;
+  packVersion: string;
+  manifestSha256: string;
+  items: PublishedItem[];
+  misconceptions: Array<{ tag: string; skillIds: string[]; description: string }>;
+  characters: PublishedCharacter[];
 }
 
 export interface Secrets {
   /** Keys for keyed hashes (pairing codes, IP addresses). Never logged, never in the repository. */
   pairingCodeKey: Bytes;
   ipHashKey: Bytes;
+  /** The content publish secret (only the owner's computer has the other copy). Absent: publishing is unavailable. */
+  publishSecret?: string;
 }

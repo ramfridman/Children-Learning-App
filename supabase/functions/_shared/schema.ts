@@ -12,9 +12,12 @@ export type Field =
   | { t: "bool" }
   | { t: "enum"; values: readonly string[] }
   | { t: "b64url"; maxBytes: number; minBytes?: number }
-  | { t: "array"; of: Field; maxItems: number };
+  | { t: "array"; of: Field; maxItems: number }
+  | { t: "object"; shape: Shape };
 
-export type Shape = Record<string, Field & { optional?: boolean }>;
+export interface Shape {
+  [key: string]: Field & { optional?: boolean };
+}
 
 const bad = (reason: string) => new GatewayError("bad_request", reason);
 
@@ -95,19 +98,28 @@ function checkField(f: Field, v: unknown, path: string): void {
       if (!Array.isArray(v) || v.length > f.maxItems) throw bad(`${path}:array`);
       v.forEach((item, i) => checkField(f.of, item, `${path}[${i}]`));
       return;
+    case "object":
+      if (v === null || typeof v !== "object" || Array.isArray(v)) throw bad(`${path}:object`);
+      checkShape(f.shape, v as Record<string, unknown>, path);
+      return;
   }
 }
 
-/** Throws `bad_request` on a missing field, a wrong type, or any field the shape does not name. */
-export function validate(shape: Shape, body: Record<string, unknown>): void {
+function checkShape(shape: Shape, body: Record<string, unknown>, prefix: string): void {
+  const at = (key: string) => (prefix ? `${prefix}.${key}` : key);
   for (const key of Object.keys(body)) {
     if (!Object.hasOwn(shape, key)) throw bad("unknown_field");
   }
   for (const [key, field] of Object.entries(shape)) {
     if (!Object.hasOwn(body, key)) {
       if (field.optional) continue;
-      throw bad(`${key}:missing`);
+      throw bad(`${at(key)}:missing`);
     }
-    checkField(field, body[key], key);
+    checkField(field, body[key], at(key));
   }
+}
+
+/** Throws `bad_request` on a missing field, a wrong type, or any field the shape does not name. */
+export function validate(shape: Shape, body: Record<string, unknown>): void {
+  checkShape(shape, body, "");
 }

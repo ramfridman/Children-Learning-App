@@ -5,6 +5,7 @@ import { Buffer } from "node:buffer";
 import postgres from "npm:postgres@3.4.9";
 import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
+import { compareSemver } from "./semver.ts";
 import type { DeviceSummary, RevokeReason, Store } from "./store.ts";
 
 const bytes = (v: unknown): Bytes => new Uint8Array(v as ArrayLike<number>) as Bytes;
@@ -238,6 +239,60 @@ export function pgStore(sql: Sql): Store {
          where id = ${deviceId} and family_id = ${familyId} and revoked_at is null
         returning id`;
       return rows.length === 1;
+    },
+
+    async publishContent(p) {
+      return await sql.begin(async (tx) => {
+        // One publish of a pack at a time.
+        await tx`select pg_advisory_xact_lock(hashtext(${"content:" + p.packId}))`;
+        const have = await tx`select pack_version, manifest_sha256 from app.content_pack where pack_id = ${p.packId}`;
+        let same = false;
+        for (const r of have) {
+          const order = compareSemver(p.packVersion, r.pack_version as string);
+          if (order === 0) {
+            if (r.manifest_sha256 !== p.manifestSha256) return "conflict" as const;
+            same = true;
+          } else if (order < 0) {
+            return "older" as const;
+          }
+        }
+        // The speaking characters are kept up to date whenever their pack is published again (the owner chooses a
+        // voice later); a voice already set is never erased by a publish that does not know it.
+        for (const c of p.characters) {
+          await tx`
+            insert into app.family_character (character_id, name_he, gender, voice_id, personal)
+            values (${c.characterId}, ${c.nameHe}, ${c.gender}, ${c.voiceId}, ${c.personal})
+            on conflict (character_id) do update
+              set name_he = excluded.name_he, gender = excluded.gender, personal = excluded.personal,
+                  voice_id = coalesce(excluded.voice_id, app.family_character.voice_id), updated_at = now()`;
+        }
+        if (same) return "unchanged" as const;
+        // Only the current version of a pack is kept (its items, misconceptions and cached lines go with it).
+        await tx`delete from app.content_pack where pack_id = ${p.packId}`;
+        await tx`
+          insert into app.content_pack (pack_id, pack_version, manifest_sha256)
+          values (${p.packId}, ${p.packVersion}, ${p.manifestSha256})`;
+        for (const i of p.items) {
+          await tx`
+            insert into app.content_item
+              (pack_id, pack_version, item_id, revision, template, band, skill_ids, llm_allowed, goal, prompt_text,
+               answers, number_set, allowed_actions, hint_threshold, object_ids)
+            values (${p.packId}, ${p.packVersion}, ${i.itemId}, ${i.revision}, ${i.template}, ${i.band},
+              array(select jsonb_array_elements_text(${JSON.stringify(i.skillIds)}::jsonb)),
+              ${i.llmAllowed}, ${i.goal}, ${i.promptText}, ${JSON.stringify(i.answers)}::jsonb,
+              array(select (jsonb_array_elements_text(${JSON.stringify(i.numberSet)}::jsonb))::integer),
+              array(select jsonb_array_elements_text(${JSON.stringify(i.allowedActions)}::jsonb)),
+              ${i.hintThreshold},
+              array(select jsonb_array_elements_text(${JSON.stringify(i.objectIds)}::jsonb)))`;
+        }
+        for (const m of p.misconceptions) {
+          await tx`
+            insert into app.misconception (pack_id, pack_version, tag, skill_ids, description)
+            values (${p.packId}, ${p.packVersion}, ${m.tag},
+              array(select jsonb_array_elements_text(${JSON.stringify(m.skillIds)}::jsonb)), ${m.description})`;
+        }
+        return "published" as const;
+      });
     },
   };
 }
