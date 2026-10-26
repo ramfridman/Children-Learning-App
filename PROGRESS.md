@@ -7,7 +7,7 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | Milestone | Status |
 |---|---|
 | Reading pass over the plan, docs and design bundle | Done |
-| M0 Foundations | **Done, merged to `main` 2026-10-26** (approved 2026-10-25; (`docs/milestones/M0.md`; build status in its section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Reinstall check done. Left: spend-limit screenshots and the owner's confirmation of the M0 report. Branch `m0-foundations`, not merged to `main`. |
+| M0 Foundations | **Done, merged to `main` 2026-10-26** (approved 2026-10-25; see `docs/milestones/M0.md`, section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Reinstall check done. Left: spend-limit screenshots and the owner's confirmation of the M0 report. Branch `m0-foundations`, not merged to `main`. |
 | M1 App shell and design system | **Plan written, waiting for the owner's OK** (`docs/milestones/M1.md`, branch `m1-app-shell`). No code yet. |
 | M2–M9 | Not started |
 
