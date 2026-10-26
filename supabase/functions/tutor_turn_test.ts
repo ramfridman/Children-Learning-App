@@ -70,15 +70,15 @@ class FakeVoice implements VoiceClient {
   calls: VoiceRequest[] = [];
   deleted: string[] = [];
   fail = false;
-  async speak(req: VoiceRequest): Promise<VoiceAnswer> {
+  speak(req: VoiceRequest): Promise<VoiceAnswer> {
     this.calls.push(req);
-    if (this.fail) throw new VoiceFailed("status");
-    return {
+    if (this.fail) return Promise.reject(new VoiceFailed("status"));
+    return Promise.resolve({
       audio: new Uint8Array(300).fill(7),
       mime: "audio/mpeg",
       requestId: `req-${this.calls.length}`,
       historyItemId: `hist${this.calls.length}abc`,
-    };
+    });
   }
   deleteHistory(id: string) {
     this.deleted.push(id);
