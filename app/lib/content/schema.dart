@@ -84,6 +84,16 @@ class SArray extends Schema {
   final String? uniqueKey;
 }
 
+/// An object whose keys are not known in advance (for example template names, which a newer pack may
+/// add): every key must match [keyPattern] and every value the [values] schema.
+class SMap extends Schema {
+  const SMap(this.values, {required this.keyPattern, this.maxEntries = 50, super.doc});
+
+  final Schema values;
+  final String keyPattern;
+  final int maxEntries;
+}
+
 /// A field of an object. Fields are required unless [required] is false.
 class SField {
   const SField(this.schema, {this.required = true});
@@ -173,6 +183,21 @@ void _check(Schema s, Object? v, String path, List<Problem> out) {
           out.add(Problem('$path[$i].$key', 'is used twice'));
         }
       }
+    case SMap():
+      if (v is! Map<Object?, Object?>) {
+        out.add(Problem(path, 'expected an object, found ${_describe(v)}'));
+        return;
+      }
+      if (v.length > s.maxEntries) out.add(Problem(path, '${v.length} entries is more than ${s.maxEntries}'));
+      final RegExp key = RegExp('^(?:${s.keyPattern})\$');
+      for (final MapEntry<Object?, Object?> e in v.entries) {
+        final Object? k = e.key;
+        if (k is! String || !key.hasMatch(k)) {
+          out.add(Problem(path, 'the key "$k" does not match the pattern ${s.keyPattern}'));
+        } else {
+          _check(s.values, e.value, _join(path, k), out);
+        }
+      }
     case SObject():
       if (v is! Map<Object?, Object?>) {
         out.add(Problem(path, 'expected an object, found ${_describe(v)}'));
@@ -217,6 +242,12 @@ Map<String, Object?> _export(Schema s) {
       'items': _export(s.items),
       'minItems': s.minItems,
       'maxItems': s.maxItems,
+    },
+    SMap() => <String, Object?>{
+      'type': 'object',
+      'propertyNames': <String, Object?>{'pattern': '^(?:${s.keyPattern})\$'},
+      'additionalProperties': _export(s.values),
+      'maxProperties': s.maxEntries,
     },
     SObject() => <String, Object?>{
       'type': 'object',

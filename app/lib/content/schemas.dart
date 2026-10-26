@@ -96,21 +96,14 @@ const SObject manifestSchema = SObject(<String, SField>{
   'id': SField(SString(minLength: 3, maxLength: 41, pattern: Patterns.packId)),
   'version': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
   'minAppVersion': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
+  // Template name to the version it needs. Names are not limited to the ones this app knows: a pack
+  // that needs a newer template is still read this far, so it can be kept hidden instead of crashing.
   'templates': SField(
-    SObject(<String, SField>{
-      'tap_answer': SField(
-        SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion),
-        required: false,
-      ),
-      'count_tap': SField(
-        SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion),
-        required: false,
-      ),
-      'give_n': SField(
-        SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion),
-        required: false,
-      ),
-    }),
+    SMap(
+      SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion),
+      keyPattern: r'[a-z][a-z0-9_]{1,30}',
+      maxEntries: 40,
+    ),
   ),
   'files': SField(_fileList),
   'assets': SField(_assetFiles),

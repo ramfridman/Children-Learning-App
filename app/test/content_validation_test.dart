@@ -108,10 +108,10 @@ final List<Broken> _cases = <Broken>[
     'does not match the pattern',
   ),
   Broken(
-    'manifest: a template this app has never heard of',
-    (SamplePack p) => _m(p.manifest['templates'])['drag_sort'] = '1.0',
+    'manifest: a template name of the wrong shape',
+    (SamplePack p) => _m(p.manifest['templates'])['Drag Sort'] = '1.0',
     'manifest.json › templates',
-    'unknown field "drag_sort"',
+    'the key "Drag Sort" does not match the pattern',
   ),
   // ---- the pack against its manifest ----
   Broken(

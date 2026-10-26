@@ -20,13 +20,14 @@ Future<PackKey> newTestKey() async {
 }
 
 /// Writes the sample pack as a source folder: pack.json, the JSON documents, the pictures and one recording.
-Directory writeSampleSource(Directory dir, {String version = '1.0.0'}) {
+Directory writeSampleSource(Directory dir, {String version = '1.0.0', bool compact = false}) {
   final SamplePack p = SamplePack();
   dir.createSync(recursive: true);
   void put(String name, List<int> bytes) =>
       File('${dir.path}${Platform.pathSeparator}$name').writeAsBytesSync(bytes);
   for (final MapEntry<String, Object?> e in p.docs.entries) {
-    put(e.key, utf8.encode('${const JsonEncoder.withIndent('  ').convert(e.value)}\n'));
+    final String text = compact ? jsonEncode(e.value) : const JsonEncoder.withIndent('  ').convert(e.value);
+    put(e.key, utf8.encode('$text\n'));
   }
   for (final Map<String, Object?> a in p.manifestList('assets')) {
     put(a['file']! as String, utf8.encode('<svg viewBox="0 0 10 10"><!-- ${a['id']} --></svg>\n'));
@@ -50,11 +51,15 @@ Directory writeSampleSource(Directory dir, {String version = '1.0.0'}) {
 }
 
 /// Builds the sample pack with [key] in a temporary folder.
-Future<BuiltPack> buildSamplePack(PackKey key, {String version = '1.0.0'}) async {
+Future<BuiltPack> buildSamplePack(PackKey key, {String version = '1.0.0', bool compact = false}) async {
   final Directory tmp = Directory.systemTemp.createTempSync('nn_src_');
   try {
     return await buildPack(
-      writeSampleSource(Directory('${tmp.path}${Platform.pathSeparator}src'), version: version),
+      writeSampleSource(
+        Directory('${tmp.path}${Platform.pathSeparator}src'),
+        version: version,
+        compact: compact,
+      ),
       key,
     );
   } finally {

@@ -27,28 +27,16 @@
     },
     "templates": {
       "type": "object",
-      "properties": {
-        "tap_answer": {
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 5,
-          "pattern": "^(?:\\d{1,2}\\.\\d{1,2})$"
-        },
-        "count_tap": {
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 5,
-          "pattern": "^(?:\\d{1,2}\\.\\d{1,2})$"
-        },
-        "give_n": {
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 5,
-          "pattern": "^(?:\\d{1,2}\\.\\d{1,2})$"
-        }
+      "propertyNames": {
+        "pattern": "^(?:[a-z][a-z0-9_]{1,30})$"
       },
-      "required": [],
-      "additionalProperties": false
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 5,
+        "pattern": "^(?:\\d{1,2}\\.\\d{1,2})$"
+      },
+      "maxProperties": 40
     },
     "files": {
       "type": "array",

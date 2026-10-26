@@ -108,7 +108,7 @@ void main() {
     test('every object closes its fields and lists the required ones', () {
       void walk(Object? node) {
         if (node is Map<String, Object?>) {
-          if (node['type'] == 'object') {
+          if (node['type'] == 'object' && node.containsKey('properties')) {
             expect(node['additionalProperties'], false);
             final Map<String, Object?> props = node['properties']! as Map<String, Object?>;
             for (final Object? r in node['required']! as List<Object?>) {

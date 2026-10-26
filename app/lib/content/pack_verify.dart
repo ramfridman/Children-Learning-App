@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:cryptography/cryptography.dart';
 
+import 'capabilities.dart';
 import 'pack_validation.dart';
 import 'schema.dart';
 import 'schemas.dart';
@@ -49,13 +50,18 @@ class PackRejected implements Exception {
 class VerifiedPack {
   const VerifiedPack({
     required this.manifestBytes,
+    required this.signature,
     required this.manifestSha256,
     required this.manifest,
     required this.docs,
     required this.files,
+    this.hiddenReason,
   });
 
   final Uint8List manifestBytes;
+
+  /// The 64 bytes of manifest.sig that were checked.
+  final Uint8List signature;
 
   /// Lower-case hex SHA-256 of manifest.json; it names this exact pack (the manifest lists every file's hash).
   final String manifestSha256;
@@ -63,6 +69,12 @@ class VerifiedPack {
 
   /// Each JSON file by name, parsed.
   final Map<String, Object?> docs;
+
+  /// Set when the pack is genuine but this app cannot play it (a newer app or template is needed). Its
+  /// content has not been read or validated, so [docs] is empty; keep it hidden.
+  final String? hiddenReason;
+
+  bool get hidden => hiddenReason != null;
 
   /// Every content file by name (not manifest.json or manifest.sig), as the bytes that were verified.
   final Map<String, Uint8List> files;
@@ -137,6 +149,7 @@ Future<VerifiedPack> verifyPack(
   Uint8List bytes, {
   required Uint8List publicKey,
   JsonParse decode = jsonDecode,
+  AppCapabilities capabilities = AppCapabilities.current,
 }) async {
   // 1. The container.
   final List<ZipEntry> entries;
@@ -145,7 +158,23 @@ Future<VerifiedPack> verifyPack(
   } on ZipException catch (e) {
     throw PackRejected('zip', e.reason);
   }
-  final Map<String, Uint8List> byName = <String, Uint8List>{for (final ZipEntry e in entries) e.name: e.data};
+  return verifyEntries(
+    <String, Uint8List>{for (final ZipEntry e in entries) e.name: e.data},
+    publicKey: publicKey,
+    decode: decode,
+    capabilities: capabilities,
+  );
+}
+
+/// Steps 2 to 4 for the entries of a pack that is already unpacked (an installed pack read back from
+/// disk is proven again this way before it is used).
+Future<VerifiedPack> verifyEntries(
+  Map<String, Uint8List> entries, {
+  required Uint8List publicKey,
+  JsonParse decode = jsonDecode,
+  AppCapabilities capabilities = AppCapabilities.current,
+}) async {
+  final Map<String, Uint8List> byName = Map<String, Uint8List>.of(entries);
   final Uint8List? manifestBytes = byName.remove(manifestName);
   final Uint8List? signature = byName.remove(signatureName);
   if (manifestBytes == null || signature == null) {
@@ -187,7 +216,21 @@ Future<VerifiedPack> verifyPack(
     }
   }
 
-  // 4. Every byte is proven; now the documents may be read.
+  // 4. Every byte is proven. A pack this app cannot play is kept as it is, unread.
+  final String? hidden = capabilities.incompatibility(manifest);
+  if (hidden != null) {
+    return VerifiedPack(
+      manifestBytes: manifestBytes,
+      signature: signature,
+      manifestSha256: sha256Hex(manifestBytes),
+      manifest: manifest,
+      docs: const <String, Object?>{},
+      files: byName,
+      hiddenReason: hidden,
+    );
+  }
+
+  // Now the documents may be read.
   final Map<String, Object?> docs = <String, Object?>{};
   for (final String name in byName.keys) {
     if (name.endsWith('.json')) docs[name] = _parse(byName[name]!, decode, name, 'content');
@@ -199,6 +242,7 @@ Future<VerifiedPack> verifyPack(
 
   return VerifiedPack(
     manifestBytes: manifestBytes,
+    signature: signature,
     manifestSha256: sha256Hex(manifestBytes),
     manifest: manifest,
     docs: docs,
