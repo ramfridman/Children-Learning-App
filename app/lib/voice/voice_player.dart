@@ -4,8 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 
 /// Plays one spoken line at a time. A small interface so that tests can use a fake that knows exactly what played.
 abstract interface class VoicePlayer {
-  /// Starts playing [mp3], replacing whatever was playing.
-  Future<void> play(Uint8List mp3);
+  /// Starts playing [sound] (an MP3, or a WAV for the free test voices), replacing whatever was playing.
+  Future<void> play(Uint8List sound, {String mime = 'audio/mpeg'});
 
   /// How far into the line the sound is now, or null if nothing is playing.
   Future<Duration?> position();
@@ -27,7 +27,8 @@ class AudioPlayersVoicePlayer implements VoicePlayer {
   final AudioPlayer _player;
 
   @override
-  Future<void> play(Uint8List mp3) => _player.play(BytesSource(mp3, mimeType: 'audio/mpeg'));
+  Future<void> play(Uint8List sound, {String mime = 'audio/mpeg'}) =>
+      _player.play(BytesSource(sound, mimeType: mime));
 
   @override
   Future<Duration?> position() => _player.getCurrentPosition();

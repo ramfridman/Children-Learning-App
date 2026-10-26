@@ -18,10 +18,10 @@ class FakePlayer implements VoicePlayer {
   final StreamController<void> _done = StreamController<void>.broadcast();
 
   @override
-  Future<void> play(Uint8List mp3) async {
+  Future<void> play(Uint8List sound, {String mime = 'audio/mpeg'}) async {
     if (failToPlay) throw StateError('no sound device');
     plays++;
-    played.add(mp3);
+    played.add(sound);
     at = Duration.zero;
   }
 

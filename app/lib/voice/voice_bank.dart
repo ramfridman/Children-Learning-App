@@ -5,9 +5,10 @@ import '../content/pack_verify.dart';
 
 /// One recorded line: the sound and when the mouth is open in it.
 class VoiceClip {
-  const VoiceClip(this.mp3, this.mouth);
+  const VoiceClip(this.mp3, this.mouth, {this.mime = 'audio/mpeg'});
 
   final Uint8List mp3;
+  final String mime;
   final MouthTrack mouth;
 }
 
@@ -27,7 +28,12 @@ class VoiceBank {
       final List<Object?> cues = cue is Map<String, Object?>
           ? (cue['cues'] as List<Object?>? ?? const <Object?>[])
           : const <Object?>[];
-      clips['vo:$id'] = VoiceClip(mp3, MouthTrack.fromJson(cues));
+      final String file = entry['file']! as String;
+      clips['vo:$id'] = VoiceClip(
+        mp3,
+        MouthTrack.fromJson(cues),
+        mime: file.endsWith('.wav') ? 'audio/wav' : 'audio/mpeg',
+      );
     }
     return VoiceBank._(pack.id.startsWith('voice-') ? pack.id.substring('voice-'.length) : pack.id, clips);
   }

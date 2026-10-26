@@ -71,7 +71,7 @@ class VoiceDirector extends ChangeNotifier {
     _mouthOpen = false;
     notifyListeners();
     try {
-      await _player.play(clip.mp3);
+      await _player.play(clip.mp3, mime: clip.mime);
     } on Object {
       // A sound that cannot play is a silent line, not a broken screen.
       _finish(gen);
