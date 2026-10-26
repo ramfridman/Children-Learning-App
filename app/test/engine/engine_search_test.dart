@@ -12,6 +12,19 @@ void practiceA(Story s) {
   }
 }
 
+/// A failed probe of skill X: two wrong answers (a single one could be a slip). A passed probe: four right answers
+/// (three-option items are easy to guess, so guessing alone must not be able to pass).
+void failProbe(Story s, String x) {
+  s.wrong('$x.p1');
+  s.wrong('$x.p2');
+}
+
+void passProbe(Story s, String x) {
+  for (final String k in <String>['p1', 'p2', 'p1', 'p2']) {
+    s.right('$x.$k');
+  }
+}
+
 Catalog chain(int length) {
   final List<SkillNode> skills = <SkillNode>[];
   final List<ItemMeta> items = <ItemMeta>[];
@@ -54,7 +67,7 @@ void main() {
       practiceA(s);
       s.wrong('C.1', tag: 'M-C');
       s.wrong('C.2');
-      s.wrong('B.p1');
+      failProbe(s, 'B');
       expect(e.state.search, isNull);
       expect(e.state.gaps, hasLength(1));
       final Gap g = e.state.gaps.single;
@@ -65,7 +78,7 @@ void main() {
       expect(e.nextProbe(), isNull);
     });
 
-    test('a probe in a three-option item that is answered right needs a second, different item to count as passed', () {
+    test('a probe in a three-option item needs several right answers to pass (a guess must not pass it), and passing everything records no gap', () {
       final Engine e = engineOf(smallCatalog());
       final Story s = Story(e);
       practiceA(s);
@@ -76,19 +89,26 @@ void main() {
       expect(e.nextProbe(), 'SK-B-01');
       expect(e.state.search!.probes, 0);
       s.right('B.p2');
-      // B is fine: the trouble is in C itself.
-      expect(e.state.gaps.single.skill, 'SK-C-01');
-      expect(e.state.gaps.single.probes, 1);
+      s.right('B.p1');
+      expect(e.state.search!.probes, 0, reason: 'three of four is not yet enough');
+      s.right('B.p2');
+      // B is fine: nothing is missing below C, so no gap is recorded; C is simply still being learned.
+      expect(e.state.gaps, isEmpty);
+      expect(e.state.closedSearches, <String>['SK-C-01']);
+      expect(e.state.search, isNull);
     });
 
-    test('a lucky first answer followed by a wrong second one is a failed probe', () {
+    test('one slip in a probe does not fail it; two wrong answers do', () {
       final Engine e = engineOf(smallCatalog());
       final Story s = Story(e);
       practiceA(s);
       s.wrong('C.1', tag: 'M-C');
       s.wrong('C.2');
-      s.right('B.p1');
-      s.wrong('B.p2');
+      s.wrong('B.p1');
+      expect(e.state.gaps, isEmpty, reason: 'one wrong answer is a slip as often as not');
+      expect(e.probeNeedsConfirmation, isTrue);
+      s.right('B.p2');
+      s.wrong('B.p1');
       expect(e.state.gaps.single.skill, 'SK-B-01');
     });
 
@@ -97,11 +117,10 @@ void main() {
       final Story s = Story(e);
       s.wrong('C.1', tag: 'M-C');
       s.wrong('C.2');
-      s.wrong('B.p1'); // B is missing; A has no evidence, so it is probed too
+      failProbe(s, 'B'); // B is missing; A has no evidence, so it is probed too
       expect(e.state.search, isNotNull);
       expect(e.nextProbe(), 'SK-A-01');
-      s.right('A.p1');
-      s.right('A.p2');
+      passProbe(s, 'A');
       expect(e.state.gaps.single.skill, 'SK-B-01');
       expect(e.state.gaps.single.probes, 2);
     });
@@ -111,8 +130,8 @@ void main() {
       final Story s = Story(e);
       s.wrong('C.1', tag: 'M-C');
       s.wrong('C.2');
-      s.wrong('B.p1');
-      s.wrong('A.p1');
+      failProbe(s, 'B');
+      failProbe(s, 'A');
       expect(e.state.gaps.single.skill, 'SK-A-01');
       expect(e.state.gaps.single.probes, 2);
     });
@@ -122,12 +141,17 @@ void main() {
       final Story s = Story(e);
       s.wrong('ch7.1');
       s.wrong('ch7.2');
-      s.wrong('ch6.p1');
-      s.wrong('ch5.p1');
-      s.wrong('ch4.p1');
+      final List<String> probed = <String>[];
+      for (int i = 0; i < 3; i++) {
+        final String? target = e.nextProbe();
+        expect(target, isNotNull);
+        probed.add(target!);
+        failProbe(s, 'ch${int.parse(target.substring(target.length - 1))}');
+      }
+      expect(probed.toSet(), hasLength(3));
       expect(e.state.search, isNull);
       final Gap g = e.state.gaps.single;
-      expect(g.skill, 'CH-A-04');
+      expect(g.skill, probed.last, reason: 'the deepest failure the three probes reached');
       expect(g.probes, 3);
       expect(g.via, 'budget');
     });
@@ -182,7 +206,7 @@ void main() {
       practiceA(s);
       s.wrong('C.1', tag: 'M-C');
       s.wrong('C.2');
-      s.wrong('D.p1');
+      failProbe(s, 'D');
       expect(e.state.search, isNotNull);
       expect(e.state.search!.probes, 0);
     });
@@ -196,7 +220,7 @@ void main() {
       final GapSearch first = e.state.search!;
       s.wrong('C.1');
       expect(e.state.search, same(first));
-      s.wrong('B.p1');
+      failProbe(s, 'B');
       expect(e.state.gaps, hasLength(1));
       s.wrong('C.1');
       s.wrong('C.2');
@@ -213,7 +237,7 @@ void main() {
         practiceA(s);
         s.wrong('C.1', tag: 'M-C');
         s.wrong('C.2');
-        s.wrong('B.p1');
+        failProbe(s, 'B');
         final Gap g = e.state.gaps.single;
         s.right('B.2');
         expect(g.repairSuccesses, 1);
@@ -227,19 +251,20 @@ void main() {
       },
     );
 
-    test('a gap can be found again later, once the first one is repaired', () {
+    test('after a repair the engine looks again when the child fails again, and sees that nothing below is missing', () {
       final Engine e = engineOf(smallCatalog());
       final Story s = Story(e);
       practiceA(s);
       s.wrong('C.1', tag: 'M-C');
       s.wrong('C.2');
-      s.wrong('B.p1');
+      failProbe(s, 'B');
       s.right('B.2');
       s.right('B.3');
       s.right('C.1');
       s.wrong('C.2');
       s.wrong('C.1');
-      expect(e.state.search, isNotNull);
+      // The engine looked again; B was just shown, so nothing is missing below C.
+      expect(e.state.closedSearches, <String>['SK-C-01']);
     });
 
     test('with no tag the walk ranks by weight and weakness and still finds the gap', () {

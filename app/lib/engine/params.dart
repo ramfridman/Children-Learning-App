@@ -37,6 +37,12 @@ class EngineParams {
     this.probeMaxDepth = 3,
     this.probeMaxPerSearch = 3,
     this.probeMaxPerSession = 3,
+    this.probeReach = 3,
+    this.probeNearTop = 0.8,
+    this.probeWrongsToFail = 2,
+    this.probeGuessPassMax = 0.02,
+    this.probeRightsCap = 4,
+    this.passClearsPrerequisites = true,
     this.skipProbeAbove = 0.95,
     this.repairSuccesses = 2,
     this.stepBackBelow = 0.4,
@@ -93,6 +99,12 @@ class EngineParams {
       probeMaxDepth: i('probeMaxDepth', d.probeMaxDepth),
       probeMaxPerSearch: i('probeMaxPerSearch', d.probeMaxPerSearch),
       probeMaxPerSession: i('probeMaxPerSession', d.probeMaxPerSession),
+      probeReach: i('probeReach', d.probeReach),
+      probeNearTop: n('probeNearTop', d.probeNearTop),
+      probeWrongsToFail: i('probeWrongsToFail', d.probeWrongsToFail),
+      probeGuessPassMax: n('probeGuessPassMax', d.probeGuessPassMax),
+      probeRightsCap: i('probeRightsCap', d.probeRightsCap),
+      passClearsPrerequisites: (j['passClearsPrerequisites'] as bool?) ?? d.passClearsPrerequisites,
       skipProbeAbove: n('skipProbeAbove', d.skipProbeAbove),
       repairSuccesses: i('repairSuccesses', d.repairSuccesses),
       stepBackBelow: n('stepBackBelow', d.stepBackBelow),
@@ -159,6 +171,21 @@ class EngineParams {
   final int probeMaxPerSearch;
   final int probeMaxPerSession;
 
+  /// How many levels below the current skill a probe may jump (1 means direct prerequisites only), and whether
+  /// passing a probe also clears everything below that skill.
+  final int probeReach;
+
+  /// Candidates within this share of the most suspicious one are equally good; of those the probe that clears most is chosen.
+  final double probeNearTop;
+
+  /// Wrong (or "not sure") answers in one probe that make it fail, when a guess could have passed it.
+  final int probeWrongsToFail;
+
+  /// A probe needs enough right answers that pure guessing passes it less often than this, within a cap.
+  final double probeGuessPassMax;
+  final int probeRightsCap;
+  final bool passClearsPrerequisites;
+
   /// A prerequisite the child has just shown at this estimate needs no probe.
   final double skipProbeAbove;
   final int repairSuccesses;
@@ -213,6 +240,12 @@ class EngineParams {
     'probeMaxDepth': probeMaxDepth,
     'probeMaxPerSearch': probeMaxPerSearch,
     'probeMaxPerSession': probeMaxPerSession,
+    'probeReach': probeReach,
+    'probeNearTop': probeNearTop,
+    'probeWrongsToFail': probeWrongsToFail,
+    'probeGuessPassMax': probeGuessPassMax,
+    'probeRightsCap': probeRightsCap,
+    'passClearsPrerequisites': passClearsPrerequisites,
     'skipProbeAbove': skipProbeAbove,
     'repairSuccesses': repairSuccesses,
     'stepBackBelow': stepBackBelow,

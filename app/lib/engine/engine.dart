@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'graph.dart';
 import 'mastery.dart';
 import 'params.dart';
@@ -58,6 +60,11 @@ class Engine {
     state.lastEventAt = e.at;
     final bool probe = item.purpose == Purpose.probe;
     final int day = dayKey(e.at);
+    // The probe this answer belongs to is decided on what was known before it (the answer itself changes the estimates).
+    final GapSearch? open = state.search;
+    final String? expectedProbe = (probe && open != null)
+        ? (open.target ?? (open.probes >= params.probeMaxPerSearch ? null : _nextTarget(open)))
+        : null;
     final int? sid = e.sessionId;
     if (sid != null) {
       (state.sessions[sid] ??= <SessionAnswer>[]).add(
@@ -78,7 +85,7 @@ class Engine {
       r.tries++;
       if (e.result == Result.correct && e.hintLevel <= 1) r.successes++;
     }
-    _updateSearch(item, e, probe);
+    _updateSearch(item, e, probe, expectedProbe);
     _updateGaps(item, e, probe);
   }
 
@@ -201,10 +208,10 @@ class Engine {
 
   // ---- the search for a gap ----
 
-  void _updateSearch(ItemMeta item, AttemptEvent e, bool probe) {
+  void _updateSearch(ItemMeta item, AttemptEvent e, bool probe, String? expectedProbe) {
     final GapSearch? s = state.search;
     if (probe) {
-      if (s != null) _probeAnswered(s, item, e);
+      if (s != null) _probeAnswered(s, item, e, expectedProbe);
       return;
     }
     if (s != null || e.result == Result.correct) return;
@@ -230,7 +237,9 @@ class Engine {
           if (below.contains(sk) && !trace.contains(sk)) trace.add(sk);
         }
       }
-      state.search = GapSearch(origin: id, startedAt: e.at, traceSkills: trace);
+      final GapSearch started = GapSearch(origin: id, startedAt: e.at, traceSkills: trace);
+      state.search = started;
+      _advance(started, e.at);
     }
   }
 
@@ -244,24 +253,58 @@ class Engine {
   }
 
   /// True when the probe of the search's current target has had its first item right and needs a second.
-  bool get probeNeedsConfirmation => state.search?.firstCorrect ?? false;
+  bool get probeNeedsConfirmation => (state.search?.correctRun ?? 0) + (state.search?.wrongRun ?? 0) > 0;
+
+  /// How many right answers a probe needs: enough that guessing alone would pass it less than
+  /// `probeGuessPassMax` of the time (one for an open task, three or four for three choices).
+  int probeRightsToPass(int optionCount) {
+    if (optionCount < 2) return 1;
+    final double g = 1.0 / optionCount;
+    return (math.log(params.probeGuessPassMax) / math.log(g)).ceil().clamp(1, params.probeRightsCap);
+  }
 
   String? _nextTarget(GapSearch s) {
     final String cur = s.path.last;
-    final Map<String, double> pre = graph.node(cur).prerequisites;
+    // Everything the child has shown it can do, and everything below that, needs no probe.
+    final Set<String> demonstrated = <String>{};
+    state.skills.forEach((String id, SkillState st) {
+      if (st.p >= params.skipProbeAbove &&
+          st.nCorrect >= 2 &&
+          st.successes >= 1 &&
+          catalog.skills.containsKey(id)) {
+        demonstrated
+          ..add(id)
+          ..addAll(graph.ancestors(id));
+      }
+    });
+    // The skills a probe may name: below the current one, up to `probeReach` levels down, each with the
+    // strength of the chain of prerequisites that leads to it.
+    final Map<String, double> reach = <String, double>{};
+    void walk(String id, double w, int d) {
+      if (d >= params.probeReach) return;
+      graph.node(id).prerequisites.forEach((String p, double wt) {
+        final double nw = w * wt;
+        if (nw > (reach[p] ?? 0)) reach[p] = nw;
+        walk(p, nw, d + 1);
+      });
+    }
+
+    walk(cur, 1.0, 0);
     final Set<String> below = graph.ancestors(cur);
-    final Map<String, double> candidates = <String, double>{
-      ...pre,
-      for (final String t in s.traceSkills)
-        if (below.contains(t) && !pre.containsKey(t)) t: 0.5,
-    };
-    String? best;
-    double bestScore = double.negativeInfinity;
-    for (final MapEntry<String, double> c in candidates.entries) {
-      if (s.cleared.contains(c.key) || s.failed.contains(c.key) || c.key == cur) continue;
+    for (final String t in s.traceSkills) {
+      if (below.contains(t)) reach.putIfAbsent(t, () => 0.5);
+    }
+    // Score every candidate: how weak it looks, along how strong a chain of prerequisites.
+    final Map<String, double> scores = <String, double>{};
+    for (final MapEntry<String, double> c in reach.entries) {
+      if (s.cleared.contains(c.key) ||
+          s.failed.contains(c.key) ||
+          c.key == cur ||
+          demonstrated.contains(c.key)) {
+        continue;
+      }
       final SkillState? st = state.skills[c.key];
-      if (st != null && st.p >= params.skipProbeAbove && st.nCorrect >= 2 && st.successes >= 1) continue;
-      double score = c.value * (1 - (st?.p ?? _prior(c.key)));
+      double score = (0.5 + 0.5 * c.value) * (1 - (st?.p ?? _prior(c.key)));
       final int ti = s.traceSkills.indexOf(c.key);
       if (ti >= 0) score += 5 - ti * 0.1;
       if (st != null && st.freshAt != null && st.memory != null) {
@@ -271,9 +314,21 @@ class Engine {
         );
         if (r < params.revisitBelow) score += 0.3;
       }
-      if (score > bestScore || (score == bestScore && best != null && c.key.compareTo(best) < 0)) {
+      scores[c.key] = score;
+    }
+    if (scores.isEmpty) return null;
+    final double top = scores.values.reduce(math.max);
+    // Among the nearly-as-suspicious, probe the one that settles most: a pass clears everything below it.
+    String? best;
+    int bestReach = -1;
+    for (final MapEntry<String, double> c in scores.entries) {
+      if (c.value < top * params.probeNearTop) continue;
+      final int clears = graph.ancestors(c.key).where(scores.containsKey).length;
+      if (bestReach < 0 ||
+          clears < bestReach ||
+          (clears == bestReach && best != null && c.key.compareTo(best) < 0)) {
         best = c.key;
-        bestScore = score;
+        bestReach = clears;
       }
     }
     return best;
@@ -281,18 +336,19 @@ class Engine {
 
   double _prior(String id) => _assumed.contains(id) ? params.priorAssumed : params.priorNew;
 
-  void _probeAnswered(GapSearch s, ItemMeta item, AttemptEvent e) {
-    final String? expected = s.target ?? (s.probes >= params.probeMaxPerSearch ? null : _nextTarget(s));
+  void _probeAnswered(GapSearch s, ItemMeta item, AttemptEvent e, String? expected) {
     if (expected == null || item.primarySkill != expected) return;
     s.target = expected;
     if (e.result == Result.correct) {
-      final bool needsSecond = item.optionCount >= 2 && item.optionCount <= 3;
-      if (needsSecond && !s.firstCorrect) {
-        s.firstCorrect = true;
-        return;
-      }
+      s.correctRun++;
+      if (s.correctRun < probeRightsToPass(item.optionCount)) return;
       _probeDone(s, passed: true, at: e.at, sessionId: e.sessionId);
     } else {
+      // A wrong answer in an item that is easy to guess is a slip as often as not: two are needed to fail,
+      // unless a right answer alone would have passed (open tasks).
+      s.wrongRun++;
+      final int needed = probeRightsToPass(item.optionCount) == 1 ? 1 : params.probeWrongsToFail;
+      if (s.wrongRun < needed) return;
       _probeDone(s, passed: false, at: e.at, sessionId: e.sessionId);
     }
   }
@@ -302,13 +358,20 @@ class Engine {
     s.probes++;
     if (sessionId != null) state.probesInSession[sessionId] = (state.probesInSession[sessionId] ?? 0) + 1;
     s.target = null;
-    s.firstCorrect = false;
+    s.correctRun = 0;
+    s.wrongRun = 0;
     if (passed) {
       s.cleared.add(target);
+      if (params.passClearsPrerequisites) s.cleared.addAll(graph.ancestors(target));
     } else {
       s.failed.add(target);
       if (!s.path.contains(target)) s.path.add(target);
     }
+    _advance(s, at);
+  }
+
+  /// Goes on with the search if there is something left to probe within the budget; otherwise ends it.
+  void _advance(GapSearch s, DateTime at) {
     final bool budgetLeft = s.probes < params.probeMaxPerSearch && s.path.length - 1 < params.probeMaxDepth;
     final String? next = budgetLeft ? _nextTarget(s) : null;
     if (next != null) return;
@@ -324,9 +387,10 @@ class Engine {
           via: budgetLeft ? 'walk' : 'budget',
         ),
       );
-    } else if (budgetLeft) {
-      // Every prerequisite is fine: the trouble is in the skill itself.
-      state.gaps.add(Gap(origin: s.origin, skill: s.origin, foundAt: at, probes: s.probes, via: 'walk'));
+    } else {
+      // Nothing below is missing (or the probes ran out with every one passed): the child simply is still
+      // learning this skill, or slipped. No gap is recorded, and the skill goes on as normal practice.
+      state.closedSearches.add(s.origin);
     }
     origin.failRun = 0;
     origin.unsureRun = 0;

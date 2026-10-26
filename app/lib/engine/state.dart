@@ -94,9 +94,10 @@ class GapSearch {
   final Set<String> failed = <String>{};
   int probes = 0;
 
-  /// The skill whose probe is being answered, and whether its first item was right (a confirming item is due).
+  /// The skill whose probe is being answered, and how many of its items in a row were right so far.
   String? target;
-  bool firstCorrect = false;
+  int correctRun = 0;
+  int wrongRun = 0;
 }
 
 /// How often each way of explaining worked for a child, per skill family.
@@ -111,6 +112,9 @@ class EngineState {
   final Map<String, TagState> tags = <String, TagState>{};
   final List<Gap> gaps = <Gap>[];
   GapSearch? search;
+
+  /// Skills for which a search ended without finding anything missing below.
+  final List<String> closedSearches = <String>[];
 
   /// Per `family|representation`.
   final Map<String, RepStats> representations = <String, RepStats>{};
