@@ -15,6 +15,8 @@ M5 work, once approved, is stacked on the M4 branch (`m5-voice-in` starts from `
 
 ## Checks to do on the phone (the Samsung plugged into the PC)
 
+**One sitting, in order, with expected results and what to report: `docs/phone-test-day.md`** (about 2 hours). The table below is the same list in short.
+
 Each one is a short list of steps with the expected result. Run them in this order, in one sitting if you can.
 
 | # | Check | Time | Steps |
