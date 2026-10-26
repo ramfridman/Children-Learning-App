@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart' show sha256;
 import 'package:cryptography/cryptography.dart';
 
+import 'binary_checks.dart';
 import 'capabilities.dart';
 import 'pack_validation.dart';
 import 'schema.dart';
@@ -236,6 +237,7 @@ Future<VerifiedPack> verifyEntries(
     if (name.endsWith('.json')) docs[name] = _parse(byName[name]!, decode, name, 'content');
   }
   final List<Problem> problems = validatePack(manifest: manifest, docs: docs, files: byName.keys.toSet());
+  if (problems.isEmpty) problems.addAll(checkCharacterFiles(manifest, docs, byName));
   if (problems.isNotEmpty) {
     throw PackRejected('content', 'the pack does not follow the content rules', problems);
   }

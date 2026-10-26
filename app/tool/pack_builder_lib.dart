@@ -9,6 +9,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
+import 'package:nitznutz/content/binary_checks.dart';
 import 'package:nitznutz/content/pack_validation.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/content/schema.dart';
@@ -217,12 +218,16 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'lessons': <String>[],
     'skills': <String>[],
     'misconceptions': <String>[],
+    'characters': <String>[],
+    'cues': <String>[],
   };
   const Map<String, String> kinds = <String, String>{
     'activity': 'activities',
     'lesson': 'lessons',
     'skill': 'skills',
     'misconception': 'misconceptions',
+    'character': 'characters',
+    'cue': 'cues',
   };
   for (final String name in docs.keys) {
     final RegExpMatch? m = RegExp(r'^([a-z]+)\.(.+)\.json$').firstMatch(name);
@@ -280,9 +285,14 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'assets': pack['assets'],
     'vo': pack['vo'],
     'voPending': pending,
-    'entries': entries,
+    // Lists of the kinds that M2 packs know are always there; characters and cues only when the pack has some.
+    'entries': <String, List<String>>{
+      for (final MapEntry<String, List<String>> e in entries.entries)
+        if (e.value.isNotEmpty || !const <String>{'characters', 'cues'}.contains(e.key)) e.key: e.value,
+    },
   };
   problems.addAll(validatePack(manifest: manifest, docs: docs, files: names.toSet()));
+  if (problems.isEmpty) problems.addAll(checkCharacterFiles(manifest, docs, files));
   if (problems.isNotEmpty) {
     throw BuildFailed('the pack does not follow the content rules; nothing was signed', problems);
   }
@@ -338,4 +348,85 @@ Map<String, Uint8List> damagedVariants(Uint8List pack) {
     'damaged-one-byte.nnpack': Uint8List.fromList(pack)..[pack.length ~/ 2] ^= 0x01,
     'truncated.nnpack': Uint8List.sublistView(pack, 0, pack.length ~/ 2),
   };
+}
+
+// ---- character packs ----
+
+/// Builds a signed character pack from a folder in the format of `design/family-pack/*` (a `pack.json` of schema
+/// `character-lite/v1` and the pictures it names). The pack is `char-<id>`; a character whose
+/// availability says `personalUseOnly` is made as a personal pack (never bundled in a build).
+Future<BuiltPack> buildCharacterPack(Directory folder, PackKey key, {String version = '1.0.0'}) async {
+  final File descriptor = File('${folder.path}${Platform.pathSeparator}pack.json');
+  if (!descriptor.existsSync()) throw const BuildFailed('the character folder has no pack.json');
+  final Object? src = _jsonOrNull(descriptor.readAsBytesSync());
+  if (src is! Map<String, Object?> || src['schema'] != SchemaIds.character) {
+    throw const BuildFailed('pack.json is not a character-lite/v1 file');
+  }
+  Map<String, Object?> obj(String k) =>
+      src[k] is Map<String, Object?> ? src[k]! as Map<String, Object?> : <String, Object?>{};
+  final String id = src['id'] is String ? src['id']! as String : '';
+  final Map<String, Object?> name = obj('name');
+  final Map<String, Object?> images = obj('images');
+  final List<Object?> size = obj('canvas')['size'] is List<Object?>
+      ? obj('canvas')['size']! as List<Object?>
+      : <Object?>[];
+  final Map<String, Object?> availability = obj('availability');
+  final bool personal = availability['personalUseOnly'] == true;
+  // The name the child's own name fills in: "template", or the Hebrew name with its placeholder turned into {name}.
+  final Object? placeholder = name['placeholder'];
+  final String template =
+      (name['template'] as String?) ??
+      (placeholder is String
+          ? (name['he'] as String? ?? '').replaceAll(placeholder, '{name}')
+          : (name['he'] as String? ?? ''));
+  final String gender = (name['grammaticalGender'] as String?)?.startsWith('f') ?? false ? 'f' : 'm';
+
+  final Directory temp = Directory.systemTemp.createTempSync('nn_char_');
+  try {
+    final List<Map<String, String>> assets = <Map<String, String>>[];
+    final Map<String, Object?> imageRefs = <String, Object?>{};
+    for (final MapEntry<String, Object?> e in images.entries) {
+      final String file = e.value is String ? e.value! as String : '';
+      final File from = File('${folder.path}${Platform.pathSeparator}$file');
+      if (!from.existsSync()) throw BuildFailed('the picture $file for "${e.key}" is missing');
+      final String ext = file.contains('.') ? file.substring(file.lastIndexOf('.')) : '';
+      final String to = '${e.key}$ext';
+      from.copySync('${temp.path}${Platform.pathSeparator}$to');
+      assets.add(<String, String>{'id': e.key, 'file': to});
+      imageRefs[e.key] = 'asset:${e.key}';
+    }
+    final Map<String, Object?> doc = <String, Object?>{
+      'schema': SchemaIds.character,
+      'id': id,
+      'review': 'needs-editor',
+      'name': <String, Object?>{'he': template, 'gender': gender},
+      'roles': src['roles'],
+      'images': imageRefs,
+      'mouth': src['mouth'],
+      'canvas': <String, Object?>{
+        'width': size.isNotEmpty ? size[0] : 0,
+        'height': size.length > 1 ? size[1] : 0,
+      },
+      'distribution': personal ? 'personal' : 'bundled',
+      'personalUseOnly': personal,
+      'palette': <String, Object?>{'dominant': obj('palette')['dominant']},
+    };
+    File('${temp.path}${Platform.pathSeparator}character.$id.json')
+        .writeAsStringSync('${const JsonEncoder.withIndent('  ').convert(doc)}${String.fromCharCode(10)}');
+    File('${temp.path}${Platform.pathSeparator}pack.json').writeAsStringSync(
+      '${const JsonEncoder.withIndent('  ').convert(<String, Object?>{'schema': SchemaIds.packSource, 'id': 'char-$id', 'version': version, 'minAppVersion': '0.3.0', 'vo': <Object?>[], 'assets': assets})}${String.fromCharCode(10)}',
+    );
+    return await buildPack(temp, key);
+  } finally {
+    _deleteQuietly(temp);
+  }
+}
+
+/// Windows sometimes holds a file for a moment (a virus scan, the indexer): a leftover temporary folder is harmless.
+void _deleteQuietly(Directory d) {
+  try {
+    d.deleteSync(recursive: true);
+  } on FileSystemException {
+    // Left for the system's temp cleaner.
+  }
 }

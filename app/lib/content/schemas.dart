@@ -24,6 +24,8 @@ abstract final class Patterns {
 abstract final class SchemaIds {
   static const String manifest = 'manifest/v1';
   static const String packSource = 'pack-source/v1';
+  static const String character = 'character-lite/v1';
+  static const String cue = 'cue/v1';
   static const String activity = 'activity/v1';
   static const String lesson = 'lesson/v1';
   static const String skill = 'skill/v1';
@@ -42,6 +44,7 @@ const List<String> bands = <String>['A', 'B', 'C'];
 const List<String> representations = <String>['concrete', 'pictorial', 'story', 'embodied', 'symbolic'];
 
 const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activityId);
+const SString _characterId = SString(minLength: 3, maxLength: 41, pattern: Patterns.packId);
 const SString _tag = SString(minLength: 5, maxLength: 20, pattern: Patterns.tag);
 const SString _skill = SString(minLength: 6, maxLength: 11, pattern: Patterns.skillId);
 const SString _vo = SString(minLength: 4, maxLength: 83, pattern: Patterns.voRef);
@@ -118,7 +121,82 @@ const SObject manifestSchema = SObject(<String, SField>{
       'lessons': SField(SArray(_id, maxItems: 50)),
       'skills': SField(SArray(_skill, maxItems: 100)),
       'misconceptions': SField(SArray(_tag, maxItems: 100)),
+      // Characters and mouth cues (M4); absent in packs that have none.
+      'characters': SField(SArray(_characterId, maxItems: 20), required: false),
+      'cues': SField(
+        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: 400),
+        required: false,
+      ),
     }),
+  ),
+});
+
+// ---- characters and mouth cues ----
+
+const List<String> characterRoles = <String>[
+  'guide_tutor',
+  'map_companion',
+  'celebration_cameo',
+  'activity_helper',
+  'sticker',
+];
+
+/// The states every character has an image for, and the optional extras.
+const List<String> requiredCharacterImages = <String>[
+  'idle',
+  'talk_closed',
+  'talk_open',
+  'celebrate',
+  'think',
+  'listen',
+  'encourage',
+];
+const List<String> optionalCharacterImages = <String>['surprised', 'sleepy', 'blink', 'wave'];
+
+final SObject characterSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.character)),
+  'id': SField(_characterId),
+  'review': _review,
+  // The Hebrew name, with niqqud. A family character's name may carry the child's name as {name}.
+  'name': SField(
+    SObject(<String, SField>{
+      'he': SField(SString(minLength: 2, maxLength: 60)),
+      'gender': SField(SEnum(<String>['m', 'f'])),
+    }),
+  ),
+  'roles': SField(SArray(SEnum(characterRoles), minItems: 1, maxItems: 5)),
+  'images': SField(
+    SObject(<String, SField>{
+      for (final String k in requiredCharacterImages) k: SField(_asset),
+      for (final String k in optionalCharacterImages) k: SField(_asset, required: false),
+    }),
+  ),
+  // Where the mouth is, as a share of the picture's width and height.
+  'mouth': SField(SArray(SNum(min: 0, max: 1), minItems: 2, maxItems: 2)),
+  'canvas': SField(
+    SObject(<String, SField>{
+      'width': SField(SInt(min: 64, max: 4096)),
+      'height': SField(SInt(min: 64, max: 4096)),
+    }),
+  ),
+  'distribution': SField(SEnum(<String>['bundled', 'personal'])),
+  'personalUseOnly': SField(SBool()),
+  'palette': SField(
+    SObject(<String, SField>{
+      'dominant': SField(SString(minLength: 7, maxLength: 7, pattern: r'#[0-9A-Fa-f]{6}')),
+    }),
+  ),
+});
+
+/// When the mouth of a spoken line is open: `t` in milliseconds from the start, `o` 1 open or 0 closed.
+const SObject cueSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.cue)),
+  'id': SField(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId)),
+  'cues': SField(
+    SArray(
+      SObject(<String, SField>{'t': SField(SInt(min: 0, max: 120000)), 'o': SField(SInt(min: 0, max: 1))}),
+      maxItems: 600,
+    ),
   ),
 });
 
@@ -382,6 +460,8 @@ const SObject packSourceSchema = SObject(<String, SField>{
 Map<String, Schema> get allSchemas => <String, Schema>{
   'pack-source': packSourceSchema,
   'manifest': manifestSchema,
+  'character': characterSchema,
+  'cue': cueSchema,
   'skill': skillSchema,
   'misconception': misconceptionSchema,
   'lesson': lessonSchema,

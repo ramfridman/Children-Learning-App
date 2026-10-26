@@ -1,12 +1,13 @@
 name: nitznutz
 description: "Nitznutz learning app (Milestone 1: app shell)."
 publish_to: 'none'
-version: 0.2.0+2
+version: 0.3.0+3
 
 environment:
   sdk: ^3.13.7
 
 dependencies:
+  audioplayers: 6.8.1
   crypto: 3.0.7
   cryptography: 2.9.0
   drift: 2.35.3
@@ -42,6 +43,7 @@ flutter:
     - network_hosts.json
     - assets/pack_signing_public_key.txt
     - assets/packs/
+    - assets/characters/
     - assets/art/
     - assets/art/scenes/
     - assets/art/ui/
