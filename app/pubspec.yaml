@@ -1,5 +1,5 @@
 name: nitznutz
-description: "Nitznutz learning app (Milestone 0 harness)."
+description: "Nitznutz learning app (Milestone 1: app shell)."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -8,19 +8,41 @@ environment:
 
 dependencies:
   crypto: 3.0.7
+  drift: 2.35.3
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   flutter_riverpod: 3.4.3
   flutter_secure_storage: 11.2.0
+  flutter_svg: 2.3.0
   http: 1.6.0
+  sqlite3: 3.8.0
   uuid: 4.6.0
 
 dev_dependencies:
+  build_runner: 2.17.1
+  drift_dev: 2.35.2
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+# The database engine is SQLite3 Multiple Ciphers (encrypted). The build downloads the prebuilt
+# library for the pinned `sqlite3` release; see docs/milestones/M1.md, E1.
+hooks:
+  user_defines:
+    sqlite3:
+      source: sqlite3mc
 
 flutter:
   uses-material-design: true
   assets:
     - network_hosts.json
+  fonts:
+    # Heebo is a variable font (weight axis 100 to 900); each family entry maps a real weight to it.
+    - family: Heebo
+      fonts:
+        - asset: assets/fonts/Heebo-Variable.ttf
+    - family: SecularOne
+      fonts:
+        - asset: assets/fonts/SecularOne-Regular.ttf
