@@ -284,12 +284,12 @@ export function pgStore(sql: Sql): Store {
               (pack_id, pack_version, item_id, revision, template, band, skill_ids, llm_allowed, goal, prompt_text,
                answers, number_set, allowed_actions, hint_threshold, object_ids)
             values (${p.packId}, ${p.packVersion}, ${i.itemId}, ${i.revision}, ${i.template}, ${i.band},
-              array(select jsonb_array_elements_text(${JSON.stringify(i.skillIds)}::jsonb)),
-              ${i.llmAllowed}, ${i.goal}, ${i.promptText}, ${JSON.stringify(i.answers)}::jsonb,
-              array(select (jsonb_array_elements_text(${JSON.stringify(i.numberSet)}::jsonb))::integer),
-              array(select jsonb_array_elements_text(${JSON.stringify(i.allowedActions)}::jsonb)),
+              array(select jsonb_array_elements_text(${JSON.stringify(i.skillIds)}::text::jsonb)),
+              ${i.llmAllowed}, ${i.goal}, ${i.promptText}, ${JSON.stringify(i.answers)}::text::jsonb,
+              array(select (jsonb_array_elements_text(${JSON.stringify(i.numberSet)}::text::jsonb))::integer),
+              array(select jsonb_array_elements_text(${JSON.stringify(i.allowedActions)}::text::jsonb)),
               ${i.hintThreshold},
-              array(select jsonb_array_elements_text(${JSON.stringify(i.objectIds)}::jsonb)))`;
+              array(select jsonb_array_elements_text(${JSON.stringify(i.objectIds)}::text::jsonb)))`;
         }
         for (const m of p.misconceptions) {
           await tx`
@@ -297,7 +297,7 @@ export function pgStore(sql: Sql): Store {
             values (${p.packId}, ${p.packVersion}, ${m.tag},
               array(select jsonb_array_elements_text(${
             JSON.stringify(m.skillIds)
-          }::jsonb)), ${m.description})`;
+          }::text::jsonb)), ${m.description})`;
         }
         return "published" as const;
       });
@@ -362,7 +362,7 @@ export function pgStore(sql: Sql): Store {
            validator_version, line, caption, next_action, highlight_targets, audio, audio_mime)
         values (${k.packId}, ${k.packVersion}, ${k.itemId}, ${k.mistake}, ${k.hintLevel}, ${k.band}, ${k.addressForm},
           ${k.characterId}, ${k.promptVersion}, ${k.validatorVersion}, ${v.line}, ${v.caption}, ${v.next},
-          array(select jsonb_array_elements_text(${JSON.stringify(v.highlight)}::jsonb)),
+          array(select jsonb_array_elements_text(${JSON.stringify(v.highlight)}::text::jsonb)),
           ${v.audio ? buf(v.audio) : null}, ${v.audio ? "audio/mpeg" : null})
         on conflict do nothing`;
     },
@@ -385,7 +385,7 @@ export function pgStore(sql: Sql): Store {
            validator_ok, validator_failures, prompt_version, total_ms, model_ms, voice_ms, eleven_request_id)
         values (${r.familyId}, ${r.childRef}, ${r.sessionRef}, ${r.packId}, ${r.packVersion}, ${r.itemId},
           ${r.characterId}, ${r.source}, ${r.outcome}, ${r.line}, ${r.validatorOk},
-          array(select jsonb_array_elements_text(${JSON.stringify(r.validatorFailures)}::jsonb)),
+          array(select jsonb_array_elements_text(${JSON.stringify(r.validatorFailures)}::text::jsonb)),
           ${r.promptVersion}, ${Math.round(r.totalMs)}, ${r.modelMs === null ? null : Math.round(r.modelMs)},
           ${r.voiceMs === null ? null : Math.round(r.voiceMs)}, ${r.elevenRequestId})`;
     },
