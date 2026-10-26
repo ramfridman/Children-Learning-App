@@ -8,7 +8,7 @@ Last updated: 2026-10-26 (M5 built).
 
 | # | What | Why it waits | Where |
 |---|------|--------------|-------|
-| D1 | **Confirm M4** (characters and voice out), so Claude can merge `m4-characters-voice` into `main` | CI is green; the owner was away from the PC and could not look at the report | `docs/milestones/M4.md` section 11 |
+| D1 | **Confirm M4 and M5** (characters and voice out; voice in), after the phone test day, so Claude can merge `m4-characters-voice` and then `m5-voice-in` into `main` | CI is green; the owner was away from the PC and could not look at the report | `docs/milestones/M4.md` section 11 |
 | ~~D2~~ | ~~OK for the M5 plan and its packages~~ | Done 2026-10-26: approved, with adult recordings now and the children's accuracy left for a later phase | `docs/milestones/M5.md` |
 | D3 | **OK for the M6 plan** (gateway and AI tutor), and a number for Q9: the most the AI may cost one family per day (my guess is 0.50) | The plan is written, no code yet | `docs/milestones/M6.md` |
 
