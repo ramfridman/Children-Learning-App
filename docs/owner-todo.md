@@ -9,7 +9,7 @@ Last updated: 2026-10-26.
 | # | What | Why it waits | Where |
 |---|------|--------------|-------|
 | D1 | **Confirm M4** (characters and voice out), so Claude can merge `m4-characters-voice` into `main` | CI is green; the owner was away from the PC and could not look at the report | `docs/milestones/M4.md` section 11 |
-| D2 | **OK for the M5 plan** (voice in) and its two new packages | The plan is written, no code yet | `docs/milestones/M5.md` |
+| ~~D2~~ | ~~OK for the M5 plan and its packages~~ | Done 2026-10-26: approved, with adult recordings now and the children's accuracy left for a later phase | `docs/milestones/M5.md` |
 
 M5 work, once approved, is stacked on the M4 branch (`m5-voice-in` starts from `m4-characters-voice`), so nothing is merged to `main` without D1.
 
@@ -40,4 +40,5 @@ Each one is a short list of steps with the expected result. Run them in this ord
 | P1 | **Save the pack signing key in 1Password.** It exists only on this PC at `%USERPROFILE%\nitznutz-secrets\pack-signing.key`. Do not delete it. | `PROGRESS.md` (Open issues) |
 | P2 | Screenshots of the spend limits in the Anthropic and ElevenLabs consoles | `docs/setup/` |
 | P3 | **Real voices (M4 Phase H).** Choose a voice for each of the nine characters from short auditions, tell Claude the model id you pick in ElevenLabs, see the plan and the cost, type the exact character count back, and listen to every generated line. About an hour. Claude gives the numbered PowerShell steps when you say you are at the PC. | `docs/milestones/M4.md` Phase H |
-| P4 | Record a few words from your own children for the speech check of M5 (only if you agree to it in the M5 plan, question Q6) | `docs/milestones/M5.md` |
+| P4 | **Adult recordings for the M5 speech check** (about 15 minutes, you and your wife, any voice-recorder app, a normal room). Say each word below three times in a row with a pause, once as a single word and once in a short phrase ("שלוש פרפרים"): the numbers 1 to 10, the colours אדום, כחול, צהוב, ירוק, and כן, לא, עוד פעם, לא יודע, עזרה. Save as WAV or M4A files named `<speaker>_<word>.wav` into one folder. Claude will give the exact label-file format and the command when the tool is ready (it is built first). | `docs/milestones/M5.md` Q6 |
+| P5 | **Put the speech model on the phone** once it is ready (one command, 72 MB, phone plugged in): `tools\make-m5-model.ps1 -Push` | `docs/setup/android-device-checks.md` section 9 (written with M5) |
