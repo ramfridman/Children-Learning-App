@@ -9,7 +9,7 @@ import type { PublishedItem, PublishedPack } from "../_shared/store.ts";
 export const MAX_PUBLISH_BYTES = 256 * 1024;
 
 const id = (max: number) => ({ t: "string", max, pattern: /^[a-z0-9][a-z0-9._-]{0,63}$/ }) as const;
-const text = (max: number) => ({ t: "string", max, pattern: /^[^\u0000-\u001f]+$/ }) as const;
+const text = (max: number) => ({ t: "string", max, pattern: /^[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]+$/u }) as const;
 const tag = { t: "string", max: 20, pattern: /^M-[A-Z]{2,5}-[A-Z0-9]{2,12}$/ } as const;
 const skill = { t: "string", max: 12, pattern: /^[A-Z]{2,5}-[A-Z]-[0-9]{2}$/ } as const;
 
@@ -34,7 +34,11 @@ const item: Shape = {
   number_set: { t: "array", of: { t: "int", min: -999, max: 9999 }, maxItems: 40 },
   allowed_actions: { t: "array", of: { t: "string", max: 40, pattern: /^[a-z_]{2,40}$/ }, maxItems: 12 },
   hint_threshold: { t: "int", min: 1, max: 3 },
-  object_ids: { t: "array", of: { t: "string", max: 40, pattern: /^[a-z0-9][a-z0-9_-]{0,39}$/ }, maxItems: 40 },
+  object_ids: {
+    t: "array",
+    of: { t: "string", max: 40, pattern: /^[a-z0-9][a-z0-9_-]{0,39}$/ },
+    maxItems: 40,
+  },
 };
 
 const misconception: Shape = {
@@ -127,6 +131,11 @@ export const spec: FunctionSpec = {
     const result = await ctx.svc.store.publishContent(pack);
     if (result === "older") throw new GatewayError("bad_request", "version_older");
     if (result === "conflict") throw new GatewayError("bad_request", "version_conflict");
-    return { result, items: items.length, misconceptions: pack.misconceptions.length, characters: pack.characters.length };
+    return {
+      result,
+      items: items.length,
+      misconceptions: pack.misconceptions.length,
+      characters: pack.characters.length,
+    };
   },
 };

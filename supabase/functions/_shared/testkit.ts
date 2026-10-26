@@ -193,13 +193,18 @@ export class FakeStore implements Store {
   }
   /** Published packs by id (only the current version is kept), and the characters by id. */
   packs = new Map<string, PublishedPack>();
-  characters = new Map<string, { nameHe: string; gender: string; voiceId: string | null; personal: boolean }>();
+  characters = new Map<
+    string,
+    { nameHe: string; gender: string; voiceId: string | null; personal: boolean }
+  >();
   publishContent(p: PublishedPack) {
     const have = this.packs.get(p.packId);
     if (have) {
       const order = compareSemver(p.packVersion, have.packVersion);
       if (order < 0) return Promise.resolve("older" as const);
-      if (order === 0 && have.manifestSha256 !== p.manifestSha256) return Promise.resolve("conflict" as const);
+      if (order === 0 && have.manifestSha256 !== p.manifestSha256) {
+        return Promise.resolve("conflict" as const);
+      }
     }
     for (const c of p.characters) {
       const old = this.characters.get(c.characterId);

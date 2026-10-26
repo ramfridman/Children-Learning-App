@@ -245,7 +245,8 @@ export function pgStore(sql: Sql): Store {
       return await sql.begin(async (tx) => {
         // One publish of a pack at a time.
         await tx`select pg_advisory_xact_lock(hashtext(${"content:" + p.packId}))`;
-        const have = await tx`select pack_version, manifest_sha256 from app.content_pack where pack_id = ${p.packId}`;
+        const have =
+          await tx`select pack_version, manifest_sha256 from app.content_pack where pack_id = ${p.packId}`;
         let same = false;
         for (const r of have) {
           const order = compareSemver(p.packVersion, r.pack_version as string);
@@ -289,7 +290,9 @@ export function pgStore(sql: Sql): Store {
           await tx`
             insert into app.misconception (pack_id, pack_version, tag, skill_ids, description)
             values (${p.packId}, ${p.packVersion}, ${m.tag},
-              array(select jsonb_array_elements_text(${JSON.stringify(m.skillIds)}::jsonb)), ${m.description})`;
+              array(select jsonb_array_elements_text(${
+            JSON.stringify(m.skillIds)
+          }::jsonb)), ${m.description})`;
         }
         return "published" as const;
       });

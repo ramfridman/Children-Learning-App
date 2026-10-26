@@ -41,7 +41,7 @@ function setup() {
     handler(plainPost("content-publish", body, secret === null ? {} : { "x-publish-secret": secret }));
   return { store, svc, handler, publish };
 }
-const code = async (r: Response) => (await r.json()).code as string;
+const code = async (r: Response) => (await r.json()).error as string;
 
 Deno.test("content-publish: the right secret publishes a pack's item index", async () => {
   const { store, publish } = setup();
@@ -95,7 +95,13 @@ Deno.test("content-publish: a voice chosen later is not erased by a publish that
   const { store, publish } = setup();
   await publish(goodBody());
   await publish(goodBody({
-    characters: [{ character_id: "nitzi", name_he: "נִיצִי", gender: "f", personal: false, voice_id: "abcDEF0123456789" }],
+    characters: [{
+      character_id: "nitzi",
+      name_he: "נִיצִי",
+      gender: "f",
+      personal: false,
+      voice_id: "abcDEF0123456789",
+    }],
   }));
   assert.equal(store.characters.get("nitzi")!.voiceId, "abcDEF0123456789");
   await publish(goodBody());
@@ -121,15 +127,21 @@ Deno.test("content-publish: the shape is strict", async () => {
   await bad(goodBody({ items: [{ ...goodItem(), skill_ids: ["numbers"] }] }), "skill id");
   await bad(goodBody({ items: [{ ...goodItem(), answers: [] }] }), "no answers");
   await bad(
-    goodBody({ items: [{ ...goodItem(), answers: [{ id: "o1", correct: false }, { id: "o2", correct: false }] }] }),
+    goodBody({
+      items: [{ ...goodItem(), answers: [{ id: "o1", correct: false }, { id: "o2", correct: false }] }],
+    }),
     "no correct answer",
   );
   await bad(
-    goodBody({ items: [{ ...goodItem(), answers: [{ id: "o1", correct: true }, { id: "o2", correct: true }] }] }),
+    goodBody({
+      items: [{ ...goodItem(), answers: [{ id: "o1", correct: true }, { id: "o2", correct: true }] }],
+    }),
     "two correct answers",
   );
   await bad(
-    goodBody({ items: [{ ...goodItem(), answers: [{ id: "o1", correct: true }, { id: "o1", correct: false }] }] }),
+    goodBody({
+      items: [{ ...goodItem(), answers: [{ id: "o1", correct: true }, { id: "o1", correct: false }] }],
+    }),
     "repeated answer id",
   );
   await bad(goodBody({ items: [goodItem(), goodItem()] }), "repeated item");
@@ -143,17 +155,29 @@ Deno.test("content-publish: the shape is strict", async () => {
     "gender",
   );
   await bad(
-    goodBody({ characters: [{ character_id: "x1", name_he: "נִיצִי", gender: "f", personal: false, voice_id: "no spaces!" }] }),
+    goodBody({
+      characters: [{
+        character_id: "x1",
+        name_he: "נִיצִי",
+        gender: "f",
+        personal: false,
+        voice_id: "no spaces!",
+      }],
+    }),
     "voice id",
   );
 });
 
 Deno.test("content-publish: the body is capped at 256 KB, and only POST is served", async () => {
   const { publish, handler } = setup();
-  const big = goodBody({ items: Array.from({ length: 5 }, (_, i) => ({ ...goodItem(), item_id: `i${i}`, goal: "x".repeat(300) })) });
+  const big = goodBody({
+    items: Array.from({ length: 5 }, (_, i) => ({ ...goodItem(), item_id: `i${i}`, goal: "x".repeat(300) })),
+  });
   assert.equal((await publish(big)).status, 200, "a realistic index passes");
   const huge = "y".repeat(MAX_PUBLISH_BYTES + 10);
-  const r = await handler(plainPost("content-publish", { pad: huge }, { "x-publish-secret": PUBLISH_SECRET }));
+  const r = await handler(
+    plainPost("content-publish", { pad: huge }, { "x-publish-secret": PUBLISH_SECRET }),
+  );
   assert.equal(r.status, 413);
   for (const method of ["GET", "PUT", "OPTIONS"]) {
     assert.equal((await handler(new Request("https://x.test/f", { method }))).status, 400);

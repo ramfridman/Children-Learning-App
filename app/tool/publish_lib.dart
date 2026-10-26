@@ -173,7 +173,7 @@ Future<Map<String, Object?>> publish(
       // The server's answer is a short code only; never echo the request.
       String code = 'error';
       try {
-        code = ((jsonDecode(text) as Map<String, Object?>)['code'] ?? 'error').toString();
+        code = ((jsonDecode(text) as Map<String, Object?>)['error'] ?? 'error').toString();
       } on FormatException {
         // keep the generic word
       }
