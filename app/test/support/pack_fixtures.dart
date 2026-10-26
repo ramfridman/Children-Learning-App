@@ -43,7 +43,6 @@ Directory writeSampleSource(Directory dir, {String version = '1.0.0', bool compa
         'minAppVersion': '0.1.0',
         'assets': p.manifest['assets'],
         'vo': p.manifest['vo'],
-        'voPending': p.manifest['voPending'],
       }),
     ),
   );

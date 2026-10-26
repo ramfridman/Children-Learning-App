@@ -13,6 +13,13 @@
       "maxLength": 11,
       "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2})$"
     },
+    "review": {
+      "type": "string",
+      "enum": [
+        "needs-editor",
+        "approved"
+      ]
+    },
     "domain": {
       "type": "string",
       "enum": [

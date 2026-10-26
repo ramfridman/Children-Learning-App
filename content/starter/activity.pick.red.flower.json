@@ -1,0 +1,116 @@
+{
+  "schema": "activity/v1",
+  "id": "pick.red.flower",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.0",
+  "domain": "colors",
+  "band": "A",
+  "skills": [
+    {
+      "id": "COL-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "find-red",
+  "difficulty": {
+    "authored": 0.1
+  },
+  "prompt": {
+    "vo": "vo:pick.red.flower.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה הַפֶּרַח הָאָדֹם?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow"
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:flower_red",
+        "label": "פֶּרַח אָדֹם"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:flower_yellow",
+        "label": "פֶּרַח צָהֹב"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:pick.red.flower.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֶה הוּא! הַפֶּרַח הָאָדֹם."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:pick.red.flower.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב: אֵיפֹה הַפֶּרַח הָאָדֹם?"
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 2,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "child points to the red flower",
+    "mustNotRevealBeforeHint": 1
+  },
+  "a11y": {
+    "altText": "שְׁנֵי פְּרָחִים בַּגִּנָּה, אֶחָד אָדֹם וְאֶחָד צָהֹב"
+  }
+}

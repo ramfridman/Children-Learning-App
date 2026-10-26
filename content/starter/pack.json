@@ -1,0 +1,37 @@
+{
+  "schema": "pack-source/v1",
+  "id": "starter",
+  "version": "0.1.0",
+  "minAppVersion": "0.1.0",
+  "assets": [
+    {
+      "id": "meadow",
+      "file": "meadow.svg"
+    },
+    {
+      "id": "butterfly",
+      "file": "butterfly.svg"
+    },
+    {
+      "id": "butterfly_lit",
+      "file": "butterfly_lit.svg"
+    },
+    {
+      "id": "flower_red",
+      "file": "flower_red.svg"
+    },
+    {
+      "id": "flower_yellow",
+      "file": "flower_yellow.svg"
+    },
+    {
+      "id": "flower_target",
+      "file": "flower_target.svg"
+    },
+    {
+      "id": "jar",
+      "file": "jar.svg"
+    }
+  ],
+  "vo": []
+}

@@ -248,6 +248,24 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     l.sort();
   }
 
+  // Voice lines the documents ask for that have no recording yet are listed as pending.
+  final Set<String> recorded = <String>{
+    for (final Object? v in pack['vo']! as List<Object?>) 'vo:${(v! as Map<String, Object?>)['id']}',
+  };
+  final Set<String> wanted = <String>{};
+  void collect(Object? node) {
+    if (node is String) {
+      if (node.startsWith('vo:')) wanted.add(node);
+    } else if (node is Map<String, Object?>) {
+      node.values.forEach(collect);
+    } else if (node is List<Object?>) {
+      node.forEach(collect);
+    }
+  }
+
+  docs.values.forEach(collect);
+  final List<String> pending = (wanted.difference(recorded).toList())..sort();
+
   final List<String> names = files.keys.toList()..sort();
   final Map<String, Object?> manifest = <String, Object?>{
     'schema': SchemaIds.manifest,
@@ -261,7 +279,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     ],
     'assets': pack['assets'],
     'vo': pack['vo'],
-    'voPending': pack['voPending'],
+    'voPending': pending,
     'entries': entries,
   };
   problems.addAll(validatePack(manifest: manifest, docs: docs, files: names.toSet()));

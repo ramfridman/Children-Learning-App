@@ -78,17 +78,6 @@
       },
       "minItems": 0,
       "maxItems": 400
-    },
-    "voPending": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 4,
-        "maxLength": 83,
-        "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
-      },
-      "minItems": 0,
-      "maxItems": 400
     }
   },
   "required": [
@@ -97,8 +86,7 @@
     "version",
     "minAppVersion",
     "assets",
-    "vo",
-    "voPending"
+    "vo"
   ],
   "additionalProperties": false
 }

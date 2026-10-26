@@ -1,0 +1,14 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CNT-CARD",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-04"
+  ],
+  "parentText": "הילד סופר שוב במקום לומר כמה יש בסך הכול, או נותן את כל העצמים כשמבקשים מספר מסוים.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "embodied"
+  ]
+}

@@ -49,6 +49,9 @@ const SString _asset = SString(minLength: 7, maxLength: 46, pattern: Patterns.as
 const SString _optionId = SString(minLength: 2, maxLength: 3, pattern: Patterns.optionId);
 const SInt _revision = SInt(min: 1, max: 9999);
 
+/// Hebrew written by an AI or an engineer stays `needs-editor` until a person approves it (CLAUDE.md).
+const SField _review = SField(SEnum(<String>['needs-editor', 'approved']), required: false);
+
 /// A line of Hebrew shown to the child (or the parent), as a list so another language can be added later.
 const SArray _caption = SArray(
   SObject(<String, SField>{'t': SField(SConst('he')), 'v': SField(SString(minLength: 1, maxLength: 240))}),
@@ -124,6 +127,7 @@ const SObject manifestSchema = SObject(<String, SField>{
 const SObject skillSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.skill)),
   'id': SField(_skill),
+  'review': _review,
   'domain': SField(SEnum(domains)),
   'band': SField(SEnum(bands)),
   'title': SField(_caption),
@@ -147,6 +151,7 @@ const SObject skillSchema = SObject(<String, SField>{
 const SObject misconceptionSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.misconception)),
   'id': SField(_tag),
+  'review': _review,
   'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
   'parentText': SField(SString(minLength: 1, maxLength: 240)),
   'repairActivities': SField(SArray(_id, maxItems: 10)),
@@ -156,6 +161,7 @@ const SObject misconceptionSchema = SObject(<String, SField>{
 const SObject lessonSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.lesson)),
   'id': SField(_id),
+  'review': _review,
   'revision': SField(_revision),
   'band': SField(SEnum(bands)),
   'title': SField(_caption),
@@ -217,6 +223,7 @@ const SArray _hints = SArray(
 Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>{
   'schema': const SField(SConst(SchemaIds.activity)),
   'id': const SField(_id),
+  'review': _review,
   'revision': const SField(_revision),
   'template': const SField(SEnum(<String>['tap_answer', 'count_tap', 'give_n'])),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
@@ -290,6 +297,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
     _base(<String, SField>{
       'scene': const SField(
         SObject(<String, SField>{
+          'background': SField(_asset, required: false),
           'objects': SField(
             SObject(<String, SField>{
               'sprite': SField(_asset),
@@ -319,6 +327,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
     _base(<String, SField>{
       'scene': const SField(
         SObject(<String, SField>{
+          'background': SField(_asset, required: false),
           'source': SField(
             SObject(<String, SField>{'sprite': SField(_asset), 'count': SField(SInt(min: 1, max: 12))}),
           ),
@@ -354,7 +363,6 @@ const SObject packSourceSchema = SObject(<String, SField>{
   'minAppVersion': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
   'assets': SField(_assetFiles),
   'vo': SField(_voFiles),
-  'voPending': SField(SArray(_vo, maxItems: 400)),
 });
 
 /// Every document schema by name, for the generator of JSON Schema files.

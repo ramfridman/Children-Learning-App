@@ -222,6 +222,7 @@ List<Problem> validatePack({
         checkAsset(file, 'scene.background', scene['background']);
         _options(file, answer, say, checkTag, checkAsset: checkAsset);
       case 'count_tap':
+        checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
         checkAsset(file, 'scene.objects.sprite', objects['sprite']);
         checkAsset(file, 'scene.objects.litSprite', objects['litSprite']);
@@ -246,6 +247,7 @@ List<Problem> validatePack({
           checkTag(file, 'traceClassifiers[$i].misconception', c['misconception']);
         }
       case 'give_n':
+        checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> source = scene['source']! as Map<String, Object?>;
         checkAsset(file, 'scene.source.sprite', source['sprite']);
         checkAsset(file, 'scene.target.sprite', (scene['target']! as Map<String, Object?>)['sprite']);

@@ -13,6 +13,13 @@
       "maxLength": 81,
       "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
     },
+    "review": {
+      "type": "string",
+      "enum": [
+        "needs-editor",
+        "approved"
+      ]
+    },
     "revision": {
       "type": "integer",
       "minimum": 1,
@@ -174,6 +181,12 @@
     "scene": {
       "type": "object",
       "properties": {
+        "background": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 46,
+          "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+        },
         "source": {
           "type": "object",
           "properties": {

@@ -40,6 +40,8 @@ flutter:
   uses-material-design: true
   assets:
     - network_hosts.json
+    - assets/pack_signing_public_key.txt
+    - assets/packs/
     - assets/art/
     - assets/art/scenes/
     - assets/art/ui/
