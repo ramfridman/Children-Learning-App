@@ -3,26 +3,7 @@ import 'dart:math';
 
 import '../core/clock.dart';
 import '../device/secure_store.dart';
-
-/// Hebrew number words for the gate, in the feminine form used when counting out loud ("ארבע עשרה").
-/// Adult UI: no niqqud. Marked needs-editor in the string catalogue.
-const Map<int, String> _words = <int, String>{
-  3: 'שלוש',
-  4: 'ארבע',
-  5: 'חמש',
-  6: 'שש',
-  7: 'שבע',
-  8: 'שמונה',
-  9: 'תשע',
-  12: 'שתים עשרה',
-  13: 'שלוש עשרה',
-  14: 'ארבע עשרה',
-  15: 'חמש עשרה',
-  16: 'שש עשרה',
-  17: 'שבע עשרה',
-  18: 'שמונה עשרה',
-  19: 'תשע עשרה',
-};
+import '../strings/he.dart';
 
 /// One question of the parent gate: a multiplication above what a Band C child does, written in
 /// Hebrew words, answered on a shuffled keypad. The keypad is shuffled again for every question.
@@ -37,8 +18,9 @@ class GateQuestion {
 
   int get answer => a * b;
 
-  /// "כמה זה ארבע עשרה כפול שש?" (× is read as כפול, never as a letter).
-  String get hebrew => 'כמה זה ${_words[a]} כפול ${_words[b]}?';
+  /// The question in words, for example "how much is fourteen times six?" (× is read out as "times").
+  String get hebrew =>
+      He.gateQuestion.fill(<String, String>{'a': He.gateNumbers[a]!.text, 'b': He.gateNumbers[b]!.text});
 }
 
 sealed class GateOutcome {

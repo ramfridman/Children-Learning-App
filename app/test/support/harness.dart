@@ -18,6 +18,12 @@ Future<void> loadAppFonts() async {
   }
 
   await load('Heebo', 'assets/fonts/Heebo-Variable.ttf');
+  // The Material icon font is not loaded by flutter test; take it from the SDK so icons are drawn in screenshots.
+  final String? sdk = Platform.environment['FLUTTER_ROOT'];
+  if (sdk != null) {
+    final String icons = '$sdk/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf';
+    if (File(icons).existsSync()) await load('MaterialIcons', icons);
+  }
   await load('SecularOne', 'assets/fonts/SecularOne-Regular.ttf');
 }
 

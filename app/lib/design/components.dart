@@ -146,7 +146,7 @@ class SpeechBubble extends StatelessWidget {
     clipBehavior: Clip.none,
     children: <Widget>[
       PositionedDirectional(
-        end: -6,
+        start: -6,
         top: 18,
         child: Transform.rotate(
           angle: 0.785398,
