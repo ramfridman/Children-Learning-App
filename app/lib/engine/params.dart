@@ -51,6 +51,7 @@ class EngineParams {
     this.stuckWorkedExamples = 2,
     this.switchAfterErrors = 2,
     this.maxNewSkillsPerSession = 2,
+    this.focusItemsPerSkill = 4,
     this.targetBandA = const <double>[0.80, 0.90],
     this.targetBandBC = const <double>[0.75, 0.85],
     this.endOnSuccessAbove = 0.85,
@@ -113,6 +114,7 @@ class EngineParams {
       stuckWorkedExamples: i('stuckWorkedExamples', d.stuckWorkedExamples),
       switchAfterErrors: i('switchAfterErrors', d.switchAfterErrors),
       maxNewSkillsPerSession: i('maxNewSkillsPerSession', d.maxNewSkillsPerSession),
+      focusItemsPerSkill: i('focusItemsPerSkill', d.focusItemsPerSkill),
       targetBandA: l('targetBandA', d.targetBandA),
       targetBandBC: l('targetBandBC', d.targetBandBC),
       endOnSuccessAbove: n('endOnSuccessAbove', d.endOnSuccessAbove),
@@ -196,6 +198,9 @@ class EngineParams {
   final int switchAfterErrors;
   final int maxNewSkillsPerSession;
 
+  /// A skill in focus gets at most this many items in one session; then the next one takes over (variety).
+  final int focusItemsPerSkill;
+
   /// The success rate the items are chosen for: Band A, and Bands B and C (low, high).
   final List<double> targetBandA;
   final List<double> targetBandBC;
@@ -254,6 +259,7 @@ class EngineParams {
     'stuckWorkedExamples': stuckWorkedExamples,
     'switchAfterErrors': switchAfterErrors,
     'maxNewSkillsPerSession': maxNewSkillsPerSession,
+    'focusItemsPerSkill': focusItemsPerSkill,
     'targetBandA': targetBandA,
     'targetBandBC': targetBandBC,
     'endOnSuccessAbove': endOnSuccessAbove,

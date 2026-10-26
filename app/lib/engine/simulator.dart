@@ -11,7 +11,7 @@ String _simId(int i) => 'SM-${String.fromCharCode(65 + i ~/ 10)}-${(i % 10).toSt
 /// An invented skill graph with items, for trying the engine on thousands of cases. Skills are numbered in
 /// a valid order; each needs up to three earlier ones. Each skill has four practice items in different
 /// representations (the first, a three-option item, can show the skill's misconception tag), two probe items,
-/// and one open item that checks the reverse.
+/// one open item that checks the reverse, and an open probe (nothing to guess).
 class SimWorld {
   SimWorld._(this.catalog, this.order);
 
@@ -104,6 +104,18 @@ class SimWorld {
           ),
         );
       }
+      // An open probe (give, drag, trace): nothing to guess, so one right answer settles it.
+      items.add(
+        ItemMeta(
+          id: '$id.p3',
+          skills: sk,
+          purpose: Purpose.probe,
+          representation: Representation.symbolic,
+          variantGroup: '$id-p',
+          difficulty: 0.35,
+          tags: <String>{'M-$id'},
+        ),
+      );
       if (delight && i % 5 == 0) {
         items.add(
           ItemMeta(
@@ -311,7 +323,7 @@ GapTrial runGapTrial({
     final (Result r, String tag) = child.answer(item);
     answered++;
     engine.apply(AttemptEvent(id: ++id, at: at, activityId: item.id, result: r, tag: tag, sessionId: 2));
-    served.add(Served(item, Phase.repair, r));
+    served.add(Served(item, triggered ? Phase.repair : Phase.focus, r));
     at = at.add(const Duration(seconds: 40));
     if (engine.state.search == null && triggered) break;
   }
@@ -456,4 +468,51 @@ GapReport falseGapReport({
     );
   }
   return GapReport('no gap (two slips)', trials);
+}
+
+int _eventId = 1000000;
+
+/// What one played session looked like.
+class SessionRun {
+  SessionRun(this.served, this.endReason, this.end);
+
+  final List<Served> served;
+  final String endReason;
+  final DateTime end;
+
+  int count(Phase p) => served.where((Served s) => s.phase == p).length;
+}
+
+/// Plays one whole session of an invented child against the builder, as the app would: pick, answer, tell the
+/// engine, repeat until the builder ends it.
+SessionRun playSession({
+  required Engine engine,
+  required SessionBuilder builder,
+  required SimChild child,
+  required int band,
+  required int sessionId,
+  required DateTime start,
+  bool limitReached = false,
+  int maxItems = 80,
+}) {
+  final List<Served> served = <Served>[];
+  DateTime at = start;
+  String reason = 'guard';
+  for (int i = 0; i < maxItems; i++) {
+    final Pick pick = builder.next(
+      SessionContext(sessionId: sessionId, band: band, now: at, served: served, limitReached: limitReached),
+    );
+    if (pick is EndSession) {
+      reason = pick.reason;
+      break;
+    }
+    final ServeItem s = pick as ServeItem;
+    final (Result r, String tag) = child.answer(s.item);
+    engine.apply(
+      AttemptEvent(id: ++_eventId, at: at, activityId: s.item.id, result: r, tag: tag, sessionId: sessionId),
+    );
+    served.add(Served(s.item, s.phase, r));
+    at = at.add(Duration(seconds: engine.params.secondsPerItem[band]));
+  }
+  return SessionRun(served, reason, at);
 }

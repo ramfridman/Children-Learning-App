@@ -2,6 +2,8 @@
 // engine finds the gap within 1, 2 and 3 probes. Run from the app/ folder:
 //
 //   dart run tool/simulate.dart [--children 1000] [--seed 20261026]
+import 'dart:io';
+
 import 'package:nitznutz/engine/simulator.dart';
 
 void main(List<String> args) {
@@ -12,11 +14,11 @@ void main(List<String> args) {
 
   final int children = option('--children', 1000);
   final int seed = option('--seed', 20261026);
-  print('Invented children against the engine (seed $seed, $children children per row).');
-  print(
+  stdout.writeln('Invented children against the engine (seed $seed, $children children per row).');
+  stdout.writeln(
     '"within N" = the planted gap was named exactly after at most N probes; "wrong" = a gap that was not planted.',
   );
-  print('');
+  stdout.writeln('');
   final List<GapReport> rows = <GapReport>[
     gapReport(label: 'one gap, history on 0% of skills', children: children, seed: seed, coverage: 0.0),
     gapReport(label: 'one gap, history on 50% of skills', children: children, seed: seed, coverage: 0.5),
@@ -30,5 +32,5 @@ void main(List<String> args) {
     ),
     falseGapReport(children: children, seed: seed),
   ];
-  rows.forEach(print);
+  rows.forEach(stdout.writeln);
 }

@@ -76,6 +76,8 @@ class Engine {
         ),
       );
     }
+    // Free play makes no demands: it is neither evidence of knowing nor of not knowing.
+    if (item.delight) return;
     for (final MapEntry<String, double> w in item.skills.entries) {
       if (catalog.skills.containsKey(w.key)) _updateSkill(w.key, w.value, item, e, probe, day);
     }
@@ -159,6 +161,7 @@ class Engine {
     s.lastItem = item.id;
     s.lastVariantGroup = item.variantGroup;
     s.lastRepresentation = item.representation;
+    if (e.result == Result.incorrect) s.lastFailedRepresentation = item.representation;
     s.lastAttemptAt = e.at;
     _checkFresh(id, s, e.at);
   }

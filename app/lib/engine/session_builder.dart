@@ -95,15 +95,20 @@ class SessionBuilder {
       return ServeItem(easy, Phase.easyEnd, 'end on a success');
     }
 
-    // A search for a gap has its probes first (a few per session, never as a test).
-    final String? probeSkill = engine.nextProbe();
-    if (probeSkill != null && (engine.state.probesInSession[c.sessionId] ?? 0) < params.probeMaxPerSession) {
+    // A search for a gap has its probes next (a few per session, never as a test, within the repair share; a
+    // probe that has begun is finished).
+    final int warmQuota = c.band == 2 ? 2 : 1;
+    final int repairMax = (total * params.repairShareMax).floor();
+    final String? probeSkill = c.served.length < warmQuota ? null : engine.nextProbe();
+    if (probeSkill != null &&
+        (engine.state.probesInSession[c.sessionId] ?? 0) < params.probeMaxPerSession &&
+        (_count(c, Phase.repair) < repairMax || engine.probeNeedsConfirmation)) {
       final ItemMeta? probe = probeItem(probeSkill, c.served.map((Served s) => s.item.id).toSet());
       if (probe != null) return ServeItem(probe, Phase.repair, 'probe $probeSkill');
     }
 
     // Stuck: leave the skill, give an easy win elsewhere.
-    if (engine.isStuck(c.sessionId)) {
+    if (c.served.length >= warmQuota && engine.isStuck(c.sessionId)) {
       final String stuckOn = engine.state.sessions[c.sessionId]!.last.skillId;
       final ItemMeta? easy = _easiestWin(c, exceptSkill: stuckOn);
       if (easy != null) return ServeItem(easy, Phase.focus, 'stuck on $stuckOn: an easy win elsewhere');
@@ -199,7 +204,12 @@ class SessionBuilder {
   ServeItem? _repair(SessionContext c, Set<String> used) {
     // 1. A gap that is open: items for the missing skill, in another representation than the one that failed.
     for (final Gap g in engine.state.openGaps) {
-      final ItemMeta? i = _itemFor(g.skill, c, used, avoid: engine.avoidRepresentation(g.skill));
+      final ItemMeta? i = _itemFor(
+        g.skill,
+        c,
+        used,
+        avoid: engine.avoidRepresentation(g.skill) ?? engine.state.skills[g.skill]?.lastFailedRepresentation,
+      );
       if (i != null) return ServeItem(i, Phase.repair, 'repair ${g.skill}');
     }
     // 2. An item built to expose a misconception that was repaired (or is active).
@@ -238,6 +248,12 @@ class SessionBuilder {
         if (s.phase == Phase.focus) s.item.primarySkill,
     };
     final Set<String> newInSession = engine.state.newSkillsInSession[c.sessionId] ?? const <String>{};
+    // A skill gets a few items and then the next takes over, so that about two are in focus in a session.
+    final int perSkill = math.max(params.focusItemsPerSkill, (totalItems(c.band) * 0.275).ceil());
+    final Map<String, int> doneToday = <String, int>{};
+    for (final Served s in c.served) {
+      if (s.phase == Phase.focus) doneToday[s.item.primarySkill] = (doneToday[s.item.primarySkill] ?? 0) + 1;
+    }
     final List<String> candidates = <String>[];
     for (final String id in catalog.skills.keys) {
       final SkillStatus st = engine.statusOf(id, c.now);
@@ -249,7 +265,16 @@ class SessionBuilder {
           newInSession.length >= params.maxNewSkillsPerSession) {
         continue;
       }
+      // Enough of this one for today: a skill gets a few items, then the next takes over.
+      if ((doneToday[id] ?? 0) >= perSkill) continue;
       candidates.add(id);
+    }
+    if (candidates.isEmpty) {
+      // Everything is saturated: go on with the weakest of the skills in focus rather than stop.
+      for (final String id in doneToday.keys) {
+        final SkillStatus st = engine.statusOf(id, c.now);
+        if (st == SkillStatus.ready || st == SkillStatus.learning) candidates.add(id);
+      }
     }
     if (candidates.isEmpty) return null;
     // Keep to one or two skills at a time: the ones already in focus, then the weakest started one, then the
@@ -350,10 +375,15 @@ class SessionBuilder {
   /// A probe item for [skillId]: a different one from what this session has served (so a confirming item
   /// is another item), the easiest first.
   ItemMeta? probeItem(String skillId, Set<String> used) {
-    final List<ItemMeta> probes = <ItemMeta>[
-      for (final ItemMeta i in catalog.itemsFor(skillId))
-        if (i.purpose == Purpose.probe) i,
-    ]..sort((ItemMeta a, ItemMeta b) => a.id.compareTo(b.id));
+    // Open items first (a right answer cannot be a guess, so one settles it), then the rest, in a fixed order.
+    final List<ItemMeta> probes =
+        <ItemMeta>[
+          for (final ItemMeta i in catalog.itemsFor(skillId))
+            if (i.purpose == Purpose.probe) i,
+        ]..sort((ItemMeta a, ItemMeta b) {
+          final int guessable = (a.optionCount == 0 ? 0 : 1).compareTo(b.optionCount == 0 ? 0 : 1);
+          return guessable != 0 ? guessable : a.id.compareTo(b.id);
+        });
     if (probes.isEmpty) return null;
     final List<ItemMeta> unused = probes.where((ItemMeta i) => !used.contains(i.id)).toList();
     return (unused.isEmpty ? probes : unused).first;

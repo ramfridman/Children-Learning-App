@@ -33,6 +33,9 @@ class SkillState {
   String? lastVariantGroup;
   Representation? lastRepresentation;
 
+  /// The way of explaining in which the child last got this skill wrong (a probe counts).
+  Representation? lastFailedRepresentation;
+
   /// Wrong answers in a row, "not sure" in a row, and the tags of the wrong answers in that run.
   int failRun = 0;
   int unsureRun = 0;
