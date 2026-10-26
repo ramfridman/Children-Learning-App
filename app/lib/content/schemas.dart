@@ -23,6 +23,7 @@ abstract final class Patterns {
 /// The four kinds of document in a pack, by the `schema` field of the file.
 abstract final class SchemaIds {
   static const String manifest = 'manifest/v1';
+  static const String packSource = 'pack-source/v1';
   static const String activity = 'activity/v1';
   static const String lesson = 'lesson/v1';
   static const String skill = 'skill/v1';
@@ -351,8 +352,21 @@ SObject? activitySchemaFor(String template) => switch (template) {
   _ => null,
 };
 
+/// The file an author writes next to the content files of a pack (`pack.json`); the pack builder reads
+/// it, works out the rest of the manifest (files, hashes, entries, template versions) and signs.
+const SObject packSourceSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.packSource)),
+  'id': SField(SString(minLength: 3, maxLength: 41, pattern: Patterns.packId)),
+  'version': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
+  'minAppVersion': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
+  'assets': SField(_assetFiles),
+  'vo': SField(_voFiles),
+  'voPending': SField(SArray(_vo, maxItems: 400)),
+});
+
 /// Every document schema by name, for the generator of JSON Schema files.
 Map<String, Schema> get allSchemas => <String, Schema>{
+  'pack-source': packSourceSchema,
   'manifest': manifestSchema,
   'skill': skillSchema,
   'misconception': misconceptionSchema,

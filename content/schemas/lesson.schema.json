@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nitznutz:schema:lesson",
+  "title": "Nitznutz lesson",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "lesson/v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 81,
+      "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9999
+    },
+    "band": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "title": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "const": "he"
+          },
+          "v": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          }
+        },
+        "required": [
+          "t",
+          "v"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 6,
+        "maxLength": 11,
+        "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2})$"
+      },
+      "minItems": 1,
+      "maxItems": 10
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 81,
+        "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
+      },
+      "minItems": 1,
+      "maxItems": 12
+    },
+    "estimatedMinutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+    },
+    "celebration": {
+      "type": "object",
+      "properties": {
+        "vo": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 83,
+          "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+        },
+        "caption": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "t": {
+                "const": "he"
+              },
+              "v": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            },
+            "required": [
+              "t",
+              "v"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 1
+        }
+      },
+      "required": [
+        "vo",
+        "caption"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "revision",
+    "band",
+    "title",
+    "skills",
+    "items",
+    "estimatedMinutes",
+    "celebration"
+  ],
+  "additionalProperties": false
+}
