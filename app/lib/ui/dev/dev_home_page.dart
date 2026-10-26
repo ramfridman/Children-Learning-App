@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/companion.dart';
 import '../../app/providers.dart';
+import '../../app/tutor_providers.dart';
 import '../../app/state.dart';
 import '../../auth/auth_client.dart';
 import '../../content/engine_adapter.dart';
@@ -250,6 +251,14 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
             _heading(DevStrings.packs),
             _button(DevStrings.installIncoming, _installIncoming),
             _button(DevStrings.listPacks, _listPacks),
+            _heading(DevStrings.tutorHeading),
+            SwitchListTile(
+              key: const Key('ai-helper-switch'),
+              title: const Text(DevStrings.aiHelper),
+              subtitle: const Text(DevStrings.aiHelperNote),
+              value: ref.watch(aiHelperProvider).value ?? false,
+              onChanged: (bool on) => ref.read(aiHelperProvider.notifier).set(on),
+            ),
             _heading(DevStrings.engine),
             _button(DevStrings.engineState, _engineState),
             _heading(DevStrings.output),

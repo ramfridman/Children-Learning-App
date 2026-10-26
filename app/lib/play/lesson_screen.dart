@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 import '../app/companion.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
+import '../app/tutor_providers.dart';
 import '../app/voice_input.dart';
 import '../characters/character.dart';
 import '../child/activity_shell.dart';
@@ -21,6 +24,7 @@ import '../design/tokens.g.dart';
 import '../speech/reliability.dart';
 import '../speech/voice_answer.dart';
 import '../strings/he.dart';
+import '../tutor/tutor.dart';
 import '../voice/voice_director.dart';
 import 'activity_frame.dart';
 import 'count_tap_session.dart';
@@ -55,6 +59,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   int? _visitId;
   bool _visitEnded = false;
   int _spokenNonce = 0;
+  int _liveSeen = 0;
+  TutorSession? _tutor;
+  final String _sessionRef = const Uuid().v4();
 
   @override
   void initState() {
@@ -126,7 +133,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   /// Back to the map. The map hears whether the lesson was finished.
   void _home() => Navigator.of(context).pop(_controller?.finished ?? false);
 
-  LessonController _controllerFor(PackContent content) {
+  LessonController _controllerFor(PackContent content, Guide guide) {
     final LessonController? have = _controller;
     if (have != null) return have;
     final LessonController made = _controller = LessonController(
@@ -136,6 +143,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
       sessionId: _visitId,
       record: ref.read(attemptSinkProvider),
       clock: ref.read(clockProvider),
+      tutor: _tutor,
+      tutorContext: _tutor == null ? null : _tutorContext(guide, content),
     );
     made.addListener(_speak);
     // The first question is spoken as soon as the lesson opens.
@@ -143,10 +152,33 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     return made;
   }
 
+  /// What the tutor may know: ids and enums, from the child's profile (the band and the address form) and the guide.
+  TutorContext _tutorContext(Guide guide, PackContent content) {
+    final Profile? p = ref.read(activeProfileProvider);
+    return TutorContext(
+      packId: content.packId,
+      packVersion: content.packVersion,
+      characterId: guide.character.id,
+      band: const <String>['A', 'B', 'C'][(p?.ageBand ?? 1).clamp(0, 2)],
+      addressForm: p?.addressForm == 'f' || p?.addressForm == 'm' ? p!.addressForm : 'n',
+      childRef: widget.profileId,
+      sessionRef: _sessionRef,
+    );
+  }
+
   /// Says the guide's newest line in its own voice (the same line asked for again is said again).
   void _speak() {
     final LessonController? c = _controller;
-    if (c == null || !mounted || c.voiceNonce == _spokenNonce) return;
+    if (c == null || !mounted) return;
+    // A line the tutor made: played in the guide's voice, with the mouth moving.
+    if (c.liveNonce != _liveSeen) {
+      _liveSeen = c.liveNonce;
+      final Uint8List? sound = c.liveLine?.audio;
+      if (_voice?.answer.state == MicState.listening) _voice?.hush();
+      if (sound != null) unawaited(_director.sayBytes(sound));
+      return;
+    }
+    if (c.voiceNonce == _spokenNonce) return;
     _spokenNonce = c.voiceNonce;
     // The guide never talks over a listening child, and the mic never hears the guide.
     if (_voice?.answer.state == MicState.listening) _voice?.hush();
@@ -176,6 +208,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     final AsyncValue<PackContent> content = ref.watch(contentProvider);
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
     final bool voiceOn = ref.watch(voiceAvailableProvider).value ?? false;
+    final bool? tutorOn = ref.watch(tutorAvailableProvider).value;
     return content.when(
       loading: () => const ColoredBox(color: TokenColors.cream),
       error: (Object e, StackTrace s) => _Unavailable(onHome: _home),
@@ -184,7 +217,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
         builder: (BuildContext context, AsyncSnapshot<int> visit) {
           // The guide and its voice load before the first question, so that the first line is heard too.
           final Guide? g = guide.value;
-          if (!visit.hasData || g == null) return const ColoredBox(color: TokenColors.cream);
+          if (!visit.hasData || g == null || tutorOn == null) {
+            return const ColoredBox(color: TokenColors.cream);
+          }
+          if (tutorOn) _tutor ??= TutorSession(client: ref.read(tutorClientProvider));
           return _lesson(context, c, g, voiceOn);
         },
       ),
@@ -225,7 +261,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   }
 
   Widget _lesson(BuildContext context, PackContent c, Guide guide, bool voiceOn) {
-    final LessonController controller = _controllerFor(c);
+    final LessonController controller = _controllerFor(c, guide);
     if (voiceOn && _voice == null) _voice = _makeVoice(controller);
     final ActivitySpec spec = ActivitySpec.of(AppLayout.of(context).board);
     return ListenableBuilder(
@@ -238,7 +274,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
             controller.errors >= 1 &&
             controller.hintLevel < controller.current.hints.length;
         final MicState? heard = _voice?.answer.state;
-        final CharacterState resting = heard == MicState.listening
+        final CharacterState resting = controller.tutorThinking
+            ? CharacterState.think
+            : heard == MicState.listening
             ? CharacterState.listen
             : heard == MicState.thinking
             ? CharacterState.think

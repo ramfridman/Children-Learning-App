@@ -64,6 +64,7 @@ abstract final class He {
   static const Str micFadedSemantics = Str('אפשר ללחוץ על התשובה');
   static const Str confirmYesSemantics = Str('כן, זה מה שאמרתי');
   static const Str confirmAgainSemantics = Str('לומר שוב');
+  static const Str thinkHmm = Str('הַמְּמ… בּוֹאוּ נַחְשֹׁב.', nikud: true);
   static const Str listenMixed = Str(
     'אוֹפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב?',
     nikud: true,

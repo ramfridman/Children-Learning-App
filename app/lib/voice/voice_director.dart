@@ -50,7 +50,14 @@ class VoiceDirector extends ChangeNotifier {
   }
 
   /// Says the line [voId] (`vo:...`) in the current voice. A null id or a line with no recording is silence.
-  Future<void> say(String? voId) async {
+  Future<void> say(String? voId) => _run(voId, voId == null ? null : _bank?.clip(voId));
+
+  /// Says a line that is not in the pack: the live line of the AI tutor, as sound that was just checked and made.
+  /// It has no mouth cues, so the mouth moves at a gentle rhythm while it plays.
+  Future<void> sayBytes(Uint8List sound, {String mime = 'audio/mpeg'}) =>
+      _run('live', VoiceClip(sound, MouthTrack(const <(int, bool)>[]), mime: mime));
+
+  Future<void> _run(String? voId, VoiceClip? clip) async {
     final int gen = ++_generation;
     _timer?.cancel();
     if (_speaking) {
@@ -58,7 +65,6 @@ class VoiceDirector extends ChangeNotifier {
       _mouthOpen = false;
     }
     await _player.stop();
-    final VoiceClip? clip = voId == null ? null : _bank?.clip(voId);
     if (_disposed || gen != _generation) return;
     _current = voId;
     if (clip == null) {

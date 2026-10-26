@@ -92,7 +92,7 @@ class ActivityFrame extends StatelessWidget {
         board: board,
         children: <Widget>[
           // The celebration says its own line; the bubble stays quiet behind it.
-          if (overlay == null)
+          if (overlay == null && bubbleText.isNotEmpty)
             Positioned(
               left: s.bubbleLeft,
               right: s.bubbleRight,

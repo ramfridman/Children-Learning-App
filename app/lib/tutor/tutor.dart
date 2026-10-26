@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../net/gateway_client.dart';
-
 /// Everything the app tells the tutor service: ids, numbers and enums. Never a name, never text, never audio.
 class TutorAttempt {
   const TutorAttempt(this.option, this.result, {this.misconception});
@@ -131,11 +129,19 @@ abstract interface class TutorClient {
   Future<List<TutorResult>> ask(TutorAsk ask);
 }
 
+/// A call to one gateway function (signed by the device key); the real one is `GatewayClient.call`.
+typedef GatewayCall = Future<Map<String, Object?>> Function(
+  String name,
+  Map<String, Object?> body, {
+  String? deviceId,
+  String? accessToken,
+});
+
 /// The real client: `tutor-turn` through the signed gateway.
 class GatewayTutorClient implements TutorClient {
-  GatewayTutorClient({required this.gateway, required this.deviceId, required this.accessToken});
+  GatewayTutorClient({required this.call, required this.deviceId, required this.accessToken});
 
-  final GatewayClient gateway;
+  final GatewayCall call;
   final Future<String?> Function() deviceId;
   final Future<String?> Function() accessToken;
 
@@ -148,7 +154,7 @@ class GatewayTutorClient implements TutorClient {
       final String? id = await deviceId();
       final String? token = await accessToken();
       if (id == null || token == null) return failed('unavailable');
-      final Map<String, Object?> answer = await gateway.call(
+      final Map<String, Object?> answer = await call(
         'tutor-turn',
         ask.toJson(),
         deviceId: id,

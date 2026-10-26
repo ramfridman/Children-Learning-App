@@ -7,7 +7,9 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/app.dart';
 import 'package:nitznutz/app/companion.dart';
+import 'package:nitznutz/app/tutor_providers.dart';
 import 'package:nitznutz/app/voice_input.dart';
+import 'package:nitznutz/tutor/tutor.dart';
 import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
@@ -92,6 +94,9 @@ class AppRig {
     FakePlayer? player,
     this.voice = false,
     FakeSpeechEngine? speech,
+    this.tutor,
+    this.aiHelper = true,
+    this.tutorEnabledOnServer = true,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
        store = MemoryStore(),
@@ -114,6 +119,11 @@ class AppRig {
   /// A parent has turned "Voice answers" on, and the recogniser is a fake that answers from a script.
   final bool voice;
   final FakeSpeechEngine speech;
+
+  /// The AI tutor service of the test (a fake), whether the helper is switched on in this phone, and the server switch.
+  final TutorClient? tutor;
+  final bool aiHelper;
+  final bool tutorEnabledOnServer;
   final MemoryStore store;
   final FakePlatform platform;
   final ControlledClock clock;
@@ -161,6 +171,8 @@ class AppRig {
     characterSourceProvider.overrideWith((Ref ref) async => characters ?? await makeSource()),
     voicePlayerProvider.overrideWithValue(player),
     speechEngineProvider.overrideWithValue(speech),
+    if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),
+    remoteSwitchesProvider.overrideWithValue(RemoteSwitches(() async => tutorEnabledOnServer, () => 0)),
     setupBackendProvider.overrideWithValue(setup),
     devicesBackendProvider.overrideWithValue(devices),
     pinServiceProvider.overrideWith(
@@ -196,6 +208,7 @@ class AppRig {
       addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
     }
     if (voice) await db.putSetting('voice_enabled', 'on');
+    if (tutor != null && aiHelper) await db.putSetting('ai_helper', 'on');
     await tester.pumpWidget(ProviderScope(overrides: overrides, child: const NitznutzApp()));
     await tester.pumpAndSettle();
   }

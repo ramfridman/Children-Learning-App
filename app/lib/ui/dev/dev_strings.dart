@@ -31,4 +31,9 @@ abstract final class DevStrings {
   static const String output = 'Output';
   static const String prodPlaceholder = 'Nitznutz';
   static const String configProblem = 'Build settings are missing or wrong';
+
+  static const String tutorHeading = 'AI helper (M6)';
+  static const String aiHelper = 'AI helper in lessons';
+  static const String aiHelperNote =
+      'Off by default. Needs the server keys and the server switch; a failure always falls back to the authored line.';
 }
