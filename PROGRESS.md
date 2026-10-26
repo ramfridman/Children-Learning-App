@@ -10,8 +10,9 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M0 Foundations | **Done, merged to `main` 2026-10-26** (approved 2026-10-25; see `docs/milestones/M0.md`, section 11). Android first, iOS gate later. Backend (8 functions) and Flutter harness are **green in CI** (6 jobs) and **proven on the owner's Samsung against the live Supabase project** for the parent device. Reinstall check done. Left: spend-limit screenshots and the owner's confirmation of the M0 report. Branch `m0-foundations`, not merged to `main`. |
 | M1 App shell and design system | **Done and merged to `main` on 2026-10-26** (CI green; child screens match the design boards, checked by 16 geometry tests). The on-phone checks (install, wrong-PIN lock-outs, database file pulled with adb, Argon2id timing) are still to do when the Samsung is plugged into the PC. The Hebrew child strings await the owner's review. |
 | M2 Content system and first activity | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M2.md` section 11). The owner chose to continue without testing on the phone; the on-phone checks (`docs/setup/android-device-checks.md` section 6) and the Hebrew review come later. |
-| M3 Learning engine | **Built, waiting for CI and the owner's confirmation** (`docs/milestones/M3.md` section 11 is the report; branch `m3-learning-engine`, not merged). The simulator finds the planted gap within 3 probes in 96.2% of 1,000 invented children (history on 80% of skills; 91.0% at 50%, 51.3% at none); the engine imports no UI code. |
-| M4–M9 | Not started |
+| M3 Learning engine | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M3.md` section 11). The simulator names the planted gap within 3 probes in 96.2% of 1,000 invented children (history on 80% of skills; 91.0% at 50%, 51.3% at none). On-phone checks (section 7 of the device checks) come later. |
+| M4 Characters and voice out | **Plan written, waiting for the owner's OK** (`docs/milestones/M4.md`, branch `m4-characters-voice`). No code yet. Needs his OK for `audioplayers` 6.8.1 and the decisions Q1 to Q10. |
+| M5–M9 | Not started |
 
 ## Done
 
@@ -59,4 +60,4 @@ itznutz-secretspack-signing.key` (outside the repo).
 
 ## Next step
 
-Claude: when CI is green and the owner confirms M3 (or says to continue), merge `m3-learning-engine` into `main`, then write the M4 plan (`docs/milestones/M4.md`, characters and voice out) and wait for his OK before coding. Do not start M4 before then.
+Claude: wait for the owner's "OK to M4" (or changes to `docs/milestones/M4.md`, and his OK for `audioplayers`), then build M4 on `m4-characters-voice`. Do not code M4 before that.
