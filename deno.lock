@@ -1,6 +1,7 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@noble/curves@2.0.1": "2.0.1",
     "npm:@peculiar/x509@2.2.0": "2.2.0",
     "npm:jose@6.2.13": "6.2.13",
     "npm:postgres@3.4.9": "3.4.9",
@@ -20,11 +21,20 @@
     "@noble/curves@1.9.7": {
       "integrity": "sha512-gbKGcRUYIjA3/zCCNaWDciTMFI0dCkvou3TL8Zmy5Nc7sJ47a0jtOeZoTaMxkuqRo9cRhjOdZJXegxYE5FN/xw==",
       "dependencies": [
-        "@noble/hashes"
+        "@noble/hashes@1.8.0"
+      ]
+    },
+    "@noble/curves@2.0.1": {
+      "integrity": "sha512-vs1Az2OOTBiP4q0pwjW5aF0xp9n4MxVrmkFBxc6EKZc6ddYx5gaZiAsZoq0uRRXWbi3AT/sBqn05eRPtn1JCPw==",
+      "dependencies": [
+        "@noble/hashes@2.0.1"
       ]
     },
     "@noble/hashes@1.8.0": {
       "integrity": "sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A=="
+    },
+    "@noble/hashes@2.0.1": {
+      "integrity": "sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw=="
     },
     "@peculiar/asn1-asym-key@2.11.0": {
       "integrity": "sha512-r2957WdSZle/Zt4t9og7OMQYXNJ9/3ANXVtFwLCDJuHORlBZ4AFmDt1Qee0CzyTbHQg4ZZApBGEz5/6cFsyCRg==",
@@ -217,8 +227,8 @@
       "dependencies": [
         "@ecies/ciphers",
         "@noble/ciphers",
-        "@noble/curves",
-        "@noble/hashes"
+        "@noble/curves@1.9.7",
+        "@noble/hashes@1.8.0"
       ]
     },
     "jose@6.2.13": {
