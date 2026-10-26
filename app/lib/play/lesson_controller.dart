@@ -114,8 +114,17 @@ class LessonController extends ChangeNotifier {
 
   FeedbackKind feedback = FeedbackKind.none;
 
-  /// The line in the guide's bubble.
+  /// The line in the guide's bubble, the voice line (`vo:...`) that goes with it, and a counter that changes
+  /// whenever the guide has a new line to say (the same line said again counts).
   String bubble = '';
+  String? voice;
+  int voiceNonce = 0;
+
+  void _say(Spoken line) {
+    bubble = line.caption;
+    voice = line.vo;
+    voiceNonce++;
+  }
 
   /// The hint that was shown last, and a counter that changes each time so a stage can replay it.
   HintAction? hintAction;
@@ -139,7 +148,7 @@ class LessonController extends ChangeNotifier {
     guided = false;
     feedback = FeedbackKind.none;
     hintAction = null;
-    bubble = a.promptLine.caption;
+    _say(a.promptLine);
     _markMs = _clock.nowMs();
     resetNonce++;
   }
@@ -147,16 +156,16 @@ class LessonController extends ChangeNotifier {
   /// The replay button: the question again, without any help.
   void replayPrompt() {
     if (finished) return;
-    bubble = current.promptLine.caption;
+    _say(current.promptLine);
     feedback = FeedbackKind.none;
     replayNonce++;
     notifyListeners();
   }
 
   /// A count template has seen every object touched: now it asks "how many?".
-  void askAnswer(String caption) {
+  void askAnswer(Spoken line) {
     if (finished || guided) return;
-    bubble = caption;
+    _say(line);
     notifyListeners();
   }
 
@@ -173,7 +182,7 @@ class LessonController extends ChangeNotifier {
     final Hint h = current.hints[level - 1];
     hintAction = h.action;
     hintNonce++;
-    bubble = h.say.caption;
+    _say(h.say);
   }
 
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)
@@ -182,13 +191,15 @@ class LessonController extends ChangeNotifier {
     if (finished) return;
     await _write(result: 'unsure', tag: '', response: '');
     attemptNo++;
-    bubble = current.feedback.unsure.caption;
+    _say(current.feedback.unsure);
     feedback = FeedbackKind.none;
     if (current.hints.isNotEmpty) {
       // The welcome line stays up; the help itself is shown by the stage.
       final String keep = bubble;
+      final String? keepVoice = voice;
       _applyHint(math.min(hintLevel + 1, current.hints.length));
       bubble = keep;
+      voice = keepVoice;
     }
     notifyListeners();
   }
@@ -231,7 +242,7 @@ class LessonController extends ChangeNotifier {
       await _write(result: 'correct', tag: tag, response: response);
       attemptNo++;
       feedback = FeedbackKind.correct;
-      bubble = a.feedback.correct.caption;
+      _say(a.feedback.correct);
       notifyListeners();
       return Outcome(correct: true, tag: tag);
     }
@@ -241,7 +252,7 @@ class LessonController extends ChangeNotifier {
     feedback = FeedbackKind.notYet;
     if (errors == 1 || a.hints.isEmpty) {
       // The first mistake: tell the child what to check (the line for this misconception).
-      bubble = a.feedback.forIncorrect(tag.isEmpty ? null : tag).caption;
+      _say(a.feedback.forIncorrect(tag.isEmpty ? null : tag));
     } else {
       // Later mistakes: help that changes how the child sees the problem, not the same words again.
       _applyHint(math.min(errors, a.hints.length));
@@ -260,7 +271,7 @@ class LessonController extends ChangeNotifier {
     if (index + 1 >= items.length) {
       finished = true;
       feedback = FeedbackKind.none;
-      bubble = lesson.celebration.caption;
+      _say(lesson.celebration);
       notifyListeners();
       return;
     }
