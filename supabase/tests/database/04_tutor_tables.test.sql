@@ -49,21 +49,21 @@ select throws_ok($$insert into app.tutor_cache
   (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
    validator_version, line, next_action, audio, audio_mime)
   values ('starter', '0.2.0', 'count.butterflies.3', 'not-a-tag', 1, 'A', 'n', 'nitzi', 'p1', 'v1',
-          'x', 'a', null, null)$$, '23514', null, 'the mistake must be a tag or default');
+          'x', 'none', null, null)$$, '23514', null, 'the mistake must be a tag or default');
 select throws_ok($$insert into app.tutor_cache
   (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
    validator_version, line, next_action, audio, audio_mime)
   values ('starter', '0.2.0', 'count.butterflies.3', 'default', 1, 'A', 'n', 'nitzi', 'p1', 'v1',
-          'x', 'a', decode(repeat('00', 70000), 'hex'), 'audio/mpeg')$$, '23514', null, 'a clip over 64 KB is refused');
+          'x', 'none', decode(repeat('00', 70000), 'hex'), 'audio/mpeg')$$, '23514', null, 'a clip over 64 KB is refused');
 select throws_ok($$insert into app.tutor_cache
   (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
    validator_version, line, next_action)
-  values ('starter', '0.2.0', 'count.butterflies.3', 'M-CNT-DOUBLE', 1, 'A', 'n', 'nitzi', 'p1', 'v1', 'again', 'a')$$,
+  values ('starter', '0.2.0', 'count.butterflies.3', 'M-CNT-DOUBLE', 1, 'A', 'n', 'nitzi', 'p1', 'v1', 'again', 'none')$$,
   '23505', null, 'the same line is never kept twice');
 select lives_ok($$insert into app.tutor_cache
   (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
    validator_version, line, next_action)
-  values ('starter', '0.2.0', 'count.butterflies.3', 'M-CNT-DOUBLE', 1, 'A', 'n', 'nitzi', 'p2', 'v1', 'again', 'a')$$,
+  values ('starter', '0.2.0', 'count.butterflies.3', 'M-CNT-DOUBLE', 1, 'A', 'n', 'nitzi', 'p2', 'v1', 'again', 'none')$$,
   'a new prompt version makes a new entry');
 
 -- ---- the caps count exactly -----------------------------------------------------------------------
