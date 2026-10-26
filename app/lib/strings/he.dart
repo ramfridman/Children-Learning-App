@@ -29,7 +29,7 @@ class Str {
 
 abstract final class He {
   // ---- child space ----
-  static const Str pickerTitle = Str('מִי מְשַׂחֵק עַכְשָׁיו?', nikud: true);
+  static const Str pickerTitle = Str('עִם מִי נְשַׂחֵק הַיּוֹם?', nikud: true);
   static const Str pickerAddSemantics = Str('הוספת ילד, להורים בלבד');
   static const Str homeParents = Str('הורים');
   static const Str homeDaily = Str('הַהַרְפַּתְקָה שֶׁל הַיּוֹם', nikud: true);
@@ -41,6 +41,7 @@ abstract final class He {
   static const Str landLogic = Str('מְעָרַת הַחִידוֹת', nikud: true);
   static const Str landRobots = Str('נְמַל הָרוֹבּוֹטִים', nikud: true);
   static const Str landMarket = Str('כְּפַר הַשּׁוּק', nikud: true);
+  static const Str homeMapSemantics = Str('מפת האיים');
   static const Str switchChildSemantics = Str('החלפת ילד');
   static const Str bookSemantics = Str('הספר');
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);

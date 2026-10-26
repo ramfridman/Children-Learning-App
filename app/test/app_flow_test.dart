@@ -146,7 +146,7 @@ void main() {
       expect(find.byType(ActivityShell), findsOneWidget);
       expect(find.text(He.activityQuestion.text), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.beach_access_rounded).first);
+      await tester.tap(find.byKey(const Key('activity-home')));
       await tester.pumpAndSettle();
       expect(find.byType(HomeScreen), findsOneWidget);
     });
@@ -157,7 +157,7 @@ void main() {
       final AppRig rig = AppRig();
       await rig.seedFinishedSetup();
       await rig.pump(tester);
-      await tester.tap(find.byIcon(Icons.add_rounded));
+      await tester.tap(find.byKey(const Key('picker-add')));
       await tester.pumpAndSettle();
       expect(find.byType(GateScreen), findsOneWidget);
       expect((await rig.db.allProfiles()).length, 1);
@@ -380,7 +380,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(ActivityShell), findsOneWidget);
         expect(tester.takeException(), isNull);
-        await tester.tap(find.byIcon(Icons.beach_access_rounded).first);
+        await tester.tap(find.byKey(const Key('activity-home')));
         await tester.pumpAndSettle();
 
         await _openAreaFromHome(tester, rig);

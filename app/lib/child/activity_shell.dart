@@ -1,14 +1,188 @@
 import 'package:flutter/material.dart';
 
+import '../design/app_text.dart';
+import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
-import 'art.dart';
 
-/// The frame of an activity (boards 13 and 23): top controls, progress trail, stage, caption, answer
-/// tiles, the guide and the microphone. In M1 it is only a frame: nothing here is playable yet
-/// (the count-and-tap template arrives in M2), and the microphone is a picture.
+/// Positions of one board of the activity frame, in the board's own coordinates (the `left`, `top`,
+/// `right` of its CSS). Boards 13 (phone), 23 (tablet landscape) and 26 (tablet portrait) are the
+/// design; the small phone has no board of its own, so its numbers are a composition of mine that
+/// keeps every touch target at the board's size.
+class _ActivitySpec {
+  const _ActivitySpec({
+    required this.homeRight,
+    required this.controlsTop,
+    required this.eyeLeft,
+    required this.hintLeft,
+    required this.trailLeft,
+    required this.trailTop,
+    required this.trailWidth,
+    required this.nitziLeft,
+    required this.nitziTop,
+    required this.nitziSize,
+    required this.micLeft,
+    required this.micTop,
+    required this.micSize,
+    this.bubbleLeft,
+    this.bubbleRight,
+    required this.bubbleTop,
+    required this.bubbleFont,
+    required this.stage,
+    required this.stageIsCard,
+    required this.tilesLeft,
+    required this.tilesTop,
+    required this.tilesWidth,
+    required this.tileFont,
+  });
+
+  final double homeRight;
+  final double controlsTop;
+  final double eyeLeft;
+  final double hintLeft;
+  final double trailLeft;
+  final double trailTop;
+  final double trailWidth;
+  final double nitziLeft;
+  final double nitziTop;
+  final double nitziSize;
+  final double micLeft;
+  final double micTop;
+  final double micSize;
+
+  /// Phones place the bubble by its left edge, tablets by its right edge, as their boards do.
+  final double? bubbleLeft;
+  final double? bubbleRight;
+  final double bubbleTop;
+  final double bubbleFont;
+  final Rect stage;
+
+  /// Tablets show the stage on a white card (boards 23 and 26); the phone shows the scene directly.
+  final bool stageIsCard;
+  final double tilesLeft;
+  final double tilesTop;
+  final double tilesWidth;
+  final double tileFont;
+
+  // Board 13.
+  static const _ActivitySpec phone = _ActivitySpec(
+    homeRight: 59,
+    controlsTop: 12,
+    eyeLeft: 59,
+    hintLeft: 147,
+    trailLeft: 71,
+    trailTop: 26,
+    trailWidth: 546,
+    nitziLeft: 617,
+    nitziTop: 80,
+    nitziSize: 176,
+    micLeft: 661,
+    micTop: 260,
+    micSize: 88,
+    bubbleLeft: 413,
+    bubbleTop: 104,
+    bubbleFont: 26,
+    stage: Rect.fromLTWH(71, 96, 330, 128),
+    stageIsCard: false,
+    tilesLeft: 71,
+    tilesTop: 244,
+    tilesWidth: 534,
+    tileFont: 56,
+  );
+
+  // No board: board 13 re-composed for 667 by 375 with the same sizes.
+  static const _ActivitySpec phoneSE = _ActivitySpec(
+    homeRight: 16,
+    controlsTop: 8,
+    eyeLeft: 16,
+    hintLeft: 96,
+    trailLeft: 16,
+    trailTop: 22,
+    trailWidth: 635,
+    nitziLeft: 490,
+    nitziTop: 66,
+    nitziSize: 150,
+    micLeft: 521,
+    micTop: 226,
+    micSize: 88,
+    bubbleLeft: 300,
+    bubbleTop: 92,
+    bubbleFont: 22,
+    stage: Rect.fromLTWH(16, 86, 270, 104),
+    stageIsCard: false,
+    tilesLeft: 16,
+    tilesTop: 214,
+    tilesWidth: 464,
+    tileFont: 56,
+  );
+
+  // Board 23.
+  static const _ActivitySpec tabletLandscape = _ActivitySpec(
+    homeRight: 24,
+    controlsTop: 24,
+    eyeLeft: 24,
+    hintLeft: 112,
+    trailLeft: 0,
+    trailTop: 38,
+    trailWidth: 1180,
+    nitziLeft: 896,
+    nitziTop: 150,
+    nitziSize: 260,
+    micLeft: 978,
+    micTop: 672,
+    micSize: 96,
+    bubbleRight: 224,
+    bubbleTop: 112,
+    bubbleFont: 28,
+    stage: Rect.fromLTWH(288, 230, 584, 300),
+    stageIsCard: true,
+    tilesLeft: 288,
+    tilesTop: 520,
+    tilesWidth: 584,
+    tileFont: 64,
+  );
+
+  // Board 26.
+  static const _ActivitySpec tabletPortrait = _ActivitySpec(
+    homeRight: 24,
+    controlsTop: 32,
+    eyeLeft: 24,
+    hintLeft: 112,
+    trailLeft: 0,
+    trailTop: 46,
+    trailWidth: 820,
+    nitziLeft: 596,
+    nitziTop: 112,
+    nitziSize: 200,
+    micLeft: 44,
+    micTop: 172,
+    micSize: 96,
+    bubbleRight: 224,
+    bubbleTop: 152,
+    bubbleFont: 28,
+    stage: Rect.fromLTWH(24, 372, 772, 300),
+    stageIsCard: true,
+    tilesLeft: 24,
+    tilesTop: 662,
+    tilesWidth: 772,
+    tileFont: 64,
+  );
+
+  static _ActivitySpec of(BoardClass b) => switch (b) {
+    BoardClass.phone => phone,
+    BoardClass.phoneSE => phoneSE,
+    BoardClass.tabletLandscape => tabletLandscape,
+    BoardClass.tabletPortrait => tabletPortrait,
+  };
+}
+
+/// The frame of an activity (boards 13, 23 and 26): the home button, the hint lamp and "show me" eye,
+/// the progress trail, the guide with her question, the stage, the answer tiles and the microphone.
+/// In M1 it is only a frame: nothing here is playable yet (the count-and-tap template arrives in M2)
+/// and the microphone is a picture. The tool rail and the equation of the tablet boards belong to
+/// the activity templates of M2.
 class ActivityShell extends StatelessWidget {
   const ActivityShell({super.key, required this.onHome});
 
@@ -16,230 +190,115 @@ class ActivityShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppLayout layout = AppLayout.of(context);
-    final double margin = layout.tokens.contentMargin;
-    final bool tall = layout.isTabletPortrait;
+    final BoardClass board = AppLayout.of(context).board;
+    final _ActivitySpec s = _ActivitySpec.of(board);
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: margin),
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: layout.tokens.topBarControlTop),
-              _TopControls(onHome: onHome),
-              Expanded(child: tall ? const _TallBody() : const _WideBody()),
-            ],
+      body: BoardCanvas(
+        background: TokenColors.cream,
+        board: board,
+        children: <Widget>[
+          // The question, drawn first so that the guide stands in front of its tail.
+          Positioned(
+            left: s.bubbleLeft,
+            right: s.bubbleRight,
+            top: s.bubbleTop,
+            child: BoardBubble(
+              text: He.activityQuestion.text,
+              fontSize: s.bubbleFont,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TopControls extends StatelessWidget {
-  const _TopControls({required this.onHome});
-
-  final VoidCallback onHome;
-
-  @override
-  // Board 13: Home at the start corner (right in Hebrew); the progress trail, then the hint lamp and the
-  // "show me" eye together at the end corner, which is where a child's own pacing controls live.
-  Widget build(BuildContext context) => Row(
-    children: <Widget>[
-      PebbleButton(
-        semanticLabel: He.homeSemantics.text,
-        icon: const Icon(Icons.beach_access_rounded, color: TokenColors.seaDeep, size: 36),
-        onPressed: onHome,
-      ),
-      const Spacer(),
-      const ProgressTrail(total: 6, done: 2),
-      const SizedBox(width: 12),
-      PebbleButton(
-        semanticLabel: He.hintSemantics.text,
-        icon: const Icon(Icons.lightbulb_rounded, color: TokenColors.skyDeep, size: 36),
-        onPressed: () {},
-      ),
-      PebbleButton(
-        semanticLabel: He.showMeSemantics.text,
-        icon: const Icon(Icons.visibility_rounded, color: TokenColors.ink, size: 36),
-        onPressed: () {},
-      ),
-    ],
-  );
-}
-
-/// Phones and tablets in landscape: the stage and the tiles at the end side, the guide at the start.
-class _WideBody extends StatelessWidget {
-  const _WideBody();
-
-  @override
-  Widget build(BuildContext context) {
-    final AppLayout layout = AppLayout.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(width: layout.tokens.guideRailWidth, child: const _GuideRail()),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Positioned(
+            left: s.nitziLeft,
+            top: s.nitziTop,
+            width: s.nitziSize,
+            height: s.nitziSize,
+            child: const BoardSvg('assets/art/ui/nitzi.svg', key: Key('activity-nitzi')),
+          ),
+          Positioned(
+            left: s.micLeft,
+            top: s.micTop,
+            child: MicButton(size: s.micSize, semanticLabel: He.micSemantics.text),
+          ),
+          _stage(s),
+          // The answer tiles: the markup order is 2, 3, 4, which in a right-to-left row reads 4, 3, 2.
+          Positioned(
+            left: s.tilesLeft,
+            top: s.tilesTop - 12,
+            width: s.tilesWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // The question sits next to the guide (start side) and the stage at the end side, as on board 13.
-                const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _Question(),
-                    SizedBox(width: 24),
-                    Expanded(child: _Stage()),
-                  ],
-                ),
-                const Spacer(),
-                const _Tiles(),
+                for (final (int n, AnswerState st) in <(int, AnswerState)>[
+                  (2, AnswerState.idle),
+                  (3, AnswerState.selected),
+                  (4, AnswerState.idle),
+                ]) ...<Widget>[
+                  AnswerTile(
+                    semanticLabel: '$n',
+                    state: st,
+                    onPressed: () {},
+                    child: Text('$n', style: AppText.fixed(size: s.tileFont, weight: 800, lineHeight: 1)),
+                  ),
+                ],
               ],
             ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Tablet in portrait: the guide strip on top, the stage below it, the tiles at the bottom.
-class _TallBody extends StatelessWidget {
-  const _TallBody();
-
-  @override
-  Widget build(BuildContext context) => const Column(
-    children: <Widget>[
-      SizedBox(height: 16),
-      SizedBox(height: 220, child: _GuideRail(horizontal: true)),
-      SizedBox(height: 16),
-      Expanded(child: _Stage()),
-      SizedBox(height: 24),
-      _Tiles(),
-      SizedBox(height: 48),
-    ],
-  );
-}
-
-class _Question extends StatelessWidget {
-  const _Question();
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 8),
-    child: SpeechBubble(text: He.activityQuestion.text, maxWidth: 360),
-  );
-}
-
-class _GuideRail extends StatelessWidget {
-  const _GuideRail({this.horizontal = false});
-
-  final bool horizontal;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppLayout layout = AppLayout.of(context);
-    final double h = layout.isTablet ? 300 : 190;
-    final Widget nitzi = NitziArt(pose: 'talk', height: horizontal ? 200 : h);
-    final Widget mic = Container(
-      width: layout.isTablet ? 104 : 88,
-      height: layout.isTablet ? 104 : 88,
-      decoration: const BoxDecoration(
-        color: TokenColors.sea,
-        shape: BoxShape.circle,
-        boxShadow: <BoxShadow>[BoxShadow(color: TokenColors.seaDeep, offset: Offset(0, 6))],
-      ),
-      child: Semantics(
-        label: He.micSemantics.text,
-        child: const ExcludeSemantics(child: Icon(Icons.mic_rounded, color: Colors.white, size: 44)),
-      ),
-    );
-    return horizontal
-        ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[nitzi, const SizedBox(width: 24), mic],
-          )
-        : Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[nitzi, mic]);
-  }
-}
-
-class _Stage extends StatelessWidget {
-  const _Stage();
-
-  @override
-  Widget build(BuildContext context) {
-    final AppLayout layout = AppLayout.of(context);
-    return Container(
-      height: layout.isTablet ? 340 : (layout.sizeClass == SizeClass.phoneSE ? 104 : 118),
-      constraints: BoxConstraints(maxWidth: layout.isTablet ? 640 : 330),
-      decoration: BoxDecoration(
-        color: TokenColors.worldGrass,
-        borderRadius: BorderRadius.circular(TokenRadius.xl),
-      ),
-      child: const Stack(
-        children: <Widget>[
-          PositionedDirectional(start: 36, top: 24, child: _Flower(TokenColors.domainColorsFill)),
-          PositionedDirectional(start: 110, top: 14, child: _Flower(TokenColors.domainLogicFill)),
-          PositionedDirectional(start: 190, top: 28, child: _Flower(TokenColors.domainColorsFill)),
+          Positioned(
+            left: s.trailLeft,
+            top: s.trailTop,
+            width: s.trailWidth,
+            child: const Center(child: ProgressTrail(total: 6, done: 2)),
+          ),
+          // Start corner: home. End corner: the child's own pacing controls, hint then "show me".
+          boardAt(
+            right: s.homeRight,
+            top: s.controlsTop,
+            child: PebbleButton(
+              key: const Key('activity-home'),
+              semanticLabel: He.homeSemantics.text,
+              onPressed: onHome,
+              child: const BoardSvg('assets/art/ui/home_palm.svg', width: 32, height: 32),
+            ),
+          ),
+          boardAt(
+            left: s.hintLeft,
+            top: s.controlsTop,
+            child: PebbleButton(
+              semanticLabel: He.hintSemantics.text,
+              onPressed: () {},
+              child: const BoardSvg('assets/art/ui/hint.svg', width: 32, height: 32),
+            ),
+          ),
+          boardAt(
+            left: s.eyeLeft,
+            top: s.controlsTop,
+            child: PebbleButton(
+              semanticLabel: He.showMeSemantics.text,
+              onPressed: () {},
+              child: const BoardSvg('assets/art/ui/eye.svg', width: 32, height: 32),
+            ),
+          ),
         ],
       ),
     );
   }
-}
 
-class _Flower extends StatelessWidget {
-  const _Flower(this.color);
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      Container(
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        child: const Center(child: CircleAvatar(radius: 8, backgroundColor: TokenColors.spark)),
-      ),
-      Container(width: 6, height: 52, color: TokenColors.worldGrassShade),
-    ],
-  );
-}
-
-class _Tiles extends StatelessWidget {
-  const _Tiles();
-
-  @override
-  Widget build(BuildContext context) {
-    final AppLayout layout = AppLayout.of(context);
-    return Padding(
-      padding: EdgeInsetsDirectional.only(end: layout.isTablet ? 160 : 120),
-      child: Align(
-        alignment: AlignmentDirectional.centerEnd,
-        // The numbers are laid out left to right, as maths always is.
-        child: MathIsolate(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              for (final (int n, AnswerState s) in <(int, AnswerState)>[
-                (4, AnswerState.idle),
-                (3, AnswerState.selected),
-                (2, AnswerState.idle),
-              ]) ...<Widget>[
-                AnswerTile(
-                  semanticLabel: '$n',
-                  state: s,
-                  onPressed: () {},
-                  child: Text('$n', style: kidNumeral(layout)),
-                ),
-                if (n != 2) SizedBox(width: layout.answerGap),
-              ],
-            ],
-          ),
+  Widget _stage(_ActivitySpec s) {
+    const BoardSvg flowers = BoardSvg('assets/art/scenes/flowers.svg', key: Key('activity-stage'));
+    if (!s.stageIsCard) {
+      return Positioned.fromRect(rect: s.stage, child: flowers);
+    }
+    return Positioned.fromRect(
+      rect: s.stage,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: TokenColors.paper,
+          borderRadius: BorderRadius.circular(TokenRadius.xl),
+          boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
         ),
+        child: flowers,
       ),
     );
   }

@@ -130,7 +130,7 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
                               width: 3,
                             ),
                           ),
-                          child: AvatarBadge(avatarId: id, size: 64),
+                          child: AvatarPicture(avatarId: id, size: 64),
                         ),
                       ),
                   ],

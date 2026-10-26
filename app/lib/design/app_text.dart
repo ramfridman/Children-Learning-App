@@ -38,6 +38,22 @@ abstract final class AppText {
     color: color,
   );
 
+  /// A style with the exact numbers of a design board (size in points, line height, weight), for
+  /// the child screens that are laid out in board coordinates. [display] selects Secular One.
+  static TextStyle fixed({
+    required double size,
+    required int weight,
+    double lineHeight = 1.7,
+    bool display = false,
+    Color color = TokenColors.ink,
+  }) => _base(
+    family: display ? TokenFonts.display : TokenFonts.text,
+    weight: weight,
+    size: size,
+    lineHeight: lineHeight,
+    color: color,
+  );
+
   /// A parent-area style (one size everywhere, adult UI, no niqqud).
   static TextStyle parent(ParentTypeToken t, {Color color = TokenColors.ink}) =>
       _base(family: TokenFonts.text, weight: t.weight, size: t.size, lineHeight: t.lineHeight, color: color);

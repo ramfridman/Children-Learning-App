@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 
+import 'board.dart';
 import 'token_types.dart';
 import 'tokens.g.dart';
 
@@ -22,6 +23,10 @@ class AppLayout {
   final Band band;
 
   SizeClass get sizeClass => sizeClassFor(size);
+
+  /// Which design board the window is laid out like (boards 10, 12, 22 and 25).
+  BoardClass get board => boardClassFor(size);
+
   bool get isTablet => sizeClass == SizeClass.tablet;
   bool get isTabletPortrait => isTablet && size.height > size.width;
 

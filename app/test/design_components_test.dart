@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/design/board.dart';
 import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/design/layout.dart';
 import 'package:nitznutz/design/token_types.dart';
-import 'package:nitznutz/design/tokens.g.dart';
 
 import 'support/harness.dart';
 
@@ -119,7 +119,7 @@ void main() {
   });
 
   group('components', () {
-    testWidgets('a pebble button has the size of the band, and a tap area larger than what is drawn', (
+    testWidgets('a pebble button draws a 64 point disc and its tap area is larger than that', (
       WidgetTester tester,
     ) async {
       int taps = 0;
@@ -127,26 +127,27 @@ void main() {
         tester,
         Center(
           child: PebbleButton(
-            key: const Key('p'),
             semanticLabel: 'hint',
-            icon: const Icon(Icons.lightbulb),
             onPressed: () => taps++,
+            child: const Icon(Icons.lightbulb),
           ),
         ),
         band: Band.a,
       );
-      final Rect drawn = tester.getRect(find.byType(PebbleButton));
-      // The widget is the drawn disc plus the hit slop on every side.
-      expect(drawn.width, 64 + 2 * TokenTouch.band[Band.a]!.hitSlop);
-      await tester.tapAt(drawn.topLeft + const Offset(3, 3));
+      final Rect disc = tester.getRect(find.byKey(const Key('pebble-disc')));
+      expect(disc.size, const Size(64, 64));
+      // 8 points outside the drawn disc is still the button (the hit slop is 12).
+      await tester.tapAt(disc.topLeft + const Offset(-8, 32));
       expect(taps, 1);
+      await tester.tapAt(disc.topLeft + const Offset(-20, 32));
+      expect(taps, 1, reason: 'beyond the slop is not the button');
     });
 
     testWidgets('a pebble button without a handler is not tappable and says so', (WidgetTester tester) async {
       await pumpScreen(
         tester,
         const Center(
-          child: PebbleButton(semanticLabel: 'x', icon: Icon(Icons.close)),
+          child: PebbleButton(semanticLabel: 'x', child: Icon(Icons.close)),
         ),
       );
       final SemanticsHandle handle = tester.ensureSemantics();
@@ -170,7 +171,8 @@ void main() {
           ],
         ),
       );
-      expect(<Color>{for (final AnswerState s in AnswerState.values) answerBorderColor(s)}.length, 4);
+      // Idle and selected share the board's pale border; the selected tile is told apart by its outline.
+      expect(<Color>{for (final AnswerState s in AnswerState.values) answerBorderColor(s)}.length, 3);
       expect(find.byIcon(Icons.close), findsNothing);
       expect(find.byIcon(Icons.close_rounded), findsNothing);
       expect(find.byIcon(Icons.check_rounded), findsOneWidget);
@@ -180,15 +182,15 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpScreen(tester, const Center(child: ProgressTrail(total: 6, done: 2)));
-      final Finder sparks = find.byIcon(Icons.auto_awesome);
+      final Finder sparks = find.byType(BoardSvg);
       expect(sparks, findsNWidgets(2));
       final double sparkX = tester.getCenter(sparks.first).dx;
       final double trailMid = tester.getCenter(find.byType(ProgressTrail)).dx;
       expect(sparkX, greaterThan(trailMid));
     });
 
-    testWidgets('the caption pill uses the 1.7 line height of pointed text', (WidgetTester tester) async {
-      await pumpScreen(tester, const Center(child: CaptionPill(text: 'כַּמָּה פְּרָחִים יֵשׁ?')));
+    testWidgets('the bubble uses the 1.7 line height of pointed text', (WidgetTester tester) async {
+      await pumpScreen(tester, const Center(child: BoardBubble(text: 'כַּמָּה פְּרָחִים יֵשׁ?')));
       final Text text = tester.widget<Text>(find.byType(Text));
       expect(text.style!.height, greaterThanOrEqualTo(1.7));
       expect(text.style!.fontFamily, 'Heebo');
