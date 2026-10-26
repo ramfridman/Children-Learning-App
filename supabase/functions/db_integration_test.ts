@@ -465,6 +465,8 @@ Deno.test({
     assert.deepEqual(ctx!.character, { nameHe: "נִיצִי", gender: "f", voiceId: "abcDEF0123456789" });
     assert.equal(await store.tutorContext("ci-tutor", "0.1.0", "nope", "ci-tutor-char"), null);
     assert.equal(await store.tutorContext("ci-tutor", "9.9.9", "t.1", "ci-tutor-char"), null);
+    assert.deepEqual(await store.tutorItemIds("ci-tutor", "0.1.0"), ["t.1"]);
+    assert.deepEqual(await store.tutorItemIds("ci-tutor", "9.9.9"), []);
 
     const key = {
       packId: "ci-tutor",

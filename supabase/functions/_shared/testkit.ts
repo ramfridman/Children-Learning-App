@@ -275,6 +275,14 @@ export class FakeStore implements Store {
     };
     return Promise.resolve(ctx);
   }
+  tutorItemIds(packId: string, packVersion: string) {
+    const p = this.packs.get(packId);
+    return Promise.resolve(
+      p && p.packVersion === packVersion
+        ? p.items.filter((i) => i.llmAllowed).map((i) => i.itemId).sort()
+        : [],
+    );
+  }
   cacheGet(k: CacheKey) {
     this.cacheGets++;
     return Promise.resolve(this.cache.get(this.cacheKey(k)) ?? null);

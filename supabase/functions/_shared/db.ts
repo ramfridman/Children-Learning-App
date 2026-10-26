@@ -330,6 +330,13 @@ export function pgStore(sql: Sql): Store {
       };
     },
 
+    async tutorItemIds(packId, packVersion) {
+      const rows = await sql`
+        select item_id from app.content_item
+         where pack_id = ${packId} and pack_version = ${packVersion} and llm_allowed order by item_id`;
+      return rows.map((r) => r.item_id as string);
+    },
+
     async cacheGet(k): Promise<CachedLine | null> {
       const [r] = await sql`
         select line, caption, next_action, highlight_targets, audio from app.tutor_cache

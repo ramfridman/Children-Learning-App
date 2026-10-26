@@ -108,6 +108,8 @@ export interface Store {
     itemId: string,
     characterId: string,
   ): Promise<TutorContext | null>;
+  /** The ids of the items of a pack version that allow the AI tutor, in a fixed order. */
+  tutorItemIds(packId: string, packVersion: string): Promise<string[]>;
   cacheGet(k: CacheKey): Promise<CachedLine | null>;
   cachePut(k: CacheKey, v: CachedLine): Promise<void>;
   /** One atomic call for every cap; nothing is counted when a limit is already reached. */
