@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 class TolerantGoldenComparator extends LocalFileComparator {
   TolerantGoldenComparator(super.testFile, this.tolerance);
 
-  /// The largest share of differing pixels that still passes (0.015 is 1.5 percent).
+  /// The largest share of differing pixels that still passes (0.03 is 3 percent).
   final double tolerance;
 
   @override

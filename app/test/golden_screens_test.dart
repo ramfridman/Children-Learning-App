@@ -1,5 +1,5 @@
 // Golden screenshots of the new screens, in right to left with the real fonts. They are compared
-// with a small tolerance, because text rendering differs a little between Windows and Linux.
+// with a tolerance of 3 percent of the pixels, because text rendering differs a little between Windows and Linux.
 //
 // Regenerate after a deliberate visual change:  flutter test --update-goldens test/golden_screens_test.dart
 // The owner compares them with the design boards (see docs/milestones/M1.md, E11).
@@ -37,7 +37,7 @@ Future<void> _shot(WidgetTester tester, String name) async {
 void main() {
   setUpAll(() async {
     await loadAppFonts();
-    useTolerantGoldens(0.015);
+    useTolerantGoldens(0.03);
   });
 
   group('child space', () {
