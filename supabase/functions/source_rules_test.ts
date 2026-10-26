@@ -70,6 +70,8 @@ Deno.test("npm packages are imported only by exact version, one version per pack
       seen.set(m[1], (seen.get(m[1]) ?? new Set()).add(m[2]));
     }
   }
-  assert.deepEqual([...seen.keys()].sort(), ["@peculiar/x509", "jose", "postgres", "reflect-metadata"]);
+  // The owner-approved list (docs/milestones/M0.md, section 6). A new name here needs the owner's OK.
+  const approved = ["@noble/curves", "@peculiar/x509", "jose", "postgres", "reflect-metadata"];
+  assert.deepEqual([...seen.keys()].sort(), approved);
   for (const [name, versions] of seen) assert.equal(versions.size, 1, `${name} has more than one version`);
 });
