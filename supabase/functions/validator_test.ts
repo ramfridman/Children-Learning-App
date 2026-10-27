@@ -161,6 +161,9 @@ Deno.test("6. maths stays true: every quantity belongs to the item, apart from i
   // Every idiom counts, not only the last one that matches; "each one" is not a quantity, a bare "one" is.
   assert.ok(check(reply("נוגעים בכל אחד פעם אחת"), item, turn({ hintLevel: 3 })).ok, "each one, once");
   assert.ok(fails(check(reply("בואו נספור אחד"), item, turn({ hintLevel: 3 }))).includes("numbers"));
+  for (const say of ["נוגעים באחד אחרי אחד", "נוגעים בפרפר אחד בכל פעם"]) {
+    assert.ok(check(reply(say), item, turn({ hintLevel: 3 })).ok, say);
+  }
 });
 
 Deno.test("a refused line says which words and how many, and the retry advice names them", () => {

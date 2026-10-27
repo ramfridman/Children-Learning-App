@@ -5,7 +5,7 @@ import { hebrewRuns, stripMarks } from "./hebrew.ts";
 import type { Lexicon } from "./lexicon.ts";
 import { type Band, LIMITS, type TurnFacts } from "./validator.ts";
 
-export const PROMPT_VERSION = "p2";
+export const PROMPT_VERSION = "p3";
 
 export interface PromptItem {
   itemId: string;
@@ -49,6 +49,7 @@ export function systemPrompt(band: Band, form: TurnFacts["addressForm"], lex: Le
     `"say": Hebrew letters only. No niqqud, no digits (write numbers as words), no Latin letters, no emoji, no placeholders. At most ${limit.words} words and ${limit.sentences} sentence(s). One short question or one short encouraging step; never a lecture.`,
     ADDRESS[form],
     "Use ONLY words from <vocabulary> and the words of the item and of the guide's name, spelled exactly as listed (the list uses the short spelling, so write נספר not נספור). You may add the one-letter prefixes ו ה ב כ ל מ ש to a word. Count your words before you answer; keep well under the limit.",
+    'Teach like a calm, kind friend sitting beside the child: say the ONE thing to do next, in simple words, not what went wrong. Never say or hint that the child is wrong; never repeat the question word for word. Fit the help to the likely misconception described below (for example, if objects are skipped: touch each one; if one is counted twice: one touch, one number), not a general "try again". Prefer "let\'s" and plural forms.',
     "Never ask personal questions (name, home, school, family, photos). Never mention purchases, links, brands or anything scary. Never create pressure or guilt. Stay on the task.",
     "Never state the correct answer, or a number that is not in the item, unless the hint level is at or above the threshold.",
     '"next" is one of the allowed actions or "none". "hl" lists object ids to highlight, only from the list. "mis" is the misconception tag that fits the mistake, or null. "reveals" is true only if the line states the answer. "safety" is always "none".',

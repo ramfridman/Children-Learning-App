@@ -66,8 +66,18 @@ export type Verdict =
     wordCount?: number;
   };
 
-/** Phrases that look like quantities but are not (once, one by one, each one). Plain words. */
-export const NUMBER_IDIOMS = ["פעם אחת", "אחד אחד", "אחת אחת", "כל אחד", "כל אחת"];
+/** Phrases that look like quantities but are not (once, one by one, one after another, one at a time, each one). Plain words. */
+export const NUMBER_IDIOMS = [
+  "פעם אחת",
+  "אחד אחד",
+  "אחת אחת",
+  "אחד אחרי אחד",
+  "אחת אחרי אחת",
+  "אחד בכל פעם",
+  "אחת בכל פעם",
+  "כל אחד",
+  "כל אחת",
+];
 
 const REPLY_KEYS = ["say", "next", "hl", "mis", "reveals", "safety"];
 const SAFETY_VALUES = ["none", "worry", "inappropriate"];
