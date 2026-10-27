@@ -160,16 +160,42 @@ on conflict (key) do update set value = excluded.value, updated_at = now();
 
 Until this row exists the server refuses every Android enrolment on purpose.
 
-## 8. The AI tutor (M6): keys, rows, publish, pre-warm
+## 8. The AI tutor (M6): what is done, and what only you can do
 
-Do this only when you are at the PC, have created both keys with their spend limits in the
-consoles (Anthropic: a workspace with a monthly limit; ElevenLabs: a credit limit), and have chosen
-the voice ids (M4 Phase H). Claude never sees a key: each is typed into a hidden prompt.
+**Done by Claude on 2026-10-27 (nothing to repeat):** the database migration `20261026120000_tutor_tables`
+(`npx supabase db push`; on a new project it is part of step 2), and all 11 functions deployed
+(`npx supabase functions deploy --use-api --project-ref ungkvkabqxssggttajfs`), including the new
+`content-publish`, `tutor-turn` and `tutor-prewarm`. They are closed: strangers get 401, and the two
+functions that need the publish secret answer "unavailable" until you do step 4.
 
-1. Send the three secrets (no value is shown or kept; the file is deleted at once):
+**What is still missing, in order.** Do steps 1 to 4 at the PC; steps 5 and 6 Claude can run once you say
+the earlier ones are done. Never paste a key into the chat.
+
+1. **Anthropic key (about 5 minutes).** console.anthropic.com > your workspace for Nitznutz > check that
+   its monthly spend limit is set (your plan says 5 USD) > API keys > create a key named
+   `nitznutz-tutor` in that workspace. Copy it into 1Password as `Nitznutz Anthropic key`. (A screenshot
+   of the limit page is also on your list, P2.)
+2. **ElevenLabs key (about 5 minutes).** elevenlabs.io > your profile > API keys > create a key named
+   `nitznutz-tutor`, allow **only Text to Speech** (and "history" if it is a separate switch: the
+   server deletes each made line afterwards), and set a credit limit on the key. Copy it into
+   1Password as `Nitznutz ElevenLabs key`.
+3. **A voice for the guide (about 30 minutes, the same as M4 Phase H).** The tutor speaks in the guide's
+   own voice, so a character with no voice id cannot have live lines. Start with **one** character, the
+   one your child picked (`hero-son`), and add the others later.
+   1. In ElevenLabs open the voice library, filter for Hebrew, listen, and copy the **voice id** of the
+      one you like (a short code of letters and digits).
+   2. Put it in `content/voices.json` under `"hero-son": { "voiceId": "<the id>" }`.
+   3. Tell Claude which model you want ("Eleven v3", "Multilingual v2", ...): Claude will read the
+      current model list and prices on ElevenLabs' and Anthropic's pages and show you the exact model id
+      and the prices to confirm. Nobody should guess the model id.
+   4. Listen: `$env:ELEVENLABS_API_KEY` is set from a hidden prompt, then
+      `dart run tool/voice_gen.dart audition hero-son "<a short sentence>"` plays one line.
+4. **Send the three secrets** (the keys are typed into hidden prompts; nothing is shown or kept; the
+   temporary file is deleted at once):
 
    ```powershell
-   $dir = "$env:USERPROFILE\nitznutz-secrets"
+   $dir = "$env:USERPROFILE
+itznutz-secrets"
    New-Item -ItemType Directory -Force -Path $dir | Out-Null
    function Ask($name) {
      $s = Read-Host -AsSecureString $name
@@ -186,58 +212,46 @@ the voice ids (M4 Phase H). Claude never sees a key: each is typed into a hidden
      "ANTHROPIC_API_KEY=$(Ask 'Anthropic key')",
      "ELEVENLABS_API_KEY=$(Ask 'ElevenLabs key')",
      "CONTENT_PUBLISH_SECRET=$publish"
-   ) | Set-Content -Path "$dir\tutor.env" -Encoding ascii
-   npx supabase secrets set --env-file "$dir\tutor.env"
+   ) | Set-Content -Path "$dir	utor.env" -Encoding ascii
+   npx supabase secrets set --env-file "$dir	utor.env" --project-ref ungkvkabqxssggttajfs
    Remove-Item -Recurse -Force $dir
    $publish | Set-Clipboard
    ```
 
    The publish secret is now on the clipboard: save it in 1Password as `Nitznutz content publish
-   secret`, then clear the clipboard. Set it for your PowerShell window with
-   `$env:NITZNUTZ_PUBLISH_SECRET = "<paste>"` whenever you run the tools below (never write it in a file).
-
-2. Deploy the functions: `npx supabase functions deploy --use-api`.
-
-3. In the Supabase SQL Editor, set the rows (the model id and prices come from the providers' pages;
-   write what you read there, not a guess):
+   secret`, then copy something else to clear the clipboard. For each PowerShell window in which you (or
+   Claude) run the tools below: `$env:NITZNUTZ_PUBLISH_SECRET = "<paste>"` (never write it in a file).
+5. **Claude: set the rows** in `app.config` (the model id and prices from step 3.3; the daily cap stays
+   0.50 USD): `elevenlabs_model_id`, `tutor_price_micro` (`in_per_mtok`, `out_per_mtok`,
+   `voice_per_1k_chars`, in millionths of a dollar) and, for the test, `tutor_enabled` and
+   `live_voice_enabled`:
 
    ```sql
    insert into app.config (key, value) values
-     ('elevenlabs_model_id', '"<model id from ElevenLabs>"'::jsonb),
+     ('elevenlabs_model_id', '"<model id>"'::jsonb),
      ('tutor_cost_cap_micro', '500000'::jsonb),
-     ('tutor_price_micro', '{"in_per_mtok": <micro-dollars per million input tokens>, "out_per_mtok": <same, output>, "voice_per_1k_chars": <micro-dollars per 1,000 characters>}'::jsonb)
+     ('tutor_price_micro', '{"in_per_mtok": <n>, "out_per_mtok": <n>, "voice_per_1k_chars": <n>}'::jsonb),
+     ('tutor_enabled', 'true'::jsonb),
+     ('live_voice_enabled', 'true'::jsonb)
    on conflict (key) do update set value = excluded.value, updated_at = now();
    ```
-
-   Leave `tutor_enabled` and `live_voice_enabled` off until the lines have been listened to (step 6).
-
-4. Publish the starter pack's item index (from the `app` folder; `--dry-run` first shows only counts):
+6. **Claude: publish, pre-warm, measure** (from the `app` folder, with the secret set as above):
 
    ```powershell
-   cd app
    dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack --dry-run
    dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack
+   dart run tool/tutor_prewarm.dart plan assets/packs/starter-0.2.0.nnpack --characters hero-son
+   dart run tool/tutor_prewarm.dart make assets/packs/starter-0.2.0.nnpack --characters hero-son --confirm-lines <N>
+   dart run tool/tutor_prewarm.dart measure assets/packs/starter-0.2.0.nnpack --characters hero-son --count 10
    ```
 
-5. Pre-warm. `plan` makes nothing; `make` refuses unless you type back the number `plan` printed:
-
-   ```powershell
-   dart run tool/tutor_prewarm.dart plan assets/packs/starter-0.2.0.nnpack --characters nitzi
-   dart run tool/tutor_prewarm.dart make assets/packs/starter-0.2.0.nnpack --characters nitzi --confirm-lines <N>
-   ```
-
-   The tool prints the number of lines, the voice characters and the estimated cost before it
-   starts, and stops at 1.5 times the estimate. Switch the server on for the measurement:
-   `update app.config set value = 'true'::jsonb where key in ('tutor_enabled', 'live_voice_enabled');`
-   (insert the rows if they do not exist yet), then
-   `dart run tool/tutor_prewarm.dart measure assets/packs/starter-0.2.0.nnpack --characters nitzi --count 10`
-   prints the median server time with the model's and the voice's share.
-
-6. Read every made line before a child can meet one. In the SQL Editor:
-   `select item_id, mistake, band, address_form, line from app.tutor_cache order by 1, 2, 3, 4;`
-   (the lines are vocalised Hebrew). Then listen to them on the phone, in device checks
-   section 10, with the **AI helper** switched on in the dev page. Only after both, tell Claude
-   you are happy for the helper to be offered to the parent in M7.
+   `plan` prints the number of lines, the voice characters and the estimated cost, and `make` refuses
+   unless you type that number back (Claude shows it to you first and waits for your OK). `measure`
+   prints the median server time with the model's and the voice's share: the real latency figure.
+7. **You: listen.** Read the made lines in the SQL Editor
+   (`select item_id, mistake, band, address_form, line from app.tutor_cache order by 1, 2, 3, 4;`), then
+   on the phone switch **AI helper in lessons** on in the dev page and make two mistakes in the counting
+   hills (device checks section 10). Only after that is the helper ever offered to a parent (M7).
 
 ## What this does not do
 
