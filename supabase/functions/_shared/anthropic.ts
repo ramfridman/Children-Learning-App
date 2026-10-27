@@ -20,8 +20,19 @@ export interface ModelClient {
 }
 
 export class ModelFailed extends Error {
-  constructor(readonly reason: "timeout" | "status" | "format" | "network") {
+  /** `detail` is only ever the HTTP status and the provider's fixed error word, never any text of the body. */
+  constructor(readonly reason: "timeout" | "status" | "format" | "network", readonly detail?: string) {
     super(reason);
+  }
+}
+
+/** The provider's error type ("not_found_error", ...), kept only when it is a plain lower-case word. */
+async function errorWord(res: Response): Promise<string> {
+  try {
+    const t = (await res.json() as { error?: { type?: unknown } }).error?.type;
+    return typeof t === "string" && /^[a-z_]{3,40}$/.test(t) ? ` ${t}` : "";
+  } catch {
+    return "";
   }
 }
 
@@ -49,8 +60,7 @@ export function anthropicClient(apiKey: string, fetchFn: typeof fetch = fetch): 
         });
         // The body of an error can echo the request: only the status is kept.
         if (!res.ok) {
-          await res.body?.cancel();
-          throw new ModelFailed("status");
+          throw new ModelFailed("status", `HTTP ${res.status}${await errorWord(res)}`);
         }
         const j = await res.json() as {
           content?: Array<{ type: string; text?: string }>;

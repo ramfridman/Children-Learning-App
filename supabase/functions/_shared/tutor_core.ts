@@ -145,6 +145,8 @@ export interface Timings {
   modelMs: number;
   voiceMs: number;
   totalMs: number;
+  /** Why a vendor call failed, as a short fixed phrase (for the owner's speed test only). */
+  detail?: string;
 }
 
 /** One line for one mistake: from the cache, or made now. Never throws for a vendor or a validator failure. */
@@ -292,6 +294,9 @@ export async function makeLine(
     } catch (e) {
       modelMs += performance.now() - t0;
       await addCost(0);
+      if (timings && e instanceof ModelFailed) {
+        timings.detail = `model ${e.reason}${e.detail ? ` ${e.detail}` : ""}`;
+      }
       return await ruleOut(e instanceof ModelFailed && e.reason === "timeout" ? "timeout" : "model_failed", {
         modelMs,
       });
@@ -331,8 +336,11 @@ export async function makeLine(
     requestId = v.requestId;
     // The provider keeps a history by default; ours is deleted at once (a failure here is not the child's concern).
     if (v.historyItemId) void tutor.voice.deleteHistory(v.historyItemId);
-  } catch {
+  } catch (e) {
     await addCost(0);
+    if (timings && e instanceof VoiceFailed) {
+      timings.detail = `voice ${e.reason}${e.detail ? ` ${e.detail}` : ""}`;
+    }
     return await ruleOut("voice_failed", { line: verdict.plain, modelMs, voiceMs: performance.now() - vt0 });
   }
   const voiceMs = performance.now() - vt0;

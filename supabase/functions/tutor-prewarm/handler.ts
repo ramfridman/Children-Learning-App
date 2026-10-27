@@ -123,6 +123,7 @@ export const spec: FunctionSpec = {
             server_ms: Math.round(timings.totalMs),
             model_ms: Math.round(timings.modelMs),
             voice_ms: Math.round(timings.voiceMs),
+            ...timings.detail ? { detail: timings.detail } : {},
           },
         );
       }

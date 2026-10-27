@@ -231,8 +231,8 @@ Future<Measurement> measure(PrewarmSend send, PrewarmRequest r, {int count = 5})
     notes: <String>[
       for (final Map<String, Object?> e in runs)
         if (e['rule'] != null)
-          '${e['rule']} (model ${e['model_ms'] ?? 0} ms, voice ${e['voice_ms'] ?? 0} ms, '
-              'total ${e['server_ms'] ?? 0} ms)',
+          '${e['rule']}${e['detail'] == null ? '' : ' - ${e['detail']}'} '
+              '(model ${e['model_ms'] ?? 0} ms, voice ${e['voice_ms'] ?? 0} ms, total ${e['server_ms'] ?? 0} ms)',
     ],
   );
 }

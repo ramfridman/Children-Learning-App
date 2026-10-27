@@ -54,7 +54,12 @@ class FakeGateway {
             <String, Object?>{'server_ms': 900, 'model_ms': 500, 'voice_ms': 300},
             <String, Object?>{'server_ms': 700, 'model_ms': 400, 'voice_ms': 250},
             <String, Object?>{'server_ms': 1100, 'model_ms': 600, 'voice_ms': 350},
-            <String, Object?>{'rule': 'model_failed', 'server_ms': 3000},
+            <String, Object?>{
+              'rule': 'model_failed',
+              'detail': 'model status HTTP 404 not_found_error',
+              'model_ms': 2100,
+              'server_ms': 2100,
+            },
           ],
           'spent_micro_usd': 4000,
         };
@@ -149,6 +154,7 @@ void main() {
     expect(m.medianVoice, 300);
     expect(m.rules, <String>['model_failed']);
     expect(m.describe(), contains('fell back to the authored line 1 times'));
+    expect(m.describe(), contains('HTTP 404 not_found_error'), reason: 'the reason it gave up is shown');
   });
 
   test(

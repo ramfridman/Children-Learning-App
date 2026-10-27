@@ -23,8 +23,19 @@ export interface VoiceClient {
 }
 
 export class VoiceFailed extends Error {
-  constructor(readonly reason: "timeout" | "status" | "network" | "empty") {
+  /** `detail` is only ever the HTTP status and the provider's fixed status word, never any text of the body. */
+  constructor(readonly reason: "timeout" | "status" | "network" | "empty", readonly detail?: string) {
     super(reason);
+  }
+}
+
+/** The provider's status word ("voice_not_found", ...), kept only when it is a plain lower-case word. */
+async function statusWord(res: Response): Promise<string> {
+  try {
+    const d = (await res.json() as { detail?: { status?: unknown } }).detail?.status;
+    return typeof d === "string" && /^[a-z_]{3,40}$/.test(d) ? ` ${d}` : "";
+  } catch {
+    return "";
   }
 }
 
@@ -44,8 +55,7 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
           },
         );
         if (!res.ok) {
-          await res.body?.cancel();
-          throw new VoiceFailed("status");
+          throw new VoiceFailed("status", `HTTP ${res.status}${await statusWord(res)}`);
         }
         const audio = new Uint8Array(await res.arrayBuffer());
         if (audio.length < 100) throw new VoiceFailed("empty");
