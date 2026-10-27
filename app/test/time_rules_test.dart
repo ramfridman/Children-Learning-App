@@ -1,5 +1,7 @@
 // The parent's time rules: defaults by band, the clamping of damaged values, rest hours that wrap midnight, the weekly
 // schedule, the daily limit, and how a day's play time is counted from sessions.
+import 'package:drift/drift.dart' show Value;
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
@@ -23,6 +25,7 @@ TimeVerdict at(
 }) => judgeTime(now: now, rules: rules, profileId: child, ageBand: band, minutesToday: minutes);
 
 void main() {
+  staleSessions();
   // 2026-10-28 is a Wednesday (weekday 3).
   final DateTime noon = DateTime(2026, 10, 28, 12);
 
@@ -196,5 +199,80 @@ void main() {
         0,
       );
     });
+  });
+}
+
+// A visit left open by a killed app must not count as play until now.
+void staleSessions() {
+  group('stale visits', () {
+    test(
+      'an old open visit is closed at its last answer; a recent open one and a closed one are left alone',
+      () async {
+        final AppDatabase db = AppDatabase(NativeDatabase.memory());
+        addTearDown(db.close);
+        final int old = await db.startSession(
+          'p-1',
+          DateTime.utc(2026, 11, 1, 9),
+          plan: 'lesson:butterflies',
+        );
+        final int noAnswers = await db.startSession(
+          'p-1',
+          DateTime.utc(2026, 11, 1, 12),
+          plan: 'lesson:butterflies',
+        );
+        final int recent = await db.startSession(
+          'p-1',
+          DateTime.utc(2026, 11, 2, 9, 50),
+          plan: 'lesson:butterflies',
+        );
+        final int done = await db.startSession(
+          'p-1',
+          DateTime.utc(2026, 11, 1, 15),
+          plan: 'lesson:butterflies',
+        );
+        await db.endSession(done, DateTime.utc(2026, 11, 1, 15, 4), 'finished');
+        await db.recordAttempt(
+          AttemptsCompanion.insert(
+            at: DateTime.utc(2026, 11, 1, 9, 7),
+            profileId: 'p-1',
+            packId: 'starter',
+            packVersion: '0.2.0',
+            activityId: 'count.butterflies.3',
+            activityRevision: 1,
+            template: 'count_tap',
+            templateVersion: '1.0',
+            skillId: 'NUM-A-03',
+            result: 'correct',
+            attemptNo: 1,
+            hintLevel: 0,
+            sessionId: Value<int?>(old),
+          ),
+        );
+        final int closed = await db.closeStaleSessions(DateTime.utc(2026, 11, 2, 7));
+        expect(closed, 2);
+        final Map<int, Session> by = <int, Session>{
+          for (final Session s in await db.sessionsOf('p-1')) s.id: s,
+        };
+        expect(
+          by[old]!.endedAt!.isAtSameMomentAs(DateTime.utc(2026, 11, 1, 9, 7)),
+          isTrue,
+          reason: 'at its last answer',
+        );
+        expect(by[old]!.endReason, 'home');
+        expect(
+          by[noAnswers]!.endedAt!.isAtSameMomentAs(DateTime.utc(2026, 11, 1, 12)),
+          isTrue,
+          reason: 'no answers: it lasted no time',
+        );
+        expect(by[recent]!.endedAt, isNull, reason: 'too recent: it may still be running');
+        expect(by[done]!.endReason, 'finished');
+        expect(by[done]!.endedAt!.isAtSameMomentAs(DateTime.utc(2026, 11, 1, 15, 4)), isTrue);
+        expect(
+          playedMinutesToday(by.values.toList(), DateTime.utc(2026, 11, 1, 20)),
+          7 + 0 + 4,
+          reason: 'the days of play add up to what really happened',
+        );
+      },
+    );
   });
 }

@@ -104,7 +104,21 @@ class _SyncScopeState extends ConsumerState<SyncScope> with WidgetsBindingObserv
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    unawaited(ref.read(syncRunnerProvider).now(force: true));
+    // A visit left open by a killed app must not count as play until now: close the old ones first, then sync.
+    unawaited(
+      ref
+          .read(databaseProvider.future)
+          .then(
+            (AppDatabase db) => db.closeStaleSessions(
+              DateTime.fromMillisecondsSinceEpoch(
+                ref.read(clockProvider).nowMs(),
+                isUtc: true,
+              ).subtract(const Duration(hours: 3)),
+            ),
+          )
+          .catchError((Object _) => 0)
+          .then((_) => ref.read(syncRunnerProvider).now(force: true)),
+    );
     _every = Timer.periodic(
       const Duration(minutes: 5),
       (Timer _) => unawaited(ref.read(syncRunnerProvider).now()),

@@ -315,6 +315,28 @@ class AppDatabase extends _$AppDatabase {
     );
   }
 
+  /// Visits that were never closed (the app was killed or the phone died) and are older than [olderThan] are closed at
+  /// their last answer, or at their start if there was none, as "home". Without this an old visit would count as playing
+  /// until now. Returns how many were closed.
+  Future<int> closeStaleSessions(DateTime olderThan) => transaction(() async {
+    final List<Session> open = await (select(
+      sessions,
+    )..where(($SessionsTable t) => t.endedAt.isNull() & t.startedAt.isSmallerThanValue(olderThan))).get();
+    for (final Session s in open) {
+      final Attempt? last =
+          await (select(attempts)
+                ..where(($AttemptsTable t) => t.sessionId.equals(s.id))
+                ..orderBy(<OrderClauseGenerator<$AttemptsTable>>[(t) => OrderingTerm.desc(t.at)])
+                ..limit(1))
+              .getSingleOrNull();
+      final DateTime end = last != null && last.at.isAfter(s.startedAt) ? last.at : s.startedAt;
+      await (update(sessions)..where(($SessionsTable t) => t.id.equals(s.id))).write(
+        SessionsCompanion(endedAt: Value<DateTime?>(end), endReason: const Value<String>('home')),
+      );
+    }
+    return open.length;
+  });
+
   /// Everything this device holds about a child: the profile, answers, visits, listens and alerts.
   Future<void> deleteChildData(String profileId) => transaction(() async {
     await (delete(attempts)..where(($AttemptsTable t) => t.profileId.equals(profileId))).go();
