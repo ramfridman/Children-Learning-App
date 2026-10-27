@@ -16,7 +16,7 @@ Nothing here is needed to use the parent area, sync or alerts: alerts already wa
    - `C:\Users\ramfr\nitznutz-secrets\backup-age-key.txt` (**the only key that opens a backup**; keep a second copy offline).
 2. The two `google-services` files are also copied into the repository folders `app\android\app\src\dev\` and `src\prod\`. Git ignores them; leave them there.
 
-## 2. Give GitHub the backup login (the one thing I may not do for you)
+## 2. Give GitHub the backup login (done 2026-10-27)
 
 A GitHub secret is stored by you. In PowerShell, from the repository root:
 
