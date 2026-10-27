@@ -13,8 +13,8 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M3 Learning engine | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M3.md` section 11). The simulator names the planted gap within 3 probes in 96.2% of 1,000 invented children (history on 80% of skills; 91.0% at 50%, 51.3% at none). On-phone checks (section 7 of the device checks) come later. |
 | M4 Characters and voice out | **Done and merged to `main` on 2026-10-27** (CI green, all six jobs; report in `docs/milestones/M4.md` section 11). Phone-tested by the owner: nine friends on Friends' Beach, a tone per friend with the mouth moving, the companion on the map and in lessons, the celebration. The voices are free test tones; real ElevenLabs voices (Phase H, to-do P3) are still to do. |
 | M5 Voice in | **Done and merged to `main` on 2026-10-27** (CI green, all six jobs; report in `docs/milestones/M5.md` section 11). Phone-tested by the owner: the parent switch, answering by word and number, the "I heard… right?" check, the repair steps and the commands. **Accuracy is still not measured**: adult recordings (to-do P4) next, children's later (stays open, as agreed). |
-| M6 Gateway and AI tutor | **Built on branch `m6-gateway-tutor` (stacked on the unmerged M5), proved with fakes; the live proof (Phase F) has not run** (report in `docs/milestones/M6.md` section 11). Tables, `content-publish`, the lexicon (417 words, unreviewed), the ten checks (451 scenarios: all bad replies refused for their rule, 0 of 170 good ones refused), `tutor-turn`, `tutor-prewarm`, and the app side (prefetch, cache, circuit breaker, 3-second plan, live voice) work. **Speed is not measured**; needs his keys, model id and voice ids (to-do P7) (Q9, the 0.50 USD daily cap, is settled). |
-| M7 Parent area | **Plan written (`docs/milestones/M7.md`), waiting for the owner's answers to Q1 to Q9 and his OK; no code yet.** |
+| M6 Gateway and AI tutor | **Merged into `main` on 2026-10-27** after the owner's confirmation and all six CI jobs green. Real Haiku 5.5 and ElevenLabs run through the gateway; device checks A to D passed on the phone (check E, Band A caption, is still to confirm); cache-hit round trip 0.6 s median; 66 reviewed hero-son lines voiced (review-and-voice flow); lexicon 570 words, teaching moves, all awaiting the Hebrew editor. Report: `docs/milestones/M6.md` section 11. |
+| M7 Parent area | **Plan accepted by the owner on 2026-10-27 (Q1 to Q9 as recommended; Q9: nicknames sync).** Next: part 7a on a new branch `m7a-parent-controls` (see `docs/milestones/M7.md`). No code yet. |
 | M8–M9 | Not started |
 
 ## Done
@@ -53,7 +53,7 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 - **Probe items:** the engine's gap search needs open probe items (give, drag, trace) for every skill that can be a gap; the starter pack has none. An authoring rule for M9; in the simulator, three-option probes alone make a search too long for a Band A session.
 - **FSRS weights** were written from memory of the FSRS 4.5 defaults and not checked against the reference; refit on real data.
 
-- **M6 live phase, in progress (2026-10-27):** real Haiku 5.5 and ElevenLabs calls work; hero-son pre-warmed (94 of 99 lines, 0.29 USD; 5 refused for vocabulary). Server time for a fresh line 2 to 3 s. Device checks A to D passed on the phone; cache-hit round trip median 625 ms. Reviewed-line flow built; 66 reviewed lines for hero-son voiced (0.18 USD). Still to do: owner listens on the phone, check E (Band A), cells without a reviewed line (33) use the authored line, Hebrew editor review (lexicon, prefix vocalisation nits), M6 merge needs his confirmation. The lexicon is small and unreviewed; the helper is off by default.
+- **M6 live phase (2026-10-27, merged):** real Haiku 5.5 and ElevenLabs calls work; hero-son pre-warmed (94 of 99 lines, 0.29 USD; 5 refused for vocabulary). Server time for a fresh line 2 to 3 s. Device checks A to D passed on the phone; cache-hit round trip median 625 ms. Reviewed-line flow built; 66 reviewed lines for hero-son voiced (0.18 USD). Still to do: owner listens on the phone, check E (Band A), cells without a reviewed line (33) use the authored line, Hebrew editor review (lexicon, prefix vocalisation nits), M6 merge needs his confirmation. The lexicon is small and unreviewed; the helper is off by default.
 - **Signing key backup:** `pack-signing.key` exists only on this PC. The owner is away from it; he will save it in 1Password when he is next at the PC. Do not delete it. If the PC were lost before then, a new key means rebuilding the starter pack and shipping an app with the new public key.
 - **M2 on-phone check** (play the lesson; damaged packs refused) waits for the Samsung to be plugged in; same sitting as the M1 on-phone checks.
 - Packs are proven again when loaded, which reads the whole pack into memory; fine for the 37 KB starter, to be made lazy when packs hold recordings (M4).
@@ -72,7 +72,7 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 The full checklist is `docs/owner-todo.md`. In short:
 
-- **M6:** at the PC, the live phase (to-do P7: keys, model id, prices, pre-warm, listening).
+- **M6:** done. Open from it: check E on the phone, Hebrew editor review of the lexicon and the reviewed lines, fix the prefix vocalisation nits, the 33 cells without a reviewed line (authored lines used).
 - **M4 and M5:** the phone checks passed on 2026-10-27; waiting for his explicit "confirmed" to merge. The adult recordings (P4) and real voices (P3) remain.
 - Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1, M2 and M3; Hebrew review; confirm M3 after the report.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
@@ -82,4 +82,4 @@ The full checklist is `docs/owner-todo.md`. In short:
 
 ## Next step
 
-Claude: when M6 CI is green, tell the owner what is built and what only he can do (P7, Q9, M4/M5 confirmation). Do not merge anything without his confirmation. M7 builds on M5's voice switch and on M6; do not start it before the owner has confirmed the M5 and M6 reports.
+Claude: M6 is merged. Start M7 part 7a (`docs/milestones/M7.md`) on a new branch. Do not merge anything without the owner's confirmation. Before 7b, ask him for the Firebase project and the `age` key (M7 section 8).
