@@ -61,3 +61,9 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+// Push to a parent's phone needs the Firebase client file of the build (kept out of Git: it holds a Google API key). It is
+// put in src/dev/ and src/prod/ by hand. Without one the app still builds and runs, and push is simply not offered.
+if (file("src/dev/google-services.json").exists() || file("src/prod/google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}

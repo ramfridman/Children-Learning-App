@@ -18,6 +18,9 @@ abstract interface class PlatformService {
   Future<void> setSecure({required bool secure});
 
   Future<MonotonicReading> monotonic();
+
+  /// True once for each tap on a push notification that started the app or brought it forward.
+  Future<bool> takeNotificationTap();
 }
 
 class AndroidPlatformService implements PlatformService {
@@ -39,6 +42,15 @@ class AndroidPlatformService implements PlatformService {
       await _channel.invokeMethod<void>('setSecure', <String, Object?>{'secure': secure});
     } on MissingPluginException {
       // Tests and platforms without the channel: nothing to block.
+    }
+  }
+
+  @override
+  Future<bool> takeNotificationTap() async {
+    try {
+      return (await _channel.invokeMethod<bool>('takeNotificationTap')) ?? false;
+    } on MissingPluginException {
+      return false;
     }
   }
 

@@ -14,6 +14,7 @@ import io.flutter.plugin.common.MethodChannel
  *    anyway; this is a second layer).
  *  - `elapsedRealtime` and `bootCount`: a clock that setting the date cannot move, so a PIN
  *    lock-out cannot be shortened by changing the time.
+ *  - `takeNotificationTap`: true once for each tap on a push notification that started or brought forward the app.
  *  - `setSecure`: while true, the window cannot be screenshotted or shown in the recent-apps
  *    preview. Used on every parent screen.
  */
@@ -30,6 +31,7 @@ class PlatformChannel(private val activity: Activity) : MethodChannel.MethodCall
             "bootCount" -> result.success(
                 Settings.Global.getInt(activity.contentResolver, Settings.Global.BOOT_COUNT, 0),
             )
+            "takeNotificationTap" -> result.success(PushTap.take())
             "setSecure" -> {
                 val secure = call.argument<Boolean>("secure") == true
                 activity.runOnUiThread {

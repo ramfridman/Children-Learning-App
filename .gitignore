@@ -62,3 +62,6 @@ Thumbs.db
 
 # Golden comparison output
 app/test/failures/
+
+# ---- Firebase client files: hold a Google API key, kept in 1Password and copied in by hand ----
+app/android/app/src/*/google-services.json

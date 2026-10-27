@@ -113,6 +113,7 @@ class LessonController extends ChangeNotifier {
     this.sessionId,
     this.tutor,
     this.tutorContext,
+    this.timeIsUp,
     Clock clock = const SystemClock(),
   }) : items = content.itemsOf(lesson),
        _record = record,
@@ -136,6 +137,13 @@ class LessonController extends ChangeNotifier {
 
   int index = 0;
   bool finished = false;
+
+  /// Asked between two activities: is it time to rest (the parent's rules, with the lock on)? Then the lesson ends
+  /// there, gently, and is not counted as finished.
+  final bool Function()? timeIsUp;
+
+  /// The lesson ended because it was time to rest, not because the child reached the end.
+  bool endedForRest = false;
 
   /// Which try this is for the current activity, from 1.
   int attemptNo = 1;
@@ -431,6 +439,14 @@ class LessonController extends ChangeNotifier {
       finished = true;
       feedback = FeedbackKind.none;
       _say(lesson.celebration);
+      notifyListeners();
+      return;
+    }
+    if (timeIsUp?.call() ?? false) {
+      endedForRest = true;
+      finished = true;
+      feedback = FeedbackKind.none;
+      _say(Spoken(vo: 'vo:core.rest.goodbye', caption: He.restGoodbye.text));
       notifyListeners();
       return;
     }

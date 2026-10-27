@@ -32,10 +32,20 @@ class FakePlatform implements PlatformService {
   bool secure = false;
   final List<bool> secureCalls = <bool>[];
 
+  /// Set to true to make the next [takeNotificationTap] say the app was opened from a notification.
+  bool notificationTap = false;
+
   void advance(Duration d) => elapsedMs += d.inMilliseconds;
 
   @override
   Future<MonotonicReading> monotonic() async => MonotonicReading(elapsedMs: elapsedMs, bootId: bootId);
+
+  @override
+  Future<bool> takeNotificationTap() async {
+    final bool was = notificationTap;
+    notificationTap = false;
+    return was;
+  }
 
   @override
   Future<String> noBackupDir() async => 'unused';

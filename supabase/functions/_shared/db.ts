@@ -6,7 +6,20 @@ import postgres from "npm:postgres@3.4.9";
 import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
 import { compareSemver } from "./semver.ts";
-import type { CachedLine, DeviceSummary, RevokeReason, Store, TakeResult, TutorContext } from "./store.ts";
+import type {
+  AlertIn,
+  AlertOut,
+  CachedLine,
+  ChildProfile,
+  DeviceSummary,
+  EventIn,
+  EventOut,
+  RevokeReason,
+  Store,
+  TakeResult,
+  TutorContext,
+  TutorLogEntry,
+} from "./store.ts";
 
 const bytes = (v: unknown): Bytes => new Uint8Array(v as ArrayLike<number>) as Bytes;
 const buf = (b: Uint8Array) => Buffer.from(b);
@@ -393,6 +406,190 @@ export function pgStore(sql: Sql): Store {
           array(select jsonb_array_elements_text(${JSON.stringify(r.validatorFailures)}::text::jsonb)),
           ${r.promptVersion}, ${Math.round(r.totalMs)}, ${r.modelMs === null ? null : Math.round(r.modelMs)},
           ${r.voiceMs === null ? null : Math.round(r.voiceMs)}, ${r.elevenRequestId})`;
+    },
+
+    async upsertChild(familyId, c) {
+      const [gone] =
+        await sql`select 1 from app.deleted_child where family_id = ${familyId} and child_id = ${c.id}`;
+      if (gone) return "deleted";
+      await sql`
+        insert into app.child_profile (family_id, id, nickname, avatar_id, companion_id, address_form, age_band)
+        values (${familyId}, ${c.id}, ${c.nickname}, ${c.avatarId}, ${c.companionId}, ${c.addressForm}, ${c.ageBand})
+        on conflict (family_id, id) do update set nickname = excluded.nickname, avatar_id = excluded.avatar_id,
+          companion_id = excluded.companion_id, address_form = excluded.address_form, age_band = excluded.age_band,
+          updated_at = now()`;
+      return "saved";
+    },
+
+    async listChildren(familyId) {
+      const rows = await sql`
+        select id, nickname, avatar_id, companion_id, address_form, age_band
+          from app.child_profile where family_id = ${familyId} order by created_at, id`;
+      return rows.map((r): ChildProfile => ({
+        id: r.id,
+        nickname: r.nickname,
+        avatarId: r.avatar_id,
+        companionId: r.companion_id,
+        addressForm: r.address_form,
+        ageBand: r.age_band,
+      }));
+    },
+
+    async listTombstones(familyId) {
+      const rows =
+        await sql`select child_id from app.deleted_child where family_id = ${familyId} order by deleted_at`;
+      return rows.map((r) => r.child_id as string);
+    },
+
+    async deleteChild(familyId, childId) {
+      await sql`select app.delete_child(${familyId}, ${childId})`;
+    },
+
+    async insertEvents(familyId, deviceId, events: readonly EventIn[]) {
+      if (events.length === 0) return { accepted: 0, duplicates: 0, refused: [] };
+      const ids = [...new Set(events.map((e) => e.childId))];
+      const known =
+        await sql`select id from app.child_profile where family_id = ${familyId} and id = any(${ids})`;
+      const have = new Set(known.map((r) => r.id as string));
+      let accepted = 0;
+      let duplicates = 0;
+      const refused: string[] = [];
+      await sql.begin(async (tx) => {
+        for (const e of events) {
+          if (!have.has(e.childId)) {
+            refused.push(e.id);
+            continue;
+          }
+          const rows = await tx`
+            insert into app.event (id, family_id, child_id, device_id, client_at, engine_version, type, payload)
+            values (${e.id}, ${familyId}, ${e.childId}, ${deviceId}, ${new Date(
+            e.clientAtMs,
+          )}, ${e.engineVersion},
+              ${e.type}, ${JSON.stringify(e.payload)}::text::jsonb)
+            on conflict (family_id, id) do nothing
+            returning seq`;
+          if (rows.length === 1) accepted++;
+          else duplicates++;
+        }
+      });
+      return { accepted, duplicates, refused };
+    },
+
+    async pullEvents(familyId, after, limit) {
+      const rows = await sql`
+        select seq, id, child_id, device_id, client_at, engine_version, type, payload
+          from app.event where family_id = ${familyId} and seq > ${after}
+         order by seq limit ${limit + 1}`;
+      const more = rows.length > limit;
+      return {
+        more,
+        events: rows.slice(0, limit).map((r): EventOut => ({
+          seq: Number(r.seq),
+          id: r.id,
+          childId: r.child_id,
+          deviceId: r.device_id,
+          clientAtMs: (r.client_at as Date).getTime(),
+          engineVersion: r.engine_version,
+          type: r.type,
+          payload: r.payload as Record<string, unknown>,
+        })),
+      };
+    },
+
+    async insertAlert(familyId, deviceId, a: AlertIn) {
+      if (a.childId !== null) {
+        const [have] =
+          await sql`select 1 from app.child_profile where family_id = ${familyId} and id = ${a.childId}`;
+        if (!have) return "refused";
+      }
+      const rows = await sql`
+        insert into app.alert (family_id, child_id, device_id, category, severity, count, detail, words, dedupe_key,
+          client_at)
+        values (${familyId}, ${a.childId}, ${deviceId}, ${a.category}, ${a.severity}, ${a.count}, ${a.detail},
+          ${a.words}, ${a.key}, ${new Date(a.clientAtMs)})
+        on conflict (family_id, dedupe_key) do nothing
+        returning id`;
+      return rows.length === 1 ? "new" : "duplicate";
+    },
+
+    async listAlerts(familyId, sinceMs) {
+      const rows = await sql`
+        select id, child_id, device_id, category, severity, count, detail, words, dedupe_key, client_at, read_at
+          from app.alert where family_id = ${familyId} and client_at >= ${new Date(sinceMs)}
+         order by client_at desc, id limit 200`;
+      return rows.map((r): AlertOut => ({
+        id: r.id,
+        childId: r.child_id,
+        deviceId: r.device_id,
+        category: r.category,
+        severity: r.severity,
+        count: r.count,
+        detail: r.detail,
+        words: r.words,
+        key: r.dedupe_key,
+        clientAtMs: (r.client_at as Date).getTime(),
+        readAtMs: r.read_at ? (r.read_at as Date).getTime() : null,
+      }));
+    },
+
+    async markAlertsRead(familyId, nowMs) {
+      const rows = await sql`
+        update app.alert set read_at = ${new Date(nowMs)}
+         where family_id = ${familyId} and read_at is null returning id`;
+      return rows.length;
+    },
+
+    async upsertPushToken(familyId, deviceId, token, platform) {
+      await sql`
+        insert into app.push_token (device_id, family_id, token, platform)
+        values (${deviceId}, ${familyId}, ${token}, ${platform})
+        on conflict (device_id) do update set token = excluded.token, platform = excluded.platform,
+          family_id = excluded.family_id, updated_at = now()`;
+    },
+
+    async removePushToken(deviceId) {
+      await sql`delete from app.push_token where device_id = ${deviceId}`;
+    },
+
+    async pushTokens(familyId) {
+      const rows =
+        await sql`select device_id, token, platform from app.push_token where family_id = ${familyId}`;
+      return rows.map((r) => ({
+        deviceId: r.device_id as string,
+        token: r.token as string,
+        platform: r.platform,
+      }));
+    },
+
+    async getSettings(familyId) {
+      const [r] = await sql`select rules, version from app.family_settings where family_id = ${familyId}`;
+      return r ? { rules: r.rules as Record<string, unknown>, version: Number(r.version) } : null;
+    },
+
+    async putSettings(familyId, rules) {
+      const [r] = await sql`
+        insert into app.family_settings (family_id, rules)
+        values (${familyId}, ${JSON.stringify(rules)}::text::jsonb)
+        on conflict (family_id) do update set rules = excluded.rules, version = app.family_settings.version + 1,
+          updated_at = now()
+        returning version`;
+      return Number(r.version);
+    },
+
+    async tutorLogOf(familyId, sinceMs, limit) {
+      const rows = await sql`
+        select created_at, child_ref, item_id, character_id, source, outcome, line
+          from app.tutor_log where family_id = ${familyId} and created_at >= ${new Date(sinceMs)}
+         order by created_at desc limit ${limit}`;
+      return rows.map((r): TutorLogEntry => ({
+        atMs: (r.created_at as Date).getTime(),
+        childRef: r.child_ref,
+        itemId: r.item_id,
+        characterId: r.character_id,
+        source: r.source,
+        outcome: r.outcome,
+        line: r.line,
+      }));
     },
   };
 }

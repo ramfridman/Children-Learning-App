@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
 import '../child/calm_loading.dart';
+import '../child/rest_scene.dart';
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
 import '../characters/character.dart';
@@ -19,6 +20,10 @@ import '../play/lesson_screen.dart';
 import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
 import 'companion.dart';
+import '../parent/time_rules.dart';
+import 'rules_providers.dart';
+import 'push_providers.dart';
+import 'sync_providers.dart';
 import 'state.dart';
 import 'tutor_providers.dart';
 
@@ -37,10 +42,15 @@ class NitznutzApp extends ConsumerWidget {
       locale: const Locale('he'),
       supportedLocales: const <Locale>[Locale('he')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      navigatorKey: ref.watch(navigatorKeyProvider),
       theme: AppTheme.child(),
-      builder: (BuildContext context, Widget? child) => LayoutScope(
-        band: active == null ? Band.b : Band.values[active.ageBand],
-        child: _OrientationLock(child: child!),
+      builder: (BuildContext context, Widget? child) => SyncScope(
+        child: PushScope(
+          child: LayoutScope(
+            band: active == null ? Band.b : Band.values[active.ageBand],
+            child: _OrientationLock(child: child!),
+          ),
+        ),
       ),
       home: const _Root(),
     );
@@ -80,6 +90,11 @@ class _Root extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // A start from a push notification goes straight to the gate: until that is known, and while the gate opens, show a
+    // loading screen, never the child picker.
+    final TapState tap = ref.watch(notificationTapProvider);
+    if (tap == TapState.checking) return const ColoredBox(color: TokenColors.cream);
+    if (tap == TapState.pending) return const _OpeningParentArea();
     final AsyncValue<AppState> state = ref.watch(appStateProvider);
     return state.when(
       loading: () => const ColoredBox(color: TokenColors.cream),
@@ -110,6 +125,17 @@ class _Root extends ConsumerWidget {
   }
 }
 
+/// Shown for the moment between a tap on a notification and the parent gate.
+class _OpeningParentArea extends StatelessWidget {
+  const _OpeningParentArea();
+
+  @override
+  Widget build(BuildContext context) => const ColoredBox(
+    color: TokenColors.parentBg,
+    child: Center(child: CircularProgressIndicator(key: Key('opening-parent-area'))),
+  );
+}
+
 /// The home map of the playing child, with the companion on it. After the first lesson the child is taken to
 /// Friends' Beach once, to choose a companion; the plus button next to the companion goes there any time.
 class _Home extends ConsumerStatefulWidget {
@@ -130,6 +156,17 @@ class _HomeState extends ConsumerState<_Home> {
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (BuildContext c) => const FriendsBeach()));
 
   Future<void> _openLesson() async {
+    // Time is up (rest hours, the schedule or the daily limit, with the lock on): a calm scene instead of the lesson.
+    final ({String id, int band}) child = (id: widget.profile.id, band: widget.profile.ageBand);
+    ref.invalidate(timeVerdictProvider(child));
+    final TimeVerdict verdict = await ref.read(timeVerdictProvider(child).future);
+    if (!mounted) return;
+    if (verdict.locked) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (BuildContext c) => RestScene(onBack: () => Navigator.of(c).pop())),
+      );
+      return;
+    }
     final bool? finished = await Navigator.of(
       context,
     ).push(MaterialPageRoute<bool>(builder: (BuildContext c) => LessonScreen(profileId: widget.profile.id)));

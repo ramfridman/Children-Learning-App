@@ -124,6 +124,16 @@ class Attempts extends Table {
 
   /// How the answer was given: `tap`, or `voice` (a spoken answer that was clear, or that the child confirmed).
   TextColumn get input => text().withDefault(const Constant<String>('tap'))();
+
+  /// Sync (M7b). An answer made here is sent once: [syncedAt] says when. An answer that came from another device
+  /// carries that device's event id in [eventId] (so it is never added twice) and is never sent back.
+  TextColumn get eventId => text().nullable()();
+
+  DateTimeColumn get syncedAt => dateTime().nullable()();
+
+  /// For an answer from another device: which visit of that device it belongs to (`deviceId:number`), until the visit's
+  /// own event has arrived and [sessionId] can be set.
+  TextColumn get remoteSession => text().nullable()();
 }
 
 /// One visit: a lesson or a session the engine planned. It holds no names and no text.
@@ -141,6 +151,14 @@ class Sessions extends Table {
 
   /// A fixed word: `finished`, `home` (the child left), `limit` (the parent's time was up) or empty while it runs.
   TextColumn get endReason => text().withDefault(const Constant<String>(''))();
+
+  /// Sync (M7b): when the visit was sent (only once it has ended), or the id of the event it came from, and for a visit
+  /// from another device its name there (`deviceId:number`).
+  TextColumn get eventId => text().nullable()();
+
+  DateTimeColumn get syncedAt => dateTime().nullable()();
+
+  TextColumn get remoteKey => text().nullable()();
 }
 
 /// One time the child tapped the mic, and how it went, as a fixed word. It holds no audio, no words and no text:
@@ -157,4 +175,37 @@ class VoiceListens extends Table {
 
   /// `accepted`, `confirmed`, `declined`, `unclear`, `silent`, `intent` or `failed`.
   TextColumn get outcome => text()();
+}
+
+/// What the parent is told about (M7): a category, a severity, a number and fixed words. The child's own words are in
+/// [words] only while "keep the words" is on (default on, never longer than 30 days); otherwise it is empty.
+class Alerts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  DateTimeColumn get at => dateTime()();
+
+  /// The child the alert is about, or null for one that concerns the device (someone at the parent gate).
+  TextColumn get profileId => text().nullable()();
+
+  /// An `AlertCategory` name and an `AlertSeverity` name.
+  TextColumn get category => text()();
+
+  TextColumn get severity => text()();
+
+  /// Minutes, attempts or days, depending on the category.
+  IntColumn get count => integer().withDefault(const Constant<int>(0))();
+
+  /// Fixed words only (an activity id).
+  TextColumn get detail => text().withDefault(const Constant<String>(''))();
+
+  /// The words the recogniser heard, kept only when the parent allows it.
+  TextColumn get words => text().withDefault(const Constant<String>(''))();
+
+  /// What makes this alert the same alert next time (one a day, one a session, one an event), so a scan never repeats it.
+  TextColumn get dedupeKey => text().unique()();
+
+  DateTimeColumn get readAt => dateTime().nullable()();
+
+  /// When the alert was sent to the family's other devices (an alert from another device is never sent back).
+  DateTimeColumn get syncedAt => dateTime().nullable()();
 }

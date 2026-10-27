@@ -35,6 +35,12 @@ abstract final class He {
   static const Str friendsTitle = Str('מִי יִהְיֶה הֶחָבֵר שֶׁלִּי?', nikud: true);
   static const Str friendChosenSemantics = Str('החבר שנבחר');
   static const Str homeParents = Str('הורים');
+  static const Str restScene = Str('עַכְשָׁו נָחִים קְצָת. נִפָּגֵשׁ שׁוּב אַחַר כָּךְ!', nikud: true);
+  static const Str restBackSemantics = Str('חזרה');
+  static const Str restGoodbye = Str(
+    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.',
+    nikud: true,
+  );
   static const Str homeDaily = Str('הַהַרְפַּתְקָה שֶׁל הַיּוֹם', nikud: true);
   static const Str homeBubble = Str('{child}, הַבַּקְבּוּק הִגִּיעַ!', nikud: true);
   static const Str landColors = Str('מִפְרַץ הַצְּבָעִים', nikud: true);
@@ -138,6 +144,140 @@ abstract final class He {
   static const Str areaConfirmRemove = Str('להסיר את הפרופיל של {child}? כל ההתקדמות במכשיר הזה תימחק.');
   static const Str areaChangePin = Str('שינוי קוד הורים');
   static const Str areaLockNow = Str('נעילה וחזרה למשחק');
+  static const Str areaTimeOpen = Str('זמן משחק ושעות מנוחה');
+
+  // ---- parent area: what the helper said (M7b) ----
+  static const Str tutorLogOpen = Str('מה העוזר אמר');
+  static const Str tutorLogTitle = Str('מה העוזר אמר ב-30 הימים האחרונים');
+  static const Str tutorLogHelp = Str(
+    'כל משפט נבדק לפני שהילד שמע אותו. משפט שלא עבר את הבדיקות לא נשמע, ובמקומו נשמעה ההודעה הרגילה.',
+  );
+  static const Str tutorLogEmpty = Str('עוד לא נשמעו משפטים של העוזר.');
+  static const Str tutorLogOffline = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
+  static const Str tutorLogSpoken = Str('נשמע');
+  static const Str tutorLogRule = Str('נשמעה ההודעה הרגילה');
+
+  // ---- parent area: alerts (M7a) ----
+  static const Str alertsTitle = Str('התראות');
+  static const Str alertsOpen = Str('התראות');
+  static const Str alertsOpenUnread = Str('התראות ({n} חדשות)');
+  static const Str alertsNone = Str('אין התראות. כשיהיה משהו שכדאי לדעת עליו, הוא יופיע כאן.');
+  static const Str alertsKeepWords = Str('לשמור בהתראה את המילים שנאמרו');
+  static const Str alertsKeepWordsHelp = Str(
+    'כשמופעל, המילים שנאמרו נשמרות עם ההתראה עד 30 יום. כשכבוי, נשמרת רק הקטגוריה.',
+  );
+  static const Str alertsNever = Str('ההתראות לא מוצגות בצד של הילדים, והאפליקציה אף פעם לא מוכיחה אותם.');
+  static const Str severityInfo = Str('לידיעה');
+  static const Str severityAttention = Str('לתשומת לב');
+  static const Str severityImportant = Str('חשוב');
+  static const Str alertAbout = Str('{child}: {title}');
+  static const Str alertWords = Str('נאמר: {w}');
+  static const Str alertPastLimitTitle = Str('שיחקו מעבר לזמן שנקבע');
+  static const Str alertPastLimitDetail = Str('ב-{n} דקות יותר מהמותר.');
+  static const Str alertPastLimitDo = Str('אפשר לשנות את הגבלת הזמן, או לדבר על סיום משחק.');
+  static const Str alertRestTitle = Str('שיחקו בשעות המנוחה');
+  static const Str alertRestDetail = Str('כ-{n} דקות.');
+  static const Str alertRestDo = Str('אפשר להפעיל נעילה בשעות המנוחה או לשנות את השעות.');
+  static const Str alertGateTitle = Str('ניסיון להיכנס לאזור ההורים');
+  static const Str alertGateDetail = Str('נכשלו {n} ניסיונות ברצף.');
+  static const Str alertGateDo = Str('אם עוד אין קוד הורים, כדאי לקבוע אחד.');
+  static const Str alertGuessTitle = Str('נראה שיש ניחושים מהירים');
+  static const Str alertGuessDo = Str('כדאי לשחק יחד כמה דקות ולעבור לפעילות רגועה.');
+  static const Str alertUpsetTitle = Str('נראה שיש תסכול במשחק');
+  static const Str alertUpsetDo = Str('אפשר לנסות פעילות רגועה בבית, או לשחק יחד.');
+  static const Str alertSwearTitle = Str('נאמרו מילים לא הולמות');
+  static const Str alertSwearDo = Str('אפשר לשוחח על כך בנחת. ההתראה לא מוצגת בצד של הילדים.');
+  static const Str alertDisclosureTitle = Str('נאמר משהו שעשוי להדאיג');
+  static const Str alertDisclosureDo = Str('כדאי לשוחח בנחת ובפרטיות, בלי ללחוץ.');
+  static const Str alertAbsenceTitle = Str('לא שיחקו זמן מה');
+  static const Str alertAbsenceDetail = Str('לפני {n} ימים.');
+  static const Str alertAbsenceDo = Str('אפשר להזמין להרפתקה קצרה.');
+  static const Str alertDropTitle = Str('המשחק השבוע ירד בהרבה');
+  static const Str alertDropDo = Str('אפשר לשאול מה קרה, ולהציע הרפתקה אהובה.');
+
+  // ---- parent area: the progress view (M7a) ----
+  static const Str areaProgress = Str('התקדמות');
+  static const Str progressTitle = Str('התקדמות של {child}');
+  static const Str progressEmpty = Str('עוד לא שיחקו. כשיתחילו, כאן יופיע איך הלמידה מתקדמת.');
+  static const Str progressTileMinutes = Str('דקות משחק השבוע');
+  static const Str progressTileAdventures = Str('הרפתקאות הושלמו');
+  static const Str progressTileUnderstood = Str('מיומנויות מובנות');
+  static const Str progressDomainCount = Str('{a} מתוך {b} מובנות');
+  static const Str progressCurveSoon = Str('הקו יתמלא ככל שיצטברו שבועות של משחק. כך נראה המצב עכשיו:');
+  static const Str progressNotYetPlayed = Str('עוד לא התחילו');
+  static const Str progressWeek = Str('השבוע');
+  static const Str progressMinutesChart = Str('דקות משחק לפי יום');
+  static const Str progressSessions = Str('{n} מפגשי משחק');
+  static const Str progressAdventures = Str('{n} הרפתקאות הושלמו');
+  static const Str progressUnderstanding = Str('הבנה לפי תחום');
+  static const Str progressGrowth = Str('הבנה לאורך זמן');
+  static const Str progressGrowthHelp = Str(
+    'כל קו מראה תחום אחד, בסוף כל שבוע בשמונה השבועות האחרונים. תחום שעוד לא התחילו בו לא מופיע.',
+  );
+  static const Str progressNoPoints = Str('עוד אין מספיק נתונים לקו.');
+  static const Str progressHelped = Str('מה עוזר לילד');
+  static const Str progressHelpedLine = Str('{how}: הצליחו {a} מתוך {b}');
+  static const Str progressMisconceptions = Str('מה כדאי לשים לב אליו');
+  static const Str progressResolved = Str('נפתר');
+  static const Str progressNothingToWatch = Str('לא נמצאו אי-הבנות.');
+  static const Str progressHabits = Str('חוזקות בלמידה');
+  static const Str habitAsked = Str('ביקשו עזרה כשלא היו בטוחים: {n} פעמים');
+  static const Str habitHints = Str('השתמשו ברמזים: {n} פעמים');
+  static const Str habitKept = Str('ניסו שוב והצליחו: {n} פעמים');
+  static const Str statusUnderstood = Str('מובן');
+  static const Str statusPractising = Str('בתרגול');
+  static const Str statusRevisit = Str('כדאי לחזור');
+  static const Str statusGap = Str('נמצא פער');
+  static const Str statusNotStarted = Str('עוד לא התחילו');
+  static const Str domainNumbers = Str('מספרים');
+  static const Str domainColors = Str('צבעים');
+  static const Str domainShapes = Str('צורות');
+  static const Str domainLogic = Str('היגיון');
+  static const Str domainCs = Str('חשיבה חישובית');
+  static const Str domainMath = Str('חשבון');
+  static const Str repConcrete = Str('לימוד עם עצמים להזיז');
+  static const Str repPictorial = Str('לימוד עם ציורים');
+  static const Str repStory = Str('לימוד דרך סיפור');
+  static const Str repEmbodied = Str('לימוד בתנועה');
+  static const Str repSymbolic = Str('לימוד עם סימנים');
+  static const Str dayLetters = Str('א ב ג ד ה ו ש');
+
+  // ---- parent area: time and the AI helper (M7a) ----
+  static const Str timeTitle = Str('זמן משחק');
+  static const Str timeLimitHeading = Str('דקות משחק ביום');
+  static const Str timeBand0 = Str('גיל 3 עד 4');
+  static const Str timeBand1 = Str('גיל 5 עד 6');
+  static const Str timeBand2 = Str('גיל 7 עד 8');
+  static const Str timeMinutes = Str('{n} דקות');
+  static const Str timeLess = Str('פחות');
+  static const Str timeMore = Str('יותר');
+  static const Str timeRestHeading = Str('שעות מנוחה');
+  static const Str timeRestOn = Str('שעות מנוחה פעילות');
+  static const Str timeRestFrom = Str('מתחילות ב-{t}');
+  static const Str timeRestTo = Str('נגמרות ב-{t}');
+  static const Str timeEarlier = Str('חצי שעה קודם');
+  static const Str timeLater = Str('חצי שעה אחר כך');
+  static const Str timeLock = Str('לנעול כשהזמן נגמר');
+  static const Str timeLockHelp = Str(
+    'כשהזמן נגמר או בשעות מנוחה לא מוצעת פעילות חדשה, והפעילות הנוכחית מסתיימת בעדינות. כשכבוי הילד ממשיך לשחק.',
+  );
+  static const Str timeScheduleHeading = Str('שעות מותרות בשבוע');
+  static const Str timeScheduleHelp = Str(
+    'ביום שמוגדרות בו שעות משחקים רק בהן. ביום בלי שעות משחקים בכל שעה.',
+  );
+  static const Str timeDayAny = Str('בכל שעה');
+  static const Str timeDayWindow = Str('{a} עד {b}');
+  static const Str timeDay1 = Str('יום שני');
+  static const Str timeDay2 = Str('יום שלישי');
+  static const Str timeDay3 = Str('יום רביעי');
+  static const Str timeDay4 = Str('יום חמישי');
+  static const Str timeDay5 = Str('יום שישי');
+  static const Str timeDay6 = Str('שבת');
+  static const Str timeDay7 = Str('יום ראשון');
+  static const Str aiHeading = Str('עוזר מילולי');
+  static const Str aiHelp = Str(
+    'אחרי טעות שנייה הדמות יכולה להגיד משפט עזרה בקולה. המשפטים נבדקים לפני שהילד שומע אותם, ואם משהו לא עובד נשמעת ההודעה הרגילה. כבוי כברירת מחדל.',
+  );
   static const Str areaVoice = Str('תשובות בקול');
   static const Str areaVoiceHelp = Str(
     'ילדים יוכלו לענות בדיבור. הזיהוי נעשה במכשיר, ההקלטה נמחקת מיד ולא נשמרת ולא נשלחת לשום מקום. המיקרופון נפתח רק כשהילד לוחץ עליו.',
@@ -145,6 +285,13 @@ abstract final class He {
   static const Str areaVoiceNoModel = Str('מודל הזיהוי עוד לא הותקן במכשיר הזה.');
   static const Str areaVoiceNoPermission = Str('לא ניתנה הרשאת מיקרופון. אפשר לתת אותה בהגדרות המכשיר.');
   static const Str areaVoiceCredit = Str('זיהוי דיבור: ivrit.ai Zipformer מאת יעקב קולני, רישיון CC-BY-4.0.');
+  static const Str areaPush = Str('התראות בטלפון הזה');
+  static const Str areaPushHelp = Str(
+    'כשנוצרת התראה חדשה, הטלפון הזה מקבל הודעה קצרה שאומרת רק "יש התראה חדשה". שמות, מילים ופרטים על הילדים לא נשלחים בהודעה, והם נפתחים רק באפליקציה, מאחורי הקוד שלכם.',
+  );
+  static const Str areaPushDenied = Str('לא ניתנה הרשאה להצגת הודעות. אפשר לתת אותה בהגדרות המכשיר.');
+  static const Str areaPushUnavailable = Str('ההתראות בטלפון לא זמינות בגרסה הזו של האפליקציה.');
+  static const Str areaPushFailed = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
   static const Str areaVersion = Str('גרסה');
   static const Str areaOffline = Str('אין חיבור לאינטרנט, אי אפשר לטעון את רשימת המכשירים.');
   static const Str confirmYes = Str('כן');

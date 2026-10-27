@@ -127,6 +127,49 @@ export interface Store {
   }): Promise<TakeResult>;
   tutorCostAdd(familyId: string, micro: number, nowMs: number): Promise<void>;
   logTutor(row: TutorLogRow): Promise<void>;
+
+  // The parent area (M7b): children, the log of what they did, and deleting a child
+  /** Saves a child (the nickname is the one personal text on the server). `deleted`: that child was deleted. */
+  upsertChild(familyId: string, c: ChildProfile): Promise<"saved" | "deleted">;
+  listChildren(familyId: string): Promise<ChildProfile[]>;
+  /** The ids of the children deleted in this family (every device deletes their local data). */
+  listTombstones(familyId: string): Promise<string[]>;
+  /** Everything about the child, and a tombstone, in one transaction. Idempotent. */
+  deleteChild(familyId: string, childId: string): Promise<void>;
+  /**
+   * Adds events to the log. An event already there (same id) is a duplicate and changes nothing. An event for a child
+   * the family does not have (or that was deleted) is refused.
+   */
+  insertEvents(familyId: string, deviceId: string, events: readonly EventIn[]): Promise<{
+    accepted: number;
+    duplicates: number;
+    refused: string[];
+  }>;
+  /** The events after the cursor, in the order the server received them, one more than `limit` is looked at. */
+  pullEvents(familyId: string, after: number, limit: number): Promise<{ events: EventOut[]; more: boolean }>;
+
+  // Alerts, push tokens, the family's settings and the tutor log (M7b)
+  /** `refused`: the alert names a child the family does not have (or that was deleted). */
+  insertAlert(familyId: string, deviceId: string, a: AlertIn): Promise<"new" | "duplicate" | "refused">;
+  /** Alerts of the family from `sinceMs` on, newest first. */
+  listAlerts(familyId: string, sinceMs: number): Promise<AlertOut[]>;
+  /** Marks every unread alert of the family read; returns how many. */
+  markAlertsRead(familyId: string, nowMs: number): Promise<number>;
+  upsertPushToken(
+    familyId: string,
+    deviceId: string,
+    token: string,
+    platform: "android" | "ios",
+  ): Promise<void>;
+  removePushToken(deviceId: string): Promise<void>;
+  pushTokens(
+    familyId: string,
+  ): Promise<Array<{ deviceId: string; token: string; platform: "android" | "ios" }>>;
+  getSettings(familyId: string): Promise<{ rules: Record<string, unknown>; version: number } | null>;
+  /** Replaces the family's settings (the last write wins); returns the new version, a server counter. */
+  putSettings(familyId: string, rules: Record<string, unknown>): Promise<number>;
+  /** What the tutor said to the family's children since `sinceMs`, newest first. */
+  tutorLogOf(familyId: string, sinceMs: number, limit: number): Promise<TutorLogEntry[]>;
 }
 
 // ---- The tutor (M6) ----
@@ -238,4 +281,56 @@ export interface Secrets {
   ipHashKey: Bytes;
   /** The content publish secret (only the owner's computer has the other copy). Absent: publishing is unavailable. */
   publishSecret?: string;
+}
+
+/** A child as the server knows them. */
+export interface ChildProfile {
+  id: string;
+  nickname: string;
+  avatarId: string;
+  companionId: string | null;
+  addressForm: "f" | "m" | "n";
+  ageBand: 0 | 1 | 2;
+}
+
+/** One thing a child did, as a device sends it: ids, numbers and fixed words only. */
+export interface EventIn {
+  id: string;
+  childId: string;
+  clientAtMs: number;
+  engineVersion: number;
+  type: "attempt" | "session";
+  payload: Record<string, unknown>;
+}
+
+export interface EventOut extends EventIn {
+  seq: number;
+  deviceId: string;
+}
+
+export interface AlertIn {
+  childId: string | null;
+  category: string;
+  severity: string;
+  count: number;
+  detail: string;
+  words: string;
+  key: string;
+  clientAtMs: number;
+}
+
+export interface AlertOut extends AlertIn {
+  id: string;
+  deviceId: string;
+  readAtMs: number | null;
+}
+
+export interface TutorLogEntry {
+  atMs: number;
+  childRef: string;
+  itemId: string;
+  characterId: string;
+  source: string;
+  outcome: string;
+  line: string | null;
 }

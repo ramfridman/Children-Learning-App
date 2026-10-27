@@ -3,8 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/alerts_provider.dart';
+import '../app/progress_provider.dart';
+import '../app/push_providers.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
+import '../app/tutor_log_provider.dart';
+import '../app/sync_providers.dart';
+import '../sync/sync_engine.dart';
 import '../app/voice_input.dart';
 import '../core/config.dart' show appVersion;
 import '../core/errors.dart';
@@ -15,9 +21,13 @@ import '../design/tokens.g.dart';
 import '../security/parent_session.dart';
 import '../strings/he.dart';
 import '../ui/dev/dev_home_page.dart';
+import 'alerts_screen.dart';
 import 'backends.dart';
 import 'child_form.dart';
 import 'pin_screens.dart';
+import 'progress_screen.dart';
+import 'rules_screen.dart';
+import 'tutor_log_screen.dart';
 
 /// The parent area (adult UI, calm). In M1 it holds only what the shell needs: the family's devices
 /// with revoke, the child profiles, the PIN and the lock. Every tap restarts the idle clock, and the
@@ -35,11 +45,16 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
   List<DeviceInfo>? _devices;
   bool _offline = false;
   String? _voiceNote;
+  String? _pushNote;
 
   @override
   void initState() {
     super.initState();
     unawaited(_loadDevices());
+    // Look for alerts now, so that the parent sees today's before reading anything else.
+    unawaited(
+      scanForAlerts(ref).catchError((Object _) {}).then((_) => ref.read(syncRunnerProvider).now(force: true)),
+    );
   }
 
   Future<void> _loadDevices() async {
@@ -63,6 +78,19 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
       () => _voiceNote = switch (r) {
         VoiceSwitch.modelMissing => He.areaVoiceNoModel.text,
         VoiceSwitch.permissionDenied => He.areaVoiceNoPermission.text,
+        _ => null,
+      },
+    );
+  }
+
+  Future<void> _setPush(bool on) async {
+    final PushSwitch r = await ref.read(pushEnabledProvider.notifier).set(on);
+    if (!mounted) return;
+    setState(
+      () => _pushNote = switch (r) {
+        PushSwitch.denied => He.areaPushDenied.text,
+        PushSwitch.unavailable => He.areaPushUnavailable.text,
+        PushSwitch.failed => He.areaPushFailed.text,
         _ => null,
       },
     );
@@ -93,8 +121,13 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
 
   Future<void> _remove(Profile p) async {
     if (!await _confirm(He.areaConfirmRemove.fill(<String, String>{'child': p.name}))) return;
-    final AppDatabase db = await ref.read(databaseProvider.future);
-    await db.removeProfile(p.id);
+    // Gone from this phone at once; on the server (and so from every phone) as soon as it can be reached.
+    final SyncEngine? engine = await ref.read(syncEngineProvider.future);
+    if (engine != null) {
+      await engine.deleteChild(p.id);
+    } else {
+      await (await ref.read(databaseProvider.future)).deleteChildData(p.id);
+    }
     await ref.read(appStateProvider.notifier).reload();
   }
 
@@ -141,6 +174,40 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              _card(He.alertsTitle.text, <Widget>[
+                ParentButton(
+                  key: const Key('open-alerts'),
+                  label: (ref.watch(unreadAlertsProvider).value ?? 0) > 0
+                      ? He.alertsOpenUnread.fill(<String, String>{
+                          'n': '${ref.watch(unreadAlertsProvider).value}',
+                        })
+                      : He.alertsOpen.text,
+                  quiet: true,
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext c) => AlertsScreen(onClose: () => Navigator.pop(c)),
+                      ),
+                    );
+                    ref.invalidate(unreadAlertsProvider);
+                  },
+                ),
+              ]),
+              _card(He.tutorLogOpen.text, <Widget>[
+                ParentButton(
+                  key: const Key('open-tutor-log'),
+                  label: He.tutorLogOpen.text,
+                  quiet: true,
+                  onPressed: () {
+                    ref.invalidate(tutorLogProvider);
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext c) => TutorLogScreen(onClose: () => Navigator.pop(c)),
+                      ),
+                    );
+                  },
+                ),
+              ]),
               _card(He.areaDevices.text, <Widget>[
                 if (_offline) Text(He.areaOffline.text, style: AppText.parent(TokenType.parentSmall)),
                 if (_devices == null && !_offline) const LinearProgressIndicator(),
@@ -176,6 +243,21 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                       children: <Widget>[
                         Expanded(child: Text(p.name, style: AppText.parent(TokenType.parentBody))),
                         ParentButton(
+                          key: Key('progress-${p.id}'),
+                          label: He.areaProgress.text,
+                          quiet: true,
+                          onPressed: () {
+                            ref.invalidate(progressProvider(p.id));
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext c) =>
+                                    ProgressScreen(profile: p, onClose: () => Navigator.pop(c)),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        ParentButton(
                           label: He.areaRemove.text,
                           destructive: true,
                           onPressed: () => _remove(p),
@@ -189,8 +271,13 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                   quiet: true,
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (BuildContext c) =>
-                          ChildFormScreen(onSaved: () => Navigator.pop(c), onCancel: () => Navigator.pop(c)),
+                      builder: (BuildContext c) => ChildFormScreen(
+                        onSaved: () {
+                          Navigator.pop(c);
+                          unawaited(ref.read(syncRunnerProvider).now(force: true));
+                        },
+                        onCancel: () => Navigator.pop(c),
+                      ),
                     ),
                   ),
                 ),
@@ -203,6 +290,18 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                     MaterialPageRoute<void>(
                       builder: (BuildContext c) =>
                           PinSetupScreen(onDone: () => Navigator.pop(c), onCancel: () => Navigator.pop(c)),
+                    ),
+                  ),
+                ),
+              ]),
+              _card(He.timeTitle.text, <Widget>[
+                ParentButton(
+                  key: const Key('open-time-rules'),
+                  label: He.areaTimeOpen.text,
+                  quiet: true,
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext c) => RulesScreen(onClose: () => Navigator.pop(c)),
                     ),
                   ),
                 ),
@@ -227,6 +326,22 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                   style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
                 ),
               ]),
+              if (ref.watch(isParentDeviceProvider).value ?? true)
+                _card(He.areaPush.text, <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(He.areaPushHelp.text, style: AppText.parent(TokenType.parentSmall)),
+                      ),
+                      Switch(
+                        key: const Key('push-switch'),
+                        value: ref.watch(pushEnabledProvider).value ?? false,
+                        onChanged: _setPush,
+                      ),
+                    ],
+                  ),
+                  if (_pushNote != null) Text(_pushNote!, style: AppText.parent(TokenType.parentSmall)),
+                ]),
               ParentButton(label: He.areaLockNow.text, onPressed: widget.onClose),
               const SizedBox(height: 24),
               // Long press on the version opens the device-chain test page in the dev flavour only.

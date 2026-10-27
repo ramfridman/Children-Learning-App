@@ -6,14 +6,20 @@ import { canonicalString } from "./canonical.ts";
 import type { Services } from "./handler.ts";
 import { compareSemver } from "./semver.ts";
 import type {
+  AlertIn,
+  AlertOut,
   CachedLine,
   CacheKey,
+  ChildProfile,
   DeviceSummary,
+  EventIn,
+  EventOut,
   PublishedPack,
   RevokeReason,
   Store,
   TakeResult,
   TutorContext,
+  TutorLogEntry,
   TutorLogRow,
 } from "./store.ts";
 import { rawToDer, utf8 } from "./testutil.ts";
@@ -322,6 +328,127 @@ export class FakeStore implements Store {
   logTutor(row: TutorLogRow) {
     this.logs.push(row);
     return Promise.resolve();
+  }
+
+  // ---- the parent area (M7b) ----
+  children = new Map<string, Map<string, ChildProfile>>();
+  tombstones = new Map<string, Set<string>>();
+  events: Array<EventOut & { familyId: string }> = [];
+  private nextSeq = 1;
+
+  upsertChild(familyId: string, c: ChildProfile) {
+    if (this.tombstones.get(familyId)?.has(c.id)) return Promise.resolve("deleted" as const);
+    const m = this.children.get(familyId) ?? new Map<string, ChildProfile>();
+    m.set(c.id, { ...c });
+    this.children.set(familyId, m);
+    return Promise.resolve("saved" as const);
+  }
+  listChildren(familyId: string) {
+    return Promise.resolve([...(this.children.get(familyId)?.values() ?? [])]);
+  }
+  listTombstones(familyId: string) {
+    return Promise.resolve([...(this.tombstones.get(familyId) ?? [])]);
+  }
+  deleteChild(familyId: string, childId: string) {
+    this.children.get(familyId)?.delete(childId);
+    this.events = this.events.filter((e) => !(e.familyId === familyId && e.childId === childId));
+    this.alerts = this.alerts.filter((a) => !(a.familyId === familyId && a.childId === childId));
+    this.logs = this.logs.filter((l) => !(l.familyId === familyId && l.childRef === childId));
+    const t = this.tombstones.get(familyId) ?? new Set<string>();
+    t.add(childId);
+    this.tombstones.set(familyId, t);
+    return Promise.resolve();
+  }
+  insertEvents(familyId: string, deviceId: string, events: readonly EventIn[]) {
+    let accepted = 0;
+    let duplicates = 0;
+    const refused: string[] = [];
+    for (const e of events) {
+      if (!this.children.get(familyId)?.has(e.childId)) {
+        refused.push(e.id);
+      } else if (this.events.some((x) => x.familyId === familyId && x.id === e.id)) {
+        duplicates++;
+      } else {
+        this.events.push({ ...e, familyId, deviceId, seq: this.nextSeq++ });
+        accepted++;
+      }
+    }
+    return Promise.resolve({ accepted, duplicates, refused });
+  }
+  alerts: Array<AlertOut & { familyId: string }> = [];
+  pushTokenRows: Array<{ familyId: string; deviceId: string; token: string; platform: "android" | "ios" }> =
+    [];
+  settings = new Map<string, { rules: Record<string, unknown>; version: number }>();
+
+  insertAlert(familyId: string, deviceId: string, a: AlertIn) {
+    if (a.childId !== null && !this.children.get(familyId)?.has(a.childId)) {
+      return Promise.resolve("refused" as const);
+    }
+    if (this.alerts.some((x) => x.familyId === familyId && x.key === a.key)) {
+      return Promise.resolve("duplicate" as const);
+    }
+    this.alerts.push({ ...a, familyId, deviceId, id: crypto.randomUUID(), readAtMs: null });
+    return Promise.resolve("new" as const);
+  }
+  listAlerts(familyId: string, sinceMs: number) {
+    return Promise.resolve(
+      this.alerts.filter((a) => a.familyId === familyId && a.clientAtMs >= sinceMs)
+        .sort((x, y) => y.clientAtMs - x.clientAtMs).map(({ familyId: _f, ...rest }) => rest),
+    );
+  }
+  markAlertsRead(familyId: string, nowMs: number) {
+    let n = 0;
+    for (const a of this.alerts) {
+      if (a.familyId === familyId && a.readAtMs === null) {
+        a.readAtMs = nowMs;
+        n++;
+      }
+    }
+    return Promise.resolve(n);
+  }
+  upsertPushToken(familyId: string, deviceId: string, token: string, platform: "android" | "ios") {
+    this.pushTokenRows = this.pushTokenRows.filter((t) => t.deviceId !== deviceId);
+    this.pushTokenRows.push({ familyId, deviceId, token, platform });
+    return Promise.resolve();
+  }
+  removePushToken(deviceId: string) {
+    this.pushTokenRows = this.pushTokenRows.filter((t) => t.deviceId !== deviceId);
+    return Promise.resolve();
+  }
+  pushTokens(familyId: string) {
+    return Promise.resolve(
+      this.pushTokenRows.filter((t) => t.familyId === familyId).map(({ familyId: _f, ...r }) => r),
+    );
+  }
+  getSettings(familyId: string) {
+    return Promise.resolve(this.settings.get(familyId) ?? null);
+  }
+  putSettings(familyId: string, rules: Record<string, unknown>) {
+    const version = (this.settings.get(familyId)?.version ?? 0) + 1;
+    this.settings.set(familyId, { rules, version });
+    return Promise.resolve(version);
+  }
+  tutorLogOf(familyId: string, sinceMs: number, limit: number): Promise<TutorLogEntry[]> {
+    return Promise.resolve(
+      this.logs.filter((l) => l.familyId === familyId).slice(0, limit).map((l) => ({
+        atMs: sinceMs,
+        childRef: l.childRef,
+        itemId: l.itemId,
+        characterId: l.characterId,
+        source: l.source,
+        outcome: l.outcome,
+        line: l.line,
+      })),
+    );
+  }
+  pullEvents(familyId: string, after: number, limit: number) {
+    const all = this.events.filter((e) => e.familyId === familyId && e.seq > after).sort((a, b) =>
+      a.seq - b.seq
+    );
+    return Promise.resolve({
+      more: all.length > limit,
+      events: all.slice(0, limit).map(({ familyId: _f, ...rest }) => rest),
+    });
   }
   revokeDevice(familyId: string, deviceId: string, _reason: RevokeReason) {
     const d = this.devices.get(deviceId);
