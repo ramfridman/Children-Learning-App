@@ -148,7 +148,8 @@ void main() {
       expect(p.growth.first.byDomain['numbers'], isNull, reason: 'eight weeks ago nothing was started');
       final double? last = p.growth.last.byDomain['numbers'];
       expect(last, isNotNull);
-      expect(last!, greaterThan(0.5));
+      expect(last!, greaterThan(0.2), reason: 'one of the two skills of the domain is being practised');
+      expect(last, lessThanOrEqualTo(1.0));
       final List<double> seen = <double>[
         for (final WeekPoint w in p.growth)
           if (w.byDomain['numbers'] != null) w.byDomain['numbers']!,

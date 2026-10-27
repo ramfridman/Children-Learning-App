@@ -99,7 +99,16 @@ void main() {
     expect(find.byKey(const Key('progress-empty')), findsNothing);
     expect(find.byType(MinutesBars), findsOneWidget);
     expect(find.text(He.progressSessions.fill(<String, String>{'n': '2'})), findsOneWidget);
-    expect(find.text(He.progressAdventures.fill(<String, String>{'n': '1'})), findsOneWidget);
+    expect(
+      find.descendant(of: find.byKey(const Key('tile-minutes')), matching: find.text('21')),
+      findsOneWidget,
+      reason: '12 and 9 minutes',
+    );
+    expect(
+      find.descendant(of: find.byKey(const Key('tile-adventures')), matching: find.text('1')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('tile-understood')), findsOneWidget);
     final Finder status = find.byKey(const Key('status-NUM-A-03'));
     await tester.scrollUntilVisible(status, 200, scrollable: find.byType(Scrollable).first);
     final String shown = tester.widget<Text>(status).data!;
@@ -108,9 +117,12 @@ void main() {
       contains(shown),
       reason: 'five days of right answers is learning or learnt',
     );
-    final Finder curve = find.byType(GrowthLines);
-    await tester.scrollUntilVisible(curve, 200, scrollable: find.byType(Scrollable).first);
-    expect(curve, findsOneWidget);
+    // Five days of play is not a curve yet: the screen says so and shows where each domain stands now.
+    final Finder soon = find.byKey(const Key('curve-soon'));
+    await tester.scrollUntilVisible(soon, 200, scrollable: find.byType(Scrollable).first);
+    expect(soon, findsOneWidget);
+    expect(find.byType(GrowthLines), findsNothing);
+    expect(find.byKey(const Key('now-numbers')), findsOneWidget);
     expect(find.text(He.progressNothingToWatch.text), findsOneWidget);
     expect(find.text(He.habitAsked.fill(<String, String>{'n': '1'})), findsOneWidget);
     tester.view.physicalSize = const Size(900, 2400);
@@ -118,6 +130,36 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpAndSettle();
     await expectLater(find.byType(ProgressScreen), matchesGoldenFile('goldens/progress_view.png'));
+  });
+
+  testWidgets('with three weeks of play behind it the curve is drawn', (WidgetTester tester) async {
+    final AppRig rig = AppRig();
+    await rig.seedFinishedSetup();
+    final DateTime now = DateTime.fromMillisecondsSinceEpoch(rig.clock.nowMs());
+    final int id = await rig.db.startSession(
+      'p-1',
+      now.subtract(const Duration(hours: 2)),
+      plan: 'lesson:butterflies',
+    );
+    await rig.db.endSession(
+      id,
+      now.subtract(const Duration(hours: 2)).add(const Duration(minutes: 10)),
+      'finished',
+    );
+    for (int week = 0; week < 4; week++) {
+      for (int i = 0; i < 3; i++) {
+        await attempt(
+          rig,
+          now.subtract(Duration(days: 7 * week + 1, minutes: i)),
+          i == 0 && week > 1 ? 'incorrect' : 'correct',
+        );
+      }
+    }
+    await openProgress(tester, rig, seed: false);
+    final Finder curve = find.byType(GrowthLines);
+    await tester.scrollUntilVisible(curve, 200, scrollable: find.byType(Scrollable).first);
+    expect(curve, findsOneWidget);
+    expect(find.byKey(const Key('curve-soon')), findsNothing);
   });
 
   test('nothing in the progress files can show speed, time per question or counts of mistakes', () {

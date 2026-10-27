@@ -135,14 +135,24 @@ class ProgressSource {
   final DateTime now;
 }
 
-/// How many skills' worth of understanding there is in a domain at one moment: the mean of the engine's estimate over
-/// the skills the child has started, or null when none were started.
-double? _domainUnderstanding(Engine engine, Iterable<String> skillIds) {
-  final List<double> ps = <double>[
-    for (final String id in skillIds)
-      if (engine.state.skills[id]?.started ?? false) engine.state.skills[id]!.p,
-  ];
-  return ps.isEmpty ? null : ps.reduce((double a, double b) => a + b) / ps.length;
+/// How far through a domain the child is at one moment, the same thing the status bars show: every skill of the domain
+/// counts for 1 when understood, a half when practising or due for a revisit, a quarter when a gap was found, and
+/// nothing when not started. The result is null while the child has not started any skill of the domain, so a line
+/// begins when the domain does. (The engine's own estimate is not used here: it rises after a few right answers, long
+/// before a skill counts as understood, and the two numbers on one screen would disagree.)
+double? _domainUnderstanding(Engine engine, Iterable<String> skillIds, DateTime now) {
+  final List<String> ids = skillIds.toList();
+  if (!ids.any((String id) => engine.state.skills[id]?.started ?? false)) return null;
+  double sum = 0;
+  for (final String id in ids) {
+    sum += switch (parentStatusOf(engine.statusOf(id, now))) {
+      ParentStatus.understood => 1,
+      ParentStatus.practising || ParentStatus.needsRevisit => 0.5,
+      ParentStatus.gap => 0.25,
+      ParentStatus.notStartedYet => 0,
+    };
+  }
+  return sum / ids.length;
 }
 
 Engine _replayUntil(Catalog catalog, List<AttemptEvent> events, DateTime until) =>
@@ -228,7 +238,7 @@ Progress buildProgress(ProgressSource src) {
           weekEnd: stop,
           byDomain: <String, double?>{
             for (final MapEntry<String, List<String>> d in idsByDomain.entries)
-              d.key: _domainUnderstanding(at, d.value),
+              d.key: _domainUnderstanding(at, d.value, stop.toUtc()),
           },
         );
       }(),

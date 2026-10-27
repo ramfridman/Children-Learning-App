@@ -188,6 +188,13 @@ abstract final class He {
   static const Str areaProgress = Str('התקדמות');
   static const Str progressTitle = Str('התקדמות של {child}');
   static const Str progressEmpty = Str('עוד לא שיחקו. כשיתחילו, כאן יופיע איך הלמידה מתקדמת.');
+  static const Str progressTileMinutes = Str('דקות משחק השבוע');
+  static const Str progressTileAdventures = Str('הרפתקאות הושלמו');
+  static const Str progressTileUnderstood = Str('מיומנויות מובנות');
+  static const Str progressDomainCount = Str('{a} מתוך {b} מובנות');
+  static const Str progressCurveSoon = Str('הקו יתמלא ככל שיצטברו שבועות של משחק. כך נראה המצב עכשיו:');
+  static const Str progressNowPercent = Str('{name}: {n}%');
+  static const Str progressNotYetPlayed = Str('עוד לא התחילו');
   static const Str progressWeek = Str('השבוע');
   static const Str progressMinutesChart = Str('דקות משחק לפי יום');
   static const Str progressSessions = Str('{n} מפגשי משחק');
