@@ -11,6 +11,7 @@ import type { FunctionSpec } from "../_shared/handler.ts";
 import type { Services } from "../_shared/handler.ts";
 import type { TutorContext } from "../_shared/store.ts";
 import {
+  APPROVED,
   CONFIG_KEYS,
   type LineParams,
   makeLine,
@@ -27,7 +28,7 @@ const EST_OUTPUT_TOKENS = 80;
 const EST_VOICE_CHARS = 45;
 
 interface Body {
-  mode: "plan" | "make" | "measure" | "evaluate";
+  mode: "plan" | "make" | "measure" | "evaluate" | "voice";
   pack_id: string;
   pack_version: string;
   character_ids: string[];
@@ -38,6 +39,18 @@ interface Body {
   offset: number;
   max_micro_usd: number;
   count: number;
+  lines?: ApprovedLine[];
+}
+
+/** A sentence a person approved for one cell of the grid (plain Hebrew, no niqqud: the lexicon vocalises it). */
+interface ApprovedLine {
+  item: string;
+  mistake: string;
+  hint: number;
+  band: "A" | "B" | "C";
+  form: "f" | "m" | "n";
+  character: string;
+  say: string;
 }
 
 interface Entry {
@@ -53,7 +66,7 @@ export const spec: FunctionSpec = {
   name: "tutor-prewarm",
   access: { kind: "publish" },
   shape: {
-    mode: { t: "enum", values: ["plan", "make", "measure", "evaluate"] },
+    mode: { t: "enum", values: ["plan", "make", "measure", "evaluate", "voice"] },
     pack_id: { t: "string", max: 41, pattern: /^[a-z0-9-]{3,41}$/ },
     pack_version: { t: "string", max: 14, pattern: /^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$/ },
     character_ids: { t: "array", of: { t: "string", max: 40, pattern: /^[a-z0-9-]{2,40}$/ }, maxItems: 12 },
@@ -64,6 +77,23 @@ export const spec: FunctionSpec = {
     offset: { t: "int", min: 0, max: 100_000 },
     max_micro_usd: { t: "int", min: 0, max: 20_000_000 },
     count: { t: "int", min: 1, max: 10 },
+    lines: {
+      t: "array",
+      maxItems: 25,
+      optional: true,
+      of: {
+        t: "object",
+        shape: {
+          item: { t: "string", max: 80, pattern: /^[a-z0-9][a-z0-9._-]{2,79}$/ },
+          mistake: { t: "string", max: 20, pattern: /^(default|M-[A-Z]{2,5}-[A-Z0-9]{2,12})$/ },
+          hint: { t: "int", min: 0, max: 3 },
+          band: { t: "enum", values: ["A", "B", "C"] },
+          form: { t: "enum", values: ["f", "m", "n"] },
+          character: { t: "string", max: 40, pattern: /^[a-z0-9-]{2,40}$/ },
+          say: { t: "string", max: 200, pattern: /^[א-ת .,?!:'"-]{2,200}$/ },
+        },
+      },
+    },
   },
   run: async (ctx) => {
     const b = ctx.body as unknown as Body;
@@ -92,7 +122,10 @@ export const spec: FunctionSpec = {
     if (b.mode === "plan") {
       let cached = 0;
       for (const e of grid) {
-        if (await svc.store.cacheGet(keyOf(b, e))) cached++;
+        if (
+          await svc.store.cacheGet({ ...keyOf(b, e), promptVersion: APPROVED }) ||
+          await svc.store.cacheGet(keyOf(b, e))
+        ) cached++;
       }
       const todo = grid.length - cached;
       return {
@@ -107,6 +140,7 @@ export const spec: FunctionSpec = {
         validator_version: VALIDATOR_VERSION,
         // How many mistake types have teaching moves in the server's config: 0 means the prompts carry none.
         moves_tags: Object.keys(cfg.moves).length,
+        voice_micro_per_1k: cfg.priceVoicePer1k,
       };
     }
 
@@ -173,6 +207,40 @@ export const spec: FunctionSpec = {
       };
     }
 
+    if (b.mode === "voice") {
+      if (!b.lines || b.lines.length === 0) throw new GatewayError("bad_request", "no_lines");
+      const results: Array<Record<string, unknown>> = [];
+      let made = 0;
+      for (const l of b.lines) {
+        const tctx = await svc.store.tutorContext(b.pack_id, b.pack_version, l.item, l.character);
+        const where = { item: l.item, mistake: l.mistake, hint: l.hint, band: l.band, form: l.form };
+        if (!tctx || !tctx.character) {
+          results.push({ ...where, ok: false, rule: "no_such_item_or_character" });
+          continue;
+        }
+        const timings: Timings = { modelMs: 0, voiceMs: 0, totalMs: 0 };
+        const r = await makeLine(
+          svc,
+          tctx,
+          cfg,
+          {
+            ...paramsOf(b, { ...entryOf(l) }, budget, false),
+            approvedSay: l.say,
+          },
+          performance.now(),
+          timings,
+        );
+        if ("rule" in r) {
+          results.push({ ...where, ok: false, rule: r.rule, detail: timings.detail ?? "" });
+        } else {
+          made++;
+          results.push({ ...where, ok: true });
+        }
+        if (budget.remainingMicro <= 0) break;
+      }
+      return { made, results, spent_micro_usd: Math.round(budget.spentMicro) };
+    }
+
     // make
     const slice = grid.slice(b.offset, b.offset + b.limit);
     const failed: Record<string, number> = {};
@@ -205,6 +273,15 @@ export const spec: FunctionSpec = {
     };
   },
 };
+
+const entryOf = (l: ApprovedLine): Entry => ({
+  itemId: l.item,
+  mistake: l.mistake,
+  hintLevel: l.hint,
+  band: l.band,
+  addressForm: l.form,
+  characterId: l.character,
+});
 
 const keyOf = (b: Body, e: Entry) => ({
   packId: b.pack_id,

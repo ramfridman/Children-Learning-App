@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../tool/prewarm_lib.dart';
+import '../tool/prewarm_voice.dart';
 
 const PrewarmRequest _request = PrewarmRequest(
   packId: 'starter',
@@ -48,6 +49,25 @@ class FakeGateway {
           'next_offset': end,
           'done': end >= total,
           'total': total,
+        };
+      case 'voice':
+        final List<Map<String, Object?>> lines = (body['lines']! as List<Object?>)
+            .cast<Map<String, Object?>>();
+        return <String, Object?>{
+          'made': lines.length - 1,
+          'results': <Object?>[
+            for (int i = 0; i < lines.length; i++)
+              <String, Object?>{
+                'item': lines[i]['item'],
+                'mistake': lines[i]['mistake'],
+                'band': lines[i]['band'],
+                'form': lines[i]['form'],
+                'ok': i != 0,
+                if (i == 0) 'rule': 'validator_failed',
+                if (i == 0) 'detail': 'checks failed: vocabulary',
+              },
+          ],
+          'spent_micro_usd': (lines.length - 1) * 1000,
         };
       case 'evaluate':
         final int from = body['offset']! as int;
@@ -252,4 +272,53 @@ void main() {
     expect(e.spentMicro, 40 * 300);
     expect(e.describe(), contains('32 passed the ten checks (80%)'));
   });
+
+  test(
+    'voice speaks only the approved lines, shows count and cost first, and reports what the checks refused',
+    () async {
+      final String file = jsonEncode(<Object?>[
+        for (int i = 0; i < 30; i++)
+          <String, Object?>{
+            'item': 'count.butterflies.3',
+            'mistake': 'default',
+            'hint': 0,
+            'band': 'A',
+            'form': 'n',
+            'character': i == 29 ? 'someone-else' : 'nitzi',
+            'say': 'בואו נספור לאט',
+            if (i == 1) 'passed': false,
+            if (i == 2) 'review': 'rejected',
+          },
+      ]);
+      final List<ApprovedLine> lines = readApproved(file, characters: <String>['nitzi']);
+      expect(lines.length, 27, reason: 'struck out lines and other characters are left out');
+      final FakeGateway g = FakeGateway();
+      await expectLater(
+        voiceLines(g.send, _request, lines, confirmLines: 3),
+        throwsA(
+          isA<PrewarmFailed>().having(
+            (PrewarmFailed e) => e.message,
+            'message',
+            contains('--confirm-lines 27'),
+          ),
+        ),
+      );
+      expect(
+        g.asked.every((Map<String, Object?> b) => b['mode'] == 'plan'),
+        isTrue,
+        reason: 'nothing was voiced',
+      );
+      final List<String> said = <String>[];
+      final VoiceOutcome o = await voiceLines(g.send, _request, lines, confirmLines: 27, say: said.add);
+      expect(said.first, startsWith('27 approved lines to voice (no model call)'));
+      expect(
+        g.asked.where((Map<String, Object?> b) => b['mode'] == 'voice').length,
+        2,
+        reason: 'batches of 25',
+      );
+      expect(o.made, 24 + 1, reason: 'the fake refuses the first line of each batch');
+      expect(o.failed.length, 2);
+      expect(o.failed.first, contains('validator_failed - checks failed: vocabulary'));
+    },
+  );
 }

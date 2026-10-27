@@ -355,7 +355,7 @@ export function pgStore(sql: Sql): Store {
         : null;
     },
 
-    async cachePut(k, v) {
+    async cachePut(k, v, replace = false) {
       await sql`
         insert into app.tutor_cache
           (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
@@ -364,7 +364,12 @@ export function pgStore(sql: Sql): Store {
           ${k.characterId}, ${k.promptVersion}, ${k.validatorVersion}, ${v.line}, ${v.caption}, ${v.next},
           array(select jsonb_array_elements_text(${JSON.stringify(v.highlight)}::text::jsonb)),
           ${v.audio ? buf(v.audio) : null}, ${v.audio ? "audio/mpeg" : null})
-        on conflict do nothing`;
+        on conflict (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id,
+                     prompt_version, validator_version)
+        do update set line = excluded.line, caption = excluded.caption, next_action = excluded.next_action,
+          highlight_targets = excluded.highlight_targets, audio = excluded.audio, audio_mime = excluded.audio_mime,
+          created_at = now()
+        where ${replace}::boolean`;
     },
 
     async tutorTake(p): Promise<TakeResult> {

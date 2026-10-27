@@ -499,6 +499,36 @@ Deno.test({
       null,
       "a new prompt version finds nothing",
     );
+    // A reviewed line that was edited replaces the old one; without the flag the first line stays.
+    const approvedKey = { ...key, promptVersion: "approved" };
+    await store.cachePut(approvedKey, {
+      line: "one",
+      caption: null,
+      next: "none",
+      highlight: [],
+      audio: audio,
+    }, true);
+    await store.cachePut(approvedKey, {
+      line: "kept",
+      caption: null,
+      next: "none",
+      highlight: [],
+      audio: null,
+    });
+    assert.equal((await store.cacheGet(approvedKey))!.line, "one");
+    await store.cachePut(approvedKey, {
+      line: "edited",
+      caption: null,
+      next: "none",
+      highlight: [],
+      audio: null,
+    }, true);
+    assert.equal((await store.cacheGet(approvedKey))!.line, "edited");
+    assert.equal(
+      (await store.cacheGet(key))!.line,
+      "בּוֹאוּ",
+      "the model's line under its own version is untouched",
+    );
 
     const now = Date.now();
     const take = (kind: "turn" | "prefetch", session: string) =>

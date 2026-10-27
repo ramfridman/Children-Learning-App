@@ -287,8 +287,8 @@ export class FakeStore implements Store {
     this.cacheGets++;
     return Promise.resolve(this.cache.get(this.cacheKey(k)) ?? null);
   }
-  cachePut(k: CacheKey, v: CachedLine) {
-    if (!this.cache.has(this.cacheKey(k))) this.cache.set(this.cacheKey(k), v);
+  cachePut(k: CacheKey, v: CachedLine, replace = false) {
+    if (replace || !this.cache.has(this.cacheKey(k))) this.cache.set(this.cacheKey(k), v);
     return Promise.resolve();
   }
   tutorTake(p: Parameters<Store["tutorTake"]>[0]): Promise<TakeResult> {

@@ -23,6 +23,9 @@ import {
 } from "./tutor_prompt.ts";
 import { type Failure, type TurnFacts, validateReply, VALIDATOR_VERSION } from "./validator.ts";
 
+/** The prompt version under which reviewed lines are kept: a new prompt never makes them unreachable. */
+export const APPROVED = "approved";
+
 const lexicon = loadLexicon();
 const blocklist = loadBlocklist();
 
@@ -131,6 +134,11 @@ export interface LineParams {
   budget?: { remainingMicro: number; spentMicro: number };
   /** Skip the cache and do not keep the result (latency measuring). */
   fresh?: boolean;
+  /**
+   * A sentence a person has read and approved for exactly this cell: the model is not asked; the ten checks are run
+   * on it again, it is voiced and kept under the `approved` prompt version, which no later prompt change touches.
+   */
+  approvedSay?: string;
   /** Ask the model and run the ten checks, then stop: no voice, nothing kept. The answer is in `timings.evaluation`. */
   modelOnly?: boolean;
 }
@@ -268,8 +276,9 @@ export async function makeLine(
   };
 
   // A line already made and checked: no model, no voice, no cost.
-  if (!p.fresh) {
-    const cached = await svc.store.cacheGet(key);
+  if (!p.fresh && p.approvedSay === undefined) {
+    const cached = (await svc.store.cacheGet({ ...key, promptVersion: APPROVED })) ??
+      await svc.store.cacheGet(key);
     if (cached && cached.audio) {
       if (p.kind === "turn") {
         const t = await take();
@@ -317,7 +326,21 @@ export async function makeLine(
     }
     if (p.familyId !== null) await svc.store.tutorCostAdd(p.familyId, micro, svc.nowMs()).catch(() => {});
   };
-  for (let attempt = 0; attempt < 2; attempt++) {
+  if (p.approvedSay !== undefined) {
+    attemptsMade = 1;
+    const reply = {
+      say: p.approvedSay,
+      next: "none",
+      hl: [] as string[],
+      mis: p.mistake === "default" ? null : p.mistake,
+      reveals: false,
+      safety: "none",
+    };
+    verdict = validateReply(reply, item, turn, lexicon, blocklist);
+    lastSay = refusedText(reply);
+    if (!verdict.ok) refused.push(`${verdict.failures.join("+")}: ${lastSay}`);
+  }
+  for (let attempt = 0; p.approvedSay === undefined && attempt < 2; attempt++) {
     const left = tb.totalMs - (performance.now() - started);
     if (left < 400) return await ruleOut("timeout", { modelMs });
     const t0 = performance.now();
@@ -426,7 +449,11 @@ export async function makeLine(
     highlight: verdict.reply.hl,
     audio,
   };
-  if (!p.fresh) await svc.store.cachePut(key, made).catch(() => {});
+  if (!p.fresh) {
+    await (p.approvedSay !== undefined
+      ? svc.store.cachePut({ ...key, promptVersion: APPROVED }, made, true)
+      : svc.store.cachePut(key, made)).catch(() => {});
+  }
   await log(p.kind === "turn" ? "live" : "prefetch", "ok", {
     line: verdict.plain,
     modelMs,

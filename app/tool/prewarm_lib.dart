@@ -31,20 +31,27 @@ class PrewarmRequest {
   final List<String> forms;
   final int hintLevelOfTags;
 
-  Map<String, Object?> body(String mode, {int limit = 25, int offset = 0, int maxMicro = 0, int count = 1}) =>
-      <String, Object?>{
-        'mode': mode,
-        'pack_id': packId,
-        'pack_version': packVersion,
-        'character_ids': characters,
-        'bands': bands,
-        'address_forms': forms,
-        'hint_level_tags': hintLevelOfTags,
-        'limit': limit,
-        'offset': offset,
-        'max_micro_usd': maxMicro,
-        'count': count,
-      };
+  Map<String, Object?> body(
+    String mode, {
+    int limit = 25,
+    int offset = 0,
+    int maxMicro = 0,
+    int count = 1,
+    List<Map<String, Object?>>? lines,
+  }) => <String, Object?>{
+    'mode': mode,
+    'pack_id': packId,
+    'pack_version': packVersion,
+    'character_ids': characters,
+    'bands': bands,
+    'address_forms': forms,
+    'hint_level_tags': hintLevelOfTags,
+    'limit': limit,
+    'offset': offset,
+    'max_micro_usd': maxMicro,
+    'count': count,
+    'lines': ?lines,
+  };
 }
 
 /// Sends one request to `tutor-prewarm`. [baseUrl] is changed only by tests, to a local fake.
@@ -91,6 +98,7 @@ class PrewarmPlan {
     required this.voiceChars,
     this.evalMicro = 0,
     this.movesTags = 0,
+    this.voiceMicroPer1k = 40000,
   });
 
   factory PrewarmPlan.from(Map<String, Object?> j) => PrewarmPlan(
@@ -101,6 +109,7 @@ class PrewarmPlan {
     voiceChars: j['est_voice_chars']! as int,
     evalMicro: j['est_eval_micro_usd'] as int? ?? 0,
     movesTags: j['moves_tags'] as int? ?? 0,
+    voiceMicroPer1k: j['voice_micro_per_1k'] as int? ?? 40000,
   );
 
   final int lines;
@@ -114,6 +123,9 @@ class PrewarmPlan {
 
   /// How many mistake types have teaching moves on the server (0 means the prompts carry none).
   final int movesTags;
+
+  /// The voice price in millionths of a dollar per 1,000 characters, from the server's config.
+  final int voiceMicroPer1k;
 
   String get _movesNote => 'Teaching moves loaded on the server for $movesTags mistake types.';
 

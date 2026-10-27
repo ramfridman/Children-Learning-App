@@ -271,3 +271,60 @@ Deno.test("tutor-prewarm: evaluate asks the model only, keeps nothing, and says 
   assert.equal(store.cache.size, 0, "nothing is kept");
   assert.equal(j.spent_micro_usd > 0, true);
 });
+
+const cell = (say: string, over: Record<string, unknown> = {}) => ({
+  item: "count.butterflies.3",
+  mistake: "default",
+  hint: 0,
+  band: "A",
+  form: "n",
+  character: "nitzi",
+  say,
+  ...over,
+});
+
+Deno.test("tutor-prewarm: voice speaks exactly the approved sentences, re-checks them, and asks the model for nothing", async () => {
+  const { ask, model, voice, store } = await setup();
+  const j = await (await ask({
+    mode: "voice",
+    lines: [cell("בואו נספור לאט"), cell("בואו נאכל בננה", { band: "B" })],
+  })).json();
+  assert.equal(j.made, 1);
+  assert.equal(j.results[0].ok, true);
+  assert.equal(j.results[1].ok, false);
+  assert.equal(j.results[1].rule, "validator_failed");
+  assert.ok(String(j.results[1].detail).includes("vocabulary"), j.results[1].detail);
+  assert.equal(model.calls.length, 0, "no model call");
+  assert.equal(voice.calls.length, 1, "voice only for the sentence that passed");
+  assert.equal(voice.calls[0].text, "בּוֹאוּ נִסְפֹּר לְאַט", "the lexicon's one reading is what is voiced");
+  const kept = [...store.cache.keys()].filter((k) => k.includes("approved"));
+  assert.equal(kept.length, 1, "kept under the approved version");
+});
+
+Deno.test("tutor-prewarm: an edited sentence replaces the approved one, and a cell with an approved line counts as made", async () => {
+  const { ask, voice, store, model } = await setup();
+  await ask({ mode: "voice", lines: [cell("בואו נספור לאט")] });
+  await ask({ mode: "voice", lines: [cell("בואו נספור יחד")] });
+  assert.equal(voice.calls.length, 2);
+  const only = [...store.cache.entries()].filter(([k]) => k.includes("approved"));
+  assert.equal(only.length, 1, "one line for the cell");
+  assert.equal(only[0][1].line, "בּוֹאוּ נִסְפֹּר יַחַד", "the edit won");
+  const plan = await (await ask({ mode: "plan", bands: ["A"], address_forms: ["n"] })).json();
+  assert.ok(plan.cached >= 1, "the approved cell is already made");
+  const made = await (await ask({ mode: "make", bands: ["A"], address_forms: ["n"] })).json();
+  assert.equal(made.cached >= 1, true, "make leaves it alone");
+  assert.equal(model.calls.length > 0, true, "other cells are still made by the model");
+});
+
+Deno.test("tutor-prewarm: voice takes only plain Hebrew, at most 25 lines, and needs lines", async () => {
+  const { ask } = await setup();
+  for (const lines of [[cell("hello there")], [cell("בואו נספור 3")], [cell("א")], []]) {
+    const r = await ask({ mode: "voice", lines });
+    assert.equal(r.status, 400);
+  }
+  assert.equal(
+    (await ask({ mode: "voice", lines: Array.from({ length: 26 }, () => cell("בואו נספור")) })).status,
+    400,
+  );
+  assert.equal((await ask({ mode: "voice" })).status, 400);
+});
