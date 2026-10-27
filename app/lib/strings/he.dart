@@ -193,7 +193,6 @@ abstract final class He {
   static const Str progressTileUnderstood = Str('מיומנויות מובנות');
   static const Str progressDomainCount = Str('{a} מתוך {b} מובנות');
   static const Str progressCurveSoon = Str('הקו יתמלא ככל שיצטברו שבועות של משחק. כך נראה המצב עכשיו:');
-  static const Str progressNowPercent = Str('{name}: {n}%');
   static const Str progressNotYetPlayed = Str('עוד לא התחילו');
   static const Str progressWeek = Str('השבוע');
   static const Str progressMinutesChart = Str('דקות משחק לפי יום');
