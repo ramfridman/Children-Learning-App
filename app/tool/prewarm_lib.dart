@@ -89,6 +89,7 @@ class PrewarmPlan {
     required this.toMake,
     required this.estMicro,
     required this.voiceChars,
+    this.evalMicro = 0,
   });
 
   factory PrewarmPlan.from(Map<String, Object?> j) => PrewarmPlan(
@@ -97,6 +98,7 @@ class PrewarmPlan {
     toMake: j['to_make']! as int,
     estMicro: j['est_micro_usd']! as int,
     voiceChars: j['est_voice_chars']! as int,
+    evalMicro: j['est_eval_micro_usd'] as int? ?? 0,
   );
 
   final int lines;
@@ -104,6 +106,14 @@ class PrewarmPlan {
   final int toMake;
   final int estMicro;
   final int voiceChars;
+
+  /// The model only (no voice), two attempts at most for every line of the grid.
+  final int evalMicro;
+
+  /// What the owner reads before saying yes to an evaluation.
+  String describeEvaluation() =>
+      '$lines lines to evaluate with the model only (no voice, nothing kept): at most ${dollars(evalMicro)} USD '
+      '(an estimate: two attempts for every line).';
 
   /// What the owner reads before saying yes.
   String describe() =>
@@ -235,4 +245,93 @@ Future<Measurement> measure(PrewarmSend send, PrewarmRequest r, {int count = 5})
               '(model ${e['model_ms'] ?? 0} ms, voice ${e['voice_ms'] ?? 0} ms, total ${e['server_ms'] ?? 0} ms)',
     ],
   );
+}
+
+/// The result of asking the model for every line of the grid, without voice: how often the ten checks pass, which
+/// ones refuse, and which words the model reached for that the lexicon does not have.
+class LineEvaluation {
+  LineEvaluation(this.rows, this.spentMicro);
+
+  final List<Map<String, Object?>> rows;
+  final int spentMicro;
+
+  int get lines => rows.length;
+
+  bool _b(Map<String, Object?> r, String k) => r[k] == true;
+
+  int get firstTry => rows.where((Map<String, Object?> r) => _b(r, 'firstTry')).length;
+
+  int get passed => rows.where((Map<String, Object?> r) => _b(r, 'passed')).length;
+
+  /// How many lines each check refused at least once (in any attempt).
+  Map<String, int> get refusedBy {
+    final Map<String, int> out = <String, int>{};
+    for (final Map<String, Object?> r in rows) {
+      for (final Object? c in (r['checks'] as List<Object?>? ?? const <Object?>[])) {
+        out[c! as String] = (out[c] ?? 0) + 1;
+      }
+    }
+    return out;
+  }
+
+  /// The plain words with no single reading, most often reached for first.
+  List<MapEntry<String, int>> get unknownWords {
+    final Map<String, int> out = <String, int>{};
+    for (final Map<String, Object?> r in rows) {
+      for (final Object? w in (r['unknown'] as List<Object?>? ?? const <Object?>[])) {
+        out[w! as String] = (out[w] ?? 0) + 1;
+      }
+    }
+    return out.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+  }
+
+  int get failedOutright => rows.where((Map<String, Object?> r) => r['rule'] != null).length;
+
+  String describe({int topWords = 40}) {
+    final String pct = lines == 0 ? '0' : (100 * passed / lines).toStringAsFixed(0);
+    final String pct1 = lines == 0 ? '0' : (100 * firstTry / lines).toStringAsFixed(0);
+    return 'evaluated $lines lines for ${dollars(spentMicro)} USD: $passed passed the ten checks ($pct%), '
+        '$firstTry on the first try ($pct1%)'
+        '${failedOutright == 0 ? '' : ', $failedOutright could not be asked (model failed)'}.\n'
+        'lines refused by each check (any attempt): $refusedBy\n'
+        'words the model used that the lexicon lacks (word x times): '
+        '${unknownWords.take(topWords).map((MapEntry<String, int> e) => '${e.key} x${e.value}').join(', ')}';
+  }
+}
+
+/// Asks the model for the lines of the grid (no voice, nothing kept), in batches. It refuses to start unless
+/// [confirmLines] equals the number of lines, and gives the server a ceiling of one and a half times the estimate.
+Future<LineEvaluation> evaluate(
+  PrewarmSend send,
+  PrewarmRequest r, {
+  required int? confirmLines,
+  void Function(String)? say,
+}) async {
+  final PrewarmPlan p = await plan(send, r);
+  say?.call(p.describeEvaluation());
+  if (confirmLines != p.lines) {
+    throw PrewarmFailed(
+      'nothing was asked. To go ahead, run again with --confirm-lines ${p.lines} (the number of lines to evaluate).',
+    );
+  }
+  final int ceiling = (p.evalMicro * 3 / 2).ceil() + 1;
+  final List<Map<String, Object?>> rows = <Map<String, Object?>>[];
+  int spent = 0;
+  int offset = 0;
+  bool done = p.lines == 0;
+  while (!done) {
+    final Map<String, Object?> j = await send(r.body('evaluate', offset: offset, maxMicro: ceiling - spent));
+    rows.addAll((j['rows']! as List<Object?>).cast<Map<String, Object?>>());
+    spent += j['spent_micro_usd']! as int;
+    final int next = j['next_offset']! as int;
+    done = j['done']! as bool;
+    say?.call('  $next of ${j['total']} lines done, ${dollars(spent)} USD spent so far');
+    if (!done && next <= offset) throw const PrewarmFailed('the server made no progress; stopping');
+    offset = next;
+    if (spent >= ceiling) {
+      say?.call('  the spending ceiling (${dollars(ceiling)} USD) was reached; stopping');
+      break;
+    }
+  }
+  return LineEvaluation(rows, spent);
 }

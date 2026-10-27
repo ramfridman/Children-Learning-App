@@ -118,6 +118,8 @@ export interface LineParams {
   budget?: { remainingMicro: number; spentMicro: number };
   /** Skip the cache and do not keep the result (latency measuring). */
   fresh?: boolean;
+  /** Ask the model and run the ten checks, then stop: no voice, nothing kept. The answer is in `timings.evaluation`. */
+  modelOnly?: boolean;
 }
 
 export function b64(bytes: Uint8Array): string {
@@ -147,10 +149,23 @@ const WARM_BUDGET = {
   modelMaxTokens: 300,
 };
 
+/** What one model-only run found (the owner's evaluation): never reaches a device. */
+export interface Evaluation {
+  attempts: number;
+  firstTry: boolean;
+  passed: boolean;
+  /** Every check that refused a reply in this run, and the plain words that had no single reading. */
+  checks: string[];
+  unknown: string[];
+  /** The sentence of the last reply (Hebrew letters only), the one a child would hear if it passed. */
+  say: string;
+}
+
 export interface Timings {
   modelMs: number;
   voiceMs: number;
   totalMs: number;
+  evaluation?: Evaluation;
   /** Why a vendor call failed, as a short fixed phrase (for the owner's speed test only). */
   detail?: string;
 }
@@ -273,6 +288,11 @@ export async function makeLine(
   let modelMs = 0;
   let reasons: string[] = [];
   const refused: string[] = [];
+  const seenChecks = new Set<string>();
+  const seenUnknown = new Set<string>();
+  let attemptsMade = 0;
+  let firstTry = false;
+  let lastSay = "";
   let verdict: ReturnType<typeof validateReply> | null = null;
   const addCost = async (chars: number) => {
     const micro = (inTokens * cfg.priceInPerMtok + outTokens * cfg.priceOutPerMtok) / 1_000_000 +
@@ -299,7 +319,14 @@ export async function makeLine(
       modelMs += performance.now() - t0;
       const raw = extractJson(ans.text);
       verdict = validateReply(raw, item, turn, lexicon, blocklist);
-      if (!verdict.ok) refused.push(`${verdict.failures.join("+")}: ${refusedText(raw)}`);
+      attemptsMade++;
+      lastSay = refusedText(raw);
+      if (verdict.ok) firstTry = attemptsMade === 1;
+      else {
+        refused.push(`${verdict.failures.join("+")}: ${lastSay}`);
+        for (const f of verdict.failures) seenChecks.add(f);
+        for (const w of verdict.unknown ?? []) seenUnknown.add(w);
+      }
     } catch (e) {
       modelMs += performance.now() - t0;
       await addCost(0);
@@ -314,6 +341,20 @@ export async function makeLine(
     reasons = retryAdvice(p.band, item.numberSet, verdict);
     // One retry, and only if there is time for a whole second attempt.
     if (tb.totalMs - (performance.now() - started) < tb.retryMinLeftMs) break;
+  }
+  if (p.modelOnly) {
+    await addCost(0);
+    if (timings) {
+      timings.evaluation = {
+        attempts: attemptsMade,
+        firstTry,
+        passed: !!verdict && verdict.ok,
+        checks: [...seenChecks],
+        unknown: [...seenUnknown],
+        say: lastSay,
+      };
+    }
+    return await ruleOut("no_voice", { modelMs });
   }
   if (!verdict || !verdict.ok) {
     await addCost(0);

@@ -33,6 +33,7 @@ class FakeGateway {
           'to_make': todo,
           'est_micro_usd': todo * microEach,
           'est_voice_chars': todo * 45,
+          'est_eval_micro_usd': total * 400,
         };
       case 'make':
         final int offset = body['offset']! as int;
@@ -46,6 +47,27 @@ class FakeGateway {
           'spent_micro_usd': count * microEach,
           'next_offset': end,
           'done': end >= total,
+          'total': total,
+        };
+      case 'evaluate':
+        final int from = body['offset']! as int;
+        final int to = (from + (body['limit']! as int)).clamp(0, total);
+        return <String, Object?>{
+          'rows': <Object?>[
+            for (int i = from; i < to; i++)
+              <String, Object?>{
+                'item': 'count.butterflies.3',
+                'attempts': i.isEven ? 1 : 2,
+                'firstTry': i.isEven,
+                'passed': i % 5 != 0,
+                'checks': i.isEven ? <Object?>[] : <Object?>['vocabulary'],
+                'unknown': i.isEven ? <Object?>[] : <Object?>['נספור'],
+                'say': 'x',
+              },
+          ],
+          'spent_micro_usd': (to - from) * 300,
+          'next_offset': to,
+          'done': to >= total,
           'total': total,
         };
       default:
@@ -201,4 +223,33 @@ void main() {
       expect(error.toString(), isNot(contains('wrong-secret')));
     },
   );
+
+  test('evaluate shows the cost first, refuses without the typed count, then reports the pass rate and the lacking words', () async {
+    final FakeGateway g = FakeGateway(total: 40);
+    await expectLater(
+      evaluate(g.send, _request, confirmLines: null),
+      throwsA(
+        isA<PrewarmFailed>().having(
+          (PrewarmFailed e) => e.message,
+          'message',
+          contains('--confirm-lines 40'),
+        ),
+      ),
+    );
+    expect(
+      g.asked.every((Map<String, Object?> b) => b['mode'] == 'plan'),
+      isTrue,
+      reason: 'nothing was asked',
+    );
+    final List<String> said = <String>[];
+    final LineEvaluation e = await evaluate(g.send, _request, confirmLines: 40, say: said.add);
+    expect(said.first, contains('0.02 USD'));
+    expect(e.lines, 40);
+    expect(e.firstTry, 20);
+    expect(e.passed, 32);
+    expect(e.refusedBy, <String, int>{'vocabulary': 20});
+    expect(e.unknownWords.first.value, 20);
+    expect(e.spentMicro, 40 * 300);
+    expect(e.describe(), contains('32 passed the ten checks (80%)'));
+  });
 }

@@ -4,10 +4,13 @@
 //   dart run tool/tutor_prewarm.dart plan    <pack file> --characters nitzi,bumbi [--bands A,B,C] [--forms f,m,n]
 //   dart run tool/tutor_prewarm.dart make    <pack file> --characters ... --confirm-lines <N>
 //   dart run tool/tutor_prewarm.dart measure <pack file> --characters ... [--count 5]
+//   dart run tool/tutor_prewarm.dart evaluate <pack file> --characters ... --confirm-lines <N> [--report <file>]
 //
 // `plan` makes nothing and spends nothing: it prints how many lines, how many voice characters and the estimated cost.
 // `make` refuses to start unless --confirm-lines equals the number `plan` printed as "to make". `measure` makes a few
 // fresh lines (kept nowhere) and prints how long the model and the voice took, so the speed is a number, not a guess.
+// `evaluate` asks the model (no voice, nothing kept) for every line of the grid and reports how often the ten checks
+// pass, which ones refuse, and the words the lexicon lacks; every sentence goes to the report file for reading.
 //
 // The publish secret is read from NITZNUTZ_PUBLISH_SECRET only. The project url comes from --url or
 // config/dev.local.json. No key of a vendor is ever on this computer's side of the call: the gateway holds them.
@@ -23,7 +26,7 @@ const String _publicKeyAsset = 'assets/pack_signing_public_key.txt';
 Future<void> main(List<String> args) async {
   if (args.length < 2) {
     stderr.writeln(
-      'usage: dart run tool/tutor_prewarm.dart plan|make|measure <pack file> --characters a,b '
+      'usage: dart run tool/tutor_prewarm.dart plan|make|measure|evaluate <pack file> --characters a,b '
       '[--bands A,B,C] [--forms f,m,n] [--confirm-lines N] [--count N] [--url <project url>]',
     );
     exit(2);
@@ -100,6 +103,18 @@ Future<void> _run(List<String> args) async {
         count: int.tryParse(_option(args, '--count') ?? '') ?? 5,
       );
       stdout.writeln(m.describe());
+    case 'evaluate':
+      final LineEvaluation e = await evaluate(
+        send,
+        request,
+        confirmLines: int.tryParse(_option(args, '--confirm-lines') ?? ''),
+        say: stdout.writeln,
+      );
+      stdout.writeln(e.describe());
+      final File report = File(_option(args, '--report') ?? '../out/tutor-eval.json');
+      report.parent.createSync(recursive: true);
+      report.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(e.rows));
+      stdout.writeln('every sentence is in ${report.path}');
     default:
       throw PrewarmFailed('unknown command: $command');
   }

@@ -240,3 +240,34 @@ Deno.test("tutor-prewarm: when a line cannot be made, measure still says how lon
   assert.equal(typeof j.runs[0].model_ms, "number");
   assert.equal(typeof j.runs[0].voice_ms, "number");
 });
+
+Deno.test("tutor-prewarm: evaluate asks the model only, keeps nothing, and says which checks refused which lines and which words", async () => {
+  const { ask, model, voice, store } = await setup();
+  model.complete = (req) => {
+    model.calls.push(req);
+    // The first line of the grid gets a good reply; the others get one unknown word and a good one on the retry.
+    const bad = { ...GOOD, say: "בואו נאכל בננה" };
+    const first = model.calls.length === 1;
+    const retry = req.user.includes("refused");
+    return Promise.resolve({
+      text: JSON.stringify(first || retry ? GOOD : bad),
+      inputTokens: 1000,
+      outputTokens: 40,
+    });
+  };
+  const plan = await (await ask({ mode: "plan" })).json();
+  assert.equal(typeof plan.est_eval_micro_usd, "number");
+  const j = await (await ask({ mode: "evaluate" })).json();
+  assert.equal(j.rows.length, plan.lines);
+  assert.equal(j.rows[0].firstTry, true);
+  assert.equal(j.rows[0].passed, true);
+  const second = j.rows[1];
+  assert.equal(second.firstTry, false);
+  assert.equal(second.attempts, 2);
+  assert.equal(second.passed, true, "the retry fixed it");
+  assert.deepEqual(second.checks, ["vocabulary"]);
+  assert.deepEqual(second.unknown, ["נאכל", "בננה"]);
+  assert.equal(voice.calls.length, 0, "no voice is made");
+  assert.equal(store.cache.size, 0, "nothing is kept");
+  assert.equal(j.spent_micro_usd > 0, true);
+});

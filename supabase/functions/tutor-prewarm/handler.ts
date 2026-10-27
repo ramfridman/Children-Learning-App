@@ -4,6 +4,8 @@
 //   plan     counts the lines and estimates the cost; makes nothing and spends nothing.
 //   make     makes up to `limit` lines of the grid from `offset`, within `max_micro_usd`.
 //   measure  makes `count` fresh lines (not kept) of the first entry and reports the server times of each.
+//   evaluate asks the model (no voice, nothing kept) for up to `limit` lines of the grid from `offset` and reports, per
+//            line, whether the ten checks passed, which ones refused it and which words had no single reading.
 import { GatewayError } from "../_shared/errors.ts";
 import type { FunctionSpec } from "../_shared/handler.ts";
 import type { Services } from "../_shared/handler.ts";
@@ -25,7 +27,7 @@ const EST_OUTPUT_TOKENS = 80;
 const EST_VOICE_CHARS = 45;
 
 interface Body {
-  mode: "plan" | "make" | "measure";
+  mode: "plan" | "make" | "measure" | "evaluate";
   pack_id: string;
   pack_version: string;
   character_ids: string[];
@@ -51,7 +53,7 @@ export const spec: FunctionSpec = {
   name: "tutor-prewarm",
   access: { kind: "publish" },
   shape: {
-    mode: { t: "enum", values: ["plan", "make", "measure"] },
+    mode: { t: "enum", values: ["plan", "make", "measure", "evaluate"] },
     pack_id: { t: "string", max: 41, pattern: /^[a-z0-9-]{3,41}$/ },
     pack_version: { t: "string", max: 14, pattern: /^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$/ },
     character_ids: { t: "array", of: { t: "string", max: 40, pattern: /^[a-z0-9-]{2,40}$/ }, maxItems: 12 },
@@ -99,6 +101,8 @@ export const spec: FunctionSpec = {
         to_make: todo,
         est_micro_usd: Math.round(todo * estimateMicro(cfg)),
         est_voice_chars: todo * EST_VOICE_CHARS,
+        // The model only, two attempts at most for every line of the grid, nothing cached.
+        est_eval_micro_usd: Math.round(grid.length * 2 * estimateModelMicro(cfg)),
         prompt_version: PROMPT_VERSION,
         validator_version: VALIDATOR_VERSION,
       };
@@ -128,6 +132,43 @@ export const spec: FunctionSpec = {
         );
       }
       return { runs, spent_micro_usd: Math.round(budget.spentMicro) };
+    }
+
+    if (b.mode === "evaluate") {
+      const rows: Array<Record<string, unknown>> = [];
+      let processed = 0;
+      for (const e of grid.slice(b.offset, b.offset + b.limit)) {
+        const tctx = contexts.get(`${e.itemId}/${e.characterId}`)!;
+        const timings: Timings = { modelMs: 0, voiceMs: 0, totalMs: 0 };
+        const r = await makeLine(
+          svc,
+          tctx,
+          cfg,
+          { ...paramsOf(b, e, budget, true), modelOnly: true },
+          performance.now(),
+          timings,
+        );
+        const ev = timings.evaluation;
+        rows.push({
+          item: e.itemId,
+          mistake: e.mistake,
+          hint: e.hintLevel,
+          band: e.band,
+          form: e.addressForm,
+          character: e.characterId,
+          ...ev ? ev : { rule: "rule" in r ? r.rule : "unknown", detail: timings.detail ?? "" },
+          model_ms: Math.round(timings.modelMs),
+        });
+        processed++;
+        if (budget.remainingMicro <= 0) break;
+      }
+      return {
+        rows,
+        spent_micro_usd: Math.round(budget.spentMicro),
+        next_offset: b.offset + processed,
+        done: b.offset + processed >= grid.length || budget.remainingMicro <= 0,
+        total: grid.length,
+      };
     }
 
     // make
@@ -199,6 +240,10 @@ function paramsOf(
     budget,
     fresh,
   };
+}
+
+function estimateModelMicro(cfg: Settings): number {
+  return (EST_INPUT_TOKENS * cfg.priceInPerMtok + EST_OUTPUT_TOKENS * cfg.priceOutPerMtok) / 1_000_000;
 }
 
 function estimateMicro(cfg: Settings): number {
