@@ -11,6 +11,8 @@ import {
   type Verdict,
 } from "./_shared/validator.ts";
 
+import { retryAdvice } from "./_shared/tutor_prompt.ts";
+
 const lex = loadLexicon();
 const blocklist = loadBlocklist();
 
@@ -156,6 +158,25 @@ Deno.test("6. maths stays true: every quantity belongs to the item, apart from i
     "once is an idiom, not a quantity",
   );
   assert.ok(check(reply("יש ארבעה"), item, turn({ hintLevel: 3 })).ok, "four belongs to this item");
+  // Every idiom counts, not only the last one that matches; "each one" is not a quantity, a bare "one" is.
+  assert.ok(check(reply("נוגעים בכל אחד פעם אחת"), item, turn({ hintLevel: 3 })).ok, "each one, once");
+  assert.ok(fails(check(reply("בואו נספור אחד"), item, turn({ hintLevel: 3 }))).includes("numbers"));
+});
+
+Deno.test("a refused line says which words and how many, and the retry advice names them", () => {
+  const v = check(reply("בואי נספור יחד בבננה"));
+  assert.ok(!v.ok);
+  if (!v.ok) {
+    assert.ok(v.unknown?.includes("בבננה") || v.unknown?.includes("נספור"), JSON.stringify(v.unknown));
+    const advice = retryAdvice("A", item.numberSet, v).join(" ");
+    assert.ok(advice.includes("not allowed") && advice.includes(v.unknown![0]), advice);
+  }
+  const long = check(reply("בואו נספור את הפרפרים אחד אחד ונגע בכל פרפר פעם אחת ועוד"));
+  assert.ok(!long.ok);
+  if (!long.ok) {
+    assert.ok(long.wordCount! > LIMITS.A.words);
+    assert.ok(retryAdvice("A", item.numberSet, long).join(" ").includes(`at most ${LIMITS.A.words} words`));
+  }
 });
 
 Deno.test("7. vocabulary: a word the lexicon does not know is refused", () => {

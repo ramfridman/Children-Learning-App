@@ -11,7 +11,7 @@ import { VoiceFailed } from "./elevenlabs.ts";
 import type { Services } from "./handler.ts";
 import { loadBlocklist, loadLexicon } from "./lexicon.ts";
 import type { CachedLine, CacheKey, TutorContext } from "./store.ts";
-import { type Attempt, PROMPT_VERSION, systemPrompt, userPrompt } from "./tutor_prompt.ts";
+import { type Attempt, PROMPT_VERSION, retryAdvice, systemPrompt, userPrompt } from "./tutor_prompt.ts";
 import { type Failure, type TurnFacts, validateReply, VALIDATOR_VERSION } from "./validator.ts";
 
 const lexicon = loadLexicon();
@@ -311,7 +311,7 @@ export async function makeLine(
       });
     }
     if (verdict.ok) break;
-    reasons = verdict.failures;
+    reasons = retryAdvice(p.band, item.numberSet, verdict);
     // One retry, and only if there is time for a whole second attempt.
     if (tb.totalMs - (performance.now() - started) < tb.retryMinLeftMs) break;
   }

@@ -5,7 +5,7 @@ import { hebrewRuns, stripMarks } from "./hebrew.ts";
 import type { Lexicon } from "./lexicon.ts";
 import { type Band, LIMITS, type TurnFacts } from "./validator.ts";
 
-export const PROMPT_VERSION = "p1";
+export const PROMPT_VERSION = "p2";
 
 export interface PromptItem {
   itemId: string;
@@ -48,12 +48,46 @@ export function systemPrompt(band: Band, form: TurnFacts["addressForm"], lex: Le
     'Reply with ONE JSON object and nothing else, with exactly these keys: {"say":"...","next":"...","hl":[],"mis":null,"reveals":false,"safety":"none"}.',
     `"say": Hebrew letters only. No niqqud, no digits (write numbers as words), no Latin letters, no emoji, no placeholders. At most ${limit.words} words and ${limit.sentences} sentence(s). One short question or one short encouraging step; never a lecture.`,
     ADDRESS[form],
-    "Use ONLY words from <vocabulary> and the words of the item and of the guide's name. You may add the one-letter prefixes ו ה ב כ ל מ ש to a word.",
+    "Use ONLY words from <vocabulary> and the words of the item and of the guide's name, spelled exactly as listed (the list uses the short spelling, so write נספר not נספור). You may add the one-letter prefixes ו ה ב כ ל מ ש to a word. Count your words before you answer; keep well under the limit.",
     "Never ask personal questions (name, home, school, family, photos). Never mention purchases, links, brands or anything scary. Never create pressure or guilt. Stay on the task.",
     "Never state the correct answer, or a number that is not in the item, unless the hint level is at or above the threshold.",
     '"next" is one of the allowed actions or "none". "hl" lists object ids to highlight, only from the list. "mis" is the misconception tag that fits the mistake, or null. "reveals" is true only if the line states the answer. "safety" is always "none".',
     `<vocabulary>${vocabulary}</vocabulary>`,
   ].join("\n");
+}
+
+/** What to tell the model when its reply was refused: one plain sentence per failed check, with the specifics it needs. */
+export function retryAdvice(
+  band: Band,
+  numberSet: readonly number[],
+  v: { failures: readonly string[]; unknown?: readonly string[]; wordCount?: number },
+): string[] {
+  const limit = LIMITS[band];
+  const out: string[] = [];
+  for (const f of v.failures) {
+    if (f === "length") {
+      out.push(
+        `It was too long (${
+          v.wordCount ?? "too many"
+        } words): at most ${limit.words} words in total and ${limit.sentences} sentence(s). Cut words.`,
+      );
+    } else if (f === "vocabulary" || f === "pronunciation") {
+      const bad = (v.unknown ?? []).map((w) => safe(w)).join(" ");
+      out.push(
+        `These words are not allowed${
+          bad ? ` (${bad})` : ""
+        }: use only words that appear in <vocabulary> (with the ו ה ב כ ל מ ש prefixes), spelled exactly as listed there; pick other words.`,
+      );
+    } else if (f === "numbers") {
+      out.push(
+        `It named a quantity that is not in the item. The only number words you may use are for: ${
+          numberSet.join(", ") || "none"
+        }. Avoid אחד and אחת except in the phrase פעם אחת.`,
+      );
+    } else if (f === "leak") out.push("It gave the answer away too early.");
+    else out.push(`The check "${f}" failed.`);
+  }
+  return out;
 }
 
 /** The part that depends on the item and the turn. */
@@ -98,9 +132,7 @@ export function userPrompt(
     "</item>",
   ];
   if (retryReasons.length > 0) {
-    lines.push(
-      `Your previous reply was refused (${retryReasons.join(", ")}). Write a new one that fixes this.`,
-    );
+    lines.push(`Your previous reply was refused. ${retryReasons.join(" ")} Write a new one that fixes this.`);
   }
   lines.push("Write the JSON reply now.");
   return lines.join("\n");

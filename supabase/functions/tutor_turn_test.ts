@@ -283,7 +283,10 @@ Deno.test("tutor-turn: a refused reply is retried once with the reason, a second
   const j = await json(await a.turn({ hint_level: 1 }));
   assert.equal(j.results[0].source, "live");
   assert.equal(a.model.calls.length, 2);
-  assert.ok(a.model.calls[1].user.includes("refused (leak"), "the second prompt carries the reason");
+  assert.ok(
+    a.model.calls[1].user.includes("refused. It gave the answer away"),
+    "the second prompt carries the reason",
+  );
   assert.equal(a.voice.calls.length, 1);
 
   const b = await setup();

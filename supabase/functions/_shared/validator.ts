@@ -58,10 +58,16 @@ export interface TurnFacts {
 
 export type Verdict =
   | { ok: true; reply: TutorReply; plain: string; vocalised: string }
-  | { ok: false; failures: Failure[] };
+  | {
+    ok: false;
+    failures: Failure[];
+    /** For the retry prompt: the plain words that have no single reading (at most six), and how many words the line had. */
+    unknown?: string[];
+    wordCount?: number;
+  };
 
-/** Phrases that look like quantities but are not (once, one by one). Plain words. */
-export const NUMBER_IDIOMS = ["פעם אחת", "אחד אחד", "אחת אחת", "אחד אחד"];
+/** Phrases that look like quantities but are not (once, one by one, each one). Plain words. */
+export const NUMBER_IDIOMS = ["פעם אחת", "אחד אחד", "אחת אחת", "כל אחד", "כל אחת"];
 
 const REPLY_KEYS = ["say", "next", "hl", "mis", "reveals", "safety"];
 const SAFETY_VALUES = ["none", "worry", "inappropriate"];
@@ -141,11 +147,14 @@ export function validateReply(
   // 7 and 8. Every word has exactly one reading and is in the vocabulary.
   const vocalisedWords: string[] = [];
   const resolutions = words.map((w) => lex.resolve(w, extra));
-  for (const r of resolutions) {
+  const unknown: string[] = [];
+  resolutions.forEach((r, i) => {
     if (r.ok) vocalisedWords.push(r.form);
-    else if (r.reason === "unknown") failures.add("vocabulary");
-    else failures.add("pronunciation");
-  }
+    else {
+      failures.add(r.reason === "unknown" ? "vocabulary" : "pronunciation");
+      if (unknown.length < 6 && !unknown.includes(words[i])) unknown.push(words[i]);
+    }
+  });
 
   // 4. Gender: a form that speaks to one child must match the parent's choice; a first-person form, the guide's gender.
   for (const r of resolutions) {
@@ -158,11 +167,10 @@ export function validateReply(
   }
 
   // 6. Maths stays true: every quantity in the line belongs to the item (apart from listed idioms).
-  let counted = words;
   const text = words.join(" ");
-  for (const idiom of NUMBER_IDIOMS) {
-    if (text.includes(idiom)) counted = words.join(" ").replace(idiom, " ").split(" ").filter((x) => x);
-  }
+  let rest = text;
+  for (const idiom of NUMBER_IDIOMS) rest = rest.replaceAll(idiom, " ");
+  const counted = rest.split(" ").filter((x) => x);
   const allowedNumbers = new Set(item.numberSet);
   for (const w of counted) {
     const r = lex.resolve(w, extra);
@@ -205,7 +213,7 @@ export function validateReply(
   if (reply.mis !== null && !active.has(reply.mis)) failures.add("targets");
   if (reply.safety !== "none") failures.add("targets");
 
-  if (failures.size > 0) return { ok: false, failures: [...failures] };
+  if (failures.size > 0) return { ok: false, failures: [...failures], unknown, wordCount: words.length };
 
   // The line as it will be voiced and captioned: each Hebrew word replaced by its one reading.
   let i = 0;
