@@ -8,7 +8,7 @@ Last updated: 2026-10-26 (M5 built).
 
 | # | What | Why it waits | Where |
 |---|------|--------------|-------|
-| D1 | **Confirm M4** (characters and voice out), so Claude can merge `m4-characters-voice` into `main` | CI is green; the owner was away from the PC and could not look at the report | `docs/milestones/M4.md` section 11 |
+| ~~D1~~ | ~~Confirm M4 and M5~~ | Done 2026-10-27: both merged into `main`, CI green | `docs/milestones/M4.md`, `M5.md` |
 | ~~D2~~ | ~~OK for the M5 plan and its packages~~ | Done 2026-10-26: approved, with adult recordings now and the children's accuracy left for a later phase | `docs/milestones/M5.md` |
 
 M5 work, once approved, is stacked on the M4 branch (`m5-voice-in` starts from `m4-characters-voice`), so nothing is merged to `main` without D1.
