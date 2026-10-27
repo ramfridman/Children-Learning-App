@@ -194,8 +194,7 @@ the earlier ones are done. Never paste a key into the chat.
    temporary file is deleted at once):
 
    ```powershell
-   $dir = "$env:USERPROFILE
-itznutz-secrets"
+   $dir = "$env:USERPROFILE\nitznutz-secrets"
    New-Item -ItemType Directory -Force -Path $dir | Out-Null
    function Ask($name) {
      $s = Read-Host -AsSecureString $name
@@ -212,8 +211,8 @@ itznutz-secrets"
      "ANTHROPIC_API_KEY=$(Ask 'Anthropic key')",
      "ELEVENLABS_API_KEY=$(Ask 'ElevenLabs key')",
      "CONTENT_PUBLISH_SECRET=$publish"
-   ) | Set-Content -Path "$dir	utor.env" -Encoding ascii
-   npx supabase secrets set --env-file "$dir	utor.env" --project-ref ungkvkabqxssggttajfs
+   ) | Set-Content -Path "$dir\tutor.env" -Encoding ascii
+   npx supabase secrets set --env-file "$dir\tutor.env" --project-ref ungkvkabqxssggttajfs
    Remove-Item -Recurse -Force $dir
    $publish | Set-Clipboard
    ```
