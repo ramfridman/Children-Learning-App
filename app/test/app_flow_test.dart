@@ -351,12 +351,22 @@ void main() {
       expect(find.textContaining(He.areaThisDevice.text), findsOneWidget);
       expect(find.text(He.areaRevoke.text), findsOneWidget, reason: 'this device has no revoke button');
 
+      await tester.scrollUntilVisible(
+        find.text(He.areaRevoke.text),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text(He.areaRevoke.text));
       await tester.pumpAndSettle();
       await tester.tap(find.text(He.confirmNo.text));
       await tester.pumpAndSettle();
       expect(rig.devices.revoked, isEmpty);
 
+      await tester.scrollUntilVisible(
+        find.text(He.areaRevoke.text),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text(He.areaRevoke.text));
       await tester.pumpAndSettle();
       await tester.tap(find.text(He.confirmYes.text));
