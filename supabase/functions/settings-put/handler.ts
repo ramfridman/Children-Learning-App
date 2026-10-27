@@ -1,5 +1,5 @@
 // The parent's rules for the family (time limits, rest hours, the weekly windows, the lock, whether the child's words
-// are kept in alerts). One document; the last write wins and the server counts the versions. Parent devices only.
+// are kept in alerts, whether the AI helper is on). One document; the last write wins and the server counts the versions. Parent devices only.
 // The document is checked field by field: anything it does not name is refused.
 import { GatewayError } from "../_shared/errors.ts";
 import type { FunctionSpec } from "../_shared/handler.ts";
@@ -32,6 +32,7 @@ export function checkRules(rules: unknown): Record<string, unknown> {
       case "restOn":
       case "lockWhenDone":
       case "keepWords":
+      case "aiHelper":
         if (typeof value !== "boolean") throw bad(key);
         break;
       case "restStartMinute":

@@ -1,7 +1,11 @@
 import 'package:drift/drift.dart' show Value;
+
+import 'dart:convert';
+
 import 'package:uuid/uuid.dart';
 
 import '../data/app_database.dart';
+import '../parent/parent_rules.dart';
 
 /// One call to a gateway function, already signed and with the device's own id and token filled in.
 typedef SyncCall = Future<Map<String, Object?>> Function(String name, Map<String, Object?> body);
@@ -91,6 +95,14 @@ class SyncEngine {
     int applied = 0;
     int added = 0;
     int deleted = 0;
+    int alertsOut = 0;
+    int alertsIn = 0;
+    bool rules = false;
+    try {
+      alertsOut = await _pushAlerts();
+    } on Object {
+      // Left "not sent": they go next time.
+    }
     try {
       final ({int pulled, int applied, int added, int deleted}) r = await _pull();
       pulled = r.pulled;
@@ -100,7 +112,20 @@ class SyncEngine {
     } on Object {
       // Same: the cursor was not moved past anything that was not applied.
     }
+    try {
+      if (isParent) alertsIn = await _pullAlerts();
+    } on Object {
+      // The parent sees them next time.
+    }
+    try {
+      rules = await _syncSettings();
+    } on Object {
+      // The rules stay as they are here until the server can be reached.
+    }
     return SyncReport(
+      pushedAlerts: alertsOut,
+      pulledAlerts: alertsIn,
+      rulesApplied: rules,
       pushedEvents: pushed,
       refusedEvents: refused,
       pulledEvents: pulled,
@@ -257,6 +282,114 @@ class SyncEngine {
       if (events.isEmpty && dropA.isEmpty && dropS.isEmpty) break;
     }
     return (pushed: pushed, refused: refused);
+  }
+
+  // ---- alerts and the family's rules ----
+
+  /// Sends the alerts found on this device that the family has not been told about. Returns how many were sent.
+  Future<int> _pushAlerts() async {
+    int sent = 0;
+    final Set<String> gone = await _tombstoned();
+    while (true) {
+      final List<Alert> rows = await db.unsyncedAlerts(limit: batch);
+      if (rows.isEmpty) break;
+      final List<int> done = <int>[];
+      for (final Alert a in rows) {
+        if (a.profileId != null && gone.contains(a.profileId)) {
+          done.add(a.id);
+          continue;
+        }
+        final Map<String, Object?> answer = await call('alert-create', <String, Object?>{
+          'child_id': ?a.profileId,
+          'category': a.category,
+          'severity': a.severity,
+          'count': a.count,
+          if (a.detail.isNotEmpty) 'detail': a.detail,
+          if (a.words.isNotEmpty) 'words': a.words,
+          'key': a.dedupeKey,
+          'at': a.at.millisecondsSinceEpoch,
+        });
+        // New, a duplicate, or refused (the server does not know the child): the alert is not sent again.
+        done.add(a.id);
+        if (answer['status'] == 'new') sent++;
+      }
+      await db.markAlertsSynced(done, _now);
+      if (rows.length < batch) break;
+    }
+    return sent;
+  }
+
+  /// A parent device takes in the alerts the family's other devices raised. Returns how many were new here.
+  Future<int> _pullAlerts() async {
+    final Map<String, Object?> answer = await call('alert-list', const <String, Object?>{});
+    final Set<String> gone = await _tombstoned();
+    int added = 0;
+    for (final Object? raw in (answer['alerts'] as List<Object?>? ?? const <Object?>[])) {
+      final Map<String, Object?> a = raw! as Map<String, Object?>;
+      final String? child = a['child_id'] as String?;
+      if (child != null && gone.contains(child)) continue;
+      final bool fresh = await db.addAlert(
+        AlertsCompanion.insert(
+          at: DateTime.fromMillisecondsSinceEpoch(a['at']! as int, isUtc: true),
+          profileId: Value<String?>(child),
+          category: a['category']! as String,
+          severity: a['severity']! as String,
+          count: Value<int>(a['count'] as int? ?? 0),
+          detail: Value<String>(a['detail'] as String? ?? ''),
+          words: Value<String>(a['words'] as String? ?? ''),
+          dedupeKey: a['key']! as String,
+          // Raised elsewhere: never sent back.
+          syncedAt: Value<DateTime?>(_now),
+        ),
+      );
+      if (fresh) added++;
+    }
+    return added;
+  }
+
+  static const String _versionKey = 'settings_version';
+  static const String _fingerprintKey = 'settings_fingerprint';
+
+  /// The family's rules as this device holds them: the time rules, whether the child's words are kept, and the AI helper.
+  Future<Map<String, Object?>> _localRules() async => <String, Object?>{
+    ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
+    'keepWords': await db.setting('keep_words') != 'off',
+    'aiHelper': await db.setting('ai_helper') == 'on',
+  };
+
+  /// Keeps the family's rules the same on every device, the last write by the server's count winning. A parent device
+  /// that changed the rules since it last synced sends them; any other device (and a parent device that has never
+  /// synced) takes the server's rules if they are newer. A new phone therefore takes the family's rules instead of
+  /// sending its defaults over them. Returns true if the rules here were replaced.
+  Future<bool> _syncSettings() async {
+    final String? lastFingerprint = await db.setting(_fingerprintKey);
+    final String local = jsonEncode(await _localRules());
+    int version = int.tryParse(await db.setting(_versionKey) ?? '') ?? 0;
+    if (isParent && lastFingerprint != null && lastFingerprint != local) {
+      final Map<String, Object?> put = await call('settings-put', <String, Object?>{'rules_json': local});
+      version = put['version']! as int;
+      await db.putSetting(_versionKey, '$version');
+      await db.putSetting(_fingerprintKey, local);
+      return false;
+    }
+    final Map<String, Object?> got = await call('settings-get', const <String, Object?>{});
+    final int serverVersion = got['version'] as int? ?? 0;
+    final Object? rules = got['rules'];
+    if (serverVersion > version && rules is Map<String, Object?>) {
+      await db.putSetting('parent_rules', ParentRules.fromJson(rules).encode());
+      await db.putSetting('keep_words', rules['keepWords'] == false ? 'off' : 'on');
+      await db.putSetting('ai_helper', rules['aiHelper'] == true ? 'on' : 'off');
+      await db.putSetting(_versionKey, '$serverVersion');
+      await db.putSetting(_fingerprintKey, jsonEncode(await _localRules()));
+      return true;
+    }
+    if (isParent && lastFingerprint == null) {
+      // Never synced and the server has nothing: these are the family's first rules.
+      final Map<String, Object?> put = await call('settings-put', <String, Object?>{'rules_json': local});
+      await db.putSetting(_versionKey, '${put['version']}');
+    }
+    await db.putSetting(_fingerprintKey, local);
+    return false;
   }
 
   // ---- in ----

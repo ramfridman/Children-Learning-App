@@ -1,11 +1,16 @@
 // A fake of the gateway's sync functions that behaves like the real ones (the Deno tests prove the real ones): one
 // family, a log numbered by the server, profiles with nicknames, tombstones, duplicates ignored, unknown or deleted
 // children refused. Devices call it through [callFor], which can be made to fail or to lose its answer.
+import 'dart:convert';
+
 class FakeFamilyServer {
   final List<Map<String, Object?>> log = <Map<String, Object?>>[];
   final Map<String, Map<String, Object?>> children = <String, Map<String, Object?>>{};
   final List<String> tombstones = <String>[];
   final List<String> calls = <String>[];
+  final List<Map<String, Object?>> alerts = <Map<String, Object?>>[];
+  Map<String, Object?>? rules;
+  int rulesVersion = 0;
   int _seq = 0;
 
   /// While true every call fails (the phone is offline).
@@ -55,6 +60,7 @@ class FakeFamilyServer {
         final String id = body['child_id']! as String;
         children.remove(id);
         log.removeWhere((Map<String, Object?> e) => e['child_id'] == id);
+        alerts.removeWhere((Map<String, Object?> a) => a['child_id'] == id);
         if (!tombstones.contains(id)) tombstones.add(id);
         return <String, Object?>{'ok': true};
       case 'sync-push':
@@ -88,6 +94,23 @@ class FakeFamilyServer {
           'children': children.values.toList(),
           'tombstones': List<String>.of(tombstones),
         };
+      case 'alert-create':
+        final String? child = body['child_id'] as String?;
+        if (child != null && !children.containsKey(child)) return <String, Object?>{'status': 'refused'};
+        if (alerts.any((Map<String, Object?> a) => a['key'] == body['key'])) {
+          return <String, Object?>{'status': 'duplicate'};
+        }
+        alerts.add(<String, Object?>{...body, 'child_id': child, 'id': 'a${alerts.length}', 'read_at': null});
+        return <String, Object?>{'status': 'new'};
+      case 'alert-list':
+        if (!parent) throw StateError('forbidden');
+        return <String, Object?>{'alerts': List<Map<String, Object?>>.of(alerts)};
+      case 'settings-put':
+        if (!parent) throw StateError('forbidden');
+        rules = jsonDecode(body['rules_json']! as String) as Map<String, Object?>;
+        return <String, Object?>{'version': ++rulesVersion};
+      case 'settings-get':
+        return <String, Object?>{'rules': rules, 'version': rulesVersion};
     }
     throw StateError('unknown function $name');
   }

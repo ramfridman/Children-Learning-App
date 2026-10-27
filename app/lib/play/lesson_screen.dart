@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import '../app/companion.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
+import '../app/sync_providers.dart';
 import '../app/tutor_providers.dart';
 import '../app/voice_input.dart';
 import '../characters/character.dart';
@@ -55,6 +56,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   TemplateSession? _session;
   int _sessionIndex = -1;
   late final SessionRecorder _recorder;
+  late final SyncRunner _sync;
   late final Future<int> _visit;
   late final VoiceDirector _director;
   LessonVoice? _voice;
@@ -78,6 +80,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     WidgetsBinding.instance.addObserver(this);
     _director = ref.read(voiceDirectorProvider);
     _recorder = ref.read(sessionRecorderProvider);
+    _sync = ref.read(syncRunnerProvider);
     _startedAt = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs());
     _visit = _recorder.start(widget.profileId, 'lesson:${widget.lessonId}').then((int id) => _visitId = id);
     unawaited(_loadTime());
@@ -156,7 +159,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     final int? id = _visitId;
     if (id == null || _visitEnded) return;
     _visitEnded = true;
-    _recorder.end(id, reason).catchError((Object _) {});
+    // The visit is saved first; then the family is told (the runner outlives this screen).
+    final SyncRunner sync = _sync;
+    _recorder.end(id, reason).catchError((Object _) {}).whenComplete(() => unawaited(sync.now(force: true)));
   }
 
   /// The app left the screen (home, another app, the notification shade): the microphone closes at once and the guide

@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/engine/engine.dart';
+import 'package:nitznutz/parent/parent_rules.dart';
 import 'package:nitznutz/sync/sync_engine.dart';
 
 import 'engine/fixtures.dart';
@@ -301,4 +302,156 @@ void main() {
       }
     },
   );
+
+  Future<void> raise(
+    Phone p,
+    String key, {
+    String category = 'frustration',
+    String? child = kid,
+    String words = '',
+  }) => p.db.addAlert(
+    AlertsCompanion.insert(
+      at: DateTime.utc(2026, 11, 20, 11),
+      profileId: Value<String?>(child),
+      category: category,
+      severity: 'attention',
+      dedupeKey: key,
+      words: Value<String>(words),
+    ),
+  );
+
+  group('alerts', () {
+    test('an alert raised on a child device reaches the parent phone once, and is never sent back', () async {
+      await p1.addChild();
+      await p1.engine.syncOnce();
+      final Phone kidPhone = Phone(dev3, server, parent: false);
+      addTearDown(kidPhone.db.close);
+      await kidPhone.engine.syncOnce();
+      await raise(kidPhone, 'upset:1');
+      final SyncReport out = await kidPhone.engine.syncOnce();
+      expect(out.pushedAlerts, 1);
+      expect(await kidPhone.db.unsyncedAlerts(), isEmpty);
+      final SyncReport got = await p1.engine.syncOnce();
+      expect(got.pulledAlerts, 1);
+      final Alert a = (await p1.db.allAlerts()).single;
+      expect(a.dedupeKey, 'upset:1');
+      expect(a.profileId, kid);
+      expect(a.syncedAt, isNotNull, reason: 'it came from elsewhere, so it is not sent back');
+      final SyncReport again = await p1.engine.syncOnce();
+      expect(again.pulledAlerts, 0);
+      expect(again.pushedAlerts, 0);
+      expect(server.alerts.length, 1);
+    });
+
+    test('the same alert found on two phones is one alert for the family', () async {
+      await p1.addChild();
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      await raise(p1, 'limit:day1', category: 'pastLimit');
+      await raise(p2, 'limit:day1', category: 'pastLimit');
+      await p1.engine.syncOnce();
+      final SyncReport second = await p2.engine.syncOnce();
+      expect(server.alerts.length, 1);
+      expect(second.pushedAlerts, 0, reason: 'the server called it a duplicate');
+      expect((await p2.db.allAlerts()).length, 1);
+    });
+
+    test('an alert of a deleted child is never sent, an alert about the gate has no child, and words travel only when kept', () async {
+      await p1.addChild();
+      await p1.engine.syncOnce();
+      await raise(p1, 'gate:1', category: 'gateAttempts', child: null);
+      await raise(p1, 'words:1', category: 'inappropriateWords', words: 'חרא');
+      await raise(p1, 'words:2', category: 'inappropriateWords');
+      await p1.engine.syncOnce();
+      final Map<String, Object?> gate = server.alerts.firstWhere(
+        (Map<String, Object?> a) => a['key'] == 'gate:1',
+      );
+      expect(gate['child_id'], isNull);
+      expect(server.alerts.firstWhere((Map<String, Object?> a) => a['key'] == 'words:1')['words'], 'חרא');
+      expect(
+        server.alerts.firstWhere((Map<String, Object?> a) => a['key'] == 'words:2').containsKey('words'),
+        isFalse,
+      );
+      await raise(p1, 'upset:9');
+      await p1.engine.deleteChild(kid);
+      expect(server.alerts.where((Map<String, Object?> a) => a['key'] == 'upset:9'), isEmpty);
+      expect(
+        await p1.db.allAlerts(),
+        isNotEmpty,
+        reason: 'the gate alert is about the device, not the child',
+      );
+    });
+  });
+
+  group('the family rules', () {
+    Future<void> setRules(Phone p, ParentRules r, {bool keepWords = true, bool ai = false}) async {
+      await p.db.putSetting('parent_rules', r.encode());
+      await p.db.putSetting('keep_words', keepWords ? 'on' : 'off');
+      await p.db.putSetting('ai_helper', ai ? 'on' : 'off');
+    }
+
+    Future<ParentRules> rulesOf(Phone p) async => ParentRules.decode(await p.db.setting('parent_rules'));
+
+    test('rules set on one parent phone reach the other, and a new phone takes them instead of sending its defaults', () async {
+      await p1.engine.syncOnce(); // first rules of the family: its defaults
+      await setRules(
+        p1,
+        const ParentRules(limitByBand: <String, int>{'A': 10, 'B': 25, 'C': 35}, restOn: false),
+        keepWords: false,
+        ai: true,
+      );
+      await p1.engine.syncOnce();
+      expect(server.rulesVersion, 2);
+
+      final SyncReport got = await p2.engine.syncOnce();
+      expect(got.rulesApplied, isTrue);
+      expect(
+        server.rulesVersion,
+        2,
+        reason: 'the new phone did not send its defaults over the rules of the family',
+      );
+      final ParentRules r = await rulesOf(p2);
+      expect(r.limitFor('x', 1), 25);
+      expect(r.restOn, isFalse);
+      expect(await p2.db.setting('keep_words'), 'off');
+      expect(await p2.db.setting('ai_helper'), 'on');
+    });
+
+    test('the last change wins by the count of the server, and a phone that changed nothing takes the newer rules', () async {
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      await setRules(p1, const ParentRules(restOn: false));
+      await setRules(p2, const ParentRules(lockWhenDone: false));
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce(); // the later write
+      expect(server.rules!['lockWhenDone'], isFalse);
+      expect(server.rules!['restOn'], isTrue, reason: 'the second write replaced the first as a whole');
+      await p1.engine.syncOnce();
+      final ParentRules r = await rulesOf(p1);
+      expect(r.lockWhenDone, isFalse);
+      expect(r.restOn, isTrue);
+      final int version = server.rulesVersion;
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      expect(server.rulesVersion, version, reason: 'nothing changed, nothing was sent');
+    });
+
+    test('a child device takes the rules and never sends any', () async {
+      await p1.engine.syncOnce();
+      await setRules(p1, const ParentRules(restOn: false));
+      await p1.engine.syncOnce();
+      final Phone kidPhone = Phone(dev3, server, parent: false);
+      addTearDown(kidPhone.db.close);
+      final SyncReport r = await kidPhone.engine.syncOnce();
+      expect(r.rulesApplied, isTrue);
+      expect((await rulesOf(kidPhone)).restOn, isFalse);
+      await kidPhone.db.putSetting('parent_rules', const ParentRules(restOn: true).encode());
+      await kidPhone.engine.syncOnce();
+      expect(
+        server.rules!['restOn'],
+        isFalse,
+        reason: 'a child device cannot change the rules of the family',
+      );
+    });
+  });
 }

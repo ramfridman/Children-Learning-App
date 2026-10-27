@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
 import 'package:nitznutz/app/app.dart';
 import 'package:nitznutz/app/companion.dart';
+import 'package:nitznutz/app/sync_providers.dart';
 import 'package:nitznutz/app/tutor_providers.dart';
 import 'package:nitznutz/app/voice_input.dart';
 import 'package:nitznutz/tutor/tutor.dart';
@@ -102,6 +103,7 @@ class AppRig {
     this.switchAnswersAfter = Duration.zero,
     this.holdCharacters,
     this.rules,
+    this.extraOverrides = const <Override>[],
     int? clockMs,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
@@ -133,6 +135,9 @@ class AppRig {
 
   /// The parent's time rules to start with (the app's defaults when null).
   final ParentRules? rules;
+
+  /// More provider overrides for one test (a sync test gives its own engine here); they come last and win.
+  final List<Override> extraOverrides;
 
   /// How long the server takes to answer the helper switch (the first call after the function slept).
   final Duration switchAnswersAfter;
@@ -190,6 +195,8 @@ class AppRig {
     voicePlayerProvider.overrideWithValue(player),
     speechEngineProvider.overrideWithValue(speech),
     if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),
+    // Nothing reaches for the network behind a test's back; sync tests give their own engine.
+    syncEnabledProvider.overrideWithValue(false),
     remoteSwitchesProvider.overrideWithValue(
       RemoteSwitches(() async {
         if (switchAnswersAfter > Duration.zero) await Future<void>.delayed(switchAnswersAfter);
@@ -215,6 +222,7 @@ class AppRig {
         onEvent: (String k, String d) => db.recordEvent(k, DateTime.utc(2026, 10, 26), detail: d),
       ),
     ),
+    ...extraOverrides,
   ];
 
   Future<void> pump(WidgetTester tester, {Size size = const Size(852, 393), bool reduceMotion = true}) async {

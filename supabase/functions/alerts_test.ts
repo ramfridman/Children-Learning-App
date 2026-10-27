@@ -256,7 +256,8 @@ Deno.test("settings-put: only a document the app can read gets in", async () => 
     { schedule: { "1": [[1]] } },
     { limitByChild: { "x": 30 } },
     { nickname: "נועה" },
-    { aiHelper: true },
+    { aiHelper: "yes" },
+    { voiceEnabled: true },
   ];
   for (const doc of bad) {
     const rules_json = typeof doc === "string" ? doc : JSON.stringify(doc);
@@ -394,4 +395,20 @@ Deno.test("fcm: notifyParents never throws and never waits long for a slow push"
   };
   assert.equal(await notifyParents(new FakePush(), broken, FAMILY_A, "none"), 0);
   assert.equal(await notifyParents(undefined, store, FAMILY_A, "none"), 0);
+});
+
+Deno.test("settings-put: the AI helper switch and the keep-the-words switch are part of the family's rules", async () => {
+  const { h, parent, child, j } = await setup();
+  const rules = { aiHelper: true, keepWords: false, restOn: true };
+  assert.deepEqual(
+    await j(await call(h.put, parent, "settings-put", { rules_json: JSON.stringify(rules) })),
+    {
+      version: 1,
+    },
+  );
+  assert.deepEqual(
+    (await j(await call(h.get, child, "settings-get", {}))).rules,
+    rules,
+    "a child device reads them",
+  );
 });

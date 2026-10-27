@@ -7,6 +7,8 @@ import '../app/alerts_provider.dart';
 import '../app/progress_provider.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
+import '../app/sync_providers.dart';
+import '../sync/sync_engine.dart';
 import '../app/voice_input.dart';
 import '../core/config.dart' show appVersion;
 import '../core/errors.dart';
@@ -46,7 +48,9 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
     super.initState();
     unawaited(_loadDevices());
     // Look for alerts now, so that the parent sees today's before reading anything else.
-    unawaited(scanForAlerts(ref).catchError((Object _) {}));
+    unawaited(
+      scanForAlerts(ref).catchError((Object _) {}).then((_) => ref.read(syncRunnerProvider).now(force: true)),
+    );
   }
 
   Future<void> _loadDevices() async {
@@ -100,8 +104,13 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
 
   Future<void> _remove(Profile p) async {
     if (!await _confirm(He.areaConfirmRemove.fill(<String, String>{'child': p.name}))) return;
-    final AppDatabase db = await ref.read(databaseProvider.future);
-    await db.removeProfile(p.id);
+    // Gone from this phone at once; on the server (and so from every phone) as soon as it can be reached.
+    final SyncEngine? engine = await ref.read(syncEngineProvider.future);
+    if (engine != null) {
+      await engine.deleteChild(p.id);
+    } else {
+      await (await ref.read(databaseProvider.future)).deleteChildData(p.id);
+    }
     await ref.read(appStateProvider.notifier).reload();
   }
 
@@ -230,8 +239,13 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                   quiet: true,
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (BuildContext c) =>
-                          ChildFormScreen(onSaved: () => Navigator.pop(c), onCancel: () => Navigator.pop(c)),
+                      builder: (BuildContext c) => ChildFormScreen(
+                        onSaved: () {
+                          Navigator.pop(c);
+                          unawaited(ref.read(syncRunnerProvider).now(force: true));
+                        },
+                        onCancel: () => Navigator.pop(c),
+                      ),
                     ),
                   ),
                 ),
