@@ -11,7 +11,16 @@ import { VoiceFailed } from "./elevenlabs.ts";
 import type { Services } from "./handler.ts";
 import { loadBlocklist, loadLexicon } from "./lexicon.ts";
 import type { CachedLine, CacheKey, TutorContext } from "./store.ts";
-import { type Attempt, PROMPT_VERSION, retryAdvice, systemPrompt, userPrompt } from "./tutor_prompt.ts";
+import {
+  type Attempt,
+  moveFor,
+  type Moves,
+  movesOf,
+  PROMPT_VERSION,
+  retryAdvice,
+  systemPrompt,
+  userPrompt,
+} from "./tutor_prompt.ts";
 import { type Failure, type TurnFacts, validateReply, VALIDATOR_VERSION } from "./validator.ts";
 
 const lexicon = loadLexicon();
@@ -35,6 +44,8 @@ export interface Settings {
   priceInPerMtok: number;
   priceOutPerMtok: number;
   priceVoicePer1k: number;
+  /** Teaching moves by misconception tag, help level and alternative (see content/tutor-moves.json). */
+  moves: Moves;
 }
 
 export const CONFIG_KEYS = [
@@ -46,6 +57,7 @@ export const CONFIG_KEYS = [
   "tutor_cost_cap_micro",
   "elevenlabs_model_id",
   "tutor_price_micro",
+  "tutor_moves",
 ] as const;
 
 const num = (v: unknown, d: number) => (typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : d);
@@ -68,6 +80,7 @@ export function settings(c: Record<string, unknown>): Settings {
     priceInPerMtok: num(price.in_per_mtok, 1_000_000),
     priceOutPerMtok: num(price.out_per_mtok, 5_000_000),
     priceVoicePer1k: num(price.voice_per_1k_chars, 300_000),
+    moves: movesOf(c.tutor_moves),
   };
 }
 
@@ -282,6 +295,7 @@ export async function makeLine(
   const descriptions = new Map(Object.entries(tctx.descriptions));
   const system = systemPrompt(p.band, p.addressForm, lexicon);
   const tb = p.kind === "warm" ? WARM_BUDGET : tutor.budget;
+  const move = moveFor(cfg.moves, p.mistake, p.hintLevel, p.band, p.addressForm);
 
   let inTokens = 0;
   let outTokens = 0;
@@ -310,7 +324,7 @@ export async function makeLine(
     try {
       const ans = await tutor.model.complete({
         system,
-        user: userPrompt(item, turn, p.attempts, descriptions, reasons),
+        user: userPrompt(item, turn, p.attempts, descriptions, reasons, move),
         maxTokens: tb.modelMaxTokens,
         timeoutMs: Math.max(200, Math.min(tb.modelMs, left - 300)),
       });

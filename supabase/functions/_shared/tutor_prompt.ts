@@ -5,7 +5,7 @@ import { hebrewRuns, stripMarks } from "./hebrew.ts";
 import type { Lexicon } from "./lexicon.ts";
 import { type Band, LIMITS, type TurnFacts } from "./validator.ts";
 
-export const PROMPT_VERSION = "p3";
+export const PROMPT_VERSION = "p4";
 
 export interface PromptItem {
   itemId: string;
@@ -25,6 +25,49 @@ export interface Attempt {
   /** `incorrect` or `unsure`. */
   result: string;
   misconception?: string;
+}
+
+/** Teaching moves: misconception tag (or `default`) to help levels to the different ways to help at that level. */
+export type Moves = Readonly<Record<string, readonly (readonly string[])[]>>;
+
+/** The moves from the server's config row (the file `content/tutor-moves.json`); anything malformed is left out. */
+export function movesOf(raw: unknown): Moves {
+  const src = (raw as { moves?: unknown } | null)?.moves;
+  if (src === null || typeof src !== "object" || Array.isArray(src)) return {};
+  const out: Record<string, string[][]> = {};
+  for (const [tag, levels] of Object.entries(src as Record<string, unknown>)) {
+    if (!/^(default|M-[A-Z]{2,5}-[A-Z0-9]{2,12})$/.test(tag) || !Array.isArray(levels)) continue;
+    const clean = levels.slice(0, 3).map((alts) =>
+      Array.isArray(alts)
+        ? alts.filter((a): a is string => typeof a === "string" && a.length >= 8 && a.length <= 240).slice(
+          0,
+          4,
+        )
+        : []
+    );
+    if (clean.length > 0 && clean.every((alts) => alts.length > 0)) out[tag] = clean;
+  }
+  return out;
+}
+
+/**
+ * The one teaching move for this line, or null. The help level picks the row (a mistake without a tag, or the level 0
+ * of the first help, uses the first row); the band and the address form pick among the alternatives, so that the
+ * lines of different cells differ while the same cell always gets the same move.
+ */
+export function moveFor(
+  moves: Moves,
+  mistake: string,
+  hintLevel: number,
+  band: Band,
+  form: TurnFacts["addressForm"],
+): string | null {
+  const rows = moves[mistake] ?? moves["default"];
+  if (!rows) return null;
+  const alts = rows[Math.min(Math.max(hintLevel, 1), rows.length) - 1];
+  if (!alts || alts.length === 0) return null;
+  const at = ({ A: 0, B: 1, C: 2 }[band] * 3 + { f: 0, m: 1, n: 2 }[form] + hintLevel) % alts.length;
+  return alts[at];
 }
 
 const ADDRESS: Record<TurnFacts["addressForm"], string> = {
@@ -98,6 +141,7 @@ export function userPrompt(
   attempts: readonly Attempt[],
   descriptions: ReadonlyMap<string, string>,
   retryReasons: readonly string[] = [],
+  move: string | null = null,
 ): string {
   const plain = (t: string) => hebrewRuns(stripMarks(t)).join(" ");
   const options = item.answers
@@ -132,6 +176,13 @@ export function userPrompt(
     }`,
     "</item>",
   ];
+  if (move) {
+    lines.push(
+      `Teaching move for this line (say it in your own simple Hebrew words, do not translate it word for word): ${
+        safe(move)
+      }`,
+    );
+  }
   if (retryReasons.length > 0) {
     lines.push(`Your previous reply was refused. ${retryReasons.join(" ")} Write a new one that fixes this.`);
   }
