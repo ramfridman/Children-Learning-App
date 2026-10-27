@@ -21,9 +21,6 @@ abstract class PushBackend {
   /// The parent tapped the notification while the app was in the background.
   Stream<void> get opened;
 
-  /// The parent tapped the notification and so started the app.
-  Future<bool> startedByNotification();
-
   /// Takes this phone off the push service.
   Future<void> stop();
 }
@@ -46,9 +43,6 @@ class NoPush implements PushBackend {
 
   @override
   Stream<void> get opened => const Stream<void>.empty();
-
-  @override
-  Future<bool> startedByNotification() async => false;
 
   @override
   Future<void> stop() async {}

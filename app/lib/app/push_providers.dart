@@ -26,6 +26,37 @@ final FutureProvider<bool> isParentDeviceProvider = FutureProvider<bool>(
   (Ref ref) async => (await ref.watch(secureStoreProvider).read(StoreKeys.role)) != 'child',
 );
 
+/// Whether this start of the app came from a tap on a push notification. While it is not known (a moment) or known to be
+/// a tap, the app shows a calm loading screen instead of the child picker, so a parent who tapped never sees the child
+/// space flash by on the way to the gate.
+enum TapState { checking, pending, none }
+
+class NotificationTap extends Notifier<TapState> {
+  @override
+  TapState build() {
+    unawaited(_check());
+    return TapState.checking;
+  }
+
+  Future<void> _check() async {
+    bool tapped = false;
+    try {
+      tapped = await ref.read(platformProvider).takeNotificationTap();
+    } on Object {
+      // Nothing to learn from the phone: start as usual.
+    }
+    if (ref.mounted) state = tapped ? TapState.pending : TapState.none;
+  }
+
+  /// The gate has been opened (or could not be); the app shows its usual first screen behind it.
+  void handled() {
+    if (state != TapState.none) state = TapState.none;
+  }
+}
+
+final NotifierProvider<NotificationTap, TapState> notificationTapProvider =
+    NotifierProvider<NotificationTap, TapState>(NotificationTap.new);
+
 /// What happened when a parent flipped the "Alerts on this phone" switch.
 enum PushSwitch { on, off, denied, unavailable, failed }
 
@@ -124,13 +155,42 @@ class PushScope extends ConsumerStatefulWidget {
   ConsumerState<PushScope> createState() => _PushScopeState();
 }
 
-class _PushScopeState extends ConsumerState<PushScope> {
+class _PushScopeState extends ConsumerState<PushScope> with WidgetsBindingObserver {
   final List<StreamSubscription<Object?>> _subs = <StreamSubscription<Object?>>[];
+  DateTime? _gateOpenedAt;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // The app was started by a tap: open the gate as soon as the first frame exists, before anything else is ready.
+    ref.listenManual<TapState>(notificationTapProvider, (TapState? _, TapState now) {
+      if (now != TapState.pending) return;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _openGate();
+        // Until the gate has slid fully over it, the screen below stays the loading screen.
+        Future<void>.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) ref.read(notificationTapProvider.notifier).handled();
+        });
+      });
+    }, fireImmediately: true);
     unawaited(_begin());
+  }
+
+  /// The app was already running and a tap on a notification brought it forward.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) return;
+    unawaited(
+      ref
+          .read(platformProvider)
+          .takeNotificationTap()
+          .then((bool tapped) {
+            if (tapped && mounted) _openGate();
+          })
+          .catchError((Object _) {}),
+    );
   }
 
   Future<void> _begin() async {
@@ -152,7 +212,6 @@ class _PushScopeState extends ConsumerState<PushScope> {
       // The address may have changed while the app was closed, or the server may have dropped it.
       final String? token = await push.token();
       if (token != null) unawaited(register(token).catchError((Object _) {}));
-      if (await push.startedByNotification()) _openGate();
     } on Object {
       // Push is a convenience; the alerts are always in the app.
     }
@@ -163,11 +222,16 @@ class _PushScopeState extends ConsumerState<PushScope> {
     final BuildContext? context = ref.read(navigatorKeyProvider).currentState?.overlay?.context;
     if (context == null || !context.mounted) return;
     if (ref.read(parentSessionProvider).unlocked.value) return;
+    // The same tap can arrive by two routes (the phone and the push library); the gate opens once.
+    final DateTime now = DateTime.now();
+    if (_gateOpenedAt != null && now.difference(_gateOpenedAt!) < const Duration(seconds: 3)) return;
+    _gateOpenedAt = now;
     unawaited(openParentArea(context, ref));
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     for (final StreamSubscription<Object?> s in _subs) {
       unawaited(s.cancel());
     }

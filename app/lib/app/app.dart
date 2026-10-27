@@ -90,6 +90,11 @@ class _Root extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // A start from a push notification goes straight to the gate: until that is known, and while the gate opens, show a
+    // loading screen, never the child picker.
+    final TapState tap = ref.watch(notificationTapProvider);
+    if (tap == TapState.checking) return const ColoredBox(color: TokenColors.cream);
+    if (tap == TapState.pending) return const _OpeningParentArea();
     final AsyncValue<AppState> state = ref.watch(appStateProvider);
     return state.when(
       loading: () => const ColoredBox(color: TokenColors.cream),
@@ -118,6 +123,17 @@ class _Root extends ConsumerWidget {
       },
     );
   }
+}
+
+/// Shown for the moment between a tap on a notification and the parent gate.
+class _OpeningParentArea extends StatelessWidget {
+  const _OpeningParentArea();
+
+  @override
+  Widget build(BuildContext context) => const ColoredBox(
+    color: TokenColors.parentBg,
+    child: Center(child: CircularProgressIndicator(key: Key('opening-parent-area'))),
+  );
 }
 
 /// The home map of the playing child, with the companion on it. After the first lesson the child is taken to

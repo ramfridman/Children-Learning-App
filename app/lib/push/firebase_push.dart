@@ -66,9 +66,6 @@ class FirebasePush implements PushBackend {
   Stream<void> get opened => FirebaseMessaging.onMessageOpenedApp.map((RemoteMessage _) {});
 
   @override
-  Future<bool> startedByNotification() async => (await _fcm?.getInitialMessage()) != null;
-
-  @override
   Future<void> stop() async {
     try {
       await _fcm?.deleteToken();

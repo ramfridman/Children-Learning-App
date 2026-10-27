@@ -2,10 +2,14 @@
 // what the app does with the push service while it is open (renew the address, sync on a message, open the gate on a tap).
 import 'dart:async';
 
-import 'package:flutter/material.dart' show Key, Scrollable, Switch;
+import 'package:flutter/material.dart' show Key, Scrollable, Size, Switch;
+import 'package:flutter/widgets.dart' show AppLifecycleState;
+import 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/push_providers.dart';
+import 'package:nitznutz/app/app.dart' show NitznutzApp;
+import 'package:nitznutz/child/profile_picker.dart';
 import 'package:nitznutz/parent/gate_screen.dart';
 import 'package:nitznutz/push/push_backend.dart';
 import 'package:nitznutz/strings/he.dart';
@@ -16,7 +20,6 @@ import 'support/harness.dart';
 class FakePush implements PushBackend {
   PushStart startResult = PushStart.ready;
   String? address = 'token-aaaaaaaaaaaaaaaaaaaa';
-  bool launchedByTap = false;
   final List<bool> startedAsking = <bool>[];
   int stops = 0;
   final StreamController<String> refreshes = StreamController<String>.broadcast();
@@ -40,9 +43,6 @@ class FakePush implements PushBackend {
 
   @override
   Stream<void> get opened => taps.stream;
-
-  @override
-  Future<bool> startedByNotification() async => launchedByTap;
 
   @override
   Future<void> stop() async => stops++;
@@ -161,12 +161,8 @@ void main() {
   });
 
   group('while the app is open', () {
-    Future<(AppRig, FakePush, Server)> started(
-      WidgetTester tester, {
-      bool on = true,
-      bool launchedByTap = false,
-    }) async {
-      final FakePush push = FakePush()..launchedByTap = launchedByTap;
+    Future<(AppRig, FakePush, Server)> started(WidgetTester tester, {bool on = true}) async {
+      final FakePush push = FakePush();
       final Server server = Server();
       final AppRig rig = AppRig(extraOverrides: server.overrides(push));
       await rig.seedFinishedSetup();
@@ -201,8 +197,42 @@ void main() {
       expect(find.byType(GateScreen), findsOneWidget);
     });
 
-    testWidgets('starting the app from the notification opens the gate', (WidgetTester tester) async {
-      await started(tester, launchedByTap: true);
+    testWidgets(
+      'starting the app from the notification goes straight to the gate and never shows the child picker',
+      (WidgetTester tester) async {
+        final FakePush push = FakePush();
+        final Server server = Server();
+        final AppRig rig = AppRig(extraOverrides: server.overrides(push));
+        await rig.seedFinishedSetup();
+        rig.platform.notificationTap = true;
+        tester.view.physicalSize = const Size(852, 393);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        addTearDown(rig.db.close);
+        await tester.pumpWidget(ProviderScope(overrides: rig.overrides, child: const NitznutzApp()));
+        var sawLoading = false;
+        for (var i = 0; i < 80; i++) {
+          await tester.pump(const Duration(milliseconds: 16));
+          expect(find.byType(ProfilePicker), findsNothing, reason: 'frame $i showed the child picker');
+          sawLoading = sawLoading || find.byKey(const Key('opening-parent-area')).evaluate().isNotEmpty;
+        }
+        expect(sawLoading, isTrue, reason: 'a loading screen stands in while the gate opens');
+        await tester.pumpAndSettle();
+        expect(find.byType(GateScreen), findsOneWidget);
+        // Going back from the gate lands on the child picker as usual.
+        await tester.tap(find.text(He.gateBack.text));
+        await tester.pumpAndSettle();
+        expect(find.byType(ProfilePicker), findsOneWidget);
+      },
+    );
+
+    testWidgets('a tap that brings the running app forward opens the gate', (WidgetTester tester) async {
+      final (AppRig rig, FakePush _, Server _) = await started(tester, on: false);
+      expect(find.byType(GateScreen), findsNothing);
+      rig.platform.notificationTap = true;
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
       expect(find.byType(GateScreen), findsOneWidget);
     });
 

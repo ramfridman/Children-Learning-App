@@ -73,6 +73,11 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
     setState(() => _checking = true);
     final PinResult r = await ref.read(pinServiceProvider).verify(_pin);
     if (!mounted) return;
+    // A correct PIN keeps the screen busy until the area replaces it, so the keypad never comes back to life in between.
+    if (r is PinOk) {
+      widget.onUnlocked();
+      return;
+    }
     setState(() {
       _checking = false;
       _pin = '';
@@ -95,7 +100,21 @@ class _PinEntryScreenState extends ConsumerState<PinEntryScreen> {
       title: He.pinTitle.text,
       hint: locked ? He.pinLocked.fill(<String, String>{'t': _formatWait(_locked!)}) : He.pinEnter.text,
       error: locked ? null : _error,
-      display: EntryDots(filled: _pin.length),
+      display: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Opacity(
+            opacity: _checking ? 0.3 : 1,
+            child: EntryDots(filled: _pin.length),
+          ),
+          if (_checking)
+            const SizedBox(
+              width: 28,
+              height: 28,
+              child: CircularProgressIndicator(key: Key('pin-checking'), strokeWidth: 3),
+            ),
+        ],
+      ),
       keypad: ParentKeypad(
         order: ParentKeypad.plain,
         enabled: !locked && !_checking,
