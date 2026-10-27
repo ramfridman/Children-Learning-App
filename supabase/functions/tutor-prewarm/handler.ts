@@ -138,9 +138,14 @@ export const spec: FunctionSpec = {
     let processed = 0;
     for (const e of slice) {
       const tctx = contexts.get(`${e.itemId}/${e.characterId}`)!;
-      const r = await makeLine(svc, tctx, cfg, paramsOf(b, e, budget, false), performance.now());
-      if ("rule" in r) failed[r.rule] = (failed[r.rule] ?? 0) + 1;
-      else if (r.source === "cache") cached++;
+      const timings: Timings = { modelMs: 0, voiceMs: 0, totalMs: 0 };
+      const r = await makeLine(svc, tctx, cfg, paramsOf(b, e, budget, false), performance.now(), timings);
+      if ("rule" in r) {
+        // A refused line says which checks refused it (check codes only), so the tally shows what to tune.
+        const codes = /^checks failed: ([a-z, ]+)/.exec(timings.detail ?? "")?.[1];
+        const key = codes ? `${r.rule} [${codes.replaceAll(", ", "+")}]` : r.rule;
+        failed[key] = (failed[key] ?? 0) + 1;
+      } else if (r.source === "cache") cached++;
       else made++;
       processed++;
       if (budget.remainingMicro <= 0) break;
