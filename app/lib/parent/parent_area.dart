@@ -7,6 +7,7 @@ import '../app/alerts_provider.dart';
 import '../app/progress_provider.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
+import '../app/tutor_log_provider.dart';
 import '../app/sync_providers.dart';
 import '../sync/sync_engine.dart';
 import '../app/voice_input.dart';
@@ -25,6 +26,7 @@ import 'child_form.dart';
 import 'pin_screens.dart';
 import 'progress_screen.dart';
 import 'rules_screen.dart';
+import 'tutor_log_screen.dart';
 
 /// The parent area (adult UI, calm). In M1 it holds only what the shell needs: the family's devices
 /// with revoke, the child profiles, the PIN and the lock. Every tap restarts the idle clock, and the
@@ -173,6 +175,21 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                       ),
                     );
                     ref.invalidate(unreadAlertsProvider);
+                  },
+                ),
+              ]),
+              _card(He.tutorLogOpen.text, <Widget>[
+                ParentButton(
+                  key: const Key('open-tutor-log'),
+                  label: He.tutorLogOpen.text,
+                  quiet: true,
+                  onPressed: () {
+                    ref.invalidate(tutorLogProvider);
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext c) => TutorLogScreen(onClose: () => Navigator.pop(c)),
+                      ),
+                    );
                   },
                 ),
               ]),

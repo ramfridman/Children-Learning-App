@@ -146,6 +146,17 @@ abstract final class He {
   static const Str areaLockNow = Str('נעילה וחזרה למשחק');
   static const Str areaTimeOpen = Str('זמן משחק ושעות מנוחה');
 
+  // ---- parent area: what the helper said (M7b) ----
+  static const Str tutorLogOpen = Str('מה העוזר אמר');
+  static const Str tutorLogTitle = Str('מה העוזר אמר ב-30 הימים האחרונים');
+  static const Str tutorLogHelp = Str(
+    'כל משפט נבדק לפני שהילד שמע אותו. משפט שלא עבר את הבדיקות לא נשמע, ובמקומו נשמעה ההודעה הרגילה.',
+  );
+  static const Str tutorLogEmpty = Str('עוד לא נשמעו משפטים של העוזר.');
+  static const Str tutorLogOffline = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
+  static const Str tutorLogSpoken = Str('נשמע');
+  static const Str tutorLogRule = Str('נשמעה ההודעה הרגילה');
+
   // ---- parent area: alerts (M7a) ----
   static const Str alertsTitle = Str('התראות');
   static const Str alertsOpen = Str('התראות');
