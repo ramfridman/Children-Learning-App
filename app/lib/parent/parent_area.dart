@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/progress_provider.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
 import '../app/voice_input.dart';
@@ -18,6 +19,7 @@ import '../ui/dev/dev_home_page.dart';
 import 'backends.dart';
 import 'child_form.dart';
 import 'pin_screens.dart';
+import 'progress_screen.dart';
 import 'rules_screen.dart';
 
 /// The parent area (adult UI, calm). In M1 it holds only what the shell needs: the family's devices
@@ -176,6 +178,21 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                     child: Row(
                       children: <Widget>[
                         Expanded(child: Text(p.name, style: AppText.parent(TokenType.parentBody))),
+                        ParentButton(
+                          key: Key('progress-${p.id}'),
+                          label: He.areaProgress.text,
+                          quiet: true,
+                          onPressed: () {
+                            ref.invalidate(progressProvider(p.id));
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext c) =>
+                                    ProgressScreen(profile: p, onClose: () => Navigator.pop(c)),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(width: 8),
                         ParentButton(
                           label: He.areaRemove.text,
                           destructive: true,

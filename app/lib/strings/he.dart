@@ -146,6 +146,47 @@ abstract final class He {
   static const Str areaLockNow = Str('נעילה וחזרה למשחק');
   static const Str areaTimeOpen = Str('זמן משחק ושעות מנוחה');
 
+  // ---- parent area: the progress view (M7a) ----
+  static const Str areaProgress = Str('התקדמות');
+  static const Str progressTitle = Str('התקדמות של {child}');
+  static const Str progressEmpty = Str('עוד לא שיחקו. כשיתחילו, כאן יופיע איך הלמידה מתקדמת.');
+  static const Str progressWeek = Str('השבוע');
+  static const Str progressMinutesChart = Str('דקות משחק לפי יום');
+  static const Str progressSessions = Str('{n} מפגשי משחק');
+  static const Str progressAdventures = Str('{n} הרפתקאות הושלמו');
+  static const Str progressUnderstanding = Str('הבנה לפי תחום');
+  static const Str progressGrowth = Str('הבנה לאורך זמן');
+  static const Str progressGrowthHelp = Str(
+    'כל קו מראה תחום אחד, בסוף כל שבוע בשמונה השבועות האחרונים. תחום שעוד לא התחילו בו לא מופיע.',
+  );
+  static const Str progressNoPoints = Str('עוד אין מספיק נתונים לקו.');
+  static const Str progressHelped = Str('מה עוזר לילד');
+  static const Str progressHelpedLine = Str('{how}: הצליחו {a} מתוך {b}');
+  static const Str progressMisconceptions = Str('מה כדאי לשים לב אליו');
+  static const Str progressResolved = Str('נפתר');
+  static const Str progressNothingToWatch = Str('לא נמצאו אי-הבנות.');
+  static const Str progressHabits = Str('חוזקות בלמידה');
+  static const Str habitAsked = Str('ביקשו עזרה כשלא היו בטוחים: {n} פעמים');
+  static const Str habitHints = Str('השתמשו ברמזים: {n} פעמים');
+  static const Str habitKept = Str('ניסו שוב והצליחו: {n} פעמים');
+  static const Str statusUnderstood = Str('מובן');
+  static const Str statusPractising = Str('בתרגול');
+  static const Str statusRevisit = Str('כדאי לחזור');
+  static const Str statusGap = Str('נמצא פער');
+  static const Str statusNotStarted = Str('עוד לא התחילו');
+  static const Str domainNumbers = Str('מספרים');
+  static const Str domainColors = Str('צבעים');
+  static const Str domainShapes = Str('צורות');
+  static const Str domainLogic = Str('היגיון');
+  static const Str domainCs = Str('חשיבה חישובית');
+  static const Str domainMath = Str('חשבון');
+  static const Str repConcrete = Str('לימוד עם עצמים להזיז');
+  static const Str repPictorial = Str('לימוד עם ציורים');
+  static const Str repStory = Str('לימוד דרך סיפור');
+  static const Str repEmbodied = Str('לימוד בתנועה');
+  static const Str repSymbolic = Str('לימוד עם סימנים');
+  static const Str dayLetters = Str('א ב ג ד ה ו ש');
+
   // ---- parent area: time and the AI helper (M7a) ----
   static const Str timeTitle = Str('זמן משחק');
   static const Str timeLimitHeading = Str('דקות משחק ביום');
