@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:drift/native.dart';
@@ -97,6 +98,7 @@ class AppRig {
     this.tutor,
     this.aiHelper = true,
     this.tutorEnabledOnServer = true,
+    this.holdCharacters,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
        store = MemoryStore(),
@@ -124,6 +126,9 @@ class AppRig {
   final TutorClient? tutor;
   final bool aiHelper;
   final bool tutorEnabledOnServer;
+
+  /// While set and not completed, the characters take their time to load (a slow phone with many packs).
+  final Completer<void>? holdCharacters;
   final MemoryStore store;
   final FakePlatform platform;
   final ControlledClock clock;
@@ -168,7 +173,10 @@ class AppRig {
     clockProvider.overrideWithValue(clock),
     databaseProvider.overrideWith((Ref ref) async => db),
     contentProvider.overrideWith((Ref ref) => loadStarter()),
-    characterSourceProvider.overrideWith((Ref ref) async => characters ?? await makeSource()),
+    characterSourceProvider.overrideWith((Ref ref) async {
+      if (holdCharacters != null) await holdCharacters!.future;
+      return characters ?? await makeSource();
+    }),
     voicePlayerProvider.overrideWithValue(player),
     speechEngineProvider.overrideWithValue(speech),
     if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),

@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
+import '../child/calm_loading.dart';
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
 import '../characters/character.dart';
@@ -93,6 +94,9 @@ class _Root extends ConsumerWidget {
                 orElse: () => null,
               );
         if (current == null) {
+          // Start getting the characters ready while the child is still choosing, so the map does not have to wait.
+          ref.read(resolverProvider);
+          ref.read(characterSourceProvider);
           return ProfilePicker(
             profiles: app.profiles,
             onChoose: (Profile p) => ref.read(activeProfileProvider.notifier).choose(p),
@@ -136,14 +140,24 @@ class _HomeState extends ConsumerState<_Home> {
   }
 
   @override
-  Widget build(BuildContext context) => HomeScreen(
+  Widget build(BuildContext context) {
+    // The map appears whole: until its character and the guide's voice are ready, a calm loading scene shows instead.
+    final AsyncValue<Character> friend = ref.watch(characterForRoleProvider(CharacterRole.mapCompanion));
+    final AsyncValue<Guide> guide = ref.watch(guideProvider);
+    if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue)) {
+      return const CalmLoading();
+    }
+    return _map(friend.value);
+  }
+
+  Widget _map(Character? friend) => HomeScreen(
     childName: widget.profile.name,
     avatarId: widget.profile.avatar,
     onParents: () => openParentArea(context, ref),
     onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
     onOpenActivity: _openLesson,
     companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
-    companionMouth: ref.watch(characterForRoleProvider(CharacterRole.mapCompanion)).value?.mouth,
+    companionMouth: friend?.mouth,
     onCompanion: () => _companion.currentState?.greet(),
     onFriends: _openFriends,
   );

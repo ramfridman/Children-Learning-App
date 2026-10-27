@@ -43,6 +43,8 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 - **2026-10-27 (phone test day):** the voice mic is never withdrawn after failed listens (owner's decision; PLAN.md and M5.md updated); the map bubble follows the companion's mouth; a line starting after leaving a lesson is stopped.
 
+- **2026-10-27:** the map now shows a calm loading scene (three pearls) until the character and its voice are ready, and the characters start loading while the child picker is on screen. The owner asked that the dev "what the engine knows" view become a parent-facing learning curve; it belongs to M7's progress view (PLAN.md, "Mockups": understanding versus retention over 8 weeks, skills by status per domain).
+
 ## Open issues
 
 - **Probe items:** the engine's gap search needs open probe items (give, drag, trace) for every skill that can be a gap; the starter pack has none. An authoring rule for M9; in the simulator, three-option probes alone make a search too long for a Band A session.
