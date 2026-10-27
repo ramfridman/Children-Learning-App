@@ -2,7 +2,7 @@
 
 Things only the owner can do, kept in one place so nothing is lost while work moves on. Tick them off here; Claude keeps this file current. Exact steps for each are in the file named in the last column.
 
-Last updated: 2026-10-26 (M6 built, live phase waiting).
+Last updated: 2026-10-27 (phone test day done for M1 to M5; M6 live phase waiting).
 
 ## Decisions waiting
 
@@ -16,19 +16,21 @@ M5 work, once approved, is stacked on the M4 branch (`m5-voice-in` starts from `
 
 ## Checks to do on the phone (the Samsung plugged into the PC)
 
+**Phone test day done on 2026-10-27** for M1 to M5 (T1 to T4 and T6; T5, frame times, was optional and not run). It found and fixed: the parent gate was too hard (now a small sum), the map bubble was far from the friend's mouth, a line could start playing after leaving a lesson, the mic was withdrawn after failed listens (now never), the mic stayed open after going to the background, and the map showed half loaded (now a loading scene). T7 (the AI helper) waits for the live phase (P7).
+
 **One sitting, in order, with expected results and what to report: `docs/phone-test-day.md`** (about 2 hours). The table below is the same list in short.
 
 Each one is a short list of steps with the expected result. Run them in this order, in one sitting if you can.
 
 | # | Check | Time | Steps |
 |---|-------|------|-------|
-| T1 | M1: install, wrong-PIN lock-outs, the database file is encrypted, PIN hashing time | 20 min | `docs/setup/android-device-checks.md` sections 1 to 4 |
-| T2 | M2: play the butterflies lesson; damaged packs are refused | 15 min | same file, section 6 |
-| T3 | M3: what the learning engine concluded about the child who played | 5 min | same file, section 7 |
-| T4 | M4: install the 8 family characters and 9 test voices, pick a friend on Friends' Beach, hear the tones with the mouth moving, celebrate, switch back | 20 min | same file, section 8 (one command builds and pushes the packs: `tools\make-m4-device-packs.ps1 -Push`) |
+| ~~T1~~ (done 2026-10-27) | M1: install, wrong-PIN lock-outs, the database file is encrypted, PIN hashing time | 20 min | `docs/setup/android-device-checks.md` sections 1 to 4 |
+| ~~T2~~ (done 2026-10-27) | M2: play the butterflies lesson; damaged packs are refused | 15 min | same file, section 6 |
+| ~~T3~~ (done 2026-10-27) | M3: what the learning engine concluded about the child who played | 5 min | same file, section 7 |
+| ~~T4~~ (done 2026-10-27) | M4: install the 8 family characters and 9 test voices, pick a friend on Friends' Beach, hear the tones with the mouth moving, celebrate, switch back | 20 min | same file, section 8 (one command builds and pushes the packs: `tools\make-m4-device-packs.ps1 -Push`) |
 | T5 | M4, optional: frame times in profile mode on the Samsung | 5 min | same file, section 8E |
 | T7 | M6: the AI helper on the phone (off by default, a made line on the second mistake, no network, kill switch, Band A without caption); after P7 | 15 min | same file, section 10 |
-| T6 | M5: model on the phone, voice switch, answer by voice, the repair steps, how long the model takes to load | 20 min | same file, section 9 |
+| ~~T6~~ (done 2026-10-27) | M5: model on the phone, voice switch, answer by voice, the repair steps, how long the model takes to load | 20 min | same file, section 9 |
 
 ## Things to look at and judge
 

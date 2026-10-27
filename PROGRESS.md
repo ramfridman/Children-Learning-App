@@ -45,6 +45,8 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 - **2026-10-27:** the map now shows a calm loading scene (three pearls) until the character and its voice are ready, and the characters start loading while the child picker is on screen. The owner asked that the dev "what the engine knows" view become a parent-facing learning curve; it belongs to M7's progress view (PLAN.md, "Mockups": understanding versus retention over 8 weeks, skills by status per domain).
 
+- **2026-10-27, phone test day (Samsung SM-S938B):** M1 to M5 checked on the phone by the owner: signed ping, PIN lock-out, the butterflies lesson, damaged packs all refused (6 of 6), engine view, Friends' Beach with nine friends and test tones, celebration, voice answers (word, number, wrong number with confirmation, repair steps, commands, switch off). Not run: frame times (T5), the adult-recording accuracy run (P4), real voices (P3), the AI helper on the phone (T7).
+
 ## Open issues
 
 - **Probe items:** the engine's gap search needs open probe items (give, drag, trace) for every skill that can be a gap; the starter pack has none. An authoring rule for M9; in the simulator, three-option probes alone make a search too long for a Band A session.
@@ -70,7 +72,7 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 The full checklist is `docs/owner-todo.md`. In short:
 
 - **M6:** at the PC, the live phase (to-do P7: keys, model id, prices, pre-warm, listening).
-- **M4:** confirm after the report (CI green); **M5:** the adult recordings and the phone checks (to-do P4 to P6, T6); the phone checks (section 8); choose ElevenLabs voices when ready (Phase H).
+- **M4 and M5:** the phone checks passed on 2026-10-27; waiting for his explicit "confirmed" to merge. The adult recordings (P4) and real voices (P3) remain.
 - Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1, M2 and M3; Hebrew review; confirm M3 after the report.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
 - Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
