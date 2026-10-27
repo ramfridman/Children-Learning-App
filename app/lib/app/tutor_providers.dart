@@ -71,8 +71,20 @@ final Provider<RemoteSwitches> remoteSwitchesProvider = Provider<RemoteSwitches>
 /// at most), and doubles as the light call that warms the function. A failure is "off".
 final FutureProvider<bool> tutorAvailableProvider = FutureProvider<bool>((Ref ref) async {
   if (!await ref.watch(aiHelperProvider.future)) return false;
-  return ref
-      .read(remoteSwitchesProvider)
-      .tutorEnabled()
-      .timeout(const Duration(seconds: 1), onTimeout: () => false);
+  final Future<bool> asked = ref.read(remoteSwitchesProvider).tutorEnabled();
+  return asked.timeout(
+    const Duration(seconds: 1),
+    onTimeout: () {
+      // A slow first answer (the function was asleep) must not mean "off" for the rest of the run: the lesson goes
+      // on without the helper now, and the answer, once it arrives, is used from the next lesson.
+      unawaited(
+        asked
+            .then((bool on) {
+              if (on) ref.invalidateSelf();
+            })
+            .catchError((Object _) {}),
+      );
+      return false;
+    },
+  );
 });

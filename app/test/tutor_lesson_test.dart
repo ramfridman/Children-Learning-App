@@ -74,6 +74,28 @@ void main() {
     expect(heard(rig), contains('mp3:nitzi:hint.count.h2'), reason: 'the authored line was said');
   });
 
+  testWidgets(
+    'a server switch that answers late still gives the helper to the lesson that was already open',
+    (WidgetTester tester) async {
+      final FakeTutorClient client = FakeTutorClient();
+      final AppRig rig = AppRig(tutor: client, switchAnswersAfter: const Duration(milliseconds: 2500));
+      await rig.seedFinishedSetup();
+      await rig.pump(tester);
+      await tester.tap(find.text('נועה'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(He.landCounting.text));
+      await wait(tester, 1500);
+      expect(find.byType(ActivityFrame), findsOneWidget);
+      await tapKey(tester, 'option-o1');
+      await wait(tester, 4000);
+      expect(
+        client.asked.where((TutorAsk a) => a.itemId == 'count.butterflies.3'),
+        isNotEmpty,
+        reason: 'the answer came after the lesson opened; the lesson uses it from then on',
+      );
+    },
+  );
+
   testWidgets('with the server switch off nothing is asked after the first check', (
     WidgetTester tester,
   ) async {

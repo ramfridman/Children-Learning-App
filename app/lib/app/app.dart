@@ -20,6 +20,7 @@ import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
 import 'companion.dart';
 import 'state.dart';
+import 'tutor_providers.dart';
 
 /// The app: Hebrew, right to left, phones in landscape and tablets in either orientation. It shows
 /// the first-run setup until the device is registered, the PIN is chosen and a child exists; after
@@ -144,6 +145,8 @@ class _HomeState extends ConsumerState<_Home> {
     // The map appears whole: until its character and the guide's voice are ready, a calm loading scene shows instead.
     final AsyncValue<Character> friend = ref.watch(characterForRoleProvider(CharacterRole.mapCompanion));
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
+    // Asks the server's helper switch now, while the map shows, so that a lesson finds the answer ready.
+    ref.watch(tutorAvailableProvider);
     if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue)) {
       return const CalmLoading();
     }

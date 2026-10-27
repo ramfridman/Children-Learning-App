@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../content/models.dart';
 import '../core/clock.dart';
+import '../core/log.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
 
@@ -127,8 +128,8 @@ class LessonController extends ChangeNotifier {
   final int? sessionId;
 
   /// The tutor of this lesson, or null when the AI helper is off: then every line is the authored one.
-  final TutorSession? tutor;
-  final TutorContext? tutorContext;
+  TutorSession? tutor;
+  TutorContext? tutorContext;
   final List<Activity> items;
   final AttemptSink _record;
   final Clock _clock;
@@ -192,6 +193,14 @@ class LessonController extends ChangeNotifier {
       attempts: prefetch ? const <TutorAttempt>[] : List<TutorAttempt>.of(_recent),
       prefetch: prefetch,
     );
+  }
+
+  /// The helper's answer from the server came after the lesson had opened: from now on this lesson may use it too.
+  void attachTutor(TutorSession session, TutorContext context) {
+    if (tutor != null) return;
+    tutor = session;
+    tutorContext = context;
+    if (!finished) _prefetchTutor(current);
   }
 
   /// Asks ahead, when an activity opens, for the lines of the mistakes it can produce. Quiet and optional.
@@ -385,6 +394,10 @@ class LessonController extends ChangeNotifier {
     // The tutor speaks for an unexpected first mistake (the authored line would be the generic one) and for the second
     // mistake, where a different explanation is needed. The authored line stays the fallback for all of it.
     final bool useTutor = _tutorMayHelp(a) && (first ? tag.isEmpty : true);
+    Log.d(
+      'helper: mistake ${a.id} errors=$errors tag=${tag.isEmpty ? 'none' : tag} session=${tutor != null} '
+      'context=${tutorContext != null} available=${tutor?.available} llmAllowed=${a.llmAllowed} use=$useTutor',
+    );
     if (first) {
       // The first mistake: tell the child what to check (the line for this misconception).
       final Spoken authored = a.feedback.forIncorrect(tag.isEmpty ? null : tag);

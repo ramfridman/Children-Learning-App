@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import '../core/log.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -216,6 +218,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             return const ColoredBox(color: TokenColors.cream);
           }
           if (tutorOn) _tutor ??= TutorSession(client: ref.read(tutorClientProvider));
+          Log.d('helper: lesson opens, tutorOn=$tutorOn');
+          final LessonController? open = _controller;
+          if (tutorOn && open != null && open.tutor == null) open.attachTutor(_tutor!, _tutorContext(g, c));
           return _lesson(context, c, g, voiceOn);
         },
       ),
