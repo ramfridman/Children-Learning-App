@@ -90,6 +90,7 @@ class PrewarmPlan {
     required this.estMicro,
     required this.voiceChars,
     this.evalMicro = 0,
+    this.movesTags = 0,
   });
 
   factory PrewarmPlan.from(Map<String, Object?> j) => PrewarmPlan(
@@ -99,6 +100,7 @@ class PrewarmPlan {
     estMicro: j['est_micro_usd']! as int,
     voiceChars: j['est_voice_chars']! as int,
     evalMicro: j['est_eval_micro_usd'] as int? ?? 0,
+    movesTags: j['moves_tags'] as int? ?? 0,
   );
 
   final int lines;
@@ -110,15 +112,20 @@ class PrewarmPlan {
   /// The model only (no voice), two attempts at most for every line of the grid.
   final int evalMicro;
 
+  /// How many mistake types have teaching moves on the server (0 means the prompts carry none).
+  final int movesTags;
+
+  String get _movesNote => 'Teaching moves loaded on the server for $movesTags mistake types.';
+
   /// What the owner reads before saying yes to an evaluation.
   String describeEvaluation() =>
       '$lines lines to evaluate with the model only (no voice, nothing kept): at most ${dollars(evalMicro)} USD '
-      '(an estimate: two attempts for every line).';
+      '(an estimate: two attempts for every line). $_movesNote';
 
   /// What the owner reads before saying yes.
   String describe() =>
       '$lines lines in all, $cached already made, $toMake to make: about $voiceChars voice characters and '
-      '${dollars(estMicro)} USD (an estimate, from the prices in the server config).';
+      '${dollars(estMicro)} USD (an estimate, from the prices in the server config). $_movesNote';
 }
 
 Future<PrewarmPlan> plan(PrewarmSend send, PrewarmRequest r) async =>

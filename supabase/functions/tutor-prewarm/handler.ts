@@ -105,6 +105,8 @@ export const spec: FunctionSpec = {
         est_eval_micro_usd: Math.round(grid.length * 2 * estimateModelMicro(cfg)),
         prompt_version: PROMPT_VERSION,
         validator_version: VALIDATOR_VERSION,
+        // How many mistake types have teaching moves in the server's config: 0 means the prompts carry none.
+        moves_tags: Object.keys(cfg.moves).length,
       };
     }
 

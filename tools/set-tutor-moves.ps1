@@ -2,9 +2,10 @@
 # its teaching moves. Plain English text only, no secret. Run from the repository root.
 $ErrorActionPreference = 'Stop'
 $file = Join-Path $PSScriptRoot '..\content\tutor-moves.json'
-$doc = Get-Content -Raw -Encoding UTF8 $file | ConvertFrom-Json
-$json = $doc.moves | ConvertTo-Json -Depth 10 -Compress
-if ($json -match '[^\x20-\x7E]') { throw 'the moves must be plain ASCII English' }
+# The file is stored as it is (the server reads its "moves" part); PowerShell's own JSON round trip would turn
+# one-element arrays into plain text.
+$json = Get-Content -Raw -Encoding UTF8 $file
+if ($json -match '[^\x09\x0A\x0D\x20-\x7E]') { throw 'the moves must be plain ASCII English' }
 $sqlFile = Join-Path $env:TEMP ([guid]::NewGuid().ToString() + '.sql')
 try {
   $escaped = $json.Replace("'", "''")
