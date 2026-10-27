@@ -132,6 +132,15 @@ export function extractJson(text: string): unknown {
   }
 }
 
+/** Pre-warm runs on the owner's computer with nobody waiting: it gets room, so a slow first call still makes a line. */
+const WARM_BUDGET = {
+  modelMs: 10_000,
+  voiceMs: 10_000,
+  retryMinLeftMs: 8_000,
+  totalMs: 40_000,
+  modelMaxTokens: 300,
+};
+
 export interface Timings {
   modelMs: number;
   voiceMs: number;
@@ -186,6 +195,11 @@ export async function makeLine(
       elevenRequestId: extra.requestId ?? null,
     }).catch(() => {});
   const ruleOut = async (reason: RuleReason, extra: Parameters<typeof log>[2] = {}): Promise<Result> => {
+    if (timings) {
+      timings.modelMs = extra.modelMs ?? 0;
+      timings.voiceMs = extra.voiceMs ?? 0;
+      timings.totalMs = performance.now() - started;
+    }
     await log("rule", reason, extra);
     return { mistake: p.mistake, rule: reason };
   };
@@ -244,6 +258,7 @@ export async function makeLine(
   const item = { ...tctx, band: p.band };
   const descriptions = new Map(Object.entries(tctx.descriptions));
   const system = systemPrompt(p.band, p.addressForm, lexicon);
+  const tb = p.kind === "warm" ? WARM_BUDGET : tutor.budget;
 
   let inTokens = 0;
   let outTokens = 0;
@@ -260,15 +275,15 @@ export async function makeLine(
     if (p.familyId !== null) await svc.store.tutorCostAdd(p.familyId, micro, svc.nowMs()).catch(() => {});
   };
   for (let attempt = 0; attempt < 2; attempt++) {
-    const left = tutor.budget.totalMs - (performance.now() - started);
+    const left = tb.totalMs - (performance.now() - started);
     if (left < 400) return await ruleOut("timeout", { modelMs });
     const t0 = performance.now();
     try {
       const ans = await tutor.model.complete({
         system,
         user: userPrompt(item, turn, p.attempts, descriptions, reasons),
-        maxTokens: tutor.budget.modelMaxTokens,
-        timeoutMs: Math.max(200, Math.min(tutor.budget.modelMs, left - 300)),
+        maxTokens: tb.modelMaxTokens,
+        timeoutMs: Math.max(200, Math.min(tb.modelMs, left - 300)),
       });
       inTokens += ans.inputTokens;
       outTokens += ans.outputTokens;
@@ -284,7 +299,7 @@ export async function makeLine(
     if (verdict.ok) break;
     reasons = verdict.failures;
     // One retry, and only if there is time for a whole second attempt.
-    if (tutor.budget.totalMs - (performance.now() - started) < tutor.budget.retryMinLeftMs) break;
+    if (tb.totalMs - (performance.now() - started) < tb.retryMinLeftMs) break;
   }
   if (!verdict || !verdict.ok) {
     await addCost(0);
@@ -304,13 +319,13 @@ export async function makeLine(
   let audio: Uint8Array;
   let requestId: string | null = null;
   try {
-    const left = tutor.budget.totalMs - (performance.now() - started);
+    const left = tb.totalMs - (performance.now() - started);
     if (left < 250) throw new VoiceFailed("timeout");
     const v = await tutor.voice.speak({
       voiceId,
       modelId: cfg.voiceModelId,
       text: verdict.vocalised,
-      timeoutMs: Math.max(200, Math.min(tutor.budget.voiceMs, left - 50)),
+      timeoutMs: Math.max(200, Math.min(tb.voiceMs, left - 50)),
     });
     audio = v.audio;
     requestId = v.requestId;

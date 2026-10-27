@@ -118,7 +118,8 @@ export const spec: FunctionSpec = {
         const timings: Timings = { modelMs: 0, voiceMs: 0, totalMs: 0 };
         const r = await makeLine(svc, tctx, cfg, paramsOf(b, e, budget, true), t0, timings);
         runs.push(
-          "rule" in r ? { rule: r.rule, server_ms: Math.round(performance.now() - t0) } : {
+          {
+            ..."rule" in r ? { rule: r.rule } : {},
             server_ms: Math.round(timings.totalMs),
             model_ms: Math.round(timings.modelMs),
             voice_ms: Math.round(timings.voiceMs),

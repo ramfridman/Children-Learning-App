@@ -1,5 +1,5 @@
 import { assert } from "./_shared/testassert.ts";
-import { type ModelAnswer, type ModelClient, type ModelRequest } from "./_shared/anthropic.ts";
+import { type ModelAnswer, type ModelClient, ModelFailed, type ModelRequest } from "./_shared/anthropic.ts";
 import { type VoiceAnswer, type VoiceClient, type VoiceRequest } from "./_shared/elevenlabs.ts";
 import { DEFAULT_TUTOR_BUDGET, makeHandler, type Services } from "./_shared/handler.ts";
 import type { PublishedPack } from "./_shared/store.ts";
@@ -48,9 +48,16 @@ const GOOD = {
 
 class FakeModel implements ModelClient {
   calls: ModelRequest[] = [];
-  complete(req: ModelRequest): Promise<ModelAnswer> {
+  delayMs = 0;
+  async complete(req: ModelRequest): Promise<ModelAnswer> {
     this.calls.push(req);
-    return Promise.resolve({ text: JSON.stringify(GOOD), inputTokens: 1000, outputTokens: 40 });
+    // Like the real client: a reply slower than the deadline it was given is a timeout.
+    if (this.delayMs > req.timeoutMs) {
+      await new Promise((r) => setTimeout(r, req.timeoutMs));
+      throw new ModelFailed("timeout");
+    }
+    if (this.delayMs > 0) await new Promise((r) => setTimeout(r, this.delayMs));
+    return { text: JSON.stringify(GOOD), inputTokens: 1000, outputTokens: 40 };
   }
 }
 
@@ -207,4 +214,29 @@ Deno.test("tutor-prewarm: a body with an unknown mode or a made-up character is 
   assert.equal((await ask({ limit: 26 })).status, 400);
   const unknown = await (await ask({ character_ids: ["nobody"] })).json();
   assert.equal(unknown.lines, 0, "a character that does not exist adds no lines");
+});
+
+Deno.test("tutor-prewarm: a model slower than a live turn may wait still makes the line, and measure shows the times", async () => {
+  const { ask, model, svc } = await setup();
+  // A live turn would give the model 50 ms; nobody waits during pre-warm, so it gets far longer.
+  svc.tutor!.budget = { ...DEFAULT_TUTOR_BUDGET, modelMs: 50, totalMs: 400 };
+  model.delayMs = 120;
+  const j = await (await ask({ mode: "measure", count: 2 })).json();
+  assert.equal(j.runs.length, 2);
+  for (const run of j.runs) {
+    assert.equal(run.rule, undefined, "no timeout in pre-warm");
+    assert.equal(run.model_ms >= 100, true, `the model time is reported (${run.model_ms} ms)`);
+  }
+});
+
+Deno.test("tutor-prewarm: when a line cannot be made, measure still says how long the model had taken", async () => {
+  const { ask, model } = await setup();
+  model.complete = (req) => {
+    model.calls.push(req);
+    return Promise.reject(new ModelFailed("status"));
+  };
+  const j = await (await ask({ mode: "measure", count: 1 })).json();
+  assert.equal(j.runs[0].rule, "model_failed");
+  assert.equal(typeof j.runs[0].model_ms, "number");
+  assert.equal(typeof j.runs[0].voice_ms, "number");
 });

@@ -178,12 +178,16 @@ class Measurement {
     required this.modelMs,
     required this.voiceMs,
     required this.rules,
+    this.notes = const <String>[],
   });
 
   final List<int> serverMs;
   final List<int> modelMs;
   final List<int> voiceMs;
   final List<String> rules;
+
+  /// One line per fallback, with the time the model and the voice had taken when it gave up.
+  final List<String> notes;
 
   static int _median(List<int> v) {
     if (v.isEmpty) return 0;
@@ -199,7 +203,7 @@ class Measurement {
 
   String describe() =>
       '${serverMs.length} fresh lines: server median $medianServer ms (model $medianModel ms, voice $medianVoice ms)'
-      '${rules.isEmpty ? '' : '; fell back to the authored line ${rules.length} times: ${rules.toSet().join(', ')}'}';
+      '${rules.isEmpty ? '' : '; fell back to the authored line ${rules.length} times: ${(notes.isEmpty ? rules : notes).join('; ')}'}';
 }
 
 /// Makes [count] fresh lines on the server (kept nowhere) and reports how long each part took. Capped at one
@@ -223,6 +227,12 @@ Future<Measurement> measure(PrewarmSend send, PrewarmRequest r, {int count = 5})
     rules: <String>[
       for (final Map<String, Object?> e in runs)
         if (e['rule'] != null) e['rule']! as String,
+    ],
+    notes: <String>[
+      for (final Map<String, Object?> e in runs)
+        if (e['rule'] != null)
+          '${e['rule']} (model ${e['model_ms'] ?? 0} ms, voice ${e['voice_ms'] ?? 0} ms, '
+              'total ${e['server_ms'] ?? 0} ms)',
     ],
   );
 }
