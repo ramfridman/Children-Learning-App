@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/app.dart';
 import 'package:nitznutz/app/companion.dart';
+import 'package:nitznutz/app/voice_input.dart';
 import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
@@ -19,6 +20,7 @@ import 'package:nitznutz/security/parent_gate.dart';
 import 'package:nitznutz/security/pin_service.dart';
 
 import 'companion_fixtures.dart';
+import 'fake_speech.dart';
 import 'fakes.dart';
 import 'security_fakes.dart';
 import 'voice_fixtures.dart';
@@ -83,12 +85,19 @@ class FakeDevicesBackend implements DevicesBackend {
 
 /// Everything a test needs to drive the whole app with no network and no hardware.
 class AppRig {
-  AppRig({this.dev = false, int gateSeed = 7, this.characters, FakePlayer? player})
-    : player = player ?? FakePlayer(),
-      store = MemoryStore(),
-      platform = FakePlatform(),
-      clock = ControlledClock(1793000000000),
-      db = AppDatabase(NativeDatabase.memory()) {
+  AppRig({
+    this.dev = false,
+    int gateSeed = 7,
+    this.characters,
+    FakePlayer? player,
+    this.voice = false,
+    FakeSpeechEngine? speech,
+  }) : player = player ?? FakePlayer(),
+       speech = speech ?? FakeSpeechEngine(),
+       store = MemoryStore(),
+       platform = FakePlatform(),
+       clock = ControlledClock(1793000000000),
+       db = AppDatabase(NativeDatabase.memory()) {
     setup = FakeSetupBackend(store);
     gateQuestion = ParentGate(store: MemoryStore(), clock: clock, random: Random(gateSeed)).newQuestion();
     this.gateSeed = gateSeed;
@@ -101,6 +110,10 @@ class AppRig {
 
   /// The sound device: it records what was played instead of playing it.
   final FakePlayer player;
+
+  /// A parent has turned "Voice answers" on, and the recogniser is a fake that answers from a script.
+  final bool voice;
+  final FakeSpeechEngine speech;
   final MemoryStore store;
   final FakePlatform platform;
   final ControlledClock clock;
@@ -147,6 +160,7 @@ class AppRig {
     contentProvider.overrideWith((Ref ref) => loadStarter()),
     characterSourceProvider.overrideWith((Ref ref) async => characters ?? await makeSource()),
     voicePlayerProvider.overrideWithValue(player),
+    speechEngineProvider.overrideWithValue(speech),
     setupBackendProvider.overrideWithValue(setup),
     devicesBackendProvider.overrideWithValue(devices),
     pinServiceProvider.overrideWith(
@@ -181,6 +195,7 @@ class AppRig {
       );
       addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
     }
+    if (voice) await db.putSetting('voice_enabled', 'on');
     await tester.pumpWidget(ProviderScope(overrides: overrides, child: const NitznutzApp()));
     await tester.pumpAndSettle();
   }

@@ -160,3 +160,29 @@ while the guide talks. Tell me if the raster and UI bars leave the green. (A rea
 
 Tell me: does anything look cut, stiff, too small or too slow to touch? Which friend would the children pick first?
 
+## 9. M5 checks: answering by voice
+
+Use the dev build, with the child's first lesson available (section 6). These steps use your own voice; the children's recordings come later.
+
+**A. Put the model on the phone** (72 MB, one command, phone plugged in). On the PC, from `D:\Children-Learning-App`:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\make-m5-model.ps1 -Push
+```
+
+It downloads the four files, checks each against the hash pinned in the app, and copies them into the app's private folder. Expect four lines ending `ok` and "Pushed".
+
+**B. Turn voice on.** Parents > the new card "תשובות בקול" > the switch. Android asks for the microphone permission: allow it. The note about the model or the permission must not appear. Turn it off and on again: it stays as you left it.
+
+**C. Answer by voice.** Pick the child, tap the counting hills. A teal microphone with ears is at the guide's feet. Tap it (the ears go up, bars move with your voice), say "אדום", and stop. Expect a tick on the mic and the red flower accepted like a tap. Then in the next question say the number out loud ("שלוש", "שלושה", and the digit's name with a noun: "שלוש פרפרים"). Try:
+
+- a wrong answer ("ארבע"): the guide asks "I heard... right?", the card glows, a tick and an "again" button appear; tap the tick and it counts as a normal not-yet, tap "again" and nothing is written;
+- silence or nonsense twice: the first time the guide says her ears got mixed up, the second time the cards light up one after the other and the mic fades; nothing is ever marked wrong;
+- "עוד פעם" (again), "לא יודע" (I don't know) and "די" (stop).
+
+**D. Time it.** From the moment you stop talking to the green tick: about a second? Note the first time you tap the mic after opening the app (loading the model) and whether the screen freezes for a moment. Tell me both.
+
+**E. Hygiene.** While listening, press home: the mic must close (the Android microphone indicator goes away). Leave the lesson in the middle of a listen: same. Nothing is saved on the phone: look in `Settings > Apps > Nitznutz > Storage`: the size does not grow with each listen.
+
+**F. Parents' side.** Turn voice off: the mic disappears from the lesson at once.
+

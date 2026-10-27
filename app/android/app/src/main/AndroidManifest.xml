@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Asked of a parent, from the "Voice answers" switch, never of a child. The microphone opens only when a child taps it. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
         android:label="${appName}"
         android:allowBackup="false"

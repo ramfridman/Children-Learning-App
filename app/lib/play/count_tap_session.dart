@@ -8,6 +8,7 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
+import '../speech/answer_matcher.dart';
 import '../strings/he.dart';
 import 'lesson_controller.dart';
 import 'template_session.dart';
@@ -122,7 +123,22 @@ class CountTapSession extends TemplateSession {
     controller.askAnswer(activity.answerPrompt);
   }
 
-  Future<void> choose(String id) async {
+  @override
+  bool get listensNow => answering && !_busy && chosenState != AnswerState.correct;
+
+  @override
+  String get voiceAnswerType => 'number';
+
+  @override
+  List<Expected> voiceExpected() => <Expected>[
+    for (final ChoiceOption o in activity.options)
+      Expected.number(o.id, o.value!, correct: o.id == activity.correctId, also: o.speech),
+  ];
+
+  @override
+  Future<void> chooseByVoice(String optionId) => choose(optionId, byVoice: true);
+
+  Future<void> choose(String id, {bool byVoice = false}) async {
     if (!answering || _busy || chosenState == AnswerState.correct) return;
     if (controller.guided && id != activity.correctId) return;
     _busy = true;
@@ -130,6 +146,7 @@ class CountTapSession extends TemplateSession {
     final Outcome o = await controller.chooseOption(
       id,
       traceTag: touchedTwice ? activity.traceTags['same_object_tapped_twice'] : null,
+      byVoice: byVoice,
     );
     if (disposed) return;
     if (o.correct) {
@@ -263,7 +280,7 @@ class CountTapSession extends TemplateSession {
                   semanticLabel: '${o.value}',
                   state: chosenId == o.id
                       ? chosenState
-                      : (controller.guided && o.id == activity.correctId
+                      : ((controller.guided && o.id == activity.correctId) || voiceLit == o.id
                             ? AnswerState.selected
                             : AnswerState.idle),
                   onPressed: () => choose(o.id),

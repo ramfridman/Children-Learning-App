@@ -22,7 +22,12 @@ Future<Character> loadNitzi() async => _nitzi ??= Character.fromPack(
 
 /// Every voice line the starter pack asks for, and the greeting of the map.
 List<String> voiceLinesOfStarter() {
-  final Set<String> ids = <String>{'core.greeting.hello'};
+  final Set<String> ids = <String>{
+    'core.greeting.hello',
+    'core.listen.mixed',
+    'core.listen.confirm',
+    'core.listen.tap',
+  };
   for (final FileSystemEntity e in Directory('../content/starter').listSync()) {
     if (e is! File || !e.path.endsWith('.json')) continue;
     for (final RegExpMatch m in RegExp(r'"vo": "vo:([^"]+)"').allMatches(e.readAsStringSync())) {

@@ -4,13 +4,15 @@ import 'tables.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: <Type>[Profiles, AppSettings, LocalEvents, InstalledPacks, Attempts, Sessions])
+@DriftDatabase(
+  tables: <Type>[Profiles, AppSettings, LocalEvents, InstalledPacks, Attempts, Sessions, VoiceListens],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 4;
+  static const int currentSchemaVersion = 5;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -32,6 +34,12 @@ class AppDatabase extends _$AppDatabase {
       }
       // 3 to 4 (M4): the companion each child chose.
       if (from < 4) await m.addColumn(profiles, profiles.companionId);
+      // 4 to 5 (M5): how an answer was given, and the record of mic listens.
+      if (from < 5) {
+        await m.createTable(voiceListens);
+        // A file older than version 2 got `attempts` just now, with the column already.
+        if (from >= 2) await m.addColumn(attempts, attempts.input);
+      }
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -108,6 +116,21 @@ class AppDatabase extends _$AppDatabase {
       (select(attempts)
             ..where((Attempts t) => t.profileId.equals(profileId))
             ..orderBy(<OrderingTerm Function(Attempts)>[(Attempts t) => OrderingTerm.asc(t.id)]))
+          .get();
+
+  // ---- voice listens ----
+
+  Future<void> recordListen(String profileId, DateTime at, String answerType, String outcome) =>
+      into(voiceListens).insert(
+        VoiceListensCompanion.insert(profileId: profileId, at: at, answerType: answerType, outcome: outcome),
+      );
+
+  /// The newest listens of a child for one kind of answer, newest first.
+  Future<List<VoiceListen>> recentListens(String profileId, String answerType, {int limit = 12}) =>
+      (select(voiceListens)
+            ..where((VoiceListens t) => t.profileId.equals(profileId) & t.answerType.equals(answerType))
+            ..orderBy(<OrderingTerm Function(VoiceListens)>[(VoiceListens t) => OrderingTerm.desc(t.id)])
+            ..limit(limit))
           .get();
 
   // ---- security events ----

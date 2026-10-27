@@ -6,6 +6,8 @@ import '../child/activity_shell.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../speech/answer_matcher.dart';
+import '../speech/hebrew_text.dart';
 import 'lesson_controller.dart';
 import 'template_session.dart';
 
@@ -21,12 +23,43 @@ class TapAnswerSession extends TemplateSession {
   bool _busy = false;
   int? pulsing;
 
-  Future<void> choose(String id) async {
+  @override
+  bool get listensNow => !_busy && chosenState != AnswerState.correct;
+
+  @override
+  String get voiceAnswerType => 'word';
+
+  /// The words of each option: its own `speech` list, or else the words of its label that the other options do not
+  /// share ("פרח אדום" and "פרח צהוב" are told apart by the colour).
+  @override
+  List<Expected> voiceExpected() {
+    final List<List<String>> words = <List<String>>[
+      for (final ChoiceOption o in activity.options)
+        <String>[...o.speech, ...tokensOf(normalizeHebrew(o.label ?? ''))],
+    ];
+    final Set<String> shared = words.isEmpty
+        ? <String>{}
+        : words
+              .map((List<String> w) => w.toSet())
+              .reduce((Set<String> a, Set<String> b) => a.intersection(b));
+    return <Expected>[
+      for (final (int i, ChoiceOption o) in activity.options.indexed)
+        Expected.words(o.id, <String>[
+          for (final String w in words[i])
+            if (!shared.contains(w) || o.speech.contains(w)) w,
+        ], correct: o.id == activity.correctId),
+    ];
+  }
+
+  @override
+  Future<void> chooseByVoice(String optionId) => choose(optionId, byVoice: true);
+
+  Future<void> choose(String id, {bool byVoice = false}) async {
     if (_busy || chosenState == AnswerState.correct) return;
     if (controller.guided && id != activity.correctId) return;
     _busy = true;
     chosenId = id;
-    final Outcome o = await controller.chooseOption(id);
+    final Outcome o = await controller.chooseOption(id, byVoice: byVoice);
     if (disposed) return;
     if (o.correct) {
       chosenState = AnswerState.correct;
@@ -122,7 +155,7 @@ class _TapStage extends StatelessWidget {
     final bool dimmed = s.controller.guided && o.id != a.correctId;
     final Color? ring = chosen
         ? (s.chosenState == AnswerState.correct ? TokenColors.correctGlow : TokenColors.notYetRing)
-        : (guidedRight ? TokenColors.hintHalo : null);
+        : (guidedRight || s.voiceLit == o.id ? TokenColors.hintHalo : null);
     return Semantics(
       button: true,
       label: o.label,

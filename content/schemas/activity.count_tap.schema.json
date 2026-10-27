@@ -287,6 +287,16 @@
                 "minimum": 0,
                 "maximum": 20
               },
+              "speech": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "minItems": 1,
+                "maxItems": 8
+              },
               "misconception": {
                 "type": "string",
                 "minLength": 5,

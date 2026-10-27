@@ -162,7 +162,14 @@ sealed class Activity {
 }
 
 class ChoiceOption {
-  const ChoiceOption({required this.id, this.value, this.sprite, this.label, this.misconception});
+  const ChoiceOption({
+    required this.id,
+    this.value,
+    this.sprite,
+    this.label,
+    this.misconception,
+    this.speech = const <String>[],
+  });
 
   final String id;
 
@@ -173,6 +180,9 @@ class ChoiceOption {
   final String? sprite;
   final String? label;
   final String? misconception;
+
+  /// Extra words a child may say for this option (see the `speech` list of the activity file).
+  final List<String> speech;
 }
 
 List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
@@ -183,6 +193,9 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
       sprite: o['sprite'] as String?,
       label: o['label'] as String?,
       misconception: o['misconception'] as String?,
+      speech: <String>[
+        for (final Object? w in (o['speech'] as List<Object?>? ?? const <Object?>[])) w! as String,
+      ],
     ),
 ];
 

@@ -1393,6 +1393,16 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _inputMeta = const VerificationMeta('input');
+  @override
+  late final GeneratedColumn<String> input = GeneratedColumn<String>(
+    'input',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant<String>('tap'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1413,6 +1423,7 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     response,
     durationMs,
     sessionId,
+    input,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1519,6 +1530,9 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     if (data.containsKey('session_id')) {
       context.handle(_sessionIdMeta, sessionId.isAcceptableOrUnknown(data['session_id']!, _sessionIdMeta));
     }
+    if (data.containsKey('input')) {
+      context.handle(_inputMeta, input.isAcceptableOrUnknown(data['input']!, _inputMeta));
+    }
     return context;
   }
 
@@ -1564,6 +1578,7 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
       response: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}response'])!,
       durationMs: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}duration_ms'])!,
       sessionId: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}session_id']),
+      input: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}input'])!,
     );
   }
 
@@ -1610,6 +1625,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
 
   /// The session this answer belongs to (a visit with a start and an end), or null for answers from before sessions.
   final int? sessionId;
+
+  /// How the answer was given: `tap`, or `voice` (a spoken answer that was clear, or that the child confirmed).
+  final String input;
   const Attempt({
     required this.id,
     required this.at,
@@ -1629,6 +1647,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     required this.response,
     required this.durationMs,
     this.sessionId,
+    required this.input,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1653,6 +1672,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     if (!nullToAbsent || sessionId != null) {
       map['session_id'] = Variable<int>(sessionId);
     }
+    map['input'] = Variable<String>(input);
     return map;
   }
 
@@ -1676,6 +1696,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       response: Value(response),
       durationMs: Value(durationMs),
       sessionId: sessionId == null && nullToAbsent ? const Value.absent() : Value(sessionId),
+      input: Value(input),
     );
   }
 
@@ -1700,6 +1721,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       response: serializer.fromJson<String>(json['response']),
       durationMs: serializer.fromJson<int>(json['durationMs']),
       sessionId: serializer.fromJson<int?>(json['sessionId']),
+      input: serializer.fromJson<String>(json['input']),
     );
   }
   @override
@@ -1724,6 +1746,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       'response': serializer.toJson<String>(response),
       'durationMs': serializer.toJson<int>(durationMs),
       'sessionId': serializer.toJson<int?>(sessionId),
+      'input': serializer.toJson<String>(input),
     };
   }
 
@@ -1746,6 +1769,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     String? response,
     int? durationMs,
     Value<int?> sessionId = const Value.absent(),
+    String? input,
   }) => Attempt(
     id: id ?? this.id,
     at: at ?? this.at,
@@ -1765,6 +1789,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     response: response ?? this.response,
     durationMs: durationMs ?? this.durationMs,
     sessionId: sessionId.present ? sessionId.value : this.sessionId,
+    input: input ?? this.input,
   );
   Attempt copyWithCompanion(AttemptsCompanion data) {
     return Attempt(
@@ -1786,6 +1811,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       response: data.response.present ? data.response.value : this.response,
       durationMs: data.durationMs.present ? data.durationMs.value : this.durationMs,
       sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
+      input: data.input.present ? data.input.value : this.input,
     );
   }
 
@@ -1809,7 +1835,8 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           ..write('misconceptionTag: $misconceptionTag, ')
           ..write('response: $response, ')
           ..write('durationMs: $durationMs, ')
-          ..write('sessionId: $sessionId')
+          ..write('sessionId: $sessionId, ')
+          ..write('input: $input')
           ..write(')'))
         .toString();
   }
@@ -1834,6 +1861,7 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     response,
     durationMs,
     sessionId,
+    input,
   );
   @override
   bool operator ==(Object other) =>
@@ -1856,7 +1884,8 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           other.misconceptionTag == this.misconceptionTag &&
           other.response == this.response &&
           other.durationMs == this.durationMs &&
-          other.sessionId == this.sessionId);
+          other.sessionId == this.sessionId &&
+          other.input == this.input);
 }
 
 class AttemptsCompanion extends UpdateCompanion<Attempt> {
@@ -1878,6 +1907,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
   final Value<String> response;
   final Value<int> durationMs;
   final Value<int?> sessionId;
+  final Value<String> input;
   const AttemptsCompanion({
     this.id = const Value.absent(),
     this.at = const Value.absent(),
@@ -1897,6 +1927,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.response = const Value.absent(),
     this.durationMs = const Value.absent(),
     this.sessionId = const Value.absent(),
+    this.input = const Value.absent(),
   });
   AttemptsCompanion.insert({
     this.id = const Value.absent(),
@@ -1917,6 +1948,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.response = const Value.absent(),
     this.durationMs = const Value.absent(),
     this.sessionId = const Value.absent(),
+    this.input = const Value.absent(),
   }) : at = Value(at),
        profileId = Value(profileId),
        packId = Value(packId),
@@ -1948,6 +1980,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Expression<String>? response,
     Expression<int>? durationMs,
     Expression<int>? sessionId,
+    Expression<String>? input,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1968,6 +2001,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       if (response != null) 'response': response,
       if (durationMs != null) 'duration_ms': durationMs,
       if (sessionId != null) 'session_id': sessionId,
+      if (input != null) 'input': input,
     });
   }
 
@@ -1990,6 +2024,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Value<String>? response,
     Value<int>? durationMs,
     Value<int?>? sessionId,
+    Value<String>? input,
   }) {
     return AttemptsCompanion(
       id: id ?? this.id,
@@ -2010,6 +2045,7 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       response: response ?? this.response,
       durationMs: durationMs ?? this.durationMs,
       sessionId: sessionId ?? this.sessionId,
+      input: input ?? this.input,
     );
   }
 
@@ -2070,6 +2106,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     if (sessionId.present) {
       map['session_id'] = Variable<int>(sessionId.value);
     }
+    if (input.present) {
+      map['input'] = Variable<String>(input.value);
+    }
     return map;
   }
 
@@ -2093,7 +2132,8 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
           ..write('misconceptionTag: $misconceptionTag, ')
           ..write('response: $response, ')
           ..write('durationMs: $durationMs, ')
-          ..write('sessionId: $sessionId')
+          ..write('sessionId: $sessionId, ')
+          ..write('input: $input')
           ..write(')'))
         .toString();
   }
@@ -2447,6 +2487,316 @@ class SessionsCompanion extends UpdateCompanion<Session> {
   }
 }
 
+class $VoiceListensTable extends VoiceListens with TableInfo<$VoiceListensTable, VoiceListen> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $VoiceListensTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'),
+  );
+  static const VerificationMeta _atMeta = const VerificationMeta('at');
+  @override
+  late final GeneratedColumn<DateTime> at = GeneratedColumn<DateTime>(
+    'at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta('profileId');
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _answerTypeMeta = const VerificationMeta('answerType');
+  @override
+  late final GeneratedColumn<String> answerType = GeneratedColumn<String>(
+    'answer_type',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _outcomeMeta = const VerificationMeta('outcome');
+  @override
+  late final GeneratedColumn<String> outcome = GeneratedColumn<String>(
+    'outcome',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, at, profileId, answerType, outcome];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'voice_listens';
+  @override
+  VerificationContext validateIntegrity(Insertable<VoiceListen> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('at')) {
+      context.handle(_atMeta, at.isAcceptableOrUnknown(data['at']!, _atMeta));
+    } else if (isInserting) {
+      context.missing(_atMeta);
+    }
+    if (data.containsKey('profile_id')) {
+      context.handle(_profileIdMeta, profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
+    } else if (isInserting) {
+      context.missing(_profileIdMeta);
+    }
+    if (data.containsKey('answer_type')) {
+      context.handle(
+        _answerTypeMeta,
+        answerType.isAcceptableOrUnknown(data['answer_type']!, _answerTypeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_answerTypeMeta);
+    }
+    if (data.containsKey('outcome')) {
+      context.handle(_outcomeMeta, outcome.isAcceptableOrUnknown(data['outcome']!, _outcomeMeta));
+    } else if (isInserting) {
+      context.missing(_outcomeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  VoiceListen map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return VoiceListen(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      at: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}at'])!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      answerType: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}answer_type'],
+      )!,
+      outcome: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}outcome'])!,
+    );
+  }
+
+  @override
+  $VoiceListensTable createAlias(String alias) {
+    return $VoiceListensTable(attachedDatabase, alias);
+  }
+}
+
+class VoiceListen extends DataClass implements Insertable<VoiceListen> {
+  final int id;
+  final DateTime at;
+  final String profileId;
+
+  /// What kind of answer was expected: `number`, `colour` or `word`.
+  final String answerType;
+
+  /// `accepted`, `confirmed`, `declined`, `unclear`, `silent`, `intent` or `failed`.
+  final String outcome;
+  const VoiceListen({
+    required this.id,
+    required this.at,
+    required this.profileId,
+    required this.answerType,
+    required this.outcome,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['at'] = Variable<DateTime>(at);
+    map['profile_id'] = Variable<String>(profileId);
+    map['answer_type'] = Variable<String>(answerType);
+    map['outcome'] = Variable<String>(outcome);
+    return map;
+  }
+
+  VoiceListensCompanion toCompanion(bool nullToAbsent) {
+    return VoiceListensCompanion(
+      id: Value(id),
+      at: Value(at),
+      profileId: Value(profileId),
+      answerType: Value(answerType),
+      outcome: Value(outcome),
+    );
+  }
+
+  factory VoiceListen.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return VoiceListen(
+      id: serializer.fromJson<int>(json['id']),
+      at: serializer.fromJson<DateTime>(json['at']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      answerType: serializer.fromJson<String>(json['answerType']),
+      outcome: serializer.fromJson<String>(json['outcome']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'at': serializer.toJson<DateTime>(at),
+      'profileId': serializer.toJson<String>(profileId),
+      'answerType': serializer.toJson<String>(answerType),
+      'outcome': serializer.toJson<String>(outcome),
+    };
+  }
+
+  VoiceListen copyWith({int? id, DateTime? at, String? profileId, String? answerType, String? outcome}) =>
+      VoiceListen(
+        id: id ?? this.id,
+        at: at ?? this.at,
+        profileId: profileId ?? this.profileId,
+        answerType: answerType ?? this.answerType,
+        outcome: outcome ?? this.outcome,
+      );
+  VoiceListen copyWithCompanion(VoiceListensCompanion data) {
+    return VoiceListen(
+      id: data.id.present ? data.id.value : this.id,
+      at: data.at.present ? data.at.value : this.at,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      answerType: data.answerType.present ? data.answerType.value : this.answerType,
+      outcome: data.outcome.present ? data.outcome.value : this.outcome,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('VoiceListen(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('profileId: $profileId, ')
+          ..write('answerType: $answerType, ')
+          ..write('outcome: $outcome')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, at, profileId, answerType, outcome);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is VoiceListen &&
+          other.id == this.id &&
+          other.at == this.at &&
+          other.profileId == this.profileId &&
+          other.answerType == this.answerType &&
+          other.outcome == this.outcome);
+}
+
+class VoiceListensCompanion extends UpdateCompanion<VoiceListen> {
+  final Value<int> id;
+  final Value<DateTime> at;
+  final Value<String> profileId;
+  final Value<String> answerType;
+  final Value<String> outcome;
+  const VoiceListensCompanion({
+    this.id = const Value.absent(),
+    this.at = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.answerType = const Value.absent(),
+    this.outcome = const Value.absent(),
+  });
+  VoiceListensCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime at,
+    required String profileId,
+    required String answerType,
+    required String outcome,
+  }) : at = Value(at),
+       profileId = Value(profileId),
+       answerType = Value(answerType),
+       outcome = Value(outcome);
+  static Insertable<VoiceListen> custom({
+    Expression<int>? id,
+    Expression<DateTime>? at,
+    Expression<String>? profileId,
+    Expression<String>? answerType,
+    Expression<String>? outcome,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (at != null) 'at': at,
+      if (profileId != null) 'profile_id': profileId,
+      if (answerType != null) 'answer_type': answerType,
+      if (outcome != null) 'outcome': outcome,
+    });
+  }
+
+  VoiceListensCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? at,
+    Value<String>? profileId,
+    Value<String>? answerType,
+    Value<String>? outcome,
+  }) {
+    return VoiceListensCompanion(
+      id: id ?? this.id,
+      at: at ?? this.at,
+      profileId: profileId ?? this.profileId,
+      answerType: answerType ?? this.answerType,
+      outcome: outcome ?? this.outcome,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (at.present) {
+      map['at'] = Variable<DateTime>(at.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (answerType.present) {
+      map['answer_type'] = Variable<String>(answerType.value);
+    }
+    if (outcome.present) {
+      map['outcome'] = Variable<String>(outcome.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('VoiceListensCompanion(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('profileId: $profileId, ')
+          ..write('answerType: $answerType, ')
+          ..write('outcome: $outcome')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2456,6 +2806,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $InstalledPacksTable installedPacks = $InstalledPacksTable(this);
   late final $AttemptsTable attempts = $AttemptsTable(this);
   late final $SessionsTable sessions = $SessionsTable(this);
+  late final $VoiceListensTable voiceListens = $VoiceListensTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2467,6 +2818,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     installedPacks,
     attempts,
     sessions,
+    voiceListens,
   ];
 }
 
@@ -3120,6 +3472,7 @@ typedef $$AttemptsTableCreateCompanionBuilder = AttemptsCompanion Function({
   Value<String> response,
   Value<int> durationMs,
   Value<int?> sessionId,
+  Value<String> input,
 });
 typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<int> id,
@@ -3140,6 +3493,7 @@ typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<String> response,
   Value<int> durationMs,
   Value<int?> sessionId,
+  Value<String> input,
 });
 
 class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -3203,6 +3557,9 @@ class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTab
 
   ColumnFilters<int> get sessionId =>
       $composableBuilder(column: $table.sessionId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get input =>
+      $composableBuilder(column: $table.input, builder: (column) => ColumnFilters(column));
 }
 
 class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -3266,6 +3623,9 @@ class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsT
 
   ColumnOrderings<int> get sessionId =>
       $composableBuilder(column: $table.sessionId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get input =>
+      $composableBuilder(column: $table.input, builder: (column) => ColumnOrderings(column));
 }
 
 class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -3327,6 +3687,8 @@ class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $Attempt
 
   GeneratedColumn<int> get sessionId =>
       $composableBuilder(column: $table.sessionId, builder: (column) => column);
+
+  GeneratedColumn<String> get input => $composableBuilder(column: $table.input, builder: (column) => column);
 }
 
 class $$AttemptsTableTableManager
@@ -3372,6 +3734,7 @@ class $$AttemptsTableTableManager
                 Value<String> response = const Value.absent(),
                 Value<int> durationMs = const Value.absent(),
                 Value<int?> sessionId = const Value.absent(),
+                Value<String> input = const Value.absent(),
               }) => AttemptsCompanion(
                 id: id,
                 at: at,
@@ -3391,6 +3754,7 @@ class $$AttemptsTableTableManager
                 response: response,
                 durationMs: durationMs,
                 sessionId: sessionId,
+                input: input,
               ),
           createCompanionCallback:
               ({
@@ -3412,6 +3776,7 @@ class $$AttemptsTableTableManager
                 Value<String> response = const Value.absent(),
                 Value<int> durationMs = const Value.absent(),
                 Value<int?> sessionId = const Value.absent(),
+                Value<String> input = const Value.absent(),
               }) => AttemptsCompanion.insert(
                 id: id,
                 at: at,
@@ -3431,6 +3796,7 @@ class $$AttemptsTableTableManager
                 response: response,
                 durationMs: durationMs,
                 sessionId: sessionId,
+                input: input,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -3637,6 +4003,169 @@ typedef $$SessionsTableProcessedTableManager =
       Session,
       PrefetchHooks Function()
     >;
+typedef $$VoiceListensTableCreateCompanionBuilder = VoiceListensCompanion Function({
+  Value<int> id,
+  required DateTime at,
+  required String profileId,
+  required String answerType,
+  required String outcome,
+});
+typedef $$VoiceListensTableUpdateCompanionBuilder = VoiceListensCompanion Function({
+  Value<int> id,
+  Value<DateTime> at,
+  Value<String> profileId,
+  Value<String> answerType,
+  Value<String> outcome,
+});
+
+class $$VoiceListensTableFilterComposer extends Composer<_$AppDatabase, $VoiceListensTable> {
+  $$VoiceListensTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get answerType =>
+      $composableBuilder(column: $table.answerType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get outcome =>
+      $composableBuilder(column: $table.outcome, builder: (column) => ColumnFilters(column));
+}
+
+class $$VoiceListensTableOrderingComposer extends Composer<_$AppDatabase, $VoiceListensTable> {
+  $$VoiceListensTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get answerType =>
+      $composableBuilder(column: $table.answerType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get outcome =>
+      $composableBuilder(column: $table.outcome, builder: (column) => ColumnOrderings(column));
+}
+
+class $$VoiceListensTableAnnotationComposer extends Composer<_$AppDatabase, $VoiceListensTable> {
+  $$VoiceListensTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get at => $composableBuilder(column: $table.at, builder: (column) => column);
+
+  GeneratedColumn<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => column);
+
+  GeneratedColumn<String> get answerType =>
+      $composableBuilder(column: $table.answerType, builder: (column) => column);
+
+  GeneratedColumn<String> get outcome =>
+      $composableBuilder(column: $table.outcome, builder: (column) => column);
+}
+
+class $$VoiceListensTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $VoiceListensTable,
+          VoiceListen,
+          $$VoiceListensTableFilterComposer,
+          $$VoiceListensTableOrderingComposer,
+          $$VoiceListensTableAnnotationComposer,
+          $$VoiceListensTableCreateCompanionBuilder,
+          $$VoiceListensTableUpdateCompanionBuilder,
+          (VoiceListen, BaseReferences<_$AppDatabase, $VoiceListensTable, VoiceListen>),
+          VoiceListen,
+          PrefetchHooks Function()
+        > {
+  $$VoiceListensTableTableManager(_$AppDatabase db, $VoiceListensTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$VoiceListensTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$VoiceListensTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$VoiceListensTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> at = const Value.absent(),
+                Value<String> profileId = const Value.absent(),
+                Value<String> answerType = const Value.absent(),
+                Value<String> outcome = const Value.absent(),
+              }) => VoiceListensCompanion(
+                id: id,
+                at: at,
+                profileId: profileId,
+                answerType: answerType,
+                outcome: outcome,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime at,
+                required String profileId,
+                required String answerType,
+                required String outcome,
+              }) => VoiceListensCompanion.insert(
+                id: id,
+                at: at,
+                profileId: profileId,
+                answerType: answerType,
+                outcome: outcome,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$VoiceListensTable, VoiceListen>(table),
+                  BaseReferences<_$AppDatabase, $VoiceListensTable, VoiceListen>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$VoiceListensTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $VoiceListensTable,
+      VoiceListen,
+      $$VoiceListensTableFilterComposer,
+      $$VoiceListensTableOrderingComposer,
+      $$VoiceListensTableAnnotationComposer,
+      $$VoiceListensTableCreateCompanionBuilder,
+      $$VoiceListensTableUpdateCompanionBuilder,
+      (VoiceListen, BaseReferences<_$AppDatabase, $VoiceListensTable, VoiceListen>),
+      VoiceListen,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3648,4 +4177,5 @@ class $AppDatabaseManager {
       $$InstalledPacksTableTableManager(_db, _db.installedPacks);
   $$AttemptsTableTableManager get attempts => $$AttemptsTableTableManager(_db, _db.attempts);
   $$SessionsTableTableManager get sessions => $$SessionsTableTableManager(_db, _db.sessions);
+  $$VoiceListensTableTableManager get voiceListens => $$VoiceListensTableTableManager(_db, _db.voiceListens);
 }

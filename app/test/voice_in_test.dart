@@ -1,0 +1,281 @@
+// Answering by voice in the real lesson screen, with a fake recogniser that says what the test tells it to.
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/child/home_screen.dart';
+import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/design/components.dart';
+import 'package:nitznutz/play/activity_frame.dart';
+import 'package:nitznutz/strings/he.dart';
+
+import 'support/app_harness.dart';
+import 'support/fake_speech.dart';
+import 'support/golden_comparator.dart';
+import 'support/harness.dart';
+
+/// Lets stage timers and the pauses between moves run, in steps, so that animations get frames.
+Future<void> wait(WidgetTester t, [int ms = 2000]) async {
+  for (int spent = 0; spent < ms; spent += 100) {
+    await t.pump(const Duration(milliseconds: 100));
+  }
+  await t.pump(const Duration(milliseconds: 50));
+}
+
+Future<void> tapKey(WidgetTester t, String key) async {
+  await t.tap(find.byKey(Key(key)), warnIfMissed: false);
+  await t.pump(const Duration(milliseconds: 60));
+}
+
+Future<AppRig> start(
+  WidgetTester tester, {
+  bool voice = true,
+  List<Scripted> script = const <Scripted>[],
+}) async {
+  final AppRig rig = AppRig(voice: voice, speech: FakeSpeechEngine(script));
+  await rig.seedFinishedSetup();
+  await rig.pump(tester);
+  await tester.tap(find.text('נועה'));
+  await tester.pumpAndSettle();
+  expect(find.byType(HomeScreen), findsOneWidget);
+  await tester.tap(find.text(He.landCounting.text));
+  await tester.pumpAndSettle();
+  expect(find.byType(ActivityFrame), findsOneWidget);
+  await wait(tester, 300);
+  return rig;
+}
+
+Future<List<Attempt>> attempts(AppRig rig) => rig.db.attemptsOf('p-1');
+
+Finder get mic => find.byKey(const Key('lesson-mic'));
+
+MicLook look(WidgetTester t) => t.widget<MicButton>(mic).look;
+
+/// Taps the mic and lets the (fake) listen and the matching run.
+Future<void> speak(WidgetTester t) async {
+  await t.tap(mic);
+  await wait(t, 1200);
+}
+
+void main() {
+  setUpAll(() async {
+    await loadAppFonts();
+    useTolerantGoldens(0.03);
+  });
+
+  goldens();
+
+  testWidgets('with voice off there is no mic and nothing listens', (WidgetTester tester) async {
+    final AppRig rig = await start(tester, voice: false);
+    expect(mic, findsNothing);
+    expect(rig.speech.listens, 0);
+    expect(rig.speech.prepares, 0);
+  });
+
+  testWidgets(
+    'with voice on the mic is offered when the question is open, and a clear answer counts like a tap',
+    (WidgetTester tester) async {
+      final AppRig rig = await start(tester, script: <Scripted>[Scripted.says('אדום')]);
+      expect(mic, findsOneWidget);
+      expect(look(tester), MicLook.ready);
+      expect(rig.speech.listens, 0, reason: 'the mic opens only when the child taps it');
+      await tester.tap(mic);
+      await tester.pump(const Duration(milliseconds: 100));
+      await wait(tester, 1500);
+      final List<Attempt> rows = await attempts(rig);
+      expect(rows.single.result, 'correct');
+      expect(rows.single.response, 'o1');
+      expect(rows.single.input, 'voice');
+      expect(rig.speech.micOpen, isFalse);
+      // The guide stopped talking before the mic opened.
+      expect(rig.speech.log.first, 'prepare');
+      final List<VoiceListen> listens = await rig.db.recentListens('p-1', 'word');
+      expect(listens.single.outcome, 'accepted');
+    },
+  );
+
+  testWidgets('a wrong colour said aloud is checked first: a tick or "again", never a "not yet" by itself', (
+    WidgetTester tester,
+  ) async {
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.says('צהוב')]);
+    await speak(tester);
+    expect(await attempts(rig), isEmpty, reason: 'nothing counted yet');
+    expect(find.byKey(const Key('confirm-yes')), findsOneWidget);
+    expect(find.byKey(const Key('confirm-again')), findsOneWidget);
+    expect(heardLines(rig).last, 'mp3:nitzi:core.listen.confirm');
+    await tester.tap(find.byKey(const Key('confirm-yes')));
+    await wait(tester, 1500);
+    final List<Attempt> rows = await attempts(rig);
+    expect(rows.single.response, 'o2');
+    expect(rows.single.result, 'incorrect');
+    expect(rows.single.input, 'voice');
+    expect(find.byKey(const Key('confirm-yes')), findsNothing);
+  });
+
+  testWidgets('"again" on the check takes it back and nothing is written', (WidgetTester tester) async {
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.says('צהוב')]);
+    await speak(tester);
+    await tester.tap(find.byKey(const Key('confirm-again')));
+    await wait(tester, 800);
+    expect(await attempts(rig), isEmpty);
+    expect(find.byKey(const Key('confirm-yes')), findsNothing);
+  });
+
+  testWidgets(
+    'unclear speech: asked again once, then the cards invite a tap, and nothing is ever marked wrong',
+    (WidgetTester tester) async {
+      final AppRig rig = await start(
+        tester,
+        script: <Scripted>[Scripted.says('בננה'), Scripted.says('גלידה')],
+      );
+      await speak(tester);
+      expect(heardLines(rig).last, 'mp3:nitzi:core.listen.mixed');
+      expect(look(tester), MicLook.ready);
+      await speak(tester);
+      expect(heardLines(rig).last, 'mp3:nitzi:core.listen.tap');
+      expect(look(tester), MicLook.faded);
+      await wait(tester, 1500);
+      expect(await attempts(rig), isEmpty);
+      // The cards still work by touch.
+      await tapKey(tester, 'option-o1');
+      await wait(tester, 400);
+      final List<Attempt> rows = await attempts(rig);
+      expect(rows.single.result, 'correct');
+      expect(rows.single.input, 'tap');
+      final List<String> outcomes = (await rig.db.recentListens(
+        'p-1',
+        'word',
+      )).map((VoiceListen l) => l.outcome).toList();
+      expect(outcomes, <String>['unclear', 'unclear']);
+    },
+  );
+
+  testWidgets('silence is never wrong either', (WidgetTester tester) async {
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.silence(), Scripted.silence()]);
+    await speak(tester);
+    await speak(tester);
+    expect(look(tester), MicLook.faded);
+    expect(await attempts(rig), isEmpty);
+  });
+
+  testWidgets('"I don\'t know" is welcomed like the eye button, and "again" asks the question again', (
+    WidgetTester tester,
+  ) async {
+    final AppRig rig = await start(
+      tester,
+      script: <Scripted>[Scripted.says('לא יודע'), Scripted.says('עוד פעם')],
+    );
+    await speak(tester);
+    final List<Attempt> rows = await attempts(rig);
+    expect(rows.single.result, 'unsure');
+    final int before = rig.player.plays;
+    await speak(tester);
+    expect(rig.player.plays, greaterThan(before), reason: 'the question was said again');
+    expect((await attempts(rig)).length, 1);
+  });
+
+  testWidgets('a model that will not load leaves the cards to tap and nothing breaks', (
+    WidgetTester tester,
+  ) async {
+    final AppRig rig = AppRig(voice: true, speech: FakeSpeechEngine()..failPrepare = true);
+    await rig.seedFinishedSetup();
+    await rig.pump(tester);
+    await tester.tap(find.text('נועה'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(He.landCounting.text));
+    await tester.pumpAndSettle();
+    await wait(tester, 300);
+    await speak(tester);
+    expect(look(tester), MicLook.faded);
+    expect(tester.takeException(), isNull);
+    await tapKey(tester, 'option-o1');
+    await wait(tester, 400);
+    expect((await attempts(rig)).single.result, 'correct');
+  });
+
+  testWidgets('leaving the lesson while listening closes the microphone', (WidgetTester tester) async {
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.hangs()]);
+    await tester.tap(mic);
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(rig.speech.micOpen, isTrue);
+    await tester.tap(find.byKey(const Key('activity-home')));
+    await tester.pumpAndSettle();
+    expect(rig.speech.micOpen, isFalse);
+    expect(await attempts(rig), isEmpty);
+  });
+
+  testWidgets('a child for whom voice has not been working is not invited any more', (
+    WidgetTester tester,
+  ) async {
+    final AppRig rig = AppRig(voice: true);
+    await rig.seedFinishedSetup();
+    for (int i = 0; i < 5; i++) {
+      await rig.db.recordListen(
+        'p-1',
+        DateTime.utc(2026, 10, 26, 8),
+        'word',
+        i.isEven ? 'unclear' : 'silent',
+      );
+    }
+    await rig.pump(tester);
+    await tester.tap(find.text('נועה'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(He.landCounting.text));
+    await tester.pumpAndSettle();
+    await wait(tester, 300);
+    expect(mic, findsNothing);
+  });
+}
+
+List<String> heardLines(AppRig rig) => rig.player.played.map(String.fromCharCodes).toList();
+
+/// The mic in each of its states, on the boards it has to fit.
+void goldens() {
+  Future<void> shot(WidgetTester t, String name) async {
+    await t.pump(const Duration(milliseconds: 200));
+    await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/$name.png'));
+  }
+
+  for (final (String, Size) d in <(String, Size)>[
+    ('phone', Size(852, 393)),
+    ('tablet_landscape', Size(1180, 820)),
+    ('tablet_portrait', Size(820, 1180)),
+  ]) {
+    testWidgets('mic states on the ${d.$1}', (WidgetTester tester) async {
+      final AppRig rig = AppRig(
+        voice: true,
+        speech: FakeSpeechEngine(<Scripted>[
+          Scripted.hangs(),
+          Scripted.says('צהוב'),
+          Scripted.silence(),
+          Scripted.silence(),
+        ]),
+      );
+      await rig.seedFinishedSetup();
+      await rig.pump(tester, size: d.$2);
+      await tester.tap(find.text('נועה'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(He.landCounting.text));
+      await tester.pumpAndSettle();
+      await wait(tester, 300);
+      await shot(tester, 'voice_mic_ready_${d.$1}');
+
+      await tester.tap(mic); // hangs: listening
+      await tester.pump(const Duration(milliseconds: 300));
+      await shot(tester, 'voice_mic_listening_${d.$1}');
+      // Asking the question again ends the listen; the next tap is a wrong colour: did you say...?
+      await tester.tap(find.byKey(const Key('lesson-replay')));
+      await wait(tester, 400);
+      await tester.tap(mic);
+      await wait(tester, 1200);
+      await shot(tester, 'voice_mic_confirm_${d.$1}');
+      await tester.tap(find.byKey(const Key('confirm-again')));
+      await wait(tester, 800);
+
+      await tester.tap(mic);
+      await wait(tester, 1200);
+      await tester.tap(mic);
+      await wait(tester, 1200);
+      await shot(tester, 'voice_mic_tap_instead_${d.$1}');
+      await wait(tester, 2500);
+    });
+  }
+}

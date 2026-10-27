@@ -264,6 +264,12 @@ const SObject lessonSchema = SObject(<String, SField>{
 
 const SObject _sprite = SObject(<String, SField>{'sprite': SField(_asset)});
 
+/// Extra words a child may say for an option, with or without niqqud (a word the number or label does not give).
+const SField _speechWords = SField(
+  SArray(SString(minLength: 1, maxLength: 40), minItems: 1, maxItems: 8),
+  required: false,
+);
+
 SObject _answerOptions(Map<String, SField> optionFields) => SObject(<String, SField>{
   'type': const SField(SConst('choice')),
   'options': SField(SArray(SObject(optionFields), minItems: 2, maxItems: 4, uniqueKey: 'id')),
@@ -379,6 +385,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'id': const SField(_optionId),
           'sprite': const SField(_asset),
           'label': const SField(SString(minLength: 1, maxLength: 80)),
+          'speech': _speechWords,
           'misconception': const SField(_tag, required: false),
         }),
       ),
@@ -406,6 +413,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
         _answerOptions(<String, SField>{
           'id': const SField(_optionId),
           'value': const SField(SInt(min: 0, max: 20)),
+          'speech': _speechWords,
           'misconception': const SField(_tag, required: false),
         }),
       ),

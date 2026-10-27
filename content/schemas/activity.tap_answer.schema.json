@@ -225,6 +225,16 @@
                 "minLength": 1,
                 "maxLength": 80
               },
+              "speech": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "minItems": 1,
+                "maxItems": 8
+              },
               "misconception": {
                 "type": "string",
                 "minLength": 5,

@@ -57,6 +57,19 @@ abstract final class He {
   static const Str hintSemantics = Str('רמז');
   static const Str homeSemantics = Str('הביתה');
   static const Str micSemantics = Str('מיקרופון');
+  static const Str micListeningSemantics = Str('מקשיבים');
+  static const Str micThinkingSemantics = Str('חושבים');
+  static const Str micUnderstoodSemantics = Str('הבנו');
+  static const Str micNotUnderstoodSemantics = Str('לא הבנו, אפשר לנסות שוב');
+  static const Str micFadedSemantics = Str('אפשר ללחוץ על התשובה');
+  static const Str confirmYesSemantics = Str('כן, זה מה שאמרתי');
+  static const Str confirmAgainSemantics = Str('לומר שוב');
+  static const Str listenMixed = Str(
+    'אוֹפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב?',
+    nikud: true,
+  );
+  static const Str listenConfirm = Str('שָׁמַעְתִּי… נָכוֹן?', nikud: true);
+  static const Str listenTap = Str('אֶפְשָׁר גַּם לִלְחֹץ עַל הַתְּשׁוּבָה.', nikud: true);
 
   // ---- parent gate and PIN (adult) ----
   static const Str gateTitle = Str('לפני שנמשיך');
@@ -143,6 +156,13 @@ abstract final class He {
   static const Str areaConfirmRemove = Str('להסיר את הפרופיל של {child}? כל ההתקדמות במכשיר הזה תימחק.');
   static const Str areaChangePin = Str('שינוי קוד הורים');
   static const Str areaLockNow = Str('נעילה וחזרה למשחק');
+  static const Str areaVoice = Str('תשובות בקול');
+  static const Str areaVoiceHelp = Str(
+    'ילדים יוכלו לענות בדיבור. הזיהוי נעשה במכשיר, ההקלטה נמחקת מיד ולא נשמרת ולא נשלחת לשום מקום. המיקרופון נפתח רק כשהילד לוחץ עליו.',
+  );
+  static const Str areaVoiceNoModel = Str('מודל הזיהוי עוד לא הותקן במכשיר הזה.');
+  static const Str areaVoiceNoPermission = Str('לא ניתנה הרשאת מיקרופון. אפשר לתת אותה בהגדרות המכשיר.');
+  static const Str areaVoiceCredit = Str('זיהוי דיבור: ivrit.ai Zipformer מאת יעקב קולני, רישיון CC-BY-4.0.');
   static const Str areaVersion = Str('גרסה');
   static const Str areaOffline = Str('אין חיבור לאינטרנט, אי אפשר לטעון את רשימת המכשירים.');
   static const Str confirmYes = Str('כן');
