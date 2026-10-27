@@ -158,3 +158,33 @@ class VoiceListens extends Table {
   /// `accepted`, `confirmed`, `declined`, `unclear`, `silent`, `intent` or `failed`.
   TextColumn get outcome => text()();
 }
+
+/// What the parent is told about (M7): a category, a severity, a number and fixed words. The child's own words are in
+/// [words] only while "keep the words" is on (default on, never longer than 30 days); otherwise it is empty.
+class Alerts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  DateTimeColumn get at => dateTime()();
+
+  /// The child the alert is about, or null for one that concerns the device (someone at the parent gate).
+  TextColumn get profileId => text().nullable()();
+
+  /// An `AlertCategory` name and an `AlertSeverity` name.
+  TextColumn get category => text()();
+
+  TextColumn get severity => text()();
+
+  /// Minutes, attempts or days, depending on the category.
+  IntColumn get count => integer().withDefault(const Constant<int>(0))();
+
+  /// Fixed words only (an activity id).
+  TextColumn get detail => text().withDefault(const Constant<String>(''))();
+
+  /// The words the recogniser heard, kept only when the parent allows it.
+  TextColumn get words => text().withDefault(const Constant<String>(''))();
+
+  /// What makes this alert the same alert next time (one a day, one a session, one an event), so a scan never repeats it.
+  TextColumn get dedupeKey => text().unique()();
+
+  DateTimeColumn get readAt => dateTime().nullable()();
+}

@@ -24,6 +24,7 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
+import '../parent/alert_scan.dart';
 import '../parent/parent_rules.dart';
 import '../parent/time_rules.dart';
 import '../speech/voice_answer.dart';
@@ -109,6 +110,21 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     ).locked;
   }
 
+  /// The words of one spoken answer, looked at once on this phone for the parent's alerts. A failure here never
+  /// reaches the child.
+  Future<void> _wordAlert(List<String> texts) async {
+    try {
+      await recordWordAlert(
+        await ref.read(databaseProvider.future),
+        now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs()),
+        profileId: widget.profileId,
+        texts: texts,
+      );
+    } on Object {
+      // Nothing to do: the alert is a note for the parent, and the lesson goes on.
+    }
+  }
+
   LessonVoice _makeVoice(LessonController controller) {
     final bool bandA = ref.read(activeProfileProvider)?.ageBand == 0;
     return LessonVoice(
@@ -117,6 +133,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       session: () => _session,
       silence: bandA ? const Duration(seconds: 2) : const Duration(milliseconds: 1500),
       stopGuide: _director.stop,
+      onWords: (List<String> texts) => unawaited(_wordAlert(texts)),
       record: (String type, String outcome) {
         unawaited(
           ref

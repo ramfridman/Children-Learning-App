@@ -2,7 +2,7 @@
 // what they should without raising an alert for everyday words.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/data/app_database.dart';
-import 'package:nitznutz/parent/alert_words.dart';
+import 'package:nitznutz/speech/alert_words.dart';
 import 'package:nitznutz/parent/alerts.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
 

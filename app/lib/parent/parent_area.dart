@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/alerts_provider.dart';
 import '../app/progress_provider.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
@@ -16,6 +17,7 @@ import '../design/tokens.g.dart';
 import '../security/parent_session.dart';
 import '../strings/he.dart';
 import '../ui/dev/dev_home_page.dart';
+import 'alerts_screen.dart';
 import 'backends.dart';
 import 'child_form.dart';
 import 'pin_screens.dart';
@@ -43,6 +45,8 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
   void initState() {
     super.initState();
     unawaited(_loadDevices());
+    // Look for alerts now, so that the parent sees today's before reading anything else.
+    unawaited(scanForAlerts(ref).catchError((Object _) {}));
   }
 
   Future<void> _loadDevices() async {
@@ -144,6 +148,25 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              _card(He.alertsTitle.text, <Widget>[
+                ParentButton(
+                  key: const Key('open-alerts'),
+                  label: (ref.watch(unreadAlertsProvider).value ?? 0) > 0
+                      ? He.alertsOpenUnread.fill(<String, String>{
+                          'n': '${ref.watch(unreadAlertsProvider).value}',
+                        })
+                      : He.alertsOpen.text,
+                  quiet: true,
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext c) => AlertsScreen(onClose: () => Navigator.pop(c)),
+                      ),
+                    );
+                    ref.invalidate(unreadAlertsProvider);
+                  },
+                ),
+              ]),
               _card(He.areaDevices.text, <Widget>[
                 if (_offline) Text(He.areaOffline.text, style: AppText.parent(TokenType.parentSmall)),
                 if (_devices == null && !_offline) const LinearProgressIndicator(),

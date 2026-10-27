@@ -146,6 +146,44 @@ abstract final class He {
   static const Str areaLockNow = Str('נעילה וחזרה למשחק');
   static const Str areaTimeOpen = Str('זמן משחק ושעות מנוחה');
 
+  // ---- parent area: alerts (M7a) ----
+  static const Str alertsTitle = Str('התראות');
+  static const Str alertsOpen = Str('התראות');
+  static const Str alertsOpenUnread = Str('התראות ({n} חדשות)');
+  static const Str alertsNone = Str('אין התראות. כשיהיה משהו שכדאי לדעת עליו, הוא יופיע כאן.');
+  static const Str alertsKeepWords = Str('לשמור בהתראה את המילים שנאמרו');
+  static const Str alertsKeepWordsHelp = Str(
+    'כשמופעל, המילים שנאמרו נשמרות עם ההתראה עד 30 יום. כשכבוי, נשמרת רק הקטגוריה.',
+  );
+  static const Str alertsNever = Str('ההתראות לא מוצגות בצד של הילדים, והאפליקציה אף פעם לא מוכיחה אותם.');
+  static const Str severityInfo = Str('לידיעה');
+  static const Str severityAttention = Str('לתשומת לב');
+  static const Str severityImportant = Str('חשוב');
+  static const Str alertAbout = Str('{child}: {title}');
+  static const Str alertWords = Str('נאמר: {w}');
+  static const Str alertPastLimitTitle = Str('שיחקו מעבר לזמן שנקבע');
+  static const Str alertPastLimitDetail = Str('ב-{n} דקות יותר מהמותר.');
+  static const Str alertPastLimitDo = Str('אפשר לשנות את הגבלת הזמן, או לדבר על סיום משחק.');
+  static const Str alertRestTitle = Str('שיחקו בשעות המנוחה');
+  static const Str alertRestDetail = Str('כ-{n} דקות.');
+  static const Str alertRestDo = Str('אפשר להפעיל נעילה בשעות המנוחה או לשנות את השעות.');
+  static const Str alertGateTitle = Str('ניסיון להיכנס לאזור ההורים');
+  static const Str alertGateDetail = Str('נכשלו {n} ניסיונות ברצף.');
+  static const Str alertGateDo = Str('אם עוד אין קוד הורים, כדאי לקבוע אחד.');
+  static const Str alertGuessTitle = Str('נראה שיש ניחושים מהירים');
+  static const Str alertGuessDo = Str('כדאי לשחק יחד כמה דקות ולעבור לפעילות רגועה.');
+  static const Str alertUpsetTitle = Str('נראה שיש תסכול במשחק');
+  static const Str alertUpsetDo = Str('אפשר לנסות פעילות רגועה בבית, או לשחק יחד.');
+  static const Str alertSwearTitle = Str('נאמרו מילים לא הולמות');
+  static const Str alertSwearDo = Str('אפשר לשוחח על כך בנחת. ההתראה לא מוצגת בצד של הילדים.');
+  static const Str alertDisclosureTitle = Str('נאמר משהו שעשוי להדאיג');
+  static const Str alertDisclosureDo = Str('כדאי לשוחח בנחת ובפרטיות, בלי ללחוץ.');
+  static const Str alertAbsenceTitle = Str('לא שיחקו זמן מה');
+  static const Str alertAbsenceDetail = Str('לפני {n} ימים.');
+  static const Str alertAbsenceDo = Str('אפשר להזמין להרפתקה קצרה.');
+  static const Str alertDropTitle = Str('המשחק השבוע ירד בהרבה');
+  static const Str alertDropDo = Str('אפשר לשאול מה קרה, ולהציע הרפתקה אהובה.');
+
   // ---- parent area: the progress view (M7a) ----
   static const Str areaProgress = Str('התקדמות');
   static const Str progressTitle = Str('התקדמות של {child}');

@@ -2797,6 +2797,518 @@ class VoiceListensCompanion extends UpdateCompanion<VoiceListen> {
   }
 }
 
+class $AlertsTable extends Alerts with TableInfo<$AlertsTable, Alert> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AlertsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'),
+  );
+  static const VerificationMeta _atMeta = const VerificationMeta('at');
+  @override
+  late final GeneratedColumn<DateTime> at = GeneratedColumn<DateTime>(
+    'at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta('profileId');
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta('category');
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _severityMeta = const VerificationMeta('severity');
+  @override
+  late final GeneratedColumn<String> severity = GeneratedColumn<String>(
+    'severity',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _countMeta = const VerificationMeta('count');
+  @override
+  late final GeneratedColumn<int> count = GeneratedColumn<int>(
+    'count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant<int>(0),
+  );
+  static const VerificationMeta _detailMeta = const VerificationMeta('detail');
+  @override
+  late final GeneratedColumn<String> detail = GeneratedColumn<String>(
+    'detail',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant<String>(''),
+  );
+  static const VerificationMeta _wordsMeta = const VerificationMeta('words');
+  @override
+  late final GeneratedColumn<String> words = GeneratedColumn<String>(
+    'words',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant<String>(''),
+  );
+  static const VerificationMeta _dedupeKeyMeta = const VerificationMeta('dedupeKey');
+  @override
+  late final GeneratedColumn<String> dedupeKey = GeneratedColumn<String>(
+    'dedupe_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _readAtMeta = const VerificationMeta('readAt');
+  @override
+  late final GeneratedColumn<DateTime> readAt = GeneratedColumn<DateTime>(
+    'read_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    at,
+    profileId,
+    category,
+    severity,
+    count,
+    detail,
+    words,
+    dedupeKey,
+    readAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'alerts';
+  @override
+  VerificationContext validateIntegrity(Insertable<Alert> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('at')) {
+      context.handle(_atMeta, at.isAcceptableOrUnknown(data['at']!, _atMeta));
+    } else if (isInserting) {
+      context.missing(_atMeta);
+    }
+    if (data.containsKey('profile_id')) {
+      context.handle(_profileIdMeta, profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
+    }
+    if (data.containsKey('category')) {
+      context.handle(_categoryMeta, category.isAcceptableOrUnknown(data['category']!, _categoryMeta));
+    } else if (isInserting) {
+      context.missing(_categoryMeta);
+    }
+    if (data.containsKey('severity')) {
+      context.handle(_severityMeta, severity.isAcceptableOrUnknown(data['severity']!, _severityMeta));
+    } else if (isInserting) {
+      context.missing(_severityMeta);
+    }
+    if (data.containsKey('count')) {
+      context.handle(_countMeta, count.isAcceptableOrUnknown(data['count']!, _countMeta));
+    }
+    if (data.containsKey('detail')) {
+      context.handle(_detailMeta, detail.isAcceptableOrUnknown(data['detail']!, _detailMeta));
+    }
+    if (data.containsKey('words')) {
+      context.handle(_wordsMeta, words.isAcceptableOrUnknown(data['words']!, _wordsMeta));
+    }
+    if (data.containsKey('dedupe_key')) {
+      context.handle(_dedupeKeyMeta, dedupeKey.isAcceptableOrUnknown(data['dedupe_key']!, _dedupeKeyMeta));
+    } else if (isInserting) {
+      context.missing(_dedupeKeyMeta);
+    }
+    if (data.containsKey('read_at')) {
+      context.handle(_readAtMeta, readAt.isAcceptableOrUnknown(data['read_at']!, _readAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Alert map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Alert(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      at: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}at'])!,
+      profileId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}profile_id']),
+      category: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}category'])!,
+      severity: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}severity'])!,
+      count: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}count'])!,
+      detail: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}detail'])!,
+      words: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}words'])!,
+      dedupeKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dedupe_key'],
+      )!,
+      readAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}read_at']),
+    );
+  }
+
+  @override
+  $AlertsTable createAlias(String alias) {
+    return $AlertsTable(attachedDatabase, alias);
+  }
+}
+
+class Alert extends DataClass implements Insertable<Alert> {
+  final int id;
+  final DateTime at;
+
+  /// The child the alert is about, or null for one that concerns the device (someone at the parent gate).
+  final String? profileId;
+
+  /// An `AlertCategory` name and an `AlertSeverity` name.
+  final String category;
+  final String severity;
+
+  /// Minutes, attempts or days, depending on the category.
+  final int count;
+
+  /// Fixed words only (an activity id).
+  final String detail;
+
+  /// The words the recogniser heard, kept only when the parent allows it.
+  final String words;
+
+  /// What makes this alert the same alert next time (one a day, one a session, one an event), so a scan never repeats it.
+  final String dedupeKey;
+  final DateTime? readAt;
+  const Alert({
+    required this.id,
+    required this.at,
+    this.profileId,
+    required this.category,
+    required this.severity,
+    required this.count,
+    required this.detail,
+    required this.words,
+    required this.dedupeKey,
+    this.readAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['at'] = Variable<DateTime>(at);
+    if (!nullToAbsent || profileId != null) {
+      map['profile_id'] = Variable<String>(profileId);
+    }
+    map['category'] = Variable<String>(category);
+    map['severity'] = Variable<String>(severity);
+    map['count'] = Variable<int>(count);
+    map['detail'] = Variable<String>(detail);
+    map['words'] = Variable<String>(words);
+    map['dedupe_key'] = Variable<String>(dedupeKey);
+    if (!nullToAbsent || readAt != null) {
+      map['read_at'] = Variable<DateTime>(readAt);
+    }
+    return map;
+  }
+
+  AlertsCompanion toCompanion(bool nullToAbsent) {
+    return AlertsCompanion(
+      id: Value(id),
+      at: Value(at),
+      profileId: profileId == null && nullToAbsent ? const Value.absent() : Value(profileId),
+      category: Value(category),
+      severity: Value(severity),
+      count: Value(count),
+      detail: Value(detail),
+      words: Value(words),
+      dedupeKey: Value(dedupeKey),
+      readAt: readAt == null && nullToAbsent ? const Value.absent() : Value(readAt),
+    );
+  }
+
+  factory Alert.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Alert(
+      id: serializer.fromJson<int>(json['id']),
+      at: serializer.fromJson<DateTime>(json['at']),
+      profileId: serializer.fromJson<String?>(json['profileId']),
+      category: serializer.fromJson<String>(json['category']),
+      severity: serializer.fromJson<String>(json['severity']),
+      count: serializer.fromJson<int>(json['count']),
+      detail: serializer.fromJson<String>(json['detail']),
+      words: serializer.fromJson<String>(json['words']),
+      dedupeKey: serializer.fromJson<String>(json['dedupeKey']),
+      readAt: serializer.fromJson<DateTime?>(json['readAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'at': serializer.toJson<DateTime>(at),
+      'profileId': serializer.toJson<String?>(profileId),
+      'category': serializer.toJson<String>(category),
+      'severity': serializer.toJson<String>(severity),
+      'count': serializer.toJson<int>(count),
+      'detail': serializer.toJson<String>(detail),
+      'words': serializer.toJson<String>(words),
+      'dedupeKey': serializer.toJson<String>(dedupeKey),
+      'readAt': serializer.toJson<DateTime?>(readAt),
+    };
+  }
+
+  Alert copyWith({
+    int? id,
+    DateTime? at,
+    Value<String?> profileId = const Value.absent(),
+    String? category,
+    String? severity,
+    int? count,
+    String? detail,
+    String? words,
+    String? dedupeKey,
+    Value<DateTime?> readAt = const Value.absent(),
+  }) => Alert(
+    id: id ?? this.id,
+    at: at ?? this.at,
+    profileId: profileId.present ? profileId.value : this.profileId,
+    category: category ?? this.category,
+    severity: severity ?? this.severity,
+    count: count ?? this.count,
+    detail: detail ?? this.detail,
+    words: words ?? this.words,
+    dedupeKey: dedupeKey ?? this.dedupeKey,
+    readAt: readAt.present ? readAt.value : this.readAt,
+  );
+  Alert copyWithCompanion(AlertsCompanion data) {
+    return Alert(
+      id: data.id.present ? data.id.value : this.id,
+      at: data.at.present ? data.at.value : this.at,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      category: data.category.present ? data.category.value : this.category,
+      severity: data.severity.present ? data.severity.value : this.severity,
+      count: data.count.present ? data.count.value : this.count,
+      detail: data.detail.present ? data.detail.value : this.detail,
+      words: data.words.present ? data.words.value : this.words,
+      dedupeKey: data.dedupeKey.present ? data.dedupeKey.value : this.dedupeKey,
+      readAt: data.readAt.present ? data.readAt.value : this.readAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Alert(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('profileId: $profileId, ')
+          ..write('category: $category, ')
+          ..write('severity: $severity, ')
+          ..write('count: $count, ')
+          ..write('detail: $detail, ')
+          ..write('words: $words, ')
+          ..write('dedupeKey: $dedupeKey, ')
+          ..write('readAt: $readAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, at, profileId, category, severity, count, detail, words, dedupeKey, readAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Alert &&
+          other.id == this.id &&
+          other.at == this.at &&
+          other.profileId == this.profileId &&
+          other.category == this.category &&
+          other.severity == this.severity &&
+          other.count == this.count &&
+          other.detail == this.detail &&
+          other.words == this.words &&
+          other.dedupeKey == this.dedupeKey &&
+          other.readAt == this.readAt);
+}
+
+class AlertsCompanion extends UpdateCompanion<Alert> {
+  final Value<int> id;
+  final Value<DateTime> at;
+  final Value<String?> profileId;
+  final Value<String> category;
+  final Value<String> severity;
+  final Value<int> count;
+  final Value<String> detail;
+  final Value<String> words;
+  final Value<String> dedupeKey;
+  final Value<DateTime?> readAt;
+  const AlertsCompanion({
+    this.id = const Value.absent(),
+    this.at = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.category = const Value.absent(),
+    this.severity = const Value.absent(),
+    this.count = const Value.absent(),
+    this.detail = const Value.absent(),
+    this.words = const Value.absent(),
+    this.dedupeKey = const Value.absent(),
+    this.readAt = const Value.absent(),
+  });
+  AlertsCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime at,
+    this.profileId = const Value.absent(),
+    required String category,
+    required String severity,
+    this.count = const Value.absent(),
+    this.detail = const Value.absent(),
+    this.words = const Value.absent(),
+    required String dedupeKey,
+    this.readAt = const Value.absent(),
+  }) : at = Value(at),
+       category = Value(category),
+       severity = Value(severity),
+       dedupeKey = Value(dedupeKey);
+  static Insertable<Alert> custom({
+    Expression<int>? id,
+    Expression<DateTime>? at,
+    Expression<String>? profileId,
+    Expression<String>? category,
+    Expression<String>? severity,
+    Expression<int>? count,
+    Expression<String>? detail,
+    Expression<String>? words,
+    Expression<String>? dedupeKey,
+    Expression<DateTime>? readAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (at != null) 'at': at,
+      if (profileId != null) 'profile_id': profileId,
+      if (category != null) 'category': category,
+      if (severity != null) 'severity': severity,
+      if (count != null) 'count': count,
+      if (detail != null) 'detail': detail,
+      if (words != null) 'words': words,
+      if (dedupeKey != null) 'dedupe_key': dedupeKey,
+      if (readAt != null) 'read_at': readAt,
+    });
+  }
+
+  AlertsCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? at,
+    Value<String?>? profileId,
+    Value<String>? category,
+    Value<String>? severity,
+    Value<int>? count,
+    Value<String>? detail,
+    Value<String>? words,
+    Value<String>? dedupeKey,
+    Value<DateTime?>? readAt,
+  }) {
+    return AlertsCompanion(
+      id: id ?? this.id,
+      at: at ?? this.at,
+      profileId: profileId ?? this.profileId,
+      category: category ?? this.category,
+      severity: severity ?? this.severity,
+      count: count ?? this.count,
+      detail: detail ?? this.detail,
+      words: words ?? this.words,
+      dedupeKey: dedupeKey ?? this.dedupeKey,
+      readAt: readAt ?? this.readAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (at.present) {
+      map['at'] = Variable<DateTime>(at.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (severity.present) {
+      map['severity'] = Variable<String>(severity.value);
+    }
+    if (count.present) {
+      map['count'] = Variable<int>(count.value);
+    }
+    if (detail.present) {
+      map['detail'] = Variable<String>(detail.value);
+    }
+    if (words.present) {
+      map['words'] = Variable<String>(words.value);
+    }
+    if (dedupeKey.present) {
+      map['dedupe_key'] = Variable<String>(dedupeKey.value);
+    }
+    if (readAt.present) {
+      map['read_at'] = Variable<DateTime>(readAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AlertsCompanion(')
+          ..write('id: $id, ')
+          ..write('at: $at, ')
+          ..write('profileId: $profileId, ')
+          ..write('category: $category, ')
+          ..write('severity: $severity, ')
+          ..write('count: $count, ')
+          ..write('detail: $detail, ')
+          ..write('words: $words, ')
+          ..write('dedupeKey: $dedupeKey, ')
+          ..write('readAt: $readAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2807,6 +3319,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AttemptsTable attempts = $AttemptsTable(this);
   late final $SessionsTable sessions = $SessionsTable(this);
   late final $VoiceListensTable voiceListens = $VoiceListensTable(this);
+  late final $AlertsTable alerts = $AlertsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2819,6 +3332,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     attempts,
     sessions,
     voiceListens,
+    alerts,
   ];
 }
 
@@ -4166,6 +4680,242 @@ typedef $$VoiceListensTableProcessedTableManager =
       VoiceListen,
       PrefetchHooks Function()
     >;
+typedef $$AlertsTableCreateCompanionBuilder = AlertsCompanion Function({
+  Value<int> id,
+  required DateTime at,
+  Value<String?> profileId,
+  required String category,
+  required String severity,
+  Value<int> count,
+  Value<String> detail,
+  Value<String> words,
+  required String dedupeKey,
+  Value<DateTime?> readAt,
+});
+typedef $$AlertsTableUpdateCompanionBuilder = AlertsCompanion Function({
+  Value<int> id,
+  Value<DateTime> at,
+  Value<String?> profileId,
+  Value<String> category,
+  Value<String> severity,
+  Value<int> count,
+  Value<String> detail,
+  Value<String> words,
+  Value<String> dedupeKey,
+  Value<DateTime?> readAt,
+});
+
+class $$AlertsTableFilterComposer extends Composer<_$AppDatabase, $AlertsTable> {
+  $$AlertsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get severity =>
+      $composableBuilder(column: $table.severity, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get count =>
+      $composableBuilder(column: $table.count, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get detail =>
+      $composableBuilder(column: $table.detail, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get words =>
+      $composableBuilder(column: $table.words, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get dedupeKey =>
+      $composableBuilder(column: $table.dedupeKey, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get readAt =>
+      $composableBuilder(column: $table.readAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$AlertsTableOrderingComposer extends Composer<_$AppDatabase, $AlertsTable> {
+  $$AlertsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get severity =>
+      $composableBuilder(column: $table.severity, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get count =>
+      $composableBuilder(column: $table.count, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get detail =>
+      $composableBuilder(column: $table.detail, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get words =>
+      $composableBuilder(column: $table.words, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get dedupeKey =>
+      $composableBuilder(column: $table.dedupeKey, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get readAt =>
+      $composableBuilder(column: $table.readAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$AlertsTableAnnotationComposer extends Composer<_$AppDatabase, $AlertsTable> {
+  $$AlertsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get at => $composableBuilder(column: $table.at, builder: (column) => column);
+
+  GeneratedColumn<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<String> get severity =>
+      $composableBuilder(column: $table.severity, builder: (column) => column);
+
+  GeneratedColumn<int> get count => $composableBuilder(column: $table.count, builder: (column) => column);
+
+  GeneratedColumn<String> get detail =>
+      $composableBuilder(column: $table.detail, builder: (column) => column);
+
+  GeneratedColumn<String> get words => $composableBuilder(column: $table.words, builder: (column) => column);
+
+  GeneratedColumn<String> get dedupeKey =>
+      $composableBuilder(column: $table.dedupeKey, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get readAt =>
+      $composableBuilder(column: $table.readAt, builder: (column) => column);
+}
+
+class $$AlertsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $AlertsTable,
+          Alert,
+          $$AlertsTableFilterComposer,
+          $$AlertsTableOrderingComposer,
+          $$AlertsTableAnnotationComposer,
+          $$AlertsTableCreateCompanionBuilder,
+          $$AlertsTableUpdateCompanionBuilder,
+          (Alert, BaseReferences<_$AppDatabase, $AlertsTable, Alert>),
+          Alert,
+          PrefetchHooks Function()
+        > {
+  $$AlertsTableTableManager(_$AppDatabase db, $AlertsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$AlertsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$AlertsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$AlertsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> at = const Value.absent(),
+                Value<String?> profileId = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<String> severity = const Value.absent(),
+                Value<int> count = const Value.absent(),
+                Value<String> detail = const Value.absent(),
+                Value<String> words = const Value.absent(),
+                Value<String> dedupeKey = const Value.absent(),
+                Value<DateTime?> readAt = const Value.absent(),
+              }) => AlertsCompanion(
+                id: id,
+                at: at,
+                profileId: profileId,
+                category: category,
+                severity: severity,
+                count: count,
+                detail: detail,
+                words: words,
+                dedupeKey: dedupeKey,
+                readAt: readAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime at,
+                Value<String?> profileId = const Value.absent(),
+                required String category,
+                required String severity,
+                Value<int> count = const Value.absent(),
+                Value<String> detail = const Value.absent(),
+                Value<String> words = const Value.absent(),
+                required String dedupeKey,
+                Value<DateTime?> readAt = const Value.absent(),
+              }) => AlertsCompanion.insert(
+                id: id,
+                at: at,
+                profileId: profileId,
+                category: category,
+                severity: severity,
+                count: count,
+                detail: detail,
+                words: words,
+                dedupeKey: dedupeKey,
+                readAt: readAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$AlertsTable, Alert>(table),
+                  BaseReferences<_$AppDatabase, $AlertsTable, Alert>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AlertsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $AlertsTable,
+      Alert,
+      $$AlertsTableFilterComposer,
+      $$AlertsTableOrderingComposer,
+      $$AlertsTableAnnotationComposer,
+      $$AlertsTableCreateCompanionBuilder,
+      $$AlertsTableUpdateCompanionBuilder,
+      (Alert, BaseReferences<_$AppDatabase, $AlertsTable, Alert>),
+      Alert,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4178,4 +4928,5 @@ class $AppDatabaseManager {
   $$AttemptsTableTableManager get attempts => $$AttemptsTableTableManager(_db, _db.attempts);
   $$SessionsTableTableManager get sessions => $$SessionsTableTableManager(_db, _db.sessions);
   $$VoiceListensTableTableManager get voiceListens => $$VoiceListensTableTableManager(_db, _db.voiceListens);
+  $$AlertsTableTableManager get alerts => $$AlertsTableTableManager(_db, _db.alerts);
 }

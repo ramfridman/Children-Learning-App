@@ -23,6 +23,7 @@ class LessonVoice {
     required this.stopGuide,
     required this.record,
     required this.onHome,
+    this.onWords,
     Duration beat = const Duration(milliseconds: 700),
   }) {
     answer = VoiceAnswerController(
@@ -35,10 +36,14 @@ class LessonVoice {
       onPrompt: _prompt,
       onIntent: _intent,
       onOutcome: (ListenOutcome o) => record(session()?.voiceAnswerType ?? 'word', o.name),
+      onWords: onWords,
     )..addListener(_light);
   }
 
   final LessonController lesson;
+
+  /// What the recogniser heard for one answer, for the parent's word alerts (not stored by the lesson).
+  final void Function(List<String> texts)? onWords;
 
   /// The activity on screen now.
   final TemplateSession? Function() session;

@@ -1,5 +1,5 @@
 import '../data/app_database.dart';
-import 'alert_words.dart';
+import '../speech/alert_words.dart';
 import 'parent_rules.dart';
 import 'time_rules.dart';
 
@@ -240,6 +240,7 @@ List<AlertDraft> absenceAlerts(DateTime now, ChildHistory child) {
         key: 'drop:${child.profileId}:$week',
         profileId: child.profileId,
         count: thisWeek,
+        detail: 'drop',
       ),
     ];
   }

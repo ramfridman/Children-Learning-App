@@ -62,6 +62,7 @@ class VoiceAnswerController extends ChangeNotifier {
     this.onPrompt,
     this.onIntent,
     this.onOutcome,
+    this.onWords,
   });
 
   final SpeechEngine engine;
@@ -88,6 +89,10 @@ class VoiceAnswerController extends ChangeNotifier {
   final void Function(VoicePrompt prompt)? onPrompt;
   final void Function(Intent intent)? onIntent;
   final void Function(ListenOutcome outcome)? onOutcome;
+
+  /// Everything the recogniser heard for one answer, handed on once and never kept here. The parent's alerts look at
+  /// it (swearing, a worrying phrase) on the device; it is not stored, sent or logged by this class.
+  final void Function(List<String> texts)? onWords;
 
   MicState _state = MicState.ready;
   double _level = 0;
@@ -192,6 +197,7 @@ class VoiceAnswerController extends ChangeNotifier {
   }
 
   Future<void> _decide(List<Hypothesis> heard, int gen) async {
+    if (heard.isNotEmpty) onWords?.call(<String>[for (final Hypothesis h in heard) h.text]);
     _set(MicState.thinking, keepOption: true);
     if (_confirmListen) {
       final Intent? answer = matcher.confirmation(heard);

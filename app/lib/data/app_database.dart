@@ -5,14 +5,23 @@ import 'tables.dart';
 part 'app_database.g.dart';
 
 @DriftDatabase(
-  tables: <Type>[Profiles, AppSettings, LocalEvents, InstalledPacks, Attempts, Sessions, VoiceListens],
+  tables: <Type>[
+    Profiles,
+    AppSettings,
+    LocalEvents,
+    InstalledPacks,
+    Attempts,
+    Sessions,
+    VoiceListens,
+    Alerts,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 5;
+  static const int currentSchemaVersion = 6;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -40,6 +49,8 @@ class AppDatabase extends _$AppDatabase {
         // A file older than version 2 got `attempts` just now, with the column already.
         if (from >= 2) await m.addColumn(attempts, attempts.input);
       }
+      // 5 to 6 (M7): the alerts the parent is told about.
+      if (from < 6) await m.createTable(alerts);
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -154,4 +165,41 @@ class AppDatabase extends _$AppDatabase {
             ..orderBy(<OrderingTerm Function(LocalEvents)>[(LocalEvents t) => OrderingTerm.desc(t.id)])
             ..limit(limit))
           .get();
+
+  // ---- alerts (M7) ----
+
+  /// Saves an alert unless the same one (same key) is already there. True if it was new.
+  Future<bool> addAlert(AlertsCompanion row) => transaction(() async {
+    final String key = row.dedupeKey.value;
+    final Alert? have = await (select(
+      alerts,
+    )..where(($AlertsTable t) => t.dedupeKey.equals(key))).getSingleOrNull();
+    if (have != null) return false;
+    await into(alerts).insert(row);
+    return true;
+  });
+
+  /// Newest first.
+  Future<List<Alert>> allAlerts() =>
+      (select(alerts)..orderBy(<OrderClauseGenerator<$AlertsTable>>[(t) => OrderingTerm.desc(t.at)])).get();
+
+  Future<int> unreadAlertCount() async {
+    final Expression<int> n = alerts.id.count();
+    final TypedResult r =
+        await (selectOnly(alerts)
+              ..addColumns(<Expression<Object>>[n])
+              ..where(alerts.readAt.isNull()))
+            .getSingle();
+    return r.read(n) ?? 0;
+  }
+
+  Future<void> markAlertsRead(DateTime at) => (update(
+    alerts,
+  )..where(($AlertsTable t) => t.readAt.isNull())).write(AlertsCompanion(readAt: Value<DateTime>(at)));
+
+  /// Alerts older than [before] go; so do the words of the ones that stay when [clearWords] is true.
+  Future<void> pruneAlerts(DateTime before) =>
+      (delete(alerts)..where(($AlertsTable t) => t.at.isSmallerThanValue(before))).go();
+
+  Future<void> clearAlertWords() => update(alerts).write(const AlertsCompanion(words: Value<String>('')));
 }

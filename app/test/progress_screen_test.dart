@@ -25,7 +25,9 @@ Future<AppRig> openProgress(WidgetTester tester, AppRig rig, {bool seed = true})
   await tapDigits(tester, testPin);
   await tester.tap(find.text(He.pinOk.text));
   await tester.pumpAndSettle();
-  await tester.tap(find.byKey(const Key('progress-p-1')));
+  final Finder open = find.byKey(const Key('progress-p-1'));
+  await tester.scrollUntilVisible(open, 200, scrollable: find.byType(Scrollable).first);
+  await tester.tap(open);
   await tester.pumpAndSettle();
   expect(find.byType(ProgressScreen), findsOneWidget);
   return rig;

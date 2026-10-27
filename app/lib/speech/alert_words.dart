@@ -1,4 +1,4 @@
-import '../speech/hebrew_text.dart';
+import 'hebrew_text.dart';
 
 /// The on-device word lists behind two alerts (PLAN: Alerts in v1). No model is involved: the recogniser's text of a
 /// spoken answer is looked at once, on the phone, and only the category (and, if the parent allows it, the words) is

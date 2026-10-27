@@ -225,7 +225,7 @@ void main() {
       expect(await db.allInstalledPacks(), isEmpty);
       expect(await db.attemptsOf('nobody'), isEmpty);
       expect(await db.sessionsOf('nobody'), isEmpty);
-      expect(AppDatabase.currentSchemaVersion, 5);
+      expect(AppDatabase.currentSchemaVersion, 6);
     });
 
     test('an attempt holds ids, numbers and fixed words only (no column can carry a name or free text of any size)', () async {
@@ -374,7 +374,7 @@ void main() {
       ], reason: 'newest first');
       expect(await db.recentListens('p1', 'word'), isEmpty);
       final rows = await db.customSelect('PRAGMA user_version').get();
-      expect(rows.single.data['user_version'], 5);
+      expect(rows.single.data['user_version'], AppDatabase.currentSchemaVersion);
     });
 
     test('a listen holds fixed words and ids only: no audio, no text, no transcript', () async {
@@ -403,5 +403,72 @@ void main() {
     addTearDown(fresh.close);
     expect(await fresh.allProfiles(), isEmpty);
     expect(await keys.keyHex(), isNot(oldKey));
+  });
+
+  group('migration from version 5 to 6 (M7)', () {
+    test('a version 5 file gets the alerts table and keeps what it had', () async {
+      final String keyHex = await keys.keyHex();
+      final AppDatabase v6 = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      await v6.recordEvent('gate_alert', DateTime.utc(2026, 11, 1), detail: 'n=3');
+      await v6.customStatement('DROP TABLE alerts');
+      await v6.customStatement('PRAGMA user_version = 5');
+      await v6.close();
+
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      addTearDown(db.close);
+      expect(await db.allAlerts(), isEmpty);
+      expect(
+        (await db.customSelect('SELECT kind FROM local_events').get()).single.data['kind'],
+        'gate_alert',
+      );
+      final rows = await db.customSelect('PRAGMA user_version').get();
+      expect(rows.single.data['user_version'], AppDatabase.currentSchemaVersion);
+    });
+
+    test(
+      'an alert is saved once, read marks it, old ones are pruned, and the words can be cleared',
+      () async {
+        final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: await keys.keyHex());
+        addTearDown(db.close);
+        AlertsCompanion row(String key, DateTime at, {String words = ''}) => AlertsCompanion.insert(
+          at: at,
+          category: 'inappropriateWords',
+          severity: 'attention',
+          dedupeKey: key,
+          words: Value<String>(words),
+        );
+        expect(await db.addAlert(row('a', DateTime.utc(2026, 11, 20), words: 'x')), isTrue);
+        expect(
+          await db.addAlert(row('a', DateTime.utc(2026, 11, 20))),
+          isFalse,
+          reason: 'the same key is the same alert',
+        );
+        expect(await db.addAlert(row('b', DateTime.utc(2026, 10, 1))), isTrue);
+        expect(await db.unreadAlertCount(), 2);
+        await db.markAlertsRead(DateTime.utc(2026, 11, 21));
+        expect(await db.unreadAlertCount(), 0);
+        expect((await db.allAlerts()).first.dedupeKey, 'a', reason: 'newest first');
+        await db.clearAlertWords();
+        expect((await db.allAlerts()).every((Alert a) => a.words.isEmpty), isTrue);
+        await db.pruneAlerts(DateTime.utc(2026, 10, 25));
+        expect((await db.allAlerts()).map((Alert a) => a.dedupeKey), <String>['a']);
+      },
+    );
+
+    test('only the words column can carry text from a child, and the alert holds no name or audio', () async {
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: await keys.keyHex());
+      addTearDown(db.close);
+      final List<String> columns = <String>[
+        for (final row in await db.customSelect('PRAGMA table_info(alerts)').get())
+          row.data['name']! as String,
+      ];
+      expect(
+        columns,
+        containsAll(<String>['category', 'severity', 'count', 'detail', 'words', 'dedupe_key']),
+      );
+      expect(columns, isNot(contains('name')));
+      expect(columns, isNot(contains('audio')));
+      expect(columns, isNot(contains('transcript')));
+    });
   });
 }
