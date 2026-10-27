@@ -1,0 +1,662 @@
+[
+  {
+    "item": "count.butterflies.3",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נספר יחד, נגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נספר יחד, נוגעים בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נסה להצביע על כל פרפר באצבע אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספור לאט, נוגעים בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, נוגעים בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "f",
+    "character": "hero-son",
+    "say": "בואי נסתכל שוב על הפרפרים, נספור לאט.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "B",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, אולי יש פרפר שעוד לא ספרנו.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "נסה לגעת בכל פרפר פעם אחת, לאט לאט.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "נספר יחד, נגע בכל פרפר פעם אחת ונאמר מספר לכל אחד.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו ננסה ביחד, נגע בפרפר אחד בכל פעם.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספור לאט, נוגעים בפרפר ואומרים מספר, ואז ממשיכים.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, בואי נספר יחד.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "C",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, ואז נספור ביחד.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "C",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, אולי יש פרפר שעוד לא ספרנו.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נסה לספור לאט, נוגעים בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.3",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט ונגע בכל פרפר פעם אחת, ונראה אם אחד נשאר בלי מספר.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נספר יחד, נגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, ואז נספר ביחד.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נספר שוב, אולי יש פרפר שלא ספרנו עדיין.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "A",
+    "form": "m",
+    "character": "hero-son",
+    "say": "נסה לגעת בכל פרפר פעם אחת, ואז נספר שוב.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר יחד, אחד אחד, בלי לדלג.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט ונגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "B",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, ואז נספר ביחד.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נסה לגעת בכל פרפר אחד אחד ולספור בשקט.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נגע בכל פרפר פעם אחת, ואז נספור שוב.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספור יחד, פרפר אחד בכל פעם.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, נגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, נגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, לאט לאט, ונספר יחד.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "C",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, ואולי יש פרפר שעוד לא ספרנו.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נספר שוב, נגע בכל פרפר פעם אחת בלבד ואז נאמר את המספר.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר יחד, פרפר אחד בכל פעם.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.4",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, נגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, לאט.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נספור יחד, נגע בכל פרפר פעם אחת בלבד.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נסה להצביע עם אצבע על כל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "A",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נגע בכל פרפר פעם אחת, ונספר שוב.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר יחד, פרפר אחד בכל פעם.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, נגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט ונגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, לאט לאט.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "B",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, ונספר יחד בשקט.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "B",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, ואולי יש פרפר שלא נספר.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נסה לספור כל פרפר פעם אחת, עם האצבע.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נגע בכל פרפר פעם אחת, ואז נספר שוב.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספור יחד, פרפר אחד בכל פעם.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, פרפר אחד, ואז נזיז לפרפר הבא.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, ונגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "C",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לגעת בכל פרפר פעם אחת, ותראי אם יש פרפר אחד שלא נספר.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "C",
+    "form": "m",
+    "character": "hero-son",
+    "say": "נספר יחד, נגע בפרפר אחד בכל פעם ונגיד מספר רק כשנגיע לפרפר חדש.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר יחד, נגע בכל פרפר פעם אחת.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-DOUBLE",
+    "hint": 2,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, נגע בכל פרפר פעם אחת ונגיד מספר.",
+    "review": "approved"
+  },
+  {
+    "item": "count.butterflies.5",
+    "mistake": "M-CNT-SKIP",
+    "hint": 2,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר לאט, נגע בכל פרפר פעם אחת, ונראה אם יש פרפר שלא ספרנו.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "f",
+    "character": "hero-son",
+    "say": "נסי לתת לפרח ארבעה פרפרים, אחד אחד.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא ננסה שוב, נצביע על כל פרפר אחד אחד.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "M-CNT-CARD",
+    "hint": 2,
+    "band": "A",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נספור פרפרים אחד אחד, ונעצור בארבעה.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נתחיל ביחד, אחד אחד.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "M-CNT-CARD",
+    "hint": 2,
+    "band": "A",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נתן פרפר אחד, ואז נספור עוד.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נתן לפרח ארבעה פרפרים, נצביע על כל אחד ונספר בשקט.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "M-CNT-CARD",
+    "hint": 2,
+    "band": "B",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נספור פרפרים אחד אחד, ונעצור כשנגיע לארבעה.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נתן פרפר אחד בכל פעם, ביחד.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "M-CNT-CARD",
+    "hint": 2,
+    "band": "B",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נתן פרפר אחד בכל פעם ונעצור בארבעה.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "f",
+    "character": "hero-son",
+    "say": "בואי נסי שוב לאט, נספר את הפרפרים אחד אחד.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "m",
+    "character": "hero-son",
+    "say": "בוא נסה להצביע על כל פרפר אחד אחד, ולעצור אחרי ארבעה.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "default",
+    "hint": 0,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו ניקח פרפר אחד בכל פעם, נספר יחד.",
+    "review": "approved"
+  },
+  {
+    "item": "give.butterflies.4",
+    "mistake": "M-CNT-CARD",
+    "hint": 2,
+    "band": "C",
+    "form": "n",
+    "character": "hero-son",
+    "say": "בואו נספר ביחד ונתן לפרח ארבעה פרפרים בלבד, לא יותר.",
+    "review": "approved"
+  }
+]
