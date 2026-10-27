@@ -21,7 +21,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 6;
+  static const int currentSchemaVersion = 7;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -51,6 +51,21 @@ class AppDatabase extends _$AppDatabase {
       }
       // 5 to 6 (M7): the alerts the parent is told about.
       if (from < 6) await m.createTable(alerts);
+      // 6 to 7 (M7b): what has been sent to the family's other devices, and where an event came from.
+      if (from < 7) {
+        // A table made in this very upgrade (a file older than the table) already has the columns.
+        if (from >= 2) {
+          await m.addColumn(attempts, attempts.eventId);
+          await m.addColumn(attempts, attempts.syncedAt);
+          await m.addColumn(attempts, attempts.remoteSession);
+        }
+        if (from >= 3) {
+          await m.addColumn(sessions, sessions.eventId);
+          await m.addColumn(sessions, sessions.syncedAt);
+          await m.addColumn(sessions, sessions.remoteKey);
+        }
+        if (from >= 6) await m.addColumn(alerts, alerts.syncedAt);
+      }
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -202,4 +217,110 @@ class AppDatabase extends _$AppDatabase {
       (delete(alerts)..where(($AlertsTable t) => t.at.isSmallerThanValue(before))).go();
 
   Future<void> clearAlertWords() => update(alerts).write(const AlertsCompanion(words: Value<String>('')));
+
+  // ---- sync (M7b) ----
+
+  /// Answers made on this device that have not been sent yet, oldest first.
+  Future<List<Attempt>> unsyncedAttempts({int limit = 40}) =>
+      (select(attempts)
+            ..where(($AttemptsTable t) => t.syncedAt.isNull() & t.eventId.isNull())
+            ..orderBy(<OrderClauseGenerator<$AttemptsTable>>[(t) => OrderingTerm.asc(t.id)])
+            ..limit(limit))
+          .get();
+
+  /// Visits made on this device that have ended and have not been sent yet, oldest first.
+  Future<List<Session>> unsyncedSessions({int limit = 40}) =>
+      (select(sessions)
+            ..where(($SessionsTable t) => t.syncedAt.isNull() & t.eventId.isNull() & t.endedAt.isNotNull())
+            ..orderBy(<OrderClauseGenerator<$SessionsTable>>[(t) => OrderingTerm.asc(t.id)])
+            ..limit(limit))
+          .get();
+
+  Future<void> markAttemptsSynced(Iterable<int> ids, DateTime at) => (update(
+    attempts,
+  )..where(($AttemptsTable t) => t.id.isIn(ids))).write(AttemptsCompanion(syncedAt: Value<DateTime>(at)));
+
+  Future<void> markSessionsSynced(Iterable<int> ids, DateTime at) => (update(
+    sessions,
+  )..where(($SessionsTable t) => t.id.isIn(ids))).write(SessionsCompanion(syncedAt: Value<DateTime>(at)));
+
+  /// Adds an answer that came from another device. False if that event is already here.
+  Future<bool> addRemoteAttempt(AttemptsCompanion row, {required String eventId, required DateTime at}) =>
+      transaction(() async {
+        final Attempt? have = await (select(
+          attempts,
+        )..where(($AttemptsTable t) => t.eventId.equals(eventId))).getSingleOrNull();
+        if (have != null) return false;
+        await into(attempts)
+            .insert(row.copyWith(eventId: Value<String?>(eventId), syncedAt: Value<DateTime?>(at)));
+        return true;
+      });
+
+  /// Adds a visit that came from another device and joins the answers that were waiting for it. Returns the local id,
+  /// or null if that event is already here.
+  Future<int?> addRemoteSession(
+    SessionsCompanion row, {
+    required String eventId,
+    required String remoteKey,
+    required DateTime at,
+  }) => transaction(() async {
+    final Session? have = await (select(
+      sessions,
+    )..where(($SessionsTable t) => t.eventId.equals(eventId))).getSingleOrNull();
+    if (have != null) return null;
+    final int id = await into(sessions).insert(
+      row.copyWith(
+        eventId: Value<String?>(eventId),
+        remoteKey: Value<String?>(remoteKey),
+        syncedAt: Value<DateTime?>(at),
+      ),
+    );
+    await (update(attempts)..where(($AttemptsTable t) => t.remoteSession.equals(remoteKey))).write(
+      AttemptsCompanion(sessionId: Value<int?>(id), remoteSession: const Value<String?>(null)),
+    );
+    return id;
+  });
+
+  /// The local id of a visit that came from another device (`deviceId:number`), if it has arrived.
+  Future<int?> sessionIdForRemoteKey(String remoteKey) async => (await (select(
+    sessions,
+  )..where(($SessionsTable t) => t.remoteKey.equals(remoteKey))).getSingleOrNull())?.id;
+
+  Future<List<Alert>> unsyncedAlerts({int limit = 40}) =>
+      (select(alerts)
+            ..where(($AlertsTable t) => t.syncedAt.isNull())
+            ..orderBy(<OrderClauseGenerator<$AlertsTable>>[(t) => OrderingTerm.asc(t.id)])
+            ..limit(limit))
+          .get();
+
+  Future<void> markAlertsSynced(Iterable<int> ids, DateTime at) => (update(
+    alerts,
+  )..where(($AlertsTable t) => t.id.isIn(ids))).write(AlertsCompanion(syncedAt: Value<DateTime>(at)));
+
+  /// A child as the family has them: a new one is added, one this device already has is brought up to date (the
+  /// companion too). The device's own creation time of an existing child is kept.
+  Future<void> upsertProfileFromFamily(ProfilesCompanion row, {required bool isNew}) async {
+    if (isNew) {
+      await into(profiles).insert(row);
+      return;
+    }
+    await (update(profiles)..where(($ProfilesTable t) => t.id.equals(row.id.value))).write(
+      ProfilesCompanion(
+        name: row.name,
+        avatar: row.avatar,
+        addressForm: row.addressForm,
+        ageBand: row.ageBand,
+        companionId: row.companionId,
+      ),
+    );
+  }
+
+  /// Everything this device holds about a child: the profile, answers, visits, listens and alerts.
+  Future<void> deleteChildData(String profileId) => transaction(() async {
+    await (delete(attempts)..where(($AttemptsTable t) => t.profileId.equals(profileId))).go();
+    await (delete(sessions)..where(($SessionsTable t) => t.profileId.equals(profileId))).go();
+    await (delete(voiceListens)..where(($VoiceListensTable t) => t.profileId.equals(profileId))).go();
+    await (delete(alerts)..where(($AlertsTable t) => t.profileId.equals(profileId))).go();
+    await (delete(profiles)..where(($ProfilesTable t) => t.id.equals(profileId))).go();
+  });
 }

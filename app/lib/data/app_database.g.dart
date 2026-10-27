@@ -1403,6 +1403,33 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     requiredDuringInsert: false,
     defaultValue: const Constant<String>('tap'),
   );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta('eventId');
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _syncedAtMeta = const VerificationMeta('syncedAt');
+  @override
+  late final GeneratedColumn<DateTime> syncedAt = GeneratedColumn<DateTime>(
+    'synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _remoteSessionMeta = const VerificationMeta('remoteSession');
+  @override
+  late final GeneratedColumn<String> remoteSession = GeneratedColumn<String>(
+    'remote_session',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1424,6 +1451,9 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     durationMs,
     sessionId,
     input,
+    eventId,
+    syncedAt,
+    remoteSession,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1533,6 +1563,18 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
     if (data.containsKey('input')) {
       context.handle(_inputMeta, input.isAcceptableOrUnknown(data['input']!, _inputMeta));
     }
+    if (data.containsKey('event_id')) {
+      context.handle(_eventIdMeta, eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta));
+    }
+    if (data.containsKey('synced_at')) {
+      context.handle(_syncedAtMeta, syncedAt.isAcceptableOrUnknown(data['synced_at']!, _syncedAtMeta));
+    }
+    if (data.containsKey('remote_session')) {
+      context.handle(
+        _remoteSessionMeta,
+        remoteSession.isAcceptableOrUnknown(data['remote_session']!, _remoteSessionMeta),
+      );
+    }
     return context;
   }
 
@@ -1579,6 +1621,12 @@ class $AttemptsTable extends Attempts with TableInfo<$AttemptsTable, Attempt> {
       durationMs: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}duration_ms'])!,
       sessionId: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}session_id']),
       input: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}input'])!,
+      eventId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}event_id']),
+      syncedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}synced_at']),
+      remoteSession: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}remote_session'],
+      ),
     );
   }
 
@@ -1628,6 +1676,15 @@ class Attempt extends DataClass implements Insertable<Attempt> {
 
   /// How the answer was given: `tap`, or `voice` (a spoken answer that was clear, or that the child confirmed).
   final String input;
+
+  /// Sync (M7b). An answer made here is sent once: [syncedAt] says when. An answer that came from another device
+  /// carries that device's event id in [eventId] (so it is never added twice) and is never sent back.
+  final String? eventId;
+  final DateTime? syncedAt;
+
+  /// For an answer from another device: which visit of that device it belongs to (`deviceId:number`), until the visit's
+  /// own event has arrived and [sessionId] can be set.
+  final String? remoteSession;
   const Attempt({
     required this.id,
     required this.at,
@@ -1648,6 +1705,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     required this.durationMs,
     this.sessionId,
     required this.input,
+    this.eventId,
+    this.syncedAt,
+    this.remoteSession,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1673,6 +1733,15 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       map['session_id'] = Variable<int>(sessionId);
     }
     map['input'] = Variable<String>(input);
+    if (!nullToAbsent || eventId != null) {
+      map['event_id'] = Variable<String>(eventId);
+    }
+    if (!nullToAbsent || syncedAt != null) {
+      map['synced_at'] = Variable<DateTime>(syncedAt);
+    }
+    if (!nullToAbsent || remoteSession != null) {
+      map['remote_session'] = Variable<String>(remoteSession);
+    }
     return map;
   }
 
@@ -1697,6 +1766,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       durationMs: Value(durationMs),
       sessionId: sessionId == null && nullToAbsent ? const Value.absent() : Value(sessionId),
       input: Value(input),
+      eventId: eventId == null && nullToAbsent ? const Value.absent() : Value(eventId),
+      syncedAt: syncedAt == null && nullToAbsent ? const Value.absent() : Value(syncedAt),
+      remoteSession: remoteSession == null && nullToAbsent ? const Value.absent() : Value(remoteSession),
     );
   }
 
@@ -1722,6 +1794,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       durationMs: serializer.fromJson<int>(json['durationMs']),
       sessionId: serializer.fromJson<int?>(json['sessionId']),
       input: serializer.fromJson<String>(json['input']),
+      eventId: serializer.fromJson<String?>(json['eventId']),
+      syncedAt: serializer.fromJson<DateTime?>(json['syncedAt']),
+      remoteSession: serializer.fromJson<String?>(json['remoteSession']),
     );
   }
   @override
@@ -1747,6 +1822,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       'durationMs': serializer.toJson<int>(durationMs),
       'sessionId': serializer.toJson<int?>(sessionId),
       'input': serializer.toJson<String>(input),
+      'eventId': serializer.toJson<String?>(eventId),
+      'syncedAt': serializer.toJson<DateTime?>(syncedAt),
+      'remoteSession': serializer.toJson<String?>(remoteSession),
     };
   }
 
@@ -1770,6 +1848,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     int? durationMs,
     Value<int?> sessionId = const Value.absent(),
     String? input,
+    Value<String?> eventId = const Value.absent(),
+    Value<DateTime?> syncedAt = const Value.absent(),
+    Value<String?> remoteSession = const Value.absent(),
   }) => Attempt(
     id: id ?? this.id,
     at: at ?? this.at,
@@ -1790,6 +1871,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     durationMs: durationMs ?? this.durationMs,
     sessionId: sessionId.present ? sessionId.value : this.sessionId,
     input: input ?? this.input,
+    eventId: eventId.present ? eventId.value : this.eventId,
+    syncedAt: syncedAt.present ? syncedAt.value : this.syncedAt,
+    remoteSession: remoteSession.present ? remoteSession.value : this.remoteSession,
   );
   Attempt copyWithCompanion(AttemptsCompanion data) {
     return Attempt(
@@ -1812,6 +1896,9 @@ class Attempt extends DataClass implements Insertable<Attempt> {
       durationMs: data.durationMs.present ? data.durationMs.value : this.durationMs,
       sessionId: data.sessionId.present ? data.sessionId.value : this.sessionId,
       input: data.input.present ? data.input.value : this.input,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      syncedAt: data.syncedAt.present ? data.syncedAt.value : this.syncedAt,
+      remoteSession: data.remoteSession.present ? data.remoteSession.value : this.remoteSession,
     );
   }
 
@@ -1836,13 +1923,16 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           ..write('response: $response, ')
           ..write('durationMs: $durationMs, ')
           ..write('sessionId: $sessionId, ')
-          ..write('input: $input')
+          ..write('input: $input, ')
+          ..write('eventId: $eventId, ')
+          ..write('syncedAt: $syncedAt, ')
+          ..write('remoteSession: $remoteSession')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     at,
     profileId,
@@ -1862,7 +1952,10 @@ class Attempt extends DataClass implements Insertable<Attempt> {
     durationMs,
     sessionId,
     input,
-  );
+    eventId,
+    syncedAt,
+    remoteSession,
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1885,7 +1978,10 @@ class Attempt extends DataClass implements Insertable<Attempt> {
           other.response == this.response &&
           other.durationMs == this.durationMs &&
           other.sessionId == this.sessionId &&
-          other.input == this.input);
+          other.input == this.input &&
+          other.eventId == this.eventId &&
+          other.syncedAt == this.syncedAt &&
+          other.remoteSession == this.remoteSession);
 }
 
 class AttemptsCompanion extends UpdateCompanion<Attempt> {
@@ -1908,6 +2004,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
   final Value<int> durationMs;
   final Value<int?> sessionId;
   final Value<String> input;
+  final Value<String?> eventId;
+  final Value<DateTime?> syncedAt;
+  final Value<String?> remoteSession;
   const AttemptsCompanion({
     this.id = const Value.absent(),
     this.at = const Value.absent(),
@@ -1928,6 +2027,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.durationMs = const Value.absent(),
     this.sessionId = const Value.absent(),
     this.input = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+    this.remoteSession = const Value.absent(),
   });
   AttemptsCompanion.insert({
     this.id = const Value.absent(),
@@ -1949,6 +2051,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     this.durationMs = const Value.absent(),
     this.sessionId = const Value.absent(),
     this.input = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+    this.remoteSession = const Value.absent(),
   }) : at = Value(at),
        profileId = Value(profileId),
        packId = Value(packId),
@@ -1981,6 +2086,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Expression<int>? durationMs,
     Expression<int>? sessionId,
     Expression<String>? input,
+    Expression<String>? eventId,
+    Expression<DateTime>? syncedAt,
+    Expression<String>? remoteSession,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2002,6 +2110,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       if (durationMs != null) 'duration_ms': durationMs,
       if (sessionId != null) 'session_id': sessionId,
       if (input != null) 'input': input,
+      if (eventId != null) 'event_id': eventId,
+      if (syncedAt != null) 'synced_at': syncedAt,
+      if (remoteSession != null) 'remote_session': remoteSession,
     });
   }
 
@@ -2025,6 +2136,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     Value<int>? durationMs,
     Value<int?>? sessionId,
     Value<String>? input,
+    Value<String?>? eventId,
+    Value<DateTime?>? syncedAt,
+    Value<String?>? remoteSession,
   }) {
     return AttemptsCompanion(
       id: id ?? this.id,
@@ -2046,6 +2160,9 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
       durationMs: durationMs ?? this.durationMs,
       sessionId: sessionId ?? this.sessionId,
       input: input ?? this.input,
+      eventId: eventId ?? this.eventId,
+      syncedAt: syncedAt ?? this.syncedAt,
+      remoteSession: remoteSession ?? this.remoteSession,
     );
   }
 
@@ -2109,6 +2226,15 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
     if (input.present) {
       map['input'] = Variable<String>(input.value);
     }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (syncedAt.present) {
+      map['synced_at'] = Variable<DateTime>(syncedAt.value);
+    }
+    if (remoteSession.present) {
+      map['remote_session'] = Variable<String>(remoteSession.value);
+    }
     return map;
   }
 
@@ -2133,7 +2259,10 @@ class AttemptsCompanion extends UpdateCompanion<Attempt> {
           ..write('response: $response, ')
           ..write('durationMs: $durationMs, ')
           ..write('sessionId: $sessionId, ')
-          ..write('input: $input')
+          ..write('input: $input, ')
+          ..write('eventId: $eventId, ')
+          ..write('syncedAt: $syncedAt, ')
+          ..write('remoteSession: $remoteSession')
           ..write(')'))
         .toString();
   }
@@ -2202,8 +2331,45 @@ class $SessionsTable extends Sessions with TableInfo<$SessionsTable, Session> {
     requiredDuringInsert: false,
     defaultValue: const Constant<String>(''),
   );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta('eventId');
   @override
-  List<GeneratedColumn> get $columns => [id, profileId, startedAt, endedAt, plan, endReason];
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _syncedAtMeta = const VerificationMeta('syncedAt');
+  @override
+  late final GeneratedColumn<DateTime> syncedAt = GeneratedColumn<DateTime>(
+    'synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _remoteKeyMeta = const VerificationMeta('remoteKey');
+  @override
+  late final GeneratedColumn<String> remoteKey = GeneratedColumn<String>(
+    'remote_key',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    profileId,
+    startedAt,
+    endedAt,
+    plan,
+    endReason,
+    eventId,
+    syncedAt,
+    remoteKey,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2235,6 +2401,15 @@ class $SessionsTable extends Sessions with TableInfo<$SessionsTable, Session> {
     if (data.containsKey('end_reason')) {
       context.handle(_endReasonMeta, endReason.isAcceptableOrUnknown(data['end_reason']!, _endReasonMeta));
     }
+    if (data.containsKey('event_id')) {
+      context.handle(_eventIdMeta, eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta));
+    }
+    if (data.containsKey('synced_at')) {
+      context.handle(_syncedAtMeta, syncedAt.isAcceptableOrUnknown(data['synced_at']!, _syncedAtMeta));
+    }
+    if (data.containsKey('remote_key')) {
+      context.handle(_remoteKeyMeta, remoteKey.isAcceptableOrUnknown(data['remote_key']!, _remoteKeyMeta));
+    }
     return context;
   }
 
@@ -2259,6 +2434,9 @@ class $SessionsTable extends Sessions with TableInfo<$SessionsTable, Session> {
         DriftSqlType.string,
         data['${effectivePrefix}end_reason'],
       )!,
+      eventId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}event_id']),
+      syncedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}synced_at']),
+      remoteKey: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}remote_key']),
     );
   }
 
@@ -2279,6 +2457,12 @@ class Session extends DataClass implements Insertable<Session> {
 
   /// A fixed word: `finished`, `home` (the child left), `limit` (the parent's time was up) or empty while it runs.
   final String endReason;
+
+  /// Sync (M7b): when the visit was sent (only once it has ended), or the id of the event it came from, and for a visit
+  /// from another device its name there (`deviceId:number`).
+  final String? eventId;
+  final DateTime? syncedAt;
+  final String? remoteKey;
   const Session({
     required this.id,
     required this.profileId,
@@ -2286,6 +2470,9 @@ class Session extends DataClass implements Insertable<Session> {
     this.endedAt,
     required this.plan,
     required this.endReason,
+    this.eventId,
+    this.syncedAt,
+    this.remoteKey,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2298,6 +2485,15 @@ class Session extends DataClass implements Insertable<Session> {
     }
     map['plan'] = Variable<String>(plan);
     map['end_reason'] = Variable<String>(endReason);
+    if (!nullToAbsent || eventId != null) {
+      map['event_id'] = Variable<String>(eventId);
+    }
+    if (!nullToAbsent || syncedAt != null) {
+      map['synced_at'] = Variable<DateTime>(syncedAt);
+    }
+    if (!nullToAbsent || remoteKey != null) {
+      map['remote_key'] = Variable<String>(remoteKey);
+    }
     return map;
   }
 
@@ -2309,6 +2505,9 @@ class Session extends DataClass implements Insertable<Session> {
       endedAt: endedAt == null && nullToAbsent ? const Value.absent() : Value(endedAt),
       plan: Value(plan),
       endReason: Value(endReason),
+      eventId: eventId == null && nullToAbsent ? const Value.absent() : Value(eventId),
+      syncedAt: syncedAt == null && nullToAbsent ? const Value.absent() : Value(syncedAt),
+      remoteKey: remoteKey == null && nullToAbsent ? const Value.absent() : Value(remoteKey),
     );
   }
 
@@ -2321,6 +2520,9 @@ class Session extends DataClass implements Insertable<Session> {
       endedAt: serializer.fromJson<DateTime?>(json['endedAt']),
       plan: serializer.fromJson<String>(json['plan']),
       endReason: serializer.fromJson<String>(json['endReason']),
+      eventId: serializer.fromJson<String?>(json['eventId']),
+      syncedAt: serializer.fromJson<DateTime?>(json['syncedAt']),
+      remoteKey: serializer.fromJson<String?>(json['remoteKey']),
     );
   }
   @override
@@ -2333,6 +2535,9 @@ class Session extends DataClass implements Insertable<Session> {
       'endedAt': serializer.toJson<DateTime?>(endedAt),
       'plan': serializer.toJson<String>(plan),
       'endReason': serializer.toJson<String>(endReason),
+      'eventId': serializer.toJson<String?>(eventId),
+      'syncedAt': serializer.toJson<DateTime?>(syncedAt),
+      'remoteKey': serializer.toJson<String?>(remoteKey),
     };
   }
 
@@ -2343,6 +2548,9 @@ class Session extends DataClass implements Insertable<Session> {
     Value<DateTime?> endedAt = const Value.absent(),
     String? plan,
     String? endReason,
+    Value<String?> eventId = const Value.absent(),
+    Value<DateTime?> syncedAt = const Value.absent(),
+    Value<String?> remoteKey = const Value.absent(),
   }) => Session(
     id: id ?? this.id,
     profileId: profileId ?? this.profileId,
@@ -2350,6 +2558,9 @@ class Session extends DataClass implements Insertable<Session> {
     endedAt: endedAt.present ? endedAt.value : this.endedAt,
     plan: plan ?? this.plan,
     endReason: endReason ?? this.endReason,
+    eventId: eventId.present ? eventId.value : this.eventId,
+    syncedAt: syncedAt.present ? syncedAt.value : this.syncedAt,
+    remoteKey: remoteKey.present ? remoteKey.value : this.remoteKey,
   );
   Session copyWithCompanion(SessionsCompanion data) {
     return Session(
@@ -2359,6 +2570,9 @@ class Session extends DataClass implements Insertable<Session> {
       endedAt: data.endedAt.present ? data.endedAt.value : this.endedAt,
       plan: data.plan.present ? data.plan.value : this.plan,
       endReason: data.endReason.present ? data.endReason.value : this.endReason,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      syncedAt: data.syncedAt.present ? data.syncedAt.value : this.syncedAt,
+      remoteKey: data.remoteKey.present ? data.remoteKey.value : this.remoteKey,
     );
   }
 
@@ -2370,13 +2584,17 @@ class Session extends DataClass implements Insertable<Session> {
           ..write('startedAt: $startedAt, ')
           ..write('endedAt: $endedAt, ')
           ..write('plan: $plan, ')
-          ..write('endReason: $endReason')
+          ..write('endReason: $endReason, ')
+          ..write('eventId: $eventId, ')
+          ..write('syncedAt: $syncedAt, ')
+          ..write('remoteKey: $remoteKey')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, profileId, startedAt, endedAt, plan, endReason);
+  int get hashCode =>
+      Object.hash(id, profileId, startedAt, endedAt, plan, endReason, eventId, syncedAt, remoteKey);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2386,7 +2604,10 @@ class Session extends DataClass implements Insertable<Session> {
           other.startedAt == this.startedAt &&
           other.endedAt == this.endedAt &&
           other.plan == this.plan &&
-          other.endReason == this.endReason);
+          other.endReason == this.endReason &&
+          other.eventId == this.eventId &&
+          other.syncedAt == this.syncedAt &&
+          other.remoteKey == this.remoteKey);
 }
 
 class SessionsCompanion extends UpdateCompanion<Session> {
@@ -2396,6 +2617,9 @@ class SessionsCompanion extends UpdateCompanion<Session> {
   final Value<DateTime?> endedAt;
   final Value<String> plan;
   final Value<String> endReason;
+  final Value<String?> eventId;
+  final Value<DateTime?> syncedAt;
+  final Value<String?> remoteKey;
   const SessionsCompanion({
     this.id = const Value.absent(),
     this.profileId = const Value.absent(),
@@ -2403,6 +2627,9 @@ class SessionsCompanion extends UpdateCompanion<Session> {
     this.endedAt = const Value.absent(),
     this.plan = const Value.absent(),
     this.endReason = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+    this.remoteKey = const Value.absent(),
   });
   SessionsCompanion.insert({
     this.id = const Value.absent(),
@@ -2411,6 +2638,9 @@ class SessionsCompanion extends UpdateCompanion<Session> {
     this.endedAt = const Value.absent(),
     this.plan = const Value.absent(),
     this.endReason = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+    this.remoteKey = const Value.absent(),
   }) : profileId = Value(profileId),
        startedAt = Value(startedAt);
   static Insertable<Session> custom({
@@ -2420,6 +2650,9 @@ class SessionsCompanion extends UpdateCompanion<Session> {
     Expression<DateTime>? endedAt,
     Expression<String>? plan,
     Expression<String>? endReason,
+    Expression<String>? eventId,
+    Expression<DateTime>? syncedAt,
+    Expression<String>? remoteKey,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2428,6 +2661,9 @@ class SessionsCompanion extends UpdateCompanion<Session> {
       if (endedAt != null) 'ended_at': endedAt,
       if (plan != null) 'plan': plan,
       if (endReason != null) 'end_reason': endReason,
+      if (eventId != null) 'event_id': eventId,
+      if (syncedAt != null) 'synced_at': syncedAt,
+      if (remoteKey != null) 'remote_key': remoteKey,
     });
   }
 
@@ -2438,6 +2674,9 @@ class SessionsCompanion extends UpdateCompanion<Session> {
     Value<DateTime?>? endedAt,
     Value<String>? plan,
     Value<String>? endReason,
+    Value<String?>? eventId,
+    Value<DateTime?>? syncedAt,
+    Value<String?>? remoteKey,
   }) {
     return SessionsCompanion(
       id: id ?? this.id,
@@ -2446,6 +2685,9 @@ class SessionsCompanion extends UpdateCompanion<Session> {
       endedAt: endedAt ?? this.endedAt,
       plan: plan ?? this.plan,
       endReason: endReason ?? this.endReason,
+      eventId: eventId ?? this.eventId,
+      syncedAt: syncedAt ?? this.syncedAt,
+      remoteKey: remoteKey ?? this.remoteKey,
     );
   }
 
@@ -2470,6 +2712,15 @@ class SessionsCompanion extends UpdateCompanion<Session> {
     if (endReason.present) {
       map['end_reason'] = Variable<String>(endReason.value);
     }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (syncedAt.present) {
+      map['synced_at'] = Variable<DateTime>(syncedAt.value);
+    }
+    if (remoteKey.present) {
+      map['remote_key'] = Variable<String>(remoteKey.value);
+    }
     return map;
   }
 
@@ -2481,7 +2732,10 @@ class SessionsCompanion extends UpdateCompanion<Session> {
           ..write('startedAt: $startedAt, ')
           ..write('endedAt: $endedAt, ')
           ..write('plan: $plan, ')
-          ..write('endReason: $endReason')
+          ..write('endReason: $endReason, ')
+          ..write('eventId: $eventId, ')
+          ..write('syncedAt: $syncedAt, ')
+          ..write('remoteKey: $remoteKey')
           ..write(')'))
         .toString();
   }
@@ -2898,6 +3152,15 @@ class $AlertsTable extends Alerts with TableInfo<$AlertsTable, Alert> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _syncedAtMeta = const VerificationMeta('syncedAt');
+  @override
+  late final GeneratedColumn<DateTime> syncedAt = GeneratedColumn<DateTime>(
+    'synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2910,6 +3173,7 @@ class $AlertsTable extends Alerts with TableInfo<$AlertsTable, Alert> {
     words,
     dedupeKey,
     readAt,
+    syncedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2958,6 +3222,9 @@ class $AlertsTable extends Alerts with TableInfo<$AlertsTable, Alert> {
     if (data.containsKey('read_at')) {
       context.handle(_readAtMeta, readAt.isAcceptableOrUnknown(data['read_at']!, _readAtMeta));
     }
+    if (data.containsKey('synced_at')) {
+      context.handle(_syncedAtMeta, syncedAt.isAcceptableOrUnknown(data['synced_at']!, _syncedAtMeta));
+    }
     return context;
   }
 
@@ -2980,6 +3247,7 @@ class $AlertsTable extends Alerts with TableInfo<$AlertsTable, Alert> {
         data['${effectivePrefix}dedupe_key'],
       )!,
       readAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}read_at']),
+      syncedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}synced_at']),
     );
   }
 
@@ -3012,6 +3280,9 @@ class Alert extends DataClass implements Insertable<Alert> {
   /// What makes this alert the same alert next time (one a day, one a session, one an event), so a scan never repeats it.
   final String dedupeKey;
   final DateTime? readAt;
+
+  /// When the alert was sent to the family's other devices (an alert from another device is never sent back).
+  final DateTime? syncedAt;
   const Alert({
     required this.id,
     required this.at,
@@ -3023,6 +3294,7 @@ class Alert extends DataClass implements Insertable<Alert> {
     required this.words,
     required this.dedupeKey,
     this.readAt,
+    this.syncedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3041,6 +3313,9 @@ class Alert extends DataClass implements Insertable<Alert> {
     if (!nullToAbsent || readAt != null) {
       map['read_at'] = Variable<DateTime>(readAt);
     }
+    if (!nullToAbsent || syncedAt != null) {
+      map['synced_at'] = Variable<DateTime>(syncedAt);
+    }
     return map;
   }
 
@@ -3056,6 +3331,7 @@ class Alert extends DataClass implements Insertable<Alert> {
       words: Value(words),
       dedupeKey: Value(dedupeKey),
       readAt: readAt == null && nullToAbsent ? const Value.absent() : Value(readAt),
+      syncedAt: syncedAt == null && nullToAbsent ? const Value.absent() : Value(syncedAt),
     );
   }
 
@@ -3072,6 +3348,7 @@ class Alert extends DataClass implements Insertable<Alert> {
       words: serializer.fromJson<String>(json['words']),
       dedupeKey: serializer.fromJson<String>(json['dedupeKey']),
       readAt: serializer.fromJson<DateTime?>(json['readAt']),
+      syncedAt: serializer.fromJson<DateTime?>(json['syncedAt']),
     );
   }
   @override
@@ -3088,6 +3365,7 @@ class Alert extends DataClass implements Insertable<Alert> {
       'words': serializer.toJson<String>(words),
       'dedupeKey': serializer.toJson<String>(dedupeKey),
       'readAt': serializer.toJson<DateTime?>(readAt),
+      'syncedAt': serializer.toJson<DateTime?>(syncedAt),
     };
   }
 
@@ -3102,6 +3380,7 @@ class Alert extends DataClass implements Insertable<Alert> {
     String? words,
     String? dedupeKey,
     Value<DateTime?> readAt = const Value.absent(),
+    Value<DateTime?> syncedAt = const Value.absent(),
   }) => Alert(
     id: id ?? this.id,
     at: at ?? this.at,
@@ -3113,6 +3392,7 @@ class Alert extends DataClass implements Insertable<Alert> {
     words: words ?? this.words,
     dedupeKey: dedupeKey ?? this.dedupeKey,
     readAt: readAt.present ? readAt.value : this.readAt,
+    syncedAt: syncedAt.present ? syncedAt.value : this.syncedAt,
   );
   Alert copyWithCompanion(AlertsCompanion data) {
     return Alert(
@@ -3126,6 +3406,7 @@ class Alert extends DataClass implements Insertable<Alert> {
       words: data.words.present ? data.words.value : this.words,
       dedupeKey: data.dedupeKey.present ? data.dedupeKey.value : this.dedupeKey,
       readAt: data.readAt.present ? data.readAt.value : this.readAt,
+      syncedAt: data.syncedAt.present ? data.syncedAt.value : this.syncedAt,
     );
   }
 
@@ -3141,14 +3422,15 @@ class Alert extends DataClass implements Insertable<Alert> {
           ..write('detail: $detail, ')
           ..write('words: $words, ')
           ..write('dedupeKey: $dedupeKey, ')
-          ..write('readAt: $readAt')
+          ..write('readAt: $readAt, ')
+          ..write('syncedAt: $syncedAt')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, at, profileId, category, severity, count, detail, words, dedupeKey, readAt);
+      Object.hash(id, at, profileId, category, severity, count, detail, words, dedupeKey, readAt, syncedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3162,7 +3444,8 @@ class Alert extends DataClass implements Insertable<Alert> {
           other.detail == this.detail &&
           other.words == this.words &&
           other.dedupeKey == this.dedupeKey &&
-          other.readAt == this.readAt);
+          other.readAt == this.readAt &&
+          other.syncedAt == this.syncedAt);
 }
 
 class AlertsCompanion extends UpdateCompanion<Alert> {
@@ -3176,6 +3459,7 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
   final Value<String> words;
   final Value<String> dedupeKey;
   final Value<DateTime?> readAt;
+  final Value<DateTime?> syncedAt;
   const AlertsCompanion({
     this.id = const Value.absent(),
     this.at = const Value.absent(),
@@ -3187,6 +3471,7 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
     this.words = const Value.absent(),
     this.dedupeKey = const Value.absent(),
     this.readAt = const Value.absent(),
+    this.syncedAt = const Value.absent(),
   });
   AlertsCompanion.insert({
     this.id = const Value.absent(),
@@ -3199,6 +3484,7 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
     this.words = const Value.absent(),
     required String dedupeKey,
     this.readAt = const Value.absent(),
+    this.syncedAt = const Value.absent(),
   }) : at = Value(at),
        category = Value(category),
        severity = Value(severity),
@@ -3214,6 +3500,7 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
     Expression<String>? words,
     Expression<String>? dedupeKey,
     Expression<DateTime>? readAt,
+    Expression<DateTime>? syncedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3226,6 +3513,7 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
       if (words != null) 'words': words,
       if (dedupeKey != null) 'dedupe_key': dedupeKey,
       if (readAt != null) 'read_at': readAt,
+      if (syncedAt != null) 'synced_at': syncedAt,
     });
   }
 
@@ -3240,6 +3528,7 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
     Value<String>? words,
     Value<String>? dedupeKey,
     Value<DateTime?>? readAt,
+    Value<DateTime?>? syncedAt,
   }) {
     return AlertsCompanion(
       id: id ?? this.id,
@@ -3252,6 +3541,7 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
       words: words ?? this.words,
       dedupeKey: dedupeKey ?? this.dedupeKey,
       readAt: readAt ?? this.readAt,
+      syncedAt: syncedAt ?? this.syncedAt,
     );
   }
 
@@ -3288,6 +3578,9 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
     if (readAt.present) {
       map['read_at'] = Variable<DateTime>(readAt.value);
     }
+    if (syncedAt.present) {
+      map['synced_at'] = Variable<DateTime>(syncedAt.value);
+    }
     return map;
   }
 
@@ -3303,7 +3596,8 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
           ..write('detail: $detail, ')
           ..write('words: $words, ')
           ..write('dedupeKey: $dedupeKey, ')
-          ..write('readAt: $readAt')
+          ..write('readAt: $readAt, ')
+          ..write('syncedAt: $syncedAt')
           ..write(')'))
         .toString();
   }
@@ -3987,6 +4281,9 @@ typedef $$AttemptsTableCreateCompanionBuilder = AttemptsCompanion Function({
   Value<int> durationMs,
   Value<int?> sessionId,
   Value<String> input,
+  Value<String?> eventId,
+  Value<DateTime?> syncedAt,
+  Value<String?> remoteSession,
 });
 typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<int> id,
@@ -4008,6 +4305,9 @@ typedef $$AttemptsTableUpdateCompanionBuilder = AttemptsCompanion Function({
   Value<int> durationMs,
   Value<int?> sessionId,
   Value<String> input,
+  Value<String?> eventId,
+  Value<DateTime?> syncedAt,
+  Value<String?> remoteSession,
 });
 
 class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -4074,6 +4374,15 @@ class $$AttemptsTableFilterComposer extends Composer<_$AppDatabase, $AttemptsTab
 
   ColumnFilters<String> get input =>
       $composableBuilder(column: $table.input, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get remoteSession =>
+      $composableBuilder(column: $table.remoteSession, builder: (column) => ColumnFilters(column));
 }
 
 class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -4140,6 +4449,15 @@ class $$AttemptsTableOrderingComposer extends Composer<_$AppDatabase, $AttemptsT
 
   ColumnOrderings<String> get input =>
       $composableBuilder(column: $table.input, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get remoteSession =>
+      $composableBuilder(column: $table.remoteSession, builder: (column) => ColumnOrderings(column));
 }
 
 class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $AttemptsTable> {
@@ -4203,6 +4521,15 @@ class $$AttemptsTableAnnotationComposer extends Composer<_$AppDatabase, $Attempt
       $composableBuilder(column: $table.sessionId, builder: (column) => column);
 
   GeneratedColumn<String> get input => $composableBuilder(column: $table.input, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteSession =>
+      $composableBuilder(column: $table.remoteSession, builder: (column) => column);
 }
 
 class $$AttemptsTableTableManager
@@ -4249,6 +4576,9 @@ class $$AttemptsTableTableManager
                 Value<int> durationMs = const Value.absent(),
                 Value<int?> sessionId = const Value.absent(),
                 Value<String> input = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
+                Value<String?> remoteSession = const Value.absent(),
               }) => AttemptsCompanion(
                 id: id,
                 at: at,
@@ -4269,6 +4599,9 @@ class $$AttemptsTableTableManager
                 durationMs: durationMs,
                 sessionId: sessionId,
                 input: input,
+                eventId: eventId,
+                syncedAt: syncedAt,
+                remoteSession: remoteSession,
               ),
           createCompanionCallback:
               ({
@@ -4291,6 +4624,9 @@ class $$AttemptsTableTableManager
                 Value<int> durationMs = const Value.absent(),
                 Value<int?> sessionId = const Value.absent(),
                 Value<String> input = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
+                Value<String?> remoteSession = const Value.absent(),
               }) => AttemptsCompanion.insert(
                 id: id,
                 at: at,
@@ -4311,6 +4647,9 @@ class $$AttemptsTableTableManager
                 durationMs: durationMs,
                 sessionId: sessionId,
                 input: input,
+                eventId: eventId,
+                syncedAt: syncedAt,
+                remoteSession: remoteSession,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -4346,6 +4685,9 @@ typedef $$SessionsTableCreateCompanionBuilder = SessionsCompanion Function({
   Value<DateTime?> endedAt,
   Value<String> plan,
   Value<String> endReason,
+  Value<String?> eventId,
+  Value<DateTime?> syncedAt,
+  Value<String?> remoteKey,
 });
 typedef $$SessionsTableUpdateCompanionBuilder = SessionsCompanion Function({
   Value<int> id,
@@ -4354,6 +4696,9 @@ typedef $$SessionsTableUpdateCompanionBuilder = SessionsCompanion Function({
   Value<DateTime?> endedAt,
   Value<String> plan,
   Value<String> endReason,
+  Value<String?> eventId,
+  Value<DateTime?> syncedAt,
+  Value<String?> remoteKey,
 });
 
 class $$SessionsTableFilterComposer extends Composer<_$AppDatabase, $SessionsTable> {
@@ -4381,6 +4726,15 @@ class $$SessionsTableFilterComposer extends Composer<_$AppDatabase, $SessionsTab
 
   ColumnFilters<String> get endReason =>
       $composableBuilder(column: $table.endReason, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get remoteKey =>
+      $composableBuilder(column: $table.remoteKey, builder: (column) => ColumnFilters(column));
 }
 
 class $$SessionsTableOrderingComposer extends Composer<_$AppDatabase, $SessionsTable> {
@@ -4408,6 +4762,15 @@ class $$SessionsTableOrderingComposer extends Composer<_$AppDatabase, $SessionsT
 
   ColumnOrderings<String> get endReason =>
       $composableBuilder(column: $table.endReason, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get remoteKey =>
+      $composableBuilder(column: $table.remoteKey, builder: (column) => ColumnOrderings(column));
 }
 
 class $$SessionsTableAnnotationComposer extends Composer<_$AppDatabase, $SessionsTable> {
@@ -4433,6 +4796,15 @@ class $$SessionsTableAnnotationComposer extends Composer<_$AppDatabase, $Session
 
   GeneratedColumn<String> get endReason =>
       $composableBuilder(column: $table.endReason, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get remoteKey =>
+      $composableBuilder(column: $table.remoteKey, builder: (column) => column);
 }
 
 class $$SessionsTableTableManager
@@ -4466,6 +4838,9 @@ class $$SessionsTableTableManager
                 Value<DateTime?> endedAt = const Value.absent(),
                 Value<String> plan = const Value.absent(),
                 Value<String> endReason = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
+                Value<String?> remoteKey = const Value.absent(),
               }) => SessionsCompanion(
                 id: id,
                 profileId: profileId,
@@ -4473,6 +4848,9 @@ class $$SessionsTableTableManager
                 endedAt: endedAt,
                 plan: plan,
                 endReason: endReason,
+                eventId: eventId,
+                syncedAt: syncedAt,
+                remoteKey: remoteKey,
               ),
           createCompanionCallback:
               ({
@@ -4482,6 +4860,9 @@ class $$SessionsTableTableManager
                 Value<DateTime?> endedAt = const Value.absent(),
                 Value<String> plan = const Value.absent(),
                 Value<String> endReason = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
+                Value<String?> remoteKey = const Value.absent(),
               }) => SessionsCompanion.insert(
                 id: id,
                 profileId: profileId,
@@ -4489,6 +4870,9 @@ class $$SessionsTableTableManager
                 endedAt: endedAt,
                 plan: plan,
                 endReason: endReason,
+                eventId: eventId,
+                syncedAt: syncedAt,
+                remoteKey: remoteKey,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -4691,6 +5075,7 @@ typedef $$AlertsTableCreateCompanionBuilder = AlertsCompanion Function({
   Value<String> words,
   required String dedupeKey,
   Value<DateTime?> readAt,
+  Value<DateTime?> syncedAt,
 });
 typedef $$AlertsTableUpdateCompanionBuilder = AlertsCompanion Function({
   Value<int> id,
@@ -4703,6 +5088,7 @@ typedef $$AlertsTableUpdateCompanionBuilder = AlertsCompanion Function({
   Value<String> words,
   Value<String> dedupeKey,
   Value<DateTime?> readAt,
+  Value<DateTime?> syncedAt,
 });
 
 class $$AlertsTableFilterComposer extends Composer<_$AppDatabase, $AlertsTable> {
@@ -4742,6 +5128,9 @@ class $$AlertsTableFilterComposer extends Composer<_$AppDatabase, $AlertsTable> 
 
   ColumnFilters<DateTime> get readAt =>
       $composableBuilder(column: $table.readAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnFilters(column));
 }
 
 class $$AlertsTableOrderingComposer extends Composer<_$AppDatabase, $AlertsTable> {
@@ -4781,6 +5170,9 @@ class $$AlertsTableOrderingComposer extends Composer<_$AppDatabase, $AlertsTable
 
   ColumnOrderings<DateTime> get readAt =>
       $composableBuilder(column: $table.readAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnOrderings(column));
 }
 
 class $$AlertsTableAnnotationComposer extends Composer<_$AppDatabase, $AlertsTable> {
@@ -4816,6 +5208,9 @@ class $$AlertsTableAnnotationComposer extends Composer<_$AppDatabase, $AlertsTab
 
   GeneratedColumn<DateTime> get readAt =>
       $composableBuilder(column: $table.readAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => column);
 }
 
 class $$AlertsTableTableManager
@@ -4853,6 +5248,7 @@ class $$AlertsTableTableManager
                 Value<String> words = const Value.absent(),
                 Value<String> dedupeKey = const Value.absent(),
                 Value<DateTime?> readAt = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
               }) => AlertsCompanion(
                 id: id,
                 at: at,
@@ -4864,6 +5260,7 @@ class $$AlertsTableTableManager
                 words: words,
                 dedupeKey: dedupeKey,
                 readAt: readAt,
+                syncedAt: syncedAt,
               ),
           createCompanionCallback:
               ({
@@ -4877,6 +5274,7 @@ class $$AlertsTableTableManager
                 Value<String> words = const Value.absent(),
                 required String dedupeKey,
                 Value<DateTime?> readAt = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
               }) => AlertsCompanion.insert(
                 id: id,
                 at: at,
@@ -4888,6 +5286,7 @@ class $$AlertsTableTableManager
                 words: words,
                 dedupeKey: dedupeKey,
                 readAt: readAt,
+                syncedAt: syncedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(

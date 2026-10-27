@@ -1,0 +1,94 @@
+// A fake of the gateway's sync functions that behaves like the real ones (the Deno tests prove the real ones): one
+// family, a log numbered by the server, profiles with nicknames, tombstones, duplicates ignored, unknown or deleted
+// children refused. Devices call it through [callFor], which can be made to fail or to lose its answer.
+class FakeFamilyServer {
+  final List<Map<String, Object?>> log = <Map<String, Object?>>[];
+  final Map<String, Map<String, Object?>> children = <String, Map<String, Object?>>{};
+  final List<String> tombstones = <String>[];
+  final List<String> calls = <String>[];
+  int _seq = 0;
+
+  /// While true every call fails (the phone is offline).
+  bool offline = false;
+
+  /// The next call that names this function does its work and then fails, as if the answer was lost on the way.
+  String? loseAnswerOf;
+
+  /// Fails the Nth `sync-pull` call from now on (1 for the next one), to test that a half-done pull resumes.
+  int failPullNumber = 0;
+  int _pulls = 0;
+
+  Future<Map<String, Object?>> Function(String, Map<String, Object?>) callFor(
+    String deviceId, {
+    bool parent = true,
+  }) {
+    return (String name, Map<String, Object?> body) async {
+      calls.add('$deviceId:$name');
+      if (name == 'sync-pull') _pulls++;
+      if (offline) throw StateError('offline');
+      final Map<String, Object?> answer = _handle(deviceId, name, body, parent);
+      if (loseAnswerOf == name) {
+        loseAnswerOf = null;
+        throw StateError('the answer was lost');
+      }
+      return answer;
+    };
+  }
+
+  Map<String, Object?> _handle(String deviceId, String name, Map<String, Object?> body, bool parent) {
+    switch (name) {
+      case 'child-put':
+        if (!parent) throw StateError('forbidden');
+        final String id = body['child_id']! as String;
+        if (tombstones.contains(id)) throw StateError('child_deleted');
+        children[id] = <String, Object?>{
+          'id': id,
+          'nickname': body['nickname'],
+          'avatar_id': body['avatar_id'],
+          'companion_id': body['companion_id'],
+          'address_form': body['address_form'],
+          'age_band': body['age_band'],
+        };
+        return <String, Object?>{'ok': true};
+      case 'child-delete':
+        if (!parent) throw StateError('forbidden');
+        final String id = body['child_id']! as String;
+        children.remove(id);
+        log.removeWhere((Map<String, Object?> e) => e['child_id'] == id);
+        if (!tombstones.contains(id)) tombstones.add(id);
+        return <String, Object?>{'ok': true};
+      case 'sync-push':
+        int accepted = 0;
+        int duplicates = 0;
+        final List<String> refused = <String>[];
+        for (final Object? raw in body['events']! as List<Object?>) {
+          final Map<String, Object?> e = raw! as Map<String, Object?>;
+          if (!children.containsKey(e['child_id'])) {
+            refused.add(e['id']! as String);
+          } else if (log.any((Map<String, Object?> x) => x['id'] == e['id'])) {
+            duplicates++;
+          } else {
+            log.add(<String, Object?>{...e, 'seq': ++_seq, 'device_id': deviceId});
+            accepted++;
+          }
+        }
+        return <String, Object?>{'accepted': accepted, 'duplicates': duplicates, 'refused': refused};
+      case 'sync-pull':
+        if (failPullNumber != 0 && _pulls == failPullNumber) throw StateError('pull failed');
+        final int after = body['after']! as int;
+        final int limit = body['limit']! as int;
+        final List<Map<String, Object?>> later =
+            log.where((Map<String, Object?> e) => (e['seq']! as int) > after).toList()
+              ..sort((a, b) => (a['seq']! as int).compareTo(b['seq']! as int));
+        final List<Map<String, Object?>> page = later.take(limit).toList();
+        return <String, Object?>{
+          'events': page,
+          'more': later.length > limit,
+          'next': page.isEmpty ? after : page.last['seq'],
+          'children': children.values.toList(),
+          'tombstones': List<String>.of(tombstones),
+        };
+    }
+    throw StateError('unknown function $name');
+  }
+}

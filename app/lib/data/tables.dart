@@ -124,6 +124,16 @@ class Attempts extends Table {
 
   /// How the answer was given: `tap`, or `voice` (a spoken answer that was clear, or that the child confirmed).
   TextColumn get input => text().withDefault(const Constant<String>('tap'))();
+
+  /// Sync (M7b). An answer made here is sent once: [syncedAt] says when. An answer that came from another device
+  /// carries that device's event id in [eventId] (so it is never added twice) and is never sent back.
+  TextColumn get eventId => text().nullable()();
+
+  DateTimeColumn get syncedAt => dateTime().nullable()();
+
+  /// For an answer from another device: which visit of that device it belongs to (`deviceId:number`), until the visit's
+  /// own event has arrived and [sessionId] can be set.
+  TextColumn get remoteSession => text().nullable()();
 }
 
 /// One visit: a lesson or a session the engine planned. It holds no names and no text.
@@ -141,6 +151,14 @@ class Sessions extends Table {
 
   /// A fixed word: `finished`, `home` (the child left), `limit` (the parent's time was up) or empty while it runs.
   TextColumn get endReason => text().withDefault(const Constant<String>(''))();
+
+  /// Sync (M7b): when the visit was sent (only once it has ended), or the id of the event it came from, and for a visit
+  /// from another device its name there (`deviceId:number`).
+  TextColumn get eventId => text().nullable()();
+
+  DateTimeColumn get syncedAt => dateTime().nullable()();
+
+  TextColumn get remoteKey => text().nullable()();
 }
 
 /// One time the child tapped the mic, and how it went, as a fixed word. It holds no audio, no words and no text:
@@ -187,4 +205,7 @@ class Alerts extends Table {
   TextColumn get dedupeKey => text().unique()();
 
   DateTimeColumn get readAt => dateTime().nullable()();
+
+  /// When the alert was sent to the family's other devices (an alert from another device is never sent back).
+  DateTimeColumn get syncedAt => dateTime().nullable()();
 }
