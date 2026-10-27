@@ -327,6 +327,8 @@ class Lesson {
 class SkillDoc {
   SkillDoc._(Map<String, Object?> json)
     : id = json['id']! as String,
+      domain = json['domain']! as String,
+      title = _caption(json['title']),
       prerequisites = <String, double>{
         for (final Map<String, Object?> p in _maps(json['prerequisites']))
           p['skill']! as String: (p['weight']! as num).toDouble(),
@@ -343,6 +345,10 @@ class SkillDoc {
       targetRetention = (_map(json['retention'])['targetRetention']! as num).toDouble();
 
   final String id;
+
+  /// One of the domains (`numbers`, `colors`, ...), and the skill as a plain sentence of what the child can do.
+  final String domain;
+  final String title;
   final Map<String, double> prerequisites;
   final List<String> representations;
   final List<String> misconceptions;
@@ -356,6 +362,7 @@ class SkillDoc {
 class TagDoc {
   TagDoc._(Map<String, Object?> json)
     : id = json['id']! as String,
+      parentText = json['parentText']! as String,
       skills = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       repairActivities = <String>[
         for (final Object? a in json['repairActivities']! as List<Object?>) a! as String,
@@ -365,6 +372,9 @@ class TagDoc {
       ];
 
   final String id;
+
+  /// What a parent reads about this misunderstanding, in plain Hebrew.
+  final String parentText;
   final List<String> skills;
   final List<String> repairActivities;
   final List<String> preferredRepresentations;
