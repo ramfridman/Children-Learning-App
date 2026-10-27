@@ -1,36 +1,36 @@
 {
   "schema": "voices/v1",
   "note": "Which ElevenLabs voice speaks for which character. The voiceId values stay empty until the owner has listened to auditions and chosen (M4 phase H). modelId must be the exact id of the model the owner picks in ElevenLabs; it is left empty rather than guessed.",
-  "modelId": "",
+  "modelId": "eleven_v4_turbo",
   "settings": {},
   "pronunciation": {},
   "voices": {
     "nitzi": {
-      "voiceId": ""
+      "voiceId": "Tbj9UQjXon5RB9MPEyc2"
     },
     "alien-jili": {
-      "voiceId": ""
+      "voiceId": "Tbj9UQjXon5RB9MPEyc2"
     },
     "climber-tzuri": {
-      "voiceId": ""
+      "voiceId": "8sZ9Z3Jy28CGLLCmKEHn"
     },
     "compass-romi": {
-      "voiceId": ""
+      "voiceId": "Tbj9UQjXon5RB9MPEyc2"
     },
     "friend-daughter": {
-      "voiceId": ""
+      "voiceId": "Tbj9UQjXon5RB9MPEyc2"
     },
     "hero-son": {
-      "voiceId": ""
+      "voiceId": "ZiofZHcEBTn5sRySe5h8"
     },
     "inventor-gali": {
-      "voiceId": ""
+      "voiceId": "Tbj9UQjXon5RB9MPEyc2"
     },
     "tower-tamir": {
-      "voiceId": ""
+      "voiceId": "6Ijsl5024dyMrE00loVE"
     },
     "weaver-keshet": {
-      "voiceId": ""
+      "voiceId": "6Ijsl5024dyMrE00loVE"
     }
   }
 }
