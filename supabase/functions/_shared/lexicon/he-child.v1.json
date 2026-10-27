@@ -1,7 +1,7 @@
 {
   "schema": "lexicon/v1",
   "review": "needs-editor",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "note": "The words the tutor may use. Each entry is \"vocalised form|tags\". Tags: num:N, 2m 2f 2pl (who it speaks to), 1m 1f 1pl (who speaks), amb (never allowed). Written with niqqud by Claude; every entry awaits an editor.",
   "words": [
     "אֶפֶס|num:0",
@@ -555,6 +555,24 @@
     "בּוֹחֲרִים",
     "מַצְבִּיעִים",
     "מַרְאִים",
-    "זוֹכְרִים"
+    "זוֹכְרִים",
+    "חָדָשׁ",
+    "חֲדָשָׁה",
+    "נַעֲצֹר|1pl",
+    "לַעֲצֹר",
+    "עִצְרוּ|2pl",
+    "עוֹצְרִים",
+    "נַגִּיעַ|1pl",
+    "לְהַגִּיעַ",
+    "אוֹמְרִים",
+    "לוֹמַר",
+    "נְחַפֵּשׂ|1pl",
+    "לְחַפֵּשׂ",
+    "נְגִיעָה",
+    "מַגָּע",
+    "הַלְאָה",
+    "עוֹבְרִים",
+    "נִתְקַדֵּם|1pl",
+    "מִתְקַדְּמִים"
   ]
 }
