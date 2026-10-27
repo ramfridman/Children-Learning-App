@@ -44,7 +44,7 @@ class LessonScreen extends ConsumerStatefulWidget {
   ConsumerState<LessonScreen> createState() => _LessonScreenState();
 }
 
-class _LessonScreenState extends ConsumerState<LessonScreen> {
+class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBindingObserver {
   LessonController? _controller;
   TemplateSession? _session;
   int _sessionIndex = -1;
@@ -64,6 +64,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _director = ref.read(voiceDirectorProvider);
     _recorder = ref.read(sessionRecorderProvider);
     _visit = _recorder.start(widget.profileId, 'lesson:${widget.lessonId}').then((int id) => _visitId = id);
@@ -102,8 +103,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     _recorder.end(id, reason).catchError((Object _) {});
   }
 
+  /// The app left the screen (home, another app, the notification shade): the microphone closes at once and the guide
+  /// stops talking. Nothing keeps listening or speaking behind the child's back.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) return;
+    _voice?.hush();
+    unawaited(_director.stop());
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _endVisit(_controller?.finished ?? false ? 'finished' : 'home');
     // Leaving the lesson silences the guide.
     unawaited(_director.stop());

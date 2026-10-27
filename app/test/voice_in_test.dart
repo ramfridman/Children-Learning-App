@@ -225,6 +225,24 @@ void main() {
     expect(rig.speech.micOpen, isFalse);
     expect(await attempts(rig), isEmpty);
   });
+
+  testWidgets('the app going to the background closes the microphone at once', (WidgetTester tester) async {
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.hangs()]);
+    await tester.tap(mic);
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(rig.speech.micOpen, isTrue);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    await tester.pump();
+    expect(
+      rig.speech.micOpen,
+      isFalse,
+      reason: 'closed at the first sign that the app is leaving, not at a timeout',
+    );
+    expect(await attempts(rig), isEmpty);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(mic, findsOneWidget, reason: 'the mic is offered again when the child is back');
+  });
 }
 
 List<String> heardLines(AppRig rig) => rig.player.played.map(String.fromCharCodes).toList();
