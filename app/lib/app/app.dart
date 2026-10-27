@@ -3,8 +3,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
+import '../child/calm_loading.dart';
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
+import '../characters/character.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
 import '../data/app_database.dart';
@@ -16,7 +18,9 @@ import '../parent/entry_flow.dart';
 import '../play/lesson_screen.dart';
 import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
+import 'companion.dart';
 import 'state.dart';
+import 'tutor_providers.dart';
 
 /// The app: Hebrew, right to left, phones in landscape and tablets in either orientation. It shows
 /// the first-run setup until the device is registered, the PIN is chosen and a child exists; after
@@ -91,6 +95,9 @@ class _Root extends ConsumerWidget {
                 orElse: () => null,
               );
         if (current == null) {
+          // Start getting the characters ready while the child is still choosing, so the map does not have to wait.
+          ref.read(resolverProvider);
+          ref.read(characterSourceProvider);
           return ProfilePicker(
             profiles: app.profiles,
             onChoose: (Profile p) => ref.read(activeProfileProvider.notifier).choose(p),
@@ -134,13 +141,26 @@ class _HomeState extends ConsumerState<_Home> {
   }
 
   @override
-  Widget build(BuildContext context) => HomeScreen(
+  Widget build(BuildContext context) {
+    // The map appears whole: until its character and the guide's voice are ready, a calm loading scene shows instead.
+    final AsyncValue<Character> friend = ref.watch(characterForRoleProvider(CharacterRole.mapCompanion));
+    final AsyncValue<Guide> guide = ref.watch(guideProvider);
+    // Asks the server's helper switch now, while the map shows, so that a lesson finds the answer ready.
+    ref.watch(tutorAvailableProvider);
+    if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue)) {
+      return const CalmLoading();
+    }
+    return _map(friend.value);
+  }
+
+  Widget _map(Character? friend) => HomeScreen(
     childName: widget.profile.name,
     avatarId: widget.profile.avatar,
     onParents: () => openParentArea(context, ref),
     onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
     onOpenActivity: _openLesson,
     companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
+    companionMouth: friend?.mouth,
     onCompanion: () => _companion.currentState?.greet(),
     onFriends: _openFriends,
   );

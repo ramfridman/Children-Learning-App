@@ -23,6 +23,8 @@ export interface Store {
 
   // Settings and limits
   getConfig(key: string): Promise<unknown | undefined>;
+  /** Several settings in one round trip; a missing key is absent from the result. */
+  getConfigs(keys: readonly string[]): Promise<Record<string, unknown>>;
   /** Counts one use in the current window; false means the limit is already reached. */
   rateLimitHit(scope: string, key: string, windowStart: Date, limit: number): Promise<boolean>;
 
@@ -90,10 +92,150 @@ export interface Store {
   listActiveDevices(familyId: string): Promise<DeviceSummary[]>;
   /** False if the device is not an active device of that family. */
   revokeDevice(familyId: string, deviceId: string, reason: RevokeReason): Promise<boolean>;
+
+  // Content (M6)
+  /**
+   * Publishes one pack version's item index in one transaction. `older`: a higher version of the pack is already
+   * published; `conflict`: this version is published with other contents; `unchanged`: exactly this is published.
+   */
+  publishContent(p: PublishedPack): Promise<"published" | "unchanged" | "older" | "conflict">;
+
+  // The tutor (M6)
+  /** The item, its misconceptions and the speaking character, or null if the pack version has no such item. */
+  tutorContext(
+    packId: string,
+    packVersion: string,
+    itemId: string,
+    characterId: string,
+  ): Promise<TutorContext | null>;
+  /** The ids of the items of a pack version that allow the AI tutor, in a fixed order. */
+  tutorItemIds(packId: string, packVersion: string): Promise<string[]>;
+  cacheGet(k: CacheKey): Promise<CachedLine | null>;
+  /** Keeps the line; with `replace`, a line already there for this key is replaced (a reviewed line that was edited). */
+  cachePut(k: CacheKey, v: CachedLine, replace?: boolean): Promise<void>;
+  /** One atomic call for every cap; nothing is counted when a limit is already reached. */
+  tutorTake(p: {
+    familyId: string;
+    childRef: string;
+    sessionRef: string;
+    kind: "turn" | "prefetch";
+    sessionCap: number;
+    dayCap: number;
+    prefetchCap: number;
+    costCapMicro: number;
+    nowMs: number;
+  }): Promise<TakeResult>;
+  tutorCostAdd(familyId: string, micro: number, nowMs: number): Promise<void>;
+  logTutor(row: TutorLogRow): Promise<void>;
+}
+
+// ---- The tutor (M6) ----
+
+export interface TutorContext {
+  itemId: string;
+  band: "A" | "B" | "C";
+  llmAllowed: boolean;
+  goal: string;
+  promptText: string;
+  numberSet: number[];
+  allowedActions: string[];
+  hintThreshold: number;
+  objectIds: string[];
+  answers: PublishedAnswer[];
+  /** Misconception tag to its description, for the prompt. */
+  descriptions: Record<string, string>;
+  character: { nameHe: string; gender: "m" | "f"; voiceId: string | null } | null;
+}
+
+export interface CacheKey {
+  packId: string;
+  packVersion: string;
+  itemId: string;
+  /** A misconception tag, or `default`. */
+  mistake: string;
+  hintLevel: number;
+  band: "A" | "B" | "C";
+  addressForm: "f" | "m" | "n";
+  characterId: string;
+  promptVersion: string;
+  validatorVersion: string;
+}
+
+export interface CachedLine {
+  line: string;
+  caption: string | null;
+  next: string;
+  highlight: string[];
+  audio: Uint8Array | null;
+}
+
+export type TakeResult = "ok" | "session_cap" | "day_cap" | "prefetch_cap" | "cost_cap";
+
+export interface TutorLogRow {
+  familyId: string;
+  childRef: string;
+  sessionRef: string;
+  packId: string;
+  packVersion: string;
+  itemId: string;
+  characterId: string;
+  source: "live" | "cache" | "prefetch" | "rule";
+  outcome: string;
+  line: string | null;
+  validatorOk: boolean | null;
+  validatorFailures: string[];
+  promptVersion: string;
+  totalMs: number;
+  modelMs: number | null;
+  voiceMs: number | null;
+  elevenRequestId: string | null;
+}
+
+export interface PublishedAnswer {
+  id: string;
+  value?: number;
+  label?: string;
+  misconception?: string;
+  correct: boolean;
+}
+
+export interface PublishedItem {
+  itemId: string;
+  revision: number;
+  template: string;
+  band: "A" | "B" | "C";
+  skillIds: string[];
+  llmAllowed: boolean;
+  goal: string;
+  promptText: string;
+  answers: PublishedAnswer[];
+  numberSet: number[];
+  allowedActions: string[];
+  hintThreshold: number;
+  objectIds: string[];
+}
+
+export interface PublishedCharacter {
+  characterId: string;
+  nameHe: string;
+  gender: "m" | "f";
+  voiceId: string | null;
+  personal: boolean;
+}
+
+export interface PublishedPack {
+  packId: string;
+  packVersion: string;
+  manifestSha256: string;
+  items: PublishedItem[];
+  misconceptions: Array<{ tag: string; skillIds: string[]; description: string }>;
+  characters: PublishedCharacter[];
 }
 
 export interface Secrets {
   /** Keys for keyed hashes (pairing codes, IP addresses). Never logged, never in the repository. */
   pairingCodeKey: Bytes;
   ipHashKey: Bytes;
+  /** The content publish secret (only the owner's computer has the other copy). Absent: publishing is unavailable. */
+  publishSecret?: string;
 }

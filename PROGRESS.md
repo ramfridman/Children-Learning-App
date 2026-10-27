@@ -13,7 +13,9 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M3 Learning engine | **Done and merged to `main` on 2026-10-26** (CI green, all six jobs; report in `docs/milestones/M3.md` section 11). The simulator names the planted gap within 3 probes in 96.2% of 1,000 invented children (history on 80% of skills; 91.0% at 50%, 51.3% at none). On-phone checks (section 7 of the device checks) come later. |
 | M4 Characters and voice out | **Done and merged to `main` on 2026-10-27** (CI green, all six jobs; report in `docs/milestones/M4.md` section 11). Phone-tested by the owner: nine friends on Friends' Beach, a tone per friend with the mouth moving, the companion on the map and in lessons, the celebration. The voices are free test tones; real ElevenLabs voices (Phase H, to-do P3) are still to do. |
 | M5 Voice in | **Done and merged to `main` on 2026-10-27** (CI green, all six jobs; report in `docs/milestones/M5.md` section 11). Phone-tested by the owner: the parent switch, answering by word and number, the "I heard… right?" check, the repair steps and the commands. **Accuracy is still not measured**: adult recordings (to-do P4) next, children's later (stays open, as agreed). |
-| M6–M9 | Not started |
+| M6 Gateway and AI tutor | **Built on branch `m6-gateway-tutor` (stacked on the unmerged M5), proved with fakes; the live proof (Phase F) has not run** (report in `docs/milestones/M6.md` section 11). Tables, `content-publish`, the lexicon (417 words, unreviewed), the ten checks (451 scenarios: all bad replies refused for their rule, 0 of 170 good ones refused), `tutor-turn`, `tutor-prewarm`, and the app side (prefetch, cache, circuit breaker, 3-second plan, live voice) work. **Speed is not measured**; needs his keys, model id and voice ids (to-do P7) (Q9, the 0.50 USD daily cap, is settled). |
+| M7 Parent area | **Plan written (`docs/milestones/M7.md`), waiting for the owner's answers to Q1 to Q9 and his OK; no code yet.** |
+| M8–M9 | Not started |
 
 ## Done
 
@@ -36,11 +38,22 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 - **M5 (2026-10-26):** `sherpa_onnx` 2.0.0 and `record` 7.1.2 added (owner approved); `app/lib/speech/` (matcher, lexicon, engine, mic controller), database v5 (`attempt.input`, `voice_listen`), the five mic states, the repair sequence, the parent's "Voice answers" switch, the ivrit.ai model with pinned hashes, `tools/make-m5-model.ps1`, `tools/run-asr-eval.ps1` and `app/tool/asr_eval.dart`.
 
+- **M6 (2026-10-26):** migration `20261026120000_tutor_tables.sql`, `content-publish`, `tutor-turn`, `tutor-prewarm`, `_shared/{hebrew,lexicon,validator,tutor_prompt,anthropic,elevenlabs,tutor_core}.ts`, the starter lexicon, `app/lib/tutor/`, `app/tool/{publish_lib,prewarm_lib,tutor_prewarm}.dart`; 132 Deno tests, 695 app tests, the pgTAP suite extended.
+
+- **2026-10-27:** the parent gate is now a small sum in digits (was a multiplication in Hebrew words; the owner found it too hard). PLAN.md updated.
+
+- **2026-10-27 (phone test day):** the voice mic is never withdrawn after failed listens (owner's decision; PLAN.md and M5.md updated); the map bubble follows the companion's mouth; a line starting after leaving a lesson is stopped.
+
+- **2026-10-27:** the map now shows a calm loading scene (three pearls) until the character and its voice are ready, and the characters start loading while the child picker is on screen. The owner asked that the dev "what the engine knows" view become a parent-facing learning curve; it belongs to M7's progress view (PLAN.md, "Mockups": understanding versus retention over 8 weeks, skills by status per domain).
+
+- **2026-10-27, phone test day (Samsung SM-S938B):** M1 to M5 checked on the phone by the owner: signed ping, PIN lock-out, the butterflies lesson, damaged packs all refused (6 of 6), engine view, Friends' Beach with nine friends and test tones, celebration, voice answers (word, number, wrong number with confirmation, repair steps, commands, switch off). Not run: frame times (T5), the adult-recording accuracy run (P4), real voices (P3), the AI helper on the phone (T7).
+
 ## Open issues
 
 - **Probe items:** the engine's gap search needs open probe items (give, drag, trace) for every skill that can be a gap; the starter pack has none. An authoring rule for M9; in the simulator, three-option probes alone make a search too long for a Band A session.
 - **FSRS weights** were written from memory of the FSRS 4.5 defaults and not checked against the reference; refit on real data.
 
+- **M6 live phase, in progress (2026-10-27):** real Haiku 5.5 and ElevenLabs calls work; hero-son pre-warmed (94 of 99 lines, 0.29 USD; 5 refused for vocabulary). Server time for a fresh line 2 to 3 s. Device checks A to D passed on the phone; cache-hit round trip median 625 ms. Reviewed-line flow built; 66 reviewed lines for hero-son voiced (0.18 USD). Still to do: owner listens on the phone, check E (Band A), cells without a reviewed line (33) use the authored line, Hebrew editor review (lexicon, prefix vocalisation nits), M6 merge needs his confirmation. The lexicon is small and unreviewed; the helper is off by default.
 - **Signing key backup:** `pack-signing.key` exists only on this PC. The owner is away from it; he will save it in 1Password when he is next at the PC. Do not delete it. If the PC were lost before then, a new key means rebuilding the starter pack and shipping an app with the new public key.
 - **M2 on-phone check** (play the lesson; damaged packs refused) waits for the Samsung to be plugged in; same sitting as the M1 on-phone checks.
 - Packs are proven again when loaded, which reads the whole pack into memory; fine for the 37 KB starter, to be made lazy when packs hold recordings (M4).
@@ -59,7 +72,8 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 The full checklist is `docs/owner-todo.md`. In short:
 
-- **M4:** confirm after the report (CI green); **M5:** the adult recordings and the phone checks (to-do P4 to P6, T6); the phone checks (section 8); choose ElevenLabs voices when ready (Phase H).
+- **M6:** at the PC, the live phase (to-do P7: keys, model id, prices, pre-warm, listening).
+- **M4 and M5:** the phone checks passed on 2026-10-27; waiting for his explicit "confirmed" to merge. The adult recordings (P4) and real voices (P3) remain.
 - Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1, M2 and M3; Hebrew review; confirm M3 after the report.
 - Spend-limit screenshots (Anthropic and ElevenLabs consoles).
 - Confirm M0 after the report (then Claude merges `m0-foundations` into `main`).
@@ -68,4 +82,4 @@ The full checklist is `docs/owner-todo.md`. In short:
 
 ## Next step
 
-Claude: wait for the owner's "OK to M4" (or changes to `docs/milestones/M4.md`, and his OK for `audioplayers`), then build M4 on `m4-characters-voice`. Do not code M4 before that.
+Claude: when M6 CI is green, tell the owner what is built and what only he can do (P7, Q9, M4/M5 confirmation). Do not merge anything without his confirmation. M7 builds on M5's voice switch and on M6; do not start it before the owner has confirmed the M5 and M6 reports.

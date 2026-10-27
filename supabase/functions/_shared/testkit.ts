@@ -4,10 +4,24 @@ import type { DeviceRecord } from "./auth.ts";
 import { b64urlEncode, type Bytes, sha256B64url } from "./b64.ts";
 import { canonicalString } from "./canonical.ts";
 import type { Services } from "./handler.ts";
-import type { DeviceSummary, RevokeReason, Store } from "./store.ts";
+import { compareSemver } from "./semver.ts";
+import type {
+  CachedLine,
+  CacheKey,
+  DeviceSummary,
+  PublishedPack,
+  RevokeReason,
+  Store,
+  TakeResult,
+  TutorContext,
+  TutorLogRow,
+} from "./store.ts";
 import { rawToDer, utf8 } from "./testutil.ts";
 
 export const NOW = 1_800_000_000_000;
+
+/** The publish secret of the fake services (long enough to be accepted). */
+export const PUBLISH_SECRET = ["fake", "value", "for", "tests", "only", "abcdefghijklmnop"].join("-");
 
 export interface StoredDevice extends DeviceRecord {
   platform: "android" | "ios";
@@ -44,6 +58,11 @@ export class FakeStore implements Store {
   }
   getConfig(key: string) {
     return Promise.resolve(this.config.get(key));
+  }
+  getConfigs(keys: readonly string[]) {
+    return Promise.resolve(
+      Object.fromEntries(keys.filter((k) => this.config.has(k)).map((k) => [k, this.config.get(k)])),
+    );
   }
   rateLimitHit(scope: string, key: string, windowStart: Date, limit: number) {
     const k = `${scope}/${key}/${windowStart.getTime()}`;
@@ -187,6 +206,123 @@ export class FakeStore implements Store {
       })),
     );
   }
+  /** Published packs by id (only the current version is kept), and the characters by id. */
+  packs = new Map<string, PublishedPack>();
+  characters = new Map<
+    string,
+    { nameHe: string; gender: string; voiceId: string | null; personal: boolean }
+  >();
+  publishContent(p: PublishedPack) {
+    const have = this.packs.get(p.packId);
+    if (have) {
+      const order = compareSemver(p.packVersion, have.packVersion);
+      if (order < 0) return Promise.resolve("older" as const);
+      if (order === 0 && have.manifestSha256 !== p.manifestSha256) {
+        return Promise.resolve("conflict" as const);
+      }
+    }
+    for (const c of p.characters) {
+      const old = this.characters.get(c.characterId);
+      this.characters.set(c.characterId, {
+        nameHe: c.nameHe,
+        gender: c.gender,
+        voiceId: c.voiceId ?? old?.voiceId ?? null,
+        personal: c.personal,
+      });
+    }
+    if (have && have.packVersion === p.packVersion) return Promise.resolve("unchanged" as const);
+    this.packs.set(p.packId, p);
+    return Promise.resolve("published" as const);
+  }
+  // ---- the tutor ----
+  cache = new Map<string, CachedLine>();
+  cacheGets = 0;
+  logs: TutorLogRow[] = [];
+  tutorCounters = new Map<string, number>();
+  costMicro = new Map<string, number>();
+  private cacheKey = (k: CacheKey) =>
+    [
+      k.packId,
+      k.packVersion,
+      k.itemId,
+      k.mistake,
+      k.hintLevel,
+      k.band,
+      k.addressForm,
+      k.characterId,
+      k.promptVersion,
+      k.validatorVersion,
+    ]
+      .join("/");
+  tutorContext(packId: string, packVersion: string, itemId: string, characterId: string) {
+    const p = this.packs.get(packId);
+    const it = p && p.packVersion === packVersion ? p.items.find((i) => i.itemId === itemId) : undefined;
+    if (!p || !it) return Promise.resolve(null);
+    const c = this.characters.get(characterId);
+    const ctx: TutorContext = {
+      itemId: it.itemId,
+      band: it.band,
+      llmAllowed: it.llmAllowed,
+      goal: it.goal,
+      promptText: it.promptText,
+      numberSet: it.numberSet,
+      allowedActions: it.allowedActions,
+      hintThreshold: it.hintThreshold,
+      objectIds: it.objectIds,
+      answers: it.answers,
+      descriptions: Object.fromEntries(p.misconceptions.map((m) => [m.tag, m.description])),
+      character: c ? { nameHe: c.nameHe, gender: c.gender as "m" | "f", voiceId: c.voiceId } : null,
+    };
+    return Promise.resolve(ctx);
+  }
+  tutorItemIds(packId: string, packVersion: string) {
+    const p = this.packs.get(packId);
+    return Promise.resolve(
+      p && p.packVersion === packVersion
+        ? p.items.filter((i) => i.llmAllowed).map((i) => i.itemId).sort()
+        : [],
+    );
+  }
+  cacheGet(k: CacheKey) {
+    this.cacheGets++;
+    return Promise.resolve(this.cache.get(this.cacheKey(k)) ?? null);
+  }
+  cachePut(k: CacheKey, v: CachedLine, replace = false) {
+    if (replace || !this.cache.has(this.cacheKey(k))) this.cache.set(this.cacheKey(k), v);
+    return Promise.resolve();
+  }
+  tutorTake(p: Parameters<Store["tutorTake"]>[0]): Promise<TakeResult> {
+    const day = Math.floor(p.nowMs / 86_400_000);
+    const bump = (scope: string, key: string, cap: number) => {
+      const k = `${scope}/${key}/${day}`;
+      const n = this.tutorCounters.get(k) ?? 0;
+      if (n >= cap) return false;
+      this.tutorCounters.set(k, n + 1);
+      return true;
+    };
+    if ((this.costMicro.get(`${p.familyId}/${day}`) ?? 0) >= p.costCapMicro) {
+      return Promise.resolve("cost_cap");
+    }
+    if (p.kind === "prefetch") {
+      return Promise.resolve(bump("prefetch", p.sessionRef, p.prefetchCap) ? "ok" : "prefetch_cap");
+    }
+    if (!bump("day", p.childRef, p.dayCap)) return Promise.resolve("day_cap");
+    if (!bump("session", p.sessionRef, p.sessionCap)) {
+      const k = `day/${p.childRef}/${day}`;
+      this.tutorCounters.set(k, (this.tutorCounters.get(k) ?? 1) - 1);
+      return Promise.resolve("session_cap");
+    }
+    return Promise.resolve("ok");
+  }
+  tutorCostAdd(familyId: string, micro: number, nowMs: number) {
+    const k = `${familyId}/${Math.floor(nowMs / 86_400_000)}`;
+    this.costMicro.set(k, (this.costMicro.get(k) ?? 0) + Math.max(0, micro));
+    return Promise.resolve();
+  }
+  logTutor(row: TutorLogRow) {
+    this.logs.push(row);
+    return Promise.resolve();
+  }
   revokeDevice(familyId: string, deviceId: string, _reason: RevokeReason) {
     const d = this.devices.get(deviceId);
     if (!d || d.familyId !== familyId || d.revokedAt) return Promise.resolve(false);
@@ -209,6 +345,7 @@ export function fakeServices(store: FakeStore, nowMs = () => NOW): Services {
     secrets: {
       pairingCodeKey: new Uint8Array(32).fill(7) as Bytes,
       ipHashKey: new Uint8Array(32).fill(9) as Bytes,
+      publishSecret: PUBLISH_SECRET,
     },
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
     allowDevEnrolment: false,

@@ -133,6 +133,17 @@ sealed class Activity {
   final Map<String, Object?> json;
   final PackAssets assets;
 
+  /// May the AI tutor speak in this activity (the author's choice)?
+  bool get llmAllowed => _map(json['tutor'])['llmAllowed'] == true;
+
+  /// The misconception tags this activity's wrong answers can carry (what the tutor may be asked about).
+  List<String> get misconceptionTags => <String>{
+    for (final Map<String, Object?> o in _maps(_map(json['answer'])['options']))
+      if (o['misconception'] is String) o['misconception']! as String,
+    for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
+      if (c['misconception'] is String) c['misconception']! as String,
+  }.toList();
+
   /// What the learning engine needs to know about the activity.
   final String purpose;
   final String checkType;

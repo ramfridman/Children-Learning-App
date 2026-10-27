@@ -3,10 +3,10 @@ import 'dart:math';
 
 import '../core/clock.dart';
 import '../device/secure_store.dart';
-import '../strings/he.dart';
 
-/// One question of the parent gate: a multiplication above what a Band C child does, written in
-/// Hebrew words, answered on a shuffled keypad. The keypad is shuffled again for every question.
+/// One question of the parent gate: a small sum in digits, answered on a shuffled keypad. It is easy for a parent
+/// (the owner found the earlier multiplication in words too hard); the PIN after it is the real protection. The
+/// keypad is shuffled again for every question.
 class GateQuestion {
   const GateQuestion({required this.a, required this.b, required this.keypad});
 
@@ -16,11 +16,10 @@ class GateQuestion {
   /// The digits 0 to 9 in the order the keypad shows them.
   final List<int> keypad;
 
-  int get answer => a * b;
+  int get answer => a + b;
 
-  /// The question in words, for example "how much is fourteen times six?" (× is read out as "times").
-  String get hebrew =>
-      He.gateQuestion.fill(<String, String>{'a': He.gateNumbers[a]!.text, 'b': He.gateNumbers[b]!.text});
+  /// The sum as it is drawn, for example "6 + 7". It is shown in a left-to-right tile, like all maths.
+  String get expression => '$a + $b';
 }
 
 sealed class GateOutcome {
@@ -46,7 +45,7 @@ class GateWait extends GateOutcome {
   final bool long;
 }
 
-/// The arithmetic parent gate. It is a speed bump in front of the PIN, not security on its own (the
+/// The parent gate (a small sum). It is a speed bump in front of the PIN, not security on its own (the
 /// design spec says so), and it keeps no secret. Its failure state is kept in secure storage so that
 /// closing the app does not clear a cool-down.
 class ParentGate {
@@ -70,8 +69,8 @@ class ParentGate {
   final Future<void> Function(String kind, String detail)? onEvent;
 
   GateQuestion newQuestion() {
-    const List<int> as = <int>[12, 13, 14, 15, 16, 17, 18, 19];
-    const List<int> bs = <int>[3, 4, 5, 6, 7, 8, 9];
+    const List<int> as = <int>[3, 4, 5, 6, 7, 8, 9];
+    const List<int> bs = <int>[2, 3, 4, 5, 6, 7, 8, 9];
     final List<int> keypad = <int>[for (int d = 0; d < 10; d++) d]..shuffle(_random);
     return GateQuestion(a: as[_random.nextInt(as.length)], b: bs[_random.nextInt(bs.length)], keypad: keypad);
   }

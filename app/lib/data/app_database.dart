@@ -125,6 +125,16 @@ class AppDatabase extends _$AppDatabase {
         VoiceListensCompanion.insert(profileId: profileId, at: at, answerType: answerType, outcome: outcome),
       );
 
+  /// Every child's newest listens, newest first (for the dev page, to see why the mic is or is not offered).
+  Future<List<VoiceListen>> allListens({int limit = 30}) =>
+      (select(voiceListens)
+            ..orderBy(<OrderingTerm Function(VoiceListens)>[(VoiceListens t) => OrderingTerm.desc(t.id)])
+            ..limit(limit))
+          .get();
+
+  /// Forgets every listen, so the mic is offered again (for the dev page).
+  Future<int> forgetListens() => delete(voiceListens).go();
+
   /// The newest listens of a child for one kind of answer, newest first.
   Future<List<VoiceListen>> recentListens(String profileId, String answerType, {int limit = 12}) =>
       (select(voiceListens)

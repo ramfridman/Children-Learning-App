@@ -1,0 +1,93 @@
+// Calls Claude (Haiku 5.5) with plain fetch: no SDK, nothing to audit. Only the gateway ever holds the key.
+export const ANTHROPIC_MODEL = "claude-haiku-5-5";
+const ENDPOINT = "https://api.anthropic.com/v1/messages";
+
+export interface ModelRequest {
+  system: string;
+  user: string;
+  maxTokens: number;
+  timeoutMs: number;
+}
+
+export interface ModelAnswer {
+  text: string;
+  inputTokens: number;
+  outputTokens: number;
+}
+
+export interface ModelClient {
+  complete(req: ModelRequest): Promise<ModelAnswer>;
+}
+
+export class ModelFailed extends Error {
+  /** `detail` is only ever the HTTP status and the provider's fixed error word, never any text of the body. */
+  constructor(readonly reason: "timeout" | "status" | "format" | "network", readonly detail?: string) {
+    super(reason);
+  }
+}
+
+/** The provider's error type ("not_found_error", ...), kept only when it is a plain lower-case word. */
+async function errorWord(res: Response): Promise<string> {
+  try {
+    const t = (await res.json() as { error?: { type?: unknown } }).error?.type;
+    return typeof t === "string" && /^[a-z_]{3,40}$/.test(t) ? ` ${t}` : "";
+  } catch {
+    return "";
+  }
+}
+
+export function anthropicClient(apiKey: string, fetchFn: typeof fetch = fetch): ModelClient {
+  return {
+    async complete(req) {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), req.timeoutMs);
+      try {
+        const res = await fetchFn(ENDPOINT, {
+          method: "POST",
+          signal: ctl.signal,
+          headers: {
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            model: ANTHROPIC_MODEL,
+            max_tokens: req.maxTokens,
+            // Haiku 5.5 thinks by default, and its thinking counts toward max_tokens: with a small limit it can finish
+            // with no text at all. One short sentence needs no thinking, and leaving it out is faster and cheaper.
+            thinking: { type: "disabled" },
+            // The fixed part is marked for the provider's prompt cache: a faster, cheaper start.
+            system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
+            messages: [{ role: "user", content: req.user }],
+          }),
+        });
+        // The body of an error can echo the request: only the status is kept.
+        if (!res.ok) {
+          throw new ModelFailed("status", `HTTP ${res.status}${await errorWord(res)}`);
+        }
+        const j = await res.json() as {
+          content?: Array<{ type: string; text?: string }>;
+          stop_reason?: unknown;
+          usage?: { input_tokens?: number; output_tokens?: number; cache_read_input_tokens?: number };
+        };
+        const text = j.content?.find((c) => c.type === "text")?.text;
+        if (typeof text !== "string") {
+          // Only fixed words: which kinds of block came back, and why the model stopped.
+          const word = (v: unknown) => typeof v === "string" && /^[a-z_]{2,30}$/.test(v) ? v : "?";
+          const kinds = (j.content ?? []).slice(0, 4).map((c) => word(c?.type)).join("+") || "none";
+          throw new ModelFailed("format", `blocks ${kinds} stop ${word(j.stop_reason)}`);
+        }
+        return {
+          text,
+          inputTokens: (j.usage?.input_tokens ?? 0) + (j.usage?.cache_read_input_tokens ?? 0),
+          outputTokens: j.usage?.output_tokens ?? 0,
+        };
+      } catch (e) {
+        if (e instanceof ModelFailed) throw e;
+        throw new ModelFailed(ctl.signal.aborted ? "timeout" : "network");
+      } finally {
+        clearTimeout(timer);
+      }
+    },
+  };
+}

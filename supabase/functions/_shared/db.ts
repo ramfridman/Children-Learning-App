@@ -5,7 +5,8 @@ import { Buffer } from "node:buffer";
 import postgres from "npm:postgres@3.4.9";
 import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
-import type { DeviceSummary, RevokeReason, Store } from "./store.ts";
+import { compareSemver } from "./semver.ts";
+import type { CachedLine, DeviceSummary, RevokeReason, Store, TakeResult, TutorContext } from "./store.ts";
 
 const bytes = (v: unknown): Bytes => new Uint8Array(v as ArrayLike<number>) as Bytes;
 const buf = (b: Uint8Array) => Buffer.from(b);
@@ -69,6 +70,11 @@ export function pgStore(sql: Sql): Store {
     async getConfig(key) {
       const [r] = await sql`select value from app.config where key = ${key}`;
       return r ? r.value : undefined;
+    },
+
+    async getConfigs(keys) {
+      const rows = await sql`select key, value from app.config where key = any(${keys as string[]})`;
+      return Object.fromEntries(rows.map((r) => [r.key as string, r.value]));
     },
 
     async rateLimitHit(scope, key, windowStart, limit) {
@@ -238,6 +244,155 @@ export function pgStore(sql: Sql): Store {
          where id = ${deviceId} and family_id = ${familyId} and revoked_at is null
         returning id`;
       return rows.length === 1;
+    },
+
+    async publishContent(p) {
+      return await sql.begin(async (tx) => {
+        // One publish of a pack at a time.
+        await tx`select pg_advisory_xact_lock(hashtext(${"content:" + p.packId}))`;
+        const have =
+          await tx`select pack_version, manifest_sha256 from app.content_pack where pack_id = ${p.packId}`;
+        let same = false;
+        for (const r of have) {
+          const order = compareSemver(p.packVersion, r.pack_version as string);
+          if (order === 0) {
+            if (r.manifest_sha256 !== p.manifestSha256) return "conflict" as const;
+            same = true;
+          } else if (order < 0) {
+            return "older" as const;
+          }
+        }
+        // The speaking characters are kept up to date whenever their pack is published again (the owner chooses a
+        // voice later); a voice already set is never erased by a publish that does not know it.
+        for (const c of p.characters) {
+          await tx`
+            insert into app.family_character (character_id, name_he, gender, voice_id, personal)
+            values (${c.characterId}, ${c.nameHe}, ${c.gender}, ${c.voiceId}, ${c.personal})
+            on conflict (character_id) do update
+              set name_he = excluded.name_he, gender = excluded.gender, personal = excluded.personal,
+                  voice_id = coalesce(excluded.voice_id, app.family_character.voice_id), updated_at = now()`;
+        }
+        if (same) return "unchanged" as const;
+        // Only the current version of a pack is kept (its items, misconceptions and cached lines go with it).
+        await tx`delete from app.content_pack where pack_id = ${p.packId}`;
+        await tx`
+          insert into app.content_pack (pack_id, pack_version, manifest_sha256)
+          values (${p.packId}, ${p.packVersion}, ${p.manifestSha256})`;
+        for (const i of p.items) {
+          await tx`
+            insert into app.content_item
+              (pack_id, pack_version, item_id, revision, template, band, skill_ids, llm_allowed, goal, prompt_text,
+               answers, number_set, allowed_actions, hint_threshold, object_ids)
+            values (${p.packId}, ${p.packVersion}, ${i.itemId}, ${i.revision}, ${i.template}, ${i.band},
+              array(select jsonb_array_elements_text(${JSON.stringify(i.skillIds)}::text::jsonb)),
+              ${i.llmAllowed}, ${i.goal}, ${i.promptText}, ${JSON.stringify(i.answers)}::text::jsonb,
+              array(select (jsonb_array_elements_text(${JSON.stringify(i.numberSet)}::text::jsonb))::integer),
+              array(select jsonb_array_elements_text(${JSON.stringify(i.allowedActions)}::text::jsonb)),
+              ${i.hintThreshold},
+              array(select jsonb_array_elements_text(${JSON.stringify(i.objectIds)}::text::jsonb)))`;
+        }
+        for (const m of p.misconceptions) {
+          await tx`
+            insert into app.misconception (pack_id, pack_version, tag, skill_ids, description)
+            values (${p.packId}, ${p.packVersion}, ${m.tag},
+              array(select jsonb_array_elements_text(${
+            JSON.stringify(m.skillIds)
+          }::text::jsonb)), ${m.description})`;
+        }
+        return "published" as const;
+      });
+    },
+
+    async tutorContext(packId, packVersion, itemId, characterId): Promise<TutorContext | null> {
+      const [i] = await sql`
+        select item_id, band, llm_allowed, goal, prompt_text, number_set, allowed_actions, hint_threshold,
+               object_ids, answers
+          from app.content_item
+         where pack_id = ${packId} and pack_version = ${packVersion} and item_id = ${itemId}`;
+      if (!i) return null;
+      const ms = await sql`
+        select tag, description from app.misconception where pack_id = ${packId} and pack_version = ${packVersion}`;
+      const [c] = await sql`
+        select name_he, gender, voice_id from app.family_character where character_id = ${characterId}`;
+      return {
+        itemId: i.item_id,
+        band: i.band,
+        llmAllowed: i.llm_allowed,
+        goal: i.goal,
+        promptText: i.prompt_text,
+        numberSet: i.number_set,
+        allowedActions: i.allowed_actions,
+        hintThreshold: i.hint_threshold,
+        objectIds: i.object_ids,
+        answers: i.answers,
+        descriptions: Object.fromEntries(ms.map((m) => [m.tag as string, m.description as string])),
+        character: c ? { nameHe: c.name_he, gender: c.gender, voiceId: c.voice_id } : null,
+      };
+    },
+
+    async tutorItemIds(packId, packVersion) {
+      const rows = await sql`
+        select item_id from app.content_item
+         where pack_id = ${packId} and pack_version = ${packVersion} and llm_allowed order by item_id`;
+      return rows.map((r) => r.item_id as string);
+    },
+
+    async cacheGet(k): Promise<CachedLine | null> {
+      const [r] = await sql`
+        select line, caption, next_action, highlight_targets, audio from app.tutor_cache
+         where pack_id = ${k.packId} and pack_version = ${k.packVersion} and item_id = ${k.itemId}
+           and mistake = ${k.mistake} and hint_level = ${k.hintLevel} and band = ${k.band}
+           and address_form = ${k.addressForm} and character_id = ${k.characterId}
+           and prompt_version = ${k.promptVersion} and validator_version = ${k.validatorVersion}`;
+      return r
+        ? {
+          line: r.line,
+          caption: r.caption,
+          next: r.next_action,
+          highlight: r.highlight_targets,
+          audio: r.audio ? bytes(r.audio) : null,
+        }
+        : null;
+    },
+
+    async cachePut(k, v, replace = false) {
+      await sql`
+        insert into app.tutor_cache
+          (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
+           validator_version, line, caption, next_action, highlight_targets, audio, audio_mime)
+        values (${k.packId}, ${k.packVersion}, ${k.itemId}, ${k.mistake}, ${k.hintLevel}, ${k.band}, ${k.addressForm},
+          ${k.characterId}, ${k.promptVersion}, ${k.validatorVersion}, ${v.line}, ${v.caption}, ${v.next},
+          array(select jsonb_array_elements_text(${JSON.stringify(v.highlight)}::text::jsonb)),
+          ${v.audio ? buf(v.audio) : null}, ${v.audio ? "audio/mpeg" : null})
+        on conflict (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id,
+                     prompt_version, validator_version)
+        do update set line = excluded.line, caption = excluded.caption, next_action = excluded.next_action,
+          highlight_targets = excluded.highlight_targets, audio = excluded.audio, audio_mime = excluded.audio_mime,
+          created_at = now()
+        where ${replace}::boolean`;
+    },
+
+    async tutorTake(p): Promise<TakeResult> {
+      const [r] = await sql`
+        select app.tutor_take(${p.familyId}, ${p.childRef}, ${p.sessionRef}, ${p.kind}, ${p.sessionCap},
+          ${p.dayCap}, ${p.prefetchCap}, ${p.costCapMicro}, ${new Date(p.nowMs)}) as result`;
+      return r.result as TakeResult;
+    },
+
+    async tutorCostAdd(familyId, micro, nowMs) {
+      await sql`select app.tutor_cost_add(${familyId}, ${Math.round(micro)}, ${new Date(nowMs)})`;
+    },
+
+    async logTutor(r) {
+      await sql`
+        insert into app.tutor_log
+          (family_id, child_ref, session_ref, pack_id, pack_version, item_id, character_id, source, outcome, line,
+           validator_ok, validator_failures, prompt_version, total_ms, model_ms, voice_ms, eleven_request_id)
+        values (${r.familyId}, ${r.childRef}, ${r.sessionRef}, ${r.packId}, ${r.packVersion}, ${r.itemId},
+          ${r.characterId}, ${r.source}, ${r.outcome}, ${r.line}, ${r.validatorOk},
+          array(select jsonb_array_elements_text(${JSON.stringify(r.validatorFailures)}::text::jsonb)),
+          ${r.promptVersion}, ${Math.round(r.totalMs)}, ${r.modelMs === null ? null : Math.round(r.modelMs)},
+          ${r.voiceMs === null ? null : Math.round(r.voiceMs)}, ${r.elevenRequestId})`;
     },
   };
 }

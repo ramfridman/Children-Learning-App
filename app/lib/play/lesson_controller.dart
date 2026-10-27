@@ -1,9 +1,34 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 
 import '../content/models.dart';
 import '../core/clock.dart';
+import '../core/log.dart';
+import '../strings/he.dart';
+import '../tutor/tutor.dart';
+
+/// What the tutor needs to know about the lesson: ids and enums only.
+class TutorContext {
+  const TutorContext({
+    required this.packId,
+    required this.packVersion,
+    required this.characterId,
+    required this.band,
+    required this.addressForm,
+    required this.childRef,
+    required this.sessionRef,
+  });
+
+  final String packId;
+  final String packVersion;
+  final String characterId;
+  final String band;
+  final String addressForm;
+  final String childRef;
+  final String sessionRef;
+}
 
 /// One answer a child gave, as it is written to the `attempt` table.
 class AttemptRecord {
@@ -86,6 +111,8 @@ class LessonController extends ChangeNotifier {
     required this.profileId,
     required AttemptSink record,
     this.sessionId,
+    this.tutor,
+    this.tutorContext,
     Clock clock = const SystemClock(),
   }) : items = content.itemsOf(lesson),
        _record = record,
@@ -99,6 +126,10 @@ class LessonController extends ChangeNotifier {
 
   /// The row of the `session` table for this visit, if one was made.
   final int? sessionId;
+
+  /// The tutor of this lesson, or null when the AI helper is off: then every line is the authored one.
+  TutorSession? tutor;
+  TutorContext? tutorContext;
   final List<Activity> items;
   final AttemptSink _record;
   final Clock _clock;
@@ -125,9 +156,97 @@ class LessonController extends ChangeNotifier {
   int voiceNonce = 0;
 
   void _say(Spoken line) {
+    // Any new line replaces what the tutor was about to say.
+    _tutorToken++;
+    tutorThinking = false;
     bubble = line.caption;
     voice = line.vo;
     voiceNonce++;
+  }
+
+  // ---- the AI tutor ----
+
+  /// True while the guide waits for the tutor's line (it shows its thinking pose).
+  bool tutorThinking = false;
+
+  /// The line the tutor made, to be played by the screen (a new one whenever [liveNonce] changes).
+  TutorLine? liveLine;
+  int liveNonce = 0;
+  int _tutorToken = 0;
+  final List<TutorAttempt> _recent = <TutorAttempt>[];
+
+  bool _tutorMayHelp(Activity a) => tutor != null && tutorContext != null && tutor!.available && a.llmAllowed;
+
+  TutorAsk _ask(Activity a, List<String> mistakes, int hint, {bool prefetch = false}) {
+    final TutorContext c = tutorContext!;
+    return TutorAsk(
+      childRef: c.childRef,
+      sessionRef: c.sessionRef,
+      packId: c.packId,
+      packVersion: c.packVersion,
+      itemId: a.id,
+      characterId: c.characterId,
+      band: c.band,
+      addressForm: c.addressForm,
+      hintLevel: hint,
+      mistakes: mistakes,
+      attempts: prefetch ? const <TutorAttempt>[] : List<TutorAttempt>.of(_recent),
+      prefetch: prefetch,
+    );
+  }
+
+  /// The helper's answer from the server came after the lesson had opened: from now on this lesson may use it too.
+  void attachTutor(TutorSession session, TutorContext context) {
+    if (tutor != null) return;
+    tutor = session;
+    tutorContext = context;
+    if (!finished) _prefetchTutor(current);
+  }
+
+  /// Asks ahead, when an activity opens, for the lines of the mistakes it can produce. Quiet and optional.
+  void _prefetchTutor(Activity a) {
+    if (!_tutorMayHelp(a)) return;
+    final List<String> tags = a.misconceptionTags.take(3).toList();
+    if (tags.isNotEmpty) unawaited(tutor!.prefetch(_ask(a, tags, _secondMistakeHint(a), prefetch: true)));
+    unawaited(tutor!.prefetch(_ask(a, const <String>['default'], 0, prefetch: true)));
+  }
+
+  /// The hint level reached by the second mistake of an activity (the first help beyond the diagnostic line).
+  int _secondMistakeHint(Activity a) => math.min(2, a.hints.length);
+
+  /// The guide waits for the tutor's line; if it does not come in time, the authored line is said instead.
+  void _holdForTutor(Spoken authored, TutorAsk ask) {
+    final int token = ++_tutorToken;
+    tutorThinking = true;
+    // The authored caption stays up so the screen is never empty; its voice waits for the tutor's answer.
+    bubble = authored.caption;
+    final Future<TutorLine?> pending = tutor!.lineFor(
+      ask,
+      onSlow: () {
+        if (token != _tutorToken) return;
+        // A recorded "hmm" covers a slow answer.
+        voice = 'vo:core.thinking.think';
+        bubble = He.thinkHmm.text;
+        voiceNonce++;
+        notifyListeners();
+      },
+    );
+    unawaited(
+      pending.then((TutorLine? line) {
+        if (token != _tutorToken) return;
+        tutorThinking = false;
+        if (line == null) {
+          _say(authored);
+        } else {
+          liveLine = line;
+          liveNonce++;
+          voice = null;
+          // A child in Band A gets no caption for a live line (PLAN); the older ones read it.
+          bubble = tutorContext!.band == 'A' ? '' : (line.caption ?? '');
+        }
+        notifyListeners();
+      }),
+    );
   }
 
   /// The hint that was shown last, and a counter that changes each time so a stage can replay it.
@@ -152,9 +271,11 @@ class LessonController extends ChangeNotifier {
     guided = false;
     feedback = FeedbackKind.none;
     hintAction = null;
+    _recent.clear();
     _say(a.promptLine);
     _markMs = _clock.nowMs();
     resetNonce++;
+    _prefetchTutor(a);
   }
 
   /// The replay button: the question again, without any help.
@@ -188,12 +309,12 @@ class LessonController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _applyHint(int level) {
+  void _applyHint(int level, {bool speak = true}) {
     hintLevel = math.max(hintLevel, level);
     final Hint h = current.hints[level - 1];
     hintAction = h.action;
     hintNonce++;
-    _say(h.say);
+    if (speak) _say(h.say);
   }
 
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)
@@ -266,12 +387,34 @@ class LessonController extends ChangeNotifier {
     attemptNo++;
     errors++;
     feedback = FeedbackKind.notYet;
-    if (errors == 1 || a.hints.isEmpty) {
+    _recent.add(TutorAttempt(response, 'incorrect', misconception: tag.isEmpty ? null : tag));
+    if (_recent.length > 3) _recent.removeAt(0);
+    final bool first = errors == 1 || a.hints.isEmpty;
+    final String mistake = tag.isEmpty ? 'default' : tag;
+    // The tutor speaks for an unexpected first mistake (the authored line would be the generic one) and for the second
+    // mistake, where a different explanation is needed. The authored line stays the fallback for all of it.
+    final bool useTutor = _tutorMayHelp(a) && (first ? tag.isEmpty : true);
+    Log.d(
+      'helper: mistake ${a.id} errors=$errors tag=${tag.isEmpty ? 'none' : tag} session=${tutor != null} '
+      'context=${tutorContext != null} available=${tutor?.available} llmAllowed=${a.llmAllowed} use=$useTutor',
+    );
+    if (first) {
       // The first mistake: tell the child what to check (the line for this misconception).
-      _say(a.feedback.forIncorrect(tag.isEmpty ? null : tag));
+      final Spoken authored = a.feedback.forIncorrect(tag.isEmpty ? null : tag);
+      if (useTutor) {
+        _holdForTutor(authored, _ask(a, <String>[mistake], 0));
+      } else {
+        _say(authored);
+      }
     } else {
       // Later mistakes: help that changes how the child sees the problem, not the same words again.
-      _applyHint(math.min(errors, a.hints.length));
+      final int level = math.min(errors, a.hints.length);
+      if (useTutor) {
+        _applyHint(level, speak: false);
+        _holdForTutor(current.hints[level - 1].say, _ask(a, <String>[mistake], hintLevel));
+      } else {
+        _applyHint(level);
+      }
     }
     if (errors >= a.maxAttempts) {
       guided = true;

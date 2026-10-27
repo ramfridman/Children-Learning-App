@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/companion.dart';
 import '../../app/providers.dart';
+import '../../app/tutor_providers.dart';
 import '../../app/state.dart';
 import '../../auth/auth_client.dart';
 import '../../content/engine_adapter.dart';
@@ -18,6 +19,7 @@ import '../../core/log.dart';
 import '../../device/device_key_service.dart';
 import '../../device/enrolment_service.dart';
 import '../../device/secure_store.dart';
+import '../../tutor/tutor.dart';
 import 'dev_strings.dart';
 
 /// Plain screens for testing the device chain on a real phone: sign in, enrol, pair, signed calls.
@@ -61,6 +63,92 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
   }
 
   /// Runs one action, shows what happened (scrubbed), and never lets an error escape.
+  /// The helper's whole chain once, step by step, so that a missing line can be traced: the switch, the server's
+  /// answer to `app-config`, and one real `tutor-turn` for the first counting item. Ids and enums only.
+  Future<void> _tutorCheck() => _run('helper check', () async {
+    final StringBuffer out = StringBuffer();
+    out.write('switch ${await ref.read(aiHelperProvider.future) ? 'on' : 'off'}; ');
+    final String? id = await ref.read(secureStoreProvider).read(StoreKeys.deviceId);
+    final String? token = await ref.read(sessionManagerProvider).accessToken();
+    out.write('device ${id == null ? 'missing' : 'ok'}, token ${token == null ? 'missing' : 'ok'}; ');
+    if (id == null || token == null) return out.toString();
+    final Stopwatch w = Stopwatch()..start();
+    try {
+      final Map<String, Object?> cfg = await ref
+          .read(gatewayProvider)
+          .call('app-config', const <String, Object?>{}, deviceId: id, accessToken: token);
+      out.write('app-config ${w.elapsedMilliseconds} ms tutor_enabled=${cfg['tutor_enabled']}; ');
+    } on GatewayException catch (e) {
+      out.write('app-config refused ${e.code} ${e.status ?? ''} after ${w.elapsedMilliseconds} ms; ');
+      return out.toString();
+    } on Object catch (e) {
+      out.write('app-config ${e.runtimeType} after ${w.elapsedMilliseconds} ms; ');
+      return out.toString();
+    }
+    final PackContent content = await ref.read(contentProvider.future);
+    final Guide guide = await ref.read(guideProvider.future);
+    w
+      ..reset()
+      ..start();
+    final List<TutorResult> r = await ref
+        .read(tutorClientProvider)
+        .ask(
+          TutorAsk(
+            childRef: 'dev-check',
+            sessionRef: 'dev-check',
+            packId: content.packId,
+            packVersion: content.packVersion,
+            itemId: 'count.butterflies.3',
+            characterId: guide.character.id,
+            band: 'A',
+            addressForm: 'n',
+            hintLevel: 0,
+            mistakes: const <String>['default'],
+          ),
+        );
+    out.write(
+      'tutor-turn ${w.elapsedMilliseconds} ms for ${content.packId} ${content.packVersion} ${guide.character.id}: ',
+    );
+    for (final TutorResult t in r) {
+      final TutorLine? l = t.line;
+      out.write(
+        l == null ? 'rule ${t.rule}' : '${l.source}, audio ${l.audio?.length ?? 0} bytes, "${l.line}"',
+      );
+    }
+    return out.toString();
+  });
+
+  /// Ten asks for a line that is already made (as a prefetch: no cap is used, no model or voice is called), timed
+  /// from this phone: the round trip of the cache-hit case.
+  Future<void> _tutorTiming() => _run('helper timing', () async {
+    final PackContent content = await ref.read(contentProvider.future);
+    final Guide guide = await ref.read(guideProvider.future);
+    final TutorAsk ask = TutorAsk(
+      childRef: 'dev-check',
+      sessionRef: 'dev-check',
+      packId: content.packId,
+      packVersion: content.packVersion,
+      itemId: 'count.butterflies.3',
+      characterId: guide.character.id,
+      band: 'A',
+      addressForm: 'n',
+      hintLevel: 0,
+      mistakes: const <String>['default'],
+      prefetch: true,
+    );
+    final List<int> ms = <int>[];
+    final Map<String, int> how = <String, int>{};
+    for (int i = 0; i < 10; i++) {
+      final Stopwatch w = Stopwatch()..start();
+      final List<TutorResult> r = await ref.read(tutorClientProvider).ask(ask);
+      ms.add(w.elapsedMilliseconds);
+      final String key = r.first.line?.source ?? 'rule ${r.first.rule}';
+      how[key] = (how[key] ?? 0) + 1;
+    }
+    final List<int> sorted = List<int>.of(ms)..sort();
+    return '10 calls: min ${sorted.first} ms, median ${sorted[5]} ms, max ${sorted.last} ms; $how; all: ${ms.join(' ')}';
+  });
+
   Future<void> _run(String label, Future<String> Function() action) async {
     if (_busy) return;
     setState(() => _busy = true);
@@ -250,6 +338,33 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
             _heading(DevStrings.packs),
             _button(DevStrings.installIncoming, _installIncoming),
             _button(DevStrings.listPacks, _listPacks),
+            _heading(DevStrings.tutorHeading),
+            SwitchListTile(
+              key: const Key('ai-helper-switch'),
+              title: const Text(DevStrings.aiHelper),
+              subtitle: const Text(DevStrings.aiHelperNote),
+              value: ref.watch(aiHelperProvider).value ?? false,
+              onChanged: (bool on) => ref.read(aiHelperProvider.notifier).set(on),
+            ),
+            _button(DevStrings.tutorCheck, _tutorCheck),
+            _button(DevStrings.tutorTiming, _tutorTiming),
+            _button(
+              DevStrings.listensShow,
+              () => _run('voice listens', () async {
+                final AppDatabase db = await ref.read(databaseProvider.future);
+                final List<VoiceListen> rows = await db.allListens();
+                return rows.isEmpty
+                    ? 'none yet'
+                    : rows.map((VoiceListen r) => '${r.answerType}:${r.outcome}').join(', ');
+              }),
+            ),
+            _button(
+              DevStrings.listensForget,
+              () => _run('voice listens', () async {
+                final AppDatabase db = await ref.read(databaseProvider.future);
+                return 'forgot ${await db.forgetListens()} listens';
+              }),
+            ),
             _heading(DevStrings.engine),
             _button(DevStrings.engineState, _engineState),
             _heading(DevStrings.output),

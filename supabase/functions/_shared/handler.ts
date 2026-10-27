@@ -5,8 +5,29 @@ import type { Bytes } from "./b64.ts";
 import { isFunctionName } from "./canonical.ts";
 import { errorResponse, GatewayError, jsonResponse } from "./errors.ts";
 import { internalReason, log } from "./log.ts";
+import { verifyPublishSecret } from "./publish_secret.ts";
 import { parseJsonObject, readBodyBytes, type Shape, validate } from "./schema.ts";
+import type { ModelClient } from "./anthropic.ts";
+import type { VoiceClient } from "./elevenlabs.ts";
 import type { Secrets, Store } from "./store.ts";
+
+/** How long each step of a tutor turn may take (milliseconds). The child never waits more than `totalMs`. */
+export interface TutorBudget {
+  modelMs: number;
+  voiceMs: number;
+  /** A refused reply is retried once only if at least this much of the budget is left. */
+  retryMinLeftMs: number;
+  totalMs: number;
+  modelMaxTokens: number;
+}
+
+export const DEFAULT_TUTOR_BUDGET: TutorBudget = {
+  modelMs: 1600,
+  voiceMs: 900,
+  retryMinLeftMs: 1500,
+  totalMs: 3000,
+  modelMaxTokens: 300,
+};
 
 export interface Services {
   nowMs(): number;
@@ -18,6 +39,8 @@ export interface Services {
   allowDevEnrolment: boolean;
   /** Creates a one-time sign-in for the family's guardian, for a child device that just paired. */
   mintSession(guardianUserId: string): Promise<{ tokenHash: string }>;
+  /** The model and the voice. Absent until their keys are set: the tutor then answers with the RuleTutor. */
+  tutor?: { model: ModelClient; voice: VoiceClient; budget: TutorBudget };
   /** Tests only: replaces Google's roots. Always undefined in production. */
   androidRootsPem?: readonly string[];
 }
@@ -27,7 +50,9 @@ export type Access =
   /** A valid session token and nothing else (first-device enrolment happens before any device exists). */
   | { kind: "token" }
   /** No session at all (a child device pairing for the first time); callers are limited per IP. */
-  | { kind: "public" };
+  | { kind: "public" }
+  /** Your computer only: the content publish secret in `x-publish-secret`, checked before the body is read. */
+  | { kind: "publish" };
 
 export interface Context {
   svc: Services;
@@ -47,6 +72,8 @@ export interface FunctionSpec {
   name: string;
   access: Access;
   shape: Shape;
+  /** Larger than 16 KB only where PLAN says so (the content index published from the owner's computer). */
+  maxBodyBytes?: number;
   run(ctx: Context): Promise<unknown>;
 }
 
@@ -68,7 +95,8 @@ export function makeHandler(spec: FunctionSpec, getServices: () => Services) {
       // No browser origins are served: no CORS headers, and only POST.
       if (req.method !== "POST") throw new GatewayError("bad_request", "method");
       const svc = getServices();
-      const raw = await readBodyBytes(req);
+      if (spec.access.kind === "publish") await verifyPublishSecret(svc, req);
+      const raw = await readBodyBytes(req, spec.maxBodyBytes);
       let auth: Authenticated | undefined;
       let userId: string | null = null;
       let issuedAt: number | null = null;

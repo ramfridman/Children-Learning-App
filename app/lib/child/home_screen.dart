@@ -254,6 +254,7 @@ class HomeScreen extends StatelessWidget {
     required this.onSwitchChild,
     required this.onOpenActivity,
     this.companion,
+    this.companionMouth,
     this.onCompanion,
     this.onFriends,
   });
@@ -268,6 +269,10 @@ class HomeScreen extends StatelessWidget {
 
   /// The character that walks the map with the child (a live [CharacterView]), drawn where the board put Nitzi.
   final Widget? companion;
+
+  /// Where the companion's mouth is, as a share of its picture (the character's own `mouth`). The speech bubble
+  /// points at it, so the bubble stays beside whichever friend is on the map.
+  final Offset? companionMouth;
 
   /// The child touched the companion.
   final VoidCallback? onCompanion;
@@ -366,10 +371,10 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           _pill(s),
-          Positioned(
-            right: s.bubbleRight,
-            top: s.bubbleTop,
-            child: BoardBubble(
+          _bubble(
+            board,
+            s,
+            BoardBubble(
               text: He.homeBubble.fill(<String, String>{'child': childName}),
               fontSize: s.bubbleFont,
               padding: s.bubblePad,
@@ -378,6 +383,25 @@ class HomeScreen extends StatelessWidget {
           for (final _Sign sign in s.signs) _sign(sign),
         ],
       ),
+    );
+  }
+
+  /// The bubble: at the board's own place when no friend is on the map; otherwise beside the friend's head, with its
+  /// tail (a corner at the bubble's lower right) pointing at the mouth.
+  Widget _bubble(BoardClass board, _HomeSpec s, Widget bubble) {
+    final Offset? m = companion == null ? null : companionMouth;
+    if (m == null) return Positioned(right: s.bubbleRight, top: s.bubbleTop, child: bubble);
+    const double size = _HomeSpec.companionSize;
+    final double mouthX = s.companionLeft + m.dx * size;
+    final double mouthY = s.companionTop + m.dy * size;
+    // The tail's tip sticks out 14.5 beyond the bubble; a head reaches about 0.18 of the picture to each side of the mouth.
+    final double rightEdge = mouthX - 0.18 * size - 4 - 14.5;
+    // The tail sits 29 above the bubble's bottom edge.
+    final double bottomEdge = mouthY + 29;
+    return Positioned(
+      right: board.size.width - rightEdge,
+      bottom: board.size.height - bottomEdge,
+      child: bubble,
     );
   }
 

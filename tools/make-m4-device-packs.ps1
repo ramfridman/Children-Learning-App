@@ -28,6 +28,8 @@ try {
   }
   foreach ($id in $ids) {
     $work = Join-Path $env:USERPROFILE "nitznutz-voice\$id"
+    # A pack left from the last run would count as an unused file and stop the build.
+    Remove-Item (Join-Path $work '*.nnpack') -Force -ErrorAction SilentlyContinue
     dart run tool/voice_gen.dart mock $id --out $work
     if ($LASTEXITCODE -ne 0) { throw "voice_gen mock failed for $id" }
     Copy-Item (Join-Path $work 'voice-*.nnpack') $out -Force

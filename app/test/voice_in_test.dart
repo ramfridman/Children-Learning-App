@@ -63,6 +63,30 @@ void main() {
 
   goldens();
 
+  testWidgets('the mic is never taken away, however badly listening went before', (
+    WidgetTester tester,
+  ) async {
+    final AppRig rig = AppRig(voice: true, speech: FakeSpeechEngine(const <Scripted>[]));
+    await rig.seedFinishedSetup();
+    for (final String type in <String>['number', 'word']) {
+      for (int i = 0; i < 12; i++) {
+        await rig.db.recordListen(
+          'p-1',
+          DateTime.utc(2026, 10, 27, 9, i),
+          type,
+          i.isEven ? 'unclear' : 'silent',
+        );
+      }
+    }
+    await rig.pump(tester);
+    await tester.tap(find.text('נועה'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(He.landCounting.text));
+    await tester.pumpAndSettle();
+    await wait(tester, 300);
+    expect(mic, findsOneWidget, reason: 'a child who is often misheard still has the mic');
+  });
+
   testWidgets('with voice off there is no mic and nothing listens', (WidgetTester tester) async {
     final AppRig rig = await start(tester, voice: false);
     expect(mic, findsNothing);
@@ -202,26 +226,22 @@ void main() {
     expect(await attempts(rig), isEmpty);
   });
 
-  testWidgets('a child for whom voice has not been working is not invited any more', (
-    WidgetTester tester,
-  ) async {
-    final AppRig rig = AppRig(voice: true);
-    await rig.seedFinishedSetup();
-    for (int i = 0; i < 5; i++) {
-      await rig.db.recordListen(
-        'p-1',
-        DateTime.utc(2026, 10, 26, 8),
-        'word',
-        i.isEven ? 'unclear' : 'silent',
-      );
-    }
-    await rig.pump(tester);
-    await tester.tap(find.text('נועה'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
-    await tester.pumpAndSettle();
-    await wait(tester, 300);
-    expect(mic, findsNothing);
+  testWidgets('the app going to the background closes the microphone at once', (WidgetTester tester) async {
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.hangs()]);
+    await tester.tap(mic);
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(rig.speech.micOpen, isTrue);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    await tester.pump();
+    expect(
+      rig.speech.micOpen,
+      isFalse,
+      reason: 'closed at the first sign that the app is leaving, not at a timeout',
+    );
+    expect(await attempts(rig), isEmpty);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(mic, findsOneWidget, reason: 'the mic is offered again when the child is back');
   });
 }
 

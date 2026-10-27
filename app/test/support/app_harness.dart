@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:drift/native.dart';
@@ -7,7 +8,9 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/app.dart';
 import 'package:nitznutz/app/companion.dart';
+import 'package:nitznutz/app/tutor_providers.dart';
 import 'package:nitznutz/app/voice_input.dart';
+import 'package:nitznutz/tutor/tutor.dart';
 import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
@@ -92,6 +95,11 @@ class AppRig {
     FakePlayer? player,
     this.voice = false,
     FakeSpeechEngine? speech,
+    this.tutor,
+    this.aiHelper = true,
+    this.tutorEnabledOnServer = true,
+    this.switchAnswersAfter = Duration.zero,
+    this.holdCharacters,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
        store = MemoryStore(),
@@ -114,6 +122,17 @@ class AppRig {
   /// A parent has turned "Voice answers" on, and the recogniser is a fake that answers from a script.
   final bool voice;
   final FakeSpeechEngine speech;
+
+  /// The AI tutor service of the test (a fake), whether the helper is switched on in this phone, and the server switch.
+  final TutorClient? tutor;
+  final bool aiHelper;
+  final bool tutorEnabledOnServer;
+
+  /// How long the server takes to answer the helper switch (the first call after the function slept).
+  final Duration switchAnswersAfter;
+
+  /// While set and not completed, the characters take their time to load (a slow phone with many packs).
+  final Completer<void>? holdCharacters;
   final MemoryStore store;
   final FakePlatform platform;
   final ControlledClock clock;
@@ -158,9 +177,19 @@ class AppRig {
     clockProvider.overrideWithValue(clock),
     databaseProvider.overrideWith((Ref ref) async => db),
     contentProvider.overrideWith((Ref ref) => loadStarter()),
-    characterSourceProvider.overrideWith((Ref ref) async => characters ?? await makeSource()),
+    characterSourceProvider.overrideWith((Ref ref) async {
+      if (holdCharacters != null) await holdCharacters!.future;
+      return characters ?? await makeSource();
+    }),
     voicePlayerProvider.overrideWithValue(player),
     speechEngineProvider.overrideWithValue(speech),
+    if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),
+    remoteSwitchesProvider.overrideWithValue(
+      RemoteSwitches(() async {
+        if (switchAnswersAfter > Duration.zero) await Future<void>.delayed(switchAnswersAfter);
+        return tutorEnabledOnServer;
+      }, () => 0),
+    ),
     setupBackendProvider.overrideWithValue(setup),
     devicesBackendProvider.overrideWithValue(devices),
     pinServiceProvider.overrideWith(
@@ -196,6 +225,7 @@ class AppRig {
       addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
     }
     if (voice) await db.putSetting('voice_enabled', 'on');
+    if (tutor != null && aiHelper) await db.putSetting('ai_helper', 'on');
     await tester.pumpWidget(ProviderScope(overrides: overrides, child: const NitznutzApp()));
     await tester.pumpAndSettle();
   }

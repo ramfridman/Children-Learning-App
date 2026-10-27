@@ -1,0 +1,271 @@
+{
+  "pack_id": "starter",
+  "pack_version": "0.2.0",
+  "manifest_sha256": "ddccdbfa1bcff62bf0570c6919eeba7fcb634f165dbf3e7a17a20dec31a3cdde",
+  "items": [
+    {
+      "item_id": "count.butterflies.3",
+      "revision": 1,
+      "template": "count_tap",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-03",
+        "NUM-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child touches each butterfly once and answers with the last number counted",
+      "prompt_text": "פַּרְפָּרִים בָּאוּ לַגִּנָּה! בּוֹאוּ נִסְפֹּר אוֹתָם. נוֹגְעִים בְּכׇל פַּרְפָּר פַּעַם אַחַת.",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 2,
+          "misconception": "M-CNT-SKIP",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 3,
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "value": 4,
+          "misconception": "M-CNT-DOUBLE",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        2,
+        3,
+        4
+      ],
+      "allowed_actions": [
+        "replay_prompt_slow",
+        "show_fingers",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0",
+        "obj-1",
+        "obj-2"
+      ]
+    },
+    {
+      "item_id": "count.butterflies.4",
+      "revision": 1,
+      "template": "count_tap",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-03",
+        "NUM-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child touches each butterfly once and answers with the last number counted",
+      "prompt_text": "עַכְשָׁו הֵם מְפֻזָּרִים. נִסְפֹּר שׁוּב — כׇּל פַּרְפָּר עָף לַפֶּרַח.",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 3,
+          "misconception": "M-CNT-SKIP",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 4,
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "value": 5,
+          "misconception": "M-CNT-DOUBLE",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        3,
+        4,
+        5
+      ],
+      "allowed_actions": [
+        "replay_prompt_slow",
+        "show_fingers",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3"
+      ]
+    },
+    {
+      "item_id": "count.butterflies.5",
+      "revision": 1,
+      "template": "count_tap",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-03",
+        "NUM-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child touches each butterfly once and answers with the last number counted",
+      "prompt_text": "הַפַּעַם הֵם נִשְׁאָרִים בַּמָּקוֹם. כַּמָּה פַּרְפָּרִים?",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 4,
+          "misconception": "M-CNT-SKIP",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 5,
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "value": 6,
+          "misconception": "M-CNT-DOUBLE",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        4,
+        5,
+        6
+      ],
+      "allowed_actions": [
+        "replay_prompt_slow",
+        "show_fingers",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4"
+      ]
+    },
+    {
+      "item_id": "give.butterflies.4",
+      "revision": 1,
+      "template": "give_n",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child gives exactly the number asked for, not the whole pile",
+      "prompt_text": "תְּנוּ לַפֶּרַח אַרְבָּעָה פַּרְפָּרִים.",
+      "answers": [
+        {
+          "id": "give-n",
+          "value": 4,
+          "correct": true
+        },
+        {
+          "id": "tookall",
+          "misconception": "M-CNT-CARD",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        4,
+        7
+      ],
+      "allowed_actions": [
+        "replay_prompt_slow",
+        "show_fingers",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4",
+        "obj-5",
+        "obj-6"
+      ]
+    },
+    {
+      "item_id": "pick.red.flower",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-02"
+      ],
+      "llm_allowed": false,
+      "goal": "child points to the red flower",
+      "prompt_text": "אֵיפֹה הַפֶּרַח הָאָדֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח אָדֹם",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "פֶּרַח צָהֹב",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "replay_prompt_slow"
+      ],
+      "hint_threshold": 1,
+      "object_ids": [
+        "o1",
+        "o2"
+      ]
+    }
+  ],
+  "misconceptions": [
+    {
+      "tag": "M-CNT-CARD",
+      "skill_ids": [
+        "NUM-A-04"
+      ],
+      "description": "הילד סופר שוב במקום לומר כמה יש בסך הכול, או נותן את כל העצמים כשמבקשים מספר מסוים."
+    },
+    {
+      "tag": "M-CNT-DOUBLE",
+      "skill_ids": [
+        "NUM-A-03"
+      ],
+      "description": "הילד סופר עצם אחד פעמיים ולכן מקבל מספר גדול מדי."
+    },
+    {
+      "tag": "M-CNT-SEQ",
+      "skill_ids": [
+        "NUM-A-01",
+        "NUM-A-02"
+      ],
+      "description": "הילד מדלג על מילות ספירה או אומר אותן שלא לפי הסדר."
+    },
+    {
+      "tag": "M-CNT-SKIP",
+      "skill_ids": [
+        "NUM-A-03"
+      ],
+      "description": "הילד מפספס עצם אחד בספירה ולכן מקבל מספר קטן מדי."
+    }
+  ],
+  "characters": []
+}

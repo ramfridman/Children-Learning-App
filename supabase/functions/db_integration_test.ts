@@ -323,3 +323,268 @@ Deno.test({ name: "child pairing against the real tables", ignore: !adminUrl || 
     await admin.end();
   }
 });
+
+Deno.test(
+  { name: "publishing and the tutor caps against the real tables", ignore: !adminUrl || !gatewayUrl },
+  async () => {
+    const admin = connect(adminUrl!);
+    const password = new URL(gatewayUrl!).password;
+    await admin.unsafe(`alter role app_gateway login password '${password.replaceAll("'", "''")}'`);
+    const sql = connect(gatewayUrl!);
+    const store = pgStore(sql);
+    const family = crypto.randomUUID();
+    await admin`insert into app.family (id) values (${family})`;
+    const item = (id: string) => ({
+      itemId: id,
+      revision: 1,
+      template: "count_tap",
+      band: "A" as const,
+      skillIds: ["NUM-A-03"],
+      llmAllowed: true,
+      goal: "touch each butterfly once",
+      promptText: "כַּמָּה פַּרְפָּרִים?",
+      answers: [
+        { id: "o1", value: 2, misconception: "M-CNT-SKIP", correct: false },
+        { id: "o2", value: 3, correct: true },
+      ],
+      numberSet: [2, 3],
+      allowedActions: ["show_fingers"],
+      hintThreshold: 3,
+      objectIds: ["o1", "o2"],
+    });
+    const pack = (version: string, sha: string, ids: string[]) => ({
+      packId: "ci-pack",
+      packVersion: version,
+      manifestSha256: sha,
+      items: ids.map(item),
+      misconceptions: [{ tag: "M-CNT-SKIP", skillIds: ["NUM-A-03"], description: "skips an object" }],
+      characters: [{
+        characterId: "ci-char",
+        nameHe: "נִיצִי",
+        gender: "f" as const,
+        voiceId: null,
+        personal: false,
+      }],
+    });
+    try {
+      assert.equal(await store.publishContent(pack("0.1.0", "a".repeat(64), ["a.1", "a.2"])), "published");
+      assert.equal(await store.publishContent(pack("0.1.0", "a".repeat(64), ["a.1", "a.2"])), "unchanged");
+      assert.equal(await store.publishContent(pack("0.1.0", "b".repeat(64), ["a.1"])), "conflict");
+      assert.equal(await store.publishContent(pack("0.0.9", "c".repeat(64), ["a.1"])), "older");
+      const items =
+        await admin`select item_id, answers, number_set, skill_ids from app.content_item where pack_id = 'ci-pack' order by item_id`;
+      assert.equal(items.length, 2);
+      assert.equal(items[0].number_set.join(","), "2,3");
+      assert.equal(items[0].skill_ids[0], "NUM-A-03");
+      assert.equal(items[0].answers[1].correct, true);
+      assert.equal(await store.publishContent(pack("0.2.0", "d".repeat(64), ["a.1"])), "published");
+      const after =
+        await admin`select pack_version, count(*)::int as n from app.content_item where pack_id = 'ci-pack' group by 1`;
+      assert.equal(after.length, 1, "only the current version is kept");
+      assert.equal(after[0].pack_version, "0.2.0");
+      await admin`update app.family_character set voice_id = 'abcDEF0123456789' where character_id = 'ci-char'`;
+      await store.publishContent(pack("0.3.0", "e".repeat(64), ["a.1"]));
+      const [ch] = await admin`select voice_id from app.family_character where character_id = 'ci-char'`;
+      assert.equal(ch.voice_id, "abcDEF0123456789", "a publish does not erase a chosen voice");
+
+      // The caps: 30 requests at once against a limit of 20 let exactly 20 through.
+      const now = new Date();
+      const results = await Promise.all(
+        Array.from(
+          { length: 30 },
+          () =>
+            sql`select app.tutor_take(${family}, 'ci-child', 'ci-session', 'turn', 20, 60, 40, 500000, ${now}) as r`,
+        ),
+      );
+      const ok = results.filter((r) => r[0].r === "ok").length;
+      assert.equal(ok, 20, "exactly 20 turns are allowed in a session, even in parallel");
+      assert.equal(results.filter((r) => r[0].r === "session_cap").length, 10);
+      const [day] =
+        await admin`select count from app.usage_counter where scope = 'tutor_day' and key = 'ci-child'`;
+      assert.equal(day.count, 20, "refused turns gave their slot back");
+    } finally {
+      await admin`delete from app.content_pack where pack_id = 'ci-pack'`;
+      await admin`delete from app.family_character where character_id = 'ci-char'`;
+      await admin`delete from app.usage_counter where key in ('ci-child', 'ci-session')`;
+      await admin`delete from app.family where id = ${family}`;
+      await sql.end();
+      await admin.end();
+    }
+  },
+);
+
+Deno.test({
+  name: "the tutor's context, cache, caps and log against the real tables",
+  ignore: !adminUrl || !gatewayUrl,
+}, async () => {
+  const admin = connect(adminUrl!);
+  const password = new URL(gatewayUrl!).password;
+  await admin.unsafe(`alter role app_gateway login password '${password.replaceAll("'", "''")}'`);
+  const sql = connect(gatewayUrl!);
+  const store = pgStore(sql);
+  const family = crypto.randomUUID();
+  await admin`insert into app.family (id) values (${family})`;
+  try {
+    await store.publishContent({
+      packId: "ci-tutor",
+      packVersion: "0.1.0",
+      manifestSha256: "f".repeat(64),
+      items: [{
+        itemId: "t.1",
+        revision: 1,
+        template: "count_tap",
+        band: "A",
+        skillIds: ["NUM-A-03"],
+        llmAllowed: true,
+        goal: "touch each once",
+        promptText: "כַּמָּה?",
+        answers: [{ id: "o1", value: 2, misconception: "M-CNT-SKIP", correct: false }, {
+          id: "o2",
+          value: 3,
+          correct: true,
+        }],
+        numberSet: [2, 3],
+        allowedActions: ["show_fingers"],
+        hintThreshold: 3,
+        objectIds: ["o1", "o2"],
+      }],
+      misconceptions: [{ tag: "M-CNT-SKIP", skillIds: ["NUM-A-03"], description: "skips one" }],
+      characters: [{
+        characterId: "ci-tutor-char",
+        nameHe: "נִיצִי",
+        gender: "f",
+        voiceId: "abcDEF0123456789",
+        personal: false,
+      }],
+    });
+    const ctx = await store.tutorContext("ci-tutor", "0.1.0", "t.1", "ci-tutor-char");
+    assert.ok(ctx);
+    assert.equal(ctx!.hintThreshold, 3);
+    assert.equal(ctx!.answers[1].correct, true);
+    assert.equal(ctx!.descriptions["M-CNT-SKIP"], "skips one");
+    assert.deepEqual(ctx!.character, { nameHe: "נִיצִי", gender: "f", voiceId: "abcDEF0123456789" });
+    assert.equal(await store.tutorContext("ci-tutor", "0.1.0", "nope", "ci-tutor-char"), null);
+    assert.equal(await store.tutorContext("ci-tutor", "9.9.9", "t.1", "ci-tutor-char"), null);
+    assert.deepEqual(await store.tutorItemIds("ci-tutor", "0.1.0"), ["t.1"]);
+    assert.deepEqual(await store.tutorItemIds("ci-tutor", "9.9.9"), []);
+
+    const key = {
+      packId: "ci-tutor",
+      packVersion: "0.1.0",
+      itemId: "t.1",
+      mistake: "M-CNT-SKIP",
+      hintLevel: 0,
+      band: "A" as const,
+      addressForm: "n" as const,
+      characterId: "ci-tutor-char",
+      promptVersion: "p1",
+      validatorVersion: "v1",
+    };
+    assert.equal(await store.cacheGet(key), null);
+    const audio = new Uint8Array([1, 2, 3, 250, 251]);
+    await store.cachePut(key, {
+      line: "בּוֹאוּ",
+      caption: null,
+      next: "show_fingers",
+      highlight: ["o1"],
+      audio,
+    });
+    await store.cachePut(key, { line: "other", caption: null, next: "none", highlight: [], audio: null });
+    const got = await store.cacheGet(key);
+    assert.equal(got!.line, "בּוֹאוּ", "the first line stays");
+    assert.deepEqual([...got!.audio!], [1, 2, 3, 250, 251]);
+    assert.deepEqual(got!.highlight, ["o1"]);
+    assert.equal(
+      await store.cacheGet({ ...key, promptVersion: "p2" }),
+      null,
+      "a new prompt version finds nothing",
+    );
+    // A reviewed line that was edited replaces the old one; without the flag the first line stays.
+    const approvedKey = { ...key, promptVersion: "approved" };
+    await store.cachePut(approvedKey, {
+      line: "one",
+      caption: null,
+      next: "none",
+      highlight: [],
+      audio: audio,
+    }, true);
+    await store.cachePut(approvedKey, {
+      line: "kept",
+      caption: null,
+      next: "none",
+      highlight: [],
+      audio: null,
+    });
+    assert.equal((await store.cacheGet(approvedKey))!.line, "one");
+    await store.cachePut(approvedKey, {
+      line: "edited",
+      caption: null,
+      next: "none",
+      highlight: [],
+      audio: null,
+    }, true);
+    assert.equal((await store.cacheGet(approvedKey))!.line, "edited");
+    assert.equal(
+      (await store.cacheGet(key))!.line,
+      "בּוֹאוּ",
+      "the model's line under its own version is untouched",
+    );
+
+    const now = Date.now();
+    const take = (kind: "turn" | "prefetch", session: string) =>
+      store.tutorTake({
+        familyId: family,
+        childRef: "ci-kid",
+        sessionRef: session,
+        kind,
+        sessionCap: 2,
+        dayCap: 3,
+        prefetchCap: 1,
+        costCapMicro: 1000,
+        nowMs: now,
+      });
+    assert.equal(await take("turn", "cs1"), "ok");
+    assert.equal(await take("turn", "cs1"), "ok");
+    assert.equal(await take("turn", "cs1"), "session_cap");
+    assert.equal(await take("turn", "cs2"), "ok");
+    assert.equal(await take("turn", "cs3"), "day_cap");
+    assert.equal(await take("prefetch", "cp1"), "ok");
+    assert.equal(await take("prefetch", "cp1"), "prefetch_cap");
+    await store.tutorCostAdd(family, 1500, now);
+    assert.equal(await take("prefetch", "cp2"), "cost_cap");
+
+    await store.logTutor({
+      familyId: family,
+      childRef: "ci-kid",
+      sessionRef: "cs1",
+      packId: "ci-tutor",
+      packVersion: "0.1.0",
+      itemId: "t.1",
+      characterId: "ci-tutor-char",
+      source: "live",
+      outcome: "ok",
+      line: "בואו",
+      validatorOk: true,
+      validatorFailures: [],
+      promptVersion: "p1",
+      totalMs: 812.4,
+      modelMs: 500.2,
+      voiceMs: 250,
+      elevenRequestId: "req123",
+    });
+    const [row] =
+      await admin`select line, total_ms, validator_failures from app.tutor_log where family_id = ${family}`;
+    assert.equal(row.line, "בואו");
+    assert.equal(row.total_ms, 812);
+    assert.equal(row.validator_failures.length, 0);
+    const configs = await store.getConfigs(["tutor_enabled", "no_such_key_ci"]);
+    assert.equal(configs["no_such_key_ci"], undefined);
+  } finally {
+    await admin`delete from app.content_pack where pack_id = 'ci-tutor'`;
+    await admin`delete from app.family_character where character_id = 'ci-tutor-char'`;
+    await admin`delete from app.usage_counter where key in ('ci-kid', 'cs1', 'cs2', 'cs3', 'cp1', 'cp2') or key = ${family}`;
+    await admin`delete from app.family where id = ${family}`;
+    await sql.end();
+    await admin.end();
+  }
+});

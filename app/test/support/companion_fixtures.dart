@@ -27,6 +27,7 @@ List<String> voiceLinesOfStarter() {
     'core.listen.mixed',
     'core.listen.confirm',
     'core.listen.tap',
+    'core.thinking.think',
   };
   for (final FileSystemEntity e in Directory('../content/starter').listSync()) {
     if (e is! File || !e.path.endsWith('.json')) continue;

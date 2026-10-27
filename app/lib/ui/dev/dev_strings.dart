@@ -23,6 +23,8 @@ abstract final class DevStrings {
   static const String revokeId = 'Device id to revoke';
   static const String revoke = 'Revoke device (parent)';
   static const String forget = 'Forget this phone (local only)';
+  static const String listensShow = 'Show the latest voice listens';
+  static const String listensForget = 'Forget the voice listens (offers the mic again)';
   static const String packs = '5. Content packs';
   static const String installIncoming = 'Install .nnpack files from the incoming folder';
   static const String listPacks = 'List installed packs';
@@ -31,4 +33,11 @@ abstract final class DevStrings {
   static const String output = 'Output';
   static const String prodPlaceholder = 'Nitznutz';
   static const String configProblem = 'Build settings are missing or wrong';
+
+  static const String tutorHeading = 'AI helper (M6)';
+  static const String aiHelper = 'AI helper in lessons';
+  static const String tutorCheck = 'Check the AI helper chain (one real call)';
+  static const String tutorTiming = 'Time 10 helper calls (lines already made)';
+  static const String aiHelperNote =
+      'Off by default. Needs the server keys and the server switch; a failure always falls back to the authored line.';
 }

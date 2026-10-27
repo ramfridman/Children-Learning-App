@@ -1,0 +1,84 @@
+{
+  "schema": "tutor-moves/v1",
+  "review": "needs-educator",
+  "note": "Teaching moves for the AI helper, by misconception tag (and 'default' for a mistake without one). Each tag has up to 3 help levels; each level has 1 to 4 different ways to help. They are instructions to the model in English, never spoken as written: the model says the move in its own simple Hebrew, and the ten checks still decide what a child hears. Kept in the server's config (key tutor_moves) by tools/set-tutor-moves.ps1; they move into the content pack in M9.",
+  "moves": {
+    "default": [
+      [
+        "Warmly invite the child to look at the objects again and try once more, slowly.",
+        "Suggest pointing a finger at each object while trying again, calmly.",
+        "Say that it is fine to try again, one object at a time, and that you will do it together."
+      ],
+      [
+        "Suggest starting again from the beginning, together, slowly.",
+        "Suggest saying each number out loud, softly, while looking at the objects.",
+        "Say that we can take our time and look carefully at every object."
+      ],
+      [
+        "Offer to count together, one object and one number at a time, and wait for the child.",
+        "Suggest using fingers to help, one finger for each object."
+      ]
+    ],
+    "M-CNT-SKIP": [
+      [
+        "Show how to go through the objects in a line, touching each one once, so that none is left out.",
+        "Suggest putting a finger on the first object and moving along to the next, so that none is missed.",
+        "Suggest touching the objects from one side to the other, in order, without jumping."
+      ],
+      [
+        "Suggest checking that every object was touched, and touching any that were left out before counting again.",
+        "Suggest counting slowly while touching each object, and looking for one that got no number.",
+        "Say that one object may be hiding without a number, and invite looking for it."
+      ],
+      [
+        "Say that an object was probably left out, and invite counting again from the first, touching each one.",
+        "Invite counting again together, with a finger on every object, so that none stays without a number."
+      ]
+    ],
+    "M-CNT-DOUBLE": [
+      [
+        "Remind that each object gets one touch and one number, and then we move on to a new one.",
+        "Suggest that after an object has its number, we move to a new object and do not go back.",
+        "Suggest touching an object only once, and saying its number as the finger lands on it."
+      ],
+      [
+        "Suggest saying a number only when the finger lands on a new object: one number for one object.",
+        "Suggest counting slowly, and moving on as soon as an object has its number.",
+        "Suggest checking where the finger is before saying the next number: is it on a new object?"
+      ],
+      [
+        "Say that one object may have been counted twice, and invite counting again together, moving on after each one.",
+        "Invite counting again together, with one touch and one number for each object, and then moving on."
+      ]
+    ],
+    "M-CNT-SEQ": [
+      [
+        "Invite saying the counting words together slowly, in order, starting from one.",
+        "Suggest saying the numbers like a song, one after the other, slowly."
+      ],
+      [
+        "Suggest saying the counting words in order together, then counting the objects with them.",
+        "Invite a slow count with a finger on each object, saying the next number each time."
+      ],
+      [
+        "Offer to say each number first, together, and then touch the next object for it."
+      ]
+    ],
+    "M-CNT-CARD": [
+      [
+        "Remind that the last number we say tells how many there are, so we can stop there.",
+        "Suggest that after counting, the last number said is the answer to how many.",
+        "Remind to give only the number asked for, counting them out one by one, and then stopping."
+      ],
+      [
+        "Suggest counting out the objects one by one, and stopping when the number asked for is reached.",
+        "Suggest counting while giving, and stopping at the number asked for, without giving more.",
+        "Suggest asking: did I stop at the right number? Then checking by counting what was given."
+      ],
+      [
+        "Invite counting together, giving one object for each number, and stopping at the number asked for.",
+        "Invite counting what was given, one by one, to check that it is the number asked for."
+      ]
+    ]
+  }
+}

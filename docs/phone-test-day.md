@@ -70,4 +70,5 @@ Follow device checks section 9. In short:
 
 - The adult speech recordings and the accuracy number: `docs/owner-todo.md` P4 (needs the PC, about 15 minutes, can be a different day).
 - Real ElevenLabs voices: P3 (an hour at the PC; the test tones in Part 2 are free).
+- The AI helper on the phone (device checks section 10): needs the live phase first (keys, model id, voice ids; `docs/setup/supabase-deploy.md` section 8), so it is its own day.
 - Saving the pack signing key in 1Password: P1 (five minutes, do it first if you are at the PC anyway).

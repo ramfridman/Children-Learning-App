@@ -94,7 +94,7 @@ npx supabase functions deploy --use-api
 
 (`--use-api` bundles on Supabase's side, so Docker is not needed.) It lists
 `signed-ping`, `app-config`, `enroll-challenge`, `device-enroll`, `device-pair`,
-`pairing-code-create`, `device-list` and `device-revoke`.
+`pairing-code-create`, `device-list` and `device-revoke`; from M6 also `content-publish`, `tutor-turn` and `tutor-prewarm`.
 
 Quick check that the gateway is closed to strangers:
 
@@ -160,9 +160,101 @@ on conflict (key) do update set value = excluded.value, updated_at = now();
 
 Until this row exists the server refuses every Android enrolment on purpose.
 
+## 8. The AI tutor (M6): what is done, and what only you can do
+
+**Done by Claude on 2026-10-27 (nothing to repeat):** the database migration `20261026120000_tutor_tables`
+(`npx supabase db push`; on a new project it is part of step 2), and all 11 functions deployed
+(`npx supabase functions deploy --use-api --project-ref ungkvkabqxssggttajfs`), including the new
+`content-publish`, `tutor-turn` and `tutor-prewarm`. They are closed: strangers get 401, and the two
+functions that need the publish secret answer "unavailable" until you do step 4.
+
+**What is still missing, in order.** Do steps 1 to 4 at the PC; steps 5 and 6 Claude can run once you say
+the earlier ones are done. Never paste a key into the chat.
+
+1. **Anthropic key (about 5 minutes).** console.anthropic.com > your workspace for Nitznutz > check that
+   its monthly spend limit is set (your plan says 5 USD) > API keys > create a key named
+   `nitznutz-tutor` in that workspace. Copy it into 1Password as `Nitznutz Anthropic key`. (A screenshot
+   of the limit page is also on your list, P2.)
+2. **ElevenLabs key (about 5 minutes).** elevenlabs.io > your profile > API keys > create a key named
+   `nitznutz-tutor`, allow **only Text to Speech** (and "history" if it is a separate switch: the
+   server deletes each made line afterwards), and set a credit limit on the key. Copy it into
+   1Password as `Nitznutz ElevenLabs key`.
+3. **A voice for the guide (about 30 minutes, the same as M4 Phase H).** The tutor speaks in the guide's
+   own voice, so a character with no voice id cannot have live lines. Start with **one** character, the
+   one your child picked (`hero-son`), and add the others later.
+   1. In ElevenLabs open the voice library, filter for Hebrew, listen, and copy the **voice id** of the
+      one you like (a short code of letters and digits).
+   2. Put it in `content/voices.json` under `"hero-son": { "voiceId": "<the id>" }`.
+   3. Tell Claude which model you want ("Eleven v3", "Multilingual v2", ...): Claude will read the
+      current model list and prices on ElevenLabs' and Anthropic's pages and show you the exact model id
+      and the prices to confirm. Nobody should guess the model id.
+   4. Listen: `$env:ELEVENLABS_API_KEY` is set from a hidden prompt, then
+      `dart run tool/voice_gen.dart audition hero-son "<a short sentence>"` plays one line.
+4. **Send the three secrets** (the keys are typed into hidden prompts; nothing is shown or kept; the
+   temporary file is deleted at once):
+
+   ```powershell
+   $dir = "$env:USERPROFILE\nitznutz-secrets"
+   New-Item -ItemType Directory -Force -Path $dir | Out-Null
+   function Ask($name) {
+     $s = Read-Host -AsSecureString $name
+     [System.Net.NetworkCredential]::new("", $s).Password
+   }
+   function New-Secret($bytes) {
+     $b = New-Object byte[] $bytes
+     $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+     $rng.GetBytes($b)
+     [Convert]::ToBase64String($b).TrimEnd('=').Replace('+','-').Replace('/','_')
+   }
+   $publish = New-Secret 32
+   @(
+     "ANTHROPIC_API_KEY=$(Ask 'Anthropic key')",
+     "ELEVENLABS_API_KEY=$(Ask 'ElevenLabs key')",
+     "CONTENT_PUBLISH_SECRET=$publish"
+   ) | Set-Content -Path "$dir\tutor.env" -Encoding ascii
+   npx supabase secrets set --env-file "$dir\tutor.env" --project-ref ungkvkabqxssggttajfs
+   Remove-Item -Recurse -Force $dir
+   $publish | Set-Clipboard
+   ```
+
+   The publish secret is now on the clipboard: save it in 1Password as `Nitznutz content publish
+   secret`, then copy something else to clear the clipboard. For each PowerShell window in which you (or
+   Claude) run the tools below: `$env:NITZNUTZ_PUBLISH_SECRET = "<paste>"` (never write it in a file).
+5. **Claude: set the rows** in `app.config` (the model id and prices from step 3.3; the daily cap stays
+   0.50 USD): `elevenlabs_model_id`, `tutor_price_micro` (`in_per_mtok`, `out_per_mtok`,
+   `voice_per_1k_chars`, in millionths of a dollar) and, for the test, `tutor_enabled` and
+   `live_voice_enabled`:
+
+   ```sql
+   insert into app.config (key, value) values
+     ('elevenlabs_model_id', '"<model id>"'::jsonb),
+     ('tutor_cost_cap_micro', '500000'::jsonb),
+     ('tutor_price_micro', '{"in_per_mtok": <n>, "out_per_mtok": <n>, "voice_per_1k_chars": <n>}'::jsonb),
+     ('tutor_enabled', 'true'::jsonb),
+     ('live_voice_enabled', 'true'::jsonb)
+   on conflict (key) do update set value = excluded.value, updated_at = now();
+   ```
+6. **Claude: publish, pre-warm, measure** (from the `app` folder, with the secret set as above):
+
+   ```powershell
+   dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack --dry-run
+   dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack
+   dart run tool/tutor_prewarm.dart plan assets/packs/starter-0.2.0.nnpack --characters hero-son
+   dart run tool/tutor_prewarm.dart make assets/packs/starter-0.2.0.nnpack --characters hero-son --confirm-lines <N>
+   dart run tool/tutor_prewarm.dart measure assets/packs/starter-0.2.0.nnpack --characters hero-son --count 10
+   ```
+
+   `plan` prints the number of lines, the voice characters and the estimated cost, and `make` refuses
+   unless you type that number back (Claude shows it to you first and waits for your OK). `measure`
+   prints the median server time with the model's and the voice's share: the real latency figure.
+7. **You: listen.** Read the made lines in the SQL Editor
+   (`select item_id, mistake, band, address_form, line from app.tutor_cache order by 1, 2, 3, 4;`), then
+   on the phone switch **AI helper in lessons** on in the dev page and make two mistakes in the counting
+   hills (device checks section 10). Only after that is the helper ever offered to a parent (M7).
+
 ## What this does not do
 
 - It does not turn on the AI tutor or voice. `app-config` reports both switches off until you set
-  the rows `tutor_enabled` / `voice_enabled` to `true` in `app.config`.
+  the rows `tutor_enabled` / `live_voice_enabled` to `true` in `app.config` (section 8).
 - It does not enable the dev allowlist. Emulator enrolment works only on the local stack
   (`ALLOW_DEV_ENROLMENT=true`, needs Docker Desktop) or during a short, deliberate test window.

@@ -79,7 +79,7 @@ jobs:
           TEST_GATEWAY_DB_URL: postgresql://app_gateway:ci-only-gateway-pass@127.0.0.1:54322/postgres
         run: >
           bash tools/ci/run-with-annotations.sh "Deno integration" deno test --frozen
-          --allow-read=testvectors,supabase --allow-net=127.0.0.1:54322 --allow-env
+          --allow-read=testvectors,supabase,content --allow-net=127.0.0.1:54322 --allow-env
           supabase/functions/db_integration_test.ts
       - name: Stop the stack
         if: always()

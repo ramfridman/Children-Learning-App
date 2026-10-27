@@ -15,6 +15,12 @@ class FakePlayer implements VoicePlayer {
   Duration? at;
   bool failToPlay = false;
   bool disposed = false;
+
+  /// While set and not completed, `play` takes its time to start (a real player prepares the sound first).
+  Completer<void>? holdPlay;
+
+  /// The sound is audible now: a play that has started and has not been stopped.
+  bool playing = false;
   final StreamController<void> _done = StreamController<void>.broadcast();
 
   @override
@@ -23,6 +29,8 @@ class FakePlayer implements VoicePlayer {
     plays++;
     played.add(sound);
     at = Duration.zero;
+    if (holdPlay != null) await holdPlay!.future;
+    playing = true;
   }
 
   @override
@@ -40,6 +48,7 @@ class FakePlayer implements VoicePlayer {
   Future<void> stop() async {
     stops++;
     at = null;
+    playing = false;
   }
 
   @override

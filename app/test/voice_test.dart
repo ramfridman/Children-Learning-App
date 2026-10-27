@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -254,6 +255,21 @@ void main() {
       expect(director.mouthOpen, isFalse, reason: 'the mouth is not driven after the stop');
       await director.stop();
       await tester.pump();
+    });
+
+    testWidgets('leaving while a line is still starting up leaves no sound behind', (
+      WidgetTester tester,
+    ) async {
+      director.useBank(hero);
+      player.holdPlay = Completer<void>();
+      final Future<void> saying = director.say('vo:a');
+      await tester.pump();
+      await director.stop();
+      player.holdPlay!.complete();
+      await saying;
+      await tester.pump();
+      expect(player.playing, isFalse, reason: 'a sound that began after the stop is stopped again');
+      expect(director.speaking, isFalse);
     });
 
     testWidgets('a line without cues still moves the mouth while it plays', (WidgetTester tester) async {
