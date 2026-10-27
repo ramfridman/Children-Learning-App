@@ -9,6 +9,7 @@ import { verifyPublishSecret } from "./publish_secret.ts";
 import { parseJsonObject, readBodyBytes, type Shape, validate } from "./schema.ts";
 import type { ModelClient } from "./anthropic.ts";
 import type { VoiceClient } from "./elevenlabs.ts";
+import type { PushClient } from "./fcm.ts";
 import type { Secrets, Store } from "./store.ts";
 
 /** How long each step of a tutor turn may take (milliseconds). The child never waits more than `totalMs`. */
@@ -39,6 +40,8 @@ export interface Services {
   allowDevEnrolment: boolean;
   /** Creates a one-time sign-in for the family's guardian, for a child device that just paired. */
   mintSession(guardianUserId: string): Promise<{ tokenHash: string }>;
+  /** The push to a parent's phone. Absent until the Firebase service account is set: alerts then wait in the app. */
+  push?: PushClient;
   /** The model and the voice. Absent until their keys are set: the tutor then answers with the RuleTutor. */
   tutor?: { model: ModelClient; voice: VoiceClient; budget: TutorBudget };
   /** Tests only: replaces Google's roots. Always undefined in production. */

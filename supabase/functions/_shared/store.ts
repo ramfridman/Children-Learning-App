@@ -147,6 +147,29 @@ export interface Store {
   }>;
   /** The events after the cursor, in the order the server received them, one more than `limit` is looked at. */
   pullEvents(familyId: string, after: number, limit: number): Promise<{ events: EventOut[]; more: boolean }>;
+
+  // Alerts, push tokens, the family's settings and the tutor log (M7b)
+  /** `refused`: the alert names a child the family does not have (or that was deleted). */
+  insertAlert(familyId: string, deviceId: string, a: AlertIn): Promise<"new" | "duplicate" | "refused">;
+  /** Alerts of the family from `sinceMs` on, newest first. */
+  listAlerts(familyId: string, sinceMs: number): Promise<AlertOut[]>;
+  /** Marks every unread alert of the family read; returns how many. */
+  markAlertsRead(familyId: string, nowMs: number): Promise<number>;
+  upsertPushToken(
+    familyId: string,
+    deviceId: string,
+    token: string,
+    platform: "android" | "ios",
+  ): Promise<void>;
+  removePushToken(deviceId: string): Promise<void>;
+  pushTokens(
+    familyId: string,
+  ): Promise<Array<{ deviceId: string; token: string; platform: "android" | "ios" }>>;
+  getSettings(familyId: string): Promise<{ rules: Record<string, unknown>; version: number } | null>;
+  /** Replaces the family's settings (the last write wins); returns the new version, a server counter. */
+  putSettings(familyId: string, rules: Record<string, unknown>): Promise<number>;
+  /** What the tutor said to the family's children since `sinceMs`, newest first. */
+  tutorLogOf(familyId: string, sinceMs: number, limit: number): Promise<TutorLogEntry[]>;
 }
 
 // ---- The tutor (M6) ----
@@ -283,4 +306,31 @@ export interface EventIn {
 export interface EventOut extends EventIn {
   seq: number;
   deviceId: string;
+}
+
+export interface AlertIn {
+  childId: string | null;
+  category: string;
+  severity: string;
+  count: number;
+  detail: string;
+  words: string;
+  key: string;
+  clientAtMs: number;
+}
+
+export interface AlertOut extends AlertIn {
+  id: string;
+  deviceId: string;
+  readAtMs: number | null;
+}
+
+export interface TutorLogEntry {
+  atMs: number;
+  childRef: string;
+  itemId: string;
+  characterId: string;
+  source: string;
+  outcome: string;
+  line: string | null;
 }

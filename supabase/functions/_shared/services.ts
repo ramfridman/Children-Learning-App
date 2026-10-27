@@ -4,6 +4,7 @@ import { b64urlDecode, type Bytes } from "./b64.ts";
 import { anthropicClient } from "./anthropic.ts";
 import { authAdminMinter } from "./auth_admin.ts";
 import { elevenLabsClient } from "./elevenlabs.ts";
+import { fcmClient } from "./fcm.ts";
 import { connect, pgStore } from "./db.ts";
 import { GatewayError } from "./errors.ts";
 import { DEFAULT_TUTOR_BUDGET, type Services } from "./handler.ts";
@@ -31,6 +32,8 @@ export function realServices(): Services {
   // The two vendor keys are optional here: without them the tutor answers with the RuleTutor and costs nothing.
   const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
   const elevenKey = Deno.env.get("ELEVENLABS_API_KEY");
+  // The push is optional too: without the Firebase service account alerts simply wait in the app.
+  const fcmAccount = Deno.env.get("FCM_SERVICE_ACCOUNT");
   cached = {
     nowMs: () => Date.now(),
     verifyToken: (bearer) => verifyAccessToken(bearer, tokenCfg),
@@ -49,6 +52,7 @@ export function realServices(): Services {
         budget: DEFAULT_TUTOR_BUDGET,
       }
       : undefined,
+    push: (fcmAccount ? fcmClient(fcmAccount) : null) ?? undefined,
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
   };
   return cached;

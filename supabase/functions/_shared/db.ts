@@ -7,6 +7,8 @@ import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
 import { compareSemver } from "./semver.ts";
 import type {
+  AlertIn,
+  AlertOut,
   CachedLine,
   ChildProfile,
   DeviceSummary,
@@ -16,6 +18,7 @@ import type {
   Store,
   TakeResult,
   TutorContext,
+  TutorLogEntry,
 } from "./store.ts";
 
 const bytes = (v: unknown): Bytes => new Uint8Array(v as ArrayLike<number>) as Bytes;
@@ -491,6 +494,102 @@ export function pgStore(sql: Sql): Store {
           payload: r.payload as Record<string, unknown>,
         })),
       };
+    },
+
+    async insertAlert(familyId, deviceId, a: AlertIn) {
+      if (a.childId !== null) {
+        const [have] =
+          await sql`select 1 from app.child_profile where family_id = ${familyId} and id = ${a.childId}`;
+        if (!have) return "refused";
+      }
+      const rows = await sql`
+        insert into app.alert (family_id, child_id, device_id, category, severity, count, detail, words, dedupe_key,
+          client_at)
+        values (${familyId}, ${a.childId}, ${deviceId}, ${a.category}, ${a.severity}, ${a.count}, ${a.detail},
+          ${a.words}, ${a.key}, ${new Date(a.clientAtMs)})
+        on conflict (family_id, dedupe_key) do nothing
+        returning id`;
+      return rows.length === 1 ? "new" : "duplicate";
+    },
+
+    async listAlerts(familyId, sinceMs) {
+      const rows = await sql`
+        select id, child_id, device_id, category, severity, count, detail, words, dedupe_key, client_at, read_at
+          from app.alert where family_id = ${familyId} and client_at >= ${new Date(sinceMs)}
+         order by client_at desc, id limit 200`;
+      return rows.map((r): AlertOut => ({
+        id: r.id,
+        childId: r.child_id,
+        deviceId: r.device_id,
+        category: r.category,
+        severity: r.severity,
+        count: r.count,
+        detail: r.detail,
+        words: r.words,
+        key: r.dedupe_key,
+        clientAtMs: (r.client_at as Date).getTime(),
+        readAtMs: r.read_at ? (r.read_at as Date).getTime() : null,
+      }));
+    },
+
+    async markAlertsRead(familyId, nowMs) {
+      const rows = await sql`
+        update app.alert set read_at = ${new Date(nowMs)}
+         where family_id = ${familyId} and read_at is null returning id`;
+      return rows.length;
+    },
+
+    async upsertPushToken(familyId, deviceId, token, platform) {
+      await sql`
+        insert into app.push_token (device_id, family_id, token, platform)
+        values (${deviceId}, ${familyId}, ${token}, ${platform})
+        on conflict (device_id) do update set token = excluded.token, platform = excluded.platform,
+          family_id = excluded.family_id, updated_at = now()`;
+    },
+
+    async removePushToken(deviceId) {
+      await sql`delete from app.push_token where device_id = ${deviceId}`;
+    },
+
+    async pushTokens(familyId) {
+      const rows =
+        await sql`select device_id, token, platform from app.push_token where family_id = ${familyId}`;
+      return rows.map((r) => ({
+        deviceId: r.device_id as string,
+        token: r.token as string,
+        platform: r.platform,
+      }));
+    },
+
+    async getSettings(familyId) {
+      const [r] = await sql`select rules, version from app.family_settings where family_id = ${familyId}`;
+      return r ? { rules: r.rules as Record<string, unknown>, version: Number(r.version) } : null;
+    },
+
+    async putSettings(familyId, rules) {
+      const [r] = await sql`
+        insert into app.family_settings (family_id, rules)
+        values (${familyId}, ${JSON.stringify(rules)}::text::jsonb)
+        on conflict (family_id) do update set rules = excluded.rules, version = app.family_settings.version + 1,
+          updated_at = now()
+        returning version`;
+      return Number(r.version);
+    },
+
+    async tutorLogOf(familyId, sinceMs, limit) {
+      const rows = await sql`
+        select created_at, child_ref, item_id, character_id, source, outcome, line
+          from app.tutor_log where family_id = ${familyId} and created_at >= ${new Date(sinceMs)}
+         order by created_at desc limit ${limit}`;
+      return rows.map((r): TutorLogEntry => ({
+        atMs: (r.created_at as Date).getTime(),
+        childRef: r.child_ref,
+        itemId: r.item_id,
+        characterId: r.character_id,
+        source: r.source,
+        outcome: r.outcome,
+        line: r.line,
+      }));
     },
   };
 }

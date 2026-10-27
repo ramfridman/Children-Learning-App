@@ -694,3 +694,99 @@ Deno.test({
     await admin.end();
   }
 });
+
+Deno.test({
+  name: "alerts, push tokens, settings and the tutor log against the real tables",
+  ignore: !adminUrl || !gatewayUrl,
+}, async () => {
+  const admin = connect(adminUrl!);
+  const password = new URL(gatewayUrl!).password;
+  await admin.unsafe(`alter role app_gateway login password '${password.replaceAll("'", "''")}'`);
+  const sql = connect(gatewayUrl!);
+  const store = pgStore(sql);
+  const family = crypto.randomUUID();
+  const other = crypto.randomUUID();
+  const user = crypto.randomUUID();
+  await admin`insert into auth.users (id, email) values (${user}, ${user + "@example.test"})`;
+  await admin`insert into app.family (id) values (${family}), (${other})`;
+  await admin`insert into app.guardian (user_id, family_id) values (${user}, ${family})`;
+  const spki = new Uint8Array(91).fill(5);
+  const [dev] =
+    await admin`insert into app.device (family_id, role, public_key, platform, attestation_kind, security_level)
+    values (${family}, 'parent', ${spki as unknown as Uint8Array}, 'android', 'dev_allowlist', 'dev') returning id`;
+  const kid = "ci-child-0001";
+  try {
+    await store.upsertChild(family, {
+      id: kid,
+      nickname: "נועה",
+      avatarId: "avatar-noa",
+      companionId: null,
+      addressForm: "f",
+      ageBand: 1,
+    });
+    const alert = (key: string, over: Partial<Parameters<typeof store.insertAlert>[2]> = {}) => ({
+      childId: kid,
+      category: "inappropriateWords",
+      severity: "attention",
+      count: 0,
+      detail: "",
+      words: "חרא",
+      key,
+      clientAtMs: Date.now() - 1000,
+      ...over,
+    });
+    assert.equal(await store.insertAlert(family, dev.id, alert("a1")), "new");
+    assert.equal(await store.insertAlert(family, dev.id, alert("a1")), "duplicate");
+    assert.equal(
+      await store.insertAlert(family, dev.id, alert("a2", { childId: "ci-child-9999" })),
+      "refused",
+    );
+    assert.equal(
+      await store.insertAlert(
+        family,
+        dev.id,
+        alert("g1", { childId: null, category: "gateAttempts", words: "", count: 3 }),
+      ),
+      "new",
+    );
+    await store.insertAlert(family, dev.id, alert("old", { clientAtMs: Date.now() - 40 * 86_400_000 }));
+    const listed = await store.listAlerts(family, Date.now() - 30 * 86_400_000);
+    assert.deepEqual(listed.map((a) => a.key).sort(), ["a1", "g1"], "30 days only");
+    assert.equal(listed.find((a) => a.key === "a1")!.words, "חרא");
+    assert.equal(listed.every((a) => a.readAtMs === null), true);
+    assert.equal(await store.markAlertsRead(family, Date.now()), 3, "every unread one, including the old");
+    assert.equal(await store.markAlertsRead(family, Date.now()), 0);
+    assert.deepEqual(await store.listAlerts(other, 0), [], "another family sees none");
+
+    const token = "ci-token-" + "a".repeat(40);
+    await store.upsertPushToken(family, dev.id, token, "android");
+    await store.upsertPushToken(family, dev.id, token + "2", "android");
+    const tokens = await store.pushTokens(family);
+    assert.equal(tokens.length, 1);
+    assert.equal(tokens[0].token, token + "2");
+    assert.deepEqual(await store.pushTokens(other), []);
+    await store.removePushToken(dev.id);
+    assert.deepEqual(await store.pushTokens(family), []);
+
+    assert.equal(await store.getSettings(family), null);
+    assert.equal(await store.putSettings(family, { restOn: true, limitByBand: { A: 15 } }), 1);
+    assert.equal(await store.putSettings(family, { restOn: false }), 2);
+    const got = await store.getSettings(family);
+    assert.deepEqual(got, { rules: { restOn: false }, version: 2 });
+    assert.equal(await store.getSettings(other), null);
+
+    await admin`insert into app.tutor_log (family_id, child_ref, session_ref, pack_id, pack_version, item_id,
+      character_id, source, outcome, line, prompt_version) values (${family}, ${kid}, 'ci-session-2', 'starter', '0.2.0',
+      'count.butterflies.3', 'hero-son', 'cache', 'ok', 'בּוֹאוּ נִסְפֹּר', 'approved')`;
+    const log = await store.tutorLogOf(family, Date.now() - 30 * 86_400_000, 100);
+    assert.equal(log.length, 1);
+    assert.equal(log[0].line, "בּוֹאוּ נִסְפֹּר");
+    assert.equal(log[0].childRef, kid);
+    assert.deepEqual(await store.tutorLogOf(other, 0, 100), []);
+  } finally {
+    await admin`delete from app.family where id in (${family}, ${other})`;
+    await admin`delete from auth.users where id = ${user}`;
+    await sql.end();
+    await admin.end();
+  }
+});
