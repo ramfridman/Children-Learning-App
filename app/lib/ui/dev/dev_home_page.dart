@@ -118,6 +118,37 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
     return out.toString();
   });
 
+  /// Ten asks for a line that is already made (as a prefetch: no cap is used, no model or voice is called), timed
+  /// from this phone: the round trip of the cache-hit case.
+  Future<void> _tutorTiming() => _run('helper timing', () async {
+    final PackContent content = await ref.read(contentProvider.future);
+    final Guide guide = await ref.read(guideProvider.future);
+    final TutorAsk ask = TutorAsk(
+      childRef: 'dev-check',
+      sessionRef: 'dev-check',
+      packId: content.packId,
+      packVersion: content.packVersion,
+      itemId: 'count.butterflies.3',
+      characterId: guide.character.id,
+      band: 'A',
+      addressForm: 'n',
+      hintLevel: 0,
+      mistakes: const <String>['default'],
+      prefetch: true,
+    );
+    final List<int> ms = <int>[];
+    final Map<String, int> how = <String, int>{};
+    for (int i = 0; i < 10; i++) {
+      final Stopwatch w = Stopwatch()..start();
+      final List<TutorResult> r = await ref.read(tutorClientProvider).ask(ask);
+      ms.add(w.elapsedMilliseconds);
+      final String key = r.first.line?.source ?? 'rule ${r.first.rule}';
+      how[key] = (how[key] ?? 0) + 1;
+    }
+    final List<int> sorted = List<int>.of(ms)..sort();
+    return '10 calls: min ${sorted.first} ms, median ${sorted[5]} ms, max ${sorted.last} ms; $how; all: ${ms.join(' ')}';
+  });
+
   Future<void> _run(String label, Future<String> Function() action) async {
     if (_busy) return;
     setState(() => _busy = true);
@@ -316,6 +347,7 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
               onChanged: (bool on) => ref.read(aiHelperProvider.notifier).set(on),
             ),
             _button(DevStrings.tutorCheck, _tutorCheck),
+            _button(DevStrings.tutorTiming, _tutorTiming),
             _button(
               DevStrings.listensShow,
               () => _run('voice listens', () async {

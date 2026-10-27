@@ -37,6 +37,7 @@ abstract final class DevStrings {
   static const String tutorHeading = 'AI helper (M6)';
   static const String aiHelper = 'AI helper in lessons';
   static const String tutorCheck = 'Check the AI helper chain (one real call)';
+  static const String tutorTiming = 'Time 10 helper calls (lines already made)';
   static const String aiHelperNote =
       'Off by default. Needs the server keys and the server switch; a failure always falls back to the authored line.';
 }
