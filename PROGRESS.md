@@ -41,6 +41,8 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 - **2026-10-27:** the parent gate is now a small sum in digits (was a multiplication in Hebrew words; the owner found it too hard). PLAN.md updated.
 
+- **2026-10-27 (phone test day):** the voice mic is never withdrawn after failed listens (owner's decision; PLAN.md and M5.md updated); the map bubble follows the companion's mouth; a line starting after leaving a lesson is stopped.
+
 ## Open issues
 
 - **Probe items:** the engine's gap search needs open probe items (give, drag, trace) for every skill that can be a gap; the starter pack has none. An authoring rule for M9; in the simulator, three-option probes alone make a search too long for a Band A session.

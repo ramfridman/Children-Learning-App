@@ -21,7 +21,6 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
-import '../speech/reliability.dart';
 import '../speech/voice_answer.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
@@ -55,7 +54,6 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
   LessonVoice? _voice;
 
   /// For each kind of answer, whether voice has been working for this child (the mic is not offered when it has not).
-  final Map<String, bool> _invited = <String, bool>{};
   int? _visitId;
   bool _visitEnded = false;
   int _spokenNonce = 0;
@@ -68,21 +66,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     super.initState();
     _director = ref.read(voiceDirectorProvider);
     _recorder = ref.read(sessionRecorderProvider);
-    unawaited(_loadInvites());
     _visit = _recorder.start(widget.profileId, 'lesson:${widget.lessonId}').then((int id) => _visitId = id);
-  }
-
-  /// Looks at how the child's last listens went, once, when the lesson opens.
-  Future<void> _loadInvites() async {
-    final AppDatabase db = await ref.read(databaseProvider.future);
-    final DateTime now = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true);
-    for (final String type in <String>['number', 'word']) {
-      final List<VoiceListen> rows = await db.recentListens(widget.profileId, type);
-      _invited[type] = voiceWorks(<VoiceListenRow>[
-        for (final VoiceListen r in rows) VoiceListenRow(r.at, r.outcome),
-      ], now: now);
-    }
-    if (mounted) setState(() {});
   }
 
   LessonVoice _makeVoice(LessonController controller) {
@@ -227,10 +211,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     );
   }
 
-  /// The microphone, only when a parent turned voice on and voice has been working for this child.
+  /// The microphone, whenever a parent turned voice on. It is never taken away because listening went badly: a young
+  /// child is often misheard, and a missing mic would only teach them that voice does not work.
   Widget? _mic(ActivitySpec spec, TemplateSession session) {
     final LessonVoice? v = _voice;
-    if (v == null || !(_invited[session.voiceAnswerType] ?? true)) return null;
+    if (v == null) return null;
     final VoiceAnswerController a = v.answer;
     final bool usable = session.listensNow;
     final MicLook look = switch (a.state) {

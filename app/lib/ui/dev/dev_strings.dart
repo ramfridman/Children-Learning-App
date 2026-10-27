@@ -23,6 +23,8 @@ abstract final class DevStrings {
   static const String revokeId = 'Device id to revoke';
   static const String revoke = 'Revoke device (parent)';
   static const String forget = 'Forget this phone (local only)';
+  static const String listensShow = 'Show the latest voice listens';
+  static const String listensForget = 'Forget the voice listens (offers the mic again)';
   static const String packs = '5. Content packs';
   static const String installIncoming = 'Install .nnpack files from the incoming folder';
   static const String listPacks = 'List installed packs';

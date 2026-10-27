@@ -259,6 +259,23 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
               value: ref.watch(aiHelperProvider).value ?? false,
               onChanged: (bool on) => ref.read(aiHelperProvider.notifier).set(on),
             ),
+            _button(
+              DevStrings.listensShow,
+              () => _run('voice listens', () async {
+                final AppDatabase db = await ref.read(databaseProvider.future);
+                final List<VoiceListen> rows = await db.allListens();
+                return rows.isEmpty
+                    ? 'none yet'
+                    : rows.map((VoiceListen r) => '${r.answerType}:${r.outcome}').join(', ');
+              }),
+            ),
+            _button(
+              DevStrings.listensForget,
+              () => _run('voice listens', () async {
+                final AppDatabase db = await ref.read(databaseProvider.future);
+                return 'forgot ${await db.forgetListens()} listens';
+              }),
+            ),
             _heading(DevStrings.engine),
             _button(DevStrings.engineState, _engineState),
             _heading(DevStrings.output),

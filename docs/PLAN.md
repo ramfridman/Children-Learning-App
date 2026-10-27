@@ -315,7 +315,7 @@ The tutor is a short-turn, Socratic helper inside activities, not an open chat. 
 2. **The answer is matched against expected answers.** Matching covers every gender form, prefix and common child pronunciation.
 3. **A clear answer counts exactly like a tap.** A clearly wrong answer is tagged with its misconception.
 4. **An unsure match gets a confirm.** For example "שָׁלוֹשׁ?" (three?), answered with a tap or a "yes".
-5. **Unclear audio is never wrong.** It gets one re-ask, then the item switches to tap. Where recognition keeps failing for a child, the app quietly stops inviting voice.
+5. **Unclear audio is never wrong.** It gets one re-ask, then the item switches to tap. Where recognition keeps failing for a child, the mic stays: it is never taken away (owner's decision, 2026-10-27, because young children are often misheard and a missing mic would teach them voice does not work). Each question has its own repair steps and falls back to tapping; the listens are still recorded as fixed words so a parent can see how voice is going.
 6. **Partial answers get one focused follow-up.** The noun alone gets "כַּמָּה?" (how many?). A hedged "maybe five?" counts as an answer, and the tutor checks it together with the child.
 7. **"I don't know" or "help" opens the show-me path**, with praise for asking.
 8. **Explain-back is sorted, not graded.** An on-device keyword matcher sorts the reason ("made ten", "counted on", "just knew") and reflects it back. Language quality is never scored.
