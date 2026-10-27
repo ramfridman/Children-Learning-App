@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
+import '../characters/character.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
 import '../data/app_database.dart';
@@ -16,6 +17,7 @@ import '../parent/entry_flow.dart';
 import '../play/lesson_screen.dart';
 import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
+import 'companion.dart';
 import 'state.dart';
 
 /// The app: Hebrew, right to left, phones in landscape and tablets in either orientation. It shows
@@ -141,6 +143,7 @@ class _HomeState extends ConsumerState<_Home> {
     onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
     onOpenActivity: _openLesson,
     companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
+    companionMouth: ref.watch(characterForRoleProvider(CharacterRole.mapCompanion)).value?.mouth,
     onCompanion: () => _companion.currentState?.greet(),
     onFriends: _openFriends,
   );

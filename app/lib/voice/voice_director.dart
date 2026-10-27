@@ -83,7 +83,11 @@ class VoiceDirector extends ChangeNotifier {
       _finish(gen);
       return;
     }
-    if (_disposed || gen != _generation) return;
+    if (_disposed || gen != _generation) {
+      // The line was stopped (or replaced) while the player was still starting it: it must not be left playing.
+      if (_disposed || !_speaking) await _player.stop();
+      return;
+    }
     _timer = Timer.periodic(poll, (Timer t) => unawaited(_tick(gen)));
   }
 
