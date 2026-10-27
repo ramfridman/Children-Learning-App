@@ -13,7 +13,7 @@ import '../design/layout.dart';
 import 'entry_layout.dart';
 import 'keypad.dart';
 
-/// The parent gate: an arithmetic question in Hebrew words on a shuffled keypad. It is the first
+/// The parent gate: a small sum in digits on a shuffled keypad. It is the first
 /// of two steps (the PIN is the second) and a speed bump against children, not security by itself.
 class GateScreen extends ConsumerStatefulWidget {
   const GateScreen({super.key, required this.onPassed, required this.onCancel});
@@ -112,9 +112,17 @@ class _GateScreenState extends ConsumerState<GateScreen> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Text(
-                  _question.hebrew,
+                  He.gateQuestion.text,
                   style: AppText.parent(TokenType.parentH2),
                   textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                MathIsolate(
+                  child: Text(
+                    _question.expression,
+                    key: const Key('gate-sum'),
+                    style: AppText.parent(TokenType.parentStat, color: TokenColors.night),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 // The answer being typed is shown as digits (it is a number, not a secret).

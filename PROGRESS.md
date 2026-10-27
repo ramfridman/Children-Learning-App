@@ -39,6 +39,8 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 - **M6 (2026-10-26):** migration `20261026120000_tutor_tables.sql`, `content-publish`, `tutor-turn`, `tutor-prewarm`, `_shared/{hebrew,lexicon,validator,tutor_prompt,anthropic,elevenlabs,tutor_core}.ts`, the starter lexicon, `app/lib/tutor/`, `app/tool/{publish_lib,prewarm_lib,tutor_prewarm}.dart`; 132 Deno tests, 695 app tests, the pgTAP suite extended.
 
+- **2026-10-27:** the parent gate is now a small sum in digits (was a multiplication in Hebrew words; the owner found it too hard). PLAN.md updated.
+
 ## Open issues
 
 - **Probe items:** the engine's gap search needs open probe items (give, drag, trace) for every skill that can be a gap; the starter pack has none. An authoring rule for M9; in the simulator, three-option probes alone make a search too long for a Band A session.

@@ -107,7 +107,7 @@ void main() {
           .allMatches(source)
           .map((RegExpMatch m) => m.group(1))
           .toSet();
-      expect(names, <String?>{'child', 's', 'm', 't', 'n', 'a', 'b'});
+      expect(names, <String?>{'child', 's', 'm', 't', 'n'});
     });
   });
 

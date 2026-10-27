@@ -19,7 +19,7 @@ import 'support/starter.dart';
 
 Future<void> _enterGate(WidgetTester tester, AppRig rig) async {
   expect(find.byType(GateScreen), findsOneWidget);
-  expect(find.text(rig.gateQuestion.hebrew), findsOneWidget, reason: 'the question is shown in Hebrew words');
+  expect(find.text(rig.gateQuestion.expression), findsOneWidget, reason: 'the sum is shown in digits');
   await tapDigits(tester, '${rig.gateQuestion.answer}');
   await tester.tap(find.text(He.pinOk.text));
   await tester.pumpAndSettle();

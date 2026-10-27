@@ -75,26 +75,7 @@ abstract final class He {
   // ---- parent gate and PIN (adult) ----
   static const Str gateTitle = Str('לפני שנמשיך');
   static const Str gateHint = Str('השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס.');
-  static const Str gateQuestion = Str('כמה זה {a} כפול {b}?');
-
-  /// Number words in the feminine form used when counting out loud, for the gate question.
-  static const Map<int, Str> gateNumbers = <int, Str>{
-    3: Str('שלוש'),
-    4: Str('ארבע'),
-    5: Str('חמש'),
-    6: Str('שש'),
-    7: Str('שבע'),
-    8: Str('שמונה'),
-    9: Str('תשע'),
-    12: Str('שתים עשרה'),
-    13: Str('שלוש עשרה'),
-    14: Str('ארבע עשרה'),
-    15: Str('חמש עשרה'),
-    16: Str('שש עשרה'),
-    17: Str('שבע עשרה'),
-    18: Str('שמונה עשרה'),
-    19: Str('תשע עשרה'),
-  };
+  static const Str gateQuestion = Str('כמה זה?');
   static const Str gateBack = Str('חזרה');
   static const Str gateWrong = Str('התשובה לא נכונה, נסו שוב.');
   static const Str gateCoolDown = Str('נחכה רגע ואז ננסה שוב, בעוד {s} שניות.');

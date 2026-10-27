@@ -27,19 +27,15 @@ void main() {
   });
 
   group('the questions', () {
-    test('are multiplications above Band C level, written in Hebrew words without niqqud', () {
+    test('are small sums of two single digits, shown in digits', () {
       final ParentGate g = make();
       for (int i = 0; i < 200; i++) {
         final GateQuestion q = g.newQuestion();
-        expect(q.a, inInclusiveRange(12, 19));
-        expect(q.b, inInclusiveRange(3, 9));
-        expect(q.answer, q.a * q.b);
-        expect(q.answer, greaterThan(30));
-        expect(q.hebrew, startsWith('כמה זה '));
-        expect(q.hebrew, contains(' כפול '));
-        expect(q.hebrew, endsWith('?'));
-        expect(q.hebrew, isNot(matches(RegExp('[ְ-ׇ]'))), reason: 'no niqqud');
-        expect(q.hebrew, isNot(matches(RegExp(r'[0-9×÷=]'))), reason: 'words, not digits or symbols');
+        expect(q.a, inInclusiveRange(3, 9));
+        expect(q.b, inInclusiveRange(2, 9));
+        expect(q.answer, q.a + q.b);
+        expect(q.answer, inInclusiveRange(5, 18));
+        expect(q.expression, '${q.a} + ${q.b}');
       }
     });
 
@@ -55,9 +51,9 @@ void main() {
     });
 
     test('a few real questions read correctly', () {
-      expect(const GateQuestion(a: 14, b: 6, keypad: <int>[]).hebrew, 'כמה זה ארבע עשרה כפול שש?');
-      expect(const GateQuestion(a: 12, b: 9, keypad: <int>[]).hebrew, 'כמה זה שתים עשרה כפול תשע?');
-      expect(const GateQuestion(a: 19, b: 3, keypad: <int>[]).hebrew, 'כמה זה תשע עשרה כפול שלוש?');
+      expect(const GateQuestion(a: 6, b: 7, keypad: <int>[]).expression, '6 + 7');
+      expect(const GateQuestion(a: 6, b: 7, keypad: <int>[]).answer, 13);
+      expect(const GateQuestion(a: 9, b: 9, keypad: <int>[]).answer, 18);
     });
   });
 
