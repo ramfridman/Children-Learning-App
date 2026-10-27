@@ -308,6 +308,7 @@ export async function makeLine(
   }
   if (!verdict || !verdict.ok) {
     await addCost(0);
+    if (timings && verdict && !verdict.ok) timings.detail = `checks failed: ${verdict.failures.join(", ")}`;
     return await ruleOut("validator_failed", {
       failures: verdict && !verdict.ok ? (verdict.failures as Failure[]) : [],
       modelMs,
