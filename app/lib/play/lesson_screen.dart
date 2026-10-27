@@ -16,6 +16,7 @@ import '../app/voice_input.dart';
 import '../characters/character.dart';
 import '../child/activity_shell.dart';
 import '../child/companion_views.dart';
+import '../app/rules_providers.dart';
 import '../content/models.dart';
 import '../data/app_database.dart';
 import '../design/app_text.dart';
@@ -23,6 +24,8 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
+import '../parent/parent_rules.dart';
+import '../parent/time_rules.dart';
 import '../speech/voice_answer.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
@@ -63,13 +66,47 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   TutorSession? _tutor;
   final String _sessionRef = const Uuid().v4();
 
+  /// The parent's time rules and the minutes already played today before this visit (read once, when it starts).
+  ParentRules _rules = const ParentRules();
+  int _minutesBefore = 0;
+  late final DateTime _startedAt;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _director = ref.read(voiceDirectorProvider);
     _recorder = ref.read(sessionRecorderProvider);
+    _startedAt = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs());
     _visit = _recorder.start(widget.profileId, 'lesson:${widget.lessonId}').then((int id) => _visitId = id);
+    unawaited(_loadTime());
+  }
+
+  Future<void> _loadTime() async {
+    try {
+      _rules = await ref.read(rulesProvider.future);
+      final AppDatabase db = await ref.read(databaseProvider.future);
+      final int id = await _visit;
+      _minutesBefore = playedMinutesToday(
+        (await db.sessionsOf(widget.profileId)).where((Session s) => s.id != id).toList(),
+        _startedAt,
+      );
+    } on Object {
+      // Without the rules the lesson simply goes on: a failure here must never stop a child.
+    }
+  }
+
+  /// Between two activities: has the parent's time run out, with the lock on? Rest hours and the schedule count too.
+  bool _timeIsUp() {
+    final DateTime now = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs());
+    final int band = ref.read(activeProfileProvider)?.ageBand ?? 1;
+    return judgeTime(
+      now: now,
+      rules: _rules,
+      profileId: widget.profileId,
+      ageBand: band,
+      minutesToday: _minutesBefore + now.difference(_startedAt).inMinutes,
+    ).locked;
   }
 
   LessonVoice _makeVoice(LessonController controller) {
@@ -117,7 +154,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _endVisit(_controller?.finished ?? false ? 'finished' : 'home');
+    _endVisit(_endReason());
     // Leaving the lesson silences the guide.
     unawaited(_director.stop());
     _voice?.dispose();
@@ -128,7 +165,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   }
 
   /// Back to the map. The map hears whether the lesson was finished.
-  void _home() => Navigator.of(context).pop(_controller?.finished ?? false);
+  void _home() =>
+      Navigator.of(context).pop((_controller?.finished ?? false) && !(_controller?.endedForRest ?? false));
+
+  String _endReason() {
+    final LessonController? c = _controller;
+    if (c == null || !c.finished) return 'home';
+    return c.endedForRest ? 'limit' : 'finished';
+  }
 
   LessonController _controllerFor(PackContent content, Guide guide) {
     final LessonController? have = _controller;
@@ -142,6 +186,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       clock: ref.read(clockProvider),
       tutor: _tutor,
       tutorContext: _tutor == null ? null : _tutorContext(guide, content),
+      timeIsUp: _timeIsUp,
     );
     made.addListener(_speak);
     // The first question is spoken as soon as the lesson opens.
@@ -269,7 +314,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer]),
       builder: (BuildContext ctx, Widget? _) {
         final TemplateSession session = _sessionFor(controller);
-        if (controller.finished) _endVisit('finished');
+        if (controller.finished) _endVisit(_endReason());
         final bool helpOffered =
             !controller.finished &&
             controller.errors >= 1 &&
@@ -283,7 +328,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             ? CharacterState.think
             : heard == MicState.notUnderstood
             ? CharacterState.surprised
-            : controller.finished || controller.feedback == FeedbackKind.correct
+            : (controller.finished && !controller.endedForRest) || controller.feedback == FeedbackKind.correct
             ? CharacterState.celebrate
             : controller.feedback == FeedbackKind.notYet
             ? CharacterState.encourage
@@ -310,12 +355,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           tiles: controller.finished ? null : session.buildTiles(ctx, spec),
           overlay: controller.finished
               ? LessonCelebration(
-                  text: controller.lesson.celebration.caption,
+                  text: controller.endedForRest ? He.restGoodbye.text : controller.lesson.celebration.caption,
                   onDone: _home,
                   cameo: SpeakingCharacter(
                     character: guide.character,
                     director: _director,
-                    resting: CharacterState.celebrate,
+                    resting: controller.endedForRest ? CharacterState.idle : CharacterState.celebrate,
                     voiceOf: guide.character.id,
                   ),
                 )

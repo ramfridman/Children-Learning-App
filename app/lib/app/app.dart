@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
 import '../child/calm_loading.dart';
+import '../child/rest_scene.dart';
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
 import '../characters/character.dart';
@@ -19,6 +20,8 @@ import '../play/lesson_screen.dart';
 import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
 import 'companion.dart';
+import '../parent/time_rules.dart';
+import 'rules_providers.dart';
 import 'state.dart';
 import 'tutor_providers.dart';
 
@@ -130,6 +133,17 @@ class _HomeState extends ConsumerState<_Home> {
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (BuildContext c) => const FriendsBeach()));
 
   Future<void> _openLesson() async {
+    // Time is up (rest hours, the schedule or the daily limit, with the lock on): a calm scene instead of the lesson.
+    final ({String id, int band}) child = (id: widget.profile.id, band: widget.profile.ageBand);
+    ref.invalidate(timeVerdictProvider(child));
+    final TimeVerdict verdict = await ref.read(timeVerdictProvider(child).future);
+    if (!mounted) return;
+    if (verdict.locked) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(builder: (BuildContext c) => RestScene(onBack: () => Navigator.of(c).pop())),
+      );
+      return;
+    }
     final bool? finished = await Navigator.of(
       context,
     ).push(MaterialPageRoute<bool>(builder: (BuildContext c) => LessonScreen(profileId: widget.profile.id)));

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/parent/parent_rules.dart';
 import 'package:nitznutz/app/app.dart';
 import 'package:nitznutz/app/companion.dart';
 import 'package:nitznutz/app/tutor_providers.dart';
@@ -100,11 +101,13 @@ class AppRig {
     this.tutorEnabledOnServer = true,
     this.switchAnswersAfter = Duration.zero,
     this.holdCharacters,
+    this.rules,
+    int? clockMs,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
        store = MemoryStore(),
        platform = FakePlatform(),
-       clock = ControlledClock(1793000000000),
+       clock = ControlledClock(clockMs ?? 1793000000000),
        db = AppDatabase(NativeDatabase.memory()) {
     setup = FakeSetupBackend(store);
     gateQuestion = ParentGate(store: MemoryStore(), clock: clock, random: Random(gateSeed)).newQuestion();
@@ -127,6 +130,9 @@ class AppRig {
   final TutorClient? tutor;
   final bool aiHelper;
   final bool tutorEnabledOnServer;
+
+  /// The parent's time rules to start with (the app's defaults when null).
+  final ParentRules? rules;
 
   /// How long the server takes to answer the helper switch (the first call after the function slept).
   final Duration switchAnswersAfter;
@@ -225,6 +231,7 @@ class AppRig {
       addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
     }
     if (voice) await db.putSetting('voice_enabled', 'on');
+    if (rules != null) await db.putSetting('parent_rules', rules!.encode());
     if (tutor != null && aiHelper) await db.putSetting('ai_helper', 'on');
     await tester.pumpWidget(ProviderScope(overrides: overrides, child: const NitznutzApp()));
     await tester.pumpAndSettle();

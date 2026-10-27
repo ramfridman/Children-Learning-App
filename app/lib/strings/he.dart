@@ -35,6 +35,12 @@ abstract final class He {
   static const Str friendsTitle = Str('מִי יִהְיֶה הֶחָבֵר שֶׁלִּי?', nikud: true);
   static const Str friendChosenSemantics = Str('החבר שנבחר');
   static const Str homeParents = Str('הורים');
+  static const Str restScene = Str('עַכְשָׁו נָחִים קְצָת. נִפָּגֵשׁ שׁוּב אַחַר כָּךְ!', nikud: true);
+  static const Str restBackSemantics = Str('חזרה');
+  static const Str restGoodbye = Str(
+    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.',
+    nikud: true,
+  );
   static const Str homeDaily = Str('הַהַרְפַּתְקָה שֶׁל הַיּוֹם', nikud: true);
   static const Str homeBubble = Str('{child}, הַבַּקְבּוּק הִגִּיעַ!', nikud: true);
   static const Str landColors = Str('מִפְרַץ הַצְּבָעִים', nikud: true);
