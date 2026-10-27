@@ -1,49 +1,36 @@
 # Push to the parent's phone, and the weekly backups (M7b): what only you can do
 
-Nothing here is needed to use the parent area, sync or alerts: alerts already wait in the app and arrive when a phone syncs. These two things add (1) a push on the parent's other phone, and (2) a weekly encrypted backup. Do them in this order, in PowerShell, from the repository root. I run the commands that need your project ref myself once you tell me each step is done.
+Nothing here is needed to use the parent area, sync or alerts: alerts already wait in the app and arrive when a phone syncs. These two things add (1) a push on the parent's other phone, and (2) a weekly encrypted backup. The build is done; what is left is below.
 
-## 1. A Firebase project (for the push on Android)
+## Done already
 
-Firebase is Google's service that delivers a push to an Android phone. Only the parent's phones use it. The push says only "יש התראה חדשה"; no name, no alert, no child data.
+- The Firebase project, its two Android apps (`app.nitznutz.nitznutz.dev` and `app.nitznutz.nitznutz`) and the sending key on the server (`FCM_SERVICE_ACCOUNT`).
+- The `age` key pair for backups. The public half is in the backup workflow; the private half is `C:\Users\ramfr\nitznutz-secrets\backup-age-key.txt`.
+- The read-only database login `backup_reader` and its address, saved in `C:\Users\ramfr\nitznutz-secrets\backup-database-url.txt`.
 
-1. Open <https://console.firebase.google.com> and sign in with the Google account you want to own this (the same one you use for the app is fine).
-2. **Add project**. Name it `nitznutz`. When it asks about Google Analytics, switch it **off**.
-3. In the project, **Add app**, choose **Android**.
-   - Package name: `app.nitznutz.nitznutz.dev` (the development build you install now). Skip the optional fields. **Register app**.
-   - **Download `google-services.json`**. Then add a second Android app the same way for the release build, package name `app.nitznutz.nitznutz`, and download its file too.
-   - Do not commit them. Put them anywhere outside the repository, for example `C:\Users\ramfr\nitznutz-secrets\firebase\`, and tell me the two file names. I place them where the build needs them and add the one allow-list entry the secret scanner will want (these files hold a client key that is public by design, not a secret).
-4. Still in the project, open **Project settings**, then **Service accounts**, then **Generate new private key**. A `.json` file downloads. This one **is a secret**: it lets someone send pushes in your name.
-   - Keep it outside the repository, for example `C:\Users\ramfr\nitznutz-secrets\firebase\service-account.json`.
-   - Give it to the server (the value never appears on screen or in Git):
+## 1. Clean up the secrets on this PC (once)
 
-     ```powershell
-     $raw = Get-Content -Raw 'C:\Users\ramfr\nitznutz-secrets\firebase\service-account.json'
-     npx supabase secrets set "FCM_SERVICE_ACCOUNT=$raw" --project-ref ungkvkabqxssggttajfs
-     Remove-Variable raw
-     ```
+1. Save these in 1Password as file attachments, then delete the copies you do not need on disk:
+   - `Downloads\google services\...firebase-adminsdk-fbsvc-....json` (the Firebase sending key: **delete it from Downloads** after saving).
+   - `Downloads\google services\google-services.json` and `google services prod.json` (not secret in the same way, but keep them: without them a new PC cannot build push).
+   - `C:\Users\ramfr\nitznutz-secrets\backup-age-key.txt` (**the only key that opens a backup**; keep a second copy offline).
+2. The two `google-services` files are also copied into the repository folders `app\android\app\src\dev\` and `src\prod\`. Git ignores them; leave them there.
 
-   - Save the file in 1Password, then delete it from the disk.
-5. Tell me "Firebase is done". I then add the Firebase packages to the app (you already approved `firebase_core` and `firebase_messaging` for parent devices only), register each parent phone's token, and prove the push on your phone.
+## 2. Give GitHub the backup login (the one thing I may not do for you)
 
-## 2. The weekly encrypted backup
+A GitHub secret is stored by you. In PowerShell, from the repository root:
 
-Every week a job dumps the family data, encrypts it with a public key, and stores the last four. Only you can open them, with the private key.
+```powershell
+Get-Content -Raw C:\Users\ramfr\nitznutz-secrets\backup-database-url.txt | gh secret set BACKUP_DATABASE_URL --repo ramfridman/Children-Learning-App
+```
 
-1. Install `age` (a small encryption tool):
+Then tell me "backup secret is set", and I start the first run and check that it produced an encrypted file.
 
-   ```powershell
-   winget install --id FiloSottile.age
-   ```
+## 3. Prove push on your phone
 
-   Close and reopen PowerShell.
-2. Make the key pair:
-
-   ```powershell
-   age-keygen -o C:\Users\ramfr\nitznutz-secrets\backup-age-key.txt
-   ```
-
-   It prints a line `Public key: age1...`. **Copy that line.** The file is the **private** key: save it in 1Password, and keep a second copy somewhere offline. Without it a backup cannot be opened, and anyone with it can read every backup.
-3. Tell me the public key (it is safe to share) and "age is done". I add it to the backup workflow, set up the backup login on the database, and ask you for one more thing then (a GitHub secret, with exact steps).
+1. Install the newest dev build (I do this for you when the phone is connected by USB).
+2. Open the parent area, find the card **התראות בטלפון הזה**, turn it on, and press **Allow** when Android asks to show notifications.
+3. Tell me "push is on". I check that the server has the phone's address and send one real test push. You should see a notification that says only "יש התראה חדשה"; tapping it opens the parent gate.
 
 ## What I will not ask you to do
 

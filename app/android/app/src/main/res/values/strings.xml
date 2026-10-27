@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The name of the notification channel for parent alerts; Hebrew text in a resource, as for every Android string. -->
+    <string name="alerts_channel_name">התראות להורים</string>
+</resources>

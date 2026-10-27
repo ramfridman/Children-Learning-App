@@ -22,6 +22,7 @@ import '../ui/dev/dev_strings.dart';
 import 'companion.dart';
 import '../parent/time_rules.dart';
 import 'rules_providers.dart';
+import 'push_providers.dart';
 import 'sync_providers.dart';
 import 'state.dart';
 import 'tutor_providers.dart';
@@ -41,11 +42,14 @@ class NitznutzApp extends ConsumerWidget {
       locale: const Locale('he'),
       supportedLocales: const <Locale>[Locale('he')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      navigatorKey: ref.watch(navigatorKeyProvider),
       theme: AppTheme.child(),
       builder: (BuildContext context, Widget? child) => SyncScope(
-        child: LayoutScope(
-          band: active == null ? Band.b : Band.values[active.ageBand],
-          child: _OrientationLock(child: child!),
+        child: PushScope(
+          child: LayoutScope(
+            band: active == null ? Band.b : Band.values[active.ageBand],
+            child: _OrientationLock(child: child!),
+          ),
         ),
       ),
       home: const _Root(),

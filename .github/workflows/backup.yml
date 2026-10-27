@@ -1,0 +1,73 @@
+# Weekly encrypted backup of the family data (the `app` schema). The dump is encrypted with a PUBLIC key before it is
+# stored, so this job holds nothing that can open it; the private key is only in the owner's password manager.
+# The job logs in as the read-only database role `backup_reader` (see the migration 20261028120000_backup_role.sql).
+# The last four weeks are kept: artifacts expire after 28 days.
+name: backup
+
+on:
+  schedule:
+    - cron: '17 3 * * 0'
+  workflow_dispatch:
+  push:
+    branches: [m7a-parent-controls]
+    paths: ['.github/workflows/backup.yml']
+
+permissions: {}
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    name: backup (encrypted dump of the app schema)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      AGE_PUBLIC_KEY: age1c8ktydg7kdasj88khdwpnf83mr0jcvxw073m8av3h28l4uz9agwqvzj8tu
+      BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+    steps:
+      - name: Check the secret is set
+        run: |
+          if [ -z "$BACKUP_DATABASE_URL" ]; then
+            echo "::error::The GitHub secret BACKUP_DATABASE_URL is not set (see docs/setup/push-and-backups.md, step 2)."
+            exit 1
+          fi
+
+      - name: Install the PostgreSQL 17 client and age
+        run: |
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+          sudo apt-get install -y -qq postgresql-client-17 age
+          /usr/lib/postgresql/17/bin/pg_dump --version
+          age --version
+
+      - name: Dump the app schema
+        run: |
+          set -euo pipefail
+          /usr/lib/postgresql/17/bin/pg_dump "$BACKUP_DATABASE_URL" \
+            --schema=app --format=custom --no-owner --no-privileges --file=dump.bin
+          size=$(stat -c %s dump.bin)
+          tables=$(/usr/lib/postgresql/17/bin/pg_restore --list dump.bin | grep -c ' TABLE DATA ')
+          echo "dump: $size bytes, $tables tables with data"
+          if [ "$size" -lt 10000 ] || [ "$tables" -lt 10 ]; then
+            echo "::error::The dump looks too small to be the whole app schema."
+            exit 1
+          fi
+
+      - name: Encrypt it, and remove the plain copy
+        run: |
+          set -euo pipefail
+          out="nitznutz-backup-$(date -u +%Y-%m-%d).dump.age"
+          age --recipient "$AGE_PUBLIC_KEY" --output "$out" dump.bin
+          shred -u dump.bin || rm -f dump.bin
+          ls -l "$out"
+          sha256sum "$out"
+
+      - name: Keep it for four weeks
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: nitznutz-backup
+          path: nitznutz-backup-*.dump.age
+          retention-days: 28
+          compression-level: 0
+          if-no-files-found: error

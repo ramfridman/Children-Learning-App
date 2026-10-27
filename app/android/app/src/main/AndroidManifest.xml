@@ -2,6 +2,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Asked of a parent, from the "Voice answers" switch, never of a child. The microphone opens only when a child taps it. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Asked of a parent, from the "Alerts on this phone" switch, never of a child. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="${appName}"
         android:allowBackup="false"
@@ -32,6 +34,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Push stays off until a parent turns it on: the push library does not register this phone by itself,
+             and nothing is collected for analytics. Pushes arrive on the "alerts" channel (made in MainActivity). -->
+        <meta-data android:name="firebase_messaging_auto_init_enabled" android:value="false"/>
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false"/>
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="alerts"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

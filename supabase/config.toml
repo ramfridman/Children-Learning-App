@@ -453,6 +453,8 @@ verify_jwt = false
 verify_jwt = false
 [functions.push-token-register]
 verify_jwt = false
+[functions.push-token-remove]
+verify_jwt = false
 [functions.settings-get]
 verify_jwt = false
 [functions.settings-put]

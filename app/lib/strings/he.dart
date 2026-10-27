@@ -285,6 +285,13 @@ abstract final class He {
   static const Str areaVoiceNoModel = Str('מודל הזיהוי עוד לא הותקן במכשיר הזה.');
   static const Str areaVoiceNoPermission = Str('לא ניתנה הרשאת מיקרופון. אפשר לתת אותה בהגדרות המכשיר.');
   static const Str areaVoiceCredit = Str('זיהוי דיבור: ivrit.ai Zipformer מאת יעקב קולני, רישיון CC-BY-4.0.');
+  static const Str areaPush = Str('התראות בטלפון הזה');
+  static const Str areaPushHelp = Str(
+    'כשנוצרת התראה חדשה, הטלפון הזה מקבל הודעה קצרה שאומרת רק "יש התראה חדשה". שמות, מילים ופרטים על הילדים לא נשלחים בהודעה, והם נפתחים רק באפליקציה, מאחורי הקוד שלכם.',
+  );
+  static const Str areaPushDenied = Str('לא ניתנה הרשאה להצגת הודעות. אפשר לתת אותה בהגדרות המכשיר.');
+  static const Str areaPushUnavailable = Str('ההתראות בטלפון לא זמינות בגרסה הזו של האפליקציה.');
+  static const Str areaPushFailed = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
   static const Str areaVersion = Str('גרסה');
   static const Str areaOffline = Str('אין חיבור לאינטרנט, אי אפשר לטעון את רשימת המכשירים.');
   static const Str confirmYes = Str('כן');

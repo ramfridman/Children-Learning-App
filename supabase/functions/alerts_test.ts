@@ -27,6 +27,7 @@ import { spec as alertList } from "./alert-list/handler.ts";
 import { spec as alertRead } from "./alert-read/handler.ts";
 import { spec as childPut } from "./child-put/handler.ts";
 import { spec as pushToken } from "./push-token-register/handler.ts";
+import { spec as pushTokenRemove } from "./push-token-remove/handler.ts";
 import { spec as settingsGet } from "./settings-get/handler.ts";
 import { spec as settingsPut } from "./settings-put/handler.ts";
 import { spec as tutorLog } from "./tutor-log/handler.ts";
@@ -52,6 +53,7 @@ async function setup() {
     list: makeHandler(alertList, () => svc),
     read: makeHandler(alertRead, () => svc),
     token: makeHandler(pushToken, () => svc),
+    untoken: makeHandler(pushTokenRemove, () => svc),
     get: makeHandler(settingsGet, () => svc),
     put: makeHandler(settingsPut, () => svc),
     log: makeHandler(tutorLog, () => svc),
@@ -151,6 +153,17 @@ Deno.test("alert-create: a dead push token is removed, a failing push never fail
   assert.equal(store.pushTokenRows.length, 1, "a passing failure keeps the token");
   svc.push = undefined;
   assert.equal((await call(h.create, child, "alert-create", alert({ key: "upset:3" }))).status, 200);
+});
+
+Deno.test("push-token-remove: a parent phone takes only itself off the list; a child device cannot", async () => {
+  const { h, child, parent, parent2, store } = await setup();
+  await call(h.token, parent, "push-token-register", { token: TOKEN, platform: "android" });
+  await call(h.token, parent2, "push-token-register", { token: "other-" + TOKEN, platform: "android" });
+  assert.equal((await call(h.untoken, child, "push-token-remove", {})).status, 403);
+  assert.equal(store.pushTokenRows.length, 2);
+  assert.equal((await call(h.untoken, parent, "push-token-remove", {})).status, 200);
+  assert.equal(store.pushTokenRows.length, 1, "only this phone's token is gone");
+  assert.equal((await call(h.untoken, parent, "push-token-remove", {})).status, 200, "twice is fine");
 });
 
 Deno.test("alert-create: a device can raise only a limited number of alerts an hour", async () => {

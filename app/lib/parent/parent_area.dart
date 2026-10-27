@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/alerts_provider.dart';
 import '../app/progress_provider.dart';
+import '../app/push_providers.dart';
 import '../app/providers.dart';
 import '../app/state.dart';
 import '../app/tutor_log_provider.dart';
@@ -44,6 +45,7 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
   List<DeviceInfo>? _devices;
   bool _offline = false;
   String? _voiceNote;
+  String? _pushNote;
 
   @override
   void initState() {
@@ -76,6 +78,19 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
       () => _voiceNote = switch (r) {
         VoiceSwitch.modelMissing => He.areaVoiceNoModel.text,
         VoiceSwitch.permissionDenied => He.areaVoiceNoPermission.text,
+        _ => null,
+      },
+    );
+  }
+
+  Future<void> _setPush(bool on) async {
+    final PushSwitch r = await ref.read(pushEnabledProvider.notifier).set(on);
+    if (!mounted) return;
+    setState(
+      () => _pushNote = switch (r) {
+        PushSwitch.denied => He.areaPushDenied.text,
+        PushSwitch.unavailable => He.areaPushUnavailable.text,
+        PushSwitch.failed => He.areaPushFailed.text,
         _ => null,
       },
     );
@@ -311,6 +326,22 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                   style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
                 ),
               ]),
+              if (ref.watch(isParentDeviceProvider).value ?? true)
+                _card(He.areaPush.text, <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(He.areaPushHelp.text, style: AppText.parent(TokenType.parentSmall)),
+                      ),
+                      Switch(
+                        key: const Key('push-switch'),
+                        value: ref.watch(pushEnabledProvider).value ?? false,
+                        onChanged: _setPush,
+                      ),
+                    ],
+                  ),
+                  if (_pushNote != null) Text(_pushNote!, style: AppText.parent(TokenType.parentSmall)),
+                ]),
               ParentButton(label: He.areaLockNow.text, onPressed: widget.onClose),
               const SizedBox(height: 24),
               // Long press on the version opens the device-chain test page in the dev flavour only.
