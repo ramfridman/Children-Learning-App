@@ -17,6 +17,12 @@ import { type Failure, type TurnFacts, validateReply, VALIDATOR_VERSION } from "
 const lexicon = loadLexicon();
 const blocklist = loadBlocklist();
 
+/** A refused line, for the owner's speed test only: Hebrew letters and basic punctuation kept, the rest dropped. */
+function refusedText(raw: unknown): string {
+  const say = (raw as { say?: unknown } | null)?.say;
+  return typeof say === "string" ? say.replace(/[^א-ת .,?!]/g, "").slice(0, 120) : "(no say)";
+}
+
 /** Settings in the `config` table, with the defaults the PLAN sets. Anything not switched on is off. */
 export interface Settings {
   tutorEnabled: boolean;
@@ -266,6 +272,7 @@ export async function makeLine(
   let outTokens = 0;
   let modelMs = 0;
   let reasons: string[] = [];
+  const refused: string[] = [];
   let verdict: ReturnType<typeof validateReply> | null = null;
   const addCost = async (chars: number) => {
     const micro = (inTokens * cfg.priceInPerMtok + outTokens * cfg.priceOutPerMtok) / 1_000_000 +
@@ -290,7 +297,9 @@ export async function makeLine(
       inTokens += ans.inputTokens;
       outTokens += ans.outputTokens;
       modelMs += performance.now() - t0;
-      verdict = validateReply(extractJson(ans.text), item, turn, lexicon, blocklist);
+      const raw = extractJson(ans.text);
+      verdict = validateReply(raw, item, turn, lexicon, blocklist);
+      if (!verdict.ok) refused.push(`${verdict.failures.join("+")}: ${refusedText(raw)}`);
     } catch (e) {
       modelMs += performance.now() - t0;
       await addCost(0);
@@ -308,7 +317,9 @@ export async function makeLine(
   }
   if (!verdict || !verdict.ok) {
     await addCost(0);
-    if (timings && verdict && !verdict.ok) timings.detail = `checks failed: ${verdict.failures.join(", ")}`;
+    if (timings && verdict && !verdict.ok) {
+      timings.detail = `checks failed: ${verdict.failures.join(", ")} | refused: ${refused.join(" | ")}`;
+    }
     return await ruleOut("validator_failed", {
       failures: verdict && !verdict.ok ? (verdict.failures as Failure[]) : [],
       modelMs,
