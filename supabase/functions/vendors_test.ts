@@ -48,3 +48,33 @@ Deno.test("voice errors keep the HTTP status and the provider's status word", as
   assert.equal(e.reason, "status");
   assert.equal(e.detail, "HTTP 404 voice_not_found");
 });
+
+Deno.test("the model request turns thinking off and keeps the key in a header, not in the body", async () => {
+  let seen: { headers: Headers; body: Record<string, unknown> } | null = null;
+  const fetchFn = ((_url: string, init: RequestInit) => {
+    seen = { headers: new Headers(init.headers), body: JSON.parse(String(init.body)) };
+    return Promise.resolve(
+      new Response(
+        JSON.stringify({
+          content: [{ type: "text", text: "{}" }],
+          usage: { input_tokens: 5, output_tokens: 2 },
+        }),
+      ),
+    );
+  }) as unknown as typeof fetch;
+  await anthropicClient("the-key", fetchFn).complete(req);
+  assert.deepEqual(seen!.body.thinking, { type: "disabled" });
+  assert.equal(seen!.body.model, "claude-haiku-5-5");
+  assert.equal(seen!.headers.get("x-api-key"), "the-key");
+  assert.equal(JSON.stringify(seen!.body).includes("the-key"), false);
+});
+
+Deno.test("a reply with no text says which blocks came back and why it stopped, in fixed words only", async () => {
+  const c = anthropicClient(
+    "key",
+    json(200, { content: [{ type: "thinking", thinking: "private text" }], stop_reason: "max_tokens" }),
+  );
+  const e = await failure<ModelFailed>(() => c.complete(req));
+  assert.equal(e.reason, "format");
+  assert.equal(e.detail, "blocks thinking stop max_tokens");
+});

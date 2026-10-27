@@ -53,6 +53,9 @@ export function anthropicClient(apiKey: string, fetchFn: typeof fetch = fetch): 
           body: JSON.stringify({
             model: ANTHROPIC_MODEL,
             max_tokens: req.maxTokens,
+            // Haiku 5.5 thinks by default, and its thinking counts toward max_tokens: with a small limit it can finish
+            // with no text at all. One short sentence needs no thinking, and leaving it out is faster and cheaper.
+            thinking: { type: "disabled" },
             // The fixed part is marked for the provider's prompt cache: a faster, cheaper start.
             system: [{ type: "text", text: req.system, cache_control: { type: "ephemeral" } }],
             messages: [{ role: "user", content: req.user }],
@@ -64,10 +67,16 @@ export function anthropicClient(apiKey: string, fetchFn: typeof fetch = fetch): 
         }
         const j = await res.json() as {
           content?: Array<{ type: string; text?: string }>;
+          stop_reason?: unknown;
           usage?: { input_tokens?: number; output_tokens?: number; cache_read_input_tokens?: number };
         };
         const text = j.content?.find((c) => c.type === "text")?.text;
-        if (typeof text !== "string") throw new ModelFailed("format");
+        if (typeof text !== "string") {
+          // Only fixed words: which kinds of block came back, and why the model stopped.
+          const word = (v: unknown) => typeof v === "string" && /^[a-z_]{2,30}$/.test(v) ? v : "?";
+          const kinds = (j.content ?? []).slice(0, 4).map((c) => word(c?.type)).join("+") || "none";
+          throw new ModelFailed("format", `blocks ${kinds} stop ${word(j.stop_reason)}`);
+        }
         return {
           text,
           inputTokens: (j.usage?.input_tokens ?? 0) + (j.usage?.cache_read_input_tokens ?? 0),
