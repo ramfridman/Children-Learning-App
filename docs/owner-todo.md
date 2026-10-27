@@ -8,7 +8,7 @@ Last updated: 2026-10-27 (phone test day done for M1 to M5; M6 live phase waitin
 
 | # | What | Why it waits | Where |
 |---|------|--------------|-------|
-| D1 | **Confirm M4 and M5** (characters and voice out; voice in), after the phone test day, so Claude can merge `m4-characters-voice` and then `m5-voice-in` into `main` | CI is green; the owner was away from the PC and could not look at the report | `docs/milestones/M4.md` section 11 |
+| ~~D1~~ | ~~Confirm M4 and M5~~ | Done 2026-10-27: both merged into `main`, CI green | `docs/milestones/M4.md`, `M5.md` |
 | ~~D2~~ | ~~OK for the M5 plan and its packages~~ | Done 2026-10-26: approved, with adult recordings now and the children's accuracy left for a later phase | `docs/milestones/M5.md` |
 | ~~D3~~ | ~~A number for Q9~~ | Done 2026-10-26: the daily cap stays at 0.50 USD per family (changeable in `config` without an update) | `docs/milestones/M6.md` |
 
