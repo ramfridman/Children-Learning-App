@@ -15,7 +15,8 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M5 Voice in | **Done and merged to `main` on 2026-10-27** (CI green, all six jobs; report in `docs/milestones/M5.md` section 11). Phone-tested by the owner: the parent switch, answering by word and number, the "I heard… right?" check, the repair steps and the commands. **Accuracy is still not measured**: adult recordings (to-do P4) next, children's later (stays open, as agreed). |
 | M6 Gateway and AI tutor | **Merged into `main` on 2026-10-27** after the owner's confirmation and all six CI jobs green. Real Haiku 5.5 and ElevenLabs run through the gateway; device checks A to D passed on the phone (check E, Band A caption, is still to confirm); cache-hit round trip 0.6 s median; 66 reviewed hero-son lines voiced (review-and-voice flow); lexicon 570 words, teaching moves, all awaiting the Hebrew editor. Report: `docs/milestones/M6.md` section 11. |
 | M7 Parent area | **Merged into `main` on 2026-10-28** after the owner's confirmation and all six CI jobs green. 7a (time rules, progress view, alerts) was checked on the phone. 7b (sync, deletion, alerts and rules across devices, the helper log): the server is live and the owner's phone synced to it (child with nickname, 54 answers, 29 visits, alerts, rules). Push (app side) and the weekly encrypted backup are built (the first backup ran and opens with his key); push was proved on his phone (a tap goes straight to the gate). Open: a second real device, the report button on the helper log, home activities (pack 0.3.0 and the `carry` step), recorded lines (need his OK on cost), the Firebase key file to 1Password and out of Downloads, the alert word lists and Hebrew strings to an editor. Reports: `docs/milestones/M7.md` sections 11 and 12. |
-| M8–M9 | Not started |
+| M8 Rewards and world | **Plan written, waiting for the owner's OK** (`docs/milestones/M8.md`, questions Q1 to Q11). Nothing coded. |
+| M9 | Not started |
 
 ## Done
 
@@ -82,4 +83,4 @@ The full checklist is `docs/owner-todo.md`. In short:
 
 ## Next step
 
-Claude: M7 is merged. Next is M8; write its plan in `docs/milestones/M8.md` and get the owner's OK before coding. Do not merge anything without the owner's confirmation.
+Claude: M7 is merged and the M8 plan is in `docs/milestones/M8.md` (branch `m8-rewards-world`). Wait for the owner's answers to Q1 to Q11 before coding. Do not merge anything without the owner's confirmation.
