@@ -14,7 +14,8 @@ Read `CLAUDE.md` and this file at the start of every session. The next agent's b
 | M4 Characters and voice out | **Done and merged to `main` on 2026-10-27** (CI green, all six jobs; report in `docs/milestones/M4.md` section 11). Phone-tested by the owner: nine friends on Friends' Beach, a tone per friend with the mouth moving, the companion on the map and in lessons, the celebration. The voices are free test tones; real ElevenLabs voices (Phase H, to-do P3) are still to do. |
 | M5 Voice in | **Done and merged to `main` on 2026-10-27** (CI green, all six jobs; report in `docs/milestones/M5.md` section 11). Phone-tested by the owner: the parent switch, answering by word and number, the "I heard… right?" check, the repair steps and the commands. **Accuracy is still not measured**: adult recordings (to-do P4) next, children's later (stays open, as agreed). |
 | M6 Gateway and AI tutor | **Built on branch `m6-gateway-tutor` (stacked on the unmerged M5), proved with fakes; the live proof (Phase F) has not run** (report in `docs/milestones/M6.md` section 11). Tables, `content-publish`, the lexicon (417 words, unreviewed), the ten checks (451 scenarios: all bad replies refused for their rule, 0 of 170 good ones refused), `tutor-turn`, `tutor-prewarm`, and the app side (prefetch, cache, circuit breaker, 3-second plan, live voice) work. **Speed is not measured**; needs his keys, model id and voice ids (to-do P7) (Q9, the 0.50 USD daily cap, is settled). |
-| M7–M9 | Not started |
+| M7 Parent area | **Plan written (`docs/milestones/M7.md`), waiting for the owner's answers to Q1 to Q9 and his OK; no code yet.** |
+| M8–M9 | Not started |
 
 ## Done
 
