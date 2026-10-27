@@ -11,6 +11,7 @@ import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/fake_speech.dart';
+import 'support/golden_comparator.dart';
 import 'support/harness.dart';
 
 Future<void> wait(WidgetTester t, [int ms = 2000]) async {
@@ -32,7 +33,11 @@ Future<void> openArea(WidgetTester tester, AppRig rig) async {
 }
 
 void main() {
-  setUpAll(loadAppFonts);
+  setUpAll(() async {
+    await loadAppFonts();
+    // The pictures are made on Windows and checked on Linux in CI: letters are smoothed a little differently.
+    useTolerantGoldens(0.03);
+  });
   goldenAlerts();
 
   testWidgets(

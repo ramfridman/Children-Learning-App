@@ -10,6 +10,7 @@ import 'package:nitznutz/parent/progress_screen.dart';
 import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
+import 'support/golden_comparator.dart';
 import 'support/harness.dart';
 
 Future<AppRig> openProgress(WidgetTester tester, AppRig rig, {bool seed = true}) async {
@@ -52,7 +53,11 @@ Future<void> attempt(AppRig rig, DateTime at, String result, {int no = 1, int hi
     );
 
 void main() {
-  setUpAll(loadAppFonts);
+  setUpAll(() async {
+    await loadAppFonts();
+    // The pictures are made on Windows and checked on Linux in CI: letters are smoothed a little differently.
+    useTolerantGoldens(0.03);
+  });
 
   testWidgets('a child who has not played gets one calm sentence, and no empty charts', (
     WidgetTester tester,
