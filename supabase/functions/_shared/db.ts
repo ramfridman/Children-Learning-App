@@ -6,7 +6,17 @@ import postgres from "npm:postgres@3.4.9";
 import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
 import { compareSemver } from "./semver.ts";
-import type { CachedLine, DeviceSummary, RevokeReason, Store, TakeResult, TutorContext } from "./store.ts";
+import type {
+  CachedLine,
+  ChildProfile,
+  DeviceSummary,
+  EventIn,
+  EventOut,
+  RevokeReason,
+  Store,
+  TakeResult,
+  TutorContext,
+} from "./store.ts";
 
 const bytes = (v: unknown): Bytes => new Uint8Array(v as ArrayLike<number>) as Bytes;
 const buf = (b: Uint8Array) => Buffer.from(b);
@@ -393,6 +403,94 @@ export function pgStore(sql: Sql): Store {
           array(select jsonb_array_elements_text(${JSON.stringify(r.validatorFailures)}::text::jsonb)),
           ${r.promptVersion}, ${Math.round(r.totalMs)}, ${r.modelMs === null ? null : Math.round(r.modelMs)},
           ${r.voiceMs === null ? null : Math.round(r.voiceMs)}, ${r.elevenRequestId})`;
+    },
+
+    async upsertChild(familyId, c) {
+      const [gone] =
+        await sql`select 1 from app.deleted_child where family_id = ${familyId} and child_id = ${c.id}`;
+      if (gone) return "deleted";
+      await sql`
+        insert into app.child_profile (family_id, id, nickname, avatar_id, companion_id, address_form, age_band)
+        values (${familyId}, ${c.id}, ${c.nickname}, ${c.avatarId}, ${c.companionId}, ${c.addressForm}, ${c.ageBand})
+        on conflict (family_id, id) do update set nickname = excluded.nickname, avatar_id = excluded.avatar_id,
+          companion_id = excluded.companion_id, address_form = excluded.address_form, age_band = excluded.age_band,
+          updated_at = now()`;
+      return "saved";
+    },
+
+    async listChildren(familyId) {
+      const rows = await sql`
+        select id, nickname, avatar_id, companion_id, address_form, age_band
+          from app.child_profile where family_id = ${familyId} order by created_at, id`;
+      return rows.map((r): ChildProfile => ({
+        id: r.id,
+        nickname: r.nickname,
+        avatarId: r.avatar_id,
+        companionId: r.companion_id,
+        addressForm: r.address_form,
+        ageBand: r.age_band,
+      }));
+    },
+
+    async listTombstones(familyId) {
+      const rows =
+        await sql`select child_id from app.deleted_child where family_id = ${familyId} order by deleted_at`;
+      return rows.map((r) => r.child_id as string);
+    },
+
+    async deleteChild(familyId, childId) {
+      await sql`select app.delete_child(${familyId}, ${childId})`;
+    },
+
+    async insertEvents(familyId, deviceId, events: readonly EventIn[]) {
+      if (events.length === 0) return { accepted: 0, duplicates: 0, refused: [] };
+      const ids = [...new Set(events.map((e) => e.childId))];
+      const known =
+        await sql`select id from app.child_profile where family_id = ${familyId} and id = any(${ids})`;
+      const have = new Set(known.map((r) => r.id as string));
+      let accepted = 0;
+      let duplicates = 0;
+      const refused: string[] = [];
+      await sql.begin(async (tx) => {
+        for (const e of events) {
+          if (!have.has(e.childId)) {
+            refused.push(e.id);
+            continue;
+          }
+          const rows = await tx`
+            insert into app.event (id, family_id, child_id, device_id, client_at, engine_version, type, payload)
+            values (${e.id}, ${familyId}, ${e.childId}, ${deviceId}, ${new Date(
+            e.clientAtMs,
+          )}, ${e.engineVersion},
+              ${e.type}, ${JSON.stringify(e.payload)}::text::jsonb)
+            on conflict (family_id, id) do nothing
+            returning seq`;
+          if (rows.length === 1) accepted++;
+          else duplicates++;
+        }
+      });
+      return { accepted, duplicates, refused };
+    },
+
+    async pullEvents(familyId, after, limit) {
+      const rows = await sql`
+        select seq, id, child_id, device_id, client_at, engine_version, type, payload
+          from app.event where family_id = ${familyId} and seq > ${after}
+         order by seq limit ${limit + 1}`;
+      const more = rows.length > limit;
+      return {
+        more,
+        events: rows.slice(0, limit).map((r): EventOut => ({
+          seq: Number(r.seq),
+          id: r.id,
+          childId: r.child_id,
+          deviceId: r.device_id,
+          clientAtMs: (r.client_at as Date).getTime(),
+          engineVersion: r.engine_version,
+          type: r.type,
+          payload: r.payload as Record<string, unknown>,
+        })),
+      };
     },
   };
 }

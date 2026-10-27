@@ -8,7 +8,10 @@ import { compareSemver } from "./semver.ts";
 import type {
   CachedLine,
   CacheKey,
+  ChildProfile,
   DeviceSummary,
+  EventIn,
+  EventOut,
   PublishedPack,
   RevokeReason,
   Store,
@@ -322,6 +325,60 @@ export class FakeStore implements Store {
   logTutor(row: TutorLogRow) {
     this.logs.push(row);
     return Promise.resolve();
+  }
+
+  // ---- the parent area (M7b) ----
+  children = new Map<string, Map<string, ChildProfile>>();
+  tombstones = new Map<string, Set<string>>();
+  events: Array<EventOut & { familyId: string }> = [];
+  private nextSeq = 1;
+
+  upsertChild(familyId: string, c: ChildProfile) {
+    if (this.tombstones.get(familyId)?.has(c.id)) return Promise.resolve("deleted" as const);
+    const m = this.children.get(familyId) ?? new Map<string, ChildProfile>();
+    m.set(c.id, { ...c });
+    this.children.set(familyId, m);
+    return Promise.resolve("saved" as const);
+  }
+  listChildren(familyId: string) {
+    return Promise.resolve([...(this.children.get(familyId)?.values() ?? [])]);
+  }
+  listTombstones(familyId: string) {
+    return Promise.resolve([...(this.tombstones.get(familyId) ?? [])]);
+  }
+  deleteChild(familyId: string, childId: string) {
+    this.children.get(familyId)?.delete(childId);
+    this.events = this.events.filter((e) => !(e.familyId === familyId && e.childId === childId));
+    this.logs = this.logs.filter((l) => !(l.familyId === familyId && l.childRef === childId));
+    const t = this.tombstones.get(familyId) ?? new Set<string>();
+    t.add(childId);
+    this.tombstones.set(familyId, t);
+    return Promise.resolve();
+  }
+  insertEvents(familyId: string, deviceId: string, events: readonly EventIn[]) {
+    let accepted = 0;
+    let duplicates = 0;
+    const refused: string[] = [];
+    for (const e of events) {
+      if (!this.children.get(familyId)?.has(e.childId)) {
+        refused.push(e.id);
+      } else if (this.events.some((x) => x.familyId === familyId && x.id === e.id)) {
+        duplicates++;
+      } else {
+        this.events.push({ ...e, familyId, deviceId, seq: this.nextSeq++ });
+        accepted++;
+      }
+    }
+    return Promise.resolve({ accepted, duplicates, refused });
+  }
+  pullEvents(familyId: string, after: number, limit: number) {
+    const all = this.events.filter((e) => e.familyId === familyId && e.seq > after).sort((a, b) =>
+      a.seq - b.seq
+    );
+    return Promise.resolve({
+      more: all.length > limit,
+      events: all.slice(0, limit).map(({ familyId: _f, ...rest }) => rest),
+    });
   }
   revokeDevice(familyId: string, deviceId: string, _reason: RevokeReason) {
     const d = this.devices.get(deviceId);
