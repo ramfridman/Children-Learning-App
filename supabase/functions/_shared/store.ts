@@ -299,7 +299,7 @@ export interface EventIn {
   childId: string;
   clientAtMs: number;
   engineVersion: number;
-  type: "attempt" | "session";
+  type: "attempt" | "session" | "reward";
   payload: Record<string, unknown>;
 }
 

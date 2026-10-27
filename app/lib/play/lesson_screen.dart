@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../app/companion.dart';
 import '../app/providers.dart';
+import '../app/reward_providers.dart';
 import '../app/state.dart';
 import '../app/sync_providers.dart';
 import '../app/tutor_providers.dart';
@@ -42,10 +43,13 @@ import 'template_session.dart';
 
 /// Plays one lesson of the installed pack, activity after activity, until the celebration.
 class LessonScreen extends ConsumerStatefulWidget {
-  const LessonScreen({super.key, required this.profileId, this.lessonId = 'butterflies'});
+  const LessonScreen({super.key, required this.profileId, this.lessonId = 'butterflies', this.mission});
 
   final String profileId;
   final String lessonId;
+
+  /// A short revisit lesson made for one skill (the bell flag on the map). Null for the pack's own lesson.
+  final Lesson? mission;
 
   @override
   ConsumerState<LessonScreen> createState() => _LessonScreenState();
@@ -57,6 +61,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   int _sessionIndex = -1;
   late final SessionRecorder _recorder;
   late final SyncRunner _sync;
+  late final Future<List<Reward>> Function(String) _evaluate;
+
+  /// The key of the sticker just earned, shown in the celebration.
+  String? _sticker;
   late final Future<int> _visit;
   late final VoiceDirector _director;
   LessonVoice? _voice;
@@ -81,8 +89,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _director = ref.read(voiceDirectorProvider);
     _recorder = ref.read(sessionRecorderProvider);
     _sync = ref.read(syncRunnerProvider);
+    _evaluate = ref.read(rewardEvaluatorProvider);
     _startedAt = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs());
-    _visit = _recorder.start(widget.profileId, 'lesson:${widget.lessonId}').then((int id) => _visitId = id);
+    final Lesson? mission = widget.mission;
+    _visit = _recorder
+        .start(
+          widget.profileId,
+          mission == null ? 'lesson:${widget.lessonId}' : 'mission:${mission.skillIds.first.toLowerCase()}',
+        )
+        .then((int id) => _visitId = id);
     unawaited(_loadTime());
   }
 
@@ -161,7 +176,27 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _visitEnded = true;
     // The visit is saved first; then the family is told (the runner outlives this screen).
     final SyncRunner sync = _sync;
-    _recorder.end(id, reason).catchError((Object _) {}).whenComplete(() => unawaited(sync.now(force: true)));
+    _recorder
+        .end(id, reason)
+        .catchError((Object _) {})
+        .then((_) => _giveRewards())
+        .whenComplete(() => unawaited(sync.now(force: true)));
+  }
+
+  /// What this visit earned: a finished lesson gives a sticker, which is revealed in the celebration. Never throws.
+  Future<void> _giveRewards() async {
+    try {
+      final List<Reward> fresh = await _evaluate(widget.profileId);
+      final Reward? sticker = fresh.where((Reward r) => r.kind == 'sticker').firstOrNull;
+      if (sticker == null || !mounted) return;
+      setState(() => _sticker = sticker.awardKey);
+      final AppDatabase db = await ref.read(databaseProvider.future);
+      await db.markRewardsSeen(<int>[
+        sticker.id,
+      ], DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true));
+    } on Object {
+      // The sticker is in the child's collection either way; the reveal is only a nicety.
+    }
   }
 
   /// The app left the screen (home, another app, the notification shade): the microphone closes at once and the guide
@@ -201,7 +236,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     if (have != null) return have;
     final LessonController made = _controller = LessonController(
       content: content,
-      lesson: content.lessons[widget.lessonId]!,
+      lesson: widget.mission ?? content.lessons[widget.lessonId]!,
       profileId: widget.profileId,
       sessionId: _visitId,
       record: ref.read(attemptSinkProvider),
@@ -378,6 +413,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           overlay: controller.finished
               ? LessonCelebration(
                   text: controller.endedForRest ? He.restGoodbye.text : controller.lesson.celebration.caption,
+                  sticker: controller.endedForRest ? null : _sticker,
                   onDone: _home,
                   cameo: SpeakingCharacter(
                     character: guide.character,

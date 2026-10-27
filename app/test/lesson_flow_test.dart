@@ -6,7 +6,6 @@ import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/play/activity_frame.dart';
-import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/harness.dart';
@@ -68,7 +67,7 @@ void main() {
       expect(find.byType(HomeScreen), findsOneWidget);
 
       // The counting hills start the lesson.
-      await tester.tap(find.text(He.landCounting.text));
+      await openCountingLesson(tester);
       await tester.pumpAndSettle();
       expect(find.byType(ActivityFrame), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -178,6 +177,14 @@ void main() {
         ),
         findsOneWidget,
       );
+      // The finished lesson gives a sticker, which pops in beside the guide and is kept (never random, never lost).
+      await wait(tester, 600);
+      expect(find.byKey(const Key('lesson-sticker')), findsOneWidget);
+      final List<Reward> given = await rig.db.rewardsOf('p-1');
+      expect(given.where((Reward r) => r.kind == 'sticker').map((Reward r) => r.awardKey), <String>[
+        'sticker:butterflies:1',
+      ]);
+      expect(given.single.seenAt, isNotNull, reason: 'shown, so not shown again');
       await tester.tap(find.byKey(const Key('lesson-done')));
       await tester.pumpAndSettle();
       // After the first finished lesson the child is taken once to Friends' Beach to choose a companion.
@@ -227,7 +234,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('lesson-show-me')));
     await wait(tester, 200);
@@ -252,7 +259,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('lesson-hint')));
     await wait(tester, 100);

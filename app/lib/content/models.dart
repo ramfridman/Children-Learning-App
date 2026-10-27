@@ -315,6 +315,11 @@ class Lesson {
       skillIds = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       celebration = Spoken.fromJson(json['celebration']);
 
+  /// A short lesson made on the spot for one skill's revisit (M8): the bell flag on the map. It is not in any pack.
+  Lesson.mission({required this.id, required this.itemIds, required this.skillIds, required this.celebration})
+    : revision = 1,
+      title = '';
+
   final String id;
   final int revision;
   final String title;

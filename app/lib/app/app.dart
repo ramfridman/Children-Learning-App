@@ -1,9 +1,17 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
 import '../child/calm_loading.dart';
+import '../child/land_screen.dart';
+import '../child/sticker_island.dart';
+import '../content/models.dart' show Lesson, PackContent;
+import '../rewards/award.dart';
+import 'reward_providers.dart';
+import 'world_providers.dart';
 import '../child/rest_scene.dart';
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
@@ -155,7 +163,51 @@ class _HomeState extends ConsumerState<_Home> {
   Future<void> _openFriends() =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (BuildContext c) => const FriendsBeach()));
 
-  Future<void> _openLesson() async {
+  @override
+  void initState() {
+    super.initState();
+    // Whatever the child has already earned is looked at once when the map opens (the first time, quietly; M8).
+    unawaited(evaluateRewardsFor(ref, widget.profile.id));
+  }
+
+  void _refreshWorld() {
+    ref.invalidate(rewardsProvider(widget.profile.id));
+    ref.invalidate(worldProvider(widget.profile.id));
+  }
+
+  /// A land with skills opens as an island with its objects; it has a way into the lesson if the pack has one for it.
+  Future<void> _openLand(Land land) async {
+    final TrophyLand trophyLand = TrophyLand.values.byName(land.name);
+    final PackContent? content = ref.read(contentProvider).value;
+    final bool hasLesson =
+        content != null &&
+        content.lessons.values.any(
+          (Lesson l) => l.skillIds.any((String s) => content.skills[s]?.domain == trophyLand.domain),
+        );
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext c) => LandScreen(
+          childId: widget.profile.id,
+          land: trophyLand,
+          // A lesson played from the island ends back on the map, as before; a revisit mission ends back on the island, so
+          // the child sees the golden star appear.
+          onPlay: hasLesson
+              ? () async {
+                  await _openLesson();
+                  if (c.mounted) Navigator.of(c).pop();
+                }
+              : null,
+          onMission: (Lesson mission) => _openLesson(mission: mission),
+        ),
+      ),
+    );
+    if (mounted) _refreshWorld();
+  }
+
+  Future<void> _openStickers() => Navigator.of(context)
+      .push(MaterialPageRoute<void>(builder: (BuildContext c) => StickerIsland(childId: widget.profile.id)));
+
+  Future<void> _openLesson({Lesson? mission}) async {
     // Time is up (rest hours, the schedule or the daily limit, with the lock on): a calm scene instead of the lesson.
     final ({String id, int band}) child = (id: widget.profile.id, band: widget.profile.ageBand);
     ref.invalidate(timeVerdictProvider(child));
@@ -167,10 +219,13 @@ class _HomeState extends ConsumerState<_Home> {
       );
       return;
     }
-    final bool? finished = await Navigator.of(
-      context,
-    ).push(MaterialPageRoute<bool>(builder: (BuildContext c) => LessonScreen(profileId: widget.profile.id)));
-    if (!mounted || finished != true) return;
+    final bool? finished = await Navigator.of(context).push(
+      MaterialPageRoute<bool>(
+        builder: (BuildContext c) => LessonScreen(profileId: widget.profile.id, mission: mission),
+      ),
+    );
+    if (mounted) _refreshWorld();
+    if (!mounted || finished != true || mission != null) return;
     final AppDatabase db = await ref.read(databaseProvider.future);
     if (await db.setting(_offeredKey) != null) return;
     await db.putSetting(_offeredKey, 'yes');
@@ -190,12 +245,24 @@ class _HomeState extends ConsumerState<_Home> {
     return _map(friend.value);
   }
 
+  /// The lands that have skills (the counting hills always open, as before).
+  Set<Land> _openableLands() => <Land>{
+    Land.counting,
+    for (final TrophyLand t
+        in ref.watch(worldProvider(widget.profile.id)).value?.lands.keys ?? const <TrophyLand>[])
+      Land.values.byName(t.name),
+  };
+
   Widget _map(Character? friend) => HomeScreen(
     childName: widget.profile.name,
     avatarId: widget.profile.avatar,
     onParents: () => openParentArea(context, ref),
     onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
     onOpenActivity: _openLesson,
+    onOpenLand: _openLand,
+    openableLands: _openableLands(),
+    stars: ref.watch(goldenStarsProvider(widget.profile.id)).value ?? 0,
+    onStickers: _openStickers,
     companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
     companionMouth: friend?.mouth,
     onCompanion: () => _companion.currentState?.greet(),

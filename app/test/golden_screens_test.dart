@@ -65,7 +65,7 @@ void main() {
         await _rig(tester, s);
         await tester.tap(find.text('נֹעָה'));
         await tester.pumpAndSettle();
-        await tester.tap(find.text(He.landCounting.text));
+        await openCountingLesson(tester);
         await tester.pumpAndSettle();
         expect(find.byType(ActivityFrame), findsOneWidget);
         await _shot(tester, 'activity_$n');

@@ -292,6 +292,14 @@ abstract final class He {
   static const Str areaPushDenied = Str('לא ניתנה הרשאה להצגת הודעות. אפשר לתת אותה בהגדרות המכשיר.');
   static const Str areaPushUnavailable = Str('ההתראות בטלפון לא זמינות בגרסה הזו של האפליקציה.');
   static const Str areaPushFailed = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
+  static const Str celebrateWell = Str('כׇּל הַכָּבוֹד!', nikud: true);
+  static const Str stickersSemantics = Str('המדבקות שלי');
+  static const Str stickersEmpty = Str('אחרי השיעור הראשון תהיה כאן מדבקה.');
+  static const Str stickerNewSemantics = Str('מדבקה חדשה');
+  static const Str starsSemantics = Str('כוכבי זהב');
+  static const Str landPlaySemantics = Str('לשחק');
+  static const Str landBackSemantics = Str('חזרה למפה');
+  static const Str bellSemantics = Str('מישהו קורא לעזרה, אפשר לבדוק שוב');
   static const Str areaVersion = Str('גרסה');
   static const Str areaOffline = Str('אין חיבור לאינטרנט, אי אפשר לטעון את רשימת המכשירים.');
   static const Str confirmYes = Str('כן');

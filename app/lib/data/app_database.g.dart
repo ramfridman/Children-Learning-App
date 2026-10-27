@@ -3603,6 +3603,437 @@ class AlertsCompanion extends UpdateCompanion<Alert> {
   }
 }
 
+class $RewardsTable extends Rewards with TableInfo<$RewardsTable, Reward> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RewardsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'),
+  );
+  static const VerificationMeta _profileIdMeta = const VerificationMeta('profileId');
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _awardKeyMeta = const VerificationMeta('awardKey');
+  @override
+  late final GeneratedColumn<String> awardKey = GeneratedColumn<String>(
+    'award_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _kindMeta = const VerificationMeta('kind');
+  @override
+  late final GeneratedColumn<String> kind = GeneratedColumn<String>(
+    'kind',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _atMeta = const VerificationMeta('at');
+  @override
+  late final GeneratedColumn<DateTime> at = GeneratedColumn<DateTime>(
+    'at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _seenAtMeta = const VerificationMeta('seenAt');
+  @override
+  late final GeneratedColumn<DateTime> seenAt = GeneratedColumn<DateTime>(
+    'seen_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta('eventId');
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _syncedAtMeta = const VerificationMeta('syncedAt');
+  @override
+  late final GeneratedColumn<DateTime> syncedAt = GeneratedColumn<DateTime>(
+    'synced_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, profileId, awardKey, kind, at, seenAt, eventId, syncedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'rewards';
+  @override
+  VerificationContext validateIntegrity(Insertable<Reward> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('profile_id')) {
+      context.handle(_profileIdMeta, profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
+    } else if (isInserting) {
+      context.missing(_profileIdMeta);
+    }
+    if (data.containsKey('award_key')) {
+      context.handle(_awardKeyMeta, awardKey.isAcceptableOrUnknown(data['award_key']!, _awardKeyMeta));
+    } else if (isInserting) {
+      context.missing(_awardKeyMeta);
+    }
+    if (data.containsKey('kind')) {
+      context.handle(_kindMeta, kind.isAcceptableOrUnknown(data['kind']!, _kindMeta));
+    } else if (isInserting) {
+      context.missing(_kindMeta);
+    }
+    if (data.containsKey('at')) {
+      context.handle(_atMeta, at.isAcceptableOrUnknown(data['at']!, _atMeta));
+    } else if (isInserting) {
+      context.missing(_atMeta);
+    }
+    if (data.containsKey('seen_at')) {
+      context.handle(_seenAtMeta, seenAt.isAcceptableOrUnknown(data['seen_at']!, _seenAtMeta));
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(_eventIdMeta, eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta));
+    }
+    if (data.containsKey('synced_at')) {
+      context.handle(_syncedAtMeta, syncedAt.isAcceptableOrUnknown(data['synced_at']!, _syncedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {profileId, awardKey},
+  ];
+  @override
+  Reward map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Reward(
+      id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      awardKey: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}award_key'])!,
+      kind: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}kind'])!,
+      at: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}at'])!,
+      seenAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}seen_at']),
+      eventId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}event_id']),
+      syncedAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}synced_at']),
+    );
+  }
+
+  @override
+  $RewardsTable createAlias(String alias) {
+    return $RewardsTable(attachedDatabase, alias);
+  }
+}
+
+class Reward extends DataClass implements Insertable<Reward> {
+  final int id;
+  final String profileId;
+
+  /// The award's key, for example `trophy:counting:silver`; the same on every device.
+  final String awardKey;
+
+  /// An `AwardKind` name.
+  final String kind;
+
+  /// When it was earned (the answer or the lesson that made it so), not when this phone found out.
+  final DateTime at;
+
+  /// When the child was shown it (a sticker revealed, a ceremony played). Null while it waits to be shown; an award from
+  /// another phone or from before this feature is marked seen at once.
+  final DateTime? seenAt;
+
+  /// Sync: when it was sent, or the id of the event it came from.
+  final String? eventId;
+  final DateTime? syncedAt;
+  const Reward({
+    required this.id,
+    required this.profileId,
+    required this.awardKey,
+    required this.kind,
+    required this.at,
+    this.seenAt,
+    this.eventId,
+    this.syncedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['profile_id'] = Variable<String>(profileId);
+    map['award_key'] = Variable<String>(awardKey);
+    map['kind'] = Variable<String>(kind);
+    map['at'] = Variable<DateTime>(at);
+    if (!nullToAbsent || seenAt != null) {
+      map['seen_at'] = Variable<DateTime>(seenAt);
+    }
+    if (!nullToAbsent || eventId != null) {
+      map['event_id'] = Variable<String>(eventId);
+    }
+    if (!nullToAbsent || syncedAt != null) {
+      map['synced_at'] = Variable<DateTime>(syncedAt);
+    }
+    return map;
+  }
+
+  RewardsCompanion toCompanion(bool nullToAbsent) {
+    return RewardsCompanion(
+      id: Value(id),
+      profileId: Value(profileId),
+      awardKey: Value(awardKey),
+      kind: Value(kind),
+      at: Value(at),
+      seenAt: seenAt == null && nullToAbsent ? const Value.absent() : Value(seenAt),
+      eventId: eventId == null && nullToAbsent ? const Value.absent() : Value(eventId),
+      syncedAt: syncedAt == null && nullToAbsent ? const Value.absent() : Value(syncedAt),
+    );
+  }
+
+  factory Reward.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Reward(
+      id: serializer.fromJson<int>(json['id']),
+      profileId: serializer.fromJson<String>(json['profileId']),
+      awardKey: serializer.fromJson<String>(json['awardKey']),
+      kind: serializer.fromJson<String>(json['kind']),
+      at: serializer.fromJson<DateTime>(json['at']),
+      seenAt: serializer.fromJson<DateTime?>(json['seenAt']),
+      eventId: serializer.fromJson<String?>(json['eventId']),
+      syncedAt: serializer.fromJson<DateTime?>(json['syncedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'profileId': serializer.toJson<String>(profileId),
+      'awardKey': serializer.toJson<String>(awardKey),
+      'kind': serializer.toJson<String>(kind),
+      'at': serializer.toJson<DateTime>(at),
+      'seenAt': serializer.toJson<DateTime?>(seenAt),
+      'eventId': serializer.toJson<String?>(eventId),
+      'syncedAt': serializer.toJson<DateTime?>(syncedAt),
+    };
+  }
+
+  Reward copyWith({
+    int? id,
+    String? profileId,
+    String? awardKey,
+    String? kind,
+    DateTime? at,
+    Value<DateTime?> seenAt = const Value.absent(),
+    Value<String?> eventId = const Value.absent(),
+    Value<DateTime?> syncedAt = const Value.absent(),
+  }) => Reward(
+    id: id ?? this.id,
+    profileId: profileId ?? this.profileId,
+    awardKey: awardKey ?? this.awardKey,
+    kind: kind ?? this.kind,
+    at: at ?? this.at,
+    seenAt: seenAt.present ? seenAt.value : this.seenAt,
+    eventId: eventId.present ? eventId.value : this.eventId,
+    syncedAt: syncedAt.present ? syncedAt.value : this.syncedAt,
+  );
+  Reward copyWithCompanion(RewardsCompanion data) {
+    return Reward(
+      id: data.id.present ? data.id.value : this.id,
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      awardKey: data.awardKey.present ? data.awardKey.value : this.awardKey,
+      kind: data.kind.present ? data.kind.value : this.kind,
+      at: data.at.present ? data.at.value : this.at,
+      seenAt: data.seenAt.present ? data.seenAt.value : this.seenAt,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      syncedAt: data.syncedAt.present ? data.syncedAt.value : this.syncedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Reward(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('awardKey: $awardKey, ')
+          ..write('kind: $kind, ')
+          ..write('at: $at, ')
+          ..write('seenAt: $seenAt, ')
+          ..write('eventId: $eventId, ')
+          ..write('syncedAt: $syncedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, profileId, awardKey, kind, at, seenAt, eventId, syncedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Reward &&
+          other.id == this.id &&
+          other.profileId == this.profileId &&
+          other.awardKey == this.awardKey &&
+          other.kind == this.kind &&
+          other.at == this.at &&
+          other.seenAt == this.seenAt &&
+          other.eventId == this.eventId &&
+          other.syncedAt == this.syncedAt);
+}
+
+class RewardsCompanion extends UpdateCompanion<Reward> {
+  final Value<int> id;
+  final Value<String> profileId;
+  final Value<String> awardKey;
+  final Value<String> kind;
+  final Value<DateTime> at;
+  final Value<DateTime?> seenAt;
+  final Value<String?> eventId;
+  final Value<DateTime?> syncedAt;
+  const RewardsCompanion({
+    this.id = const Value.absent(),
+    this.profileId = const Value.absent(),
+    this.awardKey = const Value.absent(),
+    this.kind = const Value.absent(),
+    this.at = const Value.absent(),
+    this.seenAt = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+  });
+  RewardsCompanion.insert({
+    this.id = const Value.absent(),
+    required String profileId,
+    required String awardKey,
+    required String kind,
+    required DateTime at,
+    this.seenAt = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.syncedAt = const Value.absent(),
+  }) : profileId = Value(profileId),
+       awardKey = Value(awardKey),
+       kind = Value(kind),
+       at = Value(at);
+  static Insertable<Reward> custom({
+    Expression<int>? id,
+    Expression<String>? profileId,
+    Expression<String>? awardKey,
+    Expression<String>? kind,
+    Expression<DateTime>? at,
+    Expression<DateTime>? seenAt,
+    Expression<String>? eventId,
+    Expression<DateTime>? syncedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (profileId != null) 'profile_id': profileId,
+      if (awardKey != null) 'award_key': awardKey,
+      if (kind != null) 'kind': kind,
+      if (at != null) 'at': at,
+      if (seenAt != null) 'seen_at': seenAt,
+      if (eventId != null) 'event_id': eventId,
+      if (syncedAt != null) 'synced_at': syncedAt,
+    });
+  }
+
+  RewardsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? profileId,
+    Value<String>? awardKey,
+    Value<String>? kind,
+    Value<DateTime>? at,
+    Value<DateTime?>? seenAt,
+    Value<String?>? eventId,
+    Value<DateTime?>? syncedAt,
+  }) {
+    return RewardsCompanion(
+      id: id ?? this.id,
+      profileId: profileId ?? this.profileId,
+      awardKey: awardKey ?? this.awardKey,
+      kind: kind ?? this.kind,
+      at: at ?? this.at,
+      seenAt: seenAt ?? this.seenAt,
+      eventId: eventId ?? this.eventId,
+      syncedAt: syncedAt ?? this.syncedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (awardKey.present) {
+      map['award_key'] = Variable<String>(awardKey.value);
+    }
+    if (kind.present) {
+      map['kind'] = Variable<String>(kind.value);
+    }
+    if (at.present) {
+      map['at'] = Variable<DateTime>(at.value);
+    }
+    if (seenAt.present) {
+      map['seen_at'] = Variable<DateTime>(seenAt.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (syncedAt.present) {
+      map['synced_at'] = Variable<DateTime>(syncedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RewardsCompanion(')
+          ..write('id: $id, ')
+          ..write('profileId: $profileId, ')
+          ..write('awardKey: $awardKey, ')
+          ..write('kind: $kind, ')
+          ..write('at: $at, ')
+          ..write('seenAt: $seenAt, ')
+          ..write('eventId: $eventId, ')
+          ..write('syncedAt: $syncedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3614,6 +4045,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SessionsTable sessions = $SessionsTable(this);
   late final $VoiceListensTable voiceListens = $VoiceListensTable(this);
   late final $AlertsTable alerts = $AlertsTable(this);
+  late final $RewardsTable rewards = $RewardsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3627,6 +4059,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     sessions,
     voiceListens,
     alerts,
+    rewards,
   ];
 }
 
@@ -5315,6 +5748,213 @@ typedef $$AlertsTableProcessedTableManager =
       Alert,
       PrefetchHooks Function()
     >;
+typedef $$RewardsTableCreateCompanionBuilder = RewardsCompanion Function({
+  Value<int> id,
+  required String profileId,
+  required String awardKey,
+  required String kind,
+  required DateTime at,
+  Value<DateTime?> seenAt,
+  Value<String?> eventId,
+  Value<DateTime?> syncedAt,
+});
+typedef $$RewardsTableUpdateCompanionBuilder = RewardsCompanion Function({
+  Value<int> id,
+  Value<String> profileId,
+  Value<String> awardKey,
+  Value<String> kind,
+  Value<DateTime> at,
+  Value<DateTime?> seenAt,
+  Value<String?> eventId,
+  Value<DateTime?> syncedAt,
+});
+
+class $$RewardsTableFilterComposer extends Composer<_$AppDatabase, $RewardsTable> {
+  $$RewardsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get awardKey =>
+      $composableBuilder(column: $table.awardKey, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get seenAt =>
+      $composableBuilder(column: $table.seenAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$RewardsTableOrderingComposer extends Composer<_$AppDatabase, $RewardsTable> {
+  $$RewardsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get awardKey =>
+      $composableBuilder(column: $table.awardKey, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get kind =>
+      $composableBuilder(column: $table.kind, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get at =>
+      $composableBuilder(column: $table.at, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get seenAt =>
+      $composableBuilder(column: $table.seenAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$RewardsTableAnnotationComposer extends Composer<_$AppDatabase, $RewardsTable> {
+  $$RewardsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id => $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => column);
+
+  GeneratedColumn<String> get awardKey =>
+      $composableBuilder(column: $table.awardKey, builder: (column) => column);
+
+  GeneratedColumn<String> get kind => $composableBuilder(column: $table.kind, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get at => $composableBuilder(column: $table.at, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get seenAt =>
+      $composableBuilder(column: $table.seenAt, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get syncedAt =>
+      $composableBuilder(column: $table.syncedAt, builder: (column) => column);
+}
+
+class $$RewardsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RewardsTable,
+          Reward,
+          $$RewardsTableFilterComposer,
+          $$RewardsTableOrderingComposer,
+          $$RewardsTableAnnotationComposer,
+          $$RewardsTableCreateCompanionBuilder,
+          $$RewardsTableUpdateCompanionBuilder,
+          (Reward, BaseReferences<_$AppDatabase, $RewardsTable, Reward>),
+          Reward,
+          PrefetchHooks Function()
+        > {
+  $$RewardsTableTableManager(_$AppDatabase db, $RewardsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$RewardsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$RewardsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$RewardsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> profileId = const Value.absent(),
+                Value<String> awardKey = const Value.absent(),
+                Value<String> kind = const Value.absent(),
+                Value<DateTime> at = const Value.absent(),
+                Value<DateTime?> seenAt = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
+              }) => RewardsCompanion(
+                id: id,
+                profileId: profileId,
+                awardKey: awardKey,
+                kind: kind,
+                at: at,
+                seenAt: seenAt,
+                eventId: eventId,
+                syncedAt: syncedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String profileId,
+                required String awardKey,
+                required String kind,
+                required DateTime at,
+                Value<DateTime?> seenAt = const Value.absent(),
+                Value<String?> eventId = const Value.absent(),
+                Value<DateTime?> syncedAt = const Value.absent(),
+              }) => RewardsCompanion.insert(
+                id: id,
+                profileId: profileId,
+                awardKey: awardKey,
+                kind: kind,
+                at: at,
+                seenAt: seenAt,
+                eventId: eventId,
+                syncedAt: syncedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RewardsTable, Reward>(table),
+                  BaseReferences<_$AppDatabase, $RewardsTable, Reward>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$RewardsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RewardsTable,
+      Reward,
+      $$RewardsTableFilterComposer,
+      $$RewardsTableOrderingComposer,
+      $$RewardsTableAnnotationComposer,
+      $$RewardsTableCreateCompanionBuilder,
+      $$RewardsTableUpdateCompanionBuilder,
+      (Reward, BaseReferences<_$AppDatabase, $RewardsTable, Reward>),
+      Reward,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5328,4 +5968,5 @@ class $AppDatabaseManager {
   $$SessionsTableTableManager get sessions => $$SessionsTableTableManager(_db, _db.sessions);
   $$VoiceListensTableTableManager get voiceListens => $$VoiceListensTableTableManager(_db, _db.voiceListens);
   $$AlertsTableTableManager get alerts => $$AlertsTableTableManager(_db, _db.alerts);
+  $$RewardsTableTableManager get rewards => $$RewardsTableTableManager(_db, _db.rewards);
 }

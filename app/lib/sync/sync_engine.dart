@@ -239,6 +239,15 @@ class SyncEngine {
     },
   };
 
+  Map<String, Object?> _rewardEvent(Reward r) => <String, Object?>{
+    'id': eventIdOf(deviceId, 'reward', r.id),
+    'child_id': r.profileId,
+    'at': r.at.millisecondsSinceEpoch,
+    'engine': engineVersion,
+    'type': 'reward',
+    'data': <String, Object?>{'kind': r.kind, 'key': r.awardKey},
+  };
+
   Future<({int pushed, int refused})> _pushEvents() async {
     int pushed = 0;
     int refused = 0;
@@ -246,16 +255,20 @@ class SyncEngine {
     while (true) {
       final List<Session> sessions = await db.unsyncedSessions(limit: batch);
       final List<Attempt> attempts = await db.unsyncedAttempts(limit: batch);
-      if (sessions.isEmpty && attempts.isEmpty) break;
+      final List<Reward> rewards = await db.unsyncedRewards(limit: batch);
+      if (sessions.isEmpty && attempts.isEmpty && rewards.isEmpty) break;
       // Answers go before the visit they belong to is not needed: the server keeps the order it received.
       final List<Attempt> a = attempts.where((Attempt x) => !gone.contains(x.profileId)).toList();
       final List<Session> s = sessions.where((Session x) => !gone.contains(x.profileId)).toList();
       // Rows of a deleted child are never sent; they are marked so they stop coming back.
       final List<Attempt> dropA = attempts.where((Attempt x) => gone.contains(x.profileId)).toList();
       final List<Session> dropS = sessions.where((Session x) => gone.contains(x.profileId)).toList();
+      final List<Reward> w = rewards.where((Reward x) => !gone.contains(x.profileId)).toList();
+      final List<Reward> dropW = rewards.where((Reward x) => gone.contains(x.profileId)).toList();
       final List<Map<String, Object?>> events = <Map<String, Object?>>[
         for (final Attempt x in a) _attemptEvent(x),
         for (final Session x in s) _sessionEvent(x),
+        for (final Reward x in w) _rewardEvent(x),
       ].take(batch).toList();
       if (events.isNotEmpty) {
         final Map<String, Object?> answer = await call('sync-push', <String, Object?>{'events': events});
@@ -279,7 +292,13 @@ class SyncEngine {
             .map((Session x) => x.id),
         ...dropS.map((Session x) => x.id),
       ], at);
-      if (events.isEmpty && dropA.isEmpty && dropS.isEmpty) break;
+      await db.markRewardsSynced(<int>[
+        ...w
+            .where((Reward x) => inThisCall.contains(eventIdOf(deviceId, 'reward', x.id)))
+            .map((Reward x) => x.id),
+        ...dropW.map((Reward x) => x.id),
+      ], at);
+      if (events.isEmpty && dropA.isEmpty && dropS.isEmpty && dropW.isEmpty) break;
     }
     return (pushed: pushed, refused: refused);
   }
@@ -502,6 +521,19 @@ class SyncEngine {
           sessionId: Value<int?>(sessionId),
           input: Value<String>(d['input'] as String? ?? 'tap'),
           remoteSession: Value<String?>(sessionId == null ? key : null),
+        ),
+        eventId: id,
+        at: _now,
+      );
+    }
+    if (e['type'] == 'reward') {
+      final String key = d['key']! as String;
+      return db.addRemoteReward(
+        RewardsCompanion.insert(
+          profileId: e['child_id']! as String,
+          awardKey: key,
+          kind: d['kind']! as String,
+          at: at,
         ),
         eventId: id,
         at: _now,

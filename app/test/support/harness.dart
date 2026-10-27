@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/design/layout.dart';
 import 'package:nitznutz/design/theme.dart';
 import 'package:nitznutz/design/token_types.dart';
+import 'package:nitznutz/strings/he.dart';
 
 /// Loads the two real font files so that tests (and golden screenshots) draw Hebrew with Heebo and
 /// Secular One instead of the test font's blocks.
@@ -55,4 +56,12 @@ Future<void> pumpScreen(
     ),
   );
   await tester.pump();
+}
+
+/// Taps the counting hills on the map and then the play button of its island: since M8 a land opens as an island first,
+/// with its objects growing, and the lesson is one tap further.
+Future<void> openCountingLesson(WidgetTester tester) async {
+  await tester.tap(find.text(He.landCounting.text));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const Key('land-play')));
 }

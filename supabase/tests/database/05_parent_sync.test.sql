@@ -42,8 +42,12 @@ select throws_ok($$insert into app.event (id, family_id, child_id, device_id, cl
   '23505', null, 'the same event twice is refused (a retry is harmless)');
 select throws_ok($$insert into app.event (id, family_id, child_id, device_id, client_at, engine_version, type, payload)
   values ('e1e1e1e1-0000-4000-8000-000000000002', 'd1d1d1d1-0000-4000-8000-000000000001', 'child-aaaa-0001',
-          'd2d2d2d2-0000-4000-8000-000000000001', now(), 1, 'reward', '{}')$$,
+          'd2d2d2d2-0000-4000-8000-000000000001', now(), 1, 'bonus', '{}')$$,
   '23514', null, 'an unknown event type is refused');
+select lives_ok($$insert into app.event (id, family_id, child_id, device_id, client_at, engine_version, type, payload)
+  values ('e1e1e1e1-0000-4000-8000-0000000000a1', 'd1d1d1d1-0000-4000-8000-000000000001', 'child-aaaa-0001',
+          'd2d2d2d2-0000-4000-8000-000000000001', now(), 1, 'reward', '{"kind":"star","key":"star:NUM-A-01"}')$$,
+  'a reward is a kind of event');
 select throws_ok($$insert into app.event (id, family_id, child_id, device_id, client_at, engine_version, type, payload)
   values ('e1e1e1e1-0000-4000-8000-000000000003', 'd1d1d1d1-0000-4000-8000-000000000001', 'child-aaaa-0001',
           'd2d2d2d2-0000-4000-8000-000000000001', now(), 1, 'attempt', '[1]')$$,
@@ -114,7 +118,7 @@ select is((select count(*)::int from app.alert where child_id = 'child-bbbb-0002
 select is((select count(*)::int from app.tutor_log where child_ref = 'child-bbbb-0002'), 0, 'no tutor log is left');
 select is((select count(*)::int from app.usage_counter where key = 'child-bbbb-0002'), 0, 'no counters are left');
 select is((select count(*)::int from app.deleted_child where child_id = 'child-bbbb-0002'), 1, 'one tombstone says it was deleted');
-select is((select count(*)::int from app.event where child_id = 'child-aaaa-0001'), 2, 'the other child keeps everything');
+select is((select count(*)::int from app.event where child_id = 'child-aaaa-0001'), 3, 'the other child keeps everything');
 select is((select count(*)::int from app.child_profile where id = 'child-aaaa-0001'), 1, 'and the profile');
 select lives_ok($$select app.delete_child('d1d1d1d1-0000-4000-8000-000000000001', 'child-bbbb-0002')$$, 'deleting twice is harmless');
 select is((select count(*)::int from app.deleted_child where child_id = 'child-bbbb-0002'), 1, 'and still one tombstone');

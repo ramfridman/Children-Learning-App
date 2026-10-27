@@ -7,6 +7,7 @@ import '../data/app_database.dart';
 import '../device/secure_store.dart';
 import '../sync/sync_engine.dart';
 import 'alerts_provider.dart';
+import 'reward_providers.dart';
 import 'providers.dart';
 import 'rules_providers.dart';
 import 'state.dart';
@@ -68,6 +69,14 @@ class SyncRunner {
       if (r.childrenAdded > 0 || r.childrenDeleted > 0) {
         _ref.invalidate(appStateProvider);
         // The pulled answers change what the progress view says.
+      }
+      if (r.appliedEvents > 0) {
+        // Another phone's answers may have earned something here too (the same awards, given once).
+        final AppDatabase db = await _ref.read(databaseProvider.future);
+        for (final Profile p in await db.allProfiles()) {
+          await evaluateRewards(_ref, p.id);
+        }
+        if (!_ref.mounted) return r;
       }
       if (r.rulesApplied) {
         _ref.invalidate(rulesProvider);

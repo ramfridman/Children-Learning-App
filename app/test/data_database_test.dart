@@ -225,7 +225,7 @@ void main() {
       expect(await db.allInstalledPacks(), isEmpty);
       expect(await db.attemptsOf('nobody'), isEmpty);
       expect(await db.sessionsOf('nobody'), isEmpty);
-      expect(AppDatabase.currentSchemaVersion, 7);
+      expect(AppDatabase.currentSchemaVersion, 8);
     });
 
     test('an attempt holds ids, numbers and fixed words only (no column can carry a name or free text of any size)', () async {
@@ -564,5 +564,46 @@ void main() {
         expect(rows.single.data['user_version'], AppDatabase.currentSchemaVersion);
       },
     );
+  });
+  group('migration from version 7 to 8 (M8)', () {
+    test('a version 7 file keeps its rows and gets an empty rewards table that works', () async {
+      final String keyHex = await keys.keyHex();
+      final AppDatabase v8 = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      final int session = await v8.startSession('p1', DateTime.utc(2026, 11, 1), plan: 'lesson:butterflies');
+      await v8.endSession(session, DateTime.utc(2026, 11, 1, 0, 5), 'finished');
+      await v8.customStatement('DROP TABLE rewards');
+      await v8.customStatement('PRAGMA user_version = 7');
+      await v8.close();
+
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      addTearDown(db.close);
+      expect((await db.sessionsOf('p1')).single.endReason, 'finished');
+      expect(await db.rewardsOf('p1'), isEmpty);
+      expect(
+        await db.addReward(
+          RewardsCompanion.insert(
+            profileId: 'p1',
+            awardKey: 'star:NUM-A-01',
+            kind: 'star',
+            at: DateTime.utc(2026, 11, 2),
+          ),
+        ),
+        isTrue,
+      );
+      expect(
+        await db.addReward(
+          RewardsCompanion.insert(
+            profileId: 'p1',
+            awardKey: 'star:NUM-A-01',
+            kind: 'star',
+            at: DateTime.utc(2026, 11, 3),
+          ),
+        ),
+        isFalse,
+        reason: 'an award is given once',
+      );
+      final rows = await db.customSelect('PRAGMA user_version').get();
+      expect(rows.single.data['user_version'], AppDatabase.currentSchemaVersion);
+    });
   });
 }

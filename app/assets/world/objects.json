@@ -1,0 +1,19 @@
+{
+  "comment": "Which drawing a skill owns in its land. A skill listed here has its own; otherwise it gets its domain's drawing; otherwise the fallback. The ids are the file names in assets/art/world/. A skill document may name its own object from pack 0.3.0 (M8, 8b).",
+  "skills": {
+    "NUM-A-01": "stair",
+    "NUM-A-02": "stair",
+    "NUM-A-03": "stair",
+    "NUM-A-04": "stair",
+    "COL-A-02": "pool"
+  },
+  "domains": {
+    "numbers": "stair",
+    "colors": "pool",
+    "shapes": "cone-tree",
+    "logic": "pattern-door",
+    "cs": "dock",
+    "math": "stall"
+  },
+  "fallback": "sprout"
+}

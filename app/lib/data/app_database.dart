@@ -14,6 +14,7 @@ part 'app_database.g.dart';
     Sessions,
     VoiceListens,
     Alerts,
+    Rewards,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -21,7 +22,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 7;
+  static const int currentSchemaVersion = 8;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -66,6 +67,8 @@ class AppDatabase extends _$AppDatabase {
         }
         if (from >= 6) await m.addColumn(alerts, alerts.syncedAt);
       }
+      // 7 to 8 (M8): the stickers, golden stars and trophies a child has been given.
+      if (from < 8) await m.createTable(rewards);
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -343,6 +346,65 @@ class AppDatabase extends _$AppDatabase {
     await (delete(sessions)..where(($SessionsTable t) => t.profileId.equals(profileId))).go();
     await (delete(voiceListens)..where(($VoiceListensTable t) => t.profileId.equals(profileId))).go();
     await (delete(alerts)..where(($AlertsTable t) => t.profileId.equals(profileId))).go();
+    await (delete(rewards)..where(($RewardsTable t) => t.profileId.equals(profileId))).go();
     await (delete(profiles)..where(($ProfilesTable t) => t.id.equals(profileId))).go();
   });
+  // ---- rewards (M8) ----
+
+  Future<Set<String>> awardKeys(String profileId) async => <String>{
+    for (final Reward r in await (select(
+      rewards,
+    )..where(($RewardsTable t) => t.profileId.equals(profileId))).get())
+      r.awardKey,
+  };
+
+  Future<List<Reward>> rewardsOf(String profileId) =>
+      (select(rewards)
+            ..where(($RewardsTable t) => t.profileId.equals(profileId))
+            ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.at)]))
+          .get();
+
+  /// Gives an award once. Returns false if the child already has it.
+  Future<bool> addReward(RewardsCompanion row) async {
+    final List<Reward> have =
+        await (select(rewards)..where(
+              ($RewardsTable t) =>
+                  t.profileId.equals(row.profileId.value) & t.awardKey.equals(row.awardKey.value),
+            ))
+            .get();
+    if (have.isNotEmpty) return false;
+    await into(rewards).insert(row);
+    return true;
+  }
+
+  Future<List<Reward>> unseenRewards(String profileId) =>
+      (select(rewards)
+            ..where(($RewardsTable t) => t.profileId.equals(profileId) & t.seenAt.isNull())
+            ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.at)]))
+          .get();
+
+  Future<void> markRewardsSeen(List<int> ids, DateTime at) => (update(
+    rewards,
+  )..where(($RewardsTable t) => t.id.isIn(ids))).write(RewardsCompanion(seenAt: Value<DateTime?>(at)));
+
+  Future<List<Reward>> unsyncedRewards({int limit = 40}) =>
+      (select(rewards)
+            ..where(($RewardsTable t) => t.syncedAt.isNull())
+            ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.id)])
+            ..limit(limit))
+          .get();
+
+  Future<void> markRewardsSynced(List<int> ids, DateTime at) => (update(
+    rewards,
+  )..where(($RewardsTable t) => t.id.isIn(ids))).write(RewardsCompanion(syncedAt: Value<DateTime?>(at)));
+
+  /// An award another phone gave: kept as it is, already seen here, and never sent back. False if it was here already.
+  Future<bool> addRemoteReward(RewardsCompanion row, {required String eventId, required DateTime at}) =>
+      addReward(
+        row.copyWith(
+          eventId: Value<String?>(eventId),
+          seenAt: Value<DateTime?>(at),
+          syncedAt: Value<DateTime?>(at),
+        ),
+      );
 }

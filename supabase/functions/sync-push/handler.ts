@@ -9,6 +9,10 @@ import { CHILD_ID } from "../child-put/handler.ts";
 export const MAX_EVENTS = 40;
 export const PUSHES_PER_HOUR_PER_DEVICE = 600;
 
+/** An award key: `sticker:<lesson>:<n>`, `star:<skill>`, `trophy:<land>:<tier>`, `medal:<id>` or `deco:<n>`. */
+export const AWARD_KEY =
+  /^(sticker:[a-z0-9._-]{1,40}:[0-9]{1,4}|star:[A-Z]{2,5}-[A-C]-[0-9]{2}|trophy:[a-z]{3,12}:(bronze|silver|gold)|medal:[a-z0-9-]{2,30}|deco:[0-9]{1,3})$/;
+
 const ms = { t: "int", min: 1_500_000_000_000, max: 4_100_000_000_000 } as const;
 const word = (re: RegExp, max: number) => ({ t: "string", max, pattern: re, optional: true }) as const;
 
@@ -37,9 +41,12 @@ const DATA = {
   started_at: { ...ms, optional: true },
   ended_at: { ...ms, optional: true },
   end_reason: { t: "enum", values: ["", "finished", "home", "limit"], optional: true },
+  // reward (M8): what was given, as a kind and a key. The key names the award and nothing else.
+  kind: { t: "enum", values: ["sticker", "star", "trophy", "medal", "decoration"], optional: true },
+  key: word(AWARD_KEY, 80),
 } as const;
 
-const REQUIRED: Record<"attempt" | "session", readonly string[]> = {
+const REQUIRED: Record<"attempt" | "session" | "reward", readonly string[]> = {
   attempt: [
     "activity_id",
     "activity_revision",
@@ -52,6 +59,7 @@ const REQUIRED: Record<"attempt" | "session", readonly string[]> = {
     "attempt_no",
   ],
   session: ["plan", "started_at", "session_local"],
+  reward: ["kind", "key"],
 };
 
 interface Body {
@@ -60,7 +68,7 @@ interface Body {
     child_id: string;
     at: number;
     engine: number;
-    type: "attempt" | "session";
+    type: "attempt" | "session" | "reward";
     data: Record<string, unknown>;
   }>;
 }
@@ -80,7 +88,7 @@ export const spec: FunctionSpec = {
           child_id: { t: "string", max: 64, pattern: CHILD_ID },
           at: ms,
           engine: { t: "int", min: 1, max: 1000 },
-          type: { t: "enum", values: ["attempt", "session"] },
+          type: { t: "enum", values: ["attempt", "session", "reward"] },
           data: { t: "object", shape: DATA },
         },
       },

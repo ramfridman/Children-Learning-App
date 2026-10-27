@@ -143,7 +143,7 @@ void main() {
       await tester.tap(find.text('נועה'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text(He.landCounting.text));
+      await openCountingLesson(tester);
       await tester.pumpAndSettle();
       expect(find.byType(ActivityFrame), findsOneWidget);
       expect(
@@ -436,7 +436,7 @@ void main() {
         expect(find.byType(HomeScreen), findsOneWidget);
         expect(tester.takeException(), isNull);
 
-        await tester.tap(find.text(He.landCounting.text));
+        await openCountingLesson(tester);
         await tester.pumpAndSettle();
         expect(find.byType(ActivityFrame), findsOneWidget);
         expect(tester.takeException(), isNull);

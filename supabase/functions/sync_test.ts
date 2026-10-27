@@ -198,6 +198,48 @@ Deno.test("sync-push: events are numbered by the server, a retry changes nothing
   assert.equal(pulled.events[1].type, "session");
 });
 
+Deno.test("sync-push: a reward is a kind and an award key and nothing else; a parent's phone pulls it", async () => {
+  const { h, parent, child, profile, j } = await setup();
+  await call(h.put, parent, "child-put", profile());
+  const reward = (data: Record<string, unknown>, id = crypto.randomUUID()) => ({
+    id,
+    child_id: KID,
+    at: NOON,
+    engine: 1,
+    type: "reward",
+    data,
+  });
+  const good = reward({ kind: "trophy", key: "trophy:counting:silver" });
+  const pushed = await j(await call(h.push, child, "sync-push", { events: [good] }));
+  assert.equal(pushed.accepted, 1);
+  const pulled = await j(await call(h.pull, parent, "sync-pull", { after: 0, limit: 100 }));
+  assert.equal(pulled.events[0].type, "reward");
+  assert.deepEqual(pulled.events[0].data, { kind: "trophy", key: "trophy:counting:silver" });
+  for (
+    const key of [
+      "sticker:butterflies:3",
+      "star:NUM-A-01",
+      "trophy:colors:gold",
+      "medal:asks-questions",
+      "deco:10",
+    ]
+  ) {
+    const r = await call(h.push, child, "sync-push", { events: [reward({ kind: "star", key })] });
+    assert.equal(r.status, 200, key);
+  }
+  const bad: Array<[string, Record<string, unknown>]> = [
+    ["a key that is free text", { kind: "trophy", key: "gold for being quick" }],
+    ["a promise typed by a parent", { kind: "trophy", key: "trophy:counting:gold", ribbon: "glida" }],
+    ["a kind that is not a kind", { kind: "coupon", key: "star:NUM-A-01" }],
+    ["a tier that does not exist", { kind: "trophy", key: "trophy:counting:platinum" }],
+    ["no key", { kind: "star" }],
+    ["no kind", { key: "star:NUM-A-01" }],
+  ];
+  for (const [why, data] of bad) {
+    assert.equal((await call(h.push, child, "sync-push", { events: [reward(data)] })).status, 400, why);
+  }
+});
+
 Deno.test("sync-push: only ids, numbers and fixed words get in: no free text, no name, no unknown field, nothing missing", async () => {
   const { h, parent, child, profile, attempt, j } = await setup();
   await call(h.put, parent, "child-put", profile());
