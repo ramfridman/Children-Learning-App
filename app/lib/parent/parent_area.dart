@@ -18,6 +18,7 @@ import '../ui/dev/dev_home_page.dart';
 import 'backends.dart';
 import 'child_form.dart';
 import 'pin_screens.dart';
+import 'rules_screen.dart';
 
 /// The parent area (adult UI, calm). In M1 it holds only what the shell needs: the family's devices
 /// with revoke, the child profiles, the PIN and the lock. Every tap restarts the idle clock, and the
@@ -203,6 +204,18 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                     MaterialPageRoute<void>(
                       builder: (BuildContext c) =>
                           PinSetupScreen(onDone: () => Navigator.pop(c), onCancel: () => Navigator.pop(c)),
+                    ),
+                  ),
+                ),
+              ]),
+              _card(He.timeTitle.text, <Widget>[
+                ParentButton(
+                  key: const Key('open-time-rules'),
+                  label: He.areaTimeOpen.text,
+                  quiet: true,
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext c) => RulesScreen(onClose: () => Navigator.pop(c)),
                     ),
                   ),
                 ),

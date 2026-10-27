@@ -144,6 +144,44 @@ abstract final class He {
   static const Str areaConfirmRemove = Str('להסיר את הפרופיל של {child}? כל ההתקדמות במכשיר הזה תימחק.');
   static const Str areaChangePin = Str('שינוי קוד הורים');
   static const Str areaLockNow = Str('נעילה וחזרה למשחק');
+  static const Str areaTimeOpen = Str('זמן משחק ושעות מנוחה');
+
+  // ---- parent area: time and the AI helper (M7a) ----
+  static const Str timeTitle = Str('זמן משחק');
+  static const Str timeLimitHeading = Str('דקות משחק ביום');
+  static const Str timeBand0 = Str('גיל 3 עד 4');
+  static const Str timeBand1 = Str('גיל 5 עד 6');
+  static const Str timeBand2 = Str('גיל 7 עד 8');
+  static const Str timeMinutes = Str('{n} דקות');
+  static const Str timeLess = Str('פחות');
+  static const Str timeMore = Str('יותר');
+  static const Str timeRestHeading = Str('שעות מנוחה');
+  static const Str timeRestOn = Str('שעות מנוחה פעילות');
+  static const Str timeRestFrom = Str('מתחילות ב-{t}');
+  static const Str timeRestTo = Str('נגמרות ב-{t}');
+  static const Str timeEarlier = Str('חצי שעה קודם');
+  static const Str timeLater = Str('חצי שעה אחר כך');
+  static const Str timeLock = Str('לנעול כשהזמן נגמר');
+  static const Str timeLockHelp = Str(
+    'כשהזמן נגמר או בשעות מנוחה לא מוצעת פעילות חדשה, והפעילות הנוכחית מסתיימת בעדינות. כשכבוי הילד ממשיך לשחק.',
+  );
+  static const Str timeScheduleHeading = Str('שעות מותרות בשבוע');
+  static const Str timeScheduleHelp = Str(
+    'ביום שמוגדרות בו שעות משחקים רק בהן. ביום בלי שעות משחקים בכל שעה.',
+  );
+  static const Str timeDayAny = Str('בכל שעה');
+  static const Str timeDayWindow = Str('{a} עד {b}');
+  static const Str timeDay1 = Str('יום שני');
+  static const Str timeDay2 = Str('יום שלישי');
+  static const Str timeDay3 = Str('יום רביעי');
+  static const Str timeDay4 = Str('יום חמישי');
+  static const Str timeDay5 = Str('יום שישי');
+  static const Str timeDay6 = Str('שבת');
+  static const Str timeDay7 = Str('יום ראשון');
+  static const Str aiHeading = Str('עוזר מילולי');
+  static const Str aiHelp = Str(
+    'אחרי טעות שנייה הדמות יכולה להגיד משפט עזרה בקולה. המשפטים נבדקים לפני שהילד שומע אותם, ואם משהו לא עובד נשמעת ההודעה הרגילה. כבוי כברירת מחדל.',
+  );
   static const Str areaVoice = Str('תשובות בקול');
   static const Str areaVoiceHelp = Str(
     'ילדים יוכלו לענות בדיבור. הזיהוי נעשה במכשיר, ההקלטה נמחקת מיד ולא נשמרת ולא נשלחת לשום מקום. המיקרופון נפתח רק כשהילד לוחץ עליו.',
