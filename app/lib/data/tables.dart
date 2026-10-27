@@ -20,6 +20,10 @@ class Profiles extends Table {
 
   DateTimeColumn get createdAt => dateTime()();
 
+  /// The id of the character the child chose as a companion (for example `hero-son`), or null for the house
+  /// character, Nitzi. It names a character pack by id only; the pictures and the voice live in packs.
+  TextColumn get companionId => text().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => <Column<Object>>{id};
 }

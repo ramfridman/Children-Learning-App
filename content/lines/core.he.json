@@ -1,0 +1,26 @@
+{
+  "schema": "core-lines/v1",
+  "review": "needs-editor",
+  "note": "Neutral, plural, with niqqud. Taken from docs/curriculum.md sections 9.1 to 9.3, 10.3 and 10.4 where they exist. No line says the child's name and none refers to the speaker's gender.",
+  "lines": [
+    { "id": "core.greeting.hello", "text": "שָׁלוֹם! בּוֹאוּ נְשַׂחֵק." },
+    { "id": "core.greeting.start", "text": "בּוֹאוּ נַתְחִיל!" },
+    { "id": "core.encourage.check", "text": "הַמְּמ… בּוֹאוּ נִבְדֹּק." },
+    { "id": "core.encourage.almost", "text": "עוֹד לֹא — אֲבָל כִּמְעַט." },
+    { "id": "core.encourage.ways", "text": "נִסִּיתֶם כַּמָּה דְּרָכִים — וְזֶה עָזַר!" },
+    { "id": "core.encourage.help", "text": "בִּקַּשְׁתֶּם עֶזְרָה — זֶה חָכָם לְבַקֵּשׁ עֶזְרָה." },
+    { "id": "core.encourage.mistake", "text": "טָעִינוּ? מְעֻלֶּה — עַכְשָׁו אֲנַחְנוּ יוֹדְעִים מָה לִבְדֹּק." },
+    { "id": "core.encourage.fixed", "text": "מְצָאתֶם אֶת הַטָּעוּת וְתִקַּנְתֶּם. כׇּל הַכָּבוֹד!" },
+    { "id": "core.encourage.persist", "text": "לֹא וִתַּרְתֶּם — וּמְצָאתֶם!" },
+    { "id": "core.encourage.checked", "text": "בְּדַקְתֶּם שׁוּב לִפְנֵי שֶׁעֲנִיתֶם. זֶה מַה שֶּׁמָּתֵמָטִיקָאִים עוֹשִׂים." },
+    { "id": "core.encourage.effort", "text": "זֶה הָיָה קָשֶׁה, וְהַמֹּחַ שֶׁלָּכֶם הִתְאַמֵּץ וְגָדַל." },
+    { "id": "core.celebrate.well", "text": "כׇּל הַכָּבוֹד!" },
+    { "id": "core.thinking.think", "text": "הַמְּמ… בּוֹאוּ נַחְשֹׁב." },
+    { "id": "core.thinking.together", "text": "בּוֹאוּ נְגַלֶּה יַחַד!" },
+    { "id": "core.listen.again", "text": "לֹא שָׁמַעְתִּי טוֹב — אֶפְשָׁר שׁוּב? אוֹ לִלְחֹץ." },
+    { "id": "core.listen.say", "text": "בְּבַקָּשָׁה, אִמְרוּ לִי." },
+    { "id": "core.stuck.later", "text": "נַחֲזֹר לָזֶה בְּפַעַם אַחֶרֶת. בּוֹאוּ נְשַׂחֵק בְּמַשֶּׁהוּ אַחֵר." },
+    { "id": "core.breathe.now", "text": "בּוֹאוּ נִנְשֹׁם רֶגַע." },
+    { "id": "core.goodbye.next", "text": "לָמַדְנוּ הַיּוֹם הַרְבֵּה. נִתְרָאֶה בַּפַּעַם הַבָּאָה!" }
+  ]
+}

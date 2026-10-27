@@ -130,3 +130,33 @@ tap **Show what the engine knows about each child** (section 6 of the page). Exp
 as `ready`, and nothing about misconceptions or gaps unless you made the same wrong answer on two different counting
 steps (then `misconception M-CNT-DOUBLE` or `M-CNT-SKIP` appears as `suspected` or `active`). Play again on another
 day and the numbers move; nothing is ever taken away. Tell me if a number looks wrong for what you did.
+
+## 8. M4 checks: characters and voices
+
+Use the dev build. These use free test voices (a tone, not speech): they prove the machinery. Real voices come later.
+
+**A. Put the characters and voices on the phone.** On the PC (PowerShell, from `D:\Children-Learning-App`, phone plugged in):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\make-m4-device-packs.ps1 -Push
+```
+
+It builds 17 packs (8 family characters, 9 test voices) and copies them to the app's incoming folder. On the phone:
+Parents > dev harness > section 5 **Install .nnpack files from the incoming folder**. Expect 17 lines, each `installed ...`.
+
+**B. Meet the friends.** Pick the child, tap the plus button beside the character on the map. Nine friends appear (Nitzi and
+the eight). Touch each: it waves and a tone plays in its own pitch. The one with the gold frame is the companion. Go home:
+that friend now stands on the map where Nitzi stood. Tap it: it waves and says hello (a tone).
+
+**C. The lesson.** Tap the counting hills. The guide is your friend, and a tone plays with each line while its mouth
+opens and closes. Touch the guide: the question again. Leave with the home button in the middle of a line: the sound stops.
+At the end the friend celebrates on the card, and (the first time only) you land on Friends' Beach.
+
+**D. Switch back and forth.** Choose Nitzi again and replay: her tone has a different pitch from the others.
+
+**E. Smoothness (optional).** `flutter run --profile` on the Samsung, open the lesson, and watch the performance overlay
+while the guide talks. Tell me if the raster and UI bars leave the green. (A real low-end phone is the only true test of
+"60 fps on the low-end Android", and I have none.)
+
+Tell me: does anything look cut, stiff, too small or too slow to touch? Which friend would the children pick first?
+

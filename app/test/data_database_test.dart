@@ -180,6 +180,7 @@ void main() {
       await v2.putSetting('voice', 'off');
       await v2.customStatement('DROP TABLE installed_packs');
       await v2.customStatement('DROP TABLE attempts');
+      await v2.customStatement('ALTER TABLE profiles DROP COLUMN companion_id');
       await v2.customStatement('PRAGMA user_version = 1');
       await v2.close();
 
@@ -223,7 +224,7 @@ void main() {
       expect(await db.allInstalledPacks(), isEmpty);
       expect(await db.attemptsOf('nobody'), isEmpty);
       expect(await db.sessionsOf('nobody'), isEmpty);
-      expect(AppDatabase.currentSchemaVersion, 3);
+      expect(AppDatabase.currentSchemaVersion, 4);
     });
 
     test('an attempt holds ids, numbers and fixed words only (no column can carry a name or free text of any size)', () async {
@@ -263,6 +264,7 @@ void main() {
       // Make a version 2 file: no sessions table, no session column.
       await v3.customStatement('DROP TABLE sessions');
       await v3.customStatement('ALTER TABLE attempts DROP COLUMN session_id');
+      await v3.customStatement('ALTER TABLE profiles DROP COLUMN companion_id');
       await v3.customStatement('PRAGMA user_version = 2');
       await v3.close();
 
@@ -278,7 +280,7 @@ void main() {
       expect(rows.single.endReason, 'finished');
       expect(rows.single.endedAt!.toUtc(), DateTime.utc(2026, 11, 1, 9, 4));
       final rowsV = await db.customSelect('PRAGMA user_version').get();
-      expect(rowsV.single.data['user_version'], 3);
+      expect(rowsV.single.data['user_version'], AppDatabase.currentSchemaVersion);
     });
 
     test('a session holds no name and no text', () async {
@@ -289,6 +291,42 @@ void main() {
           row.data['name']! as String,
       ];
       expect(columns, <String>['id', 'profile_id', 'started_at', 'ended_at', 'plan', 'end_reason']);
+    });
+  });
+
+  group('migration from version 3 to 4 (M4)', () {
+    test('children keep their rows, start with the house companion, and can choose another', () async {
+      final String keyHex = await keys.keyHex();
+      final AppDatabase v4 = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      await _putProfile(v4);
+      // Make a version 3 file: no companion column.
+      await v4.customStatement('ALTER TABLE profiles DROP COLUMN companion_id');
+      await v4.customStatement('PRAGMA user_version = 3');
+      await v4.close();
+
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: keyHex);
+      addTearDown(db.close);
+      final List<Profile> kids = await db.allProfiles();
+      expect(kids.single.name, secretName);
+      expect(kids.single.companionId, isNull, reason: 'null means Nitzi');
+      expect(await db.companionOf('p1'), isNull);
+      await db.setCompanion('p1', 'hero-son');
+      expect(await db.companionOf('p1'), 'hero-son');
+      await db.setCompanion('p1', null);
+      expect(await db.companionOf('p1'), isNull);
+      expect(await db.companionOf('nobody'), isNull);
+      final rows = await db.customSelect('PRAGMA user_version').get();
+      expect(rows.single.data['user_version'], 4);
+    });
+
+    test('the companion is an id and nothing else: no name, no text', () async {
+      final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: await keys.keyHex());
+      addTearDown(db.close);
+      final List<String> columns = <String>[
+        for (final row in await db.customSelect('PRAGMA table_info(profiles)').get())
+          row.data['name']! as String,
+      ];
+      expect(columns, contains('companion_id'));
     });
   });
 

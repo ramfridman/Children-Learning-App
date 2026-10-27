@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nitznutz:schema:cue",
+  "title": "Nitznutz cue",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "cue/v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^(?:[a-z0-9_.]{1,80})$"
+    },
+    "cues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 120000
+          },
+          "o": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "t",
+          "o"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 600
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "cues"
+  ],
+  "additionalProperties": false
+}

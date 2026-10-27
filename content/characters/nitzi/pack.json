@@ -1,0 +1,26 @@
+{
+  "schema": "character-lite/v1",
+  "id": "nitzi",
+  "tier": "full-vector",
+  "name": {
+    "he": "נִיצִי",
+    "grammaticalGender": "feminine"
+  },
+  "roles": ["guide_tutor", "activity_helper", "celebration_cameo", "map_companion", "sticker"],
+  "images": {
+    "idle": "idle.svg",
+    "talk_closed": "talk_closed.svg",
+    "talk_open": "talk_open.svg",
+    "celebrate": "celebrate.svg",
+    "think": "think.svg",
+    "listen": "listen.svg",
+    "encourage": "encourage.svg",
+    "surprised": "surprised.svg",
+    "sleepy": "sleepy.svg",
+    "wave": "wave.svg"
+  },
+  "canvas": { "size": [512, 512] },
+  "mouth": [0.5, 0.56],
+  "palette": { "dominant": "#F0B48A" },
+  "availability": { "distribution": "bundled", "personalUseOnly": false }
+}

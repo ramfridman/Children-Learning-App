@@ -11,6 +11,7 @@ const String skill2File = 'skill.NUM-A-04.json';
 const String tagFile = 'misconception.M-CNT-DOUBLE.json';
 const String tag2File = 'misconception.M-CNT-SKIP.json';
 const String tag3File = 'misconception.M-CNT-CARD.json';
+const String cueFile = 'cue.prompt.count.butterflies.3.json';
 
 List<Object?> _he(String text) => <Object?>[
   <String, Object?>{'t': 'he', 'v': text},
@@ -196,6 +197,15 @@ class SamplePack {
       tagFile: _tag('M-CNT-DOUBLE', repair: <Object?>['count.butterflies.3']),
       tag2File: _tag('M-CNT-SKIP'),
       tag3File: _tag('M-CNT-CARD'),
+      cueFile: <String, Object?>{
+        'schema': 'cue/v1',
+        'id': 'prompt.count.butterflies.3',
+        'cues': <Object?>[
+          <String, Object?>{'t': 0, 'o': 0},
+          <String, Object?>{'t': 200, 'o': 1},
+          <String, Object?>{'t': 380, 'o': 0},
+        ],
+      },
     };
     const List<String> assetFiles = <String>[
       'butterfly',
@@ -247,6 +257,8 @@ class SamplePack {
         'lessons': <Object?>['butterflies'],
         'skills': <Object?>['NUM-A-03', 'NUM-A-04'],
         'misconceptions': <Object?>['M-CNT-DOUBLE', 'M-CNT-SKIP', 'M-CNT-CARD'],
+        'characters': <Object?>[],
+        'cues': <Object?>['prompt.count.butterflies.3'],
       },
     };
     return SamplePack._(manifest, docs, names.toSet());

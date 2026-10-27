@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/app.dart';
+import 'package:nitznutz/app/companion.dart';
+import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
 import 'package:nitznutz/core/errors.dart';
@@ -16,8 +18,10 @@ import 'package:nitznutz/parent/keypad.dart';
 import 'package:nitznutz/security/parent_gate.dart';
 import 'package:nitznutz/security/pin_service.dart';
 
+import 'companion_fixtures.dart';
 import 'fakes.dart';
 import 'security_fakes.dart';
+import 'voice_fixtures.dart';
 import 'starter.dart';
 
 const String testPin = '4831';
@@ -79,8 +83,9 @@ class FakeDevicesBackend implements DevicesBackend {
 
 /// Everything a test needs to drive the whole app with no network and no hardware.
 class AppRig {
-  AppRig({this.dev = false, int gateSeed = 7})
-    : store = MemoryStore(),
+  AppRig({this.dev = false, int gateSeed = 7, this.characters, FakePlayer? player})
+    : player = player ?? FakePlayer(),
+      store = MemoryStore(),
       platform = FakePlatform(),
       clock = ControlledClock(1793000000000),
       db = AppDatabase(NativeDatabase.memory()) {
@@ -90,6 +95,12 @@ class AppRig {
   }
 
   final bool dev;
+
+  /// The characters and voices of the test; Nitzi alone, with a voice, when not given.
+  final CharacterSource? characters;
+
+  /// The sound device: it records what was played instead of playing it.
+  final FakePlayer player;
   final MemoryStore store;
   final FakePlatform platform;
   final ControlledClock clock;
@@ -134,6 +145,8 @@ class AppRig {
     clockProvider.overrideWithValue(clock),
     databaseProvider.overrideWith((Ref ref) async => db),
     contentProvider.overrideWith((Ref ref) => loadStarter()),
+    characterSourceProvider.overrideWith((Ref ref) async => characters ?? await makeSource()),
+    voicePlayerProvider.overrideWithValue(player),
     setupBackendProvider.overrideWithValue(setup),
     devicesBackendProvider.overrideWithValue(devices),
     pinServiceProvider.overrideWith(
@@ -155,11 +168,19 @@ class AppRig {
     ),
   ];
 
-  Future<void> pump(WidgetTester tester, {Size size = const Size(852, 393)}) async {
+  Future<void> pump(WidgetTester tester, {Size size = const Size(852, 393), bool reduceMotion = true}) async {
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     addTearDown(db.close);
+    // The characters breathe for ever; with "reduce motion" on they stand still, so the screens can settle.
+    // How they move is tested on its own (character_view_test.dart).
+    if (reduceMotion) {
+      tester.platformDispatcher.accessibilityFeaturesTestValue = const FakeAccessibilityFeatures(
+        disableAnimations: true,
+      );
+      addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    }
     await tester.pumpWidget(ProviderScope(overrides: overrides, child: const NitznutzApp()));
     await tester.pumpAndSettle();
   }

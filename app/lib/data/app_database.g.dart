@@ -65,8 +65,17 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _companionIdMeta = const VerificationMeta('companionId');
   @override
-  List<GeneratedColumn> get $columns => [id, name, avatar, addressForm, ageBand, createdAt];
+  late final GeneratedColumn<String> companionId = GeneratedColumn<String>(
+    'companion_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, avatar, addressForm, ageBand, createdAt, companionId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -109,6 +118,12 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('companion_id')) {
+      context.handle(
+        _companionIdMeta,
+        companionId.isAcceptableOrUnknown(data['companion_id']!, _companionIdMeta),
+      );
+    }
     return context;
   }
 
@@ -130,6 +145,10 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      companionId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}companion_id'],
+      ),
     );
   }
 
@@ -152,6 +171,10 @@ class Profile extends DataClass implements Insertable<Profile> {
   /// 0, 1 or 2 for age bands A (3 to 4), B (5 to 6) and C (7 to 8).
   final int ageBand;
   final DateTime createdAt;
+
+  /// The id of the character the child chose as a companion (for example `hero-son`), or null for the house
+  /// character, Nitzi. It names a character pack by id only; the pictures and the voice live in packs.
+  final String? companionId;
   const Profile({
     required this.id,
     required this.name,
@@ -159,6 +182,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     required this.addressForm,
     required this.ageBand,
     required this.createdAt,
+    this.companionId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -169,6 +193,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     map['address_form'] = Variable<String>(addressForm);
     map['age_band'] = Variable<int>(ageBand);
     map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || companionId != null) {
+      map['companion_id'] = Variable<String>(companionId);
+    }
     return map;
   }
 
@@ -180,6 +207,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       addressForm: Value(addressForm),
       ageBand: Value(ageBand),
       createdAt: Value(createdAt),
+      companionId: companionId == null && nullToAbsent ? const Value.absent() : Value(companionId),
     );
   }
 
@@ -192,6 +220,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       addressForm: serializer.fromJson<String>(json['addressForm']),
       ageBand: serializer.fromJson<int>(json['ageBand']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      companionId: serializer.fromJson<String?>(json['companionId']),
     );
   }
   @override
@@ -204,6 +233,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       'addressForm': serializer.toJson<String>(addressForm),
       'ageBand': serializer.toJson<int>(ageBand),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'companionId': serializer.toJson<String?>(companionId),
     };
   }
 
@@ -214,6 +244,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     String? addressForm,
     int? ageBand,
     DateTime? createdAt,
+    Value<String?> companionId = const Value.absent(),
   }) => Profile(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -221,6 +252,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     addressForm: addressForm ?? this.addressForm,
     ageBand: ageBand ?? this.ageBand,
     createdAt: createdAt ?? this.createdAt,
+    companionId: companionId.present ? companionId.value : this.companionId,
   );
   Profile copyWithCompanion(ProfilesCompanion data) {
     return Profile(
@@ -230,6 +262,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       addressForm: data.addressForm.present ? data.addressForm.value : this.addressForm,
       ageBand: data.ageBand.present ? data.ageBand.value : this.ageBand,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      companionId: data.companionId.present ? data.companionId.value : this.companionId,
     );
   }
 
@@ -241,13 +274,14 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('avatar: $avatar, ')
           ..write('addressForm: $addressForm, ')
           ..write('ageBand: $ageBand, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('companionId: $companionId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, avatar, addressForm, ageBand, createdAt);
+  int get hashCode => Object.hash(id, name, avatar, addressForm, ageBand, createdAt, companionId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -257,7 +291,8 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.avatar == this.avatar &&
           other.addressForm == this.addressForm &&
           other.ageBand == this.ageBand &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.companionId == this.companionId);
 }
 
 class ProfilesCompanion extends UpdateCompanion<Profile> {
@@ -267,6 +302,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<String> addressForm;
   final Value<int> ageBand;
   final Value<DateTime> createdAt;
+  final Value<String?> companionId;
   final Value<int> rowid;
   const ProfilesCompanion({
     this.id = const Value.absent(),
@@ -275,6 +311,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.addressForm = const Value.absent(),
     this.ageBand = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.companionId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ProfilesCompanion.insert({
@@ -284,6 +321,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     required String addressForm,
     required int ageBand,
     required DateTime createdAt,
+    this.companionId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -298,6 +336,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<String>? addressForm,
     Expression<int>? ageBand,
     Expression<DateTime>? createdAt,
+    Expression<String>? companionId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -307,6 +346,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (addressForm != null) 'address_form': addressForm,
       if (ageBand != null) 'age_band': ageBand,
       if (createdAt != null) 'created_at': createdAt,
+      if (companionId != null) 'companion_id': companionId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -318,6 +358,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<String>? addressForm,
     Value<int>? ageBand,
     Value<DateTime>? createdAt,
+    Value<String?>? companionId,
     Value<int>? rowid,
   }) {
     return ProfilesCompanion(
@@ -327,6 +368,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       addressForm: addressForm ?? this.addressForm,
       ageBand: ageBand ?? this.ageBand,
       createdAt: createdAt ?? this.createdAt,
+      companionId: companionId ?? this.companionId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -352,6 +394,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (companionId.present) {
+      map['companion_id'] = Variable<String>(companionId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -367,6 +412,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('addressForm: $addressForm, ')
           ..write('ageBand: $ageBand, ')
           ..write('createdAt: $createdAt, ')
+          ..write('companionId: $companionId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2431,6 +2477,7 @@ typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   required String addressForm,
   required int ageBand,
   required DateTime createdAt,
+  Value<String?> companionId,
   Value<int> rowid,
 });
 typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
@@ -2440,6 +2487,7 @@ typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<String> addressForm,
   Value<int> ageBand,
   Value<DateTime> createdAt,
+  Value<String?> companionId,
   Value<int> rowid,
 });
 
@@ -2468,6 +2516,9 @@ class $$ProfilesTableFilterComposer extends Composer<_$AppDatabase, $ProfilesTab
 
   ColumnFilters<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get companionId =>
+      $composableBuilder(column: $table.companionId, builder: (column) => ColumnFilters(column));
 }
 
 class $$ProfilesTableOrderingComposer extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -2495,6 +2546,9 @@ class $$ProfilesTableOrderingComposer extends Composer<_$AppDatabase, $ProfilesT
 
   ColumnOrderings<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get companionId =>
+      $composableBuilder(column: $table.companionId, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ProfilesTableAnnotationComposer extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -2519,6 +2573,9 @@ class $$ProfilesTableAnnotationComposer extends Composer<_$AppDatabase, $Profile
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<String> get companionId =>
+      $composableBuilder(column: $table.companionId, builder: (column) => column);
 }
 
 class $$ProfilesTableTableManager
@@ -2552,6 +2609,7 @@ class $$ProfilesTableTableManager
                 Value<String> addressForm = const Value.absent(),
                 Value<int> ageBand = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<String?> companionId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion(
                 id: id,
@@ -2560,6 +2618,7 @@ class $$ProfilesTableTableManager
                 addressForm: addressForm,
                 ageBand: ageBand,
                 createdAt: createdAt,
+                companionId: companionId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -2570,6 +2629,7 @@ class $$ProfilesTableTableManager
                 required String addressForm,
                 required int ageBand,
                 required DateTime createdAt,
+                Value<String?> companionId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion.insert(
                 id: id,
@@ -2578,6 +2638,7 @@ class $$ProfilesTableTableManager
                 addressForm: addressForm,
                 ageBand: ageBand,
                 createdAt: createdAt,
+                companionId: companionId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

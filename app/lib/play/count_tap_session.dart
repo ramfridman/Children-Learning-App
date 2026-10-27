@@ -119,7 +119,7 @@ class CountTapSession extends TemplateSession {
 
   void _finishCounting() {
     answering = true;
-    controller.askAnswer(activity.answerPrompt.caption);
+    controller.askAnswer(activity.answerPrompt);
   }
 
   Future<void> choose(String id) async {

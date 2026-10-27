@@ -20,7 +20,13 @@ void main() {
   late Directory tmp;
 
   setUp(() => tmp = Directory.systemTemp.createTempSync('nn_builder_'));
-  tearDown(() => tmp.deleteSync(recursive: true));
+  tearDown(() {
+    try {
+      tmp.deleteSync(recursive: true);
+    } on FileSystemException {
+      // Windows may hold a file for a moment.
+    }
+  });
 
   Directory source([String version = '1.0.0']) =>
       writeSampleSource(Directory('${tmp.path}${Platform.pathSeparator}src'), version: version);

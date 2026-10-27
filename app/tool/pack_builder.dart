@@ -4,6 +4,7 @@
 //   dart run tool/pack_builder.dart build <source folder> [--key <key file>] [--out <folder>]
 //   dart run tool/pack_builder.dart verify <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart inspect <pack file> [--public-key <file>]
+//   dart run tool/pack_builder.dart build-character <character folder> [--key <key file>] [--out <folder>]
 //   dart run tool/pack_builder.dart schema [--out <folder>] [--check]
 //   dart run tool/pack_builder.dart damage <pack file> [--source <folder>] [--out <folder>]
 //
@@ -32,6 +33,8 @@ Future<void> main(List<String> args) async {
         await _keygen(rest);
       case 'build':
         await _build(rest);
+      case 'build-character':
+        await _buildCharacter(rest);
       case 'verify':
         await _verify(rest, inspect: false);
       case 'inspect':
@@ -97,6 +100,17 @@ Future<void> _build(List<String> args) async {
   if (pos.length != 1) throw const BuildFailed('build needs one source folder');
   final PackKey key = readKeyFile(_option(args, '--key') ?? defaultKeyPath());
   final BuiltPack built = await buildPack(Directory(pos.single), key);
+  final Directory out = Directory(_option(args, '--out') ?? '.')..createSync(recursive: true);
+  final File file = File('${out.path}${Platform.pathSeparator}${built.fileName}');
+  file.writeAsBytesSync(built.bytes);
+  stdout.writeln('Built ${file.path}: ${built.bytes.length} bytes, manifest sha256 ${built.manifestSha256}');
+}
+
+Future<void> _buildCharacter(List<String> args) async {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) throw const BuildFailed('build-character needs one character folder');
+  final PackKey key = readKeyFile(_option(args, '--key') ?? defaultKeyPath());
+  final BuiltPack built = await buildCharacterPack(Directory(pos.single), key);
   final Directory out = Directory(_option(args, '--out') ?? '.')..createSync(recursive: true);
   final File file = File('${out.path}${Platform.pathSeparator}${built.fileName}');
   file.writeAsBytesSync(built.bytes);

@@ -1,0 +1,36 @@
+{
+  "schema": "voices/v1",
+  "note": "Which ElevenLabs voice speaks for which character. The voiceId values stay empty until the owner has listened to auditions and chosen (M4 phase H). modelId must be the exact id of the model the owner picks in ElevenLabs; it is left empty rather than guessed.",
+  "modelId": "",
+  "settings": {},
+  "pronunciation": {},
+  "voices": {
+    "nitzi": {
+      "voiceId": ""
+    },
+    "alien-jili": {
+      "voiceId": ""
+    },
+    "climber-tzuri": {
+      "voiceId": ""
+    },
+    "compass-romi": {
+      "voiceId": ""
+    },
+    "friend-daughter": {
+      "voiceId": ""
+    },
+    "hero-son": {
+      "voiceId": ""
+    },
+    "inventor-gali": {
+      "voiceId": ""
+    },
+    "tower-tamir": {
+      "voiceId": ""
+    },
+    "weaver-keshet": {
+      "voiceId": ""
+    }
+  }
+}

@@ -62,7 +62,11 @@ Future<BuiltPack> buildSamplePack(PackKey key, {String version = '1.0.0', bool c
       key,
     );
   } finally {
-    tmp.deleteSync(recursive: true);
+    try {
+      tmp.deleteSync(recursive: true);
+    } on FileSystemException {
+      // Windows may hold a file for a moment; the system cleans the temp folder later.
+    }
   }
 }
 

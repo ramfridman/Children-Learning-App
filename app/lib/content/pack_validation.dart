@@ -62,6 +62,10 @@ List<Problem> validatePack({
   final Set<String> lessonIds = <String>{};
   final Set<String> skillIds = <String>{};
   final Set<String> tagIds = <String>{};
+  final Map<String, Map<String, Object?>> characters = <String, Map<String, Object?>>{};
+  final Set<String> characterIds = <String>{};
+  final Map<String, Map<String, Object?>> cues = <String, Map<String, Object?>>{};
+  final Set<String> cueIds = <String>{};
 
   for (final String name in listedNames.intersection(files)) {
     final bool isJson = name.endsWith('.json');
@@ -126,6 +130,22 @@ List<Problem> validatePack({
         }
         if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
         if (found.isEmpty) tags[middle] = doc;
+      case 'character':
+        characterIds.add(middle);
+        final List<Problem> found = validate(characterSchema, doc);
+        for (final Problem p in found) {
+          add(name, p);
+        }
+        if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
+        if (found.isEmpty) characters[middle] = doc;
+      case 'cue':
+        cueIds.add(middle);
+        final List<Problem> found = validate(cueSchema, doc);
+        for (final Problem p in found) {
+          add(name, p);
+        }
+        if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
+        if (found.isEmpty) cues[middle] = doc;
       default:
         say(name, '', 'is a JSON file of an unknown kind "$kind"');
     }
@@ -135,7 +155,7 @@ List<Problem> validatePack({
   final Map<String, Object?> entries = manifest['entries']! as Map<String, Object?>;
   void sameSet(String field, Set<String> found) {
     final Set<String> declared = <String>{
-      for (final Object? e in entries[field]! as List<Object?>) e! as String,
+      for (final Object? e in (entries[field] as List<Object?>?) ?? const <Object?>[]) e! as String,
     };
     for (final String d in declared.difference(found)) {
       say('manifest.json', 'entries.$field', '"$d" is declared but there is no such file');
@@ -149,6 +169,8 @@ List<Problem> validatePack({
   sameSet('lessons', lessonIds);
   sameSet('skills', skillIds);
   sameSet('misconceptions', tagIds);
+  sameSet('characters', characterIds);
+  sameSet('cues', cueIds);
 
   // ---- the manifest must promise every template an activity uses ----
   final Map<String, Object?> templates = manifest['templates']! as Map<String, Object?>;
@@ -297,6 +319,47 @@ List<Problem> validatePack({
     }
   });
 
+  // ---- characters ----
+  characters.forEach((String id, Map<String, Object?> c) {
+    final String file = 'character.$id.json';
+    final Map<String, Object?> images = c['images']! as Map<String, Object?>;
+    for (final MapEntry<String, Object?> i in images.entries) {
+      checkAsset(file, 'images.${i.key}', i.value);
+    }
+    final bool personal = c['distribution'] == 'personal';
+    if (c['personalUseOnly'] != personal) {
+      say(file, 'personalUseOnly', 'must be true exactly when distribution is "personal"');
+    }
+    final Map<String, Object?> name = c['name']! as Map<String, Object?>;
+    _line(
+      (name['he']! as String).replaceAll('{name}', ''),
+      'name.he',
+      say,
+      file,
+      true,
+      allowNoHebrew: (name['he']! as String).replaceAll('{name}', '').trim().isEmpty,
+    );
+  });
+
+  // ---- mouth cues ----
+  cues.forEach((String id, Map<String, Object?> c) {
+    final String file = 'cue.$id.json';
+    if (!voFiles.containsKey(id)) say(file, 'id', 'there is no recorded voice line "$id" in the manifest');
+    int last = -1;
+    for (final (int i, Map<String, Object?> q) in _maps(c['cues']).indexed) {
+      final int t = q['t']! as int;
+      if (t <= last) say(file, 'cues[$i].t', 'times must increase');
+      last = t;
+    }
+  });
+  if (voFiles.isNotEmpty) {
+    for (final String id in voFiles.keys) {
+      if (!cueIds.contains(id)) {
+        say('manifest.json', 'vo', 'the voice line "$id" has no mouth-cue file cue.$id.json');
+      }
+    }
+  }
+
   return out;
 }
 
@@ -370,10 +433,17 @@ void _hebrew(
   walk(doc, '');
 }
 
-void _line(Object? text, String path, void Function(String, String, String) say, String file, bool pointed) {
+void _line(
+  Object? text,
+  String path,
+  void Function(String, String, String) say,
+  String file,
+  bool pointed, {
+  bool allowNoHebrew = false,
+}) {
   if (text is! String) return;
   if (_latin.hasMatch(text)) say(file, path, 'contains Latin letters; the child space is Hebrew only');
-  if (!_hebrewWord.hasMatch(text)) say(file, path, 'contains no Hebrew');
+  if (!_hebrewWord.hasMatch(text) && !allowNoHebrew) say(file, path, 'contains no Hebrew');
   if (!pointed) return;
   for (final RegExpMatch m in _hebrewWord.allMatches(text)) {
     final String word = m.group(0)!;
