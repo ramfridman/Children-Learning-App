@@ -36,9 +36,14 @@ void main() {
         await tester.tap(find.byKey(Key('land-tap-$land')));
         await _loaded(tester);
         // every skill of the land has its drawing on the island
-        expect(find.byWidgetPredicate((Widget w) => w.key.toString().startsWith("[<'object-")).evaluate().length,
-            land == "counting" ? 14 : 7);
-        await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/island_${land}_${device.$1}.png'));
+        expect(
+          find.byWidgetPredicate((Widget w) => w.key.toString().startsWith("[<'object-")).evaluate().length,
+          land == 'counting' ? 14 : 7,
+        );
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/island_${land}_${device.$1}.png'),
+        );
       });
     }
   }
