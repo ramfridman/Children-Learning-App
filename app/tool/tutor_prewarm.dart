@@ -6,6 +6,7 @@
 //   dart run tool/tutor_prewarm.dart measure <pack file> --characters ... [--count 5]
 //   dart run tool/tutor_prewarm.dart evaluate <pack file> --characters ... --confirm-lines <N> [--report <file>]
 //   dart run tool/tutor_prewarm.dart voice    <pack file> --characters ... --lines <file> --confirm-lines <N>
+//   dart run tool/tutor_prewarm.dart carry    <new pack file> --from <older version>
 //
 // `plan` makes nothing and spends nothing: it prints how many lines, how many voice characters and the estimated cost.
 // `make` refuses to start unless --confirm-lines equals the number `plan` printed as "to make". `measure` makes a few
@@ -14,6 +15,9 @@
 // pass, which ones refuse, and the words the lexicon lacks; every sentence goes to the report file for reading.
 // `voice` speaks exactly the sentences a person approved (a report with lines struck out): the ten checks run again,
 // no model is asked, and the lines are kept as reviewed lines that a later prompt change never touches.
+//
+// `carry` copies the reviewed lines of an older version of the pack to the new one, for the items whose revision did not
+// change, so a pack that changes only its notes keeps its voiced lines. It uses no model and no voice and costs nothing.
 //
 // The publish secret is read from NITZNUTZ_PUBLISH_SECRET only. The project url comes from --url or
 // config/dev.local.json. No key of a vendor is ever on this computer's side of the call: the gateway holds them.
@@ -31,7 +35,8 @@ Future<void> main(List<String> args) async {
   if (args.length < 2) {
     stderr.writeln(
       'usage: dart run tool/tutor_prewarm.dart plan|make|measure|evaluate|voice <pack file> --characters a,b '
-      '[--bands A,B,C] [--forms f,m,n] [--confirm-lines N] [--count N] [--url <project url>]',
+      '[--bands A,B,C] [--forms f,m,n] [--confirm-lines N] [--count N] [--url <project url>]\n'
+      '       dart run tool/tutor_prewarm.dart carry <new pack file> --from <older version> [--url <project url>]',
     );
     exit(2);
   }
@@ -61,7 +66,9 @@ Future<void> _run(List<String> args) async {
     publicKey: unhex(File(_publicKeyAsset).readAsStringSync()),
   );
   final List<String> characters = _list(_option(args, '--characters'), <String>[]);
-  if (characters.isEmpty) throw const PrewarmFailed('say which characters with --characters a,b');
+  if (characters.isEmpty && command != 'carry') {
+    throw const PrewarmFailed('say which characters with --characters a,b');
+  }
   final PrewarmRequest request = PrewarmRequest(
     packId: pack.id,
     packVersion: pack.version,
@@ -87,6 +94,13 @@ Future<void> _run(List<String> args) async {
   final PrewarmSend send = httpSend(baseUrl: url, secret: secret, publishableKey: publishable);
 
   switch (command) {
+    case 'carry':
+      final String? from = _option(args, '--from');
+      if (from == null) throw const PrewarmFailed('say which older version with --from 0.2.0');
+      final int copied = await carry(send, request, fromVersion: from);
+      stdout.writeln(
+        'carried $copied reviewed lines from $from to ${request.packVersion}; nothing was spent',
+      );
     case 'plan':
       stdout.writeln((await plan(send, request)).describe());
     case 'make':

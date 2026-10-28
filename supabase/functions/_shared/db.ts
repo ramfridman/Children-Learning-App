@@ -385,6 +385,24 @@ export function pgStore(sql: Sql): Store {
         where ${replace}::boolean`;
     },
 
+    async carryLines(packId, fromVersion, toVersion, promptVersion) {
+      const rows = await sql`
+        insert into app.tutor_cache
+          (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
+           validator_version, line, caption, next_action, highlight_targets, audio, audio_mime)
+        select c.pack_id, ${toVersion}, c.item_id, c.mistake, c.hint_level, c.band, c.address_form, c.character_id,
+               c.prompt_version, c.validator_version, c.line, c.caption, c.next_action, c.highlight_targets, c.audio,
+               c.audio_mime
+          from app.tutor_cache c
+          join app.content_item o on o.pack_id = c.pack_id and o.pack_version = c.pack_version and o.item_id = c.item_id
+          join app.content_item n on n.pack_id = c.pack_id and n.pack_version = ${toVersion} and n.item_id = c.item_id
+                                 and n.revision = o.revision
+         where c.pack_id = ${packId} and c.pack_version = ${fromVersion} and c.prompt_version = ${promptVersion}
+        on conflict do nothing
+        returning 1`;
+      return rows.length;
+    },
+
     async tutorTake(p): Promise<TakeResult> {
       const [r] = await sql`
         select app.tutor_take(${p.familyId}, ${p.childRef}, ${p.sessionRef}, ${p.kind}, ${p.sessionCap},

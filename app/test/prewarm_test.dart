@@ -123,6 +123,26 @@ void main() {
     },
   );
 
+  test(
+    'carry asks the server to copy the reviewed lines from the older version and spends nothing',
+    () async {
+      final List<Map<String, Object?>> asked = <Map<String, Object?>>[];
+      final int copied = await carry(
+        (Map<String, Object?> body) async {
+          asked.add(body);
+          return <String, Object?>{'carried': 66};
+        },
+        const PrewarmRequest(packId: 'starter', packVersion: '0.3.0', characters: <String>[]),
+        fromVersion: '0.2.0',
+      );
+      expect(copied, 66);
+      expect(asked.single['mode'], 'carry');
+      expect(asked.single['from_version'], '0.2.0');
+      expect(asked.single['pack_version'], '0.3.0');
+      expect(asked.single['max_micro_usd'], 0, reason: 'a carry may spend nothing');
+    },
+  );
+
   test('without the typed number, or with the wrong one, nothing is made', () async {
     final FakeGateway g = FakeGateway();
     await expectLater(make(g.send, _request, confirmLines: null), throwsA(isA<PrewarmFailed>()));

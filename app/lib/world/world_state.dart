@@ -29,6 +29,10 @@ class WorldCatalog {
   final String fallback;
 
   String objectFor(String skillId, String domain) => skills[skillId] ?? domains[domain] ?? fallback;
+
+  /// The same catalog, where the installed pack names a skill's object (pack 0.3.0), that name wins.
+  WorldCatalog withPack(Map<String, String> packObjects) =>
+      WorldCatalog(skills: <String, String>{...skills, ...packObjects}, domains: domains, fallback: fallback);
 }
 
 /// How far an object has grown. Nothing is ever padlocked and nothing ever goes back: a skill that needs a revisit keeps
@@ -51,9 +55,13 @@ class WorldObject {
     required this.objectId,
     required this.stage,
     required this.bell,
+    this.line,
   });
 
   final String skillId;
+
+  /// One line for the child of what they can do, with niqqud, when the pack has one (pack 0.3.0).
+  final String? line;
 
   /// What the child can do, for a parent or a screen reader.
   final String title;
@@ -76,6 +84,7 @@ Map<TrophyLand, List<WorldObject>> buildWorld({
   required Set<String> starredSkills,
   required WorldCatalog catalog,
   required DateTime now,
+  Map<String, String> lines = const <String, String>{},
 }) {
   final Set<String> due = engine.dueChecks(now).toSet();
   final Map<TrophyLand, List<WorldObject>> out = <TrophyLand, List<WorldObject>>{};
@@ -98,6 +107,7 @@ Map<TrophyLand, List<WorldObject>> buildWorld({
             ? GrowthStage.colour
             : GrowthStage.sketch,
         bell: due.contains(id),
+        line: lines[id],
       ),
     );
   }

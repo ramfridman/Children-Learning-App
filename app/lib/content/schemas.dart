@@ -18,6 +18,7 @@ abstract final class Patterns {
   static const String fileName = r'[A-Za-z0-9][A-Za-z0-9._-]{0,100}';
   static const String sha256 = r'[0-9a-f]{64}';
   static const String optionId = r'o[0-9]{1,2}';
+  static const String worldObject = r'[a-z][a-z0-9-]{1,23}';
 }
 
 /// The four kinds of document in a pack, by the `schema` field of the file.
@@ -224,6 +225,10 @@ const SObject skillSchema = SObject(<String, SField>{
       'initialStabilityDays': SField(SNum(min: 0, max: 30)),
     }),
   ),
+  // The world (M8, pack 0.3.0): which drawing grows for this skill (an id of the app's world art), and one line for the
+  // child, with niqqud, of what they can do (shown on the card of a trophy).
+  'worldObject': SField(SString(minLength: 2, maxLength: 24, pattern: Patterns.worldObject), required: false),
+  'childLine': SField(_caption, required: false),
   // Learning engine (M3). A core skill (three or more skills depend on it) needs more evidence for mastery.
   'core': SField(SBool(), required: false),
   'masteryRequires': SField(
@@ -243,6 +248,8 @@ const SObject misconceptionSchema = SObject(<String, SField>{
   'review': _review,
   'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
   'parentText': SField(SString(minLength: 1, maxLength: 240)),
+  // Something a parent can do at home in about five minutes (M7, pack 0.3.0). Plain Hebrew for the parent.
+  'homeActivity': SField(_caption, required: false),
   'repairActivities': SField(SArray(_id, maxItems: 10)),
   'preferredRepresentations': SField(SArray(SEnum(representations), maxItems: 5)),
 });

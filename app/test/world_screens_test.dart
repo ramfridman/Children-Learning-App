@@ -114,6 +114,39 @@ void main() {
       },
     );
 
+    testWidgets('the decorations the child has earned stand on the island, and none before they are earned', (
+      WidgetTester tester,
+    ) async {
+      await pumpIn(tester, const LandScreen(childId: child, land: TrophyLand.counting), <Override>[
+        worldOf(grown),
+        rewardsProvider(child).overrideWith((Ref ref) async => <Reward>[]),
+      ]);
+      for (final int n in <int>[10, 20, 30]) {
+        expect(find.byKey(Key('island-deco-$n')), findsNothing);
+      }
+      Reward deco(int id, int n) => Reward(
+        id: id,
+        profileId: child,
+        awardKey: 'deco:$n',
+        kind: 'decoration',
+        at: day0,
+        seenAt: day0,
+        eventId: null,
+        syncedAt: null,
+      );
+      await pumpIn(tester, const LandScreen(childId: child, land: TrophyLand.counting), <Override>[
+        worldOf(grown),
+        rewardsProvider(child).overrideWith((Ref ref) async => <Reward>[deco(1, 10), deco(2, 20)]),
+      ]);
+      expect(find.byKey(const Key('island-deco-10')), findsOneWidget);
+      expect(find.byKey(const Key('island-deco-20')), findsOneWidget);
+      expect(find.byKey(const Key('island-deco-30')), findsNothing);
+      await expectLater(
+        find.byType(MaterialApp),
+        matchesGoldenFile('goldens/land_island_decorated_phone.png'),
+      );
+    });
+
     testWidgets('the island fits a small phone and a tablet', (WidgetTester tester) async {
       for (final Size size in <Size>[const Size(667, 375), const Size(1180, 820), const Size(820, 1180)]) {
         await pumpIn(tester, const LandScreen(childId: child, land: TrophyLand.counting), <Override>[

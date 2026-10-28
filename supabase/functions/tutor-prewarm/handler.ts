@@ -28,9 +28,11 @@ const EST_OUTPUT_TOKENS = 80;
 const EST_VOICE_CHARS = 45;
 
 interface Body {
-  mode: "plan" | "make" | "measure" | "evaluate" | "voice";
+  mode: "plan" | "make" | "measure" | "evaluate" | "voice" | "carry";
   pack_id: string;
   pack_version: string;
+  /** For `carry`: the older version whose reviewed lines are copied to `pack_version`. */
+  from_version?: string;
   character_ids: string[];
   bands: Array<"A" | "B" | "C">;
   address_forms: Array<"f" | "m" | "n">;
@@ -66,9 +68,10 @@ export const spec: FunctionSpec = {
   name: "tutor-prewarm",
   access: { kind: "publish" },
   shape: {
-    mode: { t: "enum", values: ["plan", "make", "measure", "evaluate", "voice"] },
+    mode: { t: "enum", values: ["plan", "make", "measure", "evaluate", "voice", "carry"] },
     pack_id: { t: "string", max: 41, pattern: /^[a-z0-9-]{3,41}$/ },
     pack_version: { t: "string", max: 14, pattern: /^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$/ },
+    from_version: { t: "string", max: 14, pattern: /^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$/, optional: true },
     character_ids: { t: "array", of: { t: "string", max: 40, pattern: /^[a-z0-9-]{2,40}$/ }, maxItems: 12 },
     bands: { t: "array", of: { t: "enum", values: ["A", "B", "C"] }, maxItems: 3 },
     address_forms: { t: "array", of: { t: "enum", values: ["f", "m", "n"] }, maxItems: 3 },
@@ -98,6 +101,15 @@ export const spec: FunctionSpec = {
   run: async (ctx) => {
     const b = ctx.body as unknown as Body;
     const svc = ctx.svc;
+    // Carry: no model, no voice and no cost. The reviewed lines of the older pack version are copied to the newer one for
+    // the items whose revision did not change.
+    if (b.mode === "carry") {
+      if (!b.from_version || b.from_version === b.pack_version) {
+        throw new GatewayError("bad_request", "from_version");
+      }
+      const carried = await svc.store.carryLines(b.pack_id, b.from_version, b.pack_version, APPROVED);
+      return { carried, from_version: b.from_version, pack_version: b.pack_version };
+    }
     const cfg = settings(await svc.store.getConfigs(CONFIG_KEYS));
     const contexts = new Map<string, TutorContext>();
     const grid: Entry[] = [];

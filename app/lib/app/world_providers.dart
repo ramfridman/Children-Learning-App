@@ -48,7 +48,10 @@ final FutureProviderFamily<WorldView, String> worldProvider = FutureProvider.fam
 ) async {
   final AppDatabase db = await ref.watch(databaseProvider.future);
   final PackContent content = await ref.watch(contentProvider.future);
-  final WorldCatalog catalog = await ref.watch(worldCatalogProvider.future);
+  final WorldCatalog catalog = (await ref.watch(worldCatalogProvider.future)).withPack(<String, String>{
+    for (final SkillDoc s in content.skills.values)
+      if (s.worldObject != null) s.id: s.worldObject!,
+  });
   final List<Reward> given = await ref.watch(rewardsProvider(childId).future);
   final DateTime now = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true);
   final Engine engine = Engine(catalog: engineCatalog(content))
@@ -67,6 +70,10 @@ final FutureProviderFamily<WorldView, String> worldProvider = FutureProvider.fam
       },
       catalog: catalog,
       now: now,
+      lines: <String, String>{
+        for (final SkillDoc s in content.skills.values)
+          if (s.childLine != null) s.id: s.childLine!,
+      },
     ),
   );
 });

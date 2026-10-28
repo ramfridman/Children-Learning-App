@@ -328,3 +328,62 @@ Deno.test("tutor-prewarm: voice takes only plain Hebrew, at most 25 lines, and n
   );
   assert.equal((await ask({ mode: "voice" })).status, 400);
 });
+
+Deno.test("tutor-prewarm: carry copies the approved lines to a newer pack version for the items that did not change, and costs nothing", async () => {
+  const { ask, store, model, voice } = await setup();
+  await ask({
+    mode: "voice",
+    lines: [cell("בואו נספור לאט"), cell("בואו נספור לאט", { item: "pick.red.flower" })],
+  });
+  const approved = [...store.cache.keys()].filter((k) => k.includes("approved"));
+  assert.equal(approved.length, 2);
+  // The next version of the pack: one item is the same, one was revised.
+  const next = toPack();
+  next.packVersion = "0.3.0";
+  next.manifestSha256 = "b".repeat(64);
+  const revised = next.items.find((i) => i.itemId === "pick.red.flower")!;
+  revised.revision = revised.revision + 1;
+  assert.equal(await store.publishContent(next), "published");
+  const callsBefore = [model.calls.length, voice.calls.length];
+
+  const r = await ask({ mode: "carry", pack_version: "0.3.0", from_version: vector.pack_version });
+  assert.equal(r.status, 200);
+  const j = await r.json();
+  assert.equal(j.carried, 1, "only the item whose revision did not change");
+  const there = [...store.cache.keys()].filter((k) => k.includes("/0.3.0/") && k.includes("approved"));
+  assert.equal(there.length, 1);
+  assert.ok(there[0].includes("count.butterflies.3"));
+  assert.deepEqual([model.calls.length, voice.calls.length], callsBefore, "no model call and no voice");
+  assert.equal(
+    store.cache.get(there[0])!.line,
+    store.cache.get(approved.find((k) => k.includes("count.butterflies.3"))!)!.line,
+    "the same line, with its sound",
+  );
+  assert.equal(
+    (await (await ask({ mode: "carry", pack_version: "0.3.0", from_version: vector.pack_version })).json())
+      .carried,
+    0,
+    "again: nothing more",
+  );
+});
+
+Deno.test("tutor-prewarm: carry leaves lines that were not approved alone, and needs an older version", async () => {
+  const { ask, store } = await setup();
+  await ask({ mode: "make", bands: ["A"], address_forms: ["n"], limit: 2 });
+  const made = [...store.cache.keys()].filter((k) => !k.includes("approved"));
+  assert.ok(made.length > 0, "lines made by the model exist");
+  const next = toPack();
+  next.packVersion = "0.3.0";
+  next.manifestSha256 = "c".repeat(64);
+  await store.publishContent(next);
+  const j = await (await ask({ mode: "carry", pack_version: "0.3.0", from_version: vector.pack_version }))
+    .json();
+  assert.equal(j.carried, 0, "only reviewed lines are carried");
+  assert.equal((await ask({ mode: "carry", pack_version: "0.3.0" })).status, 400, "from_version is needed");
+  assert.equal((await ask({ mode: "carry", pack_version: "0.3.0", from_version: "0.3.0" })).status, 400);
+  assert.equal((await ask({ mode: "carry", pack_version: "0.3.0", from_version: "x" })).status, 400);
+  assert.equal(
+    (await ask({ mode: "carry", pack_version: "0.3.0", from_version: "0.2.0" }, null)).status,
+    401,
+  );
+});

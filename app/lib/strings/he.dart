@@ -296,6 +296,7 @@ abstract final class He {
   static const Str progressHelpedLine = Str('{how}: הצליחו {a} מתוך {b}');
   static const Str progressMisconceptions = Str('מה כדאי לשים לב אליו');
   static const Str progressResolved = Str('נפתר');
+  static const Str progressHomeActivity = Str('פעילות לבית: {w}');
   static const Str progressNothingToWatch = Str('לא נמצאו אי-הבנות.');
   static const Str progressHabits = Str('חוזקות בלמידה');
   static const Str habitAsked = Str('ביקשו עזרה כשלא היו בטוחים: {n} פעמים');

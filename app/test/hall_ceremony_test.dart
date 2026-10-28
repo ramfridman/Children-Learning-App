@@ -84,6 +84,7 @@ List<Override> overrides({
   String? outfit,
   Map<String, String> ribbons = const <String, String>{},
   AppDatabase? db,
+  Map<TrophyLand, List<WorldObject>>? lands,
 }) {
   final VoiceDirector director = VoiceDirector(player: FakePlayer());
   addTearDown(director.dispose);
@@ -99,16 +100,18 @@ List<Override> overrides({
       (Ref ref) async => WorldView(
         engine: engineOf(smallCatalog()),
         now: day0,
-        lands: <TrophyLand, List<WorldObject>>{
-          TrophyLand.counting: <WorldObject>[
-            for (int i = 0; i < 4; i++)
-              object(
-                'SK-${String.fromCharCode(65 + i)}-01',
-                i < lasting ? GrowthStage.fruit : GrowthStage.sketch,
-              ),
-          ],
-          TrophyLand.colors: <WorldObject>[object('COL-A-01', GrowthStage.colour)],
-        },
+        lands:
+            lands ??
+            <TrophyLand, List<WorldObject>>{
+              TrophyLand.counting: <WorldObject>[
+                for (int i = 0; i < 4; i++)
+                  object(
+                    'SK-${String.fromCharCode(65 + i)}-01',
+                    i < lasting ? GrowthStage.fruit : GrowthStage.sketch,
+                  ),
+              ],
+              TrophyLand.colors: <WorldObject>[object('COL-A-01', GrowthStage.colour)],
+            },
       ),
     ),
   ];
@@ -242,6 +245,49 @@ void main() {
         expect(find.byKey(const Key('ceremony')), findsOneWidget);
         expect(find.text(ceremonyLine(TrophyTier.silver).text), findsOneWidget);
         await tester.pump(const Duration(seconds: 4)); // the ceremony plays out
+      },
+    );
+
+    testWidgets(
+      'the card of an earned trophy says what was learned, from the lines of the skills understood for good',
+      (WidgetTester tester) async {
+        await pumpIn(
+          tester,
+          const TrophyHall(childId: child),
+          overrides(
+            rewards: <Reward>[reward(1, 'trophy:counting:bronze', 'trophy')],
+            lands: <TrophyLand, List<WorldObject>>{
+              TrophyLand.counting: <WorldObject>[
+                const WorldObject(
+                  skillId: 'SK-A-01',
+                  title: 'a',
+                  objectId: 'stair',
+                  stage: GrowthStage.fruit,
+                  bell: false,
+                  line: 'סוֹפְרִים עַד חָמֵשׁ',
+                ),
+                const WorldObject(
+                  skillId: 'SK-B-01',
+                  title: 'b',
+                  objectId: 'stair',
+                  stage: GrowthStage.sketch,
+                  bell: false,
+                  line: 'עוֹד לֹא הִגַּעְנוּ',
+                ),
+                object('SK-C-01', GrowthStage.fruit),
+              ],
+            },
+          ),
+        );
+        await tester.tap(find.byKey(const Key('slot-trophy:counting:bronze')));
+        await settle(tester);
+        expect(find.byKey(const Key('hall-line-SK-A-01')), findsOneWidget);
+        expect(find.text('סוֹפְרִים עַד חָמֵשׁ'), findsOneWidget);
+        expect(find.byKey(const Key('hall-line-SK-B-01')), findsNothing, reason: 'not understood yet');
+        // A trophy not earned yet shows how to earn it, and no lines.
+        await tester.tap(find.byKey(const Key('slot-trophy:counting:gold')));
+        await settle(tester);
+        expect(find.byKey(const Key('hall-line-SK-A-01')), findsNothing);
       },
     );
 

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/reward_providers.dart';
 import '../app/world_providers.dart';
 import '../content/models.dart';
+import '../data/app_database.dart' show Reward;
 import '../design/board.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../rewards/award.dart';
+import '../rewards/reward_rules.dart';
 import '../strings/he.dart';
 import '../world/world_art.dart';
 import '../world/world_state.dart';
@@ -30,6 +33,10 @@ class LandScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final WorldView? view = ref.watch(worldProvider(childId)).value;
     final List<WorldObject> objects = view?.lands[land] ?? const <WorldObject>[];
+    // The island decorations the child has earned (10, 20 and 30 skills understood for good) stand on every island.
+    final Set<String> given = <String>{
+      for (final Reward r in ref.watch(rewardsProvider(childId)).value ?? const <Reward>[]) r.awardKey,
+    };
     final ({Color sea, Color grass, Color sand}) colours = islandColours(land.domain);
     return Scaffold(
       backgroundColor: colours.sea,
@@ -83,6 +90,40 @@ class LandScreen extends ConsumerWidget {
                 child: const BoardSvg('assets/art/ui/home_palm.svg', width: 24, height: 24),
               ),
             ),
+            for (final int steps in decorationSteps)
+              if (given.contains(Awards.decoration(steps)))
+                switch (steps) {
+                  10 => PositionedDirectional(
+                    start: 24,
+                    bottom: 14,
+                    child: BoardSvg(
+                      'assets/art/decorations/deco_10.svg',
+                      key: const Key('island-deco-10'),
+                      width: 56,
+                      height: 56,
+                    ),
+                  ),
+                  20 => PositionedDirectional(
+                    end: 24,
+                    top: 64,
+                    child: BoardSvg(
+                      'assets/art/decorations/deco_20.svg',
+                      key: const Key('island-deco-20'),
+                      width: 56,
+                      height: 56,
+                    ),
+                  ),
+                  _ => PositionedDirectional(
+                    end: 24,
+                    bottom: 14,
+                    child: BoardSvg(
+                      'assets/art/decorations/deco_30.svg',
+                      key: const Key('island-deco-30'),
+                      width: 56,
+                      height: 56,
+                    ),
+                  ),
+                },
             if (onPlay != null)
               Positioned(
                 left: 0,

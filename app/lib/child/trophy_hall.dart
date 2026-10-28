@@ -416,6 +416,26 @@ class _DetailCard extends ConsumerWidget {
             key: const Key('hall-how'),
             style: AppText.fixed(size: 18, weight: 500),
           ),
+          if (earned != null) ...<Widget>[
+            for (final WorldObject o in objects.where((WorldObject o) => o.star && o.line != null).take(3))
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const BoardSvg('assets/art/world/star_gold.svg', width: 16, height: 16),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        o.line!,
+                        key: Key('hall-line-${o.skillId}'),
+                        style: AppText.fixed(size: 16, weight: 500),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
           if (promise != null) ...<Widget>[
             const SizedBox(height: 8),
             Container(

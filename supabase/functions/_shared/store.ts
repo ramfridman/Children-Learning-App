@@ -113,6 +113,12 @@ export interface Store {
   cacheGet(k: CacheKey): Promise<CachedLine | null>;
   /** Keeps the line; with `replace`, a line already there for this key is replaced (a reviewed line that was edited). */
   cachePut(k: CacheKey, v: CachedLine, replace?: boolean): Promise<void>;
+  /**
+   * Copies the lines of one prompt version (the reviewed ones) from an older pack version to a newer one, for the items
+   * whose revision did not change, so that a pack that changes only its metadata does not make them unreachable. Lines
+   * already there are kept. Returns how many were copied.
+   */
+  carryLines(packId: string, fromVersion: string, toVersion: string, promptVersion: string): Promise<number>;
   /** One atomic call for every cap; nothing is counted when a limit is already reached. */
   tutorTake(p: {
     familyId: string;
