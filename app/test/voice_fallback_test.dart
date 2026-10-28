@@ -46,8 +46,8 @@ void main() {
   });
 
   test('a borrowed line comes in the voice of the same gender: Nitzi for a girl, Hero-son for a boy', () {
-    Character of(String gender) => Character(
-      id: 'x',
+    Character of(String gender, {String id = 'x'}) => Character(
+      id: id,
       packId: 'char-x',
       nameHe: 'x',
       gender: gender,
@@ -59,5 +59,9 @@ void main() {
     );
     expect(narratorFor(of('f')), 'nitzi');
     expect(narratorFor(of('m')), 'hero-son');
+    // Jili is a girl with a girl's voice although "jelly" is a masculine word in Hebrew.
+    expect(narratorFor(of('m', id: 'alien-jili')), 'nitzi');
+    expect(narratorFor(of('f', id: 'climber-tzuri')), 'hero-son');
+    expect(narratorFor(of('m', id: 'weaver-keshet')), 'nitzi');
   });
 }

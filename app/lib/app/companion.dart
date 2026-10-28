@@ -78,12 +78,26 @@ final FutureProvider<Guide> guideProvider = FutureProvider<Guide>((Ref ref) asyn
   return Guide(c, c.id == narrator ? own : VoiceBank.withFallback(own, await source.voice(narrator)));
 });
 
-/// The two characters whose voices say every line of the lessons: Nitzi for a friend who is a girl, Hero-son for a friend
-/// who is a boy, so a borrowed line never comes in the voice of the other gender.
+/// The two characters whose voices say every line of the lessons: Nitzi for a friend with a girl's voice, Hero-son for a friend
+/// with a boy's voice, so a borrowed line never comes in the voice of the other gender. A friend's grammar in Hebrew
+/// (a jelly is a masculine word) says nothing about its voice, so the choice follows the voice each friend has.
 const String narratorFemaleId = 'nitzi';
 const String narratorMaleId = 'hero-son';
 
-String narratorFor(Character c) => c.gender == 'm' ? narratorMaleId : narratorFemaleId;
+const Map<String, String> _narratorOf = <String, String>{
+  'nitzi': narratorFemaleId,
+  'alien-jili': narratorFemaleId,
+  'compass-romi': narratorFemaleId,
+  'friend-daughter': narratorFemaleId,
+  'inventor-gali': narratorFemaleId,
+  'weaver-keshet': narratorFemaleId,
+  'hero-son': narratorMaleId,
+  'climber-tzuri': narratorMaleId,
+  'tower-tamir': narratorMaleId,
+};
+
+/// The narrator for [c]: by the friend's id, and for a character that is not listed (a new family character) by its gender.
+String narratorFor(Character c) => _narratorOf[c.id] ?? (c.gender == 'm' ? narratorMaleId : narratorFemaleId);
 
 final Provider<VoicePlayer> voicePlayerProvider = Provider<VoicePlayer>(
   (Ref ref) => AudioPlayersVoicePlayer(),
