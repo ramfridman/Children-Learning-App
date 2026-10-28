@@ -20,6 +20,7 @@
     "give.stars.5"
   ],
   "estimatedMinutes": 4,
+  "sequence": 4,
   "celebration": {
     "vo": "vo:celebrate.giving",
     "caption": [

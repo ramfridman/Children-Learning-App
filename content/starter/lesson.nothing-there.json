@@ -20,6 +20,7 @@
     "zero.basket"
   ],
   "estimatedMinutes": 3,
+  "sequence": 12,
   "celebration": {
     "vo": "vo:celebrate.nothing_there",
     "caption": [

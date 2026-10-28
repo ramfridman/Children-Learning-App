@@ -266,6 +266,9 @@ const SObject lessonSchema = SObject(<String, SField>{
   'items': SField(SArray(_id, minItems: 1, maxItems: 12)),
   'estimatedMinutes': SField(SInt(min: 1, max: 30)),
   'celebration': SField(_spoken),
+  // The place of the lesson on the path of its land (M9): the island plays the first lesson, in this order, that the
+  // child has not finished yet. Lessons without one come last.
+  'sequence': SField(SInt(min: 1, max: 500), required: false),
 });
 
 // ---- activities ----

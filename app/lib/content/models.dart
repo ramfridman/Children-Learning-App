@@ -382,11 +382,13 @@ class Lesson {
       title = _caption(json['title']),
       itemIds = <String>[for (final Object? i in json['items']! as List<Object?>) i! as String],
       skillIds = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
+      sequence = (json['sequence'] as int?) ?? 1000,
       celebration = Spoken.fromJson(json['celebration']);
 
   /// A short lesson made on the spot for one skill's revisit (M8): the bell flag on the map. It is not in any pack.
   Lesson.mission({required this.id, required this.itemIds, required this.skillIds, required this.celebration})
     : revision = 1,
+      sequence = 1000,
       title = '';
 
   final String id;
@@ -394,6 +396,9 @@ class Lesson {
   final String title;
   final List<String> itemIds;
   final List<String> skillIds;
+
+  /// Where the lesson sits on the path of its land (smaller comes first); 1000 for a lesson that has no place.
+  final int sequence;
   final Spoken celebration;
 }
 

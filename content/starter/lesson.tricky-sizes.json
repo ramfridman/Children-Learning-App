@@ -19,6 +19,7 @@
     "fewer.big.fish"
   ],
   "estimatedMinutes": 3,
+  "sequence": 10,
   "celebration": {
     "vo": "vo:celebrate.tricky_sizes",
     "caption": [

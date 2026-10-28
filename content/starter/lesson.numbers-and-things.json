@@ -23,6 +23,7 @@
     "show.stars.5"
   ],
   "estimatedMinutes": 5,
+  "sequence": 5,
   "celebration": {
     "vo": "vo:celebrate.numbers_and_things",
     "caption": [

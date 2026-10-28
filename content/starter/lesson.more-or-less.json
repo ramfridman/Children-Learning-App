@@ -21,6 +21,7 @@
     "same.apples.4v5"
   ],
   "estimatedMinutes": 4,
+  "sequence": 9,
   "celebration": {
     "vo": "vo:celebrate.more_or_less",
     "caption": [

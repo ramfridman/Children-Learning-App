@@ -20,6 +20,7 @@
     "flash.scatter.3"
   ],
   "estimatedMinutes": 3,
+  "sequence": 3,
   "celebration": {
     "vo": "vo:celebrate.glance_small",
     "caption": [

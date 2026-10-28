@@ -22,6 +22,7 @@
     "count.birds.10"
   ],
   "estimatedMinutes": 5,
+  "sequence": 7,
   "celebration": {
     "vo": "vo:celebrate.count_to_ten",
     "caption": [

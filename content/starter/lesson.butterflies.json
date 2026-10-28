@@ -23,6 +23,7 @@
     "give.butterflies.4"
   ],
   "estimatedMinutes": 4,
+  "sequence": 1,
   "celebration": {
     "vo": "vo:celebrate.butterflies",
     "caption": [

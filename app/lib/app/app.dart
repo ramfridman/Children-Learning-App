@@ -14,6 +14,7 @@ import '../rewards/ceremony.dart';
 import '../rewards/outfits.dart' show Outfit;
 import '../content/models.dart' show Lesson, PackContent;
 import '../rewards/award.dart';
+import '../world/next_lesson.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
 import '../child/rest_scene.dart';
@@ -239,7 +240,7 @@ class _HomeState extends ConsumerState<_Home> {
           // the child sees the golden star appear.
           onPlay: hasLesson
               ? () async {
-                  await _openLesson();
+                  await _openLesson(lessonId: _nextLesson(trophyLand.domain));
                   if (c.mounted) Navigator.of(c).pop();
                 }
               : null,
@@ -253,7 +254,19 @@ class _HomeState extends ConsumerState<_Home> {
   Future<void> _openStickers() => Navigator.of(context)
       .push(MaterialPageRoute<void>(builder: (BuildContext c) => StickerIsland(childId: widget.profile.id)));
 
-  Future<void> _openLesson({Lesson? mission}) async {
+  /// The lesson the child plays next in a land: the first one on its path that they have not finished.
+  String? _nextLesson(String domain) {
+    final PackContent? content = ref.read(contentProvider).value;
+    if (content == null) return null;
+    final Map<String, int> finished = <String, int>{};
+    for (final Reward r in ref.read(rewardsProvider(widget.profile.id)).value ?? const <Reward>[]) {
+      final ({String lessonId, int n})? s = Awards.stickerOf(r.awardKey);
+      if (s != null && s.n > (finished[s.lessonId] ?? 0)) finished[s.lessonId] = s.n;
+    }
+    return nextLessonId(content: content, domain: domain, finished: finished);
+  }
+
+  Future<void> _openLesson({Lesson? mission, String? lessonId}) async {
     // Time is up (rest hours, the schedule or the daily limit, with the lock on): a calm scene instead of the lesson.
     final ({String id, int band}) child = (id: widget.profile.id, band: widget.profile.ageBand);
     ref.invalidate(timeVerdictProvider(child));
@@ -267,7 +280,11 @@ class _HomeState extends ConsumerState<_Home> {
     }
     final bool? finished = await Navigator.of(context).push(
       MaterialPageRoute<bool>(
-        builder: (BuildContext c) => LessonScreen(profileId: widget.profile.id, mission: mission),
+        builder: (BuildContext c) => LessonScreen(
+          profileId: widget.profile.id,
+          mission: mission,
+          lessonId: lessonId ?? 'butterflies',
+        ),
       ),
     );
     if (mounted) _refreshWorld();
@@ -306,7 +323,7 @@ class _HomeState extends ConsumerState<_Home> {
     avatarId: widget.profile.avatar,
     onParents: () => openParentArea(context, ref),
     onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
-    onOpenActivity: _openLesson,
+    onOpenActivity: () => _openLesson(lessonId: _nextLesson('numbers')),
     onOpenLand: _openLand,
     openableLands: _openableLands(),
     stars: ref.watch(goldenStarsProvider(widget.profile.id)).value ?? 0,

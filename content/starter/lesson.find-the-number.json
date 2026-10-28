@@ -20,6 +20,7 @@
     "pick.numeral.5"
   ],
   "estimatedMinutes": 3,
+  "sequence": 6,
   "celebration": {
     "vo": "vo:celebrate.find_the_number",
     "caption": [

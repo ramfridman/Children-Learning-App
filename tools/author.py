@@ -402,11 +402,11 @@ def tag_file(t):
     }
 
 
-def lesson_file(l):
+def lesson_file(l, sequence):
     return {
         'schema': 'lesson/v1', 'id': l['id'], 'review': 'needs-editor', 'revision': 1, 'band': 'A',
         'title': [{'t': 'he', 'v': l['title']}], 'skills': l['skills'], 'items': l['items'],
-        'estimatedMinutes': l.get('minutes', 4), 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done']),
+        'estimatedMinutes': l.get('minutes', 4), 'sequence': sequence, 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done']),
     }
 
 
@@ -432,10 +432,11 @@ def main(path):
         ids.add(a['id'])
         write('activity.%s.json' % a['id'], KINDS[a['kind']](a, ctx))
         made['activity'] += 1
-    for l in spec['lessons']:
+    # The path of the land: the lessons in the order of the spec, after the older lessons the spec names in "after".
+    for number, l in enumerate(spec['lessons'], start=spec.get('firstSequence', 2)):
         for item in l['items']:
             assert item in ids or os.path.exists(os.path.join(OUT, 'activity.%s.json' % item)), 'no activity ' + item
-        write('lesson.%s.json' % l['id'], lesson_file(l))
+        write('lesson.%s.json' % l['id'], lesson_file(l, number))
         made['lesson'] += 1
     # the pack's asset list gains the sprites this unit uses
     pack_path = os.path.join(OUT, 'pack.json')

@@ -20,6 +20,7 @@
     "flash.frame.5"
   ],
   "estimatedMinutes": 3,
+  "sequence": 8,
   "celebration": {
     "vo": "vo:celebrate.glance_more",
     "caption": [

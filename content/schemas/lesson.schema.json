@@ -121,6 +121,11 @@
         "caption"
       ],
       "additionalProperties": false
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
     }
   },
   "required": [

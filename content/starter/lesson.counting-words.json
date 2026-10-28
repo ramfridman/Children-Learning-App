@@ -23,6 +23,7 @@
     "next.before.7"
   ],
   "estimatedMinutes": 4,
+  "sequence": 2,
   "celebration": {
     "vo": "vo:celebrate.counting_words",
     "caption": [

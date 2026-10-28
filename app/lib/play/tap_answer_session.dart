@@ -201,7 +201,7 @@ class _TapStage extends StatelessWidget {
           children: <Widget>[
             Text('${o.numeral}', style: AppText.fixed(size: box * 0.5, weight: 800, lineHeight: 1)),
             const SizedBox(height: 4),
-            Dots(o.numeral!),
+            FittedBox(fit: BoxFit.scaleDown, child: Dots(o.numeral!)),
           ],
         ),
       );
