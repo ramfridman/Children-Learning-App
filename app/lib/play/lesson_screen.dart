@@ -277,15 +277,23 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       _liveSeen = c.liveNonce;
       final Uint8List? sound = c.liveLine?.audio;
       if (_voice?.answer.state == MicState.listening) _voice?.hush();
-      if (sound != null) unawaited(_director.sayBytesNext(sound, owner: this));
+      if (sound != null) {
+        final int move = c.actionNonce;
+        unawaited(_director.sayBytesNext(sound, owner: this, relevant: () => c.actionNonce == move));
+      }
       return;
     }
     if (c.voiceNonce == _spokenNonce) return;
     _spokenNonce = c.voiceNonce;
     // The guide never talks over a listening child, and the mic never hears the guide.
     if (_voice?.answer.state == MicState.listening) _voice?.hush();
+    // A line is worth saying only until the child's next move; after that it would be about something already past.
+    final int move = c.actionNonce;
+    bool relevant() => c.actionNonce == move;
     unawaited(
-      c.voiceReplaces ? _director.say(c.voice, owner: this) : _director.sayNext(c.voice, owner: this),
+      c.voiceReplaces
+          ? _director.say(c.voice, owner: this, relevant: relevant)
+          : _director.sayNext(c.voice, owner: this, relevant: relevant),
     );
   }
 

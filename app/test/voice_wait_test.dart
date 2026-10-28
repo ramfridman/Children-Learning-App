@@ -55,16 +55,61 @@ void main() {
   });
 
   test(
-    'only the newest line waits: a child who moves fast does not build a queue of old questions',
+    'at most two lines wait (the congratulation and the next question): older ones are about the past',
     () async {
       await director.sayNext('vo:a');
       await director.sayNext('vo:b');
       await director.sayNext('vo:c');
+      await director.sayNext('vo:a');
       player.finish();
       await Future<void>.delayed(Duration.zero);
-      expect(heard(), <String>['mp3:hero-son:a', 'mp3:hero-son:c']);
+      expect(heard(), <String>['mp3:hero-son:a', 'mp3:hero-son:c'], reason: 'b was dropped, c is next');
+      player.finish();
+      await Future<void>.delayed(Duration.zero);
+      expect(heard(), <String>['mp3:hero-son:a', 'mp3:hero-son:c', 'mp3:hero-son:a']);
     },
   );
+
+  test('a waiting line that is no longer relevant is dropped, not played late', () async {
+    bool moved = false;
+    await director.sayNext('vo:a');
+    await director.sayNext('vo:b', relevant: () => !moved);
+    moved = true; // the child answered again while the first line played
+    player.finish();
+    await Future<void>.delayed(Duration.zero);
+    expect(heard(), <String>['mp3:hero-son:a']);
+    expect(director.speaking, isFalse);
+  });
+
+  test('a playing line that no longer matters gives way to the new one at once', () async {
+    bool moved = false;
+    await director.sayNext('vo:a', relevant: () => !moved);
+    await director.sayNext('vo:b'); // still waits: a matters
+    expect(heard(), <String>['mp3:hero-son:a']);
+    moved = true;
+    await director.sayNext('vo:c');
+    expect(heard(), <String>[
+      'mp3:hero-son:a',
+      'mp3:hero-son:b',
+    ], reason: 'a gave way; the oldest relevant line goes first');
+    player.finish();
+    await Future<void>.delayed(Duration.zero);
+    expect(heard().last, 'mp3:hero-son:c');
+  });
+
+  test('a line that has waited too long is dropped', () async {
+    DateTime clock = DateTime(2026, 10, 28, 12);
+    director.dispose();
+    player = FakePlayer();
+    director = VoiceDirector(player: player, maxWait: const Duration(seconds: 6), now: () => clock)
+      ..useBank(bank);
+    await director.sayNext('vo:a');
+    await director.sayNext('vo:b');
+    clock = clock.add(const Duration(seconds: 7));
+    player.finish();
+    await Future<void>.delayed(Duration.zero);
+    expect(heard(), <String>['mp3:hero-son:a']);
+  });
 
   test('the child\'s own touch replaces what is playing, as before', () async {
     await director.sayNext('vo:a');
