@@ -283,6 +283,35 @@ final List<Broken> _cases = <Broken>[
     'numbered 1, 2, 3 in order',
   ),
   Broken(
+    'activity: the second hint helps in the same way as the first',
+    (SamplePack p) => _m(_l(p.doc(_c)['hints'])[1])['action'] = 'replay_prompt_slow',
+    '$_c › hints[1].action',
+    'different way than level 1',
+  ),
+  Broken(
+    'activity: a question that is too long to hold in mind',
+    (SamplePack p) =>
+        _m(_l(_m(p.doc(_c)['prompt'])['caption'])[0])['v'] = List<String>.filled(15, 'בָּאוּ').join(' '),
+    '$_c › prompt.caption',
+    'is at most 14 words',
+  ),
+  Broken(
+    'count_tap: no wrong answer names a misconception',
+    (SamplePack p) {
+      for (final Object? o in _l(_m(p.doc(_c)['answer'])['options'])) {
+        _m(o).remove('misconception');
+      }
+    },
+    '$_c › answer.options',
+    'must name the misconception',
+  ),
+  Broken(
+    'activity: a caption with a greater-than sign',
+    (SamplePack p) => _m(_l(_m(p.doc(_c)['prompt'])['caption'])[0])['v'] = 'בָּא > בָּא',
+    '$_c › prompt.caption[0].v',
+    'turn over in right-to-left text',
+  ),
+  Broken(
     'activity: credit grows with more hints',
     (SamplePack p) => _m(p.doc(_c)['scoring'])['creditByHintLevel'] = <Object?>[1, 0.5, 0.75, 0],
     '$_c › scoring.creditByHintLevel',

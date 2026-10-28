@@ -230,6 +230,15 @@ List<Problem> validatePack({
       checkVo(file, 'hints[$i].vo', h['vo']);
       if (h['level'] != i + 1) say(file, 'hints[$i].level', 'hints must be numbered 1, 2, 3 in order');
     }
+    // The ladder must change something: a second hint that does the same as the first helps nobody (M9 content rules).
+    if (hints.length >= 2 && hints[1]['action'] == hints[0]['action']) {
+      say(
+        file,
+        'hints[1].action',
+        'level 2 must help in a different way than level 1 (change the representation)',
+      );
+    }
+    _lengths(file, a, say);
     final List<Object?> credit =
         (a['scoring']! as Map<String, Object?>)['creditByHintLevel']! as List<Object?>;
     for (int i = 1; i < credit.length; i++) {
@@ -268,6 +277,10 @@ List<Problem> validatePack({
         }
         for (final (int i, Map<String, Object?> c) in _maps(a['traceClassifiers']).indexed) {
           checkTag(file, 'traceClassifiers[$i].misconception', c['misconception']);
+        }
+        // Counting is where the misconceptions show: a wrong answer that is nothing in particular teaches nothing.
+        if (!_maps(answer['options']).any((Map<String, Object?> o) => o['misconception'] != null)) {
+          say(file, 'answer.options', 'at least one wrong answer must name the misconception it shows');
         }
       case 'give_n':
         checkAsset(file, 'scene.background', scene['background']);
@@ -391,6 +404,35 @@ void _options(
   }
 }
 
+/// How much a child can be asked to hear at once: a question of at most 14 words, any other line of at most 24, and no
+/// markup characters in a caption (maths is written as tokens, never as `<` or `>`).
+void _lengths(String file, Map<String, Object?> a, void Function(String, String, String) say) {
+  int words(Object? caption) {
+    final List<Map<String, Object?>> c = _maps(caption);
+    return c.isEmpty
+        ? 0
+        : (c.first['v']! as String).split(RegExp(r'\s+')).where((String w) => w.isNotEmpty).length;
+  }
+
+  void atMost(String path, Object? caption, int limit) {
+    final int n = words(caption);
+    if (n > limit) say(file, path, 'has $n words; a line the child hears is at most $limit words');
+  }
+
+  final Map<String, Object?> prompt = a['prompt']! as Map<String, Object?>;
+  atMost('prompt.caption', prompt['caption'], 14);
+  final Object? answerPrompt = a['answerPrompt'];
+  if (answerPrompt is Map<String, Object?>) atMost('answerPrompt.caption', answerPrompt['caption'], 14);
+  final Map<String, Object?> fb = a['feedback']! as Map<String, Object?>;
+  atMost('feedback.correct.caption', (fb['correct']! as Map<String, Object?>)['caption'], 24);
+  for (final (int i, Map<String, Object?> r) in _maps(fb['incorrect']).indexed) {
+    atMost('feedback.incorrect[$i].caption', r['caption'], 24);
+  }
+  for (final (int i, Map<String, Object?> h) in _maps(a['hints']).indexed) {
+    atMost('hints[$i].caption', h['caption'], 24);
+  }
+}
+
 final RegExp _jsonName = RegExp(r'^([a-z]+)\.(.+)\.json$');
 String _range(int from, int to) => '${String.fromCharCode(from)}-${String.fromCharCode(to)}';
 
@@ -443,6 +485,9 @@ void _line(
 }) {
   if (text is! String) return;
   if (_latin.hasMatch(text)) say(file, path, 'contains Latin letters; the child space is Hebrew only');
+  if (text.contains('<') || text.contains('>')) {
+    say(file, path, 'contains < or >, which turn over in right-to-left text; write maths as a token');
+  }
   if (!_hebrewWord.hasMatch(text) && !allowNoHebrew) say(file, path, 'contains no Hebrew');
   if (!pointed) return;
   for (final RegExpMatch m in _hebrewWord.allMatches(text)) {
