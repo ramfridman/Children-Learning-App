@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "shape-friends",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חֲבֵרִים צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-A-01",
+    "SHP-A-02"
+  ],
+  "items": [
+    "shp.match.circle",
+    "shp.match.square",
+    "shp.match.triangle",
+    "shp.name.circle",
+    "shp.name.square",
+    "shp.name.triangle",
+    "shp.name.mix"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 1,
+  "celebration": {
+    "vo": "vo:celebrate.shape_friends",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם אֶת הַצּוּרוֹת."
+      }
+    ]
+  }
+}

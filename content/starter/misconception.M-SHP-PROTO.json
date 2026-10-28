@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHP-PROTO",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-A-03"
+  ],
+  "parentText": "הילד מזהה רק את הצורה הרגילה, למשל משולש שווה צלעות, ולא משולש צר וגבוה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לצייר יחד כמה משולשים שונים, רחבים וצרים, ולספור בכל אחד שלוש צלעות."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "concrete"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "where-is-it",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֵיפֹה זֶה?"
+    }
+  ],
+  "skills": [
+    "SHP-A-08"
+  ],
+  "items": [
+    "shp.where.on",
+    "shp.where.under",
+    "shp.where.in",
+    "shp.where.next"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 6,
+  "celebration": {
+    "vo": "vo:celebrate.where_is_it",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כֻּל דָּבָר."
+      }
+    ]
+  }
+}

@@ -38,6 +38,9 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('log.sort.colour', 'logic_sort', 900),
   ('log.size.middle', 'logic_size', 900),
   ('log.pat.no.mixed', 'logic_pattern_yes_no', 900),
+  ('shp.any.small', 'shape_small', 900),
+  ('shp.where.under', 'shape_where', 900),
+  ('shp.rect.find', 'shape_rect', 900),
 ];
 
 void main() {

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SPACE-WORD",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-A-08"
+  ],
+  "parentText": "הילד מבלבל בין מילות מקום כמו על ומתחת.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להניח כדור על שולחן ומתחתיו, ולהגיד את המילה בכל פעם ('על השולחן', 'מתחת לשולחן'). אחר כך לבקש מהילד להניח לפי המילה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHP-SIZE",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-A-03"
+  ],
+  "parentText": "הילד חושב שצורה גדולה וצורה קטנה הן צורות שונות.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להניח עיגול גדול ועיגול קטן זה ליד זה, ולשאול: מה אותו דבר? לעזור לו להגיד 'שניהם עיגולים'."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete"
+  ]
+}

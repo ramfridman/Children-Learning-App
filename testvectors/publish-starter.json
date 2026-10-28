@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
   "pack_version": "0.5.0",
-  "manifest_sha256": "5ae2cfcffbe773cb501562bc01166599c2bd9db00b51b111902d51eafce41424",
+  "manifest_sha256": "05a1d52d48c824dc0a43c4f60fe890deda87955a17c4e7c8b8fa14a441aa3ede",
   "items": [
     {
       "item_id": "col.find.blue.ball",
@@ -4897,6 +4897,1072 @@
       ]
     },
     {
+      "item_id": "shp.any.down",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "רִבּוּעַ",
+          "misconception": "M-SHP-ORIENT",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "עִגּוּל",
+          "misconception": "M-SHP-ORIENT",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.any.small",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 1,
+          "label": "עִגּוּל",
+          "misconception": "M-SHP-SIZE",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 1,
+          "label": "מְשֻׁלָּשׁ",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "value": 1,
+          "label": "רִבּוּעַ",
+          "misconception": "M-SHP-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.any.thin",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "מַלְבֵּן",
+          "misconception": "M-SHP-PROTO",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "עִגּוּל",
+          "misconception": "M-SHP-PROTO",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.any.tilt",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הָרִבּוּעַ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "עִגּוּל",
+          "misconception": "M-SHP-ORIENT",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "רִבּוּעַ",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "מַלְבֵּן",
+          "misconception": "M-SHP-ORIENT",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.line.curved",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-10"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַקַּו הָעָקֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "קַו עָקֹם",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "קַו יָשָׁר",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2"
+      ]
+    },
+    {
+      "item_id": "shp.line.straight",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-10"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַקַּו הַיָּשָׁר?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "קַו עָקֹם",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "קַו יָשָׁר",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2"
+      ]
+    },
+    {
+      "item_id": "shp.match.circle",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-01"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה אוֹתָהּ צוּרָה?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "רִבּוּעַ",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "עִגּוּל",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "shp.match.square",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-01"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה אוֹתָהּ צוּרָה?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "רִבּוּעַ",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "עִגּוּל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "shp.match.triangle",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-01"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה אוֹתָהּ צוּרָה?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "עִגּוּל",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "רִבּוּעַ",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": true
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "shp.name.circle",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הָעִגּוּל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "עִגּוּל",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "רִבּוּעַ",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.name.mix",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הָעִגּוּל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "רִבּוּעַ",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "עִגּוּל",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.name.square",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הָרִבּוּעַ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "רִבּוּעַ",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "עִגּוּל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.name.triangle",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "עִגּוּל",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "רִבּוּעַ",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.rect.find",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַמַּלְבֵּן?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "מַלְבֵּן",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "רִבּוּעַ",
+          "misconception": "M-SHP-SQRECT",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "עִגּוּל",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.rect.long",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיזוֹ צוּרָה אֲרֻכָּה?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "רִבּוּעַ",
+          "misconception": "M-SHP-SQRECT",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "עִגּוּל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "מַלְבֵּן",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.rect.square",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הָרִבּוּעַ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "מַלְבֵּן",
+          "misconception": "M-SHP-SQRECT",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "מְשֻׁלָּשׁ",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "רִבּוּעַ",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.solid.rolls",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מָה מִתְגַּלְגֵּל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "קֻבִּיָּה",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2"
+      ]
+    },
+    {
+      "item_id": "shp.solid.stacks",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מָה אֶפְשָׁר לַעֲרֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "קֻבִּיָּה",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2"
+      ]
+    },
+    {
+      "item_id": "shp.solid.which",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מָה לֹא מִתְגַּלְגֵּל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "קֻבִּיָּה",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2"
+      ]
+    },
+    {
+      "item_id": "shp.where.in",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-08"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר? בְּתוֹךְ הַקֻּפְסָה.",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "עַל",
+          "misconception": "M-SPACE-WORD",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "מֵעַל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "בְּתוֹךְ",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.where.next",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-08"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר? לְיַד הַקֻּפְסָה.",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בְּתוֹךְ",
+          "misconception": "M-SPACE-WORD",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "לְיַד",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "עַל",
+          "misconception": "M-SPACE-WORD",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.where.on",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-08"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר? עַל הַקֻּפְסָה.",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "מִתַּחַת",
+          "misconception": "M-SPACE-WORD",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "עַל",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "לְיַד",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.where.under",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-08"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר? מִתַּחַת לַשֻּׁלְחָן.",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "עַל",
+          "misconception": "M-SPACE-WORD",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "מִתַּחַת",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "מֵעַל",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.world.circle",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מָה בְּצוּרַת עִגּוּל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "חַלּוֹן",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "שֶׁלֶט",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "צַלַּחַת",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.world.rect",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מָה בְּצוּרַת מַלְבֵּן?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "צַלַּחַת",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "חַלּוֹן",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "שֶׁלֶט",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "shp.world.triangle",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מָה בְּצוּרַת מְשֻׁלָּשׁ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "שֶׁלֶט",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "צַלַּחַת",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "חַלּוֹן",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
       "item_id": "zero.basket",
       "revision": 1,
       "template": "tap_answer",
@@ -5141,12 +6207,47 @@
       "description": "הילד מסדר לפי גודל רק את הקצוות (הכי גדול, הכי קטן) ומשאיר את האמצע באקראי."
     },
     {
+      "tag": "M-SHP-ORIENT",
+      "skill_ids": [
+        "SHP-A-03"
+      ],
+      "description": "הילד לא מכיר ריבוע מסובב או משולש הפוך כאותה צורה."
+    },
+    {
+      "tag": "M-SHP-PROTO",
+      "skill_ids": [
+        "SHP-A-03"
+      ],
+      "description": "הילד מזהה רק את הצורה הרגילה, למשל משולש שווה צלעות, ולא משולש צר וגבוה."
+    },
+    {
+      "tag": "M-SHP-SIZE",
+      "skill_ids": [
+        "SHP-A-03"
+      ],
+      "description": "הילד חושב שצורה גדולה וצורה קטנה הן צורות שונות."
+    },
+    {
+      "tag": "M-SHP-SQRECT",
+      "skill_ids": [
+        "SHP-A-04"
+      ],
+      "description": "הילד מבלבל בין ריבוע למלבן."
+    },
+    {
       "tag": "M-SORT-SHIFT",
       "skill_ids": [
         "COL-A-04",
         "LOG-A-03"
       ],
       "description": "הילד מחליף את כלל המיון באמצע: מתחיל לפי צבע וממשיך לפי צורה."
+    },
+    {
+      "tag": "M-SPACE-WORD",
+      "skill_ids": [
+        "SHP-A-08"
+      ],
+      "description": "הילד מבלבל בין מילות מקום כמו על ומתחת."
     }
   ],
   "characters": []

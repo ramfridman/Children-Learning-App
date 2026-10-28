@@ -1,0 +1,29 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-A-01",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מתאימים עיגולים, ריבועים ומשולשים זהים"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת אוֹתָהּ צוּרָה"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

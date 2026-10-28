@@ -327,6 +327,78 @@
     {
       "id": "paste",
       "file": "paste.svg"
+    },
+    {
+      "id": "shape_circle",
+      "file": "shape_circle.svg"
+    },
+    {
+      "id": "shape_rect",
+      "file": "shape_rect.svg"
+    },
+    {
+      "id": "shape_square",
+      "file": "shape_square.svg"
+    },
+    {
+      "id": "shape_square_tilt",
+      "file": "shape_square_tilt.svg"
+    },
+    {
+      "id": "shape_triangle",
+      "file": "shape_triangle.svg"
+    },
+    {
+      "id": "shape_triangle_down",
+      "file": "shape_triangle_down.svg"
+    },
+    {
+      "id": "shape_triangle_thin",
+      "file": "shape_triangle_thin.svg"
+    },
+    {
+      "id": "window",
+      "file": "window.svg"
+    },
+    {
+      "id": "plate",
+      "file": "plate.svg"
+    },
+    {
+      "id": "sign",
+      "file": "sign.svg"
+    },
+    {
+      "id": "solid_box",
+      "file": "solid_box.svg"
+    },
+    {
+      "id": "line_curved",
+      "file": "line_curved.svg"
+    },
+    {
+      "id": "line_straight",
+      "file": "line_straight.svg"
+    },
+    {
+      "id": "pos_above",
+      "file": "pos_above.svg"
+    },
+    {
+      "id": "pos_in",
+      "file": "pos_in.svg"
+    },
+    {
+      "id": "pos_next",
+      "file": "pos_next.svg"
+    },
+    {
+      "id": "pos_on",
+      "file": "pos_on.svg"
+    },
+    {
+      "id": "pos_under",
+      "file": "pos_under.svg"
     }
   ],
   "vo": []

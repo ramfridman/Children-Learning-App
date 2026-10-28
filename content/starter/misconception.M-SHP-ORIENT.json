@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHP-ORIENT",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-A-03"
+  ],
+  "parentText": "הילד לא מכיר ריבוע מסובב או משולש הפוך כאותה צורה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לגזור ריבוע מנייר ולסובב אותו על השולחן, ולשאול בכל פעם: מה זה? להראות שהצורה נשארת אותה צורה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

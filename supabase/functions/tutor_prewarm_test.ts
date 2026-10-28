@@ -14,7 +14,10 @@ const toPack = (): PublishedPack => ({
   packId: vector.pack_id,
   packVersion: vector.pack_version,
   manifestSha256: vector.manifest_sha256,
-  items: vector.items.map((i: Record<string, unknown>) => ({
+  // The counting warm-up items: the fake model of these tests answers about counting mistakes only.
+  items: vector.items.filter((i: Record<string, unknown>) =>
+    /butterflies|pick.red.flower/.test(String(i.item_id))
+  ).map((i: Record<string, unknown>) => ({
     itemId: i.item_id,
     revision: i.revision,
     template: i.template,

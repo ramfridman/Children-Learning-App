@@ -118,6 +118,162 @@
       [
         "Count the places from the start together until the place that was asked for, and stop there."
       ]
+    ],
+    "M-COL-NAME": [
+      [
+        "Invite the child to look at the colours again, slowly, and say the colour name that was asked for.",
+        "Say that some colours look alike, and invite comparing the two side by side."
+      ],
+      [
+        "Suggest finding something in the room that has the colour that was asked for, and comparing it with the picture.",
+        "Suggest saying the colour name aloud while pointing at each picture in turn."
+      ],
+      [
+        "Say the colour name clearly while pointing at the right one, then invite the child to point at it too."
+      ]
+    ],
+    "M-COL-OBJECT": [
+      [
+        "Say that the same kind of thing can have different colours, and invite looking again.",
+        "Invite the child to think about the fruit or thing in the picture and ask what else it could be."
+      ],
+      [
+        "Tell a very short story of a fruit that changes colour as it grows, and invite looking again.",
+        "Suggest remembering a time when they saw the same thing in a different colour."
+      ],
+      [
+        "Say that it is still the same thing even though its colour is different, and point at the right picture."
+      ]
+    ],
+    "M-COL-ONEATTR": [
+      [
+        "Say that there are two things to check, what it is and what colour it is, and invite looking at both.",
+        "Invite the child to first find the kind of thing that was asked for, and then pick its colour."
+      ],
+      [
+        "Suggest putting a finger on all the things of the right kind first, and then choosing the right colour among them.",
+        "Suggest saying both words aloud, the thing and the colour, while looking."
+      ],
+      [
+        "Point at the group of the right kind of thing, then at the one with the right colour, and invite the child to choose it."
+      ]
+    ],
+    "M-SORT-SHIFT": [
+      [
+        "Remind the child which rule is being used, the colour or the kind, and invite looking again.",
+        "Say the rule aloud and invite the child to check each picture against it."
+      ],
+      [
+        "Suggest putting a finger on the pictures that already belong, and finding what they have in common.",
+        "Suggest saying the rule again before choosing."
+      ],
+      [
+        "Say what the group has in common and point at the picture that has it too."
+      ]
+    ],
+    "M-PAT-NEXT": [
+      [
+        "Invite the child to say the pattern aloud from the start, and listen for what comes next.",
+        "Suggest tapping along with each picture in the pattern, one by one."
+      ],
+      [
+        "Suggest covering the last picture and asking what the pattern says should come after the one before it.",
+        "Suggest finding the small part that repeats and saying it aloud twice."
+      ],
+      [
+        "Say the pattern aloud with a beat, stop before the missing one, and let the child say it before pointing at the right picture."
+      ]
+    ],
+    "M-SEQ-CAUSE": [
+      [
+        "Invite the child to think about what happens first, and what happens because of it.",
+        "Suggest telling the little story aloud in order."
+      ],
+      [
+        "Suggest asking whether the second thing could happen before the first.",
+        "Tell the story in one short sentence for each picture, and invite the child to find the right place."
+      ],
+      [
+        "Tell the short story in order, and point at the picture that comes in the place that was asked for."
+      ]
+    ],
+    "M-SER-ENDS": [
+      [
+        "Say that the one in the middle is not the biggest and not the smallest, and invite looking again.",
+        "Invite finding the biggest and the smallest first, and then the one that is left."
+      ],
+      [
+        "Suggest putting the pictures in a line in the mind, from the smallest to the biggest, and finding the middle place.",
+        "Suggest comparing the middle one with each end."
+      ],
+      [
+        "Point at the biggest and the smallest, say that the middle one is between them, and point at it."
+      ]
+    ],
+    "M-SHP-ORIENT": [
+      [
+        "Say that a shape stays the same shape even when it is turned around, and invite looking again.",
+        "Invite the child to count the sides and the corners of the shape."
+      ],
+      [
+        "Suggest turning the head a little and looking at the shape again.",
+        "Suggest following the sides with a finger and counting them."
+      ],
+      [
+        "Count the sides aloud with the child while following them with a finger, and then point at the right shape."
+      ]
+    ],
+    "M-SHP-PROTO": [
+      [
+        "Say that the same shape can look a little different, longer or thinner, and invite looking again.",
+        "Invite counting the straight sides of each shape."
+      ],
+      [
+        "Suggest following each side with a finger and counting them aloud.",
+        "Suggest asking whether the shape is closed and has the right number of sides."
+      ],
+      [
+        "Count the sides aloud together, say how many the asked-for shape has, and point at the one that matches."
+      ]
+    ],
+    "M-SHP-SIZE": [
+      [
+        "Say that a big shape and a small shape can be the same shape, and invite looking again.",
+        "Invite ignoring how big each one is and looking only at its form."
+      ],
+      [
+        "Suggest picturing the small shape growing bigger, or the big one shrinking.",
+        "Suggest counting the sides and corners and ignoring the size."
+      ],
+      [
+        "Say that both are the same shape, one bigger and one smaller, and point at the one that was asked for."
+      ]
+    ],
+    "M-SHP-SQRECT": [
+      [
+        "Say that in a square all the sides are the same, and in a rectangle some are longer, and invite looking again.",
+        "Invite comparing the sides of each shape with a finger."
+      ],
+      [
+        "Suggest comparing the long side and the short side of each shape.",
+        "Suggest asking whether all four sides look the same length."
+      ],
+      [
+        "Compare the sides aloud: all the same for the square, long and short for the rectangle, and point at the right one."
+      ]
+    ],
+    "M-SPACE-WORD": [
+      [
+        "Invite the child to listen to the place word again and look at where the ball is.",
+        "Say the place word slowly and invite finding it in the picture."
+      ],
+      [
+        "Suggest acting it out with a real ball and a box or a table, and then looking at the pictures.",
+        "Suggest saying what is above, below, inside or next to what in each picture."
+      ],
+      [
+        "Say the place word slowly, point at where the ball is in the right picture, and invite the child to choose it."
+      ]
     ]
   }
 }

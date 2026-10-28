@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "shapes-around-us",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "צוּרוֹת סְבִיבֵנוּ"
+    }
+  ],
+  "skills": [
+    "SHP-A-05",
+    "SHP-A-10"
+  ],
+  "items": [
+    "shp.world.circle",
+    "shp.world.rect",
+    "shp.world.triangle",
+    "shp.line.straight",
+    "shp.line.curved"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 4,
+  "celebration": {
+    "vo": "vo:celebrate.shapes_around_us",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! מְצָאתֶם צוּרוֹת בְּכׇל מָקוֹם."
+      }
+    ]
+  }
+}

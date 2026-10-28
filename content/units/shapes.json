@@ -1,0 +1,88 @@
+{
+  "unit": "shapes",
+  "domain": "shapes",
+  "note": "Band A of Shapes (SHP-A-01 to 05, 07, 08 and 10; SHP-A-06 needs the drag-a-piece template and SHP-A-09 more scenes, both later). Hebrew is a draft by Claude, needs-editor.",
+  "assetGlobs": ["shape_*", "window", "plate", "sign", "solid_box", "line_*", "pos_*"],
+  "assets": ["ball_red"],
+  "things": { "ball": ["כַּדּוּר", "m"] },
+  "colours": { "red": "אָדֹם" },
+  "names": {
+    "shape_circle": { "one": "עִגּוּל", "g": "m" }, "shape_square": { "one": "רִבּוּעַ", "g": "m" },
+    "shape_triangle": { "one": "מְשֻׁלָּשׁ", "g": "m" }, "shape_rect": { "one": "מַלְבֵּן", "g": "m" },
+    "shape_square_tilt": { "one": "רִבּוּעַ", "g": "m" }, "shape_triangle_thin": { "one": "מְשֻׁלָּשׁ", "g": "m" },
+    "shape_triangle_down": { "one": "מְשֻׁלָּשׁ", "g": "m" },
+    "window": { "one": "חַלּוֹן", "g": "m" }, "plate": { "one": "צַלַּחַת", "g": "f" }, "sign": { "one": "שֶׁלֶט", "g": "m" },
+    "solid_box": { "one": "קֻבִּיָּה", "g": "f" },
+    "line_straight": { "one": "קַו יָשָׁר", "g": "m" }, "line_curved": { "one": "קַו עָקֹם", "g": "m" },
+    "pos_on": { "one": "עַל", "g": "m" }, "pos_under": { "one": "מִתַּחַת", "g": "m" }, "pos_in": { "one": "בְּתוֹךְ", "g": "m" },
+    "pos_next": { "one": "לְיַד", "g": "m" }, "pos_above": { "one": "מֵעַל", "g": "m" }
+  },
+  "tagFeedback": {
+    "M-SHP-ORIENT": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק.",
+    "M-SHP-PROTO": "אוֹתָהּ צוּרָה יְכוֹלָה לְהֵרָאוֹת קְצָת אַחֶרֶת. בּוֹאוּ נִסְפֹּר צְלָעוֹת.",
+    "M-SHP-SIZE": "צוּרָה גְּדוֹלָה וְצוּרָה קְטַנָּה יְכוֹלוֹת לִהְיוֹת אוֹתָהּ צוּרָה. בּוֹאוּ נִבְדֹּק.",
+    "M-SHP-SQRECT": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.",
+    "M-SPACE-WORD": "הַמִּלָּה אוֹמֶרֶת אֵיפֹה הַכַּדּוּר. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+  },
+  "misconceptions": [
+    { "id": "M-SHP-ORIENT", "skills": ["SHP-A-03"], "parent": "הילד לא מכיר ריבוע מסובב או משולש הפוך כאותה צורה.", "home": "לגזור ריבוע מנייר ולסובב אותו על השולחן, ולשאול בכל פעם: מה זה? להראות שהצורה נשארת אותה צורה.", "reps": ["concrete", "embodied"] },
+    { "id": "M-SHP-PROTO", "skills": ["SHP-A-03"], "parent": "הילד מזהה רק את הצורה הרגילה, למשל משולש שווה צלעות, ולא משולש צר וגבוה.", "home": "לצייר יחד כמה משולשים שונים, רחבים וצרים, ולספור בכל אחד שלוש צלעות.", "reps": ["pictorial", "concrete"] },
+    { "id": "M-SHP-SIZE", "skills": ["SHP-A-03"], "parent": "הילד חושב שצורה גדולה וצורה קטנה הן צורות שונות.", "home": "להניח עיגול גדול ועיגול קטן זה ליד זה, ולשאול: מה אותו דבר? לעזור לו להגיד 'שניהם עיגולים'.", "reps": ["concrete"] },
+    { "id": "M-SHP-SQRECT", "skills": ["SHP-A-04"], "parent": "הילד מבלבל בין ריבוע למלבן.", "home": "למדוד בנייר שני צדדים של ריבוע ושל מלבן, ולהשוות: במה הם שונים?", "reps": ["concrete", "pictorial"] },
+    { "id": "M-SPACE-WORD", "skills": ["SHP-A-08"], "parent": "הילד מבלבל בין מילות מקום כמו על ומתחת.", "home": "להניח כדור על שולחן ומתחתיו, ולהגיד את המילה בכל פעם ('על השולחן', 'מתחת לשולחן'). אחר כך לבקש מהילד להניח לפי המילה.", "reps": ["concrete", "embodied"] }
+  ],
+  "skills": [
+    { "id": "SHP-A-01", "title": "מתאימים עיגולים, ריבועים ומשולשים זהים", "child": "מוֹצְאִים אֶת אוֹתָהּ צוּרָה", "world": "cone-tree", "needs": [], "reps": ["pictorial"], "tags": [] },
+    { "id": "SHP-A-02", "title": "קוראים בשם לעיגול, ריבוע ומשולש", "child": "מַכִּירִים עִגּוּל, רִבּוּעַ וּמְשֻׁלָּשׁ", "world": "cone-tree", "needs": ["SHP-A-01"], "reps": ["pictorial"], "tags": [] },
+    { "id": "SHP-A-03", "title": "מזהים צורות בכל גודל ובכל כיוון", "child": "מַכִּירִים צוּרוֹת גְּדוֹלוֹת, קְטַנּוֹת וּמְסֻבָּבוֹת", "world": "cone-tree", "needs": ["SHP-A-02"], "reps": ["pictorial", "concrete"], "tags": ["M-SHP-ORIENT", "M-SHP-PROTO", "M-SHP-SIZE"] },
+    { "id": "SHP-A-04", "title": "מזהים מלבן ומבדילים אותו מריבוע", "child": "מַכִּירִים מַלְבֵּן", "world": "pool", "needs": ["SHP-A-02"], "reps": ["pictorial"], "tags": ["M-SHP-SQRECT"] },
+    { "id": "SHP-A-05", "title": "מוצאים צורות בעולם: חלון, צלחת, שלט", "child": "מוֹצְאִים צוּרוֹת בָּעוֹלָם", "world": "stall", "needs": ["SHP-A-03"], "reps": ["pictorial"], "tags": [] },
+    { "id": "SHP-A-07", "title": "מבדילים כדור מקובייה: מתגלגל או נערם", "child": "יוֹדְעִים מָה מִתְגַּלְגֵּל וּמָה נֶעֱרָם", "world": "dock", "needs": [], "reps": ["pictorial", "concrete"], "tags": [] },
+    { "id": "SHP-A-08", "title": "מבינים על, מתחת, בתוך, ליד ומעל", "child": "מְבִינִים עַל, מִתַּחַת, בְּתוֹךְ וְלְיַד", "world": "pattern-door", "needs": [], "reps": ["pictorial", "embodied"], "tags": ["M-SPACE-WORD"] },
+    { "id": "SHP-A-10", "title": "מבדילים קו ישר מקו עקום", "child": "מַכִּירִים קַו יָשָׁר וְקַו עָקֹם", "world": "sprout", "needs": ["SHP-A-02"], "reps": ["pictorial"], "tags": [] }
+  ],
+  "activities": [
+    { "kind": "pick", "id": "shp.match.circle", "skill": "SHP-A-01", "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?", "group": { "sprite": "shape_circle", "count": 1 }, "options": ["shape_square", "shape_circle", "shape_triangle"], "correct": "shape_circle", "difficulty": 0.05 },
+    { "kind": "pick", "id": "shp.match.square", "skill": "SHP-A-01", "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?", "group": { "sprite": "shape_square", "count": 1 }, "options": ["shape_square", "shape_circle", "shape_triangle"], "correct": "shape_square", "difficulty": 0.05 },
+    { "kind": "pick", "id": "shp.match.triangle", "skill": "SHP-A-01", "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?", "group": { "sprite": "shape_triangle", "count": 1 }, "options": ["shape_circle", "shape_square", "shape_triangle"], "correct": "shape_triangle", "difficulty": 0.1 },
+
+    { "kind": "pick", "id": "shp.name.circle", "skill": "SHP-A-02", "prompt": "אֵיפֹה הָעִגּוּל?", "options": ["shape_triangle", "shape_circle", "shape_square"], "correct": "shape_circle", "difficulty": 0.1 },
+    { "kind": "pick", "id": "shp.name.square", "skill": "SHP-A-02", "prompt": "אֵיפֹה הָרִבּוּעַ?", "options": ["shape_square", "shape_circle", "shape_triangle"], "correct": "shape_square", "difficulty": 0.15 },
+    { "kind": "pick", "id": "shp.name.triangle", "skill": "SHP-A-02", "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?", "options": ["shape_circle", "shape_triangle", "shape_square"], "correct": "shape_triangle", "difficulty": 0.15 },
+    { "kind": "pick", "id": "shp.name.mix", "skill": "SHP-A-02", "prompt": "אֵיפֹה הָעִגּוּל?", "options": ["shape_square", "shape_triangle", "shape_circle"], "correct": "shape_circle", "difficulty": 0.2 },
+
+    { "kind": "pick", "id": "shp.any.tilt", "skill": "SHP-A-03", "prompt": "אֵיפֹה הָרִבּוּעַ?", "options": ["shape_circle", "shape_square_tilt", "shape_rect"], "correct": "shape_square_tilt", "tags": { "shape_rect": "M-SHP-ORIENT", "shape_circle": "M-SHP-ORIENT" }, "difficulty": 0.35 },
+    { "kind": "pick", "id": "shp.any.thin", "skill": "SHP-A-03", "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?", "options": ["shape_rect", "shape_circle", "shape_triangle_thin"], "correct": "shape_triangle_thin", "tags": { "shape_rect": "M-SHP-PROTO", "shape_circle": "M-SHP-PROTO" }, "difficulty": 0.4 },
+    { "kind": "pick", "id": "shp.any.down", "skill": "SHP-A-03", "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?", "options": ["shape_triangle_down", "shape_square", "shape_circle"], "correct": "shape_triangle_down", "tags": { "shape_square": "M-SHP-ORIENT", "shape_circle": "M-SHP-ORIENT" }, "difficulty": 0.4 },
+    { "kind": "pick", "id": "shp.any.small", "skill": "SHP-A-03", "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?", "options": ["shape_circle*1", "shape_triangle*1@0.55", "shape_square*1"], "correct": "shape_triangle*1@0.55", "tags": { "shape_circle*1": "M-SHP-SIZE", "shape_square*1": "M-SHP-SIZE" }, "difficulty": 0.35 },
+
+    { "kind": "pick", "id": "shp.rect.find", "skill": "SHP-A-04", "prompt": "אֵיפֹה הַמַּלְבֵּן?", "options": ["shape_rect", "shape_square", "shape_circle"], "correct": "shape_rect", "tags": { "shape_square": "M-SHP-SQRECT" }, "difficulty": 0.3 },
+    { "kind": "pick", "id": "shp.rect.square", "skill": "SHP-A-04", "prompt": "אֵיפֹה הָרִבּוּעַ?", "options": ["shape_rect", "shape_triangle", "shape_square"], "correct": "shape_square", "tags": { "shape_rect": "M-SHP-SQRECT" }, "difficulty": 0.35 },
+    { "kind": "pick", "id": "shp.rect.long", "skill": "SHP-A-04", "prompt": "אֵיזוֹ צוּרָה אֲרֻכָּה?", "options": ["shape_square", "shape_circle", "shape_rect"], "correct": "shape_rect", "tags": { "shape_square": "M-SHP-SQRECT" }, "difficulty": 0.35, "correct_text": "כֵּן! הַמַּלְבֵּן אָרֹךְ." },
+
+    { "kind": "pick", "id": "shp.world.circle", "skill": "SHP-A-05", "prompt": "מָה בְּצוּרַת עִגּוּל?", "options": ["window", "sign", "plate"], "correct": "plate", "difficulty": 0.3 },
+    { "kind": "pick", "id": "shp.world.rect", "skill": "SHP-A-05", "prompt": "מָה בְּצוּרַת מַלְבֵּן?", "options": ["plate", "window", "sign"], "correct": "window", "difficulty": 0.3 },
+    { "kind": "pick", "id": "shp.world.triangle", "skill": "SHP-A-05", "prompt": "מָה בְּצוּרַת מְשֻׁלָּשׁ?", "options": ["sign", "plate", "window"], "correct": "sign", "difficulty": 0.3 },
+
+    { "kind": "pick", "id": "shp.solid.rolls", "skill": "SHP-A-07", "prompt": "מָה מִתְגַּלְגֵּל?", "options": ["solid_box", "ball_red"], "correct": "ball_red", "difficulty": 0.15, "rep": "concrete" },
+    { "kind": "pick", "id": "shp.solid.stacks", "skill": "SHP-A-07", "prompt": "מָה אֶפְשָׁר לַעֲרֹם?", "options": ["ball_red", "solid_box"], "correct": "solid_box", "difficulty": 0.2, "rep": "concrete" },
+    { "kind": "pick", "id": "shp.solid.which", "skill": "SHP-A-07", "prompt": "מָה לֹא מִתְגַּלְגֵּל?", "options": ["ball_red", "solid_box"], "correct": "solid_box", "difficulty": 0.3, "rep": "concrete" },
+
+    { "kind": "pick", "id": "shp.where.on", "skill": "SHP-A-08", "prompt": "אֵיפֹה הַכַּדּוּר? עַל הַקֻּפְסָה.", "options": ["pos_under", "pos_on", "pos_next"], "correct": "pos_on", "tags": { "pos_under": "M-SPACE-WORD" }, "difficulty": 0.2, "rep": "pictorial", "correct_text": "כֵּן! הַכַּדּוּר עַל הַקֻּפְסָה.", "h3": "הַכַּדּוּר נִמְצָא מֵעַל הַקֻּפְסָה, וְנוֹגֵעַ בָּהּ. עַכְשָׁו תּוֹרְכֶם." },
+    { "kind": "pick", "id": "shp.where.under", "skill": "SHP-A-08", "prompt": "אֵיפֹה הַכַּדּוּר? מִתַּחַת לַשֻּׁלְחָן.", "options": ["pos_on", "pos_under", "pos_above"], "correct": "pos_under", "tags": { "pos_on": "M-SPACE-WORD" }, "difficulty": 0.25, "rep": "pictorial", "correct_text": "כֵּן! הַכַּדּוּר מִתַּחַת לַשֻּׁלְחָן.", "h3": "הַשֻּׁלְחָן לְמַעְלָה, וְהַכַּדּוּר מִתַּחְתָּיו. עַכְשָׁו תּוֹרְכֶם." },
+    { "kind": "pick", "id": "shp.where.in", "skill": "SHP-A-08", "prompt": "אֵיפֹה הַכַּדּוּר? בְּתוֹךְ הַקֻּפְסָה.", "options": ["pos_on", "pos_above", "pos_in"], "correct": "pos_in", "tags": { "pos_on": "M-SPACE-WORD" }, "difficulty": 0.25, "rep": "pictorial", "correct_text": "כֵּן! הַכַּדּוּר בְּתוֹךְ הַקֻּפְסָה.", "h3": "הַכַּדּוּר בִּפְנִים, בְּתוֹךְ הַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם." },
+    { "kind": "pick", "id": "shp.where.next", "skill": "SHP-A-08", "prompt": "אֵיפֹה הַכַּדּוּר? לְיַד הַקֻּפְסָה.", "options": ["pos_in", "pos_next", "pos_on"], "correct": "pos_next", "tags": { "pos_in": "M-SPACE-WORD", "pos_on": "M-SPACE-WORD" }, "difficulty": 0.3, "rep": "pictorial", "correct_text": "כֵּן! הַכַּדּוּר לְיַד הַקֻּפְסָה.", "h3": "הַכַּדּוּר עוֹמֵד לְצַד הַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם." },
+
+    { "kind": "pick", "id": "shp.line.straight", "skill": "SHP-A-10", "prompt": "אֵיפֹה הַקַּו הַיָּשָׁר?", "options": ["line_curved", "line_straight"], "correct": "line_straight", "difficulty": 0.15 },
+    { "kind": "pick", "id": "shp.line.curved", "skill": "SHP-A-10", "prompt": "אֵיפֹה הַקַּו הָעָקֹם?", "options": ["line_curved", "line_straight"], "correct": "line_curved", "difficulty": 0.2 }
+  ],
+  "firstSequence": 1,
+  "lessons": [
+    { "id": "shape-friends", "title": "חֲבֵרִים צוּרוֹת", "skills": ["SHP-A-01", "SHP-A-02"], "items": ["shp.match.circle", "shp.match.square", "shp.match.triangle", "shp.name.circle", "shp.name.square", "shp.name.triangle", "shp.name.mix"], "minutes": 5, "done": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם אֶת הַצּוּרוֹת." },
+    { "id": "any-shape", "title": "בְּכׇל גֹּדֶל וּבְכׇל כִּוּוּן", "skills": ["SHP-A-03"], "items": ["shp.any.tilt", "shp.any.thin", "shp.any.down", "shp.any.small"], "minutes": 4, "done": "חֲכָמִים! צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה." },
+    { "id": "rectangle", "title": "מַלְבֵּן וְרִבּוּעַ", "skills": ["SHP-A-04"], "items": ["shp.rect.find", "shp.rect.square", "shp.rect.long"], "minutes": 3, "done": "יָפֶה מְאֹד! הִבְדַּלְתֶּם בֵּין מַלְבֵּן לְרִבּוּעַ." },
+    { "id": "shapes-around-us", "title": "צוּרוֹת סְבִיבֵנוּ", "skills": ["SHP-A-05", "SHP-A-10"], "items": ["shp.world.circle", "shp.world.rect", "shp.world.triangle", "shp.line.straight", "shp.line.curved"], "minutes": 4, "done": "וַאוּ! מְצָאתֶם צוּרוֹת בְּכׇל מָקוֹם." },
+    { "id": "roll-or-stack", "title": "מִתְגַּלְגֵּל אוֹ נֶעֱרָם", "skills": ["SHP-A-07"], "items": ["shp.solid.rolls", "shp.solid.stacks", "shp.solid.which"], "minutes": 3, "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה מִתְגַּלְגֵּל וּמָה נֶעֱרָם." },
+    { "id": "where-is-it", "title": "אֵיפֹה זֶה?", "skills": ["SHP-A-08"], "items": ["shp.where.on", "shp.where.under", "shp.where.in", "shp.where.next"], "minutes": 4, "done": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כֻּל דָּבָר." }
+  ]
+}

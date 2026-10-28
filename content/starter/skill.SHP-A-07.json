@@ -1,0 +1,30 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-A-07",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מבדילים כדור מקובייה: מתגלגל או נערם"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "יוֹדְעִים מָה מִתְגַּלְגֵּל וּמָה נֶעֱרָם"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

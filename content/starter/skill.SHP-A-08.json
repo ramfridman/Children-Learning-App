@@ -1,0 +1,32 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-A-08",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מבינים על, מתחת, בתוך, ליד ומעל"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְבִינִים עַל, מִתַּחַת, בְּתוֹךְ וְלְיַד"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "pictorial",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-SPACE-WORD"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

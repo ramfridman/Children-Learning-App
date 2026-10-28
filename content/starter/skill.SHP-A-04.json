@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-A-04",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מזהים מלבן ומבדילים אותו מריבוע"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים מַלְבֵּן"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-A-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-SHP-SQRECT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

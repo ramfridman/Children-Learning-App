@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "roll-or-stack",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִתְגַּלְגֵּל אוֹ נֶעֱרָם"
+    }
+  ],
+  "skills": [
+    "SHP-A-07"
+  ],
+  "items": [
+    "shp.solid.rolls",
+    "shp.solid.stacks",
+    "shp.solid.which"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 5,
+  "celebration": {
+    "vo": "vo:celebrate.roll_or_stack",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה מִתְגַּלְגֵּל וּמָה נֶעֱרָם."
+      }
+    ]
+  }
+}

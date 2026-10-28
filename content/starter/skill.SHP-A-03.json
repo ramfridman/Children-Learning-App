@@ -1,0 +1,39 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-A-03",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מזהים צורות בכל גודל ובכל כיוון"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים צוּרוֹת גְּדוֹלוֹת, קְטַנּוֹת וּמְסֻבָּבוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-A-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-SHP-ORIENT",
+    "M-SHP-PROTO",
+    "M-SHP-SIZE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

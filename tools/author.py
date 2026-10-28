@@ -398,9 +398,12 @@ def k_pick(a, ctx):
     opts, cid, tags = [], None, set()
     for k, sp in enumerate(a['options'], start=1):
         if '*' in sp:  # "ball_red*3": a set of three things as the answer
-            base, count = sp.split('*')
+            base, rest = sp.split('*')
+            count, _, scale = rest.partition('@')
             o = {'id': 'o%d' % k, 'set': {'sprite': 'asset:' + base, 'count': int(count), 'arrangement': 'line', 'seed': k},
                  'label': names[base]['one']}
+            if scale:
+                o['set']['scale'] = float(scale)
         else:
             o = {'id': 'o%d' % k, 'sprite': 'asset:' + sp, 'label': names[sp]['one']}
         if sp == a['correct']:

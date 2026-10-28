@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHP-SQRECT",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-A-04"
+  ],
+  "parentText": "הילד מבלבל בין ריבוע למלבן.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "למדוד בנייר שני צדדים של ריבוע ושל מלבן, ולהשוות: במה הם שונים?"
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-A-02",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוראים בשם לעיגול, ריבוע ומשולש"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים עִגּוּל, רִבּוּעַ וּמְשֻׁלָּשׁ"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}
