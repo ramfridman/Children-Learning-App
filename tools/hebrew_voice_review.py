@@ -268,6 +268,12 @@ def spoken(r):
     return r['group'][0] == '1' and r['id'] in VOICED_UI
 
 
+def analyse(text, is_spoken):
+    ui, g_notes = grammar(text)
+    el, e_notes = eleven(ui) if is_spoken else ('', [])
+    return ui, g_notes, el, e_notes
+
+
 def main():
     rows = list(csv.DictReader(open(SRC, encoding='utf-8-sig')))
     seen = {}
@@ -277,17 +283,12 @@ def main():
             seen[key] = {'ids': [], 'spoken': False, 'text': key}
         seen[key]['ids'].append('%s › %s' % (r['source'], r['id']))
         seen[key]['spoken'] |= spoken(r)
+    result = {k: analyse(k, v['spoken']) for k, v in seen.items()}
     out = []
     for item in seen.values():
         text = item['text']
-        ui, g_notes = grammar(text)
-        el, e_notes = ('', [])
-        if item['spoken']:
-            # the voice reads the corrected sentence
-            el, e_notes = eleven(ui)
+        ui, g_notes, el, e_notes = result[text]
         if not g_notes and not item['spoken']:
-            continue
-        if not g_notes and el == text:
             continue
         ids = item['ids']
         out.append({
@@ -308,12 +309,42 @@ def main():
         fh.write('# Hebrew review for grammar and for ElevenLabs\n\n')
         fh.write('Made by `tools/hebrew_voice_review.py` from `hebrew-review.csv`. **Nothing here is in the pack yet.** '
                  'Rows with a grammar problem come first (%d); then every spoken text with its ElevenLabs version (%d rows in all; texts that '
-                 'several activities share are one row). A row marked REVIEW in the explanation is a possible mistake that needs a person to decide.\n\n'
-                 % (len(fixes), len(out)))
+                 'several activities share are one row). A row marked REVIEW in the explanation is a possible mistake that needs a person to decide. '
+                 'The whole list, one row for each text in the app, is `hebrew-master.csv`.\n\n' % (len(fixes), len(out)))
         fh.write('| ID | Original Text | Corrected Text (For UI) | ElevenLabs Optimized Text | Explanation |\n|---|---|---|---|---|\n')
         for x in out:
             fh.write('| %s | %s | %s | %s | %s |\n' % (esc(x['id']), esc(x['original']), esc(x['ui']), esc(x['eleven']), esc(x['explanation'])))
+    master(rows, result)
     print('rows', len(out), 'grammar', sum(x['grammar'] for x in out), 'review', sum(x['review'] for x in out))
+
+
+MASTER_COLUMNS = ['group', 'source', 'id', 'kind', 'spoken', 'text', 'ui_text', 'voice_text', 'changes', 'status',
+                  'correction (fill in)', 'comment']
+
+
+def master(rows, result):
+    """The one big table: every text of the app with the corrected screen text, the voice text, what changed and where it stands.
+    What the owner typed in the last version of the table (the status and the two last columns) is kept."""
+    path = os.path.join(ROOT, 'docs', 'review', 'hebrew-master.csv')
+    kept = {}
+    if os.path.exists(path):
+        for r in csv.DictReader(open(path, encoding='utf-8-sig')):
+            if r['correction (fill in)'].strip() or r['comment'].strip() or r['status'] not in ('', 'proposed', 'unchanged'):
+                kept[(r['source'], r['id'])] = r
+    with open(path, 'w', encoding='utf-8-sig', newline='') as fh:
+        w = csv.writer(fh)
+        w.writerow(MASTER_COLUMNS)
+        for r in rows:
+            is_spoken = spoken(r)
+            ui, g_notes, el, e_notes = result[r['text']]
+            status = 'proposed' if (g_notes or is_spoken) else 'unchanged'
+            old = kept.get((r['source'], r['id']))
+            w.writerow([
+                r['group'], r['source'], r['id'], r['kind'], 'yes' if is_spoken else 'no', r['text'], ui, el,
+                '; '.join(g_notes + e_notes), old['status'] if old else status,
+                old['correction (fill in)'] if old else r['correction (fill in)'], old['comment'] if old else r['comment'],
+            ])
+    print('master', len(rows), 'rows')
 
 
 if __name__ == '__main__':
