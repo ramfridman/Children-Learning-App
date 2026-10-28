@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-counting-words",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סוֹפְרִים לְפִי הַסֵּדֶר"
+    }
+  ],
+  "skills": [
+    "NUM-A-01",
+    "NUM-A-02"
+  ],
+  "items": [
+    "next.after.3",
+    "next.before.4",
+    "next.before.5",
+    "next.after.5",
+    "next.after.9",
+    "next.before.9",
+    "next.before.10"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 13,
+  "celebration": {
+    "vo": "vo:celebrate.more_counting_words",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר."
+      }
+    ]
+  }
+}

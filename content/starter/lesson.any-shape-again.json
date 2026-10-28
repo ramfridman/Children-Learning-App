@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "any-shape-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד בְּכׇל גֹּדֶל"
+    }
+  ],
+  "skills": [
+    "SHP-A-03"
+  ],
+  "items": [
+    "shp.any.small.square",
+    "shp.any.big.circle"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 8,
+  "celebration": {
+    "vo": "vo:celebrate.any_shape_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה."
+      }
+    ]
+  }
+}

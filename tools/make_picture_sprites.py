@@ -109,12 +109,53 @@ SINGLES = {
                    'fill="#4CAF50" transform="rotate(-25 64 20)"/>',
 }
 
+# ---- more pictures for the extra activities (9b-2): shapes in colours, things in three sizes, more stories and pairs ----
+SHAPE_COLOURS = {'red': '#E5484D', 'blue': '#2F7FE0', 'green': '#4CAF50', 'yellow': '#FFC531', 'orange': '#FF9F43'}
+SHAPE_BODIES = {
+    'circle': '<circle cx="50" cy="50" r="38" fill="%s"/>',
+    'square': '<rect x="14" y="14" width="72" height="72" rx="4" fill="%s"/>',
+    'triangle': '<polygon points="50,12 90,84 10,84" fill="%s"/>',
+    'rect': '<rect x="6" y="28" width="88" height="44" rx="4" fill="%s"/>',
+}
+MORE = {
+    'cloud': '<ellipse cx="50" cy="56" rx="38" ry="20" fill="#D6DDEB"/><circle cx="34" cy="48" r="16" fill="#D6DDEB"/><circle cx="58" cy="42" r="20" fill="#D6DDEB"/>',
+    'rain': '<ellipse cx="50" cy="36" rx="36" ry="18" fill="#9AA0B4"/><circle cx="34" cy="30" r="14" fill="#9AA0B4"/><circle cx="58" cy="26" r="17" fill="#9AA0B4"/>' + ''.join('<line x1="%d" y1="62" x2="%d" y2="76" stroke="#4DA3FF" stroke-width="5" stroke-linecap="round"/>' % (x, x - 4) for x in (30, 46, 62, 76)),
+    'rainbow': ''.join('<path d="M%d 80 A%d %d 0 0 1 %d 80" fill="none" stroke="%s" stroke-width="7"/>' % (10 + i * 8, 40 - i * 8, 40 - i * 8, 90 - i * 8, c) for i, c in enumerate(('#E5484D', '#FF9F43', '#FFD84D', '#4CAF50', '#4DA3FF'))),
+    'bowl': '<path d="M12 44 H88 C88 90 12 90 12 44 Z" fill="#F48FB1" stroke="#D8648F" stroke-width="3"/>',
+    'spoon': '<ellipse cx="50" cy="26" rx="16" ry="20" fill="#C9CFDD" stroke="#9AA0B4" stroke-width="3"/><rect x="45" y="44" width="10" height="48" rx="5" fill="#C9CFDD" stroke="#9AA0B4" stroke-width="3"/>',
+    'pencil': '<rect x="10" y="40" width="64" height="20" fill="#FFC531" stroke="#C99A00" stroke-width="3"/><polygon points="74,40 94,50 74,60" fill="#F2D7A6"/><polygon points="88,47 94,50 88,53" fill="#2B2540"/><rect x="4" y="40" width="10" height="20" fill="#F48FB1"/>',
+    'paper': '<rect x="20" y="10" width="60" height="80" rx="4" fill="#FFFFFF" stroke="#B8B3C8" stroke-width="3"/>' + ''.join('<line x1="30" y1="%d" x2="70" y2="%d" stroke="#CDEBFF" stroke-width="3"/>' % (y, y) for y in (28, 42, 56, 70)),
+    'line_straight_flat': '<line x1="10" y1="50" x2="90" y2="50" stroke="#2F7FE0" stroke-width="9" stroke-linecap="round"/>',
+    'line_curved_wave': '<path d="M8 50 C 22 20, 36 80, 50 50 S 78 20, 92 50" fill="none" stroke="#E5484D" stroke-width="9" stroke-linecap="round"/>',
+    'line_straight_up': '<line x1="50" y1="10" x2="50" y2="90" stroke="#2F7FE0" stroke-width="9" stroke-linecap="round"/>',
+    'line_curved_arc': '<path d="M20 86 C 6 40, 40 10, 86 20" fill="none" stroke="#E5484D" stroke-width="9" stroke-linecap="round"/>',
+}
+
+
+def inner(thing):
+    """The drawing inside the svg tags of a sprite that make_unit_sprites.py already made."""
+    text = open(os.path.join(OUT, thing + '.svg'), encoding='utf-8').read()
+    return text[text.index('>') + 1:text.rindex('</svg>')]
+
 
 def main():
     n = 0
     for thing, draw in THINGS.items():
         for name, c in COLOURS.items():
             open(os.path.join(OUT, '%s_%s.svg' % (thing, name)), 'w', encoding='utf-8', newline='\n').write(svg(draw(c)))
+            n += 1
+    for shape, body in SHAPE_BODIES.items():
+        for cname, c in SHAPE_COLOURS.items():
+            open(os.path.join(OUT, 'shape_%s_%s.svg' % (shape, cname)), 'w', encoding='utf-8', newline=chr(10)).write(svg(body % c))
+            n += 1
+    for name, body in MORE.items():
+        open(os.path.join(OUT, name + '.svg'), 'w', encoding='utf-8', newline=chr(10)).write(svg(body))
+        n += 1
+    # a thing in three sizes: the same drawing, scaled about the middle
+    for thing in ('star', 'apple', 'fish'):
+        for tag, k in (('s', 0.4), ('m', 0.68), ('l', 1.0)):
+            body = '<g transform="translate(50 50) scale(%s) translate(-50 -50)">%s</g>' % (k, inner(thing))
+            open(os.path.join(OUT, '%s_size_%s.svg' % (thing, tag)), 'w', encoding='utf-8', newline=chr(10)).write(svg(body))
             n += 1
     for tag, r in (('s', 14), ('m', 26), ('l', 40)):
         body = ('<circle cx="50" cy="50" r="%d" fill="#E5484D"/><ellipse cx="%d" cy="%d" rx="%d" ry="%d" fill="#FFFFFF" '

@@ -1,0 +1,147 @@
+{
+  "schema": "activity/v1",
+  "id": "flash.frame.5b",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "flash",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "flash",
+  "difficulty": {
+    "authored": 0.45
+  },
+  "prompt": {
+    "vo": "vo:flash.frame.5b.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הִסְתַּכְּלוּ מַהֵר! כַּמָּה תַּפּוּחִים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "group": {
+      "sprite": "asset:apple",
+      "count": 5,
+      "arrangement": "ten_frame",
+      "seed": 1
+    },
+    "flashMs": 1500
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 5
+      },
+      {
+        "id": "o2",
+        "numeral": 4
+      },
+      {
+        "id": "o3",
+        "numeral": 6
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:flash.frame.5b.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חָמֵשׁ! רְאִיתֶם בְּלִי לִסְפֹּר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.flash.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:flash.frame.5b.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:flash.frame.5b.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֵלֶּה חֲמִשָּׁה תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child sees the number at a glance, without counting one by one",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הִסְתַּכְּלוּ מַהֵר. כַּמָּה תַּפּוּחִים?"
+  }
+}

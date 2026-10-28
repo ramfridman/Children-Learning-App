@@ -1,0 +1,167 @@
+{
+  "schema": "activity/v1",
+  "id": "math.share.ducks",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "A",
+  "skills": [
+    {
+      "id": "MATH-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "share",
+  "difficulty": {
+    "authored": 0.3
+  },
+  "prompt": {
+    "vo": "vo:math.share.ducks.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְחַלְּקִים אַרְבָּעָה בַּרְוָזִים בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:cat",
+        "count": 1,
+        "label": "חָתוּל"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:dog",
+        "count": 1,
+        "label": "כֶּלֶב"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:duck"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:duck"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:duck"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:duck"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "share",
+    "misconception": "M-SHARE-UNEQ"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:math.share.ducks.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SHARE-UNEQ",
+        "vo": "vo:fb.share_uneq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר בַּתּוֹר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.share.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַחֲלֹק אֶחָד לָזֶה, וְאֶחָד לָזֶה, בַּתּוֹר."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:math.share.ducks.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֶחָד לָזֶה, אֶחָד לָזֶה, עַד שֶׁנִּגְמַר. לְכׇל אֶחָד יֵשׁ אוֹתוֹ מִסְפָּר. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child shares fairly: one for each in turn, so both have the same",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מְחַלְּקִים אַרְבָּעָה בַּרְוָזִים בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר."
+  }
+}

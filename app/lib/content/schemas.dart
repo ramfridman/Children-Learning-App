@@ -78,7 +78,7 @@ const SArray _fileList = SArray(
     'size': SField(SInt(min: 0, max: 16 * 1024 * 1024)),
   }),
   minItems: 1,
-  maxItems: 2400,
+  maxItems: 8000,
   uniqueKey: 'name',
 );
 
@@ -89,7 +89,7 @@ const SArray _assetFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 40, pattern: Patterns.assetId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 1000,
+  maxItems: 2000,
   uniqueKey: 'id',
 );
 
@@ -98,7 +98,7 @@ const SArray _voFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 1200,
+  maxItems: 4000,
   uniqueKey: 'id',
 );
 
@@ -119,17 +119,17 @@ const SObject manifestSchema = SObject(<String, SField>{
   'files': SField(_fileList),
   'assets': SField(_assetFiles),
   'vo': SField(_voFiles),
-  'voPending': SField(SArray(_vo, maxItems: 1200)),
+  'voPending': SField(SArray(_vo, maxItems: 4000)),
   'entries': SField(
     SObject(<String, SField>{
-      'activities': SField(SArray(_id, maxItems: 600)),
-      'lessons': SField(SArray(_id, maxItems: 200)),
-      'skills': SField(SArray(_skill, maxItems: 300)),
-      'misconceptions': SField(SArray(_tag, maxItems: 200)),
+      'activities': SField(SArray(_id, maxItems: 1500)),
+      'lessons': SField(SArray(_id, maxItems: 400)),
+      'skills': SField(SArray(_skill, maxItems: 600)),
+      'misconceptions': SField(SArray(_tag, maxItems: 400)),
       // Characters and mouth cues (M4); absent in packs that have none.
       'characters': SField(SArray(_characterId, maxItems: 20), required: false),
       'cues': SField(
-        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: 1200),
+        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: 4000),
         required: false,
       ),
     }),

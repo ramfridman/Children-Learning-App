@@ -1,0 +1,155 @@
+{
+  "schema": "activity/v1",
+  "id": "shp.rect.blue",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "shapes",
+  "band": "A",
+  "skills": [
+    {
+      "id": "SHP-A-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "shape",
+  "difficulty": {
+    "authored": 0.3
+  },
+  "prompt": {
+    "vo": "vo:shp.rect.blue.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה הַמַּלְבֵּן?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:shape_square_blue",
+        "label": "רִבּוּעַ",
+        "misconception": "M-SHP-SQRECT"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:shape_rect_blue",
+        "label": "מַלְבֵּן"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:shape_circle_blue",
+        "label": "עִגּוּל"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:shp.rect.blue.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! זֶה מַלְבֵּן."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SHP-SQRECT",
+        "vo": "vo:fb.shp_sqrect",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:shp.rect.blue.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֶה מַלְבֵּן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיפֹה הַמַּלְבֵּן?"
+  }
+}

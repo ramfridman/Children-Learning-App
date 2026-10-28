@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "add-one-more-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מוֹסִיפִים"
+    }
+  ],
+  "skills": [
+    "MATH-A-01"
+  ],
+  "items": [
+    "math.add.fish2",
+    "math.add.stars2"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 8,
+  "celebration": {
+    "vo": "vo:celebrate.add_one_more_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וְסְפַרְתֶּם."
+      }
+    ]
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "schema": "activity/v1",
+  "id": "pick.numeral.4b",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick-numeral",
+  "difficulty": {
+    "authored": 0.25
+  },
+  "prompt": {
+    "vo": "vo:pick.numeral.4b.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה הַמִּסְפָּר אַרְבַּע?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow"
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      },
+      {
+        "id": "o2",
+        "numeral": 4,
+        "label": "אַרְבַּע"
+      },
+      {
+        "id": "o3",
+        "numeral": 5,
+        "label": "חָמֵשׁ"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:pick.numeral.4b.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבַּע! מָצָאתֶם אֶת הַמִּסְפָּר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:pick.numeral.4b.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב: אַרְבַּע."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:pick.numeral.4b.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד אַרְבַּע: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:pick.numeral.4b.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. הַמִּסְפָּר הָאַחֲרוֹן הוּא אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the numeral that is named",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיפֹה הַמִּסְפָּר אַרְבַּע?"
+  }
+}

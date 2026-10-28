@@ -477,7 +477,8 @@ def k_share(a, ctx):
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
               shared=('pick', 'share')),
         'child shares fairly: one for each in turn, so both have the same',
-        prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר.')
+        prompt=a.get('prompt') or 'מְחַלְּקִים %s בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר.' % qty(n, ctx['objects'][a['sprite']]),
+        correct=a.get('correct_text') or 'כֵּן! לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר.')
 
 
 def k_build(a, ctx):
@@ -509,7 +510,7 @@ def k_robot(a, ctx):
         {'background': 'asset:meadow', 'cols': a['cols'], 'rows': a['rows'],
          'robot': {'col': a['robot'][0], 'row': a['robot'][1]}, 'goal': {'col': a['goal'][0], 'row': a['goal'][1]},
          'robotSprite': 'asset:robot', 'goalSprite': 'asset:flag'},
-        {'type': 'path', 'mode': a['mode'], 'maxSteps': a.get('maxSteps', len(a['solution']) + (2 if plan else 4)),
+        {'type': 'path', 'mode': a['mode'], 'maxSteps': a.get('maxSteps', min(8, len(a['solution']) + (2 if plan else 4))),
          'solution': a['solution'], 'misconception': 'M-CS-OFF1'}, {'M-CS-OFF1'},
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת.',
               'הַצְּעָדִים הֵם: %s. עַכְשָׁו תּוֹרְכֶם.' % way,
@@ -517,6 +518,219 @@ def k_robot(a, ctx):
               shared=('pick', 'robot')),
         'child moves the robot to the flag, counting each square once',
         prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל.')
+
+
+COL_DEF = {'red': 'הָאָדֹם', 'blue': 'הַכָּחֹל', 'yellow': 'הַצָּהֹב', 'green': 'הַיָּרֹק', 'orange': 'הַכָּתֹם',
+           'purple': 'הַסָּגֹל', 'pink': 'הַוָּרֹד', 'black': 'הַשָּׁחֹר', 'white': 'הַלָּבָן', 'brown': 'הַחוּם',
+           'grey': 'הָאָפֹר'}
+THING_DEF = {'ball': 'הַכַּדּוּר', 'balloon': 'הַבָּלוֹן', 'bloom': 'הַפֶּרַח'}
+NEAR = {frozenset(p) for p in (('red', 'orange'), ('orange', 'yellow'), ('red', 'pink'), ('purple', 'blue'),
+                                ('purple', 'pink'), ('grey', 'white'), ('grey', 'black'), ('brown', 'orange'),
+                                ('brown', 'black'), ('blue', 'green'))}
+SHAPE_NAME = {'circle': ('עִגּוּל', 'הָעִגּוּל'), 'square': ('רִבּוּעַ', 'הָרִבּוּעַ'), 'triangle': ('מְשֻׁלָּשׁ', 'הַמְּשֻׁלָּשׁ'),
+              'rect': ('מַלְבֵּן', 'הַמַּלְבֵּן')}
+SIZE_WORDS = ['קָטָן', 'בֵּינוֹנִי', 'גָּדוֹל']
+
+
+def place(correct, others, pos):
+    """The options in a fixed order that has the right one at place [pos] (the order is the author's, never random)."""
+    opts = list(others)
+    opts.insert(min(pos, len(opts)), correct)
+    return opts
+
+
+def seq_words(ctx, sprites):
+    return ', '.join(ctx['names'][x]['one'] for x in sprites)
+
+
+def pick_spec(a, **kw):
+    d = {k: a[k] for k in ('id', 'skill', 'also', 'difficulty', 'rep', 'purpose', 'domain') if k in a}
+    d['variantGroup'] = a['kind'].replace('_', '-')
+    d.update(kw)
+    d['kind'] = 'pick'
+    return d
+
+
+def k_cfind(a, ctx):
+    """Find "the red ball": a thing and a colour, with near colours (and, if asked, the right colour of another thing) as traps."""
+    thing, col = a['thing'], a['colour']
+    other_thing = a.get('otherThing')
+    tags = {}
+    others = []
+    for o in a.get('others', []):
+        sp = '%s_%s' % (thing, o)
+        others.append(sp)
+        if frozenset((col, o)) in NEAR:
+            tags[sp] = 'M-COL-NAME'
+    if other_thing:
+        sp = '%s_%s' % (other_thing, col)
+        others.append(sp)
+        tags[sp] = 'M-COL-ONEATTR'
+    right = '%s_%s' % (thing, col)
+    return k_pick(pick_spec(a, prompt='אֵיפֹה %s %s?' % (THING_DEF[thing], COL_DEF[col]), options=place(right, others, a.get('pos', 1)),
+                            correct=right, tags=tags), ctx)
+
+
+def k_cmatch(a, ctx):
+    """The same colour: a thing in one colour is shown, and the answer is another thing in the same colour."""
+    ref = '%s_%s' % (a['thing'], a['colour'])
+    right = '%s_%s' % (a['other'], a['colour'])
+    wrong = ['%s_%s' % (a['other'], c) for c in a['others']]
+    return k_pick(pick_spec(a, prompt='אֵיפֹה אוֹתוֹ צֶבַע?', group={'sprite': ref, 'count': 1},
+                            options=place(right, wrong, a.get('pos', 1)), correct=right), ctx)
+
+
+def k_pat(a, ctx):
+    """A repeating pattern of two things: what comes next, what is missing, or is it a pattern at all."""
+    names = ctx['names']
+    x, y = a['a'], a['b']
+    n = lambda sp: names[sp]['one']
+    mode = a['mode']
+    if mode == 'next':
+        row = [x, y, x, y, x, '?']
+        full = [x, y, x, y, x, y]
+        return k_pick(pick_spec(a, prompt='מָה בָּא אַחַר כָּךְ?', row=row, options=place(y, [x, a['c']], a.get('pos', 1)), correct=y,
+                                tags={x: 'M-PAT-NEXT'}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
+                                h3='%s — וְאָז %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, full[:5]), n(y))), ctx)
+    if mode == 'fix':
+        row = [x, y, '?', y, x, y]
+        full = [x, y, x, y, x, y]
+        return k_pick(pick_spec(a, prompt='הַסֵּדֶר נִשְׁבַּר. מָה חָסֵר?', row=row, options=place(x, [y, a['c']], a.get('pos', 1)),
+                                correct=x, tags={y: 'M-PAT-NEXT'}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
+                                h3='%s — בַּמָּקוֹם הֶחָסֵר בָּא %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, [x, y]), n(x))), ctx)
+    if mode == 'yes':
+        row = [x, y, x, y, x, y]
+        return k_pick(pick_spec(a, prompt='הַאִם הַסֵּדֶר חוֹזֵר?', row=row, options=['cross', 'tick'], correct='tick',
+                                correct_text='כֵּן, הַסֵּדֶר חוֹזֵר: %s.' % seq_words(ctx, [x, y, x, y]),
+                                h3='%s — כֵּן, הוּא חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.' % seq_words(ctx, [x, y, x, y])), ctx)
+    row = [x, y, a['c'], x, a['d'], y]
+    return k_pick(pick_spec(a, prompt='הַאִם הַסֵּדֶר חוֹזֵר?', row=row, options=['tick', 'cross'], correct='cross',
+                            correct_text='לֹא, כָּאן הַסֵּדֶר לֹא חוֹזֵר.',
+                            h3='%s — לֹא, הוּא לֹא חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.' % seq_words(ctx, row[:5])), ctx)
+
+
+def k_odd(a, ctx):
+    names = ctx['names']
+    x, y = a['a'], a['b']
+    at = a.get('at', 2)
+    row = [x] * 4
+    row[at] = y
+    verb = 'שׁוֹנֶה' if names[y]['g'] == 'm' else 'שׁוֹנָה'
+    return k_pick(pick_spec(a, prompt='מִי שׁוֹנֶה?', row=row, options=[x, y] if a.get('pos', 1) else [y, x], correct=y,
+                            h3='%s %s מֵהָאֲחֵרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (names[y]['one'], verb)), ctx)
+
+
+def k_same(a, ctx):
+    return k_pick(pick_spec(a, prompt='אֵיפֹה אוֹתוֹ הַדָּבָר?', group={'sprite': a['ref'], 'count': 1},
+                            options=place(a['ref'], a['others'], a.get('pos', 1)), correct=a['ref']), ctx)
+
+
+def k_story(a, ctx):
+    """Three pictures of a story: what comes first, in the middle, or at the end."""
+    names = ctx['names']
+    s1, s2, s3 = a['steps']
+    n = lambda sp: names[sp]['one']
+    story = 'קֹדֶם %s, אַחַר כָּךְ %s, וּבַסּוֹף %s.' % (n(s1), n(s2), n(s3))
+    ask = a['ask']
+    common = dict(rep='story', tags={})
+    if ask == 'first':
+        return k_pick(pick_spec(a, prompt='מָה קוֹרֶה קֹדֶם?', options=place(s1, [s3, s2], a.get('pos', 1)), correct=s1,
+                                tags={s3: 'M-SEQ-CAUSE'}, correct_text='כֵּן! קֹדֶם %s.' % n(s1), h3=story + ' עַכְשָׁו תּוֹרְכֶם.',
+                                rep='story'), ctx)
+    if ask == 'last':
+        return k_pick(pick_spec(a, prompt='מָה קוֹרֶה בַּסּוֹף?', options=place(s3, [s1, s2], a.get('pos', 1)), correct=s3,
+                                tags={s1: 'M-SEQ-CAUSE'}, correct_text='כֵּן! בַּסּוֹף %s.' % n(s3), h3=story + ' עַכְשָׁו תּוֹרְכֶם.',
+                                rep='story'), ctx)
+    return k_pick(pick_spec(a, prompt='מָה בָּאֶמְצַע?', row=[s1, '?', s3], options=place(s2, [s3, s1], a.get('pos', 1)), correct=s2,
+                            tags={s1: 'M-SEQ-CAUSE', s3: 'M-SEQ-CAUSE'}, correct_text='כֵּן! בָּאֶמְצַע %s.' % n(s2),
+                            h3=story + ' עַכְשָׁו תּוֹרְכֶם.', rep='story'), ctx)
+
+
+def k_size3(a, ctx):
+    """Three sizes of one thing in a row: what stands in the middle, at the end, at the start."""
+    t = a['thing']
+    s, m, l = ['%s_size_%s' % (t, k) for k in 'sml']
+    order = [s, m, l] if a.get('dir', 'up') == 'up' else [l, m, s]
+    words = SIZE_WORDS if a.get('dir', 'up') == 'up' else SIZE_WORDS[::-1]
+    ask = a['ask']
+    gap = {'middle': 1, 'last': 2, 'first': 0}[ask]
+    row = ['?' if i == gap else sp for i, sp in enumerate(order)]
+    right = order[gap]
+    traps = {sp: 'M-SER-ENDS' for sp in order if sp != right} if ask == 'middle' else {}
+    prompt = {'middle': 'מָה בָּאֶמְצַע?', 'last': 'מָה בָּא בַּסּוֹף?', 'first': 'מָה בָּא קֹדֶם?'}[ask]
+    return k_pick(pick_spec(a, prompt=prompt, row=row, options=place(right, [x for x in order if x != right], a.get('pos', 1)),
+                            correct=right, tags=traps, correct_text='כֵּן! ' + ', '.join(words) + '.',
+                            h3=', '.join(words) + ' — ' + {'middle': 'בָּאֶמְצַע בָּא הַבֵּינוֹנִי', 'last': 'בַּסּוֹף בָּא ' + words[2],
+                                                          'first': 'קֹדֶם בָּא ' + words[0]}[ask] + '. עַכְשָׁו תּוֹרְכֶם.'), ctx)
+
+
+def k_pair(a, ctx):
+    names = ctx['names']
+    return k_pick(pick_spec(a, prompt='מָה הוֹלֵךְ עִם %s?' % names[a['ref']]['def'], group={'sprite': a['ref'], 'count': 1},
+                            options=place(a['partner'], a['others'], a.get('pos', 1)), correct=a['partner'],
+                            h3='%s וְ%s הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם.' % (names[a['ref']]['one'], names[a['partner']]['one'])), ctx)
+
+
+def k_shape(a, ctx):
+    """Shapes in colours: find the same shape (match) or the named shape (name). `shape`: the right one; `others`: the others."""
+    names = ctx['names']
+    right = 'shape_%s_%s' % (a['shape'], a['colour'])
+    wrong = ['shape_%s_%s' % (sh, c) for sh, c in a['others']]
+    for sp in [right] + wrong:
+        sh = sp.split('_')[1]
+        names.setdefault(sp, {'one': SHAPE_NAME[sh][0], 'g': 'm'})
+    tags = dict(a.get('tags', {}))
+    if a['shape'] in ('square', 'rect'):
+        for sp in wrong:
+            if sp.split('_')[1] in ('square', 'rect'):
+                tags[sp] = 'M-SHP-SQRECT'
+    if a['mode'] == 'match':
+        ref = 'shape_%s_%s' % (a['shape'], a['refColour'])
+        names.setdefault(ref, {'one': SHAPE_NAME[a['shape']][0], 'g': 'm'})
+        return k_pick(pick_spec(a, prompt='אֵיפֹה אוֹתָהּ צוּרָה?', group={'sprite': ref, 'count': 1},
+                                options=place(right, wrong, a.get('pos', 1)), correct=right, tags=tags), ctx)
+    return k_pick(pick_spec(a, prompt='אֵיפֹה %s?' % SHAPE_NAME[a['shape']][1], options=place(right, wrong, a.get('pos', 1)),
+                            correct=right, tags=tags), ctx)
+
+
+def num_g(n, obj):
+    return F[n] if obj['g'] == 'f' else M[n]
+
+
+def k_madd(a, ctx):
+    obj = ctx['objects'][a['obj']]
+    x, y = a['a'], a['b']
+    r = x + y
+    opts = [v for v in (r - 1, r, r + 1) if v >= 1]
+    while len(opts) < 3:
+        opts.append(opts[-1] + 1)
+    return k_pick(pick_spec(a, prompt='יֵשׁ %s. מוֹסִיפִים עוֹד %s. כַּמָּה עַכְשָׁו?' % (qty(x, obj), qty(y, obj)),
+                            group={'sprite': a['obj'], 'count': x}, group2={'sprite': a['obj'], 'count': y},
+                            options=['n:%d' % v for v in opts], correct='n:%d' % r, rep='concrete',
+                            correct_text='%s! %s וְעוֹד %s.' % (F[r], num_g(x, obj), num_g(y, obj)),
+                            h3='%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (num_g(x, obj), num_g(y, obj), count_words(r), F[r])), ctx)
+
+
+def k_mtake(a, ctx):
+    obj = ctx['objects'][a['obj']]
+    n = a['n']
+    r = n - 1
+    opts = [v for v in (r - 1, r, r + 1) if v >= 0]
+    while len(opts) < 3:
+        opts.append(opts[-1] + 1)
+    return k_pick(pick_spec(a, prompt='יֵשׁ %s. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?' % qty(n, obj),
+                            group={'sprite': a['obj'], 'count': n}, options=['n:%d' % v for v in opts], correct='n:%d' % r,
+                            rep='concrete', correct_text='%s! %s פָּחוֹת אֶחָד.' % (F[r], num_g(n, obj)),
+                            h3='%s פָּחוֹת אֶחָד: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (num_g(n, obj), count_words(max(r, 1)), F[r])), ctx)
+
+
+def k_shop(a, ctx):
+    item = ctx['objects'][a['item']]
+    d = dict(a)
+    d['obj'] = 'coin'
+    d['prompt'] = 'כׇּל %s עוֹלֶה מַטְבֵּעַ אֶחָד. קוֹנִים %s.' % (item['one'], qty(a['n'], item))
+    d['correct_text'] = '%s! מַטְבֵּעַ אֶחָד לְכׇל %s.' % (F[a['n']], item['one'])
+    return k_give(d, ctx)
 
 
 KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}
@@ -603,6 +817,7 @@ def main(path):
     for aid in wanted:
         if aid not in have:
             pack['assets'].append({'id': aid, 'file': aid + '.svg'})
+            have.add(aid)
     json.dump(pack, open(pack_path, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=2)
     open(pack_path, 'a', encoding='utf-8', newline='\n').write('\n')
     print('wrote', made, 'and', len(lines), 'voice lines')

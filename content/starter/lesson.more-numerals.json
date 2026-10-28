@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-numerals",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מִסְפָּרִים"
+    }
+  ],
+  "skills": [
+    "NUM-A-08"
+  ],
+  "items": [
+    "pick.numeral.1",
+    "pick.numeral.2b",
+    "pick.numeral.4b"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 17,
+  "celebration": {
+    "vo": "vo:celebrate.more_numerals",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הִכַּרְתֶּם אֶת הַמִּסְפָּרִים."
+      }
+    ]
+  }
+}

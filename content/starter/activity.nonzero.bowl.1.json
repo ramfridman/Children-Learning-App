@@ -1,0 +1,149 @@
+{
+  "schema": "activity/v1",
+  "id": "nonzero.bowl.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-14",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "zero",
+  "difficulty": {
+    "authored": 0.3
+  },
+  "prompt": {
+    "vo": "vo:nonzero.bowl.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה דָּגִים בַּקְעָרָה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:bowl_empty",
+    "group": {
+      "sprite": "asset:fish",
+      "count": 1,
+      "arrangement": "line",
+      "seed": 2
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 0,
+        "label": "אֶפֶס"
+      },
+      {
+        "id": "o2",
+        "numeral": 1,
+        "label": "אַחַת"
+      },
+      {
+        "id": "o3",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:nonzero.bowl.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת! נָכוֹן."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:nonzero.bowl.1.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:nonzero.bowl.1.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:nonzero.bowl.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַחַת."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child knows that nothing there is the number zero",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה דָּגִים בַּקְעָרָה?"
+  }
+}

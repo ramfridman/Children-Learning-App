@@ -1,0 +1,143 @@
+{
+  "schema": "activity/v1",
+  "id": "pick.numeral.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick-numeral",
+  "difficulty": {
+    "authored": 0.05
+  },
+  "prompt": {
+    "vo": "vo:pick.numeral.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה הַמִּסְפָּר אַחַת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow"
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 1,
+        "label": "אַחַת"
+      },
+      {
+        "id": "o2",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      },
+      {
+        "id": "o3",
+        "numeral": 3,
+        "label": "שָׁלוֹשׁ"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:pick.numeral.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת! מָצָאתֶם אֶת הַמִּסְפָּר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:pick.numeral.1.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב: אַחַת."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:pick.numeral.1.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד אַחַת: אַחַת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:pick.numeral.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת. הַמִּסְפָּר הָאַחֲרוֹן הוּא אַחַת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַחַת."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the numeral that is named",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיפֹה הַמִּסְפָּר אַחַת?"
+  }
+}

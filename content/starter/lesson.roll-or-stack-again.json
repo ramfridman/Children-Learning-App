@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "roll-or-stack-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מִתְגַּלְגֵּל אוֹ נֶעֱרָם"
+    }
+  ],
+  "skills": [
+    "SHP-A-07"
+  ],
+  "items": [
+    "shp.solid.rolls.blue",
+    "shp.solid.stacks.blue"
+  ],
+  "estimatedMinutes": 2,
+  "sequence": 11,
+  "celebration": {
+    "vo": "vo:celebrate.roll_or_stack_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה מִתְגַּלְגֵּל."
+      }
+    ]
+  }
+}

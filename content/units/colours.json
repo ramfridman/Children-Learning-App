@@ -2,15 +2,63 @@
   "unit": "colours",
   "domain": "colors",
   "note": "Band A of Colours (COL-A-01 and 03 to 07; COL-A-02 is the butterflies warm-up plus these). Hebrew is a draft by Claude, needs-editor.",
-  "assetGlobs": ["ball_*", "balloon_*", "bloom_*", "sun", "grass", "banana_*", "apple_green"],
-  "things": { "ball": ["כַּדּוּר", "m"], "balloon": ["בָּלוֹן", "m"], "bloom": ["פֶּרַח", "m"] },
-  "colours": { "red": "אָדֹם", "blue": "כָּחֹל", "yellow": "צָהֹב", "green": "יָרֹק", "orange": "כָּתֹם", "purple": "סָגֹל", "pink": "וָרֹד", "black": "שָׁחֹר", "white": "לָבָן", "brown": "חוּם", "grey": "אָפֹר" },
+  "assetGlobs": [
+    "ball_*",
+    "balloon_*",
+    "bloom_*",
+    "sun",
+    "grass",
+    "banana_*",
+    "apple_green"
+  ],
+  "things": {
+    "ball": [
+      "כַּדּוּר",
+      "m"
+    ],
+    "balloon": [
+      "בָּלוֹן",
+      "m"
+    ],
+    "bloom": [
+      "פֶּרַח",
+      "m"
+    ]
+  },
+  "colours": {
+    "red": "אָדֹם",
+    "blue": "כָּחֹל",
+    "yellow": "צָהֹב",
+    "green": "יָרֹק",
+    "orange": "כָּתֹם",
+    "purple": "סָגֹל",
+    "pink": "וָרֹד",
+    "black": "שָׁחֹר",
+    "white": "לָבָן",
+    "brown": "חוּם",
+    "grey": "אָפֹר"
+  },
   "names": {
-    "sun": { "one": "שֶׁמֶשׁ", "g": "f" },
-    "grass": { "one": "עֵשֶׂב", "g": "m" },
-    "banana_yellow": { "one": "בָּנָנָה צְהֻבָּה", "g": "f" },
-    "banana_green": { "one": "בָּנָנָה יְרֻקָּה", "g": "f" },
-    "apple_green": { "one": "תַּפּוּחַ יָרֹק", "g": "m" }
+    "sun": {
+      "one": "שֶׁמֶשׁ",
+      "g": "f"
+    },
+    "grass": {
+      "one": "עֵשֶׂב",
+      "g": "m"
+    },
+    "banana_yellow": {
+      "one": "בָּנָנָה צְהֻבָּה",
+      "g": "f"
+    },
+    "banana_green": {
+      "one": "בָּנָנָה יְרֻקָּה",
+      "g": "f"
+    },
+    "apple_green": {
+      "one": "תַּפּוּחַ יָרֹק",
+      "g": "m"
+    }
   },
   "tagFeedback": {
     "M-COL-NAME": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט.",
@@ -19,61 +67,975 @@
     "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק."
   },
   "misconceptions": [
-    { "id": "M-COL-NAME", "skills": ["COL-A-02", "COL-A-03"], "parent": "הילד קורא לגוון אחד בשם של גוון אחר, למשל כתום 'אדום'.", "home": "לשחק בחיפוש צבעים בבית: 'תביא משהו אדום', ואחר כך 'משהו כתום'. אם הילד מתבלבל, להניח את שני הדברים זה ליד זה ולהסתכל יחד.", "reps": ["concrete", "pictorial"] },
-    { "id": "M-COL-OBJECT", "skills": ["COL-A-05"], "parent": "הילד חושב שלכל דבר יש צבע אחד בלבד, ולא מקבל בננה ירוקה.", "home": "להראות בננה ירוקה ובננה צהובה בשוק או בתמונה, ולשאול מה זה. לדבר על כך שהפרי משנה צבע כשהוא מבשיל.", "reps": ["story", "concrete"] },
-    { "id": "M-COL-ONEATTR", "skills": ["COL-A-07"], "parent": "הילד שם לב רק לצבע או רק לסוג הדבר, ולא לשניהם יחד.", "home": "לבקש 'את הכדור הכחול' כשיש על השולחן כדורים וגם בלונים בצבעים שונים. קודם לבחור את הכדורים, ואחר כך את הכחול.", "reps": ["concrete", "pictorial"] },
-    { "id": "M-SORT-SHIFT", "skills": ["COL-A-04", "LOG-A-03"], "parent": "הילד מחליף את כלל המיון באמצע: מתחיל לפי צבע וממשיך לפי צורה.", "home": "למיין כפתורים או גרביים לשתי קופסאות ולהגיד בקול את הכלל ('כל האדומים'). אם הילד מחליף כלל, להגיד את הכלל שוב.", "reps": ["concrete", "embodied"] }
+    {
+      "id": "M-COL-NAME",
+      "skills": [
+        "COL-A-02",
+        "COL-A-03"
+      ],
+      "parent": "הילד קורא לגוון אחד בשם של גוון אחר, למשל כתום 'אדום'.",
+      "home": "לשחק בחיפוש צבעים בבית: 'תביא משהו אדום', ואחר כך 'משהו כתום'. אם הילד מתבלבל, להניח את שני הדברים זה ליד זה ולהסתכל יחד.",
+      "reps": [
+        "concrete",
+        "pictorial"
+      ]
+    },
+    {
+      "id": "M-COL-OBJECT",
+      "skills": [
+        "COL-A-05"
+      ],
+      "parent": "הילד חושב שלכל דבר יש צבע אחד בלבד, ולא מקבל בננה ירוקה.",
+      "home": "להראות בננה ירוקה ובננה צהובה בשוק או בתמונה, ולשאול מה זה. לדבר על כך שהפרי משנה צבע כשהוא מבשיל.",
+      "reps": [
+        "story",
+        "concrete"
+      ]
+    },
+    {
+      "id": "M-COL-ONEATTR",
+      "skills": [
+        "COL-A-07"
+      ],
+      "parent": "הילד שם לב רק לצבע או רק לסוג הדבר, ולא לשניהם יחד.",
+      "home": "לבקש 'את הכדור הכחול' כשיש על השולחן כדורים וגם בלונים בצבעים שונים. קודם לבחור את הכדורים, ואחר כך את הכחול.",
+      "reps": [
+        "concrete",
+        "pictorial"
+      ]
+    },
+    {
+      "id": "M-SORT-SHIFT",
+      "skills": [
+        "COL-A-04",
+        "LOG-A-03"
+      ],
+      "parent": "הילד מחליף את כלל המיון באמצע: מתחיל לפי צבע וממשיך לפי צורה.",
+      "home": "למיין כפתורים או גרביים לשתי קופסאות ולהגיד בקול את הכלל ('כל האדומים'). אם הילד מחליף כלל, להגיד את הכלל שוב.",
+      "reps": [
+        "concrete",
+        "embodied"
+      ]
+    }
   ],
   "skills": [
-    { "id": "COL-A-01", "title": "מתאימים צבעים זהים", "child": "מוֹצְאִים אֶת אוֹתוֹ צֶבַע", "world": "pool", "needs": [], "reps": ["pictorial", "concrete"], "tags": [] },
-    { "id": "COL-A-03", "title": "מזהים כתום, סגול, ורוד, שחור ולבן כשהם נקראים בשם", "child": "מַכִּירִים עוֹד צְבָעִים", "world": "sprout", "needs": ["COL-A-02"], "reps": ["pictorial"], "tags": ["M-COL-NAME"] },
-    { "id": "COL-A-04", "title": "ממיינים לפי צבע, בלי להתחשב בצורה ובגודל", "child": "מְמַיְּנִים לְפִי צֶבַע", "world": "stall", "needs": ["COL-A-01"], "reps": ["pictorial", "concrete"], "tags": ["M-SORT-SHIFT"] },
-    { "id": "COL-A-05", "title": "יודעים את הצבעים הרגילים של דברים, ושהם יכולים להשתנות", "child": "יוֹדְעִים אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים", "world": "cone-tree", "needs": ["COL-A-02"], "reps": ["story", "pictorial"], "tags": ["M-COL-OBJECT"] },
-    { "id": "COL-A-06", "title": "מזהים חום ואפור", "child": "מַכִּירִים חוּם וְאָפֹר", "world": "dock", "needs": ["COL-A-03"], "reps": ["pictorial"], "tags": ["M-COL-NAME"] },
-    { "id": "COL-A-07", "title": "מוצאים דבר לפי צבע וסוג ('הבלון האדום')", "child": "מוֹצְאִים אֶת הַדָּבָר הַנָּכוֹן לְפִי הַצֶּבַע", "world": "pattern-door", "needs": ["COL-A-02"], "reps": ["pictorial", "concrete"], "tags": ["M-COL-ONEATTR"] }
+    {
+      "id": "COL-A-01",
+      "title": "מתאימים צבעים זהים",
+      "child": "מוֹצְאִים אֶת אוֹתוֹ צֶבַע",
+      "world": "pool",
+      "needs": [],
+      "reps": [
+        "pictorial",
+        "concrete"
+      ],
+      "tags": []
+    },
+    {
+      "id": "COL-A-03",
+      "title": "מזהים כתום, סגול, ורוד, שחור ולבן כשהם נקראים בשם",
+      "child": "מַכִּירִים עוֹד צְבָעִים",
+      "world": "sprout",
+      "needs": [
+        "COL-A-02"
+      ],
+      "reps": [
+        "pictorial"
+      ],
+      "tags": [
+        "M-COL-NAME"
+      ]
+    },
+    {
+      "id": "COL-A-04",
+      "title": "ממיינים לפי צבע, בלי להתחשב בצורה ובגודל",
+      "child": "מְמַיְּנִים לְפִי צֶבַע",
+      "world": "stall",
+      "needs": [
+        "COL-A-01"
+      ],
+      "reps": [
+        "pictorial",
+        "concrete"
+      ],
+      "tags": [
+        "M-SORT-SHIFT"
+      ]
+    },
+    {
+      "id": "COL-A-05",
+      "title": "יודעים את הצבעים הרגילים של דברים, ושהם יכולים להשתנות",
+      "child": "יוֹדְעִים אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים",
+      "world": "cone-tree",
+      "needs": [
+        "COL-A-02"
+      ],
+      "reps": [
+        "story",
+        "pictorial"
+      ],
+      "tags": [
+        "M-COL-OBJECT"
+      ]
+    },
+    {
+      "id": "COL-A-06",
+      "title": "מזהים חום ואפור",
+      "child": "מַכִּירִים חוּם וְאָפֹר",
+      "world": "dock",
+      "needs": [
+        "COL-A-03"
+      ],
+      "reps": [
+        "pictorial"
+      ],
+      "tags": [
+        "M-COL-NAME"
+      ]
+    },
+    {
+      "id": "COL-A-07",
+      "title": "מוצאים דבר לפי צבע וסוג ('הבלון האדום')",
+      "child": "מוֹצְאִים אֶת הַדָּבָר הַנָּכוֹן לְפִי הַצֶּבַע",
+      "world": "pattern-door",
+      "needs": [
+        "COL-A-02"
+      ],
+      "reps": [
+        "pictorial",
+        "concrete"
+      ],
+      "tags": [
+        "M-COL-ONEATTR"
+      ]
+    }
   ],
   "activities": [
-    { "kind": "pick", "id": "col.match.red", "skill": "COL-A-01", "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?", "group": { "sprite": "ball_red", "count": 1 }, "options": ["balloon_green", "balloon_red", "balloon_blue"], "correct": "balloon_red", "difficulty": 0.05 },
-    { "kind": "pick", "id": "col.match.blue", "skill": "COL-A-01", "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?", "group": { "sprite": "ball_blue", "count": 1 }, "options": ["balloon_yellow", "balloon_red", "balloon_blue"], "correct": "balloon_blue", "difficulty": 0.05 },
-    { "kind": "pick", "id": "col.match.yellow", "skill": "COL-A-01", "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?", "group": { "sprite": "ball_yellow", "count": 1 }, "options": ["balloon_green", "balloon_yellow", "balloon_blue"], "correct": "balloon_yellow", "difficulty": 0.1 },
-    { "kind": "pick", "id": "col.match.green", "skill": "COL-A-01", "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?", "group": { "sprite": "bloom_green", "count": 1 }, "options": ["ball_red", "ball_yellow", "ball_green"], "correct": "ball_green", "difficulty": 0.1 },
-
-    { "kind": "pick", "id": "col.name.red.ball", "skill": "COL-A-02", "prompt": "אֵיפֹה הַכַּדּוּר הָאָדֹם?", "options": ["ball_blue", "ball_red", "ball_yellow"], "correct": "ball_red", "difficulty": 0.1 },
-    { "kind": "pick", "id": "col.name.blue.balloon", "skill": "COL-A-02", "prompt": "אֵיפֹה הַבָּלוֹן הַכָּחֹל?", "options": ["balloon_green", "balloon_blue", "balloon_red"], "correct": "balloon_blue", "difficulty": 0.1 },
-    { "kind": "pick", "id": "col.name.yellow.flower", "skill": "COL-A-02", "prompt": "אֵיפֹה הַפֶּרַח הַצָּהֹב?", "options": ["bloom_yellow", "bloom_blue", "bloom_green"], "correct": "bloom_yellow", "difficulty": 0.15 },
-    { "kind": "pick", "id": "col.name.green.ball", "skill": "COL-A-02", "prompt": "אֵיפֹה הַכַּדּוּר הַיָּרֹק?", "options": ["ball_red", "ball_blue", "ball_green"], "correct": "ball_green", "difficulty": 0.15 },
-    { "kind": "pick", "id": "col.name.red.near", "skill": "COL-A-02", "prompt": "אֵיפֹה הַבָּלוֹן הָאָדֹם?", "options": ["balloon_orange", "balloon_red", "balloon_blue"], "correct": "balloon_red", "tags": { "balloon_orange": "M-COL-NAME" }, "difficulty": 0.3 },
-
-    { "kind": "pick", "id": "col.name.orange", "skill": "COL-A-03", "prompt": "אֵיפֹה הַכַּדּוּר הַכָּתֹם?", "options": ["ball_red", "ball_orange", "ball_yellow"], "correct": "ball_orange", "tags": { "ball_red": "M-COL-NAME", "ball_yellow": "M-COL-NAME" }, "difficulty": 0.25 },
-    { "kind": "pick", "id": "col.name.purple", "skill": "COL-A-03", "prompt": "אֵיפֹה הַבָּלוֹן הַסָּגֹל?", "options": ["balloon_blue", "balloon_pink", "balloon_purple"], "correct": "balloon_purple", "tags": { "balloon_blue": "M-COL-NAME", "balloon_pink": "M-COL-NAME" }, "difficulty": 0.3 },
-    { "kind": "pick", "id": "col.name.pink", "skill": "COL-A-03", "prompt": "אֵיפֹה הַפֶּרַח הַוָּרֹד?", "options": ["bloom_red", "bloom_pink", "bloom_purple"], "correct": "bloom_pink", "tags": { "bloom_red": "M-COL-NAME", "bloom_purple": "M-COL-NAME" }, "difficulty": 0.3 },
-    { "kind": "pick", "id": "col.name.black", "skill": "COL-A-03", "prompt": "אֵיפֹה הַכַּדּוּר הַשָּׁחֹר?", "options": ["ball_white", "ball_black", "ball_blue"], "correct": "ball_black", "difficulty": 0.2 },
-    { "kind": "pick", "id": "col.name.white", "skill": "COL-A-03", "prompt": "אֵיפֹה הַבָּלוֹן הַלָּבָן?", "options": ["balloon_white", "balloon_yellow", "balloon_grey"], "correct": "balloon_white", "tags": { "balloon_grey": "M-COL-NAME" }, "difficulty": 0.3 },
-
-    { "kind": "pick", "id": "col.name.brown", "skill": "COL-A-06", "prompt": "אֵיפֹה הַכַּדּוּר הַחוּם?", "options": ["ball_brown", "ball_orange", "ball_black"], "correct": "ball_brown", "tags": { "ball_orange": "M-COL-NAME" }, "difficulty": 0.3 },
-    { "kind": "pick", "id": "col.name.grey", "skill": "COL-A-06", "prompt": "אֵיפֹה הַבָּלוֹן הָאָפֹר?", "options": ["balloon_white", "balloon_grey", "balloon_black"], "correct": "balloon_grey", "tags": { "balloon_white": "M-COL-NAME", "balloon_black": "M-COL-NAME" }, "difficulty": 0.35 },
-    { "kind": "pick", "id": "col.name.grey.flower", "skill": "COL-A-06", "prompt": "אֵיפֹה הַפֶּרַח הָאָפֹר?", "options": ["bloom_brown", "bloom_blue", "bloom_grey"], "correct": "bloom_grey", "tags": { "bloom_brown": "M-COL-NAME" }, "difficulty": 0.35 },
-
-    { "kind": "pick", "id": "col.sort.red", "skill": "COL-A-04", "prompt": "מִי עוֹד אָדֹם?", "group": { "sprite": "ball_red", "count": 3 }, "options": ["bloom_green", "ball_blue", "balloon_red"], "correct": "balloon_red", "tags": { "ball_blue": "M-SORT-SHIFT" }, "difficulty": 0.3 },
-    { "kind": "pick", "id": "col.sort.blue", "skill": "COL-A-04", "prompt": "מִי עוֹד כָּחֹל?", "group": { "sprite": "balloon_blue", "count": 3 }, "options": ["bloom_blue", "balloon_yellow", "ball_red"], "correct": "bloom_blue", "tags": { "balloon_yellow": "M-SORT-SHIFT" }, "difficulty": 0.35 },
-    { "kind": "pick", "id": "col.sort.green", "skill": "COL-A-04", "prompt": "מִי עוֹד יָרֹק?", "group": { "sprite": "bloom_green", "count": 3 }, "options": ["bloom_red", "ball_green", "balloon_yellow"], "correct": "ball_green", "tags": { "bloom_red": "M-SORT-SHIFT" }, "difficulty": 0.4 },
-
-    { "kind": "pick", "id": "col.find.red.balloon", "skill": "COL-A-07", "prompt": "אֵיפֹה הַבָּלוֹן הָאָדֹם?", "options": ["ball_red", "balloon_blue", "bloom_green", "balloon_red"], "correct": "balloon_red", "tags": { "ball_red": "M-COL-ONEATTR", "balloon_blue": "M-COL-ONEATTR" }, "difficulty": 0.4 },
-    { "kind": "pick", "id": "col.find.blue.ball", "skill": "COL-A-07", "prompt": "אֵיפֹה הַכַּדּוּר הַכָּחֹל?", "options": ["balloon_blue", "ball_yellow", "bloom_red", "ball_blue"], "correct": "ball_blue", "tags": { "balloon_blue": "M-COL-ONEATTR", "ball_yellow": "M-COL-ONEATTR" }, "difficulty": 0.4 },
-    { "kind": "pick", "id": "col.find.yellow.flower", "skill": "COL-A-07", "prompt": "אֵיפֹה הַפֶּרַח הַצָּהֹב?", "options": ["bloom_green", "balloon_yellow", "ball_red", "bloom_yellow"], "correct": "bloom_yellow", "tags": { "bloom_green": "M-COL-ONEATTR", "balloon_yellow": "M-COL-ONEATTR" }, "difficulty": 0.45 },
-    { "kind": "pick", "id": "col.find.green.balloon", "skill": "COL-A-07", "prompt": "אֵיפֹה הַבָּלוֹן הַיָּרֹק?", "options": ["balloon_green", "ball_green", "balloon_red", "bloom_blue"], "correct": "balloon_green", "tags": { "ball_green": "M-COL-ONEATTR", "balloon_red": "M-COL-ONEATTR" }, "difficulty": 0.45 },
-
-    { "kind": "pick", "id": "col.world.sun", "skill": "COL-A-05", "prompt": "אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?", "group": { "sprite": "sun", "count": 1 }, "options": ["ball_blue", "ball_yellow", "ball_green"], "correct": "ball_yellow", "difficulty": 0.1 },
-    { "kind": "pick", "id": "col.world.grass", "skill": "COL-A-05", "prompt": "אֵיזֶה צֶבַע הָעֵשֶׂב?", "group": { "sprite": "grass", "count": 1 }, "options": ["ball_red", "ball_blue", "ball_green"], "correct": "ball_green", "difficulty": 0.1 },
-    { "kind": "pick", "id": "col.world.banana", "skill": "COL-A-05", "prompt": "גַּם בָּנָנָה יְרֻקָּה הִיא בָּנָנָה. אֵיפֹה הַבָּנָנָה?", "options": ["ball_yellow", "banana_green", "ball_green"], "correct": "banana_green", "tags": { "ball_yellow": "M-COL-OBJECT" }, "difficulty": 0.4, "h3": "זֹאת בָּנָנָה. הִיא יְרֻקָּה כִּי עוֹד לֹא הִבְשִׁילָה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלֶיהָ." },
-    { "kind": "pick", "id": "col.world.apple", "skill": "COL-A-05", "prompt": "תַּפּוּחַ יָכוֹל לִהְיוֹת גַּם יָרֹק. אֵיפֹה הַתַּפּוּחַ?", "options": ["ball_green", "apple_green", "ball_red"], "correct": "apple_green", "difficulty": 0.35 }
+    {
+      "kind": "pick",
+      "id": "col.match.red",
+      "skill": "COL-A-01",
+      "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "group": {
+        "sprite": "ball_red",
+        "count": 1
+      },
+      "options": [
+        "balloon_green",
+        "balloon_red",
+        "balloon_blue"
+      ],
+      "correct": "balloon_red",
+      "difficulty": 0.05
+    },
+    {
+      "kind": "pick",
+      "id": "col.match.blue",
+      "skill": "COL-A-01",
+      "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "group": {
+        "sprite": "ball_blue",
+        "count": 1
+      },
+      "options": [
+        "balloon_yellow",
+        "balloon_red",
+        "balloon_blue"
+      ],
+      "correct": "balloon_blue",
+      "difficulty": 0.05
+    },
+    {
+      "kind": "pick",
+      "id": "col.match.yellow",
+      "skill": "COL-A-01",
+      "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "group": {
+        "sprite": "ball_yellow",
+        "count": 1
+      },
+      "options": [
+        "balloon_green",
+        "balloon_yellow",
+        "balloon_blue"
+      ],
+      "correct": "balloon_yellow",
+      "difficulty": 0.1
+    },
+    {
+      "kind": "pick",
+      "id": "col.match.green",
+      "skill": "COL-A-01",
+      "prompt": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "group": {
+        "sprite": "bloom_green",
+        "count": 1
+      },
+      "options": [
+        "ball_red",
+        "ball_yellow",
+        "ball_green"
+      ],
+      "correct": "ball_green",
+      "difficulty": 0.1
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.red.ball",
+      "skill": "COL-A-02",
+      "prompt": "אֵיפֹה הַכַּדּוּר הָאָדֹם?",
+      "options": [
+        "ball_blue",
+        "ball_red",
+        "ball_yellow"
+      ],
+      "correct": "ball_red",
+      "difficulty": 0.1
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.blue.balloon",
+      "skill": "COL-A-02",
+      "prompt": "אֵיפֹה הַבָּלוֹן הַכָּחֹל?",
+      "options": [
+        "balloon_green",
+        "balloon_blue",
+        "balloon_red"
+      ],
+      "correct": "balloon_blue",
+      "difficulty": 0.1
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.yellow.flower",
+      "skill": "COL-A-02",
+      "prompt": "אֵיפֹה הַפֶּרַח הַצָּהֹב?",
+      "options": [
+        "bloom_yellow",
+        "bloom_blue",
+        "bloom_green"
+      ],
+      "correct": "bloom_yellow",
+      "difficulty": 0.15
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.green.ball",
+      "skill": "COL-A-02",
+      "prompt": "אֵיפֹה הַכַּדּוּר הַיָּרֹק?",
+      "options": [
+        "ball_red",
+        "ball_blue",
+        "ball_green"
+      ],
+      "correct": "ball_green",
+      "difficulty": 0.15
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.red.near",
+      "skill": "COL-A-02",
+      "prompt": "אֵיפֹה הַבָּלוֹן הָאָדֹם?",
+      "options": [
+        "balloon_orange",
+        "balloon_red",
+        "balloon_blue"
+      ],
+      "correct": "balloon_red",
+      "tags": {
+        "balloon_orange": "M-COL-NAME"
+      },
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.orange",
+      "skill": "COL-A-03",
+      "prompt": "אֵיפֹה הַכַּדּוּר הַכָּתֹם?",
+      "options": [
+        "ball_red",
+        "ball_orange",
+        "ball_yellow"
+      ],
+      "correct": "ball_orange",
+      "tags": {
+        "ball_red": "M-COL-NAME",
+        "ball_yellow": "M-COL-NAME"
+      },
+      "difficulty": 0.25
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.purple",
+      "skill": "COL-A-03",
+      "prompt": "אֵיפֹה הַבָּלוֹן הַסָּגֹל?",
+      "options": [
+        "balloon_blue",
+        "balloon_pink",
+        "balloon_purple"
+      ],
+      "correct": "balloon_purple",
+      "tags": {
+        "balloon_blue": "M-COL-NAME",
+        "balloon_pink": "M-COL-NAME"
+      },
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.pink",
+      "skill": "COL-A-03",
+      "prompt": "אֵיפֹה הַפֶּרַח הַוָּרֹד?",
+      "options": [
+        "bloom_red",
+        "bloom_pink",
+        "bloom_purple"
+      ],
+      "correct": "bloom_pink",
+      "tags": {
+        "bloom_red": "M-COL-NAME",
+        "bloom_purple": "M-COL-NAME"
+      },
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.black",
+      "skill": "COL-A-03",
+      "prompt": "אֵיפֹה הַכַּדּוּר הַשָּׁחֹר?",
+      "options": [
+        "ball_white",
+        "ball_black",
+        "ball_blue"
+      ],
+      "correct": "ball_black",
+      "difficulty": 0.2
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.white",
+      "skill": "COL-A-03",
+      "prompt": "אֵיפֹה הַבָּלוֹן הַלָּבָן?",
+      "options": [
+        "balloon_white",
+        "balloon_yellow",
+        "balloon_grey"
+      ],
+      "correct": "balloon_white",
+      "tags": {
+        "balloon_grey": "M-COL-NAME"
+      },
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.brown",
+      "skill": "COL-A-06",
+      "prompt": "אֵיפֹה הַכַּדּוּר הַחוּם?",
+      "options": [
+        "ball_brown",
+        "ball_orange",
+        "ball_black"
+      ],
+      "correct": "ball_brown",
+      "tags": {
+        "ball_orange": "M-COL-NAME"
+      },
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.grey",
+      "skill": "COL-A-06",
+      "prompt": "אֵיפֹה הַבָּלוֹן הָאָפֹר?",
+      "options": [
+        "balloon_white",
+        "balloon_grey",
+        "balloon_black"
+      ],
+      "correct": "balloon_grey",
+      "tags": {
+        "balloon_white": "M-COL-NAME",
+        "balloon_black": "M-COL-NAME"
+      },
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "col.name.grey.flower",
+      "skill": "COL-A-06",
+      "prompt": "אֵיפֹה הַפֶּרַח הָאָפֹר?",
+      "options": [
+        "bloom_brown",
+        "bloom_blue",
+        "bloom_grey"
+      ],
+      "correct": "bloom_grey",
+      "tags": {
+        "bloom_brown": "M-COL-NAME"
+      },
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "col.sort.red",
+      "skill": "COL-A-04",
+      "prompt": "מִי עוֹד אָדֹם?",
+      "group": {
+        "sprite": "ball_red",
+        "count": 3
+      },
+      "options": [
+        "bloom_green",
+        "ball_blue",
+        "balloon_red"
+      ],
+      "correct": "balloon_red",
+      "tags": {
+        "ball_blue": "M-SORT-SHIFT"
+      },
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "col.sort.blue",
+      "skill": "COL-A-04",
+      "prompt": "מִי עוֹד כָּחֹל?",
+      "group": {
+        "sprite": "balloon_blue",
+        "count": 3
+      },
+      "options": [
+        "bloom_blue",
+        "balloon_yellow",
+        "ball_red"
+      ],
+      "correct": "bloom_blue",
+      "tags": {
+        "balloon_yellow": "M-SORT-SHIFT"
+      },
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "col.sort.green",
+      "skill": "COL-A-04",
+      "prompt": "מִי עוֹד יָרֹק?",
+      "group": {
+        "sprite": "bloom_green",
+        "count": 3
+      },
+      "options": [
+        "bloom_red",
+        "ball_green",
+        "balloon_yellow"
+      ],
+      "correct": "ball_green",
+      "tags": {
+        "bloom_red": "M-SORT-SHIFT"
+      },
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "col.find.red.balloon",
+      "skill": "COL-A-07",
+      "prompt": "אֵיפֹה הַבָּלוֹן הָאָדֹם?",
+      "options": [
+        "ball_red",
+        "balloon_blue",
+        "bloom_green",
+        "balloon_red"
+      ],
+      "correct": "balloon_red",
+      "tags": {
+        "ball_red": "M-COL-ONEATTR",
+        "balloon_blue": "M-COL-ONEATTR"
+      },
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "col.find.blue.ball",
+      "skill": "COL-A-07",
+      "prompt": "אֵיפֹה הַכַּדּוּר הַכָּחֹל?",
+      "options": [
+        "balloon_blue",
+        "ball_yellow",
+        "bloom_red",
+        "ball_blue"
+      ],
+      "correct": "ball_blue",
+      "tags": {
+        "balloon_blue": "M-COL-ONEATTR",
+        "ball_yellow": "M-COL-ONEATTR"
+      },
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "col.find.yellow.flower",
+      "skill": "COL-A-07",
+      "prompt": "אֵיפֹה הַפֶּרַח הַצָּהֹב?",
+      "options": [
+        "bloom_green",
+        "balloon_yellow",
+        "ball_red",
+        "bloom_yellow"
+      ],
+      "correct": "bloom_yellow",
+      "tags": {
+        "bloom_green": "M-COL-ONEATTR",
+        "balloon_yellow": "M-COL-ONEATTR"
+      },
+      "difficulty": 0.45
+    },
+    {
+      "kind": "pick",
+      "id": "col.find.green.balloon",
+      "skill": "COL-A-07",
+      "prompt": "אֵיפֹה הַבָּלוֹן הַיָּרֹק?",
+      "options": [
+        "balloon_green",
+        "ball_green",
+        "balloon_red",
+        "bloom_blue"
+      ],
+      "correct": "balloon_green",
+      "tags": {
+        "ball_green": "M-COL-ONEATTR",
+        "balloon_red": "M-COL-ONEATTR"
+      },
+      "difficulty": 0.45
+    },
+    {
+      "kind": "pick",
+      "id": "col.world.sun",
+      "skill": "COL-A-05",
+      "prompt": "אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?",
+      "group": {
+        "sprite": "sun",
+        "count": 1
+      },
+      "options": [
+        "ball_blue",
+        "ball_yellow",
+        "ball_green"
+      ],
+      "correct": "ball_yellow",
+      "difficulty": 0.1
+    },
+    {
+      "kind": "pick",
+      "id": "col.world.grass",
+      "skill": "COL-A-05",
+      "prompt": "אֵיזֶה צֶבַע הָעֵשֶׂב?",
+      "group": {
+        "sprite": "grass",
+        "count": 1
+      },
+      "options": [
+        "ball_red",
+        "ball_blue",
+        "ball_green"
+      ],
+      "correct": "ball_green",
+      "difficulty": 0.1
+    },
+    {
+      "kind": "pick",
+      "id": "col.world.banana",
+      "skill": "COL-A-05",
+      "prompt": "גַּם בָּנָנָה יְרֻקָּה הִיא בָּנָנָה. אֵיפֹה הַבָּנָנָה?",
+      "options": [
+        "ball_yellow",
+        "banana_green",
+        "ball_green"
+      ],
+      "correct": "banana_green",
+      "tags": {
+        "ball_yellow": "M-COL-OBJECT"
+      },
+      "difficulty": 0.4,
+      "h3": "זֹאת בָּנָנָה. הִיא יְרֻקָּה כִּי עוֹד לֹא הִבְשִׁילָה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלֶיהָ."
+    },
+    {
+      "kind": "pick",
+      "id": "col.world.apple",
+      "skill": "COL-A-05",
+      "prompt": "תַּפּוּחַ יָכוֹל לִהְיוֹת גַּם יָרֹק. אֵיפֹה הַתַּפּוּחַ?",
+      "options": [
+        "ball_green",
+        "apple_green",
+        "ball_red"
+      ],
+      "correct": "apple_green",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "cmatch",
+      "id": "col.match.green2",
+      "skill": "COL-A-01",
+      "thing": "ball",
+      "colour": "green",
+      "other": "balloon",
+      "others": [
+        "red",
+        "blue"
+      ],
+      "pos": 2,
+      "difficulty": 0.1
+    },
+    {
+      "kind": "cmatch",
+      "id": "col.match.red2",
+      "skill": "COL-A-01",
+      "thing": "bloom",
+      "colour": "red",
+      "other": "ball",
+      "others": [
+        "blue",
+        "yellow"
+      ],
+      "pos": 0,
+      "difficulty": 0.1
+    },
+    {
+      "kind": "cfind",
+      "id": "col.name.purple2",
+      "skill": "COL-A-03",
+      "thing": "ball",
+      "colour": "purple",
+      "others": [
+        "blue",
+        "pink"
+      ],
+      "pos": 2,
+      "difficulty": 0.35
+    },
+    {
+      "kind": "cfind",
+      "id": "col.name.orange2",
+      "skill": "COL-A-03",
+      "thing": "bloom",
+      "colour": "orange",
+      "others": [
+        "red",
+        "yellow"
+      ],
+      "pos": 0,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "cfind",
+      "id": "col.name.pink2",
+      "skill": "COL-A-03",
+      "thing": "balloon",
+      "colour": "pink",
+      "others": [
+        "red",
+        "purple"
+      ],
+      "pos": 1,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "col.sort.yellow",
+      "skill": "COL-A-04",
+      "prompt": "מִי עוֹד צָהֹב?",
+      "group": {
+        "sprite": "ball_yellow",
+        "count": 3
+      },
+      "options": [
+        "ball_green",
+        "bloom_blue",
+        "balloon_yellow"
+      ],
+      "correct": "balloon_yellow",
+      "tags": {
+        "ball_green": "M-SORT-SHIFT"
+      },
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "col.sort.orange",
+      "skill": "COL-A-04",
+      "prompt": "מִי עוֹד כָּתֹם?",
+      "group": {
+        "sprite": "balloon_orange",
+        "count": 3
+      },
+      "options": [
+        "bloom_orange",
+        "balloon_red",
+        "ball_green"
+      ],
+      "correct": "bloom_orange",
+      "tags": {
+        "balloon_red": "M-SORT-SHIFT"
+      },
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "col.sort.pink",
+      "skill": "COL-A-04",
+      "prompt": "מִי עוֹד וָרֹד?",
+      "group": {
+        "sprite": "bloom_pink",
+        "count": 3
+      },
+      "options": [
+        "ball_pink",
+        "bloom_blue",
+        "ball_yellow"
+      ],
+      "correct": "ball_pink",
+      "tags": {
+        "bloom_blue": "M-SORT-SHIFT"
+      },
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "col.world.banana.ripe",
+      "skill": "COL-A-05",
+      "prompt": "אֵיזֶה צֶבַע בָּנָנָה בְּשֵׁלָה?",
+      "group": {
+        "sprite": "banana_yellow",
+        "count": 1
+      },
+      "options": [
+        "ball_green",
+        "ball_blue",
+        "ball_yellow"
+      ],
+      "correct": "ball_yellow",
+      "difficulty": 0.2
+    },
+    {
+      "kind": "pick",
+      "id": "col.world.apple.red",
+      "skill": "COL-A-05",
+      "prompt": "אֵיזֶה צֶבַע הַתַּפּוּחַ?",
+      "group": {
+        "sprite": "apple",
+        "count": 1
+      },
+      "options": [
+        "ball_red",
+        "ball_blue",
+        "ball_purple"
+      ],
+      "correct": "ball_red",
+      "difficulty": 0.15
+    },
+    {
+      "kind": "cfind",
+      "id": "col.name.brown2",
+      "skill": "COL-A-06",
+      "thing": "balloon",
+      "colour": "brown",
+      "others": [
+        "orange",
+        "black"
+      ],
+      "pos": 2,
+      "difficulty": 0.35
+    },
+    {
+      "kind": "cfind",
+      "id": "col.name.grey2",
+      "skill": "COL-A-06",
+      "thing": "ball",
+      "colour": "grey",
+      "others": [
+        "white",
+        "black"
+      ],
+      "pos": 0,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "cfind",
+      "id": "col.name.brown3",
+      "skill": "COL-A-06",
+      "thing": "bloom",
+      "colour": "brown",
+      "others": [
+        "orange",
+        "grey"
+      ],
+      "pos": 1,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "cfind",
+      "id": "col.find.red.ball",
+      "skill": "COL-A-07",
+      "thing": "ball",
+      "colour": "red",
+      "others": [
+        "blue"
+      ],
+      "otherThing": "balloon",
+      "pos": 2,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "cfind",
+      "id": "col.find.yellow.balloon",
+      "skill": "COL-A-07",
+      "thing": "balloon",
+      "colour": "yellow",
+      "others": [
+        "green"
+      ],
+      "otherThing": "bloom",
+      "pos": 1,
+      "difficulty": 0.45
+    }
   ],
   "firstSequence": 2,
   "lessons": [
-    { "id": "colour-match", "title": "מוֹצְאִים אֶת אוֹתוֹ צֶבַע", "skills": ["COL-A-01", "COL-A-02"], "items": ["col.match.red", "col.match.blue", "col.match.yellow", "col.match.green", "col.name.red.ball", "col.name.blue.balloon"], "done": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַצְּבָעִים." },
-    { "id": "colour-names", "title": "שֵׁמוֹת שֶׁל צְבָעִים", "skills": ["COL-A-02", "COL-A-03"], "items": ["col.name.yellow.flower", "col.name.green.ball", "col.name.red.near", "col.name.orange", "col.name.purple", "col.name.pink"], "done": "יָפֶה מְאֹד! הִכַּרְתֶּם עוֹד צְבָעִים." },
-    { "id": "more-colours", "title": "עוֹד צְבָעִים", "skills": ["COL-A-03", "COL-A-06"], "items": ["col.name.black", "col.name.white", "col.name.brown", "col.name.grey", "col.name.grey.flower"], "minutes": 3, "done": "מַדְהִים! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים." },
-    { "id": "colour-sorting", "title": "מְמַיְּנִים לְפִי צֶבַע", "skills": ["COL-A-04", "COL-A-07"], "items": ["col.sort.red", "col.sort.blue", "col.sort.green", "col.find.red.balloon", "col.find.blue.ball", "col.find.yellow.flower", "col.find.green.balloon"], "minutes": 5, "done": "חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר." },
-    { "id": "colours-of-things", "title": "הַצְּבָעִים שֶׁל הָעוֹלָם", "skills": ["COL-A-05"], "items": ["col.world.sun", "col.world.grass", "col.world.banana", "col.world.apple"], "minutes": 3, "done": "וַאוּ! יְדַעְתֶּם אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים." }
+    {
+      "id": "colour-match",
+      "title": "מוֹצְאִים אֶת אוֹתוֹ צֶבַע",
+      "skills": [
+        "COL-A-01",
+        "COL-A-02"
+      ],
+      "items": [
+        "col.match.red",
+        "col.match.blue",
+        "col.match.yellow",
+        "col.match.green",
+        "col.name.red.ball",
+        "col.name.blue.balloon"
+      ],
+      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַצְּבָעִים."
+    },
+    {
+      "id": "colour-names",
+      "title": "שֵׁמוֹת שֶׁל צְבָעִים",
+      "skills": [
+        "COL-A-02",
+        "COL-A-03"
+      ],
+      "items": [
+        "col.name.yellow.flower",
+        "col.name.green.ball",
+        "col.name.red.near",
+        "col.name.orange",
+        "col.name.purple",
+        "col.name.pink"
+      ],
+      "done": "יָפֶה מְאֹד! הִכַּרְתֶּם עוֹד צְבָעִים."
+    },
+    {
+      "id": "more-colours",
+      "title": "עוֹד צְבָעִים",
+      "skills": [
+        "COL-A-03",
+        "COL-A-06"
+      ],
+      "items": [
+        "col.name.black",
+        "col.name.white",
+        "col.name.brown",
+        "col.name.grey",
+        "col.name.grey.flower"
+      ],
+      "minutes": 3,
+      "done": "מַדְהִים! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים."
+    },
+    {
+      "id": "colour-sorting",
+      "title": "מְמַיְּנִים לְפִי צֶבַע",
+      "skills": [
+        "COL-A-04",
+        "COL-A-07"
+      ],
+      "items": [
+        "col.sort.red",
+        "col.sort.blue",
+        "col.sort.green",
+        "col.find.red.balloon",
+        "col.find.blue.ball",
+        "col.find.yellow.flower",
+        "col.find.green.balloon"
+      ],
+      "minutes": 5,
+      "done": "חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר."
+    },
+    {
+      "id": "colours-of-things",
+      "title": "הַצְּבָעִים שֶׁל הָעוֹלָם",
+      "skills": [
+        "COL-A-05"
+      ],
+      "items": [
+        "col.world.sun",
+        "col.world.grass",
+        "col.world.banana",
+        "col.world.apple"
+      ],
+      "minutes": 3,
+      "done": "וַאוּ! יְדַעְתֶּם אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים."
+    },
+    {
+      "id": "colours-again",
+      "title": "עוֹד צְבָעִים",
+      "skills": [
+        "COL-A-01",
+        "COL-A-03",
+        "COL-A-06"
+      ],
+      "items": [
+        "col.match.green2",
+        "col.match.red2",
+        "col.name.orange2",
+        "col.name.pink2",
+        "col.name.purple2",
+        "col.name.brown2",
+        "col.name.grey2",
+        "col.name.brown3"
+      ],
+      "minutes": 6,
+      "done": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים."
+    },
+    {
+      "id": "colour-sorting-again",
+      "title": "עוֹד מְמַיְּנִים לְפִי צֶבַע",
+      "skills": [
+        "COL-A-04",
+        "COL-A-07"
+      ],
+      "items": [
+        "col.sort.yellow",
+        "col.sort.orange",
+        "col.sort.pink",
+        "col.find.red.ball",
+        "col.find.yellow.balloon"
+      ],
+      "minutes": 4,
+      "done": "חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר."
+    },
+    {
+      "id": "colours-of-things-again",
+      "title": "עוֹד צְבָעִים שֶׁל דְּבָרִים",
+      "skills": [
+        "COL-A-05"
+      ],
+      "items": [
+        "col.world.apple.red",
+        "col.world.banana.ripe"
+      ],
+      "minutes": 2,
+      "done": "וַאוּ! יְדַעְתֶּם אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים."
+    }
   ]
 }

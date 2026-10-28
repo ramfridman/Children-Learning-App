@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "robot-moves-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מְזִיזִים אֶת הָרוֹבּוֹט"
+    }
+  ],
+  "skills": [
+    "CS-A-03"
+  ],
+  "items": [
+    "cs.robot.direct.4",
+    "cs.robot.direct.5",
+    "cs.robot.direct.6"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 5,
+  "celebration": {
+    "vo": "vo:celebrate.robot_moves_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל."
+      }
+    ]
+  }
+}

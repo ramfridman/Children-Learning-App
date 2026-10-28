@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "patterns-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סְדָרִים"
+    }
+  ],
+  "skills": [
+    "LOG-A-04",
+    "LOG-A-06"
+  ],
+  "items": [
+    "log.pat.yes.green",
+    "log.pat.no.things",
+    "log.pat.yes.fish",
+    "log.next.pets",
+    "log.next.balls"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 10,
+  "celebration": {
+    "vo": "vo:celebrate.patterns_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! הִמְשַׁכְתֶּם אֶת הַסֵּדֶר."
+      }
+    ]
+  }
+}

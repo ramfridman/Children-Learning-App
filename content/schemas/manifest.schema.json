@@ -69,7 +69,7 @@
         "additionalProperties": false
       },
       "minItems": 1,
-      "maxItems": 2400
+      "maxItems": 8000
     },
     "assets": {
       "type": "array",
@@ -96,7 +96,7 @@
         "additionalProperties": false
       },
       "minItems": 0,
-      "maxItems": 1000
+      "maxItems": 2000
     },
     "vo": {
       "type": "array",
@@ -123,7 +123,7 @@
         "additionalProperties": false
       },
       "minItems": 0,
-      "maxItems": 1200
+      "maxItems": 4000
     },
     "voPending": {
       "type": "array",
@@ -134,7 +134,7 @@
         "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
       },
       "minItems": 0,
-      "maxItems": 1200
+      "maxItems": 4000
     },
     "entries": {
       "type": "object",
@@ -148,7 +148,7 @@
             "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
           },
           "minItems": 0,
-          "maxItems": 600
+          "maxItems": 1500
         },
         "lessons": {
           "type": "array",
@@ -159,7 +159,7 @@
             "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
           },
           "minItems": 0,
-          "maxItems": 200
+          "maxItems": 400
         },
         "skills": {
           "type": "array",
@@ -170,7 +170,7 @@
             "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2})$"
           },
           "minItems": 0,
-          "maxItems": 300
+          "maxItems": 600
         },
         "misconceptions": {
           "type": "array",
@@ -181,7 +181,7 @@
             "pattern": "^(?:M-[A-Z]{2,5}-[A-Z0-9]{2,12})$"
           },
           "minItems": 0,
-          "maxItems": 200
+          "maxItems": 400
         },
         "characters": {
           "type": "array",
@@ -203,7 +203,7 @@
             "pattern": "^(?:[a-z0-9_.]{1,80})$"
           },
           "minItems": 0,
-          "maxItems": 1200
+          "maxItems": 4000
         }
       },
       "required": [

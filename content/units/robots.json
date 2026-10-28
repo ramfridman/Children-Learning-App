@@ -357,6 +357,220 @@
       ],
       "prompt": "מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם.",
       "difficulty": 0.45
+    },
+    {
+      "kind": "pick",
+      "id": "cs.routine.wash.middle",
+      "skill": "CS-A-01",
+      "prompt": "רוֹחֲצִים יָדַיִם. מָה בָּאֶמְצַע?",
+      "options": [
+        "step_tap",
+        "step_soap",
+        "step_towel"
+      ],
+      "correct": "step_soap",
+      "tags": {
+        "step_towel": "M-SEQ-CAUSE"
+      },
+      "difficulty": 0.35,
+      "rep": "story",
+      "correct_text": "כֵּן! בָּאֶמְצַע מְסַבְּנִים.",
+      "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַסַּבּוֹן."
+    },
+    {
+      "kind": "pick",
+      "id": "cs.routine.teeth.middle",
+      "skill": "CS-A-01",
+      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה בָּאֶמְצַע?",
+      "options": [
+        "step_rinse",
+        "step_paste",
+        "step_brush"
+      ],
+      "correct": "step_brush",
+      "tags": {
+        "step_rinse": "M-SEQ-CAUSE"
+      },
+      "difficulty": 0.35,
+      "rep": "story",
+      "correct_text": "כֵּן! בָּאֶמְצַע מְצַחְצְחִים בַּמִּבְרֶשֶׁת.",
+      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף כּוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּבְרֶשֶׁת."
+    },
+    {
+      "kind": "pick",
+      "id": "cs.wrong.wash2",
+      "skill": "CS-A-05",
+      "prompt": "רוֹחֲצִים יָדַיִם. מָה לֹא שַׁיָּךְ?",
+      "options": [
+        "step_tap",
+        "step_soap",
+        "step_paste"
+      ],
+      "correct": "step_paste",
+      "difficulty": 0.3,
+      "rep": "pictorial",
+      "correct_text": "כֵּן! מִשְׁחָה לֹא צְרִיכָה לִרְחִיצַת יָדַיִם.",
+      "h3": "לִרְחִיצַת יָדַיִם צְרִיכִים בָּרֶז, סַבּוֹן וּמַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
+    },
+    {
+      "kind": "pick",
+      "id": "cs.wrong.teeth2",
+      "skill": "CS-A-05",
+      "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה לֹא שַׁיָּךְ?",
+      "options": [
+        "step_brush",
+        "step_towel",
+        "step_paste"
+      ],
+      "correct": "step_towel",
+      "difficulty": 0.35,
+      "rep": "pictorial",
+      "correct_text": "כֵּן! מַגֶּבֶת לֹא צְרִיכָה לְצִחְצוּחַ שִׁנַּיִם.",
+      "h3": "לְצִחְצוּחַ שִׁנַּיִם צְרִיכִים מִשְׁחָה, מִבְרֶשֶׁת וְכוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּגֶּבֶת."
+    },
+    {
+      "kind": "robot",
+      "id": "cs.robot.direct.4",
+      "skill": "CS-A-03",
+      "mode": "direct",
+      "cols": 4,
+      "rows": 2,
+      "robot": [
+        0,
+        1
+      ],
+      "goal": [
+        3,
+        0
+      ],
+      "solution": [
+        "right",
+        "right",
+        "right",
+        "up"
+      ],
+      "prompt": "מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל.",
+      "difficulty": 0.3
+    },
+    {
+      "kind": "robot",
+      "id": "cs.robot.direct.5",
+      "skill": "CS-A-03",
+      "mode": "direct",
+      "cols": 3,
+      "rows": 3,
+      "robot": [
+        2,
+        0
+      ],
+      "goal": [
+        0,
+        2
+      ],
+      "solution": [
+        "left",
+        "left",
+        "down",
+        "down"
+      ],
+      "prompt": "הָרוֹבּוֹט צָרִיךְ לָלֶכֶת אֶל הַדֶּגֶל.",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "robot",
+      "id": "cs.robot.direct.6",
+      "skill": "CS-A-03",
+      "mode": "direct",
+      "cols": 5,
+      "rows": 2,
+      "robot": [
+        0,
+        0
+      ],
+      "goal": [
+        4,
+        1
+      ],
+      "solution": [
+        "right",
+        "right",
+        "right",
+        "right",
+        "down"
+      ],
+      "prompt": "מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל.",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "robot",
+      "id": "cs.robot.plan.4",
+      "skill": "CS-A-04",
+      "mode": "plan",
+      "cols": 3,
+      "rows": 3,
+      "robot": [
+        0,
+        0
+      ],
+      "goal": [
+        2,
+        2
+      ],
+      "solution": [
+        "right",
+        "right",
+        "down",
+        "down"
+      ],
+      "prompt": "מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם.",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "robot",
+      "id": "cs.robot.plan.5",
+      "skill": "CS-A-04",
+      "mode": "plan",
+      "cols": 4,
+      "rows": 2,
+      "robot": [
+        3,
+        1
+      ],
+      "goal": [
+        1,
+        0
+      ],
+      "solution": [
+        "left",
+        "left",
+        "up"
+      ],
+      "prompt": "מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם.",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "robot",
+      "id": "cs.robot.plan.6",
+      "skill": "CS-A-04",
+      "mode": "plan",
+      "cols": 4,
+      "rows": 3,
+      "robot": [
+        1,
+        2
+      ],
+      "goal": [
+        3,
+        0
+      ],
+      "solution": [
+        "right",
+        "right",
+        "up",
+        "up"
+      ],
+      "prompt": "מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם.",
+      "difficulty": 0.55
     }
   ],
   "firstSequence": 1,
@@ -403,6 +617,50 @@
         "cs.robot.plan.1",
         "cs.robot.plan.2",
         "cs.robot.plan.3"
+      ],
+      "minutes": 5,
+      "done": "וַאוּ! תִּכְנַנְתֶּם אֶת הַדֶּרֶךְ."
+    },
+    {
+      "id": "step-by-step-again",
+      "title": "עוֹד צַעַד אַחַר צַעַד",
+      "skills": [
+        "CS-A-01",
+        "CS-A-05"
+      ],
+      "items": [
+        "cs.routine.wash.middle",
+        "cs.routine.teeth.middle",
+        "cs.wrong.wash2",
+        "cs.wrong.teeth2"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה בָּא קֹדֶם וּמָה בַּסּוֹף."
+    },
+    {
+      "id": "robot-moves-again",
+      "title": "עוֹד מְזִיזִים אֶת הָרוֹבּוֹט",
+      "skills": [
+        "CS-A-03"
+      ],
+      "items": [
+        "cs.robot.direct.4",
+        "cs.robot.direct.5",
+        "cs.robot.direct.6"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל."
+    },
+    {
+      "id": "robot-plans-again",
+      "title": "עוֹד מְתַכְנְנִים לָרוֹבּוֹט",
+      "skills": [
+        "CS-A-04"
+      ],
+      "items": [
+        "cs.robot.plan.4",
+        "cs.robot.plan.5",
+        "cs.robot.plan.6"
       ],
       "minutes": 5,
       "done": "וַאוּ! תִּכְנַנְתֶּם אֶת הַדֶּרֶךְ."

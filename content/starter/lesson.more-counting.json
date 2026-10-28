@@ -1,0 +1,38 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-counting",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סוֹפְרִים וְנוֹגְעִים"
+    }
+  ],
+  "skills": [
+    "NUM-A-03",
+    "NUM-A-04"
+  ],
+  "items": [
+    "count.ladybugs.3",
+    "count.cats.3",
+    "count.fish.4",
+    "count.dogs.4",
+    "count.apples.5",
+    "count.ducks.5",
+    "count.stars.4",
+    "count.fish.5"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 14,
+  "celebration": {
+    "vo": "vo:celebrate.more_counting",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
+      }
+    ]
+  }
+}

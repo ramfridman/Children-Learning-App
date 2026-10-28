@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-glances",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד רוֹאִים בְּמַבָּט"
+    }
+  ],
+  "skills": [
+    "NUM-A-05",
+    "NUM-A-10"
+  ],
+  "items": [
+    "flash.scatter.2",
+    "flash.frame.3",
+    "flash.dice.4b",
+    "flash.frame.5b"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 15,
+  "celebration": {
+    "vo": "vo:celebrate.more_glances",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַדְהִים! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר."
+      }
+    ]
+  }
+}

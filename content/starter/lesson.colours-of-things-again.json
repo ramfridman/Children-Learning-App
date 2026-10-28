@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "colours-of-things-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צְבָעִים שֶׁל דְּבָרִים"
+    }
+  ],
+  "skills": [
+    "COL-A-05"
+  ],
+  "items": [
+    "col.world.apple.red",
+    "col.world.banana.ripe"
+  ],
+  "estimatedMinutes": 2,
+  "sequence": 9,
+  "celebration": {
+    "vo": "vo:celebrate.colours_of_things_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! יְדַעְתֶּם אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים."
+      }
+    ]
+  }
+}

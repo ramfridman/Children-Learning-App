@@ -1,0 +1,39 @@
+{
+  "schema": "lesson/v1",
+  "id": "colours-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צְבָעִים"
+    }
+  ],
+  "skills": [
+    "COL-A-01",
+    "COL-A-03",
+    "COL-A-06"
+  ],
+  "items": [
+    "col.match.green2",
+    "col.match.red2",
+    "col.name.orange2",
+    "col.name.pink2",
+    "col.name.purple2",
+    "col.name.brown2",
+    "col.name.grey2",
+    "col.name.brown3"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 7,
+  "celebration": {
+    "vo": "vo:celebrate.colours_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים."
+      }
+    ]
+  }
+}

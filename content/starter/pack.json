@@ -1,7 +1,7 @@
 {
   "schema": "pack-source/v1",
   "id": "starter",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "minAppVersion": "0.3.0",
   "assets": [
     {
@@ -467,6 +467,166 @@
     {
       "id": "flag",
       "file": "flag.svg"
+    },
+    {
+      "id": "star_size_l",
+      "file": "star_size_l.svg"
+    },
+    {
+      "id": "star_size_m",
+      "file": "star_size_m.svg"
+    },
+    {
+      "id": "star_size_s",
+      "file": "star_size_s.svg"
+    },
+    {
+      "id": "apple_size_l",
+      "file": "apple_size_l.svg"
+    },
+    {
+      "id": "apple_size_m",
+      "file": "apple_size_m.svg"
+    },
+    {
+      "id": "apple_size_s",
+      "file": "apple_size_s.svg"
+    },
+    {
+      "id": "fish_size_l",
+      "file": "fish_size_l.svg"
+    },
+    {
+      "id": "fish_size_m",
+      "file": "fish_size_m.svg"
+    },
+    {
+      "id": "fish_size_s",
+      "file": "fish_size_s.svg"
+    },
+    {
+      "id": "cloud",
+      "file": "cloud.svg"
+    },
+    {
+      "id": "rain",
+      "file": "rain.svg"
+    },
+    {
+      "id": "rainbow",
+      "file": "rainbow.svg"
+    },
+    {
+      "id": "bowl",
+      "file": "bowl.svg"
+    },
+    {
+      "id": "spoon",
+      "file": "spoon.svg"
+    },
+    {
+      "id": "pencil",
+      "file": "pencil.svg"
+    },
+    {
+      "id": "paper",
+      "file": "paper.svg"
+    },
+    {
+      "id": "shape_circle_blue",
+      "file": "shape_circle_blue.svg"
+    },
+    {
+      "id": "shape_circle_green",
+      "file": "shape_circle_green.svg"
+    },
+    {
+      "id": "shape_circle_orange",
+      "file": "shape_circle_orange.svg"
+    },
+    {
+      "id": "shape_circle_red",
+      "file": "shape_circle_red.svg"
+    },
+    {
+      "id": "shape_circle_yellow",
+      "file": "shape_circle_yellow.svg"
+    },
+    {
+      "id": "shape_rect_blue",
+      "file": "shape_rect_blue.svg"
+    },
+    {
+      "id": "shape_rect_green",
+      "file": "shape_rect_green.svg"
+    },
+    {
+      "id": "shape_rect_orange",
+      "file": "shape_rect_orange.svg"
+    },
+    {
+      "id": "shape_rect_red",
+      "file": "shape_rect_red.svg"
+    },
+    {
+      "id": "shape_rect_yellow",
+      "file": "shape_rect_yellow.svg"
+    },
+    {
+      "id": "shape_square_blue",
+      "file": "shape_square_blue.svg"
+    },
+    {
+      "id": "shape_square_green",
+      "file": "shape_square_green.svg"
+    },
+    {
+      "id": "shape_square_orange",
+      "file": "shape_square_orange.svg"
+    },
+    {
+      "id": "shape_square_red",
+      "file": "shape_square_red.svg"
+    },
+    {
+      "id": "shape_square_yellow",
+      "file": "shape_square_yellow.svg"
+    },
+    {
+      "id": "shape_triangle_blue",
+      "file": "shape_triangle_blue.svg"
+    },
+    {
+      "id": "shape_triangle_green",
+      "file": "shape_triangle_green.svg"
+    },
+    {
+      "id": "shape_triangle_orange",
+      "file": "shape_triangle_orange.svg"
+    },
+    {
+      "id": "shape_triangle_red",
+      "file": "shape_triangle_red.svg"
+    },
+    {
+      "id": "shape_triangle_yellow",
+      "file": "shape_triangle_yellow.svg"
+    },
+    {
+      "id": "line_curved_arc",
+      "file": "line_curved_arc.svg"
+    },
+    {
+      "id": "line_curved_wave",
+      "file": "line_curved_wave.svg"
+    },
+    {
+      "id": "line_straight_flat",
+      "file": "line_straight_flat.svg"
+    },
+    {
+      "id": "line_straight_up",
+      "file": "line_straight_up.svg"
     }
   ],
   "vo": []

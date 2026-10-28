@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-more-things",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים עוֹד דְּבָרִים"
+    }
+  ],
+  "skills": [
+    "NUM-A-09"
+  ],
+  "items": [
+    "count.cats.7",
+    "count.dogs.8",
+    "count.ladybugs.10"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 18,
+  "celebration": {
+    "vo": "vo:celebrate.count_more_things",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר."
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "rectangle-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מַלְבֵּן וְרִבּוּעַ"
+    }
+  ],
+  "skills": [
+    "SHP-A-04"
+  ],
+  "items": [
+    "shp.rect.blue",
+    "shp.square.orange",
+    "shp.rect.green"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 9,
+  "celebration": {
+    "vo": "vo:celebrate.rectangle_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הִבְדַּלְתֶּם בֵּין מַלְבֵּן לְרִבּוּעַ."
+      }
+    ]
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "schema": "activity/v1",
+  "id": "math.take.ducks",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "A",
+  "skills": [
+    {
+      "id": "MATH-A-02",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "mtake",
+  "difficulty": {
+    "authored": 0.25
+  },
+  "prompt": {
+    "vo": "vo:math.take.ducks.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יֵשׁ אַרְבָּעָה בַּרְוָזִים. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:duck",
+      "count": 4,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      },
+      {
+        "id": "o2",
+        "numeral": 3,
+        "label": "שָׁלוֹשׁ"
+      },
+      {
+        "id": "o3",
+        "numeral": 4,
+        "label": "אַרְבַּע"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:math.take.ducks.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁלוֹשׁ! אַרְבָּעָה פָּחוֹת אֶחָד."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:math.take.ducks.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבָּעָה פָּחוֹת אֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "יֵשׁ אַרְבָּעָה בַּרְוָזִים. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?"
+  }
+}

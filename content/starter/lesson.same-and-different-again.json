@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "same-and-different-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד זֶהֶה וְשׁוֹנֶה"
+    }
+  ],
+  "skills": [
+    "LOG-A-01",
+    "LOG-A-02"
+  ],
+  "items": [
+    "log.same.apple",
+    "log.same.bird",
+    "log.same.balloon",
+    "log.odd.ball",
+    "log.odd.fruit",
+    "log.odd.bird"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 9,
+  "celebration": {
+    "vo": "vo:celebrate.same_and_different_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה."
+      }
+    ]
+  }
+}

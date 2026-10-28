@@ -1,0 +1,149 @@
+{
+  "schema": "activity/v1",
+  "id": "log.size.apples.last",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "size3",
+  "difficulty": {
+    "authored": 0.35
+  },
+  "prompt": {
+    "vo": "vo:log.size.apples.last.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה בָּא בַּסּוֹף?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "asset:apple_size_l",
+      "asset:apple_size_m",
+      "?"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:apple_size_l",
+        "label": "תַּפּוּחַ גָּדוֹל"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:apple_size_s",
+        "label": "תַּפּוּחַ קָטָן"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:apple_size_m",
+        "label": "תַּפּוּחַ בֵּינוֹנִי"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:log.size.apples.last.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! גָּדוֹל, בֵּינוֹנִי, קָטָן."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:log.size.apples.last.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "גָּדוֹל, בֵּינוֹנִי, קָטָן — בַּסּוֹף בָּא קָטָן. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מָה בָּא בַּסּוֹף?"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "take-one-away-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד אֶחָד הָלַךְ"
+    }
+  ],
+  "skills": [
+    "MATH-A-02"
+  ],
+  "items": [
+    "math.take.apples2",
+    "math.take.ducks",
+    "math.take.fish2"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 9,
+  "celebration": {
+    "vo": "vo:celebrate.take_one_away_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! יְדַעְתֶּם כַּמָּה נִשְׁאֲרוּ."
+      }
+    ]
+  }
+}

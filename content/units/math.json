@@ -23,7 +23,11 @@
     "cat",
     "cat_lit",
     "dog",
-    "dog_lit"
+    "dog_lit",
+    "ladybug",
+    "ladybug_lit",
+    "bird",
+    "bird_lit"
   ],
   "things": {
     "ball": [
@@ -59,6 +63,16 @@
       "g": "m",
       "one": "מַטְבֵּעַ",
       "many": "מַטְבְּעוֹת"
+    },
+    "ladybug": {
+      "g": "f",
+      "one": "חִפּוּשִׁית",
+      "many": "חִפּוּשִׁיּוֹת"
+    },
+    "bird": {
+      "g": "f",
+      "one": "צִפּוֹר",
+      "many": "צִפֳּרִים"
     }
   },
   "names": {
@@ -662,6 +676,173 @@
       ],
       "prompt": "מְחַלְּקִים שְׁנֵי דָּגִים בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר.",
       "difficulty": 0.2
+    },
+    {
+      "kind": "madd",
+      "id": "math.add.fish2",
+      "skill": "MATH-A-01",
+      "obj": "fish",
+      "a": 1,
+      "b": 2,
+      "difficulty": 0.2
+    },
+    {
+      "kind": "madd",
+      "id": "math.add.stars2",
+      "skill": "MATH-A-01",
+      "obj": "star",
+      "a": 4,
+      "b": 1,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "mtake",
+      "id": "math.take.apples2",
+      "skill": "MATH-A-02",
+      "obj": "apple",
+      "n": 3,
+      "difficulty": 0.2
+    },
+    {
+      "kind": "mtake",
+      "id": "math.take.fish2",
+      "skill": "MATH-A-02",
+      "obj": "fish",
+      "n": 5,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "mtake",
+      "id": "math.take.ducks",
+      "skill": "MATH-A-02",
+      "obj": "duck",
+      "n": 4,
+      "difficulty": 0.25
+    },
+    {
+      "kind": "share",
+      "id": "math.share.ducks",
+      "skill": "MATH-A-03",
+      "sprite": "duck",
+      "n": 4,
+      "friends": [
+        "cat",
+        "dog"
+      ],
+      "difficulty": 0.3
+    },
+    {
+      "kind": "share",
+      "id": "math.share.ladybugs",
+      "skill": "MATH-A-03",
+      "sprite": "ladybug",
+      "n": 6,
+      "friends": [
+        "cat",
+        "dog"
+      ],
+      "difficulty": 0.4
+    },
+    {
+      "kind": "share",
+      "id": "math.share.birds",
+      "skill": "MATH-A-03",
+      "sprite": "bird",
+      "n": 2,
+      "friends": [
+        "cat",
+        "dog"
+      ],
+      "difficulty": 0.2
+    },
+    {
+      "kind": "pick",
+      "id": "math.time.before",
+      "skill": "MATH-A-05",
+      "prompt": "מָה בָּא לִפְנֵי הָעֶרֶב?",
+      "options": [
+        "time_night",
+        "time_noon",
+        "time_evening"
+      ],
+      "correct": "time_noon",
+      "difficulty": 0.4,
+      "rep": "story",
+      "correct_text": "כֵּן! לִפְנֵי הָעֶרֶב בָּאִים הַצָּהֳרַיִם.",
+      "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב. עַכְשָׁו תּוֹרְכֶם."
+    },
+    {
+      "kind": "shop",
+      "id": "math.shop.ducks",
+      "skill": "MATH-A-06",
+      "item": "duck",
+      "n": 3,
+      "source": 6,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "shop",
+      "id": "math.shop.fish2",
+      "skill": "MATH-A-06",
+      "item": "fish",
+      "n": 4,
+      "source": 8,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "shop",
+      "id": "math.shop.apples2",
+      "skill": "MATH-A-06",
+      "item": "apple",
+      "n": 2,
+      "source": 5,
+      "difficulty": 0.25
+    },
+    {
+      "kind": "compare_more",
+      "id": "math.graph.ducks",
+      "skill": "MATH-A-07",
+      "obj": "duck",
+      "options": [
+        2,
+        5
+      ],
+      "big": 5,
+      "small": 2,
+      "trap": false,
+      "difficulty": 0.25,
+      "domain": "math"
+    },
+    {
+      "kind": "compare_more",
+      "id": "math.graph.stars2",
+      "skill": "MATH-A-07",
+      "obj": "star",
+      "options": [
+        4,
+        1
+      ],
+      "big": 4,
+      "small": 1,
+      "trap": false,
+      "difficulty": 0.3,
+      "domain": "math"
+    },
+    {
+      "kind": "compare_more",
+      "id": "math.graph.apples2",
+      "skill": "MATH-A-07",
+      "obj": "apple",
+      "options": [
+        5,
+        3
+      ],
+      "big": 5,
+      "small": 3,
+      "ask": "fewer",
+      "trap": false,
+      "difficulty": 0.35,
+      "domain": "math"
     }
   ],
   "firstSequence": 1,
@@ -723,7 +904,8 @@
         "math.time.morning",
         "math.time.noon",
         "math.time.evening",
-        "math.time.after"
+        "math.time.after",
+        "math.time.before"
       ],
       "minutes": 4,
       "done": "וַאוּ! הִכַּרְתֶּם אֶת הַיּוֹם: בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה."
@@ -769,6 +951,75 @@
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בְּהֲגִינוּת."
+    },
+    {
+      "id": "add-one-more-again",
+      "title": "עוֹד מוֹסִיפִים",
+      "skills": [
+        "MATH-A-01"
+      ],
+      "items": [
+        "math.add.fish2",
+        "math.add.stars2"
+      ],
+      "minutes": 3,
+      "done": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וְסְפַרְתֶּם."
+    },
+    {
+      "id": "take-one-away-again",
+      "title": "עוֹד אֶחָד הָלַךְ",
+      "skills": [
+        "MATH-A-02"
+      ],
+      "items": [
+        "math.take.apples2",
+        "math.take.ducks",
+        "math.take.fish2"
+      ],
+      "minutes": 3,
+      "done": "יָפֶה מְאֹד! יְדַעְתֶּם כַּמָּה נִשְׁאֲרוּ."
+    },
+    {
+      "id": "sharing-again",
+      "title": "עוֹד מְחַלְּקִים",
+      "skills": [
+        "MATH-A-03"
+      ],
+      "items": [
+        "math.share.birds",
+        "math.share.ducks",
+        "math.share.ladybugs"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בְּהֲגִינוּת."
+    },
+    {
+      "id": "the-shop-again",
+      "title": "עוֹד בַּחֲנוּת",
+      "skills": [
+        "MATH-A-06"
+      ],
+      "items": [
+        "math.shop.apples2",
+        "math.shop.ducks",
+        "math.shop.fish2"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם מַטְבֵּעַ אֶחָד לְכׇל דָּבָר."
+    },
+    {
+      "id": "picture-graph-again",
+      "title": "עוֹד אֵיפֹה יוֹתֵר?",
+      "skills": [
+        "MATH-A-07"
+      ],
+      "items": [
+        "math.graph.ducks",
+        "math.graph.stars2",
+        "math.graph.apples2"
+      ],
+      "minutes": 3,
+      "done": "יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."
     }
   ]
 }

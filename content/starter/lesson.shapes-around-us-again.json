@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "shapes-around-us-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צוּרוֹת סְבִיבֵנוּ"
+    }
+  ],
+  "skills": [
+    "SHP-A-05",
+    "SHP-A-10"
+  ],
+  "items": [
+    "shp.world.plate.shape",
+    "shp.world.window.shape",
+    "shp.world.sign.shape",
+    "shp.line.straight2",
+    "shp.line.curved2",
+    "shp.line.straight3",
+    "shp.line.curved3"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 10,
+  "celebration": {
+    "vo": "vo:celebrate.shapes_around_us_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! מְצָאתֶם צוּרוֹת וְקַוִּים."
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "stories-and-pairs-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סִפּוּרִים וְזוּגוֹת"
+    }
+  ],
+  "skills": [
+    "LOG-A-08",
+    "LOG-A-09"
+  ],
+  "items": [
+    "log.story.weather.last",
+    "log.story.egg.first",
+    "log.story.plant.mid",
+    "log.pair.bowl",
+    "log.pair.pencil",
+    "log.pair.shoe"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 12,
+  "celebration": {
+    "vo": "vo:celebrate.stories_and_pairs_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה קוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד."
+      }
+    ]
+  }
+}

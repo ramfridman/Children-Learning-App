@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "picture-graph-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד אֵיפֹה יוֹתֵר?"
+    }
+  ],
+  "skills": [
+    "MATH-A-07"
+  ],
+  "items": [
+    "math.graph.ducks",
+    "math.graph.stars2",
+    "math.graph.apples2"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 12,
+  "celebration": {
+    "vo": "vo:celebrate.picture_graph_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."
+      }
+    ]
+  }
+}

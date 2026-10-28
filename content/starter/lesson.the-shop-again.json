@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "the-shop-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד בַּחֲנוּת"
+    }
+  ],
+  "skills": [
+    "MATH-A-06"
+  ],
+  "items": [
+    "math.shop.apples2",
+    "math.shop.ducks",
+    "math.shop.fish2"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 11,
+  "celebration": {
+    "vo": "vo:celebrate.the_shop_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם מַטְבֵּעַ אֶחָד לְכׇל דָּבָר."
+      }
+    ]
+  }
+}

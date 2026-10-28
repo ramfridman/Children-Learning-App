@@ -16,11 +16,11 @@ const String _vectors = '../testvectors/publish-starter.json';
 
 void main() {
   late Map<String, Object?> starter;
-  setUpAll(() async => starter = indexOf(await _load('assets/packs/starter-0.5.1.nnpack')));
+  setUpAll(() async => starter = indexOf(await _load('assets/packs/starter-0.6.0.nnpack')));
 
   test('the starter pack gives its activities and misconceptions, with the facts the prompt needs', () {
     final List<Object?> items = starter['items']! as List<Object?>;
-    expect(items.length, 184);
+    expect(items.length, 306);
     expect((starter['misconceptions']! as List<Object?>).length, 22);
     final Map<String, Object?> count = items.cast<Map<String, Object?>>().firstWhere(
       (Map<String, Object?> i) => i['item_id'] == 'count.butterflies.3',

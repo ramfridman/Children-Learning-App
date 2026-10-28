@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "where-is-it-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד אֵיפֹה זֶה?"
+    }
+  ],
+  "skills": [
+    "SHP-A-08"
+  ],
+  "items": [
+    "shp.where.above",
+    "shp.where.in2"
+  ],
+  "estimatedMinutes": 2,
+  "sequence": 12,
+  "celebration": {
+    "vo": "vo:celebrate.where_is_it_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כֻּל דָּבָר."
+      }
+    ]
+  }
+}

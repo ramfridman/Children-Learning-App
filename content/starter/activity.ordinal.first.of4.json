@@ -1,0 +1,160 @@
+{
+  "schema": "activity/v1",
+  "id": "ordinal.first.of4",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-13",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "ordinal",
+  "difficulty": {
+    "authored": 0.3
+  },
+  "prompt": {
+    "vo": "vo:ordinal.first.of4.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מִי רִאשׁוֹן בַּתּוֹר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:dog",
+        "label": "כֶּלֶב"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:cat",
+        "label": "חָתוּל"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:duck",
+        "label": "בַּרְוָז"
+      },
+      {
+        "id": "o4",
+        "sprite": "asset:fish",
+        "label": "דָּג",
+        "misconception": "M-ORD-CARD"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:ordinal.first.of4.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! זֶה הָרִאשׁוֹן בַּתּוֹר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-ORD-CARD",
+        "vo": "vo:fb.ord",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:ordinal.first.of4.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:ordinal.first.of4.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: רִאשׁוֹן."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:ordinal.first.of4.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֶה הָרִאשׁוֹן בַּתּוֹר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the place in the line, not how many there are",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מִי רִאשׁוֹן בַּתּוֹר?"
+  }
+}

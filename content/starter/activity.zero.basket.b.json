@@ -1,0 +1,160 @@
+{
+  "schema": "activity/v1",
+  "id": "zero.basket.b",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-14",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "zero",
+  "difficulty": {
+    "authored": 0.35
+  },
+  "prompt": {
+    "vo": "vo:zero.basket.b.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה תַּפּוּחִים בַּסַּל?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:basket_empty",
+    "group": {
+      "sprite": "asset:apple",
+      "count": 0,
+      "arrangement": "line",
+      "seed": 2
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 0,
+        "label": "אֶפֶס"
+      },
+      {
+        "id": "o2",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      },
+      {
+        "id": "o3",
+        "numeral": 1,
+        "label": "אַחַת",
+        "misconception": "M-NUM-ZERO"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:zero.basket.b.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֶפֶס! אֵין אַף תַּפּוּחַ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-NUM-ZERO",
+        "vo": "vo:fb.zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:zero.basket.b.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:zero.basket.b.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אֵין כְּלוּם לִסְפֹּר."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:zero.basket.b.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֵין אַף תַּפּוּחַ. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child knows that nothing there is the number zero",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה תַּפּוּחִים בַּסַּל?"
+  }
+}

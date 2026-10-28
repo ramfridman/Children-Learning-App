@@ -13,7 +13,17 @@
     "key",
     "lock",
     "brush",
-    "paste"
+    "paste",
+    "star_size_*",
+    "apple_size_*",
+    "fish_size_*",
+    "cloud",
+    "rain",
+    "rainbow",
+    "bowl",
+    "spoon",
+    "pencil",
+    "paper"
   ],
   "assets": [
     "cat",
@@ -112,27 +122,33 @@
     },
     "sock": {
       "one": "גֶּרֶב",
-      "g": "f"
+      "g": "f",
+      "def": "הַגֶּרֶב"
     },
     "shoe": {
       "one": "נַעַל",
-      "g": "f"
+      "g": "f",
+      "def": "הַנַּעַל"
     },
     "key": {
       "one": "מַפְתֵּחַ",
-      "g": "m"
+      "g": "m",
+      "def": "הַמַּפְתֵּחַ"
     },
     "lock": {
       "one": "מַנְעוּל",
-      "g": "m"
+      "g": "m",
+      "def": "הַמַּנְעוּל"
     },
     "brush": {
       "one": "מִבְרֶשֶׁת",
-      "g": "f"
+      "g": "f",
+      "def": "הַמִּבְרֶשֶׁת"
     },
     "paste": {
       "one": "מִשְׁחָה",
-      "g": "f"
+      "g": "f",
+      "def": "הַמִּשְׁחָה"
     },
     "ball_size_s": {
       "one": "כַּדּוּר קָטָן",
@@ -144,6 +160,74 @@
     },
     "ball_size_l": {
       "one": "כַּדּוּר גָּדוֹל",
+      "g": "m"
+    },
+    "cloud": {
+      "one": "עָנָן",
+      "g": "m"
+    },
+    "rain": {
+      "one": "גֶּשֶׁם",
+      "g": "m"
+    },
+    "rainbow": {
+      "one": "קֶשֶׁת",
+      "g": "f"
+    },
+    "bowl": {
+      "one": "קְעָרָה",
+      "g": "f",
+      "def": "הַקְּעָרָה"
+    },
+    "spoon": {
+      "one": "כַּף",
+      "g": "f",
+      "def": "הַכַּף"
+    },
+    "pencil": {
+      "one": "עִפָּרוֹן",
+      "g": "m",
+      "def": "הָעִפָּרוֹן"
+    },
+    "paper": {
+      "one": "דַּף",
+      "g": "m",
+      "def": "הַדַּף"
+    },
+    "star_size_s": {
+      "one": "כּוֹכָב קָטָן",
+      "g": "m"
+    },
+    "star_size_m": {
+      "one": "כּוֹכָב בֵּינוֹנִי",
+      "g": "m"
+    },
+    "star_size_l": {
+      "one": "כּוֹכָב גָּדוֹל",
+      "g": "m"
+    },
+    "apple_size_s": {
+      "one": "תַּפּוּחַ קָטָן",
+      "g": "m"
+    },
+    "apple_size_m": {
+      "one": "תַּפּוּחַ בֵּינוֹנִי",
+      "g": "m"
+    },
+    "apple_size_l": {
+      "one": "תַּפּוּחַ גָּדוֹל",
+      "g": "m"
+    },
+    "fish_size_s": {
+      "one": "דָּג קָטָן",
+      "g": "m"
+    },
+    "fish_size_m": {
+      "one": "דָּג בֵּינוֹנִי",
+      "g": "m"
+    },
+    "fish_size_l": {
+      "one": "דָּג גָּדוֹל",
       "g": "m"
     }
   },
@@ -1147,6 +1231,259 @@
       ],
       "difficulty": 0.35,
       "h3": "צָהֹב, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+    },
+    {
+      "kind": "same",
+      "id": "log.same.apple",
+      "skill": "LOG-A-01",
+      "ref": "apple",
+      "others": [
+        "fish",
+        "star"
+      ],
+      "pos": 2,
+      "difficulty": 0.1
+    },
+    {
+      "kind": "same",
+      "id": "log.same.bird",
+      "skill": "LOG-A-01",
+      "ref": "bird",
+      "others": [
+        "duck",
+        "dog"
+      ],
+      "pos": 0,
+      "difficulty": 0.15
+    },
+    {
+      "kind": "same",
+      "id": "log.same.balloon",
+      "skill": "LOG-A-01",
+      "ref": "balloon_red",
+      "others": [
+        "balloon_blue",
+        "ball_red"
+      ],
+      "pos": 1,
+      "difficulty": 0.2
+    },
+    {
+      "kind": "odd",
+      "id": "log.odd.ball",
+      "skill": "LOG-A-02",
+      "a": "ball_red",
+      "b": "balloon_red",
+      "at": 0,
+      "difficulty": 0.25
+    },
+    {
+      "kind": "odd",
+      "id": "log.odd.fruit",
+      "skill": "LOG-A-02",
+      "a": "star",
+      "b": "apple",
+      "at": 3,
+      "difficulty": 0.2
+    },
+    {
+      "kind": "odd",
+      "id": "log.odd.bird",
+      "skill": "LOG-A-02",
+      "a": "duck",
+      "b": "bird",
+      "at": 1,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pat",
+      "id": "log.pat.yes.green",
+      "skill": "LOG-A-04",
+      "mode": "yes",
+      "a": "ball_green",
+      "b": "ball_yellow",
+      "difficulty": 0.2
+    },
+    {
+      "kind": "pat",
+      "id": "log.pat.no.things",
+      "skill": "LOG-A-04",
+      "mode": "no",
+      "a": "star",
+      "b": "apple",
+      "c": "fish",
+      "d": "cat",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pat",
+      "id": "log.pat.yes.fish",
+      "skill": "LOG-A-04",
+      "mode": "yes",
+      "a": "fish",
+      "b": "bird",
+      "difficulty": 0.25
+    },
+    {
+      "kind": "pat",
+      "id": "log.next.pets",
+      "skill": "LOG-A-06",
+      "mode": "next",
+      "a": "duck",
+      "b": "cat",
+      "c": "dog",
+      "pos": 0,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pat",
+      "id": "log.next.balls",
+      "skill": "LOG-A-06",
+      "mode": "next",
+      "a": "ball_green",
+      "b": "ball_red",
+      "c": "ball_blue",
+      "pos": 2,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "pat",
+      "id": "log.fix.balls",
+      "skill": "LOG-A-07",
+      "mode": "fix",
+      "a": "ball_yellow",
+      "b": "ball_blue",
+      "c": "ball_green",
+      "pos": 0,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pat",
+      "id": "log.fix.things",
+      "skill": "LOG-A-07",
+      "mode": "fix",
+      "a": "star",
+      "b": "fish",
+      "c": "apple",
+      "pos": 2,
+      "difficulty": 0.45
+    },
+    {
+      "kind": "pat",
+      "id": "log.fix.pets",
+      "skill": "LOG-A-07",
+      "mode": "fix",
+      "a": "dog",
+      "b": "cat",
+      "c": "duck",
+      "pos": 1,
+      "difficulty": 0.45
+    },
+    {
+      "kind": "story",
+      "id": "log.story.weather.last",
+      "skill": "LOG-A-08",
+      "steps": [
+        "cloud",
+        "rain",
+        "rainbow"
+      ],
+      "ask": "last",
+      "pos": 0,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "story",
+      "id": "log.story.egg.first",
+      "skill": "LOG-A-08",
+      "steps": [
+        "egg",
+        "egg_crack",
+        "chick"
+      ],
+      "ask": "first",
+      "pos": 2,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "story",
+      "id": "log.story.plant.mid",
+      "skill": "LOG-A-08",
+      "steps": [
+        "plant_seed",
+        "plant_sprout",
+        "plant_flower"
+      ],
+      "ask": "mid",
+      "pos": 1,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pair",
+      "id": "log.pair.bowl",
+      "skill": "LOG-A-09",
+      "ref": "bowl",
+      "partner": "spoon",
+      "others": [
+        "key",
+        "sock"
+      ],
+      "pos": 1,
+      "difficulty": 0.2
+    },
+    {
+      "kind": "pair",
+      "id": "log.pair.pencil",
+      "skill": "LOG-A-09",
+      "ref": "pencil",
+      "partner": "paper",
+      "others": [
+        "lock",
+        "shoe"
+      ],
+      "pos": 2,
+      "difficulty": 0.25
+    },
+    {
+      "kind": "pair",
+      "id": "log.pair.shoe",
+      "skill": "LOG-A-09",
+      "ref": "shoe",
+      "partner": "sock",
+      "others": [
+        "paste",
+        "bowl"
+      ],
+      "pos": 0,
+      "difficulty": 0.2
+    },
+    {
+      "kind": "size3",
+      "id": "log.size.stars",
+      "skill": "LOG-A-10",
+      "thing": "star",
+      "ask": "middle",
+      "pos": 2,
+      "difficulty": 0.3
+    },
+    {
+      "kind": "size3",
+      "id": "log.size.apples.last",
+      "skill": "LOG-A-10",
+      "thing": "apple",
+      "ask": "last",
+      "dir": "down",
+      "pos": 1,
+      "difficulty": 0.35
+    },
+    {
+      "kind": "size3",
+      "id": "log.size.fish.first",
+      "skill": "LOG-A-10",
+      "thing": "fish",
+      "ask": "first",
+      "pos": 0,
+      "difficulty": 0.35
     }
   ],
   "firstSequence": 1,
@@ -1276,6 +1613,87 @@
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."
+    },
+    {
+      "id": "same-and-different-again",
+      "title": "עוֹד זֶהֶה וְשׁוֹנֶה",
+      "skills": [
+        "LOG-A-01",
+        "LOG-A-02"
+      ],
+      "items": [
+        "log.same.apple",
+        "log.same.bird",
+        "log.same.balloon",
+        "log.odd.ball",
+        "log.odd.fruit",
+        "log.odd.bird"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה."
+    },
+    {
+      "id": "patterns-again",
+      "title": "עוֹד סְדָרִים",
+      "skills": [
+        "LOG-A-04",
+        "LOG-A-06"
+      ],
+      "items": [
+        "log.pat.yes.green",
+        "log.pat.no.things",
+        "log.pat.yes.fish",
+        "log.next.pets",
+        "log.next.balls"
+      ],
+      "minutes": 4,
+      "done": "וַאוּ! הִמְשַׁכְתֶּם אֶת הַסֵּדֶר."
+    },
+    {
+      "id": "fix-patterns-again",
+      "title": "עוֹד מְתַקְּנִים סֵדֶר",
+      "skills": [
+        "LOG-A-07"
+      ],
+      "items": [
+        "log.fix.balls",
+        "log.fix.things",
+        "log.fix.pets"
+      ],
+      "minutes": 3,
+      "done": "חֲכָמִים! תִּקַּנְתֶּם אֶת הַסֵּדֶר."
+    },
+    {
+      "id": "stories-and-pairs-again",
+      "title": "עוֹד סִפּוּרִים וְזוּגוֹת",
+      "skills": [
+        "LOG-A-08",
+        "LOG-A-09"
+      ],
+      "items": [
+        "log.story.weather.last",
+        "log.story.egg.first",
+        "log.story.plant.mid",
+        "log.pair.bowl",
+        "log.pair.pencil",
+        "log.pair.shoe"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה קוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד."
+    },
+    {
+      "id": "by-size-again",
+      "title": "עוֹד מְסַדְּרִים לְפִי גֹּדֶל",
+      "skills": [
+        "LOG-A-10"
+      ],
+      "items": [
+        "log.size.stars",
+        "log.size.apples.last",
+        "log.size.fish.first"
+      ],
+      "minutes": 3,
+      "done": "יָפֶה מְאֹד! סִדַּרְתֶּם לְפִי גֹּדֶל."
     }
   ]
 }

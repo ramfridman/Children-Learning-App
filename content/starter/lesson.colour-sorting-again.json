@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "colour-sorting-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מְמַיְּנִים לְפִי צֶבַע"
+    }
+  ],
+  "skills": [
+    "COL-A-04",
+    "COL-A-07"
+  ],
+  "items": [
+    "col.sort.yellow",
+    "col.sort.orange",
+    "col.sort.pink",
+    "col.find.red.ball",
+    "col.find.yellow.balloon"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 8,
+  "celebration": {
+    "vo": "vo:celebrate.colour_sorting_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר."
+      }
+    ]
+  }
+}

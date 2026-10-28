@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "fix-patterns-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מְתַקְּנִים סֵדֶר"
+    }
+  ],
+  "skills": [
+    "LOG-A-07"
+  ],
+  "items": [
+    "log.fix.balls",
+    "log.fix.things",
+    "log.fix.pets"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 11,
+  "celebration": {
+    "vo": "vo:celebrate.fix_patterns_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! תִּקַּנְתֶּם אֶת הַסֵּדֶר."
+      }
+    ]
+  }
+}

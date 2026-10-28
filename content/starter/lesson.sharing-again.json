@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "sharing-again",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מְחַלְּקִים"
+    }
+  ],
+  "skills": [
+    "MATH-A-03"
+  ],
+  "items": [
+    "math.share.birds",
+    "math.share.ducks",
+    "math.share.ladybugs"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 10,
+  "celebration": {
+    "vo": "vo:celebrate.sharing_again",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בְּהֲגִינוּת."
+      }
+    ]
+  }
+}

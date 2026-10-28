@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-giving",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד נוֹתְנִים בְּדִיּוּק"
+    }
+  ],
+  "skills": [
+    "NUM-A-06"
+  ],
+  "items": [
+    "give.cats.2",
+    "give.ducks.3",
+    "give.dogs.4"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 16,
+  "celebration": {
+    "vo": "vo:celebrate.more_giving",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ."
+      }
+    ]
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "schema": "activity/v1",
+  "id": "math.shop.apples2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "give_n",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "A",
+  "skills": [
+    {
+      "id": "MATH-A-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "reverse",
+  "representation": "concrete",
+  "variantGroup": "shop",
+  "difficulty": {
+    "authored": 0.25
+  },
+  "prompt": {
+    "vo": "vo:math.shop.apples2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד. קוֹנִים שְׁנֵי תַּפּוּחִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "source": {
+      "sprite": "asset:coin",
+      "count": 5
+    },
+    "target": {
+      "sprite": "asset:basket_target"
+    }
+  },
+  "answer": {
+    "type": "give",
+    "n": 2,
+    "classifiers": [
+      {
+        "when": "took_all",
+        "misconception": "M-CNT-CARD"
+      }
+    ]
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:math.shop.apples2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתַּיִם! מַטְבֵּעַ אֶחָד לְכׇל תַּפּוּחַ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. הַפֶּרַח רוֹצֶה רַק אַרְבָּעָה — בּוֹאוּ נִסְפֹּר אוֹתָם."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:math.shop.apples2.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תְּנוּ לִי שְׁנֵי מַטְבְּעוֹת. סוֹפְרִים תוֹךְ כְּדֵי שֶׁלּוֹקְחִים."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:math.shop.apples2.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:math.shop.apples2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת, שְׁתַּיִם. עֲצְרוּ כְּשֶׁהִגַּעְנוּ אֶל שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child gives exactly the number asked for, not the whole pile",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד. קוֹנִים שְׁנֵי תַּפּוּחִים."
+  },
+  "contradicts": "M-CNT-CARD"
+}
