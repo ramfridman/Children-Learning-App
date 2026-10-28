@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
   "pack_version": "0.5.0",
-  "manifest_sha256": "da4710fef2f284fc1ac0a7d0b2657993f329ddabb698de00dcc6b0f65dac4f53",
+  "manifest_sha256": "f34c54b6f1263af39a24389e6eb0cb20981d7c0a348ec847e850cd5abc868aa4",
   "items": [
     {
       "item_id": "col.find.blue.ball",
@@ -1662,6 +1662,192 @@
         "obj-6",
         "obj-7"
       ]
+    },
+    {
+      "item_id": "cs.robot.direct.1",
+      "revision": 1,
+      "template": "robot_path",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child moves the robot to the flag, counting each square once",
+      "prompt_text": "מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CS-OFF1",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "cs.robot.direct.2",
+      "revision": 1,
+      "template": "robot_path",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child moves the robot to the flag, counting each square once",
+      "prompt_text": "מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CS-OFF1",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "cs.robot.direct.3",
+      "revision": 1,
+      "template": "robot_path",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child moves the robot to the flag, counting each square once",
+      "prompt_text": "הָרוֹבּוֹט צָרִיךְ לַחֲזֹר אֶל הַדֶּגֶל.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CS-OFF1",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "cs.robot.plan.1",
+      "revision": 1,
+      "template": "robot_path",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child moves the robot to the flag, counting each square once",
+      "prompt_text": "מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CS-OFF1",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "cs.robot.plan.2",
+      "revision": 1,
+      "template": "robot_path",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child moves the robot to the flag, counting each square once",
+      "prompt_text": "מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CS-OFF1",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "cs.robot.plan.3",
+      "revision": 1,
+      "template": "robot_path",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child moves the robot to the flag, counting each square once",
+      "prompt_text": "מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CS-OFF1",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
     },
     {
       "item_id": "cs.routine.teeth.first",
@@ -7812,6 +7998,13 @@
         "COL-A-07"
       ],
       "description": "הילד שם לב רק לצבע או רק לסוג הדבר, ולא לשניהם יחד."
+    },
+    {
+      "tag": "M-CS-OFF1",
+      "skill_ids": [
+        "CS-A-04"
+      ],
+      "description": "הילד מתכנן מסלול שמסתיים משבצת אחת לפני היעד או אחריו, כי ספר גם את משבצת ההתחלה או פספס צעד."
     },
     {
       "tag": "M-NUM-ZERO",

@@ -33,7 +33,8 @@
         "give_n",
         "flash",
         "sort_drag",
-        "build_pattern"
+        "build_pattern",
+        "robot_path"
       ]
     },
     "templateVersion": {

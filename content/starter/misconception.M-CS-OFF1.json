@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CS-OFF1",
+  "review": "needs-editor",
+  "skills": [
+    "CS-A-04"
+  ],
+  "parentText": "הילד מתכנן מסלול שמסתיים משבצת אחת לפני היעד או אחריו, כי ספר גם את משבצת ההתחלה או פספס צעד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לצייר על הרצפה או על דף שורה של משבצות, להניח בובה בהתחלה ולבקש מהילד לתכנן כמה צעדים עד למשבצת ההיא. לקפוץ יחד, צעד אחד בכל פעם, ולספור."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "concrete"
+  ]
+}

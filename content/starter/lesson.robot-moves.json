@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "robot-moves",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְזִיזִים אֶת הָרוֹבּוֹט"
+    }
+  ],
+  "skills": [
+    "CS-A-03"
+  ],
+  "items": [
+    "cs.robot.direct.1",
+    "cs.robot.direct.2",
+    "cs.robot.direct.3"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 2,
+  "celebration": {
+    "vo": "vo:celebrate.robot_moves",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הַרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל."
+      }
+    ]
+  }
+}

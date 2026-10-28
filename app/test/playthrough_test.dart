@@ -7,6 +7,7 @@ import 'package:nitznutz/play/count_tap_session.dart';
 import 'package:nitznutz/play/flash_session.dart';
 import 'package:nitznutz/play/give_n_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
+import 'package:nitznutz/play/robot_path_session.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
 import 'package:nitznutz/play/tap_answer_session.dart';
 import 'package:nitznutz/play/template_session.dart';
@@ -65,6 +66,9 @@ void main() {
     BuildPatternActivity() => <Future<Outcome> Function(LessonController)>[
       (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
     ],
+    RobotPathActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+    ],
     GiveNActivity() => <Future<Outcome> Function(LessonController)>[
       for (final int n in <int>{
         if (a.n > 1) a.n - 1,
@@ -84,6 +88,7 @@ void main() {
       GiveNActivity() => c.giveN(a.n),
       SortDragActivity() => c.submitPlacement(right: true),
       BuildPatternActivity() => c.submitPlacement(right: true),
+      RobotPathActivity() => c.submitPlacement(right: true),
     };
   }
 
@@ -160,7 +165,15 @@ void main() {
     expect(activitiesPlayed, greaterThanOrEqualTo(content.activities.length - 1));
     expect(
       reachedTemplates,
-      containsAll(<String>['tap_answer', 'count_tap', 'give_n', 'flash', 'sort_drag', 'build_pattern']),
+      containsAll(<String>[
+        'tap_answer',
+        'count_tap',
+        'give_n',
+        'flash',
+        'sort_drag',
+        'build_pattern',
+        'robot_path',
+      ]),
     );
     // Every misconception a wrong answer can carry was produced by some wrong move, and has a line of its own.
     final Set<String> authored = <String>{
@@ -216,6 +229,7 @@ void main() {
               GiveNActivity() => GiveNSession(c, a),
               SortDragActivity() => SortDragSession(c, a),
               BuildPatternActivity() => BuildPatternSession(c, a),
+              RobotPathActivity() => RobotPathSession(c, a),
             };
             await tester.pumpWidget(
               MaterialApp(

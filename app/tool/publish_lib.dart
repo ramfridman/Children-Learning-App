@@ -39,7 +39,7 @@ Map<String, Object?> itemOf(Map<String, Object?> a) {
   final Set<int> numbers = <int>{};
   final List<String> objects = <String>[];
 
-  if (answer['type'] == 'sort' || answer['type'] == 'build') {
+  if (answer['type'] == 'sort' || answer['type'] == 'build' || answer['type'] == 'path') {
     // A drag template: the whole move is one right answer, and the way of going wrong is a class with its misconception.
     answers.add(<String, Object?>{'id': 'done', 'correct': true});
     if (answer['misconception'] is String) {

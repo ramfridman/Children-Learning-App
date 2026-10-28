@@ -300,6 +300,19 @@
       [
         "Deal the pictures one for each friend in turn together with the child, and then count what each has."
       ]
+    ],
+    "M-CS-OFF1": [
+      [
+        "Invite the child to count the squares the robot has to cross, not counting the one it starts on.",
+        "Say that each step moves the robot to the next square, and invite following the way with a finger."
+      ],
+      [
+        "Suggest hopping along the squares with a finger, one hop for each step, and counting the hops.",
+        "Suggest comparing the number of steps with the number of squares between the robot and the flag."
+      ],
+      [
+        "Count the squares aloud together, starting with the first square after the robot, and point at the flag."
+      ]
     ]
   }
 }

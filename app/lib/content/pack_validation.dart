@@ -302,6 +302,43 @@ List<Problem> validatePack({
         if (!_maps(answer['options']).any((Map<String, Object?> o) => o['misconception'] != null)) {
           say(file, 'answer.options', 'at least one wrong answer must name the misconception it shows');
         }
+      case 'robot_path':
+        checkAsset(file, 'scene.background', scene['background']);
+        checkAsset(file, 'scene.robotSprite', scene['robotSprite']);
+        checkAsset(file, 'scene.goalSprite', scene['goalSprite']);
+        final int cols = scene['cols']! as int;
+        final int rows = scene['rows']! as int;
+        final Map<String, Object?> robot = scene['robot']! as Map<String, Object?>;
+        final Map<String, Object?> goal = scene['goal']! as Map<String, Object?>;
+        bool inside(int c, int r) => c >= 0 && c < cols && r >= 0 && r < rows;
+        if (!inside(robot['col']! as int, robot['row']! as int)) {
+          say(file, 'scene.robot', 'is outside the grid');
+        }
+        if (!inside(goal['col']! as int, goal['row']! as int)) say(file, 'scene.goal', 'is outside the grid');
+        int c = robot['col']! as int;
+        int r = robot['row']! as int;
+        final List<Object?> way = answer['solution']! as List<Object?>;
+        for (final Object? step in way) {
+          switch (step) {
+            case 'up':
+              r--;
+            case 'down':
+              r++;
+            case 'left':
+              c--;
+            case 'right':
+              c++;
+          }
+          if (!inside(c, r)) {
+            say(file, 'answer.solution', 'walks the robot off the grid');
+            break;
+          }
+        }
+        if (c != goal['col'] || r != goal['row']) say(file, 'answer.solution', 'does not end at the flag');
+        if (way.length > (answer['maxSteps']! as int)) {
+          say(file, 'answer.solution', 'is longer than maxSteps');
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
       case 'sort_drag':
         checkAsset(file, 'scene.background', scene['background']);
         final List<Map<String, Object?>> bins = _maps(scene['bins']);

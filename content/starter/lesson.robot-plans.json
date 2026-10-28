@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "robot-plans",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְתַכְנְנִים לָרוֹבּוֹט"
+    }
+  ],
+  "skills": [
+    "CS-A-04"
+  ],
+  "items": [
+    "cs.robot.plan.1",
+    "cs.robot.plan.2",
+    "cs.robot.plan.3"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 3,
+  "celebration": {
+    "vo": "vo:celebrate.robot_plans",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! תִּכְנַנְתֶּם אֶת הַדֶּרֶךְ."
+      }
+    ]
+  }
+}

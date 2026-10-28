@@ -41,6 +41,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'flash': '1.0',
   'sort_drag': '1.0',
   'build_pattern': '1.0',
+  'robot_path': '1.0',
 };
 
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
@@ -344,7 +345,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'review': _review,
   'revision': const SField(_revision),
   'template': const SField(
-    SEnum(<String>['tap_answer', 'count_tap', 'give_n', 'flash', 'sort_drag', 'build_pattern']),
+    SEnum(<String>['tap_answer', 'count_tap', 'give_n', 'flash', 'sort_drag', 'build_pattern', 'robot_path']),
   ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
   'domain': const SField(SEnum(domains)),
@@ -534,6 +535,44 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // T07: a robot on a grid is moved to the flag with arrows, one step at a time (`direct`) or by planning the steps
+  // and then pressing go (`plan`). Directions are the screen's own (up is up) and never mirror.
+  'robot_path' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'cols': SField(SInt(min: 3, max: 6)),
+          'rows': SField(SInt(min: 2, max: 3)),
+          'robot': SField(
+            SObject(<String, SField>{
+              'col': SField(SInt(min: 0, max: 5)),
+              'row': SField(SInt(min: 0, max: 2)),
+            }),
+          ),
+          'goal': SField(
+            SObject(<String, SField>{
+              'col': SField(SInt(min: 0, max: 5)),
+              'row': SField(SInt(min: 0, max: 2)),
+            }),
+          ),
+          'robotSprite': SField(_asset),
+          'goalSprite': SField(_asset),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('path')),
+          'mode': SField(SEnum(<String>['direct', 'plan'])),
+          'maxSteps': SField(SInt(min: 1, max: 8)),
+          'solution': SField(
+            SArray(SEnum(<String>['up', 'down', 'left', 'right']), minItems: 1, maxItems: 8),
+          ),
+          'misconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
   // T05: the child fills the places of a pattern from a palette, by tapping or dragging.
   'build_pattern' => SObject(
     _base(<String, SField>{
@@ -612,4 +651,5 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.flash': activitySchemaFor('flash')!,
   'activity.sort_drag': activitySchemaFor('sort_drag')!,
   'activity.build_pattern': activitySchemaFor('build_pattern')!,
+  'activity.robot_path': activitySchemaFor('robot_path')!,
 };

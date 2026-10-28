@@ -53,16 +53,17 @@ Future<void> type(WidgetTester tester, String key, String text) async {
 void main() {
   setUpAll(loadAppFonts);
 
-  testWidgets('every trophy of every land has a field, and a land with too few skills says so', (
-    WidgetTester tester,
-  ) async {
-    await openArea(tester);
-    await openPrizes(tester);
-    expect(find.text(He.prizesTitle.text), findsOneWidget);
-    expect(find.text('נועה'), findsOneWidget);
-    expect(find.byType(TextField, skipOffstage: false), findsNWidgets(18));
-    expect(find.text(He.prizesNotYet.text, skipOffstage: false), findsWidgets);
-  });
+  testWidgets(
+    'every trophy of every land has a field (every land has enough skills now, so none says "not yet")',
+    (WidgetTester tester) async {
+      await openArea(tester);
+      await openPrizes(tester);
+      expect(find.text(He.prizesTitle.text), findsOneWidget);
+      expect(find.text('נועה'), findsOneWidget);
+      expect(find.byType(TextField, skipOffstage: false), findsNWidgets(18));
+      expect(find.text(He.prizesNotYet.text, skipOffstage: false), findsNothing);
+    },
+  );
 
   testWidgets('a promise is saved when the keyboard says done, and kept in the family\'s settings', (
     WidgetTester tester,

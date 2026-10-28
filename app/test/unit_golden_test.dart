@@ -49,6 +49,8 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('log.sortdrag.three', 'drag_sort_three', 900),
   ('math.share.stars', 'drag_share', 900),
   ('log.copy.three', 'drag_pattern', 900),
+  ('cs.robot.plan.2', 'robot_plan', 900),
+  ('cs.robot.direct.3', 'robot_direct', 900),
 ];
 
 void main() {

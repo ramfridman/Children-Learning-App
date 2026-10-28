@@ -10,11 +10,11 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 |---|---|
 | 1. App screens and buttons | 311 |
 | 2. Core voice lines (spoken by every friend) | 27 |
-| 3. Lesson content (skills, activities, misconceptions) | 2177 |
+| 3. Lesson content (skills, activities, misconceptions) | 2241 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 23 |
 | 6. Helper lexicon (the words the AI helper may use) | 110 |
-| **Total** | **2714** |
+| **Total** | **2778** |
 
 ## 1. App screens and buttons
 
@@ -783,6 +783,60 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.count.stars.8.json | hints.1.caption.0.v | בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… | needs-editor |
 | activity.count.stars.8.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שְׁמוֹנֶה! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנֶה. | needs-editor |
 | activity.count.stars.8.json | a11y.altText | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.cs.robot.direct.1.json | prompt.caption.0.v | מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.1.json | feedback.correct.caption.0.v | כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.1.json | feedback.incorrect.0.caption.0.v | בּוֹאוּ נִסְפֹּר אֶת הַצְּעָדִים: כׇּל צַעַד עוֹבֵר לְמִשְׁבֶּצֶת הַבָּאָה. | needs-editor |
+| activity.cs.robot.direct.1.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.cs.robot.direct.1.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.cs.robot.direct.1.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.cs.robot.direct.1.json | hints.1.caption.0.v | נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת. | needs-editor |
+| activity.cs.robot.direct.1.json | hints.2.caption.0.v | הַצְּעָדִים הֵם: יָמִינָה, יָמִינָה. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.cs.robot.direct.1.json | a11y.altText | מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.2.json | prompt.caption.0.v | מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.2.json | feedback.correct.caption.0.v | כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.2.json | feedback.incorrect.0.caption.0.v | בּוֹאוּ נִסְפֹּר אֶת הַצְּעָדִים: כׇּל צַעַד עוֹבֵר לְמִשְׁבֶּצֶת הַבָּאָה. | needs-editor |
+| activity.cs.robot.direct.2.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.cs.robot.direct.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.cs.robot.direct.2.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.cs.robot.direct.2.json | hints.1.caption.0.v | נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת. | needs-editor |
+| activity.cs.robot.direct.2.json | hints.2.caption.0.v | הַצְּעָדִים הֵם: יָמִינָה, לְמַטָּה, לְמַטָּה. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.cs.robot.direct.2.json | a11y.altText | מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.3.json | prompt.caption.0.v | הָרוֹבּוֹט צָרִיךְ לַחֲזֹר אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.3.json | feedback.correct.caption.0.v | כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.direct.3.json | feedback.incorrect.0.caption.0.v | בּוֹאוּ נִסְפֹּר אֶת הַצְּעָדִים: כׇּל צַעַד עוֹבֵר לְמִשְׁבֶּצֶת הַבָּאָה. | needs-editor |
+| activity.cs.robot.direct.3.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.cs.robot.direct.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.cs.robot.direct.3.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.cs.robot.direct.3.json | hints.1.caption.0.v | נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת. | needs-editor |
+| activity.cs.robot.direct.3.json | hints.2.caption.0.v | הַצְּעָדִים הֵם: שְׂמֹאלָה, שְׂמֹאלָה, לְמַעְלָה, לְמַעְלָה. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.cs.robot.direct.3.json | a11y.altText | הָרוֹבּוֹט צָרִיךְ לַחֲזֹר אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.plan.1.json | prompt.caption.0.v | מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם. | needs-editor |
+| activity.cs.robot.plan.1.json | feedback.correct.caption.0.v | כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.plan.1.json | feedback.incorrect.0.caption.0.v | בּוֹאוּ נִסְפֹּר אֶת הַצְּעָדִים: כׇּל צַעַד עוֹבֵר לְמִשְׁבֶּצֶת הַבָּאָה. | needs-editor |
+| activity.cs.robot.plan.1.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.cs.robot.plan.1.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.cs.robot.plan.1.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.cs.robot.plan.1.json | hints.1.caption.0.v | נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת. | needs-editor |
+| activity.cs.robot.plan.1.json | hints.2.caption.0.v | הַצְּעָדִים הֵם: יָמִינָה, יָמִינָה. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.cs.robot.plan.1.json | a11y.altText | מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם. | needs-editor |
+| activity.cs.robot.plan.2.json | prompt.caption.0.v | מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם. | needs-editor |
+| activity.cs.robot.plan.2.json | feedback.correct.caption.0.v | כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.plan.2.json | feedback.incorrect.0.caption.0.v | בּוֹאוּ נִסְפֹּר אֶת הַצְּעָדִים: כׇּל צַעַד עוֹבֵר לְמִשְׁבֶּצֶת הַבָּאָה. | needs-editor |
+| activity.cs.robot.plan.2.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.cs.robot.plan.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.cs.robot.plan.2.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.cs.robot.plan.2.json | hints.1.caption.0.v | נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת. | needs-editor |
+| activity.cs.robot.plan.2.json | hints.2.caption.0.v | הַצְּעָדִים הֵם: יָמִינָה, יָמִינָה, לְמַטָּה. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.cs.robot.plan.2.json | a11y.altText | מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם. | needs-editor |
+| activity.cs.robot.plan.3.json | prompt.caption.0.v | מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם. | needs-editor |
+| activity.cs.robot.plan.3.json | feedback.correct.caption.0.v | כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל. | needs-editor |
+| activity.cs.robot.plan.3.json | feedback.incorrect.0.caption.0.v | בּוֹאוּ נִסְפֹּר אֶת הַצְּעָדִים: כׇּל צַעַד עוֹבֵר לְמִשְׁבֶּצֶת הַבָּאָה. | needs-editor |
+| activity.cs.robot.plan.3.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.cs.robot.plan.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.cs.robot.plan.3.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.cs.robot.plan.3.json | hints.1.caption.0.v | נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת. | needs-editor |
+| activity.cs.robot.plan.3.json | hints.2.caption.0.v | הַצְּעָדִים הֵם: יָמִינָה, יָמִינָה, יָמִינָה, לְמַעְלָה. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.cs.robot.plan.3.json | a11y.altText | מְתַכְנְנִים אֶת הַצְּעָדִים, וְאָז לוֹחֲצִים עַל הַכַּפְתּוֹר הַכָּתֹם. | needs-editor |
 | activity.cs.routine.teeth.first.json | prompt.caption.0.v | מְצַחְצְחִים שִׁנַּיִם. מָה עוֹשִׂים קֹדֶם? | needs-editor |
 | activity.cs.routine.teeth.first.json | answer.options.0.label | כּוֹס מַיִם | needs-editor |
 | activity.cs.routine.teeth.first.json | answer.options.1.label | מִבְרֶשֶׁת | needs-editor |
@@ -2381,6 +2435,10 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.picture-graph.json | celebration.caption.0.v | יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת. | needs-editor |
 | lesson.rectangle.json | title.0.v | מַלְבֵּן וְרִבּוּעַ | needs-editor |
 | lesson.rectangle.json | celebration.caption.0.v | יָפֶה מְאֹד! הִבְדַּלְתֶּם בֵּין מַלְבֵּן לְרִבּוּעַ. | needs-editor |
+| lesson.robot-moves.json | title.0.v | מְזִיזִים אֶת הָרוֹבּוֹט | needs-editor |
+| lesson.robot-moves.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הַרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל. | needs-editor |
+| lesson.robot-plans.json | title.0.v | מְתַכְנְנִים לָרוֹבּוֹט | needs-editor |
+| lesson.robot-plans.json | celebration.caption.0.v | וַאוּ! תִּכְנַנְתֶּם אֶת הַדֶּרֶךְ. | needs-editor |
 | lesson.roll-or-stack.json | title.0.v | מִתְגַּלְגֵּל אוֹ נֶעֱרָם | needs-editor |
 | lesson.roll-or-stack.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה מִתְגַּלְגֵּל וּמָה נֶעֱרָם. | needs-editor |
 | lesson.same-and-different.json | title.0.v | זֶהֶה וְשׁוֹנֶה | needs-editor |
@@ -2423,6 +2481,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | misconception.M-COL-OBJECT.json | homeActivity.0.v | להראות בננה ירוקה ובננה צהובה בשוק או בתמונה, ולשאול מה זה. לדבר על כך שהפרי משנה צבע כשהוא מבשיל. | needs-editor |
 | misconception.M-COL-ONEATTR.json | parentText | הילד שם לב רק לצבע או רק לסוג הדבר, ולא לשניהם יחד. | needs-editor |
 | misconception.M-COL-ONEATTR.json | homeActivity.0.v | לבקש 'את הכדור הכחול' כשיש על השולחן כדורים וגם בלונים בצבעים שונים. קודם לבחור את הכדורים, ואחר כך את הכחול. | needs-editor |
+| misconception.M-CS-OFF1.json | parentText | הילד מתכנן מסלול שמסתיים משבצת אחת לפני היעד או אחריו, כי ספר גם את משבצת ההתחלה או פספס צעד. | needs-editor |
+| misconception.M-CS-OFF1.json | homeActivity.0.v | לצייר על הרצפה או על דף שורה של משבצות, להניח בובה בהתחלה ולבקש מהילד לתכנן כמה צעדים עד למשבצת ההיא. לקפוץ יחד, צעד אחד בכל פעם, ולספור. | needs-editor |
 | misconception.M-NUM-ZERO.json | parentText | הילד חושב שאפס הוא לא מספר, ואומר 'אחת' או 'כלום' כשאין עצמים. | needs-editor |
 | misconception.M-NUM-ZERO.json | homeActivity.0.v | להראות קערה ריקה ולשאול כמה תפוחים יש בה. לתת לילד להגיד 'אפס', ואז להכניס תפוח ולשאול שוב. | needs-editor |
 | misconception.M-ORD-CARD.json | parentText | הילד מבלבל בין 'השלישי' בתור לבין 'שלושה' ילדים. | needs-editor |
@@ -2465,6 +2525,10 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | skill.COL-A-07.json | childLine.0.v | מוֹצְאִים אֶת הַדָּבָר הַנָּכוֹן לְפִי הַצֶּבַע | needs-editor |
 | skill.CS-A-01.json | title.0.v | מסדרים שלושה שלבים של שגרה (רחצת ידיים, צחצוח שיניים) | needs-editor |
 | skill.CS-A-01.json | childLine.0.v | מַסְדִּירִים שְׁלָבִים: מָה קֹדֶם, מָה בַּסּוֹף | needs-editor |
+| skill.CS-A-03.json | title.0.v | מזיזים רובוט צעד אחר צעד בחיצים (שליטה ישירה) | needs-editor |
+| skill.CS-A-03.json | childLine.0.v | מְזִיזִים רוֹבּוֹט בַּחִצִּים | needs-editor |
+| skill.CS-A-04.json | title.0.v | מתכננים מסלול של 2 עד 3 צעדים ואז לוחצים "יוצאים" | needs-editor |
+| skill.CS-A-04.json | childLine.0.v | מְתַכְנְנִים אֶת הַדֶּרֶךְ וְאָז יוֹצְאִים | needs-editor |
 | skill.CS-A-05.json | title.0.v | מוצאים את השלב שלא שייך לרצף | needs-editor |
 | skill.CS-A-05.json | childLine.0.v | מוֹצְאִים אֶת הַשָּׁלָב שֶׁלֹּא שַׁיָּךְ | needs-editor |
 | skill.LOG-A-01.json | title.0.v | מוצאים את הדבר שזהה | needs-editor |

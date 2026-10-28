@@ -459,6 +459,14 @@
     {
       "id": "step_towel",
       "file": "step_towel.svg"
+    },
+    {
+      "id": "robot",
+      "file": "robot.svg"
+    },
+    {
+      "id": "flag",
+      "file": "flag.svg"
     }
   ],
   "vo": []

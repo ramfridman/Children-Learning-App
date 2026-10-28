@@ -497,6 +497,28 @@ def k_build(a, ctx):
         prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.')
 
 
+DIR_WORDS = {'up': 'לְמַעְלָה', 'down': 'לְמַטָּה', 'left': 'שְׂמֹאלָה', 'right': 'יָמִינָה'}
+
+
+def k_robot(a, ctx):
+    """Move the robot to the flag with arrows (mode direct) or plan the steps and press go (mode plan)."""
+    plan = a['mode'] == 'plan'
+    way = ', '.join(DIR_WORDS[d] for d in a['solution'])
+    return activity(
+        a, 'robot_path', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'practice', 'practice', 'embodied',
+        {'background': 'asset:meadow', 'cols': a['cols'], 'rows': a['rows'],
+         'robot': {'col': a['robot'][0], 'row': a['robot'][1]}, 'goal': {'col': a['goal'][0], 'row': a['goal'][1]},
+         'robotSprite': 'asset:robot', 'goalSprite': 'asset:flag'},
+        {'type': 'path', 'mode': a['mode'], 'maxSteps': a.get('maxSteps', len(a['solution']) + (2 if plan else 4)),
+         'solution': a['solution'], 'misconception': 'M-CS-OFF1'}, {'M-CS-OFF1'},
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל עַל הַדֶּרֶךְ, מִשְׁבֶּצֶת אַחַר מִשְׁבֶּצֶת.',
+              'הַצְּעָדִים הֵם: %s. עַכְשָׁו תּוֹרְכֶם.' % way,
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+              shared=('pick', 'robot')),
+        'child moves the robot to the flag, counting each square once',
+        prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל.')
+
+
 KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}
 
 

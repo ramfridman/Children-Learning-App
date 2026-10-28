@@ -41,6 +41,7 @@ import 'give_n_session.dart';
 import 'lesson_controller.dart';
 import 'lesson_voice.dart';
 import 'tap_answer_session.dart';
+import 'robot_path_session.dart';
 import 'sort_drag_session.dart';
 import 'template_session.dart';
 
@@ -311,6 +312,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         FlashActivity() => FlashSession(c, a),
         SortDragActivity() => SortDragSession(c, a),
         BuildPatternActivity() => BuildPatternSession(c, a),
+        RobotPathActivity() => RobotPathSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
       };
       _sessionIndex = c.index;

@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "CS-A-03",
+  "review": "needs-editor",
+  "domain": "cs",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מזיזים רובוט צעד אחר צעד בחיצים (שליטה ישירה)"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְזִיזִים רוֹבּוֹט בַּחִצִּים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-A-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "embodied",
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -130,6 +130,7 @@ sealed class Activity {
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
+    'robot_path' => RobotPathActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
   };
 
@@ -371,6 +372,53 @@ class BuildPatternActivity extends Activity {
   final int slots;
   final List<String> palette;
   final List<String> sequence;
+  final String? wrongTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag};
+}
+
+/// The robot-path template (T07): move a robot to the flag with arrows, directly or by planning the steps first.
+class RobotPathActivity extends Activity {
+  RobotPathActivity._(super.json, super.assets)
+    : cols = _map(json['scene'])['cols']! as int,
+      rows = _map(json['scene'])['rows']! as int,
+      robotAt = (
+        _map(_map(json['scene'])['robot'])['col']! as int,
+        _map(_map(json['scene'])['robot'])['row']! as int,
+      ),
+      goalAt = (
+        _map(_map(json['scene'])['goal'])['col']! as int,
+        _map(_map(json['scene'])['goal'])['row']! as int,
+      ),
+      robotSprite = _map(json['scene'])['robotSprite']! as String,
+      goalSprite = _map(json['scene'])['goalSprite']! as String,
+      plan = _map(json['answer'])['mode'] == 'plan',
+      maxSteps = _map(json['answer'])['maxSteps']! as int,
+      solution = <String>[
+        for (final Object? s in _map(json['answer'])['solution']! as List<Object?>) s! as String,
+      ],
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      super._();
+
+  final int cols;
+  final int rows;
+
+  /// Start and goal as (column, row), counted from the top left of the screen.
+  final (int, int) robotAt;
+  final (int, int) goalAt;
+  final String robotSprite;
+  final String goalSprite;
+
+  /// Plan mode: the steps are planned, then run with the go button. Direct mode: every arrow moves the robot at once.
+  final bool plan;
+  final int maxSteps;
+
+  /// One shortest way, as `up`, `down`, `left`, `right`, for the help.
+  final List<String> solution;
   final String? wrongTag;
 
   @override

@@ -4,6 +4,7 @@ import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/play/build_pattern_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
+import 'package:nitznutz/play/robot_path_session.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
 import 'package:nitznutz/play/template_session.dart';
 
@@ -296,5 +297,110 @@ void main() {
       s.dispose();
       await tester.pumpWidget(const SizedBox());
     });
+  });
+
+  group('the robot path', () {
+    testWidgets(
+      'direct: each arrow moves the robot at once, the edge stops it without a mistake, the flag ends it',
+      (WidgetTester tester) async {
+        final LessonController c = start(
+          'robot-moves',
+          0,
+        ); // 3 by 2, robot at the top left, flag two squares right
+        final RobotPathSession s = RobotPathSession(c, c.current as RobotPathActivity);
+        await host(tester, s);
+        expect(s.pos, (0, 0));
+        await tap(tester, 'arrow-left'); // the edge
+        expect(s.pos, (0, 0));
+        expect(s.bumped, isTrue);
+        expect(written, isEmpty, reason: 'a bump into the edge is not a mistake');
+        await settle(tester, 500);
+        await tap(tester, 'arrow-down');
+        expect(s.pos, (0, 1));
+        await tap(tester, 'arrow-up');
+        await tap(tester, 'arrow-right');
+        await tap(tester, 'arrow-right');
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(s.pos, (2, 0));
+        expect(written.single.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets(
+      'plan: the steps are planned and run on go; one square short is M-CS-OFF1 and the program stays to be changed',
+      (WidgetTester tester) async {
+        final LessonController c = start('robot-plans', 0); // 4 by 2, the flag two squares right
+        final RobotPathSession s = RobotPathSession(c, c.current as RobotPathActivity);
+        await host(tester, s);
+        await tap(tester, 'arrow-right');
+        await tap(tester, 'robot-go'); // one step: the robot stops one square short
+        expect(s.running, isTrue);
+        await settle(tester, 1500);
+        expect(s.pos, (1, 0));
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-CS-OFF1');
+        await settle(tester);
+        expect(s.program, <String>['right'], reason: 'the program stays, so the child can change it');
+        expect(s.pos, (0, 0), reason: 'the robot is back at the start');
+        await tap(tester, 'arrow-right');
+        await tap(tester, 'robot-go');
+        await settle(tester, 1500);
+        expect(written.last.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets('plan: undo takes back the last step, and a run that goes past the flag is a mistake too', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('robot-plans', 0);
+      final RobotPathSession s = RobotPathSession(c, c.current as RobotPathActivity);
+      await host(tester, s);
+      await tap(tester, 'arrow-down');
+      await tap(tester, 'robot-undo');
+      expect(s.program, isEmpty);
+      for (int k = 0; k < 3; k++) {
+        await tap(tester, 'arrow-right');
+      }
+      await tap(tester, 'robot-go');
+      await settle(tester, 2200);
+      expect(written.single.result, 'incorrect');
+      expect(written.single.misconceptionTag, 'M-CS-OFF1', reason: 'one square past the flag');
+      await settle(tester);
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets(
+      'after three wrong runs only the right next step is taken, and the help points at its arrow',
+      (WidgetTester tester) async {
+        final LessonController c = start('robot-plans', 0);
+        final RobotPathActivity a = c.current as RobotPathActivity;
+        final RobotPathSession s = RobotPathSession(c, a);
+        await host(tester, s);
+        for (int round = 0; round < a.maxAttempts; round++) {
+          await tap(tester, 'arrow-down');
+          await tap(tester, 'robot-go');
+          await settle(tester, 4200);
+        }
+        expect(c.guided, isTrue);
+        expect(s.program, isEmpty);
+        // The guide walks the robot along the right way, and then the move is the child's again.
+        await settle(tester, 4500);
+        expect(s.running, isFalse);
+        expect(s.hintStep, 'right');
+        await tap(tester, 'arrow-down'); // not the right step now
+        expect(s.program, isEmpty);
+        await tap(tester, 'arrow-right');
+        expect(s.program, <String>['right']);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
   });
 }

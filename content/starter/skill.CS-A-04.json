@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "CS-A-04",
+  "review": "needs-editor",
+  "domain": "cs",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מתכננים מסלול של 2 עד 3 צעדים ואז לוחצים \"יוצאים\""
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְתַכְנְנִים אֶת הַדֶּרֶךְ וְאָז יוֹצְאִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "CS-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "embodied",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CS-OFF1"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

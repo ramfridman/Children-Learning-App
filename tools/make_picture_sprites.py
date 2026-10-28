@@ -102,6 +102,8 @@ SINGLES = {
     'step_paste': '<rect x="8" y="58" width="70" height="12" rx="6" fill="#4DA3FF"/><rect x="62" y="48" width="26" height="22" rx="4" fill="#FFFFFF" stroke="#B8B3C8" stroke-width="2"/><path d="M14 52 H50" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>',
     'step_brush': '<rect x="8" y="58" width="70" height="12" rx="6" fill="#4DA3FF"/><rect x="62" y="46" width="26" height="24" rx="4" fill="#FFFFFF" stroke="#B8B3C8" stroke-width="2"/>',
     'step_rinse': '<path d="M20 28 H80 L72 82 H28 Z" fill="#CDEBFF" stroke="#7FB6D9" stroke-width="4" stroke-linejoin="round"/><path d="M28 48 H72" stroke="#4DA3FF" stroke-width="5"/>',
+    'robot': '<rect x="26" y="34" width="48" height="44" rx="10" fill="#9AA0B4" stroke="#6E7488" stroke-width="3"/><rect x="34" y="16" width="32" height="22" rx="8" fill="#B7BCCD" stroke="#6E7488" stroke-width="3"/><circle cx="43" cy="27" r="4" fill="#4DA3FF"/><circle cx="57" cy="27" r="4" fill="#4DA3FF"/><line x1="50" y1="16" x2="50" y2="6" stroke="#6E7488" stroke-width="3"/><circle cx="50" cy="5" r="4" fill="#E5484D"/><rect x="34" y="78" width="10" height="12" rx="3" fill="#6E7488"/><rect x="56" y="78" width="10" height="12" rx="3" fill="#6E7488"/>',
+    'flag': '<line x1="30" y1="10" x2="30" y2="92" stroke="#6B4423" stroke-width="6" stroke-linecap="round"/><polygon points="30,12 82,28 30,46" fill="#E5484D"/>',
     'apple_green': '<circle cx="50" cy="56" r="32" fill="#8BC34A"/><path d="M50 26 Q52 12 62 10" stroke="#6B4423" '
                    'stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="64" cy="20" rx="10" ry="5" '
                    'fill="#4CAF50" transform="rotate(-25 64 20)"/>',
