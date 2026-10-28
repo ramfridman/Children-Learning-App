@@ -79,6 +79,15 @@ abstract final class He {
   static const Str listenTap = Str('אֶפְשָׁר גַּם לִלְחֹץ עַל הַתְּשׁוּבָה.', nikud: true);
 
   // ---- the Trophy Hall, the ceremony, medals and prizes (M8) ----
+  static const Str homeStickersLabel = Str('מַדְבֵּקוֹת', nikud: true);
+  static const Str homeHallLabel = Str('גְּבִיעִים', nikud: true);
+  static const Str stickersTitle = Str('הַמַּדְבֵּקוֹת שֶׁלִּי', nikud: true);
+  static const Str stickersHow = Str('מַדְבֵּקָה אַחַת עַל כָּל שִׁעוּר שֶׁמְּסַיְּמִים', nikud: true);
+  static const Str landPlayLabel = Str('לְשַׂחֵק', nikud: true);
+  static const Str legendSketch = Str('מְתַרְגְּלִים', nikud: true);
+  static const Str legendColour = Str('יוֹדְעִים', nikud: true);
+  static const Str legendStar = Str('וְגַם זוֹכְרִים', nikud: true);
+  static const Str legendSemantics = Str('מה אומרים הציורים: מתרגלים, יודעים, זוכרים');
   static const Str hallTitle = Str('הֵיכַל הַגְּבִיעִים', nikud: true);
   static const Str hallSemantics = Str('היכל הגביעים');
   static const Str hallTabTrophies = Str('גְּבִיעִים', nikud: true);

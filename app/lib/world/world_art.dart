@@ -13,13 +13,8 @@ class WorldObjectView extends StatelessWidget {
   final WorldObject object;
   final double size;
 
-  /// A colour matrix that keeps only a pale grey, for the sketch.
-  static const ColorFilter _sketch = ColorFilter.matrix(<double>[
-    0.2126, 0.7152, 0.0722, 0, 70, //
-    0.2126, 0.7152, 0.0722, 0, 70,
-    0.2126, 0.7152, 0.0722, 0, 70,
-    0, 0, 0, 0.55, 0,
-  ]);
+  /// The sketch: the same drawing, washed out towards white (not grey, which looks switched off): "not grown yet".
+  static const ColorFilter _sketch = ColorFilter.mode(Color(0xB3FFFFFF), BlendMode.srcATop);
 
   @override
   Widget build(BuildContext context) {

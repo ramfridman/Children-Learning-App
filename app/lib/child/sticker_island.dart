@@ -28,36 +28,77 @@ class StickerIsland extends ConsumerWidget {
             Positioned.fill(
               child: Center(
                 child: Container(
-                  margin: const EdgeInsets.fromLTRB(24, 56, 24, 24),
+                  margin: const EdgeInsets.fromLTRB(24, 64, 24, 16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: TokenColors.paper,
                     borderRadius: BorderRadius.circular(TokenRadius.xl),
                     boxShadow: clayShadows(TokenColors.cardLip, soft16: true),
                   ),
-                  child: stickers.isEmpty
-                      ? Text(
-                          He.stickersEmptyChild.text,
-                          key: const Key('stickers-empty'),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          stickers.isEmpty ? He.stickersEmptyChild.text : He.stickersHow.text,
+                          key: stickers.isEmpty ? const Key('stickers-empty') : const Key('stickers-how'),
                           textAlign: TextAlign.center,
-                          style: AppText.fixed(size: 22, weight: 600),
-                        )
-                      : SingleChildScrollView(
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            spacing: 12,
-                            runSpacing: 12,
-                            children: <Widget>[
-                              for (final Reward r in stickers)
-                                BoardSvg(
+                          style: AppText.fixed(size: 20, weight: 600),
+                        ),
+                        const SizedBox(height: 12),
+                        // An album page: the stickers there are, and the empty places waiting for the next ones.
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 14,
+                          runSpacing: 14,
+                          children: <Widget>[
+                            for (final Reward r in stickers)
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: softShadow,
+                                  color: TokenColors.paper,
+                                ),
+                                child: BoardSvg(
                                   stickerAsset(r.awardKey),
                                   key: Key('sticker-${r.awardKey}'),
-                                  width: 84,
-                                  height: 84,
+                                  width: 76,
+                                  height: 76,
                                 ),
-                            ],
-                          ),
+                              ),
+                            for (int i = stickers.length; i < _places(stickers.length); i++)
+                              Container(
+                                key: Key('sticker-place-$i'),
+                                width: 76,
+                                height: 76,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: TokenColors.mist,
+                                  border: Border.all(color: TokenColors.cardLip, width: 3),
+                                ),
+                              ),
+                          ],
                         ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 12,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  key: const Key('stickers-title'),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: TokenColors.paper,
+                    borderRadius: BorderRadius.circular(999),
+                    boxShadow: softShadow,
+                  ),
+                  child: Text(He.stickersTitle.text, style: AppText.fixed(size: 24, weight: 700)),
                 ),
               ),
             ),
@@ -80,3 +121,7 @@ class StickerIsland extends ConsumerWidget {
     );
   }
 }
+
+/// How many places the album page shows: the stickers there are and room for the next ones, in whole rows of six, never
+/// fewer than six.
+int _places(int have) => have < 6 ? 6 : ((have ~/ 6) + 1) * 6;

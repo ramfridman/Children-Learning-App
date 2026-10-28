@@ -22,6 +22,7 @@ import '../rewards/reward_rules.dart';
 import '../strings/he.dart';
 import '../world/world_state.dart';
 import 'ceremony_screen.dart';
+import 'play_button.dart';
 import 'trophy_art.dart';
 
 enum HallTab { trophies, medals, friend }
@@ -458,14 +459,11 @@ class _DetailCard extends ConsumerWidget {
           if (earned != null) ...<Widget>[
             const SizedBox(height: 10),
             Center(
-              child: PebbleButton(
+              child: PlayPebble(
                 key: const Key('hall-replay'),
                 semanticLabel: He.trophyReplaySemantics.text,
-                size: 52,
-                fill: TokenColors.spark,
-                lip: TokenColors.sparkDeep,
+                size: 56,
                 onPressed: () => onReplay(keyName),
-                child: const BoardSvg('assets/art/ui/spark.svg', width: 28, height: 28),
               ),
             ),
           ],

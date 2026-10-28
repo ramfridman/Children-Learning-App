@@ -388,34 +388,41 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  PebbleButton(
-                    key: const Key('home-stickers'),
-                    semanticLabel: He.stickersSemantics.text,
-                    size: 48,
-                    fill: TokenColors.spark,
-                    lip: TokenColors.sparkDeep,
-                    onPressed: onStickers,
-                    child: const BoardSvg('assets/art/ui/sticker.svg', width: 24, height: 24),
+                  _Labelled(
+                    label: He.homeStickersLabel.text,
+                    child: PebbleButton(
+                      key: const Key('home-stickers'),
+                      semanticLabel: He.stickersSemantics.text,
+                      size: 48,
+                      fill: TokenColors.paper,
+                      lip: TokenColors.cardLip,
+                      onPressed: onStickers,
+                      // A real sticker of the collection, so that what is on the button is what is inside.
+                      child: const BoardSvg('assets/art/stickers/sticker_01.svg', width: 30, height: 30),
+                    ),
                   ),
                   if (onHall != null) ...<Widget>[
                     const SizedBox(width: 8),
-                    DecoratedBox(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: hallGlow
-                            ? const <BoxShadow>[
-                                BoxShadow(color: Color(0xAAFFD45C), blurRadius: 20, spreadRadius: 4),
-                              ]
-                            : null,
-                      ),
-                      child: PebbleButton(
-                        key: const Key('home-hall'),
-                        semanticLabel: He.hallSemantics.text,
-                        size: 48,
-                        fill: TokenColors.spark,
-                        lip: TokenColors.sparkDeep,
-                        onPressed: onHall,
-                        child: const BoardSvg('assets/art/trophies/trophy_gold.svg', width: 26, height: 26),
+                    _Labelled(
+                      label: He.homeHallLabel.text,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: hallGlow
+                              ? const <BoxShadow>[
+                                  BoxShadow(color: Color(0xAAFFD45C), blurRadius: 20, spreadRadius: 4),
+                                ]
+                              : null,
+                        ),
+                        child: PebbleButton(
+                          key: const Key('home-hall'),
+                          semanticLabel: He.hallSemantics.text,
+                          size: 48,
+                          fill: TokenColors.paper,
+                          lip: TokenColors.cardLip,
+                          onPressed: onHall,
+                          child: const BoardSvg('assets/art/trophies/trophy_gold.svg', width: 28, height: 28),
+                        ),
                       ),
                     ),
                   ],
@@ -636,5 +643,22 @@ class _LandSign extends StatelessWidget {
         ),
       ),
     ),
+  );
+}
+
+/// A button with a few words under it, so that no picture has to be guessed.
+class _Labelled extends StatelessWidget {
+  const _Labelled({required this.label, required this.child});
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      child,
+      ExcludeSemantics(child: Text(label, style: AppText.fixed(size: 14, weight: 700))),
+    ],
   );
 }

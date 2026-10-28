@@ -16,6 +16,7 @@ import '../design/tokens.g.dart';
 import '../rewards/award.dart';
 import '../rewards/outfits.dart';
 import '../strings/he.dart';
+import 'play_button.dart';
 import 'trophy_art.dart';
 
 /// What the ceremony says for a trophy tier, and for a medal.
@@ -234,14 +235,10 @@ class _CeremonyScreenState extends ConsumerState<CeremonyScreen> with SingleTick
                       PositionedDirectional(
                         start: 16,
                         bottom: 14,
-                        child: PebbleButton(
+                        child: PlayPebble(
                           key: const Key('ceremony-continue'),
                           semanticLabel: He.ceremonyContinueSemantics.text,
-                          size: 64,
-                          fill: TokenColors.spark,
-                          lip: TokenColors.sparkDeep,
                           onPressed: _done,
-                          child: const BoardSvg('assets/art/ui/spark.svg', width: 32, height: 32),
                         ),
                       ),
                     ],

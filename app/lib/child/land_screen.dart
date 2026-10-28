@@ -5,12 +5,15 @@ import '../app/reward_providers.dart';
 import '../app/world_providers.dart';
 import '../content/models.dart';
 import '../data/app_database.dart' show Reward;
+import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../rewards/award.dart';
 import '../rewards/reward_rules.dart';
 import '../strings/he.dart';
+import 'play_button.dart';
+import 'trophy_art.dart' show landOf;
 import '../world/world_art.dart';
 import '../world/world_state.dart';
 
@@ -124,20 +127,50 @@ class LandScreen extends ConsumerWidget {
                     ),
                   ),
                 },
+            // The land's name.
+            Positioned(
+              top: 12,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  key: const Key('land-title'),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: TokenColors.paper,
+                    borderRadius: BorderRadius.circular(999),
+                    boxShadow: softShadow,
+                  ),
+                  child: Text(landOf(land).label.text, style: AppText.fixed(size: 24, weight: 700)),
+                ),
+              ),
+            ),
+            // What the drawings mean: practising, knowing, remembering.
+            PositionedDirectional(
+              start: 16,
+              bottom: 12,
+              child: Semantics(
+                label: He.legendSemantics.text,
+                child: ExcludeSemantics(child: _Legend(key: const Key('land-legend'))),
+              ),
+            ),
             if (onPlay != null)
               Positioned(
                 left: 0,
                 right: 0,
                 bottom: 12,
                 child: Center(
-                  child: PebbleButton(
-                    key: const Key('land-play'),
-                    semanticLabel: He.landPlaySemantics.text,
-                    size: 80,
-                    fill: TokenColors.spark,
-                    lip: TokenColors.sparkDeep,
-                    onPressed: onPlay,
-                    child: const BoardSvg('assets/art/ui/spark.svg', width: 40, height: 40),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      PlayPebble(
+                        key: const Key('land-play'),
+                        semanticLabel: He.landPlaySemantics.text,
+                        size: 72,
+                        onPressed: onPlay,
+                      ),
+                      Text(He.landPlayLabel.text, style: AppText.fixed(size: 18, weight: 700)),
+                    ],
                   ),
                 ),
               ),
@@ -146,6 +179,47 @@ class LandScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Three small pictures that say what the drawings on the island mean, left to right in reading order: a faded one is still
+/// being practised, a coloured one is known, a coloured one with fruit and a golden star is remembered.
+class _Legend extends StatelessWidget {
+  const _Legend({super.key});
+
+  WorldObject _sample(GrowthStage stage) =>
+      WorldObject(skillId: 'legend', title: '', objectId: 'stair', stage: stage, bell: false);
+
+  Widget _item(GrowthStage stage, String label) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      SizedBox(
+        width: 56,
+        height: 60,
+        child: FittedBox(child: WorldObjectView(object: _sample(stage), size: 48)),
+      ),
+      Text(label, style: AppText.fixed(size: 13, weight: 700)),
+    ],
+  );
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    decoration: BoxDecoration(
+      color: TokenColors.paper.withValues(alpha: 0.92),
+      borderRadius: BorderRadius.circular(TokenRadius.xl),
+      boxShadow: softShadow,
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        _item(GrowthStage.sketch, He.legendSketch.text),
+        const SizedBox(width: 6),
+        _item(GrowthStage.colour, He.legendColour.text),
+        const SizedBox(width: 6),
+        _item(GrowthStage.fruit, He.legendStar.text),
+      ],
+    ),
+  );
 }
 
 class _IslandPainter extends CustomPainter {
