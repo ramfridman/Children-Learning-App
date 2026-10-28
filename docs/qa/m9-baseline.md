@@ -99,3 +99,59 @@ Not opened: the other `unit_*` PNGs of the earlier parts (colours, logic, shapes
 ## 6. What QA did not check
 
 The real phone (B-10), sound and voice, a child's hands, TalkBack, frame times, the CI run itself (B-9), the pgTAP suite, the four older drag templates through their real sessions, every `unit_*` PNG (section 5), Hebrew wording (the hebrew-text-editor's area), and whether the curriculum's answer keys are right beyond "the session can reach them".
+
+## 7. Re-verification, 2026-10-29 (board items B-11 and B-12)
+
+**Branch** `m9-content`, local HEAD `5e8fab6` (fixes in `dd040cd`, `dc76c0f`, `5e8fab6`). Nothing in `app/lib/` was changed by QA; every mutation below was undone with `git checkout` and `git diff` was clean after each.
+
+### What ran
+
+| Command (app/ unless said) | Result | Time |
+|---|---|---|
+| `flutter test --no-pub --dart-define=QA_OPEN=true test/qa_open_defects_test.dart` | **QA-1 to QA-6: 6 pass**; QA-13 and QA-14 fail, as they should (still open) | 6 s |
+| `flutter test --no-pub --reporter failures-only` (whole suite) | **1,038 passed, 0 failed, 2 skipped** (QA-13, QA-14) | **4 min 49 s** (was 21 min 43 s) |
+| `dart analyze` | No issues found | 7 s |
+| `dart format --output=none --set-exit-if-changed .` | 270 files, 0 changed | 2 s |
+| `deno task check` (repo root, deno 2.9.6) | **179 passed, 0 failed, 7 ignored** (the real-database tests) | 12 s |
+| `starter_pack_test.dart` + `zip_store_test.dart` (sampled mode) | 43 passed. "every 31st byte": **41 s** (was 865 s); "every single byte" sampled (every 97th): **14 s** (was 260 s); the oracle test on the real pack 10 s | 64 s |
+| `NN_EXHAUSTIVE=1 flutter test --no-pub test/starter_pack_test.dart` | **14 passed, 0 failed**: every byte of the 3.5 MB pack changed in turn and refused (`tried == bytes.length`), 16 worker isolates | **20 min 51 s** for the file (the every-byte test 1,208 s = 20.1 min, under its 60-minute timeout; the every-31st test 39 s) |
+
+### The defects
+
+| Id | Verdict | Evidence |
+|---|---|---|
+| QA-1 | **closed** | The QA-1 test passes; `TraceSession.end()` now has the `controller.guided` branch (nothing written, the way shown again). |
+| QA-2 | **closed** | The QA-2 test passes for the start and the end point of the path (tolerance 1 box unit; it read 3.1 off before). The developer's one change to the test, `await pause(tester)` after `g.cancel()`, is legitimate: a cancelled touch ends the pan, so `end()` judges a two-point stroke as a "not yet" and the session takes no touch for the 1-second pause; without the pause the second probe (the far end, where the old error was largest) would be dropped and fail on `isNotEmpty`, for a reason that has nothing to do with QA-2. The assertion itself is unchanged. (QA's original file was never committed, so it was compared with the description in section 3 and the failing run of the old code, which failed this same assertion.) |
+| QA-3 | **closed**, new minor QA-16 | The QA-3 test passes: every picture of every set is drawn for the largest set (`lineSlots`). `unit_match_numbers_phone.png` opened: one, two and three apples are the same size. But all of them are now the small size (about 17 points in a card about 90 points wide): see QA-16. |
+| QA-4 | **closed** | The QA-4 test passes: all seven coins of `x.mathb17.2` stay inside the counter and the stage. The coins shrink together (`CoinFace.fitScale`, down to a quarter at the least). Measured on the phone with a scratch test (not kept) over the five `pay-exactly` questions, every coin on the counter: the smallest touch box is 38.4 points (with seven coins), against 49.2 for the smallest coin in the purse. Below design-spec §6.1's 56 for a control, as the purse already is: part of QA-9, not a new defect. |
+| QA-5 | **closed** | The QA-5 test and the new `lesson_controller_test` pass; the controller's `solved` flag makes the lamp and "not sure" do nothing after a right answer (no write, the praise kept, `actionNonce` unchanged). Mutation: removing the guard in `unsure()` fails both tests (`['correct', 'unsure']`); removing it in `showHint()` fails the controller test (the praise line replaced by a hint). The replay button during the praise (section 4, risk 2) was not part of QA-5 and was not checked. |
+| QA-6 | **closed** | The QA-6 test passes; `unit_number_line_place_phone.png` opened: the frog waits in the top left corner of the stage, clear of the line, before an answer. |
+| QA-10 | **split**: the dev access is **closed**; the path order stays **open** (curriculum-expert, board B-15) | `app_flow_test`: in the dev flavour a long press on the version opens the dev page, "Open any lesson" lists every lesson once and opens the clock lesson on its first activity, and home comes back to the list. The prod claim holds by two tests: the long press does nothing in prod ("the dev page is hidden in the prod flavour", the only link to the dev pages) and `DevLessonsPage` shows only a placeholder in prod even if pushed directly. `nextLessonId` still ignores the band. |
+| QA-13, QA-14 | open (out of scope) | Still fail with `QA_OPEN=true`, skipped otherwise. |
+| QA-15 | **closed** (the test part; the CI run is the infrastructure-engineer's) | See "The every-byte change" below. |
+
+### The new tests: do they prove what they claim?
+
+- **`response_contract_test.dart` (SEC-1).** It plays the real session of all 15 templates over every activity, right and wrong, and checks each written code against the server's pattern, which is tied to `testvectors/wire-patterns.json` (and the Deno test sends the same examples through `sync-push`). A last test checks every template of the pack was played. Mutation: the clock writes the old `3:30` again: "clock: every hour" fails (codes refused) and "every template ... was played" fails (it does not contain `clock_set`). Proves it.
+- **`sync_engine_test.dart`, "a row the server will not take"** (with a fake server that refuses a whole batch for one bad field, like the real one). Mutation 1, no one-by-one retry (a refused batch marks all its rows refused): both tests fail (`pushedEvents` 2 instead of 5; 3 refused instead of 0). Mutation 2, the retry treats every failure as a refusal (`catch (_)`): "a failure during the one-by-one retry marks nothing as refused" fails (2 refused instead of 0). Proves it. Note: the fake's "lost answer" is a `StateError`; the real gateway's network errors were not checked to be something other than `bad_request`.
+- **`lesson_controller_test.dart` (QA-5)**: see QA-5 above.
+- **`sprite_group_test.dart` (`lineSlots`)**: checks the cell width and the centres for 1 and 3 with 4 and 3 slots. It proves the layout rule; the size on the screen is proven by the QA-3 test.
+- **`app_flow_test.dart` (QA-10)**: see QA-10 above.
+
+### The every-byte change (B-12)
+
+- **The oracle** `app/test/support/zip_store_reference.dart` is the reader, writer, CRC-32 and name rule of `e6971fb:app/lib/content/zip_store.dart` exactly: compared by a script after removing comments and white space and the `reference` prefix of the four function names, the two are identical. It imports only `ZipEntry`, `ZipException` and `ZipLimits` from the production file, and `ZipLimits` did not change in `5e8fab6`.
+- **The exhaustive test** still asserts `tried == bytes.length` (`tried` counts only refused packs, and any accepted offset fails the test before); the workers take each offset exactly once (worker w takes w·step, (w + workers)·step, ...), and each worker checks its copy is the genuine pack again at the end. The sampled mode asserts more than 300 refused.
+- **The timeouts now fire.** With the 10-minute timeout of the every-31st test set to 5 seconds (test code, undone after), the test failed with "Test timed out after 5 seconds". The file itself still ran to 39 s, as the worker isolates finish their loops before the run ends: on CI a timeout fails the test, but does not stop the work at that moment.
+
+### New defect
+
+| Id | Sev. | What | Evidence | Owner |
+|---|---|---|---|---|
+| QA-16 | minor | **Match pairs: the sets are fair now, but small.** After the QA-3 fix every picture is drawn as one of the largest set in a line of `max(count, lineSlots)` cells: in `x.numa07.1` each apple is about 17 points in a card about 90 points wide on the phone, and the single apple is as small as the others. A 3-year-old counts these (NUM-A-07, Band A). The pictures could fill the card for the largest set (about 25 to 28 points for three). | `unit_match_numbers_phone.png` | design-director (size), app-developer |
+
+### Not checked this round
+
+The real phone (B-10, the script is updated for the dev flavour), sound, TalkBack, the CI run itself, the pgTAP suite, the coins on the counter on the tablet, the replay button during the praise, and whether the dev lesson page works with two children on the phone.
+
+PNGs opened this round: `unit_match_numbers_phone`, `unit_match_numbers_tablet_landscape` (the same small apples, about 16 points in 95-point cards), `unit_number_line_place_phone`, `unit_number_line_place_tablet_landscape`. Seen, not filed: on the tablet the waiting frog is about 30 points in a stage about 550 by 270, alone in the corner; a child may not see it as the frog of the question (design-director, with QA-16).

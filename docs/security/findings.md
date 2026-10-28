@@ -56,3 +56,14 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   Gradle cache) is approved: triggers stay `push` and `workflow_dispatch` (no pull-request trigger), `permissions:
   contents: read`, no secret in the job, no new action, every action still pinned by SHA, no `${{ }}` expression in the new
   shell lines, and the summary copies only file paths, test names and times.
+- **B-12, the faster pack reader and the every-byte test (`5e8fab6`, 2026-10-29): approved, no finding.** Read in full:
+  the `zip_store.dart` diff, the new `starter_pack_test.dart` flip workers, `zip_store_test.dart`, the oracle
+  `test/support/zip_store_reference.dart`, `pack_verify.dart` (unchanged). The checks and their order are unchanged (zip,
+  signature, manifest schema, sizes and SHA-256, then parsing); the canonical re-write is still a full byte-for-byte
+  comparison; the re-write takes only entries whose name passed the same rules and whose CRC equals the CRC just computed
+  from their data, so it produces the bytes the old writer did; the limits are untouched. The oracle is the code of
+  `e6971fb` (compared mechanically: only comments, names and the shared `ZipEntry`/`ZipException`/`ZipLimits` differ).
+  The flip workers cover every offset exactly once, restore each byte in a `finally`, count every refusal and prove the
+  restored pack is genuine; a timeout can only fail the test. A separate plain-Dart check against the `e6971fb` reader
+  taken from git (no Flutter) is recorded in the private review. No package, lock file or action changed; the Dart SDK
+  3.13.7 is past the one 2026 SDK advisory found (CVE-2026-27704, pub client, fixed in 3.11.0).
