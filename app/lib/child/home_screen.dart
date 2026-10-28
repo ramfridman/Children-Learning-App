@@ -261,6 +261,8 @@ class HomeScreen extends StatelessWidget {
     this.openableLands = const <Land>{},
     this.stars = 0,
     this.onStickers,
+    this.onHall,
+    this.hallGlow = false,
   });
 
   final String childName;
@@ -296,6 +298,10 @@ class HomeScreen extends StatelessWidget {
 
   /// Opens Sticker Island.
   final VoidCallback? onStickers;
+
+  /// Opens the Trophy Hall, and whether something there is waiting for the child (a soft glow on its button).
+  final VoidCallback? onHall;
+  final bool hallGlow;
 
   VoidCallback? _tapFor(Land land) {
     final void Function(Land)? open = onOpenLand;
@@ -391,6 +397,28 @@ class HomeScreen extends StatelessWidget {
                     onPressed: onStickers,
                     child: const BoardSvg('assets/art/ui/sticker.svg', width: 24, height: 24),
                   ),
+                  if (onHall != null) ...<Widget>[
+                    const SizedBox(width: 8),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: hallGlow
+                            ? const <BoxShadow>[
+                                BoxShadow(color: Color(0xAAFFD45C), blurRadius: 20, spreadRadius: 4),
+                              ]
+                            : null,
+                      ),
+                      child: PebbleButton(
+                        key: const Key('home-hall'),
+                        semanticLabel: He.hallSemantics.text,
+                        size: 48,
+                        fill: TokenColors.spark,
+                        lip: TokenColors.sparkDeep,
+                        onPressed: onHall,
+                        child: const BoardSvg('assets/art/trophies/trophy_gold.svg', width: 26, height: 26),
+                      ),
+                    ),
+                  ],
                   if (stars > 0) ...<Widget>[
                     const SizedBox(width: 8),
                     Semantics(

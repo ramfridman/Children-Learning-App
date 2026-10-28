@@ -21,6 +21,42 @@ class FinishedLesson {
   final DateTime at;
 }
 
+/// The good habits a medal celebrates (PLAN: habit medals). A moment is something the child did, never how fast or how long.
+enum HabitKind {
+  /// Said "I'm not sure" or asked to be shown.
+  askedForHelp,
+
+  /// Got it right after a mistake, on the same activity.
+  triedAgain,
+}
+
+class HabitMoment {
+  const HabitMoment({required this.kind, required this.at});
+
+  final HabitKind kind;
+  final DateTime at;
+}
+
+/// One habit medal. [habit] is null for a medal whose activities do not exist yet (explaining how you knew, fixing the
+/// robot's bug, the weekly garden): it stays a locked silhouette until M9 has them.
+class MedalDef {
+  const MedalDef({required this.id, required this.habit, required this.needed});
+
+  final String id;
+  final HabitKind? habit;
+  final int needed;
+}
+
+const List<MedalDef> medalDefs = <MedalDef>[
+  MedalDef(id: 'brave-asker', habit: HabitKind.askedForHelp, needed: 5),
+  MedalDef(id: 'try-again', habit: HabitKind.triedAgain, needed: 3),
+  MedalDef(id: 'explainer', habit: null, needed: 3),
+  MedalDef(id: 'bug-fixer', habit: null, needed: 5),
+];
+
+/// Island decorations come with the number of skills understood for good (M8, Q7).
+const List<int> decorationSteps = <int>[10, 20, 30];
+
 /// A land has trophies only when it has at least this many skills (M8, Q3): with fewer, bronze, silver and gold would
 /// all arrive at once and mean nothing.
 const int minSkillsForLandTrophy = 3;
@@ -42,9 +78,12 @@ int skillsNeeded(TrophyTier tier, int n) {
 /// - A sticker for each finished lesson, numbered in the order the lesson was finished.
 /// - A golden star for each skill that reached lasting understanding.
 /// - A land trophy when enough skills of a land reached lasting understanding. Fresh mastery earns none.
+/// - A habit medal when the child did the habit often enough, and an island decoration for 10, 20 and 30 skills understood
+///   for good.
 List<AwardDue> dueAwards({
   required List<SkillFact> skills,
   required List<FinishedLesson> lessons,
+  List<HabitMoment> habits = const <HabitMoment>[],
   int minSkillsPerLand = minSkillsForLandTrophy,
 }) {
   final List<AwardDue> out = <AwardDue>[];
@@ -75,6 +114,28 @@ List<AwardDue> dueAwards({
       if (lasting.length >= need) {
         out.add(AwardDue(key: Awards.trophy(land, tier), kind: AwardKind.trophy, at: lasting[need - 1]));
       }
+    }
+  }
+
+  for (final MedalDef m in medalDefs) {
+    final HabitKind? kind = m.habit;
+    if (kind == null) continue;
+    final List<DateTime> moments = <DateTime>[
+      for (final HabitMoment h in habits)
+        if (h.kind == kind) h.at,
+    ]..sort();
+    if (moments.length >= m.needed) {
+      out.add(AwardDue(key: Awards.medal(m.id), kind: AwardKind.medal, at: moments[m.needed - 1]));
+    }
+  }
+
+  final List<DateTime> allLasting = <DateTime>[
+    for (final SkillFact s in skills)
+      if (s.durableAt != null) s.durableAt!,
+  ]..sort();
+  for (final int n in decorationSteps) {
+    if (allLasting.length >= n) {
+      out.add(AwardDue(key: Awards.decoration(n), kind: AwardKind.decoration, at: allLasting[n - 1]));
     }
   }
   return out;

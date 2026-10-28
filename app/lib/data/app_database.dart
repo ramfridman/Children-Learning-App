@@ -22,7 +22,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 8;
+  static const int currentSchemaVersion = 9;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -69,6 +69,8 @@ class AppDatabase extends _$AppDatabase {
       }
       // 7 to 8 (M8): the stickers, golden stars and trophies a child has been given.
       if (from < 8) await m.createTable(rewards);
+      // 8 to 9 (M8b): the prize the companion wears.
+      if (from < 9) await m.addColumn(profiles, profiles.outfitId);
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -94,6 +96,19 @@ class AppDatabase extends _$AppDatabase {
   Future<void> setCompanion(String profileId, String? characterId) =>
       (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
         ProfilesCompanion(companionId: Value<String?>(characterId)),
+      );
+
+  /// The prize the companion wears (an outfit id), or null for none.
+  Future<String?> outfitOf(String profileId) async {
+    final Profile? row = await (select(
+      profiles,
+    )..where((Profiles t) => t.id.equals(profileId))).getSingleOrNull();
+    return row?.outfitId;
+  }
+
+  Future<void> setOutfit(String profileId, String? outfitId) =>
+      (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
+        ProfilesCompanion(outfitId: Value<String?>(outfitId)),
       );
 
   Future<void> removeProfile(String id) => (delete(profiles)..where((Profiles t) => t.id.equals(id))).go();
@@ -314,6 +329,7 @@ class AppDatabase extends _$AppDatabase {
         addressForm: row.addressForm,
         ageBand: row.ageBand,
         companionId: row.companionId,
+        outfitId: row.outfitId,
       ),
     );
   }

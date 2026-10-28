@@ -94,6 +94,7 @@ Deno.test("child-put: a parent saves a child with a nickname and every device of
     nickname: "נועה",
     avatar_id: "avatar-noa",
     companion_id: null,
+    outfit_id: null,
     address_form: "f",
     age_band: 1,
   });
@@ -332,4 +333,24 @@ Deno.test("sync: events of one family are never seen by another, and the other f
   assert.deepEqual(pushed.refused, [e.id], "their family has no such child");
   const mine = await j(await call(h.pull, parent, "sync-pull", { after: 0, limit: 10 }));
   assert.equal(mine.events.length, 1);
+});
+
+Deno.test("child-put: the prize the companion wears is an id, goes to every device, and nothing else fits there", async () => {
+  const { h, parent, child, profile, j } = await setup();
+  assert.equal((await call(h.put, parent, "child-put", profile(KID, { outfit_id: "sky" }))).status, 200);
+  const first = await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }));
+  assert.equal(first.children[0].outfit_id, "sky");
+  // "none" is a choice too, and saving without a prize clears it.
+  await call(h.put, parent, "child-put", profile(KID, { outfit_id: "none" }));
+  assert.equal(
+    (await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }))).children[0].outfit_id,
+    "none",
+  );
+  for (const bad of ["Sky Scarf", "x", "a".repeat(21), "scarf!"]) {
+    assert.equal(
+      (await call(h.put, parent, "child-put", profile(KID, { outfit_id: bad }))).status,
+      400,
+      bad,
+    );
+  }
 });

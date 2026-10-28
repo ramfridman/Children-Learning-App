@@ -60,6 +60,16 @@ abstract final class Awards {
     return land == null || tier == null ? null : (land: land, tier: tier);
   }
 
+  static String medal(String id) => 'medal:$id';
+
+  static String decoration(int skills) => 'deco:$skills';
+
+  /// `medal:brave-asker` as a medal id, or null.
+  static String? medalOf(String key) => key.startsWith('medal:') ? key.substring(6) : null;
+
+  /// `deco:10` as the number of understood skills it stands for, or null.
+  static int? decorationOf(String key) => key.startsWith('deco:') ? int.tryParse(key.substring(5)) : null;
+
   /// `star:NUM-A-01` as a skill id, or null.
   static String? starOf(String key) => key.startsWith('star:') ? key.substring(5) : null;
 

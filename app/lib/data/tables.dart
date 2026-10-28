@@ -24,6 +24,10 @@ class Profiles extends Table {
   /// character, Nitzi. It names a character pack by id only; the pictures and the voice live in packs.
   TextColumn get companionId => text().nullable()();
 
+  /// The prize (an accessory colour set) the companion wears, by id (for example `sky`), or null for none. It names an
+  /// outfit of the app and holds nothing else.
+  TextColumn get outfitId => text().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => <Column<Object>>{id};
 }

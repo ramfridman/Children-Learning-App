@@ -53,6 +53,9 @@ flutter:
     - assets/art/ui/
     - assets/art/stickers/
     - assets/art/world/
+    - assets/art/trophies/
+    - assets/art/medals/
+    - assets/art/decorations/
     - assets/world/objects.json
   fonts:
     # Heebo is a variable font (weight axis 100 to 900); each family entry maps a real weight to it.

@@ -1,5 +1,6 @@
 // The parent's rules for the family (time limits, rest hours, the weekly windows, the lock, whether the child's words
-// are kept in alerts, whether the AI helper is on). One document; the last write wins and the server counts the versions. Parent devices only.
+// are kept in alerts, whether the AI helper is on, whether trophy ceremonies play, and the promises a parent attached to a
+// trophy). One document; the last write wins and the server counts the versions. Parent devices only.
 // The document is checked field by field: anything it does not name is refused.
 import { GatewayError } from "../_shared/errors.ts";
 import type { FunctionSpec } from "../_shared/handler.ts";
@@ -10,6 +11,15 @@ const isInt = (v: unknown, lo: number, hi: number): boolean =>
 const isObject = (v: unknown): v is Record<string, unknown> =>
   v !== null && typeof v === "object" && !Array.isArray(v);
 
+/** A trophy as the app names it: `trophy:<land>:<tier>`. */
+export const TROPHY_KEY = /^trophy:[a-z]{3,12}:(bronze|silver|gold)$/;
+/** A parent's promise: 1 to 60 characters, no control characters and no angle brackets (it is shown in the parent screens). */
+// deno-lint-ignore no-control-regex
+export const RIBBON_TEXT = /^[^\u0000-\u001f\u007f<>]{1,60}$/u;
+/** No links and no addresses in a promise. */
+export const RIBBON_LINK = /(https?:|www\.|:\/\/|@|\.(com|net|org|il|io|co|app|me)\b)/i;
+/** At most this many promises in all (the whole document must stay small). */
+export const MAX_RIBBONS = 30;
 /** Throws `bad_request` unless [rules] is a settings document the app can read. */
 export function checkRules(rules: unknown): Record<string, unknown> {
   const bad = (why: string) => new GatewayError("bad_request", `rules_${why}`);
@@ -29,10 +39,28 @@ export function checkRules(rules: unknown): Record<string, unknown> {
         }
         break;
       }
+      case "ribbons": {
+        // child id, then trophy key, then the words: only the family's own phones ever read them.
+        if (!isObject(value) || Object.keys(value).length > 12) throw bad("ribbons");
+        let total = 0;
+        for (const [id, byTrophy] of Object.entries(value)) {
+          if (!CHILD_ID.test(id) || !isObject(byTrophy) || Object.keys(byTrophy).length > 18) {
+            throw bad("ribbons");
+          }
+          for (const [key, text] of Object.entries(byTrophy)) {
+            if (!TROPHY_KEY.test(key) || typeof text !== "string") throw bad("ribbons");
+            if (!RIBBON_TEXT.test(text) || RIBBON_LINK.test(text)) throw bad("ribbon_text");
+            total++;
+          }
+        }
+        if (total > MAX_RIBBONS) throw bad("ribbons");
+        break;
+      }
       case "restOn":
       case "lockWhenDone":
       case "keepWords":
       case "aiHelper":
+      case "ceremonies":
         if (typeof value !== "boolean") throw bad(key);
         break;
       case "restStartMinute":
@@ -61,7 +89,7 @@ export function checkRules(rules: unknown): Record<string, unknown> {
 export const spec: FunctionSpec = {
   name: "settings-put",
   access: { kind: "device", roles: ["parent"] },
-  shape: { rules_json: { t: "string", max: 4000 } },
+  shape: { rules_json: { t: "string", max: 8000 } },
   run: async (ctx) => {
     let parsed: unknown;
     try {

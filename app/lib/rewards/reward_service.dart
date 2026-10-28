@@ -5,6 +5,7 @@ import '../data/app_database.dart';
 import '../engine/engine.dart';
 import '../engine/types.dart';
 import 'award.dart';
+import 'habits.dart';
 import 'reward_rules.dart';
 
 /// Works out what a child has earned and keeps it (M8). The rules are pure (`dueAwards`); this class reads the child's
@@ -29,6 +30,7 @@ class RewardService {
     final List<AttemptEvent> events = (await db.attemptsOf(childId)).map(eventOf).toList()
       ..sort((AttemptEvent a, AttemptEvent b) => a.at.compareTo(b.at));
     final Engine engine = Engine(catalog: catalog)..replay(events);
+    final List<HabitMoment> habits = habitMoments(events);
     final List<SkillFact> skills = <SkillFact>[
       for (final MapEntry<String, String> s in domains.entries)
         SkillFact(id: s.key, domain: s.value, durableAt: engine.state.skills[s.key]?.durableAt),
@@ -41,15 +43,15 @@ class RewardService {
             at: (s.endedAt ?? s.startedAt).toUtc(),
           ),
     ];
-    return dueAwards(skills: skills, lessons: lessons);
+    return dueAwards(skills: skills, lessons: lessons, habits: habits);
   }
 
   /// Gives the child whatever is due and was not given yet, and returns the rows given just now.
   ///
   /// The first time for a child (a child with history from before rewards existed, or one a second phone has just
   /// pulled) everything already earned is given quietly, so that only the single highest trophy is presented (M8, Q8).
-  /// After that stickers wait to be revealed and trophies wait for their ceremony; golden stars show on the map and need
-  /// no ceremony.
+  /// After that stickers wait to be revealed, and trophies and medals wait for their ceremony; golden stars and island
+  /// decorations show on the map and need none.
   Future<List<Reward>> evaluate(String childId) async {
     final List<AwardDue> due = await this.due(childId);
     final Set<String> have = await db.awardKeys(childId);
@@ -62,7 +64,9 @@ class RewardService {
       final bool showLater = switch (a.kind) {
         AwardKind.star => false,
         AwardKind.sticker || AwardKind.trophy => !firstTime || a.key == presented,
-        _ => false,
+        // A medal waits for its ceremony (quietly on the first look at old history); a decoration just appears on the island.
+        AwardKind.medal => !firstTime,
+        AwardKind.decoration => false,
       };
       final bool added = await db.addReward(
         RewardsCompanion.insert(

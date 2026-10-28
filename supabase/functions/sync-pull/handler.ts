@@ -40,6 +40,7 @@ export const spec: FunctionSpec = {
         nickname: c.nickname,
         avatar_id: c.avatarId,
         companion_id: c.companionId,
+        outfit_id: c.outfitId ?? null,
         address_form: c.addressForm,
         age_band: c.ageBand,
       })),

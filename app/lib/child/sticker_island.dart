@@ -37,7 +37,7 @@ class StickerIsland extends ConsumerWidget {
                   ),
                   child: stickers.isEmpty
                       ? Text(
-                          He.stickersEmpty.text,
+                          He.stickersEmptyChild.text,
                           key: const Key('stickers-empty'),
                           textAlign: TextAlign.center,
                           style: AppText.fixed(size: 22, weight: 600),

@@ -6,6 +6,7 @@ import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/play/activity_frame.dart';
+import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/harness.dart';
@@ -61,6 +62,17 @@ void main() {
     ) async {
       final AppRig rig = AppRig();
       await rig.seedFinishedSetup();
+      // Two trophies are waiting for their ceremony (earned on another phone, say): the lesson's end gets only one.
+      for (final String key in <String>['trophy:counting:bronze', 'trophy:counting:silver']) {
+        await rig.db.addReward(
+          RewardsCompanion.insert(
+            profileId: 'p-1',
+            awardKey: key,
+            kind: 'trophy',
+            at: DateTime.utc(2026, 10, 27),
+          ),
+        );
+      }
       await rig.pump(tester, size: device.$2);
       await tester.tap(find.text('נועה'));
       await tester.pumpAndSettle();
@@ -184,9 +196,34 @@ void main() {
       expect(given.where((Reward r) => r.kind == 'sticker').map((Reward r) => r.awardKey), <String>[
         'sticker:butterflies:1',
       ]);
-      expect(given.single.seenAt, isNotNull, reason: 'shown, so not shown again');
+      expect(
+        given.firstWhere((Reward r) => r.kind == 'sticker').seenAt,
+        isNotNull,
+        reason: 'shown, so not shown again',
+      );
       await tester.tap(find.byKey(const Key('lesson-done')));
       await tester.pumpAndSettle();
+      // Back on the map the highest waiting trophy gets its ceremony, and only that one; the other waits in the Hall.
+      expect(find.byKey(const Key('ceremony')), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('ceremony-title')),
+          matching: find.textContaining(He.trophySilver.text),
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('ceremony-continue')));
+      await tester.pumpAndSettle();
+      final Map<String, Reward> trophies = <String, Reward>{
+        for (final Reward r in await rig.db.rewardsOf('p-1'))
+          if (r.kind == 'trophy') r.awardKey: r,
+      };
+      expect(trophies['trophy:counting:silver']!.seenAt, isNotNull);
+      expect(
+        trophies['trophy:counting:bronze']!.seenAt,
+        isNull,
+        reason: 'one ceremony for each end of a lesson',
+      );
       // After the first finished lesson the child is taken once to Friends' Beach to choose a companion.
       expect(find.byType(FriendsBeach), findsOneWidget);
       await tester.tap(find.byKey(const Key('friends-home')));

@@ -1,5 +1,5 @@
 // Saves a child of the family: the nickname the parent chose (the one personal text on the server), the avatar, the
-// companion, how to address the child and the age band. A child that was deleted can never be saved again.
+// companion, the prize it wears, how to address the child and the age band. A child that was deleted can never be saved again.
 import { GatewayError } from "../_shared/errors.ts";
 import type { FunctionSpec } from "../_shared/handler.ts";
 import type { ChildProfile } from "../_shared/store.ts";
@@ -14,6 +14,7 @@ interface Body {
   nickname: string;
   avatar_id: string;
   companion_id?: string;
+  outfit_id?: string;
   address_form: "f" | "m" | "n";
   age_band: number;
 }
@@ -26,6 +27,7 @@ export const spec: FunctionSpec = {
     nickname: { t: "string", max: 24, pattern: NICKNAME },
     avatar_id: { t: "string", max: 40, pattern: /^[a-z0-9_-]{2,40}$/ },
     companion_id: { t: "string", max: 40, pattern: /^[a-z0-9-]{2,40}$/, optional: true },
+    outfit_id: { t: "string", max: 20, pattern: /^[a-z0-9-]{2,20}$/, optional: true },
     address_form: { t: "enum", values: ["f", "m", "n"] },
     age_band: { t: "int", min: 0, max: 2 },
   },
@@ -36,6 +38,7 @@ export const spec: FunctionSpec = {
       nickname: b.nickname,
       avatarId: b.avatar_id,
       companionId: b.companion_id ?? null,
+      outfitId: b.outfit_id ?? null,
       addressForm: b.address_form,
       ageBand: b.age_band as 0 | 1 | 2,
     };

@@ -425,3 +425,79 @@ Deno.test("settings-put: the AI helper switch and the keep-the-words switch are 
     "a child device reads them",
   );
 });
+
+Deno.test("settings-put: the ceremony switch and the parents' promises are part of the family's rules, and a child device reads them", async () => {
+  const { h, parent, child, j } = await setup();
+  const rules = {
+    ceremonies: false,
+    ribbons: { [KID]: { "trophy:counting:gold": "הולכים לגלידה", "trophy:colors:silver": "יום בפארק" } },
+  };
+  assert.deepEqual(
+    await j(await call(h.put, parent, "settings-put", { rules_json: JSON.stringify(rules) })),
+    { version: 1 },
+  );
+  assert.deepEqual((await j(await call(h.get, child, "settings-get", {}))).rules, rules);
+  assert.equal((await call(h.put, child, "settings-put", { rules_json: JSON.stringify(rules) })).status, 403);
+});
+
+Deno.test("settings-put: a promise is 60 plain characters for a known trophy, never a link, and there are only so many", async () => {
+  const { h, parent } = await setup();
+  const put = (ribbons: unknown) =>
+    call(h.put, parent, "settings-put", { rules_json: JSON.stringify({ ribbons }) });
+  const gold = "trophy:counting:gold";
+  const bad: unknown[] = [
+    { [KID]: { [gold]: "" } },
+    { [KID]: { [gold]: "א".repeat(61) } },
+    { [KID]: { [gold]: "<b>גלידה</b>" } },
+    { [KID]: { [gold]: "גלידה\n" } },
+    { [KID]: { [gold]: "https://example.com" } },
+    { [KID]: { [gold]: "www.example.com" } },
+    { [KID]: { [gold]: "גלידה אצל x@y.com" } },
+    { [KID]: { [gold]: "go to shop.co now" } },
+    { [KID]: { [gold]: 5 } },
+    { [KID]: { "trophy:counting:platinum": "גלידה" } },
+    { [KID]: { "sticker:butterflies:1": "גלידה" } },
+    { "x": { [gold]: "גלידה" } },
+    { [KID]: [gold] },
+    [KID],
+    "גלידה",
+  ];
+  for (const doc of bad) assert.equal((await put(doc)).status, 400, JSON.stringify(doc));
+  const many: Record<string, string> = {};
+  for (let i = 0; i < 18; i++) many[`trophy:land${String.fromCharCode(97 + i)}:gold`] = "גלידה";
+  assert.equal((await put({ [KID]: many })).status, 200, "18 promises for one child are allowed");
+  const tooMany: Record<string, Record<string, string>> = {};
+  for (let c = 0; c < 2; c++) tooMany[`child-aaaa-00${c + 1}0`] = many;
+  assert.equal((await put(tooMany)).status, 400, "more than 30 in all is refused");
+  assert.equal((await put({ [KID]: { [gold]: "הולכים לגלידה, יום שישי" } })).status, 200);
+});
+
+Deno.test("alert-create: a trophy that has a promise is told as an alert that holds only the trophy's key", async () => {
+  const { h, child, alert, j, store, push } = await setup();
+  const earned = alert({
+    category: "ribbonEarned",
+    severity: "info",
+    detail: "trophy:counting:silver",
+    key: "ribbon:" + KID + ":trophy:counting:silver",
+  });
+  assert.deepEqual(await j(await call(h.create, child, "alert-create", earned)), { status: "new" });
+  assert.equal(store.alerts.length, 1);
+  // The promise is not in the alert, and cannot be: free text is refused in the detail and in the words.
+  for (
+    const bad of [
+      { detail: "We go for ice cream" },
+      { detail: "הולכים לגלידה" },
+      { words: "הולכים לגלידה" },
+      { child_id: undefined },
+    ]
+  ) {
+    assert.equal(
+      (await call(h.create, child, "alert-create", { ...earned, key: "ribbon:other", ...bad })).status,
+      400,
+      JSON.stringify(bad),
+    );
+  }
+  // The parents' phone is told with the fixed phrase only.
+  const text = JSON.stringify(push.sent);
+  assert.equal(text.includes("trophy"), false, "the push does not name the trophy");
+});

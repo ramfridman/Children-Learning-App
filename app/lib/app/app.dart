@@ -6,8 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
 import '../child/calm_loading.dart';
+import '../child/ceremony_screen.dart';
 import '../child/land_screen.dart';
 import '../child/sticker_island.dart';
+import '../child/trophy_hall.dart';
+import '../rewards/ceremony.dart';
+import '../rewards/outfits.dart' show Outfit;
 import '../content/models.dart' show Lesson, PackContent;
 import '../rewards/award.dart';
 import 'reward_providers.dart';
@@ -28,6 +32,7 @@ import '../play/lesson_screen.dart';
 import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
 import 'companion.dart';
+import 'providers.dart';
 import '../parent/time_rules.dart';
 import 'rules_providers.dart';
 import 'push_providers.dart';
@@ -167,7 +172,48 @@ class _HomeState extends ConsumerState<_Home> {
   void initState() {
     super.initState();
     // Whatever the child has already earned is looked at once when the map opens (the first time, quietly; M8).
-    unawaited(evaluateRewardsFor(ref, widget.profile.id));
+    unawaited(_lookAtRewards());
+  }
+
+  /// The first look at what the child has earned. If it gave a trophy or a medal to celebrate, the ceremony follows.
+  Future<void> _lookAtRewards() async {
+    final List<Reward> fresh = await evaluateRewardsFor(ref, widget.profile.id);
+    if (!mounted) return;
+    if (fresh.any((Reward r) => r.seenAt == null && (r.kind == 'trophy' || r.kind == 'medal'))) {
+      await _maybeCeremony();
+    }
+  }
+
+  bool _ceremonyOpen = false;
+
+  /// One ceremony for the best award waiting, unless a parent switched ceremonies off (then it waits in the Hall). Called
+  /// when a lesson or a revisit mission has ended, so at most one ceremony comes after a lesson (M8, Q8).
+  Future<void> _maybeCeremony() async {
+    if (_ceremonyOpen || !mounted) return;
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final ({Reward reward, Outfit? prize})? due = await nextCeremonyFor(db, widget.profile.id);
+    if (due == null || !mounted) return;
+    final Reward next = due.reward;
+    final Outfit? prize = due.prize;
+    _ceremonyOpen = true;
+    await db.markRewardsSeen(<int>[
+      next.id,
+    ], DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true));
+    if (mounted) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (BuildContext c) => CeremonyScreen(awardKey: next.awardKey, prize: prize),
+        ),
+      );
+    }
+    _ceremonyOpen = false;
+    if (mounted) ref.invalidate(rewardsProvider(widget.profile.id));
+  }
+
+  Future<void> _openHall() async {
+    await Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext c) => TrophyHall(childId: widget.profile.id)));
+    if (mounted) _refreshWorld();
   }
 
   void _refreshWorld() {
@@ -225,6 +271,8 @@ class _HomeState extends ConsumerState<_Home> {
       ),
     );
     if (mounted) _refreshWorld();
+    // A trophy or a medal the visit earned gets its ceremony back on the map.
+    if (mounted) await _maybeCeremony();
     if (!mounted || finished != true || mission != null) return;
     final AppDatabase db = await ref.read(databaseProvider.future);
     if (await db.setting(_offeredKey) != null) return;
@@ -263,6 +311,8 @@ class _HomeState extends ConsumerState<_Home> {
     openableLands: _openableLands(),
     stars: ref.watch(goldenStarsProvider(widget.profile.id)).value ?? 0,
     onStickers: _openStickers,
+    onHall: _openHall,
+    hallGlow: ref.watch(hallWaitingProvider(widget.profile.id)).value ?? false,
     companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
     companionMouth: friend?.mouth,
     onCompanion: () => _companion.currentState?.greet(),

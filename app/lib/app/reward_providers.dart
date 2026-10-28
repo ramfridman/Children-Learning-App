@@ -7,6 +7,8 @@ import '../content/engine_adapter.dart';
 import '../content/models.dart';
 import '../data/app_database.dart';
 import '../rewards/award.dart';
+import '../rewards/ceremony.dart' show ceremoniesSettingKey;
+import '../rewards/outfits.dart';
 import '../rewards/reward_service.dart';
 import 'providers.dart';
 import 'state.dart';
@@ -37,12 +39,55 @@ final FutureProviderFamily<int, String> goldenStarsProvider = FutureProvider.fam
   return all.where((Reward r) => r.kind == AwardKind.star.name).length;
 });
 
+/// The setting for the ceremonies: on unless a parent switched them off (M8, F3). When off, a new trophy goes quietly to the
+/// Hall and waits there with a soft glow.
+const String ceremoniesKey = ceremoniesSettingKey;
+
+final FutureProvider<bool> ceremoniesOnProvider = FutureProvider<bool>(
+  (Ref ref) async => (await (await ref.watch(databaseProvider.future)).setting(ceremoniesKey)) != 'off',
+);
+
+/// Whether a trophy or a medal of this child is waiting to be looked at (the Hall's button glows).
+final FutureProviderFamily<bool, String> hallWaitingProvider = FutureProvider.family<bool, String>((
+  Ref ref,
+  String childId,
+) async {
+  final List<Reward> all = await ref.watch(rewardsProvider(childId).future);
+  return all.any(
+    (Reward r) => r.seenAt == null && (r.kind == AwardKind.trophy.name || r.kind == AwardKind.medal.name),
+  );
+});
+
 /// The stickers a child has, in the order they were earned.
 final FutureProviderFamily<List<Reward>, String> stickersProvider =
     FutureProvider.family<List<Reward>, String>((Ref ref, String childId) async {
       final List<Reward> all = await ref.watch(rewardsProvider(childId).future);
       return all.where((Reward r) => r.kind == AwardKind.sticker.name).toList();
     });
+
+/// The prize (an outfit id, or `none`) the playing child's companion wears, or null if never chosen. Choosing writes it at
+/// once and every screen that draws the companion follows.
+class OutfitNotifier extends AsyncNotifier<String?> {
+  @override
+  Future<String?> build() async {
+    final Profile? child = ref.watch(activeProfileProvider);
+    if (child == null) return null;
+    return (await ref.watch(databaseProvider.future)).outfitOf(child.id);
+  }
+
+  Future<void> choose(String outfitId) async {
+    final Profile? child = ref.read(activeProfileProvider);
+    if (child == null) return;
+    await (await ref.read(databaseProvider.future)).setOutfit(child.id, outfitId);
+    state = AsyncData<String?>(outfitId);
+  }
+}
+
+final AsyncNotifierProvider<OutfitNotifier, String?> outfitProvider =
+    AsyncNotifierProvider<OutfitNotifier, String?>(OutfitNotifier.new);
+
+/// The outfit the playing child's companion is wearing now (null for none).
+Outfit? wornOutfit(AsyncValue<String?> chosen) => outfitById(chosen.value);
 
 /// Asks for whatever the child has earned, and refreshes what shows it. Returns the awards given just now. Safe to
 /// call as often as wanted; it never throws to the caller (a child must never be stopped by it).
