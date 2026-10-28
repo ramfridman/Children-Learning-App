@@ -288,6 +288,36 @@ void main() {
     expect(rows.single.sessionId, visits.single.id);
   });
 
+  testWidgets('the congratulation for a right answer is heard to its end before the next question is read', (
+    WidgetTester tester,
+  ) async {
+    final AppRig rig = AppRig();
+    await rig.seedFinishedSetup();
+    await rig.pump(tester);
+    await tester.tap(find.text('נועה'));
+    await tester.pumpAndSettle();
+    await openCountingLesson(tester);
+    await tester.pumpAndSettle();
+    final int before = rig.player.plays;
+    await _tapKey(tester, 'option-o1'); // red: right
+    await wait(tester, 3000); // long enough for the lesson to move on
+    expect(
+      _bubbleText(tester),
+      say('count.butterflies.3'),
+      reason: 'the screen has moved to the next question',
+    );
+    // The congratulation is still "playing" (the fake player has not ended it): the next question waits for it.
+    final int heardMeanwhile = rig.player.plays - before;
+    expect(heardMeanwhile, lessThanOrEqualTo(1), reason: 'only the first line has been started');
+    rig.player.finish();
+    await wait(tester, 600);
+    expect(
+      rig.player.plays,
+      before + heardMeanwhile + 1,
+      reason: 'after the congratulation ends, the question is read',
+    );
+  });
+
   testWidgets('the guide repeats the question when touched, and leaving the lesson stops everything', (
     WidgetTester tester,
   ) async {

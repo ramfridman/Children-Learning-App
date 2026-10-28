@@ -71,7 +71,7 @@ class _CeremonyScreenState extends ConsumerState<CeremonyScreen> with SingleTick
       _play.forward();
     }
     // The companion says its line as the cup arrives. A line with no recording is silence.
-    unawaited(ref.read(voiceDirectorProvider).say(ceremonyVoice(_trophy?.tier)));
+    unawaited(ref.read(voiceDirectorProvider).sayNext(ceremonyVoice(_trophy?.tier), owner: this));
   }
 
   @override
