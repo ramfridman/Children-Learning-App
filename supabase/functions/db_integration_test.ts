@@ -394,7 +394,11 @@ Deno.test(
       const lines =
         await admin`select pack_version, prompt_version, octet_length(audio)::int as n from app.tutor_cache where pack_id = 'ci-pack'`;
       assert.equal(lines.length, 1, "one line is left");
-      assert.deepEqual([lines[0].pack_version, lines[0].prompt_version, lines[0].n], ["0.2.5", "approved", 3]);
+      assert.deepEqual([lines[0].pack_version, lines[0].prompt_version, lines[0].n], [
+        "0.2.5",
+        "approved",
+        3,
+      ]);
       await admin`update app.family_character set voice_id = 'abcDEF0123456789' where character_id = 'ci-char'`;
       await store.publishContent(pack("0.3.0", "e".repeat(64), ["a.1"]));
       const [ch] = await admin`select voice_id from app.family_character where character_id = 'ci-char'`;
