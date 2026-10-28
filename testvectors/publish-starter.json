@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
-  "pack_version": "0.5.0",
-  "manifest_sha256": "f34c54b6f1263af39a24389e6eb0cb20981d7c0a348ec847e850cd5abc868aa4",
+  "pack_version": "0.5.1",
+  "manifest_sha256": "994f43add7b86ce1637a55ca68894a30ea75bb94511cc8ec14e752ba32fa5c26",
   "items": [
     {
       "item_id": "col.find.blue.ball",
