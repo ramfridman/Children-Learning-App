@@ -118,7 +118,67 @@ class TapAnswerSession extends TemplateSession {
       ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _TapStage(this, size));
 
   @override
-  Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;
+  Widget? buildTiles(BuildContext context, ActivitySpec spec) {
+    if (!activity.optionsInTiles) return null;
+    final int n = activity.options.length;
+    // Numerals sit on square tiles; a set of things gets a wider one, as wide as the row allows.
+    final bool sets = activity.options.any((ChoiceOption o) => o.set != null);
+    final double width = math.min(170, spec.tilesWidth / n - 24);
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          for (final ChoiceOption o in activity.options)
+            Opacity(
+              opacity: controller.guided && o.id != activity.correctId ? 0.35 : 1,
+              child: AnswerTile(
+                key: Key('tile-${o.id}'),
+                semanticLabel: o.label ?? '',
+                width: sets ? width : null,
+                state: chosenId == o.id
+                    ? chosenState
+                    : ((controller.guided && o.id == activity.correctId) || voiceLit == o.id
+                          ? AnswerState.selected
+                          : AnswerState.idle),
+                onPressed: () => choose(o.id),
+                child: sets
+                    ? Padding(padding: const EdgeInsets.all(6), child: _face(activity, o, 96, spec.tileFont))
+                    : _face(activity, o, 96, spec.tileFont),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// What an option shows: a numeral on a tile with its dots, or a small set of things.
+Widget _face(TapAnswerActivity a, ChoiceOption o, double box, double font) {
+  if (o.numeral != null) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text('${o.numeral}', style: AppText.fixed(size: font, weight: 800, lineHeight: 1)),
+          const SizedBox(height: 4),
+          FittedBox(fit: BoxFit.scaleDown, child: Dots(o.numeral!)),
+        ],
+      ),
+    );
+  }
+  if (o.set == null) {
+    return Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(o.sprite!)));
+  }
+  final SpriteSet g = o.set!;
+  return SpriteGroup(
+    svg: a.assets.svg(g.sprite),
+    count: g.count,
+    arrangement: g.arrangement,
+    seed: g.seed,
+    scale: g.scale,
+  );
 }
 
 class _TapStage extends StatelessWidget {
@@ -133,7 +193,7 @@ class _TapStage extends StatelessWidget {
     final int n = a.options.length;
     // A group to count or compare takes the top of the stage; the answers sit below it.
     final bool hasGroup = a.group != null;
-    final double top = hasGroup ? size.height * 0.5 : 0;
+    final double top = hasGroup && !a.optionsInTiles ? size.height * 0.5 : 0;
     final double room = size.height - top;
     final double box = math.min(room * (hasGroup ? 0.9 : 0.86), size.width / (n + 0.5));
     final double gap = (size.width - box * n) / (n + 1);
@@ -147,15 +207,36 @@ class _TapStage extends StatelessWidget {
           children: <Widget>[
             if (a.background != null)
               Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
-            if (hasGroup) Positioned(left: 0, top: 0, width: size.width, height: top, child: _groups(a)),
-            for (final (int i, ChoiceOption o) in a.options.indexed)
+            if (hasGroup)
               Positioned(
-                left: gap + i * (box + gap),
-                top: top + (room - box) / 2,
-                width: box,
-                height: box,
-                child: _option(a, o, i, box),
+                left: 0,
+                top: 0,
+                width: size.width,
+                height: a.optionsInTiles ? size.height : top,
+                child: _groups(a),
               ),
+            if (a.stageNumeral != null)
+              Positioned.fill(
+                child: Center(
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Text(
+                      '${a.stageNumeral}',
+                      key: const Key('stage-numeral'),
+                      style: AppText.fixed(size: size.height * 0.7, weight: 800, lineHeight: 1),
+                    ),
+                  ),
+                ),
+              ),
+            if (!a.optionsInTiles)
+              for (final (int i, ChoiceOption o) in a.options.indexed)
+                Positioned(
+                  left: gap + i * (box + gap),
+                  top: top + (room - box) / 2,
+                  width: box,
+                  height: box,
+                  child: _option(a, o, i, box),
+                ),
           ],
         ),
       ),
@@ -191,34 +272,6 @@ class _TapStage extends StatelessWidget {
     );
   }
 
-  /// What an option shows: its picture, a numeral on a tile, or a small set of things.
-  Widget _face(TapAnswerActivity a, ChoiceOption o, double box) {
-    if (o.numeral != null) {
-      return Directionality(
-        textDirection: TextDirection.ltr,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('${o.numeral}', style: AppText.fixed(size: box * 0.5, weight: 800, lineHeight: 1)),
-            const SizedBox(height: 4),
-            FittedBox(fit: BoxFit.scaleDown, child: Dots(o.numeral!)),
-          ],
-        ),
-      );
-    }
-    if (o.set != null) {
-      final SpriteSet g = o.set!;
-      return SpriteGroup(
-        svg: a.assets.svg(g.sprite),
-        count: g.count,
-        arrangement: g.arrangement,
-        seed: g.seed,
-        scale: g.scale,
-      );
-    }
-    return PackSvg(a.assets.svg(o.sprite!));
-  }
-
   Widget _option(TapAnswerActivity a, ChoiceOption o, int i, double box) {
     final bool chosen = s.chosenId == o.id;
     final bool guidedRight = s.controller.guided && o.id == a.correctId;
@@ -244,7 +297,7 @@ class _TapStage extends StatelessWidget {
                 color: ring?.withValues(alpha: 0.22),
                 border: ring == null ? null : Border.all(color: ring, width: 5),
               ),
-              child: Padding(padding: const EdgeInsets.all(6), child: _face(a, o, box)),
+              child: Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(o.sprite!))),
             ),
           ),
         ),

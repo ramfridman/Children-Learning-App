@@ -163,7 +163,7 @@ def k_next_number(a, ctx):
     lo, hi = (ans, n) if before else (1, n)
     return activity(
         a, 'tap_answer', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'learn', 'practice', 'symbolic',
-        {}, choice(opts, cid), tags,
+        {'background': 'asset:meadow'}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: %s.' % count_words(min(n, 5)),
               'נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: %s.' % count_words(min(n, 5)),
               '%s, וְאַחֲרֵי %s בָּא %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), F[n], F[ans], F[ans])
@@ -182,7 +182,7 @@ def k_flash(a, ctx):
              'seed': a.get('seed', 1)}
     return activity(
         a, 'flash', [(a['skill'], 1)], 'learn', 'practice', 'pictorial',
-        {'group': group, 'flashMs': a.get('flashMs', 1500)}, choice(opts, cid), tags,
+        {'background': 'asset:meadow', 'group': group, 'flashMs': a.get('flashMs', 1500)}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט.', 'נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: %s.' % count_words(n),
               'זֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (qty(n, obj), F[n]),
               actions=('replay_prompt_slow', 'show_fingers', 'worked_example'), shared=('flash', None)),
@@ -256,7 +256,8 @@ def k_numeral_to_set(a, ctx):
                            'seed': v}},
         lambda v: qty(v, obj))
     return activity(
-        a, 'tap_answer', [(a['skill'], 1)], 'practice', 'reverse', 'pictorial', {}, choice(opts, cid), tags,
+        a, 'tap_answer', [(a['skill'], 1)], 'practice', 'reverse', 'pictorial',
+        {'background': 'asset:meadow', 'numeral': n}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר.', 'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
               '%s. זֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (count_words(n), qty(n, obj))),
         'child finds the group that has the number named',
@@ -267,7 +268,8 @@ def k_pick_numeral(a, ctx):
     n = a['n']
     opts, cid, tags = options(a['options'], n, lambda v: None, lambda v: {'numeral': v}, lambda v: F[v])
     return activity(
-        a, 'tap_answer', [(a['skill'], 1)], 'practice', 'practice', 'symbolic', {}, choice(opts, cid), tags,
+        a, 'tap_answer', [(a['skill'], 1)], 'practice', 'practice', 'symbolic', {'background': 'asset:meadow'},
+        choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב: %s.' % F[n], 'נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד %s: %s.' % (F[n], count_words(n)),
               '%s. הַמִּסְפָּר הָאַחֲרוֹן הוּא %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), F[n], F[n])),
         'child finds the numeral that is named',
@@ -294,7 +296,7 @@ def k_compare_more(a, ctx):
     word = 'יוֹתֵר' if more else 'פָּחוֹת'
     return activity(
         a, 'tap_answer', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'practice', 'practice',
-        a.get('rep', 'pictorial'), {}, choice(opts, cid), tags,
+        a.get('rep', 'pictorial'), {'background': 'asset:meadow'}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים.',
               'נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה.',
               'בְּצַד אֶחָד יֵשׁ %s, וּבַצַּד הָאַחֵר %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (
@@ -316,8 +318,8 @@ def k_compare_same(a, ctx):
              'group2': {'sprite': 'asset:' + a['obj'], 'count': r, 'arrangement': a.get('arrangement2', 'line'),
                         'seed': 8, 'scale': a.get('scale2', 1)}}
     return activity(
-        a, 'tap_answer', [(a['skill'], 1)], 'practice', 'practice', 'pictorial', scene, choice(opts, cid),
-        {'M-CNT-SIZE'},
+        a, 'tap_answer', [(a['skill'], 1)], 'practice', 'practice', 'pictorial', {**scene, 'optionsOnTiles': True},
+        choice(opts, cid), {'M-CNT-SIZE'},
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים.',
               'נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה.',
               ('בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: %s.' % F[l]) if same else
@@ -346,7 +348,8 @@ def k_ordinal(a, ctx):
     tags = {'M-ORD-CARD'} & {o.get('misconception') for o in opts}
     word = 'הָאַחֲרוֹן' if k == -1 else ORD_M[pos]
     return activity(
-        a, 'tap_answer', [(a['skill'], 1)], 'learn', 'practice', 'concrete', {}, choice(opts, cid), tags,
+        a, 'tap_answer', [(a['skill'], 1)], 'learn', 'practice', 'concrete',
+        {'background': 'asset:meadow', 'optionsOnTiles': True}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: %s.' % ', '.join(
             ORD_M[:pos + 1] if k != -1 else ORD_M[:len(order)]),
               'הַמָּקוֹם %s בַּתּוֹר הוּא %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (

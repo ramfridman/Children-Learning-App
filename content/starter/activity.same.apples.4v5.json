@@ -43,7 +43,8 @@
       "arrangement": "line",
       "seed": 8,
       "scale": 1
-    }
+    },
+    "optionsOnTiles": true
   },
   "answer": {
     "type": "choice",

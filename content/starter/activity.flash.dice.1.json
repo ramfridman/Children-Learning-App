@@ -31,6 +31,7 @@
     "replayButton": true
   },
   "scene": {
+    "background": "asset:meadow",
     "group": {
       "sprite": "asset:ladybug",
       "count": 1,

@@ -30,7 +30,10 @@
     ],
     "replayButton": true
   },
-  "scene": {},
+  "scene": {
+    "background": "asset:meadow",
+    "numeral": 4
+  },
   "answer": {
     "type": "choice",
     "options": [

@@ -407,6 +407,10 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'group': SField(_spriteSet, required: false),
           // Two groups side by side, for a comparison (1.1).
           'group2': SField(_spriteSet, required: false),
+          // A numeral shown large on the stage, for "find the set that has this many" (1.1).
+          'numeral': SField(SInt(min: 0, max: 20), required: false),
+          // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
+          'optionsOnTiles': SField(SBool(), required: false),
         }),
       ),
       'answer': SField(

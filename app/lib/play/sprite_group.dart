@@ -23,7 +23,7 @@ GroupLayout groupLayout(String arrangement, int count, {int seed = 0}) {
   if (count <= 0) return const GroupLayout(<Offset>[], 1, 1);
   switch (arrangement) {
     case 'dice':
-      if (count <= 6) return GroupLayout(_dice(count), 0.25, 0.25);
+      if (count <= 6) return GroupLayout(_dice(count), 0.3, 0.3);
       return groupLayout('ten_frame', count, seed: seed);
     case 'ten_frame':
       return GroupLayout(
@@ -57,9 +57,9 @@ GroupLayout groupLayout(String arrangement, int count, {int seed = 0}) {
 }
 
 List<Offset> _dice(int n) {
-  const double a = 0.25;
+  const double a = 0.2;
   const double b = 0.5;
-  const double c = 0.75;
+  const double c = 0.8;
   return switch (n) {
     1 => const <Offset>[Offset(b, b)],
     2 => const <Offset>[Offset(a, a), Offset(c, c)],
@@ -93,15 +93,22 @@ class SpriteGroup extends StatelessWidget {
     final GroupLayout layout = groupLayout(arrangement, count, seed: seed);
     return LayoutBuilder(
       builder: (BuildContext c, BoxConstraints box) {
-        final double w = box.maxWidth.isFinite ? box.maxWidth : 200;
-        final double h = box.maxHeight.isFinite ? box.maxHeight : 100;
+        double w = box.maxWidth.isFinite ? box.maxWidth : 200;
+        double h = box.maxHeight.isFinite ? box.maxHeight : 100;
+        // The pips of a dice sit in a square, however wide the room is.
+        final bool square = arrangement == 'dice' && count <= 6;
+        final double dx = square ? (w - math.min(w, h)) / 2 : 0;
+        final double dy = square ? (h - math.min(w, h)) / 2 : 0;
+        if (square) {
+          w = h = math.min(w, h);
+        }
         final double side = math.min(layout.cellWidth * w, layout.cellHeight * h) * 0.85 * scale;
         return Stack(
           children: <Widget>[
             for (final Offset p in layout.centers)
               Positioned(
-                left: p.dx * w - side / 2,
-                top: p.dy * h - side / 2,
+                left: dx + p.dx * w - side / 2,
+                top: dy + p.dy * h - side / 2,
                 width: side,
                 height: side,
                 child: PackSvg(svg),

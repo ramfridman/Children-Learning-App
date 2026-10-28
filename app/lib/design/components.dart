@@ -176,8 +176,12 @@ class AnswerTile extends StatelessWidget {
     this.state = AnswerState.idle,
     this.onPressed,
     this.size = 96,
+    this.width,
     this.slop = 12,
   });
+
+  /// A tile that is wider than it is tall (a set of things to choose) gives its [width]; the default is square.
+  final double? width;
 
   /// A row of tiles uses no gap: the tap margins of neighbours add up to the board's 24 point gap.
   final Widget child;
@@ -192,7 +196,7 @@ class AnswerTile extends StatelessWidget {
     final bool selected = state == AnswerState.selected;
     final Widget tile = Container(
       key: const Key('answer-tile'),
-      width: size,
+      width: width ?? size,
       height: size,
       alignment: Alignment.center,
       decoration: BoxDecoration(

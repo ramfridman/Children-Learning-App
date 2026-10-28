@@ -280,11 +280,8 @@ class _HomeState extends ConsumerState<_Home> {
     }
     final bool? finished = await Navigator.of(context).push(
       MaterialPageRoute<bool>(
-        builder: (BuildContext c) => LessonScreen(
-          profileId: widget.profile.id,
-          mission: mission,
-          lessonId: lessonId ?? 'butterflies',
-        ),
+        builder: (BuildContext c) =>
+            LessonScreen(profileId: widget.profile.id, mission: mission, lessonId: lessonId ?? 'butterflies'),
       ),
     );
     if (mounted) _refreshWorld();

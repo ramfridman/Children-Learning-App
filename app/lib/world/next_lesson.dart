@@ -8,10 +8,14 @@ String? nextLessonId({
   required String domain,
   required Map<String, int> finished,
 }) {
-  final List<Lesson> path = <Lesson>[
-    for (final Lesson l in content.lessons.values)
-      if (l.skillIds.any((String s) => content.skills[s]?.domain == domain)) l,
-  ]..sort((Lesson a, Lesson b) => a.sequence != b.sequence ? a.sequence.compareTo(b.sequence) : a.id.compareTo(b.id));
+  final List<Lesson> path =
+      <Lesson>[
+        for (final Lesson l in content.lessons.values)
+          if (l.skillIds.any((String s) => content.skills[s]?.domain == domain)) l,
+      ]..sort(
+        (Lesson a, Lesson b) =>
+            a.sequence != b.sequence ? a.sequence.compareTo(b.sequence) : a.id.compareTo(b.id),
+      );
   if (path.isEmpty) return null;
   for (final Lesson l in path) {
     if ((finished[l.id] ?? 0) == 0) return l.id;

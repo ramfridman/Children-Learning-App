@@ -6,7 +6,7 @@ import type { FunctionSpec } from "../_shared/handler.ts";
 import type { Shape } from "../_shared/schema.ts";
 import type { PublishedItem, PublishedPack } from "../_shared/store.ts";
 
-export const MAX_PUBLISH_BYTES = 256 * 1024;
+export const MAX_PUBLISH_BYTES = 1024 * 1024;
 
 const id = (max: number) => ({ t: "string", max, pattern: /^[a-z0-9][a-z0-9._-]{0,63}$/ }) as const;
 const text = (max: number) => ({ t: "string", max, pattern: /^[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]+$/u }) as const;
@@ -63,8 +63,8 @@ export const spec: FunctionSpec = {
     pack_id: { t: "string", max: 41, pattern: /^[a-z0-9-]{3,41}$/ },
     pack_version: { t: "string", max: 14, pattern: /^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$/ },
     manifest_sha256: { t: "string", max: 64, pattern: /^[0-9a-f]{64}$/ },
-    items: { t: "array", of: { t: "object", shape: item }, maxItems: 400 },
-    misconceptions: { t: "array", of: { t: "object", shape: misconception }, maxItems: 100 },
+    items: { t: "array", of: { t: "object", shape: item }, maxItems: 1000 },
+    misconceptions: { t: "array", of: { t: "object", shape: misconception }, maxItems: 200 },
     characters: { t: "array", of: { t: "object", shape: character }, maxItems: 40 },
   },
   run: async (ctx) => {

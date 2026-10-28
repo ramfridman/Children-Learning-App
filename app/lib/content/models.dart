@@ -255,6 +255,8 @@ class TapAnswerActivity extends Activity {
       group2 = _map(json['scene'])['group2'] == null
           ? null
           : SpriteSet.fromJson(_map(json['scene'])['group2']),
+      stageNumeral = _map(json['scene'])['numeral'] as int?,
+      _tilesFlag = _map(json['scene'])['optionsOnTiles'] == true,
       super._();
 
   final List<ChoiceOption> options;
@@ -263,6 +265,13 @@ class TapAnswerActivity extends Activity {
   /// The thing to count or compare, shown above the answers (1.1), and a second one beside it for a comparison.
   final SpriteSet? group;
   final SpriteSet? group2;
+
+  /// A numeral drawn large on the stage (1.1), or null.
+  final int? stageNumeral;
+
+  /// Numerals and sets are answered on tiles below the stage (it is too small for them); pictures stay on the stage.
+  bool get optionsInTiles => _tilesFlag || options.any((ChoiceOption o) => o.sprite == null);
+  final bool _tilesFlag;
 
   @override
   int get optionCount => options.length;

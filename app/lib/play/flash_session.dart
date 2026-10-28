@@ -176,36 +176,58 @@ class _FlashStage extends StatelessWidget {
   Widget build(BuildContext context) {
     final FlashActivity a = s.activity;
     final SpriteSet g = a.group;
+    // While the group is in view the answers are hidden, so it may use the room below the stage as well.
+    final double room = s.answering ? size.height : size.height * 1.9;
     return Semantics(
       container: true,
       label: a.altText,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(TokenRadius.lg),
-        child: Stack(
-          key: const Key('flash-stage'),
-          children: <Widget>[
-            if (a.background != null)
-              Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
+      child: Stack(
+        key: const Key('flash-stage'),
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          if (a.background != null)
             Positioned.fill(
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: s.visible
-                      ? SpriteGroup(
-                          key: const Key('flash-group'),
-                          svg: a.assets.svg(g.sprite),
-                          count: g.count,
-                          arrangement: g.arrangement,
-                          seed: g.seed,
-                          scale: g.scale,
-                        )
-                      : _Cover(key: const Key('flash-cover'), onTap: s.showAgain, canShowAgain: s.answering),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(TokenRadius.lg),
+                child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover),
+              ),
+            ),
+          if (s.visible && !s.answering)
+            Positioned(
+              left: 0,
+              top: 0,
+              width: size.width,
+              height: room,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: TokenColors.paper.withValues(alpha: 0.92),
+                  borderRadius: BorderRadius.circular(TokenRadius.lg),
                 ),
               ),
             ),
-          ],
-        ),
+          Positioned(
+            left: 0,
+            top: 0,
+            width: size.width,
+            height: s.visible ? room : size.height,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: s.visible
+                    ? SpriteGroup(
+                        key: const Key('flash-group'),
+                        svg: a.assets.svg(g.sprite),
+                        count: g.count,
+                        arrangement: g.arrangement,
+                        seed: g.seed,
+                        scale: g.scale,
+                      )
+                    : _Cover(key: const Key('flash-cover'), onTap: s.showAgain, canShowAgain: s.answering),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -209,8 +209,8 @@ void main() {
                     body: Builder(
                       builder: (BuildContext ctx) => Center(
                         child: SizedBox(
-                          width: device.$2.stage.width,
-                          height: device.$2.stage.height + 120,
+                          width: device.$2.tilesWidth,
+                          height: device.$2.stage.height + 160,
                           child: Column(
                             children: <Widget>[
                               SizedBox(
@@ -218,7 +218,12 @@ void main() {
                                 height: device.$2.stage.height,
                                 child: s.buildStage(ctx, device.$2.stage.size, device.$2),
                               ),
-                              Expanded(child: s.buildTiles(ctx, device.$2) ?? const SizedBox()),
+                              Expanded(
+                                child: SizedBox(
+                                  width: device.$2.tilesWidth,
+                                  child: s.buildTiles(ctx, device.$2) ?? const SizedBox(),
+                                ),
+                              ),
                             ],
                           ),
                         ),

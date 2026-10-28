@@ -10,11 +10,11 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 |---|---|
 | 1. App screens and buttons | 308 |
 | 2. Core voice lines (spoken by every friend) | 26 |
-| 3. Lesson content (skills, activities, misconceptions) | 70 |
+| 3. Lesson content (skills, activities, misconceptions) | 672 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 23 |
 | 6. Helper lexicon (the words the AI helper may use) | 110 |
-| **Total** | **603** |
+| **Total** | **1205** |
 
 ## 1. App screens and buttons
 
@@ -364,6 +364,27 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 
 | Source | Id | Text | Status |
 |---|---|---|---|
+| activity.count.apples.7.json | prompt.caption.0.v | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.apples.7.json | answerPrompt.caption.0.v | כַּמָּה תַּפּוּחִים? | needs-editor |
+| activity.count.apples.7.json | feedback.correct.caption.0.v | שֶׁבַע! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
+| activity.count.apples.7.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.apples.7.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.apples.7.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.count.apples.7.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.count.apples.7.json | hints.0.caption.0.v | נוֹגְעִים בְּתַּפּוּחַ אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד. | needs-editor |
+| activity.count.apples.7.json | hints.1.caption.0.v | בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… | needs-editor |
+| activity.count.apples.7.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שֶׁבַע! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֶׁבַע. | needs-editor |
+| activity.count.apples.7.json | a11y.altText | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.birds.10.json | prompt.caption.0.v | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.birds.10.json | answerPrompt.caption.0.v | כַּמָּה צִפֳּרִים? | needs-editor |
+| activity.count.birds.10.json | feedback.correct.caption.0.v | עֶשֶׂר! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
+| activity.count.birds.10.json | feedback.incorrect.0.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.birds.10.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.count.birds.10.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.count.birds.10.json | hints.0.caption.0.v | נוֹגְעִים בְּצִפּוֹר אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד. | needs-editor |
+| activity.count.birds.10.json | hints.1.caption.0.v | בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… | needs-editor |
+| activity.count.birds.10.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע, עֶשֶׂר. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: עֶשֶׂר! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשֶׂר. | needs-editor |
+| activity.count.birds.10.json | a11y.altText | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
 | activity.count.butterflies.3.json | prompt.caption.0.v | פַּרְפָּרִים בָּאוּ לַגִּנָּה! בּוֹאוּ נִסְפֹּר אוֹתָם. נוֹגְעִים בְּכׇל פַּרְפָּר פַּעַם אַחַת. | needs-editor |
 | activity.count.butterflies.3.json | answerPrompt.caption.0.v | כַּמָּה פַּרְפָּרִים יֵשׁ עַל הַפֶּרַח? | needs-editor |
 | activity.count.butterflies.3.json | feedback.correct.caption.0.v | שְׁלוֹשָׁה! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
@@ -397,6 +418,133 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.count.butterflies.5.json | hints.1.caption.0.v | בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת… שְׁתַּיִם… | needs-editor |
 | activity.count.butterflies.5.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: חָמֵשׁ! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ. | needs-editor |
 | activity.count.butterflies.5.json | a11y.altText | חֲמִשָּׁה פַּרְפָּרִים בַּגִּנָּה | needs-editor |
+| activity.count.fish.9.json | prompt.caption.0.v | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.fish.9.json | answerPrompt.caption.0.v | כַּמָּה דָּגִים? | needs-editor |
+| activity.count.fish.9.json | feedback.correct.caption.0.v | תֵּשַׁע! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
+| activity.count.fish.9.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.fish.9.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.fish.9.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.count.fish.9.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.count.fish.9.json | hints.0.caption.0.v | נוֹגְעִים בְּדָּג אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד. | needs-editor |
+| activity.count.fish.9.json | hints.1.caption.0.v | בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… | needs-editor |
+| activity.count.fish.9.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: תֵּשַׁע! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תֵּשַׁע. | needs-editor |
+| activity.count.fish.9.json | a11y.altText | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.ladybugs.6.json | prompt.caption.0.v | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.ladybugs.6.json | answerPrompt.caption.0.v | כַּמָּה חִפּוּשִׁיּוֹת? | needs-editor |
+| activity.count.ladybugs.6.json | feedback.correct.caption.0.v | שֵׁשׁ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
+| activity.count.ladybugs.6.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.ladybugs.6.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.ladybugs.6.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.count.ladybugs.6.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.count.ladybugs.6.json | hints.0.caption.0.v | נוֹגְעִים בְּחִפּוּשִׁית אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד. | needs-editor |
+| activity.count.ladybugs.6.json | hints.1.caption.0.v | בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… | needs-editor |
+| activity.count.ladybugs.6.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שֵׁשׁ! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ. | needs-editor |
+| activity.count.ladybugs.6.json | a11y.altText | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.stars.8.json | prompt.caption.0.v | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.count.stars.8.json | answerPrompt.caption.0.v | כַּמָּה כּוֹכָבִים? | needs-editor |
+| activity.count.stars.8.json | feedback.correct.caption.0.v | שְׁמוֹנֶה! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
+| activity.count.stars.8.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.stars.8.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.count.stars.8.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.count.stars.8.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.count.stars.8.json | hints.0.caption.0.v | נוֹגְעִים בְּכּוֹכָב אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד. | needs-editor |
+| activity.count.stars.8.json | hints.1.caption.0.v | בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… | needs-editor |
+| activity.count.stars.8.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שְׁמוֹנֶה! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁמוֹנֶה. | needs-editor |
+| activity.count.stars.8.json | a11y.altText | נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים. | needs-editor |
+| activity.fewer.big.fish.json | prompt.caption.0.v | אֵיפֹה יֵשׁ פָּחוֹת דָּגִים? | needs-editor |
+| activity.fewer.big.fish.json | answer.options.0.label | אַרְבָּעָה דָּגִים | needs-editor |
+| activity.fewer.big.fish.json | answer.options.1.label | שְׁנֵי דָּגִים | needs-editor |
+| activity.fewer.big.fish.json | feedback.correct.caption.0.v | כֵּן! כָּאן יֵשׁ פָּחוֹת דָּגִים. | needs-editor |
+| activity.fewer.big.fish.json | feedback.incorrect.0.caption.0.v | יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד. | needs-editor |
+| activity.fewer.big.fish.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.fewer.big.fish.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.fewer.big.fish.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.fewer.big.fish.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.fewer.big.fish.json | hints.2.caption.0.v | בְּצַד אֶחָד יֵשׁ שְׁנֵי דָּגִים, וּבַצַּד הָאַחֵר אַרְבָּעָה דָּגִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.fewer.big.fish.json | a11y.altText | אֵיפֹה יֵשׁ פָּחוֹת דָּגִים? | needs-editor |
+| activity.fewer.stars.4v2.json | prompt.caption.0.v | אֵיפֹה יֵשׁ פָּחוֹת כּוֹכָבִים? | needs-editor |
+| activity.fewer.stars.4v2.json | answer.options.0.label | אַרְבָּעָה כּוֹכָבִים | needs-editor |
+| activity.fewer.stars.4v2.json | answer.options.1.label | שְׁנֵי כּוֹכָבִים | needs-editor |
+| activity.fewer.stars.4v2.json | feedback.correct.caption.0.v | כֵּן! כָּאן יֵשׁ פָּחוֹת כּוֹכָבִים. | needs-editor |
+| activity.fewer.stars.4v2.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.fewer.stars.4v2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.fewer.stars.4v2.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.fewer.stars.4v2.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.fewer.stars.4v2.json | hints.2.caption.0.v | בְּצַד אֶחָד יֵשׁ שְׁנֵי כּוֹכָבִים, וּבַצַּד הָאַחֵר אַרְבָּעָה כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.fewer.stars.4v2.json | a11y.altText | אֵיפֹה יֵשׁ פָּחוֹת כּוֹכָבִים? | needs-editor |
+| activity.flash.dice.1.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה חִפּוּשִׁיּוֹת? | needs-editor |
+| activity.flash.dice.1.json | feedback.correct.caption.0.v | אַחַת! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.dice.1.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.dice.1.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.dice.1.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.dice.1.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת. | needs-editor |
+| activity.flash.dice.1.json | hints.2.caption.0.v | זֶה חִפּוּשִׁית אַחַת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַחַת. | needs-editor |
+| activity.flash.dice.1.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה חִפּוּשִׁיּוֹת? | needs-editor |
+| activity.flash.dice.2.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה כּוֹכָבִים? | needs-editor |
+| activity.flash.dice.2.json | feedback.correct.caption.0.v | שְׁתַּיִם! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.dice.2.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.dice.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.dice.2.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.dice.2.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם. | needs-editor |
+| activity.flash.dice.2.json | hints.2.caption.0.v | זֶה שְׁנֵי כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם. | needs-editor |
+| activity.flash.dice.2.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה כּוֹכָבִים? | needs-editor |
+| activity.flash.dice.3.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה תַּפּוּחִים? | needs-editor |
+| activity.flash.dice.3.json | feedback.correct.caption.0.v | שָׁלוֹשׁ! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.dice.3.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.dice.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.dice.3.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.dice.3.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. | needs-editor |
+| activity.flash.dice.3.json | hints.2.caption.0.v | זֶה שְׁלוֹשָׁה תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ. | needs-editor |
+| activity.flash.dice.3.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה תַּפּוּחִים? | needs-editor |
+| activity.flash.dice.4.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה חִפּוּשִׁיּוֹת? | needs-editor |
+| activity.flash.dice.4.json | feedback.correct.caption.0.v | אַרְבַּע! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.dice.4.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.dice.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.dice.4.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.dice.4.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.flash.dice.4.json | hints.2.caption.0.v | זֶה אַרְבַּע חִפּוּשִׁיּוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע. | needs-editor |
+| activity.flash.dice.4.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה חִפּוּשִׁיּוֹת? | needs-editor |
+| activity.flash.dice.5.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה כּוֹכָבִים? | needs-editor |
+| activity.flash.dice.5.json | feedback.correct.caption.0.v | חָמֵשׁ! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.dice.5.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.dice.5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.dice.5.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.dice.5.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.flash.dice.5.json | hints.2.caption.0.v | זֶה חֲמִשָּׁה כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ. | needs-editor |
+| activity.flash.dice.5.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה כּוֹכָבִים? | needs-editor |
+| activity.flash.frame.4.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה תַּפּוּחִים? | needs-editor |
+| activity.flash.frame.4.json | feedback.correct.caption.0.v | אַרְבַּע! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.frame.4.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.frame.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.frame.4.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.frame.4.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.flash.frame.4.json | hints.2.caption.0.v | זֶה אַרְבָּעָה תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע. | needs-editor |
+| activity.flash.frame.4.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה תַּפּוּחִים? | needs-editor |
+| activity.flash.frame.5.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה דָּגִים? | needs-editor |
+| activity.flash.frame.5.json | feedback.correct.caption.0.v | חָמֵשׁ! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.frame.5.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.frame.5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.frame.5.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.frame.5.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.flash.frame.5.json | hints.2.caption.0.v | זֶה חֲמִשָּׁה דָּגִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ. | needs-editor |
+| activity.flash.frame.5.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה דָּגִים? | needs-editor |
+| activity.flash.scatter.3.json | prompt.caption.0.v | הִסְתַּכְּלוּ מַהֵר! כַּמָּה חִפּוּשִׁיּוֹת? | needs-editor |
+| activity.flash.scatter.3.json | feedback.correct.caption.0.v | שָׁלוֹשׁ! רְאִיתֶם בְּלִי לִסְפֹּר. | needs-editor |
+| activity.flash.scatter.3.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.flash.scatter.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.flash.scatter.3.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט. | needs-editor |
+| activity.flash.scatter.3.json | hints.1.caption.0.v | נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. | needs-editor |
+| activity.flash.scatter.3.json | hints.2.caption.0.v | זֶה שָׁלוֹשׁ חִפּוּשִׁיּוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ. | needs-editor |
+| activity.flash.scatter.3.json | a11y.altText | הִסְתַּכְּלוּ מַהֵר. כַּמָּה חִפּוּשִׁיּוֹת? | needs-editor |
+| activity.give.apples.3.json | prompt.caption.0.v | תְּנוּ לִי שְׁלוֹשָׁה תַּפּוּחִים. | needs-editor |
+| activity.give.apples.3.json | feedback.correct.caption.0.v | שָׁלוֹשׁ! נָתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי. | needs-editor |
+| activity.give.apples.3.json | feedback.incorrect.0.caption.0.v | לָקַחְנוּ אֶת כֻּלָּם. הַפֶּרַח רוֹצֶה רַק אַרְבָּעָה — בּוֹאוּ נִסְפֹּר אוֹתָם. | needs-editor |
+| activity.give.apples.3.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.give.apples.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.give.apples.3.json | hints.0.caption.0.v | תְּנוּ לִי שְׁלוֹשָׁה תַּפּוּחִים. סוֹפְרִים תוֹךְ כְּדֵי שֶׁלּוֹקְחִים. | needs-editor |
+| activity.give.apples.3.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. | needs-editor |
+| activity.give.apples.3.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עֲצְרוּ כְּשֶׁהִגַּעְנוּ אֶל שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.give.apples.3.json | a11y.altText | תְּנוּ לִי שְׁלוֹשָׁה תַּפּוּחִים. | needs-editor |
 | activity.give.butterflies.4.json | prompt.caption.0.v | תְּנוּ לַפֶּרַח אַרְבָּעָה פַּרְפָּרִים. | needs-editor |
 | activity.give.butterflies.4.json | feedback.correct.caption.0.v | אַרְבָּעָה! נְתַתֶּם בְּדִיּוּק אַרְבָּעָה. | needs-editor |
 | activity.give.butterflies.4.json | feedback.incorrect.0.caption.0.v | לָקַחְנוּ אֶת כֻּלָּם. הַפֶּרַח רוֹצֶה רַק אַרְבָּעָה — בּוֹאוּ נִסְפֹּר אוֹתָם. | needs-editor |
@@ -406,6 +554,316 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.give.butterflies.4.json | hints.1.caption.0.v | בּוֹאוּ נַחְשֹׁב עִם הָאֶצְבָּעוֹת: אַחַת… שְׁתַּיִם… שָׁלוֹשׁ… אַרְבַּע. | needs-editor |
 | activity.give.butterflies.4.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לוֹקְחִים אַרְבָּעָה פַּרְפָּרִים. | needs-editor |
 | activity.give.butterflies.4.json | a11y.altText | צִנְצֶנֶת עִם שִׁבְעָה פַּרְפָּרִים וּפֶרַח רֵיק | needs-editor |
+| activity.give.fish.4.json | prompt.caption.0.v | תְּנוּ לִי אַרְבָּעָה דָּגִים. | needs-editor |
+| activity.give.fish.4.json | feedback.correct.caption.0.v | אַרְבַּע! נָתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי. | needs-editor |
+| activity.give.fish.4.json | feedback.incorrect.0.caption.0.v | לָקַחְנוּ אֶת כֻּלָּם. הַפֶּרַח רוֹצֶה רַק אַרְבָּעָה — בּוֹאוּ נִסְפֹּר אוֹתָם. | needs-editor |
+| activity.give.fish.4.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.give.fish.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.give.fish.4.json | hints.0.caption.0.v | תְּנוּ לִי אַרְבָּעָה דָּגִים. סוֹפְרִים תוֹךְ כְּדֵי שֶׁלּוֹקְחִים. | needs-editor |
+| activity.give.fish.4.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.give.fish.4.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עֲצְרוּ כְּשֶׁהִגַּעְנוּ אֶל אַרְבַּע. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.give.fish.4.json | a11y.altText | תְּנוּ לִי אַרְבָּעָה דָּגִים. | needs-editor |
+| activity.give.ladybugs.2.json | prompt.caption.0.v | תְּנוּ לִי שְׁתֵּי חִפּוּשִׁיּוֹת. | needs-editor |
+| activity.give.ladybugs.2.json | feedback.correct.caption.0.v | שְׁתַּיִם! נָתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי. | needs-editor |
+| activity.give.ladybugs.2.json | feedback.incorrect.0.caption.0.v | לָקַחְנוּ אֶת כֻּלָּם. הַפֶּרַח רוֹצֶה רַק אַרְבָּעָה — בּוֹאוּ נִסְפֹּר אוֹתָם. | needs-editor |
+| activity.give.ladybugs.2.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.give.ladybugs.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.give.ladybugs.2.json | hints.0.caption.0.v | תְּנוּ לִי שְׁתֵּי חִפּוּשִׁיּוֹת. סוֹפְרִים תוֹךְ כְּדֵי שֶׁלּוֹקְחִים. | needs-editor |
+| activity.give.ladybugs.2.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם. | needs-editor |
+| activity.give.ladybugs.2.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם. עֲצְרוּ כְּשֶׁהִגַּעְנוּ אֶל שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.give.ladybugs.2.json | a11y.altText | תְּנוּ לִי שְׁתֵּי חִפּוּשִׁיּוֹת. | needs-editor |
+| activity.give.stars.5.json | prompt.caption.0.v | תְּנוּ לִי חֲמִשָּׁה כּוֹכָבִים. | needs-editor |
+| activity.give.stars.5.json | feedback.correct.caption.0.v | חָמֵשׁ! נָתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי. | needs-editor |
+| activity.give.stars.5.json | feedback.incorrect.0.caption.0.v | לָקַחְנוּ אֶת כֻּלָּם. הַפֶּרַח רוֹצֶה רַק אַרְבָּעָה — בּוֹאוּ נִסְפֹּר אוֹתָם. | needs-editor |
+| activity.give.stars.5.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.give.stars.5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.give.stars.5.json | hints.0.caption.0.v | תְּנוּ לִי חֲמִשָּׁה כּוֹכָבִים. סוֹפְרִים תוֹךְ כְּדֵי שֶׁלּוֹקְחִים. | needs-editor |
+| activity.give.stars.5.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.give.stars.5.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עֲצְרוּ כְּשֶׁהִגַּעְנוּ אֶל חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.give.stars.5.json | a11y.altText | תְּנוּ לִי חֲמִשָּׁה כּוֹכָבִים. | needs-editor |
+| activity.more.apples.2v4.json | prompt.caption.0.v | אֵיפֹה יֵשׁ יוֹתֵר תַּפּוּחִים? | needs-editor |
+| activity.more.apples.2v4.json | answer.options.0.label | שְׁנֵי תַּפּוּחִים | needs-editor |
+| activity.more.apples.2v4.json | answer.options.1.label | אַרְבָּעָה תַּפּוּחִים | needs-editor |
+| activity.more.apples.2v4.json | feedback.correct.caption.0.v | כֵּן! כָּאן יֵשׁ יוֹתֵר תַּפּוּחִים. | needs-editor |
+| activity.more.apples.2v4.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.more.apples.2v4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.more.apples.2v4.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.more.apples.2v4.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.more.apples.2v4.json | hints.2.caption.0.v | בְּצַד אֶחָד יֵשׁ אַרְבָּעָה תַּפּוּחִים, וּבַצַּד הָאַחֵר שְׁנֵי תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.more.apples.2v4.json | a11y.altText | אֵיפֹה יֵשׁ יוֹתֵר תַּפּוּחִים? | needs-editor |
+| activity.more.big.apples.json | prompt.caption.0.v | אֵיפֹה יֵשׁ יוֹתֵר תַּפּוּחִים? | needs-editor |
+| activity.more.big.apples.json | answer.options.0.label | שְׁלוֹשָׁה תַּפּוּחִים | needs-editor |
+| activity.more.big.apples.json | answer.options.1.label | חֲמִשָּׁה תַּפּוּחִים | needs-editor |
+| activity.more.big.apples.json | feedback.correct.caption.0.v | כֵּן! כָּאן יֵשׁ יוֹתֵר תַּפּוּחִים. | needs-editor |
+| activity.more.big.apples.json | feedback.incorrect.0.caption.0.v | יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד. | needs-editor |
+| activity.more.big.apples.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.more.big.apples.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.more.big.apples.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.more.big.apples.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.more.big.apples.json | hints.2.caption.0.v | בְּצַד אֶחָד יֵשׁ חֲמִשָּׁה תַּפּוּחִים, וּבַצַּד הָאַחֵר שְׁלוֹשָׁה תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.more.big.apples.json | a11y.altText | אֵיפֹה יֵשׁ יוֹתֵר תַּפּוּחִים? | needs-editor |
+| activity.more.fish.3v5.json | prompt.caption.0.v | אֵיפֹה יֵשׁ יוֹתֵר דָּגִים? | needs-editor |
+| activity.more.fish.3v5.json | answer.options.0.label | חֲמִשָּׁה דָּגִים | needs-editor |
+| activity.more.fish.3v5.json | answer.options.1.label | שְׁלוֹשָׁה דָּגִים | needs-editor |
+| activity.more.fish.3v5.json | feedback.correct.caption.0.v | כֵּן! כָּאן יֵשׁ יוֹתֵר דָּגִים. | needs-editor |
+| activity.more.fish.3v5.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.more.fish.3v5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.more.fish.3v5.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.more.fish.3v5.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.more.fish.3v5.json | hints.2.caption.0.v | בְּצַד אֶחָד יֵשׁ חֲמִשָּׁה דָּגִים, וּבַצַּד הָאַחֵר שְׁלוֹשָׁה דָּגִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.more.fish.3v5.json | a11y.altText | אֵיפֹה יֵשׁ יוֹתֵר דָּגִים? | needs-editor |
+| activity.more.spread.stars.json | prompt.caption.0.v | אֵיפֹה יֵשׁ יוֹתֵר כּוֹכָבִים? | needs-editor |
+| activity.more.spread.stars.json | answer.options.0.label | אַרְבָּעָה כּוֹכָבִים | needs-editor |
+| activity.more.spread.stars.json | answer.options.1.label | שִׁשָּׁה כּוֹכָבִים | needs-editor |
+| activity.more.spread.stars.json | feedback.correct.caption.0.v | כֵּן! כָּאן יֵשׁ יוֹתֵר כּוֹכָבִים. | needs-editor |
+| activity.more.spread.stars.json | feedback.incorrect.0.caption.0.v | יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד. | needs-editor |
+| activity.more.spread.stars.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.more.spread.stars.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.more.spread.stars.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.more.spread.stars.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.more.spread.stars.json | hints.2.caption.0.v | בְּצַד אֶחָד יֵשׁ שִׁשָּׁה כּוֹכָבִים, וּבַצַּד הָאַחֵר אַרְבָּעָה כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.more.spread.stars.json | a11y.altText | אֵיפֹה יֵשׁ יוֹתֵר כּוֹכָבִים? | needs-editor |
+| activity.next.after.1.json | prompt.caption.0.v | מָה בָּא אַחֲרֵי אַחַת? | needs-editor |
+| activity.next.after.1.json | answer.options.0.label | אַחַת | needs-editor |
+| activity.next.after.1.json | answer.options.1.label | שְׁתַּיִם | needs-editor |
+| activity.next.after.1.json | answer.options.2.label | שָׁלוֹשׁ | needs-editor |
+| activity.next.after.1.json | feedback.correct.caption.0.v | שְׁתַּיִם! כָּךְ סוֹפְרִים. | needs-editor |
+| activity.next.after.1.json | feedback.incorrect.0.caption.0.v | הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר. | needs-editor |
+| activity.next.after.1.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.next.after.1.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.next.after.1.json | hints.0.caption.0.v | בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: אַחַת. | needs-editor |
+| activity.next.after.1.json | hints.1.caption.0.v | נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת. | needs-editor |
+| activity.next.after.1.json | hints.2.caption.0.v | אַחַת, וְאַחֲרֵי אַחַת בָּא שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם. | needs-editor |
+| activity.next.after.1.json | a11y.altText | מָה בָּא אַחֲרֵי אַחַת? | needs-editor |
+| activity.next.after.2.json | prompt.caption.0.v | מָה בָּא אַחֲרֵי שְׁתַּיִם? | needs-editor |
+| activity.next.after.2.json | answer.options.0.label | שְׁתַּיִם | needs-editor |
+| activity.next.after.2.json | answer.options.1.label | שָׁלוֹשׁ | needs-editor |
+| activity.next.after.2.json | answer.options.2.label | אַרְבַּע | needs-editor |
+| activity.next.after.2.json | feedback.correct.caption.0.v | שָׁלוֹשׁ! כָּךְ סוֹפְרִים. | needs-editor |
+| activity.next.after.2.json | feedback.incorrect.0.caption.0.v | הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר. | needs-editor |
+| activity.next.after.2.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.next.after.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.next.after.2.json | hints.0.caption.0.v | בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: אַחַת, שְׁתַּיִם. | needs-editor |
+| activity.next.after.2.json | hints.1.caption.0.v | נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם. | needs-editor |
+| activity.next.after.2.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, וְאַחֲרֵי שְׁתַּיִם בָּא שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ. | needs-editor |
+| activity.next.after.2.json | a11y.altText | מָה בָּא אַחֲרֵי שְׁתַּיִם? | needs-editor |
+| activity.next.after.4.json | prompt.caption.0.v | מָה בָּא אַחֲרֵי אַרְבַּע? | needs-editor |
+| activity.next.after.4.json | answer.options.0.label | שָׁלוֹשׁ | needs-editor |
+| activity.next.after.4.json | answer.options.1.label | חָמֵשׁ | needs-editor |
+| activity.next.after.4.json | answer.options.2.label | שֵׁשׁ | needs-editor |
+| activity.next.after.4.json | feedback.correct.caption.0.v | חָמֵשׁ! כָּךְ סוֹפְרִים. | needs-editor |
+| activity.next.after.4.json | feedback.incorrect.0.caption.0.v | הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר. | needs-editor |
+| activity.next.after.4.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.next.after.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.next.after.4.json | hints.0.caption.0.v | בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.next.after.4.json | hints.1.caption.0.v | נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.next.after.4.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, וְאַחֲרֵי אַרְבַּע בָּא חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ. | needs-editor |
+| activity.next.after.4.json | a11y.altText | מָה בָּא אַחֲרֵי אַרְבַּע? | needs-editor |
+| activity.next.after.6.json | prompt.caption.0.v | מָה בָּא אַחֲרֵי שֵׁשׁ? | needs-editor |
+| activity.next.after.6.json | answer.options.0.label | שֵׁשׁ | needs-editor |
+| activity.next.after.6.json | answer.options.1.label | שֶׁבַע | needs-editor |
+| activity.next.after.6.json | answer.options.2.label | שְׁמוֹנֶה | needs-editor |
+| activity.next.after.6.json | feedback.correct.caption.0.v | שֶׁבַע! כָּךְ סוֹפְרִים. | needs-editor |
+| activity.next.after.6.json | feedback.incorrect.0.caption.0.v | הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר. | needs-editor |
+| activity.next.after.6.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.next.after.6.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.next.after.6.json | hints.0.caption.0.v | בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.next.after.6.json | hints.1.caption.0.v | נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.next.after.6.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, וְאַחֲרֵי שֵׁשׁ בָּא שֶׁבַע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֶׁבַע. | needs-editor |
+| activity.next.after.6.json | a11y.altText | מָה בָּא אַחֲרֵי שֵׁשׁ? | needs-editor |
+| activity.next.after.8.json | prompt.caption.0.v | מָה בָּא אַחֲרֵי שְׁמוֹנֶה? | needs-editor |
+| activity.next.after.8.json | answer.options.0.label | שֶׁבַע | needs-editor |
+| activity.next.after.8.json | answer.options.1.label | תֵּשַׁע | needs-editor |
+| activity.next.after.8.json | answer.options.2.label | עֶשֶׂר | needs-editor |
+| activity.next.after.8.json | feedback.correct.caption.0.v | תֵּשַׁע! כָּךְ סוֹפְרִים. | needs-editor |
+| activity.next.after.8.json | feedback.incorrect.0.caption.0.v | הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר. | needs-editor |
+| activity.next.after.8.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.next.after.8.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.next.after.8.json | hints.0.caption.0.v | בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.next.after.8.json | hints.1.caption.0.v | נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.next.after.8.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, וְאַחֲרֵי שְׁמוֹנֶה בָּא תֵּשַׁע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תֵּשַׁע. | needs-editor |
+| activity.next.after.8.json | a11y.altText | מָה בָּא אַחֲרֵי שְׁמוֹנֶה? | needs-editor |
+| activity.next.before.7.json | prompt.caption.0.v | מָה בָּא לִפְנֵי שֶׁבַע? | needs-editor |
+| activity.next.before.7.json | answer.options.0.label | חָמֵשׁ | needs-editor |
+| activity.next.before.7.json | answer.options.1.label | שֵׁשׁ | needs-editor |
+| activity.next.before.7.json | answer.options.2.label | שֶׁבַע | needs-editor |
+| activity.next.before.7.json | feedback.correct.caption.0.v | שֵׁשׁ! כָּךְ סוֹפְרִים. | needs-editor |
+| activity.next.before.7.json | feedback.incorrect.0.caption.0.v | הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר. | needs-editor |
+| activity.next.before.7.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.next.before.7.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.next.before.7.json | hints.0.caption.0.v | בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.next.before.7.json | hints.1.caption.0.v | נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.next.before.7.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע. לִפְנֵי שֶׁבַע בָּא שֵׁשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ. | needs-editor |
+| activity.next.before.7.json | a11y.altText | מָה בָּא לִפְנֵי שֶׁבַע? | needs-editor |
+| activity.nonzero.nest.2.json | prompt.caption.0.v | כַּמָּה צִפֳּרִים בַּקֵּן? | needs-editor |
+| activity.nonzero.nest.2.json | answer.options.0.label | אֶפֶס | needs-editor |
+| activity.nonzero.nest.2.json | answer.options.1.label | אַחַת | needs-editor |
+| activity.nonzero.nest.2.json | answer.options.2.label | שְׁתַּיִם | needs-editor |
+| activity.nonzero.nest.2.json | feedback.correct.caption.0.v | שְׁתַּיִם! נָכוֹן. | needs-editor |
+| activity.nonzero.nest.2.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.nonzero.nest.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.nonzero.nest.2.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב. | needs-editor |
+| activity.nonzero.nest.2.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם. | needs-editor |
+| activity.nonzero.nest.2.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם. | needs-editor |
+| activity.nonzero.nest.2.json | a11y.altText | כַּמָּה צִפֳּרִים בַּקֵּן? | needs-editor |
+| activity.numeral.apples.2.json | prompt.caption.0.v | כַּמָּה תַּפּוּחִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.numeral.apples.2.json | answer.options.0.label | אַחַת | needs-editor |
+| activity.numeral.apples.2.json | answer.options.1.label | שְׁתַּיִם | needs-editor |
+| activity.numeral.apples.2.json | answer.options.2.label | שָׁלוֹשׁ | needs-editor |
+| activity.numeral.apples.2.json | feedback.correct.caption.0.v | שְׁתַּיִם! זֶה הַמִּסְפָּר. | needs-editor |
+| activity.numeral.apples.2.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.apples.2.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.apples.2.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.numeral.apples.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.numeral.apples.2.json | hints.0.caption.0.v | בּוֹאוּ נְנַסֶּה לִסְפֹּר לְאַט. | needs-editor |
+| activity.numeral.apples.2.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם. | needs-editor |
+| activity.numeral.apples.2.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם. יֵשׁ שְׁנֵי תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם. | needs-editor |
+| activity.numeral.apples.2.json | a11y.altText | כַּמָּה תַּפּוּחִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.numeral.bugs.5.json | prompt.caption.0.v | כַּמָּה חִפּוּשִׁיּוֹת יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.numeral.bugs.5.json | answer.options.0.label | אַרְבַּע | needs-editor |
+| activity.numeral.bugs.5.json | answer.options.1.label | חָמֵשׁ | needs-editor |
+| activity.numeral.bugs.5.json | answer.options.2.label | שֵׁשׁ | needs-editor |
+| activity.numeral.bugs.5.json | feedback.correct.caption.0.v | חָמֵשׁ! זֶה הַמִּסְפָּר. | needs-editor |
+| activity.numeral.bugs.5.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.bugs.5.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.bugs.5.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.numeral.bugs.5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.numeral.bugs.5.json | hints.0.caption.0.v | בּוֹאוּ נְנַסֶּה לִסְפֹּר לְאַט. | needs-editor |
+| activity.numeral.bugs.5.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.numeral.bugs.5.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. יֵשׁ חָמֵשׁ חִפּוּשִׁיּוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ. | needs-editor |
+| activity.numeral.bugs.5.json | a11y.altText | כַּמָּה חִפּוּשִׁיּוֹת יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.numeral.fish.4.json | prompt.caption.0.v | כַּמָּה דָּגִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.numeral.fish.4.json | answer.options.0.label | שָׁלוֹשׁ | needs-editor |
+| activity.numeral.fish.4.json | answer.options.1.label | אַרְבַּע | needs-editor |
+| activity.numeral.fish.4.json | answer.options.2.label | חָמֵשׁ | needs-editor |
+| activity.numeral.fish.4.json | feedback.correct.caption.0.v | אַרְבַּע! זֶה הַמִּסְפָּר. | needs-editor |
+| activity.numeral.fish.4.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.fish.4.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.fish.4.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.numeral.fish.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.numeral.fish.4.json | hints.0.caption.0.v | בּוֹאוּ נְנַסֶּה לִסְפֹּר לְאַט. | needs-editor |
+| activity.numeral.fish.4.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.numeral.fish.4.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. יֵשׁ אַרְבָּעָה דָּגִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע. | needs-editor |
+| activity.numeral.fish.4.json | a11y.altText | כַּמָּה דָּגִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.numeral.stars.3.json | prompt.caption.0.v | כַּמָּה כּוֹכָבִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.numeral.stars.3.json | answer.options.0.label | שְׁתַּיִם | needs-editor |
+| activity.numeral.stars.3.json | answer.options.1.label | שָׁלוֹשׁ | needs-editor |
+| activity.numeral.stars.3.json | answer.options.2.label | אַרְבַּע | needs-editor |
+| activity.numeral.stars.3.json | feedback.correct.caption.0.v | שָׁלוֹשׁ! זֶה הַמִּסְפָּר. | needs-editor |
+| activity.numeral.stars.3.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.stars.3.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.numeral.stars.3.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.numeral.stars.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.numeral.stars.3.json | hints.0.caption.0.v | בּוֹאוּ נְנַסֶּה לִסְפֹּר לְאַט. | needs-editor |
+| activity.numeral.stars.3.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. | needs-editor |
+| activity.numeral.stars.3.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. יֵשׁ שְׁלוֹשָׁה כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ. | needs-editor |
+| activity.numeral.stars.3.json | a11y.altText | כַּמָּה כּוֹכָבִים יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר. | needs-editor |
+| activity.ordinal.first.json | prompt.caption.0.v | מִי רִאשׁוֹן בַּתּוֹר? | needs-editor |
+| activity.ordinal.first.json | answer.options.0.label | חָתוּל | needs-editor |
+| activity.ordinal.first.json | answer.options.1.label | כֶּלֶב | needs-editor |
+| activity.ordinal.first.json | answer.options.2.label | בַּרְוָז | needs-editor |
+| activity.ordinal.first.json | feedback.correct.caption.0.v | כֵּן! זֶה הרִאשׁוֹן בַּתּוֹר. | needs-editor |
+| activity.ordinal.first.json | feedback.incorrect.0.caption.0.v | הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה. | needs-editor |
+| activity.ordinal.first.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.ordinal.first.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.ordinal.first.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.ordinal.first.json | hints.1.caption.0.v | נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: רִאשׁוֹן. | needs-editor |
+| activity.ordinal.first.json | hints.2.caption.0.v | הַמָּקוֹם רִאשׁוֹן בַּתּוֹר הוּא חָתוּל. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | needs-editor |
+| activity.ordinal.first.json | a11y.altText | מִי רִאשׁוֹן בַּתּוֹר? | needs-editor |
+| activity.ordinal.last.json | prompt.caption.0.v | מִי הָאַחֲרוֹן בַּתּוֹר? | needs-editor |
+| activity.ordinal.last.json | answer.options.0.label | חָתוּל | needs-editor |
+| activity.ordinal.last.json | answer.options.1.label | בַּרְוָז | needs-editor |
+| activity.ordinal.last.json | answer.options.2.label | כֶּלֶב | needs-editor |
+| activity.ordinal.last.json | answer.options.3.label | דָּג | needs-editor |
+| activity.ordinal.last.json | feedback.correct.caption.0.v | כֵּן! זֶה האַחֲרוֹן בַּתּוֹר. | needs-editor |
+| activity.ordinal.last.json | feedback.incorrect.0.caption.0.v | הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה. | needs-editor |
+| activity.ordinal.last.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.ordinal.last.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.ordinal.last.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.ordinal.last.json | hints.1.caption.0.v | נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי, רְבִיעִי. | needs-editor |
+| activity.ordinal.last.json | hints.2.caption.0.v | הַמָּקוֹם הָאַחֲרוֹן בַּתּוֹר הוּא דָּג. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | needs-editor |
+| activity.ordinal.last.json | a11y.altText | מִי הָאַחֲרוֹן בַּתּוֹר? | needs-editor |
+| activity.ordinal.second.json | prompt.caption.0.v | מִי שֵׁנִי בַּתּוֹר? | needs-editor |
+| activity.ordinal.second.json | answer.options.0.label | כֶּלֶב | needs-editor |
+| activity.ordinal.second.json | answer.options.1.label | בַּרְוָז | needs-editor |
+| activity.ordinal.second.json | answer.options.2.label | חָתוּל | needs-editor |
+| activity.ordinal.second.json | feedback.correct.caption.0.v | כֵּן! זֶה השֵׁנִי בַּתּוֹר. | needs-editor |
+| activity.ordinal.second.json | feedback.incorrect.0.caption.0.v | הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה. | needs-editor |
+| activity.ordinal.second.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.ordinal.second.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.ordinal.second.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.ordinal.second.json | hints.1.caption.0.v | נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: רִאשׁוֹן, שֵׁנִי. | needs-editor |
+| activity.ordinal.second.json | hints.2.caption.0.v | הַמָּקוֹם שֵׁנִי בַּתּוֹר הוּא בַּרְוָז. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | needs-editor |
+| activity.ordinal.second.json | a11y.altText | מִי שֵׁנִי בַּתּוֹר? | needs-editor |
+| activity.ordinal.third.json | prompt.caption.0.v | מִי שְׁלִישִׁי בַּתּוֹר? | needs-editor |
+| activity.ordinal.third.json | answer.options.0.label | בַּרְוָז | needs-editor |
+| activity.ordinal.third.json | answer.options.1.label | חָתוּל | needs-editor |
+| activity.ordinal.third.json | answer.options.2.label | כֶּלֶב | needs-editor |
+| activity.ordinal.third.json | feedback.correct.caption.0.v | כֵּן! זֶה השְׁלִישִׁי בַּתּוֹר. | needs-editor |
+| activity.ordinal.third.json | feedback.incorrect.0.caption.0.v | הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה. | needs-editor |
+| activity.ordinal.third.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.ordinal.third.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.ordinal.third.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.ordinal.third.json | hints.1.caption.0.v | נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי. | needs-editor |
+| activity.ordinal.third.json | hints.2.caption.0.v | הַמָּקוֹם שְׁלִישִׁי בַּתּוֹר הוּא כֶּלֶב. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | needs-editor |
+| activity.ordinal.third.json | a11y.altText | מִי שְׁלִישִׁי בַּתּוֹר? | needs-editor |
+| activity.ordinal.third.of4.json | prompt.caption.0.v | מִי שְׁלִישִׁי בַּתּוֹר? | needs-editor |
+| activity.ordinal.third.of4.json | answer.options.0.label | דָּג | needs-editor |
+| activity.ordinal.third.of4.json | answer.options.1.label | כֶּלֶב | needs-editor |
+| activity.ordinal.third.of4.json | answer.options.2.label | חָתוּל | needs-editor |
+| activity.ordinal.third.of4.json | answer.options.3.label | בַּרְוָז | needs-editor |
+| activity.ordinal.third.of4.json | feedback.correct.caption.0.v | כֵּן! זֶה השְׁלִישִׁי בַּתּוֹר. | needs-editor |
+| activity.ordinal.third.of4.json | feedback.incorrect.0.caption.0.v | הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה. | needs-editor |
+| activity.ordinal.third.of4.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.ordinal.third.of4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.ordinal.third.of4.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
+| activity.ordinal.third.of4.json | hints.1.caption.0.v | נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי. | needs-editor |
+| activity.ordinal.third.of4.json | hints.2.caption.0.v | הַמָּקוֹם שְׁלִישִׁי בַּתּוֹר הוּא חָתוּל. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | needs-editor |
+| activity.ordinal.third.of4.json | a11y.altText | מִי שְׁלִישִׁי בַּתּוֹר? | needs-editor |
+| activity.pick.numeral.2.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר שְׁתַּיִם? | needs-editor |
+| activity.pick.numeral.2.json | answer.options.0.label | אַחַת | needs-editor |
+| activity.pick.numeral.2.json | answer.options.1.label | שְׁתַּיִם | needs-editor |
+| activity.pick.numeral.2.json | answer.options.2.label | שָׁלוֹשׁ | needs-editor |
+| activity.pick.numeral.2.json | feedback.correct.caption.0.v | שְׁתַּיִם! מָצָאתֶם אֶת הַמִּסְפָּר. | needs-editor |
+| activity.pick.numeral.2.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.pick.numeral.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.pick.numeral.2.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב: שְׁתַּיִם. | needs-editor |
+| activity.pick.numeral.2.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד שְׁתַּיִם: אַחַת, שְׁתַּיִם. | needs-editor |
+| activity.pick.numeral.2.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם. הַמִּסְפָּר הָאַחֲרוֹן הוּא שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם. | needs-editor |
+| activity.pick.numeral.2.json | a11y.altText | אֵיפֹה הַמִּסְפָּר שְׁתַּיִם? | needs-editor |
+| activity.pick.numeral.3.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר שָׁלוֹשׁ? | needs-editor |
+| activity.pick.numeral.3.json | answer.options.0.label | שְׁתַּיִם | needs-editor |
+| activity.pick.numeral.3.json | answer.options.1.label | שָׁלוֹשׁ | needs-editor |
+| activity.pick.numeral.3.json | answer.options.2.label | חָמֵשׁ | needs-editor |
+| activity.pick.numeral.3.json | feedback.correct.caption.0.v | שָׁלוֹשׁ! מָצָאתֶם אֶת הַמִּסְפָּר. | needs-editor |
+| activity.pick.numeral.3.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.pick.numeral.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.pick.numeral.3.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב: שָׁלוֹשׁ. | needs-editor |
+| activity.pick.numeral.3.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד שָׁלוֹשׁ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. | needs-editor |
+| activity.pick.numeral.3.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. הַמִּסְפָּר הָאַחֲרוֹן הוּא שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ. | needs-editor |
+| activity.pick.numeral.3.json | a11y.altText | אֵיפֹה הַמִּסְפָּר שָׁלוֹשׁ? | needs-editor |
+| activity.pick.numeral.4.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר אַרְבַּע? | needs-editor |
+| activity.pick.numeral.4.json | answer.options.0.label | שָׁלוֹשׁ | needs-editor |
+| activity.pick.numeral.4.json | answer.options.1.label | אַרְבַּע | needs-editor |
+| activity.pick.numeral.4.json | answer.options.2.label | חָמֵשׁ | needs-editor |
+| activity.pick.numeral.4.json | feedback.correct.caption.0.v | אַרְבַּע! מָצָאתֶם אֶת הַמִּסְפָּר. | needs-editor |
+| activity.pick.numeral.4.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.pick.numeral.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.pick.numeral.4.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב: אַרְבַּע. | needs-editor |
+| activity.pick.numeral.4.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד אַרְבַּע: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.pick.numeral.4.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. הַמִּסְפָּר הָאַחֲרוֹן הוּא אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע. | needs-editor |
+| activity.pick.numeral.4.json | a11y.altText | אֵיפֹה הַמִּסְפָּר אַרְבַּע? | needs-editor |
+| activity.pick.numeral.5.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר חָמֵשׁ? | needs-editor |
+| activity.pick.numeral.5.json | answer.options.0.label | אַחַת | needs-editor |
+| activity.pick.numeral.5.json | answer.options.1.label | אַרְבַּע | needs-editor |
+| activity.pick.numeral.5.json | answer.options.2.label | חָמֵשׁ | needs-editor |
+| activity.pick.numeral.5.json | feedback.correct.caption.0.v | חָמֵשׁ! מָצָאתֶם אֶת הַמִּסְפָּר. | needs-editor |
+| activity.pick.numeral.5.json | feedback.incorrect.0.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.pick.numeral.5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.pick.numeral.5.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב: חָמֵשׁ. | needs-editor |
+| activity.pick.numeral.5.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת עַד חָמֵשׁ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.pick.numeral.5.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. הַמִּסְפָּר הָאַחֲרוֹן הוּא חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ. | needs-editor |
+| activity.pick.numeral.5.json | a11y.altText | אֵיפֹה הַמִּסְפָּר חָמֵשׁ? | needs-editor |
 | activity.pick.red.flower.json | prompt.caption.0.v | אֵיפֹה הַפֶּרַח הָאָדֹם? | needs-editor |
 | activity.pick.red.flower.json | answer.options.0.label | פֶּרַח אָדֹם | needs-editor |
 | activity.pick.red.flower.json | answer.options.1.label | פֶּרַח צָהֹב | needs-editor |
@@ -414,16 +872,140 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.pick.red.flower.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.pick.red.flower.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב: אֵיפֹה הַפֶּרַח הָאָדֹם? | needs-editor |
 | activity.pick.red.flower.json | a11y.altText | שְׁנֵי פְּרָחִים בַּגִּנָּה, אֶחָד אָדֹם וְאֶחָד צָהֹב | needs-editor |
+| activity.same.apples.4v5.json | prompt.caption.0.v | הַאִם יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים? | needs-editor |
+| activity.same.apples.4v5.json | answer.options.0.label | כֵּן | needs-editor |
+| activity.same.apples.4v5.json | answer.options.1.label | לֹא | needs-editor |
+| activity.same.apples.4v5.json | feedback.correct.caption.0.v | כֵּן, צָדַקְתֶּם! | needs-editor |
+| activity.same.apples.4v5.json | feedback.incorrect.0.caption.0.v | יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד. | needs-editor |
+| activity.same.apples.4v5.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.same.apples.4v5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.same.apples.4v5.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.same.apples.4v5.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.same.apples.4v5.json | hints.2.caption.0.v | בְּצַד אֶחָד יֵשׁ אַרְבָּעָה תַּפּוּחִים, וּבַצַּד הָאַחֵר חֲמִשָּׁה תַּפּוּחִים. זֶה לֹא אוֹתוֹ דָּבָר. | needs-editor |
+| activity.same.apples.4v5.json | a11y.altText | הַאִם יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים? | needs-editor |
+| activity.same.bugs.3v3.json | prompt.caption.0.v | הַאִם יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים? | needs-editor |
+| activity.same.bugs.3v3.json | answer.options.0.label | כֵּן | needs-editor |
+| activity.same.bugs.3v3.json | answer.options.1.label | לֹא | needs-editor |
+| activity.same.bugs.3v3.json | feedback.correct.caption.0.v | כֵּן, צָדַקְתֶּם! | needs-editor |
+| activity.same.bugs.3v3.json | feedback.incorrect.0.caption.0.v | יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד. | needs-editor |
+| activity.same.bugs.3v3.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.same.bugs.3v3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.same.bugs.3v3.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים. | needs-editor |
+| activity.same.bugs.3v3.json | hints.1.caption.0.v | נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה. | needs-editor |
+| activity.same.bugs.3v3.json | hints.2.caption.0.v | בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: שָׁלוֹשׁ. | needs-editor |
+| activity.same.bugs.3v3.json | a11y.altText | הַאִם יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים? | needs-editor |
+| activity.show.apples.3.json | prompt.caption.0.v | אֵיפֹה יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים? | needs-editor |
+| activity.show.apples.3.json | answer.options.0.label | שְׁנֵי תַּפּוּחִים | needs-editor |
+| activity.show.apples.3.json | answer.options.1.label | שְׁלוֹשָׁה תַּפּוּחִים | needs-editor |
+| activity.show.apples.3.json | answer.options.2.label | אַרְבָּעָה תַּפּוּחִים | needs-editor |
+| activity.show.apples.3.json | feedback.correct.caption.0.v | כֵּן! זֶה שְׁלוֹשָׁה תַּפּוּחִים. | needs-editor |
+| activity.show.apples.3.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.show.apples.3.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.show.apples.3.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.show.apples.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.show.apples.3.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר. | needs-editor |
+| activity.show.apples.3.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. | needs-editor |
+| activity.show.apples.3.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. זֶה שְׁלוֹשָׁה תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.show.apples.3.json | a11y.altText | אֵיפֹה יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים? | needs-editor |
+| activity.show.birds.4.json | prompt.caption.0.v | אֵיפֹה יֵשׁ אַרְבַּע צִפֳּרִים? | needs-editor |
+| activity.show.birds.4.json | answer.options.0.label | שָׁלוֹשׁ צִפֳּרִים | needs-editor |
+| activity.show.birds.4.json | answer.options.1.label | אַרְבַּע צִפֳּרִים | needs-editor |
+| activity.show.birds.4.json | answer.options.2.label | חָמֵשׁ צִפֳּרִים | needs-editor |
+| activity.show.birds.4.json | feedback.correct.caption.0.v | כֵּן! זֶה אַרְבַּע צִפֳּרִים. | needs-editor |
+| activity.show.birds.4.json | feedback.incorrect.0.caption.0.v | אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.show.birds.4.json | feedback.incorrect.1.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.show.birds.4.json | feedback.incorrect.2.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.show.birds.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.show.birds.4.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר. | needs-editor |
+| activity.show.birds.4.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. | needs-editor |
+| activity.show.birds.4.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. זֶה אַרְבַּע צִפֳּרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.show.birds.4.json | a11y.altText | אֵיפֹה יֵשׁ אַרְבַּע צִפֳּרִים? | needs-editor |
+| activity.show.stars.5.json | prompt.caption.0.v | אֵיפֹה יֵשׁ חֲמִשָּׁה כּוֹכָבִים? | needs-editor |
+| activity.show.stars.5.json | answer.options.0.label | שְׁלוֹשָׁה כּוֹכָבִים | needs-editor |
+| activity.show.stars.5.json | answer.options.1.label | אַרְבָּעָה כּוֹכָבִים | needs-editor |
+| activity.show.stars.5.json | answer.options.2.label | חֲמִשָּׁה כּוֹכָבִים | needs-editor |
+| activity.show.stars.5.json | feedback.correct.caption.0.v | כֵּן! זֶה חֲמִשָּׁה כּוֹכָבִים. | needs-editor |
+| activity.show.stars.5.json | feedback.incorrect.0.caption.0.v | אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.show.stars.5.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.show.stars.5.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.show.stars.5.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר. | needs-editor |
+| activity.show.stars.5.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. | needs-editor |
+| activity.show.stars.5.json | hints.2.caption.0.v | אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. זֶה חֲמִשָּׁה כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | needs-editor |
+| activity.show.stars.5.json | a11y.altText | אֵיפֹה יֵשׁ חֲמִשָּׁה כּוֹכָבִים? | needs-editor |
+| activity.zero.basket.json | prompt.caption.0.v | כַּמָּה תַּפּוּחִים בַּסַּל? | needs-editor |
+| activity.zero.basket.json | answer.options.0.label | אֶפֶס | needs-editor |
+| activity.zero.basket.json | answer.options.1.label | אַחַת | needs-editor |
+| activity.zero.basket.json | answer.options.2.label | שָׁלוֹשׁ | needs-editor |
+| activity.zero.basket.json | feedback.correct.caption.0.v | אֶפֶס! אֵין אַף תַּפּוּחַ. | needs-editor |
+| activity.zero.basket.json | feedback.incorrect.0.caption.0.v | גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס. | needs-editor |
+| activity.zero.basket.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.zero.basket.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.zero.basket.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב. | needs-editor |
+| activity.zero.basket.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אֵין כְּלוּם לִסְפֹּר. | needs-editor |
+| activity.zero.basket.json | hints.2.caption.0.v | אֵין אַף תַּפּוּחַ. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.zero.basket.json | a11y.altText | כַּמָּה תַּפּוּחִים בַּסַּל? | needs-editor |
+| activity.zero.bowl.json | prompt.caption.0.v | כַּמָּה דָּגִים בַּקְעָרָה? | needs-editor |
+| activity.zero.bowl.json | answer.options.0.label | אֶפֶס | needs-editor |
+| activity.zero.bowl.json | answer.options.1.label | אַחַת | needs-editor |
+| activity.zero.bowl.json | answer.options.2.label | שְׁתַּיִם | needs-editor |
+| activity.zero.bowl.json | feedback.correct.caption.0.v | אֶפֶס! אֵין אַף דָּג. | needs-editor |
+| activity.zero.bowl.json | feedback.incorrect.0.caption.0.v | גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס. | needs-editor |
+| activity.zero.bowl.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.zero.bowl.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.zero.bowl.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב. | needs-editor |
+| activity.zero.bowl.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אֵין כְּלוּם לִסְפֹּר. | needs-editor |
+| activity.zero.bowl.json | hints.2.caption.0.v | אֵין אַף דָּג. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.zero.bowl.json | a11y.altText | כַּמָּה דָּגִים בַּקְעָרָה? | needs-editor |
+| activity.zero.nest.json | prompt.caption.0.v | כַּמָּה צִפֳּרִים בַּקֵּן? | needs-editor |
+| activity.zero.nest.json | answer.options.0.label | אֶפֶס | needs-editor |
+| activity.zero.nest.json | answer.options.1.label | אַחַת | needs-editor |
+| activity.zero.nest.json | answer.options.2.label | שְׁתַּיִם | needs-editor |
+| activity.zero.nest.json | feedback.correct.caption.0.v | אֶפֶס! אֵין אַף צִפּוֹר. | needs-editor |
+| activity.zero.nest.json | feedback.incorrect.0.caption.0.v | גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס. | needs-editor |
+| activity.zero.nest.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
+| activity.zero.nest.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
+| activity.zero.nest.json | hints.0.caption.0.v | בּוֹאוּ נִסְתַּכֵּל שׁוּב. | needs-editor |
+| activity.zero.nest.json | hints.1.caption.0.v | נִסְפֹּר עִם הָאֶצְבָּעוֹת: אֵין כְּלוּם לִסְפֹּר. | needs-editor |
+| activity.zero.nest.json | hints.2.caption.0.v | אֵין אַף צִפּוֹר. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.zero.nest.json | a11y.altText | כַּמָּה צִפֳּרִים בַּקֵּן? | needs-editor |
 | lesson.butterflies.json | title.0.v | פַּרְפָּרִים בַּגִּנָּה | needs-editor |
 | lesson.butterflies.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם לְאַט וּבְדַקְתֶּם כׇּל פַּרְפָּר. | needs-editor |
+| lesson.count-to-ten.json | title.0.v | סוֹפְרִים עַד עֶשֶׂר | needs-editor |
+| lesson.count-to-ten.json | celebration.caption.0.v | וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר. | needs-editor |
+| lesson.counting-words.json | title.0.v | סוֹפְרִים לְפִי הַסֵּדֶר | needs-editor |
+| lesson.counting-words.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם לְפִי הַסֵּדֶר. | needs-editor |
+| lesson.find-the-number.json | title.0.v | מוֹצְאִים אֶת הַמִּסְפָּר | needs-editor |
+| lesson.find-the-number.json | celebration.caption.0.v | יָפֶה מְאֹד! הִכַּרְתֶּם אֶת הַמִּסְפָּרִים. | needs-editor |
+| lesson.giving.json | title.0.v | נוֹתְנִים בְּדִיּוּק | needs-editor |
+| lesson.giving.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ. | needs-editor |
+| lesson.glance-more.json | title.0.v | רוֹאִים אַרְבַּע וְחָמֵשׁ | needs-editor |
+| lesson.glance-more.json | celebration.caption.0.v | מַדְהִים! רְאִיתֶם אַרְבַּע וְחָמֵשׁ בְּמַבָּט אֶחָד. | needs-editor |
+| lesson.glance-small.json | title.0.v | רוֹאִים בְּמַבָּט אֶחָד | needs-editor |
+| lesson.glance-small.json | celebration.caption.0.v | וַאוּ! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר. | needs-editor |
+| lesson.more-or-less.json | title.0.v | יוֹתֵר אוֹ פָּחוֹת | needs-editor |
+| lesson.more-or-less.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת. | needs-editor |
+| lesson.nothing-there.json | title.0.v | אֵין כְּלוּם | needs-editor |
+| lesson.nothing-there.json | celebration.caption.0.v | יָפֶה מְאֹד! אֵין כְּלוּם זֶה אֶפֶס. | needs-editor |
+| lesson.numbers-and-things.json | title.0.v | מִסְפָּרִים וְדְּבָרִים | needs-editor |
+| lesson.numbers-and-things.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! מָצָאתֶם אֶת הַמִּסְפָּר הַנָּכוֹן. | needs-editor |
+| lesson.tricky-sizes.json | title.0.v | לֹא לְפִי הַגֹּדֶל | needs-editor |
+| lesson.tricky-sizes.json | celebration.caption.0.v | חֲכָמִים! סְפַרְתֶּם וְלֹא הִסְתַּכַּלְתֶּם עַל הַגֹּדֶל. | needs-editor |
+| lesson.who-is-first.json | title.0.v | מִי רִאשׁוֹן בַּתּוֹר? | needs-editor |
+| lesson.who-is-first.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי רִאשׁוֹן, שֵׁנִי וּשְׁלִישִׁי. | needs-editor |
 | misconception.M-CNT-CARD.json | parentText | הילד סופר שוב במקום לומר כמה יש בסך הכול, או נותן את כל העצמים כשמבקשים מספר מסוים. | needs-editor |
 | misconception.M-CNT-CARD.json | homeActivity.0.v | בארוחה, לבקש מהילד להגיש שלושה פירות ולספור אותם בקול. אחרי הספירה לשאול: כמה יש בסך הכול? בלי לתקן, רק לספור שוב יחד. | needs-editor |
 | misconception.M-CNT-DOUBLE.json | parentText | הילד סופר עצם אחד פעמיים ולכן מקבל מספר גדול מדי. | needs-editor |
 | misconception.M-CNT-DOUBLE.json | homeActivity.0.v | לסדר חמש כוסות בשורה ולבקש מהילד להזיז כוס אחת הצידה בכל פעם שהוא סופר אותה, כך שאי אפשר לספור אותה פעמיים. | needs-editor |
 | misconception.M-CNT-SEQ.json | parentText | הילד מדלג על מילות ספירה או אומר אותן שלא לפי הסדר. | needs-editor |
 | misconception.M-CNT-SEQ.json | homeActivity.0.v | לשיר יחד שיר ספירה, או לעלות במדרגות ולספור כל מדרגה בקול. חמש דקות מספיקות, בלי לתקן, רק לחזור שוב. | needs-editor |
+| misconception.M-CNT-SIZE.json | parentText | הילד שופט מי יותר לפי הגודל או הפיזור של העצמים ולא לפי המספר. | needs-editor |
+| misconception.M-CNT-SIZE.json | homeActivity.0.v | להניח על השולחן שתי קבוצות של כפיות: שלוש רחוקות זו מזו וחמש צפופות. לשאול איפה יש יותר, ואז לסדר זוגות, כפית מול כפית, ולראות יחד. | needs-editor |
 | misconception.M-CNT-SKIP.json | parentText | הילד מפספס עצם אחד בספירה ולכן מקבל מספר קטן מדי. | needs-editor |
 | misconception.M-CNT-SKIP.json | homeActivity.0.v | לשים צעצועים במעגל ולסמן את הראשון בכובע, כדי לדעת איפה הספירה מתחילה ונגמרת. לספור יחד ולגעת בכל אחד פעם אחת. | needs-editor |
+| misconception.M-NUM-ZERO.json | parentText | הילד חושב שאפס הוא לא מספר, ואומר 'אחת' או 'כלום' כשאין עצמים. | needs-editor |
+| misconception.M-NUM-ZERO.json | homeActivity.0.v | להראות קערה ריקה ולשאול כמה תפוחים יש בה. לתת לילד להגיד 'אפס', ואז להכניס תפוח ולשאול שוב. | needs-editor |
+| misconception.M-ORD-CARD.json | parentText | הילד מבלבל בין 'השלישי' בתור לבין 'שלושה' ילדים. | needs-editor |
+| misconception.M-ORD-CARD.json | homeActivity.0.v | לעמוד בתור עם בובות: מי הראשון, מי השני, מי האחרון? להחליף את המקומות ולשאול שוב. | needs-editor |
 | skill.COL-A-02.json | title.0.v | מצביעים על אדום, כחול, צהוב וירוק כששומעים את שמם | needs-editor |
 | skill.COL-A-02.json | childLine.0.v | מַצְבִּיעִים עַל אָדֹם, כָּחֹל, צָהֹב וְיָרֹק | needs-editor |
 | skill.NUM-A-01.json | title.0.v | אומרים את מילות הספירה 1–5 לפי הסדר | needs-editor |
@@ -434,6 +1016,26 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | skill.NUM-A-03.json | childLine.0.v | נוֹגְעִים בְּכָל אֶחָד פַּעַם אַחַת כְּשֶׁסּוֹפְרִים | needs-editor |
 | skill.NUM-A-04.json | title.0.v | עונים כמה יש לפי המספר האחרון שנספר (עד 5) | needs-editor |
 | skill.NUM-A-04.json | childLine.0.v | יוֹדְעִים כַּמָּה יֵשׁ: הַמִּסְפָּר הָאַחֲרוֹן שֶׁסָּפַרְנוּ | needs-editor |
+| skill.NUM-A-05.json | title.0.v | מזהים 1–3 במבט אחד בלי לספור | needs-editor |
+| skill.NUM-A-05.json | childLine.0.v | רוֹאִים כַּמָּה בְּמַבָּט אֶחָד | needs-editor |
+| skill.NUM-A-06.json | title.0.v | מוציאים כמות מבוקשת (עד 5) מערימה גדולה יותר | needs-editor |
+| skill.NUM-A-06.json | childLine.0.v | נוֹתְנִים בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ | needs-editor |
+| skill.NUM-A-07.json | title.0.v | מתאימים מספרים 1–5 לכמויות | needs-editor |
+| skill.NUM-A-07.json | childLine.0.v | מַתְאִימִים מִסְפָּר לַכַּמּוּת | needs-editor |
+| skill.NUM-A-08.json | title.0.v | בוחרים את הספרה 1–5 כשאומרים אותה | needs-editor |
+| skill.NUM-A-08.json | childLine.0.v | מוֹצְאִים אֶת הַמִּסְפָּר שֶׁאוֹמְרִים | needs-editor |
+| skill.NUM-A-09.json | title.0.v | סופרים 6–10 עצמים | needs-editor |
+| skill.NUM-A-09.json | childLine.0.v | סוֹפְרִים עַד עֶשֶׂר | needs-editor |
+| skill.NUM-A-10.json | title.0.v | מזהים 4–5 בקובייה ובמסגרת עשר במבט אחד | needs-editor |
+| skill.NUM-A-10.json | childLine.0.v | רוֹאִים אַרְבַּע וְחָמֵשׁ בְּמַבָּט אֶחָד | needs-editor |
+| skill.NUM-A-11.json | title.0.v | משווים שתי קבוצות עד 5: יותר, פחות, אותו דבר | needs-editor |
+| skill.NUM-A-11.json | childLine.0.v | יוֹדְעִים אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת | needs-editor |
+| skill.NUM-A-12.json | title.0.v | משווים לפי המספר גם כשהעצמים גדולים או צפופים | needs-editor |
+| skill.NUM-A-12.json | childLine.0.v | סוֹפְרִים כְּדֵי לְהַשְׁוֹת, לֹא מִסְתַּכְּלִים עַל הַגֹּדֶל | needs-editor |
+| skill.NUM-A-13.json | title.0.v | משתמשים ב'ראשון', 'שני', 'שלישי' ו'אחרון' | needs-editor |
+| skill.NUM-A-13.json | childLine.0.v | יוֹדְעִים מִי רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי וְאַחֲרוֹן | needs-editor |
+| skill.NUM-A-14.json | title.0.v | יודעים ש'אין כלום' הוא אפס | needs-editor |
+| skill.NUM-A-14.json | childLine.0.v | יוֹדְעִים שֶׁאֵין כְּלוּם זֶה אֶפֶס | needs-editor |
 
 ## 4. Reviewed helper (tutor) lines
 

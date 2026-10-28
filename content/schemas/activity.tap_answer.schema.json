@@ -273,6 +273,14 @@
             "count"
           ],
           "additionalProperties": false
+        },
+        "numeral": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "optionsOnTiles": {
+          "type": "boolean"
         }
       },
       "required": [],
