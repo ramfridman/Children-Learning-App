@@ -113,7 +113,7 @@ async function setup(over: { budget?: Partial<TutorBudget>; noTutor?: boolean } 
     child_ref: REF,
     session_ref: SESSION,
     pack_id: "starter",
-    pack_version: "0.2.0",
+    pack_version: vector.pack_version,
     item_id: "count.butterflies.3",
     character_id: "nitzi",
     band: "A",

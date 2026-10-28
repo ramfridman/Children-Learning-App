@@ -38,7 +38,6 @@ class PrewarmRequest {
     int maxMicro = 0,
     int count = 1,
     List<Map<String, Object?>>? lines,
-    String? fromVersion,
   }) => <String, Object?>{
     'mode': mode,
     'pack_id': packId,
@@ -52,7 +51,6 @@ class PrewarmRequest {
     'max_micro_usd': maxMicro,
     'count': count,
     'lines': ?lines,
-    'from_version': ?fromVersion,
   };
 }
 
@@ -140,14 +138,6 @@ class PrewarmPlan {
   String describe() =>
       '$lines lines in all, $cached already made, $toMake to make: about $voiceChars voice characters and '
       '${dollars(estMicro)} USD (an estimate, from the prices in the server config). $_movesNote';
-}
-
-/// Copies the reviewed lines of an older version of the pack to the version in [r], for the items whose revision did not
-/// change (a pack that only changes its notes must not make 66 paid lines unreachable). Costs nothing: no model, no voice.
-/// Returns how many lines were copied.
-Future<int> carry(PrewarmSend send, PrewarmRequest r, {required String fromVersion}) async {
-  final Map<String, Object?> answer = await send(r.body('carry', fromVersion: fromVersion));
-  return answer['carried']! as int;
 }
 
 Future<PrewarmPlan> plan(PrewarmSend send, PrewarmRequest r) async =>

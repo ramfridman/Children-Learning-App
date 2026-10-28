@@ -123,7 +123,7 @@ final FutureProvider<PackContent> contentProvider = FutureProvider<PackContent>(
   final PackInstaller installer = await ref.watch(packInstallerProvider.future);
   return ContentRepository(
     installer: installer,
-    bundled: () async => (await rootBundle.load('assets/packs/starter-0.2.0.nnpack')).buffer.asUint8List(),
+    bundled: () async => (await rootBundle.load('assets/packs/starter-0.3.0.nnpack')).buffer.asUint8List(),
   ).starter();
 });
 

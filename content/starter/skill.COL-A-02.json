@@ -10,6 +10,13 @@
       "v": "מצביעים על אדום, כחול, צהוב וירוק כששומעים את שמם"
     }
   ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַצְבִּיעִים עַל אָדֹם, כָּחֹל, צָהֹב וְיָרֹק"
+    }
+  ],
   "prerequisites": [],
   "representations": [
     "concrete",

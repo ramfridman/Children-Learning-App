@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
-  "pack_version": "0.2.0",
-  "manifest_sha256": "ddccdbfa1bcff62bf0570c6919eeba7fcb634f165dbf3e7a17a20dec31a3cdde",
+  "pack_version": "0.3.0",
+  "manifest_sha256": "be4d9a810fdb449375223b26f3d317d4312fef1a365f12a2fae6e4aa124274a2",
   "items": [
     {
       "item_id": "count.butterflies.3",

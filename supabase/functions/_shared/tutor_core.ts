@@ -10,6 +10,7 @@ import { ModelFailed } from "./anthropic.ts";
 import { VoiceFailed } from "./elevenlabs.ts";
 import type { Services } from "./handler.ts";
 import { loadBlocklist, loadLexicon } from "./lexicon.ts";
+import { APPROVED_PROMPT_VERSION } from "./store.ts";
 import type { CachedLine, CacheKey, TutorContext } from "./store.ts";
 import {
   type Attempt,
@@ -24,7 +25,7 @@ import {
 import { type Failure, type TurnFacts, validateReply, VALIDATOR_VERSION } from "./validator.ts";
 
 /** The prompt version under which reviewed lines are kept: a new prompt never makes them unreachable. */
-export const APPROVED = "approved";
+export const APPROVED = APPROVED_PROMPT_VERSION;
 
 const lexicon = loadLexicon();
 const blocklist = loadBlocklist();

@@ -10,6 +10,13 @@
       "v": "אומרים את מילות הספירה 1–5 לפי הסדר"
     }
   ],
+  "worldObject": "stair",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים עַד חָמֵשׁ, לְפִי הַסֵּדֶר"
+    }
+  ],
   "prerequisites": [],
   "representations": [
     "embodied",

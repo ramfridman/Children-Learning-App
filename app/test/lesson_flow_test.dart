@@ -248,7 +248,7 @@ void main() {
       ]);
       final Attempt first = (await _attempts(rig)).first;
       expect(first.packId, 'starter');
-      expect(first.packVersion, '0.2.0');
+      expect(first.packVersion, '0.3.0');
       expect(first.lessonId, 'butterflies');
       expect(first.activityRevision, 1);
       expect(first.templateVersion, '1.0');

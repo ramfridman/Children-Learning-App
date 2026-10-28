@@ -16,7 +16,7 @@ const String _vectors = '../testvectors/publish-starter.json';
 
 void main() {
   late Map<String, Object?> starter;
-  setUpAll(() async => starter = indexOf(await _load('assets/packs/starter-0.2.0.nnpack')));
+  setUpAll(() async => starter = indexOf(await _load('assets/packs/starter-0.3.0.nnpack')));
 
   test(
     'the starter pack gives its five activities and four misconceptions, with the facts the prompt needs',

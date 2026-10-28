@@ -1,5 +1,6 @@
 // Test-only kit: an in-memory Store, fake services, and a signer that talks to a real handler
 // exactly as a phone would. Never imported by a function.
+import { APPROVED_PROMPT_VERSION } from "./store.ts";
 import type { DeviceRecord } from "./auth.ts";
 import { b64urlEncode, type Bytes, sha256B64url } from "./b64.ts";
 import { canonicalString } from "./canonical.ts";
@@ -237,29 +238,25 @@ export class FakeStore implements Store {
       });
     }
     if (have && have.packVersion === p.packVersion) return Promise.resolve("unchanged" as const);
-    for (const i of p.items) this.itemRevisions.set(`${p.packId}/${p.packVersion}/${i.itemId}`, i.revision);
+    // Lines a person approved go with the items that did not change; every other line of the old version is dropped.
+    const kept = new Map<string, CachedLine>();
+    for (const [key, line] of this.cache) {
+      const [pack, version, item, ...rest] = key.split("/");
+      if (pack !== p.packId || version !== have?.packVersion) {
+        kept.set(key, line);
+        continue;
+      }
+      const was = have.items.find((i) => i.itemId === item);
+      const now = p.items.find((i) => i.itemId === item);
+      if (rest[rest.length - 2] === APPROVED_PROMPT_VERSION && was && now && was.revision === now.revision) {
+        kept.set([pack, p.packVersion, item, ...rest].join("/"), line);
+      }
+    }
+    this.cache = kept;
     this.packs.set(p.packId, p);
     return Promise.resolve("published" as const);
   }
   // ---- the tutor ----
-  /** The revision of every item of every pack version ever published (a real database keeps the old versions too). */
-  itemRevisions = new Map<string, number>();
-  carryLines(packId: string, fromVersion: string, toVersion: string, promptVersion: string) {
-    let carried = 0;
-    for (const [key, line] of [...this.cache]) {
-      const [pack, version, item, ...rest] = key.split("/");
-      if (pack !== packId || version !== fromVersion || rest[rest.length - 2] !== promptVersion) continue;
-      const was = this.itemRevisions.get(`${packId}/${fromVersion}/${item}`);
-      const now = this.itemRevisions.get(`${packId}/${toVersion}/${item}`);
-      if (was === undefined || was !== now) continue;
-      const to = [pack, toVersion, item, ...rest].join("/");
-      if (!this.cache.has(to)) {
-        this.cache.set(to, line);
-        carried++;
-      }
-    }
-    return Promise.resolve(carried);
-  }
   cache = new Map<string, CachedLine>();
   cacheGets = 0;
   logs: TutorLogRow[] = [];
