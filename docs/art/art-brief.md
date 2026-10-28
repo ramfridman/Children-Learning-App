@@ -128,6 +128,19 @@ A short celebration when a trophy or medal is won: dimmed room, a cone of light,
 - **Light cone:** one soft shape (no blur: three nested translucent cones), 600 by 800.
 - **Confetti and sparkles:** a sheet of **12 shapes** (ribbons, circles, stars, curls) in the palette, each 48 by 48, one file per shape `ceremony/confetti_<n>.svg`; and **4 sparkle shapes** `ceremony/spark_<n>.svg`.
 
+### 6.6b Counting things (the activity sprites, M9)
+
+The lessons count and compare "things", so these simple pictures appear many times on a small stage (down to 24 points tall, in groups of up to 10, sometimes as small ones next to big ones). Each must be a **single clear shape**, readable at a glance, with a friendly face only where it is an animal. Each comes with a **lit twin** (a soft glow, used when a child touches it while counting). The current files are plain placeholders in `content/starter/` (made by `tools/make_unit_sprites.py`); deliver the real ones under the **same ids** and they replace the placeholders with no change to any lesson.
+
+| Id | What | Notes |
+|---|---|---|
+| `ladybug`, `star`, `apple`, `fish`, `bird`, `duck`, `cat`, `dog` | counted things and the animals of a queue | each also as `<id>_lit`; the animals must look good in a row of four |
+| `tick`, `cross` | "yes" and "not the same" answers | no red-versus-green only: also a different shape |
+| `basket_target` | where things are put when a child gives some | open top |
+| `nest_empty`, `bowl_empty`, `basket_empty` | an **empty** nest, bowl and basket (the picture of "none", so zero must be easy to see) | full stage backgrounds, 16:9, the middle free |
+
+More of these arrive with each new unit (the list is kept in `content/units/*.json` under `assets`).
+
 ### 6.7 Buttons and small signs
 
 The child's buttons are round "pebbles" with a clay lip, with a picture on them. Restyle only if your style asks for it; keep each picture one dark colour on a light disc (or white on orange): `ui/`: book, bottle, eye, hint, home (a palm island), lock, microphone, plus, spark, sticker, play, speaker, back. Also: a **bell flag** and a **dry leaf** for the revisit marker (today `world/bell_flag.svg`, `leaf_dry.svg`), a **golden star** and **fruit** (`world/star_gold.svg`, `fruit.svg`).

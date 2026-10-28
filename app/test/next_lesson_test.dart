@@ -38,7 +38,12 @@ void main() {
     final List<int> places = <int>[for (final String id in path()) content.lessons[id]!.sequence];
     expect(places.toSet().length, places.length);
     expect(places, everyElement(lessThan(1000)));
-    expect(path().length, content.lessons.values.where((Lesson l) => l.skillIds.any((String s) => content.skills[s]?.domain == 'numbers')).length);
+    expect(
+      path().length,
+      content.lessons.values
+          .where((Lesson l) => l.skillIds.any((String s) => content.skills[s]?.domain == 'numbers'))
+          .length,
+    );
   });
 
   test('a land with no lesson has no next lesson', () {

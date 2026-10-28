@@ -173,8 +173,9 @@ void main() {
         final int n = content.activities.values
             .where((Activity a) => a.skills.any((Skill k) => k.id == s.id))
             .length;
-        if (s.id.startsWith('NUM-A-'))
+        if (s.id.startsWith('NUM-A-')) {
           expect(n, greaterThanOrEqualTo(3), reason: '${s.id} has $n activities');
+        }
         for (final String p in s.prerequisites.keys) {
           expect(content.skills, contains(p), reason: '${s.id} needs $p, which is not in the pack');
         }
