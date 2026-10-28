@@ -158,7 +158,10 @@ class AppRig {
     String name = 'נועה',
     int ageBand = 1,
     String avatar = 'avatar-noa',
+    bool warmUp = false,
   }) async {
+    // The warm-up game (M9) is off in the tests that are about something else; its own tests turn it on.
+    await db.putSetting('warm_up', warmUp ? 'on' : 'off');
     await store.write(StoreKeys.deviceId, 'aaaa');
     await store.write(StoreKeys.role, 'parent');
     await PinService(

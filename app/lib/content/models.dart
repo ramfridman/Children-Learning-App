@@ -392,13 +392,19 @@ class Lesson {
       itemIds = <String>[for (final Object? i in json['items']! as List<Object?>) i! as String],
       skillIds = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       sequence = (json['sequence'] as int?) ?? 1000,
+      stopAfterStruggles = 0,
       celebration = Spoken.fromJson(json['celebration']);
 
   /// A short lesson made on the spot for one skill's revisit (M8): the bell flag on the map. It is not in any pack.
-  Lesson.mission({required this.id, required this.itemIds, required this.skillIds, required this.celebration})
-    : revision = 1,
-      sequence = 1000,
-      title = '';
+  Lesson.mission({
+    required this.id,
+    required this.itemIds,
+    required this.skillIds,
+    required this.celebration,
+    this.stopAfterStruggles = 0,
+  }) : revision = 1,
+       sequence = 1000,
+       title = '';
 
   final String id;
   final int revision;
@@ -408,6 +414,10 @@ class Lesson {
 
   /// Where the lesson sits on the path of its land (smaller comes first); 1000 for a lesson that has no place.
   final int sequence;
+
+  /// A lesson that ends gently, with its celebration, once the child has needed the full help on this many activities in a
+  /// row (the placement warm-up: it must never become a string of failures). 0 means it never stops early.
+  final int stopAfterStruggles;
   final Spoken celebration;
 }
 

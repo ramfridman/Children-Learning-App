@@ -277,6 +277,7 @@ class LessonController extends ChangeNotifier {
   int replayNonce = 0;
 
   int _markMs = 0;
+  int _struggles = 0;
 
   Activity get current => items[math.min(index, items.length - 1)];
 
@@ -451,7 +452,10 @@ class LessonController extends ChangeNotifier {
   /// Moves on after a correct answer. After the last activity the lesson is finished.
   void next() {
     if (finished) return;
-    if (index + 1 >= items.length) {
+    // The help ran all the way up on this activity: counted, so that a warm-up can end gently instead of going on.
+    _struggles = guided ? _struggles + 1 : 0;
+    final int stop = lesson.stopAfterStruggles;
+    if (index + 1 >= items.length || (stop > 0 && _struggles >= stop)) {
       finished = true;
       feedback = FeedbackKind.none;
       _say(lesson.celebration);

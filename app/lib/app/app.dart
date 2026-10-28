@@ -15,6 +15,7 @@ import '../rewards/outfits.dart' show Outfit;
 import '../content/models.dart' show Lesson, PackContent;
 import '../rewards/award.dart';
 import '../world/next_lesson.dart';
+import '../world/placement.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
 import '../child/rest_scene.dart';
@@ -240,7 +241,7 @@ class _HomeState extends ConsumerState<_Home> {
           // the child sees the golden star appear.
           onPlay: hasLesson
               ? () async {
-                  await _openLesson(lessonId: _nextLesson(trophyLand.domain));
+                  await _playLand(trophyLand.domain);
                   if (c.mounted) Navigator.of(c).pop();
                 }
               : null,
@@ -254,11 +255,32 @@ class _HomeState extends ConsumerState<_Home> {
   Future<void> _openStickers() => Navigator.of(context)
       .push(MaterialPageRoute<void>(builder: (BuildContext c) => StickerIsland(childId: widget.profile.id)));
 
-  /// The lesson the child plays next in a land: the first one on its path that they have not finished.
-  String? _nextLesson(String domain) {
+  /// Plays a land: the warm-up first if this is the child's first visit to it (the older ones only), then the lesson the
+  /// path has next. The warm-up ends gently and never blocks the way: whatever it shows, the path goes on.
+  Future<void> _playLand(String domain) async {
+    final PackContent? content = ref.read(contentProvider).value;
+    if (content == null) return;
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final List<Attempt> history = await db.attemptsOf(widget.profile.id);
+    if (widget.profile.ageBand >= 1 &&
+        (await ref.read(warmUpProvider.future)) &&
+        placementDue(content, domain, history)) {
+      final Lesson? warmUp = placementLesson(content, domain);
+      if (warmUp != null && !await _openLesson(mission: warmUp)) return;
+    }
+    if (!mounted) return;
+    await _openLesson(lessonId: await _nextLesson(domain));
+  }
+
+  /// The lesson the child plays next in a land: the first one on its path that they have not finished, or that the
+  /// warm-up showed they already know.
+  Future<String?> _nextLesson(String domain) async {
     final PackContent? content = ref.read(contentProvider).value;
     if (content == null) return null;
-    final Map<String, int> finished = <String, int>{};
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final Map<String, int> finished = <String, int>{
+      for (final String id in placedLessons(content, await db.attemptsOf(widget.profile.id))) id: 1,
+    };
     for (final Reward r in ref.read(rewardsProvider(widget.profile.id)).value ?? const <Reward>[]) {
       final ({String lessonId, int n})? s = Awards.stickerOf(r.awardKey);
       if (s != null && s.n > (finished[s.lessonId] ?? 0)) finished[s.lessonId] = s.n;
@@ -266,17 +288,18 @@ class _HomeState extends ConsumerState<_Home> {
     return nextLessonId(content: content, domain: domain, finished: finished);
   }
 
-  Future<void> _openLesson({Lesson? mission, String? lessonId}) async {
+  /// Opens a lesson (or the rest scene when time is up). True when the child played it to its end.
+  Future<bool> _openLesson({Lesson? mission, String? lessonId}) async {
     // Time is up (rest hours, the schedule or the daily limit, with the lock on): a calm scene instead of the lesson.
     final ({String id, int band}) child = (id: widget.profile.id, band: widget.profile.ageBand);
     ref.invalidate(timeVerdictProvider(child));
     final TimeVerdict verdict = await ref.read(timeVerdictProvider(child).future);
-    if (!mounted) return;
+    if (!mounted) return false;
     if (verdict.locked) {
       await Navigator.of(context).push(
         MaterialPageRoute<void>(builder: (BuildContext c) => RestScene(onBack: () => Navigator.of(c).pop())),
       );
-      return;
+      return false;
     }
     final bool? finished = await Navigator.of(context).push(
       MaterialPageRoute<bool>(
@@ -287,11 +310,13 @@ class _HomeState extends ConsumerState<_Home> {
     if (mounted) _refreshWorld();
     // A trophy or a medal the visit earned gets its ceremony back on the map.
     if (mounted) await _maybeCeremony();
-    if (!mounted || finished != true || mission != null) return;
+    if (!mounted || finished != true) return false;
+    if (mission != null) return true;
     final AppDatabase db = await ref.read(databaseProvider.future);
-    if (await db.setting(_offeredKey) != null) return;
+    if (await db.setting(_offeredKey) != null) return true;
     await db.putSetting(_offeredKey, 'yes');
     if (mounted) await _openFriends();
+    return true;
   }
 
   @override
@@ -320,7 +345,7 @@ class _HomeState extends ConsumerState<_Home> {
     avatarId: widget.profile.avatar,
     onParents: () => openParentArea(context, ref),
     onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
-    onOpenActivity: () => _openLesson(lessonId: _nextLesson('numbers')),
+    onOpenActivity: () => _playLand('numbers'),
     onOpenLand: _openLand,
     openableLands: _openableLands(),
     stars: ref.watch(goldenStarsProvider(widget.profile.id)).value ?? 0,

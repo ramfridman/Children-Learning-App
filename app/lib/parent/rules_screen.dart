@@ -241,6 +241,18 @@ class RulesScreen extends ConsumerWidget {
                   ];
                 }(),
             ]),
+            _card(He.warmUpHeading.text, <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(child: Text(He.warmUpHelp.text, style: AppText.parent(TokenType.parentSmall))),
+                  Switch(
+                    key: const Key('warm-up-switch'),
+                    value: ref.watch(warmUpProvider).value ?? true,
+                    onChanged: (bool on) => ref.read(warmUpProvider.notifier).set(on),
+                  ),
+                ],
+              ),
+            ]),
             _card(He.aiHeading.text, <Widget>[
               Row(
                 children: <Widget>[

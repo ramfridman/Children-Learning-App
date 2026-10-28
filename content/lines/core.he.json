@@ -6,6 +6,7 @@
     { "id": "core.greeting.hello", "text": "שָׁלוֹם! בּוֹאוּ נְשַׂחֵק." },
     { "id": "core.greeting.start", "text": "בּוֹאוּ נַתְחִיל!" },
     { "id": "core.encourage.check", "text": "הַמְּמ… בּוֹאוּ נִבְדֹּק." },
+    { "id": "core.placement.done", "text": "יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל." },
     { "id": "core.encourage.almost", "text": "עוֹד לֹא — אֲבָל כִּמְעַט." },
     { "id": "core.encourage.ways", "text": "נִסִּיתֶם כַּמָּה דְּרָכִים — וְזֶה עָזַר!" },
     { "id": "core.encourage.help", "text": "בִּקַּשְׁתֶּם עֶזְרָה — זֶה חָכָם לְבַקֵּשׁ עֶזְרָה." },

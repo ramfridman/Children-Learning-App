@@ -21,6 +21,22 @@ class AiHelper extends AsyncNotifier<bool> {
   }
 }
 
+const String _warmUpKey = 'warm_up';
+
+/// The warm-up game at the first visit to a land (M9): on until a parent turns it off.
+class WarmUp extends AsyncNotifier<bool> {
+  @override
+  Future<bool> build() async =>
+      (await (await ref.watch(databaseProvider.future)).setting(_warmUpKey)) != 'off';
+
+  Future<void> set(bool on) async {
+    await (await ref.read(databaseProvider.future)).putSetting(_warmUpKey, on ? 'on' : 'off');
+    state = AsyncData<bool>(on);
+  }
+}
+
+final AsyncNotifierProvider<WarmUp, bool> warmUpProvider = AsyncNotifierProvider<WarmUp, bool>(WarmUp.new);
+
 final AsyncNotifierProvider<AiHelper, bool> aiHelperProvider = AsyncNotifierProvider<AiHelper, bool>(
   AiHelper.new,
 );

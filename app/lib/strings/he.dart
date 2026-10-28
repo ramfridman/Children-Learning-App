@@ -41,6 +41,7 @@ abstract final class He {
     'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.',
     nikud: true,
   );
+  static const Str placementDone = Str('יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.', nikud: true);
   static const Str homeDaily = Str('הַהַרְפַּתְקָה שֶׁל הַיּוֹם', nikud: true);
   static const Str homeBubble = Str('{child}, הַבַּקְבּוּק הִגִּיעַ!', nikud: true);
   static const Str landColors = Str('מִפְרַץ הַצְּבָעִים', nikud: true);
@@ -361,6 +362,10 @@ abstract final class He {
   static const Str timeDay5 = Str('יום שישי');
   static const Str timeDay6 = Str('שבת');
   static const Str timeDay7 = Str('יום ראשון');
+  static const Str warmUpHeading = Str('משחק היכרות');
+  static const Str warmUpHelp = Str(
+    'בביקור הראשון בכל אי, הילד משחק כמה דקות כדי שנתחיל מהמקום הנכון. אין בו ציון ולא טעויות. אפשר לכבות.',
+  );
   static const Str aiHeading = Str('עוזר מילולי');
   static const Str aiHelp = Str(
     'אחרי טעות שנייה הדמות יכולה להגיד משפט עזרה בקולה. המשפטים נבדקים לפני שהילד שומע אותם, ואם משהו לא עובד נשמעת ההודעה הרגילה. כבוי כברירת מחדל.',

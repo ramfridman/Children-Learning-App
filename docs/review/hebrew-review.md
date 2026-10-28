@@ -8,13 +8,13 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 
 | Group | Texts |
 |---|---|
-| 1. App screens and buttons | 308 |
-| 2. Core voice lines (spoken by every friend) | 26 |
+| 1. App screens and buttons | 311 |
+| 2. Core voice lines (spoken by every friend) | 27 |
 | 3. Lesson content (skills, activities, misconceptions) | 672 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 23 |
 | 6. Helper lexicon (the words the AI helper may use) | 110 |
-| **Total** | **1205** |
+| **Total** | **1209** |
 
 ## 1. App screens and buttons
 
@@ -29,6 +29,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | restScene | עַכְשָׁו נָחִים קְצָת. נִפָּגֵשׁ שׁוּב אַחַר כָּךְ! | needs-editor |
 | app/lib/strings/he.dart | restBackSemantics | חזרה | needs-editor |
 | app/lib/strings/he.dart | restGoodbye | הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ. | needs-editor |
+| app/lib/strings/he.dart | placementDone | יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל. | needs-editor |
 | app/lib/strings/he.dart | homeDaily | הַהַרְפַּתְקָה שֶׁל הַיּוֹם | needs-editor |
 | app/lib/strings/he.dart | homeBubble | {child}, הַבַּקְבּוּק הִגִּיעַ! | needs-editor |
 | app/lib/strings/he.dart | landColors | מִפְרַץ הַצְּבָעִים | needs-editor |
@@ -303,6 +304,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | timeDay5 | יום שישי | needs-editor |
 | app/lib/strings/he.dart | timeDay6 | שבת | needs-editor |
 | app/lib/strings/he.dart | timeDay7 | יום ראשון | needs-editor |
+| app/lib/strings/he.dart | warmUpHeading | משחק היכרות | needs-editor |
+| app/lib/strings/he.dart | warmUpHelp | בביקור הראשון בכל אי, הילד משחק כמה דקות כדי שנתחיל מהמקום הנכון. אין בו ציון ולא טעויות. אפשר לכבות. | needs-editor |
 | app/lib/strings/he.dart | aiHeading | עוזר מילולי | needs-editor |
 | app/lib/strings/he.dart | aiHelp | אחרי טעות שנייה הדמות יכולה להגיד משפט עזרה בקולה. המשפטים נבדקים לפני שהילד שומע אותם, ואם משהו לא עובד נשמעת ההודעה הרגילה. כבוי כברירת מחדל. | needs-editor |
 | app/lib/strings/he.dart | areaVoice | תשובות בקול | needs-editor |
@@ -336,6 +339,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | content/lines/core.he.json | core.greeting.hello | שָׁלוֹם! בּוֹאוּ נְשַׂחֵק. | needs-editor |
 | content/lines/core.he.json | core.greeting.start | בּוֹאוּ נַתְחִיל! | needs-editor |
 | content/lines/core.he.json | core.encourage.check | הַמְּמ… בּוֹאוּ נִבְדֹּק. | needs-editor |
+| content/lines/core.he.json | core.placement.done | יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל. | needs-editor |
 | content/lines/core.he.json | core.encourage.almost | עוֹד לֹא — אֲבָל כִּמְעַט. | needs-editor |
 | content/lines/core.he.json | core.encourage.ways | נִסִּיתֶם כַּמָּה דְּרָכִים — וְזֶה עָזַר! | needs-editor |
 | content/lines/core.he.json | core.encourage.help | בִּקַּשְׁתֶּם עֶזְרָה — זֶה חָכָם לְבַקֵּשׁ עֶזְרָה. | needs-editor |
