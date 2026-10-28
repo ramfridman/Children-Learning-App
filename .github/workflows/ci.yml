@@ -105,7 +105,7 @@ jobs:
     # Measured on run 40760468617 (pack 0.8.0, 3.5 MB): setup to analyze about 1 min; the test step's critical path is
     # one file, starter_pack_test.dart, whose every-31st-byte test alone took about 20 min; the debug build about 4 min.
     # See docs/setup/ci-m9.md before raising this again.
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

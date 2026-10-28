@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:drift/native.dart';
@@ -26,6 +27,56 @@ Uint8List _source(String name) {
 }
 
 Map<String, Object?> _m(Object? o) => o! as Map<String, Object?>;
+
+/// What one worker found: how many changed packs were refused, the offsets of any that were accepted, and
+/// whether its copy, with every byte put back, was the genuine pack again at the end.
+typedef _FlipReport = ({int refused, List<int> accepted, bool restoredIsGenuine});
+
+/// Changes the byte at [first], [first] + [stride], ... of the real pack, one at a time, and runs the full
+/// [verifyPack] on each changed pack. The byte is changed in place and put back after its check, so each
+/// check sees the real pack with exactly one byte changed (and no 3.5 MB copy is made per byte).
+Future<_FlipReport> _flipEach(int first, int stride) async {
+  final Uint8List bytes = File(_packPath).readAsBytesSync();
+  final Uint8List key = _publicKey();
+  int refused = 0;
+  final List<int> accepted = <int>[];
+  for (int i = first; i < bytes.length; i += stride) {
+    bytes[i] ^= 0x01;
+    try {
+      await verifyPack(bytes, publicKey: key);
+      accepted.add(i);
+    } on PackRejected {
+      refused++;
+    } finally {
+      bytes[i] ^= 0x01;
+    }
+  }
+  bool restoredIsGenuine = true;
+  try {
+    await verifyPack(bytes, publicKey: key);
+  } on PackRejected {
+    restoredIsGenuine = false;
+  }
+  return (refused: refused, accepted: accepted, restoredIsGenuine: restoredIsGenuine);
+}
+
+/// [_flipEach] in a new isolate (a top-level function, so the closure sent to it holds only two ints).
+Future<_FlipReport> _flipEachInWorker(int first, int stride) => Isolate.run(() => _flipEach(first, stride));
+
+/// Changes every [step]th byte of the real pack in turn (offsets 0, step, 2 x step, ...), spread over one
+/// worker isolate per processor: worker w takes the offsets w x step, (w + workers) x step, ... so together
+/// they take each offset exactly once, and every worker gets bytes from all over the pack. Expects every
+/// changed pack to be refused and returns how many were.
+Future<int> _refusedFlipsOfEvery(int step) async {
+  final int workers = Platform.numberOfProcessors;
+  final List<_FlipReport> reports = await Future.wait(<Future<_FlipReport>>[
+    for (int w = 0; w < workers; w++) _flipEachInWorker(w * step, workers * step),
+  ]);
+  final List<int> accepted = <int>[for (final _FlipReport r in reports) ...r.accepted]..sort();
+  expect(accepted, isEmpty, reason: 'these bytes were changed and the pack was accepted');
+  expect(<bool>[for (final _FlipReport r in reports) r.restoredIsGenuine], everyElement(isTrue));
+  return reports.fold<int>(0, (int sum, _FlipReport r) => sum + r.refused);
+}
 
 void main() {
   late VerifiedPack pack;
@@ -64,34 +115,20 @@ void main() {
     );
   });
 
+  // The two tests below wait on worker isolates, so their timeouts really apply. (Before B-12 the flips ran
+  // in one loop that never gave the event loop a turn, so neither the default 30 s nor the 10 minutes ever
+  // fired: the every-31st-byte test ran 865 s here, the every-byte test 27 minutes on CI for pack 0.5.1.)
   test('one changed byte anywhere in the real pack is refused (every 31st byte here)', () async {
-    final Uint8List bytes = File(_packPath).readAsBytesSync();
-    for (int i = 0; i < bytes.length; i += 31) {
-      final Uint8List bad = Uint8List.fromList(bytes)..[i] ^= 1;
-      await expectLater(
-        verifyPack(bad, publicKey: _publicKey()),
-        throwsA(isA<PackRejected>()),
-        reason: 'byte $i',
-      );
-    }
-  });
+    final int length = File(_packPath).lengthSync();
+    expect(await _refusedFlipsOfEvery(31), (length + 30) ~/ 31);
+  }, timeout: const Timeout(Duration(minutes: 10)));
 
   test('every single byte of the real starter pack, changed in turn, is refused (all bytes with NN_EXHAUSTIVE=1 or in CI)', () async {
     final bool full = Platform.environment['NN_EXHAUSTIVE'] == '1' || Platform.environment['CI'] == 'true';
     final Uint8List bytes = File(_packPath).readAsBytesSync();
-    final Uint8List key = _publicKey();
-    int tried = 0;
-    for (int i = 0; i < bytes.length; i += full ? 1 : 97) {
-      final Uint8List bad = Uint8List.fromList(bytes)..[i] ^= 0x01;
-      try {
-        await verifyPack(bad, publicKey: key);
-        fail('byte $i of ${bytes.length} was changed and the pack was accepted');
-      } on PackRejected {
-        tried++;
-      }
-    }
+    final int tried = await _refusedFlipsOfEvery(full ? 1 : 97);
     expect(tried, full ? bytes.length : greaterThan(300));
-  }, timeout: const Timeout(Duration(minutes: 10)));
+  }, timeout: const Timeout(Duration(minutes: 60)));
 
   test('the lesson has the five items of the script, in order', () {
     final Map<String, Object?> lesson = _m(pack.docs['lesson.butterflies.json']);

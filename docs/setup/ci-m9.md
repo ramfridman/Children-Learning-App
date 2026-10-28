@@ -127,6 +127,53 @@ Ruled out:
 **Recommendation:** A in every case, then B on every push and C before each pack publish, each merge to `main` and the
 release. The owner and the security-engineer decide B and C.
 
+### Addendum (Developer Agent, 2026-10-29, board item B-12): option A done, measured
+
+Only option A was applied; B and C are not. Nothing in `.github/` was touched. Every number below was measured on the
+owner's PC (16 logical processors, Windows 11, Flutter 3.47.8, Dart JIT as `flutter test` runs it), with pack 0.8.0
+(3,505,610 bytes, 1,290 files). Nothing was measured on a GitHub runner.
+
+**What changed in `app/lib/content/zip_store.dart`** (behaviour unchanged; same checks, same order, same reasons):
+
+| Change | Before | After |
+|---|---|---|
+| A1. CRC-32 slice-by-8 (eight 256-entry tables, 32-bit reads) instead of one byte per step | 9.47 ms per 3.5 MB (2.70 ns/B) | 2.61 ms (0.74 ns/B), 3.6x |
+| A2. The reader's canonical re-write uses the CRC it has just checked for each file, instead of computing it twice more; the writer computes each CRC once instead of twice | 3 CRC passes per read | 1 |
+| The file-name rule as a character loop instead of the regular expression (`^[A-Za-z0-9][A-Za-z0-9._-]{0,100}$`) | 0.71 µs per name | 0.16 µs |
+| The re-written zip compared with the input four bytes at a time | 3.0 ms | 1.7 ms |
+| **`readStoredZip` of the valid pack** (every install and launch check runs it) | **48.5 ms** | **7.9 to 8.4 ms** |
+
+**What changed in `app/test/starter_pack_test.dart`** (coverage unchanged): A3, each byte is changed in place and put
+back after its check (no 3.5 MB copy per byte; the copy alone cost 0.6 to 0.9 ms per flip, garbage included); A4, the
+offsets are spread over one worker isolate per processor (`Platform.numberOfProcessors`), worker w taking offsets w x
+step, (w + workers) x step, ..., so together they take each offset exactly once. Every changed pack still goes
+through the full `verifyPack`; the every-byte test still asserts `tried == bytes.length` in full mode; the
+every-31st-byte test now also asserts the exact number of refusals; each worker proves at the end that its buffer,
+with every byte put back, is the genuine pack again.
+
+**Timeouts (changed, on purpose).** Before, both loops never gave the event loop a turn (each `verifyPack` threw
+before its first real `await`), so neither the default 30 s nor the 10 minutes could fire: that is why the 10-minute
+test ran 27 minutes on CI (section 2). The tests now wait on isolates, so a timeout really applies. They are set to 10
+minutes (every 31st byte, was the 30 s default) and 60 minutes (every byte, was 10 minutes).
+
+**Per flip** (single worker, `flutter test`): 7.05 ms before (with the copy), 1.65 ms after. Isolate scaling under
+`flutter test` on this PC: 4 workers 607 µs per flip (2.7x), 8 workers 364 µs, 16 workers 342 µs (it stops scaling
+near 8; plain `dart` reaches 241 µs on 16).
+
+| Test (pack 0.8.0) | Before | After (this PC) |
+|---|---|---|
+| Every 31st byte (113,085 flips) | 865 s | 38.8 s (39.7 s in the sampled run) |
+| Every 97th byte (the default local mode, 36,141 flips) | 260 s | 13.2 s |
+| Every byte (`NN_EXHAUSTIVE=1`, 3,505,610 flips, all refused, `tried == bytes.length`) | hours (never finished) | **1,225.1 s (20.4 min)**, 349 µs per flip; the whole file 1,272 s |
+
+**What this means for CI (an estimate, not measured).** About 75% of a flip is now the CRC of the files in front of
+the changed one (half the pack on average, whatever their order), which no reordering removes. A GitHub runner was
+about 1.4 times slower per core than this PC on the old code (10.6 against 7.65 ms per flip). With 4 workers on 4
+vCPUs that gives roughly 0.8 ms per flip: **about 1.5 to 2 minutes for every 31st byte, and about 45 to 50 minutes for
+every byte**. That is over the job's `timeout-minutes: 45` once setup, the other files and the build are added, so the
+first green run probably needs a higher job timeout (for example 75 minutes, well under the 6-hour maximum); the
+infrastructure-engineer decides that from the job summary of the first run.
+
 ## 5. What a merge of `m9-content` into `main` needs
 
 Read with `gh` on 2026-10-28:

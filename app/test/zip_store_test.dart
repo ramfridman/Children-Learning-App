@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/zip_store.dart';
+
+import 'support/zip_store_reference.dart';
 
 Uint8List _bytes(String s) => Uint8List.fromList(s.codeUnits);
 
@@ -48,6 +51,30 @@ Uint8List _rename(Uint8List z, String from, String to) {
   expect(hits, greaterThanOrEqualTo(2), reason: 'the name should be in both headers');
   return out;
 }
+
+/// What [read] made of [bytes]: each entry's name, data and place in [bytes], or the reason it refused.
+Object _outcome(List<ZipEntry> Function(Uint8List) read, Uint8List bytes) {
+  try {
+    return <Object>[
+      for (final ZipEntry e in read(bytes))
+        <Object>[e.name, e.data, e.data.offsetInBytes, identical(e.data.buffer, bytes.buffer)],
+    ];
+  } on ZipException catch (e) {
+    return 'refused: ${e.reason}';
+  }
+}
+
+Uint8List _random(Random rnd, int length) =>
+    Uint8List.fromList(<int>[for (int i = 0; i < length; i++) rnd.nextInt(256)]);
+
+/// The bundled starter pack, whatever its version.
+Uint8List _realPack() => File(
+  Directory('assets/packs')
+      .listSync()
+      .whereType<File>()
+      .map((File f) => f.path)
+      .singleWhere((String p) => RegExp(r'starter-[0-9.]+\.nnpack$').hasMatch(p)),
+).readAsBytesSync();
 
 void main() {
   group('writing and reading', () {
@@ -271,5 +298,148 @@ void main() {
       }
       expect(refused, greaterThan(2900)); // the few that survive are the ones that changed nothing
     });
+  });
+
+  // B-12 made the CRC-32, the name rule and the canonical re-write faster. These prove the results did not
+  // change: the code before is kept in support/zip_store_reference.dart as the oracle.
+  group('the faster reader and writer give exactly the results of the code before them', () {
+    test('crc32 gives the standard values', () {
+      expect(crc32(Uint8List(0)), 0x00000000);
+      expect(crc32(_bytes('a')), 0xE8B7BE43);
+      expect(crc32(_bytes('abc')), 0x352441C2);
+      expect(crc32(_bytes('message digest')), 0x20159D7F);
+      expect(crc32(_bytes('123456789')), 0xCBF43926);
+      expect(crc32(_bytes('The quick brown fox jumps over the lazy dog')), 0x414FA339);
+    });
+
+    test(
+      'crc32 equals the bytewise CRC-32 for every length up to 300 at every alignment, and on large buffers',
+      () {
+        final Random rnd = Random(20261029);
+        for (int length = 0; length <= 300; length++) {
+          for (int offset = 0; offset < 8; offset++) {
+            final Uint8List data = Uint8List.sublistView(
+              _random(rnd, offset + length + 3),
+              offset,
+              offset + length,
+            );
+            expect(crc32(data), referenceCrc32(data), reason: 'length $length at offset $offset');
+          }
+        }
+        for (int round = 0; round < 40; round++) {
+          final Uint8List data = _random(rnd, rnd.nextInt(200000));
+          expect(crc32(data), referenceCrc32(data), reason: 'round $round, ${data.length} bytes');
+        }
+        final Uint8List ones = Uint8List(4096)..fillRange(0, 4096, 0xFF);
+        expect(crc32(ones), referenceCrc32(ones));
+      },
+    );
+
+    test('every single changed bit of a buffer changes its CRC-32, as before', () {
+      final Uint8List data = _random(Random(7), 1031);
+      final int good = crc32(data);
+      for (int bit = 0; bit < data.length * 8; bit++) {
+        data[bit >> 3] ^= 1 << (bit & 7);
+        final int changed = crc32(data);
+        expect(changed, isNot(good), reason: 'bit $bit');
+        expect(changed, referenceCrc32(data), reason: 'bit $bit');
+        data[bit >> 3] ^= 1 << (bit & 7);
+      }
+    });
+
+    test('the name rule gives the same answer as the pattern it replaced', () {
+      final Random rnd = Random(101);
+      const String plain = 'aZ09._-';
+      final List<String> names = <String>[
+        for (int c = 0; c < 256; c++) String.fromCharCode(c),
+        for (int c = 0; c < 256; c++) 'a${String.fromCharCode(c)}b',
+        for (final int n in <int>[99, 100, 101, 102, 103]) 'a' * n,
+        for (final int n in <int>[99, 100, 101, 102]) '${'a' * n}.json',
+        'abc\n',
+        '\nabc',
+        'aא',
+        'א',
+        'é.txt',
+        'nul',
+        'NUL.txt',
+        'com1.a.b',
+        'lpt9',
+        'con.',
+        'a..b',
+        'end.',
+        for (int i = 0; i < 20000; i++)
+          String.fromCharCodes(
+            List<int>.generate(
+              rnd.nextInt(108),
+              (_) => rnd.nextInt(4) == 0 ? rnd.nextInt(128) : plain.codeUnitAt(rnd.nextInt(plain.length)),
+            ),
+          ),
+      ];
+      for (final String name in names) {
+        expect(unsafeNameReason(name), referenceUnsafeNameReason(name), reason: name);
+      }
+    });
+
+    test('the writer makes the same bytes as before', () {
+      final Random rnd = Random(3);
+      expect(writeStoredZip(_sample()), referenceWriteStoredZip(_sample()));
+      for (int round = 0; round < 200; round++) {
+        final List<ZipEntry> entries = List<ZipEntry>.generate(
+          1 + rnd.nextInt(30),
+          (int i) => ZipEntry('f$i-${rnd.nextInt(1000)}.bin', _random(rnd, rnd.nextInt(3000))),
+        );
+        expect(writeStoredZip(entries), referenceWriteStoredZip(entries), reason: 'round $round');
+      }
+    });
+
+    test('every possible change of any single byte of a small zip gets the same answer as before', () {
+      final Uint8List good = writeStoredZip(_sample());
+      expect(_outcome(readStoredZip, good), _outcome(referenceReadStoredZip, good));
+      for (int i = 0; i < good.length; i++) {
+        for (int v = 0; v < 256; v++) {
+          final Uint8List bad = Uint8List.fromList(good)..[i] = v;
+          expect(
+            _outcome(readStoredZip, bad),
+            _outcome(referenceReadStoredZip, bad),
+            reason: 'byte $i set to $v',
+          );
+        }
+      }
+    });
+
+    test('random damage gets the same answer as before', () {
+      final Random rnd = Random(20261026);
+      final Uint8List good = writeStoredZip(_sample());
+      for (int round = 0; round < 3000; round++) {
+        final Uint8List input = Uint8List.fromList(good);
+        final int changes = 1 + rnd.nextInt(6);
+        for (int k = 0; k < changes; k++) {
+          input[rnd.nextInt(input.length)] = rnd.nextInt(256);
+        }
+        expect(
+          _outcome(readStoredZip, input),
+          _outcome(referenceReadStoredZip, input),
+          reason: 'round $round',
+        );
+      }
+    });
+
+    test(
+      'the real starter pack reads to the same entries as before, and changed bytes get the same reason',
+      () {
+        final Uint8List pack = _realPack();
+        expect(_outcome(readStoredZip, pack), _outcome(referenceReadStoredZip, pack));
+        // A sample (the code before needs about 7 ms a byte); the exhaustive proof that every changed byte is
+        // refused is in starter_pack_test.dart. The last 22 bytes are the end record.
+        for (final int i in <int>[
+          for (int i = 0; i < pack.length; i += 4999) i,
+          for (int i = pack.length - 22; i < pack.length; i++) i,
+        ]) {
+          pack[i] ^= 0x01;
+          expect(_outcome(readStoredZip, pack), _outcome(referenceReadStoredZip, pack), reason: 'byte $i');
+          pack[i] ^= 0x01;
+        }
+      },
+    );
   });
 }

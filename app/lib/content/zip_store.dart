@@ -56,7 +56,6 @@ const int _version = 20;
 const int _dosTime = 0;
 const int _dosDate = 0x0021;
 
-final RegExp _plainName = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,100}$');
 const Set<String> _deviceNames = <String>{
   'con',
   'prn',
@@ -82,13 +81,30 @@ const Set<String> _deviceNames = <String>{
   'lpt9',
 };
 
+/// True if [name] matches `^[A-Za-z0-9][A-Za-z0-9._-]{0,100}$` (`Patterns.fileName`): 1 to 101 ASCII
+/// letters, digits, dots, underscores and hyphens, the first a letter or a digit. A loop rather than the
+/// pattern because the reader runs it for every entry of every pack it reads, and the pattern alone took
+/// three times as long as all of [unsafeNameReason] does now (zip_store_test.dart checks the two agree).
+bool _isPlainName(String name) {
+  if (name.isEmpty || name.length > ZipLimits.maxNameLength) return false;
+  for (int i = 0; i < name.length; i++) {
+    final int c = name.codeUnitAt(i);
+    final bool letterOrDigit =
+        (c >= 0x30 && c <= 0x39) || (c >= 0x41 && c <= 0x5A) || (c >= 0x61 && c <= 0x7A);
+    if (letterOrDigit) continue;
+    if (i == 0 || (c != 0x2E && c != 0x5F && c != 0x2D)) return false;
+  }
+  return true;
+}
+
 /// Null if [name] is a safe flat file name, otherwise why not. The same rule runs when writing and
 /// reading, and the manifest's file names use the same pattern.
 String? unsafeNameReason(String name) {
-  if (!_plainName.hasMatch(name)) return 'the name "$name" is not a plain file name';
+  if (!_isPlainName(name)) return 'the name "$name" is not a plain file name';
   if (name.contains('..')) return 'the name "$name" contains ".."';
   if (name.endsWith('.')) return 'the name "$name" ends with a dot';
-  if (_deviceNames.contains(name.split('.').first.toLowerCase())) {
+  final int dot = name.indexOf('.');
+  if (_deviceNames.contains((dot < 0 ? name : name.substring(0, dot)).toLowerCase())) {
     return 'the name "$name" is reserved on Windows';
   }
   return null;
@@ -96,8 +112,12 @@ String? unsafeNameReason(String name) {
 
 // ---- CRC-32 (the zip one) ----
 
-final Uint32List _crcTable = () {
-  final Uint32List t = Uint32List(256);
+// Slice-by-8: eight tables of 256 entries. Table 0 is the usual bytewise table; table k gives the CRC
+// change of a byte followed by k zero bytes, so eight bytes are folded in with eight independent
+// lookups instead of eight dependent steps. The result is exactly the bytewise one (zip_store_test.dart
+// checks both against each other); it is about 3.6 times faster, and every pack check runs it over every file.
+final Uint32List _crcTables = () {
+  final Uint32List t = Uint32List(8 * 256);
   for (int n = 0; n < 256; n++) {
     int c = n;
     for (int k = 0; k < 8; k++) {
@@ -105,15 +125,37 @@ final Uint32List _crcTable = () {
     }
     t[n] = c;
   }
+  for (int i = 256; i < t.length; i++) {
+    final int previous = t[i - 256];
+    t[i] = (previous >> 8) ^ t[previous & 0xFF];
+  }
   return t;
 }();
 
 int crc32(Uint8List data) {
+  final Uint32List t = _crcTables;
+  final ByteData v = ByteData.sublistView(data);
+  final int n = data.length;
+  final int whole = n - n % 8;
   int c = 0xFFFFFFFF;
-  for (final int b in data) {
-    c = _crcTable[(c ^ b) & 0xFF] ^ (c >> 8);
+  int i = 0;
+  for (; i < whole; i += 8) {
+    final int low = c ^ v.getUint32(i, Endian.little);
+    final int high = v.getUint32(i + 4, Endian.little);
+    c =
+        t[0x700 + (low & 0xFF)] ^
+        t[0x600 + ((low >> 8) & 0xFF)] ^
+        t[0x500 + ((low >> 16) & 0xFF)] ^
+        t[0x400 + (low >> 24)] ^
+        t[0x300 + (high & 0xFF)] ^
+        t[0x200 + ((high >> 8) & 0xFF)] ^
+        t[0x100 + ((high >> 16) & 0xFF)] ^
+        t[high >> 24];
   }
-  return (c ^ 0xFFFFFFFF) & 0xFFFFFFFF;
+  for (; i < n; i++) {
+    c = t[(c ^ data[i]) & 0xFF] ^ (c >> 8);
+  }
+  return c ^ 0xFFFFFFFF;
 }
 
 // ---- writing ----
@@ -133,18 +175,29 @@ Uint8List writeStoredZip(List<ZipEntry> entries) {
   final List<ZipEntry> sorted = List<ZipEntry>.of(entries)
     ..sort((ZipEntry a, ZipEntry b) => _compareNames(a.name, b.name));
   final Set<String> seen = <String>{};
-  int total = _endRecord;
   for (final ZipEntry e in sorted) {
     final String? why = unsafeNameReason(e.name);
     if (why != null) throw ArgumentError(why);
     if (!seen.add(e.name.toLowerCase())) throw ArgumentError('the name "${e.name}" is used twice');
-    total += _localHeader + _centralHeader + 2 * e.name.length + e.data.length;
+  }
+  return _layOut(<_Stored>[for (final ZipEntry e in sorted) (entry: e, crc: crc32(e.data))]);
+}
+
+/// An entry with the CRC-32 of its data.
+typedef _Stored = ({ZipEntry entry, int crc});
+
+/// The bytes of the zip of [sorted]: entries already sorted by name with safe, distinct names, each with
+/// the CRC-32 of its data.
+Uint8List _layOut(List<_Stored> sorted) {
+  int total = _endRecord;
+  for (final _Stored s in sorted) {
+    total += _localHeader + _centralHeader + 2 * s.entry.name.length + s.entry.data.length;
   }
   final Uint8List out = Uint8List(total);
   final ByteData v = ByteData.sublistView(out);
   int pos = 0;
   final List<int> offsets = <int>[];
-  for (final ZipEntry e in sorted) {
+  for (final (entry: ZipEntry e, :int crc) in sorted) {
     offsets.add(pos);
     v.setUint32(pos, _localSig, Endian.little);
     v.setUint16(pos + 4, _version, Endian.little);
@@ -152,7 +205,7 @@ Uint8List writeStoredZip(List<ZipEntry> entries) {
     v.setUint16(pos + 8, 0, Endian.little); // method: stored
     v.setUint16(pos + 10, _dosTime, Endian.little);
     v.setUint16(pos + 12, _dosDate, Endian.little);
-    v.setUint32(pos + 14, crc32(e.data), Endian.little);
+    v.setUint32(pos + 14, crc, Endian.little);
     v.setUint32(pos + 18, e.data.length, Endian.little);
     v.setUint32(pos + 22, e.data.length, Endian.little);
     v.setUint16(pos + 26, e.name.length, Endian.little);
@@ -163,7 +216,7 @@ Uint8List writeStoredZip(List<ZipEntry> entries) {
     pos += e.data.length;
   }
   final int directoryStart = pos;
-  for (final (int i, ZipEntry e) in sorted.indexed) {
+  for (final (int i, (entry: ZipEntry e, :int crc)) in sorted.indexed) {
     v.setUint32(pos, _centralSig, Endian.little);
     v.setUint16(pos + 4, _version, Endian.little); // made by
     v.setUint16(pos + 6, _version, Endian.little); // needed to extract
@@ -171,7 +224,7 @@ Uint8List writeStoredZip(List<ZipEntry> entries) {
     v.setUint16(pos + 10, 0, Endian.little);
     v.setUint16(pos + 12, _dosTime, Endian.little);
     v.setUint16(pos + 14, _dosDate, Endian.little);
-    v.setUint32(pos + 16, crc32(e.data), Endian.little);
+    v.setUint32(pos + 16, crc, Endian.little);
     v.setUint32(pos + 20, e.data.length, Endian.little);
     v.setUint32(pos + 24, e.data.length, Endian.little);
     v.setUint16(pos + 28, e.name.length, Endian.little);
@@ -211,7 +264,7 @@ List<ZipEntry> readStoredZip(Uint8List bytes) {
     throw const ZipException('the directory is not where it should be');
   }
 
-  final List<ZipEntry> entries = <ZipEntry>[];
+  final List<_Stored> checked = <_Stored>[];
   final Set<String> seen = <String>{};
   int at = directoryStart;
   int expectedOffset = 0;
@@ -257,7 +310,7 @@ List<ZipEntry> readStoredZip(Uint8List bytes) {
     final int dataStart = local + _localHeader + nameLength;
     final Uint8List data = Uint8List.sublistView(bytes, dataStart, dataStart + size);
     if (crc32(data) != crc) throw ZipException('the file "$name" is damaged (checksum)');
-    entries.add(ZipEntry(name, data));
+    checked.add((entry: ZipEntry(name, data), crc: crc));
 
     expectedOffset = dataStart + size;
     at += _centralHeader + nameLength;
@@ -269,12 +322,29 @@ List<ZipEntry> readStoredZip(Uint8List bytes) {
 
   // Everything above is checked field by field; this is the net under it: the zip must be exactly the
   // one the writer would make, so a change to any byte (timestamps, version fields, attributes ...) fails.
-  final Uint8List again = writeStoredZip(entries);
-  if (again.length != bytes.length) throw const ZipException('the zip is not in canonical form');
-  for (int i = 0; i < again.length; i++) {
-    if (again[i] != bytes[i]) throw const ZipException('the zip is not in canonical form');
+  // These are the bytes `writeStoredZip` gives for the same entries: the names passed the same rules
+  // above, and each CRC is the one just computed from the data, so it is not computed twice more.
+  final Uint8List again = _layOut(
+    List<_Stored>.of(checked)..sort((_Stored a, _Stored b) => _compareNames(a.entry.name, b.entry.name)),
+  );
+  if (!_sameBytes(again, bytes)) throw const ZipException('the zip is not in canonical form');
+  return <ZipEntry>[for (final _Stored s in checked) s.entry];
+}
+
+/// True if [a] and [b] hold the same bytes; compared four at a time (1.7 ms instead of 3 ms for a 3.5 MB
+/// pack, and every pack read compares the whole file).
+bool _sameBytes(Uint8List a, Uint8List b) {
+  if (a.length != b.length) return false;
+  final ByteData x = ByteData.sublistView(a);
+  final ByteData y = ByteData.sublistView(b);
+  final int whole = a.length - a.length % 4;
+  for (int i = 0; i < whole; i += 4) {
+    if (x.getUint32(i, Endian.little) != y.getUint32(i, Endian.little)) return false;
   }
-  return entries;
+  for (int i = whole; i < a.length; i++) {
+    if (a[i] != b[i]) return false;
+  }
+  return true;
 }
 
 String _asciiName(Uint8List bytes, int start, int length) {
