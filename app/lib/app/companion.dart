@@ -72,8 +72,13 @@ class Guide {
 final FutureProvider<Guide> guideProvider = FutureProvider<Guide>((Ref ref) async {
   final Character c = await ref.watch(characterForRoleProvider(CharacterRole.guideTutor).future);
   final CharacterSource source = await ref.watch(characterSourceProvider.future);
-  return Guide(c, await source.voice(c.id));
+  final VoiceBank own = await source.voice(c.id);
+  // The narrator speaks the lines a friend has no recording of (the lessons); the friend keeps its own greetings and cheers.
+  return Guide(c, c.id == narratorId ? own : VoiceBank.withFallback(own, await source.voice(narratorId)));
 });
+
+/// The character whose voice says every line of the lessons.
+const String narratorId = 'nitzi';
 
 final Provider<VoicePlayer> voicePlayerProvider = Provider<VoicePlayer>(
   (Ref ref) => AudioPlayersVoicePlayer(),

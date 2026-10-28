@@ -14,7 +14,7 @@ class VoiceClip {
 
 /// The recorded lines of one character's voice pack, by `vo:` id. A line with no recording is simply absent.
 class VoiceBank {
-  VoiceBank._(this.characterId, this._clips);
+  VoiceBank._(this.characterId, this._clips) : fallback = null;
 
   /// Reads a verified voice pack (`voice-<character id>`): the audio files of its manifest and its cue documents.
   factory VoiceBank.fromPack(VerifiedPack pack) {
@@ -39,16 +39,25 @@ class VoiceBank {
   }
 
   /// A bank with no recordings (a character that has no voice pack yet).
-  VoiceBank.empty(this.characterId) : _clips = const <String, VoiceClip>{};
+  VoiceBank.empty(this.characterId) : _clips = const <String, VoiceClip>{}, fallback = null;
+
+  /// [primary] with the narrator behind it: a line that [primary] has no recording of is said by [fallback]'s voice, so a
+  /// friend with only its own greetings and cheers still teaches aloud (M9, Q5: the flagship voices say every line).
+  VoiceBank.withFallback(VoiceBank primary, VoiceBank this.fallback)
+    : characterId = primary.characterId,
+      _clips = primary._clips;
 
   final String characterId;
   final Map<String, VoiceClip> _clips;
+
+  /// The narrator's bank, for the lines this voice does not have; null for a bank that stands alone.
+  final VoiceBank? fallback;
 
   int get length => _clips.length;
 
   Iterable<String> get ids => _clips.keys;
 
-  bool has(String voId) => _clips.containsKey(voId);
+  bool has(String voId) => _clips.containsKey(voId) || (fallback?.has(voId) ?? false);
 
-  VoiceClip? clip(String voId) => _clips[voId];
+  VoiceClip? clip(String voId) => _clips[voId] ?? fallback?.clip(voId);
 }
