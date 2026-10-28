@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'schema.dart';
 import 'schemas.dart';
 
@@ -373,6 +375,87 @@ List<Problem> validatePack({
         }
         if ((answer['wrong']! as int) >= cells.length) say(file, 'answer.wrong', 'is not a cell of the row');
         checkTag(file, 'answer.misconception', answer['misconception']);
+      case 'match_pairs':
+        checkAsset(file, 'scene.background', scene['background']);
+        final List<Map<String, Object?>> leftFaces = _maps(scene['left']);
+        final List<Map<String, Object?>> rightFaces = _maps(scene['right']);
+        final Set<Object?> faceIds = <Object?>{};
+        for (final (String side, List<Map<String, Object?>> faces) in <(String, List<Map<String, Object?>>)>[
+          ('left', leftFaces),
+          ('right', rightFaces),
+        ]) {
+          for (final (int i, Map<String, Object?> f) in faces.indexed) {
+            if (!faceIds.add(f['id'])) say(file, 'scene.$side[$i].id', 'is used twice');
+            if ((f['sprite'] == null) == (f['numeral'] == null)) {
+              say(file, 'scene.$side[$i]', 'needs a picture or a numeral, not both and not neither');
+            }
+            if (f['sprite'] != null) checkAsset(file, 'scene.$side[$i].sprite', f['sprite']);
+          }
+        }
+        if (leftFaces.length != rightFaces.length) {
+          say(file, 'scene.right', 'must have as many faces as the left');
+        }
+        final List<Map<String, Object?>> pairs = _maps(answer['pairs']);
+        final Set<Object?> usedLeft = <Object?>{};
+        final Set<Object?> usedRight = <Object?>{};
+        for (final (int i, Map<String, Object?> p) in pairs.indexed) {
+          if (!leftFaces.any((Map<String, Object?> f) => f['id'] == p['left'])) {
+            say(file, 'answer.pairs[$i].left', 'is not a face of the top row');
+          }
+          if (!rightFaces.any((Map<String, Object?> f) => f['id'] == p['right'])) {
+            say(file, 'answer.pairs[$i].right', 'is not a face of the bottom row');
+          }
+          if (!usedLeft.add(p['left']) || !usedRight.add(p['right'])) {
+            say(file, 'answer.pairs[$i]', 'uses a face twice');
+          }
+        }
+        if (pairs.length != leftFaces.length) say(file, 'answer.pairs', 'must pair every face');
+        checkTag(file, 'answer.misconception', answer['misconception']);
+      case 'shop_pay':
+        checkAsset(file, 'scene.background', scene['background']);
+        checkAsset(file, 'scene.itemSprite', scene['itemSprite']);
+        Set<int> reach = <int>{0};
+        for (final (int i, Map<String, Object?> p) in _maps(scene['purse']).indexed) {
+          final String kind = p['kind']! as String;
+          checkAsset(file, 'scene.purse[$i].kind', 'asset:${coinSprites[kind]}');
+          final Set<int> next = <int>{...reach};
+          for (int k = 1; k <= (p['count']! as int); k++) {
+            for (final int r in reach) {
+              next.add(r + k * coinValues[kind]!);
+            }
+          }
+          reach = next;
+        }
+        if (!reach.contains(scene['price'])) {
+          say(file, 'scene.price', 'cannot be paid exactly with the purse');
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
+        checkTag(file, 'answer.countMisconception', answer['countMisconception']);
+      case 'clock_set':
+        checkAsset(file, 'scene.background', scene['background']);
+        final int minute = scene['minute']! as int;
+        if (minute != 0 && minute != 30) say(file, 'scene.minute', 'must be 0 or 30');
+        if (scene['startHour'] == scene['hour'] && (scene['startHalf'] == true) == (minute == 30)) {
+          say(file, 'scene.startHour', 'the clock already shows the time to set');
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
+        checkTag(file, 'answer.handsMisconception', answer['handsMisconception']);
+      case 'trace':
+        checkAsset(file, 'scene.background', scene['background']);
+        for (final (int i, Object? stroke) in (scene['strokes']! as List<Object?>).indexed) {
+          double length = 0;
+          final List<Object?> pts = stroke! as List<Object?>;
+          for (int k = 1; k < pts.length; k++) {
+            final List<Object?> a0 = pts[k - 1]! as List<Object?>;
+            final List<Object?> a1 = pts[k]! as List<Object?>;
+            final double dx = ((a1[0]! as num) - (a0[0]! as num)).toDouble();
+            final double dy = ((a1[1]! as num) - (a0[1]! as num)).toDouble();
+            length += math.sqrt(dx * dx + dy * dy);
+          }
+          if (length < 25) say(file, 'scene.strokes[$i]', 'is too short to trace');
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
+        checkTag(file, 'answer.directionMisconception', answer['directionMisconception']);
       case 'shape_builder':
         checkAsset(file, 'scene.background', scene['background']);
         final List<Map<String, Object?>> slots = _maps(scene['slots']);

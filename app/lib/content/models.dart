@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'dart:ui' show Offset;
 
 import 'pack_verify.dart';
+import 'schemas.dart' show coinValues;
 
 // Typed views of the documents of a pack that has passed `verifyPack`. The documents were checked
 // against the schemas and the cross-file rules, so these classes read them without defending against
@@ -135,6 +137,10 @@ sealed class Activity {
     'number_line' => NumberLineActivity._(json, assets),
     'balance' => BalanceActivity._(json, assets),
     'spot_error' => SpotErrorActivity._(json, assets),
+    'match_pairs' => MatchPairsActivity._(json, assets),
+    'shop_pay' => ShopPayActivity._(json, assets),
+    'clock_set' => ClockSetActivity._(json, assets),
+    'trace' => TraceActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
   };
 
@@ -497,6 +503,160 @@ class SpotErrorActivity extends Activity {
 
   @override
   Set<String> get engineTags => <String>{?wrongTag};
+}
+
+/// A face on the matching template: a picture (a set, when [count] is more than one) or a numeral.
+class MatchFace {
+  const MatchFace({required this.id, required this.label, this.sprite, this.count = 1, this.numeral});
+
+  factory MatchFace.fromJson(Map<String, Object?> m) => MatchFace(
+    id: m['id']! as String,
+    label: m['label']! as String,
+    sprite: m['sprite'] as String?,
+    count: (m['count'] as int?) ?? 1,
+    numeral: m['numeral'] as int?,
+  );
+
+  final String id;
+  final String label;
+  final String? sprite;
+  final int count;
+  final int? numeral;
+}
+
+/// The matching template (T16): pairs of faces, one row above and one below; the child joins each pair.
+class MatchPairsActivity extends Activity {
+  MatchPairsActivity._(super.json, super.assets)
+    : left = <MatchFace>[
+        for (final Map<String, Object?> f in _maps(_map(json['scene'])['left'])) MatchFace.fromJson(f),
+      ],
+      right = <MatchFace>[
+        for (final Map<String, Object?> f in _maps(_map(json['scene'])['right'])) MatchFace.fromJson(f),
+      ],
+      pairs = <String, String>{
+        for (final Map<String, Object?> p in _maps(_map(json['answer'])['pairs']))
+          p['left']! as String: p['right']! as String,
+      },
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      super._();
+
+  final List<MatchFace> left;
+  final List<MatchFace> right;
+
+  /// Left face id -> the right face id that goes with it.
+  final Map<String, String> pairs;
+  final String? wrongTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag};
+}
+
+/// A kind of coin or note in the purse and how many of it there are.
+class PurseItem {
+  const PurseItem(this.kind, this.count);
+
+  final String kind;
+  final int count;
+  int get value => coinValues[kind]!;
+}
+
+/// The shop template (T17): pay a price with the coins of the purse.
+class ShopPayActivity extends Activity {
+  ShopPayActivity._(super.json, super.assets)
+    : itemSprite = _map(json['scene'])['itemSprite']! as String,
+      itemCount = _map(json['scene'])['itemCount']! as int,
+      price = _map(json['scene'])['price']! as int,
+      purse = <PurseItem>[
+        for (final Map<String, Object?> p in _maps(_map(json['scene'])['purse']))
+          PurseItem(p['kind']! as String, p['count']! as int),
+      ],
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      countTag = _map(json['answer'])['countMisconception'] as String?,
+      super._();
+
+  final String itemSprite;
+  final int itemCount;
+
+  /// The price in agorot.
+  final int price;
+  final List<PurseItem> purse;
+  final String? wrongTag;
+  final String? countTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag, ?countTag};
+}
+
+/// The clock template (T18): set the hands to a time.
+class ClockSetActivity extends Activity {
+  ClockSetActivity._(super.json, super.assets)
+    : hour = _map(json['scene'])['hour']! as int,
+      minute = _map(json['scene'])['minute']! as int,
+      startHour = _map(json['scene'])['startHour']! as int,
+      startHalf = _map(json['scene'])['startHalf'] == true,
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      handsTag = _map(json['answer'])['handsMisconception'] as String?,
+      super._();
+
+  final int hour;
+
+  /// 0 for a whole hour, 30 for half past.
+  final int minute;
+  final int startHour;
+  final bool startHalf;
+  final String? wrongTag;
+  final String? handsTag;
+
+  bool get half => minute == 30;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag, ?handsTag};
+}
+
+/// The tracing template (T04): follow a path with a finger.
+class TraceActivity extends Activity {
+  TraceActivity._(super.json, super.assets)
+    : strokes = <List<Offset>>[
+        for (final Object? s in _map(json['scene'])['strokes']! as List<Object?>)
+          <Offset>[
+            for (final Object? p in s! as List<Object?>)
+              Offset(
+                ((p! as List<Object?>)[0]! as num).toDouble(),
+                ((p as List<Object?>)[1]! as num).toDouble(),
+              ),
+          ],
+      ],
+      fullGuide = _map(json['scene'])['guide'] == 'full',
+      tolerance = (_map(json['scene'])['tolerance']! as num).toDouble(),
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      directionTag = _map(json['answer'])['directionMisconception'] as String?,
+      super._();
+
+  /// Each stroke is a list of points in a 100 by 100 box, from where it starts to where it ends.
+  final List<List<Offset>> strokes;
+
+  /// The whole dotted path is drawn (otherwise only the starting dot and the first direction).
+  final bool fullGuide;
+
+  /// How far from the path a finger may be, in the same 100 by 100 units.
+  final double tolerance;
+  final String? wrongTag;
+  final String? directionTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag, ?directionTag};
 }
 
 /// A place of the shape builder: the shape that belongs there, where it stands in the picture (shares of its width and height)

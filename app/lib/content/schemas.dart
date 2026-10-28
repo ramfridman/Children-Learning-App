@@ -46,6 +46,33 @@ const Map<String, String> supportedTemplates = <String, String>{
   'number_line': '1.0',
   'balance': '1.0',
   'spot_error': '1.0',
+  'match_pairs': '1.0',
+  'shop_pay': '1.0',
+  'clock_set': '1.0',
+  'trace': '1.0',
+};
+
+/// What the coins and notes of the shop are worth, in agorot, and the picture each is drawn with.
+const Map<String, int> coinValues = <String, int>{
+  'a10': 10,
+  'h50': 50,
+  's1': 100,
+  's2': 200,
+  's5': 500,
+  's10': 1000,
+  'n20': 2000,
+  'n50': 5000,
+};
+
+const Map<String, String> coinSprites = <String, String>{
+  'a10': 'coin_silver',
+  'h50': 'coin_silver',
+  's1': 'coin_silver',
+  's2': 'coin_silver',
+  's5': 'coin_silver',
+  's10': 'coin_gold',
+  'n20': 'note_green',
+  'n50': 'note_red',
 };
 
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
@@ -298,6 +325,15 @@ const SObject _pan = SObject(<String, SField>{
   ),
 });
 
+/// A face on the matching template (T16): a picture (a set, when `count` is more than one) or a numeral, with its label.
+const SObject _face = SObject(<String, SField>{
+  'id': SField(SString(minLength: 1, maxLength: 8, pattern: r'[a-z][a-z0-9]{0,7}')),
+  'sprite': SField(_asset, required: false),
+  'count': SField(SInt(min: 1, max: 20), required: false),
+  'numeral': SField(SInt(min: 0, max: 100), required: false),
+  'label': SField(SString(minLength: 1, maxLength: 80)),
+});
+
 /// Some of a thing, drawn as a group (tap_answer 1.1): a set to count, or an answer that is a set to choose.
 /// [scale] makes each picture larger or smaller without changing how many there are.
 const SObject _spriteSet = SObject(<String, SField>{
@@ -377,6 +413,10 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'number_line',
       'balance',
       'spot_error',
+      'match_pairs',
+      'shop_pay',
+      'clock_set',
+      'trace',
     ]),
   ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
@@ -781,6 +821,118 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // T16: two rows of faces; the child touches one in the top row and one in the bottom row, and a right pair stays together.
+  // A face is a picture (with a count, for a set) or a numeral.
+  'match_pairs' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'left': SField(SArray(_face, minItems: 2, maxItems: 5)),
+          'right': SField(SArray(_face, minItems: 2, maxItems: 5)),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('match')),
+          'pairs': SField(
+            SArray(
+              SObject(<String, SField>{
+                'left': SField(SString(minLength: 1, maxLength: 8, pattern: r'[a-z][a-z0-9]{0,7}')),
+                'right': SField(SString(minLength: 1, maxLength: 8, pattern: r'[a-z][a-z0-9]{0,7}')),
+              }),
+              minItems: 2,
+              maxItems: 5,
+            ),
+          ),
+          'misconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
+  // T17: a price, and a purse of coins and notes. The child touches coins to put them on the counter and presses pay.
+  // Values are in agorot (100 = one shekel).
+  'shop_pay' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'itemSprite': SField(_asset),
+          'itemCount': SField(SInt(min: 1, max: 10)),
+          'price': SField(SInt(min: 10, max: 10000)),
+          'purse': SField(
+            SArray(
+              SObject(<String, SField>{
+                'kind': SField(SEnum(<String>['a10', 'h50', 's1', 's2', 's5', 's10', 'n20', 'n50'])),
+                'count': SField(SInt(min: 1, max: 8)),
+              }),
+              minItems: 2,
+              maxItems: 8,
+              uniqueKey: 'kind',
+            ),
+          ),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('pay')),
+          'misconception': SField(_tag, required: false),
+          // The tag for a child who puts as many coins as the price says (three coins for three shekels).
+          'countMisconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
+  // T18: set the hands of an analog clock to a time. Whole hours (`minute` 0) or half hours (30); the long hand follows.
+  'clock_set' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'hour': SField(SInt(min: 1, max: 12)),
+          'minute': SField(SInt(min: 0, max: 30)),
+          'startHour': SField(SInt(min: 1, max: 12)),
+          'startHalf': SField(SBool(), required: false),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('clock')),
+          'misconception': SField(_tag, required: false),
+          // The tag for a child who reads the long hand as the hour (a whole hour set to 12).
+          'handsMisconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
+  // T04: trace a numeral or a shape. Points are in a 100 x 100 box; a stroke is read from its first point to its last.
+  'trace' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'strokes': SField(
+            SArray(
+              SArray(SArray(SInt(min: 0, max: 100), minItems: 2, maxItems: 2), minItems: 2, maxItems: 40),
+              minItems: 1,
+              maxItems: 3,
+            ),
+          ),
+          // `full`: the dotted path is drawn. `start`: only the starting dot and the first direction.
+          'guide': SField(SEnum(<String>['full', 'start'])),
+          'tolerance': SField(SInt(min: 6, max: 24)),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('trace')),
+          'misconception': SField(_tag, required: false),
+          // The tag for a child who traces the right path from the wrong end.
+          'directionMisconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
   _ => null,
 };
 
@@ -815,4 +967,8 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.number_line': activitySchemaFor('number_line')!,
   'activity.balance': activitySchemaFor('balance')!,
   'activity.spot_error': activitySchemaFor('spot_error')!,
+  'activity.match_pairs': activitySchemaFor('match_pairs')!,
+  'activity.shop_pay': activitySchemaFor('shop_pay')!,
+  'activity.clock_set': activitySchemaFor('clock_set')!,
+  'activity.trace': activitySchemaFor('trace')!,
 };

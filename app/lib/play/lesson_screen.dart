@@ -39,7 +39,11 @@ import 'flash_session.dart';
 import 'build_pattern_session.dart';
 import 'give_n_session.dart';
 import 'lesson_controller.dart';
+import 'clock_set_session.dart';
 import 'lesson_voice.dart';
+import 'match_pairs_session.dart';
+import 'shop_pay_session.dart';
+import 'trace_session.dart';
 import 'tap_answer_session.dart';
 import 'balance_session.dart';
 import 'number_line_session.dart';
@@ -321,6 +325,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         NumberLineActivity() => NumberLineSession(c, a),
         BalanceActivity() => BalanceSession(c, a),
         SpotErrorActivity() => SpotErrorSession(c, a),
+        MatchPairsActivity() => MatchPairsSession(c, a),
+        ShopPayActivity() => ShopPaySession(c, a),
+        ClockSetActivity() => ClockSetSession(c, a),
+        TraceActivity() => TraceSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
       };
       _sessionIndex = c.index;
