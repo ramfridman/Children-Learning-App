@@ -131,6 +131,7 @@ sealed class Activity {
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
     'robot_path' => RobotPathActivity._(json, assets),
+    'shape_builder' => ShapeBuilderActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
   };
 
@@ -373,6 +374,73 @@ class BuildPatternActivity extends Activity {
   final List<String> palette;
   final List<String> sequence;
   final String? wrongTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag};
+}
+
+/// A place of the shape builder: the shape that belongs there, where it stands in the picture (shares of its width and height)
+/// and how it is turned.
+class ShapeSlot {
+  const ShapeSlot({
+    required this.id,
+    required this.sprite,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
+    required this.rot,
+  });
+
+  final String id;
+  final String sprite;
+  final double x;
+  final double y;
+  final double w;
+  final double h;
+
+  /// Degrees, clockwise.
+  final int rot;
+}
+
+/// The shape-builder template (T10): a picture made of shapes, shown as silhouettes, to be filled with the shapes.
+class ShapeBuilderActivity extends Activity {
+  ShapeBuilderActivity._(super.json, super.assets)
+    : aspect = (_map(json['scene'])['aspect']! as num).toDouble(),
+      slots = <ShapeSlot>[
+        for (final Map<String, Object?> s in _maps(_map(json['scene'])['slots']))
+          ShapeSlot(
+            id: s['id']! as String,
+            sprite: s['sprite']! as String,
+            x: (s['x']! as num).toDouble(),
+            y: (s['y']! as num).toDouble(),
+            w: (s['w']! as num).toDouble(),
+            h: (s['h']! as num).toDouble(),
+            rot: (s['rot'] as int?) ?? 0,
+          ),
+      ],
+      decoys = <String>[
+        for (final Object? d in (_map(json['scene'])['decoys'] as List<Object?>? ?? const <Object?>[]))
+          d! as String,
+      ],
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      super._();
+
+  final double aspect;
+  final List<ShapeSlot> slots;
+  final List<String> decoys;
+  final String? wrongTag;
+
+  /// The shapes in the tray, as asset references: one for each place and the decoys, in a fixed mixed order.
+  List<String> get pieces {
+    final List<String> all = <String>[for (final ShapeSlot s in slots) s.sprite, ...decoys];
+    final List<int> order = List<int>.generate(all.length, (int i) => i)
+      ..sort((int a, int b) => ((a * 5 + 2) % all.length).compareTo((b * 5 + 2) % all.length));
+    return <String>[for (final int i in order) all[i]];
+  }
 
   @override
   int get optionCount => 0;

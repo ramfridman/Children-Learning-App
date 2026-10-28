@@ -92,6 +92,8 @@ The full checklist is `docs/owner-todo.md`. In short:
 
 - **Daily welcome** (owner, 2026-10-28): when a child enters, the character welcomes them **by name** and says what they will learn today, based on their learning data and what the engine suggests for them today (the next lesson of the path, a revisit due, a skill that needs another try). Needs its own plan: the line is built on the device from ids (never by a model); the name is the one place the owner allows a first name to reach ElevenLabs (parent-reviewed spelling, CLAUDE.md), so the name part is voiced once per child through the gateway and cached, with the {child} placeholder everywhere else; a calm text-only fallback when no voice exists; short, never a test or a guilt line ("you did not play yesterday"), skippable by a tap, and said at most once a day. Builds on `nextLessonId` (M9a) and the engine's session builder.
 
+- **Drag-and-drop puzzles with beautiful pictures** (owner, 2026-10-28): jigsaw-style and picture puzzles, in one of the learning topics (Shapes fits best: it already has the shape builder, and a piece that snaps into a silhouette is the same move) or in a land of their own if that fits better. Needs real art (the illustrator's brief, to-do P9, should ask for puzzle pictures cut in 4, 6, 9 and 12 pieces, each piece with its own outline), the `shape_builder` and `sort_drag` drag code, and a plan for the levels (more pieces as the child grows) with nothing timed and nothing lost.
+
 ## Next step
 
 Claude: the M9 plan is written (`docs/milestones/M9.md`); the owner answers Q1 to Q12 (or "all as recommended"), then 9a starts. Open offers: re-voice the older lines at 44 kHz (about 1 USD, his typed count) and commissioning the art (to-do P9).

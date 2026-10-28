@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-A-06",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משלימים תמונה מצורות: כל צורה במקום שלה"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "בּוֹנִים תְּמוּנָה מִצּוּרוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -34,7 +34,8 @@
         "flash",
         "sort_drag",
         "build_pattern",
-        "robot_path"
+        "robot_path",
+        "shape_builder"
       ]
     },
     "templateVersion": {

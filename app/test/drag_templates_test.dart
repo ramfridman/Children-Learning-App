@@ -5,6 +5,7 @@ import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/play/build_pattern_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/robot_path_session.dart';
+import 'package:nitznutz/play/shape_builder_session.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
 import 'package:nitznutz/play/template_session.dart';
 
@@ -402,5 +403,97 @@ void main() {
         await tester.pumpWidget(const SizedBox());
       },
     );
+  });
+
+  group('the shape builder', () {
+    /// A point on a place that no other place covers: pictures overlap (a door on the body of a house), so the touch goes a
+    /// little above the middle of an upright place, and to the middle of a turned one.
+    Offset onSlot(WidgetTester t, ShapeBuilderActivity a, String id) {
+      final ShapeSlot slot = a.slots.firstWhere((ShapeSlot s) => s.id == id);
+      final Rect r = t.getRect(find.byKey(Key('slot-$id')));
+      return slot.rot == 0 ? r.center - Offset(0, r.height * 0.3) : r.center;
+    }
+
+    testWidgets(
+      'a shape snaps into its own place by touch, a wrong place is a not-yet and the shape stays in the tray',
+      (WidgetTester tester) async {
+        final LessonController c = start('build-with-shapes', 0); // the house
+        final ShapeBuilderActivity a = c.current as ShapeBuilderActivity;
+        final ShapeBuilderSession s = ShapeBuilderSession(c, a);
+        await host(tester, s);
+        final int square = s.pieces.indexOf('asset:shape_square_blue');
+        await tap(tester, 'piece-$square');
+        await tester.tapAt(onSlot(tester, a, 's2'));
+        await tester.pump(const Duration(milliseconds: 60));
+        await settle(tester, 300);
+        expect(written.single.result, 'incorrect');
+        expect(s.filled, isEmpty);
+        expect(s.isUsed(square), isFalse, reason: 'the shape is still in the tray');
+        await settle(tester);
+        await tap(tester, 'piece-$square');
+        await tester.tapAt(onSlot(tester, a, 's1'));
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(s.filled, <String>{'s1'});
+        expect(s.isUsed(square), isTrue);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets(
+      'drag does the same; the last shape ends the activity with one right answer; a decoy is never placed',
+      (WidgetTester tester) async {
+        final LessonController c = start('build-with-shapes', 0);
+        final ShapeBuilderActivity a = c.current as ShapeBuilderActivity;
+        final ShapeBuilderSession s = ShapeBuilderSession(c, a);
+        await host(tester, s);
+        expect(s.pieces.length, a.slots.length + a.decoys.length);
+        for (final ShapeSlot slot in a.slots) {
+          final int piece = <int>[for (int i = 0; i < s.pieces.length; i++) i]
+              .firstWhere((int i) => !s.isUsed(i) && s.pieces[i] == slot.sprite);
+          final Offset from = tester.getCenter(find.byKey(Key('piece-$piece')));
+          final Offset to = onSlot(tester, a, slot.id);
+          await tester.dragFrom(from, to - from);
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        expect(s.filled.length, a.slots.length);
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(written.where((AttemptRecord r) => r.result == 'correct').length, 1);
+        expect(written.where((AttemptRecord r) => r.result == 'incorrect'), isEmpty);
+        final int decoy = s.pieces.indexOf(a.decoys.first);
+        expect(s.isUsed(decoy), isFalse);
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets('after three wrong places only the right place takes a shape, and the help points at it', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('build-with-shapes', 0);
+      final ShapeBuilderActivity a = c.current as ShapeBuilderActivity;
+      final ShapeBuilderSession s = ShapeBuilderSession(c, a);
+      await host(tester, s);
+      final int square = s.pieces.indexOf('asset:shape_square_blue');
+      for (int k = 0; k < a.maxAttempts; k++) {
+        await tap(tester, 'piece-$square');
+        await tester.tapAt(onSlot(tester, a, 's2'));
+        await tester.pump(const Duration(milliseconds: 60));
+        await settle(tester);
+      }
+      expect(c.guided, isTrue);
+      expect(s.hintSlot, 's1', reason: 'the help shows the first empty place');
+      final int before = written.length;
+      await tap(tester, 'piece-$square');
+      await tester.tapAt(onSlot(tester, a, 's2'));
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(written.length, before, reason: 'not counted again');
+      await tester.tapAt(onSlot(tester, a, 's1'));
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(s.filled, <String>{'s1'});
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
   });
 }

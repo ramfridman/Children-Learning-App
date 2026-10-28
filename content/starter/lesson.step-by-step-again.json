@@ -18,7 +18,9 @@
     "cs.routine.wash.middle",
     "cs.routine.teeth.middle",
     "cs.wrong.wash2",
-    "cs.wrong.teeth2"
+    "cs.wrong.teeth2",
+    "cs.wrong.wash3",
+    "cs.wrong.teeth3"
   ],
   "estimatedMinutes": 4,
   "sequence": 4,

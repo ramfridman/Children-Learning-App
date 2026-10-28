@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
   "pack_version": "0.6.0",
-  "manifest_sha256": "d1573de4a3eaa923e45c4a04514fda28383740db43f06e8ccae4070e4ab7c280",
+  "manifest_sha256": "f4d232c5489e930aba565b116beca931d569b52cdf5b3907cfa5baebe3716517",
   "items": [
     {
       "item_id": "col.find.blue.ball",
@@ -3607,6 +3607,47 @@
       ]
     },
     {
+      "item_id": "cs.wrong.teeth3",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מְצַחְצְחִים שִׁנַּיִם. מָה לֹא שַׁיָּךְ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּרֶז",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "כּוֹס מַיִם",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "מִבְרֶשֶׁת",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
       "item_id": "cs.wrong.wash",
       "revision": 1,
       "template": "tap_answer",
@@ -3673,6 +3714,47 @@
           "id": "o3",
           "label": "מִשְׁחָה",
           "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "cs.wrong.wash3",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "CS-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "רוֹחֲצִים יָדַיִם. מָה לֹא שַׁיָּךְ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כּוֹס מַיִם",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "סַבּוֹן",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "מַגֶּבֶת",
+          "correct": false
         }
       ],
       "number_set": [],
@@ -4849,6 +4931,77 @@
     },
     {
       "item_id": "log.copy.colours",
+      "revision": 1,
+      "template": "build_pattern",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child copies the pattern in the same order",
+      "prompt_text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-PAT-COPY",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3"
+      ]
+    },
+    {
+      "item_id": "log.copy.green",
+      "revision": 1,
+      "template": "build_pattern",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child copies the pattern in the same order",
+      "prompt_text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-PAT-COPY",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2"
+      ]
+    },
+    {
+      "item_id": "log.copy.pets",
       "revision": 1,
       "template": "build_pattern",
       "band": "A",
@@ -11374,6 +11527,165 @@
       ]
     },
     {
+      "item_id": "shp.build.face",
+      "revision": 1,
+      "template": "shape_builder",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts each shape in the place that has its shadow",
+      "prompt_text": "בּוֹנִים פָּנִים מִצּוּרוֹת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4"
+      ]
+    },
+    {
+      "item_id": "shp.build.house",
+      "revision": 1,
+      "template": "shape_builder",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts each shape in the place that has its shadow",
+      "prompt_text": "בּוֹנִים בַּיִת מִצּוּרוֹת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2"
+      ]
+    },
+    {
+      "item_id": "shp.build.rocket",
+      "revision": 1,
+      "template": "shape_builder",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts each shape in the place that has its shadow",
+      "prompt_text": "בּוֹנִים חַלָּלִית מִצּוּרוֹת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4"
+      ]
+    },
+    {
+      "item_id": "shp.build.train",
+      "revision": 1,
+      "template": "shape_builder",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts each shape in the place that has its shadow",
+      "prompt_text": "בּוֹנִים רַכֶּבֶת מִצּוּרוֹת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4",
+        "obj-5",
+        "obj-6"
+      ]
+    },
+    {
+      "item_id": "shp.build.tree",
+      "revision": 1,
+      "template": "shape_builder",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts each shape in the place that has its shadow",
+      "prompt_text": "בּוֹנִים עֵץ מִצּוּרוֹת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3"
+      ]
+    },
+    {
       "item_id": "shp.line.curved",
       "revision": 1,
       "template": "tap_answer",
@@ -12464,6 +12776,41 @@
           "id": "o2",
           "label": "קֻבִּיָּה",
           "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2"
+      ]
+    },
+    {
+      "item_id": "shp.solid.which2",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מָה לֹא מִתְגַּלְגֵּל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "קֻבִּיָּה",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר כָּחֹל",
+          "correct": false
         }
       ],
       "number_set": [],

@@ -8,6 +8,7 @@ import 'package:nitznutz/play/flash_session.dart';
 import 'package:nitznutz/play/give_n_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/robot_path_session.dart';
+import 'package:nitznutz/play/shape_builder_session.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
 import 'package:nitznutz/play/tap_answer_session.dart';
 import 'package:nitznutz/play/template_session.dart';
@@ -69,6 +70,9 @@ void main() {
     RobotPathActivity() => <Future<Outcome> Function(LessonController)>[
       (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
     ],
+    ShapeBuilderActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+    ],
     GiveNActivity() => <Future<Outcome> Function(LessonController)>[
       for (final int n in <int>{
         if (a.n > 1) a.n - 1,
@@ -89,6 +93,7 @@ void main() {
       SortDragActivity() => c.submitPlacement(right: true),
       BuildPatternActivity() => c.submitPlacement(right: true),
       RobotPathActivity() => c.submitPlacement(right: true),
+      ShapeBuilderActivity() => c.submitPlacement(right: true),
     };
   }
 
@@ -230,6 +235,7 @@ void main() {
               SortDragActivity() => SortDragSession(c, a),
               BuildPatternActivity() => BuildPatternSession(c, a),
               RobotPathActivity() => RobotPathSession(c, a),
+              ShapeBuilderActivity() => ShapeBuilderSession(c, a),
             };
             await tester.pumpWidget(
               MaterialApp(

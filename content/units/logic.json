@@ -1484,6 +1484,41 @@
       "ask": "first",
       "pos": 0,
       "difficulty": 0.35
+    },
+    {
+      "kind": "build",
+      "id": "log.copy.pets",
+      "skill": "LOG-A-05",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "model": [
+        "duck",
+        "cat",
+        "duck",
+        "cat"
+      ],
+      "palette": [
+        "cat",
+        "duck"
+      ],
+      "difficulty": 0.3,
+      "h3": "בַּרְוָז, חָתוּל, בַּרְוָז, חָתוּל. עַכְשָׁו תּוֹרְכֶם."
+    },
+    {
+      "kind": "build",
+      "id": "log.copy.green",
+      "skill": "LOG-A-05",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "model": [
+        "ball_green",
+        "ball_green",
+        "ball_yellow"
+      ],
+      "palette": [
+        "ball_yellow",
+        "ball_green"
+      ],
+      "difficulty": 0.35,
+      "h3": "יָרֹק, יָרֹק, צָהֹב. עַכְשָׁו תּוֹרְכֶם."
     }
   ],
   "firstSequence": 1,
@@ -1609,7 +1644,9 @@
         "log.copy.colours",
         "log.copy.animals",
         "log.copy.balloons",
-        "log.copy.three"
+        "log.copy.three",
+        "log.copy.pets",
+        "log.copy.green"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."

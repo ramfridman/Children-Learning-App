@@ -51,6 +51,9 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('log.copy.three', 'drag_pattern', 900),
   ('cs.robot.plan.2', 'robot_plan', 900),
   ('cs.robot.direct.3', 'robot_direct', 900),
+  ('shp.build.house', 'builder_house', 900),
+  ('shp.build.rocket', 'builder_rocket', 900),
+  ('shp.build.train', 'builder_train', 900),
 ];
 
 void main() {

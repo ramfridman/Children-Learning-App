@@ -374,6 +374,20 @@
         "pictorial"
       ],
       "tags": []
+    },
+    {
+      "id": "SHP-A-06",
+      "title": "משלימים תמונה מצורות: כל צורה במקום שלה",
+      "child": "בּוֹנִים תְּמוּנָה מִצּוּרוֹת",
+      "world": "cone-tree",
+      "needs": [
+        "SHP-A-01"
+      ],
+      "reps": [
+        "concrete",
+        "pictorial"
+      ],
+      "tags": []
     }
   ],
   "activities": [
@@ -1135,6 +1149,241 @@
       ],
       "correct": "line_curved_wave",
       "difficulty": 0.3
+    },
+    {
+      "kind": "shapebuild",
+      "id": "shp.build.house",
+      "skill": "SHP-A-06",
+      "what": "בַּיִת",
+      "difficulty": 0.2,
+      "slots": [
+        [
+          "shape_square_blue",
+          80,
+          80,
+          70,
+          0
+        ],
+        [
+          "shape_triangle_green",
+          80,
+          31,
+          70,
+          0
+        ],
+        [
+          "shape_rect_orange",
+          80,
+          90,
+          34,
+          90
+        ]
+      ],
+      "decoys": [
+        "shape_circle_red"
+      ]
+    },
+    {
+      "kind": "shapebuild",
+      "id": "shp.build.tree",
+      "skill": "SHP-A-06",
+      "what": "עֵץ",
+      "difficulty": 0.25,
+      "slots": [
+        [
+          "shape_rect_orange",
+          50,
+          78,
+          40,
+          90
+        ],
+        [
+          "shape_circle_green",
+          50,
+          36,
+          70,
+          0
+        ],
+        [
+          "shape_circle_red",
+          42,
+          34,
+          18,
+          0
+        ],
+        [
+          "shape_circle_red",
+          62,
+          44,
+          18,
+          0
+        ]
+      ],
+      "decoys": [
+        "shape_square_yellow"
+      ]
+    },
+    {
+      "kind": "shapebuild",
+      "id": "shp.build.face",
+      "skill": "SHP-A-06",
+      "what": "פָּנִים",
+      "difficulty": 0.3,
+      "slots": [
+        [
+          "shape_rect_blue",
+          60,
+          52,
+          110,
+          0
+        ],
+        [
+          "shape_circle_yellow",
+          40,
+          44,
+          26,
+          0
+        ],
+        [
+          "shape_circle_yellow",
+          80,
+          44,
+          26,
+          0
+        ],
+        [
+          "shape_triangle_orange",
+          60,
+          56,
+          24,
+          0
+        ],
+        [
+          "shape_rect_red",
+          60,
+          70,
+          40,
+          0
+        ]
+      ],
+      "decoys": [
+        "shape_square_green"
+      ]
+    },
+    {
+      "kind": "shapebuild",
+      "id": "shp.build.train",
+      "skill": "SHP-A-06",
+      "what": "רַכֶּבֶת",
+      "difficulty": 0.4,
+      "slots": [
+        [
+          "shape_rect_orange",
+          40,
+          44,
+          64,
+          0
+        ],
+        [
+          "shape_square_yellow",
+          92,
+          40,
+          44,
+          0
+        ],
+        [
+          "shape_square_red",
+          130,
+          40,
+          44,
+          0
+        ],
+        [
+          "shape_circle_blue",
+          22,
+          66,
+          24,
+          0
+        ],
+        [
+          "shape_circle_blue",
+          50,
+          66,
+          24,
+          0
+        ],
+        [
+          "shape_circle_blue",
+          88,
+          62,
+          24,
+          0
+        ],
+        [
+          "shape_circle_blue",
+          130,
+          62,
+          24,
+          0
+        ]
+      ]
+    },
+    {
+      "kind": "shapebuild",
+      "id": "shp.build.rocket",
+      "skill": "SHP-A-06",
+      "what": "חַלָּלִית",
+      "difficulty": 0.45,
+      "slots": [
+        [
+          "shape_rect_orange",
+          50,
+          62,
+          80,
+          90
+        ],
+        [
+          "shape_triangle_red",
+          50,
+          14.8,
+          36,
+          0
+        ],
+        [
+          "shape_circle_blue",
+          50,
+          52,
+          30,
+          0
+        ],
+        [
+          "shape_triangle_green",
+          28,
+          90,
+          34,
+          -30
+        ],
+        [
+          "shape_triangle_green",
+          72,
+          90,
+          34,
+          30
+        ]
+      ]
+    },
+    {
+      "kind": "pick",
+      "id": "shp.solid.which2",
+      "skill": "SHP-A-07",
+      "prompt": "מָה לֹא מִתְגַּלְגֵּל?",
+      "options": [
+        "solid_box",
+        "ball_blue"
+      ],
+      "correct": "solid_box",
+      "difficulty": 0.3,
+      "rep": "concrete"
     }
   ],
   "firstSequence": 1,
@@ -1304,7 +1553,8 @@
       ],
       "items": [
         "shp.solid.rolls.blue",
-        "shp.solid.stacks.blue"
+        "shp.solid.stacks.blue",
+        "shp.solid.which2"
       ],
       "minutes": 2,
       "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה מִתְגַּלְגֵּל."
@@ -1321,6 +1571,22 @@
       ],
       "minutes": 2,
       "done": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כֻּל דָּבָר."
+    },
+    {
+      "id": "build-with-shapes",
+      "title": "בּוֹנִים מִצּוּרוֹת",
+      "skills": [
+        "SHP-A-06"
+      ],
+      "items": [
+        "shp.build.house",
+        "shp.build.tree",
+        "shp.build.face",
+        "shp.build.train",
+        "shp.build.rocket"
+      ],
+      "minutes": 6,
+      "done": "וַאוּ! בְּנִיתֶם תְּמוּנוֹת מִצּוּרוֹת."
     }
   ]
 }

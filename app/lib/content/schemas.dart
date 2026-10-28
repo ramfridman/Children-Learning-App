@@ -42,6 +42,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'sort_drag': '1.0',
   'build_pattern': '1.0',
   'robot_path': '1.0',
+  'shape_builder': '1.0',
 };
 
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
@@ -345,7 +346,16 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'review': _review,
   'revision': const SField(_revision),
   'template': const SField(
-    SEnum(<String>['tap_answer', 'count_tap', 'give_n', 'flash', 'sort_drag', 'build_pattern', 'robot_path']),
+    SEnum(<String>[
+      'tap_answer',
+      'count_tap',
+      'give_n',
+      'flash',
+      'sort_drag',
+      'build_pattern',
+      'robot_path',
+      'shape_builder',
+    ]),
   ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
   'domain': const SField(SEnum(domains)),
@@ -573,6 +583,43 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // T10: a picture made of shapes is shown as silhouettes; the child puts each shape in its place (by tapping or dragging) and
+  // it snaps in, turned the right way.
+  'shape_builder' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The picture's width divided by its height; the slots are placed in that picture, as shares of its width and height.
+          'aspect': SField(SNum(min: 0.3, max: 3)),
+          'slots': SField(
+            SArray(
+              SObject(<String, SField>{
+                'id': SField(SString(minLength: 2, maxLength: 3, pattern: r's[0-9]{1,2}')),
+                'sprite': SField(_asset),
+                'x': SField(SNum(min: 0, max: 1)),
+                'y': SField(SNum(min: 0, max: 1)),
+                'w': SField(SNum(min: 0.05, max: 1)),
+                'h': SField(SNum(min: 0.05, max: 1)),
+                'rot': SField(SInt(min: -180, max: 180), required: false),
+              }),
+              minItems: 2,
+              maxItems: 8,
+              uniqueKey: 'id',
+            ),
+          ),
+          // Pieces that belong nowhere in the picture, so that choosing is a choice.
+          'decoys': SField(SArray(_asset, maxItems: 2), required: false),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('shapes')),
+          'misconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
   // T05: the child fills the places of a pattern from a palette, by tapping or dragging.
   'build_pattern' => SObject(
     _base(<String, SField>{
@@ -652,4 +699,5 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.sort_drag': activitySchemaFor('sort_drag')!,
   'activity.build_pattern': activitySchemaFor('build_pattern')!,
   'activity.robot_path': activitySchemaFor('robot_path')!,
+  'activity.shape_builder': activitySchemaFor('shape_builder')!,
 };

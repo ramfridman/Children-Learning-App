@@ -302,6 +302,25 @@ List<Problem> validatePack({
         if (!_maps(answer['options']).any((Map<String, Object?> o) => o['misconception'] != null)) {
           say(file, 'answer.options', 'at least one wrong answer must name the misconception it shows');
         }
+      case 'shape_builder':
+        checkAsset(file, 'scene.background', scene['background']);
+        final List<Map<String, Object?>> slots = _maps(scene['slots']);
+        final Set<Object?> slotSprites = <Object?>{for (final Map<String, Object?> s in slots) s['sprite']};
+        for (final (int i, Map<String, Object?> s) in slots.indexed) {
+          checkAsset(file, 'scene.slots[$i].sprite', s['sprite']);
+          final double x = (s['x']! as num).toDouble();
+          final double y = (s['y']! as num).toDouble();
+          if (x + (s['w']! as num) > 1.001 || y + (s['h']! as num) > 1.001) {
+            say(file, 'scene.slots[$i]', 'reaches outside the picture');
+          }
+        }
+        for (final (int i, Object? d) in ((scene['decoys'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+          checkAsset(file, 'scene.decoys[$i]', d);
+          if (slotSprites.contains(d)) {
+            say(file, 'scene.decoys[$i]', 'is a shape that belongs in the picture');
+          }
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
       case 'robot_path':
         checkAsset(file, 'scene.background', scene['background']);
         checkAsset(file, 'scene.robotSprite', scene['robotSprite']);

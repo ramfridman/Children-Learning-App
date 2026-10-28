@@ -1,0 +1,165 @@
+{
+  "schema": "activity/v1",
+  "id": "shp.build.tree",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "shape_builder",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "A",
+  "skills": [
+    {
+      "id": "SHP-A-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "shapebuild",
+  "difficulty": {
+    "authored": 0.25
+  },
+  "prompt": {
+    "vo": "vo:shp.build.tree.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹנִים עֵץ מִצּוּרוֹת."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "aspect": 0.722,
+    "slots": [
+      {
+        "id": "s1",
+        "sprite": "asset:shape_rect_orange",
+        "x": 0.2143,
+        "y": 0.5876,
+        "w": 0.5714,
+        "h": 0.4124,
+        "rot": 90
+      },
+      {
+        "id": "s2",
+        "sprite": "asset:shape_circle_green",
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1.0,
+        "h": 0.7216,
+        "rot": 0
+      },
+      {
+        "id": "s3",
+        "sprite": "asset:shape_circle_red",
+        "x": 0.2571,
+        "y": 0.2474,
+        "w": 0.2571,
+        "h": 0.1856,
+        "rot": 0
+      },
+      {
+        "id": "s4",
+        "sprite": "asset:shape_circle_red",
+        "x": 0.5429,
+        "y": 0.3505,
+        "w": 0.2571,
+        "h": 0.1856,
+        "rot": 0
+      }
+    ],
+    "decoys": [
+      "asset:shape_square_yellow"
+    ]
+  },
+  "answer": {
+    "type": "shapes"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:shp.build.tree.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! בְּנִיתֶם עֵץ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.sb.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "לְכׇל צוּרָה יֵשׁ מָקוֹם אֶחָד, כְּמוֹ הַצֵּל שֶׁלָּהּ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:shp.build.tree.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַצּוּרָה הַנְּכוֹנָה דּוֹמָה בְּדִיּוּק לַצֵּל. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child puts each shape in the place that has its shadow",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "בּוֹנִים עֵץ מִצּוּרוֹת."
+  }
+}

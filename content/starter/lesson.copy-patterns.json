@@ -17,7 +17,9 @@
     "log.copy.colours",
     "log.copy.animals",
     "log.copy.balloons",
-    "log.copy.three"
+    "log.copy.three",
+    "log.copy.pets",
+    "log.copy.green"
   ],
   "estimatedMinutes": 4,
   "sequence": 8,

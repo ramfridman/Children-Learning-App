@@ -498,6 +498,40 @@ def k_build(a, ctx):
         prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.')
 
 
+def k_shapebuild(a, ctx):
+    """A picture made of shapes. Slots are [sprite, centre x, centre y, size, turn in degrees] in the author's own units; the
+    picture is fitted to the smallest frame that holds them all, and its shape is kept as the aspect."""
+    import math
+    boxes = []
+    for sp, cx, cy, size, rot in a['slots']:
+        half = size / 2 * (abs(math.cos(math.radians(rot))) + abs(math.sin(math.radians(rot))))
+        boxes.append((cx - half, cy - half, cx + half, cy + half))
+    x0, y0 = min(b[0] for b in boxes), min(b[1] for b in boxes)
+    x1, y1 = max(b[2] for b in boxes), max(b[3] for b in boxes)
+    cw, ch = x1 - x0, y1 - y0
+    slots = []
+    for k, (sp, cx, cy, size, rot) in enumerate(a['slots'], start=1):
+        slots.append({'id': 's%d' % k, 'sprite': 'asset:' + sp, 'x': round((cx - size / 2 - x0) / cw, 4),
+                      'y': round((cy - size / 2 - y0) / ch, 4), 'w': round(size / cw, 4), 'h': round(size / ch, 4),
+                      'rot': rot})
+    # a turned box may reach a little outside the frame; the frame is made large enough above, so the plain box is inside
+    for sl in slots:
+        sl['x'] = max(0.0, min(sl['x'], 1 - sl['w']))
+        sl['y'] = max(0.0, min(sl['y'], 1 - sl['h']))
+    scene = {'background': 'asset:meadow', 'aspect': round(cw / ch, 3), 'slots': slots}
+    if a.get('decoys'):
+        scene['decoys'] = ['asset:' + d for d in a['decoys']]
+    return activity(
+        a, 'shape_builder', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'practice', 'practice', 'concrete',
+        scene, {'type': 'shapes'}, set(),
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'לְכׇל צוּרָה יֵשׁ מָקוֹם אֶחָד, כְּמוֹ הַצֵּל שֶׁלָּהּ.',
+              'הַצּוּרָה הַנְּכוֹנָה דּוֹמָה בְּדִיּוּק לַצֵּל. עַכְשָׁו תּוֹרְכֶם.',
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+              shared=('pick', 'sb')),
+        'child puts each shape in the place that has its shadow',
+        prompt='בּוֹנִים %s מִצּוּרוֹת.' % a['what'], correct='כֵּן! בְּנִיתֶם %s.' % a['what'])
+
+
 DIR_WORDS = {'up': 'לְמַעְלָה', 'down': 'לְמַטָּה', 'left': 'שְׂמֹאלָה', 'right': 'יָמִינָה'}
 
 
