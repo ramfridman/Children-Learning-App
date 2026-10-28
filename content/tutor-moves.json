@@ -79,6 +79,45 @@
         "Invite counting together, giving one object for each number, and stopping at the number asked for.",
         "Invite counting what was given, one by one, to check that it is the number asked for."
       ]
+    ],
+    "M-CNT-SIZE": [
+      [
+        "Invite the child to look at how many things there are, not how big they are or how far apart.",
+        "Say that big things and small things each count as one, and invite counting both groups."
+      ],
+      [
+        "Suggest pairing the things one to one: one from this side with one from that side, and seeing which side has some left.",
+        "Suggest touching one thing from each group at the same time, so the group that runs out first has fewer."
+      ],
+      [
+        "Count the things of one group aloud together, then the other group, and compare the two numbers."
+      ]
+    ],
+    "M-NUM-ZERO": [
+      [
+        "Say that when there is nothing at all, there is a number for that too, and it is called zero.",
+        "Invite the child to look again at the empty place and say how many things are in it."
+      ],
+      [
+        "Suggest picturing the things that flew away or were eaten: now none is left, and the number for none is zero.",
+        "Tell a very short story where the last thing goes away, and ask how many are left."
+      ],
+      [
+        "Show that zero is where counting starts, before the first one, and that it is a number just like the others."
+      ]
+    ],
+    "M-ORD-CARD": [
+      [
+        "Say that first, second and third tell the place in the line, not how many there are.",
+        "Invite the child to point at the first one in the line, then the second, then the third."
+      ],
+      [
+        "Suggest putting a small number badge on each place in the line, so that the third place has a three on it.",
+        "Suggest walking along the line from the start, saying first, second, third, and stopping at the one that was asked for."
+      ],
+      [
+        "Count the places from the start together until the place that was asked for, and stop there."
+      ]
     ]
   }
 }

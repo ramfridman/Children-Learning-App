@@ -258,7 +258,7 @@ Deno.test("tutor-prewarm: evaluate asks the model only, keeps nothing, and says 
   const plan = await (await ask({ mode: "plan" })).json();
   assert.equal(typeof plan.est_eval_micro_usd, "number");
   const j = await (await ask({ mode: "evaluate" })).json();
-  assert.equal(j.rows.length, plan.lines);
+  assert.equal(j.rows.length, Math.min(plan.lines, 25), "an evaluation looks at 25 lines at most");
   assert.equal(j.rows[0].firstTry, true);
   assert.equal(j.rows[0].passed, true);
   const second = j.rows[1];
