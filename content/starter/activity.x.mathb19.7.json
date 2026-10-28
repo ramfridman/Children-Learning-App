@@ -1,0 +1,165 @@
+{
+  "schema": "activity/v1",
+  "id": "x.mathb19.7",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.2",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-19",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.79
+  },
+  "prompt": {
+    "vo": "vo:x.mathb19.7.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "chart": [
+      {
+        "sprite": "asset:apple",
+        "count": 3
+      },
+      {
+        "sprite": "asset:banana_yellow",
+        "count": 5
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      },
+      {
+        "id": "o2",
+        "numeral": 5,
+        "label": "חָמֵשׁ",
+        "misconception": "M-COMP-DIFF"
+      },
+      {
+        "id": "o3",
+        "numeral": 3,
+        "label": "שָׁלוֹשׁ"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:x.mathb19.7.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתַּיִם! בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ עוֹד שְׁתַּיִם."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-COMP-DIFF",
+        "vo": "vo:fb.comp_diff",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כְּדֵי לָדַעַת כַּמָּה יוֹתֵר, מַסְתַּכְּלִים כַּמָּה עוֹד יֵשׁ בַּגְּדוֹלָה. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:x.mathb19.7.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חָמֵשׁ פָּחוֹת שָׁלוֹשׁ שָׁוֶה שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?"
+  }
+}

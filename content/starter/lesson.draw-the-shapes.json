@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "draw-the-shapes",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְצַיְּרִים צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-A-02"
+  ],
+  "items": [
+    "x.shpa02.4",
+    "x.shpa02.5",
+    "x.shpa02.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 61,
+  "celebration": {
+    "vo": "vo:celebrate.draw_the_shapes",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! צִיַּרְתֶּם מֵהַנְּקֻדָּה."
+      }
+    ]
+  }
+}

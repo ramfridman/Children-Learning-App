@@ -1,0 +1,208 @@
+{
+  "schema": "activity/v1",
+  "id": "x.numb07.13",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "trace",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "trace",
+  "difficulty": {
+    "authored": 0.5
+  },
+  "prompt": {
+    "vo": "vo:x.numb07.13.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כּוֹתְבִים אֶת הַמִּסְפָּר שְׁתַּיִם. מַתְחִילִים מֵהַנְּקֻדָּה."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "strokes": [
+      [
+        [
+          24,
+          34
+        ],
+        [
+          25,
+          29
+        ],
+        [
+          27,
+          23
+        ],
+        [
+          31,
+          19
+        ],
+        [
+          36,
+          16
+        ],
+        [
+          42,
+          13
+        ],
+        [
+          48,
+          12
+        ],
+        [
+          55,
+          12
+        ],
+        [
+          61,
+          14
+        ],
+        [
+          66,
+          17
+        ],
+        [
+          71,
+          21
+        ],
+        [
+          74,
+          25
+        ],
+        [
+          76,
+          31
+        ],
+        [
+          76,
+          36
+        ],
+        [
+          74,
+          42
+        ],
+        [
+          22,
+          88
+        ],
+        [
+          80,
+          88
+        ]
+      ]
+    ],
+    "guide": "start",
+    "tolerance": 11
+  },
+  "answer": {
+    "type": "trace",
+    "directionMisconception": "M-NUM-WRITE"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:x.numb07.13.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! כְּתַבְתֶּם אֶת הַמִּסְפָּר שְׁתַּיִם."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-NUM-WRITE",
+        "vo": "vo:fb.num_write",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה, וְהוֹלְכִים בַּכִּוּוּן שֶׁל הַנְּקֻדּוֹת. בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.trace.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַנְּקֻדָּה הַיְרֻקָּה אוֹמֶרֶת מֵאֵיפֹה מַתְחִילִים."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:x.numb07.13.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה וְהוֹלְכִים לְאַט אַחֲרֵי הַנְּקֻדּוֹת. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child follows the path from its start",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כּוֹתְבִים אֶת הַמִּסְפָּר שְׁתַּיִם. מַתְחִילִים מֵהַנְּקֻדָּה."
+  }
+}

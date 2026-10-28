@@ -150,7 +150,7 @@ def activity(a, template, skills, purpose, check, rep, scene, answer, fb_tags, h
     i = a['id']
     d = {
         'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': 1,
-        'template': template, 'templateVersion': '1.1' if template == 'tap_answer' else '1.0',
+        'template': template, 'templateVersion': ('1.2' if scene.get('chart') else '1.1') if template == 'tap_answer' else '1.0',
         'domain': a.get('domain', 'numbers'), 'band': a.get('band', 'A'),
         'skills': [{'id': s, 'weight': w} for s, w in skills],
         'purpose': purpose, 'checkType': check, 'representation': rep,
@@ -473,6 +473,8 @@ def k_pick(a, ctx):
         scene['numeral'] = a['numeral']
     if 'row' in a:
         scene['row'] = [r if r == '?' or r.startswith(('n:', 'op:')) else 'asset:' + r for r in a['row']]
+    if 'chart' in a:
+        scene['chart'] = [{'sprite': 'asset:' + c[0], 'count': c[1]} for c in a['chart']]
     if 'group2' in a:
         g = a['group2']
         scene['group2'] = {'sprite': 'asset:' + g['sprite'], 'count': g.get('count', 1),
@@ -905,6 +907,84 @@ def k_sum(a, ctx):
     opts = ['n:%d' % v for v in place(r, others, a.get('pos', 1))]
     return k_pick(pick_spec(a, prompt=prompt, options=['n:%d' % v for v in place(r, others, a.get('pos', 1))], correct='n:%d' % r,
                             tags=tags, rep='concrete', correct_text=text, h3=h3, **extra), ctx)
+
+
+
+COIN_LABELS = {'a10': 'עֶשֶׂר אֲגוֹרוֹת', 'h50': 'חֲצִי שֶׁקֶל', 's1': 'שֶׁקֶל אֶחָד', 's2': 'שְׁנֵי שְׁקָלִים', 's5': 'חֲמִשָּׁה שְׁקָלִים',
+               's10': 'עֲשָׂרָה שְׁקָלִים', 'n20': 'שְׁטָר שֶׁל עֶשְׂרִים', 'n50': 'שְׁטָר שֶׁל חֲמִשִּׁים', 'n100': 'שְׁטָר שֶׁל מֵאָה', 'n200': 'שְׁטָר שֶׁל מָאתַיִם'}
+
+
+def k_match(a, ctx):
+    """Pairs of faces, one row above and one below. A face: "n:3" a numeral, "coin:s2" a coin, "apple*3" a set, "cat" a picture."""
+    names = ctx['names']
+
+    def face(spec, fid):
+        if spec.startswith('n:'):
+            n = int(spec[2:])
+            return {'id': fid, 'numeral': n, 'label': F[n]}
+        if spec.startswith('coin:'):
+            return {'id': fid, 'coin': spec[5:], 'label': COIN_LABELS[spec[5:]]}
+        if '*' in spec:
+            base, c = spec.split('*')
+            return {'id': fid, 'sprite': 'asset:' + base, 'count': int(c), 'label': qty(int(c), ctx['objects'][base])}
+        return {'id': fid, 'sprite': 'asset:' + spec, 'label': names[spec]['one']}
+
+    left = [face(l, 'a%d' % (k + 1)) for k, (l, _) in enumerate(a['pairs'])]
+    right_all = [face(r, 'b%d' % (k + 1)) for k, (_, r) in enumerate(a['pairs'])]
+    right = [right_all[i] for i in a['order']]
+    tag = a.get('tag')
+    answer = {'type': 'match', 'pairs': [{'left': 'a%d' % (k + 1), 'right': 'b%d' % (k + 1)} for k in range(len(left))]}
+    if tag:
+        answer['misconception'] = tag
+    return activity(
+        a, 'match_pairs', [(a['skill'], 1)] + [(x, 0.5) for x in a.get('also', [])], 'practice', 'practice', a.get('rep', 'pictorial'),
+        {'background': 'asset:meadow', 'left': left, 'right': right}, answer, {tag} if tag else set(),
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל לְאַט עַל כָּל אֶחָד.', a['h3'],
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'match')),
+        a.get('goal', 'child joins each picture with the one that goes with it'), prompt=a['prompt'], correct=a['correct_text'])
+
+
+def k_pay(a, ctx):
+    """Pay a price, in agorot, with the coins of a purse."""
+    return activity(
+        a, 'shop_pay', [(a['skill'], 1)] + [(x, 0.5) for x in a.get('also', [])], 'practice', 'practice', 'concrete',
+        {'background': 'asset:meadow', 'itemSprite': 'asset:' + a['item'], 'itemCount': a.get('itemCount', 1), 'price': a['price'],
+         'purse': [{'kind': k, 'count': c} for k, c in a['purse']]},
+        {'type': 'pay', 'countMisconception': a['tag']}, {a['tag']},
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'כָּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו.', a['h3'],
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'pay')),
+        'child pays the exact price by adding the values of the coins', prompt=a['prompt'], correct=a['correct_text'])
+
+
+def k_clock(a, ctx):
+    """Set the hands of a clock: whole hours (minute 0) or half hours (minute 30)."""
+    tags = {a['tag']} if a.get('tag') and a['minute'] == 0 and a['hour'] != 12 else set()
+    answer = {'type': 'clock'}
+    if tags:
+        answer['handsMisconception'] = a['tag']
+    return activity(
+        a, 'clock_set', [(a['skill'], 1)] + [(x, 0.5) for x in a.get('also', [])], 'practice', 'practice', 'pictorial',
+        {'background': 'asset:meadow', 'hour': a['hour'], 'minute': a['minute'], 'startHour': a['start'][0], 'startHalf': bool(a['start'][1])},
+        answer, tags,
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה.', a['h3'],
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'clock')),
+        'child sets the short hand to the hour', prompt=a['prompt'], correct=a['correct_text'])
+
+
+def k_trace(a, ctx):
+    """Follow a numeral or a shape with a finger. The strokes come from the glyph table of tools/band_b3.py."""
+    import band_b3
+    strokes = band_b3.GLYPHS[a['glyph']]
+    tags = {a['dirTag']} if a.get('dirTag') else set()
+    answer = {'type': 'trace'}
+    if tags:
+        answer['directionMisconception'] = a['dirTag']
+    return activity(
+        a, 'trace', [(a['skill'], 1)], 'practice', 'practice', 'embodied',
+        {'background': 'asset:meadow', 'strokes': strokes, 'guide': a['guide'], 'tolerance': a.get('tol', 12)}, answer, tags,
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'הַנְּקֻדָּה הַיְרֻקָּה אוֹמֶרֶת מֵאֵיפֹה מַתְחִילִים.', a['h3'],
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'trace')),
+        'child follows the path from its start', prompt=a['prompt'], correct=a['correct_text'])
 
 
 KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}

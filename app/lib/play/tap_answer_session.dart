@@ -216,6 +216,7 @@ class _TapStage extends StatelessWidget {
                 child: _groups(a),
               ),
             if (a.row.isNotEmpty) Positioned.fill(child: _row(a)),
+            if (a.chart.isNotEmpty) Positioned.fill(child: _chart(a)),
             if (a.stageNumeral != null)
               Positioned.fill(
                 child: Center(
@@ -243,6 +244,40 @@ class _TapStage extends StatelessWidget {
       ),
     );
   }
+
+  /// A chart to read: a column of pictures for each category, standing on one line. Left to right, whatever the language.
+  Widget _chart(TapAnswerActivity a) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+    child: Directionality(
+      textDirection: TextDirection.ltr,
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints box) {
+          final int most = a.chart.fold(1, (int m, ({String sprite, int count}) c) => math.max(m, c.count));
+          final double cell = math.min((box.maxHeight - 6) / most, box.maxWidth / a.chart.length - 14);
+          return Container(
+            key: const Key('tap-chart'),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: TokenColors.ink, width: 3)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                for (final ({String sprite, int count}) c in a.chart)
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      for (int i = 0; i < c.count; i++)
+                        SizedBox(width: cell, height: cell, child: PackSvg(a.assets.svg(c.sprite))),
+                    ],
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+    ),
+  );
 
   /// The row of pictures of a pattern or an order; a `?` is the gap the child fills in. Left to right, whatever the language.
   Widget _row(TapAnswerActivity a) => Padding(

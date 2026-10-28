@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-16",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מכירים מטבעות"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים אֶת הַמַּטְבְּעוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-MONEY-SIZE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

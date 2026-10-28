@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "pay-exactly",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְשַׁלְּמִים בְּדִיּוּק"
+    }
+  ],
+  "skills": [
+    "MATH-B-17"
+  ],
+  "items": [
+    "x.mathb17.1",
+    "x.mathb17.2",
+    "x.mathb17.3",
+    "x.mathb17.4",
+    "x.mathb17.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 62,
+  "celebration": {
+    "vo": "vo:celebrate.pay_exactly",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם בְּדִיּוּק."
+      }
+    ]
+  }
+}

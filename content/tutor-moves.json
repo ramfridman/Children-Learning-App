@@ -534,6 +534,71 @@
       [
         "Read the steps together until the different one, and point at it."
       ]
+    ],
+    "M-NUM-WRITE": [
+      [
+        "Remind the child to start at the green dot and follow the dots, slowly.",
+        "Suggest tracing once with a finger in the air before writing."
+      ],
+      [
+        "Suggest putting the finger on the green dot and moving along the dots, one small step at a time.",
+        "Suggest saying the number softly while tracing."
+      ],
+      [
+        "Walk along the path together with a dot, from the start to the end."
+      ]
+    ],
+    "M-MONEY-SIZE": [
+      [
+        "Remind the child that the number on the coin says what it is worth, not its size.",
+        "Invite looking at the number on each coin."
+      ],
+      [
+        "Suggest covering the size and reading only the numbers.",
+        "Suggest comparing two coins by their numbers."
+      ],
+      [
+        "Read the number on the coin aloud and point at the number it goes with."
+      ]
+    ],
+    "M-MONEY-COUNT": [
+      [
+        "Remind the child that each coin is worth what is written on it, so the coins have to be added up.",
+        "Invite looking at the numbers on the coins."
+      ],
+      [
+        "Suggest adding the numbers on the coins one after the other, aloud.",
+        "Suggest starting with the biggest coin that fits."
+      ],
+      [
+        "Add the coins together, one at a time, and let the child say the total."
+      ]
+    ],
+    "M-COMP-DIFF": [
+      [
+        "Invite the child to look at how many more the tall column has than the short one.",
+        "Suggest looking only at the part that sticks out."
+      ],
+      [
+        "Suggest matching the pictures of the two columns one to one and counting the ones left over.",
+        "Suggest counting the extra ones only."
+      ],
+      [
+        "Point at the extra pictures of the tall column and count them together."
+      ]
+    ],
+    "M-SHP-FACE": [
+      [
+        "Invite the child to imagine pressing the solid into sand and seeing the shape it leaves.",
+        "Suggest looking at the flat side of the solid."
+      ],
+      [
+        "Suggest turning the solid in the mind and looking at its flat bottom.",
+        "Suggest thinking of a tin can and a box."
+      ],
+      [
+        "Say which flat shape the solid leaves in the sand and point at it."
+      ]
     ]
   }
 }

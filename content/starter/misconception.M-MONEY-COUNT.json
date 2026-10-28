@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-MONEY-COUNT",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-17"
+  ],
+  "parentText": "הילד סופר כמה מטבעות יש, ולא כמה הם שווים: שלושה מטבעות הם \"שלושה שקלים\" גם אם הם של חמישה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשחק בחנות עם מטבעות: לשלם שלושה שקלים פעם עם מטבעות של שקל ופעם עם מטבע של שתיים ומטבע של שקל, ולהשוות."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "symbolic"
+  ]
+}

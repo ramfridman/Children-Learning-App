@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHP-FACE",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-B-09"
+  ],
+  "parentText": "הילד לא רואה איזו צורה שטוחה יש על הגוף: את העיגול על הגליל, את המשולש על הפירמידה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להטביע בפלסטלינה בסיס של כוס, של קופסה ושל קונוס, ולראות איזו צורה נשארת."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

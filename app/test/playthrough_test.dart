@@ -7,6 +7,10 @@ import 'package:nitznutz/play/count_tap_session.dart';
 import 'package:nitznutz/play/flash_session.dart';
 import 'package:nitznutz/play/give_n_session.dart';
 import 'package:nitznutz/play/balance_session.dart';
+import 'package:nitznutz/play/clock_set_session.dart';
+import 'package:nitznutz/play/match_pairs_session.dart';
+import 'package:nitznutz/play/shop_pay_session.dart';
+import 'package:nitznutz/play/trace_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/number_line_session.dart';
 import 'package:nitznutz/play/robot_path_session.dart';
@@ -86,6 +90,22 @@ void main() {
     SpotErrorActivity() => <Future<Outcome> Function(LessonController)>[
       (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
     ],
+    MatchPairsActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+    ],
+    ShopPayActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+      if (a.countTag != null) (LessonController c) => c.submitPlacement(right: false, tag: a.countTag!),
+    ],
+    ClockSetActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+      if (a.handsTag != null) (LessonController c) => c.submitPlacement(right: false, tag: a.handsTag!),
+    ],
+    TraceActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+      if (a.directionTag != null)
+        (LessonController c) => c.submitPlacement(right: false, tag: a.directionTag!),
+    ],
     GiveNActivity() => <Future<Outcome> Function(LessonController)>[
       for (final int n in <int>{
         if (a.n > 1) a.n - 1,
@@ -110,6 +130,10 @@ void main() {
       NumberLineActivity() => c.submitPlacement(right: true),
       BalanceActivity() => c.submitPlacement(right: true),
       SpotErrorActivity() => c.submitPlacement(right: true),
+      MatchPairsActivity() => c.submitPlacement(right: true),
+      ShopPayActivity() => c.submitPlacement(right: true),
+      ClockSetActivity() => c.submitPlacement(right: true),
+      TraceActivity() => c.submitPlacement(right: true),
     };
   }
 
@@ -198,6 +222,10 @@ void main() {
         'number_line',
         'balance',
         'spot_error',
+        'match_pairs',
+        'shop_pay',
+        'clock_set',
+        'trace',
       ]),
     );
     // Every misconception a wrong answer can carry was produced by some wrong move, and has a line of its own.
@@ -259,6 +287,10 @@ void main() {
               NumberLineActivity() => NumberLineSession(c, a),
               BalanceActivity() => BalanceSession(c, a),
               SpotErrorActivity() => SpotErrorSession(c, a),
+              MatchPairsActivity() => MatchPairsSession(c, a),
+              ShopPayActivity() => ShopPaySession(c, a),
+              ClockSetActivity() => ClockSetSession(c, a),
+              TraceActivity() => TraceSession(c, a),
             };
             await tester.pumpWidget(
               MaterialApp(

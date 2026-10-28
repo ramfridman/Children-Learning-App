@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "set-the-clock",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַכְוִינִים שָׁעוֹן"
+    }
+  ],
+  "skills": [
+    "MATH-B-15"
+  ],
+  "items": [
+    "x.mathb15.1",
+    "x.mathb15.2",
+    "x.mathb15.3",
+    "x.mathb15.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 66,
+  "celebration": {
+    "vo": "vo:celebrate.set_the_clock",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הַשָּׁעוֹן מְכֻוָּן."
+      }
+    ]
+  }
+}

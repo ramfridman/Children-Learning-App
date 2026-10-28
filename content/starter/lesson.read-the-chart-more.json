@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-the-chart-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "כַּמָּה יוֹתֵר"
+    }
+  ],
+  "skills": [
+    "MATH-B-19"
+  ],
+  "items": [
+    "x.mathb19.7",
+    "x.mathb19.8",
+    "x.mathb19.9"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 65,
+  "celebration": {
+    "vo": "vo:celebrate.read_the_chart_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה! אַתֶּם יוֹדְעִים לְהַשְׁווֹת."
+      }
+    ]
+  }
+}

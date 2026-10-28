@@ -54,6 +54,19 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('shp.build.house', 'builder_house', 900),
   ('shp.build.rocket', 'builder_rocket', 900),
   ('shp.build.train', 'builder_train', 900),
+  ('b.numb13.1', 'number_line_place', 900),
+  ('b.numb13.13', 'number_line_jump', 900),
+  ('b.mathb09.5', 'balance_compare', 900),
+  ('b.numb11.1', 'spot_numbers', 900),
+  ('x.numa07.1', 'match_numbers', 900),
+  ('x.mathb16.1', 'match_coins', 900),
+  ('x.mathb17.1', 'shop_pay', 900),
+  ('x.mathb15.1', 'clock_set', 900),
+  ('x.numb07.2', 'trace_numeral', 900),
+  ('x.numb07.12', 'trace_start_only', 900),
+  ('x.mathb19.1', 'chart_most', 900),
+  ('x.mathb19.7', 'chart_more', 900),
+  ('x.shpb09.1', 'match_solids', 900),
 ];
 
 void main() {

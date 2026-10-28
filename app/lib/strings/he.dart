@@ -56,6 +56,17 @@ abstract final class He {
   static const Str bookSemantics = Str('הספר');
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);
   static const Str replaySemantics = Str('שמיעה חוזרת של השאלה');
+  static const Str coinA10Semantics = Str('10 אגורות');
+  static const Str coinH50Semantics = Str('חצי שקל');
+  static const Str coinS1Semantics = Str('שקל');
+  static const Str coinS2Semantics = Str('שני שקלים');
+  static const Str coinS5Semantics = Str('חמישה שקלים');
+  static const Str coinS10Semantics = Str('עשרה שקלים');
+  static const Str noteN20Semantics = Str('שטר של עשרים');
+  static const Str noteN50Semantics = Str('שטר של חמישים');
+  static const Str noteN100Semantics = Str('שטר של מאה');
+  static const Str noteN200Semantics = Str('שטר של מאתיים');
+  static const Str agorot = Str('אֲגוֹרוֹת', nikud: true);
   static const Str giveDoneSemantics = Str('סיימתי');
   static const Str lessonDoneSemantics = Str('חזרה למפה');
   static const Str lessonUnavailable = Str('הַשִּׁעוּר לֹא מוּכָן עַכְשָׁו', nikud: true);

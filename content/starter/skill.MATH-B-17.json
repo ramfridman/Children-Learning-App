@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-17",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "משלמים בדיוק"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְשַׁלְּמִים בְּדִיּוּק"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-16",
+      "weight": 1
+    },
+    {
+      "skill": "MATH-B-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-MONEY-COUNT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

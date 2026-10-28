@@ -1,0 +1,151 @@
+{
+  "schema": "activity/v1",
+  "id": "x.mathb17.9",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "shop_pay",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-17",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "pay",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:x.mathb17.9.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַמְּחִיר הוּא אַחַד עָשָׂר שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "itemSprite": "asset:duck",
+    "itemCount": 1,
+    "price": 1100,
+    "purse": [
+      {
+        "kind": "s1",
+        "count": 2
+      },
+      {
+        "kind": "s5",
+        "count": 1
+      },
+      {
+        "kind": "s10",
+        "count": 1
+      }
+    ]
+  },
+  "answer": {
+    "type": "pay",
+    "countMisconception": "M-MONEY-COUNT"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:x.mathb17.9.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק אַחַד עָשָׂר שְׁקָלִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-MONEY-COUNT",
+        "vo": "vo:fb.money_count",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. בּוֹאוּ נְחַבֵּר אֶת מַה שֶּׁכָּתוּב."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pay.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כָּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:x.mathb17.9.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֶפְשָׁר לְשַׁלֵּם בְּשֶׁקֶל אֶחָד וְעֲשָׂרָה שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child pays the exact price by adding the values of the coins",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הַמְּחִיר הוּא אַחַד עָשָׂר שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי."
+  }
+}

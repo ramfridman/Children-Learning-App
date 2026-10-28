@@ -1,0 +1,138 @@
+{
+  "schema": "activity/v1",
+  "id": "x.mathb15.2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "clock_set",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-15",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "clock",
+  "difficulty": {
+    "authored": 0.44
+  },
+  "prompt": {
+    "vo": "vo:x.mathb15.2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה שֵׁשׁ."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "hour": 6,
+    "minute": 0,
+    "startHour": 3,
+    "startHalf": false
+  },
+  "answer": {
+    "type": "clock",
+    "handsMisconception": "M-CLOCK-HANDS"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:x.mathb15.2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! הַשָּׁעָה שֵׁשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CLOCK-HANDS",
+        "vo": "vo:fb.clock_hands",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה. בּוֹאוּ נִסְתַּכֵּל עָלָיו."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.clock.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:x.mathb15.2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַמַּחֲוָג הַקָּצָר וְהָעָבֶה מַצְבִּיעַ עַל שֵׁשׁ. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child sets the short hand to the hour",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה שֵׁשׁ."
+  }
+}

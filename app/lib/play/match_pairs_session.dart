@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
 import '../content/models.dart';
+import '../content/schemas.dart' show coinSprites;
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'shop_pay_session.dart' show CoinFace;
 import 'sprite_group.dart';
 import 'template_session.dart';
 
@@ -257,6 +259,11 @@ class _Row extends StatelessWidget {
   }
 
   Widget _content(MatchFace f, double side) {
+    if (f.coin != null) {
+      return FittedBox(
+        child: CoinFace(kind: f.coin!, svg: s.activity.assets.svg('asset:${coinSprites[f.coin]}')),
+      );
+    }
     if (f.numeral != null) {
       return FittedBox(
         child: Text('${f.numeral}', style: AppText.fixed(size: side * 0.6, weight: 800, lineHeight: 1)),

@@ -1,0 +1,560 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nitznutz:schema:activity.trace",
+  "title": "Nitznutz activity.trace",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "activity/v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 81,
+      "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
+    },
+    "review": {
+      "type": "string",
+      "enum": [
+        "needs-editor",
+        "approved"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9999
+    },
+    "template": {
+      "type": "string",
+      "enum": [
+        "tap_answer",
+        "count_tap",
+        "give_n",
+        "flash",
+        "sort_drag",
+        "build_pattern",
+        "robot_path",
+        "shape_builder",
+        "number_line",
+        "balance",
+        "spot_error",
+        "match_pairs",
+        "shop_pay",
+        "clock_set",
+        "trace"
+      ]
+    },
+    "templateVersion": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 5,
+      "pattern": "^(?:\\d{1,2}\\.\\d{1,2})$"
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "numbers",
+        "colors",
+        "shapes",
+        "logic",
+        "cs",
+        "math"
+      ]
+    },
+    "band": {
+      "type": "string",
+      "enum": [
+        "A",
+        "B",
+        "C"
+      ]
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 11,
+            "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2})$"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        },
+        "required": [
+          "id",
+          "weight"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 4
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "learn",
+        "practice",
+        "probe",
+        "repair",
+        "check"
+      ]
+    },
+    "contradicts": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 20,
+      "pattern": "^(?:M-[A-Z]{2,5}-[A-Z0-9]{2,12})$"
+    },
+    "checkType": {
+      "type": "string",
+      "enum": [
+        "practice",
+        "transfer",
+        "reverse",
+        "error_spotting",
+        "explain_back",
+        "predict"
+      ]
+    },
+    "representation": {
+      "type": "string",
+      "enum": [
+        "concrete",
+        "pictorial",
+        "story",
+        "embodied",
+        "symbolic"
+      ]
+    },
+    "variantGroup": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 60,
+      "pattern": "^(?:[a-z0-9._-]+)$"
+    },
+    "difficulty": {
+      "type": "object",
+      "properties": {
+        "authored": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      },
+      "required": [
+        "authored"
+      ],
+      "additionalProperties": false
+    },
+    "prompt": {
+      "type": "object",
+      "properties": {
+        "vo": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 83,
+          "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+        },
+        "caption": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "t": {
+                "const": "he"
+              },
+              "v": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            },
+            "required": [
+              "t",
+              "v"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 1
+        },
+        "replayButton": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "vo",
+        "caption",
+        "replayButton"
+      ],
+      "additionalProperties": false
+    },
+    "scene": {
+      "type": "object",
+      "properties": {
+        "background": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 46,
+          "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+        },
+        "strokes": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minItems": 2,
+            "maxItems": 60
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "guide": {
+          "type": "string",
+          "enum": [
+            "full",
+            "start"
+          ]
+        },
+        "tolerance": {
+          "type": "integer",
+          "minimum": 6,
+          "maximum": 24
+        }
+      },
+      "required": [
+        "strokes",
+        "guide",
+        "tolerance"
+      ],
+      "additionalProperties": false
+    },
+    "answer": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "trace"
+        },
+        "misconception": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 20,
+          "pattern": "^(?:M-[A-Z]{2,5}-[A-Z0-9]{2,12})$"
+        },
+        "directionMisconception": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 20,
+          "pattern": "^(?:M-[A-Z]{2,5}-[A-Z0-9]{2,12})$"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "feedback": {
+      "type": "object",
+      "properties": {
+        "correct": {
+          "type": "object",
+          "properties": {
+            "vo": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "caption": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "const": "he"
+                  },
+                  "v": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240
+                  }
+                },
+                "required": [
+                  "t",
+                  "v"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
+          },
+          "required": [
+            "vo",
+            "caption"
+          ],
+          "additionalProperties": false
+        },
+        "incorrect": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "when": {
+                "type": "string",
+                "minLength": 7,
+                "maxLength": 40,
+                "pattern": "^(?:default|misconception:M-[A-Z]{2,5}-[A-Z0-9]{2,12})$"
+              },
+              "vo": {
+                "type": "string",
+                "minLength": 4,
+                "maxLength": 83,
+                "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+              },
+              "caption": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "t": {
+                      "const": "he"
+                    },
+                    "v": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 240
+                    }
+                  },
+                  "required": [
+                    "t",
+                    "v"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 1
+              }
+            },
+            "required": [
+              "when",
+              "vo",
+              "caption"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "unsure": {
+          "type": "object",
+          "properties": {
+            "vo": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "caption": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "t": {
+                    "const": "he"
+                  },
+                  "v": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 240
+                  }
+                },
+                "required": [
+                  "t",
+                  "v"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 1
+            }
+          },
+          "required": [
+            "vo",
+            "caption"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "correct",
+        "incorrect",
+        "unsure"
+      ],
+      "additionalProperties": false
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "level": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "replay_prompt_slow",
+              "highlight_objects_sequentially",
+              "show_fingers",
+              "worked_example"
+            ]
+          },
+          "vo": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 83,
+            "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+          },
+          "caption": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "t": {
+                  "const": "he"
+                },
+                "v": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 240
+                }
+              },
+              "required": [
+                "t",
+                "v"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 1
+          }
+        },
+        "required": [
+          "level",
+          "action",
+          "vo",
+          "caption"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 3
+    },
+    "scoring": {
+      "type": "object",
+      "properties": {
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "creditByHintLevel": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      },
+      "required": [
+        "maxAttempts",
+        "creditByHintLevel"
+      ],
+      "additionalProperties": false
+    },
+    "tutor": {
+      "type": "object",
+      "properties": {
+        "llmAllowed": {
+          "type": "boolean"
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 200
+        },
+        "mustNotRevealBeforeHint": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        }
+      },
+      "required": [
+        "llmAllowed",
+        "goal",
+        "mustNotRevealBeforeHint"
+      ],
+      "additionalProperties": false
+    },
+    "a11y": {
+      "type": "object",
+      "properties": {
+        "altText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      },
+      "required": [
+        "altText"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "revision",
+    "template",
+    "templateVersion",
+    "domain",
+    "band",
+    "skills",
+    "purpose",
+    "checkType",
+    "representation",
+    "variantGroup",
+    "difficulty",
+    "prompt",
+    "scene",
+    "answer",
+    "feedback",
+    "hints",
+    "scoring",
+    "tutor",
+    "a11y"
+  ],
+  "additionalProperties": false
+}

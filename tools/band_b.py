@@ -79,11 +79,12 @@ SHARED_FB = {}  # tag -> the line, for tags that the units of Band B share
 
 
 class Unit:
-    def __init__(self, name, domain, note, first_seq, assets=(), globs=()):
+    def __init__(self, name, domain, note, first_seq, assets=(), globs=(), prefix='b'):
         self.d = {'unit': name, 'domain': domain, 'band': 'B', 'note': note, 'firstSequence': first_seq,
                   'assetGlobs': list(globs), 'assets': list(assets), 'objects': OBJECTS, 'names': NAMES,
                   'tagFeedback': {}, 'misconceptions': [], 'skills': [], 'activities': [], 'lessons': []}
         self.name = name
+        self.prefix = prefix
         self.counter = {}
 
     def tag(self, id, skills, parent, home, reps, line):
@@ -102,7 +103,7 @@ class Unit:
         key = skill.lower().replace('-', '')
         self.counter[key] = self.counter.get(key, 0) + 1
         i = self.counter[key]
-        a = {'kind': kind, 'id': 'b.%s.%d' % (key, i), 'skill': skill, 'difficulty': kw.pop('difficulty', round(min(0.9, 0.3 + 0.07 * i), 2))}
+        a = {'kind': kind, 'id': '%s.%s.%d' % (self.prefix, key, i), 'skill': skill, 'difficulty': kw.pop('difficulty', round(min(0.9, 0.3 + 0.07 * i), 2))}
         a.update(kw)
         self.d['activities'].append(a)
         return a['id']
@@ -114,7 +115,7 @@ class Unit:
         for t, line in SHARED_FB.items():
             self.d['tagFeedback'].setdefault(t, line)
         for other in sorted(os.listdir(UNITS)):
-            if other.endswith('.json') and not other.startswith('band-b-'):
+            if other.endswith('.json') and other[:-5] != self.name:
                 for t, line in load(other[:-5]).get('tagFeedback', {}).items():
                     self.d['tagFeedback'].setdefault(t, line)
         path = os.path.join(UNITS, self.name + '.json')
@@ -548,3 +549,5 @@ if __name__ == '__main__':
     math()
     import band_b2
     band_b2.run()
+    import band_b3
+    band_b3.run()

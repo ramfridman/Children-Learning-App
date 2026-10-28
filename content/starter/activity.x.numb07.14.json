@@ -1,0 +1,248 @@
+{
+  "schema": "activity/v1",
+  "id": "x.numb07.14",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "trace",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "trace",
+  "difficulty": {
+    "authored": 0.5
+  },
+  "prompt": {
+    "vo": "vo:x.numb07.14.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כּוֹתְבִים אֶת הַמִּסְפָּר שָׁלוֹשׁ. מַתְחִילִים מֵהַנְּקֻדָּה."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "strokes": [
+      [
+        [
+          29,
+          21
+        ],
+        [
+          34,
+          16
+        ],
+        [
+          40,
+          13
+        ],
+        [
+          48,
+          12
+        ],
+        [
+          56,
+          13
+        ],
+        [
+          62,
+          16
+        ],
+        [
+          67,
+          21
+        ],
+        [
+          70,
+          27
+        ],
+        [
+          70,
+          33
+        ],
+        [
+          67,
+          39
+        ],
+        [
+          62,
+          44
+        ],
+        [
+          56,
+          47
+        ],
+        [
+          48,
+          48
+        ],
+        [
+          56,
+          49
+        ],
+        [
+          63,
+          51
+        ],
+        [
+          68,
+          56
+        ],
+        [
+          72,
+          61
+        ],
+        [
+          74,
+          67
+        ],
+        [
+          73,
+          72
+        ],
+        [
+          71,
+          78
+        ],
+        [
+          66,
+          83
+        ],
+        [
+          59,
+          86
+        ],
+        [
+          52,
+          88
+        ],
+        [
+          44,
+          88
+        ],
+        [
+          37,
+          86
+        ],
+        [
+          30,
+          83
+        ],
+        [
+          25,
+          78
+        ]
+      ]
+    ],
+    "guide": "start",
+    "tolerance": 11
+  },
+  "answer": {
+    "type": "trace",
+    "directionMisconception": "M-NUM-WRITE"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:x.numb07.14.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! כְּתַבְתֶּם אֶת הַמִּסְפָּר שָׁלוֹשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-NUM-WRITE",
+        "vo": "vo:fb.num_write",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה, וְהוֹלְכִים בַּכִּוּוּן שֶׁל הַנְּקֻדּוֹת. בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.trace.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַנְּקֻדָּה הַיְרֻקָּה אוֹמֶרֶת מֵאֵיפֹה מַתְחִילִים."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:x.numb07.14.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה וְהוֹלְכִים לְאַט אַחֲרֵי הַנְּקֻדּוֹת. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child follows the path from its start",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כּוֹתְבִים אֶת הַמִּסְפָּר שָׁלוֹשׁ. מַתְחִילִים מֵהַנְּקֻדָּה."
+  }
+}

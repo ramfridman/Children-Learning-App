@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "know-the-coins",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים מַטְבְּעוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-B-16"
+  ],
+  "items": [
+    "x.mathb16.1",
+    "x.mathb16.2",
+    "x.mathb16.3"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 60,
+  "celebration": {
+    "vo": "vo:celebrate.know_the_coins",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים מַטְבְּעוֹת."
+      }
+    ]
+  }
+}

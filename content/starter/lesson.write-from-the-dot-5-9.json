@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "write-from-the-dot-5-9",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד כּוֹתְבִים מֵהַנְּקֻדָּה"
+    }
+  ],
+  "skills": [
+    "NUM-B-07"
+  ],
+  "items": [
+    "x.numb07.16",
+    "x.numb07.17",
+    "x.numb07.18",
+    "x.numb07.19",
+    "x.numb07.20"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 63,
+  "celebration": {
+    "vo": "vo:celebrate.write_from_the_dot_5_9",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַמִּסְפָּרִים בַּמָּקוֹם."
+      }
+    ]
+  }
+}

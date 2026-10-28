@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-B-09",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "גוף וצורה שלו"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "כָּל גּוּף וְהַצּוּרָה שֶׁעָלָיו"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-B-08",
+      "weight": 1
+    },
+    {
+      "skill": "SHP-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-SHP-FACE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -235,12 +235,12 @@ class _TracePainter extends CustomPainter {
     final double k = size.width / 100;
     Offset px(Offset p) => p * k;
     final TraceActivity a = s.activity;
-    final Paint dot = Paint()..color = TokenColors.hairline;
+    final Paint dot = Paint()..color = TokenColors.ink.withValues(alpha: 0.4);
     for (final (int i, List<Offset> stroke) in a.strokes.indexed) {
       final bool done = i < s.finished.length;
       if (s.guideShown && !done) {
         for (final Offset p in TraceSession._resample(stroke, math.max(6, (_length(stroke) / 5).round()))) {
-          canvas.drawCircle(px(p), 1.8 * k, dot);
+          canvas.drawCircle(px(p), 2.3 * k, dot);
         }
       }
       if (i == s.strokeIndex) {
@@ -249,7 +249,7 @@ class _TracePainter extends CustomPainter {
         if (!s.guideShown) {
           final List<Offset> lead = TraceSession._resample(stroke, 12).take(4).toList();
           for (final Offset p in lead.skip(1)) {
-            canvas.drawCircle(px(p), 1.8 * k, dot);
+            canvas.drawCircle(px(p), 2.3 * k, dot);
           }
         }
       }

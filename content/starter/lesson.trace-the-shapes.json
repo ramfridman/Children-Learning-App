@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "trace-the-shapes",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְעַקְבִים צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-A-02"
+  ],
+  "items": [
+    "x.shpa02.1",
+    "x.shpa02.2",
+    "x.shpa02.3"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 60,
+  "celebration": {
+    "vo": "vo:celebrate.trace_the_shapes",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! עִקַּבְתֶּם אַחֲרֵי צוּרוֹת."
+      }
+    ]
+  }
+}

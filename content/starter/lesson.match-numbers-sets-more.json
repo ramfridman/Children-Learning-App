@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "match-numbers-sets-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד הַתְאָמוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-A-07"
+  ],
+  "items": [
+    "x.numa07.5",
+    "x.numa07.6",
+    "x.numa07.7"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 65,
+  "celebration": {
+    "vo": "vo:celebrate.match_numbers_sets_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! כָּל אֶחָד בַּמָּקוֹם שֶׁלּוֹ."
+      }
+    ]
+  }
+}

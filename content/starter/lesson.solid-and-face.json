@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "solid-and-face",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "גּוּף וְצוּרָה"
+    }
+  ],
+  "skills": [
+    "SHP-B-09"
+  ],
+  "items": [
+    "x.shpb09.1",
+    "x.shpb09.2",
+    "x.shpb09.3",
+    "x.shpb09.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 62,
+  "celebration": {
+    "vo": "vo:celebrate.solid_and_face",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִתְאַמְתֶּם גּוּפִים."
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-MONEY-SIZE",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-16"
+  ],
+  "parentText": "הילד חושב שמטבע גדול שווה יותר (מטבע חצי השקל גדול ממטבע השקל).",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשים על השולחן מטבעות אמיתיים, ולשאול: איזה שווה יותר? לבדוק יחד את המספר שכתוב עליו."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

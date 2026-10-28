@@ -39,8 +39,11 @@ void main() {
     expect(w.id, placementId);
     expect(w.itemIds.length, inInclusiveRange(5, placementItems));
     expect(w.itemIds.toSet().length, w.itemIds.length);
-    final List<Lesson> path = content.lessons.values.toList()
-      ..sort((Lesson a, Lesson b) => a.sequence.compareTo(b.sequence));
+    final List<Lesson> path =
+        content.lessons.values
+            .where((Lesson l) => l.skillIds.any((String s) => content.skills[s]?.domain == 'numbers'))
+            .toList()
+          ..sort((Lesson a, Lesson b) => a.sequence.compareTo(b.sequence));
     int lessonOf(String id) => path.indexWhere((Lesson l) => l.itemIds.contains(id));
     final List<int> places = <int>[for (final String id in w.itemIds) lessonOf(id)];
     expect(places.first, lessThanOrEqualTo(1), reason: 'starts near the beginning');
@@ -109,7 +112,11 @@ void main() {
                 ShapeBuilderActivity() ||
                 NumberLineActivity() ||
                 BalanceActivity() ||
-                SpotErrorActivity():
+                SpotErrorActivity() ||
+                MatchPairsActivity() ||
+                ShopPayActivity() ||
+                ClockSetActivity() ||
+                TraceActivity():
               await c.submitPlacement(right: false);
           }
         }
@@ -144,7 +151,11 @@ void main() {
             ShapeBuilderActivity() ||
             NumberLineActivity() ||
             BalanceActivity() ||
-            SpotErrorActivity():
+            SpotErrorActivity() ||
+            MatchPairsActivity() ||
+            ShopPayActivity() ||
+            ClockSetActivity() ||
+            TraceActivity():
           await mixed.submitPlacement(right: true);
       }
       mixed.next();

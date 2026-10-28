@@ -1,0 +1,158 @@
+{
+  "schema": "activity/v1",
+  "id": "x.mathb19.6",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.2",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-19",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.72
+  },
+  "prompt": {
+    "vo": "vo:x.mathb19.6.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "chart": [
+      {
+        "sprite": "asset:fish",
+        "count": 4
+      },
+      {
+        "sprite": "asset:star",
+        "count": 2
+      },
+      {
+        "sprite": "asset:duck",
+        "count": 3
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 8,
+        "label": "שְׁמוֹנֶה"
+      },
+      {
+        "id": "o2",
+        "numeral": 10,
+        "label": "עֶשֶׂר"
+      },
+      {
+        "id": "o3",
+        "numeral": 9,
+        "label": "תֵּשַׁע"
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:x.mathb19.6.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תֵּשַׁע! אַרְבַּע וְעוֹד שְׁתַּיִם וְעוֹד שָׁלוֹשׁ הֵם תֵּשַׁע."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:x.mathb19.6.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבַּע וְעוֹד שְׁתַּיִם וְעוֹד שָׁלוֹשׁ הֵם תֵּשַׁע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תֵּשַׁע."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?"
+  }
+}

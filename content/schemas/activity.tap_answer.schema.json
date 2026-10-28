@@ -38,7 +38,11 @@
         "shape_builder",
         "number_line",
         "balance",
-        "spot_error"
+        "spot_error",
+        "match_pairs",
+        "shop_pay",
+        "clock_set",
+        "trace"
       ]
     },
     "templateVersion": {
@@ -288,6 +292,32 @@
         },
         "optionsOnTiles": {
           "type": "boolean"
+        },
+        "chart": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sprite": {
+                "type": "string",
+                "minLength": 7,
+                "maxLength": 46,
+                "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 8
+              }
+            },
+            "required": [
+              "sprite",
+              "count"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 2,
+          "maxItems": 5
         },
         "row": {
           "type": "array",

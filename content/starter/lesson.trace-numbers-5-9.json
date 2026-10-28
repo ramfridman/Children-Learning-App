@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "trace-numbers-5-9",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "כּוֹתְבִים 5 עַד 9"
+    }
+  ],
+  "skills": [
+    "NUM-B-07"
+  ],
+  "items": [
+    "x.numb07.6",
+    "x.numb07.7",
+    "x.numb07.8",
+    "x.numb07.9",
+    "x.numb07.10"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 61,
+  "celebration": {
+    "vo": "vo:celebrate.trace_numbers_5_9",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! עוֹד מִסְפָּרִים."
+      }
+    ]
+  }
+}

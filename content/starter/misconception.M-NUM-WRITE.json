@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-NUM-WRITE",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-B-07"
+  ],
+  "parentText": "הילד מתחיל לכתוב ספרה מהקצה הלא נכון, או מצייר אותה בכיוון הפוך.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לכתוב ספרה גדולה באצבע על חול או על קמח במגש, ולהתחיל תמיד מהנקודה: מלמעלה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "symbolic"
+  ]
+}

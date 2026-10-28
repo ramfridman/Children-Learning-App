@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "trace-numbers-0-4",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "כּוֹתְבִים 0 עַד 4"
+    }
+  ],
+  "skills": [
+    "NUM-B-07"
+  ],
+  "items": [
+    "x.numb07.1",
+    "x.numb07.2",
+    "x.numb07.3",
+    "x.numb07.4",
+    "x.numb07.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 60,
+  "celebration": {
+    "vo": "vo:celebrate.trace_numbers_0_4",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! כְּתַבְתֶּם מִסְפָּרִים."
+      }
+    ]
+  }
+}

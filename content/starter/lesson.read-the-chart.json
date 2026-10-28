@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-the-chart",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים תַּרְשִׁים"
+    }
+  ],
+  "skills": [
+    "MATH-B-19"
+  ],
+  "items": [
+    "x.mathb19.1",
+    "x.mathb19.2",
+    "x.mathb19.3",
+    "x.mathb19.4",
+    "x.mathb19.5",
+    "x.mathb19.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 64,
+  "celebration": {
+    "vo": "vo:celebrate.read_the_chart",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! קְרָאתֶם תַּרְשִׁים."
+      }
+    ]
+  }
+}

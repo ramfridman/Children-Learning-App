@@ -180,6 +180,10 @@ BAND_B_SPRITES = {
     'rule_shape': '<circle cx="28" cy="34" r="18" fill="#9AA0B4"/><rect x="52" y="16" width="36" height="36" fill="#9AA0B4"/><polygon points="50,56 78,92 22,92" fill="#9AA0B4"/>',
     'rule_size': '<circle cx="28" cy="64" r="12" fill="#9AA0B4"/><circle cx="62" cy="52" r="26" fill="#9AA0B4"/>',
     'frog': '<ellipse cx="50" cy="62" rx="32" ry="24" fill="#4CAF50"/><circle cx="34" cy="38" r="12" fill="#6BCB6E"/><circle cx="66" cy="38" r="12" fill="#6BCB6E"/><circle cx="34" cy="38" r="6" fill="#FFFFFF"/><circle cx="66" cy="38" r="6" fill="#FFFFFF"/><circle cx="34" cy="38" r="3" fill="#2B2540"/><circle cx="66" cy="38" r="3" fill="#2B2540"/><path d="M36 66 Q50 76 64 66" fill="none" stroke="#2B2540" stroke-width="3" stroke-linecap="round"/>',
+    'coin_silver': '<circle cx="50" cy="50" r="46" fill="#C9CED8" stroke="#8E96A6" stroke-width="5"/><circle cx="50" cy="50" r="36" fill="none" stroke="#E8EBF1" stroke-width="3"/>',
+    'coin_gold': '<circle cx="50" cy="50" r="46" fill="#E6B422" stroke="#A47E0B" stroke-width="5"/><circle cx="50" cy="50" r="31" fill="#C9CED8" stroke="#E6B422" stroke-width="4"/>',
+    'note_green': '<rect x="3" y="20" width="94" height="60" rx="7" fill="#9BD58C" stroke="#4E8F3E" stroke-width="4"/><circle cx="50" cy="50" r="22" fill="none" stroke="#4E8F3E" stroke-width="3"/>',
+    'note_red': '<rect x="3" y="20" width="94" height="60" rx="7" fill="#F2A39B" stroke="#B8453B" stroke-width="4"/><circle cx="50" cy="50" r="22" fill="none" stroke="#B8453B" stroke-width="3"/>',
     'block': '<rect x="14" y="14" width="72" height="72" rx="8" fill="#FFC531" stroke="#E39A00" stroke-width="5"/><rect x="30" y="30" width="40" height="40" rx="4" fill="#FFE08A"/>',
 }
 

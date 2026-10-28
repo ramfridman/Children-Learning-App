@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "know-the-coins-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מַטְבְּעוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-B-16"
+  ],
+  "items": [
+    "x.mathb16.4",
+    "x.mathb16.5",
+    "x.mathb16.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 61,
+  "celebration": {
+    "vo": "vo:celebrate.know_the_coins_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! כָּל מַטְבֵּעַ וְהַשֵּׁם שֶׁלּוֹ."
+      }
+    ]
+  }
+}

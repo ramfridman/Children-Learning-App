@@ -1,7 +1,7 @@
 {
   "schema": "pack-source/v1",
   "id": "starter",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "minAppVersion": "0.3.0",
   "assets": [
     {
@@ -831,6 +831,46 @@
     {
       "id": "rule_size",
       "file": "rule_size.svg"
+    },
+    {
+      "id": "coin_a10",
+      "file": "coin_a10.svg"
+    },
+    {
+      "id": "coin_h50",
+      "file": "coin_h50.svg"
+    },
+    {
+      "id": "coin_s1",
+      "file": "coin_s1.svg"
+    },
+    {
+      "id": "coin_s2",
+      "file": "coin_s2.svg"
+    },
+    {
+      "id": "coin_s5",
+      "file": "coin_s5.svg"
+    },
+    {
+      "id": "coin_s10",
+      "file": "coin_s10.svg"
+    },
+    {
+      "id": "note_20",
+      "file": "note_20.svg"
+    },
+    {
+      "id": "note_50",
+      "file": "note_50.svg"
+    },
+    {
+      "id": "note_100",
+      "file": "note_100.svg"
+    },
+    {
+      "id": "note_200",
+      "file": "note_200.svg"
     }
   ],
   "vo": []

@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "set-the-clock-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד שָׁעוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-B-15"
+  ],
+  "items": [
+    "x.mathb15.5",
+    "x.mathb15.6",
+    "x.mathb15.7",
+    "x.mathb15.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 67,
+  "celebration": {
+    "vo": "vo:celebrate.set_the_clock_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר."
+      }
+    ]
+  }
+}

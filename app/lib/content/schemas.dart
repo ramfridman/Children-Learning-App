@@ -35,7 +35,7 @@ abstract final class SchemaIds {
 
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
-  'tap_answer': '1.1',
+  'tap_answer': '1.2',
   'count_tap': '1.0',
   'give_n': '1.0',
   'flash': '1.0',
@@ -62,17 +62,21 @@ const Map<String, int> coinValues = <String, int>{
   's10': 1000,
   'n20': 2000,
   'n50': 5000,
+  'n100': 10000,
+  'n200': 20000,
 };
 
 const Map<String, String> coinSprites = <String, String>{
-  'a10': 'coin_silver',
-  'h50': 'coin_silver',
-  's1': 'coin_silver',
-  's2': 'coin_silver',
-  's5': 'coin_silver',
-  's10': 'coin_gold',
-  'n20': 'note_green',
-  'n50': 'note_red',
+  'a10': 'coin_a10',
+  'h50': 'coin_h50',
+  's1': 'coin_s1',
+  's2': 'coin_s2',
+  's5': 'coin_s5',
+  's10': 'coin_s10',
+  'n20': 'note_20',
+  'n50': 'note_50',
+  'n100': 'note_100',
+  'n200': 'note_200',
 };
 
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
@@ -331,6 +335,11 @@ const SObject _face = SObject(<String, SField>{
   'sprite': SField(_asset, required: false),
   'count': SField(SInt(min: 1, max: 20), required: false),
   'numeral': SField(SInt(min: 0, max: 100), required: false),
+  // A coin or a note of the shop, drawn with its value (the money template's kinds).
+  'coin': SField(
+    SEnum(<String>['a10', 'h50', 's1', 's2', 's5', 's10', 'n20', 'n50', 'n100', 'n200']),
+    required: false,
+  ),
   'label': SField(SString(minLength: 1, maxLength: 80)),
 });
 
@@ -488,6 +497,15 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'numeral': SField(SInt(min: 0, max: 100), required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
+          // A chart to read (1.2): columns of pictures, each a category with how many it has (a pictograph).
+          'chart': SField(
+            SArray(
+              SObject(<String, SField>{'sprite': SField(_asset), 'count': SField(SInt(min: 0, max: 8))}),
+              minItems: 2,
+              maxItems: 5,
+            ),
+            required: false,
+          ),
           // A row of pictures with an optional gap ("?") to fill, for patterns and order (1.1). A cell may also be a number (`n:7`)
           // or a sign (`op:+`), for a number sentence.
           'row': SField(
@@ -859,11 +877,13 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'background': SField(_asset, required: false),
           'itemSprite': SField(_asset),
           'itemCount': SField(SInt(min: 1, max: 10)),
-          'price': SField(SInt(min: 10, max: 10000)),
+          'price': SField(SInt(min: 10, max: 50000)),
           'purse': SField(
             SArray(
               SObject(<String, SField>{
-                'kind': SField(SEnum(<String>['a10', 'h50', 's1', 's2', 's5', 's10', 'n20', 'n50'])),
+                'kind': SField(
+                  SEnum(<String>['a10', 'h50', 's1', 's2', 's5', 's10', 'n20', 'n50', 'n100', 'n200']),
+                ),
                 'count': SField(SInt(min: 1, max: 8)),
               }),
               minItems: 2,
@@ -913,7 +933,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'background': SField(_asset, required: false),
           'strokes': SField(
             SArray(
-              SArray(SArray(SInt(min: 0, max: 100), minItems: 2, maxItems: 2), minItems: 2, maxItems: 40),
+              SArray(SArray(SInt(min: 0, max: 100), minItems: 2, maxItems: 2), minItems: 2, maxItems: 60),
               minItems: 1,
               maxItems: 3,
             ),

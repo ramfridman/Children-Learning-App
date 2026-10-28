@@ -1,0 +1,185 @@
+{
+  "schema": "activity/v1",
+  "id": "x.numa07.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "match_pairs",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "match",
+  "difficulty": {
+    "authored": 0.37
+  },
+  "prompt": {
+    "vo": "vo:x.numa07.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "left": [
+      {
+        "id": "a1",
+        "numeral": 1,
+        "label": "אַחַת"
+      },
+      {
+        "id": "a2",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      },
+      {
+        "id": "a3",
+        "numeral": 3,
+        "label": "שָׁלוֹשׁ"
+      }
+    ],
+    "right": [
+      {
+        "id": "b2",
+        "sprite": "asset:apple",
+        "count": 2,
+        "label": "שְׁנֵי תַּפּוּחִים"
+      },
+      {
+        "id": "b3",
+        "sprite": "asset:apple",
+        "count": 3,
+        "label": "שְׁלוֹשָׁה תַּפּוּחִים"
+      },
+      {
+        "id": "b1",
+        "sprite": "asset:apple",
+        "count": 1,
+        "label": "תַּפּוּחַ אֶחָד"
+      }
+    ]
+  },
+  "answer": {
+    "type": "match",
+    "pairs": [
+      {
+        "left": "a1",
+        "right": "b1"
+      },
+      {
+        "left": "a2",
+        "right": "b2"
+      },
+      {
+        "left": "a3",
+        "right": "b3"
+      }
+    ],
+    "misconception": "M-CNT-SIZE"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:x.numa07.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! כָּל מִסְפָּר עִם הַקְּבוּצָה שֶׁלּוֹ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-SIZE",
+        "vo": "vo:fb.size",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.match.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כָּל אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:x.numa07.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "סוֹפְרִים אֶת הַחֲפָצִים בְּכָל קְבוּצָה, וּמוֹצְאִים אֶת הַמִּסְפָּר. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child joins each picture with the one that goes with it",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ."
+  }
+}

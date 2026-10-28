@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "pay-exactly-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד לְשַׁלֵּם"
+    }
+  ],
+  "skills": [
+    "MATH-B-17"
+  ],
+  "items": [
+    "x.mathb17.6",
+    "x.mathb17.7",
+    "x.mathb17.8",
+    "x.mathb17.9"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 63,
+  "celebration": {
+    "vo": "vo:celebrate.pay_exactly_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַחֶשְׁבּוֹן יוֹצֵא."
+      }
+    ]
+  }
+}

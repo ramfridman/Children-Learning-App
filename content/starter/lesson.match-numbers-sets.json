@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "match-numbers-sets",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִסְפָּר וּקְבוּצָה"
+    }
+  ],
+  "skills": [
+    "NUM-A-07"
+  ],
+  "items": [
+    "x.numa07.1",
+    "x.numa07.2",
+    "x.numa07.3",
+    "x.numa07.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 64,
+  "celebration": {
+    "vo": "vo:celebrate.match_numbers_sets",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִתְאַמְתֶּם מִסְפָּרִים."
+      }
+    ]
+  }
+}

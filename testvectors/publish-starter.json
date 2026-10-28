@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
-  "pack_version": "0.7.0",
-  "manifest_sha256": "b43836886abdc9f71e916be43291290a1ec9053c9f9f39a26561860f2a6f0170",
+  "pack_version": "0.8.0",
+  "manifest_sha256": "7b4d8eef07688acbec4eab1efa62e940bc3a7498528e875c1ef2151cbbb92060",
   "items": [
     {
       "item_id": "b.colb01.1",
@@ -30278,6 +30278,2058 @@
       ]
     },
     {
+      "item_id": "x.mathb15.1",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה שָׁלוֹשׁ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb15.2",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה שֵׁשׁ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb15.3",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה תֵּשַׁע.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb15.4",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה אַחַת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb15.5",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה חָמֵשׁ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb15.6",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה שְׁמוֹנֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb15.7",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה אַחַת עֶשְׂרֵה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb15.8",
+      "revision": 1,
+      "template": "clock_set",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-15"
+      ],
+      "llm_allowed": true,
+      "goal": "child sets the short hand to the hour",
+      "prompt_text": "מַכְוִינִים אֶת הַשָּׁעוֹן לַשָּׁעָה שְׁתַּיִם.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb16.1",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-16"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מַטְבֵּעַ לַמִּסְפָּר שֶׁאוֹמֵר כַּמָּה הוּא שָׁוֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-MONEY-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb16.2",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-16"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מַטְבֵּעַ לַמִּסְפָּר שֶׁאוֹמֵר כַּמָּה הוּא שָׁוֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-MONEY-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb16.3",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-16"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מַטְבֵּעַ לַמִּסְפָּר שֶׁאוֹמֵר כַּמָּה הוּא שָׁוֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-MONEY-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb16.4",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-16"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מַטְבֵּעַ לַמִּסְפָּר שֶׁאוֹמֵר כַּמָּה הוּא שָׁוֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-MONEY-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb16.5",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-16"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מַטְבֵּעַ לַמִּסְפָּר שֶׁאוֹמֵר כַּמָּה הוּא שָׁוֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-MONEY-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb16.6",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-16"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מַטְבֵּעַ לַמִּסְפָּר שֶׁאוֹמֵר כַּמָּה הוּא שָׁוֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-MONEY-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.1",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא שְׁלוֹשָׁה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.2",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא חֲמִשָּׁה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.3",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא אַרְבָּעָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.4",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא שִׁבְעָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.5",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא שִׁשָּׁה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.6",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא שְׁמוֹנָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.7",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא תִּשְׁעָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.8",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא עֲשָׂרָה שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb17.9",
+      "revision": 1,
+      "template": "shop_pay",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "llm_allowed": true,
+      "goal": "child pays the exact price by adding the values of the coins",
+      "prompt_text": "הַמְּחִיר הוּא אַחַד עָשָׂר שְׁקָלִים. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַ-וִי.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.mathb19.1",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיזֶה יֵשׁ הַכִּי הַרְבֵּה?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "תַּפּוּחַ",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּנָנָה",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.2",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיזֶה יֵשׁ הַכִּי הַרְבֵּה?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כּוֹכָב",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "בַּרְוָז",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "דָּג",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.3",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיזֶה יֵשׁ הַכִּי פָּחוֹת?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּנָנָה",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "תַּפּוּחַ",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.4",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיזֶה יֵשׁ הַכִּי פָּחוֹת?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "דָּג",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "כּוֹכָב",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "בַּרְוָז",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.5",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 9,
+          "label": "תֵּשַׁע",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 10,
+          "label": "עֶשֶׂר",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "value": 11,
+          "label": "אַחַת עֶשְׂרֵה",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        9,
+        10,
+        11
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.6",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 8,
+          "label": "שְׁמוֹנֶה",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 10,
+          "label": "עֶשֶׂר",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "value": 9,
+          "label": "תֵּשַׁע",
+          "correct": true
+        }
+      ],
+      "number_set": [
+        8,
+        9,
+        10
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.7",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 2,
+          "label": "שְׁתַּיִם",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "value": 5,
+          "label": "חָמֵשׁ",
+          "misconception": "M-COMP-DIFF",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "value": 3,
+          "label": "שָׁלוֹשׁ",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        2,
+        3,
+        5
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.8",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 6,
+          "label": "שֵׁשׁ",
+          "misconception": "M-COMP-DIFF",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 4,
+          "label": "אַרְבַּע",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "value": 5,
+          "label": "חָמֵשׁ",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        4,
+        5,
+        6
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.mathb19.9",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "B",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?",
+      "answers": [
+        {
+          "id": "o1",
+          "value": 7,
+          "label": "שֶׁבַע",
+          "misconception": "M-COMP-DIFF",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "value": 4,
+          "label": "אַרְבַּע",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "value": 3,
+          "label": "שָׁלוֹשׁ",
+          "correct": true
+        }
+      ],
+      "number_set": [
+        3,
+        4,
+        7
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "x.numa07.1",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CNT-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numa07.2",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CNT-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numa07.3",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CNT-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numa07.4",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CNT-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numa07.5",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CNT-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numa07.6",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CNT-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numa07.7",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "A",
+      "skill_ids": [
+        "NUM-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-CNT-SIZE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.1",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר אֶפֶס.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.10",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר תֵּשַׁע.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.11",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר אֶפֶס. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.12",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר אַחַת. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.13",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר שְׁתַּיִם. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.14",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר שָׁלוֹשׁ. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.15",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר אַרְבַּע. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.16",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר חָמֵשׁ. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.17",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר שֵׁשׁ. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.18",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר שֶׁבַע. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.19",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר שְׁמוֹנֶה. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.2",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר אַחַת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.20",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "כּוֹתְבִים אֶת הַמִּסְפָּר תֵּשַׁע. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.3",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר שְׁתַּיִם.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.4",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר שָׁלוֹשׁ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.5",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר אַרְבַּע.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.6",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר חָמֵשׁ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.7",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר שֵׁשׁ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.8",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר שֶׁבַע.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.numb07.9",
+      "revision": 1,
+      "template": "trace",
+      "band": "B",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר שְׁמוֹנֶה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpa02.1",
+      "revision": 1,
+      "template": "trace",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הָעִגּוּל.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpa02.2",
+      "revision": 1,
+      "template": "trace",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הָרִבּוּעַ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpa02.3",
+      "revision": 1,
+      "template": "trace",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְעַקְבִים בָּאֶצְבַּע אַחֲרֵי הַמְּשֻׁלָּשׁ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpa02.4",
+      "revision": 1,
+      "template": "trace",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְצַיְּרִים אֶת הָעִגּוּל. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpa02.5",
+      "revision": 1,
+      "template": "trace",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְצַיְּרִים אֶת הָרִבּוּעַ. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpa02.6",
+      "revision": 1,
+      "template": "trace",
+      "band": "A",
+      "skill_ids": [
+        "SHP-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child follows the path from its start",
+      "prompt_text": "מְצַיְּרִים אֶת הַמְּשֻׁלָּשׁ. מַתְחִילִים מֵהַנְּקֻדָּה.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpb09.1",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "SHP-B-09"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל גּוּף לַצּוּרָה הַשְּׁטוּחָה שֶׁעַל הַגּוּף.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SHP-FACE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpb09.2",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "SHP-B-09"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל גּוּף לַצּוּרָה הַשְּׁטוּחָה שֶׁעַל הַגּוּף.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SHP-FACE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpb09.3",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "SHP-B-09"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל גּוּף לַצּוּרָה הַשְּׁטוּחָה שֶׁעַל הַגּוּף.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SHP-FACE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
+      "item_id": "x.shpb09.4",
+      "revision": 1,
+      "template": "match_pairs",
+      "band": "B",
+      "skill_ids": [
+        "SHP-B-09"
+      ],
+      "llm_allowed": true,
+      "goal": "child joins each picture with the one that goes with it",
+      "prompt_text": "מַתְאִימִים כָּל גּוּף לַצּוּרָה הַשְּׁטוּחָה שֶׁעַל הַגּוּף.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SHP-FACE",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": []
+    },
+    {
       "item_id": "zero.basket.b",
       "revision": 1,
       "template": "tap_answer",
@@ -30573,6 +32625,13 @@
       "description": "הילד חושב שכחול בהיר וכחול כהה הם צבעים שונים, או משווה לפי בהירות ולא לפי הצבע."
     },
     {
+      "tag": "M-COMP-DIFF",
+      "skill_ids": [
+        "MATH-B-19"
+      ],
+      "description": "הילד עונה על \"כמה יותר?\" בסך הכול של הקבוצה הגדולה, ולא בהפרש."
+    },
+    {
       "tag": "M-CS-FIXALL",
       "skill_ids": [
         "CS-B-04"
@@ -30610,6 +32669,20 @@
       "description": "הילד חושב שמה שגדול יותר גם כבד יותר."
     },
     {
+      "tag": "M-MONEY-COUNT",
+      "skill_ids": [
+        "MATH-B-17"
+      ],
+      "description": "הילד סופר כמה מטבעות יש, ולא כמה הם שווים: שלושה מטבעות הם \"שלושה שקלים\" גם אם הם של חמישה."
+    },
+    {
+      "tag": "M-MONEY-SIZE",
+      "skill_ids": [
+        "MATH-B-16"
+      ],
+      "description": "הילד חושב שמטבע גדול שווה יותר (מטבע חצי השקל גדול ממטבע השקל)."
+    },
+    {
       "tag": "M-NL-DIR",
       "skill_ids": [
         "NUM-B-13"
@@ -30636,6 +32709,13 @@
         "NUM-B-16"
       ],
       "description": "הילד קורא מספר בין 11 ל-19 כספרה אחת בלבד, ולא כעשר ועוד כמה."
+    },
+    {
+      "tag": "M-NUM-WRITE",
+      "skill_ids": [
+        "NUM-B-07"
+      ],
+      "description": "הילד מתחיל לכתוב ספרה מהקצה הלא נכון, או מצייר אותה בכיוון הפוך."
     },
     {
       "tag": "M-NUM-ZERO",
@@ -30716,6 +32796,13 @@
         "SHP-B-04"
       ],
       "description": "הילד מכנה צורה פתוחה או עם צלע עקומה \"משולש\" או \"מרובע\", כי היא נראית דומה."
+    },
+    {
+      "tag": "M-SHP-FACE",
+      "skill_ids": [
+        "SHP-B-09"
+      ],
+      "description": "הילד לא רואה איזו צורה שטוחה יש על הגוף: את העיגול על הגליל, את המשולש על הפירמידה."
     },
     {
       "tag": "M-SHP-ORIENT",

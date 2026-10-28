@@ -3,6 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/play/balance_session.dart';
+import 'package:nitznutz/play/trace_session.dart';
+import 'package:nitznutz/play/shop_pay_session.dart';
+import 'package:nitznutz/play/match_pairs_session.dart';
+import 'package:nitznutz/play/clock_set_session.dart';
 import 'package:nitznutz/play/build_pattern_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/number_line_session.dart';
@@ -642,6 +646,223 @@ void main() {
       await tap(tester, 'cell-${a.wrong}');
       expect(written.last.result, 'correct');
       await settle(tester);
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+  });
+
+  group('matching pairs', () {
+    testWidgets(
+      'a wrong pair is a not-yet with its misconception; the right pairs stay joined and end the activity',
+      (WidgetTester tester) async {
+        final LessonController c = start('match-numbers-sets', 0);
+        final MatchPairsActivity a = c.current as MatchPairsActivity;
+        final MatchPairsSession s = MatchPairsSession(c, a);
+        await host(tester, s);
+        final String l = a.pairs.keys.first;
+        final String wrongRight = a.pairs.values.firstWhere((String r) => r != a.pairs[l]);
+        await tap(tester, 'top-$l');
+        await tap(tester, 'bottom-$wrongRight');
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-CNT-SIZE');
+        expect(s.matched, isEmpty);
+        await settle(tester);
+        for (final MapEntry<String, String> e in a.pairs.entries) {
+          await tap(tester, 'top-${e.key}');
+          await tap(tester, 'bottom-${e.value}');
+        }
+        expect(s.matched.length, a.pairs.length);
+        expect(written.last.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets('after three wrong pairs only a right pair is taken, and the help lights it', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('match-numbers-sets', 0);
+      final MatchPairsActivity a = c.current as MatchPairsActivity;
+      final MatchPairsSession s = MatchPairsSession(c, a);
+      await host(tester, s);
+      final String l = a.pairs.keys.first;
+      final String wrongRight = a.pairs.values.firstWhere((String r) => r != a.pairs[l]);
+      for (int k = 0; k < a.maxAttempts; k++) {
+        await tap(tester, 'top-$l');
+        await tap(tester, 'bottom-$wrongRight');
+        await settle(tester);
+      }
+      expect(c.guided, isTrue);
+      expect(s.hintLeft, isNotNull);
+      final int before = written.length;
+      await tap(tester, 'top-$l');
+      await tap(tester, 'bottom-$wrongRight');
+      expect(written.length, before, reason: 'not counted again');
+      expect(s.matched, isEmpty);
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+  });
+
+  group('the shop', () {
+    testWidgets('paying the exact price is right; as many coins as shekels is M-MONEY-COUNT', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('pay-exactly', 0); // three shekels; purse: three 1s and two 2s
+      final ShopPayActivity a = c.current as ShopPayActivity;
+      expect(a.price, 300);
+      final ShopPaySession s = ShopPaySession(c, a);
+      await host(tester, s);
+      for (final String id in <String>['c3', 'c4', 'c0']) {
+        await tap(tester, 'coin-$id'); // 2 + 2 + 1 = five shekels, three coins
+      }
+      expect(s.total, 500);
+      await tap(tester, 'pay');
+      expect(written.single.result, 'incorrect');
+      expect(written.single.misconceptionTag, 'M-MONEY-COUNT');
+      await settle(tester);
+      expect(s.onCounter, isEmpty, reason: 'the coins go back to the purse');
+      await tap(tester, 'coin-c0');
+      await tap(tester, 'coin-c3');
+      await tap(tester, 'pay');
+      expect(written.last.result, 'correct');
+      await settle(tester);
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets(
+      'a coin on the counter goes back by a touch; after three mistakes the help lights a way to pay',
+      (WidgetTester tester) async {
+        final LessonController c = start('pay-exactly', 0);
+        final ShopPaySession s = ShopPaySession(c, c.current as ShopPayActivity);
+        await host(tester, s);
+        await tap(tester, 'coin-c0');
+        expect(s.onCounter, <String>['c0']);
+        await tap(tester, 'on-c0');
+        expect(s.onCounter, isEmpty);
+        for (int k = 0; k < c.current.maxAttempts; k++) {
+          await tap(tester, 'coin-c3');
+          await tap(tester, 'pay');
+          await settle(tester);
+        }
+        expect(c.guided, isTrue);
+        expect(s.solution().length, 2, reason: 'the fewest coins for three shekels: a 2 and a 1');
+        expect(s.hinted, isNotEmpty);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  });
+
+  group('the clock', () {
+    testWidgets(
+      'the arrows move the short hand; twelve for another hour is M-CLOCK-HANDS; the right hour is right',
+      (WidgetTester tester) async {
+        final LessonController c = start('set-the-clock', 0); // three o'clock, starting at twelve
+        final ClockSetActivity a = c.current as ClockSetActivity;
+        expect((a.hour, a.startHour), (3, 12));
+        final ClockSetSession s = ClockSetSession(c, a);
+        await host(tester, s);
+        await tap(tester, 'clock-ok');
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-CLOCK-HANDS');
+        await settle(tester);
+        for (int k = 0; k < 3; k++) {
+          await tap(tester, 'clock-next');
+        }
+        expect(s.hour, 3);
+        await tap(tester, 'clock-ok');
+        expect(written.last.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets(
+      'dragging the face turns the short hand to the nearest hour, and the help shows where it belongs',
+      (WidgetTester tester) async {
+        final LessonController c = start('set-the-clock', 0);
+        final ClockSetSession s = ClockSetSession(c, c.current as ClockSetActivity);
+        await host(tester, s);
+        final Rect r = tester.getRect(find.byKey(const Key('clock-face')));
+        await tester.tapAt(r.center + Offset(r.width * 0.3, 0)); // pointing at the three
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(s.hour, 3);
+        await tester.tapAt(r.center + Offset(0, r.height * 0.3)); // the six
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(s.hour, 6);
+        for (int k = 0; k < c.current.maxAttempts; k++) {
+          await tap(tester, 'clock-ok');
+          await settle(tester);
+        }
+        expect(c.guided, isTrue);
+        expect(s.ghost, isTrue);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  });
+
+  group('tracing', () {
+    Offset at(WidgetTester t, Offset unit) {
+      final Rect r = t.getRect(find.byKey(const Key('trace-stage')));
+      return r.topLeft + Offset(unit.dx / 100 * r.width, unit.dy / 100 * r.height);
+    }
+
+    Future<void> follow(WidgetTester t, List<Offset> units) async {
+      final TestGesture g = await t.startGesture(at(t, units.first));
+      for (final Offset u in units.skip(1)) {
+        await g.moveTo(at(t, u));
+        await t.pump(const Duration(milliseconds: 16));
+      }
+      await g.up();
+      await t.pump(const Duration(milliseconds: 60));
+    }
+
+    testWidgets(
+      'tracing the path from its start is right; the same path from the other end is the direction tag',
+      (WidgetTester tester) async {
+        final LessonController c = start('trace-numbers-0-4', 1); // the numeral one
+        final TraceActivity a = c.current as TraceActivity;
+        final TraceSession s = TraceSession(c, a);
+        await host(tester, s);
+        final List<Offset> path = a.strokes.first;
+        await follow(tester, path.reversed.toList());
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-NUM-WRITE', reason: 'drawn from the wrong end');
+        await settle(tester);
+        await follow(tester, <Offset>[const Offset(80, 80), const Offset(90, 90)]);
+        expect(written.last.result, 'incorrect');
+        await settle(tester);
+        await follow(tester, path);
+        expect(written.last.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets('after three mistakes the whole path is shown and a dot walks along it', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start(
+        'write-from-the-dot-0-4',
+        1,
+      ); // the numeral one, only the start dot shown
+      final TraceActivity a = c.current as TraceActivity;
+      expect(a.fullGuide, isFalse);
+      final TraceSession s = TraceSession(c, a);
+      await host(tester, s);
+      expect(s.guideShown, isFalse);
+      for (int k = 0; k < a.maxAttempts; k++) {
+        await follow(tester, <Offset>[const Offset(80, 80), const Offset(90, 90)]);
+        await settle(tester);
+      }
+      expect(c.guided, isTrue);
+      expect(s.guideShown, isTrue);
       s.dispose();
       await tester.pumpWidget(const SizedBox());
     });

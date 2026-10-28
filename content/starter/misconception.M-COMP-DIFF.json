@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-COMP-DIFF",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-19"
+  ],
+  "parentText": "הילד עונה על \"כמה יותר?\" בסך הכול של הקבוצה הגדולה, ולא בהפרש.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לסדר שתי שורות של קוביות זו מול זו ולראות יחד כמה קוביות \"עודפות\" בשורה הארוכה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

@@ -6,6 +6,7 @@ import '../content/schemas.dart' show coinSprites, coinValues;
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../strings/he.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
 
@@ -193,37 +194,43 @@ class CoinFace extends StatelessWidget {
   final bool hinted;
   final bool small;
 
-  /// The drawn size (the half shekel is the biggest of the silver coins, as in a purse; a note is wide).
-  static const Map<String, double> _size = <String, double>{
-    'a10': 34,
-    'h50': 52,
-    's1': 44,
-    's2': 50,
-    's5': 54,
-    's10': 52,
-    'n20': 74,
-    'n50': 74,
+  /// The real size of each, in millimetres (the width of a note; coins are round): the half shekel is the biggest coin and the shekel the
+  /// smallest, as in a purse.
+  static const Map<String, double> _mm = <String, double>{
+    'a10': 22,
+    'h50': 26,
+    's1': 18,
+    's2': 21.6,
+    's5': 24,
+    's10': 23,
+    'n20': 129,
+    'n50': 136,
+    'n100': 143,
+    'n200': 150,
   };
-  static const Map<String, String> _text = <String, String>{
-    'a10': '10',
-    'h50': '½',
-    's1': '1',
-    's2': '2',
-    's5': '5',
-    's10': '10',
-    'n20': '20',
-    'n50': '50',
+
+  static final Map<String, String> _label = <String, String>{
+    'a10': He.coinA10Semantics.text,
+    'h50': He.coinH50Semantics.text,
+    's1': He.coinS1Semantics.text,
+    's2': He.coinS2Semantics.text,
+    's5': He.coinS5Semantics.text,
+    's10': He.coinS10Semantics.text,
+    'n20': He.noteN20Semantics.text,
+    'n50': He.noteN50Semantics.text,
+    'n100': He.noteN100Semantics.text,
+    'n200': He.noteN200Semantics.text,
   };
 
   @override
   Widget build(BuildContext context) {
     final double k = small ? 0.8 : 1;
-    final double w = _size[kind]! * k;
     final bool note = kind.startsWith('n');
-    final double h = note ? w * 0.55 : w;
+    final double w = _mm[kind]! * (note ? 0.62 : 2.4) * k;
+    final double h = note ? w * 71 / _mm[kind]! : w;
     return Semantics(
       button: onTap != null,
-      label: _text[kind],
+      label: _label[kind],
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
@@ -235,19 +242,11 @@ class CoinFace extends StatelessWidget {
             decoration: hinted
                 ? BoxDecoration(
                     shape: note ? BoxShape.rectangle : BoxShape.circle,
+                    borderRadius: note ? BorderRadius.circular(8) : null,
                     border: Border.all(color: TokenColors.hintHalo, width: 4),
                   )
                 : null,
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                PackSvg(svg),
-                Text(
-                  kind == 'a10' ? '10' : _text[kind]!,
-                  style: AppText.fixed(size: h * (kind == 'a10' ? 0.34 : 0.46), weight: 800, lineHeight: 1),
-                ),
-              ],
-            ),
+            child: PackSvg(svg),
           ),
         ),
       ),
@@ -268,7 +267,7 @@ class _Counter extends StatelessWidget {
     final int agorot = a.price % 100;
     final String price = agorot == 0
         ? '₪$shekels'
-        : (shekels == 0 ? '$agorot אג׳' : '₪$shekels.${agorot.toString().padLeft(2, '0')}');
+        : (shekels == 0 ? '$agorot ${He.agorot.text}' : '₪$shekels.${agorot.toString().padLeft(2, '0')}');
     return Semantics(
       container: true,
       label: a.altText,
@@ -293,6 +292,7 @@ class _Counter extends StatelessWidget {
                         svg: a.assets.svg(a.itemSprite),
                         count: a.itemCount,
                         arrangement: 'line',
+                        scale: 1.6,
                       ),
                     ),
                     Container(

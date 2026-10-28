@@ -275,7 +275,14 @@ class TapAnswerActivity extends Activity {
         for (final Object? r in (_map(json['scene'])['row'] as List<Object?>? ?? const <Object?>[]))
           r! as String,
       ],
+      chart = <({String sprite, int count})>[
+        for (final Map<String, Object?> c in _maps(_map(json['scene'])['chart']))
+          (sprite: c['sprite']! as String, count: c['count']! as int),
+      ],
       super._();
+
+  /// The columns of a chart to read (1.2): each a picture and how many of it; empty when the scene has none.
+  final List<({String sprite, int count})> chart;
 
   final List<ChoiceOption> options;
   final String correctId;
@@ -507,7 +514,14 @@ class SpotErrorActivity extends Activity {
 
 /// A face on the matching template: a picture (a set, when [count] is more than one) or a numeral.
 class MatchFace {
-  const MatchFace({required this.id, required this.label, this.sprite, this.count = 1, this.numeral});
+  const MatchFace({
+    required this.id,
+    required this.label,
+    this.sprite,
+    this.count = 1,
+    this.numeral,
+    this.coin,
+  });
 
   factory MatchFace.fromJson(Map<String, Object?> m) => MatchFace(
     id: m['id']! as String,
@@ -515,6 +529,7 @@ class MatchFace {
     sprite: m['sprite'] as String?,
     count: (m['count'] as int?) ?? 1,
     numeral: m['numeral'] as int?,
+    coin: m['coin'] as String?,
   );
 
   final String id;
@@ -522,6 +537,9 @@ class MatchFace {
   final String? sprite;
   final int count;
   final int? numeral;
+
+  /// A coin or note kind of the shop (`s2`, `n20`), drawn with its value.
+  final String? coin;
 }
 
 /// The matching template (T16): pairs of faces, one row above and one below; the child joins each pair.

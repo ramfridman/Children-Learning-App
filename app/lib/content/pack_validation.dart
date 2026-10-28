@@ -258,6 +258,9 @@ List<Problem> validatePack({
         for (final (int i, Object? r) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
           if (r is String && r.startsWith('asset:')) checkAsset(file, 'scene.row[$i]', r);
         }
+        for (final (int i, Map<String, Object?> c) in _maps(scene['chart']).indexed) {
+          checkAsset(file, 'scene.chart[$i].sprite', c['sprite']);
+        }
         for (final String g in <String>['group', 'group2']) {
           final Object? group = scene[g];
           if (group is Map<String, Object?>) checkAsset(file, 'scene.$g.sprite', group['sprite']);
@@ -386,8 +389,8 @@ List<Problem> validatePack({
         ]) {
           for (final (int i, Map<String, Object?> f) in faces.indexed) {
             if (!faceIds.add(f['id'])) say(file, 'scene.$side[$i].id', 'is used twice');
-            if ((f['sprite'] == null) == (f['numeral'] == null)) {
-              say(file, 'scene.$side[$i]', 'needs a picture or a numeral, not both and not neither');
+            if (<Object?>[f['sprite'], f['numeral'], f['coin']].where((Object? x) => x != null).length != 1) {
+              say(file, 'scene.$side[$i]', 'needs exactly one of a picture, a numeral or a coin');
             }
             if (f['sprite'] != null) checkAsset(file, 'scene.$side[$i].sprite', f['sprite']);
           }
