@@ -20,6 +20,9 @@ F = {0: 'אֶפֶס', 1: 'אַחַת', 2: 'שְׁתַּיִם', 3: 'שָׁלוֹ
 M = {1: 'אֶחָד', 2: 'שְׁנַיִם', 3: 'שְׁלוֹשָׁה', 4: 'אַרְבָּעָה', 5: 'חֲמִשָּׁה', 6: 'שִׁשָּׁה', 7: 'שִׁבְעָה',
      8: 'שְׁמוֹנָה', 9: 'תִּשְׁעָה', 10: 'עֲשָׂרָה'}
 ORD_M = ['רִאשׁוֹן', 'שֵׁנִי', 'שְׁלִישִׁי', 'רְבִיעִי']
+# the same, with the definite article (the pointing of the article depends on the word: הָרִאשׁוֹן, הַשֵּׁנִי)
+ORD_DEF = ['הָרִאשׁוֹן', 'הַשֵּׁנִי', 'הַשְּׁלִישִׁי', 'הָרְבִיעִי']
+LAST_DEF = 'הָאַחֲרוֹן'
 
 # One shared line for each misconception, said whatever the activity (the voice is made once).
 TAG_FEEDBACK = {
@@ -53,6 +56,13 @@ def qty(n, obj):
     if n == 2:
         return ('שְׁתֵּי ' if f else 'שְׁנֵי ') + obj['many']
     return (F[n] if f else M[n]) + ' ' + obj['many']
+
+
+def this_qty(n, obj):
+    """'this' agreeing with what it points at: זֶה for one masculine thing, זוֹ for one feminine thing, אֵלֶּה for several."""
+    if n == 1:
+        return ('זוֹ ' if obj['g'] == 'f' else 'זֶה ') + qty(n, obj)
+    return 'אֵלֶּה ' + qty(n, obj)
 
 
 def count_words(n):
@@ -184,7 +194,7 @@ def k_flash(a, ctx):
         a, 'flash', [(a['skill'], 1)], 'learn', 'practice', 'pictorial',
         {'background': 'asset:meadow', 'group': group, 'flashMs': a.get('flashMs', 1500)}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט.', 'נַחֲזִיק אֶצְבָּעוֹת וְנִסְפֹּר: %s.' % count_words(n),
-              'זֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (qty(n, obj), F[n]),
+              '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (this_qty(n, obj), F[n]),
               actions=('replay_prompt_slow', 'show_fingers', 'worked_example'), shared=('flash', None)),
         'child sees the number at a glance, without counting one by one',
         prompt='הִסְתַּכְּלוּ מַהֵר! כַּמָּה %s?' % obj['many'], correct='%s! רְאִיתֶם בְּלִי לִסְפֹּר.' % F[n])
@@ -259,9 +269,9 @@ def k_numeral_to_set(a, ctx):
         a, 'tap_answer', [(a['skill'], 1)], 'practice', 'reverse', 'pictorial',
         {'background': 'asset:meadow', 'numeral': n}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר.', 'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
-              '%s. זֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (count_words(n), qty(n, obj))),
+              '%s. %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (count_words(n), this_qty(n, obj))),
         'child finds the group that has the number named',
-        prompt='אֵיפֹה יֵשׁ %s?' % qty(n, obj), correct='כֵּן! זֶה %s.' % qty(n, obj))
+        prompt='אֵיפֹה יֵשׁ %s?' % qty(n, obj), correct='כֵּן! %s.' % this_qty(n, obj))
 
 
 def k_pick_numeral(a, ctx):
@@ -352,12 +362,11 @@ def k_ordinal(a, ctx):
         {'background': 'asset:meadow', 'optionsOnTiles': True}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: %s.' % ', '.join(
             ORD_M[:pos + 1] if k != -1 else ORD_M[:len(order)]),
-              'הַמָּקוֹם %s בַּתּוֹר הוּא %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (
-                  word if k != -1 else 'הָאַחֲרוֹן', ctx['objects'][order[pos]]['one']),
+              'זֶה %s בַּתּוֹר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (LAST_DEF if k == -1 else ORD_DEF[pos]),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child finds the place in the line, not how many there are',
         prompt='מִי %s בַּתּוֹר?' % word if k == -1 else 'מִי %s בַּתּוֹר?' % word,
-        correct='כֵּן! זֶה ה%s בַּתּוֹר.' % ('אַחֲרוֹן' if k == -1 else ORD_M[pos]))
+        correct='כֵּן! זֶה %s בַּתּוֹר.' % (LAST_DEF if k == -1 else ORD_DEF[pos]))
 
 
 def k_zero(a, ctx):

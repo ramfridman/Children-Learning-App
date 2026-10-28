@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
-  "pack_version": "0.4.0",
-  "manifest_sha256": "910ca708516269c4670bddc505eda2f698da5cc6efc532fbbd63cac91c4266ac",
+  "pack_version": "0.4.1",
+  "manifest_sha256": "155340753764c31719ec30aecbe493af98c3a2153eb24ba75e0432e73702f5ea",
   "items": [
     {
       "item_id": "count.apples.7",
