@@ -20,7 +20,7 @@ import '../world/world_state.dart';
 /// One land close up: its island with an object for each skill, growing as the child understands, and a way into the
 /// lesson. A bell flag on an object means a check is due ("someone is calling for help"); tapping it opens a short
 /// mission of three to five items, made on the spot. Nothing here is locked, timed or counted against the child.
-class LandScreen extends ConsumerWidget {
+class LandScreen extends ConsumerStatefulWidget {
   const LandScreen({super.key, required this.childId, required this.land, this.onPlay, this.onMission});
 
   final String childId;
@@ -33,9 +33,23 @@ class LandScreen extends ConsumerWidget {
   final void Function(Lesson mission)? onMission;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LandScreen> createState() => _LandScreenState();
+}
+
+class _LandScreenState extends ConsumerState<LandScreen> {
+  /// The skill whose drawing was touched last: its name and where it stands show on a card.
+  String? _picked;
+
+  String get childId => widget.childId;
+  TrophyLand get land => widget.land;
+  VoidCallback? get onPlay => widget.onPlay;
+  void Function(Lesson mission)? get onMission => widget.onMission;
+
+  @override
+  Widget build(BuildContext context) {
     final WorldView? view = ref.watch(worldProvider(childId)).value;
     final List<WorldObject> objects = view?.lands[land] ?? const <WorldObject>[];
+    final WorldObject? picked = objects.where((WorldObject o) => o.skillId == _picked).firstOrNull;
     // The island decorations the child has earned (10, 20 and 30 skills understood for good) stand on every island.
     final Set<String> given = <String>{
       for (final Reward r in ref.watch(rewardsProvider(childId)).value ?? const <Reward>[]) r.awardKey,
@@ -58,20 +72,33 @@ class LandScreen extends ConsumerWidget {
                       spacing: 8,
                       runSpacing: 8,
                       children: <Widget>[
-                        for (final WorldObject o in objects)
+                        for (int i = 0; i < objects.length; i++)
                           Semantics(
-                            label: o.bell ? '${o.title}. ${He.bellSemantics.text}' : o.title,
-                            button: o.bell,
+                            label: objects[i].bell
+                                ? '${objects[i].title}. ${He.bellSemantics.text}'
+                                : objects[i].title,
+                            button: true,
                             child: GestureDetector(
-                              key: Key('object-${o.skillId}'),
+                              key: Key('object-${objects[i].skillId}'),
                               behavior: HitTestBehavior.opaque,
-                              onTap: o.bell && view != null && onMission != null
-                                  ? () {
-                                      final Lesson? mission = view.missionFor(o.skillId);
-                                      if (mission != null) onMission!(mission);
-                                    }
-                                  : null,
-                              child: ExcludeSemantics(child: WorldObjectView(object: o)),
+                              // A bell flag opens its short revisit; any other drawing says what it is.
+                              onTap: () {
+                                final WorldObject o = objects[i];
+                                final Lesson? mission = o.bell && view != null
+                                    ? view.missionFor(o.skillId)
+                                    : null;
+                                if (mission != null && onMission != null) {
+                                  onMission!(mission);
+                                } else {
+                                  setState(() => _picked = _picked == o.skillId ? null : o.skillId);
+                                }
+                              },
+                              child: ExcludeSemantics(
+                                child: _OnStone(
+                                  first: i == 0,
+                                  child: WorldObjectView(object: objects[i]),
+                                ),
+                              ),
                             ),
                           ),
                       ],
@@ -127,6 +154,35 @@ class LandScreen extends ConsumerWidget {
                     ),
                   ),
                 },
+            // What the touched drawing is.
+            if (picked != null)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 100,
+                child: Center(
+                  child: Container(
+                    key: const Key('land-object-card'),
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: TokenColors.paper,
+                      borderRadius: BorderRadius.circular(TokenRadius.xl),
+                      boxShadow: softShadow,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(switch (picked.stage) {
+                          GrowthStage.sketch => He.stageSketch.text,
+                          GrowthStage.colour => He.stageColour.text,
+                          GrowthStage.fruit => He.stageFruit.text,
+                        }, style: AppText.fixed(size: 18, weight: 700)),
+                        Text(picked.line ?? picked.title, style: AppText.fixed(size: 15, weight: 500)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             // The land's name.
             Positioned(
               top: 12,
@@ -179,6 +235,52 @@ class LandScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// A drawing standing on its stone, with a dotted trail from the one before it (the trail runs on the start side, which is
+/// the right in Hebrew). The order is only the order the skills are listed in: nothing here is locked.
+class _OnStone extends StatelessWidget {
+  const _OnStone({required this.first, required this.child});
+
+  final bool first;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Stack(
+    clipBehavior: Clip.none,
+    alignment: Alignment.bottomCenter,
+    children: <Widget>[
+      Positioned(
+        bottom: -6,
+        child: Container(
+          width: 104,
+          height: 20,
+          decoration: BoxDecoration(
+            color: TokenColors.worldWoodLight,
+            borderRadius: BorderRadius.circular(999),
+          ),
+        ),
+      ),
+      if (!first)
+        PositionedDirectional(
+          start: -20,
+          bottom: 2,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              for (int i = 0; i < 3; i++)
+                Container(
+                  width: 5,
+                  height: 5,
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  decoration: const BoxDecoration(color: TokenColors.worldWoodLight, shape: BoxShape.circle),
+                ),
+            ],
+          ),
+        ),
+      child,
+    ],
+  );
 }
 
 /// Three small pictures that say what the drawings on the island mean, left to right in reading order: a faded one is still

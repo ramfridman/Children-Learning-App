@@ -17,6 +17,7 @@ import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/rewards/award.dart';
 import 'package:nitznutz/rewards/sticker_design.dart';
+import 'package:nitznutz/strings/he.dart';
 import 'package:nitznutz/world/world_state.dart';
 
 import 'engine/fixtures.dart';
@@ -180,7 +181,12 @@ void main() {
       );
       await tester.tap(find.byKey(const Key('object-SK-B-01')));
       await tester.pump();
-      expect(opened, isNull, reason: 'an object without a bell does nothing');
+      expect(opened, isNull, reason: 'an object without a bell opens no mission');
+      expect(find.byKey(const Key('land-object-card')), findsOneWidget, reason: 'it says what it is instead');
+      expect(find.text(He.stageColour.text), findsOneWidget);
+      await tester.tap(find.byKey(const Key('object-SK-B-01')));
+      await tester.pump();
+      expect(find.byKey(const Key('land-object-card')), findsNothing, reason: 'touched again, the card goes');
       await tester.tap(find.byKey(const Key('object-SK-A-01')));
       await tester.pump();
       expect(opened, isNotNull);

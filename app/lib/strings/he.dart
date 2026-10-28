@@ -83,6 +83,9 @@ abstract final class He {
   static const Str homeHallLabel = Str('גְּבִיעִים', nikud: true);
   static const Str stickersTitle = Str('הַמַּדְבֵּקוֹת שֶׁלִּי', nikud: true);
   static const Str stickersHow = Str('מַדְבֵּקָה אַחַת עַל כָּל שִׁעוּר שֶׁמְּסַיְּמִים', nikud: true);
+  static const Str stageSketch = Str('עוֹד מְתַרְגְּלִים', nikud: true);
+  static const Str stageColour = Str('יוֹדְעִים!', nikud: true);
+  static const Str stageFruit = Str('יוֹדְעִים וְגַם זוֹכְרִים!', nikud: true);
   static const Str landPlayLabel = Str('לְשַׂחֵק', nikud: true);
   static const Str legendSketch = Str('מְתַרְגְּלִים', nikud: true);
   static const Str legendColour = Str('יוֹדְעִים', nikud: true);
