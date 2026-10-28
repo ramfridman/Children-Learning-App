@@ -195,6 +195,24 @@ void main() {
       expect(opened!.celebration.vo, 'vo:core.celebrate.well');
     });
 
+    testWidgets('the card that says what a drawing is never covers the play button or another drawing', (
+      WidgetTester tester,
+    ) async {
+      for (final Size size in <Size>[const Size(852, 393), const Size(667, 375), const Size(1180, 820)]) {
+        await pumpIn(tester, LandScreen(childId: child, land: TrophyLand.counting, onPlay: () {}), <Override>[
+          worldOf(grown),
+        ], size: size);
+        await tester.tap(find.byKey(const Key('object-SK-B-01')));
+        await tester.pump();
+        final Rect card = tester.getRect(find.byKey(const Key('land-object-card')));
+        expect(card.overlaps(tester.getRect(find.byKey(const Key('land-play')))), isFalse, reason: '$size');
+        for (final String id in <String>['SK-A-01', 'SK-B-01', 'SK-C-01', 'SK-D-01']) {
+          expect(card.overlaps(tester.getRect(find.byKey(Key('object-$id')))), isFalse, reason: '$size $id');
+        }
+        expect(card.overlaps(tester.getRect(find.byKey(const Key('land-legend')))), isFalse, reason: '$size');
+      }
+    });
+
     testWidgets('a land with a lesson has a play button; one without has none', (WidgetTester tester) async {
       int played = 0;
       await pumpIn(

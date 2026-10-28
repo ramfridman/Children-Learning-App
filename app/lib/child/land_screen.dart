@@ -63,7 +63,7 @@ class _LandScreenState extends ConsumerState<LandScreen> {
             Positioned.fill(child: CustomPaint(painter: _IslandPainter(colours))),
             Positioned.fill(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 56, 24, 96),
+                padding: const EdgeInsets.fromLTRB(24, 136, 24, 96),
                 child: Center(
                   child: SingleChildScrollView(
                     child: Wrap(
@@ -159,7 +159,7 @@ class _LandScreenState extends ConsumerState<LandScreen> {
               Positioned(
                 left: 0,
                 right: 0,
-                bottom: 100,
+                top: 70,
                 child: Center(
                   child: Container(
                     key: const Key('land-object-card'),
