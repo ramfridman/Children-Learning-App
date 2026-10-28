@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-LOG-NOT",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-B-09"
+  ],
+  "parentText": "הילד מתעלם מאחד התנאים (\"לא אדום ולא עיגול\") ובוחר לפי אחד בלבד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשחק \"ניחוש מי\": להסתיר חפץ ולתת רמזים \"זה לא אדום\", \"זה לא עגול\", ולהקטין את האפשרויות יחד."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "symbolic"
+  ]
+}

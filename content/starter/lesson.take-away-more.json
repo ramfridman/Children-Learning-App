@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "take-away-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "לוֹקְחִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-01"
+  ],
+  "items": [
+    "b.mathb01.7",
+    "b.mathb01.8",
+    "b.mathb01.9",
+    "b.mathb01.10",
+    "b.mathb01.11",
+    "b.mathb01.12"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 31,
+  "celebration": {
+    "vo": "vo:celebrate.take_away_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! לְקַחְתֶּם וְחִשַּׁבְתֶּם."
+      }
+    ]
+  }
+}

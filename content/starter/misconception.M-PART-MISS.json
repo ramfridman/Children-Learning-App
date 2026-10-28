@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-PART-MISS",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-02",
+    "NUM-B-14"
+  ],
+  "parentText": "הילד מוסיף במקום לחסר כשחסר חלק, ועונה בסכום.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להסתיר חלק מהחפצים בכוס, ולשאול כמה בכוס אם יש בסך הכול שבעה וחמישה בחוץ."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

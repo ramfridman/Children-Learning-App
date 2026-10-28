@@ -1,0 +1,162 @@
+{
+  "schema": "activity/v1",
+  "id": "b.numb14.6",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-14",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.72
+  },
+  "prompt": {
+    "vo": "vo:b.numb14.6.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יֵשׁ עֶשֶׂר צִפֳּרִים. מַכְנִיסִים שֵׁשׁ צִפֳּרִים לַסַּל. כַּמָּה נִשְׁאֲרוּ בַּחוּץ?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:bird",
+      "count": 10,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 10,
+        "label": "עֶשֶׂר",
+        "misconception": "M-PART-MISS"
+      },
+      {
+        "id": "o2",
+        "numeral": 6,
+        "label": "שֵׁשׁ"
+      },
+      {
+        "id": "o3",
+        "numeral": 4,
+        "label": "אַרְבַּע"
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.numb14.6.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבַּע! אַרְבַּע וְעוֹד שֵׁשׁ הֵם עֶשֶׂר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PART-MISS",
+        "vo": "vo:fb.part_miss",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסַר?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.numb14.6.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע, עֶשֶׂר. הִכְנַסְנוּ שֵׁשׁ, אָז נִשְׁאֲרוּ אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "יֵשׁ עֶשֶׂר צִפֳּרִים. מַכְנִיסִים שֵׁשׁ צִפֳּרִים לַסַּל. כַּמָּה נִשְׁאֲרוּ בַּחוּץ?"
+  }
+}

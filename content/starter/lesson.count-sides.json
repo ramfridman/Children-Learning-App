@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-sides",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים צְלָעוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-B-02"
+  ],
+  "items": [
+    "b.shpb02.1",
+    "b.shpb02.2",
+    "b.shpb02.3",
+    "b.shpb02.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 32,
+  "celebration": {
+    "vo": "vo:celebrate.count_sides",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם צְלָעוֹת."
+      }
+    ]
+  }
+}

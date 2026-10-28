@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "fix-the-program",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְתַקְּנִים תָּכְנִית"
+    }
+  ],
+  "skills": [
+    "CS-B-04"
+  ],
+  "items": [
+    "b.csb04.1",
+    "b.csb04.2",
+    "b.csb04.3",
+    "b.csb04.4",
+    "b.csb04.5",
+    "b.csb04.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 32,
+  "celebration": {
+    "vo": "vo:celebrate.fix_the_program",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! תִּקַּנְתֶּם אֶת הַצַּעַד."
+      }
+    ]
+  }
+}

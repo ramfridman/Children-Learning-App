@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "light-and-dark",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "בָּהִיר וְכֵהֶה"
+    }
+  ],
+  "skills": [
+    "COL-B-02"
+  ],
+  "items": [
+    "b.colb02.1",
+    "b.colb02.2",
+    "b.colb02.3",
+    "b.colb02.4",
+    "b.colb02.5",
+    "b.colb02.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 32,
+  "celebration": {
+    "vo": "vo:celebrate.light_and_dark",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים בָּהִיר וְכֵהֶה."
+      }
+    ]
+  }
+}

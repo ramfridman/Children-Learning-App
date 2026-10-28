@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "missing-part",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַחֵלֶק שֶׁחָסֵר"
+    }
+  ],
+  "skills": [
+    "MATH-B-02"
+  ],
+  "items": [
+    "b.mathb02.1",
+    "b.mathb02.2",
+    "b.mathb02.3",
+    "b.mathb02.4",
+    "b.mathb02.5",
+    "b.mathb02.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 32,
+  "celebration": {
+    "vo": "vo:celebrate.missing_part",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַחֵלֶק."
+      }
+    ]
+  }
+}

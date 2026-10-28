@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CS-FIXALL",
+  "review": "needs-editor",
+  "skills": [
+    "CS-B-04"
+  ],
+  "parentText": "כשיש טעות בתוכנית הילד מוחק את כולה ומתחיל מחדש, במקום לתקן צעד אחד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להכין יחד סדר פעולות של בוקר (לקום, להתלבש, לאכול), להחליף צעד אחד ולבקש מהילד לתקן רק אותו."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

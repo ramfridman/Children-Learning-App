@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "equal-groups",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קְבוּצוֹת שָׁווֹת"
+    }
+  ],
+  "skills": [
+    "MATH-B-10"
+  ],
+  "items": [
+    "b.mathb10.1",
+    "b.mathb10.2",
+    "b.mathb10.3",
+    "b.mathb10.4",
+    "b.mathb10.5",
+    "b.mathb10.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 43,
+  "celebration": {
+    "vo": "vo:celebrate.equal_groups",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! בְּכָל צַלַּחַת אוֹתוֹ מִסְפָּר."
+      }
+    ]
+  }
+}

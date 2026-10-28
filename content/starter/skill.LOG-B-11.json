@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-B-11",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מסדרים חמישה"
+    }
+  ],
+  "worldObject": "sprout",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְסַדְּרִים מִנָּמוּךְ לְגָבוֹהַּ"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-10",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-SER-ENDS"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

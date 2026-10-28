@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "missing-number",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַמִּסְפָּר הֶחָסֵר"
+    }
+  ],
+  "skills": [
+    "MATH-B-18"
+  ],
+  "items": [
+    "b.mathb18.1",
+    "b.mathb18.2",
+    "b.mathb18.3",
+    "b.mathb18.4",
+    "b.mathb18.5",
+    "b.mathb18.6",
+    "b.mathb18.7"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 49,
+  "celebration": {
+    "vo": "vo:celebrate.missing_number",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! מְצָאתֶם אֶת הַמִּסְפָּר."
+      }
+    ]
+  }
+}

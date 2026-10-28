@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CLOCK-HANDS",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-15"
+  ],
+  "parentText": "הילד מחליף בין המחוג הקצר למחוג הארוך: קורא 3:00 כ\"שתים עשרה\".",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להסביר: המחוג הקצר והעבה הוא \"הבוס של השעות\". להסתכל ביחד בשעון קיר בכל שעה עגולה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "embodied"
+  ]
+}

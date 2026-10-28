@@ -4,6 +4,7 @@ Flat shapes in the brand colours, like make_unit_sprites.py: the illustrator rep
 (docs/art/art-brief.md, section 6.6b). Things that come in colours (a ball, a balloon, a flower) are drawn once and
 tinted, so every colour of a thing is the same drawing.
 """
+import math
 import os
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'content', 'starter')
@@ -131,6 +132,57 @@ MORE = {
     'line_curved_arc': '<path d="M20 86 C 6 40, 40 10, 86 20" fill="none" stroke="#E5484D" stroke-width="9" stroke-linecap="round"/>',
 }
 
+# ---- Band B pictures (9b-3): shades, polygons, solids, towers, rules, days, clocks, a frog and a block ----
+BAND_B = True
+
+
+def poly(n, c, r=38, rot=-90):
+    pts = []
+    for k in range(n):
+        a = math.radians(rot + 360 * k / n)
+        pts.append('%.1f,%.1f' % (50 + r * math.cos(a), 52 + r * math.sin(a)))
+    return '<polygon points="%s" fill="%s" stroke-linejoin="round"/>' % (' '.join(pts), c)
+
+
+def clock(hour):
+    a = math.radians(hour * 30 - 90)
+    x, y = 50 + 24 * math.cos(a), 50 + 24 * math.sin(a)
+    ticks = ''.join('<line x1="%.1f" y1="%.1f" x2="%.1f" y2="%.1f" stroke="#2B2540" stroke-width="3" stroke-linecap="round"/>'
+                    % (50 + 36 * math.cos(math.radians(k * 30)), 50 + 36 * math.sin(math.radians(k * 30)),
+                       50 + 42 * math.cos(math.radians(k * 30)), 50 + 42 * math.sin(math.radians(k * 30))) for k in range(12))
+    return ('<circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#2B2540" stroke-width="5"/>' + ticks +
+            '<line x1="50" y1="50" x2="50" y2="14" stroke="#4DA3FF" stroke-width="4" stroke-linecap="round"/>'
+            '<line x1="50" y1="50" x2="%.1f" y2="%.1f" stroke="#E5484D" stroke-width="7" stroke-linecap="round"/>'
+            '<circle cx="50" cy="50" r="5" fill="#2B2540"/>' % (x, y))
+
+
+def tower(n):
+    return ''.join('<rect x="30" y="%d" width="40" height="%d" rx="3" fill="%s" stroke="#FFFFFF" stroke-width="2"/>'
+                   % (88 - 14 * (k + 1), 14, ('#4DA3FF', '#FFC531')[k % 2]) for k in range(n))
+
+
+def day(n):
+    dots = ''.join('<circle cx="%d" cy="%d" r="6" fill="#2B2540"/>' % (22 + (k % 4) * 19, 40 + (k // 4) * 22) for k in range(n))
+    return '<rect x="8" y="12" width="84" height="78" rx="10" fill="#FFFFFF" stroke="#4DA3FF" stroke-width="5"/><rect x="8" y="12" width="84" height="20" rx="10" fill="#4DA3FF"/>' + dots
+
+
+SHADES = {'blue': ('#CFE6FF', '#5AA6F2', '#1F4E9C'), 'green': ('#D7F2C8', '#5BBE5A', '#2A6F2F'),
+          'red': ('#FFD0D0', '#E5484D', '#8E1B22'), 'purple': ('#E6D8FA', '#9B6BDF', '#52308F')}
+BAND_B_SPRITES = {
+    'shape_pentagon': poly(5, '#9B6BDF'), 'shape_hexagon': poly(6, '#FF9F43'), 'shape_quad': poly(4, '#4CAF50', 40, -45),
+    'shape_open': '<polyline points="12,84 50,14 88,84 24,84" fill="none" stroke="#E5484D" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>',
+    'shape_curved': '<path d="M12 84 Q50 -10 88 84 Z" fill="#4DA3FF"/>',
+    'solid_cylinder': '<ellipse cx="50" cy="24" rx="30" ry="10" fill="#9ED0EC"/><rect x="20" y="24" width="60" height="52" fill="#4DA3FF"/><ellipse cx="50" cy="76" rx="30" ry="10" fill="#4DA3FF"/><ellipse cx="50" cy="24" rx="30" ry="10" fill="#9ED0EC"/>',
+    'solid_cone': '<polygon points="50,10 84,80 16,80" fill="#E5484D"/><ellipse cx="50" cy="80" rx="34" ry="10" fill="#B02A2E"/>',
+    'solid_sphere': '<circle cx="50" cy="50" r="38" fill="#9B6BDF"/><ellipse cx="38" cy="36" rx="10" ry="7" fill="#FFFFFF" opacity="0.5" transform="rotate(-30 38 36)"/>',
+    'solid_pyramid': '<polygon points="50,10 90,78 50,90 10,78" fill="#FFC531"/><polygon points="50,10 90,78 50,90" fill="#E39A00"/>',
+    'rule_colour': '<circle cx="34" cy="38" r="22" fill="#E5484D"/><circle cx="66" cy="38" r="22" fill="#4DA3FF"/><circle cx="50" cy="66" r="22" fill="#FFC531"/>',
+    'rule_shape': '<circle cx="28" cy="34" r="18" fill="#9AA0B4"/><rect x="52" y="16" width="36" height="36" fill="#9AA0B4"/><polygon points="50,56 78,92 22,92" fill="#9AA0B4"/>',
+    'rule_size': '<circle cx="28" cy="64" r="12" fill="#9AA0B4"/><circle cx="62" cy="52" r="26" fill="#9AA0B4"/>',
+    'frog': '<ellipse cx="50" cy="62" rx="32" ry="24" fill="#4CAF50"/><circle cx="34" cy="38" r="12" fill="#6BCB6E"/><circle cx="66" cy="38" r="12" fill="#6BCB6E"/><circle cx="34" cy="38" r="6" fill="#FFFFFF"/><circle cx="66" cy="38" r="6" fill="#FFFFFF"/><circle cx="34" cy="38" r="3" fill="#2B2540"/><circle cx="66" cy="38" r="3" fill="#2B2540"/><path d="M36 66 Q50 76 64 66" fill="none" stroke="#2B2540" stroke-width="3" stroke-linecap="round"/>',
+    'block': '<rect x="14" y="14" width="72" height="72" rx="8" fill="#FFC531" stroke="#E39A00" stroke-width="5"/><rect x="30" y="30" width="40" height="40" rx="4" fill="#FFE08A"/>',
+}
+
 
 def inner(thing):
     """The drawing inside the svg tags of a sprite that make_unit_sprites.py already made."""
@@ -148,6 +200,23 @@ def main():
         for cname, c in SHAPE_COLOURS.items():
             open(os.path.join(OUT, 'shape_%s_%s.svg' % (shape, cname)), 'w', encoding='utf-8', newline=chr(10)).write(svg(body % c))
             n += 1
+    for name, body in BAND_B_SPRITES.items():
+        open(os.path.join(OUT, name + '.svg'), 'w', encoding='utf-8', newline=chr(10)).write(svg(body))
+        n += 1
+    for c, (l1, l2, l3) in SHADES.items():
+        for k, col in enumerate((l1, l2, l3), start=1):
+            open(os.path.join(OUT, 'shade_%s_%d.svg' % (c, k)), 'w', encoding='utf-8', newline=chr(10)).write(
+                svg('<circle cx="50" cy="50" r="38" fill="%s"/>' % col))
+            n += 1
+    for k in range(1, 7):
+        open(os.path.join(OUT, 'tower_%d.svg' % k), 'w', encoding='utf-8', newline=chr(10)).write(svg(tower(k)))
+        n += 1
+    for k in range(1, 8):
+        open(os.path.join(OUT, 'day_%d.svg' % k), 'w', encoding='utf-8', newline=chr(10)).write(svg(day(k)))
+        n += 1
+    for h in range(1, 13):
+        open(os.path.join(OUT, 'clock_%d.svg' % h), 'w', encoding='utf-8', newline=chr(10)).write(svg(clock(h)))
+        n += 1
     for name, body in MORE.items():
         open(os.path.join(OUT, name + '.svg'), 'w', encoding='utf-8', newline=chr(10)).write(svg(body))
         n += 1

@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "many-things",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַרְבֵּה חֲפָצִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-04"
+  ],
+  "items": [
+    "b.numb04.1",
+    "b.numb04.2",
+    "b.numb04.3",
+    "b.numb04.4",
+    "b.numb04.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 35,
+  "celebration": {
+    "vo": "vo:celebrate.many_things",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם הַרְבֵּה חֲפָצִים."
+      }
+    ]
+  }
+}

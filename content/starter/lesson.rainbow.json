@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "rainbow",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַקֶּשֶׁת"
+    }
+  ],
+  "skills": [
+    "COL-B-06"
+  ],
+  "items": [
+    "b.colb06.1",
+    "b.colb06.2",
+    "b.colb06.3",
+    "b.colb06.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 37,
+  "celebration": {
+    "vo": "vo:celebrate.rainbow",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! בְּנִיתֶם קֶשֶׁת."
+      }
+    ]
+  }
+}

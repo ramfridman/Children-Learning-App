@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-the-teens",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים אֶת הַמִּסְפָּרִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-08"
+  ],
+  "items": [
+    "b.numb08.1",
+    "b.numb08.2",
+    "b.numb08.3",
+    "b.numb08.4",
+    "b.numb08.5",
+    "b.numb08.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 38,
+  "celebration": {
+    "vo": "vo:celebrate.read_the_teens",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם קוֹרְאִים מִסְפָּרִים."
+      }
+    ]
+  }
+}

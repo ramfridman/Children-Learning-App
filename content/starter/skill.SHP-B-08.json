@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-B-08",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "גופים"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "גָּלִיל, חָרוּט, כַּדּוּר וּפִירָמִידָה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-A-07",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

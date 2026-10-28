@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "growing-towers",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִגְדָּלִים שֶׁגְּדֵלִים"
+    }
+  ],
+  "skills": [
+    "LOG-B-04"
+  ],
+  "items": [
+    "b.logb04.1",
+    "b.logb04.2",
+    "b.logb04.3",
+    "b.logb04.4",
+    "b.logb04.5",
+    "b.logb04.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 33,
+  "celebration": {
+    "vo": "vo:celebrate.growing_towers",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הַמִּגְדָּלִים גְּדֵלִים."
+      }
+    ]
+  }
+}

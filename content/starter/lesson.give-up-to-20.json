@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "give-up-to-20",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "נוֹתְנִים עַד עֶשְׂרִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-05"
+  ],
+  "items": [
+    "b.numb05.1",
+    "b.numb05.2",
+    "b.numb05.3",
+    "b.numb05.4",
+    "b.numb05.5",
+    "b.numb05.6",
+    "b.numb05.7",
+    "b.numb05.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 37,
+  "celebration": {
+    "vo": "vo:celebrate.give_up_to_20",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁנוּ."
+      }
+    ]
+  }
+}

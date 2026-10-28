@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "split-numbers",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְפָרְקִים מִסְפָּרִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-14"
+  ],
+  "items": [
+    "b.numb14.1",
+    "b.numb14.2",
+    "b.numb14.3",
+    "b.numb14.4",
+    "b.numb14.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 47,
+  "celebration": {
+    "vo": "vo:celebrate.split_numbers",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לְפָרֵק."
+      }
+    ]
+  }
+}

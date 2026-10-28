@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "frog-line-10",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַצְּפַרְדֵּעַ עַל הַצִּיר"
+    }
+  ],
+  "skills": [
+    "NUM-B-13"
+  ],
+  "items": [
+    "b.numb13.1",
+    "b.numb13.2",
+    "b.numb13.3",
+    "b.numb13.4",
+    "b.numb13.5",
+    "b.numb13.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 44,
+  "celebration": {
+    "vo": "vo:celebrate.frog_line_10",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
+      }
+    ]
+  }
+}

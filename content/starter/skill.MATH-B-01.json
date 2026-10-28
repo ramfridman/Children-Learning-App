@@ -1,0 +1,42 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-01",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוסיפים ולוקחים עד 10"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹסִיפִים וְלוֹקְחִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-A-01",
+      "weight": 1
+    },
+    {
+      "skill": "MATH-A-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-ADD-RECOUNT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "core": true
+}

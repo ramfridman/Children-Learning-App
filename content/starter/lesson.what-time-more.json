@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "what-time-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד שָׁעוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-B-15"
+  ],
+  "items": [
+    "b.mathb15.6",
+    "b.mathb15.7",
+    "b.mathb15.8",
+    "b.mathb15.9",
+    "b.mathb15.10"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 48,
+  "celebration": {
+    "vo": "vo:celebrate.what_time_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר."
+      }
+    ]
+  }
+}

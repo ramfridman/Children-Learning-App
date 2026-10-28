@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-order",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַמִּסְפָּרִים בַּסֵּדֶר"
+    }
+  ],
+  "skills": [
+    "NUM-B-11"
+  ],
+  "items": [
+    "b.numb11.1",
+    "b.numb11.2",
+    "b.numb11.3",
+    "b.numb11.4",
+    "b.numb11.5",
+    "b.numb11.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 42,
+  "celebration": {
+    "vo": "vo:celebrate.count_order",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מָצָאתֶם אֶת הַטָּעוּיוֹת."
+      }
+    ]
+  }
+}

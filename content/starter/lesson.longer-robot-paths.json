@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "longer-robot-paths",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "דְּרָכִים אֲרֻכּוֹת"
+    }
+  ],
+  "skills": [
+    "CS-B-01"
+  ],
+  "items": [
+    "b.csb01.1",
+    "b.csb01.2",
+    "b.csb01.3",
+    "b.csb01.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 30,
+  "celebration": {
+    "vo": "vo:celebrate.longer_robot_paths",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! תִּכְנַנְתֶּם דֶּרֶךְ אֲרֻכָּה."
+      }
+    ]
+  }
+}

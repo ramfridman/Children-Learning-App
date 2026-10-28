@@ -1,0 +1,38 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-04",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סופרים עד 20 עצמים"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים עַד עֶשְׂרִים חֲפָצִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-09",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-CNT-DOUBLE",
+    "M-CNT-SKIP"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

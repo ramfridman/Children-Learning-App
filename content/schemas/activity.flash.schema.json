@@ -35,7 +35,10 @@
         "sort_drag",
         "build_pattern",
         "robot_path",
-        "shape_builder"
+        "shape_builder",
+        "number_line",
+        "balance",
+        "spot_error"
       ]
     },
     "templateVersion": {
@@ -210,7 +213,7 @@
             "count": {
               "type": "integer",
               "minimum": 0,
-              "maximum": 10
+              "maximum": 20
             },
             "arrangement": {
               "type": "string",
@@ -270,7 +273,7 @@
               "numeral": {
                 "type": "integer",
                 "minimum": 0,
-                "maximum": 20
+                "maximum": 100
               },
               "speech": {
                 "type": "array",

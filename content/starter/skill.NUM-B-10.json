@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-10",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "איזה מספר גדול יותר"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַשְׁוִים שְׁנֵי מִסְפָּרִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-12",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-A-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CNT-SIZE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

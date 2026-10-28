@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-B-04",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סדר שגדל"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מִגְדָּלִים שֶׁגְּדֵלִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-B-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-PAT-GROW"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-15",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוראים שעון"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים שָׁעוֹת עֲגֻלּוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-B-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CLOCK-HANDS"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

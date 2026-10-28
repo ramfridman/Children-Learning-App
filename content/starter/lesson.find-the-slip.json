@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "find-the-slip",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים טָעוּת"
+    }
+  ],
+  "skills": [
+    "MATH-B-03"
+  ],
+  "items": [
+    "b.mathb03.9",
+    "b.mathb03.10",
+    "b.mathb03.11",
+    "b.mathb03.12"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 35,
+  "celebration": {
+    "vo": "vo:celebrate.find_the_slip",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! מְצָאתֶם אֶת הַטָּעוּת."
+      }
+    ]
+  }
+}

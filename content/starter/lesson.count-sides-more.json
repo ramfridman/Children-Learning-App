@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-sides-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צְלָעוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-B-02"
+  ],
+  "items": [
+    "b.shpb02.5",
+    "b.shpb02.6",
+    "b.shpb02.7",
+    "b.shpb02.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 33,
+  "celebration": {
+    "vo": "vo:celebrate.count_sides_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה! כָּל צֶלַע פַּעַם אַחַת."
+      }
+    ]
+  }
+}

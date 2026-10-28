@@ -106,7 +106,10 @@ void main() {
             case SortDragActivity() ||
                 BuildPatternActivity() ||
                 RobotPathActivity() ||
-                ShapeBuilderActivity():
+                ShapeBuilderActivity() ||
+                NumberLineActivity() ||
+                BalanceActivity() ||
+                SpotErrorActivity():
               await c.submitPlacement(right: false);
           }
         }
@@ -135,7 +138,13 @@ void main() {
           await mixed.chooseOption(b.correctId);
         case GiveNActivity():
           await mixed.giveN(b.n);
-        case SortDragActivity() || BuildPatternActivity() || RobotPathActivity() || ShapeBuilderActivity():
+        case SortDragActivity() ||
+            BuildPatternActivity() ||
+            RobotPathActivity() ||
+            ShapeBuilderActivity() ||
+            NumberLineActivity() ||
+            BalanceActivity() ||
+            SpotErrorActivity():
           await mixed.submitPlacement(right: true);
       }
       mixed.next();

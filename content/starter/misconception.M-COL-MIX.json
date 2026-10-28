@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-COL-MIX",
+  "review": "needs-editor",
+  "skills": [
+    "COL-B-01"
+  ],
+  "parentText": "הילד מנחש את צבע התערובת לפי אחד הצבעים, או חושב שכל ערבוב נותן חום.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לערבב בצבעי אצבעות שתי טיפות, צהוב וכחול, ולהסתכל מה יוצא. אחר כך לנחש לפני שמערבבים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

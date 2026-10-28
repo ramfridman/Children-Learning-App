@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-sums",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים תַּרְגִּילִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-03"
+  ],
+  "items": [
+    "b.mathb03.1",
+    "b.mathb03.2",
+    "b.mathb03.3",
+    "b.mathb03.4",
+    "b.mathb03.5",
+    "b.mathb03.6",
+    "b.mathb03.7",
+    "b.mathb03.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 34,
+  "celebration": {
+    "vo": "vo:celebrate.read_sums",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! קְרָאתֶם תַּרְגִּילִים."
+      }
+    ]
+  }
+}

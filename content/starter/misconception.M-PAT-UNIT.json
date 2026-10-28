@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-PAT-UNIT",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-B-02"
+  ],
+  "parentText": "הילד לא מזהה איזה חלק חוזר בסדר, ולכן לא רואה איפה הוא נשבר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשיר שיר עם תנועות חוזרות, למשל טפיחה-טפיחה-מחיאה, ולעצור ולשאול: מה החלק שחוזר?"
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "pictorial"
+  ]
+}

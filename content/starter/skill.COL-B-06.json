@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-B-06",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קשת בענן"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְסַדְּרִים אֶת הַקֶּשֶׁת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-B-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-PAT-COPY"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

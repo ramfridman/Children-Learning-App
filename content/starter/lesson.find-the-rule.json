@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "find-the-rule",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מָה הַכְּלָל"
+    }
+  ],
+  "skills": [
+    "LOG-B-06"
+  ],
+  "items": [
+    "b.logb06.1",
+    "b.logb06.2",
+    "b.logb06.3",
+    "b.logb06.4",
+    "b.logb06.5",
+    "b.logb06.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 34,
+  "celebration": {
+    "vo": "vo:celebrate.find_the_rule",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַכְּלָל."
+      }
+    ]
+  }
+}

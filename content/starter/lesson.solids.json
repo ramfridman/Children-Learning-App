@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "solids",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "גּוּפִים"
+    }
+  ],
+  "skills": [
+    "SHP-B-08"
+  ],
+  "items": [
+    "b.shpb08.1",
+    "b.shpb08.2",
+    "b.shpb08.3",
+    "b.shpb08.4",
+    "b.shpb08.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 37,
+  "celebration": {
+    "vo": "vo:celebrate.solids",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם גּוּפִים."
+      }
+    ]
+  }
+}

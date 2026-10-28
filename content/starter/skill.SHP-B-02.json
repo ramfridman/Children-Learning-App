@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-B-02",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סופרים צלעות"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים צְלָעוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-B-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-CNT-DOUBLE",
+    "M-CNT-SKIP"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

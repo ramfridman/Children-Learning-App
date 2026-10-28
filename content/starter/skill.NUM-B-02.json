@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-02",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סופרים עד 30"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים עַד שְׁלוֹשִׁים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-B-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CNT-DECADE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

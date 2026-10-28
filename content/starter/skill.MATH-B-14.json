@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-14",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "ימי השבוע"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "יוֹם רִאשׁוֹן, יוֹם שֵׁנִי…"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-A-05",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "symbolic"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

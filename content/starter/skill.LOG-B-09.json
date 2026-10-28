@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-B-09",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "חושבים ומסיקים"
+    }
+  ],
+  "worldObject": "sprout",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "לֹא זֶה וְלֹא זֶה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-B-06",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-LOG-NOT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

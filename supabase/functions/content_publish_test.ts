@@ -197,7 +197,7 @@ Deno.test("content-publish: the index that the app's tool makes for the starter 
   assert.equal(j.result, "published");
   assert.equal(j.items, vector.items.length);
   assert.equal(store.packs.get("starter")!.items.length, vector.items.length);
-  assert.ok(vector.items.length >= 316, "the Counting Hills content is in the index");
+  assert.ok(vector.items.length >= 698, "the Counting Hills content and Band B are in the index");
 });
 
 Deno.test("content-publish: a newer version keeps the approved lines of the items that did not change, and nothing else", async () => {

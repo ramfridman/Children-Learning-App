@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "which-is-bigger",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֵיזֶה גָּדוֹל יוֹתֵר"
+    }
+  ],
+  "skills": [
+    "NUM-B-10"
+  ],
+  "items": [
+    "b.numb10.1",
+    "b.numb10.2",
+    "b.numb10.3",
+    "b.numb10.4",
+    "b.numb10.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 40,
+  "celebration": {
+    "vo": "vo:celebrate.which_is_bigger",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה! הִשְׁוִיתֶם מִסְפָּרִים."
+      }
+    ]
+  }
+}

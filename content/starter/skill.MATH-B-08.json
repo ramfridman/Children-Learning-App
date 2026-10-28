@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-08",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מחברים ומחסרים עד 20"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְחַבְּרִים עַד עֶשְׂרִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-06",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-B-16",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-ADD-RECOUNT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

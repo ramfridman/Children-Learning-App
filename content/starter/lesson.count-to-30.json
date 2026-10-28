@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-to-30",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים עַד שְׁלוֹשִׁים"
+    }
+  ],
+  "skills": [
+    "NUM-B-02"
+  ],
+  "items": [
+    "b.numb02.1",
+    "b.numb02.2",
+    "b.numb02.3",
+    "b.numb02.4",
+    "b.numb02.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 32,
+  "celebration": {
+    "vo": "vo:celebrate.count_to_30",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! עָבַרְתֶּם אֶת הָעֲשָׂרוֹת."
+      }
+    ]
+  }
+}

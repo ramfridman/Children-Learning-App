@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-NL-SPACE",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-B-13"
+  ],
+  "parentText": "הילד מסמן על ציר המספרים לפי המקום ולא לפי הרווח בין הסימונים, או סופר את נקודת ההתחלה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לצייר על רצפה או על נייר ציר עם צעדים שווים, ולקפוץ עליו: מתחילים מהמספר ולא סופרים אותו."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "symbolic"
+  ]
+}

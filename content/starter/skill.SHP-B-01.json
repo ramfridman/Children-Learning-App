@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-B-01",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מכירים מצולעים"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים מְשֻׁלָּשׁ, מְרֻבָּע, מְחֻמָּשׁ וּמְשֻׁשֶּׁה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-A-03",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-A-09",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-SHP-CLOSED"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

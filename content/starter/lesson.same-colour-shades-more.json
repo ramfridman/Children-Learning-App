@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "same-colour-shades-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד גְּוָנִים"
+    }
+  ],
+  "skills": [
+    "COL-B-03"
+  ],
+  "items": [
+    "b.colb03.5",
+    "b.colb03.6",
+    "b.colb03.7",
+    "b.colb03.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 35,
+  "celebration": {
+    "vo": "vo:celebrate.same_colour_shades_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! אַתֶּם רוֹאִים אֶת הַצֶּבַע."
+      }
+    ]
+  }
+}

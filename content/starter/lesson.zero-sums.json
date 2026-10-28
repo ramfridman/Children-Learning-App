@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "zero-sums",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֶפֶס בַּתַּרְגִּילִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-07"
+  ],
+  "items": [
+    "b.mathb07.1",
+    "b.mathb07.2",
+    "b.mathb07.3",
+    "b.mathb07.4",
+    "b.mathb07.5",
+    "b.mathb07.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 38,
+  "celebration": {
+    "vo": "vo:celebrate.zero_sums",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! אֶפֶס לֹא מְשַׁנֶּה."
+      }
+    ]
+  }
+}

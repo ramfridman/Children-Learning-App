@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-10",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קבוצות שוות"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "קְבוּצוֹת עִם אוֹתוֹ מִסְפָּר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-SHARE-UNEQ"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

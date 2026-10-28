@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "b.mathb09.2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "balance",
+  "templateVersion": "1.0",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "scale",
+  "difficulty": {
+    "authored": 0.44
+  },
+  "prompt": {
+    "vo": "vo:b.mathb09.2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שְׁתַּיִם וְעוֹד חָמֵשׁ, מוּל אַרְבַּע וְעוֹד שָׁלוֹשׁ. מָה אוֹמֵר הַמֹּאזְנַיִם?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "left": {
+      "groups": [
+        {
+          "sprite": "asset:apple",
+          "count": 2
+        },
+        {
+          "sprite": "asset:star",
+          "count": 5
+        }
+      ]
+    },
+    "right": {
+      "groups": [
+        {
+          "sprite": "asset:fish",
+          "count": 4
+        },
+        {
+          "sprite": "asset:duck",
+          "count": 3
+        }
+      ]
+    },
+    "hideTilt": true
+  },
+  "answer": {
+    "type": "scale",
+    "mode": "compare",
+    "result": "same",
+    "misconception": "M-EQ-OPER"
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.mathb09.2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! שְׁנֵי הַצְּדָדִים שָׁווֹת: שֶׁבַע שָׁוֶה שֶׁבַע."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-EQ-OPER",
+        "vo": "vo:fb.eq_oper",
+        "caption": [
+          {
+            "t": "he",
+            "v": "סִימָן הַ-שָׁוֶה אוֹמֵר: שְׁנֵי הַצְּדָדִים אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.scale.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.mathb09.2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתַּיִם וְעוֹד חָמֵשׁ הֵם שֶׁבַע. וְגַם אַרְבַּע וְעוֹד שָׁלוֹשׁ הֵם שֶׁבַע. שְׁנֵי הַצְּדָדִים שָׁווֹת."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child reads the scale",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "שְׁתַּיִם וְעוֹד חָמֵשׁ, מוּל אַרְבַּע וְעוֹד שָׁלוֹשׁ. מָה אוֹמֵר הַמֹּאזְנַיִם?"
+  }
+}

@@ -38,7 +38,7 @@ void main() {
         // every skill of the land has its drawing on the island
         expect(
           find.byWidgetPredicate((Widget w) => w.key.toString().startsWith("[<'object-")).evaluate().length,
-          land == 'counting' ? 14 : 7,
+          land == 'counting' ? 27 : 12,
         );
         await expectLater(
           find.byType(MaterialApp),

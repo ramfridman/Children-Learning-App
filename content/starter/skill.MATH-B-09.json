@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-09",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "שָׁוֶה זה אותו דבר"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "שְׁנֵי הַצְּדָדִים אוֹתוֹ דָּבָר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-EQ-OPER"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

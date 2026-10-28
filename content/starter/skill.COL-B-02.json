@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-B-02",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "בהיר וכהה"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "סוֹדְרִים מִבָּהִיר לְכֵהֶה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-COL-SHADE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

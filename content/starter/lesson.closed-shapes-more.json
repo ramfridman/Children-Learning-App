@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "closed-shapes-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צוּרוֹת סְגוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-B-04"
+  ],
+  "items": [
+    "b.shpb04.5",
+    "b.shpb04.6",
+    "b.shpb04.7",
+    "b.shpb04.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 36,
+  "celebration": {
+    "vo": "vo:celebrate.closed_shapes_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הִבְחַנְתֶּם בִּצְלָעוֹת יְשָׁרוֹת."
+      }
+    ]
+  }
+}

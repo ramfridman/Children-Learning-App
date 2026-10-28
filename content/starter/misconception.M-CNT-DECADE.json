@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CNT-DECADE",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-B-02",
+    "NUM-B-17"
+  ],
+  "parentText": "הילד לא יודע מה בא אחרי תשע בכל עשרת: אחרי 19 הוא אומר 10 או 100.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לספור יחד מדרגות או מעלות לפני השינה: עשרים ותשע… ומה אחר כך? להפסיק לפני הספרה האחרונה ולתת לילד להשלים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "symbolic"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "CS-B-01",
+  "review": "needs-editor",
+  "domain": "cs",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "תכנון דרך ארוכה"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְתַכְנְנִים דֶּרֶךְ שֶׁל כַּמָּה צְעָדִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "CS-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-CS-OFF1"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

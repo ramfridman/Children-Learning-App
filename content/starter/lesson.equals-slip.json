@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "equals-slip",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַטָּעוּת"
+    }
+  ],
+  "skills": [
+    "MATH-B-09"
+  ],
+  "items": [
+    "b.mathb09.9",
+    "b.mathb09.10",
+    "b.mathb09.11",
+    "b.mathb09.12"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 42,
+  "celebration": {
+    "vo": "vo:celebrate.equals_slip",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה! הַצְּדָדִים מְאֻזָּנִים."
+      }
+    ]
+  }
+}

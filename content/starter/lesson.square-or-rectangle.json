@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "square-or-rectangle",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "רִבּוּעַ אוֹ מַלְבֵּן"
+    }
+  ],
+  "skills": [
+    "SHP-B-03"
+  ],
+  "items": [
+    "b.shpb03.1",
+    "b.shpb03.2",
+    "b.shpb03.3",
+    "b.shpb03.4",
+    "b.shpb03.5",
+    "b.shpb03.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 34,
+  "celebration": {
+    "vo": "vo:celebrate.square_or_rectangle",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם מַבְחִינִים בֵּין רִבּוּעַ לְמַלְבֵּן."
+      }
+    ]
+  }
+}

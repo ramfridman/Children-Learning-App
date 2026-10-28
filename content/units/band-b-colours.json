@@ -1,0 +1,1749 @@
+{
+ "unit": "band-b-colours",
+ "domain": "colors",
+ "band": "B",
+ "note": "Band B of Colours: mixing, shades from light to dark, a shade is still the same colour, sorting two ways, the rainbow. Hebrew is a draft by Claude, needs-editor.",
+ "firstSequence": 30,
+ "assetGlobs": [],
+ "assets": [
+  "shade_blue_1",
+  "shade_blue_2",
+  "shade_blue_3",
+  "shade_green_1",
+  "shade_green_2",
+  "shade_green_3",
+  "shade_red_1",
+  "shade_red_2",
+  "shade_red_3",
+  "shade_purple_1",
+  "shade_purple_2",
+  "shade_purple_3",
+  "ball_red",
+  "ball_blue",
+  "ball_yellow",
+  "ball_orange",
+  "ball_green",
+  "ball_purple",
+  "shape_circle_red",
+  "shape_circle_blue",
+  "shape_square_red",
+  "shape_square_blue",
+  "shape_triangle_red",
+  "shape_triangle_blue",
+  "shape_circle_green",
+  "shape_square_green",
+  "shape_triangle_green",
+  "grass",
+  "basket_empty"
+ ],
+ "objects": {
+  "ladybug": {
+   "g": "f",
+   "one": "חִפּוּשִׁית",
+   "many": "חִפּוּשִׁיּוֹת"
+  },
+  "star": {
+   "g": "m",
+   "one": "כּוֹכָב",
+   "many": "כּוֹכָבִים"
+  },
+  "apple": {
+   "g": "m",
+   "one": "תַּפּוּחַ",
+   "many": "תַּפּוּחִים"
+  },
+  "fish": {
+   "g": "m",
+   "one": "דָּג",
+   "many": "דָּגִים"
+  },
+  "bird": {
+   "g": "f",
+   "one": "צִפּוֹר",
+   "many": "צִפֳּרִים"
+  },
+  "duck": {
+   "g": "m",
+   "one": "בַּרְוָז",
+   "many": "בַּרְוָזִים"
+  },
+  "cat": {
+   "g": "m",
+   "one": "חָתוּל",
+   "many": "חֲתוּלִים"
+  },
+  "dog": {
+   "g": "m",
+   "one": "כֶּלֶב",
+   "many": "כְּלָבִים"
+  },
+  "coin": {
+   "g": "m",
+   "one": "מַטְבֵּעַ",
+   "many": "מַטְבְּעוֹת"
+  },
+  "sock": {
+   "g": "f",
+   "one": "גֶּרֶב",
+   "many": "גַּרְבַּיִם"
+  }
+ },
+ "names": {
+  "tick": {
+   "one": "כֵּן",
+   "g": "m"
+  },
+  "cross": {
+   "one": "לֹא",
+   "g": "m"
+  },
+  "shape_pentagon": {
+   "one": "מְחֻמָּשׁ",
+   "g": "m"
+  },
+  "shape_hexagon": {
+   "one": "מְשֻׁשֶּׁה",
+   "g": "m"
+  },
+  "shape_quad": {
+   "one": "מְרֻבָּע",
+   "g": "m"
+  },
+  "shape_triangle": {
+   "one": "מְשֻׁלָּשׁ",
+   "g": "m"
+  },
+  "shape_circle": {
+   "one": "עִגּוּל",
+   "g": "m"
+  },
+  "shape_square": {
+   "one": "רִבּוּעַ",
+   "g": "m"
+  },
+  "shape_rect": {
+   "one": "מַלְבֵּן",
+   "g": "m"
+  },
+  "shape_open": {
+   "one": "צוּרָה פְּתוּחָה",
+   "g": "f"
+  },
+  "shape_curved": {
+   "one": "צוּרָה עֲקֻמָּה",
+   "g": "f"
+  },
+  "solid_cylinder": {
+   "one": "גָּלִיל",
+   "g": "m"
+  },
+  "solid_cone": {
+   "one": "חָרוּט",
+   "g": "m"
+  },
+  "solid_sphere": {
+   "one": "כַּדּוּר",
+   "g": "m"
+  },
+  "solid_pyramid": {
+   "one": "פִּירָמִידָה",
+   "g": "f"
+  },
+  "solid_box": {
+   "one": "תֵּבָה",
+   "g": "f"
+  },
+  "rule_colour": {
+   "one": "הַצֶּבַע",
+   "g": "m"
+  },
+  "rule_shape": {
+   "one": "הַצּוּרָה",
+   "g": "f"
+  },
+  "rule_size": {
+   "one": "הַגֹּדֶל",
+   "g": "m"
+  },
+  "frog": {
+   "one": "צְפַרְדֵּעַ",
+   "g": "f"
+  },
+  "block": {
+   "one": "קֻבִּיָּה",
+   "g": "f"
+  },
+  "stone": {
+   "one": "אֶבֶן",
+   "g": "f"
+  },
+  "feather": {
+   "one": "נוֹצָה",
+   "g": "f"
+  },
+  "cat": {
+   "one": "חָתוּל",
+   "g": "m"
+  },
+  "dog": {
+   "one": "כֶּלֶב",
+   "g": "m"
+  },
+  "rainbow": {
+   "one": "קֶשֶׁת",
+   "g": "f"
+  },
+  "coin": {
+   "one": "מַטְבֵּעַ",
+   "g": "m"
+  },
+  "shade_blue_1": {
+   "one": "כָּחֹל בָּהִיר",
+   "g": "m"
+  },
+  "shade_blue_2": {
+   "one": "כָּחֹל",
+   "g": "m"
+  },
+  "shade_blue_3": {
+   "one": "כָּחֹל כֵּהֶה",
+   "g": "m"
+  },
+  "shade_green_1": {
+   "one": "יָרֹק בָּהִיר",
+   "g": "m"
+  },
+  "shade_green_2": {
+   "one": "יָרֹק",
+   "g": "m"
+  },
+  "shade_green_3": {
+   "one": "יָרֹק כֵּהֶה",
+   "g": "m"
+  },
+  "shade_red_1": {
+   "one": "אָדֹם בָּהִיר",
+   "g": "m"
+  },
+  "shade_red_2": {
+   "one": "אָדֹם",
+   "g": "m"
+  },
+  "shade_red_3": {
+   "one": "אָדֹם כֵּהֶה",
+   "g": "m"
+  },
+  "shade_purple_1": {
+   "one": "סָגֹל בָּהִיר",
+   "g": "m"
+  },
+  "shade_purple_2": {
+   "one": "סָגֹל",
+   "g": "m"
+  },
+  "shade_purple_3": {
+   "one": "סָגֹל כֵּהֶה",
+   "g": "m"
+  },
+  "ladybug": {
+   "one": "חִפּוּשִׁית",
+   "g": "f"
+  },
+  "star": {
+   "one": "כּוֹכָב",
+   "g": "m"
+  },
+  "apple": {
+   "one": "תַּפּוּחַ",
+   "g": "m"
+  },
+  "fish": {
+   "one": "דָּג",
+   "g": "m"
+  },
+  "bird": {
+   "one": "צִפּוֹר",
+   "g": "f"
+  },
+  "duck": {
+   "one": "בַּרְוָז",
+   "g": "m"
+  },
+  "sock": {
+   "one": "גֶּרֶב",
+   "g": "f"
+  },
+  "day_1": {
+   "one": "יוֹם רִאשׁוֹן",
+   "g": "m"
+  },
+  "day_2": {
+   "one": "יוֹם שֵׁנִי",
+   "g": "m"
+  },
+  "day_3": {
+   "one": "יוֹם שְׁלִישִׁי",
+   "g": "m"
+  },
+  "day_4": {
+   "one": "יוֹם רְבִיעִי",
+   "g": "m"
+  },
+  "day_5": {
+   "one": "יוֹם חֲמִישִׁי",
+   "g": "m"
+  },
+  "day_6": {
+   "one": "יוֹם שִׁשִּׁי",
+   "g": "m"
+  },
+  "day_7": {
+   "one": "שַׁבָּת",
+   "g": "m"
+  },
+  "clock_1": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה אַחַת",
+   "g": "m"
+  },
+  "clock_2": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה שְׁתַּיִם",
+   "g": "m"
+  },
+  "clock_3": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה שָׁלוֹשׁ",
+   "g": "m"
+  },
+  "clock_4": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה אַרְבַּע",
+   "g": "m"
+  },
+  "clock_5": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה חָמֵשׁ",
+   "g": "m"
+  },
+  "clock_6": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה שֵׁשׁ",
+   "g": "m"
+  },
+  "clock_7": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה שֶׁבַע",
+   "g": "m"
+  },
+  "clock_8": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה שְׁמוֹנֶה",
+   "g": "m"
+  },
+  "clock_9": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה תֵּשַׁע",
+   "g": "m"
+  },
+  "clock_10": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה עֶשֶׂר",
+   "g": "m"
+  },
+  "clock_11": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה אַחַת עֶשְׂרֵה",
+   "g": "m"
+  },
+  "clock_12": {
+   "one": "הַשָּׁעוֹן שֶׁמַּרְאֶה שְׁתֵּים עֶשְׂרֵה",
+   "g": "m"
+  },
+  "tower_1": {
+   "one": "מִגְדָּל מִסְפָּר אַחַת",
+   "g": "m"
+  },
+  "tower_2": {
+   "one": "מִגְדָּל מִסְפָּר שְׁתַּיִם",
+   "g": "m"
+  },
+  "tower_3": {
+   "one": "מִגְדָּל מִסְפָּר שָׁלוֹשׁ",
+   "g": "m"
+  },
+  "tower_4": {
+   "one": "מִגְדָּל מִסְפָּר אַרְבַּע",
+   "g": "m"
+  },
+  "tower_5": {
+   "one": "מִגְדָּל מִסְפָּר חָמֵשׁ",
+   "g": "m"
+  },
+  "tower_6": {
+   "one": "מִגְדָּל מִסְפָּר שֵׁשׁ",
+   "g": "m"
+  },
+  "ball_red": {
+   "one": "כַּדּוּר אָדֹם",
+   "g": "m"
+  },
+  "ball_blue": {
+   "one": "כַּדּוּר כָּחֹל",
+   "g": "m"
+  },
+  "ball_yellow": {
+   "one": "כַּדּוּר צָהֹב",
+   "g": "m"
+  },
+  "ball_green": {
+   "one": "כַּדּוּר יָרֹק",
+   "g": "m"
+  },
+  "ball_orange": {
+   "one": "כַּדּוּר כָּתֹם",
+   "g": "m"
+  },
+  "ball_purple": {
+   "one": "כַּדּוּר סָגֹל",
+   "g": "m"
+  },
+  "ball_pink": {
+   "one": "כַּדּוּר וָרֹד",
+   "g": "m"
+  },
+  "ball_black": {
+   "one": "כַּדּוּר שָׁחֹר",
+   "g": "m"
+  },
+  "ball_white": {
+   "one": "כַּדּוּר לָבָן",
+   "g": "m"
+  },
+  "ball_brown": {
+   "one": "כַּדּוּר חוּם",
+   "g": "m"
+  },
+  "ball_grey": {
+   "one": "כַּדּוּר אָפֹר",
+   "g": "m"
+  },
+  "shape_circle_red": {
+   "one": "עִגּוּל אָדֹם",
+   "g": "m"
+  },
+  "shape_circle_blue": {
+   "one": "עִגּוּל כָּחֹל",
+   "g": "m"
+  },
+  "shape_circle_yellow": {
+   "one": "עִגּוּל צָהֹב",
+   "g": "m"
+  },
+  "shape_circle_green": {
+   "one": "עִגּוּל יָרֹק",
+   "g": "m"
+  },
+  "shape_circle_orange": {
+   "one": "עִגּוּל כָּתֹם",
+   "g": "m"
+  },
+  "shape_circle_purple": {
+   "one": "עִגּוּל סָגֹל",
+   "g": "m"
+  },
+  "shape_circle_pink": {
+   "one": "עִגּוּל וָרֹד",
+   "g": "m"
+  },
+  "shape_circle_black": {
+   "one": "עִגּוּל שָׁחֹר",
+   "g": "m"
+  },
+  "shape_circle_white": {
+   "one": "עִגּוּל לָבָן",
+   "g": "m"
+  },
+  "shape_circle_brown": {
+   "one": "עִגּוּל חוּם",
+   "g": "m"
+  },
+  "shape_circle_grey": {
+   "one": "עִגּוּל אָפֹר",
+   "g": "m"
+  },
+  "shape_square_red": {
+   "one": "רִבּוּעַ אָדֹם",
+   "g": "m"
+  },
+  "shape_square_blue": {
+   "one": "רִבּוּעַ כָּחֹל",
+   "g": "m"
+  },
+  "shape_square_yellow": {
+   "one": "רִבּוּעַ צָהֹב",
+   "g": "m"
+  },
+  "shape_square_green": {
+   "one": "רִבּוּעַ יָרֹק",
+   "g": "m"
+  },
+  "shape_square_orange": {
+   "one": "רִבּוּעַ כָּתֹם",
+   "g": "m"
+  },
+  "shape_square_purple": {
+   "one": "רִבּוּעַ סָגֹל",
+   "g": "m"
+  },
+  "shape_square_pink": {
+   "one": "רִבּוּעַ וָרֹד",
+   "g": "m"
+  },
+  "shape_square_black": {
+   "one": "רִבּוּעַ שָׁחֹר",
+   "g": "m"
+  },
+  "shape_square_white": {
+   "one": "רִבּוּעַ לָבָן",
+   "g": "m"
+  },
+  "shape_square_brown": {
+   "one": "רִבּוּעַ חוּם",
+   "g": "m"
+  },
+  "shape_square_grey": {
+   "one": "רִבּוּעַ אָפֹר",
+   "g": "m"
+  },
+  "shape_triangle_red": {
+   "one": "מְשֻׁלָּשׁ אָדֹם",
+   "g": "m"
+  },
+  "shape_triangle_blue": {
+   "one": "מְשֻׁלָּשׁ כָּחֹל",
+   "g": "m"
+  },
+  "shape_triangle_yellow": {
+   "one": "מְשֻׁלָּשׁ צָהֹב",
+   "g": "m"
+  },
+  "shape_triangle_green": {
+   "one": "מְשֻׁלָּשׁ יָרֹק",
+   "g": "m"
+  },
+  "shape_triangle_orange": {
+   "one": "מְשֻׁלָּשׁ כָּתֹם",
+   "g": "m"
+  },
+  "shape_triangle_purple": {
+   "one": "מְשֻׁלָּשׁ סָגֹל",
+   "g": "m"
+  },
+  "shape_triangle_pink": {
+   "one": "מְשֻׁלָּשׁ וָרֹד",
+   "g": "m"
+  },
+  "shape_triangle_black": {
+   "one": "מְשֻׁלָּשׁ שָׁחֹר",
+   "g": "m"
+  },
+  "shape_triangle_white": {
+   "one": "מְשֻׁלָּשׁ לָבָן",
+   "g": "m"
+  },
+  "shape_triangle_brown": {
+   "one": "מְשֻׁלָּשׁ חוּם",
+   "g": "m"
+  },
+  "shape_triangle_grey": {
+   "one": "מְשֻׁלָּשׁ אָפֹר",
+   "g": "m"
+  },
+  "shape_rect_red": {
+   "one": "מַלְבֵּן אָדֹם",
+   "g": "m"
+  },
+  "shape_rect_blue": {
+   "one": "מַלְבֵּן כָּחֹל",
+   "g": "m"
+  },
+  "shape_rect_yellow": {
+   "one": "מַלְבֵּן צָהֹב",
+   "g": "m"
+  },
+  "shape_rect_green": {
+   "one": "מַלְבֵּן יָרֹק",
+   "g": "m"
+  },
+  "shape_rect_orange": {
+   "one": "מַלְבֵּן כָּתֹם",
+   "g": "m"
+  },
+  "shape_rect_purple": {
+   "one": "מַלְבֵּן סָגֹל",
+   "g": "m"
+  },
+  "shape_rect_pink": {
+   "one": "מַלְבֵּן וָרֹד",
+   "g": "m"
+  },
+  "shape_rect_black": {
+   "one": "מַלְבֵּן שָׁחֹר",
+   "g": "m"
+  },
+  "shape_rect_white": {
+   "one": "מַלְבֵּן לָבָן",
+   "g": "m"
+  },
+  "shape_rect_brown": {
+   "one": "מַלְבֵּן חוּם",
+   "g": "m"
+  },
+  "shape_rect_grey": {
+   "one": "מַלְבֵּן אָפֹר",
+   "g": "m"
+  }
+ },
+ "tagFeedback": {
+  "M-COL-MIX": "כְּשֶׁמְּעָרְבְּבִים שְׁנֵי צְבָעִים יוֹצֵא צֶבַע חָדָשׁ. בּוֹאוּ נִבְדֹּק.",
+  "M-COL-SHADE": "כָּחֹל בָּהִיר וְכָחֹל כֵּהֶה הֵם שְׁנֵיהֶם כָּחֹל. בּוֹאוּ נִסְתַּכֵּל עַל הַצֶּבַע.",
+  "M-COL-NAME": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט.",
+  "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מָה זֶה, וְאֵיזֶה צֶבַע.",
+  "M-COL-OBJECT": "דְּבָרִים יְכוֹלִים לִהְיוֹת בְּכַמָּה צְבָעִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
+  "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק.",
+  "M-PAT-NEXT": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מָה בָּא.",
+  "M-SEQ-CAUSE": "בּוֹאוּ נַחְשֹׁב: מָה קוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?",
+  "M-SER-ENDS": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הַכִּי קָטָן וְלֹא הַכִּי גָּדוֹל.",
+  "M-PAT-COPY": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?",
+  "M-SHARE-UNEQ": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר בַּתּוֹר.",
+  "M-CS-OFF1": "בּוֹאוּ נִסְפֹּר אֶת הַצְּעָדִים: כׇּל צַעַד עוֹבֵר לְמִשְׁבֶּצֶת הַבָּאָה.",
+  "M-SHP-ORIENT": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק.",
+  "M-SHP-PROTO": "אוֹתָהּ צוּרָה יְכוֹלָה לְהֵרָאוֹת קְצָת אַחֶרֶת. בּוֹאוּ נִסְפֹּר צְלָעוֹת.",
+  "M-SHP-SIZE": "צוּרָה גְּדוֹלָה וְצוּרָה קְטַנָּה יְכוֹלוֹת לִהְיוֹת אוֹתָהּ צוּרָה. בּוֹאוּ נִבְדֹּק.",
+  "M-SHP-SQRECT": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.",
+  "M-SPACE-WORD": "הַמִּלָּה אוֹמֶרֶת אֵיפֹה הַכַּדּוּר. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+ },
+ "misconceptions": [
+  {
+   "id": "M-COL-MIX",
+   "skills": [
+    "COL-B-01"
+   ],
+   "parent": "הילד מנחש את צבע התערובת לפי אחד הצבעים, או חושב שכל ערבוב נותן חום.",
+   "home": "לערבב בצבעי אצבעות שתי טיפות, צהוב וכחול, ולהסתכל מה יוצא. אחר כך לנחש לפני שמערבבים.",
+   "reps": [
+    "concrete",
+    "pictorial"
+   ]
+  },
+  {
+   "id": "M-COL-SHADE",
+   "skills": [
+    "COL-B-02",
+    "COL-B-03"
+   ],
+   "parent": "הילד חושב שכחול בהיר וכחול כהה הם צבעים שונים, או משווה לפי בהירות ולא לפי הצבע.",
+   "home": "לצייר פס כחול ולהוסיף בהדרגה לבן, ולהסתכל איך הוא נהיה בהיר ועדיין כחול.",
+   "reps": [
+    "pictorial",
+    "concrete"
+   ]
+  }
+ ],
+ "skills": [
+  {
+   "id": "COL-B-01",
+   "title": "מערבבים צבעים",
+   "child": "מְעָרְבְּבִים וּמְקַבְּלִים צֶבַע חָדָשׁ",
+   "world": "pool",
+   "needs": [
+    "COL-A-03"
+   ],
+   "reps": [
+    "concrete",
+    "pictorial"
+   ],
+   "tags": [
+    "M-COL-MIX"
+   ]
+  },
+  {
+   "id": "COL-B-02",
+   "title": "בהיר וכהה",
+   "child": "סוֹדְרִים מִבָּהִיר לְכֵהֶה",
+   "world": "pool",
+   "needs": [
+    "COL-A-03"
+   ],
+   "reps": [
+    "pictorial"
+   ],
+   "tags": [
+    "M-COL-SHADE"
+   ]
+  },
+  {
+   "id": "COL-B-03",
+   "title": "בהיר וכהה הם אותו צבע",
+   "child": "כָּחֹל בָּהִיר הוּא גַּם כָּחֹל",
+   "world": "pool",
+   "needs": [
+    "COL-B-02"
+   ],
+   "reps": [
+    "pictorial"
+   ],
+   "tags": [
+    "M-COL-SHADE"
+   ]
+  },
+  {
+   "id": "COL-B-04",
+   "title": "ממיינים בשתי דרכים",
+   "child": "מְמַיְּנִים לְפִי צֶבַע וְלְפִי צוּרָה",
+   "world": "sprout",
+   "needs": [
+    "COL-A-04",
+    "SHP-A-03"
+   ],
+   "reps": [
+    "concrete"
+   ],
+   "tags": [
+    "M-SORT-SHIFT"
+   ]
+  },
+  {
+   "id": "COL-B-06",
+   "title": "קשת בענן",
+   "child": "מְסַדְּרִים אֶת הַקֶּשֶׁת",
+   "world": "pattern-door",
+   "needs": [
+    "COL-B-01"
+   ],
+   "reps": [
+    "concrete"
+   ],
+   "tags": [
+    "M-PAT-COPY"
+   ]
+  }
+ ],
+ "activities": [
+  {
+   "kind": "pick",
+   "id": "b.colb01.1",
+   "skill": "COL-B-01",
+   "difficulty": 0.37,
+   "prompt": "אִם מְעָרְבְּבִים אָדֹם וְצָהֹב, אֵיזֶה צֶבַע יוֹצֵא?",
+   "group": {
+    "sprite": "ball_red",
+    "count": 1
+   },
+   "group2": {
+    "sprite": "ball_yellow",
+    "count": 1
+   },
+   "options": [
+    "ball_orange",
+    "ball_blue",
+    "ball_green"
+   ],
+   "correct": "ball_orange",
+   "tags": {
+    "ball_blue": "M-COL-MIX",
+    "ball_green": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! אָדֹם וְצָהֹב נַעֲשִׂים כָּתֹם.",
+   "h3": "אָדֹם וְצָהֹב נַעֲשִׂים כָּתֹם. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.2",
+   "skill": "COL-B-01",
+   "difficulty": 0.44,
+   "prompt": "אִם מְעָרְבְּבִים כָּחֹל וְצָהֹב, אֵיזֶה צֶבַע יוֹצֵא?",
+   "group": {
+    "sprite": "ball_blue",
+    "count": 1
+   },
+   "group2": {
+    "sprite": "ball_yellow",
+    "count": 1
+   },
+   "options": [
+    "ball_red",
+    "ball_green",
+    "ball_orange"
+   ],
+   "correct": "ball_green",
+   "tags": {
+    "ball_red": "M-COL-MIX",
+    "ball_orange": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! כָּחֹל וְצָהֹב נַעֲשִׂים יָרֹק.",
+   "h3": "כָּחֹל וְצָהֹב נַעֲשִׂים יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.3",
+   "skill": "COL-B-01",
+   "difficulty": 0.51,
+   "prompt": "אִם מְעָרְבְּבִים אָדֹם וְכָּחֹל, אֵיזֶה צֶבַע יוֹצֵא?",
+   "group": {
+    "sprite": "ball_red",
+    "count": 1
+   },
+   "group2": {
+    "sprite": "ball_blue",
+    "count": 1
+   },
+   "options": [
+    "ball_yellow",
+    "ball_green",
+    "ball_purple"
+   ],
+   "correct": "ball_purple",
+   "tags": {
+    "ball_yellow": "M-COL-MIX",
+    "ball_green": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! אָדֹם וְכָּחֹל נַעֲשִׂים סָגֹל.",
+   "h3": "אָדֹם וְכָּחֹל נַעֲשִׂים סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.4",
+   "skill": "COL-B-01",
+   "difficulty": 0.58,
+   "prompt": "אִם מְעָרְבְּבִים צָהֹב וְאָדֹם, אֵיזֶה צֶבַע יוֹצֵא?",
+   "group": {
+    "sprite": "ball_yellow",
+    "count": 1
+   },
+   "group2": {
+    "sprite": "ball_red",
+    "count": 1
+   },
+   "options": [
+    "ball_orange",
+    "ball_blue",
+    "ball_green"
+   ],
+   "correct": "ball_orange",
+   "tags": {
+    "ball_blue": "M-COL-MIX",
+    "ball_green": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! צָהֹב וְאָדֹם נַעֲשִׂים כָּתֹם.",
+   "h3": "צָהֹב וְאָדֹם נַעֲשִׂים כָּתֹם. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.5",
+   "skill": "COL-B-01",
+   "difficulty": 0.65,
+   "prompt": "אִם מְעָרְבְּבִים צָהֹב וְכָּחֹל, אֵיזֶה צֶבַע יוֹצֵא?",
+   "group": {
+    "sprite": "ball_yellow",
+    "count": 1
+   },
+   "group2": {
+    "sprite": "ball_blue",
+    "count": 1
+   },
+   "options": [
+    "ball_red",
+    "ball_green",
+    "ball_orange"
+   ],
+   "correct": "ball_green",
+   "tags": {
+    "ball_red": "M-COL-MIX",
+    "ball_orange": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! צָהֹב וְכָּחֹל נַעֲשִׂים יָרֹק.",
+   "h3": "צָהֹב וְכָּחֹל נַעֲשִׂים יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.6",
+   "skill": "COL-B-01",
+   "difficulty": 0.72,
+   "prompt": "אִם מְעָרְבְּבִים כָּחֹל וְאָדֹם, אֵיזֶה צֶבַע יוֹצֵא?",
+   "group": {
+    "sprite": "ball_blue",
+    "count": 1
+   },
+   "group2": {
+    "sprite": "ball_red",
+    "count": 1
+   },
+   "options": [
+    "ball_yellow",
+    "ball_green",
+    "ball_purple"
+   ],
+   "correct": "ball_purple",
+   "tags": {
+    "ball_yellow": "M-COL-MIX",
+    "ball_green": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! כָּחֹל וְאָדֹם נַעֲשִׂים סָגֹל.",
+   "h3": "כָּחֹל וְאָדֹם נַעֲשִׂים סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.7",
+   "skill": "COL-B-01",
+   "difficulty": 0.79,
+   "prompt": "אָדֹם וְ… נַעֲשִׂים כָּתֹם. מָה חָסֵר?",
+   "group": {
+    "sprite": "ball_red",
+    "count": 1
+   },
+   "options": [
+    "ball_blue",
+    "ball_yellow",
+    "ball_green"
+   ],
+   "correct": "ball_yellow",
+   "tags": {
+    "ball_blue": "M-COL-MIX",
+    "ball_green": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! אָדֹם וְצָהֹב נַעֲשִׂים כָּתֹם.",
+   "h3": "אָדֹם וְצָהֹב נַעֲשִׂים כָּתֹם. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.8",
+   "skill": "COL-B-01",
+   "difficulty": 0.86,
+   "prompt": "כָּחֹל וְ… נַעֲשִׂים יָרֹק. מָה חָסֵר?",
+   "group": {
+    "sprite": "ball_blue",
+    "count": 1
+   },
+   "options": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow"
+   ],
+   "correct": "ball_yellow",
+   "tags": {
+    "ball_red": "M-COL-MIX",
+    "ball_orange": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! כָּחֹל וְצָהֹב נַעֲשִׂים יָרֹק.",
+   "h3": "כָּחֹל וְצָהֹב נַעֲשִׂים יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb01.9",
+   "skill": "COL-B-01",
+   "difficulty": 0.9,
+   "prompt": "אָדֹם וְ… נַעֲשִׂים סָגֹל. מָה חָסֵר?",
+   "group": {
+    "sprite": "ball_red",
+    "count": 1
+   },
+   "options": [
+    "ball_blue",
+    "ball_yellow",
+    "ball_green"
+   ],
+   "correct": "ball_blue",
+   "tags": {
+    "ball_yellow": "M-COL-MIX",
+    "ball_green": "M-COL-MIX"
+   },
+   "rep": "concrete",
+   "domain": "colors",
+   "correct_text": "כֵּן! אָדֹם וְכָּחֹל נַעֲשִׂים סָגֹל.",
+   "h3": "אָדֹם וְכָּחֹל נַעֲשִׂים סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.1",
+   "skill": "COL-B-02",
+   "difficulty": 0.37,
+   "prompt": "אֵיזֶה הַכִּי כֵּהֶה?",
+   "options": [
+    "shade_blue_1",
+    "shade_blue_2",
+    "shade_blue_3"
+   ],
+   "correct": "shade_blue_3",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי כֵּהֶה.",
+   "h3": "הַכֵּהֶה הוּא הַכִּי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.2",
+   "skill": "COL-B-02",
+   "difficulty": 0.44,
+   "prompt": "אֵיזֶה הַכִּי בָּהִיר?",
+   "options": [
+    "shade_blue_2",
+    "shade_blue_3",
+    "shade_blue_1"
+   ],
+   "correct": "shade_blue_1",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי בָּהִיר.",
+   "h3": "הַבָּהִיר הוּא הַכִּי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.3",
+   "skill": "COL-B-02",
+   "difficulty": 0.51,
+   "prompt": "אֵיזֶה הַכִּי כֵּהֶה?",
+   "options": [
+    "shade_green_2",
+    "shade_green_3",
+    "shade_green_1"
+   ],
+   "correct": "shade_green_3",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי כֵּהֶה.",
+   "h3": "הַכֵּהֶה הוּא הַכִּי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.4",
+   "skill": "COL-B-02",
+   "difficulty": 0.58,
+   "prompt": "אֵיזֶה הַכִּי בָּהִיר?",
+   "options": [
+    "shade_green_3",
+    "shade_green_1",
+    "shade_green_2"
+   ],
+   "correct": "shade_green_1",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי בָּהִיר.",
+   "h3": "הַבָּהִיר הוּא הַכִּי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.5",
+   "skill": "COL-B-02",
+   "difficulty": 0.65,
+   "prompt": "אֵיזֶה הַכִּי כֵּהֶה?",
+   "options": [
+    "shade_red_3",
+    "shade_red_1",
+    "shade_red_2"
+   ],
+   "correct": "shade_red_3",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי כֵּהֶה.",
+   "h3": "הַכֵּהֶה הוּא הַכִּי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.6",
+   "skill": "COL-B-02",
+   "difficulty": 0.72,
+   "prompt": "אֵיזֶה הַכִּי בָּהִיר?",
+   "options": [
+    "shade_red_1",
+    "shade_red_2",
+    "shade_red_3"
+   ],
+   "correct": "shade_red_1",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי בָּהִיר.",
+   "h3": "הַבָּהִיר הוּא הַכִּי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.7",
+   "skill": "COL-B-02",
+   "difficulty": 0.79,
+   "prompt": "אֵיזֶה הַכִּי כֵּהֶה?",
+   "options": [
+    "shade_purple_1",
+    "shade_purple_2",
+    "shade_purple_3"
+   ],
+   "correct": "shade_purple_3",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי כֵּהֶה.",
+   "h3": "הַכֵּהֶה הוּא הַכִּי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.8",
+   "skill": "COL-B-02",
+   "difficulty": 0.86,
+   "prompt": "אֵיזֶה הַכִּי בָּהִיר?",
+   "options": [
+    "shade_purple_2",
+    "shade_purple_3",
+    "shade_purple_1"
+   ],
+   "correct": "shade_purple_1",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה הַכִּי בָּהִיר.",
+   "h3": "הַבָּהִיר הוּא הַכִּי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.9",
+   "skill": "COL-B-02",
+   "difficulty": 0.9,
+   "prompt": "מָה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?",
+   "row": [
+    "shade_blue_1",
+    "?",
+    "shade_blue_3"
+   ],
+   "options": [
+    "shade_blue_2",
+    "shade_blue_1",
+    "shade_blue_3"
+   ],
+   "correct": "shade_blue_2",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה בָּאֶמְצַע.",
+   "h3": "מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.10",
+   "skill": "COL-B-02",
+   "difficulty": 0.9,
+   "prompt": "מָה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?",
+   "row": [
+    "shade_green_1",
+    "?",
+    "shade_green_3"
+   ],
+   "options": [
+    "shade_green_1",
+    "shade_green_2",
+    "shade_green_3"
+   ],
+   "correct": "shade_green_2",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה בָּאֶמְצַע.",
+   "h3": "מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb02.11",
+   "skill": "COL-B-02",
+   "difficulty": 0.9,
+   "prompt": "מָה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?",
+   "row": [
+    "shade_red_1",
+    "?",
+    "shade_red_3"
+   ],
+   "options": [
+    "shade_red_1",
+    "shade_red_3",
+    "shade_red_2"
+   ],
+   "correct": "shade_red_2",
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! זֶה בָּאֶמְצַע.",
+   "h3": "מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.1",
+   "skill": "COL-B-03",
+   "difficulty": 0.37,
+   "prompt": "אֵיפֹה עוֹד כָּחֹל?",
+   "group": {
+    "sprite": "shade_blue_1",
+    "count": 1
+   },
+   "options": [
+    "shade_blue_3",
+    "shade_red_1",
+    "shade_red_2"
+   ],
+   "correct": "shade_blue_3",
+   "tags": {
+    "shade_red_1": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה כָּחֹל.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.2",
+   "skill": "COL-B-03",
+   "difficulty": 0.44,
+   "prompt": "אֵיפֹה עוֹד כָּחֹל?",
+   "group": {
+    "sprite": "shade_blue_3",
+    "count": 1
+   },
+   "options": [
+    "shade_green_3",
+    "shade_blue_1",
+    "shade_green_2"
+   ],
+   "correct": "shade_blue_1",
+   "tags": {
+    "shade_green_3": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה כָּחֹל.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.3",
+   "skill": "COL-B-03",
+   "difficulty": 0.51,
+   "prompt": "אֵיפֹה עוֹד יָרֹק?",
+   "group": {
+    "sprite": "shade_green_1",
+    "count": 1
+   },
+   "options": [
+    "shade_purple_1",
+    "shade_purple_2",
+    "shade_green_3"
+   ],
+   "correct": "shade_green_3",
+   "tags": {
+    "shade_purple_1": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה יָרֹק.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.4",
+   "skill": "COL-B-03",
+   "difficulty": 0.58,
+   "prompt": "אֵיפֹה עוֹד יָרֹק?",
+   "group": {
+    "sprite": "shade_green_3",
+    "count": 1
+   },
+   "options": [
+    "shade_green_1",
+    "shade_red_3",
+    "shade_red_2"
+   ],
+   "correct": "shade_green_1",
+   "tags": {
+    "shade_red_3": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה יָרֹק.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.5",
+   "skill": "COL-B-03",
+   "difficulty": 0.65,
+   "prompt": "אֵיפֹה עוֹד אָדֹם?",
+   "group": {
+    "sprite": "shade_red_1",
+    "count": 1
+   },
+   "options": [
+    "shade_blue_1",
+    "shade_red_3",
+    "shade_blue_2"
+   ],
+   "correct": "shade_red_3",
+   "tags": {
+    "shade_blue_1": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה אָדֹם.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא אָדֹם. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.6",
+   "skill": "COL-B-03",
+   "difficulty": 0.72,
+   "prompt": "אֵיפֹה עוֹד אָדֹם?",
+   "group": {
+    "sprite": "shade_red_3",
+    "count": 1
+   },
+   "options": [
+    "shade_purple_3",
+    "shade_purple_2",
+    "shade_red_1"
+   ],
+   "correct": "shade_red_1",
+   "tags": {
+    "shade_purple_3": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה אָדֹם.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא אָדֹם. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.7",
+   "skill": "COL-B-03",
+   "difficulty": 0.79,
+   "prompt": "אֵיפֹה עוֹד סָגֹל?",
+   "group": {
+    "sprite": "shade_purple_1",
+    "count": 1
+   },
+   "options": [
+    "shade_purple_3",
+    "shade_green_1",
+    "shade_green_2"
+   ],
+   "correct": "shade_purple_3",
+   "tags": {
+    "shade_green_1": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה סָגֹל.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.8",
+   "skill": "COL-B-03",
+   "difficulty": 0.86,
+   "prompt": "אֵיפֹה עוֹד סָגֹל?",
+   "group": {
+    "sprite": "shade_purple_3",
+    "count": 1
+   },
+   "options": [
+    "shade_blue_3",
+    "shade_purple_1",
+    "shade_blue_2"
+   ],
+   "correct": "shade_purple_1",
+   "tags": {
+    "shade_blue_3": "M-COL-SHADE"
+   },
+   "rep": "pictorial",
+   "domain": "colors",
+   "correct_text": "כֵּן! גַּם זֶה סָגֹל.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "sort",
+   "id": "b.colb04.1",
+   "skill": "COL-B-04",
+   "difficulty": 0.37,
+   "bins": [
+    {
+     "sprite": "ball_red",
+     "label": "אָדֹם"
+    },
+    {
+     "sprite": "ball_blue",
+     "label": "כָּחֹל"
+    }
+   ],
+   "items": [
+    [
+     "shape_circle_red",
+     1
+    ],
+    [
+     "shape_circle_blue",
+     2
+    ],
+    [
+     "shape_square_red",
+     1
+    ],
+    [
+     "shape_square_blue",
+     2
+    ]
+   ],
+   "prompt": "מְמַיְּנִים לְפִי צֶבַע: אָדֹם לְכָאן, וְכָּחֹל לְכָאן.",
+   "domain": "colors",
+   "h3": "כָּל הַצּוּרוֹת בְּאוֹתוֹ צֶבַע הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם לְפִי צֶבַע."
+  },
+  {
+   "kind": "sort",
+   "id": "b.colb04.2",
+   "skill": "COL-B-04",
+   "difficulty": 0.44,
+   "bins": [
+    {
+     "sprite": "shape_circle_red",
+     "label": "עִגּוּלִים"
+    },
+    {
+     "sprite": "shape_square_red",
+     "label": "רִבּוּעִים"
+    }
+   ],
+   "items": [
+    [
+     "shape_circle_red",
+     1
+    ],
+    [
+     "shape_circle_blue",
+     1
+    ],
+    [
+     "shape_square_red",
+     2
+    ],
+    [
+     "shape_square_blue",
+     2
+    ]
+   ],
+   "prompt": "עַכְשָׁו מְמַיְּנִים לְפִי צוּרָה: עִגּוּלִים לְכָאן, וְרִבּוּעִים לְכָאן.",
+   "domain": "colors",
+   "h3": "כָּל הַצּוּרוֹת הַדּוֹמוֹת הוֹלְכוֹת יַחַד, גַּם אִם הַצֶּבַע שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם לְפִי צוּרָה."
+  },
+  {
+   "kind": "sort",
+   "id": "b.colb04.3",
+   "skill": "COL-B-04",
+   "difficulty": 0.51,
+   "bins": [
+    {
+     "sprite": "ball_green",
+     "label": "יָרֹק"
+    },
+    {
+     "sprite": "ball_red",
+     "label": "אָדֹם"
+    }
+   ],
+   "items": [
+    [
+     "shape_circle_green",
+     1
+    ],
+    [
+     "shape_circle_red",
+     2
+    ],
+    [
+     "shape_triangle_green",
+     1
+    ],
+    [
+     "shape_triangle_red",
+     2
+    ]
+   ],
+   "prompt": "מְמַיְּנִים לְפִי צֶבַע: יָרֹק לְכָאן, וְאָדֹם לְכָאן.",
+   "domain": "colors",
+   "h3": "כָּל הַצּוּרוֹת בְּאוֹתוֹ צֶבַע הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם לְפִי צֶבַע."
+  },
+  {
+   "kind": "sort",
+   "id": "b.colb04.4",
+   "skill": "COL-B-04",
+   "difficulty": 0.58,
+   "bins": [
+    {
+     "sprite": "shape_circle_red",
+     "label": "עִגּוּלִים"
+    },
+    {
+     "sprite": "shape_triangle_red",
+     "label": "מְשֻׁלָּשִׁים"
+    }
+   ],
+   "items": [
+    [
+     "shape_circle_green",
+     1
+    ],
+    [
+     "shape_circle_red",
+     1
+    ],
+    [
+     "shape_triangle_green",
+     2
+    ],
+    [
+     "shape_triangle_red",
+     2
+    ]
+   ],
+   "prompt": "עַכְשָׁו מְמַיְּנִים לְפִי צוּרָה: עִגּוּלִים לְכָאן, וְמְשֻׁלָּשִׁים לְכָאן.",
+   "domain": "colors",
+   "h3": "כָּל הַצּוּרוֹת הַדּוֹמוֹת הוֹלְכוֹת יַחַד, גַּם אִם הַצֶּבַע שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! מִיַּנְתֶּם לְפִי צוּרָה."
+  },
+  {
+   "kind": "build",
+   "id": "b.colb06.1",
+   "skill": "COL-B-06",
+   "difficulty": 0.37,
+   "model": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow",
+    "ball_green",
+    "ball_blue",
+    "ball_purple"
+   ],
+   "palette": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow",
+    "ball_green",
+    "ball_blue",
+    "ball_purple"
+   ],
+   "prompt": "בּוֹנִים אֶת הַקֶּשֶׁת בְּאוֹתוֹ סֵדֶר.",
+   "domain": "colors",
+   "h3": "הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק, כָּחֹל, סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "build",
+   "id": "b.colb06.2",
+   "skill": "COL-B-06",
+   "difficulty": 0.44,
+   "model": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow",
+    "ball_green"
+   ],
+   "palette": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow",
+    "ball_green"
+   ],
+   "prompt": "בּוֹנִים אֶת תְּחִלַּת הַקֶּשֶׁת בְּאוֹתוֹ סֵדֶר.",
+   "domain": "colors",
+   "h3": "תְּחִלַּת הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "build",
+   "id": "b.colb06.3",
+   "skill": "COL-B-06",
+   "difficulty": 0.51,
+   "model": [
+    "ball_purple",
+    "ball_blue",
+    "ball_green",
+    "ball_yellow",
+    "ball_orange",
+    "ball_red"
+   ],
+   "palette": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow",
+    "ball_green",
+    "ball_blue",
+    "ball_purple"
+   ],
+   "sequence": [
+    "ball_purple",
+    "ball_blue",
+    "ball_green",
+    "ball_yellow",
+    "ball_orange",
+    "ball_red"
+   ],
+   "prompt": "בּוֹנִים אֶת הַקֶּשֶׁת מֵהַסּוֹף לַהַתְחָלָה.",
+   "domain": "colors",
+   "h3": "מֵהַסּוֹף: סָגֹל, כָּחֹל, יָרֹק, צָהֹב, כָּתֹם, אָדֹם. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "build",
+   "id": "b.colb06.4",
+   "skill": "COL-B-06",
+   "difficulty": 0.58,
+   "palette": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow",
+    "ball_green",
+    "ball_blue",
+    "ball_purple"
+   ],
+   "sequence": [
+    "ball_red",
+    "ball_orange",
+    "ball_yellow",
+    "ball_green",
+    "ball_blue",
+    "ball_purple"
+   ],
+   "prompt": "בּוֹנִים אֶת הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק, כָּחֹל, סָגֹל.",
+   "domain": "colors",
+   "h3": "הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק, כָּחֹל, סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  }
+ ],
+ "lessons": [
+  {
+   "id": "mix-colours",
+   "title": "מְעָרְבְּבִים צְבָעִים",
+   "skills": [
+    "COL-B-01"
+   ],
+   "items": [
+    "b.colb01.1",
+    "b.colb01.2",
+    "b.colb01.3"
+   ],
+   "minutes": 5,
+   "done": "כׇּל הַכָּבוֹד! עֵרַבְתֶּם צְבָעִים."
+  },
+  {
+   "id": "mix-colours-more",
+   "title": "מַה חָסֵר בַּתַּעֲרוֹבֶת",
+   "skills": [
+    "COL-B-01"
+   ],
+   "items": [
+    "b.colb01.4",
+    "b.colb01.5",
+    "b.colb01.6",
+    "b.colb01.7",
+    "b.colb01.8",
+    "b.colb01.9"
+   ],
+   "minutes": 5,
+   "done": "יָפֶה! מְצָאתֶם אֶת הַצֶּבַע הֶחָסֵר."
+  },
+  {
+   "id": "light-and-dark",
+   "title": "בָּהִיר וְכֵהֶה",
+   "skills": [
+    "COL-B-02"
+   ],
+   "items": [
+    "b.colb02.1",
+    "b.colb02.2",
+    "b.colb02.3",
+    "b.colb02.4",
+    "b.colb02.5",
+    "b.colb02.6"
+   ],
+   "minutes": 5,
+   "done": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים בָּהִיר וְכֵהֶה."
+  },
+  {
+   "id": "middle-shade",
+   "title": "הַגָּוֶן שֶׁבָּאֶמְצַע",
+   "skills": [
+    "COL-B-02"
+   ],
+   "items": [
+    "b.colb02.7",
+    "b.colb02.8",
+    "b.colb02.9",
+    "b.colb02.10",
+    "b.colb02.11"
+   ],
+   "minutes": 5,
+   "done": "מְצֻיָּן! מְצָאתֶם אֶת הָאֶמְצַע."
+  },
+  {
+   "id": "same-colour-shades",
+   "title": "אוֹתוֹ צֶבַע",
+   "skills": [
+    "COL-B-03"
+   ],
+   "items": [
+    "b.colb03.1",
+    "b.colb03.2",
+    "b.colb03.3",
+    "b.colb03.4"
+   ],
+   "minutes": 5,
+   "done": "כׇּל הַכָּבוֹד! גְּוָנִים שׁוֹנִים, אוֹתוֹ צֶבַע."
+  },
+  {
+   "id": "same-colour-shades-more",
+   "title": "עוֹד גְּוָנִים",
+   "skills": [
+    "COL-B-03"
+   ],
+   "items": [
+    "b.colb03.5",
+    "b.colb03.6",
+    "b.colb03.7",
+    "b.colb03.8"
+   ],
+   "minutes": 5,
+   "done": "נִפְלָא! אַתֶּם רוֹאִים אֶת הַצֶּבַע."
+  },
+  {
+   "id": "sort-two-ways",
+   "title": "מְמַיְּנִים בִּשְׁתֵּי דְּרָכִים",
+   "skills": [
+    "COL-B-04"
+   ],
+   "items": [
+    "b.colb04.1",
+    "b.colb04.2",
+    "b.colb04.3",
+    "b.colb04.4"
+   ],
+   "minutes": 5,
+   "done": "כׇּל הַכָּבוֹד! מִיַּנְתֶּם בִּשְׁתֵּי דְּרָכִים."
+  },
+  {
+   "id": "rainbow",
+   "title": "הַקֶּשֶׁת",
+   "skills": [
+    "COL-B-06"
+   ],
+   "items": [
+    "b.colb06.1",
+    "b.colb06.2",
+    "b.colb06.3",
+    "b.colb06.4"
+   ],
+   "minutes": 5,
+   "done": "וַאוּ! בְּנִיתֶם קֶשֶׁת."
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "SHP-B-04",
+  "review": "needs-editor",
+  "domain": "shapes",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "צורה סגורה"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "SHP-B-01",
+      "weight": 1
+    },
+    {
+      "skill": "SHP-A-10",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-SHP-CLOSED"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

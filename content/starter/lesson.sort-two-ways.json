@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "sort-two-ways",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְמַיְּנִים בִּשְׁתֵּי דְּרָכִים"
+    }
+  ],
+  "skills": [
+    "COL-B-04"
+  ],
+  "items": [
+    "b.colb04.1",
+    "b.colb04.2",
+    "b.colb04.3",
+    "b.colb04.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 36,
+  "celebration": {
+    "vo": "vo:celebrate.sort_two_ways",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מִיַּנְתֶּם בִּשְׁתֵּי דְּרָכִים."
+      }
+    ]
+  }
+}

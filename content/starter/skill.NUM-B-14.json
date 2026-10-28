@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-14",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מפרקים מספר לשני חלקים"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְפָרְקִים מִסְפָּר לִשְׁנֵי חֲלָקִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-10",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-PART-MISS"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

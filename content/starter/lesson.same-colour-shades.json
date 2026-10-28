@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "same-colour-shades",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "אוֹתוֹ צֶבַע"
+    }
+  ],
+  "skills": [
+    "COL-B-03"
+  ],
+  "items": [
+    "b.colb03.1",
+    "b.colb03.2",
+    "b.colb03.3",
+    "b.colb03.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 34,
+  "celebration": {
+    "vo": "vo:celebrate.same_colour_shades",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! גְּוָנִים שׁוֹנִים, אוֹתוֹ צֶבַע."
+      }
+    ]
+  }
+}

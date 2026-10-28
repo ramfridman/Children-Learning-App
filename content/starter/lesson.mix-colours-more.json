@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "mix-colours-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַה חָסֵר בַּתַּעֲרוֹבֶת"
+    }
+  ],
+  "skills": [
+    "COL-B-01"
+  ],
+  "items": [
+    "b.colb01.4",
+    "b.colb01.5",
+    "b.colb01.6",
+    "b.colb01.7",
+    "b.colb01.8",
+    "b.colb01.9"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 31,
+  "celebration": {
+    "vo": "vo:celebrate.mix_colours_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה! מְצָאתֶם אֶת הַצֶּבַע הֶחָסֵר."
+      }
+    ]
+  }
+}

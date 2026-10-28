@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-B-04",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "ממיינים בשתי דרכים"
+    }
+  ],
+  "worldObject": "sprout",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְמַיְּנִים לְפִי צֶבַע וְלְפִי צוּרָה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-A-04",
+      "weight": 1
+    },
+    {
+      "skill": "SHP-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-SORT-SHIFT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

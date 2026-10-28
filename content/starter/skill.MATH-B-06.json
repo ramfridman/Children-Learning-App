@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-06",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "משלימים לעשר"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַשְׁלִימִים לְעֶשֶׂר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "symbolic"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

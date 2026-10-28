@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "equals-balance",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "שָׁוֶה זֶה אוֹתוֹ דָּבָר"
+    }
+  ],
+  "skills": [
+    "MATH-B-09"
+  ],
+  "items": [
+    "b.mathb09.1",
+    "b.mathb09.2",
+    "b.mathb09.3",
+    "b.mathb09.4",
+    "b.mathb09.5",
+    "b.mathb09.6",
+    "b.mathb09.7",
+    "b.mathb09.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 41,
+  "celebration": {
+    "vo": "vo:celebrate.equals_balance",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! שְׁנֵי הַצְּדָדִים שָׁווֹת."
+      }
+    ]
+  }
+}

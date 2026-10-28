@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "line-up-five",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְסַדְּרִים בְּשׁוּרָה"
+    }
+  ],
+  "skills": [
+    "LOG-B-11"
+  ],
+  "items": [
+    "b.logb11.1",
+    "b.logb11.2",
+    "b.logb11.3"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 37,
+  "celebration": {
+    "vo": "vo:celebrate.line_up_five",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הַמִּגְדָּלִים בַּסֵּדֶר."
+      }
+    ]
+  }
+}

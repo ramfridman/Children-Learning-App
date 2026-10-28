@@ -1,0 +1,19 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-MEAS-BIG",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-13"
+  ],
+  "parentText": "הילד חושב שמה שגדול יותר גם כבד יותר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להחזיק בכל יד חפץ גדול וקל (כדור נייר) וחפץ קטן וכבד (אבן), ולנחש מי כבד יותר לפני שמרגישים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete"
+  ]
+}

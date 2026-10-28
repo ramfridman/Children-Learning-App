@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "broken-pattern",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מָה נִשְׁבַּר"
+    }
+  ],
+  "skills": [
+    "LOG-B-02"
+  ],
+  "items": [
+    "b.logb02.1",
+    "b.logb02.2",
+    "b.logb02.3",
+    "b.logb02.4",
+    "b.logb02.5",
+    "b.logb02.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 32,
+  "celebration": {
+    "vo": "vo:celebrate.broken_pattern",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַשּׁוֹנֶה."
+      }
+    ]
+  }
+}

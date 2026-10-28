@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "polygon-detectives",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "בַּלָּשֵׁי צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-B-01"
+  ],
+  "items": [
+    "b.shpb01.1",
+    "b.shpb01.2",
+    "b.shpb01.3",
+    "b.shpb01.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 30,
+  "celebration": {
+    "vo": "vo:celebrate.polygon_detectives",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרוֹת חֲדָשׁוֹת."
+      }
+    ]
+  }
+}

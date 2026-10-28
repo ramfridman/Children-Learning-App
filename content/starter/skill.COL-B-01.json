@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-B-01",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מערבבים צבעים"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְעָרְבְּבִים וּמְקַבְּלִים צֶבַע חָדָשׁ"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-COL-MIX"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

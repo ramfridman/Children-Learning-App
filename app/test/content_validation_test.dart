@@ -227,9 +227,9 @@ final List<Broken> _cases = <Broken>[
   ),
   Broken(
     'count_tap: more objects than the screen takes',
-    (SamplePack p) => _m(_m(p.doc(_c)['scene'])['objects'])['count'] = 11,
+    (SamplePack p) => _m(_m(p.doc(_c)['scene'])['objects'])['count'] = 21,
     '$_c › scene.objects.count',
-    'is outside 1 to 10',
+    'is outside 1 to 20',
   ),
   Broken(
     'activity: a tag that is not in the catalogue (option)',
@@ -446,9 +446,9 @@ final List<Broken> _cases = <Broken>[
   ),
   Broken(
     'give_n: n out of range',
-    (SamplePack p) => _m(p.doc(_g)['answer'])['n'] = 13,
+    (SamplePack p) => _m(p.doc(_g)['answer'])['n'] = 21,
     '$_g › answer.n',
-    'is outside 1 to 12',
+    'is outside 1 to 20',
   ),
   Broken(
     'give_n: a classifier tag that is not in the catalogue',

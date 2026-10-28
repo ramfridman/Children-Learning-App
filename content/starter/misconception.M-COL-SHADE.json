@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-COL-SHADE",
+  "review": "needs-editor",
+  "skills": [
+    "COL-B-02",
+    "COL-B-03"
+  ],
+  "parentText": "הילד חושב שכחול בהיר וכחול כהה הם צבעים שונים, או משווה לפי בהירות ולא לפי הצבע.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לצייר פס כחול ולהוסיף בהדרגה לבן, ולהסתכל איך הוא נהיה בהיר ועדיין כחול."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "concrete"
+  ]
+}

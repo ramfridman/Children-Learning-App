@@ -1,0 +1,151 @@
+{
+  "schema": "activity/v1",
+  "id": "b.mathb07.5",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.65
+  },
+  "prompt": {
+    "vo": "vo:b.mathb07.5.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שֵׁשׁ פָּחוֹת שֵׁשׁ. כַּמָּה זֶה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:6",
+      "op:-",
+      "n:6",
+      "op:=",
+      "?"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 1,
+        "label": "אַחַת"
+      },
+      {
+        "id": "o2",
+        "numeral": 0,
+        "label": "אֶפֶס"
+      },
+      {
+        "id": "o3",
+        "numeral": 6,
+        "label": "שֵׁשׁ"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.mathb07.5.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֶפֶס! שֵׁשׁ פָּחוֹת שֵׁשׁ שָׁוֶה אֶפֶס."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.mathb07.5.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֶפֶס. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "שֵׁשׁ פָּחוֹת שֵׁשׁ. כַּמָּה זֶה?"
+  }
+}

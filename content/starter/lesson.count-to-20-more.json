@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-to-20-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סְפִירָה עַד עֶשְׂרִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-01"
+  ],
+  "items": [
+    "b.numb01.6",
+    "b.numb01.7",
+    "b.numb01.8",
+    "b.numb01.9"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 31,
+  "celebration": {
+    "vo": "vo:celebrate.count_to_20_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! הַסְּפִירָה מַמְשִׁיכָה."
+      }
+    ]
+  }
+}

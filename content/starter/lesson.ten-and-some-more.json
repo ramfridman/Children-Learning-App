@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "ten-and-some-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד עֶשֶׂר וְעוֹד"
+    }
+  ],
+  "skills": [
+    "NUM-B-16"
+  ],
+  "items": [
+    "b.numb16.6",
+    "b.numb16.7",
+    "b.numb16.8",
+    "b.numb16.9"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 50,
+  "celebration": {
+    "vo": "vo:celebrate.ten_and_some_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! הַמִּסְפָּרִים הַגְּדוֹלִים כְּבָר מוּכָּרִים."
+      }
+    ]
+  }
+}

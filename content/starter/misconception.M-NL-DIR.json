@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-NL-DIR",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-B-13"
+  ],
+  "parentText": "הילד קורא את ציר המספרים מימין לשמאל, כמו מילים, והמספרים הקטנים בצד הלא נכון.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להסביר שבמתמטיקה הציר תמיד הולך משמאל לימין, והמספרים גדלים בכיוון החץ."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "symbolic"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "longer-robot-paths-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד דְּרָכִים"
+    }
+  ],
+  "skills": [
+    "CS-B-01"
+  ],
+  "items": [
+    "b.csb01.5",
+    "b.csb01.6",
+    "b.csb01.7",
+    "b.csb01.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 31,
+  "celebration": {
+    "vo": "vo:celebrate.longer_robot_paths_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הָרוֹבּוֹט הִגִּיעַ."
+      }
+    ]
+  }
+}

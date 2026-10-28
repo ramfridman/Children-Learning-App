@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "pairs",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "זוּגוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-B-18"
+  ],
+  "items": [
+    "b.numb18.1",
+    "b.numb18.2",
+    "b.numb18.3",
+    "b.numb18.4",
+    "b.numb18.5",
+    "b.numb18.6",
+    "b.numb18.7",
+    "b.numb18.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 52,
+  "celebration": {
+    "vo": "vo:celebrate.pairs",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם לְזוּגוֹת."
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "join-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוֹסִיפִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-01"
+  ],
+  "items": [
+    "b.mathb01.1",
+    "b.mathb01.2",
+    "b.mathb01.3",
+    "b.mathb01.4",
+    "b.mathb01.5",
+    "b.mathb01.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 30,
+  "celebration": {
+    "vo": "vo:celebrate.join_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וְחִשַּׁבְתֶּם."
+      }
+    ]
+  }
+}

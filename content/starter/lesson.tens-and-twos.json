@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "tens-and-twos",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עֲשָׂרוֹת וּזְוּגוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-B-17"
+  ],
+  "items": [
+    "b.numb17.1",
+    "b.numb17.2",
+    "b.numb17.3",
+    "b.numb17.4",
+    "b.numb17.5",
+    "b.numb17.6",
+    "b.numb17.7",
+    "b.numb17.8",
+    "b.numb17.9",
+    "b.numb17.10",
+    "b.numb17.11",
+    "b.numb17.12"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 51,
+  "celebration": {
+    "vo": "vo:celebrate.tens_and_twos",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! סְפַרְתֶּם בַּקְּפִיצוֹת."
+      }
+    ]
+  }
+}

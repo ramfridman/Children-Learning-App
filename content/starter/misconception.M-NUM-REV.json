@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-NUM-REV",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-B-08"
+  ],
+  "parentText": "הילד מחליף בין שתי הספרות: 12 ו-21, 13 ו-31.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לכתוב מספר דו־ספרתי על דף, לקרוא אותו יחד, ואז לכתוב את ההפוך ולשאול מי גדול יותר."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic",
+    "concrete"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "not-this-not-that",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "לֹא זֶה וְלֹא זֶה"
+    }
+  ],
+  "skills": [
+    "LOG-B-09"
+  ],
+  "items": [
+    "b.logb09.1",
+    "b.logb09.2",
+    "b.logb09.3",
+    "b.logb09.4",
+    "b.logb09.5",
+    "b.logb09.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 36,
+  "celebration": {
+    "vo": "vo:celebrate.not_this_not_that",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! פִּתַּחְתֶּם חִידָּה."
+      }
+    ]
+  }
+}

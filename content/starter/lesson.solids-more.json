@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "solids-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד גּוּפִים"
+    }
+  ],
+  "skills": [
+    "SHP-B-08"
+  ],
+  "items": [
+    "b.shpb08.6",
+    "b.shpb08.7",
+    "b.shpb08.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 38,
+  "celebration": {
+    "vo": "vo:celebrate.solids_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! גּוּפִים בְּכָל מָקוֹם."
+      }
+    ]
+  }
+}

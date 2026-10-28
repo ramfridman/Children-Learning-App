@@ -42,7 +42,10 @@ Map<String, Object?> itemOf(Map<String, Object?> a) {
   if (answer['type'] == 'sort' ||
       answer['type'] == 'build' ||
       answer['type'] == 'path' ||
-      answer['type'] == 'shapes') {
+      answer['type'] == 'shapes' ||
+      answer['type'] == 'line' ||
+      answer['type'] == 'scale' ||
+      answer['type'] == 'spot') {
     // A drag template: the whole move is one right answer, and the way of going wrong is a class with its misconception.
     answers.add(<String, Object?>{'id': 'done', 'correct': true});
     if (answer['misconception'] is String) {

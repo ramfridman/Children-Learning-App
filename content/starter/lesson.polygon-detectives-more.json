@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "polygon-detectives-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-B-01"
+  ],
+  "items": [
+    "b.shpb01.5",
+    "b.shpb01.6",
+    "b.shpb01.7",
+    "b.shpb01.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 31,
+  "celebration": {
+    "vo": "vo:celebrate.polygon_detectives_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! עוֹד צוּרוֹת בָּרְשִׁימָה."
+      }
+    ]
+  }
+}

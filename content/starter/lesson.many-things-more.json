@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "many-things-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד הַרְבֵּה חֲפָצִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-04"
+  ],
+  "items": [
+    "b.numb04.6",
+    "b.numb04.7",
+    "b.numb04.8",
+    "b.numb04.9"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 36,
+  "celebration": {
+    "vo": "vo:celebrate.many_things_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! כָּל אֶחָד פַּעַם אַחַת."
+      }
+    ]
+  }
+}

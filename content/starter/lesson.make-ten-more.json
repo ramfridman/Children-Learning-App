@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "make-ten-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד עֶשֶׂר"
+    }
+  ],
+  "skills": [
+    "MATH-B-06"
+  ],
+  "items": [
+    "b.mathb06.6",
+    "b.mathb06.7",
+    "b.mathb06.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 37,
+  "celebration": {
+    "vo": "vo:celebrate.make_ten_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה! עֶשֶׂר כָּל פַּעַם."
+      }
+    ]
+  }
+}

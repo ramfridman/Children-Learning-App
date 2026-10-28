@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "if-then",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "אִם… אָז…"
+    }
+  ],
+  "skills": [
+    "LOG-B-08"
+  ],
+  "items": [
+    "b.logb08.1",
+    "b.logb08.2",
+    "b.logb08.3",
+    "b.logb08.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 35,
+  "celebration": {
+    "vo": "vo:celebrate.if_then",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! עֲשִׂיתֶם לְפִי הַכְּלָל."
+      }
+    ]
+  }
+}

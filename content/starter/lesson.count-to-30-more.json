@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-to-30-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד עֲשָׂרוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-B-02"
+  ],
+  "items": [
+    "b.numb02.6",
+    "b.numb02.7",
+    "b.numb02.8",
+    "b.numb02.9"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 33,
+  "celebration": {
+    "vo": "vo:celebrate.count_to_30_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! הַעֲשָׂרוֹת כְּבָר מוּכָּרוֹת."
+      }
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-the-teens-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מִסְפָּרִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-08"
+  ],
+  "items": [
+    "b.numb08.7",
+    "b.numb08.8",
+    "b.numb08.9",
+    "b.numb08.10",
+    "b.numb08.11",
+    "b.numb08.12"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 39,
+  "celebration": {
+    "vo": "vo:celebrate.read_the_teens_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַסִּפְרוֹת בַּמָּקוֹם הַנָּכוֹן."
+      }
+    ]
+  }
+}

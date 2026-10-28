@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "split-numbers-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד פֵּרוּקִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-14"
+  ],
+  "items": [
+    "b.numb14.6",
+    "b.numb14.7",
+    "b.numb14.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 48,
+  "celebration": {
+    "vo": "vo:celebrate.split_numbers_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! כָּל חֵלֶק בִּמְקוֹמוֹ."
+      }
+    ]
+  }
+}

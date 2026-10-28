@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "to-twenty-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד לְפָנֶיךָ עֶשְׂרִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-08"
+  ],
+  "items": [
+    "b.mathb08.9",
+    "b.mathb08.10",
+    "b.mathb08.11",
+    "b.mathb08.12"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 40,
+  "celebration": {
+    "vo": "vo:celebrate.to_twenty_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! גַּם חִסַּרְתֶּם."
+      }
+    ]
+  }
+}

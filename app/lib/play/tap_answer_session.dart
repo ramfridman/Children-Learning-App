@@ -267,7 +267,16 @@ class _TapStage extends StatelessWidget {
                           child: Text('?', style: AppText.fixed(size: 36, weight: 800, lineHeight: 1)),
                         ),
                       )
-                    : PackSvg(a.assets.svg(r)),
+                    : (r.startsWith('asset:')
+                          ? PackSvg(a.assets.svg(r))
+                          : FittedBox(
+                              child: Text(
+                                r.startsWith('op:')
+                                    ? r.substring(3).replaceAll('-', '−').replaceAll('x', '×')
+                                    : r.substring(2),
+                                style: AppText.fixed(size: 40, weight: 800, lineHeight: 1),
+                              ),
+                            )),
               ),
             ),
         ],

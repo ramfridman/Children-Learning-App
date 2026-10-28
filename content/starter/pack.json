@@ -1,7 +1,7 @@
 {
   "schema": "pack-source/v1",
   "id": "starter",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "minAppVersion": "0.3.0",
   "assets": [
     {
@@ -627,6 +627,210 @@
     {
       "id": "line_straight_up",
       "file": "line_straight_up.svg"
+    },
+    {
+      "id": "shape_curved",
+      "file": "shape_curved.svg"
+    },
+    {
+      "id": "shape_hexagon",
+      "file": "shape_hexagon.svg"
+    },
+    {
+      "id": "shape_open",
+      "file": "shape_open.svg"
+    },
+    {
+      "id": "shape_pentagon",
+      "file": "shape_pentagon.svg"
+    },
+    {
+      "id": "shape_quad",
+      "file": "shape_quad.svg"
+    },
+    {
+      "id": "frog",
+      "file": "frog.svg"
+    },
+    {
+      "id": "block",
+      "file": "block.svg"
+    },
+    {
+      "id": "day_1",
+      "file": "day_1.svg"
+    },
+    {
+      "id": "day_2",
+      "file": "day_2.svg"
+    },
+    {
+      "id": "day_3",
+      "file": "day_3.svg"
+    },
+    {
+      "id": "day_4",
+      "file": "day_4.svg"
+    },
+    {
+      "id": "day_5",
+      "file": "day_5.svg"
+    },
+    {
+      "id": "day_6",
+      "file": "day_6.svg"
+    },
+    {
+      "id": "day_7",
+      "file": "day_7.svg"
+    },
+    {
+      "id": "clock_1",
+      "file": "clock_1.svg"
+    },
+    {
+      "id": "clock_10",
+      "file": "clock_10.svg"
+    },
+    {
+      "id": "clock_11",
+      "file": "clock_11.svg"
+    },
+    {
+      "id": "clock_12",
+      "file": "clock_12.svg"
+    },
+    {
+      "id": "clock_2",
+      "file": "clock_2.svg"
+    },
+    {
+      "id": "clock_3",
+      "file": "clock_3.svg"
+    },
+    {
+      "id": "clock_4",
+      "file": "clock_4.svg"
+    },
+    {
+      "id": "clock_5",
+      "file": "clock_5.svg"
+    },
+    {
+      "id": "clock_6",
+      "file": "clock_6.svg"
+    },
+    {
+      "id": "clock_7",
+      "file": "clock_7.svg"
+    },
+    {
+      "id": "clock_8",
+      "file": "clock_8.svg"
+    },
+    {
+      "id": "clock_9",
+      "file": "clock_9.svg"
+    },
+    {
+      "id": "shade_blue_1",
+      "file": "shade_blue_1.svg"
+    },
+    {
+      "id": "shade_blue_2",
+      "file": "shade_blue_2.svg"
+    },
+    {
+      "id": "shade_blue_3",
+      "file": "shade_blue_3.svg"
+    },
+    {
+      "id": "shade_green_1",
+      "file": "shade_green_1.svg"
+    },
+    {
+      "id": "shade_green_2",
+      "file": "shade_green_2.svg"
+    },
+    {
+      "id": "shade_green_3",
+      "file": "shade_green_3.svg"
+    },
+    {
+      "id": "shade_red_1",
+      "file": "shade_red_1.svg"
+    },
+    {
+      "id": "shade_red_2",
+      "file": "shade_red_2.svg"
+    },
+    {
+      "id": "shade_red_3",
+      "file": "shade_red_3.svg"
+    },
+    {
+      "id": "shade_purple_1",
+      "file": "shade_purple_1.svg"
+    },
+    {
+      "id": "shade_purple_2",
+      "file": "shade_purple_2.svg"
+    },
+    {
+      "id": "shade_purple_3",
+      "file": "shade_purple_3.svg"
+    },
+    {
+      "id": "solid_cylinder",
+      "file": "solid_cylinder.svg"
+    },
+    {
+      "id": "solid_cone",
+      "file": "solid_cone.svg"
+    },
+    {
+      "id": "solid_sphere",
+      "file": "solid_sphere.svg"
+    },
+    {
+      "id": "solid_pyramid",
+      "file": "solid_pyramid.svg"
+    },
+    {
+      "id": "tower_1",
+      "file": "tower_1.svg"
+    },
+    {
+      "id": "tower_2",
+      "file": "tower_2.svg"
+    },
+    {
+      "id": "tower_3",
+      "file": "tower_3.svg"
+    },
+    {
+      "id": "tower_4",
+      "file": "tower_4.svg"
+    },
+    {
+      "id": "tower_5",
+      "file": "tower_5.svg"
+    },
+    {
+      "id": "tower_6",
+      "file": "tower_6.svg"
+    },
+    {
+      "id": "rule_colour",
+      "file": "rule_colour.svg"
+    },
+    {
+      "id": "rule_shape",
+      "file": "rule_shape.svg"
+    },
+    {
+      "id": "rule_size",
+      "file": "rule_size.svg"
     }
   ],
   "vo": []

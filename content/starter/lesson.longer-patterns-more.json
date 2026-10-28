@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "longer-patterns-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סְדָרִים"
+    }
+  ],
+  "skills": [
+    "LOG-B-01"
+  ],
+  "items": [
+    "b.logb01.5",
+    "b.logb01.6",
+    "b.logb01.7",
+    "b.logb01.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 31,
+  "celebration": {
+    "vo": "vo:celebrate.longer_patterns_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַסֵּדֶר נִמְשָׁךְ."
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "make-ten",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַשְׁלִימִים לְעֶשֶׂר"
+    }
+  ],
+  "skills": [
+    "MATH-B-06"
+  ],
+  "items": [
+    "b.mathb06.1",
+    "b.mathb06.2",
+    "b.mathb06.3",
+    "b.mathb06.4",
+    "b.mathb06.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 36,
+  "celebration": {
+    "vo": "vo:celebrate.make_ten",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִגַּעְתֶּם לְעֶשֶׂר."
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "which-is-bigger-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד הַשְׁוָאוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-B-10"
+  ],
+  "items": [
+    "b.numb10.6",
+    "b.numb10.7",
+    "b.numb10.8",
+    "b.numb10.9",
+    "b.numb10.10"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 41,
+  "celebration": {
+    "vo": "vo:celebrate.which_is_bigger_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! אַתֶּם יוֹדְעִים מִי גָּדוֹל."
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-PAT-GROW",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-B-04"
+  ],
+  "parentText": "בסדר שגדל, הילד חוזר על האחרון במקום להוסיף עוד אחד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לבנות מגדל מקוביות: קובייה אחת, שתיים, שלוש. בכל פעם להוסיף עוד אחת, ולשאול כמה יהיו בפעם הבאה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

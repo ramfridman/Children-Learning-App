@@ -15,10 +15,51 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'content', 'starter')
 
 # Counting words with niqqud. F: the abstract count and the numeral on a tile; M: with a masculine noun.
-F = {0: 'אֶפֶס', 1: 'אַחַת', 2: 'שְׁתַּיִם', 3: 'שָׁלוֹשׁ', 4: 'אַרְבַּע', 5: 'חָמֵשׁ', 6: 'שֵׁשׁ', 7: 'שֶׁבַע',
-     8: 'שְׁמוֹנֶה', 9: 'תֵּשַׁע', 10: 'עֶשֶׂר'}
-M = {1: 'אֶחָד', 2: 'שְׁנַיִם', 3: 'שְׁלוֹשָׁה', 4: 'אַרְבָּעָה', 5: 'חֲמִשָּׁה', 6: 'שִׁשָּׁה', 7: 'שִׁבְעָה',
-     8: 'שְׁמוֹנָה', 9: 'תִּשְׁעָה', 10: 'עֲשָׂרָה'}
+class NumWords(dict):
+    """Counting words with niqqud for 0 to 100. F: with a feminine noun and for the bare number; M: with a masculine noun."""
+
+    UNITS_F = {0: 'אֶפֶס', 1: 'אַחַת', 2: 'שְׁתַּיִם', 3: 'שָׁלוֹשׁ', 4: 'אַרְבַּע', 5: 'חָמֵשׁ', 6: 'שֵׁשׁ', 7: 'שֶׁבַע',
+               8: 'שְׁמוֹנֶה', 9: 'תֵּשַׁע', 10: 'עֶשֶׂר'}
+    UNITS_M = {1: 'אֶחָד', 2: 'שְׁנַיִם', 3: 'שְׁלוֹשָׁה', 4: 'אַרְבָּעָה', 5: 'חֲמִשָּׁה', 6: 'שִׁשָּׁה', 7: 'שִׁבְעָה',
+               8: 'שְׁמוֹנָה', 9: 'תִּשְׁעָה', 10: 'עֲשָׂרָה'}
+    TEENS_F = {11: 'אַחַת עֶשְׂרֵה', 12: 'שְׁתֵּים עֶשְׂרֵה', 13: 'שְׁלֹשׁ עֶשְׂרֵה', 14: 'אַרְבַּע עֶשְׂרֵה', 15: 'חֲמֵשׁ עֶשְׂרֵה',
+               16: 'שֵׁשׁ עֶשְׂרֵה', 17: 'שְׁבַע עֶשְׂרֵה', 18: 'שְׁמוֹנֶה עֶשְׂרֵה', 19: 'תְּשַׁע עֶשְׂרֵה'}
+    TEENS_M = {11: 'אַחַד עָשָׂר', 12: 'שְׁנֵים עָשָׂר', 13: 'שְׁלוֹשָׁה עָשָׂר', 14: 'אַרְבָּעָה עָשָׂר', 15: 'חֲמִשָּׁה עָשָׂר',
+               16: 'שִׁשָּׁה עָשָׂר', 17: 'שִׁבְעָה עָשָׂר', 18: 'שְׁמוֹנָה עָשָׂר', 19: 'תִּשְׁעָה עָשָׂר'}
+    TENS = {20: 'עֶשְׂרִים', 30: 'שְׁלוֹשִׁים', 40: 'אַרְבָּעִים', 50: 'חֲמִשִּׁים', 60: 'שִׁשִּׁים', 70: 'שִׁבְעִים',
+            80: 'שְׁמוֹנִים', 90: 'תִּשְׁעִים', 100: 'מֵאָה'}
+
+    def __init__(self, feminine):
+        super().__init__()
+        self.f = feminine
+
+    @staticmethod
+    def vav(word):
+        if word.startswith('שְׁ'):
+            return 'וּ' + word
+        if word.startswith('חֲ'):
+            return 'וַ' + word
+        return 'וְ' + word
+
+    def __missing__(self, n):
+        units = self.UNITS_F if self.f else self.UNITS_M
+        teens = self.TEENS_F if self.f else self.TEENS_M
+        if n in units:
+            w = units[n]
+        elif n in teens:
+            w = teens[n]
+        elif n in self.TENS:
+            w = self.TENS[n]
+        else:
+            tens, one = n - n % 10, n % 10
+            w = self.TENS[tens] + ' ' + self.vav(units[one])
+        self[n] = w
+        return w
+
+
+F = NumWords(True)
+M = NumWords(False)
+
 ORD_M = ['רִאשׁוֹן', 'שֵׁנִי', 'שְׁלִישִׁי', 'רְבִיעִי']
 # the same, with the definite article (the pointing of the article depends on the word: הָרִאשׁוֹן, הַשֵּׁנִי)
 ORD_DEF = ['הָרִאשׁוֹן', 'הַשֵּׁנִי', 'הַשְּׁלִישִׁי', 'הָרְבִיעִי']
@@ -66,6 +107,8 @@ def this_qty(n, obj):
 
 
 def count_words(n):
+    if n > 10:
+        return 'מֵאַחַת עַד %s' % F[n]
     return ', '.join(F[i] for i in range(1, n + 1))
 
 
@@ -108,7 +151,7 @@ def activity(a, template, skills, purpose, check, rep, scene, answer, fb_tags, h
     d = {
         'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': 1,
         'template': template, 'templateVersion': '1.1' if template == 'tap_answer' else '1.0',
-        'domain': a.get('domain', 'numbers'), 'band': 'A',
+        'domain': a.get('domain', 'numbers'), 'band': a.get('band', 'A'),
         'skills': [{'id': s, 'weight': w} for s, w in skills],
         'purpose': purpose, 'checkType': check, 'representation': rep,
         'variantGroup': a.get('variantGroup', a['kind'].replace('_', '-')),
@@ -166,8 +209,12 @@ def k_next_number(a, ctx):
     n, before = a['n'], a.get('dir') == 'before'
     ans = n - 1 if before else n + 1
     skip = ans - 1 if before else ans + 1
-    opts, cid, tags = options(a['options'], ans, lambda v: 'M-CNT-SEQ' if v == skip else None,
-                              lambda v: {'numeral': v}, lambda v: F[v])
+    def tagger(v):
+        if a.get('decade') and not before and n % 10 == 9 and v == n - 9:
+            return 'M-CNT-DECADE'  # starts the tens over: after nineteen, "ten"
+        return 'M-CNT-SEQ' if v == skip else None
+
+    opts, cid, tags = options(a['options'], ans, tagger, lambda v: {'numeral': v}, lambda v: F[v])
     word = 'לִפְנֵי' if before else 'אַחֲרֵי'
     prompt = 'מָה בָּא %s %s?' % (word, F[n])
     lo, hi = (ans, n) if before else (1, n)
@@ -425,7 +472,7 @@ def k_pick(a, ctx):
     if 'numeral' in a:
         scene['numeral'] = a['numeral']
     if 'row' in a:
-        scene['row'] = ['?' if r == '?' else 'asset:' + r for r in a['row']]
+        scene['row'] = [r if r == '?' or r.startswith(('n:', 'op:')) else 'asset:' + r for r in a['row']]
     if 'group2' in a:
         g = a['group2']
         scene['group2'] = {'sprite': 'asset:' + g['sprite'], 'count': g.get('count', 1),
@@ -767,6 +814,99 @@ def k_shop(a, ctx):
     return k_give(d, ctx)
 
 
+def hint_set(a, h3, shared=None):
+    return hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', a.get('h2') or 'נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד.', h3,
+                 actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+                 shared=shared or ('pick', None))
+
+
+def k_numline(a, ctx):
+    """A number line. Mode place: put the marker on a number. Mode jump: the marker hops and the child says where it lands."""
+    frm, to, target = a.get('from', 0), a['to'], a['target']
+    jump = a['mode'] == 'jump'
+    labels = a.get('labels') or [frm, to] + ([a['start']] if jump else [])
+    scene = {'background': 'asset:meadow', 'from': frm, 'to': to, 'markerSprite': 'asset:' + a.get('marker', 'frog'),
+             'labels': sorted(set(labels))}
+    answer = {'type': 'line', 'mode': a['mode'], 'target': target, 'misconception': a.get('tag', 'M-NL-SPACE')}
+    tags = {answer['misconception']}
+    if frm + to - target != target:
+        answer['mirrorMisconception'] = 'M-NL-DIR'
+        tags.add('M-NL-DIR')
+    if jump:
+        scene['start'] = a['start']
+        scene['hops'] = a['hops']
+    h3 = a.get('h3') or ('מַתְחִילִים מִ%s וְסוֹפְרִים: %s. עַכְשָׁו תּוֹרְכֶם.' % (F[a['start']] if jump else F[frm],
+                                                                           count_words(target) if not jump else F[target]))
+    return activity(
+        a, 'number_line', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'practice', 'practice', 'symbolic',
+        scene, answer, tags, hint_set(a, h3, ('pick', 'line')), a.get('goal', 'child finds the number on the line'),
+        prompt=a['prompt'], correct=a.get('correct_text') or '%s! נָחַתֶּם בַּמָּקוֹם הַנָּכוֹן.' % F[target])
+
+
+def k_scale(a, ctx):
+    """A balance. Mode compare: which side is heavier (or the same). Mode balance: add blocks until the scale is level."""
+    left = [{'sprite': 'asset:' + g[0], 'count': g[1]} | ({'weight': g[2]} if len(g) > 2 else {}) for g in a['left']]
+    right = [{'sprite': 'asset:' + g[0], 'count': g[1]} | ({'weight': g[2]} if len(g) > 2 else {}) for g in a.get('right', [])]
+    scene = {'background': 'asset:meadow', 'left': {'groups': left}, 'right': {'groups': right}}
+    weigh = a['mode'] == 'balance'
+    if weigh:
+        scene['blockSprite'] = 'asset:' + a.get('block', 'block')
+    if a.get('hideTilt'):
+        scene['hideTilt'] = True
+    tag = a.get('tag', 'M-MEAS-BIG')
+    return activity(
+        a, 'balance', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'practice', 'practice', 'concrete',
+        scene, {'type': 'scale', 'mode': a['mode'], 'result': str(a['result']), 'misconception': tag}, {tag},
+        hint_set(a, a.get('h3') or 'הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה. עַכְשָׁו תּוֹרְכֶם.', ('pick', 'scale')),
+        a.get('goal', 'child reads the scale'), prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הַמֹּאזְנַיִם אוֹמְרוֹת.')
+
+
+def k_spot(a, ctx):
+    """A row made by a friend with one mistake in it. Cells: sprite ids, "n:7", "dir:up", "op:+"."""
+    cells = ['asset:' + c if not c.split(':')[0] in ('n', 'dir', 'op') else c for c in a['cells']]
+    tag = a.get('tag', 'M-PAT-NEXT')
+    return activity(
+        a, 'spot_error', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'check', 'reverse', a.get('rep', 'symbolic'),
+        {'background': 'asset:meadow', 'cells': cells}, {'type': 'spot', 'wrong': a['wrong'], 'misconception': tag}, {tag},
+        hint_set(a, a.get('h3') or 'אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.', ('pick', 'spot')),
+        a.get('goal', 'child finds the one that does not fit'), prompt=a['prompt'],
+        correct=a.get('correct_text') or 'כֵּן! מָצָאתֶם אֶת הַטָּעוּת.')
+
+
+
+def k_sum(a, ctx):
+    """A small story with a number: add (join), take (take away) or missing (the part that is not in the basket)."""
+    obj = ctx['objects'][a['obj']]
+    x, y, mode = a['a'], a['b'], a['mode']
+    tags = {}
+    if mode == 'add':
+        r = x + y
+        prompt = 'יֵשׁ %s. מוֹסִיפִים עוֹד %s. כַּמָּה יֵשׁ עַכְשָׁו?' % (qty(x, obj), qty(y, obj))
+        extra = {'group': {'sprite': a['obj'], 'count': x}, 'group2': {'sprite': a['obj'], 'count': y}}
+        text = '%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[r], num_g(x, obj), num_g(y, obj), F[r])
+        h3 = '%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (num_g(x, obj), num_g(y, obj), count_words(r), F[r])
+        others = [x, r + 1] if x != r + 1 else [r + 1, r + 2]
+    elif mode == 'take':
+        r = x - y
+        prompt = 'יֵשׁ %s. לוֹקְחִים %s. כַּמָּה נִשְׁאֲרוּ?' % (qty(x, obj), qty(y, obj))
+        extra = {'group': {'sprite': a['obj'], 'count': x}}
+        text = '%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[r], num_g(x, obj), num_g(y, obj), F[r])
+        h3 = '%s פָּחוֹת %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (num_g(x, obj), num_g(y, obj), count_words(max(r, 1)), F[r])
+        others = [r + 1, r - 1] if r >= 1 else [r + 1, r + 2]
+    else:
+        r = x - y
+        prompt = 'יֵשׁ %s בְּסַךְ הַכֹּל. %s בַּסַּל. כַּמָּה בַּחוּץ?' % (qty(x, obj), qty(y, obj))
+        extra = {'group': {'sprite': a['obj'], 'count': x}}
+        text = '%s! %s וְעוֹד %s הֵם %s.' % (F[r], num_g(y, obj), num_g(r, obj), F[x])
+        h3 = '%s בְּסַךְ הַכֹּל, %s בַּסַּל. מַה שֶּׁנִּשְׁאַר בַּחוּץ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+            num_g(x, obj), num_g(y, obj), F[r], F[r])
+        others = [x, r + 1] if x != r + 1 else [r + 1, r + 2]
+        tags = {'n:%d' % x: 'M-PART-MISS'}
+    opts = ['n:%d' % v for v in place(r, others, a.get('pos', 1))]
+    return k_pick(pick_spec(a, prompt=prompt, options=['n:%d' % v for v in place(r, others, a.get('pos', 1))], correct='n:%d' % r,
+                            tags=tags, rep='concrete', correct_text=text, h3=h3, **extra), ctx)
+
+
 KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}
 
 
@@ -775,7 +915,7 @@ KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}
 def skill_file(s):
     cap = lambda t: [{'t': 'he', 'v': t}]
     d = {
-        'schema': 'skill/v1', 'id': s['id'], 'review': 'needs-editor', 'domain': s.get('domain', 'numbers'), 'band': 'A',
+        'schema': 'skill/v1', 'id': s['id'], 'review': 'needs-editor', 'domain': s.get('domain', 'numbers'), 'band': s.get('band', 'A'),
         'title': cap(s['title']), 'worldObject': s['world'], 'childLine': cap(s['child']),
         'prerequisites': [{'skill': p, 'weight': 1} for p in s['needs']],
         'representations': s['reps'], 'misconceptions': s['tags'],
@@ -797,7 +937,7 @@ def tag_file(t):
 
 def lesson_file(l, sequence):
     return {
-        'schema': 'lesson/v1', 'id': l['id'], 'review': 'needs-editor', 'revision': 1, 'band': 'A',
+        'schema': 'lesson/v1', 'id': l['id'], 'review': 'needs-editor', 'revision': 1, 'band': l.get('band', 'A'),
         'title': [{'t': 'he', 'v': l['title']}], 'skills': l['skills'], 'items': l['items'],
         'estimatedMinutes': l.get('minutes', 4), 'sequence': sequence, 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done']),
     }
@@ -813,6 +953,7 @@ def main(path):
     spec = json.load(open(path, encoding='utf-8'))
     for sk in spec['skills']:
         sk.setdefault('domain', spec.get('domain', 'numbers'))
+        sk.setdefault('band', spec.get('band', 'A'))
     ctx = {'objects': spec.get('objects', {}), 'names': spec.get('names', {})}
     # a thing in every colour is named once: noun + adjective ("כַּדּוּר אָדֹם"), the sprite id is thing_colour
     for thing, (noun, gender) in spec.get('things', {}).items():
@@ -830,12 +971,14 @@ def main(path):
     ids = set()
     for a in spec['activities']:
         a.setdefault('domain', spec.get('domain', 'numbers'))
+        a.setdefault('band', spec.get('band', 'A'))
         assert a['id'] not in ids, 'duplicate activity id ' + a['id']
         ids.add(a['id'])
         write('activity.%s.json' % a['id'], KINDS[a['kind']](a, ctx))
         made['activity'] += 1
     # The path of the land: the lessons in the order of the spec, after the older lessons the spec names in "after".
     for number, l in enumerate(spec['lessons'], start=spec.get('firstSequence', 2)):
+        l.setdefault('band', spec.get('band', 'A'))
         for item in l['items']:
             assert item in ids or os.path.exists(os.path.join(OUT, 'activity.%s.json' % item)), 'no activity ' + item
         write('lesson.%s.json' % l['id'], lesson_file(l, number))
@@ -857,4 +1000,5 @@ def main(path):
     print('wrote', made, 'and', len(lines), 'voice lines')
 
 
-main(sys.argv[1])
+if __name__ == '__main__':
+    main(sys.argv[1])

@@ -35,7 +35,10 @@
         "sort_drag",
         "build_pattern",
         "robot_path",
-        "shape_builder"
+        "shape_builder",
+        "number_line",
+        "balance",
+        "spot_error"
       ]
     },
     "templateVersion": {
@@ -223,7 +226,7 @@
             "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
           },
           "minItems": 2,
-          "maxItems": 4
+          "maxItems": 6
         }
       },
       "required": [

@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-13",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "שׁוֹקְלִים עַל מֹאזְנַיִם"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מִי כָּבֵד יוֹתֵר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-MEAS-BIG"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

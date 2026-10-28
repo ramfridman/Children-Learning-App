@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "what-time",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מָה הַשָּׁעָה"
+    }
+  ],
+  "skills": [
+    "MATH-B-15"
+  ],
+  "items": [
+    "b.mathb15.1",
+    "b.mathb15.2",
+    "b.mathb15.3",
+    "b.mathb15.4",
+    "b.mathb15.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 47,
+  "celebration": {
+    "vo": "vo:celebrate.what_time",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! קְרָאתֶם שָׁעוֹן."
+      }
+    ]
+  }
+}

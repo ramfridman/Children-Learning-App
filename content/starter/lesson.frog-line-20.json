@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "frog-line-20",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "צִיר עַד עֶשְׂרִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-13"
+  ],
+  "items": [
+    "b.numb13.7",
+    "b.numb13.8",
+    "b.numb13.9",
+    "b.numb13.10",
+    "b.numb13.11",
+    "b.numb13.12"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 45,
+  "celebration": {
+    "vo": "vo:celebrate.frog_line_20",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! הַצִּיר אָרֹךְ יוֹתֵר."
+      }
+    ]
+  }
+}

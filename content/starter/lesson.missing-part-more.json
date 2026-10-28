@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "missing-part-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד חֲלָקִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-02"
+  ],
+  "items": [
+    "b.mathb02.7",
+    "b.mathb02.8",
+    "b.mathb02.9",
+    "b.mathb02.10"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 33,
+  "celebration": {
+    "vo": "vo:celebrate.missing_part_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַכֹּל שָׁלֵם."
+      }
+    ]
+  }
+}

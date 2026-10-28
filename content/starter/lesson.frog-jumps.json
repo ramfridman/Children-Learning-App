@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "frog-jumps",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַצְּפַרְדֵּעַ קוֹפֶצֶת"
+    }
+  ],
+  "skills": [
+    "NUM-B-13"
+  ],
+  "items": [
+    "b.numb13.13",
+    "b.numb13.14",
+    "b.numb13.15",
+    "b.numb13.16",
+    "b.numb13.17",
+    "b.numb13.18",
+    "b.numb13.19"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 46,
+  "celebration": {
+    "vo": "vo:celebrate.frog_jumps",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! קְפִיצוֹת מְצֻיָּנוֹת."
+      }
+    ]
+  }
+}

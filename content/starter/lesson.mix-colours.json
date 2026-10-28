@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "mix-colours",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְעָרְבְּבִים צְבָעִים"
+    }
+  ],
+  "skills": [
+    "COL-B-01"
+  ],
+  "items": [
+    "b.colb01.1",
+    "b.colb01.2",
+    "b.colb01.3"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 30,
+  "celebration": {
+    "vo": "vo:celebrate.mix_colours",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! עֵרַבְתֶּם צְבָעִים."
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "balance-it",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְאַזְּנִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-13"
+  ],
+  "items": [
+    "b.mathb13.7",
+    "b.mathb13.8",
+    "b.mathb13.9",
+    "b.mathb13.10"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 45,
+  "celebration": {
+    "vo": "vo:celebrate.balance_it",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאוֹד! הַמֹּאזְנַיִם שָׁווֹת."
+      }
+    ]
+  }
+}

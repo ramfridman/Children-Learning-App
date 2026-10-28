@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-07",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "אפס בחיבור ובחיסור"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "אֶפֶס לֹא מְשַׁנֶּה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-03",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-A-14",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-NUM-ZERO"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

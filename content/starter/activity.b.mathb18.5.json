@@ -1,0 +1,162 @@
+{
+  "schema": "activity/v1",
+  "id": "b.mathb18.5",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-18",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.65
+  },
+  "prompt": {
+    "vo": "vo:b.mathb18.5.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שֵׁשׁ וְעוֹד כַּמָּה שָׁוֶה עֶשֶׂר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:6",
+      "op:+",
+      "?",
+      "op:=",
+      "n:10"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 10,
+        "label": "עֶשֶׂר",
+        "misconception": "M-EQ-OPER"
+      },
+      {
+        "id": "o2",
+        "numeral": 4,
+        "label": "אַרְבַּע"
+      },
+      {
+        "id": "o3",
+        "numeral": 5,
+        "label": "חָמֵשׁ"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.mathb18.5.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַרְבַּע! שֵׁשׁ וְעוֹד אַרְבַּע שָׁוֶה עֶשֶׂר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-EQ-OPER",
+        "vo": "vo:fb.eq_oper",
+        "caption": [
+          {
+            "t": "he",
+            "v": "סִימָן הַ-שָׁוֶה אוֹמֵר: שְׁנֵי הַצְּדָדִים אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.mathb18.5.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שֵׁשׁ, וְעוֹד… עַד עֶשֶׂר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע, עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "שֵׁשׁ וְעוֹד כַּמָּה שָׁוֶה עֶשֶׂר?"
+  }
+}

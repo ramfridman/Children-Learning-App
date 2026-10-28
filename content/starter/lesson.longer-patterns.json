@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "longer-patterns",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סֵדֶר שֶׁל שְׁלוֹשָׁה"
+    }
+  ],
+  "skills": [
+    "LOG-B-01"
+  ],
+  "items": [
+    "b.logb01.1",
+    "b.logb01.2",
+    "b.logb01.3",
+    "b.logb01.4"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 30,
+  "celebration": {
+    "vo": "vo:celebrate.longer_patterns",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִמְשַׁכְתֶּם סֵדֶר."
+      }
+    ]
+  }
+}

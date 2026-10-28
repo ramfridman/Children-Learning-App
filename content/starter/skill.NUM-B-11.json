@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-11",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סדר המספרים, אחד יותר ואחד פחות"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים מִסְפָּר שֶׁחָסֵר וּבְאֶחָד יוֹתֵר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-B-10",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CNT-SEQ"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

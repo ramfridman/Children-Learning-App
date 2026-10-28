@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-EQ-OPER",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-03",
+    "MATH-B-09",
+    "MATH-B-18"
+  ],
+  "parentText": "הילד קורא את סימן השוויון כ\"עכשיו מחשבים\", ולכן 7 = 3 + 4 נראה לו הפוך.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשים שני צדדים על מאזניים של בית, למשל שלוש כפיות ועוד ארבע מול שבע, ולומר: זה שווה, שני הצדדים אותו דבר."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "symbolic"
+  ]
+}

@@ -41,9 +41,12 @@ import 'give_n_session.dart';
 import 'lesson_controller.dart';
 import 'lesson_voice.dart';
 import 'tap_answer_session.dart';
+import 'balance_session.dart';
+import 'number_line_session.dart';
 import 'robot_path_session.dart';
 import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
+import 'spot_error_session.dart';
 import 'template_session.dart';
 
 /// Plays one lesson of the installed pack, activity after activity, until the celebration.
@@ -315,6 +318,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         BuildPatternActivity() => BuildPatternSession(c, a),
         RobotPathActivity() => RobotPathSession(c, a),
         ShapeBuilderActivity() => ShapeBuilderSession(c, a),
+        NumberLineActivity() => NumberLineSession(c, a),
+        BalanceActivity() => BalanceSession(c, a),
+        SpotErrorActivity() => SpotErrorSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
       };
       _sessionIndex = c.index;

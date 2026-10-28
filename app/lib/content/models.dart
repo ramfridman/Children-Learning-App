@@ -132,6 +132,9 @@ sealed class Activity {
     'build_pattern' => BuildPatternActivity._(json, assets),
     'robot_path' => RobotPathActivity._(json, assets),
     'shape_builder' => ShapeBuilderActivity._(json, assets),
+    'number_line' => NumberLineActivity._(json, assets),
+    'balance' => BalanceActivity._(json, assets),
+    'spot_error' => SpotErrorActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
   };
 
@@ -373,6 +376,120 @@ class BuildPatternActivity extends Activity {
   final int slots;
   final List<String> palette;
   final List<String> sequence;
+  final String? wrongTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag};
+}
+
+/// The number-line template (T09): put a marker on a number, or say where it lands after its hops.
+class NumberLineActivity extends Activity {
+  NumberLineActivity._(super.json, super.assets)
+    : from = _map(json['scene'])['from']! as int,
+      to = _map(json['scene'])['to']! as int,
+      markerSprite = _map(json['scene'])['markerSprite']! as String,
+      start = _map(json['scene'])['start'] as int?,
+      hops = <int>[
+        for (final Object? h in (_map(json['scene'])['hops'] as List<Object?>? ?? const <Object?>[]))
+          h! as int,
+      ],
+      labels = <int>[for (final Object? l in _map(json['scene'])['labels']! as List<Object?>) l! as int],
+      jump = _map(json['answer'])['mode'] == 'jump',
+      target = _map(json['answer'])['target']! as int,
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      mirrorTag = _map(json['answer'])['mirrorMisconception'] as String?,
+      super._();
+
+  final int from;
+  final int to;
+  final String markerSprite;
+
+  /// Where the marker starts (a jump), or null (the marker is put on the line by the child).
+  final int? start;
+
+  /// By how much each hop goes (negative: to the left).
+  final List<int> hops;
+
+  /// The numbers that have a written numeral under their tick.
+  final List<int> labels;
+  final bool jump;
+  final int target;
+  final String? wrongTag;
+
+  /// The tag for the mirror of the right answer: the child who runs the line from right to left.
+  final String? mirrorTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag, ?mirrorTag};
+}
+
+/// One kind of thing on a pan of a balance, how many there are and what one weighs (in blocks).
+class PanGroup {
+  const PanGroup({required this.sprite, required this.count, required this.weight});
+
+  final String sprite;
+  final int count;
+  final int weight;
+}
+
+/// The balance template (T08): compare two pans (which is heavier, or are they the same), or add blocks until it is level.
+class BalanceActivity extends Activity {
+  BalanceActivity._(super.json, super.assets)
+    : left = _pan(_map(json['scene'])['left']),
+      right = _pan(_map(json['scene'])['right']),
+      blockSprite = _map(json['scene'])['blockSprite'] as String?,
+      hideTilt = _map(json['scene'])['hideTilt'] == true,
+      weigh = _map(json['answer'])['mode'] == 'balance',
+      result = _map(json['answer'])['result']! as String,
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      super._();
+
+  static List<PanGroup> _pan(Object? pan) => <PanGroup>[
+    for (final Map<String, Object?> g in _maps(_map(pan)['groups']))
+      PanGroup(sprite: g['sprite']! as String, count: g['count']! as int, weight: (g['weight'] as int?) ?? 1),
+  ];
+
+  final List<PanGroup> left;
+  final List<PanGroup> right;
+  final String? blockSprite;
+  final bool hideTilt;
+
+  /// `balance` mode: add blocks to the right pan until the scale is level.
+  final bool weigh;
+
+  /// `left`, `right` or `same` (compare), or the number of blocks to add (balance).
+  final String result;
+  final String? wrongTag;
+
+  static int weightOf(List<PanGroup> pan) =>
+      pan.fold<int>(0, (int sum, PanGroup g) => sum + g.count * g.weight);
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag};
+}
+
+/// The spot-the-mistake template (T21): a row made by a friend with one mistake in it; the child touches the mistake.
+class SpotErrorActivity extends Activity {
+  SpotErrorActivity._(super.json, super.assets)
+    : cells = <String>[for (final Object? c in _map(json['scene'])['cells']! as List<Object?>) c! as String],
+      wrong = _map(json['answer'])['wrong']! as int,
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      super._();
+
+  /// Each cell is `asset:id`, `n:7`, `dir:up` or `op:+`.
+  final List<String> cells;
+
+  /// The index of the cell that is wrong.
+  final int wrong;
   final String? wrongTag;
 
   @override

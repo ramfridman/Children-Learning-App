@@ -1,0 +1,165 @@
+{
+  "schema": "activity/v1",
+  "id": "b.logb01.5",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "logic",
+  "band": "B",
+  "skills": [
+    {
+      "id": "LOG-B-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.65
+  },
+  "prompt": {
+    "vo": "vo:b.logb01.5.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה בָּא אַחַר כָּךְ?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "asset:ball_red",
+      "asset:ball_blue",
+      "asset:ball_blue",
+      "asset:ball_red",
+      "asset:ball_blue",
+      "asset:ball_blue",
+      "asset:ball_red",
+      "?"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:ball_red",
+        "label": "כַּדּוּר אָדֹם",
+        "misconception": "M-PAT-NEXT"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:ball_blue",
+        "label": "כַּדּוּר כָּחֹל"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:ball_yellow",
+        "label": "כַּדּוּר צָהֹב"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.logb01.5.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! הַסֵּדֶר חוֹזֵר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PAT-NEXT",
+        "vo": "vo:fb.pat_next",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מָה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.logb01.5.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַחֵלֶק שֶׁחוֹזֵר הוּא: כַּדּוּר אָדֹם, כַּדּוּר כָּחֹל, כַּדּוּר כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מָה בָּא אַחַר כָּךְ?"
+  }
+}

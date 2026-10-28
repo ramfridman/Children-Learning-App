@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "weigh-it",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "שׁוֹקְלִים"
+    }
+  ],
+  "skills": [
+    "MATH-B-13"
+  ],
+  "items": [
+    "b.mathb13.1",
+    "b.mathb13.2",
+    "b.mathb13.3",
+    "b.mathb13.4",
+    "b.mathb13.5",
+    "b.mathb13.6"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 44,
+  "celebration": {
+    "vo": "vo:celebrate.weigh_it",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לִשְׁקֹל."
+      }
+    ]
+  }
+}

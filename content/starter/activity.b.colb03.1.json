@@ -1,0 +1,162 @@
+{
+  "schema": "activity/v1",
+  "id": "b.colb03.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "colors",
+  "band": "B",
+  "skills": [
+    {
+      "id": "COL-B-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.37
+  },
+  "prompt": {
+    "vo": "vo:b.colb03.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה עוֹד כָּחֹל?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:shade_blue_1",
+      "count": 1,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:shade_blue_3",
+        "label": "כָּחֹל כֵּהֶה"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:shade_red_1",
+        "label": "אָדֹם בָּהִיר",
+        "misconception": "M-COL-SHADE"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:shade_red_2",
+        "label": "אָדֹם"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.colb03.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! גַּם זֶה כָּחֹל."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-COL-SHADE",
+        "vo": "vo:fb.col_shade",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּחֹל בָּהִיר וְכָחֹל כֵּהֶה הֵם שְׁנֵיהֶם כָּחֹל. בּוֹאוּ נִסְתַּכֵּל עַל הַצֶּבַע."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.colb03.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיפֹה עוֹד כָּחֹל?"
+  }
+}

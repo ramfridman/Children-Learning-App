@@ -313,6 +313,227 @@
       [
         "Count the squares aloud together, starting with the first square after the robot, and point at the flag."
       ]
+    ],
+    "M-CNT-DECADE": [
+      [
+        "Remind the child that after nine comes a new ten, and invite counting slowly together up to the nine.",
+        "Suggest saying the numbers softly and stopping just before the next ten."
+      ],
+      [
+        "Count aloud together to the nine of this ten, then pause and let the child say what comes next.",
+        "Suggest tapping the numbers on a number line while counting."
+      ],
+      [
+        "Say the number that follows and let the child repeat the last few numbers with you."
+      ]
+    ],
+    "M-NUM-REV": [
+      [
+        "Invite the child to look at the first digit and say how many tens it tells.",
+        "Suggest reading the number slowly, left to right, one digit at a time."
+      ],
+      [
+        "Suggest comparing the two numbers and asking which one is bigger.",
+        "Suggest building the number from ten and some ones."
+      ],
+      [
+        "Point at the first digit, say the number, and invite the child to find it again."
+      ]
+    ],
+    "M-NUM-TEEN": [
+      [
+        "Remind the child that a teen number is a ten and some more, and invite looking at the group again.",
+        "Suggest separating ten of the objects first."
+      ],
+      [
+        "Suggest circling ten objects and counting only the rest.",
+        "Suggest saying ten and then the ones, slowly."
+      ],
+      [
+        "Say that ten and these few make the number, and point at the ones that are left."
+      ]
+    ],
+    "M-NL-SPACE": [
+      [
+        "Invite the child to look at the jumps along the line and count each jump, not each mark.",
+        "Suggest starting on the number and not counting it."
+      ],
+      [
+        "Suggest touching the starting number, then hopping one step at a time while saying the numbers.",
+        "Suggest counting the small gaps between the marks."
+      ],
+      [
+        "Hop along the line together, step by step, and stop where the landing number is."
+      ]
+    ],
+    "M-NL-DIR": [
+      [
+        "Remind the child that the line runs from small to big, from the left to the right, and invite looking at the first number.",
+        "Suggest finding zero or the smallest number first."
+      ],
+      [
+        "Suggest reading the labelled numbers from the left, out loud.",
+        "Suggest following the arrow along the line."
+      ],
+      [
+        "Point to the left end, then walk along to the right together until the right number."
+      ]
+    ],
+    "M-PART-MISS": [
+      [
+        "Invite the child to look at how many there are altogether and how many are already in the basket.",
+        "Suggest asking what is left outside."
+      ],
+      [
+        "Suggest covering the ones in the basket and counting only the others.",
+        "Suggest counting up from the part to the whole."
+      ],
+      [
+        "Say the whole, say the part, and let the child count what is left."
+      ]
+    ],
+    "M-EQ-OPER": [
+      [
+        "Remind the child that the equals sign means both sides are the same, and invite checking each side.",
+        "Suggest working out each side by itself first."
+      ],
+      [
+        "Suggest looking at the scale: both pans must be the same.",
+        "Suggest saying the equal sign out loud as the same as."
+      ],
+      [
+        "Work out one side together, then the other, and compare the two numbers."
+      ]
+    ],
+    "M-MEAS-BIG": [
+      [
+        "Invite the child to guess and then look at the scale, because big does not always mean heavy.",
+        "Suggest imagining holding each one in a hand."
+      ],
+      [
+        "Suggest watching which side goes down, and noticing it is the heavier one.",
+        "Suggest comparing one stone with one feather."
+      ],
+      [
+        "Point at the side that is lower and say that lower means heavier."
+      ]
+    ],
+    "M-CLOCK-HANDS": [
+      [
+        "Remind the child that the short thick hand tells the hour, and invite finding it first.",
+        "Suggest asking which hand is shorter."
+      ],
+      [
+        "Suggest looking only at the short hand and saying which number it is near.",
+        "Suggest saying that the long hand is on twelve for a whole hour."
+      ],
+      [
+        "Point at the short hand and say the number it shows."
+      ]
+    ],
+    "M-ADD-RECOUNT": [
+      [
+        "Invite the child to start from the bigger number and count on from there.",
+        "Suggest not counting the first group again."
+      ],
+      [
+        "Suggest saying the first number and then counting on with the fingers, one at a time.",
+        "Suggest hiding the first group and remembering how many it was."
+      ],
+      [
+        "Say the first number and count on together, one at a time, to the answer."
+      ]
+    ],
+    "M-COL-MIX": [
+      [
+        "Invite the child to think what happens when two paints are mixed, and look at the two colours again.",
+        "Suggest remembering the colours of the rainbow."
+      ],
+      [
+        "Suggest imagining the two paints on a page, side by side, slowly mixing.",
+        "Suggest comparing with a mix the child already knows."
+      ],
+      [
+        "Say the two colours and the colour they make, and invite the child to find it."
+      ]
+    ],
+    "M-COL-SHADE": [
+      [
+        "Remind the child that a light colour and a dark colour can be the same colour, and invite looking at the colour itself.",
+        "Suggest ignoring how light it is."
+      ],
+      [
+        "Suggest asking whether it is blue or red or green, only that.",
+        "Suggest thinking of the sky and the sea, both blue."
+      ],
+      [
+        "Say the colour name, and point at the one that has the same name."
+      ]
+    ],
+    "M-SHP-CLOSED": [
+      [
+        "Invite the child to follow the edge with a finger and see if it closes all the way around.",
+        "Suggest checking that every side is straight."
+      ],
+      [
+        "Suggest tracing the edge slowly and noticing any opening or curved side.",
+        "Suggest asking if an ant could walk all the way around."
+      ],
+      [
+        "Trace the edge together and say whether it is closed and straight."
+      ]
+    ],
+    "M-PAT-UNIT": [
+      [
+        "Invite the child to find the small part that repeats and say it out loud.",
+        "Suggest reading the row from the left, slowly."
+      ],
+      [
+        "Suggest saying the first few pictures and noticing where they start again.",
+        "Suggest tapping each picture while saying its name."
+      ],
+      [
+        "Say the repeating part together, then point at the picture that breaks it."
+      ]
+    ],
+    "M-PAT-GROW": [
+      [
+        "Invite the child to notice that each tower grows by one cube, and look at the next one again.",
+        "Suggest counting the cubes of each tower."
+      ],
+      [
+        "Suggest counting the cubes of the tower before and adding one.",
+        "Suggest saying the numbers one after the other."
+      ],
+      [
+        "Count the cubes of the last tower together and add one more."
+      ]
+    ],
+    "M-LOG-NOT": [
+      [
+        "Remind the child that there are two clues, and the answer must fit both of them.",
+        "Suggest dealing with one clue at a time."
+      ],
+      [
+        "Suggest crossing out the ones that break the first clue, then checking the second clue.",
+        "Suggest saying the two clues out loud."
+      ],
+      [
+        "Say the first clue and put aside what does not fit, then the second, and point at what is left."
+      ]
+    ],
+    "M-CS-FIXALL": [
+      [
+        "Remind the child that only one step is wrong, and invite reading the steps one at a time.",
+        "Suggest comparing each step with the one that should come."
+      ],
+      [
+        "Suggest saying each step out loud and stopping at the one that is different.",
+        "Suggest comparing the steps in pairs."
+      ],
+      [
+        "Read the steps together until the different one, and point at it."
+      ]
     ]
   }
 }

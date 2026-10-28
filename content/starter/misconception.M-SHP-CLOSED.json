@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHP-CLOSED",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-B-01",
+    "SHP-B-04"
+  ],
+  "parentText": "הילד מכנה צורה פתוחה או עם צלע עקומה \"משולש\" או \"מרובע\", כי היא נראית דומה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לצייר בעיפרון משולש, ואז לצייר אחד שלא סגור בפינה, ולשאול: האם נמלה יכולה ללכת מסביב בלי לצאת?"
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial",
+    "concrete"
+  ]
+}

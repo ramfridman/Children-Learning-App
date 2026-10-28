@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-NUM-TEEN",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-B-16"
+  ],
+  "parentText": "הילד קורא מספר בין 11 ל-19 כספרה אחת בלבד, ולא כעשר ועוד כמה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשים עשר כפיות בצד ואת השאר בצד אחר, ולומר: ארבע עשרה זה עשר ועוד ארבע."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

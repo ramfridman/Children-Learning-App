@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-18",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוצאים מספר חסר"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַמִּסְפָּר הֶחָסֵר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-02",
+      "weight": 1
+    },
+    {
+      "skill": "MATH-B-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-EQ-OPER"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

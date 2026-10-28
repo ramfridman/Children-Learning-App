@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-17",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סופרים בעשרות ובזוגות"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים בַּעֲשָׂרוֹת וּבִשְׁתַּיִם"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-B-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CNT-DECADE",
+    "M-CNT-SEQ"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

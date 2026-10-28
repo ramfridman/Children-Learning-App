@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "rocket-countdown",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "סְפִירָה לַאֲחוֹר"
+    }
+  ],
+  "skills": [
+    "NUM-B-03"
+  ],
+  "items": [
+    "b.numb03.1",
+    "b.numb03.2",
+    "b.numb03.3",
+    "b.numb03.4",
+    "b.numb03.5",
+    "b.numb03.6",
+    "b.numb03.7",
+    "b.numb03.8"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 34,
+  "celebration": {
+    "vo": "vo:celebrate.rocket_countdown",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שָׁלוֹשׁ, שְׁתַּיִם, אַחַת… הַחַלָּלִית טָסָה!"
+      }
+    ]
+  }
+}

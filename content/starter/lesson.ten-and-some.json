@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "ten-and-some",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עֶשֶׂר וְעוֹד כַּמָּה"
+    }
+  ],
+  "skills": [
+    "NUM-B-16"
+  ],
+  "items": [
+    "b.numb16.1",
+    "b.numb16.2",
+    "b.numb16.3",
+    "b.numb16.4",
+    "b.numb16.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 49,
+  "celebration": {
+    "vo": "vo:celebrate.ten_and_some",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! רְאִיתֶם אֶת הָעֶשֶׂר."
+      }
+    ]
+  }
+}

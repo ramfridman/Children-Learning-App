@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "CS-B-04",
+  "review": "needs-editor",
+  "domain": "cs",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מתקנים תוכנית"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַצַּעַד הַלֹּא נָכוֹן"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "CS-B-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-CS-FIXALL"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

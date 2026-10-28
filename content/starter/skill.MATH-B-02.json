@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-02",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוצאים חלק שחסר"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַחֵלֶק שֶׁחָסֵר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-B-14",
+      "weight": 1
+    },
+    {
+      "skill": "MATH-B-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-PART-MISS"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

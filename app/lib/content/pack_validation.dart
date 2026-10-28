@@ -254,7 +254,7 @@ List<Problem> validatePack({
         checkAsset(file, 'scene.background', scene['background']);
         _options(file, answer, say, checkTag, checkAsset: checkAsset);
         for (final (int i, Object? r) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
-          if (r != '?') checkAsset(file, 'scene.row[$i]', r);
+          if (r is String && r.startsWith('asset:')) checkAsset(file, 'scene.row[$i]', r);
         }
         for (final String g in <String>['group', 'group2']) {
           final Object? group = scene[g];
@@ -302,6 +302,77 @@ List<Problem> validatePack({
         if (!_maps(answer['options']).any((Map<String, Object?> o) => o['misconception'] != null)) {
           say(file, 'answer.options', 'at least one wrong answer must name the misconception it shows');
         }
+      case 'number_line':
+        checkAsset(file, 'scene.background', scene['background']);
+        checkAsset(file, 'scene.markerSprite', scene['markerSprite']);
+        final int lineFrom = scene['from']! as int;
+        final int lineTo = scene['to']! as int;
+        if (lineFrom >= lineTo) say(file, 'scene.to', 'must be larger than from');
+        bool onLine(int n) => n >= lineFrom && n <= lineTo;
+        final int target = answer['target']! as int;
+        if (!onLine(target)) say(file, 'answer.target', 'is not on the line');
+        for (final (int i, Object? l) in (scene['labels']! as List<Object?>).indexed) {
+          if (!onLine(l! as int)) say(file, 'scene.labels[$i]', 'is not on the line');
+        }
+        if (answer['mode'] == 'jump') {
+          final int? from = scene['start'] as int?;
+          final List<Object?> hops = (scene['hops'] as List<Object?>?) ?? const <Object?>[];
+          if (from == null || hops.isEmpty || !onLine(from)) {
+            say(file, 'scene.start', 'a jump needs a start on the line and at least one hop');
+          } else {
+            int at = from;
+            for (final Object? h in hops) {
+              at += h! as int;
+              if (!onLine(at)) {
+                say(file, 'scene.hops', 'the marker leaves the line');
+                break;
+              }
+            }
+            if (at != target) say(file, 'answer.target', 'is not where the hops end ($at)');
+          }
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
+        checkTag(file, 'answer.mirrorMisconception', answer['mirrorMisconception']);
+      case 'balance':
+        checkAsset(file, 'scene.background', scene['background']);
+        checkAsset(file, 'scene.blockSprite', scene['blockSprite']);
+        int panWeight(Object? pan, String path) {
+          int total = 0;
+          for (final (int i, Map<String, Object?> g) in _maps(
+            (pan! as Map<String, Object?>)['groups'],
+          ).indexed) {
+            checkAsset(file, '$path.groups[$i].sprite', g['sprite']);
+            total += (g['count']! as int) * ((g['weight'] as int?) ?? 1);
+          }
+          return total;
+        }
+        final int wl = panWeight(scene['left'], 'scene.left');
+        final int wr = panWeight(scene['right'], 'scene.right');
+        final String result = answer['result']! as String;
+        if (answer['mode'] == 'balance') {
+          if (scene['blockSprite'] == null) {
+            say(file, 'scene.blockSprite', 'a balance task needs the picture of the blocks');
+          }
+          if (result != '${wl - wr}' || wl - wr < 1) {
+            say(
+              file,
+              'answer.result',
+              'must be the number of blocks that make it level (${wl - wr}, at least 1)',
+            );
+          }
+        } else {
+          final String truth = wl == wr ? 'same' : (wl > wr ? 'left' : 'right');
+          if (result != truth) say(file, 'answer.result', 'is not what the pans weigh ($truth)');
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
+      case 'spot_error':
+        checkAsset(file, 'scene.background', scene['background']);
+        final List<Object?> cells = scene['cells']! as List<Object?>;
+        for (final (int i, Object? c) in cells.indexed) {
+          if (c is String && c.startsWith('asset:')) checkAsset(file, 'scene.cells[$i]', c);
+        }
+        if ((answer['wrong']! as int) >= cells.length) say(file, 'answer.wrong', 'is not a cell of the row');
+        checkTag(file, 'answer.misconception', answer['misconception']);
       case 'shape_builder':
         checkAsset(file, 'scene.background', scene['background']);
         final List<Map<String, Object?>> slots = _maps(scene['slots']);

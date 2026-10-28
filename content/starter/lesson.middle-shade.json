@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "middle-shade",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַגָּוֶן שֶׁבָּאֶמְצַע"
+    }
+  ],
+  "skills": [
+    "COL-B-02"
+  ],
+  "items": [
+    "b.colb02.7",
+    "b.colb02.8",
+    "b.colb02.9",
+    "b.colb02.10",
+    "b.colb02.11"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 33,
+  "celebration": {
+    "vo": "vo:celebrate.middle_shade",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! מְצָאתֶם אֶת הָאֶמְצַע."
+      }
+    ]
+  }
+}

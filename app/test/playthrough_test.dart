@@ -6,10 +6,13 @@ import 'package:nitznutz/play/build_pattern_session.dart';
 import 'package:nitznutz/play/count_tap_session.dart';
 import 'package:nitznutz/play/flash_session.dart';
 import 'package:nitznutz/play/give_n_session.dart';
+import 'package:nitznutz/play/balance_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
+import 'package:nitznutz/play/number_line_session.dart';
 import 'package:nitznutz/play/robot_path_session.dart';
 import 'package:nitznutz/play/shape_builder_session.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
+import 'package:nitznutz/play/spot_error_session.dart';
 import 'package:nitznutz/play/tap_answer_session.dart';
 import 'package:nitznutz/play/template_session.dart';
 
@@ -73,6 +76,16 @@ void main() {
     ShapeBuilderActivity() => <Future<Outcome> Function(LessonController)>[
       (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
     ],
+    NumberLineActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+      if (a.mirrorTag != null) (LessonController c) => c.submitPlacement(right: false, tag: a.mirrorTag!),
+    ],
+    BalanceActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+    ],
+    SpotErrorActivity() => <Future<Outcome> Function(LessonController)>[
+      (LessonController c) => c.submitPlacement(right: false, tag: a.wrongTag ?? ''),
+    ],
     GiveNActivity() => <Future<Outcome> Function(LessonController)>[
       for (final int n in <int>{
         if (a.n > 1) a.n - 1,
@@ -94,6 +107,9 @@ void main() {
       BuildPatternActivity() => c.submitPlacement(right: true),
       RobotPathActivity() => c.submitPlacement(right: true),
       ShapeBuilderActivity() => c.submitPlacement(right: true),
+      NumberLineActivity() => c.submitPlacement(right: true),
+      BalanceActivity() => c.submitPlacement(right: true),
+      SpotErrorActivity() => c.submitPlacement(right: true),
     };
   }
 
@@ -178,6 +194,10 @@ void main() {
         'sort_drag',
         'build_pattern',
         'robot_path',
+        'shape_builder',
+        'number_line',
+        'balance',
+        'spot_error',
       ]),
     );
     // Every misconception a wrong answer can carry was produced by some wrong move, and has a line of its own.
@@ -236,6 +256,9 @@ void main() {
               BuildPatternActivity() => BuildPatternSession(c, a),
               RobotPathActivity() => RobotPathSession(c, a),
               ShapeBuilderActivity() => ShapeBuilderSession(c, a),
+              NumberLineActivity() => NumberLineSession(c, a),
+              BalanceActivity() => BalanceSession(c, a),
+              SpotErrorActivity() => SpotErrorSession(c, a),
             };
             await tester.pumpWidget(
               MaterialApp(

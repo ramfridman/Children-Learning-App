@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/play/balance_session.dart';
 import 'package:nitznutz/play/build_pattern_session.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
+import 'package:nitznutz/play/number_line_session.dart';
 import 'package:nitznutz/play/robot_path_session.dart';
 import 'package:nitznutz/play/shape_builder_session.dart';
 import 'package:nitznutz/play/sort_drag_session.dart';
+import 'package:nitznutz/play/spot_error_session.dart';
 import 'package:nitznutz/play/template_session.dart';
 
 import 'support/fakes.dart';
@@ -492,6 +495,153 @@ void main() {
       await tester.tapAt(onSlot(tester, a, 's1'));
       await tester.pump(const Duration(milliseconds: 60));
       expect(s.filled, <String>{'s1'});
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+  });
+
+  group('the number line', () {
+    /// A point on the line for the number [n], whatever the width of the stage.
+    Offset onTick(WidgetTester t, NumberLineActivity a, int n) {
+      final Rect r = t.getRect(find.byKey(const Key('line-touch')));
+      const double pad = 22;
+      return Offset(r.left + pad + (n - a.from) / (a.to - a.from) * (r.width - 2 * pad), r.center.dy);
+    }
+
+    testWidgets(
+      'a touch on the right tick is the answer; a wrong tick is a not-yet, and the mirror has its own tag',
+      (WidgetTester tester) async {
+        final LessonController c = start('frog-line-10', 0);
+        final NumberLineActivity a = c.current as NumberLineActivity;
+        final NumberLineSession s = NumberLineSession(c, a);
+        await host(tester, s);
+        await tester.tapAt(onTick(tester, a, 5));
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-NL-SPACE');
+        await settle(tester);
+        await tester.tapAt(onTick(tester, a, a.from + a.to - a.target));
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(written.last.result, 'incorrect');
+        expect(written.last.misconceptionTag, 'M-NL-DIR', reason: 'the line read from the right');
+        await settle(tester);
+        await tester.tapAt(onTick(tester, a, a.target));
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(written.last.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets(
+      'after three wrong touches only the right tick is taken, and the guide counts along the line',
+      (WidgetTester tester) async {
+        final LessonController c = start('frog-line-10', 0);
+        final NumberLineActivity a = c.current as NumberLineActivity;
+        final NumberLineSession s = NumberLineSession(c, a);
+        await host(tester, s);
+        for (int k = 0; k < a.maxAttempts; k++) {
+          await tester.tapAt(onTick(tester, a, 9));
+          await tester.pump(const Duration(milliseconds: 60));
+          await settle(tester);
+        }
+        expect(c.guided, isTrue);
+        final int before = written.length;
+        await tester.tapAt(onTick(tester, a, 9));
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(written.length, before, reason: 'not counted again');
+        await settle(tester, 6000);
+        await tester.tapAt(onTick(tester, a, a.target));
+        await tester.pump(const Duration(milliseconds: 60));
+        expect(written.last.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  });
+
+  group('the balance', () {
+    testWidgets('compare: the wrong side carries the misconception, the right answer ends the activity', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('equals-balance', 0);
+      final BalanceActivity a = c.current as BalanceActivity;
+      expect(a.result, 'same');
+      final BalanceSession s = BalanceSession(c, a);
+      await host(tester, s);
+      expect(s.lean, 0, reason: 'a sum that is being compared must not lean before the answer');
+      await tap(tester, 'balance-left');
+      expect(written.single.result, 'incorrect');
+      expect(written.single.misconceptionTag, 'M-EQ-OPER');
+      await settle(tester);
+      await tap(tester, 'balance-same');
+      expect(written.last.result, 'correct');
+      await settle(tester);
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('balance: blocks are added one by one, and a level scale is the answer', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('balance-it', 0);
+      final BalanceActivity a = c.current as BalanceActivity;
+      final int need = int.parse(a.result);
+      final BalanceSession s = BalanceSession(c, a);
+      await host(tester, s);
+      for (int k = 0; k < need; k++) {
+        await tap(tester, 'balance-plus');
+      }
+      expect(s.added, need);
+      expect(written.single.result, 'correct');
+      await settle(tester);
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+  });
+
+  group('spot the mistake', () {
+    testWidgets('a touch on the mistake is right; any other cell is a not-yet with the misconception', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('count-order', 0);
+      final SpotErrorActivity a = c.current as SpotErrorActivity;
+      final SpotErrorSession s = SpotErrorSession(c, a);
+      await host(tester, s);
+      final int other = a.wrong == 0 ? 1 : 0;
+      await tap(tester, 'cell-$other');
+      expect(written.single.result, 'incorrect');
+      expect(written.single.misconceptionTag, 'M-CNT-SEQ');
+      await settle(tester);
+      await tap(tester, 'cell-${a.wrong}');
+      expect(written.last.result, 'correct');
+      await settle(tester);
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('after three wrong touches only the mistake is taken, and the help rings it', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('count-order', 0);
+      final SpotErrorActivity a = c.current as SpotErrorActivity;
+      final SpotErrorSession s = SpotErrorSession(c, a);
+      await host(tester, s);
+      final int other = a.wrong == 0 ? 1 : 0;
+      for (int k = 0; k < a.maxAttempts; k++) {
+        await tap(tester, 'cell-$other');
+        await settle(tester);
+      }
+      expect(c.guided, isTrue);
+      expect(s.hintCell, a.wrong);
+      final int before = written.length;
+      await tap(tester, 'cell-$other');
+      expect(written.length, before, reason: 'not counted again');
+      await tap(tester, 'cell-${a.wrong}');
+      expect(written.last.result, 'correct');
+      await settle(tester);
       s.dispose();
       await tester.pumpWidget(const SizedBox());
     });

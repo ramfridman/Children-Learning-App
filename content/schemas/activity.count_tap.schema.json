@@ -35,7 +35,10 @@
         "sort_drag",
         "build_pattern",
         "robot_path",
-        "shape_builder"
+        "shape_builder",
+        "number_line",
+        "balance",
+        "spot_error"
       ]
     },
     "templateVersion": {
@@ -216,7 +219,7 @@
             "count": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 10
+              "maximum": 20
             },
             "arrangement": {
               "type": "string",

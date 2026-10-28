@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-B-03",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוראים תרגילים"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים תַּרְגִּילִים עִם פְּלוּס וּמִינוּס"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "MATH-B-01",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-A-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-EQ-OPER"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "core": true
+}

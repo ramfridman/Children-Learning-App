@@ -43,6 +43,9 @@ const Map<String, String> supportedTemplates = <String, String>{
   'build_pattern': '1.0',
   'robot_path': '1.0',
   'shape_builder': '1.0',
+  'number_line': '1.0',
+  'balance': '1.0',
+  'spot_error': '1.0',
 };
 
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
@@ -279,11 +282,27 @@ const SObject lessonSchema = SObject(<String, SField>{
 
 const SObject _sprite = SObject(<String, SField>{'sprite': SField(_asset)});
 
+/// What lies on one pan of a balance: groups of one picture each (`3 + 4` is two groups), and the weight of one of each.
+const SObject _pan = SObject(<String, SField>{
+  'groups': SField(
+    SArray(
+      SObject(<String, SField>{
+        'sprite': SField(_asset),
+        'count': SField(SInt(min: 1, max: 12)),
+        // How many blocks one of them weighs; 1 when it is not given.
+        'weight': SField(SInt(min: 1, max: 9), required: false),
+      }),
+      minItems: 0,
+      maxItems: 3,
+    ),
+  ),
+});
+
 /// Some of a thing, drawn as a group (tap_answer 1.1): a set to count, or an answer that is a set to choose.
 /// [scale] makes each picture larger or smaller without changing how many there are.
 const SObject _spriteSet = SObject(<String, SField>{
   'sprite': SField(_asset),
-  'count': SField(SInt(min: 0, max: 10)),
+  'count': SField(SInt(min: 0, max: 20)),
   'arrangement': SField(SEnum(<String>['line', 'scatter', 'dice', 'ten_frame']), required: false),
   'seed': SField(SInt(min: 0, max: 9999), required: false),
   'scale': SField(SNum(min: 0.5, max: 1.6), required: false),
@@ -355,6 +374,9 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'build_pattern',
       'robot_path',
       'shape_builder',
+      'number_line',
+      'balance',
+      'spot_error',
     ]),
   ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
@@ -423,13 +445,18 @@ SObject? activitySchemaFor(String template) => switch (template) {
           // Two groups side by side, for a comparison (1.1).
           'group2': SField(_spriteSet, required: false),
           // A numeral shown large on the stage, for "find the set that has this many" (1.1).
-          'numeral': SField(SInt(min: 0, max: 20), required: false),
+          'numeral': SField(SInt(min: 0, max: 100), required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
-          // A row of pictures with an optional gap ("?") to fill, for patterns and order (1.1).
+          // A row of pictures with an optional gap ("?") to fill, for patterns and order (1.1). A cell may also be a number (`n:7`)
+          // or a sign (`op:+`), for a number sentence.
           'row': SField(
             SArray(
-              SString(minLength: 1, maxLength: 46, pattern: r'asset:[a-z0-9_]{1,40}|\?'),
+              SString(
+                minLength: 1,
+                maxLength: 46,
+                pattern: r'asset:[a-z0-9_]{1,40}|\?|n:[0-9]{1,3}|op:[+=x:-]',
+              ),
               minItems: 2,
               maxItems: 8,
             ),
@@ -442,7 +469,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'id': const SField(_optionId),
           // An option is a picture, a numeral, or a set (1.1): exactly one of the three.
           'sprite': const SField(_asset, required: false),
-          'numeral': const SField(SInt(min: 0, max: 20), required: false),
+          'numeral': const SField(SInt(min: 0, max: 100), required: false),
           'set': const SField(_spriteSet, required: false),
           'label': const SField(SString(minLength: 1, maxLength: 80)),
           'speech': _speechWords,
@@ -460,7 +487,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
             SObject(<String, SField>{
               'sprite': SField(_asset),
               'litSprite': SField(_asset),
-              'count': SField(SInt(min: 1, max: 10)),
+              'count': SField(SInt(min: 1, max: 20)),
               'arrangement': SField(SEnum(<String>['line', 'scatter'])),
               'onTap': SField(SEnum(<String>['fly_to_target', 'glow'])),
               'seed': SField(SInt(min: 0, max: 9999)),
@@ -496,7 +523,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
       'answer': SField(
         _answerOptions(<String, SField>{
           'id': const SField(_optionId),
-          'numeral': const SField(SInt(min: 0, max: 20)),
+          'numeral': const SField(SInt(min: 0, max: 100)),
           'speech': _speechWords,
           'misconception': const SField(_tag, required: false),
         }),
@@ -553,17 +580,17 @@ SObject? activitySchemaFor(String template) => switch (template) {
         SObject(<String, SField>{
           'background': SField(_asset, required: false),
           'cols': SField(SInt(min: 3, max: 6)),
-          'rows': SField(SInt(min: 2, max: 3)),
+          'rows': SField(SInt(min: 2, max: 4)),
           'robot': SField(
             SObject(<String, SField>{
               'col': SField(SInt(min: 0, max: 5)),
-              'row': SField(SInt(min: 0, max: 2)),
+              'row': SField(SInt(min: 0, max: 3)),
             }),
           ),
           'goal': SField(
             SObject(<String, SField>{
               'col': SField(SInt(min: 0, max: 5)),
-              'row': SField(SInt(min: 0, max: 2)),
+              'row': SField(SInt(min: 0, max: 3)),
             }),
           ),
           'robotSprite': SField(_asset),
@@ -578,6 +605,91 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'solution': SField(
             SArray(SEnum(<String>['up', 'down', 'left', 'right']), minItems: 1, maxItems: 8),
           ),
+          'misconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
+  // T09: a number line from `from` to `to`, drawn left to right whatever the language. `place`: put the marker on a number.
+  // `jump`: the marker starts on a number and jumps; the child says where it lands.
+  'number_line' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'from': SField(SInt(min: 0, max: 100)),
+          'to': SField(SInt(min: 1, max: 100)),
+          // The marker's picture and where it starts (a number on the line); none in `place` mode.
+          'markerSprite': SField(_asset),
+          'start': SField(SInt(min: 0, max: 100), required: false),
+          // The hops of a `jump`: by how much each one goes (positive to the right, negative to the left).
+          'hops': SField(SArray(SInt(min: -20, max: 20), maxItems: 6), required: false),
+          // The numbers that carry a written numeral; the other ticks are plain marks.
+          'labels': SField(SArray(SInt(min: 0, max: 100), maxItems: 21)),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('line')),
+          'mode': SField(SEnum(<String>['place', 'jump'])),
+          'target': SField(SInt(min: 0, max: 100)),
+          'misconception': SField(_tag, required: false),
+          // The tag for a child who runs the line from right to left (the mirror of the right answer).
+          'mirrorMisconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
+  // T08: a balance scale. `compare`: which pan is heavier, or are they the same? `balance`: add blocks to the empty pan until
+  // the scale is level.
+  'balance' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'left': SField(_pan),
+          'right': SField(_pan),
+          // In `balance` mode the sprite of the blocks that the child adds.
+          'blockSprite': SField(_asset, required: false),
+          // The beam stays level until the child has answered (for sums that are being compared, not weighed).
+          'hideTilt': SField(SBool(), required: false),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('scale')),
+          'mode': SField(SEnum(<String>['compare', 'balance'])),
+          // `compare`: left, right or same. `balance`: how many blocks the child must add (as a number).
+          'result': SField(SString(minLength: 1, maxLength: 5, pattern: r'left|right|same|[0-9]{1,2}')),
+          'misconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
+  // T21: a row made by a friend that has one mistake in it; the child touches the mistake.
+  'spot_error' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // Each cell is a picture (`asset:`), a number (`n:7`), an arrow (`dir:up`) or a sign (`op:+`).
+          'cells': SField(
+            SArray(
+              SString(
+                minLength: 3,
+                maxLength: 46,
+                pattern: r'asset:[a-z0-9_]{1,40}|n:[0-9]{1,3}|dir:(up|down|left|right)|op:[+=x:-]',
+              ),
+              minItems: 3,
+              maxItems: 9,
+            ),
+          ),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('spot')),
+          'wrong': SField(SInt(min: 0, max: 8)),
           'misconception': SField(_tag, required: false),
         }),
       ),
@@ -629,7 +741,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
           // The pattern to copy, shown above the places.
           'model': SField(SArray(_asset, maxItems: 8), required: false),
           'slots': SField(SInt(min: 2, max: 8)),
-          'palette': SField(SArray(_asset, minItems: 2, maxItems: 4)),
+          'palette': SField(SArray(_asset, minItems: 2, maxItems: 6)),
         }),
       ),
       'answer': const SField(
@@ -647,7 +759,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
         SObject(<String, SField>{
           'background': SField(_asset, required: false),
           'source': SField(
-            SObject(<String, SField>{'sprite': SField(_asset), 'count': SField(SInt(min: 1, max: 12))}),
+            SObject(<String, SField>{'sprite': SField(_asset), 'count': SField(SInt(min: 1, max: 20))}),
           ),
           'target': SField(_sprite),
         }),
@@ -655,7 +767,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
       'answer': const SField(
         SObject(<String, SField>{
           'type': SField(SConst('give')),
-          'n': SField(SInt(min: 1, max: 12)),
+          'n': SField(SInt(min: 1, max: 20)),
           'classifiers': SField(
             SArray(
               SObject(<String, SField>{
@@ -700,4 +812,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.build_pattern': activitySchemaFor('build_pattern')!,
   'activity.robot_path': activitySchemaFor('robot_path')!,
   'activity.shape_builder': activitySchemaFor('shape_builder')!,
+  'activity.number_line': activitySchemaFor('number_line')!,
+  'activity.balance': activitySchemaFor('balance')!,
+  'activity.spot_error': activitySchemaFor('spot_error')!,
 };

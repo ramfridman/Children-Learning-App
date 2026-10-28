@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-16",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עשר ועוד כמה"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "רוֹאִים עֶשֶׂר וְעוֹד כַּמָּה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-B-08",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-B-14",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-NUM-TEEN"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

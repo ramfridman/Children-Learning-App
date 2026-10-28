@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-05",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "נותנים עד 20"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "נוֹתְנִים בְּדִיּוּק כַּמָּה שֶׁמְּבַקְשִׁים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-B-04",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-A-06",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-CNT-CARD"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

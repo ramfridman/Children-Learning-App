@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-ADD-RECOUNT",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-01",
+    "MATH-B-08"
+  ],
+  "parentText": "הילד סופר הכול מההתחלה במקום להמשיך מהמספר הגדול.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להסתיר חמש מטבעות בכף יד סגורה, ולהוסיף עוד שלושה אחד אחד: חמש… שש, שבע, שמונה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}
