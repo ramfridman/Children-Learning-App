@@ -283,6 +283,27 @@ final List<Broken> _cases = <Broken>[
     'numbered 1, 2, 3 in order',
   ),
   Broken(
+    'tap_answer: an option that is a picture and a numeral at once',
+    (SamplePack p) => _m(_l(_m(p.doc(_t)['answer'])['options'])[0])['numeral'] = 3,
+    '$_t › answer.options[0]',
+    'exactly one of a sprite, a numeral or a set',
+  ),
+  Broken(
+    'tap_answer: two options that look the same',
+    (SamplePack p) {
+      final List<Object?> o = _l(_m(p.doc(_t)['answer'])['options']);
+      _m(o[1])['sprite'] = _m(o[0])['sprite'];
+    },
+    '$_t › answer.options',
+    'two options look the same',
+  ),
+  Broken(
+    'tap_answer: a group whose picture is not in the pack',
+    (SamplePack p) => _m(p.doc(_t)['scene'])['group'] = <String, Object?>{'sprite': 'asset:nope', 'count': 3},
+    '$_t › scene.group.sprite',
+    'is not in the manifest assets',
+  ),
+  Broken(
     'activity: the second hint helps in the same way as the first',
     (SamplePack p) => _m(_l(p.doc(_c)['hints'])[1])['action'] = 'replay_prompt_slow',
     '$_c › hints[1].action',

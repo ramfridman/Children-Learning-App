@@ -35,7 +35,7 @@ abstract final class SchemaIds {
 
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
-  'tap_answer': '1.0',
+  'tap_answer': '1.1',
   'count_tap': '1.0',
   'give_n': '1.0',
 };
@@ -271,6 +271,16 @@ const SObject lessonSchema = SObject(<String, SField>{
 
 const SObject _sprite = SObject(<String, SField>{'sprite': SField(_asset)});
 
+/// Some of a thing, drawn as a group (tap_answer 1.1): a set to count, or an answer that is a set to choose.
+/// [scale] makes each picture larger or smaller without changing how many there are.
+const SObject _spriteSet = SObject(<String, SField>{
+  'sprite': SField(_asset),
+  'count': SField(SInt(min: 0, max: 10)),
+  'arrangement': SField(SEnum(<String>['line', 'scatter', 'dice', 'ten_frame']), required: false),
+  'seed': SField(SInt(min: 0, max: 9999), required: false),
+  'scale': SField(SNum(min: 0.5, max: 1.6), required: false),
+});
+
 /// Extra words a child may say for an option, with or without niqqud (a word the number or label does not give).
 const SField _speechWords = SField(
   SArray(SString(minLength: 1, maxLength: 40), minItems: 1, maxItems: 8),
@@ -386,11 +396,22 @@ const SArray _traceClassifiers = SArray(
 SObject? activitySchemaFor(String template) => switch (template) {
   'tap_answer' => SObject(
     _base(<String, SField>{
-      'scene': const SField(SObject(<String, SField>{'background': SField(_asset, required: false)})),
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // A group shown above the answers, to be counted or compared (1.1).
+          'group': SField(_spriteSet, required: false),
+          // Two groups side by side, for a comparison (1.1).
+          'group2': SField(_spriteSet, required: false),
+        }),
+      ),
       'answer': SField(
         _answerOptions(<String, SField>{
           'id': const SField(_optionId),
-          'sprite': const SField(_asset),
+          // An option is a picture, a numeral, or a set (1.1): exactly one of the three.
+          'sprite': const SField(_asset, required: false),
+          'numeral': const SField(SInt(min: 0, max: 20), required: false),
+          'set': const SField(_spriteSet, required: false),
           'label': const SField(SString(minLength: 1, maxLength: 80)),
           'speech': _speechWords,
           'misconception': const SField(_tag, required: false),

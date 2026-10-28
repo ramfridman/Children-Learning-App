@@ -192,6 +192,86 @@
           "minLength": 7,
           "maxLength": 46,
           "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+        },
+        "group": {
+          "type": "object",
+          "properties": {
+            "sprite": {
+              "type": "string",
+              "minLength": 7,
+              "maxLength": 46,
+              "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10
+            },
+            "arrangement": {
+              "type": "string",
+              "enum": [
+                "line",
+                "scatter",
+                "dice",
+                "ten_frame"
+              ]
+            },
+            "seed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9999
+            },
+            "scale": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1.6
+            }
+          },
+          "required": [
+            "sprite",
+            "count"
+          ],
+          "additionalProperties": false
+        },
+        "group2": {
+          "type": "object",
+          "properties": {
+            "sprite": {
+              "type": "string",
+              "minLength": 7,
+              "maxLength": 46,
+              "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10
+            },
+            "arrangement": {
+              "type": "string",
+              "enum": [
+                "line",
+                "scatter",
+                "dice",
+                "ten_frame"
+              ]
+            },
+            "seed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9999
+            },
+            "scale": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1.6
+            }
+          },
+          "required": [
+            "sprite",
+            "count"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [],
@@ -220,6 +300,51 @@
                 "maxLength": 46,
                 "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
               },
+              "numeral": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20
+              },
+              "set": {
+                "type": "object",
+                "properties": {
+                  "sprite": {
+                    "type": "string",
+                    "minLength": 7,
+                    "maxLength": 46,
+                    "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10
+                  },
+                  "arrangement": {
+                    "type": "string",
+                    "enum": [
+                      "line",
+                      "scatter",
+                      "dice",
+                      "ten_frame"
+                    ]
+                  },
+                  "seed": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9999
+                  },
+                  "scale": {
+                    "type": "number",
+                    "minimum": 0.5,
+                    "maximum": 1.6
+                  }
+                },
+                "required": [
+                  "sprite",
+                  "count"
+                ],
+                "additionalProperties": false
+              },
               "label": {
                 "type": "string",
                 "minLength": 1,
@@ -244,7 +369,6 @@
             },
             "required": [
               "id",
-              "sprite",
               "label"
             ],
             "additionalProperties": false

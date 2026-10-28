@@ -172,10 +172,40 @@ sealed class Activity {
   String? get background => _map(json['scene'])['background'] as String?;
 }
 
+/// Some of a thing, to draw as a group: the set to count in a scene, or an answer that is a set (tap_answer 1.1).
+class SpriteSet {
+  const SpriteSet({
+    required this.sprite,
+    required this.count,
+    this.arrangement = 'line',
+    this.seed = 0,
+    this.scale = 1,
+  });
+
+  factory SpriteSet.fromJson(Object? json) {
+    final Map<String, Object?> m = _map(json);
+    return SpriteSet(
+      sprite: m['sprite']! as String,
+      count: m['count']! as int,
+      arrangement: (m['arrangement'] as String?) ?? 'line',
+      seed: (m['seed'] as int?) ?? 0,
+      scale: ((m['scale'] as num?) ?? 1).toDouble(),
+    );
+  }
+
+  final String sprite;
+  final int count;
+  final String arrangement;
+  final int seed;
+  final double scale;
+}
+
 class ChoiceOption {
   const ChoiceOption({
     required this.id,
     this.value,
+    this.numeral,
+    this.set,
     this.sprite,
     this.label,
     this.misconception,
@@ -186,6 +216,10 @@ class ChoiceOption {
 
   /// The number a count option shows (`count_tap`).
   final int? value;
+
+  /// A `tap_answer` option that is a numeral (drawn as a number tile), or a set (some of a thing).
+  final int? numeral;
+  final SpriteSet? set;
 
   /// The picture of a `tap_answer` option (an `asset:` reference).
   final String? sprite;
@@ -201,6 +235,8 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
     ChoiceOption(
       id: o['id']! as String,
       value: o['value'] as int?,
+      numeral: o['numeral'] as int?,
+      set: o['set'] == null ? null : SpriteSet.fromJson(o['set']),
       sprite: o['sprite'] as String?,
       label: o['label'] as String?,
       misconception: o['misconception'] as String?,
@@ -214,10 +250,18 @@ class TapAnswerActivity extends Activity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctId = _map(json['answer'])['correct']! as String,
+      group = _map(json['scene'])['group'] == null ? null : SpriteSet.fromJson(_map(json['scene'])['group']),
+      group2 = _map(json['scene'])['group2'] == null
+          ? null
+          : SpriteSet.fromJson(_map(json['scene'])['group2']),
       super._();
 
   final List<ChoiceOption> options;
   final String correctId;
+
+  /// The thing to count or compare, shown above the answers (1.1), and a second one beside it for a comparison.
+  final SpriteSet? group;
+  final SpriteSet? group2;
 
   @override
   int get optionCount => options.length;

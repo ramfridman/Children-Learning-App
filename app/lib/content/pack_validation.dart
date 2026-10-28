@@ -253,6 +253,23 @@ List<Problem> validatePack({
       case 'tap_answer':
         checkAsset(file, 'scene.background', scene['background']);
         _options(file, answer, say, checkTag, checkAsset: checkAsset);
+        for (final String g in <String>['group', 'group2']) {
+          final Object? group = scene[g];
+          if (group is Map<String, Object?>) checkAsset(file, 'scene.$g.sprite', group['sprite']);
+        }
+        for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
+          final int kinds = <String>['sprite', 'numeral', 'set'].where(o.containsKey).length;
+          if (kinds != 1) {
+            say(file, 'answer.options[$i]', 'must be exactly one of a sprite, a numeral or a set');
+          }
+          final Object? set = o['set'];
+          if (set is Map<String, Object?>) checkAsset(file, 'answer.options[$i].set.sprite', set['sprite']);
+        }
+        // Two answers that look the same cannot be told apart by a child.
+        final List<String> looks = <String>[
+          for (final Map<String, Object?> o in _maps(answer['options'])) _look(o),
+        ];
+        if (looks.toSet().length != looks.length) say(file, 'answer.options', 'two options look the same');
       case 'count_tap':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
@@ -431,6 +448,16 @@ void _lengths(String file, Map<String, Object?> a, void Function(String, String,
   for (final (int i, Map<String, Object?> h) in _maps(a['hints']).indexed) {
     atMost('hints[$i].caption', h['caption'], 24);
   }
+}
+
+/// What an option looks like, as text, to find two that are the same.
+String _look(Map<String, Object?> o) {
+  final Object? set = o['set'];
+  final List<String> parts = <String>[
+    if (set is Map<String, Object?>)
+      for (final MapEntry<String, Object?> e in set.entries) '${e.key}=${e.value}',
+  ]..sort();
+  return '${o['sprite']}|${o['numeral']}|${parts.join(',')}';
 }
 
 final RegExp _jsonName = RegExp(r'^([a-z]+)\.(.+)\.json$');

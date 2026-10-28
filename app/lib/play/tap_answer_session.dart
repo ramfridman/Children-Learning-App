@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
 import '../content/models.dart';
+import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
 import '../speech/hebrew_text.dart';
+import 'count_tap_session.dart' show Dots;
 import 'lesson_controller.dart';
+import 'sprite_group.dart';
 import 'template_session.dart';
 
 /// The tap-the-answer template (T01): two to four pictures on the stage, one of them is right.
@@ -26,8 +29,10 @@ class TapAnswerSession extends TemplateSession {
   @override
   bool get listensNow => !_busy && chosenState != AnswerState.correct;
 
+  /// Answers that are numerals are spoken as numbers.
   @override
-  String get voiceAnswerType => 'word';
+  String get voiceAnswerType =>
+      activity.options.every((ChoiceOption o) => o.numeral != null) ? 'number' : 'word';
 
   /// The words of each option: its own `speech` list, or else the words of its label that the other options do not
   /// share ("פרח אדום" and "פרח צהוב" are told apart by the colour).
@@ -44,10 +49,13 @@ class TapAnswerSession extends TemplateSession {
               .reduce((Set<String> a, Set<String> b) => a.intersection(b));
     return <Expected>[
       for (final (int i, ChoiceOption o) in activity.options.indexed)
-        Expected.words(o.id, <String>[
-          for (final String w in words[i])
-            if (!shared.contains(w) || o.speech.contains(w)) w,
-        ], correct: o.id == activity.correctId),
+        if (o.numeral != null)
+          Expected.number(o.id, o.numeral!, correct: o.id == activity.correctId, also: o.speech)
+        else
+          Expected.words(o.id, <String>[
+            for (final String w in words[i])
+              if (!shared.contains(w) || o.speech.contains(w)) w,
+          ], correct: o.id == activity.correctId),
     ];
   }
 
@@ -123,7 +131,11 @@ class _TapStage extends StatelessWidget {
   Widget build(BuildContext context) {
     final TapAnswerActivity a = s.activity;
     final int n = a.options.length;
-    final double box = math.min(size.height * 0.86, size.width / (n + 0.5));
+    // A group to count or compare takes the top of the stage; the answers sit below it.
+    final bool hasGroup = a.group != null;
+    final double top = hasGroup ? size.height * 0.5 : 0;
+    final double room = size.height - top;
+    final double box = math.min(room * (hasGroup ? 0.9 : 0.86), size.width / (n + 0.5));
     final double gap = (size.width - box * n) / (n + 1);
     return Semantics(
       container: true,
@@ -135,10 +147,11 @@ class _TapStage extends StatelessWidget {
           children: <Widget>[
             if (a.background != null)
               Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
+            if (hasGroup) Positioned(left: 0, top: 0, width: size.width, height: top, child: _groups(a)),
             for (final (int i, ChoiceOption o) in a.options.indexed)
               Positioned(
                 left: gap + i * (box + gap),
-                top: (size.height - box) / 2,
+                top: top + (room - box) / 2,
                 width: box,
                 height: box,
                 child: _option(a, o, i, box),
@@ -147,6 +160,63 @@ class _TapStage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// The group (or the two groups, side by side) that the question is about. Not tappable.
+  Widget _groups(TapAnswerActivity a) {
+    Widget one(SpriteSet g) => SpriteGroup(
+      svg: a.assets.svg(g.sprite),
+      count: g.count,
+      arrangement: g.arrangement,
+      seed: g.seed,
+      scale: g.scale,
+    );
+    final List<SpriteSet> sets = <SpriteSet>[a.group!, ?a.group2];
+    return Semantics(
+      container: true,
+      excludeSemantics: true,
+      label: a.altText,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          key: const Key('tap-groups'),
+          children: <Widget>[
+            for (final SpriteSet g in sets)
+              Expanded(
+                child: Padding(padding: const EdgeInsets.all(6), child: one(g)),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// What an option shows: its picture, a numeral on a tile, or a small set of things.
+  Widget _face(TapAnswerActivity a, ChoiceOption o, double box) {
+    if (o.numeral != null) {
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('${o.numeral}', style: AppText.fixed(size: box * 0.5, weight: 800, lineHeight: 1)),
+            const SizedBox(height: 4),
+            Dots(o.numeral!),
+          ],
+        ),
+      );
+    }
+    if (o.set != null) {
+      final SpriteSet g = o.set!;
+      return SpriteGroup(
+        svg: a.assets.svg(g.sprite),
+        count: g.count,
+        arrangement: g.arrangement,
+        seed: g.seed,
+        scale: g.scale,
+      );
+    }
+    return PackSvg(a.assets.svg(o.sprite!));
   }
 
   Widget _option(TapAnswerActivity a, ChoiceOption o, int i, double box) {
@@ -174,7 +244,7 @@ class _TapStage extends StatelessWidget {
                 color: ring?.withValues(alpha: 0.22),
                 border: ring == null ? null : Border.all(color: ring, width: 5),
               ),
-              child: Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(o.sprite!))),
+              child: Padding(padding: const EdgeInsets.all(6), child: _face(a, o, box)),
             ),
           ),
         ),
