@@ -1,0 +1,71 @@
+{
+  "schema": "voices/v1",
+  "status": "PROPOSAL by the voice-and-sound-director, 2026-10-28. Not used by any tool. The owner listens to the audition (docs/audio/voice-direction.md section 7) and decides; then the main assistant merges what he chose into content/voices.json. Reasons and sources: docs/audio/voice-direction.md.",
+  "note": "Which ElevenLabs voice speaks for which character. voiceId values are the ones in content/voices.json today; 'brief' says what the voice should sound like, so the owner can pick a better one by ear. 'narrator' is the voice that says the lesson lines for the friend (app/lib/app/companion.dart); it must have the same gender as the friend's own voice.",
+  "modelId": "eleven_v4_turbo",
+  "outputFormat": "mp3_44100_64",
+  "request": {
+    "language_code": "he",
+    "seed": 20261028,
+    "_note": "seed makes a re-run of the same line much more alike (ElevenLabs: determinism is not guaranteed). Needs a small voice_gen change to be sent (section 6 of the markdown)."
+  },
+  "settings": { "stability": 0.55, "similarity_boost": 0.8, "style": 0.15, "use_speaker_boost": true, "speed": 0.95 },
+  "styles": {
+    "ask":      { "stability": 0.60, "similarity_boost": 0.80, "style": 0.10, "use_speaker_boost": true, "speed": 0.93 },
+    "hint":     { "stability": 0.65, "similarity_boost": 0.80, "style": 0.05, "use_speaker_boost": true, "speed": 0.90 },
+    "model":    { "stability": 0.70, "similarity_boost": 0.80, "style": 0.00, "use_speaker_boost": true, "speed": 0.90 },
+    "list":     { "stability": 0.75, "similarity_boost": 0.80, "style": 0.00, "use_speaker_boost": true, "speed": 0.90 },
+    "warm":     { "stability": 0.50, "similarity_boost": 0.80, "style": 0.25, "use_speaker_boost": true, "speed": 0.95 },
+    "gentle":   { "stability": 0.60, "similarity_boost": 0.80, "style": 0.10, "use_speaker_boost": true, "speed": 0.92 },
+    "cheer":    { "stability": 0.35, "similarity_boost": 0.80, "style": 0.45, "use_speaker_boost": true, "speed": 1.00 },
+    "cheer_current": { "stability": 0.10, "similarity_boost": 0.80, "style": 0.90, "use_speaker_boost": true },
+    "ceremony": { "stability": 0.45, "similarity_boost": 0.80, "style": 0.35, "use_speaker_boost": true, "speed": 0.92 },
+    "greet":    { "stability": 0.45, "similarity_boost": 0.80, "style": 0.30, "use_speaker_boost": true, "speed": 0.97 },
+    "think":    { "stability": 0.55, "similarity_boost": 0.80, "style": 0.20, "use_speaker_boost": true, "speed": 0.90 },
+    "calm":     { "stability": 0.70, "similarity_boost": 0.80, "style": 0.05, "use_speaker_boost": true, "speed": 0.88 },
+    "tutor":    { "stability": 0.60, "similarity_boost": 0.80, "style": 0.10, "use_speaker_boost": true, "speed": 0.95 }
+  },
+  "_stylesNote": "speed is the base for Band B; the per-line speed in docs/audio/voice-direction.csv adds -0.03 for Band A and +0.03 for Band C. 'cheer_current' is today's cheer (content/voices.json), kept so the audition can compare it with the calmer proposal. Whether eleven_v4_turbo honours style and speed is not confirmed in the official docs (one secondary source says it does not); the audition tests it (section 7, set C).",
+  "styleRules": {
+    "cheer":    ["vo:core.celebrate.", "vo:celebrate."],
+    "ceremony": ["vo:core.ceremony."],
+    "greet":    ["vo:core.greeting."],
+    "think":    ["vo:core.thinking.", "vo:core.encourage.check"],
+    "gentle":   ["vo:core.listen.", "vo:core.encourage.almost", "vo:fb."],
+    "calm":     ["vo:core.stuck.", "vo:core.breathe.", "vo:core.goodbye.", "vo:core.rest."],
+    "warm":     ["vo:core.encourage.", "vo:core.placement.", "vo:fb.unsure", "*.correct"],
+    "hint":     ["vo:hint.", "*.h1", "*.h2"],
+    "model":    ["*.h3"],
+    "ask":      ["*.prompt", "*.how_many"]
+  },
+  "_styleRulesNote": "Rules are tried in this order; the first match wins (so vo:fb.unsure is gentle by the fb. rule unless the order is changed: put warm before gentle when the tool supports it). Today voice_gen only matches a prefix ('vo:...'); the '*.suffix' patterns, the per-line 'list' style and the band speed need the change in section 6. Until then, the per-line style and speed are in docs/audio/voice-direction.csv (columns style, speed).",
+  "pronunciation": {
+    "חום": "חוּם",
+    "החום": "הַחוּם",
+    "חסר": "חָסֵר",
+    "החסר": "הֶחָסֵר",
+    "שווה": "שָׁוֶה",
+    "שווים": "שָׁוִים",
+    "מספר": "מִסְפָּר",
+    "המחוג": "הַמָּחוֹג",
+    "ברונזה": "בְּרוֹנְזָה",
+    "מדליה": "מֶדַלְיָה",
+    "וואו": "וָאוּ",
+    "המחומש": "הַמְּחֻמָּשׁ",
+    "המשושה": "הַמְּשֻׁשֶּׁה",
+    "הפירמידה": "הַפִּירָמִידָה",
+    "בתור": "בַּתּוֹר"
+  },
+  "_pronunciationNote": "Each entry keeps the letters and only adds points, for one reading. They are PROPOSALS: the hebrew-text-editor confirms each pointing, and the audition (set B) checks whether ElevenLabs needs them at all. They must be matched as whole words: today's respelled() replaces substrings, so 'חסר' would also hit 'שחסר' and 'החסר' (section 6).",
+  "voices": {
+    "nitzi":           { "voiceId": "Tbj9UQjXon5RB9MPEyc2", "gender": "f", "narrator": "nitzi",    "role": "flagship narrator (female): every lesson line, plus her own lines", "brief": "warm young woman, mid pitch, a smile in the voice, very clear Israeli Hebrew, unhurried; a kind gan teacher or big sister, never a cartoon squeak" },
+    "hero-son":        { "voiceId": "ZiofZHcEBTn5sRySe5h8", "gender": "m", "narrator": "hero-son", "role": "flagship narrator (male): every lesson line, the live helper, plus his own lines", "brief": "warm young man, light baritone, playful energy held in, very clear diction; an older cousin who loves to jump, not a child actor" },
+    "alien-jili":      { "voiceId": "Tbj9UQjXon5RB9MPEyc2", "gender": "f-voice (masculine noun)", "narrator": "nitzi", "role": "own lines only", "brief": "bubbly and bright, a little higher and faster than Nitzi, a soft wobble of fun; clearly a different person from Nitzi (today it is the same voice id)" },
+    "climber-tzuri":   { "voiceId": "8sZ9Z3Jy28CGLLCmKEHn", "gender": "m", "narrator": "hero-son", "role": "own lines only", "brief": "outdoorsy young man, upbeat and a bit breathy as if after a climb, friendly coach without shouting" },
+    "compass-romi":    { "voiceId": "Tbj9UQjXon5RB9MPEyc2", "gender": "f", "narrator": "nitzi",    "role": "own lines only", "brief": "light, curious, younger-sister colour (a young adult voice, not a child), asks with a rising smile" },
+    "friend-daughter": { "voiceId": "Tbj9UQjXon5RB9MPEyc2", "gender": "f", "narrator": "nitzi",    "role": "own lines only", "brief": "soft and dreamy, a little slower, starlight calm; the gentlest of the cast" },
+    "inventor-gali":   { "voiceId": "Tbj9UQjXon5RB9MPEyc2", "gender": "f", "narrator": "nitzi",    "role": "own lines only", "brief": "crisp and clever, mid-low pitch, quick but clear, an 'aha!' sparkle" },
+    "tower-tamir":     { "voiceId": "6Ijsl5024dyMrE00loVE", "gender": "m", "narrator": "hero-son", "role": "own lines only", "brief": "deep, slow, gentle giant, low pitch, calm and safe" },
+    "weaver-keshet":   { "voiceId": "6Ijsl5024dyMrE00loVE", "gender": "f", "narrator": "nitzi",    "role": "own lines only", "brief": "warm older-sister woman, melodic, mid-low pitch, unhurried. CONFLICT: today she has Tamir's voice id (a voice in the male narrator's group); she needs a female voice of her own (owner question 1)" }
+  }
+}

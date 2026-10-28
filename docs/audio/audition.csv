@@ -1,0 +1,164 @@
+﻿clip,set,character,candidate,voice_id,style,settings,chars,why,text
+A-01,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,voice choice: greeting,"שלום, בואו נשחק."
+A-02,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",45,voice choice: question,יש שְׁלוֹשָׁה דגים. אֶחָד שחה משם. כמה נשארו?
+A-03,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",15,voice choice: question,איפה הפרח החום?
+A-04,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",21,voice choice: hint-1,בואו נקשיב שוב לשאלה.
+A-05,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",107,voice choice: list,"אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. המספר האחרון אומר כמה: חָמֵשׁ. עכשיו תורכם — ללחוץ על חָמֵשׁ."
+A-06,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",58,voice choice: list,"הצעדים הם: למעלה, למעלה, ימינה, ימינה, למעלה. עכשיו תורכם."
+A-07,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",42,voice choice: correct,חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שווה חָמֵשׁ.
+A-08,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",20,voice choice: not-yet,"כמעט, בואו ננסה שוב."
+A-09,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",25,voice choice: unsure,"שאלה טובה, בואו נראה יחד."
+A-10,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",37,voice choice: not-yet,"המממ… בואו נספור לאט, מספר אחרי מספר."
+A-11,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,voice choice: celebration,"וואו, ספרתם עד עֶשֶׂר."
+A-12,A,nitzi,current,Tbj9UQjXon5RB9MPEyc2,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,voice choice: ceremony,הנה גביע ברונזה בשבילכם.
+A-13,A,nitzi,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,voice choice: greeting,"שלום, בואו נשחק."
+A-14,A,nitzi,cand2,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",45,voice choice: question,יש שְׁלוֹשָׁה דגים. אֶחָד שחה משם. כמה נשארו?
+A-15,A,nitzi,cand2,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",15,voice choice: question,איפה הפרח החום?
+A-16,A,nitzi,cand2,,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",21,voice choice: hint-1,בואו נקשיב שוב לשאלה.
+A-17,A,nitzi,cand2,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",107,voice choice: list,"אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. המספר האחרון אומר כמה: חָמֵשׁ. עכשיו תורכם — ללחוץ על חָמֵשׁ."
+A-18,A,nitzi,cand2,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",58,voice choice: list,"הצעדים הם: למעלה, למעלה, ימינה, ימינה, למעלה. עכשיו תורכם."
+A-19,A,nitzi,cand2,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",42,voice choice: correct,חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שווה חָמֵשׁ.
+A-20,A,nitzi,cand2,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",20,voice choice: not-yet,"כמעט, בואו ננסה שוב."
+A-21,A,nitzi,cand2,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",25,voice choice: unsure,"שאלה טובה, בואו נראה יחד."
+A-22,A,nitzi,cand2,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",37,voice choice: not-yet,"המממ… בואו נספור לאט, מספר אחרי מספר."
+A-23,A,nitzi,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,voice choice: celebration,"וואו, ספרתם עד עֶשֶׂר."
+A-24,A,nitzi,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,voice choice: ceremony,הנה גביע ברונזה בשבילכם.
+A-25,A,nitzi,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,voice choice: greeting,"שלום, בואו נשחק."
+A-26,A,nitzi,cand3,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",45,voice choice: question,יש שְׁלוֹשָׁה דגים. אֶחָד שחה משם. כמה נשארו?
+A-27,A,nitzi,cand3,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",15,voice choice: question,איפה הפרח החום?
+A-28,A,nitzi,cand3,,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",21,voice choice: hint-1,בואו נקשיב שוב לשאלה.
+A-29,A,nitzi,cand3,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",107,voice choice: list,"אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. המספר האחרון אומר כמה: חָמֵשׁ. עכשיו תורכם — ללחוץ על חָמֵשׁ."
+A-30,A,nitzi,cand3,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",58,voice choice: list,"הצעדים הם: למעלה, למעלה, ימינה, ימינה, למעלה. עכשיו תורכם."
+A-31,A,nitzi,cand3,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",42,voice choice: correct,חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שווה חָמֵשׁ.
+A-32,A,nitzi,cand3,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",20,voice choice: not-yet,"כמעט, בואו ננסה שוב."
+A-33,A,nitzi,cand3,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",25,voice choice: unsure,"שאלה טובה, בואו נראה יחד."
+A-34,A,nitzi,cand3,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",37,voice choice: not-yet,"המממ… בואו נספור לאט, מספר אחרי מספר."
+A-35,A,nitzi,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,voice choice: celebration,"וואו, ספרתם עד עֶשֶׂר."
+A-36,A,nitzi,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,voice choice: ceremony,הנה גביע ברונזה בשבילכם.
+A-37,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,voice choice: greeting,"שלום, בואו נשחק."
+A-38,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",45,voice choice: question,יש שְׁלוֹשָׁה דגים. אֶחָד שחה משם. כמה נשארו?
+A-39,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",15,voice choice: question,איפה הפרח החום?
+A-40,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",21,voice choice: hint-1,בואו נקשיב שוב לשאלה.
+A-41,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",107,voice choice: list,"אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. המספר האחרון אומר כמה: חָמֵשׁ. עכשיו תורכם — ללחוץ על חָמֵשׁ."
+A-42,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",58,voice choice: list,"הצעדים הם: למעלה, למעלה, ימינה, ימינה, למעלה. עכשיו תורכם."
+A-43,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",42,voice choice: correct,חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שווה חָמֵשׁ.
+A-44,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",20,voice choice: not-yet,"כמעט, בואו ננסה שוב."
+A-45,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",25,voice choice: unsure,"שאלה טובה, בואו נראה יחד."
+A-46,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",37,voice choice: not-yet,"המממ… בואו נספור לאט, מספר אחרי מספר."
+A-47,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,voice choice: celebration,"וואו, ספרתם עד עֶשֶׂר."
+A-48,A,hero-son,current,ZiofZHcEBTn5sRySe5h8,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,voice choice: ceremony,הנה גביע ברונזה בשבילכם.
+A-49,A,hero-son,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,voice choice: greeting,"שלום, בואו נשחק."
+A-50,A,hero-son,cand2,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",45,voice choice: question,יש שְׁלוֹשָׁה דגים. אֶחָד שחה משם. כמה נשארו?
+A-51,A,hero-son,cand2,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",15,voice choice: question,איפה הפרח החום?
+A-52,A,hero-son,cand2,,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",21,voice choice: hint-1,בואו נקשיב שוב לשאלה.
+A-53,A,hero-son,cand2,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",107,voice choice: list,"אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. המספר האחרון אומר כמה: חָמֵשׁ. עכשיו תורכם — ללחוץ על חָמֵשׁ."
+A-54,A,hero-son,cand2,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",58,voice choice: list,"הצעדים הם: למעלה, למעלה, ימינה, ימינה, למעלה. עכשיו תורכם."
+A-55,A,hero-son,cand2,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",42,voice choice: correct,חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שווה חָמֵשׁ.
+A-56,A,hero-son,cand2,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",20,voice choice: not-yet,"כמעט, בואו ננסה שוב."
+A-57,A,hero-son,cand2,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",25,voice choice: unsure,"שאלה טובה, בואו נראה יחד."
+A-58,A,hero-son,cand2,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",37,voice choice: not-yet,"המממ… בואו נספור לאט, מספר אחרי מספר."
+A-59,A,hero-son,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,voice choice: celebration,"וואו, ספרתם עד עֶשֶׂר."
+A-60,A,hero-son,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,voice choice: ceremony,הנה גביע ברונזה בשבילכם.
+A-61,A,hero-son,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,voice choice: greeting,"שלום, בואו נשחק."
+A-62,A,hero-son,cand3,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",45,voice choice: question,יש שְׁלוֹשָׁה דגים. אֶחָד שחה משם. כמה נשארו?
+A-63,A,hero-son,cand3,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",15,voice choice: question,איפה הפרח החום?
+A-64,A,hero-son,cand3,,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",21,voice choice: hint-1,בואו נקשיב שוב לשאלה.
+A-65,A,hero-son,cand3,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",107,voice choice: list,"אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. המספר האחרון אומר כמה: חָמֵשׁ. עכשיו תורכם — ללחוץ על חָמֵשׁ."
+A-66,A,hero-son,cand3,,list,"stability=0.75,similarity=0.8,style=0.0,boost=true,speed=0.9",58,voice choice: list,"הצעדים הם: למעלה, למעלה, ימינה, ימינה, למעלה. עכשיו תורכם."
+A-67,A,hero-son,cand3,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",42,voice choice: correct,חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שווה חָמֵשׁ.
+A-68,A,hero-son,cand3,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",20,voice choice: not-yet,"כמעט, בואו ננסה שוב."
+A-69,A,hero-son,cand3,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",25,voice choice: unsure,"שאלה טובה, בואו נראה יחד."
+A-70,A,hero-son,cand3,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",37,voice choice: not-yet,"המממ… בואו נספור לאט, מספר אחרי מספר."
+A-71,A,hero-son,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,voice choice: celebration,"וואו, ספרתם עד עֶשֶׂר."
+A-72,A,hero-son,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,voice choice: ceremony,הנה גביע ברונזה בשבילכם.
+A-73,A,alien-jili,current,Tbj9UQjXon5RB9MPEyc2,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-74,A,alien-jili,current,Tbj9UQjXon5RB9MPEyc2,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-75,A,alien-jili,current,Tbj9UQjXon5RB9MPEyc2,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-76,A,alien-jili,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-77,A,alien-jili,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-78,A,alien-jili,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-79,A,alien-jili,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-80,A,alien-jili,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-81,A,alien-jili,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-82,A,climber-tzuri,current,8sZ9Z3Jy28CGLLCmKEHn,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-83,A,climber-tzuri,current,8sZ9Z3Jy28CGLLCmKEHn,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-84,A,climber-tzuri,current,8sZ9Z3Jy28CGLLCmKEHn,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-85,A,climber-tzuri,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-86,A,climber-tzuri,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-87,A,climber-tzuri,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-88,A,climber-tzuri,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-89,A,climber-tzuri,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-90,A,climber-tzuri,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-91,A,compass-romi,current,Tbj9UQjXon5RB9MPEyc2,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-92,A,compass-romi,current,Tbj9UQjXon5RB9MPEyc2,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-93,A,compass-romi,current,Tbj9UQjXon5RB9MPEyc2,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-94,A,compass-romi,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-95,A,compass-romi,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-96,A,compass-romi,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-97,A,compass-romi,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-98,A,compass-romi,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-99,A,compass-romi,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-100,A,friend-daughter,current,Tbj9UQjXon5RB9MPEyc2,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-101,A,friend-daughter,current,Tbj9UQjXon5RB9MPEyc2,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-102,A,friend-daughter,current,Tbj9UQjXon5RB9MPEyc2,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-103,A,friend-daughter,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-104,A,friend-daughter,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-105,A,friend-daughter,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-106,A,friend-daughter,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-107,A,friend-daughter,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-108,A,friend-daughter,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-109,A,inventor-gali,current,Tbj9UQjXon5RB9MPEyc2,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-110,A,inventor-gali,current,Tbj9UQjXon5RB9MPEyc2,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-111,A,inventor-gali,current,Tbj9UQjXon5RB9MPEyc2,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-112,A,inventor-gali,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-113,A,inventor-gali,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-114,A,inventor-gali,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-115,A,inventor-gali,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-116,A,inventor-gali,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-117,A,inventor-gali,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-118,A,tower-tamir,current,6Ijsl5024dyMrE00loVE,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-119,A,tower-tamir,current,6Ijsl5024dyMrE00loVE,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-120,A,tower-tamir,current,6Ijsl5024dyMrE00loVE,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-121,A,tower-tamir,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-122,A,tower-tamir,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-123,A,tower-tamir,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-124,A,tower-tamir,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-125,A,tower-tamir,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-126,A,tower-tamir,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-127,A,weaver-keshet,current,6Ijsl5024dyMrE00loVE,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-128,A,weaver-keshet,current,6Ijsl5024dyMrE00loVE,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-129,A,weaver-keshet,current,6Ijsl5024dyMrE00loVE,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-130,A,weaver-keshet,cand2,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-131,A,weaver-keshet,cand2,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-132,A,weaver-keshet,cand2,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+A-133,A,weaver-keshet,cand3,,greet,"stability=0.45,similarity=0.8,style=0.3,boost=true,speed=0.97",16,friend voice choice,"שלום, בואו נשחק."
+A-134,A,weaver-keshet,cand3,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,friend voice choice,כל הכבוד.
+A-135,A,weaver-keshet,cand3,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",24,friend voice choice,הנה גביע ברונזה בשבילכם.
+B-136,B,nitzi,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,cheer proposed (calmer),"וואו, ספרתם עד עֶשֶׂר."
+B-137,B,nitzi,chosen,,cheer_current,"stability=0.1,similarity=0.8,style=0.9,boost=true",22,"cheer as today (stability 0.1, style 0.9)","וואו, ספרתם עד עֶשֶׂר."
+B-138,B,nitzi,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,cheer proposed (calmer),כל הכבוד.
+B-139,B,nitzi,chosen,,cheer_current,"stability=0.1,similarity=0.8,style=0.9,boost=true",9,"cheer as today (stability 0.1, style 0.9)",כל הכבוד.
+B-140,B,nitzi,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",24,cheer proposed (calmer),"נפלא, העשרות כבר מוכרות."
+B-141,B,nitzi,chosen,,cheer_current,"stability=0.1,similarity=0.8,style=0.9,boost=true",24,"cheer as today (stability 0.1, style 0.9)","נפלא, העשרות כבר מוכרות."
+B-142,B,nitzi,chosen,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",17,"pronunciation entry applied (compare with set A, same line without it)",איפה הפרח הַחוּם?
+B-143,B,nitzi,chosen,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",45,"pronunciation entry applied (compare with set A, same line without it)","המממ… בואו נספור לאט, מִסְפָּר אחרי מִסְפָּר."
+B-144,B,nitzi,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",23,"pronunciation entry applied (compare with set A, same line without it)","וָאוּ, ספרתם עד עֶשֶׂר."
+B-145,B,nitzi,chosen,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",29,"pronunciation entry applied (compare with set A, same line without it)",הנה גביע בְּרוֹנְזָה בשבילכם.
+B-146,B,nitzi,chosen,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",44,"pronunciation entry applied (compare with set A, same line without it)",חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שָׁוֶה חָמֵשׁ.
+B-147,B,nitzi,chosen,,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",34,"pronunciation entry applied (compare with set A, same line without it)",הַמָּחוֹג הקצר והעבה אומר את השעה.
+B-148,B,hero-son,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",22,cheer proposed (calmer),"וואו, ספרתם עד עֶשֶׂר."
+B-149,B,hero-son,chosen,,cheer_current,"stability=0.1,similarity=0.8,style=0.9,boost=true",22,"cheer as today (stability 0.1, style 0.9)","וואו, ספרתם עד עֶשֶׂר."
+B-150,B,hero-son,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",9,cheer proposed (calmer),כל הכבוד.
+B-151,B,hero-son,chosen,,cheer_current,"stability=0.1,similarity=0.8,style=0.9,boost=true",9,"cheer as today (stability 0.1, style 0.9)",כל הכבוד.
+B-152,B,hero-son,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",24,cheer proposed (calmer),"נפלא, העשרות כבר מוכרות."
+B-153,B,hero-son,chosen,,cheer_current,"stability=0.1,similarity=0.8,style=0.9,boost=true",24,"cheer as today (stability 0.1, style 0.9)","נפלא, העשרות כבר מוכרות."
+B-154,B,hero-son,chosen,,ask,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.93",17,"pronunciation entry applied (compare with set A, same line without it)",איפה הפרח הַחוּם?
+B-155,B,hero-son,chosen,,gentle,"stability=0.6,similarity=0.8,style=0.1,boost=true,speed=0.92",45,"pronunciation entry applied (compare with set A, same line without it)","המממ… בואו נספור לאט, מִסְפָּר אחרי מִסְפָּר."
+B-156,B,hero-son,chosen,,cheer,"stability=0.35,similarity=0.8,style=0.45,boost=true,speed=1.0",23,"pronunciation entry applied (compare with set A, same line without it)","וָאוּ, ספרתם עד עֶשֶׂר."
+B-157,B,hero-son,chosen,,ceremony,"stability=0.45,similarity=0.8,style=0.35,boost=true,speed=0.92",29,"pronunciation entry applied (compare with set A, same line without it)",הנה גביע בְּרוֹנְזָה בשבילכם.
+B-158,B,hero-son,chosen,,warm,"stability=0.5,similarity=0.8,style=0.25,boost=true,speed=0.95",44,"pronunciation entry applied (compare with set A, same line without it)",חָמֵשׁ. תֵּשַׁע פחות אַרְבַּע שָׁוֶה חָמֵשׁ.
+B-159,B,hero-son,chosen,,hint,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.9",34,"pronunciation entry applied (compare with set A, same line without it)",הַמָּחוֹג הקצר והעבה אומר את השעה.
+C-160,C,nitzi,chosen,,_test,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=0.8",21,does eleven_v4_turbo honour speed 0.80? (measure the length),בואו נקשיב שוב לשאלה.
+C-161,C,nitzi,chosen,,_test,"stability=0.65,similarity=0.8,style=0.05,boost=true,speed=1.2",21,does eleven_v4_turbo honour speed 1.20? (measure the length),בואו נקשיב שוב לשאלה.
+C-162,C,nitzi,chosen,,_test,"stability=0.65,similarity=0.8,style=0.0,boost=true,speed=0.9",21,does eleven_v4_turbo honour style 0.0? (measure the length),בואו נקשיב שוב לשאלה.
+C-163,C,nitzi,chosen,,_test,"stability=0.65,similarity=0.8,style=0.9,boost=true,speed=0.9",21,does eleven_v4_turbo honour style 0.9? (measure the length),בואו נקשיב שוב לשאלה.
