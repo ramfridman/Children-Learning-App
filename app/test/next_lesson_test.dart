@@ -47,6 +47,6 @@ void main() {
   });
 
   test('a land with no lesson has no next lesson', () {
-    expect(nextLessonId(content: content, domain: 'cs', finished: const <String, int>{}), isNull);
+    expect(nextLessonId(content: content, domain: 'none', finished: const <String, int>{}), isNull);
   });
 }

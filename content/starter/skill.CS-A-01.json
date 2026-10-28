@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "CS-A-01",
+  "review": "needs-editor",
+  "domain": "cs",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מסדרים שלושה שלבים של שגרה (רחצת ידיים, צחצוח שיניים)"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַסְדִּירִים שְׁלָבִים: מָה קֹדֶם, מָה בַּסּוֹף"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "story",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-SEQ-CAUSE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

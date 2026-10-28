@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-A-06",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משחקים בחנות: מטבע אחד על כל פריט"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "קוֹנִים בַּחֲנוּת: מַטְבֵּעַ לְכׇל דָּבָר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-CNT-CARD"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "my-day",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַיּוֹם שֶׁלִּי"
+    }
+  ],
+  "skills": [
+    "MATH-A-05"
+  ],
+  "items": [
+    "math.time.night",
+    "math.time.morning",
+    "math.time.noon",
+    "math.time.evening",
+    "math.time.after"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 4,
+  "celebration": {
+    "vo": "vo:celebrate.my_day",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! הִכַּרְתֶּם אֶת הַיּוֹם: בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה."
+      }
+    ]
+  }
+}

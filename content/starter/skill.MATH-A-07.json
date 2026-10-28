@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-A-07",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משווים קבוצות בתרשים תמונות: איפה יותר"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַשְׁווִים בְּתַרְשִׁים תְּמוּנוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-03",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-A-11",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-CNT-SIZE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "unit": "math",
+  "domain": "math",
+  "note": "Band A of Money and Maths (MATH-A-01, 02, 04, 05, 06 and 07; MATH-A-03, sharing fairly, needs the dealing template of part 9b). Hebrew is a draft by Claude, needs-editor.",
+  "assetGlobs": ["stick_*", "stone", "feather", "coin", "time_*"],
+  "assets": ["apple", "apple_lit", "fish", "fish_lit", "star", "star_lit", "duck", "duck_lit", "ball_red", "basket_target"],
+  "things": { "ball": ["כַּדּוּר", "m"] },
+  "colours": { "red": "אָדֹם" },
+  "objects": {
+    "apple": { "g": "m", "one": "תַּפּוּחַ", "many": "תַּפּוּחִים" },
+    "fish": { "g": "m", "one": "דָּג", "many": "דָּגִים" },
+    "star": { "g": "m", "one": "כּוֹכָב", "many": "כּוֹכָבִים" },
+    "duck": { "g": "m", "one": "בַּרְוָז", "many": "בַּרְוָזִים" },
+    "coin": { "g": "m", "one": "מַטְבֵּעַ", "many": "מַטְבְּעוֹת" }
+  },
+  "names": {
+    "stick_long": { "one": "מַקֵּל אָרֹךְ", "g": "m" }, "stick_short": { "one": "מַקֵּל קָצָר", "g": "m" },
+    "stone": { "one": "אֶבֶן", "g": "f" }, "feather": { "one": "נוֹצָה", "g": "f" },
+    "time_morning": { "one": "בֹּקֶר", "g": "m" }, "time_noon": { "one": "צָהֳרַיִם", "g": "m" },
+    "time_evening": { "one": "עֶרֶב", "g": "m" }, "time_night": { "one": "לַיְלָה", "g": "m" }
+  },
+  "tagFeedback": {},
+  "misconceptions": [],
+  "skills": [
+    { "id": "MATH-A-01", "title": "מוסיפים 1 או 2 לקבוצה קטנה (עד 5) ואומרים כמה יש עכשיו", "child": "מוֹסִיפִים עוֹד וְסוֹפְרִים כַּמָּה", "world": "stall", "needs": ["NUM-A-04"], "reps": ["concrete", "pictorial"], "tags": [] },
+    { "id": "MATH-A-02", "title": "לוקחים 1 מקבוצה קטנה (עד 5) ואומרים כמה נשאר", "child": "לוֹקְחִים אֶחָד וְסוֹפְרִים כַּמָּה נִשְׁאַר", "world": "stall", "needs": ["NUM-A-04"], "reps": ["concrete", "pictorial"], "tags": [] },
+    { "id": "MATH-A-04", "title": "משווים גדול וקטן, ארוך וקצר, כבד וקל", "child": "מַשְׁווִים גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל", "world": "dock", "needs": [], "reps": ["pictorial", "concrete"], "tags": [] },
+    { "id": "MATH-A-05", "title": "מכירים בוקר, צהריים, ערב ולילה", "child": "מַכִּירִים בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה", "world": "sprout", "needs": ["LOG-A-08"], "reps": ["story", "pictorial"], "tags": [] },
+    { "id": "MATH-A-06", "title": "משחקים בחנות: מטבע אחד על כל פריט", "child": "קוֹנִים בַּחֲנוּת: מַטְבֵּעַ לְכׇל דָּבָר", "world": "stall", "needs": ["NUM-A-03"], "reps": ["concrete", "embodied"], "tags": ["M-CNT-CARD"] },
+    { "id": "MATH-A-07", "title": "משווים קבוצות בתרשים תמונות: איפה יותר", "child": "מַשְׁווִים בְּתַרְשִׁים תְּמוּנוֹת", "world": "pool", "needs": ["LOG-A-03", "NUM-A-11"], "reps": ["pictorial"], "tags": ["M-CNT-SIZE"] }
+  ],
+  "activities": [
+    { "kind": "pick", "id": "math.add.apples", "skill": "MATH-A-01", "prompt": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים, וּבָא עוֹד תַּפּוּחַ אֶחָד. כַּמָּה עַכְשָׁו?", "group": { "sprite": "apple", "count": 3 }, "group2": { "sprite": "apple", "count": 1 }, "options": ["n:3", "n:4", "n:5"], "correct": "n:4", "difficulty": 0.2, "rep": "concrete", "correct_text": "אַרְבַּע! שְׁלוֹשָׁה וְעוֹד אֶחָד.", "h3": "שְׁלוֹשָׁה תַּפּוּחִים וְעוֹד אֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע." },
+    { "kind": "pick", "id": "math.add.fish", "skill": "MATH-A-01", "prompt": "יֵשׁ שְׁנֵי דָּגִים, וּבָאוּ עוֹד שְׁנֵי דָּגִים. כַּמָּה עַכְשָׁו?", "group": { "sprite": "fish", "count": 2 }, "group2": { "sprite": "fish", "count": 2 }, "options": ["n:3", "n:4", "n:5"], "correct": "n:4", "difficulty": 0.25, "rep": "concrete", "correct_text": "אַרְבַּע! שְׁנַיִם וְעוֹד שְׁנַיִם.", "h3": "שְׁנֵי דָּגִים וְעוֹד שְׁנַיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע." },
+    { "kind": "pick", "id": "math.add.stars", "skill": "MATH-A-01", "prompt": "יֵשׁ שְׁלוֹשָׁה כּוֹכָבִים, וּבָאוּ עוֹד שְׁנֵי כּוֹכָבִים. כַּמָּה עַכְשָׁו?", "group": { "sprite": "star", "count": 3 }, "group2": { "sprite": "star", "count": 2 }, "options": ["n:4", "n:5", "n:6"], "correct": "n:5", "difficulty": 0.35, "rep": "concrete", "correct_text": "חָמֵשׁ! שְׁלוֹשָׁה וְעוֹד שְׁנַיִם.", "h3": "שְׁלוֹשָׁה כּוֹכָבִים וְעוֹד שְׁנַיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ." },
+    { "kind": "pick", "id": "math.add.ducks", "skill": "MATH-A-01", "prompt": "יֵשׁ שְׁנֵי בַּרְוָזִים, וּבָא עוֹד בַּרְוָז אֶחָד. כַּמָּה עַכְשָׁו?", "group": { "sprite": "duck", "count": 2 }, "group2": { "sprite": "duck", "count": 1 }, "options": ["n:2", "n:3", "n:4"], "correct": "n:3", "difficulty": 0.15, "rep": "concrete", "correct_text": "שָׁלוֹשׁ! שְׁנַיִם וְעוֹד אֶחָד.", "h3": "שְׁנֵי בַּרְוָזִים וְעוֹד אֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ." },
+
+    { "kind": "pick", "id": "math.take.apples", "skill": "MATH-A-02", "prompt": "יֵשׁ אַרְבָּעָה תַּפּוּחִים. אֶחָד נֶאֱכַל. כַּמָּה נִשְׁאֲרוּ?", "group": { "sprite": "apple", "count": 4 }, "options": ["n:2", "n:3", "n:4"], "correct": "n:3", "difficulty": 0.2, "rep": "concrete", "correct_text": "שָׁלוֹשׁ! אַרְבָּעָה פָּחוֹת אֶחָד.", "h3": "אַרְבָּעָה פָּחוֹת אֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ." },
+    { "kind": "pick", "id": "math.take.fish", "skill": "MATH-A-02", "prompt": "יֵשׁ שְׁלוֹשָׁה דָּגִים. אֶחָד שָׂחָה לְהֵרָחֵק. כַּמָּה נִשְׁאֲרוּ?", "group": { "sprite": "fish", "count": 3 }, "options": ["n:1", "n:2", "n:3"], "correct": "n:2", "difficulty": 0.2, "rep": "concrete", "correct_text": "שְׁתַּיִם! שְׁלוֹשָׁה פָּחוֹת אֶחָד.", "h3": "שְׁלוֹשָׁה פָּחוֹת אֶחָד: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם." },
+    { "kind": "pick", "id": "math.take.stars", "skill": "MATH-A-02", "prompt": "יֵשׁ חֲמִשָּׁה כּוֹכָבִים. אֶחָד נָפַל. כַּמָּה נִשְׁאֲרוּ?", "group": { "sprite": "star", "count": 5 }, "options": ["n:3", "n:4", "n:5"], "correct": "n:4", "difficulty": 0.3, "rep": "concrete", "correct_text": "אַרְבַּע! חֲמִשָּׁה פָּחוֹת אֶחָד.", "h3": "חֲמִשָּׁה פָּחוֹת אֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע." },
+
+    { "kind": "pick", "id": "math.size.big", "skill": "MATH-A-04", "prompt": "אֵיזֶה כַּדּוּר גָּדוֹל?", "options": ["ball_red*1@0.6", "ball_red*1@1.5"], "correct": "ball_red*1@1.5", "difficulty": 0.1, "correct_text": "כֵּן! זֶה הַכַּדּוּר הַגָּדוֹל.", "h3": "הַכַּדּוּר הַגָּדוֹל תּוֹפֵס יוֹתֵר מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו." },
+    { "kind": "pick", "id": "math.size.small", "skill": "MATH-A-04", "prompt": "אֵיזֶה כַּדּוּר קָטָן?", "options": ["ball_red*1@1.5", "ball_red*1@0.6"], "correct": "ball_red*1@0.6", "difficulty": 0.1, "correct_text": "כֵּן! זֶה הַכַּדּוּר הַקָּטָן.", "h3": "הַכַּדּוּר הַקָּטָן תּוֹפֵס פָּחוֹת מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו." },
+    { "kind": "pick", "id": "math.size.long", "skill": "MATH-A-04", "prompt": "אֵיזֶה מַקֵּל אָרֹךְ?", "options": ["stick_short", "stick_long"], "correct": "stick_long", "difficulty": 0.15, "correct_text": "כֵּן! הַמַּקֵּל הָאָרֹךְ.", "h3": "הַמַּקֵּל הָאָרֹךְ מַגִּיעַ רָחוֹק יוֹתֵר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו." },
+    { "kind": "pick", "id": "math.size.short", "skill": "MATH-A-04", "prompt": "אֵיזֶה מַקֵּל קָצָר?", "options": ["stick_long", "stick_short"], "correct": "stick_short", "difficulty": 0.15, "correct_text": "כֵּן! הַמַּקֵּל הַקָּצָר.", "h3": "הַמַּקֵּל הַקָּצָר מַגִּיעַ פָּחוֹת רָחוֹק. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו." },
+    { "kind": "pick", "id": "math.size.heavy", "skill": "MATH-A-04", "prompt": "מָה כָּבֵד?", "options": ["feather", "stone"], "correct": "stone", "difficulty": 0.2, "correct_text": "כֵּן! אֶבֶן כְּבֵדָה.", "h3": "אֶבֶן כְּבֵדָה, וְנוֹצָה קַלָּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָאֶבֶן." },
+    { "kind": "pick", "id": "math.size.light", "skill": "MATH-A-04", "prompt": "מָה קַל?", "options": ["stone", "feather"], "correct": "feather", "difficulty": 0.2, "correct_text": "כֵּן! נוֹצָה קַלָּה.", "h3": "נוֹצָה קַלָּה, וְאֶבֶן כְּבֵדָה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנּוֹצָה." },
+
+    { "kind": "pick", "id": "math.time.morning", "skill": "MATH-A-05", "prompt": "אֵיזוֹ תְּמוּנָה הִיא בֹּקֶר?", "options": ["time_night", "time_morning", "time_noon"], "correct": "time_morning", "difficulty": 0.2, "rep": "story", "correct_text": "כֵּן! בַּבֹּקֶר הַשֶּׁמֶשׁ עוֹלָה.", "h3": "בַּבֹּקֶר הַשֶּׁמֶשׁ עוֹלָה לְאַט. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַבֹּקֶר." },
+    { "kind": "pick", "id": "math.time.noon", "skill": "MATH-A-05", "prompt": "אֵיזוֹ תְּמוּנָה הִיא צָהֳרַיִם?", "options": ["time_noon", "time_evening", "time_night"], "correct": "time_noon", "difficulty": 0.25, "rep": "story", "correct_text": "כֵּן! בַּצָּהֳרַיִם הַשֶּׁמֶשׁ גְּבוֹהָה.", "h3": "בַּצָּהֳרַיִם הַשֶּׁמֶשׁ גְּבוֹהָה בַּשָּׁמַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצָּהֳרַיִם." },
+    { "kind": "pick", "id": "math.time.evening", "skill": "MATH-A-05", "prompt": "אֵיזוֹ תְּמוּנָה הִיא עֶרֶב?", "options": ["time_morning", "time_noon", "time_evening"], "correct": "time_evening", "difficulty": 0.3, "rep": "story", "correct_text": "כֵּן! בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת.", "h3": "בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת וְהַשָּׁמַיִם כְּתֻמִּים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָעֶרֶב." },
+    { "kind": "pick", "id": "math.time.night", "skill": "MATH-A-05", "prompt": "אֵיזוֹ תְּמוּנָה הִיא לַיְלָה?", "options": ["time_night", "time_noon", "time_morning"], "correct": "time_night", "difficulty": 0.15, "rep": "story", "correct_text": "כֵּן! בַּלַּיְלָה יֵשׁ יָרֵחַ וְכוֹכָבִים.", "h3": "בַּלַּיְלָה חָשׁוּךְ, וְיֵשׁ יָרֵחַ וְכוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַלַּיְלָה." },
+    { "kind": "pick", "id": "math.time.after", "skill": "MATH-A-05", "prompt": "מָה בָּא אַחֲרֵי הַבֹּקֶר?", "options": ["time_night", "time_noon", "time_morning"], "correct": "time_noon", "difficulty": 0.4, "rep": "story", "correct_text": "כֵּן! אַחֲרֵי הַבֹּקֶר בָּאִים הַצָּהֳרַיִם.", "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב, וּבַסּוֹף לַיְלָה. עַכְשָׁו תּוֹרְכֶם." },
+
+    { "kind": "give", "id": "math.shop.apples", "skill": "MATH-A-06", "obj": "coin", "n": 3, "source": 6, "prompt": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד. קוֹנִים שְׁלוֹשָׁה תַּפּוּחִים.", "correct_text": "שָׁלוֹשׁ! מַטְבֵּעַ אֶחָד לְכׇל תַּפּוּחַ.", "difficulty": 0.3 },
+    { "kind": "give", "id": "math.shop.fish", "skill": "MATH-A-06", "obj": "coin", "n": 2, "source": 5, "prompt": "כׇּל דָּג עוֹלֶה מַטְבֵּעַ אֶחָד. קוֹנִים שְׁנֵי דָּגִים.", "correct_text": "שְׁתַּיִם! מַטְבֵּעַ אֶחָד לְכׇל דָּג.", "difficulty": 0.25 },
+    { "kind": "give", "id": "math.shop.stars", "skill": "MATH-A-06", "obj": "coin", "n": 4, "source": 7, "prompt": "כׇּל כּוֹכָב עוֹלֶה מַטְבֵּעַ אֶחָד. קוֹנִים אַרְבָּעָה כּוֹכָבִים.", "correct_text": "אַרְבַּע! מַטְבֵּעַ אֶחָד לְכׇל כּוֹכָב.", "difficulty": 0.4 },
+
+    { "kind": "compare_more", "id": "math.graph.apples", "skill": "MATH-A-07", "obj": "apple", "options": [5, 2], "big": 5, "small": 2, "trap": false, "difficulty": 0.25, "domain": "math" },
+    { "kind": "compare_more", "id": "math.graph.fish", "skill": "MATH-A-07", "obj": "fish", "options": [3, 4], "big": 4, "small": 3, "trap": false, "difficulty": 0.3, "domain": "math" },
+    { "kind": "compare_more", "id": "math.graph.stars", "skill": "MATH-A-07", "obj": "star", "options": [4, 2], "big": 4, "small": 2, "ask": "fewer", "trap": false, "difficulty": 0.35, "domain": "math" }
+  ],
+  "firstSequence": 1,
+  "lessons": [
+    { "id": "add-one-more", "title": "עוֹד אֶחָד, עוֹד שְׁנַיִם", "skills": ["MATH-A-01"], "items": ["math.add.ducks", "math.add.apples", "math.add.fish", "math.add.stars"], "minutes": 4, "done": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וְסְפַרְתֶּם." },
+    { "id": "take-one-away", "title": "אֶחָד הָלַךְ", "skills": ["MATH-A-02"], "items": ["math.take.fish", "math.take.apples", "math.take.stars"], "minutes": 3, "done": "יָפֶה מְאֹד! יְדַעְתֶּם כַּמָּה נִשְׁאֲרוּ." },
+    { "id": "big-small-long-heavy", "title": "גָּדוֹל, קָצָר, כָּבֵד", "skills": ["MATH-A-04"], "items": ["math.size.big", "math.size.small", "math.size.long", "math.size.short", "math.size.heavy", "math.size.light"], "minutes": 4, "done": "חֲכָמִים! הִשְׁוִיתֶם גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל." },
+    { "id": "my-day", "title": "הַיּוֹם שֶׁלִּי", "skills": ["MATH-A-05"], "items": ["math.time.night", "math.time.morning", "math.time.noon", "math.time.evening", "math.time.after"], "minutes": 4, "done": "וַאוּ! הִכַּרְתֶּם אֶת הַיּוֹם: בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה." },
+    { "id": "the-shop", "title": "הַחֲנוּת", "skills": ["MATH-A-06"], "items": ["math.shop.fish", "math.shop.apples", "math.shop.stars"], "minutes": 4, "done": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם מַטְבֵּעַ אֶחָד לְכׇל דָּבָר." },
+    { "id": "picture-graph", "title": "אֵיפֹה יוֹתֵר?", "skills": ["MATH-A-07"], "items": ["math.graph.apples", "math.graph.fish", "math.graph.stars"], "minutes": 3, "done": "יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת." }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "step-by-step",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "צַעַד אַחַר צַעַד"
+    }
+  ],
+  "skills": [
+    "CS-A-01",
+    "CS-A-05"
+  ],
+  "items": [
+    "cs.routine.wash.first",
+    "cs.routine.wash.last",
+    "cs.routine.teeth.first",
+    "cs.routine.teeth.last",
+    "cs.wrong.wash",
+    "cs.wrong.teeth"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 1,
+  "celebration": {
+    "vo": "vo:celebrate.step_by_step",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה בָּא קֹדֶם וּמָה בַּסּוֹף."
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "add-one-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד אֶחָד, עוֹד שְׁנַיִם"
+    }
+  ],
+  "skills": [
+    "MATH-A-01"
+  ],
+  "items": [
+    "math.add.ducks",
+    "math.add.apples",
+    "math.add.fish",
+    "math.add.stars"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 1,
+  "celebration": {
+    "vo": "vo:celebrate.add_one_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וְסְפַרְתֶּם."
+      }
+    ]
+  }
+}

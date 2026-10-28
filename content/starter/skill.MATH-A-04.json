@@ -1,0 +1,30 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-A-04",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משווים גדול וקטן, ארוך וקצר, כבד וקל"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַשְׁווִים גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "CS-A-05",
+  "review": "needs-editor",
+  "domain": "cs",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוצאים את השלב שלא שייך לרצף"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַשָּׁלָב שֶׁלֹּא שַׁיָּךְ"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "CS-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "story"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-A-05",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מכירים בוקר, צהריים, ערב ולילה"
+    }
+  ],
+  "worldObject": "sprout",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "story",
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

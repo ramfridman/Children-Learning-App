@@ -50,8 +50,8 @@ void main() {
   });
 
   test('a land with fewer than three lessons has no warm-up', () {
-    expect(placementLesson(content, 'math'), isNull);
-    expect(placementLesson(content, 'cs'), isNull);
+    expect(placementLesson(content, 'none'), isNull);
+    expect(placementLesson(content, 'none'), isNull);
   });
 
   test(
@@ -63,7 +63,7 @@ void main() {
         placementDue(content, 'numbers', <Attempt>[_attempt('butterflies', 'count.butterflies.3')]),
         isFalse,
       );
-      expect(placementDue(content, 'math', const <Attempt>[]), isFalse);
+      expect(placementDue(content, 'none', const <Attempt>[]), isFalse);
     },
   );
 

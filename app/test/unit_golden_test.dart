@@ -41,6 +41,10 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('shp.any.small', 'shape_small', 900),
   ('shp.where.under', 'shape_where', 900),
   ('shp.rect.find', 'shape_rect', 900),
+  ('math.add.apples', 'math_add', 900),
+  ('math.shop.apples', 'math_shop', 900),
+  ('math.time.morning', 'math_time', 900),
+  ('cs.routine.wash.first', 'cs_routine', 900),
 ];
 
 void main() {

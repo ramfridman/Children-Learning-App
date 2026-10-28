@@ -1,0 +1,150 @@
+{
+  "schema": "activity/v1",
+  "id": "math.graph.apples",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "A",
+  "skills": [
+    {
+      "id": "MATH-A-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "compare-more",
+  "difficulty": {
+    "authored": 0.25
+  },
+  "prompt": {
+    "vo": "vo:math.graph.apples.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה יֵשׁ יוֹתֵר תַּפּוּחִים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow"
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "set": {
+          "sprite": "asset:apple",
+          "count": 5,
+          "arrangement": "line",
+          "seed": 6,
+          "scale": 1
+        },
+        "label": "חֲמִשָּׁה תַּפּוּחִים"
+      },
+      {
+        "id": "o2",
+        "set": {
+          "sprite": "asset:apple",
+          "count": 2,
+          "arrangement": "line",
+          "seed": 4,
+          "scale": 1
+        },
+        "label": "שְׁנֵי תַּפּוּחִים"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:math.graph.apples.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! כָּאן יֵשׁ יוֹתֵר תַּפּוּחִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:math.graph.apples.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:math.graph.apples.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:math.graph.apples.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּצַד אֶחָד יֵשׁ חֲמִשָּׁה תַּפּוּחִים, וּבַצַּד הָאַחֵר שְׁנֵי תַּפּוּחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child compares by number, not by how big or spread out the things look",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיפֹה יֵשׁ יוֹתֵר תַּפּוּחִים?"
+  }
+}

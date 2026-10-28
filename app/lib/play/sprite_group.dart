@@ -49,8 +49,11 @@ GroupLayout groupLayout(String arrangement, int count, {int seed = 0}) {
       );
     default:
       return GroupLayout(
-        <Offset>[for (int i = 0; i < count; i++) Offset((i + 0.5) / count, 0.5)],
-        1 / count,
+        // A group of one or two is not drawn larger than a group of four: sizes must compare fairly.
+        <Offset>[
+          for (int i = 0; i < count; i++) Offset(0.5 + (i - (count - 1) / 2) / math.max(count, 4), 0.5),
+        ],
+        1 / math.max(count, 4),
         1,
       );
   }

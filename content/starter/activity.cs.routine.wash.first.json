@@ -1,0 +1,155 @@
+{
+  "schema": "activity/v1",
+  "id": "cs.routine.wash.first",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "cs",
+  "band": "A",
+  "skills": [
+    {
+      "id": "CS-A-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "prompt": {
+    "vo": "vo:cs.routine.wash.first.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים קֹדֶם?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:step_towel",
+        "label": "מַגֶּבֶת",
+        "misconception": "M-SEQ-CAUSE"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:step_tap",
+        "label": "בָּרֶז"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:step_soap",
+        "label": "סַבּוֹן"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:cs.routine.wash.first.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! קֹדֶם פּוֹתְחִים אֶת הַבָּרֶז."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SEQ-CAUSE",
+        "vo": "vo:fb.seq_cause",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נַחְשֹׁב: מָה קוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:cs.routine.wash.first.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַבָּרֶז."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים קֹדֶם?"
+  }
+}

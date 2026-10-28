@@ -1,0 +1,144 @@
+{
+  "schema": "activity/v1",
+  "id": "math.time.evening",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "A",
+  "skills": [
+    {
+      "id": "MATH-A-05",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.3
+  },
+  "prompt": {
+    "vo": "vo:math.time.evening.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיזוֹ תְּמוּנָה הִיא עֶרֶב?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:time_morning",
+        "label": "בֹּקֶר"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:time_noon",
+        "label": "צָהֳרַיִם"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:time_evening",
+        "label": "עֶרֶב"
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:math.time.evening.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:math.time.evening.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת וְהַשָּׁמַיִם כְּתֻמִּים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָעֶרֶב."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיזוֹ תְּמוּנָה הִיא עֶרֶב?"
+  }
+}

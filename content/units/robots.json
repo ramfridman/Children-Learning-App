@@ -1,0 +1,28 @@
+{
+  "unit": "robots",
+  "domain": "cs",
+  "note": "Band A of Computer science, first part: steps of a routine (CS-A-01) and spotting the step that does not belong (CS-A-05). The robot path skills (CS-A-02 to 04, 06, 07) need the robot-path template of part 9b. Hebrew is a draft by Claude, needs-editor.",
+  "assetGlobs": ["step_*"],
+  "names": {
+    "step_tap": { "one": "בָּרֶז", "g": "m" }, "step_soap": { "one": "סַבּוֹן", "g": "m" }, "step_towel": { "one": "מַגֶּבֶת", "g": "f" },
+    "step_paste": { "one": "מִשְׁחָה", "g": "f" }, "step_brush": { "one": "מִבְרֶשֶׁת", "g": "f" }, "step_rinse": { "one": "כּוֹס מַיִם", "g": "f" }
+  },
+  "tagFeedback": { "M-SEQ-CAUSE": "בּוֹאוּ נַחְשֹׁב: מָה קוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?" },
+  "misconceptions": [],
+  "skills": [
+    { "id": "CS-A-01", "title": "מסדרים שלושה שלבים של שגרה (רחצת ידיים, צחצוח שיניים)", "child": "מַסְדִּירִים שְׁלָבִים: מָה קֹדֶם, מָה בַּסּוֹף", "world": "dock", "needs": ["LOG-A-08"], "reps": ["story", "pictorial"], "tags": ["M-SEQ-CAUSE"] },
+    { "id": "CS-A-05", "title": "מוצאים את השלב שלא שייך לרצף", "child": "מוֹצְאִים אֶת הַשָּׁלָב שֶׁלֹּא שַׁיָּךְ", "world": "dock", "needs": ["CS-A-01"], "reps": ["pictorial", "story"], "tags": [] }
+  ],
+  "activities": [
+    { "kind": "pick", "id": "cs.routine.wash.first", "skill": "CS-A-01", "prompt": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים קֹדֶם?", "options": ["step_towel", "step_tap", "step_soap"], "correct": "step_tap", "tags": { "step_towel": "M-SEQ-CAUSE" }, "difficulty": 0.2, "rep": "story", "correct_text": "כֵּן! קֹדֶם פּוֹתְחִים אֶת הַבָּרֶז.", "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַבָּרֶז." },
+    { "kind": "pick", "id": "cs.routine.wash.last", "skill": "CS-A-01", "prompt": "רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים בַּסּוֹף?", "options": ["step_soap", "step_towel", "step_tap"], "correct": "step_towel", "tags": { "step_tap": "M-SEQ-CAUSE" }, "difficulty": 0.25, "rep": "story", "correct_text": "כֵּן! בַּסּוֹף מְיַבְּשִׁים בְּמַגֶּבֶת.", "h3": "קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּגֶּבֶת." },
+    { "kind": "pick", "id": "cs.routine.teeth.first", "skill": "CS-A-01", "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה עוֹשִׂים קֹדֶם?", "options": ["step_rinse", "step_brush", "step_paste"], "correct": "step_paste", "tags": { "step_rinse": "M-SEQ-CAUSE" }, "difficulty": 0.25, "rep": "story", "correct_text": "כֵּן! קֹדֶם שָׂמִים מִשְׁחָה.", "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף כּוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה." },
+    { "kind": "pick", "id": "cs.routine.teeth.last", "skill": "CS-A-01", "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה עוֹשִׂים בַּסּוֹף?", "options": ["step_paste", "step_rinse", "step_brush"], "correct": "step_rinse", "tags": { "step_paste": "M-SEQ-CAUSE" }, "difficulty": 0.3, "rep": "story", "correct_text": "כֵּן! בַּסּוֹף שׁוֹטְפִים בְּמַיִם.", "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף כּוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל כּוֹס הַמַּיִם." },
+    { "kind": "pick", "id": "cs.wrong.wash", "skill": "CS-A-05", "prompt": "רוֹחֲצִים יָדַיִם. מָה לֹא שַׁיָּךְ?", "options": ["step_soap", "step_brush", "step_tap"], "correct": "step_brush", "difficulty": 0.3, "rep": "pictorial", "correct_text": "כֵּן! מִבְרֶשֶׁת לֹא צְרִיכָה לִרְחִיצַת יָדַיִם.", "h3": "לִרְחִיצַת יָדַיִם צְרִיכִים בָּרֶז, סַבּוֹן וּמַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּבְרֶשֶׁת." },
+    { "kind": "pick", "id": "cs.wrong.teeth", "skill": "CS-A-05", "prompt": "מְצַחְצְחִים שִׁנַּיִם. מָה לֹא שַׁיָּךְ?", "options": ["step_soap", "step_brush", "step_rinse"], "correct": "step_soap", "difficulty": 0.35, "rep": "pictorial", "correct_text": "כֵּן! סַבּוֹן לֹא צָרִיךְ לְצִחְצוּחַ שִׁנַּיִם.", "h3": "לְצִחְצוּחַ שִׁנַּיִם צְרִיכִים מִשְׁחָה, מִבְרֶשֶׁת וְכוֹס מַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַסַּבּוֹן." }
+  ],
+  "firstSequence": 1,
+  "lessons": [
+    { "id": "step-by-step", "title": "צַעַד אַחַר צַעַד", "skills": ["CS-A-01", "CS-A-05"], "items": ["cs.routine.wash.first", "cs.routine.wash.last", "cs.routine.teeth.first", "cs.routine.teeth.last", "cs.wrong.wash", "cs.wrong.teeth"], "minutes": 5, "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה בָּא קֹדֶם וּמָה בַּסּוֹף." }
+  ]
+}

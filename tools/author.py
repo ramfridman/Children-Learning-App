@@ -204,7 +204,7 @@ def k_give(a, ctx):
     obj, n = ctx['objects'][a['obj']], a['n']
     return activity(
         a, 'give_n', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'check', 'reverse', 'concrete',
-        {'background': 'asset:meadow', 'source': {'sprite': 'asset:' + a['obj'], 'count': a['source']},
+        {'background': 'asset:meadow', 'source': {'sprite': 'asset:' + a.get('sprite', a['obj']), 'count': a['source']},
          'target': {'sprite': 'asset:basket_target'}},
         {'type': 'give', 'n': n, 'classifiers': [{'when': 'took_all', 'misconception': 'M-CNT-CARD'}]},
         {'M-CNT-CARD'},
@@ -213,7 +213,8 @@ def k_give(a, ctx):
               '%s. עֲצְרוּ כְּשֶׁהִגַּעְנוּ אֶל %s. עַכְשָׁו תּוֹרְכֶם.' % (count_words(n), F[n])),
         'child gives exactly the number asked for, not the whole pile',
         extra={'contradicts': 'M-CNT-CARD'},
-        prompt='תְּנוּ לִי %s.' % qty(n, obj), correct='%s! נָתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי.' % F[n])
+        prompt=a.get('prompt') or 'תְּנוּ לִי %s.' % qty(n, obj),
+        correct=a.get('correct_text') or '%s! נָתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי.' % F[n])
 
 
 def k_count_tap(a, ctx):
@@ -397,7 +398,10 @@ def k_pick(a, ctx):
     tags_of = a.get('tags', {})
     opts, cid, tags = [], None, set()
     for k, sp in enumerate(a['options'], start=1):
-        if '*' in sp:  # "ball_red*3": a set of three things as the answer
+        if sp.startswith('n:'):  # "n:4": a numeral on a tile
+            v = int(sp[2:])
+            o = {'id': 'o%d' % k, 'numeral': v, 'label': F[v]}
+        elif '*' in sp:  # "ball_red*3": a set of three things as the answer
             base, rest = sp.split('*')
             count, _, scale = rest.partition('@')
             o = {'id': 'o%d' % k, 'set': {'sprite': 'asset:' + base, 'count': int(count), 'arrangement': 'line', 'seed': k},
@@ -422,7 +426,11 @@ def k_pick(a, ctx):
         scene['numeral'] = a['numeral']
     if 'row' in a:
         scene['row'] = ['?' if r == '?' else 'asset:' + r for r in a['row']]
-    right = this_one(ctx, a['correct'].split('*')[0])
+    if 'group2' in a:
+        g = a['group2']
+        scene['group2'] = {'sprite': 'asset:' + g['sprite'], 'count': g.get('count', 1),
+                           'arrangement': g.get('arrangement', 'line'), 'seed': g.get('seed', 8), 'scale': g.get('scale', 1)}
+    right = F[int(a['correct'][2:])] if a['correct'].startswith('n:') else this_one(ctx, a['correct'].split('*')[0])
     return activity(
         a, 'tap_answer', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], a.get('purpose', 'practice'),
         'practice', a.get('rep', 'pictorial'), scene, choice(opts, cid), tags,

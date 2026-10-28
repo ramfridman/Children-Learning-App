@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "big-small-long-heavy",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "גָּדוֹל, קָצָר, כָּבֵד"
+    }
+  ],
+  "skills": [
+    "MATH-A-04"
+  ],
+  "items": [
+    "math.size.big",
+    "math.size.small",
+    "math.size.long",
+    "math.size.short",
+    "math.size.heavy",
+    "math.size.light"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 3,
+  "celebration": {
+    "vo": "vo:celebrate.big_small_long_heavy",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! הִשְׁוִיתֶם גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל."
+      }
+    ]
+  }
+}

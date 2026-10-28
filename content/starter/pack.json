@@ -399,6 +399,66 @@
     {
       "id": "pos_under",
       "file": "pos_under.svg"
+    },
+    {
+      "id": "stick_long",
+      "file": "stick_long.svg"
+    },
+    {
+      "id": "stick_short",
+      "file": "stick_short.svg"
+    },
+    {
+      "id": "stone",
+      "file": "stone.svg"
+    },
+    {
+      "id": "feather",
+      "file": "feather.svg"
+    },
+    {
+      "id": "coin",
+      "file": "coin.svg"
+    },
+    {
+      "id": "time_evening",
+      "file": "time_evening.svg"
+    },
+    {
+      "id": "time_morning",
+      "file": "time_morning.svg"
+    },
+    {
+      "id": "time_night",
+      "file": "time_night.svg"
+    },
+    {
+      "id": "time_noon",
+      "file": "time_noon.svg"
+    },
+    {
+      "id": "step_brush",
+      "file": "step_brush.svg"
+    },
+    {
+      "id": "step_paste",
+      "file": "step_paste.svg"
+    },
+    {
+      "id": "step_rinse",
+      "file": "step_rinse.svg"
+    },
+    {
+      "id": "step_soap",
+      "file": "step_soap.svg"
+    },
+    {
+      "id": "step_tap",
+      "file": "step_tap.svg"
+    },
+    {
+      "id": "step_towel",
+      "file": "step_towel.svg"
     }
   ],
   "vo": []

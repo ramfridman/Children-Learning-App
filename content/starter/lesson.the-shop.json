@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "the-shop",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַחֲנוּת"
+    }
+  ],
+  "skills": [
+    "MATH-A-06"
+  ],
+  "items": [
+    "math.shop.fish",
+    "math.shop.apples",
+    "math.shop.stars"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 5,
+  "celebration": {
+    "vo": "vo:celebrate.the_shop",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם מַטְבֵּעַ אֶחָד לְכׇל דָּבָר."
+      }
+    ]
+  }
+}

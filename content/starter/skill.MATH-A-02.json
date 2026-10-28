@@ -1,0 +1,35 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-A-02",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "לוקחים 1 מקבוצה קטנה (עד 5) ואומרים כמה נשאר"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "לוֹקְחִים אֶחָד וְסוֹפְרִים כַּמָּה נִשְׁאַר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "take-one-away",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֶחָד הָלַךְ"
+    }
+  ],
+  "skills": [
+    "MATH-A-02"
+  ],
+  "items": [
+    "math.take.fish",
+    "math.take.apples",
+    "math.take.stars"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 2,
+  "celebration": {
+    "vo": "vo:celebrate.take_one_away",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! יְדַעְתֶּם כַּמָּה נִשְׁאֲרוּ."
+      }
+    ]
+  }
+}
