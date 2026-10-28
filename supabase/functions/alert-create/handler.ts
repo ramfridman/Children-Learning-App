@@ -17,6 +17,7 @@ export const CATEGORIES = [
   "inappropriateWords",
   "disclosure",
   "absence",
+  "ribbonEarned",
 ] as const;
 
 interface Body {

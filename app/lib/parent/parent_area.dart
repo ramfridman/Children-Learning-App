@@ -7,6 +7,7 @@ import '../app/alerts_provider.dart';
 import '../app/progress_provider.dart';
 import '../app/push_providers.dart';
 import '../app/providers.dart';
+import '../app/reward_providers.dart';
 import '../app/state.dart';
 import '../app/tutor_log_provider.dart';
 import '../app/sync_providers.dart';
@@ -25,6 +26,7 @@ import 'alerts_screen.dart';
 import 'backends.dart';
 import 'child_form.dart';
 import 'pin_screens.dart';
+import 'prizes_screen.dart';
 import 'progress_screen.dart';
 import 'rules_screen.dart';
 import 'tutor_log_screen.dart';
@@ -94,6 +96,14 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
         _ => null,
       },
     );
+  }
+
+  /// Ceremonies on or off. It is one of the family's rules, so every phone follows.
+  Future<void> _setCeremonies(bool on) async {
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    await db.putSetting(ceremoniesKey, on ? 'on' : 'off');
+    ref.invalidate(ceremoniesOnProvider);
+    unawaited(ref.read(syncRunnerProvider).now(force: true));
   }
 
   Future<bool> _confirm(String text) async =>
@@ -302,6 +312,31 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (BuildContext c) => RulesScreen(onClose: () => Navigator.pop(c)),
+                    ),
+                  ),
+                ),
+              ]),
+              _card(He.areaPrizes.text, <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(He.areaCeremoniesHelp.text, style: AppText.parent(TokenType.parentSmall)),
+                    ),
+                    Switch(
+                      key: const Key('ceremonies-switch'),
+                      value: ref.watch(ceremoniesOnProvider).value ?? true,
+                      onChanged: _setCeremonies,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                ParentButton(
+                  key: const Key('open-prizes'),
+                  label: He.areaPromisesOpen.text,
+                  quiet: true,
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext c) => PrizesScreen(onClose: () => Navigator.pop(c)),
                     ),
                   ),
                 ),

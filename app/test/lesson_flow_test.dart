@@ -62,13 +62,24 @@ void main() {
     ) async {
       final AppRig rig = AppRig();
       await rig.seedFinishedSetup();
+      // Two trophies are waiting for their ceremony (earned on another phone, say): the lesson's end gets only one.
+      for (final String key in <String>['trophy:counting:bronze', 'trophy:counting:silver']) {
+        await rig.db.addReward(
+          RewardsCompanion.insert(
+            profileId: 'p-1',
+            awardKey: key,
+            kind: 'trophy',
+            at: DateTime.utc(2026, 10, 27),
+          ),
+        );
+      }
       await rig.pump(tester, size: device.$2);
       await tester.tap(find.text('נועה'));
       await tester.pumpAndSettle();
       expect(find.byType(HomeScreen), findsOneWidget);
 
       // The counting hills start the lesson.
-      await tester.tap(find.text(He.landCounting.text));
+      await openCountingLesson(tester);
       await tester.pumpAndSettle();
       expect(find.byType(ActivityFrame), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -178,8 +189,41 @@ void main() {
         ),
         findsOneWidget,
       );
+      // The finished lesson gives a sticker, which pops in beside the guide and is kept (never random, never lost).
+      await wait(tester, 600);
+      expect(find.byKey(const Key('lesson-sticker')), findsOneWidget);
+      final List<Reward> given = await rig.db.rewardsOf('p-1');
+      expect(given.where((Reward r) => r.kind == 'sticker').map((Reward r) => r.awardKey), <String>[
+        'sticker:butterflies:1',
+      ]);
+      expect(
+        given.firstWhere((Reward r) => r.kind == 'sticker').seenAt,
+        isNotNull,
+        reason: 'shown, so not shown again',
+      );
       await tester.tap(find.byKey(const Key('lesson-done')));
       await tester.pumpAndSettle();
+      // Back on the map the highest waiting trophy gets its ceremony, and only that one; the other waits in the Hall.
+      expect(find.byKey(const Key('ceremony')), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('ceremony-title')),
+          matching: find.textContaining(He.trophySilver.text),
+        ),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const Key('ceremony-continue')));
+      await tester.pumpAndSettle();
+      final Map<String, Reward> trophies = <String, Reward>{
+        for (final Reward r in await rig.db.rewardsOf('p-1'))
+          if (r.kind == 'trophy') r.awardKey: r,
+      };
+      expect(trophies['trophy:counting:silver']!.seenAt, isNotNull);
+      expect(
+        trophies['trophy:counting:bronze']!.seenAt,
+        isNull,
+        reason: 'one ceremony for each end of a lesson',
+      );
       // After the first finished lesson the child is taken once to Friends' Beach to choose a companion.
       expect(find.byType(FriendsBeach), findsOneWidget);
       await tester.tap(find.byKey(const Key('friends-home')));
@@ -204,7 +248,7 @@ void main() {
       ]);
       final Attempt first = (await _attempts(rig)).first;
       expect(first.packId, 'starter');
-      expect(first.packVersion, '0.2.0');
+      expect(first.packVersion, '0.3.0');
       expect(first.lessonId, 'butterflies');
       expect(first.activityRevision, 1);
       expect(first.templateVersion, '1.0');
@@ -227,7 +271,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('lesson-show-me')));
     await wait(tester, 200);
@@ -252,7 +296,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('lesson-hint')));
     await wait(tester, 100);

@@ -315,6 +315,11 @@ class Lesson {
       skillIds = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       celebration = Spoken.fromJson(json['celebration']);
 
+  /// A short lesson made on the spot for one skill's revisit (M8): the bell flag on the map. It is not in any pack.
+  Lesson.mission({required this.id, required this.itemIds, required this.skillIds, required this.celebration})
+    : revision = 1,
+      title = '';
+
   final String id;
   final int revision;
   final String title;
@@ -339,6 +344,8 @@ class SkillDoc {
       misconceptions = <String>[
         for (final Object? t in json['misconceptions']! as List<Object?>) t! as String,
       ],
+      worldObject = json['worldObject'] as String?,
+      childLine = json['childLine'] == null ? null : _caption(json['childLine']),
       core = (json['core'] as bool?) ?? false,
       masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
       initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
@@ -352,6 +359,12 @@ class SkillDoc {
   final Map<String, double> prerequisites;
   final List<String> representations;
   final List<String> misconceptions;
+
+  /// Which drawing grows for this skill (an id of the app's world art), or null: the app's own catalog then decides.
+  final String? worldObject;
+
+  /// One line for the child, with niqqud, of what they can do; or null.
+  final String? childLine;
   final bool core;
   final Map<String, Object?> masteryRequires;
   final double initialStabilityDays;
@@ -363,6 +376,7 @@ class TagDoc {
   TagDoc._(Map<String, Object?> json)
     : id = json['id']! as String,
       parentText = json['parentText']! as String,
+      homeActivity = json['homeActivity'] == null ? null : _caption(json['homeActivity']),
       skills = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       repairActivities = <String>[
         for (final Object? a in json['repairActivities']! as List<Object?>) a! as String,
@@ -375,6 +389,9 @@ class TagDoc {
 
   /// What a parent reads about this misunderstanding, in plain Hebrew.
   final String parentText;
+
+  /// Something a parent can do at home in about five minutes, or null.
+  final String? homeActivity;
   final List<String> skills;
   final List<String> repairActivities;
   final List<String> preferredRepresentations;

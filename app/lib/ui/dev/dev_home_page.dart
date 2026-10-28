@@ -254,7 +254,11 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
       final Engine engine = Engine(catalog: engineCatalog(content))
         ..replay((await db.attemptsOf(p.id)).map(eventOf));
       final String text = engineSummary(engine, DateTime.now().toUtc());
-      out.add('Child ${p.name}:${String.fromCharCode(10)}$text');
+      final List<Reward> given = await db.rewardsOf(p.id);
+      final String awards = given.isEmpty
+          ? 'no awards yet'
+          : given.map((Reward r) => r.awardKey + (r.seenAt == null ? ' (waiting)' : '')).join(', ');
+      out.add('Child ${p.name}:${String.fromCharCode(10)}$text${String.fromCharCode(10)}awards: $awards');
     }
     return out.join(String.fromCharCode(10) + String.fromCharCode(10));
   });

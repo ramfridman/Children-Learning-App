@@ -198,3 +198,35 @@ Deno.test("content-publish: the index that the app's tool makes for the starter 
   assert.equal(j.items, 5);
   assert.equal(store.packs.get("starter")!.items.length, 5);
 });
+
+Deno.test("content-publish: a newer version keeps the approved lines of the items that did not change, and nothing else", async () => {
+  const { store, publish } = setup();
+  const second = { ...goodItem(), item_id: "pick.red.flower" };
+  await publish(goodBody({ items: [goodItem(), second] }));
+  const line = (over: Partial<{ line: string }> = {}) => ({
+    line: "בואו נספור לאט",
+    caption: null,
+    next: "replay_prompt_slow",
+    highlight: [] as string[],
+    audio: new Uint8Array([1, 2, 3]),
+    ...over,
+  });
+  // approved lines for both items, and a line a model made for the first
+  const key = (item: string, prompt: string) => `starter/0.2.0/${item}/default/0/A/n/nitzi/${prompt}/v1`;
+  store.cache.set(key("count.butterflies.3", "approved"), line());
+  store.cache.set(key("pick.red.flower", "approved"), line());
+  store.cache.set(key("count.butterflies.3", "p9"), line());
+
+  // 0.3.0: the first item is the same, the second was revised
+  const next = await publish(
+    goodBody({
+      pack_version: "0.3.0",
+      manifest_sha256: "b".repeat(64),
+      items: [goodItem(), { ...second, revision: 2 }],
+    }),
+  );
+  assert.equal((await next.json()).result, "published");
+  const keys = [...store.cache.keys()].sort();
+  assert.deepEqual(keys, [key("count.butterflies.3", "approved").replace("0.2.0", "0.3.0")]);
+  assert.deepEqual([...store.cache.values()][0].audio, new Uint8Array([1, 2, 3]), "with its voice");
+});

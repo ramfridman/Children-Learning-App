@@ -8,6 +8,9 @@ import '../data/app_database.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../rewards/award.dart';
+import '../rewards/names.dart';
+import '../rewards/ribbons.dart';
 import '../strings/he.dart';
 import 'alert_scan.dart';
 
@@ -25,6 +28,9 @@ class AlertsScreen extends ConsumerStatefulWidget {
 class _AlertsScreenState extends ConsumerState<AlertsScreen> {
   bool _keepWords = true;
 
+  /// The parents' promises, looked up here and never carried by an alert.
+  Promises _promises = const <String, Map<String, String>>{};
+
   @override
   void initState() {
     super.initState();
@@ -34,9 +40,15 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
   Future<void> _load() async {
     final AppDatabase db = await ref.read(databaseProvider.future);
     final bool keep = await keepWordsOn(db);
+    final Promises promises = decodeRibbons(await db.setting('ribbons'));
     await db.markAlertsRead(DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs()));
     ref.invalidate(unreadAlertsProvider);
-    if (mounted) setState(() => _keepWords = keep);
+    if (mounted) {
+      setState(() {
+        _keepWords = keep;
+        _promises = promises;
+      });
+    }
   }
 
   Future<void> _setKeep(bool on) async {
@@ -49,9 +61,24 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     if (mounted) setState(() => _keepWords = on);
   }
 
+  /// A trophy with a promise was earned: the alert holds the trophy's key, and the words are looked up here.
+  ({String title, String detail, String todo}) _ribbon(Alert a) {
+    final ({TrophyLand land, TrophyTier tier})? t = Awards.trophyOf(a.detail);
+    final String trophy = t == null ? '' : trophyNamePlain(t.land, t.tier);
+    final String? promise = a.profileId == null ? null : _promises[a.profileId]?[a.detail];
+    return (
+      title: He.alertRibbonTitle.text,
+      detail: promise == null
+          ? He.alertRibbonNoWords.fill(<String, String>{'t': trophy})
+          : He.alertRibbonDetail.fill(<String, String>{'t': trophy, 'w': promise}),
+      todo: He.alertRibbonDo.text,
+    );
+  }
+
   ({String title, String detail, String todo}) _text(Alert a) {
     String n(String s) => s.replaceAll('{n}', '${a.count}');
     return switch (a.category) {
+      'ribbonEarned' => _ribbon(a),
       'pastLimit' => (
         title: He.alertPastLimitTitle.text,
         detail: n(He.alertPastLimitDetail.text),

@@ -315,9 +315,23 @@ class ProgressScreen extends ConsumerWidget {
               for (final MisconceptionRow m in p.misconceptions)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 3),
-                  child: Text(
-                    m.resolved ? '${m.text} (${He.progressResolved.text})' : m.text,
-                    style: AppText.parent(TokenType.parentBody),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        m.resolved ? '${m.text} (${He.progressResolved.text})' : m.text,
+                        style: AppText.parent(TokenType.parentBody),
+                      ),
+                      if (m.homeActivity != null && !m.resolved)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            He.progressHomeActivity.fill(<String, String>{'w': m.homeActivity!}),
+                            key: Key('home-activity-${m.id}'),
+                            style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
           ]),

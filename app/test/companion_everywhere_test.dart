@@ -8,7 +8,6 @@ import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/child/friends_beach.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/play/activity_frame.dart';
-import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/companion_fixtures.dart';
@@ -78,7 +77,7 @@ void main() {
   }
 
   Future<void> openLesson(WidgetTester tester) async {
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     expect(find.byType(ActivityFrame), findsOneWidget);
   }

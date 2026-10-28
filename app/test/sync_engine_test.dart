@@ -454,4 +454,72 @@ void main() {
       );
     });
   });
+  group('rewards', () {
+    Future<void> give(Phone p, String key, {String kind = 'star', bool seen = false}) => p.db.addReward(
+      RewardsCompanion.insert(
+        profileId: kid,
+        awardKey: key,
+        kind: kind,
+        at: DateTime.utc(2026, 11, 20, 11),
+        seenAt: Value<DateTime?>(seen ? DateTime.utc(2026, 11, 20, 11) : null),
+      ),
+    );
+
+    test('what one phone gave arrives on the other, already seen there, and is not sent back', () async {
+      await p1.addChild();
+      await give(p1, 'trophy:counting:silver', kind: 'trophy');
+      await give(p1, 'star:NUM-A-01');
+      final SyncReport sent = await p1.engine.syncOnce();
+      expect(sent.pushedEvents, 2);
+      expect(server.log.where((Map<String, Object?> e) => e['type'] == 'reward').length, 2);
+      expect(
+        server.log.firstWhere((Map<String, Object?> e) => e['type'] == 'reward')['data'],
+        <String, Object?>{'kind': 'trophy', 'key': 'trophy:counting:silver'},
+        reason: 'only a kind and a key',
+      );
+      await p2.engine.syncOnce();
+      final List<Reward> there = await p2.db.rewardsOf(kid);
+      expect(there.map((Reward r) => r.awardKey).toSet(), <String>{
+        'trophy:counting:silver',
+        'star:NUM-A-01',
+      });
+      expect(there.every((Reward r) => r.seenAt != null), isTrue, reason: 'already seen: no second ceremony');
+      expect(there.every((Reward r) => r.syncedAt != null), isTrue, reason: 'never sent back');
+      final int before = server.log.length;
+      await p2.engine.syncOnce();
+      expect(server.log.length, before);
+    });
+
+    test('two phones that each worked out the same award end with it once', () async {
+      await p1.addChild();
+      await give(p1, 'star:NUM-A-01');
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      // The second phone had also worked it out by itself, before it heard.
+      final int sameKey = (await p2.db.rewardsOf(kid))
+          .where((Reward r) => r.awardKey == 'star:NUM-A-01')
+          .length;
+      expect(sameKey, 1);
+      await give(p2, 'star:NUM-A-01');
+      await p2.engine.syncOnce();
+      await p1.engine.syncOnce();
+      expect((await p1.db.rewardsOf(kid)).length, 1);
+      expect((await p2.db.rewardsOf(kid)).length, 1);
+    });
+
+    test(
+      'an award is never taken away by anything that arrives later, and goes only with the child',
+      () async {
+        await p1.addChild();
+        await give(p1, 'sticker:butterflies:1', kind: 'sticker');
+        await p1.engine.syncOnce();
+        await p2.engine.syncOnce();
+        expect((await p2.db.rewardsOf(kid)).single.awardKey, 'sticker:butterflies:1');
+        await p1.engine.deleteChild(kid);
+        await p2.engine.syncOnce();
+        expect(await p2.db.rewardsOf(kid), isEmpty);
+        expect(await p1.db.rewardsOf(kid), isEmpty);
+      },
+    );
+  });
 }

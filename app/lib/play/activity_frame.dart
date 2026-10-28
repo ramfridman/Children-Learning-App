@@ -8,6 +8,7 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
+import '../rewards/sticker_design.dart';
 import '../strings/he.dart';
 
 /// The frame of a playable activity: the same positions as the boards (the [ActivitySpec] numbers),
@@ -231,9 +232,12 @@ class ActivityFrame extends StatelessWidget {
 
 /// The calm end of a lesson: the line that praises what the child did, a spark, and one way home.
 class LessonCelebration extends StatelessWidget {
-  const LessonCelebration({super.key, required this.text, required this.onDone, this.cameo});
+  const LessonCelebration({super.key, required this.text, required this.onDone, this.cameo, this.sticker});
 
   final String text;
+
+  /// The key of a sticker the child has just earned; it pops in beside the character.
+  final String? sticker;
   final VoidCallback onDone;
 
   /// The character who celebrates with the child (a live character view); a spark when there is none.
@@ -259,10 +263,19 @@ class LessonCelebration extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                if (cameo != null)
-                  SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
-                else
-                  const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    if (cameo != null)
+                      SizedBox(key: const Key('lesson-cameo'), width: 112, height: 112, child: cameo)
+                    else
+                      const BoardSvg('assets/art/ui/spark.svg', width: 64, height: 64),
+                    if (sticker != null) ...<Widget>[
+                      const SizedBox(width: 16),
+                      _StickerPop(stickerKey: sticker!),
+                    ],
+                  ],
+                ),
                 const SizedBox(height: 8),
                 Text(text, textAlign: TextAlign.center, style: AppText.fixed(size: 26, weight: 600)),
                 const SizedBox(height: 12),
@@ -280,6 +293,29 @@ class LessonCelebration extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// A new sticker pops in. With "reduce motion" it simply appears.
+class _StickerPop extends StatelessWidget {
+  const _StickerPop({required this.stickerKey});
+
+  final String stickerKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget art = Semantics(
+      label: He.stickerNewSemantics.text,
+      child: BoardSvg(stickerAsset(stickerKey), key: const Key('lesson-sticker'), width: 96, height: 96),
+    );
+    if (MediaQuery.disableAnimationsOf(context)) return art;
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 0.4, end: 1),
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.elasticOut,
+      builder: (BuildContext context, double v, Widget? child) => Transform.scale(scale: v, child: child),
+      child: art,
     );
   }
 }

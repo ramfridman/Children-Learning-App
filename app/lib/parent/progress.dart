@@ -44,11 +44,14 @@ class DomainBlock {
 
 /// One misunderstanding the engine found, with the plain sentence for the parent.
 class MisconceptionRow {
-  const MisconceptionRow({required this.id, required this.text, required this.resolved});
+  const MisconceptionRow({required this.id, required this.text, required this.resolved, this.homeActivity});
 
   final String id;
   final String text;
   final bool resolved;
+
+  /// Something to do at home in about five minutes, when the pack has one for it (pack 0.3.0).
+  final String? homeActivity;
 }
 
 /// One way of explaining that works for this child.
@@ -120,6 +123,7 @@ class ProgressSource {
     required this.catalog,
     required this.skillInfo,
     required this.tagText,
+    this.tagHome = const <String, String>{},
     required this.attempts,
     required this.sessions,
     required this.now,
@@ -128,6 +132,9 @@ class ProgressSource {
   final Catalog catalog;
   final Map<String, SkillInfo> skillInfo;
   final Map<String, String> tagText;
+
+  /// The home activity of each misconception that has one, by tag.
+  final Map<String, String> tagHome;
   final List<AttemptEvent> attempts;
   final List<Session> sessions;
 
@@ -205,6 +212,7 @@ Progress buildProgress(ProgressSource src) {
           id: t.key,
           text: src.tagText[t.key]!,
           resolved: t.value.status == TagStatus.resolved,
+          homeActivity: src.tagHome[t.key],
         ),
   ]..sort((MisconceptionRow a, MisconceptionRow b) => a.id.compareTo(b.id));
 

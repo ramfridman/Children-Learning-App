@@ -257,6 +257,12 @@ class HomeScreen extends StatelessWidget {
     this.companionMouth,
     this.onCompanion,
     this.onFriends,
+    this.onOpenLand,
+    this.openableLands = const <Land>{},
+    this.stars = 0,
+    this.onStickers,
+    this.onHall,
+    this.hallGlow = false,
   });
 
   final String childName;
@@ -279,6 +285,29 @@ class HomeScreen extends StatelessWidget {
 
   /// The child wants to choose another companion (Friends' Beach).
   final VoidCallback? onFriends;
+
+  /// A land with something in it was touched (M8): its island opens, with the objects that grow there. When this is null
+  /// the counting hills open [onOpenActivity] as before.
+  final void Function(Land land)? onOpenLand;
+
+  /// The lands that have skills, so that a tap on their sign opens them.
+  final Set<Land> openableLands;
+
+  /// The golden stars the child has, shown beside the sticker button (nothing is shown at zero).
+  final int stars;
+
+  /// Opens Sticker Island.
+  final VoidCallback? onStickers;
+
+  /// Opens the Trophy Hall, and whether something there is waiting for the child (a soft glow on its button).
+  final VoidCallback? onHall;
+  final bool hallGlow;
+
+  VoidCallback? _tapFor(Land land) {
+    final void Function(Land)? open = onOpenLand;
+    if (open != null) return openableLands.contains(land) ? () => open(land) : null;
+    return land == Land.counting ? onOpenActivity : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -328,13 +357,17 @@ class HomeScreen extends StatelessWidget {
             ),
           // A tap area above the sign of the one land that has somewhere to go.
           for (final _Sign sign in s.signs)
-            if (sign.land == Land.counting)
+            if (_tapFor(sign.land) != null)
               Positioned(
                 left: sign.left - 120,
                 top: sign.top - 150,
                 width: 240,
                 height: 160,
-                child: GestureDetector(behavior: HitTestBehavior.opaque, onTap: onOpenActivity),
+                child: GestureDetector(
+                  key: Key('land-tap-${sign.land.name}'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _tapFor(sign.land),
+                ),
               ),
           // Start corner: who is playing.
           boardAt(
@@ -347,6 +380,80 @@ class HomeScreen extends StatelessWidget {
               onPressed: onSwitchChild,
             ),
           ),
+          // Under the avatar: the stickers, and the golden stars the child has.
+          if (onStickers != null)
+            boardAt(
+              right: s.avatarRight,
+              top: s.avatarTop + s.avatarSize + 10,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _Labelled(
+                    label: He.homeStickersLabel.text,
+                    child: PebbleButton(
+                      key: const Key('home-stickers'),
+                      semanticLabel: He.stickersSemantics.text,
+                      size: 48,
+                      fill: TokenColors.paper,
+                      lip: TokenColors.cardLip,
+                      onPressed: onStickers,
+                      // A real sticker of the collection, so that what is on the button is what is inside.
+                      child: const BoardSvg('assets/art/stickers/sticker_01.svg', width: 30, height: 30),
+                    ),
+                  ),
+                  if (onHall != null) ...<Widget>[
+                    const SizedBox(width: 8),
+                    _Labelled(
+                      label: He.homeHallLabel.text,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: hallGlow
+                              ? const <BoxShadow>[
+                                  BoxShadow(color: Color(0xAAFFD45C), blurRadius: 20, spreadRadius: 4),
+                                ]
+                              : null,
+                        ),
+                        child: PebbleButton(
+                          key: const Key('home-hall'),
+                          semanticLabel: He.hallSemantics.text,
+                          size: 48,
+                          fill: TokenColors.paper,
+                          lip: TokenColors.cardLip,
+                          onPressed: onHall,
+                          child: const BoardSvg('assets/art/trophies/trophy_gold.svg', width: 28, height: 28),
+                        ),
+                      ),
+                    ),
+                  ],
+                  if (stars > 0) ...<Widget>[
+                    const SizedBox(width: 8),
+                    Semantics(
+                      label: '${He.starsSemantics.text} $stars',
+                      child: ExcludeSemantics(
+                        child: Container(
+                          key: const Key('home-stars'),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: TokenColors.paper,
+                            borderRadius: BorderRadius.circular(999),
+                            border: Border.all(color: TokenColors.ink, width: 2),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const BoardSvg('assets/art/world/star_gold.svg', width: 22, height: 22),
+                              const SizedBox(width: 4),
+                              Text('$stars', style: AppText.fixed(size: 20, weight: 700)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           // End corner: the book, then the visibly adult "Parents" button.
           Positioned(
             left: s.clusterLeft,
@@ -427,7 +534,7 @@ class HomeScreen extends StatelessWidget {
     // The counting hills are the one land with something behind it in M1.
     final Widget label = GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: sign.land == Land.counting ? onOpenActivity : null,
+      onTap: _tapFor(sign.land),
       child: _LandSign(land: sign.land),
     );
     if (!sign.centred) return Positioned(left: sign.left, top: sign.top, child: label);
@@ -536,5 +643,22 @@ class _LandSign extends StatelessWidget {
         ),
       ),
     ),
+  );
+}
+
+/// A button with a few words under it, so that no picture has to be guessed.
+class _Labelled extends StatelessWidget {
+  const _Labelled({required this.label, required this.child});
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      child,
+      ExcludeSemantics(child: Text(label, style: AppText.fixed(size: 14, weight: 700))),
+    ],
   );
 }

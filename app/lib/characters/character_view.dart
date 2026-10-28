@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../design/tokens.g.dart';
+import '../rewards/outfits.dart';
 import 'character.dart';
 
 /// Draws a character in one of its states and moves it a little, with nothing but transforms and opacity on
@@ -20,10 +21,14 @@ class CharacterView extends StatefulWidget {
     this.state = CharacterState.idle,
     this.mouthOpen = false,
     this.semanticLabel,
+    this.outfit,
   });
 
   final Character character;
   final CharacterState state;
+
+  /// The prize the character wears (M8): a scarf in a colour set, drawn on any character, or null for none.
+  final Outfit? outfit;
 
   /// While [state] is talk: the mouth open or closed (the lip-sync decides).
   final bool mouthOpen;
@@ -93,9 +98,26 @@ class _CharacterViewState extends State<CharacterView> with TickerProviderStateM
     final bool tilted = widget.state == CharacterState.think && !_reduced;
     final bool leaning = widget.state == CharacterState.listen && !_reduced;
     // The picture changes without a fade while the mouth flaps, and with a short one when the state changes.
+    final Outfit? outfit = widget.outfit;
     final Widget picture = AnimatedSwitcher(
       duration: const Duration(milliseconds: 140),
-      child: KeyedSubtree(key: ValueKey<CharacterState>(widget.state), child: _picture(image)),
+      child: KeyedSubtree(
+        key: ValueKey<CharacterState>(widget.state),
+        child: outfit == null
+            ? _picture(image)
+            : Stack(
+                fit: StackFit.expand,
+                children: <Widget>[
+                  _picture(image),
+                  IgnorePointer(
+                    child: CustomPaint(
+                      key: Key('outfit-${outfit.id}'),
+                      painter: ScarfPainter(outfit: outfit, canvas: widget.character.canvas),
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
     final Widget moving = AnimatedRotation(
       turns: tilted ? 0.012 : 0,
@@ -154,6 +176,56 @@ class _CharacterViewState extends State<CharacterView> with TickerProviderStateM
       ),
     );
   }
+}
+
+/// A scarf at the character's neck, in the prize's colours. It is placed by the shares of the picture (the neck sits about
+/// two fifths down, in the middle), so it fits any companion, and replaced by real art for a character that has some.
+class ScarfPainter extends CustomPainter {
+  const ScarfPainter({required this.outfit, required this.canvas});
+
+  final Outfit outfit;
+
+  /// The character's own canvas, so the scarf follows the picture that is drawn with `BoxFit.contain`.
+  final Size canvas;
+
+  @override
+  void paint(Canvas c, Size size) {
+    final FittedSizes fitted = applyBoxFit(BoxFit.contain, canvas, size);
+    final Size pic = fitted.destination;
+    final Offset origin = Offset((size.width - pic.width) / 2, (size.height - pic.height) / 2);
+    final double u = pic.width;
+    final Offset neck = origin + Offset(pic.width * 0.5, pic.height * 0.43);
+    final Paint main = Paint()..color = outfit.main;
+    final Paint accent = Paint()..color = outfit.accent;
+    final Paint ink = Paint()
+      ..color = TokenColors.ink
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = u * 0.008;
+    final RRect band = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: neck, width: u * 0.30, height: u * 0.07),
+      Radius.circular(u * 0.035),
+    );
+    final Path tail = Path()
+      ..moveTo(neck.dx + u * 0.08, neck.dy + u * 0.02)
+      ..quadraticBezierTo(neck.dx + u * 0.20, neck.dy + u * 0.10, neck.dx + u * 0.15, neck.dy + u * 0.22)
+      ..lineTo(neck.dx + u * 0.05, neck.dy + u * 0.18)
+      ..quadraticBezierTo(neck.dx + u * 0.10, neck.dy + u * 0.10, neck.dx + u * 0.03, neck.dy + u * 0.04)
+      ..close();
+    c.drawPath(tail, accent);
+    c.drawPath(tail, ink);
+    c.drawRRect(band, main);
+    c.drawRRect(band, ink);
+    c.drawLine(
+      neck + Offset(-u * 0.05, -u * 0.03),
+      neck + Offset(-u * 0.05, u * 0.03),
+      Paint()
+        ..color = outfit.accent
+        ..strokeWidth = u * 0.012,
+    );
+  }
+
+  @override
+  bool shouldRepaint(ScarfPainter old) => old.outfit != outfit || old.canvas != canvas;
 }
 
 /// A short burst of small stars from the character, as it celebrates.

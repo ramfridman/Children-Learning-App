@@ -4,7 +4,6 @@
 // Regenerate after a deliberate visual change:  flutter test --update-goldens test/lesson_golden_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/golden_comparator.dart';
@@ -51,7 +50,7 @@ void main() {
       await rig.pump(tester, size: device.$2);
       await tester.tap(find.text('נֹעָה'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(He.landCounting.text));
+      await openCountingLesson(tester);
       await tester.pumpAndSettle();
       final String d = device.$1;
 
@@ -109,7 +108,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נֹעָה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await _tap(tester, 'option-o1');
     await _wait(tester, 2200);

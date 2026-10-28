@@ -24,6 +24,10 @@ class Profiles extends Table {
   /// character, Nitzi. It names a character pack by id only; the pictures and the voice live in packs.
   TextColumn get companionId => text().nullable()();
 
+  /// The prize (an accessory colour set) the companion wears, by id (for example `sky`), or null for none. It names an
+  /// outfit of the app and holds nothing else.
+  TextColumn get outfitId => text().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => <Column<Object>>{id};
 }
@@ -208,4 +212,36 @@ class Alerts extends Table {
 
   /// When the alert was sent to the family's other devices (an alert from another device is never sent back).
   DateTimeColumn get syncedAt => dateTime().nullable()();
+}
+
+/// What a child has been given (M8): stickers, golden stars and trophies. A row is never changed except to say that the
+/// child has seen it, and never deleted except with the child: a replay or a late event from another phone cannot take an
+/// award away. It holds a key, a kind and a time, and no text.
+class Rewards extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  TextColumn get profileId => text()();
+
+  /// The award's key, for example `trophy:counting:silver`; the same on every device.
+  TextColumn get awardKey => text()();
+
+  /// An `AwardKind` name.
+  TextColumn get kind => text()();
+
+  /// When it was earned (the answer or the lesson that made it so), not when this phone found out.
+  DateTimeColumn get at => dateTime()();
+
+  /// When the child was shown it (a sticker revealed, a ceremony played). Null while it waits to be shown; an award from
+  /// another phone or from before this feature is marked seen at once.
+  DateTimeColumn get seenAt => dateTime().nullable()();
+
+  /// Sync: when it was sent, or the id of the event it came from.
+  TextColumn get eventId => text().nullable()();
+
+  DateTimeColumn get syncedAt => dateTime().nullable()();
+
+  @override
+  List<Set<Column<Object>>> get uniqueKeys => <Set<Column<Object>>>[
+    <Column<Object>>{profileId, awardKey},
+  ];
 }

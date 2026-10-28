@@ -134,6 +134,35 @@
       ],
       "additionalProperties": false
     },
+    "worldObject": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 24,
+      "pattern": "^(?:[a-z][a-z0-9-]{1,23})$"
+    },
+    "childLine": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "const": "he"
+          },
+          "v": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          }
+        },
+        "required": [
+          "t",
+          "v"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
     "core": {
       "type": "boolean"
     },

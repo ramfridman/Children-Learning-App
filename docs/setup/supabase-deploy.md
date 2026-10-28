@@ -237,11 +237,11 @@ the earlier ones are done. Never paste a key into the chat.
 6. **Claude: publish, pre-warm, measure** (from the `app` folder, with the secret set as above):
 
    ```powershell
-   dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack --dry-run
-   dart run tool/pack_builder.dart publish assets/packs/starter-0.2.0.nnpack
-   dart run tool/tutor_prewarm.dart plan assets/packs/starter-0.2.0.nnpack --characters hero-son
-   dart run tool/tutor_prewarm.dart make assets/packs/starter-0.2.0.nnpack --characters hero-son --confirm-lines <N>
-   dart run tool/tutor_prewarm.dart measure assets/packs/starter-0.2.0.nnpack --characters hero-son --count 10
+   dart run tool/pack_builder.dart publish assets/packs/starter-0.3.0.nnpack --dry-run
+   dart run tool/pack_builder.dart publish assets/packs/starter-0.3.0.nnpack
+   dart run tool/tutor_prewarm.dart plan assets/packs/starter-0.3.0.nnpack --characters hero-son
+   dart run tool/tutor_prewarm.dart make assets/packs/starter-0.3.0.nnpack --characters hero-son --confirm-lines <N>
+   dart run tool/tutor_prewarm.dart measure assets/packs/starter-0.3.0.nnpack --characters hero-son --count 10
    ```
 
    `plan` prints the number of lines, the voice characters and the estimated cost, and `make` refuses

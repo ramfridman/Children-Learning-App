@@ -5,7 +5,6 @@ import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/play/activity_frame.dart';
-import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/fake_speech.dart';
@@ -36,7 +35,7 @@ Future<AppRig> start(
   await tester.tap(find.text('נועה'));
   await tester.pumpAndSettle();
   expect(find.byType(HomeScreen), findsOneWidget);
-  await tester.tap(find.text(He.landCounting.text));
+  await openCountingLesson(tester);
   await tester.pumpAndSettle();
   expect(find.byType(ActivityFrame), findsOneWidget);
   await wait(tester, 300);
@@ -81,7 +80,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await wait(tester, 300);
     expect(mic, findsOneWidget, reason: 'a child who is often misheard still has the mic');
@@ -204,7 +203,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await wait(tester, 300);
     await speak(tester);
@@ -273,7 +272,7 @@ void goldens() {
       await rig.pump(tester, size: d.$2);
       await tester.tap(find.text('נועה'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(He.landCounting.text));
+      await openCountingLesson(tester);
       await tester.pumpAndSettle();
       await wait(tester, 300);
       await shot(tester, 'voice_mic_ready_${d.$1}');

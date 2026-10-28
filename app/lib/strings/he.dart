@@ -78,6 +78,72 @@ abstract final class He {
   static const Str listenConfirm = Str('שָׁמַעְתִּי… נָכוֹן?', nikud: true);
   static const Str listenTap = Str('אֶפְשָׁר גַּם לִלְחֹץ עַל הַתְּשׁוּבָה.', nikud: true);
 
+  // ---- the Trophy Hall, the ceremony, medals and prizes (M8) ----
+  static const Str homeStickersLabel = Str('מַדְבֵּקוֹת', nikud: true);
+  static const Str homeHallLabel = Str('גְּבִיעִים', nikud: true);
+  static const Str stickersTitle = Str('הַמַּדְבֵּקוֹת שֶׁלִּי', nikud: true);
+  static const Str stickersHow = Str('מַדְבֵּקָה אַחַת עַל כָּל שִׁעוּר שֶׁמְּסַיְּמִים', nikud: true);
+  static const Str stageSketch = Str('עוֹד מְתַרְגְּלִים', nikud: true);
+  static const Str stageColour = Str('יוֹדְעִים!', nikud: true);
+  static const Str stageFruit = Str('יוֹדְעִים וְגַם זוֹכְרִים!', nikud: true);
+  static const Str landPlayLabel = Str('לְשַׂחֵק', nikud: true);
+  static const Str legendSketch = Str('מְתַרְגְּלִים', nikud: true);
+  static const Str legendColour = Str('יוֹדְעִים', nikud: true);
+  static const Str legendStar = Str('וְגַם זוֹכְרִים', nikud: true);
+  static const Str legendSemantics = Str('מה אומרים הציורים: מתרגלים, יודעים, זוכרים');
+  static const Str hallTitle = Str('הֵיכַל הַגְּבִיעִים', nikud: true);
+  static const Str hallSemantics = Str('היכל הגביעים');
+  static const Str hallTabTrophies = Str('גְּבִיעִים', nikud: true);
+  static const Str hallTabMedals = Str('מֵדַלְיוֹת', nikud: true);
+  static const Str hallTabFriend = Str('לֶחָבֵר', nikud: true);
+  static const Str trophyBronze = Str('גְּבִיעַ הַבְּרוֹנְזָה', nikud: true);
+  static const Str trophySilver = Str('גְּבִיעַ הַכֶּסֶף', nikud: true);
+  static const Str trophyGold = Str('גְּבִיעַ הַזָּהָב', nikud: true);
+  static const Str trophyHow = Str('מְבִינִים {n} דְּבָרִים וְזוֹכְרִים גַּם אַחֲרֵי שָׁבוּעַ', nikud: true);
+  static const Str trophyComing = Str(
+    'הַגְּבִיעִים יָבוֹאוּ כְּשֶׁיִּהְיֶה עוֹד מָה לִלְמֹד כָּאן',
+    nikud: true,
+  );
+  static const Str trophyNewSemantics = Str('גביע חדש מחכה');
+  static const Str trophyReplaySemantics = Str('לראות שוב את הטקס');
+  static const Str trophyLockedSemantics = Str('גביע שעוד לא הרווחנו');
+  static const Str ceremonyBronze = Str(
+    'הַגְּבִיעַ הָרִאשׁוֹן שֶׁלָּכֶם! זְכַרְתֶּם — וְזֶה נִשְׁאַר.',
+    nikud: true,
+  );
+  static const Str ceremonySilver = Str('הִנֵּה הוּא — בִּשְׁבִילְכֶם!', nikud: true);
+  static const Str ceremonyGold = Str('וָאוּ! כָּל הָאִי! גְּבִיעַ הַזָּהָב בִּשְׁבִילְכֶם!', nikud: true);
+  static const Str ceremonyMedal = Str('מֵדַלְיָה! עַל הַהֶרְגֵּל הַטּוֹב שֶׁלָּכֶם!', nikud: true);
+  static const Str ceremonyAlso = Str('וְגַם לֶחָבֵר:', nikud: true);
+  static const Str ceremonyContinueSemantics = Str('להמשיך');
+  static const Str medalBraveAsker = Str('אֹמֶץ לִשְׁאֹל', nikud: true);
+  static const Str medalTryAgain = Str('מְנַסִּים שׁוּב', nikud: true);
+  static const Str medalExplainer = Str('אֵיךְ יָדַעְתִּי', nikud: true);
+  static const Str medalBugFixer = Str('מְתַקְּנֵי בָּאגִים', nikud: true);
+  static const Str medalBraveAskerHow = Str(
+    'אוֹמְרִים "לֹא בָּטוּחַ" אוֹ "תַּרְאוּ לִי" חָמֵשׁ פְּעָמִים',
+    nikud: true,
+  );
+  static const Str medalTryAgainHow = Str('מְנַסִּים שׁוּב וּמַצְלִיחִים שָׁלוֹשׁ פְּעָמִים', nikud: true);
+  static const Str medalExplainerHow = Str('אֶפְשָׁר יִהְיֶה לְהַרְוִיחַ אוֹתָהּ בְּקָרוֹב', nikud: true);
+  static const Str medalBugFixerHow = Str('אֶפְשָׁר יִהְיֶה לְהַרְוִיחַ אוֹתָהּ בְּקָרוֹב', nikud: true);
+  static const Str medalLockedSemantics = Str('מדליה שעוד לא הרווחנו');
+  static const Str outfitHoney = Str('צָעִיף דְּבַשׁ', nikud: true);
+  static const Str outfitSky = Str('צָעִיף שָׁמַיִם', nikud: true);
+  static const Str outfitRose = Str('צָעִיף וֶרֶד', nikud: true);
+  static const Str outfitNone = Str('בְּלִי צָעִיף', nikud: true);
+  static const Str outfitHowBronze = Str('מְגִיעַ עִם גְּבִיעַ בְּרוֹנְזָה', nikud: true);
+  static const Str outfitHowSilver = Str('מְגִיעַ עִם גְּבִיעַ כֶּסֶף', nikud: true);
+  static const Str outfitHowGold = Str('מְגִיעַ עִם גְּבִיעַ זָהָב', nikud: true);
+  static const Str outfitWearSemantics = Str('ללבוש');
+  static const Str decorationLantern = Str('פָּנָס', nikud: true);
+  static const Str decorationFlag = Str('דֶּגֶל', nikud: true);
+  static const Str decorationFountain = Str('מַזְרֵקָה', nikud: true);
+  static const Str stickersEmptyChild = Str(
+    'אַחֲרֵי הַשִּׁעוּר הָרִאשׁוֹן תִּהְיֶה כָּאן מַדְבֵּקָה.',
+    nikud: true,
+  );
+
   // ---- parent gate and PIN (adult) ----
   static const Str gateTitle = Str('לפני שנמשיך');
   static const Str gateHint = Str('השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס.');
@@ -192,6 +258,29 @@ abstract final class He {
   static const Str alertAbsenceTitle = Str('לא שיחקו זמן מה');
   static const Str alertAbsenceDetail = Str('לפני {n} ימים.');
   static const Str alertAbsenceDo = Str('אפשר להזמין להרפתקה קצרה.');
+  static const Str alertRibbonTitle = Str('זכו בגביע שהובטחה עליו הבטחה');
+  static const Str alertRibbonDetail = Str('{t}: {w}');
+  static const Str alertRibbonNoWords = Str('{t}');
+  static const Str alertRibbonDo = Str('זה הזמן לקיים את ההבטחה.');
+  static const Str areaPrizes = Str('גביעים והבטחות');
+  static const Str areaCeremonies = Str('טקס כשמקבלים גביע');
+  static const Str areaCeremoniesHelp = Str(
+    'כשהילד מקבל גביע או מדליה, החבר מציג אותם בטקס קצר. כשהטקס כבוי, הם מחכים בהיכל הגביעים.',
+  );
+  static const Str areaPromisesOpen = Str('הבטחות לגביעים');
+  static const Str prizesTitle = Str('הבטחות לגביעים');
+  static const Str prizesHelp = Str(
+    'אפשר לצרף הבטחה לגביע, למשל "בגביע הזהב הולכים לגלידה". כשהילד יזכה בו תקבלו התראה, וההבטחה תופיע ליד הגביע שלו בהיכל. עד 60 תווים, בלי קישורים.',
+  );
+  static const Str prizesBronze = Str('גביע ברונזה');
+  static const Str prizesSilver = Str('גביע כסף');
+  static const Str prizesGold = Str('גביע זהב');
+  static const Str prizesEarned = Str('הושג');
+  static const Str prizesNotYet = Str('בקרוב, כשיהיו באי מספיק מיומנויות');
+  static const Str prizesHint = Str('ההבטחה');
+  static const Str prizesBad = Str('עד 60 תווים, בלי קישורים ובלי תווים מיוחדים.');
+  static const Str prizesTooMany = Str('אי אפשר להוסיף עוד הבטחות (עד 30).');
+  static const Str prizesNoChildren = Str('עוד אין ילדים. אפשר להוסיף ילד באזור ההורים.');
   static const Str alertDropTitle = Str('המשחק השבוע ירד בהרבה');
   static const Str alertDropDo = Str('אפשר לשאול מה קרה, ולהציע הרפתקה אהובה.');
 
@@ -219,6 +308,7 @@ abstract final class He {
   static const Str progressHelpedLine = Str('{how}: הצליחו {a} מתוך {b}');
   static const Str progressMisconceptions = Str('מה כדאי לשים לב אליו');
   static const Str progressResolved = Str('נפתר');
+  static const Str progressHomeActivity = Str('פעילות לבית: {w}');
   static const Str progressNothingToWatch = Str('לא נמצאו אי-הבנות.');
   static const Str progressHabits = Str('חוזקות בלמידה');
   static const Str habitAsked = Str('ביקשו עזרה כשלא היו בטוחים: {n} פעמים');
@@ -292,6 +382,13 @@ abstract final class He {
   static const Str areaPushDenied = Str('לא ניתנה הרשאה להצגת הודעות. אפשר לתת אותה בהגדרות המכשיר.');
   static const Str areaPushUnavailable = Str('ההתראות בטלפון לא זמינות בגרסה הזו של האפליקציה.');
   static const Str areaPushFailed = Str('אי אפשר להגיע לשרת כרגע. נסו שוב בעוד רגע.');
+  static const Str celebrateWell = Str('כׇּל הַכָּבוֹד!', nikud: true);
+  static const Str stickersSemantics = Str('המדבקות שלי');
+  static const Str stickerNewSemantics = Str('מדבקה חדשה');
+  static const Str starsSemantics = Str('כוכבי זהב');
+  static const Str landPlaySemantics = Str('לשחק');
+  static const Str landBackSemantics = Str('חזרה למפה');
+  static const Str bellSemantics = Str('מישהו קורא לעזרה, אפשר לבדוק שוב');
   static const Str areaVersion = Str('גרסה');
   static const Str areaOffline = Str('אין חיבור לאינטרנט, אי אפשר לטעון את רשימת המכשירים.');
   static const Str confirmYes = Str('כן');

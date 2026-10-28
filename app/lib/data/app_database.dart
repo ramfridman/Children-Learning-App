@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../rewards/ribbons.dart';
 import 'tables.dart';
 
 part 'app_database.g.dart';
@@ -14,6 +15,7 @@ part 'app_database.g.dart';
     Sessions,
     VoiceListens,
     Alerts,
+    Rewards,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -21,7 +23,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 7;
+  static const int currentSchemaVersion = 9;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -66,6 +68,10 @@ class AppDatabase extends _$AppDatabase {
         }
         if (from >= 6) await m.addColumn(alerts, alerts.syncedAt);
       }
+      // 7 to 8 (M8): the stickers, golden stars and trophies a child has been given.
+      if (from < 8) await m.createTable(rewards);
+      // 8 to 9 (M8b): the prize the companion wears.
+      if (from < 9) await m.addColumn(profiles, profiles.outfitId);
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -91,6 +97,19 @@ class AppDatabase extends _$AppDatabase {
   Future<void> setCompanion(String profileId, String? characterId) =>
       (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
         ProfilesCompanion(companionId: Value<String?>(characterId)),
+      );
+
+  /// The prize the companion wears (an outfit id), or null for none.
+  Future<String?> outfitOf(String profileId) async {
+    final Profile? row = await (select(
+      profiles,
+    )..where((Profiles t) => t.id.equals(profileId))).getSingleOrNull();
+    return row?.outfitId;
+  }
+
+  Future<void> setOutfit(String profileId, String? outfitId) =>
+      (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
+        ProfilesCompanion(outfitId: Value<String?>(outfitId)),
       );
 
   Future<void> removeProfile(String id) => (delete(profiles)..where((Profiles t) => t.id.equals(id))).go();
@@ -311,6 +330,7 @@ class AppDatabase extends _$AppDatabase {
         addressForm: row.addressForm,
         ageBand: row.ageBand,
         companionId: row.companionId,
+        outfitId: row.outfitId,
       ),
     );
   }
@@ -343,6 +363,71 @@ class AppDatabase extends _$AppDatabase {
     await (delete(sessions)..where(($SessionsTable t) => t.profileId.equals(profileId))).go();
     await (delete(voiceListens)..where(($VoiceListensTable t) => t.profileId.equals(profileId))).go();
     await (delete(alerts)..where(($AlertsTable t) => t.profileId.equals(profileId))).go();
+    await (delete(rewards)..where(($RewardsTable t) => t.profileId.equals(profileId))).go();
     await (delete(profiles)..where(($ProfilesTable t) => t.id.equals(profileId))).go();
+    // The parents' promises for this child go with the child.
+    final String? promises = await setting('ribbons');
+    if (promises != null) {
+      await putSetting('ribbons', encodeRibbons(withoutChild(decodeRibbons(promises), profileId)));
+    }
   });
+
+  // ---- rewards (M8) ----
+
+  Future<Set<String>> awardKeys(String profileId) async => <String>{
+    for (final Reward r in await (select(
+      rewards,
+    )..where(($RewardsTable t) => t.profileId.equals(profileId))).get())
+      r.awardKey,
+  };
+
+  Future<List<Reward>> rewardsOf(String profileId) =>
+      (select(rewards)
+            ..where(($RewardsTable t) => t.profileId.equals(profileId))
+            ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.at)]))
+          .get();
+
+  /// Gives an award once. Returns false if the child already has it.
+  Future<bool> addReward(RewardsCompanion row) async {
+    final List<Reward> have =
+        await (select(rewards)..where(
+              ($RewardsTable t) =>
+                  t.profileId.equals(row.profileId.value) & t.awardKey.equals(row.awardKey.value),
+            ))
+            .get();
+    if (have.isNotEmpty) return false;
+    await into(rewards).insert(row);
+    return true;
+  }
+
+  Future<List<Reward>> unseenRewards(String profileId) =>
+      (select(rewards)
+            ..where(($RewardsTable t) => t.profileId.equals(profileId) & t.seenAt.isNull())
+            ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.at)]))
+          .get();
+
+  Future<void> markRewardsSeen(List<int> ids, DateTime at) => (update(
+    rewards,
+  )..where(($RewardsTable t) => t.id.isIn(ids))).write(RewardsCompanion(seenAt: Value<DateTime?>(at)));
+
+  Future<List<Reward>> unsyncedRewards({int limit = 40}) =>
+      (select(rewards)
+            ..where(($RewardsTable t) => t.syncedAt.isNull())
+            ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.id)])
+            ..limit(limit))
+          .get();
+
+  Future<void> markRewardsSynced(List<int> ids, DateTime at) => (update(
+    rewards,
+  )..where(($RewardsTable t) => t.id.isIn(ids))).write(RewardsCompanion(syncedAt: Value<DateTime?>(at)));
+
+  /// An award another phone gave: kept as it is, already seen here, and never sent back. False if it was here already.
+  Future<bool> addRemoteReward(RewardsCompanion row, {required String eventId, required DateTime at}) =>
+      addReward(
+        row.copyWith(
+          eventId: Value<String?>(eventId),
+          seenAt: Value<DateTime?>(at),
+          syncedAt: Value<DateTime?>(at),
+        ),
+      );
 }

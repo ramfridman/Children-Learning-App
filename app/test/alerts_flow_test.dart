@@ -98,7 +98,7 @@ void main() {
           await rig.pump(tester);
           await tester.tap(find.text('נועה'));
           await tester.pumpAndSettle();
-          await tester.tap(find.text(He.landCounting.text));
+          await openCountingLesson(tester);
           await tester.pumpAndSettle();
           expect(find.byType(ActivityFrame), findsOneWidget);
           await wait(tester, 300);
@@ -124,7 +124,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await wait(tester, 300);
     await tester.tap(find.byKey(const Key('lesson-mic')));

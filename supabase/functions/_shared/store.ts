@@ -283,12 +283,17 @@ export interface Secrets {
   publishSecret?: string;
 }
 
+/** The prompt version under which a person-approved tutor line is kept; a publish carries these lines over. */
+export const APPROVED_PROMPT_VERSION = "approved";
+
 /** A child as the server knows them. */
 export interface ChildProfile {
   id: string;
   nickname: string;
   avatarId: string;
   companionId: string | null;
+  /** The prize (a colour set of the app) the companion wears; an id of the app and nothing else. */
+  outfitId?: string | null;
   addressForm: "f" | "m" | "n";
   ageBand: 0 | 1 | 2;
 }
@@ -299,7 +304,7 @@ export interface EventIn {
   childId: string;
   clientAtMs: number;
   engineVersion: number;
-  type: "attempt" | "session";
+  type: "attempt" | "session" | "reward";
   payload: Record<string, unknown>;
 }
 

@@ -36,6 +36,29 @@
       "minLength": 1,
       "maxLength": 240
     },
+    "homeActivity": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "const": "he"
+          },
+          "v": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          }
+        },
+        "required": [
+          "t",
+          "v"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
     "repairActivities": {
       "type": "array",
       "items": {

@@ -382,6 +382,23 @@ Deno.test(
         await admin`select pack_version, count(*)::int as n from app.content_item where pack_id = 'ci-pack' group by 1`;
       assert.equal(after.length, 1, "only the current version is kept");
       assert.equal(after[0].pack_version, "0.2.0");
+      // A newer version carries the approved lines of an item that did not change, and drops every other line.
+      for (const prompt of ["approved", "p9"]) {
+        await admin`
+          insert into app.tutor_cache (pack_id, pack_version, item_id, mistake, hint_level, band, address_form,
+            character_id, prompt_version, validator_version, line, next_action, audio, audio_mime)
+          values ('ci-pack', '0.2.0', 'a.1', 'default', 0, 'A', 'n', 'ci-char', ${prompt}, 'v1', 'x',
+            'replay_prompt_slow', ${new Uint8Array([1, 2, 3])}, 'audio/mpeg')`;
+      }
+      assert.equal(await store.publishContent(pack("0.2.5", "f".repeat(64), ["a.1"])), "published");
+      const lines =
+        await admin`select pack_version, prompt_version, octet_length(audio)::int as n from app.tutor_cache where pack_id = 'ci-pack'`;
+      assert.equal(lines.length, 1, "one line is left");
+      assert.deepEqual([lines[0].pack_version, lines[0].prompt_version, lines[0].n], [
+        "0.2.5",
+        "approved",
+        3,
+      ]);
       await admin`update app.family_character set voice_id = 'abcDEF0123456789' where character_id = 'ci-char'`;
       await store.publishContent(pack("0.3.0", "e".repeat(64), ["a.1"]));
       const [ch] = await admin`select voice_id from app.family_character where character_id = 'ci-char'`;

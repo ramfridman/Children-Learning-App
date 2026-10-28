@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/play/activity_frame.dart';
-import 'package:nitznutz/strings/he.dart';
 import 'package:nitznutz/tutor/tutor.dart';
 
 import 'support/app_harness.dart';
@@ -41,7 +40,7 @@ Future<AppRig> toCounting(WidgetTester tester, AppRig rig) async {
   await tester.tap(find.text('נועה'));
   await tester.pumpAndSettle();
   expect(find.byType(HomeScreen), findsOneWidget);
-  await tester.tap(find.text(He.landCounting.text));
+  await openCountingLesson(tester);
   await tester.pumpAndSettle();
   expect(find.byType(ActivityFrame), findsOneWidget);
   await wait(tester, 300);
@@ -83,7 +82,7 @@ void main() {
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text(He.landCounting.text));
+      await openCountingLesson(tester);
       await wait(tester, 1500);
       expect(find.byType(ActivityFrame), findsOneWidget);
       await tapKey(tester, 'option-o1');

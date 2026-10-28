@@ -51,6 +51,7 @@ class FakeFamilyServer {
           'nickname': body['nickname'],
           'avatar_id': body['avatar_id'],
           'companion_id': body['companion_id'],
+          'outfit_id': body['outfit_id'],
           'address_form': body['address_form'],
           'age_band': body['age_band'],
         };

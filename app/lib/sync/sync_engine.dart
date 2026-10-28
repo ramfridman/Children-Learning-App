@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../data/app_database.dart';
 import '../parent/parent_rules.dart';
+import '../rewards/ribbons.dart';
 
 /// One call to a gateway function, already signed and with the device's own id and token filled in.
 typedef SyncCall = Future<Map<String, Object?>> Function(String name, Map<String, Object?> body);
@@ -179,7 +180,8 @@ class SyncEngine {
     final Set<String> gone = await _tombstoned();
     for (final Profile p in await db.allProfiles()) {
       if (gone.contains(p.id)) continue;
-      final String fingerprint = '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}';
+      final String fingerprint =
+          '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}|${p.outfitId ?? ''}';
       if (await db.setting('profile_pushed_${p.id}') == fingerprint) continue;
       try {
         await call('child-put', <String, Object?>{
@@ -187,6 +189,7 @@ class SyncEngine {
           'nickname': p.name,
           'avatar_id': p.avatar,
           'companion_id': ?p.companionId,
+          'outfit_id': ?p.outfitId,
           'address_form': p.addressForm,
           'age_band': p.ageBand,
         });
@@ -239,6 +242,15 @@ class SyncEngine {
     },
   };
 
+  Map<String, Object?> _rewardEvent(Reward r) => <String, Object?>{
+    'id': eventIdOf(deviceId, 'reward', r.id),
+    'child_id': r.profileId,
+    'at': r.at.millisecondsSinceEpoch,
+    'engine': engineVersion,
+    'type': 'reward',
+    'data': <String, Object?>{'kind': r.kind, 'key': r.awardKey},
+  };
+
   Future<({int pushed, int refused})> _pushEvents() async {
     int pushed = 0;
     int refused = 0;
@@ -246,16 +258,20 @@ class SyncEngine {
     while (true) {
       final List<Session> sessions = await db.unsyncedSessions(limit: batch);
       final List<Attempt> attempts = await db.unsyncedAttempts(limit: batch);
-      if (sessions.isEmpty && attempts.isEmpty) break;
+      final List<Reward> rewards = await db.unsyncedRewards(limit: batch);
+      if (sessions.isEmpty && attempts.isEmpty && rewards.isEmpty) break;
       // Answers go before the visit they belong to is not needed: the server keeps the order it received.
       final List<Attempt> a = attempts.where((Attempt x) => !gone.contains(x.profileId)).toList();
       final List<Session> s = sessions.where((Session x) => !gone.contains(x.profileId)).toList();
       // Rows of a deleted child are never sent; they are marked so they stop coming back.
       final List<Attempt> dropA = attempts.where((Attempt x) => gone.contains(x.profileId)).toList();
       final List<Session> dropS = sessions.where((Session x) => gone.contains(x.profileId)).toList();
+      final List<Reward> w = rewards.where((Reward x) => !gone.contains(x.profileId)).toList();
+      final List<Reward> dropW = rewards.where((Reward x) => gone.contains(x.profileId)).toList();
       final List<Map<String, Object?>> events = <Map<String, Object?>>[
         for (final Attempt x in a) _attemptEvent(x),
         for (final Session x in s) _sessionEvent(x),
+        for (final Reward x in w) _rewardEvent(x),
       ].take(batch).toList();
       if (events.isNotEmpty) {
         final Map<String, Object?> answer = await call('sync-push', <String, Object?>{'events': events});
@@ -279,7 +295,13 @@ class SyncEngine {
             .map((Session x) => x.id),
         ...dropS.map((Session x) => x.id),
       ], at);
-      if (events.isEmpty && dropA.isEmpty && dropS.isEmpty) break;
+      await db.markRewardsSynced(<int>[
+        ...w
+            .where((Reward x) => inThisCall.contains(eventIdOf(deviceId, 'reward', x.id)))
+            .map((Reward x) => x.id),
+        ...dropW.map((Reward x) => x.id),
+      ], at);
+      if (events.isEmpty && dropA.isEmpty && dropS.isEmpty && dropW.isEmpty) break;
     }
     return (pushed: pushed, refused: refused);
   }
@@ -355,6 +377,8 @@ class SyncEngine {
     ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
     'keepWords': await db.setting('keep_words') != 'off',
     'aiHelper': await db.setting('ai_helper') == 'on',
+    'ceremonies': await db.setting('ceremonies') != 'off',
+    'ribbons': decodeRibbons(await db.setting('ribbons')),
   };
 
   /// Keeps the family's rules the same on every device, the last write by the server's count winning. A parent device
@@ -379,6 +403,13 @@ class SyncEngine {
       await db.putSetting('parent_rules', ParentRules.fromJson(rules).encode());
       await db.putSetting('keep_words', rules['keepWords'] == false ? 'off' : 'on');
       await db.putSetting('ai_helper', rules['aiHelper'] == true ? 'on' : 'off');
+      await db.putSetting('ceremonies', rules['ceremonies'] == false ? 'off' : 'on');
+      // The promises are taken as the server has them, each one checked again here.
+      final Object? ribbons = rules['ribbons'];
+      await db.putSetting(
+        'ribbons',
+        encodeRibbons(decodeRibbons(ribbons == null ? null : jsonEncode(ribbons))),
+      );
       await db.putSetting(_versionKey, '$serverVersion');
       await db.putSetting(_fingerprintKey, jsonEncode(await _localRules()));
       return true;
@@ -440,6 +471,10 @@ class SyncEngine {
           addressForm: Value<String>(m['address_form']! as String),
           ageBand: Value<int>(m['age_band']! as int),
           companionId: Value<String?>(m['companion_id'] as String?),
+          // A prize the server does not know about yet never wipes the one chosen here.
+          outfitId: m['outfit_id'] is String
+              ? Value<String?>(m['outfit_id']! as String)
+              : const Value<String?>.absent(),
           createdAt: Value<DateTime>(_now),
         );
         final bool known = mine.any((Profile p) => p.id == id);
@@ -448,7 +483,7 @@ class SyncEngine {
         // What the server has is now what this device has: no need to push it back.
         await db.putSetting(
           'profile_pushed_$id',
-          '${m['nickname']}|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}',
+          '${m['nickname']}|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}|${m['outfit_id'] ?? ''}',
         );
       }
 
@@ -502,6 +537,19 @@ class SyncEngine {
           sessionId: Value<int?>(sessionId),
           input: Value<String>(d['input'] as String? ?? 'tap'),
           remoteSession: Value<String?>(sessionId == null ? key : null),
+        ),
+        eventId: id,
+        at: _now,
+      );
+    }
+    if (e['type'] == 'reward') {
+      final String key = d['key']! as String;
+      return db.addRemoteReward(
+        RewardsCompanion.insert(
+          profileId: e['child_id']! as String,
+          awardKey: key,
+          kind: d['kind']! as String,
+          at: at,
         ),
         eventId: id,
         at: _now,

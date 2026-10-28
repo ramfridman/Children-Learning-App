@@ -23,6 +23,10 @@ final FutureProviderFamily<Progress, String> progressProvider = FutureProvider.f
         for (final SkillDoc s in content.skills.values) s.id: SkillInfo(title: s.title, domain: s.domain),
       },
       tagText: <String, String>{for (final TagDoc t in content.tags.values) t.id: t.parentText},
+      tagHome: <String, String>{
+        for (final TagDoc t in content.tags.values)
+          if (t.homeActivity != null) t.id: t.homeActivity!,
+      },
       attempts: (await db.attemptsOf(profileId)).map(eventOf).toList(),
       sessions: await db.sessionsOf(profileId),
       now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs()),

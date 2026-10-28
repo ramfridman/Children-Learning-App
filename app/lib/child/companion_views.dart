@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/companion.dart';
+import '../app/reward_providers.dart';
 import '../characters/character.dart';
 import '../characters/character_view.dart';
+import '../rewards/outfits.dart';
 import '../voice/voice_director.dart';
 
 /// A character that talks when the voice director says its line is playing and rests in [resting] otherwise.
@@ -17,11 +19,15 @@ class SpeakingCharacter extends StatelessWidget {
     required this.director,
     this.resting = CharacterState.idle,
     this.voiceOf,
+    this.outfit,
   });
 
   final Character character;
   final VoiceDirector director;
   final CharacterState resting;
+
+  /// The prize the character wears, or null.
+  final Outfit? outfit;
 
   /// The id of the character whose voice the director uses now. The mouth moves only when it is this one.
   final String? voiceOf;
@@ -35,6 +41,7 @@ class SpeakingCharacter extends StatelessWidget {
         character: character,
         state: talks ? CharacterState.talk : resting,
         mouthOpen: talks && director.mouthOpen,
+        outfit: outfit,
       );
     },
   );
@@ -91,6 +98,7 @@ class MapCompanionState extends ConsumerState<MapCompanion> {
       director: _director,
       resting: _waving ? CharacterState.wave : CharacterState.idle,
       voiceOf: guide.value?.character.id,
+      outfit: wornOutfit(ref.watch(outfitProvider)),
     );
   }
 }

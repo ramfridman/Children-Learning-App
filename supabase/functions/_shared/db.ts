@@ -6,6 +6,7 @@ import postgres from "npm:postgres@3.4.9";
 import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
 import { compareSemver } from "./semver.ts";
+import { APPROVED_PROMPT_VERSION } from "./store.ts";
 import type {
   AlertIn,
   AlertOut,
@@ -286,8 +287,8 @@ export function pgStore(sql: Sql): Store {
                   voice_id = coalesce(excluded.voice_id, app.family_character.voice_id), updated_at = now()`;
         }
         if (same) return "unchanged" as const;
-        // Only the current version of a pack is kept (its items, misconceptions and cached lines go with it).
-        await tx`delete from app.content_pack where pack_id = ${p.packId}`;
+        // The new version goes in first, so that the lines people approved can be carried over to the items that did not
+        // change; only then does the old version go (its items, misconceptions and cached lines go with it).
         await tx`
           insert into app.content_pack (pack_id, pack_version, manifest_sha256)
           values (${p.packId}, ${p.packVersion}, ${p.manifestSha256})`;
@@ -312,6 +313,24 @@ export function pgStore(sql: Sql): Store {
             JSON.stringify(m.skillIds)
           }::text::jsonb)), ${m.description})`;
         }
+        // Carry the approved lines (and their voice) over to every item whose revision did not change. A line for an item
+        // that was revised is not carried: the sentence was approved for the old question.
+        await tx`
+          insert into app.tutor_cache
+            (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
+             validator_version, line, caption, next_action, highlight_targets, audio, audio_mime)
+          select c.pack_id, ${p.packVersion}, c.item_id, c.mistake, c.hint_level, c.band, c.address_form,
+                 c.character_id, c.prompt_version, c.validator_version, c.line, c.caption, c.next_action,
+                 c.highlight_targets, c.audio, c.audio_mime
+            from app.tutor_cache c
+            join app.content_item o on o.pack_id = c.pack_id and o.pack_version = c.pack_version
+                                   and o.item_id = c.item_id
+            join app.content_item n on n.pack_id = c.pack_id and n.pack_version = ${p.packVersion}
+                                   and n.item_id = c.item_id and n.revision = o.revision
+           where c.pack_id = ${p.packId} and c.pack_version <> ${p.packVersion}
+             and c.prompt_version = ${APPROVED_PROMPT_VERSION}
+          on conflict do nothing`;
+        await tx`delete from app.content_pack where pack_id = ${p.packId} and pack_version <> ${p.packVersion}`;
         return "published" as const;
       });
     },
@@ -413,23 +432,26 @@ export function pgStore(sql: Sql): Store {
         await sql`select 1 from app.deleted_child where family_id = ${familyId} and child_id = ${c.id}`;
       if (gone) return "deleted";
       await sql`
-        insert into app.child_profile (family_id, id, nickname, avatar_id, companion_id, address_form, age_band)
-        values (${familyId}, ${c.id}, ${c.nickname}, ${c.avatarId}, ${c.companionId}, ${c.addressForm}, ${c.ageBand})
+        insert into app.child_profile (family_id, id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band)
+        values (${familyId}, ${c.id}, ${c.nickname}, ${c.avatarId}, ${c.companionId}, ${
+        c.outfitId ?? null
+      }, ${c.addressForm}, ${c.ageBand})
         on conflict (family_id, id) do update set nickname = excluded.nickname, avatar_id = excluded.avatar_id,
-          companion_id = excluded.companion_id, address_form = excluded.address_form, age_band = excluded.age_band,
-          updated_at = now()`;
+          companion_id = excluded.companion_id, outfit_id = excluded.outfit_id, address_form = excluded.address_form,
+          age_band = excluded.age_band, updated_at = now()`;
       return "saved";
     },
 
     async listChildren(familyId) {
       const rows = await sql`
-        select id, nickname, avatar_id, companion_id, address_form, age_band
+        select id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band
           from app.child_profile where family_id = ${familyId} order by created_at, id`;
       return rows.map((r): ChildProfile => ({
         id: r.id,
         nickname: r.nickname,
         avatarId: r.avatar_id,
         companionId: r.companion_id,
+        outfitId: r.outfit_id,
         addressForm: r.address_form,
         ageBand: r.age_band,
       }));

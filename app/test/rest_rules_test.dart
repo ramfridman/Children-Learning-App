@@ -36,7 +36,7 @@ void main() {
     WidgetTester tester,
   ) async {
     final AppRig rig = await toMap(tester, AppRig(clockMs: at(22)));
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('rest-scene')), findsOneWidget);
     expect(find.byType(ActivityFrame), findsNothing);
@@ -50,7 +50,7 @@ void main() {
 
   testWidgets('with the lock off, rest hours do not stop the child', (WidgetTester tester) async {
     await toMap(tester, AppRig(clockMs: at(22), rules: const ParentRules(lockWhenDone: false)));
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('rest-scene')), findsNothing);
     expect(find.byType(ActivityFrame), findsOneWidget);
@@ -58,7 +58,7 @@ void main() {
 
   testWidgets('at noon with time left, the lesson opens as usual', (WidgetTester tester) async {
     await toMap(tester, AppRig(clockMs: at(12)));
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     expect(find.byType(ActivityFrame), findsOneWidget);
   });
@@ -73,7 +73,7 @@ void main() {
           rules: const ParentRules(limitByChild: <String, int>{'p-1': 5}),
         ),
       );
-      await tester.tap(find.text(He.landCounting.text));
+      await openCountingLesson(tester);
       await tester.pumpAndSettle();
       expect(find.byType(ActivityFrame), findsOneWidget);
       await wait(tester, 300);
@@ -97,7 +97,7 @@ void main() {
         rules: const ParentRules(limitByChild: <String, int>{'p-1': 5}),
       ),
     );
-    await tester.tap(find.text(He.landCounting.text));
+    await openCountingLesson(tester);
     await tester.pumpAndSettle();
     await wait(tester, 300);
     rig.clock.advance(const Duration(minutes: 2));
