@@ -3,7 +3,7 @@
 //   dart run tool/voice_gen.dart plan [--characters a,b,c] [--price <per 1,000 characters>]
 //   dart run tool/voice_gen.dart mock <character> [--key <key file>] [--out <folder>]
 //   dart run tool/voice_gen.dart audition <character> "<text>" [--out <file>]
-//   dart run tool/voice_gen.dart generate <character> --confirm-chars <N> [--key <key file>] [--out <folder>]
+//   dart run tool/voice_gen.dart generate <character> --confirm-chars <N> [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
 //
 // `plan` writes and calls nothing: it lists the lines and prints the number of characters, and the cost at the
 // price you give. `mock` makes a free voice pack of test tones (no network). `audition` says one short text with the
@@ -139,6 +139,7 @@ Future<BuiltPack> _make(
     key: key,
     workDir: work,
     pronunciation: _pronunciation(config),
+    version: _option(args, '--pack-version') ?? '1.0.0',
     progress: stdout.writeln,
   );
   final File file = File('${work.path}${Platform.pathSeparator}${built.fileName}');
