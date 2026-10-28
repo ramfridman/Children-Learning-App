@@ -61,49 +61,57 @@ class _LandScreenState extends ConsumerState<LandScreen> {
         child: Stack(
           children: <Widget>[
             Positioned.fill(child: CustomPaint(painter: _IslandPainter(colours))),
+            // The drawings have the room between the name (and the card of a touched drawing) above and the play button and
+            // the legend below, and are made as large as that room lets all of them be.
             Positioned.fill(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 136, 24, 96),
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.end,
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: <Widget>[
-                        for (int i = 0; i < objects.length; i++)
-                          Semantics(
-                            label: objects[i].bell
-                                ? '${objects[i].title}. ${He.bellSemantics.text}'
-                                : objects[i].title,
-                            button: true,
-                            child: GestureDetector(
-                              key: Key('object-${objects[i].skillId}'),
-                              behavior: HitTestBehavior.opaque,
-                              // A bell flag opens its short revisit; any other drawing says what it is.
-                              onTap: () {
-                                final WorldObject o = objects[i];
-                                final Lesson? mission = o.bell && view != null
-                                    ? view.missionFor(o.skillId)
-                                    : null;
-                                if (mission != null && onMission != null) {
-                                  onMission!(mission);
-                                } else {
-                                  setState(() => _picked = _picked == o.skillId ? null : o.skillId);
-                                }
-                              },
-                              child: ExcludeSemantics(
-                                child: _OnStone(
-                                  first: i == 0,
-                                  child: WorldObjectView(object: objects[i]),
+                padding: const EdgeInsets.fromLTRB(56, 146, 56, 136),
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints room) {
+                    final double size = objectSizeFor(objects.length, room.maxWidth, room.maxHeight);
+                    return Center(
+                      child: SingleChildScrollView(
+                        child: Wrap(
+                          alignment: WrapAlignment.center,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          spacing: _gap,
+                          runSpacing: _gap,
+                          children: <Widget>[
+                            for (int i = 0; i < objects.length; i++)
+                              Semantics(
+                                label: objects[i].bell
+                                    ? '${objects[i].title}. ${He.bellSemantics.text}'
+                                    : objects[i].title,
+                                button: true,
+                                child: GestureDetector(
+                                  key: Key('object-${objects[i].skillId}'),
+                                  behavior: HitTestBehavior.opaque,
+                                  // A bell flag opens its short revisit; any other drawing says what it is.
+                                  onTap: () {
+                                    final WorldObject o = objects[i];
+                                    final Lesson? mission = o.bell && view != null
+                                        ? view.missionFor(o.skillId)
+                                        : null;
+                                    if (mission != null && onMission != null) {
+                                      onMission!(mission);
+                                    } else {
+                                      setState(() => _picked = _picked == o.skillId ? null : o.skillId);
+                                    }
+                                  },
+                                  child: ExcludeSemantics(
+                                    child: _OnStone(
+                                      first: i == 0,
+                                      size: size,
+                                      child: WorldObjectView(object: objects[i], size: size),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -237,12 +245,28 @@ class _LandScreenState extends ConsumerState<LandScreen> {
   }
 }
 
+const double _gap = 8;
+
+/// How large each drawing of a land can be: the largest size, from 88 down to 44 points, at which all [count] fit in a
+/// room of [width] by [height] points without scrolling (a drawing is 1.2 times as wide and 1.25 times as tall as its size,
+/// and stands on a stone). Below 44 the drawings stay that small and the island scrolls.
+double objectSizeFor(int count, double width, double height) {
+  for (double size = 88; size >= 44; size -= 4) {
+    final double w = size * 1.2 + _gap;
+    final int perRow = ((width + _gap) / w).floor().clamp(1, 1000);
+    final int rows = (count / perRow).ceil();
+    if (rows * (size * 1.25 + 12 + _gap) <= height) return size;
+  }
+  return 44;
+}
+
 /// A drawing standing on its stone, with a dotted trail from the one before it (the trail runs on the start side, which is
 /// the right in Hebrew). The order is only the order the skills are listed in: nothing here is locked.
 class _OnStone extends StatelessWidget {
-  const _OnStone({required this.first, required this.child});
+  const _OnStone({required this.first, required this.child, this.size = 96});
 
   final bool first;
+  final double size;
   final Widget child;
 
   @override
@@ -253,8 +277,8 @@ class _OnStone extends StatelessWidget {
       Positioned(
         bottom: -6,
         child: Container(
-          width: 104,
-          height: 20,
+          width: size * 1.08,
+          height: size * 0.2,
           decoration: BoxDecoration(
             color: TokenColors.worldWoodLight,
             borderRadius: BorderRadius.circular(999),
@@ -263,7 +287,7 @@ class _OnStone extends StatelessWidget {
       ),
       if (!first)
         PositionedDirectional(
-          start: -20,
+          start: -size * 0.2,
           bottom: 2,
           child: Row(
             mainAxisSize: MainAxisSize.min,
