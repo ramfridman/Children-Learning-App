@@ -82,7 +82,10 @@ final Provider<VoicePlayer> voicePlayerProvider = Provider<VoicePlayer>(
 /// The one speaker of the app. It always uses the voice of the guide, so changing the companion changes the voice
 /// on every screen at once.
 final Provider<VoiceDirector> voiceDirectorProvider = Provider<VoiceDirector>((Ref ref) {
-  final VoiceDirector director = VoiceDirector(player: ref.watch(voicePlayerProvider));
+  final VoiceDirector director = VoiceDirector(
+    player: ref.watch(voicePlayerProvider),
+    gap: const Duration(milliseconds: 250),
+  );
   ref.onDispose(director.dispose);
   ref.listen<AsyncValue<Guide>>(
     guideProvider,

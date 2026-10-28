@@ -35,6 +35,8 @@ List<String> heard(AppRig rig) => rig.player.played.map(String.fromCharCodes).to
 
 /// Opens the lesson and gets past the warm-up (no tutor there) to the three butterflies.
 Future<AppRig> toCounting(WidgetTester tester, AppRig rig) async {
+  // Lines end by themselves, as real sound does, so that each waits for the one before it.
+  rig.player.endsAfter = const Duration(milliseconds: 150);
   await rig.seedFinishedSetup();
   await rig.pump(tester);
   await tester.tap(find.text('נועה'));

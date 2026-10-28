@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/friends_beach.dart';
@@ -11,6 +13,7 @@ import 'package:nitznutz/strings/he.dart';
 import 'support/app_harness.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
+import 'support/voice_fixtures.dart';
 
 /// Lets timers of the stage and the pauses between moves run, then draws.
 Future<void> wait(WidgetTester t, [int ms = 2000]) async {
@@ -287,6 +290,70 @@ void main() {
     expect(visits.single.endReason, 'home');
     expect(rows.single.sessionId, visits.single.id);
   });
+
+  testWidgets('the congratulation for a right answer is heard to its end before the next question is read', (
+    WidgetTester tester,
+  ) async {
+    // A line ends only when the test says so, to see the next one wait for it.
+    final AppRig rig = AppRig(player: FakePlayer());
+    await rig.seedFinishedSetup();
+    await rig.pump(tester);
+    await tester.tap(find.text('נועה'));
+    await tester.pumpAndSettle();
+    await openCountingLesson(tester);
+    await tester.pumpAndSettle();
+    final int before = rig.player.plays;
+    await _tapKey(tester, 'option-o1'); // red: right
+    await wait(tester, 3000); // long enough for the lesson to move on
+    expect(
+      _bubbleText(tester),
+      say('count.butterflies.3'),
+      reason: 'the screen has moved to the next question',
+    );
+    // The congratulation is still "playing" (the fake player has not ended it): the next question waits for it.
+    final int heardMeanwhile = rig.player.plays - before;
+    expect(heardMeanwhile, lessThanOrEqualTo(1), reason: 'only the first line has been started');
+    rig.player.finish();
+    await wait(tester, 600);
+    expect(
+      rig.player.plays,
+      before + heardMeanwhile + 1,
+      reason: 'after the congratulation ends, the question is read',
+    );
+  });
+
+  testWidgets(
+    'a child who races hears what is still true: no question that is already answered, no old congratulation',
+    (WidgetTester tester) async {
+      final AppRig rig = AppRig(
+        player: FakePlayer(),
+      ); // no line ends by itself: the child is faster than every sentence
+      await rig.seedFinishedSetup();
+      await rig.pump(tester);
+      await tester.tap(find.text('נועה'));
+      await tester.pumpAndSettle();
+      await openCountingLesson(tester);
+      await tester.pumpAndSettle();
+      await _tapKey(tester, 'option-o1'); // the first activity, right
+      await wait(tester, 3000); // the lesson moves on while the first sounds are still "playing"
+      expect(_bubbleText(tester), say('count.butterflies.3'));
+      await _count(tester, <int>[0, 1, 2]);
+      await _tapKey(tester, 'tile-o2'); // answers the second activity at once
+      await wait(tester, 500);
+      final List<String> lines = rig.player.played.map(utf8.decode).toList();
+      expect(
+        lines.where((String l) => l.endsWith('count.butterflies.3.prompt')),
+        isEmpty,
+        reason: 'the question was answered before it was ever read: it is not read late',
+      );
+      expect(lines.first, endsWith('pick.red.flower.prompt'));
+      expect(
+        lines.last,
+        contains('count.butterflies.3'),
+        reason: 'the answer to the second question is what is heard now',
+      );
+    },
+  );
 
   testWidgets('the guide repeats the question when touched, and leaving the lesson stops everything', (
     WidgetTester tester,

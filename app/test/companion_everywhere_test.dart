@@ -241,6 +241,7 @@ void main() {
       WidgetTester tester,
     ) async {
       final AppRig rig = await start(tester, companion: 'hero-son');
+      rig.player.endsAfter = const Duration(milliseconds: 150); // lines end by themselves, as real sound does
       await openLesson(tester);
       await tapKey(tester, 'option-o1');
       await wait(tester);

@@ -163,7 +163,16 @@ class LessonController extends ChangeNotifier {
   String? voice;
   int voiceNonce = 0;
 
+  /// The newest line was asked for by a touch (the replay button): it replaces the line that is playing. Every other line
+  /// waits for the one that is playing to end, so a sentence is never cut off.
+  bool voiceReplaces = false;
+
+  /// Counts the child's own moves (an answer, a hint, "show me", the replay button). A line made after move n is worth
+  /// saying only until move n + 1: after that the child has moved on, and the line would be about the past.
+  int actionNonce = 0;
+
   void _say(Spoken line) {
+    voiceReplaces = false;
     // Any new line replaces what the tutor was about to say.
     _tutorToken++;
     tutorThinking = false;
@@ -289,7 +298,9 @@ class LessonController extends ChangeNotifier {
   /// The replay button: the question again, without any help.
   void replayPrompt() {
     if (finished) return;
+    actionNonce++;
     _say(current.promptLine);
+    voiceReplaces = true;
     feedback = FeedbackKind.none;
     replayNonce++;
     notifyListeners();
@@ -311,6 +322,7 @@ class LessonController extends ChangeNotifier {
 
   /// The lamp: the next hint, never forced.
   void showHint() {
+    actionNonce++;
     if (finished || current.hints.isEmpty) return;
     _applyHint(math.min(hintLevel + 1, current.hints.length));
     feedback = FeedbackKind.none;
@@ -328,6 +340,7 @@ class LessonController extends ChangeNotifier {
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)
   /// and welcomed with the next hint.
   Future<void> unsure() async {
+    actionNonce++;
     if (finished) return;
     await _write(result: 'unsure', tag: '', response: '');
     attemptNo++;
@@ -383,6 +396,7 @@ class LessonController extends ChangeNotifier {
     bool byVoice = false,
   }) async {
     final Activity a = current;
+    actionNonce++;
     if (right) {
       await _write(result: 'correct', tag: tag, response: response, byVoice: byVoice);
       attemptNo++;

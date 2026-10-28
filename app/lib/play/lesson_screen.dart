@@ -212,8 +212,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _endVisit(_endReason());
-    // Leaving the lesson silences the guide.
-    unawaited(_director.stop());
+    // Leaving the lesson silences the guide, but a lesson that was finished lets its last line (the congratulation) end, and
+    // never silences a line that the next screen (the ceremony) has already started.
+    if (!(_controller?.finished ?? false)) {
+      unawaited(_director.stopFor(this));
+    }
     _voice?.dispose();
     _session?.dispose();
     _controller?.removeListener(_speak);
@@ -274,14 +277,24 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       _liveSeen = c.liveNonce;
       final Uint8List? sound = c.liveLine?.audio;
       if (_voice?.answer.state == MicState.listening) _voice?.hush();
-      if (sound != null) unawaited(_director.sayBytes(sound));
+      if (sound != null) {
+        final int move = c.actionNonce;
+        unawaited(_director.sayBytesNext(sound, owner: this, relevant: () => c.actionNonce == move));
+      }
       return;
     }
     if (c.voiceNonce == _spokenNonce) return;
     _spokenNonce = c.voiceNonce;
     // The guide never talks over a listening child, and the mic never hears the guide.
     if (_voice?.answer.state == MicState.listening) _voice?.hush();
-    unawaited(_director.say(c.voice));
+    // A line is worth saying only until the child's next move; after that it would be about something already past.
+    final int move = c.actionNonce;
+    bool relevant() => c.actionNonce == move;
+    unawaited(
+      c.voiceReplaces
+          ? _director.say(c.voice, owner: this, relevant: relevant)
+          : _director.sayNext(c.voice, owner: this, relevant: relevant),
+    );
   }
 
   /// A fresh session whenever the lesson moves to the next activity.
