@@ -74,11 +74,16 @@ final FutureProvider<Guide> guideProvider = FutureProvider<Guide>((Ref ref) asyn
   final CharacterSource source = await ref.watch(characterSourceProvider.future);
   final VoiceBank own = await source.voice(c.id);
   // The narrator speaks the lines a friend has no recording of (the lessons); the friend keeps its own greetings and cheers.
-  return Guide(c, c.id == narratorId ? own : VoiceBank.withFallback(own, await source.voice(narratorId)));
+  final String narrator = narratorFor(c);
+  return Guide(c, c.id == narrator ? own : VoiceBank.withFallback(own, await source.voice(narrator)));
 });
 
-/// The character whose voice says every line of the lessons.
-const String narratorId = 'nitzi';
+/// The two characters whose voices say every line of the lessons: Nitzi for a friend who is a girl, Hero-son for a friend
+/// who is a boy, so a borrowed line never comes in the voice of the other gender.
+const String narratorFemaleId = 'nitzi';
+const String narratorMaleId = 'hero-son';
+
+String narratorFor(Character c) => c.gender == 'm' ? narratorMaleId : narratorFemaleId;
 
 final Provider<VoicePlayer> voicePlayerProvider = Provider<VoicePlayer>(
   (Ref ref) => AudioPlayersVoicePlayer(),

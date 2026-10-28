@@ -1,4 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/app/companion.dart';
+import 'package:nitznutz/characters/character.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/voice/voice_bank.dart';
 
@@ -39,5 +43,21 @@ void main() {
   test('a bank that stands alone has no fallback and keeps saying nothing for a line it lacks', () {
     expect(friend.clip('vo:next.after.2.prompt'), isNull);
     expect(friend.fallback, isNull);
+  });
+
+  test('a borrowed line comes in the voice of the same gender: Nitzi for a girl, Hero-son for a boy', () {
+    Character of(String gender) => Character(
+      id: 'x',
+      packId: 'char-x',
+      nameHe: 'x',
+      gender: gender,
+      roles: <CharacterRole>{CharacterRole.mapCompanion},
+      personalUseOnly: false,
+      mouth: const Offset(0.5, 0.4),
+      canvas: const Size(100, 100),
+      images: const <String, CharacterImage>{},
+    );
+    expect(narratorFor(of('f')), 'nitzi');
+    expect(narratorFor(of('m')), 'hero-son');
   });
 }
