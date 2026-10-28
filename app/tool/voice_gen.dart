@@ -2,7 +2,7 @@
 //
 //   dart run tool/voice_gen.dart plan [--characters a,b,c] [--price <per 1,000 characters>]
 //   dart run tool/voice_gen.dart mock <character> [--key <key file>] [--out <folder>]
-//   dart run tool/voice_gen.dart audition <character> "<text>" [--out <file>]
+//   dart run tool/voice_gen.dart audition <character> "<text>" [--out <file>] [--model <id>] [--settings stability=0.25,style=0.6,boost=true] [--format <mp3_...>]
 //   dart run tool/voice_gen.dart generate <character> --confirm-chars <N> [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
 //
 // `plan` writes and calls nothing: it lists the lines and prints the number of characters, and the cost at the
@@ -115,6 +115,7 @@ void _plan(List<String> args) {
     _characters(args, config),
     _lines(),
     pronunciation: _pronunciation(config),
+    alreadyMade: (String c, SpokenLine l) => _made(args, c, l),
   );
   stdout.write(plan.describe(price));
   if (price == 0) {
@@ -140,6 +141,8 @@ Future<BuiltPack> _make(
     workDir: work,
     pronunciation: _pronunciation(config),
     version: _option(args, '--pack-version') ?? '1.0.0',
+    styleRules: _styleRules(config),
+    styles: _styles(config),
     progress: stdout.writeln,
   );
   final File file = File('${work.path}${Platform.pathSeparator}${built.fileName}');
@@ -154,7 +157,35 @@ Future<void> _mock(List<String> args) async {
   await _make(pos.single, args, MockSynthesizer(pos.single), _config());
 }
 
-ElevenLabsSynthesizer _eleven(String character, Map<String, Object?> config) {
+/// Whether the sound of [line] already exists in the work folder of [character] (the generator reuses it).
+bool _made(List<String> args, String character, SpokenLine line) {
+  final String dir = _outFolder(args, character);
+  final String id = line.fileId;
+  final bool audio =
+      File('$dir${Platform.pathSeparator}vo.$id.mp3').existsSync() ||
+      File('$dir${Platform.pathSeparator}vo.$id.wav').existsSync();
+  return audio && File('$dir${Platform.pathSeparator}cue.$id.json').existsSync();
+}
+
+Map<String, List<String>> _styleRules(Map<String, Object?> config) => <String, List<String>>{
+  for (final MapEntry<String, Object?> e
+      in ((config['styleRules'] ?? <String, Object?>{}) as Map<String, Object?>).entries)
+    e.key: <String>[for (final Object? p in e.value! as List<Object?>) p! as String],
+};
+
+Map<String, Map<String, Object?>> _styles(Map<String, Object?> config) => <String, Map<String, Object?>>{
+  for (final MapEntry<String, Object?> e
+      in ((config['styles'] ?? <String, Object?>{}) as Map<String, Object?>).entries)
+    e.key: e.value! as Map<String, Object?>,
+};
+
+ElevenLabsSynthesizer _eleven(
+  String character,
+  Map<String, Object?> config, {
+  String? model,
+  Map<String, Object?>? settings,
+  String? format,
+}) {
   final String? key = Platform.environment[_keyVariable];
   if (key == null || key.isEmpty) {
     throw const VoiceGenFailed(
@@ -164,21 +195,52 @@ ElevenLabsSynthesizer _eleven(String character, Map<String, Object?> config) {
   final Map<String, Object?> voice = _voiceOf(config, character);
   final String id = (voice['voiceId'] ?? '') as String;
   if (id.isEmpty) throw VoiceGenFailed('"$character" has no voiceId in content/voices.json yet');
-  final String model = (config['modelId'] ?? '') as String;
-  if (model.isEmpty) throw const VoiceGenFailed('content/voices.json has no modelId yet');
+  final String modelId = model ?? (config['modelId'] ?? '') as String;
+  if (modelId.isEmpty) throw const VoiceGenFailed('content/voices.json has no modelId yet');
   return ElevenLabsSynthesizer(
     apiKey: key,
     voiceId: id,
-    modelId: model,
-    voiceSettings: ((voice['settings'] ?? config['settings'] ?? <String, Object?>{}) as Map<String, Object?>),
+    modelId: modelId,
+    voiceSettings:
+        settings ??
+        ((voice['settings'] ?? config['settings'] ?? <String, Object?>{}) as Map<String, Object?>),
+    outputFormat: format ?? (config['outputFormat'] ?? 'mp3_22050_32') as String,
   );
+}
+
+/// `stability=0.25,style=0.6,boost=true` as the voice settings of a request (a command line cannot carry JSON quotes).
+Map<String, Object?> _settingsOf(String text) {
+  final Map<String, Object?> out = <String, Object?>{};
+  for (final String pair in text.split(',')) {
+    final List<String> kv = pair.split('=');
+    if (kv.length != 2) {
+      throw VoiceGenFailed('settings look like stability=0.25,style=0.6,boost=true, not "$pair"');
+    }
+    final String key = switch (kv[0].trim()) {
+      'boost' => 'use_speaker_boost',
+      'similarity' => 'similarity_boost',
+      final String k => k,
+    };
+    final String v = kv[1].trim();
+    out[key] = v == 'true' || v == 'false'
+        ? v == 'true'
+        : (double.tryParse(v) ?? (throw VoiceGenFailed('"$v" is not a number')));
+  }
+  return out;
 }
 
 Future<void> _audition(List<String> args) async {
   final List<String> pos = _positional(args);
   if (pos.length != 2) throw const VoiceGenFailed('audition needs a character id and a text');
   final Map<String, Object?> config = _config();
-  final Synthesis s = await _eleven(pos[0], config).say(respelled(pos[1], _pronunciation(config)));
+  final String? settings = _option(args, '--settings');
+  final Synthesis s = await _eleven(
+    pos[0],
+    config,
+    model: _option(args, '--model'),
+    settings: settings == null ? null : _settingsOf(settings),
+    format: _option(args, '--format'),
+  ).say(respelled(pos[1], _pronunciation(config)));
   final File out = File(_option(args, '--out') ?? 'audition-${pos[0]}.${s.extension}')
     ..writeAsBytesSync(s.audio);
   stdout.writeln('Wrote ${out.path} (${pos[1].runes.length} characters used)');
@@ -188,7 +250,12 @@ Future<void> _generate(List<String> args) async {
   final List<String> pos = _positional(args);
   if (pos.length != 1) throw const VoiceGenFailed('generate needs one character id');
   final Map<String, Object?> config = _config();
-  final VoicePlan plan = planVoices(<String>[pos.single], _lines(), pronunciation: _pronunciation(config));
+  final VoicePlan plan = planVoices(
+    <String>[pos.single],
+    _lines(),
+    pronunciation: _pronunciation(config),
+    alreadyMade: (String c, SpokenLine l) => _made(args, c, l),
+  );
   final int? confirmed = int.tryParse(_option(args, '--confirm-chars') ?? '');
   if (confirmed != plan.total) {
     throw VoiceGenFailed(

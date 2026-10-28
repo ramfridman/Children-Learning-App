@@ -188,6 +188,40 @@ void main() {
     });
   });
 
+  group('styles and what is still to say', () {
+    test('a line is said in the style whose prefix its id starts with', () {
+      const Map<String, List<String>> rules = <String, List<String>>{
+        'cheer': <String>['vo:core.celebrate.', 'vo:core.ceremony.'],
+      };
+      expect(styleOf('vo:core.celebrate.well', rules), 'cheer');
+      expect(styleOf('vo:core.ceremony.gold', rules), 'cheer');
+      expect(styleOf('vo:core.greeting.hello', rules), isNull);
+      expect(styleOf('vo:celebrate.butterflies', rules), isNull);
+    });
+
+    test(
+      'lines whose sound exists are reused and not counted, and the confirmation is for what will be said',
+      () {
+        final VoicePlan all = planVoices(<String>['a', 'b'], _lines);
+        final VoicePlan some = planVoices(
+          <String>['a', 'b'],
+          _lines,
+          alreadyMade: (String c, SpokenLine l) => c == 'a' || l == _lines.first,
+        );
+        expect(some.toSay, _lines.length - 1);
+        expect(some.reused, _lines.length + 1);
+        expect(some.total, lessThan(all.total));
+        expect(some.describe(0.04), contains('--confirm-chars ${some.total}'));
+        final VoicePlan none = planVoices(
+          <String>['a'],
+          _lines,
+          alreadyMade: (String c, SpokenLine l) => true,
+        );
+        expect(none.total, 0);
+      },
+    );
+  });
+
   group('the real service (a fake one on this PC)', () {
     late FakeEleven server;
     setUp(() async => server = await FakeEleven.start());
@@ -217,6 +251,41 @@ void main() {
       expect(utf8.decode(s.audio), 'mp3:שָׁלוֹם');
       expect(s.alignment.characters.length, 'שָׁלוֹם'.length);
     });
+
+    test(
+      'a line in a style is sent with the settings of that style, and the others with the usual ones',
+      () async {
+        final Directory work = _temp('nn_vg_style_');
+        try {
+          await generateVoicePack(
+            characterId: 'hero-son',
+            lines: <SpokenLine>[
+              const SpokenLine('vo:core.celebrate.well', 'כׇּל הַכָּבוֹד!'),
+              const SpokenLine('vo:core.greeting.hello', 'שָׁלוֹם!'),
+            ],
+            synth: synth(),
+            key: key,
+            workDir: work,
+            styleRules: const <String, List<String>>{
+              'cheer': <String>['vo:core.celebrate.'],
+            },
+            styles: const <String, Map<String, Object?>>{
+              'cheer': <String, Object?>{'stability': 0.1, 'style': 0.9},
+            },
+          );
+          final List<Object?> sent = <Object?>[
+            for (final Map<String, Object?> r in server.requests)
+              (r['body']! as Map<String, Object?>)['voice_settings'],
+          ];
+          expect(sent, <Object?>[
+            <String, Object?>{'stability': 0.1, 'style': 0.9},
+            <String, Object?>{'stability': 0.5},
+          ]);
+        } finally {
+          work.deleteSync(recursive: true);
+        }
+      },
+    );
 
     test('an error is reported by its status only: no body, no key', () async {
       server.failWith = 401;

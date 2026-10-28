@@ -83,14 +83,21 @@ class VoicePlan {
     required this.lines,
     required this.perCharacter,
     required this.total,
+    this.toSay = 0,
+    this.reused = 0,
   });
 
   final List<String> characters;
   final List<SpokenLine> lines;
 
-  /// Characters of text for each voice (the lines are the same for every character).
+  /// Characters of text still to be said for each voice (the lines are the same for every character; the ones whose
+  /// sound already exists are reused and cost nothing).
   final int perCharacter;
   final int total;
+
+  /// How many lines are still to be said, over all voices, and how many are reused.
+  final int toSay;
+  final int reused;
 
   /// The cost at [pricePer1000Chars] (the price per thousand characters that the owner reads off his ElevenLabs plan).
   double cost(double pricePer1000Chars) => total / 1000 * pricePer1000Chars;
@@ -99,6 +106,9 @@ class VoicePlan {
     final StringBuffer b = StringBuffer()
       ..writeln('Voices: ${characters.join(', ')}')
       ..writeln('Lines per voice: ${lines.length}')
+      ..writeln(
+        'Lines still to say, over all voices: $toSay (the other $reused already have their sound and are reused for free)',
+      )
       ..writeln('Characters of text per voice: $perCharacter')
       ..writeln('Characters of text in total: $total')
       ..writeln(
@@ -114,12 +124,35 @@ VoicePlan planVoices(
   List<String> characters,
   List<SpokenLine> lines, {
   Map<String, String> pronunciation = const <String, String>{},
+
+  /// True for a line of a character whose sound already exists (it is reused, not said again).
+  bool Function(String character, SpokenLine line)? alreadyMade,
 }) {
   int per = 0;
-  for (final SpokenLine l in lines) {
-    per += respelled(l.text, pronunciation).runes.length;
+  int total = 0;
+  int toSay = 0;
+  int reused = 0;
+  for (final String c in characters) {
+    int mine = 0;
+    for (final SpokenLine l in lines) {
+      if (alreadyMade != null && alreadyMade(c, l)) {
+        reused++;
+        continue;
+      }
+      toSay++;
+      mine += respelled(l.text, pronunciation).runes.length;
+    }
+    total += mine;
+    if (mine > per) per = mine;
   }
-  return VoicePlan(characters: characters, lines: lines, perCharacter: per, total: per * characters.length);
+  return VoicePlan(
+    characters: characters,
+    lines: lines,
+    perCharacter: per,
+    total: total,
+    toSay: toSay,
+    reused: reused,
+  );
 }
 
 // ---- mouth cues ----
@@ -208,7 +241,17 @@ class Synthesis {
 }
 
 abstract interface class Synthesizer {
-  Future<Synthesis> say(String text);
+  /// Says [text]. [settings] (stability, style ...) replace the voice's usual settings for this one line.
+  Future<Synthesis> say(String text, {Map<String, Object?>? settings});
+}
+
+/// The name of the style a line is said in (for example `cheer` for the celebrations), by the start of its voice id, or
+/// null for the usual voice. [rules] maps a style to the voice-id prefixes it covers.
+String? styleOf(String voId, Map<String, List<String>> rules) {
+  for (final MapEntry<String, List<String>> r in rules.entries) {
+    if (r.value.any(voId.startsWith)) return r.key;
+  }
+  return null;
 }
 
 /// Free test voices: a tone whose pitch depends on the character, switched on while a vowel is spoken,
@@ -223,7 +266,7 @@ class MockSynthesizer implements Synthesizer {
   static const double _perChar = 0.08;
 
   @override
-  Future<Synthesis> say(String text) async {
+  Future<Synthesis> say(String text, {Map<String, Object?>? settings}) async {
     final List<String> chars = text.split('');
     final List<double> starts = <double>[for (int i = 0; i < chars.length; i++) i * _perChar];
     final List<double> ends = <double>[for (int i = 0; i < chars.length; i++) (i + 1) * _perChar];
@@ -287,7 +330,8 @@ class ElevenLabsSynthesizer implements Synthesizer {
   final String outputFormat;
 
   @override
-  Future<Synthesis> say(String text) async {
+  Future<Synthesis> say(String text, {Map<String, Object?>? settings}) async {
+    final Map<String, Object?> used = settings ?? voiceSettings;
     final HttpClient client = HttpClient();
     try {
       final Uri uri = Uri.parse(
@@ -303,7 +347,7 @@ class ElevenLabsSynthesizer implements Synthesizer {
             'text': text,
             'model_id': modelId,
             'language_code': languageCode,
-            if (voiceSettings.isNotEmpty) 'voice_settings': voiceSettings,
+            if (used.isNotEmpty) 'voice_settings': used,
           }),
         ),
       );
@@ -337,6 +381,8 @@ Future<BuiltPack> generateVoicePack({
   required Directory workDir,
   Map<String, String> pronunciation = const <String, String>{},
   String version = '1.0.0',
+  Map<String, List<String>> styleRules = const <String, List<String>>{},
+  Map<String, Map<String, Object?>> styles = const <String, Map<String, Object?>>{},
   void Function(String)? progress,
 }) async {
   workDir.createSync(recursive: true);
@@ -350,7 +396,11 @@ Future<BuiltPack> generateVoicePack({
       if (f.existsSync()) audio = f;
     }
     if (audio == null || !cueFile.existsSync()) {
-      final Synthesis s = await synth.say(respelled(l.text, pronunciation));
+      final String? style = styleOf(l.voId, styleRules);
+      final Synthesis s = await synth.say(
+        respelled(l.text, pronunciation),
+        settings: style == null ? null : styles[style],
+      );
       audio = File('${workDir.path}${Platform.pathSeparator}vo.$id.${s.extension}')
         ..writeAsBytesSync(s.audio);
       cueFile.writeAsStringSync(

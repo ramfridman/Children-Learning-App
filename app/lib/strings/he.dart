@@ -107,13 +107,10 @@ abstract final class He {
   static const Str trophyNewSemantics = Str('גביע חדש מחכה');
   static const Str trophyReplaySemantics = Str('לראות שוב את הטקס');
   static const Str trophyLockedSemantics = Str('גביע שעוד לא הרווחנו');
-  static const Str ceremonyBronze = Str(
-    'הַגְּבִיעַ הָרִאשׁוֹן שֶׁלָּכֶם! זְכַרְתֶּם — וְזֶה נִשְׁאַר.',
-    nikud: true,
-  );
-  static const Str ceremonySilver = Str('הִנֵּה הוּא — בִּשְׁבִילְכֶם!', nikud: true);
-  static const Str ceremonyGold = Str('וָאוּ! כָּל הָאִי! גְּבִיעַ הַזָּהָב בִּשְׁבִילְכֶם!', nikud: true);
-  static const Str ceremonyMedal = Str('מֵדַלְיָה! עַל הַהֶרְגֵּל הַטּוֹב שֶׁלָּכֶם!', nikud: true);
+  static const Str ceremonyBronze = Str('הִנֵּה גְּבִיעַ בְּרוֹנְזָה בִּשְׁבִילְכֶם!', nikud: true);
+  static const Str ceremonySilver = Str('הִנֵּה גְּבִיעַ כֶּסֶף בִּשְׁבִילְכֶם!', nikud: true);
+  static const Str ceremonyGold = Str('הִנֵּה גְּבִיעַ זָהָב בִּשְׁבִילְכֶם!', nikud: true);
+  static const Str ceremonyMedal = Str('הִנֵּה מֵדַלְיָה בִּשְׁבִילְכֶם!', nikud: true);
   static const Str ceremonyAlso = Str('וְגַם לֶחָבֵר:', nikud: true);
   static const Str ceremonyContinueSemantics = Str('להמשיך');
   static const Str medalBraveAsker = Str('אֹמֶץ לִשְׁאֹל', nikud: true);

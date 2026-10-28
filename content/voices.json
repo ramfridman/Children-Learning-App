@@ -2,6 +2,9 @@
   "schema": "voices/v1",
   "note": "Which ElevenLabs voice speaks for which character. The voiceId values stay empty until the owner has listened to auditions and chosen (M4 phase H). modelId must be the exact id of the model the owner picks in ElevenLabs; it is left empty rather than guessed.",
   "modelId": "eleven_v4_turbo",
+  "outputFormat": "mp3_44100_64",
+  "styles": { "cheer": { "stability": 0.1, "similarity_boost": 0.8, "style": 0.9, "use_speaker_boost": true } },
+  "styleRules": { "cheer": ["vo:core.celebrate.", "vo:celebrate.", "vo:core.ceremony."] },
   "settings": {},
   "pronunciation": {},
   "voices": {
