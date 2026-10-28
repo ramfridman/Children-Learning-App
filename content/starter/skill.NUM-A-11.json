@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-11",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משווים שתי קבוצות עד 5: יותר, פחות, אותו דבר"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "יוֹדְעִים אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-CNT-SIZE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

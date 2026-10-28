@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "nothing-there",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֵין כְּלוּם"
+    }
+  ],
+  "skills": [
+    "NUM-A-14"
+  ],
+  "items": [
+    "zero.nest",
+    "nonzero.nest.2",
+    "zero.bowl",
+    "zero.basket"
+  ],
+  "estimatedMinutes": 3,
+  "celebration": {
+    "vo": "vo:celebrate.nothing_there",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! אֵין כְּלוּם זֶה אֶפֶס."
+      }
+    ]
+  }
+}

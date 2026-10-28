@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-13",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משתמשים ב'ראשון', 'שני', 'שלישי' ו'אחרון'"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "יוֹדְעִים מִי רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי וְאַחֲרוֹן"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-ORD-CARD"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

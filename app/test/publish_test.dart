@@ -16,32 +16,29 @@ const String _vectors = '../testvectors/publish-starter.json';
 
 void main() {
   late Map<String, Object?> starter;
-  setUpAll(() async => starter = indexOf(await _load('assets/packs/starter-0.3.0.nnpack')));
+  setUpAll(() async => starter = indexOf(await _load('assets/packs/starter-0.4.0.nnpack')));
 
-  test(
-    'the starter pack gives its five activities and four misconceptions, with the facts the prompt needs',
-    () {
-      final List<Object?> items = starter['items']! as List<Object?>;
-      expect(items.length, 5);
-      expect((starter['misconceptions']! as List<Object?>).length, 4);
-      final Map<String, Object?> count = items.cast<Map<String, Object?>>().firstWhere(
-        (Map<String, Object?> i) => i['item_id'] == 'count.butterflies.3',
-      );
-      expect(count['template'], 'count_tap');
-      expect(count['band'], 'A');
-      expect(count['skill_ids'], <String>['NUM-A-03', 'NUM-A-04']);
-      expect(count['llm_allowed'], isTrue);
-      expect(count['hint_threshold'], 3);
-      expect(count['number_set'], <int>[2, 3, 4]);
-      expect(count['allowed_actions'], containsAll(<String>['replay_prompt_slow', 'show_fingers']));
-      expect(count['object_ids'], containsAll(<String>['o1', 'o2', 'obj-0', 'obj-2']));
-      final List<Map<String, Object?>> answers = (count['answers']! as List<Object?>)
-          .cast<Map<String, Object?>>();
-      expect(answers.where((Map<String, Object?> a) => a['correct'] == true).single['value'], 3);
-      expect(answers.any((Map<String, Object?> a) => a['misconception'] == 'M-CNT-DOUBLE'), isTrue);
-      expect(count['prompt_text'], contains('פַּרְפָּרִים'));
-    },
-  );
+  test('the starter pack gives its activities and misconceptions, with the facts the prompt needs', () {
+    final List<Object?> items = starter['items']! as List<Object?>;
+    expect(items.length, 56);
+    expect((starter['misconceptions']! as List<Object?>).length, 7);
+    final Map<String, Object?> count = items.cast<Map<String, Object?>>().firstWhere(
+      (Map<String, Object?> i) => i['item_id'] == 'count.butterflies.3',
+    );
+    expect(count['template'], 'count_tap');
+    expect(count['band'], 'A');
+    expect(count['skill_ids'], <String>['NUM-A-03', 'NUM-A-04']);
+    expect(count['llm_allowed'], isTrue);
+    expect(count['hint_threshold'], 3);
+    expect(count['number_set'], <int>[2, 3, 4]);
+    expect(count['allowed_actions'], containsAll(<String>['replay_prompt_slow', 'show_fingers']));
+    expect(count['object_ids'], containsAll(<String>['o1', 'o2', 'obj-0', 'obj-2']));
+    final List<Map<String, Object?>> answers = (count['answers']! as List<Object?>)
+        .cast<Map<String, Object?>>();
+    expect(answers.where((Map<String, Object?> a) => a['correct'] == true).single['value'], 3);
+    expect(answers.any((Map<String, Object?> a) => a['misconception'] == 'M-CNT-DOUBLE'), isTrue);
+    expect(count['prompt_text'], contains('פַּרְפָּרִים'));
+  });
 
   test('"give N" and "tap the answer" activities are indexed too, with one right answer each', () {
     final List<Map<String, Object?>> items = (starter['items']! as List<Object?>)
@@ -51,13 +48,46 @@ void main() {
       expect(a.where((Map<String, Object?> x) => x['correct'] == true).length, 1, reason: '${i['item_id']}');
       expect(i['hint_threshold'], inInclusiveRange(1, 3));
     }
-    final Map<String, Object?> give = items.firstWhere((Map<String, Object?> i) => i['template'] == 'give_n');
+    final Map<String, Object?> give = items.firstWhere(
+      (Map<String, Object?> i) => i['item_id'] == 'give.butterflies.4',
+    );
     expect((give['answers']! as List<Object?>).cast<Map<String, Object?>>().first['value'], 4);
     final Map<String, Object?> flower = items.firstWhere(
       (Map<String, Object?> i) => i['item_id'] == 'pick.red.flower',
     );
     expect(flower['llm_allowed'], isFalse);
   });
+
+  test(
+    'numeral options, sets and flashed groups are indexed by the number they show (tap_answer 1.1, flash)',
+    () {
+      final List<Map<String, Object?>> items = (starter['items']! as List<Object?>)
+          .cast<Map<String, Object?>>();
+      Map<String, Object?> item(String id) =>
+          items.firstWhere((Map<String, Object?> i) => i['item_id'] == id);
+      final Map<String, Object?> flash = item('flash.dice.4');
+      expect(flash['template'], 'flash');
+      expect(flash['number_set'], <int>[3, 4, 5]);
+      expect(
+        (flash['object_ids']! as List<Object?>)
+            .whereType<String>()
+            .where((String o) => o.startsWith('obj-'))
+            .length,
+        4,
+      );
+      final List<Map<String, Object?>> shown = (item('show.birds.4')['answers']! as List<Object?>)
+          .cast<Map<String, Object?>>();
+      expect(shown.where((Map<String, Object?> a) => a['correct'] == true).single['value'], 4);
+      final Map<String, Object?> zero = item('zero.nest');
+      expect(zero['number_set'], <int>[0, 1, 2]);
+      expect(
+        (zero['answers']! as List<Object?>).cast<Map<String, Object?>>().any(
+          (Map<String, Object?> a) => a['misconception'] == 'M-NUM-ZERO',
+        ),
+        isTrue,
+      );
+    },
+  );
 
   test('nothing but text for the prompt goes up: no audio, no pictures, no ids of a device or a child', () {
     final String json = jsonEncode(starter);

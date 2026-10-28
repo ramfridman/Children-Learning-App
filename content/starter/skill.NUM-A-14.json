@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-14",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "יודעים ש'אין כלום' הוא אפס"
+    }
+  ],
+  "worldObject": "sprout",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "יוֹדְעִים שֶׁאֵין כְּלוּם זֶה אֶפֶס"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "story",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-NUM-ZERO"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema": "pack-source/v1",
   "id": "starter",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "minAppVersion": "0.3.0",
   "assets": [
     {
@@ -27,6 +27,94 @@
     {
       "id": "flower_target",
       "file": "flower_target.svg"
+    },
+    {
+      "id": "ladybug",
+      "file": "ladybug.svg"
+    },
+    {
+      "id": "ladybug_lit",
+      "file": "ladybug_lit.svg"
+    },
+    {
+      "id": "star",
+      "file": "star.svg"
+    },
+    {
+      "id": "star_lit",
+      "file": "star_lit.svg"
+    },
+    {
+      "id": "apple",
+      "file": "apple.svg"
+    },
+    {
+      "id": "apple_lit",
+      "file": "apple_lit.svg"
+    },
+    {
+      "id": "fish",
+      "file": "fish.svg"
+    },
+    {
+      "id": "fish_lit",
+      "file": "fish_lit.svg"
+    },
+    {
+      "id": "bird",
+      "file": "bird.svg"
+    },
+    {
+      "id": "bird_lit",
+      "file": "bird_lit.svg"
+    },
+    {
+      "id": "duck",
+      "file": "duck.svg"
+    },
+    {
+      "id": "duck_lit",
+      "file": "duck_lit.svg"
+    },
+    {
+      "id": "cat",
+      "file": "cat.svg"
+    },
+    {
+      "id": "cat_lit",
+      "file": "cat_lit.svg"
+    },
+    {
+      "id": "dog",
+      "file": "dog.svg"
+    },
+    {
+      "id": "dog_lit",
+      "file": "dog_lit.svg"
+    },
+    {
+      "id": "tick",
+      "file": "tick.svg"
+    },
+    {
+      "id": "cross",
+      "file": "cross.svg"
+    },
+    {
+      "id": "basket_target",
+      "file": "basket_target.svg"
+    },
+    {
+      "id": "nest_empty",
+      "file": "nest_empty.svg"
+    },
+    {
+      "id": "bowl_empty",
+      "file": "bowl_empty.svg"
+    },
+    {
+      "id": "basket_empty",
+      "file": "basket_empty.svg"
     }
   ],
   "vo": []

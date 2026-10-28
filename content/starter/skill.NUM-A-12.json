@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-12",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משווים לפי המספר גם כשהעצמים גדולים או צפופים"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים כְּדֵי לְהַשְׁוֹת, לֹא מִסְתַּכְּלִים עַל הַגֹּדֶל"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-04",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-A-11",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-CNT-SIZE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

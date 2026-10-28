@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "glance-small",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "רוֹאִים בְּמַבָּט אֶחָד"
+    }
+  ],
+  "skills": [
+    "NUM-A-05"
+  ],
+  "items": [
+    "flash.dice.1",
+    "flash.dice.2",
+    "flash.dice.3",
+    "flash.scatter.3"
+  ],
+  "estimatedMinutes": 3,
+  "celebration": {
+    "vo": "vo:celebrate.glance_small",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר."
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "giving",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "נוֹתְנִים בְּדִיּוּק"
+    }
+  ],
+  "skills": [
+    "NUM-A-06"
+  ],
+  "items": [
+    "give.ladybugs.2",
+    "give.apples.3",
+    "give.fish.4",
+    "give.stars.5"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:celebrate.giving",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ."
+      }
+    ]
+  }
+}

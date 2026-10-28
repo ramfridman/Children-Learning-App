@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "numbers-and-things",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִסְפָּרִים וְדְּבָרִים"
+    }
+  ],
+  "skills": [
+    "NUM-A-07"
+  ],
+  "items": [
+    "numeral.apples.2",
+    "numeral.stars.3",
+    "numeral.fish.4",
+    "numeral.bugs.5",
+    "show.apples.3",
+    "show.birds.4",
+    "show.stars.5"
+  ],
+  "estimatedMinutes": 5,
+  "celebration": {
+    "vo": "vo:celebrate.numbers_and_things",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מָצָאתֶם אֶת הַמִּסְפָּר הַנָּכוֹן."
+      }
+    ]
+  }
+}

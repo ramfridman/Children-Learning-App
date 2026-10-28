@@ -1,0 +1,38 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-07",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מתאימים מספרים 1–5 לכמויות"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַתְאִימִים מִסְפָּר לַכַּמּוּת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CNT-DOUBLE",
+    "M-CNT-SKIP"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "schema": "activity/v1",
+  "id": "same.apples.4v5",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-11",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "compare-same",
+  "difficulty": {
+    "authored": 0.35
+  },
+  "prompt": {
+    "vo": "vo:same.apples.4v5.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַאִם יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "group": {
+      "sprite": "asset:apple",
+      "count": 4,
+      "arrangement": "scatter",
+      "seed": 3
+    },
+    "group2": {
+      "sprite": "asset:apple",
+      "count": 5,
+      "arrangement": "line",
+      "seed": 8,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:tick",
+        "label": "כֵּן",
+        "misconception": "M-CNT-SIZE"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:cross",
+        "label": "לֹא"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:same.apples.4v5.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן, צָדַקְתֶּם!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-SIZE",
+        "vo": "vo:fb.size",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:same.apples.4v5.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:same.apples.4v5.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:same.apples.4v5.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּצַד אֶחָד יֵשׁ אַרְבָּעָה תַּפּוּחִים, וּבַצַּד הָאַחֵר חֲמִשָּׁה תַּפּוּחִים. זֶה לֹא אוֹתוֹ דָּבָר."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child decides whether two groups have the same number, whatever their look",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הַאִם יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?"
+  }
+}

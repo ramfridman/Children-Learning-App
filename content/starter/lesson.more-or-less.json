@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-or-less",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "יוֹתֵר אוֹ פָּחוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-A-11"
+  ],
+  "items": [
+    "more.apples.2v4",
+    "more.fish.3v5",
+    "fewer.stars.4v2",
+    "same.bugs.3v3",
+    "same.apples.4v5"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:celebrate.more_or_less",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."
+      }
+    ]
+  }
+}

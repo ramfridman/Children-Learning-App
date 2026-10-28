@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "find-the-number",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַמִּסְפָּר"
+    }
+  ],
+  "skills": [
+    "NUM-A-08"
+  ],
+  "items": [
+    "pick.numeral.2",
+    "pick.numeral.3",
+    "pick.numeral.4",
+    "pick.numeral.5"
+  ],
+  "estimatedMinutes": 3,
+  "celebration": {
+    "vo": "vo:celebrate.find_the_number",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הִכַּרְתֶּם אֶת הַמִּסְפָּרִים."
+      }
+    ]
+  }
+}

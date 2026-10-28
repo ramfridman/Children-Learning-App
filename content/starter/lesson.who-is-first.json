@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "who-is-first",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִי רִאשׁוֹן בַּתּוֹר?"
+    }
+  ],
+  "skills": [
+    "NUM-A-13"
+  ],
+  "items": [
+    "ordinal.first",
+    "ordinal.second",
+    "ordinal.third",
+    "ordinal.last",
+    "ordinal.third.of4"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:celebrate.who_is_first",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי רִאשׁוֹן, שֵׁנִי וּשְׁלִישִׁי."
+      }
+    ]
+  }
+}

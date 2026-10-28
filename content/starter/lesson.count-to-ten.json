@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-to-ten",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים עַד עֶשֶׂר"
+    }
+  ],
+  "skills": [
+    "NUM-A-09",
+    "NUM-A-03"
+  ],
+  "items": [
+    "count.ladybugs.6",
+    "count.apples.7",
+    "count.stars.8",
+    "count.fish.9",
+    "count.birds.10"
+  ],
+  "estimatedMinutes": 5,
+  "celebration": {
+    "vo": "vo:celebrate.count_to_ten",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר."
+      }
+    ]
+  }
+}

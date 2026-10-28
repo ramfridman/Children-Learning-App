@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "tricky-sizes",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "לֹא לְפִי הַגֹּדֶל"
+    }
+  ],
+  "skills": [
+    "NUM-A-12"
+  ],
+  "items": [
+    "more.big.apples",
+    "more.spread.stars",
+    "fewer.big.fish"
+  ],
+  "estimatedMinutes": 3,
+  "celebration": {
+    "vo": "vo:celebrate.tricky_sizes",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! סְפַרְתֶּם וְלֹא הִסְתַּכַּלְתֶּם עַל הַגֹּדֶל."
+      }
+    ]
+  }
+}

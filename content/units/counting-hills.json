@@ -1,0 +1,123 @@
+{
+  "unit": "counting-hills",
+  "note": "Band A of Numbers, the part of Counting Hills that is not the butterflies lesson. Expanded by tools/author.py into content/starter. Hebrew here is a draft by Claude, needs-editor.",
+  "assets": ["ladybug", "ladybug_lit", "star", "star_lit", "apple", "apple_lit", "fish", "fish_lit", "bird", "bird_lit", "duck", "duck_lit", "cat", "cat_lit", "dog", "dog_lit", "tick", "cross", "basket_target", "nest_empty", "bowl_empty", "basket_empty"],
+  "objects": {
+    "ladybug": { "g": "f", "one": "חִפּוּשִׁית", "many": "חִפּוּשִׁיּוֹת" },
+    "star": { "g": "m", "one": "כּוֹכָב", "many": "כּוֹכָבִים" },
+    "apple": { "g": "m", "one": "תַּפּוּחַ", "many": "תַּפּוּחִים" },
+    "fish": { "g": "m", "one": "דָּג", "many": "דָּגִים" },
+    "bird": { "g": "f", "one": "צִפּוֹר", "many": "צִפֳּרִים" },
+    "duck": { "g": "m", "one": "בַּרְוָז", "many": "בַּרְוָזִים" },
+    "cat": { "g": "m", "one": "חָתוּל", "many": "חֲתוּלִים" },
+    "dog": { "g": "m", "one": "כֶּלֶב", "many": "כְּלָבִים" }
+  },
+  "misconceptions": [
+    {
+      "id": "M-CNT-SIZE", "skills": ["NUM-A-11", "NUM-A-12"],
+      "parent": "הילד שופט מי יותר לפי הגודל או הפיזור של העצמים ולא לפי המספר.",
+      "home": "להניח על השולחן שתי קבוצות של כפיות: שלוש רחוקות זו מזו וחמש צפופות. לשאול איפה יש יותר, ואז לסדר זוגות, כפית מול כפית, ולראות יחד.",
+      "reps": ["concrete", "pictorial"]
+    },
+    {
+      "id": "M-NUM-ZERO", "skills": ["NUM-A-14"],
+      "parent": "הילד חושב שאפס הוא לא מספר, ואומר 'אחת' או 'כלום' כשאין עצמים.",
+      "home": "להראות קערה ריקה ולשאול כמה תפוחים יש בה. לתת לילד להגיד 'אפס', ואז להכניס תפוח ולשאול שוב.",
+      "reps": ["story", "concrete"]
+    },
+    {
+      "id": "M-ORD-CARD", "skills": ["NUM-A-13"],
+      "parent": "הילד מבלבל בין 'השלישי' בתור לבין 'שלושה' ילדים.",
+      "home": "לעמוד בתור עם בובות: מי הראשון, מי השני, מי האחרון? להחליף את המקומות ולשאול שוב.",
+      "reps": ["concrete", "embodied"]
+    }
+  ],
+  "skills": [
+    { "id": "NUM-A-05", "title": "מזהים 1–3 במבט אחד בלי לספור", "child": "רוֹאִים כַּמָּה בְּמַבָּט אֶחָד", "world": "sprout", "needs": [], "reps": ["pictorial", "concrete"], "tags": [] },
+    { "id": "NUM-A-06", "title": "מוציאים כמות מבוקשת (עד 5) מערימה גדולה יותר", "child": "נוֹתְנִים בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ", "world": "dock", "needs": ["NUM-A-04"], "reps": ["concrete", "embodied"], "tags": ["M-CNT-CARD"] },
+    { "id": "NUM-A-07", "title": "מתאימים מספרים 1–5 לכמויות", "child": "מַתְאִימִים מִסְפָּר לַכַּמּוּת", "world": "pool", "needs": ["NUM-A-04"], "reps": ["pictorial", "symbolic"], "tags": ["M-CNT-DOUBLE", "M-CNT-SKIP"] },
+    { "id": "NUM-A-08", "title": "בוחרים את הספרה 1–5 כשאומרים אותה", "child": "מוֹצְאִים אֶת הַמִּסְפָּר שֶׁאוֹמְרִים", "world": "stall", "needs": ["NUM-A-01"], "reps": ["symbolic"], "tags": [] },
+    { "id": "NUM-A-09", "title": "סופרים 6–10 עצמים", "child": "סוֹפְרִים עַד עֶשֶׂר", "world": "cone-tree", "needs": ["NUM-A-02", "NUM-A-04"], "reps": ["concrete", "pictorial"], "tags": ["M-CNT-DOUBLE", "M-CNT-SKIP"] },
+    { "id": "NUM-A-10", "title": "מזהים 4–5 בקובייה ובמסגרת עשר במבט אחד", "child": "רוֹאִים אַרְבַּע וְחָמֵשׁ בְּמַבָּט אֶחָד", "world": "pattern-door", "needs": ["NUM-A-05"], "reps": ["pictorial"], "tags": [] },
+    { "id": "NUM-A-11", "title": "משווים שתי קבוצות עד 5: יותר, פחות, אותו דבר", "child": "יוֹדְעִים אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת", "world": "pool", "needs": ["NUM-A-03"], "reps": ["pictorial", "concrete"], "tags": ["M-CNT-SIZE"] },
+    { "id": "NUM-A-12", "title": "משווים לפי המספר גם כשהעצמים גדולים או צפופים", "child": "סוֹפְרִים כְּדֵי לְהַשְׁוֹת, לֹא מִסְתַּכְּלִים עַל הַגֹּדֶל", "world": "stall", "needs": ["NUM-A-04", "NUM-A-11"], "reps": ["pictorial"], "tags": ["M-CNT-SIZE"] },
+    { "id": "NUM-A-13", "title": "משתמשים ב'ראשון', 'שני', 'שלישי' ו'אחרון'", "child": "יוֹדְעִים מִי רִאשׁוֹן, שֵׁנִי, שְׁלִישִׁי וְאַחֲרוֹן", "world": "pattern-door", "needs": ["NUM-A-02"], "reps": ["concrete", "embodied"], "tags": ["M-ORD-CARD"] },
+    { "id": "NUM-A-14", "title": "יודעים ש'אין כלום' הוא אפס", "child": "יוֹדְעִים שֶׁאֵין כְּלוּם זֶה אֶפֶס", "world": "sprout", "needs": ["NUM-A-04"], "reps": ["story", "concrete"], "tags": ["M-NUM-ZERO"] }
+  ],
+  "activities": [
+    { "kind": "next_number", "id": "next.after.1", "skill": "NUM-A-01", "n": 1, "options": [1, 2, 3], "difficulty": 0.1 },
+    { "kind": "next_number", "id": "next.after.2", "skill": "NUM-A-01", "n": 2, "options": [2, 3, 4], "difficulty": 0.15 },
+    { "kind": "next_number", "id": "next.after.4", "skill": "NUM-A-01", "n": 4, "options": [3, 5, 6], "difficulty": 0.2 },
+    { "kind": "next_number", "id": "next.after.6", "skill": "NUM-A-02", "n": 6, "options": [6, 7, 8], "difficulty": 0.3 },
+    { "kind": "next_number", "id": "next.after.8", "skill": "NUM-A-02", "n": 8, "options": [7, 9, 10], "difficulty": 0.35 },
+    { "kind": "next_number", "id": "next.before.7", "skill": "NUM-A-02", "n": 7, "dir": "before", "options": [5, 6, 7], "difficulty": 0.4 },
+
+    { "kind": "flash", "id": "flash.dice.1", "skill": "NUM-A-05", "obj": "ladybug", "count": 1, "arrangement": "dice", "options": [1, 2, 3], "flashMs": 1800, "difficulty": 0.1 },
+    { "kind": "flash", "id": "flash.dice.2", "skill": "NUM-A-05", "obj": "star", "count": 2, "arrangement": "dice", "options": [1, 2, 3], "flashMs": 1500, "difficulty": 0.15 },
+    { "kind": "flash", "id": "flash.dice.3", "skill": "NUM-A-05", "obj": "apple", "count": 3, "arrangement": "dice", "options": [2, 3, 4], "flashMs": 1500, "difficulty": 0.2 },
+    { "kind": "flash", "id": "flash.scatter.3", "skill": "NUM-A-05", "obj": "ladybug", "count": 3, "arrangement": "scatter", "seed": 4, "options": [2, 3, 4], "flashMs": 1500, "difficulty": 0.25 },
+
+    { "kind": "give", "id": "give.apples.3", "skill": "NUM-A-06", "obj": "apple", "n": 3, "source": 8, "difficulty": 0.3 },
+    { "kind": "give", "id": "give.ladybugs.2", "skill": "NUM-A-06", "obj": "ladybug", "n": 2, "source": 6, "difficulty": 0.2 },
+    { "kind": "give", "id": "give.stars.5", "skill": "NUM-A-06", "obj": "star", "n": 5, "source": 9, "difficulty": 0.45 },
+    { "kind": "give", "id": "give.fish.4", "skill": "NUM-A-06", "obj": "fish", "n": 4, "source": 7, "difficulty": 0.4 },
+
+    { "kind": "set_to_numeral", "id": "numeral.stars.3", "skill": "NUM-A-07", "obj": "star", "count": 3, "options": [2, 3, 4], "difficulty": 0.2 },
+    { "kind": "set_to_numeral", "id": "numeral.fish.4", "skill": "NUM-A-07", "obj": "fish", "count": 4, "options": [3, 4, 5], "difficulty": 0.3 },
+    { "kind": "set_to_numeral", "id": "numeral.bugs.5", "skill": "NUM-A-07", "obj": "ladybug", "count": 5, "options": [4, 5, 6], "difficulty": 0.4 },
+    { "kind": "set_to_numeral", "id": "numeral.apples.2", "skill": "NUM-A-07", "obj": "apple", "count": 2, "options": [1, 2, 3], "difficulty": 0.15 },
+    { "kind": "numeral_to_set", "id": "show.apples.3", "skill": "NUM-A-07", "obj": "apple", "n": 3, "options": [2, 3, 4], "difficulty": 0.3 },
+    { "kind": "numeral_to_set", "id": "show.birds.4", "skill": "NUM-A-07", "obj": "bird", "n": 4, "options": [3, 4, 5], "difficulty": 0.4 },
+    { "kind": "numeral_to_set", "id": "show.stars.5", "skill": "NUM-A-07", "obj": "star", "n": 5, "options": [3, 4, 5], "arrangement": "scatter", "difficulty": 0.5 },
+
+    { "kind": "pick_numeral", "id": "pick.numeral.2", "skill": "NUM-A-08", "n": 2, "options": [1, 2, 3], "difficulty": 0.1 },
+    { "kind": "pick_numeral", "id": "pick.numeral.3", "skill": "NUM-A-08", "n": 3, "options": [2, 3, 5], "difficulty": 0.15 },
+    { "kind": "pick_numeral", "id": "pick.numeral.4", "skill": "NUM-A-08", "n": 4, "options": [3, 4, 5], "difficulty": 0.2 },
+    { "kind": "pick_numeral", "id": "pick.numeral.5", "skill": "NUM-A-08", "n": 5, "options": [1, 4, 5], "difficulty": 0.25 },
+
+    { "kind": "count_tap", "id": "count.ladybugs.6", "skill": "NUM-A-09", "also": ["NUM-A-03"], "obj": "ladybug", "count": 6, "options": [5, 6, 7], "seed": 21, "difficulty": 0.4 },
+    { "kind": "count_tap", "id": "count.apples.7", "skill": "NUM-A-09", "obj": "apple", "count": 7, "options": [6, 7, 8], "seed": 22, "difficulty": 0.5 },
+    { "kind": "count_tap", "id": "count.stars.8", "skill": "NUM-A-09", "obj": "star", "count": 8, "options": [7, 8, 9], "seed": 23, "difficulty": 0.55 },
+    { "kind": "count_tap", "id": "count.fish.9", "skill": "NUM-A-09", "obj": "fish", "count": 9, "options": [8, 9, 10], "seed": 24, "difficulty": 0.65 },
+    { "kind": "count_tap", "id": "count.birds.10", "skill": "NUM-A-09", "obj": "bird", "count": 10, "options": [9, 10, 8], "seed": 25, "difficulty": 0.7 },
+
+    { "kind": "flash", "id": "flash.dice.4", "skill": "NUM-A-10", "obj": "ladybug", "count": 4, "arrangement": "dice", "options": [3, 4, 5], "flashMs": 1500, "difficulty": 0.3 },
+    { "kind": "flash", "id": "flash.dice.5", "skill": "NUM-A-10", "obj": "star", "count": 5, "arrangement": "dice", "options": [4, 5, 6], "flashMs": 1500, "difficulty": 0.35 },
+    { "kind": "flash", "id": "flash.frame.4", "skill": "NUM-A-10", "obj": "apple", "count": 4, "arrangement": "ten_frame", "options": [3, 4, 5], "flashMs": 1500, "difficulty": 0.4 },
+    { "kind": "flash", "id": "flash.frame.5", "skill": "NUM-A-10", "obj": "fish", "count": 5, "arrangement": "ten_frame", "options": [4, 5, 6], "flashMs": 1500, "difficulty": 0.45 },
+
+    { "kind": "compare_more", "id": "more.apples.2v4", "skill": "NUM-A-11", "obj": "apple", "options": [2, 4], "big": 4, "small": 2, "trap": false, "difficulty": 0.2 },
+    { "kind": "compare_more", "id": "more.fish.3v5", "skill": "NUM-A-11", "obj": "fish", "options": [5, 3], "big": 5, "small": 3, "trap": false, "difficulty": 0.25 },
+    { "kind": "compare_more", "id": "fewer.stars.4v2", "skill": "NUM-A-11", "obj": "star", "options": [4, 2], "big": 4, "small": 2, "ask": "fewer", "trap": false, "difficulty": 0.3 },
+    { "kind": "compare_same", "id": "same.bugs.3v3", "skill": "NUM-A-11", "obj": "ladybug", "left": 3, "right": 3, "difficulty": 0.3 },
+    { "kind": "compare_same", "id": "same.apples.4v5", "skill": "NUM-A-11", "obj": "apple", "left": 4, "right": 5, "difficulty": 0.35 },
+
+    { "kind": "compare_more", "id": "more.big.apples", "skill": "NUM-A-12", "obj": "apple", "options": [3, 5], "big": 5, "small": 3, "scale": { "3": 1.5 }, "difficulty": 0.5 },
+    { "kind": "compare_more", "id": "more.spread.stars", "skill": "NUM-A-12", "obj": "star", "options": [4, 6], "big": 6, "small": 4, "arr": { "4": "scatter", "6": "ten_frame" }, "difficulty": 0.55 },
+    { "kind": "compare_more", "id": "fewer.big.fish", "skill": "NUM-A-12", "obj": "fish", "options": [4, 2], "big": 4, "small": 2, "ask": "fewer", "scale": { "4": 0.7, "2": 1.5 }, "difficulty": 0.6 },
+
+    { "kind": "ordinal", "id": "ordinal.first", "skill": "NUM-A-13", "line": ["cat", "dog", "duck"], "pick": 0, "difficulty": 0.1 },
+    { "kind": "ordinal", "id": "ordinal.second", "skill": "NUM-A-13", "line": ["dog", "duck", "cat"], "pick": 1, "difficulty": 0.2 },
+    { "kind": "ordinal", "id": "ordinal.third", "skill": "NUM-A-13", "line": ["duck", "cat", "dog"], "pick": 2, "difficulty": 0.3 },
+    { "kind": "ordinal", "id": "ordinal.last", "skill": "NUM-A-13", "line": ["cat", "duck", "dog", "fish"], "pick": -1, "difficulty": 0.35 },
+    { "kind": "ordinal", "id": "ordinal.third.of4", "skill": "NUM-A-13", "line": ["fish", "dog", "cat", "duck"], "pick": 2, "difficulty": 0.45 },
+
+    { "kind": "zero", "id": "zero.nest", "skill": "NUM-A-14", "obj": "bird", "count": 0, "place": "nest_empty", "where": "בַּקֵּן", "options": [0, 1, 2], "difficulty": 0.3 },
+    { "kind": "zero", "id": "zero.bowl", "skill": "NUM-A-14", "obj": "fish", "count": 0, "place": "bowl_empty", "where": "בַּקְעָרָה", "options": [0, 1, 2], "difficulty": 0.35 },
+    { "kind": "zero", "id": "zero.basket", "skill": "NUM-A-14", "obj": "apple", "count": 0, "place": "basket_empty", "where": "בַּסַּל", "options": [0, 1, 3], "difficulty": 0.4 },
+    { "kind": "zero", "id": "nonzero.nest.2", "skill": "NUM-A-14", "obj": "bird", "count": 2, "place": "nest_empty", "where": "בַּקֵּן", "options": [0, 1, 2], "difficulty": 0.3 }
+  ],
+  "lessons": [
+    { "id": "counting-words", "title": "סוֹפְרִים לְפִי הַסֵּדֶר", "skills": ["NUM-A-01", "NUM-A-02"], "items": ["next.after.1", "next.after.2", "next.after.4", "next.after.6", "next.after.8", "next.before.7"], "done": "כׇּל הַכָּבוֹד! סְפַרְתֶּם לְפִי הַסֵּדֶר." },
+    { "id": "glance-small", "title": "רוֹאִים בְּמַבָּט אֶחָד", "skills": ["NUM-A-05"], "items": ["flash.dice.1", "flash.dice.2", "flash.dice.3", "flash.scatter.3"], "minutes": 3, "done": "וַאוּ! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר." },
+    { "id": "giving", "title": "נוֹתְנִים בְּדִיּוּק", "skills": ["NUM-A-06"], "items": ["give.ladybugs.2", "give.apples.3", "give.fish.4", "give.stars.5"], "done": "כׇּל הַכָּבוֹד! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ." },
+    { "id": "numbers-and-things", "title": "מִסְפָּרִים וְדְּבָרִים", "skills": ["NUM-A-07"], "items": ["numeral.apples.2", "numeral.stars.3", "numeral.fish.4", "numeral.bugs.5", "show.apples.3", "show.birds.4", "show.stars.5"], "minutes": 5, "done": "כׇּל הַכָּבוֹד! מָצָאתֶם אֶת הַמִּסְפָּר הַנָּכוֹן." },
+    { "id": "find-the-number", "title": "מוֹצְאִים אֶת הַמִּסְפָּר", "skills": ["NUM-A-08"], "items": ["pick.numeral.2", "pick.numeral.3", "pick.numeral.4", "pick.numeral.5"], "minutes": 3, "done": "יָפֶה מְאֹד! הִכַּרְתֶּם אֶת הַמִּסְפָּרִים." },
+    { "id": "count-to-ten", "title": "סוֹפְרִים עַד עֶשֶׂר", "skills": ["NUM-A-09", "NUM-A-03"], "items": ["count.ladybugs.6", "count.apples.7", "count.stars.8", "count.fish.9", "count.birds.10"], "minutes": 5, "done": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר." },
+    { "id": "glance-more", "title": "רוֹאִים אַרְבַּע וְחָמֵשׁ", "skills": ["NUM-A-10"], "items": ["flash.dice.4", "flash.dice.5", "flash.frame.4", "flash.frame.5"], "minutes": 3, "done": "מַדְהִים! רְאִיתֶם אַרְבַּע וְחָמֵשׁ בְּמַבָּט אֶחָד." },
+    { "id": "more-or-less", "title": "יוֹתֵר אוֹ פָּחוֹת", "skills": ["NUM-A-11"], "items": ["more.apples.2v4", "more.fish.3v5", "fewer.stars.4v2", "same.bugs.3v3", "same.apples.4v5"], "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת." },
+    { "id": "tricky-sizes", "title": "לֹא לְפִי הַגֹּדֶל", "skills": ["NUM-A-12"], "items": ["more.big.apples", "more.spread.stars", "fewer.big.fish"], "minutes": 3, "done": "חֲכָמִים! סְפַרְתֶּם וְלֹא הִסְתַּכַּלְתֶּם עַל הַגֹּדֶל." },
+    { "id": "who-is-first", "title": "מִי רִאשׁוֹן בַּתּוֹר?", "skills": ["NUM-A-13"], "items": ["ordinal.first", "ordinal.second", "ordinal.third", "ordinal.last", "ordinal.third.of4"], "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי רִאשׁוֹן, שֵׁנִי וּשְׁלִישִׁי." },
+    { "id": "nothing-there", "title": "אֵין כְּלוּם", "skills": ["NUM-A-14"], "items": ["zero.nest", "nonzero.nest.2", "zero.bowl", "zero.basket"], "minutes": 3, "done": "יָפֶה מְאֹד! אֵין כְּלוּם זֶה אֶפֶס." }
+  ]
+}

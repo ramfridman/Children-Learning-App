@@ -31,8 +31,8 @@ class ZipException implements Exception {
 }
 
 abstract final class ZipLimits {
-  /// 400 files of content plus `manifest.json` and `manifest.sig`.
-  static const int maxEntries = 402;
+  /// 2,400 files of content plus `manifest.json` and `manifest.sig` (a pack of lessons or of one friend's voice).
+  static const int maxEntries = 2402;
 
   /// The sum of all file sizes.
   static const int maxTotalBytes = 64 * 1024 * 1024;

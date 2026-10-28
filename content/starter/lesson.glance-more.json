@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "glance-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "רוֹאִים אַרְבַּע וְחָמֵשׁ"
+    }
+  ],
+  "skills": [
+    "NUM-A-10"
+  ],
+  "items": [
+    "flash.dice.4",
+    "flash.dice.5",
+    "flash.frame.4",
+    "flash.frame.5"
+  ],
+  "estimatedMinutes": 3,
+  "celebration": {
+    "vo": "vo:celebrate.glance_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַדְהִים! רְאִיתֶם אַרְבַּע וְחָמֵשׁ בְּמַבָּט אֶחָד."
+      }
+    ]
+  }
+}

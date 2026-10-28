@@ -88,12 +88,12 @@ final List<Broken> _cases = <Broken>[
     'is outside',
   ),
   Broken(
-    'manifest: more than 400 files',
+    'manifest: more than 2,400 files',
     (SamplePack p) => p.manifest['files'] = <Object?>[
-      for (int i = 0; i < 401; i++) <String, Object?>{'name': 'f$i.bin', 'sha256': '1' * 64, 'size': 1},
+      for (int i = 0; i < 2401; i++) <String, Object?>{'name': 'f$i.bin', 'sha256': '1' * 64, 'size': 1},
     ],
     'manifest.json › files',
-    '401 items is outside 1 to 400',
+    '2401 items is outside 1 to 2400',
   ),
   Broken(
     'manifest: no files',

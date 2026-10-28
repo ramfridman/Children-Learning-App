@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-CNT-SIZE",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-11",
+    "NUM-A-12"
+  ],
+  "parentText": "הילד שופט מי יותר לפי הגודל או הפיזור של העצמים ולא לפי המספר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להניח על השולחן שתי קבוצות של כפיות: שלוש רחוקות זו מזו וחמש צפופות. לשאול איפה יש יותר, ואז לסדר זוגות, כפית מול כפית, ולראות יחד."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

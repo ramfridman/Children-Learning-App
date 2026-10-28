@@ -61,15 +61,27 @@ Map<String, Object?> itemOf(Map<String, Object?> a) {
     final String correct = answer['correct']! as String;
     for (final Map<String, Object?> o in _maps(answer['options'])) {
       final String id = o['id']! as String;
+      // The number an option shows: a count (`value`), a numeral on a tile, or the size of a set (tap_answer 1.1).
+      final Object? shown =
+          o['value'] ??
+          o['numeral'] ??
+          (o['set'] is Map<String, Object?> ? (o['set']! as Map<String, Object?>)['count'] : null);
       answers.add(<String, Object?>{
         'id': id,
-        if (o['value'] is int) 'value': o['value'],
+        if (shown is int) 'value': shown,
         if (o['label'] is String) 'label': o['label'],
         if (o['misconception'] is String) 'misconception': o['misconception'],
         'correct': id == correct,
       });
-      if (o['value'] is int) numbers.add(o['value']! as int);
+      if (shown is int) numbers.add(shown);
       objects.add(id);
+    }
+    // A group on the stage (to count, compare or flash) is as many objects as it has things.
+    final Object? group = scene['group'];
+    if (group is Map<String, Object?> && group['count'] is int) {
+      final int count = group['count']! as int;
+      numbers.add(count);
+      objects.addAll(<String>[for (int i = 0; i < count; i++) 'obj-$i']);
     }
     final Map<String, Object?>? objs = scene['objects'] as Map<String, Object?>?;
     final Object? count = objs?['count'];

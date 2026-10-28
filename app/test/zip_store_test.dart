@@ -215,15 +215,15 @@ void main() {
       expect(() => readStoredZip(_rename(z, 'aaab.txt', 'AAAA.txt')), _refused());
     });
 
-    test('more than 402 entries are refused', () {
+    test('more than 2,402 entries are refused', () {
       final Uint8List z = writeStoredZip(<ZipEntry>[
-        for (int i = 0; i < 403; i++) ZipEntry('f$i.bin', Uint8List(1)),
+        for (int i = 0; i < 2403; i++) ZipEntry('f$i.bin', Uint8List(1)),
       ]);
-      expect(() => readStoredZip(z), _refused('403 entries'));
+      expect(() => readStoredZip(z), _refused('2403 entries'));
       final Uint8List ok = writeStoredZip(<ZipEntry>[
-        for (int i = 0; i < 402; i++) ZipEntry('f$i.bin', Uint8List(1)),
+        for (int i = 0; i < 2402; i++) ZipEntry('f$i.bin', Uint8List(1)),
       ]);
-      expect(readStoredZip(ok), hasLength(402));
+      expect(readStoredZip(ok), hasLength(2402));
     });
 
     test('more than 64 MB of content is refused', () {

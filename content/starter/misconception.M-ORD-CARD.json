@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-ORD-CARD",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-13"
+  ],
+  "parentText": "הילד מבלבל בין 'השלישי' בתור לבין 'שלושה' ילדים.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לעמוד בתור עם בובות: מי הראשון, מי השני, מי האחרון? להחליף את המקומות ולשאול שוב."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-A-06",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוציאים כמות מבוקשת (עד 5) מערימה גדולה יותר"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "נוֹתְנִים בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-CNT-CARD"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

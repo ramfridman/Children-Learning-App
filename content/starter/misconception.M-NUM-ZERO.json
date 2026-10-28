@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-NUM-ZERO",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-14"
+  ],
+  "parentText": "הילד חושב שאפס הוא לא מספר, ואומר 'אחת' או 'כלום' כשאין עצמים.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להראות קערה ריקה ולשאול כמה תפוחים יש בה. לתת לילד להגיד 'אפס', ואז להכניס תפוח ולשאול שוב."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "concrete"
+  ]
+}
