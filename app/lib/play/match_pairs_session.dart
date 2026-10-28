@@ -10,6 +10,7 @@ import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'shop_pay_session.dart' show CoinFace;
 import 'sprite_group.dart';
+import 'response_code.dart';
 import 'template_session.dart';
 
 /// The matching template (T16): a row of faces above, a row below, and a face for each in the other row. The child touches a face
@@ -45,6 +46,17 @@ class MatchPairsSession extends TemplateSession {
 
   bool isMatchedRight(String id) => matched.containsValue(id);
 
+  /// The count of the largest set among the picture faces of both rows (1 when no face is a set).
+  late final int largestSet = <MatchFace>[
+    ...activity.left,
+    ...activity.right,
+  ].where((MatchFace f) => f.sprite != null).fold(1, (int most, MatchFace f) => math.max(most, f.count));
+
+  /// Where a face stands in its row: what the written answer names (a face id can be long, an index cannot).
+  int _top(String id) => activity.left.indexWhere((MatchFace f) => f.id == id);
+  int _bottom(String id) => activity.right.indexWhere((MatchFace f) => f.id == id);
+  (int, int) _indexes(String top, String bottom) => (_top(top), _bottom(bottom));
+
   Future<void> tap(String id, {required bool top}) async {
     if (_busy || ring == AnswerState.correct) return;
     if (top ? matched.containsKey(id) : isMatchedRight(id)) return;
@@ -78,7 +90,9 @@ class MatchPairsSession extends TemplateSession {
       if (matched.length == activity.pairs.length) {
         await controller.submitPlacement(
           right: true,
-          response: matched.entries.map((MapEntry<String, String> e) => '${e.key}=${e.value}').join(','),
+          response: ResponseCode.pairs(<(int, int)>[
+            for (final MapEntry<String, String> e in matched.entries) _indexes(e.key, e.value),
+          ]),
         );
         if (disposed) return;
         ring = AnswerState.correct;
@@ -89,7 +103,11 @@ class MatchPairsSession extends TemplateSession {
       }
       return;
     }
-    await controller.submitPlacement(right: false, tag: activity.wrongTag ?? '', response: '$l=$r');
+    await controller.submitPlacement(
+      right: false,
+      tag: activity.wrongTag ?? '',
+      response: ResponseCode.pair(_top(l), _bottom(r)),
+    );
     if (disposed) return;
     wrongLeft = l;
     wrongRight = r;
@@ -270,7 +288,10 @@ class _Row extends StatelessWidget {
       );
     }
     final String svg = s.activity.assets.svg(f.sprite!);
-    if (f.count <= 1) return PackSvg(svg);
-    return SpriteGroup(svg: svg, count: f.count, arrangement: 'line', seed: f.count);
+    final int most = s.largestSet;
+    if (most <= 1) return PackSvg(svg);
+    // Fair sizes (M9 §13): where the faces are sets, every picture of every set is as big as one of the largest set, so a
+    // set of one is never a big picture next to small ones (that would teach M-CNT-SIZE).
+    return SpriteGroup(svg: svg, count: f.count, arrangement: 'line', seed: f.count, lineSlots: most);
   }
 }

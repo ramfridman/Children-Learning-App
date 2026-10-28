@@ -30,6 +30,12 @@ abstract final class DevStrings {
   static const String listPacks = 'List installed packs';
   static const String engine = '6. Learning engine';
   static const String engineState = 'Show what the engine knows about each child';
+  static const String lessons = '7. Lessons';
+  static const String openLessons = 'Open any lesson';
+  static const String lessonsTitle = 'Open any lesson (dev only)';
+  static const String lessonsNote =
+      'Opens a lesson for the chosen child without playing the path to it. The answers are written for that child.';
+  static const String lessonsNoChild = 'Add a child in the parent area first.';
   static const String output = 'Output';
   static const String prodPlaceholder = 'Nitznutz';
   static const String configProblem = 'Build settings are missing or wrong';

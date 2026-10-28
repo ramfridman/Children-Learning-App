@@ -1,0 +1,28 @@
+{
+  "about": "What the gateway takes in the text fields of an answer (SEC-1). sync-push/handler.ts (DATA) and tutor-turn/handler.ts (OPTION) are tested equal to these in Deno; the app's constants (app/lib/play/response_code.dart) and the fake server of the sync tests read them in Dart. The examples are the longest codes the templates write; the Deno test pushes each one through the real sync-push.",
+  "attempt_fields": {
+    "activity_id": { "pattern": "^[a-z0-9][a-z0-9._-]{2,80}$", "max": 81 },
+    "pack_id": { "pattern": "^[a-z0-9-]{3,41}$", "max": 41 },
+    "pack_version": { "pattern": "^[0-9]{1,4}\\.[0-9]{1,4}\\.[0-9]{1,4}$", "max": 14 },
+    "lesson_id": { "pattern": "^[a-z0-9._-]{0,40}$", "max": 40 },
+    "template": { "pattern": "^[a-z_]{2,30}$", "max": 30 },
+    "template_version": { "pattern": "^[0-9.]{1,10}$", "max": 10 },
+    "skill_id": { "pattern": "^[A-Z]{2,5}-[A-C]-[0-9]{2}$", "max": 11 },
+    "misconception_tag": { "pattern": "^(M-[A-Z]{2,5}-[A-Z0-9]{2,12})?$", "max": 20 },
+    "response": { "pattern": "^[A-Za-z0-9=._-]{0,40}$", "max": 40 }
+  },
+  "tutor_option": "^[a-z0-9=-]{1,16}$",
+  "examples": {
+    "choice": "o2",
+    "give_n": "n=4",
+    "sort": "i1-b2",
+    "share": "b1=3.b2=1",
+    "pattern": "01010101",
+    "program": "uurrdllu",
+    "shape": "p9-s12",
+    "pairs": "t0-b4.t1-b3.t2-b2.t3-b1.t4-b0",
+    "clock": "12.30",
+    "shop": "1280000",
+    "trace": "direction"
+  }
+}

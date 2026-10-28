@@ -6,6 +6,7 @@ import '../child/activity_shell.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'response_code.dart';
 import 'template_session.dart';
 
 /// The tracing template (T04): a numeral or a shape is shown as a dotted path, and the child follows it with a finger. Each stroke
@@ -71,7 +72,7 @@ class TraceSession extends TemplateSession {
       _stopDemo();
       if (finished.length == activity.strokes.length) {
         _busy = true;
-        await controller.submitPlacement(right: true, response: 'trace');
+        await controller.submitPlacement(right: true, response: ResponseCode.traced);
         if (disposed) return;
         ring = AnswerState.correct;
         notify();
@@ -81,11 +82,21 @@ class TraceSession extends TemplateSession {
       }
       return;
     }
+    if (controller.guided) {
+      // The help is at its top: a wrong stroke is not counted again; the way is shown once more instead.
+      current = <Offset>[];
+      _walk();
+      return;
+    }
     final String tag = (onPath && !startsRight && startsAtEnd && activity.directionTag != null)
         ? activity.directionTag!
         : (activity.wrongTag ?? '');
     _busy = true;
-    await controller.submitPlacement(right: false, tag: tag, response: onPath ? 'direction' : 'off');
+    await controller.submitPlacement(
+      right: false,
+      tag: tag,
+      response: onPath ? ResponseCode.tracedBackwards : ResponseCode.tracedOff,
+    );
     if (disposed) return;
     ring = AnswerState.notYet;
     notify();
@@ -188,7 +199,9 @@ class TraceSession extends TemplateSession {
     listenable: this,
     builder: (BuildContext c, Widget? _) {
       final double side = math.min(size.width, size.height) - 6;
-      Offset toBox(Offset local) => local / side * 100;
+      // The finger is read and the path is drawn inside the border, on the same square.
+      final double inner = side - 2 * _border;
+      Offset toBox(Offset local) => local / inner * 100;
       return Semantics(
         container: true,
         label: activity.altText,
@@ -204,7 +217,7 @@ class TraceSession extends TemplateSession {
                 color: ring == AnswerState.correct
                     ? TokenColors.correctGlow
                     : (ring == AnswerState.notYet ? TokenColors.notYetRing : TokenColors.hairline),
-                width: 4,
+                width: _border,
               ),
             ),
             child: GestureDetector(
@@ -213,7 +226,7 @@ class TraceSession extends TemplateSession {
               onPanStart: (DragStartDetails d) => begin(toBox(d.localPosition)),
               onPanUpdate: (DragUpdateDetails d) => extend(toBox(d.localPosition)),
               onPanEnd: (DragEndDetails d) => end(),
-              child: CustomPaint(painter: _TracePainter(this), size: Size(side, side)),
+              child: CustomPaint(painter: _TracePainter(this), size: Size(inner, inner)),
             ),
           ),
         ),
@@ -223,6 +236,8 @@ class TraceSession extends TemplateSession {
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;
+
+  static const double _border = 4;
 }
 
 class _TracePainter extends CustomPainter {

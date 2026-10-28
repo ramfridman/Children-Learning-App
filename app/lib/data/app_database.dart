@@ -239,6 +239,14 @@ class AppDatabase extends _$AppDatabase {
 
   // ---- sync (M7b) ----
 
+  /// Written as `synced_at` of a row that the server refused on its own (SEC-1): the row is never sent again and never holds
+  /// up the rows after it, and it can still be told apart from a row that was sent (whose time is when it went), so that a
+  /// later version can send it again.
+  static final DateTime refusedBySync = DateTime.utc(1970);
+
+  /// The database gives times back in local time: compare the moment, not the value.
+  static bool wasRefusedBySync(DateTime? syncedAt) => syncedAt?.isAtSameMomentAs(refusedBySync) ?? false;
+
   /// Answers made on this device that have not been sent yet, oldest first.
   Future<List<Attempt>> unsyncedAttempts({int limit = 40}) =>
       (select(attempts)

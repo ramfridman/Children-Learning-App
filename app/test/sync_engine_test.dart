@@ -52,24 +52,31 @@ class Phone {
         ),
       );
 
-  Future<void> answer(String item, String result, {int? session, int minute = 0, int no = 1}) =>
-      db.recordAttempt(
-        AttemptsCompanion.insert(
-          at: DateTime.utc(2026, 11, 20, 10, minute),
-          profileId: kid,
-          packId: 'starter',
-          packVersion: '0.2.0',
-          activityId: item,
-          activityRevision: 1,
-          template: 'count_tap',
-          templateVersion: '1.0',
-          skillId: 'SK-A-01',
-          result: result,
-          attemptNo: no,
-          hintLevel: 0,
-          sessionId: Value<int?>(session),
-        ),
-      );
+  Future<void> answer(
+    String item,
+    String result, {
+    int? session,
+    int minute = 0,
+    int no = 1,
+    String response = '',
+  }) => db.recordAttempt(
+    AttemptsCompanion.insert(
+      at: DateTime.utc(2026, 11, 20, 10, minute),
+      profileId: kid,
+      packId: 'starter',
+      packVersion: '0.2.0',
+      activityId: item,
+      activityRevision: 1,
+      template: 'count_tap',
+      templateVersion: '1.0',
+      skillId: 'SK-A-01',
+      result: result,
+      attemptNo: no,
+      hintLevel: 0,
+      sessionId: Value<int?>(session),
+      response: Value<String>(response),
+    ),
+  );
 
   Future<int> visit({String reason = 'finished'}) async {
     final int id = await db.startSession(kid, DateTime.utc(2026, 11, 20, 10), plan: 'lesson:butterflies');
@@ -519,6 +526,107 @@ void main() {
         await p2.engine.syncOnce();
         expect(await p2.db.rewardsOf(kid), isEmpty);
         expect(await p1.db.rewardsOf(kid), isEmpty);
+      },
+    );
+  });
+
+  // SEC-1: the real sync-push refuses a whole batch when one answer has a field it will not take.
+  group('a row the server will not take', () {
+    late FakeFamilyServer strict;
+    late Phone s1;
+    late Phone s2;
+
+    setUp(() async {
+      strict = FakeFamilyServer(checksAnswers: true);
+      s1 = Phone(dev1, strict);
+      s2 = Phone(dev2, strict);
+      await s1.addChild();
+      await s1.engine.syncOnce();
+    });
+
+    tearDown(() async {
+      await s1.db.close();
+      await s2.db.close();
+    });
+
+    int pushes() => strict.calls.where((String c) => c == '$dev1:sync-push').length;
+
+    test('is sent once more on its own, then never again; the good rows of its batch and after it arrive', () async {
+      // The oldest row is the bad one, so it is in the first batch of every round (batches are 4 rows here).
+      await s1.answer('Not An Id', 'correct');
+      for (int i = 1; i <= 5; i++) {
+        await s1.answer('a.$i', 'correct', minute: i);
+      }
+      final int before = pushes();
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 5);
+      expect(r.refusedEvents, 1);
+      expect(
+        pushes() - before,
+        1 + 4 + 1,
+        reason: 'the refused batch, its four rows one by one, then the last two',
+      );
+      expect(
+        strict.log.map((Map<String, Object?> e) => (e['data']! as Map<String, Object?>)['activity_id']),
+        <String>['a.1', 'a.2', 'a.3', 'a.4', 'a.5'],
+      );
+      expect(await s1.db.unsyncedAttempts(limit: 100), isEmpty, reason: 'nothing is left to send');
+      final Attempt bad = (await s1.db.attemptsOf(kid))
+          .firstWhere((Attempt a) => a.activityId == 'Not An Id');
+      expect(AppDatabase.wasRefusedBySync(bad.syncedAt), isTrue, reason: 'marked as refused, not as sent');
+      expect(
+        (await s1.db.attemptsOf(kid))
+            .where((Attempt a) => a.syncedAt != null && !AppDatabase.wasRefusedBySync(a.syncedAt))
+            .length,
+        5,
+        reason: 'the good ones are marked as sent',
+      );
+
+      final int again = pushes();
+      await s1.answer('a.6', 'correct', minute: 9);
+      await s1.engine.syncOnce();
+      await s1.engine.syncOnce();
+      expect(pushes() - again, 1, reason: 'only the new row goes, once: the refused one never comes back');
+      expect(strict.log.length, 6);
+      await s2.engine.syncOnce();
+      expect((await s2.db.attemptsOf(kid)).length, 6, reason: 'the other phone has every good answer');
+    });
+
+    test(
+      'a failure during the one-by-one retry marks nothing as refused and leaves the rest for the next round',
+      () async {
+        await s1.answer('Not An Id', 'correct');
+        await s1.answer('a.1', 'correct', minute: 1);
+        await s1.answer('a.2', 'correct', minute: 2);
+        // The batch and the bad row are refused before anything is done, so the answer lost is that of the first good row.
+        strict.loseAnswerOf = 'sync-push';
+        final SyncReport first = await s1.engine.syncOnce();
+        expect(first.refusedEvents, 0);
+        expect(
+          (await s1.db.unsyncedAttempts()).length,
+          3,
+          reason: 'the round stopped: everything is still to send',
+        );
+        final SyncReport second = await s1.engine.syncOnce();
+        expect(second.refusedEvents, 1);
+        expect(await s1.db.unsyncedAttempts(), isEmpty);
+        expect(strict.log.length, 2, reason: 'the row taken before the lost answer is not doubled');
+      },
+    );
+
+    test(
+      'an answer written by an older version with a code outside the pattern goes without its code',
+      () async {
+        await s1.answer('x.mathb15.1', 'incorrect', response: '3:30');
+        await s1.answer('b.logb08.1', 'incorrect', response: 'i1>b2', minute: 1);
+        await s1.answer('a.1', 'correct', response: 'o2', minute: 2);
+        final SyncReport r = await s1.engine.syncOnce();
+        expect(r.pushedEvents, 3);
+        expect(r.refusedEvents, 0);
+        expect(
+          strict.log.map((Map<String, Object?> e) => (e['data']! as Map<String, Object?>)['response']),
+          <String>['', '', 'o2'],
+        );
       },
     );
   });

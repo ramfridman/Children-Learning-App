@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
@@ -44,6 +46,8 @@ class ShopPaySession extends TemplateSession {
 
   int get total =>
       onCounter.fold(0, (int sum, String id) => sum + purse.firstWhere((PurseCoin c) => c.id == id).value);
+
+  String kindOf(String id) => purse.firstWhere((PurseCoin c) => c.id == id).kind;
 
   void toggle(String id) {
     if (_busy || ring == AnswerState.correct) return;
@@ -185,14 +189,18 @@ class CoinFace extends StatelessWidget {
     required this.svg,
     this.onTap,
     this.hinted = false,
-    this.small = false,
+    this.scale = 1,
   });
 
   final String kind;
   final String svg;
   final VoidCallback? onTap;
   final bool hinted;
-  final bool small;
+
+  /// The same for every coin of a row, so that the coins keep their real sizes to each other.
+  final double scale;
+
+  static const double _pad = 3;
 
   /// The real size of each, in millimetres (the width of a note; coins are round): the half shekel is the biggest coin and the shekel the
   /// smallest, as in a purse.
@@ -222,12 +230,46 @@ class CoinFace extends StatelessWidget {
     'n200': He.noteN200Semantics.text,
   };
 
+  /// The picture's own size (a note is 71 mm high, a coin is round), without the room around it.
+  static Size faceOf(String kind, {double scale = 1}) {
+    final bool note = kind.startsWith('n');
+    final double w = _mm[kind]! * (note ? 0.62 : 2.4) * scale;
+    return Size(w, note ? w * 71 / _mm[kind]! : w);
+  }
+
+  /// The largest scale, at most [most], at which [kinds] fit in [room] in rows (as a [Wrap] without spacing lays them out).
+  static double fitScale(List<String> kinds, Size room, {double most = 0.8}) {
+    double k = most;
+    while (k > 0.25 && _rowsHeight(kinds, room.width, k) > room.height) {
+      k -= 0.05;
+    }
+    return k;
+  }
+
+  static double _rowsHeight(List<String> kinds, double width, double k) {
+    double rowWidth = 0;
+    double rowHeight = 0;
+    double total = 0;
+    for (final String kind in kinds) {
+      final Size f = faceOf(kind, scale: k);
+      final double cw = f.width + 2 * _pad;
+      final double ch = f.height + 2 * _pad;
+      // Half a point to spare, so that rounding never puts a coin on a row the count here did not expect.
+      if (rowWidth > 0 && rowWidth + cw > width - 0.5) {
+        total += rowHeight;
+        rowWidth = 0;
+        rowHeight = 0;
+      }
+      rowWidth += cw;
+      rowHeight = math.max(rowHeight, ch);
+    }
+    return total + rowHeight;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double k = small ? 0.8 : 1;
     final bool note = kind.startsWith('n');
-    final double w = _mm[kind]! * (note ? 0.62 : 2.4) * k;
-    final double h = note ? w * 71 / _mm[kind]! : w;
+    final Size face = faceOf(kind, scale: scale);
     return Semantics(
       button: onTap != null,
       label: _label[kind],
@@ -235,10 +277,10 @@ class CoinFace extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Padding(
-          padding: const EdgeInsets.all(3),
+          padding: const EdgeInsets.all(_pad),
           child: Container(
-            width: w,
-            height: h,
+            width: face.width,
+            height: face.height,
             decoration: hinted
                 ? BoxDecoration(
                     shape: note ? BoxShape.rectangle : BoxShape.circle,
@@ -325,21 +367,27 @@ class _Counter extends StatelessWidget {
                     ),
                   ),
                   padding: const EdgeInsets.all(4),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: <Widget>[
-                      for (final String id in s.onCounter)
-                        CoinFace(
-                          key: Key('on-$id'),
-                          kind: s.purse.firstWhere((PurseCoin c) => c.id == id).kind,
-                          svg: a.assets.svg(
-                            'asset:${coinSprites[s.purse.firstWhere((PurseCoin c) => c.id == id).kind]}',
-                          ),
-                          small: true,
-                          onTap: () => s.toggle(id),
-                        ),
-                    ],
+                  // However many coins are paid, all of them stay on the counter where they can be taken back (QA-4): the
+                  // coins get smaller together when another row would not fit.
+                  child: LayoutBuilder(
+                    builder: (BuildContext c, BoxConstraints room) {
+                      final List<String> kinds = <String>[for (final String id in s.onCounter) s.kindOf(id)];
+                      final double k = CoinFace.fitScale(kinds, room.biggest);
+                      return Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          for (final String id in s.onCounter)
+                            CoinFace(
+                              key: Key('on-$id'),
+                              kind: s.kindOf(id),
+                              svg: a.assets.svg('asset:${coinSprites[s.kindOf(id)]}'),
+                              scale: k,
+                              onTap: () => s.toggle(id),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),

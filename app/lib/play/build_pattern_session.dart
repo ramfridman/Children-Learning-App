@@ -8,6 +8,7 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'lesson_controller.dart';
+import 'response_code.dart';
 import 'template_session.dart';
 
 /// The build-a-pattern template (T05): the pattern to copy is shown above, empty places below, and the pictures to put in
@@ -66,7 +67,9 @@ class BuildPatternSession extends TemplateSession {
     final Outcome o = await controller.submitPlacement(
       right: right,
       tag: right ? '' : (activity.wrongTag ?? ''),
-      response: filled.map((String? f) => f?.replaceFirst('asset:', '') ?? '-').join(','),
+      response: ResponseCode.pattern(<int?>[
+        for (final String? f in filled) f == null ? null : activity.palette.indexOf(f),
+      ]),
     );
     if (disposed) return;
     if (o.correct) {

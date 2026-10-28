@@ -26,6 +26,8 @@ interface Body {
 
 const ref = { t: "string", max: 64, pattern: /^[A-Za-z0-9-]{8,64}$/ } as const;
 const id = (max: number) => ({ t: "string", max, pattern: /^[a-z0-9][a-z0-9._-]{0,63}$/ }) as const;
+/** What a device may say it chose: an option id or a short code (mirrored in `testvectors/wire-patterns.json`). */
+export const OPTION = /^[a-z0-9=-]{1,16}$/;
 const mistake = { t: "string", max: 20, pattern: /^(default|M-[A-Z]{2,5}-[A-Z0-9]{2,12})$/ } as const;
 
 export const spec: FunctionSpec = {
@@ -49,7 +51,7 @@ export const spec: FunctionSpec = {
       of: {
         t: "object",
         shape: {
-          option: { t: "string", max: 16, pattern: /^[a-z0-9=-]{1,16}$/ },
+          option: { t: "string", max: 16, pattern: OPTION },
           result: { t: "enum", values: ["incorrect", "unsure"] },
           misconception: { t: "string", max: 20, pattern: /^M-[A-Z]{2,5}-[A-Z0-9]{2,12}$/, optional: true },
         },

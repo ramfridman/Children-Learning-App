@@ -7,6 +7,7 @@ import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'response_code.dart';
 import 'template_session.dart';
 
 /// The clock template (T18): set the hands of an analog clock to a time. The short thick hand is the hour hand: the child drags
@@ -71,7 +72,11 @@ class ClockSetSession extends TemplateSession {
       final bool handsSwapped = !activity.half && activity.hour != 12 && hour == 12 && !half;
       tag = (handsSwapped && activity.handsTag != null) ? activity.handsTag! : (activity.wrongTag ?? '');
     }
-    await controller.submitPlacement(right: right, tag: tag, response: '$hour${half ? ':30' : ':00'}');
+    await controller.submitPlacement(
+      right: right,
+      tag: tag,
+      response: ResponseCode.clock(hour, half: half),
+    );
     if (disposed) return;
     if (right) {
       ring = AnswerState.correct;

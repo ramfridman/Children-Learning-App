@@ -69,6 +69,25 @@ void main() {
       expect(r.durationMs, 4200);
     });
 
+    test(
+      'during the praise the lamp and "not sure" do nothing: the praise stays, nothing is written (QA-5)',
+      () async {
+        final LessonController c = make(start: 1);
+        await c.chooseOption('o2');
+        final String praise = c.bubble;
+        final int moves = c.actionNonce;
+        c.showHint();
+        await c.unsure();
+        expect(written.map((AttemptRecord r) => r.result), <String>['correct']);
+        expect(c.bubble, praise);
+        expect(c.hintLevel, 0);
+        expect(c.actionNonce, moves, reason: 'not a move: a praise line waiting to be said is not dropped');
+        c.next();
+        c.showHint();
+        expect(c.hintLevel, 1, reason: 'the next activity takes help again');
+      },
+    );
+
     test('moves on, and after the fifth activity the lesson ends with the celebration', () async {
       final LessonController c = make();
       for (int i = 0; i < 4; i++) {

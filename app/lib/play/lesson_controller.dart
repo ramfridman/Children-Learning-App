@@ -8,6 +8,7 @@ import '../core/clock.dart';
 import '../core/log.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
+import 'response_code.dart';
 
 /// What the tutor needs to know about the lesson: ids and enums only.
 class TutorContext {
@@ -155,6 +156,9 @@ class LessonController extends ChangeNotifier {
   /// True once the worked example has been shown: the child now makes the last move (the right one).
   bool guided = false;
 
+  /// The activity was answered right and only waits for the praise to end: no help and no "not sure" is taken for it now.
+  bool solved = false;
+
   FeedbackKind feedback = FeedbackKind.none;
 
   /// The line in the guide's bubble, the voice line (`vo:...`) that goes with it, and a counter that changes
@@ -287,6 +291,7 @@ class LessonController extends ChangeNotifier {
     errors = 0;
     hintLevel = 0;
     guided = false;
+    solved = false;
     feedback = FeedbackKind.none;
     hintAction = null;
     _recent.clear();
@@ -323,6 +328,8 @@ class LessonController extends ChangeNotifier {
 
   /// The lamp: the next hint, never forced.
   void showHint() {
+    // During the praise a touch is not a move: the praise is not cut and nothing is written.
+    if (solved) return;
     actionNonce++;
     if (finished || current.hints.isEmpty) return;
     _applyHint(math.min(hintLevel + 1, current.hints.length));
@@ -341,6 +348,7 @@ class LessonController extends ChangeNotifier {
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)
   /// and welcomed with the next hint.
   Future<void> unsure() async {
+    if (solved) return;
     actionNonce++;
     if (finished) return;
     await _write(result: 'unsure', tag: '', response: '');
@@ -395,7 +403,7 @@ class LessonController extends ChangeNotifier {
       final String word = taken == a.sourceCount ? 'took_all' : (taken > a.n ? 'took_more' : 'took_fewer');
       tag = a.classifiers[word] ?? '';
     }
-    return _answered(right: right, tag: tag, response: 'n=$taken');
+    return _answered(right: right, tag: tag, response: ResponseCode.count(taken));
   }
 
   Future<Outcome> _answered({
@@ -409,6 +417,7 @@ class LessonController extends ChangeNotifier {
     if (right) {
       await _write(result: 'correct', tag: tag, response: response, byVoice: byVoice);
       attemptNo++;
+      solved = true;
       feedback = FeedbackKind.correct;
       _say(a.feedback.correct);
       notifyListeners();
@@ -418,7 +427,10 @@ class LessonController extends ChangeNotifier {
     attemptNo++;
     errors++;
     feedback = FeedbackKind.notYet;
-    _recent.add(TutorAttempt(response, 'incorrect', misconception: tag.isEmpty ? null : tag));
+    // The helper takes a shorter code than the sync does: one that does not fit is told as a plain move.
+    _recent.add(
+      TutorAttempt(ResponseCode.tutorOption(response), 'incorrect', misconception: tag.isEmpty ? null : tag),
+    );
     if (_recent.length > 3) _recent.removeAt(0);
     final bool first = errors == 1 || a.hints.isEmpty;
     final String mistake = tag.isEmpty ? 'default' : tag;

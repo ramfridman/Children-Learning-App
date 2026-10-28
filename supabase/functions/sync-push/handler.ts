@@ -16,8 +16,11 @@ export const AWARD_KEY =
 const ms = { t: "int", min: 1_500_000_000_000, max: 4_100_000_000_000 } as const;
 const word = (re: RegExp, max: number) => ({ t: "string", max, pattern: re, optional: true }) as const;
 
-/** Every field an event may carry; which ones it must carry depends on its type (checked in `run`). */
-const DATA = {
+/**
+ * Every field an event may carry; which ones it must carry depends on its type (checked in `run`). The text fields of an
+ * answer are mirrored in `testvectors/wire-patterns.json`, which the app is tested against (SEC-1).
+ */
+export const DATA = {
   // attempt
   activity_id: word(/^[a-z0-9][a-z0-9._-]{2,80}$/, 81),
   activity_revision: { t: "int", min: 0, max: 100_000, optional: true },

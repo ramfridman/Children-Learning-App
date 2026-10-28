@@ -65,6 +65,22 @@ void main() {
       expect(groupLayout('scatter', 6, seed: 9).centers, isNot(groupLayout('scatter', 6, seed: 10).centers));
     });
 
+    test(
+      'a line keeps room for four, or for as many as the largest group shown with it (match pairs, QA-3)',
+      () {
+        expect(groupLayout('line', 1).cellWidth, 1 / 4);
+        expect(groupLayout('line', 3).cellWidth, 1 / 4);
+        expect(groupLayout('line', 1, lineSlots: 3).cellWidth, 1 / 3);
+        expect(groupLayout('line', 3, lineSlots: 3).cellWidth, 1 / 3);
+        expect(groupLayout('line', 1, lineSlots: 3).centers, <Offset>[const Offset(0.5, 0.5)]);
+        final List<Offset> three = groupLayout('line', 3, lineSlots: 3).centers;
+        expect(
+          three.map((Offset p) => p.dx),
+          <double>[1 / 6, 0.5, 5 / 6].map((double x) => closeTo(x, 1e-9)),
+        );
+      },
+    );
+
     test('the room per thing stays positive', () {
       expect(
         math.min(groupLayout('line', 10).cellWidth, groupLayout('ten_frame', 10).cellWidth),

@@ -6,6 +6,7 @@ import '../child/activity_shell.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'response_code.dart';
 import 'template_session.dart';
 
 /// The shape-builder template (T10). A picture made of shapes stands on the stage as silhouettes; the shapes wait in the tray
@@ -72,7 +73,7 @@ class ShapeBuilderSession extends TemplateSession {
     await controller.submitPlacement(
       right: false,
       tag: activity.wrongTag ?? '',
-      response: '${pieces[piece]}>$slotId',
+      response: ResponseCode.shapeMove(piece, slotId),
     );
     if (disposed) return;
     later(TemplateSession.notYetPause, () {
@@ -86,7 +87,7 @@ class ShapeBuilderSession extends TemplateSession {
 
   Future<void> _done() async {
     _busy = true;
-    await controller.submitPlacement(right: true, response: 'built');
+    await controller.submitPlacement(right: true, response: ResponseCode.built);
     if (disposed) return;
     ring = AnswerState.correct;
     notify();

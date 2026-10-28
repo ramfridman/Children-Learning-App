@@ -4,8 +4,11 @@ import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
 
+import '../core/errors.dart';
+import '../core/log.dart';
 import '../data/app_database.dart';
 import '../parent/parent_rules.dart';
+import '../play/response_code.dart';
 import '../rewards/ribbons.dart';
 
 /// One call to a gateway function, already signed and with the device's own id and token filled in.
@@ -34,6 +37,21 @@ class SyncReport {
   final int pushedAlerts;
   final int pulledAlerts;
   final bool rulesApplied;
+}
+
+/// What one `sync-push` (or the one-by-one retry of a refused batch) did: events taken or already there, events the server
+/// refused by id (a child it does not know), and events it would not take at all ([rejected], by event id).
+class _Sent {
+  const _Sent({this.pushed = 0, this.refused = 0, this.rejected = const <String>{}});
+
+  _Sent.of(Map<String, Object?> answer)
+    : pushed = (answer['accepted'] as int? ?? 0) + (answer['duplicates'] as int? ?? 0),
+      refused = (answer['refused'] as List<Object?>? ?? const <Object?>[]).length,
+      rejected = const <String>{};
+
+  final int pushed;
+  final int refused;
+  final Set<String> rejected;
 }
 
 /// Keeps this device and the family's other devices in step (PLAN: Sync rules).
@@ -220,7 +238,8 @@ class SyncEngine {
       'attempt_no': a.attemptNo,
       'hint_level': a.hintLevel,
       'misconception_tag': a.misconceptionTag,
-      'response': a.response,
+      // A code an older version wrote outside the server's pattern (SEC-1) goes without it: the answer itself still counts.
+      'response': ResponseCode.fits(a.response) ? a.response : '',
       'duration_ms': a.durationMs,
       'input': a.input,
       'session_local': ?a.sessionId,
@@ -273,37 +292,67 @@ class SyncEngine {
         for (final Session x in s) _sessionEvent(x),
         for (final Reward x in w) _rewardEvent(x),
       ].take(batch).toList();
-      if (events.isNotEmpty) {
-        final Map<String, Object?> answer = await call('sync-push', <String, Object?>{'events': events});
-        refused += (answer['refused'] as List<Object?>? ?? const <Object?>[]).length;
-        pushed += (answer['accepted'] as int? ?? 0) + (answer['duplicates'] as int? ?? 0);
-      }
-      // Sent, or refused (the server does not know the child): either way not sent again.
+      final _Sent sent = events.isEmpty ? const _Sent() : await _send(events);
+      pushed += sent.pushed;
+      refused += sent.refused + sent.rejected.length;
+      // Sent, or refused (the server does not know the child, or would not take the row): either way not sent again.
       final Set<String> inThisCall = <String>{
         for (final Map<String, Object?> e in events) e['id']! as String,
       };
+      List<int> went(String kind, Iterable<int> ids, {bool rejected = false}) => <int>[
+        for (final int id in ids)
+          if (inThisCall.contains(eventIdOf(deviceId, kind, id)) &&
+              sent.rejected.contains(eventIdOf(deviceId, kind, id)) == rejected)
+            id,
+      ];
       final DateTime at = _now;
-      await db.markAttemptsSynced(<int>[
-        ...a
-            .where((Attempt x) => inThisCall.contains(eventIdOf(deviceId, 'attempt', x.id)))
-            .map((Attempt x) => x.id),
-        ...dropA.map((Attempt x) => x.id),
-      ], at);
-      await db.markSessionsSynced(<int>[
-        ...s
-            .where((Session x) => inThisCall.contains(eventIdOf(deviceId, 'session', x.id)))
-            .map((Session x) => x.id),
-        ...dropS.map((Session x) => x.id),
-      ], at);
-      await db.markRewardsSynced(<int>[
-        ...w
-            .where((Reward x) => inThisCall.contains(eventIdOf(deviceId, 'reward', x.id)))
-            .map((Reward x) => x.id),
-        ...dropW.map((Reward x) => x.id),
-      ], at);
+      final Iterable<int> aIds = a.map((Attempt x) => x.id);
+      final Iterable<int> sIds = s.map((Session x) => x.id);
+      final Iterable<int> wIds = w.map((Reward x) => x.id);
+      await db.markAttemptsSynced(<int>[...went('attempt', aIds), ...dropA.map((Attempt x) => x.id)], at);
+      await db.markSessionsSynced(<int>[...went('session', sIds), ...dropS.map((Session x) => x.id)], at);
+      await db.markRewardsSynced(<int>[...went('reward', wIds), ...dropW.map((Reward x) => x.id)], at);
+      if (sent.rejected.isNotEmpty) {
+        final DateTime never = AppDatabase.refusedBySync;
+        await db.markAttemptsSynced(went('attempt', aIds, rejected: true), never);
+        await db.markSessionsSynced(went('session', sIds, rejected: true), never);
+        await db.markRewardsSynced(went('reward', wIds, rejected: true), never);
+      }
       if (events.isEmpty && dropA.isEmpty && dropS.isEmpty && dropW.isEmpty) break;
     }
     return (pushed: pushed, refused: refused);
+  }
+
+  /// Sends [events] in one call. When the server refuses the call as a whole (`bad_request`: one event it will not take
+  /// refuses the batch), they are sent again one by one, so that the good ones get in and the one it will not take is known
+  /// by its id. Any other failure (no network, the server down) is thrown: everything stays for the next round.
+  Future<_Sent> _send(List<Map<String, Object?>> events) async {
+    try {
+      return _Sent.of(await call('sync-push', <String, Object?>{'events': events}));
+    } on GatewayException catch (e) {
+      if (e.code != 'bad_request') rethrow;
+    }
+    int pushed = 0;
+    int refused = 0;
+    final Set<String> rejected = <String>{};
+    for (final Map<String, Object?> e in events) {
+      try {
+        final _Sent one = _Sent.of(
+          await call('sync-push', <String, Object?>{
+            'events': <Map<String, Object?>>[e],
+          }),
+        );
+        pushed += one.pushed;
+        refused += one.refused;
+      } on GatewayException catch (x) {
+        if (x.code != 'bad_request') rethrow;
+        rejected.add(e['id']! as String);
+      }
+    }
+    if (rejected.isNotEmpty) {
+      Log.d('sync: ${rejected.length} of ${events.length} events refused by the server');
+    }
+    return _Sent(pushed: pushed, refused: refused, rejected: rejected);
   }
 
   // ---- alerts and the family's rules ----

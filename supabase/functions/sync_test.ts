@@ -16,7 +16,8 @@ import {
 import { spec as childDelete } from "./child-delete/handler.ts";
 import { spec as childPut } from "./child-put/handler.ts";
 import { PULL_LIMIT, spec as syncPull } from "./sync-pull/handler.ts";
-import { PUSHES_PER_HOUR_PER_DEVICE, spec as syncPush } from "./sync-push/handler.ts";
+import { DATA, PUSHES_PER_HOUR_PER_DEVICE, spec as syncPush } from "./sync-push/handler.ts";
+import { OPTION } from "./tutor-turn/handler.ts";
 
 const NOON = 1_790_000_000_000;
 const KID = "child-aaaa-0001";
@@ -285,6 +286,47 @@ Deno.test("sync-push: only ids, numbers and fixed words get in: no free text, no
     0,
     "none got in",
   );
+});
+
+Deno.test("sync-push: the app's answer codes fit (testvectors/wire-patterns.json), and the codes that stopped a sync do not", async () => {
+  // The app is tested against the same file (app/test/response_contract_test.dart, the fake server of the sync tests).
+  const v = JSON.parse(
+    await Deno.readTextFile(new URL("../../testvectors/wire-patterns.json", import.meta.url)),
+  ) as {
+    attempt_fields: Record<string, { pattern: string; max: number }>;
+    tutor_option: string;
+    examples: Record<string, string>;
+  };
+  const fields = DATA as unknown as Record<string, { pattern?: RegExp; max: number }>;
+  for (const [key, f] of Object.entries(v.attempt_fields)) {
+    assert.equal(fields[key]?.pattern?.source, f.pattern, key);
+    assert.equal(fields[key]?.max, f.max, key);
+  }
+  assert.equal(OPTION.source, v.tutor_option);
+
+  const { h, parent, child, profile, attempt, j } = await setup();
+  await call(h.put, parent, "child-put", profile());
+  const events = Object.values(v.examples).map((response) => attempt({ response }));
+  const pushed = await j(await call(h.push, child, "sync-push", { events }));
+  assert.equal(pushed.accepted, events.length, "every template's longest code gets in");
+  // What the M9 templates wrote before SEC-1: each one refused the whole batch it was in.
+  for (
+    const old of [
+      "3:30",
+      "i1>b2",
+      "b1=3,b2=3",
+      "up,up,right",
+      "asset:shape_x>s1",
+      "a=x,b=y",
+      "ball_red,ball_blue",
+    ]
+  ) {
+    assert.equal(
+      (await call(h.push, child, "sync-push", { events: [attempt({ response: old })] })).status,
+      400,
+      old,
+    );
+  }
 });
 
 Deno.test("sync-push: a device can only send a limited number of times an hour", async () => {

@@ -2,8 +2,30 @@
 // family, a log numbered by the server, profiles with nicknames, tombstones, duplicates ignored, unknown or deleted
 // children refused. Devices call it through [callFor], which can be made to fail or to lose its answer.
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:nitznutz/core/errors.dart';
+
+/// The text fields of an answer as `sync-push` takes them (`testvectors/wire-patterns.json`, tested equal to the server).
+final Map<String, ({RegExp pattern, int max})> _attemptFields = () {
+  final Map<String, Object?> v =
+      jsonDecode(File('../testvectors/wire-patterns.json').readAsStringSync()) as Map<String, Object?>;
+  return <String, ({RegExp pattern, int max})>{
+    for (final MapEntry<String, Object?> e in (v['attempt_fields']! as Map<String, Object?>).entries)
+      e.key: (
+        pattern: RegExp((e.value! as Map<String, Object?>)['pattern']! as String),
+        max: (e.value! as Map<String, Object?>)['max']! as int,
+      ),
+  };
+}();
 
 class FakeFamilyServer {
+  FakeFamilyServer({this.checksAnswers = false});
+
+  /// Refuses a whole `sync-push` with `bad_request` when one answer has a text field the real server would not take, as
+  /// the real one does.
+  final bool checksAnswers;
+
   final List<Map<String, Object?>> log = <Map<String, Object?>>[];
   final Map<String, Map<String, Object?>> children = <String, Map<String, Object?>>{};
   final List<String> tombstones = <String>[];
@@ -65,6 +87,7 @@ class FakeFamilyServer {
         if (!tombstones.contains(id)) tombstones.add(id);
         return <String, Object?>{'ok': true};
       case 'sync-push':
+        if (checksAnswers) _checkAnswers(body['events']! as List<Object?>);
         int accepted = 0;
         int duplicates = 0;
         final List<String> refused = <String>[];
@@ -114,5 +137,20 @@ class FakeFamilyServer {
         return <String, Object?>{'rules': rules, 'version': rulesVersion};
     }
     throw StateError('unknown function $name');
+  }
+
+  void _checkAnswers(List<Object?> events) {
+    for (final Object? raw in events) {
+      final Map<String, Object?> e = raw! as Map<String, Object?>;
+      if (e['type'] != 'attempt') continue;
+      final Map<String, Object?> d = e['data']! as Map<String, Object?>;
+      for (final MapEntry<String, ({RegExp pattern, int max})> f in _attemptFields.entries) {
+        final Object? v = d[f.key];
+        if (v == null) continue;
+        if (v is! String || v.length > f.value.max || !f.value.pattern.hasMatch(v)) {
+          throw const GatewayException('bad_request', status: 400);
+        }
+      }
+    }
   }
 }

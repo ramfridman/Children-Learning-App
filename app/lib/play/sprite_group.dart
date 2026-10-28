@@ -17,9 +17,12 @@ class GroupLayout {
 
 /// The ways to arrange a group: in a `line`, `scatter`ed on a loose grid, as the pips of a `dice`, or in a `ten_frame`
 /// (two rows of five, filled row by row). A group of 0 is empty.
+///
+/// A `line` has room for at least [lineSlots] pictures, so that groups of different sizes shown together have pictures of the
+/// same size: by default four, and the largest group's count where every group of a screen is drawn in one row of its own.
 const List<String> groupArrangements = <String>['line', 'scatter', 'dice', 'ten_frame'];
 
-GroupLayout groupLayout(String arrangement, int count, {int seed = 0}) {
+GroupLayout groupLayout(String arrangement, int count, {int seed = 0, int lineSlots = 4}) {
   if (count <= 0) return const GroupLayout(<Offset>[], 1, 1);
   switch (arrangement) {
     case 'dice':
@@ -51,9 +54,10 @@ GroupLayout groupLayout(String arrangement, int count, {int seed = 0}) {
       return GroupLayout(
         // A group of one or two is not drawn larger than a group of four: sizes must compare fairly.
         <Offset>[
-          for (int i = 0; i < count; i++) Offset(0.5 + (i - (count - 1) / 2) / math.max(count, 4), 0.5),
+          for (int i = 0; i < count; i++)
+            Offset(0.5 + (i - (count - 1) / 2) / math.max(count, lineSlots), 0.5),
         ],
-        1 / math.max(count, 4),
+        1 / math.max(count, lineSlots),
         1,
       );
   }
@@ -83,6 +87,7 @@ class SpriteGroup extends StatelessWidget {
     this.arrangement = 'line',
     this.seed = 0,
     this.scale = 1,
+    this.lineSlots = 4,
   });
 
   final String svg;
@@ -91,9 +96,12 @@ class SpriteGroup extends StatelessWidget {
   final int seed;
   final double scale;
 
+  /// See [groupLayout].
+  final int lineSlots;
+
   @override
   Widget build(BuildContext context) {
-    final GroupLayout layout = groupLayout(arrangement, count, seed: seed);
+    final GroupLayout layout = groupLayout(arrangement, count, seed: seed, lineSlots: lineSlots);
     return LayoutBuilder(
       builder: (BuildContext c, BoxConstraints box) {
         double w = box.maxWidth.isFinite ? box.maxWidth : 200;

@@ -8,6 +8,7 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'sprite_group.dart';
+import 'response_code.dart';
 import 'template_session.dart';
 
 /// The sort-and-drag template (T03). Pictures wait below the stage; the bins stand on the stage. A picture is dragged into
@@ -82,7 +83,11 @@ class SortDragSession extends TemplateSession {
     _busy = true;
     notYetBin = binId;
     notify();
-    await controller.submitPlacement(right: false, tag: activity.wrongTag ?? '', response: '$itemId>$binId');
+    await controller.submitPlacement(
+      right: false,
+      tag: activity.wrongTag ?? '',
+      response: ResponseCode.sortMove(itemId, binId),
+    );
     if (disposed) return;
     later(TemplateSession.notYetPause, () {
       notYetBin = null;
@@ -95,7 +100,7 @@ class SortDragSession extends TemplateSession {
 
   Future<void> _done() async {
     _busy = true;
-    await controller.submitPlacement(right: true, response: 'sorted');
+    await controller.submitPlacement(right: true, response: ResponseCode.sorted);
     if (disposed) return;
     ring = AnswerState.correct;
     notify();
@@ -112,7 +117,9 @@ class SortDragSession extends TemplateSession {
     await controller.submitPlacement(
       right: false,
       tag: activity.wrongTag ?? '',
-      response: <String>[for (final SortBin b in activity.bins) '${b.id}=${countIn(b.id)}'].join(','),
+      response: ResponseCode.share(<(String, int)>[
+        for (final SortBin b in activity.bins) (b.id, countIn(b.id)),
+      ]),
     );
     if (disposed) return;
     ring = AnswerState.notYet;

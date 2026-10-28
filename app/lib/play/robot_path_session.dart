@@ -8,6 +8,7 @@ import '../design/components.dart';
 import '../child/play_button.dart';
 import '../design/tokens.g.dart';
 import 'lesson_controller.dart';
+import 'response_code.dart';
 import 'template_session.dart';
 
 /// The robot-path template (T07). A robot stands on a small grid and the flag is somewhere else. In `direct` mode every arrow
@@ -121,7 +122,7 @@ class RobotPathSession extends TemplateSession {
     final int away = (pos.$1 - activity.goalAt.$1).abs() + (pos.$2 - activity.goalAt.$2).abs();
     // One square short or one square past is the off-by-one of counting the start square.
     final String tag = away == 1 ? (activity.wrongTag ?? '') : '';
-    await controller.submitPlacement(right: false, tag: tag, response: program.join(','));
+    await controller.submitPlacement(right: false, tag: tag, response: ResponseCode.program(program));
     if (disposed) return;
     ring = AnswerState.notYet;
     notify();
@@ -142,7 +143,7 @@ class RobotPathSession extends TemplateSession {
     _busy = true;
     final Outcome o = await controller.submitPlacement(
       right: true,
-      response: activity.plan ? program.join(',') : 'reached',
+      response: activity.plan ? ResponseCode.program(program) : ResponseCode.reached,
     );
     if (disposed || !o.correct) return;
     ring = AnswerState.correct;

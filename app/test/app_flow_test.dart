@@ -4,13 +4,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/child/profile_picker.dart';
+import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/parent/gate_screen.dart';
 import 'package:nitznutz/parent/parent_area.dart';
 import 'package:nitznutz/parent/pin_screens.dart';
 import 'package:nitznutz/parent/setup_flow.dart';
+import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/strings/he.dart';
+import 'package:nitznutz/ui/dev/dev_lessons_page.dart';
+import 'package:nitznutz/ui/dev/dev_strings.dart';
 
 import 'support/app_harness.dart';
 import 'support/fake_speech.dart';
@@ -416,6 +420,71 @@ void main() {
       await tester.pumpAndSettle();
       expect(rig.platform.secure, isFalse);
     });
+
+    testWidgets('dev flavour: the dev page opens any lesson for a child, here the clock (QA-10)', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig(dev: true);
+      await rig.seedFinishedSetup();
+      await rig.pump(tester);
+      await tester.tap(find.text('נועה'));
+      await tester.pumpAndSettle();
+      await _openAreaFromHome(tester, rig);
+      await tester.ensureVisible(find.textContaining(He.areaVersion.text));
+      await tester.longPress(find.textContaining(He.areaVersion.text));
+      await tester.pumpAndSettle();
+      expect(find.text(DevStrings.title), findsOneWidget);
+      final Finder open = find.byKey(const Key('dev-open-lessons'));
+      await tester.scrollUntilVisible(open, 300, scrollable: find.byType(Scrollable).first);
+      await tester.tap(open);
+      await tester.pumpAndSettle();
+      expect(find.byType(DevLessonsPage), findsOneWidget);
+      final Finder clock = find.byKey(const Key('dev-lesson-set-the-clock'));
+      await tester.scrollUntilVisible(clock, 300, scrollable: find.byType(Scrollable).first);
+      await tester.tap(clock);
+      for (int i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(find.byType(LessonScreen), findsOneWidget);
+      expect(
+        find.byKey(const Key('clock-face')),
+        findsOneWidget,
+        reason: 'the lesson opened on its first activity',
+      );
+      await tester.tap(find.byKey(const Key('activity-home')));
+      for (int i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(find.byType(DevLessonsPage), findsOneWidget, reason: 'home goes back to the list');
+    });
+
+    testWidgets('prod flavour: the lesson list shows no lesson even if it were reached', (
+      WidgetTester tester,
+    ) async {
+      final AppRig rig = AppRig();
+      await rig.seedFinishedSetup();
+      await rig.pump(tester);
+      final BuildContext context = tester.element(find.byType(Navigator).first);
+      Navigator.of(context)
+          .push(MaterialPageRoute<void>(builder: (BuildContext c) => const DevLessonsPage()));
+      await tester.pumpAndSettle();
+      expect(find.text(DevStrings.prodPlaceholder), findsOneWidget);
+      expect(find.byType(ListTile), findsNothing);
+      expect(find.text(DevStrings.openLessons), findsNothing);
+    });
+
+    test(
+      'the lesson list holds every lesson of the pack once, by land and band, with its templates',
+      () async {
+        final PackContent content = await loadStarter();
+        final List<DevLessonRow> rows = devLessonRows(content);
+        expect(rows.map((DevLessonRow r) => r.lesson.id).toSet(), content.lessons.keys.toSet());
+        expect(rows.length, content.lessons.length);
+        final DevLessonRow clock = rows.firstWhere((DevLessonRow r) => r.lesson.id == 'set-the-clock');
+        expect(clock.templates, <String>['clock_set']);
+        expect(clock.band, 'B');
+      },
+    );
   });
 
   group('layouts: every screen fits every reference device without overflow', () {

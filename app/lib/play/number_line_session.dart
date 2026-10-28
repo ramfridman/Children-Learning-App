@@ -163,6 +163,10 @@ class _LineStage extends StatelessWidget {
     final NumberLineActivity a = s.activity;
     final double lineY = size.height * 0.66;
     final double marker = math.min(size.height * 0.5, 52);
+    // Before it stands on a number (place mode) the marker waits in the top left corner, on the stage and clearly off the
+    // line (QA-6), a little smaller; it hops onto the tick the child touches.
+    final bool waiting = s.markerAt == null;
+    final double side = waiting ? marker * 0.8 : marker;
     return Semantics(
       container: true,
       label: a.altText,
@@ -202,10 +206,10 @@ class _LineStage extends StatelessWidget {
                       key: const Key('line-marker'),
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeInOut,
-                      left: (s.markerAt == null ? _x(a.from) - marker * 1.5 : _x(s.markerAt!)) - marker / 2,
-                      top: lineY - marker - 10,
-                      width: marker,
-                      height: marker,
+                      left: waiting ? 4 : _x(s.markerAt!) - marker / 2,
+                      top: waiting ? 4 : lineY - marker - 10,
+                      width: side,
+                      height: side,
                       child: PackSvg(a.assets.svg(a.markerSprite)),
                     ),
                   ],

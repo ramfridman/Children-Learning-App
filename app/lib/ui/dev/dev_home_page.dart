@@ -20,6 +20,7 @@ import '../../device/device_key_service.dart';
 import '../../device/enrolment_service.dart';
 import '../../device/secure_store.dart';
 import '../../tutor/tutor.dart';
+import 'dev_lessons_page.dart';
 import 'dev_strings.dart';
 
 /// Plain screens for testing the device chain on a real phone: sign in, enrol, pair, signed calls.
@@ -371,6 +372,17 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
             ),
             _heading(DevStrings.engine),
             _button(DevStrings.engineState, _engineState),
+            _heading(DevStrings.lessons),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: FilledButton(
+                key: const Key('dev-open-lessons'),
+                onPressed: () =>
+                    Navigator.of(context)
+                        .push(MaterialPageRoute<void>(builder: (BuildContext c) => const DevLessonsPage())),
+                child: const Text(DevStrings.openLessons),
+              ),
+            ),
             _heading(DevStrings.output),
             for (final String line in _lines)
               Padding(padding: const EdgeInsets.only(bottom: 8), child: SelectableText(line)),
