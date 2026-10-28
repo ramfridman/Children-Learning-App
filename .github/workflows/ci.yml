@@ -102,7 +102,10 @@ jobs:
   app:
     name: app (Flutter analyze, tests, Android debug build)
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    # Measured on run 40760468617 (pack 0.8.0, 3.5 MB): setup to analyze about 1 min; the test step's critical path is
+    # one file, starter_pack_test.dart, whose every-31st-byte test alone took about 20 min; the debug build about 4 min.
+    # See docs/setup/ci-m9.md before raising this again.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -111,6 +114,9 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          # Gradle's downloads (wrapper and dependencies), keyed on the hash of the Gradle files (the action's default
+          # patterns match app/android/**). Only pushes by the repository's collaborators run this workflow.
+          cache: gradle
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
@@ -128,7 +134,15 @@ jobs:
       - name: Test
         if: ${{ !cancelled() }}
         working-directory: app
-        run: bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test
+        # package:test runs half as many files at once as there are cores (2 on this 4-core runner); use all of them, as
+        # a local run already does (8 at once on a 16-core PC). The JSON file is read by the next step.
+        run: >
+          bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test --concurrency="$(nproc)"
+          --file-reporter "json:${RUNNER_TEMP}/flutter-test.json"
+      - name: Where the test time went (job summary)
+        if: always()
+        working-directory: app
+        run: python3 ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
       - name: Build the dev flavour (debug APK)
         if: ${{ !cancelled() }}
         working-directory: app

@@ -88,6 +88,8 @@ You need four values. Three are made now; the fourth is a new Supabase secret ke
 
 ## 5. Deploy the functions
 
+**Deploy order (SEC-12).** Deploy the gateway functions first, from `main`, and only in a way that keeps what an installed app may still send (new fields optional, patterns and enums only wider). To narrow anything, release the app first and the server later. A server that suddenly refuses what the app sends makes the app mark its unsent answers as refused.
+
 ```powershell
 npx supabase functions deploy --use-api
 ```
