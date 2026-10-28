@@ -11,6 +11,7 @@ import 'package:nitznutz/strings/he.dart';
 import 'support/app_harness.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
+import 'support/voice_fixtures.dart';
 
 /// Lets timers of the stage and the pauses between moves run, then draws.
 Future<void> wait(WidgetTester t, [int ms = 2000]) async {
@@ -291,7 +292,8 @@ void main() {
   testWidgets('the congratulation for a right answer is heard to its end before the next question is read', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = AppRig();
+    // A line ends only when the test says so, to see the next one wait for it.
+    final AppRig rig = AppRig(player: FakePlayer());
     await rig.seedFinishedSetup();
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));

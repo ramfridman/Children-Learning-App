@@ -21,6 +21,11 @@ class FakePlayer implements VoicePlayer {
 
   /// The sound is audible now: a play that has started and has not been stopped.
   bool playing = false;
+
+  /// When set, a line ends by itself this long after it started, like real sound (the lesson tests use it, so that lines
+  /// wait for each other as they do on a phone).
+  Duration? endsAfter;
+  Timer? _ending;
   final StreamController<void> _done = StreamController<void>.broadcast();
 
   @override
@@ -31,6 +36,9 @@ class FakePlayer implements VoicePlayer {
     at = Duration.zero;
     if (holdPlay != null) await holdPlay!.future;
     playing = true;
+    _ending?.cancel();
+    final Duration? after = endsAfter;
+    if (after != null) _ending = Timer(after, finish);
   }
 
   @override
@@ -46,6 +54,7 @@ class FakePlayer implements VoicePlayer {
 
   @override
   Future<void> stop() async {
+    _ending?.cancel();
     stops++;
     at = null;
     playing = false;

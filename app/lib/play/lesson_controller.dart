@@ -163,7 +163,12 @@ class LessonController extends ChangeNotifier {
   String? voice;
   int voiceNonce = 0;
 
+  /// The newest line was asked for by a touch (the replay button): it replaces the line that is playing. Every other line
+  /// waits for the one that is playing to end, so a sentence is never cut off.
+  bool voiceReplaces = false;
+
   void _say(Spoken line) {
+    voiceReplaces = false;
     // Any new line replaces what the tutor was about to say.
     _tutorToken++;
     tutorThinking = false;
@@ -290,6 +295,7 @@ class LessonController extends ChangeNotifier {
   void replayPrompt() {
     if (finished) return;
     _say(current.promptLine);
+    voiceReplaces = true;
     feedback = FeedbackKind.none;
     replayNonce++;
     notifyListeners();

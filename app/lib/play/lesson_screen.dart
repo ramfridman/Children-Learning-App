@@ -284,7 +284,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _spokenNonce = c.voiceNonce;
     // The guide never talks over a listening child, and the mic never hears the guide.
     if (_voice?.answer.state == MicState.listening) _voice?.hush();
-    unawaited(_director.sayNext(c.voice, owner: this));
+    unawaited(
+      c.voiceReplaces ? _director.say(c.voice, owner: this) : _director.sayNext(c.voice, owner: this),
+    );
   }
 
   /// A fresh session whenever the lesson moves to the next activity.
