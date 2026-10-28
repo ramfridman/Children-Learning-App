@@ -13,12 +13,18 @@ enum AlertCategory {
   inappropriateWords,
   disclosure,
   absence,
+
+  /// A trophy with a promise on it was earned (M8). The alert holds only the trophy's key.
+  ribbonEarned,
 }
 
 enum AlertSeverity { info, attention, important }
 
 AlertSeverity severityOf(AlertCategory c) => switch (c) {
-  AlertCategory.pastLimit || AlertCategory.restHours || AlertCategory.absence => AlertSeverity.info,
+  AlertCategory.pastLimit ||
+  AlertCategory.restHours ||
+  AlertCategory.absence ||
+  AlertCategory.ribbonEarned => AlertSeverity.info,
   AlertCategory.gateAttempts ||
   AlertCategory.guessing ||
   AlertCategory.frustration ||

@@ -246,6 +246,29 @@ abstract final class He {
   static const Str alertAbsenceTitle = Str('לא שיחקו זמן מה');
   static const Str alertAbsenceDetail = Str('לפני {n} ימים.');
   static const Str alertAbsenceDo = Str('אפשר להזמין להרפתקה קצרה.');
+  static const Str alertRibbonTitle = Str('זכו בגביע שהובטחה עליו הבטחה');
+  static const Str alertRibbonDetail = Str('{t}: {w}');
+  static const Str alertRibbonNoWords = Str('{t}');
+  static const Str alertRibbonDo = Str('זה הזמן לקיים את ההבטחה.');
+  static const Str areaPrizes = Str('גביעים והבטחות');
+  static const Str areaCeremonies = Str('טקס כשמקבלים גביע');
+  static const Str areaCeremoniesHelp = Str(
+    'כשהילד מקבל גביע או מדליה, החבר מציג אותם בטקס קצר. כשהטקס כבוי, הם מחכים בהיכל הגביעים.',
+  );
+  static const Str areaPromisesOpen = Str('הבטחות לגביעים');
+  static const Str prizesTitle = Str('הבטחות לגביעים');
+  static const Str prizesHelp = Str(
+    'אפשר לצרף הבטחה לגביע, למשל "בגביע הזהב הולכים לגלידה". כשהילד יזכה בו תקבלו התראה, וההבטחה תופיע ליד הגביע שלו בהיכל. עד 60 תווים, בלי קישורים.',
+  );
+  static const Str prizesBronze = Str('גביע ברונזה');
+  static const Str prizesSilver = Str('גביע כסף');
+  static const Str prizesGold = Str('גביע זהב');
+  static const Str prizesEarned = Str('הושג');
+  static const Str prizesNotYet = Str('בקרוב, כשיהיו באי מספיק מיומנויות');
+  static const Str prizesHint = Str('ההבטחה');
+  static const Str prizesBad = Str('עד 60 תווים, בלי קישורים ובלי תווים מיוחדים.');
+  static const Str prizesTooMany = Str('אי אפשר להוסיף עוד הבטחות (עד 30).');
+  static const Str prizesNoChildren = Str('עוד אין ילדים. אפשר להוסיף ילד באזור ההורים.');
   static const Str alertDropTitle = Str('המשחק השבוע ירד בהרבה');
   static const Str alertDropDo = Str('אפשר לשאול מה קרה, ולהציע הרפתקה אהובה.');
 

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../rewards/ribbons.dart';
 import 'tables.dart';
 
 part 'app_database.g.dart';
@@ -364,7 +365,13 @@ class AppDatabase extends _$AppDatabase {
     await (delete(alerts)..where(($AlertsTable t) => t.profileId.equals(profileId))).go();
     await (delete(rewards)..where(($RewardsTable t) => t.profileId.equals(profileId))).go();
     await (delete(profiles)..where(($ProfilesTable t) => t.id.equals(profileId))).go();
+    // The parents' promises for this child go with the child.
+    final String? promises = await setting('ribbons');
+    if (promises != null) {
+      await putSetting('ribbons', encodeRibbons(withoutChild(decodeRibbons(promises), profileId)));
+    }
   });
+
   // ---- rewards (M8) ----
 
   Future<Set<String>> awardKeys(String profileId) async => <String>{

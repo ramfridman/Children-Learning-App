@@ -10,6 +10,7 @@ import '../rewards/award.dart';
 import '../rewards/ceremony.dart' show ceremoniesSettingKey;
 import '../rewards/outfits.dart';
 import '../rewards/reward_service.dart';
+import '../rewards/ribbon_alerts.dart';
 import 'providers.dart';
 import 'state.dart';
 
@@ -89,12 +90,24 @@ final AsyncNotifierProvider<OutfitNotifier, String?> outfitProvider =
 /// The outfit the playing child's companion is wearing now (null for none).
 Outfit? wornOutfit(AsyncValue<String?> chosen) => outfitById(chosen.value);
 
+/// A trophy that has a promise on it is told to the parents as an alert (it holds the trophy's key only).
+Future<void> _tellParents(RewardService service, String childId, List<Reward> fresh) async {
+  if (!fresh.any((Reward r) => r.kind == AwardKind.trophy.name)) return;
+  await raiseRibbonAlerts(
+    service.db,
+    childId: childId,
+    fresh: fresh,
+    now: DateTime.fromMillisecondsSinceEpoch(service.nowMs(), isUtc: true),
+  );
+}
+
 /// Asks for whatever the child has earned, and refreshes what shows it. Returns the awards given just now. Safe to
 /// call as often as wanted; it never throws to the caller (a child must never be stopped by it).
 Future<List<Reward>> evaluateRewards(Ref ref, String childId) async {
   try {
     final RewardService service = await ref.read(rewardServiceProvider.future);
     final List<Reward> fresh = await service.evaluate(childId);
+    await _tellParents(service, childId, fresh);
     if (fresh.isNotEmpty && ref.mounted) ref.invalidate(rewardsProvider(childId));
     return fresh;
   } on Object {
@@ -114,6 +127,7 @@ Future<List<Reward>> evaluateRewardsFor(WidgetRef ref, String childId) async {
   try {
     final RewardService service = await ref.read(rewardServiceProvider.future);
     final List<Reward> fresh = await service.evaluate(childId);
+    await _tellParents(service, childId, fresh);
     if (fresh.isNotEmpty && ref.context.mounted) ref.invalidate(rewardsProvider(childId));
     return fresh;
   } on Object {

@@ -40,5 +40,18 @@ select lives_ok($$insert into app.family_settings (family_id, rules)
 select throws_ok($$update app.family_settings set rules = jsonb_build_object('x', repeat('a', 9000))$$,
   '23514', null, 'a large document is still refused');
 
+-- ---- deleting a child takes that child's promises out of the settings -----------------------------------
+update app.family_settings
+   set rules = '{"ribbons":{"child-7777-0001":{"trophy:counting:gold":"x"},"child-7777-0002":{"trophy:counting:gold":"y"}}}'::jsonb,
+       version = 5
+ where family_id = 'd7d7d7d7-0000-4000-8000-000000000001';
+select lives_ok($$select app.delete_child('d7d7d7d7-0000-4000-8000-000000000001', 'child-7777-0001')$$, 'a child with promises can be deleted');
+select ok(not jsonb_exists((select rules -> 'ribbons' from app.family_settings where family_id = 'd7d7d7d7-0000-4000-8000-000000000001'), 'child-7777-0001'),
+  'the promises for that child are gone');
+select ok(jsonb_exists((select rules -> 'ribbons' from app.family_settings where family_id = 'd7d7d7d7-0000-4000-8000-000000000001'), 'child-7777-0002'),
+  'the promises for the other child stay');
+select is((select version from app.family_settings where family_id = 'd7d7d7d7-0000-4000-8000-000000000001'), 6::bigint,
+  'and every phone is told by a new version');
+
 select * from finish();
 rollback;

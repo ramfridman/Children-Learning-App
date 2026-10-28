@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../data/app_database.dart';
 import '../parent/parent_rules.dart';
+import '../rewards/ribbons.dart';
 
 /// One call to a gateway function, already signed and with the device's own id and token filled in.
 typedef SyncCall = Future<Map<String, Object?>> Function(String name, Map<String, Object?> body);
@@ -179,7 +180,8 @@ class SyncEngine {
     final Set<String> gone = await _tombstoned();
     for (final Profile p in await db.allProfiles()) {
       if (gone.contains(p.id)) continue;
-      final String fingerprint = '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}';
+      final String fingerprint =
+          '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}|${p.outfitId ?? ''}';
       if (await db.setting('profile_pushed_${p.id}') == fingerprint) continue;
       try {
         await call('child-put', <String, Object?>{
@@ -187,6 +189,7 @@ class SyncEngine {
           'nickname': p.name,
           'avatar_id': p.avatar,
           'companion_id': ?p.companionId,
+          'outfit_id': ?p.outfitId,
           'address_form': p.addressForm,
           'age_band': p.ageBand,
         });
@@ -374,6 +377,8 @@ class SyncEngine {
     ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
     'keepWords': await db.setting('keep_words') != 'off',
     'aiHelper': await db.setting('ai_helper') == 'on',
+    'ceremonies': await db.setting('ceremonies') != 'off',
+    'ribbons': decodeRibbons(await db.setting('ribbons')),
   };
 
   /// Keeps the family's rules the same on every device, the last write by the server's count winning. A parent device
@@ -398,6 +403,13 @@ class SyncEngine {
       await db.putSetting('parent_rules', ParentRules.fromJson(rules).encode());
       await db.putSetting('keep_words', rules['keepWords'] == false ? 'off' : 'on');
       await db.putSetting('ai_helper', rules['aiHelper'] == true ? 'on' : 'off');
+      await db.putSetting('ceremonies', rules['ceremonies'] == false ? 'off' : 'on');
+      // The promises are taken as the server has them, each one checked again here.
+      final Object? ribbons = rules['ribbons'];
+      await db.putSetting(
+        'ribbons',
+        encodeRibbons(decodeRibbons(ribbons == null ? null : jsonEncode(ribbons))),
+      );
       await db.putSetting(_versionKey, '$serverVersion');
       await db.putSetting(_fingerprintKey, jsonEncode(await _localRules()));
       return true;
@@ -459,6 +471,10 @@ class SyncEngine {
           addressForm: Value<String>(m['address_form']! as String),
           ageBand: Value<int>(m['age_band']! as int),
           companionId: Value<String?>(m['companion_id'] as String?),
+          // A prize the server does not know about yet never wipes the one chosen here.
+          outfitId: m['outfit_id'] is String
+              ? Value<String?>(m['outfit_id']! as String)
+              : const Value<String?>.absent(),
           createdAt: Value<DateTime>(_now),
         );
         final bool known = mine.any((Profile p) => p.id == id);
@@ -467,7 +483,7 @@ class SyncEngine {
         // What the server has is now what this device has: no need to push it back.
         await db.putSetting(
           'profile_pushed_$id',
-          '${m['nickname']}|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}',
+          '${m['nickname']}|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}|${m['outfit_id'] ?? ''}',
         );
       }
 
