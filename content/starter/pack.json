@@ -267,6 +267,66 @@
     {
       "id": "bloom_yellow",
       "file": "bloom_yellow.svg"
+    },
+    {
+      "id": "ball_size_l",
+      "file": "ball_size_l.svg"
+    },
+    {
+      "id": "ball_size_m",
+      "file": "ball_size_m.svg"
+    },
+    {
+      "id": "ball_size_s",
+      "file": "ball_size_s.svg"
+    },
+    {
+      "id": "plant_flower",
+      "file": "plant_flower.svg"
+    },
+    {
+      "id": "plant_seed",
+      "file": "plant_seed.svg"
+    },
+    {
+      "id": "plant_sprout",
+      "file": "plant_sprout.svg"
+    },
+    {
+      "id": "egg",
+      "file": "egg.svg"
+    },
+    {
+      "id": "egg_crack",
+      "file": "egg_crack.svg"
+    },
+    {
+      "id": "chick",
+      "file": "chick.svg"
+    },
+    {
+      "id": "sock",
+      "file": "sock.svg"
+    },
+    {
+      "id": "shoe",
+      "file": "shoe.svg"
+    },
+    {
+      "id": "key",
+      "file": "key.svg"
+    },
+    {
+      "id": "lock",
+      "file": "lock.svg"
+    },
+    {
+      "id": "brush",
+      "file": "brush.svg"
+    },
+    {
+      "id": "paste",
+      "file": "paste.svg"
     }
   ],
   "vo": []

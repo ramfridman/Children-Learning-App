@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "by-size",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְסַדְּרִים לְפִי גֹּדֶל"
+    }
+  ],
+  "skills": [
+    "LOG-A-10"
+  ],
+  "items": [
+    "log.size.middle",
+    "log.size.middle.down",
+    "log.size.last"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 6,
+  "celebration": {
+    "vo": "vo:celebrate.by_size",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! סִדַּרְתֶּם לְפִי גֹּדֶל."
+      }
+    ]
+  }
+}

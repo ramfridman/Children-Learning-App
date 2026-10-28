@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-07",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מתקנים סדר שנשבר"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-06",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-PAT-NEXT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "schema": "activity/v1",
+  "id": "log.pair.sock",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.15
+  },
+  "prompt": {
+    "vo": "vo:log.pair.sock.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מָה הוֹלֵךְ עִם הַגֶּרֶב?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:sock",
+      "count": 1,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:lock",
+        "label": "מַנְעוּל"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:shoe",
+        "label": "נַעַל"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:paste",
+        "label": "מִשְׁחָה"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:log.pair.sock.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! זוֹ נַעַל."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:log.pair.sock.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "גֶּרֶב וְנַעַל הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנַּעַל."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מָה הוֹלֵךְ עִם הַגֶּרֶב?"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "same-and-different",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "זֶהֶה וְשׁוֹנֶה"
+    }
+  ],
+  "skills": [
+    "LOG-A-01",
+    "LOG-A-02"
+  ],
+  "items": [
+    "log.same.cat",
+    "log.same.star",
+    "log.same.duck",
+    "log.odd.colour",
+    "log.odd.animal",
+    "log.odd.thing"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 1,
+  "celebration": {
+    "vo": "vo:celebrate.same_and_different",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה."
+      }
+    ]
+  }
+}

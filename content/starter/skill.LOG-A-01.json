@@ -1,0 +1,29 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-01",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוצאים את הדבר שזהה"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַדָּבָר הַזֵּהֶה"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

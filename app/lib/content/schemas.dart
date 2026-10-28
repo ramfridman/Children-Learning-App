@@ -411,6 +411,15 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'numeral': SField(SInt(min: 0, max: 20), required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
+          // A row of pictures with an optional gap ("?") to fill, for patterns and order (1.1).
+          'row': SField(
+            SArray(
+              SString(minLength: 1, maxLength: 46, pattern: r'asset:[a-z0-9_]{1,40}|\?'),
+              minItems: 2,
+              maxItems: 8,
+            ),
+            required: false,
+          ),
         }),
       ),
       'answer': SField(

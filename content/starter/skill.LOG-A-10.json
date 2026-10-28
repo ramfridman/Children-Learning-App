@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-10",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מסדרים 3 עצמים לפי גודל"
+    }
+  ],
+  "worldObject": "sprout",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַסְדִּירִים לְפִי גֹּדֶל"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-SER-ENDS"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "first-then-last",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "קֹדֶם, אַחַר כָּךְ, בַּסּוֹף"
+    }
+  ],
+  "skills": [
+    "LOG-A-08",
+    "LOG-A-09"
+  ],
+  "items": [
+    "log.story.plant.first",
+    "log.story.plant.last",
+    "log.story.egg.then",
+    "log.pair.sock",
+    "log.pair.key",
+    "log.pair.brush"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 5,
+  "celebration": {
+    "vo": "vo:celebrate.first_then_last",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה קוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד."
+      }
+    ]
+  }
+}

@@ -253,6 +253,9 @@ List<Problem> validatePack({
       case 'tap_answer':
         checkAsset(file, 'scene.background', scene['background']);
         _options(file, answer, say, checkTag, checkAsset: checkAsset);
+        for (final (int i, Object? r) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+          if (r != '?') checkAsset(file, 'scene.row[$i]', r);
+        }
         for (final String g in <String>['group', 'group2']) {
           final Object? group = scene[g];
           if (group is Map<String, Object?>) checkAsset(file, 'scene.$g.sprite', group['sprite']);

@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-08",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מסדרים סיפור בן שלוש תמונות: קודם, אחר כך, בסוף"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַסְדִּירִים סִפּוּר: קֹדֶם, אַחַר כָּךְ, בַּסּוֹף"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-13",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "story",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-SEQ-CAUSE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-04",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מזהים סדר שחוזר על עצמו"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים סֵדֶר שֶׁחוֹזֵר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -397,7 +397,12 @@ def k_pick(a, ctx):
     tags_of = a.get('tags', {})
     opts, cid, tags = [], None, set()
     for k, sp in enumerate(a['options'], start=1):
-        o = {'id': 'o%d' % k, 'sprite': 'asset:' + sp, 'label': names[sp]['one']}
+        if '*' in sp:  # "ball_red*3": a set of three things as the answer
+            base, count = sp.split('*')
+            o = {'id': 'o%d' % k, 'set': {'sprite': 'asset:' + base, 'count': int(count), 'arrangement': 'line', 'seed': k},
+                 'label': names[base]['one']}
+        else:
+            o = {'id': 'o%d' % k, 'sprite': 'asset:' + sp, 'label': names[sp]['one']}
         if sp == a['correct']:
             cid = o['id']
         elif sp in tags_of:
@@ -412,7 +417,9 @@ def k_pick(a, ctx):
                           'scale': g.get('scale', 1)}
     if 'numeral' in a:
         scene['numeral'] = a['numeral']
-    right = this_one(ctx, a['correct'])
+    if 'row' in a:
+        scene['row'] = ['?' if r == '?' else 'asset:' + r for r in a['row']]
+    right = this_one(ctx, a['correct'].split('*')[0])
     return activity(
         a, 'tap_answer', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], a.get('purpose', 'practice'),
         'practice', a.get('rep', 'pictorial'), scene, choice(opts, cid), tags,

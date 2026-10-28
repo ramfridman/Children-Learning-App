@@ -1,0 +1,29 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-09",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מתאימים דברים שהולכים יחד"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים מָה הוֹלֵךְ יַחַד"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

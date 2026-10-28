@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-06",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "ממשיכים סדר של שני איברים"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַמְשִׁיכִים אֶת הַסֵּדֶר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-PAT-NEXT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

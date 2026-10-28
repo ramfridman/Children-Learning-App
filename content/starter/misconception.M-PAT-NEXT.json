@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-PAT-NEXT",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-A-06",
+    "LOG-A-07"
+  ],
+  "parentText": "הילד ממשיך סדר חוזר באיבר האחרון שראה, או באיבר אקראי.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להכין סדר של כפית וסכין על השולחן ולבקש מהילד להמשיך. לומר את הסדר בקול ('כפית, סכין, כפית, סכין') ולהמשיך יחד."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "concrete"
+  ]
+}

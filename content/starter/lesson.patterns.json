@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "patterns",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "סֵדֶר שֶׁחוֹזֵר"
+    }
+  ],
+  "skills": [
+    "LOG-A-04",
+    "LOG-A-06"
+  ],
+  "items": [
+    "log.pat.yes.colours",
+    "log.pat.no.mixed",
+    "log.pat.yes.animals",
+    "log.next.colours",
+    "log.next.animals"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 3,
+  "celebration": {
+    "vo": "vo:celebrate.patterns",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! הִמְשַׁכְתֶּם אֶת הַסֵּדֶר."
+      }
+    ]
+  }
+}

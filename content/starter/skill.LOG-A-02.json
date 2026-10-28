@@ -1,0 +1,34 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-02",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוצאים את החריג לפי תכונה אחת"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים מִי שׁוֹנֶה"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

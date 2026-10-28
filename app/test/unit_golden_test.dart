@@ -34,6 +34,10 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('col.find.red.balloon', 'colour_find', 900),
   ('col.sort.red', 'colour_sort', 900),
   ('col.world.banana', 'colour_banana', 900),
+  ('log.next.colours', 'logic_next', 900),
+  ('log.sort.colour', 'logic_sort', 900),
+  ('log.size.middle', 'logic_size', 900),
+  ('log.pat.no.mixed', 'logic_pattern_yes_no', 900),
 ];
 
 void main() {

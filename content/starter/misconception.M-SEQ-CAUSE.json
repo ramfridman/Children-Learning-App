@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SEQ-CAUSE",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-A-08"
+  ],
+  "parentText": "הילד מסדר שלבים בלי להתחשב בסיבה ותוצאה, למשל שובר את הביצה אחרי שהעוגה אפויה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לספר סיפור קצר על דבר שקורה בבית (לשתול זרע, לאפות עוגה) ולשאול בכל שלב: מה קרה קודם, ומה אחר כך?"
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "concrete"
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "schema": "activity/v1",
+  "id": "log.sort.animal",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.25
+  },
+  "prompt": {
+    "vo": "vo:log.sort.animal.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְאָן הוֹלֵךְ הַכֶּלֶב?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:dog",
+      "count": 1,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "set": {
+          "sprite": "asset:cat",
+          "count": 3,
+          "arrangement": "line",
+          "seed": 1
+        },
+        "label": "חָתוּל",
+        "misconception": "M-SORT-SHIFT"
+      },
+      {
+        "id": "o2",
+        "set": {
+          "sprite": "asset:dog",
+          "count": 3,
+          "arrangement": "line",
+          "seed": 2
+        },
+        "label": "כֶּלֶב"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:log.sort.animal.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! זֶה כֶּלֶב."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SORT-SHIFT",
+        "vo": "vo:fb.sort_shift",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:log.sort.animal.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַכֶּלֶב הוֹלֵךְ אֶל הַכְּלָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַקְּבוּצָה."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "לְאָן הוֹלֵךְ הַכֶּלֶב?"
+  }
+}

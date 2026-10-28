@@ -257,6 +257,10 @@ class TapAnswerActivity extends Activity {
           : SpriteSet.fromJson(_map(json['scene'])['group2']),
       stageNumeral = _map(json['scene'])['numeral'] as int?,
       _tilesFlag = _map(json['scene'])['optionsOnTiles'] == true,
+      row = <String>[
+        for (final Object? r in (_map(json['scene'])['row'] as List<Object?>? ?? const <Object?>[]))
+          r! as String,
+      ],
       super._();
 
   final List<ChoiceOption> options;
@@ -265,6 +269,9 @@ class TapAnswerActivity extends Activity {
   /// The thing to count or compare, shown above the answers (1.1), and a second one beside it for a comparison.
   final SpriteSet? group;
   final SpriteSet? group2;
+
+  /// A row of pictures (asset references) with `?` for the gap to fill (1.1); empty when the scene has none.
+  final List<String> row;
 
   /// A numeral drawn large on the stage (1.1), or null.
   final int? stageNumeral;

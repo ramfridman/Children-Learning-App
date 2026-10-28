@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-patterns",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סְדָרִים"
+    }
+  ],
+  "skills": [
+    "LOG-A-06",
+    "LOG-A-07"
+  ],
+  "items": [
+    "log.next.balloons",
+    "log.next.stars",
+    "log.fix.colours",
+    "log.fix.animals",
+    "log.fix.balloons"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 4,
+  "celebration": {
+    "vo": "vo:celebrate.more_patterns",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! תִּקַּנְתֶּם אֶת הַסֵּדֶר."
+      }
+    ]
+  }
+}

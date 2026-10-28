@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-03",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "ממיינים לשתי קבוצות לפי כלל נתון"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְמַיְּנִים לְשָׁתֵּי קְבוּצוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-SORT-SHIFT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

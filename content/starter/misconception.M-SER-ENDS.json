@@ -1,0 +1,19 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SER-ENDS",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-A-10"
+  ],
+  "parentText": "הילד מסדר לפי גודל רק את הקצוות (הכי גדול, הכי קטן) ומשאיר את האמצע באקראי.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לסדר שלוש כוסות בגדלים שונים בשורה, ולבקש מהילד למצוא את זו שבאמצע. אחר כך להחליף את הסדר ולבקש שוב."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete"
+  ]
+}

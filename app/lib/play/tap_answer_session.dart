@@ -215,6 +215,7 @@ class _TapStage extends StatelessWidget {
                 height: a.optionsInTiles ? size.height : top,
                 child: _groups(a),
               ),
+            if (a.row.isNotEmpty) Positioned.fill(child: _row(a)),
             if (a.stageNumeral != null)
               Positioned.fill(
                 child: Center(
@@ -242,6 +243,37 @@ class _TapStage extends StatelessWidget {
       ),
     );
   }
+
+  /// The row of pictures of a pattern or an order; a `?` is the gap the child fills in. Left to right, whatever the language.
+  Widget _row(TapAnswerActivity a) => Padding(
+    padding: const EdgeInsets.all(10),
+    child: Directionality(
+      textDirection: TextDirection.ltr,
+      child: Row(
+        key: const Key('tap-row'),
+        children: <Widget>[
+          for (final String r in a.row)
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(3),
+                child: r == '?'
+                    ? DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: TokenColors.paper.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(TokenRadius.lg),
+                          border: Border.all(color: TokenColors.hairline, width: 3),
+                        ),
+                        child: Center(
+                          child: Text('?', style: AppText.fixed(size: 36, weight: 800, lineHeight: 1)),
+                        ),
+                      )
+                    : PackSvg(a.assets.svg(r)),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
 
   /// The group (or the two groups, side by side) that the question is about. Not tappable.
   Widget _groups(TapAnswerActivity a) {

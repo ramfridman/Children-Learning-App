@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "sorting-groups",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְמַיְּנִים לִקְבוּצוֹת"
+    }
+  ],
+  "skills": [
+    "LOG-A-03"
+  ],
+  "items": [
+    "log.sort.colour",
+    "log.sort.balloon",
+    "log.sort.animal"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 2,
+  "celebration": {
+    "vo": "vo:celebrate.sorting_groups",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! מִיַּנְתֶּם לְפִי הַכְּלָל."
+      }
+    ]
+  }
+}
