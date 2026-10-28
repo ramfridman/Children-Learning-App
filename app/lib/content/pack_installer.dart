@@ -125,18 +125,18 @@ class PackInstaller {
           'version ${pack.version} is older than the installed ${existing.version}',
         );
       }
-      if (order == 0) {
+      if (order == 0 && await _installedCopyIsGood(pack.id, pack.version, existing.manifestSha256)) {
+        // A copy that still proves itself with this app's key is protected: the same version never changes its contents.
         if (existing.manifestSha256 != pack.manifestSha256) {
           throw PackRejected(
             'rules',
             'version ${pack.version} is installed already, with different contents',
           );
         }
-        if (packDir(pack.id, pack.version).existsSync()) {
-          return InstallResult(InstallOutcome.alreadyInstalled, pack);
-        }
-        // The registry says installed but the folder is gone: fall through and write it again.
+        return InstallResult(InstallOutcome.alreadyInstalled, pack);
       }
+      // Otherwise (the same version is installed but its folder is gone, or it no longer proves itself, for example because
+      // it was signed with a key this app no longer trusts) the pack that was just proven replaces it: fall through.
     }
 
     root.createSync(recursive: true);
@@ -182,6 +182,29 @@ class PackInstaller {
     _removeOtherVersions(pack.id, keep: pack.version);
     return InstallResult(InstallOutcome.installed, pack);
   });
+
+  /// Whether the installed copy of [id] at [version] is on disk and proves itself again with this app's key, and is the one
+  /// that was recorded. Must not take the install queue (it is called from inside it).
+  Future<bool> _installedCopyIsGood(String id, String version, String manifestSha256) async {
+    final Directory dir = packDir(id, version);
+    if (!dir.existsSync()) return false;
+    try {
+      final Map<String, Uint8List> entries = <String, Uint8List>{};
+      for (final FileSystemEntity e in dir.listSync(followLinks: false)) {
+        if (e is! File) return false;
+        entries[e.uri.pathSegments.last] = e.readAsBytesSync();
+      }
+      final VerifiedPack pack = await verifyEntries(
+        entries,
+        publicKey: publicKey,
+        decode: decode,
+        capabilities: capabilities,
+      );
+      return pack.manifestSha256 == manifestSha256 && pack.version == version && pack.id == id;
+    } on PackRejected {
+      return false;
+    }
+  }
 
   /// Reads an installed pack back from disk and proves it again, as if it had just arrived. A file
   /// that changed on disk makes this throw [PackRejected]. Returns null if no such pack is installed.

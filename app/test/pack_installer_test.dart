@@ -122,6 +122,38 @@ void main() {
       expect(_tree(root), before);
     });
 
+    test('a copy signed with a key the app no longer trusts is replaced by the same pack signed with the new key', () async {
+      final PackKey old = await newTestKey();
+      final Uint8List first = (await buildSamplePack(old)).bytes;
+      final PackInstaller before = make(trusted: old);
+      await before.install(first);
+      expect((await before.load('sample-pack'))!.version, '1.0.0');
+
+      // The app now trusts a new key: the old copy no longer proves itself, and the pack signed again is taken.
+      final Uint8List again = (await buildSamplePack(key)).bytes;
+      final InstallResult r = await installer.install(again);
+      expect(r.outcome, InstallOutcome.installed);
+      expect((await installer.load('sample-pack'))!.version, '1.0.0');
+      expect(
+        (await installer.install(again)).outcome,
+        InstallOutcome.alreadyInstalled,
+        reason: 'now it is protected again',
+      );
+    });
+
+    test(
+      'a copy that still proves itself is never changed by a pack of the same version with other contents',
+      () async {
+        await installer.install((await buildSamplePack(key)).bytes);
+        final Uint8List other = (await buildSamplePack(key, compact: true)).bytes;
+        final BuiltPack a = await buildSamplePack(key);
+        final BuiltPack b = await buildSamplePack(key, compact: true);
+        if (a.manifestSha256 != b.manifestSha256) {
+          await expectLater(installer.install(other), _rejected('rules', 'different contents'));
+        }
+      },
+    );
+
     test('a pack signed by another key is refused and nothing is written', () async {
       final PackKey other = await newTestKey();
       final Uint8List pack = (await buildSamplePack(other)).bytes;
