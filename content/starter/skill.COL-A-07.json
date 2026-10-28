@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-A-07",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוצאים דבר לפי צבע וסוג ('הבלון האדום')"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת הַדָּבָר הַנָּכוֹן לְפִי הַצֶּבַע"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-A-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-COL-ONEATTR"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

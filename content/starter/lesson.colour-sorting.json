@@ -1,0 +1,37 @@
+{
+  "schema": "lesson/v1",
+  "id": "colour-sorting",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְמַיְּנִים לְפִי צֶבַע"
+    }
+  ],
+  "skills": [
+    "COL-A-04",
+    "COL-A-07"
+  ],
+  "items": [
+    "col.sort.red",
+    "col.sort.blue",
+    "col.sort.green",
+    "col.find.red.balloon",
+    "col.find.blue.ball",
+    "col.find.yellow.flower",
+    "col.find.green.balloon"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 5,
+  "celebration": {
+    "vo": "vo:celebrate.colour_sorting",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר."
+      }
+    ]
+  }
+}

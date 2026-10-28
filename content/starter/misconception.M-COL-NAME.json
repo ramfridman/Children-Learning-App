@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-COL-NAME",
+  "review": "needs-editor",
+  "skills": [
+    "COL-A-02",
+    "COL-A-03"
+  ],
+  "parentText": "הילד קורא לגוון אחד בשם של גוון אחר, למשל כתום 'אדום'.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשחק בחיפוש צבעים בבית: 'תביא משהו אדום', ואחר כך 'משהו כתום'. אם הילד מתבלבל, להניח את שני הדברים זה ליד זה ולהסתכל יחד."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-COL-ONEATTR",
+  "review": "needs-editor",
+  "skills": [
+    "COL-A-07"
+  ],
+  "parentText": "הילד שם לב רק לצבע או רק לסוג הדבר, ולא לשניהם יחד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לבקש 'את הכדור הכחול' כשיש על השולחן כדורים וגם בלונים בצבעים שונים. קודם לבחור את הכדורים, ואחר כך את הכחול."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "colour-match",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת אוֹתוֹ צֶבַע"
+    }
+  ],
+  "skills": [
+    "COL-A-01",
+    "COL-A-02"
+  ],
+  "items": [
+    "col.match.red",
+    "col.match.blue",
+    "col.match.yellow",
+    "col.match.green",
+    "col.name.red.ball",
+    "col.name.blue.balloon"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 2,
+  "celebration": {
+    "vo": "vo:celebrate.colour_match",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַצְּבָעִים."
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-A-05",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "יודעים את הצבעים הרגילים של דברים, ושהם יכולים להשתנות"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "יוֹדְעִים אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-A-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "story",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-COL-OBJECT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

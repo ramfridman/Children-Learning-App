@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "colours-of-things",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַצְּבָעִים שֶׁל הָעוֹלָם"
+    }
+  ],
+  "skills": [
+    "COL-A-05"
+  ],
+  "items": [
+    "col.world.sun",
+    "col.world.grass",
+    "col.world.banana",
+    "col.world.apple"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 6,
+  "celebration": {
+    "vo": "vo:celebrate.colours_of_things",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! יְדַעְתֶּם אֵיזֶה צֶבַע יֵשׁ לַדְּבָרִים."
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-A-03",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מזהים כתום, סגול, ורוד, שחור ולבן כשהם נקראים בשם"
+    }
+  ],
+  "worldObject": "sprout",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים עוֹד צְבָעִים"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-A-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-COL-NAME"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

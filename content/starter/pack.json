@@ -1,7 +1,7 @@
 {
   "schema": "pack-source/v1",
   "id": "starter",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "minAppVersion": "0.3.0",
   "assets": [
     {
@@ -115,6 +115,158 @@
     {
       "id": "basket_empty",
       "file": "basket_empty.svg"
+    },
+    {
+      "id": "ball_black",
+      "file": "ball_black.svg"
+    },
+    {
+      "id": "ball_blue",
+      "file": "ball_blue.svg"
+    },
+    {
+      "id": "ball_brown",
+      "file": "ball_brown.svg"
+    },
+    {
+      "id": "ball_green",
+      "file": "ball_green.svg"
+    },
+    {
+      "id": "ball_grey",
+      "file": "ball_grey.svg"
+    },
+    {
+      "id": "ball_orange",
+      "file": "ball_orange.svg"
+    },
+    {
+      "id": "ball_pink",
+      "file": "ball_pink.svg"
+    },
+    {
+      "id": "ball_purple",
+      "file": "ball_purple.svg"
+    },
+    {
+      "id": "ball_red",
+      "file": "ball_red.svg"
+    },
+    {
+      "id": "ball_white",
+      "file": "ball_white.svg"
+    },
+    {
+      "id": "ball_yellow",
+      "file": "ball_yellow.svg"
+    },
+    {
+      "id": "balloon_black",
+      "file": "balloon_black.svg"
+    },
+    {
+      "id": "balloon_blue",
+      "file": "balloon_blue.svg"
+    },
+    {
+      "id": "balloon_brown",
+      "file": "balloon_brown.svg"
+    },
+    {
+      "id": "balloon_green",
+      "file": "balloon_green.svg"
+    },
+    {
+      "id": "balloon_grey",
+      "file": "balloon_grey.svg"
+    },
+    {
+      "id": "balloon_orange",
+      "file": "balloon_orange.svg"
+    },
+    {
+      "id": "balloon_pink",
+      "file": "balloon_pink.svg"
+    },
+    {
+      "id": "balloon_purple",
+      "file": "balloon_purple.svg"
+    },
+    {
+      "id": "balloon_red",
+      "file": "balloon_red.svg"
+    },
+    {
+      "id": "balloon_white",
+      "file": "balloon_white.svg"
+    },
+    {
+      "id": "balloon_yellow",
+      "file": "balloon_yellow.svg"
+    },
+    {
+      "id": "sun",
+      "file": "sun.svg"
+    },
+    {
+      "id": "grass",
+      "file": "grass.svg"
+    },
+    {
+      "id": "banana_green",
+      "file": "banana_green.svg"
+    },
+    {
+      "id": "banana_yellow",
+      "file": "banana_yellow.svg"
+    },
+    {
+      "id": "apple_green",
+      "file": "apple_green.svg"
+    },
+    {
+      "id": "bloom_black",
+      "file": "bloom_black.svg"
+    },
+    {
+      "id": "bloom_blue",
+      "file": "bloom_blue.svg"
+    },
+    {
+      "id": "bloom_brown",
+      "file": "bloom_brown.svg"
+    },
+    {
+      "id": "bloom_green",
+      "file": "bloom_green.svg"
+    },
+    {
+      "id": "bloom_grey",
+      "file": "bloom_grey.svg"
+    },
+    {
+      "id": "bloom_orange",
+      "file": "bloom_orange.svg"
+    },
+    {
+      "id": "bloom_pink",
+      "file": "bloom_pink.svg"
+    },
+    {
+      "id": "bloom_purple",
+      "file": "bloom_purple.svg"
+    },
+    {
+      "id": "bloom_red",
+      "file": "bloom_red.svg"
+    },
+    {
+      "id": "bloom_white",
+      "file": "bloom_white.svg"
+    },
+    {
+      "id": "bloom_yellow",
+      "file": "bloom_yellow.svg"
     }
   ],
   "vo": []

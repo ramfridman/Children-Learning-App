@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-colours",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צְבָעִים"
+    }
+  ],
+  "skills": [
+    "COL-A-03",
+    "COL-A-06"
+  ],
+  "items": [
+    "col.name.black",
+    "col.name.white",
+    "col.name.brown",
+    "col.name.grey",
+    "col.name.grey.flower"
+  ],
+  "estimatedMinutes": 3,
+  "sequence": 4,
+  "celebration": {
+    "vo": "vo:celebrate.more_colours",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַדְהִים! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים."
+      }
+    ]
+  }
+}

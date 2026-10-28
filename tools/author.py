@@ -108,10 +108,10 @@ def activity(a, template, skills, purpose, check, rep, scene, answer, fb_tags, h
     d = {
         'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': 1,
         'template': template, 'templateVersion': '1.1' if template == 'tap_answer' else '1.0',
-        'domain': 'numbers', 'band': 'A',
+        'domain': a.get('domain', 'numbers'), 'band': 'A',
         'skills': [{'id': s, 'weight': w} for s, w in skills],
         'purpose': purpose, 'checkType': check, 'representation': rep,
-        'variantGroup': a.get('group', a['kind'].replace('_', '-')),
+        'variantGroup': a.get('variantGroup', a['kind'].replace('_', '-')),
         'difficulty': {'authored': a.get('difficulty', 0.3)},
         'prompt': {**say('vo:%s.prompt' % i, prompt), 'replayButton': True},
         'scene': scene, 'answer': answer,
@@ -386,6 +386,44 @@ def k_zero(a, ctx):
         correct=('%s! אֵין אַף %s.' % (F[0], obj['one'])) if n == 0 else '%s! נָכוֹן.' % F[n])
 
 
+def this_one(ctx, sprite):
+    n = ctx['names'][sprite]
+    return ('זֶה ' if n['g'] == 'm' else 'זוֹ ') + n['one']
+
+
+def k_pick(a, ctx):
+    """Pick the right picture. The unit's `names` give each picture its Hebrew name (a label, and what the guide says)."""
+    names = ctx['names']
+    tags_of = a.get('tags', {})
+    opts, cid, tags = [], None, set()
+    for k, sp in enumerate(a['options'], start=1):
+        o = {'id': 'o%d' % k, 'sprite': 'asset:' + sp, 'label': names[sp]['one']}
+        if sp == a['correct']:
+            cid = o['id']
+        elif sp in tags_of:
+            o['misconception'] = tags_of[sp]
+            tags.add(tags_of[sp])
+        opts.append(o)
+    scene = {'background': 'asset:' + a.get('background', 'meadow'), 'optionsOnTiles': True}
+    if 'group' in a:
+        g = a['group']
+        scene['group'] = {'sprite': 'asset:' + g['sprite'], 'count': g.get('count', 1),
+                          'arrangement': g.get('arrangement', 'line'), 'seed': g.get('seed', 3),
+                          'scale': g.get('scale', 1)}
+    if 'numeral' in a:
+        scene['numeral'] = a['numeral']
+    right = this_one(ctx, a['correct'])
+    return activity(
+        a, 'tap_answer', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], a.get('purpose', 'practice'),
+        'practice', a.get('rep', 'pictorial'), scene, choice(opts, cid), tags,
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.',
+              a.get('h3') or ('%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % right),
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+              shared=('pick', 'pick')),
+        a.get('goal', 'child picks the right picture'),
+        prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right))
+
+
 KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}
 
 
@@ -394,7 +432,7 @@ KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}
 def skill_file(s):
     cap = lambda t: [{'t': 'he', 'v': t}]
     d = {
-        'schema': 'skill/v1', 'id': s['id'], 'review': 'needs-editor', 'domain': 'numbers', 'band': 'A',
+        'schema': 'skill/v1', 'id': s['id'], 'review': 'needs-editor', 'domain': s.get('domain', 'numbers'), 'band': 'A',
         'title': cap(s['title']), 'worldObject': s['world'], 'childLine': cap(s['child']),
         'prerequisites': [{'skill': p, 'weight': 1} for p in s['needs']],
         'representations': s['reps'], 'misconceptions': s['tags'],
@@ -430,7 +468,15 @@ def write(name, doc):
 
 def main(path):
     spec = json.load(open(path, encoding='utf-8'))
-    ctx = {'objects': spec['objects']}
+    for sk in spec['skills']:
+        sk.setdefault('domain', spec.get('domain', 'numbers'))
+    ctx = {'objects': spec.get('objects', {}), 'names': spec.get('names', {})}
+    # a thing in every colour is named once: noun + adjective ("כַּדּוּר אָדֹם"), the sprite id is thing_colour
+    for thing, (noun, gender) in spec.get('things', {}).items():
+        for colour, adjective in spec.get('colours', {}).items():
+            ctx['names'].setdefault('%s_%s' % (thing, colour), {'one': noun + ' ' + adjective, 'g': gender})
+    for tag, text in spec.get('tagFeedback', {}).items():
+        TAG_FEEDBACK[tag] = ('vo:fb.' + tag[2:].lower().replace('-', '_'), text)
     made = {'skill': 0, 'misconception': 0, 'activity': 0, 'lesson': 0}
     for t in spec.get('misconceptions', []):
         write('misconception.%s.json' % t['id'], tag_file(t))
@@ -440,6 +486,7 @@ def main(path):
         made['skill'] += 1
     ids = set()
     for a in spec['activities']:
+        a.setdefault('domain', spec.get('domain', 'numbers'))
         assert a['id'] not in ids, 'duplicate activity id ' + a['id']
         ids.add(a['id'])
         write('activity.%s.json' % a['id'], KINDS[a['kind']](a, ctx))
@@ -454,7 +501,11 @@ def main(path):
     pack_path = os.path.join(OUT, 'pack.json')
     pack = json.load(open(pack_path, encoding='utf-8'))
     have = {x['id'] for x in pack['assets']}
-    for aid in spec['assets']:
+    import glob
+    wanted = list(spec.get('assets', []))
+    for pattern in spec.get('assetGlobs', []):
+        wanted += sorted(os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(OUT, pattern + '.svg')))
+    for aid in wanted:
         if aid not in have:
             pack['assets'].append({'id': aid, 'file': aid + '.svg'})
     json.dump(pack, open(pack_path, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=2)

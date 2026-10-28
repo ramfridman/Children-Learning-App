@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-COL-OBJECT",
+  "review": "needs-editor",
+  "skills": [
+    "COL-A-05"
+  ],
+  "parentText": "הילד חושב שלכל דבר יש צבע אחד בלבד, ולא מקבל בננה ירוקה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להראות בננה ירוקה ובננה צהובה בשוק או בתמונה, ולשאול מה זה. לדבר על כך שהפרי משנה צבע כשהוא מבשיל."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "concrete"
+  ]
+}

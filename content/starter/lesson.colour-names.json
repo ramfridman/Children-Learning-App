@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "colour-names",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "שֵׁמוֹת שֶׁל צְבָעִים"
+    }
+  ],
+  "skills": [
+    "COL-A-02",
+    "COL-A-03"
+  ],
+  "items": [
+    "col.name.yellow.flower",
+    "col.name.green.ball",
+    "col.name.red.near",
+    "col.name.orange",
+    "col.name.purple",
+    "col.name.pink"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 3,
+  "celebration": {
+    "vo": "vo:celebrate.colour_names",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הִכַּרְתֶּם עוֹד צְבָעִים."
+      }
+    ]
+  }
+}

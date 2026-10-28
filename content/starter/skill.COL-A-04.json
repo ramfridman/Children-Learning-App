@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-A-04",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "ממיינים לפי צבע, בלי להתחשב בצורה ובגודל"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְמַיְּנִים לְפִי צֶבַע"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "COL-A-01",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-SORT-SHIFT"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

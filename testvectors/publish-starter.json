@@ -1,8 +1,1237 @@
 {
   "pack_id": "starter",
-  "pack_version": "0.4.1",
-  "manifest_sha256": "155340753764c31719ec30aecbe493af98c3a2153eb24ba75e0432e73702f5ea",
+  "pack_version": "0.5.0",
+  "manifest_sha256": "e8660803a709ff569a62aee694547d291ca81b00a88054b6ad92ad6f208c9bde",
   "items": [
+    {
+      "item_id": "col.find.blue.ball",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר הַכָּחֹל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן כָּחֹל",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר צָהֹב",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "פֶּרַח אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o4",
+          "label": "כַּדּוּר כָּחֹל",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "o4"
+      ]
+    },
+    {
+      "item_id": "col.find.green.balloon",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַבָּלוֹן הַיָּרֹק?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן יָרֹק",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר יָרֹק",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן אָדֹם",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o4",
+          "label": "פֶּרַח כָּחֹל",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "o4"
+      ]
+    },
+    {
+      "item_id": "col.find.red.balloon",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַבָּלוֹן הָאָדֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר אָדֹם",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן כָּחֹל",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "פֶּרַח יָרֹק",
+          "correct": false
+        },
+        {
+          "id": "o4",
+          "label": "בָּלוֹן אָדֹם",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "o4"
+      ]
+    },
+    {
+      "item_id": "col.find.yellow.flower",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-07"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַפֶּרַח הַצָּהֹב?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח יָרֹק",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן צָהֹב",
+          "misconception": "M-COL-ONEATTR",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o4",
+          "label": "פֶּרַח צָהֹב",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "o4"
+      ]
+    },
+    {
+      "item_id": "col.match.blue",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-01"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן צָהֹב",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן כָּחֹל",
+          "correct": true
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "col.match.green",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-01"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר צָהֹב",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר יָרֹק",
+          "correct": true
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "col.match.red",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-01"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן יָרֹק",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן אָדֹם",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן כָּחֹל",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "col.match.yellow",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-01"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה אוֹתוֹ צֶבַע?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן יָרֹק",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן צָהֹב",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן כָּחֹל",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "col.name.black",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר הַשָּׁחֹר?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר לָבָן",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר שָׁחֹר",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר כָּחֹל",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.blue.balloon",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַבָּלוֹן הַכָּחֹל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן יָרֹק",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן כָּחֹל",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן אָדֹם",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.brown",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר הַחוּם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר חוּם",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר כָּתֹם",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר שָׁחֹר",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.green.ball",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר הַיָּרֹק?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר כָּחֹל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר יָרֹק",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.grey.flower",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַפֶּרַח הָאָפֹר?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח חוּם",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "פֶּרַח כָּחֹל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "פֶּרַח אָפֹר",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.grey",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-06"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַבָּלוֹן הָאָפֹר?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן לָבָן",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן אָפֹר",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן שָׁחֹר",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.orange",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר הַכָּתֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר אָדֹם",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר כָּתֹם",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר צָהֹב",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.pink",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַפֶּרַח הַוָּרֹד?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח אָדֹם",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "פֶּרַח וָרֹד",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "פֶּרַח סָגֹל",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.purple",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַבָּלוֹן הַסָּגֹל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן כָּחֹל",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן וָרֹד",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן סָגֹל",
+          "correct": true
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.red.ball",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַכַּדּוּר הָאָדֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר כָּחֹל",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר צָהֹב",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.red.near",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַבָּלוֹן הָאָדֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן כָּתֹם",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן אָדֹם",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן כָּחֹל",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.white",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַבָּלוֹן הַלָּבָן?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "בָּלוֹן לָבָן",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן צָהֹב",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן אָפֹר",
+          "misconception": "M-COL-NAME",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.name.yellow.flower",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-02"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיפֹה הַפֶּרַח הַצָּהֹב?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח צָהֹב",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "פֶּרַח כָּחֹל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "פֶּרַח יָרֹק",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.sort.blue",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מִי עוֹד כָּחֹל?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח כָּחֹל",
+          "correct": true
+        },
+        {
+          "id": "o2",
+          "label": "בָּלוֹן צָהֹב",
+          "misconception": "M-SORT-SHIFT",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        3
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0",
+        "obj-1",
+        "obj-2"
+      ]
+    },
+    {
+      "item_id": "col.sort.green",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מִי עוֹד יָרֹק?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח אָדֹם",
+          "misconception": "M-SORT-SHIFT",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר יָרֹק",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן צָהֹב",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        3
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0",
+        "obj-1",
+        "obj-2"
+      ]
+    },
+    {
+      "item_id": "col.sort.red",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-04"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "מִי עוֹד אָדֹם?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "פֶּרַח יָרֹק",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר כָּחֹל",
+          "misconception": "M-SORT-SHIFT",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "בָּלוֹן אָדֹם",
+          "correct": true
+        }
+      ],
+      "number_set": [
+        3
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0",
+        "obj-1",
+        "obj-2"
+      ]
+    },
+    {
+      "item_id": "col.world.apple",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "תַּפּוּחַ יָכוֹל לִהְיוֹת גַּם יָרֹק. אֵיפֹה הַתַּפּוּחַ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר יָרֹק",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "תַּפּוּחַ יָרֹק",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.world.banana",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "גַּם בָּנָנָה יְרֻקָּה הִיא בָּנָנָה. אֵיפֹה הַבָּנָנָה?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר צָהֹב",
+          "misconception": "M-COL-OBJECT",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "בָּנָנָה יְרֻקָּה",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר יָרֹק",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3"
+      ]
+    },
+    {
+      "item_id": "col.world.grass",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיזֶה צֶבַע הָעֵשֶׂב?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר אָדֹם",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר כָּחֹל",
+          "correct": false
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר יָרֹק",
+          "correct": true
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
+    {
+      "item_id": "col.world.sun",
+      "revision": 1,
+      "template": "tap_answer",
+      "band": "A",
+      "skill_ids": [
+        "COL-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child picks the right picture",
+      "prompt_text": "אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?",
+      "answers": [
+        {
+          "id": "o1",
+          "label": "כַּדּוּר כָּחֹל",
+          "correct": false
+        },
+        {
+          "id": "o2",
+          "label": "כַּדּוּר צָהֹב",
+          "correct": true
+        },
+        {
+          "id": "o3",
+          "label": "כַּדּוּר יָרֹק",
+          "correct": false
+        }
+      ],
+      "number_set": [
+        1
+      ],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "o1",
+        "o2",
+        "o3",
+        "obj-0"
+      ]
+    },
     {
       "item_id": "count.apples.7",
       "revision": 1,
@@ -2705,6 +3934,28 @@
       "description": "הילד מפספס עצם אחד בספירה ולכן מקבל מספר קטן מדי."
     },
     {
+      "tag": "M-COL-NAME",
+      "skill_ids": [
+        "COL-A-02",
+        "COL-A-03"
+      ],
+      "description": "הילד קורא לגוון אחד בשם של גוון אחר, למשל כתום 'אדום'."
+    },
+    {
+      "tag": "M-COL-OBJECT",
+      "skill_ids": [
+        "COL-A-05"
+      ],
+      "description": "הילד חושב שלכל דבר יש צבע אחד בלבד, ולא מקבל בננה ירוקה."
+    },
+    {
+      "tag": "M-COL-ONEATTR",
+      "skill_ids": [
+        "COL-A-07"
+      ],
+      "description": "הילד שם לב רק לצבע או רק לסוג הדבר, ולא לשניהם יחד."
+    },
+    {
       "tag": "M-NUM-ZERO",
       "skill_ids": [
         "NUM-A-14"
@@ -2717,6 +3968,13 @@
         "NUM-A-13"
       ],
       "description": "הילד מבלבל בין 'השלישי' בתור לבין 'שלושה' ילדים."
+    },
+    {
+      "tag": "M-SORT-SHIFT",
+      "skill_ids": [
+        "COL-A-04"
+      ],
+      "description": "הילד מחליף את כלל המיון באמצע: מתחיל לפי צבע וממשיך לפי צורה."
     }
   ],
   "characters": []

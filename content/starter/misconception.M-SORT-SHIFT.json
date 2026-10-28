@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SORT-SHIFT",
+  "review": "needs-editor",
+  "skills": [
+    "COL-A-04"
+  ],
+  "parentText": "הילד מחליף את כלל המיון באמצע: מתחיל לפי צבע וממשיך לפי צורה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "למיין כפתורים או גרביים לשתי קופסאות ולהגיד בקול את הכלל ('כל האדומים'). אם הילד מחליף כלל, להגיד את הכלל שוב."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

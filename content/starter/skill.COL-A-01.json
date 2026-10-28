@@ -1,0 +1,30 @@
+{
+  "schema": "skill/v1",
+  "id": "COL-A-01",
+  "review": "needs-editor",
+  "domain": "colors",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מתאימים צבעים זהים"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מוֹצְאִים אֶת אוֹתוֹ צֶבַע"
+    }
+  ],
+  "prerequisites": [],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

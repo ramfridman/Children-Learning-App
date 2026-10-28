@@ -31,6 +31,9 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('ordinal.third.of4', 'ordinal', 900),
   ('zero.nest', 'zero', 900),
   ('count.apples.7', 'count_seven', 900),
+  ('col.find.red.balloon', 'colour_find', 900),
+  ('col.sort.red', 'colour_sort', 900),
+  ('col.world.banana', 'colour_banana', 900),
 ];
 
 void main() {
