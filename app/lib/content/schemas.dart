@@ -39,6 +39,8 @@ const Map<String, String> supportedTemplates = <String, String>{
   'count_tap': '1.0',
   'give_n': '1.0',
   'flash': '1.0',
+  'sort_drag': '1.0',
+  'build_pattern': '1.0',
 };
 
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
@@ -341,7 +343,9 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'id': const SField(_id),
   'review': _review,
   'revision': const SField(_revision),
-  'template': const SField(SEnum(<String>['tap_answer', 'count_tap', 'give_n', 'flash'])),
+  'template': const SField(
+    SEnum(<String>['tap_answer', 'count_tap', 'give_n', 'flash', 'sort_drag', 'build_pattern']),
+  ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
   'domain': const SField(SEnum(domains)),
   'band': const SField(SEnum(bands)),
@@ -488,6 +492,69 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // T03: pictures are dragged (or tapped) into bins. `share` mode deals them between two friends until both have the same.
+  'sort_drag' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'bins': SField(
+            SArray(
+              SObject(<String, SField>{
+                'id': SField(SString(minLength: 2, maxLength: 2, pattern: r'b[0-9]')),
+                'sprite': SField(_asset),
+                'count': SField(SInt(min: 1, max: 6), required: false),
+                'label': SField(SString(minLength: 1, maxLength: 40)),
+              }),
+              minItems: 2,
+              maxItems: 3,
+              uniqueKey: 'id',
+            ),
+          ),
+          'items': SField(
+            SArray(
+              SObject(<String, SField>{
+                'id': SField(SString(minLength: 2, maxLength: 3, pattern: r'i[0-9]{1,2}')),
+                'sprite': SField(_asset),
+                'bin': SField(SString(minLength: 2, maxLength: 2, pattern: r'b[0-9]'), required: false),
+              }),
+              minItems: 2,
+              maxItems: 8,
+              uniqueKey: 'id',
+            ),
+          ),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('sort')),
+          'mode': SField(SEnum(<String>['sort', 'share'])),
+          'misconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
+  // T05: the child fills the places of a pattern from a palette, by tapping or dragging.
+  'build_pattern' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The pattern to copy, shown above the places.
+          'model': SField(SArray(_asset, maxItems: 8), required: false),
+          'slots': SField(SInt(min: 2, max: 8)),
+          'palette': SField(SArray(_asset, minItems: 2, maxItems: 4)),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('build')),
+          'sequence': SField(SArray(_asset, minItems: 2, maxItems: 8)),
+          'misconception': SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
   'give_n' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -543,4 +610,6 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,
+  'activity.sort_drag': activitySchemaFor('sort_drag')!,
+  'activity.build_pattern': activitySchemaFor('build_pattern')!,
 };

@@ -442,6 +442,61 @@ def k_pick(a, ctx):
         prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right))
 
 
+def k_sort(a, ctx):
+    """Drag (or touch) each picture into its bin. Items are [sprite, bin number (1, 2 or 3)]."""
+    names = ctx['names']
+    bins = [{'id': 'b%d' % k, 'sprite': 'asset:' + b['sprite'], 'count': b.get('count', 1),
+             'label': b.get('label') or names[b['sprite']]['one']} for k, b in enumerate(a['bins'], start=1)]
+    items = [{'id': 'i%d' % k, 'sprite': 'asset:' + sp, 'bin': 'b%d' % n} for k, (sp, n) in enumerate(a['items'], start=1)]
+    tag = a.get('tag', 'M-SORT-SHIFT')
+    return activity(
+        a, 'sort_drag', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'practice', 'practice', 'concrete',
+        {'background': 'asset:meadow', 'bins': bins, 'items': items},
+        {'type': 'sort', 'mode': 'sort', 'misconception': tag}, {tag},
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל עַל כׇּל קְבוּצָה, וְנִרְאֶה מָה יֵשׁ לָהּ.',
+              a.get('h3') or 'נַעֲבִיר כׇּל תְּמוּנָה אֶל הַקְּבוּצָה הַמַּתְאִימָה. עַכְשָׁו תּוֹרְכֶם.',
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+              shared=('pick', 'sort')),
+        a.get('goal', 'child puts every picture in the group that fits the rule'),
+        prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם.')
+
+
+def k_share(a, ctx):
+    """Deal the pictures between two friends until both have the same."""
+    names = ctx['names']
+    n = a['n']
+    bins = [{'id': 'b%d' % k, 'sprite': 'asset:' + f, 'count': 1, 'label': names[f]['one']}
+            for k, f in enumerate(a['friends'], start=1)]
+    items = [{'id': 'i%d' % k, 'sprite': 'asset:' + a['sprite']} for k in range(1, n + 1)]
+    return activity(
+        a, 'sort_drag', [(a['skill'], 1)], 'practice', 'practice', 'concrete',
+        {'background': 'asset:meadow', 'bins': bins, 'items': items},
+        {'type': 'sort', 'mode': 'share', 'misconception': 'M-SHARE-UNEQ'}, {'M-SHARE-UNEQ'},
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נַחֲלֹק אֶחָד לָזֶה, וְאֶחָד לָזֶה, בַּתּוֹר.',
+              'אֶחָד לָזֶה, אֶחָד לָזֶה, עַד שֶׁנִּגְמַר. לְכׇל אֶחָד יֵשׁ אוֹתוֹ מִסְפָּר. עַכְשָׁו תּוֹרְכֶם.',
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+              shared=('pick', 'share')),
+        'child shares fairly: one for each in turn, so both have the same',
+        prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר.')
+
+
+def k_build(a, ctx):
+    """Copy a pattern: fill the places from a palette."""
+    seq = a.get('sequence') or a['model']
+    scene = {'background': 'asset:meadow', 'slots': len(seq), 'palette': ['asset:' + p for p in a['palette']]}
+    if a.get('model'):
+        scene['model'] = ['asset:' + m for m in a['model']]
+    return activity(
+        a, 'build_pattern', [(a['skill'], 1)] + [(s, 0.5) for s in a.get('also', [])], 'practice', 'practice', 'concrete',
+        scene, {'type': 'build', 'sequence': ['asset:' + p for p in seq], 'misconception': 'M-PAT-COPY'}, {'M-PAT-COPY'},
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד.',
+              a.get('h3') or 'נַעֲתִיק אֶת הַסֵּדֶר מֵהַהַתְחָלָה, תְּמוּנָה אַחַר תְּמוּנָה. עַכְשָׁו תּוֹרְכֶם.',
+              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+              shared=('pick', 'build')),
+        'child copies the pattern in the same order',
+        prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.')
+
+
 KINDS = {k[2:]: v for k, v in globals().items() if k.startswith('k_')}
 
 

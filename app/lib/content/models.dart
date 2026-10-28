@@ -128,6 +128,8 @@ sealed class Activity {
     'count_tap' => CountTapActivity._(json, assets),
     'tap_answer' => TapAnswerActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
+    'sort_drag' => SortDragActivity._(json, assets),
+    'build_pattern' => BuildPatternActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
   };
 
@@ -141,6 +143,7 @@ sealed class Activity {
   List<String> get misconceptionTags => <String>{
     for (final Map<String, Object?> o in _maps(_map(json['answer'])['options']))
       if (o['misconception'] is String) o['misconception']! as String,
+    if (_map(json['answer'])['misconception'] is String) _map(json['answer'])['misconception']! as String,
     for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
       if (c['misconception'] is String) c['misconception']! as String,
   }.toList();
@@ -288,6 +291,93 @@ class TapAnswerActivity extends Activity {
     for (final ChoiceOption o in options)
       if (o.misconception != null) o.misconception!,
   };
+}
+
+/// A bin of the sort-and-drag template: a picture (or a set of them) that shows the rule, and its name.
+class SortBin {
+  const SortBin({required this.id, required this.sprite, required this.count, required this.label});
+
+  final String id;
+  final String sprite;
+
+  /// How many of the picture to draw in the bin (a bin that shows its rule with three of them), at least 1.
+  final int count;
+  final String label;
+}
+
+/// A picture to be sorted, and the bin it belongs in (null in share mode, where any bin may be right).
+class SortItem {
+  const SortItem({required this.id, required this.sprite, required this.bin});
+
+  final String id;
+  final String sprite;
+  final String? bin;
+}
+
+/// The sort-and-drag template (T03): pictures go into bins by touch or by drag; in `share` mode they are dealt between
+/// two friends until both have the same.
+class SortDragActivity extends Activity {
+  SortDragActivity._(super.json, super.assets)
+    : bins = <SortBin>[
+        for (final Map<String, Object?> b in _maps(_map(json['scene'])['bins']))
+          SortBin(
+            id: b['id']! as String,
+            sprite: b['sprite']! as String,
+            count: (b['count'] as int?) ?? 1,
+            label: b['label']! as String,
+          ),
+      ],
+      items = <SortItem>[
+        for (final Map<String, Object?> i in _maps(_map(json['scene'])['items']))
+          SortItem(id: i['id']! as String, sprite: i['sprite']! as String, bin: i['bin'] as String?),
+      ],
+      share = _map(json['answer'])['mode'] == 'share',
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      super._();
+
+  final List<SortBin> bins;
+  final List<SortItem> items;
+
+  /// Share mode: the answer is right when every bin holds the same number.
+  final bool share;
+  final String? wrongTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag};
+}
+
+/// The build-a-pattern template (T05): fill the places from a palette.
+class BuildPatternActivity extends Activity {
+  BuildPatternActivity._(super.json, super.assets)
+    : model = <String>[
+        for (final Object? m in (_map(json['scene'])['model'] as List<Object?>? ?? const <Object?>[]))
+          m! as String,
+      ],
+      slots = _map(json['scene'])['slots']! as int,
+      palette = <String>[
+        for (final Object? p in _map(json['scene'])['palette']! as List<Object?>) p! as String,
+      ],
+      sequence = <String>[
+        for (final Object? s in _map(json['answer'])['sequence']! as List<Object?>) s! as String,
+      ],
+      wrongTag = _map(json['answer'])['misconception'] as String?,
+      super._();
+
+  /// The pattern to copy (may be empty), the number of places, the pictures to choose from and the right order.
+  final List<String> model;
+  final int slots;
+  final List<String> palette;
+  final List<String> sequence;
+  final String? wrongTag;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?wrongTag};
 }
 
 /// The flash template (T14): a group is shown for [flashMs] and covered, and the child picks how many.

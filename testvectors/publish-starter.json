@@ -1,7 +1,7 @@
 {
   "pack_id": "starter",
   "pack_version": "0.5.0",
-  "manifest_sha256": "4d016dc0b4457afd10f22092b60f523a6eaa8d8ca8495bb55e40f6641a36c813",
+  "manifest_sha256": "da4710fef2f284fc1ac0a7d0b2657993f329ddabb698de00dcc6b0f65dac4f53",
   "items": [
     {
       "item_id": "col.find.blue.ball",
@@ -2599,6 +2599,151 @@
       ]
     },
     {
+      "item_id": "log.copy.animals",
+      "revision": 1,
+      "template": "build_pattern",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child copies the pattern in the same order",
+      "prompt_text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-PAT-COPY",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3"
+      ]
+    },
+    {
+      "item_id": "log.copy.balloons",
+      "revision": 1,
+      "template": "build_pattern",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child copies the pattern in the same order",
+      "prompt_text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-PAT-COPY",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2"
+      ]
+    },
+    {
+      "item_id": "log.copy.colours",
+      "revision": 1,
+      "template": "build_pattern",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child copies the pattern in the same order",
+      "prompt_text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-PAT-COPY",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3"
+      ]
+    },
+    {
+      "item_id": "log.copy.three",
+      "revision": 1,
+      "template": "build_pattern",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-05"
+      ],
+      "llm_allowed": true,
+      "goal": "child copies the pattern in the same order",
+      "prompt_text": "מַעֲתִיקִים אֶת הַסֵּדֶר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-PAT-COPY",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4",
+        "obj-5"
+      ]
+    },
+    {
       "item_id": "log.fix.animals",
       "revision": 1,
       "template": "tap_answer",
@@ -3622,6 +3767,117 @@
       ]
     },
     {
+      "item_id": "log.sortdrag.animals",
+      "revision": 1,
+      "template": "sort_drag",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts every picture in the group that fits the rule",
+      "prompt_text": "מַעֲבִירִים כׇּל חַיָּה אֶל הַקְּבוּצָה שֶׁלָּהּ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SORT-SHIFT",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4"
+      ]
+    },
+    {
+      "item_id": "log.sortdrag.colour",
+      "revision": 1,
+      "template": "sort_drag",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts every picture in the group that fits the rule",
+      "prompt_text": "מַעֲבִירִים כׇּל כַּדּוּר אֶל הַקְּבוּצָה שֶׁלּוֹ.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SORT-SHIFT",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3"
+      ]
+    },
+    {
+      "item_id": "log.sortdrag.three",
+      "revision": 1,
+      "template": "sort_drag",
+      "band": "A",
+      "skill_ids": [
+        "LOG-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child puts every picture in the group that fits the rule",
+      "prompt_text": "מְמַיְּנִים לִשְׁלוֹשׁ קְבוּצוֹת.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SORT-SHIFT",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4",
+        "obj-5"
+      ]
+    },
+    {
       "item_id": "log.story.egg.then",
       "revision": 1,
       "template": "tap_answer",
@@ -4069,6 +4325,114 @@
       "object_ids": [
         "o1",
         "o2"
+      ]
+    },
+    {
+      "item_id": "math.share.apples",
+      "revision": 1,
+      "template": "sort_drag",
+      "band": "A",
+      "skill_ids": [
+        "MATH-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child shares fairly: one for each in turn, so both have the same",
+      "prompt_text": "מְחַלְּקִים אַרְבָּעָה תַּפּוּחִים בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SHARE-UNEQ",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3"
+      ]
+    },
+    {
+      "item_id": "math.share.fish",
+      "revision": 1,
+      "template": "sort_drag",
+      "band": "A",
+      "skill_ids": [
+        "MATH-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child shares fairly: one for each in turn, so both have the same",
+      "prompt_text": "מְחַלְּקִים שְׁנֵי דָּגִים בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SHARE-UNEQ",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1"
+      ]
+    },
+    {
+      "item_id": "math.share.stars",
+      "revision": 1,
+      "template": "sort_drag",
+      "band": "A",
+      "skill_ids": [
+        "MATH-A-03"
+      ],
+      "llm_allowed": true,
+      "goal": "child shares fairly: one for each in turn, so both have the same",
+      "prompt_text": "מְחַלְּקִים שִׁשָּׁה כּוֹכָבִים בֵּין הֶחָתוּל לַכֶּלֶב. לִשְׁנֵיהֶם אוֹתוֹ מִסְפָּר.",
+      "answers": [
+        {
+          "id": "done",
+          "correct": true
+        },
+        {
+          "id": "wrong",
+          "misconception": "M-SHARE-UNEQ",
+          "correct": false
+        }
+      ],
+      "number_set": [],
+      "allowed_actions": [
+        "highlight_objects_sequentially",
+        "replay_prompt_slow",
+        "worked_example"
+      ],
+      "hint_threshold": 3,
+      "object_ids": [
+        "obj-0",
+        "obj-1",
+        "obj-2",
+        "obj-3",
+        "obj-4",
+        "obj-5"
       ]
     },
     {
@@ -7464,6 +7828,13 @@
       "description": "הילד מבלבל בין 'השלישי' בתור לבין 'שלושה' ילדים."
     },
     {
+      "tag": "M-PAT-COPY",
+      "skill_ids": [
+        "LOG-A-05"
+      ],
+      "description": "הילד מעתיק את האיברים בלי הסדר: מניח אותם בסדר אחר."
+    },
+    {
       "tag": "M-PAT-NEXT",
       "skill_ids": [
         "LOG-A-06",
@@ -7484,6 +7855,13 @@
         "LOG-A-10"
       ],
       "description": "הילד מסדר לפי גודל רק את הקצוות (הכי גדול, הכי קטן) ומשאיר את האמצע באקראי."
+    },
+    {
+      "tag": "M-SHARE-UNEQ",
+      "skill_ids": [
+        "MATH-A-03"
+      ],
+      "description": "הילד מחלק לא שווה, למשל אחד לך ושניים לי."
     },
     {
       "tag": "M-SHP-ORIENT",

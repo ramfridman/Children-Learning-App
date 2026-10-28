@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "copy-patterns",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַעֲתִיקִים סֵדֶר"
+    }
+  ],
+  "skills": [
+    "LOG-A-05"
+  ],
+  "items": [
+    "log.copy.colours",
+    "log.copy.animals",
+    "log.copy.balloons",
+    "log.copy.three"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 8,
+  "celebration": {
+    "vo": "vo:celebrate.copy_patterns",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."
+      }
+    ]
+  }
+}

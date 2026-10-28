@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "sharing",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְחַלְּקִים בְּהֲגִינוּת"
+    }
+  ],
+  "skills": [
+    "MATH-A-03"
+  ],
+  "items": [
+    "math.share.fish",
+    "math.share.apples",
+    "math.share.stars"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 7,
+  "celebration": {
+    "vo": "vo:celebrate.sharing",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בְּהֲגִינוּת."
+      }
+    ]
+  }
+}

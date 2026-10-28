@@ -31,7 +31,9 @@
         "tap_answer",
         "count_tap",
         "give_n",
-        "flash"
+        "flash",
+        "sort_drag",
+        "build_pattern"
       ]
     },
     "templateVersion": {

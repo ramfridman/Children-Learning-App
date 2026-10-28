@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "MATH-A-03",
+  "review": "needs-editor",
+  "domain": "math",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מחלקים בהגינות בין שני חברים (עד 6)"
+    }
+  ],
+  "worldObject": "stall",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מְחַלְּקִים בְּהֲגִינוּת: לְכׇל אֶחָד אוֹתוֹ דָּבָר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-06",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "embodied"
+  ],
+  "misconceptions": [
+    "M-SHARE-UNEQ"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -20,8 +20,8 @@ void main() {
 
   test('the starter pack gives its activities and misconceptions, with the facts the prompt needs', () {
     final List<Object?> items = starter['items']! as List<Object?>;
-    expect(items.length, 168);
-    expect((starter['misconceptions']! as List<Object?>).length, 19);
+    expect(items.length, 178);
+    expect((starter['misconceptions']! as List<Object?>).length, 21);
     final Map<String, Object?> count = items.cast<Map<String, Object?>>().firstWhere(
       (Map<String, Object?> i) => i['item_id'] == 'count.butterflies.3',
     );

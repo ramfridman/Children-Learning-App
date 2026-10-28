@@ -45,6 +45,10 @@ const List<(String, String, int)> _shots = <(String, String, int)>[
   ('math.shop.apples', 'math_shop', 900),
   ('math.time.morning', 'math_time', 900),
   ('cs.routine.wash.first', 'cs_routine', 900),
+  ('log.sortdrag.colour', 'drag_sort', 900),
+  ('log.sortdrag.three', 'drag_sort_three', 900),
+  ('math.share.stars', 'drag_share', 900),
+  ('log.copy.three', 'drag_pattern', 900),
 ];
 
 void main() {

@@ -302,6 +302,46 @@ List<Problem> validatePack({
         if (!_maps(answer['options']).any((Map<String, Object?> o) => o['misconception'] != null)) {
           say(file, 'answer.options', 'at least one wrong answer must name the misconception it shows');
         }
+      case 'sort_drag':
+        checkAsset(file, 'scene.background', scene['background']);
+        final List<Map<String, Object?>> bins = _maps(scene['bins']);
+        final Set<Object?> binIds = <Object?>{for (final Map<String, Object?> b in bins) b['id']};
+        for (final (int i, Map<String, Object?> b) in bins.indexed) {
+          checkAsset(file, 'scene.bins[$i].sprite', b['sprite']);
+        }
+        final bool share = answer['mode'] == 'share';
+        final List<Map<String, Object?>> items = _maps(scene['items']);
+        for (final (int i, Map<String, Object?> it) in items.indexed) {
+          checkAsset(file, 'scene.items[$i].sprite', it['sprite']);
+          if (!share && !binIds.contains(it['bin'])) {
+            say(file, 'scene.items[$i].bin', 'must be the id of a bin');
+          }
+        }
+        if (share && (bins.length != 2 || items.length.isOdd)) {
+          say(file, 'scene', 'sharing is between two bins and needs an even number of pictures');
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
+      case 'build_pattern':
+        checkAsset(file, 'scene.background', scene['background']);
+        final List<Object?> palette = scene['palette']! as List<Object?>;
+        for (final (int i, Object? p) in palette.indexed) {
+          checkAsset(file, 'scene.palette[$i]', p);
+        }
+        for (final (int i, Object? m) in ((scene['model'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+          checkAsset(file, 'scene.model[$i]', m);
+        }
+        final List<Object?> sequence = answer['sequence']! as List<Object?>;
+        if (sequence.length != scene['slots']) {
+          say(
+            file,
+            'answer.sequence',
+            'must have exactly as many pictures as there are places (${scene['slots']})',
+          );
+        }
+        for (final (int i, Object? p) in sequence.indexed) {
+          if (!palette.contains(p)) say(file, 'answer.sequence[$i]', 'is not in the palette');
+        }
+        checkTag(file, 'answer.misconception', answer['misconception']);
       case 'flash':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> group = scene['group']! as Map<String, Object?>;

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-PAT-COPY",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-A-05"
+  ],
+  "parentText": "הילד מעתיק את האיברים בלי הסדר: מניח אותם בסדר אחר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "להניח שלוש חרוזים או כפתורים בסדר מסוים ולבקש מהילד להניח מתחתם את אותו סדר, אחד מתחת לאחד. לשים אצבע על כל זוג."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

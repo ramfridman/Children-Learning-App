@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "sort-by-hand",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מְמַיְּנִים בַּיָּדַיִם"
+    }
+  ],
+  "skills": [
+    "LOG-A-03"
+  ],
+  "items": [
+    "log.sortdrag.colour",
+    "log.sortdrag.animals",
+    "log.sortdrag.three"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 7,
+  "celebration": {
+    "vo": "vo:celebrate.sort_by_hand",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! מִיַּנְתֶּם בְּעַצְמְכֶם."
+      }
+    ]
+  }
+}

@@ -39,7 +39,21 @@ Map<String, Object?> itemOf(Map<String, Object?> a) {
   final Set<int> numbers = <int>{};
   final List<String> objects = <String>[];
 
-  if (answer['type'] == 'give') {
+  if (answer['type'] == 'sort' || answer['type'] == 'build') {
+    // A drag template: the whole move is one right answer, and the way of going wrong is a class with its misconception.
+    answers.add(<String, Object?>{'id': 'done', 'correct': true});
+    if (answer['misconception'] is String) {
+      answers.add(<String, Object?>{
+        'id': 'wrong',
+        'misconception': answer['misconception'],
+        'correct': false,
+      });
+    }
+    final List<Map<String, Object?>> items = _maps(scene['items']);
+    final List<Object?> palette = (scene['palette'] as List<Object?>?) ?? const <Object?>[];
+    final int count = items.isNotEmpty ? items.length : (scene['slots'] as int? ?? palette.length);
+    objects.addAll(<String>[for (int i = 0; i < count; i++) 'obj-$i']);
+  } else if (answer['type'] == 'give') {
     // "Give N": the right answer is the number; each way of going wrong is a class with its misconception.
     final int n = answer['n']! as int;
     numbers.add(n);

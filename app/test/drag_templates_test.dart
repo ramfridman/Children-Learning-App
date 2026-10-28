@@ -1,0 +1,300 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/child/activity_shell.dart';
+import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/play/build_pattern_session.dart';
+import 'package:nitznutz/play/lesson_controller.dart';
+import 'package:nitznutz/play/sort_drag_session.dart';
+import 'package:nitznutz/play/template_session.dart';
+
+import 'support/fakes.dart';
+import 'support/harness.dart';
+import 'support/starter.dart';
+
+/// The drag templates (T03 sort and share, T05 build a pattern): every move by touch and by drag, the wrong ones with their
+/// misconception, the help that points at the right place, and the answers as the engine will read them.
+void main() {
+  late PackContent content;
+  setUpAll(() async {
+    await loadAppFonts();
+    content = await loadStarter();
+  });
+
+  final List<AttemptRecord> written = <AttemptRecord>[];
+
+  LessonController start(String lessonId, int index) {
+    written.clear();
+    final LessonController c = LessonController(
+      content: content,
+      lesson: content.lessons[lessonId]!,
+      profileId: 'p-1',
+      clock: FixedClock(1793000000000),
+      record: (AttemptRecord r) async => written.add(r),
+    );
+    for (int i = 0; i < index; i++) {
+      c.next();
+    }
+    return c;
+  }
+
+  Future<void> host(WidgetTester tester, TemplateSession s) async {
+    const ActivitySpec spec = ActivitySpec.phone;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Scaffold(
+            body: Builder(
+              builder: (BuildContext ctx) => Center(
+                child: SizedBox(
+                  width: spec.tilesWidth,
+                  height: spec.stage.height + 160,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        width: spec.stage.width,
+                        height: spec.stage.height,
+                        child: s.buildStage(ctx, spec.stage.size, spec),
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          width: spec.tilesWidth,
+                          child: s.buildTiles(ctx, spec) ?? const SizedBox(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+
+  Future<void> tap(WidgetTester t, String key) async {
+    await t.tap(find.byKey(Key(key)), warnIfMissed: false);
+    await t.pump(const Duration(milliseconds: 60));
+  }
+
+  Future<void> settle(WidgetTester t, [int ms = 2400]) async {
+    for (int spent = 0; spent < ms; spent += 100) {
+      await t.pump(const Duration(milliseconds: 100));
+    }
+  }
+
+  group('sorting into bins', () {
+    testWidgets(
+      'a picture goes to its bin by touch; a wrong bin is a not-yet with its misconception and the picture stays',
+      (WidgetTester tester) async {
+        final LessonController c = start('sort-by-hand', 0);
+        final SortDragSession s = SortDragSession(c, c.current as SortDragActivity);
+        await host(tester, s);
+        // i1 is a red ball (bin b1). Wrong bin first.
+        await tap(tester, 'item-i1');
+        await tap(tester, 'bin-b2');
+        await settle(tester, 300);
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-SORT-SHIFT');
+        expect(s.placed, isEmpty, reason: 'the picture goes back to the tray');
+        await settle(tester);
+        // The right bin.
+        await tap(tester, 'item-i1');
+        await tap(tester, 'bin-b1');
+        expect(s.placed['i1'], 'b1');
+        expect(find.byKey(const Key('item-i1')), findsNothing, reason: 'it left the tray');
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets(
+      'a drag does the same as two touches, and the last right drop ends the activity with one right answer',
+      (WidgetTester tester) async {
+        final LessonController c = start('sort-by-hand', 0);
+        final SortDragActivity a = c.current as SortDragActivity;
+        final SortDragSession s = SortDragSession(c, a);
+        await host(tester, s);
+        for (final SortItem item in a.items) {
+          final Offset from = tester.getCenter(find.byKey(Key('item-${item.id}')));
+          final Offset to = tester.getCenter(find.byKey(Key('bin-${item.bin}')));
+          await tester.dragFrom(from, to - from);
+          await tester.pump(const Duration(milliseconds: 100));
+        }
+        expect(s.placed.length, a.items.length);
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(written.where((AttemptRecord r) => r.result == 'correct').length, 1);
+        expect(written.where((AttemptRecord r) => r.result == 'incorrect'), isEmpty);
+        expect(c.feedback, FeedbackKind.correct);
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets('after three wrong drops only the right bin takes a picture, and the help points at it', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('sort-by-hand', 0);
+      final SortDragActivity a = c.current as SortDragActivity;
+      final SortDragSession s = SortDragSession(c, a);
+      await host(tester, s);
+      for (int k = 0; k < a.maxAttempts; k++) {
+        await tap(tester, 'item-i1');
+        await tap(tester, 'bin-b2');
+        await settle(tester);
+      }
+      expect(c.guided, isTrue);
+      expect(s.hintBin, 'b1', reason: 'the help shows the bin of the picture');
+      final int before = written.length;
+      await tap(tester, 'item-i1');
+      await tap(tester, 'bin-b2');
+      expect(written.length, before, reason: 'a wrong bin is simply not taken now, and not counted again');
+      expect(s.placed, isEmpty);
+      await tap(tester, 'bin-b1');
+      expect(s.placed['i1'], 'b1');
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+  });
+
+  group('sharing between two friends', () {
+    testWidgets(
+      'unequal shares are a not-yet with M-SHARE-UNEQ and the dealing starts again; equal shares are right',
+      (WidgetTester tester) async {
+        final LessonController c = start('sharing', 1); // four apples
+        final SortDragActivity a = c.current as SortDragActivity;
+        expect(a.share, isTrue);
+        final SortDragSession s = SortDragSession(c, a);
+        await host(tester, s);
+        // three for the first friend, one for the second
+        for (int k = 1; k <= 3; k++) {
+          await tap(tester, 'item-i$k');
+          await tap(tester, 'bin-b1');
+        }
+        await tap(tester, 'item-i4');
+        await tap(tester, 'bin-b2');
+        await settle(tester, 300);
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-SHARE-UNEQ');
+        await settle(tester);
+        expect(s.placed, isEmpty, reason: 'the pictures are dealt out again');
+        // two and two
+        for (int k = 1; k <= 4; k++) {
+          await tap(tester, 'item-i$k');
+          await tap(tester, k.isEven ? 'bin-b2' : 'bin-b1');
+        }
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(written.last.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets(
+      'after three unfair tries the guide deals them one for each in turn, and hands the move back',
+      (WidgetTester tester) async {
+        final LessonController c = start('sharing', 1);
+        final SortDragActivity a = c.current as SortDragActivity;
+        final SortDragSession s = SortDragSession(c, a);
+        await host(tester, s);
+        for (int round = 0; round < a.maxAttempts; round++) {
+          for (int k = 1; k <= 4; k++) {
+            await tap(tester, 'item-i$k');
+            await tap(tester, 'bin-b1');
+          }
+          await settle(tester);
+        }
+        expect(c.guided, isTrue);
+        await tester.pump(const Duration(milliseconds: 1500));
+        expect(s.demoRunning, isTrue, reason: 'the demonstration is on');
+        expect(s.placed.length, greaterThan(0));
+        await settle(tester, 6000);
+        expect(s.demoRunning, isFalse);
+        expect(s.placed, isEmpty, reason: 'then the move is the child\'s again');
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  });
+
+  group('building a pattern', () {
+    testWidgets(
+      'touching the palette fills the next place; a wrong pattern is a not-yet with M-PAT-COPY and empties the places',
+      (WidgetTester tester) async {
+        final LessonController c = start('copy-patterns', 0);
+        final BuildPatternActivity a = c.current as BuildPatternActivity;
+        final BuildPatternSession s = BuildPatternSession(c, a);
+        await host(tester, s);
+        expect(a.sequence, <String>[
+          'asset:ball_red',
+          'asset:ball_blue',
+          'asset:ball_red',
+          'asset:ball_blue',
+        ]);
+        // the palette is [blue, red]: red, red, red, red is wrong
+        for (int k = 0; k < 4; k++) {
+          await tap(tester, 'palette-1');
+        }
+        await settle(tester, 300);
+        expect(written.single.result, 'incorrect');
+        expect(written.single.misconceptionTag, 'M-PAT-COPY');
+        await settle(tester);
+        expect(s.filled, everyElement(isNull));
+      },
+    );
+
+    testWidgets(
+      'the right pattern ends the activity; a drag puts a picture in a chosen place; a touch on a place empties it',
+      (WidgetTester tester) async {
+        final LessonController c = start('copy-patterns', 0);
+        final BuildPatternSession s = BuildPatternSession(c, c.current as BuildPatternActivity);
+        await host(tester, s);
+        // a drag into place 1 (the second place): the blue ball, palette 0
+        final Offset from = tester.getCenter(find.byKey(const Key('palette-0')));
+        final Offset to = tester.getCenter(find.byKey(const Key('slot-1')));
+        await tester.dragFrom(from, to - from);
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(s.filled[1], 'asset:ball_blue');
+        expect(s.filled[0], isNull);
+        await tap(tester, 'slot-1');
+        expect(s.filled[1], isNull, reason: 'a touch empties a filled place');
+        // red, blue, red, blue by touch
+        for (final int p in <int>[1, 0, 1, 0]) {
+          await tap(tester, 'palette-$p');
+        }
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(written.single.result, 'correct');
+        await settle(tester);
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+
+    testWidgets('after three wrong patterns only the right picture is taken, and the help points at it', (
+      WidgetTester tester,
+    ) async {
+      final LessonController c = start('copy-patterns', 0);
+      final BuildPatternActivity a = c.current as BuildPatternActivity;
+      final BuildPatternSession s = BuildPatternSession(c, a);
+      await host(tester, s);
+      for (int round = 0; round < a.maxAttempts; round++) {
+        for (int k = 0; k < a.slots; k++) {
+          await tap(tester, 'palette-1');
+        }
+        await settle(tester);
+      }
+      expect(c.guided, isTrue);
+      expect(s.hintSprite, 'asset:ball_red', reason: 'the help shows the picture of the first place');
+      await tap(tester, 'palette-0'); // blue in the first place: not taken
+      expect(s.filled[0], isNull);
+      await tap(tester, 'palette-1');
+      expect(s.filled[0], 'asset:ball_red');
+      s.dispose();
+      await tester.pumpWidget(const SizedBox());
+    });
+  });
+}

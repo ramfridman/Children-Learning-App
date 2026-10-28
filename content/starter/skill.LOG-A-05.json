@@ -1,0 +1,37 @@
+{
+  "schema": "skill/v1",
+  "id": "LOG-A-05",
+  "review": "needs-editor",
+  "domain": "logic",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מעתיקים סדר שחוזר (אב)"
+    }
+  ],
+  "worldObject": "pattern-door",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "מַעֲתִיקִים אֶת הַסֵּדֶר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "LOG-A-04",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "concrete",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-PAT-COPY"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

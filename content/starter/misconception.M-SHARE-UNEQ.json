@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHARE-UNEQ",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-A-03"
+  ],
+  "parentText": "הילד מחלק לא שווה, למשל אחד לך ושניים לי.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לחלק ביחד ארבעה תפוחים או כפתורים בין שתי בובות: אחד לזו, אחד לזו, עד שנגמר. אחר כך לספור אצל כל בובה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

@@ -274,6 +274,32 @@
       [
         "Say the place word slowly, point at where the ball is in the right picture, and invite the child to choose it."
       ]
+    ],
+    "M-PAT-COPY": [
+      [
+        "Invite the child to look at the pattern from the first picture and put the same one in the first place.",
+        "Suggest putting a finger on each picture of the pattern in turn and finding the same one below."
+      ],
+      [
+        "Suggest saying the pattern aloud and then saying what goes in each place, one by one.",
+        "Suggest checking each place against the picture above it."
+      ],
+      [
+        "Point at the first picture of the pattern and the first place, say what goes there, and invite the child to do the next one."
+      ]
+    ],
+    "M-SHARE-UNEQ": [
+      [
+        "Say that sharing fairly means both friends get the same, and invite the child to look at how many each one has.",
+        "Invite counting what each friend has and comparing the two numbers."
+      ],
+      [
+        "Suggest giving one to this friend, then one to the other friend, in turn, until none are left.",
+        "Suggest dealing like cards, one for each in turn."
+      ],
+      [
+        "Deal the pictures one for each friend in turn together with the child, and then count what each has."
+      ]
     ]
   }
 }

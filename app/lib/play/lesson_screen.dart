@@ -36,10 +36,12 @@ import '../voice/voice_director.dart';
 import 'activity_frame.dart';
 import 'count_tap_session.dart';
 import 'flash_session.dart';
+import 'build_pattern_session.dart';
 import 'give_n_session.dart';
 import 'lesson_controller.dart';
 import 'lesson_voice.dart';
 import 'tap_answer_session.dart';
+import 'sort_drag_session.dart';
 import 'template_session.dart';
 
 /// Plays one lesson of the installed pack, activity after activity, until the celebration.
@@ -307,6 +309,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         CountTapActivity() => CountTapSession(c, a),
         TapAnswerActivity() => TapAnswerSession(c, a),
         FlashActivity() => FlashSession(c, a),
+        SortDragActivity() => SortDragSession(c, a),
+        BuildPatternActivity() => BuildPatternSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
       };
       _sessionIndex = c.index;

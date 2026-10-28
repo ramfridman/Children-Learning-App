@@ -103,6 +103,8 @@ void main() {
               await c.chooseOption(a.options.firstWhere((ChoiceOption o) => o.id != a.correctId).id);
             case GiveNActivity():
               await c.giveN(a.n == 1 ? 2 : a.n - 1);
+            case SortDragActivity() || BuildPatternActivity():
+              await c.submitPlacement(right: false);
           }
         }
         expect(c.guided, isTrue);
@@ -130,6 +132,8 @@ void main() {
           await mixed.chooseOption(b.correctId);
         case GiveNActivity():
           await mixed.giveN(b.n);
+        case SortDragActivity() || BuildPatternActivity():
+          await mixed.submitPlacement(right: true);
       }
       mixed.next();
       await struggle(mixed);

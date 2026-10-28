@@ -380,6 +380,12 @@ class LessonController extends ChangeNotifier {
     return _answered(right: right, tag: tag, response: optionId, byVoice: byVoice);
   }
 
+  /// The child made a move in a drag template (sort, share, build a pattern): [right] says whether it was the right one, [tag]
+  /// the misconception it shows if not. A right move ends the activity (it is written once, as `correct`); every wrong
+  /// move is written as `incorrect`, and after the third the help is at its top and only the right move is taken.
+  Future<Outcome> submitPlacement({required bool right, String tag = '', String response = ''}) =>
+      _answered(right: right, tag: tag, response: response);
+
   /// The child gave [taken] objects in a give-N activity.
   Future<Outcome> giveN(int taken) async {
     final GiveNActivity a = current as GiveNActivity;
