@@ -364,11 +364,13 @@ class LessonController extends ChangeNotifier {
     final List<ChoiceOption> options = switch (a) {
       CountTapActivity() => a.options,
       TapAnswerActivity() => a.options,
+      FlashActivity() => a.options,
       _ => throw StateError('${a.template} has no options'),
     };
     final String correctId = switch (a) {
       CountTapActivity() => a.correctId,
       TapAnswerActivity() => a.correctId,
+      FlashActivity() => a.correctId,
       _ => '',
     };
     final ChoiceOption chosen = options.firstWhere((ChoiceOption o) => o.id == optionId);

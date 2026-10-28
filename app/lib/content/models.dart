@@ -127,6 +127,7 @@ sealed class Activity {
   factory Activity.fromJson(Map<String, Object?> json, PackAssets assets) => switch (json['template']) {
     'count_tap' => CountTapActivity._(json, assets),
     'tap_answer' => TapAnswerActivity._(json, assets),
+    'flash' => FlashActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
   };
 
@@ -262,6 +263,30 @@ class TapAnswerActivity extends Activity {
   /// The thing to count or compare, shown above the answers (1.1), and a second one beside it for a comparison.
   final SpriteSet? group;
   final SpriteSet? group2;
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The flash template (T14): a group is shown for [flashMs] and covered, and the child picks how many.
+class FlashActivity extends Activity {
+  FlashActivity._(super.json, super.assets)
+    : options = _options(json['answer']),
+      correctId = _map(json['answer'])['correct']! as String,
+      group = SpriteSet.fromJson(_map(json['scene'])['group']),
+      flashMs = _map(json['scene'])['flashMs']! as int,
+      super._();
+
+  final List<ChoiceOption> options;
+  final String correctId;
+  final SpriteSet group;
+  final int flashMs;
 
   @override
   int get optionCount => options.length;

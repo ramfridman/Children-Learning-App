@@ -299,6 +299,24 @@ List<Problem> validatePack({
         if (!_maps(answer['options']).any((Map<String, Object?> o) => o['misconception'] != null)) {
           say(file, 'answer.options', 'at least one wrong answer must name the misconception it shows');
         }
+      case 'flash':
+        checkAsset(file, 'scene.background', scene['background']);
+        final Map<String, Object?> group = scene['group']! as Map<String, Object?>;
+        checkAsset(file, 'scene.group.sprite', group['sprite']);
+        _options(file, answer, say, checkTag);
+        if (_correctOption(answer)?['numeral'] != group['count']) {
+          say(
+            file,
+            'answer.correct',
+            'the correct option must show the number of things flashed (${group['count']})',
+          );
+        }
+        final List<Object?> numerals = <Object?>[
+          for (final Map<String, Object?> o in _maps(answer['options'])) o['numeral'],
+        ];
+        if (numerals.toSet().length != numerals.length) {
+          say(file, 'answer.options', 'two options show the same number');
+        }
       case 'give_n':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> source = scene['source']! as Map<String, Object?>;

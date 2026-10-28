@@ -38,6 +38,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'tap_answer': '1.1',
   'count_tap': '1.0',
   'give_n': '1.0',
+  'flash': '1.0',
 };
 
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
@@ -337,7 +338,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'id': const SField(_id),
   'review': _review,
   'revision': const SField(_revision),
-  'template': const SField(SEnum(<String>['tap_answer', 'count_tap', 'give_n'])),
+  'template': const SField(SEnum(<String>['tap_answer', 'count_tap', 'give_n', 'flash'])),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
   'domain': const SField(SEnum(domains)),
   'band': const SField(SEnum(bands)),
@@ -450,6 +451,27 @@ SObject? activitySchemaFor(String template) => switch (template) {
       'traceClassifiers': const SField(_traceClassifiers),
     }),
   ),
+  // T14: a group is shown for a moment and covered; the child says how many without counting. Every option is a numeral.
+  'flash' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'group': SField(_spriteSet),
+          // How long the group stays in view, in milliseconds.
+          'flashMs': SField(SInt(min: 400, max: 3000)),
+        }),
+      ),
+      'answer': SField(
+        _answerOptions(<String, SField>{
+          'id': const SField(_optionId),
+          'numeral': const SField(SInt(min: 0, max: 20)),
+          'speech': _speechWords,
+          'misconception': const SField(_tag, required: false),
+        }),
+      ),
+    }),
+  ),
   'give_n' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -504,4 +526,5 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.tap_answer': activitySchemaFor('tap_answer')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
+  'activity.flash': activitySchemaFor('flash')!,
 };

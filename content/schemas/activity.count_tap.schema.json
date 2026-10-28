@@ -30,7 +30,8 @@
       "enum": [
         "tap_answer",
         "count_tap",
-        "give_n"
+        "give_n",
+        "flash"
       ]
     },
     "templateVersion": {

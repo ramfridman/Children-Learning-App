@@ -35,6 +35,7 @@ import '../tutor/tutor.dart';
 import '../voice/voice_director.dart';
 import 'activity_frame.dart';
 import 'count_tap_session.dart';
+import 'flash_session.dart';
 import 'give_n_session.dart';
 import 'lesson_controller.dart';
 import 'lesson_voice.dart';
@@ -305,6 +306,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       _session = switch (a) {
         CountTapActivity() => CountTapSession(c, a),
         TapAnswerActivity() => TapAnswerSession(c, a),
+        FlashActivity() => FlashSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
       };
       _sessionIndex = c.index;
