@@ -169,7 +169,7 @@ class _TabPill extends StatelessWidget {
 }
 
 /// The three trophies of every land, shelf by shelf, and the card for the one chosen.
-class _Trophies extends StatelessWidget {
+class _Trophies extends ConsumerWidget {
   const _Trophies({
     required this.childId,
     required this.byKey,
@@ -187,13 +187,16 @@ class _Trophies extends StatelessWidget {
   final Future<void> Function(String key) onReplay;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Map<String, String> promises =
+        ref.watch(ribbonsProvider(childId)).value ?? const <String, String>{};
     final List<Widget> shelves = <Widget>[
       for (final TrophyLand land in TrophyLand.values)
         _Shelf(
           land: land,
           objects: world?.lands[land] ?? const <WorldObject>[],
           byKey: byKey,
+          promises: promises,
           selected: selected,
           onSelect: onSelect,
         ),
@@ -228,6 +231,7 @@ class _Shelf extends StatelessWidget {
     required this.land,
     required this.objects,
     required this.byKey,
+    required this.promises,
     required this.selected,
     required this.onSelect,
   });
@@ -235,6 +239,7 @@ class _Shelf extends StatelessWidget {
   final TrophyLand land;
   final List<WorldObject> objects;
   final Map<String, Reward> byKey;
+  final Map<String, String> promises;
   final String? selected;
   final void Function(String key, Reward? earned) onSelect;
 
@@ -292,6 +297,7 @@ class _Shelf extends StatelessWidget {
                       land: land,
                       tier: tier,
                       earned: byKey[Awards.trophy(land, tier)],
+                      promised: promises.containsKey(Awards.trophy(land, tier)),
                       chosen: selected == Awards.trophy(land, tier),
                       onSelect: onSelect,
                     ),
@@ -310,6 +316,7 @@ class _Slot extends StatelessWidget {
     required this.land,
     required this.tier,
     required this.earned,
+    required this.promised,
     required this.chosen,
     required this.onSelect,
   });
@@ -317,6 +324,9 @@ class _Slot extends StatelessWidget {
   final TrophyLand land;
   final TrophyTier tier;
   final Reward? earned;
+
+  /// A parent attached a promise to this trophy: the design's rosette hangs on it.
+  final bool promised;
   final bool chosen;
   final void Function(String key, Reward? earned) onSelect;
 
@@ -344,7 +354,23 @@ class _Slot extends StatelessWidget {
                   ? const <BoxShadow>[BoxShadow(color: Color(0x88FFD45C), blurRadius: 22, spreadRadius: 4)]
                   : null,
             ),
-            child: TrophyCup(land: land, tier: tier, height: 60, locked: earned == null),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                TrophyCup(land: land, tier: tier, height: 60, locked: earned == null),
+                if (promised)
+                  PositionedDirectional(
+                    start: -10,
+                    top: -6,
+                    child: BoardSvg(
+                      'assets/art/trophies/promise_rosette.svg',
+                      key: Key('rosette-$key'),
+                      width: 24,
+                      height: 26,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -694,9 +720,21 @@ class _OutfitRow extends ConsumerWidget {
             ),
             child: Row(
               children: <Widget>[
-                locked
-                    ? const Silhouette(child: Icon(Icons.circle, size: 36, color: Colors.black))
-                    : Icon(Icons.circle, size: 36, color: colour ?? const Color(0xFFEDE6F7)),
+                if (id == noOutfit)
+                  const SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.fromBorderSide(BorderSide(color: Color(0xFFDCD3EC), width: 3)),
+                      ),
+                    ),
+                  )
+                else if (locked)
+                  Silhouette(child: BoardSvg('assets/art/prizes/scarf_$id.svg', width: 40, height: 40))
+                else
+                  BoardSvg('assets/art/prizes/scarf_$id.svg', key: Key('scarf-$id'), width: 40, height: 40),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(

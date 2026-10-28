@@ -307,7 +307,15 @@ class _StickerPop extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget art = Semantics(
       label: He.stickerNewSemantics.text,
-      child: BoardSvg(stickerAsset(stickerKey), key: const Key('lesson-sticker'), width: 96, height: 96),
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(22),
+          color: TokenColors.paper,
+          boxShadow: softShadow,
+        ),
+        child: BoardSvg(stickerAsset(stickerKey), key: const Key('lesson-sticker'), width: 88, height: 88),
+      ),
     );
     if (MediaQuery.disableAnimationsOf(context)) return art;
     return TweenAnimationBuilder<double>(

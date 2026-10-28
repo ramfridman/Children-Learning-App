@@ -52,29 +52,36 @@ class StickerIsland extends ConsumerWidget {
                           spacing: 14,
                           runSpacing: 14,
                           children: <Widget>[
-                            for (final Reward r in stickers)
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  boxShadow: softShadow,
-                                  color: TokenColors.paper,
-                                ),
-                                child: BoardSvg(
-                                  stickerAsset(r.awardKey),
-                                  key: Key('sticker-${r.awardKey}'),
-                                  width: 76,
-                                  height: 76,
+                            for (int i = 0; i < stickers.length; i++)
+                              Transform.rotate(
+                                angle: i.isEven ? -0.035 : 0.035,
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(22),
+                                    boxShadow: softShadow,
+                                    color: TokenColors.paper,
+                                  ),
+                                  child: BoardSvg(
+                                    stickerAsset(stickers[i].awardKey),
+                                    key: Key('sticker-${stickers[i].awardKey}'),
+                                    width: 84,
+                                    height: 84,
+                                  ),
                                 ),
                               ),
                             for (int i = stickers.length; i < _places(stickers.length); i++)
                               Container(
                                 key: Key('sticker-place-$i'),
-                                width: 76,
-                                height: 76,
+                                width: 96,
+                                height: 96,
                                 decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(22),
                                   color: TokenColors.mist,
                                   border: Border.all(color: TokenColors.cardLip, width: 3),
+                                ),
+                                child: const Center(
+                                  child: BoardSvg('assets/art/world/star_gold.svg', width: 28, height: 28),
                                 ),
                               ),
                           ],

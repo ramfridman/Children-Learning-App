@@ -36,7 +36,8 @@ class Silhouette extends StatelessWidget {
   );
 }
 
-/// A trophy: the cup of its tier with its land's emblem on the bowl. [locked] draws it as a silhouette.
+/// A trophy: the cup of its tier with its land's glyph on the white disc of the bowl. A trophy not earned yet is the pale
+/// dashed cup of the design (the gold one with a pale star), with the glyph faint on it.
 class TrophyCup extends StatelessWidget {
   const TrophyCup({super.key, required this.land, required this.tier, this.height = 96, this.locked = false});
 
@@ -47,26 +48,40 @@ class TrophyCup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double width = height * 100 / 110;
-    final Widget cup = SizedBox(
+    final double width = height * 120 / 140;
+    final String file = locked
+        ? (tier == TrophyTier.gold ? 'trophy_locked_gold' : 'trophy_locked')
+        : 'trophy_${tier.name}';
+    // The disc is centred at (60, 52) of the 120 by 140 drawing and the glyph is 22 of its units wide.
+    final double glyph = height * 22 / 140;
+    final Widget emblem = BoardSvg(
+      'assets/art/trophies/emblem_${land.name}.svg',
+      width: glyph,
+      height: glyph,
+    );
+    return SizedBox(
       width: width,
       height: height,
       child: Stack(
-        alignment: Alignment.topCenter,
+        clipBehavior: Clip.none,
         children: <Widget>[
-          BoardSvg('assets/art/trophies/trophy_${tier.name}.svg', width: width, height: height),
+          BoardSvg('assets/art/trophies/$file.svg', width: width, height: height),
           Positioned(
-            top: height * 0.17,
-            child: BoardSvg(
-              'assets/art/trophies/emblem_${land.name}.svg',
-              width: height * 0.30,
-              height: height * 0.30,
-            ),
+            left: width * (60 - 11) / 120,
+            top: height * (52 - 11) / 140,
+            child: locked
+                ? Opacity(
+                    opacity: 0.55,
+                    child: ColorFiltered(
+                      colorFilter: const ColorFilter.mode(Color(0xFFDCD3EC), BlendMode.srcIn),
+                      child: emblem,
+                    ),
+                  )
+                : emblem,
           ),
         ],
       ),
     );
-    return locked ? Silhouette(child: cup) : cup;
   }
 }
 
@@ -80,8 +95,12 @@ class MedalArt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget medal = BoardSvg('assets/art/medals/medal_$id.svg', width: height * 0.8, height: height);
-    return locked ? Silhouette(child: medal) : medal;
+    // A medal not earned yet is the design's pale dashed one.
+    return BoardSvg(
+      locked ? 'assets/art/medals/medal_locked.svg' : 'assets/art/medals/medal_$id.svg',
+      width: height * 100 / 122,
+      height: height,
+    );
   }
 }
 

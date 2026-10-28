@@ -155,6 +155,19 @@ class _CeremonyScreenState extends ConsumerState<CeremonyScreen> with SingleTick
                           ),
                         ),
                       ),
+                      // The podium (the design's) under the cup.
+                      Positioned(
+                        left: (w - cup * 1.3) / 2,
+                        top: h * 0.2 + cup * 0.82,
+                        width: cup * 1.3,
+                        child: Opacity(
+                          opacity: fade,
+                          child: const BoardSvg(
+                            'assets/art/ceremony/podium.svg',
+                            key: Key('ceremony-podium'),
+                          ),
+                        ),
+                      ),
                       // The cup (or medal) spins in over its stand.
                       Positioned(
                         left: (w - cup) / 2,
@@ -313,12 +326,6 @@ class SpotlightPainter extends CustomPainter {
           ],
         ).createShader(Offset.zero & size),
     );
-    final Rect stand = Rect.fromCenter(
-      center: Offset(size.width / 2, size.height * 0.71),
-      width: size.width * 0.34,
-      height: size.height * 0.09,
-    );
-    canvas.drawOval(stand, Paint()..color = const Color(0xFFE0B97C).withValues(alpha: strength));
   }
 
   @override

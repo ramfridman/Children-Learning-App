@@ -336,12 +336,18 @@ void main() {
         );
         expect(find.byKey(const Key('medal-brave-asker')), findsOneWidget);
         expect(
-          find.descendant(of: find.byKey(const Key('medal-brave-asker')), matching: find.byType(Silhouette)),
+          find.descendant(
+            of: find.byKey(const Key('medal-brave-asker')),
+            matching: find.byWidgetPredicate((Widget w) => w is MedalArt && w.locked),
+          ),
           findsNothing,
         );
         for (final String id in <String>['try-again', 'explainer', 'bug-fixer']) {
           expect(
-            find.descendant(of: find.byKey(Key('medal-$id')), matching: find.byType(Silhouette)),
+            find.descendant(
+              of: find.byKey(Key('medal-$id')),
+              matching: find.byWidgetPredicate((Widget w) => w is MedalArt && w.locked),
+            ),
             findsOneWidget,
             reason: id,
           );
