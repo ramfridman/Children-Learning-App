@@ -542,9 +542,28 @@ VOICE_SUBS = [
     (r'(?<![\u0590-\u05ff])ו… ', 'ועוד צבע… ', 'voice: "וְ…" alone cannot be said; the blank is said as "ועוד צבע…"'),
     (r'לחזור על: ', 'לחזור על הצעדים: ', 'voice: "על:" before a list is said as "על הצעדים:"'),
     (r'(?<![֐-׿])בואו נאמר(?![֐-׿])', 'בואו נגיד', 'voice: "נאמר" can be read as "was said"; "נגיד"'),
+    (r'(?<![֐-׿])(ש?)אין כלום זה ', r'\1אין כלום — זה ', 'voice-audit 2026-10-29: a beat before "זה אֶפֶס" (without it '
+     'the two clauses run together and the rule is not heard)'),
 ]
 # words that keep their nikud in the voice text because the plain form can be read another way
 KEEP_POINTED = {'שֵׁנִי', 'הַשֵּׁנִי', 'הַוִּי', 'לְהֵרָאוֹת', 'נִסְפַּר', 'נְחַתֶּם'}
+# The pronunciation audit of 2026-10-29 (docs/agents/voice-pronunciation-audit.md): plain words a voice can read as
+# another word. They keep their nikud in the voice text; each row they change stays `proposed` until the owner agrees.
+VOICE_AUDIT_KEEP = {
+    'שָׂמִים': 'plain "שמים" is read "shamayim" (sky); here it is "samim" (we put)',
+    'סָפַר': 'plain "ספר" is read "sefer" (a book); here it is "safar" (counted)',
+    'גְּדֵלִים': 'plain "גדלים" can be read "gdalim" (sizes); here it is "gdelim" (grow)',
+    'בַּתּוֹר': 'plain "בתור" is often read "betor" (as a); here it is "ba-tor" (in the line)',
+    'אִמְרוּ': 'plain "אמרו" is read "amru" (they said); here it is the request "imru" (say)',
+    'נְגַלֶּה': 'plain "נגלה" can be read "nigla" (was revealed); here it is "negale" (we will find out)',
+    'אוֹפְּס': 'plain "אופס" can be read with an f ("ofes"); the dagesh keeps the p of "oops"',
+    'מֵדַלְיָה': 'a loanword: plain "מדליה" can be read "madliya"; the nikud gives "medalya"',
+    'אֵלֶּה': 'plain "אלה" can be read "ela"; here it is "ele" (these)',
+    'בַּשָּׁמַיִם': 'plain "בשמים" can be read "besamim" (spices); here it is "ba-shamayim" (in the sky)',
+}
+VOICE_AUDIT_KEEP = {canon(w): why for w, why in VOICE_AUDIT_KEEP.items()}
+KEEP_POINTED |= set(VOICE_AUDIT_KEEP)
+VOICE_AUDIT = 'voice-audit 2026-10-29'
 VOICE_SUBS = [(re.compile(p), r, why) for p, r, why in VOICE_SUBS]
 VOICE_MANUAL = {}  # the ui text -> (voice text, why), for lines no rule can say well
 
@@ -565,6 +584,9 @@ def eleven(text):
         notes.append('tone: "!" softened')
     t = soften(t)
     before = sum(1 for c in t if NIKUD.match(c))
+    for w, why in VOICE_AUDIT_KEEP.items():
+        if re.search(B + w + E, t):
+            notes.append('%s: kept the nikud of %s, %s' % (VOICE_AUDIT, w, why))
     t = partial_nikud(t)
     for pat, repl, why in VOICE_SUBS:
         new = pat.sub(repl, t)
@@ -755,6 +777,10 @@ def master(rows, result):
                     status, comment = 'proposed', EDITOR + doubt
                 elif any(n.startswith('REVIEW') for n in notes):
                     status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
+                elif is_spoken and any(n.startswith(VOICE_AUDIT) for n in notes):
+                    status, comment = 'proposed', EDITOR + (
+                        'V1 (pronunciation audit 2026-10-29): the voice text changed so a voice cannot misread it '
+                        '(a kept nikud or a beat; see "changes" and docs/agents/voice-pronunciation-audit.md). Please confirm.')
                 else:
                     status = 'text-ready'
                     if note:

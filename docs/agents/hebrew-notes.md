@@ -96,7 +96,10 @@ and how any line sounds (that needs audio and the voice director).
    `מצוין`, `שיש`, `הים`), the dual `ַיִם` → `יים`. No yod after a prefix מִ / a dropped nun (`מכאן`, `מתחת`, `הגיע`, `הנה`), or
    before a silent aleph (`ראשון`). Exceptions are in `KTIV` (`התוכנית`, `צהריים`, `המחוג`, `חיה`).
 2. **Nikud kept** on every number word (gender) and on words a TTS can misread: `שֵׁנִי / הַשֵּׁנִי` (ordinal, not "two of"),
-   `הַוִּי` (the tick), `נִסְפַּר`, `נְחַתֶּם`, `לְהֵרָאוֹת` (`KEEP_POINTED`).
+   `הַוִּי` (the tick), `נִסְפַּר`, `נְחַתֶּם`, `לְהֵרָאוֹת` (`KEEP_POINTED`). Proposed on 2026-10-29 (`VOICE_AUDIT_KEEP`,
+   rows `proposed` with "V1"): `שָׂמִים`, `סָפַר`, `גְּדֵלִים`, `בַּתּוֹר`, `אִמְרוּ`, `נְגַלֶּה`, `אוֹפְּס`, `מֵדַלְיָה`, `אֵלֶּה`,
+   `בַּשָּׁמַיִם`, and a beat in `אין כלום — זה אֶפֶס`; see `docs/agents/voice-pronunciation-audit.md`. No rare mark
+   (U+05C7 qamatz qatan, U+05B3 hataf qamats) is ever sent to a voice.
 3. **Punctuation.** `!` is never sent. A short opening cheer becomes a comma (`כֵּן, …`, `כִּמְעַט, …`); **a number said as the
    answer becomes a full stop** (`שָׁלוֹשׁ. חֲמִשָּׁה ועוד שְׁלוֹשָׁה הם שְׁמוֹנֶה.`; with a comma it sounded like part of the sum);
    anything else a full stop. Every line ends with `.`, `?` or `…`. Colons and em dashes stay (a beat).
