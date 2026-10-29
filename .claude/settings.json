@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(*voice_gen* generate*)",
+      "Bash(*voice_gen* audition *)",
+      "Bash(*voice_gen* audition-batch run*)",
+      "Bash(*tutor_prewarm*)",
+      "Bash(*tutor-prewarm*)",
+      "Bash(*api.elevenlabs.io*)",
+      "Bash(*xi-api-key*)",
+      "Bash(*ELEVENLABS_API_KEY*)",
+      "PowerShell(*voice_gen* generate*)",
+      "PowerShell(*voice_gen* audition *)",
+      "PowerShell(*voice_gen* audition-batch run*)",
+      "PowerShell(*tutor_prewarm*)",
+      "PowerShell(*tutor-prewarm*)",
+      "PowerShell(*api.elevenlabs.io*)",
+      "PowerShell(*xi-api-key*)",
+      "PowerShell(*ELEVENLABS_API_KEY*)",
+      "Read(~/nitznutz-secrets/**)",
+      "Read(~/nitznutz-voice/**/*.key)",
+      "Read(**/.env)",
+      "Read(**/.env.*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/block_paid_voice.py\"",
+            "shell": "bash",
+            "timeout": 10,
+            "onFailure": "block",
+            "statusMessage": "Checking for paid voice commands"
+          }
+        ]
+      }
+    ]
+  }
+}
