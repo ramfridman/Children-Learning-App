@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/play/activity_frame.dart';
+import 'package:nitznutz/child/home_island_name.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/child/profile_picker.dart';
 import 'package:nitznutz/content/models.dart';
@@ -130,7 +131,7 @@ void main() {
       await tester.tap(find.text('נועה'));
       await tester.pumpAndSettle();
       expect(find.byType(HomeScreen), findsOneWidget);
-      expect(find.text(He.homeBubble.fill(<String, String>{'child': 'נועה'})), findsOneWidget);
+      expect(find.text(He.homeBubble.fill(<String, String>{'child': isolatedName('נועה')})), findsOneWidget);
       expect(find.text(He.homeParents.text), findsOneWidget);
 
       await tester.tap(find.bySemanticsLabel(He.switchChildSemantics.text));

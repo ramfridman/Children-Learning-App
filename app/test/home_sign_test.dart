@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/home_island_name.dart';
+import 'package:nitznutz/design/app_text.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/strings/he.dart';
 
@@ -348,7 +349,17 @@ void main() {
     // Where Nitzi's mouth is on the map: the bubble stands beside it, held by its bottom.
     const Offset mouth = Offset(0.5, 0.56);
     const String long = 'אלכסנדרה';
-    String brokenLine(String name) => He.homeBubble.text.replaceFirst('{child}, ', '$name,\n');
+    // The name sits in an isolate, as on the sign.
+    String oneLine(String name) => He.homeBubble.fill(<String, String>{'child': isolatedName(name)});
+    String brokenLine(String name) =>
+        He.homeBubble.text.replaceFirst('{child}, ', '${isolatedName(name)},\n');
+    String bubbleText(WidgetTester tester) => tester
+        .widget<Text>(find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)))
+        .data!;
+
+    test('the bubble line has "{child}, " (the tablet break after the name looks for it)', () {
+      expect(He.homeBubble.text, contains('{child}, '));
+    });
 
     for (final BoardBox b in boards.skip(2)) {
       testWidgets(
@@ -356,7 +367,7 @@ void main() {
         (WidgetTester tester) async {
           await pumpHome(tester, b.size, mouth: mouth, childName: 'דן');
           final Rect short = rectOf(tester, 'bubble-body');
-          expect(find.text(He.homeBubble.fill(<String, String>{'child': 'דן'})), findsOneWidget);
+          expect(find.text(oneLine('דן')), findsOneWidget);
           expect(short.width, lessThanOrEqualTo(210));
 
           await pumpHome(tester, b.size, mouth: mouth, childName: long);
@@ -398,7 +409,7 @@ void main() {
         WidgetTester tester,
       ) async {
         await pumpHome(tester, b.size, mouth: mouth, childName: long);
-        expect(find.text(He.homeBubble.fill(<String, String>{'child': long})), findsOneWidget);
+        expect(find.text(oneLine(long)), findsOneWidget);
       });
     }
 
@@ -417,8 +428,9 @@ void main() {
                 .data!;
             final List<String> lines = text.split('\n');
             expect(lines, hasLength(2));
-            expect(lines.first, endsWith('…,'), reason: 'the name, shortened, then the comma');
-            expect(name.startsWith(lines.first.substring(0, lines.first.length - 2)), isTrue);
+            expect(lines.first, startsWith('\u2068'), reason: 'the name in an isolate');
+            expect(lines.first, endsWith('…$pdi,'), reason: 'the name, shortened, then the comma');
+            expect(name.startsWith(lines.first.substring(1, lines.first.length - 3)), isTrue);
             expect(
               lines.last,
               He.homeBubble.text.split('{child}, ').last,
@@ -446,7 +458,7 @@ void main() {
             find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
           )
           .data!;
-      expect(text, contains('…,'));
+      expect(text, contains('…$pdi,'));
       expect(text, isNot(contains('\n')), reason: 'one line on a phone');
       // A 24-letter name still fits there whole.
       await pumpHome(
@@ -455,23 +467,81 @@ void main() {
         mouth: mouth,
         island: homeIslandName('אבגדהוזחטיכלמנסעפצקרשתאב'),
       );
-      expect(
-        find.text(He.homeBubble.fill(<String, String>{'child': 'אבגדהוזחטיכלמנסעפצקרשתאב'})),
-        findsOneWidget,
-      );
+      expect(find.text(oneLine('אבגדהוזחטיכלמנסעפצקרשתאב')), findsOneWidget);
     });
 
-    testWidgets('with no usable name the bubble says only the words after the name', (
-      WidgetTester tester,
-    ) async {
-      await pumpHome(tester, boards.first.size, mouth: mouth, island: homeIslandName(' '));
-      final String text = tester
-          .widget<Text>(
-            find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
+    for (final BoardBox b in boards) {
+      testWidgets('${b.name}: with no usable name the bubble says its own line, homeBubbleNoName', (
+        WidgetTester tester,
+      ) async {
+        await pumpHome(tester, b.size, mouth: mouth, island: homeIslandName(' '));
+        expect(bubbleText(tester), He.homeBubbleNoName.text);
+      });
+    }
+
+    // A Latin name in a Hebrew line: without the isolate the "…" and the comma took the line's direction and the "…" was
+    // drawn on the left of the Latin letters, where a Latin word begins (docs/agents/b26-hebrew.md 7.2).
+    for (final (String board, double scale, String latin) in <(String, double, String)>[
+      ('tabletLandscape', 1, 'Massimiliano Bartholomew'),
+      ('tabletPortrait', 1.3, 'Massimiliano'),
+      ('phoneSE', 1.3, 'Massimiliano Bartholomew Alessandro Wolfe'),
+    ]) {
+      testWidgets('$board, text scale $scale: a shortened Latin name keeps its "…" on its right', (
+        WidgetTester tester,
+      ) async {
+        final BoardBox b = boards.firstWhere((BoardBox x) => x.name == board);
+        await pumpHome(tester, b.size, mouth: mouth, island: homeIslandName(latin), scale: scale);
+        drainKnownPillOverflow(tester);
+        final String text = bubbleText(tester);
+        final int dots = text.indexOf(ellipsis);
+        expect(dots, greaterThan(1), reason: 'the name is shortened here: "$text"');
+        expect(text, startsWith('\u2068'));
+        expect(text.substring(dots + 1), startsWith('$pdi,'), reason: 'the isolate closes after the "…"');
+        final RenderParagraph para = tester.renderObject<RenderParagraph>(
+          find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(RichText)),
+        );
+        TextBox boxAt(int i) =>
+            para.getBoxesForSelection(TextSelection(baseOffset: i, extentOffset: i + 1)).single;
+        final TextBox letter = boxAt(dots - 1);
+        final TextBox ellipsisBox = boxAt(dots);
+        expect(
+          ellipsisBox.left,
+          greaterThanOrEqualTo(letter.right - 0.5),
+          reason: '"…" right of "${text[dots - 1]}"',
+        );
+        expect(ellipsisBox.direction, TextDirection.ltr, reason: 'the "…" belongs to the Latin run');
+      });
+    }
+
+    // The isolate's marks have no width, so the fit of the bubble (and the break after the name) is what it was.
+    testWidgets('the isolate does not change the width of the bubble line', (WidgetTester tester) async {
+      final TextPainter painter = TextPainter(textDirection: TextDirection.rtl, maxLines: 1);
+      addTearDown(painter.dispose);
+      double width(String line, double size, double scale) {
+        painter
+          ..text = TextSpan(
+            text: line,
+            style: AppText.fixed(size: size, weight: 500),
           )
-          .data!;
-      expect(text, He.homeBubble.text.split('{child}, ').last);
-      expect(text, isNot(contains('{')));
+          ..textScaler = TextScaler.linear(scale)
+          ..layout();
+        return painter.width;
+      }
+
+      for (final String name in <String>[...names.values.where((String n) => n.isNotEmpty), 'Massimili…']) {
+        for (final double size in <double>[17, 18, 24]) {
+          for (final double scale in <double>[1, 1.3]) {
+            final String bare = He.homeBubble.fill(<String, String>{'child': name});
+            expect(width(oneLine(name), size, scale), closeTo(width(bare, size, scale), 0.01), reason: name);
+            final String bareFirst = '$name,';
+            expect(
+              width(brokenLine(name).split('\n').first, size, scale),
+              closeTo(width(bareFirst, size, scale), 0.01),
+              reason: '$name, the first line on a tablet',
+            );
+          }
+        }
+      }
     });
 
     testWidgets('a touch on it reaches what is under it', (WidgetTester tester) async {

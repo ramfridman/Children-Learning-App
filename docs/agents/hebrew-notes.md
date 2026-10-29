@@ -24,8 +24,9 @@ Nothing in the pack, the generators or the app was changed. The corrected texts 
 **Rows added after the master pass (2026-10-29).** `REVIEWED` covers whole groups, so a new row of group 1 to 4 or 6
 would be marked `text-ready` unread. Such a row goes into `PENDING` (it stays `proposed` with its comment) until the
 editor has read it and the owner has seen it; each run prints the rows that were not in the last table. Now in
-`PENDING`: the 10 B-26 strings (`homeIsland*`, `nitziHome*`, see `docs/agents/b26-hebrew.md`) and `homeBubble` (its
-B-26 replacement). Read and kept `text-ready`: the 8 lexicon words added with B-24 (`שלושים` to `תשעים`, `מאה`), spelt
+`PENDING`: the 10 B-26 strings (`homeIsland*`, `nitziHome*`, see `docs/agents/b26-hebrew.md`), `homeBubble` (its
+B-26 replacement) and `homeBubbleNoName` (the map bubble without a name, its own entry since B-26 step 3,
+`b26-hebrew.md` section 7). Read and kept `text-ready`: the 8 lexicon words added with B-24 (`שלושים` to `תשעים`, `מאה`), spelt
 as a recogniser writes them (`שישים`, `חמישים` with yod), so group 6 is now 118 rows.
 
 **B-26 (2026-10-29).** Every line on the home screen is said by the friend the child chose (owner decision 4), so no

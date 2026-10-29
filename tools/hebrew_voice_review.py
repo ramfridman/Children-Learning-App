@@ -581,7 +581,7 @@ def eleven(text):
 
 
 # ---------------------------------------------------------------- main
-VOICED_UI = {'homeBubble'}
+VOICED_UI = {'homeBubble', 'homeBubbleNoName'}
 
 
 def spoken(r):
@@ -627,6 +627,10 @@ PENDING = [
      'verb, so no gender is guessed and it fits every friend; Nitzi\'s home answers it ("בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה."). '
      'Step 2 had "{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!", too wide on tablets (design review b26-step2 §3, QA-25, QA-26): '
      'the fixed part is now 123 at Heebo 500, 24 (was 207; limit 140). Q6 (a per-name line) still stands.'),
+    ('1', r'^homeBubbleNoName$', r'he\.dart$', 'B-26 step 3 (QA hand-off, b26-hebrew.md section 7): the map bubble when '
+     'the child has no usable name; until now built in code from homeBubble and never in this table. The same question '
+     'without the call: complete on its own, no verb, no gender, nothing points at the missing name. Its voice text '
+     '"מה בבקבוק?" is the one of homeBubble, so one clip serves both and this line is never per-name.'),
 ]
 # Texts the editor is not sure of: (regex on the original text, the comment). The row stays proposed for the owner.
 DOUBT = [
