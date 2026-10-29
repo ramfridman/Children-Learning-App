@@ -32,8 +32,16 @@ as a recogniser writes them (`שישים`, `חמישים` with yod), so group 6 
 line names Nitzi and none has a first person with a gender: `nitziHomeHi` is `זֶה הַבַּיִת שֶׁלִּי.` (was `אֲנִי נִיצִי.
 אֲנִי גָּרָה פֹּה.`). The bottle holds a revisit or the next lesson (decision 3), so `nitziHomeBottle` is `בַּבַּקְבּוּק
 יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.` (was "brought a new adventure"), and the map bubble `homeBubble`
-(`{child}, הַבַּקְבּוּק הִגִּיעַ!`) should become `{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!` (voice text `בבקבוק יש הרפתקה.`,
-the name said before it as in Q6), applied by the app-developer with B-26 step 2. `nitziHomeBottleDone` waits for the
+(`{child}, הַבַּקְבּוּק הִגִּיעַ!`) became `{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!` in B-26 step 2. That line was too wide
+for the tablet map (its fixed part 207 at Heebo 500, 24, measured with the app's text engine; the bubble then covers
+the Counting stairs in landscape and touches the Counting sign in portrait: `docs/design/b26-step2-review.md` §3, QA-25,
+QA-26), so the map bubble is now **`{child}, מַה בַּבַּקְבּוּק?`** (fixed part 123; limit 140; voice text `מה בבקבוק?`,
+the name said before it as in Q6). It is true for a revisit and for a new lesson, has no verb (no gender guessed, fits
+a boy or girl friend), no time and no pressure; Nitzi's home answers the question with the full sentence
+(`nitziHomeBottle`). Weighed and not taken: `הִנֵּה הַבַּקְבּוּק!` (127; correct, but only points), `הַבַּקְבּוּק כָּאן!`
+(125; sounds like "it has just arrived", the claim we removed), `מַה יֵּשׁ בַּבַּקְבּוּק?` (156, too wide), `הַבַּקְבּוּק
+מְחַכֶּה!` (147, too wide and a little pressing), `בּוֹאוּ לַבַּקְבּוּק!` (131; a plural verb right after one child's name
+reads like a slip). `מַה` keeps patah: the next letter carries a dagesh (rule 4). `nitziHomeBottleDone` waits for the
 daily three-stop plan. The `nitziHome*` key names name the screen, not the speaker.
 
 Voice texts: about 520 of the 1,975 distinct voice texts were read in full (all money, clock, ordinal and maths
@@ -132,8 +140,9 @@ fix the templates below so a regeneration does not bring the old text back. Each
 3. **Missing-addend hints** (`activity.b.mathb18.1`–`.7` › `hints.2`): count on from the first number (G1)? The rows stay `proposed`.
 4. **`core.encourage.checked`**: keep `זֶה מַה שֶּׁמָּתֵמָטִיקָאִים עוֹשִׂים` or a shorter word for a three-year-old?
 5. **גֶּרֶב** masculine (standard) or feminine (common speech)? 8 rows in `activity.log.pair.*` wait.
-6. **The per-name line** `homeBubble` (`{child}, הַבַּקְבּוּק הִגִּיעַ!`): one clip per child with the name inside, or a name clip joined
-   to `הבקבוק הגיע.`? (Your decision of 2026-10-25 allows the first name; how it is joined is yours and the voice director's.)
+6. **The per-name line** `homeBubble` (`{child}, מַה בַּבַּקְבּוּק?` since B-26; was `{child}, הַבַּקְבּוּק הִגִּיעַ!`): one clip
+   per child with the name inside, or a name clip joined to `מה בבקבוק?`? (Your decision of 2026-10-25 allows the first
+   name; how it is joined is yours and the voice director's.)
 7. **`תֵּבָה`** for the box-shaped solid (school word) or `קֻפְסָה` (everyday)? Left as `תֵּבָה`.
 8. **Sums about objects.** Hints say `חֲמִשָּׁה פָּחוֹת שְׁנַיִם` after "five apples" (masculine) but the tiles and the counting are
    feminine. Keep (grammatical, follows the noun) or make every spoken sum feminine as at gan (`חָמֵשׁ פָּחוֹת שְׁתַּיִם`)?

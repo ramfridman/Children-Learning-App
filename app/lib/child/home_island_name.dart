@@ -33,8 +33,9 @@ final RegExp _letter = RegExp(r'\p{L}', unicode: true);
 /// What stands between the parts of a name: a space, a hyphen or a maqaf.
 const Set<String> _separators = <String>{' ', '-', '\u05BE'};
 
-/// A geresh as parents type it: an apostrophe, the Hebrew geresh, or the curly apostrophe a phone keyboard puts in.
-const Set<String> _gereshes = <String>{'\'', '\u05F3', '\u2019'};
+/// A geresh as parents type it: an apostrophe, the Hebrew geresh, the curly apostrophes a phone keyboard puts in, or a
+/// backtick.
+const Set<String> _gereshes = <String>{'\'', '\u05F3', '\u2019', '\u2018', '`'};
 
 /// The title's frame words are joined by a no-break space, so the title only wraps before the name.
 final Str _titleWithName = Str(_keepFrameTogether(He.homeIsland.text), nikud: true);
@@ -115,10 +116,16 @@ String? _wholeParts(List<String> clusters, int room) {
   return end == 0 ? null : clusters.sublist(0, end).join();
 }
 
-/// The first [room] clusters, one fewer if the next one is a geresh, without a trailing separator.
+/// The first [room] clusters without a trailing separator. When the cut falls on a geresh, it moves back over every
+/// geresh before it and then one letter more, so a letter is never shown without its geresh (at least one cluster stays).
 String _firstLetters(List<String> clusters, int room) {
   int end = room;
-  if (_gereshes.contains(clusters[end])) end--;
+  if (_gereshes.contains(clusters[end])) {
+    while (end > 1 && _gereshes.contains(clusters[end - 1])) {
+      end--;
+    }
+    if (end > 1) end--;
+  }
   while (end > 1 && _separators.contains(clusters[end - 1])) {
     end--;
   }

@@ -623,8 +623,10 @@ PENDING = [
     ('1', r'^nitziHomeBottleDone$', r'he\.dart$', B26 + 'Q7: only once the daily three-stop plan exists (not built); '
      'until then the bottle always holds a next step and this line is not shown.'),
     ('1', r'^homeBubble$', r'he\.dart$', 'B-26: "the bottle arrived" is not true until the daily bottle exists '
-     '(decision 3). Proposed: "{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!" (voice text: "בבקבוק יש הרפתקה."); the app-developer '
-     'applies it with B-26 step 2 (the bubble width and the home goldens change). Q6 (a per-name line) still stands.'),
+     '(decision 3). Now "{child}, מַה בַּבַּקְבּוּק?" (voice text: "מה בבקבוק?"): true for a revisit or a new lesson, no '
+     'verb, so no gender is guessed and it fits every friend; Nitzi\'s home answers it ("בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה."). '
+     'Step 2 had "{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!", too wide on tablets (design review b26-step2 §3, QA-25, QA-26): '
+     'the fixed part is now 123 at Heebo 500, 24 (was 207; limit 140). Q6 (a per-name line) still stands.'),
 ]
 # Texts the editor is not sure of: (regex on the original text, the comment). The row stays proposed for the owner.
 DOUBT = [
