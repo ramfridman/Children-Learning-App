@@ -153,6 +153,32 @@ abstract final class He {
     nikud: true,
   );
 
+  // ---- the child's home island and Nitzi's home (B-26) ----
+  // The name goes in as typed (never pointed, never with a prefix letter); `child/home_island_name.dart` fills it.
+  static const Str homeIsland = Str('הָאִי שֶׁל {child}', nikud: true);
+  static const Str homeIslandMine = Str('הָאִי שֶׁלִּי', nikud: true);
+  static const Str homeIslandSemantics = Str('האי של {child}');
+  static const Str homeIslandMineSemantics = Str('האי שלי');
+  static const Str nitziHomeWelcome = Str('שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה.', nikud: true);
+  static const Str nitziHomeWelcomeNoName = Str('שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה.', nikud: true);
+  // `nitziHome*` names the screen ("Nitzi's home"), not the speaker: the friend the child chose says these lines
+  // (B-26 decision 4), so none of them names Nitzi or has a first person with a gender.
+  static const Str nitziHomeHi = Str('זֶה הַבַּיִת שֶׁלִּי.', nikud: true);
+  static const Str nitziHomeTreasures = Str(
+    'פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת.',
+    nikud: true,
+  );
+  // The bottle holds a revisit or the next lesson (decision 3), so it never says "new" and never "arrived".
+  static const Str nitziHomeBottle = Str(
+    'בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.',
+    nikud: true,
+  );
+  // Only once the daily three-stop plan exists; until then the bottle always holds a next step, so this is not shown.
+  static const Str nitziHomeBottleDone = Str(
+    'כְּבָר סִיַּמְנוּ אֶת הַהַרְפַּתְקָה שֶׁל הַיּוֹם. אֶפְשָׁר לְשַׂחֵק בָּאִיִּים.',
+    nikud: true,
+  );
+
   // ---- parent gate and PIN (adult) ----
   static const Str gateTitle = Str('לפני שנמשיך');
   static const Str gateHint = Str('השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס.');

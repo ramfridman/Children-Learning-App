@@ -142,7 +142,8 @@ Not recommended: `הָאִי שֶׁלָּנוּ` (warm, but with siblings on one
 
 ## 3. Nitzi's home: the texts
 
-Nitzi is a she (PLAN.md › Characters), so her first person is feminine (`אֲנִי גָּרָה`). The child is addressed in the
+Update 2026-10-29 (owner decision 4): the friend the child chose says these lines, not only Nitzi, so no line names Nitzi
+or has a first person with a gender (friends are girls and boys, and a family character can be either). The child is addressed in the
 plural or not addressed with a verb at all, so no gender is guessed. Nothing is timed, nothing asks a personal
 question, nothing counts what is missing. `{companion}` is not used: its gender would have to agree with the verbs.
 
@@ -159,9 +160,9 @@ Every string below is new and is `"review": "needs-editor"` (`Str.review` return
 | `homeIslandMineSemantics` | `האי שלי` | no | screen reader, fallback | no | — |
 | `nitziHomeWelcome` | `שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה.` | yes; the name as typed | Nitzi's bubble when the screen opens | yes, **without the name** (one clip for every child) | `שלום, ברוכים הבאים הביתה.` |
 | `nitziHomeWelcomeNoName` | `שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה.` | yes | the same, when there is no name | yes (the same clip) | `שלום, ברוכים הבאים הביתה.` |
-| `nitziHomeHi` (optional) | `אֲנִי נִיצִי. אֲנִי גָּרָה פֹּה.` | yes | when the child taps Nitzi | yes | `אני ניצי. אני גָּרָה פֹּה.` |
+| `nitziHomeHi` (optional) | `זֶה הַבַּיִת שֶׁלִּי.` (2026-10-29; was `אֲנִי נִיצִי. אֲנִי גָּרָה פֹּה.`, which fits Nitzi only) | yes | when the child taps the friend at its house door | yes | `זה הבית שלי.` |
 | `nitziHomeTreasures` | `פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת.` | yes | Nitzi's second bubble, or when the hall or the stickers are tapped for the first time | yes | `פֹּה גָּרִים הגביעים, המדליות והמדבקות.` |
-| `nitziHomeBottle` | `הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.` | yes | beside today's adventure, while it is waiting | yes | `הבקבוק הביא הרפתקה חדשה.` |
+| `nitziHomeBottle` | `בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.` (2026-10-29; was `הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.`: a revisit is not new) | yes | beside the bottle | yes | `בבקבוק יש הרפתקה. בואו נִפְתַּח אותו.` |
 | `nitziHomeBottleDone` (only if the app knows the day's adventure was finished) | `כְּבָר סִיַּמְנוּ אֶת הַהַרְפַּתְקָה שֶׁל הַיּוֹם. אֶפְשָׁר לְשַׂחֵק בָּאִיִּים.` | yes | the same place, after it was finished | yes | `כבר סיימנו את ההרפתקה של היום. אפשר לשחק בָּאִיִּים.` |
 | `nitziHomeBack` | `לַמַּפָּה` | yes | the visible label of the back button | no | — |
 

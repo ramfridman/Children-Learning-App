@@ -10,7 +10,7 @@
 1. App screens and buttons,app/lib/strings/he.dart,restGoodbye,child (nikud),no,"הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.","הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.",,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,placementDone,child (nikud),no,יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.,יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.,"יפה מאוד, עכשיו נדע מאיפה להתחיל.","tone: ""!"" softened; nikud: partial (kept on number words), full spelling for the other words",text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,homeDaily,child (nikud),no,הַהַרְפַּתְקָה שֶׁל הַיּוֹם,הַהַרְפַּתְקָה שֶׁל הַיּוֹם,,,text-ready,,
-1. App screens and buttons,app/lib/strings/he.dart,homeBubble,child (nikud),yes,"{child}, הַבַּקְבּוּק הִגִּיעַ!","{child}, הַבַּקְבּוּק הִגִּיעַ!",הבקבוק הגיע.,"PER-NAME: the first name is said before this line (voiced per child, parent-reviewed spelling); tone: ""!"" softened; nikud: partial (kept on number words), full spelling for the other words",proposed,,[editor] Q6: a per-name line. The voice text is the line without the name; the name (parent-reviewed spelling) is said before it. One clip per child with the name inside sounds best; joining two clips is cheaper. The owner and the voice director decide.
+1. App screens and buttons,app/lib/strings/he.dart,homeBubble,child (nikud),yes,"{child}, הַבַּקְבּוּק הִגִּיעַ!","{child}, הַבַּקְבּוּק הִגִּיעַ!",הבקבוק הגיע.,"PER-NAME: the first name is said before this line (voiced per child, parent-reviewed spelling); tone: ""!"" softened; nikud: partial (kept on number words), full spelling for the other words",proposed,,"[editor] B-26: ""the bottle arrived"" is not true until the daily bottle exists (decision 3). Proposed: ""{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!"" (voice text: ""בבקבוק יש הרפתקה.""); the app-developer applies it with B-26 step 2 (the bubble width and the home goldens change). Q6 (a per-name line) still stands."
 1. App screens and buttons,app/lib/strings/he.dart,landColors,child (nikud),no,מִפְרַץ הַצְּבָעִים,מִפְרַץ הַצְּבָעִים,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,landCounting,child (nikud),no,גִּבְעוֹת הַסְּפִירָה,גִּבְעוֹת הַסְּפִירָה,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,landNitzi,child (nikud),no,הָאִי שֶׁל נִיצִי,הָאִי שֶׁל נִיצִי,,,text-ready,,
@@ -105,6 +105,16 @@
 1. App screens and buttons,app/lib/strings/he.dart,decorationFlag,child (nikud),no,דֶּגֶל,דֶּגֶל,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,decorationFountain,child (nikud),no,מַזְרֵקָה,מַזְרֵקָה,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,stickersEmptyChild,child (nikud),no,אַחֲרֵי הַשִּׁעוּר הָרִאשׁוֹן תִּהְיֶה כָּאן מַדְבֵּקָה.,אַחֲרֵי הַשִּׁעוּר הָרִאשׁוֹן תִּהְיֶה כָּאן מַדְבֵּקָה.,,,text-ready,,
+1. App screens and buttons,app/lib/strings/he.dart,homeIsland,child (nikud),no,הָאִי שֶׁל {child},הָאִי שֶׁל {child},,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. The island is named after the child (owner, 2026-10-29); the name is shown as typed and is never voiced or sent to a vendor; no name: ""my island""."
+1. App screens and buttons,app/lib/strings/he.dart,homeIslandMine,child (nikud),no,הָאִי שֶׁלִּי,הָאִי שֶׁלִּי,,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. The island is named after the child (owner, 2026-10-29); the name is shown as typed and is never voiced or sent to a vendor; no name: ""my island""."
+1. App screens and buttons,app/lib/strings/he.dart,homeIslandSemantics,adult,no,האי של {child},האי של {child},,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. Screen-reader text, plain; the whole name, never shortened."
+1. App screens and buttons,app/lib/strings/he.dart,homeIslandMineSemantics,adult,no,האי שלי,האי שלי,,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. Screen-reader text, plain; the whole name, never shortened."
+1. App screens and buttons,app/lib/strings/he.dart,nitziHomeWelcome,child (nikud),no,"שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה.","שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה.",,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. Said by the chosen friend (decision 4), screen only (decision 6). Q5 of b26-hebrew.md: ""בְּרוּכִים הַבָּאִים"" for every child (recommended) or by address form?"
+1. App screens and buttons,app/lib/strings/he.dart,nitziHomeWelcomeNoName,child (nikud),no,שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה.,שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה.,,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. Said by the chosen friend (decision 4), screen only (decision 6). Q5 of b26-hebrew.md: ""בְּרוּכִים הַבָּאִים"" for every child (recommended) or by address form?"
+1. App screens and buttons,app/lib/strings/he.dart,nitziHomeHi,child (nikud),no,זֶה הַבַּיִת שֶׁלִּי.,זֶה הַבַּיִת שֶׁלִּי.,,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. Said by the chosen friend at its house door (decision 4), so it names no one and has no gendered first person; was ""אֲנִי נִיצִי. אֲנִי גָּרָה פֹּה."" (fitted Nitzi only)."
+1. App screens and buttons,app/lib/strings/he.dart,nitziHomeTreasures,child (nikud),no,"פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת.","פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת.",,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. True once the Hall and the stickers live in the home (decision 1); mixed group, so masculine plural ""גָּרִים""."
+1. App screens and buttons,app/lib/strings/he.dart,nitziHomeBottle,child (nikud),no,בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.,בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.,,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. The bottle holds a revisit or the next lesson (decision 3), so not ""new""; was ""הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.""."
+1. App screens and buttons,app/lib/strings/he.dart,nitziHomeBottleDone,child (nikud),no,כְּבָר סִיַּמְנוּ אֶת הַהַרְפַּתְקָה שֶׁל הַיּוֹם. אֶפְשָׁר לְשַׂחֵק בָּאִיִּים.,כְּבָר סִיַּמְנוּ אֶת הַהַרְפַּתְקָה שֶׁל הַיּוֹם. אֶפְשָׁר לְשַׂחֵק בָּאִיִּים.,,,proposed,,"[editor] B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. Q7: only once the daily three-stop plan exists (not built); until then the bottle always holds a next step and this line is not shown."
 1. App screens and buttons,app/lib/strings/he.dart,gateTitle,adult,no,לפני שנמשיך,לפני שנמשיך,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,gateHint,adult,no,השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס.,השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס.,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,gateQuestion,adult,no,כמה זה?,כמה זה?,,,text-ready,,
@@ -9406,6 +9416,7 @@
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,אפשר שוב,אפשר שוב,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,ארבע,ארבע,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,ארבעה,ארבעה,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,ארבעים,ארבעים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,ארבעת,ארבעת,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,בטח,בטח,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,ברור,ברור,,,text-ready,,
@@ -9419,6 +9430,7 @@
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,חומות,חומות,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,חומים,חומים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,חמישה,חמישה,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,חמישים,חמישים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,חמש,חמש,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,חמשת,חמשת,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,טעות,טעות,,,text-ready,,
@@ -9449,6 +9461,7 @@
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,לבנה,לבנה,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,לבנות,לבנות,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,לבנים,לבנים,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,מאה,מאה,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,מה,מה,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,מספיק,מספיק,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,נכון,נכון,,,text-ready,,
@@ -9473,6 +9486,7 @@
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,צהובים,צהובים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שבע,שבע,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שבעה,שבעה,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שבעים,שבעים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שבעת,שבעת,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שוב,שוב,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שחור,שחור,,,text-ready,,
@@ -9480,10 +9494,13 @@
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שחורות,שחורות,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שחורים,שחורים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שישה,שישה,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שישים,שישים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שלוש,שלוש,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שלושה,שלושה,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שלושים,שלושים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שלושת,שלושת,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שמונה,שמונה,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שמונים,שמונים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שמונת,שמונת,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שני,שני,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,שניים,שניים,,,text-ready,,
@@ -9502,4 +9519,5 @@
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,תפסיקי,תפסיקי,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,תשע,תשע,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,תשעה,תשעה,,,text-ready,,
+6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,תשעים,תשעים,,,text-ready,,
 6. Helper lexicon (the words the AI helper may use),app/lib/speech/lexicon.dart,,word,no,תשעת,תשעת,,,text-ready,,
