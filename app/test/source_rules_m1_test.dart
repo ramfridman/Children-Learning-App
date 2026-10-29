@@ -91,10 +91,13 @@ void main() {
       final int childPart = source.indexOf('// ---- child space ----');
       final int parentPart = source.indexOf('// ---- parent gate and PIN');
       final String childBlock = source.substring(childPart, parentPart);
-      // Everything a child sees is pointed, except short semantic labels read by a screen reader.
-      for (final RegExpMatch m in RegExp(
-        r"static const Str (\w+) = Str\('([^']*)'(, nikud: true)?\)",
-      ).allMatches(childBlock)) {
+      // Everything a child sees is pointed, except short semantic labels read by a screen reader. The pattern also takes
+      // an entry that the formatter spread over several lines (QA-23: those were skipped before).
+      final List<RegExpMatch> entries = RegExp(
+        r"static const Str (\w+) = Str\(\s*'([^']*)'(,\s*nikud: true)?,?\s*\)",
+      ).allMatches(childBlock).toList();
+      expect(entries, hasLength(RegExp(r'static const Str \w+ =').allMatches(childBlock).length));
+      for (final RegExpMatch m in entries) {
         final String name = m.group(1)!;
         if (name.endsWith('Semantics') || name == 'homeParents') continue;
         expect(m.group(3), isNotNull, reason: '$name is shown to children and needs niqqud');

@@ -7,7 +7,7 @@ docs/review/hebrew-elevenlabs-review.md and .csv (only the rows that changed or 
   * for every spoken text, the voice text for ElevenLabs: softer punctuation, partial nikud (number words keep theirs),
     full spelling (ktiv male) for the other words, no curly-bracket variables (`VOICE_SUBS`, `VOICE_MANUAL`);
   * the status: `text-ready` for the rows the text editor reviewed and is sure of (`REVIEWED`), `proposed` with a
-    comment for the rows that wait for the owner (`DOUBT`).
+    comment for the rows that wait for the owner (`DOUBT`) and for new rows the editor has not signed (`PENDING`).
 
     PYTHONIOENCODING=utf-8 python tools/hebrew_voice_review.py
 
@@ -604,6 +604,28 @@ def analyse(text, is_spoken, groups=()):
 REVIEWED = [
     ('1', r'', r''), ('2', r'', r''), ('3', r'', r''), ('4', r'', r''), ('6', r'', r''),
 ]
+# Rows added after the master pass that the editor has not signed: (group digit, regex on the id, regex on the source,
+# the comment). They stay `proposed` for the owner although their group is in REVIEWED; this list wins over REVIEWED,
+# DOUBT and NOTE. A new string in a REVIEWED group goes here until the editor has read it (the run prints the new rows).
+B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. '
+PENDING = [
+    ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
+     'is shown as typed and is never voiced or sent to a vendor; no name: "my island".'),
+    ('1', r'^homeIsland(Mine)?Semantics$', r'he\.dart$', B26 + 'Screen-reader text, plain; the whole name, never shortened.'),
+    ('1', r'^nitziHomeWelcome(NoName)?$', r'he\.dart$', B26 + 'Said by the chosen friend (decision 4), screen only (decision 6). '
+     'Q5 of b26-hebrew.md: "בְּרוּכִים הַבָּאִים" for every child (recommended) or by address form?'),
+    ('1', r'^nitziHomeHi$', r'he\.dart$', B26 + 'Said by the chosen friend at its house door (decision 4), so it names no '
+     'one and has no gendered first person; was "אֲנִי נִיצִי. אֲנִי גָּרָה פֹּה." (fitted Nitzi only).'),
+    ('1', r'^nitziHomeTreasures$', r'he\.dart$', B26 + 'True once the Hall and the stickers live in the home (decision 1); '
+     'mixed group, so masculine plural "גָּרִים".'),
+    ('1', r'^nitziHomeBottle$', r'he\.dart$', B26 + 'The bottle holds a revisit or the next lesson (decision 3), so not '
+     '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
+    ('1', r'^nitziHomeBottleDone$', r'he\.dart$', B26 + 'Q7: only once the daily three-stop plan exists (not built); '
+     'until then the bottle always holds a next step and this line is not shown.'),
+    ('1', r'^homeBubble$', r'he\.dart$', 'B-26: "the bottle arrived" is not true until the daily bottle exists '
+     '(decision 3). Proposed: "{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!" (voice text: "בבקבוק יש הרפתקה."); the app-developer '
+     'applies it with B-26 step 2 (the bubble width and the home goldens change). Q6 (a per-name line) still stands.'),
+]
 # Texts the editor is not sure of: (regex on the original text, the comment). The row stays proposed for the owner.
 DOUBT = [
     (r'^מָה שֶׁתּוֹפֵס|^יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר', 'Q2: the misconception line M-CNT-SIZE said "more does not always mean bigger"; '
@@ -635,6 +657,13 @@ def first_match(rules, text):
 
 def reviewed(r):
     return any(r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source']) for g, i, s in REVIEWED)
+
+
+def pending(r):
+    for g, i, s, comment in PENDING:
+        if r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source']):
+            return comment
+    return None
 
 
 def main():
@@ -699,6 +728,7 @@ def master(rows, result):
         for r in csv.DictReader(open(path, encoding='utf-8-sig')):
             kept[(r['source'], r['id'], r['text'])] = r
     counts = {}
+    new_rows = []
     with open(path, 'w', encoding='utf-8-sig', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(MASTER_COLUMNS)
@@ -708,7 +738,12 @@ def master(rows, result):
             notes = g_notes + e_notes
             status = 'proposed' if (g_notes or is_spoken) else 'unchanged'
             comment = ''
-            if reviewed(r):
+            if (r['source'], r['id'], r['text']) not in kept:
+                new_rows.append(r)
+            wait = pending(r)
+            if wait:
+                status, comment = 'proposed', EDITOR + wait
+            elif reviewed(r):
                 doubt, note = first_match(DOUBT, r['text']), first_match(NOTE, r['text'])
                 if doubt:
                     status, comment = 'proposed', EDITOR + doubt
@@ -734,6 +769,11 @@ def master(rows, result):
                 '; '.join(notes), status, correction, comment or r['comment'],
             ])
     print('master', len(rows), 'rows', counts)
+    if kept and new_rows:
+        # Not in the last table: the editor has not read them; a row in a REVIEWED group needs a PENDING entry or a read.
+        print('new since the last table (%d):' % len(new_rows))
+        for r in new_rows:
+            print('  %s › %s: %s' % (r['source'], r['id'] or '-', r['text']))
 
 
 if __name__ == '__main__':

@@ -8,13 +8,13 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 
 | Group | Texts |
 |---|---|
-| 1. App screens and buttons | 322 |
+| 1. App screens and buttons | 332 |
 | 2. Core voice lines (spoken by every friend) | 27 |
 | 3. Lesson content (skills, activities, misconceptions) | 8956 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 23 |
-| 6. Helper lexicon (the words the AI helper may use) | 110 |
-| **Total** | **9504** |
+| 6. Helper lexicon (the words the AI helper may use) | 118 |
+| **Total** | **9522** |
 
 ## 1. App screens and buttons
 
@@ -126,6 +126,16 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | decorationFlag | דֶּגֶל | needs-editor |
 | app/lib/strings/he.dart | decorationFountain | מַזְרֵקָה | needs-editor |
 | app/lib/strings/he.dart | stickersEmptyChild | אַחֲרֵי הַשִּׁעוּר הָרִאשׁוֹן תִּהְיֶה כָּאן מַדְבֵּקָה. | needs-editor |
+| app/lib/strings/he.dart | homeIsland | הָאִי שֶׁל {child} | needs-editor |
+| app/lib/strings/he.dart | homeIslandMine | הָאִי שֶׁלִּי | needs-editor |
+| app/lib/strings/he.dart | homeIslandSemantics | האי של {child} | needs-editor |
+| app/lib/strings/he.dart | homeIslandMineSemantics | האי שלי | needs-editor |
+| app/lib/strings/he.dart | nitziHomeWelcome | שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה. | needs-editor |
+| app/lib/strings/he.dart | nitziHomeWelcomeNoName | שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה. | needs-editor |
+| app/lib/strings/he.dart | nitziHomeHi | זֶה הַבַּיִת שֶׁלִּי. | needs-editor |
+| app/lib/strings/he.dart | nitziHomeTreasures | פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת. | needs-editor |
+| app/lib/strings/he.dart | nitziHomeBottle | בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ. | needs-editor |
+| app/lib/strings/he.dart | nitziHomeBottleDone | כְּבָר סִיַּמְנוּ אֶת הַהַרְפַּתְקָה שֶׁל הַיּוֹם. אֶפְשָׁר לְשַׂחֵק בָּאִיִּים. | needs-editor |
 | app/lib/strings/he.dart | gateTitle | לפני שנמשיך | needs-editor |
 | app/lib/strings/he.dart | gateHint | השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס. | needs-editor |
 | app/lib/strings/he.dart | gateQuestion | כמה זה? | needs-editor |
@@ -9417,4 +9427,4 @@ Source: `app/lib/speech/alert_words.dart`. One word per entry.
 
 Source: `app/lib/speech/lexicon.dart`. One word per entry.
 
-אדום · אדומה · אדומות · אדומים · אחד · אחת · אני לא יודע · אני לא יודעת · אני רוצה לעצור · אפס · אפשר שוב · ארבע · ארבעה · ארבעת · בטח · ברור · די · ורוד · ורודה · ורודות · ורודים · חום · חומה · חומות · חומים · חמישה · חמש · חמשת · טעות · ירוק · ירוקה · ירוקות · ירוקים · כחול · כחולה · כחולות · כחולים · כחלחל · כן · כן כן · כתום · כתומה · כתומות · כתומים · כתמתם · לא · לא בטוח · לא בטוחה · לא יודע · לא יודעת · לא לא · לא נכון · לבן · לבנה · לבנות · לבנים · מה · מספיק · נכון · סגול · סגולה · סגולות · סגולים · סגלגל · עוד פעם · עוד פעם בבקשה · עזור לי · עזרה · עזרי לי · עצור · עשר · עשרה · עשרים · עשרת · צהוב · צהובה · צהובות · צהובים · שבע · שבעה · שבעת · שוב · שחור · שחורה · שחורות · שחורים · שישה · שלוש · שלושה · שלושת · שמונה · שמונת · שני · שניים · שנים · שנים עשר · שש · ששת · שתי · שתיים · שתים · שתים עשרה · תכלת · תעזור לי · תעזרי לי · תפסיק · תפסיקי · תשע · תשעה · תשעת
+אדום · אדומה · אדומות · אדומים · אחד · אחת · אני לא יודע · אני לא יודעת · אני רוצה לעצור · אפס · אפשר שוב · ארבע · ארבעה · ארבעים · ארבעת · בטח · ברור · די · ורוד · ורודה · ורודות · ורודים · חום · חומה · חומות · חומים · חמישה · חמישים · חמש · חמשת · טעות · ירוק · ירוקה · ירוקות · ירוקים · כחול · כחולה · כחולות · כחולים · כחלחל · כן · כן כן · כתום · כתומה · כתומות · כתומים · כתמתם · לא · לא בטוח · לא בטוחה · לא יודע · לא יודעת · לא לא · לא נכון · לבן · לבנה · לבנות · לבנים · מאה · מה · מספיק · נכון · סגול · סגולה · סגולות · סגולים · סגלגל · עוד פעם · עוד פעם בבקשה · עזור לי · עזרה · עזרי לי · עצור · עשר · עשרה · עשרים · עשרת · צהוב · צהובה · צהובות · צהובים · שבע · שבעה · שבעים · שבעת · שוב · שחור · שחורה · שחורות · שחורים · שישה · שישים · שלוש · שלושה · שלושים · שלושת · שמונה · שמונים · שמונת · שני · שניים · שנים · שנים עשר · שש · ששת · שתי · שתיים · שתים · שתים עשרה · תכלת · תעזור לי · תעזרי לי · תפסיק · תפסיקי · תשע · תשעה · תשעים · תשעת
