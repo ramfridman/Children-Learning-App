@@ -67,7 +67,7 @@ for _s, (_one, _) in {'circle': ('עִגּוּל', 0), 'square': ('רִבּוּ�
 # both (MATH-B-19, SHP-B-03) is not listed and passes voice=True on its spoken questions.
 VOICE_SKILLS = frozenset({
     'COL-B-01', 'MATH-B-02', 'MATH-B-03', 'MATH-B-06', 'MATH-B-07', 'MATH-B-08', 'MATH-B-10', 'MATH-B-14', 'MATH-B-15',
-    'MATH-B-18', 'NUM-B-10', 'NUM-B-11', 'NUM-B-14', 'NUM-B-16', 'NUM-B-17', 'SHP-B-02',
+    'MATH-B-18', 'NUM-B-10', 'NUM-B-11', 'NUM-B-14', 'NUM-B-17', 'SHP-B-02',
 })
 
 

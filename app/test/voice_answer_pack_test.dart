@@ -25,7 +25,7 @@ const Map<String, int> _spokenTapsBySkill = <String, int>{
   'NUM-A-01': 6,
   'NUM-A-02': 7,
   'NUM-A-14': 6, 'NUM-B-01': 9, 'NUM-B-02': 9, 'NUM-B-03': 8, 'NUM-B-10': 10, 'NUM-B-11': 12, 'NUM-B-14': 8,
-  'NUM-B-16': 9, 'NUM-B-17': 6, 'SHP-B-02': 8,
+  'NUM-B-17': 6, 'SHP-B-02': 8,
   // a colour, a shape, the next in a named sequence
   'COL-A-05': 4, 'COL-B-01': 9, 'SHP-A-04': 1, 'SHP-A-05': 3, 'SHP-B-03': 3, 'MATH-A-05': 2, 'MATH-B-14': 11,
 };
@@ -36,18 +36,19 @@ void main() {
 
   Iterable<Activity> spoken() => pack.activities.values.where((Activity a) => a.voiceAnswer);
 
-  test('267 of the 767 activities are answered by voice, and 500 are not', () {
+  test('258 of the 767 activities are answered by voice, and 509 are not', () {
     expect(pack.activities.length, 767);
-    expect(spoken().length, 267);
+    expect(spoken().length, 258);
+    expect(pack.activities.length - spoken().length, 509);
   });
 
-  test('by template: tap_answer 227 of 521, every count_tap and flash, and no other template', () {
+  test('by template: tap_answer 218 of 521, every count_tap and flash, and no other template', () {
     final Map<String, (int, int)> byTemplate = <String, (int, int)>{};
     for (final Activity a in pack.activities.values) {
       final (int, int) n = byTemplate[a.template] ?? (0, 0);
       byTemplate[a.template] = a.voiceAnswer ? (n.$1 + 1, n.$2) : (n.$1, n.$2 + 1);
     }
-    expect(byTemplate.remove('tap_answer'), (227, 294));
+    expect(byTemplate.remove('tap_answer'), (218, 303));
     expect(byTemplate.remove('count_tap'), (28, 0));
     expect(byTemplate.remove('flash'), (12, 0));
     expect(byTemplate.length, 12, reason: 'the other twelve templates');
@@ -69,6 +70,13 @@ void main() {
     for (final Activity a in pack.activities.values) {
       if (a.skillId == 'NUM-A-08' || a.skillId == 'NUM-B-08') expect(a.voiceAnswer, isFalse, reason: a.id);
     }
+  });
+
+  test('"a teen is ten and how many?" is tapped: its answer is the first word of the prompt (QA-21)', () {
+    for (int i = 1; i <= 9; i++) {
+      expect(pack.activities['b.numb16.$i']!.voiceAnswer, isFalse, reason: 'b.numb16.$i');
+    }
+    expect(pack.activities.values.where((Activity a) => a.skillId == 'NUM-B-16').length, 9);
   });
 
   test('the five hand-written activities carry the flag the decision gives them', () {
