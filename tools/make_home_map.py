@@ -329,6 +329,11 @@ def phone_strip(src, out, W, H, shift, cy_low, cy_high, spacing, R, ry):
     """A world strip: today's approved board at the right end (moved by `shift`), the 4 new lands to its left.
     Colour Bay keeps its place; shapes, logic, robots and market follow `spacing` apart, alternating high and low."""
     label, old = read_board(src)
+    if 'board12' in src:
+        # B-26 design review (docs/design/b26-step2-review.md section 4): the sparkle at (413.5, 112.5) sat half under the map
+        # bubble's top edge and looked like a glitch; it moves to the open sea left of the bubble (same size, same shape).
+        spark = re.search(r'<path d="M413\.5 105\.5 Q[^"]*" fill="#FFC83D" ></path>', old).group(0)
+        old = old.replace(spark, sparkle(280, 112.5, 7))
     colours_x = (70 if 'board10' in src else 22) + shift
     xs = {'shapes': colours_x - spacing, 'logic': colours_x - 2 * spacing, 'robots': colours_x - 3 * spacing, 'market': colours_x - 4 * spacing}
     cys = {'shapes': cy_high, 'logic': cy_low, 'robots': cy_high, 'market': cy_low}

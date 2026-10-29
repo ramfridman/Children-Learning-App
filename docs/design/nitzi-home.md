@@ -1,6 +1,7 @@
 # B-26: Nitzi's home (the child's island)
 
-Status: **PROPOSAL, waits for the owner's OK** (2026-10-29). Plan step only: no app code, no final art, nothing paid.
+Status: plan **approved by the owner** (2026-10-29). Step 4 art delivered the same day (section 6: placeholder art, drawn from
+references, `docs/design/nitzi-home-references.md`); the title fit rule is final (section 3.1).
 Owner of this doc: design-director. Board item: B-26. Wording: hebrew-text-editor. Voice: voice-and-sound-director.
 Wiring: app-developer. Checks: qa-engineer. The owner's binding decisions: the home island's sign opens a small home
 screen where the companion greets the child and where the Trophy Hall, the stickers and today's adventure live together;
@@ -18,8 +19,8 @@ Kids' app hubs (read 2026-10-29; help pages, store listings and reviews, no scre
 | Toca Life World ([parents' page](https://tocaboca.com/for-parents/toca-life-world/)) | The map is the hub; a building is a place to visit. | A building = a place (the lighthouse = the Trophy Hall). Its shop button is what we never do. |
 | ABCmouse "My Room" / hamster ([Common Sense](https://www.commonsensemedia.org/website-reviews/abcmousecom), [support](https://support.abcmouse.com/hc/de/articles/360048194113-Where-can-we-find-the-items-we-have-earned-or-purchased)) | A room decorated by spending tickets earned in lessons. | **Avoided**: no currency, no spending, no shop in the home; trophies and stickers are shown, never bought. |
 
-Real objects for the drawings (facts read now; photographs are looked at in the drawing step, before any SVG, as the
-owner's rule asks):
+Real objects for the drawings (facts read at plan time; the photographs looked at in the drawing step, before any SVG,
+and what was taken from each: `docs/design/nitzi-home-references.md`):
 - **Lighthouse** = the Trophy Hall: [Jaffa Light](https://en.wikipedia.org/wiki/Jaffa_Light): a short cylindrical tower
   with four ribs, a gallery and a lantern, painted in red and white horizontal bands. The map's lighthouse is already red
   and white banded; the close-up keeps that, adds the gallery rail and a warm lantern.
@@ -77,10 +78,9 @@ Fixed on every board:
 - **Back to the map**: the same pebble as Land, Hall and Sticker screens (`home_palm.svg`, spark fill, semantics
   `landBackSemantics` "חזרה למפה"), `PositionedDirectional(start: 16, top: 8)`, 48 drawn + 12 slop = 72 tap on phones;
   `start: 24, top: 24/32`, 64 + 12 on tablets. The start corner is where the avatar is on the map: same corner, "go back".
-- **Island name** (the title): the home sign style (wood, ink border 3, radius 12, `land_nitzi.svg` glyph), centred at
-  the top; font 22 phone, 20 SE, 28 tablets, bold, line height 1.7 (height about 43 / 40 / 54). Max width: phone 660,
-  SE 475, landscape 940, portrait 580. Always the **full** name: shrinks to 18, then wraps to two lines (there is room on
-  every board above the targets).
+- **Island name** (the title): the home sign style, centred at the top. Always the **full** name (up to 24, then `…`, as
+  step 3 builds it): it shrinks to 18 first, then takes two lines, and never breaks inside a word. Exact rule and boxes in
+  section 3.1.
 - **Bubble**: beside the companion's head on the start side, tail to the mouth; max width phone 260, SE 230,
   landscape 356, portrait 296 (each ends 16 / 24 inside the edge); up to two lines at 18 / 17 / 24 (the editor's draft "שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה." takes two
   lines on phones; the two-line bubble ends at y 165 phone and 169 SE, clear of the bottle); a name too long for it
@@ -92,7 +92,7 @@ Fixed on every board:
 | bottle (today's adventure) | 600, 192, 160 x 144 | 468, 188, 136 x 136 | 900, 480, 200 x 200 | 500, 760, 220 x 200 |
 | companion (greets) | 380, 160, 160 x 160 | 304, 172, 132 x 132 | 600, 380, 240 x 240 | 300, 380, 240 x 240 |
 | book (stickers) | 208, 216, 128 x 120 | 168, 212, 112 x 112 | 360, 516, 176 x 176 | 150, 780, 176 x 176 |
-| lighthouse (Hall) | 32, 88, 128 x 248 | 24, 84, 112 x 240 | 80, 220, 200 x 480 | 48, 200, 160 x 440 |
+| lighthouse (Hall) | 32, 88, 128 x 248 | **24, 96, 112 x 228** (was 84, 240; see 3.1) | 80, 220, 200 x 480 | 48, 200, 160 x 440 |
 | bubble (left, top) | 548, 100 | 420, 104 | 800, 296 | 500, 300 |
 | house (scene only) | 330, 64, 250 x 270 | 286, 80, 180 x 252 | 560, 180, 340 x 520 | 250, 160, 340 x 480 |
 
@@ -105,6 +105,67 @@ follow the same order. The primary object is the first one the eye meets after t
 the companion's waving hand. Portrait puts the companion and the lighthouse in the upper half and the beach row (bottle at
 the start side, book) at the thumbs. Nothing on this screen is LTR: no numerals, no maths, no arrows. A Latin-letter
 name is isolated (U+2068 ... U+2069) inside the Hebrew line.
+
+**Drawing the objects** (step 4): each picture is drawn in its tap area with `BoxFit.contain` and
+`Alignment.bottomCenter` (they stand on the ground; `BoardSvg` needs an `alignment` parameter, or an `Align` around it).
+The scene's rocks, porch and wet sand are placed for exactly that. Overlays the app draws on the pictures, in each
+picture's own coordinates:
+- lighthouse (100 x 220): the lantern window is x 35..65, y 36..60; the "something waits" trophy (`trophy_gold.svg`) is
+  centred there at 0.8 of the window's width, with the soft halo (`0xAAFFD45C`, blur 20) centred at (50, 48).
+- sticker book (100 x 100): the cover panel is x 33..63, y 19..49; the sticker (`sticker_01.svg` or the child's latest)
+  fills it.
+- bottle (100 x 100): the bob (section 5) turns the whole picture about its bottom centre.
+
+**Labels** under the objects: 14 bold on phones (as now), **18 on tablets** (14 looked too small under 200-point objects
+in the renders); they end above the bottom-24 band on every board, also at text scale 1.3.
+
+### 3.1 The title (the island's name): exact rule and boxes
+
+Card: `worldWoodLight`, ink border 3, radius 12, vertical padding 0, horizontal padding 8 (phones) / 12 (tablets),
+`land_nitzi.svg` glyph 24 / 32 on the start side, vertically centred, gap 4 / 6. So **card width = text width + 50**
+(phones) / **+ 68** (tablets), **card height = lines x size x textScale x 1.7 + 6**. Heebo 700, line height 1.7,
+centred on the board, `TextAlign.center`, at most 2 lines.
+
+| Board | top | base size | max card | **max text** |
+|---|---|---|---|---|
+| phone | 8 | 22 | 660 | 610 |
+| phoneSE | 8 | 20 | 475 | 425 |
+| tablet landscape | 24 | 28 | 940 | 872 |
+| tablet portrait | 32 | 28 | 580 | 512 |
+
+Text: `הָאִי שֶׁל` (its two words joined by a no-break space) + a space + the name (up to 24, then `…`; a Latin name in
+an isolate). Every width is measured with the screen's own `TextScaler` (so text scale 1.3 goes through the same steps):
+1. **One line**: the base size, then 1 pt smaller each step down to **18**; the first size at which the whole line fits
+   in the max text width wins.
+2. **Two lines at 18**: line 1 `הָאִי שֶׁל`, line 2 the name. A break may fall only at a space (before the name, or
+   between the name's parts). Accepted when the layout has at most 2 lines and **every single word** fits in the max text
+   width at that size (measure each word on one line: Flutter would otherwise break a long word by letters).
+3. Not yet: the same two-line layout at 17, 16, **15** (the floor, as on the map sign).
+4. Last guard only (never reached with 24 letters plus `…` at scale 1.3 on any board): `FittedBox(fit: BoxFit.scaleDown)`
+   around the card. Never a break inside a word, never a cut letter, never `…` added by the title (the name is whole).
+
+Measured in Heebo 700 (headless Chrome with the app's font file; `docs/design/previews/nitzi_home_art_*.png` are drawn
+with this rule): `הָאִי שֶׁל ` with its space is 3.528 em; ש x 24 is 20.625 em (the widest Hebrew name of 24 letters;
+W x 24 is 20.99, about the same); ש x 23 + `…` is 21.37; a typical 24-letter double name about 12.1 em.
+
+**The worst name, 24 x ש** (card boxes in board coordinates, x left..right, y top..bottom):
+
+| Board | text scale 1.0 | text scale 1.3 |
+|---|---|---|
+| phone | 22, 1 line; card 581.4 x 43.4; x 135.3..716.7, y 8..51.4 | 19, 1 line; 646.6 x 48.0; x 102.7..749.3, y 8..56.0 |
+| phoneSE | 18, 2 lines; 421.3 x 67.2; x 122.9..544.2, y 8..75.2 | 15, 2 lines; 452.2 x 72.3; x 107.4..559.6, y 8..80.3 |
+| tablet landscape | 28, 1 line; 744.3 x 53.6; x 217.9..962.2, y 24..77.6 | 27, 1 line; 915.5 x 65.7; x 132.3..1047.8, y 24..89.7 |
+| tablet portrait | 21, 1 line; 575.2 x 41.7; x 122.4..697.6, y 32..73.7 | 18, 2 lines; 550.6 x 85.6; x 134.7..685.3, y 32..117.6 |
+
+A longer name shown as 23 x ש + `…`: phone 22 / 18 (1 line), SE 18 / 15 (2 lines), landscape 28 / 26 (1 line),
+portrait 20 (1 line) / 18 (2 lines). Typical names (נֹעָה, אלכסנדרה, a 24-letter double name at 1.0) stay at the base
+size on one line on every board.
+
+Clearances in the worst case (1.3): the back pebble's tap area (72, at start 16 / 24) is 26.7 (phone), 31.4 (SE),
+32.2 (landscape) and 22.4 (portrait) away; the lighthouse's drawn top is 32 (phone), 15.7 (SE), 170 and 170 below the
+card; the bubble's top 44 / 23.7 / 206 / 182. The SE needs the lighthouse moved down 12 for this (rect 24, 96,
+112 x 228; the tower is drawn 103.6 x 228, still at least 112 to tap): before, a two-line title at 1.3 ended 4 above the
+lantern. Scene sparkles and gulls are kept out of the widest title box on every board, so the card never half-hides one.
 
 ## 4. The sign (map strip and home title)
 
@@ -174,6 +235,14 @@ first sound, which an unvocalised name does not give, and names that begin with 
 read wrongly. Every pattern keeps the name a separate word ("שֶׁל {child}", "{child}," as a call). "האי של שלי" (the
 name Shelly) reads like "the island of mine": for the editor.
 
+**The map bubble's width on phones** (QA step 3 hand-off, decided 2026-10-29): a speech bubble is speech, not a banner.
+At text scale 1.3 a 24 x ש name made the phone bubble 611.6 of 852 wide (left edge 28), across most of the open sea.
+New caps (`_HomeSpec.bubbleMaxWidth`, padding included): **phone 624 -> 460** (left edge never before x 180, the bubble
+stays over the right 60 % of the screen, by the speaker), **phoneSE 497 -> 400** (left edge never before x 113). The
+existing shortening (`_fittedName`, at least 3 letters and `…`) does the rest. What still fits whole at 1.3: about 22
+average letters or 13 ש on the phone, 21 / 14 on the SE (measured, Heebo 500: the fixed part `, מַה בַּבַּקְבּוּק?` is
+5.59 em, an average letter 0.55 em, ש 0.81 em); at 1.0 every 24-letter name stays whole. Tablets unchanged (210).
+
 **Something waits in the Hall** (the glow that leaves the map's trophy pebble): the home sign gets the same soft glow
 (`0xAAFFD45C`, blur 20, spread 4) and a 24 trophy badge (`trophy_gold.svg` on a paper disc) on its top-start corner,
 overlapping the border (no extra width); the label adds "גביע חדש מחכה" (`trophyNewSemantics`). Colour is not the only
@@ -204,21 +273,32 @@ franchise look, no real person):
 
 | File | What | Size (viewBox) |
 |---|---|---|
-| `app/assets/art/scenes/nitzi_home_phone.svg` | sea, beach, grass, the house with a porch, palm, path | 852 x 393 |
+| `app/assets/art/scenes/nitzi_home_phone.svg` | sea, the island (sand, wet sand, grass), the house with its porch, palm, the lighthouse's rocks, stepping stones, flowers, shells | 852 x 393 |
 | `.../nitzi_home_phone_se.svg` | same scene, SE board | 667 x 375 |
 | `.../nitzi_home_tablet_landscape.svg` | same scene | 1180 x 820 |
-| `.../nitzi_home_tablet_portrait.svg` | same scene, beach row at the bottom | 820 x 1180 |
-| `app/assets/art/home/lighthouse.svg` | red and white bands, ribs, gallery, lantern with a window | tall, 1 : 2.2 |
-| `app/assets/art/home/bottle_big.svg` | glass bottle, cork, rolled paper, wet-sand shadow | 1 : 1 |
-| `app/assets/art/home/sticker_book.svg` | a closed album on a tree stump (a real sticker is laid on its cover in code) | 1 : 1 |
+| `.../nitzi_home_tablet_portrait.svg` | same scene, tall island, the lighthouse on a rocky knoll, beach row at the bottom | 820 x 1180 |
+| `app/assets/art/home/lighthouse.svg` | tapering tower in six red and white bands, windows, door, gallery and railing, lantern window, domed cap, its rocks | 100 x 220 |
+| `app/assets/art/home/bottle_big.svg` | glass bottle lying in wet sand, cork, rolled letter tied with a bow, a shell | 100 x 100 |
+| `app/assets/art/home/sticker_book.svg` | an album standing on a stump, spine on the right, cover panel for the sticker, bookmark | 100 x 100 |
+
+**Delivered 2026-10-29** (step 4, art part). Generated by `python tools/make_nitzi_home.py` (deterministic: run twice,
+same bytes). The scenes hold only what stands behind the tap areas (the objects and the companion are drawn by the app
+on top). **`app/assets/art/home/` is a new folder: `app/pubspec.yaml` needs `- assets/art/home/`** (Flutter asset
+folders are not recursive; the app-developer adds it). Rendered and looked at: Chrome composites of the whole screen on
+the four boards, with Noa and with 24 x ש at text scale 1.0 and 1.3 (`docs/design/previews/nitzi_home_art_*.png`), the
+objects large and at their smallest sizes (`nitzi_home_objects.png`), and the four scenes and three objects through
+`flutter_svg` itself (`nitzi_home_objects_flutter_svg.png`; the same as in Chrome). Also changed in the map art
+(`tools/make_home_map.py`): the SE scene's sparkle that sat half under the map bubble (step 2 review, section 4) moved
+from x 413.5 to 280; it changes `home_phone_se.svg` and so the `home_phone_se*` goldens.
 
 Reused: the companion (`CharacterView`), `home_palm.svg` (back), `land_nitzi.svg` (glyph), `trophy_gold.svg` (badge
 and lantern), `sticker_01.svg` (album cover), `bottle.svg` (the pill icon, unchanged). The scenes keep the map's
 colours (`worldSea1`, the board sand and grass) so map and home feel like one place. All of it is placeholder art until
 the illustrator (to-do P9); files are named by id, so real art drops in without code.
 
-Effort (my own work): references and photographs 0.5 day; the generator, 4 scenes and 3 objects 1.5 days; contact
-sheet, previews and fixes 0.5 day; reviewing the goldens after the wiring 0.5 day. About **3 days**.
+Final vs placeholder: the **layout, sizes, title rule and file names are final**; every **picture is placeholder art**
+(drawn by me in plain shapes from references) until the illustrator's art (to-do P9) replaces it by file name. Still to
+do by me: review the goldens after the app-developer wires `HomeIslandScreen`.
 
 ## 7. Open questions for the owner (with my recommendation)
 
