@@ -63,4 +63,4 @@ class AppConfig {
 }
 
 /// The version string sent at enrolment (letters, digits and `._+-` only).
-const String appVersion = String.fromEnvironment('APP_VERSION', defaultValue: '0.3.0');
+const String appVersion = String.fromEnvironment('APP_VERSION', defaultValue: '0.4.0');
