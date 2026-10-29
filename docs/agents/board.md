@@ -1,7 +1,7 @@
 # Team board
 
 Open hand-offs between the agents (`docs/agents/README.md`). Only the orchestrator edits this file; agents return hand-offs in their reports. Statuses: `open`, `in progress`, `needs owner`, `done`.
-Last updated 2026-10-28 (after the first team wave; findings in `docs/qa/`, `docs/security/`, `docs/design/`, `docs/knowledge/`, `docs/audio/`, `docs/setup/ci-m9.md`, `docs/agents/hebrew-notes.md`).
+Last updated 2026-10-29 (B-22 added; after the first team wave; findings in `docs/qa/`, `docs/security/`, `docs/design/`, `docs/knowledge/`, `docs/audio/`, `docs/setup/ci-m9.md`, `docs/agents/hebrew-notes.md`).
 
 ## Open
 
@@ -22,6 +22,7 @@ Last updated 2026-10-28 (after the first team wave; findings in `docs/qa/`, `doc
 | B-21 | security-engineer | orchestrator, owner | SEC-13 (medium, private): on `main` (M8) a revisit-mission answer (capital letters in the lesson id) or an answer left open over an hour stalls the device's sync for good; fixed on `m9-content`. Ask which build is on the children's phone; do not uninstall or clear data; install the new dev build over it. A three-line hotfix to `main` only if an M8 build stays on the phone for days. | `docs/security/private/B-7-m9-content-review.md` | needs owner | 2026-10-29 |
 | B-19 | design-director, qa-engineer | app-developer | The curriculum and design audits agree that "who is third in the queue" has no queue on the stage, the clock needs a clearer minute hand, and the sequence direction (right to left in design-spec §8, left to right as built) needs the owner's decision. | `docs/design/m9-audit.md` F2, F6, F12 | needs owner | 2026-10-28 |
 | B-20 | security-engineer, qa-engineer | app-developer | PARTLY DONE in 2235ac2. STILL OPEN (low): R1 a brake per event type (a batch of answers plus a visit is not braked: QA-17), R2 a separate `wireFormat` number as the reset key (the engine version is never raised), QA-18 (a full batch of rows each bad on its own, for example a device clock reset to 2010, blocks later answers: a regression against 'one bad row never stops the sync'), backoff in a stall (41 calls per round). Was: SEC-12 (low): do not mark rows refused when every event of a batch of two or more is refused; reset the markers once after an engine version change; widen `wire-patterns.json` to every key, enum and range; limit synced pack fields to the server's (lesson id 40). Failing tests are described in the private review. | `app/lib/sync/sync_engine.dart:315-356` | open | 2026-10-29 |
+| B-22 | owner | infrastructure-engineer | Build warnings seen on the dev build (2026-10-29): Gradle `System::load` native-access warning on Android Studio's JDK 25, `firebase_core` applies the Kotlin Gradle plugin (a newer release with built-in Kotlin?), the SDK XML version 4 versus an old cmdline-tools. Fix what is safe, give the owner exact steps for the rest. If pubspec or lock files change: QA and security (OSV) check. | `app/android/gradle.properties`, `app/pubspec.yaml` | in progress | 2026-10-29 |
 
 ## Done
 
