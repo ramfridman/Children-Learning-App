@@ -46,7 +46,8 @@ const Map<String, String> names = <String, String>{
   'parts_40': 'אבגדהוזחטי אבגדהוזחטי אבגדהוזחטי אבגדהוז',
 };
 
-final String bubbleWithoutName = He.homeBubble.text.replaceFirst('{child}, ', '');
+/// The bubble's own line for a child with no usable name (B-26 step 3b).
+final String bubbleWithoutName = He.homeBubbleNoName.text;
 
 /// The errors list of the running test, and how many of them the profile picker raised (before the map).
 List<FlutterErrorDetails>? errorsSoFar;
@@ -141,8 +142,12 @@ void main() {
                 expect(bubble, bubbleWithoutName);
               } else {
                 expect(bubble.contains('\u200F') || bubble.contains('\u202A'), isFalse, reason: 'cleaned');
+                // The name sits in an isolate (B-26 step 3b), so its "…" stays on its right.
                 final String shown = bubble.split(',').first;
-                expect(island.name.startsWith(shown.replaceAll(ellipsis, '')), isTrue, reason: bubble);
+                expect(shown, startsWith('\u2068'), reason: bubble);
+                expect(shown, endsWith('\u2069'), reason: bubble);
+                final String inner = shown.substring(1, shown.length - 1);
+                expect(island.name.startsWith(inner.replaceAll(ellipsis, '')), isTrue, reason: bubble);
               }
               final Rect body = tester.getRect(find.byKey(const Key('bubble-body')));
               if (body.width > bubbleMax[b.key]! + 0.01) problems.add('bubble ${body.width} wide');
@@ -231,7 +236,7 @@ void main() {
 
         await rename('אלכסנדרה');
         expect(textIn(tester, 'sign-nitzi'), homeIslandName('אלכסנדרה').sign);
-        expect(textIn(tester, 'bubble-body'), startsWith('אלכסנדרה,'));
+        expect(textIn(tester, 'bubble-body'), startsWith('${isolatedName('אלכסנדרה')},'));
         await tester.tap(find.byKey(const Key('home-pill')));
         await tester.pumpAndSettle();
         expect(find.text(homeIslandName('אלכסנדרה').title), findsOneWidget);

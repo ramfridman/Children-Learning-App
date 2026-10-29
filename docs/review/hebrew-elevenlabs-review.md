@@ -1,6 +1,6 @@
 # Hebrew review for grammar and for ElevenLabs
 
-Made by `tools/hebrew_voice_review.py` from `hebrew-review.csv`. **Nothing here is in the pack yet.** Rows with a grammar problem come first (489); then every spoken text with its ElevenLabs version (2008 rows in all; texts that several activities share are one row). A row marked REVIEW in the explanation is a possible mistake that needs a person to decide. The whole list, one row for each text in the app, is `hebrew-master.csv`; the editor's rules are in `docs/agents/hebrew-notes.md`.
+Made by `tools/hebrew_voice_review.py` from `hebrew-review.csv`. **Nothing here is in the pack yet.** Rows with a grammar problem come first (489); then every spoken text with its ElevenLabs version (2009 rows in all; texts that several activities share are one row). A row marked REVIEW in the explanation is a possible mistake that needs a person to decide. The whole list, one row for each text in the app, is `hebrew-master.csv`; the editor's rules are in `docs/agents/hebrew-notes.md`.
 
 | ID | Original Text | Corrected Text (For UI) | ElevenLabs Optimized Text | Explanation |
 |---|---|---|---|---|
@@ -1790,6 +1790,7 @@ Made by `tools/hebrew_voice_review.py` from `hebrew-review.csv`. **Nothing here 
 | app/lib/strings/he.dart › ceremonyMedal (+1 more) | הִנֵּה מֵדַלְיָה בִּשְׁבִילְכֶם! | הִנֵּה מֵדַלְיָה בִּשְׁבִילְכֶם! | הנה מדליה בשבילכם. | tone: "!" softened; nikud: partial (kept on number words), full spelling for the other words |
 | app/lib/strings/he.dart › ceremonySilver (+1 more) | הִנֵּה גְּבִיעַ כֶּסֶף בִּשְׁבִילְכֶם! | הִנֵּה גְּבִיעַ כֶּסֶף בִּשְׁבִילְכֶם! | הנה גביע כסף בשבילכם. | tone: "!" softened; nikud: partial (kept on number words), full spelling for the other words |
 | app/lib/strings/he.dart › homeBubble | {child}, מַה בַּבַּקְבּוּק? | {child}, מַה בַּבַּקְבּוּק? | מה בבקבוק? | PER-NAME: the first name is said before this line (voiced per child, parent-reviewed spelling); nikud: partial (kept on number words), full spelling for the other words |
+| app/lib/strings/he.dart › homeBubbleNoName | מַה בַּבַּקְבּוּק? | מַה בַּבַּקְבּוּק? | מה בבקבוק? | nikud: partial (kept on number words), full spelling for the other words |
 | app/lib/strings/he.dart › listenConfirm (+1 more) | שָׁמַעְתִּי… נָכוֹן? | שָׁמַעְתִּי… נָכוֹן? | שמעתי… נכון? | nikud: partial (kept on number words), full spelling for the other words |
 | app/lib/strings/he.dart › listenMixed (+1 more) | אוֹפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב? | אוֹפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב? | אופס, האוזניים שלי התבלבלו. אפשר להגיד שוב? | tone: "!" softened; nikud: partial (kept on number words), full spelling for the other words |
 | app/lib/strings/he.dart › listenTap (+1 more) | אֶפְשָׁר גַּם לִלְחֹץ עַל הַתְּשׁוּבָה. | אֶפְשָׁר גַּם לִלְחֹץ עַל הַתְּשׁוּבָה. | אפשר גם ללחוץ על התשובה. | nikud: partial (kept on number words), full spelling for the other words |

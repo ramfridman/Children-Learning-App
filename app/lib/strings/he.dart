@@ -44,6 +44,9 @@ abstract final class He {
   static const Str placementDone = Str('יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.', nikud: true);
   static const Str homeDaily = Str('הַהַרְפַּתְקָה שֶׁל הַיּוֹם', nikud: true);
   static const Str homeBubble = Str('{child}, מַה בַּבַּקְבּוּק?', nikud: true);
+  // The map bubble when the child has no usable name (B-26): the same question without the call, its own entry so it
+  // is reviewed like every other line. Its voice text is the same as homeBubble's without the name (one clip).
+  static const Str homeBubbleNoName = Str('מַה בַּבַּקְבּוּק?', nikud: true);
   static const Str landColors = Str('מִפְרַץ הַצְּבָעִים', nikud: true);
   static const Str landCounting = Str('גִּבְעוֹת הַסְּפִירָה', nikud: true);
   static const Str landNitzi = Str('הָאִי שֶׁל נִיצִי', nikud: true);

@@ -139,8 +139,11 @@ String _clean(String typed) => typed
     .replaceAll(_spaceRun, ' ')
     .trim();
 
-String _withName(Str pattern, String name) =>
-    pattern.fill(<String, String>{'child': '$_isolateStart$name$_isolateEnd'});
+/// [name] in a first-strong isolate, for any Hebrew line that shows it: a Latin name and its ellipsis keep their order
+/// (the ellipsis on the right of the Latin letters). The marks have no width.
+String isolatedName(String name) => '$_isolateStart$name$_isolateEnd';
+
+String _withName(Str pattern, String name) => pattern.fill(<String, String>{'child': isolatedName(name)});
 
 /// [pattern] with the spaces between its words before the name made no-break.
 String _keepFrameTogether(String pattern) {
