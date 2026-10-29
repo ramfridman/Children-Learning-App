@@ -65,7 +65,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
-  "voiceAnswer": true,
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb16.4.correct",

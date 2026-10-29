@@ -2795,7 +2795,6 @@
    "id": "b.numb16.1",
    "skill": "NUM-B-16",
    "difficulty": 0.37,
-   "voice": true,
    "prompt": "אַחַת עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:1",
@@ -2819,7 +2818,6 @@
    "id": "b.numb16.2",
    "skill": "NUM-B-16",
    "difficulty": 0.44,
-   "voice": true,
    "prompt": "שְׁתֵּים עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:1",
@@ -2843,7 +2841,6 @@
    "id": "b.numb16.3",
    "skill": "NUM-B-16",
    "difficulty": 0.51,
-   "voice": true,
    "prompt": "שְׁלֹשׁ עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:1",
@@ -2867,7 +2864,6 @@
    "id": "b.numb16.4",
    "skill": "NUM-B-16",
    "difficulty": 0.58,
-   "voice": true,
    "prompt": "אַרְבַּע עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:4",
@@ -2891,7 +2887,6 @@
    "id": "b.numb16.5",
    "skill": "NUM-B-16",
    "difficulty": 0.65,
-   "voice": true,
    "prompt": "חֲמֵשׁ עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:1",
@@ -2915,7 +2910,6 @@
    "id": "b.numb16.6",
    "skill": "NUM-B-16",
    "difficulty": 0.72,
-   "voice": true,
    "prompt": "שֵׁשׁ עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:1",
@@ -2939,7 +2933,6 @@
    "id": "b.numb16.7",
    "skill": "NUM-B-16",
    "difficulty": 0.79,
-   "voice": true,
    "prompt": "שְׁבַע עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:7",
@@ -2963,7 +2956,6 @@
    "id": "b.numb16.8",
    "skill": "NUM-B-16",
    "difficulty": 0.86,
-   "voice": true,
    "prompt": "שְׁמוֹנֶה עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:1",
@@ -2987,7 +2979,6 @@
    "id": "b.numb16.9",
    "skill": "NUM-B-16",
    "difficulty": 0.9,
-   "voice": true,
    "prompt": "תְּשַׁע עֶשְׂרֵה הוּא עֶשֶׂר וְעוֹד כַּמָּה?",
    "options": [
     "n:1",
