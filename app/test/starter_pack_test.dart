@@ -32,6 +32,47 @@ Map<String, Object?> _m(Object? o) => o! as Map<String, Object?>;
 /// whether its copy, with every byte put back, was the genuine pack again at the end.
 typedef _FlipReport = ({int refused, List<int> accepted, bool restoredIsGenuine});
 
+/// The offsets [first], [first] + [stride], ... below [length].
+Iterable<int> _offsets(int first, int stride, int length) sync* {
+  for (int i = first; i < length; i += stride) {
+    yield i;
+  }
+}
+
+/// How many offsets [first], [first] + [step], ... lie below [length] (for 0 <= [first] < [step]).
+int _countOf(int first, int step, int length) => (length - first + step - 1) ~/ step;
+
+/// The part of the every-byte test this run takes, read from `NN_FLIP_SHARD` (`<index>/<total>`): the offsets i
+/// with i % total == index, so that the parts 0/total to (total - 1)/total together take every offset once.
+/// Unset or empty is the whole pack (`0/1`). Anything else that is not such a part fails the test: a mistyped
+/// switch must never quietly test fewer bytes.
+({int index, int total}) _flipShard(String? raw) {
+  if (raw == null || raw.isEmpty) return (index: 0, total: 1);
+  final RegExpMatch? m = RegExp(r'^(\d{1,9})/(\d{1,9})$').firstMatch(raw);
+  final int index = m == null ? -1 : int.parse(m[1]!);
+  final int total = m == null ? 0 : int.parse(m[2]!);
+  if (total < 1 || index < 0 || index >= total) {
+    fail('NN_FLIP_SHARD="$raw" is not <index>/<total> with total >= 1 and 0 <= index < total');
+  }
+  return (index: index, total: total);
+}
+
+/// Fails if there are more parts than the [length] bytes of the pack: such a switch (say 999999/1000000) would
+/// change almost no byte and still pass.
+void _expectPartsFit(({int index, int total}) shard, int length) {
+  if (shard.total > length) {
+    fail('NN_FLIP_SHARD=${shard.index}/${shard.total}: more parts than the $length bytes of the pack');
+  }
+}
+
+/// The (first, stride) of each of [workers] workers that together take the offsets [first], [first] + [step], ...
+/// each exactly once: worker w takes [first] + w x [step], then every (workers x step)th offset after it, so every
+/// worker gets bytes from all over the pack.
+List<({int first, int stride})> _workerSlices(int first, int step, int workers) =>
+    <({int first, int stride})>[
+      for (int w = 0; w < workers; w++) (first: first + w * step, stride: workers * step),
+    ];
+
 /// Changes the byte at [first], [first] + [stride], ... of the real pack, one at a time, and runs the full
 /// [verifyPack] on each changed pack. The byte is changed in place and put back after its check, so each
 /// check sees the real pack with exactly one byte changed (and no 3.5 MB copy is made per byte).
@@ -40,7 +81,7 @@ Future<_FlipReport> _flipEach(int first, int stride) async {
   final Uint8List key = _publicKey();
   int refused = 0;
   final List<int> accepted = <int>[];
-  for (int i = first; i < bytes.length; i += stride) {
+  for (final int i in _offsets(first, stride, bytes.length)) {
     bytes[i] ^= 0x01;
     try {
       await verifyPack(bytes, publicKey: key);
@@ -117,14 +158,13 @@ Future<_FixedUp> _fixedUpFile(String name) {
   return _fixedUp(entries, entries.indexWhere((ZipEntry e) => e.name == name), _publicKey());
 }
 
-/// Changes every [step]th byte of the real pack in turn (offsets 0, step, 2 x step, ...), spread over one
-/// worker isolate per processor: worker w takes the offsets w x step, (w + workers) x step, ... so together
-/// they take each offset exactly once, and every worker gets bytes from all over the pack. Expects every
-/// changed pack to be refused and returns how many were.
-Future<int> _refusedFlipsOfEvery(int step) async {
-  final int workers = Platform.numberOfProcessors;
+/// Changes every [step]th byte of the real pack in turn (offsets first, first + step, first + 2 x step, ...),
+/// spread over one worker isolate per processor ([_workerSlices]). Expects every changed pack to be refused and
+/// returns how many were.
+Future<int> _refusedFlipsOfEvery(int step, {int first = 0}) async {
   final List<_FlipReport> reports = await Future.wait(<Future<_FlipReport>>[
-    for (int w = 0; w < workers; w++) _flipEachInWorker(w * step, workers * step),
+    for (final ({int first, int stride}) s in _workerSlices(first, step, Platform.numberOfProcessors))
+      _flipEachInWorker(s.first, s.stride),
   ]);
   final List<int> accepted = <int>[for (final _FlipReport r in reports) ...r.accepted]..sort();
   expect(accepted, isEmpty, reason: 'these bytes were changed and the pack was accepted');
@@ -177,12 +217,95 @@ void main() {
     expect(await _refusedFlipsOfEvery(31), (length + 30) ~/ 31);
   }, timeout: const Timeout(Duration(minutes: 10)));
 
+  // CI runs this test as several parts side by side, each with its own NN_FLIP_SHARD=<index>/<total>; each part
+  // checks its own count, and the CI check requires the "flip shard" line, so a part that ignored the switch fails.
   test('every single byte of the real starter pack, changed in turn, is refused (all bytes with NN_EXHAUSTIVE=1 or in CI)', () async {
+    final ({int index, int total}) shard = _flipShard(Platform.environment['NN_FLIP_SHARD']);
     final bool full = Platform.environment['NN_EXHAUSTIVE'] == '1' || Platform.environment['CI'] == 'true';
     final Uint8List bytes = File(_packPath).readAsBytesSync();
-    final int tried = await _refusedFlipsOfEvery(full ? 1 : 97);
-    expect(tried, full ? bytes.length : (bytes.length + 96) ~/ 97);
+    _expectPartsFit(shard, bytes.length);
+    // Full: this part's offsets (every byte with 0/1). Here: every 97th byte, whatever the part.
+    final int first = full ? shard.index : 0;
+    final int step = full ? shard.total : 97;
+    final int tried = await _refusedFlipsOfEvery(step, first: first);
+    if (full) {
+      // ignore: avoid_print
+      print('flip shard ${shard.index}/${shard.total}: $tried of ${bytes.length} offsets refused');
+    }
+    expect(tried, _countOf(first, step, bytes.length));
   }, timeout: const Timeout(Duration(minutes: 60)));
+
+  test('the parts of the every-byte test (NN_FLIP_SHARD) take every offset exactly once, for any length', () {
+    // The counts the parts expect add up to the length, the real pack's included.
+    for (final int length in <int>[1, 5, 12, 97, 100, 1009, File(_packPath).lengthSync()]) {
+      for (int total = 1; total <= 7; total++) {
+        int expected = 0;
+        for (int index = 0; index < total; index++) {
+          expected += _countOf(index, total, length);
+        }
+        expect(expected, length, reason: 'the counts of $total parts add up to $length');
+      }
+    }
+    // The offsets the parts' workers really take: each part only its own, as many as it expects, and all the parts
+    // together every offset exactly once (lengths divisible by total and not, any number of workers).
+    for (final int length in <int>[1, 5, 12, 97, 100, 1009]) {
+      for (int total = 1; total <= 7; total++) {
+        for (final int workers in <int>{1, 3, 4, 16, Platform.numberOfProcessors}) {
+          final List<int> seen = List<int>.filled(length, 0);
+          for (int index = 0; index < total; index++) {
+            final ({int index, int total}) shard = _flipShard('$index/$total');
+            final List<int> part = <int>[
+              for (final ({int first, int stride}) s in _workerSlices(shard.index, shard.total, workers))
+                ..._offsets(s.first, s.stride, length),
+            ];
+            final String where = 'part $index/$total, $workers workers, length $length';
+            expect(part.every((int i) => i % total == index), isTrue, reason: where);
+            expect(part.length, _countOf(index, total, length), reason: where);
+            for (final int i in part) {
+              seen[i]++;
+            }
+          }
+          expect(
+            seen,
+            everyElement(1),
+            reason: '$total parts, $workers workers, length $length: each offset once',
+          );
+        }
+      }
+    }
+  });
+
+  test('NN_FLIP_SHARD: unset or empty is the whole pack, a part is <index>/<total>, anything else fails', () {
+    expect(_flipShard(null), (index: 0, total: 1));
+    expect(_flipShard(''), (index: 0, total: 1));
+    expect(_flipShard('0/1'), (index: 0, total: 1));
+    expect(_flipShard('5/6'), (index: 5, total: 6));
+    for (final String bad in <String>[
+      '6/6',
+      '7/6',
+      '0/0',
+      '-1/6',
+      '1/-6',
+      '5',
+      '5/',
+      '/6',
+      '5/6/7',
+      ' 5/6',
+      '5/6 ',
+      '5/6\n',
+      'a/6',
+      '1.0/6',
+      '5\\6',
+      '9999999999/6',
+    ]) {
+      expect(() => _flipShard(bad), throwsA(isA<TestFailure>()), reason: bad);
+    }
+    // A part must have bytes to take: at most as many parts as the pack has bytes.
+    _expectPartsFit((index: 5, total: 6), 6);
+    _expectPartsFit((index: 0, total: 1), 1);
+    expect(() => _expectPartsFit((index: 0, total: 7), 6), throwsA(isA<TestFailure>()));
+    expect(() => _expectPartsFit((index: 999998, total: 999999), 3505), throwsA(isA<TestFailure>()));
+  });
 
   // Every flip above is caught by a file's CRC or the zip rules before the signature or a hash is looked at. The three
   // tests below are the attacker who repairs the CRCs: the zip they make is valid, so only the hashes and the signature

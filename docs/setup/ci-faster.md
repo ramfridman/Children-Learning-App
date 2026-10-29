@@ -14,10 +14,10 @@ run on GitHub for this note. Numbers marked **estimate** say what they are based
 - That test is already spread over all 4 cores of one runner. The only way to make it fast without testing less is
   to spread its bytes over **several runners at once**. Everything else (caching, ordering, splitting the other
   files) saves minutes, not tens of minutes.
-- Prepared in this worktree (uncommitted): the `app` job split into parts that run side by side, with the job `app`
-  kept under its old name as a final check that every part passed (**stage 1**, works today, about 7 to 9 min
-  faster). **Stage 2** needs a ten-line change in the test (the app-developer) and one line in `ci.yml`, and brings a
-  push from **49 to 63 min down to about 9 to 10 min** (estimate). Neither stage drops a single check.
+- Applied in two stages: the `app` job split into parts that run side by side, with the job `app` kept under its old
+  name as a final check that every part passed (**stage 1**, about 7 to 9 min faster), and the every-byte test split
+  over **6 parts** by its `NN_FLIP_SHARD` switch (**stage 2**, section 6), which brings a push from **49 to 63 min down
+  to about 9 to 10 min** (estimate until the first GitHub run). Neither stage drops a single check.
 - Ideas that would skip or postpone checks (docs-only pushes, the every-byte test nightly) are in section 4's second
   table, apart
   from the speed-ups, and need the security-engineer's review and the owner's OK. They are **not** applied.
@@ -80,13 +80,13 @@ The other 68 files take under half a minute each. 1,054 tests passed and 4 were 
   the CRCs of all files before it. A pack twice as big makes this test about four times as long; on one runner it
   would pass its own 60-minute timeout. Splitting it over runners is also what keeps CI working as the pack grows.
 
-## 3. The design (prepared in `.github/workflows/ci.yml`)
+## 3. The design (in `.github/workflows/ci.yml`)
 
 ```
 secrets, hygiene, osv, database, gateway        unchanged, in parallel as before
 app-static      format, analyze, debug APK      ~3 to 5.5 min
 app-tests       2 shards of the 83 test files   ~4 to 5 min each   (every test but the every-byte one)
-app-pack-bytes  the every-byte test             stage 1: 1 part, ~42 to 52 min; stage 2: 6 parts, ~8 to 9.5 min each
+app-pack-bytes  the every-byte test             6 parts (stage 2), ~8 to 9.5 min each (estimate), job limit 25 min
 app             "app (Flutter analyze, tests, Android debug build)": green only if all three parts succeeded
 ```
 
@@ -101,29 +101,43 @@ How the split keeps every check:
   shards (now 801 and 801 weighted seconds, 42 and 41 files).
 - **Every file was really loaded.** `tools/ci/assert-tests-ran.py --files` reads the JSON report and fails the shard if
   a file of its list was never loaded as a suite.
-- **The every-byte test runs, in its own job, and nowhere else.** The file shards pass `--name '^(?!every single byte of
-  the real starter pack, changed in turn)'` (every test whose name does not start so); the pack job passes
-  `--plain-name` with the test's full name, and `assert-tests-ran.py --passed` fails it unless that exact test ran and
-  passed (not skipped). If someone renames the test, the pack job finds nothing and fails (`flutter test` exits 79 on
-  "No tests ran", checked on the PC), and the file shard runs the renamed test in full: slower, never less.
+- **The every-byte test runs, in its own job, and nowhere else; no other test can hide behind its name** (SEC-14).
+  The full name is written once per job as `EVERY_BYTE_TEST` (with `EVERY_BYTE_PREFIX`, its first words, in
+  `app-tests`). `tools/ci/exact-name-regex.py` escapes it and anchors it at both ends, so the file shards pass
+  `--name '^(?!every single byte of the real starter pack, changed in turn, is refused \(all bytes with NN_EXHAUSTIVE=1 or in CI\)$)'`:
+  every test but the one with exactly that full name. The same script fails the shard unless the prefix and the full
+  name each occur exactly once in all of `app/test` (a copy with the same name in another file would otherwise be
+  left out by the shards and never loaded by the pack job). After the tests, `assert-tests-ran.py --none-start-with`
+  fails a shard if a test that ran there starts with the prefix (a second test named "every single byte of the real
+  starter pack, changed in turn, with ..." runs, and turns the shard red until it is renamed). The pack job passes
+  `--plain-name` with the full name; `--passed` fails it unless that exact test ran and passed (not skipped), and
+  `--only` unless it was the only test that ran. If someone renames the test, the pack job finds nothing and fails
+  (`flutter test` exits 79 on "No tests ran", checked on the PC), and the source check fails the shards. All three
+  failures were proved on the PC with temporary probe files (section 7).
 - **The old name stays green only when everything is green.** The final job `app` keeps the old id and name, runs
   with `if: always()` (a skipped job would count as passed for a required check) and fails unless every part's result
   is `success`. A future branch ruleset requires the same six names as today.
 - `fail-fast: false` in both matrices: one failing shard does not cancel the others, so a push shows all its failures.
 - The test jobs no longer install Java (only the build needs it).
 
-**Stage 1 (works as it is):** `app-pack-bytes` has one part. It sets `NN_FLIP_SHARD=0/1`, which the test ignores
-today, so it changes every byte, exactly as now, but alone on its runner, from the start, without the every-31st-byte
-test, the other files and the build in front of or behind it. Estimate: about 42 to 52 min for the whole push instead
-of 49 to 63 (basis: the measured every-byte test plus about 1 min of setup).
+**Stage 1 (committed first, replaced by stage 2):** `app-pack-bytes` had one part with `NN_FLIP_SHARD=0/1`: every
+byte, alone on its runner, from the start, without the every-31st-byte test, the other files and the build in front of
+or behind it. Estimate then: about 42 to 52 min for the whole push instead of 49 to 63.
 
-**Stage 2 (needs the test change in section 6):** the matrix becomes `part: [1, 2, 3, 4, 5, 6]` and the job's
-`timeout-minutes` 25. Part k changes the offsets `i` with `i % 6 == k`; together the six parts change every offset
-exactly once, each spread over the whole pack, so they cost the same. The pack job then also requires the test to
-print `flip shard k/6:`; a test without the switch would make every part change every byte (correct, but six times
-the cost), and that check fails it instead. Estimate: 2,471 to 3,072 s / 6 = 412 to 512 s per part, plus about 1 min
-of setup: **8 to 9.5 min per part, about 9 to 10 min for the whole push** (the static job, the file shards and the
-database job are shorter).
+**Stage 2 (in place):** the matrix is `part: [1, 2, 3, 4, 5, 6]` and the job's `timeout-minutes` 25. Part k
+(`strategy.job-index` k - 1) runs the test with `NN_FLIP_SHARD=<k - 1>/6` and `NN_EXHAUSTIVE=1`, and changes the
+offsets `i` with `i % 6 == k - 1`; together the six parts change every offset exactly once, each spread over the
+whole pack, so they cost the same. `NN_EXHAUSTIVE=1` is set in the step itself, so the every-byte mode no longer
+depends on the runner's `CI=true` (SEC-15). The check step requires the line `flip shard <k - 1>/6:` for every part
+count, 1 included: the test prints it only in the every-byte mode, so a part that sampled (every 97th byte) or a test
+without the switch (every byte in every part, six times the cost) fails instead of passing.
+
+Time per part, **measured on the 16-core PC** (16 worker isolates): one part 189 s (the app-developer's run),
+part 4 of 6 (`3/6`) 3 min 6 s (the qa-engineer's), part 6 of 6 (`5/6`) 3 min 12 s (the infrastructure-engineer's).
+**On CI it is still an estimate** until the first run of this file: 2,471 to 3,072 s / 6 = 412 to 512 s per part on 4
+vCPUs, plus about 1 min of setup: **8 to 9.5 min per part, about 9 to 10 min for the whole push** (the static job, the
+file shards and the database job are shorter), against the job limit of 25 min. The first run's job summaries give
+the real figure; a part past 25 min is a red job, never a green one.
 
 **Also changed:** the concurrency group. A newer push to a branch still cancels the older run there; on `main` every
 commit now gets its own run and its own verdict. Before, a docs commit cancelled the merge's run on `main`
@@ -136,8 +150,8 @@ Pure speed-ups first: the same checks on every push, nothing moved.
 | Idea | Time saved per push (basis) | Coverage change | Needs security / owner | Risk |
 |---|---|---|---|---|
 | **A. The APK build, format and analyze in their own job, beside the tests** (applied) | 1.5 to 4.2 min wall (measured build 91 to 251 s, now off the critical path) | none | no | low; one more job's setup (about 1 min of runner time) |
-| **B. The every-byte test in its own job** (stage 1, applied) | about 7 to 9 min wall (measured: 167 to 209 s every-31st-byte test, 40 to 51 s checksums test, 41 to 65 s setup, the build; no longer in front of or behind it) | none: the same test, all bytes, every push | no | low; the job still runs 42 to 52 min, under the test's own 60-min timeout with 8 to 18 min to spare |
-| **C. The every-byte test split over 6 runners** (stage 2, prepared, needs the test change) | another 33 to 42 min wall: the push goes to about 9 to 10 min (estimate: measured test time / 6 + 1 min) | none: every byte, every push; the parts' union is checked by count in each part | security-engineer reviews the partition (it is a pack test); qa-engineer verifies | low; a part that ignored the switch fails its check |
+| **B. The every-byte test in its own job** (stage 1, applied) | about 7 to 9 min wall (measured: 167 to 209 s every-31st-byte test, 40 to 51 s checksums test, 41 to 65 s setup, the build; no longer in front of or behind it) | none: the same test, all bytes, every push | no | low; with one part the job ran 42 to 52 min (estimate), under the test's own 60-min timeout; stage 2 splits it |
+| **C. The every-byte test split over 6 runners** (stage 2, applied) | another 33 to 42 min wall: the push goes to about 9 to 10 min (estimate: measured test time / 6 + 1 min; one part 3 to 3.2 min on the 16-core PC, measured) | none: every byte, every push; the parts' union is checked by count in each part | security-engineer reviews the partition (it is a pack test); qa-engineer verifies | low; a part that ignored the switch fails its check |
 | C'. Same with 8 parts | another 1.5 to 2 min (estimate) | none | as C | 17 jobs per run against the Free plan's 20 at once: a second run at the same time waits |
 | **D. The other 83 files over 2 shards** (applied) | none on the wall today (the pack test is longer); keeps them at about 4 to 5 min instead of 6 to 7 so they never become the critical path after C | none: every file once, checked | no | low |
 | E. Caches | pub: already cached (`pub get` 1 to 2 s, measured); Flutter SDK: cached (17 to 26 s); Gradle downloads: cached (a miss cost 141 s plus 53 s to save, measured in 40795649171); test jobs skip Java now (0 to 20 s each). `build_runner` is not run in CI (generated files are committed): nothing to cache. | none | no | low |
@@ -172,33 +186,38 @@ job costs about one minute of setup and rounding.
 
 | Design | Wall time per push | Runner minutes per push (estimate) |
 |---|---|---|
-| Today | 49 to 63 min (measured) | 55 to 71 |
-| Stage 1 | about 42 to 52 min | 60 to 77 |
-| Stage 2, 6 parts | about 9 to 10 min | 66 to 84 (about 15 to 20% more than today, for about 6 times faster) |
+| Before the split | 49 to 63 min (measured) | 55 to 71 |
+| Stage 1 (replaced) | about 42 to 52 min | 60 to 77 |
+| Stage 2, 6 parts (in place) | about 9 to 10 min (estimate until the first run) | 66 to 84 (about 15 to 20% more than before the split, for about 6 times faster) |
 
 If the repository goes private again: the runners have **2 vCPUs** (half of today), Linux costs $0.006 a minute, and
-the Free plan includes $12 a month (about 2,000 minutes). Today's single job would then **fail** every push (the
+the Free plan includes $12 a month (about 2,000 minutes). The old single job would then **fail** every push (the
 every-byte test on 2 vCPUs is about 80 to 100 min, over its own 60-minute timeout and the job's 75). Stage 2 with 6
 parts would take about 15 to 18 min per push and about 120 to 140 runner-minutes ($0.72 to $0.84), so about 14 to 16
 pushes a month fit into the free amount. More parts keep the wall time down but not the minutes (the work stays the
 same). For a private repository the honest choices are paying, or idea K (owner and security-engineer).
 
-## 6. Stage 2: the test change (app-developer; qa-engineer verifies; security-engineer reviews)
+## 6. Stage 2: the test change (in place; app-developer, qa-engineer verified, security-engineer reviewed)
 
-In `app/test/starter_pack_test.dart`, only the every-byte test and its helper:
+In `app/test/starter_pack_test.dart`, only the every-byte test and its helpers:
 
-1. Read `NN_FLIP_SHARD` (`<index>/<total>`). Absent or empty: `0/1`. Anything else that is not two whole numbers with
-   `total >= 1` and `0 <= index < total` **fails** the test (never skips it).
-2. In full mode (`CI=true` or `NN_EXHAUSTIVE=1`) change the offsets `index, index + total, index + 2 x total, ...`:
-   `_refusedFlipsOfEvery` gets a first offset, and worker `w` takes `first + w x step` with stride `workers x step`
-   (with `first = index`, `step = total`). The sampled local mode (every 97th byte) stays as it is.
-3. Expect exactly `(bytes.length - index + total - 1) ~/ total` refusals (with `0/1` that is `bytes.length`, today's
-   assertion). Over all parts these add up to `bytes.length`: every offset once.
-4. Print one line `flip shard <index>/<total>: <tried> of <bytes.length> offsets refused`. The CI check looks for
-   `flip shard <index>/<total>:`.
-5. Keep the test's name (the CI jobs select it by name) and its 60-minute timeout.
+1. `NN_FLIP_SHARD` (`<index>/<total>`) is read; absent or empty is `0/1`. Anything else that is not two whole numbers
+   (at most 9 digits) with `total >= 1` and `0 <= index < total` **fails** the test (never skips it), and so does a
+   `total` larger than the number of bytes in the pack (a part with no byte to change).
+2. In full mode (`NN_EXHAUSTIVE=1`, which the CI step sets, or `CI=true`) the test changes the offsets
+   `index, index + total, index + 2 x total, ...`: `_refusedFlipsOfEvery` takes a first offset, and worker `w` takes
+   `first + w x step` with stride `workers x step` (with `first = index`, `step = total`). The sampled local mode
+   (every 97th byte) is unchanged.
+3. It expects exactly `(bytes.length - index + total - 1) ~/ total` refusals (with `0/1` that is `bytes.length`, the
+   old assertion). Over all parts these add up to `bytes.length`: every offset once. A unit test checks the partition
+   with the real helpers (lengths 1 to 1,009 and the real pack, 1 to 7 parts, 1 to 16 workers).
+4. It prints one line `flip shard <index>/<total>: <tried> of <bytes.length> offsets refused`, in full mode only. The
+   CI check requires `flip shard <index>/<total>:` with the job's own numbers, for every part count.
+5. The test's name (the CI jobs select it by name) and its 60-minute timeout are kept.
 
-Then in `ci.yml`, job `app-pack-bytes`: `part: [1, 2, 3, 4, 5, 6]` and `timeout-minutes: 25`. Commit the two together.
+In `ci.yml`, job `app-pack-bytes`: `part: [1, 2, 3, 4, 5, 6]`, `timeout-minutes: 25`, `NN_EXHAUSTIVE: "1"` on the
+test step. To change the number of parts, change the matrix list and nothing else (the switch is built from
+`strategy.job-index` and `strategy.job-total`); keep the parts' estimated time under the 25-minute limit.
 
 ## 7. How this was checked, and what was not
 
@@ -208,7 +227,18 @@ Then in `ci.yml`, job `app-pack-bytes`: `part: [1, 2, 3, 4, 5, 6]` and `timeout-
   every-byte test not among them; `assert-tests-ran.py` passed `--files` and `--passed` for the every-31st-byte test
   and failed (exit 1) for the excluded every-byte test. A `--plain-name` that matches nothing: `flutter test` exits 79
   ("No tests ran") and the check fails too.
-- **The workflow:** `actionlint` is not installed on this PC (installing it needs the owner's OK). Instead a PyYAML
+- **Stage 2 and SEC-14/15, on the PC (2026-10-29):** the file-shard form of `starter_pack_test.dart` with the exact
+  filter: +18, all passed, the every-byte test not among them, `--files` and `--none-start-with` pass. A temporary
+  probe test named "every single byte of the real starter pack, changed in turn, with the CRCs repaired": under the
+  old prefix filter it ran nowhere and the old check passed (exit 0); under the exact filter it ran and
+  `--none-start-with` failed (exit 1); the source check failed with it present (exit 1). A second test with exactly
+  the full name in another file: the source check failed (exit 1); a longer name containing it: `--only` failed the
+  pack check (exit 1). `NN_FLIP_SHARD=0/1` with `CI` and `NN_EXHAUSTIVE` unset: the test passed in sampled mode and
+  printed no `flip shard` line; the new pack check failed (exit 1), the old one-part check (`--passed` only) passed.
+  `NN_EXHAUSTIVE=1 NN_FLIP_SHARD=5/6` with `CI` unset: `flip shard 5/6: 584268 of 3505610 offsets refused`, passed
+  in 3 min 12 s, the check passed (and failed for `4/6`). `NN_FLIP_SHARD=0/999999999`: the test failed ("more parts
+  than the 3505610 bytes"). `actionlint` 1.7.12: no findings.
+- **The workflow (stage 1):** `actionlint` was not installed on this PC then. Instead a PyYAML
   check against `origin/main`'s `ci.yml`: the same triggers; `permissions: contents: read` only, none per job; no
   `pull_request_target`; no `secrets.` in any expression; the five other jobs byte-for-byte unchanged; the six job ids
   and names kept; no new action (every `uses:` is one already in the file, pinned by a 40-character SHA); every job
@@ -216,5 +246,6 @@ Then in `ci.yml`, job `app-pack-bytes`: `part: [1, 2, 3, 4, 5, 6]` and `timeout-
   of the old app job (`pub get --enforce-lockfile`, format, `analyze --fatal-infos`, `flutter test`, the timing
   summary, the arm64 debug build) is in one of the parts. All passed. Read twice by hand.
 - **Not checked:** a real run on GitHub (the first push of this change is the proof; its job summaries show the times
-  per part); the stage 2 numbers (they need the test change); the private-repository numbers (scaled from the
-  measured ones by the number of vCPUs).
+  per part, so the CI time per part is an estimate until then); all six parts run one after the other on the PC (parts
+  `3/6` and `5/6` were run; the others follow from the partition test); the private-repository numbers (scaled from
+  the measured ones by the number of vCPUs).

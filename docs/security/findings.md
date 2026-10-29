@@ -77,3 +77,12 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   are still required before SEC-12 closes (sent to the app-developer). One new finding above low is held privately.
   `deno task check`: 180 passed, 0 failed, 7 ignored. No package, lock file or workflow changed. The Flutter tests of the
   commit were not run by the security-engineer.
+- **The CI split, stages 1 and 2 (board B-25, 2026-10-29): approved; two low findings fixed.** The `app` job is split into a
+  format/analyze/build part, two test-file shards and the every-byte pack test in six parts, with a final job still named
+  `app (Flutter analyze, tests, Android debug build)` that is green only if every part succeeded (a failed, skipped or
+  cancelled part makes it red). Permissions stay `contents: read`, no pull-request trigger, no secret, no new action, every
+  action pinned by SHA. Everything that ran on every push still runs on every push: every test file once, every test, every
+  byte of the signed pack once. SEC-14 (the shard filter excluded by test-name prefix, so a second test with that prefix
+  would have run nowhere) is fixed by an exact, escaped name plus two checks that fail the run; SEC-15 (the exhaustive mode
+  relied on the runner's `CI=true`) is fixed by setting it in the job and always requiring the `flip shard` line. Skipping
+  the app jobs on docs-only pushes, or running the every-byte test only at night, were considered and are not applied.

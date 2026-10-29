@@ -156,7 +156,10 @@ jobs:
         # jobs that really exist; to add a shard, add a number here and nothing else.
         shard: [1, 2]
     env:
-      # Runs in its own jobs (app-pack-bytes). A regular expression: every test whose name does not start so.
+      # Runs in its own jobs (app-pack-bytes). The shards leave out the test with exactly this full name (escaped and
+      # anchored by exact-name-regex.py, which also fails unless the prefix and the name occur once in app/test), and
+      # fail if a test that ran starts with the prefix (SEC-14). The same value as EVERY_BYTE_TEST in app-pack-bytes.
+      EVERY_BYTE_TEST: "every single byte of the real starter pack, changed in turn, is refused (all bytes with NN_EXHAUSTIVE=1 or in CI)"
       EVERY_BYTE_PREFIX: "every single byte of the real starter pack, changed in turn"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -176,7 +179,7 @@ jobs:
           SHARD_INDEX: ${{ strategy.job-index }}
           SHARD_TOTAL: ${{ strategy.job-total }}
         run: |
-          python3 ../tools/ci/test-shard.py test "$SHARD_INDEX" "$SHARD_TOTAL" > "${RUNNER_TEMP}/shard-files.txt"
+          python3 -I ../tools/ci/test-shard.py test "$SHARD_INDEX" "$SHARD_TOTAL" > "${RUNNER_TEMP}/shard-files.txt"
           echo "runner: $(nproc) cores; files of this shard:"
           cat "${RUNNER_TEMP}/shard-files.txt"
       - name: Test
@@ -185,30 +188,34 @@ jobs:
         # local run does. The JSON file is read by the next two steps.
         run: |
           mapfile -t files < "${RUNNER_TEMP}/shard-files.txt"
+          exclude="$(python3 -I ../tools/ci/exact-name-regex.py "${EVERY_BYTE_TEST}" "${EVERY_BYTE_PREFIX}" test)"
+          echo "name filter: ${exclude}"
           bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test --concurrency="$(nproc)" \
-            --name "^(?!${EVERY_BYTE_PREFIX})" --file-reporter "json:${RUNNER_TEMP}/flutter-test.json" "${files[@]}"
-      - name: Every file of this shard was loaded
+            --name "${exclude}" --file-reporter "json:${RUNNER_TEMP}/flutter-test.json" "${files[@]}"
+      - name: Every file of this shard was loaded, and no other test has the every-byte test's words
         if: ${{ !cancelled() }}
         working-directory: app
-        run: python3 ../tools/ci/assert-tests-ran.py "${RUNNER_TEMP}/flutter-test.json" --files "${RUNNER_TEMP}/shard-files.txt"
+        run: |
+          python3 -I ../tools/ci/assert-tests-ran.py "${RUNNER_TEMP}/flutter-test.json" \
+            --files "${RUNNER_TEMP}/shard-files.txt" --none-start-with "${EVERY_BYTE_PREFIX}"
       - name: Where the test time went (job summary)
         if: always()
         working-directory: app
-        run: python3 ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
+        run: python3 -I ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
 
   app-pack-bytes:
     name: "app part: every byte of the starter pack, part ${{ matrix.part }} of ${{ strategy.job-total }}"
     runs-on: ubuntu-24.04
-    # One part today: the whole test, measured 2,471 to 3,072 s (4 worker isolates on 4 cores), under its own 60-minute
-    # test timeout. With the test's NN_FLIP_SHARD switch (docs/setup/ci-faster.md, stage 2) the parts split the bytes:
-    # 6 parts are estimated at 8 to 9.5 min each; then lower this to 25.
-    timeout-minutes: 70
+    # The whole test was measured at 2,471 to 3,072 s (4 worker isolates on 4 cores). With the test's NN_FLIP_SHARD
+    # switch (docs/setup/ci-faster.md, stage 2) the 6 parts split the bytes, each a sixth: estimated 8 to 9.5 min each.
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
-        # Stage 1: [1]. Stage 2 (only together with the test change): [1, 2, 3, 4, 5, 6].
-        part: [1]
+        # Stage 2: part k (job-index k - 1) changes the offsets i with i % 6 == k - 1; together every byte once.
+        part: [1, 2, 3, 4, 5, 6]
     env:
+      # The same value as EVERY_BYTE_TEST in app-tests (a drift makes the shards run this test and fail).
       EVERY_BYTE_TEST: "every single byte of the real starter pack, changed in turn, is refused (all bytes with NN_EXHAUSTIVE=1 or in CI)"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -227,26 +234,28 @@ jobs:
         env:
           # <index>/<total>: the test changes the offsets i with i % total == index. "0/1" is every byte.
           NN_FLIP_SHARD: ${{ strategy.job-index }}/${{ strategy.job-total }}
+          # Every byte of the part, said here and not left to the runner's CI=true (SEC-15).
+          NN_EXHAUSTIVE: "1"
         run: |
           echo "runner: $(nproc) cores; NN_FLIP_SHARD=${NN_FLIP_SHARD}"
           bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test test/starter_pack_test.dart \
             --plain-name "${EVERY_BYTE_TEST}" --file-reporter "json:${RUNNER_TEMP}/flutter-test.json"
-      - name: The test ran, passed, and took only this part's bytes
+      - name: The test ran alone, passed, and took every byte of this part
         if: ${{ !cancelled() }}
         working-directory: app
         env:
           SHARD_INDEX: ${{ strategy.job-index }}
           SHARD_TOTAL: ${{ strategy.job-total }}
-        # With more than one part the test must say it split the bytes; a test without the switch would flip every
-        # byte in every part (correct, but each part as slow as the whole).
+        # The test prints "flip shard <index>/<total>:" only when it changed every byte of its part (full mode), for
+        # any number of parts, 1 included. Missing: the test sampled (every 97th byte) or ignored the switch (every
+        # byte in every part). --only: no second test matched the name.
         run: |
-          args=(--passed "${EVERY_BYTE_TEST}")
-          if [ "$SHARD_TOTAL" -gt 1 ]; then args+=(--printed "flip shard ${SHARD_INDEX}/${SHARD_TOTAL}:"); fi
-          python3 ../tools/ci/assert-tests-ran.py "${RUNNER_TEMP}/flutter-test.json" "${args[@]}"
+          python3 -I ../tools/ci/assert-tests-ran.py "${RUNNER_TEMP}/flutter-test.json" --passed "${EVERY_BYTE_TEST}" \
+            --only "${EVERY_BYTE_TEST}" --printed "flip shard ${SHARD_INDEX}/${SHARD_TOTAL}:"
       - name: Where the test time went (job summary)
         if: always()
         working-directory: app
-        run: python3 ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
+        run: python3 -I ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
 
   app:
     # The name the owner (and a future branch ruleset) relies on. always(): this job is never "skipped" (a skipped job
