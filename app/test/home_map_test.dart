@@ -1,8 +1,11 @@
 // Board B-23: every land is on the map of every board, and opens with a still tap once it is brought into view. On a
 // phone the map is a strip that pans sideways (home at the right), on a tablet in portrait it scrolls up; a drag that
-// starts on a sign moves the map and opens nothing. The real app with the real pack.
+// starts on a sign moves the map and opens nothing. The home island's sign opens the child's home (B-26). The real app
+// with the real pack.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/child/home_island_name.dart';
+import 'package:nitznutz/child/home_island_screen.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/child/land_screen.dart';
 
@@ -40,14 +43,23 @@ void main() {
 
   for (final MapEntry<String, Size> board in boards.entries) {
     group('the map on ${board.key}', () {
-      testWidgets('all seven signs are on the map, and Nitzi\'s island has no way in yet', (
+      testWidgets('all seven signs are on the map, and the home island\'s sign opens the child\'s home', (
         WidgetTester tester,
       ) async {
         await home(tester, board.value);
         for (final Land l in Land.values) {
           expect(find.byKey(Key('sign-${l.name}')), findsOneWidget, reason: l.name);
         }
-        expect(find.byKey(const Key('land-tap-nitzi')), findsNothing);
+        expect(find.byKey(const Key('land-tap-nitzi')), findsOneWidget);
+        await tester.tap(find.byKey(const Key('sign-nitzi')));
+        await tester.pumpAndSettle();
+        expect(find.byType(LandScreen), findsNothing, reason: 'the home island is not a land');
+        expect(find.byType(HomeIslandScreen), findsOneWidget);
+        expect(find.text(homeIslandName('נועה').title), findsOneWidget);
+        await tester.tap(find.byKey(const Key('home-island-back')));
+        await tester.pumpAndSettle();
+        expect(find.byType(HomeIslandScreen), findsNothing);
+        expect(find.byType(HomeScreen), findsOneWidget);
       });
 
       for (final Land land in learningLands) {
@@ -89,6 +101,32 @@ void main() {
       });
     });
   }
+
+  testWidgets('coming back from the child\'s home, the map is where the child left it', (
+    WidgetTester tester,
+  ) async {
+    await home(tester, boards['phone']!);
+    // Panned part way towards Market Village, then the home opened from Today's Adventure, which never moves.
+    final ScrollPosition map = tester
+        .state<ScrollableState>(
+          find.descendant(
+            of: find.byKey(const PageStorageKey<String>('home-map')),
+            matching: find.byType(Scrollable),
+          ),
+        )
+        .position;
+    map.jumpTo(420);
+    await tester.pumpAndSettle();
+    final Offset counting = tester.getCenter(find.byKey(const Key('sign-counting')));
+    await tester.tap(find.byKey(const Key('home-pill')));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomeIslandScreen), findsOneWidget);
+    await tester.tap(find.byKey(const Key('home-island-back')));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(map.pixels, 420);
+    expect(tester.getCenter(find.byKey(const Key('sign-counting'))), counting);
+  });
 
   testWidgets('coming back from a land, the map is where the child left it', (WidgetTester tester) async {
     await home(tester, boards['phone']!);

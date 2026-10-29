@@ -402,6 +402,78 @@ void main() {
       });
     }
 
+    // QA-29: a name too long for its line is shortened by the sign's rule, so a tablet bubble never takes three lines.
+    for (final BoardBox b in boards.skip(2)) {
+      for (final double scale in <double>[1, 1.3]) {
+        testWidgets(
+          '${b.name}, text scale $scale: a 24-letter name is shortened so the bubble keeps two lines',
+          (WidgetTester tester) async {
+            const String name = 'אבגדהוזחטיכלמנסעפצקרשתאב';
+            await pumpHome(tester, b.size, mouth: mouth, island: homeIslandName(name), scale: scale);
+            final String text = tester
+                .widget<Text>(
+                  find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
+                )
+                .data!;
+            final List<String> lines = text.split('\n');
+            expect(lines, hasLength(2));
+            expect(lines.first, endsWith('…,'), reason: 'the name, shortened, then the comma');
+            expect(name.startsWith(lines.first.substring(0, lines.first.length - 2)), isTrue);
+            expect(
+              lines.last,
+              He.homeBubble.text.split('{child}, ').last,
+              reason: 'the words after the name, whole',
+            );
+            final Rect body = rectOf(tester, 'bubble-body');
+            expect(body.width, lessThanOrEqualTo(210));
+            expect(body.height, lessThan(3 * 24 * scale * 1.7), reason: 'two lines, never three');
+          },
+        );
+      }
+    }
+
+    testWidgets('on a phone a name is shortened only when the line would leave the open sea', (
+      WidgetTester tester,
+    ) async {
+      // 40 letters in four parts, the longest the parent form takes, at text scale 1.3 on the smallest phone.
+      const String name = 'אבגדהוזחטי אבגדהוזחטי אבגדהוזחטי אבגדהוזח';
+      await pumpHome(tester, boards[1].size, mouth: mouth, island: homeIslandName(name), scale: 1.3);
+      final Rect body = rectOf(tester, 'bubble-body');
+      expect(body.width, lessThanOrEqualTo(667 - 154 - 16));
+      expect(body.left, greaterThanOrEqualTo(16));
+      final String text = tester
+          .widget<Text>(
+            find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
+          )
+          .data!;
+      expect(text, contains('…,'));
+      expect(text, isNot(contains('\n')), reason: 'one line on a phone');
+      // A 24-letter name still fits there whole.
+      await pumpHome(
+        tester,
+        boards[1].size,
+        mouth: mouth,
+        island: homeIslandName('אבגדהוזחטיכלמנסעפצקרשתאב'),
+      );
+      expect(
+        find.text(He.homeBubble.fill(<String, String>{'child': 'אבגדהוזחטיכלמנסעפצקרשתאב'})),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('with no usable name the bubble says only the words after the name', (
+      WidgetTester tester,
+    ) async {
+      await pumpHome(tester, boards.first.size, mouth: mouth, island: homeIslandName(' '));
+      final String text = tester
+          .widget<Text>(
+            find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
+          )
+          .data!;
+      expect(text, He.homeBubble.text.split('{child}, ').last);
+      expect(text, isNot(contains('{')));
+    });
+
     testWidgets('a touch on it reaches what is under it', (WidgetTester tester) async {
       final Calls calls = await pumpHome(
         tester,
