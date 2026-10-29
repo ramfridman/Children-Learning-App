@@ -52,6 +52,7 @@
     ],
     "misconception": "M-PAT-COPY"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:log.copy.green.correct",

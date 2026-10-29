@@ -66,6 +66,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "answerPrompt": {
     "vo": "vo:count.ladybugs.3.how_many",
     "caption": [

@@ -58,6 +58,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb11.13.correct",

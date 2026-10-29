@@ -52,6 +52,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:shp.solid.which2.correct",

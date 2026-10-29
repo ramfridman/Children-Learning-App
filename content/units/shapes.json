@@ -597,6 +597,7 @@
     {
       "kind": "pick",
       "id": "shp.rect.long",
+      "voice": true,
       "skill": "SHP-A-04",
       "prompt": "אֵיזוֹ צוּרָה אֲרֻכָּה?",
       "options": [
@@ -990,6 +991,7 @@
     {
       "kind": "pick",
       "id": "shp.world.plate.shape",
+      "voice": true,
       "skill": "SHP-A-05",
       "prompt": "אֵיזוֹ צוּרָה יֵשׁ לַצַּלַּחַת?",
       "group": {
@@ -1007,6 +1009,7 @@
     {
       "kind": "pick",
       "id": "shp.world.window.shape",
+      "voice": true,
       "skill": "SHP-A-05",
       "prompt": "אֵיזוֹ צוּרָה יֵשׁ לַחַלּוֹן?",
       "group": {
@@ -1024,6 +1027,7 @@
     {
       "kind": "pick",
       "id": "shp.world.sign.shape",
+      "voice": true,
       "skill": "SHP-A-05",
       "prompt": "אֵיזוֹ צוּרָה יֵשׁ לַשֶּׁלֶט?",
       "group": {

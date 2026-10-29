@@ -74,6 +74,7 @@
     "mode": "sort",
     "misconception": "M-SORT-SHIFT"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.colb04.3.correct",

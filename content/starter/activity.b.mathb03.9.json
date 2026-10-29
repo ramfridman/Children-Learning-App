@@ -45,6 +45,7 @@
     "wrong": 4,
     "misconception": "M-EQ-OPER"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb03.9.correct",

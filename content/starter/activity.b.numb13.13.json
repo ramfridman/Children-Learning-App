@@ -59,6 +59,7 @@
     "target": 5,
     "misconception": "M-NL-SPACE"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb13.13.correct",

@@ -62,6 +62,7 @@
   "answer": {
     "type": "trace"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:x.shpa02.2.correct",

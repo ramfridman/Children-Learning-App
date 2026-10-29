@@ -46,6 +46,7 @@
     "wrong": 4,
     "misconception": "M-CS-FIXALL"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.csb04.2.correct",

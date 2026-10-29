@@ -50,6 +50,7 @@
       }
     ]
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:math.shop.fish2.correct",

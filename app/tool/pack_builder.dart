@@ -17,6 +17,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:nitznutz/content/pack_verify.dart';
+import 'package:nitznutz/content/schema.dart' show Problem;
 
 import 'pack_builder_lib.dart';
 import 'publish_lib.dart';
@@ -108,6 +109,9 @@ Future<void> _build(List<String> args) async {
   final Directory out = Directory(_option(args, '--out') ?? '.')..createSync(recursive: true);
   final File file = File('${out.path}${Platform.pathSeparator}${built.fileName}');
   file.writeAsBytesSync(built.bytes);
+  for (final Problem w in built.warnings) {
+    stdout.writeln('WARNING: $w');
+  }
   stdout.writeln('Built ${file.path}: ${built.bytes.length} bytes, manifest sha256 ${built.manifestSha256}');
 }
 

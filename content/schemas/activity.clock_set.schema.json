@@ -255,6 +255,9 @@
       ],
       "additionalProperties": false
     },
+    "voiceAnswer": {
+      "type": "boolean"
+    },
     "feedback": {
       "type": "object",
       "properties": {

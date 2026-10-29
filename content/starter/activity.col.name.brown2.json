@@ -59,6 +59,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:col.name.brown2.correct",

@@ -70,6 +70,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "answerPrompt": {
     "vo": "vo:count.fish.5.how_many",
     "caption": [

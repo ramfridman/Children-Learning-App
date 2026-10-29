@@ -158,14 +158,14 @@ def extra_math():
             r = sum(counts)
             others = [x for x in (r - 1, r + 1, r + 2) if x != r][:2]
             u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=['n:%d' % v for v in place(r, others, i % 3)], correct='n:%d' % r, rep='pictorial',
-                  prompt='כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?', correct_text='%s! %s.' % (F[r], ' וְעוֹד '.join(F[c] for c in counts) + ' הֵם ' + F[r]),
+                  voice=True, prompt='כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?', correct_text='%s! %s.' % (F[r], ' וְעוֹד '.join(F[c] for c in counts) + ' הֵם ' + F[r]),
                   h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (' וְעוֹד '.join(F[c] for c in counts) + ' הֵם ' + F[r], F[r]))
         else:
             big, small = max(counts), min(counts)
             d = big - small
             others = [x for x in (big, d + 1, d - 1) if x != d and x >= 0][:2]
             u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=['n:%d' % v for v in place(d, others, i % 3)], correct='n:%d' % d, rep='pictorial',
-                  tags={'n:%d' % big: 'M-COMP-DIFF'}, prompt='כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?',
+                  voice=True, tags={'n:%d' % big: 'M-COMP-DIFF'}, prompt='כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?',
                   correct_text='%s! בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ עוֹד %s.' % (F[d], F[d]),
                   h3='%s פָּחוֹת %s שָׁוֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[big], F[small], F[d], F[d]))
 

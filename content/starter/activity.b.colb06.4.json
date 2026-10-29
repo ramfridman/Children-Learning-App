@@ -54,6 +54,7 @@
     ],
     "misconception": "M-PAT-COPY"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.colb06.4.correct",

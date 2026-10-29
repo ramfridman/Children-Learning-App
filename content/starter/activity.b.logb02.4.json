@@ -48,6 +48,7 @@
     "wrong": 6,
     "misconception": "M-PAT-UNIT"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.logb02.4.correct",

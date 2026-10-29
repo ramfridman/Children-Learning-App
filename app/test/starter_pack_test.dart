@@ -10,7 +10,7 @@ import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/content/zip_store.dart';
 import 'package:nitznutz/data/app_database.dart';
 
-const String _packPath = 'assets/packs/starter-0.8.0.nnpack';
+const String _packPath = 'assets/packs/starter-0.9.0.nnpack';
 const String _keyPath = 'assets/pack_signing_public_key.txt';
 const String _sourcePath = '../content/starter';
 
@@ -181,7 +181,7 @@ void main() {
 
   test('the bundled starter pack is genuine: it verifies against the public key built into the app', () {
     expect(pack.id, 'starter');
-    expect(pack.version, '0.8.0');
+    expect(pack.version, '0.9.0');
     expect(pack.hidden, isFalse);
   });
 
@@ -441,7 +441,7 @@ void main() {
     );
     final InstallResult r = await installer.install(File(_packPath).readAsBytesSync());
     expect(r.outcome, InstallOutcome.installed);
-    expect((await db.installedPack('starter'))!.version, '0.8.0');
+    expect((await db.installedPack('starter'))!.version, '0.9.0');
     expect((await installer.load('starter'))!.docs, isNotEmpty);
     // The zip reader accepts the bundled file as a canonical zip.
     expect(readStoredZip(File(_packPath).readAsBytesSync()).length, pack.files.length + 2);

@@ -459,6 +459,9 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
     }),
   ),
   ...templateParts,
+  // Board B-24: the child may answer by voice (the mic is shown) only when this is true; missing is false. Only a word the
+  // question does not already say (a number, a colour, a shape, a day) is a spoken answer: see `pack_validation.dart`.
+  'voiceAnswer': const SField(SBool(), required: false),
   'feedback': const SField(_feedback),
   'hints': const SField(_hints),
   'scoring': const SField(

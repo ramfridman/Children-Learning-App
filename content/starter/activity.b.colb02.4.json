@@ -57,6 +57,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.colb02.4.correct",

@@ -26,7 +26,18 @@ void expectRect(Rect actual, double left, double top, double width, double heigh
   expect(actual.height, closeTo(height, 0.6), reason: '$why height');
 }
 
-Future<void> pumpHome(WidgetTester tester, Size size) => pumpScreen(
+/// The six learning lands; Nitzi's island has no tap area (it does not open yet).
+const Set<Land> learningLands = <Land>{
+  Land.counting,
+  Land.colors,
+  Land.shapes,
+  Land.logic,
+  Land.robots,
+  Land.market,
+};
+
+/// The home screen; [full] gives it every land, a companion and its "+", as the app does.
+Future<void> pumpHome(WidgetTester tester, Size size, {bool full = false}) => pumpScreen(
   tester,
   HomeScreen(
     childName: 'נֹעָה',
@@ -34,9 +45,79 @@ Future<void> pumpHome(WidgetTester tester, Size size) => pumpScreen(
     onParents: () {},
     onSwitchChild: () {},
     onOpenActivity: () {},
+    onOpenLand: full ? (Land l) {} : null,
+    openableLands: full ? learningLands : const <Land>{},
+    companion: full ? const SizedBox.expand() : null,
+    onFriends: full ? () {} : null,
   ),
   size: size,
 );
+
+/// The world of the map under the fixed buttons (board B-23).
+ScrollPosition mapScroll(WidgetTester tester) => tester
+    .state<ScrollableState>(
+      find.descendant(
+        of: find.byKey(const PageStorageKey<String>('home-map')),
+        matching: find.byType(Scrollable),
+      ),
+    )
+    .position;
+
+Rect rectOf(WidgetTester tester, String key) => tester.getRect(find.byKey(Key(key)));
+
+/// The things that never move with the map: avatar, stickers, book, Parents and the pill.
+List<Rect> fixedRects(WidgetTester tester) => <Rect>[
+  tester.getRect(disc(const Key('home-avatar'))),
+  tester.getRect(find.byType(ParentEntryButton)),
+  tester.getRect(disc(const Key('home-book'))),
+  rectOf(tester, 'home-pill'),
+];
+
+/// Every sign's centre and top on screen now.
+Map<String, Offset> signsNow(WidgetTester tester) => <String, Offset>{
+  for (final Land l in Land.values) l.name: rectOf(tester, 'sign-${l.name}').topCenter,
+};
+
+/// The land tap areas (in one frame of reference), each at least 64 wide and, when [apart], 24 apart, as the board's
+/// touch rules ask. The tablet landscape board is unchanged by B-23 and is only reported.
+void expectTapAreasApart(WidgetTester tester, double width, {bool apart = true}) {
+  final Map<Land, Rect> areas = <Land, Rect>{
+    for (final Land l in learningLands) l: rectOf(tester, 'land-tap-${l.name}'),
+  };
+  expect(find.byKey(const Key('land-tap-nitzi')), findsNothing, reason: 'Nitzi\'s island does not open yet');
+  for (final Rect r in areas.values) {
+    expect(r.width, closeTo(width, 0.6));
+    expect(r.width, greaterThanOrEqualTo(64));
+  }
+  final List<Land> lands = areas.keys.toList();
+  for (int i = 0; i < lands.length; i++) {
+    for (int j = i + 1; j < lands.length; j++) {
+      final double gap = separation(areas[lands[i]]!, areas[lands[j]]!);
+      if (apart) {
+        expect(gap, greaterThanOrEqualTo(24), reason: '${lands[i].name} and ${lands[j].name}');
+      } else if (gap < 24) {
+        debugPrint(
+          'note: the tap areas of ${lands[i].name} and ${lands[j].name} are ${gap.toStringAsFixed(1)} apart',
+        );
+      }
+    }
+  }
+}
+
+/// How far apart two rectangles are: the larger of the horizontal and the vertical gap (0 when they overlap).
+double separation(Rect a, Rect b) {
+  final double dx = <double>[
+    a.left - b.right,
+    b.left - a.right,
+    0,
+  ].reduce((double x, double y) => x > y ? x : y);
+  final double dy = <double>[
+    a.top - b.bottom,
+    b.top - a.bottom,
+    0,
+  ].reduce((double x, double y) => x > y ? x : y);
+  return dx > dy ? dx : dy;
+}
 
 Future<void> pumpActivity(WidgetTester tester, Size size) =>
     pumpScreen(tester, ActivityShell(onHome: () {}), size: size);
@@ -119,33 +200,86 @@ void main() {
     );
 
     testWidgets(
-      'the three signs: top 320, 12 radius, 3 point ink border, centred on 360 and 640, the other at left 63',
+      'all seven signs at top 320 on a strip 2102 wide: home at the right; panned fully left, Market Village',
       (WidgetTester tester) async {
         await pumpHome(tester, phone);
-        final Rect counting = tester.getRect(find.byKey(const Key('sign-counting')));
-        final Rect nitzi = tester.getRect(find.byKey(const Key('sign-nitzi')));
-        final Rect colors = tester.getRect(find.byKey(const Key('sign-colors')));
-        expect(counting.center.dx, closeTo(360, 0.6));
-        expect(nitzi.center.dx, closeTo(640, 0.6));
-        expect(colors.left, closeTo(63, 0.6));
-        for (final Rect r in <Rect>[counting, nitzi, colors]) {
-          expect(r.top, closeTo(320, 0.6));
+        // Start view: world x 1250 to 2102. Nitzi and Counting where board 10 has them, the whole Colour Bay sign.
+        final Map<String, Offset> start = signsNow(tester);
+        const Map<String, double> startX = <String, double>{
+          'nitzi': 640,
+          'counting': 360,
+          'colors': 70,
+          'shapes': -210,
+          'logic': -490,
+          'robots': -770,
+          'market': -1050,
+        };
+        startX.forEach((String land, double x) {
+          expect(start[land]!.dx, closeTo(x, 0.6), reason: land);
+          expect(start[land]!.dy, closeTo(320, 0.6), reason: land);
+          final Rect r = rectOf(tester, 'sign-$land');
           expect(
             r.height,
             closeTo(18 * 1.7 + 6, 0.6),
             reason: '18 point text at 1.7 plus a 3 point border each side',
           );
-        }
+        });
         final BoxDecoration d = decorationOf(tester, find.byKey(const Key('sign-counting')));
         expect(d.borderRadius, BorderRadius.circular(12));
         expect((d.border! as Border).top.width, 3);
         expect(d.color, const Color(0xFFD7A27A));
+        expect(mapScroll(tester).maxScrollExtent, closeTo(2102 - 852, 0.6));
+        // Panned fully left: world x 0 to 852.
+        mapScroll(tester).jumpTo(mapScroll(tester).maxScrollExtent);
+        await tester.pump();
+        final Map<String, Offset> end = signsNow(tester);
+        expect(end['market']!.dx, closeTo(200, 0.6));
+        expect(end['robots']!.dx, closeTo(480, 0.6));
+        expect(end['logic']!.dx, closeTo(760, 0.6));
       },
     );
+
+    testWidgets('panning the map moves none of the fixed buttons', (WidgetTester tester) async {
+      await pumpHome(tester, phone);
+      final List<Rect> before = fixedRects(tester);
+      await tester.drag(find.byKey(const Key('sign-counting')), const Offset(600, 0));
+      await tester.pumpAndSettle();
+      expect(mapScroll(tester).pixels, greaterThan(500), reason: 'the drag panned the map');
+      mapScroll(tester).jumpTo(mapScroll(tester).maxScrollExtent);
+      await tester.pump();
+      expect(fixedRects(tester), before);
+    });
+
+    testWidgets('the companion, its "+" and the bubble at the start view', (WidgetTester tester) async {
+      await pumpHome(tester, phone, full: true);
+      expectRect(rectOf(tester, 'home-companion'), 609, 154, 153.6, 153.6, why: 'companion');
+      expect(
+        rectOf(tester, 'home-friends').topLeft,
+        offsetMoreOrLessEquals(const Offset(1990 - 1250, 268), epsilon: 0.6),
+      );
+      final Rect body = rectOf(tester, 'bubble-body');
+      expect(
+        body.top,
+        closeTo(112, 0.6),
+        reason: 'the bubble stays at the board\'s place, beside a friend too',
+      );
+      expect(body.right, closeTo(852 - 212, 0.6));
+      final double gap = separation(
+        tester.getRect(disc(const Key('home-friends'))),
+        rectOf(tester, 'sign-nitzi'),
+      );
+      debugPrint('phone: the "+" disc is ${gap.toStringAsFixed(1)} from the Nitzi sign');
+      expect(gap, greaterThanOrEqualTo(24));
+    });
+
+    testWidgets('six land tap areas, 240 wide and 40 apart', (WidgetTester tester) async {
+      await pumpHome(tester, phone, full: true);
+      expectTapAreasApart(tester, 240);
+    });
   });
 
   group('board 12, home on the smallest phone (667 by 375)', () {
-    testWidgets('corner buttons, centred pill, bubble and two signs at the board\'s numbers', (
+    testWidgets('corner buttons, centred pill, bubble and the seven signs on a strip 1834 wide', (
       WidgetTester tester,
     ) async {
       await pumpHome(tester, phoneSE);
@@ -159,11 +293,51 @@ void main() {
       expect(pill.height, 64);
       expect(pill.top, closeTo(8, 0.6));
       expect(pill.center.dx, closeTo((40 + 667) / 2, 0.6));
-      expect(tester.getRect(find.byKey(const Key('bubble-body'))).top, closeTo(118, 0.6));
-      expect(tester.getRect(find.byKey(const Key('bubble-body'))).right, closeTo(667 - 140, 0.6));
-      expect(tester.getRect(find.byKey(const Key('sign-counting'))).center.dx, closeTo(268, 0.6));
-      expect(tester.getRect(find.byKey(const Key('sign-nitzi'))).center.dx, closeTo(520, 0.6));
-      expect(find.byKey(const Key('sign-colors')), findsNothing, reason: 'board 12 shows two lands');
+      // The bubble moved to the board's place in the open sea (B-23): right 154, top 112.
+      expect(rectOf(tester, 'bubble-body').top, closeTo(112, 0.6));
+      expect(rectOf(tester, 'bubble-body').right, closeTo(667 - 154, 0.6));
+      // Start view: world x 1167 to 1834.
+      final Map<String, Offset> start = signsNow(tester);
+      const Map<String, double> startX = <String, double>{
+        'nitzi': 520,
+        'counting': 268,
+        'colors': 22,
+        'shapes': -230,
+        'logic': -482,
+        'robots': -734,
+        'market': -986,
+      };
+      startX.forEach((String land, double x) {
+        expect(start[land]!.dx, closeTo(x, 0.6), reason: land);
+        expect(start[land]!.dy, closeTo(314, 0.6), reason: land);
+      });
+      final List<Rect> before = fixedRects(tester);
+      mapScroll(tester).jumpTo(mapScroll(tester).maxScrollExtent);
+      await tester.pump();
+      final Map<String, Offset> end = signsNow(tester);
+      expect(end['market']!.dx, closeTo(181, 0.6));
+      expect(end['robots']!.dx, closeTo(433, 0.6));
+      expect(end['logic']!.dx, closeTo(685, 0.6));
+      expect(fixedRects(tester), before, reason: 'the fixed buttons do not move with the map');
+    });
+
+    testWidgets('six land tap areas, 220 wide, at least 24 apart; the companion and its "+"', (
+      WidgetTester tester,
+    ) async {
+      await pumpHome(tester, phoneSE, full: true);
+      expectTapAreasApart(tester, 220);
+      expectRect(rectOf(tester, 'home-companion'), 1651 - 1167, 164.6, 153.6, 153.6, why: 'companion');
+      expect(
+        rectOf(tester, 'home-friends').topLeft,
+        offsetMoreOrLessEquals(const Offset(1776 - 1167, 256), epsilon: 0.6),
+      );
+      // A known design note (docs/design/phone-map-7-lands.md 3.3): the tightest corner of the SE, reported, not judged.
+      final double gap = separation(
+        tester.getRect(disc(const Key('home-friends'))),
+        rectOf(tester, 'sign-nitzi'),
+      );
+      debugPrint('phoneSE: the "+" disc is ${gap.toStringAsFixed(1)} from the Nitzi sign');
+      expect(tester.getRect(disc(const Key('home-friends'))).overlaps(rectOf(tester, 'sign-nitzi')), isFalse);
     });
   });
 
@@ -195,19 +369,70 @@ void main() {
         expect(r.top, closeTo(at.$2, 0.6), reason: land);
       });
       expect(tester.getRect(find.byKey(const Key('bubble-body'))).top, closeTo(430, 0.6));
+      expect(
+        find.byKey(const PageStorageKey<String>('home-map')),
+        findsNothing,
+        reason: 'the board is the whole world',
+      );
+    });
+
+    testWidgets('six land tap areas 240 wide; the companion and its "+" where they were', (
+      WidgetTester tester,
+    ) async {
+      await pumpHome(tester, tabletL, full: true);
+      expectTapAreasApart(tester, 240, apart: false);
+      expectRect(rectOf(tester, 'home-companion'), 975, 450.4, 153.6, 153.6, why: 'companion');
+      expect(
+        rectOf(tester, 'home-friends').topLeft,
+        offsetMoreOrLessEquals(const Offset(1088.6, 556), epsilon: 0.6),
+      );
     });
   });
 
   group('board 25, home on a tablet in portrait (820 by 1180)', () {
-    testWidgets('avatar, pill and the six signs', (WidgetTester tester) async {
-      await pumpHome(tester, tabletP);
-      expectRect(tester.getRect(disc(const Key('home-avatar'))), 820 - 24 - 80, 32, 80, 80, why: 'avatar');
-      final Rect pill = tester.getRect(find.byKey(const Key('home-pill')));
-      expect(pill.top, closeTo(36, 0.6));
-      expect(pill.center.dx, closeTo(410, 0.6));
-      expect(tester.getRect(find.byKey(const Key('sign-nitzi'))).center.dx, closeTo(600, 0.6));
-      expect(tester.getRect(find.byKey(const Key('sign-nitzi'))).top, closeTo(1110, 0.6));
-      expect(find.byKey(const Key('sign-market')), findsNothing, reason: 'board 25 has six lands');
+    testWidgets(
+      'avatar, pill and the seven signs on a scene 1580 high: home at the bottom, Market Village above',
+      (WidgetTester tester) async {
+        await pumpHome(tester, tabletP);
+        expectRect(tester.getRect(disc(const Key('home-avatar'))), 820 - 24 - 80, 32, 80, 80, why: 'avatar');
+        final Rect pill = tester.getRect(find.byKey(const Key('home-pill')));
+        expect(pill.top, closeTo(36, 0.6));
+        expect(pill.center.dx, closeTo(410, 0.6));
+        // Start view: world y 400 to 1580, exactly board 25.
+        const Map<String, (double, double)> startAt = <String, (double, double)>{
+          'nitzi': (600, 1110),
+          'counting': (260, 996),
+          'colors': (600, 830),
+          'shapes': (230, 654),
+          'logic': (600, 448),
+          'robots': (300, 316),
+          'market': (560, -44),
+        };
+        final Map<String, Offset> start = signsNow(tester);
+        startAt.forEach((String land, (double, double) at) {
+          expect(start[land]!.dx, closeTo(at.$1, 0.6), reason: land);
+          expect(start[land]!.dy, closeTo(at.$2, 0.6), reason: land);
+        });
+        expect(mapScroll(tester).maxScrollExtent, closeTo(400, 0.6));
+        final List<Rect> before = fixedRects(tester);
+        await tester.drag(find.byKey(const Key('sign-logic')), const Offset(0, 500));
+        await tester.pumpAndSettle();
+        expect(mapScroll(tester).pixels, closeTo(400, 0.6), reason: 'dragging down scrolls up to the top');
+        expect(signsNow(tester)['market']!.dy, closeTo(356, 0.6));
+        expect(fixedRects(tester), before, reason: 'the fixed buttons do not move with the map');
+      },
+    );
+
+    testWidgets('six land tap areas 240 wide; the companion and its "+" moved down 400', (
+      WidgetTester tester,
+    ) async {
+      await pumpHome(tester, tabletP, full: true);
+      expectTapAreasApart(tester, 240);
+      expectRect(rectOf(tester, 'home-companion'), 590, 889.2, 153.6, 153.6, why: 'companion');
+      expect(
+        rectOf(tester, 'home-friends').topLeft,
+        offsetMoreOrLessEquals(const Offset(703.6, 994.8), epsilon: 0.6),
+      );
     });
   });
 

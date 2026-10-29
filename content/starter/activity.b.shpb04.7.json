@@ -60,6 +60,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.shpb04.7.correct",

@@ -45,6 +45,7 @@
     "wrong": 3,
     "misconception": "M-CNT-DECADE"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb17.1.correct",

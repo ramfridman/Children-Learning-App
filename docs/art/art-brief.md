@@ -99,6 +99,7 @@ One scene for each of the six lands and one for Nitzi's own island. The child lo
 - **Canvas:** 1180 by 820 (tablet landscape). It is cropped for phones, so keep the important things inside the middle 852 by 393 area.
 - **Files:** `scenes/island_<land>.svg` with groups `sky`, `sea-far`, `sea-near`, `island`, `props`, `foam`. Lands: `counting`, `colors`, `shapes`, `logic`, `robots`, `market`, `nitzi`.
 - **Free space:** leave the central grass area open (about 700 by 330) for the skill drawings, and 120 points free at the top (title) and bottom (buttons).
+- **The world map (home screen) is separate from these scenes** (B-23). On phones it is one strip of all 7 islands that pans sideways, home island at the right end: 2102 by 393 (phone) and 1834 by 375 (iPhone SE), islands 280 (SE 252) apart, each island about 250 by 140 with its landmark and host. On a tablet in portrait it is one 820 by 1580 scene that scrolls up, Market Village at the top; tablet landscape stays one 1180 by 820 screen. Deliver the map at these sizes as `scenes/home_phone.svg`, `home_phone_se.svg`, `home_tablet_portrait.svg`, `home_tablet_landscape.svg`, with the islands at the same centres as today's placeholders (`tools/make_home_map.py` prints them), so the signs and tap areas still fit. No text or numerals in the picture; the clock tower's clock has hands only.
 
 ### 6.3 Stickers and the Sticker Island
 

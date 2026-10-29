@@ -50,6 +50,7 @@
       }
     ]
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:give.ducks.3.correct",

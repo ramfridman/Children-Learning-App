@@ -61,6 +61,7 @@
     "misconception": "M-NL-SPACE",
     "mirrorMisconception": "M-NL-DIR"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb13.18.correct",

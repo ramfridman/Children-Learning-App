@@ -41,6 +41,7 @@
     "type": "clock",
     "handsMisconception": "M-CLOCK-HANDS"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:x.mathb15.4.correct",

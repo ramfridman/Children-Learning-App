@@ -9,15 +9,16 @@ import 'package:nitznutz/speech/voice_answer.dart';
 import 'support/fake_speech.dart';
 
 class Rig {
-  Rig(List<Scripted> script, {Duration silence = const Duration(milliseconds: 1500)})
-    : engine = FakeSpeechEngine(script) {
+  /// The question has the numbers [numbers] (2, 3, 4 when not given), and [right] is the answer.
+  Rig(
+    List<Scripted> script, {
+    Duration silence = const Duration(milliseconds: 1500),
+    List<int> numbers = const <int>[2, 3, 4],
+    int right = 3,
+  }) : engine = FakeSpeechEngine(script) {
     controller = VoiceAnswerController(
       engine: engine,
-      expected: () => <Expected>[
-        Expected.number('o2', 2, correct: false),
-        Expected.number('o3', 3, correct: true),
-        Expected.number('o4', 4, correct: false),
-      ],
+      expected: () => <Expected>[for (final int n in numbers) Expected.number('o$n', n, correct: n == right)],
       onAnswer: (String id) async => answers.add(id),
       silence: silence,
       beat: Duration.zero,
@@ -202,6 +203,52 @@ void main() {
     expect(r.answers, <String>['o3']);
     expect(r.engine.cancels, greaterThan(0));
     expect(r.engine.micOpen, isFalse);
+  });
+
+  // Board B-24: "שמונה… עשרה" with 8 and 18 on the cards. Taking "שמונה" when it settles would answer 8 for a child who
+  // is saying 18.
+  group('a pause inside a number is not the end of the answer', () {
+    for (final (int, int, String, String) c in <(int, int, String, String)>[
+      (8, 18, 'שמונה', 'שמונה עשרה'),
+      (3, 13, 'שלוש', 'שלוש עשרה'),
+      (2, 12, 'שתיים', 'שתיים עשרה'),
+      (20, 21, 'עשרים', 'עשרים ואחת'),
+    ]) {
+      test(
+        '"${c.$4}" said with a pause, ${c.$1} right and ${c.$2} on the cards: ${c.$2}, checked first',
+        () async {
+          final Rig r = Rig(<Scripted>[Scripted.pauses(c.$3, c.$4)], numbers: <int>[c.$1, c.$2], right: c.$1);
+          await r.controller.tap();
+          expect(r.answers, isEmpty, reason: 'the short number was not taken at the pause');
+          expect(
+            r.controller.state,
+            MicState.confirming,
+            reason: 'the longer, wrong number is checked with the child',
+          );
+          expect(r.controller.optionId, 'o${c.$2}');
+        },
+      );
+
+      test('"${c.$3}" alone with ${c.$1} right is taken when the listen ends', () async {
+        final Rig r = Rig(<Scripted>[Scripted.pauses(c.$3, c.$3)], numbers: <int>[c.$1, c.$2], right: c.$1);
+        await r.controller.tap();
+        expect(r.answers, <String>['o${c.$1}']);
+        expect(r.engine.cancels, 0, reason: 'not early: the listen ran to its silence');
+      });
+    }
+
+    test('the longer number is taken when it is the right one', () async {
+      final Rig r = Rig(<Scripted>[Scripted.pauses('שמונה', 'שמונה עשרה')], numbers: <int>[8, 18], right: 18);
+      await r.controller.tap();
+      expect(r.answers, <String>['o18']);
+    });
+
+    test('with nothing longer on the cards, a settled number is still taken early', () async {
+      final Rig r = Rig(<Scripted>[Scripted.settles('שלוש')], numbers: <int>[3, 30], right: 3);
+      await r.controller.tap();
+      expect(r.answers, <String>['o3']);
+      expect(r.engine.cancels, greaterThan(0));
+    });
   });
 
   test('a settled wrong word is not taken early either', () async {

@@ -611,6 +611,7 @@
     {
       "kind": "pick",
       "id": "col.world.sun",
+      "voice": true,
       "skill": "COL-A-05",
       "prompt": "אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?",
       "group": {
@@ -628,6 +629,7 @@
     {
       "kind": "pick",
       "id": "col.world.grass",
+      "voice": true,
       "skill": "COL-A-05",
       "prompt": "אֵיזֶה צֶבַע הָעֵשֶׂב?",
       "group": {
@@ -802,6 +804,7 @@
     {
       "kind": "pick",
       "id": "col.world.banana.ripe",
+      "voice": true,
       "skill": "COL-A-05",
       "prompt": "אֵיזֶה צֶבַע בָּנָנָה בְּשֵׁלָה?",
       "group": {
@@ -819,6 +822,7 @@
     {
       "kind": "pick",
       "id": "col.world.apple.red",
+      "voice": true,
       "skill": "COL-A-05",
       "prompt": "אֵיזֶה צֶבַע הַתַּפּוּחַ?",
       "group": {

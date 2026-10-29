@@ -98,7 +98,7 @@ void main() {
           await rig.pump(tester);
           await tester.tap(find.text('נועה'));
           await tester.pumpAndSettle();
-          await openCountingLesson(tester);
+          await openActivities(tester, <String>['col.world.apple.red']); // a spoken question (board B-24)
           await tester.pumpAndSettle();
           expect(find.byType(ActivityFrame), findsOneWidget);
           await wait(tester, 300);
@@ -124,7 +124,7 @@ void main() {
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
     await tester.pumpAndSettle();
-    await openCountingLesson(tester);
+    await openActivities(tester, <String>['col.world.apple.red']);
     await tester.pumpAndSettle();
     await wait(tester, 300);
     await tester.tap(find.byKey(const Key('lesson-mic')));

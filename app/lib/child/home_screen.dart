@@ -24,21 +24,28 @@ enum Land {
   final String icon;
 }
 
-/// Where a land's sign goes on a board: the `left` and `top` of its CSS, and whether it is centred
-/// on that `left` (`translateX(-50%)`), which one of the phone's signs is not.
+/// Where a land's sign goes in the world of the map: the `left` it is centred on (`translateX(-50%)`) and its `top`.
 class _Sign {
-  const _Sign(this.land, this.left, this.top, {this.centred = true});
+  const _Sign(this.land, this.left, this.top);
 
   final Land land;
   final double left;
   final double top;
-  final bool centred;
 }
 
-/// Everything that differs between the four boards of the home screen. Numbers are the boards' own.
+/// Everything that differs between the four boards of the home screen. Numbers are the boards' own; the map's own parts
+/// (scene, signs, companion, "+", bubble) are in world coordinates, the rest in board coordinates (board B-23,
+/// docs/design/phone-map-7-lands.md).
 class _HomeSpec {
   const _HomeSpec({
     required this.scene,
+    required this.worldWidth,
+    required this.worldHeight,
+    required this.scrollAxis,
+    required this.tapWidth,
+    required this.plusLeft,
+    required this.plusTop,
+    required this.bubbleAtBoardPlace,
     required this.avatarRight,
     required this.avatarTop,
     required this.avatarSize,
@@ -68,6 +75,25 @@ class _HomeSpec {
   });
 
   final String scene;
+
+  /// The size of the world the map is drawn in: the scene's own viewBox. On a phone it is a strip wider than the board
+  /// that pans sideways; on a tablet in portrait it is taller and scrolls up; in landscape it is the board.
+  final double worldWidth;
+  final double worldHeight;
+
+  /// How the world moves under the fixed buttons; null when it is exactly the board and does not move.
+  final Axis? scrollAxis;
+
+  /// The width of the tap area above each land's sign (160 high, ending 10 under the sign's top).
+  final double tapWidth;
+
+  /// Where the "+" pebble (choose a friend) stands, at the companion's feet.
+  final double plusLeft;
+  final double plusTop;
+
+  /// On phones the bubble stays at the board's own place, in the open sea above the islands; on tablets it stands beside
+  /// the companion's mouth.
+  final bool bubbleAtBoardPlace;
   final double avatarRight;
   final double avatarTop;
   final double avatarSize;
@@ -103,6 +129,13 @@ class _HomeSpec {
 
   static const _HomeSpec phone = _HomeSpec(
     scene: 'assets/art/scenes/home_phone.svg',
+    worldWidth: 2102,
+    worldHeight: 393,
+    scrollAxis: Axis.horizontal,
+    tapWidth: 240,
+    plusLeft: 1990,
+    plusTop: 268,
+    bubbleAtBoardPlace: true,
     avatarRight: 59,
     avatarTop: 12,
     avatarSize: 64,
@@ -125,17 +158,30 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 18,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-    companionLeft: 609,
+    companionLeft: 1859,
     companionTop: 154,
+    // The start view is world x 1250 to 2102 (the board, with the whole Colour Bay sign); the rest is to the left.
     signs: <_Sign>[
-      _Sign(Land.counting, 360, 320),
-      _Sign(Land.colors, 63, 320, centred: false),
-      _Sign(Land.nitzi, 640, 320),
+      _Sign(Land.nitzi, 1890, 320),
+      _Sign(Land.counting, 1610, 320),
+      _Sign(Land.colors, 1320, 320),
+      _Sign(Land.shapes, 1040, 320),
+      _Sign(Land.logic, 760, 320),
+      _Sign(Land.robots, 480, 320),
+      _Sign(Land.market, 200, 320),
     ],
   );
 
   static const _HomeSpec phoneSE = _HomeSpec(
     scene: 'assets/art/scenes/home_phone_se.svg',
+    worldWidth: 1834,
+    worldHeight: 375,
+    scrollAxis: Axis.horizontal,
+    // Counting and Colour Bay are 246 apart on the approved board 12: 220 keeps a gap of 26 between their tap areas.
+    tapWidth: 220,
+    plusLeft: 1776,
+    plusTop: 256,
+    bubbleAtBoardPlace: true,
     avatarRight: 16,
     avatarTop: 8,
     avatarSize: 64,
@@ -153,17 +199,33 @@ class _HomeSpec {
     pillPadRight: 16,
     pillGap: 8,
     pillFrameInset: 40,
-    bubbleRight: 140,
-    bubbleTop: 118,
+    bubbleRight: 154,
+    bubbleTop: 112,
     bubbleFont: 17,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-    companionLeft: 484,
+    companionLeft: 1651,
     companionTop: 164.6,
-    signs: <_Sign>[_Sign(Land.counting, 268, 314), _Sign(Land.nitzi, 520, 314)],
+    // The start view is world x 1167 to 1834.
+    signs: <_Sign>[
+      _Sign(Land.nitzi, 1687, 314),
+      _Sign(Land.counting, 1435, 314),
+      _Sign(Land.colors, 1189, 314),
+      _Sign(Land.shapes, 937, 314),
+      _Sign(Land.logic, 685, 314),
+      _Sign(Land.robots, 433, 314),
+      _Sign(Land.market, 181, 314),
+    ],
   );
 
   static const _HomeSpec tabletLandscape = _HomeSpec(
     scene: 'assets/art/scenes/home_tablet_landscape.svg',
+    worldWidth: 1180,
+    worldHeight: 820,
+    scrollAxis: null,
+    tapWidth: 240,
+    plusLeft: 1088.6,
+    plusTop: 556,
+    bubbleAtBoardPlace: false,
     avatarRight: 24,
     avatarTop: 24,
     avatarSize: 80,
@@ -199,6 +261,13 @@ class _HomeSpec {
 
   static const _HomeSpec tabletPortrait = _HomeSpec(
     scene: 'assets/art/scenes/home_tablet_portrait.svg',
+    worldWidth: 820,
+    worldHeight: 1580,
+    scrollAxis: Axis.vertical,
+    tapWidth: 240,
+    plusLeft: 703.6,
+    plusTop: 1394.8,
+    bubbleAtBoardPlace: false,
     avatarRight: 24,
     avatarTop: 32,
     avatarSize: 80,
@@ -216,18 +285,20 @@ class _HomeSpec {
     pillPadRight: 20,
     pillGap: 12,
     bubbleRight: 214,
-    bubbleTop: 988,
+    bubbleTop: 1388,
     bubbleFont: 24,
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     companionLeft: 590,
-    companionTop: 889.2,
+    companionTop: 1289.2,
+    // Board 25 moved down 400 (the start view, world y 400 to 1580); Market Village is in the band above it.
     signs: <_Sign>[
-      _Sign(Land.nitzi, 600, 1110),
-      _Sign(Land.counting, 260, 996),
-      _Sign(Land.colors, 600, 830),
-      _Sign(Land.shapes, 230, 654),
-      _Sign(Land.logic, 600, 448),
-      _Sign(Land.robots, 300, 316),
+      _Sign(Land.nitzi, 600, 1510),
+      _Sign(Land.counting, 260, 1396),
+      _Sign(Land.colors, 600, 1230),
+      _Sign(Land.shapes, 230, 1054),
+      _Sign(Land.logic, 600, 848),
+      _Sign(Land.robots, 300, 716),
+      _Sign(Land.market, 560, 356),
     ],
   );
 
@@ -263,7 +334,11 @@ class HomeScreen extends StatelessWidget {
     this.onStickers,
     this.onHall,
     this.hallGlow = false,
+    this.homeLabel = He.landNitzi,
   });
+
+  /// The words on the sign of the home island (Nitzi's island today; board B-26 may give it the child's name).
+  final Str homeLabel;
 
   final String childName;
   final String avatarId;
@@ -320,55 +395,21 @@ class HomeScreen extends StatelessWidget {
         background: TokenColors.worldSea1,
         board: board,
         children: <Widget>[
+          // The world: it moves under the fixed buttons (on a phone sideways, home at the right; on a tablet in portrait
+          // upwards, home at the bottom). A still tap opens a land; a drag that starts on it pans.
           Positioned.fill(
-            child: BoardSvg(
-              s.scene,
-              width: board.size.width,
-              height: board.size.height,
-              label: He.homeMapSemantics.text,
-            ),
+            child: s.scrollAxis == null
+                ? _world(s)
+                : SingleChildScrollView(
+                    key: const PageStorageKey<String>('home-map'),
+                    scrollDirection: s.scrollAxis!,
+                    // Right to left, offset 0 of a horizontal view is its right end already; a vertical one is turned
+                    // so that offset 0 is its bottom.
+                    reverse: s.scrollAxis == Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    child: _world(s),
+                  ),
           ),
-          if (companion != null)
-            Positioned(
-              left: s.companionLeft,
-              top: s.companionTop,
-              width: _HomeSpec.companionSize,
-              height: _HomeSpec.companionSize,
-              child: GestureDetector(
-                key: const Key('home-companion'),
-                behavior: HitTestBehavior.opaque,
-                onTap: onCompanion,
-                child: companion,
-              ),
-            ),
-          if (companion != null && onFriends != null)
-            Positioned(
-              left: s.companionLeft + _HomeSpec.companionSize - 40,
-              top: s.companionTop + _HomeSpec.companionSize - 48,
-              child: PebbleButton(
-                key: const Key('home-friends'),
-                semanticLabel: He.friendsSemantics.text,
-                size: 48,
-                fill: TokenColors.spark,
-                lip: TokenColors.sparkDeep,
-                onPressed: onFriends,
-                child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
-              ),
-            ),
-          // A tap area above the sign of the one land that has somewhere to go.
-          for (final _Sign sign in s.signs)
-            if (_tapFor(sign.land) != null)
-              Positioned(
-                left: sign.left - 120,
-                top: sign.top - 150,
-                width: 240,
-                height: 160,
-                child: GestureDetector(
-                  key: Key('land-tap-${sign.land.name}'),
-                  behavior: HitTestBehavior.opaque,
-                  onTap: _tapFor(sign.land),
-                ),
-              ),
           // Start corner: who is playing.
           boardAt(
             right: s.avatarRight,
@@ -478,26 +519,93 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           _pill(s),
-          _bubble(
-            board,
-            s,
-            BoardBubble(
-              text: He.homeBubble.fill(<String, String>{'child': childName}),
-              fontSize: s.bubbleFont,
-              padding: s.bubblePad,
-            ),
-          ),
-          for (final _Sign sign in s.signs) _sign(sign),
         ],
       ),
     );
   }
 
-  /// The bubble: at the board's own place when no friend is on the map; otherwise beside the friend's head, with its
-  /// tail (a corner at the bubble's lower right) pointing at the mouth.
-  Widget _bubble(BoardClass board, _HomeSpec s, Widget bubble) {
+  /// Everything that belongs to the map, in world coordinates. Paint order: the scene, the tap areas, the signs, then the
+  /// companion, its "+" and the bubble, so that a land's tap area never takes a touch meant for the companion.
+  Widget _world(_HomeSpec s) => SizedBox(
+    width: s.worldWidth,
+    height: s.worldHeight,
+    child: Stack(
+      children: <Widget>[
+        Positioned.fill(
+          child: BoardSvg(
+            s.scene,
+            width: s.worldWidth,
+            height: s.worldHeight,
+            label: He.homeMapSemantics.text,
+          ),
+        ),
+        // A tap area above the sign of each land that has somewhere to go.
+        for (final _Sign sign in s.signs)
+          if (_tapFor(sign.land) != null)
+            Positioned(
+              left: sign.left - s.tapWidth / 2,
+              top: sign.top - 150,
+              width: s.tapWidth,
+              height: 160,
+              child: Semantics(
+                button: true,
+                label: _labelOf(sign.land).text,
+                child: GestureDetector(
+                  key: Key('land-tap-${sign.land.name}'),
+                  behavior: HitTestBehavior.opaque,
+                  onTap: _tapFor(sign.land),
+                ),
+              ),
+            ),
+        for (final _Sign sign in s.signs) _sign(sign),
+        if (companion != null)
+          Positioned(
+            left: s.companionLeft,
+            top: s.companionTop,
+            width: _HomeSpec.companionSize,
+            height: _HomeSpec.companionSize,
+            child: GestureDetector(
+              key: const Key('home-companion'),
+              behavior: HitTestBehavior.opaque,
+              onTap: onCompanion,
+              child: companion,
+            ),
+          ),
+        if (companion != null && onFriends != null)
+          Positioned(
+            left: s.plusLeft,
+            top: s.plusTop,
+            child: PebbleButton(
+              key: const Key('home-friends'),
+              semanticLabel: He.friendsSemantics.text,
+              size: 48,
+              fill: TokenColors.spark,
+              lip: TokenColors.sparkDeep,
+              onPressed: onFriends,
+              child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
+            ),
+          ),
+        _bubble(
+          s,
+          BoardBubble(
+            text: He.homeBubble.fill(<String, String>{'child': childName}),
+            fontSize: s.bubbleFont,
+            padding: s.bubblePad,
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Str _labelOf(Land land) => land == Land.nitzi ? homeLabel : land.label;
+
+  /// The bubble: at the board's own place on a phone, or when no friend is on the map; otherwise beside the friend's
+  /// head, with its tail (a corner at the bubble's lower right) pointing at the mouth. In world coordinates.
+  Widget _bubble(_HomeSpec s, Widget bubble) {
     final Offset? m = companion == null ? null : companionMouth;
-    if (m == null) return Positioned(right: s.bubbleRight, top: s.bubbleTop, child: bubble);
+    if (m == null || s.bubbleAtBoardPlace) {
+      return Positioned(right: s.bubbleRight, top: s.bubbleTop, child: bubble);
+    }
     const double size = _HomeSpec.companionSize;
     final double mouthX = s.companionLeft + m.dx * size;
     final double mouthY = s.companionTop + m.dy * size;
@@ -505,11 +613,7 @@ class HomeScreen extends StatelessWidget {
     final double rightEdge = mouthX - 0.18 * size - 4 - 14.5;
     // The tail sits 29 above the bubble's bottom edge.
     final double bottomEdge = mouthY + 29;
-    return Positioned(
-      right: board.size.width - rightEdge,
-      bottom: board.size.height - bottomEdge,
-      child: bubble,
-    );
+    return Positioned(right: s.worldWidth - rightEdge, bottom: s.worldHeight - bottomEdge, child: bubble);
   }
 
   Widget _pill(_HomeSpec s) {
@@ -531,13 +635,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _sign(_Sign sign) {
-    // The counting hills are the one land with something behind it in M1.
     final Widget label = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _tapFor(sign.land),
-      child: _LandSign(land: sign.land),
+      child: _LandSign(land: sign.land, label: _labelOf(sign.land)),
     );
-    if (!sign.centred) return Positioned(left: sign.left, top: sign.top, child: label);
     // translateX(-50%) in CSS: centred on `left`. A wide box does the centring.
     return Positioned(
       left: sign.left - 200,
@@ -617,13 +719,14 @@ class _DailyPill extends StatelessWidget {
 }
 
 class _LandSign extends StatelessWidget {
-  const _LandSign({required this.land});
+  const _LandSign({required this.land, required this.label});
 
   final Land land;
+  final Str label;
 
   @override
   Widget build(BuildContext context) => Semantics(
-    label: land.label.text,
+    label: label.text,
     child: ExcludeSemantics(
       child: Container(
         key: Key('sign-${land.name}'),
@@ -638,7 +741,7 @@ class _LandSign extends StatelessWidget {
           children: <Widget>[
             BoardSvg('assets/art/ui/${land.icon}.svg', width: 20, height: 20),
             const SizedBox(width: 4),
-            Text(land.label.text, style: AppText.fixed(size: 18, weight: 700), softWrap: false),
+            Text(label.text, style: AppText.fixed(size: 18, weight: 700), softWrap: false),
           ],
         ),
       ),

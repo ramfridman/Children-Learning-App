@@ -57,6 +57,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb14.4.correct",

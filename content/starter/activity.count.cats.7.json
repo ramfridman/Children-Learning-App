@@ -66,6 +66,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "answerPrompt": {
     "vo": "vo:count.cats.7.how_many",
     "caption": [

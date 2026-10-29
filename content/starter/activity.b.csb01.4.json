@@ -58,6 +58,7 @@
     ],
     "misconception": "M-CS-OFF1"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.csb01.4.correct",

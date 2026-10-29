@@ -1,5 +1,9 @@
 import 'dart:math' as math;
 
+import '../speech/answer_matcher.dart';
+import '../speech/hebrew_text.dart';
+import '../speech/lexicon.dart';
+import '../speech/spoken_options.dart';
 import 'schema.dart';
 import 'schemas.dart';
 
@@ -586,6 +590,7 @@ List<Problem> validatePack({
         }
     }
     _hebrew(file, a, say, pointed: a['band'] != 'C');
+    _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
   });
 
   lessons.forEach((String id, Map<String, Object?> l) {
@@ -665,6 +670,107 @@ List<Problem> validatePack({
   }
 
   return out;
+}
+
+/// Things in a pack that work but should be looked at: the builder prints them and still signs. Today one kind (board
+/// B-24): a spoken answer whose number word starts another option's ("שמונה" and "שמונה עשרה"); the mic waits for the end
+/// of the listen there, so a child who stops between the two words is heard as the shorter number.
+List<Problem> packWarnings({required Map<String, Object?> docs}) {
+  final List<Problem> out = <Problem>[];
+  const AnswerMatcher matcher = AnswerMatcher();
+  for (final MapEntry<String, Object?> d in docs.entries) {
+    final Object? a = d.value;
+    if (!d.key.startsWith('activity.') || a is! Map<String, Object?> || a['voiceAnswer'] != true) continue;
+    final List<SpokenOption> options = spokenOptions(a);
+    final List<Expected> heard = expectedFor(options, correctId: '');
+    for (final (int i, Expected e) in heard.indexed) {
+      for (final AcceptWord w in e.words) {
+        if (isDigits(w.text) || !matcher.couldGoOn(w.text, heard, winnerId: e.id)) continue;
+        out.add(
+          Problem('${d.key} › answer.options[$i]', 'its spoken number begins the number of another option'),
+        );
+        break;
+      }
+    }
+  }
+  return out;
+}
+
+/// The templates whose answer a child can say (board B-24); every other template is answered by hand.
+const Set<String> voiceTemplates = <String>{'tap_answer', 'count_tap', 'flash'};
+
+/// The options of a choice as voice sees them (a count_tap option has a `value`, the others a `numeral` or a label).
+List<SpokenOption> spokenOptions(Map<String, Object?> activity) => <SpokenOption>[
+  for (final Map<String, Object?> o in _maps(_mapOf(activity['answer'])['options']))
+    SpokenOption(
+      o['id']! as String,
+      number: (o['numeral'] ?? o['value']) as int?,
+      label: (o['label'] as String?) ?? '',
+      speech: <String>[
+        for (final Object? s in (o['speech'] as List<Object?>?) ?? const <Object?>[]) s! as String,
+      ],
+    ),
+];
+
+Map<String, Object?> _mapOf(Object? v) => v is Map<String, Object?> ? v : const <String, Object?>{};
+
+/// A spoken answer is offered only where the lesson can hear it (board B-24): a template with a choice, every option with
+/// a word of its own, no two options that sound the same, and no yes or no (a "no" is heard as "not", so it is never
+/// taken). In the starter pack every activity says whether it is spoken.
+void _voiceAnswer(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required bool starter,
+}) {
+  final Object? flag = a['voiceAnswer'];
+  if (flag == null) {
+    if (starter) {
+      say(file, 'voiceAnswer', 'every activity of the starter pack must say whether it is answered by voice');
+    }
+    return;
+  }
+  if (flag != true) return;
+  if (!voiceTemplates.contains(a['template'])) {
+    say(
+      file,
+      'voiceAnswer',
+      'a ${a['template']} is answered by hand; only a choice can be answered by voice',
+    );
+    return;
+  }
+  final List<SpokenOption> options = spokenOptions(a);
+  final List<Expected> heard = expectedFor(options, correctId: _mapOf(a['answer'])['correct']! as String);
+  final Set<String> yesNo = <String>{...intentPhrases(Intent.yes), ...intentPhrases(Intent.no)};
+  for (final (int i, SpokenOption o) in options.indexed) {
+    if (o.number != null) continue;
+    if (o.allWords.contains(negationWord) ||
+        <String>[o.label, ...o.speech].any((String s) => yesNo.contains(normalizeHebrew(s)))) {
+      say(file, 'answer.options[$i]', 'is a yes or a no, which voice cannot take (a "no" is heard as "not")');
+    } else if (heard[i].words.isEmpty) {
+      say(
+        file,
+        'answer.options[$i]',
+        'has nothing of its own to say: no number, and no word that only it has',
+      );
+    }
+  }
+  Set<String> sounds(Expected e) => <String>{
+    for (final AcceptWord w in e.words)
+      if (!isDigits(w.text)) phoneticKey(w.text),
+  };
+  for (int i = 0; i < heard.length; i++) {
+    for (int j = i + 1; j < heard.length; j++) {
+      final bool sameNumber = heard[i].number != null && heard[i].number == heard[j].number;
+      if (sameNumber || sounds(heard[i]).intersection(sounds(heard[j])).isNotEmpty) {
+        say(
+          file,
+          'answer.options[$j]',
+          'sounds the same as option ${heard[i].id}, so voice cannot tell them apart',
+        );
+      }
+    }
+  }
 }
 
 List<Map<String, Object?>> _maps(Object? v) => <Map<String, Object?>>[

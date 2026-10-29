@@ -131,7 +131,7 @@ class AnswerMatcher {
       final bool helpPhrase = intent == Intent.help && intentScore >= config.accept;
 
       // "לא שלוש" is the opposite of an answer.
-      if (tokens.contains('לא') && !helpPhrase) negated = true;
+      if (tokens.contains(negationWord) && !helpPhrase) negated = true;
 
       final Set<String> known = <String>{
         for (final Expected e in expected)
@@ -219,7 +219,7 @@ class AnswerMatcher {
       if (text.isEmpty) continue;
       final double f = math.sqrt(h.confidence.clamp(0.0, 1.0));
       // "לא נכון" ends with "נכון" but means no.
-      if (!tokensOf(text).contains('לא')) {
+      if (!tokensOf(text).contains(negationWord)) {
         for (final String p in intentPhrases(Intent.yes)) {
           bestYes = math.max(bestYes, f * _phraseSimilarity(text, p));
         }
@@ -233,10 +233,42 @@ class AnswerMatcher {
     return null;
   }
 
-  /// The tokens, each token without one or two prefix letters, and each pair of neighbours (for "אחת עשרה").
+  /// Whether [partial] may still grow into another option's answer: its last words are the first words of a longer answer
+  /// of an option other than [winnerId] ("שמונה" before "שמונה עשרה", "עשרים" before "עשרים ואחת"). A settled partial
+  /// like that is not taken early: the listen goes on to its end, so a pause inside a number cannot take the wrong one.
+  bool couldGoOn(String partial, List<Expected> expected, {String? winnerId}) {
+    final List<String> heard = <String>[
+      for (final String t in tokensOf(normalizeHebrew(partial))) phoneticKey(t),
+    ];
+    if (heard.isEmpty) return false;
+    for (final Expected e in expected) {
+      if (e.id == winnerId) continue;
+      for (final AcceptWord w in e.words) {
+        final List<String> answer = <String>[for (final String t in tokensOf(w.text)) phoneticKey(t)];
+        for (int k = 1; k < answer.length && k <= heard.length; k++) {
+          if (heard.sublist(heard.length - k).join(' ') == answer.sublist(0, k).join(' ')) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /// The tokens, each token without one or two prefix letters, and each pair of neighbours (for "אחת עשרה"). A pair that
+  /// is a whole answer of two words is heard as that answer only: its words do not count again on their own, or "שמונה
+  /// עשרה" would match 8 as well as 18.
   List<String> _candidates(List<String> tokens, Set<String> known) {
+    final Set<String> phrases = <String>{
+      for (final String w in known)
+        if (w.contains(' ')) w,
+    };
+    final Set<int> inPhrase = <int>{};
+    for (int i = 0; i + 1 < tokens.length; i++) {
+      final String pair = '${tokens[i]} ${tokens[i + 1]}';
+      if (phrases.any((String p) => similarity(pair, p) >= config.accept)) inPhrase.addAll(<int>[i, i + 1]);
+    }
     final Set<String> out = <String>{};
-    for (final String t in tokens) {
+    for (final (int at, String t) in tokens.indexed) {
+      if (inPhrase.contains(at)) continue;
       out.add(t);
       String rest = t;
       for (int i = 0; i < 2; i++) {

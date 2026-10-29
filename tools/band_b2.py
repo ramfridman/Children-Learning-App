@@ -144,7 +144,7 @@ def shapes():
     u.skill('SHP-B-03', 'ריבוע ומלבן', 'רִבּוּעַ וּמַלְבֵּן', 'cone-tree', ['SHP-A-04', 'SHP-B-02'], ['pictorial'], ['M-SHP-SQRECT'])
     for i in range(3):
         u.act('SHP-B-03', 'pick', prompt='לְאֵיזוֹ צוּרָה כָּל הַצְּלָעוֹת שָׁווֹת?', options=place('shape_square', ['shape_rect', 'shape_triangle'], i),
-              correct='shape_square', tags={'shape_rect': 'M-SHP-SQRECT'}, rep='pictorial', domain='shapes',
+              correct='shape_square', tags={'shape_rect': 'M-SHP-SQRECT'}, rep='pictorial', domain='shapes', voice=True,
               correct_text='כֵּן! בְּרִבּוּעַ כָּל הַצְּלָעוֹת שָׁווֹת.', h3='בְּרִבּוּעַ כָּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם.')
         u.act('SHP-B-03', 'pick', prompt='אֵיפֹה הַמַּלְבֵּן? לֹא כָּל הַצְּלָעוֹת שָׁווֹת.',
               options=place('shape_rect', ['shape_square', 'shape_circle'], i), correct='shape_rect', tags={'shape_square': 'M-SHP-SQRECT'},

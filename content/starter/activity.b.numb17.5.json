@@ -45,6 +45,7 @@
     "wrong": 2,
     "misconception": "M-CNT-SEQ"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.numb17.5.correct",

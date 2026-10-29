@@ -147,6 +147,7 @@
     "type": "trace",
     "directionMisconception": "M-NUM-WRITE"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:x.numb07.7.correct",

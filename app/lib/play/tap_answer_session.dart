@@ -8,7 +8,7 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
-import '../speech/hebrew_text.dart';
+import '../speech/spoken_options.dart';
 import 'count_tap_session.dart' show Dots;
 import 'lesson_controller.dart';
 import 'sprite_group.dart';
@@ -34,30 +34,12 @@ class TapAnswerSession extends TemplateSession {
   String get voiceAnswerType =>
       activity.options.every((ChoiceOption o) => o.numeral != null) ? 'number' : 'word';
 
-  /// The words of each option: its own `speech` list, or else the words of its label that the other options do not
-  /// share ("פרח אדום" and "פרח צהוב" are told apart by the colour).
+  /// The words of each option: its own `speech` list, and the words of its label that no other option has.
   @override
-  List<Expected> voiceExpected() {
-    final List<List<String>> words = <List<String>>[
-      for (final ChoiceOption o in activity.options)
-        <String>[...o.speech, ...tokensOf(normalizeHebrew(o.label ?? ''))],
-    ];
-    final Set<String> shared = words.isEmpty
-        ? <String>{}
-        : words
-              .map((List<String> w) => w.toSet())
-              .reduce((Set<String> a, Set<String> b) => a.intersection(b));
-    return <Expected>[
-      for (final (int i, ChoiceOption o) in activity.options.indexed)
-        if (o.numeral != null)
-          Expected.number(o.id, o.numeral!, correct: o.id == activity.correctId, also: o.speech)
-        else
-          Expected.words(o.id, <String>[
-            for (final String w in words[i])
-              if (!shared.contains(w) || o.speech.contains(w)) w,
-          ], correct: o.id == activity.correctId),
-    ];
-  }
+  List<Expected> voiceExpected() => expectedFor(<SpokenOption>[
+    for (final ChoiceOption o in activity.options)
+      SpokenOption(o.id, number: o.numeral, label: o.label ?? '', speech: o.speech),
+  ], correctId: activity.correctId);
 
   @override
   Future<void> chooseByVoice(String optionId) => choose(optionId, byVoice: true);

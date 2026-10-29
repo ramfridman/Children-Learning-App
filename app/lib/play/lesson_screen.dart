@@ -366,11 +366,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
-  /// The microphone, whenever a parent turned voice on. It is never taken away because listening went badly: a young
-  /// child is often misheard, and a missing mic would only teach them that voice does not work.
-  Widget? _mic(ActivitySpec spec, TemplateSession session) {
+  /// The microphone, when a parent turned voice on and saying the answer is the answer (the activity's `voiceAnswer`,
+  /// board B-24): where the answer is a tap, a drag or a trace there is no mic at all, not even a faded one. It is never
+  /// taken away because listening went badly: a young child is often misheard, and a missing mic would only teach them
+  /// that voice does not work.
+  Widget? _mic(ActivitySpec spec, TemplateSession session, Activity activity) {
     final LessonVoice? v = _voice;
-    if (v == null) return null;
+    if (v == null || !activity.voiceAnswer) return null;
     final VoiceAnswerController a = v.answer;
     final bool usable = session.listensNow;
     final MicLook look = switch (a.state) {
@@ -442,7 +444,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           hintGlow: helpOffered,
           onShowMe: controller.finished ? null : () => controller.unsure(),
           onReplay: controller.finished ? null : controller.replayPrompt,
-          mic: controller.finished ? null : _mic(spec, session),
+          mic: controller.finished ? null : _mic(spec, session, controller.current),
           onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
           onConfirmAgain: heard == MicState.confirming ? _voice?.answer.confirmNo : null,
           stage: (Size room) => session.buildStage(ctx, room, spec),

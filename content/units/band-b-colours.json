@@ -745,6 +745,7 @@
    "id": "b.colb01.1",
    "skill": "COL-B-01",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "אִם מְעָרְבְּבִים אָדֹם וְצָהֹב, אֵיזֶה צֶבַע יוֹצֵא?",
    "group": {
     "sprite": "ball_red",
@@ -774,6 +775,7 @@
    "id": "b.colb01.2",
    "skill": "COL-B-01",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "אִם מְעָרְבְּבִים כָּחֹל וְצָהֹב, אֵיזֶה צֶבַע יוֹצֵא?",
    "group": {
     "sprite": "ball_blue",
@@ -803,6 +805,7 @@
    "id": "b.colb01.3",
    "skill": "COL-B-01",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "אִם מְעָרְבְּבִים אָדֹם וְכָּחֹל, אֵיזֶה צֶבַע יוֹצֵא?",
    "group": {
     "sprite": "ball_red",
@@ -832,6 +835,7 @@
    "id": "b.colb01.4",
    "skill": "COL-B-01",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "אִם מְעָרְבְּבִים צָהֹב וְאָדֹם, אֵיזֶה צֶבַע יוֹצֵא?",
    "group": {
     "sprite": "ball_yellow",
@@ -861,6 +865,7 @@
    "id": "b.colb01.5",
    "skill": "COL-B-01",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "אִם מְעָרְבְּבִים צָהֹב וְכָּחֹל, אֵיזֶה צֶבַע יוֹצֵא?",
    "group": {
     "sprite": "ball_yellow",
@@ -890,6 +895,7 @@
    "id": "b.colb01.6",
    "skill": "COL-B-01",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "אִם מְעָרְבְּבִים כָּחֹל וְאָדֹם, אֵיזֶה צֶבַע יוֹצֵא?",
    "group": {
     "sprite": "ball_blue",
@@ -919,6 +925,7 @@
    "id": "b.colb01.7",
    "skill": "COL-B-01",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "אָדֹם וְ… נַעֲשִׂים כָּתֹם. מָה חָסֵר?",
    "group": {
     "sprite": "ball_red",
@@ -944,6 +951,7 @@
    "id": "b.colb01.8",
    "skill": "COL-B-01",
    "difficulty": 0.86,
+   "voice": true,
    "prompt": "כָּחֹל וְ… נַעֲשִׂים יָרֹק. מָה חָסֵר?",
    "group": {
     "sprite": "ball_blue",
@@ -969,6 +977,7 @@
    "id": "b.colb01.9",
    "skill": "COL-B-01",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "אָדֹם וְ… נַעֲשִׂים סָגֹל. מָה חָסֵר?",
    "group": {
     "sprite": "ball_red",

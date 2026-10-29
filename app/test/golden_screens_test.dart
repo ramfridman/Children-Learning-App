@@ -61,6 +61,25 @@ void main() {
         await _shot(tester, 'home_$n');
       });
 
+      // Board B-23: the far end of the map (phones panned fully left to Market Village, the portrait tablet scrolled up).
+      if (n != 'tablet_landscape') {
+        testWidgets('home at the far end of the map, $n', (WidgetTester tester) async {
+          await _rig(tester, s);
+          await tester.tap(find.text('נֹעָה'));
+          await tester.pumpAndSettle();
+          final ScrollPosition map = tester
+              .state<ScrollableState>(
+                find.descendant(
+                  of: find.byKey(const PageStorageKey<String>('home-map')),
+                  matching: find.byType(Scrollable),
+                ),
+              )
+              .position;
+          map.jumpTo(map.maxScrollExtent);
+          await _shot(tester, n == 'tablet_portrait' ? 'home_tablet_portrait_top' : 'home_${n}_end');
+        });
+      }
+
       testWidgets('activity frame, $n', (WidgetTester tester) async {
         await _rig(tester, s);
         await tester.tap(find.text('נֹעָה'));

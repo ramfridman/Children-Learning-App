@@ -84,6 +84,7 @@
   "answer": {
     "type": "shapes"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:shp.build.rocket.correct",
