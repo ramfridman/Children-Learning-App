@@ -3,7 +3,7 @@
 Written by the hebrew-text-editor on 2026-10-28 for the voice-and-sound-director, a future editor and the main assistant.
 The table is `docs/review/hebrew-master.csv`; every decision below is a rule in `tools/hebrew_voice_review.py`
 (`SUBS`, `MANUAL`, `TUTOR_SUBS`, `grammar()` steps 1 to 7, `KTIV`, `KEEP_POINTED`, `VOICE_SUBS`, `PLACEHOLDERS`,
-`REVIEWED`, `DOUBT`, `NOTE`), so a rerun gives the same table:
+`REVIEWED`, `PENDING`, `DOUBT`, `NOTE`), so a rerun gives the same table:
 
     PYTHONIOENCODING=utf-8 python tools/hebrew_voice_review.py
 
@@ -19,7 +19,22 @@ Nothing in the pack, the generators or the app was changed. The corrected texts 
 | 3. Lesson content | 8,956 | about 2,400 | every distinct text read as a *template*: number words were folded into one slot (`N`), so 326 prompt, 374 hint, 235 correct-feedback and 57 other feedback shapes were read with one real example each; all 222 labels, 310 lesson texts, 200 skill texts, 88 parent texts and the 17 alt texts that differ from their prompt were read one by one. Number and noun agreement inside the folded slots was checked by a scan of every number word before a plural noun (no mismatch left). |
 | 4. Tutor lines (hero-son) | 66 | 57 | every line read (gender forms f, m, n checked against the line) |
 | 5. Alert word lists | 23 | 23 | spelling only; left `unchanged` (see question 9) |
-| 6. Helper lexicon | 110 | 110 | spelling read |
+| 6. Helper lexicon | 118 | 118 | spelling read (110 in the pass; the 8 words of B-24, the tens `שלושים` to `תשעים` and `מאה`, on 2026-10-29) |
+
+**Rows added after the master pass (2026-10-29).** `REVIEWED` covers whole groups, so a new row of group 1 to 4 or 6
+would be marked `text-ready` unread. Such a row goes into `PENDING` (it stays `proposed` with its comment) until the
+editor has read it and the owner has seen it; each run prints the rows that were not in the last table. Now in
+`PENDING`: the 10 B-26 strings (`homeIsland*`, `nitziHome*`, see `docs/agents/b26-hebrew.md`) and `homeBubble` (its
+B-26 replacement). Read and kept `text-ready`: the 8 lexicon words added with B-24 (`שלושים` to `תשעים`, `מאה`), spelt
+as a recogniser writes them (`שישים`, `חמישים` with yod), so group 6 is now 118 rows.
+
+**B-26 (2026-10-29).** Every line on the home screen is said by the friend the child chose (owner decision 4), so no
+line names Nitzi and none has a first person with a gender: `nitziHomeHi` is `זֶה הַבַּיִת שֶׁלִּי.` (was `אֲנִי נִיצִי.
+אֲנִי גָּרָה פֹּה.`). The bottle holds a revisit or the next lesson (decision 3), so `nitziHomeBottle` is `בַּבַּקְבּוּק
+יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.` (was "brought a new adventure"), and the map bubble `homeBubble`
+(`{child}, הַבַּקְבּוּק הִגִּיעַ!`) should become `{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!` (voice text `בבקבוק יש הרפתקה.`,
+the name said before it as in Q6), applied by the app-developer with B-26 step 2. `nitziHomeBottleDone` waits for the
+daily three-stop plan. The `nitziHome*` key names name the screen, not the speaker.
 
 Voice texts: about 520 of the 1,975 distinct voice texts were read in full (all money, clock, ordinal and maths
 lines, all core and tutor lines, a random sample of 120 and every line a rule changed), plus all
