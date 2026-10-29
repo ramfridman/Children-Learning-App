@@ -255,3 +255,93 @@ spelling"); the screen-reader text keeps the plain name.
 - **Latin names**: check that `Massimili…` shows the `…` on the right of the letters (the isolate), and `Emma` reads
   left to right inside the sign.
 - **Title**: two lines must fit on the SE at the title size; a wrap falls only before the name (no-break space).
+
+## 7. Step 3 hand-off (2026-10-29): the map bubble without a name, and a last read
+
+From `docs/qa/b26-step3-verification.md` (notes): with no usable name the map bubble says only `מַה בַּבַּקְבּוּק?`,
+built in code from `homeBubble` (`_withoutName`, `home_screen.dart:740`, `replaceFirst('{child}, ', '')`), so it was
+never a row of the review tables.
+
+### 7.1 Decision: keep the bare question, as its own entry
+
+**The words stay `מַה בַּבַּקְבּוּק?`.** It is a whole question in spoken Hebrew ("what's in the bottle?", as a child
+says it), the same invitation as the named line without the call. It has no verb, so no gender is guessed and it fits
+every friend; it says nothing about a missing name; it is true for a revisit and for a new lesson; and its fixed width
+is the one already measured for the named line (123 at Heebo 500, 24; tablet limit 140), so it is one line on every
+board. Weighed and not taken: `שָׁלוֹם! מַה בַּבַּקְבּוּק?` (a greeting the named line does not have, about 60 wider,
+over the tablet limit; the welcome belongs to the home, `nitziHomeWelcomeNoName`), `מַה יֵּשׁ בַּבַּקְבּוּק?` (156, too
+wide, as in step 2), `הֵי, מַה בַּבַּקְבּוּק?` (a call to no one, and slangy).
+
+**Own entry: yes.** `He.homeBubbleNoName = Str('מַה בַּבַּקְבּוּק?', nikud: true)` (added to `app/lib/strings/he.dart`
+under `homeBubble`; `review` is `needs-editor` like every `Str`). Code point for code point the text the code builds
+today (checked, NFC). Why:
+1. Every line a child sees is read by the editor and the owner in the tables; a derived line escapes them.
+2. The derivation is fragile: if `homeBubble` is ever reworded (another punctuation after the name, a word before it),
+   `replaceFirst('{child}, ', '')` matches nothing and a child with no name sees the raw `{child}` on the map.
+3. It is the pattern of `nitziHomeWelcome` / `nitziHomeWelcomeNoName`.
+
+**For the app-developer** (not done here): `_withoutName` → `He.homeBubbleNoName`. `_breakAfterName` may stay derived
+(it only adds a line break to the same words), but it has the same fragility: a test or an `assert` that
+`He.homeBubble.text` contains `'{child}, '` would catch a rewording. A test that the nameless bubble shows exactly
+`He.homeBubbleNoName.text`.
+
+**Voice:** spoken, voice text `מה בבקבוק?`: the same voice text as `homeBubble`, so one clip serves both and this line
+is never per-name. Nothing is voiced in B-26 (decision 6).
+
+**Tables:** `tools/hebrew_voice_review.py`: `homeBubbleNoName` added to `VOICED_UI` and to `PENDING` (stays `proposed`
+for the owner). Regenerated with `tools/export-hebrew-review.py` and `tools/hebrew_voice_review.py`: 9,522 rows
+(screens 332), master text-ready 9,455, proposed 44, unchanged 23. Against the step-3 tables the only change is the
+new row in each of the five files (plus the counts in the two `.md` summaries).
+
+### 7.2 A last read against the final flow
+
+Every B-26 line read again for gender (the child's is unknown), nikud and voice. All child lines are fully pointed and
+checked: `הָאִי` (qamats under the article before א), `שֶׁלִּי` (dagesh in ל), `בַּבַּקְבּוּק` (article merged into בַּ, dagesh
+forte in the second ב, dagesh lene in בּוּק after the shva), `מַה` with patah before the dagesh, `הַבָּאִים`, `הַבַּיְתָה`,
+`פֹּה` (holam, not `פֶּה`), `וְהַמַּדְבֵּקוֹת` (וְ before ה), `נִפְתַּח` (qal future, first person plural), `סִיַּמְנוּ`, `בָּאִיִּים`.
+No line has a singular "you", a gendered first person, a gendered verb about the child, or a prefix on `{child}`.
+
+| Where in the flow | String | Verdict |
+|---|---|---|
+| Map sign | `homeIsland` `הָאִי שֶׁל {child}`; `homeIslandMine` `הָאִי שֶׁלִּי` | final. `אִי` is masculine, `שֶׁל` does not inflect: the same for a girl, a boy and a unisex name. Never voiced. |
+| Sign and title, screen reader | `homeIslandSemantics`, `homeIslandMineSemantics` | final, unpointed. When the Hall's glow moves to the sign, join the two labels with a comma: `האי של דנה, גביע חדש מחכה`. |
+| Map bubble | `homeBubble` `{child}, מַה בַּבַּקְבּוּק?`; `homeBubbleNoName` `מַה בַּבַּקְבּוּק?` | final text; per-name voicing of `homeBubble` is Q6 (not in B-26). |
+| Today's Adventure pill | `homeDaily` `הַהַרְפַּתְקָה שֶׁל הַיּוֹם` | unchanged and still true: with one stop (decision 3) it is the adventure offered today; it promises no count. |
+| Home title | `island.title` = `homeIsland` / `homeIslandMine` with no-break spaces in the frame | final (same words as the sign, never shortened under 24). |
+| Home bubble on entry | `nitziHomeWelcome` / `nitziHomeWelcomeNoName` | text final; the fixed plural `בְּרוּכִים הַבָּאִים` for every child is Q5 (open). |
+| Friend at the door | `nitziHomeHi` `זֶה הַבַּיִת שֶׁלִּי.` | correct and gender-free, but the design has no line here (a tap waves). If it is used: the house stands on **the child's** island and any friend may say it, so `זֶה הַבַּיִת שֶׁלָּנוּ.` ("our house": this friend and this child) fits the flow better. Owner question 3 below; not changed in `he.dart`. |
+| Bottle, its line | `nitziHomeBottle` `בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.` | final; it answers the map's question; `אוֹתוֹ` agrees with `בַּקְבּוּק`. |
+| Bottle, done | `nitziHomeBottleDone` | waits for the three-stop plan (Q7). |
+| Hall and stickers line | `nitziHomeTreasures` | final; true once the lighthouse and the book are in the home (step 4). |
+| Bottle label | none yet | **reuse `homeDaily`**: the pill on the map is the same thing (its icon is the bottle), so the same name ties them. If it is too wide under the SE bottle (136 wide; the design-director measures at 14 bold), a new one-word label `הַרְפַּתְקָה` (I write it on request). |
+| Book label | `homeStickersLabel` `מַדְבֵּקוֹת` | reuse (the child knows it from the map pebble). |
+| Lighthouse label | `homeHallLabel` `גְּבִיעִים` | reuse; `הֵיכַל הַגְּבִיעִים` (`hallTitle`) stays the Hall's own title, too long and too formal for a label. |
+| Back | the pebble, `landBackSemantics` `חזרה למפה` | final. My draft visible label `nitziHomeBack` `לַמַּפָּה` (3.1) is **withdrawn**: the back pebbles of the Land, Hall and Sticker screens have no visible word, and the design gives this one none. Not in `he.dart`. |
+| Old sign | `landNitzi` `הָאִי שֶׁל נִיצִי` | now only the screen-reader fallback when no `HomeIslandName` is passed (tests, old callers); a child never sees it. Keep. |
+
+**Voice-ready.** Nothing of B-26 is voiced (decision 6). In the master table only `homeBubble` and `homeBubbleNoName`
+are spoken (`מה בבקבוק?`). The draft voice texts of 3.1 (`שלום, ברוכים הבאים הביתה.`, `זה הבית שלי.`, `פֹּה גָּרִים
+הגביעים, המדליות והמדבקות.`, `בבקבוק יש הרפתקה. בואו נִפְתַּח אותו.`) are ready for the voicing step: no name, no
+`!`, partial nikud where a TTS could misread. When that step comes, their ids go into `VOICED_UI`.
+
+**Found while reading (app-developer, QA to verify): a shortened Latin name in the bubble shows its `…` on the wrong
+side.** The sign puts the name in U+2068 … U+2069 (1.3); the bubble fills `{child}` with the bare cleaned name. In
+`Massimili…, מַה בַּבַּקְבּוּק?` the `…` and the comma stand between a Latin and a Hebrew run, so they take the line's
+right-to-left direction and the `…` is drawn to the **left** of the Latin letters, where a Latin word begins (rule 4 of
+1.4 wants it on the right). Only long Latin names that are shortened (SE, tablets) show it; Hebrew names and whole Latin
+names are right. Fix: fill `{child}` with `'⁨$name⁩'` in the bubble too (as `_withName` does), and later in
+`nitziHomeWelcome`; the marks have no width, so the fit does not change.
+
+**Name pronunciation.** Nothing to decide in B-26: no name is voiced. Q6 (how a voiced name is joined to `מה בבקבוק?`)
+and the missing "how to say it" field (gap 1 of section 4) stay for the voicing step. One look-alike, for information:
+the name `שלי` (Shelly) gives `הָאִי שֶׁל שלי`, which reads like "my island" twice over; the pointed frame and the gan
+name card make it clear on screen, and a screen reader says it the way the family says the name. No change.
+
+### 7.3 Still for the owner
+
+1. Q5: `בְּרוּכִים הַבָּאִים` for every child (recommended) or by address form.
+2. Q6 (later, voicing): the per-name `homeBubble`: one clip per child with the name, or a name clip joined to `מה בבקבוק?`.
+3. `nitziHomeHi`, if the design uses it: `זֶה הַבַּיִת שֶׁלִּי.` (the friend's house) or `זֶה הַבַּיִת שֶׁלָּנוּ.` (recommended:
+   the house of this friend and this child, on the child's island).
+4. Q7: show `nitziHomeBottleDone` once the three-stop plan exists (recommended), or nothing.
+5. `homeBubbleNoName` `מַה בַּבַּקְבּוּק?` (new row, `proposed`): approve with the other B-26 rows.

@@ -669,7 +669,7 @@ class HomeScreen extends StatelessWidget {
 /// a tablet a line wider than that breaks after the child's name, so the words after it stay whole on the second line and
 /// the bubble, held by its bottom beside the friend's mouth, grows upwards over the home island's own palm. A name too
 /// long for its line is shortened by the sign's rule ([shortenName]), so a tablet bubble never takes three lines (QA-29).
-/// With no usable name it says only the words after the name.
+/// The name sits in an isolate ([isolatedName]). With no usable name it says [He.homeBubbleNoName].
 class _MapBubble extends StatelessWidget {
   const _MapBubble({required this.spec, required this.name});
 
@@ -695,10 +695,11 @@ class _MapBubble extends StatelessWidget {
       return painter.width <= room;
     }
 
-    Map<String, String> named(String n) => <String, String>{'child': n};
+    // The name in an isolate, as on the sign, so a shortened Latin name keeps its "…" on its right.
+    Map<String, String> named(String n) => <String, String>{'child': isolatedName(n)};
     final String text;
     if (name.isEmpty) {
-      text = _withoutName.text;
+      text = He.homeBubbleNoName.text;
     } else if (!spec.bubbleBreaks) {
       text = He.homeBubble.fill(named(_fittedName(name, (String n) => fits(He.homeBubble.fill(named(n))))));
     } else if (fits(He.homeBubble.fill(named(name)))) {
@@ -733,11 +734,8 @@ String _fittedName(String name, bool Function(String name) fits) {
   return tried;
 }
 
-/// The bubble's words with a line break after "{child},".
+/// The bubble's words with a line break after "{child}," (a test holds `He.homeBubble` to that "{child}, ").
 final Str _breakAfterName = Str(He.homeBubble.text.replaceFirst('{child}, ', '{child},\n'), nikud: true);
-
-/// The bubble's words without the name, for a child with no usable name.
-final Str _withoutName = Str(He.homeBubble.text.replaceFirst('{child}, ', ''), nikud: true);
 
 /// Today's adventure. It opens the child's home when [onTap] is set, and only then is it announced as a button. The three
 /// stops of the daily plan are not drawn until that plan exists (B-26).

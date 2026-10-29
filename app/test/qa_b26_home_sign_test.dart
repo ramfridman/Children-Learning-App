@@ -414,7 +414,7 @@ void main() {
         await tester.pump();
         final Finder body = find.byKey(const Key('bubble-body'));
         expect(body, findsOneWidget);
-        final String words = He.homeBubble.fill(<String, String>{'child': 'נֹעָה'});
+        final String words = He.homeBubble.fill(<String, String>{'child': isolatedName('נֹעָה')});
         expect(find.text(words), findsOneWidget);
         expect(
           find.bySemanticsLabel(words),

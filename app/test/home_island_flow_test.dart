@@ -77,7 +77,11 @@ void main() {
     final String typed = '  אבגדהוזחטי אבגדהוזחטי ${String.fromCharCode(0x200F)}אבגדהוזח ';
     await home(tester, name: typed.trim());
     final HomeIslandName island = homeIslandName(typed);
-    expect(bubbleText(tester), startsWith('${island.name},'), reason: 'cleaned: no mark, no outer space');
+    expect(
+      bubbleText(tester),
+      startsWith('${isolatedName(island.name)},'),
+      reason: 'cleaned: no mark, no outer space; the name in an isolate',
+    );
     await tester.tap(find.byKey(const Key('home-pill')));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
@@ -103,6 +107,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(HomeScreen), findsOneWidget);
     expect(signText(tester), homeIslandName('דן').sign);
-    expect(bubbleText(tester), He.homeBubble.fill(<String, String>{'child': 'דן'}));
+    expect(bubbleText(tester), He.homeBubble.fill(<String, String>{'child': isolatedName('דן')}));
   });
 }
