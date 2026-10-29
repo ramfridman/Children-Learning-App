@@ -16,7 +16,7 @@ export const HEADER_NONCE = "x-nonce";
 export const HEADER_SIGNATURE = "x-signature";
 
 const UUID_V4 = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-const UUID_ANY = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+export const UUID_ANY = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const FUNCTION_NAME = /^[a-z][a-z0-9-]{0,63}$/;
 const HASH_B64URL = /^[A-Za-z0-9_-]{43}$/; // 32 bytes
 

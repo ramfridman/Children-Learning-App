@@ -40,18 +40,21 @@ class SyncReport {
 }
 
 /// What one `sync-push` (or the one-by-one retry of a refused batch) did: events taken or already there, events the server
-/// refused by id (a child it does not know), and events it would not take at all ([rejected], by event id).
+/// refused by id (a child it does not know), and events it would not take at all ([rejected], by event id). [mismatch]:
+/// the server took none of them, so it does not know this app's format; nothing is marked and the round stops.
 class _Sent {
-  const _Sent({this.pushed = 0, this.refused = 0, this.rejected = const <String>{}});
+  const _Sent({this.pushed = 0, this.refused = 0, this.rejected = const <String>{}, this.mismatch = false});
 
   _Sent.of(Map<String, Object?> answer)
     : pushed = (answer['accepted'] as int? ?? 0) + (answer['duplicates'] as int? ?? 0),
       refused = (answer['refused'] as List<Object?>? ?? const <Object?>[]).length,
-      rejected = const <String>{};
+      rejected = const <String>{},
+      mismatch = false;
 
   final int pushed;
   final int refused;
   final Set<String> rejected;
+  final bool mismatch;
 }
 
 /// Keeps this device and the family's other devices in step (PLAN: Sync rules).
@@ -85,6 +88,22 @@ class SyncEngine {
 
   static const String cursorKey = 'sync_cursor';
   static final String _namespace = Namespace.url.value;
+
+  /// The engine version the rows refused by the server were last reset under (SEC-12).
+  static const String _refusedResetKey = 'sync_refused_reset_version';
+
+  /// `sync-push`'s own limits for values the device makes (`testvectors/wire-patterns.json`, tested equal).
+  static const String lessonIdPattern = r'^[a-z0-9._-]{0,40}$';
+  static const int maxDurationMs = 3600000;
+  static final RegExp _lessonId = RegExp(lessonIdPattern);
+
+  /// The lesson id as `sync-push` takes it. A revisit mission of an older version was named with its skill's capitals
+  /// (`mission-NUM-A-03`); it goes as the name a mission has now (`mission-num-a-03`). Anything else outside the pattern
+  /// goes empty: the answer itself still counts.
+  static String wireLessonId(String id) {
+    final String lower = id.toLowerCase();
+    return _lessonId.hasMatch(lower) ? lower : '';
+  }
 
   /// The id of an event made on this device: the same row always gives the same id.
   static String eventIdOf(String deviceId, String kind, int localId) =>
@@ -230,7 +249,7 @@ class SyncEngine {
       'activity_revision': a.activityRevision,
       'pack_id': a.packId,
       'pack_version': a.packVersion,
-      'lesson_id': a.lessonId,
+      'lesson_id': wireLessonId(a.lessonId),
       'template': a.template,
       'template_version': a.templateVersion,
       'skill_id': a.skillId,
@@ -240,7 +259,8 @@ class SyncEngine {
       'misconception_tag': a.misconceptionTag,
       // A code an older version wrote outside the server's pattern (SEC-1) goes without it: the answer itself still counts.
       'response': ResponseCode.fits(a.response) ? a.response : '',
-      'duration_ms': a.durationMs,
+      // A question left open longer than the server takes counts as that long.
+      'duration_ms': a.durationMs.clamp(0, maxDurationMs),
       'input': a.input,
       'session_local': ?a.sessionId,
     },
@@ -270,10 +290,21 @@ class SyncEngine {
     'data': <String, Object?>{'kind': r.kind, 'key': r.awardKey},
   };
 
+  /// Once per engine version, rows the server refused under an older one are made "not sent" again, so this version sends
+  /// them once more (a fixed format, or a server that has learnt the field, takes them now).
+  Future<void> _resendRefusedOncePerVersion() async {
+    if (await db.setting(_refusedResetKey) == '$engineVersion') return;
+    await db.unmarkRefusedBySync();
+    await db.putSetting(_refusedResetKey, '$engineVersion');
+  }
+
   Future<({int pushed, int refused})> _pushEvents() async {
     int pushed = 0;
     int refused = 0;
+    await _resendRefusedOncePerVersion();
     final Set<String> gone = await _tombstoned();
+    // True once the server took a call of this round: it knows this app's format, so an event it refuses alone is bad.
+    bool understood = false;
     while (true) {
       final List<Session> sessions = await db.unsyncedSessions(limit: batch);
       final List<Attempt> attempts = await db.unsyncedAttempts(limit: batch);
@@ -292,12 +323,15 @@ class SyncEngine {
         for (final Session x in s) _sessionEvent(x),
         for (final Reward x in w) _rewardEvent(x),
       ].take(batch).toList();
-      final _Sent sent = events.isEmpty ? const _Sent() : await _send(events);
+      final _Sent sent = events.isEmpty ? const _Sent() : await _send(events, understood: understood);
+      understood = understood || (events.isNotEmpty && !sent.mismatch);
       pushed += sent.pushed;
       refused += sent.refused + sent.rejected.length;
       // Sent, or refused (the server does not know the child, or would not take the row): either way not sent again.
+      // After a format mismatch none of them is either: they all wait for the next round.
       final Set<String> inThisCall = <String>{
-        for (final Map<String, Object?> e in events) e['id']! as String,
+        if (!sent.mismatch)
+          for (final Map<String, Object?> e in events) e['id']! as String,
       };
       List<int> went(String kind, Iterable<int> ids, {bool rejected = false}) => <int>[
         for (final int id in ids)
@@ -318,6 +352,7 @@ class SyncEngine {
         await db.markSessionsSynced(went('session', sIds, rejected: true), never);
         await db.markRewardsSynced(went('reward', wIds, rejected: true), never);
       }
+      if (sent.mismatch) break;
       if (events.isEmpty && dropA.isEmpty && dropS.isEmpty && dropW.isEmpty) break;
     }
     return (pushed: pushed, refused: refused);
@@ -326,7 +361,11 @@ class SyncEngine {
   /// Sends [events] in one call. When the server refuses the call as a whole (`bad_request`: one event it will not take
   /// refuses the batch), they are sent again one by one, so that the good ones get in and the one it will not take is known
   /// by its id. Any other failure (no network, the server down) is thrown: everything stays for the next round.
-  Future<_Sent> _send(List<Map<String, Object?>> events) async {
+  ///
+  /// When the server takes none of them alone, and there were two or more, or there was one and the server has taken
+  /// nothing this round ([understood] false), it is not a bad row but a server that does not know this app's format (a
+  /// gateway deployed out of order, SEC-12): the answer is a [_Sent.mismatch] and no event is marked refused.
+  Future<_Sent> _send(List<Map<String, Object?>> events, {required bool understood}) async {
     try {
       return _Sent.of(await call('sync-push', <String, Object?>{'events': events}));
     } on GatewayException catch (e) {
@@ -348,6 +387,10 @@ class SyncEngine {
         if (x.code != 'bad_request') rethrow;
         rejected.add(e['id']! as String);
       }
+    }
+    if (rejected.length == events.length && (events.length > 1 || !understood)) {
+      Log.d('sync: format mismatch, ${events.length} events kept for the next round');
+      return const _Sent(mismatch: true);
     }
     if (rejected.isNotEmpty) {
       Log.d('sync: ${rejected.length} of ${events.length} events refused by the server');

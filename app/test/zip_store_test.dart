@@ -303,6 +303,14 @@ void main() {
   // B-12 made the CRC-32, the name rule and the canonical re-write faster. These prove the results did not
   // change: the code before is kept in support/zip_store_reference.dart as the oracle.
   group('the faster reader and writer give exactly the results of the code before them', () {
+    // The oracle shares these constants with the reader, so it cannot notice a change of one: they are pinned here.
+    test('the limits are the ones the reader was reviewed with', () {
+      expect(ZipLimits.maxEntries, 8002);
+      expect(ZipLimits.maxTotalBytes, 64 * 1024 * 1024);
+      expect(ZipLimits.maxNameLength, 101);
+      expect(ZipLimits.maxZipBytes, 64 * 1024 * 1024 + 256 * 1024);
+    });
+
     test('crc32 gives the standard values', () {
       expect(crc32(Uint8List(0)), 0x00000000);
       expect(crc32(_bytes('a')), 0xE8B7BE43);

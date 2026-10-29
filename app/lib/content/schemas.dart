@@ -84,6 +84,9 @@ const List<String> bands = <String>['A', 'B', 'C'];
 const List<String> representations = <String>['concrete', 'pictorial', 'story', 'embodied', 'symbolic'];
 
 const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activityId);
+
+/// Every answer carries its lesson id, and `sync-push` takes at most 40 characters (SEC-12).
+const SString _lessonId = SString(minLength: 3, maxLength: 40, pattern: Patterns.activityId);
 const SString _characterId = SString(minLength: 3, maxLength: 41, pattern: Patterns.packId);
 const SString _tag = SString(minLength: 5, maxLength: 20, pattern: Patterns.tag);
 const SString _skill = SString(minLength: 6, maxLength: 11, pattern: Patterns.skillId);
@@ -158,7 +161,7 @@ const SObject manifestSchema = SObject(<String, SField>{
   'entries': SField(
     SObject(<String, SField>{
       'activities': SField(SArray(_id, maxItems: 1500)),
-      'lessons': SField(SArray(_id, maxItems: 400)),
+      'lessons': SField(SArray(_lessonId, maxItems: 400)),
       'skills': SField(SArray(_skill, maxItems: 600)),
       'misconceptions': SField(SArray(_tag, maxItems: 400)),
       // Characters and mouth cues (M4); absent in packs that have none.
@@ -295,7 +298,7 @@ const SObject misconceptionSchema = SObject(<String, SField>{
 
 const SObject lessonSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.lesson)),
-  'id': SField(_id),
+  'id': SField(_lessonId),
   'review': _review,
   'revision': SField(_revision),
   'band': SField(SEnum(bands)),

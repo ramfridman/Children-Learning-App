@@ -6,25 +6,58 @@ import 'dart:io';
 
 import 'package:nitznutz/core/errors.dart';
 
-/// The text fields of an answer as `sync-push` takes them (`testvectors/wire-patterns.json`, tested equal to the server).
-final Map<String, ({RegExp pattern, int max})> _attemptFields = () {
+/// One key of an event as `sync-push` takes it: is [value] of the right type, in its pattern, range or values?
+typedef _Check = bool Function(Object? value);
+
+_Check _checkOf(Map<String, Object?> f) {
+  final RegExp? pattern = f['pattern'] == null ? null : RegExp(f['pattern']! as String);
+  return switch (f['t']) {
+    'uuid' => (Object? v) => v is String && pattern!.hasMatch(v),
+    'string' => (
+      Object? v,
+    ) => v is String && v.length <= (f['max']! as int) && (pattern?.hasMatch(v) ?? true),
+    'int' => (Object? v) => v is int && v >= (f['min']! as int) && v <= (f['max']! as int),
+    'enum' => (Object? v) => v is String && (f['values']! as List<Object?>).contains(v),
+    'object' => (Object? v) => v is Map<String, Object?>,
+    _ => throw StateError('wire-patterns.json: unknown type ${f['t']}'),
+  };
+}
+
+/// Everything `sync-push` takes in an event (`testvectors/wire-patterns.json`, tested equal to the server).
+final ({
+  int maxEvents,
+  Map<String, _Check> event,
+  Map<String, _Check> data,
+  Map<String, List<String>> required,
+})
+_wire = () {
   final Map<String, Object?> v =
       jsonDecode(File('../testvectors/wire-patterns.json').readAsStringSync()) as Map<String, Object?>;
-  return <String, ({RegExp pattern, int max})>{
-    for (final MapEntry<String, Object?> e in (v['attempt_fields']! as Map<String, Object?>).entries)
-      e.key: (
-        pattern: RegExp((e.value! as Map<String, Object?>)['pattern']! as String),
-        max: (e.value! as Map<String, Object?>)['max']! as int,
-      ),
+  Map<String, _Check> checks(String key) => <String, _Check>{
+    for (final MapEntry<String, Object?> e in (v[key]! as Map<String, Object?>).entries)
+      e.key: _checkOf(e.value! as Map<String, Object?>),
   };
+  return (
+    maxEvents: v['max_events']! as int,
+    event: checks('event_fields'),
+    data: checks('data_fields'),
+    required: <String, List<String>>{
+      for (final MapEntry<String, Object?> e in (v['required']! as Map<String, Object?>).entries)
+        e.key: <String>[for (final Object? k in e.value! as List<Object?>) k! as String],
+    },
+  );
 }();
 
 class FakeFamilyServer {
-  FakeFamilyServer({this.checksAnswers = false});
+  FakeFamilyServer({this.checksFormat = false});
 
-  /// Refuses a whole `sync-push` with `bad_request` when one answer has a text field the real server would not take, as
-  /// the real one does.
-  final bool checksAnswers;
+  /// Refuses a whole `sync-push` with `bad_request` when one event is not in the format the real server takes (an unknown
+  /// key, a missing one, a value outside its pattern, range or values, too many events), as the real one does.
+  final bool checksFormat;
+
+  /// Keys of an event's data this server does not know (with [checksFormat]): a gateway older than the app, or one
+  /// deployed with a field removed. An event that carries one is refused.
+  Set<String> forgets = <String>{};
 
   final List<Map<String, Object?>> log = <Map<String, Object?>>[];
   final Map<String, Map<String, Object?>> children = <String, Map<String, Object?>>{};
@@ -87,7 +120,7 @@ class FakeFamilyServer {
         if (!tombstones.contains(id)) tombstones.add(id);
         return <String, Object?>{'ok': true};
       case 'sync-push':
-        if (checksAnswers) _checkAnswers(body['events']! as List<Object?>);
+        if (checksFormat) _checkEvents(body['events']! as List<Object?>);
         int accepted = 0;
         int duplicates = 0;
         final List<String> refused = <String>[];
@@ -139,18 +172,35 @@ class FakeFamilyServer {
     throw StateError('unknown function $name');
   }
 
-  void _checkAnswers(List<Object?> events) {
-    for (final Object? raw in events) {
-      final Map<String, Object?> e = raw! as Map<String, Object?>;
-      if (e['type'] != 'attempt') continue;
-      final Map<String, Object?> d = e['data']! as Map<String, Object?>;
-      for (final MapEntry<String, ({RegExp pattern, int max})> f in _attemptFields.entries) {
-        final Object? v = d[f.key];
-        if (v == null) continue;
-        if (v is! String || v.length > f.value.max || !f.value.pattern.hasMatch(v)) {
-          throw const GatewayException('bad_request', status: 400);
+  /// The schema check of the real `sync-push`, then its check of the keys each type must carry.
+  void _checkEvents(List<Object?> events) {
+    bool fits(
+      Map<String, _Check> shape,
+      Object? raw, {
+      required bool allOptional,
+      Set<String> unknown = const <String>{},
+    }) {
+      if (raw is! Map<String, Object?>) return false;
+      if (raw.keys.any((String k) => !shape.containsKey(k) || unknown.contains(k))) return false;
+      for (final MapEntry<String, _Check> f in shape.entries) {
+        if (!raw.containsKey(f.key)) {
+          if (allOptional) continue;
+          return false;
         }
+        if (!f.value(raw[f.key])) return false;
       }
+      return true;
     }
+
+    final bool ok =
+        events.length <= _wire.maxEvents &&
+        events.every((Object? raw) {
+          if (!fits(_wire.event, raw, allOptional: false)) return false;
+          final Map<String, Object?> e = raw! as Map<String, Object?>;
+          final Map<String, Object?> data = e['data']! as Map<String, Object?>;
+          return fits(_wire.data, data, allOptional: true, unknown: forgets) &&
+              _wire.required[e['type']]!.every(data.containsKey);
+        });
+    if (!ok) throw const GatewayException('bad_request', status: 400);
   }
 }

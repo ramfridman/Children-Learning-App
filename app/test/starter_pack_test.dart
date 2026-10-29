@@ -63,6 +63,60 @@ Future<_FlipReport> _flipEach(int first, int stride) async {
 /// [_flipEach] in a new isolate (a top-level function, so the closure sent to it holds only two ints).
 Future<_FlipReport> _flipEachInWorker(int first, int stride) => Isolate.run(() => _flipEach(first, stride));
 
+/// What became of the real pack with one byte of the file [name] changed and the zip written again with
+/// [writeStoredZip], so that every CRC is right and the zip is canonical (an attacker who repairs the checksums):
+/// whether the zip reader takes the new zip, and the stage and reason [verifyPack] refused it with ([stage] null if it
+/// was accepted).
+typedef _FixedUp = ({String name, bool readsBack, String? stage, String reason});
+
+/// Changes the middle byte of `entries[index]` (an empty file gets one byte), writes the zip again and verifies it.
+Future<_FixedUp> _fixedUp(List<ZipEntry> entries, int index, Uint8List key) async {
+  final ZipEntry target = entries[index];
+  final Uint8List data = target.data;
+  final Uint8List changed = data.isEmpty
+      ? Uint8List(1)
+      : (Uint8List.fromList(data)..[data.length ~/ 2] ^= 0x01);
+  final Uint8List zip = writeStoredZip(<ZipEntry>[
+    for (final ZipEntry e in entries) identical(e, target) ? ZipEntry(e.name, changed) : e,
+  ]);
+  bool readsBack = true;
+  try {
+    readStoredZip(zip);
+  } on ZipException {
+    readsBack = false;
+  }
+  try {
+    await verifyPack(zip, publicKey: key);
+    return (name: target.name, readsBack: readsBack, stage: null, reason: 'accepted');
+  } on PackRejected catch (e) {
+    return (name: target.name, readsBack: readsBack, stage: e.stage, reason: e.reason);
+  }
+}
+
+/// [_fixedUp] for the content files number [first], [first] + [stride], ... of the real pack (every file but the
+/// manifest and its signature, in zip order).
+Future<List<_FixedUp>> _fixedUpEach(int first, int stride) async {
+  final Uint8List key = _publicKey();
+  final List<ZipEntry> entries = readStoredZip(File(_packPath).readAsBytesSync());
+  final List<int> content = <int>[
+    for (int i = 0; i < entries.length; i++)
+      if (entries[i].name != manifestName && entries[i].name != signatureName) i,
+  ];
+  return <_FixedUp>[
+    for (int k = first; k < content.length; k += stride) await _fixedUp(entries, content[k], key),
+  ];
+}
+
+/// [_fixedUpEach] in a new isolate.
+Future<List<_FixedUp>> _fixedUpEachInWorker(int first, int stride) =>
+    Isolate.run(() => _fixedUpEach(first, stride));
+
+/// [_fixedUp] for the one file [name] of the real pack.
+Future<_FixedUp> _fixedUpFile(String name) {
+  final List<ZipEntry> entries = readStoredZip(File(_packPath).readAsBytesSync());
+  return _fixedUp(entries, entries.indexWhere((ZipEntry e) => e.name == name), _publicKey());
+}
+
 /// Changes every [step]th byte of the real pack in turn (offsets 0, step, 2 x step, ...), spread over one
 /// worker isolate per processor: worker w takes the offsets w x step, (w + workers) x step, ... so together
 /// they take each offset exactly once, and every worker gets bytes from all over the pack. Expects every
@@ -127,8 +181,47 @@ void main() {
     final bool full = Platform.environment['NN_EXHAUSTIVE'] == '1' || Platform.environment['CI'] == 'true';
     final Uint8List bytes = File(_packPath).readAsBytesSync();
     final int tried = await _refusedFlipsOfEvery(full ? 1 : 97);
-    expect(tried, full ? bytes.length : greaterThan(300));
+    expect(tried, full ? bytes.length : (bytes.length + 96) ~/ 97);
   }, timeout: const Timeout(Duration(minutes: 60)));
+
+  // Every flip above is caught by a file's CRC or the zip rules before the signature or a hash is looked at. The three
+  // tests below are the attacker who repairs the CRCs: the zip they make is valid, so only the hashes and the signature
+  // stand between it and the child.
+  test('one changed byte in any file of the real pack, with the checksums repaired, is refused by that file\'s hash', () async {
+    final int workers = Platform.numberOfProcessors;
+    final List<_FixedUp> all = <_FixedUp>[
+      for (final List<_FixedUp> part in await Future.wait(<Future<List<_FixedUp>>>[
+        for (int w = 0; w < workers; w++) _fixedUpEachInWorker(w, workers),
+      ]))
+        ...part,
+    ];
+    expect(all.length, pack.files.length, reason: 'each file once');
+    expect(<String>{for (final _FixedUp r in all) r.name}, pack.files.keys.toSet());
+    final List<String> wrong = <String>[
+      for (final _FixedUp r in all)
+        if (!r.readsBack || r.stage != 'files' || !r.reason.contains('"${r.name}"'))
+          '${r.name}: ${r.readsBack ? '' : 'the zip reader refused it, '}${r.stage ?? 'accepted'}: ${r.reason}',
+    ];
+    expect(wrong, isEmpty, reason: 'each must be a valid zip refused at "files", naming the file');
+  }, timeout: const Timeout(Duration(minutes: 10)));
+
+  test(
+    'one changed byte in manifest.json, with the checksums repaired, is refused by the signature',
+    () async {
+      final _FixedUp r = await _fixedUpFile(manifestName);
+      expect(r.readsBack, isTrue, reason: 'the zip is valid');
+      expect(r.stage, 'signature', reason: r.reason);
+    },
+  );
+
+  test(
+    'one changed byte in manifest.sig, with the checksums repaired, is refused by the signature',
+    () async {
+      final _FixedUp r = await _fixedUpFile(signatureName);
+      expect(r.readsBack, isTrue, reason: 'the zip is valid');
+      expect(r.stage, 'signature', reason: r.reason);
+    },
+  );
 
   test('the lesson has the five items of the script, in order', () {
     final Map<String, Object?> lesson = _m(pack.docs['lesson.butterflies.json']);

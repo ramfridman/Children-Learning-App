@@ -247,6 +247,20 @@ class AppDatabase extends _$AppDatabase {
   /// The database gives times back in local time: compare the moment, not the value.
   static bool wasRefusedBySync(DateTime? syncedAt) => syncedAt?.isAtSameMomentAs(refusedBySync) ?? false;
 
+  /// Makes every answer, visit and award marked [refusedBySync] "not sent" again, so that it is sent once more (SEC-12:
+  /// after the engine version changes).
+  Future<void> unmarkRefusedBySync() => transaction(() async {
+    await (update(attempts)..where(($AttemptsTable t) => t.syncedAt.equals(refusedBySync))).write(
+      const AttemptsCompanion(syncedAt: Value<DateTime?>(null)),
+    );
+    await (update(sessions)..where(($SessionsTable t) => t.syncedAt.equals(refusedBySync))).write(
+      const SessionsCompanion(syncedAt: Value<DateTime?>(null)),
+    );
+    await (update(rewards)..where(($RewardsTable t) => t.syncedAt.equals(refusedBySync))).write(
+      const RewardsCompanion(syncedAt: Value<DateTime?>(null)),
+    );
+  });
+
   /// Answers made on this device that have not been sent yet, oldest first.
   Future<List<Attempt>> unsyncedAttempts({int limit = 40}) =>
       (select(attempts)

@@ -36,7 +36,7 @@ void main() {
   test('the app and both servers take the same patterns (testvectors/wire-patterns.json)', () {
     final Map<String, Object?> v =
         jsonDecode(File('../testvectors/wire-patterns.json').readAsStringSync()) as Map<String, Object?>;
-    final Map<String, Object?> fields = v['attempt_fields']! as Map<String, Object?>;
+    final Map<String, Object?> fields = v['data_fields']! as Map<String, Object?>;
     expect(responsePattern, (fields['response']! as Map<String, Object?>)['pattern']);
     expect(tutorOptionPattern, v['tutor_option']);
     // The examples are what the templates write; the Deno test sends each of them through the real sync-push.

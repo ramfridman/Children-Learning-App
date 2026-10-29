@@ -32,7 +32,8 @@ class WorldView {
     final List<String> items = missionItemIds(engine, skillId);
     if (items.isEmpty) return null;
     return Lesson.mission(
-      id: 'mission-$skillId',
+      // A lesson id is lower case, as `sync-push` takes it (every answer carries it).
+      id: 'mission-${skillId.toLowerCase()}',
       itemIds: items,
       skillIds: <String>[skillId],
       celebration: Spoken(vo: 'vo:core.celebrate.well', caption: He.celebrateWell.text),

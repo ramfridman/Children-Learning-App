@@ -10,7 +10,7 @@
     "id": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 81,
+      "maxLength": 40,
       "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
     },
     "review": {

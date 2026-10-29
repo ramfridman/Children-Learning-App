@@ -17,8 +17,9 @@ const ms = { t: "int", min: 1_500_000_000_000, max: 4_100_000_000_000 } as const
 const word = (re: RegExp, max: number) => ({ t: "string", max, pattern: re, optional: true }) as const;
 
 /**
- * Every field an event may carry; which ones it must carry depends on its type (checked in `run`). The text fields of an
- * answer are mirrored in `testvectors/wire-patterns.json`, which the app is tested against (SEC-1).
+ * Every field an event may carry; which ones it must carry depends on its type (checked in `run`). Every field, the
+ * event's own keys and REQUIRED are mirrored in `testvectors/wire-patterns.json`, which the app is tested against (SEC-1,
+ * SEC-12).
  */
 export const DATA = {
   // attempt
@@ -49,7 +50,7 @@ export const DATA = {
   key: word(AWARD_KEY, 80),
 } as const;
 
-const REQUIRED: Record<"attempt" | "session" | "reward", readonly string[]> = {
+export const REQUIRED: Record<"attempt" | "session" | "reward", readonly string[]> = {
   attempt: [
     "activity_id",
     "activity_revision",

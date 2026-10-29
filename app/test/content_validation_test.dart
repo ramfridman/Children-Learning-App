@@ -631,6 +631,27 @@ void main() {
     });
   });
 
+  // SEC-12: every answer carries its lesson id, and sync-push takes at most 40 characters.
+  test('a lesson id longer than sync-push takes is refused, and one of 40 characters is valid', () {
+    List<Problem> withLessonId(String id) {
+      final SamplePack p = SamplePack();
+      final String file = 'lesson.$id.json';
+      p.docs[file] = _m(p.docs.remove(lessonFile))..['id'] = id;
+      p.files
+        ..remove(lessonFile)
+        ..add(file);
+      p.manifestList('files').firstWhere((Map<String, Object?> f) => f['name'] == lessonFile)['name'] = file;
+      _m(p.manifest['entries'])['lessons'] = <Object?>[id];
+      return _run(p);
+    }
+
+    expect(withLessonId('l' * 40), isEmpty);
+    // The manifest's list of lessons is checked first, and the lesson file itself has the same bound.
+    expect(withLessonId('l' * 41).map((Problem x) => x.toString()), <String>[
+      'manifest.json › entries.lessons[0]: length 41 is outside 3 to 40',
+    ]);
+  });
+
   test('a pack with a voice recording and no pending lines is valid', () {
     final SamplePack p = SamplePack();
     expect(_run(p), isEmpty);

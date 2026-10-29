@@ -1,7 +1,9 @@
 // The parent area's sync functions: children with nicknames, the log with its server cursor, and deleting a child.
 // Each one is called as a signed device, so the four checks of every function run too.
 import { assert } from "./_shared/testassert.ts";
+import { UUID_ANY } from "./_shared/canonical.ts";
 import { makeHandler } from "./_shared/handler.ts";
+import type { Field, Shape } from "./_shared/schema.ts";
 import {
   addDevice,
   call,
@@ -16,7 +18,13 @@ import {
 import { spec as childDelete } from "./child-delete/handler.ts";
 import { spec as childPut } from "./child-put/handler.ts";
 import { PULL_LIMIT, spec as syncPull } from "./sync-pull/handler.ts";
-import { DATA, PUSHES_PER_HOUR_PER_DEVICE, spec as syncPush } from "./sync-push/handler.ts";
+import {
+  DATA,
+  MAX_EVENTS,
+  PUSHES_PER_HOUR_PER_DEVICE,
+  REQUIRED,
+  spec as syncPush,
+} from "./sync-push/handler.ts";
 import { OPTION } from "./tutor-turn/handler.ts";
 
 const NOON = 1_790_000_000_000;
@@ -288,20 +296,58 @@ Deno.test("sync-push: only ids, numbers and fixed words get in: no free text, no
   );
 });
 
+/** A field of the gateway's schema as `testvectors/wire-patterns.json` writes it. */
+function described(f: Field): Record<string, unknown> {
+  switch (f.t) {
+    case "uuid":
+      return { t: f.t, pattern: UUID_ANY.source };
+    case "string":
+      return f.pattern ? { t: f.t, pattern: f.pattern.source, max: f.max } : { t: f.t, max: f.max };
+    case "int":
+      return { t: f.t, min: f.min, max: f.max };
+    case "enum":
+      return { t: f.t, values: [...f.values] };
+    default:
+      return { t: f.t };
+  }
+}
+
+Deno.test("sync-push: every key, value and range it takes is the one in testvectors/wire-patterns.json", async () => {
+  // The app is tested against the same file (app/test/wire_format_test.dart, response_contract_test.dart, and the fake
+  // server of the sync tests, which refuses what this function would): a new key, value or range cannot reach a device
+  // before this test and the file change with the gateway (SEC-12).
+  const v = JSON.parse(
+    await Deno.readTextFile(new URL("../../testvectors/wire-patterns.json", import.meta.url)),
+  ) as {
+    max_events: number;
+    event_fields: Record<string, Record<string, unknown>>;
+    data_fields: Record<string, Record<string, unknown>>;
+    required: Record<string, string[]>;
+  };
+  const events = syncPush.shape.events as { t: "array"; maxItems: number; of: { t: "object"; shape: Shape } };
+  assert.equal(events.maxItems, v.max_events);
+  assert.equal(MAX_EVENTS, v.max_events);
+  const compare = (shape: Shape, file: Record<string, Record<string, unknown>>, what: string) => {
+    assert.deepEqual(Object.keys(shape).sort(), Object.keys(file).sort(), `${what}: the same keys`);
+    for (const [key, f] of Object.entries(shape)) assert.deepEqual(described(f), file[key], `${what}.${key}`);
+  };
+  compare(events.of.shape, v.event_fields, "event");
+  compare(DATA as unknown as Shape, v.data_fields, "data");
+  for (const [key, f] of Object.entries(DATA)) {
+    assert.ok(f.optional, `data.${key} is optional; each type's are below`);
+  }
+  assert.deepEqual(REQUIRED, v.required);
+  assert.deepEqual(Object.keys(REQUIRED), (events.of.shape.type as { values: readonly string[] }).values);
+});
+
 Deno.test("sync-push: the app's answer codes fit (testvectors/wire-patterns.json), and the codes that stopped a sync do not", async () => {
   // The app is tested against the same file (app/test/response_contract_test.dart, the fake server of the sync tests).
   const v = JSON.parse(
     await Deno.readTextFile(new URL("../../testvectors/wire-patterns.json", import.meta.url)),
   ) as {
-    attempt_fields: Record<string, { pattern: string; max: number }>;
     tutor_option: string;
     examples: Record<string, string>;
   };
-  const fields = DATA as unknown as Record<string, { pattern?: RegExp; max: number }>;
-  for (const [key, f] of Object.entries(v.attempt_fields)) {
-    assert.equal(fields[key]?.pattern?.source, f.pattern, key);
-    assert.equal(fields[key]?.max, f.max, key);
-  }
   assert.equal(OPTION.source, v.tutor_option);
 
   const { h, parent, child, profile, attempt, j } = await setup();

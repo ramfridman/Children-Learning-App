@@ -7,6 +7,8 @@ import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
+import 'package:nitznutz/rewards/award.dart';
+import 'package:nitznutz/rewards/reward_rules.dart';
 import 'package:nitznutz/sync/sync_engine.dart';
 
 import 'engine/fixtures.dart';
@@ -530,14 +532,15 @@ void main() {
     );
   });
 
-  // SEC-1: the real sync-push refuses a whole batch when one answer has a field it will not take.
+  // SEC-1: the real sync-push refuses a whole batch when one event has a field it will not take. SEC-12: a server that
+  // refuses every event does not know this app's format; that is not a bad row.
   group('a row the server will not take', () {
     late FakeFamilyServer strict;
     late Phone s1;
     late Phone s2;
 
     setUp(() async {
-      strict = FakeFamilyServer(checksAnswers: true);
+      strict = FakeFamilyServer(checksFormat: true);
       s1 = Phone(dev1, strict);
       s2 = Phone(dev2, strict);
       await s1.addChild();
@@ -629,5 +632,186 @@ void main() {
         );
       },
     );
+
+    List<Attempt> refused(List<Attempt> rows) =>
+        rows.where((Attempt a) => AppDatabase.wasRefusedBySync(a.syncedAt)).toList();
+
+    test('a server that refuses every event of a batch does not know this app\'s format: nothing is marked refused, the round stops', () async {
+      // A gateway that does not know a key every answer carries (deployed too early, or with the field removed).
+      strict.forgets = <String>{'duration_ms'};
+      for (int i = 1; i <= 6; i++) {
+        await s1.answer('a.$i', 'correct', minute: i);
+      }
+      final int before = pushes();
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.refusedEvents, 0);
+      expect(r.pushedEvents, 0);
+      expect(
+        pushes() - before,
+        1 + 4,
+        reason: 'the first batch, its four events one by one, and no other batch',
+      );
+      expect(refused(await s1.db.attemptsOf(kid)), isEmpty, reason: 'no row is marked refused');
+      expect((await s1.db.unsyncedAttempts(limit: 100)).length, 6, reason: 'all six wait for the next round');
+
+      // The gateway that knows the key is deployed: everything goes, nothing was lost.
+      strict.forgets = <String>{};
+      final SyncReport next = await s1.engine.syncOnce();
+      expect(next.pushedEvents, 6);
+      expect(await s1.db.unsyncedAttempts(limit: 100), isEmpty);
+    });
+
+    test(
+      'a lone event refused before the server took anything this round is not marked refused either',
+      () async {
+        strict.forgets = <String>{'duration_ms'};
+        await s1.answer('a.1', 'correct');
+        await s1.engine.syncOnce();
+        expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+        expect((await s1.db.unsyncedAttempts()).length, 1);
+      },
+    );
+
+    test(
+      'a lone event refused after the server took a batch of the same round is a bad row, and is marked',
+      () async {
+        for (int i = 1; i <= 4; i++) {
+          await s1.answer('a.$i', 'correct', minute: i);
+        }
+        await s1.answer('Not An Id', 'correct', minute: 9);
+        final SyncReport r = await s1.engine.syncOnce();
+        expect(r.pushedEvents, 4);
+        expect(r.refusedEvents, 1);
+        expect(refused(await s1.db.attemptsOf(kid)).single.activityId, 'Not An Id');
+        expect(await s1.db.unsyncedAttempts(), isEmpty);
+      },
+    );
+
+    test(
+      'rows refused under an older format are sent again once, after the engine version changes',
+      () async {
+        final int visit = await s1.visit();
+        await s1.answer('a.1', 'correct', session: visit);
+        await s1.answer('a.2', 'correct', minute: 1);
+        await s1.answer('Not An Id', 'correct', minute: 2);
+        // This gateway does not know the visit's number: the visit and its answer are refused, the loose answer is not.
+        strict.forgets = <String>{'session_local'};
+        await s1.engine.syncOnce();
+        expect(refused(await s1.db.attemptsOf(kid)).map((Attempt a) => a.activityId), <String>[
+          'a.1',
+          'Not An Id',
+        ]);
+        expect(strict.log.length, 1);
+
+        // The right gateway is deployed; the same version of the app does not send them again.
+        strict.forgets = <String>{};
+        final int before = pushes();
+        await s1.engine.syncOnce();
+        expect(pushes(), before);
+
+        // A new version: the refused rows are sent once more. The visit and its answer get in; the bad row is refused again.
+        final SyncEngine upgraded = SyncEngine(
+          db: s1.db,
+          call: strict.callFor(dev1),
+          deviceId: dev1,
+          isParent: true,
+          nowMs: () => noon,
+          engineVersion: 2,
+          pageSize: 4,
+          batch: 4,
+        );
+        final SyncReport r = await upgraded.syncOnce();
+        expect(r.pushedEvents, 2);
+        expect(r.refusedEvents, 1);
+        expect(strict.log.length, 3);
+        expect(refused(await s1.db.attemptsOf(kid)).single.activityId, 'Not An Id');
+        final int after = pushes();
+        await upgraded.syncOnce();
+        expect(pushes(), after, reason: 'reset once per version, not every round');
+      },
+    );
+
+    test('every kind of event the app makes fits every key, value and range that sync-push takes', () async {
+      final String longest = 'l' * 40;
+      final int visit = await s1.visit();
+      final int mission = await s1.db.startSession(
+        kid,
+        DateTime.utc(2026, 11, 20, 11),
+        plan: 'mission:num-a-03',
+      );
+      await s1.db.endSession(mission, DateTime.utc(2026, 11, 20, 11, 5), 'home');
+      final int rest = await s1.db.startSession(kid, DateTime.utc(2026, 11, 20, 12), plan: 'lesson:$longest');
+      await s1.db.endSession(rest, DateTime.utc(2026, 11, 20, 12, 30), 'limit');
+      await s1.db.recordAttempt(
+        AttemptsCompanion.insert(
+          at: DateTime.utc(2026, 11, 20, 10, 1),
+          profileId: kid,
+          packId: 'starter',
+          packVersion: '0.8.0',
+          lessonId: Value<String>(longest),
+          activityId: 'a${'.' * 80}',
+          activityRevision: 9999,
+          template: 'shape_builder',
+          templateVersion: '1.0',
+          skillId: 'NUM-A-03',
+          result: 'unsure',
+          attemptNo: 5,
+          hintLevel: 3,
+          misconceptionTag: const Value<String>('M-CNT-DOUBLE'),
+          response: const Value<String>('t0-b4.t1-b3.t2-b2.t3-b1.t4-b0'),
+          // A question left open for two hours: the server takes at most one.
+          durationMs: const Value<int>(2 * 3600000),
+          sessionId: Value<int?>(visit),
+          input: const Value<String>('voice'),
+        ),
+      );
+      // An answer of a revisit mission written by an older version, whose lesson id had the skill's capitals.
+      await s1.db.recordAttempt(
+        AttemptsCompanion.insert(
+          at: DateTime.utc(2026, 11, 20, 11, 1),
+          profileId: kid,
+          packId: 'starter',
+          packVersion: '0.8.0',
+          lessonId: const Value<String>('mission-NUM-A-03'),
+          activityId: 'a.1',
+          activityRevision: 1,
+          template: 'count_tap',
+          templateVersion: '1.0',
+          skillId: 'NUM-A-03',
+          result: 'incorrect',
+          attemptNo: 1,
+          hintLevel: 0,
+          sessionId: Value<int?>(mission),
+        ),
+      );
+      final List<(AwardKind, String)> awards = <(AwardKind, String)>[
+        (AwardKind.sticker, Awards.sticker(longest, 9999)),
+        (AwardKind.star, Awards.star('NUM-A-03')),
+        for (final TrophyLand land in TrophyLand.values)
+          for (final TrophyTier tier in TrophyTier.values) (AwardKind.trophy, Awards.trophy(land, tier)),
+        for (final MedalDef m in medalDefs) (AwardKind.medal, Awards.medal(m.id)),
+        for (final int n in decorationSteps) (AwardKind.decoration, Awards.decoration(n)),
+      ];
+      for (final (AwardKind kind, String key) in awards) {
+        await s1.db.addReward(
+          RewardsCompanion.insert(
+            profileId: kid,
+            awardKey: key,
+            kind: kind.name,
+            at: DateTime.utc(2026, 11, 20, 13),
+          ),
+        );
+      }
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.refusedEvents, 0);
+      expect(r.pushedEvents, 3 + 2 + awards.length);
+      final Map<String, Object?> lessons = <String, Object?>{
+        for (final Map<String, Object?> e in strict.log)
+          if (e['type'] == 'attempt')
+            (e['data']! as Map<String, Object?>)['activity_id']! as String:
+                (e['data']! as Map<String, Object?>)['lesson_id'],
+      };
+      expect(lessons['a.1'], 'mission-num-a-03', reason: 'the same id a mission is given now');
+    });
   });
 }
