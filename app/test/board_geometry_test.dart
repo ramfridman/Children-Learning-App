@@ -65,11 +65,10 @@ ScrollPosition mapScroll(WidgetTester tester) => tester
 
 Rect rectOf(WidgetTester tester, String key) => tester.getRect(find.byKey(Key(key)));
 
-/// The things that never move with the map: avatar, stickers, book, Parents and the pill.
+/// The things that never move with the map: avatar, Parents and the pill.
 List<Rect> fixedRects(WidgetTester tester) => <Rect>[
   tester.getRect(disc(const Key('home-avatar'))),
   tester.getRect(find.byType(ParentEntryButton)),
-  tester.getRect(disc(const Key('home-book'))),
   rectOf(tester, 'home-pill'),
 ];
 
@@ -129,33 +128,21 @@ void main() {
   setUpAll(loadAppFonts);
 
   group('board 10, home on a phone (852 by 393)', () {
-    testWidgets(
-      'the corner buttons: avatar 64 at right 59, book 64 and the grey button 44 at left 59, 24 apart',
-      (WidgetTester tester) async {
-        await pumpHome(tester, phone);
-        expectRect(tester.getRect(disc(const Key('home-avatar'))), 852 - 59 - 64, 12, 64, 64, why: 'avatar');
-        final Rect parents = tester.getRect(find.byType(ParentEntryButton));
-        expect(parents.left, closeTo(59, 0.6));
-        expect(parents.height, 44);
-        expect(parents.top, closeTo(12 + (64 - 44) / 2, 0.6), reason: 'centred on the 64 high row');
-        expect(parents.width, greaterThanOrEqualTo(56));
-        final Rect book = tester.getRect(disc(const Key('home-book')));
-        expect(book.size, const Size(64, 64));
-        expect(book.top, closeTo(12, 0.6));
-        expect(book.left - parents.right, closeTo(24, 0.6), reason: 'the board puts 24 between them');
-      },
-    );
-
-    testWidgets('the button shapes: round pebbles with a 6 point clay lip, a 12 radius grey button', (
+    testWidgets('the corner buttons: avatar 64 at right 59, the grey button 44 at left 59 (no book: B-26)', (
       WidgetTester tester,
     ) async {
       await pumpHome(tester, phone);
-      final BoxDecoration book = decorationOf(tester, disc(const Key('home-book')));
-      expect(book.shape, BoxShape.circle);
-      expect(book.color, const Color(0xFFFFC83D));
-      expect(book.boxShadow!.first.color, const Color(0xFFE0A21A));
-      expect(book.boxShadow!.first.offset, const Offset(0, 6));
-      expect(book.boxShadow!.first.blurRadius, 0);
+      expectRect(tester.getRect(disc(const Key('home-avatar'))), 852 - 59 - 64, 12, 64, 64, why: 'avatar');
+      final Rect parents = tester.getRect(find.byType(ParentEntryButton));
+      expect(parents.left, closeTo(59, 0.6));
+      expect(parents.height, 44);
+      expect(parents.top, closeTo(12 + (64 - 44) / 2, 0.6), reason: 'centred on the 64 high row');
+      expect(parents.width, greaterThanOrEqualTo(56));
+      expect(find.byKey(const Key('home-book')), findsNothing, reason: 'the book did nothing and is gone');
+    });
+
+    testWidgets('the button shapes: a 12 radius grey button', (WidgetTester tester) async {
+      await pumpHome(tester, phone);
       final Container grey = tester.widget<Container>(
         find.descendant(of: find.byType(ParentEntryButton), matching: find.byType(Container)).first,
       );
@@ -286,9 +273,7 @@ void main() {
       expectRect(tester.getRect(disc(const Key('home-avatar'))), 667 - 16 - 64, 8, 64, 64, why: 'avatar');
       final Rect parents = tester.getRect(find.byType(ParentEntryButton));
       expect(parents.left, closeTo(16, 0.6));
-      final Rect book = tester.getRect(disc(const Key('home-book')));
-      expect(book.top, closeTo(8, 0.6));
-      expect(book.left - parents.right, closeTo(16, 0.6));
+      expect(parents.top, closeTo(8 + (64 - 44) / 2, 0.6), reason: 'where it stood beside the book');
       final Rect pill = tester.getRect(find.byKey(const Key('home-pill')));
       expect(pill.height, 64);
       expect(pill.top, closeTo(8, 0.6));
@@ -342,14 +327,14 @@ void main() {
   });
 
   group('board 22, home on a tablet in landscape (1180 by 820)', () {
-    testWidgets('avatar 80, book 72, pill 88, and all seven signs where the board has them', (
+    testWidgets('avatar 80, Parents, pill 88, and all seven signs where the board has them', (
       WidgetTester tester,
     ) async {
       await pumpHome(tester, tabletL);
       expectRect(tester.getRect(disc(const Key('home-avatar'))), 1180 - 24 - 80, 24, 80, 80, why: 'avatar');
-      final Rect book = tester.getRect(disc(const Key('home-book')));
-      expect(book.size, const Size(72, 72));
-      expect(book.top, closeTo(24, 0.6));
+      final Rect parents = tester.getRect(find.byType(ParentEntryButton));
+      expect(parents.left, closeTo(24, 0.6));
+      expect(parents.top, closeTo(24 + (72 - 44) / 2, 0.6), reason: 'where it stood beside the book');
       final Rect pill = tester.getRect(find.byKey(const Key('home-pill')));
       expect(pill.height, 88);
       expect(pill.top, closeTo(24, 0.6));

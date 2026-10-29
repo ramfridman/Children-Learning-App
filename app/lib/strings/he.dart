@@ -43,7 +43,7 @@ abstract final class He {
   );
   static const Str placementDone = Str('יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.', nikud: true);
   static const Str homeDaily = Str('הַהַרְפַּתְקָה שֶׁל הַיּוֹם', nikud: true);
-  static const Str homeBubble = Str('{child}, הַבַּקְבּוּק הִגִּיעַ!', nikud: true);
+  static const Str homeBubble = Str('{child}, מַה בַּבַּקְבּוּק?', nikud: true);
   static const Str landColors = Str('מִפְרַץ הַצְּבָעִים', nikud: true);
   static const Str landCounting = Str('גִּבְעוֹת הַסְּפִירָה', nikud: true);
   static const Str landNitzi = Str('הָאִי שֶׁל נִיצִי', nikud: true);
@@ -53,7 +53,6 @@ abstract final class He {
   static const Str landMarket = Str('כְּפַר הַשּׁוּק', nikud: true);
   static const Str homeMapSemantics = Str('מפת האיים');
   static const Str switchChildSemantics = Str('החלפת ילד');
-  static const Str bookSemantics = Str('הספר');
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);
   static const Str replaySemantics = Str('שמיעה חוזרת של השאלה');
   static const Str coinA10Semantics = Str('10 אגורות');

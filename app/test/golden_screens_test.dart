@@ -22,9 +22,9 @@ const Size phoneSE = Size(667, 375);
 const Size tabletL = Size(1180, 820);
 const Size tabletP = Size(820, 1180);
 
-Future<AppRig> _rig(WidgetTester tester, Size size) async {
+Future<AppRig> _rig(WidgetTester tester, Size size, {String name = 'נֹעָה'}) async {
   final AppRig rig = AppRig();
-  await rig.seedFinishedSetup(name: 'נֹעָה');
+  await rig.seedFinishedSetup(name: name);
   await rig.pump(tester, size: size);
   return rig;
 }
@@ -60,6 +60,17 @@ void main() {
         expect(find.byType(HomeScreen), findsOneWidget);
         await _shot(tester, 'home_$n');
       });
+
+      // B-26: on a tablet the bubble of a long name breaks after the name and grows upwards beside the friend.
+      if (n.startsWith('tablet')) {
+        testWidgets('home with a long name, $n', (WidgetTester tester) async {
+          await _rig(tester, s, name: 'אלכסנדרה');
+          await tester.tap(find.text('אלכסנדרה'));
+          await tester.pumpAndSettle();
+          expect(find.byType(HomeScreen), findsOneWidget);
+          await _shot(tester, 'home_long_name_$n');
+        });
+      }
 
       // Board B-23: the far end of the map (phones panned fully left to Market Village, the portrait tablet scrolled up).
       if (n != 'tablet_landscape') {

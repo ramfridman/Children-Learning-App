@@ -8,13 +8,13 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 
 | Group | Texts |
 |---|---|
-| 1. App screens and buttons | 332 |
+| 1. App screens and buttons | 331 |
 | 2. Core voice lines (spoken by every friend) | 27 |
 | 3. Lesson content (skills, activities, misconceptions) | 8956 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 23 |
 | 6. Helper lexicon (the words the AI helper may use) | 118 |
-| **Total** | **9522** |
+| **Total** | **9521** |
 
 ## 1. App screens and buttons
 
@@ -31,7 +31,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | restGoodbye | הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ. | needs-editor |
 | app/lib/strings/he.dart | placementDone | יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל. | needs-editor |
 | app/lib/strings/he.dart | homeDaily | הַהַרְפַּתְקָה שֶׁל הַיּוֹם | needs-editor |
-| app/lib/strings/he.dart | homeBubble | {child}, הַבַּקְבּוּק הִגִּיעַ! | needs-editor |
+| app/lib/strings/he.dart | homeBubble | {child}, מַה בַּבַּקְבּוּק? | needs-editor |
 | app/lib/strings/he.dart | landColors | מִפְרַץ הַצְּבָעִים | needs-editor |
 | app/lib/strings/he.dart | landCounting | גִּבְעוֹת הַסְּפִירָה | needs-editor |
 | app/lib/strings/he.dart | landNitzi | הָאִי שֶׁל נִיצִי | needs-editor |
@@ -41,7 +41,6 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | landMarket | כְּפַר הַשּׁוּק | needs-editor |
 | app/lib/strings/he.dart | homeMapSemantics | מפת האיים | needs-editor |
 | app/lib/strings/he.dart | switchChildSemantics | החלפת ילד | needs-editor |
-| app/lib/strings/he.dart | bookSemantics | הספר | needs-editor |
 | app/lib/strings/he.dart | activityQuestion | כַּמָּה פְּרָחִים יֵשׁ? | needs-editor |
 | app/lib/strings/he.dart | replaySemantics | שמיעה חוזרת של השאלה | needs-editor |
 | app/lib/strings/he.dart | coinA10Semantics | 10 אגורות | needs-editor |

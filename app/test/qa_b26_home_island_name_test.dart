@@ -1,18 +1,12 @@
 // QA, B-26 step 1: an independent, adversarial check of `homeIslandName` and `shortenName` beyond the developer's
-// tests (docs/qa/b26-step1-verification.md). Open defects are skipped in a normal run so the suite stays green; run
-//
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_b26_home_island_name_test.dart
-//
-// When a defect is fixed, the owner of the fix removes `skip: _open` from its test.
+// tests (docs/qa/b26-step1-verification.md). Its one defect, QA-22, was fixed in B-26 step 2; its test now runs in
+// every run (an open defect would again be skipped with `skip: !bool.fromEnvironment('QA_OPEN')`).
 import 'dart:math';
 
 import 'package:flutter/widgets.dart' show StringCharacters;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/home_island_name.dart';
 import 'package:nitznutz/strings/he.dart';
-
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
 
 const String fsi = '\u2068';
 const String pdi = '\u2069';
@@ -300,13 +294,13 @@ void main() {
     });
   });
 
-  group('QA-22 (open): a letter is never shown without its geresh', () {
+  group('QA-22 (fixed in step 2): a letter is never shown without its geresh', () {
     test('a doubled apostrophe after the cut still leaves the letter before it without its geresh', () {
       // clusters: א ב ג ד ה ' ' ו ל י ה; at 7 the cut lands on the second apostrophe, steps back one cluster to
       // the first apostrophe and keeps "אבגדה": ה is shown without its geresh. The rule (1.4 step 2) is that a letter
       // is never shown without its geresh: step back past every geresh, then one more letter.
       expect(shortenName('אבגדה\'\'וליה', 7), 'אבגד…');
       expect(shortenName('אבגדה׳׳וליה', 7), 'אבגד…');
-    }, skip: _open);
+    });
   });
 }
