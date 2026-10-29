@@ -86,3 +86,6 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   would have run nowhere) is fixed by an exact, escaped name plus two checks that fail the run; SEC-15 (the exhaustive mode
   relied on the runner's `CI=true`) is fixed by setting it in the job and always requiring the `flip shard` line. Skipping
   the app jobs on docs-only pushes, or running the every-byte test only at night, were considered and are not applied.
+- **SEC-16, GitHub settings (2026-10-29): closed by the owner.** `main` has an active ruleset with no bypass (no deletion, no force
+  push, linear history, and the six CI check names required), and the repository requires every action to be pinned to a full
+  commit SHA. Read back with the GitHub API.
