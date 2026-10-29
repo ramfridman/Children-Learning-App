@@ -4,6 +4,9 @@
     "include": [
       "supabase/functions/",
       "tools/"
+    ],
+    "exclude": [
+      "tools/home_map_src/"
     ]
   },
   "lint": {
