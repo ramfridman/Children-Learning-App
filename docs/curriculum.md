@@ -1408,6 +1408,10 @@ The engine keeps, per child and domain, a success rate for each representation (
 | "Show me" / "I don't know" | `outcome: unsure` (BKT weight 0.3, no misconception evidence) |
 | Core skill (≥ 3 dependants) | **new** `core: true`, which raises `masteryRequires.checkTypes` to 2 and the success count to 6 |
 
+### 10.8 Today's Adventure (the bottle on the home island)
+
+The bottle opens one stop, chosen by a pure, deterministic rule: a due revisit first once a day, then up to two lessons before the next revisit; new learning continues the land played last for up to three lessons, then moves to another land (lowest level first, then the land played longest ago); a lesson left right after an incorrect answer, and a skill already checked today, rest until the next day; when everything is finished, a known lesson is played again. Age enters only as parameters (band today, the school stage after B-29). Full rule, inputs and 28 worked examples: `docs/curriculum/todays-adventure-rule.md`.
+
 ## 11. The AI tutor's pedagogical behaviour
 
 The AI tutor is the *dynamic layer* on top of authored content. Most of what children hear comes from authored core lines. The tutor speaks when a response needs a personalised next step: an unexpected spoken answer, an explain-back, or a choice of representation.
