@@ -1,6 +1,6 @@
 # Brief for the next Claude session (rewritten 2026-10-29)
 
-Open a new Claude Code session in `D:\Children-Learning-App` (branch `m9-content`, or `main` once it is merged) and paste everything below the line, or type: *Read `docs/handoff/next-session.md` and follow it.*
+Open a new Claude Code session in `D:\Children-Learning-App` (branch `main`; M9 was merged on 2026-10-29, create a branch per piece of work) and paste everything below the line, or type: *Read `docs/handoff/next-session.md` and follow it.*
 
 ---
 
@@ -8,10 +8,10 @@ You are the **orchestrator** of the Nitznutz team. Nitznutz (נִיצְנוּץ)
 
 ## 1. Start, in this order
 
-1. `git fetch`, then `git status` and `git log --oneline -5`. Find out whether `m9-content` has been merged to `main` (ask the owner if the log does not say).
+1. `git fetch`, then `git status` and `git log --oneline -5`. M9 was fast-forwarded into `main` at `51b7666` on 2026-10-29.
 2. Read `CLAUDE.md`, `PROGRESS.md` (the "Next step" section is the current state), `docs/agents/README.md` (the team, who owns what, the recipes, the report format, the text and voice statuses), `docs/agents/board.md` (open hand-offs), `docs/milestones/M9.md` (§3 the owner's decisions, §6 the release gate, §12 to §18) and your memory (`MEMORY.md`).
 3. Check that the eight agents are loaded: the Agent tool must list **infrastructure-engineer, design-director, hebrew-text-editor, voice-and-sound-director, app-developer, qa-engineer, security-engineer, curriculum-expert**. If one is missing, tell the owner to restart the session; do not do its work inline.
-4. Check CI on the branch tip: `gh run list --branch m9-content --limit 3`.
+4. Check CI on `main`: `gh run list --branch main --limit 3`.
 
 ## 2. How you work (the owner's rule of 2026-10-28)
 
@@ -25,16 +25,16 @@ You are the **orchestrator** of the Nitznutz team. Nitznutz (נִיצְנוּץ)
 
 ## 3. Where things stand (2026-10-29)
 
-- **M0 to M8 are merged to `main`.** M9 (content and the family release) is on `m9-content`: 15 templates, Band A and B of all six lands, real Israeli coins and notes, **pack 0.8.0 published** (100 skills, 767 activities, 160 lessons, 44 misconceptions). CI was **green on all six jobs on `2235ac2` and `b8af058`** (the `app` job about 1 h 3 min of its 75). The branch tip when this was written is `51b7666` or later; its run may still be going.
-- **The merge is waiting on the owner**, not on code: (1) the phone check with `docs/qa/phone-check-m9.md` (a dev build installed over the existing app, never uninstall or clear data), (2) which build is on the children's phone (M8 or M9; SEC-13 is a sync stall on `main` that the branch fixes), (3) his explicit OK. It is a fast-forward (`main` has no commits the branch lacks). Merge only with six green jobs on the tip and his OK; nothing on GitHub enforces it (no ruleset on `main` yet).
-- **The owner's decision (2026-10-29): finish this phase and merge first, then build the remaining templates.** Do not start new templates before the merge.
+- **M0 to M8 are merged to `main`.** M9 (content and the family release) was merged to `main` on 2026-10-29 (branch `m9-content` kept): 15 templates, Band A and B of all six lands, real Israeli coins and notes, **pack 0.8.0 published** (100 skills, 767 activities, 160 lessons, 44 misconceptions). CI was **green on all six jobs on `2235ac2` and `b8af058`** (the `app` job about 1 h 3 min of its 75). The branch tip when this was written is `51b7666` or later; its run may still be going.
+- **The merge is done** (2026-10-29, fast-forward, six green jobs, the owner's OK). What is left of it is the owner's phone check with `docs/qa/phone-check-m9.md` on his one shared test phone (the parent's and the children's; it already runs the M9 dev build, installed over the old app with data kept). There is no ruleset on `main` yet (optional, steps in security's report).
+- **The owner's decision (2026-10-29): merge first, then build the remaining templates.** The merge is done; templates come after the follow-ups below, in the curriculum-expert's order.
 - **Texts and voices**: the text editor's pass is done (`docs/review/hebrew-master.csv`: 9,448 rows `text-ready`, 33 `proposed`, 23 `unchanged`) and the voice director's design is done (`docs/audio/`), **nothing was generated and nothing spent**. They wait for the owner's answers: 11 Hebrew questions (`docs/agents/hebrew-notes.md` §5, with the curriculum-expert's view in `docs/knowledge/hebrew-questions-teaching-view.md`) and 12 voice questions (`docs/audio/voice-direction.md` §9).
 - **The build warnings** the owner saw on 2026-10-29 (Gradle native-access warning on JDK 25, `firebase_core` applying the Kotlin Gradle plugin, an old Android SDK command-line tool) are with the infrastructure-engineer; see the board (B-22) and `PROGRESS.md` for the result.
 - **Drawing rule (owner, 2026-10-29)**: every drawing starts from real references found online, then is drawn as an original (this is how the coins and notes were redone; memory `drawing-from-references`). The design-director must do this for all new art.
 
 ## 4. What is left, in order
 
-1. **Merge** (owner's phone check and OK) → fast-forward `m9-content` to `main`, check CI on `main`, update `PROGRESS.md`, the board and M9.md, and say so in the report.
+1. **Phone check** (owner, on his one shared test phone, which already runs the M9 dev build) and bump the app version (still 0.3.0+3) so builds can be told apart.
 2. **Developer follow-ups after the merge** (board B-20, B-16, B-18): SEC-12 follow-ups (a brake per event type, a `wireFormat` constant with a pin test, QA-17, QA-18, backoff), SEC-3 (a typed count at an interactive terminal before any paid voicing) and the voice code changes C1 to C11 (`voice_gen` must read `voice_text` of `owner-approved` rows, not the old texts in nine voices), SEC-2 and SEC-5 to SEC-11; then QA and security re-verify.
 3. **Content bugs** (B-13, B-15) with the curriculum-expert and the text editor: the give-N line `vo:fb.card` is wrong in 17 of 22 activities; mastery cannot be reached for about 89 of 100 skills (confirm with a simulator test first); 181 items with three or more choices have no tagged wrong answer; the lesson path ignores the band; placement trusts one lucky answer. **Design fixes** (B-14): the phone stage is too small, `cross` is a red disc with a white X, island pictures, the 5-shekel coin edge.
 4. **Texts, then voices**: the owner answers the Hebrew questions → the text editor applies his corrections and the generator fixes G1 to G14, A1 and A2 into the sources (the app-developer) → the voice director's per-line direction → the audition (0.17 USD) and his voice decisions → he sees the character count and cost and **types the number** → everything is voiced once and the old lines again → a new pack with the voice packs.
