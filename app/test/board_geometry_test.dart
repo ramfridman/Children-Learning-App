@@ -26,7 +26,7 @@ void expectRect(Rect actual, double left, double top, double width, double heigh
   expect(actual.height, closeTo(height, 0.6), reason: '$why height');
 }
 
-/// The six learning lands; Nitzi's island has no tap area (it does not open yet).
+/// The six learning lands; the home island opens the child's home through `onOpenHome`, never as a land (B-26).
 const Set<Land> learningLands = <Land>{
   Land.counting,
   Land.colors,
@@ -36,7 +36,7 @@ const Set<Land> learningLands = <Land>{
   Land.market,
 };
 
-/// The home screen; [full] gives it every land, a companion and its "+", as the app does.
+/// The home screen; [full] gives it every land, the way into the child's home, a companion and its "+", as the app does.
 Future<void> pumpHome(WidgetTester tester, Size size, {bool full = false}) => pumpScreen(
   tester,
   HomeScreen(
@@ -49,6 +49,7 @@ Future<void> pumpHome(WidgetTester tester, Size size, {bool full = false}) => pu
     openableLands: full ? learningLands : const <Land>{},
     companion: full ? const SizedBox.expand() : null,
     onFriends: full ? () {} : null,
+    onOpenHome: full ? () {} : null,
   ),
   size: size,
 );
@@ -77,13 +78,13 @@ Map<String, Offset> signsNow(WidgetTester tester) => <String, Offset>{
   for (final Land l in Land.values) l.name: rectOf(tester, 'sign-${l.name}').topCenter,
 };
 
-/// The land tap areas (in one frame of reference), each at least 64 wide and, when [apart], 24 apart, as the board's
-/// touch rules ask. The tablet landscape board is unchanged by B-23 and is only reported.
+/// The land tap areas and the home island's (in one frame of reference), each at least 64 wide and, when [apart], 24
+/// apart, as the board's touch rules ask. The tablet landscape board is unchanged by B-23 and is only reported.
 void expectTapAreasApart(WidgetTester tester, double width, {bool apart = true}) {
   final Map<Land, Rect> areas = <Land, Rect>{
-    for (final Land l in learningLands) l: rectOf(tester, 'land-tap-${l.name}'),
+    for (final Land l in Land.values) l: rectOf(tester, 'land-tap-${l.name}'),
   };
-  expect(find.byKey(const Key('land-tap-nitzi')), findsNothing, reason: 'Nitzi\'s island does not open yet');
+  expect(areas[Land.nitzi], isNotNull, reason: 'the home island\'s sign opens the child\'s home (B-26)');
   for (final Rect r in areas.values) {
     expect(r.width, closeTo(width, 0.6));
     expect(r.width, greaterThanOrEqualTo(64));

@@ -74,7 +74,8 @@ class _HomeSpec {
     this.pillFrameLeft,
     this.pillFrameWidth,
     this.pillFrameInset = 0,
-    this.bubbleMaxWidth,
+    required this.bubbleMaxWidth,
+    this.bubbleBreaks = false,
   });
 
   final String scene;
@@ -124,9 +125,11 @@ class _HomeSpec {
   final double bubbleFont;
   final EdgeInsets bubblePad;
 
-  /// On a tablet the bubble is at most this wide, padding included, and a longer line breaks after the child's name
-  /// (design review of B-26 step 2), so it stays beside the friend and off Counting Hills. Null on phones: one line.
-  final double? bubbleMaxWidth;
+  /// The widest the bubble may be, padding included. On a phone it is the open sea from its right edge to 16 from the
+  /// board's left edge at the start view, on one line; on a tablet ([bubbleBreaks]) it is 210 and a longer line breaks
+  /// after the child's name (design review of B-26 step 2), so it stays beside the friend and off Counting Hills.
+  final double bubbleMaxWidth;
+  final bool bubbleBreaks;
   final List<_Sign> signs;
 
   /// Where the companion stands on the map: the place Nitzi's art had in the board, at 0.3 of its 512 point canvas.
@@ -167,6 +170,7 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 18,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+    bubbleMaxWidth: 852 - 212 - 16,
     companionLeft: 1859,
     companionTop: 154,
     homeSignLeft: 1770,
@@ -211,6 +215,7 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 17,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+    bubbleMaxWidth: 667 - 154 - 16,
     companionLeft: 1651,
     companionTop: 164.6,
     homeSignLeft: 1577,
@@ -254,6 +259,7 @@ class _HomeSpec {
     bubbleFont: 24,
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     bubbleMaxWidth: 210,
+    bubbleBreaks: true,
     companionLeft: 975,
     companionTop: 450.4,
     homeSignLeft: 890,
@@ -296,6 +302,7 @@ class _HomeSpec {
     bubbleFont: 24,
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     bubbleMaxWidth: 210,
+    bubbleBreaks: true,
     companionLeft: 590,
     companionTop: 1289.2,
     homeSignLeft: 480,
@@ -355,6 +362,7 @@ class HomeScreen extends StatelessWidget {
   /// island is a plain sign and the pill does nothing.
   final VoidCallback? onOpenHome;
 
+  /// The child's name for the bubble when there is no [homeIsland] (whose cleaned name is used otherwise).
   final String childName;
   final String avatarId;
   final VoidCallback onParents;
@@ -595,7 +603,7 @@ class HomeScreen extends StatelessWidget {
         _bubble(
           s,
           IgnorePointer(
-            child: _MapBubble(spec: s, childName: childName),
+            child: _MapBubble(spec: s, name: homeIsland?.name ?? childName),
           ),
         ),
       ],
@@ -657,45 +665,79 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-/// The bubble on the map. On a tablet it is at most [_HomeSpec.bubbleMaxWidth] wide; a line wider than that breaks after
-/// the child's name, so the words after it stay whole on the second line and the bubble, held by its bottom beside the
-/// friend's mouth, grows upwards over the home island's own palm.
+/// The bubble on the map, never wider than [_HomeSpec.bubbleMaxWidth] (padding included). On a phone it is one line; on
+/// a tablet a line wider than that breaks after the child's name, so the words after it stay whole on the second line and
+/// the bubble, held by its bottom beside the friend's mouth, grows upwards over the home island's own palm. A name too
+/// long for its line is shortened by the sign's rule ([shortenName]), so a tablet bubble never takes three lines (QA-29).
+/// With no usable name it says only the words after the name.
 class _MapBubble extends StatelessWidget {
-  const _MapBubble({required this.spec, required this.childName});
+  const _MapBubble({required this.spec, required this.name});
 
   final _HomeSpec spec;
-  final String childName;
+
+  /// The child's name as the bubble shows it (cleaned by [homeIslandName]); empty when there is none.
+  final String name;
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, String> name = <String, String>{'child': childName};
-    final String line = He.homeBubble.fill(name);
-    final double? maxWidth = spec.bubbleMaxWidth;
-    if (maxWidth == null) {
-      return BoardBubble(text: line, fontSize: spec.bubbleFont, padding: spec.bubblePad);
-    }
+    final double room = spec.bubbleMaxWidth - spec.bubblePad.horizontal;
     final TextPainter painter = TextPainter(
-      text: TextSpan(
-        text: line,
-        style: AppText.fixed(size: spec.bubbleFont, weight: 500),
-      ),
       textDirection: TextDirection.rtl,
       textScaler: MediaQuery.textScalerOf(context),
       maxLines: 1,
-    )..layout();
-    final bool oneLine = painter.width <= maxWidth - spec.bubblePad.horizontal;
+    );
+    bool fits(String line) {
+      painter.text = TextSpan(
+        text: line,
+        style: AppText.fixed(size: spec.bubbleFont, weight: 500),
+      );
+      painter.layout();
+      return painter.width <= room;
+    }
+
+    Map<String, String> named(String n) => <String, String>{'child': n};
+    final String text;
+    if (name.isEmpty) {
+      text = _withoutName.text;
+    } else if (!spec.bubbleBreaks) {
+      text = He.homeBubble.fill(named(_fittedName(name, (String n) => fits(He.homeBubble.fill(named(n))))));
+    } else if (fits(He.homeBubble.fill(named(name)))) {
+      text = He.homeBubble.fill(named(name));
+    } else {
+      final String n = _fittedName(
+        name,
+        (String n) => fits(_breakAfterName.fill(named(n)).split('\n').first),
+      );
+      text = _breakAfterName.fill(named(n));
+    }
     painter.dispose();
     return BoardBubble(
-      text: oneLine ? line : _breakAfterName.fill(name),
+      text: text,
       fontSize: spec.bubbleFont,
       padding: spec.bubblePad,
-      maxWidth: maxWidth,
+      maxWidth: spec.bubbleBreaks ? spec.bubbleMaxWidth : null,
     );
   }
 }
 
+/// [name] whole when it [fits], otherwise the longest form of [shortenName] that does (at least three clusters).
+String _fittedName(String name, bool Function(String name) fits) {
+  if (fits(name)) return name;
+  String tried = name;
+  for (int max = name.characters.length - 1; max >= 3; max--) {
+    final String short = shortenName(name, max);
+    if (short == tried) continue;
+    tried = short;
+    if (fits(short)) return short;
+  }
+  return tried;
+}
+
 /// The bubble's words with a line break after "{child},".
 final Str _breakAfterName = Str(He.homeBubble.text.replaceFirst('{child}, ', '{child},\n'), nikud: true);
+
+/// The bubble's words without the name, for a child with no usable name.
+final Str _withoutName = Str(He.homeBubble.text.replaceFirst('{child}, ', ''), nikud: true);
 
 /// Today's adventure. It opens the child's home when [onTap] is set, and only then is it announced as a button. The three
 /// stops of the daily plan are not drawn until that plan exists (B-26).

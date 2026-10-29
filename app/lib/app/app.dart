@@ -22,6 +22,8 @@ import '../child/rest_scene.dart';
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
 import '../characters/character.dart';
+import '../child/home_island_name.dart';
+import '../child/home_island_screen.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
 import '../data/app_database.dart';
@@ -167,6 +169,15 @@ class _HomeState extends ConsumerState<_Home> {
 
   String get _offeredKey => 'friends_offered:${widget.profile.id}';
 
+  /// The words of the child's island, from the name the parent typed; worked out again only when the name changes.
+  late HomeIslandName _island = homeIslandName(widget.profile.name);
+
+  @override
+  void didUpdateWidget(_Home old) {
+    super.didUpdateWidget(old);
+    if (old.profile.name != widget.profile.name) _island = homeIslandName(widget.profile.name);
+  }
+
   Future<void> _openFriends() =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (BuildContext c) => const FriendsBeach()));
 
@@ -252,6 +263,14 @@ class _HomeState extends ConsumerState<_Home> {
     if (mounted) _refreshWorld();
   }
 
+  /// The child's home, from the home island's sign or Today's Adventure. The map stays underneath, so the child comes
+  /// back to it where they left it.
+  Future<void> _openHome() async {
+    await Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext c) => HomeIslandScreen(island: _island)));
+    if (mounted) _refreshWorld();
+  }
+
   Future<void> _openStickers() => Navigator.of(context)
       .push(MaterialPageRoute<void>(builder: (BuildContext c) => StickerIsland(childId: widget.profile.id)));
 
@@ -332,7 +351,8 @@ class _HomeState extends ConsumerState<_Home> {
     return _map(friend.value);
   }
 
-  /// The lands that have skills (the counting hills always open, as before).
+  /// The lands that have skills (the counting hills always open, as before). Never the home island: it is not a land
+  /// with skills (`TrophyLand` has no `nitzi`) and opens through [_openHome].
   Set<Land> _openableLands() => <Land>{
     Land.counting,
     for (final TrophyLand t
@@ -341,7 +361,9 @@ class _HomeState extends ConsumerState<_Home> {
   };
 
   Widget _map(Character? friend) => HomeScreen(
-    childName: widget.profile.name,
+    childName: _island.name,
+    homeIsland: _island,
+    onOpenHome: _openHome,
     avatarId: widget.profile.avatar,
     onParents: () => openParentArea(context, ref),
     onSwitchChild: () => ref.read(activeProfileProvider.notifier).choose(null),
