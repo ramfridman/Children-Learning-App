@@ -88,4 +88,6 @@ The full checklist is `docs/owner-todo.md`. In short:
 
 ## Next step
 
+**The team (2026-10-28).** Every piece of work now goes through eight project agents under one orchestrating session (the owner's rule): infrastructure-engineer, design-director, hebrew-text-editor, voice-and-sound-director, app-developer, qa-engineer, security-engineer, curriculum-expert (`.claude/agents/`). The charter is `docs/agents/README.md`, the open hand-offs are on `docs/agents/board.md` and the next session's brief is `docs/handoff/next-session.md`. M9 is approved and is being built on `m9-content` (not merged); the board there is the current one.
+
 Claude: M8 is merged. Next is M9 (content: about 95 skills, the stepping-stone land paths, voices for all characters, the real land design); write `docs/milestones/M9.md` and get the owner's OK before coding. Before that, offer the 36 ceremony voice lines (his typed OK on 1674) and ask whether he wants real art commissioned.

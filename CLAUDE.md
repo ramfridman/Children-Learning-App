@@ -12,6 +12,11 @@ A Hebrew-only learning app for the owner's two children (ages 3–8). Flutter ap
 - When the build differs from PLAN.md, update PLAN.md in the same commit.
 - Ask the owner only for what only he can do, with exact numbered PowerShell steps.
 
+## The team
+- Every piece of work goes through the eight project agents in `.claude/agents/` (the owner's rule, 2026-10-28): infrastructure-engineer, design-director, hebrew-text-editor, voice-and-sound-director, app-developer, qa-engineer, security-engineer, curriculum-expert. Who owns what, the recipes and the hand-off format are in `docs/agents/README.md`; open hand-offs are on `docs/agents/board.md`.
+- The main session is the orchestrator: it briefs the agents, checks what they return (diffs, tests, pictures), routes their hand-offs, and is the only one that commits, pushes, merges, updates `PROGRESS.md` and the board, and talks to the owner.
+- No change is done until the qa-engineer has verified it; changes to the gateway, auth, crypto, packs, sync or logs also get the security-engineer's review.
+
 ## Security rules (never break)
 1. No secret in the app, repo, logs or CI output. The app holds only the Supabase URL, the publishable key and the pack-signing public key.
 2. Devices send ids, numbers and enums only. Prompts are built on the server from `content_item`, `misconception` and `family_character`.

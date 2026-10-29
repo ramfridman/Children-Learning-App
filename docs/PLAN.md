@@ -1111,7 +1111,7 @@ The discovery spikes decide how much voice each band gets before the main build 
 
 ### Who builds it
 
-You, working with Claude (Claude Code for the app and backend, Claude for content and design), plus ElevenLabs for every voice. Specialists are optional extras, not requirements: a Hebrew language editor to review nikud and wording, a kindergarten or grade 1–3 teacher to sanity-check content, and a Rive animator if you want richer character motion than the built-in procedural animation.
+You, working with Claude (Claude Code for the app and backend, Claude for content and design), plus ElevenLabs for every voice. Since 2026-10-28 the Claude Code work is split among eight project agents (infrastructure, design, Hebrew text, voice and sound, development, QA, security, curriculum) under one orchestrating session; see `docs/agents/README.md`. Specialists are optional extras, not requirements: a Hebrew language editor to review nikud and wording, a kindergarten or grade 1–3 teacher to sanity-check content, and a Rive animator if you want richer character motion than the built-in procedural animation.
 
 ### Running costs (infrastructure only)
 
