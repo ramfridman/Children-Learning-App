@@ -32,7 +32,22 @@ const Map<int, List<String>> _numberConstruct = <int, List<String>>{
   10: <String>['עשרת'],
 };
 
-/// Every accepted spelling of the number [n] (0 to 20), both genders, the construct forms, and the digits.
+// The tens from twenty, by their digit (2 for twenty); a hundred is one word.
+const List<String> _tens = <String>[
+  '',
+  '',
+  'עשרים',
+  'שלושים',
+  'ארבעים',
+  'חמישים',
+  'שישים',
+  'שבעים',
+  'שמונים',
+  'תשעים',
+];
+
+/// Every accepted spelling of the number [n] (0 to 100), both genders, the construct forms, and the digits. From 21 a
+/// number is its ten and "ו" with the unit ("עשרים ושלוש", "עשרים ושלושה").
 List<AcceptWord> numberWords(int n) {
   final Set<String> out = <String>{'$n'};
   if (n >= 0 && n <= 10) {
@@ -50,11 +65,25 @@ List<AcceptWord> numberWords(int n) {
       ..add('${normalizeHebrew(_numberFeminine[u])} עשר')
       ..add('${normalizeHebrew(_numberMasculine[u])} עשרה');
     if (u == 2) out.addAll(<String>['שתים עשרה', 'שנים עשר']);
-  } else if (n == 20) {
-    out.add('עשרים');
+  } else if (n >= 20 && n <= 99) {
+    final String ten = _tens[n ~/ 10];
+    final int u = n % 10;
+    if (u == 0) {
+      out.add(ten);
+    } else {
+      out
+        ..add('$ten ו${_numberFeminine[u]}')
+        ..add('$ten ו${_numberMasculine[u]}');
+      if (u == 2) out.addAll(<String>['$ten ושתים', '$ten ושנים']);
+    }
+  } else if (n == 100) {
+    out.add('מאה');
   }
   return <AcceptWord>[for (final String w in out) AcceptWord(normalizeHebrew(w))];
 }
+
+/// The word that turns an answer over ("לא שלוש"): an utterance with it is never taken as an answer.
+const String negationWord = 'לא';
 
 const Map<String, List<String>> _colours = <String, List<String>>{
   'red': <String>['אדום', 'אדומה', 'אדומים', 'אדומות'],

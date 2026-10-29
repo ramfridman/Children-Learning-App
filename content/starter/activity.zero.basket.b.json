@@ -63,6 +63,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "feedback": {
     "correct": {
       "vo": "vo:zero.basket.b.correct",

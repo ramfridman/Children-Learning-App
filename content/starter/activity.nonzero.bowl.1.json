@@ -62,6 +62,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "feedback": {
     "correct": {
       "vo": "vo:nonzero.bowl.1.correct",

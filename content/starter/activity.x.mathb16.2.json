@@ -85,6 +85,7 @@
     ],
     "misconception": "M-MONEY-SIZE"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:x.mathb16.2.correct",

@@ -271,4 +271,47 @@ void main() {
     expect(heard('הפרח', options).decision, Decision.accept);
     expect(heard('עץ', options).decision, Decision.confirm);
   });
+
+  // Board B-24: Band B asks for numbers up to 100, and some options are a number and a longer number that starts with it.
+  group('numbers that start another number', () {
+    test('the numbers 21 to 100 are accepted as their ten and "ו" with the unit, and as digits', () {
+      expect(heard('שלושים', numbers(<int>[29, 30, 31], 30)).optionId, 'o30');
+      expect(heard('עשרים ותשע', numbers(<int>[20, 29, 30], 29)).decision, Decision.accept);
+      expect(heard('עשרים ותשע', numbers(<int>[20, 29, 30], 29)).optionId, 'o29');
+      expect(heard('עשרים ושלושה', numbers(<int>[22, 23, 24], 23)).optionId, 'o23');
+      expect(heard('ארבעים ושתיים', numbers(<int>[41, 42, 43], 42)).optionId, 'o42');
+      expect(heard('42', numbers(<int>[41, 42, 43], 42)).decision, Decision.accept);
+      expect(heard('שמונים', numbers(<int>[71, 80, 90], 80)).optionId, 'o80');
+      expect(heard('מאה', numbers(<int>[90, 100], 100)).optionId, 'o100');
+    });
+
+    test('a whole number of two words is that number, never the number of its first word', () {
+      // "שמונה עשרה" holds "שמונה": it must be 18, whether 8 or 18 is the right answer.
+      expect(heard('שמונה עשרה', numbers(<int>[18, 8], 18)).decision, Decision.accept);
+      expect(heard('שמונה עשרה', numbers(<int>[18, 8], 18)).optionId, 'o18');
+      final MatchResult wrong = heard('שמונה עשרה', numbers(<int>[18, 8], 8));
+      expect(wrong.decision, Decision.confirm, reason: 'a wrong number is checked first');
+      expect(wrong.optionId, 'o18');
+      expect(heard('שלוש עשרה', numbers(<int>[3, 13, 4], 13)).optionId, 'o13');
+      expect(heard('שתים עשרה', numbers(<int>[1, 12, 2], 12)).optionId, 'o12');
+      expect(heard('עשרים ואחת', numbers(<int>[20, 19, 21], 21)).optionId, 'o21');
+      // The short number alone is still the short number.
+      expect(heard('שמונה', numbers(<int>[18, 8], 8)).decision, Decision.accept);
+      expect(heard('שמונה', numbers(<int>[18, 8], 8)).optionId, 'o8');
+      expect(heard('עשרים', numbers(<int>[20, 19, 21], 20)).optionId, 'o20');
+    });
+
+    test('a pause after a number that starts another option\'s number is not the end of the answer', () {
+      final List<Expected> eight = numbers(<int>[18, 8], 8);
+      expect(matcher.couldGoOn('שמונה', eight, winnerId: 'o8'), isTrue);
+      expect(matcher.couldGoOn('שמונה עשרה', eight, winnerId: 'o18'), isFalse);
+      expect(matcher.couldGoOn('שלוש', numbers(<int>[3, 13, 4], 3), winnerId: 'o3'), isTrue);
+      expect(matcher.couldGoOn('שתיים', numbers(<int>[1, 12, 2], 2), winnerId: 'o2'), isTrue);
+      expect(matcher.couldGoOn('עשרים', numbers(<int>[20, 19, 21], 20), winnerId: 'o20'), isTrue);
+      // Nothing to wait for: no other option is longer and starts the same way.
+      expect(matcher.couldGoOn('שלוש', numbers(<int>[2, 3, 4], 3), winnerId: 'o3'), isFalse);
+      expect(matcher.couldGoOn('שלוש', numbers(<int>[3, 30], 3), winnerId: 'o3'), isFalse);
+      expect(matcher.couldGoOn('', eight), isFalse);
+    });
+  });
 }

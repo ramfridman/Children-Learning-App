@@ -50,6 +50,7 @@
       }
     ]
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:give.apples.3.correct",

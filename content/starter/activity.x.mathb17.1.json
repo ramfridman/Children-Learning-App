@@ -50,6 +50,7 @@
     "type": "pay",
     "countMisconception": "M-MONEY-COUNT"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:x.mathb17.1.correct",

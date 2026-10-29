@@ -33,6 +33,16 @@ class Scripted {
     true,
   );
 
+  /// The child says [first], stops for [stableMs] (the text settles), then goes on: the listen ends with [whole].
+  factory Scripted.pauses(String first, String whole, {int stableMs = 700, double confidence = 0.9}) =>
+      Scripted._(
+        <ListenPartial>[ListenPartial(first, confidence, stableMs)],
+        <Hypothesis>[Hypothesis(whole, confidence)],
+        ListenEnd.silence,
+        false,
+        false,
+      );
+
   /// The microphone cannot be opened.
   factory Scripted.fails() =>
       const Scripted._(<ListenPartial>[], <Hypothesis>[], ListenEnd.failed, true, false);

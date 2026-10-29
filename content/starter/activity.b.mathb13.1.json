@@ -57,6 +57,7 @@
     "result": "left",
     "misconception": "M-MEAS-BIG"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb13.1.correct",

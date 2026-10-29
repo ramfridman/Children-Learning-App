@@ -103,6 +103,7 @@
     ],
     "misconception": "M-CNT-SIZE"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:x.numa07.7.correct",

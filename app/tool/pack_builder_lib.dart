@@ -29,12 +29,20 @@ class BuildFailed implements Exception {
 }
 
 class BuiltPack {
-  const BuiltPack({required this.fileName, required this.bytes, required this.manifestSha256});
+  const BuiltPack({
+    required this.fileName,
+    required this.bytes,
+    required this.manifestSha256,
+    this.warnings = const <Problem>[],
+  });
 
   /// `<id>-<version>.nnpack`
   final String fileName;
   final Uint8List bytes;
   final String manifestSha256;
+
+  /// What works but should be looked at (`packWarnings`); the pack is signed anyway.
+  final List<Problem> warnings;
 }
 
 // ---- keys ----
@@ -314,6 +322,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     fileName: '${pack['id']}-${pack['version']}.nnpack',
     bytes: zip,
     manifestSha256: check.manifestSha256,
+    warnings: packWarnings(docs: docs),
   );
 }
 

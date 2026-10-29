@@ -73,6 +73,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "feedback": {
     "correct": {
       "vo": "vo:b.colb01.2.correct",

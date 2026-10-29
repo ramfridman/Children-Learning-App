@@ -85,6 +85,7 @@
     ],
     "misconception": "M-SHP-FACE"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:x.shpb09.4.correct",

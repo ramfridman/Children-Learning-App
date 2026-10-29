@@ -145,9 +145,22 @@ def hints(act_id, h1, h2, h3, actions=('replay_prompt_slow', 'show_fingers', 'wo
     return out
 
 
+# Board B-24: the kinds whose answer the child says (a count, a number, the result of a sum). Every other kind is answered
+# by a tap, a drag or a trace, and has no mic; a unit item turns its own on or off with "voice": true or false.
+VOICE_KINDS = frozenset({'count_tap', 'flash', 'next_number', 'sum', 'madd', 'mtake', 'zero'})
+VOICE_TEMPLATES = frozenset({'tap_answer', 'count_tap', 'flash'})
+
+
+def voice_answer(a):
+    """Whether the child may answer this item by voice: the item's own "voice", else the default of its kind."""
+    return a.get('voice', a['kind'] in VOICE_KINDS)
+
+
 def activity(a, template, skills, purpose, check, rep, scene, answer, fb_tags, h, goal, extra=None, prompt=None,
              answer_prompt=None, correct=None):
     i = a['id']
+    voice = voice_answer(a)
+    assert not voice or template in VOICE_TEMPLATES, '%s: a %s is never answered by voice' % (i, template)
     d = {
         'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': 1,
         'template': template, 'templateVersion': ('1.2' if scene.get('chart') else '1.1') if template == 'tap_answer' else '1.0',
@@ -157,7 +170,7 @@ def activity(a, template, skills, purpose, check, rep, scene, answer, fb_tags, h
         'variantGroup': a.get('variantGroup', a['kind'].replace('_', '-')),
         'difficulty': {'authored': a.get('difficulty', 0.3)},
         'prompt': {**say('vo:%s.prompt' % i, prompt), 'replayButton': True},
-        'scene': scene, 'answer': answer,
+        'scene': scene, 'answer': answer, 'voiceAnswer': voice,
     }
     if answer_prompt:
         d['answerPrompt'] = say('vo:%s.how_many' % i, answer_prompt)
@@ -629,6 +642,7 @@ def seq_words(ctx, sprites):
 def pick_spec(a, **kw):
     d = {k: a[k] for k in ('id', 'skill', 'also', 'difficulty', 'rep', 'purpose', 'domain') if k in a}
     d['variantGroup'] = a['kind'].replace('_', '-')
+    d['voice'] = voice_answer(a)  # decided by the kind that asked (a sum is spoken), not by the pick it becomes
     d.update(kw)
     d['kind'] = 'pick'
     return d

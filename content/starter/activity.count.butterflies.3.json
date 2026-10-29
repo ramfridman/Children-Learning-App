@@ -70,6 +70,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "answerPrompt": {
     "vo": "vo:count.butterflies.3.how_many",
     "caption": [

@@ -160,12 +160,15 @@ class VoiceAnswerController extends ChangeNotifier {
             _level = e.level;
             notifyListeners();
           case ListenPartial():
-            // A single clear word does not need the whole silence: take it when the text has settled.
+            // A single clear word does not need the whole silence: take it when the text has settled, unless it may
+            // still become another answer ("שמונה… עשרה"); then the listen runs to its end.
             if (!_confirmListen && e.stableMs >= stableAccept.inMilliseconds) {
+              final List<Expected> options = expected();
               final MatchResult early = matcher.decide(<Hypothesis>[
                 Hypothesis(e.text, e.confidence),
-              ], expected());
-              if (early.decision == Decision.accept) {
+              ], options);
+              if (early.decision == Decision.accept &&
+                  !matcher.couldGoOn(e.text, options, winnerId: early.optionId)) {
                 heard = <Hypothesis>[Hypothesis(e.text, e.confidence)];
                 end = ListenEnd.early;
                 // Not awaited: the stream ends by itself once the engine is told, and waiting here would deadlock it.

@@ -70,6 +70,7 @@
     "mode": "share",
     "misconception": "M-SHARE-UNEQ"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:math.share.apples.correct",

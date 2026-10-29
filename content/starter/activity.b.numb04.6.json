@@ -66,6 +66,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
+  "voiceAnswer": true,
   "answerPrompt": {
     "vo": "vo:b.numb04.6.how_many",
     "caption": [

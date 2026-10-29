@@ -414,6 +414,9 @@
       "minItems": 0,
       "maxItems": 4
     },
+    "voiceAnswer": {
+      "type": "boolean"
+    },
     "feedback": {
       "type": "object",
       "properties": {

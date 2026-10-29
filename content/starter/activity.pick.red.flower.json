@@ -51,6 +51,7 @@
     "shuffle": true,
     "unsureAllowed": true
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:pick.red.flower.correct",

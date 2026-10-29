@@ -79,6 +79,7 @@
     "mode": "sort",
     "misconception": "M-SORT-SHIFT"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:log.sortdrag.animals.correct",

@@ -242,6 +242,7 @@
     {
       "kind": "pick",
       "id": "math.add.apples",
+      "voice": true,
       "skill": "MATH-A-01",
       "prompt": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים, וּבָא עוֹד תַּפּוּחַ אֶחָד. כַּמָּה עַכְשָׁו?",
       "group": {
@@ -266,6 +267,7 @@
     {
       "kind": "pick",
       "id": "math.add.fish",
+      "voice": true,
       "skill": "MATH-A-01",
       "prompt": "יֵשׁ שְׁנֵי דָּגִים, וּבָאוּ עוֹד שְׁנֵי דָּגִים. כַּמָּה עַכְשָׁו?",
       "group": {
@@ -290,6 +292,7 @@
     {
       "kind": "pick",
       "id": "math.add.stars",
+      "voice": true,
       "skill": "MATH-A-01",
       "prompt": "יֵשׁ שְׁלוֹשָׁה כּוֹכָבִים, וּבָאוּ עוֹד שְׁנֵי כּוֹכָבִים. כַּמָּה עַכְשָׁו?",
       "group": {
@@ -314,6 +317,7 @@
     {
       "kind": "pick",
       "id": "math.add.ducks",
+      "voice": true,
       "skill": "MATH-A-01",
       "prompt": "יֵשׁ שְׁנֵי בַּרְוָזִים, וּבָא עוֹד בַּרְוָז אֶחָד. כַּמָּה עַכְשָׁו?",
       "group": {
@@ -338,6 +342,7 @@
     {
       "kind": "pick",
       "id": "math.take.apples",
+      "voice": true,
       "skill": "MATH-A-02",
       "prompt": "יֵשׁ אַרְבָּעָה תַּפּוּחִים. אֶחָד נֶאֱכַל. כַּמָּה נִשְׁאֲרוּ?",
       "group": {
@@ -358,6 +363,7 @@
     {
       "kind": "pick",
       "id": "math.take.fish",
+      "voice": true,
       "skill": "MATH-A-02",
       "prompt": "יֵשׁ שְׁלוֹשָׁה דָּגִים. אֶחָד שָׂחָה לְהֵרָחֵק. כַּמָּה נִשְׁאֲרוּ?",
       "group": {
@@ -378,6 +384,7 @@
     {
       "kind": "pick",
       "id": "math.take.stars",
+      "voice": true,
       "skill": "MATH-A-02",
       "prompt": "יֵשׁ חֲמִשָּׁה כּוֹכָבִים. אֶחָד נָפַל. כַּמָּה נִשְׁאֲרוּ?",
       "group": {
@@ -546,6 +553,7 @@
     {
       "kind": "pick",
       "id": "math.time.after",
+      "voice": true,
       "skill": "MATH-A-05",
       "prompt": "מָה בָּא אַחֲרֵי הַבֹּקֶר?",
       "options": [
@@ -758,6 +766,7 @@
     {
       "kind": "pick",
       "id": "math.time.before",
+      "voice": true,
       "skill": "MATH-A-05",
       "prompt": "מָה בָּא לִפְנֵי הָעֶרֶב?",
       "options": [

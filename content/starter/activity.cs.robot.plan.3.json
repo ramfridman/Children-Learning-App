@@ -57,6 +57,7 @@
     ],
     "misconception": "M-CS-OFF1"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:cs.robot.plan.3.correct",

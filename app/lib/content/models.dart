@@ -101,6 +101,7 @@ sealed class Activity {
       variantGroup = json['variantGroup']! as String,
       difficulty = (_map(json['difficulty'])['authored']! as num).toDouble(),
       contradicts = json['contradicts'] as String?,
+      voiceAnswer = json['voiceAnswer'] == true,
       promptLine = Spoken.fromJson(json['prompt']),
       feedback = ActivityFeedback(
         correct: Spoken.fromJson(_map(json['feedback'])['correct']),
@@ -166,6 +167,9 @@ sealed class Activity {
   final String variantGroup;
   final double difficulty;
   final String? contradicts;
+
+  /// The child may say the answer (the author's choice, board B-24); without it there is no mic at all.
+  final bool voiceAnswer;
   final String id;
   final int revision;
   final String template;

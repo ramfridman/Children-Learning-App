@@ -64,6 +64,7 @@
     "result": "left",
     "misconception": "M-EQ-OPER"
   },
+  "voiceAnswer": false,
   "feedback": {
     "correct": {
       "vo": "vo:b.mathb09.5.correct",

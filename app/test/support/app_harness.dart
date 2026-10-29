@@ -14,6 +14,8 @@ import 'package:nitznutz/app/tutor_providers.dart';
 import 'package:nitznutz/app/voice_input.dart';
 import 'package:nitznutz/tutor/tutor.dart';
 import 'package:nitznutz/characters/character_source.dart';
+import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/app/state.dart';
 import 'package:nitznutz/core/errors.dart';
@@ -247,6 +249,30 @@ class AppRig {
     await tester.pumpWidget(ProviderScope(overrides: overrides, child: const NitznutzApp()));
     await tester.pumpAndSettle();
   }
+}
+
+/// Opens a lesson of just the activities [ids] of the starter pack for the child 'p-1', the way a revisit mission is
+/// opened (no map, any activity). The child must already be chosen; pump afterwards to let the lesson start.
+Future<void> openActivities(WidgetTester tester, List<String> ids) async {
+  final PackContent content = await loadStarter();
+  final Lesson lesson = Lesson.mission(
+    id: 'test',
+    itemIds: ids,
+    skillIds: <String>{
+      for (final String id in ids)
+        for (final Skill s in content.activities[id]!.skills) s.id,
+    }.toList(),
+    celebration: content.lessons['butterflies']!.celebration,
+  );
+  unawaited(
+    tester
+        .state<NavigatorState>(find.byType(Navigator).first)
+        .push(
+          MaterialPageRoute<void>(
+            builder: (BuildContext c) => LessonScreen(profileId: 'p-1', mission: lesson),
+          ),
+        ),
+  );
 }
 
 /// Types [digits] on the on-screen keypad, one tap per digit.

@@ -62,6 +62,15 @@ for _s, (_one, _) in {'circle': ('עִגּוּל', 0), 'square': ('רִבּוּ�
         NAMES['shape_%s_%s' % (_s, _c)] = {'one': '%s %s' % (_one, _adj), 'g': 'm'}
 
 
+# Board B-24 (docs/knowledge/voice-answer-by-activity.md): the skills whose `pick` questions the child answers by saying a
+# word the question does not say (a number, a colour, a day). Other kinds keep the default of author.py; a skill that mixes
+# both (MATH-B-19, SHP-B-03) is not listed and passes voice=True on its spoken questions.
+VOICE_SKILLS = frozenset({
+    'COL-B-01', 'MATH-B-02', 'MATH-B-03', 'MATH-B-06', 'MATH-B-07', 'MATH-B-08', 'MATH-B-10', 'MATH-B-14', 'MATH-B-15',
+    'MATH-B-18', 'NUM-B-10', 'NUM-B-11', 'NUM-B-14', 'NUM-B-16', 'NUM-B-17', 'SHP-B-02',
+})
+
+
 def rot(values, i):
     """The same options in another order for each activity (the author's order, never random)."""
     k = i % len(values)
@@ -104,6 +113,8 @@ class Unit:
         self.counter[key] = self.counter.get(key, 0) + 1
         i = self.counter[key]
         a = {'kind': kind, 'id': '%s.%s.%d' % (self.prefix, key, i), 'skill': skill, 'difficulty': kw.pop('difficulty', round(min(0.9, 0.3 + 0.07 * i), 2))}
+        if kind == 'pick' and skill in VOICE_SKILLS:
+            a['voice'] = True
         a.update(kw)
         self.d['activities'].append(a)
         return a['id']

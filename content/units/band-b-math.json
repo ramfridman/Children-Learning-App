@@ -1062,6 +1062,7 @@
    "id": "b.mathb02.7",
    "skill": "MATH-B-02",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "שֵׁשׁ זֶה שְׁתַּיִם וְעוֹד כַּמָּה?",
    "options": [
     "n:4",
@@ -1081,6 +1082,7 @@
    "id": "b.mathb02.8",
    "skill": "MATH-B-02",
    "difficulty": 0.86,
+   "voice": true,
    "prompt": "שֶׁבַע זֶה חָמֵשׁ וְעוֹד כַּמָּה?",
    "options": [
     "n:7",
@@ -1100,6 +1102,7 @@
    "id": "b.mathb02.9",
    "skill": "MATH-B-02",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "תֵּשַׁע זֶה אַרְבַּע וְעוֹד כַּמָּה?",
    "options": [
     "n:9",
@@ -1119,6 +1122,7 @@
    "id": "b.mathb02.10",
    "skill": "MATH-B-02",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "עֶשֶׂר זֶה שָׁלוֹשׁ וְעוֹד כַּמָּה?",
    "options": [
     "n:7",
@@ -1138,6 +1142,7 @@
    "id": "b.mathb03.1",
    "skill": "MATH-B-03",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "שָׁלוֹשׁ וְעוֹד אַרְבַּע. כַּמָּה זֶה?",
    "row": [
     "n:3",
@@ -1161,6 +1166,7 @@
    "id": "b.mathb03.2",
    "skill": "MATH-B-03",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "חָמֵשׁ וְעוֹד שְׁתַּיִם. כַּמָּה זֶה?",
    "row": [
     "n:5",
@@ -1184,6 +1190,7 @@
    "id": "b.mathb03.3",
    "skill": "MATH-B-03",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "שֵׁשׁ וְעוֹד שָׁלוֹשׁ. כַּמָּה זֶה?",
    "row": [
     "n:6",
@@ -1207,6 +1214,7 @@
    "id": "b.mathb03.4",
    "skill": "MATH-B-03",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "שְׁתַּיִם וְעוֹד שֶׁבַע. כַּמָּה זֶה?",
    "row": [
     "n:2",
@@ -1230,6 +1238,7 @@
    "id": "b.mathb03.5",
    "skill": "MATH-B-03",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "שֶׁבַע פָּחוֹת שָׁלוֹשׁ. כַּמָּה זֶה?",
    "row": [
     "n:7",
@@ -1253,6 +1262,7 @@
    "id": "b.mathb03.6",
    "skill": "MATH-B-03",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "תֵּשַׁע פָּחוֹת אַרְבַּע. כַּמָּה זֶה?",
    "row": [
     "n:9",
@@ -1276,6 +1286,7 @@
    "id": "b.mathb03.7",
    "skill": "MATH-B-03",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "שְׁמוֹנֶה פָּחוֹת חָמֵשׁ. כַּמָּה זֶה?",
    "row": [
     "n:8",
@@ -1299,6 +1310,7 @@
    "id": "b.mathb03.8",
    "skill": "MATH-B-03",
    "difficulty": 0.86,
+   "voice": true,
    "prompt": "עֶשֶׂר פָּחוֹת שֵׁשׁ. כַּמָּה זֶה?",
    "row": [
     "n:10",
@@ -1398,6 +1410,7 @@
    "id": "b.mathb06.1",
    "skill": "MATH-B-06",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "יֵשׁ חֲמִשָּׁה תַּפּוּחִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:5",
@@ -1419,6 +1432,7 @@
    "id": "b.mathb06.2",
    "skill": "MATH-B-06",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "יֵשׁ שִׁבְעָה כּוֹכָבִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:7",
@@ -1440,6 +1454,7 @@
    "id": "b.mathb06.3",
    "skill": "MATH-B-06",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "יֵשׁ שְׁמוֹנָה דָּגִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:8",
@@ -1461,6 +1476,7 @@
    "id": "b.mathb06.4",
    "skill": "MATH-B-06",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "יֵשׁ שִׁשָּׁה בַּרְוָזִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:4",
@@ -1482,6 +1498,7 @@
    "id": "b.mathb06.5",
    "skill": "MATH-B-06",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "יֵשׁ תֵּשַׁע חִפּוּשִׁיּוֹת. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:9",
@@ -1503,6 +1520,7 @@
    "id": "b.mathb06.6",
    "skill": "MATH-B-06",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "יֵשׁ אַרְבַּע צִפֳּרִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:4",
@@ -1524,6 +1542,7 @@
    "id": "b.mathb06.7",
    "skill": "MATH-B-06",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:7",
@@ -1545,6 +1564,7 @@
    "id": "b.mathb06.8",
    "skill": "MATH-B-06",
    "difficulty": 0.86,
+   "voice": true,
    "prompt": "יֵשׁ שְׁנֵי כּוֹכָבִים. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?",
    "options": [
     "n:2",
@@ -1566,6 +1586,7 @@
    "id": "b.mathb07.1",
    "skill": "MATH-B-07",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "חָמֵשׁ וְעוֹד אֶפֶס. כַּמָּה זֶה?",
    "options": [
     "n:5",
@@ -1589,6 +1610,7 @@
    "id": "b.mathb07.2",
    "skill": "MATH-B-07",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "אֶפֶס וְעוֹד אַרְבַּע. כַּמָּה זֶה?",
    "options": [
     "n:5",
@@ -1612,6 +1634,7 @@
    "id": "b.mathb07.3",
    "skill": "MATH-B-07",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "שֶׁבַע פָּחוֹת אֶפֶס. כַּמָּה זֶה?",
    "options": [
     "n:8",
@@ -1635,6 +1658,7 @@
    "id": "b.mathb07.4",
    "skill": "MATH-B-07",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "שָׁלוֹשׁ פָּחוֹת שָׁלוֹשׁ. כַּמָּה זֶה?",
    "options": [
     "n:0",
@@ -1658,6 +1682,7 @@
    "id": "b.mathb07.5",
    "skill": "MATH-B-07",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "שֵׁשׁ פָּחוֹת שֵׁשׁ. כַּמָּה זֶה?",
    "options": [
     "n:1",
@@ -1681,6 +1706,7 @@
    "id": "b.mathb07.6",
    "skill": "MATH-B-07",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "אֶפֶס וְעוֹד אֶפֶס. כַּמָּה זֶה?",
    "options": [
     "n:1",
@@ -1704,6 +1730,7 @@
    "id": "b.mathb08.1",
    "skill": "MATH-B-08",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "שְׁמוֹנֶה וְעוֹד חָמֵשׁ. כַּמָּה זֶה?",
    "options": [
     "n:13",
@@ -1728,6 +1755,7 @@
    "id": "b.mathb08.2",
    "skill": "MATH-B-08",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "תֵּשַׁע וְעוֹד אַרְבַּע. כַּמָּה זֶה?",
    "options": [
     "n:12",
@@ -1752,6 +1780,7 @@
    "id": "b.mathb08.3",
    "skill": "MATH-B-08",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "שֶׁבַע וְעוֹד שֵׁשׁ. כַּמָּה זֶה?",
    "options": [
     "n:12",
@@ -1776,6 +1805,7 @@
    "id": "b.mathb08.4",
    "skill": "MATH-B-08",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "שְׁמוֹנֶה וְעוֹד שֶׁבַע. כַּמָּה זֶה?",
    "options": [
     "n:15",
@@ -1800,6 +1830,7 @@
    "id": "b.mathb08.5",
    "skill": "MATH-B-08",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "תֵּשַׁע וְעוֹד שֵׁשׁ. כַּמָּה זֶה?",
    "options": [
     "n:14",
@@ -1824,6 +1855,7 @@
    "id": "b.mathb08.6",
    "skill": "MATH-B-08",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "שֵׁשׁ וְעוֹד תֵּשַׁע. כַּמָּה זֶה?",
    "options": [
     "n:14",
@@ -1848,6 +1880,7 @@
    "id": "b.mathb08.7",
    "skill": "MATH-B-08",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "שֶׁבַע וְעוֹד שְׁמוֹנֶה. כַּמָּה זֶה?",
    "options": [
     "n:15",
@@ -1872,6 +1905,7 @@
    "id": "b.mathb08.8",
    "skill": "MATH-B-08",
    "difficulty": 0.86,
+   "voice": true,
    "prompt": "תֵּשַׁע וְעוֹד תֵּשַׁע. כַּמָּה זֶה?",
    "options": [
     "n:17",
@@ -1896,6 +1930,7 @@
    "id": "b.mathb08.9",
    "skill": "MATH-B-08",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "שְׁלֹשׁ עֶשְׂרֵה פָּחוֹת אַרְבַּע. כַּמָּה זֶה?",
    "options": [
     "n:9",
@@ -1919,6 +1954,7 @@
    "id": "b.mathb08.10",
    "skill": "MATH-B-08",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "חֲמֵשׁ עֶשְׂרֵה פָּחוֹת שָׁלוֹשׁ. כַּמָּה זֶה?",
    "options": [
     "n:11",
@@ -1942,6 +1978,7 @@
    "id": "b.mathb08.11",
    "skill": "MATH-B-08",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "שְׁתֵּים עֶשְׂרֵה פָּחוֹת חָמֵשׁ. כַּמָּה זֶה?",
    "options": [
     "n:6",
@@ -1965,6 +2002,7 @@
    "id": "b.mathb08.12",
    "skill": "MATH-B-08",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "שְׁבַע עֶשְׂרֵה פָּחוֹת שְׁתַּיִם. כַּמָּה זֶה?",
    "options": [
     "n:15",
@@ -2328,6 +2366,7 @@
    "id": "b.mathb10.1",
    "skill": "MATH-B-10",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "יֵשׁ שְׁתַּיִם צַלָּחוֹת. עַל כָּל צַלַּחַת שְׁלוֹשָׁה תַּפּוּחִים. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?",
    "options": [
     "n:6",
@@ -2345,6 +2384,7 @@
    "id": "b.mathb10.2",
    "skill": "MATH-B-10",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "יֵשׁ שָׁלוֹשׁ צַלָּחוֹת. עַל כָּל צַלַּחַת שְׁנֵי דָּגִים. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?",
    "options": [
     "n:4",
@@ -2362,6 +2402,7 @@
    "id": "b.mathb10.3",
    "skill": "MATH-B-10",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "יֵשׁ שְׁתַּיִם צַלָּחוֹת. עַל כָּל צַלַּחַת אַרְבָּעָה כּוֹכָבִים. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?",
    "options": [
     "n:4",
@@ -2379,6 +2420,7 @@
    "id": "b.mathb10.4",
    "skill": "MATH-B-10",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "יֵשׁ שָׁלוֹשׁ צַלָּחוֹת. עַל כָּל צַלַּחַת שְׁלוֹשָׁה בַּרְוָזִים. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?",
    "options": [
     "n:9",
@@ -2396,6 +2438,7 @@
    "id": "b.mathb10.5",
    "skill": "MATH-B-10",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "יֵשׁ אַרְבַּע צַלָּחוֹת. עַל כָּל צַלַּחַת שְׁתֵּי חִפּוּשִׁיּוֹת. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?",
    "options": [
     "n:6",
@@ -2413,6 +2456,7 @@
    "id": "b.mathb10.6",
    "skill": "MATH-B-10",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "יֵשׁ שְׁתַּיִם צַלָּחוֹת. עַל כָּל צַלַּחַת חָמֵשׁ צִפֳּרִים. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?",
    "options": [
     "n:5",
@@ -2694,6 +2738,7 @@
    "id": "b.mathb14.1",
    "skill": "MATH-B-14",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "מָה בָּא אַחֲרֵי יוֹם שְׁלִישִׁי?",
    "options": [
     "day_4",
@@ -2710,6 +2755,7 @@
    "id": "b.mathb14.2",
    "skill": "MATH-B-14",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "מָה בָּא אַחֲרֵי יוֹם שִׁשִּׁי?",
    "options": [
     "day_6",
@@ -2726,6 +2772,7 @@
    "id": "b.mathb14.3",
    "skill": "MATH-B-14",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "מָה בָּא אַחֲרֵי יוֹם רִאשׁוֹן?",
    "options": [
     "day_1",
@@ -2742,6 +2789,7 @@
    "id": "b.mathb14.4",
    "skill": "MATH-B-14",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "מָה בָּא לִפְנֵי יוֹם חֲמִישִׁי?",
    "options": [
     "day_4",
@@ -2758,6 +2806,7 @@
    "id": "b.mathb14.5",
    "skill": "MATH-B-14",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "מָה בָּא לִפְנֵי שַׁבָּת?",
    "options": [
     "day_7",
@@ -2774,6 +2823,7 @@
    "id": "b.mathb14.6",
    "skill": "MATH-B-14",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "מָה בָּא אַחֲרֵי יוֹם רְבִיעִי?",
    "options": [
     "day_4",
@@ -2790,6 +2840,7 @@
    "id": "b.mathb14.7",
    "skill": "MATH-B-14",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "מָה בָּא לִפְנֵי יוֹם שֵׁנִי?",
    "options": [
     "day_1",
@@ -2806,6 +2857,7 @@
    "id": "b.mathb14.8",
    "skill": "MATH-B-14",
    "difficulty": 0.86,
+   "voice": true,
    "prompt": "הַיּוֹם יוֹם שְׁלִישִׁי. מָה יִהְיֶה מָחָר?",
    "options": [
     "day_4",
@@ -2822,6 +2874,7 @@
    "id": "b.mathb14.9",
    "skill": "MATH-B-14",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "הַיּוֹם יוֹם חֲמִישִׁי. מָה יִהְיֶה מָחָר?",
    "options": [
     "day_5",
@@ -2838,6 +2891,7 @@
    "id": "b.mathb14.10",
    "skill": "MATH-B-14",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "הַיּוֹם יוֹם שֵׁנִי. מָה הָיָה אֶתְמוֹל?",
    "options": [
     "day_2",
@@ -2854,6 +2908,7 @@
    "id": "b.mathb14.11",
    "skill": "MATH-B-14",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "הַיּוֹם יוֹם שִׁשִּׁי. מָה הָיָה אֶתְמוֹל?",
    "options": [
     "day_5",
@@ -2870,6 +2925,7 @@
    "id": "b.mathb15.1",
    "skill": "MATH-B-15",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:3",
@@ -2893,6 +2949,7 @@
    "id": "b.mathb15.2",
    "skill": "MATH-B-15",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:12",
@@ -2916,6 +2973,7 @@
    "id": "b.mathb15.3",
    "skill": "MATH-B-15",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:12",
@@ -2939,6 +2997,7 @@
    "id": "b.mathb15.4",
    "skill": "MATH-B-15",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:1",
@@ -2962,6 +3021,7 @@
    "id": "b.mathb15.5",
    "skill": "MATH-B-15",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:12",
@@ -2985,6 +3045,7 @@
    "id": "b.mathb15.6",
    "skill": "MATH-B-15",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:12",
@@ -3008,6 +3069,7 @@
    "id": "b.mathb15.7",
    "skill": "MATH-B-15",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:11",
@@ -3031,6 +3093,7 @@
    "id": "b.mathb15.8",
    "skill": "MATH-B-15",
    "difficulty": 0.86,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:12",
@@ -3054,6 +3117,7 @@
    "id": "b.mathb15.9",
    "skill": "MATH-B-15",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:12",
@@ -3077,6 +3141,7 @@
    "id": "b.mathb15.10",
    "skill": "MATH-B-15",
    "difficulty": 0.9,
+   "voice": true,
    "prompt": "מָה הַשָּׁעָה?",
    "options": [
     "n:7",
@@ -3100,6 +3165,7 @@
    "id": "b.mathb18.1",
    "skill": "MATH-B-18",
    "difficulty": 0.37,
+   "voice": true,
    "prompt": "שָׁלוֹשׁ וְעוֹד כַּמָּה שָׁוֶה שֶׁבַע?",
    "row": [
     "n:3",
@@ -3126,6 +3192,7 @@
    "id": "b.mathb18.2",
    "skill": "MATH-B-18",
    "difficulty": 0.44,
+   "voice": true,
    "prompt": "שְׁתַּיִם וְעוֹד כַּמָּה שָׁוֶה שֵׁשׁ?",
    "row": [
     "n:2",
@@ -3152,6 +3219,7 @@
    "id": "b.mathb18.3",
    "skill": "MATH-B-18",
    "difficulty": 0.51,
+   "voice": true,
    "prompt": "אַרְבַּע וְעוֹד כַּמָּה שָׁוֶה תֵּשַׁע?",
    "row": [
     "n:4",
@@ -3178,6 +3246,7 @@
    "id": "b.mathb18.4",
    "skill": "MATH-B-18",
    "difficulty": 0.58,
+   "voice": true,
    "prompt": "חָמֵשׁ וְעוֹד כַּמָּה שָׁוֶה שְׁמוֹנֶה?",
    "row": [
     "n:5",
@@ -3204,6 +3273,7 @@
    "id": "b.mathb18.5",
    "skill": "MATH-B-18",
    "difficulty": 0.65,
+   "voice": true,
    "prompt": "שֵׁשׁ וְעוֹד כַּמָּה שָׁוֶה עֶשֶׂר?",
    "row": [
     "n:6",
@@ -3230,6 +3300,7 @@
    "id": "b.mathb18.6",
    "skill": "MATH-B-18",
    "difficulty": 0.72,
+   "voice": true,
    "prompt": "אַחַת וְעוֹד כַּמָּה שָׁוֶה חָמֵשׁ?",
    "row": [
     "n:1",
@@ -3256,6 +3327,7 @@
    "id": "b.mathb18.7",
    "skill": "MATH-B-18",
    "difficulty": 0.79,
+   "voice": true,
    "prompt": "שֶׁבַע וְעוֹד כַּמָּה שָׁוֶה תֵּשַׁע?",
    "row": [
     "n:7",
