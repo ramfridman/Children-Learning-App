@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:drift/drift.dart' show Value;
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/match_pairs_session.dart';
 import 'package:nitznutz/play/number_line_session.dart';
@@ -12,7 +15,9 @@ import 'package:nitznutz/play/shop_pay_session.dart';
 import 'package:nitznutz/play/spot_error_session.dart';
 import 'package:nitznutz/play/template_session.dart';
 import 'package:nitznutz/play/trace_session.dart';
+import 'package:nitznutz/sync/sync_engine.dart';
 
+import 'support/fake_family_server.dart';
 import 'support/fakes.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
@@ -284,4 +289,104 @@ void main() {
     }
     expect(hits, isEmpty, reason: hits.join('\n'));
   }, skip: _open);
+
+  // QA-17 and QA-18 (B-20 re-verification, SEC-12): the format-mismatch brake of the sync engine.
+  group('the sync brake', () {
+    const String kid = 'child-aaaa-0001';
+    const String dev = 'd1d1d1d1-0000-4000-8000-000000000001';
+    late AppDatabase db;
+    late FakeFamilyServer server;
+
+    SyncEngine engine() => SyncEngine(
+      db: db,
+      call: server.callFor(dev),
+      deviceId: dev,
+      isParent: true,
+      nowMs: () => DateTime.utc(2026, 11, 20, 12).millisecondsSinceEpoch,
+      pageSize: 4,
+      batch: 4,
+    );
+
+    Future<void> answer(String item, DateTime at, {int? session}) => db.recordAttempt(
+      AttemptsCompanion.insert(
+        at: at,
+        profileId: kid,
+        packId: 'starter',
+        packVersion: '0.8.0',
+        activityId: item,
+        activityRevision: 1,
+        template: 'count_tap',
+        templateVersion: '1.0',
+        skillId: 'NUM-A-03',
+        result: 'correct',
+        attemptNo: 1,
+        hintLevel: 0,
+        sessionId: Value<int?>(session),
+      ),
+    );
+
+    setUp(() async {
+      db = AppDatabase(NativeDatabase.memory());
+      server = FakeFamilyServer(checksFormat: true);
+      await db.addProfile(
+        ProfilesCompanion.insert(
+          id: kid,
+          name: 'נועה',
+          avatar: 'avatar-noa',
+          addressForm: 'f',
+          ageBand: 1,
+          createdAt: DateTime.utc(2026, 11, 1),
+        ),
+      );
+    });
+    tearDown(() => db.close());
+
+    test('QA-17 a gateway that does not know a key every answer carries holds the answers back even when the batch also '
+        'has a visit it takes; once the right gateway is live the same app version delivers them', () async {
+      // A lesson: three answers and their visit, in one batch (answers first). The visit carries no duration.
+      final int visit = await db.startSession(
+        kid,
+        DateTime.utc(2026, 11, 20, 10),
+        plan: 'lesson:butterflies',
+      );
+      for (int i = 1; i <= 3; i++) {
+        await answer('a.$i', DateTime.utc(2026, 11, 20, 10, i), session: visit);
+      }
+      await db.endSession(visit, DateTime.utc(2026, 11, 20, 10, 8), 'finished');
+      server.forgets = <String>{'duration_ms'};
+      await engine().syncOnce();
+      final List<String> marked = <String>[
+        for (final Attempt a in await db.attemptsOf(kid))
+          if (AppDatabase.wasRefusedBySync(a.syncedAt)) a.activityId,
+      ];
+      expect(
+        marked,
+        isEmpty,
+        reason: 'answers refused only for a key the gateway does not know were marked refused',
+      );
+      server.forgets = <String>{};
+      await engine().syncOnce();
+      expect(server.log.where((Map<String, Object?> e) => e['type'] == 'attempt').length, 3);
+    }, skip: _open);
+
+    test('QA-18 a full batch of rows the server refuses one by one (here a wrong phone clock, before 2017) does not stop '
+        'the answers after them for good (PLAN: one bad row never stops the sync)', () async {
+      for (int i = 1; i <= 4; i++) {
+        await answer('old.$i', DateTime.utc(2010, 1, 1, 10, i));
+      }
+      await answer('a.1', DateTime.utc(2026, 11, 20, 10, 1));
+      await answer('a.2', DateTime.utc(2026, 11, 20, 10, 2));
+      for (int round = 0; round < 3; round++) {
+        await engine().syncOnce();
+      }
+      expect(
+        <Object?>[
+          for (final Map<String, Object?> e in server.log)
+            if (e['type'] == 'attempt') (e['data']! as Map<String, Object?>)['activity_id'],
+        ],
+        <String>['a.1', 'a.2'],
+        reason: 'the good answers never reach the server while the four bad rows head the queue',
+      );
+    }, skip: _open);
+  });
 }

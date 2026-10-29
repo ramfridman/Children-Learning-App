@@ -10,7 +10,7 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-9 | Secret scanning: add rules for the pack-signing key file and the publish secret | low | open | 2026-10-28 |
 | SEC-10 | Voice tool: validate the voice id and output format before building the request URL | low | open | 2026-10-28 |
 | SEC-11 | Tutor-moves upload script: run the pinned CLI from the repository root | low | open | 2026-10-28 |
-| SEC-12 | Sync: a gateway and app format mismatch would mark a device's whole unsent backlog as refused | low | open | 2026-10-29 |
+| SEC-12 | Sync: a gateway and app format mismatch would mark a device's whole unsent backlog as refused | low | open (partly fixed in `2235ac2`) | 2026-10-29 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -67,3 +67,13 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   restored pack is genuine; a timeout can only fail the test. A separate plain-Dart check against the `e6971fb` reader
   taken from git (no Flutter) is recorded in the private review. No package, lock file or action changed; the Dart SDK
   3.13.7 is past the one 2026 SDK advisory found (CVE-2026-27704, pub client, fixed in 3.11.0).
+- **`2235ac2`, the SEC-12 fix and what came with it (2026-10-29): safe to merge, SEC-12 stays open.** Verified by
+  reading: no path in the new push loop repeats a batch within a round or marks a batch the server refused as a whole;
+  the once-per-version resend touches only rows the server never stored and cannot be triggered from outside; the
+  `duration_ms` clamp and the lower-case `lesson_id` change nothing any reader depends on; the 40-character lesson-id
+  bound fits every pack ever committed (19 pack files from 0.1.0 to 0.8.0, longest lesson id 24) and changes no signed
+  byte; `testvectors/wire-patterns.json` now describes every key, value and range of `sync-push` and the Deno test holds
+  the gateway to it; the three fixed-up-checksum tests on the real pack prove the hashes and the signature. Two changes
+  are still required before SEC-12 closes (sent to the app-developer). One new finding above low is held privately.
+  `deno task check`: 180 passed, 0 failed, 7 ignored. No package, lock file or workflow changed. The Flutter tests of the
+  commit were not run by the security-engineer.

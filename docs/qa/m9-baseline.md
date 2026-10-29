@@ -155,3 +155,58 @@ The real phone (B-10), sound and voice, a child's hands, TalkBack, frame times, 
 The real phone (B-10, the script is updated for the dev flavour), sound, TalkBack, the CI run itself, the pgTAP suite, the coins on the counter on the tablet, the replay button during the praise, and whether the dev lesson page works with two children on the phone.
 
 PNGs opened this round: `unit_match_numbers_phone`, `unit_match_numbers_tablet_landscape` (the same small apples, about 16 points in 95-point cards), `unit_number_line_place_phone`, `unit_number_line_place_tablet_landscape`. Seen, not filed: on the tablet the waiting frog is about 30 points in a stage about 550 by 270, alone in the corner; a child may not see it as the frog of the question (design-director, with QA-16).
+
+## 8. Re-verification of B-20 (SEC-12), 2026-10-29
+
+**Branch** `m9-content`, local HEAD `2235ac2` (clean before this work). Nothing in `app/lib/`, `content/`, `supabase/` or `testvectors/` was changed by QA; every mutation below was undone with `git checkout` and `git diff` was clean after each. The 22-minute exhaustive byte test was **not** run (the CI run of `2235ac2` runs it).
+
+### What ran
+
+| Command (app/ unless said) | Result | Time |
+|---|---|---|
+| `flutter test --no-pub --reporter failures-only` (whole suite, before QA's additions) | **1,052 passed, 0 failed, 2 skipped** (QA-13, QA-14) | 4 min 50 s |
+| `dart analyze` | No issues found (also after QA's additions) | 7 s |
+| `dart format --output=none --set-exit-if-changed .` | 271 files, 0 changed (272 with QA's new file, 0 changed) | 3 s |
+| `deno task check` (repo root, deno 2.9.6) | **180 passed, 0 failed, 7 ignored** (the real-database tests) | 9 s |
+| The ten touched test files again, after every mutation was undone and with QA's additions | 216 passed, 4 skipped (QA-13, 14, 17, 18) | 1 min 24 s |
+| `flutter test --no-pub --dart-define=QA_OPEN=true test/qa_open_defects_test.dart` | QA-1 to QA-6 pass; QA-13, QA-14, **QA-17, QA-18 fail, as intended** | 2 s |
+
+### Mutations: do the new tests prove what they claim?
+
+| Mutation (product code, undone after) | Tests that failed | Verdict |
+|---|---|---|
+| The brake off: a batch refused event by event is marked refused again (`false &&` on the mismatch rule in `_send`) | "a server that refuses every event of a batch ..." (`refusedEvents` 6, expected 0) and "a lone event refused before the server took anything ..." | proves it |
+| Only the lone-event half removed (`events.length > 1` alone) | "a lone event refused before the server took anything ..." | proves it |
+| `understood` ignored (every lone refused event is a mismatch) | "a lone event refused after the server took a batch ... is marked" | proves it |
+| A mismatch batch marked as sent (`inThisCall` filled anyway) | the two mismatch tests (the rows no longer wait) | proves it |
+| The reset removed (`_resendRefusedOncePerVersion` not called) | "rows refused under an older format are sent again once ..." (`pushedEvents` 0, expected 2) | proves it |
+| The reset every round (the version check off) | the same test (9 pushes, expected 5) and SEC-1's "sent once more on its own, then never again" | proves it |
+| The reset leaves awards marked (the `rewards` update removed from `unmarkRefusedBySync`) | **nothing failed**; with QA's new test, "an award refused under an older format is sent again once ..." (`revisit_mission_sync_test.dart`) fails | gap, closed by QA's test |
+| Lesson id bound back to 81 (`_lessonId` in `schemas.dart`) | `content_validation_test` (41 characters accepted) and `wire_format_test` (schema bound 81 > 40) | proves it |
+| Only the lesson file's own id back to `_id` (81), the manifest kept at 40 | `wire_format_test` only (the validation test sees the manifest's error first, as its comment says) | proves it |
+| `content/schemas/lesson.schema.json` back to 81 | `pack_builder_test` "JSON Schema files ... each is current" | proves it |
+| The mission id with capitals again (`'mission-$skillId'`) | `wire_format_test` "every pack field ... fits" (and QA's new mission test); `world_screens_test` and `sync_engine_test` pass, as the sync's `wireLessonId` lower-cases it anyway | proves it |
+| The SHA-256 check off in `pack_verify.dart` | "one changed byte in any file ..., with the checksums repaired, is refused by that file's hash" | proves it |
+| The signature check off in `pack_verify.dart` | both "... manifest.json / manifest.sig, with the checksums repaired, is refused by the signature" (stage `manifest`, and accepted) | proves it |
+| (Deno) `sync-push`'s `lesson_id` widened to 41 | "sync-push: every key, value and range it takes is the one in testvectors/wire-patterns.json" | proves it |
+
+Read, not mutated: `zip_store_test` pins the four `ZipLimits` constants (a plain equality); `response_contract_test` only follows the renamed `data_fields` key; the sampled byte test now asserts the exact count `(bytes.length + 96) ~/ 97` instead of "more than 300", which is stronger.
+
+### The revisit mission (the one change a child can see)
+
+- `missionFor` makes `mission-<skill in lower case>`; the visit was already `mission:<skill in lower case>` (`lesson_screen.dart`). A mission's lesson id is used in exactly one place, `attempt.lessonId` (`lesson_controller.dart:516`), then the wire (`wireLessonId`) and the pull. Nothing looks a mission up by its id: the lesson screen gets the `Lesson` object itself; the bell flag's key, the island's growth and the bell come from the skill id and the engine (`eventOf` does not read `lessonId`); stickers are given only for `lesson:` visits; the only reader of `attempt.lessonId` is the warm-up (`placement`, lower case). No code builds or compares a mission id with capitals any more (searched `app/lib`, `supabase/functions`, `tools`).
+- Rows written by an older build (`mission-NUM-A-03`) stay so on that phone and go lower-cased on the wire; nothing on the phone reads them by that id.
+- **New test** `app/test/revisit_mission_sync_test.dart`: a mission made from the real pack for NUM-A-03 is played through the real `LessonController` and the app's own `attemptSinkProvider` (one "not yet", then every activity right, to the celebration); every answer is written as `mission-num-a-03` with its visit; the strict fake server (which refuses what `sync-push` would) takes every answer and the visit, nothing refused; a second phone gets the same answers under the same id and the visit `mission:num-a-03`. The existing `world_screens_test` mission test only opens the first activity.
+
+### New defects
+
+| Id | Sev. | What | Evidence | Owner |
+|---|---|---|---|---|
+| QA-17 | minor (security-engineer to rate; SEC-12 was low) | **The brake does not hold when the batch mixes types.** A gateway that does not know a key every answer carries (here `duration_ms`) still takes a visit or an award in the same batch, so the batch is not "all refused", and every answer in it is marked refused. A real batch is up to 40 events, answers first, then the visit and any award: after a normal lesson it is almost always mixed, so the case SEC-12 is about is mostly not braked. The answers come back only when `engineVersion` goes up, which nothing does after a server-side misdeploy (it is the constant 1). PLAN's wording ("takes none of the events of a batch") is what was built; the gap is in the rule. | `qa_open_defects_test.dart` QA-17: `['a.1', 'a.2', 'a.3']` marked refused | security-engineer (the rule), app-developer |
+| QA-18 | minor (rare, but the device's sync of events stops for good, silently) | **A full batch of rows that are bad on their own stops every later answer from syncing.** Rows go oldest first by local id; when a whole batch is refused event by event it is a "mismatch": nothing is marked, the round stops, and the next round takes the same batch. The one value the device still sends unchecked is the phone's clock (`at`, `started_at`, `ended_at` must lie in 2017 to 2099): 40 answers made with a wrong clock (an offline tablet reset to 2010) before any sync stall that device's answers, visits and awards until a new build. Before `2235ac2` they were marked refused and the rest went on. Contradicts PLAN "one bad row never stops the sync". | QA-18: after three rounds the two good answers were never sent (`[]`) | app-developer (for example clamp or drop out-of-range times at the boundary, or count mismatches), security-engineer |
+
+Seen, not filed: during a real mismatch each round makes 1 + 40 calls (the one-by-one retry); at one round every 5 minutes that is about 490 calls an hour against `sync-push`'s 600 per device per hour. A round after the limit fails like a network error and marks nothing, so no harm beyond log noise.
+
+### Not checked this round
+
+The exhaustive every-byte run (CI), the real phone, that the deployed gateway is the version this build expects, a real network error during the one-by-one retry, two real phones of one family, a bell flag on the phone (it cannot be made to appear on demand), and the pgTAP suite. The whole suite was not run again after QA's two new files; the ten touched files were (above).

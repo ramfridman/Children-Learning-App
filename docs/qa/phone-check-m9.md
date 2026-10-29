@@ -1,6 +1,6 @@
 # Phone check for M9 (`m9-content`, pack 0.8.0): board item B-10
 
-One sitting with the PC and the Samsung. It takes about 60 to 90 minutes. Each step says what to tap, what you should see, and what to tell us if you see something else. If a step fails, write down its number and what you saw (a photo of the screen is enough), then go on to the next step. Nothing here can damage the phone or the project. Written by the QA agent on 2026-10-28, from QA's baseline (`docs/qa/m9-baseline.md`); updated 2026-10-29 after the fixes of QA-1 to QA-6 (commit `dd040cd`) and the dev-only "Open any lesson".
+One sitting with the PC and the Samsung. It takes about 60 to 90 minutes. Each step says what to tap, what you should see, and what to tell us if you see something else. If a step fails, write down its number and what you saw (a photo of the screen is enough), then go on to the next step. Nothing here can damage the phone or the project. Written by the QA agent on 2026-10-28, from QA's baseline (`docs/qa/m9-baseline.md`); updated 2026-10-29 after the fixes of QA-1 to QA-6 (commit `dd040cd`) and the dev-only "Open any lesson", and again for the sync brake (part 2b, commit `2235ac2`).
 
 **Which app.** This check needs the **dev flavour** ("Nitznutz Dev" on the phone), built from `m9-content` at commit `5e8fab6` or later. Only the dev flavour has "Open any lesson"; the normal app does not (a test proves it). The APK already in `app\build` is from 2026-10-28, before the button existed: build it again (step 0.3).
 
@@ -65,10 +65,22 @@ For every template, also check: the help after three mistakes shows the way, and
 | 2.16 | Trace shapes (`trace-the-shapes`) | Trace the circle and the square | right when the finger follows the line | how many tries it takes |
 | 2.17 | Build with shapes (`build-with-shapes`, the rocket) | Put the fins in place by touch, then by dragging | the shape snaps in; a wrong place is a "not yet" | whether you can hit the fins and the door (about 15 points wide on the phone, **QA-9**) |
 
+## 2b. Sync and the revisit mission (10 minutes; added 2026-10-29 for B-20, commit `2235ac2`)
+
+This part needs the phone enrolled as the parent's phone (dev page, steps 1 and 2, as in M5) and the network on. The dev flavour's debug build writes the sync's own lines to the log; nothing in them is personal (ids and counts only).
+
+| # | Do this | You should see | If not, tell us |
+|---|---|---|---|
+| 2b.1 | In PowerShell, before opening the app: `adb logcat -c` (clears the old log) | nothing printed | an error |
+| 2b.2 | Open "Nitznutz Dev", pick the Band B child and play one lesson to the celebration (any lesson; part 1 is fine). Then press the phone's home button, wait 20 seconds, and open the app again (that starts a sync) | the app comes back where it was | anything else |
+| 2b.3 | `adb logcat -d -s flutter \| Select-String "sync:"` | **no line at all** (a sync that worked prints nothing) | every line it printed. `sync: format mismatch, ... events kept for the next round` means the deployed gateway does not take this build's events (nothing is lost; they wait); `sync: N of M events refused by the server` means some rows were refused on their own. The first start of this build sends once more any row an older build had refused, so one such line right after installing is worth reporting too |
+| 2b.4 | Only if an object on an island shows a **bell flag** (a small flag with a dry leaf; it appears by itself some days after a skill was learnt, and cannot be made to appear): tap it, play the short mission (three to five questions) to its end, then repeat 2b.2 and 2b.3 | the mission plays like a lesson and ends back on the island; no `sync:` line | a mission that does not open or cannot be finished, or any `sync:` line |
+
 ## 3. What to send back
 
 1. The step numbers that failed, each with a photo or one line on what you saw.
 2. Your honest view for 2.2, 2.4, 2.7, 2.13 and 2.17: too small, fine, or good.
-3. If anything crashed: `adb logcat -d -s flutter > crash.txt` in PowerShell, and send `crash.txt`.
+3. For 2b.3: "no line", or the lines.
+4. If anything crashed: `adb logcat -d -s flutter > crash.txt` in PowerShell, and send `crash.txt`.
 
 QA re-runs the failing tests after each fix and updates `docs/qa/m9-baseline.md`.
