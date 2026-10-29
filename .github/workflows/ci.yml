@@ -8,8 +8,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # A newer push to a branch cancels the older run there. On main every commit gets its own run and its own verdict
+  # (before, a progress commit cancelled the merge commit's run, e.g. 40830498040). See docs/setup/ci-faster.md.
+  group: ci-${{ github.ref }}${{ github.ref == 'refs/heads/main' && format('-{0}', github.sha) || '' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   secrets:
@@ -99,13 +101,17 @@ jobs:
       - name: Format, lint, type-check and test
         run: bash tools/ci/run-with-annotations.sh "Deno" deno task check
 
-  app:
-    name: app (Flutter analyze, tests, Android debug build)
+  # The app is checked by three kinds of job that run side by side (docs/setup/ci-faster.md), and the job `app` at the
+  # end, under the old name, is green only if every one of them is. Together they run exactly what the single app job
+  # ran: format, analyze, every test file, every test, every byte of the starter pack, the debug APK build.
+  # Measured before the split (runs 40824493092, 40802257767, 40795649171): the other 82 test files were done 296 to
+  # 406 s into the test step; one test, starter_pack_test.dart "every single byte ...", took 2,471 to 3,072 s.
+
+  app-static:
+    name: "app part: format, analyze, Android debug build"
     runs-on: ubuntu-24.04
-    # Measured on run 40760468617 (pack 0.8.0, 3.5 MB): setup to analyze about 1 min; the test step's critical path is
-    # one file, starter_pack_test.dart, whose every-31st-byte test alone took about 20 min; the debug build about 4 min.
-    # See docs/setup/ci-m9.md before raising this again.
-    timeout-minutes: 75
+    # Measured: setup 23 to 52 s, format and analyze 13 to 17 s, the build 91 to 110 s with the Gradle cache, 251 s without.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -131,20 +137,133 @@ jobs:
         if: ${{ !cancelled() }}
         working-directory: app
         run: bash ../tools/ci/run-with-annotations.sh "flutter analyze" flutter analyze --fatal-infos
-      - name: Test
-        if: ${{ !cancelled() }}
-        working-directory: app
-        # package:test runs half as many files at once as there are cores (2 on this 4-core runner); use all of them, as
-        # a local run already does (8 at once on a 16-core PC). The JSON file is read by the next step.
-        run: >
-          bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test --concurrency="$(nproc)"
-          --file-reporter "json:${RUNNER_TEMP}/flutter-test.json"
-      - name: Where the test time went (job summary)
-        if: always()
-        working-directory: app
-        run: python3 ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
       - name: Build the dev flavour (debug APK)
         if: ${{ !cancelled() }}
         working-directory: app
         # arm64 only: the speech libraries of four ABIs together filled the runner's disk (M5). Phones are arm64.
         run: bash ../tools/ci/run-with-annotations.sh "flutter build apk" flutter build apk --debug --flavor dev --target-platform android-arm64
+
+  app-tests:
+    name: "app part: test files, shard ${{ matrix.shard }} of ${{ strategy.job-total }}"
+    runs-on: ubuntu-24.04
+    # Estimated about 4 to 5 min each with setup (the 83 files took 296 to 406 s on one 4-core runner, now on two).
+    timeout-minutes: 20
+    strategy:
+      # A failing shard does not stop the others: every push gets the full list of failures.
+      fail-fast: false
+      matrix:
+        # Only names the jobs. The split uses strategy.job-index and strategy.job-total, so it always matches the
+        # jobs that really exist; to add a shard, add a number here and nothing else.
+        shard: [1, 2]
+    env:
+      # Runs in its own jobs (app-pack-bytes). A regular expression: every test whose name does not start so.
+      EVERY_BYTE_PREFIX: "every single byte of the real starter pack, changed in turn"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.8
+          cache: true
+      - name: Install the locked packages (fails if pubspec.lock is out of date)
+        working-directory: app
+        run: bash ../tools/ci/run-with-annotations.sh "flutter pub get" flutter pub get --enforce-lockfile
+      - name: Pick this shard's test files (every file in exactly one shard)
+        working-directory: app
+        env:
+          SHARD_INDEX: ${{ strategy.job-index }}
+          SHARD_TOTAL: ${{ strategy.job-total }}
+        run: |
+          python3 ../tools/ci/test-shard.py test "$SHARD_INDEX" "$SHARD_TOTAL" > "${RUNNER_TEMP}/shard-files.txt"
+          echo "runner: $(nproc) cores; files of this shard:"
+          cat "${RUNNER_TEMP}/shard-files.txt"
+      - name: Test
+        working-directory: app
+        # --concurrency: package:test would run half as many files at once as there are cores; use all of them, as a
+        # local run does. The JSON file is read by the next two steps.
+        run: |
+          mapfile -t files < "${RUNNER_TEMP}/shard-files.txt"
+          bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test --concurrency="$(nproc)" \
+            --name "^(?!${EVERY_BYTE_PREFIX})" --file-reporter "json:${RUNNER_TEMP}/flutter-test.json" "${files[@]}"
+      - name: Every file of this shard was loaded
+        if: ${{ !cancelled() }}
+        working-directory: app
+        run: python3 ../tools/ci/assert-tests-ran.py "${RUNNER_TEMP}/flutter-test.json" --files "${RUNNER_TEMP}/shard-files.txt"
+      - name: Where the test time went (job summary)
+        if: always()
+        working-directory: app
+        run: python3 ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
+
+  app-pack-bytes:
+    name: "app part: every byte of the starter pack, part ${{ matrix.part }} of ${{ strategy.job-total }}"
+    runs-on: ubuntu-24.04
+    # One part today: the whole test, measured 2,471 to 3,072 s (4 worker isolates on 4 cores), under its own 60-minute
+    # test timeout. With the test's NN_FLIP_SHARD switch (docs/setup/ci-faster.md, stage 2) the parts split the bytes:
+    # 6 parts are estimated at 8 to 9.5 min each; then lower this to 25.
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      matrix:
+        # Stage 1: [1]. Stage 2 (only together with the test change): [1, 2, 3, 4, 5, 6].
+        part: [1]
+    env:
+      EVERY_BYTE_TEST: "every single byte of the real starter pack, changed in turn, is refused (all bytes with NN_EXHAUSTIVE=1 or in CI)"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.8
+          cache: true
+      - name: Install the locked packages (fails if pubspec.lock is out of date)
+        working-directory: app
+        run: bash ../tools/ci/run-with-annotations.sh "flutter pub get" flutter pub get --enforce-lockfile
+      - name: Test (this part's bytes, each changed in turn, must all be refused)
+        working-directory: app
+        env:
+          # <index>/<total>: the test changes the offsets i with i % total == index. "0/1" is every byte.
+          NN_FLIP_SHARD: ${{ strategy.job-index }}/${{ strategy.job-total }}
+        run: |
+          echo "runner: $(nproc) cores; NN_FLIP_SHARD=${NN_FLIP_SHARD}"
+          bash ../tools/ci/run-with-annotations.sh "flutter test" flutter test test/starter_pack_test.dart \
+            --plain-name "${EVERY_BYTE_TEST}" --file-reporter "json:${RUNNER_TEMP}/flutter-test.json"
+      - name: The test ran, passed, and took only this part's bytes
+        if: ${{ !cancelled() }}
+        working-directory: app
+        env:
+          SHARD_INDEX: ${{ strategy.job-index }}
+          SHARD_TOTAL: ${{ strategy.job-total }}
+        # With more than one part the test must say it split the bytes; a test without the switch would flip every
+        # byte in every part (correct, but each part as slow as the whole).
+        run: |
+          args=(--passed "${EVERY_BYTE_TEST}")
+          if [ "$SHARD_TOTAL" -gt 1 ]; then args+=(--printed "flip shard ${SHARD_INDEX}/${SHARD_TOTAL}:"); fi
+          python3 ../tools/ci/assert-tests-ran.py "${RUNNER_TEMP}/flutter-test.json" "${args[@]}"
+      - name: Where the test time went (job summary)
+        if: always()
+        working-directory: app
+        run: python3 ../tools/ci/test-timings.py "${RUNNER_TEMP}/flutter-test.json"
+
+  app:
+    # The name the owner (and a future branch ruleset) relies on. always(): this job is never "skipped" (a skipped job
+    # would count as passing for a required check); it fails unless every app part succeeded.
+    name: app (Flutter analyze, tests, Android debug build)
+    if: ${{ always() }}
+    needs: [app-static, app-tests, app-pack-bytes]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Every app part passed
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          bad="$(echo "$NEEDS" | jq '[.[] | select(.result != "success")] | length')"
+          if [ "$bad" != "0" ]; then
+            echo "::error title=app::${bad} app part(s) did not succeed"
+            exit 1
+          fi

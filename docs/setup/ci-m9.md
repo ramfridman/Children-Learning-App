@@ -307,3 +307,5 @@ What Claude does next (a later wave, briefed by the orchestrator):
 | Supabase CLI (npm) | 2.122.0 | 2.122.0 (2026-10-23) | no |
 | Flutter | 3.47.8 | 3.47.8 (newest stable tag) | no |
 | Pub packages | `pubspec.lock` | 21 newer versions outside the current constraints, among them `sherpa_onnx` 2.0.0 to 2.0.1 (a direct, exactly pinned package) | the app-developer looks at them, the security-engineer checks the advisories; OSV finds none open today |
+
+> **2026-10-29:** the matrix that was ruled out here is back as stage 1 of `docs/setup/ci-faster.md`: the final job `app (Flutter analyze, tests, Android debug build)` keeps the old name and is green only if every part is.
