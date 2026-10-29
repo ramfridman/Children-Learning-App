@@ -1,12 +1,8 @@
 // QA, B-26 step 2: an independent, adversarial check of the home island's sign on the map (the fit, the placement, the
 // taps, the semantics, the bubble that only speaks), beyond the developer's home_sign_test.dart
 // (docs/qa/b26-step2-verification.md). Its two defects, QA-25 and QA-26, were fixed in the step 2 follow-up (the tablet
-// bubble at most 210 wide, broken after the name); their tests run in every run. Open defects (QA-29, re-verification)
-// are skipped in a normal run; run them with
-//
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_b26_home_sign_test.dart
-//
-// When a defect is fixed, the owner of the fix removes `skip: _open` from its test.
+// bubble at most 210 wide, broken after the name); QA-29 in step 3 (a name too long for its line is shortened in the
+// bubble too). All their tests run in every run.
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,9 +14,6 @@ import 'package:nitznutz/strings/he.dart';
 
 import 'support/app_harness.dart';
 import 'support/harness.dart';
-
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
 
 /// A board, the home sign's box in world x (docs/design/nitzi-home.md section 4, table "Width box per board"), and
 /// the world x of the Counting Hills sign's centre (from the board spec), which gives the world-to-screen offset.
@@ -497,12 +490,12 @@ void main() {
       });
     }
     for (final (String n, Size s) in bubbleBoards.skip(2)) {
-      testWidgets('QA-29 (open): $n: the bubble never takes more than two lines', (
+      testWidgets('QA-29 (fixed): $n: the bubble never takes more than two lines', (
         WidgetTester tester,
       ) async {
         final BubbleCheck c = await checkBubbles(tester, n, s);
         expect(c.tooManyLines, isEmpty, reason: c.tooManyLines.join('\n'));
-      }, skip: _open);
+      });
     }
   });
 }

@@ -10,6 +10,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/child/home_island_name.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/child/land_screen.dart';
 import 'package:nitznutz/content/models.dart';
@@ -191,8 +192,13 @@ void main() {
             expect(s.flagsCollection.isButton, isTrue, reason: l.name);
             expect(s.hasAction(SemanticsAction.tap), isTrue, reason: l.name);
           }
-          // Nitzi's island is a name only (board B-26): no button.
-          expect(find.byKey(const Key('land-tap-nitzi')), findsNothing);
+          // The home island opens the child's home (B-26 step 3): a button with the whole island's name.
+          final SemanticsData home = tester
+              .getSemantics(find.byKey(const Key('land-tap-nitzi')))
+              .getSemanticsData();
+          expect(home.label, homeIslandName('נועה').semantics);
+          expect(home.flagsCollection.isButton, isTrue);
+          expect(home.hasAction(SemanticsAction.tap), isTrue);
           // Somewhere in the tree a node offers to scroll (the map: off-screen lands are reached that way).
           SemanticsNode root = tester.getSemantics(find.byKey(const Key('land-tap-counting')));
           while (root.parent != null) {
