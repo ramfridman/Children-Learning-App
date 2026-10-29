@@ -181,6 +181,14 @@ void main() {
       expect(shortenName('אבגדהג\'וליה', 7), 'אבגדה…');
       expect(shortenName('אבגדהצ׳רלי', 7), 'אבגדה…');
       expect(shortenName('אבגדהג\u2019וליה', 7), 'אבגדה…');
+      // The other curly apostrophe and a backtick are gereshes too (the editor's suggestion, B-26 step 2).
+      expect(shortenName('אבגדהג‘וליה', 7), 'אבגדה…');
+      expect(shortenName('אבגדהג`וליה', 7), 'אבגדה…');
+      // Two gereshes in a row: the cut moves back over both, then one letter (QA-22).
+      expect(shortenName('אבגדה\'\'וליה', 7), 'אבגד…');
+      expect(shortenName('אבגדה’`וליה', 7), 'אבגד…');
+      // At the very start one letter stays, so the name never disappears behind the ellipsis.
+      expect(shortenName('א\'\'בגדהו', 3), 'א…');
       // When the geresh is kept with its letter, nothing else is dropped.
       expect(shortenName('אבגדג\'וליה', 7), 'אבגדג\'…');
     });

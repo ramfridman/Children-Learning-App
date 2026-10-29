@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../design/app_text.dart';
@@ -7,6 +9,7 @@ import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
 import 'art.dart';
+import 'home_island_name.dart';
 
 /// A land of the world map, with the sign under its island.
 enum Land {
@@ -51,14 +54,11 @@ class _HomeSpec {
     required this.avatarSize,
     required this.clusterLeft,
     required this.clusterTop,
-    required this.clusterGap,
-    required this.bookSize,
+    required this.parentsRowHeight,
     required this.pillTop,
     required this.pillHeight,
     required this.pillIcon,
     required this.pillTitle,
-    required this.pillDot,
-    required this.pillDotGap,
     required this.pillPadLeft,
     required this.pillPadRight,
     required this.pillGap,
@@ -69,9 +69,12 @@ class _HomeSpec {
     required this.signs,
     required this.companionLeft,
     required this.companionTop,
+    required this.homeSignLeft,
+    required this.homeSignRight,
     this.pillFrameLeft,
     this.pillFrameWidth,
     this.pillFrameInset = 0,
+    this.bubbleMaxWidth,
   });
 
   final String scene;
@@ -99,14 +102,14 @@ class _HomeSpec {
   final double avatarSize;
   final double clusterLeft;
   final double clusterTop;
-  final double clusterGap;
-  final double bookSize;
+
+  /// The Parents button is centred on a row this high at [clusterLeft], [clusterTop]: where the boards put it beside
+  /// the book, which is gone (B-26: it did nothing). Nothing moved into its place.
+  final double parentsRowHeight;
   final double pillTop;
   final double pillHeight;
   final double pillIcon;
   final double pillTitle;
-  final double pillDot;
-  final double pillDotGap;
   final double pillPadLeft;
   final double pillPadRight;
   final double pillGap;
@@ -120,12 +123,21 @@ class _HomeSpec {
   final double bubbleTop;
   final double bubbleFont;
   final EdgeInsets bubblePad;
+
+  /// On a tablet the bubble is at most this wide, padding included, and a longer line breaks after the child's name
+  /// (design review of B-26 step 2), so it stays beside the friend and off Counting Hills. Null on phones: one line.
+  final double? bubbleMaxWidth;
   final List<_Sign> signs;
 
   /// Where the companion stands on the map: the place Nitzi's art had in the board, at 0.3 of its 512 point canvas.
   final double companionLeft;
   final double companionTop;
   static const double companionSize = 153.6;
+
+  /// Where the home island's sign may stand, in world x (B-26, docs/design/nitzi-home.md section 4): inside the island's
+  /// tap area and 12 clear of the "+" pebble's tap area.
+  final double homeSignLeft;
+  final double homeSignRight;
 
   static const _HomeSpec phone = _HomeSpec(
     scene: 'assets/art/scenes/home_phone.svg',
@@ -141,14 +153,11 @@ class _HomeSpec {
     avatarSize: 64,
     clusterLeft: 59,
     clusterTop: 12,
-    clusterGap: 24,
-    bookSize: 64,
+    parentsRowHeight: 64,
     pillTop: 12,
     pillHeight: 72,
     pillIcon: 48,
     pillTitle: 20,
-    pillDot: 12,
-    pillDotGap: 6,
     pillPadLeft: 12,
     pillPadRight: 16,
     pillGap: 8,
@@ -160,6 +169,8 @@ class _HomeSpec {
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
     companionLeft: 1859,
     companionTop: 154,
+    homeSignLeft: 1770,
+    homeSignRight: 1978,
     // The start view is world x 1250 to 2102 (the board, with the whole Colour Bay sign); the rest is to the left.
     signs: <_Sign>[
       _Sign(Land.nitzi, 1890, 320),
@@ -187,14 +198,11 @@ class _HomeSpec {
     avatarSize: 64,
     clusterLeft: 16,
     clusterTop: 8,
-    clusterGap: 16,
-    bookSize: 64,
+    parentsRowHeight: 64,
     pillTop: 8,
     pillHeight: 64,
     pillIcon: 44,
     pillTitle: 18,
-    pillDot: 12,
-    pillDotGap: 6,
     pillPadLeft: 8,
     pillPadRight: 16,
     pillGap: 8,
@@ -205,6 +213,8 @@ class _HomeSpec {
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
     companionLeft: 1651,
     companionTop: 164.6,
+    homeSignLeft: 1577,
+    homeSignRight: 1764,
     // The start view is world x 1167 to 1834.
     signs: <_Sign>[
       _Sign(Land.nitzi, 1687, 314),
@@ -231,14 +241,11 @@ class _HomeSpec {
     avatarSize: 80,
     clusterLeft: 24,
     clusterTop: 24,
-    clusterGap: 32,
-    bookSize: 72,
+    parentsRowHeight: 72,
     pillTop: 24,
     pillHeight: 88,
     pillIcon: 64,
     pillTitle: 26,
-    pillDot: 14,
-    pillDotGap: 8,
     pillPadLeft: 12,
     pillPadRight: 20,
     pillGap: 12,
@@ -246,8 +253,11 @@ class _HomeSpec {
     bubbleTop: 430,
     bubbleFont: 24,
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    bubbleMaxWidth: 210,
     companionLeft: 975,
     companionTop: 450.4,
+    homeSignLeft: 890,
+    homeSignRight: 1130,
     signs: <_Sign>[
       _Sign(Land.nitzi, 1010, 676),
       _Sign(Land.counting, 700, 666),
@@ -273,14 +283,11 @@ class _HomeSpec {
     avatarSize: 80,
     clusterLeft: 24,
     clusterTop: 32,
-    clusterGap: 32,
-    bookSize: 72,
+    parentsRowHeight: 72,
     pillTop: 36,
     pillHeight: 88,
     pillIcon: 64,
     pillTitle: 26,
-    pillDot: 14,
-    pillDotGap: 8,
     pillPadLeft: 12,
     pillPadRight: 20,
     pillGap: 12,
@@ -288,8 +295,11 @@ class _HomeSpec {
     bubbleTop: 1388,
     bubbleFont: 24,
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    bubbleMaxWidth: 210,
     companionLeft: 590,
     companionTop: 1289.2,
+    homeSignLeft: 480,
+    homeSignRight: 720,
     // Board 25 moved down 400 (the start view, world y 400 to 1580); Market Village is in the band above it.
     signs: <_Sign>[
       _Sign(Land.nitzi, 600, 1510),
@@ -334,11 +344,16 @@ class HomeScreen extends StatelessWidget {
     this.onStickers,
     this.onHall,
     this.hallGlow = false,
-    this.homeLabel = He.landNitzi,
+    this.homeIsland,
+    this.onOpenHome,
   });
 
-  /// The words on the sign of the home island (Nitzi's island today; board B-26 may give it the child's name).
-  final Str homeLabel;
+  /// The home island's words, named after the child (B-26). Null: the sign says Nitzi's island, as before.
+  final HomeIslandName? homeIsland;
+
+  /// Opens the child's home (B-26) from the home island's sign and tap area and from the daily pill. Null: the home
+  /// island is a plain sign and the pill does nothing.
+  final VoidCallback? onOpenHome;
 
   final String childName;
   final String avatarId;
@@ -379,6 +394,8 @@ class HomeScreen extends StatelessWidget {
   final bool hallGlow;
 
   VoidCallback? _tapFor(Land land) {
+    // The home island is not a land with skills: it never goes through [onOpenLand].
+    if (land == Land.nitzi) return onOpenHome;
     final void Function(Land)? open = onOpenLand;
     if (open != null) return openableLands.contains(land) ? () => open(land) : null;
     return land == Land.counting ? onOpenActivity : null;
@@ -388,8 +405,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
     final _HomeSpec s = _HomeSpec.of(board);
-    // The book button's tap margin sits inside the gap to its neighbour, so it cannot exceed half of it.
-    final double bookSlop = s.clusterGap / 2 < 12 ? s.clusterGap / 2 : 12;
     return Scaffold(
       body: BoardCanvas(
         background: TokenColors.worldSea1,
@@ -495,27 +510,14 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-          // End corner: the book, then the visibly adult "Parents" button.
+          // End corner: the visibly adult "Parents" button.
           Positioned(
             left: s.clusterLeft,
-            top: s.clusterTop - bookSlop,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                // The tap margin of the book button (12 each side) is part of the gap to its neighbour.
-                PebbleButton(
-                  key: const Key('home-book'),
-                  slop: bookSlop,
-                  size: s.bookSize,
-                  semanticLabel: He.bookSemantics.text,
-                  fill: TokenColors.spark,
-                  lip: TokenColors.sparkDeep,
-                  onPressed: () {},
-                  child: const BoardSvg('assets/art/ui/book.svg', width: 32, height: 32),
-                ),
-                SizedBox(width: s.clusterGap - bookSlop),
-                ParentEntryButton(label: He.homeParents.text, onPressed: onParents),
-              ],
+            top: s.clusterTop,
+            height: s.parentsRowHeight,
+            child: Align(
+              widthFactor: 1,
+              child: ParentEntryButton(label: He.homeParents.text, onPressed: onParents),
             ),
           ),
           _pill(s),
@@ -549,7 +551,7 @@ class HomeScreen extends StatelessWidget {
               height: 160,
               child: Semantics(
                 button: true,
-                label: _labelOf(sign.land).text,
+                label: _semanticsOf(sign.land),
                 child: GestureDetector(
                   key: Key('land-tap-${sign.land.name}'),
                   behavior: HitTestBehavior.opaque,
@@ -557,7 +559,11 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-        for (final _Sign sign in s.signs) _sign(sign),
+        for (final _Sign sign in s.signs)
+          if (sign.land == Land.nitzi)
+            _HomeSign(spec: s, sign: sign, island: homeIsland, onTap: onOpenHome)
+          else
+            _sign(sign),
         if (companion != null)
           Positioned(
             left: s.companionLeft,
@@ -585,19 +591,20 @@ class HomeScreen extends StatelessWidget {
               child: const BoardSvg('assets/art/ui/plus.svg', width: 24, height: 24),
             ),
           ),
+        // The bubble only speaks: a touch on it goes on to the land under it (on a tablet it reaches over Counting Hills).
         _bubble(
           s,
-          BoardBubble(
-            text: He.homeBubble.fill(<String, String>{'child': childName}),
-            fontSize: s.bubbleFont,
-            padding: s.bubblePad,
+          IgnorePointer(
+            child: _MapBubble(spec: s, childName: childName),
           ),
         ),
       ],
     ),
   );
 
-  Str _labelOf(Land land) => land == Land.nitzi ? homeLabel : land.label;
+  /// What a screen reader says for a land's tap area: for the home island the whole name, never shortened.
+  String _semanticsOf(Land land) =>
+      land == Land.nitzi ? homeIsland?.semantics ?? He.landNitzi.text : land.label.text;
 
   /// The bubble: at the board's own place on a phone, or when no friend is on the map; otherwise beside the friend's
   /// head, with its tail (a corner at the bubble's lower right) pointing at the mouth. In world coordinates.
@@ -617,7 +624,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _pill(_HomeSpec s) {
-    final Widget pill = _DailyPill(spec: s);
+    final Widget pill = _DailyPill(spec: s, onTap: onOpenHome);
     if (s.pillFrameLeft != null) {
       return Positioned(
         left: s.pillFrameLeft,
@@ -638,7 +645,7 @@ class HomeScreen extends StatelessWidget {
     final Widget label = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _tapFor(sign.land),
-      child: _LandSign(land: sign.land, label: _labelOf(sign.land)),
+      child: _LandSign(land: sign.land, text: sign.land.label.text, semantics: sign.land.label.text),
     );
     // translateX(-50%) in CSS: centred on `left`. A wide box does the centring.
     return Positioned(
@@ -650,103 +657,239 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _DailyPill extends StatelessWidget {
-  const _DailyPill({required this.spec});
+/// The bubble on the map. On a tablet it is at most [_HomeSpec.bubbleMaxWidth] wide; a line wider than that breaks after
+/// the child's name, so the words after it stay whole on the second line and the bubble, held by its bottom beside the
+/// friend's mouth, grows upwards over the home island's own palm.
+class _MapBubble extends StatelessWidget {
+  const _MapBubble({required this.spec, required this.childName});
 
   final _HomeSpec spec;
+  final String childName;
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<String, String> name = <String, String>{'child': childName};
+    final String line = He.homeBubble.fill(name);
+    final double? maxWidth = spec.bubbleMaxWidth;
+    if (maxWidth == null) {
+      return BoardBubble(text: line, fontSize: spec.bubbleFont, padding: spec.bubblePad);
+    }
+    final TextPainter painter = TextPainter(
+      text: TextSpan(
+        text: line,
+        style: AppText.fixed(size: spec.bubbleFont, weight: 500),
+      ),
+      textDirection: TextDirection.rtl,
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final bool oneLine = painter.width <= maxWidth - spec.bubblePad.horizontal;
+    painter.dispose();
+    return BoardBubble(
+      text: oneLine ? line : _breakAfterName.fill(name),
+      fontSize: spec.bubbleFont,
+      padding: spec.bubblePad,
+      maxWidth: maxWidth,
+    );
+  }
+}
+
+/// The bubble's words with a line break after "{child},".
+final Str _breakAfterName = Str(He.homeBubble.text.replaceFirst('{child}, ', '{child},\n'), nikud: true);
+
+/// Today's adventure. It opens the child's home when [onTap] is set, and only then is it announced as a button. The three
+/// stops of the daily plan are not drawn until that plan exists (B-26).
+class _DailyPill extends StatelessWidget {
+  const _DailyPill({required this.spec, this.onTap});
+
+  final _HomeSpec spec;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => Semantics(
-    button: true,
+    button: onTap != null,
     label: He.homeDaily.text,
-    child: Container(
-      key: const Key('home-pill'),
-      height: spec.pillHeight,
-      padding: EdgeInsets.fromLTRB(spec.pillPadLeft, 0, spec.pillPadRight, 0),
-      decoration: BoxDecoration(
-        color: TokenColors.sunset,
-        borderRadius: BorderRadius.circular(999),
-        boxShadow: clayShadows(TokenColors.sunsetDeep, soft16: true),
-      ),
-      child: ExcludeSemantics(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Container(
-              width: spec.pillIcon,
-              height: spec.pillIcon,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(color: TokenColors.paper, shape: BoxShape.circle),
-              child: BoardSvg(
-                'assets/art/ui/bottle.svg',
-                width: spec.pillIcon - 8,
-                height: spec.pillIcon - 8,
+    child: GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Container(
+        key: const Key('home-pill'),
+        height: spec.pillHeight,
+        padding: EdgeInsets.fromLTRB(spec.pillPadLeft, 0, spec.pillPadRight, 0),
+        decoration: BoxDecoration(
+          color: TokenColors.sunset,
+          borderRadius: BorderRadius.circular(999),
+          boxShadow: clayShadows(TokenColors.sunsetDeep, soft16: true),
+        ),
+        child: ExcludeSemantics(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: spec.pillIcon,
+                height: spec.pillIcon,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(color: TokenColors.paper, shape: BoxShape.circle),
+                child: BoardSvg(
+                  'assets/art/ui/bottle.svg',
+                  width: spec.pillIcon - 8,
+                  height: spec.pillIcon - 8,
+                ),
               ),
-            ),
-            SizedBox(width: spec.pillGap),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  He.homeDaily.text,
-                  style: AppText.fixed(size: spec.pillTitle, weight: 400, lineHeight: 1.5, display: true),
-                  softWrap: false,
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    for (int i = 0; i < 3; i++) ...<Widget>[
-                      if (i > 0) SizedBox(width: spec.pillDotGap),
-                      Container(
-                        width: spec.pillDot,
-                        height: spec.pillDot,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: i == 0 ? TokenColors.paper : TokenColors.sunsetDeep,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-          ],
+              SizedBox(width: spec.pillGap),
+              Text(
+                He.homeDaily.text,
+                style: AppText.fixed(size: spec.pillTitle, weight: 400, lineHeight: 1.5, display: true),
+                softWrap: false,
+              ),
+            ],
+          ),
         ),
       ),
     ),
   );
 }
 
-class _LandSign extends StatelessWidget {
-  const _LandSign({required this.land, required this.label});
+/// The home island's sign (B-26): the child's island, as large as its box allows, centred under the island while it
+/// fits and held inside the box otherwise: `left = clamp(centre - w / 2, boxLeft, boxRight - w)`
+/// (docs/design/nitzi-home.md section 4).
+class _HomeSign extends StatelessWidget {
+  const _HomeSign({required this.spec, required this.sign, required this.island, required this.onTap});
 
-  final Land land;
-  final Str label;
+  final _HomeSpec spec;
+  final _Sign sign;
+  final HomeIslandName? island;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    label: label.text,
-    child: ExcludeSemantics(
-      child: Container(
-        key: Key('sign-${land.name}'),
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-          color: TokenColors.worldWoodLight,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: TokenColors.ink, width: 3),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            BoardSvg('assets/art/ui/${land.icon}.svg', width: 20, height: 20),
-            const SizedBox(width: 4),
-            Text(label.text, style: AppText.fixed(size: 18, weight: 700), softWrap: false),
-          ],
+  Widget build(BuildContext context) {
+    final double box = spec.homeSignRight - spec.homeSignLeft;
+    final double maxText = box - _LandSign.frame;
+    final HomeSignFit fit = fitHomeSign(island, maxText, MediaQuery.textScalerOf(context));
+    final double width = math.min(fit.width, maxText) + _LandSign.frame;
+    final double left = (sign.left - width / 2).clamp(spec.homeSignLeft, spec.homeSignRight - width);
+    return Positioned(
+      left: left,
+      top: sign.top,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: _LandSign(
+          land: Land.nitzi,
+          text: fit.text,
+          semantics: island?.semantics ?? He.landNitzi.text,
+          size: fit.size,
+          maxTextWidth: maxText,
         ),
       ),
-    ),
-  );
+    );
+  }
+}
+
+/// The home sign's line, its size in points (before the text scale) and its measured width.
+typedef HomeSignFit = ({String text, double size, double width});
+
+/// The sizes the home sign tries, largest first; it never goes below 15 (decision 5 of B-26).
+const List<double> homeSignSizes = <double>[18, 17, 16, 15];
+
+TextStyle _homeSignStyle(double size) => AppText.fixed(size: size, weight: 700);
+
+/// The home sign for [island] in a line at most [maxWidth] wide, measured with the screen's [scaler]:
+/// 1. the whole line at the largest of [homeSignSizes] that fits;
+/// 2. otherwise the longest shortened name ([HomeIslandName.signShortened]) that fits at 15, at the largest size it fits;
+/// 3. otherwise the shortest form at 15, which the sign scales down into its box.
+/// With no [island] the line is Nitzi's island, as before B-26.
+@visibleForTesting
+HomeSignFit fitHomeSign(HomeIslandName? island, double maxWidth, TextScaler scaler) {
+  final TextPainter painter = TextPainter(textDirection: TextDirection.rtl, textScaler: scaler, maxLines: 1);
+  double widthAt(String text, double size) {
+    painter.text = TextSpan(text: text, style: _homeSignStyle(size));
+    painter.layout();
+    return painter.width;
+  }
+
+  HomeSignFit? largest(String text) {
+    for (final double size in homeSignSizes) {
+      final double w = widthAt(text, size);
+      if (w <= maxWidth) return (text: text, size: size, width: w);
+    }
+    return null;
+  }
+
+  try {
+    final String whole = island?.sign ?? He.landNitzi.text;
+    final HomeSignFit? fits = largest(whole);
+    if (fits != null) return fits;
+    String shortest = whole;
+    if (island != null && island.isNamed) {
+      final double smallest = homeSignSizes.last;
+      String tried = whole;
+      for (int max = island.name.characters.length - 1; max >= 3; max--) {
+        final String text = island.signShortened(max);
+        if (text == tried) continue;
+        tried = shortest = text;
+        if (widthAt(text, smallest) <= maxWidth) return largest(text)!;
+      }
+    }
+    return (text: shortest, size: homeSignSizes.last, width: widthAt(shortest, homeSignSizes.last));
+  } finally {
+    painter.dispose();
+  }
+}
+
+class _LandSign extends StatelessWidget {
+  const _LandSign({
+    required this.land,
+    required this.text,
+    required this.semantics,
+    this.size = 18,
+    this.maxTextWidth,
+  });
+
+  /// The width of a sign around its text: padding 8 and border 3 on both sides, the 20 point icon and its gap of 4.
+  static const double frame = 2 * (8 + 3) + 20 + 4;
+
+  final Land land;
+  final String text;
+  final String semantics;
+  final double size;
+
+  /// When set (the home sign), text wider than this is scaled down into it: the last guard of the fit, for a text
+  /// scale so large that even the shortest form does not fit at 15.
+  final double? maxTextWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget line = Text(text, style: _homeSignStyle(size), softWrap: false);
+    return Semantics(
+      label: semantics,
+      child: ExcludeSemantics(
+        child: Container(
+          key: Key('sign-${land.name}'),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: TokenColors.worldWoodLight,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: TokenColors.ink, width: 3),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              BoardSvg('assets/art/ui/${land.icon}.svg', width: 20, height: 20),
+              const SizedBox(width: 4),
+              if (maxTextWidth == null)
+                line
+              else
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: maxTextWidth!),
+                  child: FittedBox(fit: BoxFit.scaleDown, child: line),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// A button with a few words under it, so that no picture has to be guessed.
