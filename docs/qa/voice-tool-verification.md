@@ -3,6 +3,26 @@
 2026-10-29, qa-engineer. Worktree `D:\nitznutz-voicefix`, branch `voice-quality-diagnosis` at `aea8e56`, plus the
 app-developer's uncommitted changes. Nothing was sent to ElevenLabs. No key was used, and nothing was paid for.
 
+## Round 3 (2026-10-30): final pass after the rebase onto main `e3ac74e`
+
+Branch `voice-quality-diagnosis` at `6565dec` (on `3553485`). Nothing paid, no key used.
+
+**Verdict: pass. QA-30 and QA-31 are closed; no new defect. Ready for a PR.**
+
+| Check | Result |
+|---|---|
+| `dart format --output=none --set-exit-if-changed lib test tool` | 306 files, 0 changed |
+| `flutter analyze` | No issues found |
+| `flutter test` (whole suite, once) | **2541 passed, 12 skipped, 0 failed** (12 min 8 s) |
+| `python .claude/hooks/test_block_paid_voice.py` | 5 tests, OK |
+| QA-30 | closed. `TerminalKeyboard.isTerminal` (`app/tool/voice_gen_lib.dart`) also needs `stdout.hasTerminal` and a readable `stdin.echoMode`; a `StdinException` while reading is refused by name. Proof: `app/test/qa_voice_tool_test.dart` › "QA-30 ..." now runs unskipped on Windows (no `QA_OPEN`) and passed in the full run |
+| QA-31 | closed. In a run the plan asks for the total instead of "Nothing was sent. To make them ...". Proof: `app/test/audition_test.dart` › "inside the run, the plan asks for the total ..." and `app/test/voice_gen_test.dart` (lines 566-567, "This run sends the N characters ...") |
+| `voice_gen plan --list` (free) | exit 0. 9 voices x 10 lines, 327 characters each, **2,943 in total**, about 0.12 USD. All 10 lines are the `owner-approved` texts (`fb.card`, `core.encourage.checked`, six `cs.wrong.*`, two `shp.solid.which*`). 2,821 lines wait: 2,735 `text-ready`, 87 `proposed` reasons. Independent check: 0 planned texts equal a `proposed` voice_text. `content/voices.json` holds no Hebrew (no texts per voice) |
+| Fresh `tools/export-hebrew-review.py` then `tools/hebrew_voice_review.py` | 10,200 rows (9,383 text-ready, 128 proposed, 40 owner-approved, 649 unchanged); `git status` clean afterwards: no diff |
+| Master table vs main `e3ac74e` (by row) | the same 10,200 keys; 0 rows lost `text`, `ui_text` or `voice_text`; 0 `text` changes; the 649 alert rows (group 5) unchanged. The 253 `ui_text` and 359 `voice_text` changes are the owner's answers (Q8 number gender, B-26 D14, V1); 8 screen rows changed, all B-26 status decisions or voice respellings, none emptied |
+
+Not checked: a real console, a real ElevenLabs call, audio.
+
 ## Round 2: re-verification after the fix round
 
 **Verdict.**
