@@ -24,7 +24,7 @@ Future<void> tapKey(WidgetTester t, String key) async {
   await t.pump(const Duration(milliseconds: 60));
 }
 
-/// A question whose answer is said (board B-24): "איזה צבע יש לתפוח?", with a red (right), a blue and a purple ball.
+/// A question whose answer is said (board B-24): "איזה צבע יש לתפוח?", with a red (right), an orange and a pink ball.
 const String colourQuestion = 'col.world.apple.red';
 
 Future<AppRig> start(
@@ -122,7 +122,7 @@ void main() {
   testWidgets('a wrong colour said aloud is checked first: a tick or "again", never a "not yet" by itself', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = await start(tester, script: <Scripted>[Scripted.says('כחול')]);
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.says('כתום')]);
     await speak(tester);
     expect(await attempts(rig), isEmpty, reason: 'nothing counted yet');
     expect(find.byKey(const Key('confirm-yes')), findsOneWidget);
@@ -138,7 +138,7 @@ void main() {
   });
 
   testWidgets('"again" on the check takes it back and nothing is written', (WidgetTester tester) async {
-    final AppRig rig = await start(tester, script: <Scripted>[Scripted.says('כחול')]);
+    final AppRig rig = await start(tester, script: <Scripted>[Scripted.says('כתום')]);
     await speak(tester);
     await tester.tap(find.byKey(const Key('confirm-again')));
     await wait(tester, 800);
@@ -151,7 +151,7 @@ void main() {
     (WidgetTester tester) async {
       final AppRig rig = await start(
         tester,
-        script: <Scripted>[Scripted.says('בננה'), Scripted.says('גלידה')],
+        script: <Scripted>[Scripted.says('בננה'), Scripted.says('אוטובוס')],
       );
       await speak(tester);
       expect(heardLines(rig).last, 'mp3:nitzi:core.listen.mixed');
@@ -341,7 +341,7 @@ void goldens() {
         voice: true,
         speech: FakeSpeechEngine(<Scripted>[
           Scripted.hangs(),
-          Scripted.says('כחול'),
+          Scripted.says('כתום'),
           Scripted.silence(),
           Scripted.silence(),
         ]),

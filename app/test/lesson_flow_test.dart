@@ -117,7 +117,7 @@ void main() {
       expect(_bubbleText(tester), content.activities['count.butterflies.3']!.hints[0].say.caption);
       await _count(tester, <int>[0, 1, 2]);
       await _tapKey(tester, 'tile-o2'); // 3
-      expect(_bubbleText(tester), contains('שְׁלוֹשָׁה'));
+      expect(_bubbleText(tester), contains('שָׁלוֹשׁ'));
       await wait(tester);
 
       // ---- 3. four scattered: the same butterfly touched twice, then the right answer ----
@@ -251,7 +251,7 @@ void main() {
       ]);
       final Attempt first = (await _attempts(rig)).first;
       expect(first.packId, 'starter');
-      expect(first.packVersion, '0.9.0');
+      expect(first.packVersion, '0.10.0');
       expect(first.lessonId, 'butterflies');
       expect(first.activityRevision, 1);
       expect(first.templateVersion, '1.0');

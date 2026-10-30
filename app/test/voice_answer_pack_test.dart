@@ -24,7 +24,14 @@ const Map<String, int> _spokenTapsBySkill = <String, int>{
   'MATH-B-19': 5,
   'NUM-A-01': 6,
   'NUM-A-02': 7,
-  'NUM-A-14': 8, 'NUM-B-01': 9, 'NUM-B-02': 9, 'NUM-B-03': 8, 'NUM-B-10': 10, 'NUM-B-11': 12, 'NUM-B-14': 10,
+  'NUM-A-14': 8,
+  'NUM-B-01': 9,
+  'NUM-B-02': 9,
+  'NUM-B-03': 8,
+  'NUM-B-08': 2,
+  'NUM-B-10': 10,
+  'NUM-B-11': 12,
+  'NUM-B-14': 10,
   'NUM-B-17': 6, 'SHP-B-02': 10,
   // a colour, a shape, the next in a named sequence
   'COL-A-05': 4,
@@ -45,19 +52,19 @@ void main() {
 
   Iterable<Activity> spoken() => pack.activities.values.where((Activity a) => a.voiceAnswer);
 
-  test('310 of the 967 activities are answered by voice, and 657 are not', () {
+  test('312 of the 967 activities are answered by voice, and 655 are not', () {
     expect(pack.activities.length, 967);
-    expect(spoken().length, 310);
-    expect(pack.activities.length - spoken().length, 657);
+    expect(spoken().length, 312);
+    expect(pack.activities.length - spoken().length, 655);
   });
 
-  test('by template: tap_answer 250 of 626, every count_tap and flash, and no other template', () {
+  test('by template: tap_answer 252 of 626, every count_tap and flash, and no other template', () {
     final Map<String, (int, int)> byTemplate = <String, (int, int)>{};
     for (final Activity a in pack.activities.values) {
       final (int, int) n = byTemplate[a.template] ?? (0, 0);
       byTemplate[a.template] = a.voiceAnswer ? (n.$1 + 1, n.$2) : (n.$1, n.$2 + 1);
     }
-    expect(byTemplate.remove('tap_answer'), (250, 376));
+    expect(byTemplate.remove('tap_answer'), (252, 374));
     expect(byTemplate.remove('count_tap'), (44, 0));
     expect(byTemplate.remove('flash'), (16, 0));
     expect(byTemplate.length, 12, reason: 'the other twelve templates');
@@ -75,9 +82,13 @@ void main() {
     expect(bySkill, _spokenTapsBySkill);
   });
 
-  test('"where is the number…?" and reading a numeral are tapped, never said', () {
+  test('"where is the number…?" and reading a numeral are tapped, never said (but the missing number in a row is)', () {
+    // b.numb08.13 and .14 ask for the missing number of a row, as NUM-B-11's do (QA-1 of the B-15 check).
+    const Set<String> missingInARow = <String>{'b.numb08.13', 'b.numb08.14'};
     for (final Activity a in pack.activities.values) {
-      if (a.skillId == 'NUM-A-08' || a.skillId == 'NUM-B-08') expect(a.voiceAnswer, isFalse, reason: a.id);
+      if (a.skillId == 'NUM-A-08' || a.skillId == 'NUM-B-08') {
+        expect(a.voiceAnswer, missingInARow.contains(a.id), reason: a.id);
+      }
     }
   });
 
