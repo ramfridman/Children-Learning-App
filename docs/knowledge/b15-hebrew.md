@@ -139,10 +139,10 @@ The generator keeps today's line for Band A until the owner decides. Each Band A
 
 | Key | Today (Band A uses it) | Proposed Band A ui_text | voice_text | Status | Note |
 |---|---|---|---|---|---|
-| P1 `k_spot` default h3 | אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | כֻּלָּם דּוֹמִים, חוּץ מֵאֶחָד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | כולם דומים, חוץ מֵאֶחָד. עכשיו תורכם — ללחוץ עליו. | proposed | Says what is true, with no `לֹא`. With H6 the slot can name the rule: `כֻּלָּם אֲדֻמִּים, חוּץ מֵאֶחָד.`, `כֻּלָּם עִגּוּלִים, חוּץ מֵאֶחָד.`; a feminine slot: `כֻּלָּן צוּרוֹת סְגוּרוֹת, חוּץ מֵאַחַת. … לִלְחֹץ עָלֶיהָ.` Number and pattern spots use X4 and X5 instead. Band B keeps today's line |
+| P1 `k_spot` default h3 | אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | כֻּלָּם דּוֹמִים, חוּץ מֵאֶחָד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | כולם דומים, חוץ מֵאֶחָד. עכשיו תורכם — ללחוץ עליו. | **owner-approved 2026-10-30** (built in, §8) | Says what is true, with no `לֹא`. With H6 the slot can name the rule: `כֻּלָּם אֲדֻמִּים, חוּץ מֵאֶחָד.`, `כֻּלָּם עִגּוּלִים, חוּץ מֵאֶחָד.`; a feminine slot: `כֻּלָּן צוּרוֹת סְגוּרוֹת, חוּץ מֵאַחַת. … לִלְחֹץ עָלֶיהָ.` Number and pattern spots use X4 and X5 instead. Band B keeps today's line |
 | P2 fb.sort_shift, **colour rule** (COL-A-01 new, COL-A-04 today) | מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק. | זֶה אוֹתוֹ דָּבָר, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע. בּוֹאוּ נִבְדֹּק. | זה אותו דבר, אבל מחפשים את אותו הצבע. בואו נבדוק. | proposed | Built like the owner's Q2 lines: it names what the eye caught, then ends in the strategy. **The line already plays in Band A today** (COL-A-04 `col.sort.*`, LOG-A-03 `log.sort.*`), not only in the new COL-A-01 items |
-| P3 fb.sort_shift, **kind rule** (LOG-A-01 spots, LOG-A-03) | (same line) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותו הדבר. בואו נבדוק. | proposed | **Today's line teaches the wrong thing here.** LOG-A-03 (`לְאָן הוֹלֵךְ הַכֶּלֶב?`) and LOG-A-01 spots sort by *kind*, and a child who sorted by colour hears "we look for the same colour". This needs the curriculum-expert's agreement too |
-| P4 fb.sort_shift, **shape rule** (SHP-A-02 spots) | (same line) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותה הצורה. בואו נבדוק. | proposed | as P3 (`צוּרָה` is feminine: `אוֹתָהּ`). A Band B shape rule (COL-B-04, LOG-B-06) would take the same split; Band B can keep `לֹא` |
+| P3 fb.sort_shift, **kind rule** (LOG-A-01 spots, LOG-A-03) | (same line) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותו הדבר. בואו נבדוק. | **owner-approved 2026-10-30** | **Today's line teaches the wrong thing here.** LOG-A-03 (`לְאָן הוֹלֵךְ הַכֶּלֶב?`) and LOG-A-01 spots sort by *kind*, and a child who sorted by colour hears "we look for the same colour". This needs the curriculum-expert's agreement too |
+| P4 fb.sort_shift, **shape rule** (SHP-A-02 spots) | (same line) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותה הצורה. בואו נבדוק. | **owner-approved 2026-10-30** | as P3 (`צוּרָה` is feminine: `אוֹתָהּ`). A Band B shape rule (COL-B-04, LOG-B-06) would take the same split; Band B can keep `לֹא` |
 
 ---
 
@@ -326,7 +326,7 @@ In flash, ordinal and pattern items: `זֶה אֶפְרוֹחַ אֶחָד.`, `�
 |---|---|---|---|---|---|
 | `vo:fb.sort_shift.shape` | Band B items with `rule: shape` (COL-B-04 shape sort, LOG-B-06 H9b, LOG-B-08 `.3`, `.4`, triangle, rectangle) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותה הצורה. בואו נבדוק. | **text-ready for Band B** | P4's text. `אוֹתָהּ` agrees with `צוּרָה` (f). The first clause is true only when the child followed the colour, which is what M-SORT-SHIFT means on these items; the tag must fire only then |
 | `vo:fb.sort_shift.kind` | Band B items with `rule: kind` (none today) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותו הדבר. בואו נבדוק. | **text-ready for Band B** | P3's text |
-| P3, P4 in Band A | LOG-A-01, LOG-A-03, SHP-A-02 | (the same texts) | | **proposed** | the owner decides with P2; Band A keeps today's `vo:fb.sort_shift` until then. Once he approves, one clip serves both bands |
+| P3, P4 in Band A | LOG-A-01, LOG-A-03, SHP-A-02 | (the same texts) | | **owner-approved 2026-10-30** (was proposed) | the owner decides with P2; Band A keeps today's `vo:fb.sort_shift` until then. Once he approves, one clip serves both bands |
 
 Band B colour items keep today's `vo:fb.sort_shift` (`מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר.`): reused.
 
@@ -342,7 +342,7 @@ Band B colour items keep today's `vo:fb.sort_shift` (`מְחַפְּשִׂים �
 
 ## 7. After the app-developer's part 2 (editor, 2026-10-30)
 
-The developer composed a few lines the sections above never wrote. I read each one; the sources (`content/units/*.json`, `tools/band_b.py`) and the rules in `tools/hebrew_voice_review.py` carry the result. Everything new or changed below is **`proposed`** for the owner (none is a pure spelling fix); the 40 `owner-approved` rows are untouched.
+The developer composed a few lines the sections above never wrote. I read each one; the sources (`content/units/*.json`, `tools/band_b.py`) and the rules in `tools/hebrew_voice_review.py` carry the result. Everything new or changed below was **`proposed`** for the owner (none is a pure spelling fix); **the owner approved all of §7.1 to §7.6 and P5 on 2026-10-30 (§8)**.
 
 **7.1 The 15 spill lessons (Band A).** Title and celebration were copied from the sibling lesson, so the lesson list showed the same title twice or three times. Each now says what it holds. The celebration ids (`vo:celebrate.<id>`) were already separate, so each line is its own clip.
 
@@ -382,8 +382,19 @@ No title repeats another Band A title. No `לֹא` (Band A). Avoided on purpose:
 
 | key | ui_text | voice_text | status |
 |---|---|---|---|
-| P5 `vo:fb.sort_shift.size` | זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק. | זה דומה, אבל מחפשים את אותו הגודל. בואו נבדוק. | proposed (owner, with P2 to P4) |
+| P5 `vo:fb.sort_shift.size` | זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק. | זה דומה, אבל מחפשים את אותו הגודל. בואו נבדוק. | **owner-approved 2026-10-30** |
 
 Code change (the app-developer; I did not touch it): (1) `tools/author.py`: add `'size': ('vo:fb.sort_shift.size', 'זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק.')` to `SORT_SHIFT_BY_RULE` and `'size'` to `SORT_RULES`. (2) `content/units/logic.json`: `"rule": "size"` on `b15.loga03.1` and `b15.loga03.2`. (3) `tools/test_generators.py`: `test_an_unknown_rule_is_refused` uses `rule='size'` as the unknown rule (use another, e.g. `'texture'`), and `test_a_sorting_rule_line_is_one_of_the_two_rule_lines` must accept `vo:fb.sort_shift.size`. Nothing else: `PENDING` already holds the line in Band A (its text contains `אֲבָל מְחַפְּשִׂים אֶת אוֹת`).
 
 **7.9 The table scripts.** A plain `export-hebrew-review.py` wrote the pack's already-corrected text into the `text` ("original") column, so 39 of the 40 `owner-approved` rows lost their mark (the rule finds the owner's row by the original text) and the table-count test failed (6 instead of 1308). `export-hebrew-review.py` now writes, for a done row, the original from the last master table; the `.md` lists the pack as it is. A rerun gives the same bytes.
+
+---
+
+## 8. The owner's answers of 2026-10-30
+
+The owner's words: "1. I approve. 2. I approve. 3. Use the new one." Applied by the editor in `tools/hebrew_voice_review.py` (`OWNER_APPROVED`) and `tools/author.py`; recorded in `docs/agents/hebrew-notes.md` §5 (items 17 to 19).
+
+1. **P3, P4, P5 are `owner-approved`**, in Band A and Band B: `vo:fb.sort_shift.kind`, `.shape`, `.size` (21 rows). The "proposed" marks of §4 and §6.6 and the Band A "keeps today's line" of §6.6 no longer apply: one clip serves both bands.
+2. **§7 is `owner-approved`:** the 15 spill lessons (title and celebration, 30 rows), NUM-B-08 `אֵיזֶה מִסְפָּר חָסֵר?` with its alt texts (4), the NUM-B-18 odd line (2), the fish and star size hints (2), the LOG-A-02 hint (2) and the COL-A-05 correct lines (2). Not covered, so left as they were: the correct lines `כֵּן! זֶה הַדָּג הַגָּדוֹל.` and `כֵּן! זֶה הַכּוֹכָב הַקָּטָן.`, the COL-A-05 tick hint `לִלְחֹץ עַל הַוִּי`, the 9 `פַּרְפָּר` rows of §6.7.
+3. **P1 is `owner-approved` and built in.** Band A spots with no hint 3 of their own say `כֻּלָּם דּוֹמִים, חוּץ מֵאֶחָד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.` (voice: כולם דומים, חוץ מֵאֶחָד. עכשיו תורכם — ללחוץ עליו.), shared clip `vo:hint.spot_but_one.h3`. The 12 items: `b15.cola02.5`, `.6`, `cola03.5`, `.6`, `cola06.1`, `.2`, `loga01.5`, `.6`, `shpa02.3`, `.4`, `shpa03.3`, `.4`. Band B keeps `אֶחָד מֵהֶם לֹא מַתְאִים…` (its own clips, as before). The per-slot forms of §4 (`כֻּלָּם אֲדֻמִּים, חוּץ מֵאֶחָד.`) are not used; the owner chose the plain line.
+4. **Still `proposed`, to be decided with the voicing:** the V1 prompts, the Q2 drafts and D12.

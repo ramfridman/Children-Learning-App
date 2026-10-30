@@ -747,28 +747,13 @@ PENDING = [
      '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
     # B-15 part 2 (docs/knowledge/b15-hebrew.md): the editor's own strings are text-ready there. These are the lines the generator
     # made from a pattern that the tables do not give, so the editor reads them; the last element is a regex on the text.
-    ('3', r'caption', r'^activity\.(?!b\.|x\.)', B15 + 'P3 and P4 (b15-hebrew.md section 4): the sorting-rule line for a kind or a shape rule. '
-     "Built into Band A on the owner's instruction of 2026-10-30 (today's line says 'the same colour' where the rule is the thing "
-     'or the shape); the owner signs it. The same text is text-ready in Band B (section 6.6).', r'אֲבָל מְחַפְּשִׂים אֶת אוֹת'),
-    ('3', r'caption|altText', r'^activity\.b\.numb08\.', B15 + 'The prompt of the missing numeral in a row (editor, 2026-10-30, b15-hebrew.md section 7.2): "אֵיזֶה מִסְפָּר חָסֵר?" '
-     'in the pattern of "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?"; the first draft "אֵיפֹה הַמִּסְפָּר הֶחָסֵר?" asked for a place when the child picks a numeral.',
-     r'אֵיזֶה מִסְפָּר חָסֵר'),
-    ('3', r'caption', r'^activity\.b\.numb18\.', B15 + 'The odd-shoes line in the feminine (editor read it, 2026-10-30: correct, "אַחַת נִשְׁאֶרֶת" agrees with "נַעַל"; '
-     'the pattern is the editor pattern אֶחָד/אַחַת, יִשָּׁאֵר/תִּשָּׁאֵר by the noun).', r'אַחַת נִשְׁאֶרֶת'),
-    ('3', r'caption', r'^activity\.b15\.matha04\.', B15 + 'The size lines about a fish and a star (editor read them, 2026-10-30: correct, "עָלָיו" agrees with "דָּג" and "כּוֹכָב"; '
-     'the pattern of the ball and the stick).',
-     r'הַדָּג הַגָּדוֹל|הַכּוֹכָב הַקָּטָן'),
-    ('3', r'caption', r'^activity\.b15\.loga02\.', B15 + 'The hint of the odd one out by size (editor read it, 2026-10-30: correct and it names the difference; '
-     'the pattern of "the blue ball is different").',
-     r'שׁוֹנֶה מֵהָאֲחֵרִים'),
+    ('3', r'feedback\.correct', r'^activity\.b15\.matha04\.', B15 + 'The correct line of the fish and star size items (editor read it, 2026-10-30: correct, '
+     '"זֶה" agrees with "דָּג" and "כּוֹכָב"). The owner approved only the two hints (2026-10-30); this line waits.',
+     r'כֵּן! זֶה הַדָּג הַגָּדוֹל|כֵּן! זֶה הַכּוֹכָב הַקָּטָן'),
     ('3', r'hints\.2', r'^activity\.b15\.cola05\.', B15 + 'The hint of a tick answer: "לִלְחֹץ עַל הַוִּי" (H7a, the editor) in the pattern of the other hints.',
      r'לִלְחֹץ עַל הַוִּי'),
-    ('3', r'feedback\.correct', r'^activity\.b15\.cola05\.', B15 + 'The correct line of a tick answer (editor, 2026-10-30, b15-hebrew.md section 7.6): the question "זוֹ בָּנָנָה?" answered '
-     'with the colour, "כֵּן! זוֹ בָּנָנָה יְרֻקָּה.", so the colour is heard next to the thing it does not change (M-COL-OBJECT).',
-     r'כֵּן! זוֹ בָּנָנָה יְרֻקָּה|כֵּן! זֶה תַּפּוּחַ יָרֹק'),
-    # The 15 spill lessons of B-15 part 2: each got its own title and celebration line (editor, 2026-10-30, section 7.1).
-    ('3', r'^(title\.0\.v|celebration\.caption\.0\.v)$', r'^lesson\.[a-z0-9-]+-b15\.json$', B15 + 'A spill lesson of B-15 part 2: its title and its '
-     'celebration line were copied from the sibling lesson; the editor named each by what it holds (b15-hebrew.md section 7.1). The owner signs the names.'),
+    # 2026-10-30: the owner approved P3-P5, the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints and the COL-A-05
+    # correct lines (OWNER_APPROVED below), so they are no longer pending.
     # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
     # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
 ]
@@ -792,12 +777,38 @@ OWNER_APPROVED = [
      'בְּטָעוּת?" for the Band A "not" question (owner-approved 2026-10-29).'),
     (r'^activity\.shp\.solid\.', r'מָה לֹא מִתְגַּלְגֵּל', 'B-13 (curriculum audit F13): the owner approved "מַה נִּשְׁאָר עוֹמֵד '
      'בַּמָּקוֹם?" for the Band A "not" question (owner-approved 2026-10-29).'),
+    # The owner's answers of 2026-10-30 for B-15 ("1. I approve. 2. I approve. 3. Use the new one."); only these exact texts.
+    # (1) P3, P4 and P5, the sorting-rule lines, in every activity where they play (Band A and Band B).
+    (r'^activity\.', r'^זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר\. בּוֹאוּ נִבְדֹּק\.$',
+     'B-15 P3 (kind rule): the owner approved it for both bands (owner-approved 2026-10-30). vo:fb.sort_shift.kind.'),
+    (r'^activity\.', r'^זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה\. בּוֹאוּ נִבְדֹּק\.$',
+     'B-15 P4 (shape rule): the owner approved it for both bands (owner-approved 2026-10-30). vo:fb.sort_shift.shape.'),
+    (r'^activity\.', r'^זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל\. בּוֹאוּ נִבְדֹּק\.$',
+     'B-15 P5 (size rule): the owner approved it (owner-approved 2026-10-30). vo:fb.sort_shift.size.'),
+    # (2) b15-hebrew.md section 7: the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints, COL-A-05 tick lines.
+    (r'^lesson\.[a-z0-9-]+-b15\.json$', r'', 'B-15 (b15-hebrew.md 7.1): the owner approved the title and the celebration line of the 15 '
+     'spill lessons (owner-approved 2026-10-30).', r'^(title\.0\.v|celebration\.caption\.0\.v)$'),
+    (r'^activity\.b\.numb08\.', r'^אֵיזֶה מִסְפָּר חָסֵר\?$', 'B-15 (b15-hebrew.md 7.2): the owner approved the prompt and its alt text '
+     '(owner-approved 2026-10-30).'),
+    (r'^activity\.b\.numb18\.', r'אַחַת נִשְׁאֶרֶת', 'B-15 (b15-hebrew.md 7.3): the owner approved the feminine odd line '
+     '(owner-approved 2026-10-30).'),
+    (r'^activity\.b15\.matha04\.', r'^(הַדָּג הַגָּדוֹל|הַכּוֹכָב הַקָּטָן) תּוֹפֵס', 'B-15 (b15-hebrew.md 7.4): the owner approved the fish '
+     'and star size hints (owner-approved 2026-10-30).'),
+    (r'^activity\.b15\.loga02\.', r'שׁוֹנֶה מֵהָאֲחֵרִים', 'B-15 (b15-hebrew.md 7.5): the owner approved the odd-one-out hint '
+     '(owner-approved 2026-10-30).'),
+    (r'^activity\.b15\.cola05\.', r'^כֵּן! (זוֹ בָּנָנָה יְרֻקָּה|זֶה תַּפּוּחַ יָרֹק)\.$', 'B-15 (b15-hebrew.md 7.6): the owner approved '
+     'the tick-answer lines of COL-A-05 (owner-approved 2026-10-30).'),
+    # (3) P1: the third hint of a Band A spot with no hint of its own (tools/author.py SPOT_H3_A, vo:hint.spot_but_one.h3).
+    (r'^activity\.', r'^כֻּלָּם דּוֹמִים, חוּץ מֵאֶחָד\. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו\.$',
+     'B-15 P1 (b15-hebrew.md 4): the owner chose the new Band A hint 3 in place of "אֶחָד מֵהֶם לֹא מַתְאִים" '
+     '(owner-approved 2026-10-30). One clip, vo:hint.spot_but_one.h3.'),
 ]
 
 
 def owner_approved(r):
-    for src, txt, comment in OWNER_APPROVED:
-        if re.search(src, r['source']) and re.search(canon(txt), canon(r['text'])):
+    for src, txt, comment, *rid in OWNER_APPROVED:  # an optional fourth element: a regex on the row id
+        if (re.search(src, r['source']) and re.search(canon(txt), canon(r['text']))
+                and (not rid or re.search(rid[0], r['id']))):
             return comment
     return None
 

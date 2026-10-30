@@ -253,6 +253,21 @@ Answered later the same day (2026-10-29):
 13. **Approved rows:** the give-N line (22 rows), the two Band A questions without "לֹא" (16 rows, with alt texts) and
     Q4 option A (1 row) are `owner-approved`: 39 rows; with `nitziHomeHi` (B-26, the line he chose) 40, the only ones so far (`OWNER_APPROVED` in the script).
 
+Answered on 2026-10-30 (B-15; the owner's words: "1. I approve. 2. I approve. 3. Use the new one."):
+
+17. **P3, P4, P5 (the sorting-rule lines)** `vo:fb.sort_shift.kind`, `.shape`, `.size`: `owner-approved` in Band A and Band B
+    (21 rows). **Applied** (`OWNER_APPROVED`).
+18. **Everything in `docs/knowledge/b15-hebrew.md` §7:** the 15 `*-b15` lesson titles and celebration lines (30 rows), the NUM-B-08
+    prompt `אֵיזֶה מִסְפָּר חָסֵר?` with its alt texts (4), the NUM-B-18 odd line (2), the fish and star size hints (2), the
+    LOG-A-02 hint (2) and the COL-A-05 correct lines `כֵּן! זוֹ בָּנָנָה יְרֻקָּה.` / `כֵּן! זֶה תַּפּוּחַ יָרֹק.` (2):
+    `owner-approved`. **Applied.** Not covered, so unchanged: the correct lines of the fish and star items, the COL-A-05 tick
+    hint, and the 9 `פַּרְפָּר` rows (§6.7).
+19. **P1:** Band A spots with no hint 3 of their own use `כֻּלָּם דּוֹמִים, חוּץ מֵאֶחָד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.`
+    (one shared clip, `vo:hint.spot_but_one.h3`) instead of `אֶחָד מֵהֶם לֹא מַתְאִים…`; 12 items; `owner-approved`. Band B keeps
+    the old line. In `tools/author.py` (`SPOT_H3_A`, `k_spot`). One case to know: in `b15.loga01.6` the odd cell is a bird in a row of
+    ducks (a feminine noun); the hint stays masculine (`אֶחָד`, `עָלָיו`) because it points at "one of the cells", as the old line did.
+    The V1 prompts, the Q2 drafts and D12 stay `proposed`: the owner will decide them together with the voicing.
+
 Still open:
 
 9. **Alert word lists** (group 5): the spelling is right; whether the lists are complete needs someone who works with
@@ -263,6 +278,7 @@ Still open:
 
 ## 6. For the voice-and-sound-director
 
+- **Update, 2026-10-30 (after the owner's B-15 answers):** the master table has 12,629 rows: 115 `owner-approved` (the 40 above plus 75: P1, P3 to P5, the 15 lessons and the §7 lines, see §5 items 17 to 19), 11,698 `text-ready`, 167 `proposed`, 649 `unchanged`. The numbers in the next bullet are of the earlier date.
 - Status now (2026-10-30, after the merge with `main`): 40 rows `owner-approved` (the give-N line, the two Band A questions,
   `core.encourage.checked`, `nitziHomeHi`): these are ready for your direction. 9,383 rows are `text-ready` (final text,
   waiting for the owner's approval); 128 are
