@@ -117,6 +117,16 @@ List<AcceptWord> colourWords(String id) {
   ];
 }
 
+// The everyday word a child knows for a label word the lesson teaches: saying it is right, and the lesson's own line
+// says the new word back (Band B "תֵּבָה" is a "קֻפְסָה" to a child; owner Q7, hebrew-notes D6). Normalised keys.
+const Map<String, List<String>> _labelSynonyms = <String, List<String>>{
+  'תבה': <String>['קופסה', 'קופסא'],
+  'תיבה': <String>['קופסה', 'קופסא'],
+};
+
+/// The other words accepted for a label word ([word] normalised), or none.
+List<String> labelSynonyms(String word) => _labelSynonyms[word] ?? const <String>[];
+
 /// What a child may say that is not an answer.
 enum Intent { repeat, help, stop, yes, no }
 

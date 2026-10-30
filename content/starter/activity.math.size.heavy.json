@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "מָה כָּבֵד?"
+        "v": "מַה כָּבֵד?"
       }
     ],
     "replayButton": true
@@ -135,6 +135,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מָה כָּבֵד?"
+    "altText": "מַה כָּבֵד?"
   }
 }
