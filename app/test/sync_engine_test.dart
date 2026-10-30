@@ -145,6 +145,60 @@ void main() {
     );
   });
 
+  group('B-28: names saved before the limit was 24', () {
+    const String long = 'abcdefghijklmnopqrstuvwxyzabcd';
+
+    test(
+      'a 30-letter name goes as its first 24 units, stays whole on this phone and is not sent again',
+      () async {
+        await p1.addChild(name: long);
+        await p1.engine.syncOnce();
+        expect(server.children[kid]?['nickname'], long.substring(0, 24));
+        expect(
+          (await p1.db.allProfiles()).single.name,
+          long,
+          reason: 'the pull did not shorten the name here',
+        );
+
+        server.calls.clear();
+        await p1.engine.syncOnce();
+        expect(
+          server.calls,
+          isNot(contains('$dev1:child-put')),
+          reason: 'nothing changed, so nothing goes again',
+        );
+
+        await p2.engine.syncOnce();
+        expect(
+          (await p2.db.allProfiles()).single.name,
+          long.substring(0, 24),
+          reason: 'what the family account has',
+        );
+      },
+    );
+
+    test('the characters the server refuses are left out of the nickname', () async {
+      await p1.addChild(name: 'נועה <3>');
+      await p1.engine.syncOnce();
+      expect(server.children[kid]?['nickname'], 'נועה 3');
+      expect((await p1.db.allProfiles()).single.name, 'נועה <3>');
+    });
+
+    test('a name with nothing the server can take is not sent, and the answers still go', () async {
+      await p1.addChild(name: '<<>>');
+      await p1.answer('A.1', 'correct');
+      final SyncReport r = await p1.engine.syncOnce();
+      expect(server.calls, isNot(contains('$dev1:child-put')));
+      expect(server.children, isEmpty);
+      expect(
+        r.refusedEvents,
+        1,
+        reason: 'the server does not know the child, as for any child it does not have',
+      );
+      expect(server.calls, contains('$dev1:sync-push'));
+    });
+  });
+
   test('syncing again changes nothing, and a phone never takes back what it made itself', () async {
     await p1.addChild();
     final int s = await p1.visit();

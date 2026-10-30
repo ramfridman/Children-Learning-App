@@ -194,6 +194,13 @@ abstract final class He {
   static const Str setupEnrolled = Str('המכשיר נרשם.');
   static const Str setupChildTitle = Str('הוספת ילד או ילדה');
   static const Str setupName = Str('שם פרטי');
+  static const Str setupNameTooLong = Str('אפשר לכתוב עד 24 תווים.');
+  static const Str setupNameBadChars = Str(
+    'בלי הסימנים < או > ובלי תווים בלתי נראים. אם השם הודבק, אפשר להקליד אותו מחדש.',
+  );
+  static const Str setupNameLegacyShortened = Str(
+    'השם ארוך מ-24 תווים, ולכן בחשבון המשפחה נשמרו רק 24 התווים הראשונים.',
+  );
   static const Str setupAge = Str('גיל');
   static const Str setupAvatar = Str('בחירת דמות');
   static const Str setupAddress = Str('פנייה בלשון');

@@ -1,0 +1,40 @@
+{
+  "about": "A child's first name, the nickname that child-put saves (board B-28). One limit on both sides: 1 to 24 UTF-16 code units, as the server's pattern counts them (no u flag; Dart String.length counts the same way), never graphemes. supabase/functions/child_name_vectors_test.ts asserts child-put/handler.ts (NICKNAME and the shape's max) equal server_pattern and max_utf16_units, and that the server takes every accept vector and refuses every reject vector that is not appOnly. app/test/child_name_test.dart asserts app/lib/data/child_name.dart gives each vector its reason, and the fake server of the sync tests refuses what server_pattern refuses. appOnly: the app refuses it (C1 controls and the invisible direction marks), the server today takes it. clientOnly: only the app can see the problem (it trims first; the server stores what it is sent). units: the length in UTF-16 code units, checked by both tests so that an editor cannot change a vector silently.",
+  "max_utf16_units": 24,
+  "server_pattern": "^[^\\u0000-\\u001f\\u007f<>]{1,24}$",
+  "accept": [
+    { "name": "one ASCII letter", "value": "a", "units": 1 },
+    { "name": "24 ASCII letters", "value": "abcdefghijklmnopqrstuvwx", "units": 24 },
+    { "name": "Hebrew without nikud", "value": "נועה", "units": 4 },
+    { "name": "Hebrew first and family-style name with a space", "value": "נועה כהן", "units": 8 },
+    { "name": "Hebrew with nikud (each mark is a unit)", "value": "נֹעָה", "units": 5 },
+    {
+      "name": "12 Hebrew letters with nikud: 12 graphemes, 24 units",
+      "value": "אָבָגָדָהָוָזָחָטָיָכָלָ",
+      "units": 24
+    },
+    { "name": "an emoji (a surrogate pair) at units 23 and 24", "value": "abcdefghijklmnopqrstuv🌸", "units": 24 }
+  ],
+  "reject": [
+    { "name": "empty", "value": "", "units": 0, "reason": "empty" },
+    { "name": "25 ASCII letters", "value": "abcdefghijklmnopqrstuvwxy", "units": 25, "reason": "tooLong" },
+    {
+      "name": "13 Hebrew letters with nikud: only 13 graphemes, but 26 units",
+      "value": "אָבָגָדָהָוָזָחָטָיָכָלָמָ",
+      "units": 26,
+      "reason": "tooLong"
+    },
+    { "name": "an emoji (a surrogate pair) at units 24 and 25", "value": "abcdefghijklmnopqrstuvw🌸", "units": 25, "reason": "tooLong" },
+    { "name": "a less-than sign", "value": "<b>נועה", "units": 7, "reason": "badChars" },
+    { "name": "a greater-than sign", "value": "נועה>", "units": 5, "reason": "badChars" },
+    { "name": "a tab inside the name", "value": "נו\tעה", "units": 5, "reason": "badChars" },
+    { "name": "DEL inside the name", "value": "נו\u007fעה", "units": 5, "reason": "badChars" },
+    { "name": "a C1 control (U+0085) inside the name", "value": "נו\u0085עה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "right-to-left mark U+200F", "value": "נו\u200fעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "right-to-left override U+202E", "value": "נו\u202eעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "left-to-right isolate U+2066", "value": "נו\u2066עה", "units": 5, "reason": "badChars", "appOnly": true }
+  ],
+  "clientOnly": [
+    { "name": "spaces only (empty once trimmed)", "value": "   ", "units": 3, "reason": "empty" }
+  ]
+}

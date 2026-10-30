@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../core/errors.dart';
 import '../core/log.dart';
 import '../data/app_database.dart';
+import '../data/child_name.dart';
 import '../parent/parent_rules.dart';
 import '../play/response_code.dart';
 import '../rewards/ribbons.dart';
@@ -220,10 +221,15 @@ class SyncEngine {
       final String fingerprint =
           '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}|${p.outfitId ?? ''}';
       if (await db.setting('profile_pushed_${p.id}') == fingerprint) continue;
+      // A name saved before B-28 could be longer than the server takes, or hold a character it refuses: it goes cut to
+      // fit. One with nothing left would only be refused, so it is not sent (its answers are then refused like those of
+      // any child the server does not have).
+      final String nickname = fitChildNameForServer(p.name);
+      if (nickname.isEmpty) continue;
       try {
         await call('child-put', <String, Object?>{
           'child_id': p.id,
-          'nickname': p.name,
+          'nickname': nickname,
           'avatar_id': p.avatar,
           'companion_id': ?p.companionId,
           'outfit_id': ?p.outfitId,
@@ -551,14 +557,22 @@ class SyncEngine {
         }
       }
       await _rememberTombstones(gone);
-      final List<Profile> mine = await db.allProfiles();
+      final Map<String, Profile> mine = <String, Profile>{
+        for (final Profile p in await db.allProfiles()) p.id: p,
+      };
       for (final Object? c in (page['children'] as List<Object?>? ?? const <Object?>[])) {
         final Map<String, Object?> m = c! as Map<String, Object?>;
         final String id = m['id']! as String;
         if (gone.contains(id)) continue;
+        final Profile? here = mine[id];
+        final String nickname = m['nickname']! as String;
+        // A name longer than the server takes went cut (B-28): the server's copy is this phone's name, kept whole here.
+        final String name = here != null && fitChildNameForServer(here.name) == nickname
+            ? here.name
+            : nickname;
         final ProfilesCompanion row = ProfilesCompanion(
           id: Value<String>(id),
-          name: Value<String>(m['nickname']! as String),
+          name: Value<String>(name),
           avatar: Value<String>(m['avatar_id']! as String),
           addressForm: Value<String>(m['address_form']! as String),
           ageBand: Value<int>(m['age_band']! as int),
@@ -569,13 +583,13 @@ class SyncEngine {
               : const Value<String?>.absent(),
           createdAt: Value<DateTime>(_now),
         );
-        final bool known = mine.any((Profile p) => p.id == id);
+        final bool known = here != null;
         if (!known) added++;
         await db.upsertProfileFromFamily(row, isNew: !known);
         // What the server has is now what this device has: no need to push it back.
         await db.putSetting(
           'profile_pushed_$id',
-          '${m['nickname']}|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}|${m['outfit_id'] ?? ''}',
+          '$name|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}|${m['outfit_id'] ?? ''}',
         );
       }
 

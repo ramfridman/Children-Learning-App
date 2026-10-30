@@ -16,6 +16,7 @@ import '../app/voice_input.dart';
 import '../core/config.dart' show appVersion;
 import '../core/errors.dart';
 import '../data/app_database.dart';
+import '../data/child_name.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
@@ -251,7 +252,21 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: Text(p.name, style: AppText.parent(TokenType.parentBody))),
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(p.name, style: AppText.parent(TokenType.parentBody)),
+                              // Saved before B-28 with more than the server takes: the family account has it cut.
+                              if (p.name.length > childNameMaxLength)
+                                Text(
+                                  He.setupNameLegacyShortened.text,
+                                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                                ),
+                            ],
+                          ),
+                        ),
                         ParentButton(
                           key: Key('progress-${p.id}'),
                           label: He.areaProgress.text,

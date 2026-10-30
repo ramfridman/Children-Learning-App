@@ -60,6 +60,9 @@ and how any line sounds (that needs audio and the voice director).
 8. **Adult texts** (parent area, skill titles, parent texts) have no nikud and use the infinitive for advice. A skill
    title written with nikud was unpointed. A sum inside an adult line is isolated left to right with U+2066 … U+2069 so
    `7 = 3 + 4` is not shown as `4 + 3 = 7` (M-EQ-OPER).
+   A length limit says `תווים` (not `אותיות`: a name may hold a space or a hyphen) and states what is allowed, not what
+   went wrong (`אפשר לכתוב עד 24 תווים.`, as `prizesBad`). Forbidden symbols are joined with `או`, never a hyphen-vav
+   (`ו->` reads as an arrow); `<` and `>` mirror in RTL, which is harmless when both are named, so no isolates (B-28).
 
 ## 3. Rules for the voice text (what the voice director receives)
 
