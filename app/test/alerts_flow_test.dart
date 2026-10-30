@@ -5,6 +5,8 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
+import 'package:nitznutz/app/providers.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/parent/alerts_screen.dart';
 import 'package:nitznutz/play/activity_frame.dart';
@@ -37,7 +39,9 @@ void main() {
   setUpAll(() async {
     await loadAppFonts();
     // The pictures are made on Windows and checked on Linux in CI: letters are smoothed a little differently.
-    useTolerantGoldens(0.03);
+    // The alerts screen is almost all text, so that smoothing alone came to 4.28% on CI (the card times,
+    // the only part that depends on the machine, were 0.02%; every letter is in Heebo). Hence 5% here.
+    useTolerantGoldens(0.05);
   });
   goldenAlerts();
 
@@ -249,7 +253,10 @@ void main() {
 
 void goldenAlerts() {
   testWidgets('the alerts screen with one alert of each kind of severity', (WidgetTester tester) async {
-    final AppRig rig = AppRig();
+    // The cards' times are drawn in UTC, so the picture is the same on any machine's time zone.
+    final AppRig rig = AppRig(
+      extraOverrides: <Override>[localTimeProvider.overrideWithValue((DateTime t) => t.toUtc())],
+    );
     await rig.seedFinishedSetup();
     final DateTime now = DateTime.fromMillisecondsSinceEpoch(rig.clock.nowMs());
     Future<void> add(
