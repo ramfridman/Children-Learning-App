@@ -97,6 +97,25 @@ void main() {
     expect(RegExp(r'[0-9a-f]{8}-[0-9a-f]{4}-4').hasMatch(json), isFalse);
   });
 
+  test('no text goes up with a control or format character, which the gateway refuses (isolates are display only)', () {
+    // The gateway's text rule refuses \p{Cc}, \p{Cf}, \p{Zl} and \p{Zp}; B-3's isolates around a sum are \p{Cf}.
+    final RegExp refused = RegExp(r'[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]', unicode: true);
+    final List<String> texts = <String>[
+      for (final Map<String, Object?> i
+          in (starter['items']! as List<Object?>).cast<Map<String, Object?>>()) ...<String>[
+        i['goal']! as String,
+        i['prompt_text']! as String,
+        for (final Map<String, Object?> a in (i['answers']! as List<Object?>).cast<Map<String, Object?>>())
+          if (a['label'] is String) a['label']! as String,
+      ],
+      for (final Map<String, Object?> m
+          in (starter['misconceptions']! as List<Object?>).cast<Map<String, Object?>>())
+        m['description']! as String,
+    ];
+    expect(texts.where(refused.hasMatch), isEmpty);
+    expect(plainText('ולכן \u20667 = 3 + 4\u2069 נראה'), 'ולכן 7 = 3 + 4 נראה');
+  });
+
   test('the index of the starter pack equals the shared vector the gateway test publishes', () {
     final String now = const JsonEncoder.withIndent('  ').convert(starter);
     if (Platform.environment['NN_UPDATE_VECTORS'] == '1') {

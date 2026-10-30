@@ -23,9 +23,16 @@ List<Map<String, Object?>> _maps(Object? v) => <Map<String, Object?>>[
       if (e is Map<String, Object?>) e,
 ];
 
+/// The direction isolates (U+2066 to U+2069) that keep a sum like 7 = 3 + 4 in order on screen. They only shape the
+/// display, and the server refuses every format character in a text, so the index sends the text without them.
+final RegExp _isolates = RegExp('[\u2066-\u2069]');
+
+/// [text] as the server takes it: the same words without the display-only isolates.
+String plainText(String text) => text.replaceAll(_isolates, '');
+
 String _hebrewCaption(Object? caption) {
   for (final Map<String, Object?> c in _maps(caption)) {
-    if (c['t'] == 'he') return c['v']! as String;
+    if (c['t'] == 'he') return plainText(c['v']! as String);
   }
   throw const PublishFailed('an activity has no Hebrew caption');
 }
@@ -96,7 +103,7 @@ Map<String, Object?> itemOf(Map<String, Object?> a) {
       answers.add(<String, Object?>{
         'id': id,
         if (shown is int) 'value': shown,
-        if (o['label'] is String) 'label': o['label'],
+        if (o['label'] is String) 'label': plainText(o['label']! as String),
         if (o['misconception'] is String) 'misconception': o['misconception'],
         'correct': id == correct,
       });
@@ -127,7 +134,7 @@ Map<String, Object?> itemOf(Map<String, Object?> a) {
     'band': a['band'],
     'skill_ids': <String>[for (final Map<String, Object?> s in _maps(a['skills'])) s['id']! as String],
     'llm_allowed': tutor['llmAllowed'] == true,
-    'goal': (tutor['goal'] as String?) ?? 'answer the question',
+    'goal': plainText((tutor['goal'] as String?) ?? 'answer the question'),
     'prompt_text': _hebrewCaption((a['prompt']! as Map<String, Object?>)['caption']),
     'answers': answers,
     'number_set': (numbers.toList()..sort()),
@@ -152,7 +159,7 @@ Map<String, Object?> indexOf(VerifiedPack pack, {Map<String, String> voices = co
       misconceptions.add(<String, Object?>{
         'tag': doc['id'],
         'skill_ids': doc['skills'],
-        'description': doc['parentText'],
+        'description': plainText(doc['parentText']! as String),
       });
     } else if (e.key.startsWith('character.')) {
       final Map<String, Object?> name = doc['name']! as Map<String, Object?>;
