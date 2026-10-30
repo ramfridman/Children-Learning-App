@@ -2,6 +2,8 @@
 
 Open a new Claude Code session in `D:\Children-Learning-App` (branch `main`; M9 was merged on 2026-10-29, create a branch per piece of work) and paste everything below the line, or type: *Read `docs/handoff/next-session.md` and follow it.*
 
+**Update 2026-10-30, night: sections 3 and 3a and 4 below are history.** The current state and the order of work are in `PROGRESS.md` › "Next step" and `docs/agents/board.md` (B-34 to B-45). Sections 1 and 2 (how to start, how to work) still hold, with these changes: QA runs once per finished feature; a push takes about 10 minutes of CI, not an hour; the owner's terminal is Windows PowerShell 5.1, so give him PowerShell commands (no `&&`, Windows paths); a force-push is refused by the auto-mode classifier, so a pushed branch that needs a rebase goes out as a new branch and PR. The untracked `docs/handoff/orchestrator-state-2026-10-30.md` in the main checkout is superseded and can be deleted.
+
 ---
 
 You are the **orchestrator** of the Nitznutz team. Nitznutz (נִיצְנוּץ) is a Hebrew-only learning app for the owner's two children (ages 3 to 8; their exact ages are not in any file, the curriculum-expert needs them): a Flutter app (Android first, iOS later) with a Supabase Frankfurt backend (project ref `ungkvkabqxssggttajfs`) whose Edge Functions are the only gateway to Claude Haiku 5.5 and ElevenLabs. The owner works on Windows with PowerShell in `D:\Children-Learning-App` (timezone Asia/Jerusalem), and is often away from the PC, working from his phone.
