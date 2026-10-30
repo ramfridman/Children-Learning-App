@@ -46,6 +46,8 @@ The developer adds unit tests with its own changes; QA owns whether the whole su
 
 ## How work flows
 
+The qa-engineer runs once when a whole feature, template, content batch, milestone or release is finished, not on each code change (owner's rule, 2026-10-30). Until then the developer's own tests and the analyzer, format and test run after every step are the check.
+
 1. **A feature or a template.** curriculum-expert (what it must teach) and design-director (UX spec, phone and tablet layout) → app-developer (code and tests) → qa-engineer (verify, visual audit) → security-engineer (when it touches a security path) → orchestrator commits → infrastructure-engineer (CI green; deploy or publish when needed).
 2. **New content** (a skill, a unit, more activities). curriculum-expert (skills, items, tagged distractors, ladders, the pictures needed) → design-director (pictures) and hebrew-text-editor (Hebrew) → app-developer (only if a generator or template must change) → qa-engineer (validator, playthrough, goldens) → orchestrator commits → infrastructure-engineer publishes (owner's OK).
 3. **A defect.** qa-engineer files `QA-<n>` with a failing test → the owner of the fix → qa-engineer re-verifies and closes it. After three rounds it goes to the owner.
