@@ -1821,6 +1821,7 @@
     "n:15": "M-CNT-SEQ"
    },
    "check": "transfer",
+   "voice": true,
    "row": [
     "n:11",
     "n:12",
@@ -1847,6 +1848,7 @@
     "n:18": "M-CNT-SEQ"
    },
    "check": "transfer",
+   "voice": true,
    "row": [
     "n:16",
     "?",
