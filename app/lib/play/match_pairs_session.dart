@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../content/schemas.dart' show coinSprites;
 import '../design/app_text.dart';
@@ -31,8 +32,13 @@ class MatchPairsSession extends TemplateSession {
   final Map<String, String> matched = <String, String>{};
   String? wrongLeft;
   String? wrongRight;
+
+  /// The faces the help has lit. A card alone is "start with this one"; the face it goes with is lit only at the end of the
+  /// worked example.
   String? hintLeft;
   String? hintRight;
+  bool demoRunning = false;
+  int _run = 0;
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
@@ -57,7 +63,20 @@ class MatchPairsSession extends TemplateSession {
   int _bottom(String id) => activity.right.indexWhere((MatchFace f) => f.id == id);
   (int, int) _indexes(String top, String bottom) => (_top(top), _bottom(bottom));
 
+  /// The pair the guide has joined for a moment, and the end of its demonstration when the child touches a card.
+  String? _demoPair;
+
+  void _endDemo() {
+    if (!demoRunning) return;
+    _run++;
+    if (_demoPair != null) matched.remove(_demoPair);
+    _demoPair = null;
+    demoRunning = false;
+    controller.demoDone();
+  }
+
   Future<void> tap(String id, {required bool top}) async {
+    _endDemo();
     if (_busy || ring == AnswerState.correct) return;
     if (top ? matched.containsKey(id) : isMatchedRight(id)) return;
     if (top) {
@@ -76,7 +95,8 @@ class MatchPairsSession extends TemplateSession {
     if (controller.guided && !right) {
       selectedLeft = null;
       selectedRight = null;
-      _point();
+      if (controller.answerShown) _point();
+      notify();
       return;
     }
     _busy = true;
@@ -120,7 +140,7 @@ class MatchPairsSession extends TemplateSession {
       selectedRight = null;
       ring = AnswerState.idle;
       _busy = false;
-      if (controller.guided) _point();
+      if (controller.answerShown) _point();
       notify();
     });
   }
@@ -138,6 +158,8 @@ class MatchPairsSession extends TemplateSession {
 
   @override
   void onReset() {
+    _run++;
+    _demoPair = null;
     matched.clear();
     selectedLeft = null;
     selectedRight = null;
@@ -147,19 +169,98 @@ class MatchPairsSession extends TemplateSession {
     hintRight = null;
     ring = AnswerState.idle;
     _busy = false;
+    demoRunning = false;
     notify();
   }
 
   @override
   void onReplay() {
+    _run++;
     hintLeft = null;
     hintRight = null;
     notify();
   }
 
+  /// The first pair that is not joined yet.
+  MapEntry<String, String>? get _nextPair {
+    for (final MapEntry<String, String> e in activity.pairs.entries) {
+      if (!matched.containsKey(e.key)) return e;
+    }
+    return null;
+  }
+
   @override
   void onHint() {
-    if (!_busy) _point();
+    if ((_busy && !controller.guided) || demoRunning) return;
+    switch (hintPictureOf(activity)) {
+      case HintPicture.eachFace:
+        _lightEach();
+      case HintPicture.firstFace:
+        _run++;
+        hintLeft = _nextPair?.key;
+        hintRight = null;
+        notify();
+      default:
+        _drawOne();
+    }
+  }
+
+  /// Hint 1: the cards of the top row are lit one after the other, from the left. None is joined and none stays lit.
+  void _lightEach() {
+    _run++;
+    final int run = _run;
+    hintRight = null;
+    final List<String> ids = <String>[
+      for (final MatchFace f in activity.left)
+        if (!matched.containsKey(f.id)) f.id,
+    ];
+    for (int i = 0; i < ids.length; i++) {
+      later(Duration(milliseconds: 700 * i), () {
+        if (run != _run) return;
+        hintLeft = ids[i];
+        notify();
+      });
+    }
+    later(Duration(milliseconds: 700 * ids.length), () {
+      if (run != _run) return;
+      hintLeft = null;
+      notify();
+    });
+    notify();
+  }
+
+  /// The worked example: the guide lights the first card, then its partner, joins them for a moment, undoes it and leaves the two
+  /// lit. Then it is the child's turn.
+  void _drawOne() {
+    final MapEntry<String, String>? pair = _nextPair;
+    if (pair == null) return;
+    _run++;
+    final int run = _run;
+    demoRunning = true;
+    hintLeft = pair.key;
+    hintRight = null;
+    selectedLeft = null;
+    selectedRight = null;
+    later(const Duration(milliseconds: 900), () {
+      if (run != _run) return;
+      hintRight = pair.value;
+      notify();
+    });
+    later(const Duration(milliseconds: 1800), () {
+      if (run != _run) return;
+      matched[pair.key] = pair.value;
+      _demoPair = pair.key;
+      notify();
+    });
+    later(const Duration(milliseconds: 3000), () {
+      if (run != _run) return;
+      matched.remove(pair.key);
+      _demoPair = null;
+      demoRunning = false;
+      notify();
+      controller.demoDone();
+    });
+    notify();
   }
 
   // ---- drawing ----

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
+import '../content/models.dart' show Activity;
 import '../speech/answer_matcher.dart';
 import 'lesson_controller.dart';
 
@@ -73,8 +75,13 @@ abstract class TemplateSession extends ChangeNotifier {
   /// The child may count (or give) again from the start.
   void onReset();
 
-  /// Play the help the controller just chose (`controller.hintAction`).
+  /// Play the help the controller just chose: the picture that [hintPictureOf] says for the level shown.
   void onHint();
+
+  /// What [activity]'s template draws for the hint level the controller has shown (B-40: one picture per level, the table is
+  /// `HintLadder`). [share] is true for a sort and drag activity in share mode.
+  HintPicture hintPictureOf(Activity activity, {bool share = false}) =>
+      HintLadder.of(activity.template, share: share)!.at(controller.hintShown);
 
   /// The question is asked again: a gentle show of the objects, no help.
   void onReplay();

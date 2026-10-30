@@ -161,10 +161,12 @@ void main() {
         // 2. the child keeps going wrong: the help climbs the whole ladder, then only the right move is left
         final List<Future<Outcome> Function(LessonController)> wrong = wrongMoves(a);
         final LessonController ladder = start(lesson, i);
-        for (int k = 0; k < a.maxAttempts; k++) {
+        final int attempts = a.optionCount == 2 ? 2 : a.maxAttempts; // a two-choice item has one retry (B-40)
+        for (int k = 0; k < attempts; k++) {
           await wrong[k % wrong.length](ladder);
         }
-        expect(ladder.guided, isTrue, reason: '$where: after ${a.maxAttempts} mistakes the child is guided');
+        expect(ladder.errors, attempts, reason: where);
+        expect(ladder.guided, isTrue, reason: '$where: after $attempts mistakes the child is guided');
         if (a.hints.isNotEmpty) {
           expect(ladder.hintLevel, a.hints.length, reason: '$where: the ladder reaches its top');
           reachedActions.add(ladder.hintAction!.name);
@@ -176,6 +178,7 @@ void main() {
         for (int h = 1; h <= a.hints.length + 1; h++) {
           lamp.showHint();
           expect(lamp.hintLevel, h <= a.hints.length ? h : a.hints.length, reason: where);
+          expect(lamp.hintShown, lamp.hintLevel, reason: '$where: the stage draws the level the lamp gave');
           if (lamp.hintAction != null) reachedActions.add(lamp.hintAction!.name);
           expect(
             lamp.bubble,
@@ -326,6 +329,14 @@ void main() {
             );
             await tester.pump(const Duration(milliseconds: 2500));
             expect(tester.takeException(), isNull, reason: '${lesson.id}[$i] ${a.id}');
+            // The whole ladder on screen (B-40): the lamp three times, each level drawn on this stage without an error. No level
+            // may leave the child without a move.
+            for (int level = 1; level <= a.hints.length; level++) {
+              c.showHint();
+              expect(c.hintShown, level, reason: a.id);
+              await tester.pump(const Duration(milliseconds: 1500));
+              expect(tester.takeException(), isNull, reason: '${lesson.id}[$i] ${a.id} hint $level');
+            }
             s.dispose();
             await tester.pumpWidget(const SizedBox());
           }

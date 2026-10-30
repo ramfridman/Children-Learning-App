@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
+import 'hint_widgets.dart';
 import 'lesson_controller.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
@@ -35,6 +37,9 @@ class FlashSession extends TemplateSession {
   /// The group stays in view while the child answers (the worked example).
   bool _kept = false;
 
+  /// Hint 2 is showing the same number as hands or ten-frames, beside the group, while it is in view.
+  bool aid = false;
+
   String? chosenId;
   AnswerState chosenState = AnswerState.idle;
   bool _busy = false;
@@ -48,7 +53,10 @@ class FlashSession extends TemplateSession {
       if (mine != _flashes) return; // a newer flash has taken over
       visible = _kept;
       answering = true;
+      aid = false;
       notify();
+      // A group that stays in view is the worked example: it has been shown, now the answer may carry the halo.
+      if (_kept) controller.demoDone();
     });
   }
 
@@ -107,6 +115,7 @@ class FlashSession extends TemplateSession {
     chosenState = AnswerState.idle;
     _busy = false;
     _kept = false;
+    aid = false;
     answering = false;
     _show(activity.flashMs);
   }
@@ -119,8 +128,12 @@ class FlashSession extends TemplateSession {
   @override
   void onHint() {
     if (_busy) return;
-    _kept = controller.hintAction == HintAction.workedExample;
-    _show(activity.flashMs * 2);
+    final HintPicture picture = hintPictureOf(activity);
+    _kept = picture == HintPicture.demonstration;
+    aid = picture == HintPicture.countingAid;
+    // The tiles step aside while the number is shown another way: the card opens in their place.
+    if (aid) answering = false;
+    _show(activity.flashMs * (_kept ? 3 : 2));
   }
 
   @override
@@ -130,38 +143,51 @@ class FlashSession extends TemplateSession {
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
-    builder: (BuildContext c, Widget? _) => IgnorePointer(
-      ignoring: !answering,
-      child: AnimatedOpacity(
-        opacity: answering ? 1 : 0,
-        duration: const Duration(milliseconds: 300),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            for (final ChoiceOption o in activity.options)
-              Opacity(
-                opacity: controller.guided && o.id != activity.correctId ? 0.35 : 1,
-                child: AnswerTile(
-                  key: Key('tile-${o.id}'),
-                  semanticLabel: '${o.numeral}',
-                  state: chosenId == o.id
-                      ? chosenState
-                      : ((controller.guided && o.id == activity.correctId) || voiceLit == o.id
-                            ? AnswerState.selected
-                            : AnswerState.idle),
-                  onPressed: () => choose(o.id),
-                  child: Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      '${o.numeral}',
-                      style: AppText.fixed(size: spec.tileFont, weight: 800, lineHeight: 1),
+    builder: (BuildContext c, Widget? _) => Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        // The answer area is empty while the group is in view: hint 2 shows the number another way here.
+        if (aid && !answering)
+          IgnorePointer(
+            child: SizedBox(
+              height: 112,
+              child: CountingAid(n: activity.group.count, shown: activity.group.count),
+            ),
+          ),
+        IgnorePointer(
+          ignoring: !answering,
+          child: AnimatedOpacity(
+            opacity: answering ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                for (final ChoiceOption o in activity.options)
+                  Opacity(
+                    opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
+                    child: AnswerTile(
+                      key: Key('tile-${o.id}'),
+                      semanticLabel: '${o.numeral}',
+                      state: chosenId == o.id
+                          ? chosenState
+                          : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
+                                ? AnswerState.selected
+                                : AnswerState.idle),
+                      onPressed: () => choose(o.id),
+                      child: Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: Text(
+                          '${o.numeral}',
+                          style: AppText.fixed(size: spec.tileFont, weight: 800, lineHeight: 1),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-          ],
+              ],
+            ),
+          ),
         ),
-      ),
+      ],
     ),
   );
 }

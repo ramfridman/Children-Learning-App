@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
@@ -149,26 +150,32 @@ class TraceSession extends TemplateSession {
     demo = null;
   }
 
-  /// A dot walks along the stroke that is next.
-  void _walk() {
+  /// A dot walks along the stroke that is next, as far as [fraction] of it, [msPerPoint] for each of its points. With [guide] the
+  /// whole path is drawn as well; with [rest] of the strokes it goes on to the strokes after that one (the worked example).
+  void _walk({double fraction = 1, int msPerPoint = 70, bool guide = true, bool allStrokes = false}) {
     _stopDemo();
     final int id = _demoId;
-    showWay = true;
-    final List<Offset> path = _resample(
-      activity.strokes[math.min(strokeIndex, activity.strokes.length - 1)],
-      24,
-    );
-    for (int i = 0; i < path.length; i++) {
-      later(Duration(milliseconds: 70 * (i + 1)), () {
-        if (_demoId != id) return;
-        demo = path[i];
-        notify();
-      });
+    if (guide) showWay = true;
+    int at = 0;
+    final int first = math.min(strokeIndex, activity.strokes.length - 1);
+    final int last = allStrokes ? activity.strokes.length - 1 : first;
+    for (int k = first; k <= last; k++) {
+      final List<Offset> path = _resample(activity.strokes[k], 24);
+      final int shown = math.max(2, (path.length * fraction).round());
+      for (int i = 0; i < shown; i++) {
+        later(Duration(milliseconds: msPerPoint * (++at)), () {
+          if (_demoId != id) return;
+          demo = path[i];
+          notify();
+        });
+      }
+      at += 6; // a short rest between strokes
     }
-    later(Duration(milliseconds: 70 * (path.length + 8)), () {
+    later(Duration(milliseconds: msPerPoint * (at + 8)), () {
       if (_demoId != id) return;
       demo = null;
       notify();
+      if (allStrokes) controller.demoDone();
     });
     notify();
   }
@@ -189,7 +196,18 @@ class TraceSession extends TemplateSession {
 
   @override
   void onHint() {
-    if (!_busy) _walk();
+    if (_busy) return;
+    switch (hintPictureOf(activity)) {
+      case HintPicture.firstStroke:
+        // Hint 1: where to start and which way, the first part of the stroke only.
+        _walk(fraction: 0.3, guide: false);
+      case HintPicture.wholeStroke:
+        // Hint 2: the whole stroke, slower, with the path drawn.
+        _walk(msPerPoint: 110);
+      default:
+        // The worked example: every stroke of the numeral or shape in turn, with the path drawn. Then it is the child's turn.
+        _walk(allStrokes: true);
+    }
   }
 
   // ---- drawing ----

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../content/schemas.dart' show coinSprites, coinValues;
 import '../design/app_text.dart';
@@ -25,8 +26,8 @@ class PurseCoin {
 /// a coin on the counter takes it back) and presses pay. The total on the counter is not shown: adding it up is the task.
 ///
 /// Exactly the price is right. Anything else is a "not yet"; if the number of coins equals the price in shekels (three coins for
-/// three shekels) the mistake carries the counting misconception, M-MONEY-COUNT. After three mistakes the help lights the coins of
-/// a way to pay (the fewest coins), and only paying exactly is taken.
+/// three shekels) the mistake carries the counting misconception, M-MONEY-COUNT. After three mistakes the guide puts the coins of a
+/// way to pay (the fewest coins) on the counter one by one, takes them back and leaves them lit, and only paying exactly is taken.
 class ShopPaySession extends TemplateSession {
   ShopPaySession(super.controller, this.activity) {
     int n = 0;
@@ -41,6 +42,12 @@ class ShopPaySession extends TemplateSession {
   final List<PurseCoin> purse = <PurseCoin>[];
   final List<String> onCounter = <String>[];
   Set<String> hinted = <String>{};
+
+  /// Hint 1 lights the price and the counter; the running total is shown only while the guide pays (the worked example).
+  bool lightPrice = false;
+  bool demoRunning = false;
+  int? demoTotal;
+  int _run = 0;
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
@@ -49,7 +56,18 @@ class ShopPaySession extends TemplateSession {
 
   String kindOf(String id) => purse.firstWhere((PurseCoin c) => c.id == id).kind;
 
+  /// A touch of the child ends the guide's demonstration at once (the coins come back) and the child's move is taken.
+  void _endDemo() {
+    if (!demoRunning) return;
+    _run++;
+    onCounter.clear();
+    demoTotal = null;
+    demoRunning = false;
+    controller.demoDone();
+  }
+
   void toggle(String id) {
+    _endDemo();
     if (_busy || ring == AnswerState.correct) return;
     if (onCounter.contains(id)) {
       onCounter.remove(id);
@@ -57,14 +75,16 @@ class ShopPaySession extends TemplateSession {
       onCounter.add(id);
     }
     hinted = <String>{};
+    lightPrice = false;
     notify();
   }
 
   Future<void> pay() async {
+    _endDemo();
     if (_busy || ring == AnswerState.correct || onCounter.isEmpty) return;
     final bool right = total == activity.price;
     if (controller.guided && !right) {
-      _showWay();
+      if (controller.answerShown) _showWay();
       return;
     }
     _busy = true;
@@ -87,7 +107,7 @@ class ShopPaySession extends TemplateSession {
       onCounter.clear();
       ring = AnswerState.idle;
       _busy = false;
-      if (controller.guided) _showWay();
+      if (controller.answerShown) _showWay();
       notify();
     });
   }
@@ -111,10 +131,23 @@ class ShopPaySession extends TemplateSession {
     notify();
   }
 
+  /// The coins of the way, the biggest first.
+  List<PurseCoin> _wayCoins() {
+    final Set<String> ids = solution();
+    return <PurseCoin>[
+      for (final PurseCoin c in purse)
+        if (ids.contains(c.id)) c,
+    ]..sort((PurseCoin a, PurseCoin b) => b.value.compareTo(a.value));
+  }
+
   @override
   void onReset() {
+    _run++;
     onCounter.clear();
     hinted = <String>{};
+    lightPrice = false;
+    demoRunning = false;
+    demoTotal = null;
     ring = AnswerState.idle;
     _busy = false;
     notify();
@@ -122,13 +155,69 @@ class ShopPaySession extends TemplateSession {
 
   @override
   void onReplay() {
+    _run++;
     hinted = <String>{};
+    lightPrice = false;
     notify();
   }
 
   @override
   void onHint() {
-    if (!_busy) _showWay();
+    if (_busy || demoRunning) return;
+    switch (hintPictureOf(activity)) {
+      case HintPicture.priceAndCounter:
+        hinted = <String>{};
+        lightPrice = true;
+        notify();
+      case HintPicture.firstCoin:
+        _putFirstCoin();
+      default:
+        _workedExample();
+    }
+  }
+
+  /// Hint 2: the guide puts the biggest coin of a way to pay on the counter and stops. When one coin pays everything that coin
+  /// would be the answer, so then the guide leaves the purse as it is and the price and counter stay lit.
+  void _putFirstCoin() {
+    hinted = <String>{};
+    lightPrice = true;
+    final List<PurseCoin> way = _wayCoins();
+    if (way.length > 1 && !onCounter.contains(way.first.id)) onCounter.add(way.first.id);
+    notify();
+  }
+
+  /// The worked example: the coins of a way to pay go on the counter one by one, with the running total, then come back; they stay
+  /// lit. Then it is the child's turn.
+  void _workedExample() {
+    _run++;
+    final int run = _run;
+    final List<PurseCoin> way = _wayCoins();
+    demoRunning = true;
+    lightPrice = true;
+    onCounter.clear();
+    hinted = <String>{};
+    demoTotal = 0;
+    int sum = 0;
+    for (int k = 0; k < way.length; k++) {
+      sum += way[k].value;
+      final int running = sum;
+      later(Duration(milliseconds: 600 + 900 * k), () {
+        if (run != _run) return;
+        onCounter.add(way[k].id);
+        demoTotal = running;
+        notify();
+      });
+    }
+    later(Duration(milliseconds: 600 + 900 * way.length + 1200), () {
+      if (run != _run) return;
+      onCounter.clear();
+      demoTotal = null;
+      demoRunning = false;
+      hinted = solution();
+      notify();
+      controller.demoDone();
+    });
+    notify();
   }
 
   // ---- drawing ----
@@ -302,14 +391,19 @@ class _Counter extends StatelessWidget {
   final ShopPaySession s;
   final Size size;
 
+  /// An amount in agorot, written the way a price is: whole shekels, shekels and agorot, or agorot.
+  static String _money(int value) {
+    final int shekels = value ~/ 100;
+    final int agorot = value % 100;
+    return agorot == 0
+        ? '₪$shekels'
+        : (shekels == 0 ? '$agorot ${He.agorot.text}' : '₪$shekels.${agorot.toString().padLeft(2, '0')}');
+  }
+
   @override
   Widget build(BuildContext context) {
     final ShopPayActivity a = s.activity;
-    final int shekels = a.price ~/ 100;
-    final int agorot = a.price % 100;
-    final String price = agorot == 0
-        ? '₪$shekels'
-        : (shekels == 0 ? '$agorot ${He.agorot.text}' : '₪$shekels.${agorot.toString().padLeft(2, '0')}');
+    final String price = _money(a.price);
     return Semantics(
       container: true,
       label: a.altText,
@@ -343,6 +437,7 @@ class _Counter extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: TokenColors.paper,
                         borderRadius: BorderRadius.circular(TokenRadius.lg),
+                        border: s.lightPrice ? Border.all(color: TokenColors.hintHalo, width: 4) : null,
                       ),
                       child: Text(price, style: AppText.fixed(size: 24, weight: 800, lineHeight: 1.2)),
                     ),
@@ -362,7 +457,9 @@ class _Counter extends StatelessWidget {
                     border: Border.all(
                       color: s.ring == AnswerState.correct
                           ? TokenColors.correctGlow
-                          : (s.ring == AnswerState.notYet ? TokenColors.notYetRing : TokenColors.hairline),
+                          : (s.ring == AnswerState.notYet
+                                ? TokenColors.notYetRing
+                                : (s.lightPrice ? TokenColors.hintHalo : TokenColors.hairline)),
                       width: 4,
                     ),
                   ),
@@ -391,6 +488,25 @@ class _Counter extends StatelessWidget {
                   ),
                 ),
               ),
+              // While the guide pays (the worked example) the running total is shown, so the child sees the amount grow.
+              if (s.demoTotal != null && s.demoTotal! > 0)
+                Positioned(
+                  right: 18,
+                  bottom: 12,
+                  child: Container(
+                    key: const Key('running-total'),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: TokenColors.paper,
+                      borderRadius: BorderRadius.circular(TokenRadius.lg),
+                      border: Border.all(color: TokenColors.hintHalo, width: 3),
+                    ),
+                    child: Text(
+                      _money(s.demoTotal!),
+                      style: AppText.fixed(size: 22, weight: 800, lineHeight: 1.2),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

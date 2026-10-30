@@ -156,6 +156,13 @@ void main() {
         await settle(tester);
       }
       expect(c.guided, isTrue);
+      // The guide demonstrates first: the bin is lit only as the last step, when the picture comes back out of it.
+      expect(s.hintBin, isNull, reason: 'the help does not point before the worked example');
+      expect(c.answerShown, isFalse);
+      expect(s.demoRunning, isTrue);
+      await settle(tester, 2500);
+      expect(s.demoRunning, isFalse);
+      expect(c.answerShown, isTrue);
       expect(s.hintBin, 'b1', reason: 'the help shows the bin of the picture');
       final int before = written.length;
       await tap(tester, 'item-i1');
@@ -211,8 +218,10 @@ void main() {
         final SortDragSession s = SortDragSession(c, a);
         await host(tester, s);
         for (int round = 0; round < a.maxAttempts; round++) {
-          for (int k = 1; k <= 4; k++) {
-            await tap(tester, 'item-i$k');
+          // Everything that is still in the tray goes to the first friend: never fair. From the second try on the guide has
+          // dealt the first round (one for each), so the child only has the rest to deal.
+          for (final SortItem item in List<SortItem>.of(s.tray)) {
+            await tap(tester, 'item-${item.id}');
             await tap(tester, 'bin-b1');
           }
           await settle(tester);
@@ -224,6 +233,7 @@ void main() {
         await settle(tester, 6000);
         expect(s.demoRunning, isFalse);
         expect(s.placed, isEmpty, reason: 'then the move is the child\'s again');
+        expect(c.answerShown, isTrue);
         s.dispose();
         await tester.pumpWidget(const SizedBox());
       },
@@ -253,6 +263,8 @@ void main() {
         expect(written.single.misconceptionTag, 'M-PAT-COPY');
         await settle(tester);
         expect(s.filled, everyElement(isNull));
+        s.dispose();
+        await tester.pumpWidget(const SizedBox());
       },
     );
 
@@ -297,6 +309,11 @@ void main() {
         await settle(tester);
       }
       expect(c.guided, isTrue);
+      expect(s.hintSprite, isNull, reason: 'the picture is pointed at only after the worked example');
+      expect(s.demoRunning, isTrue, reason: 'the guide fills the places first');
+      await settle(tester, 6000);
+      expect(s.demoRunning, isFalse);
+      expect(s.filled, everyElement(isNull), reason: 'then the places are empty again, for the child');
       expect(s.hintSprite, 'asset:ball_red', reason: 'the help shows the picture of the first place');
       await tap(tester, 'palette-0'); // blue in the first place: not taken
       expect(s.filled[0], isNull);
@@ -490,6 +507,10 @@ void main() {
         await settle(tester);
       }
       expect(c.guided, isTrue);
+      expect(s.demoRunning, isTrue, reason: 'the guide puts one piece in its place first');
+      await settle(tester, 3000);
+      expect(s.demoRunning, isFalse);
+      expect(s.filled, isEmpty, reason: 'then the piece is out again, for the child');
       expect(s.hintSlot, 's1', reason: 'the help shows the first empty place');
       final int before = written.length;
       await tap(tester, 'piece-$square');
@@ -639,7 +660,10 @@ void main() {
         await settle(tester);
       }
       expect(c.guided, isTrue);
+      // The guide walks along the row and stops at the mistake: it is rung only at the end of the walk.
+      await settle(tester, 700 * (a.cells.length + 2));
       expect(s.hintCell, a.wrong);
+      expect(c.answerShown, isTrue);
       final int before = written.length;
       await tap(tester, 'cell-$other');
       expect(written.length, before, reason: 'not counted again');
@@ -743,12 +767,17 @@ void main() {
         await tap(tester, 'on-c0');
         expect(s.onCounter, isEmpty);
         for (int k = 0; k < c.current.maxAttempts; k++) {
-          await tap(tester, 'coin-c3');
+          // From the second mistake the guide may have put its first coin on the counter already.
+          if (!s.onCounter.contains('c3')) await tap(tester, 'coin-c3');
           await tap(tester, 'pay');
           await settle(tester);
         }
         expect(c.guided, isTrue);
         expect(s.solution().length, 2, reason: 'the fewest coins for three shekels: a 2 and a 1');
+        expect(s.hinted, isEmpty, reason: 'the coins are lit only after the guide has paid');
+        expect(s.demoRunning, isTrue);
+        await settle(tester, 4000);
+        expect(s.demoRunning, isFalse);
         expect(s.hinted, isNotEmpty);
         s.dispose();
         await tester.pumpWidget(const SizedBox());
@@ -799,6 +828,10 @@ void main() {
           await settle(tester);
         }
         expect(c.guided, isTrue);
+        expect(s.ghost, isFalse, reason: 'the faint hands wait for the end of the worked example');
+        expect(s.demoRunning, isTrue, reason: 'the short hand steps to the hour first');
+        await settle(tester, 6000);
+        expect(s.demoRunning, isFalse);
         expect(s.ghost, isTrue);
         s.dispose();
         await tester.pumpWidget(const SizedBox());

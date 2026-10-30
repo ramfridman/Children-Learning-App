@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
@@ -10,6 +11,7 @@ import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
 import '../strings/he.dart';
+import 'hint_widgets.dart';
 import 'lesson_controller.dart';
 import 'template_session.dart';
 
@@ -82,8 +84,10 @@ class CountTapSession extends TemplateSession {
   AnswerState chosenState = AnswerState.idle;
   bool _busy = false;
 
-  /// An object that is wiggling to be noticed, and how many fingers the hint hand shows.
+  /// An object that is wiggling to be noticed, the objects the light of hint 1 has been to (a dot stays on each until the next
+  /// touch), and how many the counting aid of hint 2 shows (hands up to ten, ten-frames above).
   int? wiggling;
+  final Set<int> seen = <int>{};
   int fingers = 0;
   bool demoRunning = false;
 
@@ -92,6 +96,7 @@ class CountTapSession extends TemplateSession {
 
   void tapObject(int i) {
     if (answering || (demoRunning && !_demoStep)) return;
+    seen.clear();
     if (counted.contains(i)) {
       // Counting the same one again.
       touchedTwice = true;
@@ -180,34 +185,35 @@ class CountTapSession extends TemplateSession {
     chosenState = AnswerState.idle;
     _busy = false;
     wiggling = null;
+    seen.clear();
     fingers = 0;
     demoRunning = false;
     notify();
   }
 
   @override
-  void onReplay() => _wiggleAll();
+  void onReplay() => _lightEach(dots: false);
 
   @override
   void onHint() {
-    switch (controller.hintAction) {
-      case HintAction.replayPromptSlow:
-      case HintAction.highlightObjectsSequentially:
-        _wiggleAll();
-      case HintAction.showFingers:
-        _showFingers();
-      case HintAction.workedExample:
+    switch (hintPictureOf(activity)) {
+      case HintPicture.countingAid:
+        _showAid();
+      case HintPicture.demonstration:
         _workedExample();
-      case null:
-        break;
+      default:
+        _lightEach();
     }
   }
 
-  void _wiggleAll() {
+  /// Hint 1: the objects are lit one after the other, and a dot stays on each one visited. Nothing is said or counted.
+  void _lightEach({bool dots = true}) {
     if (answering) return;
+    seen.clear();
     for (int i = 0; i < activity.count; i++) {
       later(Duration(milliseconds: 450 * i), () {
         wiggling = i;
+        if (dots) seen.add(i);
         notify();
       });
     }
@@ -217,7 +223,8 @@ class CountTapSession extends TemplateSession {
     });
   }
 
-  void _showFingers() {
+  /// Hint 2: the same number counted another way: one more finger (or counter) for each second.
+  void _showAid() {
     fingers = 0;
     for (int i = 1; i <= activity.count; i++) {
       later(Duration(milliseconds: 600 * i), () {
@@ -249,6 +256,7 @@ class CountTapSession extends TemplateSession {
       demoRunning = false;
       answering = true;
       notify();
+      controller.demoDone();
     });
     notify();
   }
@@ -264,42 +272,55 @@ class CountTapSession extends TemplateSession {
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
-    builder: (BuildContext c, Widget? _) => IgnorePointer(
-      ignoring: !answering,
-      child: AnimatedOpacity(
-        opacity: answering ? 1 : 0,
-        duration: const Duration(milliseconds: 300),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            for (final ChoiceOption o in activity.options)
-              Opacity(
-                opacity: controller.guided && o.id != activity.correctId ? 0.35 : 1,
-                child: AnswerTile(
-                  key: Key('tile-${o.id}'),
-                  semanticLabel: '${o.value}',
-                  state: chosenId == o.id
-                      ? chosenState
-                      : ((controller.guided && o.id == activity.correctId) || voiceLit == o.id
-                            ? AnswerState.selected
-                            : AnswerState.idle),
-                  onPressed: () => choose(o.id),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        '${o.value}',
-                        style: AppText.fixed(size: spec.tileFont, weight: 800, lineHeight: 1),
+    builder: (BuildContext c, Widget? _) => Stack(
+      alignment: Alignment.center,
+      children: <Widget>[
+        IgnorePointer(
+          ignoring: !answering,
+          child: AnimatedOpacity(
+            opacity: answering ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                for (final ChoiceOption o in activity.options)
+                  Opacity(
+                    opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
+                    child: AnswerTile(
+                      key: Key('tile-${o.id}'),
+                      semanticLabel: '${o.value}',
+                      state: chosenId == o.id
+                          ? chosenState
+                          : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
+                                ? AnswerState.selected
+                                : AnswerState.idle),
+                      onPressed: () => choose(o.id),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            '${o.value}',
+                            style: AppText.fixed(size: spec.tileFont, weight: 800, lineHeight: 1),
+                          ),
+                          const SizedBox(height: 4),
+                          FittedBox(fit: BoxFit.scaleDown, child: Dots(o.value!)),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      Dots(o.value!),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-          ],
+              ],
+            ),
+          ),
         ),
-      ),
+        // While the objects are being counted the answer area is free: hint 2 opens its card there, beside the scene.
+        if (fingers > 0 && !answering)
+          IgnorePointer(
+            child: SizedBox(
+              height: 112,
+              child: CountingAid(n: activity.count, shown: fingers),
+            ),
+          ),
+      ],
     ),
   );
 }
@@ -375,7 +396,17 @@ class _CountStage extends StatelessWidget {
                   ),
                 ),
               ),
-            if (s.fingers > 0) Positioned(left: 10, bottom: 6, child: FingersHint(raised: s.fingers)),
+            if (s.fingers > 0 && s.answering)
+              Positioned(
+                left: 8,
+                bottom: 6,
+                child: IgnorePointer(
+                  child: SizedBox(
+                    height: size.height - 12,
+                    child: CountingAid(n: a.count, shown: s.fingers),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -411,12 +442,18 @@ class _CountStage extends StatelessWidget {
               child: AnimatedRotation(
                 turns: wiggle ? 0.04 : 0,
                 duration: const Duration(milliseconds: 250),
-                child: Center(
-                  child: PackSvg(
-                    a.assets.svg(lit ? a.litSprite : a.sprite),
-                    width: layout.objectSize * (lit ? 1.15 : 1),
-                    height: layout.objectSize * (lit ? 1.15 : 1),
-                  ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    PackSvg(
+                      a.assets.svg(lit ? a.litSprite : a.sprite),
+                      width: layout.objectSize * (lit ? 1.15 : 1),
+                      height: layout.objectSize * (lit ? 1.15 : 1),
+                    ),
+                    if (s.seen.contains(i))
+                      const Positioned(top: 2, right: 2, child: SeenDot(key: Key('seen-dot'))),
+                  ],
                 ),
               ),
             ),
@@ -425,56 +462,4 @@ class _CountStage extends StatelessWidget {
       ),
     );
   }
-}
-
-/// A hand that raises its fingers one by one (R4), for the "count on your fingers" hint.
-class FingersHint extends StatelessWidget {
-  const FingersHint({super.key, required this.raised});
-
-  final int raised;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    key: const Key('fingers-hint'),
-    width: 78,
-    height: 74,
-    padding: const EdgeInsets.fromLTRB(8, 6, 8, 4),
-    decoration: BoxDecoration(
-      color: TokenColors.skyTint,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: TokenColors.hintHalo, width: 3),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        MathIsolate(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              for (int f = 0; f < 5; f++)
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  width: 9,
-                  height: f < raised ? 36 : 12,
-                  decoration: BoxDecoration(
-                    color: f < raised ? TokenColors.spark : TokenColors.mist,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: TokenColors.ink, width: 1.5),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        Container(
-          height: 14,
-          decoration: BoxDecoration(
-            color: TokenColors.sparkTint,
-            borderRadius: BorderRadius.circular(7),
-            border: Border.all(color: TokenColors.ink, width: 1.5),
-          ),
-        ),
-      ],
-    ),
-  );
 }

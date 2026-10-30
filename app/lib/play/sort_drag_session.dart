@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
@@ -13,7 +14,8 @@ import 'template_session.dart';
 
 /// The sort-and-drag template (T03). Pictures wait below the stage; the bins stand on the stage. A picture is dragged into
 /// a bin, or touched and then the bin is touched (the same move, for a hand that does not drag yet). A wrong bin is a gentle
-/// "not yet" and the picture stays in the tray; after three of them only the right bin takes it, and the help shows which.
+/// "not yet" and the picture stays in the tray; after three of them only the right bin takes it, and the guide first sorts one
+/// picture as a worked example, which leaves the picture and its bin lit.
 ///
 /// In share mode (two or three friends, a number of pictures that divides evenly) any bin takes any picture, and the check is
 /// that all end up with the same number: a child who shares unequally gets a "not yet" with M-SHARE-UNEQ and starts dealing
@@ -34,6 +36,10 @@ class SortDragSession extends TemplateSession {
   String? hintBin;
   String? notYetBin;
 
+  /// The bin or plate that the light of hint 1 and 2 is on now. It goes through all of them and rests on none.
+  String? litBin;
+  int _run = 0;
+
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
   bool demoRunning = false;
@@ -45,8 +51,28 @@ class SortDragSession extends TemplateSession {
 
   int countIn(String bin) => placed.values.where((String b) => b == bin).length;
 
+  /// The picture the guide has put in a bin while it demonstrates a sort, and whether a deal stops after the first round.
+  String? _demoItem;
+  bool _dealFirstOnly = false;
+
+  /// A touch of the child ends the guide's demonstration at once, and the child's move is taken. What the guide had dealt for
+  /// the child to go on from (the first round) stays; what it had put in a bin as an example goes back.
+  void _endDemo() {
+    if (!demoRunning) return;
+    _run++;
+    if (_demoItem != null) {
+      placed.remove(_demoItem);
+      _demoItem = null;
+    } else if (!_dealFirstOnly) {
+      placed.clear();
+    }
+    demoRunning = false;
+    controller.demoDone();
+  }
+
   void select(String itemId) {
-    if (_busy || demoRunning || ring == AnswerState.correct) return;
+    _endDemo();
+    if (_busy || ring == AnswerState.correct) return;
     selected = selected == itemId ? null : itemId;
     notify();
   }
@@ -58,7 +84,8 @@ class SortDragSession extends TemplateSession {
   }
 
   Future<void> drop(String itemId, String binId) async {
-    if (_busy || demoRunning || ring == AnswerState.correct || placed.containsKey(itemId)) return;
+    _endDemo();
+    if (_busy || ring == AnswerState.correct || placed.containsKey(itemId)) return;
     final SortItem item = activity.items.firstWhere((SortItem i) => i.id == itemId);
     if (activity.share) {
       placed[itemId] = binId;
@@ -78,7 +105,7 @@ class SortDragSession extends TemplateSession {
     }
     // The wrong bin. With only the right bin left (after three tries) it is simply not taken.
     if (controller.guided) {
-      _pointAt(item);
+      if (controller.answerShown) _pointAt(item);
       return;
     }
     _busy = true;
@@ -94,7 +121,7 @@ class SortDragSession extends TemplateSession {
       notYetBin = null;
       selected = null;
       _busy = false;
-      if (controller.guided) _pointAt(item);
+      if (controller.answerShown) _pointAt(item);
       notify();
     });
   }
@@ -141,32 +168,101 @@ class SortDragSession extends TemplateSession {
     notify();
   }
 
-  /// The guide deals the pictures between the friends, one for each in turn, and hands the move back.
-  void _dealDemo() {
+  /// The guide deals the pictures between the friends, one for each in turn. With [firstRoundOnly] it stops after one round and
+  /// the pictures stay where they are, for the child to go on; otherwise it deals them all and puts them back for the child's turn.
+  void _dealDemo({bool firstRoundOnly = false}) {
     if (demoRunning) return;
     demoRunning = true;
+    _dealFirstOnly = firstRoundOnly;
+    _run++;
+    final int run = _run;
     placed.clear();
     final List<SortItem> all = activity.items;
-    for (int k = 0; k < all.length; k++) {
+    final int count = firstRoundOnly ? math.min(all.length, activity.bins.length) : all.length;
+    for (int k = 0; k < count; k++) {
       later(Duration(milliseconds: 300 + TemplateSession.demoStep.inMilliseconds * k), () {
+        if (run != _run) return;
         placed[all[k].id] = activity.bins[k % activity.bins.length].id;
         notify();
       });
     }
-    later(Duration(milliseconds: 300 + TemplateSession.demoStep.inMilliseconds * all.length + 1400), () {
-      placed.clear();
+    later(
+      Duration(
+        milliseconds: 300 + TemplateSession.demoStep.inMilliseconds * count + (firstRoundOnly ? 0 : 1400),
+      ),
+      () {
+        if (run != _run) return;
+        if (!firstRoundOnly) placed.clear();
+        demoRunning = false;
+        notify();
+        if (!firstRoundOnly) controller.demoDone();
+      },
+    );
+    notify();
+  }
+
+  /// Hint 1 and 2: the light goes to each bin in turn, and rests on none. With [withItem] the next picture of the tray is lit too:
+  /// "look at this one, and at each place".
+  void _lightBins({required bool withItem}) {
+    _run++;
+    final int run = _run;
+    hintBin = null;
+    hintItem = withItem && tray.isNotEmpty ? tray.first.id : null;
+    const int step = 700;
+    for (int i = 0; i < activity.bins.length; i++) {
+      later(Duration(milliseconds: step * i), () {
+        if (run != _run) return;
+        litBin = activity.bins[i].id;
+        notify();
+      });
+    }
+    later(Duration(milliseconds: step * activity.bins.length), () {
+      if (run != _run) return;
+      litBin = null;
+      notify();
+    });
+    notify();
+  }
+
+  /// The worked example: the guide lifts the next picture, puts it in its bin, takes it out again and leaves the picture and its
+  /// bin lit. Then it is the child's turn.
+  void _sortOne() {
+    final List<SortItem> left = tray;
+    if (demoRunning || left.isEmpty) return;
+    _run++;
+    litBin = null;
+    final SortItem item = left.first;
+    demoRunning = true;
+    _demoItem = item.id;
+    final int run = _run;
+    hintItem = item.id;
+    hintBin = null;
+    later(const Duration(milliseconds: 800), () {
+      if (run != _run) return;
+      placed[item.id] = item.bin!;
+      notify();
+    });
+    later(const Duration(milliseconds: 2200), () {
+      if (run != _run) return;
+      placed.remove(item.id);
+      _demoItem = null;
+      hintBin = item.bin;
       demoRunning = false;
       notify();
+      controller.demoDone();
     });
     notify();
   }
 
   @override
   void onReset() {
+    _demoItem = null;
     placed.clear();
     selected = null;
     hintItem = null;
     hintBin = null;
+    litBin = null;
+    _run++;
     notYetBin = null;
     ring = AnswerState.idle;
     _busy = false;
@@ -177,18 +273,24 @@ class SortDragSession extends TemplateSession {
   @override
   void onReplay() {
     hintBin = null;
+    litBin = null;
+    _run++;
     notify();
   }
 
   @override
   void onHint() {
     if (_busy && !controller.guided) return;
-    if (activity.share) {
-      if (controller.hintAction == HintAction.workedExample) _dealDemo();
-      return;
+    switch (hintPictureOf(activity, share: activity.share)) {
+      case HintPicture.eachPlace:
+        _lightBins(withItem: false);
+      case HintPicture.nextPicture:
+        _lightBins(withItem: true);
+      case HintPicture.firstRound:
+        _dealDemo(firstRoundOnly: true);
+      default:
+        activity.share ? _dealDemo() : _sortOne();
     }
-    final List<SortItem> left = tray;
-    if (left.isNotEmpty) _pointAt(left.first);
   }
 
   // ---- drawing ----
@@ -289,7 +391,7 @@ class _SortStage extends StatelessWidget {
         final bool over = candidate.isNotEmpty;
         final Color? ring = s.notYetBin == b.id
             ? TokenColors.notYetRing
-            : (over || s.hintBin == b.id ? TokenColors.hintHalo : null);
+            : (over || s.hintBin == b.id || s.litBin == b.id ? TokenColors.hintHalo : null);
         return GestureDetector(
           key: Key('bin-${b.id}'),
           behavior: HitTestBehavior.opaque,

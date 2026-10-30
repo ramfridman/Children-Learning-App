@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../child/play_button.dart';
@@ -32,6 +33,10 @@ class RobotPathSession extends TemplateSession {
   /// The arrow that the help points at, and the squares of the way that the help shows.
   String? hintStep;
   final Set<(int, int)> trail = <(int, int)>{};
+
+  /// Hint 1 lights the robot and the flag; hint 2 shows a ghost of the robot one step on (null when there is none).
+  bool spotlight = false;
+  (int, int)? ghost;
 
   /// The robot just tried to leave the grid.
   bool bumped = false;
@@ -63,11 +68,13 @@ class RobotPathSession extends TemplateSession {
   Future<void> arrow(String dir) async {
     if (_busy || running || ring == AnswerState.correct) return;
     if (controller.guided && dir != _nextOfHelp) {
-      hintStep = _nextOfHelp;
+      if (controller.answerShown) hintStep = _nextOfHelp;
       notify();
       return;
     }
     hintStep = null;
+    ghost = null;
+    spotlight = false;
     if (activity.plan) {
       if (program.length < activity.maxSteps) program.add(dir);
       notify();
@@ -133,7 +140,7 @@ class RobotPathSession extends TemplateSession {
       pos = activity.robotAt;
       if (controller.guided) {
         program.clear();
-        hintStep = _nextOfHelp;
+        if (controller.answerShown) hintStep = _nextOfHelp;
       }
       notify();
     });
@@ -171,7 +178,10 @@ class RobotPathSession extends TemplateSession {
       pos = activity.robotAt;
       trail.clear();
       running = false;
+      // The last step of the worked example: the arrow the child is to press first is lit. Then it is the child's turn.
+      hintStep = _nextOfHelp;
       notify();
+      controller.demoDone();
     });
   }
 
@@ -181,6 +191,8 @@ class RobotPathSession extends TemplateSession {
     program.clear();
     trail.clear();
     hintStep = null;
+    spotlight = false;
+    ghost = null;
     running = false;
     bumped = false;
     ring = AnswerState.idle;
@@ -191,17 +203,32 @@ class RobotPathSession extends TemplateSession {
   @override
   void onReplay() {
     hintStep = null;
+    spotlight = false;
+    ghost = null;
     notify();
   }
 
   @override
   void onHint() {
     if (running || ring == AnswerState.correct) return;
-    if (controller.hintAction == HintAction.workedExample) {
-      _workedExample();
-      return;
+    switch (hintPictureOf(activity)) {
+      case HintPicture.robotAndGoal:
+        // Hint 1: where the robot stands and where the flag is, nothing more.
+        hintStep = null;
+        ghost = null;
+        spotlight = true;
+      case HintPicture.firstArrow:
+        // Hint 2: the first step of the way: its arrow is lit, and a ghost of the robot stands one square on.
+        spotlight = false;
+        hintStep = _nextOfHelp;
+        ghost = hintStep == null ? null : _after(pos, hintStep!);
+        if (ghost != null && !_inside(ghost!)) ghost = null;
+      default:
+        spotlight = false;
+        ghost = null;
+        _workedExample();
+        return;
     }
-    hintStep = _nextOfHelp;
     notify();
   }
 
@@ -320,7 +347,9 @@ class _RobotStage extends StatelessWidget {
                           ? TokenColors.hintHalo.withValues(alpha: 0.5)
                           : TokenColors.paper.withValues(alpha: 0.75),
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: TokenColors.hairline, width: 2),
+                      border: s.spotlight && ((c, r) == s.pos || (c, r) == a.goalAt)
+                          ? Border.all(color: TokenColors.hintHalo, width: 4)
+                          : Border.all(color: TokenColors.hairline, width: 2),
                     ),
                   ),
                 ),
@@ -331,6 +360,18 @@ class _RobotStage extends StatelessWidget {
               height: cell - 8,
               child: PackSvg(a.assets.svg(a.goalSprite), key: const Key('robot-goal')),
             ),
+            if (s.ghost != null)
+              Positioned(
+                left: at(s.ghost!).dx + 3,
+                top: at(s.ghost!).dy + 3,
+                width: cell - 6,
+                height: cell - 6,
+                child: Opacity(
+                  key: const Key('robot-ghost'),
+                  opacity: 0.4,
+                  child: PackSvg(a.assets.svg(a.robotSprite)),
+                ),
+              ),
             AnimatedPositioned(
               key: const Key('robot'),
               duration: const Duration(milliseconds: 300),

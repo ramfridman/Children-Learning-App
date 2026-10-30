@@ -3,10 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'hint_widgets.dart';
 import 'response_code.dart';
 import 'template_session.dart';
 
@@ -15,7 +17,8 @@ import 'template_session.dart';
 /// short hand then stands between two numbers, as it does on a real clock). A tick checks the time.
 ///
 /// A whole hour set to twelve is the child who read the long hand as the hour: it carries M-CLOCK-HANDS. After three mistakes the
-/// help shows where the short hand belongs, and only the right time is taken.
+/// guide first moves the short hand from the start to the right hour, hour by hour, as a worked example, and then a faint hand
+/// stays where it belongs; only the right time is taken.
 class ClockSetSession extends TemplateSession {
   ClockSetSession(super.controller, this.activity) : hour = activity.startHour, half = activity.startHalf;
 
@@ -24,9 +27,23 @@ class ClockSetSession extends TemplateSession {
   /// 1 to 12.
   int hour;
   bool half;
+
+  /// The faint hands where the time belongs: shown only at the end of the worked example, and afterwards.
   bool ghost = false;
+
+  /// Hint 1 lights the short hand (and fades the long one) and shows the hour of the question on a card; hint 2 rings that numeral
+  /// on the dial; the worked example moves the short hand through [demoHour].
+  bool lightHand = false;
+  bool numeralRing = false;
+  int? demoHour;
+  int _run = 0;
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
+
+  /// The hour the short hand shows: the guide's while it demonstrates, the child's otherwise.
+  int get shownHour => demoHour ?? hour;
+
+  bool get demoRunning => demoHour != null;
 
   /// Does this activity use the half-hour button at all?
   bool get allowHalf => activity.half || activity.startHalf;
@@ -34,7 +51,16 @@ class ClockSetSession extends TemplateSession {
   void next() => _set(hour % 12 + 1);
   void previous() => _set((hour + 10) % 12 + 1);
 
+  /// A touch of the child ends the guide's demonstration at once and the child's move is taken.
+  void _endDemo() {
+    if (!demoRunning) return;
+    _run++;
+    demoHour = null;
+    controller.demoDone();
+  }
+
   void _set(int h) {
+    _endDemo();
     if (_busy || ring == AnswerState.correct) return;
     hour = h;
     ghost = false;
@@ -42,6 +68,7 @@ class ClockSetSession extends TemplateSession {
   }
 
   void toggleHalf() {
+    _endDemo();
     if (_busy || ring == AnswerState.correct || !allowHalf) return;
     half = !half;
     ghost = false;
@@ -59,10 +86,11 @@ class ClockSetSession extends TemplateSession {
   }
 
   Future<void> check() async {
+    _endDemo();
     if (_busy || ring == AnswerState.correct) return;
     final bool right = hour == activity.hour && half == activity.half;
     if (controller.guided && !right) {
-      ghost = true;
+      if (controller.answerShown) ghost = true;
       notify();
       return;
     }
@@ -91,16 +119,20 @@ class ClockSetSession extends TemplateSession {
       _busy = false;
       hour = activity.startHour;
       half = activity.startHalf;
-      ghost = controller.guided;
+      ghost = controller.answerShown;
       notify();
     });
   }
 
   @override
   void onReset() {
+    _run++;
     hour = activity.startHour;
     half = activity.startHalf;
     ghost = false;
+    lightHand = false;
+    numeralRing = false;
+    demoHour = null;
     ring = AnswerState.idle;
     _busy = false;
     notify();
@@ -108,13 +140,55 @@ class ClockSetSession extends TemplateSession {
 
   @override
   void onReplay() {
+    _run++;
     ghost = false;
+    lightHand = false;
+    numeralRing = false;
+    demoHour = null;
     notify();
   }
 
   @override
   void onHint() {
-    ghost = true;
+    if (demoRunning) return;
+    switch (hintPictureOf(activity)) {
+      case HintPicture.handAndHour:
+        lightHand = true;
+        numeralRing = false;
+        notify();
+      case HintPicture.numeralOnDial:
+        lightHand = true;
+        numeralRing = true;
+        notify();
+      default:
+        _workedExample();
+    }
+  }
+
+  /// The worked example: the short hand steps from where it stands to the hour of the question, one hour at a time, and then goes
+  /// back; a faint hand is left where the time belongs. Then it is the child's turn.
+  void _workedExample() {
+    _run++;
+    final int run = _run;
+    lightHand = true;
+    numeralRing = true;
+    ghost = false;
+    final int steps = (activity.hour - hour + 12) % 12;
+    demoHour = hour;
+    for (int k = 1; k <= steps; k++) {
+      later(Duration(milliseconds: 800 * k), () {
+        if (run != _run) return;
+        demoHour = (hour + k - 1) % 12 + 1;
+        notify();
+      });
+    }
+    later(Duration(milliseconds: 800 * steps + 1400), () {
+      if (run != _run) return;
+      demoHour = null;
+      ghost = true;
+      notify();
+      controller.demoDone();
+    });
     notify();
   }
 
@@ -128,19 +202,41 @@ class ClockSetSession extends TemplateSession {
       return Semantics(
         container: true,
         label: activity.altText,
-        child: Center(
-          child: SizedBox(
-            width: side,
-            height: side,
-            child: GestureDetector(
-              key: const Key('clock-face'),
-              behavior: HitTestBehavior.opaque,
-              onPanStart: (DragStartDetails d) => dragTo(d.localPosition, side),
-              onPanUpdate: (DragUpdateDetails d) => dragTo(d.localPosition, side),
-              onTapUp: (TapUpDetails d) => dragTo(d.localPosition, side),
-              child: CustomPaint(painter: _ClockPainter(this)),
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: SizedBox(
+                width: side,
+                height: side,
+                child: GestureDetector(
+                  key: const Key('clock-face'),
+                  behavior: HitTestBehavior.opaque,
+                  onPanStart: (DragStartDetails d) => dragTo(d.localPosition, side),
+                  onPanUpdate: (DragUpdateDetails d) => dragTo(d.localPosition, side),
+                  onTapUp: (TapUpDetails d) => dragTo(d.localPosition, side),
+                  child: CustomPaint(painter: _ClockPainter(this)),
+                ),
+              ),
             ),
-          ),
+            // The question again, as a card: the hour the short hand is to show (and a half for the half hour).
+            if (lightHand)
+              Positioned(
+                left: 6,
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: IgnorePointer(
+                    child: HintCard(
+                      child: Text(
+                        activity.half ? '${activity.hour}\u00bd' : '${activity.hour}',
+                        key: const Key('clock-hour-card'),
+                        style: AppText.fixed(size: 36, weight: 800, lineHeight: 1),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       );
     },
@@ -253,12 +349,28 @@ class _ClockPainter extends CustomPainter {
     }
 
     final ClockSetActivity a = s.activity;
+    final int shown = s.shownHour;
+    if (s.numeralRing) {
+      final double ang = a.hour * math.pi / 6;
+      canvas.drawCircle(
+        c + Offset(math.sin(ang), -math.cos(ang)) * (r * 0.7),
+        r * 0.16,
+        Paint()
+          ..color = TokenColors.hintHalo
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 4,
+      );
+    }
+    if (s.lightHand) {
+      // The short hand is lit from behind with a sky stroke, and the long hand fades back.
+      hand((shown % 12) * 30.0 + (s.half ? 15 : 0), r * 0.5, 18, TokenColors.hintHalo, alpha: 0.7);
+    }
     if (s.ghost) {
       hand((a.hour % 12) * 30.0 + (a.half ? 15 : 0), r * 0.5, 9, TokenColors.hintHalo, alpha: 0.55);
       hand(a.half ? 180 : 0, r * 0.78, 5, TokenColors.hintHalo, alpha: 0.55);
     }
-    hand(s.half ? 180 : 0, r * 0.78, 4, const Color(0xFF4DA3FF));
-    hand((s.hour % 12) * 30.0 + (s.half ? 15 : 0), r * 0.5, 8, const Color(0xFFE5484D));
+    hand(s.half ? 180 : 0, r * 0.78, 4, const Color(0xFF4DA3FF), alpha: s.lightHand ? 0.35 : 1);
+    hand((shown % 12) * 30.0 + (s.half ? 15 : 0), r * 0.5, 8, const Color(0xFFE5484D));
     canvas.drawCircle(c, 5, Paint()..color = TokenColors.ink);
   }
 

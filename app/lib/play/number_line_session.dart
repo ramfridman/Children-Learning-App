@@ -3,10 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'hint_widgets.dart';
 import 'template_session.dart';
 
 /// The number-line template (T09). The line always runs from the small number on the left to the large number on the right,
@@ -14,7 +16,8 @@ import 'template_session.dart';
 /// number and hops, and the child touches the tick where it lands. A touch is the answer: no confirm button.
 ///
 /// A touch on the mirror of the right tick (the line read from the right) is written with its own misconception, M-NL-DIR.
-/// After three wrong touches only the right tick is taken, and the guide hops the marker along the way.
+/// After three wrong touches only the right tick is taken: the guide first hops the marker along the whole way, and the tick it
+/// lands on stays lit. The first two helps light the start and hop one unit, and never the tick the marker is to land on.
 class NumberLineSession extends TemplateSession {
   NumberLineSession(super.controller, this.activity) : markerAt = activity.start;
 
@@ -25,6 +28,10 @@ class NumberLineSession extends TemplateSession {
 
   /// The ticks that the help has lit, and the tick that just said "not yet".
   final Set<int> trail = <int>{};
+
+  /// How many dots the hop size pill shows (hint 1 of a jump), and how many of them have been used up (hint 2 hops once).
+  int hopDots = 0;
+  int hopDotsUsed = 0;
   int? wrongTick;
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
@@ -46,6 +53,7 @@ class NumberLineSession extends TemplateSession {
       _showWay();
       return;
     }
+    hopDots = 0;
     _busy = true;
     markerAt = n;
     trail.clear();
@@ -82,6 +90,49 @@ class NumberLineSession extends TemplateSession {
     _demo++;
     demoRunning = false;
     trail.clear();
+    hopDots = 0;
+    hopDotsUsed = 0;
+  }
+
+  /// Hint 1: the start of the line is lit, with the landmarks (0, 5, 10) of a line that is put on by touch, or the size of the hop
+  /// as a pill of dots in a jump. The tick the marker is to land on is never lit.
+  void _lightStart() {
+    _stopWay();
+    if (activity.jump) {
+      trail.add(activity.start ?? activity.from);
+      hopDots = activity.hops.isEmpty ? 0 : activity.hops.first.abs();
+    } else {
+      trail.add(activity.from);
+      for (int n = activity.from; n <= activity.to; n++) {
+        if (n % 5 == 0 && n != activity.target) trail.add(n);
+      }
+    }
+    trail.remove(activity.target);
+    notify();
+  }
+
+  /// Hint 2: the guide hops the marker one unit from the start (counting back when the line is walked back) and stops. A hop that
+  /// would land on the tick of the answer is not taken: the marker only stands on the start.
+  void _hopOnce() {
+    _stopWay();
+    final int from = activity.start ?? activity.from;
+    final int dir = activity.jump && activity.hops.isNotEmpty && activity.hops.first < 0 ? -1 : 1;
+    final int one = from + dir;
+    markerAt = from;
+    trail.add(from);
+    if (activity.jump && activity.hops.isNotEmpty) {
+      hopDots = activity.hops.first.abs();
+      hopDotsUsed = one == activity.target ? 0 : 1;
+    }
+    notify();
+    if (one == activity.target || one < activity.from || one > activity.to) return;
+    final int id = _demo;
+    later(const Duration(milliseconds: 700), () {
+      if (_demo != id) return;
+      markerAt = one;
+      trail.add(one);
+      notify();
+    });
   }
 
   void _showWay() {
@@ -106,6 +157,7 @@ class NumberLineSession extends TemplateSession {
       demoRunning = false;
       markerAt = activity.start;
       notify();
+      controller.demoDone();
     });
   }
 
@@ -132,7 +184,14 @@ class NumberLineSession extends TemplateSession {
   @override
   void onHint() {
     if (_busy && !controller.guided) return;
-    _showWay();
+    switch (hintPictureOf(activity)) {
+      case HintPicture.startAndLandmarks:
+        _lightStart();
+      case HintPicture.firstHop:
+        _hopOnce();
+      default:
+        _showWay();
+    }
   }
 
   // ---- drawing ----
@@ -202,6 +261,33 @@ class _LineStage extends StatelessWidget {
                       ),
                     ),
                     for (int n = a.from; n <= a.to; n++) _tick(a, n, lineY),
+                    if (s.hopDots > 0)
+                      Positioned(
+                        right: 8,
+                        top: 6,
+                        child: HintCard(
+                          key: const Key('hop-pill'),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              for (int i = 0; i < s.hopDots; i++)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                                  child: Container(
+                                    key: i < s.hopDotsUsed ? const Key('hop-dot-used') : const Key('hop-dot'),
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: i < s.hopDotsUsed ? null : TokenColors.skyDeep,
+                                      border: Border.all(color: TokenColors.skyDeep, width: 2),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
                     AnimatedPositioned(
                       key: const Key('line-marker'),
                       duration: const Duration(milliseconds: 350),

@@ -3,11 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
-import 'count_tap_session.dart' show FingersHint;
+import 'hint_widgets.dart';
 import 'lesson_controller.dart';
 import 'template_session.dart';
 
@@ -77,7 +78,11 @@ class GiveNSession extends TemplateSession {
   AnswerState ringState = AnswerState.idle;
   bool _busy = false;
   bool demoRunning = false;
+
+  /// How many the counting aid of hint 2 shows (hands up to ten, ten-frames above), and whether hint 1 shows the goal: the
+  /// flower is lit and the card beside the button says the number the flower is to get.
   int fingers = 0;
+  bool goal = false;
   int? wiggling;
 
   Size _stage = Size.zero;
@@ -86,6 +91,7 @@ class GiveNSession extends TemplateSession {
     if (placed.contains(i) || demoRunning) return;
     placed.add(i);
     selected = null;
+    goal = false;
     notify();
   }
 
@@ -184,6 +190,7 @@ class GiveNSession extends TemplateSession {
     _busy = false;
     demoRunning = false;
     fingers = 0;
+    goal = false;
     wiggling = null;
     notify();
   }
@@ -193,16 +200,20 @@ class GiveNSession extends TemplateSession {
 
   @override
   void onHint() {
-    switch (controller.hintAction) {
-      case HintAction.showFingers:
-        _showFingers();
-      case HintAction.workedExample:
+    switch (hintPictureOf(activity)) {
+      case HintPicture.countingAid:
+        _showAid();
+      case HintPicture.demonstration:
         _workedExample();
-      case HintAction.replayPromptSlow:
-      case HintAction.highlightObjectsSequentially:
-      case null:
-        _wiggleAll();
+      default:
+        _showGoal();
     }
+  }
+
+  /// Hint 1: the flower is lit, and the card says the number it is to get (the question again, as a numeral and its dots).
+  void _showGoal() {
+    goal = true;
+    notify();
   }
 
   void _wiggleAll() {
@@ -218,7 +229,9 @@ class GiveNSession extends TemplateSession {
     });
   }
 
-  void _showFingers() {
+  /// Hint 2: the same number counted another way: one more finger (or counter) each second.
+  void _showAid() {
+    goal = false;
     fingers = 0;
     for (int i = 1; i <= activity.n; i++) {
       later(Duration(milliseconds: 600 * i), () {
@@ -248,6 +261,7 @@ class GiveNSession extends TemplateSession {
       placed.clear();
       demoRunning = false;
       notify();
+      controller.demoDone();
     });
     notify();
   }
@@ -264,16 +278,32 @@ class GiveNSession extends TemplateSession {
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
-    builder: (BuildContext c, Widget? _) => Center(
-      child: Opacity(
-        opacity: placed.isEmpty ? 0.4 : 1,
-        child: AnswerTile(
-          key: const Key('give-done'),
-          semanticLabel: He.giveDoneSemantics.text,
-          state: ringState == AnswerState.correct ? AnswerState.correct : AnswerState.idle,
-          onPressed: placed.isEmpty ? null : submit,
-          child: const SizedBox(width: 56, height: 56, child: CustomPaint(painter: _CheckPainter())),
-        ),
+    builder: (BuildContext c, Widget? _) => Directionality(
+      textDirection: TextDirection.ltr,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // The answer area has room beside the button: the goal card (hint 1) or the counting aid (hint 2) opens here.
+          if (goal || fingers > 0) ...<Widget>[
+            IgnorePointer(
+              child: SizedBox(
+                height: 112,
+                child: goal ? GoalCard(n: activity.n) : CountingAid(n: activity.n, shown: fingers),
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
+          Opacity(
+            opacity: placed.isEmpty ? 0.4 : 1,
+            child: AnswerTile(
+              key: const Key('give-done'),
+              semanticLabel: He.giveDoneSemantics.text,
+              state: ringState == AnswerState.correct ? AnswerState.correct : AnswerState.idle,
+              onPressed: placed.isEmpty ? null : submit,
+              child: const SizedBox(width: 56, height: 56, child: CustomPaint(painter: _CheckPainter())),
+            ),
+          ),
+        ],
       ),
     ),
   );
@@ -321,7 +351,7 @@ class _GiveStage extends StatelessWidget {
     final Color? ring = switch (s.ringState) {
       AnswerState.correct => TokenColors.correctGlow,
       AnswerState.notYet => TokenColors.notYetRing,
-      _ => null,
+      _ => s.goal ? TokenColors.hintHalo : null,
     };
     return Semantics(
       container: true,
@@ -399,7 +429,6 @@ class _GiveStage extends StatelessWidget {
                         ),
                       ),
               ),
-              if (s.fingers > 0) Positioned(left: 10, bottom: 6, child: FingersHint(raised: s.fingers)),
             ],
           ),
         ),
