@@ -540,8 +540,12 @@ List<Problem> validatePack({
             say(file, 'scene.items[$i].bin', 'must be the id of a bin');
           }
         }
-        if (share && (bins.length != 2 || items.length.isOdd)) {
-          say(file, 'scene', 'sharing is between two bins and needs an even number of pictures');
+        if (share && (bins.length < 2 || bins.length > 3 || items.length % bins.length != 0)) {
+          say(
+            file,
+            'scene',
+            'sharing is between two or three bins and needs a number of pictures that divides evenly',
+          );
         }
         checkTag(file, 'answer.misconception', answer['misconception']);
       case 'build_pattern':

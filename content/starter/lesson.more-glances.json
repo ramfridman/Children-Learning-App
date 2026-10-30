@@ -18,7 +18,11 @@
     "flash.scatter.2",
     "flash.frame.3",
     "flash.dice.4b",
-    "flash.frame.5b"
+    "flash.frame.5b",
+    "b15.numa05.1",
+    "b15.numa05.2",
+    "b15.numa10.1",
+    "b15.numa10.2"
   ],
   "estimatedMinutes": 3,
   "sequence": 15,

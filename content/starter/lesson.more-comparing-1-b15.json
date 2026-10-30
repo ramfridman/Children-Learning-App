@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-comparing-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד יוֹתֵר אוֹ פָּחוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-A-11",
+    "NUM-A-12"
+  ],
+  "items": [
+    "b15.numa12.1",
+    "b15.numa12.2"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 25,
+  "celebration": {
+    "vo": "vo:celebrate.more_comparing_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חֲכָמִים! סְפַרְתֶּם וְהִשְׁוִיתֶם."
+      }
+    ]
+  }
+}

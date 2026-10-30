@@ -24,7 +24,8 @@
     }
   ],
   "representations": [
-    "symbolic"
+    "symbolic",
+    "concrete"
   ],
   "misconceptions": [
     "M-CNT-SEQ"

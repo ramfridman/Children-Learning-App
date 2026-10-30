@@ -1,0 +1,38 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-counting-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סוֹפְרִים וְנוֹגְעִים"
+    }
+  ],
+  "skills": [
+    "NUM-A-03",
+    "NUM-A-04"
+  ],
+  "items": [
+    "b15.numa03.1",
+    "b15.numa03.2",
+    "b15.numa03.3",
+    "b15.numa03.4",
+    "b15.numa03.5",
+    "b15.numa04.1",
+    "b15.numa04.2",
+    "b15.numa04.3"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 23,
+  "celebration": {
+    "vo": "vo:celebrate.more_counting_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
+      }
+    ]
+  }
+}

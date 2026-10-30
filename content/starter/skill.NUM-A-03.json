@@ -24,7 +24,9 @@
     }
   ],
   "representations": [
-    "concrete"
+    "concrete",
+    "pictorial",
+    "symbolic"
   ],
   "misconceptions": [
     "M-CNT-DOUBLE",

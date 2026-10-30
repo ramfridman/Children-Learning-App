@@ -34,7 +34,10 @@ HELD = {
            'אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
            'אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
            'אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.'], start=1)},
+           'אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
+           # B-15 part 2: the triangle and the rectangle, in the form of the other four until the owner decides V1
+           'אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
+           'אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.'], start=1)},
 }
 
 
@@ -46,7 +49,9 @@ def load_rows():
 def dart_strings():
     with open(os.path.join(ROOT, 'app', 'lib', 'strings', 'he.dart'), encoding='utf-8') as fh:
         src = fh.read()
-    return {m.group(1): m.group(2).replace("\\'", "'")
+    # the escapes of the source (⁦ and the like) are read as the exporter reads them
+    unescape = lambda t: re.sub(r'\\u([0-9a-fA-F]{4})', lambda u: chr(int(u.group(1), 16)), t.replace("\\'", "'"))
+    return {m.group(1): unescape(m.group(2))
             for m in re.finditer(r"static const Str (\w+) = Str\(\s*'((?:[^'\\]|\\.)*)'", src)}
 
 
@@ -125,9 +130,10 @@ class HebrewMasterTableTest(unittest.TestCase):
 
     def test_table_counts(self):
         changed = [r for r in self.rows if r['ui_text'] != r['text']]
-        self.assertEqual(len(self.rows), 9512)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1304)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 56)
+        # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main)
+        self.assertEqual(len(self.rows), 12629)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']

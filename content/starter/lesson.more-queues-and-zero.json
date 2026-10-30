@@ -18,7 +18,11 @@
     "ordinal.first.of4",
     "ordinal.second.of4",
     "nonzero.bowl.1",
-    "zero.basket.b"
+    "zero.basket.b",
+    "b15.numa13.1",
+    "b15.numa13.2",
+    "b15.numa14.1",
+    "b15.numa14.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 20,

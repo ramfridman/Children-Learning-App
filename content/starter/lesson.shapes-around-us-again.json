@@ -21,7 +21,8 @@
     "shp.line.straight2",
     "shp.line.curved2",
     "shp.line.straight3",
-    "shp.line.curved3"
+    "shp.line.curved3",
+    "b15.shpa10.1"
   ],
   "estimatedMinutes": 5,
   "sequence": 10,

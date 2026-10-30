@@ -20,7 +20,9 @@
     "log.same.balloon",
     "log.odd.ball",
     "log.odd.fruit",
-    "log.odd.bird"
+    "log.odd.bird",
+    "b15.loga01.1",
+    "b15.loga01.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 9,

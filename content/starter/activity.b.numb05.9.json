@@ -1,0 +1,149 @@
+{
+  "schema": "activity/v1",
+  "id": "b.numb05.9",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "give_n",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "B",
+  "skills": [
+    {
+      "id": "NUM-B-05",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "concrete",
+  "variantGroup": "give",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:b.numb05.9.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "תְּנוּ לִי שְׁנֵים עָשָׂר דָּגִים."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "source": {
+      "sprite": "asset:fish",
+      "count": 20
+    },
+    "target": {
+      "sprite": "asset:bowl_empty"
+    }
+  },
+  "answer": {
+    "type": "give",
+    "n": 12,
+    "classifiers": [
+      {
+        "when": "took_all",
+        "misconception": "M-CNT-CARD"
+      }
+    ]
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.numb05.9.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתֵּים עֶשְׂרֵה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁתִּי."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:b.numb05.9.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תְּנוּ לִי שְׁנֵים עָשָׂר דָּגִים. סוֹפְרִים בִּזְמַן שֶׁלּוֹקְחִים."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:b.numb05.9.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: מֵאַחַת עַד שְׁתֵּים עֶשְׂרֵה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.numb05.9.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מֵאַחַת עַד שְׁתֵּים עֶשְׂרֵה. עוֹצְרִים כְּשֶׁמַּגִּיעִים אֶל שְׁתֵּים עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child gives exactly the number asked for, not the whole pile",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "תְּנוּ לִי שְׁנֵים עָשָׂר דָּגִים."
+  },
+  "contradicts": "M-CNT-CARD"
+}

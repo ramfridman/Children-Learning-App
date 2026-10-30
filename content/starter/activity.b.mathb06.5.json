@@ -36,7 +36,7 @@
     "group": {
       "sprite": "asset:ladybug",
       "count": 9,
-      "arrangement": "line",
+      "arrangement": "ten_frame",
       "seed": 3,
       "scale": 1
     }

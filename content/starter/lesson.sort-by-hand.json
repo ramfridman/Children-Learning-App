@@ -16,7 +16,9 @@
   "items": [
     "log.sortdrag.colour",
     "log.sortdrag.animals",
-    "log.sortdrag.three"
+    "log.sortdrag.three",
+    "b15.loga03.1",
+    "b15.loga03.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 7,

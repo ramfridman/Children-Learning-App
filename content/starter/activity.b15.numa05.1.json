@@ -1,0 +1,170 @@
+{
+  "schema": "activity/v1",
+  "id": "b15.numa05.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "flash",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-05",
+      "weight": 1
+    }
+  ],
+  "purpose": "learn",
+  "checkType": "transfer",
+  "representation": "pictorial",
+  "variantGroup": "flash",
+  "difficulty": {
+    "authored": 0.4
+  },
+  "prompt": {
+    "vo": "vo:b15.numa05.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הִסְתַּכְּלוּ טוֹב… כַּמָּה צְפַרְדְּעִים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "group": {
+      "sprite": "asset:frog",
+      "count": 2,
+      "arrangement": "line",
+      "seed": 1
+    },
+    "flashMs": 1500
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 1,
+        "misconception": "M-CNT-SKIP"
+      },
+      {
+        "id": "o2",
+        "numeral": 2
+      },
+      {
+        "id": "o3",
+        "numeral": 3,
+        "misconception": "M-CNT-DOUBLE"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": true,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b15.numa05.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתַּיִם! רְאִיתֶם בְּלִי לִסְפֹּר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.flash.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:b15.numa05.1.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָרִים אֶצְבָּעוֹת וְנִסְפֹּר: אַחַת, שְׁתַּיִם."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b15.numa05.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֵלֶּה שְׁתֵּי צְפַרְדְּעִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child sees the number at a glance, without counting one by one",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הִסְתַּכְּלוּ טוֹב. כַּמָּה צְפַרְדְּעִים?"
+  }
+}

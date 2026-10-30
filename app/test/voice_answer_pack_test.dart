@@ -9,25 +9,34 @@ import 'support/starter.dart';
 
 /// The spoken tap_answer activities per skill, from the table of the decision.
 const Map<String, int> _spokenTapsBySkill = <String, int>{
-  // a number
-  'MATH-A-01': 6,
-  'MATH-A-02': 6,
-  'MATH-B-01': 12,
-  'MATH-B-02': 10,
-  'MATH-B-03': 8,
-  'MATH-B-06': 8,
-  'MATH-B-07': 6,
-  'MATH-B-08': 12,
-  'MATH-B-10': 6,
+  // a number (pack 0.10.0, B-15 part 2: the new items of these skills follow the same rule)
+  'MATH-A-01': 8,
+  'MATH-A-02': 8,
+  'MATH-B-01': 14,
+  'MATH-B-02': 12,
+  'MATH-B-03': 10,
+  'MATH-B-06': 10,
+  'MATH-B-07': 8,
+  'MATH-B-08': 14,
+  'MATH-B-10': 8,
   'MATH-B-15': 10,
-  'MATH-B-18': 7,
+  'MATH-B-18': 9,
   'MATH-B-19': 5,
   'NUM-A-01': 6,
   'NUM-A-02': 7,
-  'NUM-A-14': 6, 'NUM-B-01': 9, 'NUM-B-02': 9, 'NUM-B-03': 8, 'NUM-B-10': 10, 'NUM-B-11': 12, 'NUM-B-14': 8,
-  'NUM-B-17': 6, 'SHP-B-02': 8,
+  'NUM-A-14': 8, 'NUM-B-01': 9, 'NUM-B-02': 9, 'NUM-B-03': 8, 'NUM-B-10': 10, 'NUM-B-11': 12, 'NUM-B-14': 10,
+  'NUM-B-17': 6, 'SHP-B-02': 10,
   // a colour, a shape, the next in a named sequence
-  'COL-A-05': 4, 'COL-B-01': 9, 'SHP-A-04': 1, 'SHP-A-05': 3, 'SHP-B-03': 3, 'MATH-A-05': 2, 'MATH-B-14': 11,
+  'COL-A-05': 4,
+  'COL-B-01': 9,
+  'CS-A-04': 2,
+  'CS-B-01': 2,
+  'SHP-A-04': 1,
+  'SHP-A-10': 2,
+  'SHP-A-05': 3,
+  'SHP-B-03': 3,
+  'MATH-A-05': 2,
+  'MATH-B-14': 11,
 };
 
 void main() {
@@ -36,26 +45,26 @@ void main() {
 
   Iterable<Activity> spoken() => pack.activities.values.where((Activity a) => a.voiceAnswer);
 
-  test('258 of the 767 activities are answered by voice, and 509 are not', () {
-    expect(pack.activities.length, 767);
-    expect(spoken().length, 258);
-    expect(pack.activities.length - spoken().length, 509);
+  test('310 of the 967 activities are answered by voice, and 657 are not', () {
+    expect(pack.activities.length, 967);
+    expect(spoken().length, 310);
+    expect(pack.activities.length - spoken().length, 657);
   });
 
-  test('by template: tap_answer 218 of 521, every count_tap and flash, and no other template', () {
+  test('by template: tap_answer 250 of 626, every count_tap and flash, and no other template', () {
     final Map<String, (int, int)> byTemplate = <String, (int, int)>{};
     for (final Activity a in pack.activities.values) {
       final (int, int) n = byTemplate[a.template] ?? (0, 0);
       byTemplate[a.template] = a.voiceAnswer ? (n.$1 + 1, n.$2) : (n.$1, n.$2 + 1);
     }
-    expect(byTemplate.remove('tap_answer'), (218, 303));
-    expect(byTemplate.remove('count_tap'), (28, 0));
-    expect(byTemplate.remove('flash'), (12, 0));
+    expect(byTemplate.remove('tap_answer'), (250, 376));
+    expect(byTemplate.remove('count_tap'), (44, 0));
+    expect(byTemplate.remove('flash'), (16, 0));
     expect(byTemplate.length, 12, reason: 'the other twelve templates');
     for (final MapEntry<String, (int, int)> t in byTemplate.entries) {
       expect(t.value.$1, 0, reason: '${t.key} is answered by hand');
     }
-    expect(byTemplate.values.fold<int>(0, (int s, (int, int) n) => s + n.$2), 206);
+    expect(byTemplate.values.fold<int>(0, (int s, (int, int) n) => s + n.$2), 281);
   });
 
   test('the spoken tap_answer activities per skill are the ones of the table', () {
@@ -73,10 +82,10 @@ void main() {
   });
 
   test('"a teen is ten and how many?" is tapped: its answer is the first word of the prompt (QA-21)', () {
-    for (int i = 1; i <= 9; i++) {
+    for (int i = 1; i <= 11; i++) {
       expect(pack.activities['b.numb16.$i']!.voiceAnswer, isFalse, reason: 'b.numb16.$i');
     }
-    expect(pack.activities.values.where((Activity a) => a.skillId == 'NUM-B-16').length, 9);
+    expect(pack.activities.values.where((Activity a) => a.skillId == 'NUM-B-16').length, 11);
   });
 
   test('the five hand-written activities carry the flag the decision gives them', () {
@@ -98,7 +107,7 @@ void main() {
     }
   });
 
-  test('the builder warns about exactly the eight numbers that start another option\'s number', () {
+  test('the builder warns about exactly the nine numbers that start another option\'s number', () {
     final List<Problem> warnings = packWarnings(
       docs: <String, Object?>{
         for (final Activity a in pack.activities.values) 'activity.${a.id}.json': a.json,
@@ -108,10 +117,11 @@ void main() {
       <String>{for (final Problem p in warnings) p.path.split(' ').first},
       <String>{
         for (final String id in <String>[
-          'b.mathb03.7',
           'b.mathb15.4',
           'b.mathb15.7',
           'b.mathb15.8',
+          'b.mathb18.4', // 3 begins 13 (B-15 D3: the options are the answer, the whole and the sum of both)
+          'b.mathb18.9',
           'b.numb02.2',
           'b.numb02.3',
           'b.numb02.6',
@@ -120,6 +130,6 @@ void main() {
           'activity.$id.json',
       },
     );
-    expect(warnings.length, 8);
+    expect(warnings.length, 9);
   });
 }

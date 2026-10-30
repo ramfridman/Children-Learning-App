@@ -16,7 +16,9 @@
   "items": [
     "log.fix.balls",
     "log.fix.things",
-    "log.fix.pets"
+    "log.fix.pets",
+    "b15.loga07.1",
+    "b15.loga07.2"
   ],
   "estimatedMinutes": 3,
   "sequence": 11,

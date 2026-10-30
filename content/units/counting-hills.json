@@ -23,7 +23,11 @@
     "basket_target",
     "nest_empty",
     "bowl_empty",
-    "basket_empty"
+    "basket_empty",
+    "chick",
+    "frog",
+    "butterfly",
+    "butterfly_lit"
   ],
   "objects": {
     "ladybug": {
@@ -65,6 +69,21 @@
       "g": "m",
       "one": "כֶּלֶב",
       "many": "כְּלָבִים"
+    },
+    "chick": {
+      "g": "m",
+      "one": "אֶפְרוֹחַ",
+      "many": "אֶפְרוֹחִים"
+    },
+    "butterfly": {
+      "g": "m",
+      "one": "פַּרְפַּר",
+      "many": "פַּרְפָּרִים"
+    },
+    "frog": {
+      "g": "f",
+      "one": "צְפַרְדֵּעַ",
+      "many": "צְפַרְדְּעִים"
     }
   },
   "misconceptions": [
@@ -1477,6 +1496,667 @@
         1
       ],
       "difficulty": 0.35
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa01.1",
+      "skill": "NUM-A-01",
+      "obj": "cat",
+      "count": 3,
+      "options": [
+        2,
+        3,
+        4
+      ],
+      "seed": 51,
+      "check": "transfer",
+      "difficulty": 0.3,
+      "weights": {
+        "NUM-A-01": 1,
+        "NUM-A-03": 0.5
+      },
+      "arrangement": "line"
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa01.2",
+      "skill": "NUM-A-01",
+      "obj": "dog",
+      "count": 4,
+      "options": [
+        3,
+        4,
+        5
+      ],
+      "seed": 52,
+      "check": "transfer",
+      "difficulty": 0.3,
+      "weights": {
+        "NUM-A-01": 1,
+        "NUM-A-03": 0.5
+      },
+      "arrangement": "line"
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa01.3",
+      "skill": "NUM-A-01",
+      "obj": "duck",
+      "count": 5,
+      "options": [
+        4,
+        5,
+        6
+      ],
+      "seed": 53,
+      "check": "transfer",
+      "difficulty": 0.3,
+      "weights": {
+        "NUM-A-01": 1,
+        "NUM-A-03": 0.5
+      },
+      "arrangement": "line"
+    },
+    {
+      "kind": "spot",
+      "id": "b15.numa01.4",
+      "skill": "NUM-A-01",
+      "cells": [
+        "n:1",
+        "n:2",
+        "n:4",
+        "n:4",
+        "n:5"
+      ],
+      "wrong": 2,
+      "tag": "M-CNT-SEQ",
+      "prompt": "חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?",
+      "h3": "נִסְפֹּר יַחַד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "check": "error_spotting",
+      "difficulty": 0.4,
+      "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת שָׁלוֹשׁ."
+    },
+    {
+      "kind": "spot",
+      "id": "b15.numa01.5",
+      "skill": "NUM-A-01",
+      "cells": [
+        "n:1",
+        "n:3",
+        "n:3",
+        "n:4",
+        "n:5"
+      ],
+      "wrong": 1,
+      "tag": "M-CNT-SEQ",
+      "prompt": "חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?",
+      "h3": "נִסְפֹּר יַחַד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "check": "error_spotting",
+      "difficulty": 0.4,
+      "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת שְׁתַּיִם."
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa02.1",
+      "skill": "NUM-A-02",
+      "obj": "duck",
+      "count": 6,
+      "options": [
+        5,
+        6,
+        7
+      ],
+      "seed": 61,
+      "check": "transfer",
+      "difficulty": 0.5,
+      "weights": {
+        "NUM-A-02": 1,
+        "NUM-A-09": 0.5
+      },
+      "arrangement": "line"
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa02.2",
+      "skill": "NUM-A-02",
+      "obj": "star",
+      "count": 8,
+      "options": [
+        7,
+        8,
+        9
+      ],
+      "seed": 62,
+      "check": "transfer",
+      "difficulty": 0.5,
+      "weights": {
+        "NUM-A-02": 1,
+        "NUM-A-09": 0.5
+      },
+      "arrangement": "line"
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa02.3",
+      "skill": "NUM-A-02",
+      "obj": "apple",
+      "count": 10,
+      "options": [
+        9,
+        10,
+        8
+      ],
+      "seed": 63,
+      "check": "transfer",
+      "difficulty": 0.5,
+      "weights": {
+        "NUM-A-02": 1,
+        "NUM-A-09": 0.5
+      },
+      "arrangement": "line"
+    },
+    {
+      "kind": "spot",
+      "id": "b15.numa02.4",
+      "skill": "NUM-A-02",
+      "cells": [
+        "n:6",
+        "n:7",
+        "n:9",
+        "n:9",
+        "n:10"
+      ],
+      "wrong": 2,
+      "tag": "M-CNT-SEQ",
+      "prompt": "חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?",
+      "h3": "נִסְפֹּר יַחַד: שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע, עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם.",
+      "check": "error_spotting",
+      "difficulty": 0.5,
+      "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת שְׁמוֹנֶה."
+    },
+    {
+      "kind": "spot",
+      "id": "b15.numa02.5",
+      "skill": "NUM-A-02",
+      "cells": [
+        "n:5",
+        "n:6",
+        "n:7",
+        "n:9",
+        "n:9"
+      ],
+      "wrong": 3,
+      "tag": "M-CNT-SEQ",
+      "prompt": "חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?",
+      "h3": "נִסְפֹּר יַחַד: חָמֵשׁ, שֵׁשׁ, שֶׁבַע, שְׁמוֹנֶה, תֵּשַׁע. עַכְשָׁו תּוֹרְכֶם.",
+      "check": "error_spotting",
+      "difficulty": 0.5,
+      "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת שְׁמוֹנֶה."
+    },
+    {
+      "kind": "set_to_numeral",
+      "id": "b15.numa03.1",
+      "skill": "NUM-A-03",
+      "obj": "butterfly",
+      "count": 4,
+      "options": [
+        3,
+        4,
+        5
+      ],
+      "difficulty": 0.35
+    },
+    {
+      "kind": "set_to_numeral",
+      "id": "b15.numa03.2",
+      "skill": "NUM-A-03",
+      "obj": "ladybug",
+      "count": 5,
+      "options": [
+        4,
+        5,
+        6
+      ],
+      "difficulty": 0.35
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa03.3",
+      "skill": "NUM-A-03",
+      "obj": "cat",
+      "count": 4,
+      "options": [
+        3,
+        4,
+        5
+      ],
+      "seed": 53,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa03.4",
+      "skill": "NUM-A-03",
+      "obj": "dog",
+      "count": 5,
+      "options": [
+        4,
+        5,
+        6
+      ],
+      "seed": 54,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "spot",
+      "id": "b15.numa03.5",
+      "skill": "NUM-A-03",
+      "cells": [
+        "n:1",
+        "n:2",
+        "n:3",
+        "n:3",
+        "n:5"
+      ],
+      "wrong": 3,
+      "tag": "M-CNT-DOUBLE",
+      "prompt": "חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?",
+      "h3": "נִסְפֹּר יַחַד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "check": "error_spotting",
+      "difficulty": 0.4,
+      "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת אַרְבַּע."
+    },
+    {
+      "kind": "set_to_numeral",
+      "id": "b15.numa04.1",
+      "skill": "NUM-A-04",
+      "obj": "fish",
+      "count": 3,
+      "options": [
+        2,
+        3,
+        4
+      ],
+      "arrangement": "line",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "set_to_numeral",
+      "id": "b15.numa04.2",
+      "skill": "NUM-A-04",
+      "obj": "bird",
+      "count": 5,
+      "options": [
+        4,
+        5,
+        6
+      ],
+      "arrangement": "line",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa04.3",
+      "skill": "NUM-A-04",
+      "obj": "bird",
+      "count": 4,
+      "options": [
+        3,
+        4,
+        5
+      ],
+      "seed": 63,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa04.4",
+      "skill": "NUM-A-04",
+      "obj": "ladybug",
+      "count": 3,
+      "options": [
+        2,
+        3,
+        4
+      ],
+      "seed": 64,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "flash",
+      "id": "b15.numa05.1",
+      "skill": "NUM-A-05",
+      "obj": "frog",
+      "count": 2,
+      "arrangement": "line",
+      "options": [
+        1,
+        2,
+        3
+      ],
+      "flashMs": 1500,
+      "check": "transfer",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "flash",
+      "id": "b15.numa05.2",
+      "skill": "NUM-A-05",
+      "obj": "chick",
+      "count": 3,
+      "arrangement": "line",
+      "options": [
+        2,
+        3,
+        4
+      ],
+      "flashMs": 1500,
+      "check": "transfer",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "flash",
+      "id": "b15.numa10.1",
+      "skill": "NUM-A-10",
+      "obj": "frog",
+      "count": 4,
+      "arrangement": "scatter",
+      "seed": 71,
+      "options": [
+        3,
+        4,
+        5
+      ],
+      "flashMs": 1500,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "flash",
+      "id": "b15.numa10.2",
+      "skill": "NUM-A-10",
+      "obj": "chick",
+      "count": 5,
+      "arrangement": "scatter",
+      "seed": 72,
+      "options": [
+        4,
+        5,
+        6
+      ],
+      "flashMs": 1500,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "give",
+      "id": "b15.numa06.1",
+      "skill": "NUM-A-06",
+      "obj": "fish",
+      "n": 4,
+      "source": 9,
+      "target": "bowl_empty",
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "give",
+      "id": "b15.numa06.2",
+      "skill": "NUM-A-06",
+      "obj": "bird",
+      "n": 3,
+      "source": 7,
+      "target": "nest_empty",
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "numeral_to_set",
+      "id": "b15.numa08.1",
+      "skill": "NUM-A-08",
+      "obj": "duck",
+      "n": 2,
+      "options": [
+        2,
+        3,
+        1
+      ],
+      "difficulty": 0.3
+    },
+    {
+      "kind": "numeral_to_set",
+      "id": "b15.numa08.2",
+      "skill": "NUM-A-08",
+      "obj": "star",
+      "n": 3,
+      "options": [
+        3,
+        2,
+        1
+      ],
+      "tags": {
+        "1": "M-CNT-SKIP"
+      },
+      "difficulty": 0.35
+    },
+    {
+      "kind": "spot",
+      "id": "b15.numa08.3",
+      "skill": "NUM-A-08",
+      "cells": [
+        "n:1",
+        "n:5",
+        "n:3",
+        "n:4",
+        "n:5"
+      ],
+      "wrong": 1,
+      "tag": "M-NUM-REV",
+      "prompt": "חָבֵר כָּתַב מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?",
+      "h3": "נִסְפֹּר יַחַד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "check": "error_spotting",
+      "difficulty": 0.5,
+      "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת שְׁתַּיִם."
+    },
+    {
+      "kind": "spot",
+      "id": "b15.numa08.4",
+      "skill": "NUM-A-08",
+      "cells": [
+        "n:1",
+        "n:2",
+        "n:3",
+        "n:4",
+        "n:2"
+      ],
+      "wrong": 4,
+      "tag": "M-NUM-REV",
+      "prompt": "חָבֵר כָּתַב מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?",
+      "h3": "נִסְפֹּר יַחַד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "check": "error_spotting",
+      "difficulty": 0.5,
+      "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת חָמֵשׁ."
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa09.1",
+      "skill": "NUM-A-09",
+      "obj": "duck",
+      "count": 7,
+      "options": [
+        6,
+        7,
+        8
+      ],
+      "seed": 71,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "count_tap",
+      "id": "b15.numa09.2",
+      "skill": "NUM-A-09",
+      "obj": "butterfly",
+      "count": 9,
+      "options": [
+        8,
+        9,
+        10
+      ],
+      "seed": 72,
+      "check": "transfer",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "compare_more",
+      "id": "b15.numa11.1",
+      "skill": "NUM-A-11",
+      "obj": "chick",
+      "options": [
+        4,
+        3
+      ],
+      "big": 4,
+      "small": 3,
+      "arr": {
+        "3": "scatter"
+      },
+      "check": "transfer",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "compare_more",
+      "id": "b15.numa11.2",
+      "skill": "NUM-A-11",
+      "obj": "butterfly",
+      "options": [
+        3,
+        5
+      ],
+      "big": 5,
+      "small": 3,
+      "arr": {
+        "3": "scatter"
+      },
+      "check": "transfer",
+      "difficulty": 0.45
+    },
+    {
+      "kind": "compare_more",
+      "id": "b15.numa12.1",
+      "skill": "NUM-A-12",
+      "obj": "chick",
+      "options": [
+        3,
+        5
+      ],
+      "big": 5,
+      "small": 3,
+      "scale": {
+        "3": 1.5
+      },
+      "check": "transfer",
+      "difficulty": 0.55
+    },
+    {
+      "kind": "compare_more",
+      "id": "b15.numa12.2",
+      "skill": "NUM-A-12",
+      "obj": "butterfly",
+      "options": [
+        5,
+        4
+      ],
+      "big": 5,
+      "small": 4,
+      "ask": "fewer",
+      "scale": {
+        "5": 0.7
+      },
+      "check": "transfer",
+      "difficulty": 0.6
+    },
+    {
+      "kind": "ordinal",
+      "id": "b15.numa13.1",
+      "skill": "NUM-A-13",
+      "line": [
+        "frog",
+        "chick",
+        "bird",
+        "fish"
+      ],
+      "pick": 1,
+      "check": "transfer",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "ordinal",
+      "id": "b15.numa13.2",
+      "skill": "NUM-A-13",
+      "line": [
+        "frog",
+        "chick",
+        "bird",
+        "fish"
+      ],
+      "pick": -1,
+      "check": "transfer",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "b15.numa14.1",
+      "skill": "NUM-A-14",
+      "check": "predict",
+      "rep": "story",
+      "prompt": "הָיוּ שָׁלוֹשׁ צִפֳּרִים בַּקֵּן, וְכֻלָּן עָפוּ. כַּמָּה נִשְׁאֲרוּ?",
+      "group": {
+        "sprite": "bird",
+        "count": 3
+      },
+      "options": [
+        "n:0",
+        "n:1",
+        "n:3"
+      ],
+      "correct": "n:0",
+      "tags": {
+        "n:1": "M-NUM-ZERO"
+      },
+      "correct_text": "אֶפֶס! אֵין אַף צִפּוֹר.",
+      "h3": "אֵין אַף צִפּוֹר. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.4,
+      "voice": true
+    },
+    {
+      "kind": "pick",
+      "id": "b15.numa14.2",
+      "skill": "NUM-A-14",
+      "check": "predict",
+      "rep": "story",
+      "prompt": "הָיוּ כָּאן שְׁנֵי דָּגִים, וְכֻלָּם שָׂחוּ רָחוֹק. כַּמָּה נִשְׁאֲרוּ?",
+      "group": {
+        "sprite": "fish",
+        "count": 2
+      },
+      "options": [
+        "n:1",
+        "n:0",
+        "n:2"
+      ],
+      "correct": "n:0",
+      "tags": {
+        "n:1": "M-NUM-ZERO"
+      },
+      "correct_text": "אֶפֶס! אֵין אַף דָּג.",
+      "h3": "אֵין אַף דָּג. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.45,
+      "voice": true
     }
   ],
   "lessons": [
@@ -1664,7 +2344,8 @@
         "next.after.5",
         "next.after.9",
         "next.before.9",
-        "next.before.10"
+        "next.before.10",
+        "b15.numa01.1"
       ],
       "minutes": 5,
       "done": "כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר."
@@ -1700,7 +2381,11 @@
         "flash.scatter.2",
         "flash.frame.3",
         "flash.dice.4b",
-        "flash.frame.5b"
+        "flash.frame.5b",
+        "b15.numa05.1",
+        "b15.numa05.2",
+        "b15.numa10.1",
+        "b15.numa10.2"
       ],
       "minutes": 3,
       "done": "מַדְהִים! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר."
@@ -1714,7 +2399,9 @@
       "items": [
         "give.cats.2",
         "give.ducks.3",
-        "give.dogs.4"
+        "give.dogs.4",
+        "b15.numa06.1",
+        "b15.numa06.2"
       ],
       "minutes": 3,
       "done": "כׇּל הַכָּבוֹד! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ."
@@ -1728,7 +2415,11 @@
       "items": [
         "pick.numeral.1",
         "pick.numeral.2b",
-        "pick.numeral.4b"
+        "pick.numeral.4b",
+        "b15.numa08.1",
+        "b15.numa08.2",
+        "b15.numa08.3",
+        "b15.numa08.4"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! הִכַּרְתֶּם אֶת הַמִּסְפָּרִים."
@@ -1742,7 +2433,9 @@
       "items": [
         "count.cats.7",
         "count.dogs.8",
-        "count.ladybugs.10"
+        "count.ladybugs.10",
+        "b15.numa09.1",
+        "b15.numa09.2"
       ],
       "minutes": 4,
       "done": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר."
@@ -1760,7 +2453,9 @@
         "same.fish.2v2",
         "more.big.stars",
         "more.spread.fish",
-        "fewer.big.ducks"
+        "fewer.big.ducks",
+        "b15.numa11.1",
+        "b15.numa11.2"
       ],
       "minutes": 5,
       "done": "חֲכָמִים! סְפַרְתֶּם וְהִשְׁוִיתֶם."
@@ -1776,10 +2471,97 @@
         "ordinal.first.of4",
         "ordinal.second.of4",
         "nonzero.bowl.1",
-        "zero.basket.b"
+        "zero.basket.b",
+        "b15.numa13.1",
+        "b15.numa13.2",
+        "b15.numa14.1",
+        "b15.numa14.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי בַּתּוֹר, וְיְדַעְתֶּם מָה זֶה אֶפֶס."
+    },
+    {
+      "id": "more-counting-words-1-b15",
+      "title": "עוֹד סוֹפְרִים לְפִי הַסֵּדֶר",
+      "skills": [
+        "NUM-A-01",
+        "NUM-A-02"
+      ],
+      "items": [
+        "b15.numa01.2",
+        "b15.numa01.3",
+        "b15.numa01.4",
+        "b15.numa01.5",
+        "b15.numa02.1",
+        "b15.numa02.2",
+        "b15.numa02.3",
+        "b15.numa02.4"
+      ],
+      "minutes": 5,
+      "done": "כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר."
+    },
+    {
+      "id": "more-counting-words-2-b15",
+      "title": "עוֹד סוֹפְרִים לְפִי הַסֵּדֶר",
+      "skills": [
+        "NUM-A-01",
+        "NUM-A-02"
+      ],
+      "items": [
+        "b15.numa02.5"
+      ],
+      "minutes": 5,
+      "done": "כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר."
+    },
+    {
+      "id": "more-counting-1-b15",
+      "title": "עוֹד סוֹפְרִים וְנוֹגְעִים",
+      "skills": [
+        "NUM-A-03",
+        "NUM-A-04"
+      ],
+      "items": [
+        "b15.numa03.1",
+        "b15.numa03.2",
+        "b15.numa03.3",
+        "b15.numa03.4",
+        "b15.numa03.5",
+        "b15.numa04.1",
+        "b15.numa04.2",
+        "b15.numa04.3"
+      ],
+      "minutes": 6,
+      "done": "וַאוּ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
+    },
+    {
+      "id": "more-counting-2-b15",
+      "title": "עוֹד סוֹפְרִים וְנוֹגְעִים",
+      "skills": [
+        "NUM-A-03",
+        "NUM-A-04"
+      ],
+      "items": [
+        "b15.numa04.4"
+      ],
+      "minutes": 6,
+      "done": "וַאוּ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת."
+    },
+    {
+      "id": "more-comparing-1-b15",
+      "title": "עוֹד יוֹתֵר אוֹ פָּחוֹת",
+      "skills": [
+        "NUM-A-11",
+        "NUM-A-12"
+      ],
+      "items": [
+        "b15.numa12.1",
+        "b15.numa12.2"
+      ],
+      "minutes": 5,
+      "done": "חֲכָמִים! סְפַרְתֶּם וְהִשְׁוִיתֶם."
     }
-  ]
+  ],
+  "tagFeedback": {
+    "M-NUM-REV": "הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+  }
 }

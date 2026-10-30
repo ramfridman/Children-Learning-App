@@ -5,8 +5,11 @@
 * G1: an item's own `check` and `rep` win over its kind's; a spot is an error-spotting check;
 * G2: the representation follows the label rule of the B-15 spec §2, and each skill lists what its activities use;
 * G3: every kind takes `weights` and `also`;
-* G4 and A5: an item's own tag line, and the M-SORT-SHIFT line by sorting rule (Band A keeps the shared line);
+* G4 and A5: an item's own tag line, and the M-SORT-SHIFT line by sorting rule (the editor's P3 and P4 for a kind or shape
+  rule in both bands; the shared line for a colour rule or none);
 * G5: MATH-B-10 draws one chart column per plate;
+* B-15 part 2: the pieces of the generators that the new items use (a count's own prompt, the give target, the second
+  hint's action, the tick's hint, the H30 sentence with its prefixes);
 * the starter pack: every activity follows the label rule, every skill file lists its activities' representations, and
   every activity is in the band of its first skill (the validator rule of B-15).
 """
@@ -20,7 +23,10 @@ TOOLS = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
 STARTER = os.path.join(ROOT, 'content', 'starter')
 sys.path.insert(0, TOOLS)
+_argv = sys.argv[:]
 import author  # noqa: E402
+import band_b  # noqa: E402  (it sets sys.argv for author.py, which is imported and never run)
+sys.argv = _argv
 
 
 def load(pattern):
@@ -103,26 +109,71 @@ class ItemOverridesTest(unittest.TestCase):
 class SortShiftLineTest(unittest.TestCase):
     shared = SHARED_SORT_SHIFT
 
-    def tearDown(self):
-        author.SORT_SHIFT_BY_RULE.clear()
+    def test_a_colour_rule_or_none_keeps_the_shared_line(self):
+        for rule in ('colour', None):
+            self.assertEqual(author.tag_line('M-SORT-SHIFT', rule=rule), self.shared)
 
-    def test_band_a_keeps_the_shared_line_whatever_the_rule(self):
-        author.SORT_SHIFT_BY_RULE['shape'] = ('vo:fb.sort_shift.shape', 'צוּרָה.')
-        self.assertEqual(author.tag_line('M-SORT-SHIFT', band='A', rule='shape'), self.shared)
-
-    def test_band_b_colour_keeps_the_shared_line(self):
-        self.assertEqual(author.tag_line('M-SORT-SHIFT', band='B', rule='colour'), self.shared)
-        self.assertEqual(author.tag_line('M-SORT-SHIFT', band='B'), self.shared)
-
-    def test_band_b_shape_and_kind_take_their_line(self):
-        author.SORT_SHIFT_BY_RULE['shape'] = ('vo:fb.sort_shift.shape', 'צוּרָה.')
-        self.assertEqual(author.tag_line('M-SORT-SHIFT', band='B', rule='shape'), author.SORT_SHIFT_BY_RULE['shape'])
-        with self.assertRaises(AssertionError):  # no kind line yet: the generator refuses rather than guess
-            author.tag_line('M-SORT-SHIFT', band='B', rule='kind')
+    def test_a_shape_or_kind_rule_takes_the_editors_line_in_either_band(self):
+        self.assertEqual(author.tag_line('M-SORT-SHIFT', rule='shape'),
+                         ('vo:fb.sort_shift.shape', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק.'))
+        self.assertEqual(author.tag_line('M-SORT-SHIFT', rule='kind'),
+                         ('vo:fb.sort_shift.kind', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.'))
+        for band in ('A', 'B'):
+            d = pick(band=band, rule='shape')
+            self.assertEqual(d['feedback']['incorrect'][0]['vo'], 'vo:fb.sort_shift.shape')
 
     def test_an_unknown_rule_is_refused(self):
         with self.assertRaises(AssertionError):
             pick(rule='size')
+
+
+class PartTwoPiecesTest(unittest.TestCase):
+    def test_a_count_takes_its_own_prompt(self):
+        a = {'kind': 'count_tap', 'id': 't.count', 'skill': 'MATH-B-01', 'obj': 'apple', 'count': 5, 'options': [4, 5, 6],
+             'prompt': 'מוֹסִיפִים.'}
+        d = author.k_count_tap(a, CTX)
+        self.assertEqual(d['prompt']['caption'][0]['v'], 'מוֹסִיפִים.')
+        del a['prompt']
+        a['id'] = 't.count2'
+        self.assertIn('נוֹגְעִים בְּכׇל אֶחָד', author.k_count_tap(a, CTX)['prompt']['caption'][0]['v'])
+
+    def test_a_give_takes_its_own_target(self):
+        a = {'kind': 'give', 'id': 't.give', 'skill': 'NUM-A-06', 'obj': 'apple', 'n': 3, 'source': 7, 'target': 'bowl_empty'}
+        self.assertEqual(author.k_give(a, CTX)['scene']['target']['sprite'], 'asset:bowl_empty')
+        del a['target']
+        a['id'] = 't.give2'
+        self.assertEqual(author.k_give(a, CTX)['scene']['target']['sprite'], 'asset:basket_target')
+
+    def test_the_second_hint_may_change_what_it_does(self):
+        self.assertEqual(pick()['hints'][1]['action'], 'highlight_objects_sequentially')
+        d = pick(h2='עֶשֶׂר אֶצְבָּעוֹת.', h2_action='show_fingers')
+        self.assertEqual((d['hints'][1]['action'], d['hints'][1]['caption'][0]['v']), ('show_fingers', 'עֶשֶׂר אֶצְבָּעוֹת.'))
+
+    def test_the_hint_of_a_tick_says_to_press_the_tick(self):
+        names = dict(NAMES, tick={'one': 'כֵּן', 'g': 'm'}, cross={'one': 'לֹא', 'g': 'm'})
+        a = {'kind': 'pick', 'id': 't.tick', 'skill': 'COL-A-05', 'prompt': 'זוֹ בָּנָנָה?', 'options': ['cross', 'tick'],
+             'correct': 'tick', 'tags': {'cross': 'M-SORT-SHIFT'}}
+        d = author.k_pick(a, {'names': names, 'objects': {}})
+        self.assertTrue(d['hints'][2]['caption'][0]['v'].endswith('לִלְחֹץ עַל הַוִּי.'))
+
+    def test_a_numeral_to_set_takes_the_tags_of_its_item(self):
+        a = {'kind': 'numeral_to_set', 'id': 't.show', 'skill': 'NUM-A-08', 'obj': 'apple', 'n': 3, 'options': [3, 2, 1],
+             'tags': {'1': 'M-CNT-SKIP'}}
+        d = author.k_numeral_to_set(a, CTX)
+        self.assertEqual([o.get('misconception') for o in d['answer']['options']], [None, 'M-CNT-SKIP', 'M-CNT-SKIP'])
+
+    def test_the_sentence_of_h30_points_its_prefixes_by_the_number(self):
+        line = band_b.part_miss_line(3, 7)['M-PART-MISS']
+        self.assertEqual(line[1], 'חִבַּרְנוּ אֶת שְׁנֵיהֶם, אֲבָל שֶׁבַע זֶה כְּבָר הַכֹּל. כַּמָּה מוֹסִיפִים לְשָׁלוֹשׁ כְּדֵי לְהַגִּיעַ לְשֶׁבַע?')
+        self.assertIn('לְחָמֵשׁ כְּדֵי לְהַגִּיעַ לְתֵשַׁע', band_b.part_miss_line(5, 9)['M-PART-MISS'][1])
+        self.assertIn('לִשְׁתַּיִם', band_b.part_miss_line(2, 6)['M-PART-MISS'][1])
+        self.assertIn('לַחֲמֵשׁ עֶשְׂרֵה', band_b.part_miss_line(15, 17)['M-PART-MISS'][1])
+        self.assertIn('לִשְׁלֹשׁ עֶשְׂרֵה', band_b.part_miss_line(8, 13)['M-PART-MISS'][1])
+
+    def test_the_basket_sentence_says_the_noun_twice_and_points_the_vav(self):
+        a = band_b.OBJECTS['apple']
+        said = 'יֵשׁ %s בַּסַּל, %s בַּחוּץ.' % (author.qty(4, a), author.vav(author.qty(2, a)))
+        self.assertEqual(said, 'יֵשׁ אַרְבָּעָה תַּפּוּחִים בַּסַּל, וּשְׁנֵי תַּפּוּחִים בַּחוּץ.')
 
 
 class StarterPackTest(unittest.TestCase):
@@ -158,7 +209,8 @@ class StarterPackTest(unittest.TestCase):
             if a['template'] == 'spot_error':
                 self.assertEqual(a['checkType'], 'error_spotting', a['id'])
             if a['template'] == 'give_n' and a['skills'][0]['id'] in ('NUM-A-06', 'NUM-B-05', 'MATH-A-06'):
-                self.assertEqual(a['checkType'], 'practice', a['id'])
+                # giving N is the skill's own task, not its reverse: practice, or the transfer of the new items
+                self.assertIn(a['checkType'], ('practice', 'transfer'), a['id'])
 
     def test_math_b_10_draws_one_column_per_plate(self):
         for a in self.acts:
@@ -166,8 +218,15 @@ class StarterPackTest(unittest.TestCase):
                 chart = a['scene']['chart']
                 self.assertEqual(len({c['count'] for c in chart}), 1, a['id'])
                 right = next(o['numeral'] for o in a['answer']['options'] if o['id'] == a['answer']['correct'])
-                self.assertEqual(sum(c['count'] for c in chart), right, a['id'])
+                # how many in all (the sum of the columns) or, the other way round, how many plates (the columns)
+                self.assertEqual(len(chart) if a['checkType'] == 'reverse' else sum(c['count'] for c in chart), right, a['id'])
                 self.assertEqual(a['templateVersion'], '1.2')
+
+    def test_a_sorting_rule_line_is_one_of_the_two_rule_lines(self):
+        for a in self.acts:
+            for f in a['feedback']['incorrect']:
+                if f['when'] == 'misconception:M-SORT-SHIFT' and f['vo'] != 'vo:fb.sort_shift':
+                    self.assertIn(f['vo'], ('vo:fb.sort_shift.shape', 'vo:fb.sort_shift.kind'), a['id'])
 
     def test_a_tagged_option_is_never_the_right_one(self):
         for a in self.acts:

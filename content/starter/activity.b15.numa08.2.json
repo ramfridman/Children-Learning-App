@@ -1,0 +1,172 @@
+{
+  "schema": "activity/v1",
+  "id": "b15.numa08.2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "reverse",
+  "representation": "pictorial",
+  "variantGroup": "numeral-to-set",
+  "difficulty": {
+    "authored": 0.35
+  },
+  "prompt": {
+    "vo": "vo:b15.numa08.2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה יֵשׁ שְׁלוֹשָׁה כּוֹכָבִים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "numeral": 3
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "set": {
+          "sprite": "asset:star",
+          "count": 3,
+          "arrangement": "line",
+          "seed": 3
+        },
+        "label": "שְׁלוֹשָׁה כּוֹכָבִים"
+      },
+      {
+        "id": "o2",
+        "set": {
+          "sprite": "asset:star",
+          "count": 2,
+          "arrangement": "line",
+          "seed": 2
+        },
+        "label": "שְׁנֵי כּוֹכָבִים",
+        "misconception": "M-CNT-SKIP"
+      },
+      {
+        "id": "o3",
+        "set": {
+          "sprite": "asset:star",
+          "count": 1,
+          "arrangement": "line",
+          "seed": 1
+        },
+        "label": "כּוֹכָב אֶחָד",
+        "misconception": "M-CNT-SKIP"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b15.numa08.2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! אֵלֶּה שְׁלוֹשָׁה כּוֹכָבִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:b15.numa08.2.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:b15.numa08.2.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b15.numa08.2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. אֵלֶּה שְׁלוֹשָׁה כּוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the group that has the number named",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיפֹה יֵשׁ שְׁלוֹשָׁה כּוֹכָבִים?"
+  }
+}

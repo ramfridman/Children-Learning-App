@@ -16,7 +16,11 @@
   "items": [
     "pick.numeral.1",
     "pick.numeral.2b",
-    "pick.numeral.4b"
+    "pick.numeral.4b",
+    "b15.numa08.1",
+    "b15.numa08.2",
+    "b15.numa08.3",
+    "b15.numa08.4"
   ],
   "estimatedMinutes": 3,
   "sequence": 17,

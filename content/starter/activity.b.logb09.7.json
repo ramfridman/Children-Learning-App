@@ -1,0 +1,157 @@
+{
+  "schema": "activity/v1",
+  "id": "b.logb09.7",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "logic",
+  "band": "B",
+  "skills": [
+    {
+      "id": "LOG-B-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "transfer",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:b.logb09.7.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הוּא לֹא צָהֹב וְלֹא רִבּוּעַ. אֵיזֶה הוּא?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:shape_square_green",
+        "label": "רִבּוּעַ יָרֹק",
+        "misconception": "M-LOG-NOT"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:shape_circle_green",
+        "label": "עִגּוּל יָרֹק"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:shape_circle_yellow",
+        "label": "עִגּוּל צָהֹב",
+        "misconception": "M-LOG-NOT"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.logb09.7.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! הוּא לֹא צָהֹב וְלֹא רִבּוּעַ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-LOG-NOT",
+        "vo": "vo:fb.log_not",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צָרִיךְ לְהַקְשִׁיב לִשְׁנֵי הָרְמָזִים יַחַד: לֹא זֶה וְגַם לֹא זֶה. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.logb09.7.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא צָהֹב וְגַם לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הוּא לֹא צָהֹב וְלֹא רִבּוּעַ. אֵיזֶה הוּא?"
+  }
+}

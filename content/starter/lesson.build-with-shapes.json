@@ -18,7 +18,9 @@
     "shp.build.tree",
     "shp.build.face",
     "shp.build.train",
-    "shp.build.rocket"
+    "shp.build.rocket",
+    "b15.shpa06.1",
+    "b15.shpa06.2"
   ],
   "estimatedMinutes": 6,
   "sequence": 13,

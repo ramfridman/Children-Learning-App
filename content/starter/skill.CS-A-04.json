@@ -24,7 +24,8 @@
     }
   ],
   "representations": [
-    "symbolic"
+    "symbolic",
+    "pictorial"
   ],
   "misconceptions": [
     "M-CS-OFF1"

@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "shape-friends-again-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מַכִּירִים עוֹד צוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-A-01",
+    "SHP-A-02"
+  ],
+  "items": [
+    "b15.shpa02.2",
+    "b15.shpa02.3",
+    "b15.shpa02.4"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 14,
+  "celebration": {
+    "vo": "vo:celebrate.shape_friends_again_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם עוֹד צוּרוֹת."
+      }
+    ]
+  }
+}

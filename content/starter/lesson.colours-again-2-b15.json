@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "colours-again-2-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צְבָעִים"
+    }
+  ],
+  "skills": [
+    "COL-A-01",
+    "COL-A-03",
+    "COL-A-06"
+  ],
+  "items": [
+    "b15.cola06.1",
+    "b15.cola06.2"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 12,
+  "celebration": {
+    "vo": "vo:celebrate.colours_again_2_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים."
+      }
+    ]
+  }
+}

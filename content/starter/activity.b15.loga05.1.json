@@ -1,0 +1,156 @@
+{
+  "schema": "activity/v1",
+  "id": "b15.loga05.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-05",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "transfer",
+  "representation": "concrete",
+  "variantGroup": "build",
+  "difficulty": {
+    "authored": 0.5
+  },
+  "prompt": {
+    "vo": "vo:b15.loga05.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַעֲתִיקִים אֶת הַסֵּדֶר."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 6,
+    "palette": [
+      "asset:star",
+      "asset:fish"
+    ],
+    "model": [
+      "asset:fish",
+      "asset:star",
+      "asset:star",
+      "asset:fish",
+      "asset:star",
+      "asset:star"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:fish",
+      "asset:star",
+      "asset:star",
+      "asset:fish",
+      "asset:star",
+      "asset:star"
+    ],
+    "misconception": "M-PAT-COPY"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b15.loga05.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PAT-COPY",
+        "vo": "vo:fb.pat_copy",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.build.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b15.loga05.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַעֲתִיק אֶת הַסֵּדֶר מֵהַהַתְחָלָה, תְּמוּנָה אַחַר תְּמוּנָה. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child copies the pattern in the same order",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מַעֲתִיקִים אֶת הַסֵּדֶר."
+  }
+}

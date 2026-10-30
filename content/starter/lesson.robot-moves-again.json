@@ -16,7 +16,9 @@
   "items": [
     "cs.robot.direct.4",
     "cs.robot.direct.5",
-    "cs.robot.direct.6"
+    "cs.robot.direct.6",
+    "b15.csa03.1",
+    "b15.csa03.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 5,

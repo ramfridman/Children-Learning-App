@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "pictorial",
+  "representation": "symbolic",
   "variantGroup": "pick",
   "difficulty": {
     "authored": 0.58
@@ -33,13 +33,13 @@
   "scene": {
     "background": "asset:meadow",
     "optionsOnTiles": true,
-    "group": {
-      "sprite": "asset:duck",
-      "count": 14,
-      "arrangement": "line",
-      "seed": 3,
-      "scale": 1
-    }
+    "row": [
+      "n:14",
+      "op:=",
+      "n:10",
+      "op:+",
+      "?"
+    ]
   },
   "answer": {
     "type": "choice",
@@ -133,12 +133,12 @@
     },
     {
       "level": 2,
-      "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "action": "show_fingers",
+      "vo": "vo:b.numb16.4.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "עֶשֶׂר אֶצְבָּעוֹת, וְעוֹד כַּמָּה? נִסְפֹּר רַק אֶת הָאֶצְבָּעוֹת שֶׁאַחֲרֵי הָעֶשֶׂר."
         }
       ]
     },

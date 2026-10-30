@@ -19,7 +19,10 @@
     "log.pat.no.things",
     "log.pat.yes.fish",
     "log.next.pets",
-    "log.next.balls"
+    "log.next.balls",
+    "b15.loga04.1",
+    "b15.loga04.2",
+    "b15.loga06.1"
   ],
   "estimatedMinutes": 4,
   "sequence": 10,

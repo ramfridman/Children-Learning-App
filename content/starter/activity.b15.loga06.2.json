@@ -1,0 +1,175 @@
+{
+  "schema": "activity/v1",
+  "id": "b15.loga06.2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "transfer",
+  "representation": "pictorial",
+  "variantGroup": "pat",
+  "difficulty": {
+    "authored": 0.45
+  },
+  "prompt": {
+    "vo": "vo:b15.loga06.2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַה בָּא אַחַר כָּךְ?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "asset:star_size_s",
+      "asset:star_size_l",
+      "asset:star_size_s",
+      "asset:star_size_l",
+      "asset:star_size_s",
+      "?"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:star_size_l",
+        "label": "כּוֹכָב גָּדוֹל"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:star_size_s",
+        "label": "כּוֹכָב קָטָן",
+        "misconception": "M-PAT-NEXT"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:star_size_m",
+        "label": "כּוֹכָב בֵּינוֹנִי",
+        "misconception": "M-PAT-UNIT"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b15.loga06.2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! כּוֹכָב קָטָן, כּוֹכָב גָּדוֹל, כּוֹכָב קָטָן, כּוֹכָב גָּדוֹל, כּוֹכָב קָטָן, כּוֹכָב גָּדוֹל."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PAT-NEXT",
+        "vo": "vo:fb.pat_next",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b15.loga06.2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כּוֹכָב קָטָן, כּוֹכָב גָּדוֹל, כּוֹכָב קָטָן, כּוֹכָב גָּדוֹל, כּוֹכָב קָטָן — וְאָז כּוֹכָב גָּדוֹל. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מַה בָּא אַחַר כָּךְ?"
+  }
+}
