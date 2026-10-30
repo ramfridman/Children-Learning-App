@@ -51,6 +51,8 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 - **2026-10-27, phone test day (Samsung SM-S938B):** M1 to M5 checked on the phone by the owner: signed ping, PIN lock-out, the butterflies lesson, damaged packs all refused (6 of 6), engine view, Friends' Beach with nine friends and test tones, celebration, voice answers (word, number, wrong number with confirmation, repair steps, commands, switch off). Not run: frame times (T5), the adult-recording accuracy run (P4), real voices (P3), the AI helper on the phone (T7).
 
+- **2026-10-30 (the "alerts and B-26" orchestrator session):** the alert pre-commit fixes SEC-30 (at most 2 `alert-create` calls per alert), SEC-26 (the app's own floor rows first, with their own step budget) and SEC-33 (the child's heard words cannot be copied; help numbers can); alert ids renumbered to SEC-25..33 and QA-34..47; one QA pass (1565 passed, 0 failed); merged as PR 9. The owner's phone check of B-26 found the bottle tappable in the empty space above it; the tap is now the drawn bottle plus 6 pt (`bottleHitArea`), checked by the owner on the phone, merged with PR 8. PR 5 and PR 12 merged; the old worktrees removed; the owner's additions B-40 to B-45 put on the board (PR 14). Notes: the owner's terminal is Windows PowerShell 5.1 (no `&&`, Windows paths); the auto-mode classifier refuses a force-push, so rebases of a pushed branch go to a new branch and PR (as PR 8 and PR 9 did) instead.
+
 ## Open issues
 
 - **Probe items:** the engine's gap search needs open probe items (give, drag, trace) for every skill that can be a gap; the starter pack has none. An authoring rule for M9; in the simulator, three-option probes alone make a search too long for a Band A session.
