@@ -1,0 +1,52 @@
+{
+  "schema": "audition/v1",
+  "title": "Round 1 of the diagnostic audition (docs/audio/voice-quality-diagnosis.md, section 3): which model (Eleven v4 Turbo or v4), which text form (full pointing or the plene voice_text), the cheer punctuation, the hum, the stress of \"equals\", a longer context, and the 32 kbps question. Nitzi, and hero-son for L7.",
+  "review": "needs-editor",
+  "note": "Written by the voice-and-sound-director on 2026-10-29. Every clip is sent with explicit settings (stability 0.5, similarity 0.75, speaker boost) at 44.1 kHz and 64 kbps unless it says otherwise. Listening sheet: docs/audio/audition/listening-sheet.md. To hear another narrator, the director changes defaults.character on request.",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4_turbo",
+    "format": "mp3_44100_64",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.75,
+      "use_speaker_boost": true
+    }
+  },
+  "clips": [
+    {"id": "L1p-turbo", "text": "אֵיפֹה הַפֶּרַח הָאָדֹם?", "tests": "P1, R1: today's pointed text. ha-a-DOM (red), not ha-a-DAM (person)? Then play the old nitzi clip vo.pick.red.flower.prompt.mp3 (32 kbps, same text): is the new one clearer?", "note": "caption of vo:pick.red.flower.prompt, the text the old clip was made from"},
+    {"id": "L1p-v4", "model": "eleven_v4", "text": "אֵיפֹה הַפֶּרַח הָאָדֹם?", "tests": "P1, R2: the same pointed text on Eleven v4.", "note": "caption of vo:pick.red.flower.prompt"},
+    {"id": "L1v-turbo", "text": "איפה הפרח האדום?", "tests": "P1: the plene voice_text. ha-a-DOM? Compare with L1p-turbo.", "note": "voice_text of vo:pick.red.flower.prompt"},
+    {"id": "L1v-v4", "model": "eleven_v4", "text": "איפה הפרח האדום?", "tests": "P1, R2: plene on v4. Compare with L1v-turbo and L1p-v4.", "note": "voice_text of vo:pick.red.flower.prompt"},
+    {"id": "L2p-turbo", "text": "פַּרְפָּרִים בָּאוּ לַגִּנָּה! בּוֹאוּ נִסְפֹּר אוֹתָם. נוֹגְעִים בְּכׇל פַּרְפָּר פַּעַם אַחַת.", "allow": ["exclamation", "rare-points"], "tests": "P1, P2, R1, R5: nis-POR (not ne-sa-PER), be-CHOL (not be-chal), and no syllable-by-syllable reading? Then play the old nitzi clip vo.count.butterflies.3.prompt.mp3 (32 kbps).", "note": "caption of vo:count.butterflies.3.prompt; it carries ! and the qamats qatan, as the old clip did"},
+    {"id": "L2p-v4", "model": "eleven_v4", "text": "פַּרְפָּרִים בָּאוּ לַגִּנָּה! בּוֹאוּ נִסְפֹּר אוֹתָם. נוֹגְעִים בְּכׇל פַּרְפָּר פַּעַם אַחַת.", "allow": ["exclamation", "rare-points"], "tests": "P1, P2, R2, R5: the same pointed text on v4.", "note": "caption of vo:count.butterflies.3.prompt"},
+    {"id": "L2v-turbo", "text": "פרפרים באו לגינה. בואו נספור אותם. נוגעים בכל פרפר פעם אַחַת.", "tests": "P1, R5: the plene voice_text. Does it flow like speech? Compare with L2p-turbo.", "note": "voice_text of vo:count.butterflies.3.prompt"},
+    {"id": "L2v-v4", "model": "eleven_v4", "text": "פרפרים באו לגינה. בואו נספור אותם. נוגעים בכל פרפר פעם אַחַת.", "tests": "P1, R2, R5: plene on v4.", "note": "voice_text of vo:count.butterflies.3.prompt"},
+    {"id": "L2v-v4-128", "model": "eleven_v4", "format": "mp3_44100_128", "text": "פרפרים באו לגינה. בואו נספור אותם. נוגעים בכל פרפר פעם אַחַת.", "tests": "R1, question 4: L2v-v4 again at 128 kbps. On headphones, are sh, s and ts fuller? If you cannot tell, 64 kbps stays.", "note": "voice_text of vo:count.butterflies.3.prompt"},
+    {"id": "L3p-turbo", "text": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שָׁלוֹשׁ! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.", "allow": ["exclamation"], "tests": "R5, list pacing: today's pointed hint 3. Is one, two, three calm or rushed? Then play the old nitzi clip vo.count.butterflies.3.h3.mp3 (32 kbps).", "note": "caption of vo:count.butterflies.3.h3"},
+    {"id": "L3v-turbo", "text": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. המספר האחרון אומר כמה: שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.", "tests": "R5, list pacing: plene. Is there a small beat at the dash before li-LCHOTZ?", "note": "voice_text of vo:count.butterflies.3.h3"},
+    {"id": "L3v-v4", "model": "eleven_v4", "text": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. המספר האחרון אומר כמה: שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.", "tests": "R2: the same on v4.", "note": "voice_text of vo:count.butterflies.3.h3"},
+    {"id": "L4p-turbo", "text": "כׇּל הַכָּבוֹד!", "allow": ["exclamation", "rare-points"], "tests": "P2, R6: KOL ha-ka-VOD (not kal), with the rare qamats qatan and !. Then play the old nitzi clip vo.core.celebrate.well.mp3 (made at stability 0.1): is 0.5 calmer and still glad?", "note": "caption of vo:core.celebrate.well"},
+    {"id": "L4v-turbo", "text": "כל הכבוד.", "tests": "R6: plene with a full stop. Glad, or flat?", "note": "voice_text of vo:core.celebrate.well"},
+    {"id": "L4v-v4", "model": "eleven_v4", "text": "כל הכבוד.", "tests": "R6: the full stop on v4.", "note": "voice_text of vo:core.celebrate.well"},
+    {"id": "L4x-turbo", "text": "כל הכבוד!", "allow": ["exclamation"], "tests": "R6: plene with one !. Glad, or shouting? Decides the cheer punctuation (the director and the editor differ).", "note": "voice_text of vo:core.celebrate.well with ! instead of the full stop (punctuation only)"},
+    {"id": "L4x-v4", "model": "eleven_v4", "text": "כל הכבוד!", "allow": ["exclamation"], "tests": "R6: one ! on v4.", "note": "as L4x-turbo"},
+    {"id": "L5p-turbo", "text": "הַמְּמ… בּוֹאוּ נִבְדֹּק.", "tests": "P1, R1: the hum written pointed. A soft hum, or the letters ha-mem? niv-DOK, not niv-DAK? Then play the old nitzi clip vo.core.encourage.check.mp3 (32 kbps).", "note": "caption of vo:core.encourage.check"},
+    {"id": "L5v-turbo", "text": "המממ… בואו נבדוק.", "tests": "the hum, the editor's form 1: a thinking hmmm, then niv-DOK.", "note": "voice_text of vo:core.encourage.check"},
+    {"id": "L5v-v4", "model": "eleven_v4", "text": "המממ… בואו נבדוק.", "tests": "the hum on v4.", "note": "voice_text of vo:core.encourage.check"},
+    {"id": "L5m-turbo", "text": "ממממ… בואו נבדוק.", "tests": "the hum, the editor's form 2: a closed-mouth mmmm. Which hum sounds like thinking, not like letters?", "note": "the editor's alternative hum (voice-pronunciation-audit.md, section 4)"},
+    {"id": "L5m-v4", "model": "eleven_v4", "text": "ממממ… בואו נבדוק.", "tests": "the second hum on v4.", "note": "as L5m-turbo"},
+    {"id": "L6v-turbo", "text": "שֶׁבַע. שָׁלוֹשׁ ועוד אַרְבַּע שווה שֶׁבַע.", "tests": "P4: the stress of \"equals\" in a number sentence: sha-VE, not SHA-ve. Are the numbers clear and in the right gender?", "note": "voice_text of activity.b.mathb03.1 feedback.correct. Its numbers all agree; the diagnosis named mathb01.1, whose genders are mixed (P8, still with the editor)"},
+    {"id": "L6v-v4", "model": "eleven_v4", "text": "שֶׁבַע. שָׁלוֹשׁ ועוד אַרְבַּע שווה שֶׁבַע.", "tests": "P4 on v4.", "note": "as L6v-turbo"},
+    {"id": "L6s-turbo", "text": "שֶׁבַע. שָׁלוֹשׁ ועוד אַרְבַּע שָׁוֶה שֶׁבַע.", "tests": "P4: the one word pointed. A better sha-VE than L6v?", "note": "L6v with the one word pointed"},
+    {"id": "L6s-v4", "model": "eleven_v4", "text": "שֶׁבַע. שָׁלוֹשׁ ועוד אַרְבַּע שָׁוֶה שֶׁבַע.", "tests": "P4: pointed, on v4.", "note": "as L6s-turbo"},
+    {"id": "L6i-turbo", "text": "שֶׁבַע. שָׁלוֹשׁ ועוד אַרְבַּע /ʃaˈve/ שֶׁבַע.", "allow": ["ipa"], "tests": "P4: the one word in IPA. Does Turbo read IPA at all, or spell out letters? (ElevenLabs documents IPA for eleven_v4 only.)", "note": "L6v with the one word as IPA"},
+    {"id": "L6i-v4", "model": "eleven_v4", "text": "שֶׁבַע. שָׁלוֹשׁ ועוד אַרְבַּע /ʃaˈve/ שֶׁבַע.", "allow": ["ipa"], "tests": "P4: IPA on v4. A clean sha-VE inside the sentence, with no seam or foreign accent?", "note": "as L6i-turbo"},
+    {"id": "L7v-turbo", "character": "hero-son", "text": "בואו נספור לאט, נוגעים בכל פרפר פעם אחת.", "tests": "P5, R2: the helper's approved plain line in hero-son's voice: nis-POR, be-CHOL. (L7p, the pointed text the gateway sends, waits for its exact string: hand-off to the app-developer.)", "note": "content/tutor-lines/hero-son.json, the reviewed line with nispor, plain as approved"},
+    {"id": "L7v-v4", "character": "hero-son", "model": "eleven_v4", "text": "בואו נספור לאט, נוגעים בכל פרפר פעם אחת.", "tests": "R2 for the male voice: the same line on v4.", "note": "as L7v-turbo"},
+    {"id": "L8v-turbo", "text": "פרפרים באו לגינה. בואו נספור אותם. נוגעים בכל פרפר פעם אַחַת. כמה פרפרים יש על הפרח?", "tests": "R3: the prompt and the question in one clip. Does the question at the end rise naturally, better than two clips joined?", "note": "voice_text of vo:count.butterflies.3.prompt and .how_many, joined by a space"},
+    {"id": "L8v-v4", "model": "eleven_v4", "text": "פרפרים באו לגינה. בואו נספור אותם. נוגעים בכל פרפר פעם אַחַת. כמה פרפרים יש על הפרח?", "tests": "R3 on v4.", "note": "as L8v-turbo"},
+    {"id": "L10a-v4", "model": "eleven_v4", "text": "פרפרים באו לגינה. בואו נספור אותם. נוגעים בכל פרפר פעם אַחַת.\nכמה פרפרים יש על הפרח?\nנוגעים בפרפר אֶחָד, ואומרים מספר אֶחָד.\nבואו נספור גם עם האצבעות: אַחַת… שְׁתַּיִם…\nאַחַת, שְׁתַּיִם, שָׁלוֹשׁ. המספר האחרון אומר כמה: שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.", "allow": ["line-breaks"], "tests": "R3, H6: the first half of the butterflies-3 activity in one request (the question, the answer prompt, hints 1 to 3). One warm arc, or does each line restart? Compare its first two lines with L8v-v4.", "note": "voice_text of vo:count.butterflies.3.prompt, vo:count.butterflies.3.how_many, vo:hint.count.h1, vo:hint.count.h2, vo:count.butterflies.3.h3, one per line. The whole activity (10 lines, 433 characters with the line breaks) is over the 300-character clip limit, so it is split in two"},
+    {"id": "L10b-v4", "model": "eleven_v4", "text": "המממ… נראה שפרפר אֶחָד נִסְפַּר פעמיים. בואו נספור לאט.\nאולי פספסנו פרפר? בואו נבדוק.\nכמעט, בואו ננסה שוב.\nשאלה טובה, בואו נראה יחד.\nשְׁלוֹשָׁה. ספרתם כל אֶחָד פעם אַחַת.", "allow": ["line-breaks"], "tests": "R3, H6: the second half (three \"not yet\" lines, the \"good question\" line and the correct line) in one request, 170 characters. Kind and curious, never a scold? Is the correct line at the end glad?", "note": "voice_text of vo:fb.double, vo:fb.skip, vo:fb.almost, vo:fb.unsure, vo:count.butterflies.3.correct, one per line"}
+  ]
+}

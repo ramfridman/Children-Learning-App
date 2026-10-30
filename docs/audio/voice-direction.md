@@ -19,6 +19,46 @@ Files:
 How sure each statement is: **[M]** measured here, **[R]** read in the repo or a cited source, **[G]** my judgement
 (a guess until a person has listened). I cannot hear; nothing below claims that something *sounds* right.
 
+### Corrections of 2026-10-29 (read these first)
+
+Promised in `docs/audio/voice-quality-diagnosis.md` (section 5). They change the sections below, and those sections
+are corrected in place where they said otherwise.
+
+1. **[R] On Eleven v4 and v4 Turbo, only stability and similarity work.** ElevenLabs: "Style and Speed sliders are not
+   available in Eleven v4, and SSML is not supported". `voice_gen` now drops `style` and `speed` before it sends a
+   request to a v4 model (`notForV4` in `app/tool/voice_gen_lib.dart`). So the following do nothing on v4:
+   - the `Style` and `Speed (B)` columns of section 3;
+   - the default `style 0.15, speed 0.95`;
+   - the band offsets of section 2.4;
+   - the `speed` column of `voice-direction.csv`;
+   - the cheer's `style 0.9`.
+
+   The cheer is in practice stability 0.1 and similarity 0.8. **Pacing comes only from punctuation, sentence structure
+   and, at most, an audio tag.** Set C of the old audition (does the model honour speed and style?) is answered and
+   dropped. The `pace` estimates stay as estimates of length, not as settings.
+2. **[M] The old 22.05 kHz clips are 32 kbps, not 56.** The first frame of each file is an information frame written
+   at 56 kbps. Every audio frame after it is 32 kbps; nitzi `vo.core.encourage.check.mp3`, for example, has 107 frames
+   at 32 kbps and 1 at 56, which averages 32.2 kbps. My earlier figure read only that first frame. The fix is in
+   section 1.2.
+3. **[R] The audition of section 7 is replaced** by the two rounds of the diagnosis. They are written as `audition/v1`
+   specs in `docs/audio/audition/round1.json` and `round2.json`, with the owner's steps and score sheet in
+   `docs/audio/audition/listening-sheet.md`. The voice-choice set A (`audition.csv`) runs after them, on the winning
+   model and text form.
+4. **[R] The paid commands changed.** `--confirm-chars` is gone. `generate`, `audition-batch run` and `audition` run
+   only in an interactive terminal: they print the plan, and the owner types the character count on the keyboard. No
+   flag can pass that gate. The commands in sections 7 and 8 are corrected.
+5. **[R] What the rebuilt tool already does**, from the header of `app/tool/voice_gen.dart`:
+   - C1: it reads `voice_text`, and only from rows that are `owner-approved`, `voice-ready` or `voiced`;
+   - C7: it records a hash of each clip's request;
+   - explicit settings on every request;
+   - 44.1 kHz only;
+   - a pre-flight allowlist of characters.
+
+   I have not checked C2 to C6 or C8 to C11. The gateway still asks for `mp3_22050_32`
+   (`supabase/functions/_shared/elevenlabs.ts:49`; diagnosis H1).
+6. **[R] The price depends on the model.** `eleven_v4` is listed at 0.08 USD per 1,000 characters, twice Turbo's 0.04.
+   The model is chosen in round 1. Section 8 is in Turbo prices; on v4 every figure doubles.
+
 ---
 
 ## 1. What exists today (the starting point)
@@ -34,7 +74,8 @@ How sure each statement is: **[M]** measured here, **[R]** read in the repo or a
 - **[R]** Jili is a masculine noun (`grammaticalGender: masculine`, "a jelly") with the girl's voice and borrows Nitzi.
   This is consistent as long as no line names the speaker's gender (none does today: `core.he.json` note).
 - **[R]** Styles: one, `cheer` (stability 0.1, similarity 0.8, style 0.9, speaker boost), used for
-  `vo:core.celebrate.`, `vo:celebrate.`, `vo:core.ceremony.`. No default `settings`, no `pronunciation`.
+  `vo:core.celebrate.`, `vo:celebrate.`, `vo:core.ceremony.`. No `pronunciation`. Since 2026-10-29 there is a default
+  `settings` (stability 0.5, similarity 0.75, speaker boost), and style 0.9 is no longer sent to v4 (correction 1).
 
 ### 1.2 The generator (`app/tool/voice_gen.dart`, `voice_gen_lib.dart`)
 - **[M]** `dart run tool/voice_gen.dart plan --price 0.04` (free, offline; it only reads files) prints today:
@@ -53,8 +94,8 @@ How sure each statement is: **[M]** measured here, **[R]** read in the repo or a
   asked before the narrator's (`VoiceBank.withFallback`), those 28 lines would still play in the friend's voice with
   the old texts inside lessons that are otherwise narrated by Nitzi or hero-son. They must be moved away before the
   friends' packs are rebuilt.
-- **[M]** The existing clips are in two formats: 22,050 Hz / 56 kbps (older) and 44,100 Hz / 64 kbps (newer, M8).
-  A full re-voice puts them all on 44.1 kHz.
+- **[M]** The existing clips are in two formats: 22,050 Hz / **32 kbps** (older; corrected on 2026-10-29, see
+  correction 2) and 44,100 Hz / 64 kbps (newer, M8). A full re-voice puts them all on 44.1 kHz.
 
 ### 1.3 Measured speech rate (from the existing files, by reading MP3 frame headers)
 **[M]** Median over the 318 clips (silence at the start and end included), at the default speed 1.0:
@@ -89,9 +130,9 @@ lengths; these are estimates, not measurements.
   `style` (0; raises expressiveness and instability), `use_speaker_boost` (true), `speed` (1.0; the playground range is
   0.7 to 1.2). Request fields that help us: `seed` (more repeatable, "determinism is not guaranteed"),
   `previous_text`/`next_text`, `pronunciation_dictionary_locators` (up to 3), `apply_text_normalization`.
-- **[R, conflicting]** A secondary source (eesel.ai) says v4 and v4 Turbo have **no style and speed controls** and no
-  SSML; ElevenLabs' own pages do not say which settings v4 Turbo honours. Audition set C measures it (if speed 0.8 and
-  1.2 give the same length, speed is ignored and pacing must come from punctuation alone).
+- **[R, settled on 2026-10-29]** v4 and v4 Turbo have **no style and speed controls** and no SSML. eesel.ai said so
+  first, and ElevenLabs' help page "What is Eleven v4?" now says it too: "Both variants use two voice settings:
+  Stability and Similarity". Pacing comes from punctuation alone. Set C is dropped (correction 1).
 - **[R]** v4 has inline **audio tags** (`[softly]`, `[pause]`, `[excited]`, ...), also on Turbo; tags are guidance, not
   guarantees, and they cost characters. **[G]** I do not use them in the plan: they would appear in the alignment that
   drives the mouth, a vague tag can be voiced as a sound, and punctuation already carries our pauses. They can be tried
@@ -146,9 +187,10 @@ The friend's face and mouth are always on screen (the narrator only lends the so
 question 4.
 
 ### 2.4 Band reads
-The design spec asks for two reads of every Nitzi line (Band A slow, B/C natural). **[G]** One read per line is enough:
-every activity belongs to one band, so its lines get the band's speed (A −0.03, B 0, C +0.03 on the style's speed);
-lines shared across bands get −0.02. This halves the cost (question 8).
+The design spec asks for two reads of every Nitzi line (Band A slow, B/C natural). **[G]** One read per line is enough
+(question 8), which halves the cost. The band speeds I planned (A −0.03, B 0, C +0.03 on the style's speed, −0.02 for
+shared lines) **do nothing on v4** (correction 1). A slower Band A can only come from the text: shorter sentences, and
+`…` or `.` where a comma would rush.
 
 ### 2.5 The per-name line
 `homeBubble` (`{child}, הבקבוק הגיע.`) is still `proposed`. **[G]** One full clip per child per narrator ("<name>,
@@ -170,8 +212,11 @@ kind. A celebration is bright and short. Nothing sudden: a quiet start, a soft e
 
 The numbers are in `content/voices.proposed.json › styles` (model `eleven_v4_turbo`, `mp3_44100_64`, `language_code
 he`, a fixed `seed`). **[G]** They are starting points for the audition, chosen from the API's documented behaviour
-(stability lower = livelier but less steady; style above 0 amplifies and can wobble; similarity 0.8 to stay on the
-chosen voice; speaker boost on).
+(stability lower = livelier but less steady; similarity 0.8 to stay on the chosen voice; speaker boost on).
+
+**On v4 only the `Stab.` and `Sim.` columns are sent.** The `Style` and `Speed (B)` columns are kept for the record
+but do nothing (correction 1). The stabilities are revised after round 2 of the diagnostic audition, which compares
+0.1, 0.5 and 0.8. Whether v4 honours `seed` is not verified.
 
 | Kind | Style | Stab. | Sim. | Style | Speed (B) | Pause budget [G] | Pacing and energy |
 |---|---|---|---|---|---|---|---|
@@ -191,7 +236,8 @@ chosen voice; speaker boost on).
 | calm, goodbye | `calm` | 0.70 | 0.80 | 0.05 | 0.88 | 4.5 to 5 s | slow, soft, a quiet ending; no "come back" pressure |
 | helper (tutor) | `tutor` | 0.60 | 0.80 | 0.10 | 0.95 | 7 s | the same sound and loudness as the lesson lines around it |
 
-Default `settings` (any line no rule covers): stability 0.55, similarity 0.8, style 0.15, boost on, speed 0.95.
+Default `settings` (any line no rule covers): stability 0.55, similarity 0.8, boost on. The style 0.15 and speed
+0.95 of the first draft do nothing on v4. The `content/voices.json` default of 0.5 / 0.75 stays until round 2.
 
 **Pauses come from punctuation only** (v4 has no SSML break; the text editor's punctuation is the tool): `,` a light
 breath (200 to 350 ms), `.` a real pause (about 450 ms), `—` a held beat (about 300 ms), `:` a small lift and a beat,
@@ -325,8 +371,16 @@ Then a free **mock run** (`voice_gen mock`) to check the packs, the shared files
 
 ## 7. The audition (the owner listens first)
 
+**Updated 2026-10-29.** Two diagnostic rounds now come first:
+- round 1: 1,852 characters, 0.1178 USD;
+- round 2: 2,774 characters, 0.2219 USD on v4.
+
+They are in `docs/audio/audition/round1.json` and `round2.json`, and the owner's steps and score sheet are in
+`docs/audio/audition/listening-sheet.md`. The voice-choice audition below (set A, then B) runs after them, on the
+winning model and text form. Set C is dropped (correction 1).
+
 `docs/audio/audition.csv` lists every clip with its text, style and settings: **163 clips, 4,309 characters, about
-0.17 USD** at 0.04 USD per 1,000. Nothing runs until the owner says yes to that number.
+0.17 USD** at 0.04 USD per 1,000 (twice that on `eleven_v4`). Nothing runs until the owner types that number himself.
 
 - **Set A, voice choice (3,621 characters).** For each narrator, the 12 lines below × 3 voices (today's voice and two
   candidates the owner picks from the ElevenLabs voice library, filtered to Hebrew; listening to library previews is
@@ -346,25 +400,23 @@ Then a free **mock run** (`voice_gen mock`) to check the packs, the shared files
 
 What the owner listens for: section 9, plus "which voice would I want to hear a thousand times".
 
-**Commands** (Windows PowerShell; needs C11 for the candidate rows; the `current` rows work today):
+**Commands.** The loop that stood here (one `audition` call per CSV row, with `--voice` and `--out <file>`) no longer
+works, and it should not: each paid call now stops for a typed count. Set A and set B will be written as `audition/v1`
+specs like the two diagnostic rounds and run with `audition-batch`, one typed count per set. The steps are those of
+`docs/audio/audition/listening-sheet.md`, section A.
 
-1. Pick the candidate voices in the ElevenLabs voice library and type their ids into the `voice_id` column of
-   `docs/audio/audition.csv` (rows `cand2`, `cand3`, and `chosen` after set A).
-2. Set `ELEVENLABS_API_KEY` in this PowerShell window the way you did for the M8 run (never printed or saved).
-3. Run:
-
-        cd D:\Children-Learning-App\app
-        New-Item -ItemType Directory -Force "$env:USERPROFILE\nitznutz-audition" | Out-Null
-        $rows = Import-Csv ..\docs\audio\audition.csv -Encoding UTF8 | Where-Object { $_.voice_id -ne '' -and $_.set -eq 'A' }
-        foreach ($r in $rows) { dart run tool/voice_gen.dart audition $r.character $r.text --voice $r.voice_id --settings $r.settings --out "$env:USERPROFILE\nitznutz-audition\$($r.clip)-$($r.character)-$($r.candidate).mp3" }
-
-4. Listen, choose, fill `chosen` ids, then run the same loop with `$_.set -eq 'B'` and `'C'`.
+A candidate library voice still needs a way in. A spec names a `character` from `content/voices.json`, and there is no
+`--voice` option (C11). So either the app-developer adds a candidate field (for example `"voice": "<library id>"` on a
+clip, checked like a voice id), or the candidates are entered as temporary characters in a copy of `voices.json`
+(hand-off in the diagnosis).
 
 ---
 
 ## 8. The voicing plan and the cost (never run)
 
-Price: `eleven_v4_turbo` **0.04 USD per 1,000 characters** (docs/PLAN.md; eesel.ai gives the same list price). The
+Price: `eleven_v4_turbo` **0.04 USD per 1,000 characters** (docs/PLAN.md; eesel.ai gives the same list price). If
+round 1 picks `eleven_v4` (0.08 USD), every USD figure in this section doubles: both narrators come to about 12.40 USD
+instead of 6.20 USD (correction 6). The
 Creator plan includes **275,000 characters a month**. Counts from `tools/voice_direction.py` on the 1,862 distinct
 `text-ready` texts (characters as Unicode code points, as `voice_gen` counts them; number-word points included).
 
@@ -398,18 +450,23 @@ characters), installed on the phone, listened to, and measured (C8 report); (4) 
 (5) the seven friends' own lines; (6) the tutor lines through the gateway; (7) the new texts and the voice packs go into
 a new pack version together (voice packs `2.0.0`).
 
-**Commands for the paid runs** (after C1 to C11; `N` is the number `plan` prints, **typed by the owner**, never by an
-agent):
+**Commands for the paid runs** (corrected 2026-10-29). Run them after the remaining changes of section 6, in a
+separate PowerShell window that does not run Claude Code, with the key set from a hidden prompt as in
+`docs/audio/audition/listening-sheet.md`, section A. No count goes on the command line.
 
     cd D:\Children-Learning-App\app
-    dart run tool/voice_gen.dart plan --characters nitzi,hero-son --price 0.04
-    dart run tool/voice_gen.dart generate nitzi --confirm-chars <N for nitzi> --pack-version 2.0.0
-    dart run tool/voice_gen.dart generate hero-son --confirm-chars <N for hero-son> --pack-version 2.0.0
-    dart run tool/voice_gen.dart plan --characters alien-jili,climber-tzuri,compass-romi,friend-daughter,inventor-gali,tower-tamir,weaver-keshet --price 0.04
-    dart run tool/voice_gen.dart generate <friend> --confirm-chars <N for that friend> --pack-version 2.0.0
+    dart run tool/voice_gen.dart plan --characters nitzi,hero-son
+    dart run tool/voice_gen.dart generate nitzi --pack-version 2.0.0
+    dart run tool/voice_gen.dart generate hero-son --pack-version 2.0.0
+    dart run tool/voice_gen.dart plan --characters alien-jili,climber-tzuri,compass-romi,friend-daughter,inventor-gali,tower-tamir,weaver-keshet
+    dart run tool/voice_gen.dart generate <friend> --pack-version 2.0.0
 
-If the changes are made as described, `plan` should print about 77,461 for each narrator (78,038 with the pronunciation
-entries) and about 186 for each friend; the number `plan` prints is the one that counts.
+`plan` is free and prices each model from `content/voices.json` (`--price` overrides that). Each `generate` plans that
+one voice again, prints the plan, and goes ahead only when the owner types the number it shows for that voice. Any
+other input stops it with nothing sent. `generate` also refuses to start while any line is not yet approved.
+
+If the changes are made as described, `plan` should print about 77,461 for each narrator (78,038 with the
+pronunciation entries) and about 186 for each friend. The number the tool prints is the one that counts.
 
 ---
 
@@ -450,7 +507,8 @@ entries) and about 186 for each friend; the number `plan` prints is the one that
 
 - **I did not listen to anything.** Every statement about how a line will sound is a guess until the owner hears it.
 - Loudness and silence of the existing clips: ffmpeg is not installed, so only lengths (from MP3 headers) were measured.
-- Which voice settings `eleven_v4_turbo` really honours (style, speed): conflicting sources; set C answers it.
+- Which voice settings `eleven_v4_turbo` really honours: settled from ElevenLabs' docs on 2026-10-29 (stability and
+  similarity only; correction 1). Not measured on our own clips.
 - Whether ElevenLabs needs any of the pronunciation entries; whether `seed` makes takes repeatable for Hebrew.
 - The genders of the voice ids (the voice library was not called); Keshet's conflict follows from the code either way.
 - The band speeds and pause budgets against real children; Band B slots were read with one example each (the editor's
@@ -470,8 +528,8 @@ See the report; the same list with audio descriptions, kept here for the record:
 4. A friend's own voice: only at the edges (greeting, cheer, ceremony, goodbye; recommended, 0.05 USD), all 26 core
    lines (0.18 USD; the friend's voice would cut in mid-lesson for encouragement and listening lines), or also the
    lesson celebrations (1.21 USD; the friend's voice for the end-of-lesson cheer).
-5. Cheer: today's very lively setting (stability 0.1, style 0.9: big swings, may wobble or overshoot) or the steadier
-   proposal (0.35 / 0.45: bright but even). Decide after set B.
+5. Cheer: today's very lively setting (stability 0.1: big swings, may wobble or overshoot; its style 0.9 does nothing
+   on v4) or a steadier one (about 0.4 to 0.5: bright but even). Decide after round 2 of the diagnostic audition.
 6. "Not yet" sound: a very soft single low marimba note (recommended), the spec's "boing" (comic), or silence with
    only the wobble.
 7. The per-name line: one natural clip per child per narrator (recommended) or a name clip joined to a shared clip

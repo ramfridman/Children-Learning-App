@@ -5,7 +5,10 @@
   "outputFormat": "mp3_44100_64",
   "styles": { "cheer": { "stability": 0.1, "similarity_boost": 0.8, "style": 0.9, "use_speaker_boost": true } },
   "styleRules": { "cheer": ["vo:core.celebrate.", "vo:celebrate.", "vo:core.ceremony."] },
-  "settings": {},
+  "settings": { "stability": 0.5, "similarity_boost": 0.75, "use_speaker_boost": true },
+  "_settingsNote": "Sent explicitly with every line (voice_gen refuses settings without stability and similarity_boost), so nothing depends on the settings stored with a voice in the ElevenLabs account. 0.5 and 0.75 are ElevenLabs' API defaults and the values of round 1 of the diagnostic audition (docs/audio/voice-quality-diagnosis.md); the voice-and-sound-director sets the final values after round 2. A style's settings go on top of these, key by key. style and speed are never sent to a v4 model (v4 does not use them), so on eleven_v4 and eleven_v4_turbo the cheer is stability 0.1 only.",
+  "listPricePer1000Chars": { "eleven_v4": 0.08, "eleven_v4_turbo": 0.04 },
+  "_priceNote": "USD per 1,000 characters, list API prices (PLAN.md › costs), used only for the estimate that voice_gen plan prints. The owner's plan may differ; --price replaces them.",
   "pronunciation": {},
   "voices": {
     "nitzi": {
