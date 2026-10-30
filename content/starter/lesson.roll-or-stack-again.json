@@ -16,7 +16,9 @@
   "items": [
     "shp.solid.rolls.blue",
     "shp.solid.stacks.blue",
-    "shp.solid.which2"
+    "shp.solid.which2",
+    "b15.shpa07.1",
+    "b15.shpa07.2"
   ],
   "estimatedMinutes": 2,
   "sequence": 11,

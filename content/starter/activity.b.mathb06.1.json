@@ -36,7 +36,7 @@
     "group": {
       "sprite": "asset:apple",
       "count": 5,
-      "arrangement": "line",
+      "arrangement": "ten_frame",
       "seed": 3,
       "scale": 1
     }

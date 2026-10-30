@@ -28,7 +28,8 @@
     }
   ],
   "representations": [
-    "concrete"
+    "concrete",
+    "pictorial"
   ],
   "misconceptions": [
     "M-SORT-SHIFT"

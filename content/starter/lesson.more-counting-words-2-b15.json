@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-counting-words-2-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סוֹפְרִים לְפִי הַסֵּדֶר"
+    }
+  ],
+  "skills": [
+    "NUM-A-01",
+    "NUM-A-02"
+  ],
+  "items": [
+    "b15.numa02.5"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 22,
+  "celebration": {
+    "vo": "vo:celebrate.more_counting_words_2_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר."
+      }
+    ]
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "schema": "activity/v1",
+  "id": "b15.shpa03.3",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "spot_error",
+  "templateVersion": "1.0",
+  "domain": "shapes",
+  "band": "A",
+  "skills": [
+    {
+      "id": "SHP-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "error_spotting",
+  "representation": "pictorial",
+  "variantGroup": "spot",
+  "difficulty": {
+    "authored": 0.5
+  },
+  "prompt": {
+    "vo": "vo:b15.shpa03.3.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חָבֵר אוֹסֵף רַק מְשֻׁלָּשִׁים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "cells": [
+      "asset:shape_triangle",
+      "asset:shape_triangle_down",
+      "asset:shape_square",
+      "asset:shape_triangle_thin"
+    ]
+  },
+  "answer": {
+    "type": "spot",
+    "wrong": 2,
+    "misconception": "M-SHP-ORIENT"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b15.shpa03.3.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! מְצָאתֶם אֶת הַטָּעוּת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SHP-ORIENT",
+        "vo": "vo:fb.shp_orient",
+        "caption": [
+          {
+            "t": "he",
+            "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.spot.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b15.shpa03.3.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the one that does not fit",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "חָבֵר אוֹסֵף רַק מְשֻׁלָּשִׁים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?"
+  }
+}

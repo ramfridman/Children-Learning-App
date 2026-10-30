@@ -33,6 +33,10 @@
   "shape_circle_green",
   "shape_square_green",
   "shape_triangle_green",
+  "shape_circle_yellow",
+  "shape_rect_red",
+  "ball_white",
+  "ball_black",
   "grass",
   "basket_empty"
  ],
@@ -77,6 +81,21 @@
    "one": "כֶּלֶב",
    "many": "כְּלָבִים"
   },
+  "chick": {
+   "g": "m",
+   "one": "אֶפְרוֹחַ",
+   "many": "אֶפְרוֹחִים"
+  },
+  "butterfly": {
+   "g": "m",
+   "one": "פַּרְפַּר",
+   "many": "פַּרְפָּרִים"
+  },
+  "frog": {
+   "g": "f",
+   "one": "צְפַרְדֵּעַ",
+   "many": "צְפַרְדְּעִים"
+  },
   "coin": {
    "g": "m",
    "one": "מַטְבֵּעַ",
@@ -86,6 +105,11 @@
    "g": "f",
    "one": "גֶּרֶב",
    "many": "גַּרְבַּיִם"
+  },
+  "shoe": {
+   "g": "f",
+   "one": "נַעַל",
+   "many": "נַעֲלַיִם"
   }
  },
  "names": {
@@ -269,8 +293,20 @@
    "one": "בַּרְוָז",
    "g": "m"
   },
+  "chick": {
+   "one": "אֶפְרוֹחַ",
+   "g": "m"
+  },
+  "butterfly": {
+   "one": "פַּרְפַּר",
+   "g": "m"
+  },
   "sock": {
    "one": "גֶּרֶב",
+   "g": "f"
+  },
+  "shoe": {
+   "one": "נַעַל",
    "g": "f"
   },
   "day_1": {
@@ -596,6 +632,26 @@
   "banana_yellow": {
    "one": "בָּנָנָה",
    "g": "f"
+  },
+  "coin_h50": {
+   "one": "מַטְבֵּעַ שֶׁל חֲצִי שֶׁקֶל",
+   "g": "m"
+  },
+  "coin_s1": {
+   "one": "מַטְבֵּעַ שֶׁל שֶׁקֶל",
+   "g": "m"
+  },
+  "coin_s2": {
+   "one": "מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים",
+   "g": "m"
+  },
+  "coin_s5": {
+   "one": "מַטְבֵּעַ שֶׁל חֲמִשָּׁה שְׁקָלִים",
+   "g": "m"
+  },
+  "coin_s10": {
+   "one": "מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים",
+   "g": "m"
   }
  },
  "tagFeedback": {
@@ -1233,6 +1289,32 @@
   },
   {
    "kind": "pick",
+   "id": "b.colb02.12",
+   "skill": "COL-B-02",
+   "difficulty": 0.6,
+   "prompt": "מַה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?",
+   "row": [
+    "shade_purple_1",
+    "?",
+    "shade_purple_3"
+   ],
+   "options": [
+    "shade_purple_1",
+    "shade_purple_2",
+    "shade_purple_3"
+   ],
+   "correct": "shade_purple_2",
+   "tags": {
+    "shade_purple_1": "M-SER-ENDS",
+    "shade_purple_3": "M-SER-ENDS"
+   },
+   "domain": "colors",
+   "check": "transfer",
+   "correct_text": "כֵּן! זֶה בָּאֶמְצַע.",
+   "h3": "מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
    "id": "b.colb03.1",
    "skill": "COL-B-03",
    "difficulty": 0.37,
@@ -1416,6 +1498,56 @@
    "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא סָגֹל. עַכְשָׁו תּוֹרְכֶם."
   },
   {
+   "kind": "pick",
+   "id": "b.colb03.9",
+   "skill": "COL-B-03",
+   "difficulty": 0.6,
+   "prompt": "אֵיפֹה עוֹד כָּחֹל?",
+   "group": {
+    "sprite": "shade_blue_1",
+    "count": 1
+   },
+   "options": [
+    "ball_white",
+    "ball_blue",
+    "ball_purple"
+   ],
+   "correct": "ball_blue",
+   "tags": {
+    "ball_white": "M-COL-SHADE",
+    "ball_purple": "M-COL-NAME"
+   },
+   "domain": "colors",
+   "check": "transfer",
+   "correct_text": "כֵּן! גַּם זֶה כָּחֹל.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.colb03.10",
+   "skill": "COL-B-03",
+   "difficulty": 0.6,
+   "prompt": "אֵיפֹה עוֹד אָדֹם?",
+   "group": {
+    "sprite": "shade_red_3",
+    "count": 1
+   },
+   "options": [
+    "ball_black",
+    "ball_orange",
+    "ball_red"
+   ],
+   "correct": "ball_red",
+   "tags": {
+    "ball_black": "M-COL-SHADE",
+    "ball_orange": "M-COL-NAME"
+   },
+   "domain": "colors",
+   "check": "transfer",
+   "correct_text": "כֵּן! גַּם זֶה אָדֹם.",
+   "h3": "בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא אָדֹם. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
    "kind": "sort",
    "id": "b.colb04.1",
    "skill": "COL-B-04",
@@ -1487,6 +1619,7 @@
      2
     ]
    ],
+   "rule": "shape",
    "prompt": "עַכְשָׁו מְמַיְּנִים לְפִי צוּרָה: עִגּוּלִים לְכָאן, וְרִבּוּעִים לְכָאן.",
    "domain": "colors",
    "h3": "כׇּל הַצּוּרוֹת הַדּוֹמוֹת הוֹלְכוֹת יַחַד, גַּם אִם הַצֶּבַע שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.",
@@ -1564,10 +1697,47 @@
      2
     ]
    ],
+   "rule": "shape",
    "prompt": "עַכְשָׁו מְמַיְּנִים לְפִי צוּרָה: עִגּוּלִים לְכָאן, וּמְשֻׁלָּשִׁים לְכָאן.",
    "domain": "colors",
    "h3": "כׇּל הַצּוּרוֹת הַדּוֹמוֹת הוֹלְכוֹת יַחַד, גַּם אִם הַצֶּבַע שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! מִיַּנְתֶּם לְפִי צוּרָה."
+  },
+  {
+   "kind": "spot",
+   "id": "b.colb04.5",
+   "skill": "COL-B-04",
+   "difficulty": 0.6,
+   "cells": [
+    "shape_circle_red",
+    "shape_square_red",
+    "shape_triangle_blue",
+    "shape_rect_red"
+   ],
+   "wrong": 2,
+   "tag": "M-SORT-SHIFT",
+   "rule": "colour",
+   "domain": "colors",
+   "check": "error_spotting",
+   "prompt": "חָבֵר מִיֵּן לְפִי צֶבַע, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?"
+  },
+  {
+   "kind": "spot",
+   "id": "b.colb04.6",
+   "skill": "COL-B-04",
+   "difficulty": 0.6,
+   "cells": [
+    "shape_circle_red",
+    "shape_circle_blue",
+    "shape_square_green",
+    "shape_circle_yellow"
+   ],
+   "wrong": 2,
+   "tag": "M-SORT-SHIFT",
+   "rule": "shape",
+   "domain": "colors",
+   "check": "error_spotting",
+   "prompt": "חָבֵר מִיֵּן לְפִי צוּרָה, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?"
   },
   {
    "kind": "build",
@@ -1672,6 +1842,26 @@
    "prompt": "בּוֹנִים אֶת הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק, כָּחֹל, סָגֹל.",
    "domain": "colors",
    "h3": "הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק, כָּחֹל, סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "spot",
+   "id": "b.colb06.5",
+   "skill": "COL-B-06",
+   "difficulty": 0.6,
+   "cells": [
+    "ball_red",
+    "ball_orange",
+    "ball_purple",
+    "ball_green",
+    "ball_blue",
+    "ball_purple"
+   ],
+   "wrong": 2,
+   "tag": "M-PAT-COPY",
+   "domain": "colors",
+   "check": "error_spotting",
+   "prompt": "חָבֵר בָּנָה קֶשֶׁת, וְיֵשׁ בָּהּ טָעוּת. אֵיפֹה הַטָּעוּת?",
+   "h3": "הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק, כָּחֹל, סָגֹל. עַכְשָׁו תּוֹרְכֶם."
   }
  ],
  "lessons": [
@@ -1734,7 +1924,8 @@
     "b.colb02.8",
     "b.colb02.9",
     "b.colb02.10",
-    "b.colb02.11"
+    "b.colb02.11",
+    "b.colb02.12"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! מְצָאתֶם אֶת הָאֶמְצַע."
@@ -1764,7 +1955,9 @@
     "b.colb03.5",
     "b.colb03.6",
     "b.colb03.7",
-    "b.colb03.8"
+    "b.colb03.8",
+    "b.colb03.9",
+    "b.colb03.10"
    ],
    "minutes": 5,
    "done": "נִפְלָא! אַתֶּם רוֹאִים אֶת הַצֶּבַע."
@@ -1779,7 +1972,9 @@
     "b.colb04.1",
     "b.colb04.2",
     "b.colb04.3",
-    "b.colb04.4"
+    "b.colb04.4",
+    "b.colb04.5",
+    "b.colb04.6"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! מִיַּנְתֶּם בִּשְׁתֵּי דְּרָכִים."
@@ -1794,7 +1989,8 @@
     "b.colb06.1",
     "b.colb06.2",
     "b.colb06.3",
-    "b.colb06.4"
+    "b.colb06.4",
+    "b.colb06.5"
    ],
    "minutes": 5,
    "done": "וַאוּ! בְּנִיתֶם קֶשֶׁת."

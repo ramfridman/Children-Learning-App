@@ -19,12 +19,13 @@ import 'support/pack_fixtures.dart';
 /// leafy plant, the content cannot give the evidence the mastery rule asks for (§4.1: an understanding check,
 /// two of them and two representations for a core skill).
 ///
-/// The target is every skill reachable and `graph.report()` empty on the real pack. Until the content of B-15 is
-/// in, those two tests FAIL; they are skipped in a normal run so that the suite stays green. Run them with
+/// The target is every skill reachable and `graph.report()` empty on the real pack. After B-15 part 2 every skill is
+/// reachable and the first test guards it in every run. `graph.report()` still lists skills that have items in only one
+/// representation: the rule asks for two for every skill, B-15 §1 only gave two to the core ones and to a few more (a
+/// decision for the curriculum-expert and the owner), so that test stays skipped. Run it with
 ///
 ///   flutter test --no-pub --dart-define=QA_OPEN=true test/mastery_reachable_test.dart
 ///
-/// When the content is fixed, remove `skip: _open` (they then guard every build).
 const bool _open = !bool.fromEnvironment('QA_OPEN');
 
 /// Days the invented child plays; the rule needs 2, so 4 leaves room.
@@ -164,7 +165,7 @@ void main() {
           '${bad.length} skills cannot reach fresh mastery even with every answer right:\n'
           '${bad.entries.map((MapEntry<String, String> e) => '${e.key}: ${e.value}').join('\n')}',
     );
-  }, skip: _open);
+  });
 
   test('graph.report() is empty on the starter pack (every skill in at least two representations)', () {
     final List<String> report = SkillGraph(catalog).report();

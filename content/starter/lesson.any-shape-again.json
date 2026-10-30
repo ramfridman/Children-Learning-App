@@ -15,7 +15,11 @@
   ],
   "items": [
     "shp.any.small.square",
-    "shp.any.big.circle"
+    "shp.any.big.circle",
+    "b15.shpa03.1",
+    "b15.shpa03.2",
+    "b15.shpa03.3",
+    "b15.shpa03.4"
   ],
   "estimatedMinutes": 3,
   "sequence": 8,

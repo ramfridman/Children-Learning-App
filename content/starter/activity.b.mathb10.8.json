@@ -1,0 +1,155 @@
+{
+  "schema": "activity/v1",
+  "id": "b.mathb10.8",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.2",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "reverse",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:b.mathb10.8.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יֵשׁ שְׁמוֹנֶה צִפֳּרִים. עַל כׇּל צַלַּחַת אַרְבַּע צִפֳּרִים. כַּמָּה צַלָּחוֹת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "chart": [
+      {
+        "sprite": "asset:bird",
+        "count": 4
+      },
+      {
+        "sprite": "asset:bird",
+        "count": 4
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 8,
+        "label": "שְׁמוֹנֶה"
+      },
+      {
+        "id": "o2",
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
+      },
+      {
+        "id": "o3",
+        "numeral": 4,
+        "label": "אַרְבַּע"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": true,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.mathb10.8.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתֵּי צַלָּחוֹת! אַרְבַּע וְעוֹד אַרְבַּע הֵם שְׁמוֹנֶה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pick.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.mathb10.8.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "יֵשׁ שְׁמוֹנֶה צִפֳּרִים. עַל כׇּל צַלַּחַת אַרְבַּע צִפֳּרִים. כַּמָּה צַלָּחוֹת?"
+  }
+}

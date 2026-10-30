@@ -16,7 +16,9 @@
   "items": [
     "math.graph.ducks",
     "math.graph.stars2",
-    "math.graph.apples2"
+    "math.graph.apples2",
+    "b15.matha07.1",
+    "b15.matha07.2"
   ],
   "estimatedMinutes": 3,
   "sequence": 12,

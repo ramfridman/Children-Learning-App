@@ -19,7 +19,9 @@
     "math.size.long",
     "math.size.short",
     "math.size.heavy",
-    "math.size.light"
+    "math.size.light",
+    "b15.matha04.1",
+    "b15.matha04.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 3,

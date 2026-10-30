@@ -19,7 +19,10 @@
     "shp.match.triangle.green",
     "shp.match.square.orange",
     "shp.name.square.yellow",
-    "shp.name.triangle.green"
+    "shp.name.triangle.green",
+    "b15.shpa01.1",
+    "b15.shpa01.2",
+    "b15.shpa02.1"
   ],
   "estimatedMinutes": 4,
   "sequence": 7,

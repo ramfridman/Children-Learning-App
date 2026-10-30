@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "stories-and-pairs-again-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סִפּוּרִים וְזוּגוֹת"
+    }
+  ],
+  "skills": [
+    "LOG-A-08",
+    "LOG-A-09"
+  ],
+  "items": [
+    "b15.loga09.1",
+    "b15.loga09.2"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 16,
+  "celebration": {
+    "vo": "vo:celebrate.stories_and_pairs_again_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה קּוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד."
+      }
+    ]
+  }
+}

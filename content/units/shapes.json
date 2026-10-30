@@ -15,7 +15,9 @@
   ],
   "assets": [
     "ball_red",
-    "ball_blue"
+    "ball_blue",
+    "solid_sphere",
+    "shape_curved"
   ],
   "things": {
     "ball": [
@@ -199,6 +201,14 @@
     "shape_open": {
       "one": "צוּרָה פְּתוּחָה",
       "g": "f"
+    },
+    "solid_sphere": {
+      "one": "כַּדּוּר",
+      "g": "m"
+    },
+    "shape_curved": {
+      "one": "צוּרָה עֲקֻמָּה",
+      "g": "f"
     }
   },
   "tagFeedback": {
@@ -208,7 +218,8 @@
     "M-SHP-SQRECT": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.",
     "M-SPACE-WORD": "הַמִּלָּה אוֹמֶרֶת אֵיפֹה הַכַּדּוּר. בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
     "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.",
-    "M-SHP-CLOSED": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+    "M-SHP-CLOSED": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.",
+    "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק."
   },
   "misconceptions": [
     {
@@ -1407,6 +1418,450 @@
       ],
       "correct": "solid_box",
       "difficulty": 0.3
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa01.1",
+      "skill": "SHP-A-01",
+      "check": "transfer",
+      "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?",
+      "group": {
+        "sprite": "shape_triangle_down",
+        "count": 1
+      },
+      "options": [
+        "shape_square_green",
+        "shape_circle_green",
+        "shape_triangle_green"
+      ],
+      "correct": "shape_triangle_green",
+      "tags": {
+        "shape_square_green": "M-SHP-ORIENT",
+        "shape_circle_green": "M-SHP-ORIENT"
+      },
+      "difficulty": 0.45
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa01.2",
+      "skill": "SHP-A-01",
+      "check": "transfer",
+      "prompt": "אֵיפֹה אוֹתָהּ צוּרָה?",
+      "group": {
+        "sprite": "shape_square_tilt",
+        "count": 1
+      },
+      "options": [
+        "shape_circle_red",
+        "shape_square_red",
+        "shape_rect_red"
+      ],
+      "correct": "shape_square_red",
+      "tags": {
+        "shape_circle_red": "M-SHP-ORIENT",
+        "shape_rect_red": "M-SHP-SQRECT"
+      },
+      "difficulty": 0.5
+    },
+    {
+      "kind": "shape",
+      "id": "b15.shpa02.1",
+      "skill": "SHP-A-02",
+      "check": "transfer",
+      "mode": "name",
+      "shape": "circle",
+      "colour": "green",
+      "others": [
+        [
+          "triangle",
+          "green"
+        ],
+        "shape_curved"
+      ],
+      "pos": 1,
+      "tags": {
+        "shape_curved": "M-SHP-CLOSED"
+      },
+      "difficulty": 0.4
+    },
+    {
+      "kind": "shape",
+      "id": "b15.shpa02.2",
+      "skill": "SHP-A-02",
+      "check": "transfer",
+      "mode": "name",
+      "shape": "square",
+      "colour": "orange",
+      "others": [
+        [
+          "rect",
+          "orange"
+        ],
+        [
+          "circle",
+          "orange"
+        ]
+      ],
+      "pos": 2,
+      "difficulty": 0.45
+    },
+    {
+      "kind": "spot",
+      "id": "b15.shpa02.3",
+      "skill": "SHP-A-02",
+      "cells": [
+        "shape_circle",
+        "shape_circle",
+        "shape_square",
+        "shape_circle"
+      ],
+      "wrong": 2,
+      "tag": "M-SORT-SHIFT",
+      "prompt": "חָבֵר אוֹסֵף רַק עִגּוּלִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
+      "check": "error_spotting",
+      "difficulty": 0.5,
+      "rule": "shape"
+    },
+    {
+      "kind": "spot",
+      "id": "b15.shpa02.4",
+      "skill": "SHP-A-02",
+      "cells": [
+        "shape_square",
+        "shape_square",
+        "shape_square",
+        "shape_triangle"
+      ],
+      "wrong": 3,
+      "tag": "M-SORT-SHIFT",
+      "prompt": "חָבֵר אוֹסֵף רַק רִבּוּעִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
+      "check": "error_spotting",
+      "difficulty": 0.5,
+      "rule": "shape"
+    },
+    {
+      "kind": "sort",
+      "id": "b15.shpa03.1",
+      "skill": "SHP-A-03",
+      "check": "transfer",
+      "rule": "shape",
+      "prompt": "מְמַיְּנִים לְפִי צוּרָה: עִגּוּלִים לְכָאן, וְרִבּוּעִים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "shape_circle",
+          "label": "עִגּוּלִים"
+        },
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעִים"
+        }
+      ],
+      "items": [
+        [
+          "shape_circle_red",
+          1
+        ],
+        [
+          "shape_square_tilt",
+          2
+        ],
+        [
+          "shape_square_blue",
+          2
+        ],
+        [
+          "shape_circle_green",
+          1
+        ],
+        [
+          "shape_square_orange",
+          2
+        ]
+      ],
+      "difficulty": 0.5
+    },
+    {
+      "kind": "sort",
+      "id": "b15.shpa03.2",
+      "skill": "SHP-A-03",
+      "check": "transfer",
+      "rule": "shape",
+      "prompt": "מְמַיְּנִים לְפִי צוּרָה: עִגּוּלִים לְכָאן, וְרִבּוּעִים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "shape_circle",
+          "label": "עִגּוּלִים"
+        },
+        {
+          "sprite": "shape_square",
+          "label": "רִבּוּעִים"
+        }
+      ],
+      "items": [
+        [
+          "shape_square_yellow",
+          2
+        ],
+        [
+          "shape_circle_blue",
+          1
+        ],
+        [
+          "shape_circle_orange",
+          1
+        ],
+        [
+          "shape_square_tilt",
+          2
+        ],
+        [
+          "shape_circle_yellow",
+          1
+        ]
+      ],
+      "difficulty": 0.5
+    },
+    {
+      "kind": "spot",
+      "id": "b15.shpa03.3",
+      "skill": "SHP-A-03",
+      "cells": [
+        "shape_triangle",
+        "shape_triangle_down",
+        "shape_square",
+        "shape_triangle_thin"
+      ],
+      "wrong": 2,
+      "tag": "M-SHP-ORIENT",
+      "prompt": "חָבֵר אוֹסֵף רַק מְשֻׁלָּשִׁים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
+      "check": "error_spotting",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "spot",
+      "id": "b15.shpa03.4",
+      "skill": "SHP-A-03",
+      "cells": [
+        "shape_square",
+        "shape_square_tilt",
+        "shape_square",
+        "shape_circle"
+      ],
+      "wrong": 3,
+      "tag": "M-SHP-ORIENT",
+      "prompt": "חָבֵר אוֹסֵף רַק רִבּוּעִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?",
+      "check": "error_spotting",
+      "difficulty": 0.5
+    },
+    {
+      "kind": "shape",
+      "id": "b15.shpa04.1",
+      "skill": "SHP-A-04",
+      "check": "transfer",
+      "mode": "name",
+      "shape": "rect",
+      "colour": "yellow",
+      "others": [
+        [
+          "square",
+          "yellow"
+        ]
+      ],
+      "pos": 0,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "shape",
+      "id": "b15.shpa04.2",
+      "skill": "SHP-A-04",
+      "check": "transfer",
+      "mode": "name",
+      "shape": "rect",
+      "colour": "red",
+      "others": [
+        [
+          "square",
+          "red"
+        ]
+      ],
+      "pos": 1,
+      "difficulty": 0.4
+    },
+    {
+      "kind": "shapebuild",
+      "id": "b15.shpa06.1",
+      "skill": "SHP-A-06",
+      "check": "transfer",
+      "what": "סִירָה",
+      "slots": [
+        [
+          "shape_rect_blue",
+          80,
+          92,
+          100,
+          0
+        ],
+        [
+          "shape_rect_orange",
+          80,
+          52,
+          48,
+          90
+        ],
+        [
+          "shape_triangle_red",
+          98,
+          46,
+          40,
+          0
+        ],
+        [
+          "shape_circle_yellow",
+          24,
+          18,
+          22,
+          0
+        ]
+      ],
+      "decoys": [
+        "shape_square_green"
+      ],
+      "difficulty": 0.5
+    },
+    {
+      "kind": "shapebuild",
+      "id": "b15.shpa06.2",
+      "skill": "SHP-A-06",
+      "check": "transfer",
+      "what": "מְכוֹנִית",
+      "slots": [
+        [
+          "shape_rect_red",
+          60,
+          58,
+          100,
+          0
+        ],
+        [
+          "shape_square_blue",
+          56,
+          30,
+          36,
+          0
+        ],
+        [
+          "shape_circle_orange",
+          36,
+          80,
+          24,
+          0
+        ],
+        [
+          "shape_circle_orange",
+          84,
+          80,
+          24,
+          0
+        ]
+      ],
+      "decoys": [
+        "shape_triangle_green"
+      ],
+      "difficulty": 0.5
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa07.1",
+      "skill": "SHP-A-07",
+      "check": "transfer",
+      "prompt": "מַה מִּתְגַּלְגֵּל?",
+      "options": [
+        "solid_box",
+        "solid_sphere"
+      ],
+      "correct": "solid_sphere",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa07.2",
+      "skill": "SHP-A-07",
+      "check": "transfer",
+      "prompt": "מָה אֶפְשָׁר לַעֲרֹם?",
+      "options": [
+        "solid_sphere",
+        "solid_box"
+      ],
+      "correct": "solid_box",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa08.1",
+      "skill": "SHP-A-08",
+      "check": "transfer",
+      "prompt": "אֵיפֹה הַכַּדּוּר? מֵעַל הַקֻּפְסָה.",
+      "options": [
+        "pos_above",
+        "pos_next",
+        "pos_under"
+      ],
+      "correct": "pos_above",
+      "tags": {
+        "pos_next": "M-SPACE-WORD",
+        "pos_under": "M-SPACE-WORD"
+      },
+      "correct_text": "כֵּן! הַכַּדּוּר מֵעַל הַקֻּפְסָה.",
+      "h3": "הַכַּדּוּר גָּבוֹהַּ יוֹתֵר, וְלֹא נוֹגֵעַ בַּקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa08.2",
+      "skill": "SHP-A-08",
+      "check": "transfer",
+      "prompt": "אֵיפֹה הַכַּדּוּר? מִתַּחַת לַשֻּׁלְחָן.",
+      "options": [
+        "pos_in",
+        "pos_under",
+        "pos_above"
+      ],
+      "correct": "pos_under",
+      "tags": {
+        "pos_in": "M-SPACE-WORD",
+        "pos_above": "M-SPACE-WORD"
+      },
+      "correct_text": "כֵּן! הַכַּדּוּר מִתַּחַת לַשֻּׁלְחָן.",
+      "h3": "הַשֻּׁלְחָן לְמַעְלָה, וְהַכַּדּוּר מִתַּחְתָּיו. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa10.1",
+      "skill": "SHP-A-10",
+      "check": "transfer",
+      "prompt": "לְאֵיזוֹ צוּרָה יֵשׁ קַו עָקֹם?",
+      "options": [
+        "shape_square",
+        "shape_circle"
+      ],
+      "correct": "shape_circle",
+      "difficulty": 0.4,
+      "voice": true
+    },
+    {
+      "kind": "pick",
+      "id": "b15.shpa10.2",
+      "skill": "SHP-A-10",
+      "check": "transfer",
+      "prompt": "לְאֵיזוֹ צוּרָה יֵשׁ קַו עָקֹם?",
+      "options": [
+        "shape_circle",
+        "shape_triangle"
+      ],
+      "correct": "shape_circle",
+      "difficulty": 0.4,
+      "voice": true
     }
   ],
   "firstSequence": 1,
@@ -1517,7 +1972,10 @@
         "shp.match.triangle.green",
         "shp.match.square.orange",
         "shp.name.square.yellow",
-        "shp.name.triangle.green"
+        "shp.name.triangle.green",
+        "b15.shpa01.1",
+        "b15.shpa01.2",
+        "b15.shpa02.1"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם עוֹד צוּרוֹת."
@@ -1530,7 +1988,11 @@
       ],
       "items": [
         "shp.any.small.square",
-        "shp.any.big.circle"
+        "shp.any.big.circle",
+        "b15.shpa03.1",
+        "b15.shpa03.2",
+        "b15.shpa03.3",
+        "b15.shpa03.4"
       ],
       "minutes": 3,
       "done": "חֲכָמִים! צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה."
@@ -1544,7 +2006,9 @@
       "items": [
         "shp.rect.blue",
         "shp.square.orange",
-        "shp.rect.green"
+        "shp.rect.green",
+        "b15.shpa04.1",
+        "b15.shpa04.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! הִבְדַּלְתֶּם בֵּין מַלְבֵּן לְרִבּוּעַ."
@@ -1563,7 +2027,8 @@
         "shp.line.straight2",
         "shp.line.curved2",
         "shp.line.straight3",
-        "shp.line.curved3"
+        "shp.line.curved3",
+        "b15.shpa10.1"
       ],
       "minutes": 5,
       "done": "וַאוּ! מְצָאתֶם צוּרוֹת וְקַוִּים."
@@ -1577,7 +2042,9 @@
       "items": [
         "shp.solid.rolls.blue",
         "shp.solid.stacks.blue",
-        "shp.solid.which2"
+        "shp.solid.which2",
+        "b15.shpa07.1",
+        "b15.shpa07.2"
       ],
       "minutes": 2,
       "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה מִּתְגַּלְגֵּל."
@@ -1590,7 +2057,9 @@
       ],
       "items": [
         "shp.where.above",
-        "shp.where.in2"
+        "shp.where.in2",
+        "b15.shpa08.1",
+        "b15.shpa08.2"
       ],
       "minutes": 2,
       "done": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כׇּל דָּבָר."
@@ -1606,10 +2075,40 @@
         "shp.build.tree",
         "shp.build.face",
         "shp.build.train",
-        "shp.build.rocket"
+        "shp.build.rocket",
+        "b15.shpa06.1",
+        "b15.shpa06.2"
       ],
       "minutes": 6,
       "done": "וַאוּ! בְּנִיתֶם תְּמוּנוֹת מִצּוּרוֹת."
+    },
+    {
+      "id": "shape-friends-again-1-b15",
+      "title": "מַכִּירִים עוֹד צוּרוֹת",
+      "skills": [
+        "SHP-A-01",
+        "SHP-A-02"
+      ],
+      "items": [
+        "b15.shpa02.2",
+        "b15.shpa02.3",
+        "b15.shpa02.4"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! הִכַּרְתֶּם עוֹד צוּרוֹת."
+    },
+    {
+      "id": "shapes-around-us-again-1-b15",
+      "title": "עוֹד צוּרוֹת סְבִיבֵנוּ",
+      "skills": [
+        "SHP-A-05",
+        "SHP-A-10"
+      ],
+      "items": [
+        "b15.shpa10.2"
+      ],
+      "minutes": 5,
+      "done": "וַאוּ! מְצָאתֶם צוּרוֹת וְקַוִּים."
     }
   ]
 }

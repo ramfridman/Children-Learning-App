@@ -7,7 +7,9 @@
     "stone",
     "feather",
     "coin",
-    "time_*"
+    "time_*",
+    "fish_size_*",
+    "star_size_*"
   ],
   "assets": [
     "apple",
@@ -27,7 +29,10 @@
     "ladybug",
     "ladybug_lit",
     "bird",
-    "bird_lit"
+    "bird_lit",
+    "chick",
+    "frog",
+    "butterfly"
   ],
   "things": {
     "ball": [
@@ -73,6 +78,21 @@
       "g": "f",
       "one": "צִפּוֹר",
       "many": "צִפֳּרִים"
+    },
+    "chick": {
+      "g": "m",
+      "one": "אֶפְרוֹחַ",
+      "many": "אֶפְרוֹחִים"
+    },
+    "butterfly": {
+      "g": "m",
+      "one": "פַּרְפַּר",
+      "many": "פַּרְפָּרִים"
+    },
+    "frog": {
+      "g": "f",
+      "one": "צְפַרְדֵּעַ",
+      "many": "צְפַרְדְּעִים"
     }
   },
   "names": {
@@ -114,6 +134,26 @@
     },
     "dog": {
       "one": "כֶּלֶב",
+      "g": "m"
+    },
+    "duck": {
+      "one": "בַּרְוָז",
+      "g": "m"
+    },
+    "fish_size_l": {
+      "one": "דָּג גָּדוֹל",
+      "g": "m"
+    },
+    "fish_size_s": {
+      "one": "דָּג קָטָן",
+      "g": "m"
+    },
+    "star_size_l": {
+      "one": "כּוֹכָב גָּדוֹל",
+      "g": "m"
+    },
+    "star_size_s": {
+      "one": "כּוֹכָב קָטָן",
       "g": "m"
     }
   },
@@ -873,6 +913,199 @@
       "trap": false,
       "difficulty": 0.35,
       "domain": "math"
+    },
+    {
+      "kind": "madd",
+      "id": "b15.matha01.1",
+      "skill": "MATH-A-01",
+      "obj": "frog",
+      "a": 2,
+      "b": 2,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math"
+    },
+    {
+      "kind": "madd",
+      "id": "b15.matha01.2",
+      "skill": "MATH-A-01",
+      "obj": "chick",
+      "a": 3,
+      "b": 1,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math"
+    },
+    {
+      "kind": "mtake",
+      "id": "b15.matha02.1",
+      "skill": "MATH-A-02",
+      "obj": "frog",
+      "n": 4,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math"
+    },
+    {
+      "kind": "mtake",
+      "id": "b15.matha02.2",
+      "skill": "MATH-A-02",
+      "obj": "chick",
+      "n": 5,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math"
+    },
+    {
+      "kind": "share",
+      "id": "b15.matha03.1",
+      "skill": "MATH-A-03",
+      "sprite": "apple",
+      "n": 6,
+      "friends": [
+        "cat",
+        "dog",
+        "duck"
+      ],
+      "prompt": "מְחַלְּקִים שִׁשָּׁה תַּפּוּחִים בֵּין הֶחָתוּל, הַכֶּלֶב וְהַבַּרְוָז. לְכֻלָּם אוֹתוֹ מִסְפָּר.",
+      "correct_text": "כֵּן! לְכֻלָּם יֵשׁ אוֹתוֹ מִסְפָּר.",
+      "check": "transfer",
+      "difficulty": 0.45,
+      "domain": "math"
+    },
+    {
+      "kind": "share",
+      "id": "b15.matha03.2",
+      "skill": "MATH-A-03",
+      "sprite": "fish",
+      "n": 3,
+      "friends": [
+        "cat",
+        "dog",
+        "duck"
+      ],
+      "prompt": "מְחַלְּקִים שְׁלוֹשָׁה דָּגִים בֵּין הֶחָתוּל, הַכֶּלֶב וְהַבַּרְוָז. לְכֻלָּם אוֹתוֹ מִסְפָּר.",
+      "correct_text": "כֵּן! לְכֻלָּם יֵשׁ אוֹתוֹ מִסְפָּר.",
+      "check": "transfer",
+      "difficulty": 0.4,
+      "domain": "math"
+    },
+    {
+      "kind": "pick",
+      "id": "b15.matha04.1",
+      "skill": "MATH-A-04",
+      "check": "transfer",
+      "prompt": "אֵיזֶה דָּג גָּדוֹל?",
+      "options": [
+        "fish_size_s",
+        "fish_size_l"
+      ],
+      "correct": "fish_size_l",
+      "correct_text": "כֵּן! זֶה הַדָּג הַגָּדוֹל.",
+      "h3": "הַדָּג הַגָּדוֹל תּוֹפֵס יוֹתֵר מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.",
+      "difficulty": 0.3,
+      "domain": "math"
+    },
+    {
+      "kind": "pick",
+      "id": "b15.matha04.2",
+      "skill": "MATH-A-04",
+      "check": "transfer",
+      "prompt": "אֵיזֶה כּוֹכָב קָטָן?",
+      "options": [
+        "star_size_l",
+        "star_size_s"
+      ],
+      "correct": "star_size_s",
+      "correct_text": "כֵּן! זֶה הַכּוֹכָב הַקָּטָן.",
+      "h3": "הַכּוֹכָב הַקָּטָן תּוֹפֵס פָּחוֹת מָקוֹם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.",
+      "difficulty": 0.3,
+      "domain": "math"
+    },
+    {
+      "kind": "pick",
+      "id": "b15.matha06.1",
+      "skill": "MATH-A-06",
+      "check": "reverse",
+      "prompt": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד. יֵשׁ לָנוּ שְׁלוֹשָׁה מַטְבְּעוֹת. כַּמָּה תַּפּוּחִים אֶפְשָׁר לִקְנוֹת?",
+      "group": {
+        "sprite": "coin",
+        "count": 3
+      },
+      "options": [
+        "n:3",
+        "n:2",
+        "n:4"
+      ],
+      "correct": "n:3",
+      "tags": {
+        "n:2": "M-CNT-SKIP",
+        "n:4": "M-CNT-DOUBLE"
+      },
+      "difficulty": 0.4,
+      "domain": "math",
+      "voice": false
+    },
+    {
+      "kind": "pick",
+      "id": "b15.matha06.2",
+      "skill": "MATH-A-06",
+      "check": "reverse",
+      "prompt": "כׇּל תַּפּוּחַ עוֹלֶה מַטְבֵּעַ אֶחָד. יֵשׁ לָנוּ אַרְבָּעָה מַטְבְּעוֹת. כַּמָּה תַּפּוּחִים אֶפְשָׁר לִקְנוֹת?",
+      "group": {
+        "sprite": "coin",
+        "count": 4
+      },
+      "options": [
+        "n:3",
+        "n:4",
+        "n:5"
+      ],
+      "correct": "n:4",
+      "tags": {
+        "n:3": "M-CNT-SKIP",
+        "n:5": "M-CNT-DOUBLE"
+      },
+      "difficulty": 0.45,
+      "domain": "math",
+      "voice": false
+    },
+    {
+      "kind": "compare_more",
+      "id": "b15.matha07.1",
+      "skill": "MATH-A-07",
+      "obj": "chick",
+      "options": [
+        2,
+        4
+      ],
+      "big": 4,
+      "small": 2,
+      "scale": {
+        "2": 1.5
+      },
+      "check": "transfer",
+      "difficulty": 0.4,
+      "domain": "math"
+    },
+    {
+      "kind": "compare_more",
+      "id": "b15.matha07.2",
+      "skill": "MATH-A-07",
+      "obj": "butterfly",
+      "options": [
+        5,
+        3
+      ],
+      "big": 5,
+      "small": 3,
+      "ask": "fewer",
+      "scale": {
+        "5": 0.7
+      },
+      "check": "transfer",
+      "difficulty": 0.45,
+      "domain": "math"
     }
   ],
   "firstSequence": 1,
@@ -918,7 +1151,9 @@
         "math.size.long",
         "math.size.short",
         "math.size.heavy",
-        "math.size.light"
+        "math.size.light",
+        "b15.matha04.1",
+        "b15.matha04.2"
       ],
       "minutes": 4,
       "done": "חֲכָמִים! הִשְׁוִיתֶם גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל."
@@ -990,7 +1225,9 @@
       ],
       "items": [
         "math.add.fish2",
-        "math.add.stars2"
+        "math.add.stars2",
+        "b15.matha01.1",
+        "b15.matha01.2"
       ],
       "minutes": 3,
       "done": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וּסְפַרְתֶּם."
@@ -1004,7 +1241,9 @@
       "items": [
         "math.take.apples2",
         "math.take.ducks",
-        "math.take.fish2"
+        "math.take.fish2",
+        "b15.matha02.1",
+        "b15.matha02.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! יְדַעְתֶּם כַּמָּה נִשְׁאֲרוּ."
@@ -1018,7 +1257,9 @@
       "items": [
         "math.share.birds",
         "math.share.ducks",
-        "math.share.ladybugs"
+        "math.share.ladybugs",
+        "b15.matha03.1",
+        "b15.matha03.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בַּהֲגִינוּת."
@@ -1032,7 +1273,9 @@
       "items": [
         "math.shop.apples2",
         "math.shop.ducks",
-        "math.shop.fish2"
+        "math.shop.fish2",
+        "b15.matha06.1",
+        "b15.matha06.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! שִׁלַּמְתֶּם מַטְבֵּעַ אֶחָד לְכׇל דָּבָר."
@@ -1046,7 +1289,9 @@
       "items": [
         "math.graph.ducks",
         "math.graph.stars2",
-        "math.graph.apples2"
+        "math.graph.apples2",
+        "b15.matha07.1",
+        "b15.matha07.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."

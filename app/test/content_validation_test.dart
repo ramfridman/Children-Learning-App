@@ -726,6 +726,51 @@ void main() {
     });
   });
 
+  group('sharing (B-15: three friends)', () {
+    /// The give activity of the sample pack, made into a share between [bins] friends of [items] pictures.
+    List<String> shareProblems(int bins, int items) {
+      final SamplePack p = SamplePack();
+      final Map<String, Object?> d = p.doc(giveFile);
+      d['template'] = 'sort_drag';
+      d['scene'] = <String, Object?>{
+        'background': 'asset:meadow',
+        'bins': <Object?>[
+          for (int b = 1; b <= bins; b++)
+            <String, Object?>{'id': 'b$b', 'sprite': 'asset:butterfly', 'count': 1, 'label': 'x$b'},
+        ],
+        'items': <Object?>[
+          for (int i = 1; i <= items; i++) <String, Object?>{'id': 'i$i', 'sprite': 'asset:butterfly'},
+        ],
+      };
+      d['answer'] = <String, Object?>{'type': 'sort', 'mode': 'share', 'misconception': 'M-CNT-DOUBLE'};
+      _m(p.manifest['templates'])['sort_drag'] = '1.0';
+      return _run(p).map((Problem x) => x.toString()).toList();
+    }
+
+    test('two or three friends, and pictures that divide evenly, are valid', () {
+      expect(shareProblems(2, 6), isEmpty);
+      expect(shareProblems(3, 6), isEmpty);
+      expect(shareProblems(3, 3), isEmpty);
+    });
+
+    test('pictures that do not divide evenly are refused, and so are one friend and four', () {
+      for (final (int bins, int items) in <(int, int)>[(3, 5), (2, 5), (3, 4)]) {
+        expect(
+          shareProblems(bins, items),
+          contains(
+            contains(
+              'sharing is between two or three bins and needs a number of pictures that divides evenly',
+            ),
+          ),
+          reason: '$bins bins, $items pictures',
+        );
+      }
+      for (final (int bins, int items) in <(int, int)>[(1, 2), (4, 8)]) {
+        expect(shareProblems(bins, items), isNotEmpty, reason: '$bins bins');
+      }
+    });
+  });
+
   test('wrong types and missing parts anywhere never make the validator throw', () {
     final SamplePack probe = SamplePack();
     final List<Object?> junk = <Object?>[null, 'x', 7, 1.5, true, <Object?>[], <String, Object?>{}];

@@ -1,0 +1,174 @@
+{
+  "schema": "activity/v1",
+  "id": "b.mathb08.14",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "math",
+  "band": "B",
+  "skills": [
+    {
+      "id": "MATH-B-08",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "reverse",
+  "representation": "symbolic",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:b.mathb08.14.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "תֵּשַׁע וְעוֹד כַּמָּה שָׁוֶה חֲמֵשׁ עֶשְׂרֵה?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:9",
+      "op:+",
+      "?",
+      "op:=",
+      "n:15"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 15,
+        "label": "חֲמֵשׁ עֶשְׂרֵה",
+        "misconception": "M-EQ-OPER"
+      },
+      {
+        "id": "o2",
+        "numeral": 6,
+        "label": "שֵׁשׁ"
+      },
+      {
+        "id": "o3",
+        "numeral": 24,
+        "label": "עֶשְׂרִים וְאַרְבַּע",
+        "misconception": "M-PART-MISS"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": true,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.mathb08.14.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שֵׁשׁ! תֵּשַׁע וְעוֹד שֵׁשׁ שָׁוֶה חֲמֵשׁ עֶשְׂרֵה."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-EQ-OPER",
+        "vo": "vo:fb.eq_oper",
+        "caption": [
+          {
+            "t": "he",
+            "v": "סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PART-MISS",
+        "vo": "vo:fb.part_miss.sentence.9_15",
+        "caption": [
+          {
+            "t": "he",
+            "v": "חִבַּרְנוּ אֶת שְׁנֵיהֶם, אֲבָל חֲמֵשׁ עֶשְׂרֵה זֶה כְּבָר הַכֹּל. כַּמָּה מוֹסִיפִים לְתֵשַׁע כְּדֵי לְהַגִּיעַ לַחֲמֵשׁ עֶשְׂרֵה?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:b.mathb08.14.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תֵּשַׁע כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד חֲמֵשׁ עֶשְׂרֵה, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.mathb08.14.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תֵּשַׁע… וּמַמְשִׁיכִים: עֶשֶׂר, אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה, אַרְבַּע עֶשְׂרֵה, חֲמֵשׁ עֶשְׂרֵה. הֵרַמְנוּ שֵׁשׁ אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "תֵּשַׁע וְעוֹד כַּמָּה שָׁוֶה חֲמֵשׁ עֶשְׂרֵה?"
+  }
+}

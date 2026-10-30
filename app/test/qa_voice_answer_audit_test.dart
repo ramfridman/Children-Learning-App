@@ -25,7 +25,7 @@ const Set<String> _choiceTemplates = <String>{'tap_answer', 'count_tap', 'flash'
 /// The words that name an attribute a child can say: a colour, a shape, a day, a time of day (normalised, both spellings).
 final Set<String> _sayable = <String>{
   for (final String w
-      in ('אדום אדם כחול כחל צהוב צהב ירוק ירק כתום כתם סגול סגל ורוד חום שחור לבן '
+      in ('אדום אדם כחול כחל צהוב צהב ירוק ירק כתום כתם סגול סגל ורוד ורד חום שחור לבן '
               'עיגול עגול ריבוע רבוע משולש משלש מלבן '
               'ראשון שני שלישי רביעי חמישי שישי ששי שבת '
               'בוקר בקר צהריים צהרים ערב לילה')
@@ -45,6 +45,11 @@ final List<String> _notSaid = <String>[
 /// The groups the owner may switch on later (the decision's "for the owner" list): off today.
 const Set<String> _ownerMaySwitchOn = <String>{'LOG-A-06', 'LOG-A-07', 'LOG-B-01', 'LOG-B-06'};
 
+/// Skills whose tapped numeral answers are, on purpose, not said (B-15 part 2): "ten and four, which number?" (NUM-B-16,
+/// spec §4: `voiceAnswer` stays false, the answer is made of the numbers of the question) and "3 coins, one coin for each
+/// apple, how many apples?" (MATH-A-06: the answer is the number of the question).
+const Set<String> _echoSkills = <String>{'NUM-B-16', 'MATH-A-06'};
+
 String _caption(Object? spoken) => <String>[
   for (final Object? c
       in ((spoken as Map<String, Object?>?)?['caption'] as List<Object?>?) ?? const <Object?>[])
@@ -61,7 +66,7 @@ List<Map<String, Object?>> _options(Activity a) => <Map<String, Object?>>[
 bool _shouldSpeak(Activity a) {
   if (a.template == 'count_tap' || a.template == 'flash') return true;
   if (a.template != 'tap_answer') return false;
-  if (_ownerMaySwitchOn.contains(a.skillId)) return false;
+  if (_ownerMaySwitchOn.contains(a.skillId) || _echoSkills.contains(a.skillId)) return false;
   final String prompt = normalizeHebrew(_caption(a.json['prompt']));
   if (_notSaid.any(prompt.contains)) return false;
   final List<Map<String, Object?>> options = _options(a);
@@ -147,8 +152,8 @@ void main() {
     return e;
   }
 
-  test('all 767 activities: the flag agrees with the rule worked out from the activity itself', () {
-    expect(pack.activities.length, 767);
+  test('all 967 activities: the flag agrees with the rule worked out from the activity itself', () {
+    expect(pack.activities.length, 967);
     final List<String> wrong = <String>[
       for (final Activity a in pack.activities.values)
         if (a.voiceAnswer != _shouldSpeak(a)) '${a.id} (${a.template}, ${a.skillId}): flag ${a.voiceAnswer}',
@@ -156,8 +161,8 @@ void main() {
     expect(wrong, isEmpty, reason: wrong.join('\n'));
     final int spoken = pack.activities.values.where((Activity a) => a.voiceAnswer).length;
     // 267 and 500 before the QA-21 amendment turned the nine NUM-B-16 activities off.
-    expect(spoken, 258);
-    expect(pack.activities.length - spoken, 509);
+    expect(spoken, 310);
+    expect(pack.activities.length - spoken, 657);
   });
 
   test('the flag is a real boolean in every activity file, and true only on a template with a choice', () {

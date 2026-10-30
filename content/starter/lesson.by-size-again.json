@@ -16,7 +16,9 @@
   "items": [
     "log.size.stars",
     "log.size.apples.last",
-    "log.size.fish.first"
+    "log.size.fish.first",
+    "b15.loga10.1",
+    "b15.loga10.2"
   ],
   "estimatedMinutes": 3,
   "sequence": 13,

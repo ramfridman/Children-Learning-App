@@ -1,0 +1,171 @@
+{
+  "schema": "activity/v1",
+  "id": "b15.numa03.2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "pictorial",
+  "variantGroup": "set-to-numeral",
+  "difficulty": {
+    "authored": 0.35
+  },
+  "prompt": {
+    "vo": "vo:b15.numa03.2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה חִפּוּשִׁיּוֹת יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "group": {
+      "sprite": "asset:ladybug",
+      "count": 5,
+      "arrangement": "scatter",
+      "seed": 5
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 4,
+        "label": "אַרְבַּע",
+        "misconception": "M-CNT-SKIP"
+      },
+      {
+        "id": "o2",
+        "numeral": 5,
+        "label": "חָמֵשׁ"
+      },
+      {
+        "id": "o3",
+        "numeral": 6,
+        "label": "שֵׁשׁ",
+        "misconception": "M-CNT-DOUBLE"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b15.numa03.2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חָמֵשׁ! זֶה הַמִּסְפָּר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.set.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נְנַסֶּה לִסְפֹּר לְאַט."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "show_fingers",
+      "vo": "vo:b15.numa03.2.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b15.numa03.2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. יֵשׁ חָמֵשׁ חִפּוּשִׁיּוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the numeral that tells how many",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה חִפּוּשִׁיּוֹת יֵשׁ? בּוֹחֲרִים אֶת הַמִּסְפָּר."
+  }
+}

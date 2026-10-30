@@ -136,10 +136,14 @@ SIZE_BY_CUE = {
     'small': ('vo:fb.size.small', 'הֵם קְטַנִּים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
     'spread': ('vo:fb.size.spread', 'הֵם רְחוֹקִים זֶה מִזֶּה, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
 }
-# A5 (B-15 addendum): in Band B the M-SORT-SHIFT line follows the item's sorting rule (`rule`: colour, shape or kind). The
-# colour rule keeps the shared line; the shape and kind lines come with the editor's text (B-15 part 2). Band A always keeps
-# the shared line until the owner decides P2 to P4.
-SORT_SHIFT_BY_RULE = {}
+# A5 (B-15 addendum): the M-SORT-SHIFT line follows the item's sorting rule (`rule`: colour, shape or kind). The colour rule
+# (and an item with no rule) keeps the shared line, which says "the same colour"; the shape and kind rules say what the child
+# should have looked at. The editor's P4 and P3 (docs/knowledge/b15-hebrew.md §4 and §6.6): `proposed` for Band A until
+# the owner signs them, `text-ready` in Band B.
+SORT_SHIFT_BY_RULE = {
+    'shape': ('vo:fb.sort_shift.shape', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק.'),
+    'kind': ('vo:fb.sort_shift.kind', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.'),
+}
 SORT_RULES = ('colour', 'shape', 'kind')
 ALMOST = ('vo:fb.almost', 'כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב.')
 UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד.')
@@ -178,25 +182,24 @@ def count_words(n):
     return ', '.join(F[i] for i in range(1, n + 1))
 
 
-def tag_line(tag, size_cue=None, own=None, band='A', rule=None):
+def tag_line(tag, size_cue=None, own=None, rule=None):
     """The line said for a tag: the item's own (G4, `tag_lines`), the cue line of M-CNT-SIZE, the rule line of
-    M-SORT-SHIFT in Band B (A5), else the shared line."""
+    M-SORT-SHIFT for a shape or kind rule (A5), else the shared line."""
     if own and tag in own:
         return tuple(own[tag])
     if tag == 'M-CNT-SIZE' and size_cue:
         return SIZE_BY_CUE[size_cue]
-    if tag == 'M-SORT-SHIFT' and band != 'A' and rule not in (None, 'colour'):
-        assert rule in SORT_SHIFT_BY_RULE, 'no M-SORT-SHIFT line for the rule %r yet' % rule
+    if tag == 'M-SORT-SHIFT' and rule not in (None, 'colour'):
         return SORT_SHIFT_BY_RULE[rule]
     return TAG_FEEDBACK[tag]
 
 
-def tagged_feedback(tags, size_cue=None, own=None, band='A', rule=None):
+def tagged_feedback(tags, size_cue=None, own=None, rule=None):
     """The line of each tag (see tag_line), then "almost". `size_cue` (big, small, spread) picks the M-CNT-SIZE line."""
     assert rule in (None,) + SORT_RULES, 'unknown sorting rule %r' % rule
     out = []
     for tag in sorted(tags):
-        vo, text = tag_line(tag, size_cue, own, band, rule)
+        vo, text = tag_line(tag, size_cue, own, rule)
         out.append({'when': 'misconception:' + tag, **say(vo, text)})
     out.append({'when': 'default', **say(*ALMOST)})
     return out
@@ -285,7 +288,7 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
         d['answerPrompt'] = say('vo:%s.how_many' % i, answer_prompt)
     d['feedback'] = {
         'correct': say('vo:%s.correct' % i, correct),
-        'incorrect': tagged_feedback(fb_tags, size_cue, a.get('tag_lines'), a.get('band', 'A'), a.get('rule')),
+        'incorrect': tagged_feedback(fb_tags, size_cue, a.get('tag_lines'), a.get('rule')),
         'unsure': say(*UNSURE),
     }
     d['hints'] = h
@@ -377,7 +380,7 @@ def k_give(a, ctx):
     return activity(
         a, 'give_n', skills_of(a), 'check', 'reverse',
         {'background': 'asset:meadow', 'source': {'sprite': 'asset:' + a.get('sprite', a['obj']), 'count': a['source']},
-         'target': {'sprite': 'asset:basket_target'}},
+         'target': {'sprite': 'asset:' + a.get('target', 'basket_target')}},
         {'type': 'give', 'n': n, 'classifiers': [{'when': 'took_all', 'misconception': 'M-CNT-CARD'}]},
         {'M-CNT-CARD'},
         hints(a['id'], 'תְּנוּ לִי %s. סוֹפְרִים בִּזְמַן שֶׁלּוֹקְחִים.' % qty(n, obj),
@@ -409,7 +412,7 @@ def k_count_tap(a, ctx):
         'child touches each one once and answers with the last number counted',
         extra={'traceClassifiers': [{'when': 'same_object_tapped_twice', 'misconception': 'M-CNT-DOUBLE'},
                                     {'when': 'object_never_tapped', 'misconception': 'M-CNT-SKIP'}]},
-        prompt='נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים.', answer_prompt='כַּמָּה %s?' % obj['many'],
+        prompt=a.get('prompt') or 'נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים.', answer_prompt='כַּמָּה %s?' % obj['many'],
         correct='%s! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת.' % F[n])
 
 
@@ -437,7 +440,7 @@ def k_numeral_to_set(a, ctx):
         a['options'], n, near_tag(n),
         lambda v: {'set': {'sprite': 'asset:' + a['obj'], 'count': v, 'arrangement': a.get('arrangement', 'line'),
                            'seed': v}},
-        lambda v: qty(v, obj))
+        lambda v: qty(v, obj), own=a.get('tags'))
     return activity(
         a, 'tap_answer', skills_of(a), 'practice', 'reverse',
         {'background': 'asset:meadow', 'numeral': n}, choice(opts, cid), tags,
@@ -618,12 +621,16 @@ def k_pick(a, ctx):
                            'arrangement': g.get('arrangement', 'line'), 'seed': g.get('seed', 8), 'scale': g.get('scale', 1)}
     right = F[int(a['correct'][2:])] if a['correct'].startswith('n:') else this_one(ctx, a['correct'].split('*')[0])
     gender = 'm' if a['correct'].startswith('n:') else names[a['correct'].split('*')[0]]['g']
+    # a tick is pressed, not "pressed on": the editor's `לִלְחֹץ עַל הַוִּי` (b15-hebrew.md H7a)
+    tick = a['correct'] == 'tick'
+    h3_default = '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % ('כֵּן', 'עַל הַוִּי') if tick else (
+        '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % (right, on_it(gender)))
     return activity(
         a, 'tap_answer', skills_of(a), a.get('purpose', 'practice'),
         'practice', scene, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', a.get('h2') or 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.',
-              a.get('h3') or ('%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % (right, on_it(gender))),
-              actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
+              a.get('h3') or h3_default,
+              actions=('replay_prompt_slow', a.get('h2_action', 'highlight_objects_sequentially'), 'worked_example'),
               shared=('pick', None if a.get('h2') else 'pick')),
         a.get('goal', 'child picks the right picture'),
         prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right))
@@ -833,7 +840,7 @@ def k_pat(a, ctx):
         row = [x, y, x, y, x, '?']
         full = [x, y, x, y, x, y]
         return k_pick(pick_spec(a, prompt='מַה בָּא אַחַר כָּךְ?', row=row, options=place(y, [x, a['c']], a.get('pos', 1)), correct=y,
-                                tags={x: 'M-PAT-NEXT'}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
+                                tags={x: 'M-PAT-NEXT', **a.get('tags', {})}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
                                 h3='%s — וְאָז %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, full[:5]), n(y))), ctx)
     if mode == 'fix':
         row = [x, y, '?', y, x, y]

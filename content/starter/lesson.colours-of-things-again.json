@@ -15,7 +15,9 @@
   ],
   "items": [
     "col.world.apple.red",
-    "col.world.banana.ripe"
+    "col.world.banana.ripe",
+    "b15.cola05.1",
+    "b15.cola05.2"
   ],
   "estimatedMinutes": 2,
   "sequence": 9,

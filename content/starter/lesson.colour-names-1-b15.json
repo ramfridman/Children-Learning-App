@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "colour-names-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "שֵׁמוֹת שֶׁל צְבָעִים"
+    }
+  ],
+  "skills": [
+    "COL-A-02",
+    "COL-A-03"
+  ],
+  "items": [
+    "b15.cola02.3",
+    "b15.cola02.4",
+    "b15.cola02.5",
+    "b15.cola02.6"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 10,
+  "celebration": {
+    "vo": "vo:celebrate.colour_names_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! הִכַּרְתֶּם עוֹד צְבָעִים."
+      }
+    ]
+  }
+}

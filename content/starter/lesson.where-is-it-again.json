@@ -15,7 +15,9 @@
   ],
   "items": [
     "shp.where.above",
-    "shp.where.in2"
+    "shp.where.in2",
+    "b15.shpa08.1",
+    "b15.shpa08.2"
   ],
   "estimatedMinutes": 2,
   "sequence": 12,

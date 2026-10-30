@@ -14,6 +14,9 @@ COIN_VALUE = {'a10': 10, 'h50': 50, 's1': 100, 's2': 200, 's5': 500, 's10': 1000
 
 COIN_OF = {'s1': 'מַטְבֵּעַ שֶׁל שֶׁקֶל', 's2': 'מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים', 's5': 'מַטְבֵּעַ שֶׁל חֲמִשָּׁה שְׁקָלִים',
            's10': 'מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים'}
+# the names of the coins that a question about their worth shows (A6); the half shekel is new
+for _k, _t in {'h50': 'מַטְבֵּעַ שֶׁל חֲצִי שֶׁקֶל', **COIN_OF}.items():
+    NAMES.setdefault('coin_' + _k, {'one': _t, 'g': 'm'})
 
 
 def coins_said(sol):
@@ -123,7 +126,7 @@ def solution(price, purse):
 def extra_math():
     u = Unit('band-b-extra-math', 'math',
              'Coins, paying exactly, reading a chart and setting the clock (T16, T17, T18 and the chart of tap_answer 1.2). Hebrew is a draft by Claude, needs-editor.',
-             60, assets=['coin_a10', 'coin_h50', 'coin_s1', 'coin_s2', 'coin_s5', 'coin_s10', 'note_20', 'note_50', 'note_100', 'note_200', 'banana_yellow', 'ball_red', 'apple', 'fish', 'star', 'block', 'duck'], prefix='x')
+             60, assets=['coin_a10', 'coin_h50', 'coin_s1', 'coin_s2', 'coin_s5', 'coin_s10', 'note_20', 'note_50', 'note_100', 'note_200', 'banana_yellow', 'ball_red', 'apple', 'fish', 'star', 'block', 'duck', 'coin_s1'], prefix='x')
     u.tag('M-MONEY-SIZE', ['MATH-B-16'], 'הילד חושב שמטבע גדול שווה יותר (מטבע חצי השקל גדול ממטבע השקל).',
           'לשים על השולחן מטבעות אמיתיים, ולשאול: איזה שווה יותר? לבדוק יחד את המספר שכתוב עליו.', ['concrete', 'pictorial'],
           'לֹא הַגֹּדֶל אוֹמֵר כַּמָּה הַמַּטְבֵּעַ שָׁוֶה, אֶלָּא הַמִּסְפָּר שֶׁעָלָיו. בּוֹאוּ נִסְתַּכֵּל.')
@@ -142,6 +145,11 @@ def extra_math():
               prompt='מַתְאִימִים כׇּל מַטְבֵּעַ לַמִּסְפָּר שֶׁאוֹמֵר כַּמָּה הוּא שָׁוֶה.', h3='הַמִּסְפָּר שֶׁעַל הַמַּטְבֵּעַ אוֹמֵר כַּמָּה הוּא שָׁוֶה. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כׇּל מַטְבֵּעַ עִם הַמִּסְפָּר שֶׁלּוֹ.')
 
+    # B-15 §1 (H29): which coin is worth more? The bigger coin is worth less in both pairs
+    for i, (lo, hi, text) in enumerate([('coin_h50', 'coin_s1', 'כֵּן! שֶׁקֶל שָׁוֶה יוֹתֵר מֵחֲצִי שֶׁקֶל.'), ('coin_s5', 'coin_s10', None)]):
+        u.act('MATH-B-16', 'pick', domain='math', prompt='אֵיזֶה מַטְבֵּעַ שָׁוֶה יוֹתֵר?', options=place(hi, [lo], i), correct=hi,
+              tags={lo: 'M-MONEY-SIZE'}, check='transfer', difficulty=0.6, **({'correct_text': text} if text else {}))
+
     u.skill('MATH-B-17', 'משלמים בדיוק', 'מְשַׁלְּמִים בְּדִיּוּק', 'stall', ['MATH-B-16', 'MATH-B-03'], ['concrete'], ['M-MONEY-COUNT'])
     pays = [(3, 'apple', [('s1', 3), ('s2', 2)]), (5, 'banana_yellow', [('s1', 4), ('s2', 2), ('s5', 1)]), (4, 'fish', [('s1', 3), ('s2', 2), ('s5', 1)]),
             (7, 'ball_red', [('s1', 3), ('s2', 2), ('s5', 1)]), (6, 'star', [('s1', 4), ('s2', 2), ('s5', 1)]), (8, 'block', [('s1', 3), ('s2', 2), ('s5', 1)]),
@@ -150,6 +158,14 @@ def extra_math():
         sol = solution(price * 100, purse)
         assert sol, (price, purse)
         u.act('MATH-B-17', 'pay', domain='math', price=price * 100, item=item, purse=purse, tag='M-MONEY-COUNT',
+              prompt='הַמְּחִיר הוּא %s. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי.' % shekels(price),
+              h3=coins_said(sol), correct_text='כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק %s.' % shekels(price))
+
+    # B-15 addendum A3 (MATH-B-17): other purses, the same task
+    for price, item, purse in ((7, 'star', [('s5', 1), ('s2', 1), ('s1', 2)]), (12, 'fish', [('s10', 1), ('s2', 1), ('s1', 1)])):
+        sol = solution(price * 100, purse)
+        assert sol, (price, purse)
+        u.act('MATH-B-17', 'pay', domain='math', price=price * 100, item=item, purse=purse, tag='M-MONEY-COUNT', check='transfer', difficulty=0.6,
               prompt='הַמְּחִיר הוּא %s. מְשַׁלְּמִים בְּדִיּוּק, וְלוֹחֲצִים עַל הַוִּי.' % shekels(price),
               h3=coins_said(sol), correct_text='כֵּן! שִׁלַּמְתֶּם בְּדִיּוּק %s.' % shekels(price))
 
@@ -185,6 +201,14 @@ def extra_math():
                   voice=True, tags={'n:%d' % big: 'M-COMP-DIFF'}, prompt='כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?',
                   correct_text='%s! בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ עוֹד %s.' % (F[d], F[d]),
                   h3='%s פָּחוֹת %s שָׁוֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[big], F[small], F[d], F[d]))
+
+    # B-15 §1 (H32): in which column are there five? The options are the pictures of the columns
+    for i, (cols, n) in enumerate([([('apple', 4), ('banana_yellow', 5), ('ball_red', 6)], 5), ([('fish', 3), ('star', 2), ('duck', 4)], 3)]):
+        right = [s for s, c in cols if c == n][0]
+        skip = [s for s, c in cols if c == n - 1][0]
+        double = [s for s, c in cols if c == n + 1][0]
+        u.act('MATH-B-19', 'pick', domain='math', chart=[list(c) for c in cols], options=place(right, [skip, double], i), correct=right,
+              tags={skip: 'M-CNT-SKIP', double: 'M-CNT-DOUBLE'}, check='reverse', difficulty=0.6, prompt='מִמָּה יֵשׁ בְּדִיּוּק %s?' % F[n])
 
     # setting the clock belongs to the reading skill that the Band B Math unit already made
     for i, (h, start, handsTag) in enumerate([(3, 12, True), (6, 3, True), (9, 6, True), (1, 7, True), (5, 11, True), (8, 2, True), (11, 4, True), (2, 9, True)]):
@@ -228,6 +252,12 @@ def extra_shapes():
         u.act('SHP-B-09', 'match', domain='shapes', pairs=[[l, r] for l, r in ps], order=order, tag='M-SHP-FACE',
               prompt='מַתְאִימִים כׇּל גּוּף לַצּוּרָה הַשְּׁטוּחָה שֶׁיֵּשׁ עָלָיו.', h3='מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כׇּל גּוּף עִם הַצּוּרָה שֶׁלּוֹ.')
+    # B-15 addendum A2: which solid leaves a circle in the sand? The box leaves a square, and no sphere is offered
+    for i, right in enumerate(['solid_cylinder', 'solid_cone']):
+        u.act('SHP-B-09', 'pick', domain='shapes', prompt='מַטְבִּיעִים בַּחוֹל, כְּמוֹ חוֹתֶמֶת. אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל?',
+              options=place(right, ['solid_box'], i), correct=right, tags={'solid_box': 'M-SHP-FACE'}, check='reverse', difficulty=0.6,
+              h3='מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת. עַכְשָׁו תּוֹרְכֶם.')
+
     ids = lambda s, a=0, b=None: lesson_ids(u, s, a, b)
     u.lesson('trace-the-shapes', 'עוֹקְבִים אַחֲרֵי צוּרוֹת', ['SHP-A-02'], ids('SHP-A-02', 0, 3), 'כׇּל הַכָּבוֹד! עֲקַבְתֶּם אַחֲרֵי צוּרוֹת.')
     u.lesson('draw-the-shapes', 'מְצַיְּרִים צוּרוֹת', ['SHP-A-02'], ids('SHP-A-02', 3), 'יָפֶה מְאֹד! צִיַּרְתֶּם מֵהַנְּקֻדָּה.')

@@ -33,6 +33,13 @@
   "shape_triangle_red",
   "shape_triangle_blue",
   "shape_triangle_green",
+  "shape_circle_yellow",
+  "shape_square_yellow",
+  "shape_square_orange",
+  "shape_rect_red",
+  "shape_rect_blue",
+  "frog",
+  "chick",
   "apple_size_l",
   "star_size_l",
   "fish_size_l",
@@ -83,6 +90,21 @@
    "one": "כֶּלֶב",
    "many": "כְּלָבִים"
   },
+  "chick": {
+   "g": "m",
+   "one": "אֶפְרוֹחַ",
+   "many": "אֶפְרוֹחִים"
+  },
+  "butterfly": {
+   "g": "m",
+   "one": "פַּרְפַּר",
+   "many": "פַּרְפָּרִים"
+  },
+  "frog": {
+   "g": "f",
+   "one": "צְפַרְדֵּעַ",
+   "many": "צְפַרְדְּעִים"
+  },
   "coin": {
    "g": "m",
    "one": "מַטְבֵּעַ",
@@ -92,6 +114,11 @@
    "g": "f",
    "one": "גֶּרֶב",
    "many": "גַּרְבַּיִם"
+  },
+  "shoe": {
+   "g": "f",
+   "one": "נַעַל",
+   "many": "נַעֲלַיִם"
   }
  },
  "names": {
@@ -275,8 +302,20 @@
    "one": "בַּרְוָז",
    "g": "m"
   },
+  "chick": {
+   "one": "אֶפְרוֹחַ",
+   "g": "m"
+  },
+  "butterfly": {
+   "one": "פַּרְפַּר",
+   "g": "m"
+  },
   "sock": {
    "one": "גֶּרֶב",
+   "g": "f"
+  },
+  "shoe": {
+   "one": "נַעַל",
    "g": "f"
   },
   "day_1": {
@@ -602,6 +641,26 @@
   "banana_yellow": {
    "one": "בָּנָנָה",
    "g": "f"
+  },
+  "coin_h50": {
+   "one": "מַטְבֵּעַ שֶׁל חֲצִי שֶׁקֶל",
+   "g": "m"
+  },
+  "coin_s1": {
+   "one": "מַטְבֵּעַ שֶׁל שֶׁקֶל",
+   "g": "m"
+  },
+  "coin_s2": {
+   "one": "מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים",
+   "g": "m"
+  },
+  "coin_s5": {
+   "one": "מַטְבֵּעַ שֶׁל חֲמִשָּׁה שְׁקָלִים",
+   "g": "m"
+  },
+  "coin_s10": {
+   "one": "מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים",
+   "g": "m"
   }
  },
  "tagFeedback": {
@@ -1026,6 +1085,66 @@
    "h3": "הַחֵלֶק שֶׁחוֹזֵר הוּא: כַּדּוּר יָרֹק, כַּדּוּר יָרֹק, כַּדּוּר אָדֹם, כַּדּוּר אָדֹם. עַכְשָׁו תּוֹרְכֶם."
   },
   {
+   "kind": "pick",
+   "id": "b.logb01.9",
+   "skill": "LOG-B-01",
+   "difficulty": 0.6,
+   "prompt": "מַה בָּא אַחַר כָּךְ?",
+   "row": [
+    "fish",
+    "star",
+    "star",
+    "fish",
+    "star",
+    "star",
+    "fish",
+    "?"
+   ],
+   "options": [
+    "fish",
+    "apple",
+    "star"
+   ],
+   "correct": "star",
+   "tags": {
+    "fish": "M-PAT-NEXT"
+   },
+   "domain": "logic",
+   "correct_text": "כֵּן! הַסֵּדֶר חוֹזֵר.",
+   "h3": "הַחֵלֶק שֶׁחוֹזֵר הוּא: דָּג, כּוֹכָב, כּוֹכָב. עַכְשָׁו תּוֹרְכֶם.",
+   "check": "transfer"
+  },
+  {
+   "kind": "pick",
+   "id": "b.logb01.10",
+   "skill": "LOG-B-01",
+   "difficulty": 0.6,
+   "prompt": "מַה בָּא אַחַר כָּךְ?",
+   "row": [
+    "frog",
+    "frog",
+    "chick",
+    "frog",
+    "frog",
+    "chick",
+    "frog",
+    "?"
+   ],
+   "options": [
+    "frog",
+    "chick",
+    "bird"
+   ],
+   "correct": "frog",
+   "tags": {
+    "chick": "M-PAT-UNIT"
+   },
+   "domain": "logic",
+   "correct_text": "כֵּן! הַסֵּדֶר חוֹזֵר.",
+   "h3": "הַחֵלֶק שֶׁחוֹזֵר הוּא: צְפַרְדֵּעַ, צְפַרְדֵּעַ, אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם.",
+   "check": "transfer"
+  },
+  {
    "kind": "spot",
    "id": "b.logb02.1",
    "skill": "LOG-B-02",
@@ -1304,6 +1423,54 @@
   },
   {
    "kind": "pick",
+   "id": "b.logb04.7",
+   "skill": "LOG-B-04",
+   "difficulty": 0.6,
+   "prompt": "הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?",
+   "row": [
+    "tower_1",
+    "tower_3",
+    "?"
+   ],
+   "options": [
+    "tower_1",
+    "tower_5",
+    "tower_4"
+   ],
+   "correct": "tower_5",
+   "tags": {
+    "tower_1": "M-PAT-GROW",
+    "tower_4": "M-PAT-NEXT"
+   },
+   "domain": "logic",
+   "check": "transfer"
+  },
+  {
+   "kind": "pick",
+   "id": "b.logb04.8",
+   "skill": "LOG-B-04",
+   "difficulty": 0.6,
+   "prompt": "הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?",
+   "row": [
+    "tower_2",
+    "tower_4",
+    "?"
+   ],
+   "options": [
+    "tower_2",
+    "tower_5",
+    "tower_6"
+   ],
+   "correct": "tower_6",
+   "tags": {
+    "tower_2": "M-PAT-GROW",
+    "tower_5": "M-PAT-NEXT"
+   },
+   "domain": "logic",
+   "check": "transfer"
+  },
+  {
+   "kind": "pick",
    "id": "b.logb06.1",
    "skill": "LOG-B-06",
    "difficulty": 0.37,
@@ -1429,6 +1596,42 @@
    "h3": "נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם אוֹתוֹ גֹּדֶל. עַכְשָׁו תּוֹרְכֶם."
   },
   {
+   "kind": "spot",
+   "id": "b.logb06.7",
+   "skill": "LOG-B-06",
+   "difficulty": 0.6,
+   "cells": [
+    "shape_circle_red",
+    "shape_square_red",
+    "shape_triangle_blue",
+    "shape_rect_red"
+   ],
+   "wrong": 2,
+   "tag": "M-SORT-SHIFT",
+   "rule": "colour",
+   "domain": "logic",
+   "check": "error_spotting",
+   "prompt": "חָבֵר מִיֵּן לְפִי צֶבַע, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?"
+  },
+  {
+   "kind": "spot",
+   "id": "b.logb06.8",
+   "skill": "LOG-B-06",
+   "difficulty": 0.6,
+   "cells": [
+    "shape_circle_red",
+    "shape_circle_blue",
+    "shape_square_green",
+    "shape_circle_yellow"
+   ],
+   "wrong": 2,
+   "tag": "M-SORT-SHIFT",
+   "rule": "shape",
+   "domain": "logic",
+   "check": "error_spotting",
+   "prompt": "חָבֵר מִיֵּן לְפִי צוּרָה, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?"
+  },
+  {
    "kind": "sort",
    "id": "b.logb08.1",
    "skill": "LOG-B-08",
@@ -1519,6 +1722,7 @@
    "id": "b.logb08.3",
    "skill": "LOG-B-08",
    "difficulty": 0.51,
+   "rule": "shape",
    "bins": [
     {
      "sprite": "basket_empty",
@@ -1561,6 +1765,7 @@
    "id": "b.logb08.4",
    "skill": "LOG-B-08",
    "difficulty": 0.58,
+   "rule": "shape",
    "bins": [
     {
      "sprite": "basket_empty",
@@ -1595,6 +1800,94 @@
    ],
    "prompt": "אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.",
    "domain": "logic",
+   "h3": "לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל."
+  },
+  {
+   "kind": "sort",
+   "id": "b.logb08.5",
+   "skill": "LOG-B-08",
+   "difficulty": 0.6,
+   "rule": "shape",
+   "bins": [
+    {
+     "sprite": "basket_empty",
+     "label": "הַקֻּפְסָה"
+    },
+    {
+     "sprite": "grass",
+     "label": "הָעֵשֶׂב"
+    }
+   ],
+   "items": [
+    [
+     "shape_circle_blue",
+     2
+    ],
+    [
+     "shape_triangle_red",
+     1
+    ],
+    [
+     "shape_square_red",
+     2
+    ],
+    [
+     "shape_triangle_blue",
+     1
+    ],
+    [
+     "shape_circle_red",
+     2
+    ]
+   ],
+   "prompt": "אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.",
+   "domain": "logic",
+   "check": "transfer",
+   "h3": "לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל."
+  },
+  {
+   "kind": "sort",
+   "id": "b.logb08.6",
+   "skill": "LOG-B-08",
+   "difficulty": 0.6,
+   "rule": "shape",
+   "bins": [
+    {
+     "sprite": "basket_empty",
+     "label": "הַקֻּפְסָה"
+    },
+    {
+     "sprite": "grass",
+     "label": "הָעֵשֶׂב"
+    }
+   ],
+   "items": [
+    [
+     "shape_rect_red",
+     1
+    ],
+    [
+     "shape_circle_blue",
+     2
+    ],
+    [
+     "shape_triangle_red",
+     2
+    ],
+    [
+     "shape_rect_blue",
+     1
+    ],
+    [
+     "shape_circle_red",
+     2
+    ]
+   ],
+   "prompt": "אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.",
+   "domain": "logic",
+   "check": "transfer",
    "h3": "לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל."
   },
@@ -1719,6 +2012,48 @@
    "h3": "מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא יָרֹק וְגַם לֹא עִגּוּל. עַכְשָׁו תּוֹרְכֶם."
   },
   {
+   "kind": "pick",
+   "id": "b.logb09.7",
+   "skill": "LOG-B-09",
+   "difficulty": 0.6,
+   "prompt": "הוּא לֹא צָהֹב וְלֹא רִבּוּעַ. אֵיזֶה הוּא?",
+   "options": [
+    "shape_square_green",
+    "shape_circle_green",
+    "shape_circle_yellow"
+   ],
+   "correct": "shape_circle_green",
+   "tags": {
+    "shape_square_green": "M-LOG-NOT",
+    "shape_circle_yellow": "M-LOG-NOT"
+   },
+   "domain": "logic",
+   "check": "transfer",
+   "correct_text": "כֵּן! הוּא לֹא צָהֹב וְלֹא רִבּוּעַ.",
+   "h3": "מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא צָהֹב וְגַם לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.logb09.8",
+   "skill": "LOG-B-09",
+   "difficulty": 0.6,
+   "prompt": "הוּא לֹא כָּתֹם וְלֹא מְשֻׁלָּשׁ. אֵיזֶה הוּא?",
+   "options": [
+    "shape_triangle_red",
+    "shape_square_orange",
+    "shape_square_red"
+   ],
+   "correct": "shape_square_red",
+   "tags": {
+    "shape_triangle_red": "M-LOG-NOT",
+    "shape_square_orange": "M-LOG-NOT"
+   },
+   "domain": "logic",
+   "check": "transfer",
+   "correct_text": "כֵּן! הוּא לֹא כָּתֹם וְלֹא מְשֻׁלָּשׁ.",
+   "h3": "מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא כָּתֹם וְגַם לֹא מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
    "kind": "build",
    "id": "b.logb11.1",
    "skill": "LOG-B-11",
@@ -1788,6 +2123,44 @@
    "prompt": "מְסַדְּרִים שִׁשָּׁה מִגְדָּלִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.",
    "domain": "logic",
    "h3": "מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "spot",
+   "id": "b.logb11.4",
+   "skill": "LOG-B-11",
+   "difficulty": 0.6,
+   "cells": [
+    "tower_1",
+    "tower_2",
+    "tower_2",
+    "tower_4",
+    "tower_5"
+   ],
+   "wrong": 2,
+   "tag": "M-SER-ENDS",
+   "domain": "logic",
+   "check": "error_spotting",
+   "prompt": "חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?",
+   "h3": "מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "spot",
+   "id": "b.logb11.5",
+   "skill": "LOG-B-11",
+   "difficulty": 0.6,
+   "cells": [
+    "tower_5",
+    "tower_4",
+    "tower_4",
+    "tower_2",
+    "tower_1"
+   ],
+   "wrong": 2,
+   "tag": "M-SER-ENDS",
+   "domain": "logic",
+   "check": "error_spotting",
+   "prompt": "חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?",
+   "h3": "מַתְחִילִים בַּגָּבוֹהַּ וְגוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם."
   }
  ],
  "lessons": [
@@ -1816,7 +2189,9 @@
     "b.logb01.5",
     "b.logb01.6",
     "b.logb01.7",
-    "b.logb01.8"
+    "b.logb01.8",
+    "b.logb01.9",
+    "b.logb01.10"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! הַסֵּדֶר נִמְשָׁךְ."
@@ -1850,7 +2225,9 @@
     "b.logb04.3",
     "b.logb04.4",
     "b.logb04.5",
-    "b.logb04.6"
+    "b.logb04.6",
+    "b.logb04.7",
+    "b.logb04.8"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! הַמִּגְדָּלִים גְּדֵלִים."
@@ -1867,7 +2244,9 @@
     "b.logb06.3",
     "b.logb06.4",
     "b.logb06.5",
-    "b.logb06.6"
+    "b.logb06.6",
+    "b.logb06.7",
+    "b.logb06.8"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַכְּלָל."
@@ -1882,7 +2261,9 @@
     "b.logb08.1",
     "b.logb08.2",
     "b.logb08.3",
-    "b.logb08.4"
+    "b.logb08.4",
+    "b.logb08.5",
+    "b.logb08.6"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! עֲשִׂיתֶם לְפִי הַכְּלָל."
@@ -1899,7 +2280,9 @@
     "b.logb09.3",
     "b.logb09.4",
     "b.logb09.5",
-    "b.logb09.6"
+    "b.logb09.6",
+    "b.logb09.7",
+    "b.logb09.8"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! פְּתַרְתֶּם חִידָה."
@@ -1913,7 +2296,9 @@
    "items": [
     "b.logb11.1",
     "b.logb11.2",
-    "b.logb11.3"
+    "b.logb11.3",
+    "b.logb11.4",
+    "b.logb11.5"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! הַמִּגְדָּלִים בַּסֵּדֶר."

@@ -736,6 +736,7 @@ REVIEWED = [
 # the comment). They stay `proposed` for the owner although their group is in REVIEWED; this list wins over REVIEWED,
 # DOUBT and NOTE. A new string in a REVIEWED group goes here until the editor has read it (the run prints the new rows).
 B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. '
+B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
 PENDING = [
     ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
      'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
@@ -744,6 +745,22 @@ PENDING = [
      'mixed group, so masculine plural "גָּרִים".'),
     ('1', r'^nitziHomeBottle$', r'he\.dart$', B26 + 'The bottle holds a revisit or the next lesson (decision 3), so not '
      '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
+    # B-15 part 2 (docs/knowledge/b15-hebrew.md): the editor's own strings are text-ready there. These are the lines the generator
+    # made from a pattern that the tables do not give, so the editor reads them; the last element is a regex on the text.
+    ('3', r'caption', r'^activity\.(?!b\.|x\.)', B15 + 'P3 and P4 (b15-hebrew.md section 4): the sorting-rule line for a kind or a shape rule. '
+     "Built into Band A on the owner's instruction of 2026-10-30 (today's line says 'the same colour' where the rule is the thing "
+     'or the shape); the owner signs it. The same text is text-ready in Band B (section 6.6).', r'אֲבָל מְחַפְּשִׂים אֶת אוֹת'),
+    ('3', r'caption', r'^activity\.b\.numb08\.', B15 + 'The prompt of the missing numeral in a row: the pattern of the other NUM-B-08 prompts and the phrase of the MATH-B-18 lesson title; the '
+     'spec points at a NUM-B-11 pattern that does not exist.', r'אֵיפֹה הַמִּסְפָּר הֶחָסֵר'),
+    ('3', r'caption', r'^activity\.b\.numb18\.', B15 + 'The odd-shoes line in the feminine (the editor gave the pattern: אֶחָד/אַחַת, '
+     'יִשָּׁאֵר/תִּשָּׁאֵר by the noun).', r'אַחַת נִשְׁאֶרֶת'),
+    ('3', r'caption', r'^activity\.b15\.matha04\.', B15 + 'The size question about a fish and a star, in the pattern of the ball and the stick.',
+     r'הַדָּג הַגָּדוֹל|הַכּוֹכָב הַקָּטָן'),
+    ('3', r'caption', r'^activity\.b15\.loga02\.', B15 + 'The odd one out by size, in the pattern of "the blue ball is different".',
+     r'שׁוֹנֶה מֵהָאֲחֵרִים'),
+    ('3', r'hints\.2', r'^activity\.b15\.cola05\.', B15 + 'The hint of a tick answer: "לִלְחֹץ עַל הַוִּי" (H7a, the editor) in the pattern of the other hints.',
+     r'לִלְחֹץ עַל הַוִּי'),
+    ('3', r'feedback\.correct', r'^activity\.b15\.cola05\.', B15 + 'The correct line, made from the question (H7a, H7b).', r'כֵּן! זוֹ בָּנָנָה|כֵּן! זֶה תַּפּוּחַ'),
     # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
     # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
 ]
@@ -795,6 +812,17 @@ NOTE = [
 WORD2N = {canon(F[_i]): _i for _i in range(0, 21)}
 WORD2N.update({canon(M[_i]): _i for _i in range(1, 21)})
 ADDEND_PROMPT = re.compile(canon(r'^(\S+) וְעוֹד כַּמָּה שָׁוֶה (\S+)\?$'))
+ADDEND_PROMPT_FLIPPED = re.compile(canon(r'^(\S+) שָׁוֶה (\S+) וְעוֹד כַּמָּה\?$'))  # `7 = 3 + ?` (B-15, H31): the whole first
+
+
+def addend_words(ctx):
+    """(the number that is there, the total) of a missing-addend prompt in either order, or None."""
+    prompt = canon(ctx.get('prompt.caption.0.v', ''))
+    m = ADDEND_PROMPT.match(prompt)
+    if m:
+        return m.group(1), m.group(2)
+    m = ADDEND_PROMPT_FLIPPED.match(prompt)
+    return (m.group(2), m.group(1)) if m else None
 
 
 def fem_before_noun(n):
@@ -807,18 +835,18 @@ def masc_before_noun(n):
 
 def missing_addend_model(r, ctx):
     """Owner Q3, hint 2 (level 2): a concrete model first; the answer is not said before hint 3."""
-    m = ADDEND_PROMPT.match(canon(ctx.get('prompt.caption.0.v', '')))
-    if not m:
+    words = addend_words(ctx)
+    if not words:
         return None
-    return '%s כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד %s, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ.' % (m.group(1), m.group(2))
+    return '%s כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד %s, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ.' % words
 
 
 def missing_addend_count_on(r, ctx):
     """Owner Q3, hint 3 (level 3): count on from the first number, one finger per count, then the answer."""
-    m = ADDEND_PROMPT.match(canon(ctx.get('prompt.caption.0.v', '')))
-    if not m:
+    words = addend_words(ctx)
+    if not words:
         return None
-    x, total = WORD2N[m.group(1)], WORD2N[m.group(2)]
+    x, total = WORD2N[words[0]], WORD2N[words[1]]
     k = total - x
     return '%s… וּמַמְשִׁיכִים: %s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
         F[x], ', '.join(F[i] for i in range(x + 1, total + 1)), fem_before_noun(k), F[k])
@@ -960,8 +988,9 @@ def reviewed(r):
 
 
 def pending(r):
-    for g, i, s, comment in PENDING:
-        if r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source']):
+    for g, i, s, comment, *text in PENDING:
+        if (r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source'])
+                and (not text or re.search(canon(text[0]), canon(r['text'])))):
             return comment
     return None
 

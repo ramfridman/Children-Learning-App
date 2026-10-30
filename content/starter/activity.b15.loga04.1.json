@@ -1,0 +1,144 @@
+{
+  "schema": "activity/v1",
+  "id": "b15.loga04.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "spot_error",
+  "templateVersion": "1.0",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "error_spotting",
+  "representation": "pictorial",
+  "variantGroup": "spot",
+  "difficulty": {
+    "authored": 0.5
+  },
+  "prompt": {
+    "vo": "vo:b15.loga04.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַסֵּדֶר חוֹזֵר, אֲבָל יֵשׁ בּוֹ טָעוּת. אֵיפֹה הַטָּעוּת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "cells": [
+      "asset:cat",
+      "asset:dog",
+      "asset:cat",
+      "asset:dog",
+      "asset:dog",
+      "asset:dog"
+    ]
+  },
+  "answer": {
+    "type": "spot",
+    "wrong": 4,
+    "misconception": "M-PAT-UNIT"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b15.loga04.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! מְצָאתֶם אֶת הַטָּעוּת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.spot.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b15.loga04.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב — כָּכָה הַסֵּדֶר חוֹזֵר. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the one that does not fit",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הַסֵּדֶר חוֹזֵר, אֲבָל יֵשׁ בּוֹ טָעוּת. אֵיפֹה הַטָּעוּת?"
+  }
+}

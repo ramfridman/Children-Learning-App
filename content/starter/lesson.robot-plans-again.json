@@ -16,7 +16,9 @@
   "items": [
     "cs.robot.plan.4",
     "cs.robot.plan.5",
-    "cs.robot.plan.6"
+    "cs.robot.plan.6",
+    "b15.csa04.1",
+    "b15.csa04.2"
   ],
   "estimatedMinutes": 5,
   "sequence": 6,

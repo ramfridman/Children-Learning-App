@@ -28,7 +28,8 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "symbolic"
   ],
   "misconceptions": [
     "M-NUM-TEEN"

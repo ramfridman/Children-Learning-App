@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "step-by-step-again-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צַעַד אַחַר צַעַד"
+    }
+  ],
+  "skills": [
+    "CS-A-01",
+    "CS-A-05"
+  ],
+  "items": [
+    "b15.csa05.1",
+    "b15.csa05.2"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 7,
+  "celebration": {
+    "vo": "vo:celebrate.step_by_step_again_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא קֹדֶם וּמָה בַּסּוֹף."
+      }
+    ]
+  }
+}

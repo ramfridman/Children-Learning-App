@@ -15,8 +15,9 @@ import 'template_session.dart';
 /// a bin, or touched and then the bin is touched (the same move, for a hand that does not drag yet). A wrong bin is a gentle
 /// "not yet" and the picture stays in the tray; after three of them only the right bin takes it, and the help shows which.
 ///
-/// In share mode (two friends, an even number of pictures) any bin takes any picture, and the check is that both end up with
-/// the same number: a child who shares unequally gets a "not yet" with M-SHARE-UNEQ and starts dealing again.
+/// In share mode (two or three friends, a number of pictures that divides evenly) any bin takes any picture, and the check is
+/// that all end up with the same number: a child who shares unequally gets a "not yet" with M-SHARE-UNEQ and starts dealing
+/// again.
 class SortDragSession extends TemplateSession {
   SortDragSession(super.controller, this.activity);
 
@@ -140,7 +141,7 @@ class SortDragSession extends TemplateSession {
     notify();
   }
 
-  /// The guide deals the pictures between the two friends, one for each in turn, and hands the move back.
+  /// The guide deals the pictures between the friends, one for each in turn, and hands the move back.
   void _dealDemo() {
     if (demoRunning) return;
     demoRunning = true;

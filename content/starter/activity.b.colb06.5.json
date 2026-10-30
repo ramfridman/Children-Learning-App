@@ -1,0 +1,144 @@
+{
+  "schema": "activity/v1",
+  "id": "b.colb06.5",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "spot_error",
+  "templateVersion": "1.0",
+  "domain": "colors",
+  "band": "B",
+  "skills": [
+    {
+      "id": "COL-B-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "error_spotting",
+  "representation": "pictorial",
+  "variantGroup": "spot",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:b.colb06.5.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חָבֵר בָּנָה קֶשֶׁת, וְיֵשׁ בָּהּ טָעוּת. אֵיפֹה הַטָּעוּת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "cells": [
+      "asset:ball_red",
+      "asset:ball_orange",
+      "asset:ball_purple",
+      "asset:ball_green",
+      "asset:ball_blue",
+      "asset:ball_purple"
+    ]
+  },
+  "answer": {
+    "type": "spot",
+    "wrong": 2,
+    "misconception": "M-PAT-COPY"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.colb06.5.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! מְצָאתֶם אֶת הַטָּעוּת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PAT-COPY",
+        "vo": "vo:fb.pat_copy",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.spot.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.colb06.5.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקֶּשֶׁת: אָדֹם, כָּתֹם, צָהֹב, יָרֹק, כָּחֹל, סָגֹל. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the one that does not fit",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "חָבֵר בָּנָה קֶשֶׁת, וְיֵשׁ בָּהּ טָעוּת. אֵיפֹה הַטָּעוּת?"
+  }
+}

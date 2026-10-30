@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "shapes-around-us-again-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד צוּרוֹת סְבִיבֵנוּ"
+    }
+  ],
+  "skills": [
+    "SHP-A-05",
+    "SHP-A-10"
+  ],
+  "items": [
+    "b15.shpa10.2"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 15,
+  "celebration": {
+    "vo": "vo:celebrate.shapes_around_us_again_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! מְצָאתֶם צוּרוֹת וְקַוִּים."
+      }
+    ]
+  }
+}

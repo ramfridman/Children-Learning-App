@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "patterns-again-1-b15",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד סְדָרִים"
+    }
+  ],
+  "skills": [
+    "LOG-A-04",
+    "LOG-A-06"
+  ],
+  "items": [
+    "b15.loga06.2"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 15,
+  "celebration": {
+    "vo": "vo:celebrate.patterns_again_1_b15",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! הִמְשַׁכְתֶּם אֶת הַסֵּדֶר."
+      }
+    ]
+  }
+}
