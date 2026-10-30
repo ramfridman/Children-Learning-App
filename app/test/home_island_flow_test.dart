@@ -118,10 +118,14 @@ void main() {
     final String typed = '  אבגדהוזחטי אבגדהוזחטי ${String.fromCharCode(0x200F)}אבגדהוזח ';
     await home(tester, name: typed.trim());
     final HomeIslandName island = homeIslandName(typed);
+    // The line is 30 letters: on a phone the bubble (210 wide, B-34) shortens the name by the sign's rule.
+    final String bubble = bubbleText(tester);
+    expect(bubble, startsWith('\u2068'), reason: 'the name in an isolate');
+    final String shown = bubble.split('\u2069').first.substring(1);
     expect(
-      bubbleText(tester),
-      startsWith('${isolatedName(island.name)},'),
-      reason: 'cleaned: no mark, no outer space; the name in an isolate',
+      island.name,
+      startsWith(shown.replaceAll('…', '')),
+      reason: 'cleaned: no mark, no outer space: $bubble',
     );
     await tester.tap(find.byKey(const Key('home-pill')));
     await tester.pumpAndSettle();

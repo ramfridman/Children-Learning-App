@@ -480,7 +480,7 @@ void main() {
     });
   });
 
-  group('re-verification: the tablet bubble is at most 210, phones one line, touches pass through', () {
+  group('re-verification: the bubble is at most 210 on every board, touches pass through', () {
     for (final (String n, Size s) in bubbleBoards) {
       testWidgets('$n: width, lines and touches for every name at text scale 1.0 and 1.3', (
         WidgetTester tester,
@@ -489,13 +489,87 @@ void main() {
         expect(c.problems, isEmpty, reason: c.problems.join('\n'));
       });
     }
-    for (final (String n, Size s) in bubbleBoards.skip(2)) {
+    for (final (String n, Size s) in bubbleBoards) {
       testWidgets('QA-29 (fixed): $n: the bubble never takes more than two lines', (
         WidgetTester tester,
       ) async {
         final BubbleCheck c = await checkBubbles(tester, n, s);
         expect(c.tooManyLines, isEmpty, reason: c.tooManyLines.join('\n'));
       });
+    }
+  });
+
+  // B-34: on the phones too the bubble stands beside the friend's mouth (it was at the board's own place, high in the
+  // open sea), its tail points at the mouth, and it covers no sign, no button and not the friend's face.
+  group('B-34: the map bubble stands beside the mouth on every board', () {
+    for (final (String n, Size s) in bubbleBoards) {
+      testWidgets(
+        '$n: tail tip at the mouth, nothing covered, for a short and a 24 letter name at 1.0 and 1.3',
+        (WidgetTester tester) async {
+          final AppRig rig = AppRig();
+          await rig.seedFinishedSetup(name: 'נועה');
+          await rig.pump(tester, size: s);
+          await tester.tap(find.text('נועה'));
+          await tester.pumpAndSettle();
+          final Offset mouth = tester.widget<HomeScreen>(find.byType(HomeScreen)).companionMouth!;
+          final List<String> problems = <String>[];
+          for (final double scale in <double>[1.0, 1.3]) {
+            for (final String name in <String>['נועה', 'אבגדהוזחטיכלמנסעפצקרשתאב']) {
+              // The known pill overflow at text scale 1.3 (QA-19) is not what this checks.
+              final List<FlutterErrorDetails> errors = <FlutterErrorDetails>[];
+              final void Function(FlutterErrorDetails)? before = FlutterError.onError;
+              FlutterError.onError = errors.add;
+              tester.platformDispatcher.textScaleFactorTestValue = scale;
+              try {
+                await pumpHome(tester, s, mouth: mouth, childName: name);
+              } finally {
+                FlutterError.onError = before;
+                tester.platformDispatcher.clearTextScaleFactorTestValue();
+              }
+              for (final FlutterErrorDetails e in errors) {
+                if (!'${e.exception}'.contains('RenderFlex overflowed')) {
+                  problems.add('$n x$scale: ${e.exception}');
+                }
+              }
+              final Rect body = rectOf(tester, 'bubble-body');
+              final Rect friend = rectOf(tester, 'home-companion');
+              final Offset m = friend.topLeft + Offset(mouth.dx * friend.width, mouth.dy * friend.height);
+              // The corner tail's tip: 14.5 beyond the bubble's right edge, 29 above its bottom edge.
+              final Offset tip = Offset(body.right + 14.5, body.bottom - 29);
+              final String at = '$n x$scale "$name"';
+              if ((tip.dy - m.dy).abs() > 3) {
+                problems.add('$at: tail tip ${tip.dy} is not level with the mouth ${m.dy}');
+              }
+              // Just outside the head (0.18 of the picture to each side of the mouth, plus 4), never on the face.
+              final double gap = m.dx - tip.dx;
+              if (gap < 0.18 * friend.width - 1 || gap > 0.18 * friend.width + 8) {
+                problems.add('$at: tail tip ${tip.dx} is $gap left of the mouth ${m.dx}');
+              }
+              if (body.left < 0 || body.top < 0 || body.right > s.width) {
+                problems.add('$at: off screen $body');
+              }
+              for (final String k in <String>['home-pill', 'home-friends']) {
+                final Rect other = rectOf(tester, k);
+                if (body.overlaps(other)) problems.add('$at: the bubble covers $k $other (bubble $body)');
+              }
+              for (final String land in <String>[
+                'nitzi',
+                'counting',
+                'colors',
+                'shapes',
+                'logic',
+                'robots',
+                'market',
+              ]) {
+                final Finder f = find.byKey(Key('sign-$land'));
+                if (f.evaluate().isEmpty) continue;
+                if (body.overlaps(tester.getRect(f))) problems.add('$at: the bubble covers the $land sign');
+              }
+            }
+          }
+          expect(problems, isEmpty, reason: problems.join('\n'));
+        },
+      );
     }
   });
 }
@@ -532,8 +606,9 @@ Future<BubbleCheck> checkBubbles(WidgetTester tester, String n, Size s) async {
   await tester.pumpAndSettle();
   final Offset? mouth = tester.widget<HomeScreen>(find.byType(HomeScreen)).companionMouth;
   expect(mouth, isNotNull);
-  final bool tablet = n.startsWith('tablet');
-  final double font = tablet ? 24 : (n == 'phone' ? 20 : 18);
+  // B-34: every board breaks a long line after the name and stands the bubble beside the friend's mouth.
+  const bool tablet = true;
+  final double font = n.startsWith('tablet') ? 24 : (n == 'phone' ? 18 : 17);
   final List<String> problems = <String>[];
   final List<String> tooManyLines = <String>[];
   for (final double scale in <double>[1.0, 1.3]) {
@@ -572,8 +647,6 @@ Future<BubbleCheck> checkBubbles(WidgetTester tester, String n, Size s) async {
       if (tablet) {
         if (r.width > 210 + 0.01) problems.add('$scale "$name": ${r.width} wide');
         if (lines > 2) tooManyLines.add('$scale "$name": $lines lines');
-      } else if (lines != 1) {
-        problems.add('$scale "$name": $lines lines on a phone');
       }
       if (r.left < 0 || r.right > s.width || r.top < 0) problems.add('$scale "$name": off screen $r');
       // A touch on the middle of the bubble reaches the map under it, never the bubble.

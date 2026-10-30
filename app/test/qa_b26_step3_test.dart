@@ -25,10 +25,10 @@ const Map<String, Size> boards = <String, Size>{
   'tabletPortrait': Size(820, 1180),
 };
 
-/// The bubble's widest body per board (padding included): the open sea on phones, 210 on tablets.
+/// The bubble's widest body per board (padding included): 210 (190 on the SE), beside the friend's mouth (B-34).
 const Map<String, double> bubbleMax = <String, double>{
-  'phone': 852 - 212 - 16,
-  'phoneSE': 667 - 154 - 16,
+  'phone': 210,
+  'phoneSE': 190,
   'tabletLandscape': 210,
   'tabletPortrait': 210,
 };
@@ -136,7 +136,7 @@ void main() {
                 expect(sign, He.homeIslandMine.text);
               }
 
-              // The bubble: the cleaned name (or none), within its width, one line on phones, two at most on tablets.
+              // The bubble: the cleaned name (or none), within its width, two lines at most on every board (B-34).
               final String bubble = textIn(tester, 'bubble-body');
               if (!island.isNamed) {
                 expect(bubble, bubbleWithoutName);
@@ -159,7 +159,7 @@ void main() {
               );
               final double font = b.key.startsWith('tablet') ? 24 : (b.key == 'phone' ? 18 : 17);
               final int lines = (para.size.height / (font * scale * 1.7)).round();
-              if (lines > (b.key.startsWith('tablet') ? 2 : 1)) {
+              if (lines > 2) {
                 problems.add('bubble $lines lines: "$bubble"');
               }
               debugPrint(

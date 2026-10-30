@@ -269,6 +269,8 @@ existing shortening (`_fittedName`, at least 3 letters and `…`) does the rest.
 average letters or 13 ש on the phone, 21 / 14 on the SE (measured, Heebo 500: the fixed part `, מַה בַּבַּקְבּוּק?` is
 5.59 em, an average letter 0.55 em, ש 0.81 em); at 1.0 every 24-letter name stays whole. Tablets unchanged (210).
 
+**Superseded 2026-10-30 (B-34, owner's Samsung phone):** the phone bubble no longer waits in the open sea; it stands beside the companion's mouth as on the tablets (`bubbleAtBoardPlace: false`, `bubbleBreaks: true`), its corner tail 14.5 beyond the right edge, level with the mouth and 4 outside the head, and a longer line breaks after the name. Caps (padding included): phone 210, SE 190 (the left edge stays right of the red stairs at text scale 1.3 with a 24 letter name; a 24 letter name is shortened to about 15 letters and `…`, two lines). The 460 / 400 caps and `bubbleRight` / `bubbleTop` of the phones remain only for a map with no friend. The bubble covers the palm trunk of the home island, as on the tablets.
+
 **Something waits in the Hall** (the glow that leaves the map's trophy pebble): the home sign gets the same soft glow
 (`0xAAFFD45C`, blur 20, spread 4) and a 24 trophy badge (`trophy_gold.svg` on a paper disc) on its top-start corner,
 overlapping the border (no extra width); the label adds "גביע חדש מחכה" (`trophyNewSemantics`). Colour is not the only

@@ -360,23 +360,27 @@ void main() {
       expect(He.homeBubble.text, contains('{child}, '));
     });
 
-    for (final BoardBox b in boards.skip(2)) {
+    // B-34: on every board the bubble stands beside the mouth, at most 210 wide (190 on the SE), and breaks after the name.
+    for (final BoardBox b in boards) {
       testWidgets(
-        '${b.name}: a short name stays on one line, a long one breaks after the name; at most 210 wide',
+        '${b.name}: a short name stays on one line, a long one breaks after the name; at most ${b.name == 'phoneSE' ? 190 : 210} wide',
         (WidgetTester tester) async {
+          final double cap = b.name == 'phoneSE' ? 190 : 210;
+          // On a phone the font is 18 (17), so "Alexandra" still fits one line: a two-part name breaks there.
+          final String longName = b.name.startsWith('tablet') ? long : 'אביגיל אלכסנדרה';
           await pumpHome(tester, b.size, mouth: mouth, childName: 'דן');
           final Rect short = rectOf(tester, 'bubble-body');
           expect(find.text(oneLine('דן')), findsOneWidget);
-          expect(short.width, lessThanOrEqualTo(210));
+          expect(short.width, lessThanOrEqualTo(cap));
 
-          await pumpHome(tester, b.size, mouth: mouth, childName: long);
+          await pumpHome(tester, b.size, mouth: mouth, childName: longName);
           final Rect broken = rectOf(tester, 'bubble-body');
           expect(
-            find.text(brokenLine(long)),
+            find.text(brokenLine(longName)),
             findsOneWidget,
             reason: 'the words after the name stay whole on line 2',
           );
-          expect(broken.width, lessThanOrEqualTo(210));
+          expect(broken.width, lessThanOrEqualTo(cap));
           expect(broken.bottom, closeTo(short.bottom, 0.6), reason: 'held by its bottom beside the mouth');
           expect(broken.right, closeTo(short.right, 0.6));
           expect(broken.top, lessThan(short.top - 20), reason: 'the second line grows upwards');
@@ -403,23 +407,16 @@ void main() {
       expect(body.height, lessThan(2 * 24 * 1.3 * 1.7 + 8 + 1), reason: 'two lines, never three');
     });
 
-    for (final BoardBox b in boards.take(2)) {
-      testWidgets('${b.name}: one line over the open sea, also with a long name', (
-        WidgetTester tester,
-      ) async {
-        await pumpHome(tester, b.size, mouth: mouth, childName: long);
-        expect(find.text(oneLine(long)), findsOneWidget);
-      });
-    }
-
     // QA-29: a name too long for its line is shortened by the sign's rule, so a tablet bubble never takes three lines.
-    for (final BoardBox b in boards.skip(2)) {
+    for (final BoardBox b in boards) {
       for (final double scale in <double>[1, 1.3]) {
         testWidgets(
           '${b.name}, text scale $scale: a 24-letter name is shortened so the bubble keeps two lines',
           (WidgetTester tester) async {
             const String name = 'אבגדהוזחטיכלמנסעפצקרשתאב';
+            final double font = b.name.startsWith('tablet') ? 24 : (b.name == 'phone' ? 18 : 17);
             await pumpHome(tester, b.size, mouth: mouth, island: homeIslandName(name), scale: scale);
+            if (b.name == 'phone' && scale > 1) drainKnownPillOverflow(tester);
             final String text = tester
                 .widget<Text>(
                   find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
@@ -436,39 +433,12 @@ void main() {
               reason: 'the words after the name, whole',
             );
             final Rect body = rectOf(tester, 'bubble-body');
-            expect(body.width, lessThanOrEqualTo(210));
-            expect(body.height, lessThan(3 * 24 * scale * 1.7), reason: 'two lines, never three');
+            expect(body.width, lessThanOrEqualTo(b.name == 'phoneSE' ? 190 : 210));
+            expect(body.height, lessThan(3 * font * scale * 1.7), reason: 'two lines, never three');
           },
         );
       }
     }
-
-    testWidgets('on a phone a name is shortened only when the line would leave the open sea', (
-      WidgetTester tester,
-    ) async {
-      // 40 letters in four parts, the longest the parent form takes, at text scale 1.3 on the smallest phone.
-      const String name = 'אבגדהוזחטי אבגדהוזחטי אבגדהוזחטי אבגדהוזח';
-      await pumpHome(tester, boards[1].size, mouth: mouth, island: homeIslandName(name), scale: 1.3);
-      final Rect body = rectOf(tester, 'bubble-body');
-      // A speech bubble, not a banner (nitzi-home.md section 4): at most 400 on the SE, its left edge never before 113.
-      expect(body.width, lessThanOrEqualTo(400));
-      expect(body.left, greaterThanOrEqualTo(113));
-      final String text = tester
-          .widget<Text>(
-            find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
-          )
-          .data!;
-      expect(text, contains('…$pdi,'));
-      expect(text, isNot(contains('\n')), reason: 'one line on a phone');
-      // A 24-letter name still fits there whole.
-      await pumpHome(
-        tester,
-        boards[1].size,
-        mouth: mouth,
-        island: homeIslandName('אבגדהוזחטיכלמנסעפצקרשתאב'),
-      );
-      expect(find.text(oneLine('אבגדהוזחטיכלמנסעפצקרשתאב')), findsOneWidget);
-    });
 
     for (final BoardBox b in boards) {
       testWidgets('${b.name}: with no usable name the bubble says its own line, homeBubbleNoName', (
@@ -544,24 +514,28 @@ void main() {
       }
     });
 
-    // The phone caps of B-26 step 4 (nitzi-home.md section 4): phone 460 (left edge never before x 180), SE 400 (113);
-    // the widest name at text scale 1.3 is shortened to stay by the speaker, an everyday one stays whole.
-    for (final (int i, double cap, double left) in <(int, double, double)>[(0, 460, 180), (1, 400, 113)]) {
-      testWidgets('${boards[i].name}: the bubble is at most $cap wide and starts at x $left or right of it', (
+    // The phone caps of B-34 (nitzi-home.md section 4): phone 210, SE 190, beside the mouth like the tablets; the widest
+    // name at text scale 1.3 is shortened to two lines, an everyday one stays whole on one line.
+    for (final (int i, double cap) in <(int, double)>[(0, 210), (1, 190)]) {
+      testWidgets('${boards[i].name}: the bubble is at most $cap wide and keeps two lines', (
         WidgetTester tester,
       ) async {
+        final double font = i == 0 ? 18 : 17;
         for (final double scale in <double>[1, 1.3]) {
           for (final String name in <String>['ש' * 24, 'אבגדהוזחטי אבגדהוזחטי אבגדהוזחטי אבגדהוזח', 'נועה']) {
             await pumpHome(tester, boards[i].size, mouth: mouth, island: homeIslandName(name), scale: scale);
             if (i == 0 && scale > 1) drainKnownPillOverflow(tester);
             final Rect body = rectOf(tester, 'bubble-body');
             expect(body.width, lessThanOrEqualTo(cap + 0.01), reason: '$name x$scale');
-            expect(body.left, greaterThanOrEqualTo(left - 0.01), reason: '$name x$scale');
-            expect(bubbleText(tester), isNot(contains('\n')), reason: 'one line on a phone');
+            expect(
+              body.height,
+              lessThan(3 * font * scale * 1.7),
+              reason: '$name x$scale: two lines, never three',
+            );
             if (name == 'נועה') expect(bubbleText(tester), oneLine(name));
           }
         }
-        // The widest 24 letters at 1.3 no longer fit whole beside the speaker: shortened, with "…".
+        // The widest 24 letters no longer fit whole beside the speaker: shortened, with "…".
         await pumpHome(tester, boards[i].size, mouth: mouth, island: homeIslandName('ש' * 24), scale: 1.3);
         if (i == 0) drainKnownPillOverflow(tester);
         expect(bubbleText(tester), contains('…$pdi,'));
