@@ -15,7 +15,7 @@ A Hebrew-only learning app for the owner's two children (ages 3–8). Flutter ap
 ## The team
 - Every piece of work goes through the eight project agents in `.claude/agents/` (the owner's rule, 2026-10-28): infrastructure-engineer, design-director, hebrew-text-editor, voice-and-sound-director, app-developer, qa-engineer, security-engineer, curriculum-expert. Who owns what, the recipes and the hand-off format are in `docs/agents/README.md`; open hand-offs are on `docs/agents/board.md`.
 - The main session is the orchestrator: it briefs the agents, checks what they return (diffs, tests, pictures), routes their hand-offs, and is the only one that commits, pushes, merges, updates `PROGRESS.md` and the board, and talks to the owner.
-- No change is done until the qa-engineer has verified it; changes to the gateway, auth, crypto, packs, sync or logs also get the security-engineer's review.
+- The qa-engineer runs once per finished feature (or template, content batch, milestone or release), not on each code change (the owner's rule, 2026-10-30). Between those, the developer's own tests plus the analyzer, format and test run after every step are the check. A feature is not done until the qa-engineer has verified it; changes to the gateway, auth, crypto, packs, sync or logs also get the security-engineer's review.
 
 ## Security rules (never break)
 1. No secret in the app, repo, logs or CI output. The app holds only the Supabase URL, the publishable key and the pack-signing public key.

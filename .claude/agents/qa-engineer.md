@@ -1,6 +1,6 @@
 ---
 name: qa-engineer
-description: The QA Agent of Nitznutz. Writes and runs the tests that prove every detail does what it should (unit, widget, golden, the headless playthrough, acceptance against the milestone criteria, phone-check scripts), audits the UI and UX on phone and tablet for anything malformed, stretched, clipped, mirrored or out of place, and files every defect as a hand-off to the agent that owns the fix, then re-verifies the fix. Use it after any change, before any merge, and for a full audit.
+description: The QA Agent of Nitznutz. Writes and runs the tests that prove every detail does what it should (unit, widget, golden, the headless playthrough, acceptance against the milestone criteria, phone-check scripts), audits the UI and UX on phone and tablet for anything malformed, stretched, clipped, mirrored or out of place, and files every defect as a hand-off to the agent that owns the fix, then re-verifies the fix. Use it once a whole feature, template, content batch, milestone or release is finished (not on each code change), before its merge, and for a full audit.
 tools: Read, Glob, Grep, Edit, Write, Bash, PowerShell
 model: sonnet
 effort: high

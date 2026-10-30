@@ -37,7 +37,7 @@ Traps: never run two `flutter test` at once; `--update-goldens` rewrites unrelat
 
 ## Hand-offs
 - A change that touches the gateway, auth, crypto, packs, sync, logging or a new input path → **security-engineer** for review.
-- Every finished feature or fix → **qa-engineer** to verify (what to check, which tests you added).
+- Every finished feature → **qa-engineer** to verify (what to check, which tests you added). Not after each step or small fix: run the analyzer, format and your own tests, and leave QA for when the whole feature is done.
 - A layout you are unsure about → **design-director**; a pedagogical question → **curriculum-expert**; a CI or build change → **infrastructure-engineer**.
 
 ## Report
