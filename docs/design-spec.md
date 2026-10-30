@@ -683,8 +683,8 @@ Principle (Apple): *flip what follows reading order; keep what refers to absolut
 | Navigation, back | **Mirrors.** Back/home sits at the top‑right and points →. "Next/continue" points ← and sits at the end side. |
 | Progress trail | **Mirrors.** It fills right → left. |
 | Lesson path, world progression | **Mirrors.** The start is at the right and new lands unfold leftwards. |
-| Story sequences, timelines, "first/then/last" cards | **Mirror.** The first card is at the right. |
-| Pattern rows ("what's next?") | **Mirror.** The pattern reads right → left, and the empty slot is at the left end. |
+| Story sequences, timelines, "first/then/last" cards | **Do not mirror** (owner and curriculum-expert, 2026-10-30, B-40 §12): the first card is at the left, like every other row in the stage, so no row ever runs the other way. |
+| Pattern rows ("what's next?") | **Do not mirror** (2026-10-30, B-40 §12): the row reads left → right and the empty slot is at the right end, the same way as the number path and number sequences; a repeating pattern gives the same answer from either end. |
 | Carousels and pagination | **Mirror.** Swipe left‑to‑right to go forward (platform RTL default). |
 | **Number line** | **Does not mirror.** 0 is at the left and values increase to the right, as in Israeli maths textbooks. |
 | **Equations and expressions** | **Do not mirror.** They are rendered as an LTR isolate: `3 + 4 = 7`. **Division is written `12 : 3`** (the Israeli school convention), never ÷. **`<` and `>` appear only inside LTR maths isolates** (`3 < 5`), so bidi mirroring can never flip them. |
