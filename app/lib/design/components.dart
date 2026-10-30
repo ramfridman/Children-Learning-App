@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import 'app_text.dart';
@@ -112,8 +114,9 @@ Positioned boardAt({
   child: child,
 );
 
-/// A speech bubble (board 10, 13): white, radius 24, a soft shadow and a small rotated tail on the
-/// right edge, towards the speaker. [fontSize] and [padding] differ per board.
+/// A speech bubble (board 10, 13): white, radius 24, a soft shadow and a small rotated tail on the right edge, towards
+/// the speaker; or, with [tailTip], a tapered wedge from its bottom edge to a speaker below it. [fontSize] and [padding]
+/// differ per board.
 class BoardBubble extends StatelessWidget {
   const BoardBubble({
     super.key,
@@ -121,6 +124,7 @@ class BoardBubble extends StatelessWidget {
     this.fontSize = 26,
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.maxWidth,
+    this.tailTip,
   });
 
   final String text;
@@ -131,22 +135,33 @@ class BoardBubble extends StatelessWidget {
   /// stays on one row, as on the design boards.
   final double? maxWidth;
 
+  /// Where the wedge tail ends, from the bubble's top left corner (the child's home, B-26: beside the friend's mouth).
+  /// The tip stays put when the bubble grows; only the wedge gets shorter. Null: the small tail on the right edge.
+  final Offset? tailTip;
+
   @override
   Widget build(BuildContext context) => Stack(
     clipBehavior: Clip.none,
     children: <Widget>[
-      Positioned(
-        right: -10,
-        bottom: 18,
-        child: Transform.rotate(
-          angle: 0.785398,
-          child: Container(
-            width: 22,
-            height: 22,
-            decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
+      if (tailTip != null)
+        Positioned.fill(
+          child: IgnorePointer(
+            child: CustomPaint(key: const Key('bubble-tail'), painter: _WedgeTailPainter(tailTip!)),
+          ),
+        )
+      else
+        Positioned(
+          right: -10,
+          bottom: 18,
+          child: Transform.rotate(
+            angle: 0.785398,
+            child: Container(
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(color: TokenColors.paper, borderRadius: BorderRadius.circular(4)),
+            ),
           ),
         ),
-      ),
       Container(
         key: const Key('bubble-body'),
         constraints: maxWidth == null ? null : BoxConstraints(maxWidth: maxWidth!),
@@ -162,8 +177,99 @@ class BoardBubble extends StatelessWidget {
           softWrap: maxWidth != null,
         ),
       ),
+      // One outline around the body and the wedge together, over both, so no line crosses where they join.
+      if (tailTip != null)
+        Positioned.fill(
+          child: IgnorePointer(
+            child: CustomPaint(key: const Key('bubble-outline'), painter: _BubbleOutlinePainter(tailTip!)),
+          ),
+        ),
     ],
   );
+}
+
+/// The colour and width of the outline around a bubble with a wedge tail (nitzi-home.md section 3, "Bubble tail").
+final Color bubbleOutlineColor = TokenColors.ink.withAlpha(0x33);
+const double bubbleOutlineWidth = 1.5;
+
+/// The outline of a [BoardBubble] body of [body] size with its wedge tail ending at [tip]: the union of the two shapes.
+@visibleForTesting
+Path bubbleOutline(Size body, Offset tip) => Path.combine(
+  PathOperation.union,
+  Path()..addRRect(RRect.fromRectAndRadius(Offset.zero & body, const Radius.circular(TokenRadius.lg))),
+  bubbleWedgeTail(body, tip),
+);
+
+class _BubbleOutlinePainter extends CustomPainter {
+  const _BubbleOutlinePainter(this.tip);
+
+  final Offset tip;
+
+  @override
+  void paint(Canvas canvas, Size size) => canvas.drawPath(
+    bubbleOutline(size, tip),
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = bubbleOutlineWidth
+      ..color = bubbleOutlineColor,
+  );
+
+  @override
+  bool shouldRepaint(_BubbleOutlinePainter old) => old.tip != tip;
+}
+
+/// The wedge tail of a [BoardBubble] with a body of [body] size, ending at [tip] (both from the body's top left): a
+/// triangle whose base lies on the bottom edge from 24 to 52 in from the left, reaching 4 up into the body so no seam
+/// shows, its tip rounded with a radius of 3 (B-26, nitzi-home.md section 3, "Bubble tail").
+@visibleForTesting
+Path bubbleWedgeTail(Size body, Offset tip) {
+  const double r = 3;
+  final Offset a = Offset(24, body.height - 4);
+  final Offset b = Offset(52, body.height - 4);
+  // The rounded end is a circle of radius 3 whose far side is the tip itself; the sides run from the base's ends to
+  // where they touch that circle.
+  final Offset toBase = Offset((a.dx + b.dx) / 2, a.dy) - tip;
+  final Offset centre = tip + toBase / toBase.distance * r;
+  Offset touch(Offset from, Offset other) {
+    final Offset out = from - centre;
+    final double turn = math.acos(r / out.distance);
+    final Offset p = centre + Offset.fromDirection(out.direction + turn, r);
+    final Offset q = centre + Offset.fromDirection(out.direction - turn, r);
+    // Of the two points where a line from [from] touches the circle, the one on [from]'s own side of the wedge.
+    return (p - other).distance > (q - other).distance ? p : q;
+  }
+
+  final Offset nearA = touch(a, b);
+  final Offset nearB = touch(b, a);
+  // Turning from a through the tip to b: clockwise on the screen when the cross product is positive (y points down).
+  final Offset inA = tip - a;
+  final Offset outB = b - tip;
+  final bool clockwise = inA.dx * outB.dy - inA.dy * outB.dx > 0;
+  return Path()
+    ..moveTo(a.dx, a.dy)
+    ..lineTo(nearA.dx, nearA.dy)
+    ..arcToPoint(nearB, radius: const Radius.circular(r), clockwise: clockwise)
+    ..lineTo(b.dx, b.dy)
+    ..close();
+}
+
+/// Paints the wedge with the bubble body's paper and soft shadow, under the body.
+class _WedgeTailPainter extends CustomPainter {
+  const _WedgeTailPainter(this.tip);
+
+  final Offset tip;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Path wedge = bubbleWedgeTail(size, tip);
+    for (final BoxShadow shadow in softShadow) {
+      canvas.drawPath(wedge.shift(shadow.offset), shadow.toPaint());
+    }
+    canvas.drawPath(wedge, Paint()..color = TokenColors.paper);
+  }
+
+  @override
+  bool shouldRepaint(_WedgeTailPainter old) => old.tip != tip;
 }
 
 /// An answer tile (board 05, 13, 23): [size] square, radius 28, a 4 px border, a clay lip and a soft

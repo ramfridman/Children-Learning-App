@@ -280,9 +280,9 @@ BOARDS = {
         sand=(440, 222, 425, 150), grass=(432, 200, 362, 114),
         house=(330, 64, 250, 270), companion=(380, 160, 160, 160), lighthouse=(32, 88, 128, 248),
         book=(208, 216, 128, 120), bottle=(600, 192, 160, 144),
-        palm=(270, 214, 238, 96), wet=(690, 342, 92, 20), stones=((566, 322), (590, 334)),
-        flowers=((300, 270, CORAL), (176, 200, GOLD), (600, 150, '#F4A7B4')), bushes=((612, 118, 0.9), (318, 112, 0.7)),
-        tufts=((200, 150), (640, 210), (560, 120), (290, 160), (720, 180)), shells=((450, 356, 0.9), (196, 345, 0.8)),
+        palm=(270, 214, 238, 96), stones=((566, 322), (590, 334)),
+        flowers=((300, 270, CORAL), (176, 200, GOLD)), bushes=((318, 112, 0.7),),
+        tufts=((200, 150), (640, 210), (290, 160), (800, 236)), shells=((450, 356, 0.9), (196, 345, 0.8)),
         starfish=((560, 358, 0.9),), sparkles=((40, 30, 7), (836, 92, 6), (810, 260, 6)),
         gulls=((34, 74), (60, 64))),
     'phone_se': dict(
@@ -290,9 +290,9 @@ BOARDS = {
         sand=(342, 214, 335, 146), grass=(336, 193, 286, 112),
         house=(286, 80, 180, 252), companion=(304, 172, 132, 132), lighthouse=(24, 96, 112, 228),
         book=(168, 212, 112, 112), bottle=(468, 188, 136, 136),
-        palm=(222, 206, 198, 118), wet=(536, 330, 76, 18), stones=((452, 314), (468, 326)),
-        flowers=((262, 270, CORAL), (150, 196, GOLD), (480, 160, '#F4A7B4')), bushes=((496, 124, 0.7),),
-        tufts=((168, 150), (520, 210), (440, 120), (590, 220)), shells=((360, 340, 0.8), (160, 334, 0.7)),
+        palm=(222, 206, 198, 118), stones=((452, 314), (468, 326)),
+        flowers=((262, 270, CORAL), (150, 196, GOLD)), bushes=(),
+        tufts=((168, 150), (520, 210), (590, 220)), shells=((360, 340, 0.8), (160, 334, 0.7)),
         starfish=((440, 344, 0.8),), sparkles=((30, 40, 6), (640, 250, 5)),
         gulls=((24, 74), (48, 64))),
     'tablet_landscape': dict(
@@ -300,10 +300,10 @@ BOARDS = {
         sand=(610, 470, 590, 300), grass=(600, 425, 500, 212),
         house=(560, 180, 340, 520), companion=(600, 380, 240, 240), lighthouse=(80, 220, 200, 480),
         book=(360, 516, 176, 176), bottle=(900, 480, 200, 200),
-        palm=(420, 470, 372, 262), wet=(1000, 700, 140, 30), stones=((860, 660), (896, 684)),
-        flowers=((470, 470, CORAL), (330, 390, GOLD), (930, 420, '#F4A7B4'), (1010, 330, CORAL)),
-        bushes=((960, 300, 1.2), (500, 290, 1.0)),
-        tufts=((350, 330), (520, 600), (1000, 470), (900, 260), (1080, 400), (300, 480)),
+        palm=(420, 470, 372, 262), stones=((860, 660), (896, 684)),
+        flowers=((470, 470, CORAL), (330, 390, GOLD)),
+        bushes=((500, 290, 1.0),),
+        tufts=((350, 330), (520, 600), (900, 260), (300, 480)),
         shells=((600, 740, 1.3), (330, 730, 1.1), (760, 760, 1.0)), starfish=((820, 730, 1.3),),
         sparkles=((60, 100, 9), (420, 130, 8), (1110, 170, 9), (1130, 560, 8), (60, 770, 8), (1140, 790, 7)),
         gulls=((130, 130), (166, 116), (1000, 120))),
@@ -312,10 +312,10 @@ BOARDS = {
         sand=(430, 640, 405, 430), grass=(424, 500, 360, 272),
         house=(250, 160, 340, 480), companion=(300, 380, 240, 240), lighthouse=(48, 200, 160, 440),
         book=(150, 780, 176, 176), bottle=(500, 760, 220, 200),
-        palm=(706, 690, 734, 440), wet=(610, 1002, 140, 28), stones=((520, 676), (520, 714)),
-        flowers=((420, 712, CORAL), (240, 700, GOLD), (650, 300, '#F4A7B4')), rock_foam=False,
-        bushes=((660, 600, 1.1), (180, 690, 0.9)),
-        tufts=((110, 420), (690, 340), (380, 730), (620, 560), (250, 300), (740, 520)),
+        palm=(716, 742, 730, 548), stones=((520, 676), (520, 714)),
+        flowers=((420, 712, CORAL), (262, 708, GOLD)), rock_foam=False,
+        bushes=((645, 655, 1.1), (196, 736, 0.9)),
+        tufts=((110, 420), (380, 730), (620, 560), (250, 300), (740, 520)),
         shells=((360, 1000, 1.2), (130, 980, 1.0), (470, 1040, 1.0)), starfish=((400, 1050, 1.2),),
         sparkles=((60, 130, 9), (760, 160, 8), (40, 1100, 8), (780, 1110, 8), (790, 700, 7)),
         gulls=((90, 200), (124, 186))),
@@ -331,6 +331,29 @@ def drawn_lighthouse(rect):
     return x + w / 2, LH_W * k, y + h
 
 
+BOTTLE_VB = 100  # the bottle picture's viewBox (square)
+
+
+def bottle_ground(rect):
+    """The ground under the bottle, in the scene and not in the bottle's picture, so it stays still while the bottle bobs
+    (the app turns the whole picture about its bottom centre): wet sand where the last wave reached, its lacy foam edge
+    ending above the label under the bottle, the bottle's soft shadow and a shell. In the bottle picture's own coordinates
+    (drawn contain, standing on the tap area's bottom edge), then placed on the board."""
+    x, y, w, h = rect
+    k = min(w, h) / BOTTLE_VB
+    ox, oy = x + (w - BOTTLE_VB * k) / 2, y + h - BOTTLE_VB * k
+
+    def at(px, py):
+        return ox + px * k, oy + py * k
+    cx, cy = at(50, 86)
+    out = wet_sand(cx, cy, 46 * k, 11 * k)
+    sx, sy = at(52, 82)
+    out.append(ellipse(sx, sy, 32 * k, 5 * k, SHADOW, opacity=0.12))
+    hx, hy = at(16, 90)
+    out += shell(hx, hy, 0.9 * k)
+    return out
+
+
 def scene(b):
     W, H, s = b['W'], b['H'], b['s']
     parts = waves(W, H, 0, 0)
@@ -339,8 +362,7 @@ def scene(b):
     for (x, y, r) in b['sparkles']:
         parts.append(sparkle(x, y, r))
     parts += island(b['sand'], b['grass'])
-    wx, wy, wrx, wry = b['wet']
-    parts += wet_sand(wx, wy, wrx, wry)
+    parts += bottle_ground(b['bottle'])
     for (x, y) in b['tufts']:
         parts.append(tuft(x, y, s))
     for (x, y, sc) in b['bushes']:
@@ -411,9 +433,9 @@ def lighthouse():
 
 
 def bottle_big():
-    """100 x 100: the bottle lying in wet sand, its neck up towards the end side, a rolled letter with a ribbon inside."""
-    out = [ellipse(50, 84, 42, 9, WET_SAND, opacity=0.9),
-           ellipse(52, 82, 32, 5, SHADOW, opacity=0.12)]
+    """100 x 100: the bottle lying on its side, its neck up towards the end side, a rolled letter with a ribbon inside. Glass
+    only: the wet sand, its shadow and the shell are drawn by the scene (bottle_ground), so they stay put while it bobs."""
+    out = []
     body = []
     # Glass: a long rounded body, a shoulder and neck, a lip ring, the cork.
     body += [el('rect', x=10, y=44, width=62, height=34, rx=16, fill='#D3F1EA', opacity=0.95),
@@ -439,7 +461,6 @@ def bottle_big():
              el('circle', cx=64, cy=49.5, r=1.8, fill='#FFFFFF', opacity=0.85),
              el('rect', x=80, y=56.5, width=7, height=2.4, rx=1.2, fill='#FFFFFF', opacity=0.8)]
     out.append('<g transform="rotate(-24 52 62)">%s</g>' % ''.join(body))
-    out += shell(16, 90, 0.9)
     return svg(100, 100, 'בַּקְבּוּק', out, sea=False)
 
 

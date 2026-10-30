@@ -132,7 +132,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | homeIslandMineSemantics | האי שלי | needs-editor |
 | app/lib/strings/he.dart | nitziHomeWelcome | שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה. | needs-editor |
 | app/lib/strings/he.dart | nitziHomeWelcomeNoName | שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה. | needs-editor |
-| app/lib/strings/he.dart | nitziHomeHi | זֶה הַבַּיִת שֶׁלִּי. | needs-editor |
+| app/lib/strings/he.dart | nitziHomeHi | זֶה הַבַּיִת שֶׁלָּנוּ. | needs-editor |
 | app/lib/strings/he.dart | nitziHomeTreasures | פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת. | needs-editor |
 | app/lib/strings/he.dart | nitziHomeBottle | בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ. | needs-editor |
 | app/lib/strings/he.dart | nitziHomeBottleDone | כְּבָר סִיַּמְנוּ אֶת הַהַרְפַּתְקָה שֶׁל הַיּוֹם. אֶפְשָׁר לְשַׂחֵק בָּאִיִּים. | needs-editor |

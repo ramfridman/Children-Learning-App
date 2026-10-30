@@ -164,8 +164,9 @@ abstract final class He {
   static const Str nitziHomeWelcome = Str('שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה.', nikud: true);
   static const Str nitziHomeWelcomeNoName = Str('שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה.', nikud: true);
   // `nitziHome*` names the screen ("Nitzi's home"), not the speaker: the friend the child chose says these lines
-  // (B-26 decision 4), so none of them names Nitzi or has a first person with a gender.
-  static const Str nitziHomeHi = Str('זֶה הַבַּיִת שֶׁלִּי.', nikud: true);
+  // (B-26 decision 4), so none of them names Nitzi or has a first person with a gender. "Our house" (this friend and
+  // this child, on the child's island): the owner's choice of 2026-10-29 (b26-hebrew.md 7.3, question 3).
+  static const Str nitziHomeHi = Str('זֶה הַבַּיִת שֶׁלָּנוּ.', nikud: true);
   static const Str nitziHomeTreasures = Str(
     'פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת.',
     nikud: true,

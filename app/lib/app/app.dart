@@ -14,6 +14,7 @@ import '../rewards/ceremony.dart';
 import '../rewards/outfits.dart' show Outfit;
 import '../content/models.dart' show Lesson, PackContent;
 import '../rewards/award.dart';
+import '../rewards/sticker_design.dart';
 import '../world/next_lesson.dart';
 import '../world/placement.dart';
 import 'reward_providers.dart';
@@ -263,13 +264,40 @@ class _HomeState extends ConsumerState<_Home> {
     if (mounted) _refreshWorld();
   }
 
-  /// The child's home, from the home island's sign or Today's Adventure. The map stays underneath, so the child comes
-  /// back to it where they left it.
+  /// The child's home, from the home island's sign or Today's Adventure: the bottle, the friend at its door, the sticker
+  /// book and the lighthouse (the Trophy Hall). The map stays underneath, so the child comes back to it where they left
+  /// it; the Hall, the album and a lesson started from the bottle come back to the home.
   Future<void> _openHome() async {
-    await Navigator.of(context)
-        .push(MaterialPageRoute<void>(builder: (BuildContext c) => HomeIslandScreen(island: _island)));
+    final String id = widget.profile.id;
+    final GlobalKey<MapCompanionState> friend = GlobalKey<MapCompanionState>();
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        // A consumer of its own: the lantern's glow and the sticker on the book follow the rewards while the home is open.
+        builder: (BuildContext c) => Consumer(
+          builder: (BuildContext c, WidgetRef ref, Widget? _) {
+            final List<Reward> stickers = ref.watch(stickersProvider(id)).value ?? const <Reward>[];
+            return HomeIslandScreen(
+              island: _island,
+              // It waves when the child arrives, silently (B-26 decision 6: nothing is voiced here yet).
+              companion: MapCompanion(key: friend, waveOnStart: true),
+              onCompanion: () => friend.currentState?.greet(),
+              onBottle: _openTodaysAdventure,
+              onStickers: _openStickers,
+              onHall: _openHall,
+              hallGlow: ref.watch(hallWaitingProvider(id)).value ?? false,
+              sticker: stickers.isEmpty ? firstStickerAsset : stickerAsset(stickers.last.awardKey),
+            );
+          },
+        ),
+      ),
+    );
     if (mounted) _refreshWorld();
   }
+
+  /// What the bottle in the child's home opens: today's adventure. This is the only place that decides it. Until the rule
+  /// of B-26 step 5 is built (docs/curriculum/todays-adventure-rule.md), it is what that rule gives a child who is new:
+  /// Counting Hills, its warm-up when due and then its next lesson, the same as the map's own way into a lesson.
+  Future<void> _openTodaysAdventure() => _playLand('numbers');
 
   Future<void> _openStickers() => Navigator.of(context)
       .push(MaterialPageRoute<void>(builder: (BuildContext c) => StickerIsland(childId: widget.profile.id)));
@@ -371,8 +399,6 @@ class _HomeState extends ConsumerState<_Home> {
     onOpenLand: _openLand,
     openableLands: _openableLands(),
     stars: ref.watch(goldenStarsProvider(widget.profile.id)).value ?? 0,
-    onStickers: _openStickers,
-    onHall: _openHall,
     hallGlow: ref.watch(hallWaitingProvider(widget.profile.id)).value ?? false,
     companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
     companionMouth: friend?.mouth,

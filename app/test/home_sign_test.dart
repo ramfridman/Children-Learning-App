@@ -65,10 +65,9 @@ Future<Calls> pumpHome(
   Offset? mouth,
   String childName = 'נועה',
 }) async {
-  if (scale != 1) {
-    tester.platformDispatcher.textScaleFactorTestValue = scale;
-    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
-  }
+  // Set every time: a second pump in the same test must not keep the text scale of the first.
+  tester.platformDispatcher.textScaleFactorTestValue = scale;
+  addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
   final Calls calls = Calls();
   await pumpScreen(
     tester,
@@ -451,8 +450,9 @@ void main() {
       const String name = 'אבגדהוזחטי אבגדהוזחטי אבגדהוזחטי אבגדהוזח';
       await pumpHome(tester, boards[1].size, mouth: mouth, island: homeIslandName(name), scale: 1.3);
       final Rect body = rectOf(tester, 'bubble-body');
-      expect(body.width, lessThanOrEqualTo(667 - 154 - 16));
-      expect(body.left, greaterThanOrEqualTo(16));
+      // A speech bubble, not a banner (nitzi-home.md section 4): at most 400 on the SE, its left edge never before 113.
+      expect(body.width, lessThanOrEqualTo(400));
+      expect(body.left, greaterThanOrEqualTo(113));
       final String text = tester
           .widget<Text>(
             find.descendant(of: find.byKey(const Key('bubble-body')), matching: find.byType(Text)),
@@ -543,6 +543,30 @@ void main() {
         }
       }
     });
+
+    // The phone caps of B-26 step 4 (nitzi-home.md section 4): phone 460 (left edge never before x 180), SE 400 (113);
+    // the widest name at text scale 1.3 is shortened to stay by the speaker, an everyday one stays whole.
+    for (final (int i, double cap, double left) in <(int, double, double)>[(0, 460, 180), (1, 400, 113)]) {
+      testWidgets('${boards[i].name}: the bubble is at most $cap wide and starts at x $left or right of it', (
+        WidgetTester tester,
+      ) async {
+        for (final double scale in <double>[1, 1.3]) {
+          for (final String name in <String>['ש' * 24, 'אבגדהוזחטי אבגדהוזחטי אבגדהוזחטי אבגדהוזח', 'נועה']) {
+            await pumpHome(tester, boards[i].size, mouth: mouth, island: homeIslandName(name), scale: scale);
+            if (i == 0 && scale > 1) drainKnownPillOverflow(tester);
+            final Rect body = rectOf(tester, 'bubble-body');
+            expect(body.width, lessThanOrEqualTo(cap + 0.01), reason: '$name x$scale');
+            expect(body.left, greaterThanOrEqualTo(left - 0.01), reason: '$name x$scale');
+            expect(bubbleText(tester), isNot(contains('\n')), reason: 'one line on a phone');
+            if (name == 'נועה') expect(bubbleText(tester), oneLine(name));
+          }
+        }
+        // The widest 24 letters at 1.3 no longer fit whole beside the speaker: shortened, with "…".
+        await pumpHome(tester, boards[i].size, mouth: mouth, island: homeIslandName('ש' * 24), scale: 1.3);
+        if (i == 0) drainKnownPillOverflow(tester);
+        expect(bubbleText(tester), contains('…$pdi,'));
+      });
+    }
 
     testWidgets('a touch on it reaches what is under it', (WidgetTester tester) async {
       final Calls calls = await pumpHome(

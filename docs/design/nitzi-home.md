@@ -81,10 +81,32 @@ Fixed on every board:
 - **Island name** (the title): the home sign style, centred at the top. Always the **full** name (up to 24, then `…`, as
   step 3 builds it): it shrinks to 18 first, then takes two lines, and never breaks inside a word. Exact rule and boxes in
   section 3.1.
-- **Bubble**: beside the companion's head on the start side, tail to the mouth; max width phone 260, SE 230,
-  landscape 356, portrait 296 (each ends 16 / 24 inside the edge); up to two lines at 18 / 17 / 24 (the editor's draft "שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה." takes two
-  lines on phones; the two-line bubble ends at y 165 phone and 169 SE, clear of the bottle); a name too long for it
-  uses the shortened form (section 4).
+- **Bubble**: above and beside the companion's head on the start side, its top left corner at the table's point (the
+  place does not move: on the phones the bottle leaves no room beside the head); max width phone 260, SE 230,
+  landscape 356, portrait 296 (each ends 16 / 24 inside the edge); two lines at 18 / 17 / 24 (the welcome
+  "שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה." takes two lines on phones; the two-line bubble ends at y 165 phone
+  and 169 SE, clear of the bottle). **Lines** (review of step 4): at most two at text scale 1.0 on every board; at a
+  larger scale a third line is allowed where the bubble still ends at least 16 above the bottle's tap area (in practice
+  the tablets: at 1.3 a three-line bubble ends at 463 landscape and 467 portrait), so more of the child's name stays
+  whole; the phones keep two. A name still too long is shortened (section 4: at least 3 letters and `…`). A two-part
+  name may break at its space; a Latin one stays in reading order (checked, landscape 1.3: "Alexandra" ends line 1,
+  "Massimiliano" starts line 2 at its right, then "!").
+- **Bubble tail** (review of step 4, replaces the small corner nub): a tapered wedge from the bubble's bottom edge to a
+  tip just outside the friend's head beside its mouth, so a child sees at once who speaks. Base: on the bottom edge
+  from x = bubble left + 24 to bubble left + 52 (28 wide), reaching 4 into the body so no seam shows. Tip: fixed in
+  board coordinates from the companion's tap area, **(left + 0.74 w, top + 0.47 h)**: phone (498.4, 235.2), SE
+  (401.7, 234.0), landscape (777.6, 492.8), portrait (477.6, 492.8), rounded with radius 3 (moved up and in on
+  2026-10-30: at (0.76, 0.52) the tip landed on the sparkle at the end of the friend's own tail, so it seemed to point
+  at the sparkle, not the face). The tip stays put when the bubble grows (text scale 1.3, a third line): only the
+  wedge gets shorter. Fill `TokenColors.paper` with the body's soft shadow, drawn under the body; it ignores touches
+  like the bubble. **Outline** (2026-10-30, the wedge was a pale sliver over the near-white house wall): when the
+  bubble has a tail tip, the body and the wedge are outlined as **one** shape (the union of the rounded body and the
+  wedge), stroke 1.5, `TokenColors.ink` at alpha 0x33 (20 %), drawn over the fill, so the join shows no line. The house
+  wall stays white (it is the map's house). Why not to the mouth itself: the tip would lie on the friend's cheek; it
+  ends about 6 to 9 outside the head's outline (37 to 66 from the mouth's centre, the larger on tablets), the way a
+  comic tail points at a speaker. Checks: the wedge stays out of the bottle's tap area on every board at 1.0 and 1.3
+  (closest: SE at 1.3, about 3 to its left), and every tip is at least 25 below the tallest bubble's bottom
+  (portrait, three lines at 1.3), so the wedge never turns upwards.
 - Nothing tappable in the bottom 24 (§6.1 edge rule); gutters 16 phone, 24 tablet.
 
 | Target | phone 852 x 393 | phoneSE 667 x 375 | tablet landscape 1180 x 820 | tablet portrait 820 x 1180 |
@@ -114,7 +136,11 @@ picture's own coordinates:
   centred there at 0.8 of the window's width, with the soft halo (`0xAAFFD45C`, blur 20) centred at (50, 48).
 - sticker book (100 x 100): the cover panel is x 33..63, y 19..49; the sticker (`sticker_01.svg` or the child's latest)
   fills it.
-- bottle (100 x 100): the bob (section 5) turns the whole picture about its bottom centre.
+- bottle (100 x 100): the bob (section 5) turns the whole picture about its bottom centre. The ground under it (wet sand
+  with its foam edge, the shadow, a shell) is drawn by the scene at the picture's resting place (`bottle_ground` in the
+  generator), so the sand does not move with the bottle; its foam edge ends above the label under the bottle.
+- Scene decorations (bushes, flowers, tufts, the portrait palm's crown) stay out of the bubble's box at its tallest
+  (text scale 1.3, three lines on tablets) and clear of the labels, so the bubble never half-hides one (review of step 4).
 
 **Labels** under the objects: 14 bold on phones (as now), **18 on tablets** (14 looked too small under 200-point objects
 in the renders); they end above the bottom-24 band on every board, also at text scale 1.3.
@@ -278,7 +304,7 @@ franchise look, no real person):
 | `.../nitzi_home_tablet_landscape.svg` | same scene | 1180 x 820 |
 | `.../nitzi_home_tablet_portrait.svg` | same scene, tall island, the lighthouse on a rocky knoll, beach row at the bottom | 820 x 1180 |
 | `app/assets/art/home/lighthouse.svg` | tapering tower in six red and white bands, windows, door, gallery and railing, lantern window, domed cap, its rocks | 100 x 220 |
-| `app/assets/art/home/bottle_big.svg` | glass bottle lying in wet sand, cork, rolled letter tied with a bow, a shell | 100 x 100 |
+| `app/assets/art/home/bottle_big.svg` | glass bottle lying on its side, cork, rolled letter tied with a bow (glass only: its wet sand, shadow and shell are in the scene, so they stay still while it bobs; review of step 4) | 100 x 100 |
 | `app/assets/art/home/sticker_book.svg` | an album standing on a stump, spine on the right, cover panel for the sticker, bookmark | 100 x 100 |
 
 **Delivered 2026-10-29** (step 4, art part). Generated by `python tools/make_nitzi_home.py` (deterministic: run twice,
