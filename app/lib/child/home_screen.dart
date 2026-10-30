@@ -95,8 +95,8 @@ class _HomeSpec {
   final double plusLeft;
   final double plusTop;
 
-  /// On phones the bubble stays at the board's own place, in the open sea above the islands; on tablets it stands beside
-  /// the companion's mouth.
+  /// True: the bubble stays at the board's own place ([bubbleRight], [bubbleTop]). All four boards are false now (B-34:
+  /// the phones too stand it beside the companion's mouth); that place is used only when no friend is on the map.
   final bool bubbleAtBoardPlace;
   final double avatarRight;
   final double avatarTop;
@@ -125,10 +125,8 @@ class _HomeSpec {
   final double bubbleFont;
   final EdgeInsets bubblePad;
 
-  /// The widest the bubble may be, padding included. On a phone it is one line by the speaker, over the right 60 % of
-  /// the screen (460 on the phone, its left edge never before x 180; 400 on the SE, never before x 113: a speech bubble
-  /// is speech, not a banner; nitzi-home.md section 4); on a tablet ([bubbleBreaks]) it is 210 and a longer line breaks
-  /// after the child's name (design review of B-26 step 2), so it stays beside the friend and off Counting Hills.
+  /// The widest the bubble may be, padding included: 210 (190 on the SE), and a longer line breaks after the child's name
+  /// ([bubbleBreaks], design review of B-26 step 2 and B-34), so it stays beside the friend and off Counting Hills.
   final double bubbleMaxWidth;
   final bool bubbleBreaks;
   final List<_Sign> signs;
@@ -151,7 +149,7 @@ class _HomeSpec {
     tapWidth: 240,
     plusLeft: 1990,
     plusTop: 268,
-    bubbleAtBoardPlace: true,
+    bubbleAtBoardPlace: false,
     avatarRight: 59,
     avatarTop: 12,
     avatarSize: 64,
@@ -171,7 +169,8 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 18,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-    bubbleMaxWidth: 460,
+    bubbleMaxWidth: 210,
+    bubbleBreaks: true,
     companionLeft: 1859,
     companionTop: 154,
     homeSignLeft: 1770,
@@ -197,7 +196,7 @@ class _HomeSpec {
     tapWidth: 220,
     plusLeft: 1776,
     plusTop: 256,
-    bubbleAtBoardPlace: true,
+    bubbleAtBoardPlace: false,
     avatarRight: 16,
     avatarTop: 8,
     avatarSize: 64,
@@ -216,7 +215,8 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 17,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-    bubbleMaxWidth: 400,
+    bubbleMaxWidth: 190,
+    bubbleBreaks: true,
     companionLeft: 1651,
     companionTop: 164.6,
     homeSignLeft: 1577,
@@ -577,8 +577,7 @@ class HomeScreen extends StatelessWidget {
     return hallGlow ? '$island, ${He.trophyNewSemantics.text}' : island;
   }
 
-  /// The bubble: at the board's own place on a phone, or when no friend is on the map; otherwise beside the friend's
-  /// head, with its tail (a corner at the bubble's lower right) pointing at the mouth. In world coordinates.
+  /// The bubble: at the board's own place when no friend is on the map; otherwise beside the friend's head, with its tail (a corner at the bubble's lower right) pointing at the mouth. In world coordinates.
   Widget _bubble(_HomeSpec s, Widget bubble) {
     final Offset? m = companion == null ? null : companionMouth;
     if (m == null || s.bubbleAtBoardPlace) {
@@ -628,10 +627,10 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-/// The bubble on the map, never wider than [_HomeSpec.bubbleMaxWidth] (padding included). On a phone it is one line; on
-/// a tablet a line wider than that breaks after the child's name, so the words after it stay whole on the second line and
-/// the bubble, held by its bottom beside the friend's mouth, grows upwards over the home island's own palm. A name too
-/// long for its line is shortened by the sign's rule ([shortenName]), so a tablet bubble never takes three lines (QA-29).
+/// The bubble on the map, never wider than [_HomeSpec.bubbleMaxWidth] (padding included). A line wider than that breaks
+/// after the child's name, so the words after it stay whole on the second line and the bubble, held by its bottom beside
+/// the friend's mouth, grows upwards over the home island's own palm. A name too long for its line is shortened by the
+/// sign's rule ([shortenName]), so the bubble never takes three lines (QA-29, B-34: on the phones too).
 /// The name sits in an isolate ([isolatedName]). With no usable name it says [He.homeBubbleNoName].
 class _MapBubble extends StatelessWidget {
   const _MapBubble({required this.spec, required this.name});

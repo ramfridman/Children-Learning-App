@@ -117,9 +117,9 @@ void main() {
               }
             }
           }
-          // Lines and width as in step 3: phones one line, tablets at most two and 210.
-          expect(lines, lessThanOrEqualTo(tablet ? 2 : 1), reason: text);
-          if (tablet) expect(r.width, lessThanOrEqualTo(210.01));
+          // Lines and width as in step 3 (B-34: every board): at most two lines, 210 wide (190 on the SE).
+          expect(lines, lessThanOrEqualTo(2), reason: text);
+          expect(r.width, lessThanOrEqualTo(b.key == 'phoneSE' ? 190.01 : 210.01));
 
           // What the screen reader gets: the sign and its tap area carry the plain whole name, no invisible marks.
           final List<String> signLabels = <String>[
