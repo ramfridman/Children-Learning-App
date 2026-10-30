@@ -125,8 +125,9 @@ class _HomeSpec {
   final double bubbleFont;
   final EdgeInsets bubblePad;
 
-  /// The widest the bubble may be, padding included. On a phone it is the open sea from its right edge to 16 from the
-  /// board's left edge at the start view, on one line; on a tablet ([bubbleBreaks]) it is 210 and a longer line breaks
+  /// The widest the bubble may be, padding included. On a phone it is one line by the speaker, over the right 60 % of
+  /// the screen (460 on the phone, its left edge never before x 180; 400 on the SE, never before x 113: a speech bubble
+  /// is speech, not a banner; nitzi-home.md section 4); on a tablet ([bubbleBreaks]) it is 210 and a longer line breaks
   /// after the child's name (design review of B-26 step 2), so it stays beside the friend and off Counting Hills.
   final double bubbleMaxWidth;
   final bool bubbleBreaks;
@@ -170,7 +171,7 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 18,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-    bubbleMaxWidth: 852 - 212 - 16,
+    bubbleMaxWidth: 460,
     companionLeft: 1859,
     companionTop: 154,
     homeSignLeft: 1770,
@@ -215,7 +216,7 @@ class _HomeSpec {
     bubbleTop: 112,
     bubbleFont: 17,
     bubblePad: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-    bubbleMaxWidth: 667 - 154 - 16,
+    bubbleMaxWidth: 400,
     companionLeft: 1651,
     companionTop: 164.6,
     homeSignLeft: 1577,
@@ -348,8 +349,6 @@ class HomeScreen extends StatelessWidget {
     this.onOpenLand,
     this.openableLands = const <Land>{},
     this.stars = 0,
-    this.onStickers,
-    this.onHall,
     this.hallGlow = false,
     this.homeIsland,
     this.onOpenHome,
@@ -391,14 +390,11 @@ class HomeScreen extends StatelessWidget {
   /// The lands that have skills, so that a tap on their sign opens them.
   final Set<Land> openableLands;
 
-  /// The golden stars the child has, shown beside the sticker button (nothing is shown at zero).
+  /// The golden stars the child has, shown under the avatar (nothing is shown at zero).
   final int stars;
 
-  /// Opens Sticker Island.
-  final VoidCallback? onStickers;
-
-  /// Opens the Trophy Hall, and whether something there is waiting for the child (a soft glow on its button).
-  final VoidCallback? onHall;
+  /// Something waits for the child in the Trophy Hall (which is in the child's home since B-26): the home island's sign
+  /// glows and wears a small trophy, and its label says so.
   final bool hallGlow;
 
   VoidCallback? _tapFor(Land land) {
@@ -444,78 +440,33 @@ class HomeScreen extends StatelessWidget {
               onPressed: onSwitchChild,
             ),
           ),
-          // Under the avatar: the stickers, and the golden stars the child has.
-          if (onStickers != null)
-            boardAt(
+          // Under the avatar: the golden stars the child has (B-26: the sticker and Hall pebbles moved into the child's
+          // home, as its book and lighthouse).
+          if (stars > 0)
+            Positioned(
               right: s.avatarRight,
               top: s.avatarTop + s.avatarSize + 10,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _Labelled(
-                    label: He.homeStickersLabel.text,
-                    child: PebbleButton(
-                      key: const Key('home-stickers'),
-                      semanticLabel: He.stickersSemantics.text,
-                      size: 48,
-                      fill: TokenColors.paper,
-                      lip: TokenColors.cardLip,
-                      onPressed: onStickers,
-                      // A real sticker of the collection, so that what is on the button is what is inside.
-                      child: const BoardSvg('assets/art/stickers/sticker_01.svg', width: 30, height: 30),
+              child: Semantics(
+                label: '${He.starsSemantics.text} $stars',
+                child: ExcludeSemantics(
+                  child: Container(
+                    key: const Key('home-stars'),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: TokenColors.paper,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: TokenColors.ink, width: 2),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const BoardSvg('assets/art/world/star_gold.svg', width: 22, height: 22),
+                        const SizedBox(width: 4),
+                        Text('$stars', style: AppText.fixed(size: 20, weight: 700)),
+                      ],
                     ),
                   ),
-                  if (onHall != null) ...<Widget>[
-                    const SizedBox(width: 8),
-                    _Labelled(
-                      label: He.homeHallLabel.text,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: hallGlow
-                              ? const <BoxShadow>[
-                                  BoxShadow(color: Color(0xAAFFD45C), blurRadius: 20, spreadRadius: 4),
-                                ]
-                              : null,
-                        ),
-                        child: PebbleButton(
-                          key: const Key('home-hall'),
-                          semanticLabel: He.hallSemantics.text,
-                          size: 48,
-                          fill: TokenColors.paper,
-                          lip: TokenColors.cardLip,
-                          onPressed: onHall,
-                          child: const BoardSvg('assets/art/trophies/trophy_gold.svg', width: 28, height: 28),
-                        ),
-                      ),
-                    ),
-                  ],
-                  if (stars > 0) ...<Widget>[
-                    const SizedBox(width: 8),
-                    Semantics(
-                      label: '${He.starsSemantics.text} $stars',
-                      child: ExcludeSemantics(
-                        child: Container(
-                          key: const Key('home-stars'),
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: TokenColors.paper,
-                            borderRadius: BorderRadius.circular(999),
-                            border: Border.all(color: TokenColors.ink, width: 2),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              const BoardSvg('assets/art/world/star_gold.svg', width: 22, height: 22),
-                              const SizedBox(width: 4),
-                              Text('$stars', style: AppText.fixed(size: 20, weight: 700)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
+                ),
               ),
             ),
           // End corner: the visibly adult "Parents" button.
@@ -569,7 +520,14 @@ class HomeScreen extends StatelessWidget {
             ),
         for (final _Sign sign in s.signs)
           if (sign.land == Land.nitzi)
-            _HomeSign(spec: s, sign: sign, island: homeIsland, onTap: onOpenHome)
+            _HomeSign(
+              spec: s,
+              sign: sign,
+              island: homeIsland,
+              semantics: _homeSemantics,
+              waiting: hallGlow,
+              onTap: onOpenHome,
+            )
           else
             _sign(sign),
         if (companion != null)
@@ -611,8 +569,13 @@ class HomeScreen extends StatelessWidget {
   );
 
   /// What a screen reader says for a land's tap area: for the home island the whole name, never shortened.
-  String _semanticsOf(Land land) =>
-      land == Land.nitzi ? homeIsland?.semantics ?? He.landNitzi.text : land.label.text;
+  String _semanticsOf(Land land) => land == Land.nitzi ? _homeSemantics : land.label.text;
+
+  /// The home island's label: the whole name, and that something waits in the Hall when it does.
+  String get _homeSemantics {
+    final String island = homeIsland?.semantics ?? He.landNitzi.text;
+    return hallGlow ? '$island, ${He.trophyNewSemantics.text}' : island;
+  }
 
   /// The bubble: at the board's own place on a phone, or when no friend is on the map; otherwise beside the friend's
   /// head, with its tail (a corner at the bubble's lower right) pointing at the mouth. In world coordinates.
@@ -792,13 +755,24 @@ class _DailyPill extends StatelessWidget {
 
 /// The home island's sign (B-26): the child's island, as large as its box allows, centred under the island while it
 /// fits and held inside the box otherwise: `left = clamp(centre - w / 2, boxLeft, boxRight - w)`
-/// (docs/design/nitzi-home.md section 4).
+/// (docs/design/nitzi-home.md section 4). When something waits in the Hall ([waiting]) it glows as the Hall's pebble did,
+/// and a small trophy sits on its top start corner, over the border, so the sign keeps its width (a shape, not only a
+/// colour).
 class _HomeSign extends StatelessWidget {
-  const _HomeSign({required this.spec, required this.sign, required this.island, required this.onTap});
+  const _HomeSign({
+    required this.spec,
+    required this.sign,
+    required this.island,
+    required this.semantics,
+    required this.waiting,
+    required this.onTap,
+  });
 
   final _HomeSpec spec;
   final _Sign sign;
   final HomeIslandName? island;
+  final String semantics;
+  final bool waiting;
   final VoidCallback? onTap;
 
   @override
@@ -808,23 +782,55 @@ class _HomeSign extends StatelessWidget {
     final HomeSignFit fit = fitHomeSign(island, maxText, MediaQuery.textScalerOf(context));
     final double width = math.min(fit.width, maxText) + _LandSign.frame;
     final double left = (sign.left - width / 2).clamp(spec.homeSignLeft, spec.homeSignRight - width);
+    final Widget label = _LandSign(
+      land: Land.nitzi,
+      text: fit.text,
+      semantics: semantics,
+      size: fit.size,
+      maxTextWidth: maxText,
+    );
     return Positioned(
       left: left,
       top: sign.top,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
-        child: _LandSign(
-          land: Land.nitzi,
-          text: fit.text,
-          semantics: island?.semantics ?? He.landNitzi.text,
-          size: fit.size,
-          maxTextWidth: maxText,
-        ),
+        child: !waiting
+            ? label
+            : Stack(
+                clipBehavior: Clip.none,
+                children: <Widget>[
+                  DecoratedBox(
+                    key: const Key('home-sign-glow'),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const <BoxShadow>[
+                        BoxShadow(color: _waitingGlow, blurRadius: 20, spreadRadius: 4),
+                      ],
+                    ),
+                    child: label,
+                  ),
+                  PositionedDirectional(
+                    start: 0,
+                    top: -12,
+                    child: Container(
+                      key: const Key('home-sign-trophy'),
+                      width: 24,
+                      height: 24,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(color: TokenColors.paper, shape: BoxShape.circle),
+                      child: const BoardSvg('assets/art/trophies/trophy_gold.svg', width: 16, height: 16),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
 }
+
+/// The soft glow of "something waits in the Hall".
+const Color _waitingGlow = Color(0xAAFFD45C);
 
 /// The home sign's line, its size in points (before the text scale) and its measured width.
 typedef HomeSignFit = ({String text, double size, double width});
@@ -930,21 +936,4 @@ class _LandSign extends StatelessWidget {
       ),
     );
   }
-}
-
-/// A button with a few words under it, so that no picture has to be guessed.
-class _Labelled extends StatelessWidget {
-  const _Labelled({required this.label, required this.child});
-
-  final String label;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      child,
-      ExcludeSemantics(child: Text(label, style: AppText.fixed(size: 14, weight: 700))),
-    ],
-  );
 }

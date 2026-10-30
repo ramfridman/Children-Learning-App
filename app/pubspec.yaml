@@ -50,6 +50,7 @@ flutter:
     - assets/characters/
     - assets/art/
     - assets/art/scenes/
+    - assets/art/home/
     - assets/art/ui/
     - assets/art/stickers/
     - assets/art/world/

@@ -231,7 +231,7 @@ void main() {
 
   group('on the map', () {
     testWidgets(
-      'the golden stars show with their number, the sticker button opens Sticker Island, a land opens its island',
+      'the golden stars show with their number, the home\'s book opens Sticker Island, a land opens its island',
       (WidgetTester tester) async {
         final AppRig rig = AppRig();
         await rig.seedFinishedSetup();
@@ -256,11 +256,16 @@ void main() {
           find.descendant(of: find.byKey(const Key('home-stars')), matching: find.text('2')),
           findsOneWidget,
         );
-        await tester.tap(find.byKey(const Key('home-stickers')));
+        // Since B-26 the stickers live in the child's home: its book opens them.
+        await tester.tap(find.byKey(const Key('home-pill')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('home-island-book')));
         await tester.pumpAndSettle();
         expect(find.byType(StickerIsland), findsOneWidget);
         expect(find.byKey(const Key('sticker-sticker:butterflies:1')), findsOneWidget);
         await tester.tap(find.byKey(const Key('stickers-back')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('home-island-back')));
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const Key('land-tap-counting')));
         await tester.pumpAndSettle();
@@ -284,7 +289,6 @@ void main() {
       await tester.tap(find.text('נועה'));
       await loaded(tester);
       expect(find.byKey(const Key('home-stars')), findsNothing);
-      expect(find.byKey(const Key('home-stickers')), findsOneWidget);
       await tester.tap(find.byKey(const Key('land-tap-colors')));
       await loaded(tester);
       expect(find.byType(LandScreen), findsOneWidget);
