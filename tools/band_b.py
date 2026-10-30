@@ -306,7 +306,9 @@ def numbers():
 
     # B-15 §1: the number missing from a row of numerals
     for i, (seq, ans, rev, nxt) in enumerate([([11, 12, None, 14], 13, 31, 15), ([16, None, 18], 17, 71, 18)]):
+        # The child names the missing number, as in NUM-B-11's identical items, so it may be said aloud (QA-1).
         numpick3(u, 'NUM-B-08', 'אֵיזֶה מִסְפָּר חָסֵר?', ans, {rev: 'M-NUM-REV', nxt: 'M-CNT-SEQ'}, i, check='transfer', difficulty=0.6,
+                 voice=True,
                  row=['?' if v is None else 'n:%d' % v for v in seq], correct_text='כֵּן! זֶה %s.' % F[ans],
                  h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (', '.join(F[ans if v is None else v] for v in seq), F[ans]))
 
