@@ -99,9 +99,10 @@ class Outcome {
 }
 
 /// Plays one lesson, activity by activity, and keeps the rules of help that the curriculum sets:
-/// the first mistake gets a diagnostic line; later mistakes escalate through the hints (a model of
-/// counting, then a worked example); after the last allowed attempt the worked example is shown and
-/// the child makes the final move, so every item ends in success. "Not sure" is never a mistake.
+/// the first mistake gets a diagnostic line and the picture of hint 1; later mistakes escalate through
+/// the hints (another way to see it, then a worked example); a two-choice item gets one retry, then the
+/// worked example; after the last allowed attempt the worked example is shown and the child makes the
+/// final move, so every item ends in success. "Not sure" is never a mistake.
 ///
 /// The controller knows nothing about widgets or timers; the screen shows what it says and decides
 /// how long to wait between moves.
@@ -153,8 +154,22 @@ class LessonController extends ChangeNotifier {
   /// The highest hint level shown so far for this activity.
   int hintLevel = 0;
 
-  /// True once the worked example has been shown: the child now makes the last move (the right one).
+  /// True once the help is at its top: only the right move is taken, and the worked example is (or was) shown.
   bool guided = false;
+
+  /// The worked example has ended (or none can be shown): the answer may now carry the halo, and the others the dimming. The
+  /// halo is the last step of the demonstration, never before it (B-40).
+  bool get answerShown => guided && _demoDone;
+  bool _demoDone = false;
+
+  /// A template calls this when its worked example has ended, and at once when it has none to show.
+  void demoDone() {
+    if (_demoDone || finished) return;
+    // Only the worked example (the last hint) counts: a smaller demonstration that a touch cut short does not.
+    if (hintShown < math.min(3, current.hints.length)) return;
+    _demoDone = true;
+    if (guided) notifyListeners();
+  }
 
   /// The activity was answered right and only waits for the praise to end: no help and no "not sure" is taken for it now.
   bool solved = false;
@@ -270,8 +285,10 @@ class LessonController extends ChangeNotifier {
     );
   }
 
-  /// The hint that was shown last, and a counter that changes each time so a stage can replay it.
+  /// The hint that was shown last, its level (1 to 3, 0 for none), and a counter that changes each time so a stage can
+  /// replay it. A stage draws what the level says (see `HintLadder`); the action is the author's note on the line.
   HintAction? hintAction;
+  int hintShown = 0;
   int hintNonce = 0;
 
   /// Changes whenever the stage should start the activity over (a new activity, or a new count after a mistake).
@@ -291,9 +308,11 @@ class LessonController extends ChangeNotifier {
     errors = 0;
     hintLevel = 0;
     guided = false;
+    _demoDone = false;
     solved = false;
     feedback = FeedbackKind.none;
     hintAction = null;
+    hintShown = 0;
     _recent.clear();
     _say(a.promptLine);
     _markMs = _clock.nowMs();
@@ -341,6 +360,7 @@ class LessonController extends ChangeNotifier {
     hintLevel = math.max(hintLevel, level);
     final Hint h = current.hints[level - 1];
     hintAction = h.action;
+    hintShown = level;
     hintNonce++;
     if (speak) _say(h.say);
   }
@@ -433,6 +453,9 @@ class LessonController extends ChangeNotifier {
     );
     if (_recent.length > 3) _recent.removeAt(0);
     final bool first = errors == 1 || a.hints.isEmpty;
+    // A child who has two choices has one retry: the first mistake already shows the second kind of help (B-40, A6).
+    final bool twoChoices = a.optionCount == 2;
+    final int attempts = twoChoices ? math.min(2, a.maxAttempts) : a.maxAttempts;
     final String mistake = tag.isEmpty ? 'default' : tag;
     // The tutor speaks for an unexpected first mistake (the authored line would be the generic one) and for the second
     // mistake, where a different explanation is needed. The authored line stays the fallback for all of it.
@@ -449,9 +472,11 @@ class LessonController extends ChangeNotifier {
       } else {
         _say(authored);
       }
+      // ...and the picture of the first help goes with it: the line is the diagnosis, the picture shows where to look.
+      if (a.hints.isNotEmpty) _applyHint(math.min(twoChoices ? 2 : 1, a.hints.length), speak: false);
     } else {
       // Later mistakes: help that changes how the child sees the problem, not the same words again.
-      final int level = math.min(errors, a.hints.length);
+      final int level = math.min(errors + (twoChoices ? 1 : 0), a.hints.length);
       if (useTutor) {
         _applyHint(level, speak: false);
         _holdForTutor(current.hints[level - 1].say, _ask(a, <String>[mistake], hintLevel));
@@ -459,9 +484,11 @@ class LessonController extends ChangeNotifier {
         _applyHint(level);
       }
     }
-    if (errors >= a.maxAttempts) {
+    if (errors >= attempts) {
       guided = true;
       if (a.hints.isNotEmpty && hintLevel < a.hints.length) _applyHint(a.hints.length);
+      // With no worked example to show (fewer than three hints) the answer may be marked at once.
+      if (a.hints.length < 3) _demoDone = true;
     }
     notifyListeners();
     return Outcome(correct: false, tag: tag);

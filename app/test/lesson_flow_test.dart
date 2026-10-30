@@ -112,9 +112,10 @@ void main() {
       expect(_bubbleText(tester), contains('פַּעֲמַיִם')); // the M-CNT-DOUBLE line
       await wait(tester, 2000);
       expect(find.byKey(const Key('counter')), findsNothing); // counting starts over
+      // The first mistake already showed the picture of hint 1 (B-40), so the lamp gives the next help: hint 2.
       await tester.tap(find.byKey(const Key('lesson-hint')));
       await wait(tester, 100);
-      expect(_bubbleText(tester), content.activities['count.butterflies.3']!.hints[0].say.caption);
+      expect(_bubbleText(tester), content.activities['count.butterflies.3']!.hints[1].say.caption);
       await _count(tester, <int>[0, 1, 2]);
       await _tapKey(tester, 'tile-o2'); // 3
       expect(_bubbleText(tester), contains('שָׁלוֹשׁ'));
@@ -238,16 +239,16 @@ void main() {
       final List<String> rows = (await _attempts(rig)).map(_row).toList();
       expect(rows, <String>[
         'pick.red.flower incorrect hint0 #1  o2',
-        'pick.red.flower correct hint0 #2  o1',
+        'pick.red.flower correct hint1 #2  o1',
         'count.butterflies.3 incorrect hint0 #1 M-CNT-DOUBLE o3',
-        'count.butterflies.3 correct hint1 #2  o2',
+        'count.butterflies.3 correct hint2 #2  o2',
         'count.butterflies.4 correct hint0 #1 M-CNT-DOUBLE o2',
         'count.butterflies.5 incorrect hint0 #1 M-CNT-SKIP o1',
-        'count.butterflies.5 incorrect hint0 #2 M-CNT-DOUBLE o3',
+        'count.butterflies.5 incorrect hint1 #2 M-CNT-DOUBLE o3',
         'count.butterflies.5 incorrect hint2 #3 M-CNT-SKIP o1',
         'count.butterflies.5 correct hint3 #4  o2',
         'give.butterflies.4 incorrect hint0 #1 M-CNT-CARD n=7',
-        'give.butterflies.4 correct hint0 #2  n=4',
+        'give.butterflies.4 correct hint1 #2  n=4',
       ]);
       final Attempt first = (await _attempts(rig)).first;
       expect(first.packId, 'starter');

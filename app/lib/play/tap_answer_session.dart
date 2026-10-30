@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
@@ -10,6 +11,7 @@ import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
 import '../speech/spoken_options.dart';
 import 'count_tap_session.dart' show Dots;
+import 'hint_widgets.dart';
 import 'lesson_controller.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
@@ -80,7 +82,11 @@ class TapAnswerSession extends TemplateSession {
   void onReplay() => _pulseAll();
 
   @override
-  void onHint() => _pulseAll();
+  void onHint() {
+    _pulseAll();
+    // Until the pictures of this template's families exist (B-40 part 2) there is no worked example to show before the halo.
+    if (hintPictureOf(activity) == HintPicture.demonstration) controller.demoDone();
+  }
 
   void _pulseAll() {
     for (int i = 0; i < activity.options.length; i++) {
@@ -113,14 +119,14 @@ class TapAnswerSession extends TemplateSession {
         children: <Widget>[
           for (final ChoiceOption o in activity.options)
             Opacity(
-              opacity: controller.guided && o.id != activity.correctId ? 0.35 : 1,
+              opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
               child: AnswerTile(
                 key: Key('tile-${o.id}'),
                 semanticLabel: o.label ?? '',
                 width: sets ? width : null,
                 state: chosenId == o.id
                     ? chosenState
-                    : ((controller.guided && o.id == activity.correctId) || voiceLit == o.id
+                    : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
                           ? AnswerState.selected
                           : AnswerState.idle),
                 onPressed: () => choose(o.id),
@@ -266,37 +272,44 @@ class _TapStage extends StatelessWidget {
     padding: const EdgeInsets.all(10),
     child: Directionality(
       textDirection: TextDirection.ltr,
-      child: Row(
-        key: const Key('tap-row'),
-        children: <Widget>[
-          for (final String r in a.row)
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(3),
-                child: r == '?'
-                    ? DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: TokenColors.paper.withValues(alpha: 0.7),
-                          borderRadius: BorderRadius.circular(TokenRadius.lg),
-                          border: Border.all(color: TokenColors.hairline, width: 3),
-                        ),
-                        child: Center(
-                          child: Text('?', style: AppText.fixed(size: 36, weight: 800, lineHeight: 1)),
-                        ),
-                      )
-                    : (r.startsWith('asset:')
-                          ? PackSvg(a.assets.svg(r))
-                          : FittedBox(
-                              child: Text(
-                                r.startsWith('op:')
-                                    ? r.substring(3).replaceAll('-', '−').replaceAll('x', '×')
-                                    : r.substring(2),
-                                style: AppText.fixed(size: 40, weight: 800, lineHeight: 1),
-                              ),
-                            )),
+      // The cells come one by one from the left, so the child sees where the row starts; the "?" is last.
+      child: RowEntrance(
+        count: a.row.length,
+        builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
+          key: const Key('tap-row'),
+          children: <Widget>[
+            for (final (int i, String r) in a.row.indexed)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: cell(
+                    i,
+                    r == '?'
+                        ? DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: TokenColors.paper.withValues(alpha: 0.7),
+                              borderRadius: BorderRadius.circular(TokenRadius.lg),
+                              border: Border.all(color: TokenColors.hairline, width: 3),
+                            ),
+                            child: Center(
+                              child: Text('?', style: AppText.fixed(size: 36, weight: 800, lineHeight: 1)),
+                            ),
+                          )
+                        : (r.startsWith('asset:')
+                              ? PackSvg(a.assets.svg(r))
+                              : FittedBox(
+                                  child: Text(
+                                    r.startsWith('op:')
+                                        ? r.substring(3).replaceAll('-', '−').replaceAll('x', '×')
+                                        : r.substring(2),
+                                    style: AppText.fixed(size: 40, weight: 800, lineHeight: 1),
+                                  ),
+                                )),
+                  ),
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     ),
   );
@@ -332,8 +345,8 @@ class _TapStage extends StatelessWidget {
 
   Widget _option(TapAnswerActivity a, ChoiceOption o, int i, double box) {
     final bool chosen = s.chosenId == o.id;
-    final bool guidedRight = s.controller.guided && o.id == a.correctId;
-    final bool dimmed = s.controller.guided && o.id != a.correctId;
+    final bool guidedRight = s.controller.answerShown && o.id == a.correctId;
+    final bool dimmed = s.controller.answerShown && o.id != a.correctId;
     final Color? ring = chosen
         ? (s.chosenState == AnswerState.correct ? TokenColors.correctGlow : TokenColors.notYetRing)
         : (guidedRight || s.voiceLit == o.id ? TokenColors.hintHalo : null);

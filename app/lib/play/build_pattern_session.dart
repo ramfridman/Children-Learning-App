@@ -3,10 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'hint_widgets.dart';
 import 'lesson_controller.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -14,7 +16,8 @@ import 'template_session.dart';
 /// The build-a-pattern template (T05): the pattern to copy is shown above, empty places below, and the pictures to put in
 /// them wait in the palette. A touch on a palette picture fills the next empty place, a drag puts it in a chosen place, and a
 /// touch on a filled place empties it. When every place is filled the answer is checked. A wrong pattern empties the
-/// places ("not yet"); after three tries only the right picture is taken, and the help points at it.
+/// places ("not yet"); after three tries only the right picture is taken: the guide first fills the places as a worked example,
+/// then points at the first place and its picture.
 ///
 /// A pattern is read from the left, whatever the language, so the rows are drawn left to right.
 class BuildPatternSession extends TemplateSession {
@@ -25,9 +28,15 @@ class BuildPatternSession extends TemplateSession {
   /// What stands in each place now (an asset reference), or null.
   final List<String?> filled;
 
-  /// The palette picture and the place that the help points at.
+  /// The palette picture and the place that the help points at. A place alone is "where", a picture is "what": the picture is
+  /// pointed at only at the end of the worked example.
   String? hintSprite;
   int? hintSlot;
+
+  /// The cell of the model that the light is on (hint 1 walks along the model, hint 2 stays on the one above the next place).
+  int? litModel;
+  bool demoRunning = false;
+  int _run = 0;
 
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
@@ -37,24 +46,38 @@ class BuildPatternSession extends TemplateSession {
     return i < 0 ? null : i;
   }
 
+  /// A touch of the child ends the guide's demonstration at once, and the child's move is taken: the halo may show then.
+  void _endDemo() {
+    if (!demoRunning) return;
+    _stopHint();
+    for (int i = 0; i < filled.length; i++) {
+      filled[i] = null;
+    }
+    demoRunning = false;
+    controller.demoDone();
+  }
+
   /// Puts [sprite] in place [at], or in the next empty place.
   Future<void> place(String sprite, {int? at}) async {
+    _endDemo();
     if (_busy || ring == AnswerState.correct) return;
     final int? target = at ?? _firstEmpty;
     if (target == null) return;
     // With only the right picture left, another one is not taken; the help shows the right one.
     if (controller.guided && sprite != activity.sequence[target]) {
-      _point(target);
+      if (controller.answerShown) _point(target);
       return;
     }
     filled[target] = sprite;
     hintSprite = null;
     hintSlot = null;
+    litModel = null;
     notify();
     if (!filled.contains(null)) await _check();
   }
 
   void clear(int i) {
+    _endDemo();
     if (_busy || ring == AnswerState.correct || filled[i] == null) return;
     filled[i] = null;
     notify();
@@ -85,7 +108,7 @@ class BuildPatternSession extends TemplateSession {
           filled[i] = null;
         }
         _busy = false;
-        if (controller.guided) _point(0);
+        if (controller.answerShown) _point(0);
         notify();
       });
     }
@@ -99,27 +122,127 @@ class BuildPatternSession extends TemplateSession {
 
   @override
   void onReset() {
+    _stopHint();
     for (int i = 0; i < filled.length; i++) {
       filled[i] = null;
     }
-    hintSprite = null;
-    hintSlot = null;
     ring = AnswerState.idle;
     _busy = false;
+    demoRunning = false;
     notify();
+  }
+
+  void _stopHint() {
+    _run++;
+    hintSprite = null;
+    hintSlot = null;
+    litModel = null;
   }
 
   @override
   void onReplay() {
-    hintSprite = null;
-    hintSlot = null;
+    _stopHint();
     notify();
   }
 
   @override
   void onHint() {
+    if ((_busy && !controller.guided) || demoRunning) return;
+    switch (hintPictureOf(activity)) {
+      case HintPicture.walkTheRow:
+        _walkRow();
+      case HintPicture.modelCell:
+        _lineUp();
+      default:
+        _workedExample();
+    }
+  }
+
+  /// Hint 1: the light goes along the model and then the places, in a steady rhythm, and ends on the next empty place: where to
+  /// build next, not what goes there.
+  void _walkRow() {
+    _stopHint();
+    final int run = _run;
     final int? next = _firstEmpty;
-    if (next != null && !_busy) _point(next);
+    if (next == null) return;
+    const int step = 450;
+    int k = 0;
+    for (int m = 0; m < activity.model.length; m++) {
+      later(Duration(milliseconds: step * k++), () {
+        if (run != _run) return;
+        litModel = m;
+        notify();
+      });
+    }
+    for (int i = 0; i <= next; i++) {
+      later(Duration(milliseconds: step * k++), () {
+        if (run != _run) return;
+        litModel = null;
+        hintSlot = i;
+        notify();
+      });
+    }
+    notify();
+  }
+
+  /// Hint 2: with a model, the cell of the model above the next place is lit: one to one, copy what is above. Without a model the
+  /// pictures of the palette are lit in turn, none of them chosen.
+  void _lineUp() {
+    _stopHint();
+    final int run = _run;
+    final int? next = _firstEmpty;
+    if (next == null) return;
+    hintSlot = next;
+    if (activity.model.isNotEmpty) {
+      litModel = math.min(next, activity.model.length - 1);
+      notify();
+      return;
+    }
+    for (int i = 0; i < activity.palette.length; i++) {
+      later(Duration(milliseconds: 600 * i), () {
+        if (run != _run) return;
+        hintSprite = activity.palette[i];
+        notify();
+      });
+    }
+    later(Duration(milliseconds: 600 * activity.palette.length), () {
+      if (run != _run) return;
+      hintSprite = null;
+      notify();
+    });
+    notify();
+  }
+
+  /// The worked example: the guide reads the model and puts every picture in its place, one by one, then takes them out again and
+  /// points at the first place and its picture. Then it is the child's turn.
+  void _workedExample() {
+    _stopHint();
+    final int run = _run;
+    demoRunning = true;
+    for (int i = 0; i < filled.length; i++) {
+      filled[i] = null;
+    }
+    const int step = 800;
+    for (int i = 0; i < activity.slots; i++) {
+      later(Duration(milliseconds: 300 + step * i), () {
+        if (run != _run) return;
+        hintSlot = i;
+        litModel = i < activity.model.length ? i : null;
+        filled[i] = activity.sequence[i];
+        notify();
+      });
+    }
+    later(Duration(milliseconds: 300 + step * activity.slots + 1200), () {
+      if (run != _run) return;
+      for (int i = 0; i < filled.length; i++) {
+        filled[i] = null;
+      }
+      litModel = null;
+      demoRunning = false;
+      _point(0);
+      controller.demoDone();
+    });
+    notify();
   }
 
   // ---- drawing ----
@@ -187,25 +310,18 @@ class _PatternStage extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   child: Column(
                     children: <Widget>[
-                      if (a.model.isNotEmpty)
-                        Expanded(
-                          child: Row(
-                            key: const Key('pattern-model'),
+                      if (a.model.isNotEmpty) Expanded(child: _modelRow(a)),
+                      Expanded(
+                        // The places come after the model, so that the child reads the model first.
+                        child: RowEntrance(
+                          count: a.slots,
+                          startAfter: RowEntrance.step * a.model.length,
+                          builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
+                            key: const Key('pattern-slots'),
                             children: <Widget>[
-                              for (final String m in a.model)
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3),
-                                    child: PackSvg(a.assets.svg(m)),
-                                  ),
-                                ),
+                              for (int i = 0; i < a.slots; i++) Expanded(child: cell(i, _slot(i))),
                             ],
                           ),
-                        ),
-                      Expanded(
-                        child: Row(
-                          key: const Key('pattern-slots'),
-                          children: <Widget>[for (int i = 0; i < a.slots; i++) Expanded(child: _slot(i))],
                         ),
                       ),
                     ],
@@ -218,6 +334,33 @@ class _PatternStage extends StatelessWidget {
       ),
     );
   }
+
+  /// The pattern to copy. Its cells come one by one from the left; the light of the hints rests on one of them at a time.
+  Widget _modelRow(BuildPatternActivity a) => RowEntrance(
+    count: a.model.length,
+    builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
+      key: const Key('pattern-model'),
+      children: <Widget>[
+        for (final (int i, String m) in a.model.indexed)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(3),
+              child: cell(
+                i,
+                DecoratedBox(
+                  key: s.litModel == i ? const Key('model-lit') : null,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(TokenRadius.lg),
+                    border: s.litModel == i ? Border.all(color: TokenColors.hintHalo, width: 5) : null,
+                  ),
+                  child: Padding(padding: const EdgeInsets.all(2), child: PackSvg(a.assets.svg(m))),
+                ),
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
 
   Widget _slot(int i) {
     final BuildPatternActivity a = s.activity;

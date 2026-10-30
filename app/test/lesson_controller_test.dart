@@ -168,7 +168,11 @@ void main() {
         final LessonController c = make(start: 1);
         await c.chooseOption('o3');
         expect(c.errors, 1);
-        expect(c.hintLevel, 0);
+        // The first mistake: the diagnostic line, and the picture of hint 1 with it (B-40, A6). The hint's own line is not said.
+        expect(c.hintLevel, 1);
+        expect(c.hintShown, 1);
+        expect(c.hintAction, HintAction.replayPromptSlow);
+        expect(c.bubble, isNot(c.current.hints[0].say.caption));
         expect(c.guided, isFalse);
 
         await c.chooseOption('o1');
@@ -184,6 +188,10 @@ void main() {
         expect(c.hintAction, HintAction.workedExample);
         expect(c.bubble, c.current.hints[2].say.caption);
         expect(c.guided, isTrue);
+        // The halo on the right answer waits for the end of the worked example.
+        expect(c.answerShown, isFalse);
+        c.demoDone();
+        expect(c.answerShown, isTrue);
 
         final Outcome last = await c.chooseOption('o2');
         expect(last.correct, isTrue);
@@ -194,7 +202,7 @@ void main() {
           'correct',
         ]);
         expect(written.map((AttemptRecord r) => r.attemptNo), <int>[1, 2, 3, 4]);
-        expect(written.map((AttemptRecord r) => r.hintLevel), <int>[0, 0, 2, 3]);
+        expect(written.map((AttemptRecord r) => r.hintLevel), <int>[0, 1, 2, 3]);
       },
     );
 
@@ -207,6 +215,81 @@ void main() {
       expect(c.hintLevel, 1);
       expect(c.bubble, c.current.hints.single.say.caption);
     });
+
+    test(
+      'a two-choice item with three hints: the first mistake shows hint 2, the second the worked example',
+      () async {
+        final TapAnswerActivity two = content.activities.values.whereType<TapAnswerActivity>().firstWhere(
+          (TapAnswerActivity a) => a.options.length == 2 && a.hints.length == 3,
+        );
+        final Lesson lesson = Lesson.mission(
+          id: 'one-two',
+          itemIds: <String>[two.id],
+          skillIds: <String>[two.skillId],
+          celebration: content.lessons['butterflies']!.celebration,
+        );
+        written = <AttemptRecord>[];
+        final LessonController c = LessonController(
+          content: content,
+          lesson: lesson,
+          profileId: 'p-1',
+          clock: FixedClock(1793000000000),
+          record: (AttemptRecord r) async => written.add(r),
+        );
+        final String wrong = two.options.firstWhere((ChoiceOption o) => o.id != two.correctId).id;
+        await c.chooseOption(wrong);
+        expect(c.hintShown, 2, reason: 'one retry: the other way of seeing it comes at once');
+        expect(c.guided, isFalse);
+        await c.chooseOption(wrong);
+        expect(c.hintShown, 3);
+        expect(c.guided, isTrue, reason: 'then the worked example');
+        expect(c.answerShown, isFalse);
+      },
+    );
+
+    test('a three-choice item keeps the ladder: hint 1, hint 2, then the worked example', () async {
+      final TapAnswerActivity three = content.activities.values.whereType<TapAnswerActivity>().firstWhere(
+        (TapAnswerActivity a) => a.options.length == 3 && a.hints.length == 3,
+      );
+      final Lesson lesson = Lesson.mission(
+        id: 'one-three',
+        itemIds: <String>[three.id],
+        skillIds: <String>[three.skillId],
+        celebration: content.lessons['butterflies']!.celebration,
+      );
+      final LessonController c = LessonController(
+        content: content,
+        lesson: lesson,
+        profileId: 'p-1',
+        clock: FixedClock(1793000000000),
+        record: (AttemptRecord r) async {},
+      );
+      final List<String> wrongs = <String>[
+        for (final ChoiceOption o in three.options)
+          if (o.id != three.correctId) o.id,
+      ];
+      final List<int> shown = <int>[];
+      for (final String w in wrongs) {
+        await c.chooseOption(w);
+        shown.add(c.hintShown);
+      }
+      expect(shown, <int>[1, 2]);
+      expect(c.guided, isFalse);
+      await c.chooseOption(wrongs.first);
+      expect(c.hintShown, 3);
+      expect(c.guided, isTrue);
+    });
+
+    test(
+      'with fewer than three hints there is no worked example to wait for: the halo may show at once',
+      () async {
+        final LessonController c = make(); // the warm-up has one hint
+        await c.chooseOption('o2');
+        await c.chooseOption('o2');
+        expect(c.guided, isTrue);
+        expect(c.answerShown, isTrue);
+      },
+    );
 
     test('the lamp gives the next hint each time and stops at the last', () {
       final LessonController c = make(start: 1);

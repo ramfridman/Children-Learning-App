@@ -312,6 +312,27 @@ final List<Broken> _cases = <Broken>[
     'different way than level 1',
   ),
   Broken(
+    'activity: the third hint helps in the same way as the second (B-40)',
+    (SamplePack p) => _m(_l(p.doc(_c)['hints'])[2])['action'] = _m(_l(p.doc(_c)['hints'])[1])['action'],
+    '$_c › hints[2].action',
+    'different way than level 2',
+  ),
+  Broken(
+    'activity: the worked example at level 1 would show the answer first (B-40)',
+    (SamplePack p) => _m(_l(p.doc(_c)['hints'])[0])['action'] = 'worked_example',
+    '$_c › hints[0].action',
+    'belongs at level 3 only',
+  ),
+  Broken(
+    'activity: the worked example at level 2 would show the answer first (B-40)',
+    (SamplePack p) {
+      _m(_l(p.doc(_c)['hints'])[1])['action'] = 'worked_example';
+      _m(_l(p.doc(_c)['hints'])[2])['action'] = 'show_fingers';
+    },
+    '$_c › hints[1].action',
+    'belongs at level 3 only',
+  ),
+  Broken(
     'activity: a question that is too long to hold in mind',
     (SamplePack p) =>
         _m(_l(_m(p.doc(_c)['prompt'])['caption'])[0])['v'] = List<String>.filled(15, 'בָּאוּ').join(' '),

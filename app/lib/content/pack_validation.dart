@@ -4,6 +4,7 @@ import '../speech/answer_matcher.dart';
 import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
 import '../speech/spoken_options.dart';
+import 'hint_ladder.dart';
 import 'schema.dart';
 import 'schemas.dart';
 
@@ -250,6 +251,21 @@ List<Problem> validatePack({
         'level 2 must help in a different way than level 1 (change the representation)',
       );
     }
+    // The ladder (B-40): the first two hints must not be the worked example, level 3 must differ from level 2, and what the
+    // template draws at each level must not mark the answer before level 3.
+    for (final (int i, Map<String, Object?> h) in hints.indexed) {
+      if (i < 2 && h['action'] == 'worked_example') {
+        say(file, 'hints[$i].action', 'the worked example shows the answer, so it belongs at level 3 only');
+      }
+    }
+    if (hints.length >= 3 && hints[2]['action'] == hints[1]['action']) {
+      say(file, 'hints[2].action', 'level 3 must help in a different way than level 2');
+    }
+    final String? ladder = HintLadder.problemWith(
+      a['template']! as String,
+      share: a['template'] == 'sort_drag' && (a['answer'] as Map<String, Object?>?)?['mode'] == 'share',
+    );
+    if (ladder != null) say(file, 'hints', ladder);
     _lengths(file, a, say);
     final List<Object?> credit =
         (a['scoring']! as Map<String, Object?>)['creditByHintLevel']! as List<Object?>;

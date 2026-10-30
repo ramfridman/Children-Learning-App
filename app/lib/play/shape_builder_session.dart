@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
+import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
@@ -12,7 +13,8 @@ import 'template_session.dart';
 /// The shape-builder template (T10). A picture made of shapes stands on the stage as silhouettes; the shapes wait in the tray
 /// below. A shape is touched and then its place is touched, or it is dragged there. A shape that belongs there snaps in, turned
 /// the way the picture needs it (the child never has to turn anything); one that does not is a gentle "not yet" and goes back.
-/// After three wrong tries only the right place takes the shape, and the help points at it.
+/// After three wrong tries only the right place takes the shape: the guide first puts one piece in its place as a worked example,
+/// and the place and the piece stay lit.
 class ShapeBuilderSession extends TemplateSession {
   ShapeBuilderSession(super.controller, this.activity);
 
@@ -28,6 +30,8 @@ class ShapeBuilderSession extends TemplateSession {
   String? hintSlot;
   int? hintPiece;
   String? notYetSlot;
+  bool demoRunning = false;
+  int _run = 0;
 
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
@@ -39,7 +43,23 @@ class ShapeBuilderSession extends TemplateSession {
 
   bool isUsed(int i) => usedPieces.contains(i);
 
+  /// The place and piece the guide has put together for a moment; a touch of the child ends the demonstration at once.
+  String? _demoSlot;
+  int? _demoPiece;
+
+  void _endDemo() {
+    if (!demoRunning) return;
+    _run++;
+    if (_demoSlot != null) filled.remove(_demoSlot);
+    if (_demoPiece != null) usedPieces.remove(_demoPiece);
+    _demoSlot = null;
+    _demoPiece = null;
+    demoRunning = false;
+    controller.demoDone();
+  }
+
   void select(int piece) {
+    _endDemo();
     if (_busy || ring == AnswerState.correct || isUsed(piece)) return;
     selected = selected == piece ? null : piece;
     notify();
@@ -51,6 +71,7 @@ class ShapeBuilderSession extends TemplateSession {
   }
 
   Future<void> drop(int piece, String slotId) async {
+    _endDemo();
     if (_busy || ring == AnswerState.correct || isUsed(piece) || filled.contains(slotId)) return;
     final ShapeSlot slot = activity.slots.firstWhere((ShapeSlot s) => s.id == slotId);
     if (pieces[piece] == slot.sprite) {
@@ -64,7 +85,7 @@ class ShapeBuilderSession extends TemplateSession {
       return;
     }
     if (controller.guided) {
-      _point(piece);
+      if (controller.answerShown) _point(piece);
       return;
     }
     _busy = true;
@@ -80,7 +101,7 @@ class ShapeBuilderSession extends TemplateSession {
       notYetSlot = null;
       selected = null;
       _busy = false;
-      if (controller.guided) _point(piece);
+      if (controller.answerShown) _point(piece);
       notify();
     });
   }
@@ -107,6 +128,9 @@ class ShapeBuilderSession extends TemplateSession {
 
   @override
   void onReset() {
+    _run++;
+    _demoSlot = null;
+    _demoPiece = null;
     filled.clear();
     usedPieces.clear();
     selected = null;
@@ -115,20 +139,92 @@ class ShapeBuilderSession extends TemplateSession {
     notYetSlot = null;
     ring = AnswerState.idle;
     _busy = false;
+    demoRunning = false;
     notify();
   }
 
   @override
   void onReplay() {
+    _run++;
     hintSlot = null;
     hintPiece = null;
     notify();
   }
 
+  ShapeSlot? get _nextOpen => activity.slots.where((ShapeSlot s) => !filled.contains(s.id)).firstOrNull;
+
   @override
   void onHint() {
-    if (_busy && !controller.guided) return;
-    _point(selected ?? 0);
+    if ((_busy && !controller.guided) || demoRunning) return;
+    switch (hintPictureOf(activity)) {
+      case HintPicture.eachFace:
+        _lightEach();
+      case HintPicture.nextOutline:
+        _run++;
+        hintPiece = null;
+        hintSlot = _nextOpen?.id;
+        notify();
+      default:
+        _putOne();
+    }
+  }
+
+  /// Hint 1: the empty outlines are lit one after the other. No piece is chosen and none stays lit.
+  void _lightEach() {
+    _run++;
+    final int run = _run;
+    hintPiece = null;
+    final List<ShapeSlot> open = <ShapeSlot>[
+      for (final ShapeSlot s in activity.slots)
+        if (!filled.contains(s.id)) s,
+    ];
+    for (int i = 0; i < open.length; i++) {
+      later(Duration(milliseconds: 700 * i), () {
+        if (run != _run) return;
+        hintSlot = open[i].id;
+        notify();
+      });
+    }
+    later(Duration(milliseconds: 700 * open.length), () {
+      if (run != _run) return;
+      hintSlot = null;
+      notify();
+    });
+    notify();
+  }
+
+  /// The worked example: the guide lights the next place and the piece that fits it, puts the piece in, takes it out again and
+  /// leaves both lit. Then it is the child's turn.
+  void _putOne() {
+    final ShapeSlot? open = _nextOpen;
+    if (open == null) return;
+    _run++;
+    final int run = _run;
+    demoRunning = true;
+    selected = null;
+    hintSlot = open.id;
+    final int fit = <int>[for (int i = 0; i < pieces.length; i++) i]
+        .firstWhere((int i) => !isUsed(i) && pieces[i] == open.sprite, orElse: () => 0);
+    hintPiece = fit;
+    later(const Duration(milliseconds: 1200), () {
+      if (run != _run) return;
+      filled.add(open.id);
+      usedPieces.add(fit);
+      _demoSlot = open.id;
+      _demoPiece = fit;
+      notify();
+    });
+    later(const Duration(milliseconds: 2600), () {
+      if (run != _run) return;
+      filled.remove(open.id);
+      usedPieces.remove(fit);
+      _demoSlot = null;
+      _demoPiece = null;
+      demoRunning = false;
+      notify();
+      controller.demoDone();
+    });
+    notify();
   }
 
   // ---- drawing ----
