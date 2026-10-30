@@ -2,6 +2,7 @@
 // pack can only promise a spoken answer that the lesson can hear.
 import 'answer_matcher.dart';
 import 'hebrew_text.dart';
+import 'lexicon.dart';
 
 /// One option of a choice as voice sees it: a number, or a label with the author's own words for it.
 class SpokenOption {
@@ -21,10 +22,15 @@ class SpokenOption {
 
 /// What each option answers to. A number by its number words; any other option by the author's `speech` words and the
 /// words of its label that no other option has ("פרח אדום" and "פרח צהוב" are told apart by the colour, and in "שבת",
-/// "יום ראשון", "יום שישי" the word "יום" tells nothing).
+/// "יום ראשון", "יום שישי" the word "יום" tells nothing). A label word also answers to the everyday word a child knows for
+/// it ([labelSynonyms]: "קופסה" for "תֵּבָה").
 List<Expected> expectedFor(List<SpokenOption> options, {required String correctId}) {
   final List<Set<String>> words = <Set<String>>[
-    for (final SpokenOption o in options) <String>{...o.speech, ...tokensOf(normalizeHebrew(o.label))},
+    for (final SpokenOption o in options)
+      <String>{
+        ...o.speech,
+        for (final String w in tokensOf(normalizeHebrew(o.label))) ...<String>[w, ...labelSynonyms(w)],
+      },
   ];
   final Map<String, int> owners = <String, int>{};
   for (final Set<String> w in words) {

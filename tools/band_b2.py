@@ -1,6 +1,6 @@
 """The second half of the Band B specs (colours, shapes, logic, computer science). See band_b.py."""
 from band_b import COLOURS, NAMES, Unit, clean, numpick, rot, tri  # noqa: E402
-from author import F, count_words, place  # noqa: E402
+from author import F, count_words, place, vav  # noqa: E402
 
 SHAPE_ONE = {'circle': 'עִגּוּל', 'square': 'רִבּוּעַ', 'triangle': 'מְשֻׁלָּשׁ'}
 SIDES_DEF = {'triangle': 'הַמְּשֻׁלָּשׁ', 'quad': 'הַמְּרֻבָּע', 'pentagon': 'הַמְּחֻמָּשׁ', 'hexagon': 'הַמְּשֻׁשֶּׁה'}
@@ -34,29 +34,29 @@ def colours():
     for i, (x, y, r, w1, w2) in enumerate(mixes + mixes):
         if i >= 3:
             x, y = y, x
-        u.act('COL-B-01', 'pick', prompt='אִם מְעָרְבְּבִים %s וְ%s, אֵיזֶה צֶבַע יוֹצֵא?' % (C[x], C[y]),
+        u.act('COL-B-01', 'pick', prompt='אִם מְעָרְבְּבִים %s %s, אֵיזֶה צֶבַע יוֹצֵא?' % (C[x], vav(C[y])),
               group={'sprite': 'ball_' + x, 'count': 1}, group2={'sprite': 'ball_' + y, 'count': 1},
               options=place('ball_' + r, ['ball_' + w1, 'ball_' + w2], i % 3), correct='ball_' + r,
               tags={'ball_' + w1: 'M-COL-MIX', 'ball_' + w2: 'M-COL-MIX'}, rep='concrete', domain='colors',
-              correct_text='כֵּן! %s וְ%s נַעֲשִׂים %s.' % (C[x], C[y], C[r]),
-              h3='%s וְ%s נַעֲשִׂים %s. עַכְשָׁו תּוֹרְכֶם.' % (C[x], C[y], C[r]))
+              correct_text='כֵּן! %s %s נַעֲשִׂים %s.' % (C[x], vav(C[y]), C[r]),
+              h3='%s %s נַעֲשִׂים %s. עַכְשָׁו תּוֹרְכֶם.' % (C[x], vav(C[y]), C[r]))
     for i, (x, y, r, w1, w2) in enumerate(mixes):
         wrong = [w for w in (w1, w2) if w != y][:2]
         u.act('COL-B-01', 'pick', prompt='%s וְ… נַעֲשִׂים %s. מָה חָסֵר?' % (C[x], C[r]), group={'sprite': 'ball_' + x, 'count': 1},
               options=place('ball_' + y, ['ball_' + w for w in wrong], (i + 1) % 3), correct='ball_' + y,
               tags={'ball_' + w: 'M-COL-MIX' for w in wrong}, rep='concrete', domain='colors',
-              correct_text='כֵּן! %s וְ%s נַעֲשִׂים %s.' % (C[x], C[y], C[r]), h3='%s וְ%s נַעֲשִׂים %s. עַכְשָׁו תּוֹרְכֶם.' % (C[x], C[y], C[r]))
+              correct_text='כֵּן! %s %s נַעֲשִׂים %s.' % (C[x], vav(C[y]), C[r]), h3='%s %s נַעֲשִׂים %s. עַכְשָׁו תּוֹרְכֶם.' % (C[x], vav(C[y]), C[r]))
 
-    u.skill('COL-B-02', 'בהיר וכהה', 'סוֹדְרִים מִבָּהִיר לְכֵהֶה', 'pool', ['COL-A-03'], ['pictorial'], ['M-COL-SHADE'])
+    u.skill('COL-B-02', 'בהיר וכהה', 'מְסַדְּרִים מִבָּהִיר לְכֵהֶה', 'pool', ['COL-A-03'], ['pictorial'], ['M-COL-SHADE'])
     for i, c in enumerate(['blue', 'green', 'red', 'purple']):
         sh = ['shade_%s_%d' % (c, k) for k in (1, 2, 3)]
-        u.act('COL-B-02', 'pick', prompt='אֵיזֶה הַכִּי כֵּהֶה?', options=rot(sh, i), correct=sh[2], rep='pictorial', domain='colors',
-              correct_text='כֵּן! זֶה הַכִּי כֵּהֶה.', h3='הַכֵּהֶה הוּא הַכִּי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.')
-        u.act('COL-B-02', 'pick', prompt='אֵיזֶה הַכִּי בָּהִיר?', options=rot(sh, i + 1), correct=sh[0], rep='pictorial', domain='colors',
-              correct_text='כֵּן! זֶה הַכִּי בָּהִיר.', h3='הַבָּהִיר הוּא הַכִּי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.')
+        u.act('COL-B-02', 'pick', prompt='אֵיזֶה הֲכִי כֵּהֶה?', options=rot(sh, i), correct=sh[2], rep='pictorial', domain='colors',
+              correct_text='כֵּן! זֶה הֲכִי כֵּהֶה.', h3='הַכֵּהֶה הוּא הֲכִי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.')
+        u.act('COL-B-02', 'pick', prompt='אֵיזֶה הֲכִי בָּהִיר?', options=rot(sh, i + 1), correct=sh[0], rep='pictorial', domain='colors',
+              correct_text='כֵּן! זֶה הֲכִי בָּהִיר.', h3='הַבָּהִיר הוּא הֲכִי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.')
     for i, c in enumerate(['blue', 'green', 'red']):
         sh = ['shade_%s_%d' % (c, k) for k in (1, 2, 3)]
-        u.act('COL-B-02', 'pick', prompt='מָה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?', row=[sh[0], '?', sh[2]],
+        u.act('COL-B-02', 'pick', prompt='מַה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?', row=[sh[0], '?', sh[2]],
               options=place(sh[1], [sh[0], sh[2]], i % 3), correct=sh[1], rep='pictorial', domain='colors',
               correct_text='כֵּן! זֶה בָּאֶמְצַע.', h3='מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.')
 
@@ -70,18 +70,18 @@ def colours():
               correct='shade_%s_%d' % (c, right_level), tags={lookalike: 'M-COL-SHADE'}, rep='pictorial', domain='colors',
               correct_text='כֵּן! גַּם זֶה %s.' % C[c], h3='בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא %s. עַכְשָׁו תּוֹרְכֶם.' % C[c])
 
-    u.skill('COL-B-04', 'ממיינים בשתי דרכים', 'מְמַיְּנִים לְפִי צֶבַע וְלְפִי צוּרָה', 'sprout', ['COL-A-04', 'SHP-A-03'], ['concrete'],
+    u.skill('COL-B-04', 'ממיינים בשתי דרכים', 'מְמַיְּנִים לְפִי צֶבַע וּלְפִי צוּרָה', 'sprout', ['COL-A-04', 'SHP-A-03'], ['concrete'],
             ['M-SORT-SHIFT'])
     sets = [(('shape_circle_red', 'shape_square_red', 'shape_circle_blue', 'shape_square_blue'), ('red', 'blue'), ('circle', 'square')),
             (('shape_circle_green', 'shape_triangle_green', 'shape_circle_red', 'shape_triangle_red'), ('green', 'red'), ('circle', 'triangle'))]
     plural = {'circle': 'עִגּוּלִים', 'square': 'רִבּוּעִים', 'triangle': 'מְשֻׁלָּשִׁים'}
     for (a1, a2, b1, b2), (c1, c2), (s1, s2) in sets:
         u.act('COL-B-04', 'sort', bins=[{'sprite': 'ball_' + c1, 'label': C[c1]}, {'sprite': 'ball_' + c2, 'label': C[c2]}],
-              items=[(a1, 1), (b1, 2), (a2, 1), (b2, 2)], prompt='מְמַיְּנִים לְפִי צֶבַע: %s לְכָאן, וְ%s לְכָאן.' % (C[c1], C[c2]),
-              domain='colors', h3='כָּל הַצּוּרוֹת בְּאוֹתוֹ צֶבַע הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! מִיַּנְתֶּם לְפִי צֶבַע.')
+              items=[(a1, 1), (b1, 2), (a2, 1), (b2, 2)], prompt='מְמַיְּנִים לְפִי צֶבַע: %s לְכָאן, %s לְכָאן.' % (C[c1], vav(C[c2])),
+              domain='colors', h3='כׇּל הַצּוּרוֹת בְּאוֹתוֹ צֶבַע הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! מִיַּנְתֶּם לְפִי צֶבַע.')
         u.act('COL-B-04', 'sort', bins=[{'sprite': 'shape_%s_red' % s1, 'label': plural[s1]}, {'sprite': 'shape_%s_red' % s2, 'label': plural[s2]}],
-              items=[(a1, 1), (b1, 1), (a2, 2), (b2, 2)], prompt='עַכְשָׁו מְמַיְּנִים לְפִי צוּרָה: %s לְכָאן, וְ%s לְכָאן.' % (plural[s1], plural[s2]),
-              domain='colors', h3='כָּל הַצּוּרוֹת הַדּוֹמוֹת הוֹלְכוֹת יַחַד, גַּם אִם הַצֶּבַע שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.',
+              items=[(a1, 1), (b1, 1), (a2, 2), (b2, 2)], prompt='עַכְשָׁו מְמַיְּנִים לְפִי צוּרָה: %s לְכָאן, %s לְכָאן.' % (plural[s1], vav(plural[s2])),
+              domain='colors', h3='כׇּל הַצּוּרוֹת הַדּוֹמוֹת הוֹלְכוֹת יַחַד, גַּם אִם הַצֶּבַע שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! מִיַּנְתֶּם לְפִי צוּרָה.')
 
     u.skill('COL-B-06', 'קשת בענן', 'מְסַדְּרִים אֶת הַקֶּשֶׁת', 'pattern-door', ['COL-B-01'], ['concrete'], ['M-PAT-COPY'])
@@ -98,7 +98,7 @@ def colours():
           h3='הַקֶּשֶׁת: %s. עַכְשָׁו תּוֹרְכֶם.' % words)
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
-    u.lesson('mix-colours', 'מְעָרְבְּבִים צְבָעִים', ['COL-B-01'], ids('COL-B-01', 0, 3), 'כׇּל הַכָּבוֹד! עֵרַבְתֶּם צְבָעִים.')
+    u.lesson('mix-colours', 'מְעָרְבְּבִים צְבָעִים', ['COL-B-01'], ids('COL-B-01', 0, 3), 'כׇּל הַכָּבוֹד! עִרְבַּבְתֶּם צְבָעִים.')
     u.lesson('mix-colours-more', 'מַה חָסֵר בַּתַּעֲרוֹבֶת', ['COL-B-01'], ids('COL-B-01', 3), 'יָפֶה! מְצָאתֶם אֶת הַצֶּבַע הֶחָסֵר.')
     u.lesson('light-and-dark', 'בָּהִיר וְכֵהֶה', ['COL-B-02'], ids('COL-B-02', 0, 6), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים בָּהִיר וְכֵהֶה.')
     u.lesson('middle-shade', 'הַגָּוֶן שֶׁבָּאֶמְצַע', ['COL-B-02'], ids('COL-B-02', 6), 'מְצֻיָּן! מְצָאתֶם אֶת הָאֶמְצַע.')
@@ -120,7 +120,7 @@ def shapes():
                          'tick', 'cross'])
     u.tag('M-SHP-CLOSED', ['SHP-B-01', 'SHP-B-04'], 'הילד מכנה צורה פתוחה או עם צלע עקומה "משולש" או "מרובע", כי היא נראית דומה.',
           'לצייר בעיפרון משולש, ואז לצייר אחד שלא סגור בפינה, ולשאול: האם נמלה יכולה ללכת מסביב בלי לצאת?',
-          ['pictorial', 'concrete'], 'צוּרָה סְגוּרָה אֵין בָּהּ פֶּתַח, וְהַצְּלָעוֹת שֶׁלָּהּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.')
+          ['pictorial', 'concrete'], 'לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.')
 
     u.skill('SHP-B-01', 'מכירים מצולעים', 'מַכִּירִים מְשֻׁלָּשׁ, מְרֻבָּע, מְחֻמָּשׁ וּמְשֻׁשֶּׁה', 'cone-tree', ['SHP-A-03', 'NUM-A-09'],
             ['pictorial'], ['M-SHP-CLOSED'])
@@ -131,7 +131,7 @@ def shapes():
         n = SIDES_N[sh]
         u.act('SHP-B-01', 'pick', prompt='אֵיפֹה %s?' % SIDES_DEF[sh], options=place('shape_' + sh, wrong, i % 3), correct='shape_' + sh,
               tags={wrong[1]: 'M-SHP-CLOSED'}, rep='pictorial', domain='shapes',
-              correct_text='כֵּן! %s יֵשׁ לוֹ %s צְלָעוֹת.' % (SIDES_DEF[sh], F[n]),
+              correct_text='כֵּן! %s יֵשׁ %s צְלָעוֹת.' % ('לַ' + SIDES_DEF[sh][2:], F[n]),
               h3='%s הוּא צוּרָה סְגוּרָה עִם %s צְלָעוֹת יְשָׁרוֹת. עַכְשָׁו תּוֹרְכֶם.' % (SIDES_DEF[sh], F[n]))
 
     u.skill('SHP-B-02', 'סופרים צלעות', 'סוֹפְרִים צְלָעוֹת', 'cone-tree', ['SHP-B-01'], ['pictorial'], ['M-CNT-DOUBLE', 'M-CNT-SKIP'])
@@ -143,10 +143,10 @@ def shapes():
 
     u.skill('SHP-B-03', 'ריבוע ומלבן', 'רִבּוּעַ וּמַלְבֵּן', 'cone-tree', ['SHP-A-04', 'SHP-B-02'], ['pictorial'], ['M-SHP-SQRECT'])
     for i in range(3):
-        u.act('SHP-B-03', 'pick', prompt='לְאֵיזוֹ צוּרָה כָּל הַצְּלָעוֹת שָׁווֹת?', options=place('shape_square', ['shape_rect', 'shape_triangle'], i),
+        u.act('SHP-B-03', 'pick', prompt='לְאֵיזוֹ צוּרָה כׇּל הַצְּלָעוֹת שָׁווֹת?', options=place('shape_square', ['shape_rect', 'shape_triangle'], i),
               correct='shape_square', tags={'shape_rect': 'M-SHP-SQRECT'}, rep='pictorial', domain='shapes', voice=True,
-              correct_text='כֵּן! בְּרִבּוּעַ כָּל הַצְּלָעוֹת שָׁווֹת.', h3='בְּרִבּוּעַ כָּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם.')
-        u.act('SHP-B-03', 'pick', prompt='אֵיפֹה הַמַּלְבֵּן? לֹא כָּל הַצְּלָעוֹת שָׁווֹת.',
+              correct_text='כֵּן! בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת.', h3='בְּרִבּוּעַ כׇּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם.')
+        u.act('SHP-B-03', 'pick', prompt='אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת.',
               options=place('shape_rect', ['shape_square', 'shape_circle'], i), correct='shape_rect', tags={'shape_square': 'M-SHP-SQRECT'},
               rep='pictorial', domain='shapes', correct_text='כֵּן! בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּצְלָעוֹת קְצָרוֹת.',
               h3='בְּמַלְבֵּן שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם.')
@@ -154,32 +154,35 @@ def shapes():
     u.skill('SHP-B-04', 'צורה סגורה', 'צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת', 'cone-tree', ['SHP-B-01', 'SHP-A-10'], ['pictorial'], ['M-SHP-CLOSED'])
     for i, (sp, closed) in enumerate([('shape_triangle', True), ('shape_open', False), ('shape_pentagon', True), ('shape_curved', False),
                                       ('shape_hexagon', True), ('shape_quad', True), ('shape_open', False), ('shape_curved', False)]):
-        u.act('SHP-B-04', 'pick', prompt='הַאִם זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?', group={'sprite': sp, 'count': 1},
+        u.act('SHP-B-04', 'pick', prompt='זוֹ צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת?', group={'sprite': sp, 'count': 1},
               options=['cross', 'tick'] if i % 2 else ['tick', 'cross'], correct='tick' if closed else 'cross',
               tags={} if closed else {'tick': 'M-SHP-CLOSED'}, rep='pictorial', domain='shapes',
               correct_text='כֵּן, הִיא סְגוּרָה וְיֵשׁ לָהּ צְלָעוֹת יְשָׁרוֹת.' if closed else 'לֹא, הִיא לֹא סְגוּרָה אוֹ שֶׁיֵּשׁ לָהּ צֶלַע עֲקֻמָּה.',
-              h3='נִסְתַּכֵּל עַל הַקַּוִּים: הַאִם אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.')
+              h3='נִסְתַּכֵּל עַל הַקַּוִּים: אֶפְשָׁר לָלֶכֶת מִסָּבִיב וְלַחֲזֹר לַהַתְחָלָה? עַכְשָׁו תּוֹרְכֶם.')
 
     u.skill('SHP-B-08', 'גופים', 'גָּלִיל, חָרוּט, כַּדּוּר וּפִירָמִידָה', 'cone-tree', ['SHP-A-07'], ['pictorial', 'concrete'], [])
     solids = [('solid_cylinder', 'הַגָּלִיל'), ('solid_cone', 'הֶחָרוּט'), ('solid_sphere', 'הַכַּדּוּר'), ('solid_pyramid', 'הַפִּירָמִידָה'),
               ('solid_box', 'הַתֵּבָה')]
+    bridge = {'solid_box': ('כֵּן! זוֹ הַתֵּבָה — כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם.', 'הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם.')}
     for i in range(8):
         sp, nm = solids[i % 5]
         others = [x for x, _ in solids if x != sp]
         pair = [others[(i * 2) % 4], others[(i * 2 + 1) % 4]]
         u.act('SHP-B-08', 'pick', prompt='אֵיפֹה %s?' % nm, options=place(sp, pair, i % 3), correct=sp, rep='pictorial', domain='shapes',
-              correct_text='כֵּן! זֶה %s.' % nm, h3='%s — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם.' % nm)
+              correct_text=bridge[sp][0] if sp in bridge else 'כֵּן! %s %s.' % ('זוֹ' if NAMES[sp]['g'] == 'f' else 'זֶה', nm),
+              h3=bridge[sp][1] if sp in bridge else '%s — נִסְתַּכֵּל עַל הַצּוּרָה %s. עַכְשָׁו תּוֹרְכֶם.' % (
+                  nm, 'שֶׁלָּהּ' if NAMES[sp]['g'] == 'f' else 'שֶׁלּוֹ'))
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('polygon-detectives', 'בַּלָּשֵׁי צוּרוֹת', ['SHP-B-01'], ids('SHP-B-01', 0, 4), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרוֹת חֲדָשׁוֹת.')
     u.lesson('polygon-detectives-more', 'עוֹד צוּרוֹת', ['SHP-B-01'], ids('SHP-B-01', 4), 'מְצֻיָּן! עוֹד צוּרוֹת בָּרְשִׁימָה.')
     u.lesson('count-sides', 'סוֹפְרִים צְלָעוֹת', ['SHP-B-02'], ids('SHP-B-02', 0, 4), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם צְלָעוֹת.')
-    u.lesson('count-sides-more', 'עוֹד צְלָעוֹת', ['SHP-B-02'], ids('SHP-B-02', 4), 'יָפֶה! כָּל צֶלַע פַּעַם אַחַת.')
+    u.lesson('count-sides-more', 'עוֹד צְלָעוֹת', ['SHP-B-02'], ids('SHP-B-02', 4), 'יָפֶה! כׇּל צֶלַע פַּעַם אַחַת.')
     u.lesson('square-or-rectangle', 'רִבּוּעַ אוֹ מַלְבֵּן', ['SHP-B-03'], ids('SHP-B-03'), 'כׇּל הַכָּבוֹד! אַתֶּם מַבְחִינִים בֵּין רִבּוּעַ לְמַלְבֵּן.')
     u.lesson('closed-shapes', 'צוּרָה סְגוּרָה', ['SHP-B-04'], ids('SHP-B-04', 0, 4), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרָה סְגוּרָה.')
-    u.lesson('closed-shapes-more', 'עוֹד צוּרוֹת סְגוּרוֹת', ['SHP-B-04'], ids('SHP-B-04', 4), 'מְצֻיָּן! הִבְחַנְתֶּם בִּצְלָעוֹת יְשָׁרוֹת.')
+    u.lesson('closed-shapes-more', 'עוֹד צוּרוֹת סְגוּרוֹת', ['SHP-B-04'], ids('SHP-B-04', 4), 'מְצֻיָּן! שַׂמְתֶּם לֵב לִצְלָעוֹת הַיְשָׁרוֹת.')
     u.lesson('solids', 'גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 0, 5), 'כׇּל הַכָּבוֹד! הִכַּרְתֶּם גּוּפִים.')
-    u.lesson('solids-more', 'עוֹד גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 5), 'יָפֶה מְאוֹד! גּוּפִים בְּכָל מָקוֹם.')
+    u.lesson('solids-more', 'עוֹד גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 5), 'יָפֶה מְאֹד! גּוּפִים בְּכׇל מָקוֹם.')
     u.save()
 
 
@@ -199,13 +202,13 @@ def logic():
           ['embodied', 'pictorial'], 'יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ.')
     u.tag('M-PAT-GROW', ['LOG-B-04'], 'בסדר שגדל, הילד חוזר על האחרון במקום להוסיף עוד אחד.',
           'לבנות מגדל מקוביות: קובייה אחת, שתיים, שלוש. בכל פעם להוסיף עוד אחת, ולשאול כמה יהיו בפעם הבאה.',
-          ['concrete', 'pictorial'], 'בַּסֵּדֶר הַזֶּה כָּל מִגְדָּל גָּבוֹהַּ בְּאֶחָד מִקּוֹדְמוֹ. בּוֹאוּ נִסְפֹּר.')
+          ['concrete', 'pictorial'], 'בַּסֵּדֶר הַזֶּה כׇּל מִגְדָּל גָּבוֹהַּ בְּאֶחָד מֵהַמִּגְדָּל שֶׁלְּפָנָיו. בּוֹאוּ נִסְפֹּר.')
     u.tag('M-LOG-NOT', ['LOG-B-09'], 'הילד מתעלם מאחד התנאים ("לא אדום ולא עיגול") ובוחר לפי אחד בלבד.',
           'לשחק "ניחוש מי": להסתיר חפץ ולתת רמזים "זה לא אדום", "זה לא עגול", ולהקטין את האפשרויות יחד.',
           ['concrete', 'symbolic'], 'צָרִיךְ לְהַקְשִׁיב לִשְׁנֵי הָרְמָזִים יַחַד: לֹא זֶה וְגַם לֹא זֶה. בּוֹאוּ נִבְדֹּק.')
 
     P = [('ball_red', 'ball_blue', 'ball_yellow'), ('cat', 'dog', 'star'), ('apple', 'fish', 'star'), ('ball_green', 'ball_red', 'ball_blue')]
-    u.skill('LOG-B-01', 'מרחיבים סדר', 'מַמְשִׁיכִים סֵדֶר שֶׁל שְׁלוֹשָׁה', 'pattern-door', ['LOG-A-06'], ['pictorial'], ['M-PAT-NEXT'])
+    u.skill('LOG-B-01', 'מרחיבים סדר', 'מַמְשִׁיכִים סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים', 'pattern-door', ['LOG-A-06'], ['pictorial'], ['M-PAT-NEXT'])
     for i, form in enumerate(['AAB', 'ABB', 'ABC', 'AAB', 'ABB', 'ABC', 'ABBC', 'AABB']):
         x, y, z = P[i % len(P)]
         sym = {'A': x, 'B': y, 'C': z}
@@ -214,11 +217,11 @@ def logic():
         row = seq[:7] + ['?']
         right = seq[7]
         others = [e for e in dict.fromkeys(unit + [z, x, y]) if e != right][:2]
-        u.act('LOG-B-01', 'pick', prompt='מָה בָּא אַחַר כָּךְ?', row=row, options=place(right, others, i % 3), correct=right,
+        u.act('LOG-B-01', 'pick', prompt='מַה בָּא אַחַר כָּךְ?', row=row, options=place(right, others, i % 3), correct=right,
               tags={seq[6]: 'M-PAT-NEXT'} if seq[6] != right else {}, rep='pictorial', domain='logic',
               correct_text='כֵּן! הַסֵּדֶר חוֹזֵר.', h3='הַחֵלֶק שֶׁחוֹזֵר הוּא: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(NAMES[e]['one'] for e in unit))
 
-    u.skill('LOG-B-02', 'מוצאים את החלק החוזר', 'מוֹצְאִים מָה נִשְׁבַּר בַּסֵּדֶר', 'pattern-door', ['LOG-B-01'], ['pictorial'], ['M-PAT-UNIT'])
+    u.skill('LOG-B-02', 'מוצאים את החלק החוזר', 'מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר', 'pattern-door', ['LOG-B-01'], ['pictorial'], ['M-PAT-UNIT'])
     for i, (form, w) in enumerate([('AAB', 4), ('ABB', 3), ('ABC', 5), ('AAB', 6), ('ABB', 4), ('ABC', 2)]):
         x, y, z = P[i % len(P)]
         sym = {'A': x, 'B': y, 'C': z}
@@ -237,9 +240,9 @@ def logic():
             others = ['tower_5', 'tower_6']
         u.act('LOG-B-04', 'pick', prompt='הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?', row=row, options=place('tower_%d' % gap, others, i % 3),
               correct='tower_%d' % gap, tags={others[0]: 'M-PAT-GROW'}, rep='pictorial', domain='logic',
-              correct_text='כֵּן! כָּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת.', h3='כָּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת מִקּוֹדְמוֹ. עַכְשָׁו תּוֹרְכֶם.')
+              correct_text='כֵּן! כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת.', h3='כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת מֵהַמִּגְדָּל שֶׁלְּפָנָיו. עַכְשָׁו תּוֹרְכֶם.')
 
-    u.skill('LOG-B-06', 'מוצאים את הכלל', 'מוֹצְאִים מָה מְשֻׁתָּף', 'sprout', ['LOG-A-03'], ['pictorial'], [])
+    u.skill('LOG-B-06', 'מוצאים את הכלל', 'מוֹצְאִים מַה מְשֻׁתָּף', 'sprout', ['LOG-A-03'], ['pictorial'], [])
     sets = [(['shape_circle_red', 'shape_square_red', 'shape_triangle_red'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
             (['shape_circle_blue', 'shape_triangle_blue', 'shape_square_blue'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
             (['shape_circle_red', 'shape_circle_blue', 'shape_circle_green'], 'rule_shape', 'אוֹתָהּ צוּרָה'),
@@ -252,6 +255,7 @@ def logic():
               domain='logic', correct_text='כֵּן! כֻּלָּם %s.' % text, h3='נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם %s. עַכְשָׁו תּוֹרְכֶם.' % text)
 
     u.skill('LOG-B-08', 'אם אז', 'אִם… אָז…', 'sprout', ['LOG-B-06'], ['concrete'], ['M-SORT-SHIFT'])
+    # the prompts wait for the owner (V1 rows, proposed): "אַחֶרֶת" → "אִם לֹא" and "הַצּוּרָה הִיא עִגּוּל" are not in yet
     ifs = [('אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.endswith('_red')),
            ('אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.endswith('_blue')),
            ('אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_circle')),
@@ -261,7 +265,7 @@ def logic():
         order = pool[i:] + pool[:i]
         u.act('LOG-B-08', 'sort', bins=[{'sprite': 'basket_empty', 'label': 'הַקֻּפְסָה'}, {'sprite': 'grass', 'label': 'הָעֵשֶׂב'}],
               items=[(s, 1 if test(s) else 2) for s in order[:5]], prompt=text + ' אַחֶרֶת — לָעֵשֶׂב.', domain='logic',
-              h3='לְכָל צוּרָה שׁוֹאֲלִים: הַאִם זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.',
+              h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.')
 
     u.skill('LOG-B-09', 'חושבים ומסיקים', 'לֹא זֶה וְלֹא זֶה', 'sprout', ['LOG-B-06'], ['concrete', 'symbolic'], ['M-LOG-NOT'])
@@ -274,25 +278,25 @@ def logic():
         u.act('LOG-B-09', 'pick', prompt='הוּא לֹא %s וְלֹא %s. אֵיזֶה הוּא?' % (C[nc], SHAPE_ONE[ns]),
               options=place(right, [w1, w2], i % 3), correct=right, tags={w1: 'M-LOG-NOT', w2: 'M-LOG-NOT'}, rep='symbolic', domain='logic',
               correct_text='כֵּן! הוּא לֹא %s וְלֹא %s.' % (C[nc], SHAPE_ONE[ns]),
-              h3='צָרִיךְ שֶׁגַּם לֹא %s וְגַם לֹא %s. עַכְשָׁו תּוֹרְכֶם.' % (C[nc], SHAPE_ONE[ns]))
+              h3='מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא %s וְגַם לֹא %s. עַכְשָׁו תּוֹרְכֶם.' % (C[nc], SHAPE_ONE[ns]))
 
     u.skill('LOG-B-11', 'מסדרים חמישה', 'מְסַדְּרִים מִנָּמוּךְ לְגָבוֹהַּ', 'sprout', ['LOG-A-10'], ['concrete', 'pictorial'], ['M-SER-ENDS'])
     towers = ['tower_%d' % k for k in range(1, 7)]
     u.act('LOG-B-11', 'build', palette=towers[:5], sequence=towers[:5], prompt='מְסַדְּרִים אֶת הַמִּגְדָּלִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.',
-          domain='logic', h3='מַתְחִילִים בַּנָּמוּךְ וְגּוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.')
+          domain='logic', h3='מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.')
     u.act('LOG-B-11', 'build', palette=towers[:5], sequence=towers[:5][::-1], prompt='מְסַדְּרִים אֶת הַמִּגְדָּלִים מֵהַגָּבוֹהַּ אֶל הַנָּמוּךְ.',
-          domain='logic', h3='מַתְחִילִים בַּגָּבוֹהַּ וְגּוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם.')
+          domain='logic', h3='מַתְחִילִים בַּגָּבוֹהַּ וְגוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם.')
     u.act('LOG-B-11', 'build', palette=towers, sequence=towers, prompt='מְסַדְּרִים שִׁשָּׁה מִגְדָּלִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.',
-          domain='logic', h3='מַתְחִילִים בַּנָּמוּךְ וְגּוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.')
+          domain='logic', h3='מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.')
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
-    u.lesson('longer-patterns', 'סֵדֶר שֶׁל שְׁלוֹשָׁה', ['LOG-B-01'], ids('LOG-B-01', 0, 4), 'כׇּל הַכָּבוֹד! הִמְשַׁכְתֶּם סֵדֶר.')
+    u.lesson('longer-patterns', 'סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים', ['LOG-B-01'], ids('LOG-B-01', 0, 4), 'כׇּל הַכָּבוֹד! הִמְשַׁכְתֶּם סֵדֶר.')
     u.lesson('longer-patterns-more', 'עוֹד סְדָרִים', ['LOG-B-01'], ids('LOG-B-01', 4), 'מְצֻיָּן! הַסֵּדֶר נִמְשָׁךְ.')
-    u.lesson('broken-pattern', 'מָה נִשְׁבַּר', ['LOG-B-02'], ids('LOG-B-02'), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַשּׁוֹנֶה.')
+    u.lesson('broken-pattern', 'מַה נִּשְׁבַּר', ['LOG-B-02'], ids('LOG-B-02'), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַשּׁוֹנֶה.')
     u.lesson('growing-towers', 'מִגְדָּלִים שֶׁגְּדֵלִים', ['LOG-B-04'], ids('LOG-B-04'), 'כׇּל הַכָּבוֹד! הַמִּגְדָּלִים גְּדֵלִים.')
     u.lesson('find-the-rule', 'מָה הַכְּלָל', ['LOG-B-06'], ids('LOG-B-06'), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַכְּלָל.')
     u.lesson('if-then', 'אִם… אָז…', ['LOG-B-08'], ids('LOG-B-08'), 'כׇּל הַכָּבוֹד! עֲשִׂיתֶם לְפִי הַכְּלָל.')
-    u.lesson('not-this-not-that', 'לֹא זֶה וְלֹא זֶה', ['LOG-B-09'], ids('LOG-B-09'), 'כׇּל הַכָּבוֹד! פִּתַּחְתֶּם חִידָּה.')
+    u.lesson('not-this-not-that', 'לֹא זֶה וְלֹא זֶה', ['LOG-B-09'], ids('LOG-B-09'), 'כׇּל הַכָּבוֹד! פְּתַרְתֶּם חִידָה.')
     u.lesson('line-up-five', 'מְסַדְּרִים בְּשׁוּרָה', ['LOG-B-11'], ids('LOG-B-11'), 'כׇּל הַכָּבוֹד! הַמִּגְדָּלִים בַּסֵּדֶר.')
     u.save()
 
@@ -332,14 +336,14 @@ def robots():
         seq = (unit * 4)[:6]
         seq[w] = bad if bad != seq[w] else 'up'
         u.act('CS-B-04', 'spot', cells=['dir:' + d for d in seq], wrong=w, tag='M-CS-FIXALL', rep='embodied', domain='cs',
-              prompt='הַתָּכְנִית צְרִיכָה לַחֲזֹר עַל: %s. אֵיפֹה הַצַּעַד הַלֹּא נָכוֹן?' % ', '.join(names[d] for d in unit),
-              h3='הַתָּכְנִית חוֹזֶרֶת: %s. צַעַד אֶחָד שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(names[d] for d in unit),
+              prompt='הַתׇּכְנִית צְרִיכָה לַחֲזֹר עַל: %s. אֵיפֹה הַצַּעַד הַלֹּא נָכוֹן?' % ', '.join(names[d] for d in unit),
+              h3='הַתׇּכְנִית חוֹזֶרֶת: %s. צַעַד אֶחָד שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(names[d] for d in unit),
               correct_text='כֵּן! מְצָאתֶם אֶת הַצַּעַד. צָרִיךְ לְתַקֵּן רַק אוֹתוֹ.')
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('longer-robot-paths', 'דְּרָכִים אֲרֻכּוֹת', ['CS-B-01'], ids('CS-B-01', 0, 4), 'כׇּל הַכָּבוֹד! תִּכְנַנְתֶּם דֶּרֶךְ אֲרֻכָּה.')
     u.lesson('longer-robot-paths-more', 'עוֹד דְּרָכִים', ['CS-B-01'], ids('CS-B-01', 4), 'מְצֻיָּן! הָרוֹבּוֹט הִגִּיעַ.')
-    u.lesson('fix-the-program', 'מְתַקְּנִים תָּכְנִית', ['CS-B-04'], ids('CS-B-04'), 'כׇּל הַכָּבוֹד! תִּקַּנְתֶּם אֶת הַצַּעַד.')
+    u.lesson('fix-the-program', 'מְתַקְּנִים תׇּכְנִית', ['CS-B-04'], ids('CS-B-04'), 'כׇּל הַכָּבוֹד! תִּקַּנְתֶּם אֶת הַצַּעַד.')
     u.save()
 
 

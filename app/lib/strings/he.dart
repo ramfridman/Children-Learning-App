@@ -96,7 +96,7 @@ abstract final class He {
   static const Str homeStickersLabel = Str('מַדְבֵּקוֹת', nikud: true);
   static const Str homeHallLabel = Str('גְּבִיעִים', nikud: true);
   static const Str stickersTitle = Str('הַמַּדְבֵּקוֹת שֶׁלִּי', nikud: true);
-  static const Str stickersHow = Str('מַדְבֵּקָה אַחַת עַל כָּל שִׁעוּר שֶׁמְּסַיְּמִים', nikud: true);
+  static const Str stickersHow = Str('מַדְבֵּקָה אַחַת עַל כׇּל שִׁעוּר שֶׁמְּסַיְּמִים', nikud: true);
   static const Str stageSketch = Str('עוֹד מְתַרְגְּלִים', nikud: true);
   static const Str stageColour = Str('יוֹדְעִים!', nikud: true);
   static const Str stageFruit = Str('יוֹדְעִים וְגַם זוֹכְרִים!', nikud: true);
@@ -115,7 +115,7 @@ abstract final class He {
   static const Str trophyGold = Str('גְּבִיעַ הַזָּהָב', nikud: true);
   static const Str trophyHow = Str('מְבִינִים {n} דְּבָרִים וְזוֹכְרִים גַּם אַחֲרֵי שָׁבוּעַ', nikud: true);
   static const Str trophyComing = Str(
-    'הַגְּבִיעִים יָבוֹאוּ כְּשֶׁיִּהְיֶה עוֹד מָה לִלְמֹד כָּאן',
+    'הַגְּבִיעִים יָבוֹאוּ כְּשֶׁיִּהְיֶה עוֹד מַה לִּלְמֹד כָּאן',
     nikud: true,
   );
   static const Str trophyNewSemantics = Str('גביע חדש מחכה');
@@ -189,7 +189,7 @@ abstract final class He {
   static const Str gateBack = Str('חזרה');
   static const Str gateWrong = Str('התשובה לא נכונה, נסו שוב.');
   static const Str gateCoolDown = Str('נחכה רגע ואז ננסה שוב, בעוד {s} שניות.');
-  static const Str gateLong = Str('יותר מדי נסיונות. אפשר לנסות שוב בעוד {m} דקות.');
+  static const Str gateLong = Str('יותר מדי ניסיונות. אפשר לנסות שוב בעוד {m} דקות.');
   static const Str pinTitle = Str('קוד הורים');
   static const Str pinEnter = Str('הקלידו את קוד ההורים');
   static const Str pinWrong = Str('הקוד לא נכון.');
@@ -430,7 +430,7 @@ abstract final class He {
   static const Str prizesSilver = Str('גביע כסף');
   static const Str prizesGold = Str('גביע זהב');
   static const Str prizesEarned = Str('הושג');
-  static const Str prizesNotYet = Str('בקרוב, כשיהיו באי מספיק מיומנויות');
+  static const Str prizesNotYet = Str('בקרוב, כשיהיו מספיק מיומנויות באי');
   static const Str prizesHint = Str('ההבטחה');
   static const Str prizesBad = Str('עד 60 תווים, בלי קישורים ובלי תווים מיוחדים.');
   static const Str prizesTooMany = Str('אי אפשר להוסיף עוד הבטחות (עד 30).');
@@ -503,11 +503,11 @@ abstract final class He {
   static const Str timeLater = Str('חצי שעה אחר כך');
   static const Str timeLock = Str('לנעול כשהזמן נגמר');
   static const Str timeLockHelp = Str(
-    'כשהזמן נגמר או בשעות מנוחה לא מוצעת פעילות חדשה, והפעילות הנוכחית מסתיימת בעדינות. כשכבוי הילד ממשיך לשחק.',
+    'כשהזמן נגמר או בשעות מנוחה לא מוצעת פעילות חדשה, והפעילות הנוכחית מסתיימת בעדינות. כשכבוי, הילד ממשיך לשחק.',
   );
   static const Str timeScheduleHeading = Str('שעות מותרות בשבוע');
   static const Str timeScheduleHelp = Str(
-    'ביום שמוגדרות בו שעות משחקים רק בהן. ביום בלי שעות משחקים בכל שעה.',
+    'ביום שהוגדרו לו שעות, אפשר לשחק רק בהן. ביום בלי שעות אפשר לשחק בכל שעה.',
   );
   static const Str timeDayAny = Str('בכל שעה');
   static const Str timeDayWindow = Str('{a} עד {b}');

@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "הַאִם הַסֵּדֶר חוֹזֵר?"
+        "v": "הַסֵּדֶר חוֹזֵר?"
       }
     ],
     "replayButton": true
@@ -143,6 +143,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "הַאִם הַסֵּדֶר חוֹזֵר?"
+    "altText": "הַסֵּדֶר חוֹזֵר?"
   }
 }

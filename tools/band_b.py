@@ -12,7 +12,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']  # author.py is imported, never run
-from author import F, M, count_words, qty  # noqa: E402
+from author import F, M, count_words, from_, prefix, qty, vav  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 UNITS = os.path.join(ROOT, 'content', 'units')
@@ -25,6 +25,7 @@ def load(name):
 COLOURS = load('colours')['colours']  # red -> אָדֹם ...
 OBJECTS = {**load('counting-hills')['objects'], **load('math')['objects']}
 OBJECTS['sock'] = {'g': 'f', 'one': 'גֶּרֶב', 'many': 'גַּרְבַּיִם'}
+PLATE = {'g': 'f', 'one': 'צַלַּחַת', 'many': 'צַלָּחוֹת'}
 
 NAMES = {
     'tick': {'one': 'כֵּן', 'g': 'm'}, 'cross': {'one': 'לֹא', 'g': 'm'},
@@ -85,6 +86,12 @@ def tri(correct, i, others):
 
 
 SHARED_FB = {}  # tag -> the line, for tags that the units of Band B share
+MADE = []  # the units made in this run, written together by write_all()
+
+
+def write_all():
+    for u in MADE:
+        u.write()
 
 
 class Unit:
@@ -123,10 +130,16 @@ class Unit:
         self.d['lessons'].append({'id': id, 'title': title, 'skills': skills, 'items': items, 'minutes': minutes, 'done': done})
 
     def save(self):
+        """Queued: the specs are written by write_all() once every unit is made, so each one gets the lines of all."""
+        MADE.append(self)
+
+    def write(self):
+        # the lines of every Band B unit of this run, then those of the hand-written Band A specs; never the Band B specs
+        # on disk, which hold the lines of the last run (an old text would come back)
         for t, line in SHARED_FB.items():
             self.d['tagFeedback'].setdefault(t, line)
         for other in sorted(os.listdir(UNITS)):
-            if other.endswith('.json') and other[:-5] != self.name:
+            if other.endswith('.json') and not other.startswith('band-b-'):
                 for t, line in load(other[:-5]).get('tagFeedback', {}).items():
                     self.d['tagFeedback'].setdefault(t, line)
         path = os.path.join(UNITS, self.name + '.json')
@@ -172,21 +185,21 @@ def numbers():
           ['symbolic', 'concrete'], 'הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב.')
     u.tag('M-NUM-TEEN', ['NUM-B-16'], 'הילד קורא מספר בין 11 ל-19 כספרה אחת בלבד, ולא כעשר ועוד כמה.',
           'לשים עשר כפיות בצד ואת השאר בצד אחר, ולומר: ארבע עשרה זה עשר ועוד ארבע.',
-          ['concrete', 'pictorial'], 'בַּמִּסְפָּר הַזֶּה יֵשׁ עֶשֶׂר, וְעוֹד כַּמָּה? בּוֹאוּ נִפְרֹד אֶת הָעֶשֶׂר.')
+          ['concrete', 'pictorial'], 'בַּמִּסְפָּר הַזֶּה יֵשׁ עֶשֶׂר, וְעוֹד כַּמָּה? בּוֹאוּ נַפְרִיד אֶת הָעֶשֶׂר.')
     u.tag('M-NL-SPACE', ['NUM-B-13'], 'הילד מסמן על ציר המספרים לפי המקום ולא לפי הרווח בין הסימונים, או סופר את נקודת ההתחלה.',
           'לצייר על רצפה או על נייר ציר עם צעדים שווים, ולקפוץ עליו: מתחילים מהמספר ולא סופרים אותו.',
-          ['embodied', 'symbolic'], 'כָּל קְפִיצָה שָׁוָה. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר.')
+          ['embodied', 'symbolic'], 'כׇּל קְפִיצָה שָׁוָה. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר.')
     u.tag('M-NL-DIR', ['NUM-B-13'], 'הילד קורא את ציר המספרים מימין לשמאל, כמו מילים, והמספרים הקטנים בצד הלא נכון.',
           'להסביר שבמתמטיקה הציר תמיד הולך משמאל לימין, והמספרים גדלים בכיוון החץ.',
           ['embodied', 'symbolic'], 'הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמֹאלִי, וְהֵם גְּדֵלִים לְכִוּוּן הַחֵץ.')
     u.tag('M-PART-MISS', ['MATH-B-02', 'NUM-B-14'], 'הילד מוסיף במקום לחסר כשחסר חלק, ועונה בסכום.',
           'להסתיר חלק מהחפצים בכוס, ולשאול כמה בכוס אם יש בסך הכול שבעה וחמישה בחוץ.',
-          ['concrete', 'pictorial'], 'יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסַר?')
+          ['concrete', 'pictorial'], 'יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסֵר?')
 
     # ---- NUM-B-01..03: counting words
     u.skill('NUM-B-01', 'סופרים עד 20', 'סוֹפְרִים עַד עֶשְׂרִים', 'cone-tree', ['NUM-A-02'], ['symbolic', 'concrete'], ['M-CNT-SEQ'])
     u.skill('NUM-B-02', 'סופרים עד 30', 'סוֹפְרִים עַד שְׁלוֹשִׁים', 'cone-tree', ['NUM-B-01'], ['symbolic'], ['M-CNT-DECADE'])
-    u.skill('NUM-B-03', 'סופרים אחורה מעשר', 'סוֹפְרִים אֲחוֹרָה כְּמוֹ בְּחַלְלִית', 'cone-tree', ['NUM-A-02'], ['symbolic'], ['M-CNT-SEQ'])
+    u.skill('NUM-B-03', 'סופרים אחורה מעשר', 'סוֹפְרִים אֲחוֹרָה כְּמוֹ בַּחֲלָלִית', 'cone-tree', ['NUM-A-02'], ['symbolic'], ['M-CNT-SEQ'])
     for i, (n, d) in enumerate([(11, 'after'), (13, 'after'), (15, 'after'), (12, 'after'), (16, 'after'), (14, 'before'),
                                 (17, 'before'), (20, 'before'), (18, 'after')]):
         ans = n + 1 if d == 'after' else n - 1
@@ -232,10 +245,10 @@ def numbers():
         u.act('NUM-B-10', 'pick', prompt='אֵיזֶה מִסְפָּר %s יוֹתֵר?' % word,
               options=['n:%d' % right, 'n:%d' % wrong] if i % 2 == 0 else ['n:%d' % wrong, 'n:%d' % right], correct='n:%d' % right,
               rep='symbolic', correct_text='כֵּן! %s.' % F[right],
-              h3='%s וְ%s. %s. עַכְשָׁו תּוֹרְכֶם.' % (F[a], F[b], 'הַמִּסְפָּר שֶׁבָּא יוֹתֵר מְאוּחָר בַּסְּפִירָה גָּדוֹל יוֹתֵר' if ask == 'big' else 'הַמִּסְפָּר שֶׁבָּא קֹדֶם בַּסְּפִירָה קָטָן יוֹתֵר'))
+              h3='%s %s. %s. עַכְשָׁו תּוֹרְכֶם.' % (F[a], vav(F[b]), 'הַמִּסְפָּר שֶׁבָּא יוֹתֵר מְאֻחָר בַּסְּפִירָה גָּדוֹל יוֹתֵר' if ask == 'big' else 'הַמִּסְפָּר שֶׁבָּא קֹדֶם בַּסְּפִירָה קָטָן יוֹתֵר'))
 
     # ---- NUM-B-11: order, one more, one less
-    u.skill('NUM-B-11', 'סדר המספרים, אחד יותר ואחד פחות', 'מוֹצְאִים מִסְפָּר שֶׁחָסֵר וּבְאֶחָד יוֹתֵר', 'pool', ['NUM-B-10'],
+    u.skill('NUM-B-11', 'סדר המספרים, אחד יותר ואחד פחות', 'מוֹצְאִים מִסְפָּר שֶׁחָסֵר, אֶחָד יוֹתֵר וְאֶחָד פָּחוֹת', 'pool', ['NUM-B-10'],
             ['symbolic'], ['M-CNT-SEQ'])
     rows = [(1, 5, 3, 8), (3, 5, 1, 9), (5, 5, 4, 2), (6, 6, 2, 12), (10, 5, 3, 14), (4, 6, 5, 12)]
     for start, length, w, v in rows:
@@ -246,11 +259,11 @@ def numbers():
               h3='הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כָּל פַּעַם. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + w])
     for i, n in enumerate([3, 6, 8, 11, 14, 17]):
-        numpick(u, 'NUM-B-11', 'הוֹסִיפוּ עוֹד אֶחָד אֶל %s. כַּמָּה יֵשׁ עַכְשָׁו?' % F[n], n + 1, [n, n + 2], i,
-                tags={n + 2: 'M-CNT-SEQ'}, text='%s! עוֹד אֶחָד.' % F[n + 1])
+        numpick(u, 'NUM-B-11', 'הוֹסִיפוּ עוֹד אַחַת אֶל %s. כַּמָּה יֵשׁ עַכְשָׁו?' % F[n], n + 1, [n, n + 2], i,
+                tags={n + 2: 'M-CNT-SEQ'}, text='%s! עוֹד אַחַת.' % F[n + 1])
     for i, n in enumerate([4, 7, 9, 12, 15, 18]):
-        numpick(u, 'NUM-B-11', 'קְחוּ אֶחָד מִתּוֹךְ %s. כַּמָּה נִשְׁאֲרוּ?' % F[n], n - 1, [n, n - 2], i,
-                tags={n - 2: 'M-CNT-SEQ'}, text='%s! אֶחָד פָּחוֹת.' % F[n - 1])
+        numpick(u, 'NUM-B-11', 'קְחוּ אַחַת מִתּוֹךְ %s. כַּמָּה נִשְׁאֲרוּ?' % F[n], n - 1, [n, n - 2], i,
+                tags={n - 2: 'M-CNT-SEQ'}, text='%s! אַחַת פָּחוֹת.' % F[n - 1])
 
     # ---- NUM-B-13: the number line
     u.skill('NUM-B-13', 'ציר המספרים', 'קוֹפְצִים עַל צִיר הַמִּסְפָּרִים', 'dock', ['NUM-B-11'], ['embodied', 'symbolic'],
@@ -267,7 +280,7 @@ def numbers():
         way = 'קָדִימָה' if d == 'f' else 'אֲחוֹרָה'
         u.act('NUM-B-13', 'numline', mode='jump', to=10, start=start, hops=hops, target=end, labels=list(range(0, 11)),
               prompt='הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל %s וְקוֹפֶצֶת %s %s. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?' % (F[start], steps(k), way),
-              h3='מַתְחִילִים מִ%s וְקוֹפְצִים %s %s. עַכְשָׁו תּוֹרְכֶם.' % (F[start], steps(k), way))
+              h3='מַתְחִילִים %s וְקוֹפְצִים %s %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[start]), steps(k), way))
 
     # ---- NUM-B-14: splitting a number
     u.skill('NUM-B-14', 'מפרקים מספר לשני חלקים', 'מְפָרְקִים מִסְפָּר לִשְׁנֵי חֲלָקִים', 'pool', ['NUM-A-10'], ['concrete', 'symbolic'],
@@ -279,15 +292,15 @@ def numbers():
         numpick(u, 'NUM-B-14', 'יֵשׁ %s. מַכְנִיסִים %s לַסַּל. כַּמָּה נִשְׁאֲרוּ בַּחוּץ?' % (qty(total, o), qty(part, o)), rest,
                 [total, part] if rest not in (total, part) else [total + 1, part + 1], i, tags={total: 'M-PART-MISS'}, rep='concrete',
                 group={'sprite': obj, 'count': total},
-                text='%s! %s וְעוֹד %s הֵם %s.' % (F[rest], num_for(rest, o), num_for(part, o), num_for(total, o)),
-                h3='%s. הִכְנַסְנוּ %s, אָז נִשְׁאֲרוּ %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(total), num_for(part, o), num_for(rest, o), F[rest]))
+                text='%s! %s וְעוֹד %s הֵם %s.' % (F[rest], F[rest], F[part], F[total]),
+                h3='%s. הִכְנַסְנוּ %s, אָז נִשְׁאֲרוּ %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(total), F[part], F[rest], F[rest]))
 
     # ---- NUM-B-16: a teen is ten and some
     u.skill('NUM-B-16', 'עשר ועוד כמה', 'רוֹאִים עֶשֶׂר וְעוֹד כַּמָּה', 'pool', ['NUM-B-08', 'NUM-B-14'], ['concrete', 'pictorial'],
             ['M-NUM-TEEN'])
     for i, n in enumerate([11, 12, 13, 14, 15, 16, 17, 18, 19]):
         obj = ['apple', 'star', 'fish', 'duck', 'ladybug', 'bird', 'apple', 'star', 'fish'][i]
-        numpick(u, 'NUM-B-16', '%s הוּא עֶשֶׂר וְעוֹד כַּמָּה?' % F[n], n - 10, [1, n - 9 if n < 19 else n - 11], i,
+        numpick(u, 'NUM-B-16', '%s זֶה עֶשֶׂר וְעוֹד כַּמָּה?' % F[n], n - 10, [1, n - 9 if n < 19 else n - 11], i,
                 tags={1: 'M-NUM-TEEN'}, rep='concrete', group={'sprite': obj, 'count': n},
                 text='%s! עֶשֶׂר וְעוֹד %s הֵם %s.' % (F[n - 10], F[n - 10], F[n]),
                 h3='%s. עֶשֶׂר, וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), count_words(n - 10), F[n - 10]))
@@ -301,12 +314,12 @@ def numbers():
         cells[w] = 'n:%d' % v
         u.act('NUM-B-17', 'spot', cells=cells, wrong=w, tag='M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ', rep='symbolic',
               prompt='סוֹפְרִים %s. אֵיפֹה הַטָּעוּת?' % nm,
-              h3='כָּל מִסְפָּר גָּדוֹל מִקּוֹדְמוֹ ב%s. עַכְשָׁו תּוֹרְכֶם.' % ('עֶשֶׂר' if step == 10 else 'שְׁתַּיִם'),
+              h3='כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו %s. עַכְשָׁו תּוֹרְכֶם.' % prefix('ב', 'עֶשֶׂר' if step == 10 else 'שְׁתַּיִם'),
               correct_text='כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + step * w])
     for i, (seq, nxt, nm) in enumerate([((10, 20, 30), 40, 'בַּעֲשָׂרוֹת'), ((20, 30, 40), 50, 'בַּעֲשָׂרוֹת'), ((50, 60, 70), 80, 'בַּעֲשָׂרוֹת'),
                                         ((2, 4, 6), 8, 'בִּשְׁתַּיִם'), ((4, 6, 8), 10, 'בִּשְׁתַּיִם'), ((6, 8, 10), 12, 'בִּשְׁתַּיִם')]):
         step = seq[1] - seq[0]
-        numpick(u, 'NUM-B-17', 'סוֹפְרִים %s: %s. מָה בָּא אַחַר כָּךְ?' % (nm, ', '.join(F[x] for x in seq)), nxt,
+        numpick(u, 'NUM-B-17', 'סוֹפְרִים %s: %s. מַה בָּא אַחַר כָּךְ?' % (nm, ', '.join(F[x] for x in seq)), nxt,
                 [seq[-1] + 1, nxt + step], i, tags={seq[-1] + 1: 'M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ'},
                 text='%s! %s.' % (F[nxt], ', '.join(F[x] for x in seq + (nxt,))))
 
@@ -317,43 +330,38 @@ def numbers():
         u.act('NUM-B-18', 'pick', prompt='אֶפְשָׁר לְחַלֵּק אֶת כֻּלָּם לְזוּגוֹת, בְּלִי שֶׁיִּשָּׁאֵר אֶחָד לְבַד?',
               group={'sprite': 'sock', 'count': n, 'arrangement': 'scatter'}, options=['cross', 'tick'] if i % 2 else ['tick', 'cross'],
               correct='tick' if even else 'cross', rep='concrete',
-              correct_text='כֵּן, כֻּלָּם בַּזּוּגוֹת.' if even else 'לֹא, אֶחָד נִשְׁאָר לְבַד.',
-              h3='נַחֲלֹק לְזוּגוֹת: %s. %s. עַכְשָׁו תּוֹרְכֶם.' % (', '.join('זוּג' for _ in range(n // 2)),
-                                                                'כֻּלָּם בַּזּוּגוֹת' if even else 'אֶחָד נִשְׁאָר לְבַד'))
+              correct_text='כֵּן, כֻּלָּם בְּזוּגוֹת.' if even else 'לֹא, אֶחָד נִשְׁאָר לְבַד.',
+              h3='נְחַלֵּק לְזוּגוֹת: %s. %s. עַכְשָׁו תּוֹרְכֶם.' % (', '.join('זוּג' for _ in range(n // 2)),
+                                                                'כֻּלָּם בְּזוּגוֹת' if even else 'אֶחָד נִשְׁאָר לְבַד'))
 
     # ---- lessons
     def ids(skill, a=0, b=None):
         return [x['id'] for x in u.d['activities'] if x['skill'] == skill][a:b]
 
     u.lesson('count-to-20', 'סוֹפְרִים עַד עֶשְׂרִים', ['NUM-B-01'], ids('NUM-B-01', 0, 5), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם עַד עֶשְׂרִים.')
-    u.lesson('count-to-20-more', 'עוֹד סְפִירָה עַד עֶשְׂרִים', ['NUM-B-01'], ids('NUM-B-01', 5), 'יָפֶה מְאוֹד! הַסְּפִירָה מַמְשִׁיכָה.')
+    u.lesson('count-to-20-more', 'עוֹד סְפִירָה עַד עֶשְׂרִים', ['NUM-B-01'], ids('NUM-B-01', 5), 'יָפֶה מְאֹד! הַסְּפִירָה מַמְשִׁיכָה.')
     u.lesson('count-to-30', 'סוֹפְרִים עַד שְׁלוֹשִׁים', ['NUM-B-02'], ids('NUM-B-02', 0, 5), 'כׇּל הַכָּבוֹד! עָבַרְתֶּם אֶת הָעֲשָׂרוֹת.')
-    u.lesson('count-to-30-more', 'עוֹד עֲשָׂרוֹת', ['NUM-B-02'], ids('NUM-B-02', 5), 'נִפְלָא! הַעֲשָׂרוֹת כְּבָר מוּכָּרוֹת.')
-    u.lesson('rocket-countdown', 'סְפִירָה לַאֲחוֹר', ['NUM-B-03'], ids('NUM-B-03'), 'שָׁלוֹשׁ, שְׁתַּיִם, אַחַת… הַחַלָּלִית טָסָה!')
+    u.lesson('count-to-30-more', 'עוֹד עֲשָׂרוֹת', ['NUM-B-02'], ids('NUM-B-02', 5), 'נִפְלָא! הָעֲשָׂרוֹת כְּבָר מוּכָּרוֹת.')
+    u.lesson('rocket-countdown', 'סְפִירָה לַאֲחוֹר', ['NUM-B-03'], ids('NUM-B-03'), 'שָׁלוֹשׁ, שְׁתַּיִם, אַחַת… הַחֲלָלִית טָסָה!')
     u.lesson('many-things', 'הַרְבֵּה חֲפָצִים', ['NUM-B-04'], ids('NUM-B-04', 0, 5), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם הַרְבֵּה חֲפָצִים.')
-    u.lesson('many-things-more', 'עוֹד הַרְבֵּה חֲפָצִים', ['NUM-B-04'], ids('NUM-B-04', 5), 'מְצֻיָּן! כָּל אֶחָד פַּעַם אַחַת.')
+    u.lesson('many-things-more', 'עוֹד הַרְבֵּה חֲפָצִים', ['NUM-B-04'], ids('NUM-B-04', 5), 'מְצֻיָּן! כׇּל אֶחָד פַּעַם אַחַת.')
     u.lesson('give-up-to-20', 'נוֹתְנִים עַד עֶשְׂרִים', ['NUM-B-05'], ids('NUM-B-05'), 'יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁנוּ.')
     u.lesson('read-the-teens', 'קוֹרְאִים אֶת הַמִּסְפָּרִים', ['NUM-B-08'], ids('NUM-B-08', 0, 6), 'כׇּל הַכָּבוֹד! אַתֶּם קוֹרְאִים מִסְפָּרִים.')
     u.lesson('read-the-teens-more', 'עוֹד מִסְפָּרִים', ['NUM-B-08'], ids('NUM-B-08', 6), 'מְצֻיָּן! הַסִּפְרוֹת בַּמָּקוֹם הַנָּכוֹן.')
     u.lesson('which-is-bigger', 'אֵיזֶה גָּדוֹל יוֹתֵר', ['NUM-B-10'], ids('NUM-B-10', 0, 5), 'יָפֶה! הִשְׁוִיתֶם מִסְפָּרִים.')
     u.lesson('which-is-bigger-more', 'עוֹד הַשְׁוָאוֹת', ['NUM-B-10'], ids('NUM-B-10', 5), 'מְצֻיָּן! אַתֶּם יוֹדְעִים מִי גָּדוֹל.')
-    u.lesson('count-order', 'הַמִּסְפָּרִים בַּסֵּדֶר', ['NUM-B-11'], ids('NUM-B-11', 0, 6), 'כׇּל הַכָּבוֹד! מָצָאתֶם אֶת הַטָּעוּיוֹת.')
+    u.lesson('count-order', 'הַמִּסְפָּרִים בַּסֵּדֶר', ['NUM-B-11'], ids('NUM-B-11', 0, 6), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַטָּעֻיּוֹת.')
     u.lesson('one-more-one-less', 'אֶחָד יוֹתֵר, אֶחָד פָּחוֹת', ['NUM-B-11'], ids('NUM-B-11', 6), 'נִפְלָא! אֶחָד יוֹתֵר וְאֶחָד פָּחוֹת.')
     u.lesson('frog-line-10', 'הַצְּפַרְדֵּעַ עַל הַצִּיר', ['NUM-B-13'], ids('NUM-B-13', 0, 6), 'כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן.')
-    u.lesson('frog-line-20', 'צִיר עַד עֶשְׂרִים', ['NUM-B-13'], ids('NUM-B-13', 6, 12), 'יָפֶה מְאוֹד! הַצִּיר אָרֹךְ יוֹתֵר.')
+    u.lesson('frog-line-20', 'צִיר עַד עֶשְׂרִים', ['NUM-B-13'], ids('NUM-B-13', 6, 12), 'יָפֶה מְאֹד! הַצִּיר אָרֹךְ יוֹתֵר.')
     u.lesson('frog-jumps', 'הַצְּפַרְדֵּעַ קוֹפֶצֶת', ['NUM-B-13'], ids('NUM-B-13', 12), 'וַאוּ! קְפִיצוֹת מְצֻיָּנוֹת.')
     u.lesson('split-numbers', 'מְפָרְקִים מִסְפָּרִים', ['NUM-B-14'], ids('NUM-B-14', 0, 5), 'כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לְפָרֵק.')
-    u.lesson('split-numbers-more', 'עוֹד פֵּרוּקִים', ['NUM-B-14'], ids('NUM-B-14', 5), 'מְצֻיָּן! כָּל חֵלֶק בִּמְקוֹמוֹ.')
+    u.lesson('split-numbers-more', 'עוֹד פֵּרוּקִים', ['NUM-B-14'], ids('NUM-B-14', 5), 'מְצֻיָּן! כׇּל חֵלֶק בִּמְקוֹמוֹ.')
     u.lesson('ten-and-some', 'עֶשֶׂר וְעוֹד כַּמָּה', ['NUM-B-16'], ids('NUM-B-16', 0, 5), 'כׇּל הַכָּבוֹד! רְאִיתֶם אֶת הָעֶשֶׂר.')
     u.lesson('ten-and-some-more', 'עוֹד עֶשֶׂר וְעוֹד', ['NUM-B-16'], ids('NUM-B-16', 5), 'נִפְלָא! הַמִּסְפָּרִים הַגְּדוֹלִים כְּבָר מוּכָּרִים.')
-    u.lesson('tens-and-twos', 'עֲשָׂרוֹת וּזְוּגוֹת', ['NUM-B-17'], ids('NUM-B-17'), 'יָפֶה מְאוֹד! סְפַרְתֶּם בַּקְּפִיצוֹת.')
+    u.lesson('tens-and-twos', 'עֲשָׂרוֹת וְזוּגוֹת', ['NUM-B-17'], ids('NUM-B-17'), 'יָפֶה מְאֹד! סְפַרְתֶּם בִּקְפִיצוֹת.')
     u.lesson('pairs', 'זוּגוֹת', ['NUM-B-18'], ids('NUM-B-18'), 'כׇּל הַכָּבוֹד! חִלַּקְתֶּם לְזוּגוֹת.')
     u.save()
-
-
-def num_for(n, obj):
-    """'three apples' without the noun when it is not needed: just the number in the gender of the noun."""
-    return F[n] if obj['g'] == 'f' else M[n]
 
 
 # ======================================================================================== MATH
@@ -364,9 +372,9 @@ def math():
              '"equals" as "the same as", equal groups, weighing, days of the week, the clock, and the missing number. '
              'Hebrew is a draft by Claude, needs-editor.',
              30, assets=['block', 'stone', 'feather', 'tick', 'cross'], globs=['day_*', 'clock_*'])
-    u.tag('M-EQ-OPER', ['MATH-B-03', 'MATH-B-09', 'MATH-B-18'], 'הילד קורא את סימן השוויון כ"עכשיו מחשבים", ולכן 7 = 3 + 4 נראה לו הפוך.',
+    u.tag('M-EQ-OPER', ['MATH-B-03', 'MATH-B-09', 'MATH-B-18'], 'הילד קורא את סימן השוויון כ"עכשיו מחשבים", ולכן ⁦7 = 3 + 4⁩ נראה לו הפוך.',
           'לשים שני צדדים על מאזניים של בית, למשל שלוש כפיות ועוד ארבע מול שבע, ולומר: זה שווה, שני הצדדים אותו דבר.',
-          ['concrete', 'symbolic'], 'סִימָן הַ-שָׁוֶה אוֹמֵר: שְׁנֵי הַצְּדָדִים אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק.')
+          ['concrete', 'symbolic'], 'סִימַן הַשָּׁוֶה אוֹמֵר: בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר. בּוֹאוּ נִבְדֹּק.')
     u.tag('M-MEAS-BIG', ['MATH-B-13'], 'הילד חושב שמה שגדול יותר גם כבד יותר.',
           'להחזיק בכל יד חפץ גדול וקל (כדור נייר) וחפץ קטן וכבד (אבן), ולנחש מי כבד יותר לפני שמרגישים.',
           ['concrete'], 'גָּדוֹל לֹא תָּמִיד כָּבֵד. בּוֹאוּ נִשְׁקֹל וְנִרְאֶה.')
@@ -374,7 +382,7 @@ def math():
           'להסביר: המחוג הקצר והעבה הוא "הבוס של השעות". להסתכל ביחד בשעון קיר בכל שעה עגולה.',
           ['pictorial', 'embodied'], 'הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה. בּוֹאוּ נִסְתַּכֵּל עָלָיו.')
     u.tag('M-ADD-RECOUNT', ['MATH-B-01', 'MATH-B-08'], 'הילד סופר הכול מההתחלה במקום להמשיך מהמספר הגדול.',
-          'להסתיר חמש מטבעות בכף יד סגורה, ולהוסיף עוד שלושה אחד אחד: חמש… שש, שבע, שמונה.',
+          'להסתיר חמישה מטבעות בכף יד סגורה, ולהוסיף עוד שלושה אחד אחד: חמש… שש, שבע, שמונה.',
           ['concrete', 'embodied'], 'אֵין צֹרֶךְ לִסְפֹּר הַכֹּל מֵחָדָשׁ. מַתְחִילִים מֵהַמִּסְפָּר הַגָּדוֹל.')
     # ---- MATH-B-01: join and take away
     u.skill('MATH-B-01', 'מוסיפים ולוקחים עד 10', 'מוֹסִיפִים וְלוֹקְחִים', 'stall', ['MATH-A-01', 'MATH-A-02'], ['concrete', 'pictorial'],
@@ -441,7 +449,7 @@ def math():
     for i, (x, y) in enumerate([(8, 5), (9, 4), (7, 6), (8, 7), (9, 6), (6, 9), (7, 8), (9, 9)]):
         r = x + y
         numpick(u, 'MATH-B-08', '%s וְעוֹד %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [r - 1, r + 1], i, row=['n:%d' % x, 'op:+', 'n:%d' % y, 'op:=', '?'],
-                text='%s! אֶפְשָׁר: %s וְעוֹד %s הֵם עֶשֶׂר, וְעוֹד %s.' % (F[r], F[x], F[10 - x], F[r - 10]),
+                text='%s! %s וְעוֹד %s הֵם עֶשֶׂר, וְעוֹד %s.' % (F[r], F[x], F[10 - x], F[r - 10]),
                 h3='%s וְעוֹד %s הֵם עֶשֶׂר. נִשְׁאָר עוֹד %s, אָז %s. עַכְשָׁו תּוֹרְכֶם.' % (F[x], F[10 - x], F[y - (10 - x)], F[r]))
     for i, (x, y) in enumerate([(13, 4), (15, 3), (12, 5), (17, 2)]):
         r = x - y
@@ -449,18 +457,18 @@ def math():
                 text='%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r]))
 
     # ---- MATH-B-09: equals means the same as
-    u.skill('MATH-B-09', 'שָׁוֶה זה אותו דבר', 'שְׁנֵי הַצְּדָדִים אוֹתוֹ דָּבָר', 'dock', ['MATH-B-03'], ['concrete', 'symbolic'], ['M-EQ-OPER'])
+    u.skill('MATH-B-09', '"שווה" זה אותו דבר', 'שְׁנֵי הַצְּדָדִים אוֹתוֹ דָּבָר', 'dock', ['MATH-B-03'], ['concrete', 'symbolic'], ['M-EQ-OPER'])
     for i, (la, lb, ra, rb) in enumerate([(3, 4, 5, 2), (2, 5, 4, 3), (6, 1, 3, 4), (4, 4, 5, 3)]):
         u.act('MATH-B-09', 'scale', mode='compare', hideTilt=True, left=[('apple', la), ('star', lb)], right=[('fish', ra), ('duck', rb)],
               result='same', tag='M-EQ-OPER',
-              prompt='%s וְעוֹד %s, מוּל %s וְעוֹד %s. מָה אוֹמֵר הַמֹּאזְנַיִם?' % (F[la], F[lb], F[ra], F[rb]),
-              h3='%s וְעוֹד %s הֵם %s. וְגַם %s וְעוֹד %s הֵם %s. שְׁנֵי הַצְּדָדִים שָׁווֹת.' % (F[la], F[lb], F[la + lb], F[ra], F[rb], F[ra + rb]),
-              correct_text='כֵּן! שְׁנֵי הַצְּדָדִים שָׁווֹת: %s שָׁוֶה %s.' % (F[la + lb], F[ra + rb]))
+              prompt='%s וְעוֹד %s, מוּל %s וְעוֹד %s. מָה אוֹמְרִים הַמֹּאזְנַיִם?' % (F[la], F[lb], F[ra], F[rb]),
+              h3='%s וְעוֹד %s הֵם %s. וְגַם %s וְעוֹד %s הֵם %s. שְׁנֵי הַצְּדָדִים שָׁוִים.' % (F[la], F[lb], F[la + lb], F[ra], F[rb], F[ra + rb]),
+              correct_text='כֵּן! שְׁנֵי הַצְּדָדִים שָׁוִים: %s שָׁוֶה %s.' % (F[la + lb], F[ra + rb]))
     for i, (la, lb, ra, rb, res) in enumerate([(5, 4, 3, 2, 'left'), (2, 2, 4, 3, 'right'), (6, 3, 2, 4, 'left'), (1, 3, 3, 3, 'right')]):
         u.act('MATH-B-09', 'scale', mode='compare', hideTilt=True, left=[('apple', la), ('star', lb)], right=[('fish', ra), ('duck', rb)],
               result=res, tag='M-EQ-OPER',
               prompt='%s וְעוֹד %s, מוּל %s וְעוֹד %s. אֵיזֶה צַד כָּבֵד יוֹתֵר?' % (F[la], F[lb], F[ra], F[rb]),
-              h3='%s וְעוֹד %s הֵם %s, וְ%s וְעוֹד %s הֵם %s. הַצַּד שֶׁיֵּשׁ בּוֹ יוֹתֵר כָּבֵד יוֹתֵר.' % (F[la], F[lb], F[la + lb], F[ra], F[rb], F[ra + rb]),
+              h3='%s וְעוֹד %s הֵם %s, %s וְעוֹד %s הֵם %s. הַצַּד שֶׁיֵּשׁ בּוֹ יוֹתֵר כָּבֵד יוֹתֵר.' % (F[la], F[lb], F[la + lb], vav(F[ra]), F[rb], F[ra + rb]),
               correct_text='כֵּן! %s בְּצַד אֶחָד, %s בַּצַּד הַשֵּׁנִי.' % (F[la + lb], F[ra + rb]))
     for i, (x, y, z) in enumerate([(3, 4, 7), (5, 2, 7), (6, 3, 9), (4, 5, 9)]):
         u.act('MATH-B-09', 'spot', cells=['n:%d' % z, 'op:=', 'n:%d' % x, 'op:+', 'n:%d' % (y + 1)], wrong=4, tag='M-EQ-OPER', rep='symbolic',
@@ -472,26 +480,27 @@ def math():
     for i, (g, per, obj) in enumerate([(2, 3, 'apple'), (3, 2, 'fish'), (2, 4, 'star'), (3, 3, 'duck'), (4, 2, 'ladybug'), (2, 5, 'bird')]):
         o = OBJECTS[obj]
         r = g * per
-        numpick(u, 'MATH-B-10', 'יֵשׁ %s צַלָּחוֹת. עַל כָּל צַלַּחַת %s. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?' % (F[g], qty(per, o)), r,
+        numpick(u, 'MATH-B-10', 'יֵשׁ %s. עַל כׇּל צַלַּחַת %s. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?' % (qty(g, PLATE), qty(per, o)), r,
                 [r - per, r + 1], i, rep='concrete',
                 text='%s! %s הֵם %s.' % (F[r], ' וְעוֹד '.join(F[per] for _ in range(g)), F[r]),
-                h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (' וְעוֹד '.join(num_for(per, o) for _ in range(g)), F[r]))
+                h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (' וְעוֹד '.join(F[per] for _ in range(g)), F[r]))
 
     # ---- MATH-B-13: weigh on the balance
-    u.skill('MATH-B-13', 'שׁוֹקְלִים עַל מֹאזְנַיִם', 'מִי כָּבֵד יוֹתֵר', 'pool', ['MATH-A-04'], ['concrete'], ['M-MEAS-BIG'])
+    u.skill('MATH-B-13', 'שוקלים על מאזניים', 'מִי כָּבֵד יוֹתֵר', 'pool', ['MATH-A-04'], ['concrete'], ['M-MEAS-BIG'])
     for i, (ls, lc, rs, rc, res) in enumerate([('stone', 1, 'feather', 1, 'left'), ('feather', 2, 'stone', 1, 'right'), ('apple', 3, 'apple', 3, 'same'),
                                                ('block', 4, 'block', 2, 'left'), ('stone', 2, 'feather', 3, 'left'), ('block', 3, 'block', 5, 'right')]):
         weights = {'stone': 3, 'feather': 1, 'apple': 1, 'block': 1}
         lw, rw = weights[ls], weights[rs]
         n1 = NAMES.get(ls, {'one': 'תַּפּוּחַ', 'g': 'm'})['one']
         u.act('MATH-B-13', 'scale', mode='compare', left=[(ls, lc, lw)], right=[(rs, rc, rw)], result=res, tag='M-MEAS-BIG',
-              prompt='אֵיזֶה צַד כָּבֵד יוֹתֵר? אוֹ שֶׁהֵם שָׁווֹת?',
-              h3='הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! הַצַּד הַזֶּה כָּבֵד יוֹתֵר.' if res != 'same' else 'כֵּן! שְׁנֵי הַצְּדָדִים שָׁווֹת.')
+              prompt='אֵיזֶה צַד כָּבֵד יוֹתֵר? אוֹ שֶׁהֵם שָׁוִים?',
+              h3='הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! הַצַּד הַזֶּה כָּבֵד יוֹתֵר.' if res != 'same' else 'כֵּן! שְׁנֵי הַצְּדָדִים שָׁוִים.')
     for i, (lc, rc) in enumerate([(5, 2), (6, 3), (4, 1), (7, 5)]):
         u.act('MATH-B-13', 'scale', mode='balance', left=[('block', lc, 1)], right=[('block', rc, 1)], block='block', result=lc - rc, tag='M-MEAS-BIG',
+              # the balance sides (D12) are an owner draft (proposed): this prompt keeps its text until he approves it
               prompt='הַצַּד הַיְמָנִי קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַמֹּאזְנַיִם שָׁווֹת.',
               h3='בַּצַּד הַשְּׂמָאלִי יֵשׁ %s, וּבַצַּד הַיְמָנִי %s. צָרִיךְ עוֹד %s.' % (qty(lc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(lc - rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'})),
-              correct_text='כֵּן! הַמֹּאזְנַיִם שָׁווֹת.')
+              correct_text='כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים.')
 
     # ---- MATH-B-14: days of the week
     u.skill('MATH-B-14', 'ימי השבוע', 'יוֹם רִאשׁוֹן, יוֹם שֵׁנִי…', 'dock', ['MATH-A-05'], ['pictorial', 'symbolic'], [])
@@ -499,7 +508,7 @@ def math():
         ans = k % 7 + 1 if ask == 'after' else (k - 2) % 7 + 1
         wrong = [x for x in (k, ans % 7 + 1 if ask == 'after' else (ans - 2) % 7 + 1) if x != ans]
         word = 'אַחֲרֵי' if ask == 'after' else 'לִפְנֵי'
-        u.act('MATH-B-14', 'pick', prompt='מָה בָּא %s %s?' % (word, DAYS[k - 1]),
+        u.act('MATH-B-14', 'pick', prompt='מַה בָּא %s %s?' % (word, DAYS[k - 1]),
               options=tri('day_%d' % ans, i, ['day_%d' % w for w in wrong]), correct='day_%d' % ans, rep='symbolic',
               correct_text='כֵּן! %s.' % DAYS[ans - 1], h3='%s, %s. עַכְשָׁו תּוֹרְכֶם.' % (DAYS[min(k, ans) - 1], DAYS[max(k, ans) - 1]) if abs(k - ans) == 1 else 'הַיָּמִים בַּסֵּדֶר: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(DAYS))
     for i, (k, ask) in enumerate([(3, 'tomorrow'), (5, 'tomorrow'), (2, 'yesterday'), (6, 'yesterday')]):
@@ -507,7 +516,7 @@ def math():
         today = k
         ans = today % 7 + 1 if ask == 'tomorrow' else (today - 2) % 7 + 1
         wrong = [today, ans % 7 + 1] if ask == 'tomorrow' else [today, (ans - 2) % 7 + 1]
-        u.act('MATH-B-14', 'pick', prompt='הַיּוֹם %s. מָה יִהְיֶה %s?' % (DAYS[today - 1], base) if ask == 'tomorrow' else 'הַיּוֹם %s. מָה הָיָה %s?' % (DAYS[today - 1], base),
+        u.act('MATH-B-14', 'pick', prompt='הַיּוֹם %s. מַה יִּהְיֶה %s?' % (DAYS[today - 1], base) if ask == 'tomorrow' else 'הַיּוֹם %s. מָה הָיָה %s?' % (DAYS[today - 1], base),
               options=tri('day_%d' % ans, i, ['day_%d' % w for w in wrong]), correct='day_%d' % ans, rep='symbolic',
               correct_text='כֵּן! %s %s.' % (base, DAYS[ans - 1]), h3='הַיּוֹם %s. עַכְשָׁו תּוֹרְכֶם.' % DAYS[today - 1])
 
@@ -526,39 +535,44 @@ def math():
               row=['n:%d' % x, 'op:+', '?', 'op:=', 'n:%d' % total], options=tri('n:%d' % r, i, ['n:%d' % o for o in clean(r, [total, r + 1])]),
               correct='n:%d' % r, tags={'n:%d' % total: 'M-EQ-OPER'}, rep='symbolic',
               correct_text='%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[r], F[x], F[r], F[total]),
-              h3='%s, וְעוֹד… עַד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[total], count_words(total), F[r]))
+              h2='%s כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד %s, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ.' % (F[x], F[total]),
+              h3='%s… וּמַמְשִׁיכִים: %s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+                  F[x], ', '.join(F[k] for k in range(x + 1, total + 1)), 'שְׁתֵּי' if r == 2 else F[r], F[r]))
 
     # ---- lessons
     def ids(skill, a=0, b=None):
         return [x['id'] for x in u.d['activities'] if x['skill'] == skill][a:b]
 
     u.lesson('join-more', 'מוֹסִיפִים', ['MATH-B-01'], ids('MATH-B-01', 0, 6), 'כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וְחִשַּׁבְתֶּם.')
-    u.lesson('take-away-more', 'לוֹקְחִים', ['MATH-B-01'], ids('MATH-B-01', 6), 'יָפֶה מְאוֹד! לְקַחְתֶּם וְחִשַּׁבְתֶּם.')
+    u.lesson('take-away-more', 'לוֹקְחִים', ['MATH-B-01'], ids('MATH-B-01', 6), 'יָפֶה מְאֹד! לְקַחְתֶּם וְחִשַּׁבְתֶּם.')
     u.lesson('missing-part', 'הַחֵלֶק שֶׁחָסֵר', ['MATH-B-02'], ids('MATH-B-02', 0, 6), 'כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַחֵלֶק.')
     u.lesson('missing-part-more', 'עוֹד חֲלָקִים', ['MATH-B-02'], ids('MATH-B-02', 6), 'מְצֻיָּן! הַכֹּל שָׁלֵם.')
     u.lesson('read-sums', 'קוֹרְאִים תַּרְגִּילִים', ['MATH-B-03'], ids('MATH-B-03', 0, 8), 'כׇּל הַכָּבוֹד! קְרָאתֶם תַּרְגִּילִים.')
     u.lesson('find-the-slip', 'מוֹצְאִים טָעוּת', ['MATH-B-03'], ids('MATH-B-03', 8), 'מְצֻיָּן! מְצָאתֶם אֶת הַטָּעוּת.')
     u.lesson('make-ten', 'מַשְׁלִימִים לְעֶשֶׂר', ['MATH-B-06'], ids('MATH-B-06', 0, 5), 'כׇּל הַכָּבוֹד! הִגַּעְתֶּם לְעֶשֶׂר.')
-    u.lesson('make-ten-more', 'עוֹד עֶשֶׂר', ['MATH-B-06'], ids('MATH-B-06', 5), 'יָפֶה! עֶשֶׂר כָּל פַּעַם.')
+    u.lesson('make-ten-more', 'עוֹד עֶשֶׂר', ['MATH-B-06'], ids('MATH-B-06', 5), 'יָפֶה! עֶשֶׂר כׇּל פַּעַם.')
     u.lesson('zero-sums', 'אֶפֶס בַּתַּרְגִּילִים', ['MATH-B-07'], ids('MATH-B-07'), 'נִפְלָא! אֶפֶס לֹא מְשַׁנֶּה.')
     u.lesson('to-twenty', 'עַד עֶשְׂרִים', ['MATH-B-08'], ids('MATH-B-08', 0, 8), 'כׇּל הַכָּבוֹד! חִבַּרְתֶּם עַד עֶשְׂרִים.')
-    u.lesson('to-twenty-more', 'עוֹד לְפָנֶיךָ עֶשְׂרִים', ['MATH-B-08'], ids('MATH-B-08', 8), 'מְצֻיָּן! גַּם חִסַּרְתֶּם.')
-    u.lesson('equals-balance', 'שָׁוֶה זֶה אוֹתוֹ דָּבָר', ['MATH-B-09'], ids('MATH-B-09', 0, 8), 'כׇּל הַכָּבוֹד! שְׁנֵי הַצְּדָדִים שָׁווֹת.')
+    u.lesson('to-twenty-more', 'עוֹד עַד עֶשְׂרִים', ['MATH-B-08'], ids('MATH-B-08', 8), 'מְצֻיָּן! גַּם חִסַּרְתֶּם.')
+    u.lesson('equals-balance', 'שָׁוֶה זֶה אוֹתוֹ דָּבָר', ['MATH-B-09'], ids('MATH-B-09', 0, 8), 'כׇּל הַכָּבוֹד! שְׁנֵי הַצְּדָדִים שָׁוִים.')
     u.lesson('equals-slip', 'מוֹצְאִים אֶת הַטָּעוּת', ['MATH-B-09'], ids('MATH-B-09', 8), 'יָפֶה! הַצְּדָדִים מְאֻזָּנִים.')
-    u.lesson('equal-groups', 'קְבוּצוֹת שָׁווֹת', ['MATH-B-10'], ids('MATH-B-10'), 'כׇּל הַכָּבוֹד! בְּכָל צַלַּחַת אוֹתוֹ מִסְפָּר.')
+    u.lesson('equal-groups', 'קְבוּצוֹת שָׁווֹת', ['MATH-B-10'], ids('MATH-B-10'), 'כׇּל הַכָּבוֹד! בְּכׇל צַלַּחַת אוֹתוֹ מִסְפָּר.')
     u.lesson('weigh-it', 'שׁוֹקְלִים', ['MATH-B-13'], ids('MATH-B-13', 0, 6), 'כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לִשְׁקֹל.')
-    u.lesson('balance-it', 'מְאַזְּנִים', ['MATH-B-13'], ids('MATH-B-13', 6), 'יָפֶה מְאוֹד! הַמֹּאזְנַיִם שָׁווֹת.')
+    u.lesson('balance-it', 'מְאַזְּנִים', ['MATH-B-13'], ids('MATH-B-13', 6), 'יָפֶה מְאֹד! הַמֹּאזְנַיִם מְאֻזָּנִים.')
     u.lesson('days-of-the-week', 'יְמֵי הַשָּׁבוּעַ', ['MATH-B-14'], ids('MATH-B-14'), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים אֶת הַיָּמִים.')
     u.lesson('what-time', 'מָה הַשָּׁעָה', ['MATH-B-15'], ids('MATH-B-15', 0, 5), 'כׇּל הַכָּבוֹד! קְרָאתֶם שָׁעוֹן.')
-    u.lesson('what-time-more', 'עוֹד שָׁעוֹת', ['MATH-B-15'], ids('MATH-B-15', 5), 'מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר.')
+    u.lesson('what-time-more', 'עוֹד שָׁעוֹת', ['MATH-B-15'], ids('MATH-B-15', 5), 'מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה.')
     u.lesson('missing-number', 'הַמִּסְפָּר הֶחָסֵר', ['MATH-B-18'], ids('MATH-B-18'), 'נִפְלָא! מְצָאתֶם אֶת הַמִּסְפָּר.')
     u.save()
 
 
 if __name__ == '__main__':
-    numbers()
-    math()
+    # one module for every part (band_b2 and band_b3 import "band_b", not "__main__"), so the units share SHARED_FB and MADE
+    import band_b
     import band_b2
-    band_b2.run()
     import band_b3
+    band_b.numbers()
+    band_b.math()
+    band_b2.run()
     band_b3.run()
+    band_b.write_all()

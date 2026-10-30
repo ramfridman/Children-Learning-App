@@ -69,7 +69,7 @@
       "g": "m"
     },
     "solid_box": {
-      "one": "קֻבִּיָּה",
+      "one": "קֻפְסָה",
       "g": "f"
     },
     "line_straight": {
@@ -339,7 +339,7 @@
     {
       "id": "SHP-A-07",
       "title": "מבדילים כדור מקובייה: מתגלגל או נערם",
-      "child": "יוֹדְעִים מָה מִתְגַּלְגֵּל וּמָה נֶעֱרָם",
+      "child": "יוֹדְעִים מַה מִּתְגַּלְגֵּל וּמָה נֶעֱרָם",
       "world": "dock",
       "needs": [],
       "reps": [
@@ -351,7 +351,7 @@
     {
       "id": "SHP-A-08",
       "title": "מבינים על, מתחת, בתוך, ליד ומעל",
-      "child": "מְבִינִים עַל, מִתַּחַת, בְּתוֹךְ וְלְיַד",
+      "child": "מְבִינִים עַל, מִתַּחַת, בְּתוֹךְ וּלְיַד",
       "world": "pattern-door",
       "needs": [],
       "reps": [
@@ -616,7 +616,7 @@
       "kind": "pick",
       "id": "shp.world.circle",
       "skill": "SHP-A-05",
-      "prompt": "מָה בְּצוּרַת עִגּוּל?",
+      "prompt": "מַה בְּצוּרַת עִגּוּל?",
       "options": [
         "window",
         "sign",
@@ -629,7 +629,7 @@
       "kind": "pick",
       "id": "shp.world.rect",
       "skill": "SHP-A-05",
-      "prompt": "מָה בְּצוּרַת מַלְבֵּן?",
+      "prompt": "מַה בְּצוּרַת מַלְבֵּן?",
       "options": [
         "plate",
         "window",
@@ -642,7 +642,7 @@
       "kind": "pick",
       "id": "shp.world.triangle",
       "skill": "SHP-A-05",
-      "prompt": "מָה בְּצוּרַת מְשֻׁלָּשׁ?",
+      "prompt": "מַה בְּצוּרַת מְשֻׁלָּשׁ?",
       "options": [
         "sign",
         "plate",
@@ -655,7 +655,7 @@
       "kind": "pick",
       "id": "shp.solid.rolls",
       "skill": "SHP-A-07",
-      "prompt": "מָה מִתְגַּלְגֵּל?",
+      "prompt": "מַה מִּתְגַּלְגֵּל?",
       "options": [
         "solid_box",
         "ball_red"
@@ -681,7 +681,7 @@
       "kind": "pick",
       "id": "shp.solid.which",
       "skill": "SHP-A-07",
-      "prompt": "מָה לֹא מִתְגַּלְגֵּל?",
+      "prompt": "מַה נִּשְׁאָר עוֹמֵד בַּמָּקוֹם?",
       "options": [
         "ball_red",
         "solid_box"
@@ -1046,7 +1046,7 @@
       "kind": "pick",
       "id": "shp.solid.rolls.blue",
       "skill": "SHP-A-07",
-      "prompt": "מָה מִתְגַּלְגֵּל?",
+      "prompt": "מַה מִּתְגַּלְגֵּל?",
       "options": [
         "solid_box",
         "ball_blue"
@@ -1336,7 +1336,7 @@
       "kind": "shapebuild",
       "id": "shp.build.rocket",
       "skill": "SHP-A-06",
-      "what": "חַלָּלִית",
+      "what": "חֲלָלִית",
       "difficulty": 0.45,
       "slots": [
         [
@@ -1380,7 +1380,7 @@
       "kind": "pick",
       "id": "shp.solid.which2",
       "skill": "SHP-A-07",
-      "prompt": "מָה לֹא מִתְגַּלְגֵּל?",
+      "prompt": "מַה נִּשְׁאָר עוֹמֵד בַּמָּקוֹם?",
       "options": [
         "solid_box",
         "ball_blue"
@@ -1394,7 +1394,7 @@
   "lessons": [
     {
       "id": "shape-friends",
-      "title": "חֲבֵרִים צוּרוֹת",
+      "title": "מַכִּירִים צוּרוֹת",
       "skills": [
         "SHP-A-01",
         "SHP-A-02"
@@ -1469,7 +1469,7 @@
         "shp.solid.which"
       ],
       "minutes": 3,
-      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה מִתְגַּלְגֵּל וּמָה נֶעֱרָם."
+      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה מִּתְגַּלְגֵּל וּמָה נֶעֱרָם."
     },
     {
       "id": "where-is-it",
@@ -1484,11 +1484,11 @@
         "shp.where.next"
       ],
       "minutes": 4,
-      "done": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כֻּל דָּבָר."
+      "done": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כׇּל דָּבָר."
     },
     {
       "id": "shape-friends-again",
-      "title": "עוֹד חֲבֵרִים צוּרוֹת",
+      "title": "מַכִּירִים עוֹד צוּרוֹת",
       "skills": [
         "SHP-A-01",
         "SHP-A-02"
@@ -1561,7 +1561,7 @@
         "shp.solid.which2"
       ],
       "minutes": 2,
-      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מָה מִתְגַּלְגֵּל."
+      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה מִּתְגַּלְגֵּל."
     },
     {
       "id": "where-is-it-again",
@@ -1574,7 +1574,7 @@
         "shp.where.in2"
       ],
       "minutes": 2,
-      "done": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כֻּל דָּבָר."
+      "done": "יָפֶה מְאֹד! הֵבַנְתֶּם אֵיפֹה כׇּל דָּבָר."
     },
     {
       "id": "build-with-shapes",

@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "מָה מִתְגַּלְגֵּל?"
+        "v": "מַה מִּתְגַּלְגֵּל?"
       }
     ],
     "replayButton": true
@@ -40,7 +40,7 @@
       {
         "id": "o1",
         "sprite": "asset:solid_box",
-        "label": "קֻבִּיָּה"
+        "label": "קֻפְסָה"
       },
       {
         "id": "o2",
@@ -135,6 +135,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מָה מִתְגַּלְגֵּל?"
+    "altText": "מַה מִּתְגַּלְגֵּל?"
   }
 }
