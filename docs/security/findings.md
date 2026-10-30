@@ -89,3 +89,12 @@ this check, a format mismatch between a deployed gateway and an installed app, i
 - **SEC-16, GitHub settings (2026-10-29): closed by the owner, with one setting reverted.** `main` has an active ruleset with no bypass (no deletion, no force
   push, linear history, and the six CI check names required). The setting "require actions pinned to a full commit SHA" was tried and
   turned off again: it also checks the actions that `flutter-action` calls inside itself (`actions/cache` by tag) and broke every app job. Our own workflow files stay pinned by SHA. Read back with the GitHub API.
+- **The child-name limit (board B-28, 2026-10-30): approved, nothing blocks; four low findings go to follow-ups.** The gateway `child-put` is unchanged
+  (nickname 1 to 24 UTF-16 units, no control characters, no angle brackets). The app now counts the same way, refuses more than the server
+  (C1 controls, direction marks), sends names saved earlier cut to fit, and keeps a phone's whole name when the server holds its cut copy.
+  No code path logs the name, and it reaches no prompt or vendor today. Low: SEC-B28-1 (the server accepts bidi, zero-width, tag
+  characters, lone surrogates and mark floods inside the 24 units), SEC-B28-2 (the app's stricter set is incomplete; a name of only
+  invisible characters is valid), SEC-B28-3 (names that arrive by sync and old local names are not checked), SEC-B28-4 (answers of a child the
+  server does not have are marked sent and lost; older than B-28, and a failed `child-put` causes it too). Info: SEC-B28-5 to 9
+  (bounded resend on error, no abuse path in the pull rule, placeholder substitution order, clean logging, deploy order). Follow-ups are
+  board B-32 and B-33. Detail is in the git-ignored `docs/security/private/B-28-name-limit-review.md`.
