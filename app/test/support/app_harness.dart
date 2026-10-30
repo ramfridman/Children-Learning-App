@@ -202,6 +202,8 @@ class AppRig {
     if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),
     // Nothing reaches for the network behind a test's back; sync tests give their own engine.
     syncEnabledProvider.overrideWithValue(false),
+    // Pumped frames do not wait for another isolate: the words are matched here (alert_safety_test covers the isolate).
+    alertCheckOffThreadProvider.overrideWithValue(false),
     remoteSwitchesProvider.overrideWithValue(
       RemoteSwitches(() async {
         if (switchAnswersAfter > Duration.zero) await Future<void>.delayed(switchAnswersAfter);

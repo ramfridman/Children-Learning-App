@@ -43,7 +43,7 @@ class LessonVoice {
   final LessonController lesson;
 
   /// What the recogniser heard for one answer, for the parent's word alerts (not stored by the lesson).
-  final void Function(List<String> texts)? onWords;
+  final void Function(List<String> texts, Set<String> answerWords)? onWords;
 
   /// The activity on screen now.
   final TemplateSession? Function() session;

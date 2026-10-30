@@ -30,6 +30,8 @@ final ({
   Map<String, _Check> event,
   Map<String, _Check> data,
   Map<String, List<String>> required,
+  Map<String, _Check> alert,
+  Set<String> wordCategories,
 })
 _wire = () {
   final Map<String, Object?> v =
@@ -45,6 +47,10 @@ _wire = () {
     required: <String, List<String>>{
       for (final MapEntry<String, Object?> e in (v['required']! as Map<String, Object?>).entries)
         e.key: <String>[for (final Object? k in e.value! as List<Object?>) k! as String],
+    },
+    alert: checks('alert_create'),
+    wordCategories: <String>{
+      for (final Object? c in v['alert_word_categories']! as List<Object?>) c! as String,
     },
   );
 }();
@@ -164,24 +170,72 @@ class FakeFamilyServer {
           'tombstones': List<String>.of(tombstones),
         };
       case 'alert-create':
+        _checkAlert(body);
         final String? child = body['child_id'] as String?;
         if (child != null && !children.containsKey(child)) return <String, Object?>{'status': 'refused'};
-        if (alerts.any((Map<String, Object?> a) => a['key'] == body['key'])) {
+        final Map<String, Object?>? have = alerts
+            .where((Map<String, Object?> a) => a['key'] == body['key'])
+            .firstOrNull;
+        if (have != null) {
+          // As the server: only a word alert said again keeps the higher count (QA-43).
+          if (_wire.wordCategories.contains(have['category']) &&
+              have['category'] == body['category'] &&
+              (body['count']! as int) > (have['count'] as int? ?? 0)) {
+            have['count'] = body['count'];
+          }
           return <String, Object?>{'status': 'duplicate'};
         }
-        alerts.add(<String, Object?>{...body, 'child_id': child, 'id': 'a${alerts.length}', 'read_at': null});
+        // As the server: the words are dropped when the family does not keep them (SEC-28).
+        alerts.add(<String, Object?>{
+          ...body,
+          'child_id': child,
+          'id': 'a${alerts.length}',
+          'read_at': null,
+          if (!keepsWords) 'words': '',
+        });
         return <String, Object?>{'status': 'new'};
       case 'alert-list':
         if (!parent) throw StateError('forbidden');
-        return <String, Object?>{'alerts': List<Map<String, Object?>>.of(alerts)};
+        return <String, Object?>{
+          'alerts': <Map<String, Object?>>[
+            for (final Map<String, Object?> a in alerts)
+              <String, Object?>{...a, if (!keepsWords) 'words': ''},
+          ],
+        };
       case 'settings-put':
         if (!parent) throw StateError('forbidden');
         rules = jsonDecode(body['rules_json']! as String) as Map<String, Object?>;
+        // As the server: turning "keep the words" off empties the words of every alert (SEC-28).
+        if (!keepsWords) {
+          for (final Map<String, Object?> a in alerts) {
+            a['words'] = '';
+          }
+        }
         return <String, Object?>{'version': ++rulesVersion};
       case 'settings-get':
         return <String, Object?>{'rules': rules, 'version': rulesVersion};
     }
     throw StateError('unknown function $name');
+  }
+
+  /// Whether the family keeps the child's words (the default until a parent says no).
+  bool get keepsWords => rules?['keepWords'] != false;
+
+  /// The schema check of the real `alert-create` (testvectors/wire-patterns.json): a known key with a value it takes,
+  /// the keys it needs, a child unless the alert is about the gate, and words only on a word alert.
+  void _checkAlert(Map<String, Object?> body) {
+    bool fits() {
+      for (final MapEntry<String, Object?> e in body.entries) {
+        final _Check? check = _wire.alert[e.key];
+        if (check == null || !check(e.value)) return false;
+      }
+      if (!<String>['category', 'severity', 'count', 'key', 'at'].every(body.containsKey)) return false;
+      if (body['category'] != 'gateAttempts' && body['child_id'] == null) return false;
+      final String words = body['words'] as String? ?? '';
+      return words.isEmpty || _wire.wordCategories.contains(body['category']);
+    }
+
+    if (!fits()) throw const GatewayException('bad_request', status: 400);
   }
 
   /// The schema check of the real `sync-push`, then its check of the keys each type must carry.

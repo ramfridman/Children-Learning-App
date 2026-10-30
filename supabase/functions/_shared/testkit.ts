@@ -400,10 +400,18 @@ export class FakeStore implements Store {
     if (a.childId !== null && !this.children.get(familyId)?.has(a.childId)) {
       return Promise.resolve("refused" as const);
     }
-    if (this.alerts.some((x) => x.familyId === familyId && x.key === a.key)) {
+    const have = this.alerts.find((x) => x.familyId === familyId && x.key === a.key);
+    if (have) {
+      // As the database: a word alert said again keeps the higher count.
+      const words = ["inappropriateWords", "disclosure", "concern"];
+      if (words.includes(have.category) && have.category === a.category && a.count > have.count) {
+        have.count = a.count;
+      }
       return Promise.resolve("duplicate" as const);
     }
-    this.alerts.push({ ...a, familyId, deviceId, id: crypto.randomUUID(), readAtMs: null });
+    // As the database: the family's rules decide the words in the insert itself.
+    const words = this.settings.get(familyId)?.rules.keepWords === false ? "" : a.words;
+    this.alerts.push({ ...a, words, familyId, deviceId, id: crypto.randomUUID(), readAtMs: null });
     return Promise.resolve("new" as const);
   }
   listAlerts(familyId: string, sinceMs: number) {
@@ -442,6 +450,10 @@ export class FakeStore implements Store {
   putSettings(familyId: string, rules: Record<string, unknown>) {
     const version = (this.settings.get(familyId)?.version ?? 0) + 1;
     this.settings.set(familyId, { rules, version });
+    // As the database: "keep the words" off empties the family's words.
+    if (rules.keepWords === false) {
+      for (const a of this.alerts) if (a.familyId === familyId) a.words = "";
+    }
     return Promise.resolve(version);
   }
   tutorLogOf(familyId: string, sinceMs: number, limit: number): Promise<TutorLogEntry[]> {

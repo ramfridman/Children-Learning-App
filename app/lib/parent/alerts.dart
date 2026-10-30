@@ -10,8 +10,16 @@ enum AlertCategory {
   gateAttempts,
   guessing,
   frustration,
+
+  /// Words heard in a spoken answer, tier 3: swearing or a word of the adult world, counted in one note a week per
+  /// child. Never pushed.
   inappropriateWords,
+
+  /// Words heard in a spoken answer, tier 1: a clear worrying statement, or rules C-1 and C-2. The only push.
   disclosure,
+
+  /// Words heard in a spoken answer, tier 2: worth a check (siblings, films, play). In the app only.
+  concern,
   absence,
 
   /// A trophy with a promise on it was earned (M8). The alert holds only the trophy's key.
@@ -24,12 +32,20 @@ AlertSeverity severityOf(AlertCategory c) => switch (c) {
   AlertCategory.pastLimit ||
   AlertCategory.restHours ||
   AlertCategory.absence ||
-  AlertCategory.ribbonEarned => AlertSeverity.info,
+  AlertCategory.ribbonEarned ||
+  AlertCategory.inappropriateWords => AlertSeverity.info,
   AlertCategory.gateAttempts ||
   AlertCategory.guessing ||
   AlertCategory.frustration ||
-  AlertCategory.inappropriateWords => AlertSeverity.attention,
+  AlertCategory.concern => AlertSeverity.attention,
   AlertCategory.disclosure => AlertSeverity.important,
+};
+
+/// The three word-alert categories, by tier.
+const Map<int, AlertCategory> wordCategory = <int, AlertCategory>{
+  1: AlertCategory.disclosure,
+  2: AlertCategory.concern,
+  3: AlertCategory.inappropriateWords,
 };
 
 /// An alert found but not yet saved. [key] is what makes one alert the same alert next time (one per day, per session,
@@ -253,23 +269,208 @@ List<AlertDraft> absenceAlerts(DateTime now, ChildHistory child) {
   return const <AlertDraft>[];
 }
 
-/// A spoken answer's words set off an alert, or none. [keepWords] is the parent's choice; the words are kept only
-/// when it is on.
-AlertDraft? wordAlert({
-  required DateTime at,
+// ---- word alerts ----
+
+/// What a word alert says about itself in its fixed [AlertDraft.detail]: `tier:sub:rule:listVersion`, then the flags
+/// `often` (rule C-5), `secret` (C-2) and `repeat` (C-1). Fixed characters only, never the child's words.
+class WordDetail {
+  const WordDetail({
+    required this.tier,
+    required this.sub,
+    required this.rule,
+    required this.listVersion,
+    this.flags = const <String>{},
+  });
+
+  /// Null for an alert that is not a word alert, or one saved before the tiers (its detail is empty).
+  static WordDetail? parse(String detail) {
+    final List<String> p = detail.split(':');
+    final int? tier = int.tryParse(p.first);
+    if (p.length < 4 || tier == null || tier < 1 || tier > 3) return null;
+    return WordDetail(tier: tier, sub: p[1], rule: p[2], listVersion: p[3], flags: p.sublist(4).toSet());
+  }
+
+  final int tier;
+  final String sub;
+  final String rule;
+  final String listVersion;
+  final Set<String> flags;
+
+  /// Only characters `alert-create` takes, whatever the lists held (SEC-25); at most 80.
+  String encode() {
+    final String d = <Object>[
+      tier,
+      sub,
+      rule,
+      listVersion,
+      ...flags,
+    ].map((Object x) => _wire('$x')).join(':');
+    return d.length <= 80 ? d : d.substring(0, 80);
+  }
+}
+
+/// A value of a detail or a key: only `[A-Za-z0-9._=-]`, at most 64 characters.
+String _wire(String s) {
+  final String w = s.replaceAll(_notWireField, '');
+  return w.length <= 64 ? w : w.substring(0, 64);
+}
+
+final RegExp _notWireField = RegExp(r'[^A-Za-z0-9._=-]');
+
+/// The longest words `alert-create` takes.
+const int maxWireWords = 200;
+
+final RegExp _notWireWords = RegExp('[^\u0590-\u05FFA-Za-z0-9 .,?!\'"-]');
+final RegExp _spaces = RegExp(' {2,}');
+
+/// The child's words as `alert-create` takes them (SEC-25): every character outside its pattern (`%`, `:`, an emoji, a
+/// direction mark, a control character) becomes a space, spaces are collapsed, the ends trimmed, and the whole cut to
+/// [maxWireWords]. Done once, when the alert is made, so what the phone shows is what the family gets.
+String wireWords(String text) {
+  final String w = text.replaceAll(_notWireWords, ' ').replaceAll(_spaces, ' ').trim();
+  return w.length <= maxWireWords ? w : w.substring(0, maxWireWords).trimRight();
+}
+
+/// The key of a child's weekly note of one kind.
+String noteKey(String profileId, String sub, DateTime now) =>
+    'note:${_wire(profileId)}:${_wire(sub)}:${weekOf(now)}';
+
+/// One alert per child and subcategory in this time, counted; a stronger tier starts a new one.
+const Duration wordEpisode = Duration(minutes: 30);
+
+/// Rule C-1: a second check within this time is an act.
+const Duration repeatWindow = Duration(days: 7);
+
+/// Rule C-2: a secret and a harm within this time are an act.
+const Duration secretWindow = Duration(hours: 24);
+
+const Set<String> _harm = <String>{'PHYS', 'SEX', 'FEAR'};
+
+/// What to save for one spoken answer.
+sealed class WordStep {
+  const WordStep();
+}
+
+/// A new alert.
+class AddAlert extends WordStep {
+  const AddAlert(this.draft);
+
+  final AlertDraft draft;
+}
+
+/// The same alert again: its count goes up by one, and it is sent to the family again (without a push). A weekly note
+/// also takes [at], the time it was last heard (rule C-2 looks back from it), and [words], the words of that hearing,
+/// so no word stays longer than 30 days after it was heard (SEC-32).
+class CountAgain extends WordStep {
+  const CountAgain(this.alert, {this.at, this.words});
+
+  final Alert alert;
+  final DateTime? at;
+  final String? words;
+}
+
+/// The Sunday the week of [t] starts on, as the key of the weekly note.
+String weekOf(DateTime t) {
+  final DateTime d = DateTime(t.year, t.month, t.day - t.weekday % 7);
+  String two(int v) => v.toString().padLeft(2, '0');
+  return '${d.year}-${two(d.month)}-${two(d.day)}';
+}
+
+/// What [match] adds to a child's alerts, given the child's alerts of the last week ([recent]):
+///
+/// - Tier 3: one note per child, kind and week, counted ("{n} פעמים"): swearing (SWEAR), adult words (EXPOSE), asking
+///   the helper to keep a secret (SECRET, W-47) and hitting oneself in band A (SELF, W-37).
+/// - Tiers 1 and 2: one alert per child and subcategory for [wordEpisode], counted; a stronger tier starts a new one.
+/// - C-2: a secret now and a harm in the last [secretWindow] (or the other way round, the secret also a note) is tier 1.
+/// - C-1: a new check when the child had another check in the last [repeatWindow] is tier 1, once a week.
+/// - C-4: a swear in the same answer as a phrase is counted in the note as well.
+///
+/// The words kept are the hypothesis that matched, cleaned for the gateway ([wireWords]), and only when [keepWords]
+/// is on.
+List<WordStep> planWordAlert({
+  required DateTime now,
   required String profileId,
-  required List<String> texts,
+  required WordMatch match,
   required bool keepWords,
-  required String key,
+  required List<Alert> recent,
 }) {
-  final WordAlert? w = checkWords(texts);
-  if (w == null) return null;
-  return AlertDraft(
-    category: w == WordAlert.disclosure ? AlertCategory.disclosure : AlertCategory.inappropriateWords,
-    at: at,
-    key: key,
-    profileId: profileId,
-    words: keepWords ? texts.first : '',
+  final List<(Alert, WordDetail)> mine = <(Alert, WordDetail)>[
+    for (final Alert a in recent)
+      if (a.profileId == profileId)
+        if (WordDetail.parse(a.detail) case final WordDetail d) (a, d),
+  ];
+  bool since(Alert a, Duration d) => !a.at.isBefore(now.subtract(d));
+  int tier = match.tier;
+  final Set<String> flags = <String>{if (match.often) 'often', if (match.secret) 'secret'};
+  final List<WordStep> steps = <WordStep>[];
+  final bool harmNow = _harm.contains(match.sub);
+  if ((harmNow || match.sub == 'SECRET') && !flags.contains('secret')) {
+    final bool paired = mine.any(
+      ((Alert, WordDetail) x) =>
+          since(x.$1, secretWindow) &&
+          (harmNow ? x.$2.sub == 'SECRET' : x.$2.tier < 3 && _harm.contains(x.$2.sub)),
+    );
+    if (paired) {
+      tier = 1;
+      flags.add('secret');
+    }
+  }
+
+  if (tier == 3) return <WordStep>[_note(now, profileId, match, keepWords, mine)];
+
+  final (Alert, WordDetail)? open = mine
+      .where(
+        ((Alert, WordDetail) x) => x.$2.tier <= tier && x.$2.sub == match.sub && since(x.$1, wordEpisode),
+      )
+      .firstOrNull;
+  if (open != null) {
+    steps.add(CountAgain(open.$1));
+  } else {
+    if (tier == 2 &&
+        mine.any(((Alert, WordDetail) x) => x.$2.tier == 2 && since(x.$1, repeatWindow)) &&
+        !mine.any(((Alert, WordDetail) x) => x.$2.flags.contains('repeat') && since(x.$1, repeatWindow))) {
+      tier = 1;
+      flags.add('repeat');
+    }
+    steps.add(
+      AddAlert(
+        AlertDraft(
+          category: wordCategory[tier]!,
+          at: now,
+          key: 'words:${_wire(profileId)}:${now.millisecondsSinceEpoch}',
+          profileId: profileId,
+          count: 1,
+          detail: WordDetail(
+            tier: tier,
+            sub: match.sub,
+            rule: match.rule,
+            listVersion: match.listVersion,
+            flags: flags,
+          ).encode(),
+          words: keepWords ? wireWords(match.text) : '',
+        ),
+      ),
+    );
+  }
+  if (match.swear case final WordMatch swear) steps.add(_note(now, profileId, swear, keepWords, mine));
+  return steps;
+}
+
+/// The week's note of one kind for one child: counted again if there is one, otherwise started.
+WordStep _note(DateTime now, String profileId, WordMatch m, bool keepWords, List<(Alert, WordDetail)> mine) {
+  final String key = noteKey(profileId, m.sub, now);
+  final Alert? have = mine.where(((Alert, WordDetail) x) => x.$1.dedupeKey == key).firstOrNull?.$1;
+  if (have != null) return CountAgain(have, at: now, words: keepWords ? wireWords(m.text) : '');
+  return AddAlert(
+    AlertDraft(
+      category: AlertCategory.inappropriateWords,
+      at: now,
+      key: key,
+      profileId: profileId,
+      count: 1,
+      detail: WordDetail(tier: 3, sub: m.sub, rule: m.rule, listVersion: m.listVersion).encode(),
+      words: keepWords ? wireWords(m.text) : '',
+    ),
   );
 }
 

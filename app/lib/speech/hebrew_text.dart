@@ -9,7 +9,8 @@ const Map<String, String> _finals = <String, String>{'ך': 'כ', 'ם': 'מ', 'ן
 /// white space. Latin letters are lower-cased; digits stay.
 String normalizeHebrew(String text) {
   final StringBuffer out = StringBuffer();
-  final String bare = text.replaceAll(_marks, '').replaceAll('־', ' ');
+  // The maqaf first: it sits inside the range of the marks, which would delete it (QA-35).
+  final String bare = text.replaceAll('־', ' ').replaceAll(_marks, '');
   for (final int r in bare.runes) {
     final String ch = String.fromCharCode(r);
     if (_finals.containsKey(ch)) {

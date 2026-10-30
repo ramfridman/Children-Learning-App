@@ -22,7 +22,8 @@ def has_nikud(s):
 src = open('app/lib/strings/he.dart', encoding='utf-8').read()
 for m in re.finditer(r"static const Str (\w+) = Str\(\s*'((?:[^'\\]|\\.)*)'(\s*,\s*nikud:\s*true)?", src):
     name, text, nk = m.group(1), m.group(2), m.group(3)
-    rows.append(('1. App screens and buttons', 'app/lib/strings/he.dart', name, text.replace(chr(92) + "'", "'"),
+    text = re.sub(r'\\u([0-9a-fA-F]{4})', lambda u: chr(int(u.group(1), 16)), text.replace(chr(92) + "'", "'"))
+    rows.append(('1. App screens and buttons', 'app/lib/strings/he.dart', name, text,
                  'needs-editor', 'child (nikud)' if nk else 'adult'))
 
 # 2. core voice lines
@@ -63,7 +64,7 @@ for f in sorted(glob.glob('content/tutor-lines/*.json')):
                      l['say'], l.get('review', 'needs-editor'), 'child (nikud)' if has_nikud(l['say']) else 'child'))
 
 # 5. word lists
-for f, label in (('app/lib/speech/alert_words.dart', '5. Alert word lists (for an editor and someone who works with children)'),
+for f, label in (('app/lib/speech/alert_lists.dart', '5. Alert word lists (for an editor and someone who works with children)'),
                  ('app/lib/speech/lexicon.dart', '6. Helper lexicon (the words the AI helper may use)')):
     t = open(f, encoding='utf-8').read()
     words = sorted(set(re.findall(r"'([\u0590-\u05ff][^']*)'", t)))

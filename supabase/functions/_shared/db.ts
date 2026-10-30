@@ -524,14 +524,23 @@ export function pgStore(sql: Sql): Store {
           await sql`select 1 from app.child_profile where family_id = ${familyId} and id = ${a.childId}`;
         if (!have) return "refused";
       }
+      // The same key again: a word alert said again takes the higher count (never lower, nothing else changes); every
+      // other alert is left as it was. Either way it is a duplicate, and no second push goes out.
+      // The words are kept only if the family's rules say so at this very statement (a "keep the words" off that
+      // commits in between cannot be missed, SEC-32); the time is never later than the server's (SEC-30).
       const rows = await sql`
         insert into app.alert (family_id, child_id, device_id, category, severity, count, detail, words, dedupe_key,
           client_at)
         values (${familyId}, ${a.childId}, ${deviceId}, ${a.category}, ${a.severity}, ${a.count}, ${a.detail},
-          ${a.words}, ${a.key}, ${new Date(a.clientAtMs)})
-        on conflict (family_id, dedupe_key) do nothing
-        returning id`;
-      return rows.length === 1 ? "new" : "duplicate";
+          case when (select s.rules ->> 'keepWords' from app.family_settings s where s.family_id = ${familyId}) = 'false'
+            then '' else ${a.words} end,
+          ${a.key}, least(${new Date(a.clientAtMs)}::timestamptz, now()))
+        on conflict (family_id, dedupe_key) do update set count = excluded.count
+          where app.alert.category in ('inappropriateWords', 'disclosure', 'concern')
+            and app.alert.category = excluded.category
+            and excluded.count > app.alert.count
+        returning (xmax = 0) as inserted`;
+      return rows.length === 1 && rows[0].inserted ? "new" : "duplicate";
     },
 
     async listAlerts(familyId, sinceMs) {
@@ -589,13 +598,19 @@ export function pgStore(sql: Sql): Store {
     },
 
     async putSettings(familyId, rules) {
-      const [r] = await sql`
-        insert into app.family_settings (family_id, rules)
-        values (${familyId}, ${JSON.stringify(rules)}::text::jsonb)
-        on conflict (family_id) do update set rules = excluded.rules, version = app.family_settings.version + 1,
-          updated_at = now()
-        returning version`;
-      return Number(r.version);
+      // Turning "keep the words" off empties the words of the family's alerts in the same transaction (SEC-28).
+      return await sql.begin(async (tx) => {
+        const [r] = await tx`
+          insert into app.family_settings (family_id, rules)
+          values (${familyId}, ${JSON.stringify(rules)}::text::jsonb)
+          on conflict (family_id) do update set rules = excluded.rules, version = app.family_settings.version + 1,
+            updated_at = now()
+          returning version`;
+        if (rules.keepWords === false) {
+          await tx`update app.alert set words = '' where family_id = ${familyId} and words <> ''`;
+        }
+        return Number(r.version);
+      });
     },
 
     async tutorLogOf(familyId, sinceMs, limit) {

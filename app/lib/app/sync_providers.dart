@@ -30,6 +30,7 @@ final FutureProvider<SyncEngine?> syncEngineProvider = FutureProvider<SyncEngine
     isParent: role != 'child',
     deviceId: id,
     nowMs: ref.watch(clockProvider).nowMs,
+    serverNowMs: ref.read(gatewayProvider).serverNowMs,
     call: (String name, Map<String, Object?> body) async {
       final String? token = await ref.read(sessionManagerProvider).accessToken();
       if (token == null) throw StateError('not signed in');

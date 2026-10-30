@@ -22,7 +22,14 @@ import {
   USER_A,
   USER_B,
 } from "./_shared/testkit.ts";
-import { ALERTS_PER_HOUR_PER_DEVICE, spec as alertCreate } from "./alert-create/handler.ts";
+import {
+  ACT_PUSHES_PER_DAY_PER_FAMILY,
+  ALERTS_PER_HOUR_PER_DEVICE,
+  PUSHES_PER_DAY_PER_FAMILY,
+  spec as alertCreate,
+  WORD_CATEGORIES,
+} from "./alert-create/handler.ts";
+import type { Field } from "./_shared/schema.ts";
 import { spec as alertList } from "./alert-list/handler.ts";
 import { spec as alertRead } from "./alert-read/handler.ts";
 import { spec as childPut } from "./child-put/handler.ts";
@@ -139,6 +146,64 @@ Deno.test("alert-create: the parents' other phones get one push that says only t
   await call(h.create, parent, "alert-create", alert({ key: "upset:2" }));
   assert.equal(push.sent.length, 3);
   assert.equal(push.sent[2].token, "other-" + TOKEN);
+});
+
+Deno.test("alert-create: a check and the weekly note of swearing never push; an act does, once", async () => {
+  const { h, child, parent, alert, push, store, j } = await setup();
+  await call(h.token, parent, "push-token-register", { token: TOKEN, platform: "android" });
+  const word = (category: string, severity: string, key: string, count = 1) =>
+    alert({ category, severity, key, count, detail: "2:FEAR:W-21:2026-10-29.1", words: "מפחידים אותי" });
+  assert.deepEqual(
+    await j(await call(h.create, child, "alert-create", word("concern", "attention", "w:1"))),
+    {
+      status: "new",
+    },
+  );
+  assert.deepEqual(
+    await j(await call(h.create, child, "alert-create", word("inappropriateWords", "info", "note:1"))),
+    { status: "new" },
+  );
+  assert.equal(push.sent.length, 0, "a check and a note are in the app only");
+  await call(h.create, child, "alert-create", word("disclosure", "important", "w:2"));
+  assert.equal(push.sent.length, 1, "an act pushes");
+  // Said again: the same key with a higher count. The family keeps the count; nobody is pushed again.
+  assert.deepEqual(
+    await j(await call(h.create, child, "alert-create", word("disclosure", "important", "w:2", 4))),
+    {
+      status: "duplicate",
+    },
+  );
+  assert.equal(push.sent.length, 1);
+  assert.equal(store.alerts.find((a) => a.key === "w:2")!.count, 4);
+  await call(h.create, child, "alert-create", word("disclosure", "important", "w:2", 2));
+  assert.equal(store.alerts.find((a) => a.key === "w:2")!.count, 4, "never lower");
+});
+
+Deno.test("alert-create: only the word alerts carry words, and a time alert is never counted again", async () => {
+  const { h, child, alert, store } = await setup();
+  assert.equal(
+    (await call(
+      h.create,
+      child,
+      "alert-create",
+      alert({ category: "concern", words: "הוא מרביץ לי", key: "w:9" }),
+    ))
+      .status,
+    200,
+  );
+  assert.equal(
+    (await call(
+      h.create,
+      child,
+      "alert-create",
+      alert({ category: "frustration", words: "הוא מרביץ לי", key: "u:9" }),
+    ))
+      .status,
+    400,
+  );
+  await call(h.create, child, "alert-create", alert({ key: "upset:7", count: 1 }));
+  await call(h.create, child, "alert-create", alert({ key: "upset:7", count: 50 }));
+  assert.equal(store.alerts.find((a) => a.key === "upset:7")!.count, 1);
 });
 
 Deno.test("alert-create: a dead push token is removed, a failing push never fails the alert, no push set up is fine", async () => {
@@ -364,8 +429,18 @@ Deno.test("fcm: it signs a token request, caches the token, and sends a message 
   assert.equal((send.init.headers as Record<string, string>).authorization, "Bearer tok-1");
   const msg = JSON.parse(send.init.body as string);
   assert.deepEqual(Object.keys(msg), ["message"]);
-  assert.deepEqual(Object.keys(msg.message).sort(), ["android", "notification", "token"]);
+  assert.deepEqual(Object.keys(msg.message).sort(), ["android", "apns", "notification", "token"]);
+  assert.deepEqual(
+    msg.message.apns,
+    { headers: { "apns-collapse-id": "alerts" } },
+    "iOS collapses too (SEC-31)",
+  );
   assert.deepEqual(msg.message.notification, { body: PUSH_TEXT });
+  assert.equal(
+    msg.message.android.collapse_key,
+    "alerts",
+    "a phone that was off shows one notice for many alerts",
+  );
   assert.equal(PUSH_TEXT, "יש התראה חדשה");
   assert.equal(JSON.stringify(msg).includes("data"), false, "no data payload at all");
 });
@@ -500,4 +575,139 @@ Deno.test("alert-create: a trophy that has a promise is told as an alert that ho
   // The parents' phone is told with the fixed phrase only.
   const text = JSON.stringify(push.sent);
   assert.equal(text.includes("trophy"), false, "the push does not name the trophy");
+});
+
+// ---- SEC-25, SEC-27, SEC-28 ---------------------------------------------------------------------------------------
+
+/** A field of alert-create's shape as `testvectors/wire-patterns.json` writes it. */
+function described(f: Field): Record<string, unknown> {
+  switch (f.t) {
+    case "string":
+      return f.pattern ? { t: f.t, pattern: f.pattern.source, max: f.max } : { t: f.t, max: f.max };
+    case "int":
+      return { t: f.t, min: f.min, max: f.max };
+    case "enum":
+      return { t: f.t, values: [...f.values] };
+    default:
+      return { t: f.t };
+  }
+}
+
+Deno.test("alert-create: every key, value and range it takes is the one in testvectors/wire-patterns.json", async () => {
+  // The app is held to the same file (alert_safety_test.dart: the words, details and keys it makes; the fake server of
+  // the sync tests refuses what this function would), so a phone cannot make an alert the gateway refuses (SEC-25).
+  const v = JSON.parse(
+    await Deno.readTextFile(new URL("../../testvectors/wire-patterns.json", import.meta.url)),
+  ) as { alert_create: Record<string, Record<string, unknown>>; alert_word_categories: string[] };
+  const shape = alertCreate.shape as Record<string, Field>;
+  assert.deepEqual(Object.keys(shape).sort(), Object.keys(v.alert_create).sort());
+  for (const [key, f] of Object.entries(shape)) assert.deepEqual(described(f), v.alert_create[key], key);
+  assert.deepEqual([...WORD_CATEGORIES].sort(), [...v.alert_word_categories].sort());
+});
+
+Deno.test('alert-create, alert-list, settings-put: "keep the words" off empties them everywhere and keeps them out', async () => {
+  const { h, child, parent, alert, store, j } = await setup();
+  const said = (key: string) =>
+    alert({ category: "disclosure", severity: "important", words: "מכים אותי", key });
+  await call(h.create, child, "alert-create", said("w:1"));
+  assert.equal((await j(await call(h.list, parent, "alert-list", {}))).alerts[0].words, "מכים אותי");
+  await call(h.put, parent, "settings-put", { rules_json: JSON.stringify({ keepWords: false }) });
+  assert.equal(store.alerts[0].words, "", "the words already saved are gone");
+  await call(h.create, child, "alert-create", said("w:2"));
+  assert.equal(store.alerts[1].words, "", "a device that still sends them is not believed");
+  assert.ok(
+    (await j(await call(h.list, parent, "alert-list", {}))).alerts.every((a: { words: string }) =>
+      a.words === ""
+    ),
+  );
+  // On again: what was emptied stays empty; new words are kept.
+  await call(h.put, parent, "settings-put", { rules_json: JSON.stringify({ keepWords: true }) });
+  await call(h.create, child, "alert-create", said("w:3"));
+  const list = (await j(await call(h.list, parent, "alert-list", {}))).alerts as Array<
+    { key: string; words: string }
+  >;
+  assert.equal(list.find((a) => a.key === "w:1")!.words, "");
+  assert.equal(list.find((a) => a.key === "w:3")!.words, "מכים אותי");
+});
+
+Deno.test("alert-create: a time ahead of the server is taken and stored as the server's time (SEC-30)", async () => {
+  const { h, child, alert, svc, store, j } = await setup();
+  const now = svc.nowMs();
+  for (const [key, at] of [["t:1", now + 600_000], ["t:2", 4_000_000_000_000]] as const) {
+    assert.deepEqual(await j(await call(h.create, child, "alert-create", alert({ key, at }))), {
+      status: "new",
+    });
+    assert.equal(store.alerts.find((a) => a.key === key)!.clientAtMs, now, "the server's time");
+  }
+  assert.deepEqual(
+    await j(await call(h.create, child, "alert-create", alert({ key: "t:3", at: now - 60_000 }))),
+    { status: "new" },
+  );
+  assert.equal(
+    store.alerts.find((a) => a.key === "t:3")!.clientAtMs,
+    now - 60_000,
+    "a time in the past is kept",
+  );
+});
+
+Deno.test("alert-create: routine alerts have a daily push budget, and acts their own, which routine ones cannot spend", async () => {
+  const { h, child, parent, alert, push, store } = await setup();
+  await call(h.token, parent, "push-token-register", { token: TOKEN, platform: "android" });
+  for (let i = 0; i < PUSHES_PER_DAY_PER_FAMILY + 3; i++) {
+    const r = await call(h.create, child, "alert-create", alert({ key: `u:${i}` }));
+    assert.equal(r.status, 200);
+  }
+  assert.equal(PUSHES_PER_DAY_PER_FAMILY, 20);
+  assert.equal(push.sent.length, PUSHES_PER_DAY_PER_FAMILY, "routine alerts: 20 a day");
+  for (let i = 0; i < ACT_PUSHES_PER_DAY_PER_FAMILY + 2; i++) {
+    const r = await call(
+      h.create,
+      child,
+      "alert-create",
+      alert({ category: "disclosure", severity: "important", key: `w:${i}` }),
+    );
+    assert.equal(r.status, 200);
+  }
+  assert.equal(ACT_PUSHES_PER_DAY_PER_FAMILY, 10);
+  assert.equal(
+    push.sent.length,
+    PUSHES_PER_DAY_PER_FAMILY + ACT_PUSHES_PER_DAY_PER_FAMILY,
+    "the acts still pushed after the routine budget was spent, up to their own",
+  );
+  assert.equal(
+    store.alerts.length,
+    PUSHES_PER_DAY_PER_FAMILY + ACT_PUSHES_PER_DAY_PER_FAMILY + 5,
+    "every alert is saved",
+  );
+});
+
+Deno.test("alert-list: a row that still holds words is listed without them while the family does not keep them (D4)", async () => {
+  const { h, child, parent, alert, store, j } = await setup();
+  await call(
+    h.create,
+    child,
+    "alert-create",
+    alert({ category: "disclosure", severity: "important", words: "מכים אותי", key: "w:1" }),
+  );
+  // The rules say "off" but the row kept its words (a race, or a restore): the list still never shows them.
+  store.settings.set(FAMILY_A, { rules: { keepWords: false }, version: 9 });
+  assert.equal(store.alerts[0].words, "מכים אותי");
+  const list = (await j(await call(h.list, parent, "alert-list", {}))).alerts as Array<{ words: string }>;
+  assert.equal(list[0].words, "");
+});
+
+Deno.test("alert store: the words are decided by the family's rules at the insert itself (SEC-32)", async () => {
+  const { store } = await setup();
+  store.settings.set(FAMILY_A, { rules: { keepWords: false }, version: 1 });
+  await store.insertAlert(FAMILY_A, "d1d1d1d1-0000-4000-8000-000000000001", {
+    childId: "child-aaaa-0001",
+    category: "disclosure",
+    severity: "important",
+    count: 1,
+    detail: "",
+    words: "מכים אותי",
+    key: "w:race",
+    clientAtMs: NOW - 1000,
+  });
+  assert.equal(store.alerts.find((a) => a.key === "w:race")!.words, "");
 });

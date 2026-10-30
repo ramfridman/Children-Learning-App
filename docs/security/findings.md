@@ -11,10 +11,46 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-10 | Voice tool: validate the voice id and output format before building the request URL | low | open | 2026-10-28 |
 | SEC-11 | Tutor-moves upload script: run the pinned CLI from the repository root | low | open | 2026-10-28 |
 | SEC-12 | Sync: a gateway and app format mismatch would mark a device's whole unsent backlog as refused | low | open (partly fixed in `2235ac2`) | 2026-10-29 |
+| SEC-26 | Word-alert lists: validate a list's values and bounds when it is read, before lists can come from a pack | low | open (checks, bounds, step budget, background matching and the floor, checked first with a step budget of its own, are in on `alerts-tiers`; window rules can still be slow within the bounds) | 2026-10-30 |
+| SEC-29 | Alert row hardening (database checks and grants, the parent text's tier) | low | fixed on `alerts-tiers`; closes when CI's pgTAP 09 passes | 2026-10-30 |
+| SEC-32 | Kept words: a narrow race when "keep the words" is turned off; a weekly note's words could outlive 30 days on a phone | low | fixed on `alerts-tiers`; closes when CI's database integration test passes | 2026-10-30 |
+| SEC-33 | Alerts screen: the kept words can be selected and copied to the system clipboard | low | fixed on `alerts-tiers` (the line with the words cannot be selected) | 2026-10-30 |
+| SEC-31 | Alert pushes: routine alerts shared the daily push budget with acts; no collapse id on iOS | low | closed (`alerts-tiers`) | 2026-10-30 |
+| SEC-27 | Alert pushes: the per-device limit was higher than PLAN said; no per-family push cap | low | closed (`alerts-tiers`) | 2026-10-30 |
+| SEC-25 | One alert the gateway refused held up every later alert of that device, silently | medium | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
 ## Closed findings
+
+### SEC-25: one alert the gateway refused held up every later alert of that device (medium, closed 2026-10-30)
+
+**What it was.** The phone sent its unsent alerts oldest first and stopped the whole round at the first failure, marking
+nothing. An alert that `alert-create` would never take was therefore sent and refused in every round, and no alert after
+it, a disclosure with its push included, ever reached the parents; nothing told them. Three things could make such an
+alert: kept words holding a character the speech model can write but the gateway refuses (`%`, `:`, a dash, a curly
+quote and more: 118 characters of the model's vocabulary), a `concern` alert reaching a gateway that did not know the
+category yet (deploy order), and list values that did not fit `detail` or `key`. No attacker was needed.
+
+**The fix (branch `alerts-tiers`).** (1) The words are cleaned once, when the alert is made (`wireWords`: every character
+outside the gateway's pattern becomes a space, cut to 200); `detail` and `key` are built only from characters the gateway
+takes. (2) Each alert is marked as it is answered; a `bad_request` is retried once without the words (the alert arrives,
+the words are lost: the private side), and if refused again the alert is kept aside and sent once more by the next app
+version; any other failure stops the round as before. (3) `alert-create`'s shape is in `testvectors/wire-patterns.json`,
+the gateway is held equal to it by a Deno test, and the app's fake server refuses what the real one would. (4) Deploy
+order: migration, then functions, then the app.
+
+**Proof re-run by the security-engineer, 2026-10-30.** The original two proof tests (a refused alert with `50%` in its
+words, and a `concern` sent to a gateway without it, each followed by a disclosure) now pass: the disclosure arrives in
+the first round. The developer's `alert_safety_test.dart` (every Basic Multilingual Plane character and every character
+of the model's `tokens.txt` through `wireWords`) and the sync tests: 301 passed. `deno test`: 186 passed, 0 failed, 7
+ignored (database-stack tests). The fix reaches a phone when a build with it is installed.
+
+### SEC-27: alert pushes had no per-family cap (low, closed 2026-10-30)
+
+A device could make the parents' phones ring for every new alert, up to 300 an hour, where PLAN said 20 a day. Fixed on
+`alerts-tiers`: at most 20 pushes a day per family (the alerts after that are saved and shown without a push), an Android
+collapse key, and PLAN states the same numbers. Deno test re-run 2026-10-30: passes. Follow-up in SEC-31.
 
 ### SEC-1: answer codes outside the server's pattern stopped a device's sync for good (high, closed 2026-10-29)
 
@@ -98,3 +134,25 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   server does not have are marked sent and lost; older than B-28, and a failed `child-put` causes it too). Info: SEC-B28-5 to 9
   (bounded resend on error, no abuse path in the pull rule, placeholder substitution order, clean logging, deploy order). Follow-ups are
   board B-32 and B-33. Detail is in the git-ignored `docs/security/private/B-28-name-limit-review.md`.
+- **Word-alert tiers, branch `alerts-tiers` (2026-10-30).** Scope: the new `concern` category and the quiet tiers, the
+  on-device matcher and its list interface, alert creation and counting, the gateway's count update, the migration and
+  its pgTAP test, sync of alerts, the parent texts. Verified by reading: the count update stays inside the caller's
+  family, changes only the count of a word alert of the same category and only upward, and never sends a second push;
+  the two quiet categories never push and the push still carries no content; no grant, RLS or schema exposure changed;
+  `detail` and `words` are held to fixed character sets at the gateway (no control or direction characters); nothing
+  about a child's words goes to any vendor or into a log. Dependencies: no package or lock file changed; OSV.dev showed
+  no advisory for the gateway's database driver (2026-10-30). Three low findings are listed above (SEC-26, SEC-27,
+  SEC-29); two findings above low (SEC-25, SEC-28) are held privately. The Deno and database tests were not run by the
+  security-engineer (no local Deno or database stack); the branch's alert and sync Flutter tests were (280 passed).
+- **Word-alert tiers, the fixes (2026-10-30).** SEC-25 and SEC-27 are closed (above). SEC-29 is fixed and closes when
+  CI runs the new pgTAP test 09 (no local database here). SEC-26 stays open: the list checks are in, but window rules
+  can still be slow within the new bounds. Two findings above low are held privately: one is fixed and waits for the
+  same pgTAP run, and one is new, brought by the fixes. Two new low ones are listed above (SEC-31, SEC-32). Re-run: `deno fmt --check`, `deno lint`, `deno test` 186 passed, 0 failed, 7 ignored; Flutter
+  alert, safety and sync tests 301 passed; the original SEC-25 proofs pass.
+- **Word-alert tiers, third round (2026-10-30).** Numbering: the voice-tool review had already used SEC-17 to SEC-22,
+  so the word-alert findings are SEC-25 to SEC-33 (earlier drafts called them SEC-17 to SEC-24). SEC-31 is closed (a
+  separate daily push budget for acts, and an iOS collapse id; Deno test re-run). SEC-32 is fixed and closes with CI's
+  database integration test. SEC-26 stays open (a source's rows can still spend the step budget before the app's own
+  floor rows are checked). New low: SEC-33. One finding above low is still held privately: the server side of it is
+  fixed and the phone side needs one more change. Re-run: `deno test` 188 passed, 0 failed, 7 ignored; Flutter alert,
+  safety and sync tests 307 passed.
