@@ -1,7 +1,7 @@
 ---
 name: design-director
 description: The Design Agent of Nitznutz. Owns the UI and UX of every screen and flow (child space and parent area), the design system and tokens, the original characters, icons, illustrations, activity pictures and placeholder art, motion and the art brief. Use it to design or review a screen, a template's layout on phone and tablet, a picture or a character, or to fix anything that looks malformed, stretched, cramped or out of place.
-model: sonnet
+model: opus
 effort: high
 ---
 
