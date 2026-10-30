@@ -85,12 +85,16 @@ for _o in OBJECTS.values():
     (FEM_SG if _o['g'] == 'f' else MASC_SG).add(_o['one'])
 for _o in NAMES.values():
     (FEM_SG if _o['g'] == 'f' else MASC_SG).add(_o['one'])
-FEM_SG -= {'כַּדּוּר', 'כֵּן', 'לֹא', 'גֶּרֶב'}
-MASC_SG -= {'כֵּן', 'לֹא'}
-FEM_PL.discard('גַּרְבַּיִם')
+FEM_SG -= {'כַּדּוּר', 'כֵּן', 'לֹא'}
+MASC_SG -= {'כֵּן', 'לֹא', 'גֶּרֶב'}
+# גֶּרֶב is feminine in this app (owner, Q5, 2026-10-29): "זוֹ גֶּרֶב", "גֶּרֶב אַחַת", "נַעַל וְגֶרֶב הוֹלְכוֹת".
 FEM_SG |= {'צִפּוֹר', 'צַלַּחַת', 'קֻבִּיָּה', 'חִפּוּשִׁית', 'בָּנָנָה', 'כַּף', 'מִשְׁחָה', 'נַעַל', 'פִּירָמִידָה', 'תֵּבָה',
-           'מַגֶּבֶת', 'מִבְרֶשֶׁת', 'מַדֵּלְיָה', 'צוּרָה', 'תְּמוּנָה'}
-MASC_SG |= {'גֶּרֶב'}
+           'מַגֶּבֶת', 'מִבְרֶשֶׁת', 'מַדֵּלְיָה', 'צוּרָה', 'תְּמוּנָה', 'גֶּרֶב', 'קֻפְסָה'}
+FEM_PL.add('גַּרְבַּיִם')
+MASC_PL |= {'צְבָעִים', 'גְּבִיעִים', 'חֲלָקִים', 'רְמָזִים'}
+# the singular of a counted plural noun (to say the noun again with its number: "וְעוֹד תַּפּוּחַ אֶחָד")
+NOUN_ONE = {_o['many']: _o['one'] for _o in OBJECTS.values()}
+OWNER = 'owner 2026-10-29'
 
 
 def unprefixed(tok):
@@ -120,9 +124,28 @@ MANUAL = {
         'לֹא שָׁמַעְתִּי טוֹב — אֶפְשָׁר לְהַגִּיד שׁוּב, אוֹ לִלְחֹץ עַל הַתְּשׁוּבָה.',
         'syntax: "אֶפְשָׁר שׁוּב? אוֹ לִלְחֹץ." is two fragments; one whole sentence, same offer'),
     # lesson content (misconception lines, skill titles, parent texts)
-    'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.': (
-        'מָה שֶׁתּוֹפֵס יוֹתֵר מָקוֹם לֹא תָּמִיד יֵשׁ בּוֹ יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.',
-        'sense: the line said "more does not always mean bigger"; the misconception (M-CNT-SIZE) is the reverse: what looks bigger is not always more'),
+    # (the M-CNT-SIZE line "יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר" is chosen per item by its cue: ROW_RULES, owner Q2)
+    'לָקַחְנוּ אֶת כֻּלָּם. הַפֶּרַח רוֹצֶה רַק אַרְבָּעָה — בּוֹאוּ נִסְפֹּר אוֹתָם.': (
+        'לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ.',
+        'sense (B-13, curriculum audit F1): the shared vo:fb.card line named "the flower" and "four" in all 22 give-N '
+        'activities; 17 ask for another number and 21 have no flower. A neutral line that is true everywhere'),
+    'בְּדַקְתֶּם שׁוּב לִפְנֵי שֶׁעֲנִיתֶם. זֶה מַה שֶּׁמָּתֵמָטִיקָאִים עוֹשִׂים.': (
+        'בְּדַקְתֶּם שׁוּב לִפְנֵי שֶׁעֲנִיתֶם. כָּכָה עוֹשִׂים חוֹקְרִים.',
+        'vocabulary (owner Q4, 2026-10-29: a shorter, simpler line, option A chosen): "מָתֵמָטִיקָאִים" is long for a three-year-old'),
+    'כֵּן! זֶה הַתֵּבָה.': ('כֵּן! זוֹ הַתֵּבָה — כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם.',
+                         'vocabulary (owner Q7, 2026-10-29): Band B teaches "תֵּבָה" bridged to the word the child knows'),
+    'הַתֵּבָה — נִסְתַּכֵּל עַל הַצּוּרָה שֶׁלּוֹ. עַכְשָׁו תּוֹרְכֶם.': (
+        'הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם.',
+        'vocabulary (owner Q7, 2026-10-29): the worked example bridges "תֵּבָה" to a shoe box (and the old line said '
+        '"שֶׁלּוֹ" of a feminine noun)'),
+    'סֵדֶר שֶׁל שְׁלוֹשָׁה': ('סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים', 'number (owner Q8, 2026-10-29): never a masculine number without its noun'),
+    'מַמְשִׁיכִים סֵדֶר שֶׁל שְׁלוֹשָׁה': ('מַמְשִׁיכִים סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים',
+                                       'number (owner Q8, 2026-10-29): never a masculine number without its noun'),
+    # app screens: B-26 (owner, 2026-10-29) and Q6
+    '{child}, הַבַּקְבּוּק הִגִּיעַ!': ('{child}, מַה בַּבַּקְבּוּק?',
+                                     'sense (B-26; owner Q6, 2026-10-29): the per-name line is a name clip joined to the '
+                                     'shared clip "מה בבקבוק?"; "the bottle arrived" is not true until the daily bottle exists'),
+    'זֶה הַבַּיִת שֶׁלִּי.': ('זֶה הַבַּיִת שֶׁלָּנוּ.', 'wording (B-26, owner 2026-10-29): "our home", said by any friend'),
     'צוּרָה סְגוּרָה אֵין בָּהּ פֶּתַח, וְהַצְּלָעוֹת שֶׁלָּהּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.': (
         'לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.',
         'sense and syntax: a closed shape need not have straight sides (a circle); the two checks are said apart, as the question asks them'),
@@ -185,7 +208,8 @@ SUBS = [
     (B + 'בָּלוֹן אָדֹם שׁוֹנֶה מֵהָאֲחֵרִים', 'הַבָּלוֹן הָאָדֹם שׁוֹנֶה מֵהָאֲחֵרִים', 'syntax: the article (the one on the screen), as in "הַכַּדּוּר הַכָּחֹל שׁוֹנֶה"'),
     (B + 'תַּפּוּחַ שׁוֹנֶה מֵהָאֲחֵרִים', 'הַתַּפּוּחַ שׁוֹנֶה מֵהָאֲחֵרִים', 'syntax: the article (the one on the screen), as in "הַכַּדּוּר הַכָּחֹל שׁוֹנֶה"'),
     (B + 'קְעָרָה וְכַּ?ף הוֹלְכִים יַחַד' + E, 'קְעָרָה וְכַף הוֹלְכוֹת יַחַד', 'agreement: קְעָרָה and כַּף are both feminine (הוֹלְכוֹת)'),
-    (B + 'גֶּרֶב וְנַעַל הוֹלְכוֹת יַחַד' + E, 'גֶּרֶב וְנַעַל הוֹלְכִים יַחַד', 'agreement: גֶּרֶב is masculine, so the pair is הוֹלְכִים'),
+    (B + 'נַעַל וְגֶּ?רֶב הוֹלְכִים יַחַד' + E, 'נַעַל וְגֶרֶב הוֹלְכוֹת יַחַד',
+     'agreement (owner Q5, 2026-10-29: גֶּרֶב is feminine): נַעַל and גֶּרֶב are both feminine (הוֹלְכוֹת)'),
     (B + 'הָעַמּוּד הַגָּבוֹהַּ הוּא הֲכִי הַרְבֵּה' + E, 'בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה', 'syntax: a column "has" the most (בָּעַמּוּד… יֵשׁ)'),
     (B + 'הָעַמּוּד הַנָּמוּךְ הוּא הֲכִי פָּחוֹת' + E, 'בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט', 'syntax: a column "has" the least (בָּעַמּוּד… יֵשׁ הֲכִי מְעַט)'),
     # pointing of single words
@@ -228,7 +252,6 @@ SUBS = [
     (B + 'אֶפְשָׁר: ', '', 'syntax: "אֶפְשָׁר:" before the sum has no verb; the sum says it'),
     (B + 'כֵּן! הַ(מְ\S+) יֵשׁ לוֹ' + E, r'כֵּן! לַ\1 יֵשׁ', 'syntax: "לַמְּשֻׁלָּשׁ יֵשׁ…" (not "הַמְּשֻׁלָּשׁ יֵשׁ לוֹ")'),
     (B + '(בְּ(?:חִפּוּשִׁית|צִפּוֹר)) אֶחָד' + E, r'\1 אַחַת', 'gender: חִפּוּשִׁית and צִפּוֹר are feminine (אַחַת)'),
-    (B + 'זוֹ גֶּרֶב' + E, 'זֶה גֶּרֶב', 'gender: גֶּרֶב is masculine (זֶה גֶּרֶב, גֶּרֶב אֶחָד)'),
     (B + 'הַחֲפָצִים' + E, 'הַדְּבָרִים', 'vocabulary: "הַדְּבָרִים" for a young child ("חֲפָצִים" is adult register)'),
     (B + 'מְעַקְבִים בָּאֶצְבַּע' + E, 'עוֹקְבִים בָּאֶצְבַּע', 'word: "מְעַקְבִים" is not a word; tracing is "עוֹקְבִים בָּאֶצְבַּע אַחֲרֵי"'),
     (B + 'מַכְוִינִים' + E, 'מְכַוְּנִים', 'word: a clock is set with "מְכַוְּנִים" (מַכְוִינִים is "guide")'),
@@ -247,6 +270,21 @@ SUBS = [
     (B + 'אֵיזֶה יֵשׁ הֲכִי הַרְבֵּה\?', 'מִמָּה יֵשׁ הֲכִי הַרְבֵּה?', 'syntax: "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?" (of which kind is there most)'),
     (B + 'אֵיזֶה יֵשׁ הֲכִי פָּחוֹת\?', 'מִמָּה יֵשׁ הֲכִי מְעַט?', 'syntax: "מִמָּה יֵשׁ הֲכִי מְעַט?" (of which kind is there least)'),
     (r' הוּא (?=[^ .?]+(?: [^ .?]+)? וְעוֹד כַּמָּה\?)', ' זֶה ','syntax: "אַחַת עֶשְׂרֵה זֶה עֶשֶׂר וְעוֹד כַּמָּה?" (as in "עֶשֶׂר זֶה שָׁלוֹשׁ וְעוֹד כַּמָּה?")'),
+    # B-13 (board, 2026-10-28): the child's space has no speed language (CLAUDE.md, design-spec §5.4; design audit F3)
+    (B + 'הִסְתַּכְּלוּ מַהֵר!', 'הִסְתַּכְּלוּ טוֹב…', 'tone (B-13, design audit F3): no speed language in the child\'s space; '
+     '"הִסְתַּכְּלוּ טוֹב…" (look carefully), the dots give the look a beat'),
+    (B + 'הִסְתַּכְּלוּ מַהֵר' + E, 'הִסְתַּכְּלוּ טוֹב', 'tone (B-13, design audit F3): no speed language in the child\'s space'),
+    # B-13 (curriculum audit F13): no "not" question in Band A (curriculum §8.3); drafts, the rows stay proposed
+    (B + 'מָה לֹא שַׁיָּךְ\?', 'מָה הִגִּיעַ לְכָאן בְּטָעוּת?', 'band A (B-13, curriculum audit F13): a question without "לֹא" '
+     '(curriculum §8.3); approved by the owner 2026-10-29'),
+    (B + 'מָה לֹא מִתְגַּלְגֵּל\?', 'מָה נִשְׁאָר עוֹמֵד בַּמָּקוֹם?', 'band A (B-13, curriculum audit F13): a question without '
+     '"לֹא" (curriculum §8.3); approved by the owner 2026-10-29'),
+    # B-13 (curriculum audit F8, F13): right and left are a skill (SHP-B-12) not built yet; the balance sides by their place
+    (B + 'הַצַּד הַיְמָנִי קַל יוֹתֵר' + E, 'הַצַּד שֶׁלְּמַעְלָה קַל יוֹתֵר', 'band B (B-13, curriculum audit F8): no right and '
+     'left words before SHP-B-12; the light side of a balance is the one that is up; draft'),
+    (B + 'בַּצַּד הַשְּׂמָאלִי יֵשׁ', 'בַּצַּד שֶׁלְּמַטָּה יֵשׁ', 'band B (B-13, curriculum audit F8): the heavy side is the one '
+     'that is down; draft'),
+    (B + 'וּבַצַּד הַיְמָנִי' + E, 'וּבַצַּד שֶׁלְּמַעְלָה', 'band B (B-13, curriculum audit F8): the light side is the one that is up; draft'),
 ]
 SUBS = [(re.compile(canon(p)), canon(r), why) for p, r, why in SUBS]
 
@@ -263,6 +301,8 @@ TUTOR_SUBS = [
     (B + 'ארבעה פרפרים בלבד' + E, 'רק ארבעה פרפרים', 'vocabulary: "רק" for a child; "בלבד" is written register'),
     (B + 'ואז נזיז לפרפר הבא' + E, 'ואז נעבור לפרפר הבא', 'word: we move on to the next one (נעבור), we do not move it'),
     (B + 'להצביע עם אצבע' + E, 'להצביע באצבע', 'style: "להצביע באצבע"'),
+    (B + 'ולעצור אחרי ארבעה' + E, 'ולעצור כשמגיעים לארבע', 'number (owner Q8, 2026-10-29): never a masculine number '
+     'without its noun; the count stops at "ארבע" (counting is feminine)'),
 ]
 TUTOR_SUBS = [(re.compile(p), r, why) for p, r, why in TUTOR_SUBS]
 
@@ -271,8 +311,8 @@ def grammar(text, groups=()):
     """(corrected text, [reasons]); the text is returned unchanged when nothing is wrong."""
     notes = []
     t = canon(text)
-    if text in MANUAL and MANUAL[text][0] != text:
-        t, why = canon(MANUAL[text][0]), MANUAL[text][1]
+    if t in MANUAL_C and canon(MANUAL_C[t][0]) != t:
+        t, why = canon(MANUAL_C[t][0]), MANUAL_C[t][1]
         notes.append(why)
     if '4' in groups:
         for pat, repl, why in TUTOR_SUBS:
@@ -382,7 +422,72 @@ def grammar(text, groups=()):
     if 'נסיונות' in t:
         t = t.replace('נסיונות', 'ניסיונות')
         notes.append('spelling: ניסיונות')
+    # 8. owner Q8 (2026-10-29): a number standing alone (a sum, an answer, a count) is feminine; a number with its noun
+    #    agrees with the noun; never a masculine number without its noun
+    # Owner Q12 (2026-10-29): "by one" stays masculine where no other number is in the line ("אֶחָד יוֹתֵר, אֶחָד פָּחוֹת",
+    # "גְּדֵלִים בְּאֶחָד", "גָּבוֹהַּ בְּאֶחָד"); inside a sentence of numbers it is feminine ("שְׁתֵּים עֶשְׂרֵה! עוֹד אַחַת."): numeric()
+    for _ in range(2):  # twice: "עוֹד אֶחָד, עוֹד שְׁנַיִם" sees the feminine "שְׁתַּיִם" on the second pass
+        t, q8 = numbers_alone(t)
+        notes += [n for n in q8 if n not in notes]
     return t, notes
+
+
+MANUAL_C = {canon(k): v for k, v in MANUAL.items()}
+MASC2FEM = {M[_i]: F[_i] for _i in range(1, 11)}
+SUM_WORDS = {'וְעוֹד', 'פָּחוֹת', 'שָׁוֶה', 'הֵם', 'כָּפוּל'}
+# words after a bare number that are not its noun (the number stands alone): "אַרְבָּעָה בַּסַּל", "שִׁשָּׁה בְּסַךְ הַכֹּל"
+NOT_A_NOUN = SUM_WORDS | {'בְּסַךְ', 'בַּסַּל', 'אָז', 'וְעוֹד'}
+Q8_WHY = 'number (owner Q8, 2026-10-29): a number standing alone is feminine (%s → %s), as the tiles and the counting'
+Q8_NOUN = 'number (owner Q8, 2026-10-29): never a masculine number without its noun; the noun is said again (%s)'
+
+
+ONE_MORE = {'עוֹד', 'קְחוּ'}
+FEM_NUM = {w for _i in range(2, 21) for w in F[_i].split()} - {'עֶשְׂרֵה'}
+
+
+def numeric(t, m):
+    """Is this "אֶחָד" in a sentence about numbers (another number word stands in the text)?"""
+    rest = t[:m.start()] + t[m.end():]
+    return any(w in FEM_NUM or (w in MASC2FEM and w != '\u05d0\u05b6\u05d7\u05b8\u05d3') for w in re.findall(r'[\u0590-\u05ff]+', rest))
+
+
+def numbers_alone(t):
+    """Owner Q8: masculine number words (אֶחָד … עֲשָׂרָה) that do not stand before their noun become feminine. Kept:
+    a number before its noun (שְׁלוֹשָׁה תַּפּוּחִים, שְׁלוֹשָׁה עָשָׂר), and "אֶחָד" as a pronoun or in the idioms
+    "אֶחָד אֶחָד", "כׇּל אֶחָד", "אֶחָד מֵהֶם", "עוֹד אֶחָד", "אֶחָד פָּחוֹת / יוֹתֵר", "בְּאֶחָד" (one thing, one unit):
+    "אֶחָד" changes only inside a sum (next to וְעוֹד, פָּחוֹת, שָׁוֶה). After a story noun ("שְׁלוֹשָׁה תַּפּוּחִים וְעוֹד
+    אֶחָד") the noun is said again ("וְעוֹד תַּפּוּחַ אֶחָד")."""
+    toks = list(re.finditer(r'[֐-׿]+', t))
+    edits, notes = [], []
+    for k, m in enumerate(toks):
+        w = m.group(0)
+        if w not in MASC2FEM:
+            continue
+        prev = toks[k - 1] if k else None
+        nxt = toks[k + 1] if k + 1 < len(toks) else None
+        pw = prev.group(0) if prev and t[prev.end():m.start()] == ' ' else None
+        nw = nxt.group(0) if nxt and t[m.end():nxt.start()] == ' ' else None
+        # "עוֹד אֶחָד", "קְחוּ אֶחָד", "אֶחָד פָּחוֹת" in a sentence of numbers ("שְׁתֵּים עֶשְׂרֵה! עוֹד אֶחָד.") is a number;
+        # alone ("אֶחָד יוֹתֵר, אֶחָד פָּחוֹת", "עוֹד אֶחָד הָלַךְ") it stays (owner Q12, 2026-10-29)
+        one_num = w == 'אֶחָד' and (pw in ONE_MORE or nw in ('פָּחוֹת', 'יוֹתֵר')) and numeric(t, m)
+        if nw and nw not in NOT_A_NOUN and not one_num:
+            if nw in MASC_PL or nw == 'עָשָׂר' or w == 'אֶחָד':
+                continue  # before its noun, or "אֶחָד" before anything that is not a sum word
+            notes.append('REVIEW number: %s %s (a masculine number before a word that is not a known noun)' % (w, nw))
+            continue
+        if w == 'אֶחָד' and not (pw in SUM_WORDS or nw in SUM_WORDS - {'פָּחוֹת'}) and not one_num:
+            continue  # "פִּסְפַּסְנוּ אֶחָד", "אֶחָד אֶחָד", "לוֹקְחִים אֶחָד" (an apple): a pronoun for a thing
+        if pw == 'וְעוֹד' and k >= 3 and toks[k - 2].group(0) in NOUN_ONE and toks[k - 3].group(0) in MASC2FEM.keys() | {'שְׁנֵי'}:
+            noun = toks[k - 2].group(0)
+            repl = NOUN_ONE[noun] + ' אֶחָד' if w == 'אֶחָד' else ('שְׁנֵי ' + noun if w == 'שְׁנַיִם' else w + ' ' + noun)
+            edits.append((m.start(), m.end(), repl))
+            notes.append(Q8_NOUN % repl)
+            continue
+        edits.append((m.start(), m.end(), MASC2FEM[w]))
+        notes.append(Q8_WHY % (w, MASC2FEM[w]))
+    for s, e, r in sorted(edits, reverse=True):
+        t = t[:s] + r + t[e:]
+    return t, list(dict.fromkeys(notes))
 
 
 # ---------------------------------------------------------------- ElevenLabs
@@ -534,7 +639,8 @@ def soften(text):
 
 # A variable is never sent to a voice. A line with {child} is voiced once per child with the parent-reviewed first name
 # (the owner's decision of 2026-10-25): the voice text leaves the name out and says so; numbers are voiced per value.
-PLACEHOLDERS = {'{child}': ('', 'PER-NAME: the first name is said before this line (voiced per child, parent-reviewed spelling)'),
+PLACEHOLDERS = {'{child}': ('', 'PER-NAME (owner Q6, 2026-10-29): a separate name clip per child (parent-reviewed spelling, made and '
+                            'cached on the device, never a repo file or a bundled pack) is played right before this shared clip'),
                 '{companion}': ('', 'PER-FRIEND: the friend\'s own name is said by its voice')}
 
 # Changes on the voice text (plain, after the spelling rules): (pattern, replacement, why)
@@ -632,47 +738,213 @@ REVIEWED = [
 B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. '
 PENDING = [
     ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
-     'is shown as typed and is never voiced or sent to a vendor; no name: "my island".'),
+     'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
     ('1', r'^homeIsland(Mine)?Semantics$', r'he\.dart$', B26 + 'Screen-reader text, plain; the whole name, never shortened.'),
-    ('1', r'^nitziHomeWelcome(NoName)?$', r'he\.dart$', B26 + 'Said by the chosen friend (decision 4), screen only (decision 6). '
-     'Q5 of b26-hebrew.md: "בְּרוּכִים הַבָּאִים" for every child (recommended) or by address form?'),
-    ('1', r'^nitziHomeHi$', r'he\.dart$', B26 + 'Said by the chosen friend at its house door (decision 4), so it names no '
-     'one and has no gendered first person; was "אֲנִי נִיצִי. אֲנִי גָּרָה פֹּה." (fitted Nitzi only).'),
     ('1', r'^nitziHomeTreasures$', r'he\.dart$', B26 + 'True once the Hall and the stickers live in the home (decision 1); '
      'mixed group, so masculine plural "גָּרִים".'),
     ('1', r'^nitziHomeBottle$', r'he\.dart$', B26 + 'The bottle holds a revisit or the next lesson (decision 3), so not '
      '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
-    ('1', r'^nitziHomeBottleDone$', r'he\.dart$', B26 + 'Q7: only once the daily three-stop plan exists (not built); '
-     'until then the bottle always holds a next step and this line is not shown.'),
-    ('1', r'^homeBubble$', r'he\.dart$', 'B-26: "the bottle arrived" is not true until the daily bottle exists '
-     '(decision 3). Now "{child}, מַה בַּבַּקְבּוּק?" (voice text: "מה בבקבוק?"): true for a revisit or a new lesson, no '
-     'verb, so no gender is guessed and it fits every friend; Nitzi\'s home answers it ("בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה."). '
-     'Step 2 had "{child}, בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה!", too wide on tablets (design review b26-step2 §3, QA-25, QA-26): '
-     'the fixed part is now 123 at Heebo 500, 24 (was 207; limit 140). Q6 (a per-name line) still stands.'),
-    ('1', r'^homeBubbleNoName$', r'he\.dart$', 'B-26 step 3 (QA hand-off, b26-hebrew.md section 7): the map bubble when '
-     'the child has no usable name; until now built in code from homeBubble and never in this table. The same question '
-     'without the call: complete on its own, no verb, no gender, nothing points at the missing name. Its voice text '
-     '"מה בבקבוק?" is the one of homeBubble, so one clip serves both and this line is never per-name.'),
+    # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
+    # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
 ]
-# Texts the editor is not sure of: (regex on the original text, the comment). The row stays proposed for the owner.
+# Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
+# proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
 DOUBT = [
-    (r'^מָה שֶׁתּוֹפֵס|^יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר', 'Q2: the misconception line M-CNT-SIZE said "more does not always mean bigger"; '
-     'the proposal says what the misconception is about (what takes more room is not always more). Please confirm.'),
-    (r'וְעוֹד… עַד', 'Q3: this missing-addend hint counts from one to the total and then names the answer, which the count does not show. '
-     'A clearer hint (count on from the first number) needs a change in tools/band_b*.py; see hebrew-notes.md, generator bug G1.'),
-    (r'מָּתֵמָטִיקָאִים', 'Q4: "מָתֵמָטִיקָאִים" is a long word for a three-year-old. Keep it (growth-mindset identity) or say '
-     '"זֶה מַה שֶּׁעוֹשִׂים חוֹקְרִים אֲמִתִּיִּים"? Your choice.'),
-    (r'גֶּרֶב', 'Q5: גֶּרֶב is masculine in standard Hebrew (גֶּרֶב אֶחָד) and the proposal follows that; many speakers say "גֶּרֶב אַחַת". '
-     'Please confirm masculine.'),
-    (r'^\{child\}, ', 'Q6: a per-name line. The voice text is the line without the name; the name (parent-reviewed spelling) is said '
-     'before it. One clip per child with the name inside sounds best; joining two clips is cheaper. The owner and the voice director decide.'),
+    (r'הַצַּד הַיְמָנִי קַל|בַּצַּד הַשְּׂ?מָ?ֹ?אלִי יֵשׁ', 'B-13 (curriculum audit F8, F13): draft. Right and left are not taught before '
+     'SHP-B-12, so the sides are named by where they are: the light side is up, the heavy side is down. True only if the '
+     'balance picture tilts (design-director to confirm).'),
 ]
+# Rows the OWNER approved (his own answers, relayed by the orchestrator; the editor never approves): (regex on the source,
+# regex on the original text, the comment). Their status is `owner-approved`. Nothing else is ever set to it by this script.
+OWNER_APPROVED = [
+    (r'core\.he\.json$', r'מָּתֵמָטִיקָאִים', 'Q4: the owner chose option A, "בְּדַקְתֶּם שׁוּב לִפְנֵי שֶׁעֲנִיתֶם. כָּכָה עוֹשִׂים '
+     'חוֹקְרִים." (owner-approved 2026-10-29).'),
+    (r'^activity\.', r'^לָקַחְנוּ אֶת כֻּלָּם\. הַפֶּרַח', 'B-13 (curriculum audit F1): the owner approved the neutral give-N line '
+     'for all 22 activities (owner-approved 2026-10-29). vo:fb.card is voiced once.'),
+    (r'he\.dart$', r'^זֶה הַבַּיִת שֶׁלָּנוּ\.$', 'B-26 (b26-hebrew.md 7.3, question 3): the owner chose this exact line for '
+     'nitziHomeHi, "our house" (owner-approved 2026-10-29).'),
+    (r'^activity\.cs\.wrong\.', r'מָה לֹא שַׁיָּךְ', 'B-13 (curriculum audit F13): the owner approved "מָה הִגִּיעַ לְכָאן '
+     'בְּטָעוּת?" for the Band A "not" question (owner-approved 2026-10-29).'),
+    (r'^activity\.shp\.solid\.', r'מָה לֹא מִתְגַּלְגֵּל', 'B-13 (curriculum audit F13): the owner approved "מַה נִּשְׁאָר עוֹמֵד '
+     'בַּמָּקוֹם?" for the Band A "not" question (owner-approved 2026-10-29).'),
+]
+
+
+def owner_approved(r):
+    for src, txt, comment in OWNER_APPROVED:
+        if re.search(src, r['source']) and re.search(canon(txt), canon(r['text'])):
+            return comment
+    return None
+
+
 # Comments the editor leaves on a row that is ready (information for the owner or the voice director): (regex, comment)
 NOTE = [
     (r'^שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד\.$', 'said when the child taps "not sure" or "show me": it praises asking, as the brave-asker medal does.'),
-    (r'הַתֵּבָה|תֵּבָה', '"תֵּבָה" (box, cuboid) is the school word for the solid; "קֻפְסָה" is the everyday word (Q7).'),
+    (r'הַתֵּבָה|תֵּבָה', 'Q7 (owner 2026-10-29): "תֵּבָה" is the Band B word, bridged to "קֻפְסָה שֶׁל נַעֲלַיִם" in the '
+     'feedback and the worked example; a spoken "קֻפְסָה" is accepted as right (app-developer). Band A says "קֻפְסָה".'),
     (r'^עַכְשָׁו נָחִים|^מְבִינִים \{n\}', 'screen only; {n} is filled with digits by the app.'),
+    (r'הִסְתַּכְּלוּ מַהֵר', 'B-13 (design audit F3): "look fast" became "look carefully" (no speed language); the '
+     'curriculum-expert confirms the flash still teaches subitising (the picture still hides after a moment).'),
+    (r'גֶּרֶב', 'Q5 (owner 2026-10-29): גֶּרֶב is feminine in this app (זוֹ גֶּרֶב, נַעַל וְגֶרֶב הוֹלְכוֹת).'),
+    (r'^\{child\}, מַה בַּבַּקְבּוּק|^\{child\}, הַבַּקְבּוּק', 'Q6 (owner 2026-10-29): a name clip per child (the '
+     'parent-reviewed first name, made and cached on the device only; never a file in the repo or a bundled pack, SEC-5) '
+     'is played right before the shared clip "מה בבקבוק?", which homeBubbleNoName also uses.'),
 ]
+
+# ---------------------------------------------------------------- per-row rules (the owner's answers of 2026-10-29)
+WORD2N = {canon(F[_i]): _i for _i in range(0, 21)}
+WORD2N.update({canon(M[_i]): _i for _i in range(1, 21)})
+ADDEND_PROMPT = re.compile(canon(r'^(\S+) וְעוֹד כַּמָּה שָׁוֶה (\S+)\?$'))
+
+
+def fem_before_noun(n):
+    return 'שְׁתֵּי' if n == 2 else F[n]
+
+
+def masc_before_noun(n):
+    return 'שְׁנֵי' if n == 2 else M[n]
+
+
+def missing_addend_model(r, ctx):
+    """Owner Q3, hint 2 (level 2): a concrete model first; the answer is not said before hint 3."""
+    m = ADDEND_PROMPT.match(canon(ctx.get('prompt.caption.0.v', '')))
+    if not m:
+        return None
+    return '%s כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד %s, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ.' % (m.group(1), m.group(2))
+
+
+def missing_addend_count_on(r, ctx):
+    """Owner Q3, hint 3 (level 3): count on from the first number, one finger per count, then the answer."""
+    m = ADDEND_PROMPT.match(canon(ctx.get('prompt.caption.0.v', '')))
+    if not m:
+        return None
+    x, total = WORD2N[m.group(1)], WORD2N[m.group(2)]
+    k = total - x
+    return '%s… וּמַמְשִׁיכִים: %s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+        F[x], ', '.join(F[i] for i in range(x + 1, total + 1)), fem_before_noun(k), F[k])
+
+
+COIN_PLAIN = [('שקל אחד', 1), ('שני שקלים', 2), ('חמשה שקלים', 5), ('עשרה שקלים', 10)]  # plain() of pointed text is ktiv chaser
+SHOP_PRICE = re.compile(canon(r'הַמְּחִיר הוּא (.+) שְׁקָלִים'))
+COIN_NAME = {1: 'מַטְבֵּעַ שֶׁל שֶׁקֶל', 2: 'מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים', 5: 'מַטְבֵּעַ שֶׁל חֲמִשָּׁה שְׁקָלִים',
+             10: 'מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים'}
+
+
+def shop_coins(r, ctx):
+    """Owner Q11: name each coin by its value (the biggest first), then the total."""
+    p = plain(r['text'])
+    coins = sorted((v for name, v in COIN_PLAIN for _ in re.finditer(name, p)), reverse=True)
+    price = SHOP_PRICE.search(canon(ctx.get('prompt.caption.0.v', '')))
+    if not coins or not price or WORD2N.get(price.group(1)) != sum(coins):
+        print('shop hint not rebuilt (the coins do not add up to the price):', r['source'], coins)
+        return None
+    if len(coins) == 1:
+        return 'מַטְבֵּעַ אֶחָד שֶׁל %s. עַכְשָׁו תּוֹרְכֶם.' % COIN_NAME[coins[0]].split(' שֶׁל ', 1)[1]
+    parts = [COIN_NAME[coins[0]]]
+    for i, v in enumerate(coins[1:], start=1):
+        name = ('עוֹד ' + COIN_NAME[v]) if v == coins[i - 1] else COIN_NAME[v]
+        parts.append(name)
+    said = ', '.join(parts[:-1]) + (' וְ' if parts[-1].startswith('עוֹד') else ' וּ') + parts[-1]
+    return '%s — בְּיַחַד %s שְׁקָלִים. עַכְשָׁו תּוֹרְכֶם.' % (said, masc_before_noun(sum(coins)))
+
+
+ROBOT_WORDS = {canon(k): v for k, v in {'יָמִינָה': 'h', 'שְׂמֹאלָה': 'h', 'לְמַעְלָה': 'לְמַעְלָה', 'לְמַטָּה': 'לְמַטָּה'}.items()}
+ROBOT_HINT = re.compile(canon(r'^הַצְּעָדִים הֵם: (.+)\. עַכְשָׁו תּוֹרְכֶם\.$'))
+
+
+def robot_landmarks(r, ctx):
+    """Band A hears landmarks, not right and left (PLAN.md; curriculum audit F13): the sideways steps go towards the flag."""
+    m = ROBOT_HINT.match(canon(r['text']))
+    if not m:
+        return None
+    steps = [ROBOT_WORDS.get(s.strip()) for s in m.group(1).split(',')]
+    if None in steps:
+        return None
+    runs = []
+    for s in steps:
+        if runs and runs[-1][0] == s:
+            runs[-1][1] += 1
+        else:
+            runs.append([s, 1])
+    said = []
+    for s, n in runs:
+        where = 'לְכִוּוּן הַדֶּגֶל' if s == 'h' else s
+        said.append(('צַעַד אֶחָד' if n == 1 else '%s צְעָדִים' % masc_before_noun(n)) + ' ' + where)
+    return '%s. עַכְשָׁו תּוֹרְכֶם.' % ', וְאָז '.join(said)
+
+
+SIZE_LINES = {
+    'big': 'הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
+    'small': 'הֵם קְטַנִּים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
+    'spread': 'הֵם רְחוֹקִים זֶה מִזֶּה, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
+    'pairs': 'בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?',
+    'count': 'בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.',
+}
+SIZE_OLD = r'^יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר'
+Q2 = 'sense (owner Q2, 2026-10-29): the M-CNT-SIZE line is chosen by the item\'s cue, names what the eye caught, has no ' \
+     '"לֹא" and ends in the strategy; the old line ("more does not always mean bigger") said the reverse'
+TR, PR = 'text-ready', 'proposed'
+# (regex on the source, regex on the id, regex on the original text, the new text or a builder (row, texts of the same
+#  source by id) or None (status only), why, status, comment). The first match wins; the generic rules still run on the
+#  new text. A row rule wins over DOUBT and NOTE.
+ROW_RULES = [
+    # Q2: the cue of each item (scale for size, arrangement for spread; the yes/no "same" items compare by pairing)
+    (r'^activity\.more\.big\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['big'], Q2 + ' (big)', TR,
+     'Q2 (owner 2026-10-29): the child picked the big ones. vo:fb.size must split by cue (hebrew-notes.md D2).'),
+    (r'^activity\.fewer\.big\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['small'], Q2 + ' (small)', TR,
+     'Q2 (owner 2026-10-29): in a "fewer" item the child picked the small ones (the teaching view\'s size line, turned '
+     'round). vo:fb.size must split by cue (hebrew-notes.md D2).'),
+    (r'^activity\.more\.spread\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['spread'], Q2 + ' (spread)', TR,
+     'Q2 (owner 2026-10-29): the child picked the spread-out ones. vo:fb.size must split by cue (hebrew-notes.md D2).'),
+    (r'^activity\.same\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['pairs'], Q2 + ' (pairs)', PR,
+     'Q2 draft: NUM-A-11 compares by pairing, but its items ask "the same number?" (yes or no), not "more" or "fewer", so '
+     'the two matching lines of the teaching view do not fit; this pairing line is new. Please confirm.'),
+    (r'^activity\.x\.numa07\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['count'], Q2 + ' (counting; NUM-A-07)', PR,
+     'Q2 draft: NUM-A-07 (match a numeral to a set) should lose the M-CNT-SIZE tag (curriculum audit F4); then this row '
+     'goes away. Until then, the counting line.'),
+    # Q3: the missing addend, a concrete model at hint 2, count on at hint 3
+    (r'^activity\.b\.mathb18\.', r'^hints\.1\.caption', r'', missing_addend_model,
+     'teaching (owner Q3, 2026-10-29): hint 2 builds the model first (the start is there, add one at a time up to the total, '
+     'count what was added); it does not say the answer', TR,
+     'Q3 (owner 2026-10-29). Needs its own vo id per item (today the shared hint-2 line) and the dots drawn (audit F12).'),
+    (r'^activity\.b\.mathb18\.', r'^hints\.2\.caption', r'', missing_addend_count_on,
+     'teaching (owner Q3, 2026-10-29): hint 3 counts on from the first number, one finger per count, then names the answer '
+     '(the old hint counted from one to the total)', TR,
+     'Q3 (owner 2026-10-29). The fingers must be drawn (audit F12); the distractor 10 (M-PPW) is a content change (hebrew-notes.md D4).'),
+    # Q11: the shop hint names each coin by its value, then the total; hint 2 stays
+    (r'^activity\.x\.mathb17\.', r'^hints\.2\.caption', r'', shop_coins,
+     'teaching (owner Q11, 2026-10-29): each coin is named by its value ("מַטְבֵּעַ שֶׁל שְׁנֵי שְׁקָלִים"), then the total; '
+     '"שְׁנֵי שְׁקָלִים" alone can be one coin or two', TR, 'Q11 (owner 2026-10-29). Hint 2 is unchanged.'),
+    # B-13 / PLAN.md: Band A robot hints without right and left
+    (r'^activity\.cs\.robot\.(direct|plan)\.', r'^hints\.2\.caption', r'יָמִינָה|שְׂמֹאלָה', robot_landmarks,
+     'band A (B-13, curriculum audit F13; PLAN.md "Band A avoids right and left words"): the sideways steps are said '
+     '"לְכִוּוּן הַדֶּגֶל", up and down stay', TR,
+     'B-13: landmark wording as PLAN.md asks; the flag is the only landmark on these grids. Curriculum-expert to confirm.'),
+    # Q7: Band A says קֻפְסָה for the box-shaped solid (SHP-A-07)
+    (r'^activity\.shp\.solid\.', r'', r'קֻבִּיָּה', lambda r, ctx: canon(r['text']).replace(canon('קֻבִּיָּה'), canon('קֻפְסָה')),
+     'vocabulary (owner Q7, 2026-10-29): Band A calls the box-shaped solid "קֻפְסָה" (קֻבִּיָּה only for a real cube)', TR,
+     'Q7 (owner 2026-10-29). The design-director draws a shoe-box cuboid for it (audit F9).'),
+    # B-26 (owner, 2026-10-29): the welcome for every child; "our home"; the bottle-done line waits for the plan
+    (r'he\.dart$', r'^nitziHomeWelcome(NoName)?$', r'', None, '', TR,
+     'B-26 (owner 2026-10-29): "בְּרוּכִים הַבָּאִים" for every child, whatever the address form.'),
+    (r'he\.dart$', r'^nitziHomeHi$', r'', None, '', TR, 'B-26 (owner 2026-10-29): "זֶה הַבַּיִת שֶׁלָּנוּ." (our home).'),
+    (r'he\.dart$', r'^nitziHomeBottleDone$', r'', None, '', TR,
+     'B-26 (owner 2026-10-29): the wording stands; shown only once the daily three-stop plan exists.'),
+    (r'he\.dart$', r'^homeBubble(NoName)?$', r'', None, '', TR,
+     'Q6 (owner 2026-10-29): a name clip per child (parent-reviewed first name, made and cached on the device only, never a '
+     'repo file or a bundled pack, SEC-5) joined before the shared clip "מה בבקבוק?"; homeBubbleNoName plays the shared clip alone.'),
+]
+
+
+def row_rule(r, ctx):
+    """(new text or None, why, status, comment) of the first row rule that matches, or None."""
+    for src, rid, txt, build, why, status, comment in ROW_RULES:
+        if re.search(src, r['source']) and re.search(rid, r['id']) and re.search(canon(txt), canon(r['text'])):
+            new = build(r, ctx) if callable(build) else build
+            if callable(build) and new is None:
+                continue
+            return (canon(new) if new else None), why, status, comment
+    return None
 ALERT_NOTE = 'spelling checked; whether the list is complete needs a person who works with children (not the text editor).'
 
 
@@ -696,19 +968,33 @@ def pending(r):
 
 def main():
     rows = list(csv.DictReader(open(SRC, encoding='utf-8-sig')))
-    seen = {}
+    by_source = {}
     for r in rows:
-        key = r['text']
+        by_source.setdefault(r['source'], {})[r['id']] = r['text']
+    seen, rules = {}, {}
+    for n, r in enumerate(rows):
+        rule = row_rule(r, by_source[r['source']]) if r['group'][0] in '123' else None
+        rules[n] = rule
+        key = (r['text'], rule[0] if rule else None, rule[1] if rule else None)
         if key not in seen:
-            seen[key] = {'ids': [], 'spoken': False, 'text': key, 'groups': set()}
+            seen[key] = {'ids': [], 'spoken': False, 'text': r['text'], 'groups': set(), 'rule': rule}
         seen[key]['ids'].append('%s › %s' % (r['source'], r['id']))
         seen[key]['spoken'] |= spoken(r)
         seen[key]['groups'].add(r['group'][0])
-    result = {k: analyse(k, v['spoken'], v['groups']) for k, v in seen.items()}
+    result = {}
+    for k, v in seen.items():
+        rule = v['rule']
+        if rule and rule[0]:
+            ui, g_notes = grammar(rule[0], v['groups'])
+            g_notes = [rule[1]] + g_notes
+            el, e_notes = eleven(ui) if v['spoken'] else ('', [])
+            result[k] = (ui, g_notes, el, e_notes)
+        else:
+            result[k] = analyse(v['text'], v['spoken'], v['groups'])
     out = []
-    for item in seen.values():
+    for k, item in seen.items():
         text = item['text']
-        ui, g_notes, el, e_notes = result[text]
+        ui, g_notes, el, e_notes = result[k]
         if not g_notes and not item['spoken']:
             continue
         ids = item['ids']
@@ -736,7 +1022,7 @@ def main():
         fh.write('| ID | Original Text | Corrected Text (For UI) | ElevenLabs Optimized Text | Explanation |\n|---|---|---|---|---|\n')
         for x in out:
             fh.write('| %s | %s | %s | %s | %s |\n' % (esc(x['id']), esc(x['original']), esc(x['ui']), esc(x['eleven']), esc(x['explanation'])))
-    master(rows, result)
+    master(rows, result, rules)
     print('rows', len(out), 'grammar', sum(x['grammar'] for x in out), 'review', sum(x['review'] for x in out))
 
 
@@ -746,7 +1032,7 @@ EDITOR = '[editor] '
 OWNER_STATUSES = ('owner-approved', 'voice-ready', 'voiced')
 
 
-def master(rows, result):
+def master(rows, result, rules):
     """The one big table: every text of the app with the corrected screen text, the voice text, what changed and where it stands.
     What the owner typed in the last version of the table (a correction, a comment that is not the editor's, a status after
     text-ready) is kept; such a row is the owner's and the editor does not change its status."""
@@ -760,9 +1046,10 @@ def master(rows, result):
     with open(path, 'w', encoding='utf-8-sig', newline='') as fh:
         w = csv.writer(fh)
         w.writerow(MASTER_COLUMNS)
-        for r in rows:
+        for n, r in enumerate(rows):
             is_spoken = spoken(r)
-            ui, g_notes, el, e_notes = result[r['text']]
+            rule = rules[n]
+            ui, g_notes, el, e_notes = result[(r['text'], rule[0] if rule else None, rule[1] if rule else None)]
             notes = g_notes + e_notes
             status = 'proposed' if (g_notes or is_spoken) else 'unchanged'
             comment = ''
@@ -773,7 +1060,14 @@ def master(rows, result):
                 status, comment = 'proposed', EDITOR + wait
             elif reviewed(r):
                 doubt, note = first_match(DOUBT, r['text']), first_match(NOTE, r['text'])
-                if doubt:
+                v1 = is_spoken and any(n_.startswith(VOICE_AUDIT) for n_ in notes)
+                if rule:
+                    status, comment = rule[2], EDITOR + rule[3]
+                    if any(n_.startswith('REVIEW') for n_ in notes):
+                        status, comment = 'proposed', comment + ' A rule flagged this row; not yet decided.'
+                    elif v1 and status == 'text-ready':
+                        status, comment = 'proposed', comment + ' V1 (pronunciation audit 2026-10-29): a kept nikud in the voice text; please confirm.'
+                elif doubt:
                     status, comment = 'proposed', EDITOR + doubt
                 elif any(n.startswith('REVIEW') for n in notes):
                     status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
@@ -787,6 +1081,9 @@ def master(rows, result):
                         comment = EDITOR + note
             elif r['group'].startswith('5'):
                 comment = EDITOR + ALERT_NOTE
+            approved = owner_approved(r)
+            if approved:
+                status, comment = 'owner-approved', EDITOR + approved
             old = kept.get((r['source'], r['id'], r['text']))
             correction = r['correction (fill in)']
             if old:

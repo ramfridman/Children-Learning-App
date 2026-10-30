@@ -10,6 +10,26 @@ How sure each statement is: **[M]** measured here (files, headers, counts), **[R
 source, **[G]** my judgement. I cannot hear audio, so every statement about how something sounds is [G] until the owner
 listens.
 
+**Update, later on 2026-10-29.** The voice tool was rebuilt and reviewed by QA and security. In `voice_gen` (packs and
+auditions) it now does the following [R, from the header of `app/tool/voice_gen.dart`]:
+- it reads `voice_text`, never the caption;
+- it sends explicit settings, with no style or speed to v4;
+- it makes 44.1 kHz only;
+- it records a hash per clip;
+- it checks every text against a pre-flight allowlist.
+
+So H3, H4 and H5 are done for `voice_gen`, and so is H1 for the packs. The gateway still asks for `mp3_22050_32`.
+
+The paid commands (`generate`, `audition-batch run`, `audition`) run only in an interactive terminal: they print the
+plan and the owner types the count. `--confirm-chars` is gone. An audition clip has at most 300 characters.
+
+The two rounds below are written as specs:
+- `docs/audio/audition/round1.json`: 34 clips, 1,852 characters, 0.1178 USD;
+- `docs/audio/audition/round2.json`: 59 clips with the editor's H1, 2,774 characters, 0.2219 USD on v4.
+
+The owner's steps and score sheet are in `docs/audio/audition/listening-sheet.md`. Section 3 is corrected to match
+them, and so are my 2026-10-28 notes in `voice-direction.md` (its "Corrections of 2026-10-29").
+
 ---
 
 ## 1. What is sent to ElevenLabs today
@@ -128,24 +148,41 @@ on the stored settings. The format is `mp3_44100_64` unless a row says otherwise
 | L3p / L3v | the `count.butterflies.3` hint 3: today's caption / `voice_text` | both | L3v | R5, list pacing |
 | L4p / L4v / L4x | `כׇּל הַכָּבוֹד!` / `כל הכבוד.` / `כל הכבוד!` | all three | L4x | P2, R6 |
 | L5p / L5v | `הַמְּמ… בּוֹאוּ נִבְדֹּק.` / `המממ… בואו נבדוק.` | both | L5v | P1, the hum |
-| L6v / L6s / L6i | `חָמֵשׁ. שְׁלוֹשָׁה ועוד שְׁנַיִם שווה חָמֵשׁ.` with `שווה` / `שָׁוֶה` / `/ʃaˈve/` | L6v, L6s, L6i | all three | P4; does Turbo read IPA? |
-| L7p / L7v | the gateway's exact `vocalised` string for one tutor line (taken from the cache, or from a free Deno run) / the approved plain line `בואו נספור לאט, נוגעים בכל פרפר פעם אחת.` | both | L7v | P5 |
+| L6v / L6s / L6i | `שֶׁבַע. שָׁלוֹשׁ ועוד אַרְבַּע שווה שֶׁבַע.` with `שווה` / `שָׁוֶה` / `/ʃaˈve/` | L6v, L6s, L6i | all three | P4; does Turbo read IPA? |
+| L7v (L7p waits) | the approved plain line `בואו נספור לאט, נוגעים בכל פרפר פעם אחת.` in hero-son's voice. L7p, the gateway's exact `vocalised` string, is not in the spec: I have only my approximation, and a guess must not be auditioned as the real thing (hand-off H9) | L7v | L7v | P5, and R2 for the male voice |
 | L8v | prompt and question in one clip: `פרפרים באו לגינה. בואו נספור אותם. נוגעים בכל פרפר פעם אַחַת. כמה פרפרים יש על הפרח?` | yes | yes | R3 |
-| L10 | all 10 `voice_text` lines of `activity.count.butterflies.3`, in one request, one line per paragraph | | yes | R3: a context longer than 250 characters |
+| L10a / L10b | the 10 `voice_text` lines of `activity.count.butterflies.3`, one per line, in **two** requests. All ten make 433 characters with the line breaks, over the tool's 300-character limit for a clip. L10a has the prompt, the answer prompt and hints 1 to 3 (262 characters, over the 250 of the v3 advice). L10b has the three "not yet" lines, the "good question" line and the correct line (170 characters) | | both | R3 |
 
-Round 1 comes to about **1,900 characters**: Turbo about 810, v4 about 1,090. At list prices (Turbo 0.04 USD and v4
-0.08 USD per 1,000 characters) that is **about 0.12 USD**.
+**What changed when round 1 was written as a spec** (`docs/audio/audition/round1.json`, 34 clips):
+- L6 uses `activity.b.mathb03.1`, whose numbers all agree. The `mathb01.1` sentence above mixed genders (P8), which
+  would blur the stress test.
+- L4v and the second hum `ממממ…` (L5m, the editor's A/B) were added on both models.
+- L10 was split, as above.
+- L7p is left out, as above.
 
-**Round 2** runs after the owner has listened to round 1, on the model and text form that won:
-- stability 0.1, 0.5 and 0.8 on `כל הכבוד!`, `הנה גביע ברונזה בשבילכם!` and L2v;
-- `[gently] כמעט, בואו ננסה שוב.` and `[warmly] שאלה טובה, בואו נראה יחד.`
+Round 1 comes to **1,852 characters**: Turbo 759, v4 1,093. At list prices (Turbo 0.04 USD and v4 0.08 USD per 1,000
+characters) that is **0.1178 USD**.
 
-Round 2 comes to about **350 characters, about 0.03 USD**.
+**Round 2** (`round2.json`, 59 clips) runs after the owner has scored round 1, on the model that won. The spec says
+`eleven_v4`, and I change it before the run if Turbo wins. It has:
+- stability 0.1, 0.5 and 0.8 on `כל הכבוד!`, on the bronze cup (the editor's `voice_text`, with a full stop) and on
+  L2v (9 clips);
+- the editor's cheer A/B on the gold, silver and medal lines at 0.1 and 0.5 (6 clips);
+- the medal line in the voices of Tzuri and of Tamir and Keshet, at 0.1 and 0.5, because these two voice ids have
+  never been heard in an audition (P7; 4 clips);
+- `[gently]` and `[warmly]` on the "not yet" and "good question" lines, each with an untagged twin (4 clips);
+- the editor's **H1**: six lines × three text forms × Nitzi and hero-son (36 clips, 2,168 characters).
+  - Form a is the caption as sent; form b is the `voice_text`.
+  - Form c changes one thing that only the ear can settle: a `…` after "oops", one `!` after "kol ha-kavod", no
+    points at all on the stars hint and on the medal line, the list counted with `…`, and the plain question with
+    `האם` kept.
 
-**Both rounds together: about 2,250 characters, at most 0.18 USD.** These are my counts in Unicode code points.
+Round 2 comes to **2,774 characters, 0.2219 USD** on v4 (0.1110 USD on Turbo).
+
+**Both rounds together: 4,626 characters, at most 0.34 USD.** These are my counts in Unicode code points.
 Pointed text counts every point, so L2p is 96 characters and L2v is 61. The number the owner types is the one the
-gated audition tool prints (section 4, H5), never mine. Then the earlier voice-choice audition (set A of
-`audition.csv`) runs on the winning model and text form; its cost doubles if v4 wins.
+gated tool prints, never mine. Then the earlier voice-choice audition (set A of `audition.csv`) runs on the winning
+model and text form; its cost doubles if v4 wins.
 
 **What the owner listens for, per clip, on the phone speaker and on headphones** (marked ok / not ok, with one word
 on what he heard):
@@ -193,8 +230,15 @@ once ffmpeg is installed. I note whether Turbo and v4 differ in length and pause
   line's kind. Do not send `style` or `speed` to v4. The gateway sends them too.
 - **H4.** C7 from `voice-direction.md`: store a hash of the sent text, model and settings for each clip, so that a
   changed line is voiced again. Today `_made` reuses any file with the same id.
-- **H5.** An `audition-batch <csv>` command with `plan` and `--confirm-chars N`, gated exactly like `generate`. Today
-  `audition` spends money with no typed count.
+- **H5. Done (2026-10-29).** It was: a gated `audition-batch` command. It is now `audition-batch plan|run <spec.json>`
+  (format `audition/v1`, in `app/tool/audition_lib.dart`). `run`, like `generate` and the one-text `audition`, runs
+  only in an interactive terminal and asks the owner to type the count. `--confirm-chars` was removed.
+- **H9.** To make L7p possible: print, without sending anything, the exact `vocalised` string that the gateway's
+  validator gives for the reviewed hero-son line `בואו נספור לאט, נוגעים בכל פרפר פעם אחת.`. A Deno test run or the
+  prewarm cache would do. I add L7p to round 2 with that string.
+- **H10.** For the voice-choice audition (set A): a way to audition a library voice id that is not yet in
+  `content/voices.json`. For example, an optional `"voice"` key on a clip, checked like a voice id (C11 of
+  `voice-direction.md`).
 - **H6.** Optional, if L8 or L10 wins: voice a whole activity or several lines in one request and split it by the
   alignment. `previous_text`/`next_text` are another option, but whether v4 accepts them is unverified.
 - **H7.** The mouth cues (C6) must handle unpointed text and an IPA `/…/` word (treat it as one open group).
@@ -227,7 +271,8 @@ pointed (for example, at most one pointed word in three).
 4. The names of the four voices in his ElevenLabs account (`Tbj9…`, `Ziof…`, `8sZ9…`, `6Ijsl…`), their language or
    accent, and their stored stability and similarity.
 5. Install ffmpeg (`winget install Gyan.FFmpeg`).
-6. Type the audition count when the gated tool prints it.
+6. Run the two rounds himself and type each count when the gated tool prints it
+   (`docs/audio/audition/listening-sheet.md`, section A). Then fill in the score sheet.
 
 ---
 
@@ -264,9 +309,11 @@ pointed (for example, at most one pointed word in three).
 **Corrections to my own design of 2026-10-28:**
 - The `speed` column in `voice-direction.csv`, the style values (0.05 to 0.45) and the band speed offsets do nothing
   on v4. Pacing comes only from punctuation, sentence structure and, at most, a tag.
-- The note that the old clips were "22,050 Hz / 56 kbps" is wrong: they are 32 kbps [M].
+- The note that the old clips were "22,050 Hz / 56 kbps" is wrong: they are 32 kbps [M]. The first frame of each file
+  is an information frame at 56 kbps; every audio frame after it is 32 kbps, which I re-measured frame by frame on four of the 22.05 kHz files.
 
-I will update `voice-direction.md` after round 1, not now.
+Both corrections are now in `voice-direction.md` (section "Corrections of 2026-10-29", and in place), together with the
+new paid-command gate. The stabilities there wait for round 2.
 
 ## 6. What I could not verify
 

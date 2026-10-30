@@ -1,0 +1,18 @@
+{
+  "schema": "audition/v1",
+  "title": "Example of the format only, with mock texts (not a real round). The voice-and-sound-director writes round 1 and round 2 of docs/audio/voice-quality-diagnosis.md as specs like this one.",
+  "review": "needs-editor",
+  "note": "The format is described at the top of app/tool/audition_lib.dart. Try it free with: dart run tool/voice_gen.dart audition-batch plan tool/audition_example.json",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4_turbo",
+    "format": "mp3_44100_64",
+    "settings": { "stability": 0.5, "similarity_boost": 0.75, "use_speaker_boost": true }
+  },
+  "clips": [
+    { "id": "M1-turbo", "text": "שלום, זו דוגמה.", "tests": "the same text on two models" },
+    { "id": "M1-v4", "text": "שלום, זו דוגמה.", "model": "eleven_v4" },
+    { "id": "M2-cheer", "text": "דוגמה שמחה!", "allow": ["exclamation"], "settings": { "stability": 0.1 }, "tests": "one ! and a low stability" },
+    { "id": "M3-voice-text", "line": "vo:core.greeting.hello", "from": "voice_text", "note": "a line taken from the master table, as the packs send it" }
+  ]
+}
