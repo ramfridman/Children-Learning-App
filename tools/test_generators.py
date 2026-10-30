@@ -124,7 +124,11 @@ class SortShiftLineTest(unittest.TestCase):
 
     def test_an_unknown_rule_is_refused(self):
         with self.assertRaises(AssertionError):
-            pick(rule='size')
+            pick(rule='weight')
+
+    def test_a_size_rule_takes_the_editors_size_line(self):
+        self.assertEqual(author.tag_line('M-SORT-SHIFT', rule='size')[0], 'vo:fb.sort_shift.size')
+        self.assertEqual(pick(band='A', rule='size')['feedback']['incorrect'][0]['vo'], 'vo:fb.sort_shift.size')
 
 
 class PartTwoPiecesTest(unittest.TestCase):
@@ -222,11 +226,11 @@ class StarterPackTest(unittest.TestCase):
                 self.assertEqual(len(chart) if a['checkType'] == 'reverse' else sum(c['count'] for c in chart), right, a['id'])
                 self.assertEqual(a['templateVersion'], '1.2')
 
-    def test_a_sorting_rule_line_is_one_of_the_two_rule_lines(self):
+    def test_a_sorting_rule_line_is_one_of_the_rule_lines(self):
         for a in self.acts:
             for f in a['feedback']['incorrect']:
                 if f['when'] == 'misconception:M-SORT-SHIFT' and f['vo'] != 'vo:fb.sort_shift':
-                    self.assertIn(f['vo'], ('vo:fb.sort_shift.shape', 'vo:fb.sort_shift.kind'), a['id'])
+                    self.assertIn(f['vo'], ('vo:fb.sort_shift.shape', 'vo:fb.sort_shift.kind', 'vo:fb.sort_shift.size'), a['id'])
 
     def test_a_tagged_option_is_never_the_right_one(self):
         for a in self.acts:

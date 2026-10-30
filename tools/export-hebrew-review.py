@@ -76,12 +76,23 @@ for r in rows:
     if r[0] not in groups:
         groups.append(r[0])
 
+# The generators already carry the corrections of every text-ready and owner-approved row (board B-3), so the pack now says
+# what the table's `ui_text` says. The csv keeps the ORIGINAL text in its `text` column (the master table's `text`, and the
+# tests that compare the table with the sources, depend on it): for such a row it writes the original from the last master
+# table. The .md lists the pack as it is.
+ORIGINAL = {}
+if os.path.exists('docs/review/hebrew-master.csv'):
+    with open('docs/review/hebrew-master.csv', encoding='utf-8-sig', newline='') as fh:
+        for m in csv.DictReader(fh):
+            if m['status'] in ('text-ready', 'owner-approved') and m['ui_text'] != m['text']:
+                ORIGINAL[(m['source'], m['id'], m['ui_text'])] = m['text']
+
 os.makedirs('docs/review', exist_ok=True)
 with open('docs/review/hebrew-review.csv', 'w', encoding='utf-8-sig', newline='') as fh:
     w = csv.writer(fh)
     w.writerow(['group', 'source', 'id', 'text', 'status', 'kind', 'correction (fill in)', 'comment'])
     for r in rows:
-        w.writerow(list(r) + ['', ''])
+        w.writerow([r[0], r[1], r[2], ORIGINAL.get((r[1], r[2], r[3]), r[3])] + list(r[4:]) + ['', ''])
 
 out = ['# Hebrew texts waiting for review', '',
        'Made by `tools/export-hebrew-review.py` on 2026-10-28 from the repository as it is now (M8 merged). '

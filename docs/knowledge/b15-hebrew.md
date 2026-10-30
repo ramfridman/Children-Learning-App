@@ -337,3 +337,53 @@ Band B colour items keep today's `vo:fb.sort_shift` (`מְחַפְּשִׂים �
 - ~~X1c~~ the three feminine size lines `הֵן גְּדוֹלוֹת / קְטַנּוֹת / רְחוֹקוֹת זוֹ מִזּוֹ…`: **dropped** (A4: every M-CNT-SIZE set is masculine). They stay in §2 as history; the generator must not add them. This answers §5 item 5.
 - §2's extra strings fall from 13 to 8 (X1a, X1b and the three X1c lines are out).
 - **Existing rows with `פַּרְפָּר` in the singular** (screen nikud only; the voice text is plain `פרפר`, so no clip needs re-voicing): `activity.count.butterflies.3` prompt, `feedback.incorrect.0`, `feedback.incorrect.1`; `activity.count.butterflies.4` prompt, `feedback.incorrect.0`, `feedback.incorrect.1`; `activity.count.butterflies.5` `feedback.incorrect.0`, `feedback.incorrect.1`; `lesson.butterflies` celebration. All 9 are `text-ready`. The fix is `פַּרְפָּר` → `פַּרְפַּר` (and `שֶׁפַּרְפָּר` → `שֶׁפַּרְפַּר`). It is a proposal for the owner; with his OK the app-developer changes it in `counting-hills.json`.
+
+---
+
+## 7. After the app-developer's part 2 (editor, 2026-10-30)
+
+The developer composed a few lines the sections above never wrote. I read each one; the sources (`content/units/*.json`, `tools/band_b.py`) and the rules in `tools/hebrew_voice_review.py` carry the result. Everything new or changed below is **`proposed`** for the owner (none is a pure spelling fix); the 40 `owner-approved` rows are untouched.
+
+**7.1 The 15 spill lessons (Band A).** Title and celebration were copied from the sibling lesson, so the lesson list showed the same title twice or three times. Each now says what it holds. The celebration ids (`vo:celebrate.<id>`) were already separate, so each line is its own clip.
+
+| lesson id | title | celebration |
+|---|---|---|
+| colour-names-1-b15 | צְבָעִים וְצוּרוֹת | כׇּל הַכָּבוֹד! הִסְתַּכַּלְתֶּם טוֹב עַל הַצְּבָעִים. |
+| colours-again-1-b15 | כָּתֹם, אָדֹם, שָׁחֹר וְלָבָן | חֲכָמִים! הִכַּרְתֶּם כָּתֹם, אָדֹם, שָׁחֹר וְלָבָן. |
+| colours-again-2-b15 | חוּם וְאָפֹר | כׇּל הַכָּבוֹד! הִכַּרְתֶּם חוּם וְאָפֹר. |
+| colour-sorting-again-1-b15 | מוֹצְאִים דָּבָר לְפִי צֶבַע | יָפֶה! מְצָאתֶם אֶת הַדָּבָר הַנָּכוֹן לְפִי הַצֶּבַע. |
+| more-comparing-1-b15 | פַּרְפָּרִים וְאֶפְרוֹחִים | חֲכָמִים! בְּדַקְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת. |
+| more-counting-1-b15 | סוֹפְרִים חַיּוֹת | וַאוּ! סְפַרְתֶּם חַיּוֹת, אַחַת אַחַת. |
+| more-counting-2-b15 | סוֹפְרִים חִפּוּשִׁיּוֹת | וַאוּ! סְפַרְתֶּם חִפּוּשִׁיּוֹת, אַחַת אַחַת. |
+| more-counting-words-1-b15 | מִסְפָּרִים מֵאַחַת עַד עֶשֶׂר | כׇּל הַכָּבוֹד! סְפַרְתֶּם מֵאַחַת עַד עֶשֶׂר. |
+| more-counting-words-2-b15 | מוֹצְאִים טָעוּת בַּסְּפִירָה | חֲכָמִים! מְצָאתֶם אֶת הַטָּעוּת בַּסְּפִירָה. |
+| patterns-again-1-b15 | מַמְשִׁיכִים אֶת הַסֵּדֶר | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא אַחַר כָּךְ. |
+| same-and-different-again-1-b15 | זֶהֶה אוֹ שׁוֹנֶה? | כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה. |
+| shape-friends-again-1-b15 | עִגּוּלִים וְרִבּוּעִים | כׇּל הַכָּבוֹד! הִכַּרְתֶּם עִגּוּלִים וְרִבּוּעִים. |
+| shapes-around-us-again-1-b15 | קַו יָשָׁר וְקַו עָקֹם | וַאוּ! הִבְדַּלְתֶּם בֵּין קַו יָשָׁר לְקַו עָקֹם. |
+| step-by-step-again-1-b15 | שִׁנַּיִם וְיָדַיִם | כׇּל הַכָּבוֹד! יְדַעְתֶּם אֵיךְ מְצַחְצְחִים וְאֵיךְ רוֹחֲצִים. |
+| stories-and-pairs-again-1-b15 | מָה הוֹלֵךְ יַחַד? | כׇּל הַכָּבוֹד! מְצָאתֶם מָה הוֹלֵךְ יַחַד. |
+
+No title repeats another Band A title. No `לֹא` (Band A). Avoided on purpose: `וּפַרְפָּרִים` and `מַה שּׁוֹנֶה` (the vav before a pe and the dagesh after `מַה` before a shin are the two pointings I would not guess); the titles use `פַּרְפָּרִים וְאֶפְרוֹחִים` and `זֶהֶה אוֹ שׁוֹנֶה?`. The single-item lessons are named by the skill, not by their one item, so a re-order of the pool does not make a title false.
+
+**7.2 NUM-B-08, the missing numeral in a row.** `אֵיפֹה הַמִּסְפָּר הֶחָסֵר?` is replaced by **`אֵיזֶה מִסְפָּר חָסֵר?`** (voice: איזה מספר חסר?). The child taps a numeral tile, so "which" fits; "where" suggested pointing at the gap. It is the pattern of `אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?`. Changed in `tools/band_b.py`.
+
+**7.3 NUM-B-18, the feminine odd line.** `לֹא, אַחַת נִשְׁאֶרֶת לְבַד.` and `אַחַת נִשְׁאֶרֶת לְבַד` are correct (`אַחַת` / `נִשְׁאֶרֶת` agree with `נַעַל`; the prompt's `תִּשָּׁאֵר` matches). Approved as written.
+
+**7.4 Fish and star size hints.** `הַדָּג הַגָּדוֹל תּוֹפֵס יוֹתֵר מָקוֹם … לִלְחֹץ עָלָיו` and the star line are correct (`דָּג`, `כּוֹכָב` are masculine). Approved as written.
+
+**7.5 LOG-A-02 hint.** `הַכַּדּוּר הַקָּטָן שׁוֹנֶה מֵהָאֲחֵרִים. … לִלְחֹץ עָלָיו.` (and the star) is correct and names the difference. Approved as written.
+
+**7.6 Tick answers (COL-A-05).** `כֵּן! זוֹ בָּנָנָה.` is true but silent about the point of the item (M-COL-OBJECT: a green banana is still a banana). Changed to **`כֵּן! זוֹ בָּנָנָה יְרֻקָּה.`** and **`כֵּן! זֶה תַּפּוּחַ יָרֹק.`** (voice: כן, זו בננה ירוקה. / כן, זה תפוח ירוק.), so the colour is heard next to the thing. Changed in `content/units/colours.json`. The tick hint `לִלְחֹץ עַל הַוִּי` stays.
+
+**7.7 The two changes in `tools/hebrew_voice_review.py`.** (a) The text-scoped `PENDING` entry (a fifth element, a regex on the text): it does what I meant. A row is held only when its id, source **and** text match, so the P3/P4 lines are held for Band A (`activity.<not b. and not x.>`), while the same lines in Band B stay `text-ready` (b15-hebrew.md 6.6). I widened the NUM-B-08 entry to `caption|altText`, because the alt text is the prompt and was `text-ready` while the prompt was `proposed`. (b) `ADDEND_PROMPT_FLIPPED` for `7 = 3 + ?` gives the number that is there and the total in the right order: `שָׁלוֹשׁ כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד שֶׁבַע …` and `שָׁלוֹשׁ… וּמַמְשִׁיכִים: אַרְבַּע … שֶׁבַע. הֵרַמְנוּ אַרְבַּע אֶצְבָּעוֹת. … לִלְחֹץ עַל אַרְבַּע.` for `b.mathb18.8` and `.9`: correct, and it equals the pack. Added: one `PENDING` entry for the 15 lessons (title and celebration).
+
+**7.8 M-SORT-SHIFT for a size sort (LOG-A-03, `b15.loga03.1` and `.2`): `proposed`, P5.** Both items have no `rule`, so they play today's colour line (`מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר`), which sends a child who failed to look at the size to the colour. The first clause of P2 to P4 ("זֶה אוֹתוֹ …") is true only for the lure the child followed; on a size sort the lure can be the colour or the kind, so the first clause is the neutral `זֶה דּוֹמֶה`:
+
+| key | ui_text | voice_text | status |
+|---|---|---|---|
+| P5 `vo:fb.sort_shift.size` | זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק. | זה דומה, אבל מחפשים את אותו הגודל. בואו נבדוק. | proposed (owner, with P2 to P4) |
+
+Code change (the app-developer; I did not touch it): (1) `tools/author.py`: add `'size': ('vo:fb.sort_shift.size', 'זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק.')` to `SORT_SHIFT_BY_RULE` and `'size'` to `SORT_RULES`. (2) `content/units/logic.json`: `"rule": "size"` on `b15.loga03.1` and `b15.loga03.2`. (3) `tools/test_generators.py`: `test_an_unknown_rule_is_refused` uses `rule='size'` as the unknown rule (use another, e.g. `'texture'`), and `test_a_sorting_rule_line_is_one_of_the_two_rule_lines` must accept `vo:fb.sort_shift.size`. Nothing else: `PENDING` already holds the line in Band A (its text contains `אֲבָל מְחַפְּשִׂים אֶת אוֹת`).
+
+**7.9 The table scripts.** A plain `export-hebrew-review.py` wrote the pack's already-corrected text into the `text` ("original") column, so 39 of the 40 `owner-approved` rows lost their mark (the rule finds the owner's row by the original text) and the table-count test failed (6 instead of 1308). `export-hebrew-review.py` now writes, for a done row, the original from the last master table; the `.md` lists the pack as it is. A rerun gives the same bytes.

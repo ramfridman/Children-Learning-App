@@ -750,17 +750,25 @@ PENDING = [
     ('3', r'caption', r'^activity\.(?!b\.|x\.)', B15 + 'P3 and P4 (b15-hebrew.md section 4): the sorting-rule line for a kind or a shape rule. '
      "Built into Band A on the owner's instruction of 2026-10-30 (today's line says 'the same colour' where the rule is the thing "
      'or the shape); the owner signs it. The same text is text-ready in Band B (section 6.6).', r'אֲבָל מְחַפְּשִׂים אֶת אוֹת'),
-    ('3', r'caption', r'^activity\.b\.numb08\.', B15 + 'The prompt of the missing numeral in a row: the pattern of the other NUM-B-08 prompts and the phrase of the MATH-B-18 lesson title; the '
-     'spec points at a NUM-B-11 pattern that does not exist.', r'אֵיפֹה הַמִּסְפָּר הֶחָסֵר'),
-    ('3', r'caption', r'^activity\.b\.numb18\.', B15 + 'The odd-shoes line in the feminine (the editor gave the pattern: אֶחָד/אַחַת, '
-     'יִשָּׁאֵר/תִּשָּׁאֵר by the noun).', r'אַחַת נִשְׁאֶרֶת'),
-    ('3', r'caption', r'^activity\.b15\.matha04\.', B15 + 'The size question about a fish and a star, in the pattern of the ball and the stick.',
+    ('3', r'caption|altText', r'^activity\.b\.numb08\.', B15 + 'The prompt of the missing numeral in a row (editor, 2026-10-30, b15-hebrew.md section 7.2): "אֵיזֶה מִסְפָּר חָסֵר?" '
+     'in the pattern of "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?"; the first draft "אֵיפֹה הַמִּסְפָּר הֶחָסֵר?" asked for a place when the child picks a numeral.',
+     r'אֵיזֶה מִסְפָּר חָסֵר'),
+    ('3', r'caption', r'^activity\.b\.numb18\.', B15 + 'The odd-shoes line in the feminine (editor read it, 2026-10-30: correct, "אַחַת נִשְׁאֶרֶת" agrees with "נַעַל"; '
+     'the pattern is the editor pattern אֶחָד/אַחַת, יִשָּׁאֵר/תִּשָּׁאֵר by the noun).', r'אַחַת נִשְׁאֶרֶת'),
+    ('3', r'caption', r'^activity\.b15\.matha04\.', B15 + 'The size lines about a fish and a star (editor read them, 2026-10-30: correct, "עָלָיו" agrees with "דָּג" and "כּוֹכָב"; '
+     'the pattern of the ball and the stick).',
      r'הַדָּג הַגָּדוֹל|הַכּוֹכָב הַקָּטָן'),
-    ('3', r'caption', r'^activity\.b15\.loga02\.', B15 + 'The odd one out by size, in the pattern of "the blue ball is different".',
+    ('3', r'caption', r'^activity\.b15\.loga02\.', B15 + 'The hint of the odd one out by size (editor read it, 2026-10-30: correct and it names the difference; '
+     'the pattern of "the blue ball is different").',
      r'שׁוֹנֶה מֵהָאֲחֵרִים'),
     ('3', r'hints\.2', r'^activity\.b15\.cola05\.', B15 + 'The hint of a tick answer: "לִלְחֹץ עַל הַוִּי" (H7a, the editor) in the pattern of the other hints.',
      r'לִלְחֹץ עַל הַוִּי'),
-    ('3', r'feedback\.correct', r'^activity\.b15\.cola05\.', B15 + 'The correct line, made from the question (H7a, H7b).', r'כֵּן! זוֹ בָּנָנָה|כֵּן! זֶה תַּפּוּחַ'),
+    ('3', r'feedback\.correct', r'^activity\.b15\.cola05\.', B15 + 'The correct line of a tick answer (editor, 2026-10-30, b15-hebrew.md section 7.6): the question "זוֹ בָּנָנָה?" answered '
+     'with the colour, "כֵּן! זוֹ בָּנָנָה יְרֻקָּה.", so the colour is heard next to the thing it does not change (M-COL-OBJECT).',
+     r'כֵּן! זוֹ בָּנָנָה יְרֻקָּה|כֵּן! זֶה תַּפּוּחַ יָרֹק'),
+    # The 15 spill lessons of B-15 part 2: each got its own title and celebration line (editor, 2026-10-30, section 7.1).
+    ('3', r'^(title\.0\.v|celebration\.caption\.0\.v)$', r'^lesson\.[a-z0-9-]+-b15\.json$', B15 + 'A spill lesson of B-15 part 2: its title and its '
+     'celebration line were copied from the sibling lesson; the editor named each by what it holds (b15-hebrew.md section 7.1). The owner signs the names.'),
     # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
     # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
 ]

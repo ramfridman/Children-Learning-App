@@ -3832,7 +3832,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.numb08.12.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
 | activity.b.numb08.12.json | hints.2.caption.0.v | שְׁתֵּים עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | needs-editor |
 | activity.b.numb08.12.json | a11y.altText | אֵיפֹה הַמִּסְפָּר שְׁתֵּים עֶשְׂרֵה? | needs-editor |
-| activity.b.numb08.13.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר הֶחָסֵר? | needs-editor |
+| activity.b.numb08.13.json | prompt.caption.0.v | אֵיזֶה מִסְפָּר חָסֵר? | needs-editor |
 | activity.b.numb08.13.json | answer.options.0.label | שְׁלֹשׁ עֶשְׂרֵה | needs-editor |
 | activity.b.numb08.13.json | answer.options.1.label | שְׁלוֹשִׁים וְאַחַת | needs-editor |
 | activity.b.numb08.13.json | answer.options.2.label | חֲמֵשׁ עֶשְׂרֵה | needs-editor |
@@ -3844,8 +3844,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.numb08.13.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.b.numb08.13.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
 | activity.b.numb08.13.json | hints.2.caption.0.v | אַחַת עֶשְׂרֵה, שְׁתֵּים עֶשְׂרֵה, שְׁלֹשׁ עֶשְׂרֵה, אַרְבַּע עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁלֹשׁ עֶשְׂרֵה. | needs-editor |
-| activity.b.numb08.13.json | a11y.altText | אֵיפֹה הַמִּסְפָּר הֶחָסֵר? | needs-editor |
-| activity.b.numb08.14.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר הֶחָסֵר? | needs-editor |
+| activity.b.numb08.13.json | a11y.altText | אֵיזֶה מִסְפָּר חָסֵר? | needs-editor |
+| activity.b.numb08.14.json | prompt.caption.0.v | אֵיזֶה מִסְפָּר חָסֵר? | needs-editor |
 | activity.b.numb08.14.json | answer.options.0.label | שִׁבְעִים וְאַחַת | needs-editor |
 | activity.b.numb08.14.json | answer.options.1.label | שְׁבַע עֶשְׂרֵה | needs-editor |
 | activity.b.numb08.14.json | answer.options.2.label | שְׁמוֹנֶה עֶשְׂרֵה | needs-editor |
@@ -3857,7 +3857,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.numb08.14.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.b.numb08.14.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
 | activity.b.numb08.14.json | hints.2.caption.0.v | שֵׁשׁ עֶשְׂרֵה, שְׁבַע עֶשְׂרֵה, שְׁמוֹנֶה עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁבַע עֶשְׂרֵה. | needs-editor |
-| activity.b.numb08.14.json | a11y.altText | אֵיפֹה הַמִּסְפָּר הֶחָסֵר? | needs-editor |
+| activity.b.numb08.14.json | a11y.altText | אֵיזֶה מִסְפָּר חָסֵר? | needs-editor |
 | activity.b.numb08.2.json | prompt.caption.0.v | אֵיפֹה הַמִּסְפָּר שְׁלֹשׁ עֶשְׂרֵה? | needs-editor |
 | activity.b.numb08.2.json | answer.options.0.label | שְׁלוֹשִׁים וְאַחַת | needs-editor |
 | activity.b.numb08.2.json | answer.options.1.label | שְׁלֹשׁ עֶשְׂרֵה | needs-editor |
@@ -5643,7 +5643,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b15.cola05.1.json | prompt.caption.0.v | זוֹ בָּנָנָה? | needs-editor |
 | activity.b15.cola05.1.json | answer.options.0.label | לֹא | needs-editor |
 | activity.b15.cola05.1.json | answer.options.1.label | כֵּן | needs-editor |
-| activity.b15.cola05.1.json | feedback.correct.caption.0.v | כֵּן! זוֹ בָּנָנָה. | needs-editor |
+| activity.b15.cola05.1.json | feedback.correct.caption.0.v | כֵּן! זוֹ בָּנָנָה יְרֻקָּה. | needs-editor |
 | activity.b15.cola05.1.json | feedback.incorrect.0.caption.0.v | דְּבָרִים יְכוֹלִים לִהְיוֹת בְּכַמָּה צְבָעִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב. | needs-editor |
 | activity.b15.cola05.1.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.b15.cola05.1.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
@@ -5654,7 +5654,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b15.cola05.2.json | prompt.caption.0.v | זֶה תַּפּוּחַ? | needs-editor |
 | activity.b15.cola05.2.json | answer.options.0.label | כֵּן | needs-editor |
 | activity.b15.cola05.2.json | answer.options.1.label | לֹא | needs-editor |
-| activity.b15.cola05.2.json | feedback.correct.caption.0.v | כֵּן! זֶה תַּפּוּחַ. | needs-editor |
+| activity.b15.cola05.2.json | feedback.correct.caption.0.v | כֵּן! זֶה תַּפּוּחַ יָרֹק. | needs-editor |
 | activity.b15.cola05.2.json | feedback.incorrect.0.caption.0.v | דְּבָרִים יְכוֹלִים לִהְיוֹת בְּכַמָּה צְבָעִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב. | needs-editor |
 | activity.b15.cola05.2.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.b15.cola05.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
@@ -5878,7 +5878,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b15.loga03.1.json | scene.bins.0.label | גְּדוֹלִים | needs-editor |
 | activity.b15.loga03.1.json | scene.bins.1.label | קְטַנִּים | needs-editor |
 | activity.b15.loga03.1.json | feedback.correct.caption.0.v | כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם. | needs-editor |
-| activity.b15.loga03.1.json | feedback.incorrect.0.caption.0.v | מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.b15.loga03.1.json | feedback.incorrect.0.caption.0.v | זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.b15.loga03.1.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.b15.loga03.1.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b15.loga03.1.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -5889,7 +5889,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b15.loga03.2.json | scene.bins.0.label | גְּדוֹלִים | needs-editor |
 | activity.b15.loga03.2.json | scene.bins.1.label | קְטַנִּים | needs-editor |
 | activity.b15.loga03.2.json | feedback.correct.caption.0.v | כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם. | needs-editor |
-| activity.b15.loga03.2.json | feedback.incorrect.0.caption.0.v | מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
+| activity.b15.loga03.2.json | feedback.incorrect.0.caption.0.v | זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.b15.loga03.2.json | feedback.incorrect.1.caption.0.v | כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.b15.loga03.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b15.loga03.2.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -11212,20 +11212,20 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.closed-shapes.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרָה סְגוּרָה. | needs-editor |
 | lesson.colour-match.json | title.0.v | מוֹצְאִים אֶת אוֹתוֹ צֶבַע | needs-editor |
 | lesson.colour-match.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַצְּבָעִים. | needs-editor |
-| lesson.colour-names-1-b15.json | title.0.v | שֵׁמוֹת שֶׁל צְבָעִים | needs-editor |
-| lesson.colour-names-1-b15.json | celebration.caption.0.v | יָפֶה מְאֹד! הִכַּרְתֶּם עוֹד צְבָעִים. | needs-editor |
+| lesson.colour-names-1-b15.json | title.0.v | צְבָעִים וְצוּרוֹת | needs-editor |
+| lesson.colour-names-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הִסְתַּכַּלְתֶּם טוֹב עַל הַצְּבָעִים. | needs-editor |
 | lesson.colour-names.json | title.0.v | שֵׁמוֹת שֶׁל צְבָעִים | needs-editor |
 | lesson.colour-names.json | celebration.caption.0.v | יָפֶה מְאֹד! הִכַּרְתֶּם עוֹד צְבָעִים. | needs-editor |
-| lesson.colour-sorting-again-1-b15.json | title.0.v | עוֹד מְמַיְּנִים לְפִי צֶבַע | needs-editor |
-| lesson.colour-sorting-again-1-b15.json | celebration.caption.0.v | חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר. | needs-editor |
+| lesson.colour-sorting-again-1-b15.json | title.0.v | מוֹצְאִים דָּבָר לְפִי צֶבַע | needs-editor |
+| lesson.colour-sorting-again-1-b15.json | celebration.caption.0.v | יָפֶה! מְצָאתֶם אֶת הַדָּבָר הַנָּכוֹן לְפִי הַצֶּבַע. | needs-editor |
 | lesson.colour-sorting-again.json | title.0.v | עוֹד מְמַיְּנִים לְפִי צֶבַע | needs-editor |
 | lesson.colour-sorting-again.json | celebration.caption.0.v | חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר. | needs-editor |
 | lesson.colour-sorting.json | title.0.v | מְמַיְּנִים לְפִי צֶבַע | needs-editor |
 | lesson.colour-sorting.json | celebration.caption.0.v | חֲכָמִים! הִסְתַּכַּלְתֶּם עַל הַצֶּבַע וְעַל הַדָּבָר. | needs-editor |
-| lesson.colours-again-1-b15.json | title.0.v | עוֹד צְבָעִים | needs-editor |
-| lesson.colours-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים. | needs-editor |
-| lesson.colours-again-2-b15.json | title.0.v | עוֹד צְבָעִים | needs-editor |
-| lesson.colours-again-2-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים. | needs-editor |
+| lesson.colours-again-1-b15.json | title.0.v | כָּתֹם, אָדֹם, שָׁחֹר וְלָבָן | needs-editor |
+| lesson.colours-again-1-b15.json | celebration.caption.0.v | חֲכָמִים! הִכַּרְתֶּם כָּתֹם, אָדֹם, שָׁחֹר וְלָבָן. | needs-editor |
+| lesson.colours-again-2-b15.json | title.0.v | חוּם וְאָפֹר | needs-editor |
+| lesson.colours-again-2-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הִכַּרְתֶּם חוּם וְאָפֹר. | needs-editor |
 | lesson.colours-again.json | title.0.v | עוֹד צְבָעִים | needs-editor |
 | lesson.colours-again.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים. | needs-editor |
 | lesson.colours-of-things-again.json | title.0.v | עוֹד צְבָעִים שֶׁל דְּבָרִים | needs-editor |
@@ -11338,18 +11338,18 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.mix-colours.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! עִרְבַּבְתֶּם צְבָעִים. | needs-editor |
 | lesson.more-colours.json | title.0.v | עוֹד צְבָעִים | needs-editor |
 | lesson.more-colours.json | celebration.caption.0.v | מַדְהִים! אַתֶּם מַכִּירִים הַרְבֵּה צְבָעִים. | needs-editor |
-| lesson.more-comparing-1-b15.json | title.0.v | עוֹד יוֹתֵר אוֹ פָּחוֹת | needs-editor |
-| lesson.more-comparing-1-b15.json | celebration.caption.0.v | חֲכָמִים! סְפַרְתֶּם וְהִשְׁוִיתֶם. | needs-editor |
+| lesson.more-comparing-1-b15.json | title.0.v | פַּרְפָּרִים וְאֶפְרוֹחִים | needs-editor |
+| lesson.more-comparing-1-b15.json | celebration.caption.0.v | חֲכָמִים! בְּדַקְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת. | needs-editor |
 | lesson.more-comparing.json | title.0.v | עוֹד יוֹתֵר אוֹ פָּחוֹת | needs-editor |
 | lesson.more-comparing.json | celebration.caption.0.v | חֲכָמִים! סְפַרְתֶּם וְהִשְׁוִיתֶם. | needs-editor |
-| lesson.more-counting-1-b15.json | title.0.v | עוֹד סוֹפְרִים וְנוֹגְעִים | needs-editor |
-| lesson.more-counting-1-b15.json | celebration.caption.0.v | וַאוּ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
-| lesson.more-counting-2-b15.json | title.0.v | עוֹד סוֹפְרִים וְנוֹגְעִים | needs-editor |
-| lesson.more-counting-2-b15.json | celebration.caption.0.v | וַאוּ! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | needs-editor |
-| lesson.more-counting-words-1-b15.json | title.0.v | עוֹד סוֹפְרִים לְפִי הַסֵּדֶר | needs-editor |
-| lesson.more-counting-words-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר. | needs-editor |
-| lesson.more-counting-words-2-b15.json | title.0.v | עוֹד סוֹפְרִים לְפִי הַסֵּדֶר | needs-editor |
-| lesson.more-counting-words-2-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר. | needs-editor |
+| lesson.more-counting-1-b15.json | title.0.v | סוֹפְרִים חַיּוֹת | needs-editor |
+| lesson.more-counting-1-b15.json | celebration.caption.0.v | וַאוּ! סְפַרְתֶּם חַיּוֹת, אַחַת אַחַת. | needs-editor |
+| lesson.more-counting-2-b15.json | title.0.v | סוֹפְרִים חִפּוּשִׁיּוֹת | needs-editor |
+| lesson.more-counting-2-b15.json | celebration.caption.0.v | וַאוּ! סְפַרְתֶּם חִפּוּשִׁיּוֹת, אַחַת אַחַת. | needs-editor |
+| lesson.more-counting-words-1-b15.json | title.0.v | מִסְפָּרִים מֵאַחַת עַד עֶשֶׂר | needs-editor |
+| lesson.more-counting-words-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם מֵאַחַת עַד עֶשֶׂר. | needs-editor |
+| lesson.more-counting-words-2-b15.json | title.0.v | מוֹצְאִים טָעוּת בַּסְּפִירָה | needs-editor |
+| lesson.more-counting-words-2-b15.json | celebration.caption.0.v | חֲכָמִים! מְצָאתֶם אֶת הַטָּעוּת בַּסְּפִירָה. | needs-editor |
 | lesson.more-counting-words.json | title.0.v | עוֹד סוֹפְרִים לְפִי הַסֵּדֶר | needs-editor |
 | lesson.more-counting-words.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! סְפַרְתֶּם עוֹד, לְפִי הַסֵּדֶר. | needs-editor |
 | lesson.more-counting.json | title.0.v | עוֹד סוֹפְרִים וְנוֹגְעִים | needs-editor |
@@ -11378,8 +11378,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.one-more-one-less.json | celebration.caption.0.v | נִפְלָא! אֶחָד יוֹתֵר וְאֶחָד פָּחוֹת. | needs-editor |
 | lesson.pairs.json | title.0.v | זוּגוֹת | needs-editor |
 | lesson.pairs.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! חִלַּקְתֶּם לְזוּגוֹת. | needs-editor |
-| lesson.patterns-again-1-b15.json | title.0.v | עוֹד סְדָרִים | needs-editor |
-| lesson.patterns-again-1-b15.json | celebration.caption.0.v | וַאוּ! הִמְשַׁכְתֶּם אֶת הַסֵּדֶר. | needs-editor |
+| lesson.patterns-again-1-b15.json | title.0.v | מַמְשִׁיכִים אֶת הַסֵּדֶר | needs-editor |
+| lesson.patterns-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא אַחַר כָּךְ. | needs-editor |
 | lesson.patterns-again.json | title.0.v | עוֹד סְדָרִים | needs-editor |
 | lesson.patterns-again.json | celebration.caption.0.v | וַאוּ! הִמְשַׁכְתֶּם אֶת הַסֵּדֶר. | needs-editor |
 | lesson.patterns.json | title.0.v | סֵדֶר שֶׁחוֹזֵר | needs-editor |
@@ -11426,8 +11426,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.roll-or-stack-again.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה מִּתְגַּלְגֵּל. | needs-editor |
 | lesson.roll-or-stack.json | title.0.v | מִתְגַּלְגֵּל אוֹ נֶעֱרָם | needs-editor |
 | lesson.roll-or-stack.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה מִּתְגַּלְגֵּל וּמָה נֶעֱרָם. | needs-editor |
-| lesson.same-and-different-again-1-b15.json | title.0.v | עוֹד זֶהֶה וְשׁוֹנֶה | needs-editor |
-| lesson.same-and-different-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה. | needs-editor |
+| lesson.same-and-different-again-1-b15.json | title.0.v | זֶהֶה אוֹ שׁוֹנֶה? | needs-editor |
+| lesson.same-and-different-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה. | needs-editor |
 | lesson.same-and-different-again.json | title.0.v | עוֹד זֶהֶה וְשׁוֹנֶה | needs-editor |
 | lesson.same-and-different-again.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! מְצָאתֶם מִי זֶהֶה וּמִי שׁוֹנֶה. | needs-editor |
 | lesson.same-and-different.json | title.0.v | זֶהֶה וְשׁוֹנֶה | needs-editor |
@@ -11440,14 +11440,14 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.set-the-clock-more.json | celebration.caption.0.v | מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה. | needs-editor |
 | lesson.set-the-clock.json | title.0.v | מְכַוְּנִים שָׁעוֹן | needs-editor |
 | lesson.set-the-clock.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הַשָּׁעוֹן מְכֻוָּן. | needs-editor |
-| lesson.shape-friends-again-1-b15.json | title.0.v | מַכִּירִים עוֹד צוּרוֹת | needs-editor |
-| lesson.shape-friends-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הִכַּרְתֶּם עוֹד צוּרוֹת. | needs-editor |
+| lesson.shape-friends-again-1-b15.json | title.0.v | עִגּוּלִים וְרִבּוּעִים | needs-editor |
+| lesson.shape-friends-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הִכַּרְתֶּם עִגּוּלִים וְרִבּוּעִים. | needs-editor |
 | lesson.shape-friends-again.json | title.0.v | מַכִּירִים עוֹד צוּרוֹת | needs-editor |
 | lesson.shape-friends-again.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הִכַּרְתֶּם עוֹד צוּרוֹת. | needs-editor |
 | lesson.shape-friends.json | title.0.v | מַכִּירִים צוּרוֹת | needs-editor |
 | lesson.shape-friends.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! הִכַּרְתֶּם אֶת הַצּוּרוֹת. | needs-editor |
-| lesson.shapes-around-us-again-1-b15.json | title.0.v | עוֹד צוּרוֹת סְבִיבֵנוּ | needs-editor |
-| lesson.shapes-around-us-again-1-b15.json | celebration.caption.0.v | וַאוּ! מְצָאתֶם צוּרוֹת וְקַוִּים. | needs-editor |
+| lesson.shapes-around-us-again-1-b15.json | title.0.v | קַו יָשָׁר וְקַו עָקֹם | needs-editor |
+| lesson.shapes-around-us-again-1-b15.json | celebration.caption.0.v | וַאוּ! הִבְדַּלְתֶּם בֵּין קַו יָשָׁר לְקַו עָקֹם. | needs-editor |
 | lesson.shapes-around-us-again.json | title.0.v | עוֹד צוּרוֹת סְבִיבֵנוּ | needs-editor |
 | lesson.shapes-around-us-again.json | celebration.caption.0.v | וַאוּ! מְצָאתֶם צוּרוֹת וְקַוִּים. | needs-editor |
 | lesson.shapes-around-us.json | title.0.v | צוּרוֹת סְבִיבֵנוּ | needs-editor |
@@ -11474,14 +11474,14 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.split-numbers.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לְפָרֵק. | needs-editor |
 | lesson.square-or-rectangle.json | title.0.v | רִבּוּעַ אוֹ מַלְבֵּן | needs-editor |
 | lesson.square-or-rectangle.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם מַבְחִינִים בֵּין רִבּוּעַ לְמַלְבֵּן. | needs-editor |
-| lesson.step-by-step-again-1-b15.json | title.0.v | עוֹד צַעַד אַחַר צַעַד | needs-editor |
-| lesson.step-by-step-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא קֹדֶם וּמָה בַּסּוֹף. | needs-editor |
+| lesson.step-by-step-again-1-b15.json | title.0.v | שִׁנַּיִם וְיָדַיִם | needs-editor |
+| lesson.step-by-step-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם אֵיךְ מְצַחְצְחִים וְאֵיךְ רוֹחֲצִים. | needs-editor |
 | lesson.step-by-step-again.json | title.0.v | עוֹד צַעַד אַחַר צַעַד | needs-editor |
 | lesson.step-by-step-again.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא קֹדֶם וּמָה בַּסּוֹף. | needs-editor |
 | lesson.step-by-step.json | title.0.v | צַעַד אַחַר צַעַד | needs-editor |
 | lesson.step-by-step.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא קֹדֶם וּמָה בַּסּוֹף. | needs-editor |
-| lesson.stories-and-pairs-again-1-b15.json | title.0.v | עוֹד סִפּוּרִים וְזוּגוֹת | needs-editor |
-| lesson.stories-and-pairs-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה קּוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד. | needs-editor |
+| lesson.stories-and-pairs-again-1-b15.json | title.0.v | מָה הוֹלֵךְ יַחַד? | needs-editor |
+| lesson.stories-and-pairs-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! מְצָאתֶם מָה הוֹלֵךְ יַחַד. | needs-editor |
 | lesson.stories-and-pairs-again.json | title.0.v | עוֹד סִפּוּרִים וְזוּגוֹת | needs-editor |
 | lesson.stories-and-pairs-again.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה קּוֹרֶה קֹדֶם וּמָה הוֹלֵךְ יַחַד. | needs-editor |
 | lesson.take-away-more.json | title.0.v | לוֹקְחִים | needs-editor |
