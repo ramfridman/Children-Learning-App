@@ -47,42 +47,57 @@ class SpeakingCharacter extends StatelessWidget {
   );
 }
 
-/// The companion on the world map: it breathes, and when touched it waves and says hello in its own voice.
+/// The companion on the world map: it breathes, and when touched it waves and says hello in its own voice. In the child's
+/// home (B-26) it also waves once when it appears, and silently ([greetingVoice] null: nothing is voiced there yet).
 class MapCompanion extends ConsumerStatefulWidget {
-  const MapCompanion({super.key, required this.greetingVoice});
+  const MapCompanion({super.key, this.greetingVoice, this.waveOnStart = false});
 
-  /// The voice line (`vo:...`) it says when touched.
-  final String greetingVoice;
+  /// The voice line (`vo:...`) it says when touched, or null for a wave without a word.
+  final String? greetingVoice;
+
+  /// Waves once as soon as it appears.
+  final bool waveOnStart;
 
   @override
   ConsumerState<MapCompanion> createState() => MapCompanionState();
 }
 
-class MapCompanionState extends ConsumerState<MapCompanion> {
-  int _waveId = 0;
+class MapCompanionState extends ConsumerState<MapCompanion> with SingleTickerProviderStateMixin {
   bool _waving = false;
   late final VoiceDirector _director;
 
+  /// How long one wave holds the waving picture, also with reduce motion on (a picture, not a movement). A controller
+  /// rather than a delayed future, so it stops with the widget and a screen settles once the wave is over.
+  late final AnimationController _wave =
+      AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 1600),
+        animationBehavior: AnimationBehavior.preserve,
+      )..addStatusListener((AnimationStatus s) {
+        if (s == AnimationStatus.completed && mounted) setState(() => _waving = false);
+      });
+
   /// Waves and greets.
   void greet() {
-    final int id = ++_waveId;
+    _wave.forward(from: 0);
     setState(() => _waving = true);
-    unawaited(_director.say(widget.greetingVoice));
-    unawaited(
-      Future<void>.delayed(const Duration(milliseconds: 1600)).then((_) {
-        if (mounted && id == _waveId) setState(() => _waving = false);
-      }),
-    );
+    final String? voice = widget.greetingVoice;
+    if (voice != null) unawaited(_director.say(voice));
   }
 
   @override
   void initState() {
     super.initState();
     _director = ref.read(voiceDirectorProvider);
+    if (widget.waveOnStart) {
+      _waving = true;
+      _wave.forward();
+    }
   }
 
   @override
   void dispose() {
+    _wave.dispose();
     unawaited(_director.stop());
     super.dispose();
   }

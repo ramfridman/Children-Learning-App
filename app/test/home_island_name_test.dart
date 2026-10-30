@@ -242,7 +242,7 @@ void main() {
         He.homeIslandMineSemantics: ('האי שלי', false),
         He.nitziHomeWelcome: ('שָׁלוֹם, {child}! בְּרוּכִים הַבָּאִים הַבַּיְתָה.', true),
         He.nitziHomeWelcomeNoName: ('שָׁלוֹם! בְּרוּכִים הַבָּאִים הַבַּיְתָה.', true),
-        He.nitziHomeHi: ('זֶה הַבַּיִת שֶׁלִּי.', true),
+        He.nitziHomeHi: ('זֶה הַבַּיִת שֶׁלָּנוּ.', true),
         He.nitziHomeTreasures: ('פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת.', true),
         He.nitziHomeBottle: ('בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ.', true),
         He.nitziHomeBottleDone: (
