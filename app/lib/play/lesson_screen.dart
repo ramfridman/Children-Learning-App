@@ -142,13 +142,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   /// The words of one spoken answer, looked at once on this phone for the parent's alerts. A failure here never
   /// reaches the child.
-  Future<void> _wordAlert(List<String> texts) async {
+  Future<void> _wordAlert(List<String> texts, Set<String> answerWords) async {
     try {
+      final DateTime now = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs());
+      final int band = ref.read(activeProfileProvider)?.ageBand ?? 1;
       await recordWordAlert(
         await ref.read(databaseProvider.future),
-        now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs()),
+        now: now,
         profileId: widget.profileId,
         texts: texts,
+        ageBand: band,
+        answerWords: answerWords,
+        offThread: ref.read(alertCheckOffThreadProvider),
       );
     } on Object {
       // Nothing to do: the alert is a note for the parent, and the lesson goes on.
@@ -163,7 +168,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       session: () => _session,
       silence: bandA ? const Duration(seconds: 2) : const Duration(milliseconds: 1500),
       stopGuide: _director.stop,
-      onWords: (List<String> texts) => unawaited(_wordAlert(texts)),
+      onWords: (List<String> texts, Set<String> answers) => unawaited(_wordAlert(texts, answers)),
       record: (String type, String outcome) {
         unawaited(
           ref

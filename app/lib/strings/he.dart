@@ -16,12 +16,12 @@ class Str {
   /// All strings are drafts until a person approves them; nothing here is approved yet.
   String get review => 'needs-editor';
 
-  /// Replaces placeholders such as the child's first name (`{child}`), after validation.
-  String fill(Map<String, String> values) {
-    String out = text;
-    values.forEach((String k, String v) => out = out.replaceAll('{$k}', v));
-    return out;
-  }
+  /// Replaces placeholders such as the child's first name (`{child}`), after validation. One pass over the text: a
+  /// value that holds braces (the child's words) is put in as it is, never filled again.
+  String fill(Map<String, String> values) =>
+      text.replaceAllMapped(_placeholder, (Match m) => values[m[1]] ?? m[0]!);
+
+  static final RegExp _placeholder = RegExp(r'\{(\w+)\}');
 
   @override
   String toString() => text;
@@ -273,16 +273,15 @@ abstract final class He {
   static const Str alertsOpen = Str('התראות');
   static const Str alertsOpenUnread = Str('התראות ({n} חדשות)');
   static const Str alertsNone = Str('אין התראות. כשיהיה משהו שכדאי לדעת עליו, הוא יופיע כאן.');
-  static const Str alertsKeepWords = Str('לשמור בהתראה את המילים שנאמרו');
+  static const Str alertsKeepWords = Str('לשמור בהתראה את המילים שנשמעו');
   static const Str alertsKeepWordsHelp = Str(
-    'כשמופעל, המילים שנאמרו נשמרות עם ההתראה עד 30 יום. כשכבוי, נשמרת רק הקטגוריה.',
+    'כשמופעל, המילים שנשמעו נשמרות עם ההתראה עד 30 יום. כשכבוי, המילים לא נשמרות. נשמרים רק סוג ההתראה, מספר הפעמים, והאם נשמע שזה אולי קורה הרבה.',
   );
-  static const Str alertsNever = Str('ההתראות לא מוצגות בצד של הילדים, והאפליקציה אף פעם לא מוכיחה אותם.');
+  static const Str alertsNever = Str('ההתראות לא מוצגות בצד של הילדים, והאפליקציה אף פעם לא נוזפת בהם.');
   static const Str severityInfo = Str('לידיעה');
   static const Str severityAttention = Str('לתשומת לב');
   static const Str severityImportant = Str('חשוב');
   static const Str alertAbout = Str('{child}: {title}');
-  static const Str alertWords = Str('נאמר: {w}');
   static const Str alertPastLimitTitle = Str('שיחקו מעבר לזמן שנקבע');
   static const Str alertPastLimitDetail = Str('ב-{n} דקות יותר מהמותר.');
   static const Str alertPastLimitDo = Str('אפשר לשנות את הגבלת הזמן, או לדבר על סיום משחק.');
@@ -296,14 +295,124 @@ abstract final class He {
   static const Str alertGuessDo = Str('כדאי לשחק יחד כמה דקות ולעבור לפעילות רגועה.');
   static const Str alertUpsetTitle = Str('נראה שיש תסכול במשחק');
   static const Str alertUpsetDo = Str('אפשר לנסות פעילות רגועה בבית, או לשחק יחד.');
-  static const Str alertSwearTitle = Str('נאמרו מילים לא הולמות');
-  static const Str alertSwearDo = Str('אפשר לשוחח על כך בנחת. ההתראה לא מוצגת בצד של הילדים.');
-  static const Str alertDisclosureTitle = Str('נאמר משהו שעשוי להדאיג');
-  static const Str alertDisclosureDo = Str('כדאי לשוחח בנחת ובפרטיות, בלי ללחוץ.');
+  // ---- parent area: word alerts (hebrew-validation.md 5.1, final-draft 2026-10-29) ----
+  // {child} never has a prefix letter attached; the numbers are isolated left to right and only on screen.
+  static const Str alertChildFallback = Str('הילדים');
+  static const Str alertHeard = Str('במשחק של {child} נשמעו המילים: "{w}"');
+  static const Str alertWordsNotKept = Str('המילים עצמן לא נשמרו, לפי ההגדרות שבחרתם.');
+  static const Str alertActTitle = Str('נשמע משהו שחשוב לשים אליו לב');
+  static const Str alertActUnsure = Str(
+    'האפליקציה לא תמיד מבינה ילדים נכון. ייתכן שזה היה משחק או סיפור, וייתכן שהיא שמעה לא נכון. היא לא יודעת מה קרה, והיא לא מאבחנת דבר.',
+  );
+  static const Str alertActNow = Str('מה כדאי לעשות עכשיו');
+  static const Str alertActStep1 = Str('למצוא זמן רגוע ומקום פרטי, ולשוחח עם {child} בלי ללחוץ.');
+  static const Str alertActStep2 = Str(
+    'להקשיב. אפשר לשאול שאלה פתוחה אחת, כמו "רוצה לספר לי עוד?" או "מה רצית לספר לי?". לא לחקור ולא להציע תשובות.',
+  );
+  static const Str alertActStep3 = Str(
+    'לומר: "טוב שסיפרת לי. אני מאמין לך. זו לא אשמתך." (אפשר גם "מאמינה").',
+  );
+  static const Str alertActStep4 = Str('לא להבטיח לשמור סוד. אפשר לומר: "אעשה מה שצריך כדי לשמור עליך."');
+  static const Str alertActStep5 = Str('אם החשש הוא מאדם מסוים, לא להתעמת איתו לפני שהתייעצתם.');
+  static const Str alertActHelp = Str('אפשר להתייעץ עוד היום, גם בלי להגיש תלונה');
+  static const Str alertHelp118 = Str(
+    '\u2066118\u2069 – מוקד המידע והסיוע של משרד הרווחה והביטחון החברתי: חינם, 24 שעות ביממה, בעברית, בערבית, באמהרית וברוסית. אפשר גם לכתוב בוואטסאפ: \u2066050-2270118\u2069.',
+  );
+  static const Str alertHelp1201 = Str(
+    '\u20661201\u2069 – ער״ן, עזרה ראשונה נפשית, אנונימית, בטלפון ובצ׳אט, גם להורים.',
+  );
+  // A lawyer confirms this sentence before the app is relied on.
+  static const Str alertActDuty = Str(
+    'במקרים רבים של פגיעה בילדים חלה בישראל חובת דיווח למשטרה או לעובד סוציאלי לפי חוק הנוער. במוקד \u2066118\u2069 אפשר לברר אם היא חלה במקרה שלכם.',
+  );
+  static const Str alertActNoReport = Str('האפליקציה לא מדווחת לאף גורם. ההחלטה מה לעשות היא שלכם.');
+  static const Str alertAddPhys = Str(
+    'אם נשמע שמישהו מרביץ: כדאי לשים לב אם יש סימנים על הגוף, ואם יש, לפנות לרופא הילדים. אם מדובר במבוגר שאחראי על {child}, להתייעץ לפני כל פנייה אליו.',
+  );
+  static const Str alertAddSex = Str(
+    'אם נשמע משהו על נגיעה או על צילום: להקשיב בלי להראות בהלה, ולא לחקור לבד. כדאי להתייעץ מיד עם מוקד \u2066118\u2069 או עם מרכז הגנה לילדים ולנוער (בית לין); אפשר להתייעץ גם בלי למסור שם. אם יש חשש לפגיעה בימים האחרונים, המרכזים האקוטיים בבתי החולים פתוחים 24 שעות ביממה.',
+  );
+  static const Str alertAddSelf = Str(
+    'ילדים צעירים לא תמיד מבינים מה זה מוות, ולפעמים אומרים דברים כאלה מתוך כעס. ובכל זאת, חשוב להתייחס לזה ברצינות: להישאר קרובים, גם ברגעים קשים, ולשאול בשקט מה עובר על {child}. בימים הקרובים כדאי להתייעץ עם יועצת הגן או בית הספר, עם פסיכולוג או עם רופא הילדים. אפשר לפנות גם לער״ן, \u20661201\u2069. בסכנה מיידית: חדר מיון.',
+  );
+  static const Str alertAddNegl = Str(
+    'אם {child} לבד עכשיו, כדאי לדאוג מיד שמבוגר יהיה שם. ילדים בגיל הזה לא אמורים להישאר לבד בבית.',
+  );
+  static const Str alertAddEmerg = Str(
+    'אם נשמע שמישהו נפל ולא זז: להתקשר מיד הביתה או לאדם שנמצא עם {child}, ואם צריך, לקרוא לעזרה רפואית. ייתכן שזה משחק, אבל כדאי לבדוק עכשיו.',
+  );
+  // The hours of 105 are not printed: they were not verified.
+  static const Str alertAddOnline = Str(
+    'אם מישהו פנה אל {child} בטלפון, במשחק או ברשת: לשמור צילומי מסך ולא למחוק, לא להגיב לפונה, ולדווח למוקד \u2066105\u2069 של המטה הלאומי להגנה על ילדים ברשת.',
+  );
+  static const Str alertAddSecret = Str(
+    'ילדים שביקשו מהם לשמור סוד על משהו שמפחיד או כואב צריכים לשמוע שמותר לספר: "הפתעה אפשר לשמור בסוד. סוד שמפחיד או כואב תמיד מספרים, ומי שמספר לא נכנס לצרות."',
+  );
+  static const Str alertCheckTitle = Str('נשמע משהו שאולי כדאי לבדוק');
+  static const Str alertCheckMaybe = Str(
+    'זה יכול להיות משחק, סיפור או משהו שנאמר בלי כוונה. ייתכן גם שהאפליקציה שמעה לא נכון. אין צורך להיבהל.',
+  );
+  static const Str alertCheckAsk = Str(
+    'בזמן רגוע, ובלי ללחוץ, אפשר לשאול: "איך היה היום? יש משהו שבא לך לספר לי?"',
+  );
+  static const Str alertCheckIf = Str(
+    'אם זה חוזר, או אם משהו בהתנהגות של {child} השתנה (שינה, אכילה, פחד מאדם מסוים, חזרה להתנהגות של גיל צעיר יותר), כדאי להתייעץ עם היועצת בגן או בבית הספר, עם רופא הילדים או עם מוקד \u2066118\u2069.',
+  );
+  static const Str alertRepeatTitle = Str('נשמעו כמה דברים שכדאי לשים אליהם לב');
+  static const Str alertRepeatHeard = Str('בשבוע האחרון נשמעו כמה פעמים דברים דומים: "{w}".');
+  // The same sentence without the words, when the parent does not keep them (not in 5.1: for the editor).
+  static const Str alertRepeatHeardNoWords = Str('בשבוע האחרון נשמעו כמה פעמים דברים דומים.');
+  static const Str alertRepeatNext = Str(
+    'כל אחד מהם לבד אולי לא מדאיג, אבל יחד כדאי לשוחח עם {child}. הצעדים ומספרי הסיוע מופיעים בהמשך.',
+  );
+  static const Str alertNoteTitle = Str('מילים לא הולמות השבוע');
+  static const Str alertNoteMany = Str('השבוע נשמעו במשחק של {child} מילים לא הולמות, {n} פעמים.');
+  static const Str alertNoteOnce = Str('נשמעה במשחק של {child} מילה לא הולמת, פעם אחת.');
+  static const Str alertNoteCalm = Str(
+    'ילדים בגיל הזה חוזרים על מילים ששמעו בבית, ברחוב או במסך, ולפעמים בודקים איך המבוגרים יגיבו. אין צורך להתרגש: אפשר להגיב בשקט, להסביר בקצרה שאת המילה הזאת לא אומרים, ולהציע מילה אחרת. ייתכן גם שהאפליקציה שמעה לא נכון.',
+  );
+  static const Str alertNoteHidden = Str('ההתראה לא מוצגת בצד של הילדים.');
+  static const Str alertExposeTitle = Str('נשמעה מילה מעולם המבוגרים');
+  static const Str alertExposeBody = Str(
+    'במשחק של {child} נשמעה מילה שקשורה לתכנים למבוגרים. ייתכן שזה משהו שנשמע או נראה בבית, אצל חברים או במסך, וייתכן שהאפליקציה שמעה לא נכון. כדאי לשוחח בנחת, בלי לנזוף, ולבדוק אילו תכנים זמינים במכשירים בבית. אם זה קרה ברשת, אפשר לפנות למוקד \u2066105\u2069.',
+  );
+  // C-5, under an act or a check (owner approved the draft, 2026-10-30).
+  static const Str alertOften = Str('נשמע גם שזה אולי קורה הרבה. כדאי לספר על כך כשמתייעצים.');
+  // How many times an act or a check was heard in its half hour (new, for the editor: not in the drafts).
+  static const Str alertHeardTimes = Str('זה נשמע {n} פעמים בתוך חצי שעה.');
+  // W-47, the weekly note of a request to keep a secret (owner approved the draft, 2026-10-30).
+  static const Str alertSecretAskTitle = Str('בקשה לשמור סוד');
+  static const Str alertSecretAskMany = Str('השבוע נשמעה במשחק של {child} בקשה לא לספר משהו, {n} פעמים.');
+  static const Str alertSecretAskOnce = Str('השבוע נשמעה במשחק של {child} בקשה לא לספר משהו, פעם אחת.');
+  static const Str alertSecretAskCalm = Str(
+    'לרוב זה משהו קטן, כמו כוס שנשברה. אפשר להזכיר בנחת שהפתעות שומרים בסוד, ודבר שמפחיד או כואב תמיד מספרים. ייתכן גם שהאפליקציה שמעה לא נכון.',
+  );
+  // W-37 in band A, the weekly note of a young child hitting themselves (owner approved the draft, 2026-10-30).
+  static const Str alertSelfHitTitle = Str('מילים על מכות לעצמי');
+  static const Str alertSelfHitMany = Str('השבוע נשמעו במשחק של {child} מילים על מכות לעצמי, {n} פעמים.');
+  static const Str alertSelfHitOnce = Str('השבוע נשמעו במשחק של {child} מילים על מכות לעצמי, פעם אחת.');
+  static const Str alertSelfHitCalm = Str(
+    'אצל ילדים צעירים זה קורה לא פעם בזמן התפרצות של כעס או תסכול. כדאי לשים לב אם זה קורה הרבה או אם יש סימנים על הגוף, ולהתייעץ עם רופא הילדים אם משהו מדאיג. ייתכן גם שהאפליקציה שמעה לא נכון.',
+  );
+  static const Str alertsHonest = Str(
+    'ההתראות הן עוד דרך לשים לב, ולא תחליף להשגחה ולשיחה עם הילדים. האפליקציה מקשיבה רק כשהילדים לוחצים על המיקרופון, והיא לא תמיד מבינה ילדים צעירים, ולכן היא תחמיץ הרבה. היא לא מאבחנת ולא מדווחת לאף גורם.',
+  );
+  // The parent card: a counsellor reviews the content (and the "doctor" sentence for a parent who washes a young child).
+  static const Str alertCardTitle = Str('שיחה על סודות ועל המקומות הפרטיים');
+  static const Str alertCard1 = Str(
+    'הפתעה, כמו מתנה ליום הולדת, אפשר לשמור בסוד. סוד שמפחיד או כואב תמיד מספרים.',
+  );
+  static const Str alertCard2 = Str(
+    'המקומות שבגד הים מכסה הם פרטיים. אף אחד לא נוגע בהם ולא מבקש מאיתנו לגעת בגוף שלו, חוץ מרופא, כשאמא או אבא איתנו.',
+  );
+  static const Str alertCard3 = Str(
+    'תמיד אפשר לספר לאמא, לאבא או למבוגר אחר שסומכים עליו, ומי שמספר לא נכנס לצרות.',
+  );
+  static const Str alertCard4 = Str('כדאי לשאול מדי פעם שאלה פתוחה: "מה היה הכי כיף היום? ומה היה לא נעים?"');
   static const Str alertAbsenceTitle = Str('לא שיחקו זמן מה');
   static const Str alertAbsenceDetail = Str('לפני {n} ימים.');
   static const Str alertAbsenceDo = Str('אפשר להזמין להרפתקה קצרה.');
-  static const Str alertRibbonTitle = Str('זכו בגביע שהובטחה עליו הבטחה');
+  static const Str alertRibbonTitle = Str('זכו בגביע שיש עליו הבטחה');
   static const Str alertRibbonDetail = Str('{t}: {w}');
   static const Str alertRibbonNoWords = Str('{t}');
   static const Str alertRibbonDo = Str('זה הזמן לקיים את ההבטחה.');
@@ -419,7 +528,7 @@ abstract final class He {
   );
   static const Str areaVoice = Str('תשובות בקול');
   static const Str areaVoiceHelp = Str(
-    'ילדים יוכלו לענות בדיבור. הזיהוי נעשה במכשיר, ההקלטה נמחקת מיד ולא נשמרת ולא נשלחת לשום מקום. המיקרופון נפתח רק כשהילד לוחץ עליו.',
+    'ילדים יוכלו לענות בדיבור. הזיהוי נעשה במכשיר, ההקלטה נמחקת מיד ולא נשמרת ולא נשלחת לשום מקום. המיקרופון נפתח רק כשהילד לוחץ עליו. המילים שזוהו נשמרות רק בהתראה, ורק אם ההגדרה "לשמור בהתראה את המילים שנשמעו" מופעלת.',
   );
   static const Str areaVoiceNoModel = Str('מודל הזיהוי עוד לא הותקן במכשיר הזה.');
   static const Str areaVoiceNoPermission = Str('לא ניתנה הרשאת מיקרופון. אפשר לתת אותה בהגדרות המכשיר.');

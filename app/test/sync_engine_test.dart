@@ -4,6 +4,7 @@ import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
+import 'package:nitznutz/core/errors.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
@@ -406,6 +407,28 @@ void main() {
       expect(server.alerts.length, 1);
     });
 
+    test('a word alert said again is sent again, and the parent phone takes the higher count', () async {
+      await p1.addChild();
+      await p1.engine.syncOnce();
+      final Phone kidPhone = Phone(dev3, server, parent: false);
+      addTearDown(kidPhone.db.close);
+      await kidPhone.engine.syncOnce();
+      await raise(kidPhone, 'words:1', category: 'disclosure');
+      await kidPhone.engine.syncOnce();
+      await p1.engine.syncOnce();
+      expect((await p1.db.allAlerts()).single.count, 0);
+      final Alert mine = (await kidPhone.db.allAlerts()).single;
+      await kidPhone.db.countAlertAgain(mine);
+      await kidPhone.db.countAlertAgain((await kidPhone.db.allAlerts()).single);
+      expect((await kidPhone.db.unsyncedAlerts()).single.count, 3, reason: 'counted again, so not sent yet');
+      final SyncReport again = await kidPhone.engine.syncOnce();
+      expect(again.pushedAlerts, 0, reason: 'the same alert: a duplicate for the server, so no second push');
+      expect(server.alerts.single['count'], 3);
+      final SyncReport got = await p1.engine.syncOnce();
+      expect(got.pulledAlerts, 0, reason: 'not a new alert');
+      expect((await p1.db.allAlerts()).single.count, 3);
+    });
+
     test('the same alert found on two phones is one alert for the family', () async {
       await p1.addChild();
       await p1.engine.syncOnce();
@@ -444,6 +467,83 @@ void main() {
         reason: 'the gate alert is about the device, not the child',
       );
     });
+  });
+
+  group('an alert the server keeps refusing', () {
+    // A gateway that answers bad_request to every alert, with one alert that has words and one that has none. Returns
+    // the alert-create calls of one round and of the round after it.
+    Future<({List<Map<String, Object?>> first, int second})> refusedRounds(int Function() serverNow) async {
+      final Phone kidPhone = Phone(dev3, server, parent: false);
+      addTearDown(kidPhone.db.close);
+      await kidPhone.addChild();
+      await kidPhone.engine.syncOnce();
+      final real = server.callFor(dev3, parent: false);
+      final List<Map<String, Object?>> creates = <Map<String, Object?>>[];
+      final SyncEngine engine = SyncEngine(
+        db: kidPhone.db,
+        call: (String name, Map<String, Object?> body) {
+          if (name != 'alert-create') return real(name, body);
+          creates.add(body);
+          if (creates.length > 50) throw StateError('more than 50 alert-create calls');
+          throw const GatewayException('bad_request', status: 400);
+        },
+        deviceId: dev3,
+        isParent: false,
+        nowMs: () => noon,
+        serverNowMs: serverNow,
+      );
+      await kidPhone.db.addAlert(
+        AlertsCompanion.insert(
+          at: DateTime.utc(2026, 11, 20, 11),
+          profileId: const Value<String?>(kid),
+          category: 'disclosure',
+          severity: 'important',
+          dedupeKey: 'words:sec30',
+          words: const Value<String>('הוא מכה אותי'),
+        ),
+      );
+      await raise(kidPhone, 'upset:sec30');
+      await engine.syncOnce();
+      final List<Map<String, Object?>> first = List<Map<String, Object?>>.of(creates);
+      expect(await kidPhone.db.unsyncedAlerts(), isEmpty, reason: 'kept aside, not retried in a loop');
+      await engine.syncOnce();
+      return (first: first, second: creates.length - first.length);
+    }
+
+    List<Map<String, Object?>> of(List<Map<String, Object?>> calls, String key) =>
+        calls.where((Map<String, Object?> b) => b['key'] == key).toList();
+
+    test('SEC-30: a clock that changes on every look costs at most two calls an alert', () async {
+      // The time the phone believes the server has is behind the alert's own time and changes each time it is worked
+      // out, so the time sent changes each time. The earlier loop called again for as long as it changed (1,001 calls).
+      int tick = 0;
+      final ({List<Map<String, Object?>> first, int second}) r = await refusedRounds(
+        () => noon - 3 * 3600000 + 1000 * tick++,
+      );
+      expect(of(r.first, 'words:sec30'), hasLength(2));
+      expect(of(r.first, 'upset:sec30'), hasLength(2));
+      expect(of(r.first, 'words:sec30').every((Map<String, Object?> b) => b.containsKey('words')), isTrue);
+      expect(r.second, 0, reason: 'a refused alert is not sent again by the next round');
+    });
+
+    test(
+      'SEC-30: with the same time both times, an alert with words is sent once more without them',
+      () async {
+        final ({List<Map<String, Object?>> first, int second}) r = await refusedRounds(
+          () => noon - 3 * 3600000,
+        );
+        final List<Map<String, Object?>> words = of(r.first, 'words:sec30');
+        expect(words, hasLength(2));
+        expect(words.first.containsKey('words'), isTrue);
+        expect(words.last.containsKey('words'), isFalse);
+        expect(
+          of(r.first, 'upset:sec30'),
+          hasLength(1),
+          reason: 'no words and the same time: nothing new to try',
+        );
+        expect(r.second, 0);
+      },
+    );
   });
 
   group('the family rules', () {

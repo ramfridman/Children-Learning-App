@@ -213,6 +213,53 @@ class AppDatabase extends _$AppDatabase {
     return true;
   });
 
+  /// An alert from another device: saved if it is new, otherwise its count is raised when the family's is higher (a word
+  /// alert counted again elsewhere). True if it was new.
+  Future<bool> takeRemoteAlert(AlertsCompanion row) => transaction(() async {
+    final Alert? have = await (select(
+      alerts,
+    )..where(($AlertsTable t) => t.dedupeKey.equals(row.dedupeKey.value))).getSingleOrNull();
+    if (have == null) {
+      await into(alerts).insert(row);
+      return true;
+    }
+    if (row.count.present && row.count.value > have.count) {
+      await (update(alerts)..where(($AlertsTable t) => t.id.equals(have.id))).write(
+        AlertsCompanion(count: Value<int>(row.count.value)),
+      );
+    }
+    return false;
+  });
+
+  /// One child's alerts since [since], newest first.
+  Future<List<Alert>> alertsOfChildSince(String profileId, DateTime since) =>
+      (select(alerts)
+            ..where(($AlertsTable t) => t.profileId.equals(profileId) & t.at.isBiggerOrEqualValue(since))
+            ..orderBy(<OrderClauseGenerator<$AlertsTable>>[(t) => OrderingTerm.desc(t.at)]))
+          .get();
+
+  /// The same alert once more: its count goes up by one and it is sent to the family again (the server keeps the higher
+  /// count and does not push again). [at] and [words], for a weekly note, are when it was last heard and what was heard.
+  Future<void> countAlertAgain(Alert a, {DateTime? at, String? words}) =>
+      (update(alerts)..where(($AlertsTable t) => t.id.equals(a.id))).write(
+        AlertsCompanion(
+          count: Value<int>((a.count < 1 ? 1 : a.count) + 1),
+          at: at == null ? const Value<DateTime>.absent() : Value<DateTime>(at),
+          words: words == null ? const Value<String>.absent() : Value<String>(words),
+          syncedAt: const Value<DateTime?>(null),
+        ),
+      );
+
+  /// How long an alert, and the words in it, are kept.
+  static const Duration alertKeep = Duration(days: 30);
+
+  /// Alerts older than [alertKeep] go, and every word goes when "keep the words" is off here (SEC-28). Run after every
+  /// sync round and at the start of the app, so a phone that never opens the parent area keeps nothing longer either.
+  Future<void> tidyAlerts(DateTime now) async {
+    await pruneAlerts(now.subtract(alertKeep));
+    if (await setting('keep_words') == 'off') await clearAlertWords();
+  }
+
   /// Newest first.
   Future<List<Alert>> allAlerts() =>
       (select(alerts)..orderBy(<OrderClauseGenerator<$AlertsTable>>[(t) => OrderingTerm.desc(t.at)])).get();
@@ -258,6 +305,9 @@ class AppDatabase extends _$AppDatabase {
     );
     await (update(rewards)..where(($RewardsTable t) => t.syncedAt.equals(refusedBySync))).write(
       const RewardsCompanion(syncedAt: Value<DateTime?>(null)),
+    );
+    await (update(alerts)..where(($AlertsTable t) => t.syncedAt.equals(refusedBySync))).write(
+      const AlertsCompanion(syncedAt: Value<DateTime?>(null)),
     );
   });
 

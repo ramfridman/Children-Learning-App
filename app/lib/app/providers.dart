@@ -18,6 +18,10 @@ final Provider<NetworkHosts> hostsProvider = Provider<NetworkHosts>((Ref ref) =>
 
 final Provider<Clock> clockProvider = Provider<Clock>((Ref ref) => const SystemClock());
 
+/// Whether a spoken answer's words are matched for the parent's alerts on another isolate (SEC-26). Tests that pump
+/// frames by hand turn it off: work on another isolate does not finish inside a pumped frame.
+final Provider<bool> alertCheckOffThreadProvider = Provider<bool>((Ref ref) => true);
+
 final Provider<http.Client> httpClientProvider = Provider<http.Client>((Ref ref) {
   final http.Client client = http.Client();
   ref.onDispose(client.close);

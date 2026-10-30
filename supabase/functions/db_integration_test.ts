@@ -754,6 +754,9 @@ Deno.test({
     });
     assert.equal(await store.insertAlert(family, dev.id, alert("a1")), "new");
     assert.equal(await store.insertAlert(family, dev.id, alert("a1")), "duplicate");
+    // A word alert said again keeps the higher count; a lower count, or another kind of alert, changes nothing.
+    assert.equal(await store.insertAlert(family, dev.id, alert("a1", { count: 4 })), "duplicate");
+    assert.equal(await store.insertAlert(family, dev.id, alert("a1", { count: 2 })), "duplicate");
     assert.equal(
       await store.insertAlert(family, dev.id, alert("a2", { childId: "ci-child-9999" })),
       "refused",
@@ -770,6 +773,17 @@ Deno.test({
     const listed = await store.listAlerts(family, Date.now() - 30 * 86_400_000);
     assert.deepEqual(listed.map((a) => a.key).sort(), ["a1", "g1"], "30 days only");
     assert.equal(listed.find((a) => a.key === "a1")!.words, "חרא");
+    assert.equal(listed.find((a) => a.key === "a1")!.count, 4, "the higher count, never a lower one");
+    await store.insertAlert(
+      family,
+      dev.id,
+      alert("g1", { childId: null, category: "gateAttempts", words: "", count: 9 }),
+    );
+    assert.equal(
+      (await store.listAlerts(family, 0)).find((a) => a.key === "g1")!.count,
+      3,
+      "only a word alert is counted again",
+    );
     assert.equal(listed.every((a) => a.readAtMs === null), true);
     assert.equal(await store.markAlertsRead(family, Date.now()), 3, "every unread one, including the old");
     assert.equal(await store.markAlertsRead(family, Date.now()), 0);
@@ -791,6 +805,24 @@ Deno.test({
     const got = await store.getSettings(family);
     assert.deepEqual(got, { rules: { restOn: false }, version: 2 });
     assert.equal(await store.getSettings(other), null);
+
+    // SEC-30: a time ahead of the server is stored as the server's time, never refused.
+    assert.equal(
+      await store.insertAlert(family, dev.id, alert("ahead", { clientAtMs: Date.now() + 600_000 })),
+      "new",
+    );
+    const [ahead] = await admin`
+      select client_at <= created_at as ok from app.alert where family_id = ${family} and dedupe_key = 'ahead'`;
+    assert.equal(ahead.ok, true, "client_at <= created_at");
+    // SEC-28 and SEC-32: turning "keep the words" off empties them, and an insert decides it in its own statement.
+    assert.equal(await store.putSettings(family, { keepWords: false }), 3);
+    const [cleared] =
+      await admin`select words from app.alert where family_id = ${family} and dedupe_key = 'a1'`;
+    assert.equal(cleared.words, "", "the words already saved are emptied");
+    await store.insertAlert(family, dev.id, alert("late"));
+    const [late] =
+      await admin`select words from app.alert where family_id = ${family} and dedupe_key = 'late'`;
+    assert.equal(late.words, "", "an insert after the switch keeps no words, whatever it was given");
 
     await admin`insert into app.tutor_log (family_id, child_ref, session_ref, pack_id, pack_version, item_id,
       character_id, source, outcome, line, prompt_version) values (${family}, ${kid}, 'ci-session-2', 'starter', '0.2.0',

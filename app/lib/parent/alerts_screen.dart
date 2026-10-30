@@ -13,6 +13,8 @@ import '../rewards/names.dart';
 import '../rewards/ribbons.dart';
 import '../strings/he.dart';
 import 'alert_scan.dart';
+import 'alerts.dart';
+import 'word_alert_text.dart';
 
 /// What the parent has been told about, newest first, each with a severity and one line on what to do. Opening the
 /// screen marks everything read. The child never sees any of it.
@@ -96,8 +98,6 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
       ),
       'guessing' => (title: He.alertGuessTitle.text, detail: '', todo: He.alertGuessDo.text),
       'frustration' => (title: He.alertUpsetTitle.text, detail: '', todo: He.alertUpsetDo.text),
-      'inappropriateWords' => (title: He.alertSwearTitle.text, detail: '', todo: He.alertSwearDo.text),
-      'disclosure' => (title: He.alertDisclosureTitle.text, detail: '', todo: He.alertDisclosureDo.text),
       'absence' when a.detail == 'drop' => (
         title: He.alertDropTitle.text,
         detail: '',
@@ -124,6 +124,87 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     _ => TokenColors.inkSoft,
   };
 
+  /// One line of an alert. A bullet hangs: its second line starts under the text, not under the bullet. Every line is
+  /// plain text, so all of them sit on the same edge (QA-46); a word alert's lines are selectable as a whole (see
+  /// [_body]), so a parent can copy a help number; the line that quotes the child's words is the one exception, it
+  /// cannot be selected or copied to the clipboard (SEC-33). Numbers are never links (no link opener in the app).
+  Widget _line(AlertLine l) {
+    final TextStyle style = switch (l.kind) {
+      AlertLineKind.heading => AppText.parent(TokenType.parentH3),
+      AlertLineKind.small => AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+      AlertLineKind.body || AlertLineKind.bullet => AppText.parent(TokenType.parentBody),
+    };
+    final Text plain = Text(l.text, style: style);
+    final Widget text = l.hasWords ? SelectionContainer.disabled(child: plain) : plain;
+    return Padding(
+      padding: EdgeInsets.only(top: l.kind == AlertLineKind.heading ? 10 : 4),
+      child: l.kind != AlertLineKind.bullet
+          ? text
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('•', style: style),
+                const SizedBox(width: 6),
+                Expanded(child: text),
+              ],
+            ),
+    );
+  }
+
+  /// The severity a category has (the row's own is the device's word and is shown only for an unknown category).
+  String _severityOf(Alert a) {
+    final AlertCategory? c = AlertCategory.values.asNameMap()[a.category];
+    return c == null ? a.severity : severityOf(c).name;
+  }
+
+  /// The card of one alert: a word alert has its own lines; every other kind a detail and one line on what to do.
+  List<Widget> _body(Alert a, String? name) {
+    final ({String title, List<AlertLine> lines})? words = wordAlertText(
+      a,
+      name ?? He.alertChildFallback.text,
+    );
+    final ({String title, String detail, String todo}) t = words == null
+        ? _text(a)
+        : (title: words.title, detail: '', todo: '');
+    return <Widget>[
+      Text(
+        name == null ? t.title : He.alertAbout.fill(<String, String>{'child': name, 'title': t.title}),
+        style: AppText.parent(TokenType.parentH2),
+      ),
+      if (words != null)
+        SelectionArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[for (final AlertLine l in words.lines) _line(l)],
+          ),
+        )
+      else ...<Widget>[
+        if (t.detail.isNotEmpty) Text(t.detail, style: AppText.parent(TokenType.parentBody)),
+        const SizedBox(height: 6),
+        Text(t.todo, style: AppText.parent(TokenType.parentSmall)),
+      ],
+    ];
+  }
+
+  /// A short card for every parent: secrets and the private places (a counsellor reviews the wording).
+  Widget _card() => Container(
+    key: const Key('alerts-card'),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: TokenColors.paper,
+      borderRadius: BorderRadius.circular(TokenRadius.md),
+      border: Border.all(color: TokenColors.hairline, width: TokenBorder.thin),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(He.alertCardTitle.text, style: AppText.parent(TokenType.parentH3)),
+        for (final Str s in <Str>[He.alertCard1, He.alertCard2, He.alertCard3, He.alertCard4])
+          _line(AlertLine(s.text, AlertLineKind.bullet)),
+      ],
+    ),
+  );
+
   String _when(DateTime t) {
     final DateTime l = t.toLocal();
     String two(int v) => v.toString().padLeft(2, '0');
@@ -149,29 +230,6 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(16),
-              margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: TokenColors.paper,
-                borderRadius: BorderRadius.circular(TokenRadius.md),
-                border: Border.all(color: TokenColors.hairline, width: TokenBorder.thin),
-              ),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(He.alertsKeepWords.text, style: AppText.parent(TokenType.parentBody)),
-                        Text(He.alertsKeepWordsHelp.text, style: AppText.parent(TokenType.parentSmall)),
-                      ],
-                    ),
-                  ),
-                  Switch(key: const Key('keep-words'), value: _keepWords, onChanged: _setKeep),
-                ],
-              ),
-            ),
             alerts.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (Object e, StackTrace s) =>
@@ -196,7 +254,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                             decoration: BoxDecoration(
                               color: TokenColors.paper,
                               borderRadius: BorderRadius.circular(TokenRadius.md),
-                              border: Border.all(color: _severityColor(a.severity), width: 1.5),
+                              border: Border.all(color: _severityColor(_severityOf(a)), width: 1.5),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,10 +262,10 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                                 Row(
                                   children: <Widget>[
                                     Text(
-                                      _severity(a.severity),
+                                      _severity(_severityOf(a)),
                                       style: AppText.parent(
                                         TokenType.parentSmall,
-                                        color: _severityColor(a.severity),
+                                        color: _severityColor(_severityOf(a)),
                                       ),
                                     ),
                                     const Spacer(),
@@ -221,30 +279,44 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  names[a.profileId] == null
-                                      ? _text(a).title
-                                      : He.alertAbout.fill(<String, String>{
-                                          'child': names[a.profileId]!,
-                                          'title': _text(a).title,
-                                        }),
-                                  style: AppText.parent(TokenType.parentH2),
-                                ),
-                                if (_text(a).detail.isNotEmpty)
-                                  Text(_text(a).detail, style: AppText.parent(TokenType.parentBody)),
-                                if (a.words.isNotEmpty)
-                                  Text(
-                                    He.alertWords.fill(<String, String>{'w': a.words}),
-                                    style: AppText.parent(TokenType.parentBody),
-                                  ),
-                                const SizedBox(height: 6),
-                                Text(_text(a).todo, style: AppText.parent(TokenType.parentSmall)),
+                                ..._body(a, names[a.profileId]),
                               ],
                             ),
                           ),
                       ],
                     ),
             ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.only(top: 8),
+              decoration: BoxDecoration(
+                color: TokenColors.paper,
+                borderRadius: BorderRadius.circular(TokenRadius.md),
+                border: Border.all(color: TokenColors.hairline, width: TokenBorder.thin),
+              ),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(He.alertsKeepWords.text, style: AppText.parent(TokenType.parentBody)),
+                        Text(He.alertsKeepWordsHelp.text, style: AppText.parent(TokenType.parentSmall)),
+                        const SizedBox(height: 6),
+                        Text(
+                          He.alertsHonest.text,
+                          key: const Key('alerts-honest'),
+                          style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch(key: const Key('keep-words'), value: _keepWords, onChanged: _setKeep),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            _card(),
             const SizedBox(height: 8),
             Text(
               He.alertsNever.text,

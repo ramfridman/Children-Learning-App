@@ -3,6 +3,7 @@
 // child's side never shows any of it.
 import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/parent/alerts_screen.dart';
@@ -63,6 +64,13 @@ void main() {
       expect(find.text(He.alertGateDetail.fill(<String, String>{'n': '3'})), findsOneWidget);
       expect(find.text(He.alertGateDo.text), findsOneWidget);
       expect(await rig.db.unreadAlertCount(), 0, reason: 'opening the screen read them');
+      expect(
+        find.byKey(const Key('alerts-honest')),
+        findsOneWidget,
+        reason: 'what the alerts can and cannot do',
+      );
+      await tester.ensureVisible(find.text(He.pinOk.text));
+      await tester.pumpAndSettle();
       await tester.tap(find.text(He.pinOk.text));
       await tester.pumpAndSettle();
       expect(
@@ -107,16 +115,42 @@ void main() {
           final List<Alert> alerts = await rig.db.allAlerts();
           expect(alerts.length, 1, reason: 'keep=$keep');
           expect(alerts.single.category, 'inappropriateWords');
-          expect(alerts.single.severity, 'attention');
+          expect(alerts.single.severity, 'info', reason: 'a note, never pushed');
           expect(alerts.single.profileId, 'p-1');
           expect(alerts.single.words, keep ? 'חרא' : '');
           // The child's screen shows nothing about it.
-          expect(find.text(He.alertSwearTitle.text), findsNothing);
+          expect(find.text(He.alertNoteTitle.text), findsNothing);
           expect(find.byType(AlertsScreen), findsNothing);
         }
       },
     );
   }
+
+  testWidgets(
+    'at the start of the app an alert past 30 days is gone, and no words stay when they are not kept',
+    (WidgetTester tester) async {
+      final AppRig rig = AppRig();
+      await rig.seedFinishedSetup();
+      final DateTime now = DateTime.fromMillisecondsSinceEpoch(rig.clock.nowMs());
+      await rig.db.addAlert(AlertsCompanionHelper.words(now.subtract(const Duration(days: 31)), 'חרא'));
+      await rig.db.addAlert(
+        AlertsCompanion.insert(
+          at: now,
+          category: 'disclosure',
+          severity: 'important',
+          dedupeKey: 'words:p-1:2',
+          profileId: const Value<String?>('p-1'),
+          words: const Value<String>('מכים אותי'),
+        ),
+      );
+      await rig.db.putSetting('keep_words', 'off');
+      await rig.pump(tester);
+      await tester.pumpAndSettle();
+      final List<Alert> left = await rig.db.allAlerts();
+      expect(left.map((Alert a) => a.dedupeKey), <String>['words:p-1:2']);
+      expect(left.single.words, isEmpty);
+    },
+  );
 
   testWidgets('an ordinary answer by voice saves no alert', (WidgetTester tester) async {
     final AppRig rig = AppRig(voice: true, speech: FakeSpeechEngine(<Scripted>[Scripted.says('אדום')]));
@@ -145,12 +179,71 @@ void main() {
     await openArea(tester, rig);
     await tester.tap(find.byKey(const Key('open-alerts')));
     await tester.pumpAndSettle();
-    expect(find.text(He.alertWords.fill(<String, String>{'w': 'חרא'})), findsOneWidget);
+    final String heard = He.alertHeard.fill(<String, String>{'child': 'נועה', 'w': 'חרא'});
+    expect(find.text(heard), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('keep-words')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('keep-words')));
     await tester.pumpAndSettle();
-    expect(find.text(He.alertWords.fill(<String, String>{'w': 'חרא'})), findsNothing);
+    expect(find.text(heard), findsNothing);
     expect(await rig.db.setting('keep_words'), 'off');
     expect((await rig.db.allAlerts()).single.words, isEmpty);
+  });
+
+  testWidgets('SEC-33: the child\'s heard words cannot be copied to the clipboard, the help numbers can', (
+    WidgetTester tester,
+  ) async {
+    final AppRig rig = AppRig();
+    await rig.seedFinishedSetup();
+    final DateTime now = DateTime.fromMillisecondsSinceEpoch(rig.clock.nowMs());
+    await rig.db.addAlert(
+      AlertsCompanion.insert(
+        at: now,
+        category: 'disclosure',
+        severity: 'important',
+        dedupeKey: 'k-sec33',
+        profileId: const Value<String?>('p-1'),
+        words: const Value<String>('הוא מכה אותי'),
+      ),
+    );
+    await rig.pump(tester);
+    await tester.tap(find.text('נועה'));
+    await tester.pumpAndSettle();
+    await openArea(tester, rig);
+    await tester.tap(find.byKey(const Key('open-alerts')));
+    await tester.pumpAndSettle();
+    final String heard = He.alertHeard.fill(<String, String>{'child': 'נועה', 'w': 'הוא מכה אותי'});
+    expect(find.text(heard), findsOneWidget, reason: 'the words are shown to the parent');
+
+    final List<String> copied = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (
+      MethodCall call,
+    ) async {
+      if (call.method == 'Clipboard.setData') {
+        copied.add((call.arguments as Map<Object?, Object?>)['text']! as String);
+      }
+      return null;
+    });
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+
+    // Select everything in the act's text and copy it, as a parent's "select all, copy" does.
+    await tester.ensureVisible(find.text(He.alertHelp118.text));
+    await tester.pumpAndSettle();
+    tester.state<SelectableRegionState>(find.byType(SelectableRegion)).selectAll();
+    await tester.pump();
+    Actions.invoke(tester.element(find.text(He.alertHelp118.text)), CopySelectionTextIntent.copy);
+    await tester.pump();
+
+    expect(copied, hasLength(1));
+    expect(copied.single, contains(He.alertHelp118.text), reason: 'the help numbers stay selectable');
+    expect(copied.single, contains(He.alertHelp1201.text));
+    expect(
+      copied.single,
+      isNot(contains('הוא מכה אותי')),
+      reason: 'the child\'s words never reach the clipboard',
+    );
   });
 }
 
@@ -193,6 +286,16 @@ void goldenAlerts() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpAndSettle();
+    // QA-46: every line is plain text on one edge; the whole act can be selected (to copy a help number).
+    expect(find.byType(SelectableText), findsNothing);
+    expect(find.byType(SelectionArea), findsOneWidget);
+    double rightOf(String text) => tester.getTopRight(find.text(text)).dx;
+    expect(
+      rightOf(He.alertHelp118.text),
+      rightOf(He.alertActStep4.text),
+      reason: 'a help line and a step line',
+    );
+    expect(rightOf(He.alertActDuty.text), rightOf(He.alertActNoReport.text));
     await expectLater(find.byType(AlertsScreen), matchesGoldenFile('goldens/alerts_view.png'));
   });
 }

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' show Value;
 
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:uuid/uuid.dart';
 
@@ -73,16 +74,23 @@ class SyncEngine {
     required this.deviceId,
     required this.isParent,
     required this.nowMs,
+    int Function()? serverNowMs,
     this.engineVersion = 1,
     this.pageSize = 100,
     this.batch = 40,
-  });
+  }) : _serverNowMs = serverNowMs;
 
   final AppDatabase db;
   final SyncCall call;
   final String deviceId;
   final bool isParent;
   final int Function() nowMs;
+
+  /// The server's time as the gateway client knows it: an alert's time is never sent later than this (a phone whose
+  /// clock runs fast). The gateway stores the earlier of the two anyway (SEC-30); one older than that refused a time
+  /// more than two minutes ahead of its own.
+  late final int Function() serverNowMs = _serverNowMs ?? nowMs;
+  final int Function()? _serverNowMs;
   final int engineVersion;
   final int pageSize;
   final int batch;
@@ -160,6 +168,12 @@ class SyncEngine {
       rules = await _syncSettings();
     } on Object {
       // The rules stay as they are here until the server can be reached.
+    }
+    try {
+      // The family's "keep the words" may have just changed, and 30 days may have passed (SEC-28).
+      await db.tidyAlerts(_now);
+    } on Object {
+      // Next round.
     }
     return SyncReport(
       pushedAlerts: alertsOut,
@@ -407,48 +421,92 @@ class SyncEngine {
   // ---- alerts and the family's rules ----
 
   /// Sends the alerts found on this device that the family has not been told about. Returns how many were sent.
+  ///
+  /// Each alert is marked as soon as it is answered. One the gateway will not take (`bad_request`: words or a value it
+  /// refuses, or a category it does not know yet) never holds up the ones after it (SEC-25): it is sent once more without
+  /// its words (the alert arrives, the words are lost, the private side), and if that is refused too it is kept aside as
+  /// [AppDatabase.refusedBySync] and sent again once by the next version of the app. Any other failure (no network, the
+  /// server down, a limit) stops the round and leaves the rest for the next one.
   Future<int> _pushAlerts() async {
     int sent = 0;
     final Set<String> gone = await _tombstoned();
     while (true) {
       final List<Alert> rows = await db.unsyncedAlerts(limit: batch);
       if (rows.isEmpty) break;
-      final List<int> done = <int>[];
       for (final Alert a in rows) {
         if (a.profileId != null && gone.contains(a.profileId)) {
-          done.add(a.id);
+          await db.markAlertsSynced(<int>[a.id], _now);
           continue;
         }
-        final Map<String, Object?> answer = await call('alert-create', <String, Object?>{
-          'child_id': ?a.profileId,
-          'category': a.category,
-          'severity': a.severity,
-          'count': a.count,
-          if (a.detail.isNotEmpty) 'detail': a.detail,
-          if (a.words.isNotEmpty) 'words': a.words,
-          'key': a.dedupeKey,
-          'at': a.at.millisecondsSinceEpoch,
-        });
+        final Map<String, Object?>? answer = await _sendAlert(a);
         // New, a duplicate, or refused (the server does not know the child): the alert is not sent again.
-        done.add(a.id);
-        if (answer['status'] == 'new') sent++;
+        await db.markAlertsSynced(<int>[a.id], answer == null ? AppDatabase.refusedBySync : _now);
+        if (answer?['status'] == 'new') sent++;
       }
-      await db.markAlertsSynced(done, _now);
       if (rows.length < batch) break;
     }
     return sent;
   }
 
+  /// One alert to `alert-create`: the server's answer, or null when it refused the alert.
+  ///
+  /// At most two calls, however the clock or the server behaves (SEC-30), and the time is worked out once for each, not
+  /// in a loop. The first call of a session may be the one that teaches the gateway client the server's time
+  /// (`clock_skew`), and a gateway older than SEC-30 refused a time ahead of its own. So when the first call is refused
+  /// and the time has changed since, the clock was the likely cause: the second call has the corrected time and the same
+  /// words, and a phone whose clock runs fast neither loses its act nor its words (QA-45). When the time is the same,
+  /// the second call is without the words (the alert arrives, the words are lost, the private side).
+  Future<Map<String, Object?>?> _sendAlert(Alert a) async {
+    final Map<String, Object?> body = <String, Object?>{
+      'child_id': ?a.profileId,
+      'category': a.category,
+      'severity': a.severity,
+      'count': a.count,
+      if (a.detail.isNotEmpty) 'detail': a.detail,
+      'key': a.dedupeKey,
+    };
+    Future<Map<String, Object?>?> send(int at, bool withWords) async {
+      try {
+        return await call('alert-create', <String, Object?>{
+          ...body,
+          'at': at,
+          if (withWords) 'words': a.words,
+        });
+      } on GatewayException catch (e) {
+        if (e.code != 'bad_request') rethrow;
+        return null;
+      }
+    }
+
+    final bool hasWords = a.words.isNotEmpty;
+    final int first = _alertTime(a);
+    final Map<String, Object?>? answer = await send(first, hasWords);
+    if (answer != null) return answer;
+    final int again = _alertTime(a);
+    final bool timeChanged = again != first;
+    if (timeChanged || hasWords) {
+      final Map<String, Object?>? second = await send(again, hasWords && timeChanged);
+      if (second != null) return second;
+    }
+    Log.d('sync: an alert refused by the server, kept aside');
+    return null;
+  }
+
+  /// The time an alert is sent with: its own, but never ahead of the server's.
+  int _alertTime(Alert a) => math.min(a.at.millisecondsSinceEpoch, serverNowMs());
+
   /// A parent device takes in the alerts the family's other devices raised. Returns how many were new here.
   Future<int> _pullAlerts() async {
     final Map<String, Object?> answer = await call('alert-list', const <String, Object?>{});
     final Set<String> gone = await _tombstoned();
+    // The words come in only when this phone keeps them (SEC-28).
+    final bool keepWords = await db.setting('keep_words') != 'off';
     int added = 0;
     for (final Object? raw in (answer['alerts'] as List<Object?>? ?? const <Object?>[])) {
       final Map<String, Object?> a = raw! as Map<String, Object?>;
       final String? child = a['child_id'] as String?;
       if (child != null && gone.contains(child)) continue;
-      final bool fresh = await db.addAlert(
+      final bool fresh = await db.takeRemoteAlert(
         AlertsCompanion.insert(
           at: DateTime.fromMillisecondsSinceEpoch(a['at']! as int, isUtc: true),
           profileId: Value<String?>(child),
@@ -456,7 +514,7 @@ class SyncEngine {
           severity: a['severity']! as String,
           count: Value<int>(a['count'] as int? ?? 0),
           detail: Value<String>(a['detail'] as String? ?? ''),
-          words: Value<String>(a['words'] as String? ?? ''),
+          words: Value<String>(keepWords ? a['words'] as String? ?? '' : ''),
           dedupeKey: a['key']! as String,
           // Raised elsewhere: never sent back.
           syncedAt: Value<DateTime?>(_now),

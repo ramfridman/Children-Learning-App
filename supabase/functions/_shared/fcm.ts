@@ -108,12 +108,14 @@ export function fcmClient(
           {
             method: "POST",
             headers: { authorization: `Bearer ${bearer}`, "content-type": "application/json" },
-            // The whole message: a token, the fixed phrase and a channel. Nothing else, ever.
+            // The whole message: a token, the fixed phrase, a channel and a collapse key for Android and iOS (a phone
+            // that was off shows one notice for many alerts, SEC-27, SEC-31). Nothing else, ever.
             body: JSON.stringify({
               message: {
                 token,
                 notification: { body: PUSH_TEXT },
-                android: { priority: "HIGH", notification: { channel_id: "alerts" } },
+                android: { priority: "HIGH", collapse_key: "alerts", notification: { channel_id: "alerts" } },
+                apns: { headers: { "apns-collapse-id": "alerts" } },
               },
             }),
             signal: AbortSignal.timeout(timeoutMs),
