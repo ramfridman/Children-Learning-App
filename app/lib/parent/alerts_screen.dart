@@ -16,6 +16,12 @@ import 'alert_scan.dart';
 import 'alerts.dart';
 import 'word_alert_text.dart';
 
+/// When an alert happened, as the card shows it: day.month hours:minutes of the wall-clock time [local].
+String alertWhen(DateTime local) {
+  String two(int v) => v.toString().padLeft(2, '0');
+  return '${two(local.day)}.${two(local.month)} ${two(local.hour)}:${two(local.minute)}';
+}
+
 /// What the parent has been told about, newest first, each with a severity and one line on what to do. Opening the
 /// screen marks everything read. The child never sees any of it.
 class AlertsScreen extends ConsumerStatefulWidget {
@@ -205,15 +211,10 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
     ),
   );
 
-  String _when(DateTime t) {
-    final DateTime l = t.toLocal();
-    String two(int v) => v.toString().padLeft(2, '0');
-    return '${two(l.day)}.${two(l.month)} ${two(l.hour)}:${two(l.minute)}';
-  }
-
   @override
   Widget build(BuildContext context) {
     final AsyncValue<List<Alert>> alerts = ref.watch(alertsProvider);
+    final DateTime Function(DateTime) local = ref.watch(localTimeProvider);
     final Map<String, String> names = <String, String>{
       for (final Profile p in ref.watch(appStateProvider).value?.profiles ?? const <Profile>[]) p.id: p.name,
     };
@@ -270,7 +271,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
                                     ),
                                     const Spacer(),
                                     Text(
-                                      _when(a.at),
+                                      alertWhen(local(a.at)),
                                       style: AppText.parent(
                                         TokenType.parentSmall,
                                         color: TokenColors.inkSoft,
