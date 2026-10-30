@@ -5,6 +5,10 @@ import 'package:drift/drift.dart';
 class Profiles extends Table {
   TextColumn get id => text()();
 
+  // The name as the parent typed it. The rule for a new name is `childNameMaxLength` (24 UTF-16 units,
+  // `data/child_name.dart`, board B-28); the column stays at 40 for the names saved before (narrowing it would need a
+  // table rebuild), and those go to the server cut to 24 (`fitChildNameForServer`). A plain comment, not a doc
+  // comment, so the generated code does not change.
   TextColumn get name => text().withLength(min: 1, max: 40)();
 
   /// An id from the avatar set, for example `avatar-noa`.

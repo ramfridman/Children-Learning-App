@@ -1,6 +1,7 @@
 // A fake of the gateway's sync functions that behaves like the real ones (the Deno tests prove the real ones): one
-// family, a log numbered by the server, profiles with nicknames, tombstones, duplicates ignored, unknown or deleted
-// children refused. Devices call it through [callFor], which can be made to fail or to lose its answer.
+// family, a log numbered by the server, profiles with nicknames (refused outside child-put's pattern), tombstones,
+// duplicates ignored, unknown or deleted children refused. Devices call it through [callFor], which can be made to fail
+// or to lose its answer.
 import 'dart:convert';
 import 'dart:io';
 
@@ -47,6 +48,13 @@ _wire = () {
     },
   );
 }();
+
+/// The nickname `child-put` takes (`testvectors/child-name.json`, tested equal to the server).
+final RegExp _nickname = RegExp(
+  (jsonDecode(File('../testvectors/child-name.json').readAsStringSync())
+          as Map<String, Object?>)['server_pattern']!
+      as String,
+);
 
 class FakeFamilyServer {
   FakeFamilyServer({this.checksFormat = false});
@@ -101,6 +109,10 @@ class FakeFamilyServer {
         if (!parent) throw StateError('forbidden');
         final String id = body['child_id']! as String;
         if (tombstones.contains(id)) throw StateError('child_deleted');
+        final Object? nickname = body['nickname'];
+        if (nickname is! String || !_nickname.hasMatch(nickname)) {
+          throw const GatewayException('bad_request', status: 400);
+        }
         children[id] = <String, Object?>{
           'id': id,
           'nickname': body['nickname'],
