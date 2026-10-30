@@ -220,7 +220,9 @@ void main() {
 
             // The tap areas are the design's rectangles, on the board, above the bottom-24 band.
             final Map<String, Rect> tap = <String, Rect>{
-              for (final String t in targets) t: rectOf(tester, 'home-island-$t'),
+              // The bottle's box is the design's rectangle; its live area inside it is checked in 'the bottle'.
+              for (final String t in targets)
+                t: rectOf(tester, t == 'bottle' ? 'home-island-bottle-box' : 'home-island-$t'),
             };
             expectRect(tap['bottle']!, b.bottle, 'bottle');
             expectRect(tap['companion']!, b.companion, 'companion');
@@ -539,7 +541,7 @@ void main() {
             );
             expect(wedge.getBounds().bottom, closeTo(tip.dy, 3), reason: '$why: the tip, rounded');
             // Out of the bottle's tap area: no point of the area's edges facing the bubble lies inside the wedge.
-            final Rect bottle = rectOf(tester, 'home-island-bottle');
+            final Rect bottle = rectOf(tester, 'home-island-bottle-box');
             for (double t = 0; t <= 1; t += 1 / 400) {
               final Offset onTop = Offset(bottle.left + t * bottle.width, bottle.top);
               final Offset onLeft = Offset(bottle.left, bottle.top + t * bottle.height);
@@ -613,7 +615,14 @@ void main() {
       final Taps taps = await pumpIsland(tester, board('phone'));
       final Finder bottle = find.byKey(const Key('home-island-bottle'));
       double scaleOf() => tester
-          .widget<Transform>(find.descendant(of: bottle, matching: find.byType(Transform)).first)
+          .widget<Transform>(
+            find
+                .descendant(
+                  of: find.byKey(const Key('home-island-bottle-box')),
+                  matching: find.byType(Transform),
+                )
+                .first,
+          )
           .transform
           .entry(0, 0);
       expect(scaleOf(), closeTo(1, 1e-9));
@@ -627,6 +636,84 @@ void main() {
       expect(taps.bottle, 0, reason: 'a drag never opens');
       await tester.tap(bottle);
       expect(taps.bottle, 1);
+    });
+
+    // The owner's phone check: Today's Adventure opened from the empty part above the bottle. The design's rectangle for
+    // the bottle is only its box; a touch counts where the bottle is drawn (and 6 pt around it for the bob), at least 48
+    // pt each way, and the same area is what a screen reader finds. The rest of the box lets a touch through.
+    const Map<String, Size> bottleLive = <String, Size>{
+      'phone': Size(136.56, 88.32),
+      'phoneSE': Size(128.4, 84.08),
+      'tabletLandscape': Size(185, 118),
+      'tabletPortrait': Size(185, 118),
+    };
+    for (final Board b in boards) {
+      testWidgets(
+        '${b.name}: only the drawn bottle opens Today\'s Adventure, not the empty part of its box',
+        (WidgetTester tester) async {
+          final SemanticsHandle semantics = tester.ensureSemantics();
+          final Taps taps = await pumpIsland(tester, b);
+          final Rect box = rectOf(tester, 'home-island-bottle-box');
+          final Rect live = rectOf(tester, 'home-island-bottle');
+          expectRect(box, b.bottle, 'the box is the design\'s rectangle, unchanged');
+          expect(live.size.width, closeTo(bottleLive[b.name]!.width, 0.01), reason: 'live width');
+          expect(live.size.height, closeTo(bottleLive[b.name]!.height, 0.01), reason: 'live height');
+          expect(live.shortestSide, greaterThanOrEqualTo(48), reason: 'a comfortable target');
+          expect(box.expandToInclude(live), box, reason: 'inside the box');
+          // The tilted bottle lies in the lower part of its box and a little to the right of its middle.
+          expect(live.center.dx, closeTo(box.center.dx, 8), reason: 'centred on the picture');
+          expect(live.center.dy, greaterThan(box.center.dy), reason: 'on the lower part, where it is drawn');
+
+          // The empty part of the old rectangle: the corners, and the strip above the bottle.
+          final List<Offset> empty = <Offset>[
+            box.topLeft + const Offset(4, 4),
+            box.topRight + const Offset(-4, 4),
+            Offset(box.center.dx, box.top + 4),
+            Offset(box.center.dx, live.top - 4),
+            box.bottomLeft + const Offset(4, -2),
+            box.bottomRight + const Offset(-4, -2),
+          ];
+          for (final Offset p in empty) {
+            expect(live.contains(p), isFalse, reason: 'the test point $p is outside the live area');
+            await tester.tapAt(p);
+            expect(taps.bottle, 0, reason: '${b.name}: a touch at $p must not open it');
+            final HitTestResult hit = tester.hitTestOnBinding(p);
+            expect(
+              hit.path.any((HitTestEntry e) => e.target is RenderSemanticsGestureHandler),
+              isFalse,
+              reason: '${b.name}: nothing takes a touch at $p, it reaches what lies under',
+            );
+          }
+
+          // On the bottle: the middle and just inside every edge of the live area.
+          for (final Offset p in <Offset>[
+            live.center,
+            live.topLeft + const Offset(2, 2),
+            live.bottomRight - const Offset(2, 2),
+          ]) {
+            await tester.tapAt(p);
+          }
+          expect(taps.bottle, 3);
+
+          // The screen reader finds the same area.
+          final SemanticsNode node = tester.getSemantics(find.byKey(const Key('home-island-bottle')));
+          expect(node.rect.size.width, closeTo(live.width, 0.01));
+          expect(node.rect.size.height, closeTo(live.height, 0.01));
+          semantics.dispose();
+        },
+      );
+    }
+
+    testWidgets('the book and the lighthouse keep their whole boxes: their pictures fill them', (
+      WidgetTester tester,
+    ) async {
+      final Taps taps = await pumpIsland(tester, board('phone'));
+      expect(find.byKey(const Key('home-island-book-box')), findsNothing);
+      expect(find.byKey(const Key('home-island-lighthouse-box')), findsNothing);
+      final Board b = board('phone');
+      await tester.tapAt(b.book.topLeft + const Offset(4, 4));
+      await tester.tapAt(b.lighthouse.topLeft + const Offset(4, 4));
+      expect((taps.stickers, taps.hall), (1, 1));
     });
 
     testWidgets('screen-reader labels, in reading order: back, title, bottle, friend, book, lighthouse', (
@@ -732,7 +819,7 @@ void main() {
       final Matrix4 m = tester
           .widgetList<Transform>(
             find.descendant(
-              of: find.byKey(const Key('home-island-bottle')),
+              of: find.byKey(const Key('home-island-bottle-box')),
               matching: find.byType(Transform),
             ),
           )
@@ -743,7 +830,10 @@ void main() {
 
     double lift(WidgetTester tester) => tester
         .widgetList<Transform>(
-          find.descendant(of: find.byKey(const Key('home-island-bottle')), matching: find.byType(Transform)),
+          find.descendant(
+            of: find.byKey(const Key('home-island-bottle-box')),
+            matching: find.byType(Transform),
+          ),
         )
         .elementAt(1)
         .transform

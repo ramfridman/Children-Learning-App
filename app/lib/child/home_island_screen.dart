@@ -78,7 +78,8 @@ class _IslandSpec {
 
   final String scene;
 
-  /// The tap areas; each picture is drawn inside its own with `BoxFit.contain`, standing on the area's bottom edge.
+  /// The objects' boxes (the design's tap rectangles); each picture is drawn inside its own with `BoxFit.contain`,
+  /// standing on the box's bottom edge. A touch counts in the whole box, except the bottle's: see [bottleHitArea].
   final Rect bottle;
   final Rect companion;
   final Rect book;
@@ -200,6 +201,30 @@ const Size _bottleSize = Size(100, 100);
 const Size _bookSize = Size(100, 100);
 const Size _lighthouseSize = Size(100, 220);
 
+/// Where the bottle is really drawn inside its 100 x 100 picture (the lying, tilted bottle leaves the top of its box
+/// empty; measured on the rendered picture).
+const Rect _bottleDrawn = Rect.fromLTRB(10, 37, 96.5, 90);
+
+/// What a finger may miss the drawn bottle by, in board points: the bob moves it 4 up or down and the tilt a few more
+/// to the side, and a small child does not aim well.
+const double _bottleSlack = 6;
+
+/// The part of the bottle's box (the design's tap rectangle, whose picture stands on its bottom edge, `BoxFit.contain`)
+/// where a touch opens Today's Adventure: the drawn bottle with [_bottleSlack] around it, in the box's own coordinates,
+/// never beyond the box (a touch outside the box never reaches its children).
+@visibleForTesting
+Rect bottleHitArea(Size box) {
+  final double side = math.min(box.width, box.height);
+  final double k = side / _bottleSize.width;
+  final Offset origin = Offset((box.width - side) / 2, box.height - side);
+  return Rect.fromLTRB(
+    origin.dx + _bottleDrawn.left * k - _bottleSlack,
+    origin.dy + _bottleDrawn.top * k - _bottleSlack,
+    origin.dx + _bottleDrawn.right * k + _bottleSlack,
+    origin.dy + _bottleDrawn.bottom * k + _bottleSlack,
+  ).intersect(Offset.zero & box);
+}
+
 /// The warm glow of "something waits" (the same as the map sign's).
 const Color _waitingGlow = Color(0xAAFFD45C);
 
@@ -284,6 +309,8 @@ class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerPr
             order: 2,
             semantics: He.homeDaily.text,
             onTap: widget.onBottle,
+            // Only the drawn bottle opens it; the empty part of its box does nothing (and a screen reader finds the same area).
+            hit: bottleHitArea(s.bottle.size),
             // Its own layer, so the bob repaints the bottle alone and not the scene under it.
             child: RepaintBoundary(
               child: _Bobbing(
@@ -360,7 +387,9 @@ class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerPr
     );
   }
 
-  /// One of the three objects: its tap area, announced as a button, with its picture inside.
+  /// One of the three objects: its box, announced as a button, with its picture inside. A touch counts in the whole box,
+  /// or only in [hit] (in the box's coordinates) when given: then the box is keyed `home-island-$id-box` and `home-island-$id`
+  /// is the area itself, the one a finger and a screen reader meet.
   Widget _thing(
     Rect rect, {
     required String id,
@@ -368,16 +397,29 @@ class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerPr
     required String semantics,
     required VoidCallback? onTap,
     required Widget child,
-  }) => Positioned.fromRect(
-    rect: rect,
-    child: Semantics(
+    Rect? hit,
+  }) {
+    Widget announce(Widget button, {Key? key}) => Semantics(
+      key: key,
       sortKey: OrdinalSortKey(order.toDouble()),
       container: true,
       button: true,
       label: semantics,
-      child: _Squash(key: Key('home-island-$id'), onTap: onTap, child: child),
-    ),
-  );
+      child: button,
+    );
+    return Positioned.fromRect(
+      rect: rect,
+      child: hit == null
+          ? announce(_Squash(key: Key('home-island-$id'), onTap: onTap, child: child))
+          : _Squash(
+              key: Key('home-island-$id-box'),
+              onTap: onTap,
+              hit: hit,
+              announce: (Widget button) => announce(button, key: Key('home-island-$id')),
+              child: child,
+            ),
+    );
+  }
 
   /// The words under an object (not tappable; a screen reader hears the object's own label). They end above the bottom
   /// 24 of the board: at a large text scale on the SE that lifts them a few points into the object's own tap area.
@@ -543,11 +585,16 @@ class _Bobbing extends StatelessWidget {
 }
 
 /// A tap target that gives a little (0.96) the moment it is touched and acts when the finger lifts; a drag never acts.
+/// It reacts in its whole box, or only in [hit] (in its own coordinates) when given: the rest of the box lets a touch
+/// through to what lies under it. Then [announce] wraps the live area (the screen reader's button).
 class _Squash extends StatefulWidget {
-  const _Squash({super.key, required this.onTap, required this.child});
+  const _Squash({super.key, required this.onTap, required this.child, this.hit, this.announce})
+    : assert((hit == null) == (announce == null), 'a hit area needs its announcer');
 
   final VoidCallback? onTap;
   final Widget child;
+  final Rect? hit;
+  final Widget Function(Widget button)? announce;
 
   @override
   State<_Squash> createState() => _SquashState();
@@ -563,13 +610,23 @@ class _SquashState extends State<_Squash> {
   @override
   Widget build(BuildContext context) {
     final bool live = widget.onTap != null;
-    return GestureDetector(
+    Widget detector({Widget? child}) => GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTapDown: live ? (_) => _press(true) : null,
       onTapUp: live ? (_) => _press(false) : null,
       onTapCancel: live ? () => _press(false) : null,
       onTap: widget.onTap,
-      child: Transform.scale(scale: _down ? 0.96 : 1, child: widget.child),
+      child: child,
+    );
+    final Widget scaled = Transform.scale(scale: _down ? 0.96 : 1, child: widget.child);
+    final Rect? hit = widget.hit;
+    if (hit == null) return detector(child: scaled);
+    return Stack(
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        Positioned.fill(child: scaled),
+        Positioned.fromRect(rect: hit, child: widget.announce!(detector())),
+      ],
     );
   }
 }
