@@ -76,6 +76,12 @@ class AppStateNotifier extends AsyncNotifier<AppState> {
   @override
   Future<AppState> build() async {
     final AppDatabase db = await ref.watch(databaseProvider.future);
+    try {
+      // At the start: alerts past 30 days go, and the words go if "keep the words" is off (SEC-28).
+      await db.tidyAlerts(DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs()));
+    } on Object {
+      // Never a reason for the app not to start; the next sync tidies again.
+    }
     return AppState(
       profiles: await db.allProfiles(),
       pinSet: await ref.read(pinServiceProvider).isSet(),

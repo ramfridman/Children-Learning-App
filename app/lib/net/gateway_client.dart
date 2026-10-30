@@ -53,6 +53,9 @@ class GatewayClient {
   /// Server time minus phone time, learned from a `clock_skew` answer.
   int _skewMs = 0;
 
+  /// The server's time as far as this phone knows it (its own clock, corrected by what a `clock_skew` answer taught).
+  int serverNowMs() => _clock.nowMs() + _skewMs;
+
   Uri _functionUri(String name) => _base.replace(path: '/functions/v1/$name');
 
   /// Calls function [name] and returns its JSON object. Throws [GatewayException] on any failure.

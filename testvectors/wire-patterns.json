@@ -1,5 +1,5 @@
 {
-  "about": "Everything sync-push takes in an event (SEC-1, SEC-12): the event's own keys, every key of its data with its pattern, range or values, and the keys each type must carry; and what tutor-turn takes as a chosen option. sync_test.ts asserts sync-push/handler.ts (spec, DATA, REQUIRED) and tutor-turn/handler.ts (OPTION) equal this file; in Dart the app's constants (app/lib/play/response_code.dart), the pack's bounds and the fake server of the sync tests (which refuses what the real one would) read it. A new key, value or wider range goes into the server and this file first (PLAN: Deploy order for the gateway). The examples are the longest codes the templates write; the Deno test pushes each one through the real sync-push.",
+  "about": "Everything sync-push takes in an event (SEC-1, SEC-12): the event's own keys, every key of its data with its pattern, range or values, and the keys each type must carry; what tutor-turn takes as a chosen option; and what alert-create takes (alert_create; only the word categories carry words and may be counted again). sync_test.ts asserts sync-push/handler.ts (spec, DATA, REQUIRED) and tutor-turn/handler.ts (OPTION) equal this file, alerts_test.ts asserts alert-create/handler.ts does; in Dart the app's constants (app/lib/play/response_code.dart), the pack's bounds and the fake server of the sync tests (which refuses what the real one would) read it. A new key, value or wider range goes into the server and this file first (PLAN: Deploy order for the gateway). The examples are the longest codes the templates write; the Deno test pushes each one through the real sync-push.",
   "max_events": 40,
   "event_fields": {
     "id": { "t": "uuid", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" },
@@ -52,6 +52,17 @@
     "session": ["plan", "started_at", "session_local"],
     "reward": ["kind", "key"]
   },
+  "alert_create": {
+    "child_id": {"t": "string", "pattern": "^[A-Za-z0-9-]{8,64}$", "max": 64},
+    "category": {"t": "enum", "values": ["pastLimit", "restHours", "gateAttempts", "guessing", "frustration", "inappropriateWords", "disclosure", "absence", "ribbonEarned", "concern"]},
+    "severity": {"t": "enum", "values": ["info", "attention", "important"]},
+    "count": {"t": "int", "min": 0, "max": 100000},
+    "detail": {"t": "string", "pattern": "^[A-Za-z0-9._:=-]*$", "max": 80},
+    "words": {"t": "string", "pattern": "^[֐-׿A-Za-z0-9 .,?!'\"-]*$", "max": 200},
+    "key": {"t": "string", "pattern": "^[A-Za-z0-9._:=-]{1,120}$", "max": 120},
+    "at": {"t": "int", "min": 1500000000000, "max": 4100000000000}
+  },
+  "alert_word_categories": ["inappropriateWords", "disclosure", "concern"],
   "tutor_option": "^[a-z0-9=-]{1,16}$",
   "examples": {
     "choice": "o2",

@@ -91,8 +91,9 @@ class VoiceAnswerController extends ChangeNotifier {
   final void Function(ListenOutcome outcome)? onOutcome;
 
   /// Everything the recogniser heard for one answer, handed on once and never kept here. The parent's alerts look at
-  /// it (swearing, a worrying phrase) on the device; it is not stored, sent or logged by this class.
-  final void Function(List<String> texts)? onWords;
+  /// it (swearing, a worrying phrase) on the device; it is not stored, sent or logged by this class. [answerWords] are
+  /// the answers of the question on screen (normalised), so that an answer is never taken for a swear word.
+  final void Function(List<String> texts, Set<String> answerWords)? onWords;
 
   MicState _state = MicState.ready;
   double _level = 0;
@@ -200,7 +201,15 @@ class VoiceAnswerController extends ChangeNotifier {
   }
 
   Future<void> _decide(List<Hypothesis> heard, int gen) async {
-    if (heard.isNotEmpty) onWords?.call(<String>[for (final Hypothesis h in heard) h.text]);
+    if (heard.isNotEmpty) {
+      onWords?.call(
+        <String>[for (final Hypothesis h in heard) h.text],
+        <String>{
+          for (final Expected e in expected())
+            for (final AcceptWord w in e.words) w.text,
+        },
+      );
+    }
     _set(MicState.thinking, keepOption: true);
     if (_confirmListen) {
       final Intent? answer = matcher.confirmation(heard);
