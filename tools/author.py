@@ -138,12 +138,12 @@ SIZE_BY_CUE = {
 }
 # A5 (B-15 addendum): the M-SORT-SHIFT line follows the item's sorting rule (`rule`: colour, shape or kind). The colour rule
 # (and an item with no rule) keeps the shared line, which says "the same colour"; the shape and kind rules say what the child
-# should have looked at. The editor's P4 and P3 (docs/knowledge/b15-hebrew.md §4 and §6.6): `proposed` for Band A until
-# the owner signs them, `text-ready` in Band B.
+# should have looked at. The editor's P4, P3 and P5 (docs/knowledge/b15-hebrew.md §4, §6.6 and §7.8): `owner-approved`
+# in both bands (the owner, 2026-10-30).
 SORT_SHIFT_BY_RULE = {
     'shape': ('vo:fb.sort_shift.shape', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק.'),
     'kind': ('vo:fb.sort_shift.kind', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.'),
-    # The editor's P5 (b15-hebrew.md §7): the size sorts of LOG-A-03; `proposed` until the owner signs it.
+    # The editor's P5 (b15-hebrew.md §7): the size sorts of LOG-A-03 (owner-approved 2026-10-30).
     'size': ('vo:fb.sort_shift.size', 'זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק.'),
 }
 SORT_RULES = ('colour', 'shape', 'kind', 'size')
@@ -1035,14 +1035,26 @@ def k_scale(a, ctx):
         a.get('goal', 'child reads the scale'), prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הַמֹּאזְנַיִם אוֹמְרוֹת.')
 
 
+# The third hint of a spot with no hint of its own. Band B says "one of them does not fit"; Band A must not hear "לֹא", so it says
+# what is true (the editor's P1, b15-hebrew.md §4; owner-approved 2026-10-30). One shared clip: `vo:hint.spot_but_one.h3`.
+SPOT_H3_B = 'אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.'
+SPOT_H3_A = 'כֻּלָּם דּוֹמִים, חוּץ מֵאֶחָד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.'
+
+
 def k_spot(a, ctx):
     """A row made by a friend with one mistake in it. Cells: sprite ids, "n:7", "dir:up", "op:+"."""
     cells = ['asset:' + c if not c.split(':')[0] in ('n', 'dir', 'op') else c for c in a['cells']]
     tag = a.get('tag', 'M-PAT-NEXT')
+    if a.get('h3'):
+        h3, shared = a['h3'], ('pick', 'spot')
+    elif a.get('band', 'A') == 'A':
+        h3, shared = SPOT_H3_A, ('pick', 'spot', 'spot_but_one')
+    else:
+        h3, shared = SPOT_H3_B, ('pick', 'spot')
     return activity(
         a, 'spot_error', skills_of(a), 'check', 'error_spotting',
         {'background': 'asset:meadow', 'cells': cells}, {'type': 'spot', 'wrong': a['wrong'], 'misconception': tag}, {tag},
-        hint_set(a, a.get('h3') or 'אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.', ('pick', 'spot')),
+        hint_set(a, h3, shared),
         a.get('goal', 'child finds the one that does not fit'), prompt=a['prompt'],
         correct=a.get('correct_text') or 'כֵּן! מְצָאתֶם אֶת הַטָּעוּת.')
 

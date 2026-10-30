@@ -88,6 +88,15 @@ class ItemOverridesTest(unittest.TestCase):
     def test_a_spot_is_an_error_spotting_check(self):
         self.assertEqual(spot()['checkType'], 'error_spotting')
 
+    def test_a_band_a_spot_never_says_not_in_its_third_hint(self):
+        # P1 (owner-approved 2026-10-30): Band A says what is true; Band B keeps "one of them does not fit"; an own h3 wins
+        h3 = lambda d: (d['hints'][2]['vo'], d['hints'][2]['caption'][0]['v'])
+        self.assertEqual(h3(spot(band='A')), ('vo:hint.spot_but_one.h3', author.SPOT_H3_A))
+        self.assertEqual(h3(spot()), ('vo:hint.spot_but_one.h3', author.SPOT_H3_A))
+        self.assertEqual(h3(spot(band='B', id='t.spot.b')), ('vo:t.spot.b.h3', author.SPOT_H3_B))
+        self.assertEqual(h3(spot(h3='נִסְפֹּר יַחַד.', id='t.spot.own')), ('vo:t.spot.own.h3', 'נִסְפֹּר יַחַד.'))
+        self.assertNotIn('לֹא', author.SPOT_H3_A)
+
     def test_the_items_check_and_rep_win(self):
         d = pick(check='reverse', rep='story')
         self.assertEqual((d['checkType'], d['representation']), ('reverse', 'story'))
