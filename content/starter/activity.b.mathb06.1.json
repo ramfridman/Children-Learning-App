@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "concrete",
+  "representation": "pictorial",
   "variantGroup": "pick",
   "difficulty": {
     "authored": 0.37
@@ -51,13 +51,15 @@
       },
       {
         "id": "o2",
-        "numeral": 6,
-        "label": "שֵׁשׁ"
+        "numeral": 10,
+        "label": "עֶשֶׂר",
+        "misconception": "M-PART-MISS"
       },
       {
         "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע"
+        "numeral": 6,
+        "label": "שֵׁשׁ",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o1",
@@ -76,6 +78,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PART-MISS",
+        "vo": "vo:fb.part_miss",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסֵר?"
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

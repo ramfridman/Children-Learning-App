@@ -28,8 +28,8 @@
     }
   ],
   "representations": [
-    "concrete",
-    "symbolic"
+    "symbolic",
+    "pictorial"
   ],
   "misconceptions": [
     "M-PART-MISS"

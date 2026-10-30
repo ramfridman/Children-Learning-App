@@ -14,8 +14,8 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
-  "representation": "symbolic",
+  "checkType": "predict",
+  "representation": "pictorial",
   "variantGroup": "numline",
   "difficulty": {
     "authored": 0.9

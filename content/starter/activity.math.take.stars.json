@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "concrete",
+  "representation": "pictorial",
   "variantGroup": "pick",
   "difficulty": {
     "authored": 0.3
@@ -47,7 +47,8 @@
       {
         "id": "o1",
         "numeral": 3,
-        "label": "שָׁלוֹשׁ"
+        "label": "שָׁלוֹשׁ",
+        "misconception": "M-CNT-SKIP"
       },
       {
         "id": "o2",
@@ -76,6 +77,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

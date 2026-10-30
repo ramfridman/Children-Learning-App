@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "concrete",
+  "representation": "pictorial",
   "variantGroup": "pick",
   "difficulty": {
     "authored": 0.86
@@ -46,8 +46,8 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 1,
-        "label": "אַחַת",
+        "numeral": 18,
+        "label": "שְׁמוֹנֶה עֶשְׂרֵה",
         "misconception": "M-NUM-TEEN"
       },
       {
@@ -57,8 +57,9 @@
       },
       {
         "id": "o3",
-        "numeral": 9,
-        "label": "תֵּשַׁע"
+        "numeral": 1,
+        "label": "אַחַת",
+        "misconception": "M-NUM-REV"
       }
     ],
     "correct": "o2",
@@ -77,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+          }
+        ]
+      },
       {
         "when": "misconception:M-NUM-TEEN",
         "vo": "vo:fb.num_teen",

@@ -345,7 +345,7 @@
       "options": [
         1,
         2,
-        3
+        0
       ],
       "flashMs": 1800,
       "difficulty": 0.1
@@ -403,7 +403,8 @@
       "obj": "apple",
       "n": 3,
       "source": 8,
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "check": "practice"
     },
     {
       "kind": "give",
@@ -412,7 +413,8 @@
       "obj": "ladybug",
       "n": 2,
       "source": 6,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "check": "practice"
     },
     {
       "kind": "give",
@@ -421,7 +423,8 @@
       "obj": "star",
       "n": 5,
       "source": 9,
-      "difficulty": 0.45
+      "difficulty": 0.45,
+      "check": "practice"
     },
     {
       "kind": "give",
@@ -430,7 +433,8 @@
       "obj": "fish",
       "n": 4,
       "source": 7,
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "check": "practice"
     },
     {
       "kind": "set_to_numeral",
@@ -934,8 +938,8 @@
       "where": "בַּקֵּן",
       "options": [
         0,
-        1,
-        2
+        2,
+        3
       ],
       "difficulty": 0.3
     },
@@ -999,7 +1003,11 @@
         9,
         10
       ],
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "tags": {
+        "8": "M-CNT-SEQ",
+        "9": "M-CNT-SEQ"
+      }
     },
     {
       "kind": "next_number",
@@ -1194,7 +1202,8 @@
       "obj": "duck",
       "n": 3,
       "source": 7,
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "check": "practice"
     },
     {
       "kind": "give",
@@ -1203,7 +1212,8 @@
       "obj": "cat",
       "n": 2,
       "source": 5,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "check": "practice"
     },
     {
       "kind": "give",
@@ -1212,7 +1222,8 @@
       "obj": "dog",
       "n": 4,
       "source": 8,
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "check": "practice"
     },
     {
       "kind": "pick_numeral",

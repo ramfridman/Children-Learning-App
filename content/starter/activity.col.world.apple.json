@@ -40,7 +40,8 @@
       {
         "id": "o1",
         "sprite": "asset:ball_green",
-        "label": "כַּדּוּר יָרֹק"
+        "label": "כַּדּוּר יָרֹק",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o2",
@@ -50,7 +51,8 @@
       {
         "id": "o3",
         "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם"
+        "label": "כַּדּוּר אָדֹם",
+        "misconception": "M-COL-OBJECT"
       }
     ],
     "correct": "o2",
@@ -69,6 +71,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-OBJECT",
+        "vo": "vo:fb.col_object",
+        "caption": [
+          {
+            "t": "he",
+            "v": "דְּבָרִים יְכוֹלִים לִהְיוֹת בְּכַמָּה צְבָעִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

@@ -1168,8 +1168,11 @@
     "banana_yellow",
     "ball_red"
    ],
+   "tags": {
+    "apple": "M-CNT-SIZE",
+    "ball_red": "M-CNT-SIZE"
+   },
    "correct": "banana_yellow",
-   "rep": "pictorial",
    "prompt": "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?",
    "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי גָּבוֹהַּ.",
    "h3": "בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
@@ -1199,8 +1202,11 @@
     "duck",
     "fish"
    ],
+   "tags": {
+    "fish": "M-CNT-SIZE",
+    "duck": "M-CNT-SIZE"
+   },
    "correct": "star",
-   "rep": "pictorial",
    "prompt": "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?",
    "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי גָּבוֹהַּ.",
    "h3": "בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
@@ -1230,8 +1236,11 @@
     "ball_red",
     "apple"
    ],
+   "tags": {
+    "apple": "M-CNT-SIZE",
+    "ball_red": "M-CNT-SIZE"
+   },
    "correct": "banana_yellow",
-   "rep": "pictorial",
    "prompt": "מִמָּה יֵשׁ הֲכִי מְעַט?",
    "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי נָמוּךְ.",
    "h3": "בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
@@ -1261,8 +1270,11 @@
     "star",
     "duck"
    ],
+   "tags": {
+    "star": "M-CNT-SIZE",
+    "duck": "M-CNT-SIZE"
+   },
    "correct": "fish",
-   "rep": "pictorial",
    "prompt": "מִמָּה יֵשׁ הֲכִי מְעַט?",
    "correct_text": "כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ הֲכִי נָמוּךְ.",
    "h3": "בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן."
@@ -1293,7 +1305,10 @@
     "n:11"
    ],
    "correct": "n:10",
-   "rep": "pictorial",
+   "tags": {
+    "n:9": "M-CNT-SKIP",
+    "n:11": "M-CNT-DOUBLE"
+   },
    "voice": true,
    "prompt": "כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?",
    "correct_text": "עֶשֶׂר! שָׁלוֹשׁ וְעוֹד חָמֵשׁ וְעוֹד שְׁתַּיִם הֵם עֶשֶׂר.",
@@ -1325,7 +1340,10 @@
     "n:9"
    ],
    "correct": "n:9",
-   "rep": "pictorial",
+   "tags": {
+    "n:8": "M-CNT-SKIP",
+    "n:10": "M-CNT-DOUBLE"
+   },
    "voice": true,
    "prompt": "כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?",
    "correct_text": "תֵּשַׁע! אַרְבַּע וְעוֹד שְׁתַּיִם וְעוֹד שָׁלוֹשׁ הֵם תֵּשַׁע.",
@@ -1353,7 +1371,6 @@
     "n:3"
    ],
    "correct": "n:2",
-   "rep": "pictorial",
    "voice": true,
    "tags": {
     "n:5": "M-COMP-DIFF"
@@ -1384,7 +1401,6 @@
     "n:5"
    ],
    "correct": "n:4",
-   "rep": "pictorial",
    "voice": true,
    "tags": {
     "n:6": "M-COMP-DIFF"
@@ -1415,7 +1431,6 @@
     "n:3"
    ],
    "correct": "n:3",
-   "rep": "pictorial",
    "voice": true,
    "tags": {
     "n:7": "M-COMP-DIFF"
@@ -1430,6 +1445,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.37,
    "domain": "math",
+   "check": "reverse",
    "hour": 3,
    "minute": 0,
    "start": [
@@ -1447,6 +1463,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.44,
    "domain": "math",
+   "check": "reverse",
    "hour": 6,
    "minute": 0,
    "start": [
@@ -1464,6 +1481,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.51,
    "domain": "math",
+   "check": "reverse",
    "hour": 9,
    "minute": 0,
    "start": [
@@ -1481,6 +1499,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.58,
    "domain": "math",
+   "check": "reverse",
    "hour": 1,
    "minute": 0,
    "start": [
@@ -1498,6 +1517,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.65,
    "domain": "math",
+   "check": "reverse",
    "hour": 5,
    "minute": 0,
    "start": [
@@ -1515,6 +1535,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.72,
    "domain": "math",
+   "check": "reverse",
    "hour": 8,
    "minute": 0,
    "start": [
@@ -1532,6 +1553,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.79,
    "domain": "math",
+   "check": "reverse",
    "hour": 11,
    "minute": 0,
    "start": [
@@ -1549,6 +1571,7 @@
    "skill": "MATH-B-15",
    "difficulty": 0.86,
    "domain": "math",
+   "check": "reverse",
    "hour": 2,
    "minute": 0,
    "start": [

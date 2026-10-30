@@ -59,12 +59,14 @@
       {
         "id": "o2",
         "sprite": "asset:duck",
-        "label": "בַּרְוָז"
+        "label": "בַּרְוָז",
+        "misconception": "M-CNT-SIZE"
       },
       {
         "id": "o3",
         "sprite": "asset:fish",
-        "label": "דָּג"
+        "label": "דָּג",
+        "misconception": "M-CNT-SIZE"
       }
     ],
     "correct": "o1",
@@ -83,6 +85,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SIZE",
+        "vo": "vo:fb.size",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

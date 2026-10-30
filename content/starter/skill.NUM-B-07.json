@@ -24,8 +24,7 @@
     }
   ],
   "representations": [
-    "embodied",
-    "symbolic"
+    "embodied"
   ],
   "misconceptions": [
     "M-NUM-WRITE"

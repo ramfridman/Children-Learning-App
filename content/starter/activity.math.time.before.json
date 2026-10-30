@@ -14,7 +14,7 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
+  "checkType": "reverse",
   "representation": "story",
   "variantGroup": "pick",
   "difficulty": {

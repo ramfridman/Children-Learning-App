@@ -54,7 +54,8 @@
       {
         "id": "o1",
         "numeral": 9,
-        "label": "תֵּשַׁע"
+        "label": "תֵּשַׁע",
+        "misconception": "M-CNT-SKIP"
       },
       {
         "id": "o2",
@@ -64,7 +65,8 @@
       {
         "id": "o3",
         "numeral": 11,
-        "label": "אַחַת עֶשְׂרֵה"
+        "label": "אַחַת עֶשְׂרֵה",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o2",
@@ -83,6 +85,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

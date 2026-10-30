@@ -195,6 +195,10 @@
     "line_curved_arc": {
       "one": "קַו עָקֹם",
       "g": "m"
+    },
+    "shape_open": {
+      "one": "צוּרָה פְּתוּחָה",
+      "g": "f"
     }
   },
   "tagFeedback": {
@@ -202,7 +206,9 @@
     "M-SHP-PROTO": "אוֹתָהּ צוּרָה יְכוֹלָה לְהֵרָאוֹת קְצָת אַחֶרֶת. בּוֹאוּ נִסְפֹּר צְלָעוֹת.",
     "M-SHP-SIZE": "צוּרָה גְּדוֹלָה וְצוּרָה קְטַנָּה יְכוֹלוֹת לִהְיוֹת אוֹתָהּ צוּרָה. בּוֹאוּ נִבְדֹּק.",
     "M-SHP-SQRECT": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.",
-    "M-SPACE-WORD": "הַמִּלָּה אוֹמֶרֶת אֵיפֹה הַכַּדּוּר. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+    "M-SPACE-WORD": "הַמִּלָּה אוֹמֶרֶת אֵיפֹה הַכַּדּוּר. בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
+    "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.",
+    "M-SHP-CLOSED": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
   },
   "misconceptions": [
     {
@@ -406,7 +412,10 @@
         "shape_triangle"
       ],
       "correct": "shape_circle",
-      "difficulty": 0.05
+      "difficulty": 0.05,
+      "tags": {
+        "shape_square": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "pick",
@@ -420,10 +429,14 @@
       "options": [
         "shape_square",
         "shape_circle",
-        "shape_triangle"
+        "shape_rect"
       ],
       "correct": "shape_square",
-      "difficulty": 0.05
+      "difficulty": 0.05,
+      "tags": {
+        "shape_circle": "M-COL-ONEATTR",
+        "shape_rect": "M-SHP-SQRECT"
+      }
     },
     {
       "kind": "pick",
@@ -436,11 +449,15 @@
       },
       "options": [
         "shape_circle",
-        "shape_square",
+        "shape_open",
         "shape_triangle"
       ],
       "correct": "shape_triangle",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "shape_circle": "M-COL-ONEATTR",
+        "shape_open": "M-SHP-CLOSED"
+      }
     },
     {
       "kind": "pick",
@@ -462,11 +479,14 @@
       "prompt": "אֵיפֹה הָרִבּוּעַ?",
       "options": [
         "shape_square",
-        "shape_circle",
+        "shape_rect",
         "shape_triangle"
       ],
       "correct": "shape_square",
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "shape_rect": "M-SHP-SQRECT"
+      }
     },
     {
       "kind": "pick",
@@ -476,10 +496,13 @@
       "options": [
         "shape_circle",
         "shape_triangle",
-        "shape_square"
+        "shape_open"
       ],
       "correct": "shape_triangle",
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "shape_open": "M-SHP-CLOSED"
+      }
     },
     {
       "kind": "pick",
@@ -661,8 +684,7 @@
         "ball_red"
       ],
       "correct": "ball_red",
-      "difficulty": 0.15,
-      "rep": "concrete"
+      "difficulty": 0.15
     },
     {
       "kind": "pick",
@@ -674,8 +696,7 @@
         "solid_box"
       ],
       "correct": "solid_box",
-      "difficulty": 0.2,
-      "rep": "concrete"
+      "difficulty": 0.2
     },
     {
       "kind": "pick",
@@ -687,8 +708,7 @@
         "solid_box"
       ],
       "correct": "solid_box",
-      "difficulty": 0.3,
-      "rep": "concrete"
+      "difficulty": 0.3
     },
     {
       "kind": "pick",
@@ -705,7 +725,6 @@
         "pos_under": "M-SPACE-WORD"
       },
       "difficulty": 0.2,
-      "rep": "pictorial",
       "correct_text": "כֵּן! הַכַּדּוּר עַל הַקֻּפְסָה.",
       "h3": "הַכַּדּוּר נִמְצָא מֵעַל הַקֻּפְסָה, וְנוֹגֵעַ בָּהּ. עַכְשָׁו תּוֹרְכֶם."
     },
@@ -724,7 +743,6 @@
         "pos_on": "M-SPACE-WORD"
       },
       "difficulty": 0.25,
-      "rep": "pictorial",
       "correct_text": "כֵּן! הַכַּדּוּר מִתַּחַת לַשֻּׁלְחָן.",
       "h3": "הַשֻּׁלְחָן לְמַעְלָה, וְהַכַּדּוּר מִתַּחְתָּיו. עַכְשָׁו תּוֹרְכֶם."
     },
@@ -743,7 +761,6 @@
         "pos_on": "M-SPACE-WORD"
       },
       "difficulty": 0.25,
-      "rep": "pictorial",
       "correct_text": "כֵּן! הַכַּדּוּר בְּתוֹךְ הַקֻּפְסָה.",
       "h3": "הַכַּדּוּר בִּפְנִים, בְּתוֹךְ הַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם."
     },
@@ -763,7 +780,6 @@
         "pos_on": "M-SPACE-WORD"
       },
       "difficulty": 0.3,
-      "rep": "pictorial",
       "correct_text": "כֵּן! הַכַּדּוּר לְיַד הַקֻּפְסָה.",
       "h3": "הַכַּדּוּר עוֹמֵד לְצַד הַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם."
     },
@@ -802,7 +818,7 @@
       "others": [
         [
           "square",
-          "blue"
+          "red"
         ],
         [
           "triangle",
@@ -810,7 +826,10 @@
         ]
       ],
       "pos": 0,
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "shape_square_red": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "shape",
@@ -823,15 +842,16 @@
       "others": [
         [
           "circle",
-          "green"
+          "yellow"
         ],
-        [
-          "square",
-          "green"
-        ]
+        "shape_open"
       ],
       "pos": 2,
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "shape_circle_yellow": "M-COL-ONEATTR",
+        "shape_open": "M-SHP-CLOSED"
+      }
     },
     {
       "kind": "shape",
@@ -844,15 +864,18 @@
       "others": [
         [
           "triangle",
-          "orange"
+          "blue"
         ],
         [
-          "circle",
+          "rect",
           "orange"
         ]
       ],
       "pos": 1,
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "shape_triangle_blue": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "shape",
@@ -863,7 +886,7 @@
       "colour": "yellow",
       "others": [
         [
-          "circle",
+          "rect",
           "yellow"
         ],
         [
@@ -886,13 +909,13 @@
           "circle",
           "green"
         ],
-        [
-          "rect",
-          "green"
-        ]
+        "shape_open"
       ],
       "pos": 2,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "shape_open": "M-SHP-CLOSED"
+      }
     },
     {
       "kind": "pick",
@@ -1004,7 +1027,8 @@
         "shape_triangle_red"
       ],
       "correct": "shape_circle_red",
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "check": "reverse"
     },
     {
       "kind": "pick",
@@ -1052,8 +1076,7 @@
         "ball_blue"
       ],
       "correct": "ball_blue",
-      "difficulty": 0.2,
-      "rep": "concrete"
+      "difficulty": 0.2
     },
     {
       "kind": "pick",
@@ -1065,8 +1088,7 @@
         "solid_box"
       ],
       "correct": "solid_box",
-      "difficulty": 0.25,
-      "rep": "concrete"
+      "difficulty": 0.25
     },
     {
       "kind": "pick",
@@ -1083,7 +1105,6 @@
         "pos_on": "M-SPACE-WORD"
       },
       "difficulty": 0.35,
-      "rep": "pictorial",
       "correct_text": "כֵּן! הַכַּדּוּר מֵעַל הַקֻּפְסָה.",
       "h3": "הַכַּדּוּר גָּבוֹהַּ יוֹתֵר, וְלֹא נוֹגֵעַ בַּקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם."
     },
@@ -1102,7 +1123,6 @@
         "pos_next": "M-SPACE-WORD"
       },
       "difficulty": 0.3,
-      "rep": "pictorial",
       "correct_text": "כֵּן! הַכַּדּוּר בְּתוֹךְ הַקֻּפְסָה.",
       "h3": "הַכַּדּוּר בִּפְנִים, בְּתוֹךְ הַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם."
     },
@@ -1386,8 +1406,7 @@
         "ball_blue"
       ],
       "correct": "solid_box",
-      "difficulty": 0.3,
-      "rep": "concrete"
+      "difficulty": 0.3
     }
   ],
   "firstSequence": 1,

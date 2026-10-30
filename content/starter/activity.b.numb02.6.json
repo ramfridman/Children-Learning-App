@@ -14,7 +14,7 @@
     }
   ],
   "purpose": "learn",
-  "checkType": "practice",
+  "checkType": "reverse",
   "representation": "symbolic",
   "variantGroup": "next-number",
   "difficulty": {

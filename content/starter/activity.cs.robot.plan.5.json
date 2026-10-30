@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "embodied",
+  "representation": "symbolic",
   "variantGroup": "robot",
   "difficulty": {
     "authored": 0.4

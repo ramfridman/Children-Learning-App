@@ -221,12 +221,16 @@
         "count": 1
       },
       "options": [
-        "balloon_green",
+        "balloon_orange",
         "balloon_red",
-        "balloon_blue"
+        "ball_blue"
       ],
       "correct": "balloon_red",
-      "difficulty": 0.05
+      "difficulty": 0.05,
+      "tags": {
+        "balloon_orange": "M-COL-NAME",
+        "ball_blue": "M-SORT-SHIFT"
+      }
     },
     {
       "kind": "pick",
@@ -238,12 +242,16 @@
         "count": 1
       },
       "options": [
-        "balloon_yellow",
-        "balloon_red",
+        "balloon_purple",
+        "ball_red",
         "balloon_blue"
       ],
       "correct": "balloon_blue",
-      "difficulty": 0.05
+      "difficulty": 0.05,
+      "tags": {
+        "balloon_purple": "M-COL-NAME",
+        "ball_red": "M-SORT-SHIFT"
+      }
     },
     {
       "kind": "pick",
@@ -255,12 +263,16 @@
         "count": 1
       },
       "options": [
-        "balloon_green",
+        "balloon_orange",
         "balloon_yellow",
-        "balloon_blue"
+        "ball_blue"
       ],
       "correct": "balloon_yellow",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "balloon_orange": "M-COL-NAME",
+        "ball_blue": "M-SORT-SHIFT"
+      }
     },
     {
       "kind": "pick",
@@ -272,12 +284,16 @@
         "count": 1
       },
       "options": [
-        "ball_red",
-        "ball_yellow",
+        "bloom_red",
+        "ball_blue",
         "ball_green"
       ],
       "correct": "ball_green",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "bloom_red": "M-SORT-SHIFT",
+        "ball_blue": "M-COL-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -285,12 +301,16 @@
       "skill": "COL-A-02",
       "prompt": "אֵיפֹה הַכַּדּוּר הָאָדֹם?",
       "options": [
-        "ball_blue",
+        "balloon_red",
         "ball_red",
-        "ball_yellow"
+        "ball_orange"
       ],
       "correct": "ball_red",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "balloon_red": "M-COL-ONEATTR",
+        "ball_orange": "M-COL-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -300,10 +320,14 @@
       "options": [
         "balloon_green",
         "balloon_blue",
-        "balloon_red"
+        "ball_blue"
       ],
       "correct": "balloon_blue",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "balloon_green": "M-COL-NAME",
+        "ball_blue": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "pick",
@@ -312,11 +336,15 @@
       "prompt": "אֵיפֹה הַפֶּרַח הַצָּהֹב?",
       "options": [
         "bloom_yellow",
-        "bloom_blue",
-        "bloom_green"
+        "ball_yellow",
+        "bloom_orange"
       ],
       "correct": "bloom_yellow",
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "ball_yellow": "M-COL-ONEATTR",
+        "bloom_orange": "M-COL-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -324,12 +352,16 @@
       "skill": "COL-A-02",
       "prompt": "אֵיפֹה הַכַּדּוּר הַיָּרֹק?",
       "options": [
-        "ball_red",
+        "balloon_green",
         "ball_blue",
         "ball_green"
       ],
       "correct": "ball_green",
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "balloon_green": "M-COL-ONEATTR",
+        "ball_blue": "M-COL-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -404,12 +436,16 @@
       "skill": "COL-A-03",
       "prompt": "אֵיפֹה הַכַּדּוּר הַשָּׁחֹר?",
       "options": [
-        "ball_white",
+        "ball_grey",
         "ball_black",
-        "ball_blue"
+        "balloon_black"
       ],
       "correct": "ball_black",
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "ball_grey": "M-COL-NAME",
+        "balloon_black": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "pick",
@@ -619,12 +655,15 @@
         "count": 1
       },
       "options": [
-        "ball_blue",
+        "ball_orange",
         "ball_yellow",
         "ball_green"
       ],
       "correct": "ball_yellow",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "ball_orange": "M-COL-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -642,7 +681,10 @@
         "ball_green"
       ],
       "correct": "ball_green",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "ball_blue": "M-COL-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -672,7 +714,11 @@
         "ball_red"
       ],
       "correct": "apple_green",
-      "difficulty": 0.35
+      "difficulty": 0.35,
+      "tags": {
+        "ball_green": "M-COL-ONEATTR",
+        "ball_red": "M-COL-OBJECT"
+      }
     },
     {
       "kind": "cmatch",
@@ -682,11 +728,11 @@
       "colour": "green",
       "other": "balloon",
       "others": [
-        "red",
         "blue"
       ],
       "pos": 2,
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "shift": "red"
     },
     {
       "kind": "cmatch",
@@ -696,11 +742,11 @@
       "colour": "red",
       "other": "ball",
       "others": [
-        "blue",
-        "yellow"
+        "orange"
       ],
       "pos": 0,
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "shift": "blue"
     },
     {
       "kind": "cfind",
@@ -813,11 +859,14 @@
       },
       "options": [
         "ball_green",
-        "ball_blue",
+        "ball_orange",
         "ball_yellow"
       ],
       "correct": "ball_yellow",
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "ball_orange": "M-COL-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -831,11 +880,15 @@
       },
       "options": [
         "ball_red",
-        "ball_blue",
-        "ball_purple"
+        "ball_orange",
+        "ball_pink"
       ],
       "correct": "ball_red",
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "ball_orange": "M-COL-NAME",
+        "ball_pink": "M-COL-NAME"
+      }
     },
     {
       "kind": "cfind",

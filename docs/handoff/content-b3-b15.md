@@ -81,3 +81,68 @@ Written 2026-10-30 by the orchestrator when the owner asked to restart with his 
    M-SHP-FACE) as part of B-5.
 6. Voice on or off for SHP-B-08/09 (now `voiceAnswer: false`, so the קופסה matcher is not reachable yet).
 7. Release: pack 0.10.0 signed with his key and published together with the next app version.
+8. P2 to P4 for Band A is now **high priority**: today's `fb.sort_shift` says "we look for the same colour" in LOG-A-03,
+   the LOG-A-01 spots and the SHP-A-02 spots, where the rule is kind or shape (curriculum-expert recommends P3 and P4).
+9. P1: keeping Band A spots on today's `k_spot` h3 contradicts the spec's H-A.
+10. The 9 existing rows with `פַּרְפָּר` (singular, wrong qamatz): `activity.count.butterflies.3`, `.4`, `.5` and the
+    `lesson.butterflies` celebration (ids in `b15-hebrew.md` §6.7); screen nikud only, no re-voicing.
+11. V1 for LOG-B-08 (`הִיא` after the noun, `אִם לֹא` instead of `אַחֶרֶת`); the two new prompts follow his choice.
+
+## Update 2026-10-30 (second session): step 1 done, part 1 built, part 2 not started
+
+The owner wound this session down after B-15 part 1; one orchestrator session ("Implementation status review") takes over.
+
+- **Step 1 done:** the curriculum-expert's `## Addendum after the Hebrew pass` (A1 to A6) at the end of
+  `docs/knowledge/b15-content-spec.md`. New targets: **203 new activities** (189 checks, 14 second representations),
+  **32 relabels** to a check, 85 check-label changes. The hebrew-text-editor's `## 6. After the curriculum addendum` in
+  `docs/knowledge/b15-hebrew.md` has the final text for every string the addendum changed (X1a to X1c dropped).
+- **Part 1** (app-developer: the skill-id band validator rule, G1 to G5, the A5 `rule` field mechanism, relabels, tagged
+  distractors): see the part 1 commit message for counts and what was verified.
+- **Known red on this branch (by design, do not weaken the rule):** the band rule refuses the bundled owner-signed
+  `starter-0.9.0` pack (18 Band B story activities, `b.mathb01.1–12` and `b.mathb02.1–6`, were marked Band A by a
+  `pick_spec` bug, now fixed in the sources). `lib/app/state.dart` checks the bundled pack with `verifyPack`, so about
+  20 test files that load it fail in setUpAll (`starter_pack_test`, `playthrough_test`, `template_sessions_playthrough_test`,
+  `voice_answer_pack_test`, …). The rule can only merge together with the owner-signed 0.10.0 pack.
+- `tools/test_hebrew_sources.py` fails `test_done_rows_have_ui_text` (292 position-keyed rows: 159 tag lines shifted,
+  133 option labels re-keyed; no text changed) until the review tables are regenerated (step 5).
+- Part 1 open points for the curriculum-expert: M-CNT-CARD has no fitting line outside give-N (`vo:fb.card` is the give-N
+  line), so it stays untagged in MATH-A-01/02, MATH-B-01/03/06/07/08/10 until part 2 adds a `tag_lines` line per context;
+  confirm the values chosen for COL-A-01/02/03/05, LOG-A-01, SHP-A-01/02 (in `content/units/*.json`); SHP-A-05
+  `sign.shape` and `window.shape` as reverse checks too? Tags: 140 of 193 (target 150; MATH-B-10 6, NUM-A-08 3 and
+  SHP-A-02 1 held for lack of a fitting line). Mastery with `QA_OPEN=true`: 84 of 100 unreachable (was 91).
+- Part 2 also: add `SORT_SHIFT_BY_RULE['shape' / 'kind']` in `tools/author.py` with the editor's text and set
+  `rule: shape` on COL-B-04 items 2 and 4, LOG-B-08 items 3 and 4 and the new items; add H30 through `tag_lines`;
+  NUM-B-16's pictures, hints and check (its §4 option values and tags are in).
+
+### Brief for B-15 part 2 (app-developer; not started)
+
+Read the spec §1 to §6 **and** the addendum A1 to A6 (the addendum replaces the §1 rows it names), and
+`b15-hebrew.md` §1 to §6 (§6 wins over earlier sections). Build the 203 new activities, appended after each skill's
+existing items so existing ids keep their numbers, with the Hebrew exactly as written; new files `review: needs-editor`;
+every new P/X/H line its own vo id. P1 to P4 stay out of Band A (Band A keeps today's lines). Then
+`tools/regen_content.py` (twice, byte-identical), pack version 0.10.0, a LOCAL build signed with a throw-away key made
+through the library (`generateKeyFile`) in the session scratchpad (never `pack_builder keygen`, never the owner's key,
+never publish, do not replace the bundled 0.9.0 pack), and `mastery_reachable_test.dart` with `QA_OPEN=true`: target all
+100 reachable and `graph.report()` empty, then remove the skips. Points from the Hebrew re-check:
+
+1. **LOG-B-08 rectangle rule:** a square is also a rectangle, so that item's pool must hold **no squares**; today's
+   pool has two squares and no `shape_rect_*` (use `shape_rect_*` sprites; the curriculum-expert confirms the pool).
+2. **CS-A-01 hands (A1):** answer `step_towel`; the prompt is the editor's new one without `מִיָּד`
+   (`רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים אַחֲרֵי הַסַּבּוֹן?`); teeth (H11a) keeps `מִיָּד`. The tap picture should read as
+   "opening the tap" (design-director).
+3. **SHP-B-09 (A2):** two two-option items, {solid_cylinder, solid_box} and {solid_cone, solid_box}, both with H21.
+4. **CS-A-03:** write the solutions up first (up×3 then right; up×3 then left×2), so "towards the flag" is a straight line.
+5. **LOG-B-09:** use the reviewed h3 `מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא…`, not the generator's old `צָרִיךְ שֶׁגַּם…`; the red and
+   orange squares of the second item must look clearly different (design-director).
+6. **fb.sort_shift (A5):** `vo:fb.sort_shift.shape` (P4's text) and `.kind` (P3's text) in Band B only, fired only when
+   the child sorted by the wrong attribute (`.shape` when the child sorted by colour); Band A and Band B colour items
+   keep today's line.
+7. **Butterfly:** the singular is `פַּרְפַּר` (A6 copied a slip with qamatz); use §6.5's forms for chick, butterfly,
+   frog and shoe. Never merge Band B's `תֵּבָה` into a Band A unit (`solid_box` says `קֻפְסָה` in Band A).
+8. LOG-B-08's two new prompts follow the owner's V1 choice; until then, build them in the form the existing four use.
+9. Check that `bowl` and `cloud` have a `def` entry in `logic.json` for LOG-A-09.
+
+After part 2: one QA pass over B-3 and B-15 (plus the §5.3 and label-rule lints of H-E), the security review (the
+validator rule, the קופסה accepted-word path, the pack), regenerate `docs/review/*` (`tools/export-hebrew-review.py`,
+then `tools/hebrew_voice_review.py`), the PLAN.md bullet, analyze, format, full tests, then push the branch (no PR or
+merge without the owner).

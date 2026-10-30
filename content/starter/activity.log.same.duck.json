@@ -52,12 +52,14 @@
       {
         "id": "o2",
         "sprite": "asset:bird",
-        "label": "צִפּוֹר"
+        "label": "צִפּוֹר",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o3",
-        "sprite": "asset:cat",
-        "label": "חָתוּל"
+        "sprite": "asset:ball_yellow",
+        "label": "כַּדּוּר צָהֹב",
+        "misconception": "M-COL-ONEATTR"
       }
     ],
     "correct": "o1",
@@ -76,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

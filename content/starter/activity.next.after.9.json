@@ -39,12 +39,14 @@
       {
         "id": "o1",
         "numeral": 8,
-        "label": "שְׁמוֹנֶה"
+        "label": "שְׁמוֹנֶה",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o2",
         "numeral": 9,
-        "label": "תֵּשַׁע"
+        "label": "תֵּשַׁע",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o3",
@@ -68,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SEQ",
+        "vo": "vo:fb.seq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

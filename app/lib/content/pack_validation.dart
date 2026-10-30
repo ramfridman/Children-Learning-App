@@ -214,6 +214,12 @@ List<Problem> validatePack({
     for (final (int i, Map<String, Object?> s) in _maps(a['skills']).indexed) {
       checkSkill(file, 'skills[$i].id', s['id']);
     }
+    // The first skill is the one the activity teaches; its band is the activity's band.
+    final List<Map<String, Object?>> taught = _maps(a['skills']);
+    final Object? taughtBand = taught.isEmpty ? null : skills[taught.first['id']]?['band'];
+    if (taughtBand != null && taughtBand != a['band']) {
+      say(file, 'band', 'is ${a['band']}, but its skill ${taught.first['id']} is in band $taughtBand');
+    }
     final Map<String, Object?> prompt = a['prompt']! as Map<String, Object?>;
     checkVo(file, 'prompt.vo', prompt['vo']);
     checkTag(file, 'contradicts', a['contradicts']);
@@ -600,6 +606,10 @@ List<Problem> validatePack({
     }
     for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
       checkSkill(file, 'skills[$i]', s);
+      final Object? band = skills[s]?['band'];
+      if (band != null && band != l['band']) {
+        say(file, 'skills[$i]', 'the skill $s is in band $band, but the lesson is in band ${l['band']}');
+      }
     }
     final Map<String, Object?> cel = l['celebration']! as Map<String, Object?>;
     checkVo(file, 'celebration.vo', cel['vo']);
@@ -608,6 +618,7 @@ List<Problem> validatePack({
 
   skills.forEach((String id, Map<String, Object?> s) {
     final String file = 'skill.$id.json';
+    _skillId(file, id, s, say);
     for (final (int i, Map<String, Object?> p) in _maps(s['prerequisites']).indexed) {
       if (p['skill'] == id) say(file, 'prerequisites[$i].skill', 'a skill cannot need itself');
     }
@@ -841,6 +852,40 @@ String _look(Map<String, Object?> o) {
 }
 
 final RegExp _jsonName = RegExp(r'^([a-z]+)\.(.+)\.json$');
+
+/// The code each domain's skill ids start with (NUM-A-01, MATH-B-07, COL-A-02, SHP-B-03, LOG-A-10, CS-B-04).
+const Map<String, String> skillDomainCodes = <String, String>{
+  'numbers': 'NUM',
+  'math': 'MATH',
+  'colors': 'COL',
+  'shapes': 'SHP',
+  'logic': 'LOG',
+  'cs': 'CS',
+};
+
+final RegExp _skillIdPattern = RegExp(r'^([A-Z]+)-([ABC])-(\d{2})$');
+
+/// A skill id is `<DOMAIN>-<BAND>-<NN>`: the code of the skill's own domain, its own band letter and two digits
+/// (board B-15). The schema only asks for the shape; this checks that the id says what the skill file says.
+void _skillId(String file, String id, Map<String, Object?> s, void Function(String, String, String) say) {
+  final RegExpMatch? m = _skillIdPattern.firstMatch(id);
+  final String? code = skillDomainCodes[s['domain']];
+  if (m == null || !skillDomainCodes.containsValue(m[1])) {
+    say(
+      file,
+      'id',
+      '"$id" must be <DOMAIN>-<BAND>-<NN>, with a domain of ${skillDomainCodes.values.join(', ')}',
+    );
+    return;
+  }
+  if (m[1] != code) {
+    say(file, 'id', '"$id" starts with ${m[1]}, but the skill is in the domain ${s['domain']} ($code)');
+  }
+  if (m[2] != s['band']) {
+    say(file, 'id', '"$id" has the band letter ${m[2]}, but the skill is in band ${s['band']}');
+  }
+}
+
 String _range(int from, int to) => '${String.fromCharCode(from)}-${String.fromCharCode(to)}';
 
 // Letters U+05D0 to U+05EA, points U+05B0 to U+05C7; geresh, gershayim and maqaf may sit inside a word.

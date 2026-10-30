@@ -236,7 +236,8 @@
     "M-PAT-NEXT": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא.",
     "M-SEQ-CAUSE": "בּוֹאוּ נַחְשֹׁב: מַה קּוֹרֶה קֹדֶם, וּמָה אַחַר כָּךְ?",
     "M-SER-ENDS": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.",
-    "M-PAT-COPY": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?"
+    "M-PAT-COPY": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?",
+    "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
   },
   "misconceptions": [
     {
@@ -449,7 +450,11 @@
         "duck"
       ],
       "correct": "cat",
-      "difficulty": 0.05
+      "difficulty": 0.05,
+      "tags": {
+        "dog": "M-COL-ONEATTR",
+        "duck": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "pick",
@@ -461,12 +466,16 @@
         "count": 1
       },
       "options": [
-        "fish",
-        "apple",
+        "ball_yellow",
+        "balloon_yellow",
         "star"
       ],
       "correct": "star",
-      "difficulty": 0.05
+      "difficulty": 0.05,
+      "tags": {
+        "ball_yellow": "M-COL-ONEATTR",
+        "balloon_yellow": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "pick",
@@ -480,10 +489,14 @@
       "options": [
         "duck",
         "bird",
-        "cat"
+        "ball_yellow"
       ],
       "correct": "duck",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "bird": "M-COL-ONEATTR",
+        "ball_yellow": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "pick",
@@ -1238,11 +1251,15 @@
       "skill": "LOG-A-01",
       "ref": "apple",
       "others": [
-        "fish",
-        "star"
+        "ball_red",
+        "balloon_red"
       ],
       "pos": 2,
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "ball_red": "M-COL-ONEATTR",
+        "balloon_red": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "same",
@@ -1251,10 +1268,14 @@
       "ref": "bird",
       "others": [
         "duck",
-        "dog"
+        "ball_blue"
       ],
       "pos": 0,
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "duck": "M-COL-ONEATTR",
+        "ball_blue": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "same",
@@ -1266,7 +1287,11 @@
         "ball_red"
       ],
       "pos": 1,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "balloon_blue": "M-COL-ONEATTR",
+        "ball_red": "M-COL-ONEATTR"
+      }
     },
     {
       "kind": "odd",

@@ -6,7 +6,7 @@
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "math",
-  "band": "A",
+  "band": "B",
   "skills": [
     {
       "id": "MATH-B-02",
@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "concrete",
+  "representation": "pictorial",
   "variantGroup": "sum",
   "difficulty": {
     "authored": 0.44

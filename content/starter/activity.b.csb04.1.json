@@ -14,8 +14,8 @@
     }
   ],
   "purpose": "check",
-  "checkType": "reverse",
-  "representation": "embodied",
+  "checkType": "error_spotting",
+  "representation": "symbolic",
   "variantGroup": "spot",
   "difficulty": {
     "authored": 0.37

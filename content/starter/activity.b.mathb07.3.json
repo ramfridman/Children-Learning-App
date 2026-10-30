@@ -46,13 +46,15 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 8,
-        "label": "שְׁמוֹנֶה"
+        "numeral": 0,
+        "label": "אֶפֶס",
+        "misconception": "M-NUM-ZERO"
       },
       {
         "id": "o2",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "numeral": 6,
+        "label": "שֵׁשׁ",
+        "misconception": "M-NUM-ZERO"
       },
       {
         "id": "o3",
@@ -76,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NUM-ZERO",
+        "vo": "vo:fb.zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

@@ -24,8 +24,8 @@
     }
   ],
   "representations": [
-    "concrete",
-    "symbolic"
+    "symbolic",
+    "pictorial"
   ],
   "misconceptions": [
     "M-EQ-OPER"

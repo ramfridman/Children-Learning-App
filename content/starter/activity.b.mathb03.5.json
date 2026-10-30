@@ -46,8 +46,8 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 10,
-        "label": "עֶשֶׂר"
+        "numeral": 7,
+        "label": "שֶׁבַע"
       },
       {
         "id": "o2",
@@ -57,7 +57,8 @@
       {
         "id": "o3",
         "numeral": 5,
-        "label": "חָמֵשׁ"
+        "label": "חָמֵשׁ",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o2",
@@ -76,6 +77,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

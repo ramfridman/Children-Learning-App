@@ -45,7 +45,8 @@
       {
         "id": "o1",
         "sprite": "asset:shade_green_1",
-        "label": "יָרֹק בָּהִיר"
+        "label": "יָרֹק בָּהִיר",
+        "misconception": "M-SER-ENDS"
       },
       {
         "id": "o2",
@@ -55,7 +56,8 @@
       {
         "id": "o3",
         "sprite": "asset:shade_green_3",
-        "label": "יָרֹק כֵּהֶה"
+        "label": "יָרֹק כֵּהֶה",
+        "misconception": "M-SER-ENDS"
       }
     ],
     "correct": "o2",
@@ -74,6 +76,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

@@ -49,11 +49,13 @@
       },
       {
         "id": "o2",
-        "numeral": 2
+        "numeral": 2,
+        "misconception": "M-CNT-DOUBLE"
       },
       {
         "id": "o3",
-        "numeral": 3
+        "numeral": 0,
+        "misconception": "M-CNT-SKIP"
       }
     ],
     "correct": "o1",
@@ -72,6 +74,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SKIP",
+        "vo": "vo:fb.skip_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
