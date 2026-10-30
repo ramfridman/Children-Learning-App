@@ -36,3 +36,8 @@ id = "nitznutz-firebase-service-account"
 description = "Google service account key file"
 regex = '''"private_key_id"\s*:\s*"[a-f0-9]{40}"'''
 keywords = ["private_key_id"]
+
+[[allowlists]]
+description = "SHA-256 of the public ivrit.ai tokens.txt (model_spec.dart); a hash, not a key"
+regexTarget = "match"
+regexes = ['''e4ebb5e72a6aeef47437a55fa2308ebbedb7c51c557de7a89bf965c23ea9af4a''']
