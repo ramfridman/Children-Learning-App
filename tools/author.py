@@ -143,8 +143,10 @@ SIZE_BY_CUE = {
 SORT_SHIFT_BY_RULE = {
     'shape': ('vo:fb.sort_shift.shape', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק.'),
     'kind': ('vo:fb.sort_shift.kind', 'זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.'),
+    # The editor's P5 (b15-hebrew.md §7): the size sorts of LOG-A-03; `proposed` until the owner signs it.
+    'size': ('vo:fb.sort_shift.size', 'זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל. בּוֹאוּ נִבְדֹּק.'),
 }
-SORT_RULES = ('colour', 'shape', 'kind')
+SORT_RULES = ('colour', 'shape', 'kind', 'size')
 ALMOST = ('vo:fb.almost', 'כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב.')
 UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד.')
 
