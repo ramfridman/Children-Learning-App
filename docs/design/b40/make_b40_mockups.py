@@ -17,8 +17,10 @@ References looked at before drawing (facts, not copied images):
 - The hand, fingers, swatch, frames, strips, towers and badges are our own drawings in plain shapes. No text in a picture
   except the numerals the app itself draws on badges and tiles (Heebo).
 """
+import math
 import os
 import subprocess
+import sys
 import tempfile
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..'))
@@ -27,6 +29,9 @@ TMP = os.environ.get('B40_TMP', os.path.join(tempfile.gettempdir(), 'b40_mock_ht
 CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
 SPR = 'file:///' + os.path.join(ROOT, 'content', 'starter').replace('\\', '/') + '/'
 GOLD = 'file:///' + os.path.join(ROOT, 'app', 'test', 'goldens').replace('\\', '/') + '/'
+HINTS = 'file:///' + os.path.join(ROOT, 'app', 'assets', 'art', 'hints').replace('\\', '/') + '/'
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import make_hint_hands as HH  # noqa: E402  (the hand art's geometry: the pointer's fingertip, the finger tips)
 FONT = 'file:///' + os.path.join(ROOT, 'app', 'assets', 'fonts', 'Heebo-Variable.ttf').replace('\\', '/')
 
 # tokens (design/tokens.json)
@@ -71,46 +76,43 @@ def badge(cx, cy, n, r=11, big=False):
 
 
 def hand(x, y, s=0.85, rot=0, ripple=True):
-    """The one neutral pointing hand (D1): sky-tint fill, sky-deep outline, fingertip at (x, y), arriving from the
-    upper right (the guide's side in RTL). No cuff, no glove stitching: it must not read as any cartoon glove."""
-    st = 'fill="%s" stroke="%s" stroke-width="%.1f" stroke-linejoin="round"' % (SKYTINT, SKYDEEP, 2.6 / s)
-    g = ['<g transform="translate(%.1f %.1f) rotate(%d) scale(%.2f)">' % (x, y, rot, s)]
+    """The one neutral pointing hand (P12), the app's own art `app/assets/art/hints/hand_point.svg` (version 2,
+    2026-10-31), its fingertip on (x, y), arriving from the upper right (the guide's side). s=0.85 is the phone size,
+    66 pt tall. `rot` turns it about the fingertip."""
+    h = 66 * s / 0.85
+    k = h / HH.POINT_VB[1]
+    g = ['<g transform="translate(%.1f %.1f) rotate(%d)">' % (x, y, rot)]
     if ripple:
         g.append('<circle cx="0" cy="0" r="10" fill="none" stroke="%s" stroke-width="2.5" opacity=".9"/>' % SKY)
         g.append('<circle cx="0" cy="0" r="17" fill="none" stroke="%s" stroke-width="2" opacity=".45"/>' % SKY)
-    g.append('<rect x="5" y="-80" width="18" height="30" rx="8" %s/>' % st)          # wrist
-    g.append('<rect x="-8" y="-58" width="34" height="34" rx="12" %s/>' % st)        # back of the hand
-    g.append('<circle cx="13" cy="-22" r="6.5" %s/>' % st)                          # curled middle
-    g.append('<circle cx="20" cy="-24" r="6" %s/>' % st)                            # curled ring
-    g.append('<circle cx="25.5" cy="-28" r="5" %s/>' % st)                          # curled little finger
-    g.append('<ellipse cx="-8" cy="-36" rx="5" ry="10" transform="rotate(-38 -8 -36)" %s/>' % st)  # thumb, along the index
-    g.append('<rect x="-6.5" y="-42" width="13" height="43" rx="6.5" %s/>' % st)    # index finger, long
-    g.append('<rect x="-3.5" y="-9" width="7" height="6" rx="3" fill="%s"/>' % PAPER)  # nail highlight
+    g.append('<image href="%shand_point.svg" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>' % (
+        HINTS, -HH.POINT_TIP[0] * k, -HH.POINT_TIP[1] * k, HH.POINT_VB[0] * k, h))
     g.append('</g>')
     return ''.join(g)
 
 
-def counting_hand(x, y, raised, right=False, s=1.0):
-    """A hand for counting (D2), seen from the back, fingers up, origin at the wrist centre. The left hand stands on the
-    left with its thumb toward the middle; the right hand mirrors it. Fingers rise index, middle, ring, little, thumb."""
-    st = 'fill="%s" stroke="%s" stroke-width="2" stroke-linejoin="round"' % (SPARKTINT, INK)
-    order = ['index', 'middle', 'ring', 'little', 'thumb']
-    up = set(order[:raised])
-    fx = {'little': -14, 'ring': -5, 'middle': 4, 'index': 13}
-    fh = {'little': 22, 'ring': 29, 'middle': 32, 'index': 29}
-    g = ['<g transform="translate(%.1f %.1f) scale(%s %.2f)">' % (x, y, ('-%.2f' % s) if right else ('%.2f' % s), s)]
-    for f in ['little', 'ring', 'middle', 'index']:
-        hgt = fh[f] if f in up else 7
-        fill = SPARK if f in up else SPARKTINT
-        g.append('<rect x="%.1f" y="%.1f" width="8.6" height="%.1f" rx="4.3" fill="%s" stroke="%s" stroke-width="2"/>' % (
-            fx[f] - 4.3, -36 - hgt + 4, hgt + 6, fill, INK))
-    if 'thumb' in up:
-        g.append('<rect x="14" y="-36" width="8.6" height="24" rx="4.3" transform="rotate(38 18 -14)" fill="%s" stroke="%s" stroke-width="2"/>' % (SPARK, INK))
-    else:
-        g.append('<ellipse cx="17" cy="-17" rx="4.5" ry="8" transform="rotate(-25 17 -17)" %s/>' % st)  # folded thumb, behind
-    g.append('<rect x="-19" y="-38" width="38" height="38" rx="13" %s/>' % st)
-    g.append('</g>')
-    return ''.join(g)
+HAND_VB = (112, 174)
+WRIST = {False: (45, 170), True: (67, 170)}   # the wrist's bottom centre in each counting hand's viewBox
+
+
+def counting_hand(x, y, raised, right=False, h=84):
+    """A counting hand (P3), the app's art `app/assets/art/hints/hand_left_k.svg` / `hand_right_k.svg`, seen from the
+    back, k fingers up (index, middle, ring, little, thumb). (x, y) is the bottom centre of the wrist; h its height."""
+    k = h / HAND_VB[1]
+    wx, wy = WRIST[right]
+    return '<image href="%shand_%s_%d.svg" x="%.1f" y="%.1f" width="%.1f" height="%.1f"/>' % (
+        HINTS, 'right' if right else 'left', raised, x - wx * k, y - wy * k, HAND_VB[0] * k, h)
+
+
+def fingertip(x, y, finger, right=False, h=84):
+    """Where a raised finger's tip is, for the dotted one-to-one lines (same placement as counting_hand)."""
+    k = h / HAND_VB[1]
+    wx, wy = WRIST[right]
+    f = HH.FINGERS[finger]
+    tx, ty = f['b'][0] + f['L'] * math.sin(math.radians(f['a'])) - 12, f['b'][1] - f['L'] * math.cos(math.radians(f['a'])) - 24
+    if right:
+        tx = HAND_VB[0] - tx
+    return x + (tx - wx) * k, y + (ty - wy) * k
 
 
 def ten_frame(x, y, cell, n, counter=None, counter_scale=0.8):
@@ -240,8 +242,8 @@ def m1():
               phone_frame(body)))
     # L2: two hands, 5 and 2, in a hint card in the free answer area; every apple has its finger's dot
     body = stage(apples() + ''.join('<circle cx="%d" cy="%d" r="4" fill="%s"/>' % (x + 15, y - 16, SKYDEEP) for (x, y) in APPLES))
-    body += hint_card(150, 238, 260, 110)
-    body += counting_hand(235, 336, 5, s=1.15) + counting_hand(325, 336, 2, right=True, s=1.15)
+    body += hint_card(150, 236, 260, 114)
+    body += counting_hand(238, 343, 5, h=96) + counting_hand(322, 343, 2, right=True, h=96)
     body += arrow('M268 205 C268 225 300 240 314 262', None)
     f.append(('L2 Another way: two hands',
               'Under the apples a card opens with two hands; a finger rises for every apple that lights (a full hand, then two more). It says: the apples are as many as these fingers.',
@@ -295,11 +297,12 @@ def m2():
               'The flower and grass fade a little; the butterflies glow one after another, with no numbers. The tiles do not change. It says: these are what we count, each one once.',
               phone_frame(body)))
     # L2: a hand on the stage raises a finger as each butterfly lights; a sky line pairs each butterfly with its finger
+    tips = [fingertip(114, 218, f, h=106) for f in ('index', 'middle', 'ring')]
     body = stage(butterflies() + hint_card(78, 102, 82, 120).replace('rx="18"', 'rx="16"')
-                 + counting_hand(118, 212, 3, s=1.3)
-                 + ''.join('<path d="M%d %d Q %d %d %d %d" fill="none" stroke="%s" stroke-width="3.5" stroke-dasharray="1 7" stroke-linecap="round"/>' % (
-                     x - 18, y, (x + 120) / 2, y - 10, tx, ty, SKYDEEP)
-                     for (x, y), (tx, ty) in zip(BUTTER, [(135, 133), (123, 129), (112, 133)])))
+                 + counting_hand(114, 218, 3, h=106)
+                 + ''.join('<path d="M%d %d Q %.1f %.1f %.1f %.1f" fill="none" stroke="%s" stroke-width="3.5" stroke-dasharray="1 7" stroke-linecap="round"/>' % (
+                     x - 18, y, (x + tx) / 2, min(y, ty) - 14, tx, ty - 4, SKYDEEP)
+                     for (x, y), (tx, ty) in zip(BUTTER, tips)))
     body += tiles_432()
     f.append(('L2 Another way: fingers',
               'A small hand stands at the side of the scene; each butterfly glows and a dotted line runs from it to a finger that rises. It says: one finger for each butterfly. The tiles still look the same.',
@@ -610,7 +613,7 @@ def m0():
     cells.append(cell(1, 'P2 light each', ''.join(img('apple', 30 + k * 40, 70, 34, 34) for k in range(4))
                       + halo_circle(127, 87, 21) + img('apple', 110, 70, 34, 34)
                       + ''.join('<circle cx="%d" cy="70" r="4" fill="%s"/>' % (62 + k * 40, SKYDEEP) for k in range(2))))
-    cells.append(cell(2, 'P3 two hands (5 and k)', counting_hand(75, 130, 5, s=1.1) + counting_hand(140, 130, 3, right=True, s=1.1)))
+    cells.append(cell(2, 'P3 two hands (5 and k)', counting_hand(64, 140, 5, h=98) + counting_hand(150, 140, 3, right=True, h=98)))
     cells.append(cell(3, 'P4 ten-frames', ten_frame(22, 60, 16, 10) + ten_frame(110, 60, 16, 4) + text(105, 120, '(counters fill like the number path, from the left)', size=9, weight=500, fill=INKSOFT)))
     p5 = ''.join(img('fish', 30 + k * 34, 46, 28, 28) for k in range(5)) + ''.join(img('duck', 30 + k * 34, 100, 28, 28) for k in range(3))
     p5 += ''.join('<line x1="%d" y1="76" x2="%d" y2="100" stroke="%s" stroke-width="2.5" stroke-dasharray="1 4" stroke-linecap="round"/>' % (44 + k * 34, 44 + k * 34, SKYDEEP) for k in range(3))
@@ -636,7 +639,7 @@ def m0():
     p11 += '<path d="M60 96 Q 75 66 90 96" fill="none" stroke="%s" stroke-width="3"/>' % SKYDEEP + badge(75, 62, 1, r=9)
     p11 += img('frog', 84, 76, 24, 24).replace('x="76.0"', 'x="77.0"').replace('y="74.0"', 'y="72.0"')
     cells.append(cell(10, 'P11 first step together', p11))
-    cells.append(cell(11, 'P12 the pointing hand', hand(110, 120, s=0.95)))
+    cells.append(cell(11, 'P12 the pointing hand', hand(96, 124, s=1.0)))
     body = ''.join(cells)
     svg = '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d">%s%s</svg>' % (4 * cw, 3 * ch, DEFS, body)
     return svg, 4 * cw, 3 * ch
@@ -669,6 +672,68 @@ def shoot(html, png, w, h):
                     '--screenshot=' + png, 'file:///' + html.replace('\\', '/')], check=True, capture_output=True)
 
 
+def hands_sheet():
+    """b40_hands_v3.png: every hand at phone size (1 px = 1 pt), the minimum size, two hands showing 7 in the hint card,
+    the pointing hand on an apple, a 3x look at the details, and a second skin tone (an offer, not shipped)."""
+    T2 = os.environ.get('B40_TONE2', '')
+    o = []
+    y = 0
+
+    def head(t, sub=''):
+        nonlocal y
+        o.append(text(20, y + 22, t, size=15, weight=800, anchor='start'))
+        if sub:
+            o.append(text(20, y + 40, sub, size=11.5, weight=500, fill=INKSOFT, anchor='start'))
+        y += 48 if sub else 32
+
+    head('Counting hands at phone size: 84 pt tall (54 x 84), 1 px = 1 pt',
+         'Seen from the back, as a child sees its own raised hands. Fingers rise index, middle, ring, little, thumb. Left hand on top, right hand below.')
+    for right in (False, True):
+        o.append('<rect x="16" y="%d" width="660" height="104" rx="18" fill="%s" stroke="%s" stroke-width="3"/>' % (y, SKYTINT, SKY))
+        for k in range(6):
+            o.append(counting_hand(70 + k * 108, y + 96, k, right=right, h=84))
+            o.append(text(108 + k * 108, y + 96, str(k), size=12, weight=700, fill=INKSOFT))
+        y += 114
+    head('The minimum (iPhone SE, 56 pt) and the tablet (116 pt)')
+    for k in range(6):
+        o.append(counting_hand(40 + k * 44, y + 60, k, h=56))
+    for k, right in ((5, False), (3, True)):
+        o.append(counting_hand(360 + (90 if right else 0), y + 120, k, right=right, h=116))
+    y += 132
+    head('Two hands show 7 in the hint card (count_tap L2, phone: card 260 x 114, hands 96 tall)')
+    o.append(hint_card(16, y, 260, 114))
+    o.append(counting_hand(104, y + 107, 5, h=96) + counting_hand(188, y + 107, 2, right=True, h=96))
+    ax = 300
+    for i in range(7):
+        o.append(img('apple', ax + (i % 4) * 40, y + 10 + (i // 4) * 50, 34, 34))
+        o.append('<circle cx="%d" cy="%d" r="4" fill="%s"/>' % (ax + (i % 4) * 40 + 32, y + 10 + (i // 4) * 50, SKYDEEP))
+    y += 128
+    head('The pointing hand (P12) touches an apple: 66 pt, fingertip on the target, from the side of the guide')
+    o.append('<rect x="16" y="%d" width="330" height="128" rx="22" fill="url(#skyg)"/>' % y)
+    o.append(img('apple', 60, y + 44, 44, 44) + img('apple', 140, y + 44, 44, 44) + img('apple', 220, y + 44, 44, 44))
+    o.append(halo_circle(162, y + 66, 26) + img('apple', 140, y + 44, 44, 44) + hand(166, y + 70, s=0.85))
+    o.append(hand(420, y + 112, s=0.85, ripple=False) + hand(520, y + 112, s=0.6, ripple=False))
+    o.append(text(420, y + 126, '66 pt', size=10, weight=600, fill=INKSOFT) + text(520, y + 126, '47 pt (SE min 40)', size=10, weight=600, fill=INKSOFT))
+    y += 140
+    head('A closer look (3x): the fist (0), hands 1 to 4 with the thumb tucked against the side, next to the good 5',
+         'Version 3: a folded thumb is hidden behind the hand; only its edge, its knuckle crease and a sliver of nail show at the side.')
+    for i, k in enumerate((0, 1, 2, 3, 4, 5)):
+        o.append(counting_hand(84 + i * 158, y + 255, k, h=252))
+        o.append(text(84 + i * 158, y + 274, '5 (the good hand)' if k == 5 else str(k), size=12, weight=700, fill=INKSOFT))
+    o.append(hand(1110, y + 230, s=0.85 * 3, ripple=False))
+    y += 290
+    if T2:
+        T2 = 'file:///' + T2.replace('\\', '/')
+        head('Offer: a second skin tone (character.kidSkin #C68B62), the same drawing', 'Not in the app. The files above use kidSkin #F1C7A5.')
+        for k in range(6):
+            o.append('<image href="%s/hand_left_%d.svg" x="%d" y="%d" width="54" height="84"/>' % (T2, k, 30 + k * 70, y))
+        o.append('<image href="%s/hand_right_2.svg" x="470" y="%d" width="54" height="84"/>' % (T2, y))
+        y += 96
+    W2 = 1220
+    svg = '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d">%s%s</svg>' % (W2, y, DEFS, ''.join(o))
+    return svg, W2, y
+
+
 def main():
     for fn in (m1, m2, m3, m4, m5, m6, m7):
         render(*fn())
@@ -679,6 +744,13 @@ def main():
                  '<p class="n">Grammar the child learns: a sky glow = look here (L1); a sky card with a new picture = another way (L2); '
                  'the sky hand = watch me (L3). Nothing is red, nothing marks an answer before L3.</p><div style="margin:0 20px">%s</div>' % (CSS, svg))
     shoot(html, os.path.join(OUT, 'b40_m0_shared_pictures.png'), w + 40, h + 90)
+    svg, w, h = hands_sheet()
+    html = os.path.join(TMP, 'b40_hands_v3.html')
+    with open(html, 'w', encoding='utf-8') as fh:
+        fh.write('<!doctype html><meta charset="utf-8"><style>%s</style><h1>B-40 hint hands, version 3 (2026-10-31): the folded thumb tucked against the side</h1>'
+                 '<p class="n">The art the app loads: app/assets/art/hints/hand_left_0..5, hand_right_0..5, hand_point (SVG). '
+                 'The sky halo and card are drawn by the app.</p><div style="margin:0 20px">%s</div>' % (CSS, svg))
+    shoot(html, os.path.join(OUT, 'b40_hands_v3.png'), w + 40, h + 80)
 
 
 if __name__ == '__main__':
