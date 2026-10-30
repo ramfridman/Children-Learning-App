@@ -54,7 +54,8 @@
       {
         "id": "o1",
         "sprite": "asset:apple",
-        "label": "תַּפּוּחַ"
+        "label": "תַּפּוּחַ",
+        "misconception": "M-CNT-SIZE"
       },
       {
         "id": "o2",
@@ -64,7 +65,8 @@
       {
         "id": "o3",
         "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם"
+        "label": "כַּדּוּר אָדֹם",
+        "misconception": "M-CNT-SIZE"
       }
     ],
     "correct": "o2",
@@ -83,6 +85,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SIZE",
+        "vo": "vo:fb.size",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

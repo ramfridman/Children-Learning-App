@@ -81,7 +81,9 @@ def extra_numbers():
     u.skill('NUM-B-07', 'כותבים מספרים', 'כּוֹתְבִים אֶת הַמִּסְפָּרִים', 'pool', ['NUM-A-08'], ['embodied', 'symbolic'], ['M-NUM-WRITE'])
     for guide in ('full', 'start'):
         for n in range(10):
-            u.act('NUM-B-07', 'trace', glyph=str(n), guide=guide, tol=12 if guide == 'full' else 11, domain='numbers',
+            # the free writing of 2 and 5 is the skill's transfer check (B-15 addendum A3)
+            check = {'check': 'transfer'} if guide == 'start' and n in (2, 5) else {}
+            u.act('NUM-B-07', 'trace', **check, glyph=str(n), guide=guide, tol=12 if guide == 'full' else 11, domain='numbers',
                   prompt='עוֹקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר %s.' % F[n] if guide == 'full' else 'כּוֹתְבִים אֶת הַמִּסְפָּר %s. מַתְחִילִים מֵהַנְּקֻדָּה.' % F[n],
                   dirTag='M-NUM-WRITE', h3='מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה וְהוֹלְכִים לְאַט אַחֲרֵי הַנְּקֻדּוֹת. עַכְשָׁו תּוֹרְכֶם.',
                   correct_text='כֵּן! כְּתַבְתֶּם אֶת הַמִּסְפָּר %s.' % F[n], difficulty=0.3 if guide == 'full' else 0.5)
@@ -162,28 +164,32 @@ def extra_math():
         chart = [list(c) for c in cols]
         if ask in ('most', 'least'):
             pick = max(cols, key=lambda c: c[1]) if ask == 'most' else min(cols, key=lambda c: c[1])
+            # B-15 §3: either other column (A4: never the bananas, which are always the answer here)
             u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=[s for s, _ in cols] if i % 3 == 0 else [s for s, _ in cols][1:] + [cols[0][0]],
-                  correct=pick[0], rep='pictorial', prompt='%s' % ('מִמָּה יֵשׁ הֲכִי הַרְבֵּה?' if ask == 'most' else 'מִמָּה יֵשׁ הֲכִי מְעַט?'),
+                  tags={s: 'M-CNT-SIZE' for s, _ in cols if s != pick[0]},
+                  correct=pick[0], prompt='%s' % ('מִמָּה יֵשׁ הֲכִי הַרְבֵּה?' if ask == 'most' else 'מִמָּה יֵשׁ הֲכִי מְעַט?'),
                   correct_text='כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ %s.' % ('הֲכִי גָּבוֹהַּ' if ask == 'most' else 'הֲכִי נָמוּךְ'),
                   h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן.' % ('בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה' if ask == 'most' else 'בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט'))
         elif ask == 'total':
             r = sum(counts)
             others = [x for x in (r - 1, r + 1, r + 2) if x != r][:2]
-            u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=['n:%d' % v for v in place(r, others, i % 3)], correct='n:%d' % r, rep='pictorial',
+            u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=['n:%d' % v for v in place(r, others, i % 3)], correct='n:%d' % r,
+                  tags={'n:%d' % (r - 1): 'M-CNT-SKIP', 'n:%d' % (r + 1): 'M-CNT-DOUBLE'},
                   voice=True, prompt='כַּמָּה יֵשׁ בְּסַךְ הַכֹּל בַּתַּרְשִׁים?', correct_text='%s! %s.' % (F[r], ' וְעוֹד '.join(F[c] for c in counts) + ' הֵם ' + F[r]),
                   h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (' וְעוֹד '.join(F[c] for c in counts) + ' הֵם ' + F[r], F[r]))
         else:
             big, small = max(counts), min(counts)
             d = big - small
             others = [x for x in (big, d + 1, d - 1) if x != d and x >= 0][:2]
-            u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=['n:%d' % v for v in place(d, others, i % 3)], correct='n:%d' % d, rep='pictorial',
+            u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=['n:%d' % v for v in place(d, others, i % 3)], correct='n:%d' % d,
                   voice=True, tags={'n:%d' % big: 'M-COMP-DIFF'}, prompt='כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?',
                   correct_text='%s! בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ עוֹד %s.' % (F[d], F[d]),
                   h3='%s פָּחוֹת %s שָׁוֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[big], F[small], F[d], F[d]))
 
     # setting the clock belongs to the reading skill that the Band B Math unit already made
     for i, (h, start, handsTag) in enumerate([(3, 12, True), (6, 3, True), (9, 6, True), (1, 7, True), (5, 11, True), (8, 2, True), (11, 4, True), (2, 9, True)]):
-        u.act('MATH-B-15', 'clock', domain='math', hour=h, minute=0, start=[start, False], tag='M-CLOCK-HANDS',
+        # setting the time reads the clock backwards: the reverse check of the reading skill (B-15 §1)
+        u.act('MATH-B-15', 'clock', domain='math', check='reverse', hour=h, minute=0, start=[start, False], tag='M-CLOCK-HANDS',
               prompt='מְכַוְּנִים אֶת הַשָּׁעוֹן לַשָּׁעָה %s.' % F[h], h3='הַמַּחֲוָג הַקָּצָר וְהָעָבֶה מַצְבִּיעַ עַל %s. עַכְשָׁו תּוֹרְכֶם.' % F[h],
               correct_text='כֵּן! הַשָּׁעָה %s.' % F[h])
     ids = lambda s, a=0, b=None: lesson_ids(u, s, a, b)

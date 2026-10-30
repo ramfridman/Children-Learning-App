@@ -267,3 +267,102 @@ New items take the correct line and hint 3 of their kind (`k_pick`'s "{r}. עַ�
 - **H-D, hebrew-text-editor:** H1 to H35 (71 strings) and the generated strings of the "pattern" rows.
 - **H-E, qa-engineer:** remove `skip: _open` from the two tests in `mastery_reachable_test.dart` when they pass; add a lint for §5.3 (3+ options: two tagged distractors, distinct unless the skill has one watch tag) and for §2's label rule.
 - **H-F, engine (orchestrator → owner, not needed for this spec):** a check passed on a two-option item counts today; §4.1 says such an item "never counts alone". Proposed: a check counts only from an item with 0 or 3+ options, or after a second two-option check of the same type.
+
+## Addendum after the Hebrew pass
+
+Curriculum-expert, 2026-10-30, after `docs/knowledge/b15-hebrew.md` §5. Each decision below **replaces** the §1 row it names; everything else in §1 to §6 stands. Checked against the generator tables and `content/starter` (767 activities) on this branch.
+
+### A1. CS-A-01 hands (H11b): the answer is the towel
+
+The pack's hand-washing routine has three steps, tap, soap, towel (`cs.routine.wash.*`). `step_rinse` is the **cup of water** of the teeth routine (`כּוֹס מַיִם`), and `cs.wrong.wash3` teaches that it does *not* belong to hand-washing. So "rinse" would have contradicted an existing item. The answer is the step the child learned. Adding a rinse step is a syllabus change, so it is not done here.
+
+| Item | Prompt | Options → r; tags | Correct line | h3 |
+|---|---|---|---|---|
+| CS-A-01 hands, `pick` reverse, story | H11b as the editor wrote it | {**step_towel**, step_tap M-SEQ-CAUSE (the step before, not after), step_soap M-SEQ-CAUSE (the anchor step itself)}; E1 | pattern of `cs.routine.wash.last`: `כֵּן! אַחֲרֵי הַסַּבּוֹן מְיַבְּשִׁים בְּמַגֶּבֶת.` (editor checks) | `cs.routine.wash.last`'s h3 unchanged (`קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. … לִלְחֹץ עַל הַמַּגֶּבֶת.`) |
+
+Teeth (H11a) stays as in §1: {step_brush, step_rinse M-SEQ-CAUSE, step_paste M-SEQ-CAUSE}. All six `step_*` sprites exist (tap, soap, towel, paste, brush, rinse), with names in `robots.json`.
+
+### A2. SHP-B-09 (H21): two two-option items, no sphere
+
+A ball pressed into sand leaves a round dent, and the cone's base is a circle too. Either one would be a second right answer, and the pyramid stays out (F9). So each item has the right solid and the box only, whose print is a square.
+
+| Item | Options → r; tag | Text |
+|---|---|---|
+| SHP-B-09 `pick` reverse ×**2**, pictorial | (1) {**solid_cylinder**, solid_box M-SHP-FACE}; (2) {**solid_cone**, solid_box M-SHP-FACE} | editor's H21 unchanged for both; h3 = SHP-B-09's existing `מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת. עַכְשָׁו תּוֹרְכֶם.` |
+
+Two items of the same check type, so they still count if the owner adopts H-F (a second two-option check of the same type). In Band B the box is labelled `תֵּבָה` (`NAMES`).
+
+### A3. Rows that duplicate existing items: relabel or new values
+
+Rule: **relabel** when the existing item is already the other *form* that the check needs, for example a reverse question in a skill that otherwise asks forwards. **Change the values** when the existing item is one of the skill's ordinary practice items, because passing a practice item is not transfer.
+
+| Skill | §1 said | Found | Decision |
+|---|---|---|---|
+| COL-B-01 | add `pick` ×2 reverse (H8) | `b.colb01.7`, `.8`, `.9` ("red and … make orange; what is missing?") are the reverse form | **relabel `b.colb01.7`–`.9` chk reverse**; no new items |
+| NUM-B-01 | add "before" ×2 reverse | `b.numb01.6`, `.7`, `.8` ask "what comes before" | **relabel `b.numb01.6`–`.8` chk reverse**; no new items |
+| NUM-B-10 | add "which is smaller?" ×2 reverse (H3) | `b.numb10.5`, `.6`, `.7` ask "smaller" | **relabel `b.numb10.5`–`.7` chk reverse**; no new items |
+| NUM-B-07 | add `trace` ×2 transfer, `guide: start`, 2 and 5 | `x.numb07.11`–`.20` are already the start-dot form | **relabel `x.numb07.13` (2) and `x.numb07.16` (5) chk transfer**; no new items |
+| COL-B-03 | add purple "where else is purple?" ×2 | `b.colb03.7`, `.8` are purple practice; only 4 shade colours exist | `pick` ×2 transfer, **swatch to object** (a new form): group `shade_blue_1`, "אֵיפֹה עוֹד כָּחֹל?" → {**ball_blue**, ball_white M-COL-SHADE (light taken for white), ball_purple M-COL-NAME}; group `shade_red_3`, "אֵיפֹה עוֹד אָדֹם?" → {**ball_red**, ball_black M-COL-SHADE (dark taken for black: the catalogue's signal), ball_orange M-COL-NAME} |
+| COL-B-02 | add purple darkest/lightest ×2 | `b.colb02.7`, `.8` are exactly that | `pick` ×**1** transfer, the purple **middle** (asked only for blue, green and red): {**shade_purple_2**, shade_purple_1 M-SER-ENDS, shade_purple_3 M-SER-ENDS}; existing "middle" prompt. Near transfer only (fit: weak) |
+| LOG-B-09 | "not yellow and not square"; "not green and not circle" | the second is `b.logb09.6` | keep the first: {**shape_circle_green**, shape_square_green M-LOG-NOT, shape_circle_yellow M-LOG-NOT}; replace the second with "not orange and not triangle": {**shape_square_red**, shape_triangle_red M-LOG-NOT, shape_square_orange M-LOG-NOT}. Existing prompt pattern |
+| SHP-A-06 | train and tree | `shp.build.train`, `shp.build.tree` exist | `shapebuild` ×2 transfer: **boat** and **car**, using the editor's ready lines `בּוֹנִים סִירָה מִצּוּרוֹת.` and `בּוֹנִים מְכוֹנִית מִצּוּרוֹת.` (call them H19c, H19d). The design-director draws the layouts, which replace train and tree in H-C |
+| LOG-B-08 | the rule on shape: circle, triangle | `b.logb08.3` (circle) and `.4` (square) exist | `sort` ×2 transfer on shapes it has not used: **triangle** and **rectangle** (`אִם הַצּוּרָה מְשֻׁלָּשׁ…`, `אִם הַצּוּרָה מַלְבֵּן…`, existing pattern) |
+| COL-A-01 | target `ball_blue` | `col.match.blue` already has it (balls and blooms are its targets) | target **`banana_yellow`** → {**bloom_yellow**, banana_green M-SORT-SHIFT, ball_orange M-COL-NAME}; `balloon_yellow` as §1 but {**ball_yellow**, balloon_green M-SORT-SHIFT, bloom_orange M-COL-NAME} |
+| SHP-A-04 | rect vs square, orange and yellow | orange is in `shp.square.orange` | **yellow and red**: rect_yellow vs square_yellow, rect_red vs square_red; square M-SHP-SQRECT |
+| CS-A-03 | boards 2×4 and 4×2 | 4×2 is `cs.robot.direct.4` | boards **2×4** (robot col 0 row 3, flag col 1 row 0) and **3×4** (robot col 2 row 3, flag col 0 row 0). Existing boards have at most 3 rows |
+| NUM-B-04 | 14 ducks, 17 butterflies | ducks are `b.numb04.4` | **14 cats**, 17 butterflies |
+| NUM-A-04 | count_tap 4 ducks, 3 stars | both are in its practice (`count.ducks.5`, `count.stars.4`) | **4 birds, 3 ladybugs** (`_lit` exists) |
+
+Checked and not duplicates: NUM-A-03, 06, 09, 11 to 14; NUM-B-08, 13 (only labels [0, 10] is new: its sparse items use [0, 5, 10, 15, 20]), 18; LOG-A-01 to 10; LOG-B-01, 04; SHP-A-01, 07, 10; COL-A-04, 05, 07; MATH-A-04; MATH-B-16, 17 (price 7 exists, but with a different purse).
+
+**New totals (replace §1's).**
+- **203 new activities** (was 211): 189 checks and 14 second representations. By land: Numbers 56, Colours and Robots 38, Logic 36, Shapes 29, Maths 44.
+- **32 relabels to a check** (was 21): §1's 21 plus COL-B-01 3, NUM-B-01 3, NUM-B-10 3 and NUM-B-07 2.
+- §2's check-label total becomes **85** (was 74).
+
+### A4. Compare and size rows (X1): masculine nouns, one noun per item
+
+`k_compare_more` draws both sets with one `obj`, so §1's "unlike objects" would have needed a generator change, and frogs as the tagged set would have needed three feminine clips. Instead, each item uses **one new masculine noun** (chick, butterfly). The M-CNT-SIZE set is masculine, the shared D1 lines (`הֵם גְּדוֹלִים / קְטַנִּים / רְחוֹקִים זֶה מִזֶּה`) fit, and the prompt is the existing `אֵיפֹה יֵשׁ יוֹתֵר/פָּחוֹת {many}?`. The transfer is the new objects (curriculum NUM-A-12: "U3 transfer (new objects)").
+
+| Skill | Item (`compare_more`, chk transfer, pictorial) | Trap → cue |
+|---|---|---|
+| NUM-A-11 | obj chick, ask more, options [4, 3], `arr {"3": "scatter"}` | 3 spread → spread |
+| NUM-A-11 | obj butterfly, ask more, options [3, 5], `arr {"3": "scatter"}` | 3 spread → spread |
+| NUM-A-12 | obj chick, ask more, options [3, 5], `scale {"3": 1.5}` | 3 big → big |
+| NUM-A-12 | obj butterfly, ask fewer, options [5, 4], `scale {"5": 0.7}` | 5 small → small |
+| MATH-A-07 | obj chick, ask more, options [2, 4], `scale {"2": 1.5}` | 2 big → big |
+| MATH-A-07 | obj butterfly, ask fewer, options [5, 3], `scale {"5": 0.7}` | 5 small → small |
+
+All have `trap: true` (tag M-CNT-SIZE). MATH-A-07's existing items keep `trap: false`. **X1a, X1b and X1c are not needed** (no two-noun prompt, no feminine size line). No other §1 row puts frogs on an M-CNT-SIZE set; frogs stay in flash, madd and mtake, and the ordinal queue, which have no size tag. **Rule from now on:** any option tagged M-CNT-SIZE that plays a cue line is a masculine set; MATH-B-19's tagged "bigger pictures" column (§3) is never the bananas.
+
+### A5. fb.sort_shift: the line follows the item's sorting rule
+
+| Band | Rule of the item | Line |
+|---|---|---|
+| A (COL-A-01 new, COL-A-04, LOG-A-01 spots, LOG-A-03, SHP-A-02 spots) | any | **today's** `vo:fb.sort_shift`, until the owner decides P2 to P4 |
+| B (COL-B-04, LOG-B-06 spots H9a, LOG-B-08 `.1`, `.2`) | colour | today's `vo:fb.sort_shift` (it is true for a colour rule, and `לֹא` is allowed in Band B) |
+| B (COL-B-04, LOG-B-06 spots H9b, LOG-B-08 `.3`, `.4` and the new triangle and rectangle) | shape | P4's text as `vo:fb.sort_shift.shape` |
+| B | kind | P3's text as `vo:fb.sort_shift.kind` (no Band B kind item today; the generator supports it) |
+
+Each item carries `rule: colour | shape | kind`, and the generator picks the line from it. **P1 stays out:** Band A spots keep today's `k_spot` h3 wherever §1 and the editor's X4 and X5 do not give one. This follows the brief. Note that this still breaks the rule in §5 and H-A, which says Band A spots must not use that line.
+
+### A6. Nouns and names the new items need
+
+The table entries copy existing rows. Only the four `OBJECTS` nouns are new; the editor already gave their forms in b15-hebrew §2.
+
+| Sprite | g | one / many | Add to | Used by |
+|---|---|---|---|---|
+| chick | m | אֶפְרוֹחַ / אֶפְרוֹחִים | `objects` of `counting-hills.json` and `math.json` (band_b `OBJECTS` inherits them) | NUM-A-05, 10, 11, 12, 13; MATH-A-01, 02, 07; LOG-B-01 |
+| butterfly | m | פַּרְפָּר / פַּרְפָּרִים | same | NUM-A-03, 09, 11, 12; MATH-A-07; NUM-B-04 |
+| frog | f | צְפַרְדֵּעַ / צְפַרְדְּעִים | same | NUM-A-05, 10, 13; MATH-A-01, 02 |
+| shoe | f | נַעַל / נַעֲלַיִם | band_b `OBJECTS` (as `sock`) | NUM-B-18 |
+
+| Unit `names` | Add (copied from) |
+|---|---|
+| `logic.json` | apple_green, ball_red, ball_blue, ball_yellow, balloon_red, balloon_blue (colours' thing+colour rule); plate with `def` `הַצַּלַּחַת` (shapes.json); tower_1 to tower_6 (band_b `NAMES`) |
+| `shapes.json` | solid_sphere `כַּדּוּר` m, shape_open, shape_curved (band_b `NAMES`) |
+| `colours.json` | shape_circle_* and shape_square_* (shapes.json) |
+| `math.json` | fish_size_l/s, star_size_l/s (logic.json) |
+| band_b `NAMES` | key, balloon_red, balloon_blue (logic and colours); coin_h50, coin_s1, coin_s5, coin_s10 for MATH-B-16: the `COIN_OF` forms, plus a new `מַטְבֵּעַ שֶׁל חֲצִי שֶׁקֶל` (needs-editor) |
+
+**`solid_box`:** Band A `shapes.json` already names it `קֻפְסָה` (Q7), and SHP-A-07's new items are built from it. Band B `NAMES` says `תֵּבָה` and is used only for Band B (SHP-B-08, 09). The generator must never merge band_b `NAMES` into a Band A unit.

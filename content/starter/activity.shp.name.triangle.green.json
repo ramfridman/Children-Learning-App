@@ -44,8 +44,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_rect_green",
-        "label": "מַלְבֵּן"
+        "sprite": "asset:shape_open",
+        "label": "צוּרָה פְּתוּחָה",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "o3",
@@ -69,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.shp_closed",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

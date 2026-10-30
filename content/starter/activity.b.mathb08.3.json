@@ -46,13 +46,14 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 12,
-        "label": "שְׁתֵּים עֶשְׂרֵה"
+        "numeral": 7,
+        "label": "שֶׁבַע"
       },
       {
         "id": "o2",
-        "numeral": 14,
-        "label": "אַרְבַּע עֶשְׂרֵה"
+        "numeral": 12,
+        "label": "שְׁתֵּים עֶשְׂרֵה",
+        "misconception": "M-CNT-DOUBLE"
       },
       {
         "id": "o3",
@@ -76,6 +77,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

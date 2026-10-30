@@ -46,8 +46,9 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_triangle_orange",
-        "label": "מְשֻׁלָּשׁ"
+        "sprite": "asset:shape_triangle_blue",
+        "label": "מְשֻׁלָּשׁ",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o2",
@@ -56,8 +57,9 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:shape_circle_orange",
-        "label": "עִגּוּל"
+        "sprite": "asset:shape_rect_orange",
+        "label": "מַלְבֵּן",
+        "misconception": "M-SHP-SQRECT"
       }
     ],
     "correct": "o2",
@@ -76,6 +78,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-SQRECT",
+        "vo": "vo:fb.shp_sqrect",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

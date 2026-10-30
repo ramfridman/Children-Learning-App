@@ -44,8 +44,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_circle",
-        "label": "עִגּוּל"
+        "sprite": "asset:shape_rect",
+        "label": "מַלְבֵּן",
+        "misconception": "M-SHP-SQRECT"
       },
       {
         "id": "o3",
@@ -69,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-SQRECT",
+        "vo": "vo:fb.shp_sqrect",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

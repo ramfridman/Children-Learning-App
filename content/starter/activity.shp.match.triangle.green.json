@@ -46,13 +46,15 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_circle_green",
-        "label": "עִגּוּל"
+        "sprite": "asset:shape_circle_yellow",
+        "label": "עִגּוּל",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_square_green",
-        "label": "רִבּוּעַ"
+        "sprite": "asset:shape_open",
+        "label": "צוּרָה פְּתוּחָה",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "o3",
@@ -76,6 +78,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.shp_closed",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

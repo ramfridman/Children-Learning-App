@@ -14,7 +14,7 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
+  "checkType": "reverse",
   "representation": "symbolic",
   "variantGroup": "pick",
   "difficulty": {
@@ -45,12 +45,14 @@
       {
         "id": "o2",
         "sprite": "asset:day_6",
-        "label": "יוֹם שִׁשִּׁי"
+        "label": "יוֹם שִׁשִּׁי",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o3",
         "sprite": "asset:day_4",
-        "label": "יוֹם רְבִיעִי"
+        "label": "יוֹם רְבִיעִי",
+        "misconception": "M-CNT-SEQ"
       }
     ],
     "correct": "o1",
@@ -69,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SEQ",
+        "vo": "vo:fb.seq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

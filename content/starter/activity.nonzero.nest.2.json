@@ -45,20 +45,22 @@
       {
         "id": "o1",
         "numeral": 0,
-        "label": "אֶפֶס"
+        "label": "אֶפֶס",
+        "misconception": "M-NUM-ZERO"
       },
       {
         "id": "o2",
-        "numeral": 1,
-        "label": "אַחַת"
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
       },
       {
         "id": "o3",
-        "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "numeral": 3,
+        "label": "שָׁלוֹשׁ",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
-    "correct": "o3",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },
@@ -74,6 +76,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-ZERO",
+        "vo": "vo:fb.zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

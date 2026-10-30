@@ -39,8 +39,9 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 10,
-        "label": "עֶשֶׂר"
+        "numeral": 1,
+        "label": "אַחַת",
+        "misconception": "M-NUM-TEEN"
       },
       {
         "id": "o2",
@@ -50,7 +51,8 @@
       {
         "id": "o3",
         "numeral": 12,
-        "label": "שְׁתֵּים עֶשְׂרֵה"
+        "label": "שְׁתֵּים עֶשְׂרֵה",
+        "misconception": "M-CNT-SEQ"
       }
     ],
     "correct": "o2",
@@ -69,6 +71,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SEQ",
+        "vo": "vo:fb.seq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-TEEN",
+        "vo": "vo:fb.num_teen",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בַּמִּסְפָּר הַזֶּה יֵשׁ עֶשֶׂר, וְעוֹד כַּמָּה? בּוֹאוּ נַפְרִיד אֶת הָעֶשֶׂר."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

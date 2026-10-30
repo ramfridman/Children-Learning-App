@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/pack_validation.dart';
 import 'package:nitznutz/content/schema.dart';
@@ -614,7 +616,10 @@ void main() {
       final Map<String, Object?> a = p.doc(_c);
       a['band'] = 'C';
       _stripNiqqud(a);
-      expect(_run(p), isEmpty);
+      // Only the band rule speaks (the sample's skill is in Band A); nothing is said about the missing niqqud.
+      expect(_run(p).map((Problem x) => x.toString()), <String>[
+        '$_c › band: is C, but its skill NUM-A-03 is in band A',
+      ]);
     });
 
     test('the same unpointed text in Band A is refused', () {
@@ -656,6 +661,69 @@ void main() {
     final SamplePack p = SamplePack();
     expect(_run(p), isEmpty);
     expect(_l(p.manifest['vo']), isNotEmpty);
+  });
+
+  // Board B-15: a skill id says the skill's domain and band, and what a skill teaches is in the skill's band.
+  group('skill ids and bands', () {
+    /// Gives the second skill (NUM-A-04) a new id everywhere: its file, the manifest and every reference.
+    SamplePack renamed(String to) {
+      final SamplePack p = SamplePack();
+      const String from = 'NUM-A-04';
+      final String file = 'skill.$to.json';
+      for (final String name in p.docs.keys.toList()) {
+        p.docs[name] = jsonDecode(jsonEncode(p.docs[name]).replaceAll('"$from"', '"$to"'));
+      }
+      p.docs[file] = p.docs.remove(skill2File);
+      p.files
+        ..remove(skill2File)
+        ..add(file);
+      p.manifestList('files').firstWhere((Map<String, Object?> f) => f['name'] == skill2File)['name'] = file;
+      final List<Object?> listed = _l(_m(p.manifest['entries'])['skills']);
+      listed[listed.indexOf(from)] = to;
+      return p;
+    }
+
+    List<String> problems(SamplePack p) => _run(p).map((Problem x) => x.toString()).toList();
+
+    test('a good id passes', () {
+      expect(_run(renamed('NUM-A-07')), isEmpty);
+    });
+
+    test('an id with an unknown domain code is refused', () {
+      expect(problems(renamed('XYZ-A-04')), contains(contains('must be <DOMAIN>-<BAND>-<NN>')));
+    });
+
+    test('an id whose domain code is not the skill domain is refused', () {
+      expect(
+        problems(renamed('COL-A-04')),
+        contains(contains('starts with COL, but the skill is in the domain numbers')),
+      );
+    });
+
+    test('an id whose band letter is not the skill band is refused', () {
+      final SamplePack p = SamplePack();
+      p.doc(skill2File)['band'] = 'B';
+      expect(
+        problems(p),
+        contains('$skill2File › id: "NUM-A-04" has the band letter A, but the skill is in band B'),
+      );
+    });
+
+    test('a lowercase id is refused', () {
+      expect(problems(renamed('num-a-04')), contains(contains('does not match the pattern')));
+    });
+
+    test('an activity in another band than its skill is refused', () {
+      final SamplePack p = SamplePack();
+      p.doc(_c)['band'] = 'B';
+      expect(problems(p), contains('$_c › band: is B, but its skill NUM-A-03 is in band A'));
+    });
+
+    test('a lesson in another band than its skills is refused', () {
+      final SamplePack p = SamplePack();
+      p.doc(lessonFile)['band'] = 'B';
+      expect(problems(p), contains(contains('the skill NUM-A-03 is in band A, but the lesson is in band B')));
+    });
   });
 
   test('wrong types and missing parts anywhere never make the validator throw', () {

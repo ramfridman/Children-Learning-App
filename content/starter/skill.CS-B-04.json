@@ -24,8 +24,7 @@
     }
   ],
   "representations": [
-    "symbolic",
-    "embodied"
+    "symbolic"
   ],
   "misconceptions": [
     "M-CS-FIXALL"

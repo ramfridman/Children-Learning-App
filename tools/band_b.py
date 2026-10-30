@@ -162,11 +162,11 @@ def clean(correct, others, lo=0, hi=100):
     return out[:2]
 
 
-def numpick(u, skill, prompt, correct, others, i, tags=None, h3=None, text=None, rep='symbolic', **kw):
-    """A question with numerals on tiles."""
+def numpick(u, skill, prompt, correct, others, i, tags=None, h3=None, text=None, **kw):
+    """A question with numerals on tiles (its representation follows the label rule of author.py)."""
     others = clean(correct, others)
     return u.act(skill, 'pick', prompt=prompt, options=tri('n:%d' % correct, i, ['n:%d' % o for o in others]),
-                 correct='n:%d' % correct, tags={('n:%d' % k): v for k, v in (tags or {}).items()}, rep=rep,
+                 correct='n:%d' % correct, tags={('n:%d' % k): v for k, v in (tags or {}).items()},
                  **({'h3': h3} if h3 else {}), **({'correct_text': text} if text else {}), **kw)
 
 
@@ -204,12 +204,14 @@ def numbers():
                                 (17, 'before'), (20, 'before'), (18, 'after')]):
         ans = n + 1 if d == 'after' else n - 1
         skip = ans + 1 if d == 'after' else ans - 1
-        u.act('NUM-B-01', 'next_number', n=n, dir=d, options=tri(ans, i, [skip, n]))
+        # "what comes before" is the reverse of the skill's counting on (B-15 addendum A3)
+        u.act('NUM-B-01', 'next_number', n=n, dir=d, options=tri(ans, i, [skip, n]), **({'check': 'reverse'} if d == 'before' else {}))
     for i, (n, d) in enumerate([(19, 'after'), (29, 'after'), (20, 'after'), (24, 'after'), (28, 'after'), (21, 'before'),
                                 (30, 'before'), (26, 'after'), (27, 'after')]):
         ans = n + 1 if d == 'after' else n - 1
         restart = n - 9 if (d == 'after' and n % 10 == 9) else (ans + 1 if d == 'after' else ans - 1)
-        u.act('NUM-B-02', 'next_number', n=n, dir=d, decade=True, options=tri(ans, i, [restart, n]))
+        u.act('NUM-B-02', 'next_number', n=n, dir=d, decade=True, options=tri(ans, i, [restart, n]),
+              **({'check': 'reverse'} if d == 'before' else {}))
     for i, n in enumerate([10, 8, 6, 9, 7, 5, 4, 3]):
         u.act('NUM-B-03', 'next_number', n=n, dir='before', options=tri(n - 1, i, [n - 2, n]))
 
@@ -223,7 +225,7 @@ def numbers():
         u.act('NUM-B-04', 'count_tap', obj=obj, count=n, options=tri(n, i, [n - 1, n + 1] if n < 20 else [n - 1, n - 2]), seed=20 + i)
     for i, (obj, n) in enumerate([('apple', 13), ('star', 15), ('fish', 14), ('duck', 17), ('ladybug', 16), ('bird', 18),
                                   ('apple', 19), ('fish', 20)]):
-        u.act('NUM-B-05', 'give', obj=obj, n=n, source=20)
+        u.act('NUM-B-05', 'give', obj=obj, n=n, source=20, check='practice')  # giving N is this skill's own task (B-15 §2)
 
     # ---- NUM-B-08: reading 11..20 with reversed digits as the trap
     u.skill('NUM-B-08', 'קוראים 11–20', 'קוֹרְאִים אֶת הַמִּסְפָּרִים עַד עֶשְׂרִים', 'pool', ['NUM-A-08', 'NUM-B-01'], ['symbolic'],
@@ -233,6 +235,10 @@ def numbers():
         numpick(u, 'NUM-B-08', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, [rev, n + 1 if n < 19 else n - 2], i, tags={rev: 'M-NUM-REV'},
                 text='כֵּן! זֶה %s.' % F[n])
     for i, n in enumerate([20, 11, 18, 12]):
+        if n == 11:  # its digits read the same both ways: the trap is the "one" heard first (B-15 §3)
+            numpick(u, 'NUM-B-08', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, [1, 12], i, tags={1: 'M-NUM-TEEN', 12: 'M-CNT-SEQ'},
+                    text='כֵּן! זֶה %s.' % F[n])
+            continue
         numpick(u, 'NUM-B-08', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, [int(str(n)[::-1]) if n % 10 else 2, n - 1], i,
                 tags={int(str(n)[::-1]) if n % 10 else 2: 'M-NUM-REV'}, text='כֵּן! זֶה %s.' % F[n])
 
@@ -244,7 +250,8 @@ def numbers():
         word = 'גָּדוֹל' if ask == 'big' else 'קָטָן'
         u.act('NUM-B-10', 'pick', prompt='אֵיזֶה מִסְפָּר %s יוֹתֵר?' % word,
               options=['n:%d' % right, 'n:%d' % wrong] if i % 2 == 0 else ['n:%d' % wrong, 'n:%d' % right], correct='n:%d' % right,
-              rep='symbolic', correct_text='כֵּן! %s.' % F[right],
+              **({'check': 'reverse'} if ask == 'small' else {}),  # "which is smaller?" (B-15 addendum A3)
+              correct_text='כֵּן! %s.' % F[right],
               h3='%s %s. %s. עַכְשָׁו תּוֹרְכֶם.' % (F[a], vav(F[b]), 'הַמִּסְפָּר שֶׁבָּא יוֹתֵר מְאֻחָר בַּסְּפִירָה גָּדוֹל יוֹתֵר' if ask == 'big' else 'הַמִּסְפָּר שֶׁבָּא קֹדֶם בַּסְּפִירָה קָטָן יוֹתֵר'))
 
     # ---- NUM-B-11: order, one more, one less
@@ -254,7 +261,7 @@ def numbers():
     for start, length, w, v in rows:
         cells = ['n:%d' % (start + k) for k in range(length)]
         cells[w] = 'n:%d' % v
-        u.act('NUM-B-11', 'spot', cells=cells, wrong=w, tag='M-CNT-SEQ', rep='symbolic',
+        u.act('NUM-B-11', 'spot', cells=cells, wrong=w, tag='M-CNT-SEQ',
               prompt='חָבֵר סָפַר מִסְפָּרִים, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
               h3='הַמִּסְפָּרִים גְּדֵלִים בְּאֶחָד כָּל פַּעַם. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + w])
@@ -279,6 +286,7 @@ def numbers():
         k = abs(sum(hops))
         way = 'קָדִימָה' if d == 'f' else 'אֲחוֹרָה'
         u.act('NUM-B-13', 'numline', mode='jump', to=10, start=start, hops=hops, target=end, labels=list(range(0, 11)),
+              check='predict',  # "on which number will she land?" (B-15 §1)
               prompt='הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל %s וְקוֹפֶצֶת %s %s. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?' % (F[start], steps(k), way),
               h3='מַתְחִילִים %s וְקוֹפְצִים %s %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[start]), steps(k), way))
 
@@ -290,7 +298,7 @@ def numbers():
         o = OBJECTS[obj]
         rest = total - part
         numpick(u, 'NUM-B-14', 'יֵשׁ %s. מַכְנִיסִים %s לַסַּל. כַּמָּה נִשְׁאֲרוּ בַּחוּץ?' % (qty(total, o), qty(part, o)), rest,
-                [total, part] if rest not in (total, part) else [total + 1, part + 1], i, tags={total: 'M-PART-MISS'}, rep='concrete',
+                [total, part] if rest not in (total, part) else [total + 1, part + 1], i, tags={total: 'M-PART-MISS'},
                 group={'sprite': obj, 'count': total},
                 text='%s! %s וְעוֹד %s הֵם %s.' % (F[rest], F[rest], F[part], F[total]),
                 h3='%s. הִכְנַסְנוּ %s, אָז נִשְׁאֲרוּ %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(total), F[part], F[rest], F[rest]))
@@ -300,8 +308,10 @@ def numbers():
             ['M-NUM-TEEN'])
     for i, n in enumerate([11, 12, 13, 14, 15, 16, 17, 18, 19]):
         obj = ['apple', 'star', 'fish', 'duck', 'ladybug', 'bird', 'apple', 'star', 'fish'][i]
-        numpick(u, 'NUM-B-16', '%s זֶה עֶשֶׂר וְעוֹד כַּמָּה?' % F[n], n - 10, [1, n - 9 if n < 19 else n - 11], i,
-                tags={1: 'M-NUM-TEEN'}, rep='concrete', group={'sprite': obj, 'count': n},
+        # B-15 §4 options: the whole number (the ten not taken apart), and the tens digit read as the ones; for 11, the ten
+        others = {n: 'M-NUM-TEEN', 1: 'M-NUM-REV'} if n > 11 else {n: 'M-NUM-TEEN', 10: 'M-PART-MISS'}
+        numpick(u, 'NUM-B-16', '%s זֶה עֶשֶׂר וְעוֹד כַּמָּה?' % F[n], n - 10, list(others), i,
+                tags=others, group={'sprite': obj, 'count': n},
                 text='%s! עֶשֶׂר וְעוֹד %s הֵם %s.' % (F[n - 10], F[n - 10], F[n]),
                 h3='%s. עֶשֶׂר, וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), count_words(n - 10), F[n - 10]))
 
@@ -312,7 +322,7 @@ def numbers():
                                           (2, 2, 5, 3, 9, 'בִּשְׁתַּיִם'), (2, 2, 5, 2, 7, 'בִּשְׁתַּיִם'), (4, 2, 5, 4, 13, 'בִּשְׁתַּיִם')]:
         cells = ['n:%d' % (start + step * k) for k in range(length)]
         cells[w] = 'n:%d' % v
-        u.act('NUM-B-17', 'spot', cells=cells, wrong=w, tag='M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ', rep='symbolic',
+        u.act('NUM-B-17', 'spot', cells=cells, wrong=w, tag='M-CNT-DECADE' if step == 10 else 'M-CNT-SEQ',
               prompt='סוֹפְרִים %s. אֵיפֹה הַטָּעוּת?' % nm,
               h3='כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו %s. עַכְשָׁו תּוֹרְכֶם.' % prefix('ב', 'עֶשֶׂר' if step == 10 else 'שְׁתַּיִם'),
               correct_text='כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת %s.' % F[start + step * w])
@@ -329,7 +339,7 @@ def numbers():
         even = n % 2 == 0
         u.act('NUM-B-18', 'pick', prompt='אֶפְשָׁר לְחַלֵּק אֶת כֻּלָּם לְזוּגוֹת, בְּלִי שֶׁיִּשָּׁאֵר אֶחָד לְבַד?',
               group={'sprite': 'sock', 'count': n, 'arrangement': 'scatter'}, options=['cross', 'tick'] if i % 2 else ['tick', 'cross'],
-              correct='tick' if even else 'cross', rep='concrete',
+              correct='tick' if even else 'cross',
               correct_text='כֵּן, כֻּלָּם בְּזוּגוֹת.' if even else 'לֹא, אֶחָד נִשְׁאָר לְבַד.',
               h3='נְחַלֵּק לְזוּגוֹת: %s. %s. עַכְשָׁו תּוֹרְכֶם.' % (', '.join('זוּג' for _ in range(n // 2)),
                                                                 'כֻּלָּם בְּזוּגוֹת' if even else 'אֶחָד נִשְׁאָר לְבַד'))
@@ -403,7 +413,7 @@ def math():
         r = total - part
         u.act('MATH-B-02', 'pick', prompt='%s זֶה %s וְעוֹד כַּמָּה?' % (F[total], F[part]),
               options=tri('n:%d' % r, i, ['n:%d' % total, 'n:%d' % (r + 1)]), correct='n:%d' % r, tags={'n:%d' % total: 'M-PART-MISS'},
-              rep='symbolic', correct_text='%s! %s וְעוֹד %s הֵם %s.' % (F[r], F[part], F[r], F[total]),
+              correct_text='%s! %s וְעוֹד %s הֵם %s.' % (F[r], F[part], F[r], F[total]),
               h3='%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[part], F[r], count_words(total), F[r]))
 
     # ---- MATH-B-03: number sentences
@@ -413,15 +423,17 @@ def math():
         r = x + y if op == '+' else x - y
         word = 'וְעוֹד' if op == '+' else 'פָּחוֹת'
         opcell = 'op:+' if op == '+' else 'op:-'
-        wrong_op = x - y if op == '+' else x + y
-        others = [wrong_op, r + 1] if wrong_op != r + 1 and 0 <= wrong_op <= 20 else [r + 1, r - 1]
+        # B-15 §3: the larger addend or the start alone (M-CNT-CARD, untagged until it has a line of its own: the shared
+        # one is the give-N line), and a count on or back that counts the start too
+        near = r - 1 if op == '+' else r + 1
+        others = [max(x, y) if op == '+' else x, near]
         u.act('MATH-B-03', 'pick', prompt='%s %s %s. כַּמָּה זֶה?' % (F[x], word, F[y]),
               row=['n:%d' % x, opcell, 'n:%d' % y, 'op:=', '?'], options=tri('n:%d' % r, i, ['n:%d' % o for o in others]),
-              correct='n:%d' % r, rep='symbolic', correct_text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]),
+              correct='n:%d' % r, tags={'n:%d' % near: 'M-CNT-DOUBLE'}, correct_text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]),
               h3='%s %s %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], word, F[y], count_words(r), F[r]))
     for x, op, y, r, bad, w in [(3, '+', 4, 7, 8, 4), (6, '+', 2, 8, 9, 4), (9, '-', 4, 5, 6, 4), (7, '-', 2, 5, 4, 4)]:
         cells = ['n:%d' % x, 'op:' + op, 'n:%d' % y, 'op:=', 'n:%d' % bad]
-        u.act('MATH-B-03', 'spot', cells=cells, wrong=w, tag='M-EQ-OPER', rep='symbolic',
+        u.act('MATH-B-03', 'spot', cells=cells, wrong=w, tag='M-EQ-OPER',
               prompt='חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?',
               h3='%s %s %s שָׁוֶה %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַתְּשׁוּבָה הַלֹּא נְכוֹנָה.' % (F[x], 'וְעוֹד' if op == '+' else 'פָּחוֹת', F[y], F[r]),
               correct_text='כֵּן! %s %s %s שָׁוֶה %s.' % (F[x], 'וְעוֹד' if op == '+' else 'פָּחוֹת', F[y], F[r]))
@@ -430,8 +442,10 @@ def math():
     u.skill('MATH-B-06', 'משלימים לעשר', 'מַשְׁלִימִים לְעֶשֶׂר', 'dock', ['MATH-B-02'], ['concrete', 'symbolic'], [])
     for i, n in enumerate([5, 7, 8, 6, 9, 4, 3, 2]):
         obj = ['apple', 'star', 'fish', 'duck', 'ladybug', 'bird', 'apple', 'star'][i]
+        # B-15 §3: the whole (ten), and the number already there (M-CNT-CARD, untagged as in MATH-B-03); for five, one more
+        others = {10: 'M-PART-MISS', n: None} if n != 5 else {10: 'M-PART-MISS', 6: 'M-CNT-DOUBLE'}
         numpick(u, 'MATH-B-06', 'יֵשׁ %s. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי שֶׁיִּהְיֶה עֶשֶׂר?' % qty(n, OBJECTS[obj]), 10 - n,
-                [n, 10 - n + 1], i, rep='concrete',
+                list(others), i, tags={k: v for k, v in others.items() if v},
                 group={'sprite': obj, 'count': n}, text='%s! %s וְעוֹד %s הֵם עֶשֶׂר.' % (F[10 - n], F[n], F[10 - n]),
                 h3='%s, וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[n], F[10 - n], count_words(10), F[10 - n]))
 
@@ -440,20 +454,27 @@ def math():
     for i, (x, op, y) in enumerate([(5, '+', 0), (0, '+', 4), (7, '-', 0), (3, '-', 3), (6, '-', 6), (0, '+', 0)]):
         r = x + y if op == '+' else x - y
         word = 'וְעוֹד' if op == '+' else 'פָּחוֹת'
-        numpick(u, 'MATH-B-07', '%s %s %s. כַּמָּה זֶה?' % (F[x], word, F[y]), r, [o for o in (r + 1, x if x != r else y + 2) if o != r][:2], i,
-                tags={}, text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]), row=['n:%d' % x, 'op:' + op, 'n:%d' % y, 'op:=', '?'])
+        # B-15 §3: refusing zero (1) and, for n - n, n (M-CNT-CARD, untagged as in MATH-B-03); on n + 0, 0 + n and n - 0
+        # the traps are 0 and the neighbour, both the zero misconception; on 0 + 0, 1 and 2
+        if r == 0:
+            others = {1: 'M-NUM-ZERO', 2: 'M-NUM-ZERO'} if x == 0 else {1: 'M-NUM-ZERO', x: None}
+        else:
+            others = {0: 'M-NUM-ZERO', r + 1 if op == '+' else r - 1: 'M-NUM-ZERO'}
+        numpick(u, 'MATH-B-07', '%s %s %s. כַּמָּה זֶה?' % (F[x], word, F[y]), r, list(others), i,
+                tags={k: v for k, v in others.items() if v}, text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]), row=['n:%d' % x, 'op:' + op, 'n:%d' % y, 'op:=', '?'])
 
     # ---- MATH-B-08: within twenty
     u.skill('MATH-B-08', 'מחברים ומחסרים עד 20', 'מְחַבְּרִים עַד עֶשְׂרִים', 'dock', ['MATH-B-06', 'NUM-B-16'], ['symbolic', 'concrete'],
             ['M-ADD-RECOUNT'])
     for i, (x, y) in enumerate([(8, 5), (9, 4), (7, 6), (8, 7), (9, 6), (6, 9), (7, 8), (9, 9)]):
         r = x + y
-        numpick(u, 'MATH-B-08', '%s וְעוֹד %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [r - 1, r + 1], i, row=['n:%d' % x, 'op:+', 'n:%d' % y, 'op:=', '?'],
+        # B-15 §3 as MATH-B-03: the larger addend or the start (untagged), and counting the start too
+        numpick(u, 'MATH-B-08', '%s וְעוֹד %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [max(x, y), r - 1], i, tags={r - 1: 'M-CNT-DOUBLE'}, row=['n:%d' % x, 'op:+', 'n:%d' % y, 'op:=', '?'],
                 text='%s! %s וְעוֹד %s הֵם עֶשֶׂר, וְעוֹד %s.' % (F[r], F[x], F[10 - x], F[r - 10]),
                 h3='%s וְעוֹד %s הֵם עֶשֶׂר. נִשְׁאָר עוֹד %s, אָז %s. עַכְשָׁו תּוֹרְכֶם.' % (F[x], F[10 - x], F[y - (10 - x)], F[r]))
     for i, (x, y) in enumerate([(13, 4), (15, 3), (12, 5), (17, 2)]):
         r = x - y
-        numpick(u, 'MATH-B-08', '%s פָּחוֹת %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [r - 1, r + 1], i, row=['n:%d' % x, 'op:-', 'n:%d' % y, 'op:=', '?'],
+        numpick(u, 'MATH-B-08', '%s פָּחוֹת %s. כַּמָּה זֶה?' % (F[x], F[y]), r, [x, r + 1], i, tags={r + 1: 'M-CNT-DOUBLE'}, row=['n:%d' % x, 'op:-', 'n:%d' % y, 'op:=', '?'],
                 text='%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r]))
 
     # ---- MATH-B-09: equals means the same as
@@ -471,7 +492,7 @@ def math():
               h3='%s וְעוֹד %s הֵם %s, %s וְעוֹד %s הֵם %s. הַצַּד שֶׁיֵּשׁ בּוֹ יוֹתֵר כָּבֵד יוֹתֵר.' % (F[la], F[lb], F[la + lb], vav(F[ra]), F[rb], F[ra + rb]),
               correct_text='כֵּן! %s בְּצַד אֶחָד, %s בַּצַּד הַשֵּׁנִי.' % (F[la + lb], F[ra + rb]))
     for i, (x, y, z) in enumerate([(3, 4, 7), (5, 2, 7), (6, 3, 9), (4, 5, 9)]):
-        u.act('MATH-B-09', 'spot', cells=['n:%d' % z, 'op:=', 'n:%d' % x, 'op:+', 'n:%d' % (y + 1)], wrong=4, tag='M-EQ-OPER', rep='symbolic',
+        u.act('MATH-B-09', 'spot', cells=['n:%d' % z, 'op:=', 'n:%d' % x, 'op:+', 'n:%d' % (y + 1)], wrong=4, tag='M-EQ-OPER',
               prompt='חָבֵר כָּתַב מִסְפָּרִים, וְאֶחָד מֵהֶם לֹא מַתְאִים. אֵיפֹה הַטָּעוּת?',
               h3='%s שָׁוֶה %s וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם.' % (F[z], F[x], F[y]), correct_text='כֵּן! %s שָׁוֶה %s וְעוֹד %s.' % (F[z], F[x], F[y]))
 
@@ -480,8 +501,10 @@ def math():
     for i, (g, per, obj) in enumerate([(2, 3, 'apple'), (3, 2, 'fish'), (2, 4, 'star'), (3, 3, 'duck'), (4, 2, 'ladybug'), (2, 5, 'bird')]):
         o = OBJECTS[obj]
         r = g * per
+        # G5 (B-15): one chart column per plate. Options (§3): one plate (M-CNT-CARD) and the groups added to the size
+        # (M-MUL-ADD, not in the pack), both untagged until they have lines
         numpick(u, 'MATH-B-10', 'יֵשׁ %s. עַל כׇּל צַלַּחַת %s. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?' % (qty(g, PLATE), qty(per, o)), r,
-                [r - per, r + 1], i, rep='concrete',
+                [per, g + per], i, chart=[[obj, per]] * g,
                 text='%s! %s הֵם %s.' % (F[r], ' וְעוֹד '.join(F[per] for _ in range(g)), F[r]),
                 h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (' וְעוֹד '.join(F[per] for _ in range(g)), F[r]))
 
@@ -510,7 +533,7 @@ def math():
         word = 'אַחֲרֵי' if ask == 'after' else 'לִפְנֵי'
         u.act('MATH-B-14', 'pick', prompt='מַה בָּא %s %s?' % (word, DAYS[k - 1]),
               options=tri('day_%d' % ans, i, ['day_%d' % w for w in wrong]), correct='day_%d' % ans, rep='symbolic',
-              correct_text='כֵּן! %s.' % DAYS[ans - 1], h3='%s, %s. עַכְשָׁו תּוֹרְכֶם.' % (DAYS[min(k, ans) - 1], DAYS[max(k, ans) - 1]) if abs(k - ans) == 1 else 'הַיָּמִים בַּסֵּדֶר: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(DAYS))
+              tags={'day_%d' % w: 'M-CNT-SEQ' for w in wrong}, correct_text='כֵּן! %s.' % DAYS[ans - 1], h3='%s, %s. עַכְשָׁו תּוֹרְכֶם.' % (DAYS[min(k, ans) - 1], DAYS[max(k, ans) - 1]) if abs(k - ans) == 1 else 'הַיָּמִים בַּסֵּדֶר: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(DAYS))
     for i, (k, ask) in enumerate([(3, 'tomorrow'), (5, 'tomorrow'), (2, 'yesterday'), (6, 'yesterday')]):
         base = {'tomorrow': 'מָחָר', 'yesterday': 'אֶתְמוֹל'}[ask]
         today = k
@@ -518,13 +541,14 @@ def math():
         wrong = [today, ans % 7 + 1] if ask == 'tomorrow' else [today, (ans - 2) % 7 + 1]
         u.act('MATH-B-14', 'pick', prompt='הַיּוֹם %s. מַה יִּהְיֶה %s?' % (DAYS[today - 1], base) if ask == 'tomorrow' else 'הַיּוֹם %s. מָה הָיָה %s?' % (DAYS[today - 1], base),
               options=tri('day_%d' % ans, i, ['day_%d' % w for w in wrong]), correct='day_%d' % ans, rep='symbolic',
+              tags={'day_%d' % w: 'M-CNT-SEQ' for w in wrong}, **({'check': 'reverse'} if ask == 'yesterday' else {}),
               correct_text='כֵּן! %s %s.' % (base, DAYS[ans - 1]), h3='הַיּוֹם %s. עַכְשָׁו תּוֹרְכֶם.' % DAYS[today - 1])
 
     # ---- MATH-B-15: the clock, whole hours
     u.skill('MATH-B-15', 'קוראים שעון', 'קוֹרְאִים שָׁעוֹת עֲגֻלּוֹת', 'pool', ['NUM-B-08'], ['pictorial', 'symbolic'], ['M-CLOCK-HANDS'])
     for i, h in enumerate([3, 6, 9, 1, 4, 8, 11, 2, 5, 7]):
         wrong = [12, h + 1 if h < 11 else 2]
-        numpick(u, 'MATH-B-15', 'מָה הַשָּׁעָה?', h, wrong, i, tags={12: 'M-CLOCK-HANDS'}, rep='pictorial', group={'sprite': 'clock_%d' % h, 'count': 1},
+        numpick(u, 'MATH-B-15', 'מָה הַשָּׁעָה?', h, wrong, i, tags={12: 'M-CLOCK-HANDS'}, group={'sprite': 'clock_%d' % h, 'count': 1},
                 text='כֵּן! הַשָּׁעָה %s.' % F[h], h3='הַמַּחֲוָג הַקָּצָר וְהָעָבֶה אוֹמֵר אֶת הַשָּׁעָה: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[h], F[h]))
 
     # ---- MATH-B-18: the missing number
@@ -533,7 +557,7 @@ def math():
         r = total - x
         u.act('MATH-B-18', 'pick', prompt='%s וְעוֹד כַּמָּה שָׁוֶה %s?' % (F[x], F[total]),
               row=['n:%d' % x, 'op:+', '?', 'op:=', 'n:%d' % total], options=tri('n:%d' % r, i, ['n:%d' % o for o in clean(r, [total, r + 1])]),
-              correct='n:%d' % r, tags={'n:%d' % total: 'M-EQ-OPER'}, rep='symbolic',
+              correct='n:%d' % r, tags={'n:%d' % total: 'M-EQ-OPER'},
               correct_text='%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[r], F[x], F[r], F[total]),
               h2='%s כְּבָר יֵשׁ. מוֹסִיפִים אַחַת אַחַת עַד %s, וְסוֹפְרִים כַּמָּה הוֹסַפְנוּ.' % (F[x], F[total]),
               h3='%s… וּמַמְשִׁיכִים: %s. הֵרַמְנוּ %s אֶצְבָּעוֹת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (

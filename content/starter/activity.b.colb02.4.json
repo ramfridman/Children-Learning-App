@@ -40,7 +40,8 @@
       {
         "id": "o1",
         "sprite": "asset:shade_green_3",
-        "label": "יָרֹק כֵּהֶה"
+        "label": "יָרֹק כֵּהֶה",
+        "misconception": "M-COL-SHADE"
       },
       {
         "id": "o2",
@@ -50,7 +51,8 @@
       {
         "id": "o3",
         "sprite": "asset:shade_green_2",
-        "label": "יָרֹק"
+        "label": "יָרֹק",
+        "misconception": "M-SER-ENDS"
       }
     ],
     "correct": "o2",
@@ -69,6 +71,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-SHADE",
+        "vo": "vo:fb.col_shade",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּחֹל בָּהִיר וְכָחֹל כֵּהֶה הֵם שְׁנֵיהֶם כָּחֹל. בּוֹאוּ נִסְתַּכֵּל עַל הַצֶּבַע."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

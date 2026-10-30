@@ -28,8 +28,7 @@
     }
   ],
   "representations": [
-    "symbolic",
-    "concrete"
+    "symbolic"
   ],
   "misconceptions": [
     "M-ADD-RECOUNT"

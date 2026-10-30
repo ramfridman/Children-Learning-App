@@ -4,7 +4,7 @@
   "review": "needs-editor",
   "revision": 1,
   "template": "tap_answer",
-  "templateVersion": "1.1",
+  "templateVersion": "1.2",
   "domain": "math",
   "band": "B",
   "skills": [
@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "concrete",
+  "representation": "pictorial",
   "variantGroup": "pick",
   "difficulty": {
     "authored": 0.72
@@ -32,7 +32,17 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "optionsOnTiles": true,
+    "chart": [
+      {
+        "sprite": "asset:bird",
+        "count": 5
+      },
+      {
+        "sprite": "asset:bird",
+        "count": 5
+      }
+    ]
   },
   "answer": {
     "type": "choice",
@@ -44,8 +54,8 @@
       },
       {
         "id": "o2",
-        "numeral": 11,
-        "label": "אַחַת עֶשְׂרֵה"
+        "numeral": 7,
+        "label": "שֶׁבַע"
       },
       {
         "id": "o3",

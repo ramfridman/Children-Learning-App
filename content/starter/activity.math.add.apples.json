@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "concrete",
+  "representation": "pictorial",
   "variantGroup": "pick",
   "difficulty": {
     "authored": 0.2
@@ -64,7 +64,8 @@
       {
         "id": "o3",
         "numeral": 5,
-        "label": "חָמֵשׁ"
+        "label": "חָמֵשׁ",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o2",
@@ -83,6 +84,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

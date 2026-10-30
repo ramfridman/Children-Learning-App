@@ -46,13 +46,15 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:balloon_red",
-        "label": "בָּלוֹן אָדֹם"
+        "sprite": "asset:balloon_blue",
+        "label": "בָּלוֹן כָּחֹל",
+        "misconception": "M-COL-NAME"
       },
       {
         "id": "o2",
-        "sprite": "asset:balloon_blue",
-        "label": "בָּלוֹן כָּחֹל"
+        "sprite": "asset:ball_red",
+        "label": "כַּדּוּר אָדֹם",
+        "misconception": "M-SORT-SHIFT"
       },
       {
         "id": "o3",
@@ -76,6 +78,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-NAME",
+        "vo": "vo:fb.col_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SORT-SHIFT",
+        "vo": "vo:fb.sort_shift",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

@@ -51,13 +51,14 @@
       },
       {
         "id": "o2",
-        "numeral": 10,
-        "label": "עֶשֶׂר"
+        "numeral": 7,
+        "label": "שֶׁבַע"
       },
       {
         "id": "o3",
         "numeral": 8,
-        "label": "שְׁמוֹנֶה"
+        "label": "שְׁמוֹנֶה",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o1",
@@ -76,6 +77,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

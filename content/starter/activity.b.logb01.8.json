@@ -50,7 +50,8 @@
       {
         "id": "o1",
         "sprite": "asset:ball_green",
-        "label": "כַּדּוּר יָרֹק"
+        "label": "כַּדּוּר יָרֹק",
+        "misconception": "M-PAT-UNIT"
       },
       {
         "id": "o2",
@@ -79,6 +80,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

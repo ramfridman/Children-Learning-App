@@ -6,7 +6,7 @@
   "template": "tap_answer",
   "templateVersion": "1.1",
   "domain": "math",
-  "band": "A",
+  "band": "B",
   "skills": [
     {
       "id": "MATH-B-01",
@@ -15,7 +15,7 @@
   ],
   "purpose": "practice",
   "checkType": "practice",
-  "representation": "concrete",
+  "representation": "pictorial",
   "variantGroup": "sum",
   "difficulty": {
     "authored": 0.58
@@ -64,7 +64,8 @@
       {
         "id": "o3",
         "numeral": 9,
-        "label": "תֵּשַׁע"
+        "label": "תֵּשַׁע",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o1",
@@ -83,6 +84,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

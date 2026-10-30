@@ -51,8 +51,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:shape_square_blue",
-        "label": "רִבּוּעַ"
+        "sprite": "asset:shape_square_red",
+        "label": "רִבּוּעַ",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o3",
@@ -76,6 +77,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.col_oneattr",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

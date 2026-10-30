@@ -14,8 +14,8 @@
     }
   ],
   "purpose": "practice",
-  "checkType": "practice",
-  "representation": "concrete",
+  "checkType": "reverse",
+  "representation": "pictorial",
   "variantGroup": "pick",
   "difficulty": {
     "authored": 0.9

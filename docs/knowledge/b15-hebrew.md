@@ -158,3 +158,182 @@ The generator keeps today's line for Band A until the owner decides. Each Band A
 **App-developer:** add the four nouns to `OBJECTS` (§2); choose forms by gender as listed; give each P- and X-line its own vo id; never use NUM-B-11's spot h3 outside counting-up rows. While reading I also saw `בַּקְעָרָה` in `nonzero.bowl.*`, which should be `בַּקְּעָרָה`; it is outside this spec, so I recorded it here and changed nothing.
 
 **Voice director** (after the owner approves): the lines to watch are H30 (14 words, two numbers with a prefix: a breath at the comma) and X3b and X4 (number lists: the commas are the breaths). The homographs kept pointed are `שָׂחוּ`, `צָמַח`, `בָּנָה`, `מִיֵּן`, `יֵרֵד` and `שָׂמִים`.
+
+---
+
+## 6. After the curriculum addendum
+
+Hebrew text editor, 2026-10-30, after the curriculum-expert's `## Addendum after the Hebrew pass` (A1 to A6) in `docs/knowledge/b15-content-spec.md`. Same rules and statuses as above. Every string below is final for the screen and the voice, written by hand (nothing made by a model), and goes into the pack as `"review": "needs-editor"`. `reused` = the generator copies an existing row; no new string. Checked against the generators (`tools/author.py`, `tools/band_b*.py`) and the unit `names` and `objects`, so each row is what the generator prints once the new values are in.
+
+**Correction to §2.** `butterfly` is **`פַּרְפַּר`** (patah under the second pe) in the singular; only the plural takes qamatz, `פַּרְפָּרִים` (ר takes no dagesh, so the patah lengthens). §2 and A6 wrote `פַּרְפָּר`; the forms in this section replace them. The prefix is `בְּפַרְפַּר אֶחָד` (no dagesh after `בְּ`). See 6.7 for the 9 existing rows with the same slip.
+
+### 6.1 CS-A-01 hands (A1: the answer is the towel)
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| H11b (revised) | CS-A-01 hands, prompt | רוֹחֲצִים יָדַיִם. מָה עוֹשִׂים אַחֲרֵי הַסַּבּוֹן? | רוחצים ידיים. מה עושים אחרי הסבון? | text-ready | **`מִיָּד` comes out** for hands. Teeth needed it (after the paste come both the brush and the rinse). In the hands routine only the towel comes after the soap, so the question is already exact. Also "right after the soap we dry" is not what a child does at the sink (you rinse first), so `מִיָּד` would push a thinking child towards the tap. H11a (teeth) keeps `מִיָּד`. 5 words |
+| H11b-c | CS-A-01 hands, correct line | כֵּן! אַחֲרֵי הַסַּבּוֹן מְיַבְּשִׁים בְּמַגֶּבֶת. | כן, אחרי הסבון מייבשים במגבת. | text-ready | as A1 proposes. Checked: `מְיַבְּשִׁים` (plural present, no subject, as `cs.routine.wash.last`'s `בַּסּוֹף מְיַבְּשִׁים בְּמַגֶּבֶת`); `בְּמַגֶּבֶת` with no dagesh in the מ. It answers the prompt in its own words ("after the soap") |
+| — | options | מַגֶּבֶת / בָּרֶז / סַבּוֹן | | reused | the labels of `cs.routine.wash.*` (`robots.json` names) |
+| — | h3 | `cs.routine.wash.last`'s h3, word for word (`קֹדֶם בָּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. … לִלְחֹץ עַל הַמַּגֶּבֶת.`) | | reused | it ends on the towel, so it fits the new answer |
+
+For the curriculum-expert (not a wording issue, so I changed nothing): the tap is tagged M-SEQ-CAUSE ("the step before"), but in life you rinse under the tap after the soap. Dropping `מִיָּד` helps; only the picture settles it (the tap should look like "opening the tap", the start of the routine).
+
+### 6.2 SHP-A-06 boat and car (A3)
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| H19c | SHP-A-06 boat, prompt | בּוֹנִים סִירָה מִצּוּרוֹת. | בונים סירה מצורות. | text-ready | `k_shapebuild` prompt pattern (`בּוֹנִים %s מִצּוּרוֹת.`) |
+| H19c-c | boat, correct line | כֵּן! בְּנִיתֶם סִירָה. | כן, בניתם סירה. | text-ready | `k_shapebuild` correct pattern; nothing agrees with the noun |
+| H19d | SHP-A-06 car, prompt | בּוֹנִים מְכוֹנִית מִצּוּרוֹת. | בונים מכונית מצורות. | text-ready | |
+| H19d-c | car, correct line | כֵּן! בְּנִיתֶם מְכוֹנִית. | כן, בניתם מכונית. | text-ready | |
+| — | hints 1 to 3 | the shared `shapebuild` hints (`לְכׇל צוּרָה יֵשׁ מָקוֹם אֶחָד, כְּמוֹ הַצֵּל שֶׁלָּהּ.` …) | | reused | |
+
+### 6.3 Compare items with the new masculine nouns (A4)
+
+`k_compare_more` with `obj` chick (`אֶפְרוֹחַ` / `אֶפְרוֹחִים`, m) or butterfly (`פַּרְפַּר` / `פַּרְפָּרִים`, m). The numbers are masculine (`qty`), with `שְׁנֵי` before the noun for 2. The size lines `vo:fb.size.big / .small / .spread` (`הֵם גְּדוֹלִים…`, `הֵם קְטַנִּים…`, `הֵם רְחוֹקִים זֶה מִזֶּה…`) are right for both nouns: **reused**, no feminine clip. Hints 1 and 2 are the shared ones.
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| C1 | NUM-A-11 chick [4, 3], prompt | אֵיפֹה יֵשׁ יוֹתֵר אֶפְרוֹחִים? | איפה יש יותר אפרוחים? | text-ready | cue `spread`; also the prompt of C3 and C5 |
+| C1-l | labels | אַרְבָּעָה אֶפְרוֹחִים / שְׁלוֹשָׁה אֶפְרוֹחִים | | text-ready | screen only |
+| C1-c | correct | כֵּן! כָּאן יֵשׁ יוֹתֵר אֶפְרוֹחִים. | כן, כאן יש יותר אפרוחים. | text-ready | shared by C1, C3, C5 (one clip) |
+| C1-h3 | h3 | בְּצַד אֶחָד יֵשׁ אַרְבָּעָה אֶפְרוֹחִים, וּבַצַּד הָאַחֵר שְׁלוֹשָׁה אֶפְרוֹחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | בצד אֶחָד יש אַרְבָּעָה אפרוחים, ובצד האחר שְׁלוֹשָׁה אפרוחים. עכשיו תורכם — ללחוץ על הנכונה. | text-ready | 16 words, under 24 |
+| C2 | NUM-A-11 butterfly [3, 5], prompt | אֵיפֹה יֵשׁ יוֹתֵר פַּרְפָּרִים? | איפה יש יותר פרפרים? | text-ready | cue `spread` |
+| C2-l | labels | שְׁלוֹשָׁה פַּרְפָּרִים / חֲמִשָּׁה פַּרְפָּרִים | | text-ready | |
+| C2-c | correct | כֵּן! כָּאן יֵשׁ יוֹתֵר פַּרְפָּרִים. | כן, כאן יש יותר פרפרים. | text-ready | |
+| C2-h3 | h3 | בְּצַד אֶחָד יֵשׁ חֲמִשָּׁה פַּרְפָּרִים, וּבַצַּד הָאַחֵר שְׁלוֹשָׁה פַּרְפָּרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | בצד אֶחָד יש חֲמִשָּׁה פרפרים, ובצד האחר שְׁלוֹשָׁה פרפרים. עכשיו תורכם — ללחוץ על הנכונה. | text-ready | |
+| C3 | NUM-A-12 chick [3, 5], prompt / correct | = C1 / = C1-c | | text-ready | cue `big` |
+| C3-l | labels | שְׁלוֹשָׁה אֶפְרוֹחִים / חֲמִשָּׁה אֶפְרוֹחִים | | text-ready | |
+| C3-h3 | h3 | בְּצַד אֶחָד יֵשׁ חֲמִשָּׁה אֶפְרוֹחִים, וּבַצַּד הָאַחֵר שְׁלוֹשָׁה אֶפְרוֹחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | בצד אֶחָד יש חֲמִשָּׁה אפרוחים, ובצד האחר שְׁלוֹשָׁה אפרוחים. עכשיו תורכם — ללחוץ על הנכונה. | text-ready | |
+| C4 | NUM-A-12 butterfly fewer [5, 4], prompt | אֵיפֹה יֵשׁ פָּחוֹת פַּרְפָּרִים? | איפה יש פחות פרפרים? | text-ready | cue `small` (the 5 drawn small); also C6's prompt |
+| C4-l | labels | חֲמִשָּׁה פַּרְפָּרִים / אַרְבָּעָה פַּרְפָּרִים | | text-ready | |
+| C4-c | correct | כֵּן! כָּאן יֵשׁ פָּחוֹת פַּרְפָּרִים. | כן, כאן יש פחות פרפרים. | text-ready | shared by C4 and C6 |
+| C4-h3 | h3 | בְּצַד אֶחָד יֵשׁ אַרְבָּעָה פַּרְפָּרִים, וּבַצַּד הָאַחֵר חֲמִשָּׁה פַּרְפָּרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | בצד אֶחָד יש אַרְבָּעָה פרפרים, ובצד האחר חֲמִשָּׁה פרפרים. עכשיו תורכם — ללחוץ על הנכונה. | text-ready | the right set first, as the generator does |
+| C5 | MATH-A-07 chick [2, 4], prompt / correct | = C1 / = C1-c | | text-ready | cue `big` |
+| C5-l | labels | שְׁנֵי אֶפְרוֹחִים / אַרְבָּעָה אֶפְרוֹחִים | | text-ready | `שְׁנֵי`, never `שְׁנַיִם`, before the noun |
+| C5-h3 | h3 | בְּצַד אֶחָד יֵשׁ אַרְבָּעָה אֶפְרוֹחִים, וּבַצַּד הָאַחֵר שְׁנֵי אֶפְרוֹחִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | בצד אֶחָד יש אַרְבָּעָה אפרוחים, ובצד האחר שְׁנֵי אפרוחים. עכשיו תורכם — ללחוץ על הנכונה. | text-ready | |
+| C6 | MATH-A-07 butterfly fewer [5, 3], prompt / correct | = C4 / = C4-c | | text-ready | cue `small` |
+| C6-l | labels | חֲמִשָּׁה פַּרְפָּרִים / שְׁלוֹשָׁה פַּרְפָּרִים | | text-ready | |
+| C6-h3 | h3 | בְּצַד אֶחָד יֵשׁ שְׁלוֹשָׁה פַּרְפָּרִים, וּבַצַּד הָאַחֵר חֲמִשָּׁה פַּרְפָּרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה. | בצד אֶחָד יש שְׁלוֹשָׁה פרפרים, ובצד האחר חֲמִשָּׁה פרפרים. עכשיו תורכם — ללחוץ על הנכונה. | text-ready | |
+
+New spoken strings in 6.3: 3 prompts (C1, C2, C4), 3 correct lines (C1-c, C2-c, C4-c), 6 h3 lines.
+
+### 6.4 The other A3 rows whose nouns change
+
+**COL-B-03, swatch to object** (`k_pick`; band_b `NAMES`: `כַּדּוּר` + colour, m). Prompt, correct line and h3 are COL-B-03's own.
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| CB3-blue | prompt (group `shade_blue_1`) | אֵיפֹה עוֹד כָּחֹל? | איפה עוד כחול? | reused | `b.colb03.1` prompt |
+| CB3-blue-l | labels | כַּדּוּר כָּחֹל / כַּדּוּר לָבָן / כַּדּוּר סָגֹל | | text-ready | names from `COLOURS`; all three already in the pack |
+| CB3-blue-c | correct | כֵּן! גַּם זֶה כָּחֹל. | כן, גם זה כחול. | reused | `זֶה` agrees with `כַּדּוּר` (m) |
+| CB3-blue-h3 | h3 | בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא כָּחֹל. עַכְשָׁו תּוֹרְכֶם. | בהיר וכהה הם אותו צבע. הצבע הוא כחול. עכשיו תורכם. | reused | it answers the white-ball trap exactly; keep it, not the default `זֶה כַּדּוּר כָּחֹל…` |
+| CB3-red | prompt (group `shade_red_3`) | אֵיפֹה עוֹד אָדֹם? | איפה עוד אדום? | reused | `b.colb03.5` prompt |
+| CB3-red-l | labels | כַּדּוּר אָדֹם / כַּדּוּר שָׁחֹר / כַּדּוּר כָּתֹם | | text-ready | |
+| CB3-red-c / h3 | correct / h3 | כֵּן! גַּם זֶה אָדֹם. / בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא אָדֹם. עַכְשָׁו תּוֹרְכֶם. | | reused | |
+
+The shared M-COL-SHADE line (`כָּחֹל בָּהִיר וְכָחֹל כֵּהֶה הֵם שְׁנֵיהֶם כָּחֹל…`) also plays on the red item, as it already does on `b.colb03.5` and `.6`. It works as an example; no change asked.
+
+**LOG-B-09** (`הוּא` agrees with the shape nouns, all m).
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| L9a | prompt | הוּא לֹא צָהֹב וְלֹא רִבּוּעַ. אֵיזֶה הוּא? | הוא לא צהוב ולא ריבוע. איזה הוא? | text-ready | |
+| L9a-l | labels | עִגּוּל יָרֹק / רִבּוּעַ יָרֹק / עִגּוּל צָהֹב | | text-ready | |
+| L9a-c | correct | כֵּן! הוּא לֹא צָהֹב וְלֹא רִבּוּעַ. | כן, הוא לא צהוב ולא ריבוע. | text-ready | |
+| L9a-h3 | h3 | מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא צָהֹב וְגַם לֹא רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם. | מחפשים משהו שהוא לא צהוב וגם לא ריבוע. עכשיו תורכם. | text-ready | the reviewed form of `b.logb09.*` h3 (its ui_text), not the generator's old `צָרִיךְ שֶׁגַּם…` |
+| L9b | prompt | הוּא לֹא כָּתֹם וְלֹא מְשֻׁלָּשׁ. אֵיזֶה הוּא? | הוא לא כתום ולא משולש. איזה הוא? | text-ready | |
+| L9b-l | labels | רִבּוּעַ אָדֹם / מְשֻׁלָּשׁ אָדֹם / רִבּוּעַ כָּתֹם | | text-ready | |
+| L9b-c | correct | כֵּן! הוּא לֹא כָּתֹם וְלֹא מְשֻׁלָּשׁ. | כן, הוא לא כתום ולא משולש. | text-ready | |
+| L9b-h3 | h3 | מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא כָּתֹם וְגַם לֹא מְשֻׁלָּשׁ. עַכְשָׁו תּוֹרְכֶם. | מחפשים משהו שהוא לא כתום וגם לא משולש. עכשיו תורכם. | text-ready | for the design-director: red and orange are a near pair (`NEAR`); the red square and the orange square must look clearly different |
+
+**LOG-B-08** (rule on shape). The four existing prompts wait for the owner (V1, `proposed`: `הִיא` after the noun, and `אִם לֹא` in place of the school word `אַחֶרֶת`). The two new prompts must take the **same** form as the existing four, so both forms are given; the generator uses the one the owner chooses for `b.logb08.1` to `.4`.
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| L8t | triangle, prompt (editor's form) | אִם הַצּוּרָה הִיא מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אִם לֹא — לָעֵשֶׂב. | אם הצורה היא משולש, שָׂמִים אותה בקופסה. אם לא — לעשב. | text-ready (goes in with V1) | `הִיא`: the subject `צוּרָה` is f, although `מְשֻׁלָּשׁ` is m |
+| L8t-old | triangle, prompt (today's form, until V1) | אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב. | אם הצורה משולש, שָׂמִים אותה בקופסה. אחרת — לעשב. | proposed (with V1) | |
+| L8r | rectangle, prompt (editor's form) | אִם הַצּוּרָה הִיא מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אִם לֹא — לָעֵשֶׂב. | אם הצורה היא מלבן, שָׂמִים אותה בקופסה. אם לא — לעשב. | text-ready (goes in with V1) | |
+| L8r-old | rectangle, prompt (today's form) | אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב. | אם הצורה מלבן, שָׂמִים אותה בקופסה. אחרת — לעשב. | proposed (with V1) | |
+| — | bins, correct, h3 | `הַקֻּפְסָה` / `הָעֵשֶׂב`; `כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.`; `לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.` | | reused | |
+
+**For the curriculum-expert (LOG-B-08 rectangle):** a square *is* a rectangle, so "if the shape is a rectangle" with a square in the pool has two defensible places for that square. The rectangle item's pool must have no square (today's `pool` has two), and it needs `shape_rect_*` (today's has none).
+
+**NUM-B-04 and NUM-A-04, `count_tap`.** The count, the correct line and h3 use bare (feminine) numbers, so only the touch hint and the answer question carry the noun.
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| N4-cat-h1 | NUM-B-04 14 cats, hint 1 | נוֹגְעִים בְּחָתוּל אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד. | נוגעים בחתול אֶחָד, ואומרים מספר אֶחָד. | text-ready | |
+| N4-cat-q | answer question | כַּמָּה חֲתוּלִים? | כמה חתולים? | text-ready | |
+| N4-cat-c | correct | אַרְבַּע עֶשְׂרֵה! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | אַרְבַּע עֶשְׂרֵה. ספרתם כל אֶחָד פעם אַחַת. | text-ready | |
+| N4-cat-h3 | h3 | מֵאַחַת עַד אַרְבַּע עֶשְׂרֵה. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: אַרְבַּע עֶשְׂרֵה! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע עֶשְׂרֵה. | מֵאַחַת עד אַרְבַּע עֶשְׂרֵה. המספר האחרון אומר כמה: אַרְבַּע עֶשְׂרֵה. עכשיו תורכם — ללחוץ על אַרְבַּע עֶשְׂרֵה. | text-ready | the `k_count_tap` pattern |
+| N4-bfly-h1 | NUM-B-04 17 butterflies, hint 1 | נוֹגְעִים בְּפַרְפַּר אֶחָד, וְאוֹמְרִים מִסְפָּר אֶחָד. | נוגעים בפרפר אֶחָד, ואומרים מספר אֶחָד. | text-ready | no dagesh in the פ after `בְּ` (`prefix()` does this) |
+| N4-bfly-q | answer question | כַּמָּה פַּרְפָּרִים? | כמה פרפרים? | text-ready | |
+| N4-bfly-c | correct | שְׁבַע עֶשְׂרֵה! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת. | שְׁבַע עֶשְׂרֵה. ספרתם כל אֶחָד פעם אַחַת. | text-ready | |
+| N4-bfly-h3 | h3 | מֵאַחַת עַד שְׁבַע עֶשְׂרֵה. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: שְׁבַע עֶשְׂרֵה! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁבַע עֶשְׂרֵה. | מֵאַחַת עד שְׁבַע עֶשְׂרֵה. המספר האחרון אומר כמה: שְׁבַע עֶשְׂרֵה. עכשיו תורכם — ללחוץ על שְׁבַע עֶשְׂרֵה. | text-ready | |
+| A4-bird-h1 | NUM-A-04 4 birds, hint 1 | נוֹגְעִים בְּצִפּוֹר אַחַת, וְאוֹמְרִים מִסְפָּר אֶחָד. | נוגעים בציפור אַחַת, ואומרים מספר אֶחָד. | text-ready | `צִפּוֹר` f: `אַחַת`; `מִסְפָּר אֶחָד` stays m (its noun is `מִסְפָּר`) |
+| A4-bird-q | answer question | כַּמָּה צִפֳּרִים? | כמה ציפורים? | text-ready | |
+| A4-bird-c / h3 | correct / h3 | `אַרְבַּע! סְפַרְתֶּם כׇּל אֶחָד פַּעַם אַחַת.` / `אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: אַרְבַּע! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.` | | reused | the same text as the existing 4-count items |
+| A4-lady-h1 | NUM-A-04 3 ladybugs, hint 1 | נוֹגְעִים בְּחִפּוּשִׁית אַחַת, וְאוֹמְרִים מִסְפָּר אֶחָד. | נוגעים בחיפושית אַחַת, ואומרים מספר אֶחָד. | text-ready | |
+| A4-lady-q | answer question | כַּמָּה חִפּוּשִׁיּוֹת? | כמה חיפושיות? | text-ready | |
+| A4-lady-c / h3 | correct / h3 | `שָׁלוֹשׁ! …` / `אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. …` (as the existing 3-count items) | | reused | |
+
+(The bird and ladybug hint 1 and question may already exist in `count.*` rows; if so the generator reuses them. Same text either way.)
+
+**COL-A-01** (`k_pick` with explicit options; names from `colours.json`).
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| CA1-ban | prompt (group `banana_yellow`) | אֵיפֹה אוֹתוֹ צֶבַע? | איפה אותו צבע? | reused | `col.match.*` |
+| CA1-ban-l | labels | פֶּרַח צָהֹב / בָּנָנָה יְרֻקָּה / כַּדּוּר כָּתֹם | | text-ready | existing label forms |
+| CA1-ban-c | correct | כֵּן! זֶה פֶּרַח צָהֹב. | כן, זה פרח צהוב. | text-ready | `זֶה`: the answer is `פֶּרַח` (m), not the banana of the picture (f) |
+| CA1-ban-h3 | h3 | זֶה פֶּרַח צָהֹב. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | זה פרח צהוב. עכשיו תורכם — ללחוץ עליו. | text-ready | |
+| CA1-bal | prompt (group `balloon_yellow`) | אֵיפֹה אוֹתוֹ צֶבַע? | איפה אותו צבע? | reused | |
+| CA1-bal-l | labels | כַּדּוּר צָהֹב / בָּלוֹן יָרֹק / פֶּרַח כָּתֹם | | text-ready | |
+| CA1-bal-c / h3 | correct / h3 | כֵּן! זֶה כַּדּוּר צָהֹב. / זֶה כַּדּוּר צָהֹב. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו. | כן, זה כדור צהוב. / זה כדור צהוב. עכשיו תורכם — ללחוץ עליו. | text-ready | |
+
+The M-SORT-SHIFT trap (green banana, green balloon) plays today's `vo:fb.sort_shift` (A5, Band A). That line is about colour, so it is true here.
+
+**SHP-A-04 (yellow and red):** no text changes. `k_shape` names the shapes without their colour (`אֵיפֹה הָרִבּוּעַ?`, `אֵיפֹה הַמַּלְבֵּן?`, `כֵּן! זֶה רִבּוּעַ.`, `זֶה מַלְבֵּן. … לִלְחֹץ עָלָיו.`): all **reused**.
+
+**CS-A-03 boards (Band A, D10).** Only h3 depends on the board (`robot_steps()`). Prompt and correct line are reused (`מַזִּיזִים אֶת הָרוֹבּוֹט אֶל הַדֶּגֶל.`, `כֵּן! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל.`).
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| R24-h3 | 2 × 4, robot (0, 3), flag (1, 0), solution up ×3, right ×1 | שְׁלוֹשָׁה צְעָדִים לְמַעְלָה, וְאָז צַעַד אֶחָד לְכִוּוּן הַדֶּגֶל. עַכְשָׁו תּוֹרְכֶם. | שְׁלוֹשָׁה צעדים למעלה, ואז צעד אֶחָד לכיוון הדגל. עכשיו תורכם. | text-ready | |
+| R34-h3 | 3 × 4, robot (2, 3), flag (0, 0), solution up ×3, left ×2 | שְׁלוֹשָׁה צְעָדִים לְמַעְלָה, וְאָז שְׁנֵי צְעָדִים לְכִוּוּן הַדֶּגֶל. עַכְשָׁו תּוֹרְכֶם. | שְׁלוֹשָׁה צעדים למעלה, ואז שְׁנֵי צעדים לכיוון הדגל. עכשיו תורכם. | text-ready | |
+
+Please write each `solution` **up first**: after the steps up, the flag is on the robot's own row, so "towards the flag" is a straight line. If the robot goes sideways first, "two steps towards the flag" points at a flag that is up and to the side.
+
+### 6.5 New names (A6) and the half-shekel coin
+
+| id | where | one | many | g | with `בְּ` (count hint) | status | note |
+|---|---|---|---|---|---|---|---|
+| chick | `objects` of `counting-hills.json`, `math.json` | אֶפְרוֹחַ | אֶפְרוֹחִים | m | בְּאֶפְרוֹחַ אֶחָד | text-ready | voice: אפרוח, אפרוחים |
+| butterfly | same | **פַּרְפַּר** | פַּרְפָּרִים | m | בְּפַרְפַּר אֶחָד | text-ready | replaces §2's `פַּרְפָּר`; voice: פרפר, פרפרים |
+| frog | same | צְפַרְדֵּעַ | צְפַרְדְּעִים | f | בִּצְפַרְדֵּעַ אַחַת | text-ready | already f in band_b `NAMES` |
+| shoe | band_b `OBJECTS` | נַעַל | נַעֲלַיִם | f | בְּנַעַל אַחַת | text-ready | NUM-B-18 forms in §2 (`כֻּלָּן`, `אַחַת`, `תִּשָּׁאֵר`) |
+| coin_h50 | band_b `NAMES` | מַטְבֵּעַ שֶׁל חֲצִי שֶׁקֶל | | m | | text-ready | voice, if a label is ever read: מטבע של חצי שקל. Same pattern as `COIN_OF` (`מַטְבֵּעַ שֶׁל שֶׁקֶל`) and as H29's `מֵחֲצִי שֶׁקֶל` (`מֵ` before the ח) |
+| coin_s1, s5, s10 | band_b `NAMES` | מַטְבֵּעַ שֶׁל שֶׁקֶל / מַטְבֵּעַ שֶׁל חֲמִשָּׁה שְׁקָלִים / מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים | | m | | reused | `COIN_OF` |
+
+The other A6 `names` entries copy existing rows; I checked each one's gender: apple_green, ball_red/blue/yellow, balloon_red/blue (m); plate `צַלַּחַת` f with `def` `הַצַּלַּחַת`; tower_1 to 6 `מִגְדָּל מִסְפָּר אַחַת…` m (the bare number after `מִסְפָּר` stays feminine, which is right); solid_sphere `כַּדּוּר` m; shape_circle_* and shape_square_* m; fish_size_l/s, star_size_l/s m; key m. No new Hebrew in them. **Band A `solid_box` stays `קֻפְסָה`** (A6, Q7).
+
+In flash, ordinal and pattern items: `זֶה אֶפְרוֹחַ אֶחָד.`, `אֵלֶּה שְׁלוֹשָׁה אֶפְרוֹחִים.`, `זֶה פַּרְפַּר אֶחָד.`, `זֶה הַשֵּׁנִי בַּתּוֹר … לִלְחֹץ עָלָיו` (as in §2).
+
+### 6.6 fb.sort_shift in Band B (A5)
+
+| id | where | nikud text (ui_text) | voice_text | status | note |
+|---|---|---|---|---|---|
+| `vo:fb.sort_shift.shape` | Band B items with `rule: shape` (COL-B-04 shape sort, LOG-B-06 H9b, LOG-B-08 `.3`, `.4`, triangle, rectangle) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתָהּ הַצּוּרָה. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותה הצורה. בואו נבדוק. | **text-ready for Band B** | P4's text. `אוֹתָהּ` agrees with `צוּרָה` (f). The first clause is true only when the child followed the colour, which is what M-SORT-SHIFT means on these items; the tag must fire only then |
+| `vo:fb.sort_shift.kind` | Band B items with `rule: kind` (none today) | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | זה אותו צבע, אבל מחפשים את אותו הדבר. בואו נבדוק. | **text-ready for Band B** | P3's text |
+| P3, P4 in Band A | LOG-A-01, LOG-A-03, SHP-A-02 | (the same texts) | | **proposed** | the owner decides with P2; Band A keeps today's `vo:fb.sort_shift` until then. Once he approves, one clip serves both bands |
+
+Band B colour items keep today's `vo:fb.sort_shift` (`מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר.`): reused.
+
+### 6.7 Dropped, and one fix to existing rows
+
+- ~~X1a~~ `יֵשׁ יוֹתֵר צְפַרְדְּעִים אוֹ יוֹתֵר אֶפְרוֹחִים?`: **dropped** (A4: one noun per item; the existing `אֵיפֹה יֵשׁ יוֹתֵר {many}?` is used).
+- ~~X1b~~ `כֵּן! יֵשׁ יוֹתֵר צְפַרְדְּעִים.`: **dropped** (A4).
+- ~~X1c~~ the three feminine size lines `הֵן גְּדוֹלוֹת / קְטַנּוֹת / רְחוֹקוֹת זוֹ מִזּוֹ…`: **dropped** (A4: every M-CNT-SIZE set is masculine). They stay in §2 as history; the generator must not add them. This answers §5 item 5.
+- §2's extra strings fall from 13 to 8 (X1a, X1b and the three X1c lines are out).
+- **Existing rows with `פַּרְפָּר` in the singular** (screen nikud only; the voice text is plain `פרפר`, so no clip needs re-voicing): `activity.count.butterflies.3` prompt, `feedback.incorrect.0`, `feedback.incorrect.1`; `activity.count.butterflies.4` prompt, `feedback.incorrect.0`, `feedback.incorrect.1`; `activity.count.butterflies.5` `feedback.incorrect.0`, `feedback.incorrect.1`; `lesson.butterflies` celebration. All 9 are `text-ready`. The fix is `פַּרְפָּר` → `פַּרְפַּר` (and `שֶׁפַּרְפָּר` → `שֶׁפַּרְפַּר`). It is a proposal for the owner; with his OK the app-developer changes it in `counting-hills.json`.

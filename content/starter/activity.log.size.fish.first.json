@@ -50,12 +50,14 @@
       {
         "id": "o2",
         "sprite": "asset:fish_size_m",
-        "label": "דָּג בֵּינוֹנִי"
+        "label": "דָּג בֵּינוֹנִי",
+        "misconception": "M-PAT-NEXT"
       },
       {
         "id": "o3",
         "sprite": "asset:fish_size_l",
-        "label": "דָּג גָּדוֹל"
+        "label": "דָּג גָּדוֹל",
+        "misconception": "M-SER-ENDS"
       }
     ],
     "correct": "o1",
@@ -74,6 +76,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-PAT-NEXT",
+        "vo": "vo:fb.pat_next",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

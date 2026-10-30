@@ -46,8 +46,9 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
+        "numeral": 0,
+        "label": "אֶפֶס",
+        "misconception": "M-NUM-ZERO"
       },
       {
         "id": "o2",
@@ -56,8 +57,9 @@
       },
       {
         "id": "o3",
-        "numeral": 0,
-        "label": "אֶפֶס"
+        "numeral": 5,
+        "label": "חָמֵשׁ",
+        "misconception": "M-NUM-ZERO"
       }
     ],
     "correct": "o2",
@@ -76,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NUM-ZERO",
+        "vo": "vo:fb.zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

@@ -51,8 +51,9 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:ball_blue",
-        "label": "כַּדּוּר כָּחֹל"
+        "sprite": "asset:ball_orange",
+        "label": "כַּדּוּר כָּתֹם",
+        "misconception": "M-COL-NAME"
       },
       {
         "id": "o3",
@@ -76,6 +77,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-NAME",
+        "vo": "vo:fb.col_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַצְּבָעִים דּוֹמִים. בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

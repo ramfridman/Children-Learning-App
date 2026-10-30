@@ -14,7 +14,7 @@
     }
   ],
   "purpose": "check",
-  "checkType": "reverse",
+  "checkType": "error_spotting",
   "representation": "symbolic",
   "variantGroup": "spot",
   "difficulty": {
