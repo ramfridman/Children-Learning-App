@@ -89,10 +89,6 @@ enum HintPicture {
   /// slots. No option is marked (tap the answer).
   anotherWay('another_way'),
 
-  /// Only the options of the stage pulse in turn; the answer tiles are not touched (tap the answer, for the families that have
-  /// no pictures yet).
-  pulse('pulse'),
-
   /// The worked example: the guide does the whole thing and the answer is marked as its last step. Level 3 only.
   demonstration('demonstration', marksAnswer: true);
 
@@ -106,9 +102,22 @@ enum HintPicture {
 }
 
 /// The picture families of `tap_answer` (curriculum plan section 5.1, TA-1 to TA-11), by what the skill asks.
-enum TapFamily { count, numerals, sequence, compare, add, colour, shapes, pattern, same, time, measure }
+enum TapFamily {
+  count,
+  numerals,
+  sequence,
+  compare,
+  add,
+  colour,
+  shapes,
+  pattern,
+  same,
+  time,
+  measure,
+  clockMoney,
+}
 
-/// The family of each Band A skill that uses `tap_answer`.
+/// The family of each skill that uses `tap_answer`: Band A first, then Band B (curriculum plan section 5.1).
 const Map<String, TapFamily> _tapFamilyOfSkill = <String, TapFamily>{
   'NUM-A-03': TapFamily.count,
   'NUM-A-04': TapFamily.count,
@@ -154,10 +163,46 @@ const Map<String, TapFamily> _tapFamilyOfSkill = <String, TapFamily>{
   'LOG-A-08': TapFamily.time,
   'MATH-A-05': TapFamily.time,
   'MATH-A-04': TapFamily.measure,
+  'CS-B-01': TapFamily.count,
+  'SHP-B-02': TapFamily.count,
+  'NUM-B-08': TapFamily.numerals,
+  'NUM-B-01': TapFamily.sequence,
+  'NUM-B-02': TapFamily.sequence,
+  'NUM-B-03': TapFamily.sequence,
+  'NUM-B-11': TapFamily.sequence,
+  'NUM-B-17': TapFamily.sequence,
+  'NUM-B-10': TapFamily.compare,
+  'NUM-B-18': TapFamily.compare,
+  'MATH-B-19': TapFamily.compare,
+  'MATH-B-01': TapFamily.add,
+  'MATH-B-02': TapFamily.add,
+  'MATH-B-03': TapFamily.add,
+  'MATH-B-06': TapFamily.add,
+  'MATH-B-07': TapFamily.add,
+  'MATH-B-08': TapFamily.add,
+  'MATH-B-10': TapFamily.add,
+  'MATH-B-18': TapFamily.add,
+  'NUM-B-14': TapFamily.add,
+  'NUM-B-16': TapFamily.add,
+  'COL-B-01': TapFamily.colour,
+  'COL-B-02': TapFamily.colour,
+  'COL-B-03': TapFamily.colour,
+  'SHP-B-01': TapFamily.shapes,
+  'SHP-B-03': TapFamily.shapes,
+  'SHP-B-04': TapFamily.shapes,
+  'SHP-B-08': TapFamily.shapes,
+  'SHP-B-09': TapFamily.shapes,
+  'LOG-B-01': TapFamily.pattern,
+  'LOG-B-04': TapFamily.pattern,
+  'LOG-B-06': TapFamily.same,
+  'LOG-B-09': TapFamily.same,
+  'MATH-B-14': TapFamily.time,
+  'MATH-B-15': TapFamily.clockMoney,
+  'MATH-B-16': TapFamily.clockMoney,
 };
 
 /// The family of a `tap_answer` activity with skill [skillId] whose stage shows a numeral ([numeralOnStage]) or not: null for a
-/// skill that has none yet (Band B).
+/// skill that is not in the table.
 TapFamily? tapFamilyOf(String skillId, {bool numeralOnStage = false}) {
   if (skillId == 'NUM-A-07' && numeralOnStage) return TapFamily.numerals;
   return _tapFamilyOfSkill[skillId];
@@ -245,12 +290,7 @@ class HintLadder {
       HintPicture.stepArcs,
       HintPicture.demonstration,
     ]),
-    // Part 2 of B-40 gives each family of this template its own pictures; until then both first levels pulse the options.
-    'tap_answer': HintLadder._(<HintPicture>[
-      HintPicture.pulse,
-      HintPicture.pulse,
-      HintPicture.demonstration,
-    ]),
+    'tap_answer': _tapFamily,
   };
 
   /// The share mode of sort and drag deals pictures, so it has its own ladder.
@@ -260,32 +300,13 @@ class HintLadder {
     HintPicture.demonstration,
   ]);
 
-  /// The families of `tap_answer` that draw their own pictures (B-40 part 2); the others still pulse their options. The Band A
-  /// families come one by one, in the order of the build plan.
-  static final Set<TapFamily> tapFamiliesBuilt = <TapFamily>{...TapFamily.values};
-
+  /// What every family of `tap_answer` draws (B-40 parts 2 and 4): look at the parts of the question, see it another way, watch
+  /// the demonstration.
   static const HintLadder _tapFamily = HintLadder._(<HintPicture>[
     HintPicture.lookHere,
     HintPicture.anotherWay,
     HintPicture.demonstration,
   ]);
-
-  /// The ladder of an activity: that of its template, or for `tap_answer` that of its family when the family is built.
-  static HintLadder? forActivity(
-    String template,
-    String skillId, {
-    bool numeralOnStage = false,
-    bool share = false,
-  }) {
-    if (template == 'tap_answer') {
-      final TapFamily? f = tapFamilyOf(skillId, numeralOnStage: numeralOnStage);
-      if (f != null && tapFamiliesBuilt.contains(f)) return _tapFamily;
-    }
-    return of(template, share: share);
-  }
-
-  /// Templates whose ladder is not complete yet: the check for two equal levels does not apply to them.
-  static const Set<String> pending = <String>{'tap_answer'};
 
   /// Every template that has a ladder.
   static Iterable<String> get templates => _byTemplate.keys;
@@ -294,8 +315,8 @@ class HintLadder {
   static HintLadder? of(String template, {bool share = false}) =>
       share && template == 'sort_drag' ? _share : _byTemplate[template];
 
-  /// What is wrong with a ladder, or null: level 1 and 2 must not mark the answer, level 3 must be the demonstration, and (unless
-  /// the template is still [pending]) no level draws what the level below draws.
+  /// What is wrong with a ladder, or null: level 1 and 2 must not mark the answer, level 3 must be the demonstration, and no level
+  /// draws what the level below draws.
   static String? problemWith(String template, {bool share = false}) {
     final HintLadder? l = of(template, share: share);
     if (l == null) return 'the template $template has no hint ladder';
@@ -304,7 +325,6 @@ class HintLadder {
       if (l.pictures[i].marksAnswer) return 'level ${i + 1} of $template shows the answer';
     }
     if (l.pictures[2] != HintPicture.demonstration) return 'level 3 of $template must be the demonstration';
-    if (pending.contains(template)) return null;
     for (int i = 1; i < 3; i++) {
       if (l.pictures[i] == l.pictures[i - 1]) return 'level ${i + 1} of $template draws what level $i draws';
     }

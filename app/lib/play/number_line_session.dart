@@ -9,6 +9,9 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hint_widgets.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
 import 'template_session.dart';
 
 /// The number-line template (T09). The line always runs from the small number on the left to the large number on the right,
@@ -16,8 +19,10 @@ import 'template_session.dart';
 /// number and hops, and the child touches the tick where it lands. A touch is the answer: no confirm button.
 ///
 /// A touch on the mirror of the right tick (the line read from the right) is written with its own misconception, M-NL-DIR.
-/// After three wrong touches only the right tick is taken: the guide first hops the marker along the whole way, and the tick it
-/// lands on stays lit. The first two helps light the start and hop one unit, and never the tick the marker is to land on.
+/// After three wrong touches only the right tick is taken: the guide first hops the marker along the whole way, one unit at a time
+/// with a dotted arc and a number for each hop, the pointing hand going with it, and the tick it lands on stays lit. The first two
+/// helps light the start and hop one unit (one arc, the number 1), and never the tick the marker is to land on. The line and its
+/// numbers run left to right; a hop back is an arc that goes to the left, along the same line.
 class NumberLineSession extends TemplateSession {
   NumberLineSession(super.controller, this.activity) : markerAt = activity.start;
 
@@ -33,12 +38,34 @@ class NumberLineSession extends TemplateSession {
   int hopDots = 0;
   int hopDotsUsed = 0;
   int? wrongTick;
+
+  /// The arcs, the numbers and the pointing hand of the hints, in the stage's own points (see [HintPlayer]).
+  late final HintPlayer _hint = HintPlayer(this);
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
   bool demoRunning = false;
   int _demo = 0; // a new touch or a new help ends the one that is running
 
   int get tickCount => activity.to - activity.from + 1;
+
+  // The places of the stage (the same numbers `_LineStage` draws with), for the hints' marks.
+  static const double _pad = 22;
+
+  double _tickX(Size size, int n) =>
+      _pad + (n - activity.from) / (activity.to - activity.from) * (size.width - 2 * _pad);
+
+  double _lineY(Size size) => size.height * 0.66;
+
+  /// The top of the tick of [n]: where the fingertip touches it and where a hop starts and ends.
+  Offset _tickTop(Size size, int n) => Offset(_tickX(size, n), _lineY(size) - 12);
+
+  /// A hop of one unit from [a] to [b] as a dotted arc, and the number of the hop (1, 2, 3) over its middle.
+  List<HintMark> _hop(Size size, int a, int b, int number) => <HintMark>[
+    ArcMark(_tickTop(size, a), _tickTop(size, b)),
+    BadgeMark(Offset((_tickX(size, a) + _tickX(size, b)) / 2, _lineY(size) - 12 - 9 - 14), number),
+  ];
+
+  Size _size = Size.zero;
 
   /// The tick (a number) nearest to a touch at [dx] on a line [width] points wide, with [pad] points of margin.
   int tickAt(double dx, double width, double pad) {
@@ -89,6 +116,7 @@ class NumberLineSession extends TemplateSession {
   void _stopWay() {
     _demo++;
     demoRunning = false;
+    _hint.clear();
     trail.clear();
     hopDots = 0;
     hopDotsUsed = 0;
@@ -127,6 +155,12 @@ class NumberLineSession extends TemplateSession {
     notify();
     if (one == activity.target || one < activity.from || one > activity.to) return;
     final int id = _demo;
+    // The marker hops after 700 ms, and the arc and its number 1 stay where it landed.
+    _hint.play(
+      HintPlan(<HintFrame>[
+        const HintFrame(<HintMark>[], hold: Duration(milliseconds: 700)),
+      ], rest: _hop(_size, from, one, 1)),
+    );
     later(const Duration(milliseconds: 700), () {
       if (_demo != id) return;
       markerAt = one;
@@ -135,15 +169,32 @@ class NumberLineSession extends TemplateSession {
     });
   }
 
+  /// The worked example: the marker hops along the way one unit at a time (a hop of three is three hops), each with its arc and its
+  /// number, the pointing hand going with it to each tick. A line that is put on by touch has no arcs (its hops would be too
+  /// close), only the number of the tick the marker is on. The tick it ends on is lit and the hand rests on it.
   void _showWay() {
     _stopWay();
     final int id = _demo;
     demoRunning = true;
     final int from = activity.start ?? activity.from;
-    final List<int> way = activity.jump ? _landings() : _countUp(from, activity.target);
+    final List<int> way = _unitWay(from, activity.jump ? _landings().last : activity.target);
     markerAt = activity.start;
     notify();
-    final int gap = way.length > 8 ? 250 : 500;
+    final int gap = way.length > 12 ? 380 : 500;
+    final double room = _lineY(_size) - math.min(_size.height * 0.5, 52) - 22;
+    List<HintMark> counted(int upTo) => <HintMark>[
+      if (activity.jump)
+        for (int i = 0; i < upTo; i++) ..._hop(_size, i == 0 ? from : way[i - 1], way[i], i + 1)
+      else if (upTo > 0)
+        BadgeMark(Offset(_tickX(_size, way[upTo - 1]), room), upTo),
+    ];
+    _hint.play(
+      handTourPlan(<HandStop>[
+        HandStop(_tickTop(_size, from), gap),
+        for (int i = 0; i < way.length; i++) HandStop(_tickTop(_size, way[i]), gap, marks: counted(i + 1)),
+        HandStop(_tickTop(_size, way.last), 1200, marks: counted(way.length)),
+      ]),
+    );
     for (int i = 0; i < way.length; i++) {
       later(Duration(milliseconds: gap * (i + 1)), () {
         if (_demo != id) return;
@@ -166,7 +217,10 @@ class NumberLineSession extends TemplateSession {
     return <int>[for (final int h in activity.hops) at += h];
   }
 
-  List<int> _countUp(int from, int to) => <int>[for (int i = from; i <= to; i++) i];
+  /// Every number from [from] to [to], one unit at a time (counting back when [to] is the smaller), without [from] itself.
+  List<int> _unitWay(int from, int to) => <int>[
+    for (int n = from; n != to; n += to > from ? 1 : -1) n + (to > from ? 1 : -1),
+  ];
 
   @override
   void onReset() {
@@ -197,8 +251,20 @@ class NumberLineSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _LineStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    return Stack(
+      fit: StackFit.expand,
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _LineStage(this, size)),
+        _hint.body(size),
+      ],
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;

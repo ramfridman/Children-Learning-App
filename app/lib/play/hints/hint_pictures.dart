@@ -42,12 +42,21 @@ class HintOverlay extends StatelessWidget {
     required this.marks,
     required this.size,
     this.clearOf,
+    this.tileHalf = 48,
+    this.rowEnd,
     this.layer = HintLayer.all,
   });
 
   final List<HintMark> marks;
   final Size size;
   final double? clearOf;
+
+  /// Half the width of an answer tile (96 wide on a phone): where the hand that comes in from the side touches the tile.
+  final double tileHalf;
+
+  /// The stage's x of the right end of the row of answer tiles, when the template knows it: only a hand that goes to the last tile
+  /// of the row (the one under the bubble) comes in from the side; to any other tile it comes from the upper left.
+  final double? rowEnd;
   final HintLayer layer;
 
   @override
@@ -234,13 +243,23 @@ class HintOverlay extends StatelessWidget {
           rect: m.rect,
           child: Appear(
             child: DecoratedBox(
-              key: const Key('hint-block'),
+              key: Key(m.empty ? 'hint-block-empty' : 'hint-block'),
               decoration: BoxDecoration(
-                color: TokenColors.skyTint,
+                color: m.empty ? null : TokenColors.skyTint,
                 borderRadius: BorderRadius.circular(3),
-                border: Border.all(color: TokenColors.skyDeep, width: 2),
+                border: Border.all(
+                  color: m.empty ? TokenColors.skyDeep.withValues(alpha: 0.55) : TokenColors.skyDeep,
+                  width: m.empty ? 1.5 : 2,
+                ),
               ),
             ),
+          ),
+        );
+      case OutlineMark():
+        return Positioned.fill(
+          key: key,
+          child: Appear(
+            child: CustomPaint(key: const Key('hint-outline'), painter: _OutlinePainter(m, k)),
           ),
         );
       case HandMark():
@@ -297,13 +316,25 @@ class HintOverlay extends StatelessWidget {
   }
 
   /// The pointing hand: its fingertip on [HandMark.tip]. It travels in 450 ms (it just appears there with "reduce motion").
+  ///
+  /// The hand's body never reaches the speech bubble (phones). It comes from the upper right, the guide's side; near the bubble from
+  /// the upper left; and to a tile that stands right under the bubble (the first tile of a row, which is at the right) it comes from
+  /// the right side, turned to point left, its fingertip just inside the tile's right edge, so that its body lies in the free place
+  /// beside the row and not over the tile or the bubble.
   Widget _hand(BuildContext context, Key key, HandMark m, double k) {
     final bool still = MediaQuery.disableAnimationsOf(context);
     final double h = (72 * k).clamp(40, 96).toDouble();
+    final double w = PointingHand.widthAt(h);
     final Offset tip = PointingHand.tipAt(h);
-    // The hand comes from the upper right (the guide's side); near the speech bubble it comes from the upper left, the same hand.
-    final double reach = PointingHand.widthAt(h) - tip.dx;
-    final bool flip = clearOf != null && m.tip.dx + reach > clearOf!;
+    final double reach = w - tip.dx;
+    final double? clear = clearOf;
+    final bool underBubble =
+        clear != null &&
+        m.tip.dy >= size.height - 4 &&
+        m.tip.dx + tip.dx > clear &&
+        (rowEnd == null ? m.tip.dx + tip.dx > clear + 14 * k : m.tip.dx + tileHalf >= rowEnd! - 2);
+    final bool flip = !underBubble && clearOf != null && m.tip.dx + reach > clearOf!;
+    final Offset at = underBubble ? m.tip + Offset(tileHalf - 14 * k, 34 * k) : m.tip;
     return Positioned.fill(
       key: key,
       child: Stack(
@@ -312,8 +343,8 @@ class HintOverlay extends StatelessWidget {
           if (m.press)
             Positioned(
               key: ValueKey<String>('ripple-${m.tip.dx.round()}-${m.tip.dy.round()}'),
-              left: m.tip.dx - 17 * k,
-              top: m.tip.dy - 17 * k,
+              left: at.dx - 17 * k,
+              top: at.dy - 17 * k,
               width: 34 * k,
               height: 34 * k,
               child: _Ripple(still: still, scale: k),
@@ -322,14 +353,22 @@ class HintOverlay extends StatelessWidget {
             key: const ValueKey<String>('hand'),
             duration: still || m.snap ? Duration.zero : const Duration(milliseconds: 450),
             curve: Curves.easeInOut,
-            left: flip ? m.tip.dx - reach : m.tip.dx - tip.dx,
-            top: m.tip.dy - tip.dy,
+            left: flip ? at.dx - reach : at.dx - tip.dx,
+            top: at.dy - tip.dy,
             child: Appear(
               child: SizedBox(
                 key: const Key('hint-p12'),
-                child: flip
-                    ? Transform.flip(flipX: true, child: PointingHand(height: h))
-                    : PointingHand(height: h),
+                width: w,
+                height: h,
+                child: underBubble
+                    ? Transform.rotate(
+                        angle: 1.2,
+                        origin: tip - Offset(w / 2, h / 2),
+                        child: PointingHand(height: h),
+                      )
+                    : (flip
+                          ? Transform.flip(flipX: true, child: PointingHand(height: h))
+                          : PointingHand(height: h)),
               ),
             ),
           ),
@@ -689,7 +728,8 @@ class _BracketPainter extends CustomPainter {
   bool shouldRepaint(_BracketPainter old) => old.left != left || old.right != right || old.k != k;
 }
 
-/// P6: a strip of equal squares with numerals, 1 at the left (never mirrored), a little taller at 5 and 10. The square [PathMark.gap]
+/// P6: a strip of equal squares with numerals, the smallest at the left (never mirrored), a little taller at the multiples of 5
+/// of a path that counts by ones. The square [PathMark.gap]
 /// is empty; the squares after [PathMark.upTo] are not drawn yet.
 class NumberPath extends StatelessWidget {
   const NumberPath({super.key, required this.mark, required this.scale});
@@ -706,11 +746,11 @@ class NumberPath extends StatelessWidget {
         key: const Key('hint-p6'),
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          for (int n = 1; n <= mark.count; n++)
+          for (int i = 1; i <= mark.count; i++)
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 1 * scale),
-                child: n > shown ? const SizedBox() : _square(n),
+                child: i > shown ? const SizedBox() : _square(mark.numberAt(i)),
               ),
             ),
         ],
@@ -718,10 +758,11 @@ class NumberPath extends StatelessWidget {
     );
   }
 
+  /// The square of the number [n] (a path of skip counting has the numbers it counts by).
   Widget _square(int n) {
     final bool gap = mark.gap == n;
     final bool ring = mark.ring == n;
-    final double tall = (n == 5 || n == 10) ? 6 * scale : 0;
+    final double tall = (mark.step == 1 && n > 0 && n % 5 == 0) ? 6 * scale : 0;
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.bottomCenter,
@@ -742,7 +783,10 @@ class NumberPath extends StatelessWidget {
               ? null
               : Directionality(
                   textDirection: TextDirection.ltr,
-                  child: Text('$n', style: AppText.fixed(size: 15 * scale, weight: 800, lineHeight: 1)),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text('$n', style: AppText.fixed(size: 15 * scale, weight: 800, lineHeight: 1)),
+                  ),
                 ),
         ),
         if (mark.marker == n)
@@ -977,6 +1021,10 @@ class _GhostPainter extends CustomPainter {
           ..lineTo(c.dx + side * 0.5, c.dy + side * 0.4)
           ..lineTo(c.dx - side * 0.5, c.dy + side * 0.4)
           ..close(),
+      GhostKind.cylinder => _cylinder(c, side),
+      GhostKind.cone => _cone(c, side),
+      GhostKind.box => _box(c, side),
+      GhostKind.pyramid => _pyramid(c, side),
       GhostKind.straight =>
         Path()
           ..moveTo(c.dx - size.width * 0.42, c.dy)
@@ -1005,6 +1053,115 @@ class _GhostPainter extends CustomPainter {
     }
   }
 
+  // The outlines of solids as a child draws them: a tin (two ovals and two sides), a cone (an oval base and a point), a box (two
+  // squares joined at their corners) and a pyramid (a triangle with its front edge).
+  Path _cylinder(Offset c, double side) {
+    final double w = side * 0.36;
+    final double top = c.dy - side * 0.34;
+    final double bottom = c.dy + side * 0.34;
+    final double ry = side * 0.11;
+    return Path()
+      ..addOval(Rect.fromLTRB(c.dx - w, top - ry, c.dx + w, top + ry))
+      ..moveTo(c.dx - w, top)
+      ..lineTo(c.dx - w, bottom)
+      ..arcToPoint(Offset(c.dx + w, bottom), radius: Radius.elliptical(w, ry), clockwise: false)
+      ..lineTo(c.dx + w, top);
+  }
+
+  Path _cone(Offset c, double side) {
+    final double w = side * 0.36;
+    final double bottom = c.dy + side * 0.3;
+    final double ry = side * 0.11;
+    return Path()
+      ..moveTo(c.dx, c.dy - side * 0.42)
+      ..lineTo(c.dx - w, bottom)
+      ..arcToPoint(Offset(c.dx + w, bottom), radius: Radius.elliptical(w, ry), clockwise: false)
+      ..close();
+  }
+
+  Path _box(Offset c, double side) {
+    final double s = side * 0.5;
+    final double d = side * 0.16;
+    final Rect front = Rect.fromLTWH(c.dx - s / 2 - d / 2, c.dy - s / 2 + d / 2, s, s);
+    final Rect back = front.shift(Offset(d, -d));
+    return Path()
+      ..addRect(front)
+      ..addRect(back)
+      ..moveTo(front.topLeft.dx, front.topLeft.dy)
+      ..lineTo(back.topLeft.dx, back.topLeft.dy)
+      ..moveTo(front.topRight.dx, front.topRight.dy)
+      ..lineTo(back.topRight.dx, back.topRight.dy)
+      ..moveTo(front.bottomRight.dx, front.bottomRight.dy)
+      ..lineTo(back.bottomRight.dx, back.bottomRight.dy);
+  }
+
+  Path _pyramid(Offset c, double side) {
+    final double w = side * 0.42;
+    final Offset apex = Offset(c.dx, c.dy - side * 0.42);
+    final Offset l = Offset(c.dx - w, c.dy + side * 0.28);
+    final Offset r = Offset(c.dx + w, c.dy + side * 0.28);
+    final Offset front = Offset(c.dx + side * 0.06, c.dy + side * 0.42);
+    return Path()
+      ..moveTo(apex.dx, apex.dy)
+      ..lineTo(l.dx, l.dy)
+      ..lineTo(front.dx, front.dy)
+      ..lineTo(r.dx, r.dy)
+      ..close()
+      ..moveTo(apex.dx, apex.dy)
+      ..lineTo(front.dx, front.dy);
+  }
+
   @override
   bool shouldRepaint(_GhostPainter old) => old.kind != kind || old.k != k;
+}
+
+/// The outline of a shape as sky lines along its corners, with a bigger start dot on the first corner and a small one on each
+/// corner reached ([OutlineMark]).
+class _OutlinePainter extends CustomPainter {
+  _OutlinePainter(this.m, this.k);
+
+  final OutlineMark m;
+  final double k;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final List<Offset> pts = m.points;
+    final int edges = m.closed ? pts.length : pts.length - 1;
+    final int lit = math.min(m.upTo ?? edges, edges);
+    Offset at(int i) => pts[i % pts.length];
+    if (m.faint) {
+      final Path all = Path()..moveTo(pts.first.dx, pts.first.dy);
+      for (int i = 1; i <= edges; i++) {
+        all.lineTo(at(i).dx, at(i).dy);
+      }
+      final Paint thin = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2 * k
+        ..strokeCap = StrokeCap.round
+        ..color = TokenColors.skyDeep.withValues(alpha: 0.5);
+      for (final ui.PathMetric pm in all.computeMetrics()) {
+        for (double d = 0; d < pm.length; d += 9 * k) {
+          canvas.drawPath(pm.extractPath(d, math.min(d + 4 * k, pm.length)), thin);
+        }
+      }
+    }
+    final Paint line = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 6 * k
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = TokenColors.hintHalo;
+    for (int i = 0; i < lit; i++) {
+      canvas.drawLine(at(i), at(i + 1), line);
+    }
+    if (!m.dots) return;
+    final Paint dot = Paint()..color = TokenColors.skyDeep;
+    canvas.drawCircle(pts.first, 6.5 * k, dot);
+    for (int i = 1; i <= lit && i < pts.length; i++) {
+      canvas.drawCircle(at(i), 4.5 * k, dot);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_OutlinePainter old) => old.m != m || old.k != k;
 }

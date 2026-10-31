@@ -141,18 +141,14 @@ void main() {
       }
     });
 
-    test(
-      'no template draws at a level what it draws at the level below (tap_answer waits for its families)',
-      () {
-        for (final String t in HintLadder.templates) {
-          if (HintLadder.pending.contains(t)) continue;
-          final HintLadder l = HintLadder.of(t)!;
-          expect(l.at(2), isNot(l.at(1)), reason: '$t level 2');
-          expect(l.at(3), isNot(l.at(2)), reason: '$t level 3');
-        }
-        expect(HintLadder.of('sort_drag', share: true)!.at(2), HintPicture.firstRound);
-      },
-    );
+    test('no template draws at a level what it draws at the level below', () {
+      for (final String t in HintLadder.templates) {
+        final HintLadder l = HintLadder.of(t)!;
+        expect(l.at(2), isNot(l.at(1)), reason: '$t level 2');
+        expect(l.at(3), isNot(l.at(2)), reason: '$t level 3');
+      }
+      expect(HintLadder.of('sort_drag', share: true)!.at(2), HintPicture.firstRound);
+    });
   });
 
   // ---- the fingers, the ten-frames ----

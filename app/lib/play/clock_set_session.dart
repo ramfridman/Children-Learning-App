@@ -9,6 +9,10 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hint_widgets.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
+import 'hints/tile_points.dart';
 import 'response_code.dart';
 import 'template_session.dart';
 
@@ -18,7 +22,8 @@ import 'template_session.dart';
 ///
 /// A whole hour set to twelve is the child who read the long hand as the hour: it carries M-CLOCK-HANDS. After three mistakes the
 /// guide first moves the short hand from the start to the right hour, hour by hour, as a worked example, and then a faint hand
-/// stays where it belongs; only the right time is taken.
+/// stays where it belongs; only the right time is taken. The guide's pointing hand presses the plus tile for each hour, and the hour
+/// it has reached is numbered on the dial. The clock never mirrors: the numbers run round it clockwise, whatever the language.
 class ClockSetSession extends TemplateSession {
   ClockSetSession(super.controller, this.activity) : hour = activity.startHour, half = activity.startHalf;
 
@@ -37,6 +42,11 @@ class ClockSetSession extends TemplateSession {
   bool numeralRing = false;
   int? demoHour;
   int _run = 0;
+
+  /// The dotted link, the numbers and the pointing hand of the hints, and the places they are drawn by (see [HintPlayer]).
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+  ActivitySpec _spec = ActivitySpec.phone;
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
@@ -55,6 +65,7 @@ class ClockSetSession extends TemplateSession {
   void _endDemo() {
     if (!demoRunning) return;
     _run++;
+    _hint.clear();
     demoHour = null;
     controller.demoDone();
   }
@@ -127,6 +138,7 @@ class ClockSetSession extends TemplateSession {
   @override
   void onReset() {
     _run++;
+    _hint.clear();
     hour = activity.startHour;
     half = activity.startHalf;
     ghost = false;
@@ -141,6 +153,7 @@ class ClockSetSession extends TemplateSession {
   @override
   void onReplay() {
     _run++;
+    _hint.clear();
     ghost = false;
     lightHand = false;
     numeralRing = false;
@@ -155,14 +168,50 @@ class ClockSetSession extends TemplateSession {
       case HintPicture.handAndHour:
         lightHand = true;
         numeralRing = false;
+        _hint.clear();
         notify();
       case HintPicture.numeralOnDial:
         lightHand = true;
         numeralRing = true;
+        _hint.play(_linkPlan());
         notify();
       default:
         _workedExample();
     }
+  }
+
+  // ---- the places of the stage, as the stage draws them ----
+
+  double get _side => math.min(_size.width, _size.height) - 8;
+
+  Offset get _centre => Offset(_size.width / 2, _size.height / 2);
+
+  /// Where the numeral [h] stands on the dial: the stage's clock has its numerals at 0.7 of the radius.
+  Offset _numeralAt(int h) {
+    final double r = _side / 2 - 3;
+    final double a = h * math.pi / 6;
+    return _centre + Offset(math.sin(a), -math.cos(a)) * (r * 0.7);
+  }
+
+  /// The card with the hour of the question: at the stage's left, as wide as its numeral.
+  Rect get _card {
+    final TextPainter text = TextPainter(
+      text: TextSpan(
+        text: activity.half ? '${activity.hour}\u00bd' : '${activity.hour}',
+        style: AppText.fixed(size: 36, weight: 800, lineHeight: 1),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final double w = text.width + 26;
+    final double h = text.height + 26;
+    return Rect.fromLTWH(6, _size.height / 2 - h / 2, w, h);
+  }
+
+  /// Level 2: the card and the numeral of the dial are lit with the same sky ring ("find the same number on the clock"). A line
+  /// from one to the other would run across the dial and over its hands, so the two rings are the link.
+  HintPlan _linkPlan() {
+    final List<HintMark> same = <HintMark>[RingMark(_card, round: false)];
+    return HintPlan(<HintFrame>[HintFrame(same, hold: const Duration(milliseconds: 2600))], rest: same);
   }
 
   /// The worked example: the short hand steps from where it stands to the hour of the question, one hour at a time, and then goes
@@ -175,6 +224,17 @@ class ClockSetSession extends TemplateSession {
     ghost = false;
     final int steps = (activity.hour - hour + 12) % 12;
     demoHour = hour;
+    // The hand presses the plus tile once for each hour, and the hour it has reached is numbered on the dial.
+    final Offset plus = _spec.tileTip(allowHalf ? 4 : 3, 1, slot: 96, slop: 12, rtl: false);
+    List<HintMark> reached(int k) => <HintMark>[
+      for (int j = 1; j <= k; j++) BadgeMark(_numeralAt((hour + j - 1) % 12 + 1), (hour + j - 1) % 12 + 1),
+    ];
+    _hint.play(
+      handTourPlan(<HandStop>[
+        for (int k = 0; k <= steps; k++) HandStop(plus, 800, marks: reached(k)),
+        HandStop(plus, 1400, marks: reached(steps)),
+      ]),
+    );
     for (int k = 1; k <= steps; k++) {
       later(Duration(milliseconds: 800 * k), () {
         if (run != _run) return;
@@ -195,7 +255,20 @@ class ClockSetSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) => ListenableBuilder(
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return Stack(
+      fit: StackFit.expand,
+      clipBehavior: Clip.none,
+      children: <Widget>[_stage(size), _hint.body(size)],
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
+
+  Widget _stage(Size size) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) {
       final double side = math.min(size.width, size.height) - 8;

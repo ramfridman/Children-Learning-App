@@ -239,7 +239,7 @@ class MatchPairsSession extends TemplateSession {
         _hint.clear();
         hintLeft = _nextPair?.key;
         hintRight = null;
-        _dotsUnderNumeral();
+        _anotherWay();
         notify();
       default:
         _drawOne();
@@ -270,28 +270,52 @@ class MatchPairsSession extends TemplateSession {
     notify();
   }
 
-  /// Another way to see the first card when it is a numeral: that many dots under it, in a sky strip. It stays while the item is open.
-  void _dotsUnderNumeral() {
+  /// Another way to see the first card, in a sky strip over its lower part, and it stays while the item is open: a numeral shows that
+  /// many dots; a coin shows what it is worth as that many dots (a coin of agorot has no strip, it is not a whole number of
+  /// shekels); a solid shows the print its face leaves, a dashed outline. A card that is none of these gets nothing.
+  void _anotherWay() {
     final MapEntry<String, String>? pair = _nextPair;
     if (pair == null || !_canDraw) return;
     final int i = _top(pair.key);
-    final int? n = activity.left[i].numeral;
-    if (n == null || n < 1) return;
+    final MatchFace card = activity.left[i];
     final Rect face = topFace(_size, activity.left.length, i);
     final double k = hintScale(_size);
-    _hint.play(
-      HintPlan(
-        const <HintFrame>[],
-        rest: <HintMark>[
-          CardMark(
-            Rect.fromLTWH(face.left + 8 * k, face.bottom - 26 * k, face.width - 16 * k, 20 * k),
-            DotRow(count: n, size: 9 * k),
-            tight: true,
-          ),
-        ],
-      ),
-    );
+    final int? dots = card.numeral ?? _shekels(card.coin);
+    final GhostKind? footprint = _printOf(card.sprite);
+    final List<HintMark> shown;
+    if (dots != null && dots >= 1) {
+      shown = <HintMark>[
+        CardMark(
+          Rect.fromLTWH(face.left + 8 * k, face.bottom - 26 * k, face.width - 16 * k, 20 * k),
+          DotRow(count: dots, size: 9 * k),
+          tight: true,
+        ),
+      ];
+    } else if (footprint != null) {
+      final Rect strip = Rect.fromLTWH(face.left + 12 * k, face.bottom - 44 * k, face.width - 24 * k, 38 * k);
+      shown = <HintMark>[
+        CardMark(strip, const SizedBox.shrink(), tight: true),
+        GhostMark(Rect.fromCenter(center: strip.center, width: 34 * k, height: 34 * k), footprint),
+      ];
+    } else {
+      return;
+    }
+    _hint.play(HintPlan(const <HintFrame>[], rest: shown));
   }
+
+  /// A coin's value in whole shekels (`s5` is 5), or null for a coin of agorot.
+  static int? _shekels(String? coin) {
+    final RegExpMatch? m = RegExp(r'^s(\d+)$').firstMatch(coin ?? '');
+    return m == null ? null : int.parse(m[1]!);
+  }
+
+  /// The print the face of a solid leaves when it is pressed on sand, by its picture's name; null for anything that is not a solid.
+  static GhostKind? _printOf(String? sprite) => switch ((sprite ?? '').replaceFirst('asset:solid_', '')) {
+    'cylinder' || 'cone' || 'sphere' => GhostKind.circle,
+    'pyramid' => GhostKind.triangle,
+    'box' => GhostKind.rect,
+    _ => null,
+  };
 
   /// The worked example: the pointing hand goes to the first card, then to its partner and draws the line between them (the guide
   /// joins them for a moment), undoes it and leaves the two lit. Then it is the child's turn.

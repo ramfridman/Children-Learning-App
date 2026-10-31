@@ -108,7 +108,7 @@ class TapAnswerSession extends TemplateSession {
     final TapGeometry? geo = _geometry();
     final HintPlan? plan = geo == null ? null : tapHintPlan(activity, geo, controller.hintShown);
     if (plan == null) {
-      // A family without pictures yet: its options pulse, and there is no worked example to show before the halo.
+      // A skill that no family knows (none in the starter pack): its options pulse, and there is no worked example before the halo.
       _pulseAll();
       if (hintPictureOf(activity) == HintPicture.demonstration) controller.demoDone();
       return;
@@ -147,7 +147,19 @@ class TapAnswerSession extends TemplateSession {
   }
 
   @override
-  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) {
+    // A tile of sets is wider than a numeral's tile (see `buildTiles`): the hand that comes in from the side stops at its edge.
+    final bool sets = activity.options.any((ChoiceOption o) => o.set != null);
+    final double width = sets ? math.min(170, spec.tilesWidth / activity.options.length - 24) : 96;
+    double? rowEnd;
+    if (activity.optionsInTiles) {
+      final TapGeometry g = TapGeometry(activity, size, spec, dir: _dir);
+      rowEnd =
+          <double>[for (int i = 0; i < activity.options.length; i++) g.optionTip(i).dx].reduce(math.max) +
+          width / 2;
+    }
+    return _hint.hands(size, spec, tileHalf: width / 2, rowEnd: rowEnd);
+  }
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) {

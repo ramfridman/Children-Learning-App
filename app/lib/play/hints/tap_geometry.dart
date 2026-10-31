@@ -36,7 +36,8 @@ class TapGeometry {
   Rect get groupArea => Rect.fromLTWH(reserve, 0, w - reserve, _groupAboveOptions ? h * 0.5 : h);
 
   /// The places of the pictures of group [which] (0, or 1 for the second group of a comparison), the same as the stage draws them.
-  List<Rect> groupObjects(int which) {
+  /// With [count] the places of a group of that many (a ten-frame of ten, to see the cells that are still empty).
+  List<Rect> groupObjects(int which, {int? count}) {
     final List<SpriteSet> sets = <SpriteSet>[a.group!, ?a.group2];
     final Rect inner = groupArea.deflate(12);
     final double cellW = inner.width / sets.length;
@@ -48,7 +49,13 @@ class TapGeometry {
     );
     final SpriteSet g = sets[which];
     return <Rect>[
-      for (final Rect r in spriteRects(cell.size, g.arrangement, g.count, seed: g.seed, scale: g.scale))
+      for (final Rect r in spriteRects(
+        cell.size,
+        g.arrangement,
+        count ?? g.count,
+        seed: g.seed,
+        scale: g.scale,
+      ))
         r.shift(cell.topLeft),
     ];
   }
@@ -81,6 +88,25 @@ class TapGeometry {
     return <Rect>[
       for (int i = 0; i < n; i++)
         Rect.fromCenter(center: Offset(10 + (i + 0.5) * cellW, h / 2), width: side, height: side),
+    ];
+  }
+
+  /// The cells of the columns of the stage's chart, each column from the bottom up, the same as the stage draws them (columns
+  /// of equal squares on one line, spread evenly).
+  List<List<Rect>> chartColumns() {
+    const double left = 16, top = 8, right = 16, bottom = 10, floor = 3;
+    final double boxW = w - left - right;
+    final double boxH = h - top - bottom;
+    final int most = a.chart.fold(1, (int m, ({String sprite, int count}) c) => math.max(m, c.count));
+    final double cell = math.min((boxH - 6) / most, boxW / a.chart.length - 14);
+    final double gap = (boxW - cell * a.chart.length) / (a.chart.length + 1);
+    final double base = h - bottom - floor;
+    return <List<Rect>>[
+      for (int i = 0; i < a.chart.length; i++)
+        <Rect>[
+          for (int j = 0; j < a.chart[i].count; j++)
+            Rect.fromLTWH(left + gap * (i + 1) + cell * i, base - cell * (j + 1), cell, cell),
+        ],
     ];
   }
 
