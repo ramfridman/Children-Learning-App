@@ -22,6 +22,7 @@ import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/strings/he.dart';
 
+import 'support/bottle.dart';
 import 'support/app_harness.dart';
 import 'support/harness.dart';
 
@@ -178,8 +179,7 @@ void main() {
             await tapAndSettle(tester, 'hall-back');
             expect(find.byType(HomeIslandScreen), findsOneWidget);
             // The bottle: a Counting Hills lesson (never a land screen), and back to the home.
-            await tester.tap(find.byKey(const Key('home-island-bottle')));
-            await tester.pumpAndSettle();
+            await tapBottleAndWait(tester);
             expect(find.byType(LessonScreen), findsOneWidget);
             expect(find.byType(LandScreen), findsNothing);
             await tapAndSettle(tester, 'activity-home');
@@ -267,8 +267,7 @@ void main() {
   ) async {
     await openMap(tester, boards['phone']!, 'נועה', warmUp: true);
     await tapAndSettle(tester, 'home-pill');
-    await tester.tap(find.byKey(const Key('home-island-bottle')));
-    await tester.pumpAndSettle();
+    await tapBottleAndWait(tester);
     final LessonScreen lesson = tester.widget<LessonScreen>(find.byType(LessonScreen));
     expect(lesson.mission, isNotNull, reason: 'the warm-up is a mission lesson');
     await tapAndSettle(tester, 'activity-home');
