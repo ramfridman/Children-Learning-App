@@ -10,7 +10,7 @@ import '../design/tokens.g.dart';
 // asset never breaks a lesson.
 //
 // The files: `hand_left_<n>.svg` and `hand_right_<n>.svg` for n = 0 to 5 raised fingers (viewBox 112 x 174), and `hand_point.svg`
-// (viewBox 96 x 136, the fingertip at (34.9, 124.5)).
+// (viewBox 102 x 142, the fingertip at (37.9, 127.5)).
 
 /// Which hand: the left one fills first ("five") and the right one carries the rest.
 enum HandSide { left, right }
@@ -64,6 +64,24 @@ class HintHand extends StatelessWidget {
 
   /// The art file of this hand.
   static String assetOf(HandSide side, int fingers) => 'assets/art/hints/hand_${side.name}_$fingers.svg';
+
+  /// The drawing box of every counting hand.
+  static const Size artSize = Size(112, 174);
+
+  /// A point just inside the tip of raised finger [finger] (0 index, 1 middle, 2 ring, 3 little, 4 thumb: the order they rise)
+  /// of the hand on [side], in the art's own units. From the finger table of `docs/design/b40/make_hint_hands.py` (the right
+  /// hand is the left one mirrored). A hint draws its dotted link from a counted thing to this point.
+  static Offset tipInArt(HandSide side, int finger) {
+    const List<Offset> left = <Offset>[
+      Offset(71.6, 21),
+      Offset(51.5, 11),
+      Offset(31.3, 20),
+      Offset(11.8, 42.5),
+      Offset(101.4, 83.3),
+    ];
+    final Offset p = left[finger.clamp(0, 4)];
+    return side == HandSide.left ? p : Offset(artSize.width - p.dx, p.dy);
+  }
 
   @override
   Widget build(BuildContext context) =>
@@ -124,16 +142,16 @@ class _Placeholder extends StatelessWidget {
 }
 
 /// The helper's pointing hand (hint 3): one neutral hand for every companion, coming from the guide's side (the upper right).
-/// Drawn at [height] (66 on a phone, 90 on a tablet, never under 40). Put the fingertip on a target with [tipAt].
+/// Drawn at [height] (72 on a phone, 96 on a tablet, never under 40). Put the fingertip on a target with [tipAt].
 class PointingHand extends StatelessWidget {
-  const PointingHand({super.key, this.height = 66});
+  const PointingHand({super.key, this.height = 72});
 
   final double height;
 
   /// The art file of the pointing hand, its drawing box, and where the fingertip is in it.
   static const String asset = 'assets/art/hints/hand_point.svg';
-  static const Size artSize = Size(96, 136);
-  static const Offset artTip = Offset(34.9, 124.5);
+  static const Size artSize = Size(102, 142);
+  static const Offset artTip = Offset(37.9, 127.5);
 
   /// The width of the hand drawn at [height].
   static double widthAt(double height) => height * artSize.width / artSize.height;
