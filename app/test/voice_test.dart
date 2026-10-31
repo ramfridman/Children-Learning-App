@@ -295,6 +295,41 @@ void main() {
       expect(director.speaking, isFalse);
     });
 
+    testWidgets('a player that refuses to stop does not end the queue or reach the zone (QA B-27)', (
+      WidgetTester tester,
+    ) async {
+      director.useBank(hero);
+      player.failToStop = true;
+      await director.say('vo:a');
+      expect(director.speaking, isTrue, reason: 'the line still plays after the refused stop before it');
+      await director.say('vo:b');
+      expect(utf8.decode(player.played.last), 'mp3:hero-son:b', reason: 'the next line goes on');
+      expect(director.speaking, isTrue);
+      await director.stop();
+      expect(director.speaking, isFalse);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets(
+      'a line that cannot play, and a player that cannot stop, still let the next line go (QA B-27)',
+      (WidgetTester tester) async {
+        director.useBank(hero);
+        player.failToStop = true;
+        player.failNextPlays = 1;
+        final Future<void> first = director.sayNext('vo:a');
+        final Future<void> second = director.sayNext('vo:b');
+        await first;
+        await second;
+        await tester.pump();
+        expect(player.plays, 1, reason: 'the first line failed, the second played');
+        expect(utf8.decode(player.played.single), 'mp3:hero-son:b');
+        expect(director.current, 'vo:b', reason: 'the caption of the line stays: the voice is only a help');
+        expect(director.speaking, isTrue);
+        await director.stop();
+        expect(tester.takeException(), isNull);
+      },
+    );
+
     testWidgets('the same line said again plays again (replay)', (WidgetTester tester) async {
       director.useBank(hero);
       await director.say('vo:b');

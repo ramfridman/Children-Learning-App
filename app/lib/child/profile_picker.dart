@@ -105,8 +105,8 @@ class _ProfileCard extends StatelessWidget {
       child: Transform.translate(
         offset: Offset(0, lifted ? -8 * k : 0),
         child: Container(
-          width: 112 * k,
-          height: 136 * k,
+          // The board's 112 by 136 is the least size: the card grows taller with the system text (QA-19).
+          constraints: BoxConstraints(minWidth: 112 * k, maxWidth: 112 * k, minHeight: 136 * k),
           padding: EdgeInsets.only(top: 8 * k),
           decoration: BoxDecoration(
             color: TokenColors.paper,
@@ -122,6 +122,7 @@ class _ProfileCard extends StatelessWidget {
           ),
           child: ExcludeSemantics(
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 AvatarPicture(avatarId: profile.avatar, size: 84 * k),
                 SizedBox(height: 2 * k),

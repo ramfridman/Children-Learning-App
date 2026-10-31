@@ -152,7 +152,9 @@ class ActivitySpec {
     stage: Rect.fromLTWH(288, 230, 584, 300),
     stageIsCard: true,
     tilesLeft: 288,
-    tilesTop: 520,
+    // The board let the tiles overlap the card by 10; they sit 18 below its 6 point lip instead, so a
+    // selected tile (lifted 6, its ring 6 wider) still clears the card (B-27).
+    tilesTop: 554,
     tilesWidth: 584,
     tileFont: 64,
   );
@@ -180,7 +182,8 @@ class ActivitySpec {
     stage: Rect.fromLTWH(24, 372, 772, 300),
     stageIsCard: true,
     tilesLeft: 24,
-    tilesTop: 662,
+    // 18 below the card's lip (672 + 6), not over the card (B-27).
+    tilesTop: 696,
     tilesWidth: 772,
     tileFont: 64,
   );

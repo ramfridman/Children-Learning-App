@@ -29,11 +29,32 @@ enum Land {
 
 /// Where a land's sign goes in the world of the map: the `left` it is centred on (`translateX(-50%)`) and its `top`.
 class _Sign {
-  const _Sign(this.land, this.left, this.top);
+  const _Sign(
+    this.land,
+    this.left,
+    this.top, {
+    this.labelLeft,
+    this.labelMaxWidth,
+    this.tapLeft,
+    this.tapRight,
+    this.tapTop,
+  });
 
   final Land land;
   final double left;
   final double top;
+
+  /// When set, the sign starts at this world x instead of being centred on [left], and is never wider than
+  /// [labelMaxWidth] (its text shrinks into it at a large system text). For the sign at a phone's left edge in the start
+  /// view: it stays whole, just inside the edge, and clear of its neighbour (B-27).
+  final double? labelLeft;
+  final double? labelMaxWidth;
+
+  /// The land's tap area when it is not the board's `left - tapWidth / 2` .. `left + tapWidth / 2`, `top - 150` ..
+  /// `top + 10`: on the landscape tablet some islands nearly touch, so their areas are trimmed apart (B-27).
+  final double? tapLeft;
+  final double? tapRight;
+  final double? tapTop;
 }
 
 /// Everything that differs between the four boards of the home screen. Numbers are the boards' own; the map's own parts
@@ -179,7 +200,8 @@ class _HomeSpec {
     signs: <_Sign>[
       _Sign(Land.nitzi, 1890, 320),
       _Sign(Land.counting, 1610, 320),
-      _Sign(Land.colors, 1320, 320),
+      // Centred on its island it would start 7 off the screen's edge: it starts 12 inside it instead (B-27).
+      _Sign(Land.colors, 1320, 320, labelLeft: 1250 + 12, labelMaxWidth: 230),
       _Sign(Land.shapes, 1040, 320),
       _Sign(Land.logic, 760, 320),
       _Sign(Land.robots, 480, 320),
@@ -225,7 +247,9 @@ class _HomeSpec {
     signs: <_Sign>[
       _Sign(Land.nitzi, 1687, 314),
       _Sign(Land.counting, 1435, 314),
-      _Sign(Land.colors, 1189, 314),
+      // Half the island peeks in at the start (the cue to pan); its sign is whole, 8 inside the edge, and at most 156
+      // wide (its own width at the system's text size is 154), so it stays 8 clear of the Counting sign at 1.3 (B-27).
+      _Sign(Land.colors, 1189, 314, labelLeft: 1167 + 8, labelMaxWidth: 156),
       _Sign(Land.shapes, 937, 314),
       _Sign(Land.logic, 685, 314),
       _Sign(Land.robots, 433, 314),
@@ -265,13 +289,16 @@ class _HomeSpec {
     companionTop: 450.4,
     homeSignLeft: 890,
     homeSignRight: 1130,
+    // B-27: Shape Forest and Colour Bay, Riddle Grotto and Robot Harbour nearly touch on this board, so their tap areas
+    // are trimmed apart (16 and 24), each still over its own island's middle and landmark; Colour Bay's reaches up to its
+    // rainbow. Robot Harbour ends 24 before Market Village.
     signs: <_Sign>[
       _Sign(Land.nitzi, 1010, 676),
       _Sign(Land.counting, 700, 666),
-      _Sign(Land.colors, 420, 700),
-      _Sign(Land.shapes, 220, 572),
-      _Sign(Land.logic, 400, 372),
-      _Sign(Land.robots, 640, 276),
+      _Sign(Land.colors, 420, 700, tapLeft: 348, tapTop: 536),
+      _Sign(Land.shapes, 220, 572, tapRight: 332),
+      _Sign(Land.logic, 400, 372, tapLeft: 282, tapRight: 508),
+      _Sign(Land.robots, 640, 276, tapLeft: 532, tapRight: 756),
       _Sign(Land.market, 900, 372),
     ],
   );
@@ -316,7 +343,8 @@ class _HomeSpec {
       _Sign(Land.shapes, 230, 1054),
       _Sign(Land.logic, 600, 848),
       _Sign(Land.robots, 300, 716),
-      _Sign(Land.market, 560, 356),
+      // 8 above the board's 356, so at text scale 1.3 its sign does not peek 2 points over the top edge (B-27).
+      _Sign(Land.market, 560, 348),
     ],
   );
 
@@ -504,10 +532,12 @@ class HomeScreen extends StatelessWidget {
         for (final _Sign sign in s.signs)
           if (_tapFor(sign.land) != null)
             Positioned(
-              left: sign.left - s.tapWidth / 2,
-              top: sign.top - 150,
-              width: s.tapWidth,
-              height: 160,
+              left: sign.tapLeft ?? sign.left - s.tapWidth / 2,
+              top: sign.tapTop ?? sign.top - 150,
+              width:
+                  (sign.tapRight ?? sign.left + s.tapWidth / 2) -
+                  (sign.tapLeft ?? sign.left - s.tapWidth / 2),
+              height: sign.top + 10 - (sign.tapTop ?? sign.top - 150),
               child: Semantics(
                 button: true,
                 label: _semanticsOf(sign.land),
@@ -615,8 +645,22 @@ class HomeScreen extends StatelessWidget {
     final Widget label = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: _tapFor(sign.land),
-      child: _LandSign(land: sign.land, text: sign.land.label.text, semantics: sign.land.label.text),
+      child: _LandSign(
+        land: sign.land,
+        text: sign.land.label.text,
+        semantics: sign.land.label.text,
+        maxTextWidth: sign.labelMaxWidth == null ? null : sign.labelMaxWidth! - _LandSign.frame,
+      ),
     );
+    if (sign.labelLeft != null) {
+      // Pinned by its left edge (a sign at the screen's edge in the start view), growing to the right.
+      return Positioned(
+        left: sign.labelLeft,
+        top: sign.top,
+        width: sign.labelMaxWidth ?? 400,
+        child: Align(alignment: Alignment.centerLeft, child: label),
+      );
+    }
     // translateX(-50%) in CSS: centred on `left`. A wide box does the centring.
     return Positioned(
       left: sign.left - 200,
@@ -739,10 +783,17 @@ class _DailyPill extends StatelessWidget {
                 ),
               ),
               SizedBox(width: spec.pillGap),
-              Text(
-                He.homeDaily.text,
-                style: AppText.fixed(size: spec.pillTitle, weight: 400, lineHeight: 1.5, display: true),
-                softWrap: false,
+              // The title grows with the system text as far as the board's box allows, then shrinks to fit it, so
+              // the icon is never covered and the title never clipped (QA-19). The pill itself keeps its board size.
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    He.homeDaily.text,
+                    style: AppText.fixed(size: spec.pillTitle, weight: 400, lineHeight: 1.5, display: true),
+                    softWrap: false,
+                  ),
+                ),
               ),
             ],
           ),

@@ -14,6 +14,12 @@ class FakePlayer implements VoicePlayer {
   int plays = 0;
   Duration? at;
   bool failToPlay = false;
+
+  /// The next this-many calls of `play` throw, the ones after them work.
+  int failNextPlays = 0;
+
+  /// `stop` throws (after it counted), like Android's player between two sounds.
+  bool failToStop = false;
   bool disposed = false;
 
   /// While set and not completed, `play` takes its time to start (a real player prepares the sound first).
@@ -31,6 +37,10 @@ class FakePlayer implements VoicePlayer {
   @override
   Future<void> play(Uint8List sound, {String mime = 'audio/mpeg'}) async {
     if (failToPlay) throw StateError('no sound device');
+    if (failNextPlays > 0) {
+      failNextPlays--;
+      throw StateError('MEDIA_ERROR_UNKNOWN');
+    }
     plays++;
     played.add(sound);
     at = Duration.zero;
@@ -58,6 +68,7 @@ class FakePlayer implements VoicePlayer {
     stops++;
     at = null;
     playing = false;
+    if (failToStop) throw StateError('IllegalStateException');
   }
 
   @override

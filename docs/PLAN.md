@@ -412,7 +412,7 @@ Phones run in landscape; tablets support both landscape and portrait. Every acti
 ### Main flows
 
 1. **First launch (adult screens):** the child's name and age, how Nitzi addresses the child (masculine, feminine or plural), an avatar, voice answers on or off, and a session limit.
-2. **Profile picker:** big avatar cards for siblings; tap and go. It is skipped when there is one child.
+2. **Profile picker:** big avatar cards for siblings; tap and go. It is skipped when there is one child. **Board chrome and large text (B-27):** the child-space screens are never clamped to a text scale of 1: the picker's cards (112 by 136 on the phone board) are a minimum height that grows with the system text, and the daily pill keeps its board size while its title shrinks only if the box is too narrow; nothing overflows at 1.0, 1.3 or 1.5 on the four boards. **Voice:** `VoiceDirector` catches, and logs by error type only, a failing `stop` or `play` of the player (Android's `IllegalStateException`, `MEDIA_ERROR_UNKNOWN`), skips that line and goes on to the next waiting one; the caption stays on screen.
 3. **Home map:** Today's Adventure bottle, the lands, Sticker Island, the child's avatar and a small grey Parents button.
 4. **Lessons:** a land opens a path of 5–8 stepping stones; each activity has 5–8 items.
 5. **Wind-down:** two minutes before the limit, a sun starts sinking. The current activity always finishes, a 30-second dusk ritual follows, and continuing needs the parent gate.
