@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/design/components.dart';
+import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/strings/he.dart';
 
 import 'support/harness.dart';
@@ -78,30 +79,60 @@ Map<String, Offset> signsNow(WidgetTester tester) => <String, Offset>{
   for (final Land l in Land.values) l.name: rectOf(tester, 'sign-${l.name}').topCenter,
 };
 
-/// The land tap areas and the home island's (in one frame of reference), each at least 64 wide and, when [apart], 24
-/// apart, as the board's touch rules ask. The tablet landscape board is unchanged by B-23 and is only reported.
-void expectTapAreasApart(WidgetTester tester, double width, {bool apart = true}) {
+/// The land tap areas and the home island's (in one frame of reference), each at least 64 wide and [width] wide when it
+/// is given, and at least [minGap] apart (24, as the board's touch rules ask; 16 on the landscape tablet, B-27).
+void expectTapAreasApart(WidgetTester tester, double? width, {double minGap = 24}) {
   final Map<Land, Rect> areas = <Land, Rect>{
     for (final Land l in Land.values) l: rectOf(tester, 'land-tap-${l.name}'),
   };
   expect(areas[Land.nitzi], isNotNull, reason: 'the home island\'s sign opens the child\'s home (B-26)');
   for (final Rect r in areas.values) {
-    expect(r.width, closeTo(width, 0.6));
+    if (width != null) expect(r.width, closeTo(width, 0.6));
     expect(r.width, greaterThanOrEqualTo(64));
+    expect(r.height, greaterThanOrEqualTo(64));
   }
   final List<Land> lands = areas.keys.toList();
   for (int i = 0; i < lands.length; i++) {
     for (int j = i + 1; j < lands.length; j++) {
       final double gap = separation(areas[lands[i]]!, areas[lands[j]]!);
-      if (apart) {
-        expect(gap, greaterThanOrEqualTo(24), reason: '${lands[i].name} and ${lands[j].name}');
-      } else if (gap < 24) {
-        debugPrint(
-          'note: the tap areas of ${lands[i].name} and ${lands[j].name} are ${gap.toStringAsFixed(1)} apart',
-        );
-      }
+      expect(gap, greaterThanOrEqualTo(minGap), reason: '${lands[i].name} and ${lands[j].name}');
     }
   }
+}
+
+/// Every sign at the start view is either whole on the screen (at least [inset] inside its edges) or wholly off it,
+/// never cut; and no two signs overlap or come closer than 8.
+void expectSignsWholeOrOff(WidgetTester tester, Size screen, {double inset = 8}) {
+  final Rect view = Offset.zero & screen;
+  final Map<Land, Rect> signs = <Land, Rect>{
+    for (final Land l in Land.values) l: rectOf(tester, 'sign-${l.name}'),
+  };
+  signs.forEach((Land l, Rect r) {
+    final bool off = !r.overlaps(view);
+    final bool whole =
+        r.left >= inset - 0.6 &&
+        r.right <= screen.width - inset + 0.6 &&
+        r.top >= 0 &&
+        r.bottom <= screen.height;
+    expect(off || whole, isTrue, reason: '${l.name} sign $r is cut by the edge of $screen');
+  });
+  final List<Land> lands = signs.keys.toList();
+  for (int i = 0; i < lands.length; i++) {
+    for (int j = i + 1; j < lands.length; j++) {
+      expect(
+        separation(signs[lands[i]]!, signs[lands[j]]!),
+        greaterThanOrEqualTo(8),
+        reason: 'the ${lands[i].name} and ${lands[j].name} signs',
+      );
+    }
+  }
+}
+
+/// Pumps the full home screen at a system text scale.
+Future<void> pumpHomeAt(WidgetTester tester, Size size, double scale) async {
+  tester.platformDispatcher.textScaleFactorTestValue = scale;
+  addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+  await pumpHome(tester, size, full: true);
 }
 
 /// How far apart two rectangles are: the larger of the horizontal and the vertical gap (0 when they overlap).
@@ -193,10 +224,12 @@ void main() {
         await pumpHome(tester, phone);
         // Start view: world x 1250 to 2102. Nitzi and Counting where board 10 has them, the whole Colour Bay sign.
         final Map<String, Offset> start = signsNow(tester);
+        // Colour Bay's sign is not centred on its island (x 70): it starts 12 inside the screen's edge (B-27).
+        expect(rectOf(tester, 'sign-colors').left, closeTo(12, 0.6));
+        expect(rectOf(tester, 'sign-colors').top, closeTo(320, 0.6));
         const Map<String, double> startX = <String, double>{
           'nitzi': 640,
           'counting': 360,
-          'colors': 70,
           'shapes': -210,
           'logic': -490,
           'robots': -770,
@@ -284,10 +317,12 @@ void main() {
       expect(rectOf(tester, 'bubble-body').right, closeTo(667 - 154, 0.6));
       // Start view: world x 1167 to 1834.
       final Map<String, Offset> start = signsNow(tester);
+      // Colour Bay's island peeks in by half (x 22); its sign is whole, 8 inside the edge (B-27).
+      expect(rectOf(tester, 'sign-colors').left, closeTo(8, 0.6));
+      expect(rectOf(tester, 'sign-colors').top, closeTo(314, 0.6));
       const Map<String, double> startX = <String, double>{
         'nitzi': 520,
         'counting': 268,
-        'colors': 22,
         'shapes': -230,
         'logic': -482,
         'robots': -734,
@@ -362,11 +397,32 @@ void main() {
       );
     });
 
-    testWidgets('six land tap areas 240 wide; the companion and its "+" where they were', (
+    testWidgets('seven land tap areas at least 16 apart (B-27); the companion and its "+" where they were', (
       WidgetTester tester,
     ) async {
       await pumpHome(tester, tabletL, full: true);
-      expectTapAreasApart(tester, 240, apart: false);
+      expectTapAreasApart(tester, null, minGap: 16);
+      // Each area is still over its own island: the middle of its sand (the scene's ellipses) and its sign's centre.
+      const Map<String, Offset> islands = <String, Offset>{
+        'nitzi': Offset(1010, 567),
+        'counting': Offset(700, 567),
+        'colors': Offset(420, 606),
+        'shapes': Offset(220, 476),
+        'logic': Offset(400, 286),
+        'robots': Offset(640, 196),
+        'market': Offset(900, 286),
+      };
+      islands.forEach((String land, Offset middle) {
+        final Rect area = rectOf(tester, 'land-tap-$land');
+        expect(area.contains(middle), isTrue, reason: '$land: $area holds its island\'s middle');
+        expect(
+          area.contains(Offset(rectOf(tester, 'sign-$land').center.dx, area.center.dy)),
+          isTrue,
+          reason: land,
+        );
+      });
+      // Colour Bay's area reaches up to the top of its rainbow (y 541).
+      expect(rectOf(tester, 'land-tap-colors').top, lessThanOrEqualTo(541));
       expectRect(rectOf(tester, 'home-companion'), 975, 450.4, 153.6, 153.6, why: 'companion');
       expect(
         rectOf(tester, 'home-friends').topLeft,
@@ -392,7 +448,7 @@ void main() {
           'shapes': (230, 654),
           'logic': (600, 448),
           'robots': (300, 316),
-          'market': (560, -44),
+          'market': (560, -52),
         };
         final Map<String, Offset> start = signsNow(tester);
         startAt.forEach((String land, (double, double) at) {
@@ -404,7 +460,7 @@ void main() {
         await tester.drag(find.byKey(const Key('sign-logic')), const Offset(0, 500));
         await tester.pumpAndSettle();
         expect(mapScroll(tester).pixels, closeTo(400, 0.6), reason: 'dragging down scrolls up to the top');
-        expect(signsNow(tester)['market']!.dy, closeTo(356, 0.6));
+        expect(signsNow(tester)['market']!.dy, closeTo(348, 0.6));
         expect(fixedRects(tester), before, reason: 'the fixed buttons do not move with the map');
       },
     );
@@ -420,6 +476,35 @@ void main() {
         offsetMoreOrLessEquals(const Offset(703.6, 994.8), epsilon: 0.6),
       );
     });
+  });
+
+  // B-27: no sign is cut by a screen's edge at the start view (a peek is a half island, never half a sign), at the text
+  // scales a family may set; the tap areas keep their gaps at those scales too.
+  group('B-27: whole signs at every edge, tap areas apart', () {
+    for (final (String n, Size s, double? tap) in <(String, Size, double?)>[
+      ('phone', phone, 240),
+      ('phoneSE', phoneSE, 220),
+      ('tabletLandscape', tabletL, null),
+      ('tabletPortrait', tabletP, 240),
+    ]) {
+      for (final double scale in <double>[1.0, 1.3]) {
+        testWidgets('$n, text scale $scale', (WidgetTester tester) async {
+          await pumpHomeAt(tester, s, scale);
+          expectSignsWholeOrOff(tester, s);
+          expectTapAreasApart(tester, tap, minGap: n == 'tabletLandscape' ? 16 : 24);
+          if (n.startsWith('phone')) {
+            final Rect colors = rectOf(tester, 'sign-colors');
+            expect(
+              colors.left,
+              closeTo(n == 'phone' ? 12 : 8, 0.6),
+              reason: 'Colour Bay\'s sign starts inside the edge',
+            );
+            // Its text keeps its size at the system's own text size; on the SE it is held in only at a larger one.
+            if (scale == 1.0) expect(colors.width, closeTo(154.2, 0.6));
+          }
+        });
+      }
+    }
   });
 
   group('board 13, the activity frame on a phone', () {
@@ -562,6 +647,63 @@ void main() {
       expectRect(tester.getRect(find.byType(MicButton)), 44, 172, 96, 96, why: 'mic');
       expect(tester.getRect(find.byType(ProgressTrail)).top, closeTo(46, 0.6));
     });
+  });
+
+  // B-27: the answer tiles sit clear of the stage: on a tablet 18 below the card's 6 point lip (they overlapped
+  // its bottom by 10), on a phone below the scene. In the board frame and in a playable activity alike.
+  group('B-27: the answer tiles are clear of the stage card', () {
+    for (final (String n, Size s) in <(String, Size)>[
+      ('phone', phone),
+      ('phoneSE', phoneSE),
+      ('tabletLandscape', tabletL),
+      ('tabletPortrait', tabletP),
+    ]) {
+      testWidgets('$n: the board frame and a lesson', (WidgetTester tester) async {
+        final bool card = n.startsWith('tablet');
+        // The card's lip (a 6 point shadow under it) belongs to the card.
+        void check(String stageKey) {
+          final Finder stage = find.byKey(Key(stageKey));
+          final Rect box = card
+              ? tester.getRect(find.ancestor(of: stage, matching: find.byType(Container)).first)
+              : tester.getRect(stage);
+          final double bottom = box.bottom + (card ? 6 : 0);
+          final List<Rect> tiles = <Rect>[
+            for (final Element e in find.byKey(const Key('answer-tile')).evaluate())
+              tester.getRect(find.byElementPredicate((Element x) => x == e)),
+          ];
+          expect(tiles, isNotEmpty);
+          for (final Rect t in tiles) {
+            // A selected tile lifts 6 and its ring is 6 wider: it still clears the card (or the scene) by 6.
+            expect(t.top - bottom, greaterThanOrEqualTo(12), reason: '$n $stageKey: tile $t, stage $box');
+            expect(t.bottom, lessThanOrEqualTo(s.height), reason: '$n: tile $t is on the screen');
+            expect(t.left, greaterThanOrEqualTo(0));
+            expect(t.right, lessThanOrEqualTo(s.width));
+          }
+        }
+
+        await pumpActivity(tester, s);
+        check('activity-stage');
+        await pumpScreen(
+          tester,
+          ActivityFrame(
+            bubbleText: He.activityQuestion.text,
+            stage: (Size room) => const SizedBox.expand(),
+            trailTotal: 3,
+            trailDone: 0,
+            onHome: () {},
+            tiles: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                for (int i = 0; i < 3; i++)
+                  AnswerTile(semanticLabel: '$i', onPressed: () {}, child: Text('$i')),
+              ],
+            ),
+          ),
+          size: s,
+        );
+        check('lesson-stage');
+      });
+    }
   });
 
   group('a window that is not exactly a board is scaled, never stretched', () {
