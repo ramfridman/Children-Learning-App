@@ -16,6 +16,7 @@ import 'package:nitznutz/rewards/names.dart';
 import 'package:nitznutz/strings/he.dart';
 import 'package:nitznutz/world/placement.dart';
 
+import 'support/bottle.dart';
 import 'support/app_harness.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
@@ -35,8 +36,7 @@ Future<AppRig> homeIsland(WidgetTester tester, Future<void> Function(AppRig rig)
 
 /// Taps the bottle and returns the lesson screen that opened.
 Future<LessonScreen> tapBottle(WidgetTester tester) async {
-  await tester.tap(find.byKey(const Key('home-island-bottle')));
-  await tester.pumpAndSettle();
+  await tapBottleAndWait(tester);
   return tester.widget<LessonScreen>(find.byType(LessonScreen));
 }
 

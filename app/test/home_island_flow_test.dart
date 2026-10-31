@@ -21,6 +21,7 @@ import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/rewards/sticker_design.dart';
 import 'package:nitznutz/strings/he.dart';
 
+import 'support/bottle.dart';
 import 'support/app_harness.dart';
 import 'support/golden_comparator.dart';
 import 'support/harness.dart';
@@ -197,7 +198,7 @@ void main() {
         );
         // The bottle in the home: the same lesson, and the child is back in the home after it.
         await openHome(tester);
-        await tester.tap(find.byKey(const Key('home-island-bottle')));
+        await tapBottleAndWait(tester);
         final String fromBottle = await lessonOnTopThenLeave(tester);
         expect(fromBottle, fromMap);
         expect(find.byType(HomeIslandScreen), findsOneWidget);

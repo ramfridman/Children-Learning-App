@@ -30,7 +30,11 @@ AdventureLine? adventureLine(TodaysAdventure stop) {
     semantics: pair.$2.fill(<String, String>{'land': landSemanticsName(land).text}),
     // The play-again line names no land, so its clip is one for every land; the others are one clip per land.
     voice: stop.reason == AdventureReason.playAgain
-        ? 'vo:core.adventure.${stop.reason.name}'
-        : 'vo:core.adventure.${stop.reason.name}.${land.name}',
+        ? 'vo:core.adventure.${_voiceWord(stop.reason)}'
+        : 'vo:core.adventure.${_voiceWord(stop.reason)}.${land.name}',
   );
 }
+
+/// The reason as a voice id writes it (a pack id has only `a-z`, digits, `_` and `.`): `callForHelp` is `call_for_help`.
+String _voiceWord(AdventureReason r) =>
+    r.name.replaceAllMapped(RegExp('[A-Z]'), (Match m) => '_${m[0]!.toLowerCase()}');

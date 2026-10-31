@@ -106,6 +106,7 @@ class AppRig {
     this.holdCharacters,
     this.rules,
     this.extraOverrides = const <Override>[],
+    this.content,
     int? clockMs,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
@@ -140,6 +141,9 @@ class AppRig {
 
   /// More provider overrides for one test (a sync test gives its own engine here); they come last and win.
   final List<Override> extraOverrides;
+
+  /// The pack the app plays, when a test needs a different one (the bundled starter pack when null).
+  final PackContent? content;
 
   /// How long the server takes to answer the helper switch (the first call after the function slept).
   final Duration switchAnswersAfter;
@@ -192,7 +196,7 @@ class AppRig {
     platformProvider.overrideWithValue(platform),
     clockProvider.overrideWithValue(clock),
     databaseProvider.overrideWith((Ref ref) async => db),
-    contentProvider.overrideWith((Ref ref) => loadStarter()),
+    contentProvider.overrideWith((Ref ref) async => content ?? await loadStarter()),
     characterSourceProvider.overrideWith((Ref ref) async {
       if (holdCharacters != null) await holdCharacters!.future;
       return characters ?? await makeSource();
