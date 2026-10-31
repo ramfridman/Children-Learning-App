@@ -11,6 +11,7 @@ import '../hint_widgets.dart';
 import 'hint_marks.dart';
 import 'hint_pictures.dart' show hintScale;
 import 'prompt_numbers.dart';
+import 'seesaw_picture.dart' show SeesawBox;
 import 'sprite_outline.dart';
 import 'tap_geometry.dart';
 
@@ -1289,9 +1290,11 @@ class _Plans {
   );
 
   HintPlan measure(int level) {
-    // Heavy and light are not seen with a stick of cubes: they wait for the seesaw (P10), and the generic ladder serves until then.
+    // Heavy and light are not seen with a stick of cubes: they are weighed on the seesaw (P10).
     final Set<String> asked = _wordsOf(a.promptLine.caption);
-    if (asked.contains(_heavy) || asked.contains(_light)) return generic(level);
+    if (asked.contains(_heavy) || asked.contains(_light)) {
+      return _seesaw(level, heavyAsked: asked.contains(_heavy));
+    }
     final List<(String, double, Rect)> things = <(String, double, Rect)>[
       for (final ChoiceOption o in a.options)
         if (_svg(_spriteOf(o)) != null)
@@ -1354,5 +1357,60 @@ class _Plans {
       );
     }
     return _walkOptions(base: aligned);
+  }
+
+  /// Heavy and light (MATH-A-04): level 1 lights the two things (their tiles, one after the other); level 2 stands them on the ends of
+  /// a seesaw that two wooden blocks hold level, so the question is set up and nothing is weighed yet; level 3 the hand takes the
+  /// blocks away, the light end's first (nothing moves, the heavy end still rests on its block) and then the heavy end's, the plank
+  /// tips slowly until the heavy end rests on the ground, and the hand goes to the answer. The things stand in the order of their
+  /// tiles, left to right as the child sees the row, so each end is linked with its tile (nothing is mirrored).
+  HintPlan _seesaw(int level, {required bool heavyAsked}) {
+    if (level == 1) return look();
+    final List<String?> svgs = <String?>[for (final ChoiceOption o in a.options) _svg(_spriteOf(o))];
+    if (_n != 2 || svgs.contains(null)) return generic(level);
+    final int leftI = g.optionTip(0).dx <= g.optionTip(1).dx ? 0 : 1;
+    final (String, double) left = inkedSvg(svgs[leftI]!);
+    final (String, double) right = inkedSvg(svgs[1 - leftI]!);
+    final int heavyI = heavyAsked ? _ci : 1 - _ci;
+    final bool heavyLeft = heavyI == leftI;
+    final Rect stage = Offset.zero & g.size;
+    SeesawMark saw({bool lightProp = true, bool heavyProp = true, bool tipped = false}) => SeesawMark(
+      stage,
+      left: left.$1,
+      leftAspect: left.$2,
+      right: right.$1,
+      rightAspect: right.$2,
+      down: tipped ? (heavyLeft ? -1 : 1) : 0,
+      propLeft: heavyLeft ? heavyProp : lightProp,
+      propRight: heavyLeft ? lightProp : heavyProp,
+    );
+    if (level == 2) {
+      return HintPlan(
+        <HintFrame>[
+          HintFrame(<HintMark>[saw()], hold: _ms(2800)),
+        ],
+        rest: <HintMark>[saw()],
+      );
+    }
+    final SeesawBox b = SeesawBox(g.size);
+    // The fingertip on the top of a block, a little in from its outer side; then, once the heavy end's block is gone, a little
+    // farther out, where the block went, clear of the plank as it comes down.
+    Offset onProp(bool leftProp) {
+      final Rect p = b.prop(left: leftProp);
+      return Offset(p.center.dx + (leftProp ? -3 : 3) * b.u, p.top + 6 * b.u);
+    }
+
+    final Rect heavyProp = b.prop(left: heavyLeft);
+    final Offset away = Offset(
+      (heavyLeft ? heavyProp.left - 16 * b.u : heavyProp.right + 16 * b.u).clamp(8, g.w - 8).toDouble(),
+      heavyProp.top + 10 * b.u,
+    );
+    final SeesawMark tipped = saw(lightProp: false, heavyProp: false, tipped: true);
+    return _demo(<HintFrame>[
+      HintFrame(<HintMark>[saw(), HandMark(onProp(!heavyLeft), press: true)], hold: _ms(1000)),
+      HintFrame(<HintMark>[saw(lightProp: false), HandMark(onProp(heavyLeft), press: true)], hold: _ms(1100)),
+      HintFrame(<HintMark>[tipped, HandMark(away)], hold: _ms(2100)),
+      _toAnswer(<HintMark>[tipped]),
+    ]);
   }
 }

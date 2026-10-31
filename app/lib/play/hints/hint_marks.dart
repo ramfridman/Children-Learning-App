@@ -216,14 +216,48 @@ final class OutlineMark extends HintMark {
   final bool faint;
 }
 
+/// P10 (the seesaw of heavy and light): a playground seesaw standing on the floor of [rect] (the whole stage), [left] on its left
+/// end and [right] on its right end (pack pictures cut to their ink, [leftAspect] and [rightAspect] their width over height). [down]
+/// is the end that rests on the ground: -1 the left, 1 the right, 0 neither (the plank is level). [propLeft] and [propRight] are the
+/// wooden blocks under each end that hold the plank level until the hand takes them away. A new [down] tips the plank slowly;
+/// with "reduce motion" the tipped plank fades in.
+final class SeesawMark extends HintMark {
+  const SeesawMark(
+    this.rect, {
+    required this.left,
+    required this.right,
+    this.leftAspect = 1,
+    this.rightAspect = 1,
+    this.down = 0,
+    this.propLeft = true,
+    this.propRight = true,
+  });
+
+  final Rect rect;
+  final String left;
+  final String right;
+  final double leftAspect;
+  final double rightAspect;
+  final int down;
+  final bool propLeft;
+  final bool propRight;
+}
+
+/// Where the body of a pointing hand lies: [guide] is the hand's own way, from the guide's side above the fingertip (it never
+/// reaches the speech bubble, see `HintOverlay`); [below] turns the hand half round so that its body lies under the fingertip, for
+/// a target whose surroundings above it (the shop's total, a bin's label) have to stay in view.
+enum HandFrom { guide, below }
+
 /// P12 (the pointing hand): the fingertip is on [tip]. [press] makes a sky ripple at the tip (the "tok"). [snap] puts the hand where
-/// it is told at once, with no glide: the hand of a trace follows a walking dot a few points at a time.
+/// it is told at once, with no glide: the hand of a trace follows a walking dot a few points at a time. [from] is where the hand's
+/// body lies.
 final class HandMark extends HintMark {
-  const HandMark(this.tip, {this.press = false, this.snap = false});
+  const HandMark(this.tip, {this.press = false, this.snap = false, this.from = HandFrom.guide});
 
   final Offset tip;
   final bool press;
   final bool snap;
+  final HandFrom from;
 }
 
 /// One step of a hint: what is on the stage for [hold]. [litOption] is the answer tile (by its place in the row) that has a sky

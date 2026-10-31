@@ -10,6 +10,7 @@ import '../hint_hand.dart';
 import '../hint_widgets.dart';
 import '../template_session.dart';
 import 'hint_marks.dart';
+import 'seesaw_picture.dart';
 
 // The shared hint pictures of B-40 (design spec sections 1 to 3): a sky glow means "look here", a sky card means "another way",
 // the sky hand means "watch me". Every picture is sky (`hintHalo`, `skyTint`, `skyDeep`), never red, takes no touch, comes to rest,
@@ -309,8 +310,14 @@ class HintOverlay extends StatelessWidget {
             child: CustomPaint(key: const Key('hint-outline'), painter: _OutlinePainter(m, k)),
           ),
         );
+      case SeesawMark():
+        return Positioned.fromRect(
+          key: key,
+          rect: m.rect,
+          child: Appear(child: SeesawPicture(mark: m)),
+        );
       case HandMark():
-        return _hand(context, key, m, k);
+        return m.from == HandFrom.below ? _handFromBelow(context, key, m, k) : _hand(context, key, m, k);
       case TileMark():
         return const SizedBox.shrink(); // never reached: [build] leaves them to the tiles
     }
@@ -428,6 +435,47 @@ class HintOverlay extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The pointing hand from below ([HandFrom.below]): turned half round, its fingertip on [HandMark.tip] and its whole body under it, so
+/// that nothing above the target is covered. The keyed box is the hand's own box, where the body really is.
+Widget _handFromBelow(BuildContext context, Key key, HandMark m, double k) {
+  final bool still = MediaQuery.disableAnimationsOf(context);
+  final double h = (72 * k).clamp(40, 96).toDouble();
+  final double w = PointingHand.widthAt(h);
+  final Offset tip = PointingHand.tipAt(h);
+  return Positioned.fill(
+    key: key,
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        if (m.press)
+          Positioned(
+            key: ValueKey<String>('ripple-${m.tip.dx.round()}-${m.tip.dy.round()}'),
+            left: m.tip.dx - 17 * k,
+            top: m.tip.dy - 17 * k,
+            width: 34 * k,
+            height: 34 * k,
+            child: _Ripple(still: still, scale: k),
+          ),
+        AnimatedPositioned(
+          key: const ValueKey<String>('hand'),
+          duration: still || m.snap ? Duration.zero : const Duration(milliseconds: 450),
+          curve: Curves.easeInOut,
+          left: m.tip.dx - (w - tip.dx),
+          top: m.tip.dy - (h - tip.dy),
+          child: Appear(
+            child: SizedBox(
+              key: const Key('hint-p12'),
+              width: w,
+              height: h,
+              child: RotatedBox(quarterTurns: 2, child: PointingHand(height: h)),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 /// A picture that moves to its new [rect] in 450 ms, easing, when a later step puts it somewhere else. It must sit directly in the

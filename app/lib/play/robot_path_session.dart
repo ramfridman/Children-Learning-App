@@ -135,6 +135,8 @@ class RobotPathSession extends TemplateSession {
   void undo() {
     if (_busy || running || program.isEmpty) return;
     program.removeLast();
+    // The undo button stays lit until what is left of the plan is the start of the way (hint 2 lit it, see [_firstStep]).
+    if (hintStep == 'undo' && _planOnWay != null) hintStep = null;
     notify();
   }
 
@@ -195,20 +197,93 @@ class RobotPathSession extends TemplateSession {
     later(TemplateSession.praisePause, controller.next);
   }
 
-  /// Hint 2: the ghost robot's square gets the footprint "1" (the first step of the way), and it stays with the ghost.
-  void _footprintOfGhost() {
-    _hint.clear();
-    final (int, int)? g = ghost;
-    if (g == null || !_canDraw) return;
+  /// One numbered footprint on each of [squares], the first of them numbered [first] (the number of that step of the way).
+  List<HintMark> _footprints(List<(int, int)> squares, {int first = 1}) {
     final double side = cellSide(_size, activity.cols, activity.rows);
-    _hint.play(
-      HintPlan(
-        const <HintFrame>[],
-        rest: <HintMark>[
-          BadgeMark(cellCentre(_size, activity.cols, activity.rows, g) + Offset(side * 0.26, side * 0.26), 1),
-        ],
-      ),
-    );
+    return <HintMark>[
+      for (int j = 0; j < squares.length; j++)
+        BadgeMark(
+          cellCentre(_size, activity.cols, activity.rows, squares[j]) + Offset(side * 0.26, side * 0.26),
+          first + j,
+        ),
+    ];
+  }
+
+  /// Where a robot that walks [steps] from the start ends: a step off the grid is not taken, as when the robot runs.
+  (int, int) _endOf(List<String> steps) {
+    (int, int) at = activity.robotAt;
+    for (final String d in steps) {
+      final (int, int) next = _after(at, d);
+      if (_inside(next)) at = next;
+    }
+    return at;
+  }
+
+  /// How many steps the child's plan has when they are all the first steps of the stored way, or null when one of them is not.
+  int? get _planOnWay {
+    final List<String> way = activity.solution;
+    if (program.length > way.length) return null;
+    for (int i = 0; i < program.length; i++) {
+      if (program[i] != way[i]) return null;
+    }
+    return program.length;
+  }
+
+  /// The first leg of the stored way from step [from]: its arrows up to the first turn, and never more than half the steps of the
+  /// way (rounded down, at least one).
+  List<String> _legFrom(int from) {
+    final List<String> way = activity.solution;
+    if (from >= way.length) return const <String>[];
+    final int most = math.max(1, way.length ~/ 2);
+    int end = from + 1;
+    while (end < way.length && end - from < most && way[end] == way[from]) {
+      end++;
+    }
+    return way.sublist(from, end);
+  }
+
+  /// Hint 2: the arrow to press is lit, and a ghost robot stands where the step (or the leg) leads, with the footprints of it.
+  ///
+  /// In direct mode it is the next step from where the robot stands (footprint 1). In plan mode it starts from the end of the plan,
+  /// and the footprints carry on from its count. The skill CS-B-01 shows a whole leg of the way; every other plan shows one step.
+  /// A plan that is not the way's beginning lights the undo button instead, and draws nothing else.
+  void _firstStep() {
+    _hint.clear();
+    ghost = null;
+    // A plan with a step that is not the way's: the footprints would be numbered from the start, but the next step pressed would be
+    // added after the wrong ones. So the undo button is lit first, and nothing else is drawn, until the plan is the way's beginning.
+    if (activity.plan && _planOnWay == null) {
+      hintStep = 'undo';
+      return;
+    }
+    final List<String> leg;
+    final (int, int) from;
+    final int first;
+    if (!activity.plan) {
+      final String? next = _nextOfHelp;
+      leg = <String>[?next];
+      from = pos;
+      first = 1;
+    } else if (activity.skillId == 'CS-B-01') {
+      leg = _legFrom(program.length);
+      from = _endOf(program);
+      first = program.length + 1;
+    } else {
+      final String? next = _nextOfHelp;
+      leg = <String>[?next];
+      from = _endOf(program);
+      first = program.length + 1;
+    }
+    hintStep = leg.isEmpty ? null : leg.first;
+    final List<(int, int)> squares = <(int, int)>[];
+    (int, int) at = from;
+    for (final String d in leg) {
+      at = _after(at, d);
+      squares.add(at);
+    }
+    ghost = squares.isEmpty || !squares.every(_inside) ? null : squares.last;
+    if (ghost == null || !_canDraw) return;
+    _hint.play(HintPlan(const <HintFrame>[], rest: _footprints(squares, first: first)));
   }
 
   /// The worked example: the pointing hand presses each arrow of the way, the robot takes the step and leaves a numbered footprint,
@@ -232,14 +307,7 @@ class RobotPathSession extends TemplateSession {
         at = _after(at, d);
         squares.add(at);
       }
-      final double side = cellSide(_size, activity.cols, activity.rows);
-      List<HintMark> footprints(int n) => <HintMark>[
-        for (int j = 0; j < n; j++)
-          BadgeMark(
-            cellCentre(_size, activity.cols, activity.rows, squares[j]) + Offset(side * 0.26, side * 0.26),
-            j + 1,
-          ),
-      ];
+      List<HintMark> footprints(int n) => _footprints(squares.sublist(0, n));
       _hint.play(
         handTourPlan(
           <HandStop>[
@@ -304,12 +372,8 @@ class RobotPathSession extends TemplateSession {
         spotlight = true;
         _hint.clear();
       case HintPicture.firstArrow:
-        // Hint 2: the first step of the way: its arrow is lit, and a ghost of the robot stands one square on.
         spotlight = false;
-        hintStep = _nextOfHelp;
-        ghost = hintStep == null ? null : _after(pos, hintStep!);
-        if (ghost != null && !_inside(ghost!)) ghost = null;
-        _footprintOfGhost();
+        _firstStep();
       default:
         spotlight = false;
         ghost = null;
@@ -342,23 +406,27 @@ class RobotPathSession extends TemplateSession {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         if (activity.plan)
-          SizedBox(
-            height: 34,
-            child: Row(
-              key: const Key('robot-program'),
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                for (final String d in program)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Icon(_icon(d), size: 28, color: TokenColors.ink),
-                  ),
-                for (int i = program.length; i < activity.maxSteps; i++)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),
-                    child: Icon(Icons.circle_outlined, size: 22, color: TokenColors.hairline),
-                  ),
-              ],
+          // The steps are drawn left to right, the first at the left, and an arrow never mirrors, in every language.
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: SizedBox(
+              height: 34,
+              child: Row(
+                key: const Key('robot-program'),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  for (final String d in program)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Icon(_icon(d), size: 28, color: TokenColors.ink),
+                    ),
+                  for (int i = program.length; i < activity.maxSteps; i++)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2),
+                      child: Icon(Icons.circle_outlined, size: 22, color: TokenColors.hairline),
+                    ),
+                ],
+              ),
             ),
           ),
         // The controls are drawn left to right: an arrow that points left stands on the left, in every language.
@@ -384,6 +452,7 @@ class RobotPathSession extends TemplateSession {
                   semanticLabel: 'undo',
                   size: 58,
                   slop: 6,
+                  state: hintStep == 'undo' ? AnswerState.selected : AnswerState.idle,
                   onPressed: undo,
                   child: const Icon(Icons.backspace_outlined, size: 28, color: TokenColors.ink),
                 ),

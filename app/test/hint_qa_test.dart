@@ -194,7 +194,7 @@ void main() {
       expect(n, 626 * 4);
     });
 
-    test('the generic picture (a question mark card at level 2) serves only the documented items: heavy and light', () {
+    test('no tap_answer activity falls back to the generic picture (a question mark card at level 2)', () {
       final List<String> generic = <String>[];
       for (final TapAnswerActivity a in all<TapAnswerActivity>()) {
         final HintPlan l2 = tapHintPlan(
@@ -208,13 +208,8 @@ void main() {
           generic.add('${a.id} (${a.skillId})');
         }
       }
-      // MATH-A-04 heavy and light wait for the seesaw (PLAN.md, B-40 part 2); every other family draws its own picture.
-      expect(
-        <String>{for (final String g in generic) g.substring(g.indexOf('(') + 1)},
-        <String>{'MATH-A-04)'},
-        reason: '$generic',
-      );
-      expect(generic, hasLength(lessThanOrEqualTo(4)), reason: '$generic');
+      // Every family draws its own picture (MATH-A-04 heavy and light have the seesaw since B-40).
+      expect(generic, isEmpty, reason: '$generic');
     });
 
     test('level 3 of tap_answer is a hand that never touches the answer tile before its last step, on every board (Band A too)', () {

@@ -37,11 +37,9 @@ class _Shot {
 }
 
 const List<_Shot> _phone = <_Shot>[
-  // The shop: the places for the eight shekels, the biggest coin, the hand taking the coins one by one and ending on the button.
+  // The shop: the places for the eight shekels, the biggest coin. Its level 3 (the hand from below) is in hint_hand_below_golden_test.
   _Shot('x.mathb17.6', 1, 'shop_l1', waitMs: 800),
   _Shot('x.mathb17.6', 2, 'shop_l2', waitMs: 1200),
-  _Shot('x.mathb17.6', 3, 'shop_l3', waitMs: 900 + 700),
-  _Shot('x.mathb17.6', 3, 'shop_l3_pay', waitMs: 900 * 3 + 700),
   // The balance, a hidden lean (5 + 4 against 3 + 2): the peg, the towers on one floor, the hand from the lower pan to the arrow.
   _Shot('b.mathb09.5', 1, 'balance_l1', waitMs: 500),
   _Shot('b.mathb09.5', 2, 'balance_l2', waitMs: 800),
@@ -63,7 +61,6 @@ const List<_Shot> _phone = <_Shot>[
 ];
 
 const List<_Shot> _tablet = <_Shot>[
-  _Shot('x.mathb17.6', 3, 'shop_l3', waitMs: 900 + 700),
   _Shot('b.mathb09.5', 2, 'balance_l2', waitMs: 800),
   _Shot('b.mathb13.7', 3, 'balance_weigh_l3', waitMs: 700 * 2 + 600),
   _Shot('b.numb11.1', 2, 'spot_numbers_l2', waitMs: 700 * 6),
