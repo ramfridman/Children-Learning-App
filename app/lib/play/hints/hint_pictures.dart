@@ -241,17 +241,42 @@ class HintOverlay extends StatelessWidget {
         return Positioned.fromRect(
           key: key,
           rect: m.rect,
+          // A counting cube, as the snap cubes of a classroom: sky, with a darker lip under it and a shine on its top left; a place
+          // still to fill is its outline only.
           child: Appear(
             child: DecoratedBox(
               key: Key(m.empty ? 'hint-block-empty' : 'hint-block'),
               decoration: BoxDecoration(
-                color: m.empty ? null : TokenColors.skyTint,
-                borderRadius: BorderRadius.circular(3),
+                color: m.empty ? TokenColors.paper.withValues(alpha: 0.5) : TokenColors.sky,
+                borderRadius: BorderRadius.circular(math.min(4, m.rect.shortestSide * 0.2)),
                 border: Border.all(
-                  color: m.empty ? TokenColors.skyDeep.withValues(alpha: 0.55) : TokenColors.skyDeep,
-                  width: m.empty ? 1.5 : 2,
+                  color: m.empty ? TokenColors.skyDeep.withValues(alpha: 0.6) : TokenColors.skyDeep,
+                  width: m.empty ? 1.5 : (m.rect.shortestSide < 9 ? 1 : 1.6),
                 ),
+                boxShadow: m.empty
+                    ? null
+                    : <BoxShadow>[
+                        BoxShadow(
+                          color: TokenColors.skyDeep,
+                          offset: Offset(0, math.max(1, m.rect.shortestSide * 0.1)),
+                        ),
+                      ],
               ),
+              child: m.empty || m.rect.shortestSide < 9
+                  ? null
+                  : Align(
+                      alignment: const Alignment(-0.45, -0.5),
+                      child: FractionallySizedBox(
+                        widthFactor: 0.32,
+                        heightFactor: 0.16,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: TokenColors.paper.withValues(alpha: 0.7),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
+                    ),
             ),
           ),
         );
@@ -869,22 +894,31 @@ class _SwatchPainter extends CustomPainter {
     final Color lip = HSLColor.fromColor(paint)
         .withLightness((HSLColor.fromColor(paint).lightness * 0.72).clamp(0, 1).toDouble())
         .toColor();
-    final double r = math.min(size.width, size.height) / 2 - 4;
+    final double r = (math.min(size.width, size.height) / 2 - 4) / 1.08;
     final Offset c = size.center(Offset.zero) - const Offset(0, 2);
-    canvas.drawCircle(
-      c + const Offset(0, 4),
-      r,
+    // A dab of thick paint, as it lies on a palette: a round blob with a soft, lobed edge, its wet shine at the upper left, and a
+    // darker lip under it where it is thick.
+    final Path blob = _blob(c, r);
+    canvas.drawPath(
+      blob.shift(const Offset(0, 4)),
       Paint()..color = colour == 'white' ? TokenColors.cardLip : lip,
     );
-    canvas.drawCircle(c, r, Paint()..color = paint);
-    canvas.drawCircle(
-      c,
-      r,
+    canvas.drawPath(blob, Paint()..color = paint);
+    canvas.drawPath(
+      blob,
       Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3
-        ..color = colour == 'white' ? TokenColors.cardLip : Colors.white.withValues(alpha: 0.7),
+        ..strokeWidth = 2.5
+        ..color = colour == 'white' ? TokenColors.cardLip : Colors.white.withValues(alpha: 0.6),
     );
+    canvas.save();
+    canvas.translate(c.dx - r * 0.5, c.dy - r * 0.58);
+    canvas.rotate(-0.6);
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset.zero, width: r * 0.42, height: r * 0.2),
+      Paint()..color = Colors.white.withValues(alpha: colour == 'white' ? 0.9 : 0.45),
+    );
+    canvas.restore();
     final Color ink = colour == 'white' ? TokenColors.skyDeep : Colors.white;
     final Paint fill = Paint()..color = ink;
     final Paint edge = Paint()
@@ -893,6 +927,23 @@ class _SwatchPainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round
       ..color = colour == 'white' ? TokenColors.skyDeep : lip;
     _symbol(canvas, c, r * 0.55, fill, edge, paint);
+  }
+
+  /// The edge of the dab: a circle of radius [r] with six soft lobes (at most 8 percent out), drawn as one smooth closed curve.
+  static Path _blob(Offset c, double r) {
+    const int steps = 72;
+    final Path p = Path();
+    for (int i = 0; i <= steps; i++) {
+      final double t = i / steps * 2 * math.pi;
+      final double rr = r * (1 + 0.05 * math.sin(6 * t + 0.4) + 0.03 * math.sin(3 * t + 1.3));
+      final Offset q = c + Offset(math.cos(t), math.sin(t)) * rr;
+      if (i == 0) {
+        p.moveTo(q.dx, q.dy);
+      } else {
+        p.lineTo(q.dx, q.dy);
+      }
+    }
+    return p..close();
   }
 
   void _symbol(Canvas canvas, Offset c, double s, Paint fill, Paint edge, Color body) {
@@ -1089,14 +1140,28 @@ class _GhostPainter extends CustomPainter {
             c.dy - side * 0.15,
           ),
     };
+    // A flat shape is a pale place of its own form with a dashed rim, like the place a piece leaves on a puzzle board; a solid and a
+    // line are their dashed edges only.
+    final bool flat = switch (kind) {
+      GhostKind.circle || GhostKind.square || GhostKind.rect || GhostKind.triangle => true,
+      _ => false,
+    };
+    if (flat) {
+      canvas.drawPath(shape, Paint()..color = TokenColors.sky.withValues(alpha: 0.28));
+    }
     final Paint paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3 * k
+      ..strokeWidth = 3.4 * k
       ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
       ..color = TokenColors.skyDeep;
     for (final ui.PathMetric m in shape.computeMetrics()) {
-      for (double d = 0; d < m.length; d += 12 * k) {
-        canvas.drawPath(m.extractPath(d, math.min(d + 6 * k, m.length)), paint);
+      // The dashes are spread evenly over each edge, so that a closed outline has no short dash where it meets itself.
+      final int dashes = math.max(4, (m.length / (12 * k)).round());
+      final double pitch = m.length / dashes;
+      for (int i = 0; i < dashes; i++) {
+        final double d = i * pitch;
+        canvas.drawPath(m.extractPath(d, math.min(d + pitch * 0.55, m.length)), paint);
       }
     }
   }

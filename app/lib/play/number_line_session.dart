@@ -181,12 +181,15 @@ class NumberLineSession extends TemplateSession {
     markerAt = activity.start;
     notify();
     final int gap = way.length > 12 ? 380 : 500;
-    final double room = _lineY(_size) - math.min(_size.height * 0.5, 52) - 22;
+    // The running number stands up and to the left of the marker: the hand comes from the upper right and would hide it right
+    // above the tick, and right above there is no room under the stage's top edge.
+    final double k = (_size.height / 128).clamp(0.85, 1.4).toDouble();
+    final double room = math.max(15 * k, _lineY(_size) - math.min(_size.height * 0.5, 52) - 16 * k);
     List<HintMark> counted(int upTo) => <HintMark>[
       if (activity.jump)
         for (int i = 0; i < upTo; i++) ..._hop(_size, i == 0 ? from : way[i - 1], way[i], i + 1)
       else if (upTo > 0)
-        BadgeMark(Offset(_tickX(_size, way[upTo - 1]), room), upTo),
+        BadgeMark(Offset(_tickX(_size, way[upTo - 1]) - 30 * k, room), upTo),
     ];
     _hint.play(
       handTourPlan(<HandStop>[

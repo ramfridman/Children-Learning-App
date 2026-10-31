@@ -8,11 +8,10 @@ import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hints/hint_marks.dart';
-import 'hints/hint_pictures.dart' show hintScale;
+import 'hints/tap_plans.dart' show inkedSvg;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
-import 'sprite_group.dart';
 import 'template_session.dart';
 
 /// The balance template (T08). A scale with two pans. In `compare` mode the child says which pan is heavier, or that they are the
@@ -216,26 +215,27 @@ class BalanceSession extends TemplateSession {
   // ---- the places of the stage, as it draws them ----
 
   /// How many cubes a column of a tower holds at most: the towers of both pans have as many columns as the heavier one needs, so
-  /// that a taller tower is always the heavier one.
-  static const int _column = 5;
+  /// that a taller tower is always the heavier one. Three rows keep the cubes big enough to count on a phone, inside the pan.
+  static const int _column = 3;
 
   /// The towers of cubes (and, to weigh, the empty places that are still to fill), and the dotted line that makes the lean or the
   /// level visible: across the tops of the towers when the pans are level (a hidden lean), through the pivot when the beam leans.
+  /// The towers stand in the pans, on the floor the pictures stand on.
   List<HintMark> _towerMarks() {
     final _ScaleBox g = _ScaleBox(_size);
-    final double k = hintScale(_size);
     final double angle = lean;
     final List<Offset> ends = <Offset>[g.leftEnd(angle), g.rightEnd(angle)];
     final List<int> weights = <int>[leftWeight, rightWeight];
     final int most = math.max(weights[0], weights[1]);
     final int cols = math.max(1, (most + _column - 1) ~/ _column);
     final int rows = math.max(1, (most + cols - 1) ~/ cols);
-    final double side = math.min(10 * k, (g.panH - 12) / rows);
-    final double pitch = side + 1.5;
-    final double width = cols * pitch - 1.5;
+    final double gap = 2 * g.u;
+    final double side = math.min(16 * g.u, math.min(g.loadH / rows, g.loadW / cols) - gap);
+    final double pitch = side + gap;
+    final double width = cols * pitch - gap;
     Rect cube(Offset end, int i) => Rect.fromLTWH(
       end.dx - width / 2 + (i % cols) * pitch,
-      g.plateTop(end) - ((i ~/ cols) + 1) * pitch + 1.5,
+      g.floor(end) - ((i ~/ cols) + 1) * pitch + gap,
       side,
       side,
     );
@@ -253,19 +253,27 @@ class BalanceSession extends TemplateSession {
     }
     if (activity.hideTilt && !activity.weigh) {
       // The pans are level, so the towers stand on one floor: the line runs across the top of the shorter one to the taller.
-      final double top = g.plateTop(ends[0]) - (math.min(weights[0], weights[1]) + cols - 1) ~/ cols * pitch;
-      marks.add(LineMark(Offset(ends[0].dx - width / 2 - 6, top), Offset(ends[1].dx + width / 2 + 6, top)));
+      final double top =
+          g.floor(ends[0]) - (math.min(weights[0], weights[1]) + cols - 1) ~/ cols * pitch - gap / 2;
+      marks.add(
+        LineMark(
+          Offset(ends[0].dx - width / 2 - 6 * g.u, top),
+          Offset(ends[1].dx + width / 2 + 6 * g.u, top),
+        ),
+      );
     } else {
-      marks.add(LineMark(Offset(g.cx - g.half - 14, g.beamY), Offset(g.cx + g.half + 14, g.beamY)));
+      marks.add(
+        LineMark(Offset(g.cx - g.half - 14 * g.u, g.beamY), Offset(g.cx + g.half + 14 * g.u, g.beamY)),
+      );
     }
     return marks;
   }
 
-  /// The fingertip place on pan [p] (0 left, 1 right) when the beam is at [angle]: its middle.
+  /// The fingertip place on pan [p] (0 left, 1 right) when the beam is at [angle]: the middle of what lies on it.
   Offset _panTip(double angle, int p) {
     final _ScaleBox g = _ScaleBox(_size);
     final Offset end = p == 0 ? g.leftEnd(angle) : g.rightEnd(angle);
-    return Offset(end.dx, end.dy + 6 + g.panH / 2);
+    return Offset(end.dx, g.floor(end) - g.loadH * 0.4);
   }
 
   /// The worked example. Comparing: the peg slides out and the beam is let go and leans slowly, the pointing hand goes to the pan
@@ -298,7 +306,10 @@ class BalanceSession extends TemplateSession {
             plus,
             1400,
             marks: <HintMark>[
-              LineMark(Offset(g.cx - g.half - 14, g.beamY - 14), Offset(g.cx + g.half + 14, g.beamY - 14)),
+              LineMark(
+                Offset(g.cx - g.half - 14 * g.u, g.beamY - 16 * g.u),
+                Offset(g.cx + g.half + 14 * g.u, g.beamY - 16 * g.u),
+              ),
             ],
           ),
         ]),
@@ -418,11 +429,15 @@ class _ScaleStage extends StatelessWidget {
   Widget build(BuildContext context) {
     final BalanceActivity a = s.activity;
     final _ScaleBox g = _ScaleBox(size);
-    final double cx = g.cx;
-    final double half = g.half;
-    final double beamY = g.beamY;
-    final double panW = g.panW;
-    final double panH = g.panH;
+    // What lies on each pan, in order, and one size for every picture of both pans (the most a pan will hold), so that a thing is
+    // as big on one pan as on the other: the size of a picture never says how heavy it is.
+    final List<String> left = _things(a.left, 0);
+    final List<String> right = _things(a.right, s.added);
+    final int most = math.max(
+      left.length,
+      _things(a.right, 0).length + (a.weigh ? int.tryParse(a.result) ?? 0 : 0),
+    );
+    final double cell = g.cellFor(math.max(most, right.length));
     return Semantics(
       container: true,
       label: a.altText,
@@ -437,47 +452,25 @@ class _ScaleStage extends StatelessWidget {
             curve: Curves.easeInOut,
             builder: (BuildContext context, double lean, Widget? _) {
               final double angle = lean;
-              final Offset rightEnd = g.rightEnd(angle);
               final Offset leftEnd = g.leftEnd(angle);
+              final Offset rightEnd = g.rightEnd(angle);
               return Stack(
+                clipBehavior: Clip.none,
                 children: <Widget>[
                   if (a.background != null)
                     Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
-                  // the stand
-                  Positioned(
-                    left: cx - 5,
-                    top: beamY,
-                    width: 10,
-                    height: size.height - beamY - 6,
-                    child: const DecoratedBox(decoration: BoxDecoration(color: TokenColors.worldWoodLight)),
-                  ),
-                  Positioned(
-                    left: cx - 30,
-                    top: size.height - 12,
-                    width: 60,
-                    height: 8,
-                    child: const DecoratedBox(decoration: BoxDecoration(color: TokenColors.worldWoodLight)),
-                  ),
-                  // the beam
-                  Positioned(
-                    left: cx - half,
-                    top: beamY - 4,
-                    width: half * 2,
-                    height: 8,
-                    child: Transform.rotate(
-                      angle: angle,
-                      child: const DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: TokenColors.ink,
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (s.pegShown)
-                    _peg(cx, beamY, out: s.revealed, still: MediaQuery.disableAnimationsOf(context)),
-                  _pan(leftEnd, panW, panH, a.left, <PanGroup>[], 0, s.litPan == 'left'),
-                  _pan(rightEnd, panW, panH, a.right, <PanGroup>[], s.added, s.litPan == 'right'),
+                  // The stand, the beam, the strings and the inside of the pans, behind what lies on them.
+                  Positioned.fill(child: CustomPaint(painter: _ScalePainter(g, angle, front: false))),
+                  if (s.pegShown) _peg(g, out: s.revealed, still: MediaQuery.disableAnimationsOf(context)),
+                  if (s.litPan == 'left') _halo(g, leftEnd),
+                  if (s.litPan == 'right') _halo(g, rightEnd),
+                  // While a hint draws the towers, the pans show their plates only.
+                  if (!s.towers) ...<Widget>[
+                    ..._load(g, leftEnd, left, cell),
+                    ..._load(g, rightEnd, right, cell, added: s.added),
+                  ],
+                  // The front of each pan, over the feet of what lies in it.
+                  Positioned.fill(child: CustomPaint(painter: _ScalePainter(g, angle, front: true))),
                 ],
               );
             },
@@ -487,16 +480,82 @@ class _ScaleStage extends StatelessWidget {
     );
   }
 
-  /// The peg that holds a beam whose lean is hidden: a short pin through the stand under the beam. It slides out (and fades) when
+  /// The pictures on a pan, one for each thing, in the order of its groups, and then the blocks the child has added.
+  List<String> _things(List<PanGroup> groups, int added) => <String>[
+    for (final PanGroup g in groups)
+      for (int i = 0; i < g.count; i++) g.sprite,
+    if (s.activity.blockSprite != null)
+      for (int i = 0; i < math.min(added, 12); i++) s.activity.blockSprite!,
+  ];
+
+  /// What lies on the pan that hangs from [end]: a heap of pictures, each [cell] across, in rows from the floor up, each row
+  /// centred (left to right, as the stage is drawn). A picture is cut to its ink, so that it stands on the floor of the pan and
+  /// fills its place; the last [added] are the blocks the child put on (`scale-blocks`).
+  List<Widget> _load(_ScaleBox g, Offset end, List<String> names, double cell, {int added = 0}) {
+    if (names.isEmpty) return const <Widget>[];
+    final int cols = math.max(1, (g.loadW / cell + 0.001).floor());
+    final List<Widget> out = <Widget>[];
+    final List<Widget> blocks = <Widget>[];
+    final int first = names.length - math.min(added, names.length);
+    for (int i = 0; i < names.length; i++) {
+      final int row = i ~/ cols;
+      final int inRow = math.min(cols, names.length - row * cols);
+      final double x = end.dx - inRow * cell / 2 + (i % cols) * cell;
+      final double bottom = g.floor(end) - row * cell;
+      final (String svg, double aspect) = inkedSvg(s.activity.assets.svg(names[i]));
+      final double side = cell * 0.9;
+      final double w = aspect >= 1 ? side : side * aspect;
+      final double h = aspect >= 1 ? side / aspect : side;
+      final Widget pic = Positioned(
+        left: x + (cell - w) / 2,
+        top: bottom - h,
+        width: w,
+        height: h,
+        child: PackSvg(svg, fit: BoxFit.fill),
+      );
+      (i >= first ? blocks : out).add(pic);
+    }
+    if (blocks.isNotEmpty) {
+      out.add(
+        Positioned.fill(
+          child: Stack(key: const Key('scale-blocks'), clipBehavior: Clip.none, children: blocks),
+        ),
+      );
+    }
+    return out;
+  }
+
+  /// The light of hint 1 on a pan: a sky ring round the pan and what lies on it.
+  Widget _halo(_ScaleBox g, Offset end) {
+    final Rect r = Rect.fromLTRB(
+      end.dx - g.rimHalf - 5 * g.u,
+      g.floor(end) - g.loadH - 4 * g.u,
+      end.dx + g.rimHalf + 5 * g.u,
+      g.rimY(end) + g.bowl + 5 * g.u,
+    );
+    return Positioned.fromRect(
+      rect: r,
+      child: DecoratedBox(
+        key: const Key('pan-lit'),
+        decoration: BoxDecoration(
+          color: TokenColors.skyTint.withValues(alpha: 0.45),
+          borderRadius: BorderRadius.circular(TokenRadius.lg),
+          border: Border.all(color: TokenColors.hintHalo, width: 4),
+        ),
+      ),
+    );
+  }
+
+  /// The peg that holds a beam whose lean is hidden: a short pin through the upright under the beam. It slides out (and fades) when
   /// the beam is let go; with "reduce motion" it is simply gone.
-  Widget _peg(double cx, double beamY, {required bool out, required bool still}) {
+  Widget _peg(_ScaleBox g, {required bool out, required bool still}) {
     final Duration d = still ? Duration.zero : const Duration(milliseconds: 400);
     return Positioned(
       key: const Key('scale-peg'),
-      left: cx - 14,
-      top: beamY + 10,
-      width: 28,
-      height: 9,
+      left: g.cx - 15 * g.u,
+      top: g.beamY + 14 * g.u,
+      width: 30 * g.u,
+      height: 9 * g.u,
       child: AnimatedSlide(
         offset: out ? const Offset(1.6, 0) : Offset.zero,
         duration: d,
@@ -505,97 +564,214 @@ class _ScaleStage extends StatelessWidget {
           duration: d,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: TokenColors.worldWood,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: TokenColors.ink, width: 2),
+              color: TokenColors.sunset,
+              borderRadius: BorderRadius.circular(4.5 * g.u),
+              border: Border.all(color: TokenColors.sunsetDeep, width: 2),
             ),
           ),
         ),
       ),
     );
   }
-
-  /// A pan hanging from the end of the beam: a plate, and what lies on it.
-  Widget _pan(
-    Offset end,
-    double w,
-    double h,
-    List<PanGroup> groups,
-    List<PanGroup> unused,
-    int blocks,
-    bool lit,
-  ) {
-    final BalanceActivity a = s.activity;
-    // While a hint draws the towers, the pan shows its plate only.
-    final List<Widget> piles = s.towers
-        ? const <Widget>[]
-        : <Widget>[
-            for (final PanGroup g in groups)
-              Expanded(
-                child: SpriteGroup(svg: a.assets.svg(g.sprite), count: g.count, arrangement: 'line'),
-              ),
-            if (blocks > 0 && a.blockSprite != null)
-              Expanded(
-                child: SpriteGroup(
-                  key: const Key('scale-blocks'),
-                  svg: a.assets.svg(a.blockSprite!),
-                  count: math.min(blocks, 12),
-                  arrangement: 'line',
-                ),
-              ),
-          ];
-    return Positioned(
-      left: end.dx - w / 2,
-      top: end.dy + 6,
-      width: w,
-      height: h,
-      child: DecoratedBox(
-        key: lit ? const Key('pan-lit') : null,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(TokenRadius.lg),
-          border: lit ? Border.all(color: TokenColors.hintHalo, width: 4) : null,
-        ),
-        child: Column(
-          children: <Widget>[
-            Expanded(child: Row(children: piles)),
-            Container(
-              height: 8,
-              decoration: BoxDecoration(
-                color: TokenColors.worldWoodLight,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
-/// The places of the scale in a stage of [size]: the same numbers the stage draws with, so that the hint can stand cubes on the
-/// plates and point at a pan.
-class _ScaleBox {
-  _ScaleBox(Size size)
-    : cx = size.width / 2,
-      half = math.min(size.width * 0.36, 130),
-      beamY = size.height * 0.3,
-      panH = size.height * 0.4;
+/// The scale itself, drawn in code after the classroom pan balance (a broad foot, an upright, a round pivot cap on the middle of
+/// the beam, a hook at each end of the beam and two strings from each hook to the rim of an open pan). [front] false draws the
+/// stand, the beam, the strings and the inside of the pans; [front] true only the front of each pan, which goes over the feet of
+/// what lies in it. The pans hang straight down from the hooks whatever the lean.
+class _ScalePainter extends CustomPainter {
+  _ScalePainter(this.g, this.angle, {required this.front});
 
+  final _ScaleBox g;
+  final double angle;
+  final bool front;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double u = g.u;
+    final List<Offset> ends = <Offset>[g.leftEnd(angle), g.rightEnd(angle)];
+    if (front) {
+      for (final Offset end in ends) {
+        _panFront(canvas, end);
+      }
+      return;
+    }
+    final Paint wood = Paint()..color = TokenColors.worldWood;
+    final Paint woodLight = Paint()..color = TokenColors.worldWoodLight;
+    final Paint woodDeep = Paint()..color = TokenColors.teachBrown;
+    // The shadow on the grass, the foot and the upright.
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(g.cx, g.ground - 1 * u), width: 96 * u, height: 7 * u),
+      Paint()..color = TokenColors.worldShadow,
+    );
+    final Path foot = Path()
+      ..moveTo(g.cx - 40 * u, g.ground - 3 * u)
+      ..lineTo(g.cx - 26 * u, g.ground - 15 * u)
+      ..lineTo(g.cx + 26 * u, g.ground - 15 * u)
+      ..lineTo(g.cx + 40 * u, g.ground - 3 * u)
+      ..close();
+    canvas.drawPath(foot, wood);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(g.cx - 43 * u, g.ground - 6 * u, g.cx + 43 * u, g.ground),
+        Radius.circular(3 * u),
+      ),
+      woodDeep,
+    );
+    final Path upright = Path()
+      ..moveTo(g.cx - 7 * u, g.ground - 15 * u)
+      ..lineTo(g.cx - 4.5 * u, g.beamY)
+      ..lineTo(g.cx + 4.5 * u, g.beamY)
+      ..lineTo(g.cx + 7 * u, g.ground - 15 * u)
+      ..close();
+    canvas.drawPath(upright, wood);
+    canvas.drawRect(Rect.fromLTRB(g.cx - 4 * u, g.beamY, g.cx - 1.5 * u, g.ground - 15 * u), woodLight);
+    // The strings, from each hook to the two sides of its pan's rim, and the inside of each pan.
+    final Paint string = Paint()
+      ..color = TokenColors.inkSoft
+      ..strokeWidth = 1.6 * u
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+    for (final Offset end in ends) {
+      final Offset hook = end + Offset(0, 5 * u);
+      final double rim = g.rimY(end);
+      canvas.drawLine(hook, Offset(end.dx - g.rimHalf + 3 * u, rim), string);
+      canvas.drawLine(hook, Offset(end.dx + g.rimHalf - 3 * u, rim), string);
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(end.dx, rim), width: 2 * g.rimHalf, height: 9 * u),
+        Paint()..color = TokenColors.seaDeep,
+      );
+    }
+    // The hooks: a ring under each end of the beam, hanging straight down.
+    final Paint ring = Paint()
+      ..color = TokenColors.ink
+      ..strokeWidth = 2 * u
+      ..style = PaintingStyle.stroke;
+    for (final Offset end in ends) {
+      canvas.drawCircle(end + Offset(0, 4 * u), 3.2 * u, ring);
+    }
+    // The beam, turned about the pivot.
+    canvas.save();
+    canvas.translate(g.cx, g.beamY);
+    canvas.rotate(angle);
+    final double len = g.half + 9 * u;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTRB(-len, -4.5 * u, len, 4.5 * u), Radius.circular(4.5 * u)),
+      wood,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(-len + 3.5 * u, -3.2 * u, len - 3.5 * u, -0.8 * u),
+        Radius.circular(1.2 * u),
+      ),
+      woodLight,
+    );
+    for (final double x in <double>[-g.half, g.half]) {
+      canvas.drawCircle(Offset(x, 0), 2 * u, woodDeep);
+    }
+    canvas.restore();
+    // The pivot cap and its pin: it does not turn.
+    canvas.drawCircle(Offset(g.cx, g.beamY), 8.5 * u, Paint()..color = TokenColors.spark);
+    canvas.drawCircle(
+      Offset(g.cx, g.beamY),
+      8.5 * u,
+      Paint()
+        ..color = TokenColors.sparkDeep
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2 * u,
+    );
+    canvas.drawCircle(Offset(g.cx, g.beamY), 2.6 * u, Paint()..color = TokenColors.ink);
+  }
+
+  /// The front of a pan: a shallow bowl under the rim, with a light edge along the front of the rim.
+  void _panFront(Canvas canvas, Offset end) {
+    final double u = g.u;
+    final double rim = g.rimY(end);
+    final double r = g.rimHalf;
+    final double ry = 4.5 * u;
+    final double b = g.bowl;
+    final Rect rimBox = Rect.fromCenter(center: Offset(end.dx, rim), width: 2 * r, height: 2 * ry);
+    final Path bowl = Path()
+      ..moveTo(end.dx + r, rim)
+      ..arcTo(rimBox, 0, math.pi, false)
+      ..cubicTo(
+        end.dx - r + 3 * u,
+        rim + b * 0.8,
+        end.dx - r * 0.6 - 6 * u,
+        rim + b,
+        end.dx - r * 0.6,
+        rim + b,
+      )
+      ..lineTo(end.dx + r * 0.6, rim + b)
+      ..cubicTo(end.dx + r * 0.6 + 6 * u, rim + b, end.dx + r - 3 * u, rim + b * 0.8, end.dx + r, rim)
+      ..close();
+    canvas.drawPath(bowl, Paint()..color = TokenColors.sea);
+    canvas.drawArc(
+      rimBox,
+      0.2,
+      math.pi - 0.4,
+      false,
+      Paint()
+        ..color = TokenColors.seaTint
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.6 * u
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ScalePainter old) => old.angle != angle || old.g.size != g.size || old.front != front;
+}
+
+/// The places of the scale in a stage of [size]: the same numbers the stage draws with, so that the hint can stand cubes in the
+/// pans and point at a pan. The scale is drawn for the phone's stage (330 by 128) and grows evenly with a bigger one, its foot on
+/// the stage's floor: the beam is short enough that a pan leaning 18 degrees stays inside the stage, and the strings long enough
+/// that three rows of cubes fit between the floor of a pan and its hook.
+class _ScaleBox {
+  _ScaleBox(this.size)
+    : u = math.min(size.width / 330, size.height / 128),
+      cx = size.width / 2,
+      ground = size.height - 2;
+
+  final Size size;
+
+  /// One point of the phone's drawing on this stage.
+  final double u;
   final double cx;
 
-  /// Half the beam's length, and the height of its pivot.
-  final double half;
-  final double beamY;
+  /// Where the foot stands.
+  final double ground;
 
-  /// The height of a pan; its width is a little less than the beam's half.
-  final double panH;
+  /// The height of the pivot.
+  double get beamY => ground - 92 * u;
 
-  double get panW => half * 0.78;
+  /// Half the beam's length, from the pivot to a hook.
+  double get half => 92 * u;
 
-  /// The ends of the beam when it leans by [angle] radians (positive: the right end is lower).
+  /// How far below its hook a pan's rim hangs, how deep the bowl is under its rim, and half the rim's width.
+  double get drop => 53 * u;
+  double get bowl => 8 * u;
+  double get rimHalf => 56 * u;
+
+  /// The room on a pan for what lies on it: as wide as the rim, less a little, and as high as the strings leave free.
+  double get loadW => 104 * u;
+  double get loadH => 43 * u;
+
+  /// The ends of the beam (its hooks) when it leans by [angle] radians (positive: the right end is lower).
   Offset rightEnd(double angle) => Offset(cx + half * math.cos(angle), beamY + half * math.sin(angle));
   Offset leftEnd(double angle) => Offset(cx - half * math.cos(angle), beamY - half * math.sin(angle));
 
-  /// The top of the plate of the pan that hangs from [end]: what lies on the pan stands on it.
-  double plateTop(Offset end) => end.dy + 6 + panH - 8;
+  /// The rim of the pan that hangs from [end], and the floor of the pan, where what lies on it stands.
+  double rimY(Offset end) => end.dy + drop;
+  double floor(Offset end) => rimY(end) + 2 * u;
+
+  /// The place of one picture when [n] of them lie on a pan: as many rows as make the pictures biggest, at most 40 across.
+  double cellFor(int n) {
+    double best = 0;
+    for (int rows = 1; rows <= math.max(1, n); rows++) {
+      final int cols = (n + rows - 1) ~/ rows;
+      best = math.max(best, math.min(loadW / cols, loadH / rows));
+    }
+    return math.min(best, 40 * u);
+  }
 }

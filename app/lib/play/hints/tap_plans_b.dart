@@ -280,7 +280,8 @@ extension _BandB on _Plans {
     final int n = values.length;
     final double startX = (heads == null ? 34 : 62) * k;
     final double most = values.fold(1, (double m, double v) => math.max(m, v.ceilToDouble()));
-    final double cube = math.max(5 * k, math.min(14 * k, (g.w - startX - 22 * k) / most));
+    // As big as the stage lets them be (up to 24 on a phone), so that the child can count the cubes of each bar.
+    final double cube = math.max(5 * k, math.min(24 * k, (g.w - startX - 26 * k) / most));
     double y(int i) => g.h * (n == 2 ? (i == 0 ? 0.3 : 0.7) : (0.2 + 0.3 * i));
     final HintMark line = LineMark(Offset(startX - 4 * k, 6 * k), Offset(startX - 4 * k, g.h - 6 * k));
     List<HintMark> bar(int i) {
@@ -439,22 +440,24 @@ extension _BandB on _Plans {
   List<HintMark> _cubesAbove(Rect cell, int n, {int? filled}) {
     if (n <= 0) return <HintMark>[];
     final int rows = (n / 5).ceil();
-    final double room = cell.top - 8 * k;
+    // The numeral of a cell may reach above its square: the cubes stand over the drawn cell's top.
+    final double top = math.min(cell.top, g.rowTop);
+    final double room = top - 8 * k;
+    // A row of five may be a little wider than its cell (the cells beside a number are signs, with nothing over them).
     final double cube = math.max(
       4,
-      math.min(math.min(14 * k, cell.width / math.min(n, 5) - 2), room / rows - 1),
+      math.min(math.min(15 * k, (cell.width + 24 * k) / math.min(n, 5) - 2), room / rows - 1),
     );
-    final double bottom = cell.top - 4 * k;
+    final double bottom = top - 4 * k;
     final double rowWidth = math.min(n, 5) * (cube + 1);
+    // A row wider than its cell stays inside the stage.
+    final double left = (cell.center.dx - rowWidth / 2)
+        .clamp(4 * k, math.max(4 * k, g.w - 4 * k - rowWidth))
+        .toDouble();
     return <HintMark>[
       for (int i = 0; i < n; i++)
         BlockMark(
-          Rect.fromLTWH(
-            cell.center.dx - rowWidth / 2 + (i % 5) * (cube + 1),
-            bottom - ((i ~/ 5) + 1) * (cube + 1),
-            cube,
-            cube,
-          ),
+          Rect.fromLTWH(left + (i % 5) * (cube + 1), bottom - ((i ~/ 5) + 1) * (cube + 1), cube, cube),
           empty: i >= (filled ?? n),
         ),
     ];
@@ -545,7 +548,7 @@ extension _BandB on _Plans {
     if (level == 1) return tilesInTurn();
     final int cells = missing ? said[0] : said[0] + said[1];
     final Rect card = g.centre(math.min(g.w - 16, 284 * k), 76 * k);
-    final double cube = math.min(22 * k, (card.width - 24 * k - (sum ? 12 * k : 0)) / cells - 3 * k);
+    final double cube = math.min(30 * k, (card.width - 24 * k - (sum ? 12 * k : 0)) / cells - 3 * k);
     Rect at(int i) {
       final double gap = sum && i >= said[0] ? 12 * k : 0;
       final double width = cells * (cube + 3 * k) + (sum ? 12 * k : 0);

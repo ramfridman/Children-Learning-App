@@ -304,7 +304,7 @@ class _TapStage extends StatelessWidget {
               height: a.optionsInTiles ? size.height : top,
               child: _groups(a),
             ),
-          if (a.row.isNotEmpty) Positioned.fill(child: _row(a)),
+          if (a.row.isNotEmpty) Positioned.fill(child: _row(a, TapGeometry.rowLiftOf(a, size.height))),
           if (a.chart.isNotEmpty) Positioned.fill(child: _chart(a)),
           if (a.stageNumeral != null)
             Positioned.fill(
@@ -381,8 +381,9 @@ class _TapStage extends StatelessWidget {
   );
 
   /// The row of pictures of a pattern or an order; a `?` is the gap the child fills in. Left to right, whatever the language.
-  Widget _row(TapAnswerActivity a) => Padding(
-    padding: const EdgeInsets.all(10),
+  /// A number sentence stands [lift] lower, so that the cubes of a hint fit over its numbers (see [TapGeometry.rowLiftOf]).
+  Widget _row(TapAnswerActivity a, double lift) => Padding(
+    padding: EdgeInsets.fromLTRB(10, 10 + lift, 10, 10),
     child: Directionality(
       textDirection: TextDirection.ltr,
       // The cells come one by one from the left, so the child sees where the row starts; the "?" is last.
@@ -429,12 +430,16 @@ class _TapStage extends StatelessWidget {
 
   /// The group (or the two groups, side by side) that the question is about. Not tappable.
   Widget _groups(TapAnswerActivity a) {
+    // A group scattered to be counted, alone on the stage, is drawn cut to its ink: a ladybug or a sock fills its place (its
+    // picture has a wide margin) and reads on a phone. Never where two groups or a scale are compared, or a row is drawn.
+    final bool inked = a.group2 == null && a.group!.arrangement == 'scatter' && a.group!.scale == 1;
     Widget one(SpriteSet g) => SpriteGroup(
-      svg: a.assets.svg(g.sprite),
+      svg: inked ? inkedSvg(a.assets.svg(g.sprite)).$1 : a.assets.svg(g.sprite),
       count: g.count,
       arrangement: g.arrangement,
       seed: g.seed,
       scale: g.scale,
+      lineSlots: TapGeometry.lineSlotsOf(a, g),
     );
     final List<SpriteSet> sets = <SpriteSet>[a.group!, ?a.group2];
     return Semantics(
