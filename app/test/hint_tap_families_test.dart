@@ -737,7 +737,7 @@ void main() {
       },
     );
 
-    test('heavy and light use the generic ladder (no length cubes); long and short keep their cubes', () {
+    test('heavy and light are weighed on the seesaw (no length cubes); long and short keep their cubes', () {
       for (final String id in <String>['math.size.heavy', 'math.size.light']) {
         final TapAnswerActivity a = act(id);
         for (int level = 1; level <= 3; level++) {
@@ -745,7 +745,7 @@ void main() {
           expect(marksOf(p).whereType<BlockMark>(), isEmpty, reason: '$id level $level');
           expect(marksOf(p).whereType<CopyMark>(), isEmpty, reason: id);
         }
-        expect(plan(a, 2).rest.whereType<CardMark>(), hasLength(1), reason: id);
+        expect(plan(a, 2).rest.whereType<SeesawMark>(), hasLength(1), reason: id);
       }
       expect(plan(act('math.size.long'), 2).rest.whereType<BlockMark>(), isNotEmpty);
     });

@@ -112,12 +112,14 @@ HintPlan pointerFlashPlan(List<Offset> centres, {int stepMs = 700, int tailMs = 
 const int handTravelMs = 450;
 
 /// One stop of a hand tour: the fingertip goes to [tip], presses, and stays [ms]; [marks] are what else is on the stage meanwhile.
+/// [from] is where the hand's body lies (see [HandFrom]).
 class HandStop {
-  const HandStop(this.tip, this.ms, {this.marks = const <HintMark>[]});
+  const HandStop(this.tip, this.ms, {this.marks = const <HintMark>[], this.from = HandFrom.guide});
 
   final Offset tip;
   final int ms;
   final List<HintMark> marks;
+  final HandFrom from;
 }
 
 /// The hand goes to each of [stops] in turn and presses there. After the last one the hand leaves and the stage holds [after] for
@@ -131,6 +133,9 @@ HintPlan handTourPlan(
 }) => HintPlan(<HintFrame>[
   for (final HandStop s in stops)
     // The hand is the first mark, so that it keeps its place (and its glide) from one stop to the next however many marks they hold.
-    HintFrame(<HintMark>[HandMark(s.tip, press: true), ...s.marks], hold: Duration(milliseconds: s.ms)),
+    HintFrame(<HintMark>[
+      HandMark(s.tip, press: true, from: s.from),
+      ...s.marks,
+    ], hold: Duration(milliseconds: s.ms)),
   if (tailMs > 0) HintFrame(after, hold: Duration(milliseconds: tailMs)),
 ], rest: rest);

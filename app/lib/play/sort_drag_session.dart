@@ -100,6 +100,10 @@ class SortDragSession extends TemplateSession {
     return Offset(r.center.dx, r.bottom - 24 * hintScale(size));
   }
 
+  /// The stop of the hand at the drop place of bin [i] of [n]. The hand comes from below, so that its body lies under the fingertip
+  /// and never covers the bin's label, which stands above the place.
+  HandStop _dropStop(int n, int i, int ms) => HandStop(dropPlace(_size, n, i), ms, from: HandFrom.below);
+
   /// A tray picture's side, as the tray draws it, and the fingertip place on the top edge of the one at place [i] of [n].
   double _traySide(ActivitySpec spec) =>
       math.max(44, math.min(84, spec.tilesWidth / math.max(1, activity.items.length) - 10));
@@ -231,7 +235,7 @@ class SortDragSession extends TemplateSession {
         handTourPlan(<HandStop>[
           for (int k = 0; k < count; k++) ...<HandStop>[
             HandStop(_trayTip(all.length - k, 0), _dealStep ~/ 2),
-            HandStop(dropPlace(_size, bins, k % bins), _dealStep ~/ 2),
+            _dropStop(bins, k % bins, _dealStep ~/ 2),
           ],
         ], tailMs: tail),
       );
@@ -319,8 +323,9 @@ class SortDragSession extends TemplateSession {
       _hint.play(
         handTourPlan(<HandStop>[
           HandStop(_trayTip(left.length, 0), taken),
-          HandStop(
-            dropPlace(_size, activity.bins.length, activity.bins.indexWhere((SortBin b) => b.id == item.bin)),
+          _dropStop(
+            activity.bins.length,
+            activity.bins.indexWhere((SortBin b) => b.id == item.bin),
             over - taken,
           ),
         ]),

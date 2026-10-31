@@ -227,15 +227,16 @@ class ShopPaySession extends TemplateSession {
     return <HintMark>[for (int i = 0; i < at.length; i++) PlaceMark(at[i], filled: i < filled)];
   }
 
-  /// The fingertip place on coin [i] of a purse that holds [kinds] (4 inside its top edge), and on the top edge of the pay button.
+  /// The fingertip place on coin [i] of a purse that holds [kinds], and on the pay button: 4 and 8 inside their bottom edges. The
+  /// hand comes from below, so that its body never covers the counter's total, its places or the price.
   Offset _coinTip(List<String> kinds, int i) {
     final Rect face = PurseLayout(kinds, _spec.tilesWidth).faces[i];
-    return _spec.fromTiles(face.center.dx, face.top + 4);
+    return _spec.fromTiles(face.center.dx, face.bottom - 4);
   }
 
   Offset _payTip(List<String> kinds) {
     final Rect pay = PurseLayout(kinds, _spec.tilesWidth).pay;
-    return _spec.fromTiles(pay.center.dx, pay.top);
+    return _spec.fromTiles(pay.center.dx, pay.bottom - 8);
   }
 
   /// The kinds of the coins that are in the purse now (not on the counter), in the order of the purse.
@@ -279,10 +280,10 @@ class ShopPaySession extends TemplateSession {
     int sum = 0;
     for (int k = 0; k < way.length; k++) {
       final Offset tip = _coinTip(kinds(), inPurse.indexWhere((PurseCoin c) => c.id == way[k].id));
-      stops.add(HandStop(tip, 600, marks: _places(sum ~/ 100)));
+      stops.add(HandStop(tip, 600, marks: _places(sum ~/ 100), from: HandFrom.below));
       sum += way[k].value;
       final int running = sum;
-      stops.add(HandStop(tip, 300, marks: _places(running ~/ 100)));
+      stops.add(HandStop(tip, 300, marks: _places(running ~/ 100), from: HandFrom.below));
       later(Duration(milliseconds: 900 * k + 600), () {
         if (run != _run) return;
         onCounter.add(way[k].id);
@@ -292,7 +293,7 @@ class ShopPaySession extends TemplateSession {
       inPurse.removeWhere((PurseCoin c) => c.id == way[k].id);
     }
     // The hand ends on the pay button, with every place paid.
-    stops.add(HandStop(_payTip(kinds()), 1400, marks: _places(sum ~/ 100)));
+    stops.add(HandStop(_payTip(kinds()), 1400, marks: _places(sum ~/ 100), from: HandFrom.below));
     _hint.play(
       handTourPlan(stops),
       onEnd: () {

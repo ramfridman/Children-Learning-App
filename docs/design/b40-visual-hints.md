@@ -156,7 +156,7 @@ tap_answer always has tiles under the stage, so L2 lives in the stage (§2.1 b).
 | TA-8 pattern rows | P2 in rhythm, ending on the "?" | P7 brackets | The unit slides to the gap |
 | TA-9 same, odd one out | P1 on the model or the group | P9 rule card beside the group; options compared in turn | The comparison finishes; the one left glows |
 | TA-10 order in time | P1 on the first picture | A timeline of 3 to 4 numbered slots in the stage (`day_*` cards for the week) | The guide walks the timeline |
-| TA-11 measure | P8 the objects slide to one start line: each picture is cut to its ink, so the drawn end (not the picture's box) touches the line | Cube sticks along each (long/short), as many cubes as the ink is long; a small seesaw (heavy/light; **not built yet**, heavy/light still shows cubes) | The comparison is made |
+| TA-11 measure | P8 the objects slide to one start line: each picture is cut to its ink, so the drawn end (not the picture's box) touches the line | Cube sticks along each (long/short), as many cubes as the ink is long; a small seesaw (heavy/light: a wooden plank on a teal A-frame, the two things on its ends in the order of their tiles, two wooden blocks hold it level; at level 3 the hand takes the blocks away and the heavy end tips down) | The comparison is made |
 | TA-12 clock, money | Clock: the short hand glows, the long one fades. Coin: the coin grows and shows its value | Clock: the short hand extends as a dotted ray to its numeral. Coin: its value beside a same-size coin of another value | The hand runs along the hand to the number |
 
 ---
