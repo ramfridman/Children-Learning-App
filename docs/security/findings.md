@@ -15,6 +15,8 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-29 | Alert row hardening (database checks and grants, the parent text's tier) | low | fixed on `alerts-tiers`; closes when CI's pgTAP 09 passes | 2026-10-30 |
 | SEC-32 | Kept words: a narrow race when "keep the words" is turned off; a weekly note's words could outlive 30 days on a phone | low | fixed on `alerts-tiers`; closes when CI's database integration test passes | 2026-10-30 |
 | SEC-33 | Alerts screen: the kept words can be selected and copied to the system clipboard | low | fixed on `alerts-tiers` (the line with the words cannot be selected) | 2026-10-30 |
+| SEC-34 | B-40 hint SVG readers threw on valid SVG numbers (`1.2.3`, a lone `.`) in a signed pack sprite, breaking the activity screen | low | fixed on `b40-visual-hints` (`tryParse`, whole-box fallback; character-pack viewBox reported as a problem) | 2026-10-31 |
+| SEC-35 | B-40 `inkBoxOf`/`outlineOf` were quadratic on an unclosed SVG tag (100 KB took 20 s, in `build`) | low | fixed on `b40-visual-hints` (linear tag reader, 64 KB cap, 8 KB tag cap, cache) | 2026-10-31 |
 | SEC-31 | Alert pushes: routine alerts shared the daily push budget with acts; no collapse id on iOS | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-27 | Alert pushes: the per-device limit was higher than PLAN said; no per-family push cap | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-25 | One alert the gateway refused held up every later alert of that device, silently | medium | closed (`alerts-tiers`) | 2026-10-30 |
@@ -156,3 +158,4 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   floor rows are checked). New low: SEC-33. One finding above low is still held privately: the server side of it is
   fixed and the phone side needs one more change. Re-run: `deno test` 188 passed, 0 failed, 7 ignored; Flutter alert,
   safety and sync tests 307 passed.
+- **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.

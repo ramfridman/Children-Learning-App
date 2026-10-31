@@ -23,21 +23,49 @@ class SpriteOutline {
   ];
 }
 
-/// The outline of the picture [svg], or null for one that has no corners (a circle, a solid).
+/// A picture longer than this is not read at all (the pack pictures are a few KB), so a hostile one cannot make a reader slow.
+const int maxReadableSvgChars = 64 * 1024;
+
+/// The longest run of attributes read inside one tag; the longest tag of a pack picture is about 4.3 KB.
+const int maxSvgTagChars = 8192;
+
+/// The tags of [svg] named in [names] (a regular-expression alternative such as `rect|circle`), each with the text of its
+/// attributes. A tag with no `>` before the next `<`, or with more than [maxSvgTagChars] of attributes, is skipped, and each
+/// character is looked at a few times at most, however the picture is cut.
+Iterable<(String, String)> svgTags(String svg, String names) sync* {
+  int gt = -1;
+  for (final RegExpMatch m in RegExp('<($names)\\b').allMatches(svg)) {
+    if (gt < m.end) gt = svg.indexOf('>', m.end);
+    if (gt < 0) return;
+    final int lt = svg.indexOf('<', m.end);
+    if ((lt >= 0 && lt < gt) || gt - m.end > maxSvgTagChars) continue;
+    yield (m[1]!, svg.substring(m.end, gt));
+  }
+}
+
+/// The outline of the picture [svg], or null for one that has no corners (a circle, a solid, a picture too long to read). Kept
+/// once for each picture.
 SpriteOutline? outlineOf(String svg) {
-  final RegExpMatch? poly = RegExp(r'<(polygon|polyline)\b[^>]*\bpoints="([^"]*)"').firstMatch(svg);
-  if (poly != null) {
+  if (svg.length > maxReadableSvgChars) return null;
+  if (_outlines.containsKey(svg)) return _outlines[svg];
+  return _outlines[svg] = _readOutline(svg);
+}
+
+final Map<String, SpriteOutline?> _outlines = <String, SpriteOutline?>{};
+
+SpriteOutline? _readOutline(String svg) {
+  for (final (String name, String at) in svgTags(svg, 'polygon|polyline')) {
+    final RegExpMatch? points = RegExp(r'\bpoints="([^"]*)"').firstMatch(at);
+    if (points == null) continue;
     final List<double> n = <double>[
-      for (final RegExpMatch m in RegExp(r'-?\d+\.?\d*').allMatches(poly[2]!)) double.parse(m[0]!),
+      for (final RegExpMatch m in RegExp(r'-?\d+\.?\d*').allMatches(points[1]!)) ?double.tryParse(m[0]!),
     ];
     return SpriteOutline(<Offset>[
       for (int i = 0; i + 1 < n.length; i += 2) Offset(n[i] / 100, n[i + 1] / 100),
-    ], closed: poly[1] == 'polygon');
+    ], closed: name == 'polygon');
   }
-  final RegExpMatch? rect = RegExp(r'<rect\b([^>]*)>').firstMatch(svg);
-  if (rect != null) {
-    double v(String name) =>
-        double.tryParse(RegExp('\\b$name="(-?[\\d.]+)"').firstMatch(rect[1]!)?[1] ?? '') ?? 0;
+  for (final (String _, String at) in svgTags(svg, 'rect')) {
+    double v(String name) => double.tryParse(RegExp('\\b$name="(-?[\\d.]+)"').firstMatch(at)?[1] ?? '') ?? 0;
     final double x = v('x') / 100;
     final double y = v('y') / 100;
     final double w = v('width') / 100;
@@ -50,11 +78,14 @@ SpriteOutline? outlineOf(String svg) {
     ], closed: true);
   }
   // The one curved shape of the pack: a quadratic curve from one corner to another and a straight side back (M x y Q cx cy x y Z).
-  final RegExpMatch? curve = RegExp(
-    r'<path\b[^>]*\bd="M\s*(-?[\d.]+)[\s,]+(-?[\d.]+)\s*Q\s*(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)',
-  ).firstMatch(svg);
-  if (curve != null) {
-    final List<double> c = <double>[for (int i = 1; i <= 6; i++) double.parse(curve[i]!) / 100];
+  for (final (String _, String at) in svgTags(svg, 'path')) {
+    final RegExpMatch? curve = RegExp(
+      r'\bd="M\s*(-?[\d.]+)[\s,]+(-?[\d.]+)\s*Q\s*(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)[\s,]+(-?[\d.]+)',
+    ).firstMatch(at);
+    if (curve == null) continue;
+    final List<double?> read = <double?>[for (int i = 1; i <= 6; i++) double.tryParse(curve[i]!)];
+    if (read.contains(null)) return null;
+    final List<double> c = <double>[for (final double? v in read) v! / 100];
     const int steps = 10;
     return SpriteOutline(<Offset>[
       for (int i = 0; i <= steps; i++)
