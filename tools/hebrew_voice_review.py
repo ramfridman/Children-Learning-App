@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']
 from author import F, M  # noqa: E402
 from band_b import NAMES, OBJECTS  # noqa: E402
+import hint_lines  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 SRC = os.path.join(ROOT, 'docs', 'review', 'hebrew-review.csv')
@@ -1006,7 +1007,15 @@ def reviewed(r):
     return any(r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source']) for g, i, s in REVIEWED)
 
 
+B40 = ('B-40 (docs/curriculum/b40-visual-hint-ladder.md, docs/agents/hebrew-notes.md section B-40): a hint line rewritten so that it says '
+       'what the hint picture shows (level 1 never counts aloud, level 2 names the new picture, level 3 puts the answer last); '
+       'new, not yet read by the owner. Voicing waits for B-45.')
+
+
 def pending(r):
+    if (r['group'].startswith('3') and re.search(r'^activity\.', r['source']) and re.search(r'^hints\.\d+\.caption\.0\.v$', r['id'])
+            and hint_lines.is_b40_text(r['text'])):
+        return B40
     for g, i, s, comment, *text in PENDING:
         if (r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source'])
                 and (not text or re.search(canon(text[0]), canon(r['text'])))):

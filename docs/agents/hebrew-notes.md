@@ -301,3 +301,40 @@ Still open:
   alone, then the reason).
 - The blank in the colour-mixing prompts is said as `ועוד צבע…`; the program lines as `לחזור על הצעדים:`.
 - 767 activities share `כמעט, בואו ננסה שוב.` and 767 share `שאלה טובה, בואו נראה יחד.`; voice each once.
+
+## 7. B-40: the hint lines follow the hint pictures (hebrew-text-editor, 2026-10-31)
+
+**What was done.** The generators now write the Band A `tap_answer` hint lines from what the picture of the family shows
+(`tools/hint_lines.py`, called by `activity()` in `tools/author.py`; the family and the fall-backs mirror
+`app/lib/play/hints/tap_plans.dart`, so a line follows the picture even where the plan falls back to a generic card).
+466 lines changed in 290 activity files (L1 36, L2 279, L3 151); every one is `proposed` in the master table (`PENDING`
+in `tools/hebrew_voice_review.py`, comment "B-40") and the activity stays `"review": "needs-editor"`. Band B is untouched.
+
+**The rules (for whoever adds a family or a picture).**
+1. Level 1 never counts aloud (design spec F2). A sequence says where to look ("the number, and the empty place next to
+   it"); the 13 old lines that counted `אַחַת, שְׁתַּיִם…` are gone. A line that only replays the question stays.
+2. Level 2 says what the new picture is, in one short line shared by the whole family (one clip for 53 colour items).
+   A number is said only where the picture counts it (hands, hops, numbered places, the path to N). The hands lines say
+   `אֶצְבָּעוֹת` only where hands are drawn; the path, the empty frame, the brackets and the pairing lines have their own.
+3. Level 3 may name the answer, because the plan (section 1, T2) lets the answer be the LAST step of the demonstration. What
+   the plan does not allow is a line that opens with the bare answer (`זֶה כַּדּוּר אָדֹם`) while the hand has not moved.
+   So: a bare answer (four words or fewer before `עַכְשָׁו`) gets one process clause in front (`הַצֶּבַע עוֹבֵר עַל כֻּלָּם,
+   וְעוֹצֵר אֵצֶל הַמַּתְאִים.` for the swatch, the same for the outline, the model and the hand); a line that already is a
+   process (it counts, reads the row, walks the story, compares) is kept; the owner-approved lines (matha04, loga02, the
+   spot line) are untouched.
+4. Compare: L1 (off the stage) says the two groups stand in two rows; L2 says the pairing lines and asks who is left
+   without a pair; L3 pairs one to one, counts what is left and says where there is more (the old line gave both numbers).
+5. The ordinal L3 starts from the flag and says the places up to the answer; zero keeps its line; the hops (CS-A-04) and
+   the coins (MATH-A-06) count in time with the hand.
+
+**Words chosen (please check, owner).** `הִנֵּה רַק הַצֶּבַע` / `רַק הַצּוּרָה, בְּלִי צֶבַע` (the attribute on its own);
+`הַדּוּגְמָה` (the model); `מְחַפְּשִׂים זוּג לַתְּמוּנָה הַזֹּאת` (LOG-A-09); `הַמִּשְׁבְּצוֹת רֵיקוֹת` (the empty ten-frame);
+`אֵיפֹה הַבַּרְוָז? …` (SHP-A-08: the picture draws a small duck, so the line says duck and not the ball of the question);
+`נִרְאֶה מַה קּוֹרֶה כְּשֶׁדּוֹחֲפִים אֶת שְׁנֵיהֶם` / `…כְּשֶׁשָּׂמִים עוֹד אֶחָד מֵעַל כָּל אֶחָד` (SHP-A-07: watch what
+happens, the result is not said). `כׇּל` is written with a qamats qatan, as everywhere in the pack.
+
+**Not changed, and why.** MATH-A-04 heavy/light (2): the picture is still a question-mark card until the seesaw exists, so
+the generic line stays. COL-A-05 tick/cross items (2): their L3 `כֵּן…` stays (the swatch tour over a tick and a cross
+says nothing). `pick.red.flower` has one hint only. The other Band A templates (count, give, flash, sort, build, match,
+shape builder, robot, spot the mistake, trace) keep their lines: they still agree with their pictures except as listed in
+the report to the orchestrator.

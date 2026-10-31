@@ -10,6 +10,7 @@
 * G5: MATH-B-10 draws one chart column per plate;
 * B-15 part 2: the pieces of the generators that the new items use (a count's own prompt, the give target, the second
   hint's action, the tick's hint, the H30 sentence with its prefixes);
+* B-40: the hint lines of Band A tap_answer follow the picture of their family (tools/hint_lines.py);
 * the starter pack: every activity follows the label rule, every skill file lists its activities' representations, and
   every activity is in the band of its first skill (the validator rule of B-15).
 """
@@ -25,6 +26,7 @@ STARTER = os.path.join(ROOT, 'content', 'starter')
 sys.path.insert(0, TOOLS)
 _argv = sys.argv[:]
 import author  # noqa: E402
+import hint_lines  # noqa: E402
 import band_b  # noqa: E402  (it sets sys.argv for author.py, which is imported and never run)
 sys.argv = _argv
 
@@ -187,6 +189,92 @@ class PartTwoPiecesTest(unittest.TestCase):
         a = band_b.OBJECTS['apple']
         said = 'יֵשׁ %s בַּסַּל, %s בַּחוּץ.' % (author.qty(4, a), author.vav(author.qty(2, a)))
         self.assertEqual(said, 'יֵשׁ אַרְבָּעָה תַּפּוּחִים בַּסַּל, וּשְׁנֵי תַּפּוּחִים בַּחוּץ.')
+
+
+NUMBER_WORDS = ('אַחַת', 'שְׁתַּיִם', 'שָׁלוֹשׁ', 'אַרְבַּע', 'חָמֵשׁ', 'שֵׁשׁ', 'שֶׁבַע', 'שְׁמוֹנֶה', 'תֵּשַׁע', 'עֶשֶׂר')
+
+
+class HintLinesFollowThePictureTest(unittest.TestCase):
+    """B-40: a hint line says what the hint picture of its family shows (hint_lines.tap_class mirrors tap_plans.dart)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.acts = [a for a in load('activity.*.json') if a['band'] == 'A' and a['template'] == 'tap_answer']
+        cls.classes = {a['id']: hint_lines.tap_class(a) for a in cls.acts}
+
+    def lines(self, a):
+        return {h['level']: h['caption'][0]['v'] for h in a['hints']}
+
+    def test_every_band_a_tap_answer_has_a_family(self):
+        self.assertEqual([i for i, c in self.classes.items() if c is None], [])
+
+    def test_level_one_never_counts_aloud(self):
+        for a in self.acts:
+            h1 = self.lines(a)[1]
+            self.assertLess(sum(w in h1 for w in NUMBER_WORDS), 2, '%s: %s' % (a['id'], h1))
+
+    def test_a_line_that_says_fingers_has_hands_on_the_screen(self):
+        # the number path, the empty frame, the brackets, the pairing lines and the rest are not fingers
+        for a in self.acts:
+            c = self.classes[a['id']]
+            if 2 in self.lines(a) and 'אֶצְבָּעוֹת' in self.lines(a)[2]:
+                self.assertIn(c[2], ('hands', 'hands_add', 'hands_take'), '%s: %s' % (a['id'], self.lines(a)[2]))
+
+    def test_hands_on_the_screen_are_named_in_the_line(self):
+        for a in self.acts:
+            if self.classes[a['id']][2] in ('hands', 'hands_add', 'hands_take'):
+                self.assertIn('אֶצְבָּעוֹת', self.lines(a)[2], a['id'])
+
+    def test_the_generic_level_two_line_stays_only_where_the_picture_is_a_question_card(self):
+        generic = author.hints('x', '', 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.', '')[1]['caption'][0]['v']
+        for a in self.acts:
+            if self.lines(a).get(2) == generic:
+                self.assertEqual(self.classes[a['id']][2], 'card', a['id'])
+
+    @staticmethod
+    def old_h3(a):
+        # the text a prefix was put in front of: the line without it
+        h3 = a['hints'][2]['caption'][0]['v']
+        for p in hint_lines.L3_PREFIX.values():
+            if h3.startswith(p + ' '):
+                return h3[len(p) + 1:]
+        return h3
+
+    def test_level_three_puts_the_answer_after_the_process(self):
+        prefixes = tuple(hint_lines.L3_PREFIX.values())
+        for a in self.acts:
+            c = self.classes[a['id']]
+            if 3 not in self.lines(a):
+                continue  # pick.red.flower, the one-hint warm-up
+            h3 = self.lines(a)[3]
+            right = next(o for o in a['answer']['options'] if o['id'] == a['answer']['correct'])
+            if right.get('sprite') in ('asset:tick', 'asset:cross') or not hint_lines.is_bare(self.old_h3(a)):
+                continue
+            if c[3] in ('swatch', 'ghost'):
+                self.assertTrue(h3.startswith(prefixes), '%s: %s' % (a['id'], h3))
+
+    def test_no_hint_is_longer_than_the_limit(self):
+        for a in self.acts:
+            for h in a['hints']:
+                self.assertLessEqual(len(h['caption'][0]['v'].split()), 24, a['id'])
+
+    def test_a_word_is_never_said_with_the_wrong_kol(self):
+        for a in self.acts:
+            for h in a['hints']:
+                self.assertNotIn('כָּל ', h['caption'][0]['v'], a['id'])  # the pack writes כׇּל (a qamats qatan)
+
+    def test_an_items_own_second_hint_wins(self):
+        d = pick(h2='עֶשֶׂר אֶצְבָּעוֹת.', h2_action='show_fingers')
+        self.assertEqual(d['hints'][1]['caption'][0]['v'], 'עֶשֶׂר אֶצְבָּעוֹת.')
+
+    def test_compare_and_ordinal_third_hints_are_processes(self):
+        for a in self.acts:
+            c = self.classes[a['id']]
+            h3 = self.lines(a).get(3, '')
+            if c[3] == 'pairs':
+                self.assertTrue(h3.startswith('מְחַבְּרִים אֶחָד לְאֶחָד'), a['id'])
+            if c[3] == 'ordinal':
+                self.assertTrue(h3.startswith('מַתְחִילִים מֵהַדֶּגֶל'), a['id'])
 
 
 class StarterPackTest(unittest.TestCase):

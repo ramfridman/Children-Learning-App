@@ -130,9 +130,11 @@ class HebrewMasterTableTest(unittest.TestCase):
 
     def test_table_counts(self):
         changed = [r for r in self.rows if r['ui_text'] != r['text']]
-        # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main)
+        # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main); 1308 became 1302
+        # in B-40, when six lines that the table had corrected (the generators already had the corrections) were replaced by
+        # new hint lines, which are `proposed` for the owner and need no correction
         self.assertEqual(len(self.rows), 12629)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1302)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
 
     def test_done_rows_have_ui_text(self):
