@@ -63,7 +63,7 @@ class CountingHands extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.end,
     children: <Widget>[
       HintHand(key: const Key('hand-first'), side: HandSide.left, fingers: math.min(raised, 5)),
-      const SizedBox(width: 22),
+      const SizedBox(width: 10),
       HintHand(
         key: const Key('hand-second'),
         side: HandSide.right,

@@ -81,7 +81,16 @@ enum HintPicture {
   /// Both pans together, with a level line across the beam (balance).
   levelLine('level_line'),
 
-  /// Only the options of the stage pulse in turn; the answer tiles are not touched (tap the answer, until its families come).
+  /// The parts of the question are lit (and where the stage has none, the options one after the other, none staying lit): look
+  /// at them (tap the answer, the families of part 2 of B-40).
+  lookHere('look_here'),
+
+  /// The question shown another way, by its family: hands, a number path, a swatch, an outline, pair lines, brackets, numbered
+  /// slots. No option is marked (tap the answer).
+  anotherWay('another_way'),
+
+  /// Only the options of the stage pulse in turn; the answer tiles are not touched (tap the answer, for the families that have
+  /// no pictures yet).
   pulse('pulse'),
 
   /// The worked example: the guide does the whole thing and the answer is marked as its last step. Level 3 only.
@@ -94,6 +103,64 @@ enum HintPicture {
 
   /// The picture picks out the answer (an option, bin, coin, cell or hand) while it is on screen.
   final bool marksAnswer;
+}
+
+/// The picture families of `tap_answer` (curriculum plan section 5.1, TA-1 to TA-11), by what the skill asks.
+enum TapFamily { count, numerals, sequence, compare, add, colour, shapes, pattern, same, time, measure }
+
+/// The family of each Band A skill that uses `tap_answer`.
+const Map<String, TapFamily> _tapFamilyOfSkill = <String, TapFamily>{
+  'NUM-A-03': TapFamily.count,
+  'NUM-A-04': TapFamily.count,
+  'NUM-A-07': TapFamily
+      .count, // numeral to set items (a numeral on the stage) belong to TapFamily.numerals, see tapFamilyOf
+  'NUM-A-14': TapFamily.count,
+  'MATH-A-06': TapFamily.count,
+  'CS-A-04': TapFamily.count,
+  'NUM-A-08': TapFamily.numerals,
+  'NUM-A-01': TapFamily.sequence,
+  'NUM-A-02': TapFamily.sequence,
+  'NUM-A-13': TapFamily.sequence,
+  'NUM-A-11': TapFamily.compare,
+  'NUM-A-12': TapFamily.compare,
+  'MATH-A-07': TapFamily.compare,
+  'MATH-A-01': TapFamily.add,
+  'MATH-A-02': TapFamily.add,
+  'COL-A-01': TapFamily.colour,
+  'COL-A-02': TapFamily.colour,
+  'COL-A-03': TapFamily.colour,
+  'COL-A-04': TapFamily.colour,
+  'COL-A-05': TapFamily.colour,
+  'COL-A-06': TapFamily.colour,
+  'COL-A-07': TapFamily.colour,
+  'SHP-A-01': TapFamily.shapes,
+  'SHP-A-02': TapFamily.shapes,
+  'SHP-A-03': TapFamily.shapes,
+  'SHP-A-04': TapFamily.shapes,
+  'SHP-A-05': TapFamily.shapes,
+  'SHP-A-07': TapFamily.shapes,
+  'SHP-A-08': TapFamily.shapes,
+  'SHP-A-10': TapFamily.shapes,
+  'LOG-A-04': TapFamily.pattern,
+  'LOG-A-06': TapFamily.pattern,
+  'LOG-A-07': TapFamily.pattern,
+  'LOG-A-10': TapFamily.pattern,
+  'LOG-A-01': TapFamily.same,
+  'LOG-A-02': TapFamily.same,
+  'LOG-A-03': TapFamily.same,
+  'LOG-A-09': TapFamily.same,
+  'CS-A-01': TapFamily.time,
+  'CS-A-05': TapFamily.time,
+  'LOG-A-08': TapFamily.time,
+  'MATH-A-05': TapFamily.time,
+  'MATH-A-04': TapFamily.measure,
+};
+
+/// The family of a `tap_answer` activity with skill [skillId] whose stage shows a numeral ([numeralOnStage]) or not: null for a
+/// skill that has none yet (Band B).
+TapFamily? tapFamilyOf(String skillId, {bool numeralOnStage = false}) {
+  if (skillId == 'NUM-A-07' && numeralOnStage) return TapFamily.numerals;
+  return _tapFamilyOfSkill[skillId];
 }
 
 /// What a template draws at levels 1, 2 and 3.
@@ -192,6 +259,30 @@ class HintLadder {
     HintPicture.firstRound,
     HintPicture.demonstration,
   ]);
+
+  /// The families of `tap_answer` that draw their own pictures (B-40 part 2); the others still pulse their options. The Band A
+  /// families come one by one, in the order of the build plan.
+  static final Set<TapFamily> tapFamiliesBuilt = <TapFamily>{...TapFamily.values};
+
+  static const HintLadder _tapFamily = HintLadder._(<HintPicture>[
+    HintPicture.lookHere,
+    HintPicture.anotherWay,
+    HintPicture.demonstration,
+  ]);
+
+  /// The ladder of an activity: that of its template, or for `tap_answer` that of its family when the family is built.
+  static HintLadder? forActivity(
+    String template,
+    String skillId, {
+    bool numeralOnStage = false,
+    bool share = false,
+  }) {
+    if (template == 'tap_answer') {
+      final TapFamily? f = tapFamilyOf(skillId, numeralOnStage: numeralOnStage);
+      if (f != null && tapFamiliesBuilt.contains(f)) return _tapFamily;
+    }
+    return of(template, share: share);
+  }
 
   /// Templates whose ladder is not complete yet: the check for two equal levels does not apply to them.
   static const Set<String> pending = <String>{'tap_answer'};

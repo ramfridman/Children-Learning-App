@@ -10,6 +10,7 @@ import 'package:nitznutz/play/clock_set_session.dart';
 import 'package:nitznutz/play/count_tap_session.dart';
 import 'package:nitznutz/play/flash_session.dart';
 import 'package:nitznutz/play/give_n_session.dart';
+import 'package:nitznutz/play/hint_hand.dart';
 import 'package:nitznutz/play/hint_widgets.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/play/match_pairs_session.dart';
@@ -111,6 +112,10 @@ void main() {
 
   List<T> all<T extends Activity>() => content.activities.values.whereType<T>().toList();
 
+  /// How many fingers the hands on the screen have up (the hand is the design-director's art, or a placeholder until it is loaded).
+  int raised(WidgetTester t) =>
+      t.widgetList<HintHand>(find.byType(HintHand)).fold(0, (int sum, HintHand h) => sum + h.fingers);
+
   // ---- the table ----
 
   group('the ladder table', () {
@@ -167,26 +172,14 @@ void main() {
           ),
         );
         if (n <= 10) {
-          expect(find.byKey(const Key('finger-up')), findsNWidgets(n));
+          expect(raised(t), n);
           expect(find.byKey(const Key('ten-frames')), findsNothing);
           // A full hand of five, and the rest on the other hand.
-          expect(
-            find.descendant(
-              of: find.byKey(const Key('hand-first')),
-              matching: find.byKey(const Key('finger-up')),
-            ),
-            findsNWidgets(n > 5 ? 5 : n),
-          );
-          expect(
-            find.descendant(
-              of: find.byKey(const Key('hand-second')),
-              matching: find.byKey(const Key('finger-up')),
-            ),
-            findsNWidgets(n > 5 ? n - 5 : 0),
-          );
+          expect(t.widget<HintHand>(find.byKey(const Key('hand-first'))).fingers, n > 5 ? 5 : n);
+          expect(t.widget<HintHand>(find.byKey(const Key('hand-second'))).fingers, n > 5 ? n - 5 : 0);
         } else {
           expect(find.byKey(const Key('frame-counter')), findsNWidgets(n));
-          expect(find.byKey(const Key('finger-up')), findsNothing);
+          expect(find.byType(HintHand), findsNothing);
         }
       });
     }
@@ -250,7 +243,7 @@ void main() {
       c.showHint(); // level 2
       await pass(t, 600 * 7 + 300);
       expect(find.byKey(const Key('fingers-hint')), findsOneWidget);
-      expect(find.byKey(const Key('finger-up')), findsNWidgets(7));
+      expect(raised(t), 7);
       expect(find.byKey(const Key('ten-frames')), findsNothing);
       await pass(t, 3000);
       expect(
@@ -275,7 +268,7 @@ void main() {
       expect(a.count, greaterThan(10));
       expect(find.byKey(const Key('ten-frames')), findsOneWidget);
       expect(find.byKey(const Key('frame-counter')), findsNWidgets(a.count));
-      expect(find.byKey(const Key('finger-up')), findsNothing);
+      expect(find.byType(HintHand), findsNothing);
       await end(t, s);
     });
 
@@ -293,7 +286,7 @@ void main() {
         expect(find.byKey(const Key('give-flower-ring')), findsOneWidget);
         c.showHint();
         await pass(t, 600 * a.n + 300);
-        expect(find.byKey(const Key('finger-up')), findsNWidgets(a.n));
+        expect(raised(t), a.n);
         await end(t, s);
       },
     );
@@ -742,7 +735,7 @@ void main() {
       c.showHint(); // level 2: and the same number as hands
       await pass(t, 200);
       expect(s.aid, isTrue);
-      expect(find.byKey(const Key('finger-up')), findsNWidgets(a.group.count));
+      expect(raised(t), a.group.count);
       await end(t, s);
     });
 

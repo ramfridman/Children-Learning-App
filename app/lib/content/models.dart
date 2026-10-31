@@ -1019,6 +1019,9 @@ class PackAssets {
 
   /// The SVG text of an `asset:<id>` reference.
   String svg(String ref) => _svg[ref.substring('asset:'.length)]!;
+
+  /// The same, or null when the pack has no such picture (a hint that draws a picture of its own asks this way).
+  String? svgOrNull(String ref) => _svg[ref.startsWith('asset:') ? ref.substring('asset:'.length) : ref];
 }
 
 /// A verified pack, ready to be played.

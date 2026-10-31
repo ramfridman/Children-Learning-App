@@ -51,6 +51,7 @@ flutter:
     - assets/art/
     - assets/art/scenes/
     - assets/art/home/
+    - assets/art/hints/
     - assets/art/ui/
     - assets/art/stickers/
     - assets/art/world/

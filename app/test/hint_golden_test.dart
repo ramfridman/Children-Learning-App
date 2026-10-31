@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/play/hint_hand.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 
 import 'support/app_harness.dart';
@@ -79,6 +80,8 @@ void main() {
     ('tablet_landscape', const Size(1180, 820), _tablet),
   ]) {
     testWidgets('the hint ladder at level 2 and 3, ${device.$1}', (WidgetTester tester) async {
+      // The hands are art files; they come from the asset bundle, which needs the real clock.
+      await tester.runAsync(warmHintHands);
       final AppRig rig = AppRig();
       await rig.seedFinishedSetup(name: 'נֹעָה');
       await rig.pump(tester, size: device.$2);

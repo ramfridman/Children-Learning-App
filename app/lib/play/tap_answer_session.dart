@@ -12,6 +12,10 @@ import '../speech/answer_matcher.dart';
 import '../speech/spoken_options.dart';
 import 'count_tap_session.dart' show Dots;
 import 'hint_widgets.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart';
+import 'hints/tap_geometry.dart';
+import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
@@ -22,6 +26,16 @@ class TapAnswerSession extends TemplateSession {
   TapAnswerSession(super.controller, this.activity);
 
   final TapAnswerActivity activity;
+
+  /// What the hint draws on the stage now (see `HintPlan`), how much of the stage's end side a card takes, and the answer tile (by
+  /// its place in the row) that glows in turn where the stage has nothing of the question to light.
+  List<HintMark> marks = const <HintMark>[];
+  double reserve = 0;
+  int? hintLit;
+  int _gen = 0;
+  Size? _stageSize;
+  ActivitySpec? _spec;
+  TextDirection _dir = TextDirection.rtl;
 
   String? chosenId;
   AnswerState chosenState = AnswerState.idle;
@@ -51,9 +65,12 @@ class TapAnswerSession extends TemplateSession {
     if (controller.guided && id != activity.correctId) return;
     _busy = true;
     chosenId = id;
+    // The dots of a first hint go with the child's next touch; a hint that is still playing stops when the answer is right.
+    if (controller.hintShown <= 1 && marks.isNotEmpty) _clearHint();
     final Outcome o = await controller.chooseOption(id, byVoice: byVoice);
     if (disposed) return;
     if (o.correct) {
+      _clearHint();
       chosenState = AnswerState.correct;
       notify();
       later(TemplateSession.praisePause, controller.next);
@@ -75,6 +92,7 @@ class TapAnswerSession extends TemplateSession {
     chosenState = AnswerState.idle;
     _busy = false;
     pulsing = null;
+    _clearHint();
     notify();
   }
 
@@ -83,9 +101,61 @@ class TapAnswerSession extends TemplateSession {
 
   @override
   void onHint() {
-    _pulseAll();
-    // Until the pictures of this template's families exist (B-40 part 2) there is no worked example to show before the halo.
-    if (hintPictureOf(activity) == HintPicture.demonstration) controller.demoDone();
+    final TapGeometry? geo = _geometry();
+    final HintPlan? plan = geo == null ? null : tapHintPlan(activity, geo, controller.hintShown);
+    if (plan == null) {
+      // A family without pictures yet: its options pulse, and there is no worked example to show before the halo.
+      _pulseAll();
+      if (hintPictureOf(activity) == HintPicture.demonstration) controller.demoDone();
+      return;
+    }
+    _play(plan);
+  }
+
+  TapGeometry? _geometry() {
+    final Size? size = _stageSize;
+    final ActivitySpec? spec = _spec;
+    return size == null || spec == null ? null : TapGeometry(activity, size, spec, dir: _dir);
+  }
+
+  /// Plays a hint: each step of [plan] on the stage for its time, then what stays. Starting another hint (or an answer) stops it.
+  void _play(HintPlan plan) {
+    final int gen = ++_gen;
+    Duration at = Duration.zero;
+    for (final HintFrame f in plan.frames) {
+      later(at, () {
+        if (gen != _gen) return;
+        marks = f.marks;
+        reserve = f.reserve;
+        _light(f.litOption);
+        notify();
+      });
+      at += f.hold;
+    }
+    later(at, () {
+      if (gen != _gen) return;
+      marks = plan.rest;
+      reserve = plan.restReserve;
+      _light(null);
+      notify();
+      if (plan.endsDemo) controller.demoDone();
+    });
+  }
+
+  /// One answer glows (a sky ring on its tile; an option on the stage grows a little).
+  void _light(int? option) {
+    if (activity.optionsInTiles) {
+      hintLit = option;
+    } else {
+      pulsing = option;
+    }
+  }
+
+  void _clearHint() {
+    _gen++;
+    marks = const <HintMark>[];
+    reserve = 0;
+    hintLit = null;
   }
 
   void _pulseAll() {
@@ -102,8 +172,12 @@ class TapAnswerSession extends TemplateSession {
   }
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _TapStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _stageSize = size;
+    _spec = spec;
+    _dir = Directionality.of(context);
+    return ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _TapStage(this, size));
+  }
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) {
@@ -117,23 +191,46 @@ class TapAnswerSession extends TemplateSession {
       builder: (BuildContext c, Widget? _) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          for (final ChoiceOption o in activity.options)
-            Opacity(
-              opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
-              child: AnswerTile(
-                key: Key('tile-${o.id}'),
-                semanticLabel: o.label ?? '',
-                width: sets ? width : null,
-                state: chosenId == o.id
-                    ? chosenState
-                    : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
-                          ? AnswerState.selected
-                          : AnswerState.idle),
-                onPressed: () => choose(o.id),
-                child: sets
-                    ? Padding(padding: const EdgeInsets.all(6), child: _face(activity, o, 96, spec.tileFont))
-                    : _face(activity, o, 96, spec.tileFont),
-              ),
+          for (final (int i, ChoiceOption o) in activity.options.indexed)
+            Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Opacity(
+                  opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
+                  child: AnswerTile(
+                    key: Key('tile-${o.id}'),
+                    semanticLabel: o.label ?? '',
+                    width: sets ? width : null,
+                    state: chosenId == o.id
+                        ? chosenState
+                        : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
+                              ? AnswerState.selected
+                              : AnswerState.idle),
+                    onPressed: () => choose(o.id),
+                    child: sets
+                        ? Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: _face(activity, o, 96, spec.tileFont),
+                          )
+                        : _face(activity, o, 96, spec.tileFont),
+                  ),
+                ),
+                // Where the stage has nothing of the question to light, a first hint lights each answer in turn, the same for all.
+                if (hintLit == i)
+                  Positioned.fill(
+                    left: 6,
+                    top: 6,
+                    right: 6,
+                    bottom: 6,
+                    child: IgnorePointer(
+                      child: const SkyRing(
+                        key: Key('hint-tile-glow'),
+                        round: false,
+                        radius: TokenRadius.xl + 6,
+                      ),
+                    ),
+                  ),
+              ],
             ),
         ],
       ),
@@ -185,50 +282,63 @@ class _TapStage extends StatelessWidget {
     final double room = size.height - top;
     final double box = math.min(room * (hasGroup ? 0.9 : 0.86), size.width / (n + 0.5));
     final double gap = (size.width - box * n) / (n + 1);
-    return Semantics(
-      container: true,
-      label: a.altText,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(TokenRadius.lg),
-        child: Stack(
-          key: const Key('tap-stage'),
-          children: <Widget>[
-            if (a.background != null)
-              Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
-            if (hasGroup)
-              Positioned(
-                left: 0,
-                top: 0,
-                width: size.width,
-                height: a.optionsInTiles ? size.height : top,
-                child: _groups(a),
-              ),
-            if (a.row.isNotEmpty) Positioned.fill(child: _row(a)),
-            if (a.chart.isNotEmpty) Positioned.fill(child: _chart(a)),
-            if (a.stageNumeral != null)
-              Positioned.fill(
-                child: Center(
-                  child: Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      '${a.stageNumeral}',
-                      key: const Key('stage-numeral'),
-                      style: AppText.fixed(size: size.height * 0.7, weight: 800, lineHeight: 1),
-                    ),
+    final Widget stage = ClipRRect(
+      borderRadius: BorderRadius.circular(TokenRadius.lg),
+      child: Stack(
+        key: const Key('tap-stage'),
+        children: <Widget>[
+          if (a.background != null)
+            Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
+          if (hasGroup)
+            AnimatedPositioned(
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              left: s.reserve,
+              top: 0,
+              width: size.width - s.reserve,
+              height: a.optionsInTiles ? size.height : top,
+              child: _groups(a),
+            ),
+          if (a.row.isNotEmpty) Positioned.fill(child: _row(a)),
+          if (a.chart.isNotEmpty) Positioned.fill(child: _chart(a)),
+          if (a.stageNumeral != null)
+            Positioned.fill(
+              child: Center(
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Text(
+                    '${a.stageNumeral}',
+                    key: const Key('stage-numeral'),
+                    style: AppText.fixed(size: size.height * 0.7, weight: 800, lineHeight: 1),
                   ),
                 ),
               ),
-            if (!a.optionsInTiles)
-              for (final (int i, ChoiceOption o) in a.options.indexed)
-                Positioned(
-                  left: gap + i * (box + gap),
-                  top: top + (room - box) / 2,
-                  width: box,
-                  height: box,
-                  child: _option(a, o, i, box),
-                ),
-          ],
-        ),
+            ),
+          if (!a.optionsInTiles)
+            for (final (int i, ChoiceOption o) in a.options.indexed)
+              Positioned(
+                left: gap + i * (box + gap),
+                top: top + (room - box) / 2,
+                width: box,
+                height: box,
+                child: _option(a, o, i, box),
+              ),
+        ],
+      ),
+    );
+    return Semantics(
+      container: true,
+      label: a.altText,
+      // The hint's pictures lie over the stage and may reach past its edge (the hand ends on the top of an answer tile).
+      child: Stack(
+        fit: StackFit.expand,
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          stage,
+          if (s.marks.isNotEmpty) HintOverlay(marks: s.marks, size: size),
+        ],
       ),
     );
   }
