@@ -61,12 +61,33 @@ void main() {
     'the warm-up is due once: not after it was played, and not for a child who already played in the land',
     () {
       expect(placementDue(content, 'numbers', const <Attempt>[]), isTrue);
-      expect(placementDue(content, 'numbers', <Attempt>[_attempt(placementId, 'next.after.4')]), isFalse);
+      expect(placementDue(content, 'numbers', <Attempt>[_attempt(placementId, 'give.dogs.4')]), isFalse);
       expect(
         placementDue(content, 'numbers', <Attempt>[_attempt('butterflies', 'count.butterflies.3')]),
         isFalse,
       );
       expect(placementDue(content, 'none', const <Attempt>[]), isFalse);
+    },
+  );
+
+  test(
+    'the warm-up is per land: the Counting Hills warm-up played, Colour Bay and the others still get theirs',
+    () {
+      final List<Attempt> numbersWarmUp = <Attempt>[
+        for (final String id in placementLesson(content, 'numbers')!.itemIds) _attempt(placementId, id),
+      ];
+      expect(placementDue(content, 'numbers', numbersWarmUp), isFalse);
+      for (final String land in <String>['colors', 'shapes', 'logic', 'cs', 'math']) {
+        expect(placementDue(content, land, numbersWarmUp), isTrue, reason: land);
+      }
+      // The first answer alone is also the first activity of the Colour Bay warm-up: it does not use that one up.
+      expect(placementDue(content, 'colors', numbersWarmUp.take(1).toList()), isTrue);
+      // The Colour Bay warm-up played uses up Colour Bay's, and only that.
+      final List<Attempt> colorsWarmUp = <Attempt>[
+        for (final String id in placementLesson(content, 'colors')!.itemIds) _attempt(placementId, id),
+      ];
+      expect(placementDue(content, 'colors', <Attempt>[...numbersWarmUp, ...colorsWarmUp]), isFalse);
+      expect(placementDue(content, 'shapes', <Attempt>[...numbersWarmUp, ...colorsWarmUp]), isTrue);
     },
   );
 

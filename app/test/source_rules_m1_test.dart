@@ -104,13 +104,50 @@ void main() {
       }
     });
 
-    test('the placeholder for the child\'s name is the only one in the child strings', () {
-      final String source = File('lib/strings/he.dart').readAsStringSync();
-      final Set<String?> names = RegExp(r'\{(\w+)\}')
-          .allMatches(source)
-          .map((RegExpMatch m) => m.group(1))
-          .toSet();
-      expect(names, <String?>{'child', 's', 'm', 't', 'n', 'a', 'b', 'how', 'title', 'w'});
+    // What this rule protects: the only thing a string may carry from the device is a short, known placeholder, and the one
+    // that holds personal data (`child`, the first name) is the only one of its kind. The others are numbers, shapes and
+    // words of the lesson itself. `land` is one more of the latter: the name of a land, filled on the device and only from
+    // the `He.land*` constants (see the next test), never from the child, the pack or a server.
+    test(
+      'the placeholders in the child strings are the known ones, and the child name is the only personal one',
+      () {
+        final String source = File('lib/strings/he.dart').readAsStringSync();
+        final Set<String?> names = RegExp(r'\{(\w+)\}')
+            .allMatches(source)
+            .map((RegExpMatch m) => m.group(1))
+            .toSet();
+        expect(names, <String?>{'child', 's', 'm', 't', 'n', 'a', 'b', 'how', 'title', 'w', 'land'});
+      },
+    );
+
+    test('{land} is only ever filled from the land names of He.land*', () {
+      // 1. Every place that fills `land` is in the adventure line and takes a name from the two functions of names.dart.
+      final List<String> fills = <String>[];
+      for (final File f in lib) {
+        final String text = f.readAsStringSync();
+        for (final RegExpMatch m in RegExp(r"'land':\s*([^,}]*)").allMatches(text)) {
+          fills.add('${f.path.replaceAll(r'\', '/').split('lib/').last}: ${m.group(1)!.trim()}');
+        }
+      }
+      expect(fills, <String>[
+        'child/adventure_line.dart: landName(land).text',
+        'child/adventure_line.dart: landSemanticsName(land).text',
+      ]);
+      // 2. Those functions return nothing but He.land* constants (one per land, and nothing else in the switch).
+      final String names = File('lib/rewards/names.dart').readAsStringSync();
+      for (final String fn in <String>['landName', 'landSemanticsName']) {
+        final int start = names.indexOf('Str $fn(TrophyLand land) => switch');
+        expect(start, isNonNegative, reason: fn);
+        final String body = names.substring(start, names.indexOf('};', start));
+        final List<String> arms = RegExp(r'TrophyLand\.\w+ => (.+),')
+            .allMatches(body)
+            .map((RegExpMatch m) => m.group(1)!)
+            .toList();
+        expect(arms, hasLength(6), reason: fn);
+        for (final String arm in arms) {
+          expect(arm, matches(RegExp(r'^He\.land[A-Za-z]+$')), reason: '$fn gives only He.land* constants');
+        }
+      }
     });
   });
 
