@@ -85,6 +85,8 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 The full checklist is `docs/owner-todo.md`. In short:
 
+- **Phone test T8 (owner, later):** the full check of everything new since his phone's 0.5.0 build, B-40 included, step by step in `docs/qa/phone-test-2026-11.md`.
+
 - **M6:** done. Open from it: check E on the phone, Hebrew editor review of the lexicon and the reviewed lines, fix the prefix vocalisation nits, the 33 cells without a reviewed line (authored lines used).
 - **M4 and M5:** the phone checks passed on 2026-10-27; waiting for his explicit "confirmed" to merge. The adult recordings (P4) and real voices (P3) remain.
 - Save the pack signing key in 1Password (next time at the PC); on-phone checks for M1, M2 and M3; Hebrew review; confirm M3 after the report.
