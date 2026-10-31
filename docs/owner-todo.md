@@ -31,6 +31,7 @@ Each one is a short list of steps with the expected result. Run them in this ord
 | T5 | M4, optional: frame times in profile mode on the Samsung | 5 min | same file, section 8E |
 | T7 | M6: the AI helper on the phone (off by default, a made line on the second mistake, no network, kill switch, Band A without caption); after P7 | 15 min | same file, section 10 |
 | ~~T6~~ (done 2026-10-27) | M5: model on the phone, voice switch, answer by voice, the repair steps, how long the model takes to load | 20 min | same file, section 9 |
+| **T8** (owner, later) | **Full phone test of everything new since 0.5.0:** Nitzi's home, the name limit, the map bubble, the 15 new lessons of pack 0.10.0, the visual hints of every activity (B-40), and, after the deploy, the alerts. Several sittings, about 4 hours in all. | 4 h | `docs/qa/phone-test-2026-11.md` |
 
 ## Things to look at and judge
 
