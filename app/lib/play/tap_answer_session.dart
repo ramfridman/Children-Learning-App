@@ -69,8 +69,10 @@ class TapAnswerSession extends TemplateSession {
     if (controller.guided && id != activity.correctId) return;
     _busy = true;
     chosenId = id;
-    // The dots of a first hint go with the child's next touch; a hint that is still playing stops when the answer is right.
-    if (controller.hintShown <= 1 && marks.isNotEmpty) _hint.clear();
+    // The dots of a first hint go with the child's next touch, and a demonstration (level 3) ends at any touch: the hand is taken
+    // off at once, even for a wrong tile (the hint that the mistake brings starts a moment later).
+    final bool demonstrating = controller.hintShown >= 3 && _hint.playing;
+    if ((controller.hintShown <= 1 || demonstrating) && marks.isNotEmpty) _hint.clear();
     final Outcome o = await controller.chooseOption(id, byVoice: byVoice);
     if (disposed) return;
     if (o.correct) {
@@ -448,14 +450,18 @@ class _TapStage extends StatelessWidget {
       label: a.altText,
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Row(
-          key: const Key('tap-groups'),
-          children: <Widget>[
-            for (final SpriteSet g in sets)
-              Expanded(
-                child: Padding(padding: const EdgeInsets.all(6), child: one(g)),
-              ),
-          ],
+        // Two groups stand like "3 + 2", the first on the left, whatever the language (the hint stands on the same places).
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Row(
+            key: const Key('tap-groups'),
+            children: <Widget>[
+              for (final SpriteSet g in sets)
+                Expanded(
+                  child: Padding(padding: const EdgeInsets.all(6), child: one(g)),
+                ),
+            ],
+          ),
         ),
       ),
     );

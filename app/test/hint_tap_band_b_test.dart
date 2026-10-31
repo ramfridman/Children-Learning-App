@@ -203,8 +203,11 @@ void main() {
       final List<String> generic = <String>[];
       for (final TapAnswerActivity a in bandB()) {
         final HintPlan l2 = plan(a, 2);
-        final List<HintMark> marks = marksOf(l2).toList();
-        if (marks.length == 1 && marks.single is CardMark) generic.add('${a.id} (${a.skillId})');
+        // What stays is the one card with a question mark (marksOf also counts the step that shows it, so it never sees one mark).
+        final HintMark? only = l2.rest.length == 1 ? l2.rest.single : null;
+        if (only is CardMark && only.child is Text && (only.child as Text).data == '?') {
+          generic.add('${a.id} (${a.skillId})');
+        }
       }
       expect(generic, isEmpty, reason: '$generic');
     });

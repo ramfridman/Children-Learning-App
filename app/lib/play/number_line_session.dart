@@ -359,7 +359,9 @@ class _LineStage extends StatelessWidget {
                       ),
                     AnimatedPositioned(
                       key: const Key('line-marker'),
-                      duration: const Duration(milliseconds: 350),
+                      duration: MediaQuery.disableAnimationsOf(context)
+                          ? Duration.zero
+                          : const Duration(milliseconds: 350),
                       curve: Curves.easeInOut,
                       left: waiting ? 4 : _x(s.markerAt!) - marker / 2,
                       top: waiting ? 4 : lineY - marker - 10,

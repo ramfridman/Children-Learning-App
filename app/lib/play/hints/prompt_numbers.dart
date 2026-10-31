@@ -64,7 +64,9 @@ final Map<String, int> _tens = <String, int>{
   _word('TSeym'): 90,
 };
 
-/// The Hebrew letters (without marks) of a prompt, with the final letters turned into the plain ones, and the rest as breaks.
+/// The Hebrew letters (without marks) of a prompt, with the final letters turned into the plain ones, and the rest as breaks. A
+/// punctuation mark (a comma, a colon, a question mark) is a break of its own, a lone `|` between spaces, so that a number word
+/// before a comma never joins the word after it ("six, eight, ten" is 6, 8, 10 and not 6, 18).
 String _plainLetters(String s) {
   const Map<String, String> finals = <String, String>{
     '\u05DA': '\u05DB',
@@ -79,7 +81,8 @@ String _plainLetters(String s) {
     if (c >= 0x5D0 && c <= 0x5EA) {
       out.write(finals[ch] ?? ch);
     } else if (c < 0x591 || c > 0x5C7) {
-      out.write(' '); // a mark is dropped, anything else that is not a letter is a break
+      // A mark is dropped; a space is a break; any other sign is a break that no word crosses.
+      out.write(ch.trim().isEmpty ? ' ' : ' | ');
     }
   }
   return out.toString();

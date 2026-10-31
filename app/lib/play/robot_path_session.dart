@@ -471,7 +471,9 @@ class _RobotStage extends StatelessWidget {
               ),
             AnimatedPositioned(
               key: const Key('robot'),
-              duration: const Duration(milliseconds: 300),
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               left: at(s.pos).dx + 3 + (s.bumped ? 4 : 0),
               top: at(s.pos).dy + 3,
