@@ -53,11 +53,24 @@ Set<String> placedLessons(PackContent content, Iterable<Attempt> attempts) {
   return done;
 }
 
-/// Whether the warm-up should be offered now: it has not been played, and the child has not played in this land.
+/// Whether the warm-up should be offered now: this land's warm-up has not been played, and the child has not played in
+/// this land. The warm-up is per land: an answer of another land's warm-up does not count here. A warm-up answer
+/// belongs to this land when its activity is in this land's warm-up and in no other land's (two warm-ups can start with
+/// the same activity, which says nothing about which land the child was in).
 bool placementDue(PackContent content, String domain, Iterable<Attempt> attempts) {
-  if (placementLesson(content, domain) == null) return false;
+  final Lesson? warmUp = placementLesson(content, domain);
+  if (warmUp == null) return false;
   final Set<String> inLand = <String>{for (final Lesson l in landPath(content, domain)) ...l.itemIds};
-  return !attempts.any((Attempt a) => a.lessonId == placementId || inLand.contains(a.activityId));
+  final Set<String> ownWarmUp = warmUp.itemIds.toSet();
+  final Set<String> otherWarmUps = <String>{
+    for (final String d in <String>{for (final SkillDoc s in content.skills.values) s.domain})
+      if (d != domain) ...?placementLesson(content, d)?.itemIds,
+  };
+  return !attempts.any(
+    (Attempt a) => a.lessonId == placementId
+        ? ownWarmUp.contains(a.activityId) && !otherWarmUps.contains(a.activityId)
+        : inLand.contains(a.activityId),
+  );
 }
 
 /// The lessons of a land in path order: every lesson that has a skill of the land's domain, by `sequence`, then by id.

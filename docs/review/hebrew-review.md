@@ -8,13 +8,13 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 
 | Group | Texts |
 |---|---|
-| 1. App screens and buttons | 384 |
+| 1. App screens and buttons | 400 |
 | 2. Core voice lines (spoken by every friend) | 27 |
 | 3. Lesson content (skills, activities, misconceptions) | 11381 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 649 |
 | 6. Helper lexicon (the words the AI helper may use) | 122 |
-| **Total** | **12629** |
+| **Total** | **12645** |
 
 ## 1. App screens and buttons
 
@@ -136,6 +136,22 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | nitziHomeTreasures | פֹּה גָּרִים הַגְּבִיעִים, הַמֵּדַלְיוֹת וְהַמַּדְבֵּקוֹת. | needs-editor |
 | app/lib/strings/he.dart | nitziHomeBottle | בַּבַּקְבּוּק יֵשׁ הַרְפַּתְקָה. בּוֹאוּ נִפְתַּח אוֹתוֹ. | needs-editor |
 | app/lib/strings/he.dart | nitziHomeBottleDone | כְּבָר סִיַּמְנוּ אֶת הַהַרְפַּתְקָה שֶׁל הַיּוֹם. אֶפְשָׁר לְשַׂחֵק בָּאִיִּים. | needs-editor |
+| app/lib/strings/he.dart | adventureWelcome | בּוֹאוּ נֵצֵא לְהַרְפַּתְקָה אֶל {land}. | needs-editor |
+| app/lib/strings/he.dart | adventureCallForHelp | מַשֶּׁהוּ שֶׁל {land} צָרִיךְ עֶזְרָה. בּוֹאוּ נַעֲזֹר. | needs-editor |
+| app/lib/strings/he.dart | adventureSameLand | בּוֹאוּ נַמְשִׁיךְ בַּהַרְפַּתְקָה שֶׁל {land}. | needs-editor |
+| app/lib/strings/he.dart | adventureOtherLand | בּוֹאוּ נְבַקֵּר אֶת {land}. | needs-editor |
+| app/lib/strings/he.dart | adventurePlayAgain | בּוֹאוּ נְשַׂחֵק שׁוּב מִשְׂחָק שֶׁאֲנַחְנוּ מַכִּירִים. | needs-editor |
+| app/lib/strings/he.dart | adventureWelcomeSemantics | הבקבוק: הרפתקה אל {land} | needs-editor |
+| app/lib/strings/he.dart | adventureCallForHelpSemantics | הבקבוק: משהו של {land} צריך עזרה | needs-editor |
+| app/lib/strings/he.dart | adventureSameLandSemantics | הבקבוק: להמשיך בהרפתקה של {land} | needs-editor |
+| app/lib/strings/he.dart | adventureOtherLandSemantics | הבקבוק: לבקר את {land} | needs-editor |
+| app/lib/strings/he.dart | adventurePlayAgainSemantics | הבקבוק: לשחק שוב משחק שאנחנו מכירים | needs-editor |
+| app/lib/strings/he.dart | landCountingSemantics | גבעות הספירה | needs-editor |
+| app/lib/strings/he.dart | landColorsSemantics | מפרץ הצבעים | needs-editor |
+| app/lib/strings/he.dart | landShapesSemantics | יער הצורות | needs-editor |
+| app/lib/strings/he.dart | landLogicSemantics | מערת החידות | needs-editor |
+| app/lib/strings/he.dart | landRobotsSemantics | נמל הרובוטים | needs-editor |
+| app/lib/strings/he.dart | landMarketSemantics | כפר השוק | needs-editor |
 | app/lib/strings/he.dart | gateTitle | לפני שנמשיך | needs-editor |
 | app/lib/strings/he.dart | gateHint | השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס. | needs-editor |
 | app/lib/strings/he.dart | gateQuestion | כמה זה? | needs-editor |

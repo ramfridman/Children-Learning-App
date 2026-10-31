@@ -5,6 +5,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
+import '../child/adventure_line.dart';
 import '../child/calm_loading.dart';
 import '../child/ceremony_screen.dart';
 import '../child/land_screen.dart';
@@ -272,6 +273,7 @@ class _HomeState extends ConsumerState<_Home> {
   Future<void> _openHome() async {
     final String id = widget.profile.id;
     final GlobalKey<MapCompanionState> friend = GlobalKey<MapCompanionState>();
+    final ValueNotifier<AdventureLine?> line = ValueNotifier<AdventureLine?>(null);
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         // A consumer of its own: the lantern's glow and the sticker on the book follow the rewards while the home is open.
@@ -283,7 +285,8 @@ class _HomeState extends ConsumerState<_Home> {
               // It waves when the child arrives, silently (B-26 decision 6: nothing is voiced here yet).
               companion: MapCompanion(key: friend, waveOnStart: true),
               onCompanion: () => friend.currentState?.greet(),
-              onBottle: _openTodaysAdventure,
+              onBottle: () => _openTodaysAdventure(line),
+              bottleLine: line,
               onStickers: _openStickers,
               onHall: _openHall,
               hallGlow: ref.watch(hallWaitingProvider(id)).value ?? false,
@@ -300,8 +303,10 @@ class _HomeState extends ConsumerState<_Home> {
   /// only place that decides it, and it is worked out when the child taps, from their visits and what is due then. A call
   /// for help opens the revisit mission of the map's own bell, a lesson goes the way of the land's play pebble (the warm-up
   /// first when it is due), and a game played again opens that lesson. Each comes back to the home; nothing is lost if
-  /// the bottle is never tapped.
-  Future<void> _openTodaysAdventure() async {
+  /// the bottle is never tapped. The friend's bubble on the home says the line for the stop ([adventureLine]) as the stop
+  /// opens, and in its voice when the pack has the clip (silence otherwise); nothing waits for it, and the line is gone
+  /// when the child comes back.
+  Future<void> _openTodaysAdventure(ValueNotifier<AdventureLine?> line) async {
     final PackContent? content = ref.read(contentProvider).value;
     if (content == null) return;
     final String id = widget.profile.id;
@@ -319,6 +324,19 @@ class _HomeState extends ConsumerState<_Home> {
       band: widget.profile.ageBand,
     );
     if (!mounted) return;
+    final AdventureLine? words = adventureLine(stop);
+    if (words != null) {
+      line.value = words;
+      unawaited(ref.read(voiceDirectorProvider).say(words.voice));
+    }
+    try {
+      await _openStop(stop, world);
+    } finally {
+      line.value = null;
+    }
+  }
+
+  Future<void> _openStop(TodaysAdventure stop, WorldView world) async {
     switch (stop.kind) {
       case AdventureKind.revisit:
         final Lesson? mission = world.missionFor(stop.skillId!);

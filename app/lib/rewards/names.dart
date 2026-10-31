@@ -12,6 +12,16 @@ Str landName(TrophyLand land) => switch (land) {
   TrophyLand.market => He.landMarket,
 };
 
+/// The same without niqqud, as a screen reader is given it (its own strings, never a changed copy).
+Str landSemanticsName(TrophyLand land) => switch (land) {
+  TrophyLand.counting => He.landCountingSemantics,
+  TrophyLand.colors => He.landColorsSemantics,
+  TrophyLand.shapes => He.landShapesSemantics,
+  TrophyLand.logic => He.landLogicSemantics,
+  TrophyLand.robots => He.landRobotsSemantics,
+  TrophyLand.market => He.landMarketSemantics,
+};
+
 /// The same, for the adult screens: plain text.
 String landNamePlain(TrophyLand land) => withoutNiqqud(landName(land).text);
 

@@ -182,6 +182,36 @@ abstract final class He {
     nikud: true,
   );
 
+  // ---- what the bottle says when it is tapped (B-39, Today's Adventure; docs/curriculum/todays-adventure-rule.md section 8) ----
+  // One line per reason; `{land}` is filled with the land's own name from `landCounting` .. `landMarket` (semantics: the
+  // plain `land*Semantics`), and sits only after a separate word (`אֶל`, `אֶת`, `שֶׁל`), never after a prefix letter, so the
+  // construct and the pointing of the name never change. Nothing here names the child or the friend, has a verb about
+  // the child, or says anything about time: every line is an invitation in "we" and "let's". The reason `nothing` has no line.
+  static const Str adventureWelcome = Str('בּוֹאוּ נֵצֵא לְהַרְפַּתְקָה אֶל {land}.', nikud: true);
+  static const Str adventureCallForHelp = Str(
+    'מַשֶּׁהוּ שֶׁל {land} צָרִיךְ עֶזְרָה. בּוֹאוּ נַעֲזֹר.',
+    nikud: true,
+  );
+  static const Str adventureSameLand = Str('בּוֹאוּ נַמְשִׁיךְ בַּהַרְפַּתְקָה שֶׁל {land}.', nikud: true);
+  static const Str adventureOtherLand = Str('בּוֹאוּ נְבַקֵּר אֶת {land}.', nikud: true);
+  static const Str adventurePlayAgain = Str(
+    'בּוֹאוּ נְשַׂחֵק שׁוּב מִשְׂחָק שֶׁאֲנַחְנוּ מַכִּירִים.',
+    nikud: true,
+  );
+  // The screen-reader label of the bottle, one per reason (plain, no niqqud; `{land}` is the plain `land*Semantics`).
+  static const Str adventureWelcomeSemantics = Str('הבקבוק: הרפתקה אל {land}');
+  static const Str adventureCallForHelpSemantics = Str('הבקבוק: משהו של {land} צריך עזרה');
+  static const Str adventureSameLandSemantics = Str('הבקבוק: להמשיך בהרפתקה של {land}');
+  static const Str adventureOtherLandSemantics = Str('הבקבוק: לבקר את {land}');
+  static const Str adventurePlayAgainSemantics = Str('הבקבוק: לשחק שוב משחק שאנחנו מכירים');
+  // The plain names of the six lands, for the labels above (the pointed names are `landCounting` .. `landMarket`).
+  static const Str landCountingSemantics = Str('גבעות הספירה');
+  static const Str landColorsSemantics = Str('מפרץ הצבעים');
+  static const Str landShapesSemantics = Str('יער הצורות');
+  static const Str landLogicSemantics = Str('מערת החידות');
+  static const Str landRobotsSemantics = Str('נמל הרובוטים');
+  static const Str landMarketSemantics = Str('כפר השוק');
+
   // ---- parent gate and PIN (adult) ----
   static const Str gateTitle = Str('לפני שנמשיך');
   static const Str gateHint = Str('השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס.');

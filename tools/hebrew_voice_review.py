@@ -672,6 +672,17 @@ KEEP_POINTED |= set(VOICE_AUDIT_KEEP)
 VOICE_AUDIT = 'voice-audit 2026-10-29'
 VOICE_SUBS = [(re.compile(p), r, why) for p, r, why in VOICE_SUBS]
 VOICE_MANUAL = {}  # the ui text -> (voice text, why), for lines no rule can say well
+# B-39 (Today's Adventure): the bottle's five lines. {land} is a land name, not a person's name, so it is not dropped (unlike
+# {child}): each line is voiced once for each of the six lands (PER-LAND, like {n} is voiced per value). The voice names are
+# listed in docs/agents/hebrew-notes.md; no name of a child or friend is in any of them.
+PER_LAND = ('PER-LAND (B-39): voiced once for each of the six lands, with {land} replaced by the voice name of the land '
+            '(גבעות הספירה, מפרץ הצבעים, יַעַר הצורות, מְעָרַת החידות, נְמַל הרובוטים, כְּפַר השוק); no child or friend name; no "!"')
+VOICE_MANUAL.update({
+    canon('בּוֹאוּ נֵצֵא לְהַרְפַּתְקָה אֶל {land}.'): ('בואו נֵצֵא להרפתקה אל {land}.', PER_LAND),
+    canon('מַשֶּׁהוּ שֶׁל {land} צָרִיךְ עֶזְרָה. בּוֹאוּ נַעֲזֹר.'): ('משהו של {land} צריך עזרה. בואו נעזור.', PER_LAND),
+    canon('בּוֹאוּ נַמְשִׁיךְ בַּהַרְפַּתְקָה שֶׁל {land}.'): ('בואו נמשיך בהרפתקה של {land}.', PER_LAND),
+    canon('בּוֹאוּ נְבַקֵּר אֶת {land}.'): ('בואו נְבַקֵּר את {land}.', PER_LAND),
+})
 
 
 def eleven(text):
@@ -709,7 +720,8 @@ def eleven(text):
 
 
 # ---------------------------------------------------------------- main
-VOICED_UI = {'homeBubble', 'homeBubbleNoName'}
+VOICED_UI = {'homeBubble', 'homeBubbleNoName', 'adventureWelcome', 'adventureCallForHelp', 'adventureSameLand',
+             'adventureOtherLand', 'adventurePlayAgain'}
 
 
 def spoken(r):
@@ -736,6 +748,7 @@ REVIEWED = [
 # the comment). They stay `proposed` for the owner although their group is in REVIEWED; this list wins over REVIEWED,
 # DOUBT and NOTE. A new string in a REVIEWED group goes here until the editor has read it (the run prints the new rows).
 B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. '
+B39 = 'B-39 (docs/curriculum/todays-adventure-rule.md section 8, docs/agents/hebrew-notes.md): new, worded by the editor, not yet read by the owner. '
 B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
 PENDING = [
     ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
@@ -745,6 +758,13 @@ PENDING = [
      'mixed group, so masculine plural "גָּרִים".'),
     ('1', r'^nitziHomeBottle$', r'he\.dart$', B26 + 'The bottle holds a revisit or the next lesson (decision 3), so not '
      '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
+    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)$', r'he\.dart$', B39 + 'The bottle line for one reason '
+     '(todays-adventure-rule.md section 8). "we" and "let us" only: no child name, no friend name, no gender, no time word. {land} follows '
+     'only a separate word (אֶל, אֶת, שֶׁל), so the construct and the pointing of the land name never change.'),
+    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)Semantics$', r'he\.dart$', B39 + 'Screen-reader label of the '
+     'bottle for that reason, plain text; {land} is the plain land name (land*Semantics).'),
+    ('1', r'^land(Counting|Colors|Shapes|Logic|Robots|Market)Semantics$', r'he\.dart$', B39 + 'The plain land name for the '
+     'bottle screen-reader label (the pointed names are land*).'),
     # B-15 part 2 (docs/knowledge/b15-hebrew.md): the editor's own strings are text-ready there. These are the lines the generator
     # made from a pattern that the tables do not give, so the editor reads them; the last element is a regex on the text.
     ('3', r'feedback\.correct', r'^activity\.b15\.matha04\.', B15 + 'The correct line of the fish and star size items (editor read it, 2026-10-30: correct, '
