@@ -55,10 +55,20 @@ class TapGeometry {
         count ?? g.count,
         seed: g.seed,
         scale: g.scale,
+        lineSlots: lineSlotsOf(a, g),
       ))
         r.shift(cell.topLeft),
     ];
   }
+
+  /// How many places a `line` of [g] has room for (see [groupLayout]). A clock face or a shade of a colour alone on the stage is one
+  /// thing to read, not a group to compare: it takes the whole room, so that its hands and its shade can be seen on a phone.
+  static int lineSlotsOf(TapAnswerActivity a, SpriteSet g) =>
+      a.group2 == null &&
+          g.count == 1 &&
+          (g.sprite.startsWith('asset:clock_') || g.sprite.startsWith('asset:shade_'))
+      ? 1
+      : 4;
 
   /// The whole box of group [which], for a group with no pictures (a count of 0) that still has a place.
   Rect groupCell(int which) {
@@ -80,14 +90,23 @@ class TapGeometry {
     return sorted;
   }
 
+  /// How far a number sentence (a row with a sign in it) stands lower than the stage's top: the room over the numbers where the
+  /// hint stands their cubes, big enough to count. 0 for any other row. The stage pads its row by the same.
+  static double rowLiftOf(TapAnswerActivity a, double stageH) =>
+      a.row.any((String r) => r.startsWith('op:')) ? (stageH * 0.26).roundToDouble() : 0;
+
+  /// The top of the drawn cells of the row (a cell is as tall as the row; a numeral in it may reach above [rowCells]' square).
+  double get rowTop => 13 + rowLiftOf(a, h);
+
   /// The squares of the cells of the stage's row, left to right.
   List<Rect> rowCells() {
     final int n = a.row.length;
+    final double lift = rowLiftOf(a, h);
     final double cellW = (w - 20) / n;
-    final double side = math.min(cellW - 6, h - 26);
+    final double side = math.min(cellW - 6, h - 26 - lift);
     return <Rect>[
       for (int i = 0; i < n; i++)
-        Rect.fromCenter(center: Offset(10 + (i + 0.5) * cellW, h / 2), width: side, height: side),
+        Rect.fromCenter(center: Offset(10 + (i + 0.5) * cellW, (h + lift) / 2), width: side, height: side),
     ];
   }
 

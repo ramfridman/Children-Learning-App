@@ -135,8 +135,11 @@ class _Row {
         if (_number(cells[i]) != null) i,
     ];
     if (at.length < 3) return null;
-    final double cs = math.min(9 * k, (side - 4) / 5 - 2);
+    // As big as the room over the row lets them be: a row of five may be a little wider than its cell (the cells beside a number
+    // are signs, with nothing over them), and the tallest pile of rows still fits under the stage's top edge.
     final double room = top - 6 * k;
+    final int rows = at.fold(1, (int m, int i) => math.max(m, (_number(cells[i])! / 5).ceil()));
+    final double cs = math.min(math.min(13 * k, (side + 18 * k) / 5 - 2), room / rows - 2);
     if (cs < 4 || room < cs) return null;
     final List<List<HintMark>> steps = <List<HintMark>>[];
     final List<HintMark> shown = <HintMark>[];
@@ -251,13 +254,15 @@ class _Row {
 
   HintPlan? sample(String Function(String) svgOf) {
     final HintMark? Function(Rect)? make = _sampleOf(svgOf);
-    final double room = top - 4 * k;
-    final double d = math.min(32 * k, room);
+    // The sample is as big as a child can read on a phone: it stands over the top of each cell, its foot on the cell's white
+    // margin (the cell's own picture starts lower), so that a row that fills the stage still leaves it room.
+    final double foot = top + math.min(10 * k, side * 0.14);
+    final double d = math.min(34 * k, foot - 3);
     if (make == null || d < 18) return null;
     return HintPlan(<HintFrame>[
       for (int i = 0; i < n; i++)
         HintFrame(<HintMark>[
-          make(Rect.fromCenter(center: Offset(centres[i].dx, top - 2 * k - d / 2), width: d, height: d))!,
+          make(Rect.fromCenter(center: Offset(centres[i].dx, foot - d / 2), width: d, height: d))!,
         ], hold: const Duration(milliseconds: 700)),
     ]);
   }

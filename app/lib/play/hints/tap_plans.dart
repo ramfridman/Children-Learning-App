@@ -245,6 +245,21 @@ String cropToInk(String svg, Rect part) {
   return svg.substring(0, start) + head + svg.substring(end);
 }
 
+/// [svg] cut to its ink, with a little room for its stroke (see [inkBoxOf] and [cropToInk]), and the ink's width over its
+/// height. A picture with a wide margin (a ladybug, an apple) then fills the place it is drawn in. Kept once for each picture.
+(String, double) inkedSvg(String svg) => _inked.putIfAbsent(svg, () {
+  final Rect ink = inkBoxOf(svg);
+  final Rect part = Rect.fromLTRB(
+    math.max(0, ink.left - 0.02),
+    math.max(0, ink.top - 0.02),
+    math.min(1, ink.right + 0.02),
+    math.min(1, ink.bottom + 0.02),
+  );
+  return (cropToInk(svg, part), part.width / part.height);
+});
+
+final Map<String, (String, double)> _inked = <String, (String, double)>{};
+
 class _Plans {
   _Plans(this.a, this.g) : k = hintScale(g.size);
 
@@ -1267,11 +1282,13 @@ class _Plans {
     if (things.length != 2) return generic(level);
     // Both things are drawn at one scale (the scale of a set kept), each in its own half of the stage, its drawn end on the
     // start line: what a child compares is the ink, not the picture's box (a short stick is drawn in the middle of its box).
-    final double cube = 14 * k;
+    // The cubes are as big as the things let them be (at most 22 on a phone, so that a long stick is about eight cubes, each
+    // big enough to count); the room left for a thing is planned with the biggest cube.
+    const double most = 22;
     final double startX = 30 * k;
     final double left = startX + 4 * k;
     final double band = g.h / 2;
-    final double roomH = band - cube - 10 * k;
+    final double roomH = band - most * k - 10 * k;
     final double roomW = g.w - left - 24 * k;
     double widest = 0;
     double tallest = 0;
@@ -1279,7 +1296,7 @@ class _Plans {
       widest = math.max(widest, ink.width * s);
       tallest = math.max(tallest, ink.height * s);
     }
-    double side = math.min(130 * k, math.min(roomW / widest, roomH / tallest));
+    double side = math.min(210 * k, math.min(roomW / widest, roomH / tallest));
     final List<Rect> drawn = <Rect>[];
     final List<Rect> ink = <Rect>[];
     // A picture's box (bigger than its ink) must stay on the stage too: a little smaller until it does.
@@ -1298,6 +1315,7 @@ class _Plans {
       if (drawn.every((Rect r) => r.left >= 0 && r.top >= 0 && r.right <= g.w && r.bottom <= g.h)) break;
       side *= 0.95;
     }
+    final double cube = (math.max(ink[0].width, ink[1].width) / 8).clamp(14 * k, most * k).toDouble();
     final List<HintMark> aligned = <HintMark>[
       LineMark(Offset(startX, 6 * k), Offset(startX, g.h - 6 * k)),
       for (int i = 0; i < 2; i++) CopyMark(drawn[i], cropToInk(things[i].$1, things[i].$3)),
@@ -1308,7 +1326,7 @@ class _Plans {
       final List<HintMark> cubes = <HintMark>[
         for (final Rect r in ink)
           for (int c = 0; c < math.max(1, (r.width / cube).round()); c++)
-            BlockMark(Rect.fromLTWH(left + c * cube, r.bottom + 3 * k, cube - 1.5, cube - 1.5)),
+            BlockMark(Rect.fromLTWH(left + c * cube, r.bottom + 3 * k, cube - 2 * k, cube - 2 * k)),
       ];
       return HintPlan(
         <HintFrame>[
