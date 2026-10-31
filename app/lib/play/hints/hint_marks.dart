@@ -191,6 +191,14 @@ final class BlockMark extends HintMark {
   final bool empty;
 }
 
+/// A place for a coin on the shop's counter (one shekel): a dashed circle, or, when [filled], gold: the shekel is paid.
+final class PlaceMark extends HintMark {
+  const PlaceMark(this.rect, {this.filled = false});
+
+  final Rect rect;
+  final bool filled;
+}
+
 /// The outline of a shape as a path of corners: the first [upTo] sides are drawn in sky (all of them when null), a start dot sits on
 /// the first corner and a dot on each corner reached. [closed] is false for a line that does not come back to its start.
 final class OutlineMark extends HintMark {

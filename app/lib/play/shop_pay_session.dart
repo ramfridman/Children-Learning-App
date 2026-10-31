@@ -10,6 +10,11 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart' show hintScale;
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
+import 'hints/tile_points.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
 
@@ -51,6 +56,18 @@ class ShopPaySession extends TemplateSession {
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
+  /// The places for the coins (one for each shekel of the price), the pointing hand, and the places of the stage and the tiles they
+  /// are drawn by (see [HintPlayer]).
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+  ActivitySpec _spec = ActivitySpec.phone;
+
+  /// The counter shows its places, not the coins on it, while a hint draws them.
+  bool get placesShown => _hint.marks.any((HintMark m) => m is PlaceMark);
+
+  /// How many shekels the price is: the number of places. Nothing is drawn for a price with agorot.
+  int get _shekels => activity.price % 100 == 0 ? activity.price ~/ 100 : 0;
+
   int get total =>
       onCounter.fold(0, (int sum, String id) => sum + purse.firstWhere((PurseCoin c) => c.id == id).value);
 
@@ -60,6 +77,7 @@ class ShopPaySession extends TemplateSession {
   void _endDemo() {
     if (!demoRunning) return;
     _run++;
+    _hint.clear();
     onCounter.clear();
     demoTotal = null;
     demoRunning = false;
@@ -68,6 +86,7 @@ class ShopPaySession extends TemplateSession {
 
   void toggle(String id) {
     _endDemo();
+    _hint.clear();
     if (_busy || ring == AnswerState.correct) return;
     if (onCounter.contains(id)) {
       onCounter.remove(id);
@@ -81,6 +100,7 @@ class ShopPaySession extends TemplateSession {
 
   Future<void> pay() async {
     _endDemo();
+    _hint.clear();
     if (_busy || ring == AnswerState.correct || onCounter.isEmpty) return;
     final bool right = total == activity.price;
     if (controller.guided && !right) {
@@ -143,6 +163,7 @@ class ShopPaySession extends TemplateSession {
   @override
   void onReset() {
     _run++;
+    _hint.clear();
     onCounter.clear();
     hinted = <String>{};
     lightPrice = false;
@@ -156,6 +177,7 @@ class ShopPaySession extends TemplateSession {
   @override
   void onReplay() {
     _run++;
+    _hint.clear();
     hinted = <String>{};
     lightPrice = false;
     notify();
@@ -168,6 +190,7 @@ class ShopPaySession extends TemplateSession {
       case HintPicture.priceAndCounter:
         hinted = <String>{};
         lightPrice = true;
+        _hint.play(HintPlan(const <HintFrame>[], rest: _places(total ~/ 100)));
         notify();
       case HintPicture.firstCoin:
         _putFirstCoin();
@@ -176,18 +199,71 @@ class ShopPaySession extends TemplateSession {
     }
   }
 
-  /// Hint 2: the guide puts the biggest coin of a way to pay on the counter and stops. When one coin pays everything that coin
-  /// would be the answer, so then the guide leaves the purse as it is and the price and counter stay lit.
+  // ---- the places of the counter and the coins of the purse, as they are drawn ----
+
+  /// The counter's box in the stage (the same numbers the stage draws with).
+  static Rect counterOf(Size size) =>
+      Rect.fromLTWH(size.width - 10 - size.width * 0.54, 8, size.width * 0.54, size.height - 16);
+
+  /// The places for [n] coins on a counter, in rows of five from the left (never mirrored), the first row at the top; a place is a
+  /// circle of at most 30 on a phone.
+  static List<Rect> placesOf(Size size, int n) {
+    final Rect inner = counterOf(size).deflate(10);
+    final int rows = (n + 4) ~/ 5;
+    final double d = math.max(
+      0,
+      math.min(math.min(inner.width / 5 - 4, inner.height / math.max(1, rows) - 4), 30 * hintScale(size)),
+    );
+    final double left = inner.center.dx - (math.min(n, 5) * (d + 4) - 4) / 2;
+    return <Rect>[
+      for (int i = 0; i < n; i++)
+        Rect.fromLTWH(left + (i % 5) * (d + 4), inner.top + (i ~/ 5) * (d + 4), d, d),
+    ];
+  }
+
+  /// A place for each shekel of the price, the first [filled] of them gold.
+  List<HintMark> _places(int filled) {
+    final List<Rect> at = placesOf(_size, _shekels);
+    return <HintMark>[for (int i = 0; i < at.length; i++) PlaceMark(at[i], filled: i < filled)];
+  }
+
+  /// The fingertip place on coin [i] of a purse that holds [kinds] (4 inside its top edge), and on the top edge of the pay button.
+  Offset _coinTip(List<String> kinds, int i) {
+    final Rect face = PurseLayout(kinds, _spec.tilesWidth).faces[i];
+    return _spec.fromTiles(face.center.dx, face.top + 4);
+  }
+
+  Offset _payTip(List<String> kinds) {
+    final Rect pay = PurseLayout(kinds, _spec.tilesWidth).pay;
+    return _spec.fromTiles(pay.center.dx, pay.top);
+  }
+
+  /// The kinds of the coins that are in the purse now (not on the counter), in the order of the purse.
+  List<String> get _purseKinds => <String>[
+    for (final PurseCoin c in purse)
+      if (!onCounter.contains(c.id)) c.kind,
+  ];
+
+  /// Hint 2: the guide puts the biggest coin of a way to pay on the counter and stops; its places turn gold, the rest stay empty.
+  /// When one coin pays everything that coin would be the answer, so then the guide leaves the purse as it is and only the empty
+  /// places stay.
   void _putFirstCoin() {
     hinted = <String>{};
     lightPrice = true;
     final List<PurseCoin> way = _wayCoins();
+    final int before = total ~/ 100;
     if (way.length > 1 && !onCounter.contains(way.first.id)) onCounter.add(way.first.id);
+    _hint.play(
+      HintPlan(<HintFrame>[
+        HintFrame(_places(before), hold: const Duration(milliseconds: 600)),
+      ], rest: _places(total ~/ 100)),
+    );
     notify();
   }
 
-  /// The worked example: the coins of a way to pay go on the counter one by one, with the running total, then come back; they stay
-  /// lit. Then it is the child's turn.
+  /// The worked example: the pointing hand takes the coins of a way to pay from the purse one by one (the biggest first) and each
+  /// fills its places on the counter, with the running total; the hand ends on the pay button. Then the coins come back and stay
+  /// lit, and it is the child's turn.
   void _workedExample() {
     _run++;
     final int run = _run;
@@ -197,34 +273,66 @@ class ShopPaySession extends TemplateSession {
     onCounter.clear();
     hinted = <String>{};
     demoTotal = 0;
+    final List<PurseCoin> inPurse = List<PurseCoin>.of(purse);
+    List<String> kinds() => <String>[for (final PurseCoin c in inPurse) c.kind];
+    final List<HandStop> stops = <HandStop>[];
     int sum = 0;
     for (int k = 0; k < way.length; k++) {
+      final Offset tip = _coinTip(kinds(), inPurse.indexWhere((PurseCoin c) => c.id == way[k].id));
+      stops.add(HandStop(tip, 600, marks: _places(sum ~/ 100)));
       sum += way[k].value;
       final int running = sum;
-      later(Duration(milliseconds: 600 + 900 * k), () {
+      stops.add(HandStop(tip, 300, marks: _places(running ~/ 100)));
+      later(Duration(milliseconds: 900 * k + 600), () {
         if (run != _run) return;
         onCounter.add(way[k].id);
         demoTotal = running;
         notify();
       });
+      inPurse.removeWhere((PurseCoin c) => c.id == way[k].id);
     }
-    later(Duration(milliseconds: 600 + 900 * way.length + 1200), () {
-      if (run != _run) return;
-      onCounter.clear();
-      demoTotal = null;
-      demoRunning = false;
-      hinted = solution();
-      notify();
-      controller.demoDone();
-    });
+    // The hand ends on the pay button, with every place paid.
+    stops.add(HandStop(_payTip(kinds()), 1400, marks: _places(sum ~/ 100)));
+    _hint.play(
+      handTourPlan(stops),
+      onEnd: () {
+        onCounter.clear();
+        demoTotal = null;
+        demoRunning = false;
+        hinted = solution();
+        notify();
+        controller.demoDone();
+      },
+    );
     notify();
   }
 
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _Counter(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return Stack(
+      fit: StackFit.expand,
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _Counter(this, size)),
+        _hint.body(size),
+      ],
+    );
+  }
+
+  /// The pointing hand over the stage. The pay button ends the row of tiles, and the row moves as coins leave the purse.
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => ListenableBuilder(
+    listenable: this,
+    builder: (BuildContext c, Widget? _) => _hint.hands(
+      size,
+      spec,
+      rowEnd: spec.fromTiles(PurseLayout(_purseKinds, spec.tilesWidth).rowEnd, 0).dx,
+    ),
+  );
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
@@ -270,6 +378,68 @@ class ShopPaySession extends TemplateSession {
   );
 }
 
+/// Where the coins of the purse and the pay button stand in the box of the tiles, in the box's own points (its top left is (0, 0)):
+/// the same numbers the row of tiles is laid out with (a [Wrap] of the coins with 4 between them, 12, and the pay tile with its tap
+/// margin, the whole row centred), so that the pointing hand can end on a coin or on the button.
+class PurseLayout {
+  PurseLayout(List<String> kinds, double boxWidth) {
+    const double slot = payTile + 2 * payMargin;
+    final double limit = boxWidth - payGap - slot;
+    final List<List<int>> runs = <List<int>>[<int>[]];
+    final List<double> widths = <double>[0];
+    final List<double> heights = <double>[0];
+    final List<Size> cells = <Size>[
+      for (final String k in kinds) CoinFace.faceOf(k) + const Offset(2 * CoinFace.pad, 2 * CoinFace.pad),
+    ];
+    for (int i = 0; i < cells.length; i++) {
+      if (runs.last.isNotEmpty && widths.last + spacing + cells[i].width > limit + 1e-10) {
+        runs.add(<int>[]);
+        widths.add(0);
+        heights.add(0);
+      }
+      widths[widths.length - 1] += (runs.last.isEmpty ? 0 : spacing) + cells[i].width;
+      heights[heights.length - 1] = math.max(heights.last, cells[i].height);
+      runs.last.add(i);
+    }
+    final double wrapW = widths.fold(0.0, math.max);
+    final double wrapH = kinds.isEmpty
+        ? 0
+        : heights.fold(0.0, (double a, double b) => a + b) + spacing * (runs.length - 1);
+    final double start = (boxWidth - (wrapW + payGap + slot)) / 2;
+    final double rowH = math.max(wrapH, slot);
+    double top = (rowH - wrapH) / 2;
+    faces = List<Rect>.filled(kinds.length, Rect.zero);
+    for (int r = 0; r < runs.length; r++) {
+      double x = start + (wrapW - widths[r]) / 2;
+      for (final int i in runs[r]) {
+        faces[i] = Rect.fromLTWH(
+          x + CoinFace.pad,
+          top + CoinFace.pad,
+          cells[i].width - 2 * CoinFace.pad,
+          cells[i].height - 2 * CoinFace.pad,
+        );
+        x += cells[i].width + spacing;
+      }
+      top += heights[r] + spacing;
+    }
+    final double slotLeft = start + wrapW + payGap;
+    pay = Rect.fromLTWH(slotLeft + payMargin, (rowH - payTile) / 2, payTile, payTile);
+    rowEnd = slotLeft + slot;
+  }
+
+  static const double payTile = 72;
+  static const double payMargin = 12;
+  static const double payGap = 12;
+  static const double spacing = 4;
+
+  /// The picture of each coin, in the order of the purse.
+  late final List<Rect> faces;
+
+  /// The pay button (without its tap margin), and the right edge of its slot, which is the end of the row.
+  late final Rect pay;
+  late final double rowEnd;
+}
+
 /// A coin or a note, with its value written on it.
 class CoinFace extends StatelessWidget {
   const CoinFace({
@@ -289,7 +459,7 @@ class CoinFace extends StatelessWidget {
   /// The same for every coin of a row, so that the coins keep their real sizes to each other.
   final double scale;
 
-  static const double _pad = 3;
+  static const double pad = 3;
 
   /// The real size of each, in millimetres (the width of a note; coins are round): the half shekel is the biggest coin and the shekel the
   /// smallest, as in a purse.
@@ -341,8 +511,8 @@ class CoinFace extends StatelessWidget {
     double total = 0;
     for (final String kind in kinds) {
       final Size f = faceOf(kind, scale: k);
-      final double cw = f.width + 2 * _pad;
-      final double ch = f.height + 2 * _pad;
+      final double cw = f.width + 2 * pad;
+      final double ch = f.height + 2 * pad;
       // Half a point to spare, so that rounding never puts a coin on a row the count here did not expect.
       if (rowWidth > 0 && rowWidth + cw > width - 0.5) {
         total += rowHeight;
@@ -366,7 +536,7 @@ class CoinFace extends StatelessWidget {
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
         child: Padding(
-          padding: const EdgeInsets.all(_pad),
+          padding: const EdgeInsets.all(pad),
           child: Container(
             width: face.width,
             height: face.height,
@@ -468,13 +638,15 @@ class _Counter extends StatelessWidget {
                   // coins get smaller together when another row would not fit.
                   child: LayoutBuilder(
                     builder: (BuildContext c, BoxConstraints room) {
-                      final List<String> kinds = <String>[for (final String id in s.onCounter) s.kindOf(id)];
+                      // While a hint draws the places of the price, the coins on the counter are those places.
+                      final List<String> shown = s.placesShown ? const <String>[] : s.onCounter;
+                      final List<String> kinds = <String>[for (final String id in shown) s.kindOf(id)];
                       final double k = CoinFace.fitScale(kinds, room.biggest);
                       return Wrap(
                         alignment: WrapAlignment.center,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: <Widget>[
-                          for (final String id in s.onCounter)
+                          for (final String id in shown)
                             CoinFace(
                               key: Key('on-$id'),
                               kind: s.kindOf(id),
