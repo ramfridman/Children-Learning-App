@@ -60,11 +60,11 @@ void main() {
     );
     expect(
       adventureLine(const TodaysAdventure.revisit(TrophyLand.market, 'MATH-A-01'))!.voice,
-      'vo:core.adventure.callForHelp.market',
+      'vo:core.adventure.call_for_help.market',
     );
     expect(
       adventureLine(const TodaysAdventure.replay(TrophyLand.logic, 'x'))!.voice,
-      'vo:core.adventure.playAgain',
+      'vo:core.adventure.play_again',
     );
   });
 }
