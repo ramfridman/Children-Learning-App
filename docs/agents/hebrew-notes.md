@@ -301,3 +301,45 @@ Still open:
   alone, then the reason).
 - The blank in the colour-mixing prompts is said as `ועוד צבע…`; the program lines as `לחזור על הצעדים:`.
 - 767 activities share `כמעט, בואו ננסה שוב.` and 767 share `שאלה טובה, בואו נראה יחד.`; voice each once.
+
+## 7. B-39: what the bottle says when it is tapped (2026-10-31, hebrew-text-editor; all `proposed`)
+
+The intents are in `docs/curriculum/todays-adventure-rule.md` section 8. Five lines in `app/lib/strings/he.dart`, one per
+reason (`nothing` has no line), each with a screen-reader label. All are "we" and "let us" lines: no child name, no friend
+name, no first person singular or second person singular (the friends differ in gender), no time word, nothing the child
+did or did not do.
+
+| Reason | `he.dart` id | Screen | Voice text (`{land}` = the land's voice name) | Screen-reader label (`...Semantics`) |
+|---|---|---|---|---|
+| welcome | `adventureWelcome` | `בּוֹאוּ נֵצֵא לְהַרְפַּתְקָה אֶל {land}.` | `בואו נֵצֵא להרפתקה אל {land}.` | `הבקבוק: הרפתקה אל {land}` |
+| callForHelp | `adventureCallForHelp` | `מַשֶּׁהוּ שֶׁל {land} צָרִיךְ עֶזְרָה. בּוֹאוּ נַעֲזֹר.` | `משהו של {land} צריך עזרה. בואו נעזור.` | `הבקבוק: משהו של {land} צריך עזרה` |
+| sameLand | `adventureSameLand` | `בּוֹאוּ נַמְשִׁיךְ בַּהַרְפַּתְקָה שֶׁל {land}.` | `בואו נמשיך בהרפתקה של {land}.` | `הבקבוק: להמשיך בהרפתקה של {land}` |
+| otherLand | `adventureOtherLand` | `בּוֹאוּ נְבַקֵּר אֶת {land}.` | `בואו נְבַקֵּר את {land}.` | `הבקבוק: לבקר את {land}` |
+| playAgain | `adventurePlayAgain` | `בּוֹאוּ נְשַׂחֵק שׁוּב מִשְׂחָק שֶׁאֲנַחְנוּ מַכִּירִים.` | `בואו נשחק שוב משחק שאנחנו מכירים.` | `הבקבוק: לשחק שוב משחק שאנחנו מכירים` |
+
+**How `{land}` is filled.** The screen line gets the land's own pointed name (`He.landCounting` .. `He.landMarket`, as the map
+sign shows it) by `Str.fill({'land': ...})`. The screen-reader label gets the plain name from six new strings
+`landCountingSemantics`, `landColorsSemantics`, `landShapesSemantics`, `landLogicSemantics`, `landRobotsSemantics`,
+`landMarketSemantics` (no nikud is ever added or removed at runtime). The voice line is voiced once for each land.
+Voice names: `גבעות הספירה`, `מפרץ הצבעים`, `יַעַר הצורות`, `מְעָרַת החידות`, `נְמַל הרובוטים`, `כְּפַר השוק` (the four pointed words
+are the ones a voice can misread; the voice director confirms them). `{land}` is not a person's name, so it is not dropped
+like `{child}`.
+
+**Why no prefix letter before `{land}`.** The names are constructs of different gender and first letter, so `לְ` / `בְּ` / `מִ`
+would need a different pointing for each (`לְגִבְעוֹת`, `לְמִפְרַץ`, `לְיַעַר`, but `לִמְעָרַת`, `לִנְמַל`, `לִכְפַר`). A separate word
+keeps the name exactly as authored: `אֶל`, `אֶת` (the name is definite through its second noun, so `אֶת` is right) and `שֶׁל`
+(the same pattern as `הָאִי שֶׁל {child}`). In `מַשֶּׁהוּ שֶׁל {land} צָרִיךְ` the subject is `מַשֶּׁהוּ` (masculine singular), so
+no verb or adjective agrees with a land of another gender or number (`גִּבְעוֹת` is feminine plural).
+
+**callForHelp** speaks of the land's object ("something of the Counting Hills needs help"), never of the child, and
+asks for no answer; it is the map's own framing. It is generic (no per-land object such as the bridge board): a line per
+land would be six more texts and needs the object names from the design.
+
+**Open for the owner.** (1) `אֶל` is a little more formal than the spoken `לְ`; it is the price of a safe single `{land}`.
+If he prefers `בּוֹאוּ נֵלֵךְ לְ…`, six pointed "to"-forms of the land names are needed (`לְגִבְעוֹת הַסְּפִירָה`, `לְמִפְרַץ הַצְּבָעִים`,
+`לְיַעַר הַצּוּרוֹת`, `לִמְעָרַת הַחִידוֹת`, `לִנְמַל הָרוֹבּוֹטִים`, `לִכְפַר הַשּׁוּק`). (2) `adventurePlayAgain` names no land by design
+(the intent has none); the rule's replay has a land, so a variant with `{land}` is possible. (3) Whether the bottle's
+screen-reader label should say the stop before the tap (it is computed when the home is built; the tap can pick another stop
+if a check fell due meanwhile, rule section 6).
+Wording guard for QA: none of the ten strings contains `היום`, `עוד לא`, `כבר`, `שוב` as "again after a pause", a count or `{n}`;
+`שוב` in `adventurePlayAgain` is "play a known game once more", which the intent asks for.
