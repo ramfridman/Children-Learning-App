@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../characters/lip_sync.dart';
+import '../core/log.dart';
 import 'voice_bank.dart';
 import 'voice_player.dart';
 
@@ -167,7 +168,7 @@ class VoiceDirector extends ChangeNotifier {
       _speaking = false;
       _mouthOpen = false;
     }
-    await _player.stop();
+    await _stopPlayer();
     if (_disposed || gen != _generation) return;
     _current = voId;
     if (clip == null) {
@@ -182,14 +183,15 @@ class VoiceDirector extends ChangeNotifier {
     notifyListeners();
     try {
       await _player.play(clip.mp3, mime: clip.mime);
-    } on Object {
-      // A sound that cannot play is a silent line, not a broken screen.
+    } on Object catch (e) {
+      // A sound that cannot play is a silent line, not a broken screen. The line waiting behind it still goes on.
+      Log.d('voice: play failed (${e.runtimeType})');
       _finish(gen);
       return;
     }
     if (_disposed || gen != _generation) {
       // The line was stopped (or replaced) while the player was still starting it: it must not be left playing.
-      if (_disposed || !_speaking) await _player.stop();
+      if (_disposed || !_speaking) await _stopPlayer();
       return;
     }
     _timer = Timer.periodic(poll, (Timer t) => unawaited(_tick(gen)));
@@ -250,8 +252,19 @@ class VoiceDirector extends ChangeNotifier {
     final bool was = _speaking;
     _speaking = false;
     _mouthOpen = false;
-    await _player.stop();
+    await _stopPlayer();
     if (was && !_disposed) notifyListeners();
+  }
+
+  /// Stops the player. The platform can refuse (Android's `IllegalStateException` when the player is between two
+  /// sounds); that must not end the queue or reach the zone as an unhandled error, so it is logged by type only (the
+  /// message could name a file or a line) and the next line goes on.
+  Future<void> _stopPlayer() async {
+    try {
+      await _player.stop();
+    } on Object catch (e) {
+      Log.d('voice: stop failed (${e.runtimeType})');
+    }
   }
 
   /// Stops only what [owner] said (a screen that closes must not silence a line that the next screen has just started).
