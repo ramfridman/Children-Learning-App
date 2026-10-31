@@ -146,11 +146,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.match.h2",
+      "vo": "vo:hint.match_dots.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כׇּל אֶחָד."
+          "v": "מִתַּחַת לַמִּסְפָּר יֵשׁ נְקֻדּוֹת — כַּמָּה שֶׁהוּא אוֹמֵר."
         }
       ]
     },

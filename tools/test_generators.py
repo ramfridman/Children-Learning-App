@@ -10,13 +10,15 @@
 * G5: MATH-B-10 draws one chart column per plate;
 * B-15 part 2: the pieces of the generators that the new items use (a count's own prompt, the give target, the second
   hint's action, the tick's hint, the H30 sentence with its prefixes);
-* B-40: the hint lines of Band A tap_answer follow the picture of their family (tools/hint_lines.py);
+* B-40: the hint lines of Band A tap_answer follow the picture of their family (tools/hint_lines.py); part 4: so do the lines of
+  Band B tap_answer and of the number line, clock, match, sort, build, shape builder, robot and spot-the-mistake templates;
 * the starter pack: every activity follows the label rule, every skill file lists its activities' representations, and
   every activity is in the band of its first skill (the validator rule of B-15).
 """
 import glob
 import json
 import os
+import re
 import sys
 import unittest
 
@@ -93,8 +95,12 @@ class ItemOverridesTest(unittest.TestCase):
     def test_a_band_a_spot_never_says_not_in_its_third_hint(self):
         # P1 (owner-approved 2026-10-30): Band A says what is true; Band B keeps "one of them does not fit"; an own h3 wins
         h3 = lambda d: (d['hints'][2]['vo'], d['hints'][2]['caption'][0]['v'])
-        self.assertEqual(h3(spot(band='A')), ('vo:hint.spot_but_one.h3', author.SPOT_H3_A))
-        self.assertEqual(h3(spot()), ('vo:hint.spot_but_one.h3', author.SPOT_H3_A))
+        no_card = ['asset:ball_brown', 'asset:bloom_brown', 'asset:ball_orange', 'asset:balloon_brown']  # the row alone does not tell
+        self.assertEqual(h3(spot(band='A', cells=no_card, wrong=2)), ('vo:hint.spot_but_one.h3', author.SPOT_H3_A))
+        self.assertEqual(h3(spot(cells=no_card, wrong=2)), ('vo:hint.spot_but_one.h3', author.SPOT_H3_A))
+        # B-40 part 4: where the right picture appears above the mistake, the line says so (and says it without "לֹא")
+        self.assertEqual(h3(spot(band='A', cells=['asset:apple', 'asset:apple', 'asset:fish', 'asset:apple'], wrong=2)),
+                         hint_lines.SPOT_RIGHT_H3)
         self.assertEqual(h3(spot(band='B', id='t.spot.b')), ('vo:t.spot.b.h3', author.SPOT_H3_B))
         self.assertEqual(h3(spot(h3='נִסְפֹּר יַחַד.', id='t.spot.own')), ('vo:t.spot.own.h3', 'נִסְפֹּר יַחַד.'))
         self.assertNotIn('לֹא', author.SPOT_H3_A)
@@ -275,6 +281,201 @@ class HintLinesFollowThePictureTest(unittest.TestCase):
                 self.assertTrue(h3.startswith('מְחַבְּרִים אֶחָד לְאֶחָד'), a['id'])
             if c[3] == 'ordinal':
                 self.assertTrue(h3.startswith('מַתְחִילִים מֵהַדֶּגֶל'), a['id'])
+
+
+class BandBHintLinesFollowThePictureTest(unittest.TestCase):
+    """B-40 part 4: the hint lines of Band B tap_answer and of the other templates say what the pictures of
+    hints/tap_plans_b.dart and of the sessions draw (hint_lines.B_FAMILIES, hint_lines.retext_other)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.all = load('activity.*.json')
+        cls.b = [a for a in cls.all if a['band'] == 'B' and a['template'] == 'tap_answer']
+        cls.F, cls.cw = author.F, staticmethod(author.count_words)
+
+    @staticmethod
+    def lines(a):
+        return {h['level']: h['caption'][0]['v'] for h in a['hints']}
+
+    @staticmethod
+    def written_here(text):
+        # a line of part 4 (not one of the Band A lines of the first run of B-40)
+        return text in hint_lines._SHARED_B or any(rx.match(text) for rx in hint_lines._TEMPLATES) or text.startswith(
+            hint_lines.L3_B_PREFIXES)
+
+    def by_skill(self, *skills):
+        return [a for a in self.b if a['skills'][0]['id'] in skills]
+
+    def test_the_port_of_numbers_in_reads_the_questions_like_the_app(self):
+        self.assertEqual(hint_lines.numbers_in('סוֹפְרִים בִּשְׁתַּיִם: שְׁתַּיִם, אַרְבַּע, שֵׁשׁ. מַה בָּא אַחַר כָּךְ?'), [2, 4, 6])
+        self.assertEqual(hint_lines.numbers_in('עֶשֶׂר זֶה שָׁלוֹשׁ וְעוֹד כַּמָּה?'), [10, 3])
+        self.assertEqual(hint_lines.numbers_in('מַה בָּא אַחֲרֵי עֶשְׂרִים וְתֵשַׁע?'), [29])
+        # the quirk of the app (prompt_numbers.dart): "eight, ten" next to each other is read as eighteen, so b.numb17.12 has
+        # no number path in the app and keeps its generic lines until the developer fixes the reader
+        self.assertEqual(hint_lines.numbers_in('שֵׁשׁ, שְׁמוֹנֶה, עֶשֶׂר.'), [6, 18])
+
+    def test_the_port_of_right_cell_reads_the_rows_like_the_app(self):
+        self.assertEqual(hint_lines.right_cell_of(['asset:apple', 'asset:apple', 'asset:fish', 'asset:apple'], 2), 'asset:apple')
+        self.assertEqual(hint_lines.right_cell_of(['n:1', 'n:2', 'n:4', 'n:4', 'n:5'], 2), 'n:3')
+        self.assertEqual(hint_lines.right_cell_of(['n:6', 'op:+', 'n:2', 'op:=', 'n:9'], 4), 'n:8')
+        # the rows that do not tell what should be there
+        self.assertIsNone(hint_lines.right_cell_of(['asset:step_paste', 'asset:step_brush', 'asset:step_soap', 'asset:step_rinse'], 2))
+
+    def test_the_outline_reader_knows_the_shapes_of_the_pack(self):
+        self.assertEqual(hint_lines.outline_of('asset:shape_pentagon'), (5, True, False))
+        self.assertEqual(hint_lines.outline_of('asset:shape_quad'), (4, True, False))
+        self.assertEqual(hint_lines.outline_of('asset:shape_open'), (3, False, False))
+        self.assertEqual(hint_lines.outline_of('asset:shape_curved')[2], True)
+        self.assertIsNone(hint_lines.outline_of('asset:shape_circle'))
+
+    def test_level_one_of_the_number_questions_names_the_place_and_never_counts(self):
+        # the F2 rule of the design spec: level 1 never counts aloud
+        for a in self.by_skill('NUM-B-01', 'NUM-B-02', 'NUM-B-03', 'NUM-B-11'):
+            h1 = self.lines(a)[1]
+            self.assertEqual(h1, hint_lines.GAP_H1[1], a['id'])
+            self.assertLess(sum(w in h1 for w in NUMBER_WORDS), 2, a['id'])
+
+    def test_the_hop_is_one_square_and_the_answer_is_the_last_word(self):
+        for a in self.by_skill('NUM-B-01', 'NUM-B-02', 'NUM-B-03', 'NUM-B-11'):
+            h3 = self.lines(a)[3]
+            c = next(o for o in a['answer']['options'] if o['id'] == a['answer']['correct'])['numeral']
+            self.assertIn('קְפִיצָה אַחַת', h3, a['id'])
+            self.assertNotIn('מֵאַחַת עַד', h3, a['id'])
+            self.assertIn(self.F[c] + '. עַכְשָׁו תּוֹרְכֶם', h3, a['id'])
+            self.assertIn('אָחוֹרָה' if (('לִפְנֵי' in a['prompt']['caption'][0]['v']) or ('קְחוּ' in a['prompt']['caption'][0]['v']))
+                          else 'קָדִימָה', h3, a['id'])
+
+    def test_the_line_of_nineteen_to_twenty_is_the_one_square_hop(self):
+        a = next(x for x in self.b if x['id'] == 'b.numb02.1')
+        self.assertTrue(self.lines(a)[3].startswith('עוֹמְדִים עַל תְּשַׁע עֶשְׂרֵה וְקוֹפְצִים קְפִיצָה אַחַת קָדִימָה: עֶשְׂרִים.'))
+
+    def test_fingers_are_said_only_where_the_screen_has_hands(self):
+        # none of the Band B pictures draws fingers; the count-on families (MATH-B-01, NUM-B-14, NUM-B-16 with groups) are Band A's
+        for a in self.b:
+            if a['skills'][0]['id'] in hint_lines.B_FAMILIES:
+                for lv in (2, 3):
+                    if self.lines(a)[lv] in hint_lines._SHARED_B or hint_lines.is_b40_text(self.lines(a)[lv]):
+                        self.assertNotIn('אֶצְבָּעוֹת', self.lines(a)[lv], a['id'])
+
+    def test_the_line_of_a_picture_family_is_its_own_not_the_generic_one(self):
+        generic2 = author.hints('x', '', 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.', '')[1]['caption'][0]['v']
+        for a in self.b:
+            sk = a['skills'][0]['id']
+            if sk not in hint_lines.B_FAMILIES:
+                continue
+            got = hint_lines.B_FAMILIES[sk](a, self.F, self.cw)
+            if got is None:
+                continue  # the plan falls back to the generic card: the old line is the right one
+            own_h2 = a['hints'][1]['vo'].startswith('vo:' + a['id'] + '.')
+            if not own_h2 and got[1]:
+                self.assertEqual((a['hints'][1]['vo'], self.lines(a)[2]), tuple(got[1]), a['id'])
+                self.assertNotEqual(self.lines(a)[2], generic2, a['id'])
+            if got[2] and sk in ('SHP-B-03', 'LOG-B-06'):
+                self.assertTrue(self.lines(a)[3].startswith(hint_lines.L3_B_PREFIXES), a['id'])  # the old line goes after a clause
+            elif got[2]:
+                self.assertEqual(self.lines(a)[3], got[2], a['id'])
+
+    def test_every_new_line_is_known_to_the_review_table(self):
+        # the table marks a line `proposed` through hint_lines.is_b40_text: it must know every line written here
+        for a in self.all:
+            got = None
+            sk = a['skills'][0]['id']
+            if a['band'] == 'B' and a['template'] == 'tap_answer' and sk in hint_lines.B_FAMILIES:
+                got = hint_lines.B_FAMILIES[sk](a, self.F, self.cw)
+            if got:
+                for lv in (1, 2, 3):
+                    if got[lv - 1] and not (lv == 2 and a['hints'][1]['vo'].startswith('vo:' + a['id'])):
+                        text = got[lv - 1][1] if isinstance(got[lv - 1], tuple) else got[lv - 1]
+                        self.assertTrue(hint_lines.is_b40_text(text) or text in (hint_lines.L2['links'][1],), '%s L%d: %s' % (a['id'], lv, text))
+
+    def test_numbers_agree_with_the_noun_they_count(self):
+        bad = (r'(^|\s)שְׁתַּיִם (קֻבִּיּוֹת|צַלָּחוֹת)', 'שְׁנַיִם', r'(^|\s)אֶחָד קֻבִּיּוֹת', r'(^|\s)אַחַת (קֻבִּיּוֹת|צַלָּחוֹת)')
+        for a in self.all:
+            for h in a['hints']:
+                for b in bad:
+                    self.assertIsNone(re.search(b, h['caption'][0]['v']), '%s: %s' % (a['id'], h['caption'][0]['v']))
+
+    def test_no_new_line_is_longer_than_the_limit_and_kol_has_a_qamats_qatan(self):
+        for a in self.all:
+            for h in a['hints']:
+                t = h['caption'][0]['v']
+                if a['band'] == 'B' or self.written_here(t):
+                    self.assertLessEqual(len(t.split()), 24, '%s: %s' % (a['id'], t))
+                if self.written_here(t):
+                    self.assertNotIn('כָּל ', t, a['id'])
+
+    def test_the_four_paint_spot_items_ask_for_the_colour_not_show_it(self):
+        ids = ('col.world.apple.red', 'col.world.banana.ripe', 'col.world.grass', 'col.world.sun')
+        acts = {a['id']: a for a in self.all}
+        for i in ids:
+            h2 = self.lines(acts[i])[2]
+            self.assertEqual(h2, hint_lines.L2['paint_spot'][1], i)
+            self.assertNotIn('הַצֶּבַע. נִסְתַּכֵּל', h2)
+            self.assertIn('?', h2)
+        # the tick and the cross keep the swatch line and the other world items too
+        self.assertEqual(self.lines(acts['col.world.apple'])[2], hint_lines.L2['swatch'][1])
+
+    def test_the_hands_free_lines_of_the_number_line_follow_the_hops(self):
+        acts = {a['id']: a for a in self.all}
+        h3 = self.lines(acts['b.numb13.18'])[3]  # 3, then 2 and 3 hops: five hops in all
+        self.assertIn('אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ', h3)
+        self.assertTrue(h3.startswith('הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שָׁלוֹשׁ'))
+        self.assertIn('אָחוֹרָה', self.lines(acts['b.numb13.16'])[3])
+        self.assertEqual(self.lines(acts['b.numb13.16'])[2], hint_lines.LINE_HOP_BACK_H2[1])
+        self.assertEqual(self.lines(acts['b.numb13.1'])[2], hint_lines.LINE_PLACE_H2[1])
+        self.assertEqual(self.lines(acts['b.numb13.1'])[3].split(': ')[1].split('.')[0], 'אַחַת, שְׁתַּיִם, שָׁלוֹשׁ')
+
+    def test_the_week_walk_never_starts_and_stops_on_the_same_day(self):
+        for a in self.by_skill('MATH-B-14'):
+            h3 = self.lines(a)[3]
+            self.assertNotIn('מִיּוֹם רִאשׁוֹן עַד יוֹם רִאשׁוֹן', h3, a['id'])
+        acts = {a['id']: a for a in self.all}
+        self.assertTrue(self.lines(acts['b.mathb14.3'])[3].startswith('מַתְחִילִים בְּיוֹם רִאשׁוֹן.'))
+        self.assertIn('שַׁבָּת', self.lines(acts['b.mathb14.2'])[3])
+
+    def test_the_clock_names_the_short_hand_at_level_one_and_the_ring_at_level_two(self):
+        for a in self.all:
+            if a['template'] == 'clock_set':
+                h = self.lines(a)
+                self.assertEqual(h[1], hint_lines.CLOCK_H1_TEXT, a['id'])
+                self.assertEqual(h[2], hint_lines.CLOCK_H2[1], a['id'])
+                steps = (a['scene']['hour'] - a['scene']['startHour']) % 12
+                self.assertEqual(len(h[3].split(': ')[1].split('.')[0].split(', ')), steps, a['id'])
+
+    def test_the_other_templates_take_the_line_of_their_picture(self):
+        for a in self.all:
+            h = self.lines(a)
+            if a['template'] == 'robot_path':
+                self.assertEqual(h[2], hint_lines.ROBOT_FOOT_H2[1], a['id'])
+            if a['template'] == 'sort_drag' and any(i.get('bin') for i in a['scene']['items']):
+                self.assertEqual(h[2], hint_lines.SORT_PASS_H2[1], a['id'])
+            if a['template'] == 'shape_builder':
+                self.assertEqual(h[2], hint_lines.SB_GHOST_H2[1], a['id'])
+            if a['template'] == 'build_pattern' and a['scene'].get('model'):
+                self.assertIn(h[2], (hint_lines.BUILD_UNIT_H2[1], hint_lines.BUILD_CELL_H2[1]), a['id'])
+            if a['template'] == 'match_pairs':
+                self.assertIn(h[2], (hint_lines.MATCH_DOTS_H2[1], hint_lines.MATCH_COIN_H2[1], hint_lines.MATCH_PRINT_H2[1]), a['id'])
+
+    def test_a_spot_with_a_card_gets_the_line_that_says_so_and_a_spot_without_one_keeps_its_own(self):
+        for a in self.all:
+            if a['template'] != 'spot_error':
+                continue
+            has_card = hint_lines.right_cell_of(a['scene']['cells'], a['answer']['wrong'])
+            h3 = a['hints'][2]
+            if h3['vo'] == hint_lines.SPOT_RIGHT_H3[0]:
+                self.assertTrue(has_card, a['id'])
+                self.assertEqual(h3['caption'][0]['v'], hint_lines.SPOT_RIGHT_H3[1])
+            if h3['vo'] == 'vo:hint.spot_but_one.h3':
+                self.assertFalse(has_card, a['id'])  # the approved line stays where the picture shows no card
+
+    def test_band_a_hears_no_lo_in_a_new_line(self):
+        # the owner's rule for Band A (b15-hebrew.md §4): say what is true, not what is not
+        for a in self.all:
+            if a['band'] == 'A':
+                for h in a['hints']:
+                    t = h['caption'][0]['v']
+                    if self.written_here(t):
+                        self.assertNotIn('לֹא ', t, a['id'])
 
 
 class StarterPackTest(unittest.TestCase):

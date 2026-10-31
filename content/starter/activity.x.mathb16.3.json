@@ -143,11 +143,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.match.h2",
+      "vo": "vo:hint.match_coin.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כׇּל אֶחָד."
+          "v": "מִתַּחַת לַמַּטְבֵּעַ יֵשׁ נְקֻדּוֹת: נְקֻדָּה לְכׇל שֶׁקֶל."
         }
       ]
     },
