@@ -102,12 +102,15 @@ final class GhostMark extends HintMark {
 /// A picture of the question drawn again where the hint needs it (a group in a row, the picture in a gap, a sample). [turns] is a
 /// rotation in turns; [opacity] makes it a ghost.
 final class CopyMark extends HintMark {
-  const CopyMark(this.rect, this.svg, {this.opacity = 1, this.turns = 0});
+  const CopyMark(this.rect, this.svg, {this.opacity = 1, this.turns = 0, this.backed = false});
 
   final Rect rect;
   final String svg;
   final double opacity;
   final double turns;
+
+  /// The picture stands on a paper fill the size of [rect], over whatever the stage has there (the "?" of an empty place).
+  final bool backed;
 }
 
 /// The sky card of a second picture: radius 18, `skyTint`, a `hintHalo` ring 3 wide, with [child] inside. A [tight] card has half

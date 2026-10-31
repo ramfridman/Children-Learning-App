@@ -171,7 +171,18 @@ class HintOverlay extends StatelessWidget {
             child: Opacity(
               key: const Key('hint-copy'),
               opacity: m.opacity,
-              child: Transform.rotate(angle: m.turns * 2 * math.pi, child: PackSvg(m.svg)),
+              child: Transform.rotate(
+                angle: m.turns * 2 * math.pi,
+                child: m.backed
+                    ? DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: TokenColors.paper,
+                          borderRadius: BorderRadius.circular(TokenRadius.lg),
+                        ),
+                        child: Padding(padding: EdgeInsets.all(3 * k), child: PackSvg(m.svg)),
+                      )
+                    : PackSvg(m.svg),
+              ),
             ),
           ),
         );
@@ -370,7 +381,12 @@ class HintOverlay extends StatelessWidget {
         m.tip.dx + tip.dx > clear &&
         (rowEnd == null ? m.tip.dx + tip.dx > clear + 14 * k : m.tip.dx + tileHalf >= rowEnd! - 2);
     final bool flip = !underBubble && clearOf != null && m.tip.dx + reach > clearOf!;
-    final Offset at = underBubble ? m.tip + Offset(tileHalf - 14 * k, 34 * k) : m.tip;
+    // A turned hand's body reaches [tip.dx] to the right of its fingertip. Where that would meet the bubble (a tile of the row near
+    // it, on the small phone), the fingertip slides left along the tile's top edge, but stays inside the tile.
+    final double tipX = flip
+        ? math.min(m.tip.dx, math.max(clear! + 8 - tip.dx, m.tip.dx - (tileHalf - 8)))
+        : m.tip.dx;
+    final Offset at = underBubble ? m.tip + Offset(tileHalf - 14 * k, 34 * k) : Offset(tipX, m.tip.dy);
     return Positioned.fill(
       key: key,
       child: Stack(

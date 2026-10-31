@@ -121,9 +121,11 @@ class ActivitySpec {
     bubbleFont: 22,
     stage: Rect.fromLTWH(16, 86, 270, 104),
     stageIsCard: false,
-    tilesLeft: 16,
+    // Four numeral tiles (96 wide, 12 tap margin on each side) need 480; the row stays centred where it was (x 248), 8 left of
+    // the old start, and ends at 488, before the guide (490) and the microphone (521).
+    tilesLeft: 8,
     tilesTop: 214,
-    tilesWidth: 464,
+    tilesWidth: 480,
     tileFont: 56,
   );
 

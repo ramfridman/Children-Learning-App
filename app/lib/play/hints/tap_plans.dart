@@ -290,18 +290,21 @@ class _Plans {
     reserve: reserve,
   );
 
-  /// The hand goes along the options (tiles) one after the other and ends on the right one: the demonstration of a question
-  /// that has nothing else to do.
-  HintPlan _walkOptions({List<HintMark> base = const <HintMark>[], int? to, double reserve = 0}) {
-    final int last = to ?? _n - 1;
+  /// The hand goes along the other options (tiles) one after the other and ends on the right one: the demonstration of a question
+  /// that has nothing else to do. The answer is the end of the demonstration, never shown before its last step.
+  HintPlan _walkOptions({List<HintMark> base = const <HintMark>[], double reserve = 0}) {
+    final List<int> order = <int>[
+      for (int i = 0; i < _n; i++)
+        if (i != _ci) i,
+      _ci,
+    ];
     return _demo(<HintFrame>[
-      for (int i = 0; i <= last; i++)
+      for (final int i in order)
         HintFrame(
           <HintMark>[...base, HandMark(g.optionTip(i), press: true)],
-          hold: _ms(i == last && last == _ci ? 1300 : 850),
+          hold: _ms(i == _ci ? 1300 : 850),
           reserve: reserve,
         ),
-      if (last != _ci) _toAnswer(base, reserve: reserve),
     ]);
   }
 
@@ -1010,7 +1013,8 @@ class _Plans {
     final String? answerSvg = gap >= 0 ? _svg(_spriteOf(_right)) : null;
     final List<HintMark> filled = <HintMark>[
       ...base,
-      if (answerSvg != null) CopyMark(cells[gap].deflate(3 * k), answerSvg),
+      // The picture covers the "?" of the empty place: it stands on a card of the place's size.
+      if (answerSvg != null) CopyMark(cells[gap], answerSvg, backed: true),
     ];
     return _demo(<HintFrame>[
       for (int i = 0; i < cells.length; i++)

@@ -154,13 +154,16 @@ extension _BandB on _Plans {
     if (n == null || n < 10 || n > 20) return generic(level);
     if (level == 1) return tilesInTurn();
     final int frames = n > 10 ? 2 : 1;
-    final Rect card = g.centre(math.min(g.w - 16, 270 * k), 84 * k);
-    // A ten-frame of cells 22 across is 119 wide, and the card scales what it holds down to fit.
-    final double total = frames * 119.0 + (frames - 1) * 16;
+    // The cells are 24 across on a phone (the spec says 30, which two frames side by side do not leave room for) and grow with the
+    // stage. A frame is five cells, its padding and its border wide; the card scales what it holds down if the stage is too narrow.
+    final double cell = 24 * k;
+    final double frameW = 5 * cell + 9;
+    final Rect card = g.centre(math.min(g.w - 16, 300 * k), 84 * k);
+    final double total = frames * frameW + (frames - 1) * 16;
     final double f = math.min(1, (card.width - 2 * (6 * k + 3)) / total);
-    Offset frameAt(int i) => card.center + Offset((i - (frames - 1) / 2) * (119 + 16) * f, 0);
+    Offset frameAt(int i) => card.center + Offset((i - (frames - 1) / 2) * (frameW + 16) * f, 0);
     List<HintMark> built(int filled) => <HintMark>[
-      CardMark(card, TenFrames(total: n, filled: filled, cell: 22)),
+      CardMark(card, TenFrames(total: n, filled: filled, cell: cell)),
     ];
     if (level == 2) {
       return HintPlan(<HintFrame>[

@@ -448,7 +448,10 @@ class _ScaleStage extends StatelessWidget {
           child: TweenAnimationBuilder<double>(
             key: const Key('scale-stage'),
             tween: Tween<double>(end: s.lean),
-            duration: Duration(milliseconds: s.demoRunning ? 1200 : 600),
+            // With reduce motion the beam is drawn already tipped (design spec b40-visual-hints.md 2.2).
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : Duration(milliseconds: s.demoRunning ? 1200 : 600),
             curve: Curves.easeInOut,
             builder: (BuildContext context, double lean, Widget? _) {
               final double angle = lean;
