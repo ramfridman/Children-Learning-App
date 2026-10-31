@@ -124,6 +124,10 @@ abstract class TemplateSession extends ChangeNotifier {
   /// The row of answer tiles (or the single confirm button), or null when the template has none.
   Widget? buildTiles(BuildContext context, ActivitySpec spec);
 
+  /// The layer of a hint's pointing hand, over the same room as the stage and above the speech bubble (so the hand that shows the
+  /// way is never hidden by it), or null when the template draws no hand. The rest of a hint is drawn by [buildStage].
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => null;
+
   @override
   void dispose() {
     _disposed = true;

@@ -9,6 +9,8 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hint_widgets.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_player.dart';
 import 'template_session.dart';
 
 /// The spot-the-mistake template (T21): a friend made a row (a pattern, a count, a program, a sum) and one cell of it is wrong.
@@ -34,8 +36,22 @@ class SpotErrorSession extends TemplateSession {
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
+  /// The pointing hand of the worked example (level 3), and the stage's size it is placed by.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+
+  /// Where the cells of a row of [n] stand in a stage of [size], left to right: the same numbers the stage draws with.
+  static List<Offset> cellCentres(Size size, int n) {
+    final double side = math.min(size.height - 16, (size.width - 16) / n - 6);
+    final double row = (side + 6) * n;
+    return <Offset>[
+      for (int i = 0; i < n; i++) Offset((size.width - row) / 2 + (side + 6) * (i + 0.5), size.height / 2),
+    ];
+  }
+
   Future<void> choose(int i) async {
     if (_busy || ring == AnswerState.correct) return;
+    _hint.clear();
     if (controller.guided && i != activity.wrong) {
       if (controller.answerShown) hintCell = activity.wrong;
       notify();
@@ -87,6 +103,7 @@ class SpotErrorSession extends TemplateSession {
 
   void _clearWalk() {
     _run++;
+    _hint.clear();
     lit = null;
     barTo = null;
     visited.clear();
@@ -110,6 +127,16 @@ class SpotErrorSession extends TemplateSession {
   void _walk({required int to, required bool bar, bool stopOnWrong = false}) {
     _clearWalk();
     hintCell = null;
+    if (stopOnWrong && !_size.isEmpty) {
+      // The hand reads the row from the left with the light, and stops on the mistake where the light stops.
+      final List<Offset> at = cellCentres(_size, activity.cells.length);
+      _hint.play(
+        HintPlan(<HintFrame>[
+          for (int i = 0; i <= to; i++)
+            HintFrame(<HintMark>[HandMark(at[i], press: true)], hold: const Duration(milliseconds: 700)),
+        ]),
+      );
+    }
     final int run = _run;
     const int step = 700;
     for (int i = 0; i <= to; i++) {
@@ -135,8 +162,13 @@ class SpotErrorSession extends TemplateSession {
   }
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _RowStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    return ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _RowStage(this, size));
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;

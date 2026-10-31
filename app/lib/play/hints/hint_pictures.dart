@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../design/app_text.dart';
 import '../../design/tokens.g.dart';
+import '../../child/activity_shell.dart' show ActivitySpec;
 import '../hint_hand.dart';
 import '../hint_widgets.dart';
 import '../template_session.dart';
@@ -21,13 +22,32 @@ import 'hint_marks.dart';
 /// under 0.85, so the minimum sizes of the spec hold) and at most 1.4 on a tablet.
 double hintScale(Size stage) => (stage.height / 128).clamp(0.85, 1.4).toDouble();
 
+/// How far to the right (in the stage's own points) the pointing hand's body may reach before it would go under the speech bubble,
+/// or null where the bubble is clear of the stage (the tablets). On a phone the bubble stands at the stage's end, and a hand that
+/// comes from the upper right to a tile near it would be hidden behind it, so that hand comes from the upper left instead.
+double? handClearOf(ActivitySpec spec) =>
+    spec.bubbleLeft == null ? null : spec.bubbleLeft! - spec.stage.left - 4;
+
+/// Which marks of a hint an overlay draws: all of them, everything but the pointing hand (the stage's own layer, under the speech
+/// bubble), or only the hand (a layer of its own above the bubble).
+enum HintLayer { all, body, hands }
+
 /// Draws [marks] over a stage of [size]. It sits above the stage, takes no touch, and may draw beyond the stage's edge (the hand's
-/// fingertip ends on the top edge of an answer tile).
+/// fingertip ends on the top edge of an answer tile). [clearOf] is the stage's x beyond which a hand's body would be under the
+/// speech bubble (see [handClearOf]).
 class HintOverlay extends StatelessWidget {
-  const HintOverlay({super.key, required this.marks, required this.size});
+  const HintOverlay({
+    super.key,
+    required this.marks,
+    required this.size,
+    this.clearOf,
+    this.layer = HintLayer.all,
+  });
 
   final List<HintMark> marks;
   final Size size;
+  final double? clearOf;
+  final HintLayer layer;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +56,8 @@ class HintOverlay extends StatelessWidget {
     final List<Widget> body = <Widget>[];
     final List<Widget> hands = <Widget>[];
     for (final (int i, HintMark m) in marks.indexed) {
+      if (m is TileMark) continue; // the tiles draw these
+      if ((m is HandMark) != (layer == HintLayer.hands) && layer != HintLayer.all) continue;
       final Widget w = _draw(context, m, i, k);
       (m is VeilMark ? veils : (m is HandMark ? hands : body)).add(w);
     }
@@ -177,9 +199,25 @@ class HintOverlay extends StatelessWidget {
         return Positioned.fill(
           key: key,
           child: CustomPaint(
-            key: const Key('hint-line'),
-            painter: _DottedPainter(<(Offset, Offset)>[(m.from, m.to)], k, curved: false),
+            key: Key(m.faint ? 'hint-connector' : 'hint-line'),
+            painter: _DottedPainter(<(Offset, Offset)>[(m.from, m.to)], k, curved: false, faint: m.faint),
           ),
+        );
+      case ArrowMark():
+        return Positioned.fill(
+          key: key,
+          child: Appear(
+            child: CustomPaint(key: const Key('hint-arrow'), painter: _ArrowPainter(m.from, m.to, k)),
+          ),
+        );
+      case FlagMark():
+        return Positioned(
+          key: key,
+          left: m.base.dx - 4 * k,
+          top: m.base.dy - 26 * k,
+          width: 24 * k,
+          height: 26 * k,
+          child: Appear(scaleFrom: 0.8, child: HintFlag(scale: k)),
         );
       case BracketMark():
         return Positioned.fill(
@@ -205,10 +243,13 @@ class HintOverlay extends StatelessWidget {
         );
       case HandMark():
         return _hand(context, key, m, k);
+      case TileMark():
+        return const SizedBox.shrink(); // never reached: [build] leaves them to the tiles
     }
   }
 
-  /// A sample that glides from one place to the next in 450 ms (it is simply there with "reduce motion").
+  /// A sample that glides from one place to the next in 450 ms. With "reduce motion" it does not travel: it appears in its new place
+  /// with the same short fade as everything else.
   Widget _glide(Key key, Rect rect, Widget child) => _Glide(key: key, rect: rect, child: child);
 
   Widget _badge(Key key, BadgeMark m, double k) {
@@ -221,19 +262,7 @@ class HintOverlay extends StatelessWidget {
       height: 2 * r,
       child: Appear(
         scaleFrom: 0.7,
-        child: Container(
-          key: const Key('hint-badge'),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: TokenColors.paper,
-            shape: BoxShape.circle,
-            border: Border.all(color: TokenColors.skyDeep, width: 2.5),
-          ),
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: Text('${m.n}', style: AppText.fixed(size: 14 * k, weight: 800, lineHeight: 1)),
-          ),
-        ),
+        child: HintBadge(n: m.n, scale: k),
       ),
     );
   }
@@ -270,6 +299,9 @@ class HintOverlay extends StatelessWidget {
     final bool still = MediaQuery.disableAnimationsOf(context);
     final double h = (72 * k).clamp(40, 96).toDouble();
     final Offset tip = PointingHand.tipAt(h);
+    // The hand comes from the upper right (the guide's side); near the speech bubble it comes from the upper left, the same hand.
+    final double reach = PointingHand.widthAt(h) - tip.dx;
+    final bool flip = clearOf != null && m.tip.dx + reach > clearOf!;
     return Positioned.fill(
       key: key,
       child: Stack(
@@ -286,14 +318,16 @@ class HintOverlay extends StatelessWidget {
             ),
           AnimatedPositioned(
             key: const ValueKey<String>('hand'),
-            duration: still ? Duration.zero : const Duration(milliseconds: 450),
+            duration: still || m.snap ? Duration.zero : const Duration(milliseconds: 450),
             curve: Curves.easeInOut,
-            left: m.tip.dx - tip.dx,
+            left: flip ? m.tip.dx - reach : m.tip.dx - tip.dx,
             top: m.tip.dy - tip.dy,
             child: Appear(
               child: SizedBox(
                 key: const Key('hint-p12'),
-                child: PointingHand(height: h),
+                child: flip
+                    ? Transform.flip(flipX: true, child: PointingHand(height: h))
+                    : PointingHand(height: h),
               ),
             ),
           ),
@@ -312,11 +346,63 @@ class _Glide extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => AnimatedPositioned.fromRect(
-    rect: rect,
-    duration: MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 450),
-    curve: Curves.easeInOut,
-    child: child,
+  Widget build(BuildContext context) {
+    if (MediaQuery.disableAnimationsOf(context)) {
+      // Still: a new place is a new picture, and it fades in where it stands.
+      return Positioned.fromRect(
+        rect: rect,
+        child: KeyedSubtree(key: ValueKey<Rect>(rect), child: child),
+      );
+    }
+    return AnimatedPositioned.fromRect(
+      rect: rect,
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeInOut,
+      child: child,
+    );
+  }
+}
+
+/// The number badge of a hint (paper, a sky ring, a numeral read left to right): [n] things counted so far, or a place in a queue.
+/// 22 across on a phone, [scale] times that on a bigger board. Keyed `hint-badge`.
+class HintBadge extends StatelessWidget {
+  const HintBadge({super.key, required this.n, this.scale = 1});
+
+  final int n;
+  final double scale;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 22 * scale,
+    height: 22 * scale,
+    child: Container(
+      key: const Key('hint-badge'),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: TokenColors.paper,
+        shape: BoxShape.circle,
+        border: Border.all(color: TokenColors.skyDeep, width: 2.5),
+      ),
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Text('$n', style: AppText.fixed(size: 14 * scale, weight: 800, lineHeight: 1)),
+      ),
+    ),
+  );
+}
+
+/// The start flag of a hint: a pole and a pennant in sky, in a box 24 by 26 (times [scale]) with the pole's foot at the bottom
+/// left. Keyed `hint-flag`.
+class HintFlag extends StatelessWidget {
+  const HintFlag({super.key, this.scale = 1});
+
+  final double scale;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 24 * scale,
+    height: 26 * scale,
+    child: CustomPaint(key: const Key('hint-flag'), painter: _FlagPainter(scale)),
   );
 }
 
@@ -472,21 +558,23 @@ class _VeilPainter extends CustomPainter {
   bool shouldRepaint(_VeilPainter old) => old.holes != holes || old.k != k;
 }
 
-/// P5 and the small links: dotted `skyDeep` lines (3 wide, round caps, 1 on and 6 off); [curved] draws each as a hop arc.
+/// P5 and the small links: dotted `skyDeep` lines (3 wide, round caps, 1 on and 6 off); [curved] draws each as a hop arc, [faint]
+/// draws them thin and light (a connector that only says which thing belongs to which).
 class _DottedPainter extends CustomPainter {
-  _DottedPainter(this.lines, this.k, {required this.curved});
+  _DottedPainter(this.lines, this.k, {required this.curved, this.faint = false});
 
   final List<(Offset, Offset)> lines;
   final double k;
   final bool curved;
+  final bool faint;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3 * k
+      ..strokeWidth = (faint ? 2 : 3) * k
       ..strokeCap = StrokeCap.round
-      ..color = TokenColors.skyDeep;
+      ..color = faint ? TokenColors.skyDeep.withValues(alpha: 0.6) : TokenColors.skyDeep;
     for (final (Offset a, Offset b) in lines) {
       final Path p = Path()..moveTo(a.dx, a.dy);
       if (curved) {
@@ -504,7 +592,69 @@ class _DottedPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DottedPainter old) => old.lines != lines || old.k != k;
+  bool shouldRepaint(_DottedPainter old) => old.lines != lines || old.k != k || old.faint != faint;
+}
+
+/// A sky arrow: a 3.5 wide shaft with a two-stroke head at its end.
+class _ArrowPainter extends CustomPainter {
+  _ArrowPainter(this.from, this.to, this.k);
+
+  final Offset from;
+  final Offset to;
+  final double k;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.5 * k
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = TokenColors.skyDeep;
+    final Offset dir = (to - from) / (to - from).distance;
+    final Offset side = Offset(-dir.dy, dir.dx);
+    final double head = 7 * k;
+    canvas.drawLine(from, to, paint);
+    canvas.drawPath(
+      Path()
+        ..moveTo(to.dx - dir.dx * head + side.dx * head * 0.8, to.dy - dir.dy * head + side.dy * head * 0.8)
+        ..lineTo(to.dx, to.dy)
+        ..lineTo(to.dx - dir.dx * head - side.dx * head * 0.8, to.dy - dir.dy * head - side.dy * head * 0.8),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ArrowPainter old) => old.from != from || old.to != to || old.k != k;
+}
+
+/// A start flag: a pole with a pennant, `skyDeep`, standing on the bottom left of its box.
+class _FlagPainter extends CustomPainter {
+  _FlagPainter(this.k);
+
+  final double k;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double foot = size.height - 2 * k;
+    final double x = 4 * k;
+    final Path pennant = Path()
+      ..moveTo(x, foot - 22 * k)
+      ..lineTo(x + 17 * k, foot - 16 * k)
+      ..lineTo(x, foot - 10 * k);
+    canvas.drawPath(pennant..close(), Paint()..color = TokenColors.skyTint);
+    final Paint line = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3 * k
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = TokenColors.skyDeep;
+    canvas.drawLine(Offset(x, foot), Offset(x, foot - 24 * k), line);
+    canvas.drawPath(pennant, line);
+  }
+
+  @override
+  bool shouldRepaint(_FlagPainter old) => old.k != k;
 }
 
 /// P7: an open bracket, `skyDeep` 3 wide: the two tips point up to the things above it.
@@ -549,7 +699,7 @@ class NumberPath extends StatelessWidget {
   Widget build(BuildContext context) {
     final int shown = mark.upTo ?? mark.count;
     return Directionality(
-      textDirection: mark.reverse ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: TextDirection.ltr,
       child: Row(
         key: const Key('hint-p6'),
         crossAxisAlignment: CrossAxisAlignment.end,

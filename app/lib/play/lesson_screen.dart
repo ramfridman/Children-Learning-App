@@ -453,6 +453,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
           onConfirmAgain: heard == MicState.confirming ? _voice?.answer.confirmNo : null,
           stage: (Size room) => session.buildStage(ctx, room, spec),
+          hands: controller.finished
+              ? null
+              : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
           tiles: controller.finished ? null : session.buildTiles(ctx, spec),
           overlay: controller.finished
               ? LessonCelebration(

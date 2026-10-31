@@ -9,6 +9,8 @@ import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
 import 'hint_widgets.dart';
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
 import 'lesson_controller.dart';
 import 'template_session.dart';
 
@@ -86,6 +88,9 @@ class GiveNSession extends TemplateSession {
   int? wiggling;
 
   Size _stage = Size.zero;
+
+  /// The pointing hand of the worked example (level 3).
+  late final HintPlayer _hint = HintPlayer(this);
 
   void _place(int i) {
     if (placed.contains(i) || demoRunning) return;
@@ -192,6 +197,7 @@ class GiveNSession extends TemplateSession {
     fingers = 0;
     goal = false;
     wiggling = null;
+    _hint.clear();
     notify();
   }
 
@@ -251,6 +257,11 @@ class GiveNSession extends TemplateSession {
     placed.clear();
     selected = null;
     demoRunning = true;
+    if (!_stage.isEmpty) {
+      // The hand takes each one from the pile and puts it on the flower, with its badge, as the guide gives it.
+      final GiveLayout l = GiveLayout(_stage, activity);
+      _hint.play(pointerGivePlan(l.pile.take(activity.n).toList(), l.slots.take(activity.n).toList()));
+    }
     for (int i = 0; i < activity.n; i++) {
       later(Duration(milliseconds: 300 + CountDemo.stepMs * i), () {
         placed.add(i);
@@ -276,23 +287,39 @@ class GiveNSession extends TemplateSession {
   }
 
   @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
+
+  @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) => Directionality(
       textDirection: TextDirection.ltr,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.topCenter,
         children: <Widget>[
-          // The answer area has room beside the button: the goal card (hint 1) or the counting aid (hint 2) opens here.
-          if (goal || fingers > 0) ...<Widget>[
-            IgnorePointer(
-              child: SizedBox(
-                height: 112,
-                child: goal ? GoalCard(n: activity.n) : CountingAid(n: activity.n, shown: fingers),
+          // The answer area has room beside the button: the goal card (hint 1) or the counting aid (hint 2) opens there, its
+          // top under the stage, and the button stays where it is.
+          if (goal || fingers > 0)
+            Positioned(
+              top: AnswerAreaCard.place(spec).top,
+              left: 0,
+              // The card's end is 16 from the button's edge (the button's tile is 96 wide with a 12 tap margin on each side).
+              right: spec.tilesWidth / 2 + 60 + 16,
+              height: AnswerAreaCard.place(spec).height,
+              child: IgnorePointer(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: goal
+                      ? FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: GoalCard(n: activity.n),
+                        )
+                      : CountingAid(n: activity.n, shown: fingers, scale: AnswerAreaCard.scaleOf(spec)),
+                ),
               ),
             ),
-            const SizedBox(width: 16),
-          ],
           Opacity(
             opacity: placed.isEmpty ? 0.4 : 1,
             child: AnswerTile(
@@ -399,6 +426,7 @@ class _GiveStage extends StatelessWidget {
                 child: PackSvg(a.assets.svg(a.targetSprite), key: const Key('give-flower')),
               ),
               for (int i = 0; i < a.sourceCount; i++) _butterfly(a, l, i),
+              Positioned.fill(child: s._hint.body(size)),
               Positioned(
                 left: l.flower.left,
                 top: l.flower.bottom - 30,

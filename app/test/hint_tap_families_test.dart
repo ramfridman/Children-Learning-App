@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/hint_ladder.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/design/components.dart';
+import 'package:nitznutz/design/token_types.dart' show Band;
+import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/play/hint_hand.dart';
 import 'package:nitznutz/play/hints/hint_marks.dart';
 import 'package:nitznutz/play/hints/hint_pictures.dart';
@@ -136,7 +141,9 @@ void main() {
               expect(marksOf(p).whereType<HandMark>(), isEmpty, reason: '${a.id} level $level draws no hand');
               for (final HintMark m in marksOf(p)) {
                 final Rect? r = rectOf(m);
-                if (r != null) {
+                // A set that rises out of its own tile starts hidden under the tile's top edge (a tile paints over the stage).
+                final bool underTile = m is CopyMark && r != null && r.top >= g.optionTip(0).dy - 1;
+                if (r != null && !underTile) {
                   expect(
                     r.bottom,
                     lessThanOrEqualTo(room.height + 1),
@@ -238,11 +245,41 @@ void main() {
       }
     });
 
-    test('rows and paths are drawn left to right: a path is never reversed except the ordinal one under the tiles', () {
+    test('nothing in the stage runs right to left: the ordinal items draw no path at all, only badges over the tiles', () {
       for (final TapAnswerActivity a in bandA()) {
         for (int level = 1; level <= 3; level++) {
-          for (final HintMark m in marksOf(plan(a, level))) {
-            if (m is PathMark && m.reverse) expect(a.skillId, 'NUM-A-13', reason: a.id);
+          final Iterable<HintMark> marks = marksOf(plan(a, level));
+          if (a.skillId == 'NUM-A-13') expect(marks.whereType<PathMark>(), isEmpty, reason: a.id);
+        }
+      }
+    });
+
+    test('no hint at level 1 or 2 draws the right answer\'s own picture alone: the other answers are drawn with it', () {
+      // The act-out of a solid (SHP-A-07) and the measure sticks draw every option's picture alike; a sample copied from the model
+      // of the question (the same family) is the question's own picture; the position hint draws a toy and a box of its own.
+      for (final TapAnswerActivity a in bandA()) {
+        final String? right = a.assets.svgOrNull(
+          a.options.firstWhere((ChoiceOption o) => o.id == a.correctId).sprite ?? '',
+        );
+        if (right == null) continue;
+        final Set<String> stageOwn = <String>{
+          for (final String? ref in <String?>[a.group?.sprite, a.group2?.sprite, ...a.row])
+            if (ref != null && a.assets.svgOrNull(ref) != null) a.assets.svgOrNull(ref)!,
+        };
+        for (int level = 1; level <= 2; level++) {
+          final Set<String> drawn = <String>{
+            for (final CopyMark m in marksOf(plan(a, level)).whereType<CopyMark>()) m.svg,
+          };
+          if (!drawn.contains(right) || stageOwn.contains(right)) continue;
+          for (final ChoiceOption o in a.options) {
+            final String? svg = a.assets.svgOrNull(o.sprite ?? '');
+            if (svg != null) {
+              expect(
+                drawn,
+                contains(svg),
+                reason: '${a.id} level $level draws the right picture but not ${o.id}',
+              );
+            }
           }
         }
       }
@@ -367,6 +404,434 @@ void main() {
     });
   });
 
+  group('the part 2 review fixes', () {
+    TapAnswerActivity act(String id) => content.activities[id]! as TapAnswerActivity;
+
+    final RegExp niqqud = RegExp('[֑-ׇ]');
+
+    test(
+      'NUM-A-13 items keep their order (shuffle off), stand in one row, and the right one is the asked place',
+      () {
+        final Map<String, int> places = <String, int>{'ראשון': 1, 'שני': 2, 'שלישי': 3, 'אחרון': -1};
+        int seen = 0;
+        for (final FileSystemEntity f in Directory('../content/starter').listSync()) {
+          final String name = f.uri.pathSegments.last;
+          if (!name.startsWith('activity.') || !name.endsWith('.json')) continue;
+          final Map<String, Object?> json =
+              jsonDecode(File(f.path).readAsStringSync()) as Map<String, Object?>;
+          final List<Object?> skills = json['skills']! as List<Object?>;
+          if (!skills.any((Object? s) => (s! as Map<String, Object?>)['id'] == 'NUM-A-13')) continue;
+          seen++;
+          final Map<String, Object?> answer = json['answer']! as Map<String, Object?>;
+          final List<Object?> options = answer['options']! as List<Object?>;
+          expect(answer['shuffle'], isFalse, reason: '$name keeps the order of the queue');
+          expect((json['scene']! as Map<String, Object?>)['optionsOnTiles'], isTrue, reason: name);
+          final String caption = ((json['prompt']! as Map<String, Object?>)['caption']! as List<Object?>)
+              .map((Object? c) => (c! as Map<String, Object?>)['v'])
+              .join(' ');
+          final String word = places.keys.singleWhere(
+            (String w) => caption.replaceAll(niqqud, '').contains(w),
+            orElse: () => '',
+          );
+          expect(word, isNotEmpty, reason: '$name asks for a place');
+          final int place = places[word]! < 0 ? options.length : places[word]!;
+          expect(answer['correct'], 'o$place', reason: '$name: the right tile is the place asked');
+          // The tiles stand in one row, side by side.
+          final TapAnswerActivity a = act(json['id']! as String);
+          final TapGeometry g = geo(a);
+          expect(
+            <double>{for (int i = 0; i < a.options.length; i++) g.optionTip(i).dy},
+            hasLength(1),
+            reason: name,
+          );
+          for (int i = 1; i < a.options.length; i++) {
+            expect(
+              g.optionTip(i).dx,
+              lessThan(g.optionTip(i - 1).dx),
+              reason: '$name: the row runs right to left',
+            );
+          }
+        }
+        expect(seen, 9);
+      },
+    );
+
+    test('ordinal: a place badge on every tile, 1 at the front (the right-hand tile), a start flag there, and nothing else', () {
+      for (final String id in <String>[
+        'ordinal.first',
+        'ordinal.second.of4',
+        'ordinal.third.of4',
+        'ordinal.last',
+      ]) {
+        final TapAnswerActivity a = act(id);
+        final TapGeometry g = geo(a);
+        final HintPlan l2 = plan(a, 2);
+        final List<TileBadgeMark> badges = l2.rest.whereType<TileBadgeMark>().toList();
+        expect(badges.map((TileBadgeMark b) => b.n), <int>[
+          for (int i = 1; i <= a.options.length; i++) i,
+        ], reason: id);
+        for (int i = 0; i < badges.length; i++) {
+          expect(badges[i].tile, i, reason: '$id: badge ${i + 1} is on tile $i');
+        }
+        expect(
+          g.optionTip(0).dx,
+          greaterThan(g.optionTip(1).dx),
+          reason: '$id: tile 0, the front, is the right-hand one',
+        );
+        expect(l2.rest.whereType<TileFlagMark>().single.tile, 0, reason: '$id: the flag stands at the front');
+        expect(l2.rest.length, a.options.length + 1, reason: '$id: only the badges and the flag');
+        expect(marksOf(l2).whereType<HandMark>(), isEmpty, reason: id);
+        // Level 3: the hand goes from the front along the row, and ends on the asked tile.
+        final List<HandMark> hands = <HandMark>[
+          for (final HintFrame f in plan(a, 3).frames) ...f.marks.whereType<HandMark>(),
+        ];
+        expect(hands, hasLength(g.correctIndex + 1), reason: id);
+        for (int i = 0; i < hands.length; i++) {
+          expect(
+            (hands[i].tip - g.optionTip(i)).distance,
+            lessThan(0.5),
+            reason: '$id: the hand is on tile $i',
+          );
+        }
+        // The overlay leaves the tile marks to the tiles.
+      }
+    });
+
+    test('compare: each row rises out of its own tile, the first option\'s row first, and keeps a thin connector to that tile', () {
+      for (final String id in <String>[
+        'more.apples.2v4',
+        'more.fish.3v5',
+        'more.big.apples',
+        'b15.matha07.2',
+      ]) {
+        final TapAnswerActivity a = act(id);
+        final TapGeometry g = geo(a);
+        final HintPlan l1 = plan(a, 1);
+        final int n0 = a.options[0].set!.count;
+        final int n1 = a.options[1].set!.count;
+        List<CopyMark> copies(int frame) => l1.frames[frame].marks.whereType<CopyMark>().toList();
+        // Step 1: every picture is under its own tile (the tile paints over the stage).
+        for (int i = 0; i < n0 + n1; i++) {
+          final int tile = i < n0 ? 0 : 1;
+          expect(
+            copies(0)[i].rect.center.dx,
+            closeTo(g.optionTip(tile).dx, 0.5),
+            reason: '$id picture $i starts at tile $tile',
+          );
+          expect(copies(0)[i].rect.top, greaterThan(g.optionTip(tile).dy), reason: id);
+        }
+        // Step 2: the first option's row has risen to the top row; the other is still under its tile.
+        for (int i = 0; i < n0; i++) {
+          expect(copies(1)[i].rect.center.dy, closeTo(g.h * 0.3, 0.5), reason: id);
+        }
+        for (int i = n0; i < n0 + n1; i++) {
+          expect(copies(1)[i].rect.top, greaterThan(g.optionTip(1).dy), reason: id);
+        }
+        // At rest: both rows at their places (equal sizes), and a faint connector from each row to its tile.
+        final List<LineMark> connectors = l1.rest
+            .whereType<LineMark>()
+            .where((LineMark l) => l.faint)
+            .toList();
+        expect(connectors, hasLength(2), reason: id);
+        for (int tile = 0; tile < 2; tile++) {
+          expect(
+            (connectors[tile].to - g.optionTip(tile)).distance,
+            lessThan(5),
+            reason: '$id: connector $tile ends on tile $tile',
+          );
+          expect(connectors[tile].from.dy, closeTo(g.h * (tile == 0 ? 0.3 : 0.72), 0.5), reason: id);
+        }
+        // The connectors never cross: the row that starts higher goes to the tile that is further.
+        expect(
+          connectors[0].to.dx,
+          greaterThan(connectors[1].to.dx),
+          reason: '$id: o1 is the right-hand tile',
+        );
+        // No connector tells the answer: they are alike in length order and colour (the same mark for both).
+        expect(l1.rest.whereType<RingMark>(), isEmpty, reason: id);
+        // The rows stay on in the pair lines of level 2 and the demonstration of level 3.
+        expect(
+          plan(a, 2).rest.whereType<LineMark>().where((LineMark l) => l.faint),
+          hasLength(2),
+          reason: id,
+        );
+      }
+    });
+
+    test('compare with two groups on the stage is as built: no connector, no flight', () {
+      final HintPlan l2 = plan(act('same.apples.4v5'), 2);
+      expect(l2.rest.whereType<CopyMark>(), isEmpty);
+      expect(l2.rest.whereType<LineMark>(), isEmpty);
+    });
+
+    test('position: the card shows a toy and the thing the question names, never the tile\'s red ball or its drawing', () {
+      final Set<String> pairs = <String>{};
+      for (final String id in <String>[
+        'shp.where.above',
+        'shp.where.on',
+        'shp.where.in',
+        'shp.where.in2',
+        'shp.where.next',
+        'shp.where.under',
+        'b15.shpa08.1',
+        'b15.shpa08.2',
+      ]) {
+        final TapAnswerActivity a = act(id);
+        final List<CopyMark> drawn = plan(a, 2).rest.whereType<CopyMark>().toList();
+        expect(drawn, hasLength(2), reason: id);
+        final Set<String> tileArt = <String>{
+          for (final ChoiceOption o in a.options) a.assets.svg(o.sprite!),
+          a.assets.svg('asset:ball_red'),
+          a.assets.svg('asset:solid_sphere'),
+          a.assets.svg('asset:solid_box'),
+        };
+        for (final CopyMark m in drawn) {
+          expect(
+            tileArt,
+            isNot(contains(m.svg)),
+            reason: '$id copies a picture the tiles or the red ball show',
+          );
+        }
+        expect(
+          drawn.map((CopyMark m) => m.svg),
+          contains(a.assets.svg('asset:duck')),
+          reason: '$id: the toy is the duck',
+        );
+        final String thing = drawn
+            .map((CopyMark m) => m.svg)
+            .firstWhere((String s) => s != a.assets.svg('asset:duck'));
+        // The two "under the table" items draw a table (legs), the others a box, and "in" a bin.
+        final bool table = thing.contains('width="9"');
+        expect(table, id == 'shp.where.under' || id == 'b15.shpa08.2', reason: '$id: table or box');
+        pairs.add(
+          '${a.options[a.options.indexWhere((ChoiceOption o) => o.id == a.correctId)].sprite}:${thing.hashCode}',
+        );
+      }
+      expect(pairs.length, greaterThan(3), reason: 'each relation is drawn its own way');
+    });
+
+    test(
+      'position: the toy and the thing stand in the relation of the question (above, on, next to, under, in)',
+      () {
+        Rect rectOfSvg(HintPlan p, bool toy, TapAnswerActivity a) => p.rest
+            .whereType<CopyMark>()
+            .firstWhere((CopyMark m) => (m.svg == a.assets.svg('asset:duck')) == toy)
+            .rect;
+        TapAnswerActivity a = act('shp.where.above');
+        HintPlan p = plan(a, 2);
+        expect(
+          rectOfSvg(p, true, a).bottom,
+          lessThan(rectOfSvg(p, false, a).top),
+          reason: 'above: a gap between',
+        );
+        a = act('shp.where.on');
+        p = plan(a, 2);
+        expect(
+          rectOfSvg(p, true, a).bottom,
+          lessThan(rectOfSvg(p, false, a).center.dy),
+          reason: 'on: the toy is over the thing',
+        );
+        a = act('shp.where.next');
+        p = plan(a, 2);
+        expect(
+          rectOfSvg(p, true, a).left,
+          greaterThan(rectOfSvg(p, false, a).center.dx),
+          reason: 'next to: side by side',
+        );
+        a = act('shp.where.under');
+        p = plan(a, 2);
+        expect(
+          rectOfSvg(p, true, a).top,
+          greaterThan(rectOfSvg(p, false, a).top),
+          reason: 'under: below the table top',
+        );
+        expect(rectOfSvg(p, true, a).center.dx, closeTo(rectOfSvg(p, false, a).center.dx, 0.5));
+      },
+    );
+
+    test('solids: both objects get the same push, the box stays and the ball rolls away', () {
+      for (final String id in <String>[
+        'shp.solid.rolls',
+        'shp.solid.rolls.blue',
+        'b15.shpa07.1',
+        'shp.solid.which',
+        'shp.solid.which2',
+      ]) {
+        final TapAnswerActivity a = act(id);
+        final HintPlan l2 = plan(a, 2);
+        final List<ArrowMark> arrows = l2.rest.whereType<ArrowMark>().toList();
+        expect(arrows, hasLength(2), reason: id);
+        expect(
+          (arrows[0].to - arrows[0].from).distance,
+          closeTo((arrows[1].to - arrows[1].from).distance, 0.01),
+          reason: '$id: the same push',
+        );
+        expect(arrows[0].from.dx, closeTo(arrows[1].from.dx, 0.01), reason: id);
+        final List<CopyMark> before = l2.frames.first.marks.whereType<CopyMark>().toList();
+        final List<CopyMark> after = l2.rest.whereType<CopyMark>().toList();
+        expect(before, hasLength(2), reason: id);
+        final String ballSvg = a.assets.svg(
+          a.options
+              .firstWhere((ChoiceOption o) => o.sprite!.contains('ball') || o.sprite!.contains('sphere'))
+              .sprite!,
+        );
+        for (int i = 0; i < 2; i++) {
+          final bool isBall = before[i].svg == ballSvg;
+          if (isBall) {
+            expect(
+              after[i].rect.center.dx,
+              greaterThan(before[i].rect.center.dx + 40),
+              reason: '$id: the ball rolls away',
+            );
+          } else {
+            expect(after[i].rect, before[i].rect, reason: '$id: the box stays');
+          }
+        }
+      }
+    });
+
+    test(
+      'solids: the stacking items put a second one on each; it stays on the box and slides off the ball',
+      () {
+        for (final String id in <String>['shp.solid.stacks', 'shp.solid.stacks.blue', 'b15.shpa07.2']) {
+          final TapAnswerActivity a = act(id);
+          final HintPlan l2 = plan(a, 2);
+          expect(
+            <HintMark>[for (final HintFrame f in l2.frames) ...f.marks, ...l2.rest].whereType<ArrowMark>(),
+            isEmpty,
+            reason: '$id is not the rolling scene',
+          );
+          final List<CopyMark> hover = l2.frames.first.marks.whereType<CopyMark>().toList();
+          final List<CopyMark> landed = l2.rest.whereType<CopyMark>().toList();
+          expect(hover, hasLength(4), reason: '$id: two solids and a second one of each');
+          expect(landed, hasLength(4), reason: id);
+          for (int i = 0; i < 2; i++) {
+            expect(
+              landed[2 + i].svg,
+              landed[i].svg,
+              reason: '$id: the second one is a copy of the same solid',
+            );
+            expect(landed[2 + i].rect.size, hover[2 + i].rect.size, reason: id);
+            final bool ball =
+                landed[i].svg ==
+                a.assets.svg(
+                  a.options
+                      .firstWhere(
+                        (ChoiceOption o) => o.sprite!.contains('ball') || o.sprite!.contains('sphere'),
+                      )
+                      .sprite!,
+                );
+            if (ball) {
+              expect(
+                landed[2 + i].rect.left,
+                greaterThan(landed[i].rect.right - 1),
+                reason: '$id: slid off the ball',
+              );
+              expect(landed[2 + i].rect.bottom, closeTo(landed[i].rect.bottom, 0.5), reason: id);
+            } else {
+              expect(
+                landed[2 + i].rect.bottom,
+                closeTo(landed[i].rect.top, 0.5),
+                reason: '$id: stays on the box',
+              );
+              expect(landed[2 + i].rect.center.dx, closeTo(landed[i].rect.center.dx, 0.5), reason: id);
+            }
+          }
+        }
+      },
+    );
+
+    test('heavy and light use the generic ladder (no length cubes); long and short keep their cubes', () {
+      for (final String id in <String>['math.size.heavy', 'math.size.light']) {
+        final TapAnswerActivity a = act(id);
+        for (int level = 1; level <= 3; level++) {
+          final HintPlan p = plan(a, level);
+          expect(marksOf(p).whereType<BlockMark>(), isEmpty, reason: '$id level $level');
+          expect(marksOf(p).whereType<CopyMark>(), isEmpty, reason: id);
+        }
+        expect(plan(a, 2).rest.whereType<CardMark>(), hasLength(1), reason: id);
+      }
+      expect(plan(act('math.size.long'), 2).rest.whereType<BlockMark>(), isNotEmpty);
+    });
+  });
+
+  group('the bubble and the guide are drawn over the stage and its hint', () {
+    testWidgets(
+      'in the frame the speech bubble and the guide come after the stage, and the hand of the hint after them',
+      (WidgetTester t) async {
+        await pumpScreen(
+          t,
+          ActivityFrame(
+            bubbleText: 'x',
+            stage: (Size room) =>
+                SizedBox(key: const Key('probe-stage'), width: room.width, height: room.height),
+            hands: (Size room) => const SizedBox(key: Key('probe-hands')),
+            tiles: const SizedBox(key: Key('probe-tiles')),
+            trailTotal: 3,
+            trailDone: 1,
+            onHome: () {},
+          ),
+          band: Band.a,
+        );
+        final List<Element> all = find
+            .descendant(of: find.byType(Scaffold), matching: find.byWidgetPredicate((Widget w) => true))
+            .evaluate()
+            .toList();
+        int at(String key) => all.indexOf(find.byKey(Key(key)).evaluate().single);
+        expect(at('lesson-bubble'), greaterThan(at('probe-stage')));
+        expect(at('activity-nitzi'), greaterThan(at('probe-stage')));
+        // The hint's hand is above the bubble and the guide (so the way it shows is never hidden), and below the tiles.
+        expect(at('probe-hands'), greaterThan(at('lesson-bubble')));
+        expect(at('probe-hands'), greaterThan(at('activity-nitzi')));
+        expect(at('probe-tiles'), greaterThan(at('probe-hands')));
+      },
+    );
+  });
+
+  group('the hand keeps out from under the speech bubble', () {
+    Future<void> hand(WidgetTester t, double x, double? clearOf) async {
+      // The hand's art comes from the asset bundle, which needs the real clock.
+      await t.runAsync(warmHintHands);
+      await t.pumpWidget(
+        MaterialApp(
+          home: Center(
+            child: HintOverlay(
+              size: const Size(330, 128),
+              clearOf: clearOf,
+              marks: <HintMark>[HandMark(Offset(x, 140))],
+            ),
+          ),
+        ),
+      );
+      await t.pump(const Duration(milliseconds: 100));
+    }
+
+    bool flipped(WidgetTester t) => t
+        .widgetList<Transform>(
+          find.descendant(of: find.byKey(const Key('hint-p12')), matching: find.byType(Transform)),
+        )
+        .any((Transform w) => w.transform.storage[0] < 0);
+
+    testWidgets(
+      'a hand whose body would reach the bubble comes from the upper left; elsewhere it is as always',
+      (WidgetTester t) async {
+        final double clear = handClearOf(ActivitySpec.phone)!;
+        expect(clear, 338, reason: 'the bubble starts at 413 and the stage at 71');
+        expect(
+          handClearOf(ActivitySpec.tabletLandscape),
+          isNull,
+          reason: 'the tablet bubble is above the stage',
+        );
+        await hand(t, 100, clear);
+        expect(flipped(t), isFalse);
+        await hand(t, 330, clear);
+        expect(flipped(t), isTrue);
+        await hand(t, 330, null);
+        expect(flipped(t), isFalse);
+      },
+    );
+  });
+
   group('on the lesson stage', () {
     Future<void> host(WidgetTester tester, TapAnswerSession s, {bool reduceMotion = true}) async {
       await tester.pumpWidget(
@@ -388,7 +853,13 @@ void main() {
                         SizedBox(
                           width: spec.stage.width,
                           height: spec.stage.height,
-                          child: s.buildStage(ctx, spec.stage.size, spec),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: <Widget>[
+                              Positioned.fill(child: s.buildStage(ctx, spec.stage.size, spec)),
+                              Positioned.fill(child: s.buildHands(ctx, spec.stage.size, spec)!),
+                            ],
+                          ),
                         ),
                         Expanded(
                           child: SizedBox(
@@ -441,6 +912,9 @@ void main() {
       ('add', 'math.add.stars', 'hint-p1', 'hint-card'),
       ('numerals', 'show.birds.4', 'hint-p1', 'hint-p6'),
       ('measure', 'math.size.long', 'hint-line', 'hint-block'),
+      ('ordinal', 'ordinal.second.of4', 'hint-tile-glow', 'hint-flag'),
+      ('position', 'shp.where.above', 'hint-tile-glow', 'hint-card'),
+      ('solids', 'shp.solid.rolls', 'hint-tile-glow', 'hint-arrow'),
     ];
 
     for (final (String name, String id, String key1, String key2) in shots) {

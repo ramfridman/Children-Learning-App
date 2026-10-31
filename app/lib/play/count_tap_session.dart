@@ -12,6 +12,8 @@ import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
 import '../strings/he.dart';
 import 'hint_widgets.dart';
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
 import 'lesson_controller.dart';
 import 'template_session.dart';
 
@@ -90,6 +92,10 @@ class CountTapSession extends TemplateSession {
   final Set<int> seen = <int>{};
   int fingers = 0;
   bool demoRunning = false;
+
+  /// The pointing hand of the worked example (level 3), and the stage's size it is placed by.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
 
   bool get flies => activity.onTap == 'fly_to_target';
   int get counter => counted.length;
@@ -188,6 +194,7 @@ class CountTapSession extends TemplateSession {
     seen.clear();
     fingers = 0;
     demoRunning = false;
+    _hint.clear();
     notify();
   }
 
@@ -245,6 +252,18 @@ class CountTapSession extends TemplateSession {
     arrived.clear();
     answering = false;
     demoRunning = true;
+    if (!_size.isEmpty) {
+      // The hand reaches each object as it is counted, and a badge stays on it where it stays on the stage.
+      final CountLayout l = CountLayout(_size, activity);
+      _hint.play(
+        pointerCountPlan(
+          l.centers,
+          badges: !flies,
+          badgeAt: (int i) => l.centers[i] + Offset(l.objectSize * 0.4, -l.objectSize * 0.4),
+          tailMs: 650,
+        ),
+      );
+    }
     for (int i = 0; i < activity.count; i++) {
       later(Duration(milliseconds: 300 + demoStepMs * i), () {
         _demoStep = true;
@@ -266,13 +285,22 @@ class CountTapSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _CountStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => _CountStage(this, size),
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) => Stack(
+      clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: <Widget>[
         IgnorePointer(
@@ -314,11 +342,9 @@ class CountTapSession extends TemplateSession {
         ),
         // While the objects are being counted the answer area is free: hint 2 opens its card there, beside the scene.
         if (fingers > 0 && !answering)
-          IgnorePointer(
-            child: SizedBox(
-              height: 112,
-              child: CountingAid(n: activity.count, shown: fingers),
-            ),
+          AnswerAreaCard(
+            spec: spec,
+            child: CountingAid(n: activity.count, shown: fingers, scale: AnswerAreaCard.scaleOf(spec)),
           ),
       ],
     ),
@@ -374,6 +400,7 @@ class _CountStage extends StatelessWidget {
               child: PackSvg(a.assets.svg(a.targetSprite), key: const Key('count-flower')),
             ),
             for (int i = 0; i < a.count; i++) _object(a, layout, touch, target, i),
+            Positioned.fill(child: s._hint.body(size)),
             if (s.counter > 0)
               Positioned(
                 left: layout.flower.center.dx - 26,

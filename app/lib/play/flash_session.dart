@@ -8,6 +8,8 @@ import '../design/components.dart';
 import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
 import 'hint_widgets.dart';
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
 import 'lesson_controller.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
@@ -39,6 +41,10 @@ class FlashSession extends TemplateSession {
 
   /// Hint 2 is showing the same number as hands or ten-frames, beside the group, while it is in view.
   bool aid = false;
+
+  /// The pointing hand of the worked example (level 3), and the stage's size it is placed by.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
 
   String? chosenId;
   AnswerState chosenState = AnswerState.idle;
@@ -117,6 +123,7 @@ class FlashSession extends TemplateSession {
     _kept = false;
     aid = false;
     answering = false;
+    _hint.clear();
     _show(activity.flashMs);
   }
 
@@ -134,24 +141,51 @@ class FlashSession extends TemplateSession {
     // The tiles step aside while the number is shown another way: the card opens in their place.
     if (aid) answering = false;
     _show(activity.flashMs * (_kept ? 3 : 2));
+    if (_kept && !_size.isEmpty) {
+      // The group stays in view, and the hand touches each picture in turn, a badge staying on it: the last one is the count.
+      final FlashActivity a = activity;
+      _hint.play(
+        pointerFlashPlan(
+          flashObjectCentres(
+            _size,
+            answering ? _size.height : _size.height * 1.9,
+            arrangement: a.group.arrangement,
+            count: a.group.count,
+            seed: a.group.seed,
+            scale: a.group.scale,
+          ),
+        ),
+      );
+    }
   }
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _FlashStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => _FlashStage(this, size),
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) => Stack(
+      clipBehavior: Clip.none,
       alignment: Alignment.center,
       children: <Widget>[
         // The answer area is empty while the group is in view: hint 2 shows the number another way here.
         if (aid && !answering)
-          IgnorePointer(
-            child: SizedBox(
-              height: 112,
-              child: CountingAid(n: activity.group.count, shown: activity.group.count),
+          AnswerAreaCard(
+            spec: spec,
+            child: CountingAid(
+              n: activity.group.count,
+              shown: activity.group.count,
+              scale: AnswerAreaCard.scaleOf(spec),
             ),
           ),
         IgnorePointer(
@@ -253,6 +287,7 @@ class _FlashStage extends StatelessWidget {
               ),
             ),
           ),
+          Positioned.fill(child: s._hint.body(size)),
         ],
       ),
     );
