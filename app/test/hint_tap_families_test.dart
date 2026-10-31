@@ -36,7 +36,9 @@ void main() {
 
   List<TapAnswerActivity> bandA() => <TapAnswerActivity>[
     for (final TapAnswerActivity a in content.activities.values.whereType<TapAnswerActivity>())
-      if (tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null) != null) a,
+      if (!a.skillId.contains('-B-') &&
+          tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null) != null)
+        a,
   ];
 
   // The room a stage has on each board (a tablet's stage sits on a card with a 16 point border).
@@ -91,14 +93,12 @@ void main() {
         final TapFamily f = tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null)!;
         n[f] = (n[f] ?? 0) + 1;
       }
-      expect(n.keys.toSet(), TapFamily.values.toSet());
+      expect(n.keys.toSet(), TapFamily.values.toSet().difference(<TapFamily>{TapFamily.clockMoney}));
       expect(all.map((TapAnswerActivity a) => a.id), contains('pick.red.flower'));
-      expect(HintLadder.tapFamiliesBuilt, TapFamily.values.toSet());
     });
 
-    test('the ladder of a built family is look, another way, demonstration', () {
-      final TapAnswerActivity a = bandA().first;
-      final HintLadder l = HintLadder.forActivity('tap_answer', a.skillId)!;
+    test('the ladder of tap_answer is look, another way, demonstration, for both bands', () {
+      final HintLadder l = HintLadder.of('tap_answer')!;
       expect(l.pictures, <HintPicture>[
         HintPicture.lookHere,
         HintPicture.anotherWay,
@@ -106,11 +106,7 @@ void main() {
       ]);
       expect(l.at(1).marksAnswer, isFalse);
       expect(l.at(2).marksAnswer, isFalse);
-      expect(
-        HintLadder.forActivity('tap_answer', 'NUM-B-04')!.at(1),
-        HintPicture.pulse,
-        reason: 'Band B waits',
-      );
+      expect(HintLadder.problemWith('tap_answer'), isNull);
     });
 
     test('each level has steps, no step is empty of time, and a demonstration is over in 10 seconds', () {

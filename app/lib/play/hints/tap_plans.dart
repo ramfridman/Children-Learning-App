@@ -10,7 +10,11 @@ import '../hint_hand.dart';
 import '../hint_widgets.dart';
 import 'hint_marks.dart';
 import 'hint_pictures.dart' show hintScale;
+import 'prompt_numbers.dart';
+import 'sprite_outline.dart';
 import 'tap_geometry.dart';
+
+part 'tap_plans_b.dart';
 
 // What each family of `tap_answer` draws at each hint level (B-40 part 2; the plan is docs/curriculum/b40-visual-hint-ladder.md
 // section 5.1, the pictures are docs/design/b40-visual-hints.md section 5). Each level is a [HintPlan]: steps shown one after the
@@ -27,9 +31,11 @@ import 'tap_geometry.dart';
 /// The plan of [a] at [level] (1 to 3), or null when the activity's family has no pictures yet.
 HintPlan? tapHintPlan(TapAnswerActivity a, TapGeometry g, int level) {
   final TapFamily? family = tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null);
-  if (family == null || !HintLadder.tapFamiliesBuilt.contains(family)) return null;
+  if (family == null) return null;
   final _Plans p = _Plans(a, g);
   final int l = level.clamp(1, 3);
+  final HintPlan? own = p.bandB(l);
+  if (own != null) return own;
   return switch (family) {
     TapFamily.colour => p.colour(l),
     TapFamily.shapes => p.shapes(l),
@@ -42,20 +48,26 @@ HintPlan? tapHintPlan(TapAnswerActivity a, TapGeometry g, int level) {
     TapFamily.add => p.add(l),
     TapFamily.numerals => p.numerals(l),
     TapFamily.measure => p.measure(l),
+    TapFamily.clockMoney => p.generic(l),
   };
 }
 
-/// The colour a sprite name ends in (`ball_red`, `shape_circle_yellow`), or null.
+/// The colour a sprite name says (`ball_red`, `shape_circle_yellow`, `shade_blue_1`: the last part that is a colour), or null.
 String? colourOfSprite(String? ref) {
   if (ref == null) return null;
-  final String last = ref.split('_').last;
-  return hintColours.containsKey(last) ? last : null;
+  for (final String part in ref.split('_').reversed) {
+    if (hintColours.containsKey(part)) return part;
+  }
+  return null;
 }
 
 /// The words of a number question that say which way the sequence goes, written as code points (every Hebrew string of the app
 /// lives in `strings/he.dart`; these two are read, never shown): "before" and "after".
 final String _before = String.fromCharCodes(<int>[0x5DC, 0x5E4, 0x5E0, 0x5D9]);
 final String _after = String.fromCharCodes(<int>[0x5D0, 0x5D7, 0x5E8, 0x5D9]);
+
+/// "From" (as in "take one from seven"): a question that takes one away, as the word "before" asks for the one before.
+final String _from = String.fromCharCodes(<int>[0x5DE, 0x5EA, 0x5D5, 0x5DA]);
 
 /// The Hebrew text of a prompt without its vowel marks, to look for one word.
 String _plain(String s) => s.replaceAll(_vowelMarks, '');
@@ -242,7 +254,7 @@ class _Plans {
 
   // ---- small helpers ----
 
-  static Duration _ms(int ms) => Duration(milliseconds: ms);
+  Duration _ms(int ms) => Duration(milliseconds: ms);
 
   int get _n => a.options.length;
   int get _ci => g.correctIndex;
@@ -384,7 +396,29 @@ class _Plans {
   HintPlan colour(int level) {
     final String? c = colourOfSprite(_spriteOf(_right)) ?? colourOfSprite(a.group?.sprite);
     if (c == null) return generic(level);
+    if (level == 2 && _asksColourOfObject) return _emptyPaint();
     return _sample(level, (Rect box) => SwatchMark(box, c));
+  }
+
+  /// COL-A-05: a thing of the world on the stage ("which colour is the apple?") and plain colour balls to choose from. The paint of
+  /// the right colour would be the answer, so level 2 never shows it.
+  bool get _asksColourOfObject =>
+      a.group != null && a.options.every((ChoiceOption o) => (o.sprite ?? '').startsWith('asset:ball_'));
+
+  /// Level 2 of [_asksColourOfObject]: an empty paint spot (a dashed circle) beside the thing, "which paint is this one's?". It names
+  /// no colour, and the child still has to find it among the tiles.
+  HintPlan _emptyPaint() {
+    final Rect card = _card;
+    final double side = math.min(66 * k, card.width - 16 * k);
+    final List<HintMark> shown = <HintMark>[
+      CardMark(card, const SizedBox.shrink()),
+      GhostMark(Rect.fromCenter(center: card.center, width: side, height: side), GhostKind.circle),
+    ];
+    return HintPlan(
+      <HintFrame>[HintFrame(shown, hold: _ms(2600), reserve: _reserve)],
+      rest: shown,
+      restReserve: _reserve,
+    );
   }
 
   // ---- TA-7 shapes ----
@@ -406,6 +440,16 @@ class _Plans {
   /// The shape the question asks for, read from the right option (`shape_circle_red`, a plate, `line_curved`).
   GhostKind? _shapeKind() {
     final String name = (_spriteOf(_right) ?? '').replaceFirst('asset:', '');
+    if (name.startsWith('solid_')) {
+      return switch (name.substring(6)) {
+        'cylinder' => GhostKind.cylinder,
+        'cone' => GhostKind.cone,
+        'sphere' => GhostKind.circle,
+        'pyramid' => GhostKind.pyramid,
+        'box' => GhostKind.box,
+        _ => null,
+      };
+    }
     if (a.skillId == 'SHP-A-10') {
       if (name.contains('curved') || name.contains('circle')) return GhostKind.curved;
       return GhostKind.straight;
@@ -775,22 +819,44 @@ class _Plans {
 
   // ---- TA-3 sequence ----
 
+  /// The number the question gives, from the answer [c]: the one before it when the question asks what comes after (or adds one), the
+  /// one after it when it asks what comes before (or takes one away); in a row, the number left of the gap. Null when it cannot tell.
+  int? _givenFor(int c) {
+    final String q = _plain(a.promptLine.caption);
+    if (a.row.isNotEmpty) {
+      final int gap = a.row.indexOf('?');
+      final String? side = gap > 0 ? a.row[gap - 1] : (gap == 0 && a.row.length > 1 ? a.row[1] : null);
+      final int? known = side != null && side.startsWith('n:') ? int.tryParse(side.substring(2)) : null;
+      return known;
+    }
+    final bool takes = a.skillId == 'NUM-B-11' && q.contains(_from);
+    final bool before = q.contains(_before) || takes;
+    final bool after = q.contains(_after) || (a.skillId == 'NUM-B-11' && !takes);
+    if (!before && !after) return null;
+    return before ? c + 1 : c - 1;
+  }
+
   HintPlan sequence(int level) {
     if (a.skillId == 'NUM-A-13') return _ordinal(level);
+    if (a.skillId == 'NUM-B-17') return _skipCount(level);
     final int? c = _right.numeral;
-    final String q = _plain(a.promptLine.caption);
-    final bool before = q.contains(_before);
-    final bool after = q.contains(_after);
-    if (c == null || (!before && !after)) return generic(level);
-    final int given = before ? c + 1 : c - 1;
-    final int m = given <= 5 && c <= 5 && a.options.every((ChoiceOption o) => (o.numeral ?? 0) <= 5) ? 5 : 10;
+    final int? given = c == null ? null : _givenFor(c);
+    if (c == null || given == null) return generic(level);
+    final bool before = given > c;
+    final bool bandB = a.skillId.contains('-B-');
+    // Band A counts from 1 on a path of five or ten squares; Band B shows ten squares around the two numbers.
+    final int m = bandB || given > 5 || c > 5 || a.options.any((ChoiceOption o) => (o.numeral ?? 0) > 5)
+        ? 10
+        : 5;
+    final int from = bandB ? math.max(1, math.min(given, c) - 4) : 1;
     final Rect path = Rect.fromCenter(
       center: Offset(g.w / 2, g.h / 2 + 6 * k),
       width: math.min(g.w - 20, m * 30 * k),
       height: 36 * k,
     );
-    Offset squareTop(int j) => Offset(path.left + (j - 0.5) * path.width / m, path.top + 2 * k);
+    Offset squareTop(int n) => Offset(path.left + (n - from + 0.5) * path.width / m, path.top + 2 * k);
     if (level == 1) {
+      if (a.row.isNotEmpty) return look();
       // The number we are given and an empty place next to it, left to right: the gap is where to look (the question, no answer).
       final double s = 52 * k;
       final Rect givenAt = Rect.fromCenter(
@@ -812,10 +878,27 @@ class _Plans {
       ]);
     }
     PathMark strip({int? marker, int? gap, int? ring}) =>
-        PathMark(rect: path, count: m, gap: gap, ring: ring, marker: marker);
+        PathMark(rect: path, count: m, gap: gap, ring: ring, marker: marker, from: from);
     if (level == 2) {
       final List<HintMark> shown = <HintMark>[strip(gap: c, ring: given)];
       return HintPlan(<HintFrame>[HintFrame(shown, hold: _ms(2800))], rest: shown);
+    }
+    if (bandB) {
+      // The marker stands on the number given, hops one square (to the right, or back to the left) and lands in the place.
+      final ArcMark hop = ArcMark(squareTop(given), squareTop(c));
+      return _demo(<HintFrame>[
+        HintFrame(<HintMark>[
+          strip(gap: c, marker: given),
+          HandMark(squareTop(given), press: true),
+        ], hold: _ms(900)),
+        HintFrame(<HintMark>[
+          strip(gap: c, marker: given),
+          hop,
+          HandMark(squareTop(c), press: true),
+        ], hold: _ms(900)),
+        HintFrame(<HintMark>[strip(marker: c), hop, HandMark(squareTop(c))], hold: _ms(900)),
+        _toAnswer(<HintMark>[strip(marker: c), hop]),
+      ]);
     }
     return _demo(<HintFrame>[
       for (int j = 1; j <= c; j++)
@@ -879,9 +962,13 @@ class _Plans {
     final int blocks = p == null && !yesNo ? 0 : (cells.length / (p ?? cells.length ~/ 2)).ceil();
     if (level == 2) {
       if (blocks == 0) {
-        // A row that grows (seriation): one floor under every cell, and the neighbours are linked.
+        // A row that grows (seriation): one floor under every cell, and the neighbours are linked. A row of towers (LOG-B-04) also
+        // has the number of cubes of each step under it, but not under the empty place.
         final List<HintMark> floor = <HintMark>[
           LineMark(Offset(cells.first.left, y), Offset(cells.last.right, y)),
+          if (a.skillId == 'LOG-B-04')
+            for (int i = 0; i < cells.length; i++)
+              if (i != gap) ?_towerHeight(a.row[i], cells[i].center.dx, y + 14 * k),
           for (int i = 0; i + 1 < cells.length; i++)
             ArcMark(
               Offset(cells[i].center.dx, cells[i].top),
@@ -895,6 +982,12 @@ class _Plans {
       ], rest: brackets(blocks));
     }
     return _rowDemo(cells, gap);
+  }
+
+  /// The number of cubes of a tower picture (`tower_3`) as a badge under it, or null for a picture that is not a tower.
+  HintMark? _towerHeight(String ref, double x, double y) {
+    final RegExpMatch? m = RegExp(r'tower_(\d+)$').firstMatch(ref);
+    return m == null ? null : BadgeMark(Offset(x, y), int.parse(m[1]!));
   }
 
   /// The hand reads the row from the left, and where there is a gap the right picture appears in it last.
@@ -1014,12 +1107,17 @@ class _Plans {
         if (adds) HintFrame(<HintMark>[VeilMark(second)], hold: _ms(1500)),
       ]);
     }
-    Widget hands(int raised) => raised <= 5
-        ? HintHand(fingers: math.max(0, raised), side: HandSide.left, height: 84)
-        : CountingHands(raised: raised);
+    // Up to ten a number is shown as hands; above ten (Band B) the card holds the numeral.
+    Widget hands(int raised) => raised > 10
+        ? Text('$raised', style: AppText.fixed(size: 44, weight: 800, lineHeight: 1))
+        : (raised <= 5
+              ? HintHand(fingers: math.max(0, raised), side: HandSide.left, height: 84)
+              : CountingHands(raised: raised));
     if (adds) {
       // Count on: the hand shows the first group, and the second group is counted one by one on top of it.
       final int more = second.length;
+      // "How many more?" (the answer is the second group) counts that group from one; "how many in all" counts on from the first.
+      final bool asksMore = total == more && total != start + more;
       List<HintMark> done(int j) => <HintMark>[
         for (final Rect r in first) SeenMark(r),
         for (int i = 0; i < j; i++) SeenMark(second[i]),
@@ -1045,12 +1143,12 @@ class _Plans {
         for (int j = 1; j <= more; j++)
           HintFrame(
             <HintMark>[
-              CardMark(_card, hands(start + j)),
+              CardMark(_card, hands(asksMore ? start : start + j)),
               ...done(j),
-              BadgeMark(second[j - 1].topRight, start + j),
+              BadgeMark(second[j - 1].topRight, asksMore ? j : start + j),
               HandMark(second[j - 1].center, press: true),
             ],
-            hold: _ms(900),
+            hold: _ms(more > 6 ? 600 : 900),
             reserve: _reserve,
           ),
         // The count card takes the hand card's place (drawn over it, the hand peeked out above the number).

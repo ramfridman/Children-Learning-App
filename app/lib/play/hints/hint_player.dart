@@ -63,11 +63,18 @@ class HintPlayer {
   }
 
   /// The layer of the pointing hand over a stage of [size] (see `TemplateSession.buildHands`); empty while no hand is shown.
-  Widget hands(Size size, ActivitySpec spec) => ListenableBuilder(
+  Widget hands(Size size, ActivitySpec spec, {double tileHalf = 48, double? rowEnd}) => ListenableBuilder(
     listenable: session,
     builder: (BuildContext c, Widget? _) => marks.whereType<HandMark>().isEmpty
         ? const SizedBox()
-        : HintOverlay(marks: marks, size: size, clearOf: handClearOf(spec), layer: HintLayer.hands),
+        : HintOverlay(
+            marks: marks,
+            size: size,
+            clearOf: handClearOf(spec),
+            tileHalf: tileHalf,
+            rowEnd: rowEnd,
+            layer: HintLayer.hands,
+          ),
   );
 
   /// Everything of the hint but the hand, over a stage of [size].

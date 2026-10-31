@@ -51,11 +51,20 @@ final class PairsMark extends HintMark {
   final List<Rect> unpaired;
 }
 
-/// P6 (number path): equal squares with numerals, 1 at the left (never mirrored). [gap] is a square drawn empty, [ring] a square
-/// with a sky ring, [marker] the square the helper's marker stands on, [upTo] how many squares are drawn so far (the rest are not
-/// there yet).
+/// P6 (number path): equal squares with numerals, the first at the left (never mirrored): [from], [from] + [step], and so on.
+/// [gap] is the number of a square drawn empty, [ring] one with a sky ring, [marker] the one the helper's marker stands on, [upTo]
+/// how many squares are drawn so far (the rest are not there yet). A step of 2 or 10 is a path of skip counting.
 final class PathMark extends HintMark {
-  const PathMark({required this.rect, required this.count, this.gap, this.ring, this.marker, this.upTo});
+  const PathMark({
+    required this.rect,
+    required this.count,
+    this.gap,
+    this.ring,
+    this.marker,
+    this.upTo,
+    this.from = 1,
+    this.step = 1,
+  });
 
   final Rect rect;
   final int count;
@@ -63,6 +72,11 @@ final class PathMark extends HintMark {
   final int? ring;
   final int? marker;
   final int? upTo;
+  final int from;
+  final int step;
+
+  /// The number written in the [i]th square (from 1).
+  int numberAt(int i) => from + (i - 1) * step;
 }
 
 /// P9 (sample): a paint dab of a colour with its helper symbol. [colour] is one of the names in [hintColours].
@@ -73,8 +87,8 @@ final class SwatchMark extends HintMark {
   final String colour;
 }
 
-/// The outlines a [GhostMark] can draw.
-enum GhostKind { circle, square, rect, triangle, straight, curved }
+/// The outlines a [GhostMark] can draw: flat shapes, a line, and the outline of a solid as it is drawn on paper.
+enum GhostKind { circle, square, rect, triangle, straight, curved, cylinder, cone, box, pyramid }
 
 /// P9 (sample): a dashed outline of a shape (or a line); [turn] lets it turn once to show that a shape stays itself.
 final class GhostMark extends HintMark {
@@ -168,11 +182,27 @@ final class BracketMark extends HintMark {
   final Offset right;
 }
 
-/// A small cube of a stick or a tower (a unit to count along a length): `skyTint` with a `skyDeep` edge.
+/// A small cube of a stick or a tower (a unit to count along a length): `skyTint` with a `skyDeep` edge. An [empty] one is only its
+/// outline: a place that is not filled.
 final class BlockMark extends HintMark {
-  const BlockMark(this.rect);
+  const BlockMark(this.rect, {this.empty = false});
 
   final Rect rect;
+  final bool empty;
+}
+
+/// The outline of a shape as a path of corners: the first [upTo] sides are drawn in sky (all of them when null), a start dot sits on
+/// the first corner and a dot on each corner reached. [closed] is false for a line that does not come back to its start.
+final class OutlineMark extends HintMark {
+  const OutlineMark(this.points, {this.closed = true, this.upTo, this.dots = true, this.faint = false});
+
+  final List<Offset> points;
+  final bool closed;
+  final int? upTo;
+  final bool dots;
+
+  /// Only a thin dotted outline: the shape is there, none of its sides is lit.
+  final bool faint;
 }
 
 /// P12 (the pointing hand): the fingertip is on [tip]. [press] makes a sky ripple at the tip (the "tok"). [snap] puts the hand where
