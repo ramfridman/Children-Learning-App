@@ -14,7 +14,7 @@ const int placementStruggles = 2;
 
 /// The warm-up of a land, or null when the land has fewer than three lessons (there is nothing to place on).
 Lesson? placementLesson(PackContent content, String domain) {
-  final List<Lesson> path = _path(content, domain);
+  final List<Lesson> path = landPath(content, domain);
   if (path.length < 3) return null;
   final int n = path.length < placementItems ? path.length : placementItems;
   final List<String> items = <String>[];
@@ -56,11 +56,13 @@ Set<String> placedLessons(PackContent content, Iterable<Attempt> attempts) {
 /// Whether the warm-up should be offered now: it has not been played, and the child has not played in this land.
 bool placementDue(PackContent content, String domain, Iterable<Attempt> attempts) {
   if (placementLesson(content, domain) == null) return false;
-  final Set<String> inLand = <String>{for (final Lesson l in _path(content, domain)) ...l.itemIds};
+  final Set<String> inLand = <String>{for (final Lesson l in landPath(content, domain)) ...l.itemIds};
   return !attempts.any((Attempt a) => a.lessonId == placementId || inLand.contains(a.activityId));
 }
 
-List<Lesson> _path(PackContent content, String domain) =>
+/// The lessons of a land in path order: every lesson that has a skill of the land's domain, by `sequence`, then by id.
+/// The land's play pebble (`nextLessonId`), the warm-up and Today's Adventure all read the path from here.
+List<Lesson> landPath(PackContent content, String domain) =>
     <Lesson>[
       for (final Lesson l in content.lessons.values)
         if (l.skillIds.any((String s) => content.skills[s]?.domain == domain)) l,
