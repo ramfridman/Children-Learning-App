@@ -106,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.links.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "קַו מְחַבֵּר בֵּין כׇּל שְׁנֵי שְׁכֵנִים. נַשְׁוֶה אוֹתָם."
         }
       ]
     },
