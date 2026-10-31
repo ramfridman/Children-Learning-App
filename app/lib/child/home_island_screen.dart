@@ -29,6 +29,7 @@ class HomeIslandScreen extends StatefulWidget {
     this.onCompanion,
     this.onBottle,
     this.bottleLine,
+    this.bottleWobble,
     this.onStickers,
     this.onHall,
     this.hallGlow = false,
@@ -52,6 +53,10 @@ class HomeIslandScreen extends StatefulWidget {
   /// What the bottle's stop is, once the child touched the bottle: the bubble says it (in place of the welcome and the
   /// friend's hello) until it is null again. The bottle's own label does not change: the stop is only chosen at the touch.
   final ValueListenable<AdventureLine?>? bottleLine;
+
+  /// Counts the touches on the bottle that found nothing to open: each gives the bottle one small wobble (none with reduce
+  /// motion), and the bubble says nothing new.
+  final ValueListenable<int>? bottleWobble;
 
   /// Something waits in the Hall: the lighthouse's lantern shows a trophy in a warm halo.
   final bool hallGlow;
@@ -235,17 +240,49 @@ Rect bottleHitArea(Size box) {
 /// The warm glow of "something waits" (the same as the map sign's).
 const Color _waitingGlow = Color(0xAAFFD45C);
 
-class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerProviderStateMixin {
+class _HomeIslandScreenState extends State<HomeIslandScreen> with TickerProviderStateMixin {
   /// The bottle's gentle bob: one slow round trip, again and again, like the friend's breath (nothing counts or ends).
   late final AnimationController _bob = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 2400),
   );
 
+  /// The bottle's one small wobble when a touch found nothing to open: it rocks to both sides and settles, in 0.7 s.
+  late final AnimationController _wobble = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 700),
+  );
+  int _wobbles = 0;
+
   static final ValueNotifier<AdventureLine?> _noLine = ValueNotifier<AdventureLine?>(null);
 
   /// The child touched the friend: the bubble says hello instead of the welcome, and keeps saying it.
   bool _hi = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _wobbles = widget.bottleWobble?.value ?? 0;
+    widget.bottleWobble?.addListener(_onWobble);
+  }
+
+  @override
+  void didUpdateWidget(HomeIslandScreen old) {
+    super.didUpdateWidget(old);
+    if (old.bottleWobble != widget.bottleWobble) {
+      old.bottleWobble?.removeListener(_onWobble);
+      _wobbles = widget.bottleWobble?.value ?? 0;
+      widget.bottleWobble?.addListener(_onWobble);
+    }
+  }
+
+  void _onWobble() {
+    final int n = widget.bottleWobble!.value;
+    if (n == _wobbles) return;
+    _wobbles = n;
+    // Reduce motion removes the motion and nothing else: the bottle stays still.
+    if (!(MediaQuery.maybeDisableAnimationsOf(context) ?? false)) _wobble.forward(from: 0);
+  }
 
   @override
   void didChangeDependencies() {
@@ -261,6 +298,8 @@ class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerPr
 
   @override
   void dispose() {
+    widget.bottleWobble?.removeListener(_onWobble);
+    _wobble.dispose();
     _bob.dispose();
     super.dispose();
   }
@@ -324,6 +363,7 @@ class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerPr
             child: RepaintBoundary(
               child: _Bobbing(
                 bob: _bob,
+                wobble: _wobble,
                 child: const _Picture(_bottleArt, size: _bottleSize),
               ),
             ),
@@ -582,23 +622,26 @@ class _Picture extends StatelessWidget {
   );
 }
 
-/// The bottle's bob: ±4 up and down and ±3° about its bottom centre, following [bob] (still when it stands still).
+/// The bottle's bob: ±4 up and down and ±3° about its bottom centre, following [bob] (still when it stands still); and,
+/// after a touch that found nothing to open, [wobble]: two rocks of ±6° that die away.
 class _Bobbing extends StatelessWidget {
-  const _Bobbing({required this.bob, required this.child});
+  const _Bobbing({required this.bob, required this.wobble, required this.child});
 
   final Animation<double> bob;
+  final Animation<double> wobble;
   final Widget child;
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-    animation: bob,
+    animation: Listenable.merge(<Listenable>[bob, wobble]),
     child: child,
     builder: (BuildContext context, Widget? child) {
       final double wave = math.sin(bob.value * 2 * math.pi);
+      final double rock = math.sin(wobble.value * 4 * math.pi) * (1 - wobble.value) * 6;
       return Transform.translate(
         offset: Offset(0, -4 * wave),
         child: Transform.rotate(
-          angle: wave * 3 * math.pi / 180,
+          angle: (wave * 3 + rock) * math.pi / 180,
           alignment: Alignment.bottomCenter,
           child: child,
         ),

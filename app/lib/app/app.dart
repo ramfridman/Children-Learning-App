@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 
-import '../child/adventure_line.dart';
 import '../child/calm_loading.dart';
 import '../child/ceremony_screen.dart';
 import '../child/land_screen.dart';
@@ -20,6 +19,8 @@ import '../world/next_lesson.dart';
 import '../world/adventure_adapter.dart';
 import '../world/placement.dart';
 import '../world/todays_adventure.dart';
+import '../child/adventure_line.dart' show AdventureLine, adventureLine;
+import 'bottle_hold.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
 import '../child/rest_scene.dart';
@@ -273,7 +274,7 @@ class _HomeState extends ConsumerState<_Home> {
   Future<void> _openHome() async {
     final String id = widget.profile.id;
     final GlobalKey<MapCompanionState> friend = GlobalKey<MapCompanionState>();
-    final ValueNotifier<AdventureLine?> line = ValueNotifier<AdventureLine?>(null);
+    final BottleHold bottle = BottleHold(ref.read(voiceDirectorProvider));
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         // A consumer of its own: the lantern's glow and the sticker on the book follow the rewards while the home is open.
@@ -285,10 +286,18 @@ class _HomeState extends ConsumerState<_Home> {
               // It waves when the child arrives, silently (B-26 decision 6: nothing is voiced here yet).
               companion: MapCompanion(key: friend, waveOnStart: true),
               onCompanion: () => friend.currentState?.greet(),
-              onBottle: () => _openTodaysAdventure(line),
-              bottleLine: line,
-              onStickers: _openStickers,
-              onHall: _openHall,
+              onBottle: () => _openTodaysAdventure(bottle),
+              bottleLine: bottle.line,
+              bottleWobble: bottle.wobble,
+              // Going to the book or the lighthouse drops the stop that the line was waiting to open.
+              onStickers: () {
+                bottle.drop();
+                unawaited(_openStickers());
+              },
+              onHall: () {
+                bottle.drop();
+                unawaited(_openHall());
+              },
               hallGlow: ref.watch(hallWaitingProvider(id)).value ?? false,
               sticker: stickers.isEmpty ? firstStickerAsset : stickerAsset(stickers.last.awardKey),
             );
@@ -296,6 +305,7 @@ class _HomeState extends ConsumerState<_Home> {
         ),
       ),
     );
+    bottle.dispose();
     if (mounted) _refreshWorld();
   }
 
@@ -303,36 +313,42 @@ class _HomeState extends ConsumerState<_Home> {
   /// only place that decides it, and it is worked out when the child taps, from their visits and what is due then. A call
   /// for help opens the revisit mission of the map's own bell, a lesson goes the way of the land's play pebble (the warm-up
   /// first when it is due), and a game played again opens that lesson. Each comes back to the home; nothing is lost if
-  /// the bottle is never tapped. The friend's bubble on the home says the line for the stop ([adventureLine]) as the stop
-  /// opens, and in its voice when the pack has the clip (silence otherwise); nothing waits for it, and the line is gone
-  /// when the child comes back.
-  Future<void> _openTodaysAdventure(ValueNotifier<AdventureLine?> line) async {
+  /// the bottle is never tapped. The friend's bubble on the home says the line for the stop ([adventureLine]), in its
+  /// voice when the pack has the recording, and the stop opens when the line has been seen and heard ([BottleHold]); a
+  /// second touch opens it at once, and leaving the home drops it. With nothing to open the bottle only wobbles.
+  Future<void> _openTodaysAdventure(BottleHold bottle) async {
+    // A second touch while the line waits goes on at once; while the stop is still being worked out it is not a second stop.
+    if (bottle.waiting) return bottle.releaseNow();
+    if (bottle.busy) return;
     final PackContent? content = ref.read(contentProvider).value;
     if (content == null) return;
-    final String id = widget.profile.id;
-    final AppDatabase db = await ref.read(databaseProvider.future);
-    final WorldView world = await ref.read(worldProvider(id).future);
-    final List<Reward> rewards = await ref.read(rewardsProvider(id).future);
-    final List<Attempt> attempts = await db.attemptsOf(id);
-    final TodaysAdventure stop = todaysAdventureFor(
-      content: content,
-      engine: world.engine,
-      attempts: attempts,
-      sessions: await db.sessionsOf(id),
-      finished: finishedLessons(content, attempts, rewards.map((Reward r) => r.awardKey)),
-      now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
-      band: widget.profile.ageBand,
-    );
-    if (!mounted) return;
-    final AdventureLine? words = adventureLine(stop);
-    if (words != null) {
-      line.value = words;
-      unawaited(ref.read(voiceDirectorProvider).say(words.voice));
-    }
+    bottle.busy = true;
     try {
+      final String id = widget.profile.id;
+      final AppDatabase db = await ref.read(databaseProvider.future);
+      final WorldView world = await ref.read(worldProvider(id).future);
+      final List<Reward> rewards = await ref.read(rewardsProvider(id).future);
+      final List<Attempt> attempts = await db.attemptsOf(id);
+      final TodaysAdventure stop = todaysAdventureFor(
+        content: content,
+        engine: world.engine,
+        attempts: attempts,
+        sessions: await db.sessionsOf(id),
+        finished: finishedLessons(content, attempts, rewards.map((Reward r) => r.awardKey)),
+        now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
+        band: widget.profile.ageBand,
+      );
+      if (!mounted || bottle.gone) return;
+      final AdventureLine? words = adventureLine(stop);
+      if (words == null) {
+        bottle.nudge();
+        return;
+      }
+      if (!await bottle.hold(words) || !mounted || bottle.gone) return;
       await _openStop(stop, world);
     } finally {
-      line.value = null;
+      bottle.clear();
+      bottle.busy = false;
     }
   }
 
