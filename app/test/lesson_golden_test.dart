@@ -4,6 +4,7 @@
 // Regenerate after a deliberate visual change:  flutter test --update-goldens test/lesson_golden_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/play/hint_hand.dart';
 
 import 'support/app_harness.dart';
 import 'support/golden_comparator.dart';
@@ -103,6 +104,8 @@ void main() {
   }
 
   testWidgets('help on screen: a mistake with the fingers, phone', (WidgetTester tester) async {
+    // The hands are art files; they come from the asset bundle, which needs the real clock.
+    await tester.runAsync(warmHintHands);
     final AppRig rig = AppRig();
     await rig.seedFinishedSetup(name: 'נֹעָה');
     await rig.pump(tester);

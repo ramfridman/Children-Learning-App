@@ -77,6 +77,33 @@ List<Offset> _dice(int n) {
   };
 }
 
+/// The place of each picture of a group inside a box of [box] (the same numbers [SpriteGroup] draws with, so that a hint can ring
+/// a picture it did not draw itself).
+List<Rect> spriteRects(
+  Size box,
+  String arrangement,
+  int count, {
+  int seed = 0,
+  double scale = 1,
+  int lineSlots = 4,
+}) {
+  final GroupLayout layout = groupLayout(arrangement, count, seed: seed, lineSlots: lineSlots);
+  double w = box.width;
+  double h = box.height;
+  // The pips of a dice sit in a square, however wide the room is.
+  final bool square = arrangement == 'dice' && count <= 6;
+  final double dx = square ? (w - math.min(w, h)) / 2 : 0;
+  final double dy = square ? (h - math.min(w, h)) / 2 : 0;
+  if (square) {
+    w = h = math.min(w, h);
+  }
+  final double side = math.min(layout.cellWidth * w, layout.cellHeight * h) * 0.85 * scale;
+  return <Rect>[
+    for (final Offset p in layout.centers)
+      Rect.fromLTWH(dx + p.dx * w - side / 2, dy + p.dy * h - side / 2, side, side),
+  ];
+}
+
 /// [count] pictures of [svg] in the given arrangement. [scale] makes every picture bigger or smaller (the "crowded or
 /// large objects" of a comparison); the group never changes its count.
 class SpriteGroup extends StatelessWidget {
@@ -100,33 +127,23 @@ class SpriteGroup extends StatelessWidget {
   final int lineSlots;
 
   @override
-  Widget build(BuildContext context) {
-    final GroupLayout layout = groupLayout(arrangement, count, seed: seed, lineSlots: lineSlots);
-    return LayoutBuilder(
-      builder: (BuildContext c, BoxConstraints box) {
-        double w = box.maxWidth.isFinite ? box.maxWidth : 200;
-        double h = box.maxHeight.isFinite ? box.maxHeight : 100;
-        // The pips of a dice sit in a square, however wide the room is.
-        final bool square = arrangement == 'dice' && count <= 6;
-        final double dx = square ? (w - math.min(w, h)) / 2 : 0;
-        final double dy = square ? (h - math.min(w, h)) / 2 : 0;
-        if (square) {
-          w = h = math.min(w, h);
-        }
-        final double side = math.min(layout.cellWidth * w, layout.cellHeight * h) * 0.85 * scale;
-        return Stack(
-          children: <Widget>[
-            for (final Offset p in layout.centers)
-              Positioned(
-                left: dx + p.dx * w - side / 2,
-                top: dy + p.dy * h - side / 2,
-                width: side,
-                height: side,
-                child: PackSvg(svg),
-              ),
-          ],
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (BuildContext c, BoxConstraints box) {
+      final Size room = Size(
+        box.maxWidth.isFinite ? box.maxWidth : 200,
+        box.maxHeight.isFinite ? box.maxHeight : 100,
+      );
+      final List<Rect> places = spriteRects(
+        room,
+        arrangement,
+        count,
+        seed: seed,
+        scale: scale,
+        lineSlots: lineSlots,
+      );
+      return Stack(
+        children: <Widget>[for (final Rect r in places) Positioned.fromRect(rect: r, child: PackSvg(svg))],
+      );
+    },
+  );
 }
