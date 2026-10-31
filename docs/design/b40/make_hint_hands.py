@@ -12,7 +12,7 @@ ellipses, groups with transforms, clipPath):
                                          curled, the thumb resting along them, a short wrist, no cuff.
 
 viewBox: counting hands 0 0 112 174 (54 x 84 pt on a phone; the wrist's bottom centre at (45, 170) left, (67, 170) right);
-the pointing hand 0 0 96 136 (47 x 66 pt) with the fingertip at POINT_TIP (34.9, 124.5): the anchor the app places on
+the pointing hand 0 0 102 142 (52 x 72 pt) with the fingertip at POINT_TIP (37.9, 127.5): the anchor the app places on
 the target.
 
 Finger order (design-spec P3, F12; the curriculum plan does not say otherwise): 1 index, 2 + middle, 3 + ring,
@@ -48,7 +48,10 @@ OUT = os.path.join(ROOT, 'app', 'assets', 'art', 'hints')
 TONE1 = dict(skin='#F1C7A5', shade='#E2A57F', light='#F8DCC4', nail='#FBE9DA', crease='#C98563', line='#7A2E4E')
 TONE2 = dict(skin='#C68B62', shade='#A9704B', light='#D7A27C', nail='#E6BE9F', crease='#8C5536', line='#5E2A35')
 # The helper's pointer (P12) stays sky: brand.skyDeep outline; paper and skyTint fills; the shadow token.
-SKYHAND = dict(skin='#FFFFFF', shade='#CDEBFA', light='#FFFFFF', nail='#E3F4FC', crease='#8FD3F4', line='#5BB6E0')
+# 2026-10-31 (B-40 part 2 review): on the sky stage the thin outline let the white hand melt into the sky, so the outline is
+# half as thick again (POINT_OW), the shade a little deeper and the shadow a little darker; the viewBox grew by 3 on each side
+# so the thicker outline is never cut.
+SKYHAND = dict(skin='#FFFFFF', shade='#C4E6F8', light='#FFFFFF', nail='#E3F4FC', crease='#8FD3F4', line='#5BB6E0')
 SHADOW = 'rgba(43,35,80,0.14)'
 
 OW = 2.6  # outline width in viewBox units (about 1.1 pt at 84 pt tall)
@@ -256,6 +259,7 @@ def counting_hand_svg(k, tone, mirror=False):
 
 
 # ---------------------------------------------------------------- the pointing hand (P12)
+POINT_OW = OW * 3.3  # the pointer's outline (the counting hands keep OW * 2)
 POINT_TURN = 200  # degrees: the finger points down and a little left, the wrist goes to the upper right
 
 
@@ -273,8 +277,8 @@ def _point_local():
 
 
 # The viewBox is cropped to the drawn hand (measured from a render, 2 units of air), so the app can size it by height.
-POINT_VB = (96, 136)
-POINT_TIP = (34.9, 124.5)  # the fingertip in the viewBox: the anchor the app puts on the target
+POINT_VB = (102, 142)
+POINT_TIP = (37.9, 127.5)  # the fingertip in the viewBox: the anchor the app puts on the target
 
 
 def pointing_hand_svg(tone=SKYHAND):
@@ -283,7 +287,7 @@ def pointing_hand_svg(tone=SKYHAND):
     outl, fills, det = [], [], []
 
     def shape(d, tr, fill):
-        outl.append('<path d="%s" transform="%s" stroke-width="%.1f" stroke-linejoin="round"/>' % (d, tr, OW * 2.2))
+        outl.append('<path d="%s" transform="%s" stroke-width="%.1f" stroke-linejoin="round"/>' % (d, tr, POINT_OW))
         fills.append('<path d="%s" transform="%s" fill="%s"/>' % (d, tr, fill))
 
     shape(wrist, '', t['skin'])
@@ -313,7 +317,7 @@ def pointing_hand_svg(tone=SKYHAND):
     det.append('<path d="M10 96 Q20 100 31 96" fill="none" stroke="%s" stroke-width="1.4" stroke-linecap="round"/>' % t['crease'])
     body = ('<g fill="%s" stroke="%s">%s</g>' % (t['line'], t['line'], ''.join(outl))
             + fills[0] + fills[1] + pshade + ''.join(fills[2:5]) + cshade + fills[5] + ishade + fills[6] + ''.join(det))
-    shadow = '<g transform="translate(-2.5 -4)" fill="#2B2350" fill-opacity="0.14" stroke="#2B2350" stroke-opacity="0.14">%s</g>' % ''.join(outl)
+    shadow = '<g transform="translate(-2.5 -4)" fill="#2B2350" fill-opacity="0.2" stroke="#2B2350" stroke-opacity="0.2">%s</g>' % ''.join(outl)
     g = '<g transform="translate(%.1f %.1f) rotate(%d)">%s%s</g>' % (POINT_TIP[0], POINT_TIP[1], POINT_TURN, shadow, body)
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" role="img" aria-label="יד מצביעה">'
             '<defs>%s</defs>%s</svg>\n') % (POINT_VB[0], POINT_VB[1], clips, g)

@@ -562,13 +562,13 @@ void main() {
     });
   });
 
-  test('the shared pictures keep their sizes: a hand 66 high on a phone, the fingertip on the target', () {
+  test('the shared pictures keep their sizes: a hand 72 high on a phone, the fingertip on the target', () {
     expect(hintScale(const Size(330, 128)), 1);
     expect(hintScale(const Size(270, 104)), 0.85);
     expect(hintScale(const Size(552, 268)), 1.4);
-    expect(PointingHand.widthAt(66), closeTo(46.6, 0.1));
-    final Offset tip = PointingHand.tipAt(66);
-    expect(tip.dx, closeTo(16.9, 0.1));
-    expect(tip.dy, closeTo(60.4, 0.1));
+    expect(PointingHand.widthAt(72), closeTo(51.7, 0.1));
+    final Offset tip = PointingHand.tipAt(72);
+    expect(tip.dx, closeTo(19.2, 0.1));
+    expect(tip.dy, closeTo(64.6, 0.1));
   });
 }

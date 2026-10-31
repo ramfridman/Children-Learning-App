@@ -268,7 +268,7 @@ class HintOverlay extends StatelessWidget {
   /// The pointing hand: its fingertip on [HandMark.tip]. It travels in 450 ms (it just appears there with "reduce motion").
   Widget _hand(BuildContext context, Key key, HandMark m, double k) {
     final bool still = MediaQuery.disableAnimationsOf(context);
-    final double h = (66 * k).clamp(40, 90).toDouble();
+    final double h = (72 * k).clamp(40, 96).toDouble();
     final Offset tip = PointingHand.tipAt(h);
     return Positioned.fill(
       key: key,

@@ -79,6 +79,137 @@ int? periodOf(List<String> row) {
   return null;
 }
 
+/// The box the ink of a pack picture covers, as parts of its drawing box (0 to 1 each way): a short stick is drawn in the middle
+/// of a box as big as the long one's, so a hint that lines things up or measures them needs the ink, not the box. Reads the plain
+/// shapes the pack pictures are made of (rect, circle, ellipse, line, polygon, absolute paths) and one centred `scale` group;
+/// anything else counts as the whole box.
+Rect inkBoxOf(String svg) {
+  const Rect whole = Rect.fromLTWH(0, 0, 1, 1);
+  final RegExpMatch? vb = RegExp(r'viewBox="\s*([-\d.]+)[\s,]+([-\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)')
+      .firstMatch(svg);
+  if (vb == null) return whole;
+  final double vx = double.parse(vb[1]!);
+  final double vy = double.parse(vb[2]!);
+  final double vw = double.parse(vb[3]!);
+  final double vh = double.parse(vb[4]!);
+  final RegExpMatch? grp = RegExp(
+    r'translate\(\s*([-\d.]+)[\s,]+([-\d.]+)\s*\)\s*scale\(\s*([\d.]+)\s*\)\s*translate\(',
+  ).firstMatch(svg);
+  final Offset pivot = grp == null ? Offset.zero : Offset(double.parse(grp[1]!), double.parse(grp[2]!));
+  final double scale = grp == null ? 1 : double.parse(grp[3]!);
+  double minX = double.infinity, minY = double.infinity, maxX = -double.infinity, maxY = -double.infinity;
+  void add(double x, double y) {
+    final Offset p = pivot + (Offset(x, y) - pivot) * scale;
+    minX = math.min(minX, p.dx);
+    minY = math.min(minY, p.dy);
+    maxX = math.max(maxX, p.dx);
+    maxY = math.max(maxY, p.dy);
+  }
+
+  for (final RegExpMatch m in RegExp(
+    r'<(rect|circle|ellipse|line|polygon|polyline|path)\b([^>]*)>',
+  ).allMatches(svg)) {
+    final String at = m[2]!;
+    double v(String name) =>
+        double.tryParse(
+          RegExp(
+                r'\b'
+                '$name'
+                r'="([-\d.]+)"',
+              ).firstMatch(at)?[1] ??
+              '',
+        ) ??
+        0;
+    switch (m[1]) {
+      case 'rect':
+        add(v('x'), v('y'));
+        add(v('x') + v('width'), v('y') + v('height'));
+      case 'circle':
+        add(v('cx') - v('r'), v('cy') - v('r'));
+        add(v('cx') + v('r'), v('cy') + v('r'));
+      case 'ellipse':
+        add(v('cx') - v('rx'), v('cy') - v('ry'));
+        add(v('cx') + v('rx'), v('cy') + v('ry'));
+      case 'line':
+        add(v('x1'), v('y1'));
+        add(v('x2'), v('y2'));
+      case 'polygon' || 'polyline':
+        final List<double> n = <double>[
+          for (final RegExpMatch d in RegExp(
+            r'-?[\d.]+',
+          ).allMatches(RegExp(r'points="([^"]*)"').firstMatch(at)?[1] ?? ''))
+            double.parse(d[0]!),
+        ];
+        for (int i = 0; i + 1 < n.length; i += 2) {
+          add(n[i], n[i + 1]);
+        }
+      default:
+        final String d = RegExp(r'\bd="([^"]*)"').firstMatch(at)?[1] ?? '';
+        // Relative moves and arcs are not read: the whole box.
+        if (RegExp('[a-yA]').hasMatch(d.replaceAll('e-', ''))) return whole;
+        String cmd = 'M';
+        final List<double> nums = <double>[];
+        void flush() {
+          if (cmd == 'H') {
+            for (final double x in nums) {
+              add(x, minY.isFinite ? minY : 0);
+            }
+          } else if (cmd == 'V') {
+            for (final double y in nums) {
+              add(minX.isFinite ? minX : 0, y);
+            }
+          } else {
+            for (int i = 0; i + 1 < nums.length; i += 2) {
+              add(nums[i], nums[i + 1]);
+            }
+          }
+          nums.clear();
+        }
+
+        for (final RegExpMatch t in RegExp(r'[A-Za-z]|-?\d*\.?\d+').allMatches(d)) {
+          final String tok = t[0]!;
+          if (RegExp('[A-Za-z]').hasMatch(tok)) {
+            flush();
+            cmd = tok;
+          } else {
+            nums.add(double.parse(tok));
+          }
+        }
+        flush();
+    }
+  }
+  if (!minX.isFinite) return whole;
+  return Rect.fromLTRB(
+    ((minX - vx) / vw).clamp(0, 1).toDouble(),
+    ((minY - vy) / vh).clamp(0, 1).toDouble(),
+    ((maxX - vx) / vw).clamp(0, 1).toDouble(),
+    ((maxY - vy) / vh).clamp(0, 1).toDouble(),
+  );
+}
+
+/// [svg] with its viewBox cut down to [part] (parts of the box, as [inkBoxOf] gives them) and no fixed size, so that it draws
+/// only that part, filling a box of the same shape.
+String cropToInk(String svg, Rect part) {
+  final RegExpMatch? vb = RegExp(r'viewBox="\s*([-\d.]+)[\s,]+([-\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)\s*"')
+      .firstMatch(svg);
+  if (vb == null) return svg;
+  final double vx = double.parse(vb[1]!);
+  final double vy = double.parse(vb[2]!);
+  final double vw = double.parse(vb[3]!);
+  final double vh = double.parse(vb[4]!);
+  String f(double v) => v.toStringAsFixed(2);
+  final String box =
+      'viewBox="${f(vx + part.left * vw)} ${f(vy + part.top * vh)} ${f(part.width * vw)} ${f(part.height * vh)}"';
+  final int start = math.max(0, svg.indexOf('<svg'));
+  final int end = svg.indexOf('>', start);
+  if (end < 0) return svg;
+  final String head = svg
+      .substring(start, end)
+      .replaceFirst(vb[0]!, box)
+      .replaceAll(RegExp(r'\s(width|height)="[^"]*"'), '');
+  return svg.substring(0, start) + head + svg.substring(end);
+}
+
 class _Plans {
   _Plans(this.a, this.g) : k = hintScale(g.size);
 
@@ -150,6 +281,20 @@ class _Plans {
   Rect get _card => g.endCard;
   double get _reserve => g.endCard.right + 6;
 
+  /// Where the tip of the finger that counts thing [i] (from 0) of [n] is drawn, when the hands of [n] stand in [card] (one hand
+  /// up to five, two hands above): the card's padding and ring, then the hands centred and shrunk to fit, as [CardMark] draws them.
+  Offset _fingerIn(Rect card, int i, int n) {
+    const double handH = 84;
+    final double handW = handH * HintHand.artSize.width / HintHand.artSize.height;
+    final double w = n <= 5 ? handW : 2 * handW + 10;
+    final Rect inner = card.deflate(6 * k + 3);
+    final double f = math.min(1, math.min(inner.width / w, inner.height / handH));
+    final Offset origin = inner.center - Offset(w * f / 2, handH * f / 2);
+    final HandSide side = i < 5 ? HandSide.left : HandSide.right;
+    final Offset tip = HintHand.tipInArt(side, i % 5) * (handH / HintHand.artSize.height);
+    return origin + (Offset(i < 5 ? 0 : handW + 10, 0) + tip) * f;
+  }
+
   /// Level 1 of a count: the things are lit one after the other, left to right, a dot staying on each; nothing is said or counted.
   List<HintFrame> _lightEach(
     List<Rect> rs, {
@@ -184,8 +329,11 @@ class _Plans {
         restReserve: reserve,
       );
     }
+    // The sample stands on the tile's top edge, just before the fingertip (the hand comes from the upper right), big enough to
+    // be the same picture as in the card: 50 on a phone, at most 60 on a tablet.
+    final double s = math.min(50 * k, 60);
     Rect above(int i) =>
-        Rect.fromCenter(center: g.optionTip(i) - Offset(26 * k, 22 * k), width: 38 * k, height: 38 * k);
+        Rect.fromCenter(center: g.optionTip(i) - Offset(26 * k, s / 2 + 1), width: s, height: s);
     return _demo(<HintFrame>[
       HintFrame(<HintMark>[make(home)], hold: _ms(700), reserve: reserve),
       for (int i = 0; i < _n; i++) HintFrame(<HintMark>[make(above(i))], hold: _ms(800), reserve: reserve),
@@ -424,17 +572,21 @@ class _Plans {
     Widget hands(int raised) => raised <= 5
         ? HintHand(fingers: raised, side: HandSide.left, height: 84)
         : CountingHands(raised: raised);
-    final Offset fingerTop = Offset(_card.center.dx, _card.top + 20 * k);
     if (level == 2) {
+      // Each thing keeps a dotted line to the hand (mockup M2), so the hand reads as the same things counted another way. The lines
+      // aim at their own fingers but pass under the card, so they end on its edge and never cross the drawn fingers.
+      List<HintMark> links(int upTo) => <HintMark>[
+        for (int j = 0; j < upTo; j++) LineMark(objs[j].center, _fingerIn(_card, j, n)),
+      ];
       final List<HintFrame> frames = <HintFrame>[
         HintFrame(<HintMark>[CardMark(_card, hands(0))], hold: _ms(500), reserve: _reserve),
         for (int i = 0; i < n; i++)
           HintFrame(
             <HintMark>[
+              ...links(i + 1),
               CardMark(_card, hands(i + 1)),
               for (int j = 0; j < i; j++) SeenMark(objs[j]),
               RingMark(objs[i]),
-              LineMark(objs[i].center, fingerTop),
             ],
             hold: _ms(950),
             reserve: _reserve,
@@ -442,7 +594,7 @@ class _Plans {
       ];
       return HintPlan(
         frames,
-        rest: <HintMark>[CardMark(_card, hands(n)), for (final Rect r in objs) SeenMark(r)],
+        rest: <HintMark>[...links(n), CardMark(_card, hands(n)), for (final Rect r in objs) SeenMark(r)],
         restReserve: _reserve,
       );
     }
@@ -801,11 +953,8 @@ class _Plans {
             hold: _ms(900),
             reserve: _reserve,
           ),
-        _toAnswer(<HintMark>[
-          CardMark(_card, hands(total)),
-          ...done(more),
-          BadgeMark(_card.center, total, big: true),
-        ], reserve: _reserve),
+        // The count card takes the hand card's place (drawn over it, the hand peeked out above the number).
+        _toAnswer(<HintMark>[...done(more), BadgeMark(_card.center, total, big: true)], reserve: _reserve),
       ]);
     }
     // Take away: the hand shows the group, and the things taken away fold a finger each.
@@ -831,10 +980,7 @@ class _Plans {
           hold: _ms(900),
           reserve: _reserve,
         ),
-      _toAnswer(<HintMark>[
-        CardMark(_card, hands(total)),
-        BadgeMark(_card.center, total, big: true),
-      ], reserve: _reserve),
+      _toAnswer(<HintMark>[BadgeMark(_card.center, total, big: true)], reserve: _reserve),
     ]);
   }
 
@@ -903,34 +1049,65 @@ class _Plans {
 
   // ---- TA-11 measure ----
 
+  /// The ink box with room for the outline (the pack pictures' strokes are about 3 in a box of 100).
+  static Rect _withStroke(Rect ink) => Rect.fromLTRB(
+    math.max(0, ink.left - 0.015),
+    math.max(0, ink.top - 0.015),
+    math.min(1, ink.right + 0.015),
+    math.min(1, ink.bottom + 0.015),
+  );
+
   HintPlan measure(int level) {
-    final List<(String, double)> things = <(String, double)>[
+    final List<(String, double, Rect)> things = <(String, double, Rect)>[
       for (final ChoiceOption o in a.options)
-        if (_svg(_spriteOf(o)) != null) (_svg(_spriteOf(o))!, o.set?.scale ?? 1),
+        if (_svg(_spriteOf(o)) != null)
+          (_svg(_spriteOf(o))!, o.set?.scale ?? 1, _withStroke(inkBoxOf(_svg(_spriteOf(o))!))),
     ];
     if (things.length != 2) return generic(level);
-    final double most = things.map(((String, double) t) => t.$2).reduce(math.max);
-    final double base = math.min(54 * k, g.h * 0.34) / math.max(1.0, most);
-    final List<Rect> rows = <Rect>[
-      for (int i = 0; i < 2; i++)
-        Rect.fromCenter(
-          center: Offset(46 * k + base * things[i].$2 / 2, g.h * (i == 0 ? 0.27 : 0.66)),
-          width: base * things[i].$2,
-          height: base * things[i].$2,
-        ),
-    ];
+    // Both things are drawn at one scale (the scale of a set kept), each in its own half of the stage, its drawn end on the
+    // start line: what a child compares is the ink, not the picture's box (a short stick is drawn in the middle of its box).
+    final double cube = 14 * k;
+    final double startX = 30 * k;
+    final double left = startX + 4 * k;
+    final double band = g.h / 2;
+    final double roomH = band - cube - 10 * k;
+    final double roomW = g.w - left - 24 * k;
+    double widest = 0;
+    double tallest = 0;
+    for (final (String _, double s, Rect ink) in things) {
+      widest = math.max(widest, ink.width * s);
+      tallest = math.max(tallest, ink.height * s);
+    }
+    double side = math.min(130 * k, math.min(roomW / widest, roomH / tallest));
+    final List<Rect> drawn = <Rect>[];
+    final List<Rect> ink = <Rect>[];
+    // A picture's box (bigger than its ink) must stay on the stage too: a little smaller until it does.
+    for (int tries = 0; tries < 40; tries++) {
+      drawn.clear();
+      ink.clear();
+      for (int i = 0; i < 2; i++) {
+        final (String _, double s, Rect box) = things[i];
+        final double d = side * s;
+        final double inkH = box.height * d;
+        final double top = i * band + 4 * k + (roomH - inkH) / 2;
+        ink.add(Rect.fromLTWH(left, top, box.width * d, inkH));
+        // The copy is cut to its ink (see [cropToInk]), so its box is the ink itself.
+        drawn.add(ink.last);
+      }
+      if (drawn.every((Rect r) => r.left >= 0 && r.top >= 0 && r.right <= g.w && r.bottom <= g.h)) break;
+      side *= 0.95;
+    }
     final List<HintMark> aligned = <HintMark>[
-      LineMark(Offset(30 * k, 6 * k), Offset(30 * k, g.h - 6 * k)),
-      for (int i = 0; i < 2; i++) CopyMark(rows[i], things[i].$1),
+      LineMark(Offset(startX, 6 * k), Offset(startX, g.h - 6 * k)),
+      for (int i = 0; i < 2; i++) CopyMark(drawn[i], cropToInk(things[i].$1, things[i].$3)),
     ];
     if (level == 1) return HintPlan(<HintFrame>[HintFrame(aligned, hold: _ms(2600))], rest: aligned);
     if (level == 2) {
-      // A stick of cubes along each: the longer has more.
-      final double cube = 11 * k;
+      // A stick of cubes along each, from the same start line: the longer has more.
       final List<HintMark> cubes = <HintMark>[
-        for (final Rect r in rows)
-          for (int c = 0; c < math.max(1, (r.width / cube).floor()); c++)
-            BlockMark(Rect.fromLTWH(r.left + c * cube, r.bottom + 2 * k, cube - 1.5, cube - 1.5)),
+        for (final Rect r in ink)
+          for (int c = 0; c < math.max(1, (r.width / cube).round()); c++)
+            BlockMark(Rect.fromLTWH(left + c * cube, r.bottom + 3 * k, cube - 1.5, cube - 1.5)),
       ];
       return HintPlan(
         <HintFrame>[
