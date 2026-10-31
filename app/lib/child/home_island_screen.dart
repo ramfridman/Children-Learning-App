@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show OrdinalSortKey;
 
@@ -9,6 +10,7 @@ import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
+import 'adventure_line.dart';
 import 'home_island_name.dart';
 
 /// The picture the sticker book shows on its cover until the child has a sticker of their own.
@@ -26,6 +28,7 @@ class HomeIslandScreen extends StatefulWidget {
     this.companion,
     this.onCompanion,
     this.onBottle,
+    this.bottleLine,
     this.onStickers,
     this.onHall,
     this.hallGlow = false,
@@ -45,6 +48,10 @@ class HomeIslandScreen extends StatefulWidget {
   final VoidCallback? onBottle;
   final VoidCallback? onStickers;
   final VoidCallback? onHall;
+
+  /// What the bottle's stop is, once the child touched the bottle: the bubble says it (in place of the welcome and the
+  /// friend's hello) until it is null again. The bottle's own label does not change: the stop is only chosen at the touch.
+  final ValueListenable<AdventureLine?>? bottleLine;
 
   /// Something waits in the Hall: the lighthouse's lantern shows a trophy in a warm halo.
   final bool hallGlow;
@@ -235,6 +242,8 @@ class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerPr
     duration: const Duration(milliseconds: 2400),
   );
 
+  static final ValueNotifier<AdventureLine?> _noLine = ValueNotifier<AdventureLine?>(null);
+
   /// The child touched the friend: the bubble says hello instead of the welcome, and keeps saying it.
   bool _hi = false;
 
@@ -340,15 +349,29 @@ class _HomeIslandScreenState extends State<HomeIslandScreen> with SingleTickerPr
             left: s.bubble.dx,
             top: s.bubble.dy,
             child: IgnorePointer(
-              child: KeyedSubtree(
-                key: const Key('home-island-bubble'),
-                child: BoardBubble(
-                  text: _hi ? He.nitziHomeHi.text : _welcome(context, s),
-                  fontSize: s.bubbleFont,
-                  padding: s.bubblePad,
-                  maxWidth: s.bubbleMaxWidth,
-                  tailTip: s.tailTip - s.bubble,
-                ),
+              child: ValueListenableBuilder<AdventureLine?>(
+                valueListenable: widget.bottleLine ?? _noLine,
+                builder: (BuildContext context, AdventureLine? line, Widget? _) {
+                  final Widget bubble = KeyedSubtree(
+                    key: const Key('home-island-bubble'),
+                    child: BoardBubble(
+                      text: line?.text ?? (_hi ? He.nitziHomeHi.text : _welcome(context, s)),
+                      fontSize: s.bubbleFont,
+                      padding: s.bubblePad,
+                      maxWidth: s.bubbleMaxWidth,
+                      tailTip: s.tailTip - s.bubble,
+                    ),
+                  );
+                  // A screen reader is told the bottle's line in plain letters, once, as it appears.
+                  return line == null
+                      ? bubble
+                      : Semantics(
+                          container: true,
+                          liveRegion: true,
+                          label: line.semantics,
+                          child: ExcludeSemantics(child: bubble),
+                        );
+                },
               ),
             ),
           ),
