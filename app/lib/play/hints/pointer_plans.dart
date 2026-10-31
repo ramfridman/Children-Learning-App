@@ -106,3 +106,30 @@ HintPlan pointerFlashPlan(List<Offset> centres, {int stepMs = 700, int tailMs = 
   frames.add(HintFrame(counted(centres.length), hold: Duration(milliseconds: tailMs)));
   return HintPlan(frames);
 }
+
+/// How long the hand takes to travel from one place to the next (the same 450 ms as `HintOverlay`): a session that changes its
+/// stage "when the hand gets there" does so this long after the hand is sent.
+const int handTravelMs = 450;
+
+/// One stop of a hand tour: the fingertip goes to [tip], presses, and stays [ms]; [marks] are what else is on the stage meanwhile.
+class HandStop {
+  const HandStop(this.tip, this.ms, {this.marks = const <HintMark>[]});
+
+  final Offset tip;
+  final int ms;
+  final List<HintMark> marks;
+}
+
+/// The hand goes to each of [stops] in turn and presses there. After the last one the hand leaves and the stage holds [after] for
+/// [tailMs] (a plan is as long as the session's demonstration, so that nothing stays when the child's turn comes); [rest] is what
+/// stays on the stage when the plan is over.
+HintPlan handTourPlan(
+  List<HandStop> stops, {
+  List<HintMark> after = const <HintMark>[],
+  int tailMs = 0,
+  List<HintMark> rest = const <HintMark>[],
+}) => HintPlan(<HintFrame>[
+  for (final HandStop s in stops)
+    HintFrame(<HintMark>[...s.marks, HandMark(s.tip, press: true)], hold: Duration(milliseconds: s.ms)),
+  if (tailMs > 0) HintFrame(after, hold: Duration(milliseconds: tailMs)),
+], rest: rest);

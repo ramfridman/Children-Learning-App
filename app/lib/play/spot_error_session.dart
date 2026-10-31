@@ -10,7 +10,9 @@ import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
+import 'hints/right_cell.dart';
 import 'template_session.dart';
 
 /// The spot-the-mistake template (T21): a friend made a row (a pattern, a count, a program, a sum) and one cell of it is wrong.
@@ -40,9 +42,12 @@ class SpotErrorSession extends TemplateSession {
   late final HintPlayer _hint = HintPlayer(this);
   Size _size = Size.zero;
 
+  /// The side of a cell of a row of [n] in a stage of [size].
+  static double cellSide(Size size, int n) => math.min(size.height - 16, (size.width - 16) / n - 6);
+
   /// Where the cells of a row of [n] stand in a stage of [size], left to right: the same numbers the stage draws with.
   static List<Offset> cellCentres(Size size, int n) {
-    final double side = math.min(size.height - 16, (size.width - 16) / n - 6);
+    final double side = cellSide(size, n);
     final double row = (side + 6) * n;
     return <Offset>[
       for (int i = 0; i < n; i++) Offset((size.width - row) / 2 + (side + 6) * (i + 0.5), size.height / 2),
@@ -118,7 +123,7 @@ class SpotErrorSession extends TemplateSession {
       case HintPicture.stepArcs:
         _walk(to: activity.cells.length - 1, bar: true);
       default:
-        _walk(to: activity.wrong, bar: true, stopOnWrong: true);
+        _walk(to: activity.wrong, bar: false, stopOnWrong: true);
     }
   }
 
@@ -134,7 +139,7 @@ class SpotErrorSession extends TemplateSession {
         HintPlan(<HintFrame>[
           for (int i = 0; i <= to; i++)
             HintFrame(<HintMark>[HandMark(at[i], press: true)], hold: const Duration(milliseconds: 700)),
-        ]),
+        ], rest: _rightOne(at[to])),
       );
     }
     final int run = _run;
@@ -159,6 +164,29 @@ class SpotErrorSession extends TemplateSession {
       if (stopOnWrong) controller.demoDone();
     });
     notify();
+  }
+
+  /// The sky card with what the mistake should have been, above the cell [mistake] where the hand stopped; it stays for the child
+  /// to compare (nothing when the row alone does not tell). It lies over the top of the cell a little where the row leaves no room.
+  List<HintMark> _rightOne(Offset mistake) {
+    final String? right = rightCellOf(activity.cells, activity.wrong);
+    if (right == null) return const <HintMark>[];
+    final double k = hintScale(_size);
+    final double side = cellSide(_size, activity.cells.length);
+    final double room = mistake.dy - side / 2;
+    final double card = (room + 10 * k).clamp(40 * k, 56 * k);
+    final double top = math.max(2, mistake.dy - side / 2 - card - 2);
+    final double inner = card - 12 * k - 6;
+    return <HintMark>[
+      CardMark(
+        Rect.fromLTWH(mistake.dx - card / 2, top, card, card),
+        SizedBox(
+          width: inner,
+          height: inner,
+          child: Center(child: _cellFace(activity, right, inner)),
+        ),
+      ),
+    ];
   }
 
   @override
@@ -224,6 +252,7 @@ class _RowStage extends StatelessWidget {
                   ),
                 ),
               ),
+            Positioned.fill(child: s._hint.body(size)),
           ],
         ),
       ),
@@ -255,7 +284,7 @@ class _RowStage extends StatelessWidget {
             fit: StackFit.passthrough,
             alignment: Alignment.center,
             children: <Widget>[
-              Center(child: _face(a, a.cells[i], side)),
+              Center(child: _cellFace(a, a.cells[i], side)),
               if (s.visited.contains(i) && s.hintCell != i)
                 const Positioned(top: 4, right: 4, child: SeenDot(key: Key('seen-dot'))),
             ],
@@ -264,21 +293,22 @@ class _RowStage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _face(SpotErrorActivity a, String cell, double side) {
-    if (cell.startsWith('asset:')) {
-      return Padding(padding: const EdgeInsets.all(5), child: PackSvg(a.assets.svg(cell)));
-    }
-    if (cell.startsWith('dir:')) {
-      final IconData icon = switch (cell.substring(4)) {
-        'up' => Icons.arrow_upward_rounded,
-        'down' => Icons.arrow_downward_rounded,
-        'left' => Icons.arrow_back_rounded,
-        _ => Icons.arrow_forward_rounded,
-      };
-      return Icon(icon, size: side * 0.6, color: TokenColors.ink);
-    }
-    final String text = cell.startsWith('op:') ? cell.substring(3).replaceAll('-', '−') : cell.substring(2);
-    return Text(text, style: AppText.fixed(size: side * 0.5, weight: 800, lineHeight: 1));
+/// What a cell shows: a picture of the pack, an arrow, a number or a sign, in a cell whose side is [side].
+Widget _cellFace(SpotErrorActivity a, String cell, double side) {
+  if (cell.startsWith('asset:')) {
+    return Padding(padding: const EdgeInsets.all(5), child: PackSvg(a.assets.svg(cell)));
   }
+  if (cell.startsWith('dir:')) {
+    final IconData icon = switch (cell.substring(4)) {
+      'up' => Icons.arrow_upward_rounded,
+      'down' => Icons.arrow_downward_rounded,
+      'left' => Icons.arrow_back_rounded,
+      _ => Icons.arrow_forward_rounded,
+    };
+    return Icon(icon, size: side * 0.6, color: TokenColors.ink);
+  }
+  final String text = cell.startsWith('op:') ? cell.substring(3).replaceAll('-', '−') : cell.substring(2);
+  return Text(text, style: AppText.fixed(size: side * 0.5, weight: 800, lineHeight: 1));
 }

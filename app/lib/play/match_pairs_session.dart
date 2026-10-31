@@ -9,6 +9,12 @@ import '../content/schemas.dart' show coinSprites;
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'hint_widgets.dart' show DotRow;
+import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart' show hintScale;
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
+import 'hints/tile_points.dart';
 import 'shop_pay_session.dart' show CoinFace;
 import 'sprite_group.dart';
 import 'response_code.dart';
@@ -42,6 +48,35 @@ class MatchPairsSession extends TemplateSession {
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
+  /// The pointing hand, the line it draws and the dots under a numeral (B-40), and the stage's and the board's sizes they use.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+  ActivitySpec? _spec;
+
+  bool get _canDraw => _spec != null && !_size.isEmpty;
+
+  /// A face's side in a row of [n] faces over [width] by [height], and where the faces stand: a row is centred and drawn left to
+  /// right, each face with 5 around it. The top row is in the stage, the bottom row in the tiles' box.
+  static double faceSide(double width, double height, int n) =>
+      math.min(height - 12, math.min(96, width / n - 14));
+
+  static double _rowStart(double width, int n, double side) => (width - n * (side + 10)) / 2;
+
+  static Rect topFace(Size stage, int n, int i) {
+    final double side = faceSide(stage.width, stage.height, n);
+    return Rect.fromCenter(
+      center: Offset(_rowStart(stage.width, n, side) + (i + 0.5) * (side + 10), stage.height / 2),
+      width: side,
+      height: side,
+    );
+  }
+
+  /// The fingertip place on the top edge of bottom face [i] of [n] (a tile's top, 5 under the box's top).
+  static Offset bottomTip(ActivitySpec spec, int n, int i) {
+    final double side = faceSide(spec.tilesWidth, 110, n);
+    return spec.fromTiles(_rowStart(spec.tilesWidth, n, side) + (i + 0.5) * (side + 10), 5);
+  }
+
   int numberOf(String leftId) => matched.keys.toList().indexOf(leftId) + 1;
   int? numberOfRight(String rightId) {
     for (final MapEntry<String, String> e in matched.entries) {
@@ -68,6 +103,7 @@ class MatchPairsSession extends TemplateSession {
 
   void _endDemo() {
     if (!demoRunning) return;
+    _hint.clear();
     _run++;
     if (_demoPair != null) matched.remove(_demoPair);
     _demoPair = null;
@@ -101,6 +137,7 @@ class MatchPairsSession extends TemplateSession {
     }
     _busy = true;
     if (right) {
+      _hint.clear();
       matched[l] = r;
       selectedLeft = null;
       selectedRight = null;
@@ -158,6 +195,7 @@ class MatchPairsSession extends TemplateSession {
 
   @override
   void onReset() {
+    _hint.clear();
     _run++;
     _demoPair = null;
     matched.clear();
@@ -175,6 +213,7 @@ class MatchPairsSession extends TemplateSession {
 
   @override
   void onReplay() {
+    _hint.clear();
     _run++;
     hintLeft = null;
     hintRight = null;
@@ -197,8 +236,10 @@ class MatchPairsSession extends TemplateSession {
         _lightEach();
       case HintPicture.firstFace:
         _run++;
+        _hint.clear();
         hintLeft = _nextPair?.key;
         hintRight = null;
+        _dotsUnderNumeral();
         notify();
       default:
         _drawOne();
@@ -229,8 +270,31 @@ class MatchPairsSession extends TemplateSession {
     notify();
   }
 
-  /// The worked example: the guide lights the first card, then its partner, joins them for a moment, undoes it and leaves the two
-  /// lit. Then it is the child's turn.
+  /// Another way to see the first card when it is a numeral: that many dots under it, in a sky strip. It stays while the item is open.
+  void _dotsUnderNumeral() {
+    final MapEntry<String, String>? pair = _nextPair;
+    if (pair == null || !_canDraw) return;
+    final int i = _top(pair.key);
+    final int? n = activity.left[i].numeral;
+    if (n == null || n < 1) return;
+    final Rect face = topFace(_size, activity.left.length, i);
+    final double k = hintScale(_size);
+    _hint.play(
+      HintPlan(
+        const <HintFrame>[],
+        rest: <HintMark>[
+          CardMark(
+            Rect.fromLTWH(face.left + 8 * k, face.bottom - 26 * k, face.width - 16 * k, 20 * k),
+            DotRow(count: n, size: 9 * k),
+            tight: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// The worked example: the pointing hand goes to the first card, then to its partner and draws the line between them (the guide
+  /// joins them for a moment), undoes it and leaves the two lit. Then it is the child's turn.
   void _drawOne() {
     final MapEntry<String, String>? pair = _nextPair;
     if (pair == null) return;
@@ -241,6 +305,24 @@ class MatchPairsSession extends TemplateSession {
     hintRight = null;
     selectedLeft = null;
     selectedRight = null;
+    final ActivitySpec? spec = _spec;
+    if (spec != null && _canDraw) {
+      final Rect face = topFace(_size, activity.left.length, _top(pair.key));
+      final Offset bottom = bottomTip(spec, activity.right.length, _bottom(pair.value));
+      _hint.play(
+        handTourPlan(<HandStop>[
+          HandStop(face.center, 900),
+          HandStop(bottom, 900),
+          HandStop(
+            bottom,
+            1200,
+            marks: <HintMark>[
+              PairsMark(lines: <(Offset, Offset)>[(Offset(face.center.dx, face.bottom), bottom)]),
+            ],
+          ),
+        ]),
+      );
+    }
     later(const Duration(milliseconds: 900), () {
       if (run != _run) return;
       hintRight = pair.value;
@@ -266,17 +348,32 @@ class MatchPairsSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) => ListenableBuilder(
-    listenable: this,
-    builder: (BuildContext c, Widget? _) => Directionality(
-      textDirection: TextDirection.ltr,
-      child: Semantics(
-        container: true,
-        label: activity.altText,
-        child: _Row(this, activity.left, top: true, width: size.width, height: size.height),
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: Semantics(
+          container: true,
+          label: activity.altText,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: <Widget>[
+              Positioned.fill(
+                child: _Row(this, activity.left, top: true, width: size.width, height: size.height),
+              ),
+              Positioned.fill(child: _hint.body(size)),
+            ],
+          ),
+        ),
       ),
-    ),
-  );
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
@@ -307,7 +404,7 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double side = math.min(height - 12, math.min(96, width / faces.length - 14));
+    final double side = MatchPairsSession.faceSide(width, height, faces.length);
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.min,

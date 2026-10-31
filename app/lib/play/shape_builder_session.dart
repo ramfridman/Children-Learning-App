@@ -7,6 +7,11 @@ import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart' show hintScale;
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
+import 'hints/tile_points.dart';
 import 'response_code.dart';
 import 'template_session.dart';
 
@@ -38,6 +43,52 @@ class ShapeBuilderSession extends TemplateSession {
 
   late final List<String> pieces = activity.pieces;
 
+  /// The pointing hand and the ghost outline (B-40), and the stage's and the board's sizes they are placed by.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+  ActivitySpec? _spec;
+
+  bool get _canDraw => _spec != null && !_size.isEmpty;
+
+  /// The box the picture of the stage is drawn in (centred, as high as the stage allows), and the place of a slot in it.
+  Rect pictureBox(Size size) {
+    final double w = math.min(size.width - 16, (size.height - 12) * activity.aspect);
+    final double h = w / activity.aspect;
+    return Rect.fromLTWH((size.width - w) / 2, (size.height - h) / 2, w, h);
+  }
+
+  Rect slotRect(Size size, ShapeSlot slot) {
+    final Rect box = pictureBox(size);
+    return Rect.fromLTWH(
+      box.left + slot.x * box.width,
+      box.top + slot.y * box.height,
+      slot.w * box.width,
+      slot.h * box.height,
+    );
+  }
+
+  /// The outline that a slot's silhouette has, or null for a shape the ghost cannot draw.
+  static GhostKind? ghostKindOf(String sprite) {
+    if (sprite.contains('shape_circle')) return GhostKind.circle;
+    if (sprite.contains('shape_square')) return GhostKind.square;
+    if (sprite.contains('shape_triangle')) return GhostKind.triangle;
+    if (sprite.contains('shape_rect')) return GhostKind.rect;
+    return null;
+  }
+
+  /// Where the ghost floats beside the picture: at the stage's end side (the left) when there is room for it there, else at the
+  /// other side, else null. It is as big as the room allows, up to 56 (times the board's scale).
+  Rect? _ghostPlace(Size size) {
+    final Rect box = pictureBox(size);
+    final double k = hintScale(size);
+    final double left = box.left - 8;
+    final double right = size.width - box.right - 8;
+    final double side = math.min(56 * k, math.max(left, right) - 8);
+    if (side < 34) return null;
+    final double x = left >= right ? 4 + (left - side) / 2 : box.right + 4 + (right - side) / 2;
+    return Rect.fromLTWH(x, (size.height - side) / 2, side, side);
+  }
+
   /// The tray pieces that have been used (the first of each shape that has been placed).
   final Set<int> usedPieces = <int>{};
 
@@ -50,6 +101,7 @@ class ShapeBuilderSession extends TemplateSession {
   void _endDemo() {
     if (!demoRunning) return;
     _run++;
+    _hint.clear();
     if (_demoSlot != null) filled.remove(_demoSlot);
     if (_demoPiece != null) usedPieces.remove(_demoPiece);
     _demoSlot = null;
@@ -75,6 +127,7 @@ class ShapeBuilderSession extends TemplateSession {
     if (_busy || ring == AnswerState.correct || isUsed(piece) || filled.contains(slotId)) return;
     final ShapeSlot slot = activity.slots.firstWhere((ShapeSlot s) => s.id == slotId);
     if (pieces[piece] == slot.sprite) {
+      _hint.clear();
       filled.add(slotId);
       usedPieces.add(piece);
       selected = null;
@@ -128,6 +181,7 @@ class ShapeBuilderSession extends TemplateSession {
 
   @override
   void onReset() {
+    _hint.clear();
     _run++;
     _demoSlot = null;
     _demoPiece = null;
@@ -145,6 +199,7 @@ class ShapeBuilderSession extends TemplateSession {
 
   @override
   void onReplay() {
+    _hint.clear();
     _run++;
     hintSlot = null;
     hintPiece = null;
@@ -161,8 +216,10 @@ class ShapeBuilderSession extends TemplateSession {
         _lightEach();
       case HintPicture.nextOutline:
         _run++;
+        _hint.clear();
         hintPiece = null;
         hintSlot = _nextOpen?.id;
+        _liftGhost();
         notify();
       default:
         _putOne();
@@ -193,8 +250,26 @@ class ShapeBuilderSession extends TemplateSession {
     notify();
   }
 
-  /// The worked example: the guide lights the next place and the piece that fits it, puts the piece in, takes it out again and
-  /// leaves both lit. Then it is the child's turn.
+  /// P9: the outline of the next empty place lifts off as a ghost, turns once and floats beside the picture, where the child can
+  /// compare it with the pieces in the tray. It marks no piece and stays while the item is open.
+  void _liftGhost() {
+    final ShapeSlot? open = _nextOpen;
+    final GhostKind? kind = open == null ? null : ghostKindOf(open.sprite);
+    final Rect? place = _canDraw ? _ghostPlace(_size) : null;
+    if (open == null || kind == null || place == null) return;
+    final Rect from = slotRect(_size, open);
+    _hint.play(
+      HintPlan(
+        <HintFrame>[
+          HintFrame(<HintMark>[GhostMark(from, kind)], hold: const Duration(milliseconds: 700)),
+        ],
+        rest: <HintMark>[GhostMark(place, kind, turn: true)],
+      ),
+    );
+  }
+
+  /// The worked example: the pointing hand takes the piece that fits the next place from the tray and puts it there (the guide
+  /// lights the place and the piece, puts the piece in, takes it out again and leaves both lit). Then it is the child's turn.
   void _putOne() {
     final ShapeSlot? open = _nextOpen;
     if (open == null) return;
@@ -206,7 +281,20 @@ class ShapeBuilderSession extends TemplateSession {
     final int fit = <int>[for (int i = 0; i < pieces.length; i++) i]
         .firstWhere((int i) => !isUsed(i) && pieces[i] == open.sprite, orElse: () => 0);
     hintPiece = fit;
-    later(const Duration(milliseconds: 1200), () {
+    const int taken = 850; // the hand is at the piece
+    const int put = 1300; // and in the place
+    const int over = 2800;
+    final ActivitySpec? spec = _spec;
+    if (spec != null && _canDraw) {
+      final double side = math.max(44, math.min(84, spec.tilesWidth / math.max(1, pieces.length) - 8));
+      _hint.play(
+        handTourPlan(<HandStop>[
+          HandStop(spec.tileTip(pieces.length, fit, slot: side + 8, slop: 4), taken),
+          HandStop(slotRect(_size, open).center, over - taken),
+        ]),
+      );
+    }
+    later(const Duration(milliseconds: put), () {
       if (run != _run) return;
       filled.add(open.id);
       usedPieces.add(fit);
@@ -214,7 +302,7 @@ class ShapeBuilderSession extends TemplateSession {
       _demoPiece = fit;
       notify();
     });
-    later(const Duration(milliseconds: 2600), () {
+    later(const Duration(milliseconds: over), () {
       if (run != _run) return;
       filled.remove(open.id);
       usedPieces.remove(fit);
@@ -230,8 +318,17 @@ class ShapeBuilderSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _BuilderStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => _BuilderStage(this, size),
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
@@ -278,10 +375,9 @@ class _BuilderStage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ShapeBuilderActivity a = s.activity;
-    final double maxW = size.width - 16;
-    final double maxH = size.height - 12;
-    final double w = math.min(maxW, maxH * a.aspect);
-    final double h = w / a.aspect;
+    final Rect box = s.pictureBox(size);
+    final double w = box.width;
+    final double h = box.height;
     return Semantics(
       container: true,
       label: a.altText,
@@ -293,8 +389,8 @@ class _BuilderStage extends StatelessWidget {
             if (a.background != null)
               Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
             Positioned(
-              left: (size.width - w) / 2,
-              top: (size.height - h) / 2,
+              left: box.left,
+              top: box.top,
               width: w,
               height: h,
               // A picture is drawn as it is, left to right, whatever the language.
@@ -306,6 +402,7 @@ class _BuilderStage extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned.fill(child: s._hint.body(size)),
           ],
         ),
       ),

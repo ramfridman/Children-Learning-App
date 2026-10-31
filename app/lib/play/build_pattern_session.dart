@@ -9,6 +9,11 @@ import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'hint_widgets.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart' show hintScale;
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
+import 'hints/tile_points.dart';
 import 'lesson_controller.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -38,8 +43,45 @@ class BuildPatternSession extends TemplateSession {
   bool demoRunning = false;
   int _run = 0;
 
+  /// The pointing hand and the brackets of the unit (B-40), and the stage's and the board's sizes they are placed by.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+  ActivitySpec? _spec;
+
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
+
+  bool get _canDraw => _spec != null && !_size.isEmpty;
+
+  /// The cell [i] of a row of [n] cells in the row whose top is [top] and whose height is [height]: the row fills the stage 8 in,
+  /// each cell has 3 around it, and the rows are drawn left to right (a pattern is read from the left, whatever the language).
+  static Rect cell(Size size, int n, int i, {required double top, required double height}) {
+    final double w = (size.width - 16) / n;
+    return Rect.fromLTWH(8 + i * w + 3, top + 3, w - 6, height - 6);
+  }
+
+  /// The cells of the model row (above), and of the row of places (below it, or alone when there is no model).
+  static Rect modelCell(Size size, int n, int i) => cell(size, n, i, top: 8, height: (size.height - 16) / 2);
+
+  static Rect slotCell(Size size, int slots, int i, {required bool hasModel}) {
+    final double row = hasModel ? (size.height - 16) / 2 : size.height - 16;
+    return cell(size, slots, i, top: hasModel ? 8 + row : 8, height: row);
+  }
+
+  /// The length of the unit that repeats in [row] (the smallest one that is repeated at least once), or null when none does.
+  static int? unitLength(List<String> row) {
+    for (int p = 1; p <= row.length ~/ 2; p++) {
+      if (<int>[for (int i = p; i < row.length; i++) i].every((int i) => row[i] == row[i - p])) return p;
+    }
+    return null;
+  }
+
+  /// The fingertip place on the top edge of the palette picture [sprite].
+  Offset _paletteTip(ActivitySpec spec, String sprite) {
+    final int n = activity.palette.length;
+    final double side = math.min(96, spec.tilesWidth / n - 16);
+    return spec.tileTip(n, math.max(0, activity.palette.indexOf(sprite)), slot: side + 12, slop: 6);
+  }
 
   int? get _firstEmpty {
     final int i = filled.indexOf(null);
@@ -134,6 +176,7 @@ class BuildPatternSession extends TemplateSession {
 
   void _stopHint() {
     _run++;
+    _hint.clear();
     hintSprite = null;
     hintSlot = null;
     litModel = null;
@@ -195,6 +238,7 @@ class BuildPatternSession extends TemplateSession {
     hintSlot = next;
     if (activity.model.isNotEmpty) {
       litModel = math.min(next, activity.model.length - 1);
+      _bracketUnit();
       notify();
       return;
     }
@@ -213,8 +257,33 @@ class BuildPatternSession extends TemplateSession {
     notify();
   }
 
-  /// The worked example: the guide reads the model and puts every picture in its place, one by one, then takes them out again and
-  /// points at the first place and its picture. Then it is the child's turn.
+  /// P7: an open bracket under each copy of the unit that repeats in the model, one after the other, left to right; they stay.
+  void _bracketUnit() {
+    final int? unit = unitLength(activity.model);
+    if (unit == null || !_canDraw) return;
+    final int n = activity.model.length;
+    final double k = hintScale(_size);
+    final List<BracketMark> brackets = <BracketMark>[
+      for (int c = 0; (c + 1) * unit <= n; c++)
+        BracketMark(
+          Offset(modelCell(_size, n, c * unit).left + 2 * k, modelCell(_size, n, c * unit).bottom - 3 * k),
+          Offset(
+            modelCell(_size, n, (c + 1) * unit - 1).right - 2 * k,
+            modelCell(_size, n, (c + 1) * unit - 1).bottom - 3 * k,
+          ),
+        ),
+    ];
+    _hint.play(
+      HintPlan(<HintFrame>[
+        for (int c = 0; c < brackets.length; c++)
+          HintFrame(brackets.sublist(0, c + 1), hold: const Duration(milliseconds: 600)),
+      ], rest: brackets),
+    );
+  }
+
+  /// The worked example: the pointing hand reads the model and, for each place, takes the picture that goes there and puts it in;
+  /// the guide fills the places one by one, then takes them out again and points at the first place and its picture. Then it is
+  /// the child's turn.
   void _workedExample() {
     _stopHint();
     final int run = _run;
@@ -222,9 +291,32 @@ class BuildPatternSession extends TemplateSession {
     for (int i = 0; i < filled.length; i++) {
       filled[i] = null;
     }
-    const int step = 800;
+    const int step = 900; // the hand takes a picture (half) and puts it in its place (half)
+    const int tail = 1200;
+    final ActivitySpec? spec = _spec;
+    if (spec != null && _canDraw) {
+      final bool hasModel = activity.model.isNotEmpty;
+      final int? unit = unitLength(activity.model);
+      Offset from(int i) {
+        // From the model cell that the place copies (a model can be shorter than the row: then the unit goes on), else from the
+        // palette picture that goes there.
+        final int? m = !hasModel ? null : (i < activity.model.length ? i : (unit == null ? null : i % unit));
+        return m == null
+            ? _paletteTip(spec, activity.sequence[i])
+            : modelCell(_size, activity.model.length, m).center;
+      }
+
+      _hint.play(
+        handTourPlan(<HandStop>[
+          for (int i = 0; i < activity.slots; i++) ...<HandStop>[
+            HandStop(from(i), step ~/ 2),
+            HandStop(slotCell(_size, activity.slots, i, hasModel: hasModel).center, step ~/ 2),
+          ],
+        ], tailMs: tail),
+      );
+    }
     for (int i = 0; i < activity.slots; i++) {
-      later(Duration(milliseconds: 300 + step * i), () {
+      later(Duration(milliseconds: step ~/ 2 + 400 + step * i), () {
         if (run != _run) return;
         hintSlot = i;
         litModel = i < activity.model.length ? i : null;
@@ -232,7 +324,7 @@ class BuildPatternSession extends TemplateSession {
         notify();
       });
     }
-    later(Duration(milliseconds: 300 + step * activity.slots + 1200), () {
+    later(Duration(milliseconds: step * activity.slots + tail), () {
       if (run != _run) return;
       for (int i = 0; i < filled.length; i++) {
         filled[i] = null;
@@ -248,8 +340,17 @@ class BuildPatternSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _PatternStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => _PatternStage(this, size),
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
@@ -329,6 +430,7 @@ class _PatternStage extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned.fill(child: s._hint.body(size)),
           ],
         ),
       ),

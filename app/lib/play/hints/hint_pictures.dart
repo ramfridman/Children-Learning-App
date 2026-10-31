@@ -16,7 +16,8 @@ import 'hint_marks.dart';
 // and has a still version for "reduce motion" (it appears with a 200 ms fade, in the same order).
 //
 // Keys for the tests: `hint-p1` (spotlight), `hint-p2` (a lit ring), `hint-p5` (pair lines), `hint-p6` (number path), `hint-p9`
-// (a sample: swatch or ghost outline), `hint-p12` (the pointing hand), and `seen-dot` for a small dot that stays.
+// (a sample: swatch or ghost outline), `hint-p12` (the pointing hand), `hint-copy` (a picture of the question drawn again), and
+// `seen-dot` for a small dot that stays.
 
 /// How much bigger than a phone's stage (128 high) the hint pictures are: 1 on a phone, a little less on the small phone (never
 /// under 0.85, so the minimum sizes of the spec hold) and at most 1.4 on a tablet.
@@ -159,6 +160,7 @@ class HintOverlay extends StatelessWidget {
           m.rect,
           Appear(
             child: Opacity(
+              key: const Key('hint-copy'),
               opacity: m.opacity,
               child: Transform.rotate(angle: m.turns * 2 * math.pi, child: PackSvg(m.svg)),
             ),
@@ -177,7 +179,7 @@ class HintOverlay extends StatelessWidget {
                 borderRadius: BorderRadius.circular(18 * k),
                 border: Border.all(color: TokenColors.hintHalo, width: 3),
               ),
-              padding: EdgeInsets.all(6 * k),
+              padding: EdgeInsets.all((m.tight ? 2 : 6) * k),
               child: Directionality(
                 textDirection: TextDirection.ltr,
                 child: Center(
