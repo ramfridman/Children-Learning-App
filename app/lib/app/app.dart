@@ -16,7 +16,9 @@ import '../content/models.dart' show Lesson, PackContent;
 import '../rewards/award.dart';
 import '../rewards/sticker_design.dart';
 import '../world/next_lesson.dart';
+import '../world/adventure_adapter.dart';
 import '../world/placement.dart';
+import '../world/todays_adventure.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
 import '../child/rest_scene.dart';
@@ -294,10 +296,41 @@ class _HomeState extends ConsumerState<_Home> {
     if (mounted) _refreshWorld();
   }
 
-  /// What the bottle in the child's home opens: today's adventure. This is the only place that decides it. Until the rule
-  /// of B-26 step 5 is built (docs/curriculum/todays-adventure-rule.md), it is what that rule gives a child who is new:
-  /// Counting Hills, its warm-up when due and then its next lesson, the same as the map's own way into a lesson.
-  Future<void> _openTodaysAdventure() => _playLand('numbers');
+  /// What the bottle in the child's home opens: today's adventure (docs/curriculum/todays-adventure-rule.md). This is the
+  /// only place that decides it, and it is worked out when the child taps, from their visits and what is due then. A call
+  /// for help opens the revisit mission of the map's own bell, a lesson goes the way of the land's play pebble (the warm-up
+  /// first when it is due), and a game played again opens that lesson. Each comes back to the home; nothing is lost if
+  /// the bottle is never tapped.
+  Future<void> _openTodaysAdventure() async {
+    final PackContent? content = ref.read(contentProvider).value;
+    if (content == null) return;
+    final String id = widget.profile.id;
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final WorldView world = await ref.read(worldProvider(id).future);
+    final List<Reward> rewards = await ref.read(rewardsProvider(id).future);
+    final List<Attempt> attempts = await db.attemptsOf(id);
+    final TodaysAdventure stop = todaysAdventureFor(
+      content: content,
+      engine: world.engine,
+      attempts: attempts,
+      sessions: await db.sessionsOf(id),
+      finished: finishedLessons(content, attempts, rewards.map((Reward r) => r.awardKey)),
+      now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
+      band: widget.profile.ageBand,
+    );
+    if (!mounted) return;
+    switch (stop.kind) {
+      case AdventureKind.revisit:
+        final Lesson? mission = world.missionFor(stop.skillId!);
+        if (mission != null) await _openLesson(mission: mission);
+      case AdventureKind.lesson:
+        await _playLand(stop.land!.domain);
+      case AdventureKind.replay:
+        await _openLesson(lessonId: stop.lessonId);
+      case AdventureKind.none:
+        break;
+    }
+  }
 
   Future<void> _openStickers() => Navigator.of(context)
       .push(MaterialPageRoute<void>(builder: (BuildContext c) => StickerIsland(childId: widget.profile.id)));
@@ -325,13 +358,13 @@ class _HomeState extends ConsumerState<_Home> {
     final PackContent? content = ref.read(contentProvider).value;
     if (content == null) return null;
     final AppDatabase db = await ref.read(databaseProvider.future);
-    final Map<String, int> finished = <String, int>{
-      for (final String id in placedLessons(content, await db.attemptsOf(widget.profile.id))) id: 1,
-    };
-    for (final Reward r in ref.read(rewardsProvider(widget.profile.id)).value ?? const <Reward>[]) {
-      final ({String lessonId, int n})? s = Awards.stickerOf(r.awardKey);
-      if (s != null && s.n > (finished[s.lessonId] ?? 0)) finished[s.lessonId] = s.n;
-    }
+    final String id = widget.profile.id;
+    final List<Reward> rewards = ref.read(rewardsProvider(id)).value ?? const <Reward>[];
+    final Map<String, int> finished = finishedLessons(
+      content,
+      await db.attemptsOf(id),
+      rewards.map((Reward r) => r.awardKey),
+    );
     return nextLessonId(content: content, domain: domain, finished: finished);
   }
 
