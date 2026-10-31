@@ -255,6 +255,17 @@ class HintOverlay extends StatelessWidget {
             ),
           ),
         );
+      case PlaceMark():
+        return Positioned.fromRect(
+          key: key,
+          rect: m.rect,
+          child: Appear(
+            child: CustomPaint(
+              key: Key(m.filled ? 'hint-place-full' : 'hint-place'),
+              painter: _PlacePainter(m.filled, k),
+            ),
+          ),
+        );
       case OutlineMark():
         return Positioned.fill(
           key: key,
@@ -726,6 +737,43 @@ class _BracketPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_BracketPainter old) => old.left != left || old.right != right || old.k != k;
+}
+
+/// A place for a coin: a dashed `skyDeep` circle (an empty place), or a gold coin with its darker edge (a paid shekel).
+class _PlacePainter extends CustomPainter {
+  _PlacePainter(this.filled, this.k);
+
+  final bool filled;
+  final double k;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect box = (Offset.zero & size).deflate(2 * k);
+    if (filled) {
+      canvas.drawOval(box, Paint()..color = TokenColors.spark);
+      canvas.drawOval(
+        box,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5 * k
+          ..color = TokenColors.sparkDeep,
+      );
+      return;
+    }
+    final Paint dash = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5 * k
+      ..strokeCap = StrokeCap.round
+      ..color = TokenColors.skyDeep;
+    for (final ui.PathMetric m in (Path()..addOval(box)).computeMetrics()) {
+      for (double d = 0; d < m.length; d += 7 * k) {
+        canvas.drawPath(m.extractPath(d, d + 3.5 * k), dash);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_PlacePainter old) => old.filled != filled || old.k != k;
 }
 
 /// P6: a strip of equal squares with numerals, the smallest at the left (never mirrored), a little taller at the multiples of 5

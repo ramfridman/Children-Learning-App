@@ -13,6 +13,7 @@ import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/right_cell.dart';
+import 'hints/spot_plans.dart';
 import 'template_session.dart';
 
 /// The spot-the-mistake template (T21): a friend made a row (a pattern, a count, a program, a sum) and one cell of it is wrong.
@@ -120,11 +121,34 @@ class SpotErrorSession extends TemplateSession {
     switch (hintPictureOf(activity)) {
       case HintPicture.walkTheRow:
         _walk(to: activity.cells.length - 1, bar: false);
-      case HintPicture.stepArcs:
-        _walk(to: activity.cells.length - 1, bar: true);
+      case HintPicture.anotherWay:
+        _anotherWay();
       default:
         _walk(to: activity.wrong, bar: false, stopOnWrong: true);
     }
+  }
+
+  /// Hint 2: the row another way, by what it is about (a path of numbers under a count, brackets under a pattern, cubes over a sentence,
+  /// a sample beside each cell of a sort); a row that has no such picture gets the light going along it with the sky bar under it. No
+  /// cell is picked out.
+  void _anotherWay() {
+    _clearWalk();
+    hintCell = null;
+    final HintPlan? plan = _size.isEmpty
+        ? null
+        : spotAnotherWay(
+            activity,
+            _size,
+            cellCentres(_size, activity.cells.length),
+            cellSide(_size, activity.cells.length),
+            (String sprite) => activity.assets.svg(sprite),
+          );
+    if (plan == null) {
+      _walk(to: activity.cells.length - 1, bar: true);
+      return;
+    }
+    _hint.play(plan);
+    notify();
   }
 
   /// The light goes along the row from the left, one cell at a time, as far as [to]. With [stopOnWrong] (the worked example) it

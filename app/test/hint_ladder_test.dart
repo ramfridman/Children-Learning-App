@@ -472,7 +472,7 @@ void main() {
         await lamp(t, c, ms: 3000);
         expect(s.revealed, isFalse, reason: '${a.id} level 2');
         expect(s.chosen, isNull);
-        expect(s.levelLine, isTrue);
+        expect(s.towers, isTrue);
         await lamp(t, c, ms: 30000);
         expect(s.demoRunning, isFalse, reason: a.id);
         if (a.weigh) {
@@ -552,30 +552,31 @@ void main() {
   // ---- each level changes the stage ----
 
   group('each level changes the stage', () {
-    testWidgets('spot the mistake: the light, then the sky bar under the row, then the stop on the mistake', (
-      WidgetTester t,
-    ) async {
-      final SpotErrorActivity a = all<SpotErrorActivity>().firstWhere(
-        (SpotErrorActivity x) => x.cells.length >= 4,
-      );
-      final LessonController c = controllerFor(a);
-      final SpotErrorSession s = SpotErrorSession(c, a);
-      await host(t, s);
-      expect(find.byKey(const Key('spot-bar')), findsNothing);
-      c.showHint();
-      await pass(t, 800);
-      expect(find.byKey(const Key('seen-dot')), findsWidgets);
-      expect(find.byKey(const Key('spot-bar')), findsNothing);
-      await pass(t, 700 * a.cells.length + 300);
-      c.showHint();
-      await pass(t, 800);
-      expect(find.byKey(const Key('spot-bar')), findsOneWidget);
-      await pass(t, 700 * a.cells.length + 300);
-      c.showHint();
-      await pass(t, 700 * (a.wrong + 1) + 400);
-      expect(s.hintCell, a.wrong);
-      await end(t, s);
-    });
+    testWidgets(
+      'spot the mistake, a row that no family draws (the steps of washing): the light, then the sky bar under the row, then the stop on the mistake',
+      (WidgetTester t) async {
+        final SpotErrorActivity a = all<SpotErrorActivity>().firstWhere(
+          (SpotErrorActivity x) => x.skillId == 'CS-A-05',
+        );
+        final LessonController c = controllerFor(a);
+        final SpotErrorSession s = SpotErrorSession(c, a);
+        await host(t, s);
+        expect(find.byKey(const Key('spot-bar')), findsNothing);
+        c.showHint();
+        await pass(t, 800);
+        expect(find.byKey(const Key('seen-dot')), findsWidgets);
+        expect(find.byKey(const Key('spot-bar')), findsNothing);
+        await pass(t, 700 * a.cells.length + 300);
+        c.showHint();
+        await pass(t, 800);
+        expect(find.byKey(const Key('spot-bar')), findsOneWidget);
+        await pass(t, 700 * a.cells.length + 300);
+        c.showHint();
+        await pass(t, 700 * (a.wrong + 1) + 400);
+        expect(s.hintCell, a.wrong);
+        await end(t, s);
+      },
+    );
 
     testWidgets('number line, a jump: the hop size pill at level 1, one dot used at level 2', (
       WidgetTester t,
@@ -620,27 +621,29 @@ void main() {
       },
     );
 
-    testWidgets('balance: each pan lights in turn; then the level line; the beam stays level until level 3', (
-      WidgetTester t,
-    ) async {
-      final BalanceActivity a = all<BalanceActivity>().firstWhere(
-        (BalanceActivity x) => x.hideTilt && !x.weigh,
-      );
-      final LessonController c = controllerFor(a);
-      final BalanceSession s = BalanceSession(c, a);
-      await host(t, s);
-      c.showHint();
-      await pass(t, 300);
-      expect(find.byKey(const Key('pan-lit')), findsOneWidget);
-      await pass(t, 2000);
-      expect(find.byKey(const Key('pan-lit')), findsNothing);
-      c.showHint();
-      await pass(t, 300);
-      expect(find.byKey(const Key('level-line')), findsOneWidget);
-      expect(find.byKey(const Key('pan-lit')), findsNWidgets(2));
-      expect(s.lean, 0, reason: 'a hidden tilt stays hidden');
-      await end(t, s);
-    });
+    testWidgets(
+      'balance: each pan lights in turn; then the towers and the level line; the beam stays level until level 3',
+      (WidgetTester t) async {
+        final BalanceActivity a = all<BalanceActivity>().firstWhere(
+          (BalanceActivity x) => x.hideTilt && !x.weigh,
+        );
+        final LessonController c = controllerFor(a);
+        final BalanceSession s = BalanceSession(c, a);
+        await host(t, s);
+        c.showHint();
+        await pass(t, 300);
+        expect(find.byKey(const Key('pan-lit')), findsOneWidget);
+        await pass(t, 2000);
+        expect(find.byKey(const Key('pan-lit')), findsNothing);
+        c.showHint();
+        await pass(t, 300);
+        expect(find.byKey(const Key('hint-line')), findsOneWidget);
+        expect(find.byKey(const Key('hint-block')), findsWidgets);
+        expect(find.byKey(const Key('pan-lit')), findsNothing);
+        expect(s.lean, 0, reason: 'a hidden tilt stays hidden');
+        await end(t, s);
+      },
+    );
 
     testWidgets('robot: the flag and the robot glow at level 1; a ghost robot one step on at level 2', (
       WidgetTester t,

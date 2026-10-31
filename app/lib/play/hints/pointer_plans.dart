@@ -130,6 +130,7 @@ HintPlan handTourPlan(
   List<HintMark> rest = const <HintMark>[],
 }) => HintPlan(<HintFrame>[
   for (final HandStop s in stops)
-    HintFrame(<HintMark>[...s.marks, HandMark(s.tip, press: true)], hold: Duration(milliseconds: s.ms)),
+    // The hand is the first mark, so that it keeps its place (and its glide) from one stop to the next however many marks they hold.
+    HintFrame(<HintMark>[HandMark(s.tip, press: true), ...s.marks], hold: Duration(milliseconds: s.ms)),
   if (tailMs > 0) HintFrame(after, hold: Duration(milliseconds: tailMs)),
 ], rest: rest);

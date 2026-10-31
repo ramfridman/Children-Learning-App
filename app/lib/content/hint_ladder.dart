@@ -36,9 +36,6 @@ enum HintPicture {
   /// The row, the model or the program is lit in order, ending on the next empty place (patterns, spot the mistake, programs).
   walkTheRow('walk_the_row'),
 
-  /// The same walk, with a step arc between each two neighbours; no cell is picked out (spot the mistake).
-  stepArcs('step_arcs'),
-
   /// The model cell above the next empty place is lit: one to one copying (build a pattern).
   modelCell('model_cell'),
 
@@ -63,10 +60,10 @@ enum HintPicture {
   /// The next arrow is lit and a ghost robot takes the one step (robot).
   firstArrow('first_arrow'),
 
-  /// The price and the counter where coins go are lit (shop).
+  /// The price and the counter are lit, and the counter shows a place for each shekel of the price (shop).
   priceAndCounter('price_and_counter'),
 
-  /// The biggest coin that fits goes on the counter, and the guide stops (shop).
+  /// The biggest coin that fits goes on the counter, its places turn gold, and the guide stops (shop).
   firstCoin('first_coin'),
 
   /// The short hand is lit and the long hand fades; a card shows the hour of the question (clock).
@@ -78,15 +75,16 @@ enum HintPicture {
   /// Each pan is lit in turn (balance).
   eachPan('each_pan'),
 
-  /// Both pans together, with a level line across the beam (balance).
-  levelLine('level_line'),
+  /// What is on each pan as a tower of cubes, with a dotted line that makes the lean or the level visible (balance).
+  towers('towers'),
 
   /// The parts of the question are lit (and where the stage has none, the options one after the other, none staying lit): look
   /// at them (tap the answer, the families of part 2 of B-40).
   lookHere('look_here'),
 
   /// The question shown another way, by its family: hands, a number path, a swatch, an outline, pair lines, brackets, numbered
-  /// slots. No option is marked (tap the answer).
+  /// slots (tap the answer); and for spot the mistake the row put another way (a correct path under it, brackets, cubes over the
+  /// numbers, a sample beside each cell). No option and no cell is marked.
   anotherWay('another_way'),
 
   /// The worked example: the guide does the whole thing and the answer is marked as its last step. Level 3 only.
@@ -282,12 +280,12 @@ class HintLadder {
     ]),
     'balance': HintLadder._(<HintPicture>[
       HintPicture.eachPan,
-      HintPicture.levelLine,
+      HintPicture.towers,
       HintPicture.demonstration,
     ]),
     'spot_error': HintLadder._(<HintPicture>[
       HintPicture.walkTheRow,
-      HintPicture.stepArcs,
+      HintPicture.anotherWay,
       HintPicture.demonstration,
     ]),
     'tap_answer': _tapFamily,
