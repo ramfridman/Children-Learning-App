@@ -188,6 +188,20 @@ void main() {
       );
       await expectLater(buildCharacterPack(dir, key), _fails('viewBox'));
     });
+
+    test('an SVG whose viewBox is not a number is a problem, not a crash', () async {
+      final Directory dir = Directory('${tmp.path}/vb-dot')..createSync();
+      for (final String p in poseFiles) {
+        File('${dir.path}/$p.svg').writeAsStringSync('<svg xmlns="x" viewBox="0 0 . 64"></svg>');
+      }
+      File('${dir.path}/pack.json').writeAsStringSync(
+        '{"schema":"character-lite/v1","id":"svg-char","name":{"he":"נִיצִי","grammaticalGender":"feminine"},'
+        '"roles":["guide_tutor"],"images":{${poseFiles.map((String p) => '"$p":"$p.svg"').join(',')}},'
+        '"canvas":{"size":[64,64]},"mouth":[0.5,0.5],"palette":{"dominant":"#112233"},'
+        '"availability":{"distribution":"bundled","personalUseOnly":false}}',
+      );
+      await expectLater(buildCharacterPack(dir, key), _fails('viewBox'));
+    });
   });
 
   group('a character pack is untrusted content like any other', () {

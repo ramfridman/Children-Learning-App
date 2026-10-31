@@ -117,21 +117,35 @@ int? periodOf(List<String> row) {
 /// The box the ink of a pack picture covers, as parts of its drawing box (0 to 1 each way): a short stick is drawn in the middle
 /// of a box as big as the long one's, so a hint that lines things up or measures them needs the ink, not the box. Reads the plain
 /// shapes the pack pictures are made of (rect, circle, ellipse, line, polygon, absolute paths) and one centred `scale` group;
-/// anything else counts as the whole box.
+/// anything else counts as the whole box, as does a picture it cannot read (no numbers it can parse, an empty viewBox, a picture
+/// over [maxReadableSvgChars]). Never throws. Kept once for each picture.
 Rect inkBoxOf(String svg) {
-  const Rect whole = Rect.fromLTWH(0, 0, 1, 1);
+  if (svg.length > maxReadableSvgChars) return _wholeBox;
+  return _inkBoxes.putIfAbsent(svg, () => _readInkBox(svg));
+}
+
+const Rect _wholeBox = Rect.fromLTWH(0, 0, 1, 1);
+final Map<String, Rect> _inkBoxes = <String, Rect>{};
+
+Rect _readInkBox(String svg) {
+  const Rect whole = _wholeBox;
   final RegExpMatch? vb = RegExp(r'viewBox="\s*([-\d.]+)[\s,]+([-\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)')
       .firstMatch(svg);
   if (vb == null) return whole;
-  final double vx = double.parse(vb[1]!);
-  final double vy = double.parse(vb[2]!);
-  final double vw = double.parse(vb[3]!);
-  final double vh = double.parse(vb[4]!);
+  final double? vx = double.tryParse(vb[1]!);
+  final double? vy = double.tryParse(vb[2]!);
+  final double? vw = double.tryParse(vb[3]!);
+  final double? vh = double.tryParse(vb[4]!);
+  if (vx == null || vy == null || vw == null || vh == null || !(vw > 0) || !(vh > 0)) return whole;
   final RegExpMatch? grp = RegExp(
     r'translate\(\s*([-\d.]+)[\s,]+([-\d.]+)\s*\)\s*scale\(\s*([\d.]+)\s*\)\s*translate\(',
   ).firstMatch(svg);
-  final Offset pivot = grp == null ? Offset.zero : Offset(double.parse(grp[1]!), double.parse(grp[2]!));
-  final double scale = grp == null ? 1 : double.parse(grp[3]!);
+  final double? px = grp == null ? 0 : double.tryParse(grp[1]!);
+  final double? py = grp == null ? 0 : double.tryParse(grp[2]!);
+  final double? sc = grp == null ? 1 : double.tryParse(grp[3]!);
+  if (px == null || py == null || sc == null) return whole;
+  final Offset pivot = Offset(px, py);
+  final double scale = sc;
   double minX = double.infinity, minY = double.infinity, maxX = -double.infinity, maxY = -double.infinity;
   void add(double x, double y) {
     final Offset p = pivot + (Offset(x, y) - pivot) * scale;
@@ -141,10 +155,7 @@ Rect inkBoxOf(String svg) {
     maxY = math.max(maxY, p.dy);
   }
 
-  for (final RegExpMatch m in RegExp(
-    r'<(rect|circle|ellipse|line|polygon|polyline|path)\b([^>]*)>',
-  ).allMatches(svg)) {
-    final String at = m[2]!;
+  for (final (String tag, String at) in svgTags(svg, 'rect|circle|ellipse|line|polygon|polyline|path')) {
     double v(String name) =>
         double.tryParse(
           RegExp(
@@ -155,7 +166,7 @@ Rect inkBoxOf(String svg) {
               '',
         ) ??
         0;
-    switch (m[1]) {
+    switch (tag) {
       case 'rect':
         add(v('x'), v('y'));
         add(v('x') + v('width'), v('y') + v('height'));
@@ -169,12 +180,14 @@ Rect inkBoxOf(String svg) {
         add(v('x1'), v('y1'));
         add(v('x2'), v('y2'));
       case 'polygon' || 'polyline':
-        final List<double> n = <double>[
+        final List<double?> read = <double?>[
           for (final RegExpMatch d in RegExp(
             r'-?[\d.]+',
           ).allMatches(RegExp(r'points="([^"]*)"').firstMatch(at)?[1] ?? ''))
-            double.parse(d[0]!),
+            double.tryParse(d[0]!),
         ];
+        if (read.contains(null)) return whole;
+        final List<double> n = <double>[for (final double? v in read) v!];
         for (int i = 0; i + 1 < n.length; i += 2) {
           add(n[i], n[i + 1]);
         }
@@ -213,7 +226,7 @@ Rect inkBoxOf(String svg) {
         flush();
     }
   }
-  if (!minX.isFinite) return whole;
+  if (!minX.isFinite || !minY.isFinite || !maxX.isFinite || !maxY.isFinite) return whole;
   return Rect.fromLTRB(
     ((minX - vx) / vw).clamp(0, 1).toDouble(),
     ((minY - vy) / vh).clamp(0, 1).toDouble(),
@@ -228,10 +241,11 @@ String cropToInk(String svg, Rect part) {
   final RegExpMatch? vb = RegExp(r'viewBox="\s*([-\d.]+)[\s,]+([-\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)\s*"')
       .firstMatch(svg);
   if (vb == null) return svg;
-  final double vx = double.parse(vb[1]!);
-  final double vy = double.parse(vb[2]!);
-  final double vw = double.parse(vb[3]!);
-  final double vh = double.parse(vb[4]!);
+  final double? vx = double.tryParse(vb[1]!);
+  final double? vy = double.tryParse(vb[2]!);
+  final double? vw = double.tryParse(vb[3]!);
+  final double? vh = double.tryParse(vb[4]!);
+  if (vx == null || vy == null || vw == null || vh == null || !(vw > 0) || !(vh > 0)) return svg;
   String f(double v) => v.toStringAsFixed(2);
   final String box =
       'viewBox="${f(vx + part.left * vw)} ${f(vy + part.top * vh)} ${f(part.width * vw)} ${f(part.height * vh)}"';

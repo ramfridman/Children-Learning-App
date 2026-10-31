@@ -86,7 +86,7 @@ List<Problem> checkCharacterFiles(
         final RegExpMatch? m = _viewBox.firstMatch(text);
         if (m == null) {
           out.add(Problem('${d.key} › $where', '$name has no viewBox starting at 0 0'));
-        } else if (double.parse(m.group(1)!).round() != w || double.parse(m.group(2)!).round() != h) {
+        } else if (double.tryParse(m.group(1)!)?.round() != w || double.tryParse(m.group(2)!)?.round() != h) {
           out.add(
             Problem(
               '${d.key} › $where',
