@@ -8,6 +8,11 @@ import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart' show hintScale;
+import 'hints/hint_player.dart';
+import 'hints/pointer_plans.dart';
+import 'hints/tile_points.dart';
 import 'sprite_group.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -44,6 +49,11 @@ class SortDragSession extends TemplateSession {
   bool _busy = false;
   bool demoRunning = false;
 
+  /// The pointing hand and the picture that glides past the bins (B-40), and the stage's and the board's sizes they are placed by.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+  ActivitySpec? _spec;
+
   List<SortItem> get tray => <SortItem>[
     for (final SortItem i in activity.items)
       if (!placed.containsKey(i.id)) i,
@@ -58,6 +68,7 @@ class SortDragSession extends TemplateSession {
   /// A touch of the child ends the guide's demonstration at once, and the child's move is taken. What the guide had dealt for
   /// the child to go on from (the first round) stays; what it had put in a bin as an example goes back.
   void _endDemo() {
+    _hint.clear();
     if (!demoRunning) return;
     _run++;
     if (_demoItem != null) {
@@ -69,6 +80,36 @@ class SortDragSession extends TemplateSession {
     demoRunning = false;
     controller.demoDone();
   }
+
+  /// Where bin [i] of [n] stands in a stage of [size]: they fill it 8 in, side by side, the first at the right (the language's way).
+  static Rect binRect(Size size, int n, int i) {
+    final double w = (size.width - 16) / n;
+    return Rect.fromLTWH(size.width - 8 - (i + 1) * w + 4, 8, w - 8, size.height - 16);
+  }
+
+  /// The middle of the sample picture of a bin: the top 5/9 of what the border, the padding and the label leave.
+  static Offset sampleCentre(Size size, int n, int i) {
+    final Rect r = binRect(size, n, i);
+    final double room = r.height - 6 - 12 - 17;
+    return Offset(r.center.dx, r.top + 9 + room * 5 / 18);
+  }
+
+  /// Where the hand puts a picture into bin [i] of [n]: the lower middle, where the sorted pictures lie.
+  static Offset dropPlace(Size size, int n, int i) {
+    final Rect r = binRect(size, n, i);
+    return Offset(r.center.dx, r.bottom - 24 * hintScale(size));
+  }
+
+  /// A tray picture's side, as the tray draws it, and the fingertip place on the top edge of the one at place [i] of [n].
+  double _traySide(ActivitySpec spec) =>
+      math.max(44, math.min(84, spec.tilesWidth / math.max(1, activity.items.length) - 10));
+
+  Offset _trayTip(int n, int i) {
+    final ActivitySpec spec = _spec!;
+    return spec.tileTip(n, i, slot: _traySide(spec) + 8, slop: 4);
+  }
+
+  bool get _canDraw => _spec != null && !_size.isEmpty;
 
   void select(String itemId) {
     _endDemo();
@@ -168,8 +209,12 @@ class SortDragSession extends TemplateSession {
     notify();
   }
 
+  /// How long the hand takes for one picture of a deal: half at the tray, half at the plate.
+  static const int _dealStep = 900;
+
   /// The guide deals the pictures between the friends, one for each in turn. With [firstRoundOnly] it stops after one round and
-  /// the pictures stay where they are, for the child to go on; otherwise it deals them all and puts them back for the child's turn.
+  /// the pictures stay where they are, for the child to go on; otherwise the pointing hand takes each one from the tray to its
+  /// plate, the guide deals them all and puts them back for the child's turn.
   void _dealDemo({bool firstRoundOnly = false}) {
     if (demoRunning) return;
     demoRunning = true;
@@ -179,25 +224,34 @@ class SortDragSession extends TemplateSession {
     placed.clear();
     final List<SortItem> all = activity.items;
     final int count = firstRoundOnly ? math.min(all.length, activity.bins.length) : all.length;
+    final int bins = activity.bins.length;
+    const int tail = 1400;
+    if (!firstRoundOnly && _canDraw) {
+      _hint.play(
+        handTourPlan(<HandStop>[
+          for (int k = 0; k < count; k++) ...<HandStop>[
+            HandStop(_trayTip(all.length - k, 0), _dealStep ~/ 2),
+            HandStop(dropPlace(_size, bins, k % bins), _dealStep ~/ 2),
+          ],
+        ], tailMs: tail),
+      );
+    }
+    final int first = firstRoundOnly ? 300 : _dealStep ~/ 2 + 400;
+    final int step = firstRoundOnly ? TemplateSession.demoStep.inMilliseconds : _dealStep;
     for (int k = 0; k < count; k++) {
-      later(Duration(milliseconds: 300 + TemplateSession.demoStep.inMilliseconds * k), () {
+      later(Duration(milliseconds: first + step * k), () {
         if (run != _run) return;
-        placed[all[k].id] = activity.bins[k % activity.bins.length].id;
+        placed[all[k].id] = activity.bins[k % bins].id;
         notify();
       });
     }
-    later(
-      Duration(
-        milliseconds: 300 + TemplateSession.demoStep.inMilliseconds * count + (firstRoundOnly ? 0 : 1400),
-      ),
-      () {
-        if (run != _run) return;
-        if (!firstRoundOnly) placed.clear();
-        demoRunning = false;
-        notify();
-        if (!firstRoundOnly) controller.demoDone();
-      },
-    );
+    later(Duration(milliseconds: firstRoundOnly ? first + step * count : step * count + tail), () {
+      if (run != _run) return;
+      if (!firstRoundOnly) placed.clear();
+      demoRunning = false;
+      notify();
+      if (!firstRoundOnly) controller.demoDone();
+    });
     notify();
   }
 
@@ -209,6 +263,27 @@ class SortDragSession extends TemplateSession {
     hintBin = null;
     hintItem = withItem && tray.isNotEmpty ? tray.first.id : null;
     const int step = 700;
+    if (withItem && tray.isNotEmpty && _canDraw) {
+      // P9: a copy of the next picture glides past the sample of each bin, and stops at none (the bins are compared, none is chosen).
+      final double side = 34 * hintScale(_size);
+      final String svg = activity.assets.svg(tray.first.sprite);
+      final int n = activity.bins.length;
+      _hint.play(
+        HintPlan(<HintFrame>[
+          for (int i = 0; i < n; i++)
+            HintFrame(<HintMark>[
+              CopyMark(
+                Rect.fromCenter(
+                  center: sampleCentre(_size, n, i) - Offset(0, side * 0.2),
+                  width: side,
+                  height: side,
+                ),
+                svg,
+              ),
+            ], hold: const Duration(milliseconds: step)),
+        ]),
+      );
+    }
     for (int i = 0; i < activity.bins.length; i++) {
       later(Duration(milliseconds: step * i), () {
         if (run != _run) return;
@@ -224,8 +299,8 @@ class SortDragSession extends TemplateSession {
     notify();
   }
 
-  /// The worked example: the guide lifts the next picture, puts it in its bin, takes it out again and leaves the picture and its
-  /// bin lit. Then it is the child's turn.
+  /// The worked example: the pointing hand takes the next picture from the tray, puts it in its bin, the guide takes it out again
+  /// and leaves the picture and its bin lit. Then it is the child's turn.
   void _sortOne() {
     final List<SortItem> left = tray;
     if (demoRunning || left.isEmpty) return;
@@ -237,12 +312,26 @@ class SortDragSession extends TemplateSession {
     final int run = _run;
     hintItem = item.id;
     hintBin = null;
-    later(const Duration(milliseconds: 800), () {
+    const int taken = 850; // the hand is at the picture
+    const int put = 1250; // and in the bin
+    const int over = 3000;
+    if (_canDraw) {
+      _hint.play(
+        handTourPlan(<HandStop>[
+          HandStop(_trayTip(left.length, 0), taken),
+          HandStop(
+            dropPlace(_size, activity.bins.length, activity.bins.indexWhere((SortBin b) => b.id == item.bin)),
+            over - taken,
+          ),
+        ]),
+      );
+    }
+    later(const Duration(milliseconds: put), () {
       if (run != _run) return;
       placed[item.id] = item.bin!;
       notify();
     });
-    later(const Duration(milliseconds: 2200), () {
+    later(const Duration(milliseconds: over), () {
       if (run != _run) return;
       placed.remove(item.id);
       _demoItem = null;
@@ -256,6 +345,7 @@ class SortDragSession extends TemplateSession {
 
   @override
   void onReset() {
+    _hint.clear();
     _demoItem = null;
     placed.clear();
     selected = null;
@@ -272,6 +362,7 @@ class SortDragSession extends TemplateSession {
 
   @override
   void onReplay() {
+    _hint.clear();
     hintBin = null;
     litBin = null;
     _run++;
@@ -296,18 +387,24 @@ class SortDragSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _SortStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => _SortStage(this, size),
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) {
       final List<SortItem> left = tray;
-      final double side = math.max(
-        44,
-        math.min(84, spec.tilesWidth / math.max(1, activity.items.length) - 10),
-      );
+      final double side = _traySide(spec);
       return Row(
         key: const Key('sort-tray'),
         mainAxisAlignment: MainAxisAlignment.center,
@@ -372,6 +469,7 @@ class _SortStage extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned.fill(child: s._hint.body(size)),
           ],
         ),
       ),

@@ -96,12 +96,14 @@ final class CopyMark extends HintMark {
   final double turns;
 }
 
-/// The sky card of a second picture: radius 18, `skyTint`, a `hintHalo` ring 3 wide, with [child] inside.
+/// The sky card of a second picture: radius 18, `skyTint`, a `hintHalo` ring 3 wide, with [child] inside. A [tight] card has half
+/// the padding, for a strip that lies over a thing (dots under a numeral).
 final class CardMark extends HintMark {
-  const CardMark(this.rect, this.child);
+  const CardMark(this.rect, this.child, {this.tight = false});
 
   final Rect rect;
   final Widget child;
+  final bool tight;
 }
 
 /// A hop of the number path, as a dotted arc.

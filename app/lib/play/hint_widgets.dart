@@ -224,6 +224,30 @@ class GoalCard extends StatelessWidget {
   );
 }
 
+/// A row of [count] round dots, [size] across, in `skyDeep`: a number shown as that many (under a numeral). Read left to right.
+class DotRow extends StatelessWidget {
+  const DotRow({super.key, required this.count, this.size = 12});
+
+  final int count;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    key: const Key('dot-row'),
+    mainAxisSize: MainAxisSize.min,
+    textDirection: TextDirection.ltr,
+    children: <Widget>[
+      for (int i = 0; i < count; i++)
+        Container(
+          width: size,
+          height: size,
+          margin: EdgeInsets.symmetric(horizontal: size * 0.25),
+          decoration: const BoxDecoration(color: TokenColors.skyDeep, shape: BoxShape.circle),
+        ),
+    ],
+  );
+}
+
 /// A small sky dot: this one has been looked at.
 class SeenDot extends StatelessWidget {
   const SeenDot({super.key, this.radius = 4});

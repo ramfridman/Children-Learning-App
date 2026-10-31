@@ -8,6 +8,10 @@ import '../content/models.dart';
 import '../design/components.dart';
 import '../child/play_button.dart';
 import '../design/tokens.g.dart';
+import 'hints/hint_marks.dart';
+import 'hints/pointer_plans.dart';
+import 'hints/hint_player.dart';
+import 'hints/tile_points.dart';
 import 'lesson_controller.dart';
 import 'response_code.dart';
 import 'template_session.dart';
@@ -44,6 +48,38 @@ class RobotPathSession extends TemplateSession {
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
+  /// The pointing hand and the numbered footprints of the worked example (B-40), and the stage's and the board's sizes they use.
+  late final HintPlayer _hint = HintPlayer(this);
+  Size _size = Size.zero;
+  ActivitySpec? _spec;
+
+  bool get _canDraw => _spec != null && !_size.isEmpty;
+
+  /// The side of a square of the grid in a stage of [size], and the middle of the square [p] ((column, row) from the top left).
+  /// The grid is drawn left to right and top to bottom, whatever the language.
+  static double cellSide(Size size, int cols, int rows) =>
+      math.min((size.width - 16) / cols, (size.height - 12) / rows);
+
+  static Offset cellCentre(Size size, int cols, int rows, (int, int) p) {
+    final double cell = cellSide(size, cols, rows);
+    return Offset(
+      (size.width - cell * cols) / 2 + (p.$1 + 0.5) * cell,
+      (size.height - cell * rows) / 2 + (p.$2 + 0.5) * cell,
+    );
+  }
+
+  /// The arrow tiles stand left, up, down, right in a row that is drawn left to right in every language; a plan has three more
+  /// tiles after them (undo, 70 wide, and go, 94, with a gap of 10) and a row of its steps above.
+  static const List<String> arrowOrder = <String>['left', 'up', 'down', 'right'];
+
+  /// The fingertip place on the top edge of the arrow tile [dir] (a tile is 58 and its tap margin 6). The row of a plan is taller
+  /// (the go button has a lip) and its tiles stand 12 lower in it, under the row of the steps (34).
+  Offset arrowTip(ActivitySpec spec, String dir) {
+    final double row = (activity.plan ? 4 * 70 + 10 + 70 + 94 : 4 * 70).toDouble();
+    final double x = (spec.tilesWidth - row) / 2 + (arrowOrder.indexOf(dir) + 0.5) * 70;
+    return spec.fromTiles(x, (activity.plan ? 34 + 12 : 0) + 6);
+  }
+
   static (int, int) _after((int, int) p, String d) => switch (d) {
     'up' => (p.$1, p.$2 - 1),
     'down' => (p.$1, p.$2 + 1),
@@ -75,6 +111,7 @@ class RobotPathSession extends TemplateSession {
     hintStep = null;
     ghost = null;
     spotlight = false;
+    _hint.clear();
     if (activity.plan) {
       if (program.length < activity.maxSteps) program.add(dir);
       notify();
@@ -158,7 +195,24 @@ class RobotPathSession extends TemplateSession {
     later(TemplateSession.praisePause, controller.next);
   }
 
-  /// The robot walks the way that the guide knows, and goes back to the start.
+  /// Hint 2: the ghost robot's square gets the footprint "1" (the first step of the way), and it stays with the ghost.
+  void _footprintOfGhost() {
+    _hint.clear();
+    final (int, int)? g = ghost;
+    if (g == null || !_canDraw) return;
+    final double side = cellSide(_size, activity.cols, activity.rows);
+    _hint.play(
+      HintPlan(
+        const <HintFrame>[],
+        rest: <HintMark>[
+          BadgeMark(cellCentre(_size, activity.cols, activity.rows, g) + Offset(side * 0.26, side * 0.26), 1),
+        ],
+      ),
+    );
+  }
+
+  /// The worked example: the pointing hand presses each arrow of the way, the robot takes the step and leaves a numbered footprint,
+  /// and at the flag the robot goes back to the start. Then it is the child's turn.
   void _workedExample() {
     if (running) return;
     running = true;
@@ -167,14 +221,43 @@ class RobotPathSession extends TemplateSession {
     trail.clear();
     notify();
     final List<String> way = activity.solution;
+    const int step = 600;
+    const int tail = 1200;
+    final ActivitySpec? spec = _spec;
+    if (spec != null && _canDraw) {
+      // The square after each step, in the order of the steps: the footprints.
+      final List<(int, int)> squares = <(int, int)>[];
+      (int, int) at = activity.robotAt;
+      for (final String d in way) {
+        at = _after(at, d);
+        squares.add(at);
+      }
+      final double side = cellSide(_size, activity.cols, activity.rows);
+      List<HintMark> footprints(int n) => <HintMark>[
+        for (int j = 0; j < n; j++)
+          BadgeMark(
+            cellCentre(_size, activity.cols, activity.rows, squares[j]) + Offset(side * 0.26, side * 0.26),
+            j + 1,
+          ),
+      ];
+      _hint.play(
+        handTourPlan(
+          <HandStop>[
+            for (int i = 0; i < way.length; i++) HandStop(arrowTip(spec, way[i]), step, marks: footprints(i)),
+          ],
+          after: footprints(way.length),
+          tailMs: step + tail,
+        ),
+      );
+    }
     for (int i = 0; i < way.length; i++) {
-      later(Duration(milliseconds: 600 * (i + 1)), () {
+      later(Duration(milliseconds: step * (i + 1)), () {
         pos = _after(pos, way[i]);
         trail.add(pos);
         notify();
       });
     }
-    later(Duration(milliseconds: 600 * (way.length + 1) + 1200), () {
+    later(Duration(milliseconds: step * (way.length + 1) + tail), () {
       pos = activity.robotAt;
       trail.clear();
       running = false;
@@ -187,6 +270,7 @@ class RobotPathSession extends TemplateSession {
 
   @override
   void onReset() {
+    _hint.clear();
     pos = activity.robotAt;
     program.clear();
     trail.clear();
@@ -202,6 +286,7 @@ class RobotPathSession extends TemplateSession {
 
   @override
   void onReplay() {
+    _hint.clear();
     hintStep = null;
     spotlight = false;
     ghost = null;
@@ -217,15 +302,18 @@ class RobotPathSession extends TemplateSession {
         hintStep = null;
         ghost = null;
         spotlight = true;
+        _hint.clear();
       case HintPicture.firstArrow:
         // Hint 2: the first step of the way: its arrow is lit, and a ghost of the robot stands one square on.
         spotlight = false;
         hintStep = _nextOfHelp;
         ghost = hintStep == null ? null : _after(pos, hintStep!);
         if (ghost != null && !_inside(ghost!)) ghost = null;
+        _footprintOfGhost();
       default:
         spotlight = false;
         ghost = null;
+        _hint.clear();
         _workedExample();
         return;
     }
@@ -235,8 +323,17 @@ class RobotPathSession extends TemplateSession {
   // ---- drawing ----
 
   @override
-  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
-      ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _RobotStage(this, size));
+  Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
+    _size = size;
+    _spec = spec;
+    return ListenableBuilder(
+      listenable: this,
+      builder: (BuildContext c, Widget? _) => _RobotStage(this, size),
+    );
+  }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => ListenableBuilder(
@@ -382,6 +479,7 @@ class _RobotStage extends StatelessWidget {
               height: cell - 6,
               child: PackSvg(a.assets.svg(a.robotSprite)),
             ),
+            Positioned.fill(child: s._hint.body(size)),
           ],
         ),
       ),
