@@ -5,6 +5,13 @@ sideways) on phone and phoneSE, and the tablet portrait map in the same item (a 
 Market Village at the top). Tablet landscape is unchanged (its scene and golden must not change).
 Owner of this doc: design-director. Board item: B-23. Wiring: app-developer. Goldens: qa-engineer.
 
+**B-27 follow-ups (2026-10-31):** no sign is ever cut by an edge (a peek is half an island, never half a sign): Colour
+Bay's sign starts 12 inside the left edge on the phone and 8 on the SE (at most 156 wide there, so it stays 8 clear of
+Counting at text scale 1.3), and the portrait Market sign moved up 8 (top 348) so it does not peek 2 pt at 1.3. On
+tablet landscape the tap areas are trimmed apart (shapes right 332, colors 348..540 from y 536, logic 282..508, robots
+532..756): every gap is 16 or more. The portrait bubble still covers part of Nitzi's island: no sea beside the mouth is
+big enough (see the B-27 report); it waits for the owner's art decision.
+
 ## 1. What was wrong
 
 | Board class | Board | Signs on the map before | Missing |

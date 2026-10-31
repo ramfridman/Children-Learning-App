@@ -5,8 +5,8 @@
 //   flag: 138 of them), each opened through the real lesson screen.
 // - B-23: the map and a lesson without a mic with a larger system text (1.3), and the map on screens that are not one of
 //   the four boards (narrow phones), where every learning land must still open with a tap.
-// - QA-19 (open, skipped in a normal run; run with --dart-define=QA_OPEN=true): at a system text scale of 1.3 the child
-//   space overflows (the daily pill on the phone board, the child's card of the profile picker under the map).
+// - QA-19 (closed by B-27): at system text scales of 1.0, 1.3 and 1.5 the child space draws without an overflow (the daily
+//   pill on the phone board, the child's card of the profile picker under the map), on the four boards.
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,9 +20,6 @@ import 'support/app_harness.dart';
 import 'support/fake_speech.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
-
-/// QA's open defects in this file run only with --dart-define=QA_OPEN=true (the convention of qa_open_defects_test.dart).
-const bool _open = !bool.fromEnvironment('QA_OPEN');
 
 Future<void> _wait(WidgetTester t, [int ms = 300]) async {
   for (int spent = 0; spent < ms; spent += 100) {
@@ -50,13 +47,6 @@ Future<AppRig> _home(
   await tester.pumpAndSettle();
   expect(find.byType(HomeScreen), findsOneWidget);
   return rig;
-}
-
-/// Takes the home's known overflow (QA-19: the daily pill at a system text scale of 1.3) out of the way, and only it.
-void _drainPillOverflow(WidgetTester tester) {
-  final Object? e = tester.takeException();
-  if (e == null) return;
-  expect('$e', anyOf(contains('Multiple exceptions'), contains('RenderFlex overflowed')), reason: '$e');
 }
 
 Future<void> _closeLesson(WidgetTester tester) async {
@@ -238,8 +228,6 @@ void main() {
         WidgetTester tester,
       ) async {
         await _home(tester, size: b.value, textScale: 1.3);
-        // The daily pill overflows at 1.3 (QA-19, before B-23 too): proven by its own test in qa_open_defects_test.dart.
-        _drainPillOverflow(tester);
         for (final Land l in Land.values) {
           expect(find.byKey(Key('sign-${l.name}')), findsOneWidget);
         }
@@ -257,7 +245,6 @@ void main() {
           WidgetTester tester,
         ) async {
           await _home(tester, size: b.value, textScale: 1.3);
-          _drainPillOverflow(tester);
           await openActivities(tester, <String>[id]);
           await _wait(tester, 1500);
           expect(find.byType(ActivityFrame), findsOneWidget);
@@ -305,19 +292,31 @@ void main() {
     }
   });
 
-  group('QA-19 (open): a larger system text does not break the child space', () {
-    for (final MapEntry<String, Size> b in <String, Size>{
-      'phone': const Size(852, 393),
-      'phoneSE': const Size(667, 375),
-      'tabletLandscape': const Size(1180, 820),
-      'tabletPortrait': const Size(820, 1180),
-    }.entries) {
-      testWidgets('text scale 1.3, ${b.key}: the picker and the map draw without an overflow', (
-        WidgetTester tester,
-      ) async {
-        await _home(tester, size: b.value, textScale: 1.3);
-        expect(tester.takeException(), isNull);
-      }, skip: _open);
+  group('QA-19: a larger system text does not break the child space', () {
+    for (final double scale in <double>[1, 1.3, 1.5]) {
+      for (final MapEntry<String, Size> b in <String, Size>{
+        'phone': const Size(852, 393),
+        'phoneSE': const Size(667, 375),
+        'tabletLandscape': const Size(1180, 820),
+        'tabletPortrait': const Size(820, 1180),
+      }.entries) {
+        testWidgets('text scale $scale, ${b.key}: the picker and the map draw without an overflow', (
+          WidgetTester tester,
+        ) async {
+          await _home(tester, size: b.value, textScale: scale);
+          expect(tester.takeException(), isNull);
+          // The pill keeps its icon and its whole title inside it.
+          final Rect pill = tester.getRect(find.byKey(const Key('home-pill')));
+          final Rect title = tester.getRect(
+            find.descendant(of: find.byKey(const Key('home-pill')), matching: find.byType(Text)),
+          );
+          expect(
+            pill.contains(title.topLeft) && pill.contains(title.bottomRight),
+            isTrue,
+            reason: '$pill vs $title',
+          );
+        });
+      }
     }
   });
 }
