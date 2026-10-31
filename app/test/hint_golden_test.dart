@@ -38,7 +38,10 @@ class _Shot {
 const List<_Shot> _phone = <_Shot>[
   _Shot('count.apples.7', 2, 'count_l2_hands', waitMs: 600 * 7 + 400),
   _Shot('b.numb04.3', 2, 'count_l2_frames', waitMs: 600 * 13 + 400),
-  _Shot('count.apples.7', 3, 'count_l3', waitMs: 300 + 800 * 7 + 500),
+  _Shot('count.apples.7', 3, 'count_l3', waitMs: 300 + 800 * 4),
+  _Shot('give.butterflies.4', 3, 'give_l3', waitMs: 300 + 800 * 2),
+  _Shot('flash.dice.3', 3, 'flash_l3', waitMs: 1500),
+  _Shot('x.shpa02.1', 3, 'trace_l3', waitMs: 1500),
   _Shot('give.butterflies.4', 1, 'give_l1', waitMs: 600),
   _Shot('give.butterflies.4', 2, 'give_l2', waitMs: 600 * 4 + 400),
   _Shot('b.numb13.13', 2, 'numberline_jump_l2', waitMs: 1500),
@@ -49,6 +52,7 @@ const List<_Shot> _phone = <_Shot>[
   _Shot('b.mathb09.5', 3, 'balance_l3', waitMs: 3500),
   _Shot('b.numb11.1', 2, 'spot_l2', waitMs: 700 * 6),
   _Shot('b.numb11.1', 3, 'spot_l3', waitMs: 700 * 8),
+  _Shot('b15.cola02.5', 3, 'spot_a_l3', waitMs: 1500),
   _Shot('x.mathb17.1', 2, 'shop_l2', waitMs: 800),
   _Shot('x.mathb17.1', 3, 'shop_l3', waitMs: 9000),
   _Shot('cs.robot.plan.2', 2, 'robot_l2', waitMs: 800),
@@ -67,6 +71,11 @@ const List<_Shot> _phone = <_Shot>[
 const List<_Shot> _tablet = <_Shot>[
   _Shot('count.apples.7', 2, 'count_l2_hands', waitMs: 600 * 7 + 400),
   _Shot('b.numb04.3', 2, 'count_l2_frames', waitMs: 600 * 13 + 400),
+  _Shot('count.apples.7', 3, 'count_l3', waitMs: 300 + 800 * 4),
+  _Shot('give.butterflies.4', 3, 'give_l3', waitMs: 300 + 800 * 2),
+  _Shot('flash.dice.3', 3, 'flash_l3', waitMs: 1500),
+  _Shot('x.shpa02.1', 3, 'trace_l3', waitMs: 1500),
+  _Shot('b15.cola02.5', 3, 'spot_a_l3', waitMs: 1500),
 ];
 
 void main() {

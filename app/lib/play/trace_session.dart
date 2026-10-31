@@ -7,6 +7,8 @@ import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import 'hints/hint_marks.dart';
+import 'hints/hint_pictures.dart';
 import 'response_code.dart';
 import 'template_session.dart';
 
@@ -148,12 +150,36 @@ class TraceSession extends TemplateSession {
   void _stopDemo() {
     _demoId++;
     demo = null;
+    _handDemo = false;
   }
+
+  /// True while the worked example (level 3) walks: the pointing hand goes with the dot.
+  bool _handDemo = false;
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => ListenableBuilder(
+    listenable: this,
+    builder: (BuildContext c, Widget? _) {
+      final Offset? dot = demo;
+      if (dot == null || !_handDemo) return const SizedBox();
+      // The dot is in the box's own 0 to 100; the box is the square at the middle of the stage, inside its border.
+      final double side = math.min(size.width, size.height) - 6;
+      final double inner = side - 2 * _border;
+      final Offset origin = Offset((size.width - side) / 2 + _border, (size.height - side) / 2 + _border);
+      return HintOverlay(
+        marks: <HintMark>[HandMark(origin + dot / 100 * inner, snap: true)],
+        size: size,
+        clearOf: handClearOf(spec),
+        layer: HintLayer.hands,
+      );
+    },
+  );
 
   /// A dot walks along the stroke that is next, as far as [fraction] of it, [msPerPoint] for each of its points. With [guide] the
   /// whole path is drawn as well; with [rest] of the strokes it goes on to the strokes after that one (the worked example).
   void _walk({double fraction = 1, int msPerPoint = 70, bool guide = true, bool allStrokes = false}) {
     _stopDemo();
+    _handDemo = allStrokes;
     final int id = _demoId;
     if (guide) showWay = true;
     int at = 0;

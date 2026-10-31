@@ -51,19 +51,11 @@ final class PairsMark extends HintMark {
   final List<Rect> unpaired;
 }
 
-/// P6 (number path): equal squares with numerals, 1 at the left (never mirrored; [reverse] puts 1 at the right, only where the
-/// row of tiles below runs that way). [gap] is a square drawn empty, [ring] a square with a sky ring, [marker] the square the
-/// helper's marker stands on, [upTo] how many squares are drawn so far (the rest are not there yet).
+/// P6 (number path): equal squares with numerals, 1 at the left (never mirrored). [gap] is a square drawn empty, [ring] a square
+/// with a sky ring, [marker] the square the helper's marker stands on, [upTo] how many squares are drawn so far (the rest are not
+/// there yet).
 final class PathMark extends HintMark {
-  const PathMark({
-    required this.rect,
-    required this.count,
-    this.gap,
-    this.ring,
-    this.marker,
-    this.upTo,
-    this.reverse = false,
-  });
+  const PathMark({required this.rect, required this.count, this.gap, this.ring, this.marker, this.upTo});
 
   final Rect rect;
   final int count;
@@ -71,7 +63,6 @@ final class PathMark extends HintMark {
   final int? ring;
   final int? marker;
   final int? upTo;
-  final bool reverse;
 }
 
 /// P9 (sample): a paint dab of a colour with its helper symbol. [colour] is one of the names in [hintColours].
@@ -121,12 +112,50 @@ final class ArcMark extends HintMark {
   final Offset to;
 }
 
-/// A dotted sky line: a link from a thing to its picture, a start line, a floor.
+/// A dotted sky line: a link from a thing to its picture, a start line, a floor. [faint] makes it thin and light: a connector that
+/// only says "this belongs to that", beside the lines that carry the hint itself.
 final class LineMark extends HintMark {
-  const LineMark(this.from, this.to);
+  const LineMark(this.from, this.to, {this.faint = false});
 
   final Offset from;
   final Offset to;
+  final bool faint;
+}
+
+/// A sky arrow from [from] to [to] with its head at [to]: a push, a direction the helper's things move in.
+final class ArrowMark extends HintMark {
+  const ArrowMark(this.from, this.to);
+
+  final Offset from;
+  final Offset to;
+}
+
+/// A mark that is drawn on an answer tile, not on the stage: the session draws it in its row of tiles, because a tile (and what is
+/// on it) paints above the stage and the speech bubble, and the stage's overlay does not. [tile] is the tile's place in the row
+/// (0 is the first option).
+sealed class TileMark extends HintMark {
+  const TileMark(this.tile);
+
+  final int tile;
+}
+
+/// A place badge over the top edge of a tile: [n] is its place in the queue (the same badge as the stage's [BadgeMark]).
+final class TileBadgeMark extends TileMark {
+  const TileBadgeMark(super.tile, this.n);
+
+  final int n;
+}
+
+/// A small start flag standing on the first end of a tile (the end the row starts at).
+final class TileFlagMark extends TileMark {
+  const TileFlagMark(super.tile);
+}
+
+/// A small start flag that stands on [base] (the foot of its pole): where a line, a queue or a row begins.
+final class FlagMark extends HintMark {
+  const FlagMark(this.base);
+
+  final Offset base;
 }
 
 /// P7 (core bracket): an open bracket under the span from [left] to [right] (the ends are at the bracket's top, the tips point up).
@@ -144,12 +173,14 @@ final class BlockMark extends HintMark {
   final Rect rect;
 }
 
-/// P12 (the pointing hand): the fingertip is on [tip]. [press] makes a sky ripple at the tip (the "tok").
+/// P12 (the pointing hand): the fingertip is on [tip]. [press] makes a sky ripple at the tip (the "tok"). [snap] puts the hand where
+/// it is told at once, with no glide: the hand of a trace follows a walking dot a few points at a time.
 final class HandMark extends HintMark {
-  const HandMark(this.tip, {this.press = false});
+  const HandMark(this.tip, {this.press = false, this.snap = false});
 
   final Offset tip;
   final bool press;
+  final bool snap;
 }
 
 /// One step of a hint: what is on the stage for [hold]. [litOption] is the answer tile (by its place in the row) that has a sky

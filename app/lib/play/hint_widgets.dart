@@ -2,10 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../child/activity_shell.dart';
 import '../design/app_text.dart';
 import '../design/tokens.g.dart';
 import 'count_tap_session.dart' show Dots;
 import 'hint_hand.dart';
+import 'hints/hint_pictures.dart' show hintScale;
 
 // The small pictures that hints and row entrances draw (B-40). They never take a touch (callers wrap them in IgnorePointer where
 // they lie over something that can be touched), they are drawn left to right whatever the language (they are maths), and none
@@ -31,30 +33,73 @@ class HintCard extends StatelessWidget {
 
 /// A number counted another way: up to ten as two hands (a full hand of five, then the rest on the other hand), above ten as one or
 /// two ten-frames. [shown] is how many are counted so far (0 to [n]); a template raises it one at a time, in time with its objects.
+/// [scale] is the board's hint scale (1 on a phone, up to 1.4 on a tablet): the hands are 84 high at 1, a frame's cell 26.
 class CountingAid extends StatelessWidget {
-  const CountingAid({super.key, required this.n, required this.shown});
+  const CountingAid({super.key, required this.n, required this.shown, this.scale = 1});
 
   final int n;
   final int shown;
+  final double scale;
 
   /// Two hands up to this number, ten-frames above it.
   static const int handsUpTo = 10;
+
+  /// How high a card holding the hands of [scale] is: the hands, the card's padding and its ring.
+  static double cardHeight(double scale) => 84 * scale + 26;
 
   @override
   Widget build(BuildContext context) => HintCard(
     child: FittedBox(
       fit: BoxFit.scaleDown,
-      child: n <= handsUpTo ? CountingHands(raised: shown) : TenFrames(total: n, filled: shown),
+      child: n <= handsUpTo
+          ? CountingHands(raised: shown, height: 84 * scale)
+          : TenFrames(total: n, filled: shown, cell: TenFrames.baseCell * scale),
     ),
   );
+}
+
+/// Where a hint's second picture opens in the free answer area (count, give, flash and trace have no tiles to show while the
+/// hint is on): its top 14 under the stage, centred, as high as the hands of this board need. Put it in the Stack of the tiles box;
+/// a phone's card is 110 high, a tablet's 143 (the hands 84 and 118).
+class AnswerAreaCard extends StatelessWidget {
+  const AnswerAreaCard({super.key, required this.spec, required this.child});
+
+  final ActivitySpec spec;
+  final Widget child;
+
+  /// The board's hint scale (see `hintScale`): the size of the stage the hint is on, without the card around it.
+  static double scaleOf(ActivitySpec spec) =>
+      hintScale(spec.stageIsCard ? Size(spec.stage.width - 32, spec.stage.height - 32) : spec.stage.size);
+
+  /// The card's size and top, from the board's numbers.
+  static ({double top, double height}) place(ActivitySpec spec) {
+    // The tiles box starts 12 above the tiles' top (the tiles' tap margin).
+    return (
+      top: spec.stage.bottom + 14 - (spec.tilesTop - 12),
+      height: CountingAid.cardHeight(scaleOf(spec)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ({double top, double height}) at = place(spec);
+    return Positioned(
+      top: at.top,
+      left: 0,
+      right: 0,
+      height: at.height,
+      child: IgnorePointer(child: Center(child: child)),
+    );
+  }
 }
 
 /// Two hands, each with five fingers. The first hand fills first, then the second: "five, and some more". A finger that is up is
 /// `spark`, one that is folded is a short stub. At most ten fingers.
 class CountingHands extends StatelessWidget {
-  const CountingHands({super.key, required this.raised});
+  const CountingHands({super.key, required this.raised, this.height = 84});
 
   final int raised;
+  final double height;
 
   @override
   Widget build(BuildContext context) => Row(
@@ -62,12 +107,18 @@ class CountingHands extends StatelessWidget {
     mainAxisSize: MainAxisSize.min,
     crossAxisAlignment: CrossAxisAlignment.end,
     children: <Widget>[
-      HintHand(key: const Key('hand-first'), side: HandSide.left, fingers: math.min(raised, 5)),
-      const SizedBox(width: 10),
+      HintHand(
+        key: const Key('hand-first'),
+        side: HandSide.left,
+        fingers: math.min(raised, 5),
+        height: height,
+      ),
+      SizedBox(width: height / 8.4),
       HintHand(
         key: const Key('hand-second'),
         side: HandSide.right,
         fingers: math.max(0, math.min(raised - 5, 5)),
+        height: height,
       ),
     ],
   );
@@ -76,13 +127,15 @@ class CountingHands extends StatelessWidget {
 /// One or two ten-frames (2 rows of 5): the counters fill the top row from the left, then the bottom row, then the second
 /// frame. A number above ten is a full frame and the rest.
 class TenFrames extends StatelessWidget {
-  const TenFrames({super.key, required this.total, required this.filled});
+  const TenFrames({super.key, required this.total, required this.filled, this.cell = baseCell});
 
   /// How many counters the number has, and how many are on the frames now.
   final int total;
   final int filled;
 
-  static const double cell = 26;
+  /// A cell's side on a phone; [cell] is the one drawn.
+  static const double baseCell = 26;
+  final double cell;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +146,7 @@ class TenFrames extends StatelessWidget {
       children: <Widget>[
         for (int f = 0; f < frames; f++) ...<Widget>[
           if (f > 0) const SizedBox(width: 16),
-          _Frame(from: f * 10, filled: filled, total: math.min(total, 20)),
+          _Frame(from: f * 10, filled: filled, total: math.min(total, 20), cell: cell),
         ],
       ],
     );
@@ -101,12 +154,13 @@ class TenFrames extends StatelessWidget {
 }
 
 class _Frame extends StatelessWidget {
-  const _Frame({required this.from, required this.filled, required this.total});
+  const _Frame({required this.from, required this.filled, required this.total, required this.cell});
 
   /// The number of the counters of earlier frames.
   final int from;
   final int filled;
   final int total;
+  final double cell;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -130,15 +184,15 @@ class _Frame extends StatelessWidget {
   Widget _slot(int index) {
     final bool used = index < filled && index < total;
     return Container(
-      width: TenFrames.cell,
-      height: TenFrames.cell,
+      width: cell,
+      height: cell,
       decoration: BoxDecoration(border: Border.all(color: TokenColors.hairline, width: 1.5)),
       alignment: Alignment.center,
       child: used
           ? Container(
               key: const Key('frame-counter'),
-              width: TenFrames.cell * 0.72,
-              height: TenFrames.cell * 0.72,
+              width: cell * 0.72,
+              height: cell * 0.72,
               decoration: BoxDecoration(
                 color: TokenColors.spark,
                 shape: BoxShape.circle,

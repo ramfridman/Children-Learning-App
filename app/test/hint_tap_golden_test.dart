@@ -28,10 +28,13 @@ Future<void> _wait(WidgetTester t, int ms) async {
 
 /// One family: the activity, and the name of its pictures.
 class _Family {
-  const _Family(this.name, this.activity, {this.tablet = const <int>[]});
+  const _Family(this.name, this.activity, {this.tablet = const <int>[], this.l1AtRest = false});
 
   final String name;
   final String activity;
+
+  /// Level 1 is taken when its pictures have come to rest (a set that rises out of its tile), not in the middle of its glow.
+  final bool l1AtRest;
 
   /// The levels that are also taken on the tablet.
   final List<int> tablet;
@@ -41,7 +44,7 @@ const List<_Family> _families = <_Family>[
   _Family('shapes', 'shp.name.triangle', tablet: <int>[2]),
   _Family('colour', 'col.name.red.ball', tablet: <int>[3]),
   _Family('colour_model', 'col.match.red'),
-  _Family('compare', 'more.apples.2v4'),
+  _Family('compare', 'more.apples.2v4', l1AtRest: true, tablet: <int>[1]),
   _Family('count', 'numeral.bugs.5'),
   _Family('sequence', 'next.after.4'),
   _Family('pattern', 'log.next.colours', tablet: <int>[2]),
@@ -51,7 +54,7 @@ const List<_Family> _families = <_Family>[
   _Family('numerals', 'show.birds.4'),
   _Family('measure', 'math.size.long'),
   _Family('position', 'shp.where.above'),
-  _Family('ordinal', 'ordinal.second.of4'),
+  _Family('ordinal', 'ordinal.second.of4', tablet: <int>[3]),
   _Family('zero', 'zero.basket'),
 ];
 
@@ -64,11 +67,12 @@ void main() {
   });
 
   /// How long after the lamp the picture of [level] is taken.
-  int waitFor(TapAnswerActivity a, ActivitySpec spec, Size stage, int level) {
+  int waitFor(TapAnswerActivity a, ActivitySpec spec, Size stage, int level, {bool l1AtRest = false}) {
     final HintPlan p = tapHintPlan(a, TapGeometry(a, stage, spec), level)!;
     final List<HintFrame> frames = p.frames;
     switch (level) {
       case 1:
+        if (l1AtRest) return p.length.inMilliseconds + 500;
         // In the middle of the glow: half the steps are done, and the next one is half way.
         final int done = frames.length ~/ 2;
         return frames.take(done).fold(0, (int s, HintFrame f) => s + f.hold.inMilliseconds) +
@@ -116,7 +120,7 @@ void main() {
           await tester.tap(find.byKey(const Key('lesson-hint')), warnIfMissed: false);
           await tester.pump(const Duration(milliseconds: 60));
           final bool shoot = levels.contains(level);
-          await _wait(tester, shoot ? waitFor(a, device.$3, stage, level) : 5000);
+          await _wait(tester, shoot ? waitFor(a, device.$3, stage, level, l1AtRest: f.l1AtRest) : 5000);
           if (shoot) {
             await expectLater(
               find.byType(MaterialApp),

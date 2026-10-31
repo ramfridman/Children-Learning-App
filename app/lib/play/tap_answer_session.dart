@@ -14,6 +14,7 @@ import 'count_tap_session.dart' show Dots;
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart';
+import 'hints/hint_player.dart';
 import 'hints/tap_geometry.dart';
 import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
@@ -27,12 +28,12 @@ class TapAnswerSession extends TemplateSession {
 
   final TapAnswerActivity activity;
 
-  /// What the hint draws on the stage now (see `HintPlan`), how much of the stage's end side a card takes, and the answer tile (by
-  /// its place in the row) that glows in turn where the stage has nothing of the question to light.
-  List<HintMark> marks = const <HintMark>[];
-  double reserve = 0;
-  int? hintLit;
-  int _gen = 0;
+  /// The hint on the stage (see `HintPlayer`), and the answer tile that glows in turn where the stage has nothing of the question
+  /// to light. The stage's end side is made room for a card by `_hint.reserve`.
+  late final HintPlayer _hint = HintPlayer(this);
+  List<HintMark> get marks => _hint.marks;
+  double get reserve => _hint.reserve;
+  int? get hintLit => activity.optionsInTiles ? _hint.litOption : null;
   Size? _stageSize;
   ActivitySpec? _spec;
   TextDirection _dir = TextDirection.rtl;
@@ -41,6 +42,9 @@ class TapAnswerSession extends TemplateSession {
   AnswerState chosenState = AnswerState.idle;
   bool _busy = false;
   int? pulsing;
+
+  /// The option on the stage that is grown a little now: one of a pulse of all, or the one a hint lights.
+  int? get pulsingNow => pulsing ?? (activity.optionsInTiles ? null : _hint.litOption);
 
   @override
   bool get listensNow => !_busy && chosenState != AnswerState.correct;
@@ -66,11 +70,11 @@ class TapAnswerSession extends TemplateSession {
     _busy = true;
     chosenId = id;
     // The dots of a first hint go with the child's next touch; a hint that is still playing stops when the answer is right.
-    if (controller.hintShown <= 1 && marks.isNotEmpty) _clearHint();
+    if (controller.hintShown <= 1 && marks.isNotEmpty) _hint.clear();
     final Outcome o = await controller.chooseOption(id, byVoice: byVoice);
     if (disposed) return;
     if (o.correct) {
-      _clearHint();
+      _hint.clear();
       chosenState = AnswerState.correct;
       notify();
       later(TemplateSession.praisePause, controller.next);
@@ -92,7 +96,7 @@ class TapAnswerSession extends TemplateSession {
     chosenState = AnswerState.idle;
     _busy = false;
     pulsing = null;
-    _clearHint();
+    _hint.clear();
     notify();
   }
 
@@ -119,44 +123,7 @@ class TapAnswerSession extends TemplateSession {
   }
 
   /// Plays a hint: each step of [plan] on the stage for its time, then what stays. Starting another hint (or an answer) stops it.
-  void _play(HintPlan plan) {
-    final int gen = ++_gen;
-    Duration at = Duration.zero;
-    for (final HintFrame f in plan.frames) {
-      later(at, () {
-        if (gen != _gen) return;
-        marks = f.marks;
-        reserve = f.reserve;
-        _light(f.litOption);
-        notify();
-      });
-      at += f.hold;
-    }
-    later(at, () {
-      if (gen != _gen) return;
-      marks = plan.rest;
-      reserve = plan.restReserve;
-      _light(null);
-      notify();
-      if (plan.endsDemo) controller.demoDone();
-    });
-  }
-
-  /// One answer glows (a sky ring on its tile; an option on the stage grows a little).
-  void _light(int? option) {
-    if (activity.optionsInTiles) {
-      hintLit = option;
-    } else {
-      pulsing = option;
-    }
-  }
-
-  void _clearHint() {
-    _gen++;
-    marks = const <HintMark>[];
-    reserve = 0;
-    hintLit = null;
-  }
+  void _play(HintPlan plan) => _hint.play(plan, onEnd: plan.endsDemo ? controller.demoDone : null);
 
   void _pulseAll() {
     for (int i = 0; i < activity.options.length; i++) {
@@ -178,6 +145,9 @@ class TapAnswerSession extends TemplateSession {
     _dir = Directionality.of(context);
     return ListenableBuilder(listenable: this, builder: (BuildContext c, Widget? _) => _TapStage(this, size));
   }
+
+  @override
+  Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => _hint.hands(size, spec);
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) {
@@ -215,6 +185,27 @@ class TapAnswerSession extends TemplateSession {
                         : _face(activity, o, 96, spec.tileFont),
                   ),
                 ),
+                // A place badge, and a start flag at the first end of the row, stand on the tiles (a tile paints above the stage and
+                // the speech bubble, so they are never covered by the bubble).
+                for (final TileMark m in marks.whereType<TileMark>())
+                  if (m.tile == i)
+                    switch (m) {
+                      TileBadgeMark() => Positioned(
+                        top: 12 - 23 * hintScale(_stageSize ?? Size.zero),
+                        left: 0,
+                        right: 0,
+                        child: IgnorePointer(
+                          child: Center(
+                            child: HintBadge(n: m.n, scale: hintScale(_stageSize ?? Size.zero)),
+                          ),
+                        ),
+                      ),
+                      TileFlagMark() => Positioned(
+                        top: 12 - 26 * hintScale(_stageSize ?? Size.zero),
+                        right: 12 - 20 * hintScale(_stageSize ?? Size.zero),
+                        child: IgnorePointer(child: HintFlag(scale: hintScale(_stageSize ?? Size.zero))),
+                      ),
+                    },
                 // Where the stage has nothing of the question to light, a first hint lights each answer in turn, the same for all.
                 if (hintLit == i)
                   Positioned.fill(
@@ -337,7 +328,7 @@ class _TapStage extends StatelessWidget {
         clipBehavior: Clip.none,
         children: <Widget>[
           stage,
-          if (s.marks.isNotEmpty) HintOverlay(marks: s.marks, size: size),
+          if (s.marks.isNotEmpty) HintOverlay(marks: s.marks, size: size, layer: HintLayer.body),
         ],
       ),
     );
@@ -468,7 +459,7 @@ class _TapStage extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: () => s.choose(o.id),
         child: AnimatedScale(
-          scale: s.pulsing == i ? 1.15 : 1,
+          scale: s.pulsingNow == i ? 1.15 : 1,
           duration: const Duration(milliseconds: 250),
           child: Opacity(
             opacity: dimmed ? 0.35 : 1,

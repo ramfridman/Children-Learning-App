@@ -24,6 +24,7 @@ class ActivityFrame extends StatelessWidget {
     required this.trailDone,
     required this.onHome,
     this.tiles,
+    this.hands,
     this.onHint,
     this.hintGlow = false,
     this.onShowMe,
@@ -41,6 +42,9 @@ class ActivityFrame extends StatelessWidget {
   /// Builds the stage for the room it has (its width and height, in board points).
   final Widget Function(Size room) stage;
   final Widget? tiles;
+
+  /// The layer of the hint's pointing hand over the stage, drawn above the bubble and the guide; null when there is none.
+  final Widget Function(Size room)? hands;
   final int trailTotal;
   final int trailDone;
   final VoidCallback onHome;
@@ -92,6 +96,11 @@ class ActivityFrame extends StatelessWidget {
         background: TokenColors.cream,
         board: board,
         children: <Widget>[
+          if (mic != null) Positioned(left: s.micLeft, top: s.micTop, child: mic!),
+          if (mic != null && onConfirmYes != null && onConfirmAgain != null) ..._confirmButtons(board, s),
+          _stage(s, room),
+          // The bubble and the guide are drawn after the stage, so a hint's hand that reaches over the stage's edge goes under
+          // them (the bubble first, so that the guide stands in front of its tail).
           // The celebration says its own line; the bubble stays quiet behind it.
           if (overlay == null && bubbleText.isNotEmpty)
             Positioned(
@@ -121,9 +130,7 @@ class ActivityFrame extends StatelessWidget {
               ),
             ),
           ),
-          if (mic != null) Positioned(left: s.micLeft, top: s.micTop, child: mic!),
-          if (mic != null && onConfirmYes != null && onConfirmAgain != null) ..._confirmButtons(board, s),
-          _stage(s, room),
+          if (hands != null) _handLayer(s, room),
           if (tiles != null)
             Positioned(left: s.tilesLeft, top: s.tilesTop - 12, width: s.tilesWidth, child: tiles!),
           Positioned(
@@ -205,6 +212,18 @@ class ActivityFrame extends StatelessWidget {
         ),
       ),
     ];
+  }
+
+  /// The hint's hand: over the stage's room, above the bubble. It takes no touch.
+  Widget _handLayer(ActivitySpec s, Size room) {
+    final double inset = s.stageIsCard ? 16 : 0;
+    return Positioned(
+      left: s.stage.left + inset,
+      top: s.stage.top + inset,
+      width: room.width,
+      height: room.height,
+      child: IgnorePointer(child: hands!(room)),
+    );
   }
 
   Widget _stage(ActivitySpec s, Size room) {

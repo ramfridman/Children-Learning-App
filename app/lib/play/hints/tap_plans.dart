@@ -62,6 +62,29 @@ String _plain(String s) => s.replaceAll(_vowelMarks, '');
 
 final RegExp _vowelMarks = RegExp('[${String.fromCharCode(0x591)}-${String.fromCharCode(0x5C7)}]');
 
+/// The whole words of a prompt, without vowel marks.
+Set<String> _wordsOf(String s) => _plain(s).split(_notLetters).toSet();
+
+final RegExp _notLetters = RegExp('[^${String.fromCharCode(0x5D0)}-${String.fromCharCode(0x5EA)}]+');
+
+/// Words a plan reads from a question to choose its picture, written as code points: "to stack", "table", "heavy", "light".
+final String _stack = String.fromCharCodes(<int>[0x5DC, 0x5E2, 0x5E8, 0x5DD]);
+final String _table = String.fromCharCodes(<int>[0x5E9, 0x5DC, 0x5D7, 0x5DF]);
+final String _heavy = String.fromCharCodes(<int>[0x5DB, 0x5D1, 0x5D3]);
+final String _light = String.fromCharCodes(<int>[0x5E7, 0x5DC]);
+
+// The pictures a position hint draws of its own (the tiles' red ball and brown box are not copied): a plain box, a bin the toy can
+// stand in, and a table the toy can stand under. Each is drawn in a 100 by 100 box, its top edge a little below the box's top.
+const String _boxSvg =
+    '<svg viewBox="0 0 100 100"><rect x="8" y="22" width="84" height="70" rx="6" fill="#C98F52"/>'
+    '<rect x="8" y="22" width="84" height="16" rx="6" fill="#B07A3F"/></svg>';
+const String _binSvg =
+    '<svg viewBox="0 0 100 100"><path d="M8 40 H92 L82 92 H18 Z" fill="#C98F52"/>'
+    '<rect x="6" y="38" width="88" height="8" rx="4" fill="#B07A3F"/></svg>';
+const String _tableSvg =
+    '<svg viewBox="0 0 100 100"><rect x="4" y="18" width="92" height="10" rx="4" fill="#8A5A2B"/>'
+    '<rect x="10" y="28" width="9" height="68" fill="#8A5A2B"/><rect x="81" y="28" width="9" height="68" fill="#8A5A2B"/></svg>';
+
 /// The smallest unit that repeats through the known cells of [row], or null when none does (the unit is at most half the row).
 int? periodOf(List<String> row) {
   for (int p = 1; p <= row.length ~/ 2; p++) {
@@ -370,7 +393,7 @@ class _Plans {
     if (level == 1) return look();
     switch (a.skillId) {
       case 'SHP-A-07':
-        return _rolls(level);
+        return _solids(level);
       case 'SHP-A-08':
         return _position(level);
       default:
@@ -394,34 +417,80 @@ class _Plans {
     return null;
   }
 
-  /// SHP-A-07: the ball rolls away and the box stays where it is (the question's own two things, no new ones).
-  HintPlan _rolls(int level) {
+  /// SHP-A-07: two solids, a push or a stack. Both get the same treatment, and the property shows (the ball rolls away and the box
+  /// stays; a second one stays on the box and slides off the ball). The question's own two things, no new ones; the question's
+  /// word says whether it is about stacking.
+  HintPlan _solids(int level) {
     final ChoiceOption? ball = _first((String s) => s.contains('sphere') || s.contains('ball'));
     final ChoiceOption? box = _first((String s) => s.contains('box'));
-    final String? ballSvg = _svg(ball?.sprite);
-    final String? boxSvg = _svg(box?.sprite);
-    if (ballSvg == null || boxSvg == null) return generic(level);
-    final double side = 46 * k;
-    final Rect ballAt = Rect.fromCenter(center: Offset(g.w * 0.22, g.h / 2), width: side, height: side);
-    final Rect ballFar = Rect.fromCenter(center: Offset(g.w * 0.52, g.h / 2), width: side, height: side);
-    final Rect boxAt = Rect.fromCenter(center: Offset(g.w * 0.8, g.h / 2), width: side, height: side);
-    List<HintMark> scene(Rect b, {double turns = 0, bool trail = false}) => <HintMark>[
-      CopyMark(boxAt, boxSvg),
-      CopyMark(b, ballSvg, turns: turns),
-      if (trail)
+    if (_n != 2 || ball == null || box == null || _svg(ball.sprite) == null || _svg(box.sprite) == null) {
+      return generic(level);
+    }
+    if (level == 3) return _walkOptions();
+    final List<String> svgs = <String>[for (final ChoiceOption o in a.options) _svg(o.sprite)!];
+    final bool isBall0 = identical(a.options[0], ball);
+    final double side = 40 * k;
+    final List<HintMark> end = _asksAbout(_stack)
+        ? _stackScene(svgs, isBall0, side, landed: true)
+        : _pushScene(svgs, isBall0, side, rolled: true);
+    final List<HintMark> start = _asksAbout(_stack)
+        ? _stackScene(svgs, isBall0, side, landed: false)
+        : _pushScene(svgs, isBall0, side, rolled: false);
+    return HintPlan(<HintFrame>[
+      HintFrame(start, hold: _ms(900)),
+      HintFrame(end, hold: _ms(2000)),
+    ], rest: end);
+  }
+
+  /// Both solids in a lane of their own, each with the same push arrow; the ball has rolled away and the box has not moved.
+  List<HintMark> _pushScene(List<String> svgs, bool isBall0, double side, {required bool rolled}) {
+    Rect at(int lane, double x) =>
+        Rect.fromCenter(center: Offset(x, g.h * (lane == 0 ? 0.3 : 0.72)), width: side, height: side);
+    final double home = g.w * 0.16;
+    final double far = g.w * 0.7;
+    final List<Rect> where = <Rect>[
+      at(0, rolled && isBall0 ? far : home),
+      at(1, rolled && !isBall0 ? far : home),
+    ];
+    return <HintMark>[
+      for (int i = 0; i < 2; i++)
+        CopyMark(where[i], svgs[i], turns: rolled && (i == 0) == isBall0 ? 0.75 : 0),
+      for (int i = 0; i < 2; i++)
+        ArrowMark(
+          Offset(home + side / 2 + 6 * k, at(i, home).center.dy),
+          Offset(home + side / 2 + 32 * k, at(i, home).center.dy),
+        ),
+      if (rolled)
         LineMark(
-          Offset(ballAt.center.dx, ballAt.bottom + 6 * k),
-          Offset(ballFar.center.dx, ballFar.bottom + 6 * k),
+          Offset(home + side / 2 + 40 * k, at(isBall0 ? 0 : 1, home).bottom + 4 * k),
+          Offset(far - side / 2, at(isBall0 ? 0 : 1, home).bottom + 4 * k),
         ),
     ];
-    if (level == 2) {
-      final List<HintMark> end = scene(ballFar, turns: 0.5, trail: true);
-      return HintPlan(<HintFrame>[
-        HintFrame(scene(ballAt), hold: _ms(900)),
-        HintFrame(end, hold: _ms(2000)),
-      ], rest: end);
-    }
-    return _walkOptions();
+  }
+
+  /// Both solids on one floor, and a second one of each: it is put on top and stays on the box, or slides off the ball.
+  List<HintMark> _stackScene(List<String> svgs, bool isBall0, double side, {required bool landed}) {
+    final double floor = g.h * 0.86;
+    final double small = side * 0.6;
+    final List<double> xs = <double>[g.w * 0.27, g.w * 0.7];
+    return <HintMark>[
+      for (int i = 0; i < 2; i++)
+        CopyMark(Rect.fromLTWH(xs[i] - side / 2, floor - side, side, side), svgs[i]),
+      for (int i = 0; i < 2; i++)
+        CopyMark(
+          landed && (i == 0) == isBall0
+              ? Rect.fromLTWH(xs[i] + side * 0.62, floor - small, small, small)
+              : Rect.fromLTWH(
+                  xs[i] - small / 2,
+                  landed ? floor - side - small : floor - side - small - 16 * k,
+                  small,
+                  small,
+                ),
+          svgs[i],
+          turns: landed && (i == 0) == isBall0 ? 0.25 : 0,
+        ),
+      LineMark(Offset(g.w * 0.08, floor), Offset(g.w * 0.92, floor)),
+    ];
   }
 
   ChoiceOption? _first(bool Function(String sprite) test) {
@@ -431,47 +500,56 @@ class _Plans {
     return null;
   }
 
-  /// SHP-A-08: the position of the question's word acted out with a box and a ball, in a sky card.
+  /// True when the question (without vowel marks) has [word] in it, with or without a prefix letter ("to the table").
+  bool _asksAbout(String word) => _plain(a.promptLine.caption).contains(word);
+
+  /// SHP-A-08: the position of the question's word acted out in a sky card with a small toy and the thing the question names (a
+  /// box, or the table of "under the table"). Only the relation is the tile's: the tiles show a red ball, so the toy is another
+  /// figure, and the drawing of the box is not the tile's.
   HintPlan _position(int level) {
     final String where = (_right.sprite ?? '').replaceFirst('asset:pos_', '');
-    final String? boxSvg = _svg('asset:solid_box');
-    final String? ballSvg = _svg('asset:ball_red') ?? _svg('asset:solid_sphere');
-    if (boxSvg == null ||
-        ballSvg == null ||
-        !<String>{'above', 'on', 'next', 'under', 'in'}.contains(where)) {
-      return generic(level);
-    }
+    final String? toy = _svg('asset:duck');
+    if (toy == null || !<String>{'above', 'on', 'next', 'under', 'in'}.contains(where)) return generic(level);
     if (level == 3) return _walkOptions();
+    // The thing, and where its drawn top and its drawn foot are in its picture's box (parts of the box).
+    final ({String svg, double top, double foot}) shape = _asksAbout(_table)
+        ? (svg: _tableSvg, top: 0.18, foot: 0.96)
+        : (where == 'in' ? (svg: _binSvg, top: 0.40, foot: 0.92) : (svg: _boxSvg, top: 0.22, foot: 0.92));
     final Rect card = g.centre(150 * k, 112 * k);
-    final double b = 44 * k;
-    final double d = 24 * k;
+    final double b = 52 * k;
+    final double d = 30 * k;
     final Offset c = card.center;
-    final (Rect, Rect) place = switch (where) {
-      'above' => (
-        Rect.fromCenter(center: c + Offset(0, 24 * k), width: b, height: b),
-        Rect.fromCenter(center: c + Offset(0, -40 * k), width: d, height: d),
-      ),
-      'on' => (
-        Rect.fromCenter(center: c + Offset(0, 18 * k), width: b, height: b),
-        Rect.fromCenter(center: c + Offset(0, -16 * k), width: d, height: d),
-      ),
-      'next' => (
-        Rect.fromCenter(center: c + Offset(-26 * k, 10 * k), width: b, height: b),
-        Rect.fromCenter(center: c + Offset(30 * k, 22 * k), width: d, height: d),
-      ),
-      'under' => (
-        Rect.fromCenter(center: c + Offset(0, -22 * k), width: b, height: b),
-        Rect.fromCenter(center: c + Offset(0, 36 * k), width: d, height: d),
-      ),
-      _ => (
-        Rect.fromCenter(center: c + Offset(0, 8 * k), width: b * 1.3, height: b * 1.3),
-        Rect.fromCenter(center: c + Offset(0, 14 * k), width: d * 0.8, height: d * 0.8),
-      ),
-    };
+    Rect thing(double dx, double dy) =>
+        Rect.fromCenter(center: c + Offset(dx * k, dy * k), width: b, height: b);
+    Rect small(double x, double y) => Rect.fromCenter(center: Offset(x, y), width: d, height: d);
+    double top(Rect o) => o.top + shape.top * b;
+    double foot(Rect o) => o.top + shape.foot * b;
+    final Rect o;
+    final Rect t;
+    switch (where) {
+      case 'above':
+        o = thing(0, 24);
+        t = small(c.dx, top(o) - 16 * k - d / 2);
+      case 'on':
+        o = thing(0, 18);
+        t = small(c.dx, top(o) - d / 2 + 1);
+      case 'next':
+        o = thing(-28, 8);
+        t = small(c.dx + 36 * k, foot(o) - d / 2);
+      case 'under':
+        o = thing(0, 0);
+        t = small(c.dx, foot(o) - d / 2 - 1);
+      default:
+        o = thing(0, 14);
+        t = small(c.dx, top(o) - d * 0.1);
+    }
     final List<HintMark> scene = <HintMark>[
       CardMark(card, const SizedBox.shrink()),
-      CopyMark(place.$1, boxSvg),
-      CopyMark(place.$2, ballSvg),
+      // Something that holds the toy is drawn over it; anything else is drawn first.
+      if (where == 'in') ...<HintMark>[CopyMark(t, toy), CopyMark(o, shape.svg)] else ...<HintMark>[
+        CopyMark(o, shape.svg),
+        CopyMark(t, toy),
+      ],
     ];
     return HintPlan(<HintFrame>[HintFrame(scene, hold: _ms(2600))], rest: scene);
   }
@@ -491,6 +569,9 @@ class _Plans {
     List<Rect> top;
     List<Rect> bottom;
     List<HintMark> copies = <HintMark>[];
+    // The copies of the two tiles' sets, one at a time (the first option's row on top): they come up from their own tile, so a row
+    // is known by the tile it came from. Each row keeps a thin connector to that tile once it has landed.
+    final List<HintFrame> flight = <HintFrame>[];
     if (onStage) {
       top = _groupRects(g, 0);
       bottom = _groupRects(g, 1);
@@ -506,10 +587,30 @@ class _Plans {
       ];
       top = row(sets[0].$2, g.h * 0.3);
       bottom = row(sets[1].$2, g.h * 0.72);
+      // Under its tile (the tile paints over the stage), so a set rises out of the tile's top edge.
+      List<Rect> underTile(int tile, int count) => <Rect>[
+        for (int i = 0; i < count; i++)
+          Rect.fromCenter(center: g.optionTip(tile) + Offset(0, d / 2 + 8 * k), width: d, height: d),
+      ];
+      final Offset startLineTop = Offset(24 * k, 6 * k);
+      final HintMark startLine = LineMark(startLineTop, Offset(24 * k, g.h - 6 * k));
+      HintMark connector(int tile, Rect firstOfRow) =>
+          LineMark(Offset(24 * k, firstOfRow.center.dy), g.optionTip(tile) - Offset(0, 3 * k), faint: true);
+      List<HintMark> pictures(List<Rect> a, List<Rect> b) => <HintMark>[
+        for (final Rect r in a) CopyMark(r, sets[0].$1),
+        for (final Rect r in b) CopyMark(r, sets[1].$1),
+      ];
+      final List<Rect> home0 = underTile(0, top.length);
+      final List<Rect> home1 = underTile(1, bottom.length);
+      flight.addAll(<HintFrame>[
+        HintFrame(pictures(home0, home1), hold: _ms(200)),
+        HintFrame(<HintMark>[...pictures(top, home1), startLine, connector(0, top.first)], hold: _ms(900)),
+      ]);
       copies = <HintMark>[
-        for (final Rect r in top) CopyMark(r, sets[0].$1),
-        for (final Rect r in bottom) CopyMark(r, sets[1].$1),
-        LineMark(Offset(24 * k, 6 * k), Offset(24 * k, g.h - 6 * k)),
+        ...pictures(top, bottom),
+        startLine,
+        connector(0, top.first),
+        connector(1, bottom.first),
       ];
     }
     final int pairs = math.min(top.length, bottom.length);
@@ -521,7 +622,7 @@ class _Plans {
     ];
     if (level == 1) {
       if (onStage) return look();
-      return HintPlan(<HintFrame>[HintFrame(copies, hold: _ms(2600))], rest: copies);
+      return HintPlan(<HintFrame>[...flight, HintFrame(copies, hold: _ms(2000))], rest: copies);
     }
     if (level == 2) {
       final List<HintFrame> frames = <HintFrame>[
@@ -723,27 +824,26 @@ class _Plans {
     ]);
   }
 
-  /// NUM-A-13: first, second, third, last. The tiles are the line, and the row of tiles starts at the right, so the numbered
-  /// strip starts at the right too (the one place a strip of the stage is turned, to run the way the tiles run).
+  /// NUM-A-13: first, second, third, last. The tiles are the queue and its front is the first tile of the row (the right-hand one:
+  /// the row of tiles runs right to left), so nothing is drawn in the stage that could read as a number line. Each tile gets a place
+  /// badge over its top edge, 1 at the front, and a small start flag stands at the front's end (the tiles draw both: they paint
+  /// above the speech bubble). Level 3: the hand walks the tiles from the front and stops on the right one.
   HintPlan _ordinal(int level) {
     if (level == 1) return tilesInTurn();
-    final Rect path = Rect.fromCenter(
-      center: Offset(g.w / 2, g.h / 2),
-      width: math.min(g.w - 20, _n * 44 * k),
-      height: 40 * k,
-    );
+    List<HintMark> shown(int upTo) => <HintMark>[
+      const TileFlagMark(0),
+      for (int j = 0; j < upTo; j++) TileBadgeMark(j, j + 1),
+    ];
     if (level == 2) {
-      final List<HintMark> shown = <HintMark>[PathMark(rect: path, count: _n, ring: _ci + 1, reverse: true)];
-      return HintPlan(<HintFrame>[HintFrame(shown, hold: _ms(2800))], rest: shown);
+      return HintPlan(<HintFrame>[
+        for (int j = 1; j <= _n; j++) HintFrame(shown(j), hold: _ms(700)),
+      ], rest: shown(_n));
     }
-    Offset squareTop(int j) => Offset(path.right - (j - 0.5) * path.width / _n, path.top + 2 * k);
     return _demo(<HintFrame>[
-      for (int j = 1; j <= _ci + 1; j++)
-        HintFrame(<HintMark>[
-          PathMark(rect: path, count: _n, marker: j, reverse: true),
-          HandMark(squareTop(j), press: true),
-        ], hold: _ms(800)),
-      _toAnswer(<HintMark>[PathMark(rect: path, count: _n, ring: _ci + 1, reverse: true)]),
+      HintFrame(shown(0), hold: _ms(600)),
+      for (int i = 0; i < _ci; i++)
+        HintFrame(<HintMark>[...shown(i + 1), HandMark(g.optionTip(i), press: true)], hold: _ms(850)),
+      _toAnswer(shown(_ci + 1)),
     ]);
   }
 
@@ -1058,6 +1158,9 @@ class _Plans {
   );
 
   HintPlan measure(int level) {
+    // Heavy and light are not seen with a stick of cubes: they wait for the seesaw (P10), and the generic ladder serves until then.
+    final Set<String> asked = _wordsOf(a.promptLine.caption);
+    if (asked.contains(_heavy) || asked.contains(_light)) return generic(level);
     final List<(String, double, Rect)> things = <(String, double, Rect)>[
       for (final ChoiceOption o in a.options)
         if (_svg(_spriteOf(o)) != null)
