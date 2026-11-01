@@ -1,4 +1,4 @@
-# Listening sheet: the diagnostic audition, rounds 1 and 2
+# Listening sheet: the diagnostic audition, rounds 1, 2 and 3
 
 Written by the voice-and-sound-director on 2026-10-29. The clips are in `round1.json` and `round2.json` next to this
 file. Each spec gives every clip's exact text, model, settings and format, and the question the clip answers (`tests`).
@@ -8,6 +8,7 @@ The plan prints all of this again before anything is sent.
 |---|---|---|---|---|
 | 1 | 34 (32 Nitzi, 2 hero-son) | **1,852**: eleven_v4_turbo 759, eleven_v4 1,093 | **0.1178 USD** | now |
 | 2 | 59 (36 of them the editor's H1 A/B) | **2,774**, all on the model round 1 picks | **0.2219 USD** on eleven_v4 (0.1110 on Turbo) | after I have read your round-1 scores and updated `round2.json` |
+| **3** | **40** (31 Nitzi, 7 hero-son, 1 Tzuri, 1 Tamir; 4 of the Nitzi clips repeat on eleven_v4) | **1,423**: eleven_v4_turbo 1,246, eleven_v4 177 | **0.0640 USD** | **now: this is the round to run (B-45). Rounds 1 and 2 were never run; round 3 replaces them as the check before the full voicing. Go to section E.** |
 
 The number you type is the total that the tool prints, not mine. If they differ, stop and tell Claude.
 
@@ -241,3 +242,145 @@ On the model that round 1 picks, Nitzi's voice unless the row says otherwise.
 - whether **audio tags** are used;
 - whether the two **friends' voices** sound native;
 - for each H1 line, which **text form** wins (my note to the editor).
+
+---
+
+## E. Round 3 (40 clips): the check before the full voicing (B-45)
+
+Written by the voice-and-sound-director on 2026-11-01. Spec: `round3.json` next to this file. Every text is owner-approved.
+Every word the corrected sheet touched is here, in a real line of the pack, said the way the pack will send it. Nothing is
+generated yet. The free plan says **40 clips, 1,423 characters, 0.0640 USD** at list prices.
+
+**Who says what.** `N` = Nitzi (female, the flagship narrator; 27 clips on `eleven_v4_turbo` and 4 repeats on `eleven_v4`).
+`H` = hero-son (male, the flagship narrator; 7 clips). `F1` = Climber Tzuri and `F2` = Tower Tamir, each saying the medal
+line in his **own** voice (friends keep their own cheers and ceremonies). A friend's **lesson** lines are said by the
+narrator of the same gender, so `H01` (a question) is also how Tzuri and Tamir ask a lesson line, and a girl friend would
+borrow Nitzi (`N05`). Listen to `F1`, then `H01`: one man or two people?
+
+**How the tone is set.** On every v4 model only stability and similarity are sent (the tool drops style and speed), so the
+tone here is stability alone: ask 0.60, hint 1 and 2 0.65, hint 3 0.70, calm try-again 0.60, praise and bottle 0.50,
+thinking 0.55, celebration 0.35, ceremony 0.45. The two clips at **0.10** (`N22`, `N24`) are today's cheer, kept to compare.
+Similarity is 0.8 for all. Today's `content/voices.json` has 0.5 for everything except the cheer; your scores decide the
+numbers I then put there.
+
+### E1. Steps (Windows PowerShell 5.1; Claude never runs these)
+
+Until round 3 is merged to `main`, use the worktree `D:\nitznutz-next` below. After the merge, use `D:\Children-Learning-App`.
+
+1. **Open a separate PowerShell window** (Start menu, `PowerShell`, **Windows PowerShell**), not the terminal where Claude
+   Code runs.
+2. **Go to the app folder and let the window show Hebrew:**
+
+   ```powershell
+   cd D:\nitznutz-next\app
+   [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+   ```
+
+3. **The free plan** (sends nothing, needs no key):
+
+   ```powershell
+   dart run tool/voice_gen.dart audition-batch plan ../docs/audio/audition/round3.json
+   ```
+
+   It must end with `Clips to make: 40 of 40`, `Characters of text in total: 1423` and `Estimated cost ... 0.0640 USD`.
+   Stop and tell Claude if the total differs or you see "FAILED" or "The pre-flight check refuses". (Hebrew may show in
+   reverse order in the console; that is only the display.)
+4. **The key, typed into a hidden prompt** (it stays only in this window):
+
+   ```powershell
+   $s = Read-Host -AsSecureString 'ElevenLabs key'
+   $env:ELEVENLABS_API_KEY = [System.Net.NetworkCredential]::new('', $s).Password
+   Remove-Variable s
+   ```
+
+5. **The paid run:**
+
+   ```powershell
+   dart run tool/voice_gen.dart audition-batch run ../docs/audio/audition/round3.json
+   ```
+
+   It prints the same plan and asks you to type the number of characters. **Type 1423 and press Enter** (the number printed
+   as "Characters of text in total"). Anything else stops it and sends nothing. If it stops halfway, repeat this step:
+   clips already made are skipped and not paid for again; type the new, smaller total.
+6. **Close the key:**
+
+   ```powershell
+   Remove-Item Env:ELEVENLABS_API_KEY
+   exit
+   ```
+
+7. **Where the files are, and how to play them.** Any PowerShell window; free:
+
+   ```powershell
+   explorer "$env:USERPROFILE\nitznutz-voice\auditions\round3"
+   ```
+
+   Forty `.mp3` files (`N01-oops.mp3` ...), each with a `.json` beside it (what was sent). Double-click one to play it on
+   the PC. Play them in name order: F, H, then N.
+8. **To the phone.** Copy only the `.mp3` files of the `round3` folder. Android: USB cable, "File transfer", drag into
+   `Music`. iPhone: upload to OneDrive or iCloud Drive and play from Files. The clips hold only these test sentences,
+   nothing about the children. Delete the phone copy after you answer.
+
+### E2. How to answer from the phone
+
+Listen to each clip **twice** (once on the phone speaker, once on headphones). Then reply to Claude in one message, one
+line per clip:
+
+`N05 ok` or `N05 W3 S5 R4 Wa5 NR4 "the question does not rise"`
+
+- `ok` = right words, right stress, warm and natural. Anything else: scores 1 to 5 as in section B (W words, S stress,
+  R rhythm, Wa warmth, NR not robotic) and two or three words about what you heard.
+- For pairs, say which is better: `N21 over N22`, `N18 over N17`, `N01 v4 better`.
+- A photo of the table below also works.
+- A **wrong word or wrong stress** is the most important answer: write the word as you heard it ("sounded like nig-LE").
+
+### E3. What to listen for in each clip
+
+| Clip | Says | Listen for | W | S | R | Wa | NR | Notes |
+|---|---|---|---|---|---|---|---|---|
+| N01-oops | אוּפְּס, האוזניים שלי התבלבלו. אפשר להגיד שוב? | "UPS" (not "ofs"); "ha-oz-NA-yim"; a calm, curious tone; the question rises | | | | | | |
+| N02-say | בבקשה, תגידו לי. | "ta-gi-DU li" (not "im-RU li"); a warm invitation | | | | | | |
+| N03-discover | בואו נְגַלֶּה יחד. | "ne-ga-LE" (we will find out), not "nig-LE"; thinking, curious | | | | | | |
+| N04-put | שָׂמִים כל צורה עם אותה צורה. | "sa-MIM" (we put); a clear instruction, not a scold | | | | | | |
+| N05-queue | מי ראשון בַּתּוֹר? | "ba-TOR" (in the queue), not "be-TOR"; the pitch rises: a question | | | | | | |
+| N06-hint1 | בואו נקשיב שוב לשאלה. | hint 1: short, slow, soft; an invitation, no sigh | | | | | | |
+| N07-hint2 | נספור בַּתּוֹר מההתחלה: ראשון. | hint 2: calm; "ba-TOR"; "ri-SHON" clear | | | | | | |
+| N08-hint3 | מתחילים מהדגל: ראשון. זה הראשון בַּתּוֹר. עכשיו תורכם — ללחוץ עליו. | hint 3: the slowest and steadiest; a short beat at the dash; ends warm | | | | | | |
+| N09-sky | בצהריים השמש גבוהה בַּשָּׁמַיִם. עכשיו תורכם — ללחוץ על הצהריים. | "ba-sha-MA-yim" (stress MA); "ba-tza-ha-RA-yim"; a beat at the dash | | | | | | |
+| N10-praise | כן, אֵלֶּה חֲמִשָּׁה כוכבים. | "E-le" (these), not "e-LA"; "cha-mi-SHA"; glad, not shouting | | | | | | |
+| N11-right | צדקתם, שם יש יותר אפרוחים. | "tz'dak-TEM" (you were right), not "tza-dak-TEM"; short, glad | | | | | | |
+| N12-tryagain | המקום בַּתּוֹר הוא לא כמה יש. בואו נספור מההתחלה. | a calm "try again": curious and kind, never a scold | | | | | | |
+| N13-box | כן, זו התיבה — ארוכה, כמו קופסה של נעליים. | "tei-VA" and "kuf-SA", two different words; a beat at the dash | | | | | | |
+| N14-cube-q | איפה הקובייה? | "ku-BI-ya" (cube), stress BI; a short question that rises | | | | | | |
+| N15-cube-vs-box | בקובייה כל הצדדים ריבועים, ולתיבה יש צדדים ארוכים כמו מלבן. | "ba-ku-BI-ya", "ve-la-tei-VA", "mal-BEN"; calm, not a lecture | | | | | | |
+| N16-teen | כן, שֵׁשׁ עֶשְׂרֵה ציפורים. | "shesh es-RE" (sixteen, feminine); a clear, steady number | | | | | | |
+| N17-equals-plain | כן, שֵׁשׁ ועוד שְׁתַּיִם שווה שְׁמוֹנֶה. | "=" from the plain word: "sha-VE" or "SHA-ve"? numbers clear | | | | | | |
+| N18-equals-pointed | the same with שָׁוֶה pointed | "sha-VE"; better than N17? If yes I add the pronunciation entry | | | | | | |
+| N19-times | שְׁתַּיִם כָּפוּל שָׁלוֹשׁ שָׁוֶה שֵׁשׁ. | "ka-FUL" (times); a clean sum (a test sentence: the pack has no × line yet) | | | | | | |
+| N20-cheer-count | כל הכבוד, עברתם את העשרות. | "a-va-r'TEM" (you passed); "KOL ha-ka-VOD"; glad and short at 0.35 | | | | | | |
+| N21-cheer-towers-035 | כל הכבוד, המגדלים גְּדֵלִים. | "g'de-LIM" (they grow), not "g'da-LIM"; bright but even | | | | | | |
+| N22-cheer-towers-010 | the same at stability 0.1 (today's cheer) | wobbly or shouted next to N21? | | | | | | |
+| N23-medal-045 | הנה מֵדַלְיָה בשבילכם. | "me-DAL-ya" (stress DAL); proud and warm | | | | | | |
+| N24-medal-010 | the same at 0.1 (today's ceremony) | compare with N23 | | | | | | |
+| N25-bottle-land | בואו נֵצֵא להרפתקה אל גִּבְעוֹת הַסְּפִירָה. | the pointed land name flows inside the sentence; an inviting "we" | | | | | | |
+| N26-bottle-land-plain | the same with the name unpointed | same as N25, or a different reading? | | | | | | |
+| N27-bottle-robots | בואו נְבַקֵּר את נְמַל הָרוֹבּוֹטִים. | "ne-MAL ha-ro-bo-TIM"; stress on "bo" in robot | | | | | | |
+| N01-oops-v4 | as N01 | model A/B: clearer or warmer than turbo? | | | | | | |
+| N08-hint3-v4 | as N08 | the same A/B | | | | | | |
+| N18-equals-pointed-v4 | as N18 | the same A/B | | | | | | |
+| N23-medal-045-v4 | as N23 | the same A/B | | | | | | |
+| H01-queue | מי ראשון בַּתּוֹר? | hero-son: "ba-TOR"; a natural male voice; a real question. Also Tzuri's and Tamir's lesson voice | | | | | | |
+| H02-sky | as N09 | hero-son hint 3: "ba-sha-MA-yim"; calm and steady | | | | | | |
+| H03-praise | as N10 | hero-son: "E-le"; glad, not shouting | | | | | | |
+| H04-cube-vs-box | as N15 | hero-son "try again" with "ku-BI-ya" and "tei-VA" | | | | | | |
+| H06-equals-pointed | as N18 | hero-son: "sha-VE" | | | | | | |
+| H07-oops | as N01 | hero-son: "UPS"; kind, not annoyed | | | | | | |
+| H08-cheer-towers | as N21 | hero-son celebration at 0.35: "g'de-LIM" | | | | | | |
+| F1-tzuri-own-medal | as N23 | Tzuri's OWN voice: native Hebrew, friendly; compare with H01 (his borrowed lesson voice): one man or two? | | | | | | |
+| F2-tamir-own-medal | as N23 | Tamir's OWN voice: deep, slow, gentle; compare with H01 | | | | | | |
+
+**What round 3 decides.** (1) Each corrected word: said right, or I add a respelling to `content/voices.json` ›
+`pronunciation` (`שווה` is the likely one) or ask the text editor for a punctuation change. (2) The stability per kind of
+line (the numbers above). (3) `eleven_v4_turbo` or `eleven_v4` for the full run (v4 costs twice per character). (4) Whether
+Tzuri and Tamir sound like the same people as the borrowed hero-son. (5) Whether land names go to the voice pointed or
+plain. Only after your OK is the full voicing planned, for the number you type.
