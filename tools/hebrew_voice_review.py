@@ -279,7 +279,7 @@ SUBS = [
     (B + '(וּ?)בַּסַּךְ הַכֹּל' + E, lambda m: ('וּ' if m.group(1) else '') + 'בְּסַךְ הַכֹּל', 'spelling: בְּסַךְ הַכֹּל (no article)'),
     (B + '(הַ|לַ)חָתוּל' + E, lambda m: ('הֶ' if m.group(1) == 'הַ' else 'לֶ') + 'חָתוּל', 'nikud: הֶחָתוּל, לֶחָתוּל (the article before ח with a qamatz)'),
     (B + 'הֶחוּם' + E, 'הַחוּם', 'nikud: הַחוּם (the article before ח with a shuruk is הַ)'),
-    (B + 'אוּפְּס' + E, 'אוֹפְּס', 'nikud: אוֹפְּס, as in core.listen.mixed'),
+    (B + 'אוֹפְּס' + E, 'אוּפְּס', 'nikud: אוּפְּס, "ups" (Milog, Hebrew Wiktionary); אוֹפְּס would be read "ofs"'),
     # B-13 (board, 2026-10-28): the child's space has no speed language (CLAUDE.md, design-spec §5.4; design audit F3)
     (B + 'הִסְתַּכְּלוּ מַהֵר!', 'הִסְתַּכְּלוּ טוֹב…', 'tone (B-13, design audit F3): no speed language in the child\'s space; '
      '"הִסְתַּכְּלוּ טוֹב…" (look carefully), the dots give the look a beat'),
@@ -670,16 +670,22 @@ KEEP_POINTED = {'שֵׁנִי', 'הַשֵּׁנִי', 'הַוִּי', 'לְהֵ�
 # The pronunciation audit of 2026-10-29 (docs/agents/voice-pronunciation-audit.md): plain words a voice can read as
 # another word. They keep their nikud in the voice text; each row they change stays `proposed` until the owner agrees.
 VOICE_AUDIT_KEEP = {
-    'שָׂמִים': 'plain "שמים" is read "shamayim" (sky); here it is "samim" (we put)',
-    'סָפַר': 'plain "ספר" is read "sefer" (a book); here it is "safar" (counted)',
-    'גְּדֵלִים': 'plain "גדלים" can be read "gdalim" (sizes); here it is "gdelim" (grow)',
-    'בַּתּוֹר': 'plain "בתור" is often read "betor" (as a); here it is "ba-tor" (in the line)',
-    'אִמְרוּ': 'plain "אמרו" is read "amru" (they said); here it is the request "imru" (say)',
-    'נְגַלֶּה': 'plain "נגלה" can be read "nigla" (was revealed); here it is "negale" (we will find out)',
-    'אוֹפְּס': 'plain "אופס" can be read with an f ("ofes"); the dagesh keeps the p of "oops"',
-    'מֵדַלְיָה': 'a loanword: plain "מדליה" can be read "madliya"; the nikud gives "medalya"',
-    'אֵלֶּה': 'plain "אלה" can be read "ela"; here it is "ele" (these)',
-    'בַּשָּׁמַיִם': 'plain "בשמים" can be read "besamim" (spices); here it is "ba-shamayim" (in the sky)',
+    # reasons re-checked 2026-11-01 against Pealim, Milog and Wiktionary (docs/agents/hebrew-notes.md section 15); stress in capitals
+    'שָׂמִים': 'plain "שמים" can be read "shamayim" (sha-MA-yim, the sky); here it is "samim" (sa-MIM), the plural present of שָׂם, "put"',
+    'סָפַר': 'plain "ספר" can be read "sefer" (SE-fer, a book) or "sapar" (sa-PAR, a barber); here it is "safar" (sa-FAR), "counted"',
+    'גְּדֵלִים': 'plain "גדלים" is spelled like "gdalim" (gda-LIM, sizes, the plural of גֹּדֶל); here it is "gdelim" (gde-LIM), '
+                 'the plural present of גָּדֵל, "grow, get bigger"',
+    'בַּתּוֹר': 'plain "בתור" can be read "betor" (be-TOR, "as, in the role of"); here it is "ba-tor" (ba-TOR), "in the line"',
+    'אִמְרוּ': 'plain "אמרו" is read "amru" (am-RU, "they said"); here it is "imru" (im-RU), the request "say!"',
+    'נְגַלֶּה': 'plain "נגלה" can be read "nigle" or "nigale" (nifal, "we will be revealed"), or "nigla" ("was revealed"); here it is '
+                'the piel "negale" (ne-ga-LE), "we will discover"',
+    'אוּפְּס': 'plain "אופס" can be read "ofes" (o-FES, אוֹפֵס, "is running out") or "upas" (u-PAS, אֻפַּס, "was reset"); here it is the '
+               'interjection "ups" (one syllable, "oops")',
+    'מֵדַלְיָה': 'a loanword: plain "מדליה" leaves the first vowel and the stress open ("madalya", or final stress); the nikud '
+                 'gives "medalya" (me-DAL-ya, stress on the second syllable)',
+    'אֵלֶּה': 'plain "אלה" can be read "ela" (e-LA, אֵלָה "terebinth" or a name) or "ala" (a-LA, a club); here it is "ele" (E-le, '
+              'stress on the first syllable), "these"',
+    'בַּשָּׁמַיִם': 'plain "בשמים" can be read "bsamim" (bsa-MIM, בְּשָׂמִים, "in perfumes"); here it is "ba-shamayim" (ba-sha-MA-yim), "in the sky"',
 }
 VOICE_AUDIT_KEEP = {canon(w): why for w, why in VOICE_AUDIT_KEEP.items()}
 KEEP_POINTED |= set(VOICE_AUDIT_KEEP)
@@ -886,9 +892,6 @@ PART_F_LIST = [
     ('בְּסַךְ הַכֹּל יֵשׁ תִּשְׁעָה דָּגִים. רוֹאִים חֲמִשָּׁה דָּגִים, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?',
      'בְּסַךְ הַכֹּל יֵשׁ תִּשְׁעָה דָּגִים. רוֹאִים חָמֵשׁ, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?',
      'number (owner Q8): the noun is said with its number'),
-    ('אוֹפְּס, חֵץ אֶחָד הָלַךְ לְמַטָּה בִּמְקוֹם לְמַעְלָה, וְהָרוֹבּוֹט נֶעֱצַר כָּאן. מַגִּיעִים לַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה.',
-     'אוּפְּס, חֵץ אֶחָד הָלַךְ לְמַטָּה בִּמְקוֹם לְמַעְלָה, וְהָרוֹבּוֹט נֶעֱצַר כָּאן. מַגִּיעִים לַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה.',
-     'nikud: אוֹפְּס, as in core.listen.mixed'),
     ('מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי בָּהִיר וְלֹא הֲכִי כֵּהֶה.', 'הָאֶמְצָעִי אֵינוֹ הֶחָלָשׁ בְּיוֹתֵר וְאֵינוֹ הֶחָזָק בְּיוֹתֵר. בּוֹאוּ נַתְחִיל מֵהַבָּהִיר.',
      'curriculum-expert (b36 section 10): size words for a shade; the middle items COL-B-02 .9 to .12 get this line too, instead of the shared "not the smallest and not the biggest"'),
     ('זֶה הָאֶמְצַע. בּוֹאוּ נַשְׁוֶה אֶת כֻּלָּם: בָּהִיר, אֶמְצָעִי, כֵּהֶה.', 'מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.',
@@ -916,6 +919,11 @@ for _new, _old, _why in PART_F_LIST:
     PART_F[canon(_new)] = (_old, _why)
 # the same kind of rewording over many rows: (regex on the new text, the draft in words, why)
 PART_F_RX = [
+    # D1 research (hebrew-text-editor, 2026-11-01): two wrong 2nd person plural past forms found in the sources (Pealim)
+    (re.compile(canon(r'^כֵּן, צְדַקְתֶּם!$')), '"כֵּן, צָדַקְתֶּם!"',
+     'nikud: a paal verb in the 2nd person plural past takes a shva, צְדַקְתֶּם (tzdaktem), not צָדַקְתֶּם (Pealim)'),
+    (re.compile(canon(r'עֲבַרְתֶּם')), 'the same line with עָבַרְתֶּם',
+     'nikud: a guttural first letter takes a hataf-patach, עֲבַרְתֶּם (avartem), not עָבַרְתֶּם (Pealim)'),
     (re.compile(canon(r'^סוֹפְרִים אֶת כֻּלָּם\. אֵלֶּה ')), 'the same line without "סוֹפְרִים אֶת כֻּלָּם."',
      'teaching: the third hint is a worked example, and a bare answer ("these are three apples") opened it; the hand counts first (16 flash items)'),
     (re.compile(canon(r'הָעַמּוּד הֲכִי (גָּבוֹהַּ|נָמוּךְ) הוּא זֶה')), '"הָעַמּוּד הַגָּבוֹהַּ / הַנָּמוּךְ בְּיוֹתֵר"',
@@ -931,7 +939,11 @@ PART_F_RX = [
 # B-38 cube and cat lines, the B-39 bottle lines, the B-32 refusal message, the 150 part D items and their lessons) and reworded what was
 # wrong in the SOURCES (PART_F_LIST above). They are `text-ready` and wait for the owner's sample-and-rule review (docs/review/b36-owner-sample.md).
 # What stays `proposed` is a question only the owner can answer: pending() below (B40_Q3, B40_SPOT, B40_TEN), DOUBT, ROW_RULES (Q2, D12) and the V1 rows.
-PENDING = []
+PENDING = [
+    ('3', r'^(feedback\.correct|celebration)\.caption\.0\.v$', r'^(activity\.same\.|activity\.b\.shpb02\.1[12]|lesson\.count-to-30)',
+     'D1 research (2026-11-01): the nikud of the verb was wrong in the source and is corrected (see "changes"); please read it again.',
+     r'^כֵּן, צְדַקְתֶּם!$|עֲבַרְתֶּם'),
+]
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
 DOUBT = [

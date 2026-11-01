@@ -71,13 +71,15 @@ listen for**, not a measurement.
 
 ## 4. Risk table: the lines voiced today
 
+**Correction of 2026-11-01** (the owner said some pronunciations in the sheet were wrong; details in `hebrew-notes.md` section 15 and the D1 table of `docs/review/b36-owner-sample.md`): `אוֹפְּס` below is a wrong pointing, the word is `אוּפְּס` ("ups"), so the clip of 2026-10-28 said "ofs"; "plain would read `ofes`" meant the real word `אוֹפֵס`. Where the table below says "betor", "ela", "nigla", "besamim", "gdalim", read: `בְּתוֹר` be-TOR ("as"), `אֵלָה` e-LA, `נִגְלֶה` / `נִגָּלֶה`, `בְּשָׂמִים` bsa-MIM, `גְּדָלִים` gda-LIM ("sizes"); the stress of the pointed forms is ba-TOR, E-le, ne-ga-LE, ba-sha-MA-yim, gde-LIM, sa-MIM, sa-FAR, im-RU, me-DAL-ya.
+
 Status: **TR** = the correction is already `text-ready` in the table (only re-voicing from `voice_text` is missing);
 **V1** = new in this audit, `proposed` in the table; **AB** = proposal in this file only, until an A/B listen.
 
 | Ids (voiced) | Sent to the voice | Risk heard | Proposed spoken text | St |
 |---|---|---|---|---|
 | `celebrate.butterflies`, `.counting_words`, `.giving`, `.more_or_less`, `.numbers_and_things`, `.who_is_first`, `core.celebrate.well`, `core.encourage.fixed` (31 lines with `כׇּל`) | `כׇּל הַכָּבוֹד!` | "kal ha-kavod", shouted, cheer style | `כל הכבוד, ספרתם לאט ובדקתם כל פרפר.` | TR |
-| `core.listen.mixed` | `אוֹפְּס, הָאָזְנַיִם … הִתְבַּלְבְּלוּ!` | "aznayim"; `!` | `אוֹפְּס, האוזניים שלי התבלבלו. אפשר להגיד שוב?` | V1 |
+| `core.listen.mixed` | `אוֹפְּס, הָאָזְנַיִם … הִתְבַּלְבְּלוּ!` (wrong: `אוּפְּס`) | "ofs"; "aznayim"; `!` | `אוּפְּס, האוזניים שלי התבלבלו. אפשר להגיד שוב?` | V1 |
 | `core.encourage.check`, `core.thinking.think`, `fb.double`, `fb.seq` | `הַמְּמ…` | "ham-m", letters | `המממ… בואו נבדוק.`; A/B with `ממממ…` | TR / AB |
 | `celebrate.count_to_ten`, `celebrate.glance_small` | `וַאוּ!` | "va-u" in two syllables | `וואו, ספרתם עד עֶשֶׂר.` | TR |
 | `count.stars.8.h1` (`.apples.7.h1`, `.fish.9.h1` have the same slip in ת and ד, no sound change) | `נוֹגְעִים בְּכּוֹכָב אֶחָד` | "be-kochav" | `נוגעים בכוכב אֶחָד, ואומרים מספר אֶחָד.` | TR |

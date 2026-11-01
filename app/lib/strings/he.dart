@@ -86,7 +86,7 @@ abstract final class He {
   static const Str confirmAgainSemantics = Str('לומר שוב');
   static const Str thinkHmm = Str('הַמְּמ… בּוֹאוּ נַחְשֹׁב.', nikud: true);
   static const Str listenMixed = Str(
-    'אוֹפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב?',
+    'אוּפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב?',
     nikud: true,
   );
   static const Str listenConfirm = Str('שָׁמַעְתִּי… נָכוֹן?', nikud: true);

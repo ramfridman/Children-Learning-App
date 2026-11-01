@@ -120,7 +120,7 @@ void main() {
           jsonEncode(<String, Object?>{
             'lines': <Object?>[
               <String, Object?>{'id': 'core.greeting.hello', 'text': 'שָׁלוֹם! בּוֹאוּ נְשַׂחֵק.'},
-              <String, Object?>{'id': 'core.listen.mixed', 'text': 'אוֹפְּס!'},
+              <String, Object?>{'id': 'core.listen.mixed', 'text': 'אוּפְּס!'},
             ],
           }),
         );
@@ -160,7 +160,7 @@ void main() {
         'שלום, בואו נשחק.',
         'owner-approved',
       ),
-      _row(coreSource, 'core.listen.mixed', 'אוֹפְּס!', 'אוֹפְּס, האוזניים שלי התבלבלו.', 'owner-approved'),
+      _row(coreSource, 'core.listen.mixed', 'אוּפְּס!', 'אוּפְּס, האוזניים שלי התבלבלו.', 'owner-approved'),
     ];
 
     test(
@@ -175,7 +175,7 @@ void main() {
             'vo:fb.almost': 'כמעט, בואו ננסה שוב.',
             'vo:t.2.h1': 'נספור',
             'vo:core.greeting.hello': 'שלום, בואו נשחק.',
-            'vo:core.listen.mixed': 'אוֹפְּס, האוזניים שלי התבלבלו.',
+            'vo:core.listen.mixed': 'אוּפְּס, האוזניים שלי התבלבלו.',
           },
         );
         expect(t.ready.map((SpokenLine l) => l.voId).toList(), <String>[
@@ -195,7 +195,7 @@ void main() {
 
     test('a proposed row is refused, and the refusal names the line and where it comes from', () {
       final List<List<String>> rows = approved();
-      rows[5] = _row(coreSource, 'core.listen.mixed', 'אוֹפְּס!', 'אוֹפְּס, האוזניים התבלבלו.', 'proposed');
+      rows[5] = _row(coreSource, 'core.listen.mixed', 'אוּפְּס!', 'אוּפְּס, האוזניים התבלבלו.', 'proposed');
       final VoiceTexts t = texts(rows);
       expect(t.ready.map((SpokenLine l) => l.voId), isNot(contains('vo:core.listen.mixed')));
       expect(t.blocked.single.voId, 'vo:core.listen.mixed');

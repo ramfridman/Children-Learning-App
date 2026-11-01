@@ -3,6 +3,21 @@
 From the hebrew-text-editor, for the owner. The plan is `docs/milestones/B36.md` part F and decision 7. You cannot read 3,000 rows, and you do not have to.
 You read about 90 rows chosen by pattern (part 4) and the questions I flag (parts 2 and 3). Everything else is approved by the rule in part 5.
 
+## What was wrong in the first version of this sheet (corrected 2026-11-01, after your remark on the pronunciation and the translations)
+
+I looked every word up again in Pealim, Milog and Wiktionary (a link for each word is in the D1 table), and not from memory. What I found:
+
+1. **A real mistake in the pack: `אוֹפְּס` was pointed wrong.** The dictionaries point it `אוּפְּס` (shuruk, one syllable "ups", like "oops"). With a holam it reads "ofs". I had changed the draft `אוּפְּס` to `אוֹפְּס` ("as in core.listen.mixed"); that was my error, and the helper's line `core.listen.mixed` had `אוֹפְּס` since M5 (the design spec and the prototype say `אוּפְּס`). Fixed in 4 places in the sources (`he.dart`, `core.he.json`, the robot item `b.csb04.7`, and my rule), so the draft I called "was" in S67 was the right one. The clips of 2026-10-28 say `אוֹפְּס` and must be voiced again.
+2. **Two verb forms with wrong nikud on the screen** (found while checking: they are not V1 words). `צָדַקְתֶּם` → `צְדַקְתֶּם` (tzdaktem, 3 rows, "כֵּן, צָדַקְתֶּם!" in the same-number items) and `עָבַרְתֶּם` → `עֲבַרְתֶּם` (avartem, 3 rows, the shapes and count-to-30 lines). The first letter of a Pa'al verb takes a shva, and ע takes a hataf-patach. These 6 rows are `proposed` again.
+3. **`שָׂמִים` was glossed "we put".** It is the present-tense plural of שָׂם, "put": here the impersonal instruction "we put / you put each thing with…". Pealim's own gloss is "we / you / they put". The risk you meant is real (plain שמים is also שָׁמַיִם, "sky"), but the stress was missing: sa-MIM against sha-MA-yim.
+4. **`בַּתּוֹר`: "betor, as a" was loose.** The competing reading is בְּתוֹר, "as, in the role of", said be-TOR. Ours is ba-TOR, "in the queue" (Wiktionary: אתה הבא בתור, "atá habá batór").
+5. **`אֵלֶּה`: "ela" was not the right competitor.** The word is said E-le (stress on the first syllable). The words plain אלה can be mistaken for are אֵלָה e-LA ("terebinth", "goddess", also a name) and אַלָּה a-LA ("club").
+6. **`גְּדֵלִים`**: right (a Pa'al present, "grow, get bigger", gde-LIM). The competitor "gdalim, sizes" is real: גְּדָלִים, the plural of גֹּדֶל ("size"), is spelled the same (Pealim lists both). I only added the stress and the forms.
+7. **`נְגַלֶּה`**: "nigla" (was revealed) was one of several; the main competitor is נִגְלֶה / נִגָּלֶה, "we will be revealed". Ours is the Pi'el, ne-ga-LE, "let's discover". "We will find out" was too weak for "בּוֹאוּ נְגַלֶּה".
+8. **`מֵדַלְיָה`**: my "madliya" was not a reading anyone would give. The risk is the open first vowel and the stress: ours is me-DAL-ya.
+9. **`בַּשָּׁמַיִם`**: the competitor is בְּשָׂמִים, "in perfumes / spices" (bsa-MIM). `סָפַר`, `אִמְרוּ`: right, with stress added. `אִמְרוּ` is correct but literary: Pealim says the spoken imperative of "to say" is `תַּגִּידוּ` (see D1).
+10. No other claim was dropped as "not ambiguous"; the unpointed `סָפַרְנוּ` (130 rows, "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם?") stays plain in the voice text: it can also be read "sifrenu" (our book), but the sentence leaves no doubt. I heard no audio, so what the engine really does with these forms is still for your ear.
+
 **How to answer, from a phone.** Reply with the numbers, for example:
 
 `D1 yes · D2 a yes, b yes, c yes · D3 yes · D4 yes · D5 yes · F1 A · F2 yes · F3 yes · F4 keep אֶל · F5 keep · F6 ok · S1 to S88 OK except S12: say X, S30: delete the second sentence`
@@ -15,9 +30,10 @@ You read about 90 rows chosen by pattern (part 4) and the questions I flag (part
 |---|---|
 | Read by the editor (every row that was `proposed` or `needs-editor`) | 3,147 (997 different texts) |
 | Now `text-ready`: grammar, nikud, gender and number, plural address, length and the voice text are final | 2,928 |
-| Reworded in the sources (units and generators), the draft kept in the `changes` column of the master table | 185 rows (94 texts) |
+| Reworded in the sources (units and generators), the draft kept in the `changes` column of the master table | 183 rows (93 texts; was 185 and 94: `אוֹפְּס` was not a reword but a mistake, now undone) |
 | Older `text-ready` rows that changed with them | 60 |
 | Still `proposed`: V1 | 171 |
+| Still `proposed`: the 6 rows whose verb nikud I corrected after your remark (`צְדַקְתֶּם`, `עֲבַרְתֶּם`; they were `text-ready` before) | 6 |
 | Still `proposed`: the balance sides, D12 | 12 |
 | Still `proposed`: the Q2 drafts | 10 |
 | Still `proposed`: a teaching question in part 3 (F1 to F3) | 26 |
@@ -30,20 +46,25 @@ Checks that passed on all rows: the length limits (a question is at most 14 word
 
 These rows change the screen text or the voice text, so they come before the signature.
 
-**D1 · V1, the pronunciation audit.** 171 rows (the audit counted 100; the new rows use the same words). Where: rows whose comment starts `V1` in the master table; the reasons are in `docs/agents/voice-pronunciation-audit.md` sections 4 and 9. In the voice text these words keep their nikud, because plain they read as another word:
+**D1 · V1, the pronunciation audit.** 171 rows (the audit counted 100; the new rows use the same words). Where: rows whose comment starts `V1` in the master table; the reasons are in `docs/agents/voice-pronunciation-audit.md` sections 4 and 9. In the voice text these words keep their nikud, because the plain spelling can be read as another word. The table was checked again on 2026-11-01 (stress in capitals; a link for every word):
 
-| Word | Plain it can be read as | Rows |
-|---|---|---|
-| בַּתּוֹר (in the line) | "betor", as a | 51 |
-| גְּדֵלִים (they grow) | "gdalim", sizes | 43 |
-| אֵלֶּה (these) | "ela" | 37 |
-| שָׂמִים (we put) | "shamayim", sky | 19 |
-| סָפַר (counted) | "sefer", a book | 13 |
-| אוֹפְּס (oops) | with an f | 2 |
-| נְגַלֶּה, אִמְרוּ, מֵדַלְיָה, בַּשָּׁמַיִם | one row each | 4 |
+| Word, as pointed | What it is, and what it means in the line | Said | The other word the plain spelling can be | Rows | Sources |
+|---|---|---|---|---|---|
+| בַּתּוֹר | בְּ + הַתּוֹר: "in the line / queue" (`מִי שֵׁנִי בַּתּוֹר?`, who is second in line) | ba-TOR | בְּתוֹר, "as, in the role of" (be-TOR) | 51 | [Wiktionary תּוֹר](https://en.wiktionary.org/wiki/%D7%AA%D7%95%D7%A8) (בַּתּוֹר and בְּתוֹר) |
+| גְּדֵלִים | Pa'al, present, masc. plural of גָּדֵל: "(they) grow, get bigger" (`הַמִּגְדָּלִים גְּדֵלִים`, the towers get bigger) | gde-LIM | גְּדָלִים, "sizes" (gda-LIM), the plural of גֹּדֶל | 43 | [Pealim לִגְדֹּל](https://www.pealim.com/dict/298-ligdol/), [Pealim search](https://www.pealim.com/search/?q=%D7%92%D7%93%D7%9C%D7%99%D7%9D), [Milog](https://milog.co.il/%D7%92%D7%93%D7%9C%D7%99%D7%9D) |
+| אֵלֶּה | "these" (the plural of זֶה / זוֹ); the dagesh in the lamed is only a reading mark | E-le (first syllable) | אֵלָה, "terebinth", "goddess", a name (e-LA); אַלָּה, "club" (a-LA) | 37 | [Hebrew Wiktionary](https://he.wiktionary.org/wiki/%D7%90%D7%9C%D7%94), [Wiktionary](https://en.wiktionary.org/wiki/%D7%90%D7%9C%D7%94), [Pealim search](https://www.pealim.com/search/?q=%D7%90%D7%9C%D7%94) |
+| שָׂמִים | Pa'al, present, masc. plural of שָׂם: "put", said as the instruction "we put / you put" (`שָׂמִים כׇּל דָּבָר עִם מַה שֶּׁהוֹלֵךְ אִתּוֹ`) | sa-MIM | שָׁמַיִם, "sky" (sha-MA-yim) | 19 | [Pealim לָשִׂים](https://www.pealim.com/dict/45-lasim/), [Milog](https://milog.co.il/%D7%A9%D7%9E%D7%99%D7%9D) |
+| סָפַר | Pa'al, past, he: "counted" (`חָבֵר סָפַר מִסְפָּרִים`, a friend counted numbers) | sa-FAR | סֵפֶר, "book" (SE-fer); סַפָּר, "barber" (sa-PAR) | 13 | [Pealim search](https://www.pealim.com/search/?q=%D7%A1%D7%A4%D7%A8) |
+| אוּפְּס (was `אוֹפְּס`, wrong) | "oops", a call; one syllable | UPS | אוֹפֵס, "is running out" (o-FES); אֻפַּס, "was reset" (u-PAS) | 2 | [Milog](https://milog.co.il/%D7%90%D7%95%D7%A4%D7%A1), [Hebrew Wiktionary](https://he.wiktionary.org/wiki/%D7%90%D7%95%D7%A4%D7%A1), [Pealim search](https://www.pealim.com/search/?q=%D7%90%D7%95%D7%A4%D7%A1) |
+| נְגַלֶּה | Pi'el, future, we: "let's discover" (`בּוֹאוּ נְגַלֶּה יַחַד`) | ne-ga-LE | נִגְלֶה / נִגָּלֶה, "we will be revealed"; נִגְלָה, "was revealed" | 1 | [Pealim search](https://www.pealim.com/search/?q=%D7%A0%D7%92%D7%9C%D7%94) |
+| אִמְרוּ | imperative, you (plural): "say!" (`בְּבַקָּשָׁה, אִמְרוּ לִי`) | im-RU | אָמְרוּ, "they said" (am-RU) | 1 | [Pealim search](https://www.pealim.com/search/?q=%D7%90%D7%9E%D7%A8%D7%95) |
+| מֵדַלְיָה | "medal", a loanword; the plain spelling leaves the first vowel and the stress open | me-DAL-ya | (no other word: "ma-dal-YA", the stress on the last syllable, is the risk) | 1 | [Wiktionary](https://en.wiktionary.org/wiki/%D7%9E%D7%93%D7%9C%D7%99%D7%94), [Milog](https://milog.co.il/%D7%9E%D7%93%D7%9C%D7%99%D7%94) |
+| בַּשָּׁמַיִם | בְּ + הַשָּׁמַיִם: "in the sky" | ba-sha-MA-yim | בְּשָׂמִים, "in perfumes / spices" (bsa-MIM) | 1 | [Pealim search](https://www.pealim.com/search/?q=%D7%91%D7%A9%D7%9E%D7%99%D7%9D) |
 
-Also: a beat before `זֶה אֶפֶס` in `אֵין כְּלוּם — זֶה אֶפֶס` (2 rows).
+Also: a beat before `זֶה אֶפֶס` in `אֵין כְּלוּם — זֶה אֶפֶס` (2 rows); אֶפֶס is E-fes, "zero".
+Not changed: the other pointed words of the voice text are the number words (gender), `שֵׁנִי` / `הַשֵּׁנִי` (second), `הַוִּי` (the check mark, [Milog וִי](https://milog.co.il/%D7%95%D7%99)), `נְחַתֶּם`, `נִסְפַּר`, `לְהֵרָאוֹת`; I checked their nikud as well and it is right.
 Q: Keep these words pointed in the voice text? *My recommendation: yes.* Reply `D1 yes`, or list the words to drop.
+Q: `אִמְרוּ לִי` is right but literary: [Pealim](https://www.pealim.com/search/?q=%D7%90%D7%9E%D7%A8%D7%95) says the spoken "say!" is `תַּגִּידוּ` (the audit's Q5). *My recommendation: `בְּבַקָּשָׁה, תַּגִּידוּ לִי`, and then `אִמְרוּ` leaves V1.* Reply `D1 תַּגִּידוּ` or `D1 keep אִמְרוּ`.
 
 **D2 · Q2, the drafts.** Where: `docs/review/owner-sample.md` rows 4 and 5. Three drafts for the "same number?" and the counting items:
 
@@ -408,8 +429,8 @@ Q: A mirrored digit has a line of its own, about the mirror. OK?
 > *voice: עֶשֶׂר. ספרתם זוג אחר זוג. · was: עֶשֶׂר! כֹּל זוּג, וְעוֹד זוּג.*
 
 **S67 · Fix the program (robot)** · `b.csb04.7 › prompt`
-> אוֹפְּס, חֵץ אֶחָד הָלַךְ לְמַטָּה בִּמְקוֹם לְמַעְלָה, וְהָרוֹבּוֹט נֶעֱצַר כָּאן. מַגִּיעִים לַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה.
-> *voice: אוֹפְּס, חץ אֶחָד הלך למטה במקום למעלה, והרובוט נעצר כאן. מגיעים לדגל בדרך הקצרה. · was: אוּפְּס, חֵץ אֶחָד הָלַךְ לְמַטָּה בִּמְקוֹם לְמַעְלָה, וְהָרוֹבּוֹט נֶעֱצַר כָּאן. מַגִּיעִים לַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה. · same text in 2 rows · status: proposed*
+> אוּפְּס, חֵץ אֶחָד הָלַךְ לְמַטָּה בִּמְקוֹם לְמַעְלָה, וְהָרוֹבּוֹט נֶעֱצַר כָּאן. מַגִּיעִים לַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה.
+> *voice: אוּפְּס, חץ אֶחָד הלך למטה במקום למעלה, והרובוט נעצר כאן. מגיעים לדגל בדרך הקצרה. · no change from the draft: `אוּפְּס` ("ups") is the right pointing, see "What was wrong" · same text in 2 rows · status: proposed*
 
 **S68 · A new tag line: the next hop (M-CNT-DECADE, a new group of ten)** · `b.numb02.10 › feedback.incorrect.0`
 > אַחֲרֵי הַתֵּשַׁע מַתְחִילָה קְבוּצָה חֲדָשָׁה שֶׁל עֶשֶׂר. בּוֹאוּ נִסְפֹּר יַחַד.
@@ -526,6 +547,7 @@ Q: The line the curriculum-expert asked for: no "blue" for green, red and purple
 ## 6. What I could not settle
 
 - The tag of a mirrored 3 or 7 (`x.numb07.21`, `.22`) is `M-NUM-REV` ("swaps two digits"); `M-NUM-WRITE` fits. I gave the items their own line; the tag is the curriculum-expert's.
-- Older lines I left alone because they are `text-ready` and you may have read them: `יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ` (M-PART-MISS, 40 rows), and the NUM-A-11 correct line `כֵּן, צָדַקְתֶּם!` that a child hears after answering "לֹא".
+- Older lines I left alone because they are `text-ready` and you may have read them: `יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ` (M-PART-MISS, 40 rows), and the NUM-A-11 correct line `כֵּן, צְדַקְתֶּם!` that a child hears after answering "לֹא".
 - The five bottle lines are voiced once for each of the six lands; the voice director confirms the four pointed land names (`יַעַר הצורות`, `מְעָרַת החידות`, `נְמַל הרובוטים`, `כְּפַר השוק`).
+- Checked on 2026-11-01 and not settled: (1) I found no Academy decision on `בתור` ("as") against `בַּתּוֹר`; the only source for the second reading is Wiktionary. (2) I heard no audio: that the engine reads the pointed forms right (and the plain ones wrong) is not tested; it is for the A/B listen (H1). (3) Two lines I would word differently and did not touch, because they are older `text-ready` rows: `אֵלֶּה מַה שֶּׁחָסֵר עַד עֶשֶׂר` (10 rows, a plural "these" with "what is missing"; `אֵלֶּה הַמִּשְׁבְּצוֹת שֶׁחָסְרוּ` is plainer) and `גְּדֵלִים לְכִוּוּן הַחֵץ` (28 rows; `בְּכִוּוּן הַחֵץ`, "in the direction of the arrow", is the usual phrase). Reply `T1 change` or `T1 keep` if you want them.
 - I did not run the app tests (no Flutter, as asked). Tests that pin Hebrew text in `app/test` may need the new text; the Python tests are green.

@@ -120,7 +120,7 @@ and how any line sounds (that needs audio and the voice director).
    `הגיע`, `הנה`), or before a silent aleph (`ראשון`). Exceptions are in `KTIV` (`התוכנית`, `צהריים`, `המחוג`, `חיה`).
 2. **Nikud kept** on every number word (gender) and on words a TTS can misread: `שֵׁנִי / הַשֵּׁנִי` (ordinal, not "two of"),
    `הַוִּי` (the tick), `נִסְפַּר`, `נְחַתֶּם`, `לְהֵרָאוֹת` (`KEEP_POINTED`). Proposed on 2026-10-29 (`VOICE_AUDIT_KEEP`,
-   rows `proposed` with "V1", 100 rows, still waiting): `שָׂמִים`, `סָפַר`, `גְּדֵלִים`, `בַּתּוֹר`, `אִמְרוּ`, `נְגַלֶּה`, `אוֹפְּס`,
+   rows `proposed` with "V1", 100 rows, still waiting): `שָׂמִים`, `סָפַר`, `גְּדֵלִים`, `בַּתּוֹר`, `אִמְרוּ`, `נְגַלֶּה`, `אוּפְּס`,
    `מֵדַלְיָה`, `אֵלֶּה`, `בַּשָּׁמַיִם`, and a beat in `אין כלום — זה אֶפֶס`; see `docs/agents/voice-pronunciation-audit.md`. No
    rare mark (U+05C7 qamatz qatan, U+05B3 hataf qamats) is ever sent to a voice.
 3. **Punctuation.** `!` is never sent. A short opening cheer becomes a comma (`כֵּן, …`, `כִּמְעַט, …`); **a number said as the
@@ -483,7 +483,7 @@ Owner-approved rows: 115 before, 115 after, none changed.
 | Gender | `שְׁלוֹשָׁה צְפַרְדְּעִים גְּדוֹלִים` (a frog is feminine); `שְׁתֵּי עִקּוּלִים` (עִקּוּל is masculine) | `counting-hills.json`, `band_b36.py` |
 | Words that are not Hebrew, or the wrong word | `עוֹשִׂים שֶׁהֵם יַחְזְרוּ`; `הָעֶתֶק` / `בֶּעָתֶק` (not "the copy"); `מִלַּכֶּלֶב`; `קַו שֶׁכָּבוּי` ("turned off"); `חֲסֵרוֹת` with no noun | `logic.json`, `math.json`, `band_b36.py` |
 | Sense: the line did not fit the item | "you copied the order" after putting a routine, a story, towers or days in order (12 items: now `סִדַּרְתֶּם`); the old M-CNT-SIZE line ("more is not always bigger") on the NUM-A-11 balance; the mirrored 3 and 7 answered with the line about two digits swapped; `הֵם שׁוֹנִים` with no "different in what" | `correct_text`, `tag_lines` |
-| Nikud | `מִעֶשֶׂר` → `מֵעֶשֶׂר`, `מִשֵׁשׁ` → `מִשֵּׁשׁ`, `הַחָתוּל` → `הֶחָתוּל`, `הֶחוּם` → `הַחוּם`, `אוּפְּס` → `אוֹפְּס`, `בַּסַּךְ הַכֹּל` → `בְּסַךְ הַכֹּל`, `כֹּל` → `כׇּל` | `author.py from_()` (gutturals take מֵ; the dagesh after מִ), `SUBS` |
+| Nikud | `מִעֶשֶׂר` → `מֵעֶשֶׂר`, `מִשֵׁשׁ` → `מִשֵּׁשׁ`, `הַחָתוּל` → `הֶחָתוּל`, `הֶחוּם` → `הַחוּם`, (`אוּפְּס` → `אוֹפְּס` was a mistake, undone in section 15), `בַּסַּךְ הַכֹּל` → `בְּסַךְ הַכֹּל`, `כֹּל` → `כׇּל` | `author.py from_()` (gutturals take מֵ; the dagesh after מִ), `SUBS` |
 | Register / vocabulary | `שִׁגְרָה`, `גְּרָף`, `נֶעֱרָמִים`, `כָּמוֹהוּ`, `אֶלְכְּסוֹן`, `בְּיוֹתֵר` | `אֶפְשָׁר לַעֲרֹם`, `שַׁיָּךְ`, `הֲכִי גָּבוֹהַּ`, a slide a child knows |
 | Templates | the default level 3 of a number line that starts at ten said "start from ten and count from one to fourteen" | `author.py k_numline`: "start from ten and count: eleven, twelve…" |
 | Level 3 opens with the answer | the 16 flash lines began `אֵלֶּה שְׁלוֹשָׁה תַּפּוּחִים.` | `author.py k_flash`: `סוֹפְרִים אֶת כֻּלָּם.` first |
@@ -514,3 +514,19 @@ Owner-approved rows: 115 before, 115 after, none changed.
 - **app-developer:** nothing to fold in; the sources are already corrected (`content/units`, `tools/`, `he.dart` › `setupNameBadChars`). The two tool pins moved with a comment
   (`test_hebrew_sources.py`: corrected-and-done rows 1189 → 1159, proposed-and-corrected rows 75 → 39).
 - **qa-engineer:** the label `אֵיפֹה הַבַּרְוָז?` of the cat items is right: the hint card draws a small duck (`tap_plans.dart _position`), not the cat.
+
+
+## 15. The research pass on the V1 words (hebrew-text-editor, 2026-11-01; the owner said some pronunciations and translations in the B-36 sheet were wrong)
+
+Method: every word of the V1 list looked up in Pealim (forms, nikud, transliteration), Milog (Hebrew-Hebrew meaning and nikud), Hebrew and English Wiktionary
+(stress, readings); the results are in the D1 table of `docs/review/b36-owner-sample.md` with a link for each word. What it changed:
+
+| Finding | Fix |
+|---|---|
+| **`אוֹפְּס` is wrong; the pointing is `אוּפְּס`** ("ups"; Milog, Hebrew Wiktionary). I had changed `אוּפְּס` to `אוֹפְּס` in B-36 part F ("as in core.listen.mixed"); the helper line had `אוֹפְּס` since M5. The competing readings of plain אופס are `אוֹפֵס` (o-FES, "is running out") and `אֻפַּס` (u-PAS, "was reset") | `he.dart` listenMixed, `core.he.json` core.listen.mixed, `tools/band_b36.py` (the robot item `b.csb04.7`, regenerated), the rule in `hebrew_voice_review.py` now maps `אוֹפְּס` to `אוּפְּס`; the part F entry for this line is removed. The clips of 2026-10-28 (`core.listen.mixed`) were sent as `אוֹפְּס` and need voicing again. Not touched (they are audition inputs the director may have used): `docs/audio/audition/round2.json` H1-mixed-*, six lines with `אוֹפְּס` |
+| `צָדַקְתֶּם` → `צְדַקְתֶּם` (3 rows, `tools/author.py`); `עָבַרְתֶּם` → `עֲבַרְתֶּם` (3 rows, `band_b.py`, `band_b36.py`) | Pa'al 2nd person plural past: shva, and a hataf-patach after ע (Pealim). The 6 rows are `proposed` again (`PENDING`). I scanned every 2nd person plural past in the table (the `-תֶּם` forms); no other form is off |
+| Glosses and stress | `VOICE_AUDIT_KEEP` has the corrected reasons (stress in capitals, the real competing word). `שָׂמִים` is the plural present of שָׂם ("put", the impersonal instruction); `גְּדֵלִים` has a real competitor, `גְּדָלִים` ("sizes", Pealim lists both); `בַּתּוֹר` against `בְּתוֹר` ("as"); `אֵלֶּה` against `אֵלָה` / `אַלָּה`; `נְגַלֶּה` against `נִגְלֶה` / `נִגָּלֶה`; `בַּשָּׁמַיִם` against `בְּשָׂמִים`; `מֵדַלְיָה` is me-DAL-ya (Wiktionary) |
+| Left as it is | plain `ספרנו` (130 rows, `סָפַרְנוּ`; the other reading, `סִפְרֵנוּ` "our book", does not fit "אוּלַי ___ אֶחָד פַּעֲמַיִם?"); `הַוִּי` (Milog: וִי); the number words |
+| Suggested, not done | `אִמְרוּ לִי` → `תַּגִּידוּ לִי` (Pealim: the spoken imperative of לוֹמַר is from לְהַגִּיד; the audit's Q5); `אֵלֶּה מַה שֶּׁחָסֵר` (10 rows) and `לְכִוּוּן הַחֵץ` → `בְּכִוּוּן הַחֵץ` (28 rows) wait for the owner's word |
+
+Checks: `regen_content.py` twice, byte-identical; `test_hebrew_sources` (10) and `test_generators` (58) pass. Not run: the Flutter tests (`app/test/voice_text_test.dart` has the fixture text `אוּפְּס` now; it is a fake core file, it pins nothing of the real text).

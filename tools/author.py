@@ -548,7 +548,7 @@ def k_compare_same(a, ctx):
               if same else (leftover_line(abs(l - r), obj, 'זֶה לֹא אוֹתוֹ מִסְפָּר.') + ' עַכְשָׁו תּוֹרְכֶם.'),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child decides whether two groups have the same number, whatever their look',
-        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צָדַקְתֶּם!')
+        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צְדַקְתֶּם!')
 
 
 def k_ordinal(a, ctx):
