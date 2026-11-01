@@ -74,12 +74,71 @@ Not in scope: the signing itself (part J), the swap of the bundled pack (part K)
 
 | Id | Title | Severity | Status |
 |---|---|---|---|
-| SEC-B36-1 | `content-publish` refuses the 0.11.0 index (1,118 items, the gateway takes at most 1,000) | low | open |
-| SEC-B36-2 | Compiled Python files (`tools/__pycache__/*.pyc`) are tracked; the hygiene job does not refuse them | low | open |
-| SEC-B36-3 | A newer pack this app cannot play replaces the playable one, with no way back on that app (not new on the branch) | low | open |
+| SEC-B36-1 | `content-publish` refuses the 0.11.0 index (1,118 items, the gateway takes at most 1,000) | low | fixed (`e0355a7`, re-verified 2026-11-01; closes when CI's Deno suite passes) |
+| SEC-B36-2 | Compiled Python files (`tools/__pycache__/*.pyc`) are tracked; the hygiene job does not refuse them | low | fixed (`3eb40c6`, re-verified 2026-11-01) |
+| SEC-B36-3 | A newer pack this app cannot play replaces the playable one, with no way back on that app (not new on the branch) | low | fixed (`e0355a7`, re-verified 2026-11-01); the downgrade case is SEC-B36-4 |
+| SEC-B36-4 | After an app downgrade, the first start has no lessons (the second start plays the bundled pack) | low | open |
 
-None of them blocks signing (part J). SEC-B36-1 blocks the publish of 0.11.0 (part M) and will turn the Deno vector test red in
-part K. SEC-B36-2 should be fixed before the PR to `main` (part L).
+None of them blocks signing (part J). SEC-B36-1 blocked the publish of 0.11.0 (part M); it is fixed on `b36-sec-fixes`.
+
+## Re-review of the fixes (2026-11-01, branch `b36-sec-fixes`, commit `e0355a7`)
+
+### SEC-B36-1: fixed
+
+- `content-publish/handler.ts` now exports `MAX_PUBLISH_ITEMS` 2,000, `MAX_PUBLISH_MISCONCEPTIONS` 200 and
+  `MAX_PUBLISH_CHARACTERS` 40, and the shape uses them. `maxBodyBytes` is still `MAX_PUBLISH_BYTES` (1 MiB), and the body is
+  still read with that cap before anything else is done. Nothing else in the gateway changed: the publish secret, the shape
+  rules and the parameterised inserts in `_shared/db.ts` are the same.
+- `publish_lib.dart` `encodeBody` refuses an index over any count or over 1 MiB, with the numbers in the message, before
+  `HttpClient` is created. It runs in `publish()` and in `pack_builder publish --dry-run`. The publish secret is still never
+  printed (the existing test still passes).
+- `publish_test.dart` reads `handler.ts` and pins the four Dart numbers to the gateway's, and checks that the shape and
+  `maxBodyBytes` use the constants. It also shows that a refusal comes before any connection (`127.0.0.1:1`).
+- The Deno tests add 1,118 items accepted, 2,001 refused with nothing stored, and 2,000 accepted.
+- **The 1 MiB body cap is fine.** The publish is behind the publish secret and sent only from the owner's PC; 0.11.0 is
+  about 700 KB; anything over the cap is refused on the PC with a plain message. The cap binds at about 1,670 items, before
+  the item cap. Raise both together, with a Deno test, when a pack passes about 1,500 activities. Each item is one insert in
+  one transaction, which is fine for the Edge Function at this size.
+- Run here: `flutter test test/pack_installer_test.dart test/publish_test.dart` (48 passed). The Deno tests were not run (no
+  Deno on this PC); the finding closes when CI's Deno suite passes on the branch.
+
+### SEC-B36-2: fixed
+
+The four files are untracked; the root `.gitignore` has `__pycache__/` and `*.pyc`; `tools/ci/hygiene.sh` refuses `*.pyc` and
+`__pycache__/`. Proof: the new pattern, applied to the tree of `4216286`, refuses exactly the four files. `hygiene.sh` on the
+fixed tree passes.
+
+### SEC-B36-3: fixed
+
+- A newer pack that this app cannot play, arriving while a playable version is installed, returns `keptPlayable`. Nothing is
+  written, and the playable version stays on disk, in the list and in `load()`.
+- A hidden pack still replaces a hidden one. A newer playable pack still replaces an older one.
+- An older pack is let in only when three things hold: the installed row is hidden, the arriving pack is playable by this app,
+  and the installed copy, read back from disk and proven again with this app's key and capabilities, is not playable. The
+  arriving pack has already passed the signature and every hash before this rule is reached.
+- The developer's 8 new tests pass. These cover the bundled pack being played after a forged newer one, and over a hidden one
+  that an older build stored.
+
+**Can the "older playable over hidden" exception be used for a rollback?** No useful one. I checked by reading the code and
+with a scratch probe test (not committed):
+
+- The older pack must be signed by the owner's key; a pack signed by another key is refused at the signature (probe P4).
+- It must be playable by this app, and the pack it replaces must be one this app cannot play. The device goes from no lessons
+  to the owner's older lessons, which is what it would have bundled anyway.
+- Whether the installed copy can be played is decided by proving it again on disk, not by the stored flag. So once the app is
+  updated and can play the newer pack, the older pack is refused again ("an older pack is still refused when the installed
+  newer one is playable").
+- When an app that can play the newer pack brings it again, it is newer, so it is installed (probe P2).
+- Making the installed copy look unplayable needs write access to the app's private storage (probe P3: a changed manifest lets
+  the older pack in). With that access an attacker can already delete the packs, and the changed copy would fail `load()`
+  anyway. This adds nothing.
+- Today the only ways in are the dev flavour's sideload page and an app downgrade. Any future download path would have to
+  keep the same signature and newer-version rules.
+
+### SEC-B36-4 (new, low): first start after an app downgrade
+
+**Why low:** only after the owner reinstalls an older app over a newer one with the data kept, and it clears itself on the
+second start. Detail is in the private record.
 
 ## Advisories checked (2026-11-01)
 

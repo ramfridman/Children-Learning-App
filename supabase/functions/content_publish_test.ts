@@ -2,7 +2,7 @@ import { assert } from "./_shared/testassert.ts";
 import { makeHandler } from "./_shared/handler.ts";
 import { fakeServices, FakeStore, plainPost, PUBLISH_SECRET } from "./_shared/testkit.ts";
 import { PUBLISH_FAILS_PER_HOUR_PER_IP } from "./_shared/publish_secret.ts";
-import { MAX_PUBLISH_BYTES, spec } from "./content-publish/handler.ts";
+import { MAX_PUBLISH_BYTES, MAX_PUBLISH_ITEMS, spec } from "./content-publish/handler.ts";
 
 const goodItem = () => ({
   item_id: "count.butterflies.3",
@@ -198,6 +198,37 @@ Deno.test("content-publish: the index that the app's tool makes for the starter 
   assert.equal(j.items, vector.items.length);
   assert.equal(store.packs.get("starter")!.items.length, vector.items.length);
   assert.ok(vector.items.length >= 767, "the Counting Hills content and Band B are in the index");
+});
+
+const manyItems = (n: number) =>
+  Array.from({ length: n }, (_, i) => ({ ...goodItem(), item_id: `many.item.${i}` }));
+
+Deno.test("content-publish: the 1,118 items of pack 0.11.0 are accepted (SEC-B36-1)", async () => {
+  const { store, publish } = setup();
+  const r = await publish(goodBody({ pack_version: "0.11.0", items: manyItems(1118) }));
+  assert.equal(r.status, 200, JSON.stringify(await r.clone().json()));
+  assert.equal((await r.json()).items, 1118);
+  assert.equal(store.packs.get("starter")!.items.length, 1118);
+});
+
+Deno.test("content-publish: the item cap is MAX_PUBLISH_ITEMS; one more is refused and changes nothing", async () => {
+  assert.equal(MAX_PUBLISH_ITEMS, 2000);
+  const { store, publish } = setup();
+  // Distinct items of the smallest valid size, so only the count (not the body cap) decides.
+  const tiny = (i: number) => ({
+    ...goodItem(),
+    item_id: `t${i}`,
+    goal: "g",
+    prompt_text: "p",
+    number_set: [],
+    allowed_actions: [],
+    object_ids: [],
+    answers: [{ id: "a", correct: true }],
+  });
+  const items = (n: number) => Array.from({ length: n }, (_, i) => tiny(i));
+  assert.equal((await publish(goodBody({ items: items(MAX_PUBLISH_ITEMS + 1) }))).status, 400);
+  assert.equal(store.packs.size, 0);
+  assert.equal((await publish(goodBody({ items: items(MAX_PUBLISH_ITEMS) }))).status, 200);
 });
 
 Deno.test("content-publish: a newer version keeps the approved lines of the items that did not change, and nothing else", async () => {

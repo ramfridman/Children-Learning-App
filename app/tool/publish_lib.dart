@@ -186,6 +186,33 @@ Map<String, Object?> indexOf(VerifiedPack pack, {Map<String, String> voices = co
   };
 }
 
+/// What the gateway takes in one publish (`supabase/functions/content-publish/handler.ts`; a test reads that file, so the
+/// numbers here cannot drift from it).
+const int maxPublishBytes = 1024 * 1024;
+const int maxPublishItems = 2000;
+const int maxPublishMisconceptions = 200;
+const int maxPublishCharacters = 40;
+
+/// The body as it goes on the wire. Throws [PublishFailed], before anything is sent, if the gateway would refuse it for its
+/// size or for the number of items, misconceptions or characters.
+List<int> encodeBody(Map<String, Object?> body) {
+  void within(String what, int count, int max) {
+    if (count > max) throw PublishFailed('the index has $count $what; the gateway takes at most $max');
+  }
+
+  within('items', (body['items'] as List<Object?>?)?.length ?? 0, maxPublishItems);
+  within('misconceptions', (body['misconceptions'] as List<Object?>?)?.length ?? 0, maxPublishMisconceptions);
+  within('characters', (body['characters'] as List<Object?>?)?.length ?? 0, maxPublishCharacters);
+  final List<int> bytes = utf8.encode(jsonEncode(body));
+  if (bytes.length > maxPublishBytes) {
+    throw PublishFailed(
+      'the index is ${bytes.length} bytes; the gateway takes at most $maxPublishBytes. '
+      'Publish fewer packs together, or raise MAX_PUBLISH_BYTES in the gateway first.',
+    );
+  }
+  return bytes;
+}
+
 /// Voice ids from `content/voices.json` (empty ones are left out).
 Map<String, String> readVoices(File f) {
   final Map<String, Object?> doc = jsonDecode(f.readAsStringSync()) as Map<String, Object?>;
@@ -204,6 +231,9 @@ Future<Map<String, Object?>> publish(
   required String secret,
   String? publishableKey,
 }) async {
+  final List<int> payload = encodeBody(
+    body,
+  ); // refuses a body the gateway would refuse, before a connection is made
   final HttpClient client = HttpClient();
   try {
     final HttpClientRequest req = await client.postUrl(Uri.parse('$baseUrl/functions/v1/content-publish'));
@@ -212,7 +242,7 @@ Future<Map<String, Object?>> publish(
       ..set('x-publish-secret', secret)
       ..set('x-region', 'eu-central-1');
     if (publishableKey != null) req.headers.set('apikey', publishableKey);
-    req.add(utf8.encode(jsonEncode(body)));
+    req.add(payload);
     final HttpClientResponse res = await req.close();
     final String text = await utf8.decodeStream(res);
     if (res.statusCode != 200) {
