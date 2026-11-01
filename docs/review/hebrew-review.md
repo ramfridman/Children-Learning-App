@@ -187,7 +187,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | setupChildTitle | הוספת ילד או ילדה | needs-editor |
 | app/lib/strings/he.dart | setupName | שם פרטי | needs-editor |
 | app/lib/strings/he.dart | setupNameTooLong | אפשר לכתוב עד 24 תווים. | needs-editor |
-| app/lib/strings/he.dart | setupNameBadChars | בלי הסימנים < או > ובלי תווים בלתי נראים. אם השם הודבק, אפשר להקליד אותו מחדש. | needs-editor |
+| app/lib/strings/he.dart | setupNameBadChars | בלי הסימנים < או > ובלי תווים בלתי נראים או מיוחדים. ניקוד צריך לבוא אחרי אות, עד שלושה סימנים על אות. אם השם הודבק, אפשר להקליד אותו מחדש. | needs-editor |
 | app/lib/strings/he.dart | setupNameLegacyShortened | השם ארוך מ-24 תווים, ולכן בחשבון המשפחה נשמרו רק 24 התווים הראשונים. | needs-editor |
 | app/lib/strings/he.dart | setupAge | גיל | needs-editor |
 | app/lib/strings/he.dart | setupAvatar | בחירת דמות | needs-editor |

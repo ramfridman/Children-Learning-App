@@ -166,7 +166,7 @@
 1. App screens and buttons,app/lib/strings/he.dart,setupChildTitle,adult,no,הוספת ילד או ילדה,הוספת ילד או ילדה,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,setupName,adult,no,שם פרטי,שם פרטי,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,setupNameTooLong,adult,no,אפשר לכתוב עד 24 תווים.,אפשר לכתוב עד 24 תווים.,,,text-ready,,
-1. App screens and buttons,app/lib/strings/he.dart,setupNameBadChars,adult,no,"בלי הסימנים < או > ובלי תווים בלתי נראים. אם השם הודבק, אפשר להקליד אותו מחדש.","בלי הסימנים < או > ובלי תווים בלתי נראים. אם השם הודבק, אפשר להקליד אותו מחדש.",,,text-ready,,
+1. App screens and buttons,app/lib/strings/he.dart,setupNameBadChars,adult,no,"בלי הסימנים < או > ובלי תווים בלתי נראים או מיוחדים. ניקוד צריך לבוא אחרי אות, עד שלושה סימנים על אות. אם השם הודבק, אפשר להקליד אותו מחדש.","בלי הסימנים < או > ובלי תווים בלתי נראים או מיוחדים. ניקוד צריך לבוא אחרי אות, עד שלושה סימנים על אות. אם השם הודבק, אפשר להקליד אותו מחדש.",B-32: also refuses nikud with no letter, 4+ marks on a letter, private-use and format characters,proposed,,
 1. App screens and buttons,app/lib/strings/he.dart,setupNameLegacyShortened,adult,no,"השם ארוך מ-24 תווים, ולכן בחשבון המשפחה נשמרו רק 24 התווים הראשונים.","השם ארוך מ-24 תווים, ולכן בחשבון המשפחה נשמרו רק 24 התווים הראשונים.",,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,setupAge,adult,no,גיל,גיל,,,text-ready,,
 1. App screens and buttons,app/lib/strings/he.dart,setupAvatar,adult,no,בחירת דמות,בחירת דמות,,,text-ready,,

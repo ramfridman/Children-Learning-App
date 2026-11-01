@@ -1,5 +1,5 @@
 {
-  "about": "A child's first name, the nickname that child-put saves (board B-28). One limit on both sides: 1 to 24 UTF-16 code units, as the server's pattern counts them (no u flag; Dart String.length counts the same way), never graphemes. supabase/functions/child_name_vectors_test.ts asserts child-put/handler.ts (NICKNAME and the shape's max) equal server_pattern and max_utf16_units, and that the server takes every accept vector and refuses every reject vector that is not appOnly. app/test/child_name_test.dart asserts app/lib/data/child_name.dart gives each vector its reason, and the fake server of the sync tests refuses what server_pattern refuses. appOnly: the app refuses it (C1 controls and the invisible direction marks), the server today takes it. clientOnly: only the app can see the problem (it trims first; the server stores what it is sent). units: the length in UTF-16 code units, checked by both tests so that an editor cannot change a vector silently.",
+  "about": "A child's first name, the nickname that child-put saves (board B-28). One limit on both sides: 1 to 24 UTF-16 code units, as the server's pattern counts them (no u flag; Dart String.length counts the same way), never graphemes. supabase/functions/child_name_vectors_test.ts asserts child-put/handler.ts (NICKNAME and the shape's max) equal server_pattern and max_utf16_units, and that the server takes every accept vector and refuses every reject vector that is not appOnly. app/test/child_name_test.dart asserts app/lib/data/child_name.dart gives each vector its reason, and the fake server of the sync tests refuses what server_pattern refuses. appOnly: the app refuses it (C1 controls, private-use characters, noncharacters, the grapheme joiner, a combining mark with no letter before it, the format characters Cf with the direction marks, lone surrogates, no visible character, four combining marks in a row; app/lib/data/child_name.dart safeChildName), the server today takes it. clientOnly: only the app can see the problem (it trims first; the server stores what it is sent). units: the length in UTF-16 code units, checked by both tests so that an editor cannot change a vector silently.",
   "max_utf16_units": 24,
   "server_pattern": "^[^\\u0000-\\u001f\\u007f<>]{1,24}$",
   "accept": [
@@ -13,7 +13,14 @@
       "value": "אָבָגָדָהָוָזָחָטָיָכָלָ",
       "units": 24
     },
-    { "name": "an emoji (a surrogate pair) at units 23 and 24", "value": "abcdefghijklmnopqrstuv🌸", "units": 24 }
+    { "name": "an emoji (a surrogate pair) at units 23 and 24", "value": "abcdefghijklmnopqrstuv🌸", "units": 24 },
+    { "name": "Hebrew with a dagesh", "value": "בִּנְיָמִין", "units": 11 },
+    {
+      "name": "a shin with a dagesh, a shin dot and a vowel: three marks in a row are a normal pointed name",
+      "value": "ש\u05bc\u05c1\u05b8",
+      "units": 4
+    },
+    { "name": "a pointed name with a dagesh in the middle", "value": "כֹּהֵן", "units": 6 }
   ],
   "reject": [
     { "name": "empty", "value": "", "units": 0, "reason": "empty" },
@@ -32,7 +39,33 @@
     { "name": "a C1 control (U+0085) inside the name", "value": "נו\u0085עה", "units": 5, "reason": "badChars", "appOnly": true },
     { "name": "right-to-left mark U+200F", "value": "נו\u200fעה", "units": 5, "reason": "badChars", "appOnly": true },
     { "name": "right-to-left override U+202E", "value": "נו\u202eעה", "units": 5, "reason": "badChars", "appOnly": true },
-    { "name": "left-to-right isolate U+2066", "value": "נו\u2066עה", "units": 5, "reason": "badChars", "appOnly": true }
+    { "name": "left-to-right isolate U+2066", "value": "נו\u2066עה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a zero-width space U+200B inside the name", "value": "נו\u200bעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a zero-width joiner U+200D", "value": "נו\u200dעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "the Arabic letter mark U+061C", "value": "נו\u061cעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a soft hyphen U+00AD", "value": "נו\u00adעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a tag character U+E0041 (a surrogate pair)", "value": "נועה\udb40\udc41", "units": 6, "reason": "badChars", "appOnly": true },
+    { "name": "a lone high surrogate at the end", "value": "נועה\ud800", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a lone low surrogate inside the name", "value": "נו\udc00עה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "only zero-width characters", "value": "\u200b\u200b\u2060", "units": 3, "reason": "badChars", "appOnly": true },
+    { "name": "only the braille blank U+2800", "value": "\u2800", "units": 1, "reason": "badChars", "appOnly": true },
+    { "name": "only the Hangul filler U+3164", "value": "\u3164", "units": 1, "reason": "badChars", "appOnly": true },
+    { "name": "only combining marks, no base letter", "value": "\u05b0\u05b1", "units": 2, "reason": "badChars", "appOnly": true },
+    {
+      "name": "four combining marks in a row on one letter",
+      "value": "נ\u05b0\u05b1\u05b2\u05b3",
+      "units": 5,
+      "reason": "badChars",
+      "appOnly": true
+    },
+    { "name": "a private-use character U+E000", "value": "נו\ue000עה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a noncharacter U+FFFF", "value": "נו\uffffעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a noncharacter U+FFFE", "value": "נו\ufffeעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a noncharacter U+FDD0", "value": "נו\ufdd0עה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a noncharacter of another plane U+1FFFE (a surrogate pair)", "value": "נו\ud83f\udffeעה", "units": 6, "reason": "badChars", "appOnly": true },
+    { "name": "the grapheme joiner U+034F", "value": "נו\u034fעה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a combining mark at the start of the name", "value": "\u05b0נועה", "units": 5, "reason": "badChars", "appOnly": true },
+    { "name": "a combining mark after a space", "value": "נועה \u05b0כהן", "units": 9, "reason": "badChars", "appOnly": true }
   ],
   "clientOnly": [
     { "name": "spaces only (empty once trimmed)", "value": "   ", "units": 3, "reason": "empty" }

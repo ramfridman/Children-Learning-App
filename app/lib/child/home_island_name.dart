@@ -8,6 +8,7 @@
 // importing it directly would make it a new direct dependency.
 import 'package:flutter/widgets.dart' show StringCharacters;
 
+import '../data/child_name.dart';
 import '../strings/he.dart';
 
 /// Marks the end of a shortened name.
@@ -22,12 +23,6 @@ const String _isolateEnd = '\u2069';
 const String _noBreakSpace = '\u00A0';
 const String _childSlot = '{child}';
 
-// Format characters: direction marks and isolates, zero-width characters, the byte-order mark, the soft hyphen.
-final RegExp _format = RegExp(r'\p{Cf}', unicode: true);
-// Any white space, also a tab, a new line or a no-break space.
-final RegExp _space = RegExp(r'\s');
-final RegExp _control = RegExp(r'\p{Cc}', unicode: true);
-final RegExp _spaceRun = RegExp(' {2,}');
 final RegExp _letter = RegExp(r'\p{L}', unicode: true);
 
 /// What stands between the parts of a name: a space, a hyphen or a maqaf.
@@ -132,12 +127,7 @@ String _firstLetters(List<String> clusters, int room) {
   return clusters.sublist(0, end).join();
 }
 
-String _clean(String typed) => typed
-    .replaceAll(_format, '')
-    .replaceAll(_space, ' ')
-    .replaceAll(_control, '')
-    .replaceAll(_spaceRun, ' ')
-    .trim();
+String _clean(String typed) => displayChildName(typed);
 
 /// [name] in a first-strong isolate, for any Hebrew line that shows it: a Latin name and its ellipsis keep their order
 /// (the ellipsis on the right of the Latin letters). The marks have no width.

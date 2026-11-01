@@ -16,6 +16,7 @@ import 'package:nitznutz/child/profile_picker.dart';
 import 'package:nitznutz/child/sticker_island.dart';
 import 'package:nitznutz/child/trophy_hall.dart';
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/data/child_name.dart';
 import 'package:nitznutz/design/board.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/rewards/sticker_design.dart';
@@ -30,7 +31,8 @@ Future<AppRig> home(WidgetTester tester, {String name = 'נועה', Size size = 
   final AppRig rig = AppRig();
   await rig.seedFinishedSetup(name: name);
   await rig.pump(tester, size: size);
-  await tester.tap(find.text(name));
+  // The picker shows the name cleaned (SEC-B28-3): a typed mark or space around it is not on the card.
+  await tester.tap(find.text(displayChildName(name)));
   await tester.pumpAndSettle();
   expect(find.byType(HomeScreen), findsOneWidget);
   return rig;
