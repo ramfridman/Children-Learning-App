@@ -59,6 +59,9 @@ Future<void> main(List<String> args) async {
   } on PackRejected catch (e) {
     stderr.writeln('REFUSED: $e');
     exit(1);
+  } on PublishFailed catch (e) {
+    stderr.writeln('NOT PUBLISHED: $e');
+    exit(1);
   }
 }
 
@@ -198,10 +201,12 @@ Future<void> _publish(List<String> args) async {
   for (final String f in files) {
     final VerifiedPack pack = await verifyPack(File(f).readAsBytesSync(), publicKey: publicKey);
     final Map<String, Object?> body = indexOf(pack, voices: voices);
+    final int size = encodeBody(body)
+        .length; // refuses, with the reason, what the gateway would refuse (also in a dry run)
     stdout.writeln(
       '${pack.id} ${pack.version}: ${(body['items']! as List<Object?>).length} items, '
       '${(body['misconceptions']! as List<Object?>).length} misconceptions, '
-      '${(body['characters']! as List<Object?>).length} characters, ${utf8.encode(jsonEncode(body)).length} bytes',
+      '${(body['characters']! as List<Object?>).length} characters, $size bytes',
     );
     if (dry) continue;
     final Map<String, Object?> answer = await publish(

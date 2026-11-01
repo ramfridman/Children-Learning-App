@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/capabilities.dart';
+import 'package:nitznutz/content/content_repository.dart';
 import 'package:nitznutz/content/pack_installer.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/content/zip_store.dart';
@@ -284,6 +285,101 @@ void main() {
       expect(v.docs, isNotEmpty);
       expect((await db.installedPack('sample-pack'))!.hidden, isFalse);
     });
+  });
+
+  group('a newer pack this app cannot play never replaces one it can (SEC-B36-3)', () {
+    Future<Uint8List> forged(String version) async => forge(
+      key,
+      (await buildSamplePack(key, version: version)).bytes,
+      manifest: (Map<String, Object?> m) => m['minAppVersion'] = '9.0.0',
+    );
+
+    test('the playable 1.0.0 stays, on disk and in the list, and load() still plays it', () async {
+      await installer.install((await buildSamplePack(key)).bytes);
+      final List<String> before = _tree(root);
+      final InstallResult r = await installer.install(await forged('1.1.0'));
+      expect(r.outcome, InstallOutcome.keptPlayable);
+      expect(_tree(root), before);
+      final InstalledPack row = (await db.installedPack('sample-pack'))!;
+      expect(row.version, '1.0.0');
+      expect(row.hidden, isFalse);
+      final VerifiedPack v = (await installer.load('sample-pack'))!;
+      expect(v.version, '1.0.0');
+      expect(v.hidden, isFalse);
+      expect(v.docs, isNotEmpty);
+    });
+
+    test('a newer pack this app can play still replaces it', () async {
+      await installer.install((await buildSamplePack(key)).bytes);
+      final InstallResult r = await installer.install((await buildSamplePack(key, version: '1.1.0')).bytes);
+      expect(r.outcome, InstallOutcome.installed);
+      expect((await installer.load('sample-pack'))!.version, '1.1.0');
+    });
+
+    test(
+      'a hidden pack still replaces a hidden one, and the first one is stored when nothing is playable',
+      () async {
+        expect((await installer.install(await forged('1.1.0'))).outcome, InstallOutcome.installed);
+        expect((await installer.install(await forged('1.2.0'))).outcome, InstallOutcome.installed);
+        expect((await db.installedPack('sample-pack'))!.version, '1.2.0');
+        expect(_tree(root), contains('sample-pack/1.2.0/manifest.json'));
+        expect(_tree(root), isNot(contains('sample-pack/1.1.0/manifest.json')));
+      },
+    );
+
+    test(
+      'a hidden pack already stored (an older build did this) gives way to the playable one that ships',
+      () async {
+        await installer.install(await forged('1.1.0'));
+        expect((await installer.load('sample-pack'))!.hidden, isTrue);
+        final InstallResult r = await installer.install((await buildSamplePack(key)).bytes);
+        expect(r.outcome, InstallOutcome.installed);
+        final VerifiedPack v = (await installer.load('sample-pack'))!;
+        expect(v.version, '1.0.0');
+        expect(v.hidden, isFalse);
+        expect(_tree(root), isNot(contains('sample-pack/1.1.0/manifest.json')));
+      },
+    );
+
+    test('an older pack is still refused when the installed newer one is playable', () async {
+      await installer.install((await buildSamplePack(key, version: '1.1.0')).bytes);
+      await expectLater(installer.install((await buildSamplePack(key)).bytes), _rejected('rules', 'older'));
+      expect((await installer.load('sample-pack'))!.version, '1.1.0');
+    });
+
+    test(
+      'an older pack is refused when the installed newer one is hidden but the older one is hidden too',
+      () async {
+        await installer.install(await forged('1.1.0'));
+        await expectLater(installer.install(await forged('1.0.0')), _rejected('rules', 'older'));
+      },
+    );
+
+    test('the content repository plays the bundled 1.0.0 after a forged 1.1.0', () async {
+      final Uint8List bundled = (await buildSamplePack(key)).bytes;
+      final ContentRepository repo = ContentRepository(
+        installer: installer,
+        bundled: () async => bundled,
+        packId: 'sample-pack',
+      );
+      expect((await repo.starter()).packVersion, '1.0.0');
+      await installer.install(await forged('1.1.0'));
+      expect((await repo.starter()).packVersion, '1.0.0');
+    });
+
+    test(
+      'the content repository plays the bundled 1.0.0 over a hidden 1.1.0 an older build stored',
+      () async {
+        await installer.install(await forged('1.1.0'));
+        final Uint8List bundled = (await buildSamplePack(key)).bytes;
+        final ContentRepository repo = ContentRepository(
+          installer: installer,
+          bundled: () async => bundled,
+          packId: 'sample-pack',
+        );
+        expect((await repo.starter()).packVersion, '1.0.0');
+      },
+    );
   });
 
   group('a crash never leaves half a pack', () {

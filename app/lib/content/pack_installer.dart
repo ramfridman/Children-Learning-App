@@ -58,7 +58,8 @@ class DbPackRegistry implements PackRegistry {
   );
 }
 
-enum InstallOutcome { installed, alreadyInstalled }
+/// [keptPlayable]: the pack needs a newer app than this one and a playable version is installed, so nothing was changed.
+enum InstallOutcome { installed, alreadyInstalled, keptPlayable }
 
 class InstallResult {
   const InstallResult(this.outcome, this.pack);
@@ -119,13 +120,24 @@ class PackInstaller {
     final InstalledPack? existing = await registry.find(pack.id);
     if (existing != null) {
       final int order = compareSemver(pack.version, existing.version);
-      if (order < 0) {
+      // The installed copy is proven again only when the answer depends on it (it is the costly part).
+      final bool needsCopy =
+          order == 0 || (order < 0 && existing.hidden && !pack.hidden) || (order > 0 && pack.hidden);
+      final VerifiedPack? copy = needsCopy ? await _installedCopy(pack.id, existing) : null;
+      final bool copyPlayable = copy != null && !copy.hidden;
+      if (order < 0 && !(existing.hidden && !pack.hidden && !copyPlayable)) {
+        // Only one case lets an older pack in: the installed one is a newer pack this app cannot play, and this one can be played.
         throw PackRejected(
           'rules',
           'version ${pack.version} is older than the installed ${existing.version}',
         );
       }
-      if (order == 0 && await _installedCopyIsGood(pack.id, pack.version, existing.manifestSha256)) {
+      if (order > 0 && pack.hidden && copyPlayable) {
+        // A newer pack this app cannot play never replaces one it can: the playable version stays, and the hidden one is
+        // not stored (an app that can play it brings it, or it is installed again then).
+        return InstallResult(InstallOutcome.keptPlayable, pack);
+      }
+      if (order == 0 && copy != null) {
         // A copy that still proves itself with this app's key is protected: the same version never changes its contents.
         if (existing.manifestSha256 != pack.manifestSha256) {
           throw PackRejected(
@@ -183,15 +195,16 @@ class PackInstaller {
     return InstallResult(InstallOutcome.installed, pack);
   });
 
-  /// Whether the installed copy of [id] at [version] is on disk and proves itself again with this app's key, and is the one
-  /// that was recorded. Must not take the install queue (it is called from inside it).
-  Future<bool> _installedCopyIsGood(String id, String version, String manifestSha256) async {
-    final Directory dir = packDir(id, version);
-    if (!dir.existsSync()) return false;
+  /// The recorded copy of [row] read back from disk, if it is there, proves itself again with this app's key and is the one
+  /// that was recorded; otherwise null. Its `hidden` says whether this app can play it. Must not take the install queue
+  /// (it is called from inside it).
+  Future<VerifiedPack?> _installedCopy(String id, InstalledPack row) async {
+    final Directory dir = packDir(id, row.version);
+    if (!dir.existsSync()) return null;
     try {
       final Map<String, Uint8List> entries = <String, Uint8List>{};
       for (final FileSystemEntity e in dir.listSync(followLinks: false)) {
-        if (e is! File) return false;
+        if (e is! File) return null;
         entries[e.uri.pathSegments.last] = e.readAsBytesSync();
       }
       final VerifiedPack pack = await verifyEntries(
@@ -200,9 +213,11 @@ class PackInstaller {
         decode: decode,
         capabilities: capabilities,
       );
-      return pack.manifestSha256 == manifestSha256 && pack.version == version && pack.id == id;
+      final bool recorded =
+          pack.manifestSha256 == row.manifestSha256 && pack.version == row.version && pack.id == id;
+      return recorded ? pack : null;
     } on PackRejected {
-      return false;
+      return null;
     }
   }
 

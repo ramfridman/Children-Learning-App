@@ -204,6 +204,91 @@ void main() {
     });
   });
 
+  group('limits of the gateway (SEC-B36-1)', () {
+    Map<String, Object?> bodyWith(int items, {int pad = 0}) {
+      final Map<String, Object?> one = (starter['items']! as List<Object?>).first! as Map<String, Object?>;
+      return <String, Object?>{
+        ...starter,
+        'items': <Object?>[
+          for (int i = 0; i < items; i++)
+            <String, Object?>{...one, 'item_id': 'x$i', 'goal': 'g' * (1 + pad)},
+        ],
+      };
+    }
+
+    int constant(String source, String name) {
+      final RegExpMatch m = RegExp('export const $name = ([0-9 *]+);').firstMatch(source)!;
+      return m.group(1)!.split('*').map((String s) => int.parse(s.trim())).reduce((int a, int b) => a * b);
+    }
+
+    test('the numbers here are the numbers in the gateway (read from handler.ts)', () {
+      final String ts = File('../supabase/functions/content-publish/handler.ts').readAsStringSync();
+      expect(maxPublishBytes, constant(ts, 'MAX_PUBLISH_BYTES'));
+      expect(maxPublishItems, constant(ts, 'MAX_PUBLISH_ITEMS'));
+      expect(maxPublishMisconceptions, constant(ts, 'MAX_PUBLISH_MISCONCEPTIONS'));
+      expect(maxPublishCharacters, constant(ts, 'MAX_PUBLISH_CHARACTERS'));
+      for (final String shape in <String>[
+        'MAX_PUBLISH_ITEMS',
+        'MAX_PUBLISH_MISCONCEPTIONS',
+        'MAX_PUBLISH_CHARACTERS',
+      ]) {
+        expect(ts, contains('maxItems: $shape'), reason: 'the gateway shape uses $shape');
+      }
+      expect(ts, contains('maxBodyBytes: MAX_PUBLISH_BYTES'));
+    });
+
+    test('the 1,118 activities of pack 0.11.0 are inside the item and the byte limits', () {
+      final List<int> bytes = encodeBody(bodyWith(1118));
+      expect(bytes.length, lessThan(maxPublishBytes));
+    });
+
+    test('too many items are refused before anything is sent, with the numbers in the message', () async {
+      final Map<String, Object?> body = bodyWith(maxPublishItems + 1);
+      final Matcher refused = throwsA(
+        isA<PublishFailed>().having(
+          (PublishFailed e) => e.message,
+          'message',
+          allOf(contains('${maxPublishItems + 1} items'), contains('at most $maxPublishItems')),
+        ),
+      );
+      expect(() => encodeBody(body), refused);
+      // No server is running at this address: the refusal must come first, not a connection error.
+      await expectLater(
+        publish(body, baseUrl: 'http://127.0.0.1:1', secret: 'a-long-enough-test-value-0123456789'),
+        refused,
+      );
+    });
+
+    test('a body over the byte limit is refused before anything is sent', () async {
+      final Map<String, Object?> body = bodyWith(100, pad: maxPublishBytes);
+      final Matcher refused = throwsA(
+        isA<PublishFailed>().having(
+          (PublishFailed e) => e.message,
+          'message',
+          allOf(contains('bytes'), contains('at most $maxPublishBytes')),
+        ),
+      );
+      expect(() => encodeBody(body), refused);
+      await expectLater(
+        publish(body, baseUrl: 'http://127.0.0.1:1', secret: 'a-long-enough-test-value-0123456789'),
+        refused,
+      );
+    });
+
+    test('too many misconceptions or characters are refused too', () {
+      List<Object?> many(int n) => List<Object?>.filled(n, <String, Object?>{});
+      expect(
+        () => encodeBody(<String, Object?>{'misconceptions': many(maxPublishMisconceptions + 1)}),
+        throwsA(isA<PublishFailed>()),
+      );
+      expect(
+        () => encodeBody(<String, Object?>{'characters': many(maxPublishCharacters + 1)}),
+        throwsA(isA<PublishFailed>()),
+      );
+      expect(encodeBody(<String, Object?>{'items': many(maxPublishItems)}), isNotEmpty);
+    });
+  });
+
   test('the secret is never printed or written by the publish code', () {
     for (final String f in <String>['tool/publish_lib.dart', 'tool/pack_builder.dart']) {
       final String src = File(f).readAsStringSync();
