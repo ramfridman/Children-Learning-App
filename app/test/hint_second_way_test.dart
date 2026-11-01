@@ -178,14 +178,21 @@ void main() {
   });
 
   test('the coins of a chart show their own value, and the hand keeps a running sum', () {
+    // Level 2: each coin's value as that many dots on its own lower rim (QA-B36-8), no number badge and no sum.
+    List<int> dots(HintPlan p) => <int>[
+      for (final CardMark m in p.rest.whereType<CardMark>())
+        if (m.child is ValueDots) (m.child as ValueDots).count,
+    ];
     final TapAnswerActivity a = item('x.mathb17.12');
-    expect(<int>[for (final BadgeMark m in plan(a, 2).rest.whereType<BadgeMark>()) m.n], <int>[5, 2, 1]);
+    expect(dots(plan(a, 2)), <int>[5, 2, 1]);
+    expect(plan(a, 2).rest.whereType<BadgeMark>(), isEmpty);
     expect(
       <int>[for (final BadgeMark m in plan(a, 3).frames.last.marks.whereType<BadgeMark>()) m.n],
       <int>[5, 7, 8],
     );
     final TapAnswerActivity b = item('x.mathb17.13');
-    expect(<int>[for (final BadgeMark m in plan(b, 2).rest.whereType<BadgeMark>()) m.n], <int>[10, 2, 2]);
+    expect(dots(plan(b, 2)), <int>[10, 2, 2]);
+    expect(plan(b, 2).rest.whereType<BadgeMark>(), isEmpty);
     expect(
       <int>[for (final BadgeMark m in plan(b, 3).frames.last.marks.whereType<BadgeMark>()) m.n],
       <int>[10, 14],

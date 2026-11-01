@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
-import 'package:nitznutz/design/app_text.dart';
 import 'package:nitznutz/design/board.dart';
+import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/play/hint_hand.dart';
 import 'package:nitznutz/play/hints/hint_marks.dart';
 import 'package:nitznutz/play/hints/hint_pictures.dart';
@@ -15,15 +15,9 @@ import 'package:nitznutz/play/hints/tap_plans.dart';
 
 import 'support/harness.dart';
 
-/// QA's open defects of the B-36 pass (docs/qa/b36-verification.md). The two defect tests FAIL until their defect is fixed; they
-/// are skipped in a normal run so that the suite stays green; run them with
-///
-///   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_b36_open_defects_test.dart
-///
-/// When a defect is fixed, the owner of the fix removes `skip: _open` from its test. The items are read from the pack sources
-/// (as hint_second_way_test does), so the tests hold before the new pack is signed and bundled.
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
+/// QA's defects of the B-36 pass (docs/qa/b36-verification.md), QA-B36-1, 2 and 3, fixed by the design-director: each test failed
+/// before its fix and now runs in every suite. The items are read from the pack sources (as hint_second_way_test does), so the
+/// tests hold before the new pack is signed and bundled.
 
 void main() {
   const String sources = '../content/starter';
@@ -64,9 +58,10 @@ void main() {
   HintPlan plan(TapAnswerActivity a, int level, ActivitySpec spec) =>
       tapHintPlan(a, TapGeometry(a, stageOf(spec), spec), level)!;
 
+  // The bubble's own box at its largest, and the grown box a long line takes (QA-B36-3): a sample must stay clear of both.
   Rect bubbleOf(ActivitySpec board) {
     final Size size = boardOf(board);
-    return board.bubbleLeft != null
+    final Rect own = board.bubbleLeft != null
         ? Rect.fromLTWH(board.bubbleLeft!, board.bubbleTop, board.bubbleMaxWidth, board.bubbleMaxHeight)
         : Rect.fromLTWH(
             size.width - board.bubbleRight! - board.bubbleMaxWidth,
@@ -74,6 +69,7 @@ void main() {
             board.bubbleMaxWidth,
             board.bubbleMaxHeight,
           );
+    return own.expandToInclude(board.bubbleRoom);
   }
 
   // The worked example of every tap item the part D added: the hand reaches the right tile only in the last step, and the levels
@@ -144,11 +140,11 @@ void main() {
     }
   });
 
-  // QA-B36-1 (major). The sample that glides over the tiles (the written numeral of NUM-B-07, the outline of SHP-A-06, and the
-  // swatches, outlines and copies of the older sample plans) stands on the top edge of each tile. When the right answer is the FIRST
-  // option, a right-to-left row puts it at the right end, right under the speech bubble of a phone: in the last step the sample is
-  // half under the bubble. The new items are x.numb07.21/.22 and b36.shpa06.1/.2; about 35 older items (colours, shapes, LOG-A-01 and
-  // LOG-A-09) have the same fault.
+  // QA-B36-1 (major, fixed). The sample that glides over the tiles (the written numeral of NUM-B-07, the outline of SHP-A-06, and the
+  // swatches, outlines and copies of the older sample plans) stood on the top edge of each tile. When the right answer is the FIRST
+  // option, a right-to-left row puts it at the right end, right under the speech bubble of a phone: in the last step the sample was
+  // half under the bubble (x.numb07.21/.22, b36.shpa06.1/.2 and about 35 older items). Now, where any tile's sample would meet the
+  // bubble, the whole glide goes under the tiles.
   test(
     'QA-B36-1: in the last step of a sample plan the sample is not under the speech bubble on a phone',
     () {
@@ -179,48 +175,66 @@ void main() {
       }
       expect(bad, isEmpty, reason: '${bad.length} cases\n${bad.join('\n')}');
     },
-    skip: _open,
   );
 
-  // QA-B36-3 (major on the small phone). A line that does not fit the speech bubble even at the smallest font (14) makes the bubble
-  // taller than its board allows: on the small phone it then lies over the top of the answer tiles (seen on b36.numa14.2 and
-  // b.numb16.2). The worked-example lines (level 3) are the long ones. At the base of this branch (e5d74c7) 134 cases did not fit
-  // (133 on the small phone, 1 on the phone); with the 1,142 rewritten lines and the new items 318 do not (4 prompts and 288
-  // level-3 lines on the small phone, 26 level-3 lines on the phone). The test allows 8 points over (about a third of a line).
-  test('QA-B36-3: every prompt and level-3 line fits the speech bubble at the smallest font on the phone and the small phone', () {
+  // QA-B36-3 (major on the small phone, fixed). A line that did not fit the speech bubble even at the smallest font (14) made the
+  // bubble taller than its board allows: on the small phone it then lay over the top of the answer tiles (b36.numa14.2, b.numb16.2);
+  // 318 prompts and level-3 lines did not fit. The texts are owner-approved, so the bubble makes room instead
+  // (`ActivityFrame.fitBubble`): a line that does not fit its own box at 16 or more takes the board's grown box, wider toward the
+  // guide and taller upward under the trail, its bottom 12 above the tiles. Every text the bubble can show (prompt, every hint,
+  // every feedback line) must fit, at 14 or more, inside that box, on all four boards.
+  test('QA-B36-3: every bubble line fits its bubble at the smallest font or more, and the bubble stays clear of the tiles', () {
     final List<String> bad = <String>[];
+    int grown = 0, texts = 0;
+    final List<String> lines = <String>[];
+    void walk(Object? n) {
+      if (n is Map<String, Object?>) {
+        if (n['caption'] is List<Object?>) {
+          final String t = (n['caption']! as List<Object?>)
+              .map((Object? c) => (c! as Map<String, Object?>)['v']! as String)
+              .join(' ');
+          if (t.isNotEmpty) lines.add(t);
+        }
+        n.values.forEach(walk);
+      } else if (n is List<Object?>) {
+        n.forEach(walk);
+      }
+    }
+
     for (final File f in Directory(sources).listSync().whereType<File>()) {
       if (!f.uri.pathSegments.last.startsWith('activity.')) continue;
       final Map<String, Object?> j = jsonDecode(f.readAsStringSync()) as Map<String, Object?>;
-      final List<(String, Object?)> spoken = <(String, Object?)>[
-        ('prompt', j['prompt']),
-        for (final Object? h in (j['hints'] as List<Object?>?) ?? const <Object?>[])
-          if ((h! as Map<String, Object?>)['level'] == 3) ('hint 3', h),
-      ];
-      for (final (String, Object?) s in spoken) {
-        final String text =
-            (((s.$2! as Map<String, Object?>)['caption'] as List<Object?>?) ?? const <Object?>[])
-                .map((Object? c) => (c! as Map<String, Object?>)['v']! as String)
-                .join(' ');
-        if (text.isEmpty) continue;
-        for (final ActivitySpec board in <ActivitySpec>[ActivitySpec.phone, ActivitySpec.phoneSE]) {
-          final TextPainter tp = TextPainter(
-            text: TextSpan(text: text, style: AppText.fixed(size: 14, weight: 500)),
-            textDirection: TextDirection.rtl,
-          )..layout(maxWidth: board.bubbleMaxWidth - 32);
-          if (tp.height + 16 > board.bubbleMaxHeight + 8) {
+      lines.clear();
+      walk(j);
+      for (final String text in lines) {
+        texts++;
+        for (final ActivitySpec board in boards) {
+          final BubbleFit fit = ActivityFrame.fitBubble(text, board);
+          final Rect room = board.bubbleRoom;
+          if (fit.grown) grown++;
+          final double bottom = fit.top + fit.height;
+          if (fit.font < ActivityFrame.minFont || fit.top < room.top - 0.5 || bottom > room.bottom + 0.5) {
             bad.add(
-              '${j['id']} ${s.$1} on ${board.stage.size}: ${(tp.height + 16).round()} high, room ${board.bubbleMaxHeight}',
+              '${j['id']} on ${board.stage.size}: font ${fit.font}, ${fit.top.round()} to ${bottom.round()}, room $room: $text',
+            );
+          }
+          // The box the bubble was fitted to stays inside the room.
+          final double left = fit.left ?? (boardOf(board).width - board.bubbleRight! - fit.maxWidth);
+          if (left < room.left - 0.5 || left + fit.maxWidth > room.right + 0.5) {
+            bad.add(
+              '${j['id']} on ${board.stage.size}: the bubble ($left, ${fit.maxWidth}) leaves the room $room',
             );
           }
         }
       }
     }
-    expect(bad, isEmpty, reason: '${bad.length} cases\n${bad.join('\n')}');
-  }, skip: _open);
+    // ignore: avoid_print
+    print('QA-B36-3: $texts lines on four boards, $grown placements in the grown box');
+    expect(bad, isEmpty, reason: '${bad.length} cases\n${bad.take(40).join('\n')}');
+  });
 
-  // QA-B36-2 (major). The pointing hand of the symbolic NUM-B-16 items goes to the empty places drawn at the stage's top left corner;
-  // on a phone the hand's body ends up behind the eye button of the top bar, and the demonstration cannot be seen.
+  // QA-B36-2 (major, fixed). The pointing hand of the symbolic NUM-B-16 items goes to the empty places drawn at the stage's top left
+  // corner; on a phone the hand's body ended up behind the eye button of the top bar. Now it comes from below there.
   testWidgets(
     'QA-B36-2: the hand of the symbolic NUM-B-16 worked example is not under the top bar on a phone',
     (WidgetTester t) async {
@@ -275,6 +289,5 @@ void main() {
       }
       expect(bad, isEmpty, reason: bad.join('\n'));
     },
-    skip: _open,
   );
 }

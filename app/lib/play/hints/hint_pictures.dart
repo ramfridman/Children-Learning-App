@@ -347,7 +347,8 @@ class HintOverlay extends StatelessWidget {
   }
 
   Widget _bigBadge(Key key, BadgeMark m, double k) {
-    final double side = 64 * k;
+    final double side = m.side ?? 64 * k;
+    final double f = side / (64 * k);
     return Positioned(
       key: key,
       left: m.at.dx - side / 2,
@@ -361,12 +362,12 @@ class HintOverlay extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: TokenColors.paper,
-            borderRadius: BorderRadius.circular(18 * k),
+            borderRadius: BorderRadius.circular(18 * k * f),
             border: Border.all(color: TokenColors.hintHalo, width: 3),
           ),
           child: Directionality(
             textDirection: TextDirection.ltr,
-            child: Text('${m.n}', style: AppText.fixed(size: 44 * k, weight: 800, lineHeight: 1)),
+            child: Text('${m.n}', style: AppText.fixed(size: 44 * k * f, weight: 800, lineHeight: 1)),
           ),
         ),
       ),

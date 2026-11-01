@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../content/hint_ladder.dart';
 import '../../content/models.dart';
 import '../../design/app_text.dart';
+import '../../design/tokens.g.dart';
 import '../count_tap_session.dart' show Dots;
 import '../hint_hand.dart';
 import '../hint_widgets.dart';
@@ -395,8 +396,9 @@ class _Plans {
   // ---- a sample the child compares the options with (TA-6 colour, TA-7 shapes, TA-9 same) ----
 
   /// Level 2 shows the sample (a swatch, an outline, a copy of the model) in a sky card; level 3 glides it over each option in
-  /// turn, and it stops on the one that matches. [make] draws the sample in a given box.
-  HintPlan _sample(int level, HintMark Function(Rect box) make) {
+  /// turn, and it stops on the one that matches. [make] draws the sample in a given box; [makeUnder] draws it in the smaller box
+  /// under a tile (the same as [make] when null).
+  HintPlan _sample(int level, HintMark Function(Rect box) make, {HintMark Function(Rect box)? makeUnder}) {
     if (level == 1) return look();
     final bool beside = _questionParts().isNotEmpty;
     final Rect card = beside ? _card : g.centre(110 * k, 100 * k);
@@ -416,11 +418,26 @@ class _Plans {
     final double s = math.min(50 * k, 60);
     Rect above(int i) =>
         Rect.fromCenter(center: g.optionTip(i) - Offset(26 * k, s / 2 + 1), width: s, height: s);
+    // On a phone the first tiles of a right-to-left row stand under the speech bubble, and a sample above them would be hidden
+    // (QA-B36-1). Then the sample glides under the tiles instead, centred under each one, in the room between the tiles' lip and
+    // the foot of the board (40, the room a phone has there); the hand still presses the tile's top edge. The whole glide goes
+    // under, so the sample keeps one path.
+    final Rect bubble = g.bubbleRoom;
+    final bool under =
+        g.tiles && <int>[for (int i = 0; i < _n; i++) i].any((int i) => above(i).overlaps(bubble));
+    final double su = math.min(s, 40);
+    Rect below(int i) => Rect.fromCenter(
+      center: g.optionTip(i) + Offset(0, TapGeometry.tileHeight + 8 + su / 2),
+      width: su,
+      height: su,
+    );
+    final HintMark Function(Rect box) small = makeUnder ?? make;
+    HintMark at(int i) => under ? small(below(i)) : make(above(i));
     return _demo(<HintFrame>[
       HintFrame(<HintMark>[make(home)], hold: _ms(700), reserve: reserve),
-      for (int i = 0; i < _n; i++) HintFrame(<HintMark>[make(above(i))], hold: _ms(800), reserve: reserve),
+      for (int i = 0; i < _n; i++) HintFrame(<HintMark>[at(i)], hold: _ms(800), reserve: reserve),
       HintFrame(
-        <HintMark>[make(above(_ci)), HandMark(g.optionTip(_ci), press: true)],
+        <HintMark>[at(_ci), HandMark(g.optionTip(_ci), press: true)],
         hold: _ms(1300),
         reserve: reserve,
       ),
@@ -614,33 +631,47 @@ class _Plans {
         ? (svg: _tableSvg, top: 0.18, foot: 0.96)
         : (where == 'in' ? (svg: _binSvg, top: 0.40, foot: 0.92) : (svg: _boxSvg, top: 0.22, foot: 0.92));
     final Rect card = g.centre(150 * k, 112 * k);
-    final double b = 52 * k;
-    final double d = 30 * k;
-    final Offset c = card.center;
-    Rect thing(double dx, double dy) =>
-        Rect.fromCenter(center: c + Offset(dx * k, dy * k), width: b, height: b);
+    // The scene is laid out at a size of its own (the thing 52, the toy 30), then the two together are scaled to fill the card and
+    // centred in it, so a basket and its duck read well at every relation (QA-B36-9: they were about 40 points in a card of 150).
+    const double b = 52;
+    const double d = 30;
+    Rect thing(double dx, double dy) => Rect.fromCenter(center: Offset(dx, dy), width: b, height: b);
     Rect small(double x, double y) => Rect.fromCenter(center: Offset(x, y), width: d, height: d);
     double top(Rect o) => o.top + shape.top * b;
     double foot(Rect o) => o.top + shape.foot * b;
-    final Rect o;
-    final Rect t;
+    final Rect o0;
+    final Rect t0;
     switch (where) {
       case 'above':
-        o = thing(0, 24);
-        t = small(c.dx, top(o) - 16 * k - d / 2);
+        o0 = thing(0, 24);
+        t0 = small(0, top(o0) - 16 - d / 2);
       case 'on':
-        o = thing(0, 18);
-        t = small(c.dx, top(o) - d / 2 + 1);
+        o0 = thing(0, 18);
+        t0 = small(0, top(o0) - d / 2 + 1);
       case 'next':
-        o = thing(-28, 8);
-        t = small(c.dx + 36 * k, foot(o) - d / 2);
+        o0 = thing(-28, 8);
+        t0 = small(36, foot(o0) - d / 2);
       case 'under':
-        o = thing(0, 0);
-        t = small(c.dx, foot(o) - d / 2 - 1);
+        o0 = thing(0, 0);
+        t0 = small(0, foot(o0) - d / 2 - 1);
       default:
-        o = thing(0, 14);
-        t = small(c.dx, top(o) - d * 0.1);
+        o0 = thing(0, 14);
+        t0 = small(0, top(o0) - d * 0.1);
     }
+    // What is drawn: the thing from its drawn top to its foot, and the toy.
+    final Rect drawn = Rect.fromLTRB(o0.left, top(o0), o0.right, foot(o0)).expandToInclude(t0);
+    final double z = math.min(
+      2,
+      math.min((card.width - 24 * k) / drawn.width, (card.height - 20 * k) / drawn.height),
+    );
+    Rect fit(Rect r) => Rect.fromLTWH(
+      card.center.dx + (r.left - drawn.center.dx) * z,
+      card.center.dy + (r.top - drawn.center.dy) * z,
+      r.width * z,
+      r.height * z,
+    );
+    final Rect o = fit(o0);
+    final Rect t = fit(t0);
     final List<HintMark> scene = <HintMark>[
       CardMark(card, const SizedBox.shrink()),
       // Something that holds the toy is drawn over it; anything else is drawn first.
@@ -828,7 +859,13 @@ class _Plans {
         ], hold: _ms(2400)),
       ]);
     }
-    final Rect card = g.centre(170 * k, 92 * k);
+    // Where the stage shows the zero itself (NUM-A-14), the card covers the whole numeral: on a tablet the numeral is taller than
+    // the card, and its top showed above it as a dark cap (QA-B36-10).
+    final Rect? numeral = a.stageNumeral == null ? null : g.stageNumeral;
+    final Rect card = g.centre(
+      math.max(170 * k, (numeral?.width ?? 0) + 24 * k),
+      math.min(g.h - 8, math.max(92 * k, (numeral?.height ?? 0) + 16 * k)),
+    );
     final List<HintMark> frame = <HintMark>[CardMark(card, const TenFrames(total: 10, filled: 0))];
     if (level == 2) return HintPlan(<HintFrame>[HintFrame(frame, hold: _ms(2600))], rest: frame);
     final List<Offset> cells = <Offset>[

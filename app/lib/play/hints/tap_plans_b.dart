@@ -535,13 +535,17 @@ extension _BandB on _Plans {
     // The empty places are counted one by one in the cell of the unknown: a badge with how many so far.
     final Offset counted = cells[s.unknown].center + Offset(0, 24 * k);
     final List<HintMark> places = _cubesAbove(cells[s.r], whole, filled: known);
+    // The empty places are the top row of the stack, at the stage's top edge. On a phone the stage stands right under the top bar,
+    // and a hand from the guide's side would lie behind the eye button (QA-B36-2): there it comes from below, its body over the
+    // cubes already counted, the places it counts in view above the fingertip.
+    final HandFrom from = g.spec.stageIsCard ? HandFrom.guide : HandFrom.below;
     return _demo(<HintFrame>[
       HintFrame(<HintMark>[...parts, HandMark(cells[knownCell].center, press: true)], hold: _ms(800)),
       for (int j = 1; j <= left; j++)
         HintFrame(<HintMark>[
           ...parts,
           BadgeMark(counted, j),
-          HandMark((places[known + j - 1] as BlockMark).rect.center, press: true),
+          HandMark((places[known + j - 1] as BlockMark).rect.center, press: true, from: from),
         ], hold: _ms(650)),
       _toAnswer(<HintMark>[...parts, BadgeMark(counted, left)]),
     ]);
