@@ -36,11 +36,14 @@ final class SeenMark extends HintMark {
 
 /// A number badge (paper, a sky ring): [n] things counted so far. [big] is the count card of the end of a count.
 final class BadgeMark extends HintMark {
-  const BadgeMark(this.at, this.n, {this.big = false});
+  const BadgeMark(this.at, this.n, {this.big = false, this.side});
 
   final Offset at;
   final int n;
   final bool big;
+
+  /// The side of a [big] badge, where it must be smaller than its own 64 (a sample under a tile, QA-B36-1); null for its own.
+  final double? side;
 }
 
 /// P5 (pair lines): dotted lines between partners; the things in [unpaired] get a sky ring.

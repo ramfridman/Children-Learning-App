@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../design/app_text.dart';
@@ -15,6 +17,7 @@ class ActivitySpec {
   const ActivitySpec({
     required this.bubbleMaxWidth,
     required this.bubbleMaxHeight,
+    required this.bubbleGrown,
     required this.homeRight,
     required this.controlsTop,
     required this.eyeLeft,
@@ -43,6 +46,11 @@ class ActivitySpec {
   /// The room a long question has: its width and height limits, in board points.
   final double bubbleMaxWidth;
   final double bubbleMaxHeight;
+
+  /// The whole box a long line's bubble may take (QA-B36-3): from under the progress trail down to just above the answer tiles,
+  /// and on a phone a little wider toward the guide (never over her art, never over the stage). A line that does not fit the
+  /// bubble's own box at a comfortable size grows into it, upward first, so the bubble never covers an answer tile.
+  final Rect bubbleGrown;
   final double homeRight;
   final double controlsTop;
   final double eyeLeft;
@@ -80,6 +88,7 @@ class ActivitySpec {
   }) => ActivitySpec(
     bubbleMaxWidth: bubbleMaxWidth,
     bubbleMaxHeight: bubbleMaxHeight,
+    bubbleGrown: bubbleGrown,
     homeRight: homeRight,
     controlsTop: controlsTop,
     eyeLeft: eyeLeft,
@@ -109,6 +118,8 @@ class ActivitySpec {
   static const ActivitySpec phone = ActivitySpec(
     bubbleMaxWidth: 190,
     bubbleMaxHeight: 132,
+    // Under the trail (26 + 36, and 6), to 12 above the tiles; to 640, 25 short of the guide's ears (her box starts at 617).
+    bubbleGrown: Rect.fromLTRB(413, 68, 640, 232),
     homeRight: 59,
     controlsTop: 12,
     eyeLeft: 59,
@@ -137,6 +148,8 @@ class ActivitySpec {
   static const ActivitySpec phoneSE = ActivitySpec(
     bubbleMaxWidth: 176,
     bubbleMaxHeight: 118,
+    // Under the trail (22 + 36, and 6), to 12 above the tiles; to 508, 22 short of the guide's ears (her box starts at 490).
+    bubbleGrown: Rect.fromLTRB(300, 64, 508, 202),
     homeRight: 16,
     controlsTop: 8,
     eyeLeft: 16,
@@ -167,6 +180,8 @@ class ActivitySpec {
   static const ActivitySpec tabletLandscape = ActivitySpec(
     bubbleMaxWidth: 600,
     bubbleMaxHeight: 112,
+    // Under the trail (38 + 36, and 6), to 6 above the stage's card (where the board's own box ends); the same width.
+    bubbleGrown: Rect.fromLTRB(356, 80, 956, 224),
     homeRight: 24,
     controlsTop: 24,
     eyeLeft: 24,
@@ -197,6 +212,8 @@ class ActivitySpec {
   static const ActivitySpec tabletPortrait = ActivitySpec(
     bubbleMaxWidth: 440,
     bubbleMaxHeight: 208,
+    // Under the trail (46 + 36, and 6), to 8 above the stage's card; the same width.
+    bubbleGrown: Rect.fromLTRB(156, 88, 596, 364),
     homeRight: 24,
     controlsTop: 32,
     eyeLeft: 24,
@@ -220,6 +237,15 @@ class ActivitySpec {
     tilesTop: 696,
     tilesWidth: 772,
     tileFont: 64,
+  );
+
+  /// The box a grown bubble may take on this layout: [bubbleGrown], and never lower than 12 above this layout's answer tiles (a
+  /// template that moves its tiles up, as the robot's pad on a phone, keeps its bubble clear of them).
+  Rect get bubbleRoom => Rect.fromLTRB(
+    bubbleGrown.left,
+    bubbleGrown.top,
+    bubbleGrown.right,
+    stageIsCard ? bubbleGrown.bottom : math.min(bubbleGrown.bottom, tilesTop - 12),
   );
 
   static ActivitySpec of(BoardClass b) => switch (b) {

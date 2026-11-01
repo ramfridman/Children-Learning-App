@@ -65,7 +65,11 @@ extension _SecondWay on _Plans {
     final RegExpMatch? m = RegExp(r'glyph_(\d)').firstMatch(_spriteOf(_right) ?? '');
     if (m == null) return generic(level);
     final int n = int.parse(m[1]!);
-    return _sample(level, (Rect box) => BadgeMark(box.center, n, big: true));
+    return _sample(
+      level,
+      (Rect box) => BadgeMark(box.center, n, big: true),
+      makeUnder: (Rect box) => BadgeMark(box.center, n, big: true, side: box.width),
+    );
   }
 
   // ---- NUM-B-17: counting a pile in twos ----
@@ -80,25 +84,33 @@ extension _SecondWay on _Plans {
     if (level == 1) return look();
     final int pairs = n ~/ 2;
     final bool columns = a.group!.arrangement == 'ten_frame' && n == 10;
-    final List<Rect> at = <Rect>[
+    List<Rect> pairsOf(List<Rect> o) => <Rect>[
       for (int i = 0; i < pairs; i++)
-        columns ? objs[i].expandToInclude(objs[i + 5]) : objs[2 * i].expandToInclude(objs[2 * i + 1]),
+        columns ? o[i].expandToInclude(o[i + 5]) : o[2 * i].expandToInclude(o[2 * i + 1]),
     ];
-    List<HintMark> counted(int upTo) => <HintMark>[
+    List<HintMark> counted(List<Rect> at, int upTo) => <HintMark>[
       for (int i = 0; i < upTo; i++) ...<HintMark>[
         RingMark(at[i].inflate(2 * k), round: false),
         BadgeMark(at[i].topRight, 2 * (i + 1)),
       ],
     ];
     if (level == 2) {
+      final List<Rect> at = pairsOf(objs);
       return HintPlan(<HintFrame>[
-        for (int i = 1; i <= pairs; i++) HintFrame(counted(i), hold: _ms(800)),
-      ], rest: counted(pairs));
+        for (int i = 1; i <= pairs; i++) HintFrame(counted(at, i), hold: _ms(800)),
+      ], rest: counted(at, pairs));
     }
+    // The worked example makes room at the stage's end side, as the count does: the pile moves into the rest, and the total comes
+    // last in the place it left, beside the counted pairs and over none of them (QA-B36-5).
+    final List<Rect> at = pairsOf(_groupRects(g.withReserve(_reserve), 0));
     return _demo(<HintFrame>[
       for (int i = 1; i <= pairs; i++)
-        HintFrame(<HintMark>[...counted(i), HandMark(at[i - 1].center, press: true)], hold: _ms(800)),
-      _toAnswer(<HintMark>[...counted(pairs), BadgeMark(Offset(g.w / 2, 18 * k), n, big: true)]),
+        HintFrame(
+          <HintMark>[...counted(at, i), HandMark(at[i - 1].center, press: true)],
+          hold: _ms(800),
+          reserve: _reserve,
+        ),
+      _toAnswer(<HintMark>[...counted(at, pairs), BadgeMark(_card.center, n, big: true)], reserve: _reserve),
     ]);
   }
 
@@ -110,8 +122,8 @@ extension _SecondWay on _Plans {
     return m == null ? null : int.parse(m[1]!);
   }
 
-  /// "How much money is there?": the coins stand in columns on the stage. Level 2 puts each coin's value beside it, column by column;
-  /// at level 3 the hand goes along the columns with the sum so far, and the total comes last.
+  /// "How much money is there?": the coins stand in columns on the stage. Level 2 puts each coin's value on it as dots, column by
+  /// column; at level 3 the hand goes along the columns with the sum so far, and the total comes last.
   HintPlan money(int level) {
     final List<int?> value = <int?>[
       for (final ({String sprite, int count}) c in a.chart) _shekelsOf(c.sprite),
@@ -129,9 +141,21 @@ extension _SecondWay on _Plans {
         ], hold: _ms(2400)),
       ]);
     }
+    // Level 2 shows what each coin is worth as that many dots, the dots of the answer tiles, on a strip that lies on the coin's
+    // lower rim: it belongs to its own coin only, and it says the value another way than the number printed on it (QA-B36-8).
+    // Nothing is added up, so the answer is not shown.
+    // Up to five dots in one row, more in two rows of five (a ten as two fives), as large as the strip lets them be.
+    Rect strip(Rect coin, int v) {
+      final int rows = v > 5 ? 2 : 1;
+      final int across = math.min(v, 5);
+      final double h = (coin.height * 0.22).clamp(12 * k, 30 * k).toDouble() * (rows == 2 ? 1.6 : 1);
+      final double w = math.min(coin.width * 0.9, (h - 7) * across / rows + 10);
+      return Rect.fromCenter(center: Offset(coin.center.dx, coin.bottom - h * 0.45), width: w, height: h);
+    }
+
     List<HintMark> values(int upTo) => <HintMark>[
       for (int i = 0; i < upTo; i++)
-        for (final Rect coin in cols[i]) BadgeMark(Offset(coin.right + 14 * k, coin.center.dy), value[i]!),
+        for (final Rect coin in cols[i]) CardMark(strip(coin, value[i]!), ValueDots(value[i]!), tight: true),
     ];
     if (level == 2) {
       return HintPlan(<HintFrame>[
@@ -163,7 +187,14 @@ extension _SecondWay on _Plans {
     if (!numbersIn(a.promptLine.caption).contains(seen + hidden)) return generic(level);
     if (level == 1) return look();
     final int whole = seen + hidden;
-    final Rect card = g.centre(math.min(g.w - 16, 190 * k), 84 * k);
+    // The frame stands in a card that covers the whole of the stage's own picture (the fish and the stone), never a part of it
+    // (QA-B36-4: some fish were under the card and one beside it). Moving the picture aside instead leaves fish too small to see
+    // on a phone.
+    final Rect band = g.centre(g.w - 12, math.min(84 * k, g.h - 8));
+    final Rect card = <Rect>[
+      ...g.groupObjects(0),
+      ...g.groupObjects(1),
+    ].fold(band, (Rect c, Rect r) => c.expandToInclude(r.inflate(4 * k))).intersect(Offset.zero & g.size);
     final double cube = math.min(26 * k, (card.width - 20 * k) / 5);
     final List<Rect> cells = <Rect>[
       for (int i = 0; i < whole; i++)
@@ -185,7 +216,8 @@ extension _SecondWay on _Plans {
         rest: <HintMark>[...frame, for (final Rect r in empties) SeenMark(r)],
       );
     }
-    final Offset badgeAt = Offset(g.w / 2, 18 * k);
+    // The count of the empty places stands over the card's middle, above the frame.
+    final Offset badgeAt = Offset(card.center.dx, card.top + 2 * k);
     return _demo(<HintFrame>[
       HintFrame(frame, hold: _ms(500)),
       for (int j = 1; j <= hidden; j++)
@@ -198,4 +230,34 @@ extension _SecondWay on _Plans {
       _toAnswer(<HintMark>[...frame, BadgeMark(badgeAt, hidden)]),
     ]);
   }
+}
+
+/// The value of a coin as dots, the dots of the answer tiles: up to five in a row, more in rows of five. Drawn large, so that the
+/// card it stands in shrinks it to fill the strip.
+class ValueDots extends StatelessWidget {
+  const ValueDots(this.count, {super.key});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    // A short second row starts where the first does, on the left, as a ten-frame fills.
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      for (int row = 0; row * 5 < count; row++)
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            for (int i = row * 5; i < math.min(count, row * 5 + 5); i++)
+              Container(
+                width: 16,
+                height: 16,
+                margin: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(color: TokenColors.inkSoft, shape: BoxShape.circle),
+              ),
+          ],
+        ),
+    ],
+  );
 }

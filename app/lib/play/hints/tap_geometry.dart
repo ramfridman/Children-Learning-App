@@ -211,6 +211,16 @@ class TapGeometry {
 
   // ---- the answers ----
 
+  /// The height of an answer tile (`AnswerTile`, every board); its clay lip and shadow reach 6 below it.
+  static const double tileHeight = 96;
+
+  /// The box the speech bubble may take on this board ([ActivitySpec.bubbleRoom]), in the stage's own points: a hint's picture
+  /// that stands outside the stage stays out of it.
+  Rect get bubbleRoom {
+    final double inset = spec.stageIsCard ? 16 : 0;
+    return spec.bubbleRoom.shift(Offset(-(spec.stage.left + inset), -(spec.stage.top + inset)));
+  }
+
   /// True when the options are tiles below the stage.
   bool get tiles => a.optionsInTiles;
 
