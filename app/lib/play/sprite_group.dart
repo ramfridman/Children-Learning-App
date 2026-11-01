@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../design/tokens.g.dart';
 import 'template_session.dart';
 
 /// Where the pictures of a counted group sit, in the unit square (0 to 1 in both directions), and the room each one
@@ -88,6 +89,20 @@ List<Rect> spriteRects(
   int lineSlots = 4,
 }) {
   final GroupLayout layout = groupLayout(arrangement, count, seed: seed, lineSlots: lineSlots);
+  final Rect? frame = tenFrameRect(box, arrangement, count);
+  if (frame != null) {
+    // Square cells of the drawn frame; each picture fills most of its cell, so the frame's lines show between them.
+    final double cell = frame.width / 5;
+    final double side = cell * 0.78 * scale;
+    return <Rect>[
+      for (int i = 0; i < count; i++)
+        Rect.fromCenter(
+          center: frame.topLeft + Offset(((i % 5) + 0.5) * cell, ((i ~/ 5) + 0.5) * cell),
+          width: side,
+          height: side,
+        ),
+    ];
+  }
   double w = box.width;
   double h = box.height;
   // The pips of a dice sit in a square, however wide the room is.
@@ -102,6 +117,24 @@ List<Rect> spriteRects(
     for (final Offset p in layout.centers)
       Rect.fromLTWH(dx + p.dx * w - side / 2, dy + p.dy * h - side / 2, side, side),
   ];
+}
+
+/// Whether a group is drawn on a ten-frame: a `ten_frame`, and a `dice` of more than six (which falls back to one).
+bool drawsTenFrame(String arrangement, int count) =>
+    arrangement == 'ten_frame' || (arrangement == 'dice' && count > 6);
+
+/// The ten-frame of a group inside a box of [box]: two rows of five square cells (more rows only for a group of more than ten),
+/// as large as the box allows and centred in it; null when the group is not drawn on a frame. The empty cells are part of the
+/// picture: "five, and five more make ten" is seen in the cells that are left.
+Rect? tenFrameRect(Size box, String arrangement, int count) {
+  if (!drawsTenFrame(arrangement, count)) return null;
+  final int rows = math.max(2, (count / 5).ceil());
+  // A little room round the frame for its outline.
+  final double w = box.width - 4;
+  final double h = box.height - 4;
+  if (w <= 0 || h <= 0) return null;
+  final double cell = math.min(w / 5, h / rows);
+  return Rect.fromLTWH((box.width - cell * 5) / 2, (box.height - cell * rows) / 2, cell * 5, cell * rows);
 }
 
 /// [count] pictures of [svg] in the given arrangement. [scale] makes every picture bigger or smaller (the "crowded or
@@ -141,9 +174,54 @@ class SpriteGroup extends StatelessWidget {
         scale: scale,
         lineSlots: lineSlots,
       );
+      final Rect? frame = tenFrameRect(room, arrangement, count);
       return Stack(
-        children: <Widget>[for (final Rect r in places) Positioned.fromRect(rect: r, child: PackSvg(svg))],
+        children: <Widget>[
+          if (frame != null)
+            Positioned.fromRect(
+              key: const Key('group-ten-frame'),
+              rect: frame,
+              child: CustomPaint(painter: _TenFramePainter(rows: (frame.height / (frame.width / 5)).round())),
+            ),
+          for (final Rect r in places) Positioned.fromRect(rect: r, child: PackSvg(svg)),
+        ],
       );
     },
   );
+}
+
+/// The ten-frame under a group: a white board with an ink rim and soft lines between its cells (the same look as the ten-frames
+/// of the hints), so that the empty cells can be counted too.
+class _TenFramePainter extends CustomPainter {
+  const _TenFramePainter({required this.rows});
+
+  final int rows;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double cell = size.width / 5;
+    final double rim = (cell * 0.07).clamp(2.0, 3.5);
+    final Rect board = Offset.zero & size;
+    final RRect outer = RRect.fromRectAndRadius(board.deflate(rim / 2), Radius.circular(cell * 0.12));
+    canvas.drawRRect(outer, Paint()..color = TokenColors.paper.withValues(alpha: 0.94));
+    final Paint line = Paint()
+      ..color = TokenColors.ink.withValues(alpha: 0.28)
+      ..strokeWidth = (rim * 0.6).clamp(1.5, 2.0);
+    for (int c = 1; c < 5; c++) {
+      canvas.drawLine(Offset(c * cell, rim), Offset(c * cell, size.height - rim), line);
+    }
+    for (int r = 1; r < rows; r++) {
+      canvas.drawLine(Offset(rim, r * cell), Offset(size.width - rim, r * cell), line);
+    }
+    canvas.drawRRect(
+      outer,
+      Paint()
+        ..color = TokenColors.ink
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = rim,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_TenFramePainter old) => old.rows != rows;
 }

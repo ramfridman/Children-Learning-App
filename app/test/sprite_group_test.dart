@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/play/sprite_group.dart';
 
@@ -86,6 +87,56 @@ void main() {
         math.min(groupLayout('line', 10).cellWidth, groupLayout('ten_frame', 10).cellWidth),
         greaterThan(0),
       );
+    });
+  });
+
+  group('the ten-frame under a group (B-38)', () {
+    test(
+      'a ten-frame, and a dice of more than six, are drawn on a frame of 2 by 5 square cells, centred',
+      () {
+        for (final (String, int) g in <(String, int)>[('ten_frame', 3), ('ten_frame', 10), ('dice', 8)]) {
+          final Rect f = tenFrameRect(const Size(300, 100), g.$1, g.$2)!;
+          expect(f.width / 5, closeTo(f.height / 2, 1e-9), reason: '$g');
+          expect(f.center.dx, closeTo(150, 1e-9));
+          expect(f.center.dy, closeTo(50, 1e-9));
+        }
+        expect(tenFrameRect(const Size(300, 100), 'dice', 6), isNull);
+        expect(tenFrameRect(const Size(300, 100), 'line', 5), isNull);
+        expect(tenFrameRect(const Size(300, 100), 'scatter', 5), isNull);
+      },
+    );
+
+    test('every picture sits inside its own cell, the top row filled first from the left', () {
+      const Size box = Size(150, 100);
+      final Rect f = tenFrameRect(box, 'ten_frame', 7)!;
+      final double cell = f.width / 5;
+      final List<Rect> r = spriteRects(box, 'ten_frame', 7);
+      for (int i = 0; i < 7; i++) {
+        final Rect c = Rect.fromLTWH(f.left + (i % 5) * cell, f.top + (i ~/ 5) * cell, cell, cell);
+        expect(
+          c.contains(r[i].topLeft) && c.contains(r[i].bottomRight - const Offset(1e-6, 1e-6)),
+          isTrue,
+          reason: '$i',
+        );
+      }
+    });
+
+    testWidgets('the frame is drawn with its empty cells, also for a group of one', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const Directionality(
+          textDirection: TextDirection.rtl,
+          child: Center(
+            child: SizedBox(
+              width: 300,
+              height: 120,
+              child: SpriteGroup(svg: '<svg viewBox="0 0 10 10"/>', count: 1, arrangement: 'ten_frame'),
+            ),
+          ),
+        ),
+      );
+      expect(find.byKey(const Key('group-ten-frame')), findsOneWidget);
     });
   });
 }
