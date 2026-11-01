@@ -871,6 +871,18 @@
     {
       "id": "note_200",
       "file": "note_200.svg"
+    },
+    {
+      "id": "pos_cat_in",
+      "file": "pos_cat_in.svg"
+    },
+    {
+      "id": "pos_cat_next",
+      "file": "pos_cat_next.svg"
+    },
+    {
+      "id": "pos_cat_on",
+      "file": "pos_cat_on.svg"
     }
   ],
   "vo": []

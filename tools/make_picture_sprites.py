@@ -188,6 +188,17 @@ BAND_B_SPRITES = {
 }
 
 
+# B-38: the pictures drawn again from references (tools/pictures_b38.py); they replace the placeholders above under the same ids.
+import pictures_b38  # noqa: E402
+
+SINGLES.update(pictures_b38.PICTURES)
+for _gone in ('step_tap', 'step_soap', 'step_towel', 'solid_box'):
+    BAND_B_SPRITES.pop(_gone, None)
+    MORE.pop(_gone, None)
+SHAPE_COLOURS = pictures_b38.SHAPE_COLOURS
+SHAPE_BODIES = pictures_b38.SHAPE_BODIES
+
+
 def inner(thing):
     """The drawing inside the svg tags of a sprite that make_unit_sprites.py already made."""
     text = open(os.path.join(OUT, thing + '.svg'), encoding='utf-8').read()
@@ -202,7 +213,7 @@ def main():
             n += 1
     for shape, body in SHAPE_BODIES.items():
         for cname, c in SHAPE_COLOURS.items():
-            open(os.path.join(OUT, 'shape_%s_%s.svg' % (shape, cname)), 'w', encoding='utf-8', newline=chr(10)).write(svg(body % c))
+            open(os.path.join(OUT, 'shape_%s_%s.svg' % (shape, cname)), 'w', encoding='utf-8', newline=chr(10)).write(svg(body % (c, pictures_b38.SHAPE_RIMS[cname])))
             n += 1
     for name, body in BAND_B_SPRITES.items():
         open(os.path.join(OUT, name + '.svg'), 'w', encoding='utf-8', newline=chr(10)).write(svg(body))

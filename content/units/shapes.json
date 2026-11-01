@@ -1695,31 +1695,31 @@
       "what": "סִירָה",
       "slots": [
         [
-          "shape_rect_blue",
+          "shape_triangle_blue",
+          14.8,
+          79,
+          48.9,
+          180
+        ],
+        [
+          "shape_triangle_blue",
+          85.2,
+          79,
+          48.9,
+          180
+        ],
+        [
+          "shape_rect_red",
+          50,
           80,
-          92,
-          100,
+          80,
           0
         ],
         [
-          "shape_rect_orange",
-          80,
-          52,
-          48,
-          90
-        ],
-        [
-          "shape_triangle_red",
-          98,
-          46,
-          40,
-          0
-        ],
-        [
-          "shape_circle_yellow",
-          24,
-          18,
-          22,
+          "shape_triangle_yellow",
+          50,
+          37.2,
+          74,
           0
         ]
       ],
@@ -1737,30 +1737,30 @@
       "slots": [
         [
           "shape_rect_red",
+          50,
           60,
-          58,
           100,
           0
         ],
         [
-          "shape_square_blue",
+          "shape_rect_blue",
+          46,
+          26,
           56,
+          0
+        ],
+        [
+          "shape_circle_orange",
+          27,
+          82,
           30,
-          36,
           0
         ],
         [
           "shape_circle_orange",
-          36,
-          80,
-          24,
-          0
-        ],
-        [
-          "shape_circle_orange",
-          84,
-          80,
-          24,
+          73,
+          82,
+          30,
           0
         ]
       ],
