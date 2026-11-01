@@ -314,6 +314,7 @@ class MatchPairsSession extends TemplateSession {
     'cylinder' || 'cone' || 'sphere' => GhostKind.circle,
     'pyramid' => GhostKind.triangle,
     'box' => GhostKind.rect,
+    'cube' => GhostKind.square,
     _ => null,
   };
 

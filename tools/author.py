@@ -13,6 +13,8 @@ import sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'content', 'starter')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hint_lines  # noqa: E402  (B-40: the hint lines of Band A follow the hint pictures)
 
 # ---------------------------------------------------------------- one-letter prefixes, pointed by the word they join
 SHVA, HIRIQ, DAGESH = '\u05b0', '\u05b4', '\u05bc'
@@ -151,12 +153,21 @@ ALMOST = ('vo:fb.almost', 'כִּמְעַט! בּוֹאוּ נְנַסֶּה ש�
 UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד.')
 
 lines = {}  # voice id -> caption: one text for every id, checked below
+superseded = {}  # voice id -> the text a kind first wrote for it, before B-40 (hint_lines.retext) gave it a new one
 
 
 def say(vo, text):
-    assert vo not in lines or lines[vo] == text, 'the line %s has two texts: %r and %r' % (vo, lines[vo], text)
-    lines[vo] = text
+    if superseded.get(vo) != text:  # a kind that writes its old text again (a second item of the same id) is not a second text
+        assert vo not in lines or lines[vo] == text, 'the line %s has two texts: %r and %r' % (vo, lines[vo], text)
+        lines[vo] = text
     return {'vo': vo, 'caption': [{'t': 'he', 'v': text}]}
+
+
+def reword(vo, text):
+    """The line [vo] is said as [text] from now on (B-40): the id keeps its place in the pack, the old text is forgotten."""
+    if vo in lines:
+        superseded[vo] = lines.pop(vo)
+    return say(vo, text)
 
 
 def qty(n, obj):
@@ -294,6 +305,7 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
         'unsure': say(*UNSURE),
     }
     d['hints'] = h
+    hint_lines.retext(d, say, reword, F, count_words, own_h2=bool(a.get('h2')))  # B-40: Band A tap_answer hint lines say what the picture shows
     d['scoring'] = {'maxAttempts': 3, 'creditByHintLevel': [1, 0.8, 0.5, 0]}
     d['tutor'] = {'llmAllowed': True, 'goal': goal, 'mustNotRevealBeforeHint': 3}
     d['a11y'] = {'altText': alt or prompt.replace('!', '.')}
@@ -464,6 +476,14 @@ def k_pick_numeral(a, ctx):
         prompt='אֵיפֹה הַמִּסְפָּר %s?' % F[n], correct='%s! מְצָאתֶם אֶת הַמִּסְפָּר.' % F[n])
 
 
+def leftover_line(diff, obj, tail='שָׁם יֵשׁ יוֹתֵר.'):
+    """B-40: the worked example of a comparison pairs the two groups one to one and counts what has no partner (the picture:
+    pair lines, then the leftovers ringed and counted), so the line does the same, and says the result last."""
+    left = 'נִשְׁאֲרָה %s' % qty(1, obj) if (diff == 1 and obj['g'] == 'f') else (
+        'נִשְׁאַר %s' % qty(1, obj) if diff == 1 else 'נִשְׁאֲרוּ %s' % qty(diff, obj))
+    return 'מְחַבְּרִים אֶחָד לְאֶחָד. %s בְּלִי זוּג, אָז %s' % (left, tail)
+
+
 def k_compare_more(a, ctx):
     obj = ctx['objects'][a['obj']]
     more = a.get('ask', 'more') == 'more'
@@ -490,8 +510,7 @@ def k_compare_more(a, ctx):
         {'background': 'asset:meadow'}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים.',
               'נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה.',
-              'בְּצַד אֶחָד יֵשׁ %s, וּבַצַּד הָאַחֵר %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (
-                  qty(want, obj), qty(small if more else big, obj)),
+              leftover_line(big - small, obj) + ' עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.',
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child compares by number, not by how big or spread out the things look',
         prompt='אֵיפֹה יֵשׁ %s %s?' % (word, obj['many']), correct='כֵּן! כָּאן יֵשׁ %s %s.' % (word, obj['many']),
@@ -514,8 +533,8 @@ def k_compare_same(a, ctx):
         choice(opts, cid), {'M-CNT-SIZE'},
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים.',
               'נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה.',
-              ('בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: %s.' % F[l]) if same else
-              ('בְּצַד אֶחָד יֵשׁ %s, וּבַצַּד הָאַחֵר %s. זֶה לֹא אוֹתוֹ דָּבָר.' % (qty(l, obj), qty(r, obj))),
+              ('מְחַבְּרִים אֶחָד לְאֶחָד — לְכֻלָּם יֵשׁ זוּג. בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: %s. עַכְשָׁו תּוֹרְכֶם.' % F[l])
+              if same else (leftover_line(abs(l - r), obj, 'זֶה לֹא אוֹתוֹ מִסְפָּר.') + ' עַכְשָׁו תּוֹרְכֶם.'),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child decides whether two groups have the same number, whatever their look',
         prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צָדַקְתֶּם!')
@@ -544,7 +563,8 @@ def k_ordinal(a, ctx):
         {'background': 'asset:meadow', 'optionsOnTiles': True}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: %s.' % ', '.join(
             ORD_M[:pos + 1] if k != -1 else ORD_M[:len(order)]),
-              'זֶה %s בַּתּוֹר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (LAST_DEF if k == -1 else ORD_DEF[pos]),
+              'מַתְחִילִים מֵהַדֶּגֶל: %s. זֶה %s בַּתּוֹר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (
+                  ', '.join(ORD_M[:pos + 1]), LAST_DEF if k == -1 else ORD_DEF[pos]),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child finds the place in the line, not how many there are',
         prompt='מִי %s בַּתּוֹר?' % word if k == -1 else 'מִי %s בַּתּוֹר?' % word,

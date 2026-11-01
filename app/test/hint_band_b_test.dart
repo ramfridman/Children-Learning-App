@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
@@ -270,5 +272,51 @@ void main() {
         }
       },
     );
+
+    testWidgets('a cube (B-38, x.shpb09.4) shows the print of its face at level 2, like the other solids', (
+      WidgetTester t,
+    ) async {
+      await t.runAsync(warmHintHands);
+      // The bundled pack does not hold the cube item yet: it is made from x.shpb09.1 with a cube for its first card, and the cube's
+      // picture is the box's.
+      final Map<String, Object?> json =
+          jsonDecode(jsonEncode(content.activities['x.shpb09.1']!.json)) as Map<String, Object?>;
+      json['id'] = 't.shpb09.cube';
+      final List<Object?> left = (json['scene']! as Map<String, Object?>)['left']! as List<Object?>;
+      (left.first! as Map<String, Object?>)['sprite'] = 'asset:solid_cube';
+      final MatchPairsActivity a = Activity.fromJson(json, _CubeAsBox(content.assets)) as MatchPairsActivity;
+      content.activities[a.id] = a;
+      addTearDown(() => content.activities.remove(a.id));
+      final LessonController c = controllerFor(a);
+      final MatchPairsSession s = MatchPairsSession(c, a);
+      await host(t, s);
+      c.showHint();
+      await pass(t, 4000);
+      expect(find.byKey(const Key('hint-p9')), findsNothing, reason: 'level 1');
+      c.showHint();
+      await t.pump(const Duration(milliseconds: 1));
+      await pass(t, 1000);
+      expect(
+        find.byKey(const Key('hint-p9')),
+        findsOneWidget,
+        reason: 'level 2: the square it leaves in the sand',
+      );
+      await end(t, s);
+    });
   });
+}
+
+/// The pack's pictures, with a cube drawn as the box (the bundled pack has no cube picture).
+class _CubeAsBox extends PackAssets {
+  _CubeAsBox(this._base) : super(const <String, String>{});
+
+  final PackAssets _base;
+
+  static String _name(String ref) => ref == 'asset:solid_cube' ? 'asset:solid_box' : ref;
+
+  @override
+  String svg(String ref) => _base.svg(_name(ref));
+
+  @override
+  String? svgOrNull(String ref) => _base.svgOrNull(_name(ref));
 }

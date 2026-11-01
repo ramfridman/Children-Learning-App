@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']
 from author import F, M  # noqa: E402
 from band_b import NAMES, OBJECTS  # noqa: E402
+import hint_lines  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 SRC = os.path.join(ROOT, 'docs', 'review', 'hebrew-review.csv')
@@ -895,6 +896,8 @@ def masc_before_noun(n):
 
 def missing_addend_model(r, ctx):
     """Owner Q3, hint 2 (level 2): a concrete model first; the answer is not said before hint 3."""
+    if hint_lines.is_b40_text(r['text']):
+        return None
     words = addend_words(ctx)
     if not words:
         return None
@@ -903,6 +906,8 @@ def missing_addend_model(r, ctx):
 
 def missing_addend_count_on(r, ctx):
     """Owner Q3, hint 3 (level 3): count on from the first number, one finger per count, then the answer."""
+    if hint_lines.is_b40_text(r['text']):
+        return None  # B-40 part 4: the line now says what the picture draws (the empty places counted from one, no fingers)
     words = addend_words(ctx)
     if not words:
         return None
@@ -1047,7 +1052,26 @@ def reviewed(r):
     return any(r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source']) for g, i, s in REVIEWED)
 
 
+B40 = ('B-40 (docs/curriculum/b40-visual-hint-ladder.md, docs/agents/hebrew-notes.md section B-40): a hint line rewritten so that it says '
+       'what the hint picture shows (level 1 never counts aloud, level 2 names the new picture, level 3 puts the answer last); '
+       'new, not yet read by the owner. Voicing waits for B-45.')
+
+
+B40_Q3 = (B40 + ' THIS LINE REPLACES the count-on line of the owner Q3 answer (2026-10-29, "continue counting from the first number, '
+          'with fingers"): the picture of MATH-B-18 counts the empty places from one and draws no fingers, so the line says that. '
+          'Please decide which of the two teachings stays (hebrew-notes.md section 8).')
+B40_SPOT = (B40 + ' THIS LINE REPLACES the owner-approved P1 line (vo:hint.spot_but_one.h3, 2026-10-30) for the rows where the app draws '
+            'the right picture above the mistake; the approved line stays for the rows where it draws no card.')
+
+
 def pending(r):
+    if (r['group'].startswith('3') and re.search(r'^activity\.', r['source']) and re.search(r'^hints\.\d+\.caption\.0\.v$', r['id'])
+            and hint_lines.is_b40_text(r['text'])):
+        if re.search(r'^activity\.b\.mathb18\.', r['source']) and r['id'] == 'hints.2.caption.0.v':
+            return B40_Q3
+        if r['text'] == hint_lines.SPOT_RIGHT_H3[1]:
+            return B40_SPOT
+        return B40
     for g, i, s, comment, *text in PENDING:
         if (r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source'])
                 and (not text or re.search(canon(text[0]), canon(r['text'])))):

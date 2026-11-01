@@ -132,8 +132,12 @@ class HebrewMasterTableTest(unittest.TestCase):
         changed = [r for r in self.rows if r['ui_text'] != r['text']]
         # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main); 12645 with
         # B-39 (the bottle's five lines) and B-32 (the reworded name refusal); 12659 with the 14 rows of B-38 (2026-11-01)
+        # B-36 part A (2026-11-01), the 1,142 B-40 hint lines: the rows stay 12659 (a hint line replaces a line, it adds none) and the
+        # corrected-and-done rows go from 1306 to 1204, because 102 lines the table had corrected (the dagesh after the vav in
+        # שְׁנֵי / שְׁתֵּי and the like; B-40 counted 6 + 97 on the older table) were replaced by new lines that carry the corrections already and are
+        # `proposed`; the three new B-38 lines (vo:hint.pos_cat_in / pos_cat_on / match_print on the cat and cube items) add no row
         self.assertEqual(len(self.rows), 12659)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1306)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1204)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
 
     def test_done_rows_have_ui_text(self):

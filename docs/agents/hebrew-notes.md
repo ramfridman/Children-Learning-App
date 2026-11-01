@@ -356,3 +356,107 @@ box bridge, the new `b.shpb08.10`, the solids' own SQRECT line). Rows: `PENDING`
   `צְדָדִים` (Band A `צַד שָׁטוּחַ`), the sides of a flat shape stay `צְלָעוֹת`.
 - **SQRECT for solids:** the shared line (`בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת…`) speaks of flat shapes and does not tell a cube from a
   box, so the two cube-and-box items have their own line (`tag_lines`, `vo:fb.sqrect.solids`).
+
+## 12. B-40: the hint lines follow the hint pictures (hebrew-text-editor, 2026-10-31)
+
+**What was done.** The generators now write the Band A `tap_answer` hint lines from what the picture of the family shows
+(`tools/hint_lines.py`, called by `activity()` in `tools/author.py`; the family and the fall-backs mirror
+`app/lib/play/hints/tap_plans.dart`, so a line follows the picture even where the plan falls back to a generic card).
+466 lines changed in 290 activity files (L1 36, L2 279, L3 151); every one is `proposed` in the master table (`PENDING`
+in `tools/hebrew_voice_review.py`, comment "B-40") and the activity stays `"review": "needs-editor"`. Band B is untouched.
+
+**The rules (for whoever adds a family or a picture).**
+1. Level 1 never counts aloud (design spec F2). A sequence says where to look ("the number, and the empty place next to
+   it"); the 13 old lines that counted `אַחַת, שְׁתַּיִם…` are gone. A line that only replays the question stays.
+2. Level 2 says what the new picture is, in one short line shared by the whole family (one clip for 53 colour items).
+   A number is said only where the picture counts it (hands, hops, numbered places, the path to N). The hands lines say
+   `אֶצְבָּעוֹת` only where hands are drawn; the path, the empty frame, the brackets and the pairing lines have their own.
+3. Level 3 may name the answer, because the plan (section 1, T2) lets the answer be the LAST step of the demonstration. What
+   the plan does not allow is a line that opens with the bare answer (`זֶה כַּדּוּר אָדֹם`) while the hand has not moved.
+   So: a bare answer (four words or fewer before `עַכְשָׁו`) gets one process clause in front (`הַצֶּבַע עוֹבֵר עַל כֻּלָּם,
+   וְעוֹצֵר אֵצֶל הַמַּתְאִים.` for the swatch, the same for the outline, the model and the hand); a line that already is a
+   process (it counts, reads the row, walks the story, compares) is kept; the owner-approved lines (matha04, loga02, the
+   spot line) are untouched.
+4. Compare: L1 (off the stage) says the two groups stand in two rows; L2 says the pairing lines and asks who is left
+   without a pair; L3 pairs one to one, counts what is left and says where there is more (the old line gave both numbers).
+5. The ordinal L3 starts from the flag and says the places up to the answer; zero keeps its line; the hops (CS-A-04) and
+   the coins (MATH-A-06) count in time with the hand.
+
+**Words chosen (please check, owner).** `הִנֵּה רַק הַצֶּבַע` / `רַק הַצּוּרָה, בְּלִי צֶבַע` (the attribute on its own);
+`הַדּוּגְמָה` (the model); `מְחַפְּשִׂים זוּג לַתְּמוּנָה הַזֹּאת` (LOG-A-09); `הַמִּשְׁבְּצוֹת רֵיקוֹת` (the empty ten-frame);
+`אֵיפֹה הַבַּרְוָז? …` (SHP-A-08: the picture draws a small duck, so the line says duck and not the ball of the question);
+`נִרְאֶה מַה קּוֹרֶה כְּשֶׁדּוֹחֲפִים אֶת שְׁנֵיהֶם` / `…כְּשֶׁשָּׂמִים עוֹד אֶחָד מֵעַל כָּל אֶחָד` (SHP-A-07: watch what
+happens, the result is not said). `כׇּל` is written with a qamats qatan, as everywhere in the pack.
+
+**Not changed, and why.** MATH-A-04 heavy/light (2): the picture is still a question-mark card until the seesaw exists, so
+the generic line stays. COL-A-05 tick/cross items (2): their L3 `כֵּן…` stays (the swatch tour over a tick and a cross
+says nothing). `pick.red.flower` has one hint only. The other Band A templates (count, give, flash, sort, build, match,
+shape builder, robot, spot the mistake, trace) keep their lines: they still agree with their pictures except as listed in
+the report to the orchestrator.
+
+## 13. B-40 part 4: the hint lines of Band B and of the other templates (hebrew-text-editor, 2026-10-31)
+
+**What was done.** `tools/hint_lines.py` now also reads Band B `tap_answer` (one function for each plan of
+`app/lib/play/hints/tap_plans_b.dart`, `B_FAMILIES`) and the number line, clock, match, sort, build a pattern, shape builder, robot
+and spot-the-mistake templates (`retext_other`), with the same guards and fall-backs as the app (a plan that falls back to the
+generic card, or to the Band A family plan, keeps the lines it has). 676 lines changed in 383 activity files (L1 46, L2 357, L3 273);
+every one is `proposed` in the master table (`PENDING` / `is_b40_text`), the activity stays `needs-editor`. The grammar rules found
+nothing to correct in them (`ui_text` equals `text`); 97 older Band B rows whose table corrections (the dagesh after the vav and the
+like) are now in the source text were replaced, so the pinned count of corrected rows in `test_hebrew_sources.py` went from 1302 to 1205.
+
+**Lines changed, by family.**
+
+| Family | Level 1 | Level 2 | Level 3 | Items |
+| --- | --- | --- | --- | --- |
+| The number path: NUM-B-01, 02, 03, 11 | the number and the empty place (`vo:hint.gap.h1`, as in Band A; no counting) | the path of ten, the number marked, the empty place beside it | one hop from the number given, forward or back, the answer last (NUM-B-02: nineteen to twenty is one square) | 9 + 9 + 8 + 12 |
+| NUM-B-17 (skip counting) | stays | the hops between the numbers said | the numbers said, one more hop, the answer last | 5 of 6 |
+| NUM-B-08 (a teen) | stays | ten squares full, the ones on the second board | build: a full board, the ones, together | 14 |
+| MATH-B-02 (no picture), 06 | stays | cubes or empty squares: what is there, what is missing | count the empty places (from one) | 4, 10 |
+| MATH-B-03, 07, 08, 18, NUM-B-16 with a row | stays | cubes over each number (over the whole: cubes and empty places) | the cubes of each number, the answer last | 10, 8, 14, 9, 4 |
+| NUM-B-10, MATH-B-16 | stays | a bar of cubes for each number or coin, from one line | the count of each bar, the longer or shorter one last | 10, 2 |
+| NUM-B-18 | stays | pair lines, who is left without a pair | the old line stays (it follows the picture) | 10 |
+| MATH-B-10, 19 | stays | a count beside each column | the running total (plates) or the counts (chart), then the question | 8, 11 |
+| MATH-B-14 (the week) | stays | the seven days, the day of the question marked | the walk along the week, the answer last | 11 |
+| MATH-B-15 (read the clock) | stays | the dotted line to the rim, 12 marked | count the hours round the dial | 10 |
+| SHP-B-01, 02, 03, 04 | stays | the sides lit one by one (SHP-B-03: a stick for each side) | the hand along the corners (B-01 counts; B-04 says closed, open or curved) | 8, 10, 6, 8 |
+| SHP-B-08, 09 | stays | the lines of the solid; the print under each solid | the lines go over the options; the solids are pressed in sand | 8, 2 |
+| COL-B-01, 02 | stays | two paints, an arrow, an empty circle; the shades in a row with an arrow | the mix, last; light to dark | 9, 12 |
+| LOG-B-06, 09 | stays | links between neighbours; the first clue fades one | the walk and the compare; the second clue fades another | 6, 8 |
+| COL-A-05 (4 items) | stays | an empty paint spot: "which colour fits this?" | stays | 4 |
+| number_line | stays | one dotted hop, the number one | the frog counts its hops and lands (a line put on by touch: a running number) | 25 |
+| clock_set | the short hand (the old level 2 line, moved up) | the card and the numeral on the dial have the same ring | the plus is pressed hour by hour, the hours said | 8 |
+| match_pairs | stays | dots under the numeral or the coin; the print under the solid | stays | 7 + 6 + 4 |
+| sort (not share), build a pattern with a model, shape builder, robot | stays | a picture passes each group; the picture above the empty place is lit (and a line marks the repeat); the shadow floats beside the picture; the first arrow and the footprint "1" | stays | 25 + 11 + 7 + 22 |
+| spot the mistake (Band A, the shared line) | stays | stays | the hand stops on the odd one and the right picture appears above it | 9 of 12 |
+
+**Rules added.**
+1. A level 3 line keeps each item's own ending ("now your turn — click on seven"), so the process comes first and the answer is the
+   last number or word before the ending.
+2. A line that counts cubes writes the number in agreement with the noun (`שְׁתֵּי קֻבִּיּוֹת`, `קֻבִּיָּה אַחַת`, `אֵין קֻבִּיּוֹת`);
+   a bare number is feminine.
+3. The conjunctive vav comes from `F.vav` (`וְכָחֹל`, no dagesh); `לְ` before a number word is pointed by `lamed()` (`לִשְׁמוֹנֶה`).
+4. A line is never longer than 24 words (the longest is 22).
+
+**Decisions for the owner (all rows `proposed`, comment "B-40").**
+1. **MATH-B-18 (9 items).** The owner's Q3 (2026-10-29) asked for "count on from the first number, one finger per count". The picture
+   in the app counts the empty places from one (badges 1, 2, 3...) and draws no fingers, so the new line says that. Two teachings,
+   one picture: either the line stays as it is now, or the picture changes to the count-on (the app-developer and the curriculum-expert).
+   Likewise NUM-B-16 with a row (4 items): "ten, and one more, two" became "ten cubes are there, count the empty places".
+2. **MATH-B-08 above ten (8 items, e.g. 8 + 5).** The old line made a ten ("eight and two are ten, three more, thirteen"). The picture is
+   two groups of cubes, not a ten, so the new line is `שְׁמוֹנֶה קֻבִּיּוֹת וְעוֹד חָמֵשׁ קֻבִּיּוֹת. בַּכֹּל — שְׁלֹשׁ עֶשְׂרֵה.` The make-ten
+   strategy is gone from level 3 until a picture of a ten exists.
+3. **The owner-approved P1 line** `vo:hint.spot_but_one.h3` ("all alike except one") is replaced by `vo:hint.spot_right.h3` in the 9
+   Band A spots where the app draws the right picture above the mistake; it stays in the other 3. Spots that have their own third hint
+   (the order of washing, the counting, the patterns) are not changed.
+4. **New words:** `לוּחַ` (a ten-frame: `לוּחַ אֶחָד מָלֵא, עֶשֶׂר מִשְׁבְּצוֹת`), `הַפְּלוּס` (the plus tile of the clock), `קַו מְנֻקָּד` (the
+   dotted arc and the dotted line to the rim), `מַקְלוֹת` (the sticks of SHP-B-03), `הַצֵּל` (the ghost outline of the shape builder),
+   `הָרוֹבּוֹט הַשָּׁקוּף` (the ghost robot), `דּוֹהָה` (a shape fades, LOG-B-09).
+
+**For the app-developer and the curriculum-expert (found while reading the plans).**
+- `numbersIn` (`hints/prompt_numbers.dart`) reads "שֵׁשׁ, שְׁמוֹנֶה, עֶשֶׂר" as 6 and 18 (a comma is a break, the tokens are neighbours), so
+  `b.numb17.12` gets no number path and plays the generic card; its lines were left as they are.
+- MATH-B-10 "how many plates?" (2 items, `reverse`): the picture shows the running total of the things (2, 4, 6), not the number of
+  plates. The line says it ("when we reached six, there were three plates"), but the picture does not show the plates counted.
+- The sphere of SHP-B-08 is drawn as a circle (its outline on paper); its line says "lines of the solid".
+- Not done, because the picture is not built or the plan is the Band A family plan: shop_pay, balance, COL-B-03, MATH-B-01, NUM-B-14,
+  NUM-B-16 with groups, MATH-B-02 with groups, LOG-B-01 and 04, trace.
