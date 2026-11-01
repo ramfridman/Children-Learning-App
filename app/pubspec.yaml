@@ -19,7 +19,7 @@ dependencies:
     sdk: flutter
   flutter_riverpod: 3.4.3
   flutter_secure_storage: 11.2.0
-  flutter_svg: 2.3.0
+  flutter_svg: 2.3.2
   hashlib: 2.4.2
   http: 1.6.0
   record: 7.1.2
