@@ -1,6 +1,6 @@
 # Phone test, November 2026: everything new since the phone last got a build
 
-Written by the QA agent on 2026-10-31 for the branch `b40-visual-hints` (it contains `main` plus B-40). One or more sittings with the PC and the Samsung (SM-S938B). About 3 hours in all; it splits cleanly into three sittings (see "Plan of the sittings"). Each step says what to do, what you should see, and **what to tell me if it does not happen**. If a step fails, write down its number and what you saw (a screenshot is best), then go on to the next one. Nothing here can damage the phone, the children's data or the project.
+Written by the QA agent on 2026-10-31 for `main` (B-40 was merged on 2026-10-31; B-27 and B-39 on 2026-11-01). One or more sittings with the PC and the Samsung (SM-S938B). About 3 hours in all; it splits cleanly into three sittings (see "Plan of the sittings"). Each step says what to do, what you should see, and **what to tell me if it does not happen**. If a step fails, write down its number and what you saw (a screenshot is best), then go on to the next one. Nothing here can damage the phone, the children's data or the project.
 
 Style model: `docs/phone-test-day.md` and `docs/qa/phone-check-m9.md`. Pack and sync background: `docs/qa/b3-b15-verification.md`, `docs/qa/b26-step4-verification.md`, `docs/qa/b28-verification.md`, `docs/qa/alert-tiers-verification.md`. The picture ladder: `docs/curriculum/b40-visual-hint-ladder.md` and `docs/design/b40-visual-hints.md`.
 
@@ -42,7 +42,7 @@ Open PowerShell. No `&&` anywhere: type each line, press Enter, wait for it to f
 | # | Do this | You should see | If not, tell me |
 |---|---|---|---|
 | 0.1 | `cd D:\nitznutz-content` | the prompt moves to that folder | the error |
-| 0.2 | `git fetch` then `git checkout b40-visual-hints` then `git pull` (three lines, one after the other) | `b40-visual-hints` (it may say you are already on it; that is fine) and `Already up to date.` or a short list of files | the last lines it printed. If git says the branch is used by another folder, tell me; do not force anything |
+| 0.2 | `git fetch` then `git checkout main` then `git pull` (three lines, one after the other) | `main` (it may say you are already on it; that is fine) and `Already up to date.` or a short list of files | the last lines it printed. If git says the branch is used by another folder, tell me; do not force anything |
 | 0.3 | `$env:Path += ";$env:LOCALAPPDATA\Android\Sdk\platform-tools"` then `adb devices` (phone plugged in, unlocked, "Allow USB debugging" accepted) | a line that ends in `device` | `unauthorized`, or no line |
 | 0.4 | `cd app` then `flutter pub get` | `Got dependencies!` (or `No dependencies changed`) | the last 20 lines |
 | 0.5 | `flutter build apk --debug --flavor dev --dart-define-from-file=config/dev.local.json` (the first build takes several minutes; both words "dev" matter: this makes "Nitznutz Dev" and turns the dev pages on) | `Built build\app\outputs\flutter-apk\app-dev-debug.apk` | the **last 20 lines** of the output (the single most useful thing) |
