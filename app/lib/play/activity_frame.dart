@@ -43,7 +43,7 @@ class ActivityFrame extends StatelessWidget {
   final Widget Function(Size room) stage;
   final Widget? tiles;
 
-  /// The layer of the hint's pointing hand over the stage, drawn above the bubble and the guide; null when there is none.
+  /// The layer of the hint's pointing hand over the stage, drawn above the stage, the bubble, the guide and the answer tiles; null when there is none.
   final Widget Function(Size room)? hands;
   final int trailTotal;
   final int trailDone;
@@ -130,9 +130,10 @@ class ActivityFrame extends StatelessWidget {
               ),
             ),
           ),
-          if (hands != null) _handLayer(s, room),
           if (tiles != null)
             Positioned(left: s.tilesLeft, top: s.tilesTop - 12, width: s.tilesWidth, child: tiles!),
+          // The hand is drawn after the answer tiles (and the stage, the bubble and the guide), so it is never behind what it points at.
+          if (hands != null) _handLayer(s, room),
           Positioned(
             left: s.trailLeft,
             top: s.trailTop,
@@ -214,7 +215,7 @@ class ActivityFrame extends StatelessWidget {
     ];
   }
 
-  /// The hint's hand: over the stage's room, above the bubble. It takes no touch.
+  /// The hint's hand: over the stage's room, above the bubble and the answer tiles. It takes no touch.
   Widget _handLayer(ActivitySpec s, Size room) {
     final double inset = s.stageIsCard ? 16 : 0;
     return Positioned(
