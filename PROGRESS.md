@@ -85,9 +85,10 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 The full checklist is `docs/owner-todo.md`. In short:
 
-- **FIRST: voice audition round 4, the number two (owner, open since 2026-11-01).** Round 3 (40 clips) was approved by the owner on 2026-11-01 except "two": the voice misreads שְׁתַּיִם; he wants sh-TA-yim. Round 4 (`docs/audio/audition/round4.json`, 11 clips, 384 characters, about 0.015 USD) tests five voice-only spellings A to E. The owner runs it himself from `D:
+- **Voice auditions done (owner, 2026-11-01):** round 3 approved except the number two; in round 4 the owner chose spelling D, `שתַּיִם` (points on the TA only), as the only correct sh-TA-yim. It is now in `content/voices.json` › `pronunciation` for pointed `שְׁתַּיִם` and plain `שתיים`; it replaces substrings, so prefixed forms (וּשְׁתַּיִם) follow. D was not heard in hero-son's voice or at the start of a sentence; listen for it in the director's check of B-45. Next: plan the full voicing B-45 (count and cost first; the owner runs it).
 itznutz-nextpp` (listening sheet E1b; Claude never runs it). When he says done, send the 11 clips from `%USERPROFILE%
-itznutz-voiceuditionsound4` with SendUserFile, get his pick, add it to `content/voices.json` › `pronunciation` (plain שתיים and pointed שְׁתַּיִם, 562 voice lines), and then plan the full voicing B-45 (count and cost first). If none works: phoneme input or a stress mark in the voice_gen allowlist.
+itznutz-voiceuditions
+ound4` with SendUserFile, get his pick, add it to `content/voices.json` › `pronunciation` (plain שתיים and pointed שְׁתַּיִם, 562 voice lines), and then plan the full voicing B-45 (count and cost first). If none works: phoneme input or a stress mark in the voice_gen allowlist.
 - **Phone test T8 (owner, later):** the full check of everything new since his phone's 0.5.0 build, B-40 included, step by step in `docs/qa/phone-test-2026-11.md`.
 
 - **M6:** done. Open from it: check E on the phone, Hebrew editor review of the lexicon and the reviewed lines, fix the prefix vocalisation nits, the 33 cells without a reviewed line (authored lines used).
