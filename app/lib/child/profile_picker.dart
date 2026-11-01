@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/app_database.dart';
+import '../data/child_name.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
@@ -98,7 +99,7 @@ class _ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    label: profile.name,
+    label: displayChildName(profile.name),
     child: GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -127,7 +128,7 @@ class _ProfileCard extends StatelessWidget {
                 AvatarPicture(avatarId: profile.avatar, size: 84 * k),
                 SizedBox(height: 2 * k),
                 Text(
-                  profile.name,
+                  displayChildName(profile.name),
                   style: AppText.fixed(size: 20 * k, weight: 700),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

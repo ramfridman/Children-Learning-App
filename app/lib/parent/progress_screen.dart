@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/progress_provider.dart';
 import '../data/app_database.dart';
+import '../data/child_name.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
@@ -74,7 +75,7 @@ class ProgressScreen extends ConsumerWidget {
         backgroundColor: TokenColors.night,
         foregroundColor: Colors.white,
         title: Text(
-          He.progressTitle.fill(<String, String>{'child': profile.name}),
+          He.progressTitle.fill(<String, String>{'child': displayChildName(profile.name)}),
           style: AppText.parent(TokenType.parentH2, color: Colors.white),
         ),
         leading: IconButton(icon: const Icon(Icons.arrow_forward_rounded), onPressed: onClose),

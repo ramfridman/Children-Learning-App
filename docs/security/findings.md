@@ -17,6 +17,12 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-33 | Alerts screen: the kept words can be selected and copied to the system clipboard | low | fixed on `alerts-tiers` (the line with the words cannot be selected) | 2026-10-30 |
 | SEC-34 | B-40 hint SVG readers threw on valid SVG numbers (`1.2.3`, a lone `.`) in a signed pack sprite, breaking the activity screen | low | fixed on `b40-visual-hints` (`tryParse`, whole-box fallback; character-pack viewBox reported as a problem) | 2026-10-31 |
 | SEC-35 | B-40 `inkBoxOf`/`outlineOf` were quadratic on an unclosed SVG tag (100 KB took 20 s, in `build`) | low | fixed on `b40-visual-hints` (linear tag reader, 64 KB cap, 8 KB tag cap, cache) | 2026-10-31 |
+| SEC-B28-2 | The app's stricter name set was incomplete; a name of only invisible characters was valid | low | fixed on `b32-name-safety` (`safeChildName`; 15 app-only vectors) | 2026-10-30 |
+| SEC-B28-3 | Names that arrive by sync and old local names were not checked | low | open, partly fixed on `b32-name-safety` (pulled names and the home island are cleaned; old local names still show raw in the picker and parent screens, repair skipped) | 2026-10-30 |
+| SEC-B28-4 | Answers of a child the server does not have were refused and lost (a failed `child-put` too) | low | fixed on `b32-name-safety` (held until the first good `child-put`); see SEC-B32-2 | 2026-10-30 |
+| SEC-B28-5, -7 | Bounded resend on error; placeholder substitution order | info | closed (re-checked 2026-11-01: unchanged, `Str.fill` is one pass) | 2026-10-30 |
+| SEC-B32-1 | Child name: a few invisible or unrenderable characters still pass the app (grapheme joiner, private use, noncharacters, leading marks) | low | open | 2026-11-01 |
+| SEC-B32-2 | Sync hold: the held set is read once per round, so a child created during a long round can have rows refused | low | open | 2026-11-01 |
 | SEC-31 | Alert pushes: routine alerts shared the daily push budget with acts; no collapse id on iOS | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-27 | Alert pushes: the per-device limit was higher than PLAN said; no per-family push cap | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-25 | One alert the gateway refused held up every later alert of that device, silently | medium | closed (`alerts-tiers`) | 2026-10-30 |
@@ -136,6 +142,11 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   server does not have are marked sent and lost; older than B-28, and a failed `child-put` causes it too). Info: SEC-B28-5 to 9
   (bounded resend on error, no abuse path in the pull rule, placeholder substitution order, clean logging, deploy order). Follow-ups are
   board B-32 and B-33. Detail is in the git-ignored `docs/security/private/B-28-name-limit-review.md`.
+- **Child-name safety and the sync guard (board B-32, 2026-11-01): approved, nothing blocks.** Gateway and migrations unchanged; the
+  Deno vector test passes (5 of 5). Every name the app accepts is accepted by `child-put`, and a newly typed name is stored exactly as the
+  phone shows it (no side normalises; nikud with up to three marks a letter passes). Held rows are never lost, duplicated (event ids are
+  stable) or sent for another child; a deleted child's rows are deleted; a pulled child is never held; a child device holds nothing;
+  held alerts still go after 30 days. Nothing new is logged. SEC-B28-2 and -4 fixed, -3 partly; new low SEC-B32-1 and -2.
 - **Word-alert tiers, branch `alerts-tiers` (2026-10-30).** Scope: the new `concern` category and the quiet tiers, the
   on-device matcher and its list interface, alert creation and counting, the gateway's count update, the migration and
   its pgTAP test, sync of alerts, the parent texts. Verified by reading: the count update stays inside the caller's

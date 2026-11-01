@@ -258,6 +258,21 @@ class SyncEngine {
     }
   }
 
+  /// The children whose rows wait (B-32): on a parent device, the ones this device has not yet saved on the server (no
+  /// `profile_pushed_<id>` key; a failed `child-put` leaves none). The server refuses the rows of a child it does not
+  /// know, and a refused row is never sent again, so the answers, visits, awards and alerts of such a child stay "not
+  /// sent" and go in the round after the first successful `child-put`. A device that is not a parent never pushes
+  /// children: the ones it has came from the server, so nothing waits there. A deleted child is not held (its rows are
+  /// dropped).
+  Future<Set<String>> _childrenNotOnServer() async {
+    if (!isParent) return const <String>{};
+    final Set<String> gone = await _tombstoned();
+    return <String>{
+      for (final Profile p in await db.allProfiles())
+        if (!gone.contains(p.id) && await db.setting('profile_pushed_${p.id}') == null) p.id,
+    };
+  }
+
   Map<String, Object?> _attemptEvent(Attempt a) => <String, Object?>{
     'id': eventIdOf(deviceId, 'attempt', a.id),
     'child_id': a.profileId,
@@ -326,9 +341,11 @@ class SyncEngine {
     // True once the server took a call of this round: it knows this app's format, so an event it refuses alone is bad.
     bool understood = false;
     while (true) {
-      final List<Session> sessions = await db.unsyncedSessions(limit: batch);
-      final List<Attempt> attempts = await db.unsyncedAttempts(limit: batch);
-      final List<Reward> rewards = await db.unsyncedRewards(limit: batch);
+      // Read again for each batch: a child made during a long round is held at once.
+      final Set<String> held = await _childrenNotOnServer();
+      final List<Session> sessions = await db.unsyncedSessions(limit: batch, except: held);
+      final List<Attempt> attempts = await db.unsyncedAttempts(limit: batch, except: held);
+      final List<Reward> rewards = await db.unsyncedRewards(limit: batch, except: held);
       if (sessions.isEmpty && attempts.isEmpty && rewards.isEmpty) break;
       // Answers go before the visit they belong to is not needed: the server keeps the order it received.
       final List<Attempt> a = attempts.where((Attempt x) => !gone.contains(x.profileId)).toList();
@@ -431,7 +448,8 @@ class SyncEngine {
     int sent = 0;
     final Set<String> gone = await _tombstoned();
     while (true) {
-      final List<Alert> rows = await db.unsyncedAlerts(limit: batch);
+      final Set<String> held = await _childrenNotOnServer();
+      final List<Alert> rows = await db.unsyncedAlerts(limit: batch, except: held);
       if (rows.isEmpty) break;
       for (final Alert a in rows) {
         if (a.profileId != null && gone.contains(a.profileId)) {
@@ -623,9 +641,12 @@ class SyncEngine {
         final String id = m['id']! as String;
         if (gone.contains(id)) continue;
         final Profile? here = mine[id];
-        final String nickname = m['nickname']! as String;
+        // The server's copy is untrusted like any input (B-32): cleaned like a typed name. A new child whose name has
+        // nothing left is not taken on; one this phone has keeps its own name.
+        final String nickname = safeChildName(m['nickname']! as String);
+        if (nickname.isEmpty && here == null) continue;
         // A name longer than the server takes went cut (B-28): the server's copy is this phone's name, kept whole here.
-        final String name = here != null && fitChildNameForServer(here.name) == nickname
+        final String name = here != null && (nickname.isEmpty || fitChildNameForServer(here.name) == nickname)
             ? here.name
             : nickname;
         final ProfilesCompanion row = ProfilesCompanion(

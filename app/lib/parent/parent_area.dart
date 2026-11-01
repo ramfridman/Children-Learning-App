@@ -131,7 +131,8 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
   }
 
   Future<void> _remove(Profile p) async {
-    if (!await _confirm(He.areaConfirmRemove.fill(<String, String>{'child': p.name}))) return;
+    final String question = He.areaConfirmRemove.fill(<String, String>{'child': displayChildName(p.name)});
+    if (!await _confirm(question)) return;
     // Gone from this phone at once; on the server (and so from every phone) as soon as it can be reached.
     final SyncEngine? engine = await ref.read(syncEngineProvider.future);
     if (engine != null) {
@@ -250,23 +251,18 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                 for (final Profile p in app?.profiles ?? const <Profile>[])
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(p.name, style: AppText.parent(TokenType.parentBody)),
-                              // Saved before B-28 with more than the server takes: the family account has it cut.
-                              if (p.name.length > childNameMaxLength)
-                                Text(
-                                  He.setupNameLegacyShortened.text,
-                                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
-                                ),
-                            ],
-                          ),
-                        ),
+                    child: _ChildRow(
+                      name: displayChildName(p.name),
+                      // Saved before B-28 with more than the server takes: the family account has it cut. Its own row
+                      // under the name, the width of the card, so no word is cut by the buttons (QA-B28-3).
+                      note: p.name.length > childNameMaxLength
+                          ? Text(
+                              He.setupNameLegacyShortened.text,
+                              key: Key('legacy-name-${p.id}'),
+                              style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                            )
+                          : null,
+                      buttons: <Widget>[
                         ParentButton(
                           key: Key('progress-${p.id}'),
                           label: He.areaProgress.text,
@@ -283,6 +279,7 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                         ),
                         const SizedBox(width: 8),
                         ParentButton(
+                          key: Key('remove-${p.id}'),
                           label: He.areaRemove.text,
                           destructive: true,
                           onPressed: () => _remove(p),
@@ -412,4 +409,49 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
       ),
     );
   }
+}
+
+/// One child in the parent area's list: the name with the progress and remove buttons beside it, or, when the name would
+/// not fit beside them (it would wrap in the middle of a word), the buttons in their own row under it. The note, if any,
+/// has the row under both, the width of the card.
+class _ChildRow extends StatelessWidget {
+  const _ChildRow({required this.name, required this.buttons, this.note});
+
+  final String name;
+  final List<Widget> buttons;
+  final Widget? note;
+
+  /// What the two buttons and the gap need, at a text scale of 1.
+  static const double _buttonsWidth = 190;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (BuildContext context, BoxConstraints box) {
+      final TextStyle style = AppText.parent(TokenType.parentBody);
+      final TextScaler scaler = MediaQuery.textScalerOf(context);
+      final double nameWidth = (TextPainter(
+        text: TextSpan(text: name, style: style),
+        textDirection: TextDirection.rtl,
+        textScaler: scaler,
+      )..layout()).width;
+      final bool stacked = nameWidth > box.maxWidth - scaler.scale(_buttonsWidth) - 8;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          if (stacked) ...<Widget>[
+            Text(name, style: style),
+            const SizedBox(height: 4),
+            Row(children: buttons),
+          ] else
+            Row(
+              children: <Widget>[
+                Expanded(child: Text(name, style: style)),
+                ...buttons,
+              ],
+            ),
+          ?note,
+        ],
+      );
+    },
+  );
 }

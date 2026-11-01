@@ -85,6 +85,13 @@ class FakeFamilyServer {
   /// While true every call fails (the phone is offline).
   bool offline = false;
 
+  /// Functions that fail before they do anything while they are in this set (a server error on one call, the others fine).
+  final Set<String> failing = <String>{};
+
+  /// Runs after each call has been handled and before its answer goes back: the phone's database can change in the middle
+  /// of a round (a child made while a long round is still sending).
+  Future<void> Function(String name)? afterCall;
+
   /// The next call that names this function does its work and then fails, as if the answer was lost on the way.
   String? loseAnswerOf;
 
@@ -100,7 +107,9 @@ class FakeFamilyServer {
       calls.add('$deviceId:$name');
       if (name == 'sync-pull') _pulls++;
       if (offline) throw StateError('offline');
+      if (failing.contains(name)) throw StateError('server error');
       final Map<String, Object?> answer = _handle(deviceId, name, body, parent);
+      await afterCall?.call(name);
       if (loseAnswerOf == name) {
         loseAnswerOf = null;
         throw StateError('the answer was lost');

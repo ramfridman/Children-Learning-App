@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../app/state.dart';
 import '../app/tutor_log_provider.dart';
 import '../data/app_database.dart';
+import '../data/child_name.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
@@ -26,7 +27,8 @@ class TutorLogScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final AsyncValue<List<TutorLogLine>?> log = ref.watch(tutorLogProvider);
     final Map<String, String> names = <String, String>{
-      for (final Profile p in ref.watch(appStateProvider).value?.profiles ?? const <Profile>[]) p.id: p.name,
+      for (final Profile p in ref.watch(appStateProvider).value?.profiles ?? const <Profile>[])
+        p.id: displayChildName(p.name),
     };
     return Scaffold(
       backgroundColor: TokenColors.parentBg,

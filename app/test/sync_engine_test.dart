@@ -185,19 +185,23 @@ void main() {
       expect((await p1.db.allProfiles()).single.name, 'נועה <3>');
     });
 
-    test('a name with nothing the server can take is not sent, and the answers still go', () async {
-      await p1.addChild(name: '<<>>');
-      await p1.answer('A.1', 'correct');
-      final SyncReport r = await p1.engine.syncOnce();
-      expect(server.calls, isNot(contains('$dev1:child-put')));
-      expect(server.children, isEmpty);
-      expect(
-        r.refusedEvents,
-        1,
-        reason: 'the server does not know the child, as for any child it does not have',
-      );
-      expect(server.calls, contains('$dev1:sync-push'));
-    });
+    test(
+      'a name with nothing the server can take is not sent, and the answers wait (B-32), not refused',
+      () async {
+        await p1.addChild(name: '<<>>');
+        await p1.answer('A.1', 'correct');
+        final SyncReport r = await p1.engine.syncOnce();
+        expect(server.calls, isNot(contains('$dev1:child-put')));
+        expect(server.children, isEmpty);
+        expect(
+          r.refusedEvents,
+          0,
+          reason: 'the server never saw the row: it stays "not sent" for when it has the child',
+        );
+        expect(server.calls, isNot(contains('$dev1:sync-push')));
+        expect(await p1.db.unsyncedAttempts(), hasLength(1));
+      },
+    );
   });
 
   test('syncing again changes nothing, and a phone never takes back what it made itself', () async {

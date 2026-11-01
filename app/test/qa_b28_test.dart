@@ -2,12 +2,8 @@
 // server). Verdicts of the server side were derived independently from supabase/functions/child-put/handler.ts (the
 // pattern /^[^\u0000-\u001f\u007f<>]{1,24}$/ without the u flag) by running it in Deno on every string used here.
 //
-// The groups "regression" pass today. The group "QA-B28 (open)" holds the defects: each test FAILS until the defect is
-// fixed and is skipped in a normal run (the convention of qa_open_defects_test.dart); run them with
-//
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_b28_test.dart
-//
-// When a defect is fixed, the owner of the fix removes `skip: _open` from its test. Record: docs/qa/b28-verification.md.
+// The group "regression" held what passed from the start. The group "QA-B28 (fixed in B-32)" holds the three defects QA
+// found, each failing until B-32 fixed it. Record: docs/qa/b28-verification.md.
 import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,8 +17,6 @@ import 'support/app_harness.dart';
 import 'support/fake_family_server.dart';
 import 'support/harness.dart';
 import 'sync_engine_test.dart' show Phone, dev1, dev2, kid;
-
-const bool _open = !bool.fromEnvironment('QA_OPEN');
 
 const String _flower = '\u{1F338}';
 const String _long30 = 'abcdefghijklmnopqrstuvwxyzabcd';
@@ -52,11 +46,11 @@ void main() {
     test(
       'NBSP and the ideographic space at the ends are trimmed, as saving trims; U+00A0 alone is empty',
       () {
-        expect(validateChildName(' נועה '), ChildNameProblem.ok);
-        expect(validateChildName('　נועה　'), ChildNameProblem.ok);
-        expect(validateChildName('${'a' * 24} '), ChildNameProblem.ok);
-        expect(validateChildName(' 　 '), ChildNameProblem.empty);
-        expect(fitChildNameForServer(' נועה　'), 'נועה');
+        expect(validateChildName('\u00a0נועה\u00a0'), ChildNameProblem.ok);
+        expect(validateChildName('\u3000נועה\u3000'), ChildNameProblem.ok);
+        expect(validateChildName('${'a' * 24}\u00a0'), ChildNameProblem.ok);
+        expect(validateChildName('\u00a0\u3000 '), ChildNameProblem.empty);
+        expect(fitChildNameForServer('\u00a0נועה\u3000'), 'נועה');
       },
     );
 
@@ -74,7 +68,7 @@ void main() {
       'fit never gives the server more than 24 units, nor half an emoji, for 0 to 40 units of mixed text',
       () {
         final RegExp server = RegExp(r'^[^\u0000-\u001f\u007f<>]{1,24}$');
-        const List<String> pieces = <String>['a', 'ב', 'ָ', _flower, ' ', '<', '‏'];
+        const List<String> pieces = <String>['a', 'ב', '\u05b8', _flower, ' ', '<', '\u200f'];
         for (int shift = 0; shift < pieces.length; shift++) {
           final StringBuffer b = StringBuffer();
           for (int i = 0; i < 40; i++) {
@@ -269,13 +263,13 @@ void main() {
     });
   });
 
-  group('QA-B28 (open)', () {
+  group('QA-B28 (fixed in B-32)', () {
     // QA-B28-1 (minor): the rule refuses the direction marks and controls, but a name made only of characters that draw
     // nothing is "ok", so a parent can save a child with a blank name that the family list and the child's picker
     // show as empty. U+200B is not white space for Dart's trim(); U+061C is the Arabic letter mark, a direction mark
     // the library comment ("the invisible direction marks") says is refused.
     test('QA-B28-1a: a name of invisible characters only is not ok', () {
-      for (final String blank in <String>['​', '​​⁠', '⠀', 'ㅤ', '­']) {
+      for (final String blank in <String>['\u200b', '\u200b\u200b\u2060', '\u2800', '\u3164', '\u00ad']) {
         expect(
           validateChildName(blank),
           isNot(ChildNameProblem.ok),
@@ -283,11 +277,11 @@ void main() {
         );
         expect(fitChildNameForServer(blank), isEmpty, reason: 'nothing visible is left to send');
       }
-    }, skip: _open);
+    });
 
     test('QA-B28-1b: the Arabic letter mark U+061C (a direction mark) is refused like U+200F', () {
-      expect(validateChildName('נו؜עה'), ChildNameProblem.badChars);
-    }, skip: _open);
+      expect(validateChildName('נו\u061cעה'), ChildNameProblem.badChars);
+    });
 
     // QA-B28-2 (minor): a lone surrogate is not text. Dart's jsonEncode sends it as an escape, the gateway's pattern
     // takes it (no u flag), and the database driver turns it into U+FFFD, so the server holds a different name than the
@@ -296,35 +290,60 @@ void main() {
     // the "progress" and "remove" buttons, so on a 360-point phone the line gets a column of 86 points (65 at a text
     // scale of 1.3: 300 points tall, words cut in the middle: המשפח/ה, הראשוני/ם) and a 40-unit name is cut into columns of
     // four letters. Evidence: docs/qa/b28-verification.md (the list PNGs).
-    testWidgets('QA-B28-3: the legacy line has room to be read on a phone', (WidgetTester tester) async {
-      await loadAppFonts();
-      final AppRig rig = AppRig();
-      await rig.seedFinishedSetup(name: ('אָ' * 20));
-      await rig.pump(tester, size: const Size(360, 740));
-      await tester.tap(find.text(('אָ' * 20)));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(He.homeParents.text));
-      await tester.pumpAndSettle();
-      await tapDigits(tester, '${rig.gateQuestion.answer}');
-      await tester.tap(find.text(He.pinOk.text));
-      await tester.pumpAndSettle();
-      await tapDigits(tester, testPin);
-      await tester.tap(find.text(He.pinOk.text));
-      await tester.pumpAndSettle();
-      expect(find.byType(ParentArea), findsOneWidget);
-      final Finder note = find.text(He.setupNameLegacyShortened.text);
-      await tester.scrollUntilVisible(note, 100, scrollable: find.byType(Scrollable).first);
-      expect(
-        tester.getSize(note).width,
-        greaterThanOrEqualTo(160),
-        reason: 'a column of 86 points is 7 lines',
-      );
-    }, skip: _open);
+    for (final double scale in <double>[1.0, 1.3]) {
+      testWidgets('QA-B28-3: the legacy line has its own full-width row under the name, text scale $scale', (
+        WidgetTester tester,
+      ) async {
+        await loadAppFonts();
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final String name = 'אָ' * 20;
+        final AppRig rig = AppRig();
+        await rig.seedFinishedSetup(name: name);
+        await rig.pump(tester, size: const Size(360, 740));
+        await tester.tap(find.text(name));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(He.homeParents.text));
+        await tester.pumpAndSettle();
+        await tapDigits(tester, '${rig.gateQuestion.answer}');
+        await tester.tap(find.text(He.pinOk.text));
+        await tester.pumpAndSettle();
+        await tapDigits(tester, testPin);
+        await tester.tap(find.text(He.pinOk.text));
+        await tester.pumpAndSettle();
+        expect(find.byType(ParentArea), findsOneWidget);
+        final Finder note = find.text(He.setupNameLegacyShortened.text);
+        await tester.scrollUntilVisible(note, 100, scrollable: find.byType(Scrollable).first);
+        final String id = (await rig.db.allProfiles()).single.id;
+        final Finder buttons = find.byKey(Key('progress-$id'));
+        final Finder remove = find.byKey(Key('remove-$id'));
+        // A long name does not wrap beside the buttons: it has a line to itself, the buttons their own row under it.
+        final Finder nameText = find.descendant(of: find.byType(ParentArea), matching: find.text(name));
+        final double fontSize = tester.widget<Text>(nameText).style!.fontSize!;
+        expect(tester.getSize(nameText).height, lessThan(2 * fontSize * scale), reason: 'one line');
+        expect(tester.getRect(buttons).top, greaterThanOrEqualTo(tester.getRect(nameText).bottom));
+        expect(tester.getRect(remove).top, greaterThanOrEqualTo(tester.getRect(nameText).bottom));
+        expect(tester.getRect(remove).right, lessThanOrEqualTo(360), reason: 'on the screen');
+        expect(tester.getRect(remove).left, greaterThanOrEqualTo(0), reason: 'on the screen');
+        final Rect noteBox = tester.getRect(note);
+        // Under the name's row, clear of the buttons, and the width of the card (360 less the margins and padding).
+        expect(
+          noteBox.top,
+          greaterThanOrEqualTo(tester.getRect(buttons).bottom),
+          reason: 'below the buttons',
+        );
+        expect(noteBox.width, greaterThanOrEqualTo(260), reason: 'a column of 86 points was 7 lines');
+        // One sentence of about 10 words: three lines at most, so no word is cut in the middle.
+        final double lineHeight = tester.getSize(find.text(He.setupNameLegacyShortened.text)).height;
+        expect(lineHeight, lessThanOrEqualTo(3 * 14 * 1.7 * scale), reason: 'a few lines, not a tall column');
+        expect(tester.takeException(), isNull);
+      });
+    }
 
     test('QA-B28-2: a lone surrogate is refused', () {
       expect(validateChildName('ab\uD800'), isNot(ChildNameProblem.ok));
       expect(validateChildName('ab\uDC00cd'), isNot(ChildNameProblem.ok));
       expect(fitChildNameForServer('ab\uD800'), 'ab');
-    }, skip: _open);
+    });
   });
 }

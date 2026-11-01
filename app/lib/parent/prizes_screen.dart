@@ -9,6 +9,7 @@ import '../app/state.dart';
 import '../app/sync_providers.dart';
 import '../app/world_providers.dart';
 import '../data/app_database.dart';
+import '../data/child_name.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
@@ -150,7 +151,7 @@ class _ChildPrizes extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(child.name, style: AppText.parent(TokenType.parentH2)),
+          Text(displayChildName(child.name), style: AppText.parent(TokenType.parentH2)),
           for (final TrophyLand land in TrophyLand.values) ...<Widget>[
             const SizedBox(height: 12),
             Text(landNamePlain(land), style: AppText.parent(TokenType.parentBody)),
