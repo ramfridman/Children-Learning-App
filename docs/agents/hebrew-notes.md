@@ -530,3 +530,45 @@ Method: every word of the V1 list looked up in Pealim (forms, nikud, translitera
 | Suggested, not done | `אִמְרוּ לִי` → `תַּגִּידוּ לִי` (Pealim: the spoken imperative of לוֹמַר is from לְהַגִּיד; the audit's Q5); `אֵלֶּה מַה שֶּׁחָסֵר` (10 rows) and `לְכִוּוּן הַחֵץ` → `בְּכִוּוּן הַחֵץ` (28 rows) wait for the owner's word |
 
 Checks: `regen_content.py` twice, byte-identical; `test_hebrew_sources` (10) and `test_generators` (58) pass. Not run: the Flutter tests (`app/test/voice_text_test.dart` has the fixture text `אוּפְּס` now; it is a fake core file, it pins nothing of the real text).
+
+## 16. The owner's answer to the B-36 sheet (recorded by the hebrew-text-editor, 2026-11-01)
+
+The owner's words: "All proposed looks good." (after the corrected sheet `docs/review/b36-owner-sample.md`). Recorded as follows.
+
+| Question | Answer | Where it is now |
+|---|---|---|
+| D1 V1 words kept pointed in the voice text | yes | `VOICE_AUDIT_KEEP`, unchanged except the next line |
+| D1 "say!" | **`תַּגִּידוּ לִי`** (my recommendation, not `אִמְרוּ לִי`) | `content/lines/core.he.json` `core.listen.say` (voice text plain: `תגידו`); `אִמְרוּ` left `VOICE_AUDIT_KEEP` (V1 is 170 rows now) |
+| D2 Q2 a, b, c | yes, yes, yes | `tools/author.py` `SIZE_BY_CUE` (`pairs` for the 3 NUM-A-11 "same?" items, vo:fb.size.pairs; `count` for the 7 NUM-A-07 matches, vo:fb.size.count, set in `band_b3.py`); c was in already |
+| D3 balance sides (12 rows) | yes (true only if the beam tilts; the design-director still confirms) | `tools/band_b.py` (MATH-B-13 balance items) |
+| D4 `הוּא לֹא` (11 rows) | yes | `tools/author.py` `TAG_FEEDBACK['M-ORD-CARD']` |
+| D5 `אִם לֹא` (6 prompts) | yes; the shape rules also carry the copula `הַצּוּרָה הִיא עִגּוּל` the table had corrected | `tools/band_b2.py` (LOG-B-08); the `HELD` list of `tools/test_hebrew_sources.py` is empty |
+| F1 | A (the line matches the picture) | the B-40 line stays |
+| F2 | yes (`vo:hint.spot_right.h3` in the 9 spots) | unchanged |
+| F3 | yes | unchanged |
+| F4 | keep `אֶל` | `he.dart` `adventureWelcome` unchanged |
+| F5 | keep `לִלְחֹץ עַל` | unchanged |
+| F6 | ok (`לִלְחֹץ עָלָיו` after a number stays) | unchanged |
+| S1 to S88 | OK | |
+| The rule of part 5 | every row the pass read | 3,233 rows `owner-approved` |
+
+**How the approval is kept.** `docs/review/b36-approved-rows.tsv` lists (source, id, hash of the text, screen text and voice text) of the 3,233 rows
+the pass covered: the 3,147 that were `proposed` and the older rows whose text changed with them (the rows not `text-ready`, `owner-approved` or
+`unchanged` with the same text and screen text in the table before B-36, plus every row still `proposed`). `tools/hebrew_voice_review.py`
+(`b36_approved`) sets `owner-approved` for a row whose hash is in the list; a row whose text or voice text changes later is not in it any more, and goes
+back to the editor's own status (`text-ready` or `proposed`). The list is data made once by the editor from the table and read by the script;
+the editor never adds a row to it without the owner's word. The `PENDING`, `DOUBT` and Q2/Q3 `PR` entries, the B-40 `pending()` branches and the D1 rules for
+`אִמְרוּ` were removed, because their questions are answered.
+
+**Counts.** Master table, 14,434 rows: `owner-approved` 115 before, 3,348 after (115 + 3,233); `proposed` 225 before, 0 after; `text-ready` 13,445 before, 10,437 after;
+`unchanged` 649. The 10,437 `text-ready` rows are older rows (M-era, B-13 to B-15) that were never part of this sheet: the pass did not touch them
+and the owner did not approve them; they are not `proposed`.
+
+**What stays marked `needs-editor` in the code, and why.** (1) `app/lib/strings/he.dart`: `Str.review` is one getter, `'needs-editor'`, for all
+strings; `source_rules_m1_test.dart` pins that it is there and that `'approved'` is not in the file. The repo records an app string's approval only in the master
+table (as for `nitziHomeHi` on 2026-10-29), so the bottle lines (B-39) and the refusal message (B-32) are `owner-approved` there. (2) Every pack document has
+`"review": "needs-editor"` (1,454 files, written by `tools/author.py`); `starter_pack_test.dart` pins that none is `approved`. (3) The `status` column of the exported
+`hebrew-review.csv` says `needs-editor` for every row (it is the raw export). Changing (1) or (2) to a per-string or per-document `approved` marker is a code and
+test decision for the app-developer and the owner, not a text decision.
+
+**Also fixed.** `docs/audio/audition/round2.json`: the six `H1-mixed-*` inputs had `אוֹפְּס`; now `אוּפְּס`.

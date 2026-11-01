@@ -364,27 +364,27 @@ def logic():
               prompt='חָבֵר מִיֵּן %s, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?' % how)
 
     u.skill('LOG-B-08', 'אם אז', 'אִם… אָז…', 'sprout', ['LOG-B-06'], ['concrete'], ['M-SORT-SHIFT'])
-    # the prompts wait for the owner (V1 rows, proposed): "אַחֶרֶת" → "אִם לֹא" and "הַצּוּרָה הִיא עִגּוּל" are not in yet
+    # D5 (owner-approved 2026-11-01): "אַחֶרֶת" became "אִם לֹא" (school register → spoken), and the shape rules say "הַצּוּרָה הִיא עִגּוּל" (the copula, as the editor corrected)
     ifs = [('אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.endswith('_red')),
            ('אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.endswith('_blue')),
-           ('אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_circle')),
-           ('אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_square'))]
+           ('אִם הַצּוּרָה הִיא עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_circle')),
+           ('אִם הַצּוּרָה הִיא רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_square'))]
     pool = ['shape_circle_red', 'shape_square_blue', 'shape_triangle_red', 'shape_circle_blue', 'shape_square_red', 'shape_triangle_blue']
     for i, (text, test) in enumerate(ifs):
         order = pool[i:] + pool[:i]
         # A5: the colour rules keep the shared M-SORT-SHIFT line; the shape rules have theirs
         u.act('LOG-B-08', 'sort', rule='colour' if i < 2 else 'shape', bins=[{'sprite': 'basket_empty', 'label': 'הַקֻּפְסָה'}, {'sprite': 'grass', 'label': 'הָעֵשֶׂב'}],
-              items=[(s, 1 if test(s) else 2) for s in order[:5]], prompt=text + ' אַחֶרֶת — לָעֵשֶׂב.', domain='logic',
+              items=[(s, 1 if test(s) else 2) for s in order[:5]], prompt=text + ' אִם לֹא — לָעֵשֶׂב.', domain='logic',
               h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.')
 
     # B-15 addendum A3: the rule on a triangle and on a rectangle; a square is also a rectangle, so that pool has none
-    for text, test, order in (('אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_triangle'),
+    for text, test, order in (('אִם הַצּוּרָה הִיא מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_triangle'),
                                ['shape_circle_blue', 'shape_triangle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_circle_red']),
-                              ('אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_rect'),
+                              ('אִם הַצּוּרָה הִיא מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_rect'),
                                ['shape_rect_red', 'shape_circle_blue', 'shape_triangle_red', 'shape_rect_blue', 'shape_circle_red'])):
         u.act('LOG-B-08', 'sort', rule='shape', bins=[{'sprite': 'basket_empty', 'label': 'הַקֻּפְסָה'}, {'sprite': 'grass', 'label': 'הָעֵשֶׂב'}],
-              items=[(s, 1 if test(s) else 2) for s in order], prompt=text + ' אַחֶרֶת — לָעֵשֶׂב.', domain='logic', check='transfer', difficulty=0.6,
+              items=[(s, 1 if test(s) else 2) for s in order], prompt=text + ' אִם לֹא — לָעֵשֶׂב.', domain='logic', check='transfer', difficulty=0.6,
               h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.')
 

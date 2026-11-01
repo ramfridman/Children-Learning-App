@@ -1,5 +1,7 @@
 # B-36 owner sheet: the new texts of the pack and the app (2026-11-01)
 
+**Owner's answer (2026-11-01): "All proposed looks good."** D1 to D5 as proposed (D1, "say!": `תַּגִּידוּ לִי`), F1 to F6 as recommended, S1 to S88 OK, and every row of the rule in part 5. Recorded in `docs/agents/hebrew-notes.md` section 16; the rows are `owner-approved` in `docs/review/hebrew-master.csv`.
+
 From the hebrew-text-editor, for the owner. The plan is `docs/milestones/B36.md` part F and decision 7. You cannot read 3,000 rows, and you do not have to.
 You read about 90 rows chosen by pattern (part 4) and the questions I flag (parts 2 and 3). Everything else is approved by the rule in part 5.
 

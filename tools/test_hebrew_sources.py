@@ -27,18 +27,8 @@ DONE = ('text-ready', 'owner-approved')
 
 # Done rows whose source text is, on purpose, not the table's ui_text yet: (source, id) -> (the text the source has, why).
 # Each is checked exactly; remove an entry when its reason is gone.
-HELD = {
-    **{('activity.b.logb08.%d.json' % k, 'a11y.altText'): (
-        alt, 'the alt text is the prompt, and the prompt row is proposed (V1, waits for the owner)')
-       for k, alt in enumerate([
-           'אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           # B-15 part 2: the triangle and the rectangle, in the form of the other four until the owner decides V1
-           'אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.'], start=1)},
-}
+# Empty since 2026-11-01: the owner approved the V1 prompts of LOG-B-08 ("אִם לֹא", "הִיא"), so the sources carry them.
+HELD = {}
 
 
 def load_rows():
@@ -150,9 +140,15 @@ class HebrewMasterTableTest(unittest.TestCase):
         # correction differs from the text go from 75 to 39: the 36 nikud-only corrections (שְׂמָאלִי, כׇּל, וִידַעְתֶּם) are in the
         # sources, and what is left waits for the owner's decision 8 (the 11 "אֵינוֹ" lines of V1, the 10 Q2 drafts, the 12 balance sides
         # of D12 and the 6 "אַחֶרֶת" prompts)
+        # B-36 owner approval (2026-11-01, "All proposed looks good"): the decisions D1 to D5 and Q2 a and b are in the sources (the 11 "הוּא לֹא"
+        # lines, the 6 "אִם לֹא" prompts, the 12 balance rows, the 10 Q2 lines, `תַּגִּידוּ`), so the 39 proposed rows with a correction are
+        # gone (39 to 0) and no row is `proposed` or its text still a draft. The corrected-and-done rows go from 1159 to 1163: the `text` column of
+        # the four LOG-B-08 shape-rule prompts (b.logb08.3 to .6) keeps the draft without the copula "הִיא" (the table keeps the last draft it
+        # held as `text`; the sources say the `ui_text`).
         self.assertEqual(len(self.rows), 14434)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1159)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 39)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1163)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 0)
+        self.assertEqual(sum(1 for r in self.rows if r['status'] == 'proposed'), 0)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']

@@ -16,6 +16,7 @@ Nothing is written back to the pack: the owner decides which rows to take. What 
 start with "[editor]" and are rewritten on every run.
 """
 import csv
+import hashlib
 import os
 import re
 import sys
@@ -676,7 +677,6 @@ VOICE_AUDIT_KEEP = {
     'גְּדֵלִים': 'plain "גדלים" is spelled like "gdalim" (gda-LIM, sizes, the plural of גֹּדֶל); here it is "gdelim" (gde-LIM), '
                  'the plural present of גָּדֵל, "grow, get bigger"',
     'בַּתּוֹר': 'plain "בתור" can be read "betor" (be-TOR, "as, in the role of"); here it is "ba-tor" (ba-TOR), "in the line"',
-    'אִמְרוּ': 'plain "אמרו" is read "amru" (am-RU, "they said"); here it is "imru" (im-RU), the request "say!"',
     'נְגַלֶּה': 'plain "נגלה" can be read "nigle" or "nigale" (nifal, "we will be revealed"), or "nigla" ("was revealed"); here it is '
                 'the piel "negale" (ne-ga-LE), "we will discover"',
     'אוּפְּס': 'plain "אופס" can be read "ofes" (o-FES, אוֹפֵס, "is running out") or "upas" (u-PAS, אֻפַּס, "was reset"); here it is the '
@@ -914,11 +914,32 @@ PART_F_LIST = [
     ('הילד מחבר את מספר הקבוצות ואת מה שיש בקבוצה אחת (שתי צלחות, שלושה פירות על כל אחת: הוא עונה חמש), במקום לספור את כל הפריטים.',
      'הילד מחבר את מספר הקבוצות ואת מה שיש בקבוצה אחת (שתי צלחות, שלושה על כל אחת: חמש), במקום לספור את כל הפריטים.', 'clarity: the noun is said (parent text)'),
 ]
+# The owner's answers of 2026-11-01 (B-36 sheet, "All proposed looks good"): the drafts he approved, now in the sources. (new text, the draft, why)
+PART_F_LIST += [
+    ('הַמָּקוֹם בַּתּוֹר הוּא לֹא כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.', 'הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.',
+     'register (owner D4, 2026-11-01): "אֵינוֹ" is written Hebrew; "הוּא לֹא" for a child'),
+    ('בְּבַקָּשָׁה, תַּגִּידוּ לִי.', 'בְּבַקָּשָׁה, אִמְרוּ לִי.',
+     'register (owner D1, 2026-11-01, the "say!" question): the spoken imperative of לוֹמַר is תַּגִּידוּ (Pealim); אִמְרוּ is literary and left the V1 list'),
+    ('בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.',
+     'sense (owner Q2 a, 2026-11-01): the "same number?" items compare by pairing; the old M-CNT-SIZE line said the reverse'),
+    ('בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.',
+     'sense (owner Q2 b, 2026-11-01): the numeral-to-set matches count each group; the old M-CNT-SIZE line said the reverse'),
+    ('הַצַּד שֶׁלְּמַעְלָה קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.',
+     'הַצַּד הַיְמָנִי קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַמֹּאזְנַיִם שָׁווֹת.',
+     'curriculum and agreement (owner D3, 2026-11-01): the sides of the balance are named by where they are, not by right and left; the scales are not "שָׁווֹת", the sides are equal. True only if the beam tilts (design-director)'),
+]
 PART_F = {}
 for _new, _old, _why in PART_F_LIST:
     PART_F[canon(_new)] = (_old, _why)
 # the same kind of rewording over many rows: (regex on the new text, the draft in words, why)
 PART_F_RX = [
+    # the owner's answers of 2026-11-01 (B-36 sheet): D3 (the sides of the balance), D5 and the copula of the LOG-B-08 shape rules
+    (re.compile(canon(r'^בַּצַּד שֶׁלְּמַטָּה יֵשׁ .* וּבַצַּד שֶׁלְּמַעְלָה .* צָרִיךְ עוֹד ')), 'the same line with "בַּצַּד הַשְּׂמָאלִי … וּבַצַּד הַיְמָנִי"',
+     'curriculum (owner D3, 2026-11-01): the sides are named by where they are (down is the heavy side, up the light side), not by right and left; true only if the beam tilts'),
+    (re.compile(canon(r'^אִם הַצּוּרָה הִיא .*אִם לֹא — לָעֵשֶׂב\.$')), 'the same line without "הִיא" and with "אַחֶרֶת — לָעֵשֶׂב"',
+     'syntax and register (owner D5, 2026-11-01): a shape needs "הִיא" (אִם הַצּוּרָה הִיא עִגּוּל); "אַחֶרֶת" is school register, "אִם לֹא" for ages 3 to 6'),
+    (re.compile(canon(r'^אִם הַצּוּרָה .*אִם לֹא — לָעֵשֶׂב\.$')), 'the same line with "אַחֶרֶת — לָעֵשֶׂב"',
+     'register (owner D5, 2026-11-01): "אַחֶרֶת" is school register, "אִם לֹא" for ages 3 to 6'),
     # D1 research (hebrew-text-editor, 2026-11-01): two wrong 2nd person plural past forms found in the sources (Pealim)
     (re.compile(canon(r'^כֵּן, צְדַקְתֶּם!$')), '"כֵּן, צָדַקְתֶּם!"',
      'nikud: a paal verb in the 2nd person plural past takes a shva, צְדַקְתֶּם (tzdaktem), not צָדַקְתֶּם (Pealim)'),
@@ -939,18 +960,10 @@ PART_F_RX = [
 # B-38 cube and cat lines, the B-39 bottle lines, the B-32 refusal message, the 150 part D items and their lessons) and reworded what was
 # wrong in the SOURCES (PART_F_LIST above). They are `text-ready` and wait for the owner's sample-and-rule review (docs/review/b36-owner-sample.md).
 # What stays `proposed` is a question only the owner can answer: pending() below (B40_Q3, B40_SPOT, B40_TEN), DOUBT, ROW_RULES (Q2, D12) and the V1 rows.
-PENDING = [
-    ('3', r'^(feedback\.correct|celebration)\.caption\.0\.v$', r'^(activity\.same\.|activity\.b\.shpb02\.1[12]|lesson\.count-to-30)',
-     'D1 research (2026-11-01): the nikud of the verb was wrong in the source and is corrected (see "changes"); please read it again.',
-     r'^כֵּן, צְדַקְתֶּם!$|עֲבַרְתֶּם'),
-]
+PENDING = []  # empty: the owner approved the whole B-36 pass on 2026-11-01 (docs/review/b36-owner-sample.md)
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
-DOUBT = [
-    (r'הַצַּד הַיְמָנִי קַל|בַּצַּד הַשְּׂ?מָ?ֹ?אלִי יֵשׁ', 'B-13 (curriculum audit F8, F13): draft. Right and left are not taught before '
-     'SHP-B-12, so the sides are named by where they are: the light side is up, the heavy side is down. True only if the '
-     'balance picture tilts (design-director to confirm).'),
-]
+DOUBT = []  # empty: D12 (the balance sides) was approved on 2026-11-01 and is in the sources (tools/band_b.py)
 # Rows the OWNER approved (his own answers, relayed by the orchestrator; the editor never approves): (regex on the source,
 # regex on the original text, the comment). Their status is `owner-approved`. Nothing else is ever set to it by this script.
 OWNER_APPROVED = [
@@ -990,6 +1003,31 @@ OWNER_APPROVED = [
      'B-15 P1 (b15-hebrew.md 4): the owner chose the new Band A hint 3 in place of "אֶחָד מֵהֶם לֹא מַתְאִים" '
      '(owner-approved 2026-10-30). One clip, vo:hint.spot_but_one.h3.'),
 ]
+
+
+# B-36 (2026-11-01): the owner approved the whole B-36 pass ("All proposed looks good"): the sample rows S1 to S88, the questions D1
+# to D5 as proposed (D1: `תַּגִּידוּ לִי`, not `אִמְרוּ לִי`), F1 to F6 as recommended (F1 A, F2 yes, F3 yes, F4 keep אֶל, F5 keep, F6 ok),
+# and, by the rule of part 5 of docs/review/b36-owner-sample.md, every row the editor read in that pass. The rows are listed in
+# docs/review/b36-approved-rows.tsv as (source, id, hash of the text, the screen text and the voice text exactly as approved): a row
+# whose text, screen text or voice text changes later is not in the list any more and goes back to the editor's own status.
+# The list was made from the table after the sources had the approved wording (the rows that were `proposed`, and the rows that were
+# not `text-ready`/`owner-approved`/`unchanged` with the same text and screen text in the table before B-36). The editor never adds a row.
+B36_APPROVED_FILE = os.path.join(ROOT, 'docs', 'review', 'b36-approved-rows.tsv')
+B36_APPROVED_COMMENT = ('B-36 sheet (docs/review/b36-owner-sample.md): the owner approved this row on 2026-11-01 ("All proposed looks good"; '
+                        'sample S1-S88, D1-D5, F1-F6, and the rule of part 5).')
+_b36 = None
+
+
+def b36_hash(text, ui, voice):
+    return hashlib.sha1(chr(0x1f).join((text, ui, voice)).encode('utf-8')).hexdigest()[:12]
+
+
+def b36_approved(r, ui, voice):
+    global _b36
+    if _b36 is None:
+        with open(B36_APPROVED_FILE, encoding='utf-8') as fh:
+            _b36 = {tuple(line.rstrip(chr(10)).split(chr(9))) for line in fh if line.strip()}
+    return (r['source'], r['id'], b36_hash(r['text'], ui, voice)) in _b36
 
 
 def owner_approved(r):
@@ -1115,8 +1153,6 @@ SIZE_LINES = {
     'big': 'הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
     'small': 'הֵם קְטַנִּים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
     'spread': 'הֵם רְחוֹקִים זֶה מִזֶּה, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
-    'pairs': 'בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?',
-    'count': 'בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.',
 }
 SIZE_OLD = r'^יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר'
 Q2 = 'sense (owner Q2, 2026-10-29): the M-CNT-SIZE line is chosen by the item\'s cue, names what the eye caught, has no ' \
@@ -1134,12 +1170,6 @@ ROW_RULES = [
      'round). vo:fb.size must split by cue (hebrew-notes.md D2).'),
     (r'^activity\.more\.spread\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['spread'], Q2 + ' (spread)', TR,
      'Q2 (owner 2026-10-29): the child picked the spread-out ones. vo:fb.size must split by cue (hebrew-notes.md D2).'),
-    (r'^activity\.same\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['pairs'], Q2 + ' (pairs)', PR,
-     'Q2 draft: NUM-A-11 compares by pairing, but its items ask "the same number?" (yes or no), not "more" or "fewer", so '
-     'the two matching lines of the teaching view do not fit; this pairing line is new. Please confirm.'),
-    (r'^activity\.x\.numa07\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['count'], Q2 + ' (counting; NUM-A-07)', PR,
-     'Q2 draft: NUM-A-07 (match a numeral to a set) should lose the M-CNT-SIZE tag (curriculum audit F4); then this row '
-     'goes away. Until then, the counting line.'),
     # Q3: the missing addend, a concrete model at hint 2, count on at hint 3
     (r'^activity\.b\.mathb18\.', r'^hints\.1\.caption', r'', missing_addend_model,
      'teaching (owner Q3, 2026-10-29): hint 2 builds the model first (the start is there, add one at a time up to the total, '
@@ -1197,32 +1227,7 @@ def reviewed(r):
     return any(r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source']) for g, i, s in REVIEWED)
 
 
-B40 = ('B-40 (docs/curriculum/b40-visual-hint-ladder.md, docs/agents/hebrew-notes.md section B-40): a hint line rewritten so that it says '
-       'what the hint picture shows (level 1 never counts aloud, level 2 names the new picture, level 3 puts the answer last); '
-       'read in part F of B-36. Voicing waits for B-45.')
-
-
-B40_Q3 = (B40 + ' THIS LINE REPLACES the count-on line of the owner Q3 answer (2026-10-29, "continue counting from the first number, '
-          'with fingers"): the picture of MATH-B-18 counts the empty places from one and draws no fingers, so the line says that. '
-          'Please decide which of the two teachings stays (hebrew-notes.md section 8).')
-B40_TEN = (B40 + ' THIS LINE REPLACES the make-ten line of MATH-B-08 above ten ("eight and two are ten, three more": the old level 3): the picture is two '
-            'groups of cubes, not a ten, so the line says the two groups and the sum and the make-ten strategy is gone from level 3 until a picture '
-            'of a ten exists (hebrew-notes.md section 13, decision 2).')
-B40_SPOT = (B40 + ' THIS LINE REPLACES the owner-approved P1 line (vo:hint.spot_but_one.h3, 2026-10-30) for the rows where the app draws '
-            'the right picture above the mistake; the approved line stays for the rows where it draws no card.')
-
-
 def pending(r):
-    if (r['group'].startswith('3') and re.search(r'^activity\.', r['source']) and re.search(r'^hints\.\d+\.caption\.0\.v$', r['id'])
-            and hint_lines.is_b40_text(r['text'])):
-        if re.search(r'^activity\.b\.mathb18\.', r['source']) and r['id'] == 'hints.2.caption.0.v':
-            return B40_Q3
-        if r['text'] == hint_lines.SPOT_RIGHT_H3[1]:
-            return B40_SPOT
-        if (re.search(r'^activity\.b\.mathb08\.[1-8]\.json$', r['source']) and r['id'] == 'hints.2.caption.0.v'
-                and 'קֻבִּיּוֹת וְעוֹד' in r['text']):
-            return B40_TEN
-        return None  # every other B-40 hint line was read in part F of B-36 (hebrew-notes.md section 14)
     for g, i, s, comment, *text in PENDING:
         if (r['group'].startswith(g) and re.search(i, r['id']) and re.search(s, r['source'])
                 and (not text or re.search(canon(text[0]), canon(r['text'])))):
@@ -1348,7 +1353,7 @@ def master(rows, result, rules):
                         comment = EDITOR + note
             elif r['group'].startswith('5'):
                 comment = EDITOR + ALERT_NOTE
-            approved = owner_approved(r)
+            approved = owner_approved(r) or (B36_APPROVED_COMMENT if b36_approved(r, ui, el) else None)
             if approved:
                 status, comment = 'owner-approved', EDITOR + approved
             old = kept.get((r['source'], r['id'], r['text']))

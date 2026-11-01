@@ -134,18 +134,21 @@ TAG_FEEDBACK = {
     'M-CNT-SKIP': ('vo:fb.skip_set', 'אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק.'),
     # D4 (owner-approved 2026-10-29): true in every give-N activity, whatever number it asks for
     'M-CNT-CARD': ('vo:fb.card', 'לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ.'),
-    # the line where no cue line is chosen (SIZE_BY_CUE): the NUM-A-11 "same?" items and NUM-A-07 keep it until the owner
-    # approves their drafts (hebrew-notes §4.2 D1: "בּוֹאוּ נַעֲשֶׂה זוּגוֹת…" as vo:fb.size.pairs, and a counting line)
+    # the line where no cue line is chosen (SIZE_BY_CUE); no item uses it since the owner approved the Q2 drafts (2026-11-01):
+    # the NUM-A-11 "same?" items say vo:fb.size.pairs and the NUM-A-07 matches say vo:fb.size.count
     'M-CNT-SIZE': ('vo:fb.size', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.'),
     'M-NUM-ZERO': ('vo:fb.zero', 'גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס.'),
-    # G8 ("אֵינוֹ" → "הוּא לֹא") waits: its 7 rows are V1 rows the owner has not approved yet
-    'M-ORD-CARD': ('vo:fb.ord', 'הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.'),
+    # G8 / D4 (owner-approved 2026-11-01): "אֵינוֹ" is written Hebrew; "הוּא לֹא" for a child
+    'M-ORD-CARD': ('vo:fb.ord', 'הַמָּקוֹם בַּתּוֹר הוּא לֹא כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.'),
 }
 # D1 (owner Q2, 2026-10-29): the M-CNT-SIZE line names the cue that misled the child, then the strategy
 SIZE_BY_CUE = {
     'big': ('vo:fb.size.big', 'הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
     'small': ('vo:fb.size.small', 'הֵם קְטַנִּים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
     'spread': ('vo:fb.size.spread', 'הֵם רְחוֹקִים זֶה מִזֶּה, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
+    # Q2 a and b (owner-approved 2026-11-01, B-36 sheet D2): the "same number?" items compare by pairing; the matches count
+    'pairs': ('vo:fb.size.pairs', 'בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?'),
+    'count': ('vo:fb.size.count', 'בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.'),
 }
 # A5 (B-15 addendum): the M-SORT-SHIFT line follows the item's sorting rule (`rule`: colour, shape or kind). The colour rule
 # (and an item with no rule) keeps the shared line, which says "the same colour"; the shape and kind rules say what the child
@@ -548,7 +551,7 @@ def k_compare_same(a, ctx):
               if same else (leftover_line(abs(l - r), obj, 'זֶה לֹא אוֹתוֹ מִסְפָּר.') + ' עַכְשָׁו תּוֹרְכֶם.'),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child decides whether two groups have the same number, whatever their look',
-        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צְדַקְתֶּם!')
+        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צְדַקְתֶּם!', size_cue='pairs')
 
 
 def k_ordinal(a, ctx):
@@ -1170,7 +1173,8 @@ def k_match(a, ctx):
         {'background': 'asset:meadow', 'left': left, 'right': right}, answer, {tag} if tag else set(),
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל לְאַט עַל כׇּל אֶחָד.', a['h3'],
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'match')),
-        a.get('goal', 'child joins each picture with the one that goes with it'), prompt=a['prompt'], correct=a['correct_text'])
+        a.get('goal', 'child joins each picture with the one that goes with it'), prompt=a['prompt'], correct=a['correct_text'],
+        size_cue=a.get('size_cue'))
 
 
 def k_pay(a, ctx):

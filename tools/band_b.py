@@ -735,9 +735,10 @@ def math():
               h3='הַצַּד הַכָּבֵד יוֹרֵד לְמַטָּה. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! הַצַּד הַזֶּה כָּבֵד יוֹתֵר.' if res != 'same' else 'כֵּן! שְׁנֵי הַצְּדָדִים שָׁוִים.')
     for i, (lc, rc) in enumerate([(5, 2), (6, 3), (4, 1), (7, 5)]):
         u.act('MATH-B-13', 'scale', mode='balance', left=[('block', lc, 1)], right=[('block', rc, 1)], block='block', result=lc - rc, tag='M-MEAS-BIG',
-              # the balance sides (D12) are an owner draft (proposed): this prompt keeps its text until he approves it
-              prompt='הַצַּד הַיְמָנִי קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַמֹּאזְנַיִם שָׁווֹת.',
-              h3='בַּצַּד הַשְּׂמָאלִי יֵשׁ %s, וּבַצַּד הַיְמָנִי %s. צָרִיךְ עוֹד %s.' % (qty(lc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(lc - rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'})),
+              # D12 (owner-approved 2026-11-01, B-36 sheet D3): the sides are named by where they are (the light side is up, the heavy
+              # side is down), not by right and left, which are not taught before SHP-B-12. True only if the beam tilts (design-director)
+              prompt='הַצַּד שֶׁלְּמַעְלָה קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.',
+              h3='בַּצַּד שֶׁלְּמַטָּה יֵשׁ %s, וּבַצַּד שֶׁלְּמַעְלָה %s. צָרִיךְ עוֹד %s.' % (qty(lc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'}), qty(lc - rc, NAMES['block'] | {'many': 'קֻבִּיּוֹת'})),
               correct_text='כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים.')
 
     # B-15 §1 (H28): guess which side goes down, then see; the big light thing against a small heavy one
