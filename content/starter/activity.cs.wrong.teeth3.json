@@ -45,12 +45,14 @@
       {
         "id": "o2",
         "sprite": "asset:step_rinse",
-        "label": "כּוֹס מַיִם"
+        "label": "כּוֹס מַיִם",
+        "misconception": "M-SEQ-SCRIPT"
       },
       {
         "id": "o3",
         "sprite": "asset:step_brush",
-        "label": "מִבְרֶשֶׁת"
+        "label": "מִבְרֶשֶׁת",
+        "misconception": "M-SEQ-SCRIPT"
       }
     ],
     "correct": "o1",
@@ -69,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SEQ-SCRIPT",
+        "vo": "vo:fb.seq_script",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה חֵלֶק מֵהַשְּׁלַבִּים. בּוֹאוּ נַעֲבֹר עֲלֵיהֶם, אֶחָד אַחֲרֵי הַשֵּׁנִי."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

@@ -58,7 +58,8 @@
       {
         "id": "o3",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-CNT-CARD"
       }
     ],
     "correct": "o2",
@@ -77,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה. בּוֹאוּ נִסְתַּכֵּל שׁוּב: כַּמָּה נִשְׁאֲרוּ עַכְשָׁו?"
+          }
+        ]
+      },
       {
         "when": "misconception:M-NUM-ZERO",
         "vo": "vo:fb.zero",

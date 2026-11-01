@@ -752,6 +752,25 @@ B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by 
 B39 = 'B-39 (docs/curriculum/todays-adventure-rule.md section 8, docs/agents/hebrew-notes.md): new, worded by the editor, not yet read by the owner. '
 B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
 B38 = 'B-38 (docs/curriculum/b38-decisions.md), next pack: new or changed, worded by the editor, not yet read by the owner. '
+B36 = 'B-36 (docs/milestones/B36.md), next pack: a draft by the curriculum-expert, not yet read by the editor or the owner. '
+# The B-36 feedback lines (tools/band_b.py CARD, the tagFeedback of the units, band_b2.py), exactly as the sources write them
+B36_LINES = [
+    'זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד.',
+    'זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ.',
+    'זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה. בּוֹאוּ נִסְתַּכֵּל שׁוּב: כַּמָּה נִשְׁאֲרוּ עַכְשָׁו?',
+    'זֶה כַּמָּה שֶׁכְּבָר יֵשׁ. בּוֹאוּ נַמְשִׁיךְ לִסְפֹּר עַד עֶשֶׂר, וְנִרְאֶה כַּמָּה הוֹסַפְנוּ.',
+    'הַשְּׁאֵלָה הִיא כַּמָּה צַלָּחוֹת. בּוֹאוּ נִסְפֹּר אֶת הַצַּלָּחוֹת.',
+    'זֶה הָעֶשֶׂר שֶׁכְּבָר יֵשׁ. כַּמָּה יֵשׁ עוֹד, אַחֲרֵי הָעֶשֶׂר?',
+    'חִבַּרְנוּ אֶת שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם, צַלַּחַת אַחַר צַלַּחַת.',
+    'בּוֹאוּ נִסְתַּכֵּל שׁוּב בַּסִּימָן: מוֹסִיפִים אוֹ לוֹקְחִים?',
+    'בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אַחֲרֵי הַשֵּׁנִי.',
+    'לְכׇל מִסְפָּר יֵשׁ סִפְרָה מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל כׇּל סִפְרָה.',
+    'לְכׇל צוּרָה יֵשׁ שֵׁם מִשֶּׁלָּהּ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַקַּוִּים וְהַפִּנּוֹת.',
+    'לְכׇל גּוּף יֵשׁ שֵׁם מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל: הוּא מִתְגַּלְגֵּל? יֵשׁ לוֹ פִּנּוֹת?',
+    'זֶה נָכוֹן לְאֶחָד מֵהֶם. בּוֹאוּ נִבְדֹּק אִם זֶה נָכוֹן לְכֻלָּם, אֶחָד אֶחָד.',
+    'זֶה חֵלֶק מֵהַשְּׁלַבִּים. בּוֹאוּ נַעֲבֹר עֲלֵיהֶם, אֶחָד אַחֲרֵי הַשֵּׁנִי.',
+    'זֶה נִרְאֶה דּוֹמֶה. בּוֹאוּ נַחְשֹׁב מָה עוֹשִׂים עִם כׇּל דָּבָר, וּמָה הוֹלֵךְ יַחַד.',
+]
 PENDING = [
     ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
      'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
@@ -794,6 +813,19 @@ PENDING = [
     ('3', r'^feedback\.incorrect\.\d\.caption\.0\.v$', r'^activity\.', B38 + 'M-SHP-SQRECT for solids: the shared line speaks of the sides '
      'of flat shapes, so the two cube-and-box items have a line of their own (tag_lines, one new clip, vo:fb.sqrect.solids).',
      r'^בַּקֻּבִּיָּה כׇּל הַצְּדָדִים רִבּוּעִים'),
+    # B-36 parts B, C and E (docs/milestones/B36.md, curriculum-expert, 2026-11-01): the curriculum-expert's drafts, for the editor's
+    # part F pass and then the owner. The lines of the 8 new tags and the M-CNT-CARD line by context (one clip each).
+    ('3', r'^feedback\.incorrect\.\d\.caption\.0\.v$', r'^activity\.', B36 + 'The feedback line of a new tag (decision 3) or of '
+     'M-CNT-CARD in its context (join, take away, make ten, zero, plates, the ten of a teen; the shared vo:fb.card is true only for '
+     '"give N"). One clip per line. Band A lines have no "לֹא".', '^(' + '|'.join(re.escape(t) for t in B36_LINES) + ')$'),
+    ('3', r'^answer\.options\.\d\.label$', r'^activity\.(log\.pair\.(key|brush|bowl|pencil)|b15\.loga09\.[12])\.json$',
+     B36 + 'LOG-A-09: a look-alike takes the place of a random wrong answer (it looks like the thing shown and does not go with '
+     'it, M-ASSOC-LOOK). The name is the pack\'s existing word for the picture.', r'^(מַטְבֵּעַ|עִפָּרוֹן|כַּדּוּר וָרֹד|פֶּרַח לָבָן|מִבְרֶשֶׁת)$'),
+    ('3', r'', r'^misconception\.(M-MUL-ADD|M-OP-SWAP|M-TIME-SEQ|M-NUM-NAME|M-SHP-NAME|M-RULE-ONE|M-SEQ-SCRIPT|M-ASSOC-LOOK)\.json$',
+     B36 + 'A new tag (decision 3): the parent text and the home activity, plain adult Hebrew, never voiced.'),
+    ('3', r'^hints\.0\.caption\.0\.v$', r'^activity\.(count|give)\.butterflies\.\d\.json$', B36 + 'Decision 10 (owner, 2026-11-01): '
+     'the singular is פַּרְפַּר, so בְּפַרְפַּר (was בְּפַרְפָּר). Screen nikud only; the voice text is plain, so nothing is voiced again. '
+     'The 9 rows of b15-hebrew.md 6.7 were fixed in 0.10.0; these 4 are the ones left.', r'בְּפַרְפַּר'),
     # 2026-10-30: the owner approved P3-P5, the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints and the COL-A-05
     # correct lines (OWNER_APPROVED below), so they are no longer pending.
     # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),

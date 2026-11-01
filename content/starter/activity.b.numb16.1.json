@@ -66,7 +66,7 @@
         "id": "o3",
         "numeral": 10,
         "label": "עֶשֶׂר",
-        "misconception": "M-PART-MISS"
+        "misconception": "M-CNT-CARD"
       }
     ],
     "correct": "o1",
@@ -86,22 +86,22 @@
     },
     "incorrect": [
       {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.teen",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה הָעֶשֶׂר שֶׁכְּבָר יֵשׁ. כַּמָּה יֵשׁ עוֹד, אַחֲרֵי הָעֶשֶׂר?"
+          }
+        ]
+      },
+      {
         "when": "misconception:M-NUM-TEEN",
         "vo": "vo:fb.num_teen",
         "caption": [
           {
             "t": "he",
             "v": "בַּמִּסְפָּר הַזֶּה יֵשׁ עֶשֶׂר, וְעוֹד כַּמָּה? בּוֹאוּ נַפְרִיד אֶת הָעֶשֶׂר."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-PART-MISS",
-        "vo": "vo:fb.part_miss",
-        "caption": [
-          {
-            "t": "he",
-            "v": "יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסֵר?"
           }
         ]
       },

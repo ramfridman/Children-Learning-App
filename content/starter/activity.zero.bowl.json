@@ -56,7 +56,8 @@
       {
         "id": "o3",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-NUM-ZERO"
       }
     ],
     "correct": "o1",

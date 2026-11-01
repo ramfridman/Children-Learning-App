@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-RULE-ONE",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-B-06"
+  ],
+  "parentText": "הילד בודק את הכלל רק על אחד הפריטים ולא על כולם: רואה שהראשון עיגול ובוחר \"הצורה\", גם כשהאחרים אינם עיגולים.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשים על השולחן שלושה חפצים באותו צבע ולשאול: מה דומה בכולם? לעבור יחד על כל חפץ ולבדוק שזה נכון גם לו."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

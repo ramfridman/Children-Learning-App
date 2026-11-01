@@ -53,7 +53,8 @@
       {
         "id": "o2",
         "numeral": 4,
-        "label": "אַרְבַּע"
+        "label": "אַרְבַּע",
+        "misconception": "M-CNT-CARD"
       },
       {
         "id": "o3",
@@ -77,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.ten",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה כַּמָּה שֶׁכְּבָר יֵשׁ. בּוֹאוּ נַמְשִׁיךְ לִסְפֹּר עַד עֶשֶׂר, וְנִרְאֶה כַּמָּה הוֹסַפְנוּ."
+          }
+        ]
+      },
       {
         "when": "misconception:M-PART-MISS",
         "vo": "vo:fb.part_miss",

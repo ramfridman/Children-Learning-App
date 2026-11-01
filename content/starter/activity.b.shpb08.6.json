@@ -40,12 +40,14 @@
       {
         "id": "o1",
         "sprite": "asset:solid_pyramid",
-        "label": "פִּירָמִידָה"
+        "label": "פִּירָמִידָה",
+        "misconception": "M-SHP-NAME"
       },
       {
         "id": "o2",
         "sprite": "asset:solid_box",
-        "label": "תֵּבָה"
+        "label": "תֵּבָה",
+        "misconception": "M-SHP-NAME"
       },
       {
         "id": "o3",
@@ -69,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-NAME",
+        "vo": "vo:fb.shp_name.solids",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל גּוּף יֵשׁ שֵׁם מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל: הוּא מִתְגַּלְגֵּל? יֵשׁ לוֹ פִּנּוֹת?"
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

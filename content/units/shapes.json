@@ -236,7 +236,8 @@
     "M-SPACE-WORD": "הַמִּלָּה אוֹמֶרֶת לָנוּ אֵיפֹה זֶה נִמְצָא. בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
     "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.",
     "M-SHP-CLOSED": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.",
-    "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק."
+    "M-SORT-SHIFT": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק.",
+    "M-SHP-NAME": "לְכׇל צוּרָה יֵשׁ שֵׁם מִשֶּׁלָּהּ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַקַּוִּים וְהַפִּנּוֹת."
   },
   "misconceptions": [
     {
@@ -297,6 +298,20 @@
         "concrete",
         "embodied"
       ]
+    },
+    {
+      "id": "M-SHP-NAME",
+      "skills": [
+        "SHP-A-02",
+        "SHP-A-05",
+        "SHP-B-08"
+      ],
+      "parent": "הילד עדיין לא מחבר בין שם הצורה או הגוף לבין איך שהם נראים: כששומע \"עיגול\" הוא בוחר משולש.",
+      "home": "לצאת ל\"ציד צורות\" בבית: למצוא יחד משהו עגול, משהו מרובע ומשהו משולש, ולומר את השם בזמן שעוברים באצבע מסביב לצורה.",
+      "reps": [
+        "concrete",
+        "pictorial"
+      ]
     }
   ],
   "skills": [
@@ -322,7 +337,9 @@
       "reps": [
         "pictorial"
       ],
-      "tags": []
+      "tags": [
+        "M-SHP-NAME"
+      ]
     },
     {
       "id": "SHP-A-03",
@@ -368,7 +385,9 @@
       "reps": [
         "pictorial"
       ],
-      "tags": []
+      "tags": [
+        "M-SHP-NAME"
+      ]
     },
     {
       "id": "SHP-A-07",
@@ -498,7 +517,11 @@
         "shape_square"
       ],
       "correct": "shape_circle",
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "shape_triangle": "M-SHP-NAME",
+        "shape_square": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -513,7 +536,8 @@
       "correct": "shape_square",
       "difficulty": 0.15,
       "tags": {
-        "shape_rect": "M-SHP-SQRECT"
+        "shape_rect": "M-SHP-SQRECT",
+        "shape_triangle": "M-SHP-NAME"
       }
     },
     {
@@ -529,7 +553,8 @@
       "correct": "shape_triangle",
       "difficulty": 0.15,
       "tags": {
-        "shape_open": "M-SHP-CLOSED"
+        "shape_open": "M-SHP-CLOSED",
+        "shape_circle": "M-SHP-NAME"
       }
     },
     {
@@ -543,7 +568,11 @@
         "shape_circle"
       ],
       "correct": "shape_circle",
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "shape_square": "M-SHP-NAME",
+        "shape_triangle": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -674,7 +703,11 @@
         "plate"
       ],
       "correct": "plate",
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "window": "M-SHP-NAME",
+        "sign": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -687,7 +720,11 @@
         "sign"
       ],
       "correct": "window",
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "plate": "M-SHP-NAME",
+        "sign": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -700,7 +737,11 @@
         "window"
       ],
       "correct": "sign",
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "plate": "M-SHP-NAME",
+        "window": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -923,7 +964,10 @@
         ]
       ],
       "pos": 0,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "shape_triangle_yellow": "M-SHP-NAME"
+      }
     },
     {
       "kind": "shape",
@@ -942,7 +986,8 @@
       "pos": 2,
       "difficulty": 0.2,
       "tags": {
-        "shape_open": "M-SHP-CLOSED"
+        "shape_open": "M-SHP-CLOSED",
+        "shape_circle_green": "M-SHP-NAME"
       }
     },
     {
@@ -1056,7 +1101,11 @@
       ],
       "correct": "shape_circle_red",
       "difficulty": 0.3,
-      "check": "reverse"
+      "check": "reverse",
+      "tags": {
+        "shape_square_red": "M-SHP-NAME",
+        "shape_triangle_red": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -1074,7 +1123,11 @@
         "shape_rect_blue"
       ],
       "correct": "shape_rect_blue",
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "shape_circle_blue": "M-SHP-NAME",
+        "shape_triangle_blue": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -1092,7 +1145,11 @@
         "shape_square_yellow"
       ],
       "correct": "shape_triangle_yellow",
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "shape_circle_yellow": "M-SHP-NAME",
+        "shape_square_yellow": "M-SHP-NAME"
+      }
     },
     {
       "kind": "pick",
@@ -1497,7 +1554,8 @@
       ],
       "pos": 1,
       "tags": {
-        "shape_curved": "M-SHP-CLOSED"
+        "shape_curved": "M-SHP-CLOSED",
+        "shape_triangle_green": "M-SHP-NAME"
       },
       "difficulty": 0.4
     },
@@ -1520,7 +1578,10 @@
         ]
       ],
       "pos": 2,
-      "difficulty": 0.45
+      "difficulty": 0.45,
+      "tags": {
+        "shape_circle_orange": "M-SHP-NAME"
+      }
     },
     {
       "kind": "spot",

@@ -26,7 +26,10 @@
   "representations": [
     "pictorial"
   ],
-  "misconceptions": [],
+  "misconceptions": [
+    "M-PART-MISS",
+    "M-CNT-CARD"
+  ],
   "retention": {
     "targetRetention": 0.9,
     "initialStabilityDays": 1

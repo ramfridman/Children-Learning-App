@@ -210,7 +210,7 @@ def shapes():
     u.act('SHP-B-04', 'spot', cells=['shape_triangle', 'shape_square', 'shape_open', 'shape_pentagon'], wrong=2, tag='M-SHP-CLOSED', domain='shapes',
           check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק צוּרוֹת סְגוּרוֹת. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
 
-    u.skill('SHP-B-08', 'גופים', 'גָּלִיל, חָרוּט, כַּדּוּר וּפִירָמִידָה', 'cone-tree', ['SHP-A-07'], ['pictorial', 'concrete'], [])
+    u.skill('SHP-B-08', 'גופים', 'גָּלִיל, חָרוּט, כַּדּוּר וּפִירָמִידָה', 'cone-tree', ['SHP-A-07'], ['pictorial', 'concrete'], ['M-SHP-NAME'])
     solids = [('solid_cylinder', 'הַגָּלִיל'), ('solid_cone', 'הֶחָרוּט'), ('solid_sphere', 'הַכַּדּוּר'), ('solid_pyramid', 'הַפִּירָמִידָה'),
               ('solid_box', 'הַתֵּבָה')]
     # B-38: with the cube among the options the bridge also says what tells the box from the cube (long sides). The shoe-box bridge
@@ -222,13 +222,17 @@ def shapes():
                                      'בַּקֻּבִּיָּה כׇּל הַצְּדָדִים רִבּוּעִים, וְלַתֵּבָה יֵשׁ צְדָדִים אֲרֻכִּים כְּמוֹ מַלְבֵּן.')}
     # B-38: "where is the box?" offers the cube as its wrong option (box versus cube: square faces or long ones)
     contrast = {'solid_box': (['solid_cube', 'solid_cone'], {'solid_cube': 'M-SHP-SQRECT'})}
+    # B-36 decision 3: another solid for the one named is M-SHP-NAME (the solid word not yet linked to its look), with a line
+    # for solids: the shapes line speaks of lines and corners, which a ball has not. needs-editor
+    solid_name = {'M-SHP-NAME': ('vo:fb.shp_name.solids', 'לְכׇל גּוּף יֵשׁ שֵׁם מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל: הוּא מִתְגַּלְגֵּל? יֵשׁ לוֹ פִּנּוֹת?')}
     for i in range(8):
         sp, nm = solids[i % 5]
         others = [x for x, _ in solids if x != sp]
         pair = [others[(i * 2) % 4], others[(i * 2 + 1) % 4]]
         pair, tags = contrast.get(sp, (pair, {}))
+        tags = dict({x: 'M-SHP-NAME' for x in pair}, **tags)
         u.act('SHP-B-08', 'pick', prompt='אֵיפֹה %s?' % nm, options=place(sp, pair, i % 3), correct=sp, domain='shapes',
-              **({'tags': tags, 'tag_lines': solid_sqrect} if tags else {}),
+              tags=tags, tag_lines=dict(solid_name, **(solid_sqrect if 'M-SHP-SQRECT' in tags.values() else {})),
               correct_text=bridge[sp][0] if sp in bridge else 'כֵּן! %s %s.' % ('זוֹ' if NAMES[sp]['g'] == 'f' else 'זֶה', nm),
               h3=bridge[sp][1] if sp in bridge else '%s — נִסְתַּכֵּל עַל הַצּוּרָה %s. עַכְשָׁו תּוֹרְכֶם.' % (
                   nm, 'שֶׁלָּהּ' if NAMES[sp]['g'] == 'f' else 'שֶׁלּוֹ'))
@@ -325,7 +329,11 @@ def logic():
               options=place('tower_%d' % gap, list(tags), i + 1), correct='tower_%d' % gap,
               tags={tags[0]: 'M-PAT-GROW', tags[1]: 'M-PAT-NEXT'}, domain='logic', check='transfer', difficulty=0.6)
 
-    u.skill('LOG-B-06', 'מוצאים את הכלל', 'מוֹצְאִים מַה מְשֻׁתָּף', 'sprout', ['LOG-A-03'], ['pictorial'], [])
+    # B-36 decision 3. needs-editor
+    u.tag('M-RULE-ONE', ['LOG-B-06'], 'הילד בודק את הכלל רק על אחד הפריטים ולא על כולם: רואה שהראשון עיגול ובוחר "הצורה", גם כשהאחרים אינם עיגולים.',
+          'לשים על השולחן שלושה חפצים באותו צבע ולשאול: מה דומה בכולם? לעבור יחד על כל חפץ ולבדוק שזה נכון גם לו.',
+          ['concrete', 'pictorial'], 'זֶה נָכוֹן לְאֶחָד מֵהֶם. בּוֹאוּ נִבְדֹּק אִם זֶה נָכוֹן לְכֻלָּם, אֶחָד אֶחָד.')
+    u.skill('LOG-B-06', 'מוצאים את הכלל', 'מוֹצְאִים מַה מְשֻׁתָּף', 'sprout', ['LOG-A-03'], ['pictorial'], ['M-RULE-ONE'])
     sets = [(['shape_circle_red', 'shape_square_red', 'shape_triangle_red'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
             (['shape_circle_blue', 'shape_triangle_blue', 'shape_square_blue'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
             (['shape_circle_red', 'shape_circle_blue', 'shape_circle_green'], 'rule_shape', 'אוֹתָהּ צוּרָה'),
@@ -333,9 +341,11 @@ def logic():
             (['apple_size_l', 'star_size_l', 'fish_size_l'], 'rule_size', 'אוֹתוֹ גֹּדֶל'),
             (['apple_size_s', 'fish_size_s', 'star_size_s'], 'rule_size', 'אוֹתוֹ גֹּדֶל')]
     for i, (row, rule, text) in enumerate(sets):
-        others = [r for r in ('rule_colour', 'rule_shape', 'rule_size') if r != rule]
+        # B-36: the shapes of a colour or shape row are all one size, so "the size" was true too and is not offered there; a
+        # rule card that fits only some of the row is M-RULE-ONE (the rule checked on one of them)
+        others = [r for r in ('rule_colour', 'rule_shape') + (('rule_size',) if rule == 'rule_size' else ()) if r != rule]
         u.act('LOG-B-06', 'pick', prompt='מַה מְשֻׁתָּף לְכֻלָּם?', row=row, options=place(rule, others, i % 3), correct=rule,
-              domain='logic', correct_text='כֵּן! כֻּלָּם %s.' % text, h3='נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם %s. עַכְשָׁו תּוֹרְכֶם.' % text)
+              tags={r: 'M-RULE-ONE' for r in others}, domain='logic', correct_text='כֵּן! כֻּלָּם %s.' % text, h3='נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם %s. עַכְשָׁו תּוֹרְכֶם.' % text)
 
     # B-15 §1 (H9a, H9b): a friend sorted one way and one shape is in the wrong place
     for cells, rule, how in ((['shape_circle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_rect_red'], 'colour', 'לְפִי צֶבַע'),

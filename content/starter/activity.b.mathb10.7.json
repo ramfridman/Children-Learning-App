@@ -59,12 +59,14 @@
       {
         "id": "o2",
         "numeral": 6,
-        "label": "שֵׁשׁ"
+        "label": "שֵׁשׁ",
+        "misconception": "M-CNT-CARD"
       },
       {
         "id": "o3",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-CNT-CARD"
       }
     ],
     "correct": "o1",
@@ -83,6 +85,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.plates",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַשְּׁאֵלָה הִיא כַּמָּה צַלָּחוֹת. בּוֹאוּ נִסְפֹּר אֶת הַצַּלָּחוֹת."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

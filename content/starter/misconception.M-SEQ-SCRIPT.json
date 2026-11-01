@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SEQ-SCRIPT",
+  "review": "needs-editor",
+  "skills": [
+    "CS-A-05"
+  ],
+  "parentText": "הילד עדיין לא מכיר את השלבים של שגרה מוכרת (צחצוח שיניים, רחיצת ידיים), ולכן לא מזהה דבר שלא שייך אליה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "בזמן צחצוח שיניים או רחיצת ידיים, לומר בקול כל שלב לפני שעושים אותו: קודם משחה, אחר כך מברשת, ובסוף כוס מים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "concrete"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-ASSOC-LOOK",
+  "review": "needs-editor",
+  "skills": [
+    "LOG-A-09"
+  ],
+  "parentText": "הילד בוחר את מה שנראה דומה (צורה או צבע), ולא את מה שהולך יחד בשימוש: למפתח הוא מתאים עיפרון, כי שניהם ארוכים וצהובים.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשחק \"מה הולך עם מה\" בבית: מברשת ומשחה, נעל וגרב, מפתח ומנעול. לשאול על כל זוג: מה עושים איתם יחד?"
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "story"
+  ]
+}

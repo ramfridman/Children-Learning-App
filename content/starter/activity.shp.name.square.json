@@ -51,7 +51,8 @@
       {
         "id": "o3",
         "sprite": "asset:shape_triangle",
-        "label": "מְשֻׁלָּשׁ"
+        "label": "מְשֻׁלָּשׁ",
+        "misconception": "M-SHP-NAME"
       }
     ],
     "correct": "o1",
@@ -70,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-NAME",
+        "vo": "vo:fb.shp_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל צוּרָה יֵשׁ שֵׁם מִשֶּׁלָּהּ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַקַּוִּים וְהַפִּנּוֹת."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-SQRECT",
         "vo": "vo:fb.shp_sqrect",

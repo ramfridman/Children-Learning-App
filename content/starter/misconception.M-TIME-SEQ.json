@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-TIME-SEQ",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-A-05",
+    "MATH-B-14"
+  ],
+  "parentText": "הילד עדיין לא מכיר את הסדר של חלקי היום או של ימי השבוע: בוחר את הזמן שנאמר בשאלה, או מדלג על אחד.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "בערב, לספר יחד את היום מההתחלה: בבוקר קמנו, בצהריים אכלנו, בערב התרחצנו, ועכשיו לילה. ובשבוע: לומר יחד את הימים מיום ראשון עד שבת."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

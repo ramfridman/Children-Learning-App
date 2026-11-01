@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-NUM-NAME",
+  "review": "needs-editor",
+  "skills": [
+    "NUM-A-08"
+  ],
+  "parentText": "הילד עדיין לא מחבר בין הספרה הכתובה לבין שם המספר: כששומע \"שלוש\" הוא בוחר ספרה אחרת.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לחפש ספרות בבית ובחוץ (על שלט, על שעון, במעלית), לקרוא אותן יחד בקול, ולהרים כמה אצבעות שהספרה אומרת."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic",
+    "pictorial"
+  ]
+}

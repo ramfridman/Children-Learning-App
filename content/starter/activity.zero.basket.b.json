@@ -50,7 +50,8 @@
       {
         "id": "o2",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-NUM-ZERO"
       },
       {
         "id": "o3",

@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SHP-NAME",
+  "review": "needs-editor",
+  "skills": [
+    "SHP-A-02",
+    "SHP-A-05",
+    "SHP-B-08"
+  ],
+  "parentText": "הילד עדיין לא מחבר בין שם הצורה או הגוף לבין איך שהם נראים: כששומע \"עיגול\" הוא בוחר משולש.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לצאת ל\"ציד צורות\" בבית: למצוא יחד משהו עגול, משהו מרובע ומשהו משולש, ולומר את השם בזמן שעוברים באצבע מסביב לצורה."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

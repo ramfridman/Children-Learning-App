@@ -41,13 +41,13 @@
         "id": "o1",
         "sprite": "asset:day_1",
         "label": "יוֹם רִאשׁוֹן",
-        "misconception": "M-CNT-SEQ"
+        "misconception": "M-TIME-SEQ"
       },
       {
         "id": "o2",
         "sprite": "asset:day_3",
         "label": "יוֹם שְׁלִישִׁי",
-        "misconception": "M-CNT-SEQ"
+        "misconception": "M-TIME-SEQ"
       },
       {
         "id": "o3",
@@ -72,12 +72,12 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-CNT-SEQ",
-        "vo": "vo:fb.seq",
+        "when": "misconception:M-TIME-SEQ",
+        "vo": "vo:fb.time_seq",
         "caption": [
           {
             "t": "he",
-            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אַחֲרֵי הַשֵּׁנִי."
           }
         ]
       },

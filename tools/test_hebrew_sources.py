@@ -136,8 +136,12 @@ class HebrewMasterTableTest(unittest.TestCase):
         # corrected-and-done rows go from 1306 to 1204, because 102 lines the table had corrected (the dagesh after the vav in
         # שְׁנֵי / שְׁתֵּי and the like; B-40 counted 6 + 97 on the older table) were replaced by new lines that carry the corrections already and are
         # `proposed`; the three new B-38 lines (vo:hint.pos_cat_in / pos_cat_on / match_print on the cat and cube items) add no row
-        self.assertEqual(len(self.rows), 12659)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1204)
+        # B-36 parts B, C and E (2026-11-01): 12801 rows (+142: the feedback rows of the newly tagged wrong answers and the 16 rows
+        # of the 8 new misconception files, less the LOG-B-06 "size" options taken out); the corrected-and-done rows go from 1204
+        # to 1189, because 15 corrected lines moved to another index of `feedback.incorrect` (a new tag line sorts before them) and
+        # the table now holds them as they are in the source, already corrected. The proposed count stays 64
+        self.assertEqual(len(self.rows), 12801)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1189)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
 
     def test_done_rows_have_ui_text(self):

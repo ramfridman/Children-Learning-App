@@ -39,7 +39,8 @@
       {
         "id": "o1",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-NUM-NAME"
       },
       {
         "id": "o2",
@@ -49,7 +50,8 @@
       {
         "id": "o3",
         "numeral": 5,
-        "label": "חָמֵשׁ"
+        "label": "חָמֵשׁ",
+        "misconception": "M-NUM-NAME"
       }
     ],
     "correct": "o2",
@@ -68,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NUM-NAME",
+        "vo": "vo:fb.num_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל מִסְפָּר יֵשׁ סִפְרָה מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל כׇּל סִפְרָה."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

@@ -45,20 +45,16 @@
       {
         "id": "o1",
         "sprite": "asset:rule_colour",
-        "label": "הַצֶּבַע"
+        "label": "הַצֶּבַע",
+        "misconception": "M-RULE-ONE"
       },
       {
         "id": "o2",
-        "sprite": "asset:rule_size",
-        "label": "הַגֹּדֶל"
-      },
-      {
-        "id": "o3",
         "sprite": "asset:rule_shape",
         "label": "הַצּוּרָה"
       }
     ],
-    "correct": "o3",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },
@@ -74,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-RULE-ONE",
+        "vo": "vo:fb.rule_one",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה נָכוֹן לְאֶחָד מֵהֶם. בּוֹאוּ נִבְדֹּק אִם זֶה נָכוֹן לְכֻלָּם, אֶחָד אֶחָד."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

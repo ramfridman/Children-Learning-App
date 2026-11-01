@@ -1,0 +1,21 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-OP-SWAP",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-03",
+    "MATH-B-08"
+  ],
+  "parentText": "הילד עושה את הפעולה ההפוכה: מחבר כשצריך לחסר (13 בתרגיל 9 פחות 4), או מחסר כשצריך לחבר.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לקרוא יחד תרגיל קצר בקול ולשאול קודם: מוסיפים או לוקחים? ואז לעשות אותו בכפיות: מניחים תשע, ומורידים ארבע."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "symbolic"
+  ]
+}

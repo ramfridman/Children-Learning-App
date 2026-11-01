@@ -44,12 +44,14 @@
       {
         "id": "o2",
         "numeral": 4,
-        "label": "אַרְבַּע"
+        "label": "אַרְבַּע",
+        "misconception": "M-NUM-NAME"
       },
       {
         "id": "o3",
         "numeral": 1,
-        "label": "אַחַת"
+        "label": "אַחַת",
+        "misconception": "M-NUM-NAME"
       }
     ],
     "correct": "o1",
@@ -68,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-NUM-NAME",
+        "vo": "vo:fb.num_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל מִסְפָּר יֵשׁ סִפְרָה מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל כׇּל סִפְרָה."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

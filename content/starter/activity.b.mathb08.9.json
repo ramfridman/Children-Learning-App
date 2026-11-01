@@ -52,13 +52,14 @@
       {
         "id": "o2",
         "numeral": 13,
-        "label": "שְׁלֹשׁ עֶשְׂרֵה"
+        "label": "שְׁלֹשׁ עֶשְׂרֵה",
+        "misconception": "M-CNT-CARD"
       },
       {
         "id": "o3",
-        "numeral": 10,
-        "label": "עֶשֶׂר",
-        "misconception": "M-CNT-DOUBLE"
+        "numeral": 17,
+        "label": "שְׁבַע עֶשְׂרֵה",
+        "misconception": "M-OP-SWAP"
       }
     ],
     "correct": "o1",
@@ -78,12 +79,22 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-CNT-DOUBLE",
-        "vo": "vo:fb.double_set",
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.take",
         "caption": [
           {
             "t": "he",
-            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+            "v": "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-OP-SWAP",
+        "vo": "vo:fb.op_swap",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב בַּסִּימָן: מוֹסִיפִים אוֹ לוֹקְחִים?"
           }
         ]
       },

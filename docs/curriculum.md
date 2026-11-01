@@ -181,13 +181,13 @@ The skill becomes **`durable_mastery`** when a delayed check at least 7 days lat
 | | NUM-A-05 | Instantly recognises 1–3 without counting | — | Flash ≤2 s, three arrangements | — |
 | | NUM-A-06 | Counts out N (≤5) from a bigger pile | A-04 | Stops at N; does not take the whole pile | M-CNT-CARD |
 | A2 Numbers I see | NUM-A-07 | Matches numerals 1–5 to quantities | A-04 | Both directions (numeral → set, set → numeral) | M-NUM-REV |
-| | NUM-A-08 | Picks the numeral 1–5 when it is named | A-01 | — | M-NUM-REV |
+| | NUM-A-08 | Picks the numeral 1–5 when it is named | A-01 | — | M-NUM-NAME, M-NUM-REV |
 | | NUM-A-09 | Counts 6–10 objects with one-to-one and cardinality | A-02, A-04 | Scattered sets | M-CNT-DOUBLE, M-CNT-SKIP |
 | | NUM-A-10 | Instantly recognises 4–5 in dice and finger patterns | A-05 | Two pattern types | — |
 | A3 More or less | NUM-A-11 | Compares two sets ≤5 by matching: more, fewer, same | A-03 | Includes "same" | M-CNT-SIZE |
 | | NUM-A-12 | Compares by counting when the set with more items has the smaller or more crowded objects | A-04, A-11 | U3 transfer (new objects) | M-CNT-SIZE |
 | | NUM-A-13 | Uses רִאשׁוֹן/רִאשׁוֹנָה, שֵׁנִי, שְׁלִישִׁי, אַחֲרוֹן (first, second, third, last) | A-02 | Line of animals and a queue | M-ORD-CARD |
-| | NUM-A-14 | Knows "none" (אֵין / אֶפֶס) as an empty set | A-04 | "How many birds in the nest?" → 0 | M-NUM-ZERO |
+| | NUM-A-14 | Knows "none" (אֵין / אֶפֶס) as an empty set | A-04 | "How many birds in the nest?" → 0 | M-NUM-ZERO, M-CNT-CARD |
 
 **Band B: ages 5–6**
 
@@ -208,7 +208,7 @@ The skill becomes **`durable_mastery`** when a delayed check at least 7 days lat
 | | NUM-B-13 | Places 0–10 on a number line running left to right | B-11 | Jump and place tasks | M-NL-SPACE, M-NL-DIR |
 | | NUM-B-14 | Splits numbers ≤10 into two parts in all the ways | B-09 | U2 "show it another way" | — |
 | | NUM-B-15 | Estimates a set ≤20 ("about how many?"), then checks | B-04 | Within ±3 | M-CNT-SIZE |
-| B4 Toward 100 | NUM-B-16 | Teen numbers as ten and some ones (14 = 10 and 4) | B-08, B-09 | Two ten-frames and bundles | M-NUM-TEEN |
+| B4 Toward 100 | NUM-B-16 | Teen numbers as ten and some ones (14 = 10 and 4) | B-08, B-09 | Two ten-frames and bundles | M-NUM-TEEN, M-NUM-REV, M-CNT-CARD |
 | | NUM-B-17 | Counts by tens to 100 and by twos to 20 | B-02 | — | M-CNT-DECADE |
 | | NUM-B-18 | Even and odd to 20 by pairing | B-04 | Pair up socks | — |
 
@@ -260,10 +260,10 @@ The skill becomes **`durable_mastery`** when a delayed check at least 7 days lat
 | Band / unit | ID | Can do | Prereqs | Mastery evidence beyond SE | Watch for |
 |---|---|---|---|---|---|
 | **A1 Shape friends** | SHP-A-01 | Matches identical circles, squares and triangles | — | — | — |
-| | SHP-A-02 | Names circle (עִגּוּל), square (רִבּוּעַ) and triangle (מְשֻׁלָּשׁ) in typical form | A-01 | — | — |
+| | SHP-A-02 | Names circle (עִגּוּל), square (רִבּוּעַ) and triangle (מְשֻׁלָּשׁ) in typical form | A-01 | — | M-SHP-NAME, M-SHP-SQRECT, M-SHP-CLOSED |
 | | SHP-A-03 | Recognises shapes in any size and orientation, including thin and tilted triangles | A-02 | U3: rotated and scaled | M-SHP-ORIENT, M-SHP-PROTO, M-SHP-SIZE |
 | | SHP-A-04 | Recognises a rectangle (מַלְבֵּן) and tells it from a square informally | A-02 | — | M-SHP-SQRECT |
-| | SHP-A-05 | Finds shapes in the world (window, plate, sign) | A-03 | Photos and drawings | M-SHP-PROTO |
+| | SHP-A-05 | Finds shapes in the world (window, plate, sign) | A-03 | Photos and drawings | M-SHP-NAME, M-SHP-PROTO |
 | **A2 Build it** | SHP-A-06 | Fills an outline puzzle where each piece is outlined | A-01 | Rotation snaps | — |
 | | SHP-A-07 | Ball (כַּדּוּר) vs box/cube (קֻבִּיָּה): rolls or stacks? | — | — | — |
 | **A3 Where is it?** | SHP-A-08 | Understands עַל, מִתַּחַת, בְּתוֹךְ, לְיַד, מֵעַל (on, under, in, next to, above) | — | Tap and drag | — |
@@ -276,7 +276,7 @@ The skill becomes **`durable_mastery`** when a delayed check at least 7 days lat
 | **B2 Shape builder** | SHP-B-05 | Makes pictures from shapes with no inner outlines | A-06 | — | — |
 | | SHP-B-06 | Substitutes shapes: two triangles make a square | B-05 | U2 | — |
 | | SHP-B-07 | Cuts a shape into given parts | B-06 | — | — |
-| **B3 Solids & mirrors** | SHP-B-08 | Names cube (קֻבִּיָּה), box (תֵּבָה), cylinder (גְּלִיל), cone (חָרוּט), sphere (כַּדּוּר) and pyramid (פִּירָמִידָה) | A-07 | — | — |
+| **B3 Solids & mirrors** | SHP-B-08 | Names cube (קֻבִּיָּה), box (תֵּבָה), cylinder (גְּלִיל), cone (חָרוּט), sphere (כַּדּוּר) and pyramid (פִּירָמִידָה) | A-07 | — | M-SHP-NAME, M-SHP-SQRECT |
 | | SHP-B-09 | Matches a solid to its face by "stamping" | B-08, A-03 | — | — |
 | | SHP-B-10 | Completes a mirror-symmetric picture; says whether a shape is symmetric | A-03 | — | M-SYM-SHIFT |
 | **B4 Maps & positions** | SHP-B-11 | Follows and gives "forward, back, turn" (קָדִימָה, אֲחוֹרָה, הִסְתּוֹבֵב) | A-09 | — | — |
@@ -307,23 +307,23 @@ The skill becomes **`durable_mastery`** when a delayed check at least 7 days lat
 | | LOG-A-06 | Extends an AB pattern (what comes next?) | A-05 | Colour, shape, sound and movement | M-PAT-NEXT |
 | | LOG-A-07 | Fixes a broken AB pattern | A-06 | — | M-PAT-NEXT |
 | **A3 Order & pairs** | LOG-A-08 | Orders a 3-picture story (first, then, finally) | NUM-A-13 | — | M-SEQ-CAUSE |
-| | LOG-A-09 | Matches things that go together (sock and shoe) | — | Explains by voice (Band B) | — |
+| | LOG-A-09 | Matches things that go together (sock and shoe) | A-01 | Explains by voice (Band B) | M-ASSOC-LOOK |
 | | LOG-A-10 | Orders 3–4 objects by size (seriation) | A-01 | — | M-SER-ENDS |
 | **B1 Pattern makers** | LOG-B-01 | Extends ABB, AAB, ABC and ABCD patterns | A-06 | — | M-PAT-NEXT |
 | | LOG-B-02 | Finds the pattern unit (the "core") | B-01 | U2: show it in another material | M-PAT-UNIT |
 | | LOG-B-03 | Translates a pattern between modalities (red-blue → clap-stomp → A-B) | B-02 | U2 | M-PAT-UNIT |
 | | LOG-B-04 | Growing patterns: 1, 2, 3 blocks… | B-01, NUM-B-11 | — | M-PAT-GROW |
 | **B2 Sort & classify** | LOG-B-05 | Sorts by two attributes (2×2 table) | A-03 | — | M-SORT-SHIFT |
-| | LOG-B-06 | Finds the sorting rule ("how did I sort?") | B-05 | — | — |
+| | LOG-B-06 | Finds the sorting rule ("how did I sort?") | B-05 | — | M-RULE-ONE |
 | | LOG-B-07 | Venn diagram with two rings and an overlap | B-05 | — | M-SORT-OVERLAP |
 | **B3 Think it through** | LOG-B-08 | If-then rules in a game ("if it's red, put it in the box") | B-05 | — | M-IF-REVERSE |
-| | LOG-B-09 | Simple deduction: "it's not red and not a circle — which is it?" | B-05 | — | M-NOT |
+| | LOG-B-09 | Simple deduction: "it's not red and not a circle — which is it?" | B-05 | — | M-LOG-NOT |
 | | LOG-B-10 | 4×4 picture sudoku | A-02 | — | — |
 | | LOG-B-11 | Seriation of 5–7 items; inserting a new one in order | A-10 | — | M-SER-ENDS |
 | | LOG-B-12 | Sequences with causes ("what happened before?") | A-08 | — | M-SEQ-CAUSE |
 | **C1 Rules & codes** | LOG-C-01 | Number and shape patterns with a rule (+2, ×2, alternating) | B-04, NUM-C-08 | U6 explain the rule | M-PAT-GROW |
 | | LOG-C-02 | Function machine: in → out, find the rule | C-01 | U4 reversible | — |
-| | LOG-C-03 | Uses "and", "or", "not" in classification | B-07, B-09 | — | M-NOT, M-SORT-OVERLAP |
+| | LOG-C-03 | Uses "and", "or", "not" in classification | B-07, B-09 | — | M-LOG-NOT, M-SORT-OVERLAP |
 | **C2 Puzzles** | LOG-C-04 | Logic grids (3 children × 3 pets) | B-09 | — | — |
 | | LOG-C-05 | 6×6 sudoku; KenKen-style sums | B-10, MATH-C-01 | — | — |
 | | LOG-C-06 | Truth-teller puzzles and "which clue is useless?" | C-03 | — | — |
@@ -340,7 +340,7 @@ Every CS activity is unplugged-style: arrows, picture cards and robots on a grid
 | | CS-A-02 | Follows a spoken 1–2 step instruction with the body ("jump, then clap") | — | Embodied | — |
 | | CS-A-03 | Moves a robot one step at a time by tapping arrows (direct control) | SHP-A-09 | Up, down and toward the landmark | M-DIR-EGO |
 | | CS-A-04 | Plans a 2–3 step path, then presses "go" | CS-A-03 | — | M-CS-OFF1 |
-| **A2 Oops-fixers** | CS-A-05 | Spots the step that is wrong in a picture sequence | A-01 | — | — |
+| **A2 Oops-fixers** | CS-A-05 | Spots the step that is wrong in a picture sequence | A-01 | — | M-SEQ-SCRIPT |
 | | CS-A-06 | Notices that the robot did something different from the plan | A-04 | "The robot made a mistake!" | — |
 | | CS-A-07 | Repeats a movement pattern (dance) — a pre-loop | LOG-A-06 | — | — |
 | **B1 Program the robot** | CS-B-01 | Plans 4–6 step paths in a 4×4 grid | A-04 | — | M-CS-OFF1, M-DIR-LR |
@@ -370,11 +370,11 @@ Every CS activity is unplugged-style: arrows, picture cards and robots on a grid
 
 | Unit | ID | Can do | Prereqs | Mastery evidence beyond SE | Watch for |
 |---|---|---|---|---|---|
-| A1 More & gone | MATH-A-01 | Adding 1 or 2 to a small set: "how many now?" (≤5) | NUM-A-04 | Concrete only | M-ADD-RECOUNT (OK at A) |
-| | MATH-A-02 | Taking 1 away from a small set (≤5) | NUM-A-04 | Concrete only | — |
+| A1 More & gone | MATH-A-01 | Adding 1 or 2 to a small set: "how many now?" (≤5) | NUM-A-04 | Concrete only | M-ADD-RECOUNT (OK at A), M-CNT-CARD |
+| | MATH-A-02 | Taking 1 away from a small set (≤5) | NUM-A-04 | Concrete only | M-CNT-CARD |
 | | MATH-A-03 | Shares fairly between two friends (≤6) | NUM-A-06 | — | M-SHARE-UNEQ |
 | A2 Big & small | MATH-A-04 | Compares big/small, long/short, tall/short, heavy/light (כָּבֵד / קַל) | — | — | M-MEAS-ALIGN |
-| A3 My day | MATH-A-05 | Orders morning, noon, evening and night; before and after | LOG-A-08 | — | — |
+| A3 My day | MATH-A-05 | Orders morning, noon, evening and night; before and after | LOG-A-08 | — | M-TIME-SEQ |
 | A4 The shop | MATH-A-06 | Pretend-shop play: gives one coin per item | NUM-A-03 | Coins as tokens | — |
 | A5 Picture graph | MATH-A-07 | Sorts and compares groups in a picture chart ("which do we have more of?") | LOG-A-03, NUM-A-11 | — | — |
 
@@ -382,20 +382,20 @@ Every CS activity is unplugged-style: arrows, picture cards and robots on a grid
 
 | Unit | ID | Can do | Prereqs | Mastery evidence beyond SE | Watch for |
 |---|---|---|---|---|---|
-| B1 Join & take away | MATH-B-01 | Story problems "join" and "take away" within 10 with objects | MATH-A-01/02, NUM-B-05 | Any strategy accepted | M-ADD-RECOUNT |
-| | MATH-B-02 | Part-part-whole within 10 (missing part, with objects) | NUM-B-14 | U4 reversible | M-PPW |
-| | MATH-B-03 | Reads and writes + − = in number sentences ≤10 | B-01, NUM-B-06 | Symbol ↔ picture | M-EQ-OPER, M-SUB-ORDER |
+| B1 Join & take away | MATH-B-01 | Story problems "join" and "take away" within 10 with objects | MATH-A-01/02, NUM-B-05 | Any strategy accepted | M-ADD-RECOUNT, M-CNT-CARD |
+| | MATH-B-02 | Part-part-whole within 10 (missing part, with objects) | NUM-B-14 | U4 reversible | M-PART-MISS |
+| | MATH-B-03 | Reads and writes + − = in number sentences ≤10 | B-01, NUM-B-06 | Symbol ↔ picture | M-EQ-OPER, M-CNT-CARD, M-OP-SWAP, M-SUB-ORDER |
 | | MATH-B-04 | Counts on from the larger addend | B-01, NUM-B-01 | Observed in the hint trace | M-ADD-RECOUNT |
 | | MATH-B-05 | Facts within 5, then within 10, become automatic | B-03 | Answers within ~3 s, *measured silently, never shown* | — |
-| | MATH-B-06 | Makes 10: pairs that make ten | NUM-B-09 | Ten-frame | — |
-| | MATH-B-07 | Zero in addition and subtraction ("two aspects of zero") | B-03, NUM-A-14 | — | M-NUM-ZERO |
-| B2 Into the teens | MATH-B-08 | Add/subtract within 20 using ten (8+5 = 8+2+3) | B-06, NUM-B-16 | No method forced | M-ADD-RECOUNT |
+| | MATH-B-06 | Makes 10: pairs that make ten | NUM-B-09 | Ten-frame | M-PART-MISS, M-CNT-CARD |
+| | MATH-B-07 | Zero in addition and subtraction ("two aspects of zero") | B-03, NUM-A-14 | — | M-NUM-ZERO, M-CNT-CARD |
+| B2 Into the teens | MATH-B-08 | Add/subtract within 20 using ten (8+5 = 8+2+3) | B-06, NUM-B-16 | No method forced | M-ADD-RECOUNT, M-CNT-CARD, M-OP-SWAP |
 | | MATH-B-09 | The equals sign as "same as" (3+4 = 5+2; 7 = 3+4) | B-03 | U5 | M-EQ-OPER |
-| | MATH-B-10 | Equal groups: repeated addition, sharing and grouping (≤20) | MATH-A-03, NUM-B-17 | Both kinds of division problem | M-SHARE-UNEQ |
+| | MATH-B-10 | Equal groups: repeated addition, sharing and grouping (≤20) | MATH-A-03, NUM-B-17 | Both kinds of division problem | M-SHARE-UNEQ, M-MUL-ADD, M-CNT-CARD |
 | B3 Measure | MATH-B-11 | Compares length directly and through an intermediary (a string) | MATH-A-04 | — | M-MEAS-ALIGN |
 | | MATH-B-12 | Measures with arbitrary units (clips, footsteps) | B-11, NUM-B-04 | No gaps or overlaps | M-MEAS-GAP, M-MEAS-UNIT |
 | | MATH-B-13 | Compares weight on a balance | MATH-A-04 | — | M-MEAS-BIG |
-| B4 Time | MATH-B-14 | Days of the week (יוֹם רִאשׁוֹן … שַׁבָּת); today, yesterday, tomorrow | MATH-A-05 | — | — |
+| B4 Time | MATH-B-14 | Days of the week (יוֹם רִאשׁוֹן … שַׁבָּת); today, yesterday, tomorrow | MATH-A-05 | — | M-TIME-SEQ |
 | | MATH-B-15 | Reads an analog clock to whole hours (grade 1) | NUM-B-08 | — | M-CLOCK-HANDS |
 | B5 Shop & coins | MATH-B-16 | Recognises Israeli coins and notes (10 agorot, ½ ₪, ₪1, 2, 5, 10; notes 20, 50) | NUM-B-06 | — | M-MONEY-SIZE |
 | | MATH-B-17 | Pays an exact amount ≤10 ₪ with ₪1, 2, 5 and 10 coins; simple change (עֹדֶף) | B-16, B-03 | — | M-MONEY-COUNT |
@@ -534,9 +534,13 @@ Every distractor and every likely spoken wrong answer carries one of these tags.
 | M-CNT-SIZE | Judges "more" by size or spread instead of number | Picks the bigger-looking or more spread-out set | NUM-A-11/12 | R1 one-to-one pairing with lines; then counting |
 | M-CNT-DECADE | Stuck at a decade change (…28, 29, 20-10?) | Spoken "עֶשְׂרִים וְעֶשֶׂר"; selects 20 after 29 | NUM-B-17 | R2 hundred-chart row ending; R1 bundle of ten |
 | M-NUM-REV | Reverses digits or mirrors numerals | Selects 21 for 12; traces a backward 3 | NUM-B-08, NUM-C-02 | R2 tens-and-ones blocks next to digits; R3 "first the tens" |
-| M-NUM-TEEN | Writes the teens as heard ("שְׁתֵּים־עֶשְׂרֵה" → 2 then 10 = "210") | Builds 2, then 10 | NUM-B-16 | R1 ten-frame plus extras; R2 a 10-bundle |
+| M-NUM-TEEN | Does not yet see a teen as ten and some ones; writes the teens as heard ("שְׁתֵּים־עֶשְׂרֵה" → 2 then 10 = "210") | Answers 14 for "14 is ten and how many?"; builds 2, then 10 | NUM-B-16 | R1 ten-frame plus extras; R2 a 10-bundle |
+| M-NUM-NAME | Has not yet linked a numeral to its number word | Picks another numeral when "שָׁלוֹשׁ" is named | NUM-A-08 | R4 fingers next to the numeral; R2 the numeral with its dot pattern |
+| M-NUM-WRITE | Starts a numeral from the wrong end, or traces it the wrong way | The trace starts away from the start dot, or runs backwards | NUM-B-07 | R4 write it big with a finger in sand or flour, from the dot; R1 the start dot and an arrow |
 | M-NUM-ZERO | Thinks zero is "nothing, not a number"; 0 cannot be an answer | Picks 1 for an empty nest; refuses 0 | NUM-A-14 | R3 story "all the birds flew away"; R2 the number line starts at 0 |
 | M-ORD-CARD | Confuses ordinal with cardinal ("the third" = three of them) | Taps three objects instead of the third one | NUM-A-13 | R4 queue role-play; R2 a number badge on each position |
+| M-SHP-NAME | Has not yet linked a shape or solid word to its look | Picks the triangle for "where is the circle?", the cone for "where is the cylinder?" | SHP-A-02, SHP-A-05, SHP-B-08 | R1 run a finger round the edge and count the corners; R4 a shape hunt at home |
+| M-SHP-FACE | Does not see the flat face a solid leaves (the circle of a cylinder, the square of a cube) | Picks the box for "which solid leaves a circle in the sand?" | SHP-B-09 | R1 press the solid into sand and look at the print; R2 the face coloured on the solid |
 | M-SPACE-WORD | Confuses paired spatial words (עַל/מִתַּחַת, לִפְנֵי/מֵאָחוֹר) | Picks the opposite position | SHP-A-08/09 | R4 put a toy on/under a real table at home (parent prompt); R1 drag-and-see with the word echoed |
 | M-NL-SPACE | Places numbers with unequal gaps | Places 5 near 9 on a 0–10 line | NUM-B-13 | R4 jump equal hops; R1 a linear board game (X7) |
 | M-NL-DIR | Runs the number line right to left, following Hebrew reading order | Places 2 to the right of 8 | NUM-B-13 | R2 the line grows from a "0 house" on the left, with a ruler image (§8.6) |
@@ -564,17 +568,21 @@ Every distractor and every likely spoken wrong answer carries one of these tags.
 | M-PAT-NEXT | Continues with the last element or a random one | Picks a repeat of the last item | LOG-A-06/B-01 | R4 chant the pattern aloud ("אָדֹם־כָּחֹל, אָדֹם־כָּחֹל"); R1 put a box round the core |
 | M-PAT-UNIT | Cannot see the repeating unit | Wrong core in "find the core" | LOG-B-02 | R2 wrap the core with a train car |
 | M-PAT-GROW | Treats a growing pattern as repeating | Picks the first step again | LOG-B-04 | R1 build towers step by step |
+| M-SEQ-SCRIPT | Does not yet know the steps of a familiar routine (brushing teeth, washing hands) | Picks a real step of the routine as the one that "came by mistake" | CS-A-05, traces to CS-A-01 | R3 say each step aloud while doing it at home; R1 sort the steps into their routine |
+| M-TIME-SEQ | Does not yet know the order of a time cycle (the parts of the day, the days of the week) | Picks the time or day that was named, or skips one | MATH-A-05, MATH-B-14 | R3 tell the day as a story; R2 a strip of the day or the week, left to right |
 | M-SEQ-CAUSE | Ignores cause and effect in order (cracks the egg after the cake is baked) | Wrong order around the causal pair | LOG-A-08 | R3 a story; R1 "can this happen before that?" |
 | M-SER-ENDS | Orders only the ends (biggest, smallest) and leaves the middle random | Middle out of order | LOG-A-10 | R1 a staircase outline to fit into |
 | M-IF-REVERSE | Reverses if-then ("if it's in the box, it's red") | Applies the rule to the wrong items | LOG-B-08, CS-B-09 | R3 traffic-light story; R4 a Simon-says game |
-| M-NOT | Ignores "not" (לֹא) | Selects the named item | LOG-B-09 | R2 a cross-out stamp on excluded items |
+| M-LOG-NOT | Ignores "not" (לֹא), or one of two "not" clues | Selects the named item | LOG-B-09 | R2 a cross-out stamp on excluded items |
+| M-RULE-ONE | Checks a rule on one thing, not on all of them | Picks "the shape" for a red circle, a red square and a red triangle | LOG-B-06, LOG-B-08 | R1 check each one in turn, saying yes or no; R2 a tick under each one that fits |
+| M-ASSOC-LOOK | Matches by look (shape, colour) instead of by use, for "what goes with…" | Picks the coin for the plate, the pencil for the key | LOG-A-09, traces to LOG-A-01 | R3 a tiny story of using the thing; R4 act it out with the hands |
 | M-SEARCH-MISS | Lists combinations unsystematically and misses some | Finds 4 of 6 | LOG-C-07 | R2 a table, filled row by row |
 | M-CS-OFF1 | Off by one step: counts the start square, or one short | The robot ends one square short or past | CS-A-04, CS-B-01 | R4 "hop" the squares with a finger; R1 a footprint per step |
 | M-CS-FIXALL | Deletes the whole program instead of finding the bug | Clears the program | CS-B-04 | R1 step-through: run the program one step at a time; stop at the first surprise |
 | M-LOOP-COUNT | Wrong repeat count: counts the steps, not the repeats | ×6 instead of ×3 for a 3-unit dance | CS-B-06 | R2 colour-boxed repeats; R4 dance the repeats |
 | M-AI-MAGIC | Thinks the machine "just knows" | — | CS-C-09 | R1 give the machine bad examples and watch it fail |
 | M-ADD-RECOUNT | Counts all from 1 instead of counting on (a strategy level, not an error) | Slow; the tap log shows recounting | MATH-B-04 | R2 a hidden cup ("5 are in the cup… 6, 7, 8"); R4 fingers |
-| M-PPW | Doesn't see the whole as made of parts; adds when a part is missing | For "7 = 3 + □" answers 10 | MATH-B-02 | R2 a part-part-whole mat; bar model |
+| M-PART-MISS | Doesn't see the whole as made of parts; answers with the whole, or adds, when a part is missing | For "7 = 3 + □" answers 10; for "7 shekels, how many more to make 10?" answers 10 | MATH-B-02 | R2 a part-part-whole mat; bar model |
 | M-EQ-OPER | Reads = as "do it now, the answer comes next" | For 3 + 4 = □ + 2 answers 7 (or 9); rejects 7 = 3 + 4 | MATH-B-09 | R1 a balance scale; R3 "same as" language: "זֶה כְּמוֹ זֶה"; equations in both orientations |
 | M-SUB-ORDER | Thinks subtraction is commutative (3 − 5 = 2) | Picks 2 for 3 − 5 (Band C) | MATH-B-03 | R3 "you have 3 sweets, can you give away 5?" |
 | M-SUB-SMALLBIG | Subtracts the smaller digit from the larger in each column (52 − 27 = 35) | Picks 35 for 52 − 27 | MATH-C-04/05; traces to NUM-C-03 | R1 base-ten blocks: trade a ten for ten ones; R2 a number line counting up |
@@ -582,7 +590,8 @@ Every distractor and every likely spoken wrong answer carries one of these tags.
 | M-COLM-ALIGN | Misaligns columns (34 + 5 aligned left = 84) | Answer is 84 | MATH-C-06; traces to NUM-C-03 | R2 a place-value grid behind the column |
 | M-COMP-DIFF | Answers "how many more?" with one set's total | Picks 8 (the larger set) for "8 vs 5, how many more?" | MATH-B-19, MATH-C-07 | R1 line up the two rows; the extras glow |
 | M-KEYWORD | Picks the operation from a keyword ("more" means add) | Adds in "Dana has 3 more than Noa, Dana has 8; how many does Noa have?" | MATH-C-07 | R3 act out the story; R2 a bar model |
-| M-MUL-ADD | Adds instead of multiplying (3 × 4 = 7) | Picks 7 | MATH-C-09 | R1 equal groups of objects; R2 an array |
+| M-MUL-ADD | Adds instead of multiplying: adds the number of groups and the size of one (3 × 4 = 7) | Picks 5 for "2 plates, 3 apples on each"; picks 7 for 3 × 4 | MATH-B-10, MATH-C-09 | R1 equal groups of objects, counted plate after plate; R2 an array |
+| M-OP-SWAP | Does the other operation: adds for a take-away, or takes away for an add | Picks 13 for 9 − 4 | MATH-B-03, MATH-B-08 | R3 tell the sum as a story (do things come or go?); R1 act it out with fingers or objects |
 | M-MUL-ZERO | Thinks × 0 = the number | Picks 5 for 5 × 0 | MATH-C-12 | R3 "5 plates with 0 cookies on each" |
 | M-SHARE-UNEQ | Shares unequally ("one to you, two to me") | Unequal groups | MATH-A-03, MATH-B-10 | R1 deal one by one |
 | M-REM-BIG | Leaves a remainder ≥ the divisor | 17 : 5 = 2 remainder 7 | MATH-C-13 | R1 group the leftovers again |
@@ -995,9 +1004,9 @@ The engine plays `greeting` at the start of the activity, never between the prom
 | 20 | SHP-B-01 | B | T01 | אֵיזוֹ צוּרָה הִיא מְשֻׁלָּשׁ? (*Which shape is a triangle?*) | the long thin triangle | open 3-line figure → M-SHP-CLOSED; a triangle with a curved side |
 | 21 | SHP-B-10 | B | T10 | הַשְׁלִימוּ אֶת הַפַּרְפָּר שֶׁיִּהְיֶה סִימֶטְרִי. (*Complete the butterfly so it's symmetric.*) | mirrored half | a copied half → M-SYM-SHIFT |
 | 22 | LOG-B-02 | B | T05 | אֵיזֶה חֵלֶק חוֹזֵר? 🔴🔴🔵🔴🔴🔵 (*Which part repeats?*) | 🔴🔴🔵 | 🔴🔵 → M-PAT-UNIT |
-| 23 | LOG-B-09 | B | T01 | זֶה לֹא אָדֹם וְלֹא עִגּוּל. מָה זֶה? (*It's not red and not a circle. What is it?*) | the blue square | the red square → M-NOT |
+| 23 | LOG-B-09 | B | T01 | זֶה לֹא אָדֹם וְלֹא עִגּוּל. מָה זֶה? (*It's not red and not a circle. What is it?*) | the blue square | the red square → M-LOG-NOT |
 | 24 | CS-B-06 | B | T07 | אֵיךְ אֶפְשָׁר לְקַצֵּר אֶת הַתָּכְנִית? (*How can we make the program shorter?*) ⬆↱⬆↱⬆↱ | repeat ×3 [⬆↱] | ×6 → M-LOOP-COUNT |
-| 25 | MATH-B-02 | B | T13 | בַּכִּתָּה 7 יְלָדִים. 3 בַּחוּץ. כַּמָּה בִּפְנִים? (*7 children in the class. 3 are outside. How many are inside?*) | 4 | 10 → M-PPW |
+| 25 | MATH-B-02 | B | T13 | בַּכִּתָּה 7 יְלָדִים. 3 בַּחוּץ. כַּמָּה בִּפְנִים? (*7 children in the class. 3 are outside. How many are inside?*) | 4 | 10 → M-PART-MISS |
 | 26 | MATH-B-09 | B | T08 | מָה צָרִיךְ לָשִׂים כְּדֵי שֶׁיִּהְיֶה שָׁוֶה? `3 + 4 = □ + 2` (*What do we need so it's equal?*) | 5 | 7 → M-EQ-OPER; 9 → M-EQ-OPER (adds all) |
 | 27 | MATH-B-15 | B | T18 | מָה הַשָּׁעָה? (*What time is it?*) — 3:00 | 3 o'clock (שָׁלוֹשׁ) | 12 → M-CLOCK-HANDS |
 | 28 | MATH-B-17 | B | T17 | שַׁלְּמוּ 7 שְׁקָלִים. (*Pay 7 shekels.*) — coins 5, 2, 1, 1 | 5+2 (or 5+1+1) | three coins of any value → M-MONEY-COUNT |

@@ -50,12 +50,14 @@
       {
         "id": "o1",
         "numeral": 5,
-        "label": "חָמֵשׁ"
+        "label": "חָמֵשׁ",
+        "misconception": "M-CNT-CARD"
       },
       {
         "id": "o2",
         "numeral": 7,
-        "label": "שֶׁבַע"
+        "label": "שֶׁבַע",
+        "misconception": "M-MUL-ADD"
       },
       {
         "id": "o3",
@@ -79,6 +81,26 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.join",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-MUL-ADD",
+        "vo": "vo:fb.mul_add",
+        "caption": [
+          {
+            "t": "he",
+            "v": "חִבַּרְנוּ אֶת שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם, צַלַּחַת אַחַר צַלַּחַת."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

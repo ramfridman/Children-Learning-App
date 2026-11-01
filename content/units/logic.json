@@ -44,7 +44,10 @@
     "bird",
     "bird_lit",
     "tick",
-    "cross"
+    "cross",
+    "coin",
+    "ball_pink",
+    "bloom_white"
   ],
   "things": {
     "ball": [
@@ -266,6 +269,18 @@
     "tower_6": {
       "one": "מִגְדָּל מִסְפָּר שֵׁשׁ",
       "g": "m"
+    },
+    "coin": {
+      "one": "מַטְבֵּעַ",
+      "g": "m"
+    },
+    "ball_pink": {
+      "one": "כַּדּוּר וָרֹד",
+      "g": "m"
+    },
+    "bloom_white": {
+      "one": "פֶּרַח לָבָן",
+      "g": "m"
     }
   },
   "tagFeedback": {
@@ -275,7 +290,8 @@
     "M-SER-ENDS": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.",
     "M-PAT-COPY": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?",
     "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.",
-    "M-PAT-UNIT": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+    "M-PAT-UNIT": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ.",
+    "M-ASSOC-LOOK": "זֶה נִרְאֶה דּוֹמֶה. בּוֹאוּ נַחְשֹׁב מָה עוֹשִׂים עִם כׇּל דָּבָר, וּמָה הוֹלֵךְ יַחַד."
   },
   "misconceptions": [
     {
@@ -324,6 +340,18 @@
       "reps": [
         "concrete",
         "embodied"
+      ]
+    },
+    {
+      "id": "M-ASSOC-LOOK",
+      "skills": [
+        "LOG-A-09"
+      ],
+      "parent": "הילד בוחר את מה שנראה דומה (צורה או צבע), ולא את מה שהולך יחד בשימוש: למפתח הוא מתאים עיפרון, כי שניהם ארוכים וצהובים.",
+      "home": "לשחק \"מה הולך עם מה\" בבית: מברשת ומשחה, נעל וגרב, מפתח ומנעול. לשאול על כל זוג: מה עושים איתם יחד?",
+      "reps": [
+        "concrete",
+        "story"
       ]
     }
   ],
@@ -433,11 +461,15 @@
       "title": "מתאימים דברים שהולכים יחד",
       "child": "מוֹצְאִים מָה הוֹלֵךְ יַחַד",
       "world": "dock",
-      "needs": [],
+      "needs": [
+        "LOG-A-01"
+      ],
       "reps": [
         "pictorial"
       ],
-      "tags": []
+      "tags": [
+        "M-ASSOC-LOOK"
+      ]
     },
     {
       "id": "LOG-A-10",
@@ -992,12 +1024,15 @@
       },
       "options": [
         "sock",
-        "brush",
+        "pencil",
         "lock"
       ],
       "correct": "lock",
       "difficulty": 0.2,
-      "h3": "מַפְתֵּחַ וּמַנְעוּל הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּנְעוּל."
+      "h3": "מַפְתֵּחַ וּמַנְעוּל הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּנְעוּל.",
+      "tags": {
+        "pencil": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pick",
@@ -1011,11 +1046,14 @@
       "options": [
         "paste",
         "key",
-        "shoe"
+        "pencil"
       ],
       "correct": "paste",
       "difficulty": 0.25,
-      "h3": "מִבְרֶשֶׁת וּמִשְׁחָה הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
+      "h3": "מִבְרֶשֶׁת וּמִשְׁחָה הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה.",
+      "tags": {
+        "pencil": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pick",
@@ -1491,30 +1529,48 @@
       "difficulty": 0.4
     },
     {
-      "kind": "pair",
+      "kind": "pick",
       "id": "log.pair.bowl",
       "skill": "LOG-A-09",
-      "ref": "bowl",
-      "partner": "spoon",
-      "others": [
-        "key",
+      "variantGroup": "pair",
+      "prompt": "מָה הוֹלֵךְ עִם הַקְּעָרָה?",
+      "group": {
+        "sprite": "bowl",
+        "count": 1
+      },
+      "options": [
+        "ball_pink",
+        "spoon",
         "sock"
       ],
-      "pos": 1,
-      "difficulty": 0.2
+      "correct": "spoon",
+      "h3": "קְעָרָה וְכַף הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.2,
+      "tags": {
+        "ball_pink": "M-ASSOC-LOOK"
+      }
     },
     {
-      "kind": "pair",
+      "kind": "pick",
       "id": "log.pair.pencil",
       "skill": "LOG-A-09",
-      "ref": "pencil",
-      "partner": "paper",
-      "others": [
-        "lock",
-        "shoe"
+      "variantGroup": "pair",
+      "prompt": "מָה הוֹלֵךְ עִם הָעִפָּרוֹן?",
+      "group": {
+        "sprite": "pencil",
+        "count": 1
+      },
+      "options": [
+        "brush",
+        "shoe",
+        "paper"
       ],
-      "pos": 2,
-      "difficulty": 0.25
+      "correct": "paper",
+      "h3": "עִפָּרוֹן וְדַף הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.25,
+      "tags": {
+        "brush": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pair",
@@ -2039,32 +2095,50 @@
       "difficulty": 0.5
     },
     {
-      "kind": "pair",
+      "kind": "pick",
       "id": "b15.loga09.1",
       "skill": "LOG-A-09",
-      "check": "transfer",
-      "ref": "plate",
-      "partner": "spoon",
-      "others": [
+      "variantGroup": "pair",
+      "prompt": "מָה הוֹלֵךְ עִם הַצַּלַּחַת?",
+      "group": {
+        "sprite": "plate",
+        "count": 1
+      },
+      "options": [
         "lock",
-        "shoe"
+        "spoon",
+        "coin"
       ],
-      "pos": 1,
-      "difficulty": 0.4
+      "correct": "spoon",
+      "h3": "צַלַּחַת וְכַף הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.4,
+      "check": "transfer",
+      "tags": {
+        "coin": "M-ASSOC-LOOK"
+      }
     },
     {
-      "kind": "pair",
+      "kind": "pick",
       "id": "b15.loga09.2",
       "skill": "LOG-A-09",
-      "check": "transfer",
-      "ref": "cloud",
-      "partner": "rain",
-      "others": [
-        "key",
-        "sock"
+      "variantGroup": "pair",
+      "prompt": "מָה הוֹלֵךְ עִם הֶעָנָן?",
+      "group": {
+        "sprite": "cloud",
+        "count": 1
+      },
+      "options": [
+        "bloom_white",
+        "sock",
+        "rain"
       ],
-      "pos": 2,
-      "difficulty": 0.4
+      "correct": "rain",
+      "h3": "עָנָן וְגֶשֶׁם הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם.",
+      "difficulty": 0.4,
+      "check": "transfer",
+      "tags": {
+        "bloom_white": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pick",

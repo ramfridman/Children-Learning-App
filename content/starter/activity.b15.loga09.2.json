@@ -46,8 +46,9 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:key",
-        "label": "מַפְתֵּחַ"
+        "sprite": "asset:bloom_white",
+        "label": "פֶּרַח לָבָן",
+        "misconception": "M-ASSOC-LOOK"
       },
       {
         "id": "o2",
@@ -76,6 +77,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-ASSOC-LOOK",
+        "vo": "vo:fb.assoc_look",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה נִרְאֶה דּוֹמֶה. בּוֹאוּ נַחְשֹׁב מָה עוֹשִׂים עִם כׇּל דָּבָר, וּמָה הוֹלֵךְ יַחַד."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

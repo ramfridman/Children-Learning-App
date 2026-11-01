@@ -52,12 +52,14 @@
       {
         "id": "o2",
         "sprite": "asset:shape_circle_yellow",
-        "label": "עִגּוּל"
+        "label": "עִגּוּל",
+        "misconception": "M-SHP-NAME"
       },
       {
         "id": "o3",
         "sprite": "asset:shape_square_yellow",
-        "label": "רִבּוּעַ"
+        "label": "רִבּוּעַ",
+        "misconception": "M-SHP-NAME"
       }
     ],
     "correct": "o1",
@@ -76,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-NAME",
+        "vo": "vo:fb.shp_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל צוּרָה יֵשׁ שֵׁם מִשֶּׁלָּהּ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַקַּוִּים וְהַפִּנּוֹת."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
