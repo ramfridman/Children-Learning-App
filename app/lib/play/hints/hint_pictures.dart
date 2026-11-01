@@ -46,6 +46,7 @@ class HintOverlay extends StatelessWidget {
     this.tileHalf = 48,
     this.rowEnd,
     this.layer = HintLayer.all,
+    this.scale,
   });
 
   final List<HintMark> marks;
@@ -60,9 +61,12 @@ class HintOverlay extends StatelessWidget {
   final double? rowEnd;
   final HintLayer layer;
 
+  /// The size of the pictures (see [hintScale]) when the template wants them another size than its stage's height gives.
+  final double? scale;
+
   @override
   Widget build(BuildContext context) {
-    final double k = hintScale(size);
+    final double k = scale ?? hintScale(size);
     final List<Widget> veils = <Widget>[];
     final List<Widget> body = <Widget>[];
     final List<Widget> hands = <Widget>[];

@@ -86,17 +86,30 @@ final String _table = String.fromCharCodes(<int>[0x5E9, 0x5DC, 0x5D7, 0x5DF]);
 final String _heavy = String.fromCharCodes(<int>[0x5DB, 0x5D1, 0x5D3]);
 final String _light = String.fromCharCodes(<int>[0x5E7, 0x5DC]);
 
-// The pictures a position hint draws of its own (the tiles' red ball and brown box are not copied): a plain box, a bin the toy can
-// stand in, and a table the toy can stand under. Each is drawn in a 100 by 100 box, its top edge a little below the box's top.
+// The pictures a position hint draws of its own (the tiles' red ball, brown box and cat are not copied): a plain box, a bin the toy
+// can stand in, a table the toy can stand under, and a basket open (the toy stands in it) or with a lid (the toy sits on it, or by
+// it). Each is drawn in a 100 by 100 box, its top edge a little below the box's top.
 const String _boxSvg =
     '<svg viewBox="0 0 100 100"><rect x="8" y="22" width="84" height="70" rx="6" fill="#C98F52"/>'
     '<rect x="8" y="22" width="84" height="16" rx="6" fill="#B07A3F"/></svg>';
 const String _binSvg =
     '<svg viewBox="0 0 100 100"><path d="M8 40 H92 L82 92 H18 Z" fill="#C98F52"/>'
     '<rect x="6" y="38" width="88" height="8" rx="4" fill="#B07A3F"/></svg>';
+const String _basketSvg =
+    '<svg viewBox="0 0 100 100"><path d="M10 38 H90 L80 92 H20 Z" fill="#D9A45B"/>'
+    '<path d="M13 56 Q50 66 87 56 M16 74 Q50 84 84 74" fill="none" stroke="#B07A35" stroke-width="3"/>'
+    '<rect x="6" y="34" width="88" height="9" rx="4.5" fill="#B07A35"/></svg>';
+const String _lidBasketSvg =
+    '<svg viewBox="0 0 100 100"><path d="M12 52 H88 L80 92 H20 Z" fill="#D9A45B"/>'
+    '<path d="M15 68 Q50 78 85 68" fill="none" stroke="#B07A35" stroke-width="3"/>'
+    '<path d="M8 54 Q10 26 50 26 Q90 26 92 54 Z" fill="#EBC58A" stroke="#B07A35" stroke-width="3"/>'
+    '<circle cx="50" cy="24" r="4" fill="#7A5222"/></svg>';
 const String _tableSvg =
     '<svg viewBox="0 0 100 100"><rect x="4" y="18" width="92" height="10" rx="4" fill="#8A5A2B"/>'
     '<rect x="10" y="28" width="9" height="68" fill="#8A5A2B"/><rect x="81" y="28" width="9" height="68" fill="#8A5A2B"/></svg>';
+
+/// What a cat-and-basket position tile's name (after `pos_`) starts with, before the relation it shows.
+const String _catPrefix = 'cat_';
 
 /// The smallest unit that repeats through the known cells of [row], or null when none does (the unit is at most half the row).
 int? periodOf(List<String> row) {
@@ -581,15 +594,22 @@ class _Plans {
   bool _asksAbout(String word) => _plain(a.promptLine.caption).contains(word);
 
   /// SHP-A-08: the position of the question's word acted out in a sky card with a small toy and the thing the question names (a
-  /// box, or the table of "under the table"). Only the relation is the tile's: the tiles show a red ball, so the toy is another
-  /// figure, and the drawing of the box is not the tile's.
+  /// box, a basket, or the table of "under the table"). Only the relation is the tile's: the tiles show a red ball or a cat, so the
+  /// toy is another figure (the duck), and the drawing of the box or the basket is not the tile's. The transfer items show a cat
+  /// and a basket (`pos_cat_in`, `pos_cat_on`, `pos_cat_next`): the same relations, named by what follows `pos_cat_`.
   HintPlan _position(int level) {
-    final String where = (_right.sprite ?? '').replaceFirst('asset:pos_', '');
+    final String tile = (_right.sprite ?? '').replaceFirst('asset:pos_', '');
+    final bool basket = tile.startsWith(_catPrefix);
+    final String where = basket ? tile.substring(_catPrefix.length) : tile;
     final String? toy = _svg('asset:duck');
     if (toy == null || !<String>{'above', 'on', 'next', 'under', 'in'}.contains(where)) return generic(level);
     if (level == 3) return _walkOptions();
     // The thing, and where its drawn top and its drawn foot are in its picture's box (parts of the box).
-    final ({String svg, double top, double foot}) shape = _asksAbout(_table)
+    final ({String svg, double top, double foot}) shape = basket
+        ? (where == 'in'
+              ? (svg: _basketSvg, top: 0.34, foot: 0.92)
+              : (svg: _lidBasketSvg, top: 0.24, foot: 0.92))
+        : _asksAbout(_table)
         ? (svg: _tableSvg, top: 0.18, foot: 0.96)
         : (where == 'in' ? (svg: _binSvg, top: 0.40, foot: 0.92) : (svg: _boxSvg, top: 0.22, foot: 0.92));
     final Rect card = g.centre(150 * k, 112 * k);

@@ -23,7 +23,7 @@ void main() {
     content = await loadStarter();
   });
 
-  const ActivitySpec spec = ActivitySpec.phone;
+  final ActivitySpec spec = RobotPathSession.laidOut(ActivitySpec.phone);
 
   LessonController controllerFor(Activity a) => LessonController(
     content: content,
@@ -110,9 +110,20 @@ void main() {
 
   /// Where footprint [n] of the square [p] stands on the board.
   Offset footprintAt(RobotPathActivity a, (int, int) p) {
-    final double side = RobotPathSession.cellSide(spec.stage.size, a.cols, a.rows);
+    final double side = RobotPathSession.cellSide(
+      spec.stage.size,
+      a.cols,
+      a.rows,
+      strip: RobotPathSession.stripOf(a, spec),
+    );
     return spec.stage.topLeft +
-        RobotPathSession.cellCentre(spec.stage.size, a.cols, a.rows, p) +
+        RobotPathSession.cellCentre(
+          spec.stage.size,
+          a.cols,
+          a.rows,
+          p,
+          strip: RobotPathSession.stripOf(a, spec),
+        ) +
         Offset(side * 0.26, side * 0.26);
   }
 
@@ -141,7 +152,14 @@ void main() {
     }
     final Rect ghost = t.getRect(find.byKey(const Key('robot-ghost')));
     final Offset cell =
-        spec.stage.topLeft + RobotPathSession.cellCentre(spec.stage.size, a.cols, a.rows, squares.last);
+        spec.stage.topLeft +
+        RobotPathSession.cellCentre(
+          spec.stage.size,
+          a.cols,
+          a.rows,
+          squares.last,
+          strip: RobotPathSession.stripOf(a, spec),
+        );
     expect(
       (ghost.center - cell).distance,
       lessThan(0.6),
@@ -387,9 +405,18 @@ void main() {
         expect(find.byKey(const Key('hint-badge')), findsOneWidget, reason: 'one step, one footprint');
         expect(badge(2), findsOneWidget, reason: 'it is the second step of the way');
         final Rect ghost = t.getRect(find.byKey(const Key('robot-ghost')));
-        final double cell = RobotPathSession.cellSide(spec.stage.size, a.cols, a.rows);
+        final double cell = RobotPathSession.cellSide(
+          spec.stage.size,
+          a.cols,
+          a.rows,
+          strip: RobotPathSession.stripOf(a, spec),
+        );
         final Offset want =
-            spec.stage.topLeft + RobotPathSession.cellCentre(spec.stage.size, a.cols, a.rows, (2, 0));
+            spec.stage.topLeft +
+            RobotPathSession.cellCentre(spec.stage.size, a.cols, a.rows, (
+              2,
+              0,
+            ), strip: RobotPathSession.stripOf(a, spec));
         expect((ghost.center - want).distance, lessThan(0.6), reason: 'drawn on the square, cell $cell');
         s.dispose();
         await t.pumpWidget(const SizedBox());

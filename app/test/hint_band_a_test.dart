@@ -45,6 +45,7 @@ void main() {
 
   /// The stage, the hand's layer over it and the tiles, placed as the lesson screen places them.
   Future<void> host(WidgetTester tester, TemplateSession s, {bool reduceMotion = true}) async {
+    final ActivitySpec laid = s.layoutFor(spec);
     await tester.pumpWidget(
       MaterialApp(
         builder: (BuildContext context, Widget? child) => MediaQuery(
@@ -59,23 +60,23 @@ void main() {
                 clipBehavior: Clip.none,
                 children: <Widget>[
                   Positioned(
-                    left: spec.stage.left,
-                    top: spec.stage.top,
-                    width: spec.stage.width,
-                    height: spec.stage.height,
+                    left: laid.stage.left,
+                    top: laid.stage.top,
+                    width: laid.stage.width,
+                    height: laid.stage.height,
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: <Widget>[
-                        Positioned.fill(child: s.buildStage(ctx, spec.stage.size, spec)),
-                        Positioned.fill(child: s.buildHands(ctx, spec.stage.size, spec)!),
+                        Positioned.fill(child: s.buildStage(ctx, laid.stage.size, laid)),
+                        Positioned.fill(child: s.buildHands(ctx, laid.stage.size, laid)!),
                       ],
                     ),
                   ),
                   Positioned(
-                    left: spec.tilesLeft,
-                    top: spec.tilesTop - 12,
-                    width: spec.tilesWidth,
-                    child: s.buildTiles(ctx, spec) ?? const SizedBox(),
+                    left: laid.tilesLeft,
+                    top: laid.tilesTop - 12,
+                    width: laid.tilesWidth,
+                    child: s.buildTiles(ctx, laid) ?? const SizedBox(),
                   ),
                 ],
               ),
@@ -701,7 +702,7 @@ void main() {
 
   group('robot', () {
     testWidgets(
-      'the arrows are drawn left, up, down, right, and the hand lands on their top edges in both modes',
+      'the arrows stand in a block of 2 by 2 (left, up / down, right), never mirrored, and the hand lands on their top edges in both modes',
       (WidgetTester t) async {
         await t.runAsync(warmHintHands);
         for (final String id in <String>['cs.robot.plan.2', 'cs.robot.direct.1']) {
@@ -709,16 +710,25 @@ void main() {
           final LessonController c = controllerFor(a);
           final RobotPathSession s = RobotPathSession(c, a);
           await host(t, s);
-          double last = -1;
+          final Map<String, Offset> at = <String, Offset>{
+            for (final String d in RobotPathSession.arrowOrder) d: t.getCenter(find.byKey(Key('arrow-$d'))),
+          };
+          expect(at['left']!.dx, lessThan(at['up']!.dx), reason: '$id: left is left of up (never mirrored)');
+          expect(at['down']!.dx, lessThan(at['right']!.dx), reason: '$id: down is left of right');
+          expect(at['left']!.dx, closeTo(at['down']!.dx, 0.01), reason: '$id: the first column');
+          expect(at['up']!.dx, closeTo(at['right']!.dx, 0.01), reason: '$id: the second column');
+          expect(at['left']!.dy, closeTo(at['up']!.dy, 0.01), reason: '$id: the first row');
+          expect(at['down']!.dy, closeTo(at['right']!.dy, 0.01), reason: '$id: the second row');
+          expect(at['down']!.dy, greaterThan(at['left']!.dy + 58), reason: '$id: the rows do not touch');
           for (final String d in RobotPathSession.arrowOrder) {
-            final Finder tile = find.byKey(Key('arrow-$d'));
-            expect(
-              t.getCenter(tile).dx,
-              greaterThan(last),
-              reason: '$id: $d is right of the one before (never mirrored)',
-            );
-            last = t.getCenter(tile).dx;
-            near(s.arrowTip(spec, d), tileTopOf(t, tile, 6), '$id: $d');
+            near(s.arrowTip(s.layoutFor(spec), d), tileTopOf(t, find.byKey(Key('arrow-$d')), 6), '$id: $d');
+          }
+          if (a.plan) {
+            final Offset undo = t.getCenter(find.byKey(const Key('robot-undo')));
+            final Offset go = t.getCenter(find.byKey(const Key('robot-go')));
+            expect(undo.dx, greaterThan(at['up']!.dx + 58), reason: 'undo stands beside the block');
+            expect(go.dx, closeTo(undo.dx, 0.01), reason: 'go is under undo');
+            expect(go.dy, greaterThan(undo.dy + 58), reason: 'go is under undo');
           }
           await end(t, s);
         }

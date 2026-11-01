@@ -30,10 +30,12 @@ GroupLayout groupLayout(String arrangement, int count, {int seed = 0, int lineSl
       if (count <= 6) return GroupLayout(_dice(count), 0.3, 0.3);
       return groupLayout('ten_frame', count, seed: seed);
     case 'ten_frame':
+      // Two rows of five; a group of more than ten (drawn with no frame) goes on with more rows.
+      final int rows = math.max(2, (count / 5).ceil());
       return GroupLayout(
-        <Offset>[for (int i = 0; i < count; i++) Offset(((i % 5) + 0.5) / 5, ((i ~/ 5) + 0.5) / 2)],
+        <Offset>[for (int i = 0; i < count; i++) Offset(((i % 5) + 0.5) / 5, ((i ~/ 5) + 0.5) / rows)],
         0.2,
-        0.5,
+        1 / rows,
       );
     case 'scatter':
       const int cols = 5;
@@ -78,8 +80,14 @@ List<Offset> _dice(int n) {
   };
 }
 
+/// How much of its cell a picture fills at scale 1: on a ten-frame most of it (the frame's lines show between the pictures), in
+/// any other arrangement a little less than all of it.
+const double _frameFill = 0.78;
+const double _cellFill = 0.85;
+
 /// The place of each picture of a group inside a box of [box] (the same numbers [SpriteGroup] draws with, so that a hint can ring
-/// a picture it did not draw itself).
+/// a picture it did not draw itself). A picture is never larger than its cell, whatever [scale] asks (QA-38-3). With [framed]
+/// false a ten-frame is not drawn: its pictures stand on the same grid with no board under them.
 List<Rect> spriteRects(
   Size box,
   String arrangement,
@@ -87,17 +95,18 @@ List<Rect> spriteRects(
   int seed = 0,
   double scale = 1,
   int lineSlots = 4,
+  bool framed = true,
 }) {
   final GroupLayout layout = groupLayout(arrangement, count, seed: seed, lineSlots: lineSlots);
-  final Rect? frame = tenFrameRect(box, arrangement, count);
-  if (frame != null) {
-    // Square cells of the drawn frame; each picture fills most of its cell, so the frame's lines show between them.
-    final double cell = frame.width / 5;
-    final double side = cell * 0.78 * scale;
+  final List<Rect> frames = tenFrameRects(box, arrangement, count, framed: framed);
+  if (frames.isNotEmpty) {
+    // Square cells of the drawn frames; each picture fills most of its cell, so the lines of the frame show between them.
+    final double cell = frames.first.width / 5;
+    final double side = cell * _frameFill * math.min(scale, 1 / _frameFill);
     return <Rect>[
       for (int i = 0; i < count; i++)
         Rect.fromCenter(
-          center: frame.topLeft + Offset(((i % 5) + 0.5) * cell, ((i ~/ 5) + 0.5) * cell),
+          center: frames[i ~/ 10].topLeft + Offset(((i % 10 % 5) + 0.5) * cell, ((i % 10 ~/ 5) + 0.5) * cell),
           width: side,
           height: side,
         ),
@@ -112,7 +121,8 @@ List<Rect> spriteRects(
   if (square) {
     w = h = math.min(w, h);
   }
-  final double side = math.min(layout.cellWidth * w, layout.cellHeight * h) * 0.85 * scale;
+  final double side =
+      math.min(layout.cellWidth * w, layout.cellHeight * h) * _cellFill * math.min(scale, 1 / _cellFill);
   return <Rect>[
     for (final Offset p in layout.centers)
       Rect.fromLTWH(dx + p.dx * w - side / 2, dy + p.dy * h - side / 2, side, side),
@@ -123,22 +133,35 @@ List<Rect> spriteRects(
 bool drawsTenFrame(String arrangement, int count) =>
     arrangement == 'ten_frame' || (arrangement == 'dice' && count > 6);
 
-/// The ten-frame of a group inside a box of [box]: two rows of five square cells (more rows only for a group of more than ten),
-/// as large as the box allows and centred in it; null when the group is not drawn on a frame. The empty cells are part of the
-/// picture: "five, and five more make ten" is seen in the cells that are left.
-Rect? tenFrameRect(Size box, String arrangement, int count) {
-  if (!drawsTenFrame(arrangement, count)) return null;
-  final int rows = math.max(2, (count / 5).ceil());
-  // A little room round the frame for its outline.
+/// The ten-frames of a group inside a box of [box], left to right: each is two rows of five square cells. A group of more than ten
+/// is a full frame and the rest (the same as the hint's `TenFrames`), as large as the box allows and centred in it. Empty when the
+/// group is not drawn on a frame, or when [framed] is false. The empty cells are part of the picture: "five, and five more make
+/// ten" is seen in the cells that are left.
+List<Rect> tenFrameRects(Size box, String arrangement, int count, {bool framed = true}) {
+  if (!framed || !drawsTenFrame(arrangement, count)) return const <Rect>[];
+  final int frames = math.max(1, (count / 10).ceil());
+  // A little room round the frames for their outline.
   final double w = box.width - 4;
   final double h = box.height - 4;
-  if (w <= 0 || h <= 0) return null;
-  final double cell = math.min(w / 5, h / rows);
-  return Rect.fromLTWH((box.width - cell * 5) / 2, (box.height - cell * rows) / 2, cell * 5, cell * rows);
+  if (w <= 0 || h <= 0) return const <Rect>[];
+  // The frames are five cells wide, with a gap of 0.6 of a cell between two.
+  final double across = 5.0 * frames + _frameGap * (frames - 1);
+  final double cell = math.min(w / across, h / 2);
+  final double left = (box.width - cell * across) / 2;
+  final double top = (box.height - cell * 2) / 2;
+  return <Rect>[
+    for (int f = 0; f < frames; f++)
+      Rect.fromLTWH(left + f * (5 + _frameGap) * cell, top, cell * 5, cell * 2),
+  ];
 }
 
+const double _frameGap = 0.6;
+
 /// [count] pictures of [svg] in the given arrangement. [scale] makes every picture bigger or smaller (the "crowded or
-/// large objects" of a comparison); the group never changes its count.
+/// large objects" of a comparison, never past its cell); the group never changes its count.
+///
+/// A ten-frame is drawn with its board unless [framed] is false. Answers to be told apart are all drawn with no board (see
+/// `answerGroupsFramed`): a board on one of them and not on another would tell the child which one is right (QA-38-1).
 class SpriteGroup extends StatelessWidget {
   const SpriteGroup({
     super.key,
@@ -148,6 +171,7 @@ class SpriteGroup extends StatelessWidget {
     this.seed = 0,
     this.scale = 1,
     this.lineSlots = 4,
+    this.framed = true,
   });
 
   final String svg;
@@ -158,6 +182,7 @@ class SpriteGroup extends StatelessWidget {
 
   /// See [groupLayout].
   final int lineSlots;
+  final bool framed;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -173,15 +198,16 @@ class SpriteGroup extends StatelessWidget {
         seed: seed,
         scale: scale,
         lineSlots: lineSlots,
+        framed: framed,
       );
-      final Rect? frame = tenFrameRect(room, arrangement, count);
       return Stack(
         children: <Widget>[
-          if (frame != null)
+          // Absolute places, so a pair of frames stands first-on-the-left whatever the direction around it.
+          for (final (int i, Rect frame) in tenFrameRects(room, arrangement, count, framed: framed).indexed)
             Positioned.fromRect(
-              key: const Key('group-ten-frame'),
+              key: Key('group-ten-frame${i == 0 ? '' : '-$i'}'),
               rect: frame,
-              child: CustomPaint(painter: _TenFramePainter(rows: (frame.height / (frame.width / 5)).round())),
+              child: const CustomPaint(painter: _TenFramePainter()),
             ),
           for (final Rect r in places) Positioned.fromRect(rect: r, child: PackSvg(svg)),
         ],
@@ -190,12 +216,10 @@ class SpriteGroup extends StatelessWidget {
   );
 }
 
-/// The ten-frame under a group: a white board with an ink rim and soft lines between its cells (the same look as the ten-frames
-/// of the hints), so that the empty cells can be counted too.
+/// One ten-frame under a group: a white board of 2 by 5 cells with an ink rim and soft lines between its cells (the same look as
+/// the ten-frames of the hints), so that the empty cells can be counted too.
 class _TenFramePainter extends CustomPainter {
-  const _TenFramePainter({required this.rows});
-
-  final int rows;
+  const _TenFramePainter();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -210,9 +234,7 @@ class _TenFramePainter extends CustomPainter {
     for (int c = 1; c < 5; c++) {
       canvas.drawLine(Offset(c * cell, rim), Offset(c * cell, size.height - rim), line);
     }
-    for (int r = 1; r < rows; r++) {
-      canvas.drawLine(Offset(rim, r * cell), Offset(size.width - rim, r * cell), line);
-    }
+    canvas.drawLine(Offset(rim, cell), Offset(size.width - rim, cell), line);
     canvas.drawRRect(
       outer,
       Paint()
@@ -223,5 +245,5 @@ class _TenFramePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_TenFramePainter old) => old.rows != rows;
+  bool shouldRepaint(_TenFramePainter old) => false;
 }
