@@ -85,6 +85,9 @@ itznutz-secrets\pack-signing.key` (outside the repo).
 
 The full checklist is `docs/owner-todo.md`. In short:
 
+- **FIRST: voice audition round 4, the number two (owner, open since 2026-11-01).** Round 3 (40 clips) was approved by the owner on 2026-11-01 except "two": the voice misreads שְׁתַּיִם; he wants sh-TA-yim. Round 4 (`docs/audio/audition/round4.json`, 11 clips, 384 characters, about 0.015 USD) tests five voice-only spellings A to E. The owner runs it himself from `D:
+itznutz-nextpp` (listening sheet E1b; Claude never runs it). When he says done, send the 11 clips from `%USERPROFILE%
+itznutz-voiceuditionsound4` with SendUserFile, get his pick, add it to `content/voices.json` › `pronunciation` (plain שתיים and pointed שְׁתַּיִם, 562 voice lines), and then plan the full voicing B-45 (count and cost first). If none works: phoneme input or a stress mark in the voice_gen allowlist.
 - **Phone test T8 (owner, later):** the full check of everything new since his phone's 0.5.0 build, B-40 included, step by step in `docs/qa/phone-test-2026-11.md`.
 
 - **M6:** done. Open from it: check E on the phone, Hebrew editor review of the lexicon and the reviewed lines, fix the prefix vocalisation nits, the 33 cells without a reviewed line (authored lines used).
