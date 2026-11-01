@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -73,7 +73,7 @@ class InstallResult {
 /// Installs content packs. Everything about a pack is proven in memory first (`verifyPack`); nothing
 /// touches the disk or the database until the signature, every hash and every content rule have passed.
 ///
-/// On disk: `<root>/<pack id>/<version>/…`, written into a temporary folder and moved into place in
+/// On disk: `<root>/<pack id>/<version>/ג€¦`, written into a temporary folder and moved into place in
 /// one step, then recorded in the registry. A crash at any point leaves the old pack or the new one,
 /// never half of one; leftovers are removed by [sweep].
 class PackInstaller {
@@ -121,12 +121,14 @@ class PackInstaller {
     if (existing != null) {
       final int order = compareSemver(pack.version, existing.version);
       // The installed copy is proven again only when the answer depends on it (it is the costly part).
-      final bool needsCopy =
-          order == 0 || (order < 0 && existing.hidden && !pack.hidden) || (order > 0 && pack.hidden);
+      // The row's `hidden` is not trusted for this: after an app downgrade it still says playable, so the copy on disk is
+      // proven with this app's capabilities.
+      final bool needsCopy = order == 0 || (order < 0 && !pack.hidden) || (order > 0 && pack.hidden);
       final VerifiedPack? copy = needsCopy ? await _installedCopy(pack.id, existing) : null;
       final bool copyPlayable = copy != null && !copy.hidden;
-      if (order < 0 && !(existing.hidden && !pack.hidden && !copyPlayable)) {
-        // Only one case lets an older pack in: the installed one is a newer pack this app cannot play, and this one can be played.
+      if (order < 0 && !(!pack.hidden && !copyPlayable)) {
+        // Only one case lets an older pack in: this one can be played and the installed newer one cannot (this app cannot
+        // play it, or it is not there or no longer proves itself).
         throw PackRejected(
           'rules',
           'version ${pack.version} is older than the installed ${existing.version}',

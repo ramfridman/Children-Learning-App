@@ -367,6 +367,34 @@ void main() {
       expect((await repo.starter()).packVersion, '1.0.0');
     });
 
+    test('SEC-B36-4: after an app downgrade the first start plays the bundled 1.0.0 (the row still says playable)', () async {
+      final PackInstaller newerApp = make(
+        capabilities: const AppCapabilities(
+          appVersion: '9.0.0',
+          templates: <String, String>{'tap_answer': '1.0', 'count_tap': '1.0', 'give_n': '1.0'},
+        ),
+      );
+      expect((await newerApp.install(await forged('1.1.0'))).hidden, isFalse);
+      expect((await db.installedPack('sample-pack'))!.hidden, isFalse);
+      final Uint8List bundled = (await buildSamplePack(key)).bytes;
+      final ContentRepository repo = ContentRepository(
+        installer: make(), // the app is older now; its data was kept
+        bundled: () async => bundled,
+        packId: 'sample-pack',
+      );
+      expect((await repo.starter()).packVersion, '1.0.0'); // the first call, not the second
+      expect((await db.installedPack('sample-pack'))!.version, '1.0.0');
+    });
+
+    test(
+      'SEC-B36-4: rollback protection stays while the installed newer pack proves itself and plays',
+      () async {
+        await installer.install((await buildSamplePack(key, version: '1.1.0')).bytes);
+        await expectLater(installer.install((await buildSamplePack(key)).bytes), _rejected('rules', 'older'));
+        expect((await db.installedPack('sample-pack'))!.version, '1.1.0');
+      },
+    );
+
     test(
       'the content repository plays the bundled 1.0.0 over a hidden 1.1.0 an older build stored',
       () async {
