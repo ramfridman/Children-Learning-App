@@ -189,8 +189,11 @@ def _glyph(n, mirror=False):
 
 
 def shape_open_quad():
-    """A square's four straight sides with its bottom-left corner missing: one clear gap, as shape_open has (same stroke)."""
-    return ('<polyline points="16,64 16,16 84,16 84,84 36,84" fill="none" stroke="#2F7FE0" stroke-width="8" '
+    """A square's four straight sides with its bottom-left corner missing: one clear gap, as shape_open has (same stroke).
+    Slate grey (the robot's grey), not blue: SHP-B-04's bins and items use blue #2F7FE0 (shape_square), light blue #4DA3FF
+    (shape_curved), purple, red, orange and green, so its colour matches no bin and gives no answer away. Solid, not dashed, so
+    it is not the empty outline (outline_*)."""
+    return ('<polyline points="16,64 16,16 84,16 84,84 36,84" fill="none" stroke="#6E7488" stroke-width="8" '
             'stroke-linejoin="round" stroke-linecap="round"/>')
 
 

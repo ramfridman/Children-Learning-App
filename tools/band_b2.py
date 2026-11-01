@@ -1,6 +1,7 @@
 """The second half of the Band B specs (colours, shapes, logic, computer science). See band_b.py."""
 from band_b import COLOURS, NAMES, Unit, clean, numpick, rot, steps, tri  # noqa: E402
 from author import F, count_words, place, vav  # noqa: E402
+from band_b36 import SHADE_END_PICK, SHADE_ENDS, SHADE_SAME  # noqa: E402  (B-36 part F: the shade lines say nothing about size or about "blue")
 
 SHAPE_ONE = {'circle': 'עִגּוּל', 'square': 'רִבּוּעַ', 'triangle': 'מְשֻׁלָּשׁ'}
 SIDES_DEF = {'triangle': 'הַמְּשֻׁלָּשׁ', 'quad': 'הַמְּרֻבָּע', 'pentagon': 'הַמְּחֻמָּשׁ', 'hexagon': 'הַמְּשֻׁשֶּׁה'}
@@ -54,22 +55,27 @@ def colours():
     for i, c in enumerate(['blue', 'green', 'red', 'purple']):
         sh = ['shade_%s_%d' % (c, k) for k in (1, 2, 3)]
         # B-15 §3: the middle shade stops short (M-SER-ENDS), the other end is the shade taken for the colour
+        # part F (curriculum-expert, b36 section 10): the shared M-COL-SHADE line says "blue" (right only for blue), and the shared
+        # M-SER-ENDS line says "look for the middle" when the question asks for an end
+        lines = {'M-SER-ENDS': SHADE_END_PICK, **({'M-COL-SHADE': SHADE_SAME} if c != 'blue' else {})}
         u.act('COL-B-02', 'pick', prompt='אֵיזֶה הֲכִי כֵּהֶה?', options=rot(sh, i), correct=sh[2],
-              tags={sh[1]: 'M-SER-ENDS', sh[0]: 'M-COL-SHADE'}, domain='colors',
+              tags={sh[1]: 'M-SER-ENDS', sh[0]: 'M-COL-SHADE'}, tag_lines=lines, domain='colors',
               correct_text='כֵּן! זֶה הֲכִי כֵּהֶה.', h3='הַכֵּהֶה הוּא הֲכִי חָשׁוּךְ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.')
         u.act('COL-B-02', 'pick', prompt='אֵיזֶה הֲכִי בָּהִיר?', options=rot(sh, i + 1), correct=sh[0],
-              tags={sh[1]: 'M-SER-ENDS', sh[2]: 'M-COL-SHADE'}, domain='colors',
+              tags={sh[1]: 'M-SER-ENDS', sh[2]: 'M-COL-SHADE'}, tag_lines=lines, domain='colors',
               correct_text='כֵּן! זֶה הֲכִי בָּהִיר.', h3='הַבָּהִיר הוּא הֲכִי קָרוֹב לְלָבָן. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.')
     for i, c in enumerate(['blue', 'green', 'red']):
         sh = ['shade_%s_%d' % (c, k) for k in (1, 2, 3)]
         u.act('COL-B-02', 'pick', prompt='מַה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?', row=[sh[0], '?', sh[2]],
-              options=place(sh[1], [sh[0], sh[2]], i % 3), correct=sh[1], tags={sh[0]: 'M-SER-ENDS', sh[2]: 'M-SER-ENDS'}, domain='colors',
+              options=place(sh[1], [sh[0], sh[2]], i % 3), correct=sh[1], tags={sh[0]: 'M-SER-ENDS', sh[2]: 'M-SER-ENDS'},
+              tag_lines={'M-SER-ENDS': SHADE_ENDS}, domain='colors',
               correct_text='כֵּן! זֶה בָּאֶמְצַע.', h3='מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.')
 
     # B-15 addendum A3: the purple middle (the middle was asked for blue, green and red)
     sh = ['shade_purple_%d' % k for k in (1, 2, 3)]
     u.act('COL-B-02', 'pick', prompt='מַה בָּאֶמְצַע, בֵּין הַבָּהִיר לַכֵּהֶה?', row=[sh[0], '?', sh[2]], options=place(sh[1], [sh[0], sh[2]], 1),
-          correct=sh[1], tags={sh[0]: 'M-SER-ENDS', sh[2]: 'M-SER-ENDS'}, domain='colors', check='transfer', difficulty=0.6,
+          correct=sh[1], tags={sh[0]: 'M-SER-ENDS', sh[2]: 'M-SER-ENDS'}, tag_lines={'M-SER-ENDS': SHADE_ENDS}, domain='colors',
+          check='transfer', difficulty=0.6,
           correct_text='כֵּן! זֶה בָּאֶמְצַע.', h3='מִבָּהִיר לְכֵהֶה: בָּהִיר, אֶמְצָעִי, כֵּהֶה. עַכְשָׁו תּוֹרְכֶם.')
 
     u.skill('COL-B-03', 'בהיר וכהה הם אותו צבע', 'כָּחֹל בָּהִיר הוּא גַּם כָּחֹל', 'pool', ['COL-B-02'], ['pictorial'], ['M-COL-SHADE'])
@@ -80,6 +86,7 @@ def colours():
         u.act('COL-B-03', 'pick', prompt='אֵיפֹה עוֹד %s?' % C[c], group={'sprite': 'shade_%s_%d' % (c, ref), 'count': 1},
               options=place('shade_%s_%d' % (c, right_level), [lookalike, 'shade_%s_2' % other], i % 3),
               correct='shade_%s_%d' % (c, right_level), tags={lookalike: 'M-COL-SHADE'}, domain='colors',
+              **({'tag_lines': {'M-COL-SHADE': SHADE_SAME}} if c != 'blue' else {}),
               correct_text='כֵּן! גַּם זֶה %s.' % C[c], h3='בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא %s. עַכְשָׁו תּוֹרְכֶם.' % C[c])
 
     # B-15 addendum A3: from a swatch to a thing; the light taken for white and the dark for black are the trap
@@ -87,6 +94,7 @@ def colours():
                                                      ('red', 3, 'ball_red', 'ball_black', 'ball_orange')]):
         u.act('COL-B-03', 'pick', prompt='אֵיפֹה עוֹד %s?' % C[c], group={'sprite': 'shade_%s_%d' % (c, ref), 'count': 1},
               options=place(right, [off, other], i + 1), correct=right, tags={off: 'M-COL-SHADE', other: 'M-COL-NAME'}, domain='colors',
+              **({'tag_lines': {'M-COL-SHADE': SHADE_SAME}} if c != 'blue' else {}),
               check='transfer', difficulty=0.6, correct_text='כֵּן! גַּם זֶה %s.' % C[c],
               h3='בָּהִיר וְכֵהֶה הֵם אוֹתוֹ צֶבַע. הַצֶּבַע הוּא %s. עַכְשָׁו תּוֹרְכֶם.' % C[c])
 
@@ -332,7 +340,7 @@ def logic():
               tags={tags[0]: 'M-PAT-GROW', tags[1]: 'M-PAT-NEXT'}, domain='logic', check='transfer', difficulty=0.6)
 
     # B-36 decision 3. needs-editor
-    u.tag('M-RULE-ONE', ['LOG-B-06'], 'הילד בודק את הכלל רק על אחד הפריטים ולא על כולם: רואה שהראשון עיגול ובוחר "הצורה", גם כשהאחרים אינם עיגולים.',
+    u.tag('M-RULE-ONE', ['LOG-B-06'], 'הילד בודק את הכלל רק על אחד הפריטים ולא על כולם: רואה שהראשון עיגול ובוחר בכלל "כולם עיגולים", גם כשהאחרים אינם עיגולים.',
           'לשים על השולחן שלושה חפצים באותו צבע ולשאול: מה דומה בכולם? לעבור יחד על כל חפץ ולבדוק שזה נכון גם לו.',
           ['concrete', 'pictorial'], 'זֶה נָכוֹן לְאֶחָד מֵהֶם. בּוֹאוּ נִבְדֹּק אִם זֶה נָכוֹן לְכֻלָּם, אֶחָד אֶחָד.')
     u.skill('LOG-B-06', 'מוצאים את הכלל', 'מוֹצְאִים מַה מְשֻׁתָּף', 'sprout', ['LOG-A-03'], ['pictorial'], ['M-RULE-ONE'])

@@ -144,9 +144,15 @@ class HebrewMasterTableTest(unittest.TestCase):
         # two LOG-A-09 items with a look-alike, and the own lines of five items). The corrected-and-done rows stay 1189 (the sources
         # were written in the editor's form where a rule had a correction: מַה, שְׁנֵי הַצְּדָדִים שָׁוִים, the qamats qatan of תׇּכְנִית), and the
         # proposed rows whose correction differs from the text go from 64 to 75 (11 new draft lines the editor's rules would still change)
+        # B-36 part F (2026-11-01), the editor's pass over the pack and the app: the sources carry the editor's rewordings and the
+        # nikud rules (the shade lines, the "all hops are equal" line, מֵעֶשֶׂר, the 28 שְׂמָאלִי lines and the like), so 30 corrected-and-done
+        # rows (the older shade and number-line lines) now say the corrected text in the source: 1189 to 1159. The proposed rows whose
+        # correction differs from the text go from 75 to 39: the 36 nikud-only corrections (שְׂמָאלִי, כׇּל, וִידַעְתֶּם) are in the
+        # sources, and what is left waits for the owner's decision 8 (the 11 "אֵינוֹ" lines of V1, the 10 Q2 drafts, the 12 balance sides
+        # of D12 and the 6 "אַחֶרֶת" prompts)
         self.assertEqual(len(self.rows), 14434)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1189)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 75)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1159)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 39)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
@@ -206,8 +212,14 @@ class PrefixHelpersTest(unittest.TestCase):
         self.assertEqual(self.a.from_('אֶפֶס'), 'מֵאֶפֶס')
         self.assertEqual(self.a.from_('אַחַת'), 'מֵאַחַת')
         self.assertEqual(self.a.from_('הַמִּסְפָּר'), 'מֵהַמִּסְפָּר')
-        self.assertEqual(self.a.from_('שָׁלוֹשׁ'), 'מִ' + 'שָׁלוֹשׁ')
-        self.assertEqual(self.a.from_('אַרְבַּע'), 'מִאַרְבַּע')  # as the table has it (a question for the editor)
+        # B-36 part F (2026-11-01): מֵ before every guttural, and the dagesh of the dropped nun in the other letters
+        self.assertEqual(self.a.from_('אַרְבַּע'), 'מֵאַרְבַּע')
+        self.assertEqual(self.a.from_('עֶשֶׂר'), 'מֵעֶשֶׂר')
+        self.assertEqual(self.a.from_('חֲמֵשׁ עֶשְׂרֵה'), 'מֵחֲמֵשׁ עֶשְׂרֵה')
+        self.assertEqual(self.a.from_('שָׁלוֹשׁ'), 'מִשָּׁלוֹשׁ')
+        self.assertEqual(self.a.from_('שֵׁשׁ'), 'מִשֵּׁשׁ')
+        self.assertEqual(self.a.from_('שֶׁבַע'), 'מִשֶּׁבַע')
+        self.assertEqual(self.a.from_('תֵּשַׁע'), 'מִתֵּשַׁע')
 
     def test_robot_steps(self):
         self.assertEqual(self.a.robot_steps(['right', 'right', 'down']), 'שְׁנֵי צְעָדִים לְכִוּוּן הַדֶּגֶל, וְאָז צַעַד אֶחָד לְמַטָּה')

@@ -6,20 +6,18 @@ or a new continuation lesson `<lesson>-1-b36` placed after the older ones. Every
 """
 import statistics
 
-from author import F, M, count_words, qty, vav  # noqa: E402
+from author import F, M, count_words, from_, qty, vav  # noqa: E402
 
 CARD_TAKE = ['vo:fb.card.take', 'זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ.']
 SOLIDS_LINE = ['vo:fb.shp_name.solids', 'לְכׇל גּוּף יֵשׁ שֵׁם מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל: הוּא מִתְגַּלְגֵּל? יֵשׁ לוֹ פִּנּוֹת?']
-SHADE_ENDS = ['vo:fb.ser_ends.shade', 'הָאֶמְצָעִי אֵינוֹ הֶחָלָשׁ בְּיוֹתֵר וְאֵינוֹ הֶחָזָק בְּיוֹתֵר. בּוֹאוּ נַתְחִיל מֵהַבָּהִיר.']
+SHADE_ENDS = ['vo:fb.ser_ends.shade', 'מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי בָּהִיר וְלֹא הֲכִי כֵּהֶה.']
+SHADE_END_PICK = ['vo:fb.ser_ends.shade_end', 'זֶה הָאֶמְצַע. בּוֹאוּ נַשְׁוֶה אֶת כֻּלָּם: בָּהִיר, אֶמְצָעִי, כֵּהֶה.']
+MIRROR_LINE = ['vo:fb.num_mirror', 'הַסִּפְרָה הַזֹּאת הֲפוּכָה, כְּמוֹ בַּמַּרְאָה. בּוֹאוּ נִסְתַּכֵּל לְאֵיזֶה צַד הִיא פּוֹנָה.']
 SHADE_SAME = ['vo:fb.col_shade.plain', 'בָּהִיר אוֹ כֵּהֶה, זֶה אוֹתוֹ צֶבַע. בּוֹאוּ נִבְדֹּק שׁוּב.']
 
 
 def steps(k):
     return 'צַעַד אֶחָד' if k == 1 else ('שְׁנֵי צְעָדִים' if k == 2 else '%s צְעָדִים' % M[k])
-
-
-def from_(word):
-    return ('מֵ' if word.startswith('ה') else 'מִ') + word
 
 
 class Adder:
@@ -57,6 +55,11 @@ class Adder:
                 self.u.d['lessons'].append(new)
                 lessons[lesson] = new
             lessons[lesson]['items'].append(item)
+
+
+def cubes(n):
+    """'three cubes' with the number agreeing with the feminine noun."""
+    return 'קֻבִּיָּה אַחַת' if n == 1 else ('שְׁתֵּי קֻבִּיּוֹת' if n == 2 else '%s קֻבִּיּוֹת' % F[n])
 
 
 def tiles(correct, others, i):
@@ -107,13 +110,13 @@ def numbers(u):
           prompt='אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר, %s אוֹ %s?' % (F[9], F[6]),
           group={'sprite': 'apple', 'count': 9, 'arrangement': 'ten_frame', 'seed': 3},
           group2={'sprite': 'apple', 'count': 6, 'arrangement': 'ten_frame', 'seed': 8, 'scale': 1.5},
-          options=['n:9', 'n:6'], correct='n:9', tags={'n:6': 'M-CNT-SIZE'}, size_cue='big', correct_text='כֵּן! %s גָּדוֹל יוֹתֵר.' % F[9],
+          options=['n:9', 'n:6'], correct='n:9', tags={'n:6': 'M-CNT-SIZE'}, size_cue='big', correct_text='כֵּן! הַמִּסְפָּר %s גָּדוֹל יוֹתֵר.' % F[9],
           h3='מְחַבְּרִים אֶחָד לְאֶחָד: לְתֵשַׁע יֵשׁ עוֹד שָׁלוֹשׁ בְּלִי זוּג, אָז תֵּשַׁע גָּדוֹל יוֹתֵר. עַכְשָׁו תּוֹרְכֶם.')
     A.add('b.numb10.12', 'which-is-bigger-more', 'NUM-B-10', 'pick', check='reverse',
           prompt='אֵיזֶה מִסְפָּר קָטָן יוֹתֵר, %s אוֹ %s?' % (F[4], F[7]),
           group={'sprite': 'apple', 'count': 4, 'arrangement': 'line', 'seed': 3},
           group2={'sprite': 'apple', 'count': 7, 'arrangement': 'line', 'seed': 8, 'scale': 0.7},
-          options=['n:4', 'n:7'], correct='n:4', tags={'n:7': 'M-CNT-SIZE'}, size_cue='small', correct_text='כֵּן! %s קָטָן יוֹתֵר.' % F[4],
+          options=['n:4', 'n:7'], correct='n:4', tags={'n:7': 'M-CNT-SIZE'}, size_cue='small', correct_text='כֵּן! הַמִּסְפָּר %s קָטָן יוֹתֵר.' % F[4],
           h3='מְחַבְּרִים אֶחָד לְאֶחָד: לְשֶׁבַע יֵשׁ עוֹד שָׁלוֹשׁ בְּלִי זוּג, אָז אַרְבַּע קָטָן יוֹתֵר. עַכְשָׁו תּוֹרְכֶם.')
     A.add('b.numb11.19', 'one-more-one-less-1-b36', 'NUM-B-11', 'numline', mode='place', to=10, target=7, labels=[0, 6, 10], tag='M-CNT-SEQ',
           check='practice', prompt='שִׂימוּ אֶת הַצְּפַרְדֵּעַ עַל הַמִּסְפָּר שֶׁהוּא אֶחָד יוֹתֵר %s.' % from_(F[6]),
@@ -129,12 +132,13 @@ def numbers(u):
     for want, left, right, check in (('b.numb14.11', 6, 2, 'practice'), ('b.numb14.12', 8, 3, 'transfer')):
         A.add(want, 'split-numbers-more', 'NUM-B-14', 'scale', mode='balance', left=[('block', left, 1)], right=[('block', right, 1)],
               block='block', result=left - right, tag='M-PART-MISS', check=check,
-              prompt='%s עַל קַעֲרָה אַחַת, %s עַל הַשְּׁנִיָּה. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.' % (F[left], F[right]),
-              h3='%s %s: חֲסֵרוֹת %s. מוֹסִיפִים קֻבִּיָּה אַחַר קֻבִּיָּה. עַכְשָׁו תּוֹרְכֶם.' % (F[left], vav(F[right]), F[left - right]),
+              prompt='%s בְּצַד אֶחָד, %s בַּצַּד הַשֵּׁנִי. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.' % (cubes(left), cubes(right)),
+              h3='%s בְּצַד אֶחָד, %s בַּצַּד הַשֵּׁנִי. מוֹסִיפִים קֻבִּיָּה אַחַר קֻבִּיָּה, עַד שֶׁיֵּשׁ %s. עַכְשָׁו תּוֹרְכֶם.' % (
+                  cubes(left), cubes(right), F[left]),
               correct_text='כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים.')
     A.add('b.numb17.13', 'tens-and-twos-1-b36', 'NUM-B-17', 'pick', check='practice',
           prompt='סוֹפְרִים גַּרְבַּיִם בְּזוּגוֹת. כַּמָּה גַּרְבַּיִם יֵשׁ?', group={'sprite': 'sock', 'count': 10, 'arrangement': 'ten_frame', 'seed': 3},
-          options=tiles(10, [8, 12], 0), correct='n:10', tags={'n:8': 'M-CNT-SKIP', 'n:12': 'M-CNT-DOUBLE'}, correct_text='%s! כֹּל זוּג, וְעוֹד זוּג.' % F[10],
+          options=tiles(10, [8, 12], 0), correct='n:10', tags={'n:8': 'M-CNT-SKIP', 'n:12': 'M-CNT-DOUBLE'}, correct_text='%s! סְפַרְתֶּם זוּג אַחַר זוּג.' % F[10],
           h3='סוֹפְרִים בִּשְׁתַּיִם: שְׁתַּיִם, אַרְבַּע, שֵׁשׁ, שְׁמוֹנֶה, עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשֶׂר.')
     A.add('b.numb17.14', 'tens-and-twos-1-b36', 'NUM-B-17', 'numline', mode='jump', to=20, start=4, hops=[2, 2], target=8, labels=[0, 4, 10, 20],
           tag='M-CNT-SEQ', check='predict',
@@ -153,8 +157,9 @@ def math(u):
     for want, left, right, check in (('b.mathb06.11', 10, 7, 'practice'), ('b.mathb06.12', 10, 4, 'transfer')):
         A.add(want, 'make-ten-more', 'MATH-B-06', 'scale', mode='balance', left=[('block', left, 1)], right=[('block', right, 1)], block='block',
               result=left - right, tag='M-PART-MISS', check=check,
-              prompt='%s עַל קַעֲרָה אַחַת, %s עַל הַשְּׁנִיָּה. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.' % (F[left], F[right]),
-              h3='%s %s: חֲסֵרוֹת %s. מוֹסִיפִים קֻבִּיָּה אַחַר קֻבִּיָּה. עַכְשָׁו תּוֹרְכֶם.' % (F[left], vav(F[right]), F[left - right]),
+              prompt='%s בְּצַד אֶחָד, %s בַּצַּד הַשֵּׁנִי. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.' % (cubes(left), cubes(right)),
+              h3='%s בְּצַד אֶחָד, %s בַּצַּד הַשֵּׁנִי. מוֹסִיפִים קֻבִּיָּה אַחַר קֻבִּיָּה, עַד שֶׁיֵּשׁ %s. עַכְשָׁו תּוֹרְכֶם.' % (
+                  cubes(left), cubes(right), F[left]),
               correct_text='כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים.')
     A.add('b.mathb07.9', 'zero-sums', 'MATH-B-07', 'pick', check='practice',
           prompt='%s, וְעוֹד אֶפֶס. כַּמָּה יֵשׁ עַכְשָׁו?' % qty(5, obj['apple']),
@@ -170,7 +175,7 @@ def math(u):
           tag_lines={'M-CNT-CARD': CARD_TAKE}, correct_text='%s! כְּשֶׁכֻּלָּם הָלְכוּ, נִשְׁאַר אֶפֶס.' % F[0],
           h3='%s פָּחוֹת %s: לֹא נִשְׁאַר אַף אֶחָד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[4], F[4], F[0]))
     A.add('b.mathb08.15', 'to-twenty-more', 'MATH-B-08', 'pick', check='practice',
-          prompt='יֵשׁ %s, וְעוֹד %s. כַּמָּה יֵשׁ בַּסַּךְ הַכֹּל?' % (qty(8, obj['apple']), qty(5, obj['apple'])),
+          prompt='יֵשׁ %s, וְעוֹד %s. כַּמָּה יֵשׁ בְּסַךְ הַכֹּל?' % (qty(8, obj['apple']), qty(5, obj['apple'])),
           group={'sprite': 'apple', 'count': 8, 'arrangement': 'ten_frame', 'seed': 3},
           group2={'sprite': 'apple', 'count': 5, 'arrangement': 'ten_frame', 'seed': 8},
           options=tiles(13, [3, 12], 0), correct='n:13', tags={'n:3': 'M-OP-SWAP', 'n:12': 'M-CNT-DOUBLE'},
@@ -187,21 +192,21 @@ def math(u):
           prompt='מְחַלְּקִים %s בֵּין הֶחָתוּל, הַכֶּלֶב וְהַבַּרְוָז. לְכֻלָּם אוֹתוֹ מִסְפָּר.' % qty(6, obj['apple']))
     A.add('b.mathb14.12', 'days-of-the-week-1-b36', 'MATH-B-14', 'build', palette=['day_3', 'day_1', 'day_4', 'day_2'],
           sequence=['day_1', 'day_2', 'day_3', 'day_4'], tag='M-TIME-SEQ', check='practice',
-          prompt='מְסַדְּרִים אֶת הַיָּמִים, מִיּוֹם רִאשׁוֹן.',
+          prompt='מְסַדְּרִים אֶת הַיָּמִים, מִיּוֹם רִאשׁוֹן.', correct_text='כֵּן! סִדַּרְתֶּם אֶת הַיָּמִים.',
           h3='יוֹם רִאשׁוֹן, יוֹם שֵׁנִי, יוֹם שְׁלִישִׁי, יוֹם רְבִיעִי. עַכְשָׁו תּוֹרְכֶם.')
     A.add('b.mathb14.13', 'days-of-the-week-1-b36', 'MATH-B-14', 'build', palette=['day_7', 'day_5', 'day_6'],
           sequence=['day_5', 'day_6', 'day_7'], tag='M-TIME-SEQ', check='transfer',
-          prompt='מְסַדְּרִים אֶת הַיָּמִים, מִיּוֹם חֲמִישִׁי עַד שַׁבָּת.',
+          prompt='מְסַדְּרִים אֶת הַיָּמִים, מִיּוֹם חֲמִישִׁי עַד שַׁבָּת.', correct_text='כֵּן! סִדַּרְתֶּם אֶת הַיָּמִים.',
           h3='יוֹם חֲמִישִׁי, יוֹם שִׁשִּׁי, שַׁבָּת. עַכְשָׁו תּוֹרְכֶם.')
     for want, total, seen, check in (('b.mathb18.10', 7, 3, 'practice'), ('b.mathb18.11', 9, 5, 'transfer')):
         hidden = total - seen
         A.add(want, 'missing-number', 'MATH-B-18', 'pick', check=check,
-              prompt='בְּסַךְ הַכֹּל יֵשׁ %s. רוֹאִים %s, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?' % (qty(total, obj['fish']), F[seen]),
+              prompt='בְּסַךְ הַכֹּל יֵשׁ %s. רוֹאִים %s, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?' % (qty(total, obj['fish']), qty(seen, obj['fish'])),
               group={'sprite': 'fish', 'count': seen, 'arrangement': 'line', 'seed': 3}, group2={'sprite': 'stone', 'count': 1},
               options=tiles(hidden, [total, seen + total], 0 if want.endswith('10') else 2), correct='n:%d' % hidden,
               tags={'n:%d' % total: 'M-PART-MISS', 'n:%d' % (seen + total): 'M-OP-SWAP'},
               correct_text='%s! %s וְעוֹד %s הֵם %s.' % (F[hidden], F[seen], F[hidden], F[total]),
-              h3='רוֹאִים %s, וּבַסַּךְ הַכֹּל יֵשׁ %s. מַה שֶּׁחָסֵר: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[seen], F[total], F[hidden], F[hidden]))
+              h3='רוֹאִים %s, וּבְסַךְ הַכֹּל יֵשׁ %s. מַה שֶּׁחָסֵר: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[seen], F[total], F[hidden], F[hidden]))
     A.finish()
 
 
@@ -222,7 +227,7 @@ def colours(u):
     for want, colour, order, check in (('b.colb02.13', 'blue', [3, 1, 2], 'practice'), ('b.colb02.14', 'green', [2, 3, 1], 'transfer')):
         A.add(want, 'middle-shade', 'COL-B-02', 'build', palette=['shade_%s_%d' % (colour, k) for k in order],
               sequence=['shade_%s_%d' % (colour, k) for k in (1, 2, 3)], tag='M-SER-ENDS', tag_lines={'M-SER-ENDS': SHADE_ENDS}, check=check,
-              prompt='מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.', h3='מַתְחִילִים בַּבָּהִיר, אַחֲרָיו הָאֶמְצָעִי, וּבַסּוֹף הַכֵּהֶה. עַכְשָׁו תּוֹרְכֶם.')
+              prompt='מְסַדְּרִים מֵהַבָּהִיר אֶל הַכֵּהֶה.', correct_text='כֵּן! סִדַּרְתֶּם מֵהַבָּהִיר אֶל הַכֵּהֶה.', h3='מַתְחִילִים בַּבָּהִיר, אַחֲרָיו הָאֶמְצָעִי, וּבַסּוֹף הַכֵּהֶה. עַכְשָׁו תּוֹרְכֶם.')
     for want, (c1, w1), (c2, w2), items, check in (
             ('b.colb03.11', ('blue', 'כָּחֹל'), ('red', 'אָדֹם'), [('shade_blue_1', 1), ('shade_red_3', 2), ('shade_blue_3', 1), ('shade_red_1', 2),
                                                                   ('ball_blue', 1), ('ball_red', 2)], 'practice'),
@@ -339,7 +344,7 @@ def robots(u):
     A = Adder(u)
     A.add('b.csb04.7', 'fix-the-program', 'CS-B-04', 'robot', mode='direct', cols=4, rows=3, robot=[2, 2], goal=[2, 0], solution=['up', 'up'],
           domain='cs', check='transfer',
-          prompt='אוּפְּס, חֵץ אֶחָד הָלַךְ לְמַטָּה בִּמְקוֹם לְמַעְלָה, וְהָרוֹבּוֹט נֶעֱצַר כָּאן. מַגִּיעִים לַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה.')
+          prompt='אוֹפְּס, חֵץ אֶחָד הָלַךְ לְמַטָּה בִּמְקוֹם לְמַעְלָה, וְהָרוֹבּוֹט נֶעֱצַר כָּאן. מַגִּיעִים לַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה.')
     A.add('b.csb04.8', 'fix-the-program', 'CS-B-04', 'robot', mode='direct', cols=4, rows=2, robot=[1, 1], goal=[3, 1], solution=['right', 'right'],
           domain='cs', check='transfer', prompt='הַתׇּכְנִית אָמְרָה שְׂמֹאלָה בִּמְקוֹם יָמִינָה. מַגִּיעִים אֶל הַדֶּגֶל בַּדֶּרֶךְ הַקְּצָרָה.')
     A.finish()
@@ -354,11 +359,13 @@ def extra_numbers(u, names):
     A.add('x.numb07.21', 'write-from-the-dot-0-4', 'NUM-B-07', 'pick', check='practice',
           prompt='אֵיפֹה הַשָּׁלוֹשׁ כְּתוּבָה נָכוֹן?', options=['glyph_3', 'glyph_3_rev', 'glyph_8'], correct='glyph_3',
           tags={'glyph_3_rev': 'M-NUM-REV', 'glyph_8': 'M-NUM-NAME'}, correct_text='כֵּן! כָּכָה כּוֹתְבִים שָׁלוֹשׁ.',
-          h3='כּוֹתְבִים שָׁלוֹשׁ בִּשְׁתֵּי עִקּוּלִים שֶׁנִּפְתָּחִים לְצַד שְׂמֹאל. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשָּׁלוֹשׁ הַנְּכוֹנָה.')
+          h3='כּוֹתְבִים שָׁלוֹשׁ בִּשְׁתֵּי קְשָׁתוֹת שֶׁנִּפְתָּחוֹת שְׂמֹאלָה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשָּׁלוֹשׁ הַנְּכוֹנָה.',
+          tag_lines={'M-NUM-REV': MIRROR_LINE})
     A.add('x.numb07.22', 'write-from-the-dot-5-9', 'NUM-B-07', 'pick', check='transfer',
           prompt='אֵיפֹה הַשֶּׁבַע כְּתוּבָה נָכוֹן?', options=['glyph_7', 'glyph_7_rev', 'glyph_1'], correct='glyph_7',
           tags={'glyph_7_rev': 'M-NUM-REV', 'glyph_1': 'M-NUM-NAME'}, correct_text='כֵּן! כָּכָה כּוֹתְבִים שֶׁבַע.',
-          h3='כּוֹתְבִים שֶׁבַע בְּקַו שֶׁכָּבוּי וְקַו אֶלְכְּסוֹן שֶׁיּוֹרֵד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשֶּׁבַע הַנְּכוֹנָה.')
+          h3='כּוֹתְבִים שֶׁבַע: קַו שׁוֹכֵב, וְאַחֲרָיו קַו שֶׁיּוֹרֵד כְּמוֹ מַגְלֵשָׁה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשֶּׁבַע הַנְּכוֹנָה.',
+          tag_lines={'M-NUM-REV': MIRROR_LINE})
     for i, (o, n, opts, check) in enumerate((('cat', 4, [3, 4, 5], 'practice'), ('butterfly', 5, [4, 5, 6], 'transfer')), start=1):
         A.add('b36.numa07.%d' % i, 'match-numbers-sets-more', 'NUM-A-07', 'count_tap', id='b36.numa07.%d' % i, band='A', domain='numbers', obj=o,
               count=n, options=opts, also=['NUM-A-04'], check=check, seed=70 + i)

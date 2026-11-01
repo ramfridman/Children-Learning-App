@@ -10,6 +10,7 @@ pack is built, and is the same every time it runs. Every text it writes is `need
 import json
 import os
 import sys
+import unicodedata
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'content', 'starter')
@@ -63,14 +64,22 @@ def prefix(p, word):
     return base + SHVA + dagesh + letter + marks + rest
 
 
-# The words the reviewed table writes with מֵ (hebrew-notes G9, G10). It keeps "מִאַרְבַּע" (activity.b.numb13.14), which
-# G9 would write "מֵאַרְבַּע": a question for the hebrew-text-editor; until it is answered the generator follows the table.
-FROM_TSERE = ('אֶפֶס', 'אַחַת')
+# מִ before a word of the pack (hebrew-notes G9, G10; part F of B-36 answered the open question about "מִאַרְבַּע"): מֵ before a
+# guttural (א ה ח ע ר: מֵאֶפֶס, מֵאַרְבַּע, מֵעֶשֶׂר, מֵחָמֵשׁ, מֵהַמִּסְפָּר); any other letter takes the dagesh of the dropped
+# nun (מִשֵּׁשׁ, מִשֶּׁבַע, מִשָּׁלוֹשׁ, מִשְּׁמוֹנֶה; מִתֵּשַׁע has it already).
+FROM_GUTTURAL = 'אהחער'
 
 
 def from_(word):
-    """מִ before a word; מֵ before the article and the words of FROM_TSERE (מֵאֶפֶס, מֵאַחַת, מֵהַמִּסְפָּר)."""
-    return ('מֵ' if word.startswith(FROM_TSERE) or word.startswith('ה') else 'מִ') + word
+    """The word with "from" in front of it, pointed by its first letter."""
+    letter, marks, rest = _first(word)
+    if letter in FROM_GUTTURAL:
+        return 'מֵ' + word
+    if DAGESH in marks or letter not in 'דזלמנסצקשתגט':
+        return 'מִ' + word
+    # the dagesh comes after the vowel and before the shin dot, as in every text of the pack
+    parts = sorted(set(marks) | {DAGESH}, key=unicodedata.combining)
+    return 'מִ' + letter + ''.join(parts) + rest
 
 
 # Counting words with niqqud. F: the abstract count and the numeral on a tile; M: with a masculine noun.
@@ -382,7 +391,7 @@ def k_flash(a, ctx):
         a, 'flash', skills_of(a), 'learn', 'practice',
         {'background': 'asset:meadow', 'group': group, 'flashMs': a.get('flashMs', 1500)}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט.', 'נָרִים אֶצְבָּעוֹת וְנִסְפֹּר: %s.' % count_words(n),
-              '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (this_qty(n, obj), F[n]),
+              'סוֹפְרִים אֶת כֻּלָּם. %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (this_qty(n, obj), F[n]),
               actions=('replay_prompt_slow', 'show_fingers', 'worked_example'), shared=('flash', None)),
         'child sees the number at a glance, without counting one by one',
         prompt='הִסְתַּכְּלוּ טוֹב… כַּמָּה %s?' % obj['many'], correct='%s! רְאִיתֶם בְּלִי לִסְפֹּר.' % F[n],
@@ -1035,8 +1044,16 @@ def k_numline(a, ctx):
     if jump:
         scene['start'] = a['start']
         scene['hops'] = a['hops']
-    h3 = a.get('h3') or ('מַתְחִילִים %s וְסוֹפְרִים: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[a['start']] if jump else F[frm]),
-                                                                           count_words(target) if not jump else F[target]))
+    if a.get('h3'):
+        h3 = a['h3']
+    elif not jump and frm > 0:
+        # B-36 part F: counting on from a number that is not zero says the numbers after it ("start from ten and count: eleven, twelve"),
+        # not "from one to fourteen"
+        after = (': ' + ', '.join(F[i] for i in range(frm + 1, target + 1))) if target - frm <= 5 else ' הָלְאָה עַד %s' % F[target]
+        h3 = 'מַתְחִילִים %s וְסוֹפְרִים%s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[frm]), after)
+    else:
+        h3 = 'מַתְחִילִים %s וְסוֹפְרִים: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[a['start']] if jump else F[frm]),
+                                                              count_words(target) if not jump else F[target])
     return activity(
         a, 'number_line', skills_of(a), 'practice', 'practice',
         scene, answer, tags, hint_set(a, h3, ('pick', 'line')), a.get('goal', 'child finds the number on the line'),

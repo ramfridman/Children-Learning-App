@@ -460,3 +460,57 @@ like) are now in the source text were replaced, so the pinned count of corrected
 - The sphere of SHP-B-08 is drawn as a circle (its outline on paper); its line says "lines of the solid".
 - Not done, because the picture is not built or the plan is the Band A family plan: shop_pay, balance, COL-B-03, MATH-B-01, NUM-B-14,
   NUM-B-16 with groups, MATH-B-02 with groups, LOG-B-01 and 04, trace.
+
+## 14. B-36 part F: the text pass over the next pack and the app (hebrew-text-editor, 2026-11-01)
+
+**What was read.** Every `proposed` row of `docs/review/hebrew-master.csv` on branch `next-pack`: 3,147 rows, 997 distinct texts. They are
+the 1,142 B-40 hint lines, the part B/C/E lines (`vo:fb.card.*`, the 8 new tags, `vo:fb.shp_name.solids`, the 8 misconception files,
+the LOG-A-09 labels), the 150 part D items with their 8 `-1-b36` lessons, the B-38 cube and cat lines, the 9 `vo:hint.spot_but_one.h3`
+rows that went back to proposed, the B-39 bottle lines and the B-32 refusal message. Each text was read as the child sees it (grammar,
+nikud, gender and number, plural address, length, the word a 3 to 8 year old knows), with the item next to it where the line depends on the picture
+or on the answer (`ditems` view: prompt, options, correct line, every wrong-answer line, the three hints).
+
+**Result.** 2,928 rows are `text-ready`; 219 stay `proposed` because only the owner can answer them: 171 V1 rows (decision 8), 12 balance
+rows (D12), 10 Q2 drafts, and 26 B-40 hint rows with a real teaching question (section 14.3). 185 rows (94 distinct texts) were reworded in
+the SOURCES; the table keeps the draft and the reason in the `changes` column (`PART_F_LIST` and `PART_F_RX` in `tools/hebrew_voice_review.py`).
+Another 60 older rows that were `text-ready` already changed with them (the shade lines of COL-B-02 and COL-B-03, the M-SEQ-SCRIPT line of the six `cs.wrong` items, the number-line line `כׇּל הַקְּפִיצוֹת שָׁווֹת`, the B-32 refusal message): 245 rows in all have a new text.
+Owner-approved rows: 115 before, 115 after, none changed.
+
+### 14.1 What was wrong, by kind (the drafts of the app-developer and the curriculum-expert)
+
+| Kind | Examples | Fix (source) |
+|---|---|---|
+| Gender | `שְׁלוֹשָׁה צְפַרְדְּעִים גְּדוֹלִים` (a frog is feminine); `שְׁתֵּי עִקּוּלִים` (עִקּוּל is masculine) | `counting-hills.json`, `band_b36.py` |
+| Words that are not Hebrew, or the wrong word | `עוֹשִׂים שֶׁהֵם יַחְזְרוּ`; `הָעֶתֶק` / `בֶּעָתֶק` (not "the copy"); `מִלַּכֶּלֶב`; `קַו שֶׁכָּבוּי` ("turned off"); `חֲסֵרוֹת` with no noun | `logic.json`, `math.json`, `band_b36.py` |
+| Sense: the line did not fit the item | "you copied the order" after putting a routine, a story, towers or days in order (12 items: now `סִדַּרְתֶּם`); the old M-CNT-SIZE line ("more is not always bigger") on the NUM-A-11 balance; the mirrored 3 and 7 answered with the line about two digits swapped; `הֵם שׁוֹנִים` with no "different in what" | `correct_text`, `tag_lines` |
+| Nikud | `מִעֶשֶׂר` → `מֵעֶשֶׂר`, `מִשֵׁשׁ` → `מִשֵּׁשׁ`, `הַחָתוּל` → `הֶחָתוּל`, `הֶחוּם` → `הַחוּם`, `אוּפְּס` → `אוֹפְּס`, `בַּסַּךְ הַכֹּל` → `בְּסַךְ הַכֹּל`, `כֹּל` → `כׇּל` | `author.py from_()` (gutturals take מֵ; the dagesh after מִ), `SUBS` |
+| Register / vocabulary | `שִׁגְרָה`, `גְּרָף`, `נֶעֱרָמִים`, `כָּמוֹהוּ`, `אֶלְכְּסוֹן`, `בְּיוֹתֵר` | `אֶפְשָׁר לַעֲרֹם`, `שַׁיָּךְ`, `הֲכִי גָּבוֹהַּ`, a slide a child knows |
+| Templates | the default level 3 of a number line that starts at ten said "start from ten and count from one to fourteen" | `author.py k_numline`: "start from ten and count: eleven, twelve…" |
+| Level 3 opens with the answer | the 16 flash lines began `אֵלֶּה שְׁלוֹשָׁה תַּפּוּחִים.` | `author.py k_flash`: `סוֹפְרִים אֶת כֻּלָּם.` first |
+| One word for one thing | the ten-frame was `לוּחַ` (my B-40 draft, 23 rows) and `מִסְגֶּרֶת` (older lines, NUM-A-14, MATH-B-08) | `מִסְגֶּרֶת` everywhere (`hint_lines.py` TEEN templates); `לוּחַ` is gone |
+| The sides of a scale | `עַל קַעֲרָה אַחַת` (a bowl) in 4 balance items; `חֲסֵרוֹת` | `בְּצַד אֶחָד … בַּצַּד הַשֵּׁנִי`, as every other balance line says |
+
+### 14.2 The two lines of the curriculum-expert (b36 section 10), and what was found next to them
+
+- COL-B-02 `.9` to `.12` (the middle shade): the shared M-SER-ENDS line said "not the smallest and not the biggest". They and `b.colb02.13`/`.14`
+  say `מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי בָּהִיר וְלֹא הֲכִי כֵּהֶה.` (`SHADE_ENDS`, one clip).
+- COL-B-03 green, red and purple (and the same three colours in COL-B-02): the shared M-COL-SHADE line said "light blue and dark blue are both blue".
+  They say `בָּהִיר אוֹ כֵּהֶה, זֶה אוֹתוֹ צֶבַע. בּוֹאוּ נִבְדֹּק שׁוּב.` (`SHADE_SAME`); the blue items keep the old line.
+- **Found next to it:** in `b.colb02.1` to `.8` ("which is the darkest / lightest?") a child who picked the middle shade heard "we look for the middle". They now
+  hear `זֶה הָאֶמְצַע. בּוֹאוּ נַשְׁוֶה אֶת כֻּלָּם: בָּהִיר, אֶמְצָעִי, כֵּהֶה.` (`SHADE_END_PICK`).
+
+### 14.3 Left for the owner (still `proposed`), besides V1, Q2 and D12
+
+1. **MATH-B-18, level 3 (9 items):** the B-40 line counts the empty places from one (what the picture draws); the owner's Q3 asked for count on with fingers.
+2. **Spot the mistake, level 3 (9 Band A items):** the B-40 line `vo:hint.spot_right.h3` replaces the owner-approved P1 line where the app draws the right picture above the mistake.
+3. **MATH-B-08 above ten, level 3 (8 items):** two groups and the sum; the make-ten strategy is gone until a picture of a ten exists.
+
+### 14.4 Not text, for others
+
+- **curriculum-expert:** `x.numb07.21` and `.22` tag the mirrored 3 and 7 `M-NUM-REV` ("swaps two digits"); the tag that fits is `M-NUM-WRITE`. The line is fixed (own `tag_lines`), the tag is not.
+  Older lines worth a second look (all `text-ready`, I did not touch them): `יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ` (M-PART-MISS, 40 rows) and the NUM-A-11 "same?" correct line `כֵּן, צָדַקְתֶּם!` after a child's "לֹא".
+- **voice director:** V1 is 171 rows now (was 126): the new rows use the same 10 words (`בַּתּוֹר` 51, `גְּדֵלִים` 43, `אֵלֶּה` 37, `שָׂמִים` 19, `סָפַר` 13, and 5 single words) and the beat before `זֶה אֶפֶס`.
+  Number words keep their nikud also after `מִ` (`מִשֵּׁשׁ`, `מִשֶּׁבַע`): `is_number_token` strips the dagesh of the dropped nun. The five B-39 lines stay PER-LAND.
+- **app-developer:** nothing to fold in; the sources are already corrected (`content/units`, `tools/`, `he.dart` › `setupNameBadChars`). The two tool pins moved with a comment
+  (`test_hebrew_sources.py`: corrected-and-done rows 1189 → 1159, proposed-and-corrected rows 75 → 39).
+- **qa-engineer:** the label `אֵיפֹה הַבַּרְוָז?` of the cat items is right: the hint card draws a small duck (`tap_plans.dart _position`), not the cat.
