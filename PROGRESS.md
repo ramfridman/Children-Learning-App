@@ -97,6 +97,8 @@ The full checklist is `docs/owner-todo.md`. In short:
 
 ## Later ideas (after the full app is done)
 
+- **Background music** (owner, 2026-11-01): gentle music where the character is not speaking; now board row B-46 (plan first, after the voicing B-45).
+
 The first four ideas below (dress-up studio, daily welcome, picture puzzles, English lessons) are now in the plan as board B-41 to B-44 (owner, 2026-10-30); their specs stay here.
 
 - **Dress-up studio** (owner, 2026-10-28): an **Edit** button on the character selection opens a page where the child dresses the character with drag and drop, every clothing type (head, face, body, legs, feet, hands, back, extras), a large variety. The choice is saved on the child's profile (synced, never reset to a default). It needs its own plan before any code: the UI and UX (layers and anchor points per character, a wardrobe drawer by type, undo and reset, no purchases, no scarcity, nothing that frightens or shames), art for every item on all nine characters (a shared rig so one item fits every body; this goes into the illustrator's brief, to-do P9), how it relates to the M8 scarf outfits (`outfit_id`) and prizes (prizes may unlock items, but nothing is ever lost), and the sync and parent view. Goldens for every item on every character.
