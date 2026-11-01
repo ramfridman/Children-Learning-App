@@ -137,6 +137,7 @@ def colours():
     u.lesson('same-colour-shades-more', 'עוֹד גְּוָנִים', ['COL-B-03'], ids('COL-B-03', 4), 'נִפְלָא! אַתֶּם רוֹאִים אֶת הַצֶּבַע.')
     u.lesson('sort-two-ways', 'מְמַיְּנִים בִּשְׁתֵּי דְּרָכִים', ['COL-B-04'], ids('COL-B-04'), 'כׇּל הַכָּבוֹד! מִיַּנְתֶּם בִּשְׁתֵּי דְּרָכִים.')
     u.lesson('rainbow', 'הַקֶּשֶׁת', ['COL-B-06'], ids('COL-B-06'), 'וַאוּ! בְּנִיתֶם קֶשֶׁת.')
+    import band_b36; band_b36.colours(u)  # noqa: E702
     u.save()
 
 
@@ -146,7 +147,7 @@ def shapes():
     u = Unit('band-b-shapes', 'shapes',
              'Band B of Shapes: polygons by their sides, counting sides, square and rectangle, closed shapes, the solids. '
              'Hebrew is a draft by Claude, needs-editor.',
-             30, assets=['shape_pentagon', 'shape_hexagon', 'shape_quad', 'shape_open', 'shape_curved', 'solid_cylinder', 'solid_cone',
+             30, assets=['shape_open_quad', 'obj_can', 'obj_drum', 'obj_party_hat', 'obj_gift', 'shape_pentagon', 'shape_hexagon', 'shape_quad', 'shape_open', 'shape_curved', 'solid_cylinder', 'solid_cone',
                          'solid_sphere', 'solid_pyramid', 'solid_box', 'solid_cube', 'shape_triangle', 'shape_square', 'shape_rect', 'shape_circle',
                          'shape_triangle_thin', 'shape_triangle_down', 'shape_square_tilt', 'tick', 'cross'])
     u.tag('M-SHP-CLOSED', ['SHP-B-01', 'SHP-B-04'], 'הילד מכנה צורה פתוחה או עם צלע עקומה "משולש" או "מרובע", כי היא נראית דומה.',
@@ -255,6 +256,7 @@ def shapes():
     u.lesson('closed-shapes-more', 'עוֹד צוּרוֹת סְגוּרוֹת', ['SHP-B-04'], ids('SHP-B-04', 4), 'מְצֻיָּן! שַׂמְתֶּם לֵב לִצְלָעוֹת הַיְשָׁרוֹת.')
     u.lesson('solids', 'גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 0, 5), 'כׇּל הַכָּבוֹד! הִכַּרְתֶּם גּוּפִים.')
     u.lesson('solids-more', 'עוֹד גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 5), 'יָפֶה מְאֹד! גּוּפִים בְּכׇל מָקוֹם.')
+    import band_b36; band_b36.shapes(u)  # noqa: E702
     u.save()
 
 
@@ -422,6 +424,7 @@ def logic():
     u.lesson('if-then', 'אִם… אָז…', ['LOG-B-08'], ids('LOG-B-08'), 'כׇּל הַכָּבוֹד! עֲשִׂיתֶם לְפִי הַכְּלָל.')
     u.lesson('not-this-not-that', 'לֹא זֶה וְלֹא זֶה', ['LOG-B-09'], ids('LOG-B-09'), 'כׇּל הַכָּבוֹד! פְּתַרְתֶּם חִידָה.')
     u.lesson('line-up-five', 'מְסַדְּרִים בְּשׁוּרָה', ['LOG-B-11'], ids('LOG-B-11'), 'כׇּל הַכָּבוֹד! הַמִּגְדָּלִים בַּסֵּדֶר.')
+    import band_b36; band_b36.logic(u)  # noqa: E702
     u.save()
 
 
@@ -474,6 +477,7 @@ def robots():
     u.lesson('longer-robot-paths', 'דְּרָכִים אֲרֻכּוֹת', ['CS-B-01'], ids('CS-B-01', 0, 4), 'כׇּל הַכָּבוֹד! תִּכְנַנְתֶּם דֶּרֶךְ אֲרֻכָּה.')
     u.lesson('longer-robot-paths-more', 'עוֹד דְּרָכִים', ['CS-B-01'], ids('CS-B-01', 4), 'מְצֻיָּן! הָרוֹבּוֹט הִגִּיעַ.')
     u.lesson('fix-the-program', 'מְתַקְּנִים תׇּכְנִית', ['CS-B-04'], ids('CS-B-04'), 'כׇּל הַכָּבוֹד! תִּקַּנְתֶּם אֶת הַצַּעַד.')
+    import band_b36; band_b36.robots(u)  # noqa: E702
     u.save()
 
 

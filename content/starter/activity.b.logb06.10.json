@@ -1,0 +1,172 @@
+{
+  "schema": "activity/v1",
+  "id": "b.logb06.10",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "logic",
+  "band": "B",
+  "skills": [
+    {
+      "id": "LOG-B-06",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "transfer",
+  "representation": "concrete",
+  "variantGroup": "sort",
+  "difficulty": {
+    "authored": 0.59
+  },
+  "prompt": {
+    "vo": "vo:b.logb06.10.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חָבֵר הִתְחִיל לְמַיֵּן. מִסְתַּכְּלִים עַל שְׁתֵּי הַקֻּפְסָאוֹת, וּמְמַיְּנִים אֶת הַשְּׁאָר בְּאוֹתָהּ דֶּרֶךְ."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:shape_square_red",
+        "count": 1,
+        "label": "רִבּוּעַ אָדֹם"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:shape_triangle_red",
+        "count": 1,
+        "label": "מְשֻׁלָּשׁ אָדֹם"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:shape_square_blue",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:shape_triangle_green",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:shape_square_yellow",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:shape_triangle_blue",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-RULE-ONE"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.logb06.10.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-RULE-ONE",
+        "vo": "vo:fb.rule_one",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה נָכוֹן לְאֶחָד מֵהֶם. בּוֹאוּ נִבְדֹּק אִם זֶה נָכוֹן לְכֻלָּם, אֶחָד אֶחָד."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.sort_pass.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַתְּמוּנָה הַבָּאָה עוֹבֶרֶת לְיַד כׇּל קְבוּצָה. נִסְתַּכֵּל לְאֵיזוֹ הִיא מַתְאִימָה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.logb06.10.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַעֲבִיר כׇּל תְּמוּנָה אֶל הַקְּבוּצָה הַמַּתְאִימָה. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child puts every picture in the group that fits the rule",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "חָבֵר הִתְחִיל לְמַיֵּן. מִסְתַּכְּלִים עַל שְׁתֵּי הַקֻּפְסָאוֹת, וּמְמַיְּנִים אֶת הַשְּׁאָר בְּאוֹתָהּ דֶּרֶךְ."
+  }
+}

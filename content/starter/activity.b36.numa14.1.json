@@ -1,0 +1,172 @@
+{
+  "schema": "activity/v1",
+  "id": "b36.numa14.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-14",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "reverse",
+  "representation": "pictorial",
+  "variantGroup": "numeral-to-set",
+  "difficulty": {
+    "authored": 0.35
+  },
+  "prompt": {
+    "vo": "vo:b36.numa14.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה יֵשׁ אֶפֶס דָּגִים?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "numeral": 0
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "set": {
+          "sprite": "asset:fish",
+          "count": 1,
+          "arrangement": "ten_frame",
+          "seed": 1
+        },
+        "label": "דָּג אֶחָד",
+        "misconception": "M-NUM-ZERO"
+      },
+      {
+        "id": "o2",
+        "set": {
+          "sprite": "asset:fish",
+          "count": 0,
+          "arrangement": "ten_frame",
+          "seed": 0
+        },
+        "label": "אֵין אַף דָּג"
+      },
+      {
+        "id": "o3",
+        "set": {
+          "sprite": "asset:fish",
+          "count": 2,
+          "arrangement": "ten_frame",
+          "seed": 2
+        },
+        "label": "שְׁנֵי דָּגִים",
+        "misconception": "M-NUM-ZERO"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b36.numa14.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! אֵין כָּאן אַף דָּג."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-NUM-ZERO",
+        "vo": "vo:fb.zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:b36.numa14.1.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:b36.numa14.1.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל עַל כׇּל מִסְגֶּרֶת: אֵיפֹה הִיא רֵיקָה?"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b36.numa14.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְחַפְּשִׂים מִסְגֶּרֶת בְּלִי אַף דָּג. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּסְגֶּרֶת הָרֵיקָה."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the group that has the number named",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיפֹה יֵשׁ אֶפֶס דָּגִים?"
+  }
+}

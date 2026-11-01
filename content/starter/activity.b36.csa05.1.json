@@ -1,0 +1,172 @@
+{
+  "schema": "activity/v1",
+  "id": "b36.csa05.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "sort_drag",
+  "templateVersion": "1.0",
+  "domain": "cs",
+  "band": "A",
+  "skills": [
+    {
+      "id": "CS-A-05",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "sort",
+  "difficulty": {
+    "authored": 0.35
+  },
+  "prompt": {
+    "vo": "vo:b36.csa05.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל צַעַד אֶל הַשִּׁגְרָה שֶׁלּוֹ: צִחְצוּחַ שִׁנַּיִם אוֹ רְחִיצַת יָדַיִם."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "bins": [
+      {
+        "id": "b1",
+        "sprite": "asset:step_brush",
+        "count": 1,
+        "label": "צִחְצוּחַ שִׁנַּיִם"
+      },
+      {
+        "id": "b2",
+        "sprite": "asset:step_soap",
+        "count": 1,
+        "label": "רְחִיצַת יָדַיִם"
+      }
+    ],
+    "items": [
+      {
+        "id": "i1",
+        "sprite": "asset:step_paste",
+        "bin": "b1"
+      },
+      {
+        "id": "i2",
+        "sprite": "asset:step_tap",
+        "bin": "b2"
+      },
+      {
+        "id": "i3",
+        "sprite": "asset:step_rinse",
+        "bin": "b1"
+      },
+      {
+        "id": "i4",
+        "sprite": "asset:step_towel",
+        "bin": "b2"
+      }
+    ]
+  },
+  "answer": {
+    "type": "sort",
+    "mode": "sort",
+    "misconception": "M-SEQ-SCRIPT"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b36.csa05.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! מִיַּנְתֶּם אֶת כֻּלָּם."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SEQ-SCRIPT",
+        "vo": "vo:fb.seq_script",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה חֵלֶק מֵהַשְּׁלַבִּים. בּוֹאוּ נַעֲבֹר עֲלֵיהֶם, אֶחָד אַחֲרֵי הַשֵּׁנִי."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.sort_pass.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַתְּמוּנָה הַבָּאָה עוֹבֶרֶת לְיַד כׇּל קְבוּצָה. נִסְתַּכֵּל לְאֵיזוֹ הִיא מַתְאִימָה."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b36.csa05.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נַעֲבִיר כׇּל תְּמוּנָה אֶל הַקְּבוּצָה הַמַּתְאִימָה. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child puts every picture in the group that fits the rule",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כׇּל צַעַד אֶל הַשִּׁגְרָה שֶׁלּוֹ: צִחְצוּחַ שִׁנַּיִם אוֹ רְחִיצַת יָדַיִם."
+  }
+}

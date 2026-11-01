@@ -823,6 +823,182 @@
       "h3": "לִרְחִיצַת יָדַיִם צְרִיכִים בָּרֶז, סַבּוֹן וּמַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּבְרֶשֶׁת.",
       "difficulty": 0.5,
       "domain": "cs"
+    },
+    {
+      "kind": "build",
+      "id": "b36.csa01.1",
+      "skill": "CS-A-01",
+      "check": "practice",
+      "prompt": "מְסַדְּרִים אֶת הַצְּעָדִים שֶׁל רְחִיצַת יָדַיִם.",
+      "palette": [
+        "step_soap",
+        "step_towel",
+        "step_tap"
+      ],
+      "h3": "קֹדֶם בֶּרֶז, אַחַר כָּךְ סַבּוֹן, וּבַסּוֹף מַגֶּבֶת. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-SEQ-CAUSE",
+      "sequence": [
+        "step_tap",
+        "step_soap",
+        "step_towel"
+      ],
+      "domain": "cs",
+      "goal": "child puts the steps of a routine in order",
+      "difficulty": 0.37
+    },
+    {
+      "kind": "build",
+      "id": "b36.csa01.2",
+      "skill": "CS-A-01",
+      "check": "transfer",
+      "prompt": "מְסַדְּרִים אֶת הַצְּעָדִים שֶׁל צִחְצוּחַ שִׁנַּיִם.",
+      "palette": [
+        "step_rinse",
+        "step_paste",
+        "step_brush"
+      ],
+      "h3": "קֹדֶם מִשְׁחָה, אַחַר כָּךְ מִבְרֶשֶׁת, וּבַסּוֹף שְׁטִיפָה. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-SEQ-CAUSE",
+      "sequence": [
+        "step_paste",
+        "step_brush",
+        "step_rinse"
+      ],
+      "domain": "cs",
+      "goal": "child puts the steps of a routine in order",
+      "difficulty": 0.37
+    },
+    {
+      "kind": "robot",
+      "id": "b36.csa03.1",
+      "skill": "CS-A-03",
+      "check": "practice",
+      "mode": "plan",
+      "cols": 3,
+      "rows": 2,
+      "robot": [
+        0,
+        1
+      ],
+      "goal": [
+        1,
+        0
+      ],
+      "solution": [
+        "up",
+        "right"
+      ],
+      "prompt": "מְתַכְנְנִים אֶת צַעֲדֵי הָרוֹבּוֹט, וְאַחַר כָּךְ לוֹחֲצִים עַל הַתְחָלָה.",
+      "domain": "cs",
+      "weights": {
+        "CS-A-03": 1,
+        "CS-A-04": 0.5
+      },
+      "difficulty": 0.32
+    },
+    {
+      "kind": "robot",
+      "id": "b36.csa03.2",
+      "skill": "CS-A-03",
+      "check": "transfer",
+      "mode": "plan",
+      "cols": 3,
+      "rows": 3,
+      "robot": [
+        1,
+        2
+      ],
+      "goal": [
+        1,
+        0
+      ],
+      "solution": [
+        "up",
+        "up"
+      ],
+      "prompt": "מְתַכְנְנִים אֶת צַעֲדֵי הָרוֹבּוֹט, וְאַחַר כָּךְ לוֹחֲצִים עַל הַתְחָלָה.",
+      "domain": "cs",
+      "weights": {
+        "CS-A-03": 1,
+        "CS-A-04": 0.5
+      },
+      "difficulty": 0.32
+    },
+    {
+      "kind": "sort",
+      "id": "b36.csa05.1",
+      "skill": "CS-A-05",
+      "check": "practice",
+      "prompt": "כׇּל צַעַד אֶל הַשִּׁגְרָה שֶׁלּוֹ: צִחְצוּחַ שִׁנַּיִם אוֹ רְחִיצַת יָדַיִם.",
+      "bins": [
+        {
+          "sprite": "step_brush",
+          "label": "צִחְצוּחַ שִׁנַּיִם"
+        },
+        {
+          "sprite": "step_soap",
+          "label": "רְחִיצַת יָדַיִם"
+        }
+      ],
+      "items": [
+        [
+          "step_paste",
+          1
+        ],
+        [
+          "step_tap",
+          2
+        ],
+        [
+          "step_rinse",
+          1
+        ],
+        [
+          "step_towel",
+          2
+        ]
+      ],
+      "tag": "M-SEQ-SCRIPT",
+      "domain": "cs",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "sort",
+      "id": "b36.csa05.2",
+      "skill": "CS-A-05",
+      "check": "transfer",
+      "prompt": "כׇּל צַעַד אֶל הַשִּׁגְרָה שֶׁלּוֹ: צִחְצוּחַ שִׁנַּיִם אוֹ רְחִיצַת יָדַיִם.",
+      "bins": [
+        {
+          "sprite": "step_paste",
+          "label": "צִחְצוּחַ שִׁנַּיִם"
+        },
+        {
+          "sprite": "step_tap",
+          "label": "רְחִיצַת יָדַיִם"
+        }
+      ],
+      "items": [
+        [
+          "step_brush",
+          1
+        ],
+        [
+          "step_soap",
+          2
+        ],
+        [
+          "step_rinse",
+          1
+        ],
+        [
+          "step_towel",
+          2
+        ]
+      ],
+      "tag": "M-SEQ-SCRIPT",
+      "domain": "cs",
+      "difficulty": 0.35
     }
   ],
   "firstSequence": 1,
@@ -904,7 +1080,9 @@
         "cs.robot.direct.5",
         "cs.robot.direct.6",
         "b15.csa03.1",
-        "b15.csa03.2"
+        "b15.csa03.2",
+        "b36.csa03.1",
+        "b36.csa03.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! הָרוֹבּוֹט הִגִּיעַ אֶל הַדֶּגֶל."
@@ -934,7 +1112,11 @@
       ],
       "items": [
         "b15.csa05.1",
-        "b15.csa05.2"
+        "b15.csa05.2",
+        "b36.csa01.1",
+        "b36.csa01.2",
+        "b36.csa05.1",
+        "b36.csa05.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם אֵיךְ מְצַחְצְחִים וְאֵיךְ רוֹחֲצִים."

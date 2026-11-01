@@ -24,7 +24,8 @@
     }
   ],
   "representations": [
-    "concrete"
+    "concrete",
+    "symbolic"
   ],
   "misconceptions": [],
   "retention": {

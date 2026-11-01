@@ -32,7 +32,9 @@
     "bird_lit",
     "chick",
     "frog",
-    "butterfly"
+    "butterfly",
+    "tick",
+    "cross"
   ],
   "things": {
     "ball": [
@@ -93,6 +95,11 @@
       "g": "f",
       "one": "צְפַרְדֵּעַ",
       "many": "צְפַרְדְּעִים"
+    },
+    "cat": {
+      "g": "m",
+      "one": "חָתוּל",
+      "many": "חֲתוּלִים"
     }
   },
   "names": {
@@ -154,6 +161,14 @@
     },
     "star_size_s": {
       "one": "כּוֹכָב קָטָן",
+      "g": "m"
+    },
+    "tick": {
+      "one": "כֵּן",
+      "g": "m"
+    },
+    "cross": {
+      "one": "לֹא",
       "g": "m"
     }
   },
@@ -832,26 +847,13 @@
       "difficulty": 0.2
     },
     {
-      "kind": "pick",
+      "kind": "madd",
       "id": "math.add.fish2",
       "skill": "MATH-A-01",
-      "variantGroup": "madd",
-      "voice": true,
-      "prompt": "יֵשׁ דָּג אֶחָד. מוֹסִיפִים עוֹד שְׁנֵי דָּגִים. כַּמָּה עַכְשָׁו?",
-      "group": {
-        "sprite": "fish",
-        "count": 1
-      },
-      "group2": {
-        "sprite": "fish",
-        "count": 2
-      },
-      "options": [
-        "n:1",
-        "n:3",
-        "n:4"
-      ],
-      "correct": "n:3",
+      "obj": "fish",
+      "a": 1,
+      "b": 2,
+      "difficulty": 0.2,
       "tags": {
         "n:4": "M-CNT-DOUBLE",
         "n:1": "M-CNT-CARD"
@@ -861,32 +863,16 @@
           "vo:fb.card.join",
           "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
         ]
-      },
-      "correct_text": "שָׁלוֹשׁ! אַחַת וְעוֹד שְׁתַּיִם.",
-      "h3": "אַחַת וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.",
-      "difficulty": 0.2
+      }
     },
     {
-      "kind": "pick",
+      "kind": "madd",
       "id": "math.add.stars2",
       "skill": "MATH-A-01",
-      "variantGroup": "madd",
-      "voice": true,
-      "prompt": "יֵשׁ אַרְבָּעָה כּוֹכָבִים. מוֹסִיפִים עוֹד כּוֹכָב אֶחָד. כַּמָּה עַכְשָׁו?",
-      "group": {
-        "sprite": "star",
-        "count": 4
-      },
-      "group2": {
-        "sprite": "star",
-        "count": 1
-      },
-      "options": [
-        "n:4",
-        "n:5",
-        "n:6"
-      ],
-      "correct": "n:5",
+      "obj": "star",
+      "a": 4,
+      "b": 1,
+      "difficulty": 0.3,
       "tags": {
         "n:6": "M-CNT-DOUBLE",
         "n:4": "M-CNT-CARD"
@@ -896,28 +882,15 @@
           "vo:fb.card.join",
           "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
         ]
-      },
-      "correct_text": "חָמֵשׁ! אַרְבַּע וְעוֹד אַחַת.",
-      "h3": "אַרְבַּע וְעוֹד אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ.",
-      "difficulty": 0.3
+      }
     },
     {
-      "kind": "pick",
+      "kind": "mtake",
       "id": "math.take.apples2",
       "skill": "MATH-A-02",
-      "variantGroup": "mtake",
-      "voice": true,
-      "prompt": "יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?",
-      "group": {
-        "sprite": "apple",
-        "count": 3
-      },
-      "options": [
-        "n:1",
-        "n:2",
-        "n:3"
-      ],
-      "correct": "n:2",
+      "obj": "apple",
+      "n": 3,
+      "difficulty": 0.2,
       "tags": {
         "n:1": "M-CNT-SKIP",
         "n:3": "M-CNT-CARD"
@@ -927,28 +900,15 @@
           "vo:fb.card.take",
           "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
         ]
-      },
-      "correct_text": "שְׁתַּיִם! שָׁלוֹשׁ פָּחוֹת אַחַת.",
-      "h3": "שָׁלוֹשׁ פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.",
-      "difficulty": 0.2
+      }
     },
     {
-      "kind": "pick",
+      "kind": "mtake",
       "id": "math.take.fish2",
       "skill": "MATH-A-02",
-      "variantGroup": "mtake",
-      "voice": true,
-      "prompt": "יֵשׁ חֲמִשָּׁה דָּגִים. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?",
-      "group": {
-        "sprite": "fish",
-        "count": 5
-      },
-      "options": [
-        "n:3",
-        "n:4",
-        "n:5"
-      ],
-      "correct": "n:4",
+      "obj": "fish",
+      "n": 5,
+      "difficulty": 0.3,
       "tags": {
         "n:3": "M-CNT-SKIP",
         "n:5": "M-CNT-CARD"
@@ -958,28 +918,15 @@
           "vo:fb.card.take",
           "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
         ]
-      },
-      "correct_text": "אַרְבַּע! חָמֵשׁ פָּחוֹת אַחַת.",
-      "h3": "חָמֵשׁ פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.",
-      "difficulty": 0.3
+      }
     },
     {
-      "kind": "pick",
+      "kind": "mtake",
       "id": "math.take.ducks",
       "skill": "MATH-A-02",
-      "variantGroup": "mtake",
-      "voice": true,
-      "prompt": "יֵשׁ אַרְבָּעָה בַּרְוָזִים. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?",
-      "group": {
-        "sprite": "duck",
-        "count": 4
-      },
-      "options": [
-        "n:2",
-        "n:3",
-        "n:4"
-      ],
-      "correct": "n:3",
+      "obj": "duck",
+      "n": 4,
+      "difficulty": 0.25,
       "tags": {
         "n:2": "M-CNT-SKIP",
         "n:4": "M-CNT-CARD"
@@ -989,10 +936,7 @@
           "vo:fb.card.take",
           "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
         ]
-      },
-      "correct_text": "שָׁלוֹשׁ! אַרְבַּע פָּחוֹת אַחַת.",
-      "h3": "אַרְבַּע פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.",
-      "difficulty": 0.25
+      }
     },
     {
       "kind": "share",
@@ -1129,26 +1073,15 @@
       "domain": "math"
     },
     {
-      "kind": "pick",
+      "kind": "madd",
       "id": "b15.matha01.1",
       "skill": "MATH-A-01",
-      "variantGroup": "madd",
-      "voice": true,
-      "prompt": "יֵשׁ שְׁתֵּי צְפַרְדְּעִים. מוֹסִיפִים עוֹד שְׁתֵּי צְפַרְדְּעִים. כַּמָּה עַכְשָׁו?",
-      "group": {
-        "sprite": "frog",
-        "count": 2
-      },
-      "group2": {
-        "sprite": "frog",
-        "count": 2
-      },
-      "options": [
-        "n:2",
-        "n:4",
-        "n:5"
-      ],
-      "correct": "n:4",
+      "obj": "frog",
+      "a": 2,
+      "b": 2,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math",
       "tags": {
         "n:5": "M-CNT-DOUBLE",
         "n:2": "M-CNT-CARD"
@@ -1158,34 +1091,18 @@
           "vo:fb.card.join",
           "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
         ]
-      },
-      "correct_text": "אַרְבַּע! שְׁתַּיִם וְעוֹד שְׁתַּיִם.",
-      "h3": "שְׁתַּיִם וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.",
-      "difficulty": 0.35,
-      "check": "transfer",
-      "domain": "math"
+      }
     },
     {
-      "kind": "pick",
+      "kind": "madd",
       "id": "b15.matha01.2",
       "skill": "MATH-A-01",
-      "variantGroup": "madd",
-      "voice": true,
-      "prompt": "יֵשׁ שְׁלוֹשָׁה אֶפְרוֹחִים. מוֹסִיפִים עוֹד אֶפְרוֹחַ אֶחָד. כַּמָּה עַכְשָׁו?",
-      "group": {
-        "sprite": "chick",
-        "count": 3
-      },
-      "group2": {
-        "sprite": "chick",
-        "count": 1
-      },
-      "options": [
-        "n:3",
-        "n:4",
-        "n:5"
-      ],
-      "correct": "n:4",
+      "obj": "chick",
+      "a": 3,
+      "b": 1,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math",
       "tags": {
         "n:5": "M-CNT-DOUBLE",
         "n:3": "M-CNT-CARD"
@@ -1195,30 +1112,17 @@
           "vo:fb.card.join",
           "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
         ]
-      },
-      "correct_text": "אַרְבַּע! שָׁלוֹשׁ וְעוֹד אַחַת.",
-      "h3": "שָׁלוֹשׁ וְעוֹד אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.",
-      "difficulty": 0.35,
-      "check": "transfer",
-      "domain": "math"
+      }
     },
     {
-      "kind": "pick",
+      "kind": "mtake",
       "id": "b15.matha02.1",
       "skill": "MATH-A-02",
-      "variantGroup": "mtake",
-      "voice": true,
-      "prompt": "יֵשׁ אַרְבַּע צְפַרְדְּעִים. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?",
-      "group": {
-        "sprite": "frog",
-        "count": 4
-      },
-      "options": [
-        "n:2",
-        "n:3",
-        "n:4"
-      ],
-      "correct": "n:3",
+      "obj": "frog",
+      "n": 4,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math",
       "tags": {
         "n:2": "M-CNT-SKIP",
         "n:4": "M-CNT-CARD"
@@ -1228,30 +1132,17 @@
           "vo:fb.card.take",
           "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
         ]
-      },
-      "correct_text": "שָׁלוֹשׁ! אַרְבַּע פָּחוֹת אַחַת.",
-      "h3": "אַרְבַּע פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.",
-      "difficulty": 0.35,
-      "check": "transfer",
-      "domain": "math"
+      }
     },
     {
-      "kind": "pick",
+      "kind": "mtake",
       "id": "b15.matha02.2",
       "skill": "MATH-A-02",
-      "variantGroup": "mtake",
-      "voice": true,
-      "prompt": "יֵשׁ חֲמִשָּׁה אֶפְרוֹחִים. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?",
-      "group": {
-        "sprite": "chick",
-        "count": 5
-      },
-      "options": [
-        "n:3",
-        "n:4",
-        "n:5"
-      ],
-      "correct": "n:4",
+      "obj": "chick",
+      "n": 5,
+      "check": "transfer",
+      "difficulty": 0.35,
+      "domain": "math",
       "tags": {
         "n:3": "M-CNT-SKIP",
         "n:5": "M-CNT-CARD"
@@ -1261,12 +1152,7 @@
           "vo:fb.card.take",
           "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
         ]
-      },
-      "correct_text": "אַרְבַּע! חָמֵשׁ פָּחוֹת אַחַת.",
-      "h3": "חָמֵשׁ פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.",
-      "difficulty": 0.35,
-      "check": "transfer",
-      "domain": "math"
+      }
     },
     {
       "kind": "share",
@@ -1418,6 +1304,385 @@
       "check": "transfer",
       "difficulty": 0.45,
       "domain": "math"
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha01.1",
+      "skill": "MATH-A-01",
+      "check": "practice",
+      "obj": "cat",
+      "count": 4,
+      "options": [
+        4,
+        2,
+        5
+      ],
+      "seed": 31,
+      "tags": {
+        "2": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      },
+      "prompt": "יֵשׁ שְׁנֵי חֲתוּלִים, וְעוֹד שְׁנֵי חֲתוּלִים בָּאוּ. נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha01.2",
+      "skill": "MATH-A-01",
+      "check": "transfer",
+      "obj": "ladybug",
+      "count": 5,
+      "options": [
+        5,
+        3,
+        6
+      ],
+      "seed": 32,
+      "tags": {
+        "3": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      },
+      "prompt": "יֵשׁ שָׁלוֹשׁ חִפּוּשִׁיּוֹת, וְעוֹד שְׁתֵּי חִפּוּשִׁיּוֹת בָּאוּ. נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha02.1",
+      "skill": "MATH-A-02",
+      "check": "practice",
+      "obj": "duck",
+      "count": 3,
+      "options": [
+        3,
+        4,
+        2
+      ],
+      "seed": 33,
+      "tags": {
+        "4": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      },
+      "prompt": "הָיוּ אַרְבָּעָה בַּרְוָזִים. אֶחָד שָׂחָה הַרְחֵק. נוֹגְעִים בְּאֵלֶּה שֶׁנִּשְׁאֲרוּ, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha02.2",
+      "skill": "MATH-A-02",
+      "check": "transfer",
+      "obj": "fish",
+      "count": 4,
+      "options": [
+        4,
+        5,
+        3
+      ],
+      "seed": 34,
+      "tags": {
+        "5": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      },
+      "prompt": "הָיוּ חֲמִשָּׁה דָּגִים. אֶחָד שָׂחָה הַרְחֵק. נוֹגְעִים בְּאֵלֶּה שֶׁנִּשְׁאֲרוּ, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "pick",
+      "id": "b36.matha03.1",
+      "skill": "MATH-A-03",
+      "check": "transfer",
+      "prompt": "הֶחָתוּל קִבֵּל אֶת אֵלֶּה, וְהַכֶּלֶב קִבֵּל אֶת אֵלֶּה. לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר?",
+      "group": {
+        "sprite": "apple",
+        "count": 3,
+        "arrangement": "line",
+        "seed": 3
+      },
+      "group2": {
+        "sprite": "apple",
+        "count": 1,
+        "arrangement": "line",
+        "seed": 8
+      },
+      "options": [
+        "tick",
+        "cross"
+      ],
+      "correct": "cross",
+      "tags": {
+        "tick": "M-SHARE-UNEQ"
+      },
+      "correct_text": "כֵּן, לֶחָתוּל יֵשׁ יוֹתֵר מִלַּכֶּלֶב.",
+      "h3": "מְחַבְּרִים אֶחָד לְאֶחָד. לַחָתוּל נִשְׁאֲרוּ שְׁנֵי תַּפּוּחִים בְּלִי זוּג, אָז הֵם שׁוֹנִים. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child judges whether a share is equal",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "b36.matha03.2",
+      "skill": "MATH-A-03",
+      "check": "transfer",
+      "prompt": "הֶחָתוּל קִבֵּל אֶת אֵלֶּה, וְהַכֶּלֶב קִבֵּל אֶת אֵלֶּה. לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר?",
+      "group": {
+        "sprite": "star",
+        "count": 3,
+        "arrangement": "scatter",
+        "seed": 3
+      },
+      "group2": {
+        "sprite": "star",
+        "count": 3,
+        "arrangement": "line",
+        "seed": 8
+      },
+      "options": [
+        "tick",
+        "cross"
+      ],
+      "correct": "tick",
+      "tags": {
+        "cross": "M-CNT-SIZE"
+      },
+      "size_cue": "spread",
+      "correct_text": "כֵּן, לִשְׁנֵיהֶם יֵשׁ שָׁלוֹשׁ.",
+      "h3": "מְחַבְּרִים אֶחָד לְאֶחָד — לְכֻלָּם יֵשׁ זוּג. בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child judges whether a share is equal",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha04.1",
+      "skill": "MATH-A-04",
+      "check": "practice",
+      "prompt": "גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "ball_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "ball_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "apple_size_l",
+          1
+        ],
+        [
+          "fish_size_s",
+          2
+        ],
+        [
+          "star_size_l",
+          1
+        ],
+        [
+          "apple_size_s",
+          2
+        ],
+        [
+          "fish_size_l",
+          1
+        ],
+        [
+          "star_size_s",
+          2
+        ]
+      ],
+      "rule": "size",
+      "difficulty": 0.17
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha04.2",
+      "skill": "MATH-A-04",
+      "check": "transfer",
+      "prompt": "גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "fish_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "fish_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "ball_size_s",
+          2
+        ],
+        [
+          "star_size_l",
+          1
+        ],
+        [
+          "apple_size_l",
+          1
+        ],
+        [
+          "ball_size_l",
+          1
+        ],
+        [
+          "star_size_s",
+          2
+        ]
+      ],
+      "rule": "size",
+      "difficulty": 0.17
+    },
+    {
+      "kind": "build",
+      "id": "b36.matha05.1",
+      "skill": "MATH-A-05",
+      "check": "practice",
+      "prompt": "מְסַדְּרִים אֶת הַיּוֹם, מֵהַבֹּקֶר.",
+      "palette": [
+        "time_noon",
+        "time_night",
+        "time_morning",
+        "time_evening"
+      ],
+      "h3": "בֹּקֶר, צָהֳרַיִם, עֶרֶב, לַיְלָה. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-TIME-SEQ",
+      "sequence": [
+        "time_morning",
+        "time_noon",
+        "time_evening",
+        "time_night"
+      ],
+      "goal": "child puts the parts of the day in order",
+      "difficulty": 0.33
+    },
+    {
+      "kind": "build",
+      "id": "b36.matha05.2",
+      "skill": "MATH-A-05",
+      "check": "transfer",
+      "prompt": "מַתְחִילִים בָּעֶרֶב, וּמְסַדְּרִים אֶת הַשְּׁאָר.",
+      "palette": [
+        "time_morning",
+        "time_evening",
+        "time_night"
+      ],
+      "h3": "עֶרֶב, לַיְלָה, וְאַחֲרֵי הַלַּיְלָה שׁוּב בֹּקֶר. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-TIME-SEQ",
+      "sequence": [
+        "time_evening",
+        "time_night",
+        "time_morning"
+      ],
+      "goal": "child puts the parts of the day in order",
+      "difficulty": 0.33
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha07.1",
+      "skill": "MATH-A-07",
+      "check": "practice",
+      "prompt": "תַּפּוּחִים לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ בּוֹנִים גְּרָף תְּמוּנוֹת.",
+      "bins": [
+        {
+          "sprite": "apple",
+          "label": "תַּפּוּחִים"
+        },
+        {
+          "sprite": "ball_red",
+          "label": "כַּדּוּרִים"
+        }
+      ],
+      "items": [
+        [
+          "apple",
+          1
+        ],
+        [
+          "ball_red",
+          2
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "ball_red",
+          2
+        ]
+      ],
+      "rule": "kind",
+      "difficulty": 0.32
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha07.2",
+      "skill": "MATH-A-07",
+      "check": "transfer",
+      "prompt": "בָּנָנוֹת לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ בּוֹנִים גְּרָף תְּמוּנוֹת.",
+      "bins": [
+        {
+          "sprite": "banana_yellow",
+          "label": "בָּנָנוֹת"
+        },
+        {
+          "sprite": "ball_yellow",
+          "label": "כַּדּוּרִים"
+        }
+      ],
+      "items": [
+        [
+          "banana_yellow",
+          1
+        ],
+        [
+          "ball_yellow",
+          2
+        ],
+        [
+          "ball_yellow",
+          2
+        ],
+        [
+          "banana_yellow",
+          1
+        ],
+        [
+          "ball_yellow",
+          2
+        ],
+        [
+          "ball_yellow",
+          2
+        ]
+      ],
+      "rule": "kind",
+      "difficulty": 0.32
     }
   ],
   "firstSequence": 1,
@@ -1482,7 +1747,9 @@
         "math.time.noon",
         "math.time.evening",
         "math.time.after",
-        "math.time.before"
+        "math.time.before",
+        "b36.matha05.1",
+        "b36.matha05.2"
       ],
       "minutes": 4,
       "done": "וַאוּ! הִכַּרְתֶּם אֶת הַיּוֹם: בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה."
@@ -1539,7 +1806,9 @@
         "math.add.fish2",
         "math.add.stars2",
         "b15.matha01.1",
-        "b15.matha01.2"
+        "b15.matha01.2",
+        "b36.matha01.1",
+        "b36.matha01.2"
       ],
       "minutes": 3,
       "done": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וּסְפַרְתֶּם."
@@ -1555,7 +1824,9 @@
         "math.take.ducks",
         "math.take.fish2",
         "b15.matha02.1",
-        "b15.matha02.2"
+        "b15.matha02.2",
+        "b36.matha02.1",
+        "b36.matha02.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! יְדַעְתֶּם כַּמָּה נִשְׁאֲרוּ."
@@ -1571,7 +1842,9 @@
         "math.share.ducks",
         "math.share.ladybugs",
         "b15.matha03.1",
-        "b15.matha03.2"
+        "b15.matha03.2",
+        "b36.matha03.1",
+        "b36.matha03.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בַּהֲגִינוּת."
@@ -1603,10 +1876,25 @@
         "math.graph.stars2",
         "math.graph.apples2",
         "b15.matha07.1",
-        "b15.matha07.2"
+        "b15.matha07.2",
+        "b36.matha07.1",
+        "b36.matha07.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."
+    },
+    {
+      "id": "big-small-long-heavy-1-b36",
+      "title": "גָּדוֹל, אָרֹךְ, כָּבֵד",
+      "skills": [
+        "MATH-A-04"
+      ],
+      "items": [
+        "b36.matha04.1",
+        "b36.matha04.2"
+      ],
+      "minutes": 4,
+      "done": "חֲכָמִים! הִשְׁוִיתֶם גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל."
     }
   ]
 }

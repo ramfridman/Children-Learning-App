@@ -17,7 +17,11 @@
   ],
   "items": [
     "b15.cola06.1",
-    "b15.cola06.2"
+    "b15.cola06.2",
+    "b36.cola01.1",
+    "b36.cola01.2",
+    "b36.cola06.1",
+    "b36.cola06.2"
   ],
   "estimatedMinutes": 6,
   "sequence": 12,

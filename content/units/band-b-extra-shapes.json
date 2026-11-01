@@ -633,6 +633,30 @@
   "coin_s10": {
    "one": "מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים",
    "g": "m"
+  },
+  "glyph_3": {
+   "one": "שָׁלוֹשׁ",
+   "g": "f"
+  },
+  "glyph_3_rev": {
+   "one": "שָׁלוֹשׁ הֲפוּכָה",
+   "g": "f"
+  },
+  "glyph_8": {
+   "one": "שְׁמוֹנֶה",
+   "g": "f"
+  },
+  "glyph_7": {
+   "one": "שֶׁבַע",
+   "g": "f"
+  },
+  "glyph_7_rev": {
+   "one": "שֶׁבַע הֲפוּכָה",
+   "g": "f"
+  },
+  "glyph_1": {
+   "one": "אַחַת",
+   "g": "f"
   }
  },
  "tagFeedback": {
@@ -950,6 +974,67 @@
    },
    "check": "reverse",
    "h3": "מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "sort",
+   "id": "x.shpb09.7",
+   "skill": "SHP-B-09",
+   "difficulty": 0.54,
+   "tag": "M-SHP-FACE",
+   "check": "practice",
+   "prompt": "מַנִּיחִים כׇּל גּוּף עַל הַצּוּרָה שֶׁהוּא מַשְׁאִיר בַּחוֹל.",
+   "bins": [
+    {
+     "sprite": "shape_circle"
+    },
+    {
+     "sprite": "shape_square"
+    }
+   ],
+   "items": [
+    [
+     "solid_cylinder",
+     1
+    ],
+    [
+     "solid_cube",
+     2
+    ]
+   ]
+  },
+  {
+   "kind": "sort",
+   "id": "x.shpb09.8",
+   "skill": "SHP-B-09",
+   "difficulty": 0.54,
+   "tag": "M-SHP-FACE",
+   "check": "transfer",
+   "prompt": "מַנִּיחִים כׇּל גּוּף עַל הַצּוּרָה שֶׁהוּא מַשְׁאִיר בַּחוֹל.",
+   "bins": [
+    {
+     "sprite": "shape_square"
+    },
+    {
+     "sprite": "shape_rect"
+    },
+    {
+     "sprite": "shape_circle"
+    }
+   ],
+   "items": [
+    [
+     "solid_cube",
+     1
+    ],
+    [
+     "solid_box",
+     2
+    ],
+    [
+     "solid_cone",
+     3
+    ]
+   ]
   }
  ],
  "lessons": [
@@ -995,7 +1080,9 @@
     "x.shpb09.3",
     "x.shpb09.4",
     "x.shpb09.5",
-    "x.shpb09.6"
+    "x.shpb09.6",
+    "x.shpb09.7",
+    "x.shpb09.8"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! הִתְאַמְתֶּם גּוּפִים."

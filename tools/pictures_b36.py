@@ -1,7 +1,7 @@
-"""B-36 part D: the 15 new pictures of the second representations (design-director, 2026-11-01).
+"""B-36 part D: the 17 new pictures of the second representations (design-director, 2026-11-01).
 
 Spec: docs/curriculum/b36-second-representations.md, section 6 (D1 to D5). Imported by make_picture_sprites.py, which writes them with
-the rest; `python tools/pictures_b36.py` writes only these 15. Same rules as pictures_b38.py: viewBox 0 0 100 100, plain shapes
+the rest; `python tools/pictures_b36.py` writes only these 17. Same rules as pictures_b38.py: viewBox 0 0 100 100, plain shapes
 only (no script, href, image, style, use, url() or text, so no font is needed, no gradient or clip path), absolute coordinates,
 no transform, and every file a few KB (the hint readers stop at 64 KB). The outlines and the open shape keep their outline as the
 FIRST polygon or polyline of the file, because the B-40 hint reader `outlineOf` takes the first one.
@@ -21,6 +21,12 @@ References (facts and the look only; every drawing is our own, nothing traced or
 - The wrapped gift (obj_gift): photographs of wrapped presents on Wikimedia Commons (search "gift wrapping present",
   2026-11-01): a box in red paper, a ribbon round it both ways crossing on the top, a bow where they cross. A long, low box (not
   a cube), drawn with the same oblique view as pictures_b38's shoe box and cube.
+- The mitten (obj_mitten): https://en.wikipedia.org/wiki/Mitten (one pocket for the four fingers, the thumb in its own part at
+  the side), and photographs of knitted mittens on Wikimedia Commons (search "knitted mittens", 2026-11-01): a round top, the
+  thumb starting about half way down the side, a dotted knit, a ribbed cuff a little wider than the wrist.
+- The toy boat (obj_toy_boat): photographs of toy and model sailboats on Wikimedia Commons (search "wooden toy sailboat",
+  2026-11-01): a painted wooden hull, low at the stern and rising to the bow, one mast with a mainsail behind it and a jib in
+  front, a pennant at the masthead. Drawn floating on a ripple, so the hull (a shoe's outline) reads as a boat.
 - The cat (pos_cat_under, pos_cat_above): the B-38 cat and basket (pictures_b38.py). The leaping cat: Muybridge's
   photographs of a cat galloping and jumping (Wikimedia Commons search "cat jumping", 2026-11-01): the body stretched out, the
   front legs reaching forward, the hind legs pushed back, the tail out behind. Its head stays turned to us, as the sitting cat's.
@@ -382,6 +388,102 @@ def obj_gift():
     return ''.join(out)
 
 
+# ---------------------------------------------------------------- D6: the look-alikes of LOG-A-09 (what goes together)
+
+
+def _inside(poly, x, y):
+    """Is (x, y) inside the polygon? (even-odd ray cast) Used to keep the knit dots on the mitten."""
+    c = False
+    for (x1, y1), (x2, y2) in zip(poly, poly[1:] + poly[:1]):
+        if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
+            c = not c
+    return c
+
+
+def obj_mitten():
+    """A knitted mitten, standing with its fingers up: one round pocket for the four fingers, the thumb out on its own at the
+    side, a ribbed cuff. Pink with cream dots, so it is not the blue sock's colour: it looks like a sock only by being soft,
+    knitted and cuffed, and the thumb says it is for the hand."""
+    knit, knit_edge, knit_shade, cream = '#E8609E', '#A8336B', '#C9447F', '#FFF3D6'
+    cuff, cuff_edge = '#7C4DCC', '#4E2A8E'
+    body = ('M43 67 L41.5 59 C31 61 19.5 54 17.5 43 C16 34 23.5 29.5 30 33.5 C34 36 37 40.5 39 43 '
+            'L37.5 33 C37 14 49 6 60 6 C73 6 81 17 80 33 L76 67 Z')
+    out = [
+        '<ellipse cx="58" cy="94" rx="24" ry="3.2" fill="%s" opacity="0.12"/>' % INK,
+        '<path d="%s" fill="%s" stroke="%s" stroke-width="2.2" stroke-linejoin="round"/>' % (body, knit, knit_edge),
+        # shade down the right side of the hand, and on the thumb's underside
+        '<path d="M72 12 C79 20 80.5 31 78.8 46 L75.4 66 L69.5 66 C73 50 74.5 28 72 12 Z" fill="%s" opacity="0.7"/>' % knit_shade,
+        '<path d="M19 47 C23 55 31 59 41 58.5 L41.5 59 C31 61 19.5 54 17.5 43 Z" fill="%s" opacity="0.7"/>' % knit_shade,
+        # the seam between the thumb and the hand
+        '<path d="M39 43 Q38.2 50 41.2 57" fill="none" stroke="%s" stroke-width="1.6" stroke-linecap="round"/>' % knit_edge,
+    ]
+    # the knit dots, in staggered rows, only where they fall well inside the mitten
+    hand = [(43, 66), (40.5, 44), (39, 33), (40, 20), (48, 10), (60, 8), (72, 10), (78, 21), (78, 34), (74.5, 66)]
+    thumb = [(41, 57.5), (32, 59), (22, 54), (18.5, 44), (22, 34), (30, 35), (38, 45)]
+    for row, y in enumerate(range(16, 64, 8)):
+        for x in range(23 + (row % 2) * 5, 80, 10):
+            if _inside(hand, x - 3.5, y) and _inside(hand, x + 3.5, y) and _inside(hand, x, y - 4) or \
+                    _inside(thumb, x - 2.5, y) and _inside(thumb, x + 2.5, y) and _inside(thumb, x, y - 3) and _inside(thumb, x, y + 3):
+                out.append('<circle cx="%d" cy="%d" r="2.1" fill="%s"/>' % (x, y, cream))
+    # a soft light on the left of the hand
+    out.append('<path d="M44 20 C45 14 50 11 55 10.5" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" '
+               'opacity="0.55"/>')
+    # the cuff: a ribbed band a little wider than the wrist, a rolled edge at the top
+    out.append('<rect x="41" y="65" width="36" height="24" rx="4" fill="%s" stroke="%s" stroke-width="2.2"/>' % (cuff, cuff_edge))
+    out.append(''.join('<path d="M%.1f 70 V86" stroke="%s" stroke-width="1.6" stroke-linecap="round" opacity="0.8"/>'
+                       % (x, cuff_edge) for x in (46.5, 51.8, 57.1, 62.4, 67.7, 73)))
+    out.append('<rect x="40" y="63" width="38" height="7" rx="3.5" fill="%s" stroke="%s" stroke-width="2"/>' % (cuff, cuff_edge))
+    out.append('<path d="M42 65.4 H57" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>')
+    return ''.join(out)
+
+
+def obj_toy_boat():
+    """A wooden toy sailboat seen from the side, bow to the right, floating on a ripple: a yellow hull with a red stripe, a mast,
+    two white sails and a red pennant. The hull alone is a shoe's outline (low at the back, the bow up at the front, as the
+    shoe's toe is), and that is its trap; the sails and the water say it is a boat."""
+    hull, hull_edge, hull_shade, stripe, stripe_edge = '#FFC531', '#B98A10', '#E3A912', '#E5484D', '#A82020'
+    sail, sail_edge, wood, wood_edge = '#FFF6E0', '#8A90A6', '#B07A35', '#7A5222'
+    water, water_edge = '#9ED4FF', '#4DA3FF'
+    out = [
+        # the mast, and the pennant at its top, blowing back
+        '<rect x="47.6" y="9" width="3.6" height="50" rx="1.6" fill="%s" stroke="%s" stroke-width="1.2"/>' % (wood, wood_edge),
+        '<path d="M49 9.5 L35 13 L49 16.5 Z" fill="%s" stroke="%s" stroke-width="1.3" stroke-linejoin="round"/>' % (stripe, stripe_edge),
+        '<circle cx="49.4" cy="8.4" r="2" fill="%s" stroke="%s" stroke-width="1"/>' % (wood, wood_edge),
+        # the mainsail behind the mast (to the stern), its back edge curved by the wind
+        '<path d="M47 18 Q36 34 19 50 L47 50 Z" fill="%s" stroke="%s" stroke-width="1.8" stroke-linejoin="round"/>' % (sail, sail_edge),
+        # the seams of the sail cloth
+        '<path d="M40.5 30 L47 30 M32 40 L47 40" fill="none" stroke="%s" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>'
+        % sail_edge,
+        # the boom under it
+        '<path d="M20 51 H48" stroke="%s" stroke-width="2.6" stroke-linecap="round"/>' % wood_edge,
+        # the jib in front of the mast, to the bow
+        '<path d="M52 19 Q66 34 78 49 L52 49 Z" fill="%s" stroke="%s" stroke-width="1.8" stroke-linejoin="round"/>' % (sail, sail_edge),
+        '<path d="M52 30 L61 30 M52 40 L69.5 40" fill="none" stroke="%s" stroke-width="1.1" stroke-linecap="round" opacity="0.55"/>'
+        % sail_edge,
+        # the hull: a low stern on the left, the deck rising to the bow on the right, a round bottom
+        '<path d="M9 52 Q48 58 93 46 Q90 63 75 73 Q66 77 52 77 L22 77 Q12 74 11 62 Z" fill="%s" stroke="%s" stroke-width="2.2" '
+        'stroke-linejoin="round"/>' % (hull, hull_edge),
+        # shade under the belly
+        '<path d="M12 66 Q30 70 52 70 Q72 70 86 60 Q80 69 72 73 Q64 77 52 77 L22 77 Q13 74 12 66 Z" fill="%s" opacity="0.85"/>' % hull_shade,
+        # the red stripe along the side, under the deck
+        '<path d="M10 55.5 Q48 61.5 91.5 50 L90 54.6 Q48 66 10.6 60.2 Z" fill="%s" stroke="%s" stroke-width="1.2" '
+        'stroke-linejoin="round"/>' % (stripe, stripe_edge),
+        # the deck edge, a light line along the top
+        '<path d="M11 52.6 Q48 58.4 91 47.2" fill="none" stroke="#FFE79A" stroke-width="1.6" stroke-linecap="round"/>',
+    ]
+    # two round portholes
+    out.append(''.join('<circle cx="%d" cy="%.1f" r="3" fill="#CDEBFF" stroke="%s" stroke-width="1.4"/>' % (x, y, hull_edge)
+                       for x, y in ((40, 67.6), (56, 67.2))))
+    # the water: a ripple the hull sits in, with a wave crest along its top
+    waves = 'M4 78 ' + ' '.join('Q%d %d %d 78' % (x + 6, 74 if k % 2 else 82, x + 12) for k, x in enumerate(range(4, 88, 12)))
+    out.append('<path d="%s L96 78 Q94 88 50 90 Q6 88 4 78 Z" fill="%s" opacity="0.9"/>' % (waves.replace('M4 78 ', 'M4 78 ', 1), water))
+    out.append('<path d="%s" fill="none" stroke="%s" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'
+               % (waves, water_edge))
+    out.append('<path d="M24 85 Q30 83 36 85 M60 86 Q66 84 72 86" fill="none" stroke="#FFFFFF" stroke-width="1.6" '
+               'stroke-linecap="round" opacity="0.8"/>')
+    return ''.join(out)
+
+
 PICTURES = {
     'outline_triangle_down': outline_triangle_down(),
     'outline_square_tilt': outline_square_tilt(),
@@ -398,6 +500,8 @@ PICTURES = {
     'obj_drum': obj_drum(),
     'obj_party_hat': obj_party_hat(),
     'obj_gift': obj_gift(),
+    'obj_mitten': obj_mitten(),
+    'obj_toy_boat': obj_toy_boat(),
 }
 
 

@@ -1,0 +1,148 @@
+{
+  "schema": "activity/v1",
+  "id": "b.logb04.9",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
+  "domain": "logic",
+  "band": "B",
+  "skills": [
+    {
+      "id": "LOG-B-04",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "concrete",
+  "variantGroup": "build",
+  "difficulty": {
+    "authored": 0.64
+  },
+  "prompt": {
+    "vo": "vo:b.logb04.9.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹנִים מַדְרֵגוֹת שֶׁל מִגְדָּלִים: כׇּל מִגְדָּל גָּבוֹהַּ בְּאֶחָד מֵהַקּוֹדֵם."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 4,
+    "palette": [
+      "asset:tower_3",
+      "asset:tower_1",
+      "asset:tower_4",
+      "asset:tower_2"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:tower_1",
+      "asset:tower_2",
+      "asset:tower_3",
+      "asset:tower_4"
+    ],
+    "misconception": "M-PAT-GROW"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b.logb04.9.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PAT-GROW",
+        "vo": "vo:fb.pat_grow",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בַּסֵּדֶר הַזֶּה כׇּל מִגְדָּל גָּבוֹהַּ בְּאֶחָד מֵהַמִּגְדָּל שֶׁלְּפָנָיו. בּוֹאוּ נִסְפֹּר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.build.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b.logb04.9.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל מִגְדָּל גָּבוֹהַּ בְּאֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child copies the pattern in the same order",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "בּוֹנִים מַדְרֵגוֹת שֶׁל מִגְדָּלִים: כׇּל מִגְדָּל גָּבוֹהַּ בְּאֶחָד מֵהַקּוֹדֵם."
+  }
+}

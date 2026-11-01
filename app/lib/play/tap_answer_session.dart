@@ -272,9 +272,13 @@ Widget _face(TapAnswerActivity a, ChoiceOption o, double box, double font) {
     arrangement: g.arrangement,
     seed: g.seed,
     scale: g.scale,
-    framed: answerGroupsFramed,
+    framed: answerGroupsFramed || _hasEmptySet(a),
   );
 }
+
+/// B-36 G6: when one answer is an empty set, every answer set of the item is drawn with its ten-frame board (the same way for all,
+/// so the board tells nothing), and zero is a frame with nothing in it, not a blank tile.
+bool _hasEmptySet(TapAnswerActivity a) => a.options.any((ChoiceOption o) => o.set?.count == 0);
 
 /// Whether the group of an answer tile is drawn with its ten-frame board. Never: a board on one answer and not on its neighbour
 /// would tell the child which one to pick (QA-38-1), so within one activity every answer group is drawn the same way, and "the

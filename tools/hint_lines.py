@@ -42,6 +42,9 @@ FAMILY = {
     'LOG-A-04': 'pattern', 'LOG-A-06': 'pattern', 'LOG-A-07': 'pattern', 'LOG-A-10': 'pattern', 'LOG-A-01': 'same',
     'LOG-A-02': 'same', 'LOG-A-03': 'same', 'LOG-A-09': 'same', 'CS-A-01': 'time', 'CS-A-05': 'time',
     'LOG-A-08': 'time', 'MATH-A-05': 'time', 'MATH-A-04': 'measure',
+    # B-36 part D: the skills whose new items are a tap_answer (the same table as hint_ladder.dart)
+    'NUM-A-06': 'count', 'NUM-A-09': 'count', 'MATH-A-03': 'compare', 'SHP-A-06': 'shapes', 'LOG-A-05': 'pattern',
+    'NUM-B-04': 'count', 'NUM-B-05': 'numerals', 'NUM-B-07': 'numerals', 'MATH-B-17': 'clockMoney',
     'SHP-B-08': 'shapes',  # Band B: the one Band B skill that the Band A shapes plan serves (the others have plans of their own)
 }
 COLOURS = {'red', 'blue', 'yellow', 'green', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'grey', 'gray'}
@@ -78,7 +81,7 @@ def tap_class(d):
     """(family, what level 1 draws, what level 2 draws, what level 3 does) for a tap_answer activity, or None."""
     sk = d['skills'][0]['id']
     sc, answer = d['scene'], d['answer']
-    fam = 'numerals' if (sk == 'NUM-A-07' and sc.get('numeral') is not None) else FAMILY.get(sk)
+    fam = 'numerals' if (sk in ('NUM-A-07', 'NUM-A-14') and sc.get('numeral') is not None) else FAMILY.get(sk)
     if fam is None:
         return None
     opts = answer['options']
@@ -140,8 +143,8 @@ def tap_class(d):
     if fam == 'count':
         if row:
             return (fam, 'veil', 'hops', 'hops')
-        if not grp:
-            return (fam, 'tiles', 'card', 'walk')
+        if not grp or right.get('numeral') is None:  # no group, or the answer is a plate (NUM-A-06): the hands would count the pile, not the answer
+            return (fam, 'tiles' if not grp else look, 'card', 'walk')
         if right.get('numeral') == 0:
             return (fam, 'veil', 'empty_frame', 'frame_zero')
         return (fam, 'light', 'hands', 'count')

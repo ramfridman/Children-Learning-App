@@ -758,7 +758,8 @@ class _Plans {
 
   HintPlan count(int level) {
     if (a.row.isNotEmpty) return _steps(level);
-    if (a.group == null) return generic(level);
+    // The answer is a plate of things (B-36 NUM-A-06, "give three of the seven"): counting the pile would count the wrong number.
+    if (a.group == null || _right.numeral == null) return generic(level);
     if (_right.numeral == 0) return _zero(level);
     final TapGeometry g2 = g.withReserve(_reserve);
     final List<Rect> objs = _groupRects(level == 1 ? g : g2, 0);

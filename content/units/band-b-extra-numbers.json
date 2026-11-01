@@ -9,7 +9,13 @@
   "apple",
   "star",
   "fish",
-  "duck"
+  "duck",
+  "glyph_1",
+  "glyph_3",
+  "glyph_3_rev",
+  "glyph_7",
+  "glyph_7_rev",
+  "glyph_8"
  ],
  "objects": {
   "ladybug": {
@@ -627,6 +633,30 @@
   "coin_s10": {
    "one": "מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים",
    "g": "m"
+  },
+  "glyph_3": {
+   "one": "שָׁלוֹשׁ",
+   "g": "f"
+  },
+  "glyph_3_rev": {
+   "one": "שָׁלוֹשׁ הֲפוּכָה",
+   "g": "f"
+  },
+  "glyph_8": {
+   "one": "שְׁמוֹנֶה",
+   "g": "f"
+  },
+  "glyph_7": {
+   "one": "שֶׁבַע",
+   "g": "f"
+  },
+  "glyph_7_rev": {
+   "one": "שֶׁבַע הֲפוּכָה",
+   "g": "f"
+  },
+  "glyph_1": {
+   "one": "אַחַת",
+   "g": "f"
   }
  },
  "tagFeedback": {
@@ -1212,6 +1242,86 @@
    "prompt": "מַתְאִימִים כׇּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.",
    "h3": "סוֹפְרִים אֶת הַדְּבָרִים בְּכׇל קְבוּצָה, וּמוֹצְאִים אֶת הַמִּסְפָּר. עַכְשָׁו תּוֹרְכֶם.",
    "correct_text": "כֵּן! כׇּל מִסְפָּר עִם הַקְּבוּצָה שֶׁלּוֹ."
+  },
+  {
+   "kind": "pick",
+   "id": "x.numb07.21",
+   "skill": "NUM-B-07",
+   "difficulty": 0.4,
+   "check": "practice",
+   "prompt": "אֵיפֹה הַשָּׁלוֹשׁ כְּתוּבָה נָכוֹן?",
+   "options": [
+    "glyph_3",
+    "glyph_3_rev",
+    "glyph_8"
+   ],
+   "correct": "glyph_3",
+   "tags": {
+    "glyph_3_rev": "M-NUM-REV",
+    "glyph_8": "M-NUM-NAME"
+   },
+   "correct_text": "כֵּן! כָּכָה כּוֹתְבִים שָׁלוֹשׁ.",
+   "h3": "כּוֹתְבִים שָׁלוֹשׁ בִּשְׁתֵּי עִקּוּלִים שֶׁנִּפְתָּחִים לְצַד שְׂמֹאל. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשָּׁלוֹשׁ הַנְּכוֹנָה."
+  },
+  {
+   "kind": "pick",
+   "id": "x.numb07.22",
+   "skill": "NUM-B-07",
+   "difficulty": 0.4,
+   "check": "transfer",
+   "prompt": "אֵיפֹה הַשֶּׁבַע כְּתוּבָה נָכוֹן?",
+   "options": [
+    "glyph_7",
+    "glyph_7_rev",
+    "glyph_1"
+   ],
+   "correct": "glyph_7",
+   "tags": {
+    "glyph_7_rev": "M-NUM-REV",
+    "glyph_1": "M-NUM-NAME"
+   },
+   "correct_text": "כֵּן! כָּכָה כּוֹתְבִים שֶׁבַע.",
+   "h3": "כּוֹתְבִים שֶׁבַע בְּקַו שֶׁכָּבוּי וְקַו אֶלְכְּסוֹן שֶׁיּוֹרֵד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשֶּׁבַע הַנְּכוֹנָה."
+  },
+  {
+   "kind": "count_tap",
+   "id": "b36.numa07.1",
+   "skill": "NUM-A-07",
+   "difficulty": 0.53,
+   "band": "A",
+   "domain": "numbers",
+   "obj": "cat",
+   "count": 4,
+   "options": [
+    3,
+    4,
+    5
+   ],
+   "also": [
+    "NUM-A-04"
+   ],
+   "check": "practice",
+   "seed": 71
+  },
+  {
+   "kind": "count_tap",
+   "id": "b36.numa07.2",
+   "skill": "NUM-A-07",
+   "difficulty": 0.5,
+   "band": "A",
+   "domain": "numbers",
+   "obj": "butterfly",
+   "count": 5,
+   "options": [
+    4,
+    5,
+    6
+   ],
+   "also": [
+    "NUM-A-04"
+   ],
+   "check": "transfer",
+   "seed": 72
   }
  ],
  "lessons": [
@@ -1258,7 +1368,8 @@
     "x.numb07.12",
     "x.numb07.13",
     "x.numb07.14",
-    "x.numb07.15"
+    "x.numb07.15",
+    "x.numb07.21"
    ],
    "minutes": 5,
    "done": "נִפְלָא! כְּתַבְתֶּם לְבַד."
@@ -1274,7 +1385,8 @@
     "x.numb07.17",
     "x.numb07.18",
     "x.numb07.19",
-    "x.numb07.20"
+    "x.numb07.20",
+    "x.numb07.22"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! הַמִּסְפָּרִים בַּמָּקוֹם."
@@ -1304,7 +1416,9 @@
    "items": [
     "x.numa07.5",
     "x.numa07.6",
-    "x.numa07.7"
+    "x.numa07.7",
+    "b36.numa07.1",
+    "b36.numa07.2"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! כׇּל אֶחָד בַּמָּקוֹם שֶׁלּוֹ.",

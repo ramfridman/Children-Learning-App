@@ -16,7 +16,9 @@
   "items": [
     "x.numa07.5",
     "x.numa07.6",
-    "x.numa07.7"
+    "x.numa07.7",
+    "b36.numa07.1",
+    "b36.numa07.2"
   ],
   "estimatedMinutes": 5,
   "sequence": 65,

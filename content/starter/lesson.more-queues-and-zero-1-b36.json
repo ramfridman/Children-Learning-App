@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "more-queues-and-zero-1-b36",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד תּוֹר וְאֶפֶס"
+    }
+  ],
+  "skills": [
+    "NUM-A-13",
+    "NUM-A-14"
+  ],
+  "items": [
+    "b36.numa13.1",
+    "b36.numa13.2",
+    "b36.numa14.1",
+    "b36.numa14.2"
+  ],
+  "estimatedMinutes": 4,
+  "sequence": 27,
+  "celebration": {
+    "vo": "vo:celebrate.more_queues_and_zero_1_b36",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי בַּתּוֹר, וְיְדַעְתֶּם מָה זֶה אֶפֶס."
+      }
+    ]
+  }
+}

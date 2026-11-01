@@ -19,7 +19,9 @@
     "math.time.noon",
     "math.time.evening",
     "math.time.after",
-    "math.time.before"
+    "math.time.before",
+    "b36.matha05.1",
+    "b36.matha05.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 4,

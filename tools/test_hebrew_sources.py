@@ -140,9 +140,13 @@ class HebrewMasterTableTest(unittest.TestCase):
         # of the 8 new misconception files, less the LOG-B-06 "size" options taken out); the corrected-and-done rows go from 1204
         # to 1189, because 15 corrected lines moved to another index of `feedback.incorrect` (a new tag line sorts before them) and
         # the table now holds them as they are in the source, already corrected. The proposed count stays 64
-        self.assertEqual(len(self.rows), 12801)
+        # B-36 part D (2026-11-01): 14434 rows (+1633: the texts of the 150 second-representation items, 8 continuation lessons, the
+        # two LOG-A-09 items with a look-alike, and the own lines of five items). The corrected-and-done rows stay 1189 (the sources
+        # were written in the editor's form where a rule had a correction: מַה, שְׁנֵי הַצְּדָדִים שָׁוִים, the qamats qatan of תׇּכְנִית), and the
+        # proposed rows whose correction differs from the text go from 64 to 75 (11 new draft lines the editor's rules would still change)
+        self.assertEqual(len(self.rows), 14434)
         self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1189)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 75)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']

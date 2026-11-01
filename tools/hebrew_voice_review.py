@@ -771,6 +771,36 @@ B36_LINES = [
     'זֶה חֵלֶק מֵהַשְּׁלַבִּים. בּוֹאוּ נַעֲבֹר עֲלֵיהֶם, אֶחָד אַחֲרֵי הַשֵּׁנִי.',
     'זֶה נִרְאֶה דּוֹמֶה. בּוֹאוּ נַחְשֹׁב מָה עוֹשִׂים עִם כׇּל דָּבָר, וּמָה הוֹלֵךְ יַחַד.',
 ]
+B36D = 'B-36 part D (second representations), next pack: a draft by the app-developer from the curriculum-expert spec, not yet read by the editor or the owner. '
+B36_D_ITEMS = [
+    'b36.numa05.1', 'b36.numa05.2', 'b36.numa10.1', 'b36.numa10.2', 'b36.numa06.1', 'b36.numa06.2',
+    'b36.numa07.1', 'b36.numa07.2', 'b36.numa09.1', 'b36.numa09.2', 'b36.numa11.1', 'b36.numa11.2',
+    'b36.numa12.1', 'b36.numa12.2', 'b36.numa13.1', 'b36.numa13.2', 'b36.numa14.1', 'b36.numa14.2',
+    'b36.cola01.1', 'b36.cola01.2', 'b36.cola05.1', 'b36.cola05.2', 'b36.cola06.1', 'b36.cola06.2',
+    'b36.cola07.1', 'b36.cola07.2', 'b36.shpa01.1', 'b36.shpa01.2', 'b36.shpa04.1', 'b36.shpa04.2',
+    'b36.shpa05.1', 'b36.shpa05.2', 'b36.shpa06.1', 'b36.shpa06.2', 'b36.shpa07.1', 'b36.shpa07.2',
+    'b36.shpa08.1', 'b36.shpa08.2', 'b36.shpa10.1', 'b36.shpa10.2', 'b36.loga02.1', 'b36.loga02.2',
+    'b36.loga04.1', 'b36.loga04.2', 'b36.loga05.1', 'b36.loga05.2', 'b36.loga06.1', 'b36.loga06.2',
+    'b36.loga07.1', 'b36.loga07.2', 'b36.loga08.1', 'b36.loga08.2', 'b36.loga09.1', 'b36.loga09.2',
+    'b36.loga10.1', 'b36.loga10.2', 'b36.csa01.1', 'b36.csa01.2', 'b36.csa03.1', 'b36.csa03.2',
+    'b36.csa05.1', 'b36.csa05.2', 'b36.matha01.1', 'b36.matha01.2', 'b36.matha02.1', 'b36.matha02.2',
+    'b36.matha03.1', 'b36.matha03.2', 'b36.matha04.1', 'b36.matha04.2', 'b36.matha05.1', 'b36.matha05.2',
+    'b36.matha07.1', 'b36.matha07.2', 'b.numb01.10', 'b.numb01.11', 'b.numb02.10', 'b.numb02.11',
+    'b.numb03.11', 'b.numb03.12', 'b.numb04.12', 'b.numb04.13', 'b.numb05.11', 'b.numb05.12',
+    'x.numb07.21', 'x.numb07.22', 'b.numb08.15', 'b.numb08.16', 'b.numb10.11', 'b.numb10.12',
+    'b.numb11.19', 'b.numb11.20', 'b.numb13.22', 'b.numb13.23', 'b.numb14.11', 'b.numb14.12',
+    'b.numb17.13', 'b.numb17.14', 'b.numb18.11', 'b.numb18.12', 'b.colb01.10', 'b.colb01.11',
+    'b.colb02.13', 'b.colb02.14', 'b.colb03.11', 'b.colb03.12', 'b.shpb01.11', 'b.shpb01.12',
+    'b.shpb02.11', 'b.shpb02.12', 'b.shpb03.8', 'b.shpb03.9', 'b.shpb04.10', 'b.shpb04.11',
+    'b.shpb08.11', 'b.shpb08.12', 'x.shpb09.7', 'x.shpb09.8', 'b.logb01.11', 'b.logb01.12',
+    'b.logb02.7', 'b.logb02.8', 'b.logb04.9', 'b.logb04.10', 'b.logb06.9', 'b.logb06.10',
+    'b.logb08.7', 'b.logb08.8', 'b.logb09.9', 'b.logb09.10', 'b.csb04.7', 'b.csb04.8',
+    'b.mathb06.11', 'b.mathb06.12', 'b.mathb07.9', 'b.mathb07.10', 'b.mathb08.15', 'b.mathb08.16',
+    'b.mathb10.9', 'b.mathb10.10', 'b.mathb14.12', 'b.mathb14.13', 'x.mathb16.9', 'x.mathb16.10',
+    'x.mathb17.12', 'x.mathb17.13', 'b.mathb18.10', 'b.mathb18.11', 'x.mathb19.12', 'x.mathb19.13',
+]
+B36_D_LESSONS = ['more-glances-1-b36', 'more-queues-and-zero-1-b36', 'copy-patterns-1-b36', 'build-with-shapes-1-b36', 'big-small-long-heavy-1-b36', 'days-of-the-week-1-b36', 'one-more-one-less-1-b36', 'tens-and-twos-1-b36']
+
 PENDING = [
     ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
      'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
@@ -830,6 +860,12 @@ PENDING = [
     # correct lines (OWNER_APPROVED below), so they are no longer pending.
     # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
     # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
+    # B-36 part D (docs/curriculum/b36-second-representations.md, 2026-11-01): the 150 second-representation items, the 8 continuation
+    # lessons and the two LOG-A-09 items that got look-alike wrong answers (the mitten and the toy boat). Every text is the app-developer's draft,
+    # for the editor's part F pass and then the owner; the voice texts follow the final text (B-45), so nothing is voiced before then.
+    ('3', r'', r'^activity\.(' + '|'.join(re.escape(i) for i in B36_D_ITEMS) + r')\.json$', B36D),
+    ('3', r'', r'^lesson\.(' + '|'.join(re.escape(i) for i in B36_D_LESSONS) + r')\.json$', B36D),
+    ('3', r'^answer\.options\.\d\.label$|^feedback\.incorrect\.\d\.caption\.0\.v$', r'^activity\.log\.pair\.(sock|shoe)\.json$', B36D + 'LOG-A-09: the mitten looks like the sock and the toy boat like the shoe (M-ASSOC-LOOK).'),
 ]
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)

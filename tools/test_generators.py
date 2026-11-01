@@ -529,7 +529,8 @@ class StarterPackTest(unittest.TestCase):
 
     def test_math_b_10_draws_one_column_per_plate(self):
         for a in self.acts:
-            if a['skills'][0]['id'] == 'MATH-B-10':
+            # B-36: the share items of the skill (sort_drag) have no chart; the test is about the tap items
+            if a['skills'][0]['id'] == 'MATH-B-10' and a['template'] == 'tap_answer':
                 chart = a['scene']['chart']
                 self.assertEqual(len({c['count'] for c in chart}), 1, a['id'])
                 right = next(o['numeral'] for o in a['answer']['options'] if o['id'] == a['answer']['correct'])

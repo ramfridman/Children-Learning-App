@@ -417,6 +417,8 @@ void main() {
               jsonDecode(File(f.path).readAsStringSync()) as Map<String, Object?>;
           final List<Object?> skills = json['skills']! as List<Object?>;
           if (!skills.any((Object? s) => (s! as Map<String, Object?>)['id'] == 'NUM-A-13')) continue;
+          // B-36: the second way of NUM-A-13 is a line the child builds (build_pattern), with no answer tiles to order
+          if (json['template'] != 'tap_answer') continue;
           seen++;
           final Map<String, Object?> answer = json['answer']! as Map<String, Object?>;
           final List<Object?> options = answer['options']! as List<Object?>;

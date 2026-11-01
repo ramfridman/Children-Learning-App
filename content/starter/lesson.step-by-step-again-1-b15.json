@@ -16,7 +16,11 @@
   ],
   "items": [
     "b15.csa05.1",
-    "b15.csa05.2"
+    "b15.csa05.2",
+    "b36.csa01.1",
+    "b36.csa01.2",
+    "b36.csa05.1",
+    "b36.csa05.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 7,

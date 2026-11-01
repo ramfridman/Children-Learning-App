@@ -219,31 +219,22 @@ def card(context):
 
 
 def sum_item(u, skill, mode, obj, x, y, pos):
-    """The join or take-away story of author.py's `sum` kind, written as a `pick` so that it carries its own tags: the start
-    or the first group alone is M-CNT-CARD (B-36 part B). The same activity as before, apart from the tag and its line."""
-    o, kw = OBJECTS[obj], {}
+    """The join or take-away story of author.py's `sum` kind. The start or the first group alone is M-CNT-CARD (B-36 part B),
+    with its line for the context, so the item gives the kind its own `tags` and `tag_lines`."""
+    o = OBJECTS[obj]
     if mode == 'add':
         r = x + y
-        prompt = 'יֵשׁ %s. מוֹסִיפִים עוֹד %s. כַּמָּה יֵשׁ עַכְשָׁו?' % (qty(x, o), qty(y, o))
-        kw = {'group': {'sprite': obj, 'count': x}, 'group2': {'sprite': obj, 'count': y}}
-        text = '%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r])
-        h3 = '%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], count_words(r), F[r])
         others = [x, r + 1] if x != r + 1 else [r + 1, r + 2]
         tags = {'n:%d' % (r + 1): 'M-CNT-DOUBLE'}
         line = 'join'
     else:
         r = x - y
-        prompt = 'יֵשׁ %s. לוֹקְחִים %s. כַּמָּה נִשְׁאֲרוּ?' % (qty(x, o), qty(y, o))
-        kw = {'group': {'sprite': obj, 'count': x}}
-        text = '%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r])
-        h3 = '%s פָּחוֹת %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], count_words(max(r, 1)), F[r])
         others = [x, y] if y not in (r, x) else [x, r + 1]
         tags = {'n:%d' % y: 'M-PART-MISS'} if y in others else {'n:%d' % (r + 1): 'M-CNT-DOUBLE'}
         line = 'take'
     if x in others:
         tags['n:%d' % x] = 'M-CNT-CARD'
-    return u.act(skill, 'pick', variantGroup='sum', voice=True, prompt=prompt, options=['n:%d' % v for v in place(r, others, pos)],
-                 correct='n:%d' % r, tags=tags, tag_lines=card(line), correct_text=text, h3=h3, **kw)
+    return u.act(skill, 'sum', mode=mode, obj=obj, a=x, b=y, pos=pos, tags=tags, tag_lines=card(line))
 
 
 def missing_addend(u, skill, x, total, i, flipped=False, **kw):
@@ -522,6 +513,7 @@ def numbers():
     u.lesson('ten-and-some-more', 'עוֹד עֶשֶׂר וְעוֹד', ['NUM-B-16'], ids('NUM-B-16', 5), 'נִפְלָא! הַמִּסְפָּרִים הַגְּדוֹלִים כְּבָר מוּכָּרִים.')
     u.lesson('tens-and-twos', 'עֲשָׂרוֹת וְזוּגוֹת', ['NUM-B-17'], ids('NUM-B-17'), 'יָפֶה מְאֹד! סְפַרְתֶּם בִּקְפִיצוֹת.')
     u.lesson('pairs', 'זוּגוֹת', ['NUM-B-18'], ids('NUM-B-18'), 'כׇּל הַכָּבוֹד! חִלַּקְתֶּם לְזוּגוֹת.')
+    import band_b36; band_b36.numbers(u)  # noqa: E702  (B-36 part D)
     u.save()
 
 
@@ -814,6 +806,7 @@ def math():
     u.lesson('what-time', 'מָה הַשָּׁעָה', ['MATH-B-15'], ids('MATH-B-15', 0, 5), 'כׇּל הַכָּבוֹד! קְרָאתֶם שָׁעוֹן.')
     u.lesson('what-time-more', 'עוֹד שָׁעוֹת', ['MATH-B-15'], ids('MATH-B-15', 5), 'מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה.')
     u.lesson('missing-number', 'הַמִּסְפָּר הֶחָסֵר', ['MATH-B-18'], ids('MATH-B-18'), 'נִפְלָא! מְצָאתֶם אֶת הַמִּסְפָּר.')
+    import band_b36; band_b36.math(u)  # noqa: E702
     u.save()
 
 

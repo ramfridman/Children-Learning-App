@@ -61,7 +61,8 @@ GLYPHS = {
     '5': [thin([[72, 12], [30, 12], [26, 46]] + arc(48, 66, 28, 24, -120, 140, 16))],
     '6': [thin([[66, 12], [44, 26], [28, 50]] + arc(50, 66, 26, 24, 180, -180, 22))],
     '7': [[[22, 14], [78, 14], [40, 90]]],
-    '8': [thin(arc(50, 31, 20, 18, -90, -450, 20) + arc(50, 69, 24, 21, -90, -450, 22))],
+    # one stroke: down the left of the top loop, round the bottom loop, and up the right of the top loop; it crosses itself in the middle
+    '8': [thin(arc(50, 31, 20, 18, -90, -270, 10) + arc(50, 69, 24, 21, -90, 270, 22) + arc(50, 31, 20, 18, 90, -90, 10))],
     '9': [thin(arc(50, 34, 24, 22, 0, -360, 22) + [[74, 36], [70, 62], [46, 90]])],
     'circle': [thin(arc(50, 50, 34, 34, -90, -450, 28))],
     'square': [[[22, 22], [78, 22], [78, 78], [22, 78], [22, 22]]],
@@ -77,7 +78,7 @@ def lesson_ids(u, skill, a=0, b=None):
 def extra_numbers():
     u = Unit('band-b-extra-numbers', 'numbers',
              'Tracing the numerals 0 to 9 (T04) and matching numerals to sets (T16). Hebrew is a draft by Claude, needs-editor.', 60,
-             assets=['apple', 'star', 'fish', 'duck'], prefix='x')
+             assets=['apple', 'star', 'fish', 'duck', 'glyph_1', 'glyph_3', 'glyph_3_rev', 'glyph_7', 'glyph_7_rev', 'glyph_8'], prefix='x')
     u.tag('M-NUM-WRITE', ['NUM-B-07'], 'הילד מתחיל לכתוב ספרה מהקצה הלא נכון, או מצייר אותה בכיוון הפוך.',
           'לכתוב ספרה גדולה באצבע על חול או על קמח במגש, ולהתחיל תמיד מהנקודה: מלמעלה.',
           ['embodied', 'symbolic'], 'מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה, וְהוֹלְכִים בַּכִּוּוּן שֶׁל הַנְּקֻדּוֹת. בּוֹאוּ נְנַסֶּה שׁוּב.')
@@ -107,6 +108,7 @@ def extra_numbers():
     for l in u.d['lessons']:
         if l['skills'] == ['NUM-A-07']:
             l['band'] = 'A'
+    import band_b36; band_b36.extra_numbers(u, NAMES)  # noqa: E702
     u.save()
 
 
@@ -225,6 +227,7 @@ def extra_math():
     u.lesson('read-the-chart-more', 'כַּמָּה יוֹתֵר', ['MATH-B-19'], ids('MATH-B-19', 6), 'יָפֶה! אַתֶּם יוֹדְעִים לְהַשְׁווֹת.')
     u.lesson('set-the-clock', 'מְכַוְּנִים שָׁעוֹן', ['MATH-B-15'], ids('MATH-B-15', 0, 4), 'כׇּל הַכָּבוֹד! הַשָּׁעוֹן מְכֻוָּן.')
     u.lesson('set-the-clock-more', 'עוֹד שָׁעוֹת', ['MATH-B-15'], ids('MATH-B-15', 4), 'מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה.')
+    import band_b36; band_b36.extra_math(u, shekels, solution, coins_said)  # noqa: E702
     u.save()
 
 
@@ -266,6 +269,7 @@ def extra_shapes():
     for l in u.d['lessons']:
         if l['skills'] == ['SHP-A-02']:
             l['band'] = 'A'
+    import band_b36; band_b36.extra_shapes(u)  # noqa: E702
     u.save()
 
 

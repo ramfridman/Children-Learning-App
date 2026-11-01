@@ -1,0 +1,165 @@
+{
+  "schema": "activity/v1",
+  "id": "b36.numa12.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "A",
+  "skills": [
+    {
+      "id": "NUM-A-12",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "error_spotting",
+  "representation": "story",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.55
+  },
+  "prompt": {
+    "vo": "vo:b36.numa12.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "שְׁלוֹשָׁה צְפַרְדְּעִים גְּדוֹלִים וַחֲמִשָּׁה אֶפְרוֹחִים קְטַנִּים. הַצְּפַרְדֵּעַ אוֹמֶרֶת: \"אֲנַחְנוּ יוֹתֵר!\" הִיא צוֹדֶקֶת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:frog",
+      "count": 3,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1.5
+    },
+    "group2": {
+      "sprite": "asset:chick",
+      "count": 5,
+      "arrangement": "line",
+      "seed": 8,
+      "scale": 0.7
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:tick",
+        "label": "כֵּן",
+        "misconception": "M-CNT-SIZE"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:cross",
+        "label": "לֹא"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b36.numa12.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "צְדַקְתֶּם, שָׁם יֵשׁ יוֹתֵר אֶפְרוֹחִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-SIZE",
+        "vo": "vo:fb.size.big",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.pairs.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְחַבְּרִים אֶחָד לְאֶחָד בְּקַוִּים. מִי נִשְׁאָר בְּלִי זוּג?"
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b36.numa12.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְחַבְּרִים אֶחָד לְאֶחָד. נִשְׁאֲרוּ שְׁנֵי אֶפְרוֹחִים בְּלִי זוּג, אָז שָׁם יֵשׁ יוֹתֵר. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child judges a claim about more by number, not by size",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "שְׁלוֹשָׁה צְפַרְדְּעִים גְּדוֹלִים וַחֲמִשָּׁה אֶפְרוֹחִים קְטַנִּים. הַצְּפַרְדֵּעַ אוֹמֶרֶת: \"אֲנַחְנוּ יוֹתֵר.\" הִיא צוֹדֶקֶת?"
+  }
+}

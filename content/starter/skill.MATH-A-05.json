@@ -24,7 +24,8 @@
     }
   ],
   "representations": [
-    "story"
+    "story",
+    "concrete"
   ],
   "misconceptions": [
     "M-TIME-SEQ"

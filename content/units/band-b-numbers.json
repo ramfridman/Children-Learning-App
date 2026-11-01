@@ -630,6 +630,30 @@
   "coin_s10": {
    "one": "מַטְבֵּעַ שֶׁל עֲשָׂרָה שְׁקָלִים",
    "g": "m"
+  },
+  "glyph_3": {
+   "one": "שָׁלוֹשׁ",
+   "g": "f"
+  },
+  "glyph_3_rev": {
+   "one": "שָׁלוֹשׁ הֲפוּכָה",
+   "g": "f"
+  },
+  "glyph_8": {
+   "one": "שְׁמוֹנֶה",
+   "g": "f"
+  },
+  "glyph_7": {
+   "one": "שֶׁבַע",
+   "g": "f"
+  },
+  "glyph_7_rev": {
+   "one": "שֶׁבַע הֲפוּכָה",
+   "g": "f"
+  },
+  "glyph_1": {
+   "one": "אַחַת",
+   "g": "f"
   }
  },
  "tagFeedback": {
@@ -3819,6 +3843,538 @@
    "correct": "cross",
    "correct_text": "לֹא, אַחַת נִשְׁאֶרֶת לְבַד.",
    "h3": "נְחַלֵּק לְזוּגוֹת: זוּג, זוּג, זוּג. אַחַת נִשְׁאֶרֶת לְבַד. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb01.10",
+   "skill": "NUM-B-01",
+   "difficulty": 0.65,
+   "mode": "place",
+   "to": 20,
+   "target": 14,
+   "labels": [
+    10,
+    20
+   ],
+   "tag": "M-CNT-SEQ",
+   "check": "practice",
+   "from": 10,
+   "prompt": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל אַרְבַּע עֶשְׂרֵה. נוֹגְעִים בַּמָּקוֹם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb01.11",
+   "skill": "NUM-B-01",
+   "difficulty": 0.65,
+   "mode": "place",
+   "to": 20,
+   "target": 17,
+   "labels": [
+    10,
+    15,
+    20
+   ],
+   "tag": "M-CNT-SEQ",
+   "check": "transfer",
+   "from": 10,
+   "prompt": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שְׁבַע עֶשְׂרֵה. נוֹגְעִים בַּמָּקוֹם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb02.10",
+   "skill": "NUM-B-02",
+   "difficulty": 0.65,
+   "mode": "place",
+   "to": 35,
+   "target": 30,
+   "labels": [
+    15,
+    25,
+    35
+   ],
+   "tag": "M-CNT-DECADE",
+   "check": "practice",
+   "from": 15,
+   "prompt": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל שְׁלוֹשִׁים. נוֹגְעִים בַּמָּקוֹם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb02.11",
+   "skill": "NUM-B-02",
+   "difficulty": 0.65,
+   "mode": "place",
+   "to": 30,
+   "target": 20,
+   "labels": [
+    10,
+    15,
+    30
+   ],
+   "tag": "M-CNT-DECADE",
+   "check": "transfer",
+   "from": 10,
+   "prompt": "הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל עֶשְׂרִים. נוֹגְעִים בַּמָּקוֹם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb03.11",
+   "skill": "NUM-B-03",
+   "difficulty": 0.54,
+   "mode": "jump",
+   "to": 10,
+   "start": 10,
+   "hops": [
+    -3
+   ],
+   "target": 7,
+   "labels": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tag": "M-CNT-SEQ",
+   "check": "predict",
+   "prompt": "הַצְּפַרְדֵּעַ סוֹפֶרֶת אֲחוֹרָה כְּמוֹ חֲלָלִית: מִעֶשֶׂר, שְׁלוֹשָׁה צְעָדִים אֲחוֹרָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?",
+   "h3": "מַתְחִילִים מִעֶשֶׂר וְקוֹפְצִים שְׁלוֹשָׁה צְעָדִים אֲחוֹרָה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb03.12",
+   "skill": "NUM-B-03",
+   "difficulty": 0.54,
+   "mode": "jump",
+   "to": 10,
+   "start": 7,
+   "hops": [
+    -3
+   ],
+   "target": 4,
+   "labels": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tag": "M-CNT-SEQ",
+   "check": "predict",
+   "prompt": "הַצְּפַרְדֵּעַ סוֹפֶרֶת אֲחוֹרָה כְּמוֹ חֲלָלִית: מִשֶׁבַע, שְׁלוֹשָׁה צְעָדִים אֲחוֹרָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?",
+   "h3": "מַתְחִילִים מִשֶׁבַע וְקוֹפְצִים שְׁלוֹשָׁה צְעָדִים אֲחוֹרָה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "set_to_numeral",
+   "id": "b.numb04.12",
+   "skill": "NUM-B-04",
+   "difficulty": 0.6,
+   "obj": "fish",
+   "count": 13,
+   "options": [
+    12,
+    13,
+    14
+   ],
+   "arrangement": "ten_frame",
+   "check": "practice"
+  },
+  {
+   "kind": "set_to_numeral",
+   "id": "b.numb04.13",
+   "skill": "NUM-B-04",
+   "difficulty": 0.6,
+   "obj": "ladybug",
+   "count": 16,
+   "options": [
+    15,
+    16,
+    17
+   ],
+   "arrangement": "ten_frame",
+   "check": "transfer"
+  },
+  {
+   "kind": "pick",
+   "id": "b.numb05.11",
+   "skill": "NUM-B-05",
+   "difficulty": 0.6,
+   "check": "reverse",
+   "prompt": "יֵשׁ כָּאן עֶשְׂרִים דָּגִים. הֶחָתוּל בִּקֵּשׁ שְׁנֵים עָשָׂר דָּגִים. אֵיזוֹ צַלַּחַת נְכוֹנָה?",
+   "group": {
+    "sprite": "fish",
+    "count": 20,
+    "arrangement": "ten_frame",
+    "seed": 5
+   },
+   "options": [
+    "fish*12#ten_frame",
+    "fish*20#ten_frame",
+    "fish*13#ten_frame"
+   ],
+   "correct": "fish*12#ten_frame",
+   "tags": {
+    "fish*20#ten_frame": "M-CNT-CARD",
+    "fish*13#ten_frame": "M-CNT-DOUBLE"
+   },
+   "correct_text": "כֵּן! שְׁנֵים עָשָׂר דָּגִים.",
+   "h3": "סוֹפְרִים וְעוֹצְרִים: מֵאַחַת עַד שְׁתֵּים עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצַּלַּחַת."
+  },
+  {
+   "kind": "pick",
+   "id": "b.numb05.12",
+   "skill": "NUM-B-05",
+   "difficulty": 0.6,
+   "check": "transfer",
+   "prompt": "יֵשׁ כָּאן עֶשְׂרִים צִפֳּרִים. הַבַּרְוָז בִּקֵּשׁ שֵׁשׁ עֶשְׂרֵה צִפֳּרִים. אֵיזוֹ צַלַּחַת נְכוֹנָה?",
+   "group": {
+    "sprite": "bird",
+    "count": 20,
+    "arrangement": "ten_frame",
+    "seed": 5
+   },
+   "options": [
+    "bird*16#ten_frame",
+    "bird*20#ten_frame",
+    "bird*15#ten_frame"
+   ],
+   "correct": "bird*16#ten_frame",
+   "tags": {
+    "bird*20#ten_frame": "M-CNT-CARD",
+    "bird*15#ten_frame": "M-CNT-SKIP"
+   },
+   "correct_text": "כֵּן! שֵׁשׁ עֶשְׂרֵה צִפֳּרִים.",
+   "h3": "סוֹפְרִים וְעוֹצְרִים: מֵאַחַת עַד שֵׁשׁ עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצַּלַּחַת."
+  },
+  {
+   "kind": "pick",
+   "id": "b.numb08.15",
+   "skill": "NUM-B-08",
+   "difficulty": 0.69,
+   "check": "practice",
+   "numeral": 13,
+   "prompt": "אֵיזוֹ צַלַּחַת יֵשׁ בָּהּ בְּדִיּוּק כַּמָּה שֶׁכָּתוּב?",
+   "options": [
+    "fish*13#ten_frame",
+    "fish*3#ten_frame",
+    "fish*14#ten_frame"
+   ],
+   "correct": "fish*13#ten_frame",
+   "tags": {
+    "fish*3#ten_frame": "M-NUM-TEEN",
+    "fish*14#ten_frame": "M-CNT-SEQ"
+   },
+   "correct_text": "כֵּן! שְׁלוֹשָׁה עָשָׂר דָּגִים.",
+   "h3": "עֶשֶׂר וְעוֹד שָׁלוֹשׁ: שְׁלֹשׁ עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצַּלַּחַת."
+  },
+  {
+   "kind": "pick",
+   "id": "b.numb08.16",
+   "skill": "NUM-B-08",
+   "difficulty": 0.69,
+   "check": "transfer",
+   "numeral": 17,
+   "prompt": "אֵיזוֹ צַלַּחַת יֵשׁ בָּהּ בְּדִיּוּק כַּמָּה שֶׁכָּתוּב?",
+   "options": [
+    "star*17#ten_frame",
+    "star*7#ten_frame",
+    "star*16#ten_frame"
+   ],
+   "correct": "star*17#ten_frame",
+   "tags": {
+    "star*7#ten_frame": "M-NUM-TEEN",
+    "star*16#ten_frame": "M-CNT-SEQ"
+   },
+   "correct_text": "כֵּן! שִׁבְעָה עָשָׂר כּוֹכָבִים.",
+   "h3": "עֶשֶׂר וְעוֹד שֶׁבַע: שְׁבַע עֶשְׂרֵה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצַּלַּחַת."
+  },
+  {
+   "kind": "pick",
+   "id": "b.numb10.11",
+   "skill": "NUM-B-10",
+   "difficulty": 0.69,
+   "voice": true,
+   "check": "practice",
+   "prompt": "אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר, תֵּשַׁע אוֹ שֵׁשׁ?",
+   "group": {
+    "sprite": "apple",
+    "count": 9,
+    "arrangement": "ten_frame",
+    "seed": 3
+   },
+   "group2": {
+    "sprite": "apple",
+    "count": 6,
+    "arrangement": "ten_frame",
+    "seed": 8,
+    "scale": 1.5
+   },
+   "options": [
+    "n:9",
+    "n:6"
+   ],
+   "correct": "n:9",
+   "tags": {
+    "n:6": "M-CNT-SIZE"
+   },
+   "size_cue": "big",
+   "correct_text": "כֵּן! תֵּשַׁע גָּדוֹל יוֹתֵר.",
+   "h3": "מְחַבְּרִים אֶחָד לְאֶחָד: לְתֵשַׁע יֵשׁ עוֹד שָׁלוֹשׁ בְּלִי זוּג, אָז תֵּשַׁע גָּדוֹל יוֹתֵר. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "pick",
+   "id": "b.numb10.12",
+   "skill": "NUM-B-10",
+   "difficulty": 0.69,
+   "voice": true,
+   "check": "reverse",
+   "prompt": "אֵיזֶה מִסְפָּר קָטָן יוֹתֵר, אַרְבַּע אוֹ שֶׁבַע?",
+   "group": {
+    "sprite": "apple",
+    "count": 4,
+    "arrangement": "line",
+    "seed": 3
+   },
+   "group2": {
+    "sprite": "apple",
+    "count": 7,
+    "arrangement": "line",
+    "seed": 8,
+    "scale": 0.7
+   },
+   "options": [
+    "n:4",
+    "n:7"
+   ],
+   "correct": "n:4",
+   "tags": {
+    "n:7": "M-CNT-SIZE"
+   },
+   "size_cue": "small",
+   "correct_text": "כֵּן! אַרְבַּע קָטָן יוֹתֵר.",
+   "h3": "מְחַבְּרִים אֶחָד לְאֶחָד: לְשֶׁבַע יֵשׁ עוֹד שָׁלוֹשׁ בְּלִי זוּג, אָז אַרְבַּע קָטָן יוֹתֵר. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb11.19",
+   "skill": "NUM-B-11",
+   "difficulty": 0.9,
+   "mode": "place",
+   "to": 10,
+   "target": 7,
+   "labels": [
+    0,
+    6,
+    10
+   ],
+   "tag": "M-CNT-SEQ",
+   "check": "practice",
+   "prompt": "שִׂימוּ אֶת הַצְּפַרְדֵּעַ עַל הַמִּסְפָּר שֶׁהוּא אֶחָד יוֹתֵר מִשֵׁשׁ.",
+   "h3": "מַתְחִילִים בְּשֵׁשׁ וְקוֹפְצִים קְפִיצָה אַחַת קָדִימָה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb11.20",
+   "skill": "NUM-B-11",
+   "difficulty": 0.9,
+   "mode": "place",
+   "to": 10,
+   "target": 8,
+   "labels": [
+    0,
+    9,
+    10
+   ],
+   "tag": "M-CNT-SEQ",
+   "check": "reverse",
+   "prompt": "שִׂימוּ אֶת הַצְּפַרְדֵּעַ עַל הַמִּסְפָּר שֶׁהוּא אֶחָד פָּחוֹת מִתֵּשַׁע.",
+   "h3": "מַתְחִילִים בְּתֵשַׁע וְקוֹפְצִים קְפִיצָה אַחַת אֲחוֹרָה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "spot",
+   "id": "b.numb13.22",
+   "skill": "NUM-B-13",
+   "difficulty": 0.9,
+   "cells": [
+    "n:0",
+    "n:1",
+    "n:2",
+    "n:3",
+    "n:8",
+    "n:5",
+    "n:6"
+   ],
+   "wrong": 4,
+   "tag": "M-NL-SPACE",
+   "check": "error_spotting",
+   "prompt": "חָבֵר כָּתַב אֶת הַמִּסְפָּרִים שֶׁל קַו הַצְּפַרְדֵּעַ, וּמִסְפָּר אֶחָד לֹא בַּמָּקוֹם. אֵיפֹה הוּא?",
+   "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת אַרְבַּע."
+  },
+  {
+   "kind": "spot",
+   "id": "b.numb13.23",
+   "skill": "NUM-B-13",
+   "difficulty": 0.9,
+   "cells": [
+    "n:4",
+    "n:5",
+    "n:6",
+    "n:2",
+    "n:8",
+    "n:9",
+    "n:10"
+   ],
+   "wrong": 3,
+   "tag": "M-NL-SPACE",
+   "check": "error_spotting",
+   "prompt": "חָבֵר כָּתַב אֶת הַמִּסְפָּרִים שֶׁל קַו הַצְּפַרְדֵּעַ, וּמִסְפָּר אֶחָד לֹא בַּמָּקוֹם. אֵיפֹה הוּא?",
+   "correct_text": "כֵּן! בַּמָּקוֹם הַזֶּה הָיָה צָרִיךְ לִהְיוֹת שֶׁבַע."
+  },
+  {
+   "kind": "scale",
+   "id": "b.numb14.11",
+   "skill": "NUM-B-14",
+   "difficulty": 0.65,
+   "mode": "balance",
+   "left": [
+    [
+     "block",
+     6,
+     1
+    ]
+   ],
+   "right": [
+    [
+     "block",
+     2,
+     1
+    ]
+   ],
+   "block": "block",
+   "result": 4,
+   "tag": "M-PART-MISS",
+   "check": "practice",
+   "prompt": "שֵׁשׁ עַל קַעֲרָה אַחַת, שְׁתַּיִם עַל הַשְּׁנִיָּה. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.",
+   "h3": "שֵׁשׁ וּשְׁתַּיִם: חֲסֵרוֹת אַרְבַּע. מוֹסִיפִים קֻבִּיָּה אַחַר קֻבִּיָּה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים."
+  },
+  {
+   "kind": "scale",
+   "id": "b.numb14.12",
+   "skill": "NUM-B-14",
+   "difficulty": 0.65,
+   "mode": "balance",
+   "left": [
+    [
+     "block",
+     8,
+     1
+    ]
+   ],
+   "right": [
+    [
+     "block",
+     3,
+     1
+    ]
+   ],
+   "block": "block",
+   "result": 5,
+   "tag": "M-PART-MISS",
+   "check": "transfer",
+   "prompt": "שְׁמוֹנֶה עַל קַעֲרָה אַחַת, שָׁלוֹשׁ עַל הַשְּׁנִיָּה. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.",
+   "h3": "שְׁמוֹנֶה וְשָׁלוֹשׁ: חֲסֵרוֹת חָמֵשׁ. מוֹסִיפִים קֻבִּיָּה אַחַר קֻבִּיָּה. עַכְשָׁו תּוֹרְכֶם.",
+   "correct_text": "כֵּן! הַמֹּאזְנַיִם מְאֻזָּנִים."
+  },
+  {
+   "kind": "pick",
+   "id": "b.numb17.13",
+   "skill": "NUM-B-17",
+   "difficulty": 0.76,
+   "voice": true,
+   "check": "practice",
+   "prompt": "סוֹפְרִים גַּרְבַּיִם בְּזוּגוֹת. כַּמָּה גַּרְבַּיִם יֵשׁ?",
+   "group": {
+    "sprite": "sock",
+    "count": 10,
+    "arrangement": "ten_frame",
+    "seed": 3
+   },
+   "options": [
+    "n:10",
+    "n:8",
+    "n:12"
+   ],
+   "correct": "n:10",
+   "tags": {
+    "n:8": "M-CNT-SKIP",
+    "n:12": "M-CNT-DOUBLE"
+   },
+   "correct_text": "עֶשֶׂר! כֹּל זוּג, וְעוֹד זוּג.",
+   "h3": "סוֹפְרִים בִּשְׁתַּיִם: שְׁתַּיִם, אַרְבַּע, שֵׁשׁ, שְׁמוֹנֶה, עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשֶׂר."
+  },
+  {
+   "kind": "numline",
+   "id": "b.numb17.14",
+   "skill": "NUM-B-17",
+   "difficulty": 0.76,
+   "mode": "jump",
+   "to": 20,
+   "start": 4,
+   "hops": [
+    2,
+    2
+   ],
+   "target": 8,
+   "labels": [
+    0,
+    4,
+    10,
+    20
+   ],
+   "tag": "M-CNT-SEQ",
+   "check": "predict",
+   "prompt": "הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל אַרְבַּע וְקוֹפֶצֶת שְׁתֵּי קְפִיצוֹת שֶׁל שְׁתַּיִם. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?",
+   "h3": "מַתְחִילִים מִאַרְבַּע וְקוֹפְצִים בִּשְׁתַּיִם: שֵׁשׁ, שְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם."
+  },
+  {
+   "kind": "share",
+   "id": "b.numb18.11",
+   "skill": "NUM-B-18",
+   "difficulty": 0.6,
+   "sprite": "sock",
+   "n": 8,
+   "friends": [
+    "cat",
+    "dog"
+   ],
+   "check": "practice",
+   "correct_text": "כֵּן! לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר: אַרְבַּע. שְׁמוֹנֶה הוּא מִסְפָּר זוּגִי."
+  },
+  {
+   "kind": "share",
+   "id": "b.numb18.12",
+   "skill": "NUM-B-18",
+   "difficulty": 0.6,
+   "sprite": "shoe",
+   "n": 6,
+   "friends": [
+    "cat",
+    "dog"
+   ],
+   "check": "transfer",
+   "correct_text": "כֵּן! לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר: שָׁלוֹשׁ. שֵׁשׁ הוּא מִסְפָּר זוּגִי."
   }
  ],
  "lessons": [
@@ -3848,7 +4404,9 @@
     "b.numb01.6",
     "b.numb01.7",
     "b.numb01.8",
-    "b.numb01.9"
+    "b.numb01.9",
+    "b.numb01.10",
+    "b.numb01.11"
    ],
    "minutes": 5,
    "done": "יָפֶה מְאֹד! הַסְּפִירָה מַמְשִׁיכָה."
@@ -3879,7 +4437,9 @@
     "b.numb02.6",
     "b.numb02.7",
     "b.numb02.8",
-    "b.numb02.9"
+    "b.numb02.9",
+    "b.numb02.10",
+    "b.numb02.11"
    ],
    "minutes": 5,
    "done": "נִפְלָא! הָעֲשָׂרוֹת כְּבָר מוּכָּרוֹת."
@@ -3900,7 +4460,9 @@
     "b.numb03.7",
     "b.numb03.8",
     "b.numb03.9",
-    "b.numb03.10"
+    "b.numb03.10",
+    "b.numb03.11",
+    "b.numb03.12"
    ],
    "minutes": 5,
    "done": "שָׁלוֹשׁ, שְׁתַּיִם, אַחַת… הַחֲלָלִית טָסָה!"
@@ -3933,7 +4495,9 @@
     "b.numb04.8",
     "b.numb04.9",
     "b.numb04.10",
-    "b.numb04.11"
+    "b.numb04.11",
+    "b.numb04.12",
+    "b.numb04.13"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! כׇּל אֶחָד פַּעַם אַחַת."
@@ -3954,7 +4518,9 @@
     "b.numb05.7",
     "b.numb05.8",
     "b.numb05.9",
-    "b.numb05.10"
+    "b.numb05.10",
+    "b.numb05.11",
+    "b.numb05.12"
    ],
    "minutes": 5,
    "done": "יָפֶה! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקַּשְׁנוּ."
@@ -3990,7 +4556,9 @@
     "b.numb08.11",
     "b.numb08.12",
     "b.numb08.13",
-    "b.numb08.14"
+    "b.numb08.14",
+    "b.numb08.15",
+    "b.numb08.16"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! הַסִּפְרוֹת בַּמָּקוֹם הַנָּכוֹן."
@@ -4022,7 +4590,9 @@
     "b.numb10.7",
     "b.numb10.8",
     "b.numb10.9",
-    "b.numb10.10"
+    "b.numb10.10",
+    "b.numb10.11",
+    "b.numb10.12"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! אַתֶּם יוֹדְעִים מִי גָּדוֹל."
@@ -4116,7 +4686,9 @@
     "b.numb13.18",
     "b.numb13.19",
     "b.numb13.20",
-    "b.numb13.21"
+    "b.numb13.21",
+    "b.numb13.22",
+    "b.numb13.23"
    ],
    "minutes": 5,
    "done": "וַאוּ! קְפִיצוֹת מְצֻיָּנוֹת."
@@ -4148,7 +4720,9 @@
     "b.numb14.7",
     "b.numb14.8",
     "b.numb14.9",
-    "b.numb14.10"
+    "b.numb14.10",
+    "b.numb14.11",
+    "b.numb14.12"
    ],
    "minutes": 5,
    "done": "מְצֻיָּן! כׇּל חֵלֶק בִּמְקוֹמוֹ."
@@ -4225,10 +4799,38 @@
     "b.numb18.7",
     "b.numb18.8",
     "b.numb18.9",
-    "b.numb18.10"
+    "b.numb18.10",
+    "b.numb18.11",
+    "b.numb18.12"
    ],
    "minutes": 5,
    "done": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם לְזוּגוֹת."
+  },
+  {
+   "id": "one-more-one-less-1-b36",
+   "title": "אֶחָד יוֹתֵר, אֶחָד פָּחוֹת",
+   "skills": [
+    "NUM-B-11"
+   ],
+   "items": [
+    "b.numb11.19",
+    "b.numb11.20"
+   ],
+   "minutes": 5,
+   "done": "נִפְלָא! אֶחָד יוֹתֵר וְאֶחָד פָּחוֹת."
+  },
+  {
+   "id": "tens-and-twos-1-b36",
+   "title": "עֲשָׂרוֹת וְזוּגוֹת",
+   "skills": [
+    "NUM-B-17"
+   ],
+   "items": [
+    "b.numb17.13",
+    "b.numb17.14"
+   ],
+   "minutes": 5,
+   "done": "יָפֶה מְאֹד! סְפַרְתֶּם בִּקְפִיצוֹת."
   }
  ]
 }

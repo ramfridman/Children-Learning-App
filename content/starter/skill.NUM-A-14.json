@@ -24,7 +24,8 @@
     }
   ],
   "representations": [
-    "story"
+    "story",
+    "pictorial"
   ],
   "misconceptions": [
     "M-NUM-ZERO",
