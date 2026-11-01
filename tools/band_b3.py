@@ -232,7 +232,7 @@ def extra_math():
 def extra_shapes():
     u = Unit('band-b-extra-shapes', 'shapes',
              'Tracing the first shapes (T04) and matching a solid to its face (T16). Hebrew is a draft by Claude, needs-editor.', 60,
-             assets=['shape_circle', 'shape_square', 'shape_triangle', 'shape_rect', 'solid_cylinder', 'solid_cone', 'solid_pyramid', 'solid_box', 'solid_sphere'], prefix='x')
+             assets=['shape_circle', 'shape_square', 'shape_triangle', 'shape_rect', 'solid_cylinder', 'solid_cone', 'solid_pyramid', 'solid_box', 'solid_sphere', 'solid_cube'], prefix='x')
     u.tag('M-SHP-FACE', ['SHP-B-09'], 'הילד לא רואה איזו צורה שטוחה יש על הגוף: את העיגול על הגליל, את המשולש על הפירמידה.',
           'להטביע בפלסטלינה בסיס של כוס, של קופסה ושל קונוס, ולראות איזו צורה נשארת.', ['concrete', 'pictorial'],
           'כְּשֶׁמַּטְבִּיעִים אֶת הַגּוּף בַּחוֹל, נִשְׁאֶרֶת צוּרָה. בּוֹאוּ נְדַמְיֵן אֶת זֶה.')
@@ -245,14 +245,15 @@ def extra_shapes():
     pairs = [[('solid_cylinder', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')],
              [('solid_cone', 'shape_circle'), ('solid_box', 'shape_rect'), ('solid_pyramid', 'shape_triangle')],
              [('solid_cylinder', 'shape_circle'), ('solid_box', 'shape_rect')],
-             [('solid_sphere', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
+             # B-38: a sphere has no flat face, so the cube and its square take its place
+             [('solid_cube', 'shape_square'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
     for i, ps in enumerate(pairs):
         order = list(range(len(ps)))
         order = order[1:] + order[:1] if i % 2 == 0 else order[::-1]
         u.act('SHP-B-09', 'match', domain='shapes', pairs=[[l, r] for l, r in ps], order=order, tag='M-SHP-FACE',
               prompt='מַתְאִימִים כׇּל גּוּף לַצּוּרָה הַשְּׁטוּחָה שֶׁיֵּשׁ עָלָיו.', h3='מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כׇּל גּוּף עִם הַצּוּרָה שֶׁלּוֹ.')
-    # B-15 addendum A2: which solid leaves a circle in the sand? The box leaves a square, and no sphere is offered
+    # B-15 addendum A2: which solid leaves a circle in the sand? The box leaves a rectangle, and no sphere is offered
     for i, right in enumerate(['solid_cylinder', 'solid_cone']):
         u.act('SHP-B-09', 'pick', domain='shapes', prompt='מַטְבִּיעִים בַּחוֹל, כְּמוֹ חוֹתֶמֶת. אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל?',
               options=place(right, ['solid_box'], i), correct=right, tags={'solid_box': 'M-SHP-FACE'}, check='reverse', difficulty=0.6,

@@ -147,7 +147,7 @@ def shapes():
              'Band B of Shapes: polygons by their sides, counting sides, square and rectangle, closed shapes, the solids. '
              'Hebrew is a draft by Claude, needs-editor.',
              30, assets=['shape_pentagon', 'shape_hexagon', 'shape_quad', 'shape_open', 'shape_curved', 'solid_cylinder', 'solid_cone',
-                         'solid_sphere', 'solid_pyramid', 'solid_box', 'shape_triangle', 'shape_square', 'shape_rect', 'shape_circle',
+                         'solid_sphere', 'solid_pyramid', 'solid_box', 'solid_cube', 'shape_triangle', 'shape_square', 'shape_rect', 'shape_circle',
                          'shape_triangle_thin', 'shape_triangle_down', 'shape_square_tilt', 'tick', 'cross'])
     u.tag('M-SHP-CLOSED', ['SHP-B-01', 'SHP-B-04'], 'הילד מכנה צורה פתוחה או עם צלע עקומה "משולש" או "מרובע", כי היא נראית דומה.',
           'לצייר בעיפרון משולש, ואז לצייר אחד שלא סגור בפינה, ולשאול: האם נמלה יכולה ללכת מסביב בלי לצאת?',
@@ -213,18 +213,33 @@ def shapes():
     u.skill('SHP-B-08', 'גופים', 'גָּלִיל, חָרוּט, כַּדּוּר וּפִירָמִידָה', 'cone-tree', ['SHP-A-07'], ['pictorial', 'concrete'], [])
     solids = [('solid_cylinder', 'הַגָּלִיל'), ('solid_cone', 'הֶחָרוּט'), ('solid_sphere', 'הַכַּדּוּר'), ('solid_pyramid', 'הַפִּירָמִידָה'),
               ('solid_box', 'הַתֵּבָה')]
-    bridge = {'solid_box': ('כֵּן! זוֹ הַתֵּבָה — כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם.', 'הַתֵּבָה דּוֹמָה לְקֻפְסָה שֶׁל נַעֲלַיִם. עַכְשָׁו תּוֹרְכֶם.')}
+    # B-38: with the cube among the options the bridge also says what tells the box from the cube (long sides). The shoe-box bridge
+    # (owner Q7) stays; the h3 is the worked example. needs-editor, for the owner
+    bridge = {'solid_box': ('כֵּן! זוֹ הַתֵּבָה — אֲרֻכָּה, כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם.',
+                            'נִסְתַּכֵּל עַל הַצְּדָדִים. לַתֵּבָה יֵשׁ צְדָדִים אֲרֻכִּים, כְּמוֹ קֻפְסָה שֶׁל נַעֲלַיִם, וּבַקֻּבִּיָּה כֻּלָּם רִבּוּעִים. עַכְשָׁו תּוֹרְכֶם.')}
+    # the line for a solid tapped for the other solid: the shared M-SHP-SQRECT line speaks of the sides of flat shapes
+    solid_sqrect = {'M-SHP-SQRECT': ('vo:fb.sqrect.solids',
+                                     'בַּקֻּבִּיָּה כׇּל הַצְּדָדִים רִבּוּעִים, וְלַתֵּבָה יֵשׁ צְדָדִים אֲרֻכִּים כְּמוֹ מַלְבֵּן.')}
+    # B-38: "where is the box?" offers the cube as its wrong option (box versus cube: square faces or long ones)
+    contrast = {'solid_box': (['solid_cube', 'solid_cone'], {'solid_cube': 'M-SHP-SQRECT'})}
     for i in range(8):
         sp, nm = solids[i % 5]
         others = [x for x, _ in solids if x != sp]
         pair = [others[(i * 2) % 4], others[(i * 2 + 1) % 4]]
+        pair, tags = contrast.get(sp, (pair, {}))
         u.act('SHP-B-08', 'pick', prompt='אֵיפֹה %s?' % nm, options=place(sp, pair, i % 3), correct=sp, domain='shapes',
+              **({'tags': tags, 'tag_lines': solid_sqrect} if tags else {}),
               correct_text=bridge[sp][0] if sp in bridge else 'כֵּן! %s %s.' % ('זוֹ' if NAMES[sp]['g'] == 'f' else 'זֶה', nm),
               h3=bridge[sp][1] if sp in bridge else '%s — נִסְתַּכֵּל עַל הַצּוּרָה %s. עַכְשָׁו תּוֹרְכֶם.' % (
                   nm, 'שֶׁלָּהּ' if NAMES[sp]['g'] == 'f' else 'שֶׁלּוֹ'))
 
     u.act('SHP-B-08', 'spot', cells=['solid_cylinder', 'solid_cylinder', 'solid_cone', 'solid_cylinder'], wrong=2, tag='M-SHP-FACE', domain='shapes',
           check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק גְּלִילִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
+    # B-38: the cube, never asked for before; after the spot item so no id moves (b.shpb08.10). Hebrew needs-editor
+    u.act('SHP-B-08', 'pick', prompt='אֵיפֹה הַקֻּבִּיָּה?', options=place('solid_cube', ['solid_box', 'shape_square'], 2),
+          correct='solid_cube', tags={'solid_box': 'M-SHP-SQRECT', 'shape_square': 'M-SHP-FACE'}, domain='shapes', difficulty=0.6,
+          tag_lines=solid_sqrect, correct_text='כֵּן! זוֹ הַקֻּבִּיָּה — כׇּל הַצְּדָדִים שֶׁלָּהּ רִבּוּעִים.',
+          h3='נִסְתַּכֵּל עַל הַצְּדָדִים. בַּקֻּבִּיָּה כֻּלָּם רִבּוּעִים, וְלַתֵּבָה יֵשׁ צְדָדִים אֲרֻכִּים. עַכְשָׁו תּוֹרְכֶם.')
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('polygon-detectives', 'בַּלָּשֵׁי צוּרוֹת', ['SHP-B-01'], ids('SHP-B-01', 0, 4), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרוֹת חֲדָשׁוֹת.')

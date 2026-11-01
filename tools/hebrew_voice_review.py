@@ -750,6 +750,7 @@ REVIEWED = [
 B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. '
 B39 = 'B-39 (docs/curriculum/todays-adventure-rule.md section 8, docs/agents/hebrew-notes.md): new, worded by the editor, not yet read by the owner. '
 B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
+B38 = 'B-38 (docs/curriculum/b38-decisions.md), next pack: new or changed, worded by the editor, not yet read by the owner. '
 PENDING = [
     ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
      'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
@@ -772,6 +773,26 @@ PENDING = [
      r'כֵּן! זֶה הַדָּג הַגָּדוֹל|כֵּן! זֶה הַכּוֹכָב הַקָּטָן'),
     ('3', r'hints\.2', r'^activity\.b15\.cola05\.', B15 + 'The hint of a tick answer: "לִלְחֹץ עַל הַוִּי" (H7a, the editor) in the pattern of the other hints.',
      r'לִלְחֹץ עַל הַוִּי'),
+    # B-38 (the cat and the basket, the cube): the lines the curriculum-expert changed, worded by the editor, waiting for the owner.
+    ('3', r'^(prompt\.caption\.0\.v|answer\.options\.\d\.label|feedback\.correct\.caption\.0\.v|hints\.2\.caption\.0\.v|a11y\.altText)$',
+     r'^activity\.b15\.shpa08\.[12]\.json$', B38 + 'SHP-A-08 transfer: the cat in, on and next to the basket (בְּתוֹךְ, עַל, לְיַד); the prompt names the '
+     'place and the child matches the word to the picture. h3: look at the basket, then say why (all around the cat; closed, the cat on top).'),
+    ('3', r'^(prompt\.caption\.0\.v|answer\.options\.\d\.label|feedback\.correct\.caption\.0\.v|hints\.2\.caption\.0\.v|a11y\.altText)$',
+     r'^activity\.b\.shpb08\.10\.json$', B38 + 'SHP-B-08, the new item "where is the cube?": the correct line and h3 name what tells the cube from the box '
+     '(all its sides are squares; the box has long sides). Band B says תֵּבָה for the box.'),
+    ('3', r'^(answer\.options\.0\.label|feedback\.correct\.caption\.0\.v|hints\.2\.caption\.0\.v)$', r'^activity\.b\.shpb08\.5\.json$',
+     B38 + 'SHP-B-08 "where is the box?": the cube is now a wrong option, so the correct line and h3 add what tells the box from the cube (long sides); '
+     'the shoe-box bridge of Q7 stays.'),
+    ('3', r'^(answer\.options\.1\.label|feedback\.correct\.caption\.0\.v|hints\.2\.caption\.0\.v)$', r'^activity\.b15\.shpa07\.2\.json$',
+     B38 + 'SHP-A-07 "what can we stack?": the cube (Band A says קֻבִּיָּה only for a real cube; the box is קֻפְסָה); h3 says why it stacks.'),
+    ('3', r'^scene\.(left\.0|right\.2)\.label$', r'^activity\.x\.shpb09\.4\.json$',
+     B38 + 'SHP-B-09 match: the cube and its square take the place of the sphere and the circle (a sphere has no flat face).'),
+    ('3', r'^feedback\.incorrect\.\d\.caption\.0\.v$', r'^activity\.', B38 + 'M-SPACE-WORD, shared by all position items: no object in it '
+     '(it said "the ball" for the cat items too). One clip, vo:fb.space_word, to be voiced again if it was voiced.',
+     r'^הַמִּלָּה אוֹמֶרֶת לָנוּ אֵיפֹה זֶה נִמְצָא'),
+    ('3', r'^feedback\.incorrect\.\d\.caption\.0\.v$', r'^activity\.', B38 + 'M-SHP-SQRECT for solids: the shared line speaks of the sides '
+     'of flat shapes, so the two cube-and-box items have a line of their own (tag_lines, one new clip, vo:fb.sqrect.solids).',
+     r'^בַּקֻּבִּיָּה כׇּל הַצְּדָדִים רִבּוּעִים'),
     # 2026-10-30: the owner approved P3-P5, the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints and the COL-A-05
     # correct lines (OWNER_APPROVED below), so they are no longer pending.
     # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),

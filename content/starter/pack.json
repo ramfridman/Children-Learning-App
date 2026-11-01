@@ -883,6 +883,10 @@
     {
       "id": "pos_cat_on",
       "file": "pos_cat_on.svg"
+    },
+    {
+      "id": "solid_cube",
+      "file": "solid_cube.svg"
     }
   ],
   "vo": []

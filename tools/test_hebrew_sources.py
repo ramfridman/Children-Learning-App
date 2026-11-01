@@ -130,9 +130,10 @@ class HebrewMasterTableTest(unittest.TestCase):
 
     def test_table_counts(self):
         changed = [r for r in self.rows if r['ui_text'] != r['text']]
-        # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main)
-        self.assertEqual(len(self.rows), 12629)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
+        # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main); 12645 with
+        # B-39 (the bottle's five lines) and B-32 (the reworded name refusal); 12659 with the 14 rows of B-38 (2026-11-01)
+        self.assertEqual(len(self.rows), 12659)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1306)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
 
     def test_done_rows_have_ui_text(self):

@@ -343,3 +343,16 @@ screen-reader label should say the stop before the tap (it is computed when the 
 if a check fell due meanwhile, rule section 6).
 Wording guard for QA: none of the ten strings contains `היום`, `עוד לא`, `כבר`, `שוב` as "again after a pause", a count or `{n}`;
 `שוב` in `adventurePlayAgain` is "play a known game once more", which the intent asks for.
+
+## 11. B-38 wording for the next pack (2026-11-01, `proposed` / `needs-editor`)
+
+Sources: `content/units/shapes.json` (the two cat items, the b15.shpa07.2 h3, the shared M-SPACE-WORD line), `tools/band_b2.py` (the
+box bridge, the new `b.shpb08.10`, the solids' own SQRECT line). Rows: `PENDING` in `tools/hebrew_voice_review.py` (B38).
+- **Cat items:** the prompt names the place (`אֵיפֹה הֶחָתוּל? בְּתוֹךְ הַסַּל.`); the labels are the plain place words; h3 = look at
+  the basket, then why (`הוּא מִסָּבִיב לֶחָתוּל` / `הוּא סָגוּר, וְהֶחָתוּל יוֹשֵׁב לְמַעְלָה`), the answer last.
+- **`fb.space_word`** has no object: `הַמִּלָּה אוֹמֶרֶת לָנוּ אֵיפֹה זֶה נִמְצָא.` (`זֶה` fits a ball, a cat and a box). It is one clip for
+  eight items; voice it again if the old one was made.
+- **Box and cube:** Band B `תֵּבָה` / `קֻבִּיָּה`; Band A `קֻפְסָה`, and `קֻבִּיָּה` only for a real cube. The faces of a solid are
+  `צְדָדִים` (Band A `צַד שָׁטוּחַ`), the sides of a flat shape stay `צְלָעוֹת`.
+- **SQRECT for solids:** the shared line (`בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת…`) speaks of flat shapes and does not tell a cube from a
+  box, so the two cube-and-box items have their own line (`tag_lines`, `vo:fb.sqrect.solids`).
