@@ -198,6 +198,12 @@ for _gone in ('step_tap', 'step_soap', 'step_towel', 'solid_box'):
 SHAPE_COLOURS = pictures_b38.SHAPE_COLOURS
 SHAPE_BODIES = pictures_b38.SHAPE_BODIES
 
+# B-36 part D: the 15 new pictures of the second representations (tools/pictures_b36.py: outlines, the cat under and above the
+# basket, the numerals and their mirror images, an open four-sided shape, and four solids from the child's world).
+import pictures_b36  # noqa: E402
+
+SINGLES.update(pictures_b36.PICTURES)
+
 
 def inner(thing):
     """The drawing inside the svg tags of a sprite that make_unit_sprites.py already made."""

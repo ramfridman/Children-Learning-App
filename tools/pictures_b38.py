@@ -223,9 +223,9 @@ def _cat_sitting(cx, base, s):
         # the white chest
         '<path d="M%s C%s %s %s C%s %s %s Z" fill="%s"/>'
         % (P(0, -26), P(-8, -24), P(-8, -6), P(0, -4), P(8, -6), P(8, -24), P(0, -26), WHITE),
-        # the front legs and white paws
-        '<path d="M%s V%s" stroke="%s" stroke-width="%.2f" stroke-linecap="round" opacity="0.8"/>' % (P(-2.5, -14), P(-2.5, -4), FUR_SHADE, 1.2 * s),
-        '<path d="M%s V%s" stroke="%s" stroke-width="%.2f" stroke-linecap="round" opacity="0.8"/>' % (P(2.5, -14), P(2.5, -4), FUR_SHADE, 1.2 * s),
+        # the front legs and white paws (an L to a point: B-36 found a V here that was given a point, a stray line up the chest)
+        '<path d="M%s L%s" stroke="%s" stroke-width="%.2f" stroke-linecap="round" opacity="0.8"/>' % (P(-2.5, -14), P(-2.5, -4), FUR_SHADE, 1.2 * s),
+        '<path d="M%s L%s" stroke="%s" stroke-width="%.2f" stroke-linecap="round" opacity="0.8"/>' % (P(2.5, -14), P(2.5, -4), FUR_SHADE, 1.2 * s),
         '<ellipse cx="%.2f" cy="%.2f" rx="%.2f" ry="%.2f" fill="%s" stroke="%s" stroke-width="%.2f"/>' % (cx - 5 * s, base - 2.2 * s, 4.6 * s, 2.8 * s, WHITE, FUR_EDGE, 1.2 * s),
         '<ellipse cx="%.2f" cy="%.2f" rx="%.2f" ry="%.2f" fill="%s" stroke="%s" stroke-width="%.2f"/>' % (cx + 5 * s, base - 2.2 * s, 4.6 * s, 2.8 * s, WHITE, FUR_EDGE, 1.2 * s),
         _cat_head(cx, base - 36 * s, s),
