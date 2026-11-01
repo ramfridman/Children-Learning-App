@@ -220,11 +220,12 @@ class HintLinesFollowThePictureTest(unittest.TestCase):
             self.assertLess(sum(w in h1 for w in NUMBER_WORDS), 2, '%s: %s' % (a['id'], h1))
 
     def test_a_line_that_says_fingers_has_hands_on_the_screen(self):
-        # the number path, the empty frame, the brackets, the pairing lines and the rest are not fingers
+        # the number path, the empty frame, the brackets, the pairing lines and the rest are not fingers; the plate of NUM-A-06
+        # (B-36, QA-B36-6) shows the asked number on fingers, so its line says fingers too
         for a in self.acts:
             c = self.classes[a['id']]
             if 2 in self.lines(a) and 'אֶצְבָּעוֹת' in self.lines(a)[2]:
-                self.assertIn(c[2], ('hands', 'hands_add', 'hands_take'), '%s: %s' % (a['id'], self.lines(a)[2]))
+                self.assertIn(c[2], ('hands', 'hands_add', 'hands_take', 'plate'), '%s: %s' % (a['id'], self.lines(a)[2]))
 
     def test_hands_on_the_screen_are_named_in_the_line(self):
         for a in self.acts:

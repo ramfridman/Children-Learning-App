@@ -119,6 +119,10 @@ def tap_class(d):
             solid = nm[6:]
             if solid in ('sphere', 'cylinder', 'cone', 'pyramid', 'box'):
                 return (fam, look, 'ghost_solid', 'ghost_solid')
+            if solid == 'cube':
+                # B-38 (QA-B36-6): the cube is drawn as an outline like the box (tap_plans.dart `_shapeKind`), but its item keeps its own
+                # third hint (the sides are all squares), so level 3 stays as it is ('walk', not 'ghost_solid')
+                return (fam, look, 'ghost_solid', 'walk')
             return (fam, look, 'card', 'walk')
         if sk == 'SHP-A-10':
             kind = 'curved' if ('curved' in nm or 'circle' in nm) else 'straight'
@@ -143,6 +147,10 @@ def tap_class(d):
     if fam == 'count':
         if row:
             return (fam, 'veil', 'hops', 'hops')
+        if sk == 'NUM-A-06' and grp and right.get('numeral') is None and right.get('set'):
+            # B-36, QA-B36-6 (tap_plans_c.dart `_plate`): the answer is a plate out of a pile, so level 2 shows the asked number on
+            # fingers beside the pile; the line says what the fingers are (not how many: the question has said it)
+            return (fam, look, 'plate', 'walk')
         if not grp or right.get('numeral') is None:  # no group, or the answer is a plate (NUM-A-06): the hands would count the pile, not the answer
             return (fam, 'tiles' if not grp else look, 'card', 'walk')
         if right.get('numeral') == 0:
@@ -168,6 +176,9 @@ def tap_class(d):
             return (fam, look, 'card', 'walk')
         return (fam, 'veil', 'hands_add' if grp2 else 'hands_take', 'adddemo')
     if fam == 'numerals':
+        if num is None and right.get('numeral') is None and re.search(r'glyph_\d', _sprite_of(right) or ''):
+            # B-36, QA-B36-6 (tap_plans_c.dart `_writtenNumeral`): the answers are drawn numerals; level 2 shows the numeral on its own
+            return (fam, 'tiles', 'glyph', 'walk')
         nn = num if num is not None else right.get('numeral')
         if nn is None or nn < 1:
             return (fam, look, 'card', 'walk')
@@ -177,6 +188,12 @@ def tap_class(d):
         if 'כבד' in words or 'קל' in words:
             return (fam, look, 'card', 'walk')
         return (fam, 'aligned', 'cubes', 'walk')
+    if fam == 'clockMoney':
+        # B-36, QA-B36-6 (tap_plans_c.dart `money`): a chart of whole-shekel coins; level 2 puts each coin's value beside it
+        chart = sc.get('chart') or []
+        if chart and all(re.search(r'coin_s\d+$', c.get('sprite') or '') for c in chart):
+            return (fam, 'veil', 'coin_values', 'walk')
+        return None
     return None
 
 
@@ -216,6 +233,13 @@ L2 = {
     'cubes': ('vo:hint.cubes.h2', 'מוֹדְדִים כׇּל אֶחָד בְּקֻבִּיּוֹת, מֵאוֹתוֹ קַו.'),
     # CS-A-04: the steps from the robot to the flag are the hops between the squares
     'hops': ('vo:hint.hops.h2', 'כׇּל צַעַד הוּא קְפִיצָה אַחַת אֶל הַמִּשְׁבֶּצֶת הַבָּאָה.'),
+    # B-36 (QA-B36-6): the second ways of showing a skill (tap_plans_c.dart), each with a line that says what its picture is
+    # NUM-A-06: the asked number on fingers, beside the pile (the answer is a plate; the pile is more than was asked)
+    'plate': ('vo:hint.plate.h2', 'הָאֶצְבָּעוֹת מַרְאוֹת כַּמָּה צָרִיךְ לָתֵת.'),
+    # NUM-B-07: the numeral on its own, written the right way, as the sample to look at
+    'glyph': ('vo:hint.glyph.h2', 'הִנֵּה הַמִּסְפָּר כָּתוּב נָכוֹן. נִסְתַּכֵּל עָלָיו טוֹב.'),
+    # MATH-B-17: the value of each coin beside it, one coin at a time
+    'coin_values': ('vo:hint.coin_values.h2', 'לְיַד כׇּל מַטְבֵּעַ כָּתוּב כַּמָּה הוּא שָׁוֶה.'),
     # zero: an empty ten-frame
     'empty_frame': ('vo:hint.empty_frame.h2', 'הַמִּשְׁבְּצוֹת רֵיקוֹת — אֵין כְּלוּם לִסְפֹּר.'),
     # SHP-A-07: the question's own two solids are pushed, or one more of each is put on top (watch what happens)
@@ -609,6 +633,9 @@ def _repeating_cell(cells, wrong):
 
 
 # ---------------------------------------------------------------- the shared lines (one clip for a whole family)
+# B-36 (QA-B36-6): a pile counted in twos (tap_plans_c.dart `_inTwos`), the part that hides behind a stone (`_hiddenPart`)
+INTWOS_H2 = S('vo:hint.in_twos.h2', 'כׇּל זוּג בְּטַבַּעַת, וְסוֹפְרִים זוּג אַחַר זוּג.')
+HIDDEN_H2 = S('vo:hint.hidden_part.h2', 'הַמִּסְגֶּרֶת הִיא הַכֹּל. הַמִּשְׁבְּצוֹת הַמְּלֵאוֹת הֵן מַה שֶּׁרוֹאִים, וְהָרֵיקוֹת — מַה שֶּׁמֻּסְתָּר.')
 SEQ_H2 = S('vo:hint.path_b.h2', 'הַמִּסְפָּרִים עוֹמְדִים בְּשׁוּרָה, כׇּל אֶחָד בִּמְקוֹמוֹ. הַמִּסְפָּר מֵהַשְּׁאֵלָה מְסֻמָּן, וּלְיָדוֹ מָקוֹם רֵיק.')
 SKIP_H2 = S('vo:hint.skip.h2', 'קוֹפְצִים מִמִּסְפָּר לַמִּסְפָּר הַבָּא בַּשּׁוּרָה. נִסְתַּכֵּל אֵיפֹה יֵשׁ מָקוֹם רֵיק.')
 TEEN_H2 = S('vo:hint.teen.h2', 'מִסְגֶּרֶת אַחַת מְלֵאָה, עֶשֶׂר מִשְׁבְּצוֹת. בַּמִּסְגֶּרֶת הַשְּׁנִיָּה יֵשׁ עוֹד כַּמָּה.')
@@ -769,6 +796,12 @@ def _seq(d, F, cw):
 def _skip(d, F, cw):
     c = _right(d).get('numeral')
     said = numbers_in(_raw(d))
+    grp = d['scene'].get('group')
+    if grp and not said and not d['scene'].get('row'):
+        # tap_plans_b.dart `_skipCount` -> tap_plans_c.dart `_inTwos`: a pile to count in twos has no numbers in its question; the
+        # third hint of the item (it counts the pairs aloud) stays as it is
+        n = grp.get('count') or 0
+        return (None, INTWOS_H2, None) if n >= 2 and n % 2 == 0 else None
     if c is None or len(said) < 2:
         return None
     step = said[1] - said[0]
@@ -993,6 +1026,19 @@ def _sentence(d, F, cw):
     return (None, CUBES_WHOLE_H2, with_tail(line, old))
 
 
+def _hidden(d, F, cw):
+    """MATH-B-18: with a pile and a stone on the stage the plan is the frame of the whole (tap_plans_c.dart `_hiddenPart`: the seen
+    ones filled, the hidden ones empty); otherwise the number sentence of `_sentence`."""
+    sc = d['scene']
+    if sc.get('row') or not sc.get('group') or not sc.get('group2'):
+        return _sentence(d, F, cw)
+    seen = sc['group'].get('count')
+    hidden = _right(d).get('numeral')
+    if not seen or hidden is None or hidden < 1 or seen + hidden > 10 or (seen + hidden) not in numbers_in(_raw(d)):
+        return None
+    return (None, HIDDEN_H2, None)
+
+
 def _to_ten(d, F, cw):
     g = d['scene'].get('group')
     c = _right(d).get('numeral')
@@ -1110,7 +1156,7 @@ B_FAMILIES = {
     'NUM-B-01': _seq, 'NUM-B-02': _seq, 'NUM-B-03': _seq, 'NUM-B-11': _seq, 'NUM-B-08': _teens, 'NUM-B-17': _skip,
     'COL-B-01': _mix, 'COL-B-02': _shades, 'NUM-B-10': _compare_bars, 'MATH-B-16': _coin_bars, 'NUM-B-18': _pairs,
     'MATH-B-10': _chart, 'MATH-B-19': _chart, 'MATH-B-02': _whole_parts, 'MATH-B-03': _sentence, 'MATH-B-07': _sentence,
-    'MATH-B-08': _sentence, 'MATH-B-18': _sentence, 'NUM-B-16': _sentence, 'MATH-B-06': _to_ten, 'MATH-B-14': _week,
+    'MATH-B-08': _sentence, 'MATH-B-18': _hidden, 'NUM-B-16': _sentence, 'MATH-B-06': _to_ten, 'MATH-B-14': _week,
     'MATH-B-15': _hour, 'SHP-B-01': _corners, 'SHP-B-02': _sides, 'SHP-B-04': _sides, 'SHP-B-03': _sticks,
     'SHP-B-09': _stamps, 'LOG-B-06': _common, 'LOG-B-09': _clues,
 }

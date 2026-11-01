@@ -928,6 +928,32 @@ PART_F_LIST += [
      'הַצַּד הַיְמָנִי קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַמֹּאזְנַיִם שָׁווֹת.',
      'curriculum and agreement (owner D3, 2026-11-01): the sides of the balance are named by where they are, not by right and left; the scales are not "שָׁווֹת", the sides are equal. True only if the beam tilts (design-director)'),
 ]
+# QA-B36-6 (2026-11-01, hebrew-text-editor): the level-2 hint line (hints.1) of ten second-way items was the generic "look slowly at all of them"
+# over a picture that is new (docs/qa/b36-verification.md). The rows below got a line that says what the picture shows
+# (tools/hint_lines.py); each is a new text that the owner has not read, so it is `text-ready`, never `owner-approved`
+# (docs/review/b36-qa6-owner-sample.md). Keyed by the pack file (source); the id is always hints.1.caption.0.v.
+QA6_DRAFT = 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.'
+QA6_SOURCES = {
+    'activity.b36.numa06.1.json': 'the asked number on fingers beside the pile',
+    'activity.b36.numa06.2.json': 'the asked number on fingers beside the pile',
+    'activity.x.numb07.21.json': 'the numeral written the right way, on its own',
+    'activity.x.numb07.22.json': 'the numeral written the right way, on its own',
+    'activity.b.numb17.13.json': 'a ring round each pair of socks, with the count so far',
+    'activity.x.mathb17.12.json': 'the value of each coin beside it',
+    'activity.x.mathb17.13.json': 'the value of each coin beside it',
+    'activity.b.mathb18.10.json': 'the whole as a frame: the seen places filled, the hidden ones empty',
+    'activity.b.mathb18.11.json': 'the whole as a frame: the seen places filled, the hidden ones empty',
+    'activity.b.shpb08.10.json': 'the cube as an outline, like every other solid of SHP-B-08 (the shared line vo:hint.solid_outline.h2)',
+}
+
+
+def qa6_note(r):
+    if r['id'] == 'hints.1.caption.0.v' and r['source'] in QA6_SOURCES:
+        return ('QA-B36-6 (editor, 2026-11-01): the level-2 line said "look slowly at all of them" over a new picture (%s); it now says '
+                'what the picture shows; the draft was: %s' % (QA6_SOURCES[r['source']], QA6_DRAFT))
+    return None
+
+
 PART_F = {}
 for _new, _old, _why in PART_F_LIST:
     PART_F[canon(_new)] = (_old, _why)
@@ -1323,6 +1349,9 @@ def master(rows, result, rules):
             pf = PART_F.get(canon(r['text'])) or next(((o_, w_) for rx, o_, w_ in PART_F_RX if rx.search(canon(r['text']))), None)
             if pf:
                 notes = ['B-36 part F (editor, 2026-11-01): %s; the draft was: %s' % (pf[1], pf[0])] + notes
+            q6 = qa6_note(r)
+            if q6:
+                notes = [q6] + notes
             status = 'proposed' if (g_notes or is_spoken) else 'unchanged'
             comment = ''
             if (r['source'], r['id'], r['text']) not in kept:
@@ -1354,6 +1383,8 @@ def master(rows, result, rules):
             elif r['group'].startswith('5'):
                 comment = EDITOR + ALERT_NOTE
             approved = owner_approved(r) or (B36_APPROVED_COMMENT if b36_approved(r, ui, el) else None)
+            if q6 and status == 'text-ready':
+                comment = EDITOR + 'new text (QA-B36-6): waits for the owner, docs/review/b36-qa6-owner-sample.md'
             if approved:
                 status, comment = 'owner-approved', EDITOR + approved
             old = kept.get((r['source'], r['id'], r['text']))

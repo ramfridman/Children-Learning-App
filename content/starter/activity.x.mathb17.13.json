@@ -137,11 +137,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.coin_values.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "לְיַד כׇּל מַטְבֵּעַ כָּתוּב כַּמָּה הוּא שָׁוֶה."
         }
       ]
     },

@@ -572,3 +572,33 @@ table (as for `nitziHomeHi` on 2026-10-29), so the bottle lines (B-39) and the r
 test decision for the app-developer and the owner, not a text decision.
 
 **Also fixed.** `docs/audio/audition/round2.json`: the six `H1-mixed-*` inputs had `אוֹפְּס`; now `אוּפְּס`.
+
+## 17. QA-B36-6: the second hint line of ten second-way items (hebrew-text-editor, 2026-11-01)
+
+QA found that the level 2 line of `b36.numa06.1/.2`, `x.numb07.21/.22`, `b.numb17.13`, `x.mathb17.12/.13`, `b.mathb18.10/.11` and `b.shpb08.10` was the generic
+`נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.` over a picture that is new (`app/lib/play/hints/tap_plans_c.dart`, and `tap_plans.dart` for the cube).
+Cause: `tools/hint_lines.py` had no class for the new plans (`tap_class` gave `card`, or None, and `retext_b` gave None), so the generator kept the generic line.
+
+**Fixed in the source (`tools/hint_lines.py`), no pack content was written by hand.** New classes, each read the way the Dart plan reads the item:
+
+| Item(s) | Class | Line (shared, one clip) | Voice id |
+|---|---|---|---|
+| NUM-A-06 with a pile and plates | `plate` | `הָאֶצְבָּעוֹת מַרְאוֹת כַּמָּה צָרִיךְ לָתֵת.` | `vo:hint.plate.h2` |
+| NUM-B-07 with drawn numerals (`glyph_N`) | `glyph` | `הִנֵּה הַמִּסְפָּר כָּתוּב נָכוֹן. נִסְתַּכֵּל עָלָיו טוֹב.` | `vo:hint.glyph.h2` |
+| MATH-B-17 with a chart of whole-shekel coins | `coin_values` | `לְיַד כׇּל מַטְבֵּעַ כָּתוּב כַּמָּה הוּא שָׁוֶה.` | `vo:hint.coin_values.h2` |
+| NUM-B-17 with a pile and no numbers in the question (`_skip`) | `INTWOS_H2` | `כׇּל זוּג בְּטַבַּעַת, וְסוֹפְרִים זוּג אַחַר זוּג.` | `vo:hint.in_twos.h2` |
+| MATH-B-18 with a pile and a stone (`_hidden`; a row stays with `_sentence`) | `HIDDEN_H2` | `הַמִּסְגֶּרֶת הִיא הַכֹּל. הַמִּשְׁבְּצוֹת הַמְּלֵאוֹת הֵן מַה שֶּׁרוֹאִים, וְהָרֵיקוֹת — מַה שֶּׁמֻּסְתָּר.` | `vo:hint.hidden_part.h2` |
+| SHP-B-08, the cube | `ghost_solid` (level 3 stays `walk`: the item's own sides line) | the existing `vo:hint.solid_outline.h2` | no new clip |
+
+Rules kept: level 2 says what the picture is and never counts aloud where the picture does not; the question has said the numbers, so no line says one;
+plural or impersonal; no gender guessed. The NUM-A-06 line says "fingers", so `test_a_line_that_says_fingers_has_hands_on_the_screen` accepts the class `plate`
+(the plate plan draws fingers); no pinned count changed. Only these ten files of `content/starter` changed; regeneration is byte-identical on the second run.
+
+Rows: the nine that were `owner-approved` (their hash is no longer in `b36-approved-rows.tsv`) and `b.shpb08.10` (was `text-ready`) are `text-ready` with the comment
+`new text (QA-B36-6): waits for the owner` (`QA6_SOURCES` in `tools/hebrew_voice_review.py`; the draft is in `changes`). Master table: `owner-approved` 3,348 to 3,339,
+`text-ready` 10,437 to 10,446. The owner's sheet is `docs/review/b36-qa6-owner-sample.md`.
+
+**The `בשְׁתַּיִם` and `וְשְׁתַּיִם` rows the security reviewer saw are not errors in the pack.** They are in the `text` column of `hebrew-master.csv`, which keeps the ORIGINAL draft
+on purpose (`export-hebrew-review.py` writes the original of a `text-ready` row from the last master table: "the master table's `text` ... depend on it"). The pack and the `ui_text`
+column already say `בִּשְׁתַּיִם` (`b.numb17.4/.5/.6`, whose line is now `כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו בִּשְׁתַּיִם`) and `וּשְׁתַּיִם` (`b.mathb09.7`); the corrections
+are the `SUBS` rule of `hebrew_voice_review.py` and the `changes` column says so. The voice text is plain and right. Nothing to fix at the source.
