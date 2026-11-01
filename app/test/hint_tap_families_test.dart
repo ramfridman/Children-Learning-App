@@ -776,10 +776,10 @@ void main() {
         int at(String key) => all.indexOf(find.byKey(Key(key)).evaluate().single);
         expect(at('lesson-bubble'), greaterThan(at('probe-stage')));
         expect(at('activity-nitzi'), greaterThan(at('probe-stage')));
-        // The hint's hand is above the bubble and the guide (so the way it shows is never hidden), and below the tiles.
+        // The hint's hand is above the bubble, the guide and the answer tiles (so the way it shows is never hidden).
         expect(at('probe-hands'), greaterThan(at('lesson-bubble')));
         expect(at('probe-hands'), greaterThan(at('activity-nitzi')));
-        expect(at('probe-tiles'), greaterThan(at('probe-hands')));
+        expect(at('probe-hands'), greaterThan(at('probe-tiles')));
       },
     );
   });
