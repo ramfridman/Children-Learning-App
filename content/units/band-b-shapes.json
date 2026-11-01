@@ -2084,11 +2084,11 @@
    "prompt": "צוּרוֹת סְגוּרוֹת עִם קַוִּים יְשָׁרִים לְכָאן, וְכׇל הַשְּׁאָר לְכָאן.",
    "bins": [
     {
-     "sprite": "shape_pentagon",
+     "sprite": "shape_square",
      "label": "סְגוּרוֹת, קַוִּים יְשָׁרִים"
     },
     {
-     "sprite": "shape_open",
+     "sprite": "shape_curved",
      "label": "כׇּל הַשְּׁאָר"
     }
    ],
@@ -2098,11 +2098,11 @@
      2
     ],
     [
-     "shape_hexagon",
+     "shape_pentagon",
      1
     ],
     [
-     "shape_curved",
+     "shape_open",
      2
     ],
     [

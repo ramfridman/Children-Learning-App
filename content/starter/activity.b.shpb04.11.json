@@ -35,13 +35,13 @@
     "bins": [
       {
         "id": "b1",
-        "sprite": "asset:shape_pentagon",
+        "sprite": "asset:shape_square",
         "count": 1,
         "label": "סְגוּרוֹת, קַוִּים יְשָׁרִים"
       },
       {
         "id": "b2",
-        "sprite": "asset:shape_open",
+        "sprite": "asset:shape_curved",
         "count": 1,
         "label": "כׇּל הַשְּׁאָר"
       }
@@ -54,12 +54,12 @@
       },
       {
         "id": "i2",
-        "sprite": "asset:shape_hexagon",
+        "sprite": "asset:shape_pentagon",
         "bin": "b1"
       },
       {
         "id": "i3",
-        "sprite": "asset:shape_curved",
+        "sprite": "asset:shape_open",
         "bin": "b2"
       },
       {

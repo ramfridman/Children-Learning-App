@@ -275,10 +275,8 @@ def shapes(u):
           items=[['shape_triangle', 1], ['shape_curved', 2], ['shape_hexagon', 1], ['shape_quad', 1], ['line_curved_arc', 2]])
     A.add('b.shpb04.11', 'closed-shapes-more', 'SHP-B-04', 'sort', tag='M-SHP-CLOSED', check='transfer',
           prompt='צוּרוֹת סְגוּרוֹת עִם קַוִּים יְשָׁרִים לְכָאן, וְכׇל הַשְּׁאָר לְכָאן.',
-          # the spec's bins (a square, a curved shape) are blue like the open square, which hints at the bin it goes with; red and purple bins
-          # carry no colour lure until the sprite has a neutral colour (design-director)
-          bins=[{'sprite': 'shape_pentagon', 'label': 'סְגוּרוֹת, קַוִּים יְשָׁרִים'}, {'sprite': 'shape_open', 'label': 'כׇּל הַשְּׁאָר'}],
-          items=[['shape_open_quad', 2], ['shape_hexagon', 1], ['shape_curved', 2], ['shape_triangle_thin', 1], ['shape_circle', 2]])
+          bins=[{'sprite': 'shape_square', 'label': 'סְגוּרוֹת, קַוִּים יְשָׁרִים'}, {'sprite': 'shape_curved', 'label': 'כׇּל הַשְּׁאָר'}],
+          items=[['shape_open_quad', 2], ['shape_pentagon', 1], ['shape_open', 2], ['shape_triangle_thin', 1], ['shape_circle', 2]])
     A.add('b.shpb08.11', 'solids-more', 'SHP-B-08', 'sort', tag='M-SHP-NAME', tag_lines={'M-SHP-NAME': SOLIDS_LINE}, check='practice',
           prompt='מַכְנִיסִים כׇּל דָּבָר אֶל הַגּוּף שֶׁהוּא דּוֹמֶה לוֹ.',
           bins=[{'sprite': 'solid_cylinder'}, {'sprite': 'solid_cone'}, {'sprite': 'solid_sphere'}],
