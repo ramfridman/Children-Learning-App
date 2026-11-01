@@ -1,0 +1,132 @@
+{
+  "schema": "audition/v1",
+  "title": "Round 4: only the number two (שְׁתַּיִם, shTA-yim). Round 3 was approved on 2026-11-01 except this word; five respellings for the voice only, screen text unchanged.",
+  "review": "needs-editor",
+  "note": "Written by the voice-and-sound-director on 2026-11-01. Model eleven_v4_turbo (not changed), stability 0.5, similarity 0.8, as N18. Candidates A to E change only the letters sent to the voice; the screen text stays שתיים/שְׁתַּיִם. If one wins it becomes a voices.json pronunciation entry (the plain and the pointed form both map to it). None is certain: no ElevenLabs document describes Hebrew stress control, so this round is the test.",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4_turbo",
+    "format": "mp3_44100_64",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.8,
+      "use_speaker_boost": true
+    }
+  },
+  "clips": [
+    {
+      "id": "N30-A-plain-aleph",
+      "text": "כן, שֵׁשׁ ועוד שתאים שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate A, no points at all, an aleph for the glottal break (שתאים). Listen: shTA-im with stress on TA. Unpointed words can lean on the model's own guess; does it still land on TA?"
+    },
+    {
+      "id": "N30-B-yodyod",
+      "text": "כן, שֵׁשׁ ועוד שְׁתַּיְיִם שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate B, a doubled yod with a sheva (U+05B0) so the diphthong is kept apart: shTAY-yim. Listen: TA-yim stressed on TA, no extra \"y\" sound or stutter."
+    },
+    {
+      "id": "N30-C-aleph",
+      "text": "כן, שֵׁשׁ ועוד שְׁתַּאיִם שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate C, an aleph as a glottal break (the owner's idea): shTA-im. Listen: TA stressed, a clean break before \"im\"; a gap or a \"ta-ee-im\" is a fail."
+    },
+    {
+      "id": "N30-D-sparse",
+      "text": "כן, שֵׁשׁ ועוד שתַּיִם שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate D, nikud only on the TA (the community advice: sparse points): sh-TA-yim. Listen: does dropping the sheva and the long ending make the stress land on TA?"
+    },
+    {
+      "id": "N30-E-male",
+      "text": "כן, שֵׁשׁ ועוד שְׁתַּיִים שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate E, the full spelling with two yods and a hirik under the first (שְׁתַּיִים): shTA-yim. Listen: stress on TA, not on YIM."
+    },
+    {
+      "id": "N31-iso-A",
+      "text": "שתאים.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate A alone, one word, a full stop: the cleanest hearing of the stress (shTA-yim). Judge the stress, not the tone."
+    },
+    {
+      "id": "N31-iso-C",
+      "text": "שְׁתַּאיִם.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate C alone, one word: shTA-im or shTA-yim? Same question as N31-iso-A."
+    },
+    {
+      "id": "N32-start-C",
+      "text": "שְׁתַּאיִם כָּפוּל שָׁלוֹשׁ שָׁוֶה שֵׁשׁ.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Candidate C at the start of a sentence (the N19 position, where the model also misread it). Only useful if C or B wins N30; shTA-yim at the head of the line.",
+      "note": "N19 position"
+    },
+    {
+      "id": "N33-shtei-control",
+      "text": "יֵשׁ שְׁתֵּי כּוֹכָבִים בַּשָּׁמַיִם.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Control, unchanged spelling: שְׁתֵּי 'shte' (two, before a noun) and בַּשָּׁמַיִם. The owner approved the others; confirm שְׁתֵּי is not misread the same way.",
+      "note": "control, not a candidate"
+    },
+    {
+      "id": "H30-A",
+      "text": "כן, שֵׁשׁ ועוד שתאים שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son, candidate A (שתאים, unpointed) in the N18 sentence: shTA-yim. Compare with H06 (old)."
+    },
+    {
+      "id": "H30-C",
+      "text": "כן, שֵׁשׁ ועוד שְׁתַּאיִם שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son, candidate C in the N18 sentence: shTA-yim, no gap."
+    }
+  ]
+}

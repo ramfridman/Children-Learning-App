@@ -1,5 +1,8 @@
 # Listening sheet: the diagnostic audition, rounds 1, 2 and 3
 
+> **Round 3 was approved by the owner on 2026-11-01, except the number two** (he wants "Sh-ta-yim", stress on TA).
+> Round 4 (section E1b) tests respellings of that one word only.
+
 Written by the voice-and-sound-director on 2026-10-29. The clips are in `round1.json` and `round2.json` next to this
 file. Each spec gives every clip's exact text, model, settings and format, and the question the clip answers (`tests`).
 The plan prints all of this again before anything is sent.
@@ -320,6 +323,32 @@ Until round 3 is merged to `main`, use the worktree `D:\nitznutz-next` below. Af
 8. **To the phone.** Copy only the `.mp3` files of the `round3` folder. Android: USB cable, "File transfer", drag into
    `Music`. iPhone: upload to OneDrive or iCloud Drive and play from Files. The clips hold only these test sentences,
    nothing about the children. Delete the phone copy after you answer.
+
+### E1b. Round 4: only the number two (2026-11-01)
+
+**Round 3 was approved by the owner on 2026-11-01, except one word: the number two.** He wants "Sh-ta-yim" (שְׁתַּיִם,
+shTA-yim, stress on TA). Heard in N17 (plain), N18, N18-v4, H06 and N19 (pointed): the voice misreads it with and without
+points. Everything else (the words, the tones, the voices) is approved, and the model stays `eleven_v4_turbo` (v4 was not
+picked over it). Round 4 tests five respellings that change only what the voice is sent, never the screen text:
+`round4.json`, 11 clips (8 Nitzi, 2 hero-son, 1 control), **384 characters**, about **0.0154 USD**.
+
+Steps (Windows PowerShell 5.1; Claude never runs these). Same as E1, with these differences:
+
+1. Open a separate PowerShell window, then `cd D:\nitznutz-next\app` and
+   `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`.
+2. Free plan: `dart run tool/voice_gen.dart audition-batch plan ../docs/audio/audition/round4.json`. It must end with
+   `Clips to make: 11 of 11` and `Characters of text in total: 384`. Stop and tell Claude if it differs.
+3. The key (hidden prompt), as E1 step 4.
+4. The paid run: the same command as E1 step 5 with `round4.json` in place of `round3.json`. It asks for the total:
+   **type 384** and press Enter.
+5. Close the key (`Remove-Item Env:ELEVENLABS_API_KEY`, then `exit`).
+6. The clips: `explorer "$env:USERPROFILE\nitznutz-voice\auditions\round4"`. Play in name order (H30, N30, N31, N32, N33).
+7. Answer one line per clip: "yes, shTA-yim", "no, it says ...", or "close". Say which of A to E you like best; if none,
+   say what you hear (for example "stress on the last syllable").
+
+What to listen for: the stress on TA, a clean "sh-t" start (no "shi-ta"), no extra gap or extra syllable. N33 is a control:
+שְׁתֵּי must still sound right. Candidates: A plain with aleph (שתאים), B double yod (שְׁתַּיְיִם), C pointed aleph
+(שְׁתַּאיִם), D sparse points (שתַּיִם), E full spelling (שְׁתַּיִים).
 
 ### E2. How to answer from the phone
 
