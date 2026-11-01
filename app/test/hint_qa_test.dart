@@ -378,7 +378,7 @@ void main() {
         final NumberLineSession s = NumberLineSession(c, a);
         await host(t, s);
         final List<double> xs = <double>[];
-        for (final int n in <int>[0, 5, 10]) {
+        for (final int n in <int>[0, 5, 10, 15, 20]) {
           final Finder f = find.text('$n');
           if (f.evaluate().isNotEmpty) xs.add(t.getCenter(f.first).dx);
         }

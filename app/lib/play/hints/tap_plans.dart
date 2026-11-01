@@ -16,6 +16,7 @@ import 'sprite_outline.dart';
 import 'tap_geometry.dart';
 
 part 'tap_plans_b.dart';
+part 'tap_plans_c.dart';
 
 // What each family of `tap_answer` draws at each hint level (B-40 part 2; the plan is docs/curriculum/b40-visual-hint-ladder.md
 // section 5.1, the pictures are docs/design/b40-visual-hints.md section 5). Each level is a [HintPlan]: steps shown one after the
@@ -49,7 +50,7 @@ HintPlan? tapHintPlan(TapAnswerActivity a, TapGeometry g, int level) {
     TapFamily.add => p.add(l),
     TapFamily.numerals => p.numerals(l),
     TapFamily.measure => p.measure(l),
-    TapFamily.clockMoney => p.generic(l),
+    TapFamily.clockMoney => p.money(l),
   };
 }
 
@@ -492,7 +493,7 @@ class _Plans {
         'cone' => GhostKind.cone,
         'sphere' => GhostKind.circle,
         'pyramid' => GhostKind.pyramid,
-        'box' => GhostKind.box,
+        'box' || 'cube' => GhostKind.box,
         _ => null,
       };
     }
@@ -512,7 +513,7 @@ class _Plans {
   /// word says whether it is about stacking.
   HintPlan _solids(int level) {
     final ChoiceOption? ball = _first((String s) => s.contains('sphere') || s.contains('ball'));
-    final ChoiceOption? box = _first((String s) => s.contains('box'));
+    final ChoiceOption? box = _first((String s) => s.contains('box') || s.contains('cube'));
     if (_n != 2 || ball == null || box == null || _svg(ball.sprite) == null || _svg(box.sprite) == null) {
       return generic(level);
     }
@@ -759,6 +760,7 @@ class _Plans {
   HintPlan count(int level) {
     if (a.row.isNotEmpty) return _steps(level);
     // The answer is a plate of things (B-36 NUM-A-06, "give three of the seven"): counting the pile would count the wrong number.
+    if (_right.numeral == null && _right.set != null) return _plate(level);
     if (a.group == null || _right.numeral == null) return generic(level);
     if (_right.numeral == 0) return _zero(level);
     final TapGeometry g2 = g.withReserve(_reserve);
@@ -801,12 +803,14 @@ class _Plans {
       for (int j = 0; j < upTo; j++) BadgeMark(objs[j].topRight, j + 1),
     ];
     final List<HintMark> counted = <HintMark>[...badges(n), BadgeMark(_card.center, n, big: true)];
+    // A pile of nine or more is counted a little faster, so that the whole demonstration stays under ten seconds.
+    final int each = math.min(850, 7000 ~/ n);
     return _demo(<HintFrame>[
       HintFrame(const <HintMark>[], hold: _ms(500), reserve: _reserve),
       for (int i = 0; i < n; i++)
         HintFrame(
           <HintMark>[...badges(i + 1), HandMark(objs[i].center, press: true)],
-          hold: _ms(850),
+          hold: _ms(each),
           reserve: _reserve,
         ),
       HintFrame(<HintMark>[...counted, HandMark(objs[n - 1].center)], hold: _ms(900), reserve: _reserve),
@@ -1159,7 +1163,10 @@ class _Plans {
     if (level == 1) {
       return HintPlan(<HintFrame>[
         HintFrame(<HintMark>[VeilMark(first)], hold: _ms(1500)),
-        if (adds) HintFrame(<HintMark>[VeilMark(second)], hold: _ms(1500)),
+        if (adds)
+          HintFrame(<HintMark>[
+            VeilMark(second.isEmpty ? <Rect>[g.groupCell(1)] : second),
+          ], hold: _ms(1500)),
       ]);
     }
     // Up to ten a number is shown as hands; above ten (Band B) the card holds the numeral.
@@ -1241,7 +1248,9 @@ class _Plans {
 
   HintPlan numerals(int level) {
     final int? n = a.stageNumeral ?? _right.numeral;
-    if (n == null || n < 1) return generic(level);
+    if (n == null) return _writtenNumeral(level);
+    if (n == 0) return _zeroOnStage(level);
+    if (n < 1) return generic(level);
     final Rect path = Rect.fromCenter(
       center: Offset(g.w / 2, g.h / 2 + 6 * k),
       width: math.min(g.w - 20, 5 * 40 * k),

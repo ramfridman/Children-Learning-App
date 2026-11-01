@@ -384,7 +384,7 @@ def extra_math(u, shekels, solution, coins_said):
     for want, chart, total, wrong, check in (
             ('x.mathb17.12', [('coin_s5', 1), ('coin_s2', 1), ('coin_s1', 1)], 8, (3, 7), 'practice'),
             ('x.mathb17.13', [('coin_s10', 1), ('coin_s2', 2)], 14, (3, 12), 'transfer')):
-        A.add(want, 'pay-exactly-more', 'MATH-B-17', 'pick', domain='math', check=check, prompt='כַּמָּה כֶּסֶף יֵשׁ כָּאן?', chart=chart,
+        A.add(want, 'pay-exactly-more', 'MATH-B-17', 'pick', domain='math', check=check, prompt='כַּמָּה כֶּסֶף יֵשׁ כָּאן?', chart=chart, voice=True,
               options=tiles(total, list(wrong), 0), correct='n:%d' % total, tags={'n:%d' % wrong[0]: 'M-MONEY-COUNT', 'n:%d' % wrong[1]: 'M-CNT-SKIP'},
               correct_text='%s! מְחַבְּרִים אֶת מַה שֶּׁכָּתוּב עַל הַמַּטְבְּעוֹת.' % F[total],
               h3='מְחַבְּרִים אֶת מַה שֶּׁכָּתוּב עַל כׇּל מַטְבֵּעַ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[total], F[total]))

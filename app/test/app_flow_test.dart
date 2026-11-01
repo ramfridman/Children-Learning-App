@@ -442,6 +442,9 @@ void main() {
       expect(find.byType(DevLessonsPage), findsOneWidget);
       final Finder clock = find.byKey(const Key('dev-lesson-set-the-clock'));
       await tester.scrollUntilVisible(clock, 300, scrollable: find.byType(Scrollable).first);
+      // The row is built as soon as its edge shows; the list is long, so bring all of it on screen before the tap.
+      await tester.ensureVisible(clock);
+      await tester.pumpAndSettle();
       await tester.tap(clock);
       for (int i = 0; i < 20; i++) {
         await tester.pump(const Duration(milliseconds: 100));

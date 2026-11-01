@@ -69,7 +69,7 @@
     "shuffle": false,
     "unsureAllowed": true
   },
-  "voiceAnswer": false,
+  "voiceAnswer": true,
   "feedback": {
     "correct": {
       "vo": "vo:x.mathb17.13.correct",
