@@ -410,11 +410,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   Widget _lesson(BuildContext context, PackContent c, Guide guide, bool voiceOn) {
     final LessonController controller = _controllerFor(c, guide);
     if (voiceOn && _voice == null) _voice = _makeVoice(controller);
-    final ActivitySpec spec = ActivitySpec.of(AppLayout.of(context).board);
+    final ActivitySpec board = ActivitySpec.of(AppLayout.of(context).board);
     return ListenableBuilder(
       listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer]),
       builder: (BuildContext ctx, Widget? _) {
         final TemplateSession session = _sessionFor(controller);
+        final ActivitySpec spec = session.layoutFor(board);
         if (controller.finished) _endVisit(_endReason());
         final bool helpOffered =
             !controller.finished &&
@@ -435,6 +436,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             ? CharacterState.encourage
             : CharacterState.idle;
         return ActivityFrame(
+          spec: spec,
           guide: SpeakingCharacter(
             character: guide.character,
             director: _director,

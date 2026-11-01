@@ -396,14 +396,14 @@ void main() {
         final RobotPathActivity a = all<RobotPathActivity>().first;
         final LessonController c = controllerFor(a);
         final RobotPathSession s = RobotPathSession(c, a);
-        await host(t, s);
+        await host(t, s, spec: RobotPathSession.laidOut(ActivitySpec.phone));
         final Map<String, IconData> icons = <String, IconData>{
           'left': Icons.arrow_back_rounded,
           'up': Icons.arrow_upward_rounded,
           'down': Icons.arrow_downward_rounded,
           'right': Icons.arrow_forward_rounded,
         };
-        double last = -1;
+        final Map<String, double> x = <String, double>{};
         for (final String d in RobotPathSession.arrowOrder) {
           final Finder icon = find.descendant(
             of: find.byKey(Key('arrow-$d')),
@@ -415,9 +415,12 @@ void main() {
             TextDirection.ltr,
             reason: '$d: the arrow must not follow the screen',
           );
-          expect(t.getCenter(icon).dx, greaterThan(last));
-          last = t.getCenter(icon).dx;
+          x[d] = t.getCenter(icon).dx;
         }
+        // The block of 2 by 2 (left, up / down, right): the arrow that points left is left of the one that points right.
+        expect(x['left']!, lessThan(x['up']!));
+        expect(x['down']!, lessThan(x['right']!));
+        expect(x['left']!, lessThan(x['right']!));
         await end(t, s);
       },
     );
