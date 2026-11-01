@@ -23,7 +23,9 @@ extension _BandB on _Plans {
     'MATH-B-10' || 'MATH-B-19' => _chart(level),
     'MATH-B-02' when a.group == null => _wholeParts(level),
     'MATH-B-03' || 'MATH-B-07' || 'MATH-B-08' || 'MATH-B-18' => _sentence(level),
-    'NUM-B-16' when a.row.isNotEmpty => _sentence(level),
+    // With the two ten-frames on the stage the sentence stands under them, with no room over its numbers for cubes: the frames are
+    // what the hint counts then (the family's own plan).
+    'NUM-B-16' when a.row.isNotEmpty && !g.stacked => _sentence(level),
     'MATH-B-06' => _toTen(level),
     'MATH-B-14' => _week(level),
     'MATH-B-15' => _clockHour(level),

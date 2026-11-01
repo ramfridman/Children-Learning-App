@@ -38,6 +38,10 @@ class TapAnswerSession extends TemplateSession {
   ActivitySpec? _spec;
   TextDirection _dir = TextDirection.rtl;
 
+  /// The screen's layout numbers and the row direction of the tiles, as the stage was last built with them.
+  ActivitySpec? get spec => _spec;
+  TextDirection get dir => _dir;
+
   String? chosenId;
   AnswerState chosenState = AnswerState.idle;
   bool _busy = false;
@@ -293,6 +297,11 @@ class _TapStage extends StatelessWidget {
     final double room = size.height - top;
     final double box = math.min(room * (hasGroup ? 0.9 : 0.86), size.width / (n + 0.5));
     final double gap = (size.width - box * n) / (n + 1);
+    // The places of the group(s) and, under them, of the numeral or row of the question: the same numbers the hints stand on.
+    final TapGeometry geo = TapGeometry(a, size, s.spec!, reserve: s.reserve, dir: s.dir);
+    final Duration slide = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : const Duration(milliseconds: 300);
     final Widget stage = ClipRRect(
       borderRadius: BorderRadius.circular(TokenRadius.lg),
       child: Stack(
@@ -301,32 +310,31 @@ class _TapStage extends StatelessWidget {
           if (a.background != null)
             Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
           if (hasGroup)
-            AnimatedPositioned(
-              duration: MediaQuery.disableAnimationsOf(context)
-                  ? Duration.zero
-                  : const Duration(milliseconds: 300),
+            AnimatedPositioned.fromRect(
+              rect: geo.groupArea,
+              duration: slide,
               curve: Curves.easeInOut,
-              left: s.reserve,
-              top: 0,
-              width: size.width - s.reserve,
-              height: a.optionsInTiles ? size.height : top,
               child: _groups(a),
             ),
-          if (a.row.isNotEmpty) Positioned.fill(child: _row(a, TapGeometry.rowLiftOf(a, size.height))),
+          if (a.row.isNotEmpty)
+            geo.stacked
+                ? AnimatedPositioned.fromRect(
+                    rect: geo.lowerArea,
+                    duration: slide,
+                    curve: Curves.easeInOut,
+                    child: _row(a, 0),
+                  )
+                : Positioned.fill(child: _row(a, TapGeometry.rowLiftOf(a, size.height))),
           if (a.chart.isNotEmpty) Positioned.fill(child: _chart(a)),
           if (a.stageNumeral != null)
-            Positioned.fill(
-              child: Center(
-                child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Text(
-                    '${a.stageNumeral}',
-                    key: const Key('stage-numeral'),
-                    style: AppText.fixed(size: size.height * 0.7, weight: 800, lineHeight: 1),
-                  ),
-                ),
-              ),
-            ),
+            geo.stacked
+                ? AnimatedPositioned.fromRect(
+                    rect: geo.lowerArea,
+                    duration: slide,
+                    curve: Curves.easeInOut,
+                    child: _numeral(a, geo.stageNumeralFont),
+                  )
+                : Positioned.fill(child: _numeral(a, geo.stageNumeralFont)),
           if (!a.optionsInTiles)
             for (final (int i, ChoiceOption o) in a.options.indexed)
               Positioned(
@@ -353,6 +361,22 @@ class _TapStage extends StatelessWidget {
       ),
     );
   }
+
+  /// The numeral the stage shows large, in the middle of its room and left to right whatever the language. Under groups the room is
+  /// a band, and a long numeral is scaled to fit it.
+  Widget _numeral(TapAnswerActivity a, double font) => Center(
+    child: Directionality(
+      textDirection: TextDirection.ltr,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          '${a.stageNumeral}',
+          key: const Key('stage-numeral'),
+          style: AppText.fixed(size: font, weight: 800, lineHeight: 1),
+        ),
+      ),
+    ),
+  );
 
   /// A chart to read: a column of pictures for each category, standing on one line. Left to right, whatever the language.
   Widget _chart(TapAnswerActivity a) => Padding(
@@ -391,7 +415,7 @@ class _TapStage extends StatelessWidget {
   /// The row of pictures of a pattern or an order; a `?` is the gap the child fills in. Left to right, whatever the language.
   /// A number sentence stands [lift] lower, so that the cubes of a hint fit over its numbers (see [TapGeometry.rowLiftOf]).
   Widget _row(TapAnswerActivity a, double lift) => Padding(
-    padding: EdgeInsets.fromLTRB(10, 10 + lift, 10, 10),
+    padding: EdgeInsets.fromLTRB(10, TapGeometry.rowPadOf(a) + lift, 10, TapGeometry.rowPadOf(a)),
     child: Directionality(
       textDirection: TextDirection.ltr,
       // The cells come one by one from the left, so the child sees where the row starts; the "?" is last.
@@ -455,7 +479,7 @@ class _TapStage extends StatelessWidget {
       excludeSemantics: true,
       label: a.altText,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(TapGeometry.groupInsetOf(a)),
         // Two groups stand like "3 + 2", the first on the left, whatever the language (the hint stands on the same places).
         child: Directionality(
           textDirection: TextDirection.ltr,
@@ -464,7 +488,7 @@ class _TapStage extends StatelessWidget {
             children: <Widget>[
               for (final SpriteSet g in sets)
                 Expanded(
-                  child: Padding(padding: const EdgeInsets.all(6), child: one(g)),
+                  child: Padding(padding: EdgeInsets.all(TapGeometry.cellInsetOf(a)), child: one(g)),
                 ),
             ],
           ),
