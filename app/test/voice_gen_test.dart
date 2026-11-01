@@ -270,6 +270,29 @@ void main() {
       },
     );
 
+    test('content/voices.json respells the number two (round 4 of the audition: the owner chose spelling D, points on the TA only) '
+        'for every character, in the pointed and the plain form, and nothing else', () {
+      // Written out with escapes so the editor cannot normalise the order of the marks: shin, sheva, shin dot (the order the pack uses).
+      const String pointed = 'שְׁתַּיִם'; // שְׁתַּיִם
+      const String plain = 'שתיים'; // שתיים
+      const String chosen = 'שתַּיִם'; // שתַּיִם
+      const String twelve = 'שְׁתֵּים'; // שְׁתֵּים (before עֶשְׂרֵה): a different word, left alone
+      final Map<String, Object?> config = _realConfig();
+      final Map<String, Object?> table = config['pronunciation']! as Map<String, Object?>;
+      expect(table[pointed], chosen);
+      expect(table[plain], chosen);
+      for (final String c in (config['voices']! as Map<String, Object?>).keys) {
+        final VoiceProfile p = VoiceProfile.fromConfig(config, c);
+        String said(String text) => p.requestFor(SpokenLine('vo:core.celebrate.well', text)).text;
+        expect(said(pointed), chosen, reason: c);
+        expect(said(plain), chosen, reason: c);
+        // A prefix (and, with the) follows, the other words of the line do not change, and a second pass changes nothing.
+        expect(said('וּשְׁתַּיִם שָׁלוֹם'), 'וּ$chosen שָׁלוֹם', reason: c);
+        expect(said(chosen), chosen, reason: c);
+        expect(said(twelve), twelve, reason: c);
+      }
+    });
+
     test('a profile refuses a missing voice, a voice id that is not plain, a model that is not Hebrew, a style rule '
         'with no style and a 22.05 kHz format', () {
       final Map<String, Object?> config = _realConfig();
