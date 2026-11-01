@@ -118,6 +118,10 @@ abstract class TemplateSession extends ChangeNotifier {
     later(Duration(milliseconds: 450 * options.length), () => setVoiceLit(null));
   }
 
+  /// The board numbers this template lays its activity out on: [base] (the board's own, see `ActivitySpec.of`) unless the template
+  /// needs a different stage or tile box. Every `build...` below is given what this returns.
+  ActivitySpec layoutFor(ActivitySpec base) => base;
+
   /// The picture that fills the stage, inside [size].
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec);
 

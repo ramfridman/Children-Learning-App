@@ -71,6 +71,40 @@ class ActivitySpec {
   final double tilesWidth;
   final double tileFont;
 
+  /// The same board with another stage and another box for the answer tiles (the numbers of the rest stay).
+  ActivitySpec withStageAndTiles({
+    required Rect stage,
+    required double tilesLeft,
+    required double tilesTop,
+    required double tilesWidth,
+  }) => ActivitySpec(
+    bubbleMaxWidth: bubbleMaxWidth,
+    bubbleMaxHeight: bubbleMaxHeight,
+    homeRight: homeRight,
+    controlsTop: controlsTop,
+    eyeLeft: eyeLeft,
+    hintLeft: hintLeft,
+    trailLeft: trailLeft,
+    trailTop: trailTop,
+    trailWidth: trailWidth,
+    nitziLeft: nitziLeft,
+    nitziTop: nitziTop,
+    nitziSize: nitziSize,
+    micLeft: micLeft,
+    micTop: micTop,
+    micSize: micSize,
+    bubbleLeft: bubbleLeft,
+    bubbleRight: bubbleRight,
+    bubbleTop: bubbleTop,
+    bubbleFont: bubbleFont,
+    stage: stage,
+    stageIsCard: stageIsCard,
+    tilesLeft: tilesLeft,
+    tilesTop: tilesTop,
+    tilesWidth: tilesWidth,
+    tileFont: tileFont,
+  );
+
   // Board 13.
   static const ActivitySpec phone = ActivitySpec(
     bubbleMaxWidth: 190,

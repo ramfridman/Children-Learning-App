@@ -22,6 +22,7 @@ class ActivityFrame extends StatelessWidget {
     required this.stage,
     required this.trailTotal,
     required this.trailDone,
+    this.spec,
     required this.onHome,
     this.tiles,
     this.hands,
@@ -35,6 +36,9 @@ class ActivityFrame extends StatelessWidget {
     this.onConfirmYes,
     this.onConfirmAgain,
   });
+
+  /// The board numbers to lay out on, when the template's are not the board's own (see `TemplateSession.layoutFor`).
+  final ActivitySpec? spec;
 
   /// What the guide says now.
   final String bubbleText;
@@ -88,7 +92,7 @@ class ActivityFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
-    final ActivitySpec s = ActivitySpec.of(board);
+    final ActivitySpec s = spec ?? ActivitySpec.of(board);
     final double font = fitFont(bubbleText, s);
     final Size room = s.stageIsCard ? Size(s.stage.width - 32, s.stage.height - 32) : s.stage.size;
     return Scaffold(

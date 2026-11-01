@@ -268,8 +268,14 @@ Widget _face(TapAnswerActivity a, ChoiceOption o, double box, double font) {
     arrangement: g.arrangement,
     seed: g.seed,
     scale: g.scale,
+    framed: answerGroupsFramed,
   );
 }
+
+/// Whether the group of an answer tile is drawn with its ten-frame board. Never: a board on one answer and not on its neighbour
+/// would tell the child which one to pick (QA-38-1), so within one activity every answer group is drawn the same way, and "the
+/// same way" is no board. The group the question stands on (alone on the stage) keeps its board.
+const bool answerGroupsFramed = false;
 
 class _TapStage extends StatelessWidget {
   const _TapStage(this.s, this.size);
