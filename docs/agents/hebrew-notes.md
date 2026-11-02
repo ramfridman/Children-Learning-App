@@ -791,6 +791,51 @@ Checked: `SAY="בוא ננסה להצביע על כל פרפר אחד אחד, ו
 
 **Status.** Not changed: the line is `"review": "approved"` in the file, and a different text is a new text. If the owner agrees, the app-developer or the curriculum-expert (owner of the tutor-line file) puts it in with `"review": "needs-editor"` until he approves it; the row is `text-ready` in the master table and, being outside the signed pack and the gateway change in progress, still not part of the B-45 run. Whenever tutor lines change, run `node tools/check_tutor_lines.mjs`: it must say `failing 0`.
 
+**Owner approved, 2026-11-02 (chat: "Yes" to the rewording).** The line is now in `content/tutor-lines/hero-son.json` on branch `live-helper-voice-format` (`D:\nitznutz-live`) as `בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור בארבעה.` with `"review": "approved"` (the value of the file's convention for an owner-approved line; it never needed `needs-editor` in between, the owner approved before it was written). The table rows there (`hebrew-master.csv`, `hebrew-review.*`, `hebrew-elevenlabs-review.*`) carry the new text for the row `give.butterflies.4 / mistake default / hint 0 / band C`, `text-ready`. Checked there with `tools/check_tutor_lines.mjs` (copied from this branch for the run, not left in the live branch): `checked 66 failing 0`; `tools/test_hebrew_sources.py` passes. This branch (b45) still has the old line in its copy of the file: the change comes in when the live branch is merged. Not in the B-45 run.
+
 ### 19.7 The 27 new lines approved (hebrew-text-editor, 2026-11-02, after the director's direction)
 
 The voice director directed all 29 rows of `docs/review/b45-new-lines.tsv` (commit edb3c68, no asks, no text change). Condition (a) of section 18 was met by my own check in 19.2 to 19.4, condition (b) by a direction row for exactly each voice text with no open ask (checked row by row against `voice-direction.csv`). The 27 core lines (`core.rest.goodbye`, the 24 per-land bottle lines, `core.adventure.play_again`, `core.home.bubble`) are in `b45-approved-rows.tsv` (6,579 lines) with the hash of text, screen text and voice text, and are `owner-approved` under the owner's conditional approval of 2026-11-02; they are out of `b45-held-rows.tsv` (166 rows). The two `h3` lines were approved by the owner himself earlier. Master: `owner-approved` 9,903 to 9,930, `text-ready` 3,882, `unchanged` 649; regenerated twice, byte-identical. Free `voice_gen plan`: 4,018 lines and 175,723 characters a narrator, 9 lines and 190 characters a friend, 352,776 characters over nine voices, 14.11 USD; nothing under "cannot be voiced yet".
+
+
+## 22. B-45 job 4: the 48 welcome lines and the 100 map-card lines are core lines (hebrew-text-editor, 2026-11-02)
+
+**The owner's words** (chat, 2026-11-02): (1) the 48 B-42 daily-welcome lines join the one paid voicing run; (2) the 98 map-card `childLine` rows are voiced (the proposal `docs/review/b45-childline-proposed.tsv`, 100 rows); (3) the rewording of the live helper row `give.butterflies.4` (section 20) is approved. The wording and the voice texts of the welcome lines are those of section 21, which is on branch `b42-welcome-plan` (commit ecd0de9; the two branches both append after section 17, so on the merge keep the order 18, 19, 20, 21, 22).
+
+### 22.1 What is in `content/lines/core.he.json` now (202 lines: 54 + 148)
+
+- **48 welcome lines** with the ids of the plan: `welcome.hello.1` / `.2` / `.3` / `.first`, `welcome.topic.<land>.<topic>` (37), `welcome.land.<land>` (6), `welcome.close`, so the voice ids are `vo:welcome.*` exactly as in `docs/milestones/B42.md` (they do not start with `core.`; `voice_gen` makes `vo:` + the line id, the pattern allows it). Screen text and voice text are the TSV of section 21, word for word. The plan estimated 1,234 unpointed characters a voice; the voice texts have 1,286 (the pointing kept on `נְגַלֶּה`, `נְפָרֵק`, `נְחַלֵּק`, `נֵצֵא`, the land words `יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר`, `אֶחָד`, `לִשְׁתֵּי`, `שְׁנֵי`).
+- **100 map-card lines** `core.skill.<skill id in lower case, hyphens to underscores>` (`COL-A-01` is `vo:core.skill.col_a_01`), text = the skill's `childLine` (screen text with nikud, no full stop; the voice text adds the stop and drops the pointing a voice does not need). One manual voice text: `core.skill.log_b_04` is `מִגְדָּלִים שגדלים.` (section 19.4).
+- All 148 rows are **`text-ready`** in the master table: owner-approved in wording by the owner's chat answer, waiting for the voice director's direction row for exactly their voice text (the same rule as the 27 lines of 19.7); then they go into `b45-approved-rows.tsv`.
+
+### 22.2 Rules added to `tools/hebrew_voice_review.py`
+
+1. `VOICE_MANUAL` (`WELCOME_WHY`): eight welcome voice texts the general rules would have un-pointed (`נְפָרֵק`, `נְחַלֵּק`, the six `היום נֵצֵא אל <land>` lines with the bottle's four pointed land words), so that the table gives exactly the voice texts of section 21 (1,286 characters). Before this the table said `נפרק`, `נחלק`, `נצא`, `יער`, `מערת`, `נמל`, `כפר`.
+2. `V1_ANSWERED`: six rows whose voice text keeps a pointed word that the pronunciation audit asks the owner to confirm (V1): `נְגַלֶּה` in five welcome topics (`counting.compare`, `counting.ordinal`, `shapes.position`, `logic.patterns`, `market.missing`) and `אֶפֶס` in `core.skill.num_a_14` (the same `childLine` row is already owner-approved from the B-36 sheet). The owner's yes of 2026-11-02 covered these lines, so they are `text-ready` and not `proposed`; the rule names exactly these six ids.
+
+### 22.3 `content/voices.json`
+
+`ownLines` is now **57** ids: the nine of B-45 and the 48 welcome ids (each friend greets in its own voice, the plan's decision 2, accepted by the owner's approval of the cost of all nine voices). The map-card lines are the narrators' (a friend borrows the narrator's clip, as for every lesson line). Tone: all welcome lines take the default stability 0.50 (greeting); nothing in `styleRules` matches `vo:welcome.` or `vo:core.skill.`.
+
+### 22.4 Voice packs: two new small groups (`app/tool/voice_packs_lib.dart`)
+
+Adding 148 lines to the shared pack (422 lines, limit 450) would have cut `voice-<character>` into two parts and taken the plain id away, which the pack tests (and the app's lookup of the shared pack) rely on. `voiceGroupOf` now gives `welcome.*` the group **`welcome`** (48 lines, ~2.8 MiB) and `core.skill.*` the group **`skill`** (100 lines, ~5.9 MiB), so a narrator is **18 packs** (was 16) and `core` stays 422 lines. It also keeps a map-card tap or the day's first welcome from pulling a 25 MiB lesson pack into memory for one short clip. A friend is still one pack (57 lines). The app looks a line up in all the packs of a character, so playback is unchanged; whether the welcome pack should be pinned like the shared pack is the app-developer's call.
+
+### 22.5 Tests
+
+- `tools/test_hebrew_sources.py`: the row count is 14,609; new `CoreLinesTest`: every skill has `core.skill.<id>` and its text equals the skill's `childLine` (so they cannot drift), no map-card line without a skill, the welcome set is 48 lines and all in `ownLines`, no variable or `!` / U+05C7 / digit / Latin letter / bracket in the screen or voice text of the new lines, every greeting's voice text starts with `שלום,`.
+- `app/test/voice_gen_roles_test.dart` (57 own lines, new test: a friend says all 48 welcome lines and the nine of before, no map card), `app/test/voice_packs_test.dart` (the welcome and skill groups; the "unknown id is core" example is `mystery.daily.1` now, because `welcome.daily.1` is a group of its own), `app/test/qa_b45_voice_packs_end_to_end_test.dart` (its counts were already out of date: it pinned 3,991 planned lines, 16 packs, 15 parts, 9 own lines; now 4,166, 18, 17 and 57; the QA owner should look at the new pins).
+
+### 22.6 Plan totals (free `voice_gen plan --repo <copy>`; the 148 rows counted as if approved in a scratch copy, nothing changed in the repository)
+
+| | Lines per narrator | Characters per narrator | Lines and characters per friend | Characters, all nine voices | USD (list, 0.04 per 1,000) |
+|---|---|---|---|---|---|
+| Before (section 19.7) | 4,018 | 175,723 | 9 / 190 | 352,776 | 14.11 |
+| And the 48 welcome lines (nine voices) | 4,066 | 177,009 | 57 / 1,476 | 364,350 | 14.57 |
+| And the 100 map-card lines (two narrators) | **4,166** | **179,315** | **57 / 1,476** | **368,962** | **14.76** |
+
+The welcome costs 1,286 characters a voice: 11,574 over nine voices (0.46 USD), of which the seven friends 9,002 (0.36 USD) and the two narrators 2,572 (0.10 USD). The map cards are 2,306 characters a narrator, 4,612 for two (0.18 USD). Narrator packs: `voice-<id>` 422 lines, 15 land-and-band parts as before, `-part-skill` 100 lines (2,306 characters), `-part-welcome` 48 lines (1,286). Until the director's rows exist the plan lists the 148 lines under "cannot be voiced yet". The list for the director is `docs/review/b45-new-lines-2.tsv` (148 rows, 3,592 characters a narrator).
+
+### 22.7 What is left
+
+For the **voice director**: a direction row for each of the 148 voice texts (`b45-new-lines-2.tsv`); the greeting lines must read well right after a name clip (`שלום,` opens each); the pilot of B-42 section 6 (a made-up name, `hello.1`, `topic.counting.glance`, `close`) is still the way to hear the seam; the two plain `שווה` / `שווים` welcome lines (`market.share`, `market.equal`) join the listening check of decision 3. For the **app-developer**: the clip ids above for the map card and the welcome (B-42 section 8, item 4); a test per family that the core line equals what the screen shows (the welcome captions come from the same file); the `welcome` and `skill` pack groups (22.4). For the **owner**: nothing new; the lines are approved in wording, and the approval for the run follows the rule of section 18 after the direction rows.

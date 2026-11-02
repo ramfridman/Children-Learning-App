@@ -147,7 +147,9 @@ class HebrewMasterTableTest(unittest.TestCase):
         # held as `text`; the sources say the `ui_text`).
         # B-45 (2026-11-02): 27 new core lines the app already asks for (`core.rest.goodbye`, the bottle's 24 per-land lines and the play-again
         # line, and `core.home.bubble`, hebrew-notes section 19): 14434 to 14461 rows
-        self.assertEqual(len(self.rows), 14461)
+        # B-45 job 4 (2026-11-02): the 48 daily-welcome lines of B-42 (`welcome.*`) and the 100 map-card lines (`core.skill.<skill id>`,
+        # the text of the skill's childLine; hebrew-notes sections 21 and 22): 14461 to 14609 rows
+        self.assertEqual(len(self.rows), 14609)
         self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1163)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 0)
         self.assertEqual(sum(1 for r in self.rows if r['status'] == 'proposed'), 0)
@@ -173,6 +175,69 @@ class HebrewMasterTableTest(unittest.TestCase):
     def test_unchanged_rows_keep_their_text(self):
         bad = ['%s › %s' % (r['source'], r['id']) for r, t in self.current if r['status'] == 'unchanged' and t != r['text']]
         self.assertEqual(bad, [])
+
+
+class CoreLinesTest(unittest.TestCase):
+    """The clips that are not in the pack (B-45 job 4, 2026-11-02): the map-card lines and the daily welcome."""
+
+    @classmethod
+    def setUpClass(cls):
+        core = read_json(os.path.join(ROOT, 'content', 'lines', 'core.he.json'))
+        cls.core = {line['id']: line['text'] for line in core['lines']}
+        cls.skills = {}
+        for f in sorted(glob.glob(os.path.join(ROOT, 'content', 'starter', 'skill.*.json'))):
+            d = read_json(f)
+            cls.skills[d['id']] = ''.join(c['v'] for c in d['childLine'] if c['t'] == 'he')
+        cls.master = {r['id']: r for r in load_rows() if r['source'] == 'content/lines/core.he.json'}
+        cls.own = set(read_json(os.path.join(ROOT, 'content', 'voices.json'))['ownLines'])
+
+    @staticmethod
+    def skill_line_id(skill_id):
+        return 'core.skill.' + skill_id.lower().replace('-', '_')
+
+    def test_every_skill_has_a_map_card_line_with_its_childline_text(self):
+        """vo:core.skill.<skill id> says what the map card shows: the two cannot drift apart."""
+        self.assertEqual(len(self.skills), 100)
+        bad = []
+        for sid, child_line in self.skills.items():
+            lid = self.skill_line_id(sid)
+            if self.core.get(lid) != child_line:
+                bad.append('%s: core line %r, childLine %r' % (lid, self.core.get(lid), child_line))
+        self.assertEqual(bad, [])
+
+    def test_no_map_card_line_without_a_skill(self):
+        wanted = {self.skill_line_id(sid) for sid in self.skills}
+        have = {i for i in self.core if i.startswith('core.skill.')}
+        self.assertEqual(have - wanted, set())
+        self.assertEqual(len(have), 100)
+
+    def test_the_welcome_set_is_48_lines_a_friend_says_in_its_own_voice(self):
+        welcome = [i for i in self.core if i.startswith('welcome.')]
+        self.assertEqual(len(welcome), 48)
+        self.assertEqual({'vo:' + i for i in welcome} - self.own, set())
+        self.assertEqual([i for i in self.own if i.startswith('vo:welcome.')].__len__(), 48)
+
+    def test_the_new_lines_are_clean_for_a_voice(self):
+        """No name or variable in a line, and a voice text without "!", the qamats qatan sign, digits, Latin letters or brackets."""
+        bad = []
+        for i, text in self.core.items():
+            if not (i.startswith('welcome.') or i.startswith('core.skill.')):
+                continue
+            row = self.master[i]
+            if re.search(r'[{}]', text):
+                bad.append('%s: a variable in the screen text' % i)
+            voice = row['voice_text']
+            if not voice or re.search(r'[!A-Za-z0-9{}ׇ]', voice):
+                bad.append('%s: voice text %r' % (i, voice))
+            if row['status'] not in ('text-ready', 'owner-approved'):
+                bad.append('%s: status %s' % (i, row['status']))
+        self.assertEqual(bad, [])
+
+    def test_a_greeting_stands_alone_after_a_name_clip(self):
+        """B-42: every greeting starts with a call and a full sentence, and only a greeting may follow a name clip."""
+        for i, text in self.core.items():
+            if i.startswith('welcome.hello.'):
+                self.assertTrue(self.master[i]['voice_text'].startswith('שלום,'), i)
 
 
 class PrefixHelpersTest(unittest.TestCase):

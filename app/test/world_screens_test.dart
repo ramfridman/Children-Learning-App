@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/app/companion.dart' show voicePlayerProvider;
 import 'package:nitznutz/app/reward_providers.dart';
 import 'package:nitznutz/app/world_providers.dart';
 import 'package:nitznutz/child/home_screen.dart';
@@ -25,6 +26,7 @@ import 'support/app_harness.dart';
 import 'support/golden_comparator.dart';
 import 'support/harness.dart';
 import 'support/starter.dart';
+import 'support/voice_fixtures.dart';
 
 const String child = 'p-1';
 
@@ -62,7 +64,11 @@ Future<void> pumpIn(
   addTearDown(tester.view.reset);
   await pumpScreen(
     tester,
-    ProviderScope(overrides: overrides, child: screen),
+    // The island now has a voice of its own (the card line), so it must not reach for the phone's sound.
+    ProviderScope(
+      overrides: <Override>[voicePlayerProvider.overrideWithValue(FakePlayer()), ...overrides],
+      child: screen,
+    ),
     size: size,
   );
   await tester.pumpAndSettle();

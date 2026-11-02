@@ -1,6 +1,9 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/companion.dart' show voiceDirectorProvider;
 import '../app/reward_providers.dart';
 import '../app/world_providers.dart';
 import '../content/models.dart';
@@ -12,6 +15,8 @@ import '../design/tokens.g.dart';
 import '../rewards/award.dart';
 import '../rewards/reward_rules.dart';
 import '../strings/he.dart';
+import '../voice/voice_director.dart';
+import '../voice/voice_lines.dart';
 import 'play_button.dart';
 import 'trophy_art.dart' show landOf;
 import '../world/world_art.dart';
@@ -39,6 +44,44 @@ class LandScreen extends ConsumerStatefulWidget {
 class _LandScreenState extends ConsumerState<LandScreen> {
   /// The skill whose drawing was touched last: its name and where it stands show on a card.
   String? _picked;
+
+  /// Read once: the screen's own voice must still be reachable when it is closed (a `ref` is not, in [dispose]).
+  late final VoiceDirector _director;
+  bool _prefetched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _director = ref.read(voiceDirectorProvider);
+    // The lines of the map cards are a part of the narrator's voice that is not kept in memory: it is read when the island
+    // opens (as a lesson reads its own), so that the first touch is heard at once.
+    ref.listenManual<AsyncValue<WorldView>>(worldProvider(childId), (_, AsyncValue<WorldView> next) {
+      final WorldView? view = next.value;
+      if (_prefetched || view == null) return;
+      _prefetched = true;
+      unawaited(_director.prefetch(cardLineVoiceIds(view.lands[land] ?? const <WorldObject>[])));
+    }, fireImmediately: true);
+  }
+
+  @override
+  void dispose() {
+    // Leaving the island stops the card's line, and only that: the next screen's own line is not touched.
+    unawaited(_director.stopFor(this));
+    super.dispose();
+  }
+
+  /// A touch on a drawing: its card opens and, if the card shows the skill's own line, the narrator says it. Touching the
+  /// drawing again closes the card and stops the line, and touching another one replaces it (the voice never overlaps).
+  void _pick(WorldObject o) {
+    final bool open = _picked != o.skillId;
+    setState(() => _picked = open ? o.skillId : null);
+    final String? voice = open && o.line != null ? skillLineVoiceId(o.skillId) : null;
+    if (voice == null) {
+      unawaited(_director.stopFor(this));
+    } else {
+      unawaited(_director.say(voice, owner: this));
+    }
+  }
 
   String get childId => widget.childId;
   TrophyLand get land => widget.land;
@@ -93,9 +136,10 @@ class _LandScreenState extends ConsumerState<LandScreen> {
                                         ? view.missionFor(o.skillId)
                                         : null;
                                     if (mission != null && onMission != null) {
+                                      unawaited(_director.stopFor(this));
                                       onMission!(mission);
                                     } else {
-                                      setState(() => _picked = _picked == o.skillId ? null : o.skillId);
+                                      _pick(o);
                                     }
                                   },
                                   child: ExcludeSemantics(

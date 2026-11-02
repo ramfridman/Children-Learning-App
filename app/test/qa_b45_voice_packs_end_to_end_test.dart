@@ -35,7 +35,7 @@ Map<String, Object?> _config() =>
 String _text(int i) =>
     'שלום ${i.toString().split('').map((String d) => String.fromCharCode(0x05D0 + int.parse(d))).join()}.';
 
-/// The 3,991 planned lines of a narrator: every voice id of the starter content and of the core lines.
+/// The 4,166 planned lines of a narrator (3,991 at the QA of 2026-11-02, +27 core lines the app asks for, +48 welcome, +100 map cards): every voice id of the starter content and of the core lines.
 final List<SpokenLine> _planned = <SpokenLine>[
   for (final (int i, String id) in <String>{
     for (final SpokenLine l in linesOfContent(Directory('../content/starter'))) l.voId,
@@ -110,12 +110,12 @@ void main() {
     _drop(scratch);
   });
 
-  test('the planned ids are the 3,991 lines of the plan', () {
-    expect(_planned.map((SpokenLine l) => l.voId).toSet().length, 3991);
+  test('the planned ids are the 4,166 lines of the plan', () {
+    expect(_planned.map((SpokenLine l) => l.voId).toSet().length, 4166);
   });
 
-  test('a narrator is 16 packs and a friend one; each passes verifyPack, under ZipLimits and under the 40 MiB / 3,000 limits', () async {
-    expect(nitzi.length, 16);
+  test('a narrator is 18 packs (core, 15 land-and-band parts, welcome and skill) and a friend one; each passes verifyPack, under ZipLimits and under the 40 MiB / 3,000 limits', () async {
+    expect(nitzi.length, 18);
     expect(gali.length, 1);
     expect(gali.single.fileName, 'voice-inventor-gali-2.0.0.nnpack');
     expect(nitzi.first.fileName, 'voice-nitzi-2.0.0.nnpack');
@@ -144,12 +144,12 @@ void main() {
         ids++;
       }
     }
-    expect(ids, 3991);
+    expect(ids, 4166);
     expect(seen, <String>{
       for (final SpokenLine l in _planned) l.voId,
     }, reason: 'every planned id is in exactly one pack');
     final VerifiedPack friend = await verifyPack(gali.single.bytes, publicKey: key.publicKey);
-    expect((friend.manifest['vo']! as List<Object?>).length, 9);
+    expect((friend.manifest['vo']! as List<Object?>).length, 57);
     // A different key does not verify any of them.
     final PackKey other = await newTestKey();
     await expectLater(verifyPack(nitzi[3].bytes, publicKey: other.publicKey), throwsA(isA<PackRejected>()));
@@ -198,10 +198,10 @@ void main() {
     );
 
     test(
-      'the index knows all 3,991 lines before any part is read; only the shared pack is in memory',
+      'the index knows all 4,166 lines before any part is read; only the shared pack is in memory',
       () async {
         final VoiceBank bank = await source.voice('nitzi');
-        expect(bank.length, 3991);
+        expect(bank.length, 4166);
         expect(bank.packs!.residentPacks, <String>['voice-nitzi']);
         expect(bank.packs!.failedPacks, isEmpty);
         for (final SpokenLine l in _planned) {
@@ -210,7 +210,7 @@ void main() {
       },
     );
 
-    test('a line from each of the 15 land-and-band parts, and a core line, is found and is that line\'s own sound', () async {
+    test('a line from each of the 17 parts (15 land-and-band, welcome and skill), and a core line, is found and is that line\'s own sound', () async {
       final VoiceBank bank = await source.voice('nitzi');
       final String core = firstOf('core');
       expect(
@@ -221,7 +221,7 @@ void main() {
       final List<String> parts = <String>[
         for (final BuiltPack b in nitzi.skip(1)) b.fileName.replaceFirst('-2.0.0.nnpack', ''),
       ];
-      expect(parts.length, 15);
+      expect(parts.length, 17);
       int visited = 0;
       for (final String packId in parts) {
         final String group = _land(packId);
@@ -245,7 +245,7 @@ void main() {
         );
         visited++;
       }
-      expect(visited, 15);
+      expect(visited, 17);
       expect(bank.packs!.failedPacks, isEmpty);
     });
 
@@ -320,7 +320,7 @@ void main() {
     test('a friend says its own lines in its own voice, and every other line in the narrator\'s', () async {
       final VoiceBank narrator = await source.voice('nitzi');
       final VoiceBank own = await source.voice('inventor-gali');
-      expect(own.length, 9);
+      expect(own.length, 57);
       final VoiceBank friend = VoiceBank.withFallback(own, narrator);
       final String hello = 'vo:core.greeting.hello';
       expect(utf8.decode(friend.clip(hello)!.mp3), 'gali|${textOf[hello]}', reason: 'the friend\'s own line');
@@ -404,7 +404,7 @@ void main() {
   group('the size guard and the free re-pack, on the real ids', () {
     test('a pack of 100 KiB clips is over 40 MiB: the build fails naming it; a re-pack with fewer lines passes verifyPack under ZipLimits', () async {
       final VoiceProfile profile = VoiceProfile.fromConfig(_config(), 'nitzi');
-      // The 440 lines of the largest pack (num-a-1) at a worst-case clip size, not all 3,991 (to keep the run small).
+      // The 440 lines of the largest pack (num-a-1) at a worst-case clip size, not all 4,166 (to keep the run small).
       final List<VoicePackGroup> layout = voicePackLayout('nitzi', profile, _planned);
       final VoicePackGroup biggest = layout.reduce(
         (VoicePackGroup a, VoicePackGroup b) => a.voIds.length >= b.voIds.length ? a : b,

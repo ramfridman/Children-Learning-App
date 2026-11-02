@@ -52,9 +52,19 @@ void main() {
       expect(voiceGroupOf('vo:ordinal.first.2.correct'), 'num-a');
     });
 
+    test('the daily welcome and the map-card lines are groups of their own, so core stays one pack', () {
+      expect(voiceGroupOf('vo:welcome.hello.1'), 'welcome');
+      expect(voiceGroupOf('welcome.topic.counting.count'), 'welcome');
+      expect(voiceGroupOf('vo:welcome.close'), 'welcome');
+      expect(voiceGroupOf('vo:core.skill.col_a_01'), 'skill');
+      expect(voiceGroupOf('core.skill.math_b_19'), 'skill');
+      expect(voiceGroupOf('vo:core.skills'), 'core', reason: 'only core.skill.<id> is a map card');
+      expect(voiceGroupOf('vo:core.greeting.hello'), 'core');
+    });
+
     test('an id nothing here knows is core, with or without vo:', () {
-      expect(voiceGroupOf('vo:welcome.daily.1'), 'core');
-      expect(voiceGroupOf('welcome.daily.1'), 'core');
+      expect(voiceGroupOf('vo:mystery.daily.1'), 'core');
+      expect(voiceGroupOf('mystery.daily.1'), 'core');
       expect(voiceGroupOf('b.numb03.8.correct'), 'num-b');
       expect(voiceGroupOf('vo:b.nothing.8.correct'), 'core');
     });

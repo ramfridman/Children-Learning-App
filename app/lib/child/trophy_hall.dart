@@ -20,6 +20,8 @@ import '../rewards/award.dart';
 import '../rewards/outfits.dart';
 import '../rewards/reward_rules.dart';
 import '../strings/he.dart';
+import '../voice/voice_director.dart';
+import '../voice/voice_lines.dart';
 import '../world/world_state.dart';
 import 'ceremony_screen.dart';
 import 'play_button.dart';
@@ -44,6 +46,51 @@ class _TrophyHallState extends ConsumerState<TrophyHall> {
   late HallTab _tab = widget.initialTab;
   String? _selected;
 
+  /// Read once: the screen's own voice must still be reachable when it is closed (a `ref` is not, in [dispose]).
+  late final VoiceDirector _director;
+  bool _prefetched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _director = ref.read(voiceDirectorProvider);
+    // The lines of the map cards are a part of the narrator's voice that is not kept in memory: it is read when the hall opens
+    // (only for the stars that are earned, whose lines the cards show), so that the first touch is heard at once.
+    ref.listenManual<AsyncValue<WorldView>>(worldProvider(widget.childId), (_, AsyncValue<WorldView> next) {
+      final WorldView? view = next.value;
+      if (_prefetched || view == null) return;
+      final List<String> ids = cardLineVoiceIds(<WorldObject>[
+        for (final List<WorldObject> land in view.lands.values) ...land.where((WorldObject o) => o.star),
+      ]);
+      if (ids.isEmpty) return;
+      _prefetched = true;
+      unawaited(_director.prefetch(ids));
+    }, fireImmediately: true);
+  }
+
+  @override
+  void dispose() {
+    // Leaving the hall stops the star line, and only that: the next screen's own line is not touched.
+    unawaited(_director.stopFor(this));
+    super.dispose();
+  }
+
+  /// A touch on the line of an earned star: the narrator says it. A touch on the line that is being said stops it, and a
+  /// touch on another replaces it (the voice never overlaps). A line with no recording is silence.
+  void _sayStar(String skillId) {
+    final String? voice = skillLineVoiceId(skillId);
+    if (voice == null || (_director.speaking && _director.current == voice)) {
+      unawaited(_director.stopFor(this));
+    } else {
+      unawaited(_director.say(voice, owner: this));
+    }
+  }
+
+  void _showTab(HallTab tab) {
+    unawaited(_director.stopFor(this));
+    setState(() => _tab = tab);
+  }
+
   Future<void> _markSeen(Reward r) async {
     if (r.seenAt != null) return;
     final AppDatabase db = await ref.read(databaseProvider.future);
@@ -54,13 +101,16 @@ class _TrophyHallState extends ConsumerState<TrophyHall> {
   }
 
   void _select(String key, Reward? earned) {
+    unawaited(_director.stopFor(this));
     setState(() => _selected = key);
     if (earned != null) unawaited(_markSeen(earned));
   }
 
-  Future<void> _replay(String key) =>
-      Navigator.of(context)
-          .push(MaterialPageRoute<void>(builder: (BuildContext c) => CeremonyScreen(awardKey: key)));
+  Future<void> _replay(String key) {
+    unawaited(_director.stopFor(this));
+    return Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext c) => CeremonyScreen(awardKey: key)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,21 +142,21 @@ class _TrophyHallState extends ConsumerState<TrophyHall> {
                     key: const Key('hall-tab-trophies'),
                     label: He.hallTabTrophies.text,
                     on: _tab == HallTab.trophies,
-                    onTap: () => setState(() => _tab = HallTab.trophies),
+                    onTap: () => _showTab(HallTab.trophies),
                   ),
                   const SizedBox(width: 8),
                   _TabPill(
                     key: const Key('hall-tab-medals'),
                     label: He.hallTabMedals.text,
                     on: _tab == HallTab.medals,
-                    onTap: () => setState(() => _tab = HallTab.medals),
+                    onTap: () => _showTab(HallTab.medals),
                   ),
                   const SizedBox(width: 8),
                   _TabPill(
                     key: const Key('hall-tab-friend'),
                     label: He.hallTabFriend.text,
                     on: _tab == HallTab.friend,
-                    onTap: () => setState(() => _tab = HallTab.friend),
+                    onTap: () => _showTab(HallTab.friend),
                   ),
                 ],
               ),
@@ -120,6 +170,7 @@ class _TrophyHallState extends ConsumerState<TrophyHall> {
                   selected: _selected,
                   onSelect: _select,
                   onReplay: _replay,
+                  onSayLine: _sayStar,
                 ),
                 HallTab.medals => _Medals(byKey: byKey, given: given, onReplay: _replay, onSeen: _markSeen),
                 HallTab.friend => _Friend(given: given),
@@ -177,6 +228,7 @@ class _Trophies extends ConsumerWidget {
     required this.selected,
     required this.onSelect,
     required this.onReplay,
+    required this.onSayLine,
   });
 
   final String childId;
@@ -185,6 +237,7 @@ class _Trophies extends ConsumerWidget {
   final String? selected;
   final void Function(String key, Reward? earned) onSelect;
   final Future<void> Function(String key) onReplay;
+  final void Function(String skillId) onSayLine;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -209,6 +262,7 @@ class _Trophies extends ConsumerWidget {
             earned: byKey[selected!],
             objects: world?.lands[Awards.trophyOf(selected!)?.land] ?? const <WorldObject>[],
             onReplay: onReplay,
+            onSayLine: onSayLine,
           );
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -216,7 +270,8 @@ class _Trophies extends ConsumerWidget {
         if (card != null)
           SizedBox(
             width: 300,
-            child: Padding(padding: const EdgeInsets.all(12), child: card),
+            // Scrolls when the card is taller than the screen (three star lines on a small phone in landscape).
+            child: SingleChildScrollView(padding: const EdgeInsets.all(12), child: card),
           ),
         Expanded(
           child: ListView(padding: const EdgeInsets.fromLTRB(12, 4, 12, 24), children: shelves),
@@ -385,6 +440,7 @@ class _DetailCard extends ConsumerWidget {
     required this.earned,
     required this.objects,
     required this.onReplay,
+    required this.onSayLine,
   });
 
   final String childId;
@@ -392,6 +448,9 @@ class _DetailCard extends ConsumerWidget {
   final Reward? earned;
   final List<WorldObject> objects;
   final Future<void> Function(String key) onReplay;
+
+  /// A touch on the line of an earned star: the narrator says it.
+  final void Function(String skillId) onSayLine;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -445,21 +504,26 @@ class _DetailCard extends ConsumerWidget {
           ),
           if (earned != null) ...<Widget>[
             for (final WorldObject o in objects.where((WorldObject o) => o.star && o.line != null).take(3))
-              Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const BoardSvg('assets/art/world/star_gold.svg', width: 16, height: 16),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        o.line!,
-                        key: Key('hall-line-${o.skillId}'),
-                        style: AppText.fixed(size: 16, weight: 500),
+              GestureDetector(
+                key: Key('hall-say-${o.skillId}'),
+                behavior: HitTestBehavior.opaque,
+                onTap: () => onSayLine(o.skillId),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 6, bottom: 6),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const BoardSvg('assets/art/world/star_gold.svg', width: 16, height: 16),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          o.line!,
+                          key: Key('hall-line-${o.skillId}'),
+                          style: AppText.fixed(size: 16, weight: 500),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
           ],
