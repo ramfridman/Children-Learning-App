@@ -590,7 +590,7 @@ before the pilot. Nothing here needs a punctuation change before voicing.
 **The 98 `childLine` rows** have no `vo:` id: the app shows them on the map card and never says them. There is nothing to
 direct. They are `not-voiced` in the checked list (T9 stands: `spoken: no` is the editor's decision).
 
-**Two flags for the editor and the curriculum-expert (a wording question, not a sound problem; the lines can be said).**
+**Two flags for the editor and the curriculum-expert (a wording question, not a sound problem; the lines can be said). Closed later on 2026-11-02: the two lines were fixed and are `owner-approved` through the b36 list, directed (0.70); `generate` no longer refuses on them.**
 `b.mathb01.15.h3` and `b.mathb01.16.h3` count up to the total (5, 7) and then ask the child to press the added number
 (2, 3). It is the same pattern as T3. The line is said clearly either way; whether the child understands it is theirs.
 

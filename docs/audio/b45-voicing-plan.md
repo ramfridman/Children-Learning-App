@@ -35,10 +35,11 @@ Add 5 percent (about 0.74 USD) for a fix batch after listening. Model `eleven_v4
 `content/voices.json`); on `eleven_v4` every USD figure doubles, but you did not choose it.
 
 **What blocks the run today (section 5 has the details):**
-1. The 148 lines of the update above are `text-ready`: they have their direction row and no open ask, so they wait only for the
-   hebrew-text-editor's approval step (the owner's conditional rule, section 8 decision 1). `generate` refuses until they are
-   `owner-approved`, and so does it for the two held `b.mathb01.15.h3` and `.16.h3` lines. The free `plan` today still prints
-   4,018 lines and 175,723 characters per narrator and 9 lines per friend, because it hides the 148 until then.
+1. **Nothing blocks the texts any more (checked by the coordinator and the editor on 2026-11-02, branch at 2e4384b).** The 148
+   lines of the update are `owner-approved` (conditional approval: direction row, no open ask), the two MATH-B-01 `h3` lines
+   (`b.mathb01.15.h3`, `.16.h3`) are `owner-approved` through the b36 list, directed and planned at 0.70, and the tool's
+   `texts.blocked` list is empty, so `generate` no longer refuses on a line. The free `plan` now prints 4,166 lines and 179,315
+   characters per narrator and 57 lines per friend. `generate` still refuses without the owner's typed count, as it should.
 2. The tone-by-end-of-id and the friend-scope changes (P2, P3) are in the tool: the plan prints the right counts (section 2).
 3. Your decisions in section 8.
 
@@ -127,7 +128,7 @@ lines are "we" or genderless, no `!`, no number to mis-gender, no name. The poin
 `לִשְׁתֵּי`, `שְׁנֵי`, `אֶחָד` and the five land words `נֵצֵא`, `יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר`) are right and stay. *Map cards
 (100)*: a new `styleRules` entry (`vo:core.skill.` in `ask`) makes them 0.60, the level of the prompts: they are the same kind of
 sentence ("מוצאים את אותו צבע."), 100 short clips that should sound alike, calm and not teacherly. One line in
-`content/voices.json`, free to undo before batch 1 (decision 9). No text needs a change; no ask for the editor.
+`content/voices.json`, free to undo before batch 1 (decision 10). No text needs a change; no ask for the editor.
 
 The bottle lines (`core.adventure.*`, 25) are an invitation: they fall to the default 0.50 on purpose (warm, even,
 ends level, no shout); `core.rest.goodbye` is a goodbye at 0.50, soft; `core.home.bubble` ("what is in the bottle?") is a
@@ -291,7 +292,7 @@ exit
 
 | # | What | Who | Why |
 |---|---|---|---|
-| P1 | **Texts approved.** 2,818 lines (104,062 characters a voice) come from rows still `text-ready`; the tool voices only `owner-approved`, `voice-ready` or `voiced`, and `generate` refuses while any line waits. Your signature of 0.11.0 is the approval (decision 1; answered conditionally on 2026-11-02: 6,552 rows approved, 2 lines per narrator still wait: the two held `h3` lines of `b.mathb01.15`/`.16`); after it, the hebrew-text-editor records the spoken rows of the signed pack as `owner-approved` (6,720 spoken rows now `text-ready`). | owner, then hebrew-text-editor | measured |
+| P1 | **Texts approved: done.** All spoken rows of the run are `owner-approved`, including the 148 welcome and map-card lines and the two MATH-B-01 `h3` lines (owner's conditional rule, 2026-11-02); `texts.blocked` is empty. | owner, hebrew-text-editor | done |
 | P2 | **Tone by the end of an id.** `styleOf` in `app/tool/voice_gen_lib.dart` matches the START of an id only. The rules in `voices.json` that begin with `*` (`*.h3`, `*.h1`, `*.h2`, `*.prompt`) must match the END. Without it, about 2,430 lines (every question, hint 1 to 3; 130,000 of the 174,772 characters) go out at 0.5 instead of 0.60 to 0.70. Change: in `styleOf`, `p.startsWith('*') ? voId.endsWith(p.substring(1)) : voId.startsWith(p)`, with a test. After it, `plan --list` must show stability 0.35 x184, 0.45 x4, 0.5 x1,175, 0.55 x2, 0.6 x1,220, 0.65 x299, 0.7 x1,107. | app-developer | read in code |
 | P3 | **A friend's own lines only.** `plan` and `generate` give every character all lines (today every friend would cost 6.99 USD, 48.9 USD for seven). Add to `content/voices.json` `"narrators": ["nitzi","hero-son"]` and `"ownLines": ["vo:core.greeting.hello","vo:core.greeting.start","vo:core.celebrate.well","vo:core.placement.done","vo:core.goodbye.next","vo:core.ceremony.bronze","vo:core.ceremony.silver","vo:core.ceremony.gold","vo:core.ceremony.medal"]`; a character not in `narrators` plans and sends only `ownLines`. The app already falls back to the narrator for any other line. | app-developer | read in code |
 | P4 | **The QA test** "every `vo` id has a recording in every shipped voice pack" must allow a friend pack to hold only its 9 own lines (the narrator pack covers the rest). | qa-engineer | read |
@@ -414,12 +415,12 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
    check, `docs/audio/b45-direction-checked.tsv`, `voice-direction.md` section 14): 6,552 of the 6,720 spoken rows are
    `owner-approved`** (6,530 pack rows and 22 core rows in the B-45 list; all 27 core lines are approved), hash-locked in `docs/review/b45-approved-rows.tsv` (6,552 lines, no header):
    the 6,091 plus 447 `directed` and 14 `ask-withdrawn` rows. 168 are held, each with its reason in `docs/review/b45-held-rows.tsv`:
-   **2** wording held (`b.mathb01.15.h3` and `.16.h3`: the worked example counts to the total and asks for the addend; the
-   editor's proposed fix is in `docs/agents/hebrew-notes.md` section 18, and it changes pack 0.11.0, so the orchestrator
-   decides), **98** map-card `childLine` rows (no `vo:` id, never voiced, left out of the voicing approval), **66** live-helper
+   **2** wording held at that time (`b.mathb01.15.h3` and `.16.h3`; since then fixed, owner-approved through the b36 list and
+   planned at 0.70: nothing of the run is held), **98** map-card `childLine` rows (no `vo:` id; the map-card *spoken* lines are the
+   100 new `vo:core.skill.*` lines of section 0), **66** live-helper
    rows and **2** per-name strings (not in this run). The free `voice_gen plan` now plans **3,989 of 3,991 lines per narrator
-   (174,559 characters; first pass 3,546, before that 1,173)** and all 9 lines of each friend (190 characters); the 2 lines still
-   waiting are the two held `h3` lines, so `generate` still refuses until they are approved or changed. Whether a script-made
+   (174,559 characters at that time; now 4,166 lines and 179,315 characters)** and 57 lines of each friend (1,476 characters);
+   `generate` no longer refuses on any line. Whether a script-made
    direction table plus the director's reading of the 561 rows is the check the owner meant is for him to say.
 2. **One run per narrator (recommended)** or a tool change that lets a run take only part of the lines. The pilot is the safe
    small step already; Ctrl+C is the emergency stop. *Recommend: one run each, no tool change.*
@@ -448,7 +449,10 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
 8. **The live helper lines (66 rows, gateway)** are prepared on branch `live-helper-voice-format` (same format and settings as the pack; 65 of 66 lines,
    4,544 characters); you run the prewarm in the same session as batch 2 (steps in that branch's `docs/setup/supabase-deploy.md`
    section 8). *Recommend: yes, same session.*
-9. **Map-card lines at 0.60 (new, 2026-11-02).** The 100 `core.skill.*` lines are set like the prompts (calm, even), not at
+9. **Answered by the owner on 2026-11-02:** the B-42 welcome lines are in the run (yes); the map-card lines are voiced (yes); the
+   `butterflies` rewording is accepted (yes); the free `voice_gen pack` is allowed (yes; the hook change is uncommitted in
+   `D:\nitznutz-content` until the owner commits it).
+10. **Map-card lines at 0.60 (new, 2026-11-02).** The 100 `core.skill.*` lines are set like the prompts (calm, even), not at
    the default 0.50. If you hear them in the batch-1 check as too flat, I move them to 0.50 (one line in `voices.json`) and only
    those clips are made again (100 lines, 2,306 characters, 0.09 USD per narrator). *Recommend: 0.60.*
 
@@ -464,6 +468,5 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
 - **security-engineer:** nothing new. Only the first-name exception is allowed to go to ElevenLabs; the B-45 lines contain no
   child's name (the per-name `homeBubble` clips and the B-42 name clips are a later step). The only name in the pilot is a
   made-up one (`דָּנִי,`), and I ask you to confirm it is not a name of one of your children.
-- **hebrew-text-editor:** record the 148 rows of the update (`welcome.*`, `core.skill.*`) as `owner-approved` by the owner's
-  conditional rule: they have their direction row and no open ask. No text change and no punctuation change asked.
+- **hebrew-text-editor:** nothing open; the 148 rows and the two `h3` lines are `owner-approved`. No text change and no punctuation change asked.
 - **curriculum-expert:** nothing; the welcome topic table and the map-card lines are already theirs and the editor's.
