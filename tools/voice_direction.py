@@ -92,12 +92,16 @@ STYLE_OF_KIND = {
     'celebration': 'cheer', 'cheer': 'cheer', 'ceremony': 'ceremony', 'greeting': 'greet',
     'encourage': 'warm', 'thinking': 'think', 'listen': 'gentle', 'calm': 'calm', 'goodbye': 'calm',
     'tutor': 'tutor', 'invite': 'warm',
+    # 2026-11-02, the 148 lines of b45-new-lines-2.tsv: the welcome is the default 0.50 ('warm'), the map card the
+    # calm 0.60 of an instruction ('ask'; the rule `vo:core.skill.` in content/voices.json).
+    'welcome-hello': 'warm', 'welcome-topic': 'warm', 'welcome-land': 'warm', 'welcome-close': 'warm', 'card': 'ask',
 }
 # Seconds the line should fit in (pause budget), at the style's speed; a longer line is flagged.
 BUDGET = {   # a guess from the design spec (Tier 1 is short, Tier 2 is 2 to 3 s) and the measured rate; not measured
     'question': 8, 'instruction': 8, 'answer-prompt': 3, 'hint-1': 6, 'hint-2': 8, 'hint-3': 12, 'list': 16,
     'correct': 6, 'not-yet': 6.5, 'unsure': 3.5, 'celebration': 4.5, 'cheer': 2.5, 'ceremony': 3, 'greeting': 3,
     'encourage': 5, 'thinking': 3, 'listen': 5.5, 'calm': 4.5, 'goodbye': 5, 'tutor': 7, 'invite': 4,
+    'welcome-hello': 4, 'welcome-topic': 4, 'welcome-land': 4, 'welcome-close': 3, 'card': 4,
 }
 BAND_SPEED = {'A': -0.03, 'B': 0.0, 'C': 0.03, '': 0.0, 'mixed': -0.02}
 
@@ -138,7 +142,9 @@ def kind_of(row, node_path, text):
                        ('core.stuck', 'calm'), ('core.breathe', 'calm'), ('core.goodbye', 'goodbye'),
                        ('core.rest.goodbye', 'goodbye'), ('core.adventure', 'invite'), ('core.home.bubble', 'question'),
                        ('core.encourage.check', 'thinking'), ('core.encourage.almost', 'not-yet'),
-                       ('core.encourage', 'encourage')):
+                       ('core.encourage', 'encourage'), ('core.skill.', 'card'),
+                       ('welcome.hello', 'welcome-hello'), ('welcome.topic', 'welcome-topic'),
+                       ('welcome.land', 'welcome-land'), ('welcome.close', 'welcome-close')):
             if cid.startswith(pre):
                 return k, is_list
     if g == '4':
@@ -183,6 +189,13 @@ def pause_notes(text, kind, is_list):
                      'the last item lands down' % n)
     if text.count('.') + text.count('?') >= 2 and not is_list:
         notes.append('%d sentences: a full stop is a real pause (about 450 ms)' % (text.count('.') + text.count('?')))
+    if kind == 'welcome-hello':
+        notes.append('plays after a short name clip (a gap of about 300 to 500 ms set by the app); this clip starts on '
+                     '"שלום" with at most 50 ms of silence; the comma after "שלום" is a light beat (about 200 ms)')
+    if kind in ('welcome-topic', 'welcome-land', 'welcome-close'):
+        notes.append('one short sentence; the app puts about 300 to 500 ms between the clips of a welcome')
+    if kind == 'card':
+        notes.append('said alone when the child taps a picture on the map; a quiet start and a soft end')
     if text.rstrip().endswith('?'):
         notes.append('question: a soft rise at the end, curious, not testing')
     return '; '.join(notes)
@@ -211,6 +224,17 @@ def listen_for(text, kind, is_list):
         'goodbye': 'soft, warm, a quiet end; no "come back" pressure',
         'invite': 'the bubble of the bottle: a warm invitation to an adventure, even and unhurried, no shout; the land name '
                   'said whole and clearly (pointed words read as pointed); it ends level, not on a question rise',
+        'welcome-hello': 'the call after a name clip: starts at once on "שלום" (no lead-in silence over 50 ms), warm and '
+                         'glad to see the child, level and unhurried, no shout; ends down softly; the same voice and '
+                         'settings as the name clip so the seam does not show',
+        'welcome-topic': 'a light preview of the day, not a promise and not pressure: even, ends level-down; "היום" '
+                         'unstressed; no rise at the end (it is not a question)',
+        'welcome-land': 'a light invitation to a place; the land name said whole and clearly (pointed words read as '
+                        'pointed); ends level-down',
+        'welcome-close': 'the invitation to open the bottle: warm, a little brighter than the topic, still short and '
+                         'soft; not a command',
+        'card': 'a calm naming of what the picture is, as a friend would say it when asked; short, even, '
+                'no teaching voice and no question rise; ends down softly',
         'tutor': 'same voice and loudness as the lesson lines around it; addressed in the right gender form',
     }[kind]
     extra = []
@@ -227,6 +251,20 @@ def listen_for(text, kind, is_list):
     if PLAIN(text).startswith('כדי לדעת כמה יותר'):
         extra.append('LISTEN FIRST (ask withdrawn 2026-11-02): already two sentences; a full stop is a real pause '
                      'before "בואו נשווה"')
+    if kind.startswith('welcome') or kind == 'card':
+        plain = PLAIN(text)
+        if re.search(r'(^|\s)(שווה|שווים)(\s|[.,:…]|$)', plain):
+            extra.append('LISTEN (joins the "equals" check of the pilot): שווה = sha-VE, שווים = sha-VIM, not "sh-VA"')
+        if re.search(r'(^|\s)(נשווה|משווים)(\s|[.,:…]|$)', plain):
+            extra.append('LISTEN: the verb "compare" (נשווה = nash-VE, משווים = mash-VIM), not the adjective "equal"')
+        for w, how in (('גליל', 'ga-LIL'), ('חרוט', 'cha-RUT'), ('פירמידה', 'pi-ra-MI-da'), ('מרובע', 'me-ru-BA'),
+                       ('מחומש', 'me-chu-MASH'), ('משושה', 'me-shu-SHE'), ('קובייה', 'ku-BI-ya'), ('כבד', 'ka-VED'),
+                       ('בלשים', 'ba-la-SHIM'), ('ציר', 'TSIR'), ('הקשת', 'ha-KE-shet')):
+            if re.search(r'(^|\s)ו?ה?' + w + r'(\s|[.,:…]|$)', plain):
+                extra.append('LISTEN: %s read %s' % (w, how))
+        if '…' in text:
+            extra.append('LISTEN: each "…" is a short beat (about 400 ms), the pitch stays level; it must not sound like '
+                         'the thinking hum or like trailing off')
     if 'שֵׁנִי' in text or 'הַשֵּׁנִי' in text:
         extra.append('שני is the ordinal (sheni), not "two of" (shnei)')
     if re.search(r'(^|\s)ו?ה?ממ', PLAIN(text)) or 'המממ' in text:
