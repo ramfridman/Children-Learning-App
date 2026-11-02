@@ -60,3 +60,12 @@ All three are minor; none blocks this feature. QA-B45-CL-1 and -3 exist on `main
 2. Latency of the first tap after the `skill` pack (about 6 MiB) is read from disk, and that a quick second tap or leaving the island mid-line is clean on the real player.
 3. That a child discovers the star line in the hall is tappable (QA-B45-CL-2).
 4. Text scale 1.3 on the device's own font setting (QA-B45-CL-1, -3).
+
+## Re-verification after the design-director's fix (60cd404), 2026-11-02
+
+Ran: `flutter analyze` clean, format 385 files 0 changed, my layout test and `childline_voice_test` and the source rule (44 passed, with the tightened checks), full `flutter test` 3,260 passed, 4 skipped, 1 failed (only the known `starter_pack_test`). Ten PNGs in `docs/qa/` regenerated from the fixed build and opened.
+
+- **QA-B45-CL-1: CLOSED.** The card sits between the title and the pictures at every board and both text scales: bottom at 142 pt (1.0) or 137 pt (1.3, one row), no picture under it, no control covered.
+- **QA-B45-CL-2: CLOSED.** No hall star row is under 56 pt (64 pt rows, shortest lines included), at all four boards and both scales; every row is scrollable into reach and tapped.
+- **QA-B45-CL-3: CLOSED.** The shelf-name cut was my test's scroll; the new test checks the name whole when the hall opens, on all boards at 1.3.
+- **QA-B45-CL-4 (new, minor, design-director, large text only).** `trophy_hall.dart:140` the hall title "היכל הגביעים" ends 4 pt from the "גביעים" tab pill at text 1.3 on phoneSE 667x375 (title left 357.7, pill right 353.6). Fine at 1.0 (gap 103 pt) and on the 852x393 phone at 1.3 (189 pt). Older than this feature. Measured with a throw-away test (not kept).
