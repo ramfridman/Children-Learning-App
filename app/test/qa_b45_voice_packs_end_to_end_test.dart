@@ -13,6 +13,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/content/capabilities.dart';
+import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_installer.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/content/zip_store.dart';
@@ -21,10 +22,12 @@ import 'package:nitznutz/voice/voice_bank.dart';
 import 'package:nitznutz/voice/voice_director.dart';
 import 'package:nitznutz/voice/voice_lines.dart';
 import 'package:nitznutz/voice/voice_pack_ids.dart';
+import 'package:nitznutz/world/world_state.dart';
 
 import '../tool/pack_builder_lib.dart';
 import '../tool/voice_gen_lib.dart';
 import 'support/pack_fixtures.dart';
+import 'support/starter.dart';
 import 'support/voice_fixtures.dart';
 
 Map<String, Object?> _config() =>
@@ -398,6 +401,126 @@ void main() {
       expect(bank.has(log), isFalse, reason: 'its manifest is gone, so the index never had it');
       expect(await bank.fetch(log), isNull);
       expect(await bank.fetch(firstOf('col-a')), isNotNull);
+    });
+  });
+
+  // B-45 job "the map-card line is voiced" (QA 2026-11-02): the 100 `core.skill.*` lines are the `skill` part pack; a land map
+  // (or the Trophy Hall) prefetches it and says a line from it; a friend borrows the narrator's; a damaged pack is silence.
+  group('the map-card lines (the skill part pack), through the real installer', () {
+    late List<String> ids;
+    late List<WorldObject> objects;
+
+    setUpAll(() async {
+      final content = await loadStarter();
+      objects = <WorldObject>[
+        for (final SkillDoc s in content.skills.values)
+          if (s.childLine != null)
+            WorldObject(
+              skillId: s.id,
+              title: s.title,
+              objectId: 'stair',
+              stage: GrowthStage.fruit,
+              bell: false,
+              line: s.childLine,
+            ),
+      ];
+      ids = <String>[for (final WorldObject o in objects) skillLineVoiceId(o.skillId)!];
+    });
+
+    test('every skill of the starter pack has its line in one pack, voice-nitzi-part-skill, and that pack holds only them', () async {
+      expect(ids.length, 100);
+      expect(ids.toSet().length, 100);
+      final VoiceBank bank = await full.source.voice('nitzi');
+      for (final String id in ids) {
+        expect(bank.has(id), isTrue, reason: id);
+        expect(bank.packs!.index[id], 'voice-nitzi-part-skill', reason: id);
+      }
+      final Set<String> inPack = <String>{
+        for (final MapEntry<String, String> e in bank.packs!.index.entries)
+          if (e.value == 'voice-nitzi-part-skill') e.key,
+      };
+      expect(inPack, ids.toSet(), reason: 'the pack holds exactly the 100 map-card lines');
+      expect(bank.packs!.residentPacks, <String>[
+        'voice-nitzi',
+      ], reason: 'not read before the island or the hall opens');
+    });
+
+    test('the island prefetches it once and a touch is then heard at once; a second line replaces, the same twice stops', () async {
+      final VoiceBank bank = await full.source.voice('nitzi');
+      final FakePlayer player = FakePlayer();
+      final VoiceDirector director = VoiceDirector(player: player)..useBank(bank);
+      addTearDown(director.dispose);
+      expect(bank.canLoad(ids.first), isTrue);
+      await director.prefetch(cardLineVoiceIds(objects));
+      expect(bank.packs!.residentPacks.toSet(), <String>{'voice-nitzi', 'voice-nitzi-part-skill'});
+      expect(bank.canLoad(ids.first), isFalse, reason: 'nothing to wait for');
+      final Object owner = Object();
+      await director.say(ids[0], owner: owner);
+      expect(utf8.decode(player.played.single), 'nitzi|${textOf[ids[0]]}');
+      await director.say(ids[57], owner: owner);
+      expect(utf8.decode(player.played.last), 'nitzi|${textOf[ids[57]]}');
+      expect(player.plays, 2);
+      expect(player.playing, isTrue);
+      await director.stopFor(owner);
+      expect(player.playing, isFalse);
+      // The last line of the pack too (the pack is read whole, not part).
+      await director.say(ids.last, owner: owner);
+      expect(utf8.decode(player.played.last), 'nitzi|${textOf[ids.last]}');
+    });
+
+    test('every one of the 100 lines plays its own sound (no two lines share a sound)', () async {
+      final VoiceBank bank = await full.source.voice('nitzi');
+      await bank.prefetch(ids);
+      final Set<String> heard = <String>{};
+      for (final String id in ids) {
+        final VoiceClip? clip = bank.clip(id);
+        expect(clip, isNotNull, reason: id);
+        expect(utf8.decode(clip!.mp3), 'nitzi|${textOf[id]}', reason: id);
+        expect(clip.mouth.length, greaterThan(0), reason: id);
+        heard.add(utf8.decode(clip.mp3));
+      }
+      expect(heard.length, 100, reason: 'no two lines share a sound');
+    });
+
+    test('a friend (any of the nine) says a map-card line in the narrator voice, and its director prefetches the narrator skill pack', () async {
+      final VoiceBank narrator = await full.source.voice('nitzi');
+      final VoiceBank own = await full.source.voice('inventor-gali');
+      expect(own.has(ids.first), isFalse, reason: 'a friend has only its own lines');
+      final VoiceBank friend = VoiceBank.withFallback(own, narrator);
+      expect(friend.has(ids.first), isTrue);
+      final FakePlayer player = FakePlayer();
+      final VoiceDirector director = VoiceDirector(player: player)..useBank(friend);
+      addTearDown(director.dispose);
+      await director.prefetch(<String>[ids[3]]);
+      expect(narrator.packs!.residentPacks, contains('voice-nitzi-part-skill'));
+      await director.say(ids[3]);
+      expect(utf8.decode(player.played.single), 'nitzi|${textOf[ids[3]]}');
+    });
+
+    test('a damaged skill pack is silence for the 100 lines (no error), and the shared lines still play', () async {
+      final _Phone small = await _Phone.open(key, <BuiltPack>[
+        for (final BuiltPack b in nitzi)
+          if (<String>{
+            'voice-nitzi-2.0.0.nnpack',
+            'voice-nitzi-part-skill-2.0.0.nnpack',
+          }.contains(b.fileName))
+            b,
+      ]);
+      addTearDown(small.close);
+      final File sound = File(
+        '${small.root.path}${Platform.pathSeparator}voice-nitzi-part-skill${Platform.pathSeparator}2.0.0${Platform.pathSeparator}vo.${ids.first.substring(3)}.mp3',
+      );
+      sound.writeAsBytesSync(<int>[...sound.readAsBytesSync(), 7]);
+      final VoiceBank bank = await small.source.voice('nitzi');
+      final FakePlayer player = FakePlayer();
+      final VoiceDirector director = VoiceDirector(player: player)..useBank(bank);
+      addTearDown(director.dispose);
+      await director.prefetch(ids);
+      await director.say(ids[1]);
+      expect(player.plays, 0, reason: 'the whole pack is refused, so every one of its lines is silent');
+      expect(bank.packs!.failedPacks, <String>{'voice-nitzi-part-skill'});
+      await director.say('vo:core.greeting.hello');
+      expect(player.plays, 1);
     });
   });
 
