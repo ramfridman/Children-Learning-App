@@ -61,6 +61,19 @@ are corrected in place where they said otherwise.
 
 ---
 
+### Addendum of 2026-11-02 (B-45, read before sections 3, 4 and 8)
+
+The full voicing plan is `docs/audio/b45-voicing-plan.md`; the pilot spec is `docs/audio/b45/pilot.json`. What changed:
+
+- **Tones are now stabilities in `content/voices.json`** (`styles`, `styleRules`), the values the owner approved in round 3:
+  similarity 0.8; stability 0.5 default, ask 0.60, hint 0.65, hint 3 0.70, thinking 0.55, ceremony 0.45, cheer 0.35 (not 0.1).
+  This **supersedes the `style` and `speed` columns of `voice-direction.csv` and the tables of sections 3 and 8**; the CSV's
+  `pace`, `pause_notes`, `listen_for` and `pronunciation` columns still guide the listening.
+- A rule that starts with `*` matches the end of an id (`*.h3`); it needs a small change in `voice_gen_lib.dart` (`styleOf`).
+- Friends say only their 9 own lines (section 2.3) once `voice_gen` has a narrators/ownLines scope; Nitzi and hero-son say all
+  3,991 lines of pack 0.11.0 (174,772 characters each, 6.99 USD each at Turbo list price).
+- The number two is respelled `שתַּיִם` (choice D) in `voices.json` › `pronunciation`.
+
 ## 1. What exists today (the starting point)
 
 ### 1.1 Voices
