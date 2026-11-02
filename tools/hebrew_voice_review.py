@@ -723,6 +723,25 @@ for _tmpl, (_voice, _why) in list(VOICE_MANUAL.items()):
         VOICE_MANUAL[canon(_tmpl.replace('{land}', _screen))] = (_voice.replace('{land}', LAND_VOICE[_land]), PER_LAND_CORE)
 
 
+# B-42 (daily welcome, hebrew-notes section 21): the pointing the voice must keep. נִפְרֹק / נְפָרֵק, נַחֲלֹק / נְחַלֵּק and נֵצֵא are the
+# pi'el (or the future of יצא) that plain spelling can turn into another verb; the land lines keep the four pointed land words of the bottle.
+WELCOME_WHY = ('B-42: pointing kept so a voice cannot misread the verb (נְפָרֵק, נְחַלֵּק, נֵצֵא) or the land word (יַעַר, מְעָרַת, נְמַל, כְּפַר), '
+               'as in the bottle lines (hebrew-notes section 21)')
+VOICE_MANUAL[canon('הַיּוֹם נְפָרֵק מִסְפָּרִים לַחֲלָקִים.')] = ('היום נְפָרֵק מספרים לחלקים.', WELCOME_WHY)
+VOICE_MANUAL[canon('הַיּוֹם נְחַלֵּק שָׁוֶה בְּשָׁוֶה.')] = ('היום נְחַלֵּק שווה בשווה.', WELCOME_WHY)
+for _land, _screen in LAND_SCREEN.items():
+    VOICE_MANUAL[canon('הַיּוֹם נֵצֵא אֶל %s.' % _screen)] = ('היום נֵצֵא אל %s.' % LAND_VOICE[_land], WELCOME_WHY)
+# B-45 job 4 (2026-11-02): the owner said yes to the 48 daily-welcome lines (B-42) and to the 98 + 2 `childLine` clips, and the lines he
+# read carry the pointing that the voice audit keeps (נְגַלֶּה in five welcome topics, אֶפֶס in the NUM-A-14 line, as in the
+# already approved pack rows). The audit's "please confirm" (V1) is therefore answered for exactly these rows: they are `text-ready`
+# for the voice director, not `proposed`.
+V1_ANSWERED = {('content/lines/core.he.json', i) for i in (
+    'welcome.topic.counting.compare', 'welcome.topic.counting.ordinal', 'welcome.topic.shapes.position',
+    'welcome.topic.logic.patterns', 'welcome.topic.market.missing', 'core.skill.num_a_14')}
+V1_ANSWERED_NOTE = ('B-45 job 4: the kept pointing (V1 of the voice audit) was in the line the owner approved in chat on 2026-11-02; '
+                    'text-ready for the voice director direction row.')
+
+
 def eleven(text):
     notes = []
     t = text
@@ -1425,6 +1444,8 @@ def master(rows, result, rules):
                     status, comment = 'proposed', EDITOR + doubt
                 elif any(n.startswith('REVIEW') for n in notes):
                     status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
+                elif (r['source'], r['id']) in V1_ANSWERED and is_spoken and any(n.startswith(VOICE_AUDIT) for n in notes):
+                    status, comment = 'text-ready', EDITOR + V1_ANSWERED_NOTE
                 elif is_spoken and any(n.startswith(VOICE_AUDIT) for n in notes):
                     status, comment = 'proposed', EDITOR + (
                         'V1 (pronunciation audit 2026-10-29): the voice text changed so a voice cannot misread it '

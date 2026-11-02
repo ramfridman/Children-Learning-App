@@ -339,7 +339,7 @@ void main() {
     });
   });
 
-  group('content/voices.json: the seven friends and the nine own lines', () {
+  group('content/voices.json: the seven friends and the 57 own lines (nine at the edges of play, 48 of the daily welcome)', () {
     final Map<String, Object?> config = _realConfig();
     const List<String> friends = <String>[
       'alien-jili',
@@ -351,18 +351,30 @@ void main() {
       'weaver-keshet',
     ];
 
-    test('the narrators are Nitzi and hero-son; every other voice is a friend with the same nine lines', () {
+    test('the narrators are Nitzi and hero-son; every other voice is a friend with the same 57 lines', () {
       expect(config['narrators'], <String>['nitzi', 'hero-son']);
       final Set<String> voices = (config['voices']! as Map<String, Object?>).keys.toSet();
       expect(voices.difference(<String>{'nitzi', 'hero-son'}), friends.toSet());
       for (final String f in friends) {
         final VoiceProfile p = VoiceProfile.fromConfig(config, f);
-        expect(p.ownLines, hasLength(9), reason: f);
+        expect(p.ownLines, hasLength(57), reason: f);
         expect(p.ownLines, VoiceProfile.fromConfig(config, 'tower-tamir').ownLines, reason: f);
       }
       for (final String n in <String>['nitzi', 'hero-son']) {
         expect(VoiceProfile.fromConfig(config, n).ownLines, isNull, reason: n);
       }
+    });
+
+    test('a friend says the whole daily welcome and the nine lines of before, and no map card', () {
+      final Set<String> own = VoiceProfile.fromConfig(config, 'tower-tamir').ownLines!;
+      final Set<String> welcome = <String>{
+        for (final SpokenLine l in coreLines(File('../content/lines/core.he.json')))
+          if (l.voId.startsWith('vo:welcome.')) l.voId,
+      };
+      expect(welcome, hasLength(48));
+      expect(own.containsAll(welcome), isTrue);
+      expect(own.where((String id) => !id.startsWith('vo:welcome.')), hasLength(9));
+      expect(own.any((String id) => id.startsWith('vo:core.skill.')), isFalse);
     });
 
     test('each own line is a real line of the core lines, so no id is misspelt', () {

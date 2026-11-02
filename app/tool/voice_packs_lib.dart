@@ -7,7 +7,8 @@
 // The share is a pure function of the voice ids, so the same lines always land in the same packs and nothing about it
 // depends on which clips were made, or when:
 //   1. [voiceGroupOf] gives every id a group: `core` (the shared lines every lesson uses: `core.*`, `fb.*`, `hint.*`,
-//      `celebrate.*`, and any id this file does not know) or `<land>-<band>` (`num-b`: the number land, band B). A
+//      `celebrate.*`, and any id this file does not know), `welcome` (the daily welcome, `welcome.*`), `skill` (the map card of a
+//      skill, `core.skill.*`) or `<land>-<band>` (`num-b`: the number land, band B). A
 //      land is the skill's domain (num, math, log, col, shp, cs) and a band is the letter in the skill id (`numb03` is band B).
 //   2. [layoutVoicePacks] cuts a group of more than `maxLines` lines into parts, in the order of the ids, never inside a
 //      unit (all the lines of one skill, or of one old lesson, stay together), so `num-b` becomes `num-b-1` and `num-b-2`.
@@ -41,6 +42,13 @@ int voicePackEntries(int lines) => 2 * lines + 2;
 
 const Set<String> _sharedPrefixes = <String>{'core', 'fb', 'hint', 'celebrate'};
 
+/// B-45 job 4 (2026-11-02): two small groups of their own, so that `core` stays one pack with the plain id (it is 422 lines; 148 more
+/// would cut it into core-1 and core-2) and a child who taps a map card, or opens the app for the day, does not pull a 25 MiB lesson
+/// pack into memory for one short clip. `welcome.*` is the 48 daily-welcome lines (B-42); `core.skill.<skill id>` is the sentence of a
+/// skill's map card (the `childLine`, 100 lines).
+const String _welcomePrefix = 'welcome';
+const String _mapCardSegment = 'skill';
+
 /// The ids that carry a skill: `b.numb03.8.prompt`, `b15.numa13.1.h1`, `b36...`, `x.numb07...`.
 const Set<String> _skillPrefixes = <String>{'b', 'b15', 'b36', 'x'};
 
@@ -68,10 +76,12 @@ const Set<String> _oldNumberLessons = <String>{
 
 List<String> _segments(String voId) => (voId.startsWith('vo:') ? voId.substring(3) : voId).split('.');
 
-/// The group of [voId] (with or without `vo:`): `core`, or `<land>-<band>` such as `num-b` or `shp-a`. Any id this does not
+/// The group of [voId] (with or without `vo:`): `core`, `welcome`, `skill`, or `<land>-<band>` such as `num-b` or `shp-a`. Any id this does not
 /// recognise is in `core`.
 String voiceGroupOf(String voId) {
   final List<String> s = _segments(voId);
+  if (s.first == _welcomePrefix) return 'welcome';
+  if (s.first == 'core' && s.length > 2 && s[1] == _mapCardSegment) return 'skill';
   if (_sharedPrefixes.contains(s.first)) return 'core';
   if (_skillPrefixes.contains(s.first) && s.length > 1) {
     final RegExpMatch? m = _skillToken.firstMatch(s[1]);

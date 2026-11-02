@@ -1,0 +1,149 @@
+vo_id	voice_text	kind	source	master_status	chars
+vo:welcome.hello.1	שלום, איזה כיף לראות אתכם.	welcome greeting (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.hello.1	text-ready	26
+vo:welcome.hello.2	שלום, כיף שאנחנו ביחד.	welcome greeting (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.hello.2	text-ready	22
+vo:welcome.hello.3	שלום, יש לי רעיון להרפתקה.	welcome greeting (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.hello.3	text-ready	26
+vo:welcome.hello.first	שלום, היום מתחילה ההרפתקה שלנו.	welcome greeting (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.hello.first	text-ready	31
+vo:welcome.topic.counting.count	היום נספור יחד.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.count	text-ready	15
+vo:welcome.topic.counting.glance	היום נראה כמה יש במבט אֶחָד.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.glance	text-ready	28
+vo:welcome.topic.counting.numerals	היום נכיר את המספרים.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.numerals	text-ready	21
+vo:welcome.topic.counting.compare	היום נְגַלֶּה איפה יותר ואיפה פחות.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.compare	text-ready	35
+vo:welcome.topic.counting.ordinal	היום נְגַלֶּה מי ראשון ומי אחרון.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.ordinal	text-ready	33
+vo:welcome.topic.counting.big	היום נספור מספרים גדולים.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.big	text-ready	25
+vo:welcome.topic.counting.order	היום נטייל על ציר המספרים.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.order	text-ready	26
+vo:welcome.topic.counting.parts	היום נְפָרֵק מספרים לחלקים.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.counting.parts	text-ready	27
+vo:welcome.topic.colors.match	היום נמיין ונתאים לפי צבע.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.colors.match	text-ready	26
+vo:welcome.topic.colors.names	היום נכיר את הצבעים.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.colors.names	text-ready	20
+vo:welcome.topic.colors.mix	היום נערבב צבעים ונקבל צבע חדש.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.colors.mix	text-ready	31
+vo:welcome.topic.colors.shades	היום נכיר צבע בהיר וצבע כהה.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.colors.shades	text-ready	28
+vo:welcome.topic.colors.rainbow	היום נסדר את צבעי הקשת.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.colors.rainbow	text-ready	23
+vo:welcome.topic.shapes.names	היום נכיר צורות.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.shapes.names	text-ready	16
+vo:welcome.topic.shapes.world	היום נחפש צורות בעולם.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.shapes.world	text-ready	22
+vo:welcome.topic.shapes.build	היום נבנה תמונה מצורות.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.shapes.build	text-ready	23
+vo:welcome.topic.shapes.solids	היום נכיר כדור, קובייה וגליל.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.shapes.solids	text-ready	29
+vo:welcome.topic.shapes.position	היום נְגַלֶּה איפה כל דבר נמצא.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.shapes.position	text-ready	31
+vo:welcome.topic.shapes.lines	היום נכיר קו ישר וקו עקום.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.shapes.lines	text-ready	26
+vo:welcome.topic.shapes.sides	היום נבדוק את הצלעות של הצורות.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.shapes.sides	text-ready	31
+vo:welcome.topic.logic.same	היום נחפש מה דומה ומה שונה.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.logic.same	text-ready	27
+vo:welcome.topic.logic.sort	היום נמיין לִשְׁתֵּי קבוצות.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.logic.sort	text-ready	28
+vo:welcome.topic.logic.patterns	היום נְגַלֶּה איך הסדר ממשיך.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.logic.patterns	text-ready	29
+vo:welcome.topic.logic.story	היום נסדר סיפור: מה קודם ומה בסוף.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.logic.story	text-ready	34
+vo:welcome.topic.logic.size	היום נסדר דברים לפי הגודל.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.logic.size	text-ready	26
+vo:welcome.topic.logic.think	היום נחשוב כמו בלשים.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.logic.think	text-ready	21
+vo:welcome.topic.robots.steps	היום נסדר שלבים: מה קודם ומה אחר כך.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.robots.steps	text-ready	36
+vo:welcome.topic.robots.move	היום נגיד לרובוט לאן ללכת.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.robots.move	text-ready	26
+vo:welcome.topic.robots.fix	היום נתקן את התוכנית של הרובוט.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.robots.fix	text-ready	31
+vo:welcome.topic.market.addsub	היום נוסיף וניקח, ונספור כמה יש.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.addsub	text-ready	32
+vo:welcome.topic.market.share	היום נְחַלֵּק שווה בשווה.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.share	text-ready	25
+vo:welcome.topic.market.missing	היום נְגַלֶּה מה חסר.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.missing	text-ready	21
+vo:welcome.topic.market.equal	היום נבדוק אם שְׁנֵי הצדדים שווים.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.equal	text-ready	34
+vo:welcome.topic.market.measure	היום נשווה גדול וקטן, ארוך וקצר, כבד וקל.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.measure	text-ready	41
+vo:welcome.topic.market.graph	היום נקרא תרשים של תמונות.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.graph	text-ready	26
+vo:welcome.topic.market.time	היום נלמד על הזמן.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.time	text-ready	18
+vo:welcome.topic.market.money	היום נשחק בחנות עם מטבעות.	welcome topic (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.topic.market.money	text-ready	26
+vo:welcome.land.counting	היום נֵצֵא אל גבעות הספירה.	welcome land (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.land.counting	text-ready	27
+vo:welcome.land.colors	היום נֵצֵא אל מפרץ הצבעים.	welcome land (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.land.colors	text-ready	26
+vo:welcome.land.shapes	היום נֵצֵא אל יַעַר הצורות.	welcome land (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.land.shapes	text-ready	27
+vo:welcome.land.logic	היום נֵצֵא אל מְעָרַת החידות.	welcome land (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.land.logic	text-ready	29
+vo:welcome.land.robots	היום נֵצֵא אל נְמַל הרובוטים.	welcome land (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.land.robots	text-ready	29
+vo:welcome.land.market	היום נֵצֵא אל כְּפַר השוק.	welcome land (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.land.market	text-ready	26
+vo:welcome.close	בואו נפתח את הבקבוק.	welcome close (B-42; every voice says it, friends in their own voice)	content/lines/core.he.json > welcome.close	text-ready	20
+vo:core.skill.col_a_01	מוצאים את אותו צבע.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_a_01; text = skill.COL-A-01.json > childLine.0.v	text-ready	19
+vo:core.skill.col_a_02	מצביעים על אדום, כחול, צהוב וירוק.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_a_02; text = skill.COL-A-02.json > childLine.0.v	text-ready	34
+vo:core.skill.col_a_03	מכירים עוד צבעים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_a_03; text = skill.COL-A-03.json > childLine.0.v	text-ready	17
+vo:core.skill.col_a_04	ממיינים לפי צבע.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_a_04; text = skill.COL-A-04.json > childLine.0.v	text-ready	16
+vo:core.skill.col_a_05	יודעים איזה צבע יש לדברים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_a_05; text = skill.COL-A-05.json > childLine.0.v	text-ready	26
+vo:core.skill.col_a_06	מכירים חום ואפור.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_a_06; text = skill.COL-A-06.json > childLine.0.v	text-ready	17
+vo:core.skill.col_a_07	מוצאים את הדבר הנכון לפי הצבע.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_a_07; text = skill.COL-A-07.json > childLine.0.v	text-ready	30
+vo:core.skill.col_b_01	מערבבים ומקבלים צבע חדש.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_b_01; text = skill.COL-B-01.json > childLine.0.v	text-ready	24
+vo:core.skill.col_b_02	מסדרים מבהיר לכהה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_b_02; text = skill.COL-B-02.json > childLine.0.v	text-ready	18
+vo:core.skill.col_b_03	כחול בהיר הוא גם כחול.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_b_03; text = skill.COL-B-03.json > childLine.0.v	text-ready	22
+vo:core.skill.col_b_04	ממיינים לפי צבע ולפי צורה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_b_04; text = skill.COL-B-04.json > childLine.0.v	text-ready	26
+vo:core.skill.col_b_06	מסדרים את הקשת.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.col_b_06; text = skill.COL-B-06.json > childLine.0.v	text-ready	15
+vo:core.skill.cs_a_01	מסדרים שלבים: מה קודם, מה בסוף.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.cs_a_01; text = skill.CS-A-01.json > childLine.0.v	text-ready	31
+vo:core.skill.cs_a_03	מזיזים רובוט בחיצים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.cs_a_03; text = skill.CS-A-03.json > childLine.0.v	text-ready	20
+vo:core.skill.cs_a_04	מתכננים את הדרך ואז יוצאים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.cs_a_04; text = skill.CS-A-04.json > childLine.0.v	text-ready	27
+vo:core.skill.cs_a_05	מוצאים את השלב שלא שייך.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.cs_a_05; text = skill.CS-A-05.json > childLine.0.v	text-ready	24
+vo:core.skill.cs_b_01	מתכננים דרך של כמה צעדים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.cs_b_01; text = skill.CS-B-01.json > childLine.0.v	text-ready	25
+vo:core.skill.cs_b_04	מוצאים את הצעד הלא נכון.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.cs_b_04; text = skill.CS-B-04.json > childLine.0.v	text-ready	24
+vo:core.skill.log_a_01	מוצאים את הדבר הזהה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_01; text = skill.LOG-A-01.json > childLine.0.v	text-ready	20
+vo:core.skill.log_a_02	מוצאים מי שונה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_02; text = skill.LOG-A-02.json > childLine.0.v	text-ready	15
+vo:core.skill.log_a_03	ממיינים לִשְׁתֵּי קבוצות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_03; text = skill.LOG-A-03.json > childLine.0.v	text-ready	25
+vo:core.skill.log_a_04	מכירים סדר שחוזר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_04; text = skill.LOG-A-04.json > childLine.0.v	text-ready	17
+vo:core.skill.log_a_05	מעתיקים את הסדר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_05; text = skill.LOG-A-05.json > childLine.0.v	text-ready	16
+vo:core.skill.log_a_06	ממשיכים את הסדר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_06; text = skill.LOG-A-06.json > childLine.0.v	text-ready	16
+vo:core.skill.log_a_07	מתקנים סדר שנשבר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_07; text = skill.LOG-A-07.json > childLine.0.v	text-ready	17
+vo:core.skill.log_a_08	מסדרים סיפור: קודם, אחר כך, בסוף.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_08; text = skill.LOG-A-08.json > childLine.0.v	text-ready	33
+vo:core.skill.log_a_09	מוצאים מה הולך יחד.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_09; text = skill.LOG-A-09.json > childLine.0.v	text-ready	19
+vo:core.skill.log_a_10	מסדרים לפי גודל.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_a_10; text = skill.LOG-A-10.json > childLine.0.v	text-ready	16
+vo:core.skill.log_b_01	ממשיכים סדר של שְׁלוֹשָׁה דברים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_b_01; text = skill.LOG-B-01.json > childLine.0.v	text-ready	32
+vo:core.skill.log_b_02	מוצאים מה נשבר בסדר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_b_02; text = skill.LOG-B-02.json > childLine.0.v	text-ready	20
+vo:core.skill.log_b_04	מִגְדָּלִים שגדלים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_b_04; text = skill.LOG-B-04.json > childLine.0.v	text-ready	19
+vo:core.skill.log_b_06	מוצאים מה משותף.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_b_06; text = skill.LOG-B-06.json > childLine.0.v	text-ready	16
+vo:core.skill.log_b_08	אם… אז…	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_b_08; text = skill.LOG-B-08.json > childLine.0.v	text-ready	7
+vo:core.skill.log_b_09	לא זה ולא זה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_b_09; text = skill.LOG-B-09.json > childLine.0.v	text-ready	13
+vo:core.skill.log_b_11	מסדרים מנמוך לגבוה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.log_b_11; text = skill.LOG-B-11.json > childLine.0.v	text-ready	19
+vo:core.skill.math_a_01	מוסיפים עוד וסופרים כמה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_a_01; text = skill.MATH-A-01.json > childLine.0.v	text-ready	24
+vo:core.skill.math_a_02	לוקחים אֶחָד וסופרים כמה נשאר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_a_02; text = skill.MATH-A-02.json > childLine.0.v	text-ready	30
+vo:core.skill.math_a_03	מחלקים בהגינות: לכל אֶחָד אותו מספר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_a_03; text = skill.MATH-A-03.json > childLine.0.v	text-ready	36
+vo:core.skill.math_a_04	משווים גדול וקטן, ארוך וקצר, כבד וקל.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_a_04; text = skill.MATH-A-04.json > childLine.0.v	text-ready	37
+vo:core.skill.math_a_05	מכירים בוקר, צהריים, ערב ולילה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_a_05; text = skill.MATH-A-05.json > childLine.0.v	text-ready	31
+vo:core.skill.math_a_06	קונים בחנות: מטבע לכל דבר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_a_06; text = skill.MATH-A-06.json > childLine.0.v	text-ready	26
+vo:core.skill.math_a_07	משווים בתרשים תמונות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_a_07; text = skill.MATH-A-07.json > childLine.0.v	text-ready	21
+vo:core.skill.math_b_01	מוסיפים ולוקחים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_01; text = skill.MATH-B-01.json > childLine.0.v	text-ready	16
+vo:core.skill.math_b_02	מוצאים את החלק שחסר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_02; text = skill.MATH-B-02.json > childLine.0.v	text-ready	20
+vo:core.skill.math_b_03	קוראים תרגילים עם פלוס ומינוס.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_03; text = skill.MATH-B-03.json > childLine.0.v	text-ready	30
+vo:core.skill.math_b_06	משלימים לְעֶשֶׂר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_06; text = skill.MATH-B-06.json > childLine.0.v	text-ready	17
+vo:core.skill.math_b_07	אֶפֶס לא משנה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_07; text = skill.MATH-B-07.json > childLine.0.v	text-ready	14
+vo:core.skill.math_b_08	מחברים עד עֶשְׂרִים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_08; text = skill.MATH-B-08.json > childLine.0.v	text-ready	20
+vo:core.skill.math_b_09	שְׁנֵי הצדדים אותו דבר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_09; text = skill.MATH-B-09.json > childLine.0.v	text-ready	23
+vo:core.skill.math_b_10	קבוצות עם אותו מספר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_10; text = skill.MATH-B-10.json > childLine.0.v	text-ready	20
+vo:core.skill.math_b_13	מי כבד יותר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_13; text = skill.MATH-B-13.json > childLine.0.v	text-ready	12
+vo:core.skill.math_b_14	יום ראשון, יום שֵׁנִי…	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_14; text = skill.MATH-B-14.json > childLine.0.v	text-ready	22
+vo:core.skill.math_b_15	קוראים שעות עגולות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_15; text = skill.MATH-B-15.json > childLine.0.v	text-ready	19
+vo:core.skill.math_b_16	מכירים את המטבעות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_16; text = skill.MATH-B-16.json > childLine.0.v	text-ready	18
+vo:core.skill.math_b_17	משלמים בדיוק.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_17; text = skill.MATH-B-17.json > childLine.0.v	text-ready	13
+vo:core.skill.math_b_18	מוצאים את המספר החסר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_18; text = skill.MATH-B-18.json > childLine.0.v	text-ready	21
+vo:core.skill.math_b_19	קוראים תרשים של תמונות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.math_b_19; text = skill.MATH-B-19.json > childLine.0.v	text-ready	23
+vo:core.skill.num_a_01	סופרים עד חָמֵשׁ, לפי הסדר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_01; text = skill.NUM-A-01.json > childLine.0.v	text-ready	27
+vo:core.skill.num_a_02	סופרים עד עֶשֶׂר, לפי הסדר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_02; text = skill.NUM-A-02.json > childLine.0.v	text-ready	27
+vo:core.skill.num_a_03	נוגעים בכל אֶחָד פעם אַחַת כשסופרים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_03; text = skill.NUM-A-03.json > childLine.0.v	text-ready	36
+vo:core.skill.num_a_04	יודעים כמה יש: המספר האחרון שספרנו.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_04; text = skill.NUM-A-04.json > childLine.0.v	text-ready	35
+vo:core.skill.num_a_05	רואים כמה במבט אֶחָד.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_05; text = skill.NUM-A-05.json > childLine.0.v	text-ready	21
+vo:core.skill.num_a_06	נותנים בדיוק כמה שביקשו.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_06; text = skill.NUM-A-06.json > childLine.0.v	text-ready	24
+vo:core.skill.num_a_07	מתאימים מספר לכמות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_07; text = skill.NUM-A-07.json > childLine.0.v	text-ready	19
+vo:core.skill.num_a_08	מוצאים את המספר שאומרים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_08; text = skill.NUM-A-08.json > childLine.0.v	text-ready	24
+vo:core.skill.num_a_09	סופרים עד עֶשֶׂר.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_09; text = skill.NUM-A-09.json > childLine.0.v	text-ready	17
+vo:core.skill.num_a_10	רואים אַרְבַּע וְחָמֵשׁ במבט אֶחָד.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_10; text = skill.NUM-A-10.json > childLine.0.v	text-ready	35
+vo:core.skill.num_a_11	יודעים איפה יותר ואיפה פחות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_11; text = skill.NUM-A-11.json > childLine.0.v	text-ready	28
+vo:core.skill.num_a_12	סופרים כדי להשוות, לא מסתכלים על הגודל.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_12; text = skill.NUM-A-12.json > childLine.0.v	text-ready	39
+vo:core.skill.num_a_13	יודעים מי ראשון, שֵׁנִי, שלישי ואחרון.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_13; text = skill.NUM-A-13.json > childLine.0.v	text-ready	38
+vo:core.skill.num_a_14	יודעים שאין כלום — זה אֶפֶס.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_a_14; text = skill.NUM-A-14.json > childLine.0.v	text-ready	28
+vo:core.skill.num_b_01	סופרים עד עֶשְׂרִים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_01; text = skill.NUM-B-01.json > childLine.0.v	text-ready	20
+vo:core.skill.num_b_02	סופרים עד שְׁלוֹשִׁים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_02; text = skill.NUM-B-02.json > childLine.0.v	text-ready	22
+vo:core.skill.num_b_03	סופרים אחורה כמו בחללית.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_03; text = skill.NUM-B-03.json > childLine.0.v	text-ready	24
+vo:core.skill.num_b_04	סופרים עד עֶשְׂרִים חפצים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_04; text = skill.NUM-B-04.json > childLine.0.v	text-ready	26
+vo:core.skill.num_b_05	נותנים בדיוק כמה שמבקשים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_05; text = skill.NUM-B-05.json > childLine.0.v	text-ready	25
+vo:core.skill.num_b_07	כותבים את המספרים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_07; text = skill.NUM-B-07.json > childLine.0.v	text-ready	18
+vo:core.skill.num_b_08	קוראים את המספרים עד עֶשְׂרִים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_08; text = skill.NUM-B-08.json > childLine.0.v	text-ready	31
+vo:core.skill.num_b_10	משווים שְׁנֵי מספרים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_10; text = skill.NUM-B-10.json > childLine.0.v	text-ready	21
+vo:core.skill.num_b_11	מוצאים מספר שחסר, אֶחָד יותר וְאֶחָד פחות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_11; text = skill.NUM-B-11.json > childLine.0.v	text-ready	42
+vo:core.skill.num_b_13	קופצים על ציר המספרים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_13; text = skill.NUM-B-13.json > childLine.0.v	text-ready	22
+vo:core.skill.num_b_14	מפרקים מספר לִשְׁנֵי חלקים.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_14; text = skill.NUM-B-14.json > childLine.0.v	text-ready	27
+vo:core.skill.num_b_16	רואים עֶשֶׂר ועוד כמה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_16; text = skill.NUM-B-16.json > childLine.0.v	text-ready	22
+vo:core.skill.num_b_17	סופרים בעשרות וּבִשְׁתַּיִם.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_17; text = skill.NUM-B-17.json > childLine.0.v	text-ready	28
+vo:core.skill.num_b_18	מחלקים לזוגות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.num_b_18; text = skill.NUM-B-18.json > childLine.0.v	text-ready	14
+vo:core.skill.shp_a_01	מוצאים את אותה צורה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_01; text = skill.SHP-A-01.json > childLine.0.v	text-ready	20
+vo:core.skill.shp_a_02	מכירים עיגול, ריבוע ומשולש.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_02; text = skill.SHP-A-02.json > childLine.0.v	text-ready	27
+vo:core.skill.shp_a_03	מכירים צורות גדולות, קטנות ומסובבות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_03; text = skill.SHP-A-03.json > childLine.0.v	text-ready	36
+vo:core.skill.shp_a_04	מכירים מלבן.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_04; text = skill.SHP-A-04.json > childLine.0.v	text-ready	12
+vo:core.skill.shp_a_05	מוצאים צורות בעולם.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_05; text = skill.SHP-A-05.json > childLine.0.v	text-ready	19
+vo:core.skill.shp_a_06	בונים תמונה מצורות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_06; text = skill.SHP-A-06.json > childLine.0.v	text-ready	19
+vo:core.skill.shp_a_07	יודעים מה מתגלגל ומה נערם.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_07; text = skill.SHP-A-07.json > childLine.0.v	text-ready	26
+vo:core.skill.shp_a_08	מבינים על, מתחת, בתוך וליד.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_08; text = skill.SHP-A-08.json > childLine.0.v	text-ready	27
+vo:core.skill.shp_a_10	מכירים קו ישר וקו עקום.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_a_10; text = skill.SHP-A-10.json > childLine.0.v	text-ready	23
+vo:core.skill.shp_b_01	מכירים משולש, מרובע, מחומש ומשושה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_b_01; text = skill.SHP-B-01.json > childLine.0.v	text-ready	34
+vo:core.skill.shp_b_02	סופרים צלעות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_b_02; text = skill.SHP-B-02.json > childLine.0.v	text-ready	13
+vo:core.skill.shp_b_03	ריבוע ומלבן.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_b_03; text = skill.SHP-B-03.json > childLine.0.v	text-ready	12
+vo:core.skill.shp_b_04	צורה סגורה עם צלעות ישרות.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_b_04; text = skill.SHP-B-04.json > childLine.0.v	text-ready	26
+vo:core.skill.shp_b_08	גליל, חרוט, כדור ופירמידה.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_b_08; text = skill.SHP-B-08.json > childLine.0.v	text-ready	26
+vo:core.skill.shp_b_09	כל גוף והצורה שעליו.	map-card childLine of a skill (narrators only)	content/lines/core.he.json > core.skill.shp_b_09; text = skill.SHP-B-09.json > childLine.0.v	text-ready	20
