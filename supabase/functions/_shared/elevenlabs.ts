@@ -2,6 +2,9 @@
 // the server's own character table, and the history item is deleted right after use.
 const BASE = "https://api.elevenlabs.io";
 
+/** The most audio a clip may have: the limit of `app.tutor_cache.audio` (a test checks the migration says the same). */
+export const MAX_AUDIO_BYTES = 131_072;
+
 export interface VoiceRequest {
   voiceId: string;
   modelId: string;
@@ -28,7 +31,10 @@ export interface VoiceClient {
 
 export class VoiceFailed extends Error {
   /** `detail` is only ever the HTTP status and the provider's fixed status word, never any text of the body. */
-  constructor(readonly reason: "timeout" | "status" | "network" | "empty", readonly detail?: string) {
+  constructor(
+    readonly reason: "timeout" | "status" | "network" | "empty" | "too_large",
+    readonly detail?: string,
+  ) {
     super(reason);
   }
 }
@@ -70,6 +76,8 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
         }
         const audio = new Uint8Array(await res.arrayBuffer());
         if (audio.length < 100) throw new VoiceFailed("empty");
+        // A clip the cache cannot keep would be paid for again and again.
+        if (audio.length > MAX_AUDIO_BYTES) throw new VoiceFailed("too_large");
         return {
           audio,
           mime: "audio/mpeg",

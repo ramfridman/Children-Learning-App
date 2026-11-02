@@ -252,6 +252,19 @@ the earlier ones are done. Never paste a key into the chat.
    (`select item_id, mistake, band, address_form, line from app.tutor_cache order by 1, 2, 3, 4;`), then
    on the phone switch **AI helper in lessons** on in the dev page and make two mistakes in the counting
    hills (device checks section 10). Only after that is the helper ever offered to a parent (M7).
+8. **The live helper in the pack's voice (2026-11-02): order and conditions.** The helper now speaks at
+   44.1 kHz, 64 kbps with the pack's model and settings, and a clip is cached under a voice profile, so every
+   older 22 kHz clip is unreachable until the reviewed lines are voiced again. In this order:
+   1. Check the switch: `select value from app.config where key = 'live_voice_enabled';` Keep it `false`
+      (or absent) until step 4 is done, so no child's turn pays for a line that the cache could serve.
+   2. Apply the migration **before** the functions: `npx supabase db push --project-ref ungkvkabqxssggttajfs`
+      (it adds `app.tutor_cache.voice_profile` and raises the clip limit to 131072 bytes, which is
+      `MAX_AUDIO_BYTES` in `_shared/elevenlabs.ts`; a longer clip is refused as `voice_failed`).
+   3. Deploy `tutor-turn`, `tutor-prewarm` and `content-publish` (section 5).
+   4. Re-voice the reviewed lines with `tutor_prewarm voice` (you type the line count; this is the paid step),
+      then set `live_voice_enabled` to `true`.
+   5. Delete the stale row, which the gateway no longer reads:
+      `delete from app.config where key = 'elevenlabs_model_id';`
 
 ## What this does not do
 

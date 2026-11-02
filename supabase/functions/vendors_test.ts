@@ -1,6 +1,6 @@
 import { assert } from "./_shared/testassert.ts";
 import { anthropicClient, ModelFailed } from "./_shared/anthropic.ts";
-import { elevenLabsClient, VoiceFailed } from "./_shared/elevenlabs.ts";
+import { elevenLabsClient, MAX_AUDIO_BYTES, VoiceFailed } from "./_shared/elevenlabs.ts";
 
 const json = (status: number, body: unknown) =>
   (() => Promise.resolve(new Response(JSON.stringify(body), { status }))) as unknown as typeof fetch;
@@ -83,6 +83,29 @@ Deno.test("the voice request asks for the pack's format and sends the settings e
   });
   assert.equal(seen!.headers.get("xi-api-key"), "the-key");
   assert.equal(JSON.stringify(seen!.body).includes("the-key"), false);
+});
+
+Deno.test("a clip over the cache limit is refused (never sent on or paid twice), one at the limit passes", async () => {
+  const speak = (bytes: number) =>
+    elevenLabsClient("key", (() => Promise.resolve(new Response(new Uint8Array(bytes)))) as typeof fetch)
+      .speak({
+        voiceId: "abcDEF0123456789",
+        modelId: "eleven_v4_turbo",
+        outputFormat: "mp3_44100_64",
+        settings: { stability: 0.5, similarity_boost: 0.8 },
+        text: "t",
+        timeoutMs: 1000,
+      });
+  assert.equal((await speak(MAX_AUDIO_BYTES)).audio.length, 131072);
+  assert.equal((await failure<VoiceFailed>(() => speak(MAX_AUDIO_BYTES + 1))).reason, "too_large");
+  assert.equal(MAX_AUDIO_BYTES, 131072);
+  const migration = await Deno.readTextFile(
+    new URL("../migrations/20261102120000_tutor_cache_voice_profile.sql", import.meta.url),
+  );
+  assert.ok(
+    migration.includes(`octet_length(audio) <= ${MAX_AUDIO_BYTES}`),
+    "the migration's limit is the same number",
+  );
 });
 
 Deno.test("the model request turns thinking off and keeps the key in a header, not in the body", async () => {
