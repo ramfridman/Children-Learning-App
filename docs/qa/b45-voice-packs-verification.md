@@ -56,3 +56,12 @@ No defect found in: layout (a pure function, ids unique, no id lost), signing an
 4. Install time and disk: 16 packs of one narrator (about 100 to 240 MB real, not the mock sizes) installed from the real download, and the install of a second narrator. The installer's own on-disk checks were only run with mock sizes here.
 5. A real mid-install state: only the shared pack and some parts installed (download interrupted); the lines of a missing part must be silent with no crash.
 6. Sound itself: no clip or cue of a real narrator was heard (mock clips only); the mouth cues on the real clips.
+
+## Re-verification of QA-B45-1 to -3 (commit b01a918)
+
+2026-11-02. `flutter analyze`: no issues. `dart format`: 380 files, 0 changed. My two QA files: 13 passed. Whole `flutter test`: 3,198 passed, 4 skipped, 1 failed (only the known `starter_pack_test`).
+
+- **QA-B45-1: closed in code, device number still open.** `pack_installer.dart` `_readAndVerify` reads and verifies in `Isolate.run` (same errors, same result; falls back to the UI isolate only for a test's custom `decode`). My end-to-end test, which loads real installed packs, passes through it. The frame check on the Samsung (device item 2) stays.
+- **QA-B45-2: closed.** `voice_bank.dart`: a pack that failed for a disk reason (`PackRejected` stage `disk`, or any other error) gets one retry at the next `prefetch`; a failed signature, hash or content check is permanent (`character_source.dart`). My tampered-pack tests (hash failure) still end silent and are not read again. Not by me: the retry path itself is covered by the developer's `voice_pack_hardening_test.dart`.
+- **QA-B45-3: closed.** `docs/PLAN.md` now says the bound counts clip bytes only. The real peak is still a device item (3).
+- Also in this commit and not reviewed by me: SEC-36 (only parts at the shared pack's version are heard) and SEC-37 (no `-part-` in a character id); my tests are unaffected.
