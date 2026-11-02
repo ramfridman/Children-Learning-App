@@ -202,6 +202,8 @@ export interface CacheKey {
   characterId: string;
   promptVersion: string;
   validatorVersion: string;
+  /** The format, model, settings and respellings the clip was made with (VOICE_PROFILE_ID): an older clip is never served. */
+  voiceProfile: string;
 }
 
 export interface CachedLine {

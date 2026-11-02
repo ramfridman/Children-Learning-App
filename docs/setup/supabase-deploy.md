@@ -222,14 +222,13 @@ the earlier ones are done. Never paste a key into the chat.
    The publish secret is now on the clipboard: save it in 1Password as `Nitznutz content publish
    secret`, then copy something else to clear the clipboard. For each PowerShell window in which you (or
    Claude) run the tools below: `$env:NITZNUTZ_PUBLISH_SECRET = "<paste>"` (never write it in a file).
-5. **Claude: set the rows** in `app.config` (the model id and prices from step 3.3; the daily cap stays
-   0.50 USD): `elevenlabs_model_id`, `tutor_price_micro` (`in_per_mtok`, `out_per_mtok`,
+5. **Claude: set the rows** in `app.config` (the prices from step 3.3; the daily cap stays
+   0.50 USD): `tutor_price_micro` (`in_per_mtok`, `out_per_mtok`,
    `voice_per_1k_chars`, in millionths of a dollar) and, for the test, `tutor_enabled` and
    `live_voice_enabled`:
 
    ```sql
    insert into app.config (key, value) values
-     ('elevenlabs_model_id', '"<model id>"'::jsonb),
      ('tutor_cost_cap_micro', '500000'::jsonb),
      ('tutor_price_micro', '{"in_per_mtok": <n>, "out_per_mtok": <n>, "voice_per_1k_chars": <n>}'::jsonb),
      ('tutor_enabled', 'true'::jsonb),

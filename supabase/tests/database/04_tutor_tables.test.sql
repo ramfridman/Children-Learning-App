@@ -54,7 +54,12 @@ select throws_ok($$insert into app.tutor_cache
   (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
    validator_version, line, next_action, audio, audio_mime)
   values ('starter', '0.2.0', 'count.butterflies.3', 'default', 1, 'A', 'n', 'nitzi', 'p1', 'v1',
-          'x', 'none', decode(repeat('00', 70000), 'hex'), 'audio/mpeg')$$, '23514', null, 'a clip over 64 KB is refused');
+          'x', 'none', decode(repeat('00', 140000), 'hex'), 'audio/mpeg')$$, '23514', null, 'a clip over 128 KB is refused');
+select lives_ok($$insert into app.tutor_cache
+  (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
+   validator_version, line, next_action, audio, audio_mime)
+  values ('starter', '0.2.0', 'count.butterflies.3', 'default', 1, 'A', 'n', 'nitzi', 'p1', 'v1',
+          'x', 'none', decode(repeat('00', 70000), 'hex'), 'audio/mpeg')$$, 'a 64 kbps clip of 70 KB is kept');
 select throws_ok($$insert into app.tutor_cache
   (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
    validator_version, line, next_action)
@@ -65,6 +70,20 @@ select lives_ok($$insert into app.tutor_cache
    validator_version, line, next_action)
   values ('starter', '0.2.0', 'count.butterflies.3', 'M-CNT-DOUBLE', 1, 'A', 'n', 'nitzi', 'p2', 'v1', 'again', 'none')$$,
   'a new prompt version makes a new entry');
+select is((select voice_profile from app.tutor_cache where prompt_version = 'p1' and mistake = 'M-CNT-DOUBLE'),
+  'legacy', 'a clip kept without a voice profile is the legacy one, which no request asks for');
+select lives_ok($$insert into app.tutor_cache
+  (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
+   validator_version, voice_profile, line, next_action)
+  values ('starter', '0.2.0', 'count.butterflies.3', 'M-CNT-DOUBLE', 1, 'A', 'n', 'nitzi', 'p1', 'v1',
+          'mp3_44100_64.eleven_v4_turbo.0123456789ab', 'again', 'none')$$,
+  'a new voice profile makes a new entry for the same line');
+select throws_ok($$insert into app.tutor_cache
+  (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
+   validator_version, voice_profile, line, next_action)
+  values ('starter', '0.2.0', 'count.butterflies.3', 'M-CNT-DOUBLE', 1, 'A', 'n', 'nitzi', 'p1', 'v1',
+          'mp3_44100_64.eleven_v4_turbo.0123456789ab', 'again', 'none')$$,
+  '23505', null, 'the same line under the same voice profile is never kept twice');
 
 -- ---- the caps count exactly -----------------------------------------------------------------------
 create function pg_temp.take(p_kind text, p_child text, p_session text, p_cost bigint default 500000) returns text

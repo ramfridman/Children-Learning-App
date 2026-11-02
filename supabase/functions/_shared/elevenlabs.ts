@@ -5,6 +5,10 @@ const BASE = "https://api.elevenlabs.io";
 export interface VoiceRequest {
   voiceId: string;
   modelId: string;
+  /** From the shared voice profile (voice_profile.ts), the same as the voice packs: `mp3_44100_64`. */
+  outputFormat: string;
+  /** Explicit stability and similarity (and the speaker boost), so nothing depends on the voice's stored settings. */
+  settings: Record<string, number | boolean>;
   text: string;
   timeoutMs: number;
 }
@@ -46,12 +50,19 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
       const timer = setTimeout(() => ctl.abort(), req.timeoutMs);
       try {
         const res = await fetchFn(
-          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=mp3_22050_32`,
+          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=${
+            encodeURIComponent(req.outputFormat)
+          }`,
           {
             method: "POST",
             signal: ctl.signal,
             headers: { "xi-api-key": apiKey, "content-type": "application/json" },
-            body: JSON.stringify({ text: req.text, model_id: req.modelId, language_code: "he" }),
+            body: JSON.stringify({
+              text: req.text,
+              model_id: req.modelId,
+              language_code: "he",
+              voice_settings: req.settings,
+            }),
           },
         );
         if (!res.ok) {

@@ -23,6 +23,7 @@ import {
   userPrompt,
 } from "./tutor_prompt.ts";
 import { type Failure, type TurnFacts, validateReply, VALIDATOR_VERSION } from "./validator.ts";
+import { VOICE_PROFILE_ID, voiceSpecFor } from "./voice_profile.ts";
 
 /** The prompt version under which reviewed lines are kept: a new prompt never makes them unreachable. */
 export const APPROVED = APPROVED_PROMPT_VERSION;
@@ -44,7 +45,6 @@ export interface Settings {
   dayCap: number;
   prefetchCap: number;
   costCapMicro: number;
-  voiceModelId: string | null;
   priceInPerMtok: number;
   priceOutPerMtok: number;
   priceVoicePer1k: number;
@@ -59,7 +59,6 @@ export const CONFIG_KEYS = [
   "tutor_day_cap",
   "tutor_prefetch_cap",
   "tutor_cost_cap_micro",
-  "elevenlabs_model_id",
   "tutor_price_micro",
   "tutor_moves",
 ] as const;
@@ -76,10 +75,6 @@ export function settings(c: Record<string, unknown>): Settings {
     prefetchCap: num(c.tutor_prefetch_cap, 40),
     // 0.50 dollars a family a day, until the owner sets another number.
     costCapMicro: num(c.tutor_cost_cap_micro, 500_000),
-    voiceModelId:
-      typeof c.elevenlabs_model_id === "string" && /^[A-Za-z0-9_.-]{3,60}$/.test(c.elevenlabs_model_id)
-        ? c.elevenlabs_model_id
-        : null,
     // Placeholders until the owner has checked the providers' prices: the cap works on what is written here.
     priceInPerMtok: num(price.in_per_mtok, 1_000_000),
     priceOutPerMtok: num(price.out_per_mtok, 5_000_000),
@@ -212,6 +207,7 @@ export async function makeLine(
     characterId: p.characterId,
     promptVersion: PROMPT_VERSION,
     validatorVersion: VALIDATOR_VERSION,
+    voiceProfile: VOICE_PROFILE_ID,
   };
   const log = (
     source: "live" | "cache" | "prefetch" | "rule",
@@ -407,10 +403,12 @@ export async function makeLine(
 
   // Voice only for a line that passed, in the voice the server's own table names.
   const voiceId = tctx.character!.voiceId;
-  if (!cfg.liveVoiceEnabled || !voiceId || !cfg.voiceModelId) {
+  if (!cfg.liveVoiceEnabled || !voiceId) {
     await addCost(0);
     return await ruleOut("no_voice", { line: verdict.plain, modelMs });
   }
+  // The format, model, settings and respellings are the voice packs' own (voice_profile.ts), by the line's help level.
+  const spoken = voiceSpecFor(verdict.vocalised, p.hintLevel);
   const vt0 = performance.now();
   let audio: Uint8Array;
   let requestId: string | null = null;
@@ -419,8 +417,10 @@ export async function makeLine(
     if (left < 250) throw new VoiceFailed("timeout");
     const v = await tutor.voice.speak({
       voiceId,
-      modelId: cfg.voiceModelId,
-      text: verdict.vocalised,
+      modelId: spoken.modelId,
+      outputFormat: spoken.outputFormat,
+      settings: spoken.settings,
+      text: spoken.text,
       timeoutMs: Math.max(200, Math.min(tb.voiceMs, left - 50)),
     });
     audio = v.audio;
@@ -435,7 +435,7 @@ export async function makeLine(
     return await ruleOut("voice_failed", { line: verdict.plain, modelMs, voiceMs: performance.now() - vt0 });
   }
   const voiceMs = performance.now() - vt0;
-  await addCost(verdict.vocalised.length);
+  await addCost(spoken.text.length);
   if (timings) {
     timings.modelMs = modelMs;
     timings.voiceMs = voiceMs;

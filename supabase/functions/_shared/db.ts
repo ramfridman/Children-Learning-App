@@ -7,6 +7,7 @@ import type { DeviceRecord } from "./auth.ts";
 import type { Bytes } from "./b64.ts";
 import { compareSemver } from "./semver.ts";
 import { APPROVED_PROMPT_VERSION } from "./store.ts";
+import { VOICE_PROFILE_ID } from "./voice_profile.ts";
 import type {
   AlertIn,
   AlertOut,
@@ -318,10 +319,10 @@ export function pgStore(sql: Sql): Store {
         await tx`
           insert into app.tutor_cache
             (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
-             validator_version, line, caption, next_action, highlight_targets, audio, audio_mime)
+             validator_version, voice_profile, line, caption, next_action, highlight_targets, audio, audio_mime)
           select c.pack_id, ${p.packVersion}, c.item_id, c.mistake, c.hint_level, c.band, c.address_form,
-                 c.character_id, c.prompt_version, c.validator_version, c.line, c.caption, c.next_action,
-                 c.highlight_targets, c.audio, c.audio_mime
+                 c.character_id, c.prompt_version, c.validator_version, c.voice_profile, c.line, c.caption,
+                 c.next_action, c.highlight_targets, c.audio, c.audio_mime
             from app.tutor_cache c
             join app.content_item o on o.pack_id = c.pack_id and o.pack_version = c.pack_version
                                    and o.item_id = c.item_id
@@ -329,6 +330,7 @@ export function pgStore(sql: Sql): Store {
                                    and n.item_id = c.item_id and n.revision = o.revision
            where c.pack_id = ${p.packId} and c.pack_version <> ${p.packVersion}
              and c.prompt_version = ${APPROVED_PROMPT_VERSION}
+             and c.voice_profile = ${VOICE_PROFILE_ID}
           on conflict do nothing`;
         await tx`delete from app.content_pack where pack_id = ${p.packId} and pack_version <> ${p.packVersion}`;
         return "published" as const;
@@ -375,7 +377,8 @@ export function pgStore(sql: Sql): Store {
          where pack_id = ${k.packId} and pack_version = ${k.packVersion} and item_id = ${k.itemId}
            and mistake = ${k.mistake} and hint_level = ${k.hintLevel} and band = ${k.band}
            and address_form = ${k.addressForm} and character_id = ${k.characterId}
-           and prompt_version = ${k.promptVersion} and validator_version = ${k.validatorVersion}`;
+           and prompt_version = ${k.promptVersion} and validator_version = ${k.validatorVersion}
+           and voice_profile = ${k.voiceProfile}`;
       return r
         ? {
           line: r.line,
@@ -391,13 +394,13 @@ export function pgStore(sql: Sql): Store {
       await sql`
         insert into app.tutor_cache
           (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id, prompt_version,
-           validator_version, line, caption, next_action, highlight_targets, audio, audio_mime)
+           validator_version, voice_profile, line, caption, next_action, highlight_targets, audio, audio_mime)
         values (${k.packId}, ${k.packVersion}, ${k.itemId}, ${k.mistake}, ${k.hintLevel}, ${k.band}, ${k.addressForm},
-          ${k.characterId}, ${k.promptVersion}, ${k.validatorVersion}, ${v.line}, ${v.caption}, ${v.next},
+          ${k.characterId}, ${k.promptVersion}, ${k.validatorVersion}, ${k.voiceProfile}, ${v.line}, ${v.caption}, ${v.next},
           array(select jsonb_array_elements_text(${JSON.stringify(v.highlight)}::text::jsonb)),
           ${v.audio ? buf(v.audio) : null}, ${v.audio ? "audio/mpeg" : null})
         on conflict (pack_id, pack_version, item_id, mistake, hint_level, band, address_form, character_id,
-                     prompt_version, validator_version)
+                     prompt_version, validator_version, voice_profile)
         do update set line = excluded.line, caption = excluded.caption, next_action = excluded.next_action,
           highlight_targets = excluded.highlight_targets, audio = excluded.audio, audio_mime = excluded.audio_mime,
           created_at = now()

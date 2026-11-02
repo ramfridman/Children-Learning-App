@@ -1,6 +1,7 @@
 // Test-only kit: an in-memory Store, fake services, and a signer that talks to a real handler
 // exactly as a phone would. Never imported by a function.
 import { APPROVED_PROMPT_VERSION } from "./store.ts";
+import { VOICE_PROFILE_ID } from "./voice_profile.ts";
 import type { DeviceRecord } from "./auth.ts";
 import { b64urlEncode, type Bytes, sha256B64url } from "./b64.ts";
 import { canonicalString } from "./canonical.ts";
@@ -248,7 +249,11 @@ export class FakeStore implements Store {
       }
       const was = have.items.find((i) => i.itemId === item);
       const now = p.items.find((i) => i.itemId === item);
-      if (rest[rest.length - 2] === APPROVED_PROMPT_VERSION && was && now && was.revision === now.revision) {
+      const [prompt, , profile] = rest.slice(-3);
+      if (
+        prompt === APPROVED_PROMPT_VERSION && profile === VOICE_PROFILE_ID && was && now &&
+        was.revision === now.revision
+      ) {
         kept.set([pack, p.packVersion, item, ...rest].join("/"), line);
       }
     }
@@ -274,6 +279,7 @@ export class FakeStore implements Store {
       k.characterId,
       k.promptVersion,
       k.validatorVersion,
+      k.voiceProfile,
     ]
       .join("/");
   tutorContext(packId: string, packVersion: string, itemId: string, characterId: string) {

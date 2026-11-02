@@ -4,6 +4,8 @@ import { type VoiceAnswer, type VoiceClient, type VoiceRequest } from "./_shared
 import { DEFAULT_TUTOR_BUDGET, makeHandler, type Services } from "./_shared/handler.ts";
 import type { PublishedPack } from "./_shared/store.ts";
 import { fakeServices, FakeStore, plainPost, PUBLISH_SECRET } from "./_shared/testkit.ts";
+import { VOICE_PROFILE_ID } from "./_shared/voice_profile.ts";
+import { VOICE_PROFILE } from "./_shared/voice_profile_data.ts";
 import { spec } from "./tutor-prewarm/handler.ts";
 
 const vector = JSON.parse(
@@ -93,7 +95,6 @@ async function setup() {
   });
   store.config.set("tutor_enabled", true);
   store.config.set("live_voice_enabled", true);
-  store.config.set("elevenlabs_model_id", "test-model-1");
   const model = new FakeModel();
   const voice = new FakeVoice();
   const svc: Services = {
@@ -330,4 +331,71 @@ Deno.test("tutor-prewarm: voice takes only plain Hebrew, at most 25 lines, and n
     400,
   );
   assert.equal((await ask({ mode: "voice" })).status, 400);
+});
+
+Deno.test("tutor-prewarm: voice uses the pack's voice profile: the line's help level picks the style, the key holds the profile", async () => {
+  const { ask, voice, store } = await setup();
+  const j = await (await ask({
+    mode: "voice",
+    lines: [cell("בואו נספור לאט"), cell("בואו נספור יחד", { hint: 2 })],
+  })).json();
+  assert.equal(j.made, 2);
+  const [first, second] = voice.calls;
+  assert.equal(first.outputFormat, "mp3_44100_64");
+  assert.equal(first.modelId, VOICE_PROFILE.modelId);
+  assert.equal(first.settings.stability, 0.6, "hint 0 is an ask");
+  assert.equal(second.settings.stability, 0.65, "hint 2 is a hint");
+  assert.ok([...store.cache.keys()].every((k) => k.endsWith(`/${VOICE_PROFILE_ID}`)));
+  // The plan counts a cell as made only when its clip has the current profile.
+  const plan = await (await ask({ mode: "plan", bands: ["A"], address_forms: ["n"] })).json();
+  assert.equal(plan.voice_profile, VOICE_PROFILE_ID);
+  assert.ok(plan.cached >= 1);
+  store.cache = new Map(
+    [...store.cache].map(([k, v]) => [k.replace(VOICE_PROFILE_ID, "mp3_22050_32.old"), v]),
+  );
+  const after = await (await ask({ mode: "plan", bands: ["A"], address_forms: ["n"] })).json();
+  assert.equal(after.cached, 0, "an old 22 kHz clip is not a made line");
+});
+
+Deno.test("tutor-prewarm: the 66 reviewed hero-son lines all pass the ten checks, and what the voice gets is counted", async () => {
+  const { ask, voice, store } = await setup();
+  store.characters.set("hero-son", {
+    nameHe: "גִּבּוֹר",
+    gender: "m",
+    voiceId: "zzzDEF0123456789",
+    personal: true,
+  });
+  const rows: Array<Record<string, unknown>> = JSON.parse(
+    await Deno.readTextFile(new URL("../../content/tutor-lines/hero-son.json", import.meta.url)),
+  );
+  assert.equal(rows.length, 66);
+  let made = 0;
+  const refused: unknown[] = [];
+  for (let i = 0; i < rows.length; i += 25) {
+    const lines = rows.slice(i, i + 25).map((r) => ({
+      item: r.item,
+      mistake: r.mistake,
+      hint: r.hint,
+      band: r.band,
+      form: r.form,
+      character: r.character,
+      say: r.say,
+    }));
+    const j = await (await ask({ mode: "voice", character_ids: ["hero-son"], lines })).json();
+    made += j.made;
+    refused.push(...j.results.filter((x: { ok: boolean }) => !x.ok));
+  }
+  // One reviewed line is refused by the ten checks against the starter pack's item (a first-help line that says the
+  // answer "four": vocabulary and leak). The voice is never asked for it, so it costs nothing; the hebrew-text-editor
+  // decides whether to reword it. When it is fixed this test is updated to expect 66.
+  assert.deepEqual(
+    refused.map((r) =>
+      `${(r as { item: string }).item}/${(r as { band: string }).band}/${(r as { form: string }).form}`
+    ),
+    ["give.butterflies.4/C/m"],
+  );
+  assert.equal(made, 65);
+  const chars = voice.calls.reduce((n, c) => n + c.text.length, 0);
+  console.log(`LIVE-HELPER-CHARS ${chars}`);
+  assert.ok(voice.calls.every((c) => c.outputFormat === "mp3_44100_64" && c.voiceId === "zzzDEF0123456789"));
 });

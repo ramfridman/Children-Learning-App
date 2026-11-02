@@ -3,6 +3,7 @@
 import { assert } from "./_shared/testassert.ts";
 import { connect, pgStore } from "./_shared/db.ts";
 import { b64urlDecode, b64urlEncode } from "./_shared/b64.ts";
+import { VOICE_PROFILE_ID } from "./_shared/voice_profile.ts";
 import { type FunctionSpec, makeHandler } from "./_shared/handler.ts";
 import {
   call,
@@ -382,21 +383,29 @@ Deno.test(
         await admin`select pack_version, count(*)::int as n from app.content_item where pack_id = 'ci-pack' group by 1`;
       assert.equal(after.length, 1, "only the current version is kept");
       assert.equal(after[0].pack_version, "0.2.0");
-      // A newer version carries the approved lines of an item that did not change, and drops every other line.
-      for (const prompt of ["approved", "p9"]) {
+      // A newer version carries the approved lines of an item that did not change, made with the current voice
+      // profile, and drops every other line (a model-made one, and a clip of an older voice).
+      for (
+        const [prompt, profile] of [
+          ["approved", VOICE_PROFILE_ID],
+          ["approved", "mp3_22050_32.old"],
+          ["p9", VOICE_PROFILE_ID],
+        ]
+      ) {
         await admin`
           insert into app.tutor_cache (pack_id, pack_version, item_id, mistake, hint_level, band, address_form,
-            character_id, prompt_version, validator_version, line, next_action, audio, audio_mime)
-          values ('ci-pack', '0.2.0', 'a.1', 'default', 0, 'A', 'n', 'ci-char', ${prompt}, 'v1', 'x',
+            character_id, prompt_version, validator_version, voice_profile, line, next_action, audio, audio_mime)
+          values ('ci-pack', '0.2.0', 'a.1', 'default', 0, 'A', 'n', 'ci-char', ${prompt}, 'v1', ${profile}, 'x',
             'replay_prompt_slow', ${new Uint8Array([1, 2, 3])}, 'audio/mpeg')`;
       }
       assert.equal(await store.publishContent(pack("0.2.5", "f".repeat(64), ["a.1"])), "published");
       const lines =
-        await admin`select pack_version, prompt_version, octet_length(audio)::int as n from app.tutor_cache where pack_id = 'ci-pack'`;
+        await admin`select pack_version, prompt_version, voice_profile, octet_length(audio)::int as n from app.tutor_cache where pack_id = 'ci-pack'`;
       assert.equal(lines.length, 1, "one line is left");
-      assert.deepEqual([lines[0].pack_version, lines[0].prompt_version, lines[0].n], [
+      assert.deepEqual([lines[0].pack_version, lines[0].prompt_version, lines[0].voice_profile, lines[0].n], [
         "0.2.5",
         "approved",
+        VOICE_PROFILE_ID,
         3,
       ]);
       await admin`update app.family_character set voice_id = 'abcDEF0123456789' where character_id = 'ci-char'`;
@@ -496,6 +505,7 @@ Deno.test({
       characterId: "ci-tutor-char",
       promptVersion: "p1",
       validatorVersion: "v1",
+      voiceProfile: VOICE_PROFILE_ID,
     };
     assert.equal(await store.cacheGet(key), null);
     const audio = new Uint8Array([1, 2, 3, 250, 251]);
@@ -515,6 +525,11 @@ Deno.test({
       await store.cacheGet({ ...key, promptVersion: "p2" }),
       null,
       "a new prompt version finds nothing",
+    );
+    assert.equal(
+      await store.cacheGet({ ...key, voiceProfile: "mp3_22050_32.old" }),
+      null,
+      "a clip made with another voice profile is never served",
     );
     // A reviewed line that was edited replaces the old one; without the flag the first line stays.
     const approvedKey = { ...key, promptVersion: "approved" };

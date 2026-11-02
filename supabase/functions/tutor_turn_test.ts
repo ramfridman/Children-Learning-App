@@ -5,6 +5,8 @@ import { DEFAULT_TUTOR_BUDGET, makeHandler, type Services, type TutorBudget } fr
 import type { PublishedPack } from "./_shared/store.ts";
 import { addDevice, call, fakeServices, FakeStore, FAMILY_A, USER_A } from "./_shared/testkit.ts";
 import { PROMPT_VERSION, userPrompt } from "./_shared/tutor_prompt.ts";
+import { VOICE_PROFILE_ID } from "./_shared/voice_profile.ts";
+import { VOICE_PROFILE } from "./_shared/voice_profile_data.ts";
 import { spec } from "./tutor-turn/handler.ts";
 
 const vector = JSON.parse(
@@ -100,7 +102,6 @@ async function setup(over: { budget?: Partial<TutorBudget>; noTutor?: boolean } 
   });
   store.config.set("tutor_enabled", true);
   store.config.set("live_voice_enabled", true);
-  store.config.set("elevenlabs_model_id", "test-model-1");
   const model = new FakeModel();
   const voice = new FakeVoice();
   const svc: Services = {
@@ -146,7 +147,13 @@ Deno.test("tutor-turn: a live turn makes a checked line and its voice, returns b
   assert.equal(model.calls.length, 1);
   assert.equal(voice.calls.length, 1);
   assert.equal(voice.calls[0].voiceId, "abcDEF0123456789");
-  assert.equal(voice.calls[0].modelId, "test-model-1");
+  assert.equal(voice.calls[0].modelId, VOICE_PROFILE.modelId, "the pack's model");
+  assert.equal(voice.calls[0].outputFormat, "mp3_44100_64", "the pack's format, not the old 22 kHz one");
+  assert.deepEqual(
+    voice.calls[0].settings,
+    { similarity_boost: 0.8, stability: 0.6, use_speaker_boost: true },
+    "a first help is an `ask`: the pack's settings, sent explicitly",
+  );
   assert.equal(voice.calls[0].text, "בּוֹאוּ נִסְפֹּר לְאַט", "the voice gets the vocalised line, nothing else");
   assert.deepEqual(voice.deleted, ["hist1abc"], "the provider's history item is deleted right away");
   assert.equal(store.cache.size, 1);
@@ -157,6 +164,37 @@ Deno.test("tutor-turn: a live turn makes a checked line and its voice, returns b
     (store.costMicro.get(`${FAMILY_A}/${Math.floor(1_800_000_000_000 / 86_400_000)}`) ?? 0) > 0,
     "the cost is counted",
   );
+});
+
+Deno.test("tutor-turn: a clip made another way (an older format) is never served: the line is made again", async () => {
+  const { turn, voice, store } = await setup();
+  await turn();
+  assert.deepEqual([...store.cache.keys()].map((k) => k.split("/").pop()), [VOICE_PROFILE_ID]);
+  // The same line as an older build made it: a different profile at the end of the key.
+  store.cache = new Map(
+    [...store.cache].map(([k, v]) => [k.replace(VOICE_PROFILE_ID, "mp3_22050_32.old"), v]),
+  );
+  const j = await json(await turn());
+  assert.equal(j.results[0].source, "live", "the 22 kHz clip is not served");
+  assert.equal(voice.calls.length, 2);
+  assert.equal(store.cache.size, 2, "the new clip is kept beside the old one");
+});
+
+Deno.test("tutor-turn: the help level picks the pack's style: a first help asks, helps 1 and 2 hint, help 3 is the steadiest", async () => {
+  const stability: Record<number, number> = {};
+  for (const hint of [0, 1, 2, 3]) {
+    const { turn, voice } = await setup();
+    const r = await json(await turn({ hint_level: hint }));
+    assert.equal(r.results[0].source, "live");
+    stability[hint] = voice.calls[0].settings.stability as number;
+    assert.equal(voice.calls[0].settings.similarity_boost, 0.8);
+    assert.equal(voice.calls[0].settings.use_speaker_boost, true);
+    assert.ok(
+      !("style" in voice.calls[0].settings) && !("speed" in voice.calls[0].settings),
+      "never sent to v4",
+    );
+  }
+  assert.deepEqual(stability, { 0: 0.6, 1: 0.65, 2: 0.65, 3: 0.7 });
 });
 
 Deno.test("tutor-turn: bands B and C get the vocalised caption", async () => {

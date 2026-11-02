@@ -21,6 +21,7 @@ import {
 } from "../_shared/tutor_core.ts";
 import { PROMPT_VERSION } from "../_shared/tutor_prompt.ts";
 import { VALIDATOR_VERSION } from "../_shared/validator.ts";
+import { VOICE_PROFILE_ID } from "../_shared/voice_profile.ts";
 
 /** A line the owner would hear: rough figures for the estimate (the plan says so). */
 const EST_INPUT_TOKENS = 1500;
@@ -138,6 +139,8 @@ export const spec: FunctionSpec = {
         est_eval_micro_usd: Math.round(grid.length * 2 * estimateModelMicro(cfg)),
         prompt_version: PROMPT_VERSION,
         validator_version: VALIDATOR_VERSION,
+        // The voice the kept clips must have been made with (content/voices.json); older clips are made again.
+        voice_profile: VOICE_PROFILE_ID,
         // How many mistake types have teaching moves in the server's config: 0 means the prompts carry none.
         moves_tags: Object.keys(cfg.moves).length,
         voice_micro_per_1k: cfg.priceVoicePer1k,
@@ -294,6 +297,7 @@ const keyOf = (b: Body, e: Entry) => ({
   characterId: e.characterId,
   promptVersion: PROMPT_VERSION,
   validatorVersion: VALIDATOR_VERSION,
+  voiceProfile: VOICE_PROFILE_ID,
 });
 
 function paramsOf(

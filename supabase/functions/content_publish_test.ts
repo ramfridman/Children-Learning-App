@@ -2,6 +2,7 @@ import { assert } from "./_shared/testassert.ts";
 import { makeHandler } from "./_shared/handler.ts";
 import { fakeServices, FakeStore, plainPost, PUBLISH_SECRET } from "./_shared/testkit.ts";
 import { PUBLISH_FAILS_PER_HOUR_PER_IP } from "./_shared/publish_secret.ts";
+import { VOICE_PROFILE_ID } from "./_shared/voice_profile.ts";
 import { MAX_PUBLISH_BYTES, spec } from "./content-publish/handler.ts";
 
 const goodItem = () => ({
@@ -213,10 +214,13 @@ Deno.test("content-publish: a newer version keeps the approved lines of the item
     ...over,
   });
   // approved lines for both items, and a line a model made for the first
-  const key = (item: string, prompt: string) => `starter/0.2.0/${item}/default/0/A/n/nitzi/${prompt}/v1`;
+  const key = (item: string, prompt: string, profile = VOICE_PROFILE_ID) =>
+    `starter/0.2.0/${item}/default/0/A/n/nitzi/${prompt}/v1/${profile}`;
   store.cache.set(key("count.butterflies.3", "approved"), line());
   store.cache.set(key("pick.red.flower", "approved"), line());
   store.cache.set(key("count.butterflies.3", "p9"), line());
+  // an approved clip made in an older voice (22 kHz) is not carried either
+  store.cache.set(key("count.butterflies.3", "approved", "mp3_22050_32.old"), line());
 
   // 0.3.0: the first item is the same, the second was revised
   const next = await publish(
