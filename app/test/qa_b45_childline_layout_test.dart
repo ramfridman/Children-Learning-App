@@ -20,6 +20,7 @@ import 'package:nitznutz/child/trophy_hall.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/design/board.dart';
+import 'package:nitznutz/design/components.dart' show SpeakerMark;
 import 'package:nitznutz/rewards/award.dart';
 import 'package:nitznutz/voice/voice_director.dart';
 import 'package:nitznutz/world/world_state.dart';
@@ -31,6 +32,9 @@ import 'support/voice_fixtures.dart';
 
 const String child = 'p-1';
 final bool shots = Platform.environment['QA_B45_SHOTS'] == '1';
+
+/// Where the PNGs go (QA_B45_SHOTS_DIR, or docs/qa).
+final String shotsDir = Platform.environment['QA_B45_SHOTS_DIR'] ?? '../docs/qa';
 
 final List<(String, Size)> boards = <(String, Size)>[
   ('phone', BoardClass.phone.size),
@@ -108,7 +112,7 @@ Future<void> save(WidgetTester tester, GlobalKey shot, String name) async {
     final ui.Image im = await rb.toImage();
     return (await im.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
   }))!;
-  File('../docs/qa/b45-childline-$name.png').writeAsBytesSync(bytes);
+  File('$shotsDir/b45-childline-$name.png').writeAsBytesSync(bytes);
 }
 
 bool overlap(Rect a, Rect b) => a.overlaps(b.deflate(0.5));
@@ -175,15 +179,7 @@ void main() {
               'land-legend': tester.getRect(find.byKey(const Key('land-legend'))),
             };
             for (final MapEntry<String, Rect> e in others.entries) {
-              // QA-B45-1 (open, minor, design-director): at text 1.3 the card (top 70) reaches 7 pt into the land title pill.
-              if (scale > 1 && e.key == 'land-title') {
-                if (overlap(card, e.value)) {
-                  notes.add(
-                    '${land.name}: card overlaps the title by ${(e.value.bottom - card.top).toStringAsFixed(0)} pt',
-                  );
-                }
-                continue;
-              }
+              // QA-B45-CL-1 (fixed): the card has the band between the title and the drawings, at 1.0 and at 1.3.
               expect(
                 overlap(card, e.value),
                 isFalse,
@@ -197,6 +193,21 @@ void main() {
                 if (overlap(card, tester.getRect(find.byKey(Key('object-${o.skillId}'))).intersect(room)))
                   o.skillId,
             ];
+            // QA-B45-CL-1 (fixed): no tappable picture is under the card, and the card stays above the drawings' room.
+            expect(hidden, isEmpty, reason: '$name $scale ${land.name}: the card $card covers $hidden');
+            expect(
+              card.bottom <= room.top,
+              isTrue,
+              reason: '$name $scale ${land.name}: the card $card reaches the room',
+            );
+            // The speaker mark shows that the line speaks.
+            expect(
+              find.descendant(
+                of: find.byKey(const Key('land-object-card')),
+                matching: find.byType(SpeakerMark),
+              ),
+              findsOneWidget,
+            );
             notes.add(
               '${land.name}: ${objects.length} pictures, smallest ${smallest.toStringAsFixed(0)} pt, card h '
               '${card.height.toStringAsFixed(0)} bottom ${card.bottom.toStringAsFixed(0)}, '
@@ -264,7 +275,12 @@ void main() {
                   ),
                 ),
               ], shot);
-              await tester.ensureVisible(find.byKey(Key('slot-trophy:${land.name}:bronze')));
+              // The shelf is brought to the middle of the list (a child scrolls to it), not to its top edge, where the
+              // land's name above the trophies would be cut by the edge of the list.
+              await Scrollable.ensureVisible(
+                tester.element(find.byKey(Key('slot-trophy:${land.name}:bronze'))),
+                alignment: 0.5,
+              );
               await tester.pumpAndSettle();
               await tester.tap(find.byKey(Key('slot-trophy:${land.name}:bronze')));
               await tester.pumpAndSettle();
@@ -288,11 +304,15 @@ void main() {
               String lines(String id) =>
                   objects.firstWhere((WorldObject o) => o.skillId == id).line!.length.toString();
               final List<String> small = <String>[];
+              final List<double> heights = <double>[];
               int heard = 0;
               for (final String id in shown) {
                 final Finder row = find.byKey(Key('hall-say-$id'));
                 final Size rs = tester.getSize(row);
+                heights.add(rs.height);
                 if (rs.height < 56) small.add('$id ${rs.height.toStringAsFixed(0)}pt (${lines(id)} chars)');
+                // The speaker mark shows that the line speaks.
+                expect(find.descendant(of: row, matching: find.byType(SpeakerMark)), findsOneWidget);
                 await tester.ensureVisible(row);
                 await tester.pumpAndSettle();
                 final Rect r = tester.getRect(row);
@@ -306,6 +326,8 @@ void main() {
                 await tester.pump();
                 heard++;
               }
+              // QA-B45-CL-2 (fixed): every star line is a child target, at least 56 pt tall (the hall uses band A's 64).
+              expect(small, isEmpty, reason: '$name $scale: star rows under 56 pt: $small');
               await tester.drag(scroller, const Offset(0, -2000));
               await tester.pumpAndSettle();
               final Rect replay = tester.getRect(find.byKey(const Key('hall-replay')));
@@ -324,6 +346,39 @@ void main() {
           );
         }
       }
+    }
+  });
+
+  group('the Trophy Hall shelves (QA-B45-CL-3)', () {
+    for (final (String name, Size size) in boards) {
+      testWidgets('$name at text 1.3: the name of the first shelf is whole when the hall opens', (
+        WidgetTester tester,
+      ) async {
+        final GlobalKey shot = GlobalKey();
+        await pump(tester, const TrophyHall(childId: child), size, 1.3, <Override>[
+          rewardsProvider(child).overrideWith((Ref ref) async => const <Reward>[]),
+          ribbonsProvider(child).overrideWith((Ref ref) async => const <String, String>{}),
+          worldProvider(child).overrideWith(
+            (Ref ref) async => WorldView(engine: engineOf(smallCatalog()), now: day0, lands: lands),
+          ),
+        ], shot);
+        expect(tester.takeException(), isNull);
+        final Finder list = find.ancestor(
+          of: find.byKey(const Key('shelf-stars-counting')),
+          matching: find.byType(ListView),
+        );
+        final Rect view = tester.getRect(list);
+        final Finder labelBox = find
+            .ancestor(of: find.byKey(const Key('shelf-stars-counting')), matching: find.byType(Column))
+            .first;
+        final Rect label = tester.getRect(labelBox);
+        expect(
+          label.top >= view.top - 0.5,
+          isTrue,
+          reason: '$name: the first shelf name $label is cut by the list $view',
+        );
+        await save(tester, shot, 'hall-$name-1.3-shelves');
+      });
     }
   });
 }

@@ -62,7 +62,15 @@ class BoardCanvas extends StatelessWidget {
 
 /// An SVG from the board artwork, drawn at the size the board gives it.
 class BoardSvg extends StatelessWidget {
-  const BoardSvg(this.asset, {super.key, this.width, this.height, this.label, this.fit = BoxFit.contain});
+  const BoardSvg(
+    this.asset, {
+    super.key,
+    this.width,
+    this.height,
+    this.label,
+    this.fit = BoxFit.contain,
+    this.matchTextDirection = false,
+  });
 
   final String asset;
   final double? width;
@@ -72,12 +80,17 @@ class BoardSvg extends StatelessWidget {
   final String? label;
   final BoxFit fit;
 
+  /// Mirrors the picture in right-to-left text: only for directional icons (a speaker's waves, design-spec 8), never for
+  /// numbers, clocks or robot arrows.
+  final bool matchTextDirection;
+
   @override
   Widget build(BuildContext context) => SvgPicture.asset(
     asset,
     width: width,
     height: height,
     fit: fit,
+    matchTextDirection: matchTextDirection,
     excludeFromSemantics: label == null,
     semanticsLabel: label,
   );

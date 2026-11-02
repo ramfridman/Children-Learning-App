@@ -685,3 +685,27 @@ class ParentButton extends StatelessWidget {
 
 /// The band a profile belongs to, from the age in years (3 and 4: A, 5 and 6: B, 7 and 8: C).
 Band bandForAge(int age) => age <= 4 ? Band.a : (age <= 6 ? Band.b : Band.c);
+
+/// The small "this speaks" mark beside a line a child can touch to hear it (design-spec 6.5: a speaker for listening): the
+/// speaker of `ui/speaker.svg` in one colour on a light disc, like the pictures on the pebble buttons. Its waves face the
+/// end side, so they are mirrored in right-to-left (design-spec 8). It is only a sign: the whole line is the target.
+class SpeakerMark extends StatelessWidget {
+  const SpeakerMark({super.key, this.size = 28});
+
+  /// The disc's diameter; the speaker is two thirds of it.
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    alignment: Alignment.center,
+    decoration: const BoxDecoration(color: TokenColors.skyTint, shape: BoxShape.circle),
+    child: BoardSvg(
+      'assets/art/ui/speaker.svg',
+      width: size * 2 / 3,
+      height: size * 2 / 3,
+      matchTextDirection: true,
+    ),
+  );
+}

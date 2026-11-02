@@ -15,6 +15,7 @@ import '../data/app_database.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
+import '../design/token_types.dart';
 import '../design/tokens.g.dart';
 import '../rewards/award.dart';
 import '../rewards/outfits.dart';
@@ -461,6 +462,7 @@ class _DetailCard extends ConsumerWidget {
     final int need = real ? skillsNeeded(t.tier, n) : 0;
     final int lasting = objects.where((WorldObject o) => o.star).length;
     final String? promise = ref.watch(ribbonsProvider(childId)).value?[keyName];
+    final VoiceDirector director = ref.watch(voiceDirectorProvider);
     return Container(
       key: const Key('hall-card'),
       padding: const EdgeInsets.all(14),
@@ -504,26 +506,14 @@ class _DetailCard extends ConsumerWidget {
           ),
           if (earned != null) ...<Widget>[
             for (final WorldObject o in objects.where((WorldObject o) => o.star && o.line != null).take(3))
-              GestureDetector(
-                key: Key('hall-say-${o.skillId}'),
-                behavior: HitTestBehavior.opaque,
-                onTap: () => onSayLine(o.skillId),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 6, bottom: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const BoardSvg('assets/art/world/star_gold.svg', width: 16, height: 16),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          o.line!,
-                          key: Key('hall-line-${o.skillId}'),
-                          style: AppText.fixed(size: 16, weight: 500),
-                        ),
-                      ),
-                    ],
-                  ),
+              Padding(
+                // The gap between two child targets (design-spec 6.1: never under 12).
+                padding: const EdgeInsets.only(top: 12),
+                child: _StarLine(
+                  skillId: o.skillId,
+                  line: o.line!,
+                  director: director,
+                  onTap: () => onSayLine(o.skillId),
                 ),
               ),
           ],
@@ -561,6 +551,64 @@ class _DetailCard extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// The line of an earned star, which the narrator says when it is touched: a soft chip at least as tall as a child's control
+/// (design-spec 6.1), with the speaker mark at its end so a child sees it speaks, and a soft gold while it is being
+/// said (no flashing, nothing that counts).
+/// The youngest band's floor for any child control (design-spec 6.1: 64 pt for band A, 56 for B and C); the hall is the same
+/// for every band, so it takes the largest.
+final double _starLineMin = TokenTouch.band[Band.a]!.minControl;
+
+class _StarLine extends StatelessWidget {
+  const _StarLine({required this.skillId, required this.line, required this.director, required this.onTap});
+
+  final String skillId;
+  final String line;
+  final VoiceDirector director;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    button: true,
+    child: GestureDetector(
+      key: Key('hall-say-$skillId'),
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: ListenableBuilder(
+        listenable: director,
+        builder: (BuildContext context, Widget? child) {
+          final bool speaking = director.speaking && director.current == skillLineVoiceId(skillId);
+          return AnimatedContainer(
+            key: Key('hall-say-chip-$skillId'),
+            duration: TokenMotion.dBase,
+            constraints: BoxConstraints(minHeight: _starLineMin),
+            padding: const EdgeInsetsDirectional.fromSTEB(10, 6, 8, 6),
+            decoration: BoxDecoration(
+              color: speaking ? TokenColors.sparkTint : TokenColors.cream,
+              borderRadius: BorderRadius.circular(TokenRadius.md),
+              border: Border.all(
+                color: speaking ? TokenColors.spark : TokenColors.hairline,
+                width: TokenBorder.thin,
+              ),
+            ),
+            child: child,
+          );
+        },
+        child: Row(
+          children: <Widget>[
+            const BoardSvg('assets/art/world/star_gold.svg', width: 16, height: 16),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(line, key: Key('hall-line-$skillId'), style: AppText.fixed(size: 16, weight: 500)),
+            ),
+            const SizedBox(width: 8),
+            const SpeakerMark(),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 /// The habit medals and the island decorations.

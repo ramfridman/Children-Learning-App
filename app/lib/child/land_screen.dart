@@ -98,6 +98,13 @@ class _LandScreenState extends ConsumerState<LandScreen> {
       for (final Reward r in ref.watch(rewardsProvider(childId)).value ?? const <Reward>[]) r.awardKey,
     };
     final ({Color sea, Color grass, Color sand}) colours = islandColours(land.domain);
+    // The card of a touched drawing has the band between the land's name and the drawings (the name grows with large text).
+    final double titleBottom =
+        _titleTop +
+        textBox(landOf(land).label.text, _titleStyle, MediaQuery.textScalerOf(context)).height +
+        2 * _titlePadV;
+    final double cardTop = titleBottom + _cardGap;
+    final double cardBand = _roomTop - _cardGap - cardTop;
     return Scaffold(
       backgroundColor: colours.sea,
       body: SafeArea(
@@ -108,7 +115,7 @@ class _LandScreenState extends ConsumerState<LandScreen> {
             // the legend below, and are made as large as that room lets all of them be.
             Positioned.fill(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(56, 146, 56, 136),
+                padding: const EdgeInsets.fromLTRB(56, _roomTop, 56, 136),
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints room) {
                     final double size = objectSizeFor(objects.length, room.maxWidth, room.maxHeight);
@@ -206,50 +213,53 @@ class _LandScreenState extends ConsumerState<LandScreen> {
                     ),
                   ),
                 },
-            // What the touched drawing is.
-            if (picked != null)
+            // What the touched drawing is: in the band between the land's name and the drawings, so it never covers either.
+            if (picked != null && cardBand > 0)
               Positioned(
-                left: 0,
-                right: 0,
-                top: 70,
-                child: Center(
-                  child: Container(
-                    key: const Key('land-object-card'),
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: TokenColors.paper,
-                      borderRadius: BorderRadius.circular(TokenRadius.xl),
-                      boxShadow: softShadow,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(switch (picked.stage) {
-                          GrowthStage.sketch => He.stageSketch.text,
-                          GrowthStage.colour => He.stageColour.text,
-                          GrowthStage.fruit => He.stageFruit.text,
-                        }, style: AppText.fixed(size: 18, weight: 700)),
-                        Text(picked.line ?? picked.title, style: AppText.fixed(size: 15, weight: 500)),
-                      ],
+                left: 16,
+                right: 16,
+                top: cardTop,
+                height: cardBand,
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints band) => Align(
+                    alignment: Alignment.topCenter,
+                    child: ListenableBuilder(
+                      listenable: _director,
+                      builder: (BuildContext context, Widget? _) {
+                        final String? voice = picked.line == null ? null : skillLineVoiceId(picked.skillId);
+                        return _ObjectCard(
+                          key: const Key('land-object-card'),
+                          stage: switch (picked.stage) {
+                            GrowthStage.sketch => He.stageSketch.text,
+                            GrowthStage.colour => He.stageColour.text,
+                            GrowthStage.fruit => He.stageFruit.text,
+                          },
+                          line: picked.line ?? picked.title,
+                          voiced: voice != null,
+                          speaking: voice != null && _director.speaking && _director.current == voice,
+                          maxWidth: band.maxWidth,
+                          maxHeight: band.maxHeight,
+                        );
+                      },
                     ),
                   ),
                 ),
               ),
             // The land's name.
             Positioned(
-              top: 12,
+              top: _titleTop,
               left: 0,
               right: 0,
               child: Center(
                 child: Container(
                   key: const Key('land-title'),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: _titlePadV),
                   decoration: BoxDecoration(
                     color: TokenColors.paper,
                     borderRadius: BorderRadius.circular(999),
                     boxShadow: softShadow,
                   ),
-                  child: Text(landOf(land).label.text, style: AppText.fixed(size: 24, weight: 700)),
+                  child: Text(landOf(land).label.text, style: _titleStyle),
                 ),
               ),
             ),
@@ -290,6 +300,115 @@ class _LandScreenState extends ConsumerState<LandScreen> {
 }
 
 const double _gap = 8;
+
+/// Where the land's name stands and its padding, and where the drawings' room starts (below the name and the card's band).
+const double _titleTop = 12;
+const double _titlePadV = 6;
+const double _roomTop = 146;
+
+/// The space kept between the card of a touched drawing and the name above it or the drawings below it.
+const double _cardGap = 4;
+final TextStyle _titleStyle = AppText.fixed(size: 24, weight: 700);
+
+/// The size of [text] in [style] at the device's text size, on one line (or wrapped at [maxWidth]).
+Size textBox(String text, TextStyle style, TextScaler scaler, {double maxWidth = double.infinity}) {
+  final TextPainter p = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: TextDirection.rtl,
+    textScaler: scaler,
+  )..layout(maxWidth: maxWidth);
+  final Size size = p.size;
+  p.dispose();
+  return size;
+}
+
+/// The card of a touched drawing: where it stands (still practised, known, known and remembered) and its line, with the
+/// speaker mark when the line is said aloud and a soft gold while it is being said (no flashing, nothing that counts).
+/// It fits the band it is given: the stage above the line when both fit, otherwise the two side by side on one row, made
+/// smaller only if that row is still too wide (large text on a small phone). So it never covers the name or a drawing.
+class _ObjectCard extends StatelessWidget {
+  const _ObjectCard({
+    super.key,
+    required this.stage,
+    required this.line,
+    required this.voiced,
+    required this.speaking,
+    required this.maxWidth,
+    required this.maxHeight,
+  });
+
+  final String stage;
+  final String line;
+  final bool voiced;
+  final bool speaking;
+  final double maxWidth;
+  final double maxHeight;
+
+  static const double _padH = 18;
+  static const double _padV = 6;
+  static const double _border = TokenBorder.thin;
+  static const double _mark = 28;
+  static const double _markGap = 10;
+  static final TextStyle _stageStyle = AppText.fixed(size: 18, weight: 700);
+  static final TextStyle _lineStyle = AppText.fixed(size: 15, weight: 500);
+
+  @override
+  Widget build(BuildContext context) {
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    final double side = voiced ? _mark + _markGap : 0;
+    final double textMax = maxWidth - 2 * (_padH + _border) - side;
+    final bool stacked =
+        textMax > 0 &&
+        textBox(stage, _stageStyle, scaler, maxWidth: textMax).height +
+                textBox(line, _lineStyle, scaler, maxWidth: textMax).height +
+                2 * (_padV + _border) <=
+            maxHeight;
+    final List<Widget> mark = <Widget>[
+      if (voiced) ...<Widget>[const SizedBox(width: _markGap), const SpeakerMark(size: _mark)],
+    ];
+    final Widget card = AnimatedContainer(
+      duration: TokenMotion.dBase,
+      padding: const EdgeInsets.symmetric(horizontal: _padH, vertical: _padV),
+      decoration: BoxDecoration(
+        color: speaking ? TokenColors.sparkTint : TokenColors.paper,
+        borderRadius: BorderRadius.circular(TokenRadius.xl),
+        border: Border.all(color: speaking ? TokenColors.spark : TokenColors.paper, width: _border),
+        boxShadow: softShadow,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: stacked
+            ? <Widget>[
+                Flexible(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(stage, textAlign: TextAlign.center, style: _stageStyle),
+                      Text(line, textAlign: TextAlign.center, style: _lineStyle),
+                    ],
+                  ),
+                ),
+                ...mark,
+              ]
+            : <Widget>[
+                Text(stage, style: _stageStyle),
+                Container(
+                  width: 6,
+                  height: 6,
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: const BoxDecoration(color: TokenColors.cardLip, shape: BoxShape.circle),
+                ),
+                Text(line, style: _lineStyle),
+                ...mark,
+              ],
+      ),
+    );
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: maxHeight),
+      child: stacked ? card : FittedBox(fit: BoxFit.scaleDown, child: card),
+    );
+  }
+}
 
 /// How large each drawing of a land can be: the largest size, from 88 down to 44 points, at which all [count] fit in a
 /// room of [width] by [height] points without scrolling (a drawing is 1.2 times as wide and 1.25 times as tall as its size,

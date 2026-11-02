@@ -16,9 +16,11 @@ import 'package:nitznutz/child/land_screen.dart';
 import 'package:nitznutz/child/trophy_hall.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/design/components.dart' show SpeakerMark;
 import 'package:nitznutz/design/layout.dart';
 import 'package:nitznutz/design/theme.dart';
 import 'package:nitznutz/design/token_types.dart';
+import 'package:nitznutz/design/tokens.g.dart';
 import 'package:nitznutz/rewards/award.dart';
 import 'package:nitznutz/voice/voice_bank.dart';
 import 'package:nitznutz/voice/voice_director.dart';
@@ -384,5 +386,82 @@ void main() {
       await pumpOpened(tester, const TrophyHall(childId: child), none.overrides);
       expect(lazyNone.loads, isEmpty, reason: 'no earned star shows a line, so the 6 MiB stay on disk');
     });
+  });
+
+  // QA-B45-CL-2: a line that speaks shows it (a speaker mark), and the line being said has a soft gold, which goes when the
+  // voice stops or ends. Nothing flashes or counts.
+  group('the "this speaks" cue', () {
+    Color fill(WidgetTester tester, Finder f) =>
+        ((tester.widget<AnimatedContainer>(f).decoration! as BoxDecoration).color)!;
+    Finder landCard() => find
+        .descendant(of: find.byKey(const Key('land-object-card')), matching: find.byType(AnimatedContainer))
+        .first;
+
+    testWidgets('a land card with a line has the speaker mark and is gold while the line is said', (
+      WidgetTester tester,
+    ) async {
+      final Rig r = await rig(bank, <TrophyLand, List<WorldObject>>{
+        TrophyLand.colors: <WorldObject>[
+          object(recorded, GrowthStage.sketch),
+          object(noLine, GrowthStage.sketch, withLine: false),
+        ],
+      });
+      await pumpOpened(tester, const LandScreen(childId: child, land: TrophyLand.colors), r.overrides);
+      await tester.tap(find.byKey(const Key('object-$recorded')));
+      await settle(tester);
+      expect(
+        find.descendant(of: find.byKey(const Key('land-object-card')), matching: find.byType(SpeakerMark)),
+        findsOneWidget,
+      );
+      expect(r.director.speaking, isTrue);
+      expect(fill(tester, landCard()), TokenColors.sparkTint);
+      r.player.finish();
+      await settle(tester);
+      expect(r.director.speaking, isFalse);
+      expect(fill(tester, landCard()), TokenColors.paper, reason: 'the gold goes when the line ends');
+
+      // A picture with no line says nothing, so its card has no speaker mark.
+      await tester.tap(find.byKey(const Key('object-$noLine')));
+      await settle(tester);
+      expect(find.byType(SpeakerMark), findsNothing);
+    });
+
+    testWidgets(
+      'a hall star line has the speaker mark and a child-sized target, and only the line said is gold',
+      (WidgetTester tester) async {
+        final Rig r = await rig(
+          bank,
+          <TrophyLand, List<WorldObject>>{
+            TrophyLand.colors: <WorldObject>[
+              object(recorded, GrowthStage.fruit),
+              object(alsoRecorded, GrowthStage.fruit),
+            ],
+          },
+          rewards: <Reward>[reward(1, 'trophy:colors:bronze', 'trophy')],
+        );
+        await pumpOpened(tester, const TrophyHall(childId: child), r.overrides);
+        await tester.tap(find.byKey(const Key('slot-trophy:colors:bronze')));
+        await settle(tester);
+        for (final String id in <String>[recorded, alsoRecorded]) {
+          expect(tester.getSize(find.byKey(Key('hall-say-$id'))).height, greaterThanOrEqualTo(56));
+          expect(
+            find.descendant(of: find.byKey(Key('hall-say-$id')), matching: find.byType(SpeakerMark)),
+            findsOneWidget,
+          );
+          expect(fill(tester, find.byKey(Key('hall-say-chip-$id'))), TokenColors.cream);
+        }
+        await tester.tap(find.byKey(const Key('hall-say-$recorded')));
+        await settle(tester);
+        expect(fill(tester, find.byKey(const Key('hall-say-chip-$recorded'))), TokenColors.sparkTint);
+        expect(fill(tester, find.byKey(const Key('hall-say-chip-$alsoRecorded'))), TokenColors.cream);
+        await tester.tap(find.byKey(const Key('hall-say-$recorded')));
+        await settle(tester);
+        expect(
+          fill(tester, find.byKey(const Key('hall-say-chip-$recorded'))),
+          TokenColors.cream,
+          reason: 'stopped',
+        );
+      },
+    );
   });
 }
