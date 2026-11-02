@@ -203,7 +203,7 @@ void main() {
       final VoiceProfile tamir = VoiceProfile.fromConfig(_realConfig(), 'tower-tamir');
       final List<VoicePackGroup> layout = voicePackLayout('tower-tamir', tamir, _realLines);
       expect(layout.single.packId, 'voice-tower-tamir');
-      expect(layout.single.voIds, hasLength(9));
+      expect(layout.single.voIds, hasLength(57));
       final List<BuiltPack> built = await generateVoicePack(
         characterId: 'tower-tamir',
         lines: _realLines,
@@ -215,7 +215,7 @@ void main() {
       );
       expect(built.single.fileName, 'voice-tower-tamir-2.0.0.nnpack');
       final VerifiedPack pack = await verifyPack(built.single.bytes, publicKey: key.publicKey);
-      expect(VoiceBank.fromPack(pack).length, 9);
+      expect(VoiceBank.fromPack(pack).length, 57);
       expect(characterOfVoicePack(pack.id), 'tower-tamir');
     });
 
