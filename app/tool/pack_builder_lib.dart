@@ -178,13 +178,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
   if (!descriptor.existsSync()) throw const BuildFailed('the source folder has no pack.json');
   final Object? pack = _jsonOrNull(descriptor.readAsBytesSync());
   if (pack is! Map<String, Object?>) throw const BuildFailed('pack.json is not a JSON object');
-  final List<Problem> shape = validate(packSourceSchema, pack);
-  if (shape.isNotEmpty) {
-    throw BuildFailed('pack.json does not follow its schema', <Problem>[
-      for (final Problem p in shape)
-        Problem(p.path.isEmpty ? 'pack.json' : 'pack.json › ${p.path}', p.message),
-    ]);
-  }
+  _checkDescriptor(pack);
 
   // Every other file in the folder goes into the pack.
   final Map<String, Uint8List> files = <String, Uint8List>{};
@@ -201,10 +195,39 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
       problems.add(Problem(name, why));
       continue;
     }
-    files[name] = _normalised(name, e.readAsBytesSync());
+    files[name] = e.readAsBytesSync();
   }
   if (problems.isNotEmpty) {
     throw BuildFailed('the source folder has files that cannot go into a pack', problems);
+  }
+  return buildPackFrom(pack, files, key);
+}
+
+/// Refuses a `pack.json` that does not follow its schema.
+void _checkDescriptor(Map<String, Object?> pack) {
+  final List<Problem> shape = validate(packSourceSchema, pack);
+  if (shape.isNotEmpty) {
+    throw BuildFailed('pack.json does not follow its schema', <Problem>[
+      for (final Problem p in shape)
+        Problem(p.path.isEmpty ? 'pack.json' : 'pack.json › ${p.path}', p.message),
+    ]);
+  }
+}
+
+/// Builds and signs the pack described by [pack] (the content of a `pack.json`) from exactly the [files] given, which need
+/// not live together in a folder. The voice tool uses it to make several packs out of one folder of clips.
+Future<BuiltPack> buildPackFrom(Map<String, Object?> pack, Map<String, Uint8List> given, PackKey key) async {
+  _checkDescriptor(pack);
+  final Map<String, Uint8List> files = <String, Uint8List>{
+    for (final MapEntry<String, Uint8List> f in given.entries) f.key: _normalised(f.key, f.value),
+  };
+  final List<Problem> problems = <Problem>[];
+  for (final String name in files.keys) {
+    final String? why = unsafeNameReason(name);
+    if (why != null) problems.add(Problem(name, why));
+  }
+  if (problems.isNotEmpty) {
+    throw BuildFailed('the files cannot go into a pack', problems);
   }
 
   final Map<String, Object?> docs = <String, Object?>{};

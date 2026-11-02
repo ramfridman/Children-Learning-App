@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
+import '../content/capabilities.dart' show compareSemver;
 import '../content/pack_installer.dart';
 import '../content/pack_verify.dart';
 import '../data/app_database.dart';
 import '../voice/voice_bank.dart';
+import '../voice/voice_pack_ids.dart';
 import 'character.dart';
 import 'resolver.dart';
 
@@ -56,15 +58,54 @@ class InstalledCharacterSource implements CharacterSource {
     return CharacterResolver(available: found, house: house.first);
   }
 
+  /// The voice of [characterId]: all the voice packs installed for it (one for a friend, about sixteen for a narrator) as one
+  /// bank that reads them lazily. Only the manifests are read here, to know which pack holds which line, and the shared
+  /// lines (the plain `voice-<character>` pack) are loaded; every other pack is loaded, and proven again, when one of its
+  /// lines is first wanted (see [LazyVoicePacks]). A pack that fails its checks or that this app cannot play is left out
+  /// then, and its lines are silent (or the narrator's).
   @override
   Future<VoiceBank> voice(String characterId) async {
-    try {
-      final VerifiedPack? pack = await installer.load('voice-$characterId');
-      if (pack == null || pack.hidden) return VoiceBank.empty(characterId);
-      return VoiceBank.fromPack(pack);
-    } on PackRejected {
-      return VoiceBank.empty(characterId);
+    final List<InstalledPack> rows =
+        <InstalledPack>[
+          for (final InstalledPack row in await installer.registry.all())
+            if (isVoicePackOf(characterId, row.id)) row,
+        ]..sort((InstalledPack a, InstalledPack b) {
+          final int newer = compareSemver(b.version, a.version);
+          return newer != 0 ? newer : a.id.compareTo(b.id);
+        });
+    // The tool builds all the packs of a voice with one version. A part of another version is left over from an earlier layout
+    // (dropped or renamed since, its lines perhaps pulled for their wording), so it is not heard: the version of the shared pack
+    // counts, or the newest one when the shared pack is not installed.
+    final String? voiceVersion = rows.isEmpty
+        ? null
+        : rows
+              .firstWhere((InstalledPack r) => r.id == voicePackId(characterId), orElse: () => rows.first)
+              .version;
+    final Map<String, String> index = <String, String>{};
+    for (final InstalledPack row in rows) {
+      if (row.version != voiceVersion) continue;
+      final Map<String, Object?>? manifest = await installer.installedManifest(row.id);
+      if (manifest == null) continue;
+      for (final Object? v in manifest['vo'] as List<Object?>? ?? const <Object?>[]) {
+        if (v is Map<String, Object?> && v['id'] is String) index.putIfAbsent('vo:${v['id']}', () => row.id);
+      }
     }
+    if (index.isEmpty) return VoiceBank.empty(characterId);
+    final LazyVoicePacks packs = LazyVoicePacks(
+      index: index,
+      pinned: <String>{voicePackId(characterId)},
+      loader: (String packId) async {
+        try {
+          final VerifiedPack? pack = await installer.load(packId);
+          return pack == null || pack.hidden ? null : pack;
+        } on PackRejected catch (e) {
+          // Files that are missing or not the ones recorded may be a moment's trouble; a failed check never passes.
+          throw VoicePackUnavailable(permanent: e.stage != 'disk');
+        }
+      },
+    );
+    await packs.loadPinned();
+    return VoiceBank.lazy(characterId, packs);
   }
 }
 

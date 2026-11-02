@@ -84,6 +84,9 @@ Future<BuiltPack> buildVoicePack(
   String characterId,
   Map<String, List<(int, int)>> lines, {
   String version = '1.0.0',
+
+  /// The pack id; `voice-<characterId>` when not given (the other packs of a narrator have `-part-` ids).
+  String? packId,
 }) async {
   final Directory src = Directory.systemTemp.createTempSync('nn_voice_');
   try {
@@ -104,7 +107,7 @@ Future<BuiltPack> buildVoicePack(
     File('${src.path}/pack.json').writeAsStringSync(
       jsonEncode(<String, Object?>{
         'schema': 'pack-source/v1',
-        'id': 'voice-$characterId',
+        'id': packId ?? 'voice-$characterId',
         'version': version,
         'minAppVersion': '0.3.0',
         'assets': <Object?>[],

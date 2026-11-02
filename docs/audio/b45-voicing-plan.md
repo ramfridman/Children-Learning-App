@@ -205,10 +205,15 @@ tones once: `dart run tool/voice_gen.dart plan --characters nitzi --list` and lo
 dart run tool/voice_gen.dart generate nitzi --pack-version 2.0.0
 ```
 
-Lands in `$env:USERPROFILE\nitznutz-voice\nitzi\` (`vo.<id>.mp3` and `cue.<id>.json` per line, `pack.json`) and the signed
-pack `voice-nitzi-2.0.0.nnpack` in the same folder. The pack is signed at the end with your signing key (the tool reads
-the key file before it asks for the count, so a missing key stops it before anything is spent). If it stops half way, run it
-again and type the new, smaller number.
+Lands in `$env:USERPROFILE\nitznutz-voice\nitzi\` (`vo.<id>.mp3` and `cue.<id>.json` per line) and the signed voice packs in
+the same folder: **16 packs for a narrator, not one** (section 7 lists them): `voice-nitzi-2.0.0.nnpack` for the shared lines
+and `voice-nitzi-part-num-b-1-2.0.0.nnpack` and so on for each land and band. The packs are signed at the end with your signing
+key (the tool reads the key file before it asks for the count, so a missing key stops it before anything is spent). The
+`plan` and the start of the run list the packs, so you see them before you type the count. If it stops half way, run it
+again and type the new, smaller number. If a pack comes out over 40 MiB, the run ends with an error that names it, **all
+the clips are kept, and nothing needs paying for again**: run the free
+`dart run tool/voice_gen.dart pack nitzi --pack-version 2.0.0 --max-lines <the number the error suggests>` and the packs are
+made again from the saved clips.
 
 ### 4.5 Batch 2, hero-son
 
@@ -257,7 +262,7 @@ exit
 | P3 | **A friend's own lines only.** `plan` and `generate` give every character all lines (today every friend would cost 6.99 USD, 48.9 USD for seven). Add to `content/voices.json` `"narrators": ["nitzi","hero-son"]` and `"ownLines": ["vo:core.greeting.hello","vo:core.greeting.start","vo:core.celebrate.well","vo:core.placement.done","vo:core.goodbye.next","vo:core.ceremony.bronze","vo:core.ceremony.silver","vo:core.ceremony.gold","vo:core.ceremony.medal"]`; a character not in `narrators` plans and sends only `ownLines`. The app already falls back to the narrator for any other line. | app-developer | read in code |
 | P4 | **The QA test** "every `vo` id has a recording in every shipped voice pack" must allow a friend pack to hold only its 9 own lines (the narrator pack covers the rest). | qa-engineer | read |
 | P5 | **ffmpeg** to measure loudness (decision 5). | owner | not installed (measured) |
-| P6 | **Pack size**: see decision 6. | infrastructure-engineer | guess |
+| P6 | **Pack size**: see decision 6. Done: several packs per narrator, each under 40 MiB (section 7). | app-developer | done |
 
 Batch 0 needs none of these. Batch 1 and 2 need P1 and P2 (and P6 answered). Batch 3 needs P1 and P3.
 
@@ -314,9 +319,27 @@ This needs **ffmpeg, which is not installed on this PC** (decision 5). Without i
 ledger, and I will say so. I do not claim to have heard anything: your listening in section 6 is the listening.
 
 **New pack version.**
-- The tool builds and signs each voice pack itself at the end of its `generate` run (`voice-<id>-2.0.0.nnpack`, in the
-  voice folder, signed with the pack-signing key in `nitznutz-secrets`). Version **2.0.0** for all nine (the old ones are
-  1.2.0 and 1.3.1). The infrastructure-engineer publishes them; the app-developer's pack list picks them up.
+- The tool builds and signs the voice packs itself at the end of its `generate` run (`voice-<id>-2.0.0.nnpack` for the
+  shared lines and `voice-<id>-part-<land>-<band>-2.0.0.nnpack` for the rest, in the voice folder, signed with the
+  pack-signing key in `nitznutz-secrets`). Version **2.0.0** for every pack of all nine voices (the old ones are 1.2.0 and
+  1.3.1), `minAppVersion` 0.6.0. The infrastructure-engineer publishes them (all the packs of a voice on the same day); the app
+  reads every installed pack of a character as one voice.
+- **Why several packs, and how they are shared (decision 6, answered by the code).** The app refuses a pack over 64 MiB or
+  8,002 files and reads a pack whole into memory, and one narrator is about 4,000 lines (8,000 files) and 100 to 240 MB. So
+  each narrator is 16 packs, each under **40 MiB and 3,000 files** (at 60 KiB a clip they are 3 to 26 MiB). The share is a fixed
+  function of the voice id (`voiceGroupOf` in `app/tool/voice_packs_lib.dart`): the shared lines (`core.`, `fb.`, `hint.`,
+  `celebrate.`) in `voice-<id>`, every other line by its **land** (number, maths, logic, colours, shapes, computer-science) and its
+  **band** (the A or B in the skill id), because a child plays one band at a time and a land is the natural unit when a band is
+  too big. A group over 450 lines is cut between skills (`num-b-1`, `num-b-2`). A friend's nine lines stay one pack.
+  Counts per narrator (3,989 lines today): core 395; col-a 213, col-b 144; cs-a 114, cs-b 54; log-a 298, log-b 189; math-a
+  220, math-b 603 (two packs); num-a 636 (two); num-b 656 (two); shp-a 275, shp-b 192.
+- **On the phone** the app does not hold a narrator's 16 packs at once: the shared pack stays in memory and at most two part packs
+  (the last used), each at most 40 MiB, so about 75 MiB of clips at the 60 KiB estimate and at most 120 MiB. That counts the clip
+  bytes only, not the decoded cue tracks, the objects around them, or the temporary copy while a pack is verified. A lesson loads its
+  own part when it opens. Only packs of the same version as the shared pack are heard, so all packs of a voice must be published at one version.
+- **If a pack is too big after the run** (the clips are longer than the 60 KiB guess): the build fails with the pack's name, the
+  clips and the paid-for hashes are kept, and `pack <character> --max-lines <n>` (free, no key but the signing key, no network)
+  makes the packs again with fewer lines in each. Re-packing the same clips with the same key gives the same bytes.
 - **Order with pack 0.11.0:** the voice packs hold clips for the `vo` ids of 0.11.0 with the texts as signed. Changed lines
   (texts that changed since 0.10.0) would play new words over old captions on a phone that has the old content pack, and
   new lines would be silent. So **publish content 0.11.0 and voice 2.0.0 on the same day**, voice packs after the content pack
@@ -360,6 +383,10 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
    pack is roughly **240 MB** (*guess*; the old pack of 318 clips was 9.9 MB, measured). Ask the infrastructure-engineer
    whether a pack of that size can be downloaded and stored as it is, or must be split by land or band, **before** batch 1.
    *Recommend: ask first; it does not change the cost.*
+   **Answered 2026-11-02 (app-developer, with the infrastructure-engineer's limits):** it cannot be one pack (the app refuses over
+   64 MiB or 8,002 files and reads a pack whole into memory, and `ZipLimits` is a memory guard that stays). Each narrator is 16
+   packs of at most 40 MiB and 3,000 files, shared by land and band; section 7 has the list and the free `pack` command that makes
+   them again from the saved clips if one is too big. P6 is done in the tool.
 7. **ElevenLabs allowance.** The plan's Creator tier lists 275,000 "v4 characters" a month (`docs/PLAN.md`); this run is
    353,650 characters. I have not checked whether Turbo counts at the same rate or half. Look at your usage page. If it would
    pass the allowance, run Nitzi this month and hero-son after the month turns. *Recommend: check the usage page before batch 1.*
