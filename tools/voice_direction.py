@@ -1,6 +1,6 @@
 """The voice director's table: one row for every distinct voiced text of the app, with its direction.
 
-Reads docs/review/hebrew-master.csv (only rows with status `text-ready`, spoken, and their `voice_text`), the content
+Reads docs/review/hebrew-master.csv (spoken rows with status `text-ready`, `owner-approved`, `voice-ready` or `voiced`, and their `voice_text`), the content
 files (to find each row's `vo:` id and band) and content/voices.proposed.json (the styles), and writes
 docs/audio/voice-direction.csv. It also prints the character counts and the cost of the voicing plan.
 
@@ -28,6 +28,9 @@ PROPOSED = os.path.join(ROOT, 'content', 'voices.proposed.json')
 OUT = os.path.join(ROOT, 'docs', 'audio', 'voice-direction.csv')
 VOICE_HOME = os.path.join(os.environ.get('USERPROFILE', os.path.expanduser('~')), 'nitznutz-voice')
 
+# Rows the table covers: text read by the editor (`text-ready`) and every later step (the owner approved it, it is
+# marked for voicing, it was voiced). Reading only `text-ready` would drop a line once the owner approves it.
+READ_STATUS = ('text-ready', 'owner-approved', 'voice-ready', 'voiced')
 NIKUD = re.compile('[֑-ׇ]')
 HE_LETTER = re.compile('[א-ת]')
 PRICE_PER_1000 = 0.04          # eleven_v4_turbo API list price (docs/PLAN.md, ElevenLabs pricing)
@@ -210,6 +213,16 @@ def listen_for(text, kind, is_list):
     pointed = [w for w in re.findall(r'\S+', text) if NIKUD.search(w)]
     if pointed:
         extra.append('pointed words read as pointed: ' + ' '.join(w.strip('.,?:…—') for w in pointed[:6]))
+    if kind == 'correct' and PLAIN(text).startswith('לא,'):
+        extra.append('LISTEN FIRST (ask withdrawn 2026-11-02): the line echoes the tap the child just made on "לא" (a yes/no '
+                     'question); the "לא" must be bright and sure and run on into the reason, not a falling "no"; '
+                     'only if it sounds like a not-yet, ask the editor for "לֹא." (a full stop)')
+    if PLAIN(text).startswith('לא שמעתי'):
+        extra.append('LISTEN FIRST (ask withdrawn 2026-11-02): one dash beat already splits the line; the fault is '
+                     'the ears of the helper, said soft and unhurried')
+    if PLAIN(text).startswith('כדי לדעת כמה יותר'):
+        extra.append('LISTEN FIRST (ask withdrawn 2026-11-02): already two sentences; a full stop is a real pause '
+                     'before "בואו נשווה"')
     if 'שֵׁנִי' in text or 'הַשֵּׁנִי' in text:
         extra.append('שני is the ordinal (sheni), not "two of" (shnei)')
     if re.search(r'(^|\s)ו?ה?ממ', PLAIN(text)) or 'המממ' in text:
@@ -233,15 +246,16 @@ def editor_note(text, kind, est, budget, is_list, row_ids):
         notes.append('LONG LIST: %d items; the commas are the breaths. Only if the audition shows it rushed: ask for '
                      '"…" instead of "," between the numbers (hebrew-notes.md section 6 offers it); no change asked '
                      'before that' % (text.count(',') + 1))
-    if est > budget * 1.25:
-        notes.append('LONG: about %.0f s against a %.0f s budget; ask the editor for a full stop to split it into two '
-                     'breaths, or a shorter wording' % (est, budget))
+    # 2026-11-02: no more "LONG" ask from a time estimate. The estimate used the speed of a style, and the v4 models
+    # drop speed (voice-direction.md; b45-voicing-plan.md section 2), and round 3 approved long hint-3 lines. A real
+    # problem is a stretch of more than 18 words with no full stop, question mark, colon, dash or ellipsis in it.
+    longest = max((len(x.split()) for x in re.split(r'[.?!:—…]', text) if x.strip()), default=0)
+    if longest > 18:
+        notes.append('LONG: %d words with no full stop, colon or dash; ask the editor for a full stop to split it '
+                     'into two breaths' % longest)
     if re.search(r'^\S+, ועוד', text):
         notes.append('comma between a number and "ועוד" makes a pause inside the sum; the other sums have none '
                      '(e.g. "שֵׁשׁ ועוד שָׁלוֹשׁ:"); ask to drop the comma for a single sum phrase')
-    if kind == 'correct' and text.startswith('לא,'):
-        notes.append('a correct line that starts "לא," can sound like a not-yet; ask for "לא." (the answer alone, '
-                     'then the reason, as for number answers)')
     m = re.search(r'ללחוץ על (\S+)\.$', text)
     if is_list and m and re.match(r'^\S+,? ועוד \S+:', text):
         listed = [w.strip() for w in text.split(':', 1)[1].split('.')[0].split(',')]
@@ -254,7 +268,7 @@ def editor_note(text, kind, est, budget, is_list, row_ids):
 def main():
     styles = load_styles()
     rows = list(csv.DictReader(open(MASTER, encoding='utf-8-sig')))
-    ready = [r for r in rows if r['status'] == 'text-ready' and r['spoken'] == 'yes' and r['voice_text'].strip()]
+    ready = [r for r in rows if r['status'] in READ_STATUS and r['spoken'] == 'yes' and r['voice_text'].strip()]
     docs = {}
 
     def doc(name):
@@ -391,7 +405,7 @@ def main():
                       len(gone))
 
     p = PRICE_PER_1000 / 1000
-    print('Distinct voiced texts: %d (narrator %d, own core %d, tutor %d) from %d text-ready spoken rows'
+    print('Distinct voiced texts: %d (narrator %d, own core %d, tutor %d) from %d spoken rows (text-ready or later)'
           % (len(out_rows), n_lines['narrator'], n_lines['own'], n_lines['tutor'], len(ready)))
     print('Not voiced by the app:', dict(unvoiced))
     print('Narrator lesson lines: %d distinct texts, %d characters per voice (voiced per vo id instead: %d vo ids, '
