@@ -245,14 +245,14 @@ void main() {
           if (e.existsSync()) e.deleteSync(recursive: true);
         }
       });
-      final BuiltPack built = await generateVoicePack(
+      final BuiltPack built = (await generateVoicePack(
         characterId: 'tower-tamir',
         lines: _lines,
         synth: ElevenLabsSynthesizer(apiKey: 'test-key-123', client: server.client),
         profile: VoiceProfile.fromConfig(_config(), 'tower-tamir'),
         key: key,
         workDir: work,
-      );
+      )).single;
       expect(server.requests.length, 2);
       expect(
         <Object?>[for (final Map<String, Object?> b in server.bodies) b['text']],
@@ -272,14 +272,14 @@ void main() {
           if (e.existsSync()) e.deleteSync(recursive: true);
         }
       });
-      final BuiltPack built = await generateVoicePack(
+      final BuiltPack built = (await generateVoicePack(
         characterId: 'nitzi',
         lines: _lines,
         synth: ElevenLabsSynthesizer(apiKey: 'test-key-123', client: FakeEleven().client),
         profile: VoiceProfile.fromConfig(_config(), 'nitzi'),
         key: key,
         workDir: work,
-      );
+      )).single;
       final VerifiedPack pack = await verifyPack(built.bytes, publicKey: key.publicKey);
       expect(VoiceBank.fromPack(pack).ids.toSet(), _release);
     });
@@ -325,14 +325,14 @@ void main() {
           }
         });
         final VoiceProfile profile = VoiceProfile.fromConfig(config, c);
-        final BuiltPack built = await generateVoicePack(
+        final BuiltPack built = (await generateVoicePack(
           characterId: c,
           lines: _lines,
           synth: MockSynthesizer(c),
           profile: profile,
           key: key,
           workDir: work,
-        );
+        )).single;
         final VoiceBank bank = VoiceBank.fromPack(await verifyPack(built.bytes, publicKey: key.publicKey));
         expect(missingVoLines(profile, _release, bank.ids.toSet()), isEmpty, reason: c);
       }

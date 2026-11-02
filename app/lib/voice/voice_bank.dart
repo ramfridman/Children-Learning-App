@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import '../characters/lip_sync.dart';
+import '../content/capabilities.dart';
 import '../content/pack_verify.dart';
+import 'voice_pack_ids.dart';
 
 /// One recorded line: the sound and when the mouth is open in it.
 class VoiceClip {
@@ -12,30 +14,44 @@ class VoiceClip {
   final MouthTrack mouth;
 }
 
-/// The recorded lines of one character's voice pack, by `vo:` id. A line with no recording is simply absent.
+/// The recorded lines of one character's voice packs, by `vo:` id. A line with no recording is simply absent.
 class VoiceBank {
   VoiceBank._(this.characterId, this._clips) : fallback = null;
 
-  /// Reads a verified voice pack (`voice-<character id>`): the audio files of its manifest and its cue documents.
-  factory VoiceBank.fromPack(VerifiedPack pack) {
+  /// Reads one verified voice pack (`voice-<character id>`): the audio files of its manifest and its cue documents.
+  factory VoiceBank.fromPack(VerifiedPack pack) =>
+      VoiceBank.fromPacks(characterOfVoicePack(pack.id), <VerifiedPack>[pack]);
+
+  /// Reads all the verified voice packs of [characterId] into one bank, so a line is found whichever pack holds it. If
+  /// two packs hold the same line (a pack of an older layout left behind), the newer pack's clip is used, and between
+  /// equal versions the pack that comes first by id: always the same one.
+  factory VoiceBank.fromPacks(String characterId, Iterable<VerifiedPack> packs) {
+    final List<VerifiedPack> ordered = packs.toList()
+      ..sort((VerifiedPack a, VerifiedPack b) {
+        final int newer = compareSemver(b.version, a.version);
+        return newer != 0 ? newer : a.id.compareTo(b.id);
+      });
     final Map<String, VoiceClip> clips = <String, VoiceClip>{};
-    for (final Object? v in pack.manifest['vo']! as List<Object?>) {
-      final Map<String, Object?> entry = v! as Map<String, Object?>;
-      final String id = entry['id']! as String;
-      final Uint8List? mp3 = pack.files[entry['file']! as String];
-      if (mp3 == null) continue;
-      final Object? cue = pack.docs['cue.$id.json'];
-      final List<Object?> cues = cue is Map<String, Object?>
-          ? (cue['cues'] as List<Object?>? ?? const <Object?>[])
-          : const <Object?>[];
-      final String file = entry['file']! as String;
-      clips['vo:$id'] = VoiceClip(
-        mp3,
-        MouthTrack.fromJson(cues),
-        mime: file.endsWith('.wav') ? 'audio/wav' : 'audio/mpeg',
-      );
+    for (final VerifiedPack pack in ordered) {
+      for (final Object? v in pack.manifest['vo']! as List<Object?>) {
+        final Map<String, Object?> entry = v! as Map<String, Object?>;
+        final String id = entry['id']! as String;
+        if (clips.containsKey('vo:$id')) continue;
+        final String file = entry['file']! as String;
+        final Uint8List? mp3 = pack.files[file];
+        if (mp3 == null) continue;
+        final Object? cue = pack.docs['cue.$id.json'];
+        final List<Object?> cues = cue is Map<String, Object?>
+            ? (cue['cues'] as List<Object?>? ?? const <Object?>[])
+            : const <Object?>[];
+        clips['vo:$id'] = VoiceClip(
+          mp3,
+          MouthTrack.fromJson(cues),
+          mime: file.endsWith('.wav') ? 'audio/wav' : 'audio/mpeg',
+        );
+      }
     }
-    return VoiceBank._(pack.id.startsWith('voice-') ? pack.id.substring('voice-'.length) : pack.id, clips);
+    return VoiceBank._(characterId, clips);
   }
 
   /// A bank with no recordings (a character that has no voice pack yet).

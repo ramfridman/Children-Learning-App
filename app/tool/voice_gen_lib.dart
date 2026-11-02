@@ -1,7 +1,8 @@
 // The working parts of `voice_gen`: exactly what is sent for each line (the request and its hash), which clips are
 // new, changed or up to date, what generating them would cost, the gate before any money is spent, the ElevenLabs
-// call, the conversion of its character timestamps into mouth cues, and the voice pack. Which lines and which words
-// are in voice_text_lib.dart; the audition is in audition_lib.dart.
+// call, the conversion of its character timestamps into mouth cues, and the voice packs. Which lines and which words
+// are in voice_text_lib.dart; how the lines are shared among the packs of a character is in voice_packs_lib.dart; the
+// audition is in audition_lib.dart.
 //
 // This runs on the owner's PC only, never in the app. The ElevenLabs key is passed in by the command line
 // (from an environment variable) and is never written anywhere.
@@ -15,8 +16,10 @@ import 'package:http/http.dart' as http;
 import 'package:nitznutz/content/pack_verify.dart';
 
 import 'pack_builder_lib.dart';
+import 'voice_packs_lib.dart';
 import 'voice_text_lib.dart';
 
+export 'voice_packs_lib.dart';
 export 'voice_text_lib.dart';
 
 /// Respells known tricky words (names, words the voice gets wrong) before they are sent.
@@ -639,8 +642,8 @@ class _Silent implements Synthesizer {
 /// will send, prints the plan, refuses texts the pre-flight check refuses, asks the owner to type the total, and only
 /// then asks for the voice ([synth], which reads the key) and makes the pack. [heading] (where the texts come from) is
 /// printed above the plan, after the terminal check. When every clip is up to date it builds
-/// the pack without asking for the voice or the count.
-Future<BuiltPack> generateGated({
+/// the packs without asking for the voice or the count.
+Future<List<BuiltPack>> generateGated({
   required String characterId,
   required List<SpokenLine> lines,
   required VoiceProfile profile,
@@ -653,6 +656,7 @@ Future<BuiltPack> generateGated({
   String priceSource = '',
   String heading = '',
   String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
 }) async {
   requireTerminal(keyboard, 'generate');
   if (heading.isNotEmpty) write(heading);
@@ -670,6 +674,16 @@ Future<BuiltPack> generateGated({
       'the pre-flight check refuses ${refused.length} texts. Nothing was sent:\n${refused.join('\n')}',
     );
   }
+  // The lines must fit in packs before any money is spent on them.
+  write(
+    describeVoicePacks(
+      characterId,
+      voicePackLayout(characterId, profile, lines, maxLines: maxLines),
+      <String, int>{for (final PlannedClip c in plan.clips) c.line.voId: c.request.characters},
+      version: version,
+      maxLines: maxLines,
+    ),
+  );
   final Synthesizer voice;
   if (plan.total == 0) {
     voice = const _Silent();
@@ -685,6 +699,7 @@ Future<BuiltPack> generateGated({
     key: key,
     workDir: workDir,
     version: version,
+    maxLines: maxLines,
     progress: write,
   );
 }
@@ -931,14 +946,33 @@ void checkApiKey(String key) {
   }
 }
 
-// ---- making the voice pack ----
+// ---- making the voice packs ----
+
+/// The oldest app that reads a voice split into several packs (`VoiceBank.fromPacks`). An older app keeps the voice pack it
+/// has instead of replacing it with the first of the new ones alone.
+const String voicePackMinAppVersion = '0.6.0';
+
+/// The packs [profile] makes of [lines]: a narrator's lines are shared among packs by land and band, while a friend's own
+/// few lines are one pack.
+List<VoicePackGroup> voicePackLayout(
+  String characterId,
+  VoiceProfile profile,
+  List<SpokenLine> lines, {
+  int maxLines = VoicePackLimits.maxLines,
+}) => layoutVoicePacks(
+  characterId,
+  <String>[for (final SpokenLine l in profile.linesOf(lines)) l.voId],
+  maxLines: maxLines,
+  onePack: profile.ownLines != null,
+);
 
 /// Says every line in [lines] that [profile] says (all of them, or a friend's own: [VoiceProfile.linesOf]) whose clip is
-/// new or changed, and builds the signed voice pack of [characterId]. Writes
-/// the sources to [workDir] first and records each clip's hash in its [ClipLedger], so that a run that stops can be
-/// continued, and a line whose text, voice, model, settings or format changed is said again. Refuses before sending
-/// anything if a text fails the pre-flight check.
-Future<BuiltPack> generateVoicePack({
+/// new or changed, then builds the signed voice packs of [characterId] ([buildVoicePacks]). The clips go to [workDir] and
+/// each clip's hash is recorded in its [ClipLedger], so that a run that stops can be continued, and a line whose text,
+/// voice, model, settings or format changed is said again. Refuses before sending anything if a text fails the
+/// pre-flight check or the lines cannot be shared among packs. The clips are all saved before any pack is built, so a pack
+/// that is too big costs nothing: [repackVoicePacks] makes the packs again from the same clips.
+Future<List<BuiltPack>> generateVoicePack({
   required String characterId,
   required List<SpokenLine> lines,
   required Synthesizer synth,
@@ -946,6 +980,7 @@ Future<BuiltPack> generateVoicePack({
   required PackKey key,
   required Directory workDir,
   String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
   void Function(String)? progress,
 }) async {
   final List<SpokenLine> mine = profile.linesOf(lines);
@@ -958,6 +993,7 @@ Future<BuiltPack> generateVoicePack({
       'the pre-flight check refuses ${problems.length} texts. Nothing was sent:\n${problems.join('\n')}',
     );
   }
+  voicePackLayout(characterId, profile, lines, maxLines: maxLines);
   checkWorkFolder(workDir);
   final ClipLedger ledger = ClipLedger(workDir);
   if (isInsideFolder(ledger.file, workDir)) {
@@ -965,41 +1001,140 @@ Future<BuiltPack> generateVoicePack({
   }
   workDir.createSync(recursive: true);
   final Map<String, String> made = ledger.hashes();
-  final List<Map<String, String>> vo = <Map<String, String>>[];
   for (int i = 0; i < mine.length; i++) {
     final String id = mine[i].fileId;
     final ClipRequest request = requests[i];
-    if (clipState(workDir, id, request, made) != ClipState.unchanged) {
-      final Synthesis s = await synth.say(request);
-      // The old sound goes only once the new one is here (it may have had the other extension).
-      _audioOf(workDir, id)?.deleteSync();
-      File(_inFolder(workDir, 'vo.$id.${s.extension}')).writeAsBytesSync(s.audio);
-      File(_inFolder(workDir, 'cue.$id.json')).writeAsStringSync(
-        jsonEncode(<String, Object?>{
-          'schema': 'cue/v1',
-          'id': id,
-          'cues': <Object?>[
-            for (final (int, int) c in cuesFromAlignment(s.alignment))
-              <String, Object?>{'t': c.$1, 'o': c.$2},
-          ],
-        }),
-      );
-      ledger.record(id, 'vo.$id.${s.extension}', request);
-      progress?.call('said $id');
-    }
-    vo.add(<String, String>{'id': id, 'file': _audioOf(workDir, id)!.uri.pathSegments.last});
+    if (clipState(workDir, id, request, made) == ClipState.unchanged) continue;
+    final Synthesis s = await synth.say(request);
+    // The old sound goes only once the new one is here (it may have had the other extension).
+    _audioOf(workDir, id)?.deleteSync();
+    File(_inFolder(workDir, 'vo.$id.${s.extension}')).writeAsBytesSync(s.audio);
+    File(_inFolder(workDir, 'cue.$id.json')).writeAsStringSync(
+      jsonEncode(<String, Object?>{
+        'schema': 'cue/v1',
+        'id': id,
+        'cues': <Object?>[
+          for (final (int, int) c in cuesFromAlignment(s.alignment)) <String, Object?>{'t': c.$1, 'o': c.$2},
+        ],
+      }),
+    );
+    ledger.record(id, 'vo.$id.${s.extension}', request);
+    progress?.call('said $id');
   }
-  File(_inFolder(workDir, 'pack.json')).writeAsStringSync(
-    jsonEncode(<String, Object?>{
-      'schema': 'pack-source/v1',
-      'id': 'voice-$characterId',
-      'version': version,
-      'minAppVersion': '0.3.0',
-      'assets': <Object?>[],
-      'vo': vo,
-    }),
+  return buildVoicePacks(
+    characterId: characterId,
+    lines: lines,
+    profile: profile,
+    key: key,
+    workDir: workDir,
+    version: version,
+    maxLines: maxLines,
+    progress: progress,
   );
-  return buildPack(workDir, key);
+}
+
+/// Makes the voice packs again from the clips already in [workDir]. It has no voice to ask, so it cannot say a word or spend
+/// anything. For a pack that was too big (`--max-lines`), a new pack version, or a lost pack file. Refuses, and builds
+/// nothing, if any line has no clip made from its current request: that is what `generate` is for.
+Future<List<BuiltPack>> repackVoicePacks({
+  required String characterId,
+  required List<SpokenLine> lines,
+  required VoiceProfile profile,
+  required PackKey key,
+  required Directory workDir,
+  String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
+  void Function(String)? progress,
+}) async {
+  voicePackLayout(characterId, profile, lines, maxLines: maxLines);
+  checkWorkFolder(workDir);
+  final Map<String, String> made = ClipLedger(workDir).hashes();
+  final List<String> lacking = <String>[
+    for (final SpokenLine l in profile.linesOf(lines))
+      if (clipState(workDir, l.fileId, profile.requestFor(l), made) != ClipState.unchanged) l.voId,
+  ];
+  if (lacking.isNotEmpty) {
+    throw VoiceGenFailed(
+      '${lacking.length} lines have no clip made from their current text and settings (for example '
+      '${lacking.take(3).join(', ')}), so the packs would be incomplete. Nothing was built: run `generate` first.',
+    );
+  }
+  return buildVoicePacks(
+    characterId: characterId,
+    lines: lines,
+    profile: profile,
+    key: key,
+    workDir: workDir,
+    version: version,
+    maxLines: maxLines,
+    progress: progress,
+  );
+}
+
+/// Builds and signs the voice packs of [characterId] from the clips in [workDir], one pack for each of
+/// [voicePackLayout], and checks the size of every pack against [VoicePackLimits] before it signs any. A pack holds exactly
+/// the sound and cue files of its own lines; nothing else in the folder (an older pack file, the hashes) goes in.
+Future<List<BuiltPack>> buildVoicePacks({
+  required String characterId,
+  required List<SpokenLine> lines,
+  required VoiceProfile profile,
+  required PackKey key,
+  required Directory workDir,
+  String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
+  void Function(String)? progress,
+}) async {
+  final List<VoicePackGroup> packs = voicePackLayout(characterId, profile, lines, maxLines: maxLines);
+  final Map<String, List<(String, File)>> sources = <String, List<(String, File)>>{};
+  final Map<String, int> bytes = <String, int>{};
+  for (final VoicePackGroup p in packs) {
+    final List<(String, File)> files = <(String, File)>[];
+    for (final String voId in p.voIds) {
+      final String id = voId.substring('vo:'.length);
+      final File? audio = _audioOf(workDir, id);
+      final File cue = File(_inFolder(workDir, 'cue.$id.json'));
+      if (audio == null || !cue.existsSync()) {
+        throw VoiceGenFailed(
+          '$voId has no clip in ${workDir.path}: run `generate` first. Nothing was built.',
+        );
+      }
+      files
+        ..add((audio.uri.pathSegments.last, audio))
+        ..add(('cue.$id.json', cue));
+    }
+    sources[p.packId] = files;
+    bytes[p.packId] = files.fold<int>(0, (int s, (String, File) f) => s + f.$2.lengthSync());
+  }
+  checkVoicePackSizes(characterId, packs, bytes);
+  final List<BuiltPack> built = <BuiltPack>[];
+  for (final VoicePackGroup p in packs) {
+    final Map<String, Uint8List> contents = <String, Uint8List>{
+      for (final (String name, File file) in sources[p.packId]!) name: file.readAsBytesSync(),
+    };
+    final BuiltPack pack = await buildPackFrom(
+      <String, Object?>{
+        'schema': 'pack-source/v1',
+        'id': p.packId,
+        'version': version,
+        'minAppVersion': voicePackMinAppVersion,
+        'assets': <Object?>[],
+        'vo': <Map<String, String>>[
+          for (final String voId in p.voIds)
+            <String, String>{
+              'id': voId.substring('vo:'.length),
+              'file': _audioOf(workDir, voId.substring('vo:'.length))!.uri.pathSegments.last,
+            },
+        ],
+      },
+      contents,
+      key,
+    );
+    // The files were under the limit; the zip adds only headers and the manifest, and it is the zip that is sent.
+    checkVoicePackSizes(characterId, <VoicePackGroup>[p], <String, int>{p.packId: pack.bytes.length});
+    built.add(pack);
+    progress?.call('built ${pack.fileName}: ${p.voIds.length} lines, ${pack.bytes.length} bytes');
+  }
+  return built;
 }
 
 /// Whether any file under [dir] contains [secret] (used by tests: the key must never be written anywhere).

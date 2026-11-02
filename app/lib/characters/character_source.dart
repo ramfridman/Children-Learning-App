@@ -4,6 +4,7 @@ import '../content/pack_installer.dart';
 import '../content/pack_verify.dart';
 import '../data/app_database.dart';
 import '../voice/voice_bank.dart';
+import '../voice/voice_pack_ids.dart';
 import 'character.dart';
 import 'resolver.dart';
 
@@ -56,15 +57,21 @@ class InstalledCharacterSource implements CharacterSource {
     return CharacterResolver(available: found, house: house.first);
   }
 
+  /// All the voice packs installed for [characterId] (one pack for a friend, several for a narrator) as one bank. A pack
+  /// that fails its checks or that this app cannot play is left out; its lines are then silent (or the narrator's).
   @override
   Future<VoiceBank> voice(String characterId) async {
-    try {
-      final VerifiedPack? pack = await installer.load('voice-$characterId');
-      if (pack == null || pack.hidden) return VoiceBank.empty(characterId);
-      return VoiceBank.fromPack(pack);
-    } on PackRejected {
-      return VoiceBank.empty(characterId);
+    final List<VerifiedPack> packs = <VerifiedPack>[];
+    for (final InstalledPack row in await installer.registry.all()) {
+      if (!isVoicePackOf(characterId, row.id)) continue;
+      try {
+        final VerifiedPack? pack = await installer.load(row.id);
+        if (pack != null && !pack.hidden) packs.add(pack);
+      } on PackRejected {
+        continue;
+      }
     }
+    return packs.isEmpty ? VoiceBank.empty(characterId) : VoiceBank.fromPacks(characterId, packs);
   }
 }
 

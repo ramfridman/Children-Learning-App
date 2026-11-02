@@ -558,7 +558,7 @@ void main() {
 
     final int total = _lines.fold<int>(0, (int s, SpokenLine l) => s + l.text.runes.length);
 
-    Future<BuiltPack> run(Keyboard kb) => generateGated(
+    Future<List<BuiltPack>> run(Keyboard kb) => generateGated(
       characterId: 'nitzi',
       lines: _lines,
       profile: _v4,
@@ -599,7 +599,7 @@ void main() {
     });
 
     test('goes ahead with the right number, and a second run with nothing new asks for nothing', () async {
-      final BuiltPack built = await run(FakeKeyboard(typed: <String>['$total']));
+      final BuiltPack built = (await run(FakeKeyboard(typed: <String>['$total']))).single;
       expect(server.requests.length, 3);
       expect(synths, 1);
       await verifyPack(built.bytes, publicKey: key.publicKey);
@@ -782,14 +782,14 @@ void main() {
       List<SpokenLine> lines = _lines,
       VoiceProfile profile = _v4,
       Synthesizer? voice,
-    }) => generateVoicePack(
+    }) async => (await generateVoicePack(
       characterId: 'hero-son',
       lines: lines,
       synth: voice ?? synth(),
       profile: profile,
       key: key,
       workDir: work,
-    );
+    )).single;
 
     test('a line in a style is sent with the settings of that style on top of the usual ones', () async {
       await make(
@@ -946,14 +946,14 @@ void main() {
     test('make a voice pack that plays as audio/wav, with cues from the text', () async {
       final Directory work = _temp('nn_vg_');
       try {
-        final BuiltPack built = await generateVoicePack(
+        final BuiltPack built = (await generateVoicePack(
           characterId: 'nitzi',
           lines: _lines,
           synth: MockSynthesizer('nitzi'),
           profile: VoiceProfile.mock,
           key: key,
           workDir: work,
-        );
+        )).single;
         final VoiceBank bank = VoiceBank.fromPack(await verifyPack(built.bytes, publicKey: key.publicKey));
         expect(bank.length, 3);
         expect(bank.clip('vo:a.one')!.mime, 'audio/wav');
@@ -999,7 +999,7 @@ void main() {
       'no paid path takes the count from the command line, and the voice is made only after the typed count',
       () {
         expect(cli, isNot(contains("_option(args, '--confirm-chars')")));
-        final String gated = lib.substring(lib.indexOf('Future<BuiltPack> generateGated('));
+        final String gated = lib.substring(lib.indexOf('Future<List<BuiltPack>> generateGated('));
         expect(gated.indexOf('requireTyped('), lessThan(gated.indexOf('synth()')));
         final String run = audition.substring(audition.indexOf('Future<List<File>> runAudition('));
         expect(run.indexOf('requireTerminal('), lessThan(run.indexOf('write(plan.describe')));
