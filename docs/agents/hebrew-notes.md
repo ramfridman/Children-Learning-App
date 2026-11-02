@@ -643,3 +643,40 @@ Master counts: `owner-approved` 3,349 to **9,440**, `text-ready` 10,436 to **4,3
 3. The group 4 and group 1 rows need the owner's word that they are meant too (the live helper and the per-name lines are not in this run).
 
 Effect on the plan (free `voice_gen plan`, all nine voices): each narrator plans **3,546 of 3,991 lines** (153,615 characters; it was 1,173 lines); each friend plans all its 9 lines (190 characters); 445 lines per narrator still wait (433 for no direction row, 12 for an open ask). `generate` still refuses until every line is approved.
+
+### 18.1 Second pass, after the voice director's check (hebrew-text-editor, 2026-11-02)
+
+**Trigger.** The voice-and-sound-director read the held rows (`docs/audio/b45-direction-checked.tsv`, `docs/audio/voice-direction.md` section 14, commit 524d167) and rewrote `voice-direction.csv` (`tools/voice_direction.py` now reads `owner-approved` rows too). Condition (b) of section 18 is now met for the rows below. Condition (a), my own check, was re-read on the master table: all 561 checked rows are `spoken: yes`, `text-ready`, group 3 (one is the core line `core.listen.again`, group 2), and none is flagged.
+
+| Director's result | Rows | What I did |
+|---|---|---|
+| `directed` | 447 | added to `docs/review/b45-approved-rows.tsv` (same hash lock, same comment); now `owner-approved` |
+| `ask-withdrawn` | 14 | added; now `owner-approved`. The asks the director withdrew: `לא,` to `לא.` (10 rows, 3 texts; the text stays `לא,` and the 10 rows are the first item of the batch-1 listening check), `core.listen.again` "LONG" (1 row), `x.mathb19.7`/`.8`/`.9` "LONG" (3 rows) |
+| `directed-flag` | 2 | **HELD: the wording is wrong, see below** |
+| `not-voiced` | 98 | **left out of the voicing approval, see below** |
+
+Total added: **461**. The list has **6,552** lines (6,530 pack rows and 22 core rows), no header, all distinct. Master: `owner-approved` 9,440 to **9,901**, `text-ready` 4,345 to **3,884**, `unchanged` 649. Spoken and still `text-ready`: 98 `childLine`, 2 `h3` rows, 66 live helper, 2 per-name strings. `docs/review/b45-held-rows.tsv` now has 168 rows (it had 629), each with its new reason.
+
+**6,090 or 6,091?** 6,091 is right. `b45-approved-rows.tsv` as committed in dcee186 has 6,091 lines, all distinct (source, id, hash), with no header line, and the master has exactly 6,091 rows that carry the B-45 comment (checked in the first pass and again now, hash by hash). The director's 6,090 is what a reader gets who treats the first line as a header (the first row is `core.greeting.hello`). No row was lost.
+
+**The two flagged rows: the director is right, the wording does not teach the right thing.** `b.mathb01.15` and `.16` ask `כַּמָּה הוֹסַפְנוּ?` ("how many did we add?"; 3 apples, now 5; 4 fish, now 7) and hint 3 reads `שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.` (and the same with 4, 3, 7). The child hears a count of everything that ends on the total, and is then asked for the other number. The last number the child hears (5, 7) is exactly the wrong choice of the item, tagged `M-PART-MISS` ("the total": `o2` in .15, `o1` in .16). At the moment of need the hint points at the mistake it should repair. It is also the wrong model for "how many were added": the child has to count only the new ones, or count on from the first number. The sentence is right for the item "how many in all?" (the same pattern in `tools/band_b.py` line 196, where the count does end on the answer); it is wrong only for the reverse item. Sister hints that do it right: `b.mathb02.7` and `b.mathb18.2` (`שְׁתֵּי קֻבִּיּוֹת כְּבָר יֵשׁ. סוֹפְרִים אֶת הַמְּקוֹמוֹת הָרֵיקִים: …`, owner-approved) count only the empty places, and decision D2 above (missing addend) has the same rule. `docs/curriculum/b40-visual-hint-ladder.md` (TA-5) says for MATH-B-01 "count on (the first group hugs into its number, the rest light on)", so the fix needs no new curriculum decision; only the picture follows the words (the app-developer, hint action `worked_example`).
+
+I did not change `content/` and did not approve the two rows. **Proposed fix**: one argument in the generator, the `h3=` of the `numpick3` call at `tools/band_b.py` line 565 (the loop over `('apple', 3, 5), ('fish', 4, 7)`). It changes `content/starter/activity.b.mathb01.15.json` and `.16.json`, so it changes pack 0.11.0 before it is signed.
+
+```
+h3='%s כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (qty(x, OBJECTS[obj]), count_words(r), F[r])
+```
+
+Resulting texts (16 and 17 words, under the limit):
+- `b.mathb01.15.h3`: `שְׁלוֹשָׁה תַּפּוּחִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.`
+- `b.mathb01.16.h3`: `אַרְבָּעָה דָּגִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.`
+- voice text `.15`: `שְׁלוֹשָׁה תפוחים כבר יש. סופרים רק את אלה שהוספנו: אַחַת, שְׁתַּיִם. עכשיו תורכם — ללחוץ על שְׁתַּיִם.`
+- voice text `.16`: `אַרְבָּעָה דגים כבר יש. סופרים רק את אלה שהוספנו: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.`
+
+Agreement: the counted noun takes its own gender (`שְׁלוֹשָׁה תַּפּוּחִים`, `אַרְבָּעָה דָּגִים`, as in the prompt); the bare numbers in the count and on the button are feminine. After the generator change the two rows are new text (`needs-editor` until I read them again; they are two lines of a shape the director has already directed). If the orchestrator keeps pack 0.11.0 as it is, the two rows stay `text-ready` and `voice_gen` skips them (plan below; `generate` refuses until they are approved or changed). The other 12 rows of the director's T3 (`mathb02.7` to `.10`, `mathb06.1` to `.8`, `hints.2`) are not the same problem: they count the empty places only (`סוֹפְרִים אֶת הַמְּקוֹמוֹת הָרֵיקִים`), the count ends on the number the child is asked to press, and they are already `owner-approved`.
+
+**The 98 `childLine` rows.** They are the sentence on a skill's map card. They have no `vo:` id and the app never says them (`voice_direction.py` and `voice_gen` both skip them), so a voice approval has nothing to approve. I left them out of the voicing approval: they stay `text-ready` (the text is checked; the owner's approval of the text comes with the signed pack) and are in `b45-held-rows.tsv` with that reason. The master still says `spoken: yes` for them because `spoken()` in `tools/hebrew_voice_review.py` treats every `childLine` as spoken (T9 of the voice director). I did not change that: it would change the voice-text column of about 100 rows, and the owner has not said whether the map card should ever be voiced. Proposal for the owner: `spoken: no` for `childLine`, or a voiced map card (then the units need `vo:` ids; their voice text is already made). One other `childLine` row (`skill.LOG-A-05`) was approved in the first pass because the old direction table had it; no change.
+
+**The director's note on `שְׁמוֹנָה` (masculine eight): note only, no change.** Ten voice texts carry it (for example `יש שְׁמוֹנָה דגים`, `המחיר הוא שְׁמוֹנָה שקלים`); each is before a masculine noun, so the masculine form is right, and the bare number in the same family is the feminine `שְׁמוֹנֶה` (`ללחוץ על שְׁמוֹנֶה`). The pointing is kept in the voice text on purpose. If the pilot reads it badly, the fix is a pronunciation entry, not a text change.
+
+**Plan (free `dart run tool/voice_gen.dart plan`, 2026-11-02).** Each of `nitzi` and `hero-son`: **3,989 of 3,991 lines**, 174,559 characters a voice (was 3,546 lines, 153,615 characters). Each of the 7 friends: 9 lines, 190 characters. Over all nine voices: 350,448 characters, 14.02 USD at the list price (an estimate, not a spend). Blocked: 2 lines, `vo:b.mathb01.15.h3` and `vo:b.mathb01.16.h3`. Nothing else waits, so `generate` will accept the plan as soon as those two are approved or changed. The other held rows are not in the plan for their own reasons (98 never voiced, 66 live helper, 2 per-name).
