@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/design/app_text.dart';
 import 'package:nitznutz/design/board.dart';
 import 'package:nitznutz/play/activity_frame.dart';
 import 'package:nitznutz/play/hint_hand.dart';
@@ -288,6 +293,171 @@ void main() {
         }
       }
       expect(bad, isEmpty, reason: bad.join('\n'));
+    },
+  );
+
+  // QA-B36-11 (minor, fixed). On a phone the hand that counted the empty places of a missing part came from below and lay over the
+  // whole's number ("12" read "I2"). Now it lies on its side in the band of the cubes. Every part of the drawn hand (finger, palm,
+  // thumb, cuff) is checked against the ink of every number and sign of the sentence (measured from the glyphs, drawn as the stage
+  // draws them), the "?" box, the cubes of the other number, the places it has not counted yet, the eye and lamp buttons, the
+  // bubble, the tiles and the screen's edge.
+  testWidgets(
+    'QA-B36-11: the hand that counts a missing part covers no number, sign, place still to count or button',
+    (WidgetTester t) async {
+      const List<String> ids = <String>[
+        'b.numb16.2', 'b.numb16.4', 'b.numb16.6', 'b.numb16.8', //
+        'b.mathb18.1',
+        'b.mathb18.2',
+        'b.mathb18.3',
+        'b.mathb18.4',
+        'b.mathb18.5',
+        'b.mathb18.6',
+        'b.mathb18.7', //
+        'b.mathb18.8', 'b.mathb18.9', 'b.mathb08.13', 'b.mathb08.14', 'b.mathb07.7', 'b.mathb07.8',
+      ];
+      // The ink of one symbol of the row, drawn in a cell of [size] as `tap_answer_session.dart` draws it (a FittedBox numeral).
+      final Map<String, Rect> inks = <String, Rect>{};
+      Future<Rect> inkOf(String text, Size size) async {
+        final String key = '$text@$size';
+        if (inks[key] != null) return inks[key]!;
+        final GlobalKey boundary = GlobalKey();
+        await t.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: RepaintBoundary(
+                key: boundary,
+                child: SizedBox.fromSize(
+                  size: size,
+                  child: FittedBox(
+                    child: Text(text, style: AppText.fixed(size: 40, weight: 800, lineHeight: 1)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        final RenderRepaintBoundary rb =
+            boundary.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+        final ByteData bytes = (await t.runAsync(() async {
+          final ui.Image im = await rb.toImage();
+          return (await im.toByteData())!;
+        }))!;
+        final int w = size.width.ceil(), h = size.height.ceil();
+        double l = 1e9, tp = 1e9, r = -1, b = -1;
+        for (int y = 0; y < h; y++) {
+          for (int x = 0; x < w; x++) {
+            if (bytes.getUint8((y * w + x) * 4 + 3) > 40) {
+              l = math.min(l, x.toDouble());
+              tp = math.min(tp, y.toDouble());
+              r = math.max(r, x + 1.0);
+              b = math.max(b, y + 1.0);
+            }
+          }
+        }
+        return inks[key] = Rect.fromLTRB(l, tp, r, b);
+      }
+
+      bool hitsCircle(Rect r, Offset c, double radius) {
+        final Offset near = Offset(c.dx.clamp(r.left, r.right), c.dy.clamp(r.top, r.bottom));
+        return (near - c).distance < radius;
+      }
+
+      final List<String> bad = <String>[];
+      int hands = 0;
+      for (final String id in ids) {
+        final TapAnswerActivity a = item(id);
+        for (final ActivitySpec board in <ActivitySpec>[ActivitySpec.phone, ActivitySpec.phoneSE]) {
+          final Size stage = stageOf(board);
+          final Size screen = boardOf(board);
+          final double k = hintScale(stage);
+          // The sentence's cells as the stage draws them, and what in each may not be covered.
+          final double cellW = (stage.width - 20) / a.row.length;
+          final double lift = TapGeometry.rowLiftOf(a, stage.height);
+          final double pad = TapGeometry.rowPadOf(a);
+          final List<(String, Rect)> keepClear = <(String, Rect)>[];
+          for (final (int i, String r) in a.row.indexed) {
+            final Rect cell = Rect.fromLTRB(
+              10 + i * cellW + 3,
+              pad + lift + 3,
+              10 + (i + 1) * cellW - 3,
+              stage.height - pad - 3,
+            );
+            if (r == '?') {
+              keepClear.add(('the "?" box', cell));
+            } else {
+              final String text = r.startsWith('op:') ? r.substring(3).replaceAll('-', '−') : r.substring(2);
+              final Rect ink = await inkOf(text, cell.size);
+              keepClear.add(('"$text"', ink.shift(cell.topLeft)));
+            }
+          }
+          final List<HintFrame> frames = plan(a, 3, board).frames;
+          // The whole's stack is the one with empty places; the other number's cubes stay in view.
+          final List<BlockMark> blocks = frames.first.marks.whereType<BlockMark>().toList();
+          final double wholeX = blocks
+              .firstWhere((BlockMark b) => b.empty, orElse: () => blocks.first)
+              .rect
+              .center
+              .dx;
+          for (final BlockMark b in blocks) {
+            if ((b.rect.center.dx - wholeX).abs() > cellW) {
+              keepClear.add(('a cube of the other number', b.rect.deflate(1)));
+            }
+          }
+          final List<HandMark> counting = <HandMark>[
+            for (final HintFrame f in frames.sublist(1, frames.length - 1)) ...f.marks.whereType<HandMark>(),
+          ];
+          for (final (int n, HandMark h) in counting.indexed) {
+            hands++;
+            final List<Rect>? parts = sideHandParts(h, k);
+            if (parts == null) {
+              bad.add('$id on ${board.stage.size}: count ${n + 1} is not a hand on its side (${h.from})');
+              continue;
+            }
+            final List<(String, Rect)> clear = <(String, Rect)>[
+              ...keepClear,
+              for (final HandMark later in counting.sublist(n + 1))
+                (
+                  'the place counted ${counting.indexOf(later) + 1}',
+                  blocks
+                      .firstWhere((BlockMark b) => b.rect.contains(later.tip))
+                      .rect
+                      .deflate(blocks.first.rect.width * 0.25),
+                ),
+            ];
+            for (final Rect p in parts) {
+              for (final (String what, Rect r) in clear) {
+                if (p.overlaps(r)) {
+                  bad.add(
+                    '$id on ${board.stage.size}, count ${n + 1} (${h.from}): the hand $p covers $what $r',
+                  );
+                }
+              }
+              final Rect s = p.shift(board.stage.topLeft);
+              // The eye and the lamp: round buttons of 56 with a 6 point lip.
+              for (final double left in <double>[board.eyeLeft, board.hintLeft]) {
+                if (hitsCircle(s, Offset(left + 28, board.controlsTop + 28), 34)) {
+                  bad.add(
+                    '$id on ${board.stage.size}, count ${n + 1}: the hand $s meets the button at $left',
+                  );
+                }
+              }
+              if (s.left < 0 ||
+                  s.top < 0 ||
+                  s.right > screen.width ||
+                  s.bottom > board.tilesTop ||
+                  s.right > board.bubbleLeft!) {
+                bad.add('$id on ${board.stage.size}, count ${n + 1}: the hand $s leaves its room');
+              }
+            }
+          }
+        }
+      }
+      // ignore: avoid_print
+      print('QA-B36-11: $hands counting hands on the phone and the small phone');
+      expect(hands, greaterThan(100));
+      expect(bad, isEmpty, reason: '${bad.length} cases\n${bad.take(40).join('\n')}');
     },
   );
 }

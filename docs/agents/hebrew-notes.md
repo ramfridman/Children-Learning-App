@@ -612,6 +612,36 @@ on purpose (`export-hebrew-review.py` writes the original of a `text-ready` row 
 column already say `בִּשְׁתַּיִם` (`b.numb17.4/.5/.6`, whose line is now `כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו בִּשְׁתַּיִם`) and `וּשְׁתַּיִם` (`b.mathb09.7`); the corrections
 are the `SUBS` rule of `hebrew_voice_review.py` and the `changes` column says so. The voice text is plain and right. Nothing to fix at the source.
 
+### 17.1 `b.mathb01.15` and `.16`: the third hint line fixed and approved (hebrew-text-editor, 2026-11-02, next-pack)
+
+The voice director found that the third hint (`hints.2`, voice ids `vo:b.mathb01.15.h3` and `.16.h3`) of the two "how many did we add?" items counted everything up to the
+total (`שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. …`), so the last number the child heard was the wrong answer `M-PART-MISS`. I proposed a line that counts
+only the added ones (§18.1 on branch `b45-voicing-plan`, commit 78f0887). **The owner read the two texts in chat on 2026-11-02 and said "Fix them"**; the two texts are owner-approved as written.
+
+**Source.** One argument of the `numpick3` call in `tools/band_b.py` (the loop over `('apple', 3, 5), ('fish', 4, 7)`, MATH-B-01):
+`h3='%s כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (qty(x, OBJECTS[obj]), count_words(r), F[r])`. Regenerated twice, byte-identical.
+Changed under `content/`: `starter/activity.b.mathb01.15.json`, `starter/activity.b.mathb01.16.json` and the unit spec `units/band-b-math.json` (the two `h3` values); nothing else.
+
+| Row | Screen text (= `ui_text`) | Voice text |
+|---|---|---|
+| `activity.b.mathb01.15.json` › `hints.2.caption.0.v` | `שְׁלוֹשָׁה תַּפּוּחִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.` | `שְׁלוֹשָׁה תפוחים כבר יש. סופרים רק את אֵלֶּה שהוספנו: אַחַת, שְׁתַּיִם. עכשיו תורכם — ללחוץ על שְׁתַּיִם.` |
+| `activity.b.mathb01.16.json` › `hints.2.caption.0.v` | `אַרְבָּעָה דָּגִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.` | `אַרְבָּעָה דגים כבר יש. סופרים רק את אֵלֶּה שהוספנו: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.` |
+
+The voice texts differ from the plain ones in §18.1 in two places, both by rules that already exist and that I checked: `אֵלֶּה` keeps its nikud (V1 audit of 2026-10-29: plain `אלה` can be read `אֵלָה` or `אַלָּה`), and the
+counted number word before a noun (`שְׁלוֹשָׁה`) keeps its nikud (number words carry gender).
+
+**Approval, hash-locked as B-36.** The two rows are in `docs/review/b36-approved-rows.tsv` (3,236 rows now) with the hash of the text, screen text and voice text above. `tools/hebrew_voice_review.py` gives them the comment
+`H3_COUNT_ADDED_COMMENT` (the owner's words "Fix them"); if either line changes later its hash is not in the list and the row goes back to `text-ready`. Master table (14,434 rows): `owner-approved` 3,349 to **3,351**, `text-ready`
+10,434 (the two rows were `proposed` for a moment as new text), `unchanged` 649. The pack documents stay `"review": "needs-editor"`.
+
+**The hint picture does not match the new line (for the app-developer, not changed here).** `MATH-B-01` is in the `add` family (`app/lib/content/hint_ladder.dart`), and `_Plans.add` (`app/lib/play/hints/tap_plans.dart`, line ~1190) has a
+count-on picture only when the stage has a second group (`a.group2 != null`). These two items have one group (3 apples, 4 fish) and no second one, so level 3 takes the take-away branch: the hand card shows 3 (4), the hand presses the last
+apple (fish) as if one were taken away, and the result badge shows 2 (3). Measured with a test probe on the phone stage: frames `CardMark`, `CardMark + HandMark`, `BadgeMark(2) + HandMark` (`.15`); `BadgeMark(3)` at the end (`.16`). The line now says
+"3 apples are already here; we count only the ones we added: one, two". The picture should be: the group of three raised as the hand (it "hugs" into its number, as `docs/curriculum/b40-visual-hint-ladder.md` TA-5 says for MATH-B-01), then
+the hand lights two new places beside it, counting 1, 2 (`asksMore` of the existing branch counts that way), ending on the badge 2. The picture was wrong before this fix too (a take-away over an add question).
+
+**Fixed in the app (app-developer, 2026-11-02).** `countsAddedOnes` (`tap_plans.dart`) gives these two items their own picture: the group hugs into its number on the hand card, one cube lights up for each added one in a row under the group (badge 1, 2, (3)), and the last step is the answer badge and the right tile. Level 2 only counts the group. Test: `app/test/hint_count_added_test.dart`; no other item changes.
+
 ## 18. B-45: the owner's conditional approval of the spoken texts (hebrew-text-editor, 2026-11-02)
 
 **The owner's words** (chat, 2026-11-02, answering whether signing pack 0.11.0 should also approve all its spoken texts for voicing, decision 1 of `docs/audio/b45-voicing-plan.md`): "If they are already checked by the text agent and the voice agent its fine by me". The approval is conditional, so a spoken row became `owner-approved` only if **both** held:
@@ -679,4 +709,84 @@ Agreement: the counted noun takes its own gender (`שְׁלוֹשָׁה תַּפ
 
 **The director's note on `שְׁמוֹנָה` (masculine eight): note only, no change.** Ten voice texts carry it (for example `יש שְׁמוֹנָה דגים`, `המחיר הוא שְׁמוֹנָה שקלים`); each is before a masculine noun, so the masculine form is right, and the bare number in the same family is the feminine `שְׁמוֹנֶה` (`ללחוץ על שְׁמוֹנֶה`). The pointing is kept in the voice text on purpose. If the pilot reads it badly, the fix is a pronunciation entry, not a text change.
 
-**Plan (free `dart run tool/voice_gen.dart plan`, 2026-11-02).** Each of `nitzi` and `hero-son`: **3,989 of 3,991 lines**, 174,559 characters a voice (was 3,546 lines, 153,615 characters). Each of the 7 friends: 9 lines, 190 characters. Over all nine voices: 350,448 characters, 14.02 USD at the list price (an estimate, not a spend). Blocked: 2 lines, `vo:b.mathb01.15.h3` and `vo:b.mathb01.16.h3`. Nothing else waits, so `generate` will accept the plan as soon as those two are approved or changed. The other held rows are not in the plan for their own reasons (98 never voiced, 66 live helper, 2 per-name).
+**Plan (free `dart run tool/voice_gen.dart plan`, 2026-11-02).** Each of `nitzi` and `hero-son`: **3,989 of 3,991 lines**, 174,559 characters a voice (was 3,546 lines, 153,615 characters). Each of the 7 friends: 9 lines, 190 characters. Over all nine voices: 350,448 characters, 14.02 USD at the list price (an estimate, not a spend). Blocked: 2 lines, `vo:b.mathb01.15.h3` and `vo:b.mathb01.16.h3`. Nothing else waits, so `generate` will accept the plan as soon as those two are approved or changed. The other held rows are not in the plan for their own reasons (98 never voiced, 66 live helper, 2 per-name). **Closed on 2026-11-02:** the two `h3` rows were fixed as proposed and approved by the owner ("Fix them", section 17.1); see 19.1.
+
+
+## 19. B-45 job 3: every spoken text that was not in the plan (hebrew-text-editor, 2026-11-02, after merging `next-pack`)
+
+**Why.** The owner wants one paid run for all voices. Every text the app says, or will say, must have a `vo:` id the tool can plan, a voice text, and a direction row. I looked for the spoken texts that were still outside the plan: the app's `vo:` references against `content/lines/core.he.json` and the pack, every caption in the pack documents (all 3,964 have a `vo`, no caption is without one), and every child string of `app/lib/strings/he.dart` (group 1; there is no other Hebrew in `app/lib` except the speech lists).
+
+### 19.0 The merge with `next-pack`
+
+Conflicts: `tools/hebrew_voice_review.py` (the approval chain: kept `b36_approved` with the QA6 comment and the `H3_COUNT_ADDED_*` override, then `b45_approved`; both constants and `lost_b45` stay), `docs/agents/hebrew-notes.md` (next-pack's 17.1 stays under 17, then 18 and 18.1 from this branch; no renumbering was needed) and `docs/review/hebrew-master.csv` (not hand-merged: the branch's own table was put back and the table was regenerated: `regen_content.py`, `export-hebrew-review.py`, `hebrew_voice_review.py`, twice, byte-identical). No approval was lost: every row that was `owner-approved` on either side is `owner-approved` after the merge (9,901 on this branch + the 2 `h3` rows that next-pack approved = 9,903).
+
+### 19.1 `b.mathb01.15.h3` and `.16.h3`
+
+The fix of 18.1 is in the sources (`tools/band_b.py`, next-pack) and the owner approved the two texts himself ("Fix them"; `H3_COUNT_ADDED_COMMENT`, hash-locked in `b36-approved-rows.tsv`). They are therefore `owner-approved` already, by the owner's own word. They are not in `b45-approved-rows.tsv` (that list is the conditional approval), and I did not remove an approval the owner gave. They are in the plan again (3,991 lines per narrator). What is missing is the director's direction row for this exact voice text; they are the first two rows of `docs/review/b45-new-lines.tsv`. They are no longer in `b45-held-rows.tsv`.
+
+### 19.2 The bottle's lines (B-39): ids for the clips the app already asks for
+
+The five lines were worded in section 7 and the owner approved them on 2026-11-01 (the B-36 sheet), so there is no new wording. What was missing is the clip. `app/lib/child/adventure_line.dart` asks for `vo:core.adventure.<reason>.<land>` (reasons `welcome`, `call_for_help`, `same_land`, `other_land`; lands `counting`, `colors`, `shapes`, `logic`, `robots`, `market`) and `vo:core.adventure.play_again`; no such line existed, so the bottle was silent. Added to `content/lines/core.he.json`: **25 lines** (4 x 6 + 1). The screen text of each is the template with the land's own pointed name (`He.landCounting` .. `He.landMarket`), word for word what `adventureLine(...).text` shows. The voice text is the template's voice text with the land's voice name (`גבעות הספירה`, `מפרץ הצבעים`, `יַעַר הצורות`, `מְעָרַת החידות`, `נְמַל הרובוטים`, `כְּפַר השוק`; the four pointed words are the ones a voice can misread, the director confirms); rule: `LAND_SCREEN` and `LAND_VOICE` in `tools/hebrew_voice_review.py`. The five template rows in group 1 stay as they are (`spoken: yes`, owner-approved: changing them would change their hash); the clips are the 25 group 2 rows. All 25 are `text-ready` (new rows; not approved until the director's direction row exists). The narrators say them (a friend borrows Nitzi or hero-son by voice gender, as for every lesson line). Nothing about speed, time, the child or guilt.
+
+For the app-developer: the ids already match the code. Add a test that each `core.adventure.*` line equals `adventureLine(...).text` for its land (a land name change in `he.dart` would otherwise leave an old clip). Nothing else in code.
+
+### 19.2b Why `voice_gen` did not see these lines, and the shared `homeBubble` clip
+
+`voice_gen` plans only what it reads in `content/starter` (a `vo` next to a `caption`) and in `content/lines/core.he.json`. A line that lives only in `app/lib/strings/he.dart` (a `Str` with a voice id built in code) is never in the plan, whatever its status in the table. That is why the bottle's 25 lines and `core.rest.goodbye` were silent. **I fixed it on the content side, with no app code:** the 26 lines are now in `core.he.json` (19.2, 19.3), and one more: `core.home.bubble` = `מַה בַּבַּקְבּוּק?`, the shared clip of the home bubble (`homeBubble` plays the child's name clip first and then this one; `homeBubbleNoName` plays it alone, `he.dart` line 48). Voice text `מה בבקבוק?`. The name clip is per child and stays out of the run. The two `he.dart` rows keep their status (`text-ready`); the clip is the group 2 row, `text-ready` until it has a direction row. The app plays nothing there yet (owner decision 6 of B-26); the wiring is the app-developer's.
+
+What the app-developer must do so that the plan keeps seeing them: nothing for planning. For correctness: (1) a test per family that the core line equals the `he.dart` output (`core.adventure.*` against `adventureLine(...).text`, `core.rest.goodbye` against `He.restGoodbye.text`, `core.home.bubble` against `He.homeBubbleNoName.text`), so that a later change of a `he.dart` string cannot leave an old clip behind; (2) any new spoken string in code gets its core line first (or a `{vo, caption}` object in a pack document), never only a `Str`; (3) play `vo:core.home.bubble` in `home_screen.dart` after the name clip, if the owner wants the bubble spoken.
+
+### 19.3 `core.rest.goodbye`, and a nikud error found on the way
+
+`lesson_controller.dart` asks for `vo:core.rest.goodbye` (the lesson ends for rest) and no such line existed. Added (text = `He.restGoodbye`). **The screen text had a wrong word:** `וְנִשְׁחַק` with a shin dot is "and we will be worn down" (from שחק, "to grind, to wear"); "and we will play" is `וּנְשַׂחֵק` (שִׂחֵק with a sin dot, the same word as in `core.greeting.hello` and `adventurePlayAgain`). I scanned every row of the table for the shin-dot root שחק: this was the only one. Fixed in `app/lib/strings/he.dart` (`restGoodbye`: `הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וּנְשַׂחֵק שׁוּב אַחַר כָּךְ.`) and in the new core line. The test `rest_rules_test.dart` reads `He.restGoodbye.text`, so no test pins the old word. Voice text: `היה כיף, עכשיו נחים קצת, ונשחק שוב אחר כך.` (a calm line; `voices.proposed.json` already treats `vo:core.rest.` as calm). Not the rest scene (`restScene`): see 19.5.
+
+### 19.4 The 98 `childLine` rows (map card): recommendation
+
+**Recommendation: voice them, yes.** `childLine` is the sentence under a picture on the land map (a touch on a drawing) and the line of an earned star in the Trophy Hall ("מוֹצְאִים אֶת אוֹתוֹ צֶבַע"). It is the one place where a child asks "what is this one?", and a child of 3 to 8 mostly cannot read the answer. The lines are short (2 to 7 words, 23 characters on average), already in the child's "we" form, and the text is checked. Cost: 100 lines (the 98 held + `skill.LOG-A-05` and `skill.NUM-A-14`) are 2,308 characters per narrator, about 0.09 USD a narrator and 0.19 USD for both. The risk is not money but wiring: until the app plays a clip on that card the clips are never heard.
+
+What I prepared: `docs/review/b45-childline-proposed.tsv` (100 rows: id, voice text, source, status). Id scheme: `vo:core.skill.<skill id in lower case, hyphens to underscores>` (for example `COL-A-01` is `vo:core.skill.col_a_01`; the pattern `vo:[a-z0-9_.]{1,80}` allows it, and all 100 are distinct). One voice text changed: `skill.LOG-B-04` is now `מִגְדָּלִים שגדלים.` (plain "מגדלים" is read "megadlim", they raise; here it is towers that grow; `VOICE_MANUAL`). I read the other 99 voice texts for sound and found nothing else.
+
+I did **not** add them to `core.he.json`, because the owner has not said yes and the app has no place for them yet. If he says yes, the cheapest way to have them in the single run needs no schema change: append the 100 lines to `content/lines/core.he.json` as `core.skill.<id>` (text = the skill's `childLine`; I do it in one step, and a test keeps the two texts equal), then the director directs them. Measured with the free `voice_gen plan` on a copy of the repository with the 100 added: **4,118 lines per narrator and 178,029 characters** (with only the 27 lines of this section: 4,018 lines and 175,723 characters; with neither: 3,991 lines and 174,772 characters). The cleaner alternative is a `childSpoken` object (`vo` + `caption`) on the skill document, which `voice_gen` already finds; that is a schema and generator change.
+
+What the app-developer would need (nothing was changed): (1) in `land_screen.dart` (the object card) and `trophy_hall.dart` (the star lines): on the touch, say `vo:core.skill.<id>` through the voice director if the bank has it (the same call the bottle makes); `WorldObject` already carries the skill id; (2) a test that every `childLine` has its core line; (3) the card's stage word (`stageSketch` "עוֹד מְתַרְגְּלִים", `stageColour` "יוֹדְעִים!", `stageFruit` "יוֹדְעִים וְגַם זוֹכְרִים!") is not voiced: three more short core lines can be added if the owner wants the whole card spoken. `spoken()` in `hebrew_voice_review.py` still says `spoken: yes` for `childLine`; unchanged until the owner decides.
+
+### 19.5 The other child strings of `he.dart` (73 rows, `spoken: no`) and what I did
+
+| Kind | Strings | Decision |
+|---|---|---|
+| Already voiced as a core line with the same text (checked equal) | `placementDone`, `thinkHmm`, `listenMixed`, `listenConfirm`, `listenTap`, `celebrateWell`, `ceremonyBronze/Silver/Gold/Medal` | nothing to do |
+| The app asks for a clip that did not exist | `restGoodbye` | added, 19.3 |
+| The home island's bubble | `nitziHomeHi`, `nitziHomeWelcome`, `nitziHomeWelcomeNoName` | silent by the owner's decision 6 of B-26 ("nothing is voiced here yet"); the with-name welcome is per-name and the daily welcome is B-42; not touched |
+| Strings no code uses | `nitziHomeTreasures`, `nitziHomeBottle`, `nitziHomeBottleDone` | dead text; not voiced until something shows them |
+| The rest scene | `restScene`: the screen when the parent's rest hours begin (sea, one sentence, one button) | not voiced. **Optional:** a calm clip `core.rest.scene` ("עכשיו נחים קצת. ניפגש שוב אחר כך.") would help a child who cannot read; it needs the owner's word and one line in `rest_scene.dart` |
+| Labels, titles and explanations | lands, hall, medals, outfits, stickers, `trophyHow`, `stickersHow`, `lessonUnavailable`, `activityQuestion` ... | a child knows these by the picture; the explanations are read with a parent; screen only |
+| Pack texts that are not spoken | 183 lesson titles, 1,884 answer labels, 1,118 alt texts, 294 scene labels | labels and descriptions for a screen reader; screen only |
+
+### 19.6 Plan totals (free `voice_gen plan`, 2026-11-02, after this section)
+
+| | Lines per narrator | Characters per narrator | Characters, all nine voices | USD (list) |
+|---|---|---|---|---|
+| Before (after the merge; the two `h3` lines are in) | 3,991 | 174,772 | 350,874 | 14.03 |
+| With the 27 new lines approved (`core.rest.goodbye`, 24 per-land bottle lines, `play_again`, `core.home.bubble`) | 4,018 | 175,723 | 352,776 | 14.11 |
+| And the 100 `childLine` lines too, if the owner says yes | 4,118 | 178,029 | 357,388 | 14.30 |
+
+Each friend still plans 9 lines and 190 characters (the new lines are the narrators'). Until the 27 lines have a direction row and are approved they are not planned: the plan prints them under "cannot be voiced yet", and `generate` refuses. The list for the director is `docs/review/b45-new-lines.tsv` (29 rows, 1,170 characters: the 2 `h3` lines and the 27 new lines). The approval of the 27 follows the rule of section 18: a direction row for exactly their voice text with no open ask; then they go into `b45-approved-rows.tsv`.
+
+
+## 20. The live helper line `give.butterflies.4` (band C, form m, hint 0) fails the server's checks (hebrew-text-editor, 2026-11-02; **needs-editor**, proposal only)
+
+**Found by the curriculum-expert, reproduced here.** I ran all 66 reviewed lines of `content/tutor-lines/hero-son.json` through `supabase/functions/_shared/validator.ts` (the ten checks) against `testvectors/publish-starter.json` with the new free script `tools/check_tutor_lines.mjs` (Node 22, no package, no network). Exactly one line fails (the other 65 pass):
+
+`בוֹא נְנַסֶּה לְהַצְבִּיעַ עַל כׇּל פַּרְפָּר אֶחָד אֶחָד, וְלַעֲצֹר כְּשֶׁמַּגִּיעִים לְאַרְבַּע.` (plain: `בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור כשמגיעים לארבע.`)
+
+Two causes, both in the last words:
+- **vocabulary:** `כשמגיעים` ("when we arrive") is not in the helper's lexicon (`he-child.v1.json`); a line may only use lexicon words and the item's own prompt words.
+- **leak:** `ארבע` (the feminine bare number) is the answer of the item and is not a word of the prompt (`תְּנוּ לַפֶּרַח אַרְבָּעָה פַּרְפָּרִים`, which has `ארבעה`). At hint 0 (below the item's threshold) the validator treats the answer word as a leak. The prompt's own `ארבעה` is allowed, which is why the sister lines (`ונעצור בארבעה`) pass.
+
+**Proposed rewording** (same teaching: point at each butterfly one by one and stop at the number asked for; band C, 11 words (limit 20), one sentence, `בוא` for form m, as before):
+
+`בוֹא נְנַסֶּה לְהַצְבִּיעַ עַל כׇּל פַּרְפָּר אֶחָד אֶחָד, וְלַעֲצֹר בְּאַרְבָּעָה.` (plain for the server: `בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור בארבעה.`)
+
+Checked: `SAY="בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור בארבעה." node tools/check_tutor_lines.mjs` gives `checked 66 failing 0`. Grammar: `ארבעה` is masculine because it counts the butterflies (`פרפרים`), the same as the approved sister lines `בוא נספור פרפרים אחד אחד, ונעצור בארבעה` (band A) and `...ונעצור כשנגיע לארבעה` (band B); a bare number would be feminine, but this one stands for the butterflies. Nothing in the line gives the answer away beyond what the prompt says.
+
+**Status.** Not changed: the line is `"review": "approved"` in the file, and a different text is a new text. If the owner agrees, the app-developer or the curriculum-expert (owner of the tutor-line file) puts it in with `"review": "needs-editor"` until he approves it; the row is `text-ready` in the master table and, being outside the signed pack and the gateway change in progress, still not part of the B-45 run. Whenever tutor lines change, run `node tools/check_tutor_lines.mjs`: it must say `failing 0`.

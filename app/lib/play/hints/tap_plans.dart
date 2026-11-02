@@ -55,6 +55,16 @@ HintPlan? tapHintPlan(TapAnswerActivity a, TapGeometry g, int level) {
   };
 }
 
+/// True for the items whose question is "how many did we add?" over one group on the stage: MATH-B-01, checked in reverse (the
+/// stage shows what was there, the answer is the added part). Only these two items (`b.mathb01.15` and `.16`) are drawn as a count
+/// of the added ones; every other item of the add family keeps its count on or its take away.
+bool countsAddedOnes(TapAnswerActivity a) =>
+    a.skillId == 'MATH-B-01' &&
+    a.checkType == 'reverse' &&
+    (a.group?.count ?? 0) > 0 &&
+    a.group2 == null &&
+    a.options.any((ChoiceOption o) => o.id == a.correctId && (o.numeral ?? 0) > 0);
+
 /// The colour a sprite name says (`ball_red`, `shape_circle_yellow`, `shade_blue_1`: the last part that is a colour), or null.
 String? colourOfSprite(String? ref) {
   if (ref == null) return null;
@@ -1212,6 +1222,7 @@ class _Plans {
         : (raised <= 5
               ? HintHand(fingers: math.max(0, raised), side: HandSide.left, height: 84)
               : CountingHands(raised: raised));
+    if (countsAddedOnes(a)) return _addedOnes(level, first, hands);
     if (adds) {
       // Count on: the hand shows the first group, and the second group is counted one by one on top of it.
       final int more = second.length;
@@ -1279,6 +1290,63 @@ class _Plans {
         ),
       _toAnswer(<HintMark>[BadgeMark(_card.center, total, big: true)], reserve: _reserve),
     ]);
+  }
+
+  /// MATH-B-01 "how many did we add?": the group on the stage is what was already there, and the answer is how many were added to
+  /// it. The hint never counts the group again (TA-5, the third line says "we count only the ones we added"). The group hugs into its
+  /// number on the hand card; the places of the added ones are not on the stage, so the hint draws them in a row under the group
+  /// and counts them from one. Level 2 only counts the group (the added places would be the answer); level 3 ends on the badge.
+  HintPlan _addedOnes(int level, List<Rect> first, Widget Function(int) hands) {
+    final int start = first.length;
+    final int more = _right.numeral!;
+    final List<Rect> places = _addedPlaces(first, more);
+    final HintMark card = CardMark(_card, hands(start));
+    List<HintMark> seenGroup() => <HintMark>[for (final Rect r in first) SeenMark(r)];
+    if (level == 2) {
+      return HintPlan(
+        _lightEach(first, base: <HintMark>[card], reserve: _reserve),
+        rest: <HintMark>[card, ...seenGroup()],
+        restReserve: _reserve,
+      );
+    }
+    // Each added one is a cube that lights up as it is counted; the dots stay on the group, which is not counted again.
+    List<HintMark> counted(int j) => <HintMark>[
+      ...seenGroup(),
+      for (int i = 0; i < j; i++) BlockMark(places[i]),
+    ];
+    return _demo(<HintFrame>[
+      HintFrame(<HintMark>[card, ...seenGroup()], hold: _ms(800), reserve: _reserve),
+      for (int j = 1; j <= more; j++)
+        HintFrame(
+          <HintMark>[
+            card,
+            ...counted(j),
+            BadgeMark(places[j - 1].topLeft, j),
+            HandMark(places[j - 1].center, press: true),
+          ],
+          hold: _ms(more > 6 ? 600 : 900),
+          reserve: _reserve,
+        ),
+      // The count card takes the hand card's place, as in every count.
+      _toAnswer(<HintMark>[...counted(more), BadgeMark(_card.center, more, big: true)], reserve: _reserve),
+    ]);
+  }
+
+  /// A row of [n] places for the added ones, centred under the group [first] (which stands in a row of its own, with the stage's
+  /// room under it): as big as a picture of the group, no taller than that room, and inside the part of the stage the card leaves.
+  List<Rect> _addedPlaces(List<Rect> first, int n) {
+    final Rect span = first.fold(first.first, (Rect s, Rect r) => s.expandToInclude(r));
+    final double gap = 4 * k;
+    final double room = g.h - span.bottom - 10 * k;
+    final double across = g.w - _reserve - 12 * k;
+    final double side = math.min(first.first.height * 0.8, math.min(room, (across - (n - 1) * gap) / n));
+    final double rowW = n * side + (n - 1) * gap;
+    final double left = (span.center.dx - rowW / 2).clamp(
+      _reserve + 6 * k,
+      math.max(_reserve + 6 * k, g.w - 6 * k - rowW),
+    );
+    final double top = span.bottom + 6 * k;
+    return <Rect>[for (int i = 0; i < n; i++) Rect.fromLTWH(left + i * (side + gap), top, side, side)];
   }
 
   // ---- TA-2 numerals ----

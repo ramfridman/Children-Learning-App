@@ -564,7 +564,8 @@ def math():
         numpick3(u, 'MATH-B-01', 'יֵשׁ %s. מוֹסִיפִים עוֹד, וְעַכְשָׁו יֵשׁ %s. כַּמָּה הוֹסַפְנוּ?' % (qty(x, OBJECTS[obj]), qty(t, OBJECTS[obj])), r,
                  {t: 'M-PART-MISS', x: 'M-CNT-DOUBLE'}, i, check='reverse', difficulty=0.6, voice=True, group={'sprite': obj, 'count': x},
                  correct_text='%s! %s וְעוֹד %s הֵם %s.' % (F[r], F[x], F[r], F[t]),
-                 h3='%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[r], count_words(t), F[r]))
+                 h3='%s כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
+                     qty(x, OBJECTS[obj]), count_words(r), F[r]))
     for start, hop in ((3, 2), (4, 3)):
         jump_item(u, 'MATH-B-01', start, hop, check='transfer', difficulty=0.6)
 

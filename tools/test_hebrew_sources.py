@@ -145,7 +145,9 @@ class HebrewMasterTableTest(unittest.TestCase):
         # gone (39 to 0) and no row is `proposed` or its text still a draft. The corrected-and-done rows go from 1159 to 1163: the `text` column of
         # the four LOG-B-08 shape-rule prompts (b.logb08.3 to .6) keeps the draft without the copula "הִיא" (the table keeps the last draft it
         # held as `text`; the sources say the `ui_text`).
-        self.assertEqual(len(self.rows), 14434)
+        # B-45 (2026-11-02): 27 new core lines the app already asks for (`core.rest.goodbye`, the bottle's 24 per-land lines and the play-again
+        # line, and `core.home.bubble`, hebrew-notes section 19): 14434 to 14461 rows
+        self.assertEqual(len(self.rows), 14461)
         self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1163)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 0)
         self.assertEqual(sum(1 for r in self.rows if r['status'] == 'proposed'), 0)

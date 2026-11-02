@@ -38,7 +38,7 @@ abstract final class He {
   static const Str restScene = Str('עַכְשָׁו נָחִים קְצָת. נִפָּגֵשׁ שׁוּב אַחַר כָּךְ!', nikud: true);
   static const Str restBackSemantics = Str('חזרה');
   static const Str restGoodbye = Str(
-    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.',
+    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וּנְשַׂחֵק שׁוּב אַחַר כָּךְ.',
     nikud: true,
   );
   static const Str placementDone = Str('יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.', nikud: true);

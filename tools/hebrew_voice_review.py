@@ -703,6 +703,24 @@ VOICE_MANUAL.update({
     canon('בּוֹאוּ נַמְשִׁיךְ בַּהַרְפַּתְקָה שֶׁל {land}.'): ('בואו נמשיך בהרפתקה של {land}.', PER_LAND),
     canon('בּוֹאוּ נְבַקֵּר אֶת {land}.'): ('בואו נְבַקֵּר את {land}.', PER_LAND),
 })
+# B-45 (2026-11-02): the bottle's lines as the clips the app asks for, `core.adventure.<reason>.<land>` (24 lines) and
+# `core.adventure.play_again` (content/lines/core.he.json, group 2). The screen text is the template with the land's own
+# pointed name (`He.landCounting` .. `He.landMarket`); the voice text is the template's voice text with the land's voice name.
+LAND_SCREEN = {'counting': 'גִּבְעוֹת הַסְּפִירָה', 'colors': 'מִפְרַץ הַצְּבָעִים', 'shapes': 'יַעַר הַצּוּרוֹת',
+               'logic': 'מְעָרַת הַחִידוֹת', 'robots': 'נְמַל הָרוֹבּוֹטִים', 'market': 'כְּפַר הַשּׁוּק'}
+LAND_VOICE = {'counting': 'גבעות הספירה', 'colors': 'מפרץ הצבעים', 'shapes': 'יַעַר הצורות',
+              'logic': 'מְעָרַת החידות', 'robots': 'נְמַל הרובוטים', 'market': 'כְּפַר השוק'}
+PER_LAND_CORE = ('B-45: one clip of the bottle\'s per-land line (B-39), the land\'s voice name in place of {land}; the pointed words are the '
+                 'ones a voice can misread (יַעַר, מְעָרַת, נְמַל, כְּפַר); no child or friend name; no "!"')
+# B-45 (the map card's childLine, hebrew-notes section 19): plain "מגדלים" is read "megadlim" (they raise) more often than "migdalim"
+# (towers); here it is the towers that grow.
+VOICE_MANUAL[canon('מִגְדָּלִים שֶׁגְּדֵלִים')] = (
+    'מִגְדָּלִים שגדלים.', 'pronunciation: plain "מגדלים" can be read "megadlim" (they raise); here it is "migdalim", towers')
+for _tmpl, (_voice, _why) in list(VOICE_MANUAL.items()):
+    if '{land}' not in _tmpl:
+        continue
+    for _land, _screen in LAND_SCREEN.items():
+        VOICE_MANUAL[canon(_tmpl.replace('{land}', _screen))] = (_voice.replace('{land}', LAND_VOICE[_land]), PER_LAND_CORE)
 
 
 def eleven(text):
@@ -952,6 +970,14 @@ QA6_SOURCES = {
 # changes later is not in the list any more and goes back to `text-ready` with the QA-B36-6 comment below.
 QA6_APPROVED_COMMENT = ('QA-B36-6 (docs/review/b36-qa6-owner-sample.md): the owner approved this level-2 hint line on 2026-11-02 '
                         '("Yes, 1-6 OK"); the voice id of its family is shared by the items of the family.')
+
+# The third hint line of b.mathb01.15 and .16 ("how many did we add?": 3 apples, now 5; 4 fish, now 7). The first version counted everything up to the
+# total (the last number heard was the wrong answer, tagged M-PART-MISS). The voice director flagged it; the editor proposed the line that counts only
+# the added ones (hebrew-notes section 18.1 on branch b45-voicing-plan, commit 78f0887); the owner read both texts in chat and said "Fix them" on
+# 2026-11-02. The two rows are in docs/review/b36-approved-rows.tsv with the hash of the text, screen text and voice text exactly as approved.
+H3_COUNT_ADDED_SOURCES = ('activity.b.mathb01.15.json', 'activity.b.mathb01.16.json')
+H3_COUNT_ADDED_COMMENT = ('the owner read this third hint line in chat and approved it on 2026-11-02 ("Fix them"): it counts only the added ones, '
+                          'as the director asked (hebrew-notes section 17.1); the voice id is vo:b.mathb01.15.h3 / .16.h3.')
 
 
 def qa6_note(r):
@@ -1412,6 +1438,8 @@ def master(rows, result, rules):
             approved = owner_approved(r)
             if not approved and b36_approved(r, ui, el):
                 approved = QA6_APPROVED_COMMENT if q6 else B36_APPROVED_COMMENT
+                if r['id'] == 'hints.2.caption.0.v' and r['source'] in H3_COUNT_ADDED_SOURCES:
+                    approved = H3_COUNT_ADDED_COMMENT
             if not approved and b45_approved(r, ui, el):
                 approved = B45_APPROVED_COMMENT
             if q6 and status == 'text-ready':
