@@ -36,6 +36,15 @@ Map<String, VoiceClip> clipsOfVoicePack(VerifiedPack pack) {
   return clips;
 }
 
+/// Thrown by a pack loader that cannot give a pack. [permanent] says it never will (the pack failed a signature, hash or
+/// content check, or this app cannot play it); otherwise the files were not there or not readable just now, and a later
+/// try may work.
+class VoicePackUnavailable implements Exception {
+  const VoicePackUnavailable({required this.permanent});
+
+  final bool permanent;
+}
+
 /// The voice packs of one character, read one at a time as their lines are needed (B-45: a narrator's voice is about sixteen
 /// packs and about 100 to 240 MB, too much to hold at once).
 ///
@@ -43,8 +52,10 @@ Map<String, VoiceClip> clipsOfVoicePack(VerifiedPack pack) {
 /// lines, which every lesson uses) are loaded once and never let go. Of the others at most [maxParts] are in memory at
 /// once: a pack is loaded by [loader] when one of its lines is first wanted, and the one used longest ago makes room for it.
 /// So the memory is the pinned packs plus [maxParts] more (each at most 40 MiB), the pack being loaded counted among them.
-/// A pack that fails to load ([loader] returns null or throws) is given up for the life of this object: its lines are
-/// simply missing, as a line with no recording always was.
+/// A pack that fails to load ([loader] returns null or throws) is given up: its lines are simply missing, as a line with no
+/// recording always was. A pack that failed for a reason that may pass (its files were not readable, [VoicePackUnavailable]
+/// with `permanent` false, or any other error) is tried once more, when the next [prefetch] (a lesson opening) asks for it
+/// and never otherwise, so there is no retry loop; a pack that failed a check, or whose loader returned null, never is.
 class LazyVoicePacks {
   LazyVoicePacks({
     required this.index,
@@ -62,6 +73,10 @@ class LazyVoicePacks {
   final Map<String, Map<String, VoiceClip>> _resident = <String, Map<String, VoiceClip>>{};
   final Map<String, Future<Map<String, VoiceClip>?>> _loading = <String, Future<Map<String, VoiceClip>?>>{};
   final Set<String> _failed = <String>{};
+
+  /// The failed packs that [prefetch] may try once more, and those it has tried again.
+  final Set<String> _retryable = <String>{};
+  final Set<String> _retried = <String>{};
 
   /// The packs in memory now, the one used longest ago first (for tests and measuring).
   List<String> get residentPacks => _resident.keys.toList();
@@ -100,7 +115,14 @@ class LazyVoicePacks {
     final List<String> wanted = <String>[];
     for (final String id in voIds) {
       final String? pack = index[id];
-      if (pack == null || _failed.contains(pack) || pinned.contains(pack) || wanted.contains(pack)) continue;
+      if (pack == null || wanted.contains(pack)) continue;
+      if (_retryable.remove(pack)) {
+        // Its one more try; if it fails again it stays given up.
+        _retried.add(pack);
+        _failed.remove(pack);
+      } else if (_failed.contains(pack) || pinned.contains(pack)) {
+        continue;
+      }
       wanted.add(pack);
       if (wanted.length == maxParts) break;
     }
@@ -140,9 +162,11 @@ class LazyVoicePacks {
       _resident[packId] = clips;
       _makeRoom(0);
       return clips;
-    } on Object {
+    } on Object catch (e) {
       // Why is not kept: a message could name a file. The pack's lines are missing, as a line with no recording is.
       _failed.add(packId);
+      final bool permanent = e is VoicePackUnavailable && e.permanent;
+      if (!permanent && !_retried.contains(packId)) _retryable.add(packId);
       return null;
     }
   }

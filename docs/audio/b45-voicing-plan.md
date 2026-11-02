@@ -316,6 +316,10 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
   too big. A group over 450 lines is cut between skills (`num-b-1`, `num-b-2`). A friend's nine lines stay one pack.
   Counts per narrator (3,989 lines today): core 395; col-a 213, col-b 144; cs-a 114, cs-b 54; log-a 298, log-b 189; math-a
   220, math-b 603 (two packs); num-a 636 (two); num-b 656 (two); shp-a 275, shp-b 192.
+- **On the phone** the app does not hold a narrator's 16 packs at once: the shared pack stays in memory and at most two part packs
+  (the last used), each at most 40 MiB, so about 75 MiB of clips at the 60 KiB estimate and at most 120 MiB. That counts the clip
+  bytes only, not the decoded cue tracks, the objects around them, or the temporary copy while a pack is verified. A lesson loads its
+  own part when it opens. Only packs of the same version as the shared pack are heard, so all packs of a voice must be published at one version.
 - **If a pack is too big after the run** (the clips are longer than the 60 KiB guess): the build fails with the pack's name, the
   clips and the paid-for hashes are kept, and `pack <character> --max-lines <n>` (free, no key but the signing key, no network)
   makes the packs again with fewer lines in each. Re-packing the same clips with the same key gives the same bytes.

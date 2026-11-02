@@ -1,5 +1,6 @@
 ﻿import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -9,6 +10,23 @@ import '../core/clock.dart';
 import '../data/app_database.dart';
 import 'capabilities.dart';
 import 'pack_verify.dart';
+
+/// Reads every file in the folder [path] and proves them as a pack ([verifyEntries]). Throws [PackRejected].
+Future<VerifiedPack> readAndVerifyInstalled(
+  String path,
+  Uint8List publicKey,
+  AppCapabilities capabilities,
+  JsonParse decode,
+) async {
+  final Map<String, Uint8List> entries = <String, Uint8List>{};
+  for (final FileSystemEntity e in Directory(path).listSync(followLinks: false)) {
+    if (e is! File) {
+      throw const PackRejected('disk', 'the installed pack holds something that is not a file');
+    }
+    entries[e.uri.pathSegments.last] = e.readAsBytesSync();
+  }
+  return verifyEntries(entries, publicKey: publicKey, decode: decode, capabilities: capabilities);
+}
 
 /// Where the list of installed packs is kept. The database implements it; tests use a failing one to
 /// prove a crash between the files and the list never leaves half a pack.
@@ -204,23 +222,25 @@ class PackInstaller {
     final Directory dir = packDir(id, row.version);
     if (!dir.existsSync()) return null;
     try {
-      final Map<String, Uint8List> entries = <String, Uint8List>{};
-      for (final FileSystemEntity e in dir.listSync(followLinks: false)) {
-        if (e is! File) return null;
-        entries[e.uri.pathSegments.last] = e.readAsBytesSync();
-      }
-      final VerifiedPack pack = await verifyEntries(
-        entries,
-        publicKey: publicKey,
-        decode: decode,
-        capabilities: capabilities,
-      );
+      final VerifiedPack pack = await _readAndVerify(dir);
       final bool recorded =
           pack.manifestSha256 == row.manifestSha256 && pack.version == row.version && pack.id == id;
       return recorded ? pack : null;
     } on PackRejected {
       return null;
     }
+  }
+
+  /// Reads the files of an installed pack folder and proves them (signature, every hash, the content rules), off the UI
+  /// isolate: a pack of 27 MiB takes about half a second to read and hash, which would stop the screen. The result and the
+  /// errors are the same as doing it here; the bytes come back to this isolate without being copied. With a `decode` other
+  /// than `jsonDecode` (a test's spy, which cannot cross) it is done here.
+  Future<VerifiedPack> _readAndVerify(Directory dir) {
+    final String path = dir.path;
+    final Uint8List key = publicKey;
+    final AppCapabilities caps = capabilities;
+    if (!identical(decode, jsonDecode)) return readAndVerifyInstalled(path, key, caps, decode);
+    return Isolate.run(() => readAndVerifyInstalled(path, key, caps, jsonDecode));
   }
 
   /// Reads an installed pack back from disk and proves it again, as if it had just arrived. A file
@@ -231,19 +251,7 @@ class PackInstaller {
     if (row == null) return null;
     final Directory dir = packDir(id, row.version);
     if (!dir.existsSync()) throw const PackRejected('disk', 'the files of the installed pack are missing');
-    final Map<String, Uint8List> entries = <String, Uint8List>{};
-    for (final FileSystemEntity e in dir.listSync(followLinks: false)) {
-      if (e is! File) {
-        throw const PackRejected('disk', 'the installed pack holds something that is not a file');
-      }
-      entries[e.uri.pathSegments.last] = e.readAsBytesSync();
-    }
-    final VerifiedPack pack = await verifyEntries(
-      entries,
-      publicKey: publicKey,
-      decode: decode,
-      capabilities: capabilities,
-    );
+    final VerifiedPack pack = await _readAndVerify(dir);
     if (pack.manifestSha256 != row.manifestSha256 || pack.version != row.version || pack.id != row.id) {
       throw const PackRejected('disk', 'the installed pack is not the one that was recorded');
     }
