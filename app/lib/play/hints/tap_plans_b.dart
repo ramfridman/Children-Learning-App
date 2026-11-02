@@ -534,21 +534,50 @@ extension _BandB on _Plans {
     }
     // The empty places are counted one by one in the cell of the unknown: a badge with how many so far.
     final Offset counted = cells[s.unknown].center + Offset(0, 24 * k);
-    final List<HintMark> places = _cubesAbove(cells[s.r], whole, filled: known);
-    // The empty places are the top row of the stack, at the stage's top edge. On a phone the stage stands right under the top bar,
-    // and a hand from the guide's side would lie behind the eye button (QA-B36-2): there it comes from below, its body over the
-    // cubes already counted, the places it counts in view above the fingertip.
-    final HandFrom from = g.spec.stageIsCard ? HandFrom.guide : HandFrom.below;
+    final List<HandMark> hands = _countHands(cells[s.r], whole, known);
     return _demo(<HintFrame>[
       HintFrame(<HintMark>[...parts, HandMark(cells[knownCell].center, press: true)], hold: _ms(800)),
-      for (int j = 1; j <= left; j++)
-        HintFrame(<HintMark>[
-          ...parts,
-          BadgeMark(counted, j),
-          HandMark((places[known + j - 1] as BlockMark).rect.center, press: true, from: from),
-        ], hold: _ms(650)),
+      for (final (int i, HandMark hand) in hands.indexed)
+        HintFrame(<HintMark>[...parts, BadgeMark(counted, i + 1), hand], hold: _ms(650)),
       _toAnswer(<HintMark>[...parts, BadgeMark(counted, left)]),
     ]);
+  }
+
+  /// The hand of each count of the missing part, in the order counted: the empty places of the whole's stack over [wholeCell]
+  /// ([whole] places, the first [known] full).
+  ///
+  /// On a tablet the hand comes from the guide's side, place after place in the stack's order. On a phone the stage stands right
+  /// under the top bar and the stack stands right on the whole's number, so a hand from above lies behind the eye button
+  /// (QA-B36-2) and a hand from below lies over the number (QA-B36-11). There the hand lies on its side, in the band of the
+  /// cubes: it comes in from the middle of the sentence (the whole is its first or its last number, and its neighbour is a sign
+  /// with nothing over it) and counts toward the stage's edge, so its body is always over places it has already counted. In the
+  /// stack's upper half its palm hangs under the finger (its thumb stays clear of the top bar); in the lower half, nearer the
+  /// number, the palm is above the finger and the thumb, the hand's smallest side, is under it, the hand rising a little.
+  List<HandMark> _countHands(Rect wholeCell, int whole, int known) {
+    final List<Rect> empty = <Rect>[
+      for (final HintMark m in _cubesAbove(wholeCell, whole, filled: known).sublist(known))
+        (m as BlockMark).rect,
+    ];
+    if (g.spec.stageIsCard) {
+      return <HandMark>[for (final Rect r in empty) HandMark(r.center, press: true)];
+    }
+    final bool fromRight = wholeCell.center.dx < g.w / 2;
+    // Toward the edge: from the right, the rightmost place first; from the left, the leftmost. A column's lower place first.
+    final List<Rect> order = List<Rect>.of(empty)
+      ..sort((Rect p, Rect q) {
+        final int x = fromRight ? q.center.dx.compareTo(p.center.dx) : p.center.dx.compareTo(q.center.dx);
+        return x != 0 ? x : q.center.dy.compareTo(p.center.dy);
+      });
+    return <HandMark>[
+      for (final Rect r in order)
+        HandMark(
+          r.center,
+          press: true,
+          from: r.center.dy > g.rowTop / 2
+              ? (fromRight ? HandFrom.rightHigh : HandFrom.leftHigh)
+              : (fromRight ? HandFrom.rightLow : HandFrom.leftLow),
+        ),
+    ];
   }
 
   // ---- MATH-B-02: a whole and its parts, with no picture on the stage ----
