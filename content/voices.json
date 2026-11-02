@@ -60,7 +60,7 @@
     "similarity_boost": 0.8,
     "use_speaker_boost": true
   },
-  "_settingsNote": "Sent explicitly with every line (voice_gen refuses settings without stability and similarity_boost). Set by the voice-and-sound-director on 2026-11-02 from the approved audition (round 3, 2026-11-01): similarity 0.8 for all; stability 0.5 for the lines not named in styleRules (praise, correct answers, greetings, goodbyes), and the styles on top: cheer 0.35 (celebrations), ceremony 0.45, thinking 0.55, ask 0.60 (questions, 'not yet' and listening lines), hint 0.65 (hints 1 and 2), hint3 0.70. style and speed are never sent to a v4 model, so a style is a stability only. A rule that starts with * matches the END of the voice id (needs the B-45 change in voice_gen_lib.dart styleOf; until then those rules match nothing and the line is said at 0.5); every other rule matches the START. The first matching style wins, in the order written here. Reasons and the listening notes: docs/audio/b45-voicing-plan.md.",
+  "_settingsNote": "Sent explicitly with every line (voice_gen refuses settings without stability and similarity_boost). Set by the voice-and-sound-director on 2026-11-02 from the approved audition (round 3, 2026-11-01): similarity 0.8 for all; stability 0.5 for the lines not named in styleRules (praise, correct answers, greetings, goodbyes), and the styles on top: cheer 0.35 (celebrations), ceremony 0.45, thinking 0.55, ask 0.60 (questions, 'not yet' and listening lines), hint 0.65 (hints 1 and 2), hint3 0.70. style and speed are never sent to a v4 model, so a style is a stability only. A rule that starts with * matches the END of the voice id (voice_gen_lib.dart styleOf); every other rule matches the START. The first matching style wins, in the order written here. Reasons and the listening notes: docs/audio/b45-voicing-plan.md.",
   "listPricePer1000Chars": {
     "eleven_v4": 0.08,
     "eleven_v4_turbo": 0.04
@@ -70,6 +70,22 @@
     "שְׁתַּיִם": "שתַּיִם",
     "שתיים": "שתַּיִם"
   },
+  "narrators": [
+    "nitzi",
+    "hero-son"
+  ],
+  "ownLines": [
+    "vo:core.greeting.hello",
+    "vo:core.greeting.start",
+    "vo:core.celebrate.well",
+    "vo:core.placement.done",
+    "vo:core.goodbye.next",
+    "vo:core.ceremony.bronze",
+    "vo:core.ceremony.silver",
+    "vo:core.ceremony.gold",
+    "vo:core.ceremony.medal"
+  ],
+  "_rolesNote": "narrators say every line of the app (a friend with a girl's voice borrows nitzi in the lessons, one with a boy's voice borrows hero-son). Every other character is a friend and says only ownLines, the lines at the edges of play, in its own voice; the app falls back to the narrator for any other line. voice_gen plan and generate give a friend only these lines. Reasons: docs/audio/b45-voicing-plan.md.",
   "voices": {
     "nitzi": {
       "voiceId": "Tbj9UQjXon5RB9MPEyc2"

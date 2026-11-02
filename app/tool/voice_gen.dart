@@ -16,6 +16,10 @@
 // v4 model) and asks for 44.1 kHz audio. Each clip's hash (text, voice, model, settings, format) is recorded next to the
 // work folder, so a changed line is said again and an unchanged one is reused.
 //
+// A character named in `narrators` (content/voices.json) says every line. Any other character, a friend, says only the
+// lines in `ownLines`: its plan, its pack and the lines it waits for are those alone (the app plays the narrator's clip
+// for the rest). With no `narrators` in the file, every character says every line.
+//
 // `plan`, `audition-batch plan` and `mock` are free and need no terminal: `plan` counts new, changed and unchanged lines
 // for each voice, the characters and the cost (--list prints every line still to say with its exact text); `mock` makes
 // a voice pack of test tones (no network). The paid commands, `generate`, `audition-batch run` and `audition`, work only
@@ -166,15 +170,31 @@ String _home() => '${Platform.environment['USERPROFILE'] ?? '.'}${Platform.pathS
 String _outFolder(List<String> args, String character) =>
     _option(args, '--out') ?? '${_home()}${Platform.pathSeparator}$character';
 
+/// [texts] cut down to the lines that one of [profiles] says, after checking that every own line of a friend exists: a
+/// friend's plan must not list, or wait for, the lines it never says.
+VoiceTexts _neededBy(VoiceTexts texts, Iterable<VoiceProfile> profiles) {
+  final Set<String> all = <String>{for (final VoicedLine l in texts.lines) l.voId};
+  for (final VoiceProfile p in profiles) {
+    p.checkOwnLines(all);
+  }
+  return VoiceTexts(<VoicedLine>[
+    for (final VoicedLine l in texts.lines)
+      if (profiles.any((VoiceProfile p) => p.says(l.voId))) l,
+  ]);
+}
+
 void _plan(List<String> args) {
   final Map<String, Object?> config = _config(args);
-  final VoiceTexts texts = _voiceTexts(args);
   final List<String> characters = _characters(args, config);
+  final Map<String, VoiceProfile> profiles = <String, VoiceProfile>{
+    for (final String c in characters) c: VoiceProfile.fromConfig(config, c),
+  };
+  final VoiceTexts texts = _neededBy(_voiceTexts(args), profiles.values);
   final Map<String, Map<String, String>> made = <String, Map<String, String>>{
     for (final String c in characters) c: ClipLedger(Directory(_outFolder(args, c))).hashes(),
   };
   final VoicePlan plan = planVoices(
-    <String, VoiceProfile>{for (final String c in characters) c: VoiceProfile.fromConfig(config, c)},
+    profiles,
     texts.ready,
     stateOf: (String c, SpokenLine l, ClipRequest r) =>
         clipState(Directory(_outFolder(args, c)), l.fileId, r, made[c]!),
@@ -251,9 +271,9 @@ Future<void> _generate(List<String> args) async {
   final String character = pos.single;
   requireTerminal(_keyboard, 'generate');
   final Map<String, Object?> config = _config(args);
-  final VoiceTexts texts = _voiceTexts(args);
-  if (texts.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was sent. ${texts.describeBlocked()}');
   final VoiceProfile profile = VoiceProfile.fromConfig(config, character);
+  final VoiceTexts texts = _neededBy(_voiceTexts(args), <VoiceProfile>[profile]);
+  if (texts.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was sent. ${texts.describeBlocked()}');
   final Directory work = Directory(_outFolder(args, character));
   final BuiltPack built = await generateGated(
     characterId: character,
