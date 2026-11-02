@@ -953,6 +953,14 @@ QA6_SOURCES = {
 QA6_APPROVED_COMMENT = ('QA-B36-6 (docs/review/b36-qa6-owner-sample.md): the owner approved this level-2 hint line on 2026-11-02 '
                         '("Yes, 1-6 OK"); the voice id of its family is shared by the items of the family.')
 
+# The third hint line of b.mathb01.15 and .16 ("how many did we add?": 3 apples, now 5; 4 fish, now 7). The first version counted everything up to the
+# total (the last number heard was the wrong answer, tagged M-PART-MISS). The voice director flagged it; the editor proposed the line that counts only
+# the added ones (hebrew-notes section 18.1 on branch b45-voicing-plan, commit 78f0887); the owner read both texts in chat and said "Fix them" on
+# 2026-11-02. The two rows are in docs/review/b36-approved-rows.tsv with the hash of the text, screen text and voice text exactly as approved.
+H3_COUNT_ADDED_SOURCES = ('activity.b.mathb01.15.json', 'activity.b.mathb01.16.json')
+H3_COUNT_ADDED_COMMENT = ('the owner read this third hint line in chat and approved it on 2026-11-02 ("Fix them"): it counts only the added ones, '
+                          'as the director asked (hebrew-notes section 17.1); the voice id is vo:b.mathb01.15.h3 / .16.h3.')
+
 
 def qa6_note(r):
     if r['id'] == 'hints.1.caption.0.v' and r['source'] in QA6_SOURCES:
@@ -1392,6 +1400,8 @@ def master(rows, result, rules):
             approved = owner_approved(r)
             if not approved and b36_approved(r, ui, el):
                 approved = QA6_APPROVED_COMMENT if q6 else B36_APPROVED_COMMENT
+                if r['id'] == 'hints.2.caption.0.v' and r['source'] in H3_COUNT_ADDED_SOURCES:
+                    approved = H3_COUNT_ADDED_COMMENT
             if q6 and status == 'text-ready':
                 comment = EDITOR + 'new text (QA-B36-6): waits for the owner, docs/review/b36-qa6-owner-sample.md'
             if approved:

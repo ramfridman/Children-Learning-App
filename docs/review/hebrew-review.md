@@ -1949,7 +1949,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.mathb01.15.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b.mathb01.15.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.b.mathb01.15.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
-| activity.b.mathb01.15.json | hints.2.caption.0.v | שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם. | needs-editor |
+| activity.b.mathb01.15.json | hints.2.caption.0.v | שְׁלוֹשָׁה תַּפּוּחִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם. | needs-editor |
 | activity.b.mathb01.15.json | a11y.altText | יֵשׁ שְׁלוֹשָׁה תַּפּוּחִים. מוֹסִיפִים עוֹד, וְעַכְשָׁו יֵשׁ חֲמִשָּׁה תַּפּוּחִים. כַּמָּה הוֹסַפְנוּ? | needs-editor |
 | activity.b.mathb01.16.json | prompt.caption.0.v | יֵשׁ אַרְבָּעָה דָּגִים. מוֹסִיפִים עוֹד, וְעַכְשָׁו יֵשׁ שִׁבְעָה דָּגִים. כַּמָּה הוֹסַפְנוּ? | needs-editor |
 | activity.b.mathb01.16.json | answer.options.0.label | שֶׁבַע | needs-editor |
@@ -1962,7 +1962,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.mathb01.16.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b.mathb01.16.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.b.mathb01.16.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
-| activity.b.mathb01.16.json | hints.2.caption.0.v | אַרְבַּע וְעוֹד שָׁלוֹשׁ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ, שֵׁשׁ, שֶׁבַע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ. | needs-editor |
+| activity.b.mathb01.16.json | hints.2.caption.0.v | אַרְבָּעָה דָּגִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ. | needs-editor |
 | activity.b.mathb01.16.json | a11y.altText | יֵשׁ אַרְבָּעָה דָּגִים. מוֹסִיפִים עוֹד, וְעַכְשָׁו יֵשׁ שִׁבְעָה דָּגִים. כַּמָּה הוֹסַפְנוּ? | needs-editor |
 | activity.b.mathb01.17.json | prompt.caption.0.v | הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל שָׁלוֹשׁ וְקוֹפֶצֶת שְׁנֵי צְעָדִים קָדִימָה. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת? | needs-editor |
 | activity.b.mathb01.17.json | feedback.correct.caption.0.v | חָמֵשׁ! נְחַתֶּם בַּמָּקוֹם הַנָּכוֹן. | needs-editor |

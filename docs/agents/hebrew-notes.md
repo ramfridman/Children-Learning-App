@@ -611,3 +611,31 @@ their text, screen text and voice text as approved (nine old entries, whose hash
 on purpose (`export-hebrew-review.py` writes the original of a `text-ready` row from the last master table: "the master table's `text` ... depend on it"). The pack and the `ui_text`
 column already say `בִּשְׁתַּיִם` (`b.numb17.4/.5/.6`, whose line is now `כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו בִּשְׁתַּיִם`) and `וּשְׁתַּיִם` (`b.mathb09.7`); the corrections
 are the `SUBS` rule of `hebrew_voice_review.py` and the `changes` column says so. The voice text is plain and right. Nothing to fix at the source.
+
+### 17.1 `b.mathb01.15` and `.16`: the third hint line fixed and approved (hebrew-text-editor, 2026-11-02, next-pack)
+
+The voice director found that the third hint (`hints.2`, voice ids `vo:b.mathb01.15.h3` and `.16.h3`) of the two "how many did we add?" items counted everything up to the
+total (`שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. …`), so the last number the child heard was the wrong answer `M-PART-MISS`. I proposed a line that counts
+only the added ones (§18.1 on branch `b45-voicing-plan`, commit 78f0887). **The owner read the two texts in chat on 2026-11-02 and said "Fix them"**; the two texts are owner-approved as written.
+
+**Source.** One argument of the `numpick3` call in `tools/band_b.py` (the loop over `('apple', 3, 5), ('fish', 4, 7)`, MATH-B-01):
+`h3='%s כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (qty(x, OBJECTS[obj]), count_words(r), F[r])`. Regenerated twice, byte-identical.
+Changed under `content/`: `starter/activity.b.mathb01.15.json`, `starter/activity.b.mathb01.16.json` and the unit spec `units/band-b-math.json` (the two `h3` values); nothing else.
+
+| Row | Screen text (= `ui_text`) | Voice text |
+|---|---|---|
+| `activity.b.mathb01.15.json` › `hints.2.caption.0.v` | `שְׁלוֹשָׁה תַּפּוּחִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.` | `שְׁלוֹשָׁה תפוחים כבר יש. סופרים רק את אֵלֶּה שהוספנו: אַחַת, שְׁתַּיִם. עכשיו תורכם — ללחוץ על שְׁתַּיִם.` |
+| `activity.b.mathb01.16.json` › `hints.2.caption.0.v` | `אַרְבָּעָה דָּגִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.` | `אַרְבָּעָה דגים כבר יש. סופרים רק את אֵלֶּה שהוספנו: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.` |
+
+The voice texts differ from the plain ones in §18.1 in two places, both by rules that already exist and that I checked: `אֵלֶּה` keeps its nikud (V1 audit of 2026-10-29: plain `אלה` can be read `אֵלָה` or `אַלָּה`), and the
+counted number word before a noun (`שְׁלוֹשָׁה`) keeps its nikud (number words carry gender).
+
+**Approval, hash-locked as B-36.** The two rows are in `docs/review/b36-approved-rows.tsv` (3,236 rows now) with the hash of the text, screen text and voice text above. `tools/hebrew_voice_review.py` gives them the comment
+`H3_COUNT_ADDED_COMMENT` (the owner's words "Fix them"); if either line changes later its hash is not in the list and the row goes back to `text-ready`. Master table (14,434 rows): `owner-approved` 3,349 to **3,351**, `text-ready`
+10,434 (the two rows were `proposed` for a moment as new text), `unchanged` 649. The pack documents stay `"review": "needs-editor"`.
+
+**The hint picture does not match the new line (for the app-developer, not changed here).** `MATH-B-01` is in the `add` family (`app/lib/content/hint_ladder.dart`), and `_Plans.add` (`app/lib/play/hints/tap_plans.dart`, line ~1190) has a
+count-on picture only when the stage has a second group (`a.group2 != null`). These two items have one group (3 apples, 4 fish) and no second one, so level 3 takes the take-away branch: the hand card shows 3 (4), the hand presses the last
+apple (fish) as if one were taken away, and the result badge shows 2 (3). Measured with a test probe on the phone stage: frames `CardMark`, `CardMark + HandMark`, `BadgeMark(2) + HandMark` (`.15`); `BadgeMark(3)` at the end (`.16`). The line now says
+"3 apples are already here; we count only the ones we added: one, two". The picture should be: the group of three raised as the hand (it "hugs" into its number, as `docs/curriculum/b40-visual-hint-ladder.md` TA-5 says for MATH-B-01), then
+the hand lights two new places beside it, counting 1, 2 (`asksMore` of the existing branch counts that way), ending on the badge 2. The picture was wrong before this fix too (a take-away over an add question).
