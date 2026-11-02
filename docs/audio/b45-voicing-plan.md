@@ -235,7 +235,7 @@ exit
 
 | # | What | Who | Why |
 |---|---|---|---|
-| P1 | **Texts approved.** 2,818 lines (104,062 characters a voice) come from rows still `text-ready`; the tool voices only `owner-approved`, `voice-ready` or `voiced`, and `generate` refuses while any line waits. Your signature of 0.11.0 is the approval (decision 1); after it, the hebrew-text-editor records the spoken rows of the signed pack as `owner-approved` (6,720 spoken rows now `text-ready`). | owner, then hebrew-text-editor | measured |
+| P1 | **Texts approved.** 2,818 lines (104,062 characters a voice) come from rows still `text-ready`; the tool voices only `owner-approved`, `voice-ready` or `voiced`, and `generate` refuses while any line waits. Your signature of 0.11.0 is the approval (decision 1; answered conditionally on 2026-11-02: 6,091 rows approved, 445 lines per narrator still wait); after it, the hebrew-text-editor records the spoken rows of the signed pack as `owner-approved` (6,720 spoken rows now `text-ready`). | owner, then hebrew-text-editor | measured |
 | P2 | **Tone by the end of an id.** `styleOf` in `app/tool/voice_gen_lib.dart` matches the START of an id only. The rules in `voices.json` that begin with `*` (`*.h3`, `*.h1`, `*.h2`, `*.prompt`) must match the END. Without it, about 2,430 lines (every question, hint 1 to 3; 130,000 of the 174,772 characters) go out at 0.5 instead of 0.60 to 0.70. Change: in `styleOf`, `p.startsWith('*') ? voId.endsWith(p.substring(1)) : voId.startsWith(p)`, with a test. After it, `plan --list` must show stability 0.35 x184, 0.45 x4, 0.5 x1,175, 0.55 x2, 0.6 x1,220, 0.65 x299, 0.7 x1,107. | app-developer | read in code |
 | P3 | **A friend's own lines only.** `plan` and `generate` give every character all lines (today every friend would cost 6.99 USD, 48.9 USD for seven). Add to `content/voices.json` `"narrators": ["nitzi","hero-son"]` and `"ownLines": ["vo:core.greeting.hello","vo:core.greeting.start","vo:core.celebrate.well","vo:core.placement.done","vo:core.goodbye.next","vo:core.ceremony.bronze","vo:core.ceremony.silver","vo:core.ceremony.gold","vo:core.ceremony.medal"]`; a character not in `narrators` plans and sends only `ownLines`. The app already falls back to the narrator for any other line. | app-developer | read in code |
 | P4 | **The QA test** "every `vo` id has a recording in every shipped voice pack" must allow a friend pack to hold only its 9 own lines (the narrator pack covers the rest). | qa-engineer | read |
@@ -316,6 +316,18 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
 1. **Does signing pack 0.11.0 count as your approval of every spoken text in it?** Then the editor marks the 6,720
    spoken `text-ready` rows `owner-approved` after the signing, and 3,991 lines can be voiced. If no: only the 1,173 lines
    already approved (70,710 characters a voice) can be voiced, and 2,818 lines would have no new clip. *Recommend: yes.*
+   **Answered 2026-11-02 (recorded by the hebrew-text-editor).** The owner, in chat: "If they are already checked by the text
+   agent and the voice agent its fine by me". So the approval is conditional: a spoken row is `owner-approved` only if the editor
+   checked it (`text-ready`, not flagged) and the voice director has a direction row for exactly its voice text in
+   `docs/audio/voice-direction.csv` with no open ask. Result: **6,091 of the 6,720 spoken rows are `owner-approved`** (6,070 pack
+   rows, 21 core rows), hash-locked in `docs/review/b45-approved-rows.tsv`; 629 are held, each with its reason in
+   `docs/review/b45-held-rows.tsv` (547 have no direction row because their text is newer than the table of 2026-10-28, 14 carry
+   an open ask, 68 are outside the pack: 66 live-helper rows and 2 per-name strings). The free `voice_gen plan` now plans **3,546
+   of 3,991 lines per narrator (153,615 characters, was 1,173 lines)** and all 9 lines of each friend; 445 lines per narrator still
+   wait, so `generate` still refuses. To release them the voice director must give the 547 rows a direction row and answer the 14
+   asks (details: `docs/agents/hebrew-notes.md` section 18; `tools/voice_direction.py` reads only `text-ready` rows, so it must also
+   read `owner-approved` before it is rerun). The director's table is per text, made by a script, and nobody has listened; whether
+   that is the check the owner meant is for him to say.
 2. **One run per narrator (recommended)** or a tool change that lets a run take only part of the lines. The pilot is the safe
    small step already; Ctrl+C is the emergency stop. *Recommend: one run each, no tool change.*
 3. **The word "equals" (`שווה`, 120 lines, 5,636 characters):** after the pilot, say "N44 better" or "N43 is fine". If the

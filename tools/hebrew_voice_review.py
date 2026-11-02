@@ -1050,6 +1050,18 @@ B36_APPROVED_COMMENT = ('B-36 sheet (docs/review/b36-owner-sample.md): the owner
                         'sample S1-S88, D1-D5, F1-F6, and the rule of part 5).')
 _b36 = None
 
+# 2026-11-02 (B-45): the owner, in chat, verbatim: "If they are already checked by the text agent and the voice agent its fine by me"
+# (answering whether signing pack 0.11.0 also approves its spoken texts for voicing). A CONDITIONAL approval: a spoken row is
+# `owner-approved` only if (a) the editor has checked it (it is `text-ready`, not flagged) and (b) the voice director has a direction
+# row for exactly its voice text in docs/audio/voice-direction.csv, with no open ask. The rows that met both are in
+# docs/review/b45-approved-rows.tsv, hash-locked like the B-36 list (source, id, hash of text, screen text and voice text): a later change
+# of any of the three takes the row out of the list and back to `text-ready`. The rows that did not are listed, with the reason, in
+# docs/review/b45-held-rows.tsv (they stay as they are). docs/agents/hebrew-notes.md section 18 has the rules and the counts.
+B45_APPROVED_FILE = os.path.join(ROOT, 'docs', 'review', 'b45-approved-rows.tsv')
+B45_APPROVED_COMMENT = ('owner approved 2026-11-02, conditional: checked by the text and voice agents (the owner, in chat: "If they are already '
+                        'checked by the text agent and the voice agent its fine by me"; docs/agents/hebrew-notes.md section 18).')
+_b45 = None
+
 
 def b36_hash(text, ui, voice):
     return hashlib.sha1(chr(0x1f).join((text, ui, voice)).encode('utf-8')).hexdigest()[:12]
@@ -1061,6 +1073,14 @@ def b36_approved(r, ui, voice):
         with open(B36_APPROVED_FILE, encoding='utf-8') as fh:
             _b36 = {tuple(line.rstrip(chr(10)).split(chr(9))) for line in fh if line.strip()}
     return (r['source'], r['id'], b36_hash(r['text'], ui, voice)) in _b36
+
+
+def b45_approved(r, ui, voice):
+    global _b45
+    if _b45 is None:
+        with open(B45_APPROVED_FILE, encoding='utf-8') as fh:
+            _b45 = {tuple(line.rstrip(chr(10)).split(chr(9))) for line in fh if line.strip()}
+    return (r['source'], r['id'], b36_hash(r['text'], ui, voice)) in _b45
 
 
 def owner_approved(r):
@@ -1392,6 +1412,8 @@ def master(rows, result, rules):
             approved = owner_approved(r)
             if not approved and b36_approved(r, ui, el):
                 approved = QA6_APPROVED_COMMENT if q6 else B36_APPROVED_COMMENT
+            if not approved and b45_approved(r, ui, el):
+                approved = B45_APPROVED_COMMENT
             if q6 and status == 'text-ready':
                 comment = EDITOR + 'new text (QA-B36-6): waits for the owner, docs/review/b36-qa6-owner-sample.md'
             if approved:
@@ -1400,7 +1422,11 @@ def master(rows, result, rules):
             correction = r['correction (fill in)']
             if old:
                 owner_comment = old['comment'].strip() and not old['comment'].startswith(EDITOR.strip())
-                if old['correction (fill in)'].strip() or owner_comment or old['status'] in OWNER_STATUSES:
+                # A B-45 row whose hash is no longer in the list is not kept as approved from the last table: it goes back to the editor's status.
+                lost_b45 = old['comment'].startswith(EDITOR + B45_APPROVED_COMMENT) and approved != B45_APPROVED_COMMENT
+                if lost_b45:
+                    pass
+                elif old['correction (fill in)'].strip() or owner_comment or old['status'] in OWNER_STATUSES:
                     status = old['status'] if old['status'] in OWNER_STATUSES or old['correction (fill in)'].strip() else status
                     correction = old['correction (fill in)']
                     comment = old['comment'] if owner_comment else comment

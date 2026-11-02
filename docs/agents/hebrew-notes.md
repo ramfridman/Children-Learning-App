@@ -611,3 +611,35 @@ their text, screen text and voice text as approved (nine old entries, whose hash
 on purpose (`export-hebrew-review.py` writes the original of a `text-ready` row from the last master table: "the master table's `text` ... depend on it"). The pack and the `ui_text`
 column already say `בִּשְׁתַּיִם` (`b.numb17.4/.5/.6`, whose line is now `כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו בִּשְׁתַּיִם`) and `וּשְׁתַּיִם` (`b.mathb09.7`); the corrections
 are the `SUBS` rule of `hebrew_voice_review.py` and the `changes` column says so. The voice text is plain and right. Nothing to fix at the source.
+
+## 18. B-45: the owner's conditional approval of the spoken texts (hebrew-text-editor, 2026-11-02)
+
+**The owner's words** (chat, 2026-11-02, answering whether signing pack 0.11.0 should also approve all its spoken texts for voicing, decision 1 of `docs/audio/b45-voicing-plan.md`): "If they are already checked by the text agent and the voice agent its fine by me". The approval is conditional, so a spoken row became `owner-approved` only if **both** held:
+
+- **(a) The text editor has checked it:** the row is `text-ready` (read in the editor's passes; not `proposed`, not flagged). The two "second look" notes of section 14.4 were closed for this: the 27 `text-ready` rows of `יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסֵר?` were read again (grammar, age and sense are right for Band B, and the same sentence is already `owner-approved` in 19 rows from the B-36 pass); the 12 `cs.robot.direct` hint rows ("curriculum-expert to confirm") follow the Band A landmark rule that `docs/curriculum/b40-visual-hint-ladder.md` builds on. The other note of 14.4 (`כֵּן, צָדַקְתֶּם!` after a child's "לֹא") has no `text-ready` row left: its three rows were approved in B-36, and the question stays with the curriculum-expert.
+- **(b) The voice director has checked it for voicing:** `docs/audio/voice-direction.csv` (the director's per-text table, made by `tools/voice_direction.py` on 2026-10-28) has a row for **exactly this voice text**, and that row carries no open ask to the editor (`note_for_text_editor` is empty, or only "long list, no change asked before the audition").
+
+**How sure (b) is, said plainly.** There is no per-row human sign-off by the director, and nobody has listened. The only per-row record is that script-made direction table (a tone, a pace, `listen_for`, flags). The director's plan of 2026-11-02 (`docs/audio/b45-voicing-plan.md`) is category-level (tone by the end of an id, the number "two", "equals"); it says no line needs more and that no punctuation change is asked. I took "a direction row for this exact voice text, and no open ask" as the per-row check. If the owner meant more than that, the director must sign the rows (below).
+
+**Scope.** The spoken rows of the pack documents (group 3) and the core lines (group 2, voiced in the same run). Not touched: the 66 live-helper rows (group 4: gateway, its own prewarm step) and the 2 per-name app strings (`homeBubble`, `homeBubbleNoName`, group 1).
+
+**Result** (master table, 14,434 rows; 6,720 spoken rows were `text-ready`):
+
+| | Rows |
+|---|---|
+| Now `owner-approved` (met both): 6,070 pack rows (group 3) and 21 core rows | **6,091** |
+| Held: no direction row for the exact voice text (text new or changed since 2026-10-28 by B-13, B-15, B-36, B-40, QA-B36-6; 438 distinct voice texts, mostly `b.*` 196 rows and `b15.*` 159 rows) | 547 |
+| Held: the director's table has an open ask for the line (5 voice texts: three correct lines that start with `לא,` (10 rows) which can sound like a "not yet"; the `x.mathb19.7`/`.8` line "LONG, split at a full stop" (3 rows); `core.listen.again` "LONG" (1 row)) | 14 |
+| Held: outside the signed pack, live helper (group 4) | 66 |
+| Held: outside the signed pack, app strings (group 1) | 2 |
+
+Master counts: `owner-approved` 3,349 to **9,440**, `text-ready` 10,436 to **4,345**, `unchanged` 649. No `proposed` rows. Every held row is listed with its reason in `docs/review/b45-held-rows.tsv`.
+
+**How it is kept (hash-locked, as B-36).** `docs/review/b45-approved-rows.tsv` has the 6,091 rows as (source, id, hash of the text, the screen text and the voice text), the same hash as `b36-approved-rows.tsv`. `tools/hebrew_voice_review.py` (`b45_approved`, `B45_APPROVED_COMMENT`) sets `owner-approved` with the comment "owner approved 2026-11-02, conditional: checked by the text and voice agents" and the owner's words. If the pack text, the screen text or the voice text of a row changes later, its hash is not in the list and the row goes back to `text-ready`; a row that leaves the list is also not kept as approved from the last table (`lost_b45`). Tested by breaking one hash (the row returned to `text-ready`; restoring it gave a byte-identical table). The editor adds no row to the list without the owner's word. Pack documents stay `"review": "needs-editor"` (section 16); `content/` was not touched (regeneration is byte-identical; `git status` shows no change under `content/`).
+
+**What the voice director needs to do for the held rows** (then I add them to the list; no text changes unless the director asks for punctuation):
+1. The **547 rows / 438 voice texts** with no direction row: rerun `tools/voice_direction.py` (or an equivalent check) so each gets a direction row, and say they are checked. **Caution:** that tool reads only `text-ready` rows (`tools/voice_direction.py` line 257). The 6,091 rows are `owner-approved` now, so a plain rerun would write a table without them and lose their direction record. Make it read `owner-approved` too, or write the new rows to a second file.
+2. The **14 rows with an open ask**: confirm in one line that the asks of 2026-10-28 are withdrawn (the plan says "I asked for no punctuation change"), or send the punctuation change (`לא.` for `לא,`; a full stop in the `x.mathb19.7` line and in `core.listen.again`). I change `voice_text`, and the row is checked again.
+3. The group 4 and group 1 rows need the owner's word that they are meant too (the live helper and the per-name lines are not in this run).
+
+Effect on the plan (free `voice_gen plan`, all nine voices): each narrator plans **3,546 of 3,991 lines** (153,615 characters; it was 1,173 lines); each friend plans all its 9 lines (190 characters); 445 lines per narrator still wait (433 for no direction row, 12 for an open ask). `generate` still refuses until every line is approved.
