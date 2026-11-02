@@ -11906,7 +11906,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | hero-son.json | give.butterflies.4 / mistake default / hint 0 / band B | בואו ניתן פרפר אחד בכל פעם, ביחד. | approved |
 | hero-son.json | give.butterflies.4 / mistake M-CNT-CARD / hint 2 / band B | בואו ניתן פרפר אחד בכל פעם ונעצור בארבעה. | approved |
 | hero-son.json | give.butterflies.4 / mistake default / hint 0 / band C | בואי ננסה שוב לאט, נספור את הפרפרים אחד אחד. | approved |
-| hero-son.json | give.butterflies.4 / mistake default / hint 0 / band C | בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור כשמגיעים לארבע. | approved |
+| hero-son.json | give.butterflies.4 / mistake default / hint 0 / band C | בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור בארבעה. | approved |
 | hero-son.json | give.butterflies.4 / mistake default / hint 0 / band C | בואו ניקח פרפר אחד בכל פעם, נספור יחד. | approved |
 | hero-son.json | give.butterflies.4 / mistake M-CNT-CARD / hint 2 / band C | בואו נספור ביחד וניתן לפרח רק ארבעה פרפרים, לא יותר. | approved |
 
