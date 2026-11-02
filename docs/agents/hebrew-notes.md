@@ -641,3 +641,22 @@ apple (fish) as if one were taken away, and the result badge shows 2 (3). Measur
 the hand lights two new places beside it, counting 1, 2 (`asksMore` of the existing branch counts that way), ending on the badge 2. The picture was wrong before this fix too (a take-away over an add question).
 
 **Fixed in the app (app-developer, 2026-11-02).** `countsAddedOnes` (`tap_plans.dart`) gives these two items their own picture: the group hugs into its number on the hand card, one cube lights up for each added one in a row under the group (badge 1, 2, (3)), and the last step is the answer badge and the right tile. Level 2 only counts the group. Test: `app/test/hint_count_added_test.dart`; no other item changes.
+
+
+## 21. B-42: the 48 daily-welcome lines (hebrew-text-editor, 2026-11-02; `needs-editor` in the pack once they exist, `text-ready` here)
+
+`docs/review/b42-welcome-lines.tsv` now has, per line, the final screen text (`hebrew`), the `voice_text`, `status` (`text-ready`), `chars`, `changes` (why, and the pipeline's own notes), `draft` (the old text when it changed) and the curriculum-expert's `note`. The voice text was made with the editor's own rules (`analyse()` of `tools/hebrew_voice_review.py`, so `!` became a comma, number words and the audited words keep their nikud) and checked: no `!`, no U+05C7, no digit, Latin letter or curly bracket. Nothing was added to `core.he.json` (the owner has not approved the B-42 plan), and the master table has no welcome rows yet.
+
+**Size:** 1,286 characters a voice (the plan estimated 1,234 unpointed); 2,572 for the two narrators, 11,574 for nine voices (about 0.46 USD at 0.04 per 1,000).
+
+**The open points**
+1. **שְׁלָבִים, not שְׁלַבִּים.** The plural of שָׁלָב is שְׁלָבִים (as the CS-A-01 childLine writes it). Fixed in `topic.robots.steps`.
+2. **מַה / מָה.** The rule: מָה before א ה ח ע (and ר), מַה with a dagesh in the next letter before the other letters. Checked: `logic.same` (דּוֹמֶה, שּׁוֹנֶה), `logic.story` (קֹּדֶם, בַּסּוֹף) and `market.missing` (מָה חָסֵר) were right; `robots.steps` had `מַה אַחַר כָּךְ` and is now `מָה אַחַר כָּךְ`. `market.measure` is reworded so that it needs no question word.
+3. **גּוּפִים for Band A.** Dropped: `topic.shapes.solids` is now `כַּדּוּר, קֻבִּיָּה וְגָלִיל` (words a 3 to 4 year old knows). Curriculum-expert: confirm that SHP-A-07 uses ball, cube and cylinder.
+4. **נִקַּח / נוֹרִיד.** נִקַּח stays: it is the child word of the skills (`מוֹסִיפִים וְלוֹקְחִים`, `לוֹקְחִים אֶחָד`); נוֹרִיד is the school word for subtract.
+5. **שָׁוֶה.** `market.share` keeps the idiom `שָׁוֶה בְּשָׁוֶה`; `market.equal` is now `נִבְדֹּק אִם שְׁנֵי הַצְּדָדִים שָׁוִים` (the draft `שֶׁשָּׁוֶה זֶה אוֹתוֹ דָּבָר מִשְּׁנֵי הַצְּדָדִים` was heavy to say). Voice texts have plain `שווה` / `שווים`, following decision 3 of the B-45 plan; if the owner picks the pointed form after the pilot, change both lines together.
+6. **Shortening `shapes.position`:** `הַיּוֹם נְגַלֶּה אֵיפֹה כׇּל דָּבָר נִמְצָא.` (27 characters unpointed instead of 45); still no left or right.
+
+**Other changes:** `hello.1` (`אֵיזֶה כֵּיף לְהִתְרָאוֹת` is the word for goodbye; now `אֵיזֶה כֵּיף לִרְאוֹת אֶתְכֶם`); `counting.big` (`נִסְפֹּר עַד מִסְפָּרִים` was not Hebrew; now `נִסְפֹּר מִסְפָּרִים גְּדוֹלִים`); `counting.order` (`צִיר הַמִּסְפָּרִים`, the word of the skills, not `שׁוּרַת`). Kept: `logic.think` (בַּלָּשִׁים), `robots.fix` (screen `הַתׇּכְנִית`, voice `התוכנית`), the land lines and `close`.
+
+**For the voice director.** (a) Greetings follow a name clip that says only the name as a call: each begins `שלום,` and stands alone as well. (b) Keep the pointing in the voice texts: `נְגַלֶּה`, `נֵצֵא`, `נְחַלֵּק`, `נְפָרֵק`, `אֶחָד`, `לִשְׁתֵּי`, `שְׁנֵי`, and the land names `יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר` (as in the bottle lines). (c) `topic.market.share` and `.equal` carry plain `שווה` / `שווים`: they join the listening check of decision 3. (d) `topic.shapes.solids` has `גליל` (cylinder, "galil"), not `גְּלִיל`: listen. (e) No new tone: all are greeting-level.
