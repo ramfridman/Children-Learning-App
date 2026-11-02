@@ -1,5 +1,9 @@
 # QA-B36-6: the second hint line of ten second-way items (hebrew-text-editor, 2026-11-01)
 
+**Answer (2026-11-02): approved.** The owner wrote in chat, verbatim: "Yes, 1–6 OK". All ten rows are `owner-approved` (the six families as
+written below, including the cube row that reuses `vo:hint.solid_outline.h2`). He did not ask for a new line for `b.numb17.12`; it stays as it is.
+Recorded in `docs/review/b36-approved-rows.tsv` and in `docs/agents/hebrew-notes.md` §17. The sentence below was true when the sheet was sent.
+
 For the owner, to read from a phone. Nothing here is approved until you say so; the ten rows are `text-ready`, not `owner-approved`.
 
 **What was wrong.** The second hint (level 2: the first picture that changes, "another way to see it") of ten new items said the same

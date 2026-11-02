@@ -947,6 +947,13 @@ QA6_SOURCES = {
 }
 
 
+# The owner approved the ten rows on 2026-11-02 (chat, verbatim: "Yes, 1-6 OK"; the sheet docs/review/b36-qa6-owner-sample.md). Their hashes are in
+# docs/review/b36-approved-rows.tsv (the nine rows whose old hash no longer matched were updated, b.shpb08.10 was added). A row whose line
+# changes later is not in the list any more and goes back to `text-ready` with the QA-B36-6 comment below.
+QA6_APPROVED_COMMENT = ('QA-B36-6 (docs/review/b36-qa6-owner-sample.md): the owner approved this level-2 hint line on 2026-11-02 '
+                        '("Yes, 1-6 OK"); the voice id of its family is shared by the items of the family.')
+
+
 def qa6_note(r):
     if r['id'] == 'hints.1.caption.0.v' and r['source'] in QA6_SOURCES:
         return ('QA-B36-6 (editor, 2026-11-01): the level-2 line said "look slowly at all of them" over a new picture (%s); it now says '
@@ -1382,7 +1389,9 @@ def master(rows, result, rules):
                         comment = EDITOR + note
             elif r['group'].startswith('5'):
                 comment = EDITOR + ALERT_NOTE
-            approved = owner_approved(r) or (B36_APPROVED_COMMENT if b36_approved(r, ui, el) else None)
+            approved = owner_approved(r)
+            if not approved and b36_approved(r, ui, el):
+                approved = QA6_APPROVED_COMMENT if q6 else B36_APPROVED_COMMENT
             if q6 and status == 'text-ready':
                 comment = EDITOR + 'new text (QA-B36-6): waits for the owner, docs/review/b36-qa6-owner-sample.md'
             if approved:

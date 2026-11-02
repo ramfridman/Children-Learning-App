@@ -755,7 +755,7 @@ activity.b.mathb18.10.json	feedback.incorrect.1.caption.0.v	c550017f3c31
 activity.b.mathb18.10.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.b.mathb18.10.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.b.mathb18.10.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.b.mathb18.10.json	hints.1.caption.0.v	c955848ed8a4
+activity.b.mathb18.10.json	hints.1.caption.0.v	8ac7c8beb30a
 activity.b.mathb18.10.json	hints.2.caption.0.v	d5a445db0682
 activity.b.mathb18.10.json	a11y.altText	f6f1d1848168
 activity.b.mathb18.11.json	prompt.caption.0.v	c2e44c554917
@@ -768,7 +768,7 @@ activity.b.mathb18.11.json	feedback.incorrect.1.caption.0.v	c550017f3c31
 activity.b.mathb18.11.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.b.mathb18.11.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.b.mathb18.11.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.b.mathb18.11.json	hints.1.caption.0.v	c955848ed8a4
+activity.b.mathb18.11.json	hints.1.caption.0.v	8ac7c8beb30a
 activity.b.mathb18.11.json	hints.2.caption.0.v	4fdaa0e51f2d
 activity.b.mathb18.11.json	a11y.altText	c2e44c554917
 activity.b.mathb18.2.json	hints.2.caption.0.v	9e32e64107a4
@@ -1275,7 +1275,7 @@ activity.b.numb17.13.json	feedback.incorrect.1.caption.0.v	4b8ef25698d2
 activity.b.numb17.13.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.b.numb17.13.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.b.numb17.13.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.b.numb17.13.json	hints.1.caption.0.v	c955848ed8a4
+activity.b.numb17.13.json	hints.1.caption.0.v	d9e7806d7882
 activity.b.numb17.13.json	hints.2.caption.0.v	11a6d23a9d84
 activity.b.numb17.13.json	a11y.altText	1b2175df76e3
 activity.b.numb17.14.json	prompt.caption.0.v	646059f2e53c
@@ -1477,6 +1477,7 @@ activity.b.shpb08.10.json	answer.options.1.label	2564918e93ca
 activity.b.shpb08.10.json	answer.options.2.label	411e287f0464
 activity.b.shpb08.10.json	feedback.correct.caption.0.v	34d45c550ee1
 activity.b.shpb08.10.json	feedback.incorrect.1.caption.0.v	7097eb496c4b
+activity.b.shpb08.10.json	hints.1.caption.0.v	143af682f99f
 activity.b.shpb08.10.json	hints.2.caption.0.v	d0675b85ba0d
 activity.b.shpb08.10.json	a11y.altText	f131bdd5e87c
 activity.b.shpb08.11.json	prompt.caption.0.v	29dd62022c94
@@ -2170,7 +2171,7 @@ activity.b36.numa06.1.json	feedback.incorrect.1.caption.0.v	799dd7016091
 activity.b36.numa06.1.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.b36.numa06.1.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.b36.numa06.1.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.b36.numa06.1.json	hints.1.caption.0.v	c955848ed8a4
+activity.b36.numa06.1.json	hints.1.caption.0.v	1c00bd2db8ed
 activity.b36.numa06.1.json	hints.2.caption.0.v	c625498da7db
 activity.b36.numa06.1.json	a11y.altText	b9e9099252e8
 activity.b36.numa06.2.json	prompt.caption.0.v	98ced9a10299
@@ -2183,7 +2184,7 @@ activity.b36.numa06.2.json	feedback.incorrect.1.caption.0.v	799dd7016091
 activity.b36.numa06.2.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.b36.numa06.2.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.b36.numa06.2.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.b36.numa06.2.json	hints.1.caption.0.v	c955848ed8a4
+activity.b36.numa06.2.json	hints.1.caption.0.v	1c00bd2db8ed
 activity.b36.numa06.2.json	hints.2.caption.0.v	0ff750461733
 activity.b36.numa06.2.json	a11y.altText	98ced9a10299
 activity.b36.numa07.1.json	prompt.caption.0.v	f59b2c74d226
@@ -3058,7 +3059,7 @@ activity.x.mathb17.12.json	feedback.incorrect.1.caption.0.v	34943dfa54f9
 activity.x.mathb17.12.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.x.mathb17.12.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.x.mathb17.12.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.x.mathb17.12.json	hints.1.caption.0.v	c955848ed8a4
+activity.x.mathb17.12.json	hints.1.caption.0.v	531c2f8d499a
 activity.x.mathb17.12.json	hints.2.caption.0.v	38a7f084cfea
 activity.x.mathb17.12.json	a11y.altText	7df5da395745
 activity.x.mathb17.13.json	prompt.caption.0.v	7df5da395745
@@ -3071,7 +3072,7 @@ activity.x.mathb17.13.json	feedback.incorrect.1.caption.0.v	34943dfa54f9
 activity.x.mathb17.13.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.x.mathb17.13.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.x.mathb17.13.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.x.mathb17.13.json	hints.1.caption.0.v	c955848ed8a4
+activity.x.mathb17.13.json	hints.1.caption.0.v	531c2f8d499a
 activity.x.mathb17.13.json	hints.2.caption.0.v	92ae9cf0fdc7
 activity.x.mathb17.13.json	a11y.altText	7df5da395745
 activity.x.mathb19.1.json	hints.1.caption.0.v	f5aed7ed8fd6
@@ -3141,7 +3142,7 @@ activity.x.numb07.21.json	feedback.incorrect.1.caption.0.v	e1d6627dbbf6
 activity.x.numb07.21.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.x.numb07.21.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.x.numb07.21.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.x.numb07.21.json	hints.1.caption.0.v	c955848ed8a4
+activity.x.numb07.21.json	hints.1.caption.0.v	a6ff55d1fc36
 activity.x.numb07.21.json	hints.2.caption.0.v	9fe8e9b1be7c
 activity.x.numb07.21.json	a11y.altText	872cddd68fd4
 activity.x.numb07.22.json	prompt.caption.0.v	d1687649bccf
@@ -3154,7 +3155,7 @@ activity.x.numb07.22.json	feedback.incorrect.1.caption.0.v	e1d6627dbbf6
 activity.x.numb07.22.json	feedback.incorrect.2.caption.0.v	93ba3702c6ac
 activity.x.numb07.22.json	feedback.unsure.caption.0.v	b44a3e438ed6
 activity.x.numb07.22.json	hints.0.caption.0.v	1b1e3d4a2784
-activity.x.numb07.22.json	hints.1.caption.0.v	c955848ed8a4
+activity.x.numb07.22.json	hints.1.caption.0.v	a6ff55d1fc36
 activity.x.numb07.22.json	hints.2.caption.0.v	8353b282efaa
 activity.x.numb07.22.json	a11y.altText	d1687649bccf
 activity.x.shpb09.1.json	hints.1.caption.0.v	576b6452c6ee

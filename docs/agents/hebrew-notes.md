@@ -598,6 +598,15 @@ Rows: the nine that were `owner-approved` (their hash is no longer in `b36-appro
 `new text (QA-B36-6): waits for the owner` (`QA6_SOURCES` in `tools/hebrew_voice_review.py`; the draft is in `changes`). Master table: `owner-approved` 3,348 to 3,339,
 `text-ready` 10,437 to 10,446. The owner's sheet is `docs/review/b36-qa6-owner-sample.md`.
 
+**The owner's answer (2026-11-02, recorded by the hebrew-text-editor).** In chat, verbatim: "Yes, 1–6 OK" (the six families of the sheet; he did not ask for a new line for
+`b.numb17.12`, which stays as it is). The ten rows are `owner-approved`. How it is kept: `docs/review/b36-approved-rows.tsv` has the ten `hints.1.caption.0.v` rows with the hash of
+their text, screen text and voice text as approved (nine old entries, whose hash no longer matched the new line, got the new hash; `b.shpb08.10` is a new entry; the list has
+3,234 rows now, in the order of the master table). `tools/hebrew_voice_review.py` gives these rows the comment `QA6_APPROVED_COMMENT` (the other rows of the list keep
+`B36_APPROVED_COMMENT`); if one of the ten lines changes later its hash is not in the list and the row goes back to `text-ready` with the QA-B36-6 comment. Pack, generators
+(`tools/hint_lines.py`) and the voice ids are unchanged by the approval; the pack documents stay `"review": "needs-editor"` (§16). Counts, master table (14,434 rows): `owner-approved`
+3,339 to 3,349, `text-ready` 10,446 to 10,436, `unchanged` 649. Next for the voice director: the five new clips (`vo:hint.plate.h2`, `vo:hint.glyph.h2`, `vo:hint.in_twos.h2`,
+`vo:hint.coin_values.h2`, `vo:hint.hidden_part.h2`); `vo:hint.solid_outline.h2` exists.
+
 **The `בשְׁתַּיִם` and `וְשְׁתַּיִם` rows the security reviewer saw are not errors in the pack.** They are in the `text` column of `hebrew-master.csv`, which keeps the ORIGINAL draft
 on purpose (`export-hebrew-review.py` writes the original of a `text-ready` row from the last master table: "the master table's `text` ... depend on it"). The pack and the `ui_text`
 column already say `בִּשְׁתַּיִם` (`b.numb17.4/.5/.6`, whose line is now `כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו בִּשְׁתַּיִם`) and `וּשְׁתַּיִם` (`b.mathb09.7`); the corrections
