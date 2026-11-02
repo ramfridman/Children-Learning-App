@@ -22,6 +22,13 @@ class _Waiting {
   bool get stale => relevant != null && !relevant!();
 }
 
+/// A line that is waiting for its pack to be loaded, and who asked for it.
+class _Loading {
+  _Loading(this.owner);
+
+  final Object? owner;
+}
+
 /// Speaks the guide's lines, one at a time, in the voice of the child's companion, and tells the character
 /// when its mouth is open. It never plays two lines at once, stops when told to (the child leaves the screen),
 /// and does nothing for a line with no recording (the caption is on screen anyway).
@@ -69,6 +76,10 @@ class VoiceDirector extends ChangeNotifier {
   VoiceClip? _clip;
   final MouthFlap _flap = MouthFlap();
   int _generation = 0;
+
+  /// The lines waiting for their pack to load. Replacing or stopping the voice takes them out, and a line that finds itself
+  /// gone when its pack arrives is not said.
+  final List<_Loading> _loading = <_Loading>[];
   bool _disposed = false;
 
   bool _speaking = false;
@@ -95,8 +106,33 @@ class VoiceDirector extends ChangeNotifier {
 
   /// Says the line [voId] (`vo:...`) in the current voice, replacing whatever is playing. A null id or a line with no
   /// recording is silence. [owner] says who spoke (see [stopFor]).
-  Future<void> say(String? voId, {Object? owner, bool Function()? relevant}) =>
-      _run(voId, voId == null ? null : _bank?.clip(voId), owner: owner, relevant: relevant);
+  ///
+  /// A line whose pack is not in memory yet (a part of the narrator's voice, see [VoiceBank.lazy]) is loaded first and then
+  /// said, unless the child has moved on meanwhile (anything that replaces or stops the voice, or [relevant] turning false).
+  Future<void> say(String? voId, {Object? owner, bool Function()? relevant}) {
+    final VoiceBank? bank = _bank;
+    if (voId == null || bank == null || !bank.canLoad(voId)) {
+      return _run(voId, voId == null ? null : bank?.clip(voId), owner: owner, relevant: relevant);
+    }
+    // This line replaces whatever was about to be said; it is dropped in turn if something replaces or stops it first.
+    _loading.clear();
+    final _Loading mine = _Loading(owner);
+    _loading.add(mine);
+    return bank.fetch(voId).then((VoiceClip? clip) {
+      if (_disposed || !_loading.remove(mine) || (relevant != null && !relevant())) return null;
+      return _run(voId, clip, owner: owner, relevant: relevant);
+    });
+  }
+
+  /// Loads the packs of the lines [voIds] ahead of their use, so that the first of them is said without waiting for a pack
+  /// (a lesson that is opening). Harmless when the voice is not lazy; never throws.
+  Future<void> prefetch(Iterable<String> voIds) async {
+    try {
+      await _bank?.prefetch(voIds);
+    } on Object catch (e) {
+      Log.d('voice: prefetch failed (${e.runtimeType})');
+    }
+  }
 
   /// Says a line that is not in the pack: the live line of the AI tutor, as sound that was just checked and made.
   /// It has no mouth cues, so the mouth moves at a gentle rhythm while it plays.
@@ -114,8 +150,21 @@ class VoiceDirector extends ChangeNotifier {
 
   /// Says the line [voId] after the line that is playing has ended; at once if none is playing. A line with no recording
   /// is skipped and never cuts a playing one. Only the newest waiting line is kept.
+  /// A line whose pack is not in memory yet is loaded first, and joins the queue then (unless the voice was replaced or
+  /// stopped meanwhile).
   Future<void> sayNext(String? voId, {Object? owner, bool Function()? relevant}) {
-    final VoiceClip? clip = voId == null ? null : _bank?.clip(voId);
+    final VoiceBank? bank = _bank;
+    if (voId == null || bank == null) return Future<void>.value();
+    if (bank.canLoad(voId)) {
+      final _Loading mine = _Loading(owner);
+      _loading.add(mine);
+      return bank.fetch(voId).then((VoiceClip? clip) {
+        final bool wanted = !_disposed && _loading.remove(mine) && (relevant == null || relevant());
+        if (!wanted || clip == null) return null;
+        return _next(voId, clip, owner, relevant);
+      });
+    }
+    final VoiceClip? clip = bank.clip(voId);
     return clip == null ? Future<void>.value() : _next(voId, clip, owner, relevant);
   }
 
@@ -158,6 +207,7 @@ class VoiceDirector extends ChangeNotifier {
     bool keepWaiting = false,
   }) async {
     final int gen = ++_generation;
+    if (!keepWaiting) _loading.clear();
     _timer?.cancel();
     _gapTimer?.cancel();
     if (!keepWaiting) _waiting.clear();
@@ -243,6 +293,7 @@ class VoiceDirector extends ChangeNotifier {
   /// Stops the line now, and forgets any line waiting.
   Future<void> stop() async {
     _generation++;
+    _loading.clear();
     _timer?.cancel();
     _gapTimer?.cancel();
     _waiting.clear();
@@ -270,6 +321,7 @@ class VoiceDirector extends ChangeNotifier {
   /// Stops only what [owner] said (a screen that closes must not silence a line that the next screen has just started).
   Future<void> stopFor(Object owner) async {
     _waiting.removeWhere((_Waiting w) => identical(w.owner, owner));
+    _loading.removeWhere((_Loading l) => identical(l.owner, owner));
     if (identical(_owner, owner)) await stop();
   }
 

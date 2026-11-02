@@ -176,7 +176,13 @@ void main() {
         'vo:b.numb03.1.prompt',
         'vo:col.find.1.prompt',
       });
-      expect(said(bank, 'vo:b.numb03.1.prompt'), 'mp3:nitzi:b.numb03.1.prompt');
+      expect(bank.packs!.residentPacks, <String>['voice-nitzi'], reason: 'only the shared lines are loaded');
+      expect(bank.canLoad('vo:b.numb03.1.prompt'), isTrue);
+      expect(bank.clip('vo:b.numb03.1.prompt'), isNull, reason: 'not in memory yet');
+      expect(utf8.decode((await bank.fetch('vo:b.numb03.1.prompt'))!.mp3), 'mp3:nitzi:b.numb03.1.prompt');
+      expect(bank.packs!.residentPacks, <String>['voice-nitzi', 'voice-nitzi-part-num-b-1']);
+      expect(said(bank, 'vo:b.numb03.1.prompt'), 'mp3:nitzi:b.numb03.1.prompt', reason: 'now in memory');
+      expect(said(bank, 'vo:core.greeting.hello'), 'mp3:nitzi:core.greeting.hello');
       expect(bank.has('vo:b.numb03.2.prompt'), isFalse, reason: 'hero-son\'s line');
     });
 
@@ -201,7 +207,34 @@ void main() {
       );
       sound.writeAsBytesSync(<int>[...sound.readAsBytesSync(), 1]);
       final VoiceBank bank = await source.voice('nitzi');
-      expect(bank.ids.toSet(), <String>{'vo:core.greeting.hello'});
+      expect(
+        bank.has('vo:col.find.1.prompt'),
+        isTrue,
+        reason: 'the manifest is fine; the pack is proven when it is loaded',
+      );
+      expect(await bank.fetch('vo:col.find.1.prompt'), isNull);
+      expect(bank.has('vo:col.find.1.prompt'), isFalse, reason: 'given up, as a line never recorded');
+      expect(bank.packs!.failedPacks, <String>{'voice-nitzi-part-col-a'});
+      expect(
+        said(bank, 'vo:core.greeting.hello'),
+        'mp3:nitzi:core.greeting.hello',
+        reason: 'the others are kept',
+      );
+    });
+
+    test('a manifest that is not the one recorded at install leaves its pack out of the index', () async {
+      await install('nitzi', 'voice-nitzi', <String>['core.greeting.hello']);
+      await install('nitzi', 'voice-nitzi-part-col-a', <String>['col.find.1.prompt']);
+      final File manifest = File(
+        '${root.path}${Platform.pathSeparator}voice-nitzi-part-col-a${Platform.pathSeparator}2.0.0${Platform.pathSeparator}manifest.json',
+      );
+      manifest.writeAsStringSync('${manifest.readAsStringSync()} ');
+      expect(await installer.installedManifest('voice-nitzi-part-col-a'), isNull);
+      expect(await installer.installedManifest('voice-nitzi'), isNotNull);
+      expect(await installer.installedManifest('voice-nobody'), isNull);
+      final VoiceBank bank = await source.voice('nitzi');
+      expect(bank.has('vo:col.find.1.prompt'), isFalse);
+      expect(bank.has('vo:core.greeting.hello'), isTrue);
     });
 
     test('a new version of a pack id replaces the old one, so a line only the old one had is gone', () async {
@@ -218,7 +251,7 @@ void main() {
         )).bytes,
       );
       final VoiceBank bank = await source.voice('nitzi');
-      expect(said(bank, 'vo:core.a'), 'mp3:nitzi-new:core.a');
+      expect(said(bank, 'vo:core.a'), 'mp3:nitzi-new:core.a', reason: 'the shared pack is loaded at once');
       expect(
         bank.has('vo:core.b'),
         isFalse,

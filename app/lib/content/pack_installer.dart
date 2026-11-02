@@ -260,6 +260,25 @@ class PackInstaller {
     return pack;
   });
 
+  /// The manifest of the installed pack [id], to learn which lines it holds without reading its sounds. It is read from disk
+  /// and must be the exact bytes recorded at install (their SHA-256 is the row's), so it is the manifest that was verified
+  /// then; the pack itself is proven whole only by [load], which anything that plays a sound must go through. Null if the
+  /// pack is not installed or its manifest is missing or changed.
+  Future<Map<String, Object?>?> installedManifest(String id) => _serial(() async {
+    final InstalledPack? row = await registry.find(id);
+    if (row == null) return null;
+    final File file = File('${packDir(id, row.version).path}${Platform.pathSeparator}$manifestName');
+    if (!file.existsSync()) return null;
+    final Uint8List bytes = file.readAsBytesSync();
+    if (sha256Hex(bytes) != row.manifestSha256) return null;
+    try {
+      final Object? manifest = decode(utf8.decode(bytes));
+      return manifest is Map<String, Object?> ? manifest : null;
+    } on FormatException {
+      return null;
+    }
+  });
+
   /// Removes what an interrupted install left behind: temporary folders, versions the registry does
   /// not point at, and folders of packs that are not installed.
   Future<void> sweep() => _serial(() async {
