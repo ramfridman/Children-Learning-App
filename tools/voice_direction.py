@@ -39,6 +39,7 @@ CREATOR_MONTH = 275_000        # characters a month on the Creator plan (docs/PL
 NARRATORS = ['nitzi', 'hero-son']
 FRIENDS = ['alien-jili', 'climber-tzuri', 'compass-romi', 'friend-daughter', 'inventor-gali', 'tower-tamir',
            'weaver-keshet']
+OWN_LINES = set(json.load(open(os.path.join(ROOT, 'content', 'voices.json'), encoding='utf-8'))['ownLines'])
 NARRATOR_OF = {'nitzi': 'nitzi', 'alien-jili': 'nitzi', 'compass-romi': 'nitzi', 'friend-daughter': 'nitzi',
                'inventor-gali': 'nitzi', 'weaver-keshet': 'nitzi', 'hero-son': 'hero-son',
                'climber-tzuri': 'hero-son', 'tower-tamir': 'hero-son'}   # app/lib/app/companion.dart
@@ -90,13 +91,13 @@ STYLE_OF_KIND = {
     'correct': 'warm', 'not-yet': 'gentle', 'unsure': 'warm',
     'celebration': 'cheer', 'cheer': 'cheer', 'ceremony': 'ceremony', 'greeting': 'greet',
     'encourage': 'warm', 'thinking': 'think', 'listen': 'gentle', 'calm': 'calm', 'goodbye': 'calm',
-    'tutor': 'tutor',
+    'tutor': 'tutor', 'invite': 'warm',
 }
 # Seconds the line should fit in (pause budget), at the style's speed; a longer line is flagged.
 BUDGET = {   # a guess from the design spec (Tier 1 is short, Tier 2 is 2 to 3 s) and the measured rate; not measured
     'question': 8, 'instruction': 8, 'answer-prompt': 3, 'hint-1': 6, 'hint-2': 8, 'hint-3': 12, 'list': 16,
     'correct': 6, 'not-yet': 6.5, 'unsure': 3.5, 'celebration': 4.5, 'cheer': 2.5, 'ceremony': 3, 'greeting': 3,
-    'encourage': 5, 'thinking': 3, 'listen': 5.5, 'calm': 4.5, 'goodbye': 5, 'tutor': 7,
+    'encourage': 5, 'thinking': 3, 'listen': 5.5, 'calm': 4.5, 'goodbye': 5, 'tutor': 7, 'invite': 4,
 }
 BAND_SPEED = {'A': -0.03, 'B': 0.0, 'C': 0.03, '': 0.0, 'mixed': -0.02}
 
@@ -135,6 +136,7 @@ def kind_of(row, node_path, text):
         for pre, k in (('core.greeting', 'greeting'), ('core.celebrate', 'cheer'), ('core.ceremony', 'ceremony'),
                        ('core.placement', 'encourage'), ('core.thinking', 'thinking'), ('core.listen', 'listen'),
                        ('core.stuck', 'calm'), ('core.breathe', 'calm'), ('core.goodbye', 'goodbye'),
+                       ('core.rest.goodbye', 'goodbye'), ('core.adventure', 'invite'), ('core.home.bubble', 'question'),
                        ('core.encourage.check', 'thinking'), ('core.encourage.almost', 'not-yet'),
                        ('core.encourage', 'encourage')):
             if cid.startswith(pre):
@@ -207,6 +209,8 @@ def listen_for(text, kind, is_list):
         'listen': 'soft, the fault is the helper\'s ears, never the child\'s speech',
         'calm': 'slow and soft, a quiet ending',
         'goodbye': 'soft, warm, a quiet end; no "come back" pressure',
+        'invite': 'the bubble of the bottle: a warm invitation to an adventure, even and unhurried, no shout; the land name '
+                  'said whole and clearly (pointed words read as pointed); it ends level, not on a question rise',
         'tutor': 'same voice and loudness as the lesson lines around it; addressed in the right gender form',
     }[kind]
     extra = []
@@ -321,7 +325,7 @@ def main():
         band = bands[0] if len(set(bands)) == 1 else ('mixed' if bands else '')
         g = info['group']
         style = STYLE_OF_KIND[kind]
-        if g == '2':
+        if g == '2' and next(iter(info['vos'])) in OWN_LINES:
             voices = 'own: every friend in its own voice (9)'
             scope = 'own'
         elif g == '4':

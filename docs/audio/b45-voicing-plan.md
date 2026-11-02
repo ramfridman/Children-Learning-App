@@ -9,16 +9,21 @@ line says *read* or *guess*. The number the tool prints on the day is the one yo
 | | Clips | Characters | USD (Turbo, list) |
 |---|---|---|---|
 | Batch 0, pilot (20 test clips) | 20 | 874 | 0.035 |
-| Batch 1, Nitzi, every line | 3,991 | 174,772 | 6.99 |
-| Batch 2, hero-son, every line | 3,991 | 174,772 | 6.99 |
+| Batch 1, Nitzi, every line | 4,018 | 175,723 | 7.03 |
+| Batch 2, hero-son, every line | 4,018 | 175,723 | 7.03 |
 | Batch 3, seven friends, own lines only | 63 | 1,330 | 0.05 |
-| **All four** | **8,065** | **351,748** | **14.07** |
+| **All four** | **8,119** | **353,650** | **14.15** |
+
+(Updated later on 2026-11-02 for the 27 new core lines of the merge: 25 B-39 bottle lines, `core.rest.goodbye`,
+`core.home.bubble`, 951 characters a voice. The two fixed MATH-B-01 `h3` lines are inside the old count. The free `plan`
+prints 3,991 lines and 174,772 characters per narrator today, because it hides the 27 lines still waiting for the
+editor's approval step; the 4,018 / 175,723 above is what it will print after that step.)
 
 Add 5 percent (about 0.70 USD) for a fix batch after listening. Model `eleven_v4_turbo` (0.04 USD per 1,000 characters,
 `content/voices.json`); on `eleven_v4` every USD figure doubles, but you did not choose it.
 
 **What blocks the run today (section 5 has the details):**
-1. 2,818 of the 3,991 lines are still `text-ready`, not `owner-approved`. `generate` refuses until all are approved.
+1. 27 lines (the 25 B-39 bottle lines, `core.rest.goodbye`, `core.home.bubble`; 951 characters a voice) are still `text-ready`; they have their direction row now and wait only for the hebrew-text-editor's approval step. `generate` refuses until they are `owner-approved`. (All others are approved, section 8 decision 1.)
 2. `voice_gen` cannot yet pick a tone by the end of an id (`.h3`, `.prompt`), and cannot yet say "own lines only" for a friend.
    Two small code changes for the app-developer (section 5).
 3. Your decisions in section 8.
@@ -30,7 +35,7 @@ Batch 0 needs none of these. You can run it any time.
 ## 1. What gets voiced, and why
 
 The texts of pack 0.11.0 are final. The tool counts one line per `vo:` id, from the pack documents and
-`content/lines/core.he.json`, with the `voice_text` of the master table. 3,991 lines per narrator:
+`content/lines/core.he.json`, with the `voice_text` of the master table. 4,018 lines per narrator (3,991 planned today, 27 waiting for approval):
 
 | Group | Lines | Characters |
 |---|---|---|
@@ -40,31 +45,37 @@ The texts of pack 0.11.0 are final. The tool counts one line per `vo:` id, from 
 | Hint 3 (`.h3`, the worked steps) | 1,105 | 84,695 |
 | Shared "not yet" lines (`vo:fb.`) | 89 | 4,640 |
 | End-of-lesson celebrations (`vo:celebrate.`) | 183 | 5,083 |
-| The 27 core lines (`vo:core.`) | 27 | 691 |
+| The 54 core lines (`vo:core.`; 27 of them new, waiting for approval) | 54 | 1,642 |
 | Other (a few short ones) | 50 | 577 |
-| **Total per narrator** | **3,991** | **174,772** |
+| **Total per narrator** | **4,018** | **175,723** |
 
 (The tone table in section 2 sums the same lines by tone. The group table is for reading.)
 
 **Who says what (the owner's decision Q5, kept):**
-- **Nitzi** and **hero-son** each say all 3,991 lines. A friend with a girl's voice borrows Nitzi in the lessons, a friend
+- **Nitzi** and **hero-son** each say all 4,018 lines. A friend with a girl's voice borrows Nitzi in the lessons, a friend
   with a boy's voice borrows hero-son (`app/lib/app/companion.dart`).
 - **Each friend** says only the 9 lines at the edges of play, in his or her own voice: `core.greeting.hello`,
   `core.greeting.start`, `core.celebrate.well`, `core.placement.done`, `core.goodbye.next`, `core.ceremony.bronze`,
   `.silver`, `.gold`, `.medal`. That is 190 characters a friend. A child never hears two voices take turns inside one
-  activity. (`core.rest.goodbye` does not exist yet.)
+  activity. (`core.rest.goodbye`, the 25 `core.adventure.*` and `core.home.bubble` are narrator lines, not friend lines; the friend still says `core.goodbye.next`. A friend borrows the narrator for them.)
 
 **Old lines are voiced again, and that is already inside the counts above.** Each narrator has 282 lines that have an old
 clip. Every one is voiced again, because the model settings, the 44.1 kHz format, the respelling of "two" and some texts
 changed: the plan says "changed 282, unchanged 0". The old clips are not reused and not paid twice. Why: the whole app
 must sound like one voice with one tone, not a mix of the old and the new.
 
-**Not in this run:**
-- **B-42 daily-welcome lines**: their own batch later, new lines only, so no line is voiced twice (B36 decision 11).
-- **The live helper (hero-son tutor lines, 66 rows)** go through the gateway at play time, not through `voice_gen`.
-  The gateway still asks for the old 22 kHz format and sends no voice settings (`supabase/functions/_shared/elevenlabs.ts`
-  line 49), so they would sound different from the pack. That needs an app-developer change first, then a separate paid
-  step you run (prewarm). Not counted here.
+**Not in this run, or joining it (state of 2026-11-02):**
+- **B-39 bottle lines are now in** (25 `core.adventure.*` lines, plus `core.rest.goodbye` and `core.home.bubble`; 27 lines,
+  951 characters a voice). They wait only for the editor's approval step. The per-name `homeBubble` clips are not in this run.
+- **B-42 welcome lines (48 lines, plan on branch `b42-welcome-plan`)** join this run if the owner OKs that plan. Their
+  characters are not counted in the totals above; the free `plan` will print the new totals after they are in `core.he.json`.
+- **The live helper (hero-son tutor lines)** is now prepared on branch `live-helper-voice-format`: the gateway sends the same
+  format and settings as the pack (65 of the 66 lines, 4,544 characters). The owner runs the prewarm in the same session as
+  batch 2; the deploy steps are in that branch's `docs/setup/supabase-deploy.md` section 8. Not counted above (4,544
+  characters would add 0.18 USD at the Turbo list price).
+- **Voice packs are split per narrator** into a core pack and band packs (work on branch `b45-voice-pack-split`), because
+  the app caps a pack at 64 MiB and 8,002 entries. This answers decision 6 (one narrator is about 240 MB, *guess*; 4,018
+  entries fit the entry cap but not the size cap). It does not change the cost.
 - **Music and effects** (B-46) are separate.
 
 ---
@@ -77,18 +88,24 @@ round 3 (2026-11-01); similarity is 0.8 everywhere. They are now in `content/voi
 
 | Kind of line | Stability | Lines | Characters | What it should sound like |
 |---|---|---|---|---|
-| Question, "not yet", listening (`.prompt`, `vo:fb.`, `core.listen/stuck/breathe`, the try-again `core.encourage`) | 0.60 | 1,220 | 42,083 | calm, curious and kind; a question rises softly; "not yet" is never disappointed |
+| Question, "not yet", listening (`.prompt`, `vo:fb.`, `core.listen/stuck/breathe`, the try-again `core.encourage`, `core.home.bubble`) | 0.60 | 1,221 | 42,093 | calm, curious and kind; a question rises softly; "not yet" is never disappointed |
 | Hint 1 and 2 | 0.65 | 299 | 12,645 | short, slow, soft, an invitation; no sigh |
 | Hint 3 and worked steps (`.h3`) | 0.70 | 1,107 | 84,853 | the slowest and steadiest; counts and steps even; a small beat at a dash; ends warm |
-| Correct, praise, greeting, goodbye, core praise | 0.50 | 1,175 | 29,976 | glad, never a shout |
+| Correct, praise, greeting, goodbye, core praise, `core.adventure.*`, `core.rest.goodbye` | 0.50 | 1,201 | 30,917 | glad, never a shout |
 | Celebration (`vo:celebrate.`, `core.celebrate.`) | 0.35 | 184 | 5,092 | bright but short and even (0.1 was wobbly) |
 | Ceremony (`core.ceremony.`) | 0.45 | 4 | 88 | proud and warm |
 | Thinking (`core.thinking.`) | 0.55 | 2 | 35 | a thinking hum, then a light line |
 
-The 3,991 lines add up (1,220 + 299 + 1,107 + 1,175 + 184 + 4 + 2).
+The 4,018 lines add up (1,221 + 299 + 1,107 + 1,201 + 184 + 4 + 2).
 Pace comes only from punctuation. No line needs more now; the editor's punctuation is final. The old per-line table
 `docs/audio/voice-direction.csv` is **superseded** for style and speed (those columns do nothing on v4); its
 `pronunciation` and `listen_for` columns still help the listening.
+
+The bottle lines (`core.adventure.*`, 25) are an invitation: they fall to the default 0.50 on purpose (warm, even,
+ends level, no shout); `core.rest.goodbye` is a goodbye at 0.50, soft; `core.home.bubble` ("what is in the bottle?") is a
+question and has its own `ask` rule (0.60). The pointed land words `יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר` are correct
+(ya-AR, me-a-RAT, ne-MAL, k'FAR) and stay as written; `מה בבקבוק?` stays in plain letters (no change asked; it is the
+first item to listen for in the fix batch).
 
 Pronunciation entries now live: `שְׁתַּיִם` and `שתיים` become `שתַּיִם` (choice D). It reaches 420 lines (34,114 characters
 per narrator), 356 of them with the word at the start or after a full stop. **Open:** 120 lines (5,636 characters) say
@@ -105,8 +122,8 @@ rest).
 | Batch | What | Clips | Characters | USD |
 |---|---|---|---|---|
 | 0 | Pilot: `audition-batch`, `docs/audio/b45/pilot.json` | 20 | 874 | 0.0350 |
-| 1 | `generate nitzi` | 3,991 | 174,772 | 6.9909 |
-| 2 | `generate hero-son` | 3,991 | 174,772 | 6.9909 |
+| 1 | `generate nitzi` | 4,018 | 175,723 | 7.0289 |
+| 2 | `generate hero-son` | 4,018 | 175,723 | 7.0289 |
 | 3 | `generate` for each friend, own 9 lines | 7 x 9 = 63 | 7 x 190 = 1,330 | 0.0532 |
 
 - **Why this order:** the pilot is small and settles the last open sounds (the number two at the start of a sentence and
@@ -180,9 +197,9 @@ was sent).
 dart run tool/voice_gen.dart plan --characters nitzi
 ```
 
-Must show `Lines per voice: 3991` and `characters to send for this voice 174772`, no "cannot be voiced yet" list. Check the
+Must show `Lines per voice: 4018` and `characters to send for this voice 175723`, no "cannot be voiced yet" list. Check the
 tones once: `dart run tool/voice_gen.dart plan --characters nitzi --list` and look at a `core.celebrate.well` line (stability
-0.35) and a `.h3` line (0.7). Then the paid run, and **type 174772** (or whatever the plan printed):
+0.35) and a `.h3` line (0.7). Then the paid run, and **type 175723** (or whatever the plan printed):
 
 ```powershell
 dart run tool/voice_gen.dart generate nitzi --pack-version 2.0.0
@@ -200,7 +217,7 @@ dart run tool/voice_gen.dart plan --characters hero-son
 dart run tool/voice_gen.dart generate hero-son --pack-version 2.0.0
 ```
 
-Type the number the second command prints (174772 if nothing changed).
+Type the number the second command prints (175723 if nothing changed).
 
 ### 4.6 Batch 3, the friends (own lines; needs the friend-scope change of section 5)
 
@@ -287,7 +304,7 @@ friend sounds male; Keshet sounds female (decision 4); nothing sounds like a sho
 ## 7. After the run: my check, and the new pack version
 
 **My check (status `voiced` to `checked`).** For each voice folder I compare, with `ffprobe` and `ffmpeg ebur128`:
-1. the clip count equals the line count (3,991, or 9) and every `vo` id has its file and its cue file;
+1. the clip count equals the line count (4,018, or 9) and every `vo` id has its file and its cue file;
 2. each clip's length against its characters (a clip far too short or too long is a clipped word or a run-on);
 3. loudness about -16 LUFS, true peak at most -1 dBTP, even across lines;
 4. no click or long silence at the start (50 ms) or end (150 ms);
@@ -307,7 +324,7 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
   but the voice packs must not go out before 0.11.0 does.
 - If any text changes after the voicing (it should not), `plan` finds the changed lines and the next run says only those
   (the ledger hashes text, voice, model, settings and format).
-- B-42 welcome lines: later, own batch, new voice pack version 2.1.0.
+- B-42 welcome lines: join this run if the owner OKs `b42-welcome-plan`; otherwise a later batch and pack version 2.1.0.
 
 ---
 
@@ -344,10 +361,11 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
    whether a pack of that size can be downloaded and stored as it is, or must be split by land or band, **before** batch 1.
    *Recommend: ask first; it does not change the cost.*
 7. **ElevenLabs allowance.** The plan's Creator tier lists 275,000 "v4 characters" a month (`docs/PLAN.md`); this run is
-   351,748 characters. I have not checked whether Turbo counts at the same rate or half. Look at your usage page. If it would
+   353,650 characters. I have not checked whether Turbo counts at the same rate or half. Look at your usage page. If it would
    pass the allowance, run Nitzi this month and hero-son after the month turns. *Recommend: check the usage page before batch 1.*
-8. **The live helper lines (66 rows, gateway)** stay as they are for now and get their own step after an app-developer change
-   (format and voice settings). *Recommend: yes, later.*
+8. **The live helper lines (66 rows, gateway)** are prepared on branch `live-helper-voice-format` (same format and settings as the pack; 65 of 66 lines,
+   4,544 characters); you run the prewarm in the same session as batch 2 (steps in that branch's `docs/setup/supabase-deploy.md`
+   section 8). *Recommend: yes, same session.*
 
 ---
 

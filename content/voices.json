@@ -52,7 +52,8 @@
       "vo:core.encourage.mistake",
       "vo:core.encourage.help",
       "vo:core.encourage.check",
-      "vo:core.encourage.ways"
+      "vo:core.encourage.ways",
+      "vo:core.home.bubble"
     ]
   },
   "settings": {

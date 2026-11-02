@@ -613,3 +613,12 @@ not sound like a "not yet". `core.listen.again`: soft, unhurried, the fault is t
 pause at the full stop before "בואו נשווה".
 
 **Not changed:** the 66 live-helper rows and the 2 per-name app strings are outside this run.
+
+**Addition (2026-11-02, the 29 lines of `docs/review/b45-new-lines.tsv`).** Every one has a direction row for exactly its
+voice text and no open ask (`docs/audio/b45-direction-checked.tsv`, 29 `directed`): the two fixed MATH-B-01 `h3` lines
+(hint3, 0.70, the added numbers counted in the feminine) and 27 core lines. The 25 `core.adventure.*` lines are an
+invitation (new kind `invite`, default 0.50, even, ends level); `core.rest.goodbye` is a goodbye (0.50, soft);
+`core.home.bubble` is a question and has a new `ask` rule in `content/voices.json` (0.60). The pointed land words
+`יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר` are right and stay; `מה בבקבוק?` stays plain. `tools/voice_direction.py` now marks as
+"own" only the nine `ownLines` of `content/voices.json`; the other core lines are narrator lines (the older rows said
+"own" for all core lines).

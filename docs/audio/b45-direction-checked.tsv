@@ -560,3 +560,32 @@ skill.SHP-B-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map c
 skill.SHP-B-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
 skill.SHP-B-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
 skill.SHP-B-09.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+activity.b.mathb01.15.json	hints.2.caption.0.v	directed	directed: MATH-B-01 hint 3 (added ones only): slowest and steadiest (hint3 0.70); the added numbers are counted in the feminine, a beat at the dash, "now your turn" bright; "שְׁתַּיִם"/"שָׁלוֹשׁ" per the pronunciation entry; no ask (B-45 follow-up 2026-11-02)
+activity.b.mathb01.16.json	hints.2.caption.0.v	directed	directed: MATH-B-01 hint 3 (added ones only): slowest and steadiest (hint3 0.70); the added numbers are counted in the feminine, a beat at the dash, "now your turn" bright; "שְׁתַּיִם"/"שָׁלוֹשׁ" per the pronunciation entry; no ask (B-45 follow-up 2026-11-02)
+content/lines/core.he.json	core.rest.goodbye	directed	directed: goodbye 0.50 default, soft, no come-back pressure; no ask
+content/lines/core.he.json	core.adventure.welcome.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.play_again	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.home.bubble	directed	directed: ask 0.60 (new styleRules entry), a curious soft rise; plain letters kept, first item of the listening check; no ask
