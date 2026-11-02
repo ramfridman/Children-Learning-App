@@ -53,7 +53,8 @@
       "vo:core.encourage.help",
       "vo:core.encourage.check",
       "vo:core.encourage.ways",
-      "vo:core.home.bubble"
+      "vo:core.home.bubble",
+      "vo:core.skill."
     ]
   },
   "settings": {

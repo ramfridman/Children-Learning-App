@@ -622,3 +622,25 @@ invitation (new kind `invite`, default 0.50, even, ends level); `core.rest.goodb
 `יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר` are right and stay; `מה בבקבוק?` stays plain. `tools/voice_direction.py` now marks as
 "own" only the nine `ownLines` of `content/voices.json`; the other core lines are narrator lines (the older rows said
 "own" for all core lines).
+
+**Addition (2026-11-02, evening: the 148 lines of `docs/review/b45-new-lines-2.tsv`).** Every one has a direction row for
+exactly its voice text and no open ask (`docs/audio/b45-direction-checked.tsv`, 148 `directed`). `tools/voice_direction.py`
+has five new kinds: `welcome-hello` (4), `welcome-topic` (37), `welcome-land` (6), `welcome-close` (1) and `card` (100).
+- **Welcome (48, the nine voices, each friend in his or her own voice).** Default 0.50 for all four kinds, so the name clip
+  (also 0.50), the greeting and the topic sit at one level. Every greeting starts `שלום,`: the clip must start on "shalom" with at most
+  50 ms of silence, and the comma is a light beat (about 200 ms); the app sets the gap after the name clip (about 500 ms Band A, 350
+  Band B, 300 Band C, B42.md 2.5). A topic is a light preview, level, ending down, never a question and never a promise; the land
+  line names the place whole (pointed land words read as pointed); the closing line is an invitation, warm and short. All lines are
+  "we" or genderless, so a friend of either gender says them with no grammar to fix; the voice id decides the timbre
+  (Keshet still has a male voice id, plan section 8 decision 4). The pilot has the seam check with a made-up name only; the real
+  name clip is a separate later step and never Claude's.
+- **Map cards (100, narrators only).** A calm naming of what a picture is, short, ending down softly. New `styleRules` entry
+  `vo:core.skill.` in `ask` (0.60, the level of the prompts: the same kind of sentence, and 100 short clips should sound alike).
+  Undo = remove that one line (plan decision 9).
+- **The listening check** gets: `market.share` and `market.equal` join the `שווה`/`שווים` check (sha-VE, sha-VIM; the pilot's
+  clips 43 and 44 decide whether a pronunciation entry is needed); `נשווה` (nash-VE) and `משווים` (mash-VIM) are the verb
+  "compare", a separate small check; the rare words in the cards (`מרובע`, `מחומש`, `משושה`, `גליל`, `חרוט`, `פירמידה`, `ציר`,
+  `כבד`, `הקשת`, `בלשים`, `קובייה`) are in plain letters like the approved lessons that use them; they are read by ear in batch
+  1 before any entry is added. The two cards with "…" (`log_b_08`, `math_b_14`) must keep a short level beat, not a hum.
+- **Asks:** none. A text was not changed. The "OVER" flags of the table (a guessed budget at a speed the v4 models drop) are
+  not asks (see above).

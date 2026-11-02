@@ -589,3 +589,151 @@ content/lines/core.he.json	core.adventure.other_land.robots	directed	directed: b
 content/lines/core.he.json	core.adventure.other_land.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
 content/lines/core.he.json	core.adventure.play_again	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
 content/lines/core.he.json	core.home.bubble	directed	directed: ask 0.60 (new styleRules entry), a curious soft rise; plain letters kept, first item of the listening check; no ask
+content/lines/core.he.json	welcome.hello.1	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.hello.2	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.hello.3	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.hello.first	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.topic.counting.count	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.glance	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.numerals	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.compare	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.ordinal	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.big	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.order	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.counting.parts	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.match	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.names	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.mix	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.shades	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.rainbow	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.shapes.names	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.world	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.build	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.solids	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.shapes.position	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.lines	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.sides	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.same	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.sort	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.patterns	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.story	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.size	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.think	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.robots.steps	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.robots.move	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.robots.fix	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.addsub	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.share	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.market.missing	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.equal	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.market.measure	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.market.graph	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.time	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.money	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.land.counting	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.colors	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.shapes	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.logic	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.robots	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.market	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.close	directed	directed: welcome closing invitation (default 0.50, warm and short); no ask
+content/lines/core.he.json	core.skill.col_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.cs_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.log_b_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_11	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_13	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_b_14	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_b_15	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_16	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_17	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_18	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_19	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_11	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_12	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_13	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_14	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.num_b_11	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_13	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.num_b_14	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_16	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_17	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_18	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.shp_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.shp_b_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
