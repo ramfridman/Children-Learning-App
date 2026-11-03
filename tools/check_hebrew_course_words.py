@@ -6,6 +6,7 @@ the one it is listed in. It also reports an invalid final form, a shin with no d
 in canonical (NFC) order. Words of S9 to S12 are only listed (they are read by hand).
 
     python -I tools/check_hebrew_course_words.py [docs/languages/hebrew/syllabus.md]
+    python -I tools/check_hebrew_course_words.py --text FILE...   (hygiene of any file: NFC order, final letters, shin dots)
 
 Rules (syllabus section 3): ב כ פ with a dagesh belong to S1/S4/S6, without it to S7; שׂ and ך ף are S7;
 a final ָה is S1, a final ֶה/ֵה is S6; a shva on the first letter or a hataf is S8; a silent shva is S3;
@@ -122,4 +123,41 @@ def main(path):
         step=int(m.group(1)); cells=[c.strip() for c in line.strip().strip('|').split('|')]
         early=[w for w in hebrew_tokens(cells[4]) if need(w)[0]<step]
         if early: print(f"S{step} words that could sit earlier: "+' '.join(f"{w}(S{need(w)[0]})" for w in early))
-main(sys.argv[1] if len(sys.argv) > 1 else 'docs/languages/hebrew/syllabus.md')
+def hygiene(paths):
+    """Text hygiene for any file (the Band A batches, the pronunciation CSV): every Hebrew word is in canonical (NFC)
+    order, no final letter inside a word and no non-final letter at the end (a hard final pe, פ, is allowed: פִּיפּ), and a
+    pointed word has a dot on every shin. (U+05C7 on כׇל is the pack's standard on screen; it is never sent to a voice.)"""
+    bad = total = pointed = 0
+    for path in paths:
+        for n, line in enumerate(open(path, encoding='utf-8').read().splitlines(), 1):
+            for tok in re.findall(r'[֐-׿]+', line):
+                if not re.search('[א-ת]', tok):
+                    continue
+                total += 1
+                marks = bool(re.search('[ְ-ׇ]', tok))
+                pointed += marks
+                msgs = []
+                if tok != unicodedata.normalize('NFC', tok): msgs.append('not NFC')
+                core = re.sub('[־ֿ׀׃ׅׄ׆]', '', tok)
+                if not BASE(core[0]):
+                    msgs.append('a mark with no letter before it')
+                    core = core.lstrip(''.join(chr(c) for c in range(0x0591, 0x05C8)))
+                if not core or re.sub('[ְ-ׇ]', '', core) in ('הממ', 'המממ'):
+                    continue  # the interjection "hmm" (הַמְּמ…, המממ) is written as the curriculum writes it
+                cl = clusters(core)
+                for i, (c, m) in enumerate(cl):
+                    last = i == len(cl) - 1
+                    if c in FINALS and not last: msgs.append('final letter inside: ' + c)
+                    if c in 'כמנצ' and last and len(cl) > 1: msgs.append('non-final letter at the end: ' + c)
+                    if c == 'ש' and marks and SHIN not in m and SIN not in m: msgs.append('shin without a dot')
+                    if c == 'ש' and SHIN in m and SIN in m: msgs.append('shin and sin dots')
+                if msgs:
+                    bad += 1
+                    print('%s:%d %s  <-- %s' % (path, n, tok, '; '.join(msgs)))
+    print('hygiene: %d Hebrew words (%d pointed) in %d file(s), %d to look at' % (total, pointed, len(paths), bad))
+
+
+if len(sys.argv) > 1 and sys.argv[1] == '--text':
+    hygiene(sys.argv[2:])
+else:
+    main(sys.argv[1] if len(sys.argv) > 1 else 'docs/languages/hebrew/syllabus.md')

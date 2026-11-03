@@ -1,6 +1,6 @@
 # The Hebrew course: Band A content batch (HEB-1)
 
-Owner: hebrew-language-teacher. Date: 2026-11-03. Status: **draft**. Every new Hebrew text below is `"review": "needs-editor"` for the hebrew-text-editor; words taken from the syllabus lists (`syllabus.md` §3, already `text-ready`) are marked **(tr)**. Nothing is built, drawn or voiced.
+Owner: hebrew-language-teacher. Date: 2026-11-03. Status: **text-ready** (the hebrew-text-editor, 2026-11-03: every text below has its final wording, nikud and voice text, and waits for the owner; `docs/agents/hebrew-notes.md` §9). Words taken from the syllabus lists (`syllabus.md` §3, already `text-ready`) are marked **(tr)**; the new words are `text-ready` too. Nothing is built, drawn or voiced.
 Skills: `syllabus.md` §6.1 (HEB-A-01 to A-14). Templates: the shared LS ids (`frame.md` §2.3; `templates.md` §2). Tags: `syllabus.md` §5 (the Band A tags are new there). Pronunciation: `pronunciation.csv` (rows `heb-a-…`). Voicing count: §9.
 
 ## 0. The rules this batch keeps
@@ -9,8 +9,8 @@ Skills: `syllabus.md` §6.1 (HEB-A-01 to A-14). Templates: the shared LS ids (`f
 - **Every item carries at least two tagged distractors** (F5). A 2-choice item is the *guided* step of a 3-choice item: it hides one of the item's two tagged distractors, and the engine's 2-choice guard (at most 50% of the evidence) applies.
 - **Every hint ladder** has three steps, and step 2 changes the representation (frame §2.3). Step 3, "show me", is a worked example after which the child makes the last move, so every item ends in success (curriculum §9.2).
 - **Words a child will later read.** Most picture words are taken from the code-spine lists of `syllabus.md` §3, so a Band A child meets them by ear, with their pictures, before reading them in Bands B and C (decoding is easier for words already in the child's spoken vocabulary), and the same pictures and word clips serve all three bands. Ordinary words stay in (owner, 2026-11-03): טִיל is a rocket to the moon here.
-- **Instructions** use the plural imperative or "let's" (curriculum §8.3), the app's gender-neutral form. Whether the Hebrew course follows the child's address form instead (frame §1.3) is for the editor.
-- **One voice.** Inside the course the Hebrew teaching voice says every line (frame §1.3); the companion reacts without words.
+- **Instructions** use the plural imperative, "let's" or the impersonal present (curriculum §8.3), the app's gender-neutral form. **Settled by the editor (`hebrew-notes.md` §9.1):** the course voice does not follow the child's address form; every recorded line is plural or neutral, so there is one clip per line, and no line has a first-person verb or adjective with a gender (so any voice can say them).
+- **One voice.** Inside the course the Hebrew teaching voice says every line (frame §1.3); the companion reacts without words. The voice has no gender in its lines (`hebrew-notes.md` §9.1); its sound is the voice director's choice.
 - **A word clip is reused everywhere.** A picture's word is one clip ("כַּדּוּר"), played as the option's own sound (LS01 b), after a carrier line ("בּוֹאוּ נִמְצָא:"), and in the specific praise. This keeps the voicing small (§9). Whether the carrier + word joins sound natural is for the voice-and-sound-director's pilot.
 - **No speech is scored.** LS09 echo is optional practice; with the parent's voice switch on, it gets confident or unsure feedback, never evidence (`syllabus.md` §0).
 - **Pictures** are the design-director's, drawn from real references (`docs/agents/README.md`); §2 lists what each must show.
@@ -21,14 +21,14 @@ Skills: `syllabus.md` §6.1 (HEB-A-01 to A-14). Templates: the shared LS ids (`f
 |---|---|
 | Item | `A-xx.<n>`; **P** = practice, **C** = understanding or delayed check (a new item or representation) |
 | Template | the shared id and mode |
-| Prompt | the line heard (clip ids in `pronunciation.csv`); Hebrew is draft, needs-editor |
+| Prompt | the line heard (clip ids in `pronunciation.csv`); Hebrew is `text-ready` |
 | Right | the right answer |
 | Distractors | each with its tag |
 | Rep | representation (frame §3.3.1): `pic` pictorial, `con` concrete, `sto` story, `emb` embodied, `sym` symbolic |
 
 ## 2. Word and picture stock (91 pictures, one word clip each)
 
-Ids are `pic.<word>`. Every picture is one clear object (or a small scene), no text in it, the object facing right where it moves (the reading direction). "(tr)" = in the syllabus lists, `text-ready`; all others are new and `needs-editor`.
+Ids are `pic.<word>`. Every picture is one clear object (or a small scene), no text in it, the object facing right where it moves (the reading direction). "(tr)" = in the syllabus lists, `text-ready`; all others are new and `text-ready` too (the editor read the nikud, the stress and the fit for ages 3 to 8 of each).
 
 | Group | Word, gloss and picture |
 |---|---|
@@ -44,38 +44,38 @@ Ids are `pic.<word>`. Every picture is one clear object (or a small scene), no t
 
 **Words with a second sense** (the editor's list, `hebrew-notes.md` §8.7): none of the picture words above is used for a sense other than its picture. מוֹרָה is "a teacher", not "pointing"; קֶשֶׁת is the rainbow.
 
-## 3. Shared lines (all `needs-editor`)
+## 3. Shared lines (all `text-ready`)
 
 | Id | Line | Use |
 |---|---|---|
 | i-find | בּוֹאוּ נִמְצָא: | carrier before a word clip (A-02, A-05) |
 | i-what-he / i-what-she | מָה הוּא עוֹשֶׂה? / מָה הִיא עוֹשָׂה? | A-02 actions |
-| i-rhyme | אֵיזוֹ מִלָּה נִגְמֶרֶת כָּמוֹהָ? | A-07, after the cue word clip ("דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת כָּמוֹהָ?") |
+| i-rhyme | אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר? | A-07, after the cue word clip ("דָּג. אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר?") |
 | i-rhyme-finish | מַה מַּתְאִים לְסוֹף הַשּׁוּרָה? | A-06 (after the open verse) |
 | i-pairs | חַבְּרוּ מִלִּים שֶׁנִּגְמָרוֹת אוֹתוֹ דָּבָר. | A-07 check |
 | i-drum | תּוֹפְפוּ פַּעַם לְכׇל חֵלֶק שֶׁל הַמִּלָּה. | A-08 drum (the word with the qamats qatan is sent unpointed to the voice) |
-| i-strip | כַּמָּה תּוֹפִים? | A-08 strips |
+| i-strip | כַּמָּה תֻּפִּים? | A-08 strips |
 | i-blend | מָה אָמַר הַתֻּכִּי? | A-09 (the puppet is an original parrot, תֻּכִּי) |
 | i-sort-cat | שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ. | A-03, A-05 sorts |
-| i-odd | מִי לֹא שַׁיָּךְ? | A-03 odd one out (a negative in Band A, kept: it is the name of the game; the editor may prefer "מִי שׁוֹנֶה?") |
+| i-odd | מָה הִגִּיעַ לְכָאן בְּטָעוּת? | A-03 odd one out. Was "מִי לֹא שַׁיָּךְ?": Band A asks no "not" question (curriculum §8.3), and the same game has had this owner-approved line since 2026-10-29 (`hebrew-notes.md` §2.9) |
 | i-letters | אֵיפֹה הָאוֹתִיּוֹת? גְּעוּ בְּכׇל הָאוֹתִיּוֹת. | A-10 tap all |
 | i-bin-letters / i-bin-other | אוֹתִיּוֹת / דְּבָרִים אֲחֵרִים | A-10 bin labels |
 | i-name | אֵיפֹה הַשֵּׁם שֶׁלָּכֶם? | A-11 |
 | i-name-letter | אֵיפֹה הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם? | A-11 |
 | i-start | אֵיפֹה מַתְחִילִים לִקְרֹא? | A-12 |
-| i-follow | גְּעוּ בְּכׇל מִלָּה כְּשֶׁאֲנִי קוֹרֵאת. | A-12 word by word (the voice is feminine here; the editor sets the voice's gender) |
+| i-follow | הַקְשִׁיבוּ לְכׇל מִלָּה, וּגְעוּ בָּהּ. | A-12 word by word. Was "גְּעוּ בְּכׇל מִלָּה כְּשֶׁאֲנִי קוֹרֵאת" (קוֹרֵאת gave the voice a gender, `hebrew-notes.md` §9.1); the voice reads one word and waits, so the child listens and touches |
 | i-order | סַדְּרוּ אֶת הַתְּמוּנוֹת לְפִי הַסִּפּוּר. | A-13 |
 | i-first | מַה קָּרָה קֹדֶם? | A-13; also the STORY-ORDER line |
 | i-trace | הוֹלְכִים עִם הָאֶצְבַּע עַל הַדֶּרֶךְ. | A-14 |
 | bin-animals / bin-food / bin-clothes | בַּעֲלֵי חַיִּים / אֹכֶל / בְּגָדִים | A-03 |
 | bin-one / bin-many | אֶחָד / הַרְבֵּה | A-05 |
-| ok-1 … ok-8 | נָכוֹן! · כֵּן, זֶה זֶה! · שְׁמַעְתֶּם טוֹב! · הִקְשַׁבְתֶּם עַד הַסּוֹף! · מְצָאתֶם! · יוֹפִי שֶׁל הַקְשָׁבָה! · בְּדִיּוּק! · וְזֶה נָכוֹן! | short praise after the item's word clip ("כַּדּוּר! שְׁמַעְתֶּם טוֹב!"): specific because the word is named (curriculum §9.1) |
+| ok-1 … ok-8 | נָכוֹן! · כֵּן, זֶהוּ זֶה! · שְׁמַעְתֶּם טוֹב! · הִקְשַׁבְתֶּם עַד הַסּוֹף! · מְצָאתֶם! · יוֹפִי שֶׁל הַקְשָׁבָה! · בְּדִיּוּק! · כׇּל הַכָּבוֹד! | short praise after the item's word clip ("כַּדּוּר! שְׁמַעְתֶּם טוֹב!"): specific because the word is named (curriculum §9.1) |
 | ok-hint | לֹא וִתַּרְתֶּם — וּמְצָאתֶם! | correct after hints (curriculum §9.1, `text-ready` there) |
 | try-1, try-2 | הַמְּמ… בּוֹאוּ נִבְדֹּק. · בּוֹאוּ נִשְׁמַע שׁוּב. | first error (curriculum §9.2), before the diagnostic line |
 | show | בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד. | hint level 3 opener |
 | say-together | בּוֹאוּ נֹאמַר יַחַד. (voice text: בואו נגיד יחד.) | LS09 and the unsure result; `text-ready` (the editor's line, `hebrew-notes.md` §8.8) |
 | heard | שָׁמַעְתִּי: | LS09 confident result, before the word clip |
-| why | כִּי שְׁנֵיהֶם… | A-03, before a bin label clip ("כִּי שְׁנֵיהֶם… בַּעֲלֵי חַיִּים!"), unscored talk |
+| why | כִּי אֵלֶּה… | A-03, before a bin label clip ("כִּי אֵלֶּה… בַּעֲלֵי חַיִּים!"), unscored talk |
 | seq-1, seq-2, seq-3 | קֹדֶם · אַחַר כָּךְ · בַּסּוֹף | A-13 level 2 |
 | p-al, p-mitachat, p-betoch, p-leyad | עַל · מִתַּחַת · בְּתוֹךְ · לְיַד | A-04 level 1, the place word alone |
 | e-… | כָב · נָב · עוֹן · לוֹן · דּוּר · נוּר · רוֹן · טוֹס · רָה | A-06 and A-07 level 1 and 2: the rhyming ends alone (one-syllable words are said whole) |
@@ -122,7 +122,7 @@ The **diagnostic line per tag** (the first-error feedback, curriculum §9.2) is 
 | A-02.17–18 C | as .9 and .12 in the second action scene (a boy kicks; a duck swims) | | | the same | sto |
 
 Verb items keep the verb's gender with the doer (the rabbit and the fish are "he", the cat and Nitzi "she"). The options of .9 to .12 have no picture: each is a sound button, so the child chooses by the word heard.
-**Hint ladder.** (1) The word again, and the diagnostic line: SEM "זֶה דּוֹמֶה, אֲבָל זֶה לֹא זֶה. בּוֹאוּ נִשְׁמַע שׁוּב."; SOUNDALIKE "שִׁמְעוּ עַד הַסּוֹף." (2) The word card: the picture with its meaning line (`m-…`, §5), then the two pictures side by side, each named. (3) Show me: the voice names each option, then says the target with its picture lit; the child taps it.
+**Hint ladder.** (1) The word again, and the diagnostic line: SEM "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב."; SOUNDALIKE "שִׁמְעוּ עַד הַסּוֹף." (2) The word card: the picture with its meaning line (`m-…`, §5), then the two pictures side by side, each named. (3) Show me: the voice names each option, then says the target with its picture lit; the child taps it.
 **LS09 (optional, unscored):** after a correct pick, say-together + the word clip. With the parent's voice switch on: confident → heard + the word clip ("שָׁמַעְתִּי: שִׂיחַ!"); unsure → say-together and the voice models the word. Never evidence.
 
 ### HEB-A-03 Sorts pictures into simple categories (OL)
@@ -140,8 +140,8 @@ Verb items keep the verb's gender with the doer (the rabbit and the fish are "he
 | A-03.8 C | sort, animals / food (new set) | rooster, ant, cookie, egg | animals: rooster, ant; food: cookie, egg | egg → animals [CAT-THEME] · ant → food [CAT-ATYPICAL] | con |
 | A-03.9 C | odd one out | horse, butterfly, butterfly kite | the kite | horse [CAT-LOOK: butterfly and kite look alike] · butterfly [CAT-ATYPICAL] | pic |
 
-**Change to the syllabus check (proposed):** the A-03 check was "say why (tap the category picture)". Its wrong options (the other categories) reveal nothing nameable, so it cannot carry two tagged distractors. The checks are A-03.7 to .9 instead (new pictures, an untypical member); the "why" stays as unscored talk: after an odd one out the voice says why + the bin label ("כִּי שְׁנֵיהֶם… בַּעֲלֵי חַיִּים!") with the bin picture.
-**Hint ladder.** (1) Each card named by the voice, with the bin labels (diagnostic: THEME "הֵם הוֹלְכִים יַחַד, אֲבָל הֵם לֹא מֵאוֹתוֹ סוּג."; LOOK "הֵם דּוֹמִים בַּצֶּבַע. מָה הֵם בֶּאֱמֶת?"; ATYPICAL "גַּם הוּא חַי: הוּא זָז וְאוֹכֵל."). (2) The bin opens as a family of 4 typical members, and the card is shown beside them (a new representation: a set, not a label). (3) Show me: the voice puts one card in its bin and names why; the child puts the rest.
+**Change to the syllabus check (proposed):** the A-03 check was "say why (tap the category picture)". Its wrong options (the other categories) reveal nothing nameable, so it cannot carry two tagged distractors. The checks are A-03.7 to .9 instead (new pictures, an untypical member); the "why" stays as unscored talk: after an odd one out the voice says why + the bin label ("כִּי אֵלֶּה… בַּעֲלֵי חַיִּים!") with the bin picture.
+**Hint ladder.** (1) Each card named by the voice, with the bin labels (diagnostic: THEME "הֵם הוֹלְכִים יַחַד. בּוֹאוּ נִבְדֹּק מֵאֵיזֶה סוּג הֵם."; LOOK "הֵם דּוֹמִים בַּצֶּבַע. מָה הֵם בֶּאֱמֶת?"; ATYPICAL "גַּם זֶה חַי: זֶה זָז וְאוֹכֵל."). (2) The bin opens as a family of 4 typical members, and the card is shown beside them (a new representation: a set, not a label). (3) Show me: the voice puts one card in its bin and names why; the child puts the rest.
 
 ### HEB-A-04 Follows a one-step instruction with a place word (OL)
 **Template:** LS11 `listen_do` drag into a scene (`emb`) and LS01 picture choice for a heard sentence (`pic`). Place words: עַל, מִתַּחַת לְ, בְּתוֹךְ, לְיַד. In LS11 the drop zones are the three places; the thing never changes.
@@ -159,7 +159,7 @@ Verb items keep the verb's gender with the doer (the rabbit and the fish are "he
 | A-04.9 C | LS11 drag, a new object | pl-9 שִׂימוּ אֶת הַכּוֹבַע עַל הַשֻּׁלְחָן. | on the table | under [PREP] · next to [PREP] | emb |
 | A-04.10 C | LS01, a new object | pl-10 הַתַּפּוּחַ בְּתוֹךְ הַקְּעָרָה. | apple in bowl | bowl upside down on the apple [ROLE-SWAP] · apple next to bowl [PREP] | pic |
 
-**Hint ladder.** (1) The sentence again, the place word stressed a little (diagnostic: PREP "שִׁמְעוּ אֵיפֹה:" + the place word clip; ROLE-SWAP "מִי זָז?" + the thing's word clip). (2) The companion acts it out with itself and a box, saying the place word (embodied, a new representation). (3) Show me: the thing moves to its place while the sentence plays; the child drags it there.
+**Hint ladder.** (1) The sentence again, the place word stressed a little (diagnostic: PREP "שִׁמְעוּ אֵיפֹה:" + the place word clip; ROLE-SWAP "עַל מַה מְדַבְּרִים?" + the thing's word clip). (2) The companion acts it out with itself and a box, saying the place word (embodied, a new representation). (3) Show me: the thing moves to its place while the sentence plays; the child drags it there.
 
 ### HEB-A-05 Understands one and many (OL)
 **Template:** LS01 picture choice (`pic`) and LS01 sort of **audio cards** (`con`): a card plays a word when tapped and has no picture, so the child sorts by the ending heard, not by counting. The pick items all ask for the plural, because "אֵיפֹה יֵשׁ חָתוּל?" would also be true of a picture of many cats.
@@ -194,7 +194,7 @@ Verb items keep the verb's gender with the doer (the rabbit and the fish are "he
 | A-06.8 C | v8 (new) עַל הַמַּיִם שָׁטָה סִירָה, / וּבַגַּן שָׁרָה… (full: …הַמּוֹרָה) | מוֹרָה | סוּס [ALLIT] · יַלְדָּה [SEM] |
 
 Every rhyme pair shares its stressed vowel and what follows: ‑av (כּוֹכָב, אַרְנָב), ‑on (שָׁעוֹן, חַלּוֹן), ‑ur (כַּדּוּר, תַּנּוּר), ‑il (טִיל, פִּיל), ‑ut (תּוּת, חוּט), ‑os (מָטוֹס, כּוֹס), ‑af (אַף, כַּף), ‑ra (סִירָה, מוֹרָה). All are stressed on the last syllable, so the rhyme is real in speech. A prefix the verse needs (בַּחַלּוֹן, בַּתַּנּוּר, הַמּוֹרָה) is heard only in the full line; the open line stops before it, and the options are the bare words. In v4, טַבַּעַת (a ring) is the ALLIT distractor because it starts with ט and does not rhyme.
-**Hint ladder.** (1) The first line's end word again, then the diagnostic line (ALLIT "זֶה מַתְחִיל אוֹתוֹ דָּבָר, אֲבָל נִגְמָר אַחֶרֶת."; SEM "זֶה מַתְאִים, אֲבָל לֹא נִגְמָר אוֹתוֹ דָּבָר."). (2) The ends only: the voice says the end of the first line's word (the `e-` clip, "כָב") and each option's word after it, so the child hears which one ends the same (a new representation: the ends alone). (3) Show me: the whole verse with the right picture lit on the rhyme; the child taps it.
+**Hint ladder.** (1) The first line's end word again, then the diagnostic line (ALLIT "זֶה מַתְחִיל אוֹתוֹ דָּבָר. בּוֹאוּ נַקְשִׁיב לַסּוֹף."; SEM "זֶה מַתְאִים. בּוֹאוּ נַקְשִׁיב לַסּוֹף."). (2) The ends only: the voice says the end of the first line's word (the `e-` clip, "כָב") and each option's word after it, so the child hears which one ends the same (a new representation: the ends alone). (3) Show me: the whole verse with the right picture lit on the rhyme; the child taps it.
 
 ### HEB-A-07 Tells which word rhymes with a word (PA)
 **Template:** LS01 with a sound per option (`pic`; the cue word plays with its picture), 3 pictures, a guided 2-picture step first; check by LS01 `match_pairs` (two pairs only, Band A).
@@ -265,11 +265,11 @@ Not used in A-08 on purpose: words with a shva at the start (גְּלִידָה 
 | A-10.5 P | tap all | ז, 7, ס, 0, ♥ | ז, ס | 7, 0 [PRINT-NUM] · ♥ [PRINT-SHAPE] |
 | A-10.6 C | sort, a new font (Secular One) | ק, פ, ה, 9, ✿ | ק, פ, ה | 9 [PRINT-NUM] · ✿ [PRINT-SHAPE] |
 
-**Hint ladder.** (1) "אוֹתִיּוֹת הֵן מַה שֶּׁקּוֹרְאִים." (diagnostic NUM: "בָּזֶה סוֹפְרִים."; SHAPE: "זֶה צִיּוּר."). (2) Each card shown in its home: the letter inside a word on a book page, the numeral on a die, the shape on a toy (a new representation: context). (3) Show me: the voice puts one card of each kind in its bin; the child sorts the rest.
+**Hint ladder.** (1) "בָּאוֹתִיּוֹת קוֹרְאִים וְכוֹתְבִים." (diagnostic NUM: "בָּזֶה סוֹפְרִים."; SHAPE: "זֶה צִיּוּר."). (2) Each card shown in its home: the letter inside a word on a book page, the numeral on a die, the shape on a toy (a new representation: context). (3) Show me: the voice puts one card of each kind in its bin; the child sorts the rest.
 
 ### HEB-A-11 Recognises their own written name (PK; on the device only)
 **Template:** LS01 text options (`sym`). The name never leaves the device and is never voiced (decision 25; `docs/PLAN.md` child safety). All names are shown **without nikud** (Heebo 700): the child's name is typed by a parent, and nikud would be a cue the other names do not share; a pointed name is shown with its marks removed (removing marks is not generating them). **No-name fallback:** the child's companion's name stands in (ניצי by default).
-**Distractor names** come from a closed list, never made up at runtime: **NAME-FIRST** a name with the same first letter; **NAME-LENGTH** a name with the same number of letters and another first letter; never a name equal to the child's. The list (all `needs-editor`, ordinary Israeli first names, two to five letters, both genders): אורי, אלה, בן, בר, גיל, גפן, דן, דנה, הדר, הילה, ורד, זיו, זוהר, חן, חיים, טל, טליה, יעל, יונתן, כרמל, כנרת, ליה, לביא, מאיה, מיכאל, נועה, ניר, סהר, סתיו, עומר, עדי, פז, פלג, צור, צליל, קרן, קשת, רון, רוני, שירה, שקד, תמר, תום, and the cast names ניצי, נקודי, גוני, קובי, טימי, צעדון, פנינה, נוגה, איתן. If no name in the list has the same first letter, the second distractor is a name whose first letter is the look-alike of the child's (M-HEB-SHAPE pair, `syllabus.md` §5).
+**Distractor names** come from a closed list, never made up at runtime: **NAME-FIRST** a name with the same first letter; **NAME-LENGTH** a name with the same number of letters and another first letter; never a name equal to the child's. The list (all `text-ready`: 52 names, 43 ordinary Israeli first names and the 9 names of the cast, spelt in the usual way; ordinary Israeli first names, two to five letters, both genders): אורי, אלה, בן, בר, גיל, גפן, דן, דנה, הדר, הילה, ורד, זיו, זוהר, חן, חיים, טל, טליה, יעל, יונתן, כרמל, כנרת, ליה, לביא, מאיה, מיכאל, נועה, ניר, סהר, סתיו, עומר, עדי, פז, פלג, צור, צליל, קרן, קשת, רון, רוני, שירה, שקד, תמר, תום, and the cast names ניצי, נקודי, גוני, קובי, טימי, צעדון, פנינה, נוגה, איתן. If no name in the list has the same first letter, the second distractor is a name whose first letter is the look-alike of the child's (M-HEB-SHAPE pair, `syllabus.md` §5).
 
 | Item | Template | Options | Right | Distractors |
 |---|---|---|---|---|
@@ -295,7 +295,7 @@ Where the last letter equals the first, or has no look-alike, the item uses the 
 | A-12.6 C | story 3, page 3 (new) | i-start | the right end | the left end [ORDER] · the picture [PRINT-PICTURE] |
 | A-12.7 C | story 3, page 5 | i-follow | as .4 | as .4 |
 
-**Hint ladder.** (1) "קוֹרְאִים אֶת הַמִּלִּים, לֹא אֶת הַצִּיּוּר." or "מַתְחִילִים כָּאן." with the reading arrow over the line (diagnostic ORDER and PRINT-PICTURE). (2) The voice reads the line while a finger moves under the words from right to left (a new representation: motion). (3) Show me: the finger stops at the start and the voice says "מַתְחִילִים כָּאן."; the child taps there. In i-follow items the voice's word-by-word clips are cut from the page clip with word timing (frame §2.3 LS08), so they cost no extra characters.
+**Hint ladder.** (1) "זוֹ תְּמוּנָה. קוֹרְאִים אֶת הַמִּלִּים." or "מַתְחִילִים כָּאן." with the reading arrow over the line (diagnostic ORDER and PRINT-PICTURE). (2) The voice reads the line while a finger moves under the words from right to left (a new representation: motion). (3) Show me: the finger stops at the start and the voice says "מַתְחִילִים כָּאן."; the child taps there. In i-follow items the voice's word-by-word clips are cut from the page clip with word timing (frame §2.3 LS08), so they cost no extra characters.
 
 ### HEB-A-13 Puts 3 story pictures in order (OL)
 **Template:** LS01 sequence (`pic`): three picture tiles into three slots **right to left** (the first slot is the rightmost, with a small "start" arrow); and LS01 "what happened first" (`sto`). Classifiers: the right order laid left to right → **M-HEB-ORDER**; two pictures swapped → **M-HEB-STORY-ORDER**.
@@ -331,7 +331,7 @@ Where the last letter equals the first, or has no look-alike, the item uses the 
 
 ## 5. The stories (LS08 `dialogic`; A-01, A-02, A-12, A-13)
 
-Original, 5 pages, at most 8 words in a sentence, 3–4 target words, 2 pauses with a picture question, a recast after the answer, a word card per target word and a parent co-play card. All Hebrew `needs-editor`. The characters are the app's own original cast (Nitzi; Kubi the tortoise) and plain animals.
+Original, 5 pages, at most 8 words in a sentence, 3–4 target words, 2 pauses with a picture question, a recast after the answer, a word card per target word and a parent co-play card. All Hebrew `text-ready`. The characters are the app's own original cast (Nitzi; Kubi the tortoise) and plain animals.
 
 **Story 1: הַכַּדּוּר שֶׁל הָאַרְנָב (the rabbit's ball).** Target words: בּוֹעֵט, שִׂיחַ, מְחַפֶּשֶׂת (and כַּדּוּר).
 
@@ -379,55 +379,55 @@ Original, 5 pages, at most 8 words in a sentence, 3–4 target words, 2 pauses w
 
 | Clip | Word | Meaning line |
 |---|---|---|
-| m-boet | בּוֹעֵט | בּוֹעֵט זֶה נוֹתֵן מַכָּה בָּרֶגֶל. בּוֹעֲטִים בְּכַדּוּר. |
+| m-boet | בּוֹעֵט | בּוֹעֲטִים בְּכַדּוּר בָּרֶגֶל, וְהוּא עָף רָחוֹק. |
 | m-siach | שִׂיחַ | שִׂיחַ הוּא כְּמוֹ עֵץ קָטָן וְנָמוּךְ, עִם הַרְבֵּה עָלִים. |
-| m-mechapeset | מְחַפֶּשֶׂת | מְחַפֶּשֶׂת זֶה מְנַסָּה לִמְצֹא מַשֶּׁהוּ. |
+| m-mechapeset | מְחַפֶּשֶׂת | מְחַפֶּשֶׂת זֶה לְנַסּוֹת לִמְצֹא מַשֶּׁהוּ. |
 | m-kemach | קֶמַח | קֶמַח הוּא אֲבָקָה לְבָנָה. מִמֶּנּוּ אוֹפִים לֶחֶם וְעוּגוֹת. |
 | m-keara | קְעָרָה | קְעָרָה הִיא כְּלִי עָגֹל וְעָמֹק. |
-| m-meurbevet | מְעַרְבֶּבֶת | מְעַרְבֶּבֶת זֶה מְסוֹבֶבֶת בְּכַף, וְהַכֹּל מִתְחַבֵּר. |
-| m-tanur | תַּנּוּר | בַּתַּנּוּר חַם מְאוֹד. בּוֹ אוֹפִים עוּגוֹת. |
+| m-meurbevet | מְעַרְבֶּבֶת | מְעַרְבֶּבֶת זֶה לְסוֹבֵב בְּכַף, וְהַכֹּל מִתְחַבֵּר. |
+| m-tanur | תַּנּוּר | בַּתַּנּוּר חַם מְאֹד. בּוֹ אוֹפִים עוּגוֹת. |
 | m-sira | סִירָה | סִירָה שָׁטָה עַל הַמַּיִם. |
 | m-kova | כּוֹבַע | כּוֹבַע שָׂמִים עַל הָרֹאשׁ. |
 | m-ruach | רוּחַ | רוּחַ זֶה אֲוִיר שֶׁזָּז. אֶת הָרוּחַ לֹא רוֹאִים, אֲבָל מַרְגִּישִׁים. |
-| m-soche | שׂוֹחֶה | שׂוֹחֶה זֶה זָז בְּתוֹךְ הַמַּיִם. |
+| m-soche | שׂוֹחֶה | שׂוֹחֶה זֶה לָזוּז בְּתוֹךְ הַמַּיִם. |
 
 (כַּדּוּר needs no card: it is a known word, used as the anchor.)
 
-**Parent co-play cards** (parent text, unpointed, needs-editor; shown at the end of each story in the parent's view):
-- Story 1: "שאלו: מה היית עושה אם הכדור שלך היה נופל לשיח? מי עוזר לך כשמשהו הולך לאיבוד? בקשו מהילד לספר את הסיפור עם הכדור שלו."
+**Parent co-play cards** (parent text, unpointed, `text-ready`; shown at the end of each story in the parent's view):
+- Story 1: "שאלו: מה היית עושה אם הכדור שלך היה נופל לשיח? מי עוזר לך כשמשהו הולך לאיבוד? אפשר גם לבקש מהילד להמציא סיפור משלו על כדור."
 - Story 2: "אפו או הכינו משהו יחד, ותנו לילד לערבב. שאלו: מה שמנו קודם? מה אחר כך? הזכירו את המילים קמח, קערה ותנור."
-- Story 3: "בגינה או באמבטיה: מה עף ברוח? מה צף על המים? שאלו: מי עזר לקובי, ולמה?"
+- Story 3: "בגינה או באמבטיה אפשר לשחק: מה עף ברוח? מה צף על המים? ואחרי הסיפור שאלו: מי עזר לקובי, ולמה?"
 
 ## 6. Feedback by tag (the first-error lines, hint level 1)
 
-All are in the ladders above; collected here for the editor (`needs-editor`):
+All are in the ladders above; collected here (`text-ready`; the editor changed the lines that had a "לא", see `hebrew-notes.md` §9.3):
 
 | Tag | Line |
 |---|---|
-| SEM | זֶה דּוֹמֶה, אֲבָל זֶה לֹא זֶה. בּוֹאוּ נִשְׁמַע שׁוּב. |
+| SEM | זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב. |
 | SOUNDALIKE | שִׁמְעוּ עַד הַסּוֹף. |
 | STORY-ROLE | מִי עָשָׂה אֶת זֶה בַּסִּפּוּר? |
 | STORY-SEEN | מַה שָּׁאַלְנוּ? |
 | STORY-WORLD | בּוֹאוּ נִרְאֶה מַה קָּרָה בַּסִּפּוּר שֶׁלָּנוּ. |
 | STORY-ORDER | מַה קָּרָה קֹדֶם? (the i-first clip) |
-| CAT-THEME | הֵם הוֹלְכִים יַחַד, אֲבָל הֵם לֹא מֵאוֹתוֹ סוּג. |
+| CAT-THEME | הֵם הוֹלְכִים יַחַד. בּוֹאוּ נִבְדֹּק מֵאֵיזֶה סוּג הֵם. |
 | CAT-LOOK | הֵם דּוֹמִים בַּצֶּבַע. מָה הֵם בֶּאֱמֶת? |
-| CAT-ATYPICAL | גַּם הוּא חַי: הוּא זָז וְאוֹכֵל. |
+| CAT-ATYPICAL | גַּם זֶה חַי: זֶה זָז וְאוֹכֵל. |
 | PREP | שִׁמְעוּ אֵיפֹה: (then the place word clip) |
-| ROLE-SWAP | מִי זָז? (then the thing's word clip) |
+| ROLE-SWAP | עַל מַה מְדַבְּרִים? (then the thing's word clip) |
 | PLURAL | שִׁמְעוּ אֶת הַסּוֹף: (then the plural clip) |
-| ALLIT | זֶה מַתְחִיל אוֹתוֹ דָּבָר, אֲבָל נִגְמָר אַחֶרֶת. |
-| SEM (rhyme) | זֶה מַתְאִים, אֲבָל לֹא נִגְמָר אוֹתוֹ דָּבָר. |
+| ALLIT | זֶה מַתְחִיל אוֹתוֹ דָּבָר. בּוֹאוּ נַקְשִׁיב לַסּוֹף. |
+| SEM (rhyme) | זֶה מַתְאִים. בּוֹאוּ נַקְשִׁיב לַסּוֹף. |
 | SYLL | בּוֹאוּ נִסְפֹּר לְאַט. |
 | BLEND-FIRST | שִׁמְעוּ עַד הַסּוֹף. (shared clip) |
 | BLEND-LAST | שִׁמְעוּ מֵהַהַתְחָלָה. |
 | PRINT-NUM | בָּזֶה סוֹפְרִים. |
 | PRINT-SHAPE | זֶה צִיּוּר. |
-| PRINT-PICTURE | קוֹרְאִים אֶת הַמִּלִּים, לֹא אֶת הַצִּיּוּר. |
+| PRINT-PICTURE | זוֹ תְּמוּנָה. קוֹרְאִים אֶת הַמִּלִּים. |
 | ORDER, STROKE | מַתְחִילִים כָּאן. (one clip) |
 | NAME-FIRST | גַּם זֶה מַתְחִיל כָּךְ. בּוֹאוּ נִרְאֶה אֶת כׇּל הַשֵּׁם. |
 | NAME-LENGTH | זֶה אָרֹךְ כְּמוֹ הַשֵּׁם שֶׁלָּכֶם, אֲבָל הָאוֹתִיּוֹת אֲחֵרוֹת. |
-| (letters) | אוֹתִיּוֹת הֵן מַה שֶּׁקּוֹרְאִים. |
+| (letters) | בָּאוֹתִיּוֹת קוֹרְאִים וְכוֹתְבִים. |
 | (name) | הַשֵּׁם שֶׁלָּכֶם מַתְחִיל בָּאוֹת הַזֹּאת. (the letter lights; the name and the letter are never said) |
 
 ## 7. Session shape for Band A visits (frame §3.5)
@@ -451,26 +451,27 @@ A visit (8 minutes) has: a warm-up (a verse the child knows, A-06), one focus (o
 
 `pronunciation.csv` holds a row per clip (`heb-a-…`), with its IPA, stress, traps and what the listener must hear. The character count is computed by script from the CSV (the text sent is `say` when it is filled, else `shown`); the voice-and-sound-director turns it into the real plan and cost, and the owner runs and pays.
 
-Counted on 2026-11-03 (the text sent is `say` when filled, else `shown`; "unpointed" removes U+0591–U+05C7; spaces and punctuation count):
+Counted again by the editor on 2026-11-03 after the final wording (the text sent is `say` when filled, else `shown`; spaces and punctuation count). The teacher's count before the edit was 5,400 pointed and 3,309 unpointed. The sentences are now sent as **voice text** (partial nikud, full spelling, no "!"; `hebrew-notes.md` §3 and §9.4), which is why the instruction, verse and story rows are about 35% shorter; the words, syllables and rhyme ends are still sent fully pointed until the pilot decides (§8.4 there):
 
-| Clips | Rows | Characters, pointed | Characters, unpointed |
+| Clips | Rows | Characters as sent (the voice text) | Of them, letters without nikud |
 |---|---|---|---|
 | Words (`heb-a-w-…`, bins, place and sequence words) | 131 | 929 | 524 |
-| Syllable clips (`heb-a-u-…`, A-08 slow and A-09) | 12 | 120 | 84 |
+| Syllable clips (`heb-a-u-…`, A-08 slow and A-09) | 12 | 123 | 84 |
 | Rhyme ends (`heb-a-e-…`) | 9 | 34 | 24 |
-| Instructions, praise, hints, place sentences (`heb-a-i-…`, `ok-`, `d-`, `pl-` …) | 67 | 1,946 | 1,211 |
-| Verses (open and full) | 16 | 779 | 470 |
-| Stories (titles, pages, questions, recasts, word cards) | 41 | 1,592 | 996 |
-| **All of Band A** | **276** | **5,400** | **3,309** |
+| Instructions, praise, hints, place sentences (`heb-a-i-…`, `ok-`, `d-`, `pl-` …) | 67 | 1,274 | 1,240 |
+| Verses (open and full) | 16 | 514 | 480 |
+| Stories (titles, pages, questions, recasts, word cards) | 41 | 1,063 | 1,004 |
+| **All of Band A** | **276** | **3,937** | **3,356** |
 
 - Of the 929 word characters, 352 (201 unpointed) are the 57 `text-ready` words whose whole-word clips the syllabus voicing plan needs anyway for Bands B and C (`voice-brief.md` §5): one clip serves all three bands.
-- Pointed text is about 60% more characters than unpointed. Which form is sent is the pilot's answer (`hebrew-notes.md` §8.4); single words go pointed in the pilot.
+- Several Hebrew frame lines are the same words in the three courses (for example `הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.`, `בּוֹאוּ נֹאמַר יַחַד.`, `שָׁמַעְתִּי:`); if the voice director uses one voice for them they can be one clip. That is a saving the director plans, not a text change.
+- Pointed text is about 60% more characters than unpointed. Which form is sent for sentences is now the voice text (partial nikud); for single words it is the pilot's answer (`hebrew-notes.md` §8.4), and they go pointed in the pilot.
 - Not counted: the per-word clips of A-12 (cut from the page clips with word timing), the drum-strip syllables of A-09 (cut from the `u-` clips), any second take, and the parent co-play cards (screen only, never voiced).
 - The voice-and-sound-director turns this into the plan and its cost; the owner runs and pays (CLAUDE.md).
 
 ## 10. Hand-offs
 
-- **hebrew-text-editor:** every line, word card, verse, story page, question, recast, feedback line and the name list above (`needs-editor`); the address form of the course voice (plural, or the child's form, frame §1.3); the voice's own gender (i-follow uses קוֹרֵאת); whether "מִי לֹא שַׁיָּךְ?" stays.
+- **hebrew-text-editor:** done on 2026-11-03 (`text-ready`, waiting for the owner): every line, word card, verse, story page, question, recast, feedback line and the name list. The three questions are settled in `hebrew-notes.md` §9: the course voice speaks in the plural (§9.1); the voice has no gender in its lines, and i-follow no longer uses קוֹרֵאת (§9.1); "מִי לֹא שַׁיָּךְ?" does not stay, it is "מָה הִגִּיעַ לְכָאן בְּטָעוּת?" (§9.3).
 - **design-director:** the pictures of §2 and the stories (drawn from real references), the A-10 marks, the A-14 picture paths, and the stroke directions of the arch and the circle (F6).
 - **voice-and-sound-director:** the voicing plan from `pronunciation.csv`; whether a carrier line + a word clip joins naturally (§0); the syllable clips of A-09 (about 0.5 s gaps, each syllable a clean CV, level pitch).
 - **curriculum-expert:** the 18 new tags (kind and family, and the suggested MEANING family); the A-03 check change (§4).

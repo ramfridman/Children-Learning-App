@@ -45,7 +45,7 @@ Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each c
   - This is a change to PLAN.md › "Every character speaks in its own voice, everywhere". The orchestrator updates PLAN.md once the owner approves this frame.
 - **Clips.** Every mixed line is **two clips**, a Hebrew frame clip and a target clip, played in sequence (the teachers' S3, `pronunciation-spec` §3). A target clip is reusable, and its pronunciation spec belongs to its teacher.
 - **If no single voice is excellent in both languages** (the D6 fallback), the frame accepts **two characters**: a Hebrew-speaking host and a native-speaking puppet friend. Never one character with two voices, because a voice change must be visible as a change of speaker. This is also the common "one person, one language" practice of bilingual homes. The evidence that children *need* it is mixed, so it is a fallback, not a goal.
-- **The address form** (masculine, feminine, plural) follows the child's profile in the Hebrew frame, as everywhere. Target-language lines keep the teachers' gender rules (the Russian voice never reveals its own gender, syllabus §6).
+- **The address form.** The recorded Hebrew frame lines are plural and gender-neutral for every profile, like every core line of the app (the hebrew-text-editor's rule, `docs/agents/hebrew-notes.md` §9.1: one clip per line, and no first-person verb or adjective with a gender, so any voice can say them). The profile's address form (masculine, feminine, plural) applies only to the AI tutor, which is off in language lessons (§1.6). Target-language lines keep the teachers' gender rules (the Russian voice never reveals its own gender, syllabus §6).
 
 ### 1.4 The parent area: a language on or off, and progress per language
 **Controls** (one page per language, in the existing Controls area):
@@ -768,7 +768,7 @@ The three teachers sent their Band A batches with tag proposals and rule questio
   - for a chunk, every key word the author marks is confident.
 - **Unsure:** everything else, including a confidently heard foil and silence. There is **no "wrong" outcome** and no "did you say …?" question in a language lesson.
 
-**Feedback.** The lines are drafts, unpointed, `"review": "needs-editor"`; the target word is a target clip.
+**Feedback.** The lines are `text-ready` (hebrew-text-editor, 2026-11-03: `שָׁמַעְתִּי:` and `בּוֹאוּ נֹאמַר יַחַד.`, the same in the three courses); the target word is a target clip.
 - **Confident:** specific praise naming the word: "שמעתי: apple!" (*I heard: apple!*). It praises the saying, not the child.
 - **Unsure:** "בואו נגיד יחד" (*let's say it together*). The voice models the word; there is a choral pause; then the activity moves on.
 - **At most one more try,** offered by a tap and never required. There is no retry loop.

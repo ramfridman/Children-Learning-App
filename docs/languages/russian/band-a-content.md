@@ -1,6 +1,6 @@
 # The Russian course: Band A content batch (RUS-1)
 
-*Owner: russian-language-teacher. Draft 2026-11-03, for the owner's OK, then the hebrew-text-editor (the Hebrew frame lines), the design-director (the pictures) and the voice-and-sound-director (the clips). Plan only; nothing here is built or voiced.*
+*Owner: russian-language-teacher. Draft 2026-11-03, for the owner's OK, then the design-director (the pictures) and the voice-and-sound-director (the clips). **The Hebrew frame lines (§2) and the parent texts (§3) are `text-ready`** (hebrew-text-editor, 2026-11-03). Plan only; nothing here is built or voiced.*
 *Built on: `syllabus.md` (skills RUS-A-01 to A-20, §5 vocabulary, §8 speaking, §11 tags), `templates.md`, the shared frame `docs/languages/frame.md` (templates LS01 to LS14 §2.3, mastery §3.3, catalogue format §4.1, speech §5.1, personal turns §5.2), `docs/curriculum.md` §6.1, §9.2 and §10. Every Russian clip id is a row of `pronunciation.csv`.*
 
 ## 1. How the batch works
@@ -11,7 +11,7 @@
 
 **Two clips per line** (F3). Every prompt is a Hebrew frame clip (§2, ids F01 to F39) and then a Russian clip (a `pronunciation.csv` id). A Hebrew clip never contains a Russian word, and a Russian clip never contains Hebrew. Every option picture plays its Russian word on tap (LS01 b). Lessons are taught in Hebrew for every child (D12); the meaning of a Russian word is given by its picture, never by a Hebrew translation in the voice.
 
-**Feedback.** A right answer: the app's existing praise line, then the Russian target clip again (a recast; no new text). Not yet: the app's existing gentle line and the next hint (curriculum §9.2). Never "wrong". Speaking follows syllabus §8: per-word confident or unsure, `שמעתי:` + the word, or `בּוֹאוּ נֹאמַר יַחַד.` and the model.
+**Feedback.** A right answer: the app's existing praise line, then the Russian target clip again (a recast; no new text). Not yet: the app's existing gentle line and the next hint (curriculum §9.2). Never "wrong". Speaking follows syllabus §8: per-word confident or unsure, `שָׁמַעְתִּי:` + the word, or `בּוֹאוּ נֹאמַר יַחַד.` and the model.
 
 **Hints.** Each skill has one three-step ladder: 1 attention (the clip again, slower, F02); 2 a **new representation** (an action, a scene, the mouth, fingers, a row of pages); 3 show me (the answer is played and lit, a tap goes on, the item returns later). Credit by hint level as curriculum §10.2.
 
@@ -30,67 +30,81 @@
 
 **Pictures.** Original art only (no franchise characters); picture ids are proposals for the design-director (§5). Clear, single-object pictures for LS01; scenes for LS11; one original family for A-02 and A-13. Any clothes on any friend.
 
-## 2. Hebrew frame lines (drafts)
-Unpointed drafts for the hebrew-text-editor (`"review": "needs-editor"`), plural and gender-neutral as in the rest of the app. F03 is already final. Where the app already has an approved line with the same meaning (F02, the praise and the show-me lines), that line is reused instead.
+## 2. Hebrew frame lines (final, `text-ready`)
+Full nikud (child text), plural and gender-neutral as in the rest of the app (the rule: `docs/agents/hebrew-notes.md` §9.1). The voice text is the line for ElevenLabs (partial nikud, no "!", a colon kept on a carrier line). Written 2026-11-03 by the hebrew-text-editor from the teacher's unpointed drafts.
 
-| Id | Hebrew (draft) | Used in | Review |
-|---|---|---|---|
-| F01 | הקשיבו, וגעו בתמונה. | LS01 hear → picture (A-02, A-05, A-07, A-08, A-09, A-15 tap) | needs-editor |
-| F02 | הקשיבו שוב. | hint level 1 in every skill (reuse the app's approved line if one exists) | needs-editor |
-| F03 | בּוֹאוּ נֹאמַר יַחַד. | LS09 unsure, and the new-learner echo (text-ready, hebrew-text-editor 2026-11-03; voice text בואו נגיד יחד.) | text-ready |
-| F04 | שמעתי: | LS09 confident, followed by the word clip | needs-editor |
-| F05 | עכשיו אתם. | LS09 the pause for the child | needs-editor |
-| F06 | מה זה? נסו להגיד ברוסית. | LS09 picture first (A-15) | needs-editor |
-| F07 | מה עונים לחבר? | LS10 bubble choice (A-01, A-14) | needs-editor |
-| F08 | הקשיבו, ומצאו את זה אצל החבר. | LS11 body hotspots (A-03) | needs-editor |
-| F09 | הקשיבו, ועזרו לחבר לעשות את זה. | LS11 action buttons (A-04) | needs-editor |
-| F10 | עכשיו אתם! עשו את זה, ואז געו בכפתור. | LS11 embodied version (A-03, A-04; never counted alone) | needs-editor |
-| F11 | הקשיבו, ושימו את זה בצלחת של החבר. | LS11 picnic (A-07) | needs-editor |
-| F12 | הקשיבו, ושימו את זה בקופסה. | LS11 tidy-up (A-08) | needs-editor |
-| F13 | הקשיבו, והלבישו את החבר. | LS11 dress the friend (A-09) | needs-editor |
-| F14 | הקשיבו, וגעו בצבע. | LS01 colour patch (A-06) | needs-editor |
-| F15 | בואו נספור יחד. | T02 count and tap (A-10, A-11) | needs-editor |
-| F16 | הקשיבו למספר, וגעו בתמונה. | LS01 number → set (A-10, A-11) | needs-editor |
-| F17 | החבר שואל. געו בתשובה. | A-12 question → answer (audio options or windows) | needs-editor |
-| F18 | זה נכון? | yes / no items (A-12, A-13) | needs-editor |
-| F19 | הקשיבו, ומצאו בחדר. | LS11 scene search (A-13) | needs-editor |
-| F20 | הקשיבו, ותנו לחבר את מה שהוא מבקש. | LS11 give (A-14) | needs-editor |
-| F21 | בואו נקשיב לסיפור. | LS08 listen (A-16) | needs-editor |
-| F22 | מה יקרה עכשיו? | LS08 dialogic pause (A-16) | needs-editor |
-| F23 | מי היה בסיפור? | A-16 story 1 question | needs-editor |
-| F24 | מה מצא הקיפוד? | A-16 story 2 question | needs-editor |
-| F25 | מה חיפשה הילדה? | A-16 story 3 question | needs-editor |
-| F26 | הקשיבו לשיר. | LS12 chant (A-17) | needs-editor |
-| F27 | איזו מילה מתאימה לסוף? | LS12 rhyme gap (A-17) | needs-editor |
-| F28 | תופפו על התוף: פעם אחת לכל חלק במילה. | LS03 drum (A-18) | needs-editor |
-| F29 | באיזו תמונה יש שלוש מחיאות כפיים? | A-18 | needs-editor |
-| F30 | באיזו תמונה יש שתי מחיאות כפיים? | A-18 | needs-editor |
-| F31 | באיזו תמונה יש מחיאת כפיים אחת? | A-18 | needs-editor |
-| F32 | באיזו תמונה המילה מתחילה אותו דבר? | A-19 same first sound | needs-editor |
-| F33 | המילים מתחילות אותו דבר? | A-19 same / different start (audio options) | needs-editor |
-| F34 | הקשיבו לשתי המילים. אותו דבר, או לא? | A-20 same / different | needs-editor |
-| F35 | איזו מילה שמעתם? | A-20 picture choice | needs-editor |
-| F36 | הסתכלו על הפה. | A-20 hint level 2 | needs-editor |
-| F37 | מי עושה את הקול הזה? הקשיבו לשתי המילים. | A-05 animal sound → word | needs-editor |
-| F38 | איזו מילה מתאימה לתמונה? | A-02 picture → two words | needs-editor |
-| F39 | החבר בא, או הולך? | A-01 picture choice | needs-editor |
+| Id | Hebrew (final, with nikud) | Voice text (for ElevenLabs) | Used in | Review |
+|---|---|---|---|---|
+| F01 | הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה. | הקשיבו, וגעו בתמונה. | LS01 hear → picture (A-02, A-05, A-07, A-08, A-09, A-15 tap) | text-ready |
+| F02 | הַקְשִׁיבוּ שׁוּב. | הקשיבו שוב. | hint level 1 in every skill (the app has no line for "listen again" yet; this is it) | text-ready |
+| F03 | בּוֹאוּ נֹאמַר יַחַד. | בואו נגיד יחד. | LS09 unsure, and the new-learner echo (text-ready, hebrew-text-editor 2026-11-03; voice text בואו נגיד יחד.) | text-ready |
+| F04 | שָׁמַעְתִּי: | שמעתי: | LS09 confident, followed by the word clip | text-ready |
+| F05 | עַכְשָׁו אַתֶּם. | עכשיו אתם. | LS09 the pause for the child | text-ready |
+| F06 | מַה זֶּה? נַסּוּ לְהַגִּיד בְּרוּסִית. | מה זה? נסו להגיד ברוסית. | LS09 picture first (A-15) | text-ready |
+| F07 | מָה עוֹנִים לֶחָבֵר? | מה עונים לֶחָבֵר? | LS10 bubble choice (A-01, A-14) | text-ready |
+| F08 | הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה אֵצֶל הֶחָבֵר. | הקשיבו, ומצאו את זה אצל החבר. | LS11 body hotspots (A-03) | text-ready |
+| F09 | הַקְשִׁיבוּ, וְעִזְרוּ לֶחָבֵר לַעֲשׂוֹת אֶת זֶה. | הקשיבו, ועזרו לֶחָבֵר לַעֲשׂוֹת את זה. | LS11 action buttons (A-04) | text-ready |
+| F10 | עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר. | עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור. | LS11 embodied version (A-03, A-04; never counted alone) | text-ready |
+| F11 | הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּצַּלַּחַת שֶׁל הֶחָבֵר. | הקשיבו, וְשִׂימוּ את זה בצלחת של החבר. | LS11 picnic (A-07) | text-ready |
+| F12 | הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּקֻּפְסָה. | הקשיבו, וְשִׂימוּ את זה בקופסה. | LS11 tidy-up (A-08) | text-ready |
+| F13 | הַקְשִׁיבוּ, וְהַלְבִּישׁוּ אֶת הֶחָבֵר. | הקשיבו, והלבישו את החבר. | LS11 dress the friend (A-09) | text-ready |
+| F14 | הַקְשִׁיבוּ, וּגְעוּ בַּצֶּבַע. | הקשיבו, וגעו בצבע. | LS01 colour patch (A-06) | text-ready |
+| F15 | בּוֹאוּ נִסְפֹּר יַחַד. | בואו נספור יחד. | T02 count and tap (A-10, A-11) | text-ready |
+| F16 | הַקְשִׁיבוּ לַמִּסְפָּר, וּגְעוּ בַּתְּמוּנָה. | הקשיבו למספר, וגעו בתמונה. | LS01 number → set (A-10, A-11) | text-ready |
+| F17 | הַקְשִׁיבוּ לַשְּׁאֵלָה, וּגְעוּ בַּתְּשׁוּבָה. | הקשיבו לשאלה, וגעו בתשובה. | A-12 question → answer (audio options or windows) | text-ready |
+| F18 | זֶה נָכוֹן? | זה נכון? | yes / no items (A-12, A-13) | text-ready |
+| F19 | הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה בַּחֶדֶר. | הקשיבו, ומצאו את זה בחדר. | LS11 scene search (A-13) | text-ready |
+| F20 | הַקְשִׁיבוּ לַבַּקָּשָׁה, וּתְנוּ לֶחָבֵר אֶת מַה שֶּׁמְּבַקְשִׁים. | הקשיבו לבקשה, ותנו לֶחָבֵר את מה שמבקשים. | LS11 give (A-14) | text-ready |
+| F21 | בּוֹאוּ נַקְשִׁיב לְסִפּוּר. | בואו נקשיב לסיפור. | LS08 listen (A-16) | text-ready |
+| F22 | מַה יִּקְרֶה עַכְשָׁו? | מה יקרה עכשיו? | LS08 dialogic pause (A-16) | text-ready |
+| F23 | מִי הָיָה בַּסִּפּוּר? | מי היה בסיפור? | A-16 story 1 question | text-ready |
+| F24 | מַה מָּצָא הַקִּפּוֹד? | מה מצא הקיפוד? | A-16 story 2 question | text-ready |
+| F25 | מָה חִפְּשָׂה הַיַּלְדָּה? | מה חִפְּשָׂה הילדה? | A-16 story 3 question | text-ready |
+| F26 | הַקְשִׁיבוּ לַשִּׁיר. | הקשיבו לשיר. | LS12 chant (A-17) | text-ready |
+| F27 | אֵיזוֹ מִלָּה מַתְאִימָה לַסּוֹף? | איזו מילה מתאימה לסוף? | LS12 rhyme gap (A-17) | text-ready |
+| F28 | תּוֹפְפוּ עַל הַתֹּף: פַּעַם אַחַת לְכׇל חֵלֶק בַּמִּלָּה. | תופפו על התוף: פעם אַחַת לכל חלק במילה. | LS03 drum (A-18) | text-ready |
+| F29 | בְּאֵיזוֹ תְּמוּנָה יֵשׁ שָׁלוֹשׁ מְחִיאוֹת כַּפַּיִם? | באיזו תמונה יש שָׁלוֹשׁ מחיאות כפיים? | A-18 | text-ready |
+| F30 | בְּאֵיזוֹ תְּמוּנָה יֵשׁ שְׁתֵּי מְחִיאוֹת כַּפַּיִם? | באיזו תמונה יש שְׁתֵּי מחיאות כפיים? | A-18 | text-ready |
+| F31 | בְּאֵיזוֹ תְּמוּנָה יֵשׁ מְחִיאַת כַּפַּיִם אַחַת? | באיזו תמונה יש מחיאת כפיים אַחַת? | A-18 | text-ready |
+| F32 | בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה אוֹתוֹ דָּבָר? | באיזו תמונה המילה מתחילה אותו דבר? | A-19 same first sound | text-ready |
+| F33 | הַמִּלִּים מַתְחִילוֹת אוֹתוֹ דָּבָר? | המילים מתחילות אותו דבר? | A-19 same / different start (audio options) | text-ready |
+| F34 | הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים. אוֹתוֹ דָּבָר, אוֹ לֹא? | הקשיבו לִשְׁתֵּי המילים. אותו דבר, או לא? | A-20 same / different | text-ready |
+| F35 | אֵיזוֹ מִלָּה שְׁמַעְתֶּם? | איזו מילה שמעתם? | A-20 picture choice | text-ready |
+| F36 | הִסְתַּכְּלוּ עַל הַפֶּה. | הסתכלו על הפה. | A-20 hint level 2 | text-ready |
+| F37 | מִי עוֹשֶׂה אֶת הַקּוֹל הַזֶּה? הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים. | מי עוֹשֶׂה את הקול הזה? הקשיבו לִשְׁתֵּי המילים. | A-05 animal sound → word | text-ready |
+| F38 | אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה? | איזו מילה מתאימה לתמונה? | A-02 picture → two words | text-ready |
+| F39 | מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ? | מישהו בא, או הולך? | A-01 picture choice | text-ready |
+
+**What the editor changed** (the other lines only got nikud and the voice text):
+- F04: first-person past: the same for every voice; a carrier before the word clip.
+- F06: מַה + dagesh before a full vowel; "להגיד" is the spoken verb.
+- F07: the friend is "הֶחָבֵר" (the app's word for the companion); no pronoun.
+- F17: was "החבר שואל" (a masculine verb for the friend).
+- F19: the object "אֶת זֶה" was missing ("find in the room" what?).
+- F20: was "מה שהוא מבקש": no pronoun for the friend; the request is impersonal.
+- F29: שלוש: מחיאות is feminine.
+- F30: שְׁתֵּי before a noun.
+- F33: מילים is feminine: מתחילות.
+- F39: was "החבר בא, או הולך?" (masculine verbs for the friend).
+- F01 is the same line as `he-ins-listen-tap` of the English course, F03 the same as `he-fb-together`: one clip can serve both courses if the voice director uses one voice for them.
+- The friend is called "הֶחָבֵר" (the app's word for the companion) and never "הוא" or "היא"; no verb is said about the friend in these lines, so the friend's gender is not guessed (`hebrew-notes.md` §9.1). The Hebrew clip never contains a Russian word, and the lines address the children in the plural.
 
 ## 3. Misconception tags used in Band A
-Kinds and families as frame §4.1. The eleven tags marked **new** are proposals for the shared catalogue (the curriculum-expert decides the ids and families); the rest are in syllabus §11. `parentText` and `homeActivity` are Hebrew drafts for the hebrew-text-editor (needs-editor), filling gap G6 for these tags. Russian words inside them are left-to-right runs.
+Kinds and families as frame §4.1. The eleven tags marked **new** are proposals for the shared catalogue (the curriculum-expert decides the ids and families); the rest are in syllabus §11. `parentText` and `homeActivity` are Hebrew texts for the parent area, `text-ready` (hebrew-text-editor, 2026-11-03; adult text, no nikud, "הילד" as in the rest of the parent area), filling gap G6 for these tags. Russian words inside them are left-to-right runs.
 
-| Tag | Engine id (proposed) | Kind | Family | Signal (Band A) | Level-2 re-teach | parentText (draft) | homeActivity (draft) |
+| Tag | Engine id (proposed) | Kind | Family | Signal (Band A) | Level-2 re-teach | parentText (final) | homeActivity (final) |
 |---|---|---|---|---|---|---|---|
-| M-RUS-SEM **new** | `rus.voc.sem` | diagnostic | GUESS | a word of the same theme chosen (another animal, another family member) | the word in its scene (the skill's level 2) | מכירים כבר את הנושא, ומילים קרובות (כמו שתי חיות) עוד מתחלפות לפעמים. | הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו להצביע עליו. |
-| M-RUS-SOUND **new** | `rus.voc.sound` | diagnostic | GUESS | a word that sounds like the target chosen (сок / суп, кот / кит, семь / во́семь) | the two words said one after the other, each with its picture | מילים שנשמעות דומה (сок ו־суп) עוד מתחלפות. זה שלב רגיל בלמידת שפה חדשה. | אמרו לאט שתי מילים דומות, אחת אחרי השנייה, והצביעו על התמונה של כל אחת. |
-| M-RUS-KTO **new** | `rus.grm.kto` | diagnostic | GRAMMAR | a thing chosen for Кто э́то?, or a living being for Что э́то? | alive or not: the living ones move, the things stay still | ברוסית שואלים кто ("מי") גם על בעלי חיים, ו־что ("מה") על חפצים. בעברית אומרים "מה זה?" גם על חתול, ולכן זה מבלבל בהתחלה. | בספר תמונות: על חיה או על אדם שאלו Кто это?, ועל חפץ Что это?. |
-| M-RUS-TYVY **new** | `rus.grm.tyvy` | diagnostic | GRAMMAR | приве́т or пока́ chosen for a grown-up who is not family | the scene acted: the grown-up arrives, the friend greets with здра́вствуйте | למבוגר שאינו מהמשפחה אומרים ברוסית здравствуйте ו־до свидания, ולחבר привет ו־пока. זו צורת בית הספר; בבית ובמשפחה מדברים כרגיל. | כשפוגשים מבוגר שמדבר רוסית, אמרו יחד здравствуйте. |
-| M-RUS-YESNO **new** | `rus.grm.yesno` | diagnostic | GUESS | да on a "no" item, or нет on a "yes" item | the friend points and says the thing's real name | בשאלות של כן ולא, תשובה שחוזרת תמיד (да) מראה שהשאלה עוד לא מובנת עד הסוף. | שאלו בצחוק Это кот? על דברים בבית, לפעמים נכון ולפעמים לא, וענו יחד да או нет. |
-| M-RUS-NUMWORD **new** | `rus.voc.numword` | diagnostic | GUESS | the set next to the heard number chosen | fingers: the number shown one finger at a time | מספרים קרובים ברוסית (три ו־четыре) עוד מתחלפים. | ספרו יחד ברוסית דברים בבית: מדרגות, כפיות, צעצועים. |
-| M-RUS-COUNT **new** | `rus.voc.count` | diagnostic | SEGMENT | in count-and-tap, an object skipped or counted twice | the friend's finger touches each object once as it is counted | בספירה מדלגים לפעמים על חפץ או סופרים אותו פעמיים. זה קורה גם בעברית בגיל הזה. | ספרו יחד ברוסית, ונגעו בכל חפץ פעם אחת בדיוק. |
-| M-RUS-RHYME-ONSET **new** | `rus.pho.rhyme_onset` | diagnostic | RHYME | a word with the same start chosen instead of the rhyme (но́ги for нос) | word pairs: the line-1 rhyme word before each option | כשמחפשים חרוז, נבחרת מילה שמתחילה אותו דבר (нос ו־ноги), ולא מילה שנגמרת אותו דבר. | אמרו שתי מילים מתחרזות ברוסית ושאלו: נשמע דומה בסוף? (кот – рот). |
-| M-RUS-SYLL **new** | `rus.pho.syll` | diagnostic | SEGMENT | one beat more or fewer on the drum, or the picture with the wrong number of claps | a hand claps with the child on each beat | בספירת חלקי מילה (מחיאות כפיים) יש מחיאה אחת יותר או פחות. | מחאו כפיים יחד לכל חלק בשמות של צעצועים: ку-кла, ма-ши-на. |
-| M-RUS-NOTFIRST **new** | `rus.pho.notfirst` | diagnostic | SEGMENT | a word with the sound at the end chosen (дом for м) | the mouth shows the first sound while each option is said with its first sound held | הצליל נשמע במילה, אבל עוד לא ברור שהוא בהתחלה. | משחק "מה מתחיל ב־ммм?": משכו את הצליל הראשון של מילה, ומצאו עוד דבר שמתחיל כך. |
-| M-RUS-SEQ **new** | `rus.voc.seq` | diagnostic | GUESS | after a story, a picture that did not happen in it | the pages laid out in a row and replayed | אחרי הסיפור נבחרה תמונה שלא הייתה בו. זה סימן להקשיב שוב, עם התמונות. | קראו יחד ספר תמונות ושאלו "מה יקרה עכשיו?" לפני שמדפדפים. |
+| M-RUS-SEM **new** | `rus.voc.sem` | diagnostic | GUESS | a word of the same theme chosen (another animal, another family member) | the word in its scene (the skill's level 2) | הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות. | הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו. |
+| M-RUS-SOUND **new** | `rus.voc.sound` | diagnostic | GUESS | a word that sounds like the target chosen (сок / суп, кот / кит, семь / во́семь) | the two words said one after the other, each with its picture | מילים שנשמעות דומה (сок ו־суп) עדיין מתחלפות לילד. זה שלב רגיל בלמידת שפה חדשה. | אמרו לאט שתי מילים דומות, אחת אחרי השנייה, והצביעו על התמונה של כל אחת. |
+| M-RUS-KTO **new** | `rus.grm.kto` | diagnostic | GRAMMAR | a thing chosen for Кто э́то?, or a living being for Что э́то? | alive or not: the living ones move, the things stay still | ברוסית שואלים кто ("מי") על אנשים ועל בעלי חיים, ו־что ("מה") על חפצים. בעברית אומרים "מה זה?" גם על חתול, ולכן זה מבלבל בהתחלה. | בספר תמונות: על חיה או על אדם שאלו "Кто это?", ועל חפץ שאלו "Что это?". |
+| M-RUS-TYVY **new** | `rus.grm.tyvy` | diagnostic | GRAMMAR | приве́т or пока́ chosen for a grown-up who is not family | the scene acted: the grown-up arrives, the friend greets with здра́вствуйте | למבוגר שאינו מהמשפחה אומרים ברוסית здравствуйте ו־до свидания, ולחבר привет ו־пока. זו הצורה המנומסת; במשפחה ובין חברים מדברים כרגיל. | כשפוגשים מבוגר שמדבר רוסית, אמרו יחד "здравствуйте". |
+| M-RUS-YESNO **new** | `rus.grm.yesno` | diagnostic | GUESS | да on a "no" item, or нет on a "yes" item | the friend points and says the thing's real name | בשאלות של כן ולא, אם הילד עונה כל פעם да, כנראה שהשאלה עדיין לא ברורה לו עד הסוף. זה נורמלי בהתחלה. | שאלו בצחוק "Это кот?" על דברים בבית, לפעמים נכון ולפעמים לא, וענו יחד да או нет. |
+| M-RUS-NUMWORD **new** | `rus.voc.numword` | diagnostic | GUESS | the set next to the heard number chosen | fingers: the number shown one finger at a time | מספרים שנשמעים קרובים ברוסית (три ו־четыре) עדיין מתחלפים לילד. | ספרו יחד ברוסית דברים בבית: מדרגות, כפיות, צעצועים. |
+| M-RUS-COUNT **new** | `rus.voc.count` | diagnostic | SEGMENT | in count-and-tap, an object skipped or counted twice | the friend's finger touches each object once as it is counted | בספירה ילדים מדלגים לפעמים על חפץ או סופרים אותו פעמיים. זה קורה גם בעברית בגיל הזה. | ספרו יחד ברוסית, ונגעו בכל חפץ פעם אחת בדיוק. |
+| M-RUS-RHYME-ONSET **new** | `rus.pho.rhyme_onset` | diagnostic | RHYME | a word with the same start chosen instead of the rhyme (но́ги for нос) | word pairs: the line-1 rhyme word before each option | כשמחפשים חרוז, ילדים בוחרים לפעמים מילה שמתחילה אותו דבר (нос ו־ноги) במקום מילה שנגמרת אותו דבר. | אמרו שתי מילים מתחרזות ברוסית (кот – рот) ושאלו: נשמע דומה בסוף? |
+| M-RUS-SYLL **new** | `rus.pho.syll` | diagnostic | SEGMENT | one beat more or fewer on the drum, or the picture with the wrong number of claps | a hand claps with the child on each beat | בספירת חלקי מילה במחיאות כפיים, קורה שהילד מוחא פעם אחת יותר או פחות. | מחאו כפיים יחד לכל חלק בשמות של צעצועים: ку-кла, ма-ши-на. |
+| M-RUS-NOTFIRST **new** | `rus.pho.notfirst` | diagnostic | SEGMENT | a word with the sound at the end chosen (дом for м) | the mouth shows the first sound while each option is said with its first sound held | הילד שומע את הצליל במילה, אבל עוד לא ברור לו שהוא בהתחלה. | משחק "מה מתחיל ב־ммм?": משכו את הצליל הראשון של מילה, ומצאו עוד דבר שמתחיל כך. |
+| M-RUS-SEQ **new** | `rus.voc.seq` | diagnostic | GUESS | after a story, a picture that did not happen in it | the pages laid out in a row and replayed | אחרי הסיפור הילד בחר תמונה שלא הייתה בו. כדאי להקשיב לסיפור שוב, עם התמונות. | קראו יחד ספר תמונות ושאלו "מה יקרה עכשיו?" לפני שמדפדפים. |
 | M-RUS-HARDSOFT | `rus.pho.hardsoft` | diagnostic | CONTRAST | лук chosen for люк (A-20) | the mouth: a wide smile for the soft one | ברוסית יש עיצורים "רכים" ו"קשים" (лук "בצל", люк "מכסה בכביש"). בעברית אין הבדל כזה, ולכן לוקח זמן לשמוע אותו. | אמרו את הזוג лук – люк, עם חיוך רחב ב־люк, ושחקו "איזו מילה שמעתם?". |
 | M-RUS-YI | `rus.pho.yi` | diagnostic | CONTRAST | ми́шка chosen for мы́шка; "same" for мы / ми (A-20) | the puzzled friend says "ы…" | הצליל ы לא קיים בעברית, ולכן мышка ("עכבר") ו־мишка ("דובי") נשמעות דומה. | עשו יחד "פרצוף מתלבט" ואמרו ы…, ואחר כך мышка ו־мишка. |
 
@@ -883,6 +897,6 @@ Every Russian word met in Band A, its clip and its picture. Picture ids are prop
 - **Pronunciation specs:** **214 new rows** in `pronunciation.csv` (status `draft`), and 20 pilot rows reused; the table now has 269 rows. Every new row has its stress (the `stress` column; U+0301 in `say`).
 - **Characters for voicing (for the voice-and-sound-director's plan; nothing is run by Claude):**
   - Russian, the new rows' `say` text: **2356 characters** with the stress marks (U+0301 counted), 2121 without them. The 20 reused pilot rows add 104 characters if they are voiced again for the course.
-  - Hebrew frame drafts: **877 characters** for all 39 lines (856 without the line already approved, F03). This will change when the hebrew-text-editor makes them final; the voice text is unpointed.
+  - Hebrew frame lines: **938 characters** of voice text for all 39 lines (924 without F03, already approved), counted by the hebrew-text-editor on 2026-11-03 after the final wording (the drafts counted 877). The voice text has partial nikud (number words, sin-dot words and a few ambiguous words keep theirs).
   - The owner runs and pays for every generation, after the voice-and-sound-director shows the count and the cost.
 - **Clip check (by script):** clips referenced but missing from the CSV: []; batch rows referenced nowhere: [].

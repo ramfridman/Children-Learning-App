@@ -1,6 +1,6 @@
 # English course: Band A content batch (ENG-1)
 
-Owner: english-language-teacher. Date: 2026-11-03. Status: **draft for the team and the owner. Nothing is built or voiced.** The English is the teacher's and final after the listening check; every **Hebrew line is a draft marked `"review": "needs-editor"`** for the hebrew-text-editor; every picture is a brief for the design-director.
+Owner: english-language-teacher. Date: 2026-11-03. Status: **draft for the team and the owner. Nothing is built or voiced.** The English is the teacher's and final after the listening check; every **Hebrew line is final** (`text-ready`, waiting for the owner, 2026-11-03: the hebrew-text-editor added the nikud, the voice text and the address rule of `docs/agents/hebrew-notes.md` §9); every picture is a brief for the design-director.
 
 Built on: `syllabus.md` §2 Band A (ENG-A-01 to A-17), `templates.md` (the shared ids), `docs/languages/frame.md` (§2.3 templates, §3 mastery and set coverage, §5.1 speech, §5.2 personal turns), `docs/curriculum.md` §9 (feedback) and §10. Pronunciation specs: `pronunciation.csv` (one row per English clip). Made and checked by a script (the counts in §7 are its output).
 
@@ -17,64 +17,85 @@ Built on: `syllabus.md` §2 Band A (ENG-A-01 to A-17), `templates.md` (the share
 - **Order:** the options of every item are shown in a random order (the tables list the right answer first only for reading).
 - **Color-blind safe:** red and green are never options in the same item (A-03, A-12).
 
-## 2. Hebrew frame lines (drafts, `"review": "needs-editor"`)
-Written in the gender-neutral plural, as the curriculum's core lines (§9.3); the editor decides on per-child forms and adds the nikud and the voice text. Unpointed here on purpose.
+## 2. Hebrew frame lines (final, `text-ready`)
+The rule (`hebrew-notes.md` §9.1): the teaching voice speaks to the children in the plural, in "let's" forms or in the impersonal present, whatever the profile's address form, and says nothing in the first person that has a gender. So there is no per-child version of any line (one clip per line, not three), and any voice can say them. Full nikud (child text). The voice text is the line for ElevenLabs: partial nikud, no "!", no quotes; a word with the sin dot keeps its nikud; a line that ends in a colon is a carrier before another clip.
 
-| Id | Hebrew (draft) | Meaning | Used in | review |
-|---|---|---|---|---|
-| he-welcome | שלום! באי הזה מדברים אנגלית. בואו נקשיב ונשחק. | Hello! On this island we speak English. Let's listen and play. | first visit | needs-editor |
-| he-bye | להתראות! היה כיף לשחק באנגלית. | Goodbye! It was fun to play in English. | end of a visit | needs-editor |
-| he-ins-listen-tap | הקשיבו, וגעו בתמונה. | Listen, and touch the picture. | LS01 tap (until "Listen!" replaces it) | needs-editor |
-| he-ins-who-doing | הקשיבו, וגעו בחבר שעושה את זה. | Listen, and touch the friend who is doing it. | A-02 LS01 | needs-editor |
-| he-ins-make-do | הקשיבו, וגעו בכפתור, ומיקה יעשה את זה. | Listen, and touch the button. Mika will do it. | A-02 LS11 buttons | needs-editor |
-| he-ins-do-too | עכשיו אתם! עשו את זה, ואז געו ב"סיימתי". | Now you! Do it, then touch "done". | LS11 embodied | needs-editor |
-| he-ins-count | בואו נספור באנגלית. געו בכל אחד. | Let's count in English. Touch each one. | A-04 T02 | needs-editor |
-| he-ins-touch-body | הקשיבו, וגעו בגוף של מיקה. | Listen, and touch Mika's body. | A-06 LS11 hotspots | needs-editor |
-| he-ins-give | הקשיבו, וגררו את האוכל לפיפ. | Listen, and drag the food to Pip. | A-08 LS11 drag | needs-editor |
-| he-ins-say | עכשיו תורכם. אמרו גם אתם! | Now it's your turn. You say it too! | LS09 | needs-editor |
-| he-ins-mic | געו במיקרופון, ואמרו. | Touch the microphone, and say it. | LS09 voice on | needs-editor |
-| he-ins-said-it | אמרתם? געו ב"אמרתי". | Did you say it? Touch "I said it". | LS09 voice off | needs-editor |
-| he-ins-find-said | ועכשיו געו בתמונה של המילה. | And now touch the picture of the word. | LS09 then tap | needs-editor |
-| he-ins-drum | הקשיבו למילה, ותופפו פעם אחת על כל חלק. | Listen to the word, and drum once for each part. | A-14 LS03 drum | needs-editor |
-| he-ins-strip | כמה פעמים מתופפים? געו בשורת התופים הנכונה. | How many drum beats? Touch the right row of drums. | A-14 LS01 | needs-editor |
-| he-ins-story | בואו נשמע סיפור. אפשר לגעת בתמונות. | Let's hear a story. You can touch the pictures. | A-15 LS08 | needs-editor |
-| he-q-who | מי זה? | Who is it? | A-15 dialogic pause | needs-editor |
-| he-q-ball-end | אצל מי הכדור בסוף? | Who has the ball at the end? | A-15 question | needs-editor |
-| he-q-ball-which | איזה כדור היה בסיפור? | Which ball was in the story? | A-15 question | needs-editor |
-| he-q-ball-first | ליד מי הכדור קפץ ראשון? | Who did the ball bounce past first? | A-15 question | needs-editor |
-| he-ins-thumbs | כן או לא? געו באגודל. | Yes or no? Touch a thumb. | A-16 LS01 | needs-editor |
-| he-ins-box | מה יש בקופסה? הקשיבו לפיפ. | What is in the box? Listen to Pip. | A-16 guessing game | needs-editor |
-| he-ins-box-pick | אז מה יש בקופסה? געו בתמונה. | So what is in the box? Touch the picture. | A-16 guessing game | needs-editor |
-| he-ins-bubble | מה עונים? געו בבועה. | What do we answer? Touch a bubble. | LS10 | needs-editor |
-| he-ins-face | הקשיבו, וגעו בפרצוף הנכון. | Listen, and touch the right face. | A-17 LS01 | needs-editor |
-| he-ins-chant | בואו נדקלם יחד, ונעשה את התנועות! | Let's chant together and do the moves! | LS12 | needs-editor |
-| he-ins-pairs | מצאו שתי תמונות שהולכות יחד. | Find two pictures that go together. | LS01 pairs | needs-editor |
-| he-ins-whats-this | הקשיבו לשאלה ולתשובה, וגעו בתמונה. | Listen to the question and the answer, and touch the picture. | A-11 LS01 | needs-editor |
-| he-ins-personal | אפשר לענות בתמונה, בקול, או לדלג. | You can answer with a picture, out loud, or skip. | LS10 personal | needs-editor |
-| he-hint-again | הקשיבו שוב, לאט. | Listen again, slowly. | H1 | needs-editor |
-| he-hint-hebrew | בעברית: | In Hebrew: | H2 (before the gloss) | needs-editor |
-| he-hint-english | ובאנגלית: | And in English: | H2 (after the gloss) | needs-editor |
-| he-hint-showme | תראו איך עושים. | Watch how it is done. | H3 | needs-editor |
-| he-hint-beats | נמחא כף על כל חלק, לאט. | We clap for each part, slowly. | A-14 H2 | needs-editor |
-| he-hint-page | בואו נחזור לעמוד הזה בסיפור. | Let's go back to this page of the story. | A-15 H2 | needs-editor |
-| he-fb-right-1 | נכון! | Right! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-right-2 | כן! | Yes! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-right-3 | יפה מאוד! | Very nice! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-right-4 | מצאתם! | You found it! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-right-5 | בדיוק! | Exactly! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-right-6 | שמעתם טוב! | You heard well! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-right-7 | הקשבתם יפה! | You listened well! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-right-8 | כל הכבוד! | Well done! | correct, followed by the English word clip (8 lines, curriculum §9.1) | needs-editor |
-| he-fb-check | הממ… בואו נבדוק. | Hmm… let's check. | first error (curriculum §9.2) | needs-editor |
-| he-fb-thats | זה | That is | diagnostic: "זה" + the chosen word in English | needs-editor |
-| he-fb-listen-again | בואו נקשיב שוב: | Let's listen again: | diagnostic: then the target word | needs-editor |
-| he-fb-look-again | בואו נסתכל שוב על התמונה. | Let's look at the picture again. | A-16 YESNO | needs-editor |
-| he-fb-beats-together | בואו נתופף יחד, לאט. | Let's drum together, slowly. | A-14 error | needs-editor |
-| he-fb-heard | שמעתי: | I heard: | LS09 confident (frame §5.1) + the word | needs-editor |
-| he-fb-together | בואו נגיד יחד: | Let's say it together: | LS09 unsure (frame §5.1) + the word | needs-editor |
-| he-fb-try-once | רוצים לנסות עוד פעם? געו במיקרופון. | Want to try once more? Touch the microphone. | LS09: at most one more try, by a tap | needs-editor |
+| Id | Hebrew (final, with nikud) | Voice text (for ElevenLabs) | Meaning | Used in | review |
+|---|---|---|---|---|---|
+| he-welcome | שָׁלוֹם! בָּאִי הַזֶּה מְדַבְּרִים אַנְגְּלִית. בּוֹאוּ נַקְשִׁיב וּנְשַׂחֵק. | שלום, באי הזה מדברים אנגלית. בואו נקשיב וּנְשַׂחֵק. | Hello! On this island we speak English. Let's listen and play. | first visit | text-ready |
+| he-bye | לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית. | להתראות, היה כיף לְשַׂחֵק באנגלית. | Goodbye! It was fun to play in English. | end of a visit | text-ready |
+| he-ins-listen-tap | הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה. | הקשיבו, וגעו בתמונה. | Listen, and touch the picture. | LS01 tap (until "Listen!" replaces it) | text-ready |
+| he-ins-who-doing | הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה שֶׁל הַפְּעֻלָּה. | הקשיבו, וגעו בתמונה של הפעולה. | Listen, and touch the picture of the action. | A-02 LS01 | text-ready |
+| he-ins-make-do | הַקְשִׁיבוּ, וְהַרְאוּ לְמִיקָה מַה לַּעֲשׂוֹת: גְּעוּ בַּכַּפְתּוֹר. | הקשיבו, והראו למיקה מה לַעֲשׂוֹת: געו בכפתור. | Listen, and show Mika what to do: touch the button. | A-02 LS11 buttons | text-ready |
+| he-ins-do-too | עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר "סִיַּמְתִּי". | עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור — סיימתי. | Now you! Do it, then touch the button "done". | LS11 embodied | text-ready |
+| he-ins-count | בּוֹאוּ נִסְפֹּר בְּאַנְגְּלִית. גְּעוּ בְּכׇל אֶחָד. | בואו נספור באנגלית. געו בכל אֶחָד. | Let's count in English. Touch each one. | A-04 T02 | text-ready |
+| he-ins-touch-body | הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה. | הקשיבו, וגעו בגוף של מיקה. | Listen, and touch Mika's body. | A-06 LS11 hotspots | text-ready |
+| he-ins-give | הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ. | הקשיבו, וגררו את האוכל לפיפ. | Listen, and drag the food to Pip. | A-08 LS11 drag | text-ready |
+| he-ins-say | עַכְשָׁו תּוֹרְכֶם. אִמְרוּ גַּם אַתֶּם! | עכשיו תורכם. אִמְרוּ גם אתם. | Now it's your turn. You say it too! | LS09 | text-ready |
+| he-ins-mic | גְּעוּ בַּמִּיקְרוֹפוֹן, וְאִמְרוּ. | געו במיקרופון, וְאִמְרוּ. | Touch the microphone, and say it. | LS09 voice on | text-ready |
+| he-ins-said-it | אָמַרְתֶּם? גְּעוּ בַּכַּפְתּוֹר "אָמַרְתִּי". | אמרתם? געו בכפתור — אמרתי. | Did you say it? Touch the button "I said it". | LS09 voice off | text-ready |
+| he-ins-find-said | וְעַכְשָׁו גְּעוּ בַּתְּמוּנָה שֶׁל הַמִּלָּה. | ועכשיו געו בתמונה של המילה. | And now touch the picture of the word. | LS09 then tap | text-ready |
+| he-ins-drum | הַקְשִׁיבוּ לַמִּלָּה, וְתוֹפְפוּ פַּעַם אַחַת לְכׇל חֵלֶק. | הקשיבו למילה, ותופפו פעם אַחַת לכל חלק. | Listen to the word, and drum once for each part. | A-14 LS03 drum | text-ready |
+| he-ins-strip | כַּמָּה תֻּפִּים? גְּעוּ בַּשּׁוּרָה הַנְּכוֹנָה. | כמה תופים? געו בשורה הנכונה. | How many drums? Touch the right row. | A-14 LS01 | text-ready |
+| he-ins-story | בּוֹאוּ נִשְׁמַע סִפּוּר. אֶפְשָׁר לָגַעַת בַּתְּמוּנוֹת. | בואו נשמע סיפור. אפשר לגעת בתמונות. | Let's hear a story. You can touch the pictures. | A-15 LS08 | text-ready |
+| he-q-who | מִי זֶה? | מי זה? | Who is it? | A-15 dialogic pause | text-ready |
+| he-q-ball-end | אֵצֶל מִי הַכַּדּוּר בַּסּוֹף? | אצל מי הכדור בסוף? | Who has the ball at the end? | A-15 question | text-ready |
+| he-q-ball-which | אֵיזֶה כַּדּוּר הָיָה בַּסִּפּוּר? | איזה כדור היה בסיפור? | Which ball was in the story? | A-15 question | text-ready |
+| he-q-ball-first | לְיַד מִי הַכַּדּוּר קָפַץ בַּהַתְחָלָה? | ליד מי הכדור קפץ בהתחלה? | Who did the ball bounce past at the beginning? | A-15 question | text-ready |
+| he-ins-thumbs | כֵּן אוֹ לֹא? גְּעוּ בַּאֲגוּדָל. | כן או לא? געו באגודל. | Yes or no? Touch a thumb. | A-16 LS01 | text-ready |
+| he-ins-box | מַה יֵּשׁ בַּקֻּפְסָה? הַקְשִׁיבוּ לְפִיפּ. | מה יש בקופסה? הקשיבו לפיפ. | What is in the box? Listen to Pip. | A-16 guessing game | text-ready |
+| he-ins-box-pick | אָז מַה יֵּשׁ בַּקֻּפְסָה? גְּעוּ בַּתְּמוּנָה. | אז מה יש בקופסה? געו בתמונה. | So what is in the box? Touch the picture. | A-16 guessing game | text-ready |
+| he-ins-bubble | מָה עוֹנִים? גְּעוּ בַּבֻּעָה. | מה עונים? געו בבועה. | What do we answer? Touch a bubble. | LS10 | text-ready |
+| he-ins-face | הַקְשִׁיבוּ, וּגְעוּ בַּפַּרְצוּף הַנָּכוֹן. | הקשיבו, וגעו בפרצוף הנכון. | Listen, and touch the right face. | A-17 LS01 | text-ready |
+| he-ins-chant | בּוֹאוּ נְדַקְלֵם יַחַד, וְנַעֲשֶׂה אֶת הַתְּנוּעוֹת! | בואו נדקלם יחד, וְנַעֲשֶׂה את התנועות. | Let's chant together and do the moves! | LS12 | text-ready |
+| he-ins-pairs | מִצְאוּ שְׁתֵּי תְּמוּנוֹת שֶׁהוֹלְכוֹת יַחַד. | מצאו שְׁתֵּי תמונות שהולכות יחד. | Find two pictures that go together. | LS01 pairs | text-ready |
+| he-ins-whats-this | הַקְשִׁיבוּ לַשְּׁאֵלָה וְלַתְּשׁוּבָה, וּגְעוּ בַּתְּמוּנָה. | הקשיבו לשאלה ולתשובה, וגעו בתמונה. | Listen to the question and the answer, and touch the picture. | A-11 LS01 | text-ready |
+| he-ins-personal | אֶפְשָׁר לַעֲנוֹת בִּתְמוּנָה, אוֹ בְּקוֹל. אֶפְשָׁר גַּם לְדַלֵּג. | אפשר לענות בתמונה, או בקול. אפשר גם לדלג. | You can answer with a picture, or out loud. You can also skip. | LS10 personal | text-ready |
+| he-hint-again | הַקְשִׁיבוּ שׁוּב, לְאַט. | הקשיבו שוב, לאט. | Listen again, slowly. | H1 | text-ready |
+| he-hint-hebrew | בְּעִבְרִית: | בעברית: | In Hebrew: | H2 (before the gloss) | text-ready |
+| he-hint-english | וּבְאַנְגְּלִית: | ובאנגלית: | And in English: | H2 (after the gloss) | text-ready |
+| he-hint-showme | הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים. | הסתכלו איך עוֹשִׂים. | Watch how it is done. | H3 (the same line in every ladder) | text-ready |
+| he-hint-beats | בּוֹאוּ נִמְחָא כַּפַּיִם לְכׇל חֵלֶק, לְאַט. | בואו נמחא כפיים לכל חלק, לאט. | Let's clap for each part, slowly. | A-14 H2 | text-ready |
+| he-hint-page | בּוֹאוּ נַחֲזֹר לָעַמּוּד הַזֶּה בַּסִּפּוּר. | בואו נחזור לעמוד הזה בסיפור. | Let's go back to this page of the story. | A-15 H2 | text-ready |
+| he-fb-right-1 | נָכוֹן! | נכון. | Right! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-right-2 | כֵּן! | כן. | Yes! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-right-3 | יָפֶה מְאֹד! | יפה מאוד. | Very nice! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-right-4 | מְצָאתֶם! | מצאתם. | You found it! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-right-5 | בְּדִיּוּק! | בדיוק. | Exactly! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-right-6 | שְׁמַעְתֶּם טוֹב! | שמעתם טוב. | You heard well! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-right-7 | הִקְשַׁבְתֶּם יָפֶה! | הקשבתם יפה. | You listened well! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-right-8 | כׇּל הַכָּבוֹד! | כל הכבוד. | Well done! | correct, followed by the English word clip (8 lines, curriculum §9.1) | text-ready |
+| he-fb-check | הַמְּמ… בּוֹאוּ נִבְדֹּק. | המממ… בואו נבדוק. | Hmm… let's check. | first error (curriculum §9.2) | text-ready |
+| he-fb-thats | זֶה | זה: | That is | diagnostic: "זה" + the chosen word in English | text-ready |
+| he-fb-listen-again | בּוֹאוּ נַקְשִׁיב שׁוּב: | בואו נקשיב שוב: | Let's listen again: | diagnostic: then the target word | text-ready |
+| he-fb-look-again | בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַתְּמוּנָה. | בואו נסתכל שוב על התמונה. | Let's look at the picture again. | A-16 YESNO | text-ready |
+| he-fb-beats-together | בּוֹאוּ נְתוֹפֵף יַחַד, לְאַט. | בואו נתופף יחד, לאט. | Let's drum together, slowly. | A-14 error | text-ready |
+| he-fb-heard | שָׁמַעְתִּי: | שמעתי: | I heard: | LS09 confident (frame §5.1) + the word | text-ready |
+| he-fb-together | בּוֹאוּ נֹאמַר יַחַד. | בואו נגיד יחד. | Let's say it together. | LS09 unsure (frame §5.1); the word follows as its own clip. The same line as the Hebrew and Russian courses | text-ready |
+| he-fb-try-once | רוֹצִים לְנַסּוֹת עוֹד פַּעַם? גְּעוּ בַּמִּיקְרוֹפוֹן. | רוצים לנסות עוד פעם? געו במיקרופון. | Want to try once more? Touch the microphone. | LS09: at most one more try, by a tap | text-ready |
 
-**Glosses for hint level 2** (`he-gl-<word>`, needs-editor; 68 words, 68 distinct Hebrew words): apple תפוח · baby תינוק · ball כדור · banana בננה · big גדול · bike אופניים · bird ציפור · blue כחול · boat סירה · book ספר · bread לחם · brother אח · bye ביי · cake עוגה · car מכונית · cat חתול · clap מחאו כף · cold קר · cow פרה · dad אבא · dog כלב · drum תוף · duck ברווז · ears אוזניים · egg ביצה · elephant פיל · eyes עיניים · feet כפות רגליים · fine בסדר · fish דג · five חמש · four ארבע · frog צפרדע · goodbye להתראות · grandma סבתא · grandpa סבא · green ירוק · hands ידיים · happy שמח · head ראש · hello שלום · hi היי · hot חם · juice מיץ · jump קפצו · kite עפיפון · listen הקשיבו · look הסתכלו · milk חלב · mom אמא · mouth פה · nose אף · one אחת · pig חזיר · red אדום · sad עצוב · sister אחות · sit-down שבו · small קטן · stand-up קומו · stop עצרו · teddy דובי · three שלוש · tummy בטן · two שתיים · water מים · wave נופפו · yellow צהוב. Notes for the editor: the actions are plural imperatives to match the frame; the numbers are the counting forms; "happy" and "sad" are masculine here and may follow the character shown.
+**What the editor changed** (the other lines only got nikud and the voice text):
+- `he-welcome`: the verb "play" is pi'el (נְשַׂחֵק); the vav before a shva is וּ.
+- `he-ins-who-doing`: was "touch the friend who is doing it": the pictures show one friend, and a participle would give the friend a gender.
+- `he-ins-make-do`: was "and Mika will do it" (a masculine verb for Mika); now the child "shows Mika what to do", no verb about Mika, so no gender is guessed.
+- `he-ins-do-too`: the button is named, and its label is quoted; סִיַּמְתִּי is a first-person past verb, the same in every voice.
+- `he-ins-said-it`: same as `he-ins-do-too`: the button is named ("אָמַרְתִּי" is a first-person past verb, the same in every voice).
+- `he-ins-drum`: "לְכׇל חֵלֶק", the same words as the Hebrew course (was "על כל חלק").
+- `he-ins-give`: the name Pip is פִּיפּ with a hard final pe (dagesh), not a final ף.
+- `he-ins-strip`: was "how many drum beats? touch the right row of drums"; the plural of תֹּף is תֻּפִּים; same wording as the Hebrew course.
+- `he-ins-thumbs`: אֲגוּדָל (thumb); בַּ before a hataf.
+- `he-ins-personal`: says first that answering is optional; the pass button is "לדלג".
+- `he-ins-chant`: נְדַקְלֵם (we recite) is the gan word.
+- `he-hint-showme`: was "תראו איך עושים" (a future form used as an order); the app's imperative.
+- `he-hint-beats`: was "נמחא כף על כל חלק" (written register); the plural כפיים is the word of the gan songs.
+- `he-q-ball-first`: was "ליד מי הכדור קפץ ראשון?" (ראשון is a number word here); "בהתחלה" says what is meant.
+- `he-fb-beats-together`: the verb is the one of the Hebrew course (תוֹפֵף), not a third form.
+- `he-fb-together`: the same approved line as the Hebrew and Russian courses (hebrew-notes.md 8.8), with a full stop instead of a colon; the model of the word is its own clip.
+- `he-fb-thats`: a carrier: the English word of the chosen picture follows as its own clip.
+
+**Glosses for hint level 2** (`he-gl-<word>`, `text-ready`; 68 words, 68 distinct Hebrew words): apple תַּפּוּחַ · baby תִּינוֹק · ball כַּדּוּר · banana בָּנָנָה · big גָּדוֹל · bike אוֹפַנַּיִם · bird צִפּוֹר · blue כָּחֹל · boat סִירָה · book סֵפֶר · bread לֶחֶם · brother אָח · bye בַּיי · cake עוּגָה · car מְכוֹנִית · cat חָתוּל · clap מְחִיאַת כַּפַּיִם · cold קַר · cow פָּרָה · dad אַבָּא · dog כֶּלֶב · drum תֹּף · duck בַּרְוָז · ears אָזְנַיִם · egg בֵּיצָה · elephant פִּיל · eyes עֵינַיִם · feet רַגְלַיִם · fine בְּסֵדֶר · fish דָּג · five חָמֵשׁ · four אַרְבַּע · frog צְפַרְדֵּעַ · goodbye לְהִתְרָאוֹת · grandma סַבְתָּא · grandpa סָבָא · green יָרֹק · hands יָדַיִם · happy שָׂמֵחַ · head רֹאשׁ · hello שָׁלוֹם · hi הַיי · hot חַם · juice מִיץ · jump קִפְצוּ · kite עֲפִיפוֹן · listen הַקְשִׁיבוּ · look הִסְתַּכְּלוּ · milk חָלָב · mom אִמָּא · mouth פֶּה · nose אַף · one אַחַת · pig חֲזִיר · red אָדֹם · sad עָצוּב · sister אָחוֹת · sit-down שְׁבוּ · small קָטָן · stand-up קוּמוּ · stop עִצְרוּ · teddy דֻּבִּי · three שָׁלוֹשׁ · tummy בֶּטֶן · two שְׁתַּיִם · water מַיִם · wave נוֹפְפוּ · yellow צָהֹב.
+
+Editor's notes on the glosses: (1) The voice text of a gloss is the pointed word itself, as for every single-word clip until the voice pilot says whether unpointed words read as well (`hebrew-notes.md` 8.4). (2) Numbers are the counting forms (feminine, bare): אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. (3) The actions are plural imperatives, as the frame lines are; for "clap" the noun מְחִיאַת כַּפַּיִם is used because the plural imperative of מחא could not be checked in a dictionary. (4) A gloss names a word, so an adjective or a noun is in the dictionary form: שָׂמֵחַ, עָצוּב, קָטָן, תִּינוֹק are masculine singular and do **not** follow the character shown (a gloss is a name, not a sentence about a person). (5) "feet" is רַגְלַיִם, the word children use (it also means legs; the picture shows feet). (6) "drum" is תֹּף (plural תֻּפִּים), "bike" is the dual אוֹפַנַּיִם.
 
 ## 3. Hint ladders (level 2 changes the representation, level 3 is "show me")
 | Ladder | Steps |
@@ -587,10 +608,10 @@ All original, no text, no brands, no franchise look; one consistent style; Pip a
 
 - **Skills:** 17 (ENG-A-01 to A-17). **Words taught in sets:** 69. **Personal turns:** 4. **Chants:** 5. **Stories:** 1 (6 pages). **Pictures:** 110 briefs.
 - **English clips:** 223 (75 words, 68 slow words for hint level 1, 80 chunks, chant lines and story pages); **2,148 characters** (1,780 without the slow clips). Each has a row in `pronunciation.csv`.
-- **Hebrew clips:** 51 frame lines (1,107 characters, unpointed) and 68 glosses (275 characters): **1,382 characters** before the editor's nikud. In the app's voiced Hebrew today the pointed voice text is about 1.09 times the unpointed length (measured on `docs/review/hebrew-master.csv`), so about 1,506.
-- **Total for one voicing of Band A:** about **3,654 characters**, about **0.29 USD** at the list price used in `voices.md` (0.08 USD per 1,000 characters, `eleven_v4`). Counting rule: Unicode code points of the exact `say` text (as `voice_gen` counts). Not counted: re-takes after a `heard-wrong`, isolated letter sounds (Band B), the drum and animal sound effects.
+- **Hebrew clips:** 51 frame lines (1,163 characters as voice text) and 68 glosses (460 characters, pointed, as for every single word until the pilot decides): **1,623 characters** (counted by the hebrew-text-editor on 2026-11-03 after the final wording; before the editor it was 1,382 unpointed).
+- **Total for one voicing of Band A:** about **3,771 characters**, about **0.30 USD** at the list price used in `voices.md` (0.08 USD per 1,000 characters, `eleven_v4`). Counting rule: Unicode code points of the exact `say` text (as `voice_gen` counts). Not counted: re-takes after a `heard-wrong`, isolated letter sounds (Band B), the drum and animal sound effects.
 - **Nothing is voiced by Claude.** The owner runs every paid command and types the character count (CLAUDE.md › Characters and money).
 
 ## 8. Checked by script, and not checked
 Checked: at most 3 choices; the right answer among the options; every distractor tagged with a known, non-accent tag; at least 2 tagged distractors per skill; 2-choice items at most half of each skill's scored items; every set word is the right answer at least once; every picture has a brief; every Hebrew line referenced exists; English clips are Latin only; Hebrew lines have no Latin letters; every English clip has a CSV row. Result: **all pass**.
-Not checked: the pictures (none drawn); the voice (nothing voiced; every row is `draft`); the Hebrew wording (the editor's); the timing of chant pictures (the voice-and-sound-director); the recogniser foils against a real model (L3).
+Not checked: the pictures (none drawn); the voice (nothing voiced; every row is `draft`); the Hebrew wording (checked by the hebrew-text-editor on 2026-11-03: `text-ready`); the timing of chant pictures (the voice-and-sound-director); the recogniser foils against a real model (L3).
