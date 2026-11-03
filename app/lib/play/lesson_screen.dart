@@ -528,6 +528,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           trailTotal: controller.trailLength,
           trailDone: controller.finished ? controller.trailLength : controller.index,
           onHome: _home,
+          showHelp: !controller.noHelp,
           onHint: controller.finished || controller.noHelp ? null : controller.showHint,
           hintGlow: helpOffered,
           onShowMe: controller.finished || controller.noHelp ? null : () => controller.unsure(),

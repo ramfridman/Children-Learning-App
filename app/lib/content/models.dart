@@ -1374,6 +1374,60 @@ class GateDoc {
   final Set<String> routeBypass;
 }
 
+/// One strand of a course's placement game: a ladder of levels of probe items, where a questionnaire answer starts it, and when it is
+/// offered at all.
+class PlacementStrandDoc {
+  PlacementStrandDoc._(Map<String, Object?> json)
+    : id = json['id']! as String,
+      offerAnswer = _maybe(json['offer'])['answer'] as String?,
+      offerEquals = _maybe(json['offer'])['equals'] as String?,
+      offerMinBand = (_maybe(json['offer'])['minBand'] as int?) ?? 0,
+      start = <({String answer, String equals, int level})>[
+        for (final Map<String, Object?> s in _maps(json['start']))
+          (answer: s['answer']! as String, equals: s['equals']! as String, level: s['level']! as int),
+      ],
+      levels = <({List<String> items, List<String> assumes})>[
+        for (final Map<String, Object?> l in _maps(json['levels']))
+          (
+            items: <String>[for (final Object? i in l['items']! as List<Object?>) i! as String],
+            assumes: <String>[
+              for (final Object? i in (l['assumes'] as List<Object?>?) ?? const <Object?>[]) i! as String,
+            ],
+          ),
+      ];
+
+  final String id;
+
+  /// The strand is offered only when the questionnaire answered [offerAnswer] with [offerEquals] (both null: always) and the child's
+  /// presentation band is at least [offerMinBand].
+  final String? offerAnswer;
+  final String? offerEquals;
+  final int offerMinBand;
+  final List<({String answer, String equals, int level})> start;
+  final List<({List<String> items, List<String> assumes})> levels;
+}
+
+/// The placement game of a language course (docs/languages/frame.md section 3.2, LS13): its strands, the one warm line after each probe,
+/// the line that ends a visit, and how many probes one visit may hold.
+class PlacementDoc {
+  PlacementDoc._(Map<String, Object?> json)
+    : id = json['id']! as String,
+      course = (json['course'] as String?) ?? Course.core,
+      thanks = Spoken.fromJson(json['thanks']),
+      celebration = Spoken.fromJson(json['celebration']),
+      perVisit = json['perVisit']! as int,
+      strands = <PlacementStrandDoc>[
+        for (final Map<String, Object?> s in _maps(json['strands'])) PlacementStrandDoc._(s),
+      ];
+
+  final String id;
+  final String course;
+  final Spoken thanks;
+  final Spoken celebration;
+  final int perVisit;
+  final List<PlacementStrandDoc> strands;
+}
+
 /// A misconception of the pack.
 class TagDoc {
   TagDoc._(Map<String, Object?> json)
@@ -1436,6 +1490,7 @@ class PackContent {
     required this.skills,
     required this.tags,
     required this.gates,
+    this.placement,
   });
 
   factory PackContent.fromPack(VerifiedPack pack) {
@@ -1445,6 +1500,7 @@ class PackContent {
     final Map<String, SkillDoc> skills = <String, SkillDoc>{};
     final Map<String, TagDoc> tags = <String, TagDoc>{};
     final Map<String, GateDoc> gates = <String, GateDoc>{};
+    PlacementDoc? placement;
     for (final MapEntry<String, Object?> d in pack.docs.entries) {
       final Map<String, Object?> doc = _map(d.value);
       if (d.key.startsWith('lesson.')) {
@@ -1456,6 +1512,8 @@ class PackContent {
       } else if (d.key.startsWith('gate.')) {
         final GateDoc g = GateDoc._(doc);
         gates[g.id] = g;
+      } else if (d.key.startsWith('placement.')) {
+        placement = PlacementDoc._(doc);
       } else if (d.key.startsWith('misconception.')) {
         final TagDoc t = TagDoc._(doc);
         tags[t.id] = t;
@@ -1474,6 +1532,7 @@ class PackContent {
       skills: skills,
       tags: tags,
       gates: gates,
+      placement: placement,
     );
   }
 
@@ -1490,6 +1549,9 @@ class PackContent {
 
   /// The gates of the course (none in the lands that exist today).
   final Map<String, GateDoc> gates;
+
+  /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
+  final PlacementDoc? placement;
 
   /// The activities of a lesson, in order.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[

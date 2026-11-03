@@ -563,3 +563,68 @@ Map<String, Object?> drumJson({
     ],
   },
 };
+
+// ---- the placement game (LS13) ----
+
+/// One strand of a placement document: [levels] are the probe item ids (short ids, without the course) of each level, floor first.
+Map<String, Object?> strandJson(
+  String id,
+  String course,
+  List<List<String>> levels, {
+  List<List<String>>? assumes,
+  List<Map<String, Object?>>? start,
+  Map<String, Object?>? offer,
+}) => <String, Object?>{
+  'id': id,
+  'offer': ?offer,
+  'start': ?start,
+  'levels': <Object?>[
+    for (final (int i, List<String> items) in levels.indexed)
+      <String, Object?>{
+        'items': <String>[for (final String it in items) '$course.$it'],
+        if (assumes != null && assumes[i].isNotEmpty) 'assumes': assumes[i],
+      },
+  ],
+};
+
+/// The placement document of [course]: its strands, the warm line after each probe and the line that ends a visit.
+Map<String, Object?> placementJson(String course, List<Map<String, Object?>> strands, {int perVisit = 8}) =>
+    <String, Object?>{
+      'schema': 'placement/v1',
+      'id': '$course.placement',
+      'course': course,
+      'thanks': line('vo:$course.placement.thanks', 'תּוֹדָה רַבָּה!'),
+      'celebration': line('vo:$course.placement.done', 'הָיָה כֵּיף לְבַקֵּר!'),
+      'perVisit': perVisit,
+      'strands': strands,
+    };
+
+extension PlacementFixture on LangPack {
+  /// A tap item that is a probe: `o1` is right, `o2` and `o3` are tagged. Its id is `<course>.<id>`.
+  void addProbe(String id, {String? skill}) {
+    add(
+      tapJson(
+        course: course,
+        id: id,
+        skill: skill,
+        purpose: 'probe',
+        options: <Map<String, Object?>>[
+          pictureOption('o1', 'cat'),
+          pictureOption('o2', 'dog', tag: tag('lis.sem')),
+          pictureOption('o3', 'duck', tag: tag('lis.guess')),
+        ],
+        correct: 'o1',
+      ),
+    );
+  }
+
+  /// Adds the placement document (and its voice lines) to the pack.
+  void addPlacement(Map<String, Object?> doc) {
+    final String id = doc['id']! as String;
+    pack.addDocument('placement.$id.json', 'placements', id, doc);
+    final List<Object?> pending = pack.manifest['voPending']! as List<Object?>;
+    for (final String v in <String>['thanks', 'done']) {
+      if (!pending.contains('vo:$course.placement.$v')) pending.add('vo:$course.placement.$v');
+    }
+  }
+}

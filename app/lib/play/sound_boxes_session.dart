@@ -79,7 +79,7 @@ class SoundBoxesSession extends TemplateSession {
     if (disposed) return;
     if (o.correct || o.settled) {
       // A probe of the placement game ends on its one answer, right or not, and shows nothing "not yet".
-      state = o.correct ? AnswerState.correct : AnswerState.selected;
+      state = o.settled ? AnswerState.selected : AnswerState.correct;
       notify();
       later(TemplateSession.praisePause, controller.next);
     } else {

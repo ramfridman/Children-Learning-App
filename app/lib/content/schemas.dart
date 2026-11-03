@@ -26,6 +26,9 @@ abstract final class Patterns {
   // A letter bundle and a gate: the course, a dot and a short name (`eng.g1`, `eng.oral`).
   static const String bundle = r'[a-z]{3}\.[a-z0-9_]{1,19}';
   static const String gateId = r'[a-z]{3}\.[a-z0-9_]{1,19}';
+
+  // The placement document of a course: `eng.placement`.
+  static const String placementId = r'[a-z]{3}\.placement';
 }
 
 /// The four kinds of document in a pack, by the `schema` field of the file.
@@ -37,6 +40,7 @@ abstract final class SchemaIds {
   static const String activity = 'activity/v1';
   static const String lesson = 'lesson/v1';
   static const String gate = 'gate/v1';
+  static const String placement = 'placement/v1';
   static const String skill = 'skill/v1';
   static const String misconception = 'misconception/v1';
 }
@@ -235,6 +239,11 @@ const SObject manifestSchema = SObject(<String, SField>{
         SArray(SString(minLength: 5, maxLength: 24, pattern: Patterns.gateId), maxItems: 20),
         required: false,
       ),
+      // The placement game of a course (docs/languages/frame.md section 3.2): one document, absent in packs that have none.
+      'placements': SField(
+        SArray(SString(minLength: 13, maxLength: 13, pattern: Patterns.placementId), maxItems: 1),
+        required: false,
+      ),
     }),
   ),
 });
@@ -398,6 +407,67 @@ const SObject gateSchema = SObject(<String, SField>{
     required: false,
   ),
   'routeBypass': SField(SArray(SEnum(courseRoutes), maxItems: 3), required: false),
+});
+
+/// A questionnaire answer a placement rule reads: the question and the answer it takes (enums, as the parent's questionnaire keeps them).
+const SString _answerKey = SString(minLength: 2, maxLength: 24, pattern: r'[a-z][A-Za-z0-9]{1,23}');
+
+/// The placement game of a language course (docs/languages/frame.md section 3.2, LS13): its strands, each a ladder of levels of probe
+/// items. The rules of the staircase (two right up, one wrong down, 2 reversals or 8 items, 2/3 right minus one, two misses at the
+/// floor stop it) are the app's and not data, so a pack can only choose the ladders, where a questionnaire answer starts them, and which
+/// strand is offered only on an answer.
+const SObject placementSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.placement)),
+  'id': SField(SString(minLength: 13, maxLength: 13, pattern: Patterns.placementId)),
+  'review': _review,
+  'course': _course,
+  // The one warm line said after every probe, whatever the answer (no result is shown to the child), and the line that ends a visit.
+  'thanks': SField(_spoken),
+  'celebration': SField(_spoken),
+  // Never more than about this many probes in one visit (frame section 3.2: about 8).
+  'perVisit': SField(SInt(min: 4, max: 10)),
+  'strands': SField(
+    SArray(
+      SObject(<String, SField>{
+        'id': SField(SString(minLength: 1, maxLength: 4, pattern: r'[a-z0-9]{1,4}')),
+        // The strand is offered only when the questionnaire says so and the presentation band is at least `minBand` (eng literacy).
+        'offer': SField(
+          SObject(<String, SField>{
+            'answer': SField(_answerKey, required: false),
+            'equals': SField(_answerKey, required: false),
+            'minBand': SField(SInt(min: 0, max: 2), required: false),
+          }),
+          required: false,
+        ),
+        // Where the staircase starts when the questionnaire gave this answer: never where it ends.
+        'start': SField(
+          SArray(
+            SObject(<String, SField>{
+              'answer': SField(_answerKey),
+              'equals': SField(_answerKey),
+              'level': SField(SInt(min: 0, max: 7)),
+            }),
+            maxItems: 8,
+          ),
+          required: false,
+        ),
+        // The levels from the floor up: probe items (activities with `purpose` probe), and the skills a placement above the level takes as known.
+        'levels': SField(
+          SArray(
+            SObject(<String, SField>{
+              'items': SField(SArray(_id, minItems: 1, maxItems: 6)),
+              'assumes': SField(SArray(_skill, maxItems: 20), required: false),
+            }),
+            minItems: 2,
+            maxItems: 8,
+          ),
+        ),
+      }),
+      minItems: 1,
+      maxItems: 6,
+      uniqueKey: 'id',
+    ),
+  ),
 });
 
 const SObject misconceptionSchema = SObject(<String, SField>{
@@ -1360,6 +1430,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'misconception': misconceptionSchema,
   'lesson': lessonSchema,
   'gate': gateSchema,
+  'placement': placementSchema,
   'activity.tap_answer': activitySchemaFor('tap_answer')!,
   'activity.story': activitySchemaFor('story')!,
   'activity.listen_do': activitySchemaFor('listen_do')!,

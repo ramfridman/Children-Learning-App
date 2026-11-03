@@ -51,15 +51,16 @@ abstract class ChoiceSession extends TemplateSession {
     onChosen(o);
     final Outcome out = await controller.chooseOption(id);
     if (disposed) return;
-    if (out.correct) {
-      chosenState = AnswerState.correct;
-      notify();
-      onRight();
-    } else if (out.settled) {
-      // A probe's one answer: nothing "not yet" is shown, and the lesson goes on after the pause.
+    if (out.settled) {
+      // A probe's one answer, right or not: the tile looks the same either way (no result is shown), and the lesson goes on after the
+      // pause.
       chosenState = AnswerState.selected;
       notify();
       later(TemplateSession.praisePause, controller.next);
+    } else if (out.correct) {
+      chosenState = AnswerState.correct;
+      notify();
+      onRight();
     } else {
       chosenState = AnswerState.notYet;
       notify();

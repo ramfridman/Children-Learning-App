@@ -38,7 +38,12 @@ class ActivityFrame extends StatelessWidget {
     this.onConfirmAgain,
     this.bubbleTarget,
     this.bubbleAboveTiles = false,
+    this.showHelp = true,
   });
+
+  /// The hint lamp and "show me" are drawn. Off for a probe of the placement game, which has no help at all (docs/languages/frame.md
+  /// section 3.2): the two buttons are not there, not merely dimmed.
+  final bool showHelp;
 
   /// The board numbers to lay out on, when the template's are not the board's own (see `TemplateSession.layoutFor`).
   final ActivitySpec? spec;
@@ -196,28 +201,30 @@ class ActivityFrame extends StatelessWidget {
               child: const BoardSvg('assets/art/ui/home_palm.svg', width: 32, height: 32),
             ),
           ),
-          boardAt(
-            left: s.hintLeft,
-            top: s.controlsTop,
-            child: PebbleButton(
-              key: const Key('lesson-hint'),
-              semanticLabel: He.hintSemantics.text,
-              fill: hintGlow ? TokenColors.skyTint : TokenColors.paper,
-              lip: hintGlow ? TokenColors.hintHalo : TokenColors.cardLip,
-              onPressed: onHint,
-              child: const BoardSvg('assets/art/ui/hint.svg', width: 32, height: 32),
+          if (showHelp)
+            boardAt(
+              left: s.hintLeft,
+              top: s.controlsTop,
+              child: PebbleButton(
+                key: const Key('lesson-hint'),
+                semanticLabel: He.hintSemantics.text,
+                fill: hintGlow ? TokenColors.skyTint : TokenColors.paper,
+                lip: hintGlow ? TokenColors.hintHalo : TokenColors.cardLip,
+                onPressed: onHint,
+                child: const BoardSvg('assets/art/ui/hint.svg', width: 32, height: 32),
+              ),
             ),
-          ),
-          boardAt(
-            left: s.eyeLeft,
-            top: s.controlsTop,
-            child: PebbleButton(
-              key: const Key('lesson-show-me'),
-              semanticLabel: He.showMeSemantics.text,
-              onPressed: onShowMe,
-              child: const BoardSvg('assets/art/ui/eye.svg', width: 32, height: 32),
+          if (showHelp)
+            boardAt(
+              left: s.eyeLeft,
+              top: s.controlsTop,
+              child: PebbleButton(
+                key: const Key('lesson-show-me'),
+                semanticLabel: He.showMeSemantics.text,
+                onPressed: onShowMe,
+                child: const BoardSvg('assets/art/ui/eye.svg', width: 32, height: 32),
+              ),
             ),
-          ),
           ?overlay,
         ],
       ),

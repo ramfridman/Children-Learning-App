@@ -224,6 +224,17 @@
           },
           "minItems": 0,
           "maxItems": 20
+        },
+        "placements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 13,
+            "maxLength": 13,
+            "pattern": "^(?:[a-z]{3}\\.placement)$"
+          },
+          "minItems": 0,
+          "maxItems": 1
         }
       },
       "required": [

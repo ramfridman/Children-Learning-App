@@ -70,12 +70,14 @@ List<Problem> validatePack({
   final Map<String, Map<String, Object?>> skills = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> tags = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> gates = <String, Map<String, Object?>>{};
+  final Map<String, Map<String, Object?>> placements = <String, Map<String, Object?>>{};
   // Every id that has a file, even one that failed its schema; only valid documents are cross-checked.
   final Set<String> activityIds = <String>{};
   final Set<String> lessonIds = <String>{};
   final Set<String> skillIds = <String>{};
   final Set<String> tagIds = <String>{};
   final Set<String> gateIds = <String>{};
+  final Set<String> placementIds = <String>{};
   final Map<String, Map<String, Object?>> characters = <String, Map<String, Object?>>{};
   final Set<String> characterIds = <String>{};
   final Map<String, Map<String, Object?>> cues = <String, Map<String, Object?>>{};
@@ -152,6 +154,14 @@ List<Problem> validatePack({
         }
         if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
         if (found.isEmpty) gates[middle] = doc;
+      case 'placement':
+        placementIds.add(middle);
+        final List<Problem> found = validate(placementSchema, doc);
+        for (final Problem p in found) {
+          add(name, p);
+        }
+        if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
+        if (found.isEmpty) placements[middle] = doc;
       case 'character':
         characterIds.add(middle);
         final List<Problem> found = validate(characterSchema, doc);
@@ -192,6 +202,7 @@ List<Problem> validatePack({
   sameSet('skills', skillIds);
   sameSet('misconceptions', tagIds);
   sameSet('gates', gateIds);
+  sameSet('placements', placementIds);
   sameSet('characters', characterIds);
   sameSet('cues', cueIds);
 
@@ -711,6 +722,21 @@ List<Problem> validatePack({
     }
   });
 
+  // ---- the placement game of a language course (docs/languages/frame.md section 3.2) ----
+  placements.forEach((String id, Map<String, Object?> p) {
+    _placement(
+      'placement.$id.json',
+      id,
+      p,
+      course: course,
+      activities: activities,
+      skillIds: skillIds,
+      say: say,
+      checkVo: checkVo,
+    );
+    _hebrew('placement.$id.json', p, say, pointed: true);
+  });
+
   // ---- courses never mix (docs/languages/frame.md section 1.5) ----
   _courseRules(
     course: course,
@@ -1096,6 +1122,91 @@ void _noOverlap(String file, List<(String, _Place?)> places, void Function(Strin
       final _Place? b = places[j].$2;
       if (a != null && b != null && _overlap(a, b)) {
         say(file, places[j].$1, 'overlaps ${places[i].$1}: a touch must mean one thing');
+      }
+    }
+  }
+}
+
+/// The templates a probe of the placement game may be: ordinary tap and drum items, never a story, a command, a song or a talk.
+const Set<String> probeTemplates = <String>{'tap_answer', 'sound_boxes'};
+
+/// LS13: the placement document of a language course. Its probes are ordinary items of the pack's own course with `purpose` probe (no
+/// hints, one answer), of a template a probe may be, answered by touch (speech is never a probe), scored (a personal turn or a step the
+/// child does is never one), and each in one place of one ladder.
+void _placement(
+  String file,
+  String id,
+  Map<String, Object?> p, {
+  required String course,
+  required Map<String, Map<String, Object?>> activities,
+  required Set<String> skillIds,
+  required void Function(String, String, String) say,
+  required void Function(String, String, Object?) checkVo,
+}) {
+  if (!Course.isLanguage(course)) {
+    say(
+      file,
+      '',
+      'belongs to a language course: the lands have no placement document (their warm-up is made on the spot)',
+    );
+  } else {
+    if (p['course'] != course) say(file, 'course', 'must be $course, the course of the pack');
+    if (id != '$course.placement') say(file, 'id', 'must be "$course.placement"');
+  }
+  checkVo(file, 'thanks.vo', (p['thanks']! as Map<String, Object?>)['vo']);
+  checkVo(file, 'celebration.vo', (p['celebration']! as Map<String, Object?>)['vo']);
+  final Set<String> used = <String>{};
+  for (final (int s, Map<String, Object?> strand) in _maps(p['strands']).indexed) {
+    final List<Map<String, Object?>> levels = _maps(strand['levels']);
+    final Object? offer = strand['offer'];
+    if (offer is Map<String, Object?> && (offer.containsKey('answer') != offer.containsKey('equals'))) {
+      say(
+        file,
+        'strands[$s].offer',
+        'names a questionnaire question and the answer that offers the strand, both or neither',
+      );
+    }
+    for (final (int r, Map<String, Object?> rule) in _maps(strand['start']).indexed) {
+      if ((rule['level']! as int) >= levels.length) {
+        say(file, 'strands[$s].start[$r].level', 'is not a level of the strand (0 to ${levels.length - 1})');
+      }
+    }
+    for (final (int l, Map<String, Object?> level) in levels.indexed) {
+      for (final (int i, Object? item) in ((level['items'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+        final String path = 'strands[$s].levels[$l].items[$i]';
+        final Map<String, Object?>? a = item is String ? activities[item] : null;
+        if (a == null) {
+          say(file, path, 'there is no activity "$item" in this pack');
+          continue;
+        }
+        final String probe = item! as String;
+        if (!used.add(probe)) {
+          say(file, path, '"$probe" is a probe of two places: each probe stands in one level of one strand');
+        }
+        if (a['purpose'] != 'probe') {
+          say(file, path, '"$probe" must be a probe (purpose: probe): no hints, one answer');
+        }
+        if (!probeTemplates.contains(a['template'])) {
+          say(file, path, '"$probe" is a ${a['template']}: a probe is a tap item or a drum item');
+        }
+        if (a['voiceAnswer'] == true) {
+          say(file, path, '"$probe" is answered by voice: speech is never a probe');
+        }
+        if (_mapOf(a['answer'])['type'] == 'none') {
+          say(file, path, '"$probe" is not scored, so it cannot be a probe');
+        }
+        if (Course.ofActivityId(probe) != course) {
+          say(file, path, '"$probe" is not an item of the course $course');
+        }
+      }
+      for (final (int i, Object? skill)
+          in ((level['assumes'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+        final String path = 'strands[$s].levels[$l].assumes[$i]';
+        if (skill is! String || !skillIds.contains(skill)) {
+          say(file, path, 'the skill $skill is not in this pack');
+        } else if (Course.ofSkillId(skill) != course) {
+          say(file, path, '$skill is not a skill of the course $course');
+        }
       }
     }
   }
