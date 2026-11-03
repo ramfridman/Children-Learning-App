@@ -389,7 +389,7 @@ def face(sp, r, hc, expr):
         out += [L('M %s %s Q %s %s %s %s' % (f(sx * ex - er * 1.1), f(ey), f(sx * ex), f(ey + er * 1.1 * (1 if expr == 'closed' else -1)),
                                              f(sx * ex + er * 1.1), f(ey)), INK, 3) for sx in (-1, 1)]
     else:
-        lx = {'look': er * 0.45, 'sing': 0}.get(expr, 0)
+        lx = {'look': er * 0.45, 'lookleft': -er * 0.5, 'sing': 0}.get(expr, 0)
         for sx in (-1, 1):
             out.append(E(sx * ex + lx, ey, er, er * 1.15, INK, 0))
             out.append('<circle cx="%s" cy="%s" r="%s" fill="%s"/>' % (f(sx * ex + lx - er * 0.35), f(ey - er * 0.4), f(er * 0.38), WHITE))
@@ -410,7 +410,7 @@ def face(sp, r, hc, expr):
 
 
 def posed(sp, view='front', arms=((8, 0), (8, 0)), legs=((3, 0), (3, 0)), lift=0, expr='smile', tilt=0, lean=0, flat=None,
-          props_back=(), props_front=(), reach=None, visor=None):
+          props_back=(), props_front=(), reach=None, visor=None, behind=(), palms=False):
     """A person in a pose. arms/legs: (shoulder or hip angle, elbow or knee bend) for (left, right) in the front view or
     (far, near) in the side view; lift raises the body (a jump); lean tilts the body forward (side view)."""
     H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
@@ -449,7 +449,9 @@ def posed(sp, view='front', arms=((8, 0), (8, 0)), legs=((3, 0), (3, 0)), lift=0
     def draw_arm(i, dim):
         (a1, a2), (x0, y0), s = arms[i], shoulders[i], sides[i]
         k = (reach or {}).get(i, 1.0)
-        pts = chain(x0, y0, [(ua * k, a1), (fa * k, a2)], s, view)
+        ku, kf = k if isinstance(k, tuple) else (k, k)
+        k = ku
+        pts = chain(x0, y0, [(ua * ku, a1), (fa * kf, a2)], s, view)
         long_sleeve = sp.get('adult') and not sp.get('vest')
         o = limb(pts, dimc(top if long_sleeve else skin, dim), aw)
         if not long_sleeve:
@@ -457,16 +459,21 @@ def posed(sp, view='front', arms=((8, 0), (8, 0)), legs=((3, 0), (3, 0)), lift=0
             mid = (pts[0][0] + (pts[1][0] - pts[0][0]) * t, pts[0][1] + (pts[1][1] - pts[0][1]) * t)
             o += limb([pts[0], mid], dimc(top, dim), aw + 3)
         hx, hy = pts[-1]
-        if visor is not None and visor == i:
-            o.append(E(hx - aw * 0.2, hy, aw * 1.05, aw * 0.45, skin))
-        elif flat is not None and flat == i:
-            o.append(RR(hx - aw * 0.5, hy - aw * 1.0, aw, aw * 1.9, aw * 0.45, skin))
+        hd = []
+        if visor is not None and visor == i:     # a hand held flat over the brow, fingers pointing across
+            hd.append(RR((hx - aw * 1.05) if view == 'front' else hx - aw * 2.0, hy - aw * 0.32, aw * 2.1, aw * 0.64, aw * 0.3, skin))
+        elif flat is not None and flat == i:      # a palm held up, fingers up (stop)
+            hd.append(RR(hx - aw * 0.42, hy - aw * 1.55, aw * 0.84, aw * 1.9, aw * 0.4, skin))
+            hd.append(RR(hx - aw * 0.95, hy - aw * 0.75, aw * 0.6, aw * 0.36, aw * 0.18, skin))
+        elif palms:                               # an open palm seen from the side, fingers up (clap)
+            hd.append(RR(hx - aw * 0.38, hy - aw * 1.25, aw * 0.76, aw * 1.6, aw * 0.36, skin))
         else:
-            o.append(E(hx, hy, aw * 0.62, aw * 0.62, dimc(skin, dim)))
-        return o, (hx, hy)
+            hd.append(E(hx, hy, aw * 0.62, aw * 0.62, dimc(skin, dim)))
+        return o + hd, (hx, hy), o, hd
 
     hands = {}
     far_arm = draw_arm(0, True)[0] if view == 'side' else []
+    late = []
     if view == 'side':
         out += draw_leg(0, True)
     for i in ((0, 1) if view == 'front' else (1,)):
@@ -489,10 +496,17 @@ def posed(sp, view='front', arms=((8, 0), (8, 0)), legs=((3, 0), (3, 0)), lift=0
     else:
         w0 = tw if view == 'front' else tw * 0.64
         out.append(RR(-w0 / 2, sh, w0, hip - sh + body * 0.05, w0 * 0.3, top))
+    for i in behind:      # an arm that goes behind the head: the arm first, its hand after the head
+        _, hands[i], arm_only, hand_only = draw_arm(i, False)
+        out += arm_only
+        late += hand_only
     out += head_block(sp, expr, view, tilt)
     for i in ((0, 1) if view == 'front' else (1,)):
-        o, hands[i] = draw_arm(i, False)
+        if i in behind:
+            continue
+        o, hands[i], _, _ = draw_arm(i, False)
         out += o
+    out += late
     out.append('</g>')
     out += list(props_front)
     out.append('</g>')
@@ -543,7 +557,11 @@ def act(name):
     sp = MIKA
     H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
     if name == 'clap':
-        parts = posed(sp, arms=((62, -142), (62, -142)), expr='happy') + motion(0, sh + aw * 0.2, 14)
+        parts = posed(sp, arms=((10, -110), (10, -110)), reach={0: (1.4, 1.25), 1: (1.4, 1.25)}, palms=True, expr='happy')
+        top_y = -51 - aw * 1.3
+        parts += [L('M 0 %s L 0 %s M -8 %s L -15 %s M 8 %s L 15 %s M -10 %s L -18 %s M 10 %s L 18 %s'
+                    % (f(top_y - 3), f(top_y - 10), f(top_y - 1), f(top_y - 7), f(top_y - 1), f(top_y - 7),
+                       f(top_y + 8), f(top_y + 6), f(top_y + 8), f(top_y + 6)), '#E04F9E', 3)]
     elif name == 'jump':
         parts = posed(sp, arms=((150, 15), (150, 15)), legs=((25, -50), (25, -50)), lift=26, expr='laugh')
         parts += [L('M -30 -6 L -40 6 M 0 -2 L 0 10 M 30 -6 L 40 6', '#B8B0D0', 4)]
@@ -551,7 +569,9 @@ def act(name):
         parts = posed(sp, arms=((8, 0), (155, 148)), expr='closed', tilt=-6)
         parts += [L('M 56 %s q 10 10 0 20 M 66 %s q 14 14 0 28' % (f(hc - 4), f(hc - 8)), '#B8B0D0', 4)]
     elif name == 'look':
-        parts = posed(sp, arms=((8, 0), (175, 48)), expr='look', tilt=0, reach={1: 1.78}, visor=1)
+        boat = '<g transform="translate(-108 -150) scale(0.16)">%s</g>' % prefixed(m.boat('blue').parts, 'bt')
+        sea = ['<path d="M -130 -112 L -40 -112" stroke="#8FD3F4" stroke-width="5"/>']
+        parts = sea + [boat] + posed(sp, arms=((140, 95), (8, 0)), expr='lookleft', tilt=5, reach={0: (1.5, 2.22)}, visor=0, behind=(0,))
     elif name == 'sit':
         seat = hip + (-hip) * 0.5
         parts = posed(sp, view='side', arms=((10, -20), (10, -40)), legs=((90, -90), (90, -90)), lift=-(-hip) * 0.5 + lw * 0.1,
@@ -559,7 +579,9 @@ def act(name):
     elif name == 'stand':
         parts = posed(sp, arms=((160, 10), (160, 10)), expr='happy', props_back=front_chair(-38, 70))
     elif name == 'stop':
-        parts = posed(sp, view='side', arms=((20, 10), (90, 0)), legs=((-14, 0), (16, 0)), flat=1, lean=4, props_back=dust(30, -6))
+        parts = posed(sp, view='side', arms=((4, 0), (90, 0)), legs=((1, 0), (-1, 0)), flat=1, expr='smile')
+        px = -aw * 0.1 - arm * 1.02
+        parts += [L('M %s %s l -10 0 M %s %s l -12 0 M %s %s l -10 0' % (f(px - 14), f(sh - 6), f(px - 14), f(sh + 6), f(px - 14), f(sh + 18)), '#B8B0D0', 4)]
     elif name == 'wave':
         parts = posed(sp, arms=((8, 0), (140, 28)), expr='happy') + motion(62, -150, 12)
     elif name == 'run':
