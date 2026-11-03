@@ -67,7 +67,7 @@ The title of the page is `{lang} · {child}` (as drawn; no change).
 | Hebrew: `areaLangReadCheck`, title | (none; the spec says "parent check of reading aloud") | **בדיקת הקראה להורים** | |
 | `areaLangReadCheckHelp` | (none) | **קריאה בקול היא תרגול, בלי ציון. הבדיקה מיועדת להורים, ואינה משפיעה על ההתקדמות.** | D22: reading aloud is unscored. How the check works is not written in the sources, so the text says only what is certain (question 4) |
 | Russian: `areaLangQuestTitle` | שאלון שפת הבית | **שאלון שפת הבית** | |
-| `areaLangQuestHelp` | שלוש שאלות קצרות עוזרות לבחור מאיפה להתחיל. אפשר לשנות בכל זמן. | **שלוש שאלות קצרות עוזרות לבחור מאיפה להתחיל. אפשר לשנות את התשובות בכל זמן.** | "to change" what? |
+| `areaLangQuestHelp` | שלוש שאלות קצרות עוזרות לבחור מאיפה להתחיל. אפשר לשנות בכל זמן. | **התשובות קובעות רק מאיפה מתחילים. אפשר לשנות אותן בכל זמן.** (no number: the Russian questionnaire has five questions, English one; changed at L0, he.dart 94e805b) | "to change" what? |
 | `areaLangQuestButton` | לשאלון | **לשאלון** | |
 | progress buttons | התקדמות ברוסית | **התקדמות באנגלית** · **התקדמות בעברית** · **התקדמות ברוסית** | three fixed strings (no prefix letter added by code). The same three are the page titles with ` · {child}` |
 
