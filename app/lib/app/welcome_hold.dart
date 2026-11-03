@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import '../child/welcome_shown.dart';
 import '../voice/voice_director.dart';
+import '../world/welcome_lines.dart' show mayFollowNameClip;
 import 'bottle_hold.dart' show bottleClipMostWait, bottleLineHold;
 
 /// One sentence of the daily welcome: what the bubble shows, and what is said while it shows ([nameClip] first, then
@@ -110,11 +111,12 @@ class WelcomeHold {
 
   Future<void> _say(WelcomeStep step) async {
     final Uint8List? name = step.nameClip;
-    if (name != null) {
+    final String? voice = step.voice;
+    // The name is heard once, as a call before a greeting; before any other line it is left out.
+    if (name != null && voice != null && mayFollowNameClip(voice)) {
       await _director.sayBytes(name, owner: this);
       await _untilQuiet();
     }
-    final String? voice = step.voice;
     if (voice == null || stopped) return;
     await _director.say(voice, owner: this);
     if (stopped) return;

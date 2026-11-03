@@ -67,3 +67,19 @@ Future<FixedCharacterSource> makeSource({List<String> friends = const <String>[]
     }
   }
 }
+
+/// Nitzi, with a voice that has just [lines] (ids without `vo:`, each a tiny file that names its line).
+Future<FixedCharacterSource> sourceWithLines(List<String> lines) async {
+  final PackKey key = await newTestKey();
+  final Character nitzi = await loadNitzi();
+  final BuiltPack built = await buildVoicePack(key, nitzi.id, <String, List<(int, int)>>{
+    for (final String line in lines) line: <(int, int)>[(0, 0), (100, 1), (200, 0)],
+  });
+  return FixedCharacterSource(
+    characters: <Character>[nitzi],
+    house: nitzi,
+    voices: <String, VoiceBank>{
+      nitzi.id: VoiceBank.fromPack(await verifyPack(built.bytes, publicKey: key.publicKey)),
+    },
+  );
+}

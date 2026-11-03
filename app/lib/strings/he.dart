@@ -278,6 +278,27 @@ abstract final class He {
   static const Str areaDevices = Str('מכשירים');
   static const Str areaThisDevice = Str('המכשיר הזה');
   static const Str areaRevoke = Str('ניתוק');
+  // ---- parent area: how a child's name is said (B-42; proposed, for the hebrew-text-editor) ----
+  static const Str areaNameSpoken = Str('איך אומרים את השם');
+  static const Str nameSpokenTitle = Str('איך אומרים את השם של {child}');
+  static const Str nameSpokenHelp = Str(
+    'כתבו את השם כמו שצריך להגיד אותו, עם ניקוד אם צריך. בלחיצה על "להאזין" הדמות שהילד בחר אומרת אותו, ואז הוא נשמע בברכה של כל יום.',
+  );
+  static const Str nameSpokenField = Str('איך אומרים');
+  static const Str nameSpokenBadChars = Str(
+    'אפשר רק אותיות בעברית, ניקוד, רווח, מקף וגרש. ניקוד רק אחרי אות, ולא יותר משלושה סימנים על אות.',
+  );
+  static const Str nameSpokenTooLong = Str('אפשר לכתוב עד 24 תווים.');
+  static const Str nameSpokenListen = Str('להאזין');
+  static const Str nameSpokenWorking = Str('מכינים את ההקלטה...');
+  static const Str nameSpokenSaved = Str('נשמר.');
+  static const Str nameSpokenHeard = Str('ההקלטה נשמרה במכשיר הזה בלבד.');
+  static const Str nameSpokenPrivacy = Str(
+    'השם נשלח לשירות הקול רק כדי להכין את ההקלטה. ההקלטה נשמרת במכשיר הזה בלבד ואינה מסונכרנת.',
+  );
+  static const Str nameSpokenOff = Str('ההקלטה של שמות לא זמינה כרגע.');
+  static const Str nameSpokenCap = Str('הגעתם למספר ההקלטות של היום. אפשר לנסות שוב מחר.');
+  static const Str nameSpokenOffline = Str('לא הצלחנו להתחבר. בדקו את החיבור ונסו שוב.');
   static const Str areaRefresh = Str('רענון');
   static const Str areaProfiles = Str('ילדים');
   static const Str areaAddChild = Str('הוספת ילד');

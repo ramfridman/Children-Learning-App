@@ -17,22 +17,16 @@ import 'package:nitznutz/app/welcome_providers.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/child/land_screen.dart';
 import 'package:nitznutz/data/app_database.dart';
-import 'package:nitznutz/characters/character.dart';
-import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
-import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/engine/types.dart' show Catalog;
 import 'package:nitznutz/rewards/reward_service.dart';
 import 'package:nitznutz/strings/he.dart';
-import 'package:nitznutz/voice/voice_bank.dart';
 import 'package:nitznutz/world/welcome_table.dart';
 
-import '../tool/pack_builder_lib.dart';
 import 'support/app_harness.dart';
 import 'support/companion_fixtures.dart';
 import 'support/harness.dart';
-import 'support/pack_fixtures.dart';
 import 'support/starter.dart';
 import 'support/voice_fixtures.dart';
 
@@ -116,22 +110,6 @@ Future<List<String>> readWelcome(WidgetTester tester) async {
     await tester.pump(const Duration(milliseconds: 100));
   }
   return said;
-}
-
-/// Nitzi, with a voice that has just [lines] (ids without `vo:`, each a tiny file that names its line).
-Future<FixedCharacterSource> sourceWith(List<String> lines) async {
-  final PackKey key = await newTestKey();
-  final Character nitzi = await loadNitzi();
-  final BuiltPack built = await buildVoicePack(key, nitzi.id, <String, List<(int, int)>>{
-    for (final String line in lines) line: <(int, int)>[(0, 0), (100, 1), (200, 0)],
-  });
-  return FixedCharacterSource(
-    characters: <Character>[nitzi],
-    house: nitzi,
-    voices: <String, VoiceBank>{
-      nitzi.id: VoiceBank.fromPack(await verifyPack(built.bytes, publicKey: key.publicKey)),
-    },
-  );
 }
 
 /// A child who has finished a lesson, so that the day's greeting is one of the three that turn with the day.
@@ -318,7 +296,7 @@ void main() {
       final AppRig rig = AppRig(
         welcome: true,
         player: player,
-        characters: await sourceWith(<String>[...welcomeIds(), 'core.greeting.hello']),
+        characters: await sourceWithLines(<String>[...welcomeIds(), 'core.greeting.hello']),
       );
       await toMap(tester, rig: rig);
       await start(tester);
@@ -352,7 +330,7 @@ void main() {
       final AppRig rig = AppRig(
         welcome: true,
         player: player,
-        characters: await sourceWith(lines ?? welcomeIds()),
+        characters: await sourceWithLines(lines ?? welcomeIds()),
         extraOverrides: more,
       );
       return rig;

@@ -16,6 +16,7 @@ part 'app_database.g.dart';
     VoiceListens,
     Alerts,
     Rewards,
+    NameClips,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -23,7 +24,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 9;
+  static const int currentSchemaVersion = 10;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -72,6 +73,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 8) await m.createTable(rewards);
       // 8 to 9 (M8b): the prize the companion wears.
       if (from < 9) await m.addColumn(profiles, profiles.outfitId);
+      // 9 to 10 (B-42): how a child's name is said, and the sound made from it.
+      if (from < 10) {
+        await m.addColumn(profiles, profiles.nameSpoken);
+        await m.createTable(nameClips);
+      }
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -111,6 +117,78 @@ class AppDatabase extends _$AppDatabase {
       (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
         ProfilesCompanion(outfitId: Value<String?>(outfitId)),
       );
+
+  /// How the child's name is said (the spelling a parent checked), or null.
+  Future<String?> nameSpokenOf(String profileId) async {
+    final Profile? row = await (select(
+      profiles,
+    )..where((Profiles t) => t.id.equals(profileId))).getSingleOrNull();
+    return row?.nameSpoken;
+  }
+
+  /// Sets how the child's name is said; null clears it. A different spelling makes every clip made from the old one
+  /// unused, so they are deleted with the change.
+  Future<void> setNameSpoken(String profileId, String? spelling) => transaction(() async {
+    if (await nameSpokenOf(profileId) == spelling) return;
+    await (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
+      ProfilesCompanion(nameSpoken: Value<String?>(spelling)),
+    );
+    await deleteNameClips(profileId);
+  });
+
+  // ---- the sound of a child's name (B-42) ----
+
+  /// The sound of the child's name in [characterId]'s voice, made from the spelling whose hash is [spellingHash]; null when
+  /// there is none (or it was made from another spelling).
+  Future<Uint8List?> nameClipOf(String profileId, String characterId, String spellingHash) async {
+    final NameClip? row =
+        await (select(nameClips)..where(
+              (NameClips t) =>
+                  t.profileId.equals(profileId) &
+                  t.characterId.equals(characterId) &
+                  t.spellingHash.equals(spellingHash),
+            ))
+            .getSingleOrNull();
+    return row?.sound;
+  }
+
+  /// Keeps [sound] as the child's name clip in [characterId]'s voice. The child's other clips (another friend's, another
+  /// spelling's) are not used any more and go.
+  Future<void> putNameClip({
+    required String profileId,
+    required String characterId,
+    required String spellingHash,
+    required Uint8List sound,
+    required DateTime at,
+  }) => transaction(() async {
+    await pruneNameClips(profileId, characterId: characterId, spellingHash: spellingHash);
+    await into(nameClips).insertOnConflictUpdate(
+      NameClipsCompanion.insert(
+        profileId: profileId,
+        characterId: characterId,
+        spellingHash: spellingHash,
+        sound: sound,
+        madeAt: at,
+      ),
+    );
+  });
+
+  /// Deletes the child's clips except the one for [characterId] made from [spellingHash]: a changed spelling or friend makes
+  /// the older ones unused.
+  Future<void> pruneNameClips(
+    String profileId, {
+    required String characterId,
+    required String spellingHash,
+  }) =>
+      (delete(nameClips)..where(
+            (NameClips t) =>
+                t.profileId.equals(profileId) &
+                (t.characterId.equals(characterId).not() | t.spellingHash.equals(spellingHash).not()),
+          ))
+          .go();
+
+  Future<void> deleteNameClips(String profileId) =>
+      (delete(nameClips)..where((NameClips t) => t.profileId.equals(profileId))).go();
 
   Future<void> removeProfile(String id) => (delete(profiles)..where((Profiles t) => t.id.equals(id))).go();
 
@@ -422,16 +500,23 @@ class AppDatabase extends _$AppDatabase {
       await into(profiles).insert(row);
       return;
     }
-    await (update(profiles)..where(($ProfilesTable t) => t.id.equals(row.id.value))).write(
-      ProfilesCompanion(
-        name: row.name,
-        avatar: row.avatar,
-        addressForm: row.addressForm,
-        ageBand: row.ageBand,
-        companionId: row.companionId,
-        outfitId: row.outfitId,
-      ),
-    );
+    await transaction(() async {
+      // A different spelling from the family makes the clips made from the old one unused.
+      if (row.nameSpoken.present && row.nameSpoken.value != await nameSpokenOf(row.id.value)) {
+        await deleteNameClips(row.id.value);
+      }
+      await (update(profiles)..where(($ProfilesTable t) => t.id.equals(row.id.value))).write(
+        ProfilesCompanion(
+          name: row.name,
+          avatar: row.avatar,
+          addressForm: row.addressForm,
+          ageBand: row.ageBand,
+          companionId: row.companionId,
+          outfitId: row.outfitId,
+          nameSpoken: row.nameSpoken,
+        ),
+      );
+    });
   }
 
   /// Visits that were never closed (the app was killed or the phone died) and are older than [olderThan] are closed at
@@ -463,6 +548,7 @@ class AppDatabase extends _$AppDatabase {
     await (delete(voiceListens)..where(($VoiceListensTable t) => t.profileId.equals(profileId))).go();
     await (delete(alerts)..where(($AlertsTable t) => t.profileId.equals(profileId))).go();
     await (delete(rewards)..where(($RewardsTable t) => t.profileId.equals(profileId))).go();
+    await deleteNameClips(profileId);
     await (delete(profiles)..where(($ProfilesTable t) => t.id.equals(profileId))).go();
     await removeSetting(_welcomeKey(profileId));
     // The parents' promises for this child go with the child.

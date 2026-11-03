@@ -32,8 +32,33 @@ class Profiles extends Table {
   /// outfit of the app and holds nothing else.
   TextColumn get outfitId => text().nullable()();
 
+  /// How the child's name is said: the spelling a parent checked (Hebrew letters, nikud, a space, a hyphen and a geresh,
+  /// 1 to 24 units: `isSpokenName`), or null. It is what the gateway turns into the child's own name clip, and it goes to
+  /// the family's other devices like the nickname.
+  TextColumn get nameSpoken => text().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => <Column<Object>>{id};
+}
+
+/// The sound of a child's name in a friend's voice (B-42): made once through the gateway when a parent taps "listen", kept
+/// here, in the encrypted database, and nowhere else. One row for each child and character; it is used only while
+/// [spellingHash] is the hash of the spelling the child has now. Never synced, never in a backup to the server, never in
+/// a log; it goes with the child.
+class NameClips extends Table {
+  TextColumn get profileId => text()();
+
+  TextColumn get characterId => text()();
+
+  /// The first 16 hex characters of the SHA-256 of the spelling the clip was made from.
+  TextColumn get spellingHash => text().withLength(min: 16, max: 16)();
+
+  BlobColumn get sound => blob()();
+
+  DateTimeColumn get madeAt => dateTime()();
+
+  @override
+  Set<Column<Object>> get primaryKey => <Column<Object>>{profileId, characterId};
 }
 
 /// Small settings that belong to this device (not to a child), as text key and value.

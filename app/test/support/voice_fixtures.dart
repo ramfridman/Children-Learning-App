@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:nitznutz/voice/name_clips.dart';
 import 'package:nitznutz/voice/voice_player.dart';
 
 import '../../tool/pack_builder_lib.dart';
@@ -121,5 +122,23 @@ Future<BuiltPack> buildVoicePack(
     } on FileSystemException {
       // Left for the system's temp cleaner.
     }
+  }
+}
+
+/// The gateway's `name-voice` for tests: it records what was asked and gives a small sound, or fails as told. Nothing
+/// reaches a provider and no key is read.
+class FakeNameVoice implements NameVoice {
+  FakeNameVoice({Uint8List? sound})
+    : sound = sound ?? Uint8List.fromList(utf8.encode('name-clip'.padRight(120, '.')));
+
+  final Uint8List sound;
+  NameVoiceFailure? fail;
+  final List<({String childId, String characterId})> asked = <({String childId, String characterId})>[];
+
+  @override
+  Future<Uint8List> make({required String childId, required String characterId}) async {
+    asked.add((childId: childId, characterId: characterId));
+    if (fail != null) throw NameVoiceException(fail!);
+    return sound;
   }
 }

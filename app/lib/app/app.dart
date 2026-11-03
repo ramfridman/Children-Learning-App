@@ -38,6 +38,7 @@ import '../child/home_island_name.dart';
 import '../child/home_island_screen.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
+import '../core/log.dart';
 import '../data/app_database.dart';
 import '../design/layout.dart';
 import '../design/theme.dart';
@@ -241,6 +242,9 @@ class _HomeState extends ConsumerState<_Home> with WidgetsBindingObserver {
     _welcomeBusy = true;
     try {
       await _giveWelcome();
+    } on Object catch (e) {
+      // The welcome is a gift: whatever goes wrong with it (a pack or a voice that fails to load) never reaches the child.
+      Log.d('welcome: skipped (${e.runtimeType})');
     } finally {
       _welcomeBusy = false;
     }
@@ -258,10 +262,11 @@ class _HomeState extends ConsumerState<_Home> with WidgetsBindingObserver {
     final ({String id, int band}) who = (id: child.id, band: child.ageBand);
     ref.invalidate(timeVerdictProvider(who));
     if ((await ref.read(timeVerdictProvider(who).future)).locked) return;
-    final PackContent? content = ref.read(contentProvider).value;
+    // The pack may still be loading when the map first opens: wait for it rather than skip the day's welcome.
+    final PackContent content = await ref.read(contentProvider.future);
     final ({TodaysAdventure stop, WorldView world, List<Attempt> attempts})? adventure =
         await _adventureNow();
-    if (content == null || adventure == null) return;
+    if (adventure == null) return;
     final WelcomeTable table = await ref.read(welcomeTableProvider.future);
     final Uint8List? nameClip = await ref.read(nameClipProvider(child.id).future);
     final bool warmUpOn = await ref.read(warmUpProvider.future);
@@ -572,6 +577,8 @@ class _HomeState extends ConsumerState<_Home> with WidgetsBindingObserver {
     // The map appears whole: until its character and the guide's voice are ready, a calm loading scene shows instead.
     final AsyncValue<Character> friend = ref.watch(characterForRoleProvider(CharacterRole.mapCompanion));
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
+    // The sound of the child's name (if a parent made one) is ready before the friend is touched.
+    ref.watch(nameClipProvider(widget.profile.id));
     // Asks the server's helper switch now, while the map shows, so that a lesson finds the answer ready.
     ref.watch(tutorAvailableProvider);
     if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue)) {
@@ -612,9 +619,18 @@ class _HomeState extends ConsumerState<_Home> with WidgetsBindingObserver {
     hallGlow: ref.watch(hallWaitingProvider(widget.profile.id)).value ?? false,
     companion: MapCompanion(key: _companion, greetingVoice: 'vo:core.greeting.hello'),
     companionMouth: friend?.mouth,
-    onCompanion: () => _companion.currentState?.greet(),
+    onCompanion: _greetFriend,
     onFriends: _openFriends,
   );
+
+  /// A touch on the friend: it waves and greets. When the child's name clip has been made, it says the name and then the
+  /// map bubble's shared clip, so it says what the bubble shows (the name, then the question about the bottle); without a
+  /// name clip it says its hello, as before.
+  void _greetFriend() {
+    final Uint8List? name = ref.read(nameClipProvider(widget.profile.id)).value;
+    final bool bubble = name != null && (ref.read(voiceDirectorProvider).bank?.has(homeBubbleVoice) ?? false);
+    _companion.currentState?.greet(voice: bubble ? homeBubbleVoice : null, nameClip: bubble ? name : null);
+  }
 }
 
 /// Shown instead of the app when the build settings are wrong. Says nothing about the values.

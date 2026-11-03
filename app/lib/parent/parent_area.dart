@@ -26,6 +26,7 @@ import '../ui/dev/dev_home_page.dart';
 import 'alerts_screen.dart';
 import 'backends.dart';
 import 'child_form.dart';
+import 'name_spoken_screen.dart';
 import 'pin_screens.dart';
 import 'prizes_screen.dart';
 import 'progress_screen.dart';
@@ -255,13 +256,28 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                       name: displayChildName(p.name),
                       // Saved before B-28 with more than the server takes: the family account has it cut. Its own row
                       // under the name, the width of the card, so no word is cut by the buttons (QA-B28-3).
-                      note: p.name.length > childNameMaxLength
-                          ? Text(
+                      note: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          if (p.name.length > childNameMaxLength)
+                            Text(
                               He.setupNameLegacyShortened.text,
                               key: Key('legacy-name-${p.id}'),
                               style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
-                            )
-                          : null,
+                            ),
+                          ParentButton(
+                            key: Key('name-spoken-${p.id}'),
+                            label: He.areaNameSpoken.text,
+                            quiet: true,
+                            onPressed: () => Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext c) =>
+                                    NameSpokenScreen(profile: p, onClose: () => Navigator.pop(c)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       buttons: <Widget>[
                         ParentButton(
                           key: Key('progress-${p.id}'),

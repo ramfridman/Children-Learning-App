@@ -83,6 +83,15 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _nameSpokenMeta = const VerificationMeta('nameSpoken');
+  @override
+  late final GeneratedColumn<String> nameSpoken = GeneratedColumn<String>(
+    'name_spoken',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -93,6 +102,7 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     createdAt,
     companionId,
     outfitId,
+    nameSpoken,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -145,6 +155,12 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     if (data.containsKey('outfit_id')) {
       context.handle(_outfitIdMeta, outfitId.isAcceptableOrUnknown(data['outfit_id']!, _outfitIdMeta));
     }
+    if (data.containsKey('name_spoken')) {
+      context.handle(
+        _nameSpokenMeta,
+        nameSpoken.isAcceptableOrUnknown(data['name_spoken']!, _nameSpokenMeta),
+      );
+    }
     return context;
   }
 
@@ -171,6 +187,10 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         data['${effectivePrefix}companion_id'],
       ),
       outfitId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}outfit_id']),
+      nameSpoken: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name_spoken'],
+      ),
     );
   }
 
@@ -201,6 +221,11 @@ class Profile extends DataClass implements Insertable<Profile> {
   /// The prize (an accessory colour set) the companion wears, by id (for example `sky`), or null for none. It names an
   /// outfit of the app and holds nothing else.
   final String? outfitId;
+
+  /// How the child's name is said: the spelling a parent checked (Hebrew letters, nikud, a space, a hyphen and a geresh,
+  /// 1 to 24 units: `isSpokenName`), or null. It is what the gateway turns into the child's own name clip, and it goes to
+  /// the family's other devices like the nickname.
+  final String? nameSpoken;
   const Profile({
     required this.id,
     required this.name,
@@ -210,6 +235,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     required this.createdAt,
     this.companionId,
     this.outfitId,
+    this.nameSpoken,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -226,6 +252,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     if (!nullToAbsent || outfitId != null) {
       map['outfit_id'] = Variable<String>(outfitId);
     }
+    if (!nullToAbsent || nameSpoken != null) {
+      map['name_spoken'] = Variable<String>(nameSpoken);
+    }
     return map;
   }
 
@@ -239,6 +268,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       createdAt: Value(createdAt),
       companionId: companionId == null && nullToAbsent ? const Value.absent() : Value(companionId),
       outfitId: outfitId == null && nullToAbsent ? const Value.absent() : Value(outfitId),
+      nameSpoken: nameSpoken == null && nullToAbsent ? const Value.absent() : Value(nameSpoken),
     );
   }
 
@@ -253,6 +283,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       companionId: serializer.fromJson<String?>(json['companionId']),
       outfitId: serializer.fromJson<String?>(json['outfitId']),
+      nameSpoken: serializer.fromJson<String?>(json['nameSpoken']),
     );
   }
   @override
@@ -267,6 +298,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'companionId': serializer.toJson<String?>(companionId),
       'outfitId': serializer.toJson<String?>(outfitId),
+      'nameSpoken': serializer.toJson<String?>(nameSpoken),
     };
   }
 
@@ -279,6 +311,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     DateTime? createdAt,
     Value<String?> companionId = const Value.absent(),
     Value<String?> outfitId = const Value.absent(),
+    Value<String?> nameSpoken = const Value.absent(),
   }) => Profile(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -288,6 +321,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     createdAt: createdAt ?? this.createdAt,
     companionId: companionId.present ? companionId.value : this.companionId,
     outfitId: outfitId.present ? outfitId.value : this.outfitId,
+    nameSpoken: nameSpoken.present ? nameSpoken.value : this.nameSpoken,
   );
   Profile copyWithCompanion(ProfilesCompanion data) {
     return Profile(
@@ -299,6 +333,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       companionId: data.companionId.present ? data.companionId.value : this.companionId,
       outfitId: data.outfitId.present ? data.outfitId.value : this.outfitId,
+      nameSpoken: data.nameSpoken.present ? data.nameSpoken.value : this.nameSpoken,
     );
   }
 
@@ -312,13 +347,15 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('ageBand: $ageBand, ')
           ..write('createdAt: $createdAt, ')
           ..write('companionId: $companionId, ')
-          ..write('outfitId: $outfitId')
+          ..write('outfitId: $outfitId, ')
+          ..write('nameSpoken: $nameSpoken')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, avatar, addressForm, ageBand, createdAt, companionId, outfitId);
+  int get hashCode =>
+      Object.hash(id, name, avatar, addressForm, ageBand, createdAt, companionId, outfitId, nameSpoken);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -330,7 +367,8 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.ageBand == this.ageBand &&
           other.createdAt == this.createdAt &&
           other.companionId == this.companionId &&
-          other.outfitId == this.outfitId);
+          other.outfitId == this.outfitId &&
+          other.nameSpoken == this.nameSpoken);
 }
 
 class ProfilesCompanion extends UpdateCompanion<Profile> {
@@ -342,6 +380,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<DateTime> createdAt;
   final Value<String?> companionId;
   final Value<String?> outfitId;
+  final Value<String?> nameSpoken;
   final Value<int> rowid;
   const ProfilesCompanion({
     this.id = const Value.absent(),
@@ -352,6 +391,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.createdAt = const Value.absent(),
     this.companionId = const Value.absent(),
     this.outfitId = const Value.absent(),
+    this.nameSpoken = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ProfilesCompanion.insert({
@@ -363,6 +403,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     required DateTime createdAt,
     this.companionId = const Value.absent(),
     this.outfitId = const Value.absent(),
+    this.nameSpoken = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -379,6 +420,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<DateTime>? createdAt,
     Expression<String>? companionId,
     Expression<String>? outfitId,
+    Expression<String>? nameSpoken,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -390,6 +432,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (createdAt != null) 'created_at': createdAt,
       if (companionId != null) 'companion_id': companionId,
       if (outfitId != null) 'outfit_id': outfitId,
+      if (nameSpoken != null) 'name_spoken': nameSpoken,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -403,6 +446,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<DateTime>? createdAt,
     Value<String?>? companionId,
     Value<String?>? outfitId,
+    Value<String?>? nameSpoken,
     Value<int>? rowid,
   }) {
     return ProfilesCompanion(
@@ -414,6 +458,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       createdAt: createdAt ?? this.createdAt,
       companionId: companionId ?? this.companionId,
       outfitId: outfitId ?? this.outfitId,
+      nameSpoken: nameSpoken ?? this.nameSpoken,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -445,6 +490,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (outfitId.present) {
       map['outfit_id'] = Variable<String>(outfitId.value);
     }
+    if (nameSpoken.present) {
+      map['name_spoken'] = Variable<String>(nameSpoken.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -462,6 +510,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('createdAt: $createdAt, ')
           ..write('companionId: $companionId, ')
           ..write('outfitId: $outfitId, ')
+          ..write('nameSpoken: $nameSpoken, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4083,6 +4132,339 @@ class RewardsCompanion extends UpdateCompanion<Reward> {
   }
 }
 
+class $NameClipsTable extends NameClips with TableInfo<$NameClipsTable, NameClip> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NameClipsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _profileIdMeta = const VerificationMeta('profileId');
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _characterIdMeta = const VerificationMeta('characterId');
+  @override
+  late final GeneratedColumn<String> characterId = GeneratedColumn<String>(
+    'character_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _spellingHashMeta = const VerificationMeta('spellingHash');
+  @override
+  late final GeneratedColumn<String> spellingHash = GeneratedColumn<String>(
+    'spelling_hash',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(minTextLength: 16, maxTextLength: 16),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _soundMeta = const VerificationMeta('sound');
+  @override
+  late final GeneratedColumn<Uint8List> sound = GeneratedColumn<Uint8List>(
+    'sound',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _madeAtMeta = const VerificationMeta('madeAt');
+  @override
+  late final GeneratedColumn<DateTime> madeAt = GeneratedColumn<DateTime>(
+    'made_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [profileId, characterId, spellingHash, sound, madeAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'name_clips';
+  @override
+  VerificationContext validateIntegrity(Insertable<NameClip> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('profile_id')) {
+      context.handle(_profileIdMeta, profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
+    } else if (isInserting) {
+      context.missing(_profileIdMeta);
+    }
+    if (data.containsKey('character_id')) {
+      context.handle(
+        _characterIdMeta,
+        characterId.isAcceptableOrUnknown(data['character_id']!, _characterIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_characterIdMeta);
+    }
+    if (data.containsKey('spelling_hash')) {
+      context.handle(
+        _spellingHashMeta,
+        spellingHash.isAcceptableOrUnknown(data['spelling_hash']!, _spellingHashMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_spellingHashMeta);
+    }
+    if (data.containsKey('sound')) {
+      context.handle(_soundMeta, sound.isAcceptableOrUnknown(data['sound']!, _soundMeta));
+    } else if (isInserting) {
+      context.missing(_soundMeta);
+    }
+    if (data.containsKey('made_at')) {
+      context.handle(_madeAtMeta, madeAt.isAcceptableOrUnknown(data['made_at']!, _madeAtMeta));
+    } else if (isInserting) {
+      context.missing(_madeAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {profileId, characterId};
+  @override
+  NameClip map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NameClip(
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      characterId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}character_id'],
+      )!,
+      spellingHash: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}spelling_hash'],
+      )!,
+      sound: attachedDatabase.typeMapping.read(DriftSqlType.blob, data['${effectivePrefix}sound'])!,
+      madeAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}made_at'])!,
+    );
+  }
+
+  @override
+  $NameClipsTable createAlias(String alias) {
+    return $NameClipsTable(attachedDatabase, alias);
+  }
+}
+
+class NameClip extends DataClass implements Insertable<NameClip> {
+  final String profileId;
+  final String characterId;
+
+  /// The first 16 hex characters of the SHA-256 of the spelling the clip was made from.
+  final String spellingHash;
+  final Uint8List sound;
+  final DateTime madeAt;
+  const NameClip({
+    required this.profileId,
+    required this.characterId,
+    required this.spellingHash,
+    required this.sound,
+    required this.madeAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['profile_id'] = Variable<String>(profileId);
+    map['character_id'] = Variable<String>(characterId);
+    map['spelling_hash'] = Variable<String>(spellingHash);
+    map['sound'] = Variable<Uint8List>(sound);
+    map['made_at'] = Variable<DateTime>(madeAt);
+    return map;
+  }
+
+  NameClipsCompanion toCompanion(bool nullToAbsent) {
+    return NameClipsCompanion(
+      profileId: Value(profileId),
+      characterId: Value(characterId),
+      spellingHash: Value(spellingHash),
+      sound: Value(sound),
+      madeAt: Value(madeAt),
+    );
+  }
+
+  factory NameClip.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NameClip(
+      profileId: serializer.fromJson<String>(json['profileId']),
+      characterId: serializer.fromJson<String>(json['characterId']),
+      spellingHash: serializer.fromJson<String>(json['spellingHash']),
+      sound: serializer.fromJson<Uint8List>(json['sound']),
+      madeAt: serializer.fromJson<DateTime>(json['madeAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'profileId': serializer.toJson<String>(profileId),
+      'characterId': serializer.toJson<String>(characterId),
+      'spellingHash': serializer.toJson<String>(spellingHash),
+      'sound': serializer.toJson<Uint8List>(sound),
+      'madeAt': serializer.toJson<DateTime>(madeAt),
+    };
+  }
+
+  NameClip copyWith({
+    String? profileId,
+    String? characterId,
+    String? spellingHash,
+    Uint8List? sound,
+    DateTime? madeAt,
+  }) => NameClip(
+    profileId: profileId ?? this.profileId,
+    characterId: characterId ?? this.characterId,
+    spellingHash: spellingHash ?? this.spellingHash,
+    sound: sound ?? this.sound,
+    madeAt: madeAt ?? this.madeAt,
+  );
+  NameClip copyWithCompanion(NameClipsCompanion data) {
+    return NameClip(
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      characterId: data.characterId.present ? data.characterId.value : this.characterId,
+      spellingHash: data.spellingHash.present ? data.spellingHash.value : this.spellingHash,
+      sound: data.sound.present ? data.sound.value : this.sound,
+      madeAt: data.madeAt.present ? data.madeAt.value : this.madeAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NameClip(')
+          ..write('profileId: $profileId, ')
+          ..write('characterId: $characterId, ')
+          ..write('spellingHash: $spellingHash, ')
+          ..write('sound: $sound, ')
+          ..write('madeAt: $madeAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(profileId, characterId, spellingHash, $driftBlobEquality.hash(sound), madeAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NameClip &&
+          other.profileId == this.profileId &&
+          other.characterId == this.characterId &&
+          other.spellingHash == this.spellingHash &&
+          $driftBlobEquality.equals(other.sound, this.sound) &&
+          other.madeAt == this.madeAt);
+}
+
+class NameClipsCompanion extends UpdateCompanion<NameClip> {
+  final Value<String> profileId;
+  final Value<String> characterId;
+  final Value<String> spellingHash;
+  final Value<Uint8List> sound;
+  final Value<DateTime> madeAt;
+  final Value<int> rowid;
+  const NameClipsCompanion({
+    this.profileId = const Value.absent(),
+    this.characterId = const Value.absent(),
+    this.spellingHash = const Value.absent(),
+    this.sound = const Value.absent(),
+    this.madeAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  NameClipsCompanion.insert({
+    required String profileId,
+    required String characterId,
+    required String spellingHash,
+    required Uint8List sound,
+    required DateTime madeAt,
+    this.rowid = const Value.absent(),
+  }) : profileId = Value(profileId),
+       characterId = Value(characterId),
+       spellingHash = Value(spellingHash),
+       sound = Value(sound),
+       madeAt = Value(madeAt);
+  static Insertable<NameClip> custom({
+    Expression<String>? profileId,
+    Expression<String>? characterId,
+    Expression<String>? spellingHash,
+    Expression<Uint8List>? sound,
+    Expression<DateTime>? madeAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (profileId != null) 'profile_id': profileId,
+      if (characterId != null) 'character_id': characterId,
+      if (spellingHash != null) 'spelling_hash': spellingHash,
+      if (sound != null) 'sound': sound,
+      if (madeAt != null) 'made_at': madeAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  NameClipsCompanion copyWith({
+    Value<String>? profileId,
+    Value<String>? characterId,
+    Value<String>? spellingHash,
+    Value<Uint8List>? sound,
+    Value<DateTime>? madeAt,
+    Value<int>? rowid,
+  }) {
+    return NameClipsCompanion(
+      profileId: profileId ?? this.profileId,
+      characterId: characterId ?? this.characterId,
+      spellingHash: spellingHash ?? this.spellingHash,
+      sound: sound ?? this.sound,
+      madeAt: madeAt ?? this.madeAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (characterId.present) {
+      map['character_id'] = Variable<String>(characterId.value);
+    }
+    if (spellingHash.present) {
+      map['spelling_hash'] = Variable<String>(spellingHash.value);
+    }
+    if (sound.present) {
+      map['sound'] = Variable<Uint8List>(sound.value);
+    }
+    if (madeAt.present) {
+      map['made_at'] = Variable<DateTime>(madeAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NameClipsCompanion(')
+          ..write('profileId: $profileId, ')
+          ..write('characterId: $characterId, ')
+          ..write('spellingHash: $spellingHash, ')
+          ..write('sound: $sound, ')
+          ..write('madeAt: $madeAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4095,6 +4477,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $VoiceListensTable voiceListens = $VoiceListensTable(this);
   late final $AlertsTable alerts = $AlertsTable(this);
   late final $RewardsTable rewards = $RewardsTable(this);
+  late final $NameClipsTable nameClips = $NameClipsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4109,6 +4492,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     voiceListens,
     alerts,
     rewards,
+    nameClips,
   ];
 }
 
@@ -4121,6 +4505,7 @@ typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   required DateTime createdAt,
   Value<String?> companionId,
   Value<String?> outfitId,
+  Value<String?> nameSpoken,
   Value<int> rowid,
 });
 typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
@@ -4132,6 +4517,7 @@ typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<DateTime> createdAt,
   Value<String?> companionId,
   Value<String?> outfitId,
+  Value<String?> nameSpoken,
   Value<int> rowid,
 });
 
@@ -4166,6 +4552,9 @@ class $$ProfilesTableFilterComposer extends Composer<_$AppDatabase, $ProfilesTab
 
   ColumnFilters<String> get outfitId =>
       $composableBuilder(column: $table.outfitId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get nameSpoken =>
+      $composableBuilder(column: $table.nameSpoken, builder: (column) => ColumnFilters(column));
 }
 
 class $$ProfilesTableOrderingComposer extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -4199,6 +4588,9 @@ class $$ProfilesTableOrderingComposer extends Composer<_$AppDatabase, $ProfilesT
 
   ColumnOrderings<String> get outfitId =>
       $composableBuilder(column: $table.outfitId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get nameSpoken =>
+      $composableBuilder(column: $table.nameSpoken, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ProfilesTableAnnotationComposer extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -4229,6 +4621,9 @@ class $$ProfilesTableAnnotationComposer extends Composer<_$AppDatabase, $Profile
 
   GeneratedColumn<String> get outfitId =>
       $composableBuilder(column: $table.outfitId, builder: (column) => column);
+
+  GeneratedColumn<String> get nameSpoken =>
+      $composableBuilder(column: $table.nameSpoken, builder: (column) => column);
 }
 
 class $$ProfilesTableTableManager
@@ -4264,6 +4659,7 @@ class $$ProfilesTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<String?> companionId = const Value.absent(),
                 Value<String?> outfitId = const Value.absent(),
+                Value<String?> nameSpoken = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion(
                 id: id,
@@ -4274,6 +4670,7 @@ class $$ProfilesTableTableManager
                 createdAt: createdAt,
                 companionId: companionId,
                 outfitId: outfitId,
+                nameSpoken: nameSpoken,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -4286,6 +4683,7 @@ class $$ProfilesTableTableManager
                 required DateTime createdAt,
                 Value<String?> companionId = const Value.absent(),
                 Value<String?> outfitId = const Value.absent(),
+                Value<String?> nameSpoken = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion.insert(
                 id: id,
@@ -4296,6 +4694,7 @@ class $$ProfilesTableTableManager
                 createdAt: createdAt,
                 companionId: companionId,
                 outfitId: outfitId,
+                nameSpoken: nameSpoken,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -6019,6 +6418,177 @@ typedef $$RewardsTableProcessedTableManager =
       Reward,
       PrefetchHooks Function()
     >;
+typedef $$NameClipsTableCreateCompanionBuilder = NameClipsCompanion Function({
+  required String profileId,
+  required String characterId,
+  required String spellingHash,
+  required Uint8List sound,
+  required DateTime madeAt,
+  Value<int> rowid,
+});
+typedef $$NameClipsTableUpdateCompanionBuilder = NameClipsCompanion Function({
+  Value<String> profileId,
+  Value<String> characterId,
+  Value<String> spellingHash,
+  Value<Uint8List> sound,
+  Value<DateTime> madeAt,
+  Value<int> rowid,
+});
+
+class $$NameClipsTableFilterComposer extends Composer<_$AppDatabase, $NameClipsTable> {
+  $$NameClipsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get characterId =>
+      $composableBuilder(column: $table.characterId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get spellingHash =>
+      $composableBuilder(column: $table.spellingHash, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<Uint8List> get sound =>
+      $composableBuilder(column: $table.sound, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get madeAt =>
+      $composableBuilder(column: $table.madeAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$NameClipsTableOrderingComposer extends Composer<_$AppDatabase, $NameClipsTable> {
+  $$NameClipsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get characterId =>
+      $composableBuilder(column: $table.characterId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get spellingHash =>
+      $composableBuilder(column: $table.spellingHash, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<Uint8List> get sound =>
+      $composableBuilder(column: $table.sound, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get madeAt =>
+      $composableBuilder(column: $table.madeAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$NameClipsTableAnnotationComposer extends Composer<_$AppDatabase, $NameClipsTable> {
+  $$NameClipsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => column);
+
+  GeneratedColumn<String> get characterId =>
+      $composableBuilder(column: $table.characterId, builder: (column) => column);
+
+  GeneratedColumn<String> get spellingHash =>
+      $composableBuilder(column: $table.spellingHash, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get sound =>
+      $composableBuilder(column: $table.sound, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get madeAt =>
+      $composableBuilder(column: $table.madeAt, builder: (column) => column);
+}
+
+class $$NameClipsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $NameClipsTable,
+          NameClip,
+          $$NameClipsTableFilterComposer,
+          $$NameClipsTableOrderingComposer,
+          $$NameClipsTableAnnotationComposer,
+          $$NameClipsTableCreateCompanionBuilder,
+          $$NameClipsTableUpdateCompanionBuilder,
+          (NameClip, BaseReferences<_$AppDatabase, $NameClipsTable, NameClip>),
+          NameClip,
+          PrefetchHooks Function()
+        > {
+  $$NameClipsTableTableManager(_$AppDatabase db, $NameClipsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$NameClipsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$NameClipsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$NameClipsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> profileId = const Value.absent(),
+                Value<String> characterId = const Value.absent(),
+                Value<String> spellingHash = const Value.absent(),
+                Value<Uint8List> sound = const Value.absent(),
+                Value<DateTime> madeAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NameClipsCompanion(
+                profileId: profileId,
+                characterId: characterId,
+                spellingHash: spellingHash,
+                sound: sound,
+                madeAt: madeAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String profileId,
+                required String characterId,
+                required String spellingHash,
+                required Uint8List sound,
+                required DateTime madeAt,
+                Value<int> rowid = const Value.absent(),
+              }) => NameClipsCompanion.insert(
+                profileId: profileId,
+                characterId: characterId,
+                spellingHash: spellingHash,
+                sound: sound,
+                madeAt: madeAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$NameClipsTable, NameClip>(table),
+                  BaseReferences<_$AppDatabase, $NameClipsTable, NameClip>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$NameClipsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $NameClipsTable,
+      NameClip,
+      $$NameClipsTableFilterComposer,
+      $$NameClipsTableOrderingComposer,
+      $$NameClipsTableAnnotationComposer,
+      $$NameClipsTableCreateCompanionBuilder,
+      $$NameClipsTableUpdateCompanionBuilder,
+      (NameClip, BaseReferences<_$AppDatabase, $NameClipsTable, NameClip>),
+      NameClip,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6033,4 +6603,5 @@ class $AppDatabaseManager {
   $$VoiceListensTableTableManager get voiceListens => $$VoiceListensTableTableManager(_db, _db.voiceListens);
   $$AlertsTableTableManager get alerts => $$AlertsTableTableManager(_db, _db.alerts);
   $$RewardsTableTableManager get rewards => $$RewardsTableTableManager(_db, _db.rewards);
+  $$NameClipsTableTableManager get nameClips => $$NameClipsTableTableManager(_db, _db.nameClips);
 }
