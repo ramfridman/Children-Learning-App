@@ -298,6 +298,7 @@ abstract final class He {
   );
   static const Str nameSpokenOff = Str('הכנת קטעי שמע לשמות לא זמינה כרגע. נסו שוב מאוחר יותר.');
   static const Str nameSpokenCap = Str('הגעתם למכסה היומית של קטעי השמע. אפשר לנסות שוב מחר.');
+  static const Str nameSpokenNotYet = Str('השם החדש עוד לא הגיע לשרת, וההקלטה לא נשמרה. נסו שוב בעוד רגע.');
   static const Str nameSpokenOffline = Str('לא הצלחנו להתחבר. בדקו את החיבור לאינטרנט ונסו שוב.');
   static const Str areaRefresh = Str('רענון');
   static const Str areaProfiles = Str('ילדים');

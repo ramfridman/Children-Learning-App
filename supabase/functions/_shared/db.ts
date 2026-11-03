@@ -436,7 +436,9 @@ export function pgStore(sql: Sql): Store {
         values (${familyId}, ${c.id}, ${c.nickname}, ${
         c.nameSpoken ?? null
       }, ${c.avatarId}, ${c.companionId}, ${c.outfitId ?? null}, ${c.addressForm}, ${c.ageBand})
-        on conflict (family_id, id) do update set nickname = excluded.nickname, name_spoken = excluded.name_spoken,
+        on conflict (family_id, id) do update set nickname = excluded.nickname,
+          name_spoken = case when ${c.nameSpoken === undefined}::boolean then app.child_profile.name_spoken
+                             else excluded.name_spoken end,
           avatar_id = excluded.avatar_id, companion_id = excluded.companion_id, outfit_id = excluded.outfit_id,
           address_form = excluded.address_form, age_band = excluded.age_band, updated_at = now()`;
       return "saved";
@@ -444,8 +446,17 @@ export function pgStore(sql: Sql): Store {
 
     async childNameSpoken(familyId, childId) {
       const [r] =
-        await sql`select name_spoken from app.child_profile where family_id = ${familyId} and id = ${childId}`;
-      return r ? { spelling: r.name_spoken ?? null } : null;
+        await sql`select name_spoken, companion_id from app.child_profile where family_id = ${familyId} and id = ${childId}`;
+      return r ? { spelling: r.name_spoken ?? null, companionId: r.companion_id ?? null } : null;
+    },
+
+    async tutorCostToday(familyId, nowMs) {
+      const [r] = await sql`
+        select coalesce(sum(cost_micro_usd), 0) as spent from app.usage_counter
+         where scope = 'tutor_cost' and key = ${familyId} and window_start = ${new Date(
+        Math.floor(nowMs / 86_400_000) * 86_400_000,
+      )}`;
+      return Number(r.spent);
     },
 
     async characterVoice(characterId) {

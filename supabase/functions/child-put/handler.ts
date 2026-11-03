@@ -14,7 +14,7 @@ export const NICKNAME = /^[^\u0000-\u001f\u007f<>]{1,24}$/;
 interface Body {
   child_id: string;
   nickname: string;
-  name_spoken?: string;
+  name_spoken?: string | null;
   avatar_id: string;
   companion_id?: string;
   outfit_id?: string;
@@ -28,7 +28,8 @@ export const spec: FunctionSpec = {
   shape: {
     child_id: { t: "string", max: 64, pattern: CHILD_ID },
     nickname: { t: "string", max: 24, pattern: NICKNAME },
-    name_spoken: { t: "string", max: NAME_SPOKEN_MAX, pattern: NAME_SPOKEN, optional: true },
+    // Absent leaves the spelling as it is (a phone from before B-42 does not send it); null clears it.
+    name_spoken: { t: "string", max: NAME_SPOKEN_MAX, pattern: NAME_SPOKEN, optional: true, nullable: true },
     avatar_id: { t: "string", max: 40, pattern: /^[a-z0-9_-]{2,40}$/ },
     companion_id: { t: "string", max: 40, pattern: /^[a-z0-9-]{2,40}$/, optional: true },
     outfit_id: { t: "string", max: 20, pattern: /^[a-z0-9-]{2,20}$/, optional: true },
@@ -40,7 +41,7 @@ export const spec: FunctionSpec = {
     const child: ChildProfile = {
       id: b.child_id,
       nickname: b.nickname,
-      nameSpoken: b.name_spoken ?? null,
+      nameSpoken: b.name_spoken,
       avatarId: b.avatar_id,
       companionId: b.companion_id ?? null,
       outfitId: b.outfit_id ?? null,

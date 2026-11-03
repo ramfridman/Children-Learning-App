@@ -265,17 +265,19 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                               key: Key('legacy-name-${p.id}'),
                               style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
                             ),
-                          ParentButton(
-                            key: Key('name-spoken-${p.id}'),
-                            label: He.areaNameSpoken.text,
-                            quiet: true,
-                            onPressed: () => Navigator.of(context).push(
-                              MaterialPageRoute<void>(
-                                builder: (BuildContext c) =>
-                                    NameSpokenScreen(profile: p, onClose: () => Navigator.pop(c)),
+                          // Only a parent device can make the clip (the gateway refuses a child device).
+                          if (ref.watch(isParentDeviceProvider).value ?? true)
+                            ParentButton(
+                              key: Key('name-spoken-${p.id}'),
+                              label: He.areaNameSpoken.text,
+                              quiet: true,
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext c) =>
+                                      NameSpokenScreen(profile: p, onClose: () => Navigator.pop(c)),
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
                       buttons: <Widget>[

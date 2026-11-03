@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -99,19 +98,26 @@ class _NameSpokenScreenState extends ConsumerState<NameSpokenScreen> {
       final String characterId = resolver
           .resolve(CharacterRole.guideTutor, companionId: await db.companionOf(widget.profile.id))
           .id;
-      final Uint8List sound = await ref
+      final MadeNameClip made = await ref
           .read(nameVoiceProvider)
           .make(childId: widget.profile.id, characterId: characterId);
-      await db.putNameClip(
-        profileId: widget.profile.id,
-        characterId: characterId,
-        spellingHash: spellingHash(_spelling.text.trim()),
-        sound: sound,
-        at: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
-      );
-      ref.invalidate(nameClipProvider(widget.profile.id));
-      unawaited(ref.read(voiceDirectorProvider).sayBytes(sound));
-      done = He.nameSpokenHeard;
+      final String mine = spellingHash(_spelling.text.trim());
+      if (made.spellingHash != mine) {
+        // The server voiced an older spelling (the new one has not reached it yet): that clip is not this name's.
+        error = true;
+        done = He.nameSpokenNotYet;
+      } else {
+        await db.putNameClip(
+          profileId: widget.profile.id,
+          characterId: characterId,
+          spellingHash: mine,
+          sound: made.sound,
+          at: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
+        );
+        ref.invalidate(nameClipProvider(widget.profile.id));
+        unawaited(ref.read(voiceDirectorProvider).sayBytes(made.sound));
+        done = He.nameSpokenHeard;
+      }
     } on NameVoiceException catch (e) {
       error = true;
       done = switch (e.failure) {

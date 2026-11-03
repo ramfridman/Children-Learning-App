@@ -128,17 +128,21 @@ Future<BuiltPack> buildVoicePack(
 /// The gateway's `name-voice` for tests: it records what was asked and gives a small sound, or fails as told. Nothing
 /// reaches a provider and no key is read.
 class FakeNameVoice implements NameVoice {
-  FakeNameVoice({Uint8List? sound})
+  FakeNameVoice({Uint8List? sound, this.spelling = 'נֹעָה'})
     : sound = sound ?? Uint8List.fromList(utf8.encode('name-clip'.padRight(120, '.')));
 
   final Uint8List sound;
+
+  /// The spelling the fake "server" holds and voices; the answer carries its hash. A spelling other than the one the parent
+  /// typed is the server being behind.
+  String spelling;
   NameVoiceFailure? fail;
   final List<({String childId, String characterId})> asked = <({String childId, String characterId})>[];
 
   @override
-  Future<Uint8List> make({required String childId, required String characterId}) async {
+  Future<MadeNameClip> make({required String childId, required String characterId}) async {
     asked.add((childId: childId, characterId: characterId));
     if (fail != null) throw NameVoiceException(fail!);
-    return sound;
+    return MadeNameClip(sound: sound, spellingHash: spellingHash(spelling));
   }
 }

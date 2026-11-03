@@ -243,12 +243,21 @@ class SyncEngine {
       // any child the server does not have).
       final String nickname = fitChildNameForServer(p.name);
       if (nickname.isEmpty) continue;
+      // The server keeps the spelling when the field is absent (an older build does not send it), so a spelling this phone
+      // cleared is sent as an explicit null: only when the server was last told one. A spelling outside the rule would make
+      // the server refuse the whole child: it stays on the phone.
+      final bool valid = p.nameSpoken != null && isSpokenName(p.nameSpoken!);
+      final String? told = await db.setting('profile_pushed_${p.id}');
+      final bool cleared =
+          p.nameSpoken == null &&
+          told != null &&
+          told.split('|').last.isNotEmpty &&
+          told.split('|').length >= 7;
       try {
         await call('child-put', <String, Object?>{
           'child_id': p.id,
           'nickname': nickname,
-          // A spelling outside the rule would make the server refuse the whole child: it stays on the phone.
-          'name_spoken': ?(p.nameSpoken != null && isSpokenName(p.nameSpoken!) ? p.nameSpoken : null),
+          if (valid) 'name_spoken': p.nameSpoken else if (cleared) 'name_spoken': null,
           'avatar_id': p.avatar,
           'companion_id': ?p.companionId,
           'outfit_id': ?p.outfitId,

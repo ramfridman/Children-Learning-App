@@ -63,11 +63,20 @@ class NameVoiceException implements Exception {
   String toString() => 'NameVoiceException($failure)';
 }
 
+/// A made clip: the mp3, and the hash of the spelling the server made it from (the server voices the spelling it holds,
+/// which may be an older one than the phone's).
+class MadeNameClip {
+  const MadeNameClip({required this.sound, required this.spellingHash});
+
+  final Uint8List sound;
+  final String spellingHash;
+}
+
 /// Asks for the sound of a child's name. The only implementation that reaches the network is [GatewayNameVoice]; tests give
 /// their own.
 abstract interface class NameVoice {
   /// The mp3 of the name of [childId] in the voice of [characterId]. Throws [NameVoiceException].
-  Future<Uint8List> make({required String childId, required String characterId});
+  Future<MadeNameClip> make({required String childId, required String characterId});
 }
 
 /// `name-voice` on the gateway: the phone sends two ids; the server holds the spelling and the voice.
@@ -79,9 +88,10 @@ class GatewayNameVoice implements NameVoice {
   /// A clip of a name is a few kilobytes; anything far outside that is not one.
   static const int _smallest = 100;
   static const int _largest = 400 * 1024;
+  static final RegExp _hash = RegExp(r'^[0-9a-f]{16}$');
 
   @override
-  Future<Uint8List> make({required String childId, required String characterId}) async {
+  Future<MadeNameClip> make({required String childId, required String characterId}) async {
     final Map<String, Object?> answer;
     try {
       answer = await _call('name-voice', <String, Object?>{'child_id': childId, 'character_id': characterId});
@@ -96,7 +106,8 @@ class GatewayNameVoice implements NameVoice {
       throw const NameVoiceException(NameVoiceFailure.unreachable);
     }
     final Object? audio = answer['audio'];
-    if (audio is! String || answer['mime'] != 'audio/mpeg') {
+    final Object? hash = answer['spelling_hash'];
+    if (audio is! String || answer['mime'] != 'audio/mpeg' || hash is! String || !_hash.hasMatch(hash)) {
       throw const NameVoiceException(NameVoiceFailure.unreachable);
     }
     try {
@@ -104,7 +115,7 @@ class GatewayNameVoice implements NameVoice {
       if (sound.length < _smallest || sound.length > _largest) {
         throw const NameVoiceException(NameVoiceFailure.unreachable);
       }
-      return sound;
+      return MadeNameClip(sound: sound, spellingHash: hash);
     } on FormatException {
       throw const NameVoiceException(NameVoiceFailure.unreachable);
     }

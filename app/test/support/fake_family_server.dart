@@ -142,7 +142,8 @@ class FakeFamilyServer {
         children[id] = <String, Object?>{
           'id': id,
           'nickname': body['nickname'],
-          'name_spoken': spoken,
+          // As the server: absent keeps what it has, null clears it.
+          'name_spoken': body.containsKey('name_spoken') ? spoken : children[id]?['name_spoken'],
           'avatar_id': body['avatar_id'],
           'companion_id': body['companion_id'],
           'outfit_id': body['outfit_id'],

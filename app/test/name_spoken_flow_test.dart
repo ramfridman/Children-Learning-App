@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/app/push_providers.dart' show isParentDeviceProvider;
 import 'package:nitznutz/app/welcome_providers.dart';
 import 'package:nitznutz/child/home_screen.dart';
 import 'package:nitznutz/design/components.dart';
@@ -32,14 +33,22 @@ const List<String> lines = <String>[
   'core.greeting.hello',
 ];
 
-Future<AppRig> rigWith({FakePlayer? player, FakeNameVoice? voice, bool welcome = false}) async {
+Future<AppRig> rigWith({
+  FakePlayer? player,
+  FakeNameVoice? voice,
+  bool welcome = false,
+  bool childDevice = false,
+}) async {
   final FakePlayer p = player ?? FakePlayer();
   final List<String> ids = <String>[...lines, for (final String id in welcomeTopicIds) id];
   return AppRig(
     welcome: welcome,
     player: p,
     characters: await sourceWithLines(ids),
-    extraOverrides: <Override>[if (voice != null) nameVoiceProvider.overrideWithValue(voice)],
+    extraOverrides: <Override>[
+      if (voice != null) nameVoiceProvider.overrideWithValue(voice),
+      if (childDevice) isParentDeviceProvider.overrideWith((Ref ref) async => false),
+    ],
   );
 }
 
@@ -111,6 +120,41 @@ void main() {
       expect(note(tester), He.nameSpokenHeard.text);
     },
   );
+
+  testWidgets('when the server voiced an older spelling, the clip is not kept as the new one (SEC-B42-3)', (
+    WidgetTester tester,
+  ) async {
+    final FakeNameVoice voice = FakeNameVoice(spelling: 'נועה');
+    final AppRig rig = await rigWith(voice: voice);
+    await toParentArea(tester, rig);
+    await openSpelling(tester);
+    await tester.enterText(find.byKey(const Key('name-spoken-field')), spelling);
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('name-spoken-listen')));
+    await tester.pumpAndSettle();
+    expect(voice.asked, hasLength(1), reason: 'the gateway was asked');
+    expect(note(tester), He.nameSpokenNotYet.text);
+    expect(await rig.db.select(rig.db.nameClips).get(), isEmpty, reason: 'and nothing was kept');
+    expect(await rig.db.nameSpokenOf('p-1'), spelling, reason: 'the new spelling itself is saved');
+    voice.spelling = spelling;
+    await tester.tap(find.byKey(const Key('name-spoken-listen')));
+    await tester.pumpAndSettle();
+    expect(note(tester), He.nameSpokenHeard.text, reason: 'once the server has it, the clip is kept');
+    expect(await rig.db.select(rig.db.nameClips).get(), hasLength(1));
+  });
+
+  testWidgets('a child device has no "how the name is said" button (O1)', (WidgetTester tester) async {
+    final AppRig rig = await rigWith(voice: FakeNameVoice(), childDevice: true);
+    await toParentArea(tester, rig);
+    expect(find.byKey(const Key('name-spoken-p-1')), findsNothing);
+  });
+
+  testWidgets('a parent device has it (O1)', (WidgetTester tester) async {
+    final AppRig rig = await rigWith(voice: FakeNameVoice());
+    await toParentArea(tester, rig);
+    await tester.ensureVisible(find.byKey(const Key('name-spoken-p-1')));
+    expect(find.byKey(const Key('name-spoken-p-1')), findsOneWidget);
+  });
 
   testWidgets('a spelling outside the rule is told at once and cannot be listened to; nothing is asked', (
     WidgetTester tester,

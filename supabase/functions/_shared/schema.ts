@@ -16,7 +16,8 @@ export type Field =
   | { t: "object"; shape: Shape };
 
 export interface Shape {
-  [key: string]: Field & { optional?: boolean };
+  /** `nullable`: the value may be JSON null as well (an explicit "clear this"); absent is still governed by `optional`. */
+  [key: string]: Field & { optional?: boolean; nullable?: boolean };
 }
 
 const bad = (reason: string) => new GatewayError("bad_request", reason);
@@ -115,6 +116,7 @@ function checkShape(shape: Shape, body: Record<string, unknown>, prefix: string)
       if (field.optional) continue;
       throw bad(`${at(key)}:missing`);
     }
+    if (field.nullable && body[key] === null) continue;
     checkField(field, body[key], at(key));
   }
 }

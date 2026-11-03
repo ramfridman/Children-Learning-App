@@ -4,7 +4,12 @@
 import { assert } from "./_shared/testassert.ts";
 import { type VoiceAnswer, type VoiceClient, VoiceFailed, type VoiceRequest } from "./_shared/elevenlabs.ts";
 import { makeHandler, type Services } from "./_shared/handler.ts";
-import { NAME_VOICE_FORMAT, NAME_VOICE_SETTINGS, nameVoiceSettings } from "./_shared/name_voice.ts";
+import {
+  NAME_VOICE_FORMAT,
+  NAME_VOICE_SETTINGS,
+  nameVoiceSettings,
+  spellingHash,
+} from "./_shared/name_voice.ts";
 import {
   addDevice,
   call,
@@ -23,6 +28,8 @@ class FakeVoice implements VoiceClient {
   calls: VoiceRequest[] = [];
   deleted: string[] = [];
   fail: VoiceFailed | null = null;
+  /** The provider refuses to delete (a key without the history permission). */
+  keepsHistory = false;
   speak(req: VoiceRequest): Promise<VoiceAnswer> {
     this.calls.push(req);
     if (this.fail) return Promise.reject(this.fail);
@@ -35,7 +42,7 @@ class FakeVoice implements VoiceClient {
   }
   deleteHistory(id: string) {
     this.deleted.push(id);
-    return Promise.resolve();
+    return Promise.resolve(!this.keepsHistory);
   }
 }
 
@@ -43,11 +50,25 @@ const KID = "child-aaaa-0001";
 const NAME = "נֹעָה";
 const NITZI = "nitzi";
 
-async function setup(over: { enabled?: boolean; voice?: boolean; withSpelling?: boolean } = {}) {
+async function setup(
+  over: { enabled?: boolean; voice?: boolean; withSpelling?: boolean; companion?: string } = {},
+) {
   const store = new FakeStore();
   store.config.set("name_voice_enabled", over.enabled ?? true);
   store.config.set("elevenlabs_model_id", "eleven_v4_turbo");
   store.characters.set(NITZI, { nameHe: "ניצי", gender: "f", voiceId: "voice-nitzi-0001", personal: false });
+  store.characters.set("other-friend", {
+    nameHe: "other",
+    gender: "m",
+    voiceId: "voiceother0001",
+    personal: false,
+  });
+  store.characters.set("hero-son", {
+    nameHe: "hero",
+    gender: "m",
+    voiceId: "voicepersonal01",
+    personal: true,
+  });
   store.characters.set("quiet", { nameHe: "שקט", gender: "m", voiceId: null, personal: false });
   const voice = new FakeVoice();
   const svc: Services = { ...fakeServices(store), ...(over.voice === false ? {} : { voice }) };
@@ -60,6 +81,7 @@ async function setup(over: { enabled?: boolean; voice?: boolean; withSpelling?: 
     child_id: KID,
     nickname: "נועה",
     ...(over.withSpelling === false ? {} : { name_spoken: NAME }),
+    ...(over.companion ? { companion_id: over.companion } : {}),
     avatar_id: "avatar-noa",
     address_form: "f",
     age_band: 1,
@@ -87,7 +109,8 @@ Deno.test("name-voice: a parent gets the clip of the child's name, made from the
   const r = await ask();
   assert.equal(r.status, 200);
   const body = await r.json();
-  assert.deepEqual(Object.keys(body).sort(), ["audio", "chars", "mime"]);
+  assert.deepEqual(Object.keys(body).sort(), ["audio", "chars", "mime", "spelling_hash"]);
+  assert.equal(body.spelling_hash, await spellingHash(NAME), "what the clip was made from, as a hash");
   assert.equal(body.mime, "audio/mpeg");
   assert.equal(body.chars, NAME.length + 1);
   assert.equal(atob(body.audio).length, 4000);
@@ -222,7 +245,13 @@ Deno.test("name-voice: no spelling, an unknown child or character, and a charact
   const { ask, voice, parent } = await setup();
   assert.equal((await ask(parent, { child_id: "child-zzzz-9999", character_id: NITZI })).status, 404);
   assert.equal((await ask(parent, { child_id: KID, character_id: "nobody" })).status, 400);
-  assert.equal((await ask(parent, { child_id: KID, character_id: "quiet" })).status, 503);
+  const silent = await setup({ companion: "quiet" });
+  assert.equal(
+    (await silent.ask(silent.parent, { child_id: KID, character_id: "quiet" })).status,
+    503,
+    "a friend with no voice yet",
+  );
+  assert.equal(silent.voice.calls.length, 0);
   assert.equal(voice.calls.length, 0);
   assert.equal(none.voice.calls.length, 0);
 });
@@ -252,6 +281,7 @@ Deno.test("name-voice: a family may make so many clips a day, then it is told so
     dayCap: 20,
     modelId: null,
     priceVoicePer1k: 300_000,
+    costCapMicro: 500_000,
   });
 });
 
@@ -271,4 +301,66 @@ Deno.test("name-voice: nothing in the function reads a key or the environment", 
     const text = await Deno.readTextFile(new URL(file, import.meta.url));
     assert.ok(!/Deno\.env|API_KEY|apiKey|console\./.test(text), file);
   }
+});
+
+Deno.test("name-voice: the provider's history is deleted with one more try; if it stays, one fixed line says so and the clip is still returned (SEC-B42-1)", async () => {
+  const kept = await setup();
+  kept.voice.keepsHistory = true;
+  const lines = await logged(async () => {
+    const r = await kept.ask();
+    assert.equal(r.status, 200, "the money is spent: the clip is returned");
+    await r.body?.cancel();
+  });
+  assert.deepEqual(kept.voice.deleted, ["hist1abcdef", "hist1abcdef"], "two tries");
+  const keptLines = lines.filter((l) => l.includes("history_kept"));
+  assert.equal(keptLines.length, 1);
+  assert.equal(JSON.parse(keptLines[0]).fn, "name-voice");
+  for (const l of lines) {
+    assert.ok(!l.includes("hist1abcdef") && !l.includes(NAME), `a log line holds an id or a name: ${l}`);
+  }
+
+  const fine = await setup();
+  const fineLines = await logged(async () => {
+    await (await fine.ask()).body?.cancel();
+  });
+  assert.deepEqual(fine.voice.deleted, ["hist1abcdef"], "one try when it works");
+  assert.ok(!fineLines.some((l) => l.includes("history_kept")));
+});
+
+Deno.test("name-voice: only the child's own friend is voiced - the one chosen, or the house character (SEC-B42-2)", async () => {
+  const house = await setup();
+  for (const character_id of ["other-friend", "hero-son"]) {
+    const r = await house.ask(house.parent, { child_id: KID, character_id });
+    assert.equal(r.status, 400, character_id);
+  }
+  assert.equal(house.voice.calls.length, 0, "no voice call for a character the child does not have");
+  assert.equal((await house.ask()).status, 200, "the house character speaks for a child with no friend");
+
+  const chose = await setup({ companion: "hero-son" });
+  assert.equal((await chose.ask(chose.parent, { child_id: KID, character_id: "hero-son" })).status, 200);
+  assert.equal(chose.voice.calls[0].voiceId, "voicepersonal01");
+  assert.equal(
+    (await chose.ask(chose.parent, { child_id: KID, character_id: "other-friend" })).status,
+    400,
+    "not a friend the child did not choose",
+  );
+  assert.equal(
+    (await chose.ask()).status,
+    200,
+    "the house character is still allowed (a friend that is not installed)",
+  );
+});
+
+Deno.test("name-voice: a family at its daily spend cap gets no more paid clips, and nothing is spent (SEC-B42-4)", async () => {
+  const { store, ask, voice } = await setup();
+  const day = Math.floor(NOW / 86_400_000);
+  store.costMicro.set(`${FAMILY_A}/${day}`, 499_999);
+  assert.equal((await ask()).status, 200, "just under the cap");
+  store.costMicro.set(`${FAMILY_A}/${day}`, 500_000);
+  const r = await ask();
+  assert.equal(r.status, 429);
+  assert.deepEqual(await r.json(), { error: "rate_limited" });
+  assert.equal(voice.calls.length, 1, "the second did not reach the voice");
+  store.config.set("tutor_cost_cap_micro", 900_000);
+  assert.equal((await ask()).status, 200, "the cap is the owner's setting");
 });

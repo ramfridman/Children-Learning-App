@@ -21,6 +21,7 @@ export const NAME_VOICE_CONFIG_KEYS = [
   "name_voice_day_cap",
   "elevenlabs_model_id",
   "tutor_price_micro",
+  "tutor_cost_cap_micro",
 ] as const;
 
 export interface NameVoiceSettings {
@@ -32,6 +33,8 @@ export interface NameVoiceSettings {
   modelId: string | null;
   /** Millionths of a dollar for 1,000 characters (the tutor's voice price, until the owner sets the real one). */
   priceVoicePer1k: number;
+  /** What a family may spend in a day on generated voice (the tutor's cap, shared): no clip is made once it is reached. */
+  costCapMicro: number;
 }
 
 const num = (v: unknown, d: number) => (typeof v === "number" && Number.isFinite(v) && v >= 0 ? v : d);
@@ -47,5 +50,15 @@ export function nameVoiceSettings(c: Record<string, unknown>): NameVoiceSettings
       ? c.elevenlabs_model_id
       : null,
     priceVoicePer1k: num(price.voice_per_1k_chars, 300_000),
+    costCapMicro: num(c.tutor_cost_cap_micro, 500_000),
   };
+}
+
+/**
+ * What a clip is keyed by on the phone: the first 16 hex characters of the SHA-256 of the UTF-8 spelling. The answer carries
+ * it so that the phone keeps a clip only for the spelling it holds (a hash, never the name).
+ */
+export async function spellingHash(spelling: string): Promise<string> {
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(spelling)));
+  return Array.from(digest.subarray(0, 8), (b) => b.toString(16).padStart(2, "0")).join("");
 }

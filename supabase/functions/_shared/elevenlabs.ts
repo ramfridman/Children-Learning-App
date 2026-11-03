@@ -32,8 +32,19 @@ export interface VoiceAnswer {
 
 export interface VoiceClient {
   speak(req: VoiceRequest): Promise<VoiceAnswer>;
-  /** Best effort: a failure is not an error for the child. */
-  deleteHistory(historyItemId: string): Promise<void>;
+  /**
+   * Deletes the provider's copy of a line. True when it is gone (or was already); false when the provider refused, was
+   * slow (3 s) or could not be reached. A failure is never an error for the child, but the caller says so in its log.
+   */
+  deleteHistory(historyItemId: string): Promise<boolean>;
+}
+
+/** How long one delete of the provider's history may take. */
+const HISTORY_DELETE_MS = 3000;
+
+/** [VoiceClient.deleteHistory] with one more try after a failure. */
+export async function deleteHistoryWithRetry(voice: VoiceClient, historyItemId: string): Promise<boolean> {
+  return await voice.deleteHistory(historyItemId) || await voice.deleteHistory(historyItemId);
 }
 
 export class VoiceFailed extends Error {
@@ -95,15 +106,22 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
     },
 
     async deleteHistory(id) {
-      if (!/^[A-Za-z0-9]{6,60}$/.test(id)) return;
+      if (!/^[A-Za-z0-9]{6,60}$/.test(id)) return false;
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), HISTORY_DELETE_MS);
       try {
         const res = await fetchFn(`${BASE}/v1/history/${id}`, {
           method: "DELETE",
+          signal: ctl.signal,
           headers: { "xi-api-key": apiKey },
         });
         await res.body?.cancel();
+        // Gone, or already gone (404). A refusal (a key without the history permission, a 429, a 5xx) is not "deleted".
+        return res.ok || res.status === 404;
       } catch {
-        // The nightly sweep (M7) catches what this misses.
+        return false;
+      } finally {
+        clearTimeout(timer);
       }
     },
   };

@@ -2,6 +2,7 @@
 // (testvectors/name-spoken.json). The app is tested against the same file (app/test/name_spoken_test.dart); this side proves
 // what the shared validator, child-put and the migration's check take and refuse.
 import { assert } from "./_shared/testassert.ts";
+import { spellingHash } from "./_shared/name_voice.ts";
 import { isSpokenName, NAME_SPOKEN, NAME_SPOKEN_MAX } from "./_shared/name_spoken.ts";
 import { type Shape, validate } from "./_shared/schema.ts";
 import { addDevice, call, fakeServices, FakeStore, FAMILY_A, USER_A } from "./_shared/testkit.ts";
@@ -17,7 +18,13 @@ interface Vector {
 
 const v = JSON.parse(
   await Deno.readTextFile(new URL("../../testvectors/name-spoken.json", import.meta.url)),
-) as { max_utf16_units: number; server_pattern: string; accept: Vector[]; reject: Vector[] };
+) as {
+  max_utf16_units: number;
+  server_pattern: string;
+  accept: Vector[];
+  reject: Vector[];
+  hash_examples: Array<{ value: string; hash: string }>;
+};
 
 Deno.test("name spoken: the validator's pattern and limit are the ones in testvectors/name-spoken.json", () => {
   assert.equal(NAME_SPOKEN.source, v.server_pattern);
@@ -91,15 +98,20 @@ async function setup() {
   return { store, h, parent, child, profile };
 }
 
-Deno.test("child-put: the spelling is saved with the child, every device of the family sees it, and saving without it clears it", async () => {
+Deno.test("child-put: the spelling is saved with the child and every device sees it; absent keeps it, null clears it", async () => {
   const { h, parent, child, profile } = await setup();
   assert.equal((await call(h.put, parent, "child-put", profile({ name_spoken: "נֹעָה" }))).status, 200);
   const first = await (await call(h.pull, child, "sync-pull", { after: 0, limit: 10 })).json();
   assert.equal(first.children[0].name_spoken, "נֹעָה");
   assert.equal(first.children[0].nickname, "נועה", "the nickname is its own text");
-  assert.equal((await call(h.put, parent, "child-put", profile())).status, 200);
-  const again = await (await call(h.pull, child, "sync-pull", { after: 0, limit: 10 })).json();
-  assert.equal(again.children[0].name_spoken, null, "the parent cleared it");
+  // A phone from before B-42 saves the child without the field: the spelling stays (O2).
+  assert.equal((await call(h.put, parent, "child-put", profile({ nickname: "נועה כהן" }))).status, 200);
+  const kept = await (await call(h.pull, child, "sync-pull", { after: 0, limit: 10 })).json();
+  assert.equal(kept.children[0].name_spoken, "נֹעָה", "absent leaves it");
+  assert.equal(kept.children[0].nickname, "נועה כהן", "the rest of the child did change");
+  assert.equal((await call(h.put, parent, "child-put", profile({ name_spoken: null }))).status, 200);
+  const cleared = await (await call(h.pull, child, "sync-pull", { after: 0, limit: 10 })).json();
+  assert.equal(cleared.children[0].name_spoken, null, "an explicit null clears it");
 });
 
 Deno.test("child-put: a spelling the voice must not read is refused, and a child device cannot set one", async () => {
@@ -107,7 +119,11 @@ Deno.test("child-put: a spelling the voice must not read is refused, and a child
   for (const bad of ["Noa", "נועה!", " נועה", "<b>", "x".repeat(25), ""]) {
     assert.equal((await call(h.put, parent, "child-put", profile({ name_spoken: bad }))).status, 400, bad);
   }
-  assert.equal((await call(h.put, parent, "child-put", profile({ name_spoken: null }))).status, 400);
   assert.equal((await call(h.put, child, "child-put", profile({ name_spoken: "נועה" }))).status, 403);
   assert.equal(store.children.size, 0, "nothing was saved");
+});
+
+Deno.test("name spoken: the hash a clip is keyed by is the shared one (the phone checks the same examples)", async () => {
+  assert.ok(v.hash_examples.length >= 3);
+  for (const x of v.hash_examples) assert.equal(await spellingHash(x.value), x.hash, x.value);
 });

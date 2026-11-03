@@ -2,6 +2,7 @@
 // gateway (a mock here: nothing reaches a provider), kept in the encrypted database by child, character and a hash of the
 // spelling, deleted when any of them changes, never synced; only a greeting or the map bubble's clip follows it.
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
@@ -231,6 +232,30 @@ void main() {
       expect(await p2.db.select(p2.db.nameClips).get(), isEmpty);
     });
 
+    test('an older build that saves the child without the field leaves the spelling; clearing it here sends an explicit null', () async {
+      await p1.addChild();
+      await p1.db.setNameSpoken(kid, 'נועה');
+      await p1.engine.syncOnce();
+      // A phone from before B-42 sends no name_spoken at all.
+      await server.callFor(dev2)('child-put', <String, Object?>{
+        'child_id': kid,
+        'nickname': 'נועה',
+        'avatar_id': 'avatar-noa',
+        'address_form': 'f',
+        'age_band': 1,
+      });
+      expect(server.children[kid]!['name_spoken'], 'נועה', reason: 'absent keeps it');
+      await p1.db.setNameSpoken(kid, null);
+      await p1.engine.syncOnce();
+      expect(
+        server.children[kid]!['name_spoken'],
+        isNull,
+        reason: 'a cleared spelling is cleared on the server',
+      );
+      await p2.engine.syncOnce();
+      expect(await p2.db.nameSpokenOf(kid), isNull);
+    });
+
     test(
       'a spelling this phone changed and has not sent is not wiped by an older one from the server',
       () async {
@@ -275,10 +300,11 @@ void main() {
     Future<Map<String, Object?>> Function(String, Map<String, Object?>) answering(
       Object? audio, {
       Object? mime = 'audio/mpeg',
+      Object? hash = '91dfbdb3f1113565',
     }) => (String name, Map<String, Object?> body) async {
       expect(name, 'name-voice');
       expect(body.keys.toSet(), <String>{'child_id', 'character_id'}, reason: 'two ids and nothing else');
-      return <String, Object?>{'audio': audio, 'mime': mime, 'chars': 5};
+      return <String, Object?>{'audio': audio, 'mime': mime, 'chars': 5, 'spelling_hash': hash};
     };
     Future<Map<String, Object?>> Function(String, Map<String, Object?>) failing(String code) =>
         (String name, Map<String, Object?> body) async => throw GatewayException(code, status: 400);
@@ -294,9 +320,10 @@ void main() {
 
     test('a good answer is the sound', () async {
       final Uint8List clip = sound('hello');
-      final Uint8List got = await GatewayNameVoice(answering(base64Encode(clip)))
+      final MadeNameClip got = await GatewayNameVoice(answering(base64Encode(clip)))
           .make(childId: kid, characterId: 'nitzi');
-      expect(got, clip);
+      expect(got.sound, clip);
+      expect(got.spellingHash, '91dfbdb3f1113565', reason: 'what the server says it voiced');
     });
 
     test('each answer of the gateway is told to the parent in its own way', () async {
@@ -312,6 +339,34 @@ void main() {
         ),
         NameVoiceFailure.unreachable,
       );
+    });
+
+    test(
+      'an answer without the hash of the spelling it voiced, or with a wrong-looking one, is refused',
+      () async {
+        final String good = base64Encode(sound('x'));
+        expect(await failureOf(GatewayNameVoice(answering(good, hash: null))), NameVoiceFailure.unreachable);
+        expect(
+          await failureOf(GatewayNameVoice(answering(good, hash: 'NOT-A-HASH'))),
+          NameVoiceFailure.unreachable,
+        );
+        expect(
+          await failureOf(GatewayNameVoice(answering(good, hash: '91DFBDB3F1113565'))),
+          NameVoiceFailure.unreachable,
+        );
+        expect(await failureOf(GatewayNameVoice(answering(good))), isNull);
+      },
+    );
+
+    test('the key of a clip is the shared hash of the spelling (the gateway answers the same examples)', () {
+      final Map<String, Object?> doc =
+          jsonDecode(File('../testvectors/name-spoken.json').readAsStringSync()) as Map<String, Object?>;
+      final List<Object?> examples = doc['hash_examples']! as List<Object?>;
+      expect(examples.length, greaterThanOrEqualTo(3));
+      for (final Object? e in examples) {
+        final Map<String, Object?> x = e! as Map<String, Object?>;
+        expect(spellingHash(x['value']! as String), x['hash'], reason: x['value']! as String);
+      }
     });
 
     test('anything that is not a small mp3 sound is refused', () async {
