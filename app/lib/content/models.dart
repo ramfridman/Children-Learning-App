@@ -322,6 +322,10 @@ class TapAnswerActivity extends Activity {
   final List<ChoiceOption> options;
   final String correctId;
 
+  /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
+  /// texts as words, all alike, whatever their length.
+  bool get letterFace => _map(this.json['answer'])['face'] == 'letter';
+
   /// The thing to count or compare, shown above the answers (1.1), and a second one beside it for a comparison.
   final SpriteSet? group;
   final SpriteSet? group2;

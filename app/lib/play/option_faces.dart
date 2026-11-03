@@ -8,22 +8,6 @@ import '../strings/he.dart';
 // font and direction, a sound button with nothing on it but its sound, a speaker that plays a tile's own clip without
 // answering, and the word that appears under a picture once the answer is accepted. The tile itself is `AnswerTile`.
 
-/// Whether [text] is one letter (or a digraph, or a vowel sign on one): such a tile is square and shows the letter large and
-/// bold. Combining marks (a stress mark, nikud) are not letters.
-bool isSingleLetter(String text) {
-  int letters = 0;
-  for (final int r in text.runes) {
-    final bool mark = (r >= 0x0300 && r <= 0x036F) || (r >= 0x05B0 && r <= 0x05C7);
-    if (!mark) letters++;
-  }
-  return letters <= 2;
-}
-
-/// Whether an item's options are letters: every one of them is a single letter (or a digraph). The face of a tile follows the item,
-/// never its own text, so that the options of one item are all set alike: a word of two letters beside longer words is a word,
-/// and the child's own short name among other names does not stand out by its look.
-bool isLetterItem(Iterable<String> texts) => texts.isNotEmpty && texts.every(isSingleLetter);
-
 /// The text of a tile, in its course's font and direction, as large as the tile lets it be: in a letter item ([letter]) the tile font
 /// in bold, in a word item a little over half of it in Medium, scaled down to fit the width (a long word never wraps and never
 /// overflows).
@@ -42,7 +26,7 @@ class OptionTextFace extends StatelessWidget {
   /// The numeral size of the board's tiles (`ActivitySpec.tileFont`).
   final double tileFont;
 
-  /// The item is a letter item (see [isLetterItem]).
+  /// The item is a letter item (`TapAnswerActivity.letterFace`: the item says so; the text never decides).
   final bool letter;
 
   @override

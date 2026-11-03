@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/content/scripts.dart' show isSingleLetter;
 import 'package:nitznutz/design/board.dart' show boardClassFor;
 import 'package:nitznutz/design/components.dart';
 import 'package:nitznutz/design/token_types.dart' show Band;
@@ -111,7 +112,7 @@ class Rig {
 }
 
 /// An item of text tiles in [course], one for each word, the first right, each with its own clip when [clips] is true.
-LangPack words(String course, List<String> w, {bool clips = true, String id = 'words'}) {
+LangPack words(String course, List<String> w, {bool clips = true, String id = 'words', String? face}) {
   final LangPack p = LangPack(course);
   p.add(
     tapJson(
@@ -127,6 +128,7 @@ LangPack words(String course, List<String> w, {bool clips = true, String id = 'w
           ),
       ],
       correct: 'o1',
+      answer: <String, Object?>{'face': ?face},
     ),
   );
   return p;
@@ -239,7 +241,7 @@ void main() {
     });
 
     testWidgets('a single letter is a square tile with the letter large and bold', (WidgetTester t) async {
-      final Rig r = Rig(words('eng', <String>['a', 'b', 'c']), 'words');
+      final Rig r = Rig(words('eng', <String>['a', 'b', 'c'], face: 'letter'), 'words');
       await r.pump(t);
       expect(
         t.getSize(find.descendant(of: r.tile('o1'), matching: find.byKey(const Key('answer-tile')))).width,
@@ -250,21 +252,32 @@ void main() {
       await r.done(t);
     });
 
-    testWidgets('QA-L1-1: the face follows the item: all tiles alike, a short word among words is a word', (
+    testWidgets('QA-L1-1: the item says its face, the text does not: words stay words, letters are letters', (
       WidgetTester t,
     ) async {
-      for (final (String, List<String>, double, FontWeight) c in <(String, List<String>, double, FontWeight)>[
-        ('eng', <String>['on', 'cat', 'sun'], 30.8, FontWeight.w500),
-        ('eng', <String>['on', 'up', 'in'], 56, FontWeight.w700),
-        ('eng', <String>['b', 'd', 'p'], 56, FontWeight.w700),
-        ('heb', <String>['בֵּן', 'נוֹעָה', 'יַעַל'], 30.8, FontWeight.w500),
-      ]) {
-        final Rig r = Rig(words(c.$1, c.$2), 'words');
+      // (course, options, the item's `face`, the font size and weight every tile has)
+      for (final (String, List<String>, String?, double, FontWeight) c
+          in <(String, List<String>, String?, double, FontWeight)>[
+            ('eng', <String>['on', 'cat', 'sun'], null, 30.8, FontWeight.w500),
+            ('eng', <String>['on', 'up', 'in'], 'word', 30.8, FontWeight.w500),
+            ('rus', <String>['да', 'нет', 'ёж'], 'word', 30.8, FontWeight.w500),
+            ('heb', <String>['בֵּן', 'טַל', 'דָּן'], 'word', 30.8, FontWeight.w500),
+            ('heb', <String>['בֵּן', 'נוֹעָה', 'יַעַל'], null, 30.8, FontWeight.w500),
+            ('eng', <String>['b', 'd', 'p'], 'letter', 56, FontWeight.w700),
+            ('eng', <String>['sh', 'ch', 'th'], 'letter', 56, FontWeight.w700),
+            ('heb', <String>['ב', 'כ', 'פ'], 'letter', 56, FontWeight.w700),
+          ]) {
+        final Rig r = Rig(words(c.$1, c.$2, face: c.$3), 'words');
         await r.pump(t);
         for (final String id in <String>['o1', 'o2', 'o3']) {
-          expect(r.textIn(t, id).style!.fontSize, closeTo(c.$3, 0.01), reason: '${c.$2} $id');
-          expect(r.textIn(t, id).style!.fontWeight, c.$4, reason: '${c.$2} $id');
+          expect(r.textIn(t, id).style!.fontSize, closeTo(c.$4, 0.01), reason: '${c.$2} ${c.$3} $id');
+          expect(r.textIn(t, id).style!.fontWeight, c.$5, reason: '${c.$2} ${c.$3} $id');
         }
+        // A letter item is square tiles; a word item is as wide as the row allows.
+        final double width = t
+            .getSize(find.descendant(of: r.tile('o1'), matching: find.byKey(const Key('answer-tile'))))
+            .width;
+        expect(width, c.$3 == 'letter' ? 96 : greaterThan(96), reason: '${c.$2} ${c.$3}');
         await r.done(t);
       }
     });
@@ -642,7 +655,10 @@ void main() {
           ('words', <String>['cat', 'dog', 'sun', 'pig'], 'eng'),
           ('words', <String>['кот', 'дом', 'сон', 'нос'], 'rus'),
         ]) {
-          final Rig r = Rig(words(c.$3, c.$2, id: c.$1), c.$1);
+          final Rig r = Rig(
+            words(c.$3, c.$2, id: c.$1, face: c.$2.every((String w) => w.length == 1) ? 'letter' : null),
+            c.$1,
+          );
           await r.pump(t, size: b.value);
           final List<Rect> tiles = <Rect>[
             for (final String id in <String>[for (int i = 1; i <= c.$2.length; i++) 'o$i'])
@@ -671,7 +687,10 @@ void main() {
     test('the width of a tile: 96 for letters, buttons and pictures; wide for words; the same for the hint\'s geometry', () {
       const ActivitySpec phone = ActivitySpec.phone;
       final TapAnswerActivity w = Rig(words('eng', <String>['cat', 'dog', 'sun']), 'words').activity;
-      final TapAnswerActivity l = Rig(words('eng', <String>['a', 'b', 'c']), 'words').activity;
+      final TapAnswerActivity l = Rig(
+        words('eng', <String>['a', 'b', 'c'], face: 'letter'),
+        'words',
+      ).activity;
       expect(TapGeometry.tileWidthOf(l, phone), 96);
       expect(TapGeometry.tileWidthOf(w, phone), 534 / 3 - 24);
       expect(

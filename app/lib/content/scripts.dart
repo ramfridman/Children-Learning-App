@@ -99,6 +99,17 @@ List<String> hebrewLineProblems(String text) {
 String stripDirectionControls(String run) =>
     String.fromCharCodes(run.runes.where((int r) => !_isDirectionControl(r)));
 
+/// Whether [text] is one letter, or a digraph, or a vowel sign on one letter: at most two letters, the combining marks (a stress mark,
+/// nikud) not counted. Such a text could be a letter tile, so an item whose options all are this must say what it is (`answer.face`).
+bool isSingleLetter(String text) {
+  int letters = 0;
+  for (final int r in text.runes) {
+    final bool mark = (r >= 0x0300 && r <= 0x036F) || _isHebrewPoint(r);
+    if (!mark) letters++;
+  }
+  return letters <= 2;
+}
+
 /// The words of [text]: runs of letters and combining marks, cut at spaces and punctuation.
 List<String> wordsOf(String text) {
   final List<String> out = <String>[];

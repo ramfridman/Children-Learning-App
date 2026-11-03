@@ -665,6 +665,9 @@ SObject? activitySchemaFor(String template) => switch (template) {
             // Which side of a two-way skill this item is, and the item it is paired with in a check (frame section 2.3).
             'pole': const SField(SEnum(poles), required: false),
             'pairWith': const SField(_id, required: false),
+            // What the text tiles are: `letter` (square, large, bold) or `word` (Medium, as wide as the row allows). The text never
+            // decides: an item whose options are all one or two letters must say which it is (the validator). Missing is `word`.
+            'face': const SField(SEnum(<String>['letter', 'word']), required: false),
           },
         ),
       ),

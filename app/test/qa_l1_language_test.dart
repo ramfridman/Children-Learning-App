@@ -107,7 +107,11 @@ Map<String, Object?> _textItem(
       textOption('o${i + 1}', w, tag: i == 0 ? null : p.tag(i.isOdd ? 'lis.sem' : 'lis.guess')),
   ],
   correct: 'o1',
-  answer: answer,
+  // An item of one-letter options says it is a letter item, and one of syllables or words that it is words.
+  answer: <String, Object?>{
+    'face': words.every((String w) => w.runes.length == 1) ? 'letter' : 'word',
+    ...answer,
+  },
 );
 
 void _skill(LangPack p, String id, Map<String, Object?> fields) {

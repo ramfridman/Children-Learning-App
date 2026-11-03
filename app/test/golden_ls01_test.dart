@@ -91,7 +91,7 @@ Future<void> _shot(WidgetTester t, String name, String board, {int wait = 600}) 
   await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/ls01_${name}_$board.png'));
 }
 
-LangPack _wordsPack(String course, List<String> w, String prompt) {
+LangPack _wordsPack(String course, List<String> w, String prompt, {String? face}) {
   final LangPack p = LangPack(course);
   p.add(
     tapJson(
@@ -109,6 +109,7 @@ LangPack _wordsPack(String course, List<String> w, String prompt) {
       ],
       correct: 'o1',
       target: 'vo:$course.words.word',
+      answer: <String, Object?>{'face': ?face},
     ),
   );
   return p;
@@ -159,7 +160,7 @@ void main() {
       testWidgets('letters on square tiles', (WidgetTester t) async {
         await _open(
           t,
-          _wordsPack('eng', <String>['b', 'd', 'p'], 'הַקְשִׁיבוּ, וּגְעוּ בָּאוֹת.'),
+          _wordsPack('eng', <String>['b', 'd', 'p'], 'הַקְשִׁיבוּ, וּגְעוּ בָּאוֹת.', face: 'letter'),
           'words',
           b.value,
         );

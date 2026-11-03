@@ -235,10 +235,7 @@ class TapAnswerSession extends TemplateSession {
     // Numerals sit on square tiles; a set of things gets a wider one, as wide as the row allows.
     final bool sets = activity.options.any((ChoiceOption o) => o.set != null);
     final double width = TapGeometry.tileWidthOf(activity, spec);
-    final bool letterItem = isLetterItem(<String>[
-      for (final ChoiceOption o in activity.options)
-        if (o.text != null) o.text!,
-    ]);
+    final bool letterItem = activity.letterFace;
     return ListenableBuilder(
       listenable: this,
       builder: (BuildContext c, Widget? _) => Directionality(

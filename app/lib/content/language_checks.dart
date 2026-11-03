@@ -81,6 +81,7 @@ void checkLanguageContent({
       );
     }
     _distractors(file, a, tags, say);
+    _face(file, a, say);
     _countInCourse(file, a, say);
     _decodable(file, a, texts, skills, taughtCache, say);
     _pairs(file, id, a, activities, skills, say);
@@ -251,6 +252,40 @@ void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, O
         path,
         '$tag is an accent tag: a difference of accent is never marked, so it is never on a distractor',
       );
+    }
+  }
+}
+
+// ---- the face of text tiles ----
+
+/// The face of the text tiles is the item's to say, never the text's: an item whose options are all one or two letters (a letter, a
+/// digraph, `on`, a short own name) must name its `answer.face`, `letter` or `word`, so that no author gets it wrong by accident; a
+/// letter item holds nothing longer than that.
+void _face(String file, Map<String, Object?> a, Say say) {
+  final Map<String, Object?> answer = _map(a['answer']);
+  final List<String> texts = <String>[
+    for (final Map<String, Object?> o in _maps(answer['options']))
+      if (o['text'] is String) o['text']! as String,
+  ];
+  if (texts.isEmpty) return;
+  final Object? face = answer['face'];
+  if (face == null && texts.every(isSingleLetter)) {
+    say(
+      file,
+      'answer.face',
+      'every option is one or two letters: say whether the tiles are `letter` (square, large, bold) or `word`',
+    );
+  }
+  if (face == 'letter') {
+    for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
+      final Object? t = o['text'];
+      if (t is String && !isSingleLetter(t)) {
+        say(
+          file,
+          'answer.options[$i].text',
+          '"$t" is longer than a letter or a digraph: a letter item holds letters only',
+        );
+      }
     }
   }
 }

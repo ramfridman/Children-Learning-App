@@ -864,4 +864,78 @@ void main() {
       },
     );
   });
+
+  group('the item says the face of its text tiles', () {
+    LangPack shortItem(String course, List<String> w, {String? face}) {
+      final LangPack p = LangPack(course);
+      p.add(
+        tapJson(
+          course: course,
+          id: 'face',
+          options: <Map<String, Object?>>[
+            textOption('o1', w[0]),
+            textOption('o2', w[1], tag: p.tag('lis.sem')),
+            textOption('o3', w[2], tag: p.tag('lis.guess')),
+          ],
+          correct: 'o1',
+          answer: <String, Object?>{'face': ?face},
+        ),
+      );
+      return p;
+    }
+
+    test('an item whose options are all one or two letters must say letter or word, in every course', () {
+      for (final (String, List<String>) c in <(String, List<String>)>[
+        ('eng', <String>['on', 'up', 'in']),
+        ('eng', <String>['sh', 'ch', 'th']),
+        ('eng', <String>['a', 'b', 'c']),
+        ('rus', <String>['да', 'он', 'ёж']),
+        ('heb', <String>['בֵּן', 'טַל', 'דָּן']),
+      ]) {
+        final LangPack p = shortItem(c.$1, c.$2);
+        expect(
+          _run(p.pack),
+          _refused('activity.${c.$1}.face.json › answer.face', 'say whether the tiles are `letter`'),
+          reason: '${c.$2}',
+        );
+        for (final String face in <String>['letter', 'word']) {
+          expect(_run(shortItem(c.$1, c.$2, face: face).pack), isEmpty, reason: '${c.$2} $face');
+        }
+      }
+    });
+
+    test('an item with any longer option needs no marker, and may still say word', () {
+      expect(_run(shortItem('eng', <String>['on', 'cat', 'sun']).pack), isEmpty);
+      expect(_run(shortItem('eng', <String>['on', 'cat', 'sun'], face: 'word').pack), isEmpty);
+    });
+
+    test('a letter item holds letters and digraphs only', () {
+      final LangPack p = shortItem('eng', <String>['a', 'b', 'cat'], face: 'letter');
+      expect(
+        _run(p.pack),
+        _refused('activity.eng.face.json › answer.options[2].text', 'a letter item holds letters only'),
+      );
+    });
+
+    test('the face is one of letter and word', () {
+      final LangPack p = shortItem('eng', <String>['a', 'b', 'c'], face: 'maybe');
+      expect(_run(p.pack), isNotEmpty);
+    });
+
+    test('a picture item and a sound item have no face to say', () {
+      final LangPack p = LangPack();
+      p.add(
+        tapJson(
+          id: 'pic',
+          options: <Map<String, Object?>>[
+            pictureOption('o1', 'flower_red'),
+            pictureOption('o2', 'flower_yellow', tag: p.tag('lis.sem')),
+            pictureOption('o3', 'butterfly', tag: p.tag('lis.guess')),
+          ],
+          correct: 'o1',
+        ),
+      );
+      expect(_run(p.pack), isEmpty);
+    });
+  });
 }
