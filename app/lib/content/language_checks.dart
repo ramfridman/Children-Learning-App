@@ -81,6 +81,7 @@ void checkLanguageContent({
       );
     }
     _distractors(file, a, tags, say);
+    _classifiers(file, a, tags, say);
     _face(file, a, say);
     _countInCourse(file, a, say);
     _decodable(file, a, texts, skills, taughtCache, say);
@@ -253,6 +254,20 @@ void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, O
         file,
         path,
         '$tag is an accent tag: a difference of accent is never marked, so it is never on a distractor',
+      );
+    }
+  }
+}
+
+/// The tag a classifier of a free response (the drum) maps a count to is never an accent tag: a difference of accent is never marked.
+void _classifiers(String file, Map<String, Object?> a, Map<String, Map<String, Object?>> tags, Say say) {
+  for (final (int i, Map<String, Object?> c) in _maps(_map(a['answer'])['classifiers']).indexed) {
+    final Object? tag = c['misconception'];
+    if (tag is String && tags[tag]?['kind'] == 'accent') {
+      say(
+        file,
+        'answer.classifiers[$i].misconception',
+        '$tag is an accent tag: a difference of accent is never marked, so it is never on a classifier',
       );
     }
   }

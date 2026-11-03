@@ -148,6 +148,7 @@ sealed class Activity {
     'listen_do' => ListenDoActivity._(json, assets),
     'sing_along' => SingAlongActivity._(json, assets),
     'puppet_talk' => PuppetTalkActivity._(json, assets),
+    'sound_boxes' => SoundBoxesActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
@@ -595,6 +596,52 @@ class PuppetTalkActivity extends Activity implements ChoiceActivity {
       for (final ChoiceOption o in options)
         if (o.misconception != null) o.misconception!,
   };
+}
+
+/// The sound-boxes template in drum mode (LS03, docs/languages/frame.md section 2.3): a word is heard with its picture and the child taps
+/// a drum once for each part. A free response: a count of [beats] is right; one more and one fewer map to a tag ([moreTag],
+/// [fewerTag]); any other count is a retry with no tag.
+class SoundBoxesActivity extends Activity {
+  SoundBoxesActivity._(super.json, super.assets)
+    : picture = _map(json['scene'])['picture']! as String,
+      word = <String>[for (final Object? c in _map(json['scene'])['word']! as List<Object?>) c! as String],
+      slow = <String>[
+        for (final Object? c in (_map(json['scene'])['slow'] as List<Object?>?) ?? const <Object?>[])
+          c! as String,
+      ],
+      drumClip = _map(json['scene'])['drum'] as String?,
+      beats = _map(json['answer'])['beats']! as int,
+      moreTag = _classified(json, 'one_more'),
+      fewerTag = _classified(json, 'one_fewer'),
+      super._();
+
+  static String? _classified(Map<String, Object?> json, String when) {
+    for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers'])) {
+      if (c['when'] == when) return c['misconception']! as String;
+    }
+    return null;
+  }
+
+  /// The word's picture (an `asset:` reference), the clips of the word, the same slowly, and the sound of a tap on the drum.
+  final String picture;
+  final List<String> word;
+  final List<String> slow;
+  final String? drumClip;
+
+  /// How many parts the word has.
+  final int beats;
+  final String? moreTag;
+  final String? fewerTag;
+
+  /// The tag for a count of [taps], or empty: one more and one fewer are named, any other count is not.
+  String tagFor(int taps) =>
+      taps == beats + 1 ? (moreTag ?? '') : (taps == beats - 1 ? (fewerTag ?? '') : '');
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?moreTag, ?fewerTag};
 }
 
 /// A bin of the sort-and-drag template: a picture (or a set of them) that shows the rule, and its name.

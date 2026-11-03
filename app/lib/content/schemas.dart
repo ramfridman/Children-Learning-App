@@ -48,6 +48,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'listen_do': '1.0',
   'sing_along': '1.0',
   'puppet_talk': '1.0',
+  'sound_boxes': '1.0',
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
@@ -585,6 +586,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'listen_do',
       'sing_along',
       'puppet_talk',
+      'sound_boxes',
       'count_tap',
       'give_n',
       'flash',
@@ -1269,6 +1271,43 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // LS03, drum mode (Band A; the boxes and colours of Bands B and C are L5): the word is heard with its picture and the child taps a drum
+  // once for each part. Free response: there are no options, so no fixed distractors; a count one more or one fewer than `beats` is
+  // mapped to a tag (`classifiers`), any other count is a retry with no tag. The response is the count (`n=3`).
+  'sound_boxes' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The picture of the word.
+          'picture': SField(_asset),
+          // The word, heard with its picture; the same word slowly, with a pause between the beats; and the sound of a tap on the drum.
+          'word': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+          'slow': SField(SArray(_vo, minItems: 1, maxItems: 2), required: false),
+          'drum': SField(_vo, required: false),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('drum')),
+          'mode': SField(SConst('drum')),
+          // How many parts the word has: the right number of taps (1 to 6).
+          'beats': SField(SInt(min: 1, max: 6)),
+          // `one_more` and `one_fewer` to the tag each one is evidence for. Any other count is a retry with no tag.
+          'classifiers': SField(
+            SArray(
+              SObject(<String, SField>{
+                'when': SField(SEnum(<String>['one_more', 'one_fewer'])),
+                'misconception': SField(_tag),
+              }),
+              maxItems: 2,
+              uniqueKey: 'when',
+            ),
+          ),
+        }),
+      ),
+    }),
+  ),
   'trace' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1326,6 +1365,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.listen_do': activitySchemaFor('listen_do')!,
   'activity.sing_along': activitySchemaFor('sing_along')!,
   'activity.puppet_talk': activitySchemaFor('puppet_talk')!,
+  'activity.sound_boxes': activitySchemaFor('sound_boxes')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,

@@ -57,6 +57,7 @@ import 'spot_error_session.dart';
 import 'listen_do_session.dart';
 import 'puppet_talk_session.dart';
 import 'sing_along_session.dart';
+import 'sound_boxes_session.dart';
 import 'story_session.dart';
 import 'template_session.dart';
 
@@ -387,6 +388,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         StoryActivity() => StorySession(c, a, stress: caption.stress),
         ListenDoActivity() => ListenDoSession(c, a, stress: caption.stress),
         SingAlongActivity() => SingAlongSession(c, a, stress: caption.stress),
+        SoundBoxesActivity() => SoundBoxesSession(c, a),
         PuppetTalkActivity() => PuppetTalkSession(
           c,
           a,

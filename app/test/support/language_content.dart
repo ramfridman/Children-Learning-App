@@ -520,3 +520,46 @@ Map<String, Object?> puppetJson({
           },
   };
 }
+
+// ---- the drum (LS03) ----
+
+/// A drum item of [course] (LS03): the word [word] with its picture, [beats] parts, and the tags a count one more and one fewer map to.
+Map<String, Object?> drumJson({
+  String course = 'eng',
+  required String id,
+  String? skill,
+  String picture = 'cat',
+  required int beats,
+  String? more,
+  String? fewer,
+  String purpose = 'learn',
+  bool slow = true,
+  bool drumSound = true,
+}) => <String, Object?>{
+  ..._common(
+    course,
+    id,
+    skill ?? '${course.toUpperCase()}-A-02',
+    'sound_boxes',
+    '1.0',
+    purpose,
+    'A',
+    'concrete',
+  ),
+  ..._lines('$course.$id', promptText: 'הַקְשִׁיבוּ לַמִּלָּה, וְתוֹפְפוּ פַּעַם אַחַת לְכׇל חֵלֶק.'),
+  'scene': <String, Object?>{
+    'picture': 'asset:$picture',
+    'word': <String>['vo:$course.$id.word'],
+    if (slow) 'slow': <String>['vo:$course.$id.slow'],
+    if (drumSound) 'drum': 'vo:$course.drum',
+  },
+  'answer': <String, Object?>{
+    'type': 'drum',
+    'mode': 'drum',
+    'beats': beats,
+    'classifiers': <Object?>[
+      if (more != null) <String, Object?>{'when': 'one_more', 'misconception': more},
+      if (fewer != null) <String, Object?>{'when': 'one_fewer', 'misconception': fewer},
+    ],
+  },
+};

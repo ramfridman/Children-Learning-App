@@ -330,6 +330,22 @@ List<Problem> validatePack({
       case 'puppet_talk':
         checkAsset(file, 'scene.background', scene['background']);
         _puppetTalk(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'sound_boxes':
+        checkAsset(file, 'scene.background', scene['background']);
+        checkAsset(file, 'scene.picture', scene['picture']);
+        for (final String k in <String>['word', 'slow']) {
+          for (final (int i, Object? c) in ((scene[k] as List<Object?>?) ?? const <Object?>[]).indexed) {
+            checkVo(file, 'scene.$k[$i]', c);
+          }
+        }
+        checkVo(file, 'scene.drum', scene['drum']);
+        for (final (int i, Map<String, Object?> c) in _maps(answer['classifiers']).indexed) {
+          checkTag(file, 'answer.classifiers[$i].misconception', c['misconception']);
+        }
+        // A free response is evidence of one thing only: whether the child can count the parts. It is never the check of a skill alone.
+        if (a['purpose'] == 'check') {
+          say(file, 'purpose', 'a drum item is never a check: its answer is free, with no distractors');
+        }
       case 'count_tap':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
