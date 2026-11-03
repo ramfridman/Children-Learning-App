@@ -54,3 +54,217 @@ w-yabloko,яблоко,я́блоко,[ˈjabləkə],я,standard Russian,stress o
 sen-1,Я вижу кошку.,Я ви́жу ко́шку.,[ja ˈvʲiʐʊ ˈkoʂkʊ],ви; кош,standard Russian,ко́шка said for ко́шку,the ending у clearly heard,draft
 sen-2,Это кот.,Э́то кот.,[ˈɛtə kot],э; кот,standard Russian,full o in это,это with a reduced end,draft
 aw-moloko,молоко,мо-ло-ко́,[mo.lo.ˈko],ко,standard Russian (as-written clip),used as a speaking model,each syllable with a full o; only for skills C-11 and C-21,draft
+w-privet,Привет!,Приве́т!,[prʲɪˈvʲet],вет,standard Russian,full е in при; hard в,при reduced to [prʲɪ]; soft в; a friendly greeting,draft
+w-poka,Пока!,Пока́!,[pɐˈka],ка,standard Russian,stress on по; full о,reduced first vowel [ɐ]; stress on ка,draft
+w-zdravstvuj,Здравствуй!,Здра́вствуй!,[ˈzdrastvʊj],здра,standard Russian,the first в pronounced; stress moved,no first в; stress on здра,draft
+w-do-svidanija,До свидания!,До свида́ния!,[də svʲɪˈdanʲɪjə],да,standard Russian,full о in до; the phrase split into two stresses,"one stress, on да; до reduced",draft
+w-da,Да.,Да.,[da],да,standard Russian,none expected,a clear calm yes,draft
+w-net,Нет.,Нет.,[nʲet],нет,standard Russian,hard н,"soft н; a calm, kind no",draft
+w-na,На!,На!,[na],на,standard Russian,said as a question,"a warm ""here you are"" while giving",draft
+w-papa,папа,па́па,[ˈpapə],па,standard Russian,final stress (Hebrew habit); full a at the end,stress on the first па; the end reduced,draft
+w-babushka,бабушка,ба́бушка,[ˈbabʊʂkə],ба,standard Russian,stress on бу; soft ш,stress on ба; hard [ʂ],draft
+w-dedushka,дедушка,де́душка,[ˈdʲedʊʂkə],де,standard Russian,hard д; stress on ду,soft д; stress on де,draft
+w-brat,брат,брат,[brat],брат,standard Russian,uvular р,a trilled or tapped р,draft
+w-sestra,сестра,сестра́,[sʲɪˈstra],стра,standard Russian,full е; stress on сес,reduced first vowel; stress on стра,draft
+w-malysh,малыш,малы́ш,[mɐˈɫɨʂ],лыш,standard Russian,ы said as и; soft ш,"dark л, a true ы, hard [ʂ]",draft
+w-malchik,мальчик,ма́льчик,[ˈmalʲtɕɪk],маль,standard Russian,hard л (ь ignored); hard ч,soft л and a soft ч,draft
+w-devochka,девочка,де́вочка,[ˈdʲevətɕkə],де,standard Russian,full о in во; stress on во,stress on де; во reduced,draft
+w-semja,семья,семья́,[sʲɪˈmʲja],мья,standard Russian,no [j] after м (сем-я); full е,soft м then [j]: [mʲja],draft
+w-golova,голова,голова́,[ɡəɫɐˈva],ва,standard Russian,full о in every syllable,"two reduced vowels, stress on ва",draft
+w-nos,нос,нос,[nos],нос,standard Russian,none expected,a clear [o],draft
+w-rot,рот,рот,[rot],рот,standard Russian,uvular р,a trilled or tapped р,draft
+w-glaza,глаза,глаза́,[ɡɫɐˈza],за,standard Russian,stress on гла,dark л; stress on за,draft
+w-ushi,уши,у́ши,[ˈuʂɨ],у,standard Russian,ши with [i],hard ш and [ɨ] after it,draft
+w-ruki,руки,ру́ки,[ˈrukʲɪ],ру,standard Russian,stress on ки (from рука́),stress on ру; soft к,draft
+w-nogi,ноги,но́ги,[ˈnoɡʲɪ],но,standard Russian,stress on ги (from нога́),stress on но; soft г,draft
+w-zhivot,живот,живо́т,[ʐɨˈvot],вот,standard Russian,жи with [i],hard ж and [ɨ]; stress on вот,draft
+w-paltsy,пальцы,па́льцы,[ˈpalʲt͡sɨ],паль,standard Russian,hard л; цы with [i],soft л; hard ц and [ɨ],draft
+w-zuby,зубы,зу́бы,[ˈzubɨ],зу,standard Russian,ы said as и,a true ы at the end,draft
+w-volosy,волосы,во́лосы,[ˈvoɫəsɨ],во,standard Russian,stress on ло; full о,stress on во; ло reduced,draft
+ch-pokazhi-golovu,Покажи голову!,Покажи́ го́лову!,[pəkɐˈʐɨ ˈɡoɫəvʊ],жи; го,standard Russian,го́лову stressed on ва or ло (copied from голова́),the stress moves: го́лову; жи with [ɨ],draft
+ch-pokazhi-nos,Покажи нос!,Покажи́ нос!,[pəkɐˈʐɨ ˈnos],жи; нос,standard Russian,жи with [i]; full о in по,hard ж and [ɨ]; по reduced,draft
+ch-pokazhi-rot,Покажи рот!,Покажи́ рот!,[pəkɐˈʐɨ ˈrot],жи; рот,standard Russian,as ch-pokazhi-nos; uvular р,as ch-pokazhi-nos,draft
+ch-pokazhi-glaza,Покажи глаза!,Покажи́ глаза́!,[pəkɐˈʐɨ ɡɫɐˈza],жи; за,standard Russian,stress on гла,stress on за,draft
+ch-pokazhi-ushi,Покажи уши!,Покажи́ у́ши!,[pəkɐˈʐɨ ˈuʂɨ],жи; у,standard Russian,ши with [i],hard ш and [ɨ],draft
+ch-pokazhi-ruki,Покажи руки!,Покажи́ ру́ки!,[pəkɐˈʐɨ ˈrukʲɪ],жи; ру,standard Russian,stress on ки,stress on ру,draft
+ch-pokazhi-nogi,Покажи ноги!,Покажи́ но́ги!,[pəkɐˈʐɨ ˈnoɡʲɪ],жи; но,standard Russian,stress on ги,stress on но,draft
+ch-pokazhi-zhivot,Покажи живот!,Покажи́ живо́т!,[pəkɐˈʐɨ ʐɨˈvot],жи; вот,standard Russian,жи with [i] twice,hard ж and [ɨ] in both,draft
+ch-pokazhi-paltsy,Покажи пальцы!,Покажи́ па́льцы!,[pəkɐˈʐɨ ˈpalʲt͡sɨ],жи; паль,standard Russian,hard л,soft л; hard ц,draft
+ch-pokazhi-zuby,Покажи зубы!,Покажи́ зу́бы!,[pəkɐˈʐɨ ˈzubɨ],жи; зу,standard Russian,ы said as и,a true ы,draft
+ch-pokazhi-volosy,Покажи волосы!,Покажи́ во́лосы!,[pəkɐˈʐɨ ˈvoɫəsɨ],жи; во,standard Russian,stress on ло,stress on во,draft
+w-idi,Иди!,Иди́!,[ɪˈdʲi],ди,standard Russian,stress on и,stress on ди; soft д,draft
+w-begi,Беги!,Беги́!,[bʲɪˈɡʲi],ги,standard Russian,stress on бе; hard г,stress on ги; soft б and г,draft
+w-prygaj,Прыгай!,Пры́гай!,[ˈprɨɡəj],пры,standard Russian,ы said as и; stress on гай,a true ы; stress on пры,draft
+w-sjad,Сядь!,Сядь!,[sʲætʲ],сядь,standard Russian,final д voiced or hard,"soft с, a final soft [tʲ]",draft
+w-vstan,Встань!,Встань!,[fstanʲ],встань,standard Russian,в voiced; final н hard,в as [f]; a soft final н,draft
+w-hlopaj,Хлопай!,Хло́пай!,[ˈxɫopəj],хло,standard Russian,х too weak or like Hebrew ח,a light [x]; dark л; stress on хло,draft
+ch-vozmi-mjach,Возьми мяч!,Возьми́ мяч!,[vɐzʲˈmʲi ˈmʲætɕ],ми; мяч,standard Russian,full о; hard з,reduced first vowel; soft з,draft
+w-koshka,кошка,ко́шка,[ˈkoʂkə],кош,standard Russian,soft ш; full a at the end,hard [ʂ]; the end reduced,draft
+w-kot,кот,кот,[kot],кот,standard Russian,none expected,a clear [o]; same pitch as w-kit when paired,draft
+w-sobaka,собака,соба́ка,[sɐˈbakə],ба,standard Russian,full о in со,reduced first vowel; stress on ба,draft
+w-korova,корова,коро́ва,[kɐˈrovə],ро,standard Russian,full о in ко; uvular р,reduced first vowel; stress on ро,draft
+w-loshad,лошадь,ло́шадь,[ˈɫoʂətʲ],ло,standard Russian,final д voiced; full a in шадь,a final soft [tʲ]; шадь reduced,draft
+w-svinja,свинья,свинья́,[svʲɪˈnʲja],нья,standard Russian,no [j] after н,soft н then [j],draft
+w-koza,коза,коза́,[kɐˈza],за,standard Russian,stress on ко,stress on за,draft
+w-utka,утка,у́тка,[ˈutkə],ут,standard Russian,full a at the end,stress on у; the end reduced,draft
+w-kuritsa,курица,ку́рица,[ˈkurʲɪt͡sə],ку,standard Russian,stress on ри; soft ц,stress on ку; hard ц,draft
+w-petuh,петух,пету́х,[pʲɪˈtux],тух,standard Russian,х like Hebrew ח,a light [x]; stress on тух,draft
+w-mysh,мышь,мышь,[mɨʂ],мышь,standard Russian,ы said as и; soft ш from ь,a true ы; hard [ʂ] (ь changes nothing here),draft
+w-zajats,заяц,за́яц,[ˈzajɪt͡s],за,standard Russian,stress on яц,stress on за; hard ц,draft
+w-medved,медведь,медве́дь,[mʲɪdˈvʲetʲ],ведь,standard Russian,final д voiced,a final soft [tʲ],draft
+w-volk,волк,волк,[voɫk],волк,standard Russian,clear Hebrew-like л,a dark [ɫ],draft
+w-belka,белка,бе́лка,[ˈbʲeɫkə],бел,standard Russian,hard б; soft л,"soft б, dark л",draft
+w-slon,слон,слон,[sɫon],слон,standard Russian,a vowel between с and л,one syllable; dark л,draft
+w-ptitsa,птица,пти́ца,[ˈptʲit͡sə],пти,standard Russian,a vowel between п and т,one cluster [ptʲ]; hard ц,draft
+w-kit,кит,кит,[kʲit],кит,standard Russian,hard к,soft к; same pitch as w-kot when paired,draft
+w-krasnyj,красный,кра́сный,[ˈkrasnɨj],крас,standard Russian,ый said as [ij],a true [ɨj] at the end,draft
+w-sinij,синий,си́ний,[ˈsʲinʲɪj],си,standard Russian,hard н,soft с and н,draft
+w-zholtyj,жёлтый,жёлтый,[ˈʐoɫtɨj],жёл,standard Russian,ё said as е,[o] after a hard ж; dark л,draft
+w-zeljonyj,зелёный,зелёный,[zʲɪˈlʲonɨj],лё,standard Russian,ё said as е; stress on зе,stress on лё; soft з and л,draft
+w-belyj,белый,бе́лый,[ˈbʲeɫɨj],бе,standard Russian,soft л; ы said as и,"soft б, dark л, a true ы",draft
+w-chornyj,чёрный,чёрный,[ˈtɕornɨj],чёр,standard Russian,hard ч like Hebrew צ׳,a soft [tɕ],draft
+w-sok,сок,сок,[sok],сок,standard Russian,none expected,a clear [o]; same pitch as w-sup when paired,draft
+w-syr,сыр,сыр,[sɨr],сыр,standard Russian,ы said as и; uvular р,a true ы; a trilled р,draft
+w-sup,суп,суп,[sup],суп,standard Russian,none expected,a final [p] with no vowel,draft
+w-kasha,каша,ка́ша,[ˈkaʂə],ка,standard Russian,soft ш,hard [ʂ],draft
+w-jajtso,яйцо,яйцо́,[jɪjˈt͡so],цо,standard Russian,stress on яй; full я,stress on цо; яй reduced to [jɪj],draft
+w-chaj,чай,чай,[tɕaj],чай,standard Russian,hard ч,a soft [tɕ],draft
+w-pechenje,печенье,пече́нье,[pʲɪˈtɕenʲjə],че,standard Russian,no [j] before the end,soft н then [j]; stress on че,draft
+w-banan,банан,бана́н,[bɐˈnan],нан,standard Russian,stress on ба (as in Hebrew בננה),stress on нан,draft
+w-grusha,груша,гру́ша,[ˈɡruʂə],гру,standard Russian,soft ш,hard [ʂ],draft
+w-apelsin,апельсин,апельси́н,[ɐpʲɪlʲˈsʲin],син,standard Russian,hard л,soft л; stress on син,draft
+w-klubnika,клубника,клубни́ка,[kɫʊbˈnʲikə],ни,standard Russian,stress on клуб,stress on ни,draft
+w-vinograd,виноград,виногра́д,[vʲɪnɐˈɡrat],град,standard Russian,final д voiced,a final [t],draft
+w-arbuz,арбуз,арбу́з,[ɐrˈbus],буз,standard Russian,final з voiced,a final [s],draft
+w-morkov,морковь,морко́вь,[mɐrˈkofʲ],ковь,standard Russian,final в voiced or hard,a final soft [fʲ],draft
+w-ogurets,огурец,огуре́ц,[ɐɡʊˈrʲet͡s],рец,standard Russian,stress on гу; soft ц,stress on рец; hard ц,draft
+w-pomidor,помидор,помидо́р,[pəmʲɪˈdor],дор,standard Russian,full о in по,stress on дор; по reduced,draft
+w-kartoshka,картошка,карто́шка,[kɐrˈtoʂkə],тош,standard Russian,soft ш,hard [ʂ]; stress on тош,draft
+w-kukla,кукла,ку́кла,[ˈkukɫə],кук,standard Russian,a vowel between к and л,one cluster [kɫ]; dark л,draft
+w-mashina,машина,маши́на,[mɐˈʂɨnə],ши,standard Russian,ши with [i],hard ш and [ɨ],draft
+w-kubiki,кубики,ку́бики,[ˈkubʲɪkʲɪ],ку,standard Russian,stress on би,stress on ку,draft
+w-mishka,мишка,ми́шка,[ˈmʲiʂkə],миш,standard Russian,hard м; said like мы́шка,soft м and и; same pitch as w-myshka when paired,draft
+w-sharik,шарик,ша́рик,[ˈʂarʲɪk],ша,standard Russian,soft ш; hard р,hard [ʂ]; soft р,draft
+w-piramidka,пирамидка,пирами́дка,[pʲɪrɐˈmʲitkə],мид,standard Russian,д voiced before к,a [t] before к,draft
+w-kniga,книга,кни́га,[ˈknʲiɡə],кни,standard Russian,a vowel between к and н,one cluster [knʲ],draft
+w-karandash,карандаш,каранда́ш,[kərɐnˈdaʂ],даш,standard Russian,stress on ран,stress on даш; hard [ʂ],draft
+w-jula,юла,юла́,[jʊˈɫa],ла,standard Russian,stress on ю,stress on ла; dark л,draft
+w-knizhka,книжка,кни́жка,[ˈknʲiʂkə],книж,standard Russian,ж voiced before к,a voiceless [ʂ] before к (it rhymes with ми́шка),draft
+w-shapka,шапка,ша́пка,[ˈʂapkə],шап,standard Russian,soft ш,hard [ʂ],draft
+w-kurtka,куртка,ку́ртка,[ˈkurtkə],кур,standard Russian,a vowel in the cluster ртк,two syllables only,draft
+w-platje,платье,пла́тье,[ˈpɫatʲjə],пла,standard Russian,no [j] after т,soft т then [j],draft
+w-futbolka,футболка,футбо́лка,[fʊdˈboɫkə],бол,standard Russian,stress on фут (English football),stress on бол; т voiced before б,draft
+w-shtany,штаны,штаны́,[ʂtɐˈnɨ],ны,standard Russian,ы said as и; stress on шта,stress on ны; a true ы,draft
+w-noski,носки,носки́,[nɐˈskʲi],ки,standard Russian,stress on нос,stress on ки,draft
+w-botinki,ботинки,боти́нки,[bɐˈtʲinkʲɪ],тин,standard Russian,hard т,soft т; stress on тин,draft
+w-sapogi,сапоги,сапоги́,[səpɐˈɡʲi],ги,standard Russian,stress on по,stress on ги,draft
+w-sharf,шарф,шарф,[ʂarf],шарф,standard Russian,soft ш,hard [ʂ]; one syllable,draft
+w-varezhki,варежки,ва́режки,[ˈvarʲɪʂkʲɪ],ва,standard Russian,ж voiced before к; stress on ре,stress on ва; [ʂ] before к,draft
+w-nosok,носок,носо́к,[nɐˈsok],сок,standard Russian,stress on нос,stress on сок,draft
+n-1,один,оди́н,[ɐˈdʲin],дин,standard Russian,full о,reduced first vowel; soft д,draft
+n-2,два,два,[dva],два,standard Russian,a vowel between д and в,one syllable,draft
+n-3,три,три,[trʲi],три,standard Russian,uvular р,a trilled soft р,draft
+n-4,четыре,четы́ре,[tɕɪˈtɨrʲɪ],ты,standard Russian,ы said as и; stress on че,a true ы; stress on ты,draft
+n-5,пять,пять,[pʲætʲ],пять,standard Russian,hard т at the end,soft п and a soft final т,draft
+n-6,шесть,шесть,[ʂɛsʲtʲ],шесть,standard Russian,soft ш,hard [ʂ]; a soft end,draft
+n-7,семь,семь,[sʲemʲ],семь,standard Russian,hard м at the end,a soft final м,draft
+n-8,восемь,во́семь,[ˈvosʲɪmʲ],во,standard Russian,stress on семь,stress on во,draft
+n-9,девять,де́вять,[ˈdʲevʲɪtʲ],де,standard Russian,full я,вять reduced to [vʲɪtʲ],draft
+n-10,десять,де́сять,[ˈdʲesʲɪtʲ],де,standard Russian,full я,сять reduced to [sʲɪtʲ],draft
+ch-chto-eto,Что это?,Что э́то?,[ʂto ˈɛtə],что; э,standard Russian,что said [tʃto],a hard [ʂ] at the start; a question,draft
+ch-kto-eto,Кто это?,Кто э́то?,[kto ˈɛtə],кто; э,standard Russian,a vowel between к and т,one syllable кто; a question,draft
+ch-eto-mjach,Это мяч.,Э́то мяч.,[ˈɛtə ˈmʲætɕ],э; мяч,standard Russian,full о in это,это with a reduced end,draft
+ch-eto-kukla,Это кукла.,Э́то ку́кла.,[ˈɛtə ˈkukɫə],э; кук,standard Russian,as ch-eto-mjach,as ch-eto-mjach,draft
+ch-eto-koshka,Это кошка.,Э́то ко́шка.,[ˈɛtə ˈkoʂkə],э; кош,standard Russian,as ch-eto-mjach,as ch-eto-mjach,draft
+ch-eto-sobaka,Это собака.,Э́то соба́ка.,[ˈɛtə sɐˈbakə],э; ба,standard Russian,as ch-eto-mjach,as ch-eto-mjach,draft
+ch-eto-jabloko,Это яблоко.,Э́то я́блоко.,[ˈɛtə ˈjabləkə],э; я,standard Russian,stress on ло,stress on я,draft
+ch-eto-banan,Это банан.,Э́то бана́н.,[ˈɛtə bɐˈnan],э; нан,standard Russian,stress on ба,stress on нан,draft
+ch-eto-moloko,Это молоко.,Э́то молоко́.,[ˈɛtə məlɐˈko],э; ко,standard Russian,full о,reduced vowels; stress on ко,draft
+ch-eto-mama,Это мама.,Э́то ма́ма.,[ˈɛtə ˈmamə],э; ма,standard Russian,final stress,stress on the first ма,draft
+ch-eto-papa,Это папа.,Э́то па́па.,[ˈɛtə ˈpapə],э; па,standard Russian,final stress,stress on the first па,draft
+ch-eto-babushka,Это бабушка.,Э́то ба́бушка.,[ˈɛtə ˈbabʊʂkə],э; ба,standard Russian,stress on бу,stress on ба,draft
+ch-eto-mashina,Это машина.,Э́то маши́на.,[ˈɛtə mɐˈʂɨnə],э; ши,standard Russian,ши with [i],hard ш and [ɨ],draft
+ch-eto-kot-q,Это кот?,Э́то кот?,[ˈɛtə ˈkot],э; кот,standard Russian,said as a statement,a yes-no question: the voice rises on кот,draft
+ch-eto-mjach-q,Это мяч?,Э́то мяч?,[ˈɛtə ˈmʲætɕ],э; мяч,standard Russian,said as a statement,the voice rises on мяч,draft
+ch-eto-ryba-q,Это рыба?,Э́то ры́ба?,[ˈɛtə ˈrɨbə],э; ры,standard Russian,said as a statement; ы as и,the voice rises on ры,draft
+ch-eto-kukla-q,Это кукла?,Э́то ку́кла?,[ˈɛtə ˈkukɫə],э; кук,standard Russian,said as a statement,the voice rises on кук,draft
+ch-gde-mjach,Где мяч?,Где мяч?,[ɡdʲe ˈmʲætɕ],мяч,standard Russian,a vowel between г and д,"one syllable где; a question word, the voice falls on мяч",draft
+ch-gde-koshka,Где кошка?,Где ко́шка?,[ɡdʲe ˈkoʂkə],кош,standard Russian,as ch-gde-mjach,as ch-gde-mjach,draft
+ch-gde-mysh,Где мышь?,Где мышь?,[ɡdʲe ˈmɨʂ],мышь,standard Russian,ы said as и,a true ы,draft
+ch-gde-shapka,Где шапка?,Где ша́пка?,[ɡdʲe ˈʂapkə],шап,standard Russian,soft ш,hard [ʂ],draft
+ch-gde-jabloko,Где яблоко?,Где я́блоко?,[ɡdʲe ˈjabləkə],я,standard Russian,stress on ло,stress on я,draft
+ch-gde-mama,Где мама?,Где ма́ма?,[ɡdʲe ˈmamə],ма,standard Russian,final stress,stress on the first ма,draft
+ch-vot-mjach,Вот мяч!,Вот мяч!,[vot ˈmʲætɕ],мяч,standard Russian,вот stressed louder than the noun,the noun carries the stress,draft
+ch-vot-koshka,Вот кошка!,Вот ко́шка!,[vot ˈkoʂkə],кош,standard Russian,as ch-vot-mjach,as ch-vot-mjach,draft
+ch-vot-mysh,Вот мышь!,Вот мышь!,[vot ˈmɨʂ],мышь,standard Russian,ы said as и,a true ы,draft
+ch-vot-shapka,Вот шапка!,Вот ша́пка!,[vot ˈʂapkə],шап,standard Russian,soft ш,hard [ʂ],draft
+ch-vot-jabloko,Вот яблоко!,Вот я́блоко!,[vot ˈjabləkə],я,standard Russian,stress on ло,stress on я,draft
+ch-vot-mama,Вот мама!,Вот ма́ма!,[vot ˈmamə],ма,standard Russian,final stress,stress on the first ма,draft
+ch-daj-mjach,"Дай, пожалуйста, мяч.","Дай, пожа́луйста, мяч.",[daj pɐˈʐaɫəstə ˈmʲætɕ],жа; мяч,standard Russian,every letter of пожалуйста pronounced,"пожалуйста fluent [pɐˈʐaɫəstə]; a polite, warm request",draft
+ch-daj-sok,"Дай, пожалуйста, сок.","Дай, пожа́луйста, сок.",[daj pɐˈʐaɫəstə ˈsok],жа; сок,standard Russian,as ch-daj-mjach,as ch-daj-mjach,draft
+ch-daj-sup,"Дай, пожалуйста, суп.","Дай, пожа́луйста, суп.",[daj pɐˈʐaɫəstə ˈsup],жа; суп,standard Russian,as ch-daj-mjach,as ch-daj-mjach,draft
+ch-daj-hleb,"Дай, пожалуйста, хлеб.","Дай, пожа́луйста, хлеб.",[daj pɐˈʐaɫəstə ˈxlʲep],жа; хлеб,standard Russian,final б voiced,a final [p],draft
+ch-daj-jabloko,"Дай, пожалуйста, яблоко.","Дай, пожа́луйста, я́блоко.",[daj pɐˈʐaɫəstə ˈjabləkə],жа; я,standard Russian,stress on ло,stress on я,draft
+ch-daj-banan,"Дай, пожалуйста, банан.","Дай, пожа́луйста, бана́н.",[daj pɐˈʐaɫəstə bɐˈnan],жа; нан,standard Russian,stress on ба,stress on нан,draft
+ch-daj-karandash,"Дай, пожалуйста, карандаш.","Дай, пожа́луйста, каранда́ш.",[daj pɐˈʐaɫəstə kərɐnˈdaʂ],жа; даш,standard Russian,stress on ран,stress on даш,draft
+ch-hochu-syr,Я хочу сыр.,Я хочу́ сыр.,[ja xɐˈtɕu ˈsɨr],чу; сыр,standard Russian,full о in хо; hard ч,reduced хо; a soft ч; a true ы,draft
+ch-hochu-apelsin,Я хочу апельсин.,Я хочу́ апельси́н.,[ja xɐˈtɕu ɐpʲɪlʲˈsʲin],чу; син,standard Russian,as ch-hochu-syr,as ch-hochu-syr,draft
+ch-hochu-moloko,Я хочу молоко.,Я хочу́ молоко́.,[ja xɐˈtɕu məlɐˈko],чу; ко,standard Russian,full о,reduced vowels; stress on ко,draft
+ch-menja-zovut,Меня зовут {puppet}.,Меня́ зову́т {puppet}.,[mʲɪˈnʲa zɐˈvut …],ня; вут,standard Russian,stress on ме or зо,stress on ня and вут; the puppet's name pending (design-director),draft
+ch-kak-tebja-zovut,Как тебя зовут?,Как тебя́ зову́т?,[kak tʲɪˈbʲa zɐˈvut],бя; вут,standard Russian,stress on те or зо,a warm question; stress on бя and вут,draft
+ch-ochen-prijatno,Очень приятно!,О́чень прия́тно!,[ˈotɕɪnʲ prʲɪˈjatnə],о; ят,standard Russian,stress on чень,stress on о and ят,draft
+ch-horosho,Хорошо!,Хорошо́!,[xərɐˈʂo],шо,standard Russian,full о in every syllable,"two reduced vowels, stress on шо",draft
+ch-kto-u-tebja-v-seme,Кто у тебя в семье?,Кто у тебя́ в семье́?,[kto ʊ tʲɪˈbʲa fsʲɪˈmʲje],бя; мье,standard Russian,в voiced; no [j] in семье,в as [f]; soft м then [j],draft
+ch-u-menja-est,У меня есть мама и бабушка.,У меня́ есть ма́ма и ба́бушка.,[ʊ mʲɪˈnʲa jesʲtʲ ˈmamə i ˈbabʊʂkə],ня; есть; ма; ба,standard Russian,есть said without [j],[jesʲtʲ]; four stresses,draft
+ch-zdorovo,Здорово!,Здо́рово!,[ˈzdorəvə],здо,standard Russian,"stress on ро (здоро́во is a different word, a greeting)","stress on здо: ""great!""",draft
+st1-t,Собака и мяч,Соба́ка и мяч.,[sɐˈbakə i ˈmʲætɕ],ба; мяч,standard Russian,none expected,"a title, calm",draft
+st1-1,Вот собака. Вот мяч.,Вот соба́ка. Вот мяч.,[vot sɐˈbakə ‖ vot ˈmʲætɕ],ба; мяч,standard Russian,вот stressed,two short sentences with a pause,draft
+st1-2,"Собака бежит. Бежит, бежит!","Соба́ка бежи́т. Бежи́т, бежи́т!",[sɐˈbakə bʲɪˈʐɨt ‖ bʲɪˈʐɨt bʲɪˈʐɨt],ба; жит,standard Russian,жи with [i],"hard ж and [ɨ]; lively, the repeated line",draft
+st1-3,Вот мяч! Собака рада.,Вот мяч! Соба́ка ра́да.,[vot ˈmʲætɕ ‖ sɐˈbakə ˈradə],мяч; ба; ра,standard Russian,stress on да,stress on ра; happy,draft
+st2-t,Ёжик и яблоко,Ёжик и я́блоко.,[ˈjoʐɨk i ˈjabləkə],ё; я,standard Russian,ё said as е,[jo] at the start,draft
+st2-1,Вот ёжик. Ёжик идёт.,Вот ёжик. Ёжик идёт.,[vot ˈjoʐɨk ‖ ˈjoʐɨk ɪˈdʲot],ё; дёт,standard Russian,ё said as е; жи with [i],[jo]; hard ж and [ɨ]; stress on дёт,draft
+st2-2,Ой! Вот яблоко. Красное яблоко!,Ой! Вот я́блоко. Кра́сное я́блоко!,[oj ‖ vot ˈjabləkə ‖ ˈkrasnəjə ˈjabləkə],я; крас,standard Russian,full о and е in красное,"красное reduced [ˈkrasnəjə]; surprised, then pleased",draft
+st2-3,Ёжик ест яблоко. Ням-ням!,Ёжик ест я́блоко. Ням-ням!,[ˈjoʐɨk jesʲt ˈjabləkə ‖ nʲamˈnʲam],ё; ест; я; ням,standard Russian,ест said without [j],[jesʲt]; ням-ням playful,draft
+st3-1,Вот девочка. Вот снег.,Вот де́вочка. Вот снег.,[vot ˈdʲevətɕkə ‖ vot ˈsʲnʲek],де; снег,standard Russian,final г voiced,a final [k],draft
+st3-2,Холодно! Где шапка?,Хо́лодно! Где ша́пка?,[ˈxoɫədnə ‖ ɡdʲe ˈʂapkə],хо; шап,standard Russian,stress on ло,"stress on хо; a little cold, looking around",draft
+st3-3,Вот шапка! Тепло.,Вот ша́пка! Тепло́.,[vot ˈʂapkə ‖ tʲɪˈpɫo],шап; пло,standard Russian,stress on те,stress on пло; content,draft
+rh1,"Вот лохматый добрый пёс, / У него холодный нос.","Вот лохма́тый до́брый пёс, у него́ холо́дный нос.",[vot ɫɐxˈmatɨj ˈdobrɨj pʲos ‖ ʊ nʲɪˈvo xɐˈɫodnɨj nos],ма; до; пёс; во; ло; нос,standard Russian,него with [ɡ]; ё said as е,"него [nʲɪˈvo]; a steady chant beat, the rhyme пёс / нос clear",draft
+rh1-gap,"Вот лохматый добрый пёс, / У него холодный …","Вот лохма́тый до́брый пёс, у него́ холо́дный…",[vot ɫɐxˈmatɨj ˈdobrɨj pʲos ‖ ʊ nʲɪˈvo xɐˈɫodnɨj],ма; до; пёс; во; ло,standard Russian,as rh1,"as rh1, ending on an expectant pause",draft
+rh2,"Улыбается наш кот, / Широко открыл он рот.","Улыба́ется наш кот, широко́ откры́л он рот.",[ʊɫɨˈbajɪt͡sə naʂ kot ‖ ʂɨrɐˈko ɐtˈkrɨɫ on rot],ба; кот; ко; крыл; рот,standard Russian,ется / тся said as written; ши with [i],[ˈbajɪt͡sə]; hard ш and [ɨ],draft
+rh2-gap,"Улыбается наш кот, / Широко открыл он …","Улыба́ется наш кот, широко́ откры́л он…",[ʊɫɨˈbajɪt͡sə naʂ kot ‖ ʂɨrɐˈko ɐtˈkrɨɫ on],ба; кот; ко; крыл,standard Russian,as rh2,"as rh2, ending on an expectant pause",draft
+rh3,В море синем тихо спит / Самый добрый в мире кит.,В мо́ре си́нем ти́хо спит са́мый до́брый в ми́ре кит.,[ˈvmorʲɪ ˈsʲinʲɪm ˈtʲixə spʲit ‖ ˈsamɨj ˈdobrɨj ˈvmʲirʲɪ kʲit],мо; си; ти; спит; са; до; ми; кит,standard Russian,в said as a separate syllable,"в joined to the next word; quiet, sleepy",draft
+rh3-gap,В море синем тихо спит / Самый добрый в мире …,В мо́ре си́нем ти́хо спит са́мый до́брый в ми́ре…,[ˈvmorʲɪ ˈsʲinʲɪm ˈtʲixə spʲit ‖ ˈsamɨj ˈdobrɨj ˈvmʲirʲɪ],мо; си; ти; спит; са; до; ми,standard Russian,as rh3,"as rh3, ending on an expectant pause",draft
+rh4,"Пьёт котёнок сладкий сок, / Потерял он свой носок.","Пьёт котёнок сла́дкий сок, потеря́л он свой носо́к.",[pʲjot kɐˈtʲonək ˈsɫatkʲɪj sok ‖ pətʲɪˈrʲaɫ on svoj nɐˈsok],пьёт; тё; слад; сок; рял; свой; сок,standard Russian,ё said as е; д voiced before к,[pʲjot]; [ˈsɫatkʲɪj],draft
+rh4-gap,"Пьёт котёнок сладкий сок, / Потерял он свой …","Пьёт котёнок сла́дкий сок, потеря́л он свой…",[pʲjot kɐˈtʲonək ˈsɫatkʲɪj sok ‖ pətʲɪˈrʲaɫ on svoj],пьёт; тё; слад; сок; рял; свой,standard Russian,as rh4,"as rh4, ending on an expectant pause",draft
+rh5,"Спит в кроватке мишка, / Под подушкой — книжка.","Спит в крова́тке ми́шка, под поду́шкой — кни́жка.",[spʲit fkrɐˈvatkʲɪ ˈmʲiʂkə ‖ pət pɐˈduʂkəj ˈknʲiʂkə],спит; ват; миш; душ; книж,standard Russian,в voiced; д voiced in под,в as [f]; под as [pət]; the rhyme ми́шка / кни́жка,draft
+rh5-gap,"Спит в кроватке мишка, / Под подушкой — …","Спит в крова́тке ми́шка, под поду́шкой…",[spʲit fkrɐˈvatkʲɪ ˈmʲiʂkə ‖ pət pɐˈduʂkəj],спит; ват; миш; душ,standard Russian,as rh5,"as rh5, ending on an expectant pause",draft
+w-jozhik,ёжик,ёжик,[ˈjoʐɨk],ё,standard Russian,ё said as е; жи with [i],[jo] at the start; hard ж and [ɨ],draft
+w-pjos,пёс,пёс,[pʲos],пёс,standard Russian,ё said as е,soft п and [o],draft
+w-spit,спит,спит,[spʲit],спит,standard Russian,a vowel before с,one syllable; soft п,draft
+sy-sobaka,со-ба-ка,со… ба́… ка,[so ‖ ˈba ‖ ka],ба,standard Russian (syllables clip),used as a speaking model,three even beats; full vowels allowed in this clip type,draft
+sy-mashina,ма-ши-на,ма… ши́… на,[ma ‖ ˈʂɨ ‖ na],ши,standard Russian (syllables clip),ши with [i],three even beats; hard ш,draft
+sy-moloko,мо-ло-ко,мо… ло… ко́,[mo ‖ lo ‖ ˈko],ко,standard Russian (syllables clip),used as a speaking model,three even beats,draft
+sy-babushka,ба-бу-шка,ба́… бу… шка,[ˈba ‖ bu ‖ ʂka],ба,standard Russian (syllables clip),four beats (бу-ш-ка),three beats,draft
+sy-karandash,ка-ран-даш,ка… ран… да́ш,[ka ‖ ran ‖ ˈdaʂ],даш,standard Russian (syllables clip),used as a speaking model,three beats,draft
+sy-mama,ма-ма,ма́… ма,[ˈma ‖ ma],ма,standard Russian (syllables clip),none expected,two beats,draft
+sy-ryba,ры-ба,ры́… ба,[ˈrɨ ‖ ba],ры,standard Russian (syllables clip),ы said as и,two beats,draft
+sy-kukla,ку-кла,ку́… кла,[ˈku ‖ kɫa],ку,standard Russian (syllables clip),three beats (ку-ку-ла),two beats,draft
+sy-utka,у-тка,у́… тка,[ˈu ‖ tka],у,standard Russian (syllables clip),three beats,two beats,draft
+sy-koshka,ко-шка,ко́… шка,[ˈko ‖ ʂka],ко,standard Russian (syllables clip),three beats,two beats,draft
+sf-mama,мама,м-м-ма́ма,[ˈmːamə],ма,standard Russian,a vowel before the held м; эм,"м held about one second, then the word natural",draft
+sf-sok,сок,с-с-сок,[sːok],сок,standard Russian,эс; a vowel after the held с,"с held about one second, then the word",draft
+sf-shapka,шапка,ш-ш-ша́пка,[ˈʂːapkə],шап,standard Russian,soft ш,"a hard ш held, then the word",draft
+sf-nos,нос,н-н-нос,[nːos],нос,standard Russian,эн,"н held, then the word",draft
+sf-ryba,рыба,р-р-ры́ба,[ˈrːɨbə],ры,standard Russian,uvular р,"a trilled р held, then the word",draft
+w-dom,дом,дом,[dom],дом,standard Russian,none expected,a clear [o],draft
+w-shar,шар,шар,[ʂar],шар,standard Russian,soft ш,hard [ʂ],draft
+w-myshka,мышка,мы́шка,[ˈmɨʂkə],мыш,standard Russian,ы said as и (then it is ми́шка),hard м and a true ы; same pitch as w-mishka,draft
+w-rys,рысь,рысь,[rɨsʲ],рысь,standard Russian,ы said as и (then it is рис); hard final с,a true ы; a soft final с; same pitch as w-ris,draft
+w-ris,рис,рис,[rʲis],рис,standard Russian,hard р,soft р and и; same pitch as w-rys,draft
+w-zhuk,жук,жук,[ʐuk],жук,standard Russian,soft ж,hard [ʐ],draft
+syl-ly,лы,лы,[ɫɨ],лы,standard Russian,said as ли,dark л and a true ы; same pitch as syl-li,draft
+syl-li,ли,ли,[lʲi],ли,standard Russian,none expected,soft л and и,draft
+syl-no,но,но,[no],но,standard Russian,none expected,hard н; same pitch as syl-njo,draft
+syl-njo,нё,нё,[nʲo],нё,standard Russian,said as но or as н + ё [njo],soft н merged with о,draft
+syl-sy,сы,сы,[sɨ],сы,standard Russian,said as си,hard с and a true ы; same pitch as syl-si,draft
+syl-si,си,си,[sʲi],си,standard Russian,none expected,soft с and и,draft

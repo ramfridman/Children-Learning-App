@@ -4,7 +4,7 @@ Owner: hebrew-language-teacher. Status: **draft** (2026-11-03). Nothing was voic
 **No paid step is in this brief.** Claude never runs `voice_gen generate`, `audition` or `audition-batch run`, never calls api.elevenlabs.io and never reads or sets `ELEVENLABS_API_KEY` (CLAUDE.md). Every audition and generation is run and paid for by the owner, after he sees the character count.
 Skills: `syllabus.md`. Evidence: `docs/research/hebrew-course-2026-11-03.md`. Method: `.claude/skills/pronunciation-spec/SKILL.md`.
 
-**The Hebrew below was edited by the hebrew-text-editor on 2026-11-03 and is `text-ready`** (waiting for the owner's approval): letter and vowel names, nikud and stress are confirmed, and the open questions of §2 are settled (reasons and the checks: `docs/agents/hebrew-notes.md` §8). Two points still wait for the owner (the name of ז, and the spoken names יוּד and קוּף): `hebrew-notes.md` §8.7. The voice director gives the direction only after the owner approves.
+**The Hebrew below was edited by the hebrew-text-editor on 2026-11-03 and is `text-ready`** (waiting for the owner's approval): letter and vowel names, nikud and stress are confirmed, and the open questions of §2 are settled (reasons and the checks: `docs/agents/hebrew-notes.md` §8). The owner approved the letter names יוּד, קוּף, וָו and זַיִן on 2026-11-03 (`docs/languages/frame.md` §8).
 
 ## 1. What the teaching voice must do
 
@@ -39,7 +39,7 @@ Columns follow the `pronunciation-spec` skill. `say` is left empty here: it is f
 | ד | דָּלֶת | DÁ-let (מלעיל) | [d] | no: דָּ | — |
 | ה | הֵא | one syllable | [h]; silent at the end | weak; prefer הָ | a final ה is silent |
 | ו | וָו (decided: not וָיו, which a child reads as "va-yo") | one syllable, said [vav] | [v]; part of וֹ [o] and וּ [u] | yes, stretched | consonant vs vowel letter |
-| ז | זַיִן | ZÁ-yin (מלעיל) | [z] | yes, stretched | the name is also a slang word that children may know; owner decides (`hebrew-notes.md` §8.7, question 2) |
+| ז | זַיִן | ZÁ-yin (מלעיל) | [z] | yes, stretched | the name is also a slang word that children may know; the owner approved זַיִן on 2026-11-03 |
 | ח | חֵית | one syllable | [χ] | yes, stretched | not pharyngeal |
 | ט | טֵית | one syllable | [t] | no: טָ | homophone of ת |
 | י | יוּד (decided: the spoken name; the Academy's יוֹד is also right) | one syllable | [j]; part of ִי [i] and ֵי [e] | no: יָ | consonant vs vowel letter |
