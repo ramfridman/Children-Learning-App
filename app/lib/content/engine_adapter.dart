@@ -12,6 +12,7 @@ Catalog engineCatalog(PackContent content) {
       for (final SkillDoc s in content.skills.values)
         SkillNode(
           id: s.id,
+          course: s.course,
           prerequisites: s.prerequisites,
           core: s.core,
           representations: <Representation>{for (final String r in s.representations) rep(r)},
@@ -28,6 +29,7 @@ Catalog engineCatalog(PackContent content) {
       for (final Activity a in content.activities.values)
         ItemMeta(
           id: a.id,
+          course: a.course,
           skills: <String, double>{for (final Skill s in a.skills) s.id: s.weight},
           purpose: purposeOf(a.purpose),
           checkType: checkTypeOf(a.checkType),
@@ -44,6 +46,7 @@ Catalog engineCatalog(PackContent content) {
       for (final TagDoc t in content.tags.values)
         TagInfo(
           id: t.id,
+          course: t.course,
           skills: t.skills,
           repairActivities: t.repairActivities,
           preferredRepresentations: <Representation>[

@@ -145,7 +145,7 @@ class SyncEngine {
   static final String _namespace = Namespace.url.value;
 
   /// The wire format of this build (see [wireFormat]).
-  static const int currentWireFormat = 1;
+  static const int currentWireFormat = 2;
 
   /// The wire format the rows refused by the server were last reset under (SEC-12). Not the key of the engine version that
   /// came before it (`sync_refused_reset_version`): the first start of the build that brought this resets once more, which

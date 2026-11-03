@@ -1,6 +1,8 @@
 // Plain data the engine works with. No clock, no database, no widgets: the app turns its pack documents and
 // its `attempt` rows into these, and the simulator makes them up.
 
+import 'course.dart';
+
 enum Result { correct, incorrect, unsure }
 
 enum Representation { concrete, pictorial, story, embodied, symbolic }
@@ -42,6 +44,7 @@ CheckType checkTypeOf(String s) => switch (s) {
 class SkillNode {
   const SkillNode({
     required this.id,
+    this.course = Course.core,
     this.prerequisites = const <String, double>{},
     this.core = false,
     this.representations = const <Representation>{},
@@ -55,6 +58,9 @@ class SkillNode {
   });
 
   final String id;
+
+  /// The course this skill belongs to (`core` for every land that exists today). A skill never relates to another course.
+  final String course;
 
   /// Prerequisite skill id to the weight of the edge (0 to 1).
   final Map<String, double> prerequisites;
@@ -83,6 +89,7 @@ class ItemMeta {
   const ItemMeta({
     required this.id,
     required this.skills,
+    this.course = Course.core,
     this.purpose = Purpose.practice,
     this.checkType = CheckType.practice,
     this.representation = Representation.concrete,
@@ -96,6 +103,9 @@ class ItemMeta {
   });
 
   final String id;
+
+  /// The course of the item: the course of every skill, tag and repair it names.
+  final String course;
 
   /// Skill id to the weight of the evidence this item gives for it.
   final Map<String, double> skills;
@@ -125,12 +135,14 @@ class ItemMeta {
 class TagInfo {
   const TagInfo({
     required this.id,
+    this.course = Course.core,
     this.skills = const <String>[],
     this.repairActivities = const <String>[],
     this.preferredRepresentations = const <Representation>[],
   });
 
   final String id;
+  final String course;
 
   /// The skills this misconception traces back to, most likely first.
   final List<String> skills;
@@ -179,4 +191,15 @@ class Catalog {
     for (final ItemMeta i in items.values)
       if (i.skills.containsKey(skillId)) i,
   ];
+
+  /// The courses that have at least one skill here.
+  Set<String> get courses => <String>{for (final SkillNode s in skills.values) s.course};
+
+  /// Only [course]: its skills, its items and its misconception tags. A visit plays one course, and an engine built on this
+  /// view cannot see, serve or learn from another course's data.
+  Catalog forCourse(String course) => Catalog(
+    skills: skills.values.where((SkillNode s) => s.course == course),
+    items: items.values.where((ItemMeta i) => i.course == course),
+    tags: tags.values.where((TagInfo t) => t.course == course),
+  );
 }

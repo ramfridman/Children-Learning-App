@@ -11,6 +11,7 @@ import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/schema.dart';
 import 'package:nitznutz/content/schemas.dart';
+import 'package:nitznutz/engine/course.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/engine/types.dart';
 import 'package:nitznutz/rewards/award.dart';
@@ -18,6 +19,7 @@ import 'package:nitznutz/rewards/reward_rules.dart';
 import 'package:nitznutz/sync/sync_engine.dart';
 import 'package:nitznutz/world/world_state.dart';
 
+import 'support/sample_pack.dart';
 import 'support/starter.dart';
 
 Map<String, Object?> _m(Object? o) => o! as Map<String, Object?>;
@@ -91,6 +93,39 @@ void main() {
     expect(bad, isEmpty, reason: 'sync-push would refuse these');
   });
 
+  test(
+    'everything a language course\'s pack carries fits too: dotted skill ids, language tag ids, its pack id',
+    () {
+      for (final String course in Course.languages) {
+        final PackContent lang = PackContent.fromPack(SamplePack.language(course).verified());
+        final List<String> bad = <String>[];
+        void check(String key, Object? value) {
+          if (!fits(key, value)) bad.add('$key = $value');
+        }
+
+        check('pack_id', lang.packId);
+        check('course', lang.course);
+        for (final Activity a in lang.activities.values) {
+          check('skill_id', a.skillId);
+        }
+        for (final String t in lang.tags.keys) {
+          check('misconception_tag', t);
+        }
+        for (final String s in <String>[
+          '${course.toUpperCase()}-B-19.G1',
+          '${course.toUpperCase()}-B-14.S10',
+        ]) {
+          check('skill_id', s);
+          check('key', Awards.star(s));
+        }
+        expect(bad, isEmpty, reason: '$course: sync-push would refuse these');
+      }
+      expect(fits('course', 'fra'), isFalse);
+      expect(fits('skill_id', 'ENG-B-19.g1'), isFalse);
+      expect(fits('misconception_tag', 'eng.ph'), isFalse);
+    },
+  );
+
   test('the pack schema bounds every id an answer carries by the server\'s own length', () {
     int maxOf(SField f) => (f.schema as SString).maxLength;
     final Map<String, SField> lesson = lessonSchema.fields;
@@ -141,6 +176,7 @@ void main() {
   test('the wire format number follows testvectors/wire-patterns.json: change the file, raise the number', () {
     const Map<int, String> pinned = <int, String>{
       1: '7e97bab38490a13af04d450cbc10057dbe948a10abe9a577dd3ba2232df16cf1',
+      2: '13b732637eb5d446281f7acb58239871733c8341d7ba9665a9fa3cda5ac884aa',
     };
     final String digest = sha256.convert(utf8.encode(jsonEncode(wire))).toString();
     expect(

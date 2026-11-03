@@ -208,6 +208,54 @@ Deno.test("sync-push: events are numbered by the server, a retry changes nothing
   assert.equal(pulled.events[1].type, "session");
 });
 
+Deno.test("sync-push: an answer of a language course carries its course, a dotted skill id and a language tag, and nothing else about it", async () => {
+  const { h, parent, child, profile, attempt, j } = await setup();
+  await call(h.put, parent, "child-put", profile());
+  const english = attempt({
+    pack_id: "lang-eng",
+    skill_id: "ENG-B-19.G1",
+    course: "eng",
+    misconception_tag: "eng.ph.dir",
+    result: "incorrect",
+  });
+  const plainCore = attempt({ course: "core" });
+  const noCourse = attempt({ pack_id: "lang-heb", skill_id: "HEB-B-14.S10", misconception_tag: "" });
+  const pushed = await j(await call(h.push, child, "sync-push", { events: [english, plainCore, noCourse] }));
+  assert.equal(pushed.accepted, 3, "the course is optional; the lands send none");
+  const pulled = await j(await call(h.pull, parent, "sync-pull", { after: 0, limit: 10 }));
+  assert.equal(pulled.events[0].data.course, "eng");
+  assert.equal(pulled.events[0].data.skill_id, "ENG-B-19.G1");
+  for (
+    const bad of [
+      { course: "fra" },
+      { course: "ENG" },
+      { skill_id: "ENG-B-19.g1" },
+      { skill_id: "ENG-B-19.G123" },
+      { skill_id: "ENG-B-19.G1.G2" },
+      { misconception_tag: "eng.ph.Dir" },
+      { misconception_tag: "eng.ph" },
+      { misconception_tag: "english.ph.dir" },
+      { misconception_tag: "eng.ph." + "x".repeat(25) },
+    ]
+  ) {
+    assert.equal(
+      (await call(h.push, child, "sync-push", { events: [attempt(bad)] })).status,
+      400,
+      JSON.stringify(bad),
+    );
+  }
+  const star = { kind: "star", key: "star:HEB-B-14.S1" };
+  const reward = {
+    id: crypto.randomUUID(),
+    child_id: KID,
+    at: NOON,
+    engine: 1,
+    type: "reward",
+    data: star,
+  };
+  assert.equal((await call(h.push, child, "sync-push", { events: [reward] })).status, 200);
+});
+
 Deno.test("sync-push: a reward is a kind and an award key and nothing else; a parent's phone pulls it", async () => {
   const { h, parent, child, profile, j } = await setup();
   await call(h.put, parent, "child-put", profile());

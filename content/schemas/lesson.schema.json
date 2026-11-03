@@ -20,6 +20,15 @@
         "approved"
       ]
     },
+    "course": {
+      "type": "string",
+      "enum": [
+        "core",
+        "eng",
+        "heb",
+        "rus"
+      ]
+    },
     "revision": {
       "type": "integer",
       "minimum": 1,
@@ -61,8 +70,8 @@
       "items": {
         "type": "string",
         "minLength": 6,
-        "maxLength": 11,
-        "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2})$"
+        "maxLength": 14,
+        "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2}(?:\\.[A-Z][0-9]{1,2})?)$"
       },
       "minItems": 1,
       "maxItems": 10

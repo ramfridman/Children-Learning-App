@@ -19,9 +19,15 @@ Future<PackKey> newTestKey() async {
   );
 }
 
-/// Writes the sample pack as a source folder: pack.json, the JSON documents, the pictures and one recording.
-Directory writeSampleSource(Directory dir, {String version = '1.0.0', bool compact = false}) {
-  final SamplePack p = SamplePack();
+/// Writes the sample pack as a source folder: pack.json, the JSON documents, the pictures and one recording. With [sample]
+/// (for example `SamplePack.language('eng')`) the folder holds that pack, under its own id and course.
+Directory writeSampleSource(
+  Directory dir, {
+  String version = '1.0.0',
+  bool compact = false,
+  SamplePack? sample,
+}) {
+  final SamplePack p = sample ?? SamplePack();
   dir.createSync(recursive: true);
   void put(String name, List<int> bytes) =>
       File('${dir.path}${Platform.pathSeparator}$name').writeAsBytesSync(bytes);
@@ -38,9 +44,10 @@ Directory writeSampleSource(Directory dir, {String version = '1.0.0', bool compa
     utf8.encode(
       const JsonEncoder.withIndent('  ').convert(<String, Object?>{
         'schema': 'pack-source/v1',
-        'id': 'sample-pack',
+        'id': p.manifest['id'],
         'version': version,
         'minAppVersion': '0.1.0',
+        'course': ?p.manifest['course'],
         'assets': p.manifest['assets'],
         'vo': p.manifest['vo'],
       }),
@@ -50,7 +57,12 @@ Directory writeSampleSource(Directory dir, {String version = '1.0.0', bool compa
 }
 
 /// Builds the sample pack with [key] in a temporary folder.
-Future<BuiltPack> buildSamplePack(PackKey key, {String version = '1.0.0', bool compact = false}) async {
+Future<BuiltPack> buildSamplePack(
+  PackKey key, {
+  String version = '1.0.0',
+  bool compact = false,
+  SamplePack? sample,
+}) async {
   final Directory tmp = Directory.systemTemp.createTempSync('nn_src_');
   try {
     return await buildPack(
@@ -58,6 +70,7 @@ Future<BuiltPack> buildSamplePack(PackKey key, {String version = '1.0.0', bool c
         Directory('${tmp.path}${Platform.pathSeparator}src'),
         version: version,
         compact: compact,
+        sample: sample,
       ),
       key,
     );

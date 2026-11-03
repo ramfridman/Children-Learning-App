@@ -2,6 +2,11 @@
 // validator says. It holds one activity of each template, a lesson, a skill and a misconception.
 // File hashes here are placeholders: `validatePack` does not look at bytes (the installer does).
 
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:nitznutz/content/pack_verify.dart' show VerifiedPack;
+
 const String countFile = 'activity.count.butterflies.3.json';
 const String tapFile = 'activity.pick.red.flower.json';
 const String giveFile = 'activity.give.three.jar.json';
@@ -263,6 +268,50 @@ class SamplePack {
     };
     return SamplePack._(manifest, docs, names.toSet());
   }
+
+  /// The same small pack as a pack of a language [course] (not real content): the course on the manifest and on every
+  /// skill, activity, lesson and misconception; skills `ENG-A-01` and `ENG-A-02`; tags `eng.cnt.double`, `eng.cnt.skip`
+  /// and `eng.cnt.card`; the domain `languages`; the pack id `lang-eng`. Change it in place, as with [SamplePack.new].
+  factory SamplePack.language([String course = 'eng']) {
+    final SamplePack base = SamplePack();
+    final String up = course.toUpperCase();
+    String rename(String s) => s
+        .replaceAll('NUM-A-03', '$up-A-01')
+        .replaceAll('NUM-A-04', '$up-A-02')
+        .replaceAll('M-CNT-DOUBLE', '$course.cnt.double')
+        .replaceAll('M-CNT-SKIP', '$course.cnt.skip')
+        .replaceAll('M-CNT-CARD', '$course.cnt.card')
+        .replaceAll('sample-pack', 'lang-$course');
+    Object? walk(Object? v) => switch (v) {
+      final String s => v == 'numbers' ? 'languages' : rename(s),
+      final List<Object?> l => <Object?>[for (final Object? e in l) walk(e)],
+      final Map<String, Object?> m => <String, Object?>{
+        for (final MapEntry<String, Object?> e in m.entries) rename(e.key): walk(e.value),
+      },
+      _ => v,
+    };
+    final Map<String, Object?> docs = walk(base.docs)! as Map<String, Object?>;
+    for (final MapEntry<String, Object?> d in docs.entries) {
+      final Map<String, Object?> doc = d.value! as Map<String, Object?>;
+      if (<String>['activity', 'lesson', 'skill', 'misconception'].any(d.key.startsWith)) {
+        doc['course'] = course;
+      }
+    }
+    final Map<String, Object?> manifest = walk(base.manifest)! as Map<String, Object?>;
+    manifest['course'] = course;
+    return SamplePack._(manifest, docs, <String>{for (final String f in base.files) rename(f)});
+  }
+
+  /// The pack as the app holds one that passed `verifyPack`, but with no signature and no bytes: for tests of what is built
+  /// from the documents (the models, the engine's catalogue), which never look at either.
+  VerifiedPack verified() => VerifiedPack(
+    manifestBytes: Uint8List.fromList(utf8.encode(jsonEncode(manifest))),
+    signature: Uint8List(64),
+    manifestSha256: '0' * 64,
+    manifest: manifest,
+    docs: docs,
+    files: const <String, Uint8List>{},
+  );
 
   final Map<String, Object?> manifest;
 

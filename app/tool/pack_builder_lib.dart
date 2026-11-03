@@ -285,6 +285,8 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'id': pack['id'],
     'version': pack['version'],
     'minAppVersion': pack['minAppVersion'],
+    // A language pack names its course; a pack that does not is `core` and its manifest is exactly what it was before.
+    if (pack['course'] is String) 'course': pack['course'],
     'templates': <String, Object?>{for (final String t in (templates.keys.toList()..sort())) t: templates[t]},
     'files': <Object?>[
       for (final String n in names)

@@ -872,7 +872,7 @@ void main() {
       strict.forgets = <String>{};
       final int before = pushes();
       await s1.engine.syncOnce();
-      SyncEngine of({int engineVersion = 1, int wireFormat = 1}) => SyncEngine(
+      SyncEngine of({int engineVersion = 1, int wireFormat = SyncEngine.currentWireFormat}) => SyncEngine(
         db: s1.db,
         call: strict.callFor(dev1),
         deviceId: dev1,
@@ -887,7 +887,7 @@ void main() {
       expect(pushes(), before, reason: 'a new engine version alone resets nothing');
 
       // A new wire format: the refused rows are sent once more. The answer of the visit gets in; the bad row is refused again.
-      final SyncEngine upgraded = of(wireFormat: 2);
+      final SyncEngine upgraded = of(wireFormat: SyncEngine.currentWireFormat + 1);
       final SyncReport r = await upgraded.syncOnce();
       expect(r.pushedEvents, 1);
       expect(r.refusedEvents, 1);

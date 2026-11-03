@@ -1,3 +1,4 @@
+import '../engine/course.dart';
 import 'schema.dart';
 
 // The schemas of a content pack. Ids, tags and references use fixed shapes so that a file can never
@@ -9,8 +10,10 @@ abstract final class Patterns {
   static const String semver = r'\d{1,3}\.\d{1,3}\.\d{1,3}';
   static const String templateVersion = r'\d{1,2}\.\d{1,2}';
   static const String activityId = r'[a-z0-9][a-z0-9._-]{2,80}';
-  static const String skillId = r'[A-Z]{2,5}-[ABC]-\d{2}';
-  static const String tag = r'M-[A-Z]{2,5}-[A-Z0-9]{2,12}';
+  // `ENG-B-19.G1`: the group of a skill taught group by group (a dotted id, docs/languages/frame.md section 3.3.2).
+  static const String skillId = r'[A-Z]{2,5}-[ABC]-\d{2}(?:\.[A-Z][0-9]{1,2})?';
+  // `M-CNT-DOUBLE` in the existing lands; `eng.ph.dir` (course, strand, slug) in a language course.
+  static const String tag = r'M-[A-Z]{2,5}-[A-Z0-9]{2,12}|[a-z]{3}\.[a-z]{2,4}\.[a-z0-9_]{1,24}';
   static const String assetRef = r'asset:[a-z0-9_]{1,40}';
   static const String voRef = r'vo:[a-z0-9_.]{1,80}';
   static const String assetId = r'[a-z0-9_]{1,40}';
@@ -79,7 +82,10 @@ const Map<String, String> coinSprites = <String, String>{
   'n200': 'note_200',
 };
 
-const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math'];
+const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math', languagesDomain];
+
+/// The domain of every skill of a language course; the course itself says which language.
+const String languagesDomain = 'languages';
 const List<String> bands = <String>['A', 'B', 'C'];
 const List<String> representations = <String>['concrete', 'pictorial', 'story', 'embodied', 'symbolic'];
 
@@ -88,8 +94,12 @@ const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activ
 /// Every answer carries its lesson id, and `sync-push` takes at most 40 characters (SEC-12).
 const SString _lessonId = SString(minLength: 3, maxLength: 40, pattern: Patterns.activityId);
 const SString _characterId = SString(minLength: 3, maxLength: 41, pattern: Patterns.packId);
-const SString _tag = SString(minLength: 5, maxLength: 20, pattern: Patterns.tag);
-const SString _skill = SString(minLength: 6, maxLength: 11, pattern: Patterns.skillId);
+const SString _tag = SString(minLength: 5, maxLength: 36, pattern: Patterns.tag);
+const SString _skill = SString(minLength: 6, maxLength: 14, pattern: Patterns.skillId);
+
+/// The course of a document (docs/languages/frame.md section 1.5). Missing means `core`, so every pack that exists keeps
+/// its bytes; a language pack puts its course on the manifest and on every document, and the validator makes them agree.
+const SField _course = SField(SEnum(Course.all), required: false);
 const SString _vo = SString(minLength: 4, maxLength: 83, pattern: Patterns.voRef);
 const SString _asset = SString(minLength: 7, maxLength: 46, pattern: Patterns.assetRef);
 const SString _optionId = SString(minLength: 2, maxLength: 3, pattern: Patterns.optionId);
@@ -145,6 +155,7 @@ const SObject manifestSchema = SObject(<String, SField>{
   'id': SField(SString(minLength: 3, maxLength: 41, pattern: Patterns.packId)),
   'version': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
   'minAppVersion': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
+  'course': _course,
   // Template name to the version it needs. Names are not limited to the ones this app knows: a pack
   // that needs a newer template is still read this far, so it can be kept hidden instead of crashing.
   'templates': SField(
@@ -249,6 +260,7 @@ const SObject skillSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.skill)),
   'id': SField(_skill),
   'review': _review,
+  'course': _course,
   'domain': SField(SEnum(domains)),
   'band': SField(SEnum(bands)),
   'title': SField(_caption),
@@ -288,6 +300,7 @@ const SObject misconceptionSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.misconception)),
   'id': SField(_tag),
   'review': _review,
+  'course': _course,
   'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
   'parentText': SField(SString(minLength: 1, maxLength: 240)),
   // Something a parent can do at home in about five minutes (M7, pack 0.3.0). Plain Hebrew for the parent.
@@ -300,6 +313,7 @@ const SObject lessonSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.lesson)),
   'id': SField(_lessonId),
   'review': _review,
+  'course': _course,
   'revision': SField(_revision),
   'band': SField(SEnum(bands)),
   'title': SField(_caption),
@@ -377,7 +391,7 @@ const SObject _feedback = SObject(<String, SField>{
       SObject(<String, SField>{
         // "default", or "misconception:" followed by a tag from the catalogue.
         'when': SField(
-          SString(minLength: 7, maxLength: 40, pattern: r'default|misconception:M-[A-Z]{2,5}-[A-Z0-9]{2,12}'),
+          SString(minLength: 7, maxLength: 50, pattern: 'default|misconception:(?:${Patterns.tag})'),
         ),
         'vo': SField(_vo),
         'caption': SField(_caption),
@@ -432,6 +446,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
     ]),
   ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
+  'course': _course,
   'domain': const SField(SEnum(domains)),
   'band': const SField(SEnum(bands)),
   'skills': const SField(
@@ -969,6 +984,7 @@ const SObject packSourceSchema = SObject(<String, SField>{
   'id': SField(SString(minLength: 3, maxLength: 41, pattern: Patterns.packId)),
   'version': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
   'minAppVersion': SField(SString(minLength: 5, maxLength: 11, pattern: Patterns.semver)),
+  'course': _course,
   'assets': SField(_assetFiles),
   'vo': SField(_voFiles),
 });
