@@ -79,8 +79,11 @@ class LanguageProgress {
   final List<NoticeView> notices;
 }
 
-/// The strands of each course, in the order the page shows them, each with the strand codes of the skills it holds.
-const Map<String, List<(Str, Set<String>)>> _strands = <String, List<(Str, Set<String>)>>{
+/// The strands of each course, in the order the page shows them, each with the strand codes of the skills it holds. The
+/// codes are the lowercase strand codes of the three syllabi (frame §4.1); a code the table lacks would fall under "more
+/// topics", so a test reads the syllabus tables and checks every code is here. Russian numbers (`num`) are words heard and
+/// said, so they sit with listening and speaking.
+const Map<String, List<(Str, Set<String>)>> languageStrands = <String, List<(Str, Set<String>)>>{
   Course.eng: <(Str, Set<String>)>[
     (He.langStrandEngLisSpk, <String>{'lis', 'spk'}),
     (He.langStrandEngPhon, <String>{'pa', 'ph'}),
@@ -88,11 +91,11 @@ const Map<String, List<(Str, Set<String>)>> _strands = <String, List<(Str, Set<S
     (He.langStrandEngWrite, <String>{'wr'}),
   ],
   Course.heb: <(Str, Set<String>)>[
-    (He.langStrandHebOral, <String>{'ol', 'pk'}),
-    (He.langStrandHebCode, <String>{'dec'}),
+    (He.langStrandHebOral, <String>{'ol', 'pa'}),
+    (He.langStrandHebCode, <String>{'pk', 'dec', 'wr'}),
   ],
   Course.rus: <(Str, Set<String>)>[
-    (He.langStrandRusUnderstand, <String>{'voc', 'grm'}),
+    (He.langStrandRusUnderstand, <String>{'lis', 'spk', 'voc', 'grm', 'num'}),
     (He.langStrandRusSounds, <String>{'pho'}),
     (He.langStrandRusLetters, <String>{'let'}),
     (He.langStrandRusRead, <String>{'rea'}),
@@ -143,7 +146,7 @@ LanguageProgress buildLanguageProgress({
     );
   }
 
-  final List<(Str, Set<String>)> table = _strands[content.course] ?? const <(Str, Set<String>)>[];
+  final List<(Str, Set<String>)> table = languageStrands[content.course] ?? const <(Str, Set<String>)>[];
   final Set<String> known = <String>{for (final (Str, Set<String>) t in table) ...t.$2};
   final List<StrandProgress> strands = <StrandProgress>[
     for (final (Str name, Set<String> codes) in table)
