@@ -435,7 +435,12 @@ void main() {
         final int plain = shadows().length;
         glow.value = true;
         await tester.pump();
-        expect(shadows().length, still ? plain : plain + 1, reason: still ? 'reduced motion' : 'the glow');
+        // The glow is a gold rim and a pale light around it (docs/design/b42-daily-welcome.md).
+        expect(
+          shadows().length,
+          still ? plain : greaterThan(plain),
+          reason: still ? 'reduced motion' : 'the glow',
+        );
         glow.value = false;
         await tester.pump();
         expect(shadows().length, plain, reason: 'and it goes out');
