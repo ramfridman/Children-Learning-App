@@ -733,6 +733,7 @@ def eleven(text):
 COURSE_KEEP |= {canon(w) for w in (
     'וְאִמְרוּ',    # plain "ואמרו" is read "ve-amru" (and they said); here it is "ve-imru" (and say)
     'לֶחָבֵר',      # plain "לחבר" is also the infinitive "to connect"; here it is "to the friend"
+    'נְשַׂחֵק',     # the bottle's lines for a language stop (adventureLang…): plain "נשחק" is read with [ʃ] (and means "we will defeat")
 )}
 
 
@@ -754,7 +755,8 @@ def course_voice_text(text):
 
 # ---------------------------------------------------------------- main
 VOICED_UI = {'homeBubble', 'homeBubbleNoName', 'adventureWelcome', 'adventureCallForHelp', 'adventureSameLand',
-             'adventureOtherLand', 'adventurePlayAgain'}
+             'adventureOtherLand', 'adventurePlayAgain', 'languagesDoorsHello', 'adventureLangEnglish', 'adventureLangRussian',
+             'adventureLangHebrew'}
 
 
 def spoken(r):

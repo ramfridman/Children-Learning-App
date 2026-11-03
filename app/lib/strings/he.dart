@@ -607,8 +607,8 @@ abstract final class He {
   static const Str roleParent = Str('הורה');
   static const Str roleChild = Str('ילד');
 
-  // ---- parent area: the languages (L0). The texts are the hebrew-text-editor's (docs/languages/island-texts.md section 3);
-  // the ones marked "placeholder" are not in it (the editor has not written them yet). All stay needs-editor. The owner approved
+  // ---- parent area: the languages (L0). The texts are the hebrew-text-editor's (docs/languages/island-texts.md section 3, and
+  // the ones the L0 screens added, written by the editor on 2026-11-03). All stay needs-editor. The owner approved
   // the door line, the bottle lines and the progress words (בתרגול, מובן, מובן וזכור) on 2026-11-03. ----
   static const Str areaLanguages = Str('שפות');
   static const Str areaLanguagesHelp = Str(
@@ -649,18 +649,16 @@ abstract final class He {
   static const Str routeReader = Str('קוראים');
   static const Str stressDefaultNew = Str('מופיע גם על מילים חדשות בקריאה');
   static const Str stressDefaultOther = Str('לא מופיע מחוץ לשיעורי ההטעמה');
-  // Placeholders (not in the editor's file): the three choices of the stress setting.
+  // The three choices of the stress setting (the editor's words, final 2026-11-03).
   static const Str areaLangStressRoute = Str('לפי המסלול');
-  static const Str areaLangStressOn = Str('מופיעים');
-  static const Str areaLangStressOff = Str('לא מופיעים');
+  static const Str areaLangStressOn = Str('גם על מילים חדשות');
+  static const Str areaLangStressOff = Str('רק בשיעורי הטעמה');
   static const Str areaLangReadCheck = Str('בדיקת הקראה להורים');
   static const Str areaLangReadCheckHelp = Str(
     'קריאה בקול היא תרגול, בלי ציון. הבדיקה מיועדת להורים, ואינה משפיעה על ההתקדמות.',
   );
   static const Str areaLangQuestTitle = Str('שאלון שפת הבית');
-  static const Str areaLangQuestHelp = Str(
-    'שלוש שאלות קצרות עוזרות לבחור מאיפה להתחיל. אפשר לשנות את התשובות בכל זמן.',
-  );
+  static const Str areaLangQuestHelp = Str('התשובות קובעות רק מאיפה מתחילים. אפשר לשנות אותן בכל זמן.');
   static const Str areaLangQuestButton = Str('לשאלון');
   static const Str areaLangProgressEng = Str('התקדמות באנגלית');
   static const Str areaLangProgressHeb = Str('התקדמות בעברית');
@@ -686,55 +684,58 @@ abstract final class He {
   static const Str areaLangPractised = Str('תורגל');
   static const Str areaLangSaid = Str('נאמר');
   static const Str areaLangNoticeFound = Str('נמצא');
-  // Placeholders (not in the editor's file): the names of the strands of Hebrew and Russian (the teachers give the final
-  // lists), the page title of a child's settings, the questionnaire's questions and answers, the presentation band, and the
-  // question of the child setup (Q-F1).
-  static const Str childSettingsTitle = Str('חוקים והגדרות של {child}');
+  // The names of the strands of Hebrew and Russian (the English ones above are the model), the page title of a child's
+  // settings, the questionnaire's questions and answers, the presentation band, and the question of the child setup (Q-F1).
+  static const Str childSettingsTitle = Str('ההגדרות של {child}');
   static const Str langEnglish = Str('אנגלית');
   static const Str langHebrew = Str('עברית');
   static const Str langRussian = Str('רוסית');
-  static const Str langBand = Str('רמת הצגה');
-  static const Str langBandHelp = Str('לפי הגיל, או לבחירת ההורה: כמה אפשרויות על המסך וכמה זמן.');
-  static const Str langBandAge = Str('לפי הגיל');
-  static const Str langBandA = Str('קטנים');
-  static const Str langBandB = Str('אמצע');
-  static const Str langBandC = Str('גדולים');
-  static const Str langRoute = Str('מסלול');
+  static const Str langBand = Str('התאמה לגיל');
+  static const Str langBandHelp = Str(
+    'ברירת המחדל לפי גיל הילד. אפשר לבחור את ההצגה של קבוצת גיל אחרת: כמה בחירות יש על המסך וכמה זמן נמשך השיעור.',
+  );
+  static const Str langBandAge = Str('לפי גיל הילד');
+  static const Str langBandA = Str('גילאי 3 עד 4');
+  static const Str langBandB = Str('גילאי 5 עד 6');
+  static const Str langBandC = Str('גילאי 7 עד 8');
+  static const Str langRoute = Str('מסלול הלמידה');
   static const Str langQuestionnaireDone = Str('סיום');
   static const Str qKnowsLetters = Str('הילד מכיר אותיות באנגלית?');
   static const Str qHome = Str('מי מדבר רוסית בבית?');
   static const Str qUnderstands = Str('הילד מבין רוסית?');
   static const Str qSpeaks = Str('הילד מדבר רוסית?');
-  static const Str qLetters = Str('הילד מכיר אותיות רוסיות?');
-  static const Str qReads = Str('הילד קורא רוסית?');
+  static const Str qLetters = Str('הילד מכיר אותיות ברוסית?');
+  static const Str qReads = Str('הילד קורא ברוסית?');
   static const Str aNo = Str('לא');
   static const Str aSome = Str('קצת');
   static const Str aMost = Str('הרבה');
   static const Str aNone = Str('אף אחד');
-  static const Str aOneParent = Str('הורה אחד');
+  static const Str aOneParent = Str('אחד ההורים');
   static const Str aBothParents = Str('שני ההורים');
-  static const Str aGrandparentsOthers = Str('סבים וסבתות או אחרים');
+  static const Str aGrandparentsOthers = Str('סבא וסבתא או אחרים');
   static const Str aWords = Str('מילים');
   static const Str aSentences = Str('משפטים');
   static const Str aSyllables = Str('הברות');
-  static const Str langProgressNoCourse = Str('השפה עוד לא הותקנה במכשיר הזה, ולכן אין עוד מה להראות.');
+  static const Str langProgressNoCourse = Str(
+    'השיעורים של השפה הזאת עוד לא הגיעו למכשיר הזה, ולכן אין מה להראות כאן.',
+  );
   static const Str langStrandEngLisSpk = Str('הקשבה ודיבור');
   static const Str langStrandEngPhon = Str('צלילים ואותיות');
   static const Str langStrandEngRead = Str('קריאה');
   static const Str langStrandEngWrite = Str('כתיבה');
-  static const Str langStrandHebOral = Str('שפה בעל פה וצלילים');
+  static const Str langStrandHebOral = Str('הקשבה, דיבור וצלילים');
   static const Str langStrandHebCode = Str('אותיות, קריאה וכתיבה');
-  static const Str langStrandRusUnderstand = Str('הבנה');
+  static const Str langStrandRusUnderstand = Str('הקשבה ודיבור');
   static const Str langStrandRusSounds = Str('צלילים');
   static const Str langStrandRusLetters = Str('אותיות');
   static const Str langStrandRusRead = Str('קריאה');
-  static const Str langStrandRusWrite = Str('כתיבה ואיות');
-  static const Str langStrandAll = Str('כל המיומנויות');
-  static const Str langSetupTitle = Str('באילו שפות הילד ישחק?');
+  static const Str langStrandRusWrite = Str('כתיבה');
+  static const Str langStrandAll = Str('נושאים נוספים');
+  static const Str langSetupTitle = Str('אילו שפות לפתוח לילד?');
   static const Str langSetupHelp = Str(
     'כל שפה שמסמנים מקבלת דלת באי השפות. אפשר לשנות בכל זמן באזור ההורים.',
   );
   static const Str langSetupEnglish = Str('אנגלית: לשמוע, לדבר ובהמשך לקרוא ולכתוב');
-  static const Str langSetupHebrew = Str('עברית: שפה בעל פה, אותיות, קריאה וכתיבה');
-  static const Str langSetupRussian = Str('רוסית: לכל ילד, מהשמיעה בבית ועד קריאה וכתיבה');
+  static const Str langSetupHebrew = Str('עברית: מילים, סיפורים וצלילים, ובהמשך אותיות, קריאה וכתיבה');
+  static const Str langSetupRussian = Str('רוסית: לשמוע, לדבר ובהמשך לקרוא ולכתוב, גם אם אין רוסית בבית');
 }
