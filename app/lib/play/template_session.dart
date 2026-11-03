@@ -9,6 +9,9 @@ import '../content/models.dart' show Activity;
 import '../speech/answer_matcher.dart';
 import 'lesson_controller.dart';
 
+/// Plays clips (`vo:` references) in order; see [TemplateSession.playClips].
+typedef ClipPlayer = void Function(List<String> voIds, {bool replace});
+
 /// The state of one activity on screen. A template (count and tap, tap the answer, give N) is a
 /// session: it draws the stage and the answer tiles from one shared state, takes the child's moves,
 /// reports each answer to the [LessonController] (which keeps the rules and writes the attempt) and
@@ -41,6 +44,11 @@ abstract class TemplateSession extends ChangeNotifier {
   static const Duration demoStep = Duration(milliseconds: 800);
 
   bool get disposed => _disposed;
+
+  /// Plays the sound of an answer in a language course: the clips in order. With [replace] they cut in at once (the child touched
+  /// to hear); otherwise they wait for the line that is playing (a hint's own line comes first). The lesson screen gives its
+  /// sessions the voice director's; a session that has none (a test) makes no sound.
+  ClipPlayer? playClips;
 
   /// Runs [action] after [delay] unless the session has been disposed.
   void later(Duration delay, VoidCallback action) {

@@ -44,36 +44,37 @@ Map<String, Object?> pictureOption(String id, String asset, {String? tag, String
 
 const String _he1 = 'הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.';
 
-Map<String, Object?> _lines(String id, {String? target, String? show}) => <String, Object?>{
-  'prompt': <String, Object?>{
-    ...line('vo:$id.prompt', _he1, target: target, show: show),
-    'replayButton': true,
-  },
-  'feedback': <String, Object?>{
-    'correct': line('vo:$id.right', 'נָכוֹן!'),
-    'incorrect': <Object?>[
-      <String, Object?>{'when': 'default', ...line('vo:$id.again', 'בּוֹאוּ נַקְשִׁיב שׁוּב.')},
-    ],
-    'unsure': line('vo:$id.unsure', 'בּוֹאוּ נְנַסֶּה יַחַד.'),
-  },
-  'hints': <Object?>[
+Map<String, Object?> _lines(String id, {String? target, String? show, String? promptText}) =>
     <String, Object?>{
-      'level': 1,
-      'action': 'replay_prompt_slow',
-      ...line('vo:$id.h1', 'הַקְשִׁיבוּ שׁוּב, לְאַט.'),
-    },
-    <String, Object?>{
-      'level': 2,
-      'action': 'highlight_objects_sequentially',
-      ...line('vo:$id.h2', 'בּוֹאוּ נִסְתַּכֵּל בַּתְּמוּנוֹת.'),
-    },
-    <String, Object?>{
-      'level': 3,
-      'action': 'worked_example',
-      ...line('vo:$id.h3', 'הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.'),
-    },
-  ],
-};
+      'prompt': <String, Object?>{
+        ...line('vo:$id.prompt', promptText ?? _he1, target: target, show: show),
+        'replayButton': true,
+      },
+      'feedback': <String, Object?>{
+        'correct': line('vo:$id.right', 'נָכוֹן!'),
+        'incorrect': <Object?>[
+          <String, Object?>{'when': 'default', ...line('vo:$id.again', 'בּוֹאוּ נַקְשִׁיב שׁוּב.')},
+        ],
+        'unsure': line('vo:$id.unsure', 'בּוֹאוּ נְנַסֶּה יַחַד.'),
+      },
+      'hints': <Object?>[
+        <String, Object?>{
+          'level': 1,
+          'action': 'replay_prompt_slow',
+          ...line('vo:$id.h1', 'הַקְשִׁיבוּ שׁוּב, לְאַט.'),
+        },
+        <String, Object?>{
+          'level': 2,
+          'action': 'highlight_objects_sequentially',
+          ...line('vo:$id.h2', 'בּוֹאוּ נִסְתַּכֵּל בַּתְּמוּנוֹת.'),
+        },
+        <String, Object?>{
+          'level': 3,
+          'action': 'worked_example',
+          ...line('vo:$id.h3', 'הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.'),
+        },
+      ],
+    };
 
 Map<String, Object?> _common(
   String course,
@@ -124,6 +125,7 @@ Map<String, Object?> tapJson({
   Map<String, Object?> answer = const <String, Object?>{},
   String? target,
   String? show,
+  String? promptText,
 }) => <String, Object?>{
   ..._common(
     course,
@@ -135,7 +137,7 @@ Map<String, Object?> tapJson({
     band,
     representation,
   ),
-  ..._lines('$course.$id', target: target, show: show),
+  ..._lines('$course.$id', target: target, show: show, promptText: promptText),
   'scene': scene,
   'answer': <String, Object?>{
     'type': 'choice',

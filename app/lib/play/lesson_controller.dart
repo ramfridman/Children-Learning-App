@@ -182,6 +182,11 @@ class LessonController extends ChangeNotifier {
   String? voice;
   int voiceNonce = 0;
 
+  /// A language course: the clip that follows [voice] (the second clip of the line), and the target word to show in a chip under
+  /// the bubble's line. Null for every line of the lands.
+  String? voiceTarget;
+  String? bubbleShow;
+
   /// The newest line was asked for by a touch (the replay button): it replaces the line that is playing. Every other line
   /// waits for the one that is playing to end, so a sentence is never cut off.
   bool voiceReplaces = false;
@@ -197,6 +202,8 @@ class LessonController extends ChangeNotifier {
     tutorThinking = false;
     bubble = line.caption;
     voice = line.vo;
+    voiceTarget = line.target;
+    bubbleShow = line.show;
     voiceNonce++;
   }
 
@@ -379,9 +386,13 @@ class LessonController extends ChangeNotifier {
       // The welcome line stays up; the help itself is shown by the stage.
       final String keep = bubble;
       final String? keepVoice = voice;
+      final String? keepTarget = voiceTarget;
+      final String? keepShow = bubbleShow;
       _applyHint(math.min(hintLevel + 1, current.hints.length));
       bubble = keep;
       voice = keepVoice;
+      voiceTarget = keepTarget;
+      bubbleShow = keepShow;
     }
     notifyListeners();
   }

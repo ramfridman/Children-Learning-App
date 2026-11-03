@@ -46,6 +46,9 @@ class VoiceDirector extends ChangeNotifier {
 
   final VoicePlayer _player;
 
+  /// How many lines wait for the one that is playing.
+  static const int _keepWaiting = 2;
+
   /// A short pause between a line and the one that was waiting for it.
   final Duration gap;
 
@@ -114,9 +117,30 @@ class VoiceDirector extends ChangeNotifier {
 
   /// Says the line [voId] after the line that is playing has ended; at once if none is playing. A line with no recording
   /// is skipped and never cuts a playing one. Only the newest waiting line is kept.
-  Future<void> sayNext(String? voId, {Object? owner, bool Function()? relevant}) {
+  Future<void> sayNext(String? voId, {Object? owner, bool Function()? relevant}) =>
+      _nextClip(voId, owner, relevant, keep: _keepWaiting);
+
+  /// Says a line made of several clips, one after the other: a Hebrew frame clip and then the target-language clip (docs/languages/
+  /// frame.md, F3), or the sounds of all the answer buttons in turn. The first clip replaces what is playing when [replace] is
+  /// true (the child's own touch) and otherwise waits for it, like [sayNext]; the others follow it. A clip with no recording
+  /// is skipped (a null id too), and the rest still play.
+  Future<void> sayClips(
+    List<String?> voIds, {
+    Object? owner,
+    bool Function()? relevant,
+    bool replace = false,
+  }) async {
+    await Future.wait(<Future<void>>[
+      for (final (int i, String? id) in voIds.indexed)
+        i == 0 && replace
+            ? say(id, owner: owner, relevant: relevant)
+            : _nextClip(id, owner, relevant, keep: voIds.length),
+    ]);
+  }
+
+  Future<void> _nextClip(String? voId, Object? owner, bool Function()? relevant, {required int keep}) {
     final VoiceClip? clip = voId == null ? null : _bank?.clip(voId);
-    return clip == null ? Future<void>.value() : _next(voId, clip, owner, relevant);
+    return clip == null ? Future<void>.value() : _next(voId, clip, owner, relevant, keep: keep);
   }
 
   /// [sayNext] for a line that is not in the pack (the tutor's live line).
@@ -127,12 +151,19 @@ class VoiceDirector extends ChangeNotifier {
     bool Function()? relevant,
   }) => _next('live', VoiceClip(sound, MouthTrack(const <(int, bool)>[]), mime: mime), owner, relevant);
 
-  Future<void> _next(String? voId, VoiceClip clip, Object? owner, bool Function()? relevant) {
+  Future<void> _next(
+    String? voId,
+    VoiceClip clip,
+    Object? owner,
+    bool Function()? relevant, {
+    int keep = _keepWaiting,
+  }) {
     _forgetStale();
     final bool free = !(_speaking || _starting || _waiting.isNotEmpty);
     _waiting.add(_Waiting(voId, clip, owner, relevant, _now()));
-    // Only the two newest lines wait (the congratulation and the next question): older ones are about the past.
-    while (_waiting.length > 2) {
+    // Only the two newest lines wait (the congratulation and the next question): older ones are about the past. A line of several
+    // clips keeps all of its own.
+    while (_waiting.length > keep) {
       _waiting.removeAt(0);
     }
     // Nothing is playing, or the line that is playing no longer matters (the child answered again, or moved on): the first

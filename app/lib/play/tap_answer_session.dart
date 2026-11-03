@@ -12,6 +12,7 @@ import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
 import '../speech/spoken_options.dart';
 import 'count_tap_session.dart' show Dots;
+import 'caption_policy.dart';
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart';
@@ -19,15 +20,33 @@ import 'hints/hint_player.dart';
 import 'hints/tap_geometry.dart';
 import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
+import 'option_faces.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
 
 /// The tap-the-answer template (T01): two to four pictures on the stage, one of them is right.
 /// Used here for the warm-up "where is the red flower?".
+///
+/// In a language course (LS01, docs/languages/frame.md section 2.3) an answer may also be a text in the course's font and
+/// direction, with a speaker that plays its own clip without answering, or a sound button; a picture or a sound button says its
+/// word as it is chosen; and, when [captions] is on, the word appears under the right picture once the answer is accepted.
 class TapAnswerSession extends TemplateSession {
-  TapAnswerSession(super.controller, this.activity);
+  TapAnswerSession(super.controller, this.activity, {this.captions = false, this.stress = true});
 
   final TapAnswerActivity activity;
+
+  /// The word of the right picture appears under it after the answer (`captionAfterAnswer`), with its stress marks if [stress].
+  final bool captions;
+  final bool stress;
+
+  /// The word to show under the right picture, or null when captions are off or the activity has none.
+  String? get captionWord {
+    final String? word = captions ? activity.revealedWord : null;
+    return word == null ? null : withStress(word, show: stress);
+  }
+
+  /// True once the right answer has been accepted: the caption is shown from now on.
+  bool get captionShown => chosenId == activity.correctId && chosenState == AnswerState.correct;
 
   /// The hint on the stage (see `HintPlayer`), and the answer tile that glows in turn where the stage has nothing of the question
   /// to light. The stage's end side is made room for a card by `_hint.reserve`.
@@ -74,6 +93,7 @@ class TapAnswerSession extends TemplateSession {
     if (controller.guided && id != activity.correctId) return;
     _busy = true;
     chosenId = id;
+    if (!byVoice) _sayWord(id);
     // The dots of a first hint go with the child's next touch, and a demonstration (level 3) ends at any touch: the hand is taken
     // off at once, even for a wrong tile (the hint that the mistake brings starts a moment later).
     final bool demonstrating = controller.hintShown >= 3 && _hint.playing;
@@ -97,6 +117,12 @@ class TapAnswerSession extends TemplateSession {
     }
   }
 
+  /// A picture, or a sound button, says its word as it is chosen. A text tile has a speaker of its own and does not.
+  void _sayWord(String id) {
+    final ChoiceOption o = activity.options.firstWhere((ChoiceOption o) => o.id == id);
+    if (o.clip != null && o.text == null) playClips?.call(<String>[o.clip!], replace: true);
+  }
+
   @override
   void onReset() {
     chosenId = null;
@@ -116,6 +142,11 @@ class TapAnswerSession extends TemplateSession {
     final HintPlan? plan = geo == null ? null : tapHintPlan(activity, geo, controller.hintShown);
     if (plan == null) {
       // A skill that no family knows (none in the starter pack): its options pulse, and there is no worked example before the halo.
+      // Sound buttons play again, one after the other, as they pulse.
+      final List<ChoiceOption> buttons = activity.options.where((ChoiceOption o) => o.soundOnly).toList();
+      if (buttons.length == activity.options.length) {
+        playClips?.call(<String>[for (final ChoiceOption o in buttons) o.clip!], replace: false);
+      }
       _pulseAll();
       if (hintPictureOf(activity) == HintPicture.demonstration) controller.demoDone();
       return;
@@ -133,13 +164,15 @@ class TapAnswerSession extends TemplateSession {
   void _play(HintPlan plan) => _hint.play(plan, onEnd: plan.endsDemo ? controller.demoDone : null);
 
   void _pulseAll() {
+    // A word takes longer to say than a picture takes to light: sound buttons pulse more slowly.
+    final int step = activity.options.every((ChoiceOption o) => o.soundOnly) ? 700 : 450;
     for (int i = 0; i < activity.options.length; i++) {
-      later(Duration(milliseconds: 450 * i), () {
+      later(Duration(milliseconds: step * i), () {
         pulsing = i;
         notify();
       });
     }
-    later(Duration(milliseconds: 450 * activity.options.length), () {
+    later(Duration(milliseconds: step * activity.options.length), () {
       pulsing = null;
       notify();
     });
@@ -189,7 +222,7 @@ class TapAnswerSession extends TemplateSession {
                     child: AnswerTile(
                       key: Key('tile-${o.id}'),
                       semanticLabel: o.label ?? '',
-                      width: sets ? width : null,
+                      width: width == 96 ? null : width,
                       state: chosenId == o.id
                           ? chosenState
                           : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
@@ -199,11 +232,40 @@ class TapAnswerSession extends TemplateSession {
                       child: sets
                           ? Padding(
                               padding: const EdgeInsets.all(6),
-                              child: _face(activity, o, 96, spec.tileFont),
+                              child: _face(activity, o, 96, spec.tileFont, stress),
                             )
-                          : _face(activity, o, 96, spec.tileFont),
+                          : _face(activity, o, 96, spec.tileFont, stress),
                     ),
                   ),
+                  // A text tile with a clip has a speaker in its reading-start corner: it plays the word and does not answer.
+                  if (o.text != null && o.clip != null)
+                    PositionedDirectional(
+                      start: 10,
+                      bottom: 10,
+                      child: SpeakerMark(
+                        key: Key('speaker-${o.id}'),
+                        onTap: () => playClips?.call(<String>[o.clip!], replace: true),
+                      ),
+                    ),
+                  // The word of the right picture, under its tile, once the answer is accepted.
+                  if (captionWord != null && o.id == activity.correctId)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 12 + 96 + 6,
+                      child: IgnorePointer(
+                        child: AnimatedOpacity(
+                          opacity: captionShown ? 1 : 0,
+                          duration: _fade(c),
+                          child: RevealCaption(
+                            key: const Key('reveal-caption'),
+                            text: captionWord!,
+                            course: activity.course,
+                            size: spec.tileFont * 0.5,
+                          ),
+                        ),
+                      ),
+                    ),
                   // A place badge, and a start flag at the first end of the row, stand on the tiles (a tile paints above the stage and
                   // the speech bubble, so they are never covered by the bubble).
                   for (final TileMark m in marks.whereType<TileMark>())
@@ -250,7 +312,16 @@ class TapAnswerSession extends TemplateSession {
 }
 
 /// What an option shows: a numeral on a tile with its dots, or a small set of things.
-Widget _face(TapAnswerActivity a, ChoiceOption o, double box, double font) {
+Widget _face(TapAnswerActivity a, ChoiceOption o, double box, double font, bool stress) {
+  if (o.text != null) {
+    return OptionTextFace(
+      text: withStress(o.text!, show: stress),
+      course: a.course,
+      tileFont: font,
+      roomBelow: o.clip == null ? 0 : SpeakerMark.touch - 18,
+    );
+  }
+  if (o.soundOnly) return const SoundFace();
   if (o.numeral != null) {
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -278,6 +349,13 @@ Widget _face(TapAnswerActivity a, ChoiceOption o, double box, double font) {
   );
 }
 
+/// The room under the pictures of the stage for the word revealed after the answer.
+const double _captionRoom = 34;
+
+/// How long a fade takes: none with reduce motion.
+Duration _fade(BuildContext context) =>
+    MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 250);
+
 /// Whether the group of an answer tile is drawn with its ten-frame board. Never: a board on one answer and not on its neighbour
 /// would tell the child which one to pick (QA-38-1), so within one activity every answer group is drawn the same way, and "the
 /// same way" is no board. The group the question stands on (alone on the stage) keeps its board.
@@ -296,7 +374,10 @@ class _TapStage extends StatelessWidget {
     // A group to count or compare takes the top of the stage; the answers sit below it.
     final bool hasGroup = a.group != null;
     final double top = hasGroup && !a.optionsInTiles ? size.height * 0.5 : 0;
-    final double room = size.height - top;
+    // The word under the right picture (LS01 g) has its room from the start, so that nothing moves when it appears.
+    final String? word = a.optionsInTiles ? null : s.captionWord;
+    final double captionRoom = word == null ? 0 : _captionRoom;
+    final double room = size.height - top - captionRoom;
     final double box = math.min(room * (hasGroup ? 0.9 : 0.86), size.width / (n + 0.5));
     final double gap = (size.width - box * n) / (n + 1);
     // A course that reads right to left lays its pictures out from the right (F1); the lands keep the first on the left.
@@ -344,6 +425,29 @@ class _TapStage extends StatelessWidget {
                 height: box,
                 child: _option(a, o, i, box),
               ),
+          if (word != null)
+            for (final (int i, ChoiceOption o) in a.options.indexed)
+              if (o.id == a.correctId)
+                Positioned(
+                  left: gap + (fromRight ? n - 1 - i : i) * (box + gap) - gap / 2,
+                  top: top + (room - box) / 2 + box,
+                  width: box + gap,
+                  height: captionRoom,
+                  child: IgnorePointer(
+                    child: AnimatedOpacity(
+                      opacity: s.captionShown ? 1 : 0,
+                      duration: _fade(context),
+                      child: Center(
+                        child: RevealCaption(
+                          key: const Key('reveal-caption'),
+                          text: word,
+                          course: a.course,
+                          size: _captionRoom * 0.62,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
         ],
       ),
     );

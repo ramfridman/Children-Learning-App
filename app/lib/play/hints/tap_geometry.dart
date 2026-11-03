@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../../child/activity_shell.dart';
 import '../../content/models.dart';
 import '../../design/course_text.dart';
+import '../option_faces.dart' show isSingleLetter;
 import '../sprite_group.dart';
 
 /// Where the things of a `tap_answer` stage and of its answer tiles are, in the stage's own points ((0, 0) is the stage's top left
@@ -165,11 +166,14 @@ class TapGeometry {
   /// True when the options are tiles below the stage.
   bool get tiles => a.optionsInTiles;
 
-  /// The width of one answer tile of [a] on [spec]'s board: a square 96 points for a numeral, a sound or a picture; as wide as the
-  /// row allows (170 at most) for a set of things.
+  /// The width of one answer tile of [a] on [spec]'s board: a square 96 points for a numeral, a letter, a sound or a picture; as
+  /// wide as the row allows for a set of things (170 at most) and for words (220 at most).
   static double tileWidthOf(TapAnswerActivity a, ActivitySpec spec) {
-    final bool sets = a.options.any((ChoiceOption o) => o.set != null);
-    return sets ? math.min(170, spec.tilesWidth / a.options.length - 24) : 96;
+    final double room = spec.tilesWidth / a.options.length - 24;
+    if (a.options.any((ChoiceOption o) => o.set != null)) return math.min(170, room);
+    final bool words = a.options.any((ChoiceOption o) => o.text != null && !isSingleLetter(o.text!));
+    if (words) return math.min(220, room);
+    return 96;
   }
 
   /// The point on the top edge of option [i]'s tile (or, for an option on the stage, of its picture) where the hand's fingertip
