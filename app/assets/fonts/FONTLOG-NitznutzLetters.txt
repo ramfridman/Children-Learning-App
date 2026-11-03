@@ -1,0 +1,25 @@
+FONTLOG for Nitznutz Letters
+============================
+
+Nitznutz Letters is the font the Nitznutz app uses for English and Russian lesson text (words, syllables and letter
+tiles) for young children. It is a Modified Version of Andika 7.000 (2 June 2025) by SIL Global, released under the
+Open Font License 1.1. "Andika" and "SIL" are Reserved Font Names of the original, so this build carries another name
+(OFL condition 3). The original copyright notice and the licence are in OFL-NitznutzLetters.txt.
+
+Source
+------
+Andika-7.000.zip from https://github.com/silnrsi/font-andika/releases/tag/v7.000
+  zip SHA-256           88ba6ea41ef4a8e5214b090df8fa2983be1babe4843efaa99cdb6078b0e2c070
+  Andika-Medium.ttf     dccaf8662b5883ff9c3a2a9290ba1793bf93d8237a03e65b22c2eef1a626e164
+  Andika-Bold.ttf       3ad43a77a29ea060528be69a9e0e81c9dbbe8dff894a26ae1818d3c472393319
+Built by tools/make_letters_font.py (fontTools) in the Nitznutz repository.
+
+Changes from the original
+-------------------------
+2026-11-03 (build 1)
+- U+0430 CYRILLIC SMALL LETTER A is mapped to the original font's own two-storey "a" glyph, the form printed in Russian
+  primers. No outline was drawn or changed. U+0061 keeps the single-storey a.
+- Subset to Basic Latin, Latin-1, the Russian Cyrillic alphabet (with Ё ё), the combining grave, acute, breve and
+  diaeresis, the dotted circle, common punctuation and the bidi isolate and mark controls. Only the default OpenType
+  layout features are kept; the stylistic sets and the Graphite tables are removed.
+- Renamed to "Nitznutz Letters" (Medium and Bold) in every name record; the vendor id is cleared.
