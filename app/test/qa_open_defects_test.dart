@@ -373,10 +373,10 @@ void main() {
       expect(server.log.where((Map<String, Object?> e) => e['type'] == 'attempt').length, 3);
     });
 
-    test('QA-18 a full batch of rows the server refuses one by one (here a wrong phone clock, before 2017) does not stop '
+    test('QA-18 a full batch of rows the server refuses one by one (here an activity id it does not take) does not stop '
         'the answers after them for good (PLAN: one bad row never stops the sync)', () async {
       for (int i = 1; i <= 4; i++) {
-        await answer('old.$i', DateTime.utc(2010, 1, 1, 10, i));
+        await answer('Not An Id $i', DateTime.utc(2026, 11, 20, 9, i));
       }
       await answer('a.1', DateTime.utc(2026, 11, 20, 10, 1));
       await answer('a.2', DateTime.utc(2026, 11, 20, 10, 2));
@@ -389,7 +389,21 @@ void main() {
             if (e['type'] == 'attempt') (e['data']! as Map<String, Object?>)['activity_id'],
         ],
         <String>['a.1', 'a.2'],
-        reason: 'the good answers never reach the server while the four bad rows head the queue',
+        reason: 'the good answers reach the server although four bad rows head the queue',
+      );
+    });
+
+    test('QA-18 answers timed before 2017 (a wrong phone clock) are not bad rows any more: they are re-timed and sent '
+        'with the others (SEC-B20-1)', () async {
+      for (int i = 1; i <= 4; i++) {
+        await answer('old.$i', DateTime.utc(2010, 1, 1, 10, i));
+      }
+      await answer('a.1', DateTime.utc(2026, 11, 20, 10, 1));
+      await engine().syncOnce();
+      expect(server.log.length, 5);
+      expect(
+        server.log.every((Map<String, Object?> e) => (e['at']! as int) >= SyncEngine.minClientMs),
+        isTrue,
       );
     });
   });

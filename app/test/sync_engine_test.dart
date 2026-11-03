@@ -898,33 +898,39 @@ void main() {
       expect(pushes(), after, reason: 'reset once per wire format, not every round');
     });
 
-    // QA-18: rows that are bad on their own, a whole batch of them, head the queue (here a clock reset to 2010: the server
-    // takes times from 2017 on).
+    // QA-18: rows that are bad on their own, a whole batch of them, head the queue (here an activity id that sync-push
+    // refuses; a clock before 2017 is no longer such a cause, the time is set right at the boundary: SEC-B20-1).
+    Future<void> badAnswers(int n) async {
+      for (int i = 1; i <= n; i++) {
+        await s1.answer('Not An Id $i', 'correct', minute: i);
+      }
+    }
+
     Future<void> oldClockAnswers(int n) async {
       for (int i = 1; i <= n; i++) {
         await s1.answer('old.$i', 'correct', at: DateTime.utc(2010, 1, 1, 10, i));
       }
     }
 
+    Iterable<Object?> sentIds() =>
+        strict.log.map((Map<String, Object?> e) => (e['data']! as Map<String, Object?>)['activity_id']);
+
     test(
       'QA-18 a whole batch of bad rows is set aside and the answers after it go in the same round',
       () async {
-        await oldClockAnswers(4);
+        await badAnswers(4);
         for (int i = 1; i <= 3; i++) {
-          await s1.answer('a.$i', 'correct', minute: i);
+          await s1.answer('a.$i', 'correct', minute: 10 + i);
         }
         final SyncReport r = await s1.engine.syncOnce();
         expect(r.pushedEvents, 3);
         expect(r.refusedEvents, 4);
-        expect(
-          strict.log.map((Map<String, Object?> e) => (e['data']! as Map<String, Object?>)['activity_id']),
-          <String>['a.1', 'a.2', 'a.3'],
-        );
+        expect(sentIds(), <String>['a.1', 'a.2', 'a.3']);
         expect(refused(await s1.db.attemptsOf(kid)).map((Attempt a) => a.activityId), <String>[
-          'old.1',
-          'old.2',
-          'old.3',
-          'old.4',
+          'Not An Id 1',
+          'Not An Id 2',
+          'Not An Id 3',
+          'Not An Id 4',
         ]);
         expect(await s1.db.unsyncedAttempts(limit: 100), isEmpty);
         final int before = pushes();
@@ -934,15 +940,16 @@ void main() {
     );
 
     test('QA-18 a visit and an award that are bad on their own are set aside too', () async {
-      // The visit of a clock reset to 2010, and an award of the same time, ahead of a good answer, a good visit and award.
-      final int old = await s1.db.startSession(kid, DateTime.utc(2010, 1, 1, 10), plan: 'lesson:butterflies');
-      await s1.db.endSession(old, DateTime.utc(2010, 1, 1, 10, 5), 'finished');
+      // A visit with a plan the server refuses, and an award with a key it refuses, ahead of a good answer, a good visit and
+      // award.
+      final int old = await s1.db.startSession(kid, DateTime.utc(2026, 11, 20, 9), plan: 'Not A Plan');
+      await s1.db.endSession(old, DateTime.utc(2026, 11, 20, 9, 5), 'finished');
       await s1.db.addReward(
         RewardsCompanion.insert(
           profileId: kid,
-          awardKey: 'star:NUM-A-03',
+          awardKey: 'star:bad key',
           kind: 'star',
-          at: DateTime.utc(2010, 1, 1, 10, 6),
+          at: DateTime.utc(2026, 11, 20, 9, 6),
         ),
       );
       await s1.answer('a.1', 'correct');
@@ -974,22 +981,136 @@ void main() {
       );
       expect(
         AppDatabase.wasRefusedBySync(
-          (await s1.db.rewardsOf(kid)).firstWhere((Reward x) => x.awardKey == 'star:NUM-A-03').syncedAt,
+          (await s1.db.rewardsOf(kid)).firstWhere((Reward x) => x.awardKey == 'star:bad key').syncedAt,
         ),
         isTrue,
       );
     });
 
-    test('QA-18 a round gives up on a kind after two batches that only the bad rows fill, and it costs a bounded number of calls', () async {
-      await oldClockAnswers(8);
-      await s1.answer('a.1', 'correct', minute: 1);
+    test('QA-18 a round gives up on a kind when even its newest row is refused, and it costs a bounded number of calls', () async {
+      await badAnswers(9);
       final int before = pushes();
       final SyncReport r = await s1.engine.syncOnce();
-      expect(pushes() - before, 2 * (1 + 4), reason: 'two batches, each looked at event by event');
+      expect(
+        pushes() - before,
+        2 * (1 + 4) + 2,
+        reason: 'two batches, each looked at event by event, then the newest row alone (refused as a batch of one, and again)',
+      );
       expect(r.pushedEvents, 0);
       expect(r.refusedEvents, 0, reason: 'no verdict: nothing is marked');
       expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
       expect((await s1.db.unsyncedAttempts(limit: 100)).length, 9);
+    });
+
+    test('SEC-B20-1 a good answer behind more bad rows than a round looks at is sent, and the bad rows are set aside', () async {
+      await badAnswers(8);
+      await s1.answer('a.1', 'correct', minute: 20);
+      final int before = pushes();
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 1);
+      expect(r.refusedEvents, 8);
+      expect(sentIds(), <String>['a.1']);
+      expect(
+        pushes() - before,
+        2 * (1 + 4) + 1,
+        reason: 'two batches looked at one by one, then the probe is taken',
+      );
+      expect(refused(await s1.db.attemptsOf(kid)).length, 8);
+      expect(await s1.db.unsyncedAttempts(limit: 100), isEmpty);
+    });
+
+    test('SEC-B20-1 more bad rows than a round looks at, ahead of a good answer, never stop the good answer for good', () async {
+      for (int i = 1; i <= 9; i++) {
+        await s1.answer('Not An Id $i', 'correct', minute: i); // an activity id sync-push refuses
+      }
+      await s1.answer('a.1', 'correct', minute: 20);
+      for (int r = 0; r < 3; r++) {
+        await s1.engine.syncOnce();
+        s1.clock += SyncEngine.stallCap.inMilliseconds;
+      }
+      expect(sentIds(), contains('a.1'));
+      expect(refused(await s1.db.attemptsOf(kid)).length, 9);
+    });
+
+    test('SEC-B20-1 answers timed before 2017 are re-timed, not refused: all go in the first round, in the server\'s range', () async {
+      await oldClockAnswers(9);
+      await s1.answer('a.1', 'correct', minute: 20);
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 10);
+      expect(r.refusedEvents, 0);
+      expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+      for (final Map<String, Object?> e in strict.log) {
+        expect(e['at']! as int, inInclusiveRange(SyncEngine.minClientMs, noon));
+      }
+      // The phone keeps the time it had.
+      expect(
+        (await s1.db.attemptsOf(kid)).where((Attempt a) => a.activityId == 'old.1').single.at.toUtc(),
+        DateTime.utc(2010, 1, 1, 10, 1),
+      );
+    });
+
+    test('SEC-B20-1 a time before 2017 keeps its place by the phone\'s offset from the server\'s time; the future is held at the server\'s time', () async {
+      const int hour = 3600000;
+      final int floor = SyncEngine.minClientMs;
+      // The phone's clock reads 2010 while the server's reads 2026: times before 2017 are shifted by the difference.
+      final int wrongNow = DateTime.utc(2010, 1, 1, 12).millisecondsSinceEpoch;
+      final SyncEngine engine = SyncEngine(
+        db: s1.db,
+        call: strict.callFor(dev1),
+        deviceId: dev1,
+        isParent: true,
+        nowMs: () => wrongNow,
+        serverNowMs: () => noon,
+        pageSize: 4,
+        batch: 4,
+      );
+      await s1.answer('x.1', 'correct', at: DateTime.utc(2010, 1, 1, 10));
+      await s1.answer('x.2', 'correct', at: DateTime.utc(2010, 1, 1, 11));
+      await s1.answer('x.3', 'correct', at: DateTime.utc(1970));
+      await s1.answer('x.4', 'correct', at: DateTime.utc(2099));
+      await s1.answer('x.5', 'correct', at: DateTime.fromMillisecondsSinceEpoch(floor, isUtc: true));
+      final int visit = await s1.db.startSession(
+        kid,
+        DateTime.utc(2010, 1, 1, 10),
+        plan: 'lesson:butterflies',
+      );
+      await s1.db.endSession(visit, DateTime.utc(2010, 1, 1, 10, 8), 'finished');
+      await engine.syncOnce();
+      final Map<Object?, int> times = <Object?, int>{
+        for (final Map<String, Object?> e in strict.log)
+          if (e['type'] == 'attempt') (e['data']! as Map<String, Object?>)['activity_id']: e['at']! as int,
+      };
+      final int offset = noon - wrongNow;
+      expect(times['x.1'], DateTime.utc(2010, 1, 1, 10).millisecondsSinceEpoch + offset);
+      expect(times['x.2']! - times['x.1']!, hour, reason: 'the spacing is kept');
+      expect(times['x.3'], floor, reason: '1970 plus the offset is still before 2017: held at the floor');
+      expect(times['x.4'], noon, reason: 'a time ahead of the server is held at its time');
+      expect(times['x.5'], floor, reason: 'the floor itself is not moved');
+      final Map<String, Object?> session = strict.log.singleWhere(
+        (Map<String, Object?> e) => e['type'] == 'session',
+      );
+      final Map<String, Object?> data = session['data']! as Map<String, Object?>;
+      expect(data['started_at'], DateTime.utc(2010, 1, 1, 10).millisecondsSinceEpoch + offset);
+      expect(session['at'], data['started_at']);
+      expect(
+        (data['ended_at']! as int) - (data['started_at']! as int),
+        8 * 60000,
+        reason: 'start and end move together',
+      );
+    });
+
+    test('SEC-B20-1 a visit whose end is held by the server\'s time never ends before it starts', () async {
+      final int visit = await s1.db.startSession(
+        kid,
+        DateTime.utc(2026, 11, 20, 11, 59),
+        plan: 'lesson:butterflies',
+      );
+      await s1.db.endSession(visit, DateTime.utc(2026, 11, 20, 12, 40), 'finished');
+      await s1.engine.syncOnce();
+      final Map<String, Object?> data = strict.log.single['data']! as Map<String, Object?>;
+      expect(data['started_at'], DateTime.utc(2026, 11, 20, 11, 59).millisecondsSinceEpoch);
+      expect(data['ended_at'], noon, reason: 'held at the server\'s time');
+      expect((data['ended_at']! as int) >= (data['started_at']! as int), isTrue);
     });
 
     test('R1 the brake is held per kind of event: a visit the server takes does not make the answers of its batch bad rows', () async {
@@ -1124,6 +1245,122 @@ void main() {
       await s1.engine.syncOnce();
       expect(pushes() - before, 1 + 2, reason: 'and once only');
     });
+
+    test(
+      'SEC-B20-3 in the wait after a stall only the kind that stalled waits: the others go on as usual',
+      () async {
+        await s1.db.addReward(
+          RewardsCompanion.insert(
+            profileId: kid,
+            awardKey: 'star:bad key',
+            kind: 'star',
+            at: DateTime.utc(2026, 11, 20, 10),
+          ),
+        );
+        await s1.answer('a.1', 'correct');
+        final SyncReport first = await s1.engine.syncOnce();
+        expect(first.pushedEvents, 1, reason: 'the answer; the award has no award to give it a verdict');
+        expect((await s1.db.unsyncedRewards()).length, 1);
+
+        s1.clock += minute;
+        await s1.answer('a.2', 'correct', minute: 2);
+        final int before = pushes();
+        final SyncReport second = await s1.engine.syncOnce();
+        expect(second.pushedEvents, 1, reason: 'today 0: every push waited');
+        expect(pushes() - before, 1, reason: 'the award is not asked about during the wait');
+
+        s1.clock += 4 * minute;
+        expect(
+          await round(),
+          2,
+          reason: 'five minutes after the stall: the award is looked at again, and stalls again',
+        );
+        s1.clock += 9 * minute;
+        expect(await round(), 0, reason: 'the wait after the second stall is ten minutes');
+      },
+    );
+
+    test(
+      'SEC-B20-4 the suspect batches are one budget for the whole round, and the probes are bounded',
+      () async {
+        strict.forgets = <String>{'duration_ms', 'end_reason', 'kind'};
+        for (int i = 1; i <= 8; i++) {
+          await s1.answer('a.$i', 'correct', minute: i);
+          final int v = await s1.db.startSession(
+            kid,
+            DateTime.utc(2026, 11, 20, 10, i),
+            plan: 'lesson:butterflies',
+          );
+          await s1.db.endSession(v, DateTime.utc(2026, 11, 20, 10, i, 30), 'finished');
+          await s1.db.addReward(
+            RewardsCompanion.insert(
+              profileId: kid,
+              awardKey: 'star:NUM-A-0$i',
+              kind: 'star',
+              at: DateTime.utc(2026, 11, 20, 10, i),
+            ),
+          );
+        }
+        final int before = pushes();
+        final SyncReport r = await s1.engine.syncOnce();
+        expect(r.pushedEvents, 0);
+        expect(r.refusedEvents, 0);
+        expect(
+          pushes() - before,
+          lessThanOrEqualTo(2 * (1 + 4) + 3 * 2),
+          reason: 'two suspect batches in all, then at most one probe (two calls) for each kind',
+        );
+        expect(await s1.db.setting('sync_stall'), '1,${s1.clock},attempt+reward+session');
+        expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+        expect((await s1.db.unsyncedSessions(limit: 100)).length, 8);
+        expect((await s1.db.unsyncedRewards(limit: 100)).length, 8);
+      },
+    );
+
+    test('SEC-B20-5 a stall setting with a count of 0 or less, or one that is not understood, does not stop the pushes', () async {
+      expect(SyncEngine.stallWait(0), SyncEngine.stallBase);
+      expect(SyncEngine.stallWait(-7), SyncEngine.stallBase);
+      for (final String bad in <String>[
+        '0,${s1.clock},attempt',
+        '-3,${s1.clock},attempt',
+        '1,x,attempt',
+        '1,${s1.clock},nothing',
+        '1,${s1.clock}',
+      ]) {
+        await s1.db.putSetting('sync_stall', bad);
+        await s1.answer('a.${bad.hashCode}', 'correct');
+        expect((await s1.engine.syncOnce()).pushedEvents, 1, reason: bad);
+      }
+    });
+
+    test(
+      'SEC-B20-7 a bad_request that is not a 400 is a failure, not a bad row: nothing is marked',
+      () async {
+        await s1.answer('a.1', 'correct');
+        final SyncEngine odd = SyncEngine(
+          db: s1.db,
+          call: (String name, Map<String, Object?> body) async {
+            if (name == 'sync-push') throw const GatewayException('bad_request', status: 502);
+            return strict.callFor(dev1)(name, body);
+          },
+          deviceId: dev1,
+          isParent: true,
+          nowMs: () => noon,
+          pageSize: 4,
+          batch: 4,
+        );
+        final int before = pushes();
+        final SyncReport r = await odd.syncOnce();
+        expect(r.refusedEvents, 0);
+        expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+        expect((await s1.db.unsyncedAttempts()).length, 1);
+        expect(
+          pushes(),
+          before,
+          reason: 'the fake server saw no sync-push; the one-by-one retry was not tried either',
+        );
+      },
+    );
 
     test('every kind of event the app makes fits every key, value and range that sync-push takes', () async {
       final String longest = 'l' * 40;

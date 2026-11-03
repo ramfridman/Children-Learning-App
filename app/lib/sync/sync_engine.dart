@@ -60,12 +60,12 @@ class _Sent {
 /// those of the event ids and of the wire's `type`). The server's format is judged per kind: an answer carries keys a
 /// visit does not, so a server that has taken a visit has not shown that it takes answers (QA-17).
 class _Round {
-  _Round() {
+  /// [waiting] are the kinds still in the wait after a stalled round: they are not read in this round.
+  _Round({Set<String> waiting = const <String>{}}) : givenUp = <String>{...waiting} {
     for (final String k in SyncEngine._kinds) {
       understood[k] = false;
       suspects[k] = <int>{};
       after[k] = 0;
-      batches[k] = 0;
     }
   }
 
@@ -80,11 +80,23 @@ class _Round {
   /// Rows numbered this or lower are left out of the next batches: they wait in [suspects].
   final Map<String, int> after = <String, int>{};
 
-  /// How many batches had only suspects in them, and the kinds given up on for this round.
-  final Map<String, int> batches = <String, int>{};
-  final Set<String> givenUp = <String>{};
+  /// How many batches (of any kind) had suspects in them, one budget for the whole round (SEC-B20-4); [newSuspects] says
+  /// the batch just settled added some.
+  int suspectBatches = 0;
+  bool newSuspects = false;
 
-  bool get stalled => suspects.values.any((Set<int> s) => s.isNotEmpty);
+  /// The kinds not read any more in this round: waiting, or given up after the budget and the probe.
+  final Set<String> givenUp;
+
+  /// The kinds whose probe (the newest unsent row) was refused too.
+  final Set<String> probeFailed = <String>{};
+
+  /// The kinds that end the round without a verdict: they hold suspects, or their probe was refused. A round with any is
+  /// a stall.
+  Set<String> get stalled => <String>{
+    for (final String k in SyncEngine._kinds)
+      if (suspects[k]!.isNotEmpty || probeFailed.contains(k)) k,
+  };
 }
 
 /// Keeps this device and the family's other devices in step (PLAN: Sync rules).
@@ -142,6 +154,7 @@ class SyncEngine {
   static const String _stallKey = 'sync_stall';
 
   /// `sync-push`'s own limits for values the device makes (`testvectors/wire-patterns.json`, tested equal).
+  static const int minClientMs = AppDatabase.serverTimeFloorMs;
   static const String lessonIdPattern = r'^[a-z0-9._-]{0,40}$';
   static const int maxDurationMs = 3600000;
   static final RegExp _lessonId = RegExp(lessonIdPattern);
@@ -159,6 +172,16 @@ class SyncEngine {
       const Uuid().v5(_namespace, 'nitznutz/$deviceId/$kind/$localId');
 
   DateTime get _now => DateTime.fromMillisecondsSinceEpoch(nowMs(), isUtc: true);
+
+  /// A time of an event as `sync-push` takes it (SEC-B20-1): never earlier than [minClientMs] and never later than the
+  /// server's time. One from a clock that was wrong (before the floor) keeps its place in time by the phone's offset from
+  /// the server's time now, then is held inside the range; a row is re-timed, never dropped, and the time kept on the
+  /// phone is not touched.
+  int _wireTime(int t) {
+    final int server = serverNowMs();
+    final int shifted = t < minClientMs ? t + (server - nowMs()) : t;
+    return shifted.clamp(minClientMs, math.max(server, minClientMs));
+  }
 
   /// One full round. Safe to call as often as wanted, and from two places at once (the second waits for the first).
   Future<SyncReport> syncOnce() =>
@@ -316,7 +339,7 @@ class SyncEngine {
   Map<String, Object?> _attemptEvent(Attempt a) => <String, Object?>{
     'id': eventIdOf(deviceId, 'attempt', a.id),
     'child_id': a.profileId,
-    'at': a.at.millisecondsSinceEpoch,
+    'at': _wireTime(a.at.millisecondsSinceEpoch),
     'engine': engineVersion,
     'type': 'attempt',
     'data': <String, Object?>{
@@ -341,25 +364,30 @@ class SyncEngine {
     },
   };
 
-  Map<String, Object?> _sessionEvent(Session s) => <String, Object?>{
-    'id': eventIdOf(deviceId, 'session', s.id),
-    'child_id': s.profileId,
-    'at': s.startedAt.millisecondsSinceEpoch,
-    'engine': engineVersion,
-    'type': 'session',
-    'data': <String, Object?>{
-      'plan': s.plan,
-      'started_at': s.startedAt.millisecondsSinceEpoch,
-      'ended_at': s.endedAt!.millisecondsSinceEpoch,
-      'end_reason': s.endReason,
-      'session_local': s.id,
-    },
-  };
+  Map<String, Object?> _sessionEvent(Session s) {
+    final int start = _wireTime(s.startedAt.millisecondsSinceEpoch);
+    // The two times move together; the end never comes before the start.
+    final int end = math.max(start, _wireTime(s.endedAt!.millisecondsSinceEpoch));
+    return <String, Object?>{
+      'id': eventIdOf(deviceId, 'session', s.id),
+      'child_id': s.profileId,
+      'at': start,
+      'engine': engineVersion,
+      'type': 'session',
+      'data': <String, Object?>{
+        'plan': s.plan,
+        'started_at': start,
+        'ended_at': end,
+        'end_reason': s.endReason,
+        'session_local': s.id,
+      },
+    };
+  }
 
   Map<String, Object?> _rewardEvent(Reward r) => <String, Object?>{
     'id': eventIdOf(deviceId, 'reward', r.id),
     'child_id': r.profileId,
-    'at': r.at.millisecondsSinceEpoch,
+    'at': _wireTime(r.at.millisecondsSinceEpoch),
     'engine': engineVersion,
     'type': 'reward',
     'data': <String, Object?>{'kind': r.kind, 'key': r.awardKey},
@@ -368,9 +396,10 @@ class SyncEngine {
   /// The kinds of event, in the order they are read (and the names of the event ids).
   static const List<String> _kinds = <String>['attempt', 'session', 'reward'];
 
-  /// Batches of one kind that the server refuses event by event, before it has shown that it takes the kind, which a round
-  /// tries before it gives that kind up: each costs a call for the batch and one for each of its events. A round that gives
-  /// a kind up is a stall (see [stallWait]).
+  /// Batches (of any kind, one budget for the round) that the server refuses event by event before it has shown that it
+  /// takes the kind: each costs a call for the batch and one for each of its events. When they are used up, every kind
+  /// still without a verdict gets one probe, the newest unsent row of the kind, and is given up if that is refused too. A
+  /// round that gives a kind up is a stall (see [stallWait]).
   static const int maxSuspectBatches = 2;
 
   /// Once per wire format, rows the server refused under an older one are made "not sent" again, so this version sends
@@ -386,41 +415,53 @@ class SyncEngine {
   // ---- a stall: backing off ----
 
   /// How long a round that stalled (the server took no event of a kind, so it may not know this app's format) is followed by
-  /// no event call at all: the first time [stallBase], then twice as long each time, at most [stallCap]. Without it every
-  /// round of every five minutes would spend a call per event on rows the server will not take (41 per batch), against
-  /// `sync-push`'s 600 calls an hour. Setting `sync_stall`: the number of stalled rounds in a row and when the last one was.
+  /// no event call for the kinds that stalled: the first time [stallBase], then twice as long each time, at most
+  /// [stallCap]. The other kinds go on as usual (SEC-B20-3). Without it every round of every five minutes would spend a
+  /// call per event on rows the server will not take (41 per batch), against `sync-push`'s 600 calls an hour. Setting
+  /// `sync_stall`: the number of stalled rounds in a row, when the last one was, and the kinds that stalled (`1,<ms>,reward`
+  /// or `2,<ms>,attempt+session`).
   static const Duration stallBase = Duration(minutes: 5);
   static const Duration stallCap = Duration(hours: 1);
 
   /// The wait after the [count]th stalled round in a row.
   static Duration stallWait(int count) {
-    final Duration wait = stallBase * (1 << math.min(count - 1, 10));
+    final Duration wait = stallBase * (1 << math.min(math.max(count - 1, 0), 10));
     return wait > stallCap ? stallCap : wait;
   }
 
-  /// The stalled rounds in a row and the time (the device's clock) of the last one; null when the last round did not stall.
-  Future<({int count, int at})?> _stall() async {
+  /// The stalled rounds in a row, the time (the device's clock) of the last one and the kinds that stalled; null when the
+  /// last round did not stall, or the setting is not one this engine wrote.
+  Future<({int count, int at, Set<String> kinds})?> _stall() async {
     final List<String> parts = (await db.setting(_stallKey) ?? '').split(',');
-    final int? count = parts.length == 2 ? int.tryParse(parts[0]) : null;
-    final int? at = parts.length == 2 ? int.tryParse(parts[1]) : null;
-    return count == null || at == null ? null : (count: count, at: at);
+    if (parts.length != 3) return null;
+    final int? count = int.tryParse(parts[0]);
+    final int? at = int.tryParse(parts[1]);
+    final Set<String> kinds = parts[2].split('+').where(_kinds.contains).toSet();
+    return count == null || count < 1 || at == null || kinds.isEmpty
+        ? null
+        : (count: count, at: at, kinds: kinds);
   }
 
-  /// True while the wait after a stalled round is not over. A clock that went back does not hold the sync for ever.
-  Future<bool> _backingOff() async {
-    final ({int count, int at})? stall = await _stall();
-    if (stall == null) return false;
+  /// The kinds that are still in the wait after a stalled round; none when it is over. A clock that went back does not hold
+  /// the sync for ever.
+  Future<Set<String>> _waitingKinds() async {
+    final ({int count, int at, Set<String> kinds})? stall = await _stall();
+    if (stall == null) return const <String>{};
     final int since = nowMs() - stall.at;
-    return since >= 0 && since < stallWait(stall.count).inMilliseconds;
+    return since >= 0 && since < stallWait(stall.count).inMilliseconds ? stall.kinds : const <String>{};
   }
 
-  Future<void> _noteStall({required bool stalled}) async {
-    final ({int count, int at})? before = await _stall();
-    if (!stalled) {
-      if (before != null) await db.putSetting(_stallKey, '');
+  /// Records how the round ended: [stalled] kinds start (or lengthen) a wait, in which the [skipped] ones, still waiting
+  /// from before, stay; a round that stalled nothing and skipped nothing ends the wait. A round that only skipped changes
+  /// nothing.
+  Future<void> _noteStall({required Set<String> stalled, required Set<String> skipped}) async {
+    final ({int count, int at, Set<String> kinds})? before = await _stall();
+    if (stalled.isEmpty) {
+      if (before != null && skipped.isEmpty) await db.putSetting(_stallKey, '');
       return;
     }
-    await db.putSetting(_stallKey, '${(before?.count ?? 0) + 1},${nowMs()}');
+    final String kinds = (<String>{...stalled, ...skipped}.toList()..sort()).join('+');
+    await db.putSetting(_stallKey, '${(before?.count ?? 0) + 1},${nowMs()},$kinds');
   }
 
   // ---- sending events ----
@@ -429,9 +470,9 @@ class SyncEngine {
     int pushed = 0;
     int refused = 0;
     await _resendRefusedOncePerFormat();
-    if (await _backingOff()) return (pushed: 0, refused: 0);
+    final Set<String> waiting = await _waitingKinds();
     final Set<String> gone = await _tombstoned();
-    final _Round round = _Round();
+    final _Round round = _Round(waiting: waiting);
     while (true) {
       // Read again for each batch: a child made during a long round is held at once.
       final Set<String> held = await _childrenNotOnServer();
@@ -480,14 +521,81 @@ class SyncEngine {
           at: at,
         );
       }
+      if (round.newSuspects) round.suspectBatches++;
+      round.newSuspects = false;
+      if (round.suspectBatches >= maxSuspectBatches) {
+        // The budget is used up: one probe for each kind without a verdict, then the rest of the round, or no more of it.
+        for (final String kind in _kinds) {
+          if (round.understood[kind]! || round.givenUp.contains(kind)) continue;
+          final ({int pushed, int refused}) probed = await _probe(round, kind, gone);
+          pushed += probed.pushed;
+          refused += probed.refused;
+          if (!round.understood[kind]!) round.givenUp.add(kind);
+        }
+      }
       if (events.isEmpty && dropA.isEmpty && dropS.isEmpty && dropW.isEmpty) break;
     }
-    if (round.stalled) {
-      final int waiting = round.suspects.values.fold(0, (int n, Set<int> ids) => n + ids.length);
-      Log.d('sync: format mismatch, $waiting events kept for the next round');
+    final Set<String> stalled = round.stalled;
+    if (stalled.isNotEmpty) {
+      final int kept = round.suspects.values.fold(0, (int n, Set<int> ids) => n + ids.length);
+      Log.d('sync: format mismatch, $kept events kept for the next round');
     }
-    await _noteStall(stalled: round.stalled);
+    await _noteStall(stalled: stalled, skipped: waiting);
     return (pushed: pushed, refused: refused);
+  }
+
+  /// One last try for a [kind] the round is about to give up on: its newest unsent row (not one of the suspects), sent
+  /// alone. If the server takes it the kind is understood, every suspect is a bad row and the round goes on with the rows
+  /// after them; if it is refused too the kind stalls (SEC-B20-1). Without it 80 bad rows at the head of the queue would
+  /// stop the good rows behind them for ever, since every round starts from the oldest.
+  Future<({int pushed, int refused})> _probe(_Round round, String kind, Set<String> gone) async {
+    final Set<String> skip = <String>{...await _childrenNotOnServer(), ...gone};
+    final int after = round.after[kind]!;
+    final (int, Map<String, Object?>)? row = switch (kind) {
+      'attempt' => <(int, Map<String, Object?>)>[
+        for (final Attempt x in await db.unsyncedAttempts(
+          limit: 1,
+          except: skip,
+          after: after,
+          newestFirst: true,
+        ))
+          (x.id, _attemptEvent(x)),
+      ].firstOrNull,
+      'session' => <(int, Map<String, Object?>)>[
+        for (final Session x in await db.unsyncedSessions(
+          limit: 1,
+          except: skip,
+          after: after,
+          newestFirst: true,
+        ))
+          (x.id, _sessionEvent(x)),
+      ].firstOrNull,
+      _ => <(int, Map<String, Object?>)>[
+        for (final Reward x in await db.unsyncedRewards(
+          limit: 1,
+          except: skip,
+          after: after,
+          newestFirst: true,
+        ))
+          (x.id, _rewardEvent(x)),
+      ].firstOrNull,
+    };
+    if (row == null) return (pushed: 0, refused: 0);
+    final _Sent sent = await _send(<Map<String, Object?>>[row.$2]);
+    if (sent.rejected.isNotEmpty) {
+      round.probeFailed.add(kind);
+      return (pushed: 0, refused: 0);
+    }
+    final int marked = await _settle(
+      round,
+      kind,
+      ids: <int>[row.$1],
+      dropped: const <int>[],
+      inCall: <String>{row.$2['id']! as String},
+      rejected: sent.rejected,
+      at: _now,
+    );
+    return (pushed: sent.pushed, refused: sent.refused + marked);
   }
 
   /// Marks what became of the rows of one [kind] in one call: those the server took (or had, or refused by id) and those of
@@ -495,7 +603,8 @@ class SyncEngine {
   /// server has shown that it takes the kind in this round, and a suspect until then (marked nothing, left out of the next
   /// batches of the round, so that the rows after it still go: QA-18). The first event of the kind the server takes gives
   /// the verdict on every suspect: bad rows. A round that ends with suspects left is a stall; they all wait for the next
-  /// round. Returns how many rows were marked refused.
+  /// round. Whether a kind is given up is for [_pushEvents] to say (the budget of suspect batches, then [_probe]). Returns
+  /// how many rows were marked refused.
   Future<int> _settle(
     _Round round,
     String kind, {
@@ -529,8 +638,7 @@ class SyncEngine {
     if (bad.isNotEmpty) {
       suspects.addAll(bad);
       round.after[kind] = bad.reduce(math.max);
-      round.batches[kind] = round.batches[kind]! + 1;
-      if (round.batches[kind]! >= maxSuspectBatches) round.givenUp.add(kind);
+      round.newSuspects = true;
     }
     return 0;
   }
@@ -541,6 +649,10 @@ class SyncEngine {
     _ => db.markRewardsSynced(ids, at),
   };
 
+  /// The one answer that says a row is bad on its own: our gateway's `bad_request`, with the status 400. The same word from
+  /// anything else (another status) is a failure that leaves the rows as they are (SEC-B20-7).
+  static bool _isBadRequest(GatewayException e) => e.code == 'bad_request' && e.status == 400;
+
   /// Sends [events] in one call. When the server refuses the call as a whole (`bad_request`: one event it will not take
   /// refuses the batch), they are sent again one by one, so that the good ones get in and the ones it will not take are known
   /// by their ids ([_Sent.rejected]). Any other failure (no network, the server down) is thrown: everything stays for the
@@ -550,7 +662,7 @@ class SyncEngine {
     try {
       return _Sent.of(await call('sync-push', <String, Object?>{'events': events}));
     } on GatewayException catch (e) {
-      if (e.code != 'bad_request') rethrow;
+      if (!_isBadRequest(e)) rethrow;
     }
     int pushed = 0;
     int refused = 0;
@@ -565,7 +677,7 @@ class SyncEngine {
         pushed += one.pushed;
         refused += one.refused;
       } on GatewayException catch (x) {
-        if (x.code != 'bad_request') rethrow;
+        if (!_isBadRequest(x)) rethrow;
         rejected.add(e['id']! as String);
       }
     }
@@ -631,7 +743,7 @@ class SyncEngine {
           if (withWords) 'words': a.words,
         });
       } on GatewayException catch (e) {
-        if (e.code != 'bad_request') rethrow;
+        if (!_isBadRequest(e)) rethrow;
         return null;
       }
     }
@@ -650,8 +762,14 @@ class SyncEngine {
     return null;
   }
 
-  /// The time an alert is sent with: its own, but never ahead of the server's.
-  int _alertTime(Alert a) => math.min(a.at.millisecondsSinceEpoch, serverNowMs());
+  /// The time an alert is sent with: its own, but never ahead of the server's, and the server's own when its time is before
+  /// what the gateway takes (a wrong clock: the server lists and deletes alerts by this time, so the floor would not do;
+  /// SEC-B20-2).
+  int _alertTime(Alert a) {
+    final int at = a.at.millisecondsSinceEpoch;
+    final int server = serverNowMs();
+    return at < minClientMs ? server : math.min(at, server);
+  }
 
   /// A parent device takes in the alerts the family's other devices raised. Returns how many were new here.
   Future<int> _pullAlerts() async {

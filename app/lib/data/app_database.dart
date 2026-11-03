@@ -253,9 +253,19 @@ class AppDatabase extends _$AppDatabase {
   /// How long an alert, and the words in it, are kept.
   static const Duration alertKeep = Duration(days: 30);
 
+  /// The earliest time the gateway takes from a device (`at` of an event or an alert, `testvectors/wire-patterns.json`:
+  /// 2017-07-14). A time before it comes from a clock that was wrong.
+  static const int serverTimeFloorMs = 1500000000000;
+
   /// Alerts older than [alertKeep] go, and every word goes when "keep the words" is off here (SEC-28). Run after every
   /// sync round and at the start of the app, so a phone that never opens the parent area keeps nothing longer either.
+  /// An alert not delivered whose time is before [serverTimeFloorMs] (raised under a wrong clock) is first given [now]:
+  /// the gateway would not take that time, and 30 days from it would already be over (SEC-B20-2).
   Future<void> tidyAlerts(DateTime now) async {
+    await restampUndeliveredAlertsBefore(
+      DateTime.fromMillisecondsSinceEpoch(serverTimeFloorMs, isUtc: true),
+      now,
+    );
     await pruneAlerts(now.subtract(alertKeep));
     if (await setting('keep_words') == 'off') await clearAlertWords();
   }
@@ -277,6 +287,15 @@ class AppDatabase extends _$AppDatabase {
   Future<void> markAlertsRead(DateTime at) => (update(
     alerts,
   )..where(($AlertsTable t) => t.readAt.isNull())).write(AlertsCompanion(readAt: Value<DateTime>(at)));
+
+  /// Alerts timed before [floor] that the family has not been told about (not sent, or kept aside as refused) are timed
+  /// [now] instead.
+  Future<void> restampUndeliveredAlertsBefore(DateTime floor, DateTime now) =>
+      (update(alerts)..where(
+            ($AlertsTable t) =>
+                t.at.isSmallerThanValue(floor) & (t.syncedAt.isNull() | t.syncedAt.equals(refusedBySync)),
+          ))
+          .write(AlertsCompanion(at: Value<DateTime>(now)));
 
   /// Alerts older than [before] go; so do the words of the ones that stay when [clearWords] is true.
   Future<void> pruneAlerts(DateTime before) =>
@@ -311,13 +330,15 @@ class AppDatabase extends _$AppDatabase {
     );
   });
 
-  /// Answers made on this device that have not been sent yet, oldest first. Those of the children in [except] are left
-  /// out (the sync engine holds them until the server has the child, B-32), and so are those numbered [after] or lower
-  /// (the rows of this round that wait for a verdict, QA-18).
+  /// Answers made on this device that have not been sent yet, oldest first (newest first with [newestFirst]: the probe of
+  /// a round that is about to give up on the kind, SEC-B20-1). Those of the children in [except] are left out (the sync
+  /// engine holds them until the server has the child, B-32), and so are those numbered [after] or lower (the rows of
+  /// this round that wait for a verdict, QA-18).
   Future<List<Attempt>> unsyncedAttempts({
     int limit = 40,
     Set<String> except = const <String>{},
     int after = 0,
+    bool newestFirst = false,
   }) =>
       (select(attempts)
             ..where(
@@ -327,16 +348,19 @@ class AppDatabase extends _$AppDatabase {
                   t.profileId.isNotIn(except) &
                   t.id.isBiggerThanValue(after),
             )
-            ..orderBy(<OrderClauseGenerator<$AttemptsTable>>[(t) => OrderingTerm.asc(t.id)])
+            ..orderBy(<OrderClauseGenerator<$AttemptsTable>>[
+              (t) => newestFirst ? OrderingTerm.desc(t.id) : OrderingTerm.asc(t.id),
+            ])
             ..limit(limit))
           .get();
 
-  /// Visits made on this device that have ended and have not been sent yet, oldest first, without those of the
-  /// children in [except] and those numbered [after] or lower.
+  /// Visits made on this device that have ended and have not been sent yet, oldest first (or newest first), without
+  /// those of the children in [except] and those numbered [after] or lower.
   Future<List<Session>> unsyncedSessions({
     int limit = 40,
     Set<String> except = const <String>{},
     int after = 0,
+    bool newestFirst = false,
   }) =>
       (select(sessions)
             ..where(
@@ -347,7 +371,9 @@ class AppDatabase extends _$AppDatabase {
                   t.profileId.isNotIn(except) &
                   t.id.isBiggerThanValue(after),
             )
-            ..orderBy(<OrderClauseGenerator<$SessionsTable>>[(t) => OrderingTerm.asc(t.id)])
+            ..orderBy(<OrderClauseGenerator<$SessionsTable>>[
+              (t) => newestFirst ? OrderingTerm.desc(t.id) : OrderingTerm.asc(t.id),
+            ])
             ..limit(limit))
           .get();
 
@@ -509,18 +535,22 @@ class AppDatabase extends _$AppDatabase {
     rewards,
   )..where(($RewardsTable t) => t.id.isIn(ids))).write(RewardsCompanion(seenAt: Value<DateTime?>(at)));
 
-  /// Awards not sent yet, oldest first, without those of the children in [except] and those numbered [after] or lower.
+  /// Awards not sent yet, oldest first (or newest first), without those of the children in [except] and those numbered
+  /// [after] or lower.
   Future<List<Reward>> unsyncedRewards({
     int limit = 40,
     Set<String> except = const <String>{},
     int after = 0,
+    bool newestFirst = false,
   }) =>
       (select(rewards)
             ..where(
               ($RewardsTable t) =>
                   t.syncedAt.isNull() & t.profileId.isNotIn(except) & t.id.isBiggerThanValue(after),
             )
-            ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.id)])
+            ..orderBy(<OrderingTerm Function($RewardsTable)>[
+              ($RewardsTable t) => newestFirst ? OrderingTerm.desc(t.id) : OrderingTerm.asc(t.id),
+            ])
             ..limit(limit))
           .get();
 
