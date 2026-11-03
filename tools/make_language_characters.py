@@ -385,31 +385,76 @@ def pip_side():
     return out
 
 
-def pip_head(expr):
+def pip_wing(cx, cy, rx, ry, rot):
+    """A folded budgerigar wing as on the door host: dark green, barred with yellow scallops."""
     c = PIP
-    out = ['<circle cx="256" cy="380" r="150" fill="%s"/>' % c['green'],
-           '<circle cx="256" cy="200" r="150" fill="%s"/>' % c['face'],
-           '<circle cx="252" cy="192" r="140" fill="%s"/>' % c['yellow']]
-    out += ['<ellipse cx="%d" cy="262" rx="28" ry="20" fill="%s"/>' % (x, c['cheek']) for x in (150, 362)]
-    out += ['<circle cx="%d" cy="%d" r="9" fill="#3B2C85"/>' % xy for xy in ((196, 320), (226, 334), (286, 334), (316, 320))]
-    out.append('<rect x="228" y="232" width="56" height="22" rx="11" fill="%s"/>' % c['cere'])
-    out.append('<path d="M 222 254 Q 256 244 290 254 Q 288 290 256 310 Q 224 290 222 254 Z" fill="%s"/>' % c['beak'])
-    for x in (186, 326):
+    t = 'rotate(%s %s %s)' % (f(rot), f(cx), f(cy))
+    out = ['<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="%s" transform="%s"/>' % (f(cx), f(cy), f(rx), f(ry), c['wing'], t)]
+    for k in range(4):
+        yy = cy - ry * 0.55 + k * ry * 0.34
+        out.append('<path d="M%s %s q%s %s %s 0 q%s %s %s 0" fill="none" stroke="%s" stroke-width="6" stroke-linecap="round" transform="%s"/>'
+                   % (f(cx - rx * 0.6), f(yy), f(rx * 0.3), f(ry * 0.22), f(rx * 0.6), f(rx * 0.3), f(ry * 0.22), f(rx * 0.6), c['yellow'], t))
+    return out
+
+
+def pip_head(expr):
+    """Pip from the chest up, the same bird as the door host: a round crown that flows into the throat (no neck), the
+    yellow face and forehead with fine dark bars on the crown's sides, the violet-blue cheek patches, the four black throat
+    spots, the blue cere over a short hooked beak, the green chest and the barred wing edges at the shoulders. The
+    expression is in the eyes, the brow feathers and the tilt of the head; a bird has no mouth to smile with."""
+    c = PIP
+    tilt = {'happy': -9, 'think': 11, 'frown': -3}[expr]
+    drop = {'happy': 0, 'think': 0, 'frown': 10}[expr]
+    out = ['<ellipse cx="256" cy="520" rx="196" ry="200" fill="%s"/>' % c['green_d'],
+           '<ellipse cx="262" cy="514" rx="188" ry="196" fill="%s"/>' % c['green'],
+           '<ellipse cx="262" cy="540" rx="110" ry="150" fill="%s"/>' % c['belly']]
+    out += pip_wing(92, 470, 62, 130, 14) + pip_wing(420, 470, 62, 130, -14)
+    out.append('<g transform="translate(0 %d) rotate(%d 256 360)">' % (drop, tilt))
+    head = ('M 256 52 C 352 52, 404 124, 398 204 C 394 262, 366 304, 336 330 C 316 348, 290 356, 256 356 '
+            'C 222 356, 196 348, 176 330 C 146 304, 118 262, 114 204 C 108 124, 160 52, 256 52 Z')
+    out.append('<path d="%s" fill="%s"/>' % (head, c['face']))
+    out.append('<path d="M 256 60 C 346 60, 392 128, 388 202 C 384 258, 358 296, 330 320 C 310 338, 288 346, 256 346 '
+               'C 224 346, 202 338, 182 320 C 154 296, 128 258, 124 202 C 120 128, 166 60, 256 60 Z" fill="%s"/>' % c['yellow'])
+    for sx in (-1, 1):
+        for k, (half, y0) in enumerate(((92, 92), (112, 116), (124, 140), (130, 164))):
+            x0 = 256 + sx * (half - 26)
+            out.append('<path d="M %d %d q %d -6 %d 0 q %d -6 %d 0" fill="none" stroke="%s" stroke-width="4" stroke-linecap="round" opacity="0.75"/>'
+                       % (x0, y0, sx * 9, sx * 18, sx * 9, sx * 18, INK))
+    out.append('<ellipse cx="298" cy="104" rx="34" ry="12" fill="%s" opacity="0.35" transform="rotate(-22 298 104)"/>' % CREAM)
+    if expr == 'happy':
+        out += ['<path d="M %d 96 q 4 -26 18 -30 M %d 92 q 2 -24 14 -30" fill="none" stroke="%s" stroke-width="7" stroke-linecap="round"/>'
+                % (x, x + 24, c['face']) for x in (236,)]
+    out += ['<ellipse cx="%d" cy="258" rx="30" ry="21" fill="%s"/>' % (x, c['cheek']) for x in (158, 354)]
+    out += ['<circle cx="%d" cy="%d" r="11" fill="%s"/>' % (x, y, INK) for x, y in ((200, 312), (228, 328), (284, 328), (312, 312))]
+    for x in (200, 312):
         if expr == 'happy':
-            out.append('<path d="M %d 200 Q %d 172 %d 200" fill="none" stroke="#3B2C85" stroke-width="12" stroke-linecap="round"/>'
-                       % (x - 30, x, x + 30))
+            out.append('<circle cx="%d" cy="186" r="34" fill="#FFF7D6"/>' % x)
+            out.append('<path d="M %d 194 Q %d 162 %d 194" fill="none" stroke="%s" stroke-width="11" stroke-linecap="round"/>' % (x - 22, x, x + 22, INK))
         else:
-            dx, dy = (8, -10) if expr == 'think' else (0, 4)
-            out.append('<circle cx="%d" cy="196" r="36" fill="#FFF7D6"/><circle cx="%d" cy="%d" r="22" fill="#3B2C85"/>'
-                       '<circle cx="%d" cy="%d" r="7" fill="%s"/>' % (x, x + dx, 196 + dy, x + dx - 7, 196 + dy - 8, WHITE))
+            dx, dy = (9, -10) if expr == 'think' else (0, 5)
+            out.append('<circle cx="%d" cy="186" r="34" fill="#FFF7D6"/><circle cx="%d" cy="%d" r="25" fill="%s"/>'
+                       '<circle cx="%d" cy="%d" r="8" fill="%s"/><circle cx="%d" cy="%d" r="4" fill="%s"/>'
+                       % (x, x + dx, 187 + dy, INK, x + dx - 8, 178 + dy, CREAM, x + dx + 8, 196 + dy, CREAM))
+            if expr == 'frown':
+                out.append('<path d="M %d 168 Q %d 150 %d 168 L %d 160 Q %d 140 %d 160 Z" fill="%s"/>'
+                           % (x - 36, x, x + 36, x + 36, x, x - 36, c['yellow']))
+    brow = c['face']
+    if expr == 'happy':
+        out += ['<path d="M %d 138 Q %d 124 %d 136" fill="none" stroke="%s" stroke-width="9" stroke-linecap="round"/>' % (x - 26, x, x + 26, brow)
+                for x in (200, 312)]
+    elif expr == 'think':
+        out.append('<path d="M 176 140 Q 200 134 224 140" fill="none" stroke="%s" stroke-width="9" stroke-linecap="round"/>' % brow)
+        out.append('<path d="M 284 122 Q 312 100 342 118" fill="none" stroke="%s" stroke-width="9" stroke-linecap="round"/>' % brow)
+    else:
+        out += ['<path d="M %d %d L %d %d" fill="none" stroke="%s" stroke-width="9" stroke-linecap="round"/>' % (a, b, cc, d, brow)
+                for a, b, cc, d in ((170, 150, 226, 132), (342, 150, 286, 132))]
+    out.append('<rect x="228" y="214" width="56" height="24" rx="12" fill="%s"/>' % c['cere'])
+    out.append('<path d="M 222 238 Q 256 228 290 238 Q 290 262 270 284 Q 262 296 256 300 Q 252 290 250 282 Q 228 262 222 238 Z" fill="%s"/>' % c['beak'])
+    out.append('<path d="M 256 300 Q 262 284 266 262" fill="none" stroke="#6F7160" stroke-width="4" stroke-linecap="round"/>')
+    out.append('</g>')
     if expr == 'think':
-        out.append('<path d="M 296 136 Q 326 112 360 130" fill="none" stroke="%s" stroke-width="10" stroke-linecap="round"/>' % c['green_d'])
         out += ['<circle cx="%d" cy="%d" r="%d" fill="%s" stroke="%s" stroke-width="4"/>' % (x, y, rr, WHITE, INK)
-                for x, y, rr in ((410, 120, 12), (440, 82, 17), (470, 40, 23))]
-    if expr == 'frown':
-        out += ['<path d="M %d %d L %d %d" fill="none" stroke="%s" stroke-width="10" stroke-linecap="round"/>' % (a, b, cc, d, c['green_d'])
-                for a, b, cc, d in ((150, 150, 210, 130), (362, 150, 302, 130))]
-        out += ['<path d="M %d 186 Q %d 172 %d 186" fill="%s"/>' % (x - 36, x, x + 36, c['yellow']) for x in (186, 326)]
+                for x, y, rr in ((424, 112, 12), (452, 74, 17), (482, 32, 23))]
     return out
 
 
@@ -546,7 +591,7 @@ def build(tmp):
     pieces['pip-front'] = os.path.join(tmp, 'pip-front.svg')
     put('pip-side', svg(pip_side(), (0, 0, 512, 512)))
     for e in ('happy', 'think', 'frown'):
-        put('pip-' + e, svg(pip_head(e), (40, 0, 480, 512)))
+        put('pip-' + e, svg(pip_head(e), (16, 0, 496, 512)))
     shutil.copy(os.path.join(LANG, 'host_rus.svg'), os.path.join(tmp, 'sasha-front.svg'))
     pieces['sasha-front'] = os.path.join(tmp, 'sasha-front.svg')
     put('sasha-side', svg(sasha_side(), (0, 0, 512, 512)))
@@ -593,7 +638,7 @@ def html(pieces, cards):
     body += '<h2>The same people make the family shapes of the personal turns (frame 5.2; pets and "someone else" are their own cards)</h2>'
     body += '<div class="row">%s</div>' % ''.join('<div class="cell">%s<span>%s</span></div>' % (img(c, 270, 230, 'k'), c.replace('card-', '').replace('-', ' '))
                                                   for c in cards)
-    small = ['mika-front', 'pip-front', 'sasha-front'] + [sp['id'] + '-small' for sp in FAMILY if sp['id'] != 'mika']
+    small = ['mika-front', 'pip-front', 'pip-happy', 'pip-think', 'pip-frown', 'sasha-front'] + [sp['id'] + '-small' for sp in FAMILY if sp['id'] != 'mika']
     body += '<h2>At 64 px</h2><div class="row">%s</div>' % ''.join(img(n, 64, cls='s') for n in small)
     return ('<html><body style="margin:0;padding:16px;background:#FFF6E8;width:1240px;font:14px sans-serif;color:#2B2350">'
             '<style>h1{font-size:22px;margin:4px 0 8px}h2{font-size:15px;margin:18px 0 6px}.row{display:flex;flex-wrap:wrap;gap:10px}'
