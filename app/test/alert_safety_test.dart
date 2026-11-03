@@ -747,6 +747,20 @@ void main() {
       expect(a.at.toUtc(), noon);
     });
 
+    test(
+      'SEC-B20-8 a wrong clock that stays wrong does not keep an undelivered alert past 30 days',
+      () async {
+        await raiseOld();
+        final DateTime later = wrong.add(const Duration(days: 31));
+        for (DateTime d = wrong; d.isBefore(later); d = d.add(const Duration(days: 1))) {
+          await db.tidyAlerts(d); // the phone stays offline and its clock stays wrong
+        }
+        expect((await db.allAlerts()).single.at.toUtc(), wrong, reason: 'not moved while the clock is wrong');
+        await db.tidyAlerts(later);
+        expect(await db.allAlerts(), isEmpty);
+      },
+    );
+
     test('an alert that was sent, or has a right time, is not touched', () async {
       await raiseOld();
       await db.markAlertsSynced(<int>[(await db.allAlerts()).single.id], noon);

@@ -259,13 +259,13 @@ class AppDatabase extends _$AppDatabase {
 
   /// Alerts older than [alertKeep] go, and every word goes when "keep the words" is off here (SEC-28). Run after every
   /// sync round and at the start of the app, so a phone that never opens the parent area keeps nothing longer either.
-  /// An alert not delivered whose time is before [serverTimeFloorMs] (raised under a wrong clock) is first given [now]:
-  /// the gateway would not take that time, and 30 days from it would already be over (SEC-B20-2).
+  /// An alert not delivered whose time is before [serverTimeFloorMs] (raised under a wrong clock) is first given [now]
+  /// once the clock is right: the gateway would not take that time, and 30 days from it would already be over
+  /// (SEC-B20-2). While [now] is itself before the floor nothing is restamped: the alert then ages in real time by the
+  /// wrong clock and is pruned after 30 days like any other (SEC-B20-8).
   Future<void> tidyAlerts(DateTime now) async {
-    await restampUndeliveredAlertsBefore(
-      DateTime.fromMillisecondsSinceEpoch(serverTimeFloorMs, isUtc: true),
-      now,
-    );
+    final DateTime floor = DateTime.fromMillisecondsSinceEpoch(serverTimeFloorMs, isUtc: true);
+    if (!now.isBefore(floor)) await restampUndeliveredAlertsBefore(floor, now);
     await pruneAlerts(now.subtract(alertKeep));
     if (await setting('keep_words') == 'off') await clearAlertWords();
   }
