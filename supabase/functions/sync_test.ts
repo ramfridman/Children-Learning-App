@@ -101,6 +101,7 @@ Deno.test("child-put: a parent saves a child with a nickname and every device of
   assert.deepEqual(pulled.children[0], {
     id: KID,
     nickname: "נועה",
+    name_spoken: null,
     avatar_id: "avatar-noa",
     companion_id: null,
     outfit_id: null,

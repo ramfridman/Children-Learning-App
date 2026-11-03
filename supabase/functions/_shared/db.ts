@@ -432,23 +432,35 @@ export function pgStore(sql: Sql): Store {
         await sql`select 1 from app.deleted_child where family_id = ${familyId} and child_id = ${c.id}`;
       if (gone) return "deleted";
       await sql`
-        insert into app.child_profile (family_id, id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band)
-        values (${familyId}, ${c.id}, ${c.nickname}, ${c.avatarId}, ${c.companionId}, ${
-        c.outfitId ?? null
-      }, ${c.addressForm}, ${c.ageBand})
-        on conflict (family_id, id) do update set nickname = excluded.nickname, avatar_id = excluded.avatar_id,
-          companion_id = excluded.companion_id, outfit_id = excluded.outfit_id, address_form = excluded.address_form,
-          age_band = excluded.age_band, updated_at = now()`;
+        insert into app.child_profile (family_id, id, nickname, name_spoken, avatar_id, companion_id, outfit_id, address_form, age_band)
+        values (${familyId}, ${c.id}, ${c.nickname}, ${
+        c.nameSpoken ?? null
+      }, ${c.avatarId}, ${c.companionId}, ${c.outfitId ?? null}, ${c.addressForm}, ${c.ageBand})
+        on conflict (family_id, id) do update set nickname = excluded.nickname, name_spoken = excluded.name_spoken,
+          avatar_id = excluded.avatar_id, companion_id = excluded.companion_id, outfit_id = excluded.outfit_id,
+          address_form = excluded.address_form, age_band = excluded.age_band, updated_at = now()`;
       return "saved";
+    },
+
+    async childNameSpoken(familyId, childId) {
+      const [r] =
+        await sql`select name_spoken from app.child_profile where family_id = ${familyId} and id = ${childId}`;
+      return r ? { spelling: r.name_spoken ?? null } : null;
+    },
+
+    async characterVoice(characterId) {
+      const [r] = await sql`select voice_id from app.family_character where character_id = ${characterId}`;
+      return r ? { voiceId: r.voice_id ?? null } : null;
     },
 
     async listChildren(familyId) {
       const rows = await sql`
-        select id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band
+        select id, nickname, name_spoken, avatar_id, companion_id, outfit_id, address_form, age_band
           from app.child_profile where family_id = ${familyId} order by created_at, id`;
       return rows.map((r): ChildProfile => ({
         id: r.id,
         nickname: r.nickname,
+        nameSpoken: r.name_spoken,
         avatarId: r.avatar_id,
         companionId: r.companion_id,
         outfitId: r.outfit_id,

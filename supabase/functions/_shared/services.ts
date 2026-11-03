@@ -32,6 +32,7 @@ export function realServices(): Services {
   // The two vendor keys are optional here: without them the tutor answers with the RuleTutor and costs nothing.
   const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
   const elevenKey = Deno.env.get("ELEVENLABS_API_KEY");
+  const voice = elevenKey ? elevenLabsClient(elevenKey) : undefined;
   // The push is optional too: without the Firebase service account alerts simply wait in the app.
   const fcmAccount = Deno.env.get("FCM_SERVICE_ACCOUNT");
   cached = {
@@ -45,13 +46,10 @@ export function realServices(): Services {
     },
     mintSession: (id) => authAdminMinter(need("SUPABASE_URL"), need("AUTH_ADMIN_KEY"))(id),
     allowDevEnrolment: Deno.env.get("ALLOW_DEV_ENROLMENT") === "true",
-    tutor: anthropicKey && elevenKey
-      ? {
-        model: anthropicClient(anthropicKey),
-        voice: elevenLabsClient(elevenKey),
-        budget: DEFAULT_TUTOR_BUDGET,
-      }
+    tutor: anthropicKey && voice
+      ? { model: anthropicClient(anthropicKey), voice, budget: DEFAULT_TUTOR_BUDGET }
       : undefined,
+    voice,
     push: (fcmAccount ? fcmClient(fcmAccount) : null) ?? undefined,
     randomBytes: (n) => crypto.getRandomValues(new Uint8Array(n)) as Bytes,
   };

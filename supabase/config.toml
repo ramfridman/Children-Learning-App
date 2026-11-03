@@ -470,3 +470,6 @@ verify_jwt = false
 
 [functions.tutor-prewarm]
 verify_jwt = false
+
+[functions.name-voice]
+verify_jwt = false

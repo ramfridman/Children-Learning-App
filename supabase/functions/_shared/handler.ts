@@ -44,6 +44,8 @@ export interface Services {
   push?: PushClient;
   /** The model and the voice. Absent until their keys are set: the tutor then answers with the RuleTutor. */
   tutor?: { model: ModelClient; voice: VoiceClient; budget: TutorBudget };
+  /** The voice alone (the child's name clip, B-42). Absent until the voice key is set: `name-voice` then says unavailable. */
+  voice?: VoiceClient;
   /** Tests only: replaces Google's roots. Always undefined in production. */
   androidRootsPem?: readonly string[];
 }

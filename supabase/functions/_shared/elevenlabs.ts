@@ -2,11 +2,25 @@
 // the server's own character table, and the history item is deleted right after use.
 const BASE = "https://api.elevenlabs.io";
 
+/** The voice settings sent with a request (the same shape `content/voices.json` has). */
+export interface VoiceSettings {
+  stability: number;
+  similarity_boost: number;
+  use_speaker_boost: boolean;
+}
+
+/** The small format a tutor line uses unless the caller names another. */
+export const DEFAULT_OUTPUT_FORMAT = "mp3_22050_32";
+
 export interface VoiceRequest {
   voiceId: string;
   modelId: string;
   text: string;
   timeoutMs: number;
+  /** An `mp3_<rate>_<kbps>` format; [DEFAULT_OUTPUT_FORMAT] when absent. */
+  outputFormat?: string;
+  /** Sent as `voice_settings` when given (the child's name clip uses the pack's settings). */
+  settings?: VoiceSettings;
 }
 
 export interface VoiceAnswer {
@@ -46,12 +60,19 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
       const timer = setTimeout(() => ctl.abort(), req.timeoutMs);
       try {
         const res = await fetchFn(
-          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=mp3_22050_32`,
+          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=${
+            encodeURIComponent(req.outputFormat ?? DEFAULT_OUTPUT_FORMAT)
+          }`,
           {
             method: "POST",
             signal: ctl.signal,
             headers: { "xi-api-key": apiKey, "content-type": "application/json" },
-            body: JSON.stringify({ text: req.text, model_id: req.modelId, language_code: "he" }),
+            body: JSON.stringify({
+              text: req.text,
+              model_id: req.modelId,
+              language_code: "he",
+              ...(req.settings ? { voice_settings: req.settings } : {}),
+            }),
           },
         );
         if (!res.ok) {

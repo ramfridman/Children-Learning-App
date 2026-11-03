@@ -362,6 +362,14 @@ export class FakeStore implements Store {
   listChildren(familyId: string) {
     return Promise.resolve([...(this.children.get(familyId)?.values() ?? [])]);
   }
+  childNameSpoken(familyId: string, childId: string) {
+    const c = this.children.get(familyId)?.get(childId);
+    return Promise.resolve(c ? { spelling: c.nameSpoken ?? null } : null);
+  }
+  characterVoice(characterId: string) {
+    const c = this.characters.get(characterId);
+    return Promise.resolve(c ? { voiceId: c.voiceId } : null);
+  }
   listTombstones(familyId: string) {
     return Promise.resolve([...(this.tombstones.get(familyId) ?? [])]);
   }

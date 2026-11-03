@@ -1,7 +1,9 @@
-// Saves a child of the family: the nickname the parent chose (the one personal text on the server), the avatar, the
+// Saves a child of the family: the nickname the parent chose (the one personal text on the server), how the name is said
+// (the spelling the parent checked, which `name-voice` turns into the child's own name clip; B-42), the avatar, the
 // companion, the prize it wears, how to address the child and the age band. A child that was deleted can never be saved again.
 import { GatewayError } from "../_shared/errors.ts";
 import type { FunctionSpec } from "../_shared/handler.ts";
+import { NAME_SPOKEN, NAME_SPOKEN_MAX } from "../_shared/name_spoken.ts";
 import type { ChildProfile } from "../_shared/store.ts";
 
 export const CHILD_ID = /^[A-Za-z0-9-]{8,64}$/;
@@ -12,6 +14,7 @@ export const NICKNAME = /^[^\u0000-\u001f\u007f<>]{1,24}$/;
 interface Body {
   child_id: string;
   nickname: string;
+  name_spoken?: string;
   avatar_id: string;
   companion_id?: string;
   outfit_id?: string;
@@ -25,6 +28,7 @@ export const spec: FunctionSpec = {
   shape: {
     child_id: { t: "string", max: 64, pattern: CHILD_ID },
     nickname: { t: "string", max: 24, pattern: NICKNAME },
+    name_spoken: { t: "string", max: NAME_SPOKEN_MAX, pattern: NAME_SPOKEN, optional: true },
     avatar_id: { t: "string", max: 40, pattern: /^[a-z0-9_-]{2,40}$/ },
     companion_id: { t: "string", max: 40, pattern: /^[a-z0-9-]{2,40}$/, optional: true },
     outfit_id: { t: "string", max: 20, pattern: /^[a-z0-9-]{2,20}$/, optional: true },
@@ -36,6 +40,7 @@ export const spec: FunctionSpec = {
     const child: ChildProfile = {
       id: b.child_id,
       nickname: b.nickname,
+      nameSpoken: b.name_spoken ?? null,
       avatarId: b.avatar_id,
       companionId: b.companion_id ?? null,
       outfitId: b.outfit_id ?? null,
