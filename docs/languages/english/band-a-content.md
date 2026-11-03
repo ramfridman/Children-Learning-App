@@ -31,9 +31,9 @@ The rule (`hebrew-notes.md` §9.1): the teaching voice speaks to the children in
 | he-ins-make-do | הַקְשִׁיבוּ, וְהַרְאוּ לְמִיקָה מַה לַּעֲשׂוֹת: גְּעוּ בַּכַּפְתּוֹר. | הקשיבו, והראו למיקה מה לַעֲשׂוֹת: געו בכפתור. | Listen, and show Mika what to do: touch the button. | A-02 LS11 buttons | text-ready |
 | he-ins-do-too | עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר "סִיַּמְתִּי". | עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור — סיימתי. | Now you! Do it, then touch the button "done". | LS11 embodied | text-ready |
 | he-ins-count | בּוֹאוּ נִסְפֹּר בְּאַנְגְּלִית. גְּעוּ בְּכׇל אֶחָד. | בואו נספור באנגלית. געו בכל אֶחָד. | Let's count in English. Touch each one. | A-04 T02 | text-ready |
-| he-ins-how-many | כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון. (draft, unpointed) | (the editor writes it) | How many are there? Listen to the buttons, and touch the right number. | A-04 T02, the scored "how many?" step after the counting (frame §2.2); added 2026-11-03 by the English teacher | needs-editor |
+| he-ins-how-many | כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן. | כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון. | How many are there? Listen to the buttons, and touch the right number. | A-04 T02, the scored "how many?" step after the counting (frame §2.2); added 2026-11-03 by the English teacher; the same line as Russian F40 | text-ready |
 | he-ins-touch-body | הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה. | הקשיבו, וגעו בגוף של מיקה. | Listen, and touch Mika's body. | A-06 LS11 hotspots | text-ready |
-| he-ins-give | הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ. | הקשיבו, וגררו את האוכל לפיפ. | Listen, and drag the food to Pip. | A-08 LS11 drag | text-ready |
+| he-ins-give | הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ. | הקשיבו, וגררו את הָאֹכֶל לפיפ. | Listen, and drag the food to Pip. | A-08 LS11 drag | text-ready |
 | he-ins-say | עַכְשָׁו תּוֹרְכֶם. אִמְרוּ גַּם אַתֶּם! | עכשיו תורכם. אִמְרוּ גם אתם. | Now it's your turn. You say it too! | LS09 | text-ready |
 | he-ins-mic | גְּעוּ בַּמִּיקְרוֹפוֹן, וְאִמְרוּ. | געו במיקרופון, וְאִמְרוּ. | Touch the microphone, and say it. | LS09 voice on | text-ready |
 | he-ins-said-it | אָמַרְתֶּם? גְּעוּ בַּכַּפְתּוֹר "אָמַרְתִּי". | אמרתם? געו בכפתור — אמרתי. | Did you say it? Touch the button "I said it". | LS09 voice off | text-ready |
@@ -85,6 +85,8 @@ The rule (`hebrew-notes.md` §9.1): the teaching voice speaks to the children in
 - `he-ins-said-it`: same as `he-ins-do-too`: the button is named ("אָמַרְתִּי" is a first-person past verb, the same in every voice).
 - `he-ins-drum`: "לְכׇל חֵלֶק", the same words as the Hebrew course (was "על כל חלק").
 - `he-ins-give`: the name Pip is פִּיפּ with a hard final pe (dagesh), not a final ף.
+- `he-ins-give` (voice text, 2026-11-03, second pass): הָאֹכֶל keeps its nikud, because plain האוכל is read with the stress on the last syllable ("the one who eats"); the same rule is in the Hebrew course (`i-odd-food`).
+- `he-ins-how-many` (new, 2026-11-03): the English teacher's draft kept as it was in meaning ("How many are there? Listen to the buttons, and touch the right number"); pointed, plural, 7 words, no gender. `כַּמָּה יֵשׁ?` and not "how many did we count": the number is the answer, and the line is the same as Russian F40 (one clip can serve both courses).
 - `he-ins-strip`: was "how many drum beats? touch the right row of drums"; the plural of תֹּף is תֻּפִּים; same wording as the Hebrew course.
 - `he-ins-thumbs`: אֲגוּדָל (thumb); בַּ before a hataf.
 - `he-ins-personal`: says first that answering is optional; the pass button is "לדלג".
@@ -616,7 +618,7 @@ All original, no text, no brands, no franchise look; one consistent style; Pip a
 
 - **Skills:** 17 (ENG-A-01 to A-17). **Words taught in sets:** 69. **Personal turns:** 4. **Chants:** 5. **Stories:** 1 (6 pages). **Pictures:** 111 briefs.
 - **English clips:** 223 (75 words, 68 slow words for hint level 1, 80 chunks, chant lines and story pages); **2,148 characters** (1,780 without the slow clips). Each has a row in `pronunciation.csv`.
-- **Hebrew clips:** 52 frame lines and 68 glosses. The 51 final lines (1,163 characters as voice text) and the 68 glosses (460 characters, pointed, as for every single word until the pilot decides) are **1,623 characters** (counted by the hebrew-text-editor on 2026-11-03 after the final wording; before the editor it was 1,382 unpointed). The new draft `he-ins-how-many` (needs-editor) is 42 characters unpointed, so about **1,665 characters**; the editor's voice text may change it by a few.
+- **Hebrew clips:** 52 frame lines and 68 glosses. The 52 final lines (1,207 characters as voice text: the 51 lines of 1,163, the new `he-ins-how-many` of 41, and 3 for the nikud that `he-ins-give` now keeps on הָאֹכֶל) and the 68 glosses (460 characters, pointed, as for every single word until the pilot decides) are **1,667 characters** (counted by the hebrew-text-editor on 2026-11-03 after the final wording).
 - **Total for one voicing of Band A:** about **3,813 characters** (English 2,148 + Hebrew about 1,665), about **0.31 USD** at the list price used in `voices.md` (0.08 USD per 1,000 characters, `eleven_v4`). Counting rule: Unicode code points of the exact `say` text (as `voice_gen` counts). Not counted: re-takes after a `heard-wrong`, isolated letter sounds (Band B), the drum and animal sound effects.
 - **Nothing is voiced by Claude.** The owner runs every paid command and types the character count (CLAUDE.md › Characters and money).
 

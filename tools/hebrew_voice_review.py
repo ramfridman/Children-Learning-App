@@ -733,6 +733,8 @@ def eleven(text):
 COURSE_KEEP |= {canon(w) for w in (
     'וְאִמְרוּ',    # plain "ואמרו" is read "ve-amru" (and they said); here it is "ve-imru" (and say)
     'לֶחָבֵר',      # plain "לחבר" is also the infinitive "to connect"; here it is "to the friend"
+    'הָאֹכֶל',      # plain "האוכל" is read with the stress on the last syllable ("the one who eats"); here it is "ha-O-khel" (the food)
+    'אִי',          # plain "אי" alone is read "ai" or "ee" (not); here it is "i" (island), as in אִי הַשָּׂפוֹת
 )}
 
 

@@ -1,6 +1,6 @@
 # The Hebrew course: Band A content batch (HEB-1)
 
-Owner: hebrew-language-teacher. Date: 2026-11-03. Status: **text-ready** (the hebrew-text-editor, 2026-11-03: every text below has its final wording, nikud and voice text, and waits for the owner; `docs/agents/hebrew-notes.md` §9). Words taken from the syllabus lists (`syllabus.md` §3, already `text-ready`) are marked **(tr)**; the new words are `text-ready` too. Nothing is built, drawn or voiced. **Except** the three A-03 kind lines (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`, §3), new drafts of 2026-11-03 after the catalogue (frame §4.4 H4): `needs-editor`.
+Owner: hebrew-language-teacher. Date: 2026-11-03. Status: **text-ready** (the hebrew-text-editor, 2026-11-03: every text below has its final wording, nikud and voice text, and waits for the owner; `docs/agents/hebrew-notes.md` §9). Words taken from the syllabus lists (`syllabus.md` §3, already `text-ready`) are marked **(tr)**; the new words are `text-ready` too. Nothing is built, drawn or voiced. The three A-03 kind lines (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`, §3), new after the catalogue (frame §4.4 H4), are `text-ready` too (second pass, 2026-11-03).
 Skills: `syllabus.md` §6.1 (HEB-A-01 to A-14). Templates: the shared LS ids (`frame.md` §2.3; `templates.md` §2). Tags: `syllabus.md` §5 (the Band A tags are new there). Pronunciation: `pronunciation.csv` (rows `heb-a-…`). Voicing count: §9.
 
 ## 0. The rules this batch keeps
@@ -58,9 +58,9 @@ Ids are `pic.<word>`. Every picture is one clear object (or a small scene), no t
 | i-blend | מָה אָמַר הַתֻּכִּי? | A-09 (the puppet is an original parrot, תֻּכִּי) |
 | i-sort-cat | שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ. | A-03, A-05 sorts |
 | i-odd | מָה הִגִּיעַ לְכָאן בְּטָעוּת? | The editor's odd-one-out line (the maths lands' game). Was "מִי לֹא שַׁיָּךְ?": Band A asks no "not" question (curriculum §8.3), and the same game has had this owner-approved line since 2026-10-29 (`hebrew-notes.md` §2.9). **Not the prompt of a scored A-03 item** (frame §4.4 H4): it names no kind, so the colour and the theme answers are both defensible. The three lines below build on it |
-| i-odd-animals | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל בַּעֲלֵי הַחַיִּים? | **draft, `needs-editor`.** A-03.4, .7, .9: the odd one out names its kind; the animals box with its picture holds the three cards (§4 A-03) |
-| i-odd-food | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הָאֹכֶל? | **draft, `needs-editor`.** A-03.5 |
-| i-odd-clothes | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הַבְּגָדִים? | **draft, `needs-editor`.** A-03.6 |
+| i-odd-animals | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל בַּעֲלֵי הַחַיִּים? | A-03.4, .7, .9: the odd one out names its kind; the animals box with its picture holds the three cards (§4 A-03). **Final** (editor, second pass): `text-ready`. 7 words (the limit for Band A is 8). It keeps the pattern of `i-odd` ("מָה הִגִּיעַ … בְּטָעוּת") and adds the kind's box; `בַּעֲלֵי חַיִּים` as everywhere in the course (§9.3). Voice text: `מה הגיע בטעות לקופסה של בעלי החיים?`. **If the bin is not drawn as a box**, use "לַמָּקוֹם שֶׁל" (the wording of `i-sort-cat`): `מָה הִגִּיעַ בְּטָעוּת לַמָּקוֹם שֶׁל בַּעֲלֵי הַחַיִּים?` (voice text `מה הגיע בטעות למקום של בעלי החיים?`) |
+| i-odd-food | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הָאֹכֶל? | A-03.5. **Final** (`text-ready`). `הָאֹכֶל` (food) is the word children say; its voice text keeps the nikud, because plain `האוכל` is read with the stress on the last syllable ("the one who eats"). Alternative if the bin is not a box: `מָה הִגִּיעַ בְּטָעוּת לַמָּקוֹם שֶׁל הָאֹכֶל?` |
+| i-odd-clothes | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הַבְּגָדִים? | A-03.6. **Final** (`text-ready`). `הַבְּגָדִים` has the dagesh of a hard b (it is [b], as the IPA column says). Alternative if the bin is not a box: `מָה הִגִּיעַ בְּטָעוּת לַמָּקוֹם שֶׁל הַבְּגָדִים?` |
 | i-letters | אֵיפֹה הָאוֹתִיּוֹת? גְּעוּ בְּכׇל הָאוֹתִיּוֹת. | A-10 tap all |
 | i-bin-letters / i-bin-other | אוֹתִיּוֹת / דְּבָרִים אֲחֵרִים | A-10 bin labels |
 | i-name | אֵיפֹה הַשֵּׁם שֶׁלָּכֶם? | A-11 |
@@ -133,7 +133,7 @@ Verb items keep the verb's gender with the doer (the rabbit and the fish are "he
 
 **The bins (the same in the sorts and the odd ones out).** Each bin is an open box with its typical member's picture on the front: animals the elephant (פִּיל), food the banana (בָּנָנָה), clothes the plain shirt (חֻלְצָה). None of them is a card in an odd-one-out item, and none looks like a trap card (for the design-director).
 
-**Every scored odd one out names its kind and shows its bin** (frame §4.4 H4). The three cards sit in the kind's box, and the prompt is the kind's line (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`, §3; drafts, `needs-editor`); the bare `i-odd` names no kind and is never the prompt of a scored item. With no kind named, the colour answer (A-03.4: the dog is the only one that is not yellow) and the theme answer are both defensible, and an unclear question never makes an answer wrong. So CAT-THEME and CAT-LOOK are evidence only in an item that named the kind: every odd one out below names it, and every sort shows both bins with their labels. Young children readily group things that go together, and look for things of one kind when the kind is named (Markman and Hutchinson 1984).
+**Every scored odd one out names its kind and shows its bin** (frame §4.4 H4). The three cards sit in the kind's box, and the prompt is the kind's line (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`, §3, `text-ready`); the bare `i-odd` names no kind and is never the prompt of a scored item. With no kind named, the colour answer (A-03.4: the dog is the only one that is not yellow) and the theme answer are both defensible, and an unclear question never makes an answer wrong. So CAT-THEME and CAT-LOOK are evidence only in an item that named the kind: every odd one out below names it, and every sort shows both bins with their labels. Young children readily group things that go together, and look for things of one kind when the kind is named (Markman and Hutchinson 1984).
 
 | Item | Template | Cards or options | Right | Traps and tags | Rep |
 |---|---|---|---|---|---|
@@ -458,17 +458,17 @@ A visit (8 minutes) has: a warm-up (a verse the child knows, A-06), one focus (o
 
 `pronunciation.csv` holds a row per clip (`heb-a-…`), with its IPA, stress, traps and what the listener must hear. The character count is computed by script from the CSV (the text sent is `say` when it is filled, else `shown`); the voice-and-sound-director turns it into the real plan and cost, and the owner runs and pays.
 
-Counted again by the editor on 2026-11-03 after the final wording (the text sent is `say` when filled, else `shown`; spaces and punctuation count). The teacher's count before the edit was 5,400 pointed and 3,309 unpointed. The sentences are now sent as **voice text** (partial nikud, full spelling, no "!"; `hebrew-notes.md` §3 and §9.4), which is why the instruction, verse and story rows are about 35% shorter; the words, syllables and rhyme ends are still sent fully pointed until the pilot decides (§8.4 there):
+Counted again by the editor on 2026-11-03 after the final wording (and again after the three kind lines got their voice text: 4,093 became 4,035, because those rows were counted pointed before) (the text sent is `say` when filled, else `shown`; spaces and punctuation count). The teacher's count before the edit was 5,400 pointed and 3,309 unpointed. The sentences are now sent as **voice text** (partial nikud, full spelling, no "!"; `hebrew-notes.md` §3 and §9.4), which is why the instruction, verse and story rows are about 35% shorter; the words, syllables and rhyme ends are still sent fully pointed until the pilot decides (§8.4 there):
 
 | Clips | Rows | Characters as sent (the voice text) | Of them, letters without nikud |
 |---|---|---|---|
 | Words (`heb-a-w-…`, bins, place and sequence words) | 131 | 929 | 524 |
 | Syllable clips (`heb-a-u-…`, A-08 slow and A-09) | 12 | 123 | 84 |
 | Rhyme ends (`heb-a-e-…`) | 9 | 34 | 24 |
-| Instructions, praise, hints, place sentences (`heb-a-i-…`, `ok-`, `d-`, `pl-` …) | 70 | 1,430 | 1,332 |
+| Instructions, praise, hints, place sentences (`heb-a-i-…`, `ok-`, `d-`, `pl-` …) | 70 | 1,372 | 1,335 |
 | Verses (open and full) | 16 | 514 | 480 |
 | Stories (titles, pages, questions, recasts, word cards) | 41 | 1,063 | 1,004 |
-| **All of Band A** | **279** | **4,093** | **3,448** |
+| **All of Band A** | **279** | **4,035** | **3,451** |
 
 - Of the 929 word characters, 352 (201 unpointed) are the 57 `text-ready` words whose whole-word clips the syllabus voicing plan needs anyway for Bands B and C (`voice-brief.md` §5): one clip serves all three bands.
 - Several Hebrew frame lines are the same words in the three courses (for example `הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.`, `בּוֹאוּ נֹאמַר יַחַד.`, `שָׁמַעְתִּי:`); if the voice director uses one voice for them they can be one clip. That is a saving the director plans, not a text change.
@@ -478,7 +478,7 @@ Counted again by the editor on 2026-11-03 after the final wording (the text sent
 
 ## 10. Hand-offs
 
-- **hebrew-text-editor (open, 2026-11-03):** the three A-03 kind lines of §3 (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`), drafts after frame §4.4 H4: wording, nikud and voice text (their `say` cells are empty). They keep your `i-odd` pattern, "מָה הִגִּיעַ … בְּטָעוּת", and add the kind's box; if the bin is not drawn as a box, "לַמָּקוֹם שֶׁל" (as `i-sort-cat`) is the alternative. (`text-ready`, waiting for the owner): every line, word card, verse, story page, question, recast, feedback line and the name list. The three questions are settled in `hebrew-notes.md` §9: the course voice speaks in the plural (§9.1); the voice has no gender in its lines, and i-follow no longer uses קוֹרֵאת (§9.1); "מִי לֹא שַׁיָּךְ?" does not stay, it is "מָה הִגִּיעַ לְכָאן בְּטָעוּת?" (§9.3).
+- **hebrew-text-editor (done, 2026-11-03, second pass):** the three A-03 kind lines of §3 (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`) are final and `text-ready`, with their `say` cells (`pronunciation.csv`) and the "לַמָּקוֹם שֶׁל" alternative in case the bin is not drawn as a box (the design-director's spec draws it as a box, so the lines stay as they are). Every other line, word card, verse, story page, question, recast, feedback line and the name list is `text-ready` too (waiting for the owner). The three questions are settled in `hebrew-notes.md` §9: the course voice speaks in the plural (§9.1); the voice has no gender in its lines, and i-follow no longer uses קוֹרֵאת (§9.1); "מִי לֹא שַׁיָּךְ?" does not stay, it is "מָה הִגִּיעַ לְכָאן בְּטָעוּת?" (§9.3).
 - **design-director:** the A-03 bins as open boxes with the typical member's picture on the front (elephant, banana, plain shirt; A-03), holding the three cards of an odd one out; the pictures of §2 and the stories (drawn from real references), the A-10 marks, the A-14 picture paths, and the stroke directions of the arch and the circle (F6).
 - **voice-and-sound-director:** the voicing plan from `pronunciation.csv`; whether a carrier line + a word clip joins naturally (§0); the syllable clips of A-09 (about 0.5 s gaps, each syllable a clean CV, level pitch).
 - **curriculum-expert:** the 18 new tags (kind and family, and the suggested MEANING family); the A-03 check change (§4). **Settled** (frame §4.4 H1 to H4) and applied here on 2026-11-03: every A-03 odd one out names its kind and shows its bin; A-03.8, a sort, is always one of a child's two checks.
