@@ -11,6 +11,9 @@ import 'schemas.dart' show coinValues;
 // a wrong shape; they are never built from anything that has not been verified.
 
 Map<String, Object?> _map(Object? o) => o! as Map<String, Object?>;
+
+/// A part of a document that may be absent: an empty map when it is.
+Map<String, Object?> _maybe(Object? o) => o == null ? const <String, Object?>{} : _map(o);
 List<Map<String, Object?>> _maps(Object? o) => <Map<String, Object?>>[
   for (final Object? e in (o as List<Object?>? ?? const <Object?>[])) _map(e),
 ];
@@ -142,6 +145,7 @@ sealed class Activity {
     'count_tap' => CountTapActivity._(json, assets),
     'tap_answer' => TapAnswerActivity._(json, assets),
     'story' => StoryActivity._(json, assets),
+    'listen_do' => ListenDoActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
@@ -435,6 +439,52 @@ class StoryActivity extends Activity implements ChoiceActivity {
   final String correctId;
 
   bool get dialogic => question != null;
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The listen-and-do template (LS11, docs/languages/frame.md section 2.3): the child carries out a command in a scene. In `hotspots`
+/// mode the options are the glowing parts of the picture ([ChoiceOption.at]); in `buttons` they are action pictures and the friend
+/// does the one chosen; in `drag` they are things that go to [targetAt]; in `place` they are places for [thingAt]'s one thing; in
+/// `embodied` mode there is nothing to choose: the child does it and touches "done", and nothing is scored.
+class ListenDoActivity extends Activity implements ChoiceActivity {
+  ListenDoActivity._(super.json, super.assets)
+    : mode = _map(json['answer'])['mode']! as String,
+      picture = _map(json['scene'])['picture']! as String,
+      targetAt = _rect(_maybe(_map(json['scene'])['target'])['at']),
+      targetSprite = _maybe(_map(json['scene'])['target'])['sprite'] as String?,
+      thingAt = _rect(_maybe(_map(json['scene'])['thing'])['at']),
+      thingSprite = _maybe(_map(json['scene'])['thing'])['sprite'] as String?,
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  /// `hotspots`, `buttons`, `drag`, `place` or `embodied`.
+  final String mode;
+
+  /// The scene's picture (an `asset:` reference).
+  final String picture;
+
+  /// Where a dragged thing is dropped, and its picture if it has one (`drag`).
+  final Rect? targetAt;
+  final String? targetSprite;
+
+  /// The one thing that is moved, and where it starts (`place`).
+  final Rect? thingAt;
+  final String? thingSprite;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get embodied => mode == 'embodied';
 
   @override
   int get optionCount => options.length;

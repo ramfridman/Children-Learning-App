@@ -9,6 +9,7 @@ import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
+import 'choice_row.dart' show withTallStage;
 import 'choice_session.dart';
 import 'lesson_controller.dart' show LessonController;
 import 'template_session.dart';
@@ -192,14 +193,7 @@ class StorySession extends ChoiceSession {
   /// tile is in the way); at the question the stage shrinks to its usual size to leave the room to the tiles.
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
-    if (asking) return super.layoutFor(base);
-    final double bottom = base.boardHeight - TokenTouch.bottomNoHotspot - 20;
-    return base.withStageAndTiles(
-      stage: Rect.fromLTWH(base.stage.left, base.stage.top, base.stage.width, bottom - base.stage.top),
-      tilesLeft: base.tilesLeft,
-      tilesTop: base.tilesTop,
-      tilesWidth: base.tilesWidth,
-    );
+    return asking ? super.layoutFor(base) : withTallStage(base);
   }
 
   @override

@@ -54,6 +54,7 @@ import 'robot_path_session.dart';
 import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
 import 'spot_error_session.dart';
+import 'listen_do_session.dart';
 import 'story_session.dart';
 import 'template_session.dart';
 
@@ -375,6 +376,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         CountTapActivity() => CountTapSession(c, a),
         TapAnswerActivity() => TapAnswerSession(c, a, captions: caption.captions, stress: caption.stress),
         StoryActivity() => StorySession(c, a, stress: caption.stress),
+        ListenDoActivity() => ListenDoSession(c, a, stress: caption.stress),
         FlashActivity() => FlashSession(c, a),
         SortDragActivity() => SortDragSession(c, a),
         BuildPatternActivity() => BuildPatternSession(c, a),

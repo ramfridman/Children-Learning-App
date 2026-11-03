@@ -30,6 +30,7 @@
       "enum": [
         "tap_answer",
         "story",
+        "listen_do",
         "count_tap",
         "give_n",
         "flash",

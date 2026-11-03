@@ -85,6 +85,18 @@ ActivitySpec withSpeakerRoom(ActivitySpec base) {
   );
 }
 
+/// The board for a template that has no tiles under its stage (a story being told, a scene to touch or to drag in): the stage has the whole
+/// height under the guide's bubble, down to the edge where no hotspot may be, so that the picture is as large as the board lets it be.
+ActivitySpec withTallStage(ActivitySpec base) {
+  final double bottom = base.boardHeight - TokenTouch.bottomNoHotspot - 20;
+  return base.withStageAndTiles(
+    stage: Rect.fromLTWH(base.stage.left, base.stage.top, base.stage.width, bottom - base.stage.top),
+    tilesLeft: base.tilesLeft,
+    tilesTop: base.tilesTop,
+    tilesWidth: base.tilesWidth,
+  );
+}
+
 /// The row of answer tiles of one choice, in the course's direction.
 class ChoiceRow extends StatelessWidget {
   const ChoiceRow({

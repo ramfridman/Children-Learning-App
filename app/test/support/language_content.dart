@@ -361,3 +361,62 @@ Map<String, Object?> storyJson({
         : <String, Object?>{'type': 'none', 'mode': 'listen'},
   };
 }
+
+// ---- listen and do (LS11) ----
+
+/// A place in a picture, as shares of it.
+Map<String, Object?> at(double x, double y, double w, double h) => <String, Object?>{
+  'x': x,
+  'y': y,
+  'w': w,
+  'h': h,
+};
+
+/// An option of a command that is a part of the picture (`hotspots`, or a place of `place`): no face, a place.
+Map<String, Object?> partOption(String id, Map<String, Object?> where, {String? tag, String? label}) =>
+    <String, Object?>{'id': id, 'label': label ?? 'part $id', 'at': where, 'misconception': ?tag};
+
+/// An option that is a thing to drag: its picture and where it starts.
+Map<String, Object?> thingOption(String id, String asset, Map<String, Object?> where, {String? tag}) =>
+    <String, Object?>{'id': id, 'sprite': 'asset:$asset', 'label': asset, 'at': where, 'misconception': ?tag};
+
+/// A command of [course] (LS11) in [mode]: `hotspots`, `buttons`, `drag`, `place` or `embodied`.
+Map<String, Object?> listenDoJson({
+  String course = 'eng',
+  required String id,
+  String? skill,
+  required String mode,
+  String picture = 'teddy',
+  List<Map<String, Object?>>? options,
+  String? correct,
+  Map<String, Object?>? target,
+  Map<String, Object?>? thing,
+  String purpose = 'learn',
+  String? representation,
+}) {
+  final bool embodied = mode == 'embodied';
+  return <String, Object?>{
+    ..._common(
+      course,
+      id,
+      skill ?? '${course.toUpperCase()}-A-02',
+      'listen_do',
+      '1.0',
+      embodied ? 'practice' : purpose,
+      'A',
+      representation ?? 'embodied',
+    ),
+    ..._lines('$course.$id', promptText: 'הַקְשִׁיבוּ, וְהַרְאוּ לְחָבֵר מַה לַּעֲשׂוֹת.'),
+    'scene': <String, Object?>{'picture': 'asset:$picture', 'target': ?target, 'thing': ?thing},
+    'answer': embodied
+        ? <String, Object?>{'type': 'none', 'mode': 'embodied'}
+        : <String, Object?>{
+            'type': 'choice',
+            'mode': mode,
+            'options': options,
+            'correct': correct,
+            'shuffle': true,
+            'unsureAllowed': true,
+          },
+  };
+}

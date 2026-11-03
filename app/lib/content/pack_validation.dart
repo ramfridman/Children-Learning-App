@@ -321,6 +321,9 @@ List<Problem> validatePack({
       case 'story':
         checkAsset(file, 'scene.background', scene['background']);
         _story(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'listen_do':
+        checkAsset(file, 'scene.background', scene['background']);
+        _listenDo(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
       case 'count_tap':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
@@ -1010,6 +1013,7 @@ void _l4Options(
   void Function(String, String, Object?) checkVo,
   void Function(String, String, Object?) checkTag, {
   bool needCorrect = true,
+  bool faceless = false,
 }) {
   final List<Map<String, Object?>> options = _maps(answer['options']);
   if (needCorrect) _options(file, answer, say, checkTag, checkAsset: checkAsset);
@@ -1018,7 +1022,7 @@ void _l4Options(
     checkAsset(file, '$path.sprite', o['sprite']);
     checkVo(file, '$path.clip', o['clip']);
     final int faces = <String>['sprite', 'numeral', 'text'].where(o.containsKey).length;
-    if (faces > 1 || (faces == 0 && !o.containsKey('clip'))) {
+    if (faces > 1 || (faces == 0 && !o.containsKey('clip') && !faceless)) {
       say(
         file,
         path,
@@ -1032,8 +1036,11 @@ void _l4Options(
       if (x > 1.001 || y > 1.001) say(file, '$path.at', 'reaches outside the picture');
     }
   }
+  // Parts of a picture are told apart by where they are (the overlap rule), not by a face of their own.
   final List<String> looks = <String>[for (final Map<String, Object?> o in options) _look(o)];
-  if (looks.toSet().length != looks.length) say(file, 'answer.options', 'two options look the same');
+  if (!faceless && looks.toSet().length != looks.length) {
+    say(file, 'answer.options', 'two options look the same');
+  }
 }
 
 /// What an activity of a language template that is not scored must be: practice, with no options to choose and nothing right.
@@ -1043,6 +1050,128 @@ void _unscored(String file, Map<String, Object?> a, void Function(String, String
   if (answer['type'] != 'none') say(file, 'answer.type', '$what has no answer to choose: the type is "none"');
   for (final String k in <String>['correct', 'pairWith', 'pole']) {
     if (answer.containsKey(k)) say(file, 'answer.$k', '$what has no right answer');
+  }
+}
+
+/// A rectangle of the scene as shares of its picture (the validator is plain Dart, which the pack builder runs: no `dart:ui`).
+typedef _Place = ({double left, double top, double right, double bottom});
+
+_Place? _share(Object? o) {
+  if (o is! Map<String, Object?>) return null;
+  final double x = (o['x']! as num).toDouble();
+  final double y = (o['y']! as num).toDouble();
+  return (left: x, top: y, right: x + (o['w']! as num).toDouble(), bottom: y + (o['h']! as num).toDouble());
+}
+
+bool _overlap(_Place a, _Place b) =>
+    a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+
+/// Two places that overlap cannot be told apart by a touch: each part of the picture is one thing.
+void _noOverlap(String file, List<(String, _Place?)> places, void Function(String, String, String) say) {
+  for (int i = 0; i < places.length; i++) {
+    for (int j = i + 1; j < places.length; j++) {
+      final _Place? a = places[i].$2;
+      final _Place? b = places[j].$2;
+      if (a != null && b != null && _overlap(a, b)) {
+        say(file, places[j].$1, 'overlaps ${places[i].$1}: a touch must mean one thing');
+      }
+    }
+  }
+}
+
+/// LS11: what each mode needs of its scene and its options.
+void _listenDo(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final String mode = answer['mode']! as String;
+  checkAsset(file, 'scene.picture', scene['picture']);
+  final Map<String, Object?>? target = scene['target'] as Map<String, Object?>?;
+  final Map<String, Object?>? thing = scene['thing'] as Map<String, Object?>?;
+  checkAsset(file, 'scene.target.sprite', target?['sprite']);
+  checkAsset(file, 'scene.thing.sprite', thing?['sprite']);
+  for (final (String path, Map<String, Object?>? m) in <(String, Map<String, Object?>?)>[
+    ('scene.target.at', target),
+    ('scene.thing.at', thing),
+  ]) {
+    final _Place? r = _share(m?['at']);
+    if (r != null && (r.right > 1.001 || r.bottom > 1.001)) say(file, path, 'reaches outside the picture');
+  }
+  if (mode == 'embodied') {
+    _unscored(file, a, say, 'a step the child does');
+    if (a['representation'] != 'embodied') {
+      say(
+        file,
+        'representation',
+        'what the child does is the representation "embodied", never counted alone',
+      );
+    }
+    if (answer.containsKey('options')) {
+      say(file, 'answer.options', 'a step the child does has nothing to choose');
+    }
+    for (final String k in <String>['target', 'thing']) {
+      if (scene.containsKey(k)) say(file, 'scene.$k', 'a step the child does moves nothing');
+    }
+    return;
+  }
+  if (answer['type'] != 'choice') {
+    say(file, 'answer.type', 'a command that is scored is a choice: the type is "choice"');
+  }
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (options.length < 2 || answer['correct'] == null) {
+    say(file, 'answer.options', 'needs 2 or 3 options and the right one');
+    return;
+  }
+  _l4Options(
+    file,
+    answer,
+    say,
+    checkAsset,
+    checkVo,
+    checkTag,
+    faceless: mode == 'hotspots' || mode == 'place',
+  );
+  final List<(String, _Place?)> places = <(String, _Place?)>[
+    for (final (int i, Map<String, Object?> o) in options.indexed) ('answer.options[$i].at', _share(o['at'])),
+  ];
+  switch (mode) {
+    case 'hotspots':
+    case 'place':
+      for (final (int i, Map<String, Object?> o) in options.indexed) {
+        if (o['at'] == null) {
+          say(file, 'answer.options[$i].at', 'a $mode option is a place in the picture: it needs `at`');
+        }
+      }
+      if (mode == 'place') {
+        if (thing == null) say(file, 'scene.thing', 'a place mode moves one thing: the scene needs it');
+        _noOverlap(file, <(String, _Place?)>[...places, ('scene.thing.at', _share(thing?['at']))], say);
+      } else {
+        _noOverlap(file, places, say);
+      }
+    case 'buttons':
+      for (final (int i, Map<String, Object?> o) in options.indexed) {
+        if (o['sprite'] == null) {
+          say(file, 'answer.options[$i].sprite', 'a button is the picture of an action');
+        }
+      }
+    case 'drag':
+      for (final (int i, Map<String, Object?> o) in options.indexed) {
+        if (o['sprite'] == null || o['at'] == null) {
+          say(
+            file,
+            'answer.options[$i]',
+            'a thing to drag is a picture with the place it starts at (`sprite` and `at`)',
+          );
+        }
+      }
+      if (target == null) say(file, 'scene.target', 'a drag mode needs the place the things are taken to');
+      _noOverlap(file, <(String, _Place?)>[...places, ('scene.target.at', _share(target?['at']))], say);
   }
 }
 

@@ -45,6 +45,7 @@ abstract final class SchemaIds {
 const Map<String, String> supportedTemplates = <String, String>{
   'tap_answer': '1.3',
   'story': '1.0',
+  'listen_do': '1.0',
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
@@ -569,6 +570,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
     SEnum(<String>[
       'tap_answer',
       'story',
+      'listen_do',
       'count_tap',
       'give_n',
       'flash',
@@ -1147,6 +1149,31 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // LS11: the child carries out a command in a scene. `hotspots`: touch one of the glowing parts of the picture (a body, a room);
+  // `buttons`: one of 2 or 3 action pictures, and the friend does it; `drag`: one of 2 or 3 things goes to the target (a plate, a box,
+  // the friend); `place`: the one thing goes to one of 2 or 3 places; `embodied`: the child does it and touches "done" (never scored).
+  'listen_do' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The picture of the scene: the friend, the body, the room.
+          'picture': SField(_asset),
+          // Where things are dropped (`drag`).
+          'target': SField(
+            SObject(<String, SField>{'at': SField(_at), 'sprite': SField(_asset, required: false)}),
+            required: false,
+          ),
+          // The one thing that is moved (`place`).
+          'thing': SField(
+            SObject(<String, SField>{'at': SField(_at), 'sprite': SField(_asset)}),
+            required: false,
+          ),
+        }),
+      ),
+      'answer': SField(_l4Answer(const <String>['hotspots', 'buttons', 'drag', 'place', 'embodied'])),
+    }),
+  ),
   'trace' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1201,6 +1228,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'gate': gateSchema,
   'activity.tap_answer': activitySchemaFor('tap_answer')!,
   'activity.story': activitySchemaFor('story')!,
+  'activity.listen_do': activitySchemaFor('listen_do')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,
