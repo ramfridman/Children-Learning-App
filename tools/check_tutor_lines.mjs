@@ -37,14 +37,30 @@ for (const l of lines) {
     objectIds: it.object_ids,
     answers: it.answers,
   };
-  const turn = { hintLevel: l.hint, addressForm: l.form, characterGender: "m", characterNames: ["נִיצִי", "גִּבּוֹר"] };
-  const swap = process.env.SAY && l.item === "give.butterflies.4" && l.band === "C" && l.form === "m" && l.hint === 0;
+  const turn = {
+    hintLevel: l.hint,
+    addressForm: l.form,
+    characterGender: "m",
+    characterNames: ["נִיצִי", "גִּבּוֹר"],
+  };
+  const swap = process.env.SAY && l.item === "give.butterflies.4" && l.band === "C" && l.form === "m" &&
+    l.hint === 0;
   const say = swap ? process.env.SAY : l.say.replace(/!/g, "");
   const reply = { say, next: "none", hl: [], mis: null, reveals: false, safety: "none" };
   const v = validateReply(reply, facts, turn, lex, blocklist);
   if (!v.ok) {
     failing++;
-    console.log(l.item, l.band, l.form, "hint", l.hint, JSON.stringify(v.failures), JSON.stringify(v.unknown ?? []), "|", say);
+    console.log(
+      l.item,
+      l.band,
+      l.form,
+      "hint",
+      l.hint,
+      JSON.stringify(v.failures),
+      JSON.stringify(v.unknown ?? []),
+      "|",
+      say,
+    );
   }
 }
 console.log("checked", lines.length, "failing", failing);
