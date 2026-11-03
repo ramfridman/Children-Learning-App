@@ -13,6 +13,9 @@ const text = (max: number) => ({ t: "string", max, pattern: /^[^\p{Cc}\p{Cf}\p{Z
 const tag = { t: "string", max: 20, pattern: /^M-[A-Z]{2,5}-[A-Z0-9]{2,12}$/ } as const;
 const skill = { t: "string", max: 12, pattern: /^[A-Z]{2,5}-[A-Z]-[0-9]{2}$/ } as const;
 
+/** A language course's pack (`lang-<course>`) is never published: the AI tutor is off there (docs/languages/frame.md 1.6). */
+const LANGUAGE_PACK = /^lang-/;
+
 const answer: Shape = {
   id: { t: "string", max: 16, pattern: /^[a-z][a-z0-9-]{0,15}$/ },
   value: { t: "int", min: -999, max: 9999, optional: true },
@@ -76,6 +79,7 @@ export const spec: FunctionSpec = {
       misconceptions: Array<Record<string, unknown>>;
       characters: Array<Record<string, unknown>>;
     };
+    if (LANGUAGE_PACK.test(b.pack_id)) throw new GatewayError("bad_request", "language_pack");
     const items: PublishedItem[] = b.items.map((i) => ({
       itemId: i.item_id as string,
       revision: i.revision as number,

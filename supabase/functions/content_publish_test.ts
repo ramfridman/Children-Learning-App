@@ -118,6 +118,10 @@ Deno.test("content-publish: the shape is strict", async () => {
   await bad({ ...goodBody(), extra: 1 }, "unknown top-level field");
   await bad(goodBody({ pack_id: "Starter!" }), "pack id");
   await bad(goodBody({ pack_version: "1.0" }), "pack version");
+  // A language course's pack is never published: the AI tutor is off in language lessons.
+  for (const lang of ["lang-eng", "lang-heb", "lang-rus", "lang-xyz"]) {
+    await bad(goodBody({ pack_id: lang }), `the pack of a language course (${lang})`);
+  }
   await bad(goodBody({ manifest_sha256: "xyz" }), "hash");
   await bad(goodBody({ items: [{ ...goodItem(), band: "D" }] }), "band");
   await bad(goodBody({ items: [{ ...goodItem(), surprise: true }] }), "unknown item field");

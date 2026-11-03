@@ -337,7 +337,7 @@ export function pgStore(sql: Sql): Store {
 
     async tutorContext(packId, packVersion, itemId, characterId): Promise<TutorContext | null> {
       const [i] = await sql`
-        select item_id, band, llm_allowed, goal, prompt_text, number_set, allowed_actions, hint_threshold,
+        select item_id, skill_ids, band, llm_allowed, goal, prompt_text, number_set, allowed_actions, hint_threshold,
                object_ids, answers
           from app.content_item
          where pack_id = ${packId} and pack_version = ${packVersion} and item_id = ${itemId}`;
@@ -348,6 +348,7 @@ export function pgStore(sql: Sql): Store {
         select name_he, gender, voice_id from app.family_character where character_id = ${characterId}`;
       return {
         itemId: i.item_id,
+        skillIds: i.skill_ids,
         band: i.band,
         llmAllowed: i.llm_allowed,
         goal: i.goal,

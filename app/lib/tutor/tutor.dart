@@ -191,6 +191,7 @@ class TutorSession {
     'kill_switch',
     'not_configured',
     'item_not_allowed',
+    'course_not_allowed',
     'cost_cap',
     'day_cap',
     'session_cap',

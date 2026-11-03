@@ -176,6 +176,8 @@ export interface Store {
 
 export interface TutorContext {
   itemId: string;
+  /** The skills the item gives evidence for; the capitals at the start of an id say its course (`ENG-`, `HEB-`, `RUS-`). */
+  skillIds: string[];
   band: "A" | "B" | "C";
   llmAllowed: boolean;
   goal: string;

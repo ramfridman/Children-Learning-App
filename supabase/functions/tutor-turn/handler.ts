@@ -9,6 +9,15 @@ import { CONFIG_KEYS, makeLine, type Result, type RuleReason, settings } from ".
 
 export const REQUESTS_PER_MINUTE_PER_DEVICE = 60;
 
+/**
+ * The AI tutor is off in every language course (docs/languages/frame.md section 1.6): a line in English, Russian or a Hebrew
+ * reading lesson cannot be checked by the validator, and model text in a target language may not reach a child before its
+ * teacher has approved it. A language pack is named `lang-<course>`, and the skills of its items start with the course in
+ * capitals; either one is enough to refuse.
+ */
+export const LANGUAGE_PACK = /^lang-/;
+export const LANGUAGE_SKILL = /^(ENG|HEB|RUS)-/;
+
 interface Body {
   child_ref: string;
   session_ref: string;
@@ -70,11 +79,13 @@ export const spec: FunctionSpec = {
     if (!(await svc.store.rateLimitHit("tutor_req", device.id, minute, REQUESTS_PER_MINUTE_PER_DEVICE))) {
       throw new GatewayError("rate_limited", "tutor_rate");
     }
-    const cfg = settings(await svc.store.getConfigs(CONFIG_KEYS));
     const rule = (reason: RuleReason) => ({
       results: body.mistakes.map((m) => ({ mistake: m, rule: reason })),
       server_ms: Math.round(performance.now() - started),
     });
+    // Before anything is read, counted or sent: a language course never reaches the model.
+    if (LANGUAGE_PACK.test(body.pack_id)) return rule("course_not_allowed");
+    const cfg = settings(await svc.store.getConfigs(CONFIG_KEYS));
     if (!cfg.tutorEnabled) return rule("kill_switch");
 
     const tctx = await svc.store.tutorContext(
@@ -90,6 +101,7 @@ export const spec: FunctionSpec = {
         throw new GatewayError("bad_request", "unknown_mistake");
       }
     }
+    if (tctx.skillIds.some((s) => LANGUAGE_SKILL.test(s))) return rule("course_not_allowed");
     if (!tctx.llmAllowed) return rule("item_not_allowed");
 
     const out: Result[] = await Promise.all(body.mistakes.map((m) =>
