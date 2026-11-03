@@ -97,7 +97,7 @@ select throws_ok($$insert into app.family_settings (family_id, rules)
 
 -- ---- deleting a child leaves nothing of that child --------------------------------------------
 insert into app.child_profile (family_id, id, nickname, avatar_id, address_form, age_band)
-values ('d1d1d1d1-0000-4000-8000-000000000001', 'child-bbbb-0002', 'דני', 'avatar-dani', 'm', 0);
+values ('d1d1d1d1-0000-4000-8000-000000000001', 'child-bbbb-0002', 'גלעד', 'avatar-gilad', 'm', 0);
 insert into app.event (id, family_id, child_id, device_id, client_at, engine_version, type, payload)
 values ('e1e1e1e1-0000-4000-8000-000000000011', 'd1d1d1d1-0000-4000-8000-000000000001', 'child-bbbb-0002',
         'd2d2d2d2-0000-4000-8000-000000000001', now(), 1, 'attempt', '{"activity_id":"x"}');
