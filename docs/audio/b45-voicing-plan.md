@@ -8,11 +8,11 @@ line says *read* or *guess*. The number the tool prints on the day is the one yo
 
 | | Clips | Characters | USD (Turbo, list) |
 |---|---|---|---|
-| Batch 0, pilot (28 test clips) | 28 | 1,036 | 0.041 |
+| Batch 0, pilot (28 test clips) | 28 | 1,040 | 0.042 |
 | Batch 1, Nitzi, every line | 4,166 | 179,315 | 7.17 |
 | Batch 2, hero-son, every line | 4,166 | 179,315 | 7.17 |
 | Batch 3, seven friends, own lines only (57 each) | 399 | 10,332 | 0.41 |
-| **All four** | **8,759** | **369,998** | **14.80** |
+| **All four** | **8,759** | **370,002** | **14.80** |
 
 **Update, 2026-11-02 evening: the 148 lines of `docs/review/b45-new-lines-2.tsv` are in the run** (the owner said yes): the 48
 B-42 daily-welcome lines (`vo:welcome.*`, each friend says them in his or her own voice, `ownLines` is 57) and the 100
@@ -21,7 +21,7 @@ map-card lines (`vo:core.skill.<id>`, narrators only). They have their direction
 (the tool shows the 148 only once the editor has recorded them `owner-approved`; I counted them by marking them so in a
 throw-away edit of the master table and put the file back unchanged): **4,166 lines and 179,315 characters per narrator**
 (7.17 USD each), **57 lines and 1,476 characters per friend** (0.059 USD each, 0.41 USD for the seven), **all nine voices
-368,962 characters, 14.76 USD**, plus the pilot 1,036 characters (0.041 USD) = 369,998 characters, 14.80 USD. The 148 lines
+368,962 characters, 14.76 USD**, plus the pilot 1,040 characters (0.042 USD) = 370,002 characters, 14.80 USD. The 148 lines
 add 16,186 characters (0.65 USD) to the 352,776 characters of the plan before them: 3,592 a narrator (welcome 1,286, map cards
 2,306) and 1,286 a friend (the welcome). Each narrator is now **18 voice packs** (two new small ones: `part-welcome` 48 lines and
 `part-skill` 100 lines); a friend is still one pack (57 lines).
@@ -150,7 +150,7 @@ rest).
 
 | Batch | What | Clips | Characters | USD |
 |---|---|---|---|---|
-| 0 | Pilot: `audition-batch`, `docs/audio/b45/pilot.json` | 28 | 1,036 | 0.0414 |
+| 0 | Pilot: `audition-batch`, `docs/audio/b45/pilot.json` | 28 | 1,040 | 0.0416 |
 | 1 | `generate nitzi` | 4,166 | 179,315 | 7.1726 |
 | 2 | `generate hero-son` | 4,166 | 179,315 | 7.1726 |
 | 3 | `generate` for each friend, own 57 lines | 7 x 57 = 399 | 7 x 1,476 = 10,332 | 0.4133 |
@@ -162,12 +162,12 @@ rest).
   word; 42 two at the start of a question and again after "ve-OD"; 43 and 44 the same sentence with `שווה` plain, then pointed;
   45 two inside a counted list; 46 to 50 the five new hint clips (`hint.plate.h2`, `hint.glyph.h2`, `hint.in_twos.h2`,
   `hint.coin_values.h2`, `hint.hidden_part.h2`); **51 to 54 the B-42 welcome seam** (new, from `docs/milestones/B42.md`
-  section 6): 51 a made-up name alone (`דָּנִי,`, not one of your children's: tell me if it is, and I change it), 52
+  section 6): 51 a made-up name alone (`אַלְמוֹג,`), 52
   `welcome.hello.1`, 53 `welcome.topic.counting.glance`, 54 `welcome.close`, all at 0.50. You hear whether the name and the
   greeting sound like one voice and one sentence, and how long a whole welcome is. The name clip in the pilot is **only a test
   of the sound**: the real name clip (one per child and speaking voice, from the spelling a parent checked) is a separate later
-  step through the gateway; it is never made by Claude, never in a repo file, and never in this run. 162 more characters than the
-  old pilot (`דָּנִי,` 14 for the two voices, the three lines 74 each). Each clip says in its `tests` field what to hear.
+  step through the gateway; it is never made by Claude, never in a repo file, and never in this run. 166 more characters than the
+  old pilot (`אַלְמוֹג,` 18 for the two voices, the three lines 74 each). Each clip says in its `tests` field what to hear.
 - **The five new hint clips** are also inside batch 1 and 2 (they are lines of the pack). The pilot only lets you hear them first.
 - **A big batch can be stopped.** Every clip is saved as it is made. If the first clips sound wrong, press Ctrl+C: the
   money spent so far is only for the clips made. A rerun types a smaller total (clips already made are skipped).
@@ -216,8 +216,8 @@ Remove-Variable s
 dart run tool/voice_gen.dart audition-batch plan ../docs/audio/b45/pilot.json
 ```
 
-It must end with `Clips to make: 28 of 28`, `Characters of text in total: 1036`, `0.0414 USD`. Stop and tell Claude
-if not. Then (key set) the paid run, and **type 1036**:
+It must end with `Clips to make: 28 of 28`, `Characters of text in total: 1040`, `0.0416 USD`. Stop and tell Claude
+if not. Then (key set) the paid run, and **type 1040**:
 
 ```powershell
 dart run tool/voice_gen.dart audition-batch run ../docs/audio/b45/pilot.json
@@ -315,9 +315,9 @@ on headphones. Answer like round 3: `ok`, or the clip and what you heard.
 - `N45`, `H45`: two inside a list, even and calm.
 - `N46` to `N50` and `H46` to `H50`: the five new hints. Soft, level, nothing counted aloud; `hint.hidden_part.h2` keeps its
   level to the end and the dash is a beat; `hint.coin_values.h2` reads "sha-VE".
-- `N51` to `N54` and `H51` to `H54` (the welcome seam, made-up name `דָּנִי,`): play 51 then 52 with a gap of about 400 ms, then
+- `N51` to `N54` and `H51` to `H54` (the welcome seam, made-up name `אַלְמוֹג,`): play 51 then 52 with a gap of about 400 ms, then
   300 and 500 (the app will use about 500 ms for Band A, 350 for Band B, 300 for Band C). Does it sound like one voice saying
-  one sentence, "da-NI, sha-LOM, EI-ze kef lir-OT et-KHEM"? No click, no long silence at the start of 52, the greeting not louder
+  one sentence, "al-MOG, sha-LOM, EI-ze kef lir-OT et-KHEM"? No click, no long silence at the start of 52, the greeting not louder
   or higher than the name, a soft end. 53 is a light preview ("ha-YOM nir-E ka-MA yesh be-ma-BAT e-KHAD"), level, no rise; 54 is
   warm, short, an invitation. Then 51, 52, 53, 54 in a row: about 8 seconds; is it too long or too even for a 3 year old? If the seam
   sounds stitched, say so: the fallback is the name on screen only (B-42 decision 1), with no new voicing of the 48 lines.
@@ -444,7 +444,7 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
    packs of at most 40 MiB (16 at that time, 18 with the welcome and map-card groups) and 3,000 files, shared by land and band; section 7 has the list and the free `pack` command that makes
    them again from the saved clips if one is too big. P6 is done in the tool.
 7. **ElevenLabs allowance.** The plan's Creator tier lists 275,000 "v4 characters" a month (`docs/PLAN.md`); this run is
-   369,998 characters (14.80 USD). I have not checked whether Turbo counts at the same rate or half. Look at your usage page. If it would
+   370,002 characters (14.80 USD). I have not checked whether Turbo counts at the same rate or half. Look at your usage page. If it would
    pass the allowance, run Nitzi this month and hero-son after the month turns. *Recommend: check the usage page before batch 1.*
 8. **The live helper lines (66 rows, gateway)** are prepared on branch `live-helper-voice-format` (same format and settings as the pack; 65 of 66 lines,
    4,544 characters); you run the prewarm in the same session as batch 2 (steps in that branch's `docs/setup/supabase-deploy.md`
@@ -467,6 +467,6 @@ ledger, and I will say so. I do not claim to have heard anything: your listening
 - **infrastructure-engineer:** pack size (decision 6) and publishing voice 2.0.0 with content 0.11.0.
 - **security-engineer:** nothing new. Only the first-name exception is allowed to go to ElevenLabs; the B-45 lines contain no
   child's name (the per-name `homeBubble` clips and the B-42 name clips are a later step). The only name in the pilot is a
-  made-up one (`דָּנִי,`), and I ask you to confirm it is not a name of one of your children.
+  made-up one (`אַלְמוֹג,`).
 - **hebrew-text-editor:** nothing open; the 148 rows and the two `h3` lines are `owner-approved`. No text change and no punctuation change asked.
 - **curriculum-expert:** nothing; the welcome topic table and the map-card lines are already theirs and the editor's.

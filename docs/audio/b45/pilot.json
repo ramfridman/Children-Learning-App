@@ -244,13 +244,13 @@
     },
     {
       "id": "N51-seam-name",
-      "text": "דָּנִי,",
+      "text": "אַלְמוֹג,",
       "settings": {
         "stability": 0.5,
         "similarity_boost": 0.8,
         "use_speaker_boost": true
       },
-      "tests": "The made-up name alone, as the call that opens a welcome: \"da-NI,\" a short rise, a small pause, a quiet start. Same voice and settings as the greeting that follows. Made-up name only; a name of one of the children must never be used here."
+      "tests": "The made-up name alone, as the call that opens a welcome: \"al-MOG,\" a short rise, a small pause, a quiet start. Same voice and settings as the greeting that follows. Made-up name only; a name of one of the children must never be used here."
     },
     {
       "id": "N52-seam-hello1",
@@ -261,7 +261,7 @@
         "similarity_boost": 0.8,
         "use_speaker_boost": true
       },
-      "tests": "Play it right after clip 51 with a gap of about 400 ms (play both, then try 300 and 500). Does \"da-NI ... sha-LOM, EI-ze kef lir-OT et-KHEM\" sound like one voice saying one sentence? Check: no click at the start, no long lead-in silence, same loudness as 51, \"shalom\" not louder or higher than the name."
+      "tests": "Play it right after clip 51 with a gap of about 400 ms (play both, then try 300 and 500). Does \"al-MOG ... sha-LOM, EI-ze kef lir-OT et-KHEM\" sound like one voice saying one sentence? Check: no click at the start, no long lead-in silence, same loudness as 51, \"shalom\" not louder or higher than the name."
     },
     {
       "id": "N53-seam-glance",
@@ -287,14 +287,14 @@
     },
     {
       "id": "H51-seam-name",
-      "text": "דָּנִי,",
+      "text": "אַלְמוֹג,",
       "settings": {
         "stability": 0.5,
         "similarity_boost": 0.8,
         "use_speaker_boost": true
       },
       "character": "hero-son",
-      "tests": "The made-up name alone, as the call that opens a welcome: \"da-NI,\" a short rise, a small pause, a quiet start. Same voice and settings as the greeting that follows. Made-up name only; a name of one of the children must never be used here."
+      "tests": "The made-up name alone, as the call that opens a welcome: \"al-MOG,\" a short rise, a small pause, a quiet start. Same voice and settings as the greeting that follows. Made-up name only; a name of one of the children must never be used here."
     },
     {
       "id": "H52-seam-hello1",
@@ -306,7 +306,7 @@
         "use_speaker_boost": true
       },
       "character": "hero-son",
-      "tests": "Play it right after clip 51 with a gap of about 400 ms (play both, then try 300 and 500). Does \"da-NI ... sha-LOM, EI-ze kef lir-OT et-KHEM\" sound like one voice saying one sentence? Check: no click at the start, no long lead-in silence, same loudness as 51, \"shalom\" not louder or higher than the name."
+      "tests": "Play it right after clip 51 with a gap of about 400 ms (play both, then try 300 and 500). Does \"al-MOG ... sha-LOM, EI-ze kef lir-OT et-KHEM\" sound like one voice saying one sentence? Check: no click at the start, no long lead-in silence, same loudness as 51, \"shalom\" not louder or higher than the name."
     },
     {
       "id": "H53-seam-glance",
