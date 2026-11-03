@@ -10,7 +10,12 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-9 | Secret scanning: add rules for the pack-signing key file and the publish secret | low | open | 2026-10-28 |
 | SEC-10 | Voice tool: validate the voice id and output format before building the request URL | low | open | 2026-10-28 |
 | SEC-11 | Tutor-moves upload script: run the pinned CLI from the repository root | low | open | 2026-10-28 |
-| SEC-12 | Sync: a gateway and app format mismatch would mark a device's whole unsent backlog as refused | low | open (partly fixed in `2235ac2`) | 2026-10-29 |
+| SEC-12 | Sync: a gateway and app format mismatch would mark a device's whole unsent backlog as refused | low | fixed on `b20-sync-fixes` (`a924828`: the brake per kind of event, R1, and the reset per wire format, R2, verified by reading); closes when its proof tests are re-run green | 2026-10-29 |
+| SEC-B20-3 | Sync: a stall of one kind of event holds the push of every kind for the wait | low | open | 2026-11-03 |
+| SEC-B20-4 | Sync: the call budget of a stalled round is per kind (up to about 246 calls), PLAN says about 80 | info | open | 2026-11-03 |
+| SEC-B20-5 | Sync: the stall setting is not range-checked when read (not reachable from outside) | info | open | 2026-11-03 |
+| SEC-B20-6 | Sync: the wire-format pin test can be satisfied without raising the number | info | open | 2026-11-03 |
+| SEC-B20-7 | Gateway client: `bad_request` is recognised whatever the HTTP status | info | open | 2026-11-03 |
 | SEC-26 | Word-alert lists: validate a list's values and bounds when it is read, before lists can come from a pack | low | open (checks, bounds, step budget, background matching and the floor, checked first with a step budget of its own, are in on `alerts-tiers`; window rules can still be slow within the bounds) | 2026-10-30 |
 | SEC-29 | Alert row hardening (database checks and grants, the parent text's tier) | low | fixed on `alerts-tiers`; closes when CI's pgTAP 09 passes | 2026-10-30 |
 | SEC-32 | Kept words: a narrow race when "keep the words" is turned off; a weekly note's words could outlive 30 days on a phone | low | fixed on `alerts-tiers`; closes when CI's database integration test passes | 2026-10-30 |
@@ -169,4 +174,14 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   floor rows are checked). New low: SEC-33. One finding above low is still held privately: the server side of it is
   fixed and the phone side needs one more change. Re-run: `deno test` 188 passed, 0 failed, 7 ignored; Flutter alert,
   safety and sync tests 307 passed.
+- **B-20 sync robustness, `b20-sync-fixes` (`a924828`, `145519e`; 2026-11-03): safe to merge, two findings above low
+  held privately.** Verified by reading: the format brake is now judged per kind of event (R1) and the rows refused alone
+  before a verdict wait without holding up the rows after them (QA-18); every round ends and never repeats a row; only a
+  `bad_request` can mark a row; the reset of refused rows is keyed to a wire-format number pinned to a digest of
+  `testvectors/wire-patterns.json` (digest recomputed independently: equal), cannot be triggered from outside and resends
+  only rows the server never stored; the stall wait is at most an hour, a clock moved either way ends it, and pulls,
+  alerts and settings still run. SEC-12 is fixed on the branch and closes when its proof tests are re-run. Gateway,
+  migrations, packages, lock files and workflows unchanged; `flutter analyze` clean; OSV.dev: no advisory for drift
+  2.35.3, sqlite3 3.8.0, crypto 3.0.8, uuid 4.6.0 (2026-11-03). Not run by the security-engineer: `flutter test`.
+  New: SEC-B20-3 (low) and SEC-B20-4 to -7 (info) above.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
