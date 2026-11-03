@@ -4,7 +4,7 @@ Owner: hebrew-language-teacher. Status: **draft** (2026-11-03). Nothing was voic
 **No paid step is in this brief.** Claude never runs `voice_gen generate`, `audition` or `audition-batch run`, never calls api.elevenlabs.io and never reads or sets `ELEVENLABS_API_KEY` (CLAUDE.md). Every audition and generation is run and paid for by the owner, after he sees the character count.
 Skills: `syllabus.md`. Evidence: `docs/research/hebrew-course-2026-11-03.md`. Method: `.claude/skills/pronunciation-spec/SKILL.md`.
 
-**All Hebrew below is a draft, `"review": "needs-editor"`.** Letter and vowel names, nikud and stress are for the hebrew-text-editor to confirm. Where the editor and I disagree, we both write our reasons and the orchestrator asks the owner.
+**The Hebrew below was edited by the hebrew-text-editor on 2026-11-03 and is `text-ready`** (waiting for the owner's approval): letter and vowel names, nikud and stress are confirmed, and the open questions of §2 are settled (reasons and the checks: `docs/agents/hebrew-notes.md` §8). Two points still wait for the owner (the name of ז, and the spoken names יוּד and קוּף): `hebrew-notes.md` §8.7. The voice director gives the direction only after the owner approves.
 
 ## 1. What the teaching voice must do
 
@@ -23,8 +23,8 @@ Skills: `syllabus.md`. Evidence: `docs/research/hebrew-course-2026-11-03.md`. Me
 6. **Use the correct stress of every word** (§4). Most Hebrew words stress the last syllable (מִלְּרַע), and many common ones the one before it (מִלְעֵיל: יֶלֶד, סֵפֶר, אַבָּא).
 7. **Say a shva as modern Hebrew does,** per word, from the editor's spec. At the start of a word it is mostly silent (גְּלִידָה [gliˈda], שְׂמִיכָה [smiˈχa]). It is [e] where modern speech has it, for example after the prefixes and in some starting letters. The editor's `voice_text` and IPA decide each word; the voice follows them.
 8. **Letter names and letter sounds are different clips,** and a line never mixes them without a pause.
-   - Example: "זוֹ גִּימֶל. הִיא אוֹמֶרֶת גְּ… כְּמוֹ בְּגִיר" is a teaching line, and the sound inside it is a CV unit (גִּי), not a bare stop.
-   - The wording is the editor's. This line is only a shape.
+   - Example (editor's wording, `text-ready`): "זוֹ גִּימֶל. הִיא אוֹמֶרֶת גָּ, כְּמוֹ בַּמִּלָּה גָּמָל." is a teaching line, and the sound inside it is a CV unit (גָּ), not a bare stop and not the name's own unit (גִּי).
+   - The first draft ("גְּ… כְּמוֹ בְּגִיר") had a bare stop with a shva, which this brief forbids, and "כְּמוֹ בְּגִיר" reads as "like in chalk". The letter is feminine (אוֹת), so זוֹ and הִיא.
 
 ## 2. The letters: names, sounds and how each is voiced (draft for the spec table)
 
@@ -34,57 +34,61 @@ Columns follow the `pronunciation-spec` skill. `say` is left empty here: it is f
 |---|---|---|---|---|---|
 | א | אָלֶף | Á-lef (מלעיל) | ∅ / [ʔ] — carries the vowel | never: only אָ, אִ… | TTS says the name; a child thinks א is "a" |
 | בּ | בֵּית | one syllable | [b] | no: בָּ | — |
-| ב | וֵית (the name used for the soft ב; editor to confirm) | one syllable | [v] | yes, stretched | the same as ו in sound (homophone) |
+| ב | בֵּית (the same name as בּ: one letter, two sounds; there is no separate name "וֵית") | one syllable | [v] | yes, stretched | the same as ו in sound (homophone) |
 | ג | גִּימֶל | GÍ-mel (מלעיל) | [g] | no: גָּ | name-sound mix (גִּי) |
 | ד | דָּלֶת | DÁ-let (מלעיל) | [d] | no: דָּ | — |
 | ה | הֵא | one syllable | [h]; silent at the end | weak; prefer הָ | a final ה is silent |
-| ו | וָו (editor: וָו or וָיו) | one syllable | [v]; part of וֹ [o] and וּ [u] | yes, stretched | consonant vs vowel letter |
-| ז | זַיִן | ZÁ-yin (מלעיל) | [z] | yes, stretched | — |
+| ו | וָו (decided: not וָיו, which a child reads as "va-yo") | one syllable, said [vav] | [v]; part of וֹ [o] and וּ [u] | yes, stretched | consonant vs vowel letter |
+| ז | זַיִן | ZÁ-yin (מלעיל) | [z] | yes, stretched | the name is also a slang word that children may know; owner decides (`hebrew-notes.md` §8.7, question 2) |
 | ח | חֵית | one syllable | [χ] | yes, stretched | not pharyngeal |
 | ט | טֵית | one syllable | [t] | no: טָ | homophone of ת |
-| י | יוֹד (editor: יוֹד or the spoken "יוּד") | one syllable | [j]; part of ִי [i] and ֵי [e] | no: יָ | consonant vs vowel letter |
+| י | יוּד (decided: the spoken name; the Academy's יוֹד is also right) | one syllable | [j]; part of ִי [i] and ֵי [e] | no: יָ | consonant vs vowel letter |
 | כּ | כַּף | one syllable | [k] | no: כָּ | homophone of ק |
-| כ ך | כַף; כַף סוֹפִית | one syllable; so-FIT | [χ] | yes, stretched | homophone of ח |
+| כ ך | כַּף; כַּף סוֹפִית (the same name as כּ; the name is said with [k], as everyone says it) | one syllable; so-FIT | [χ] | yes, stretched | homophone of ח; the name starts with [k], the sound is [χ] |
 | ל | לָמֶד | LÁ-med (מלעיל) | [l] | yes, stretched | — |
 | מ ם | מֵם; מֵם סוֹפִית | one syllable; so-FIT | [m] | yes, stretched | — |
 | נ ן | נוּן; נוּן סוֹפִית | one syllable; so-FIT | [n] | yes, stretched | — |
 | ס | סָמֶךְ | SÁ-mech (מלעיל) | [s] | yes, stretched | homophone of שׂ |
 | ע | עַיִן | Á-yin (מלעיל) | ∅ / [ʔ] — carries the vowel | never | not pharyngeal |
 | פּ | פֵּא | one syllable | [p] | no: פָּ | — |
-| פ ף | פֵא; פֵא סוֹפִית | one syllable; so-FIT | [f] | yes, stretched | TTS may say [p] in a lone syllable |
+| פ ף | פֵּא; פֵּא סוֹפִית (the same name as פּ) | one syllable; so-FIT | [f] | yes, stretched | the name starts with [p], the sound is [f]; TTS may say [p] in a lone syllable |
 | צ ץ | צָדִי; צָדִי סוֹפִית | TSÁ-di (מלעיל); so-FIT | [ts] | no: צָ | — |
-| ק | קוֹף (editor: קוֹף or the spoken "קוּף") | one syllable | [k] | no: קָ | homophone of כּ |
+| ק | קוּף (decided: the spoken name; the Academy's קוֹף is also right, and is the word "monkey", S7) | one syllable | [k] | no: קָ | homophone of כּ |
 | ר | רֵישׁ | one syllable | [ʁ] | yes, stretched | — |
 | שׁ | שִׁין | one syllable | [ʃ] | yes, stretched | — |
 | שׂ | שִׂין | one syllable | [s] | yes, stretched | TTS may say [ʃ] for an unpointed ש |
-| ת | תָּו | one syllable | [t] | no: תָּ | homophone of ט |
+| ת | תָּו | one syllable, said [tav] | [t] | no: תָּ | homophone of ט; the name ends in [v], the sound is [t] |
 
-**An open question for the editor (and maybe the owner):** the names יוֹד/יוּד, קוֹף/קוּף and וָו/וָיו. The normative and the spoken forms differ, and children hear the spoken forms in the gan. My preference is the form Israeli school materials use, once the editor confirms which form that is.
+**Settled by the editor (2026-11-03; reasons in `hebrew-notes.md` §8.3):** the names are יוּד, קוּף and וָו. The pointing of a name is what a child decodes, and it is what the voice says. קוּף (not קוֹף) keeps the letter apart from the word קוֹף (monkey, S7); וָו (not וָיו) decodes as [vav]. Both forms of יוֹד/יוּד and קוֹף/קוּף are accepted by the Academy and by reference works, so the parent area may write either. The names are the same for the hard and the soft sound (בֵּית, כַּף, פֵּא): there is no name "וֵית". The final forms are "the name + סוֹפִית" (כַּף סוֹפִית, מֵם סוֹפִית, נוּן סוֹפִית, פֵּא סוֹפִית, צָדִי סוֹפִית).
 
 ## 3. The vowel signs
 
 | Sign(s) | Name (draft) | Sound | CV pilot | Notes |
 |---|---|---|---|---|
-| ָ ַ | קָמַץ, פַּתָּח | [a] | מָ, בָּ | one sound, two signs. Qamats qatan (כׇּל) is [o] and is not taught as a sign; the editor marks it in text (U+05C7 is never sent to a voice, `hebrew-notes.md` §3.2) |
+| ָ ַ | קָמָץ, פַּתָּח | [a] | מָ, בָּ | one sound, two signs. Qamats qatan (כׇּל) is [o] and is not taught as a sign; the editor marks it in text (U+05C7 is never sent to a voice, `hebrew-notes.md` §3.2) |
 | ִ ִי | חִירִיק (חָסֵר, מָלֵא) | [i] | מִ, לִי | — |
 | ֹ וֹ | חוֹלָם (חָסֵר, מָלֵא) | [o] | מֹ, לוֹ | the holam dot vs the shin dot (שׁוֹ / שֹׁ) |
 | וּ ֻ | שׁוּרוּק, קֻבּוּץ | [u] | מוּ, דֻּ | וּ vs וֹ: the dot's place |
 | ֵ ֵי ֶ | צֵירֵי, סֶגּוֹל | [e] | מֵ, לֵי, מֶ | — |
 | ְ | שְׁוָא | ∅ or [e], per word (§1.7) | יַלְ (silent), גְּלִי (start) | the hardest for a voice and for a child |
-| ֲ ֱ ֳ | חֲטַף פַּתָּח, חֲטַף סֶגּוֹל, חֲטַף קָמַץ | [a], [e], [o] | חֲ, אֱ | U+05B3 is never sent to a voice |
+| ֲ ֱ ֳ | חֲטַף פַּתָּח, חֲטַף סֶגּוֹל, חֲטַף קָמָץ | [a], [e], [o] | חֲ, אֱ | U+05B3 is never sent to a voice |
 
-Children learn the sounds first and the names later. The names are for the parent text and for Band C talk.
+Children learn the sounds first and the names later. The names are for the parent text and for Band C talk. Stress of the names: קָמָץ [kaˈmats], פַּתָּח [paˈtaχ], חִירִיק [χiˈrik], חוֹלָם [χoˈlam], שׁוּרוּק [ʃuˈruk], קֻבּוּץ [kuˈbuts], צֵירֵי [tseˈre], סֶגּוֹל [segˈol], שְׁוָא [ʃeˈva]: all on the last syllable. (The first draft had קָמַץ with patah, which is the verb "he clenched", not the sign.)
 
 ## 4. Stress of the course's words
 
-The stress of every word in the syllabus lists (`syllabus.md` §3) goes into the spec table. A first list of מִלְעֵיל words, to confirm:
-- יֶלֶד, לֶחֶם, גֶּשֶׁם, שֶׁמֶשׁ, דֶּלֶת, סֵפֶר, כֶּלֶב, מֶלֶךְ, מֶלַח, אֶצְבַּע, טַבַּעַת;
-- אַבָּא, אִמָּא, סָבָא, סַבְתָּא, דֻּבִּי, פִּיצָה;
-- עֵינַיִם, אוֹפַנַּיִם, מִשְׁקָפַיִם.
+The stress of every word in the syllabus lists (`syllabus.md` §3) is settled by the editor (2026-11-03) and goes into the spec table. **Every word is מִלְּרַע (stress on the last syllable) except the words below.**
 
-The rest are, as far as I know, מִלְּרַע (שַׁבָּת, אַתָּה, תָּמָר, שָׁלוֹם, גָּדוֹל, כַּדּוּר, חָתוּל, עוּגָה, טֶלֶפוֹן, צְפַרְדֵּעַ, כִּסֵּא…).
+**מִלְעֵיל (stress on the syllable before the last):**
+- segolate and similar nouns: יֶלֶד, לֶחֶם, גֶּשֶׁם, שֶׁמֶשׁ, דֶּלֶת, סֵפֶר, כֶּלֶב, מֶלֶךְ, מֶלַח, אֶצְבַּע, אֱמֶת, טַבַּעַת;
+- אַבָּא, אִמָּא, סָבָא, סַבְתָּא, דֻּבִּי, בֻּבָּה, פִּיצָה, לַיְלָה, בַּיִת, אֵיפֹה [ˈejfo] (the accepted spoken form; the Academy's standard form is [eˈfo]; the editor chose the form children say);
+- words with a patah gnuva: the stress is on the vowel before it: רוּחַ [ˈruaχ], תַּפּוּחַ [taˈpuaχ], יָרֵחַ [jaˈreaχ], אֲבַטִּיחַ [avaˈtiaχ], צְפַרְדֵּעַ [tsfarˈdeʔa];
+- the dual: עֵינַיִם, אוֹפַנַּיִם, מִשְׁקָפַיִם, stress on the נַ / פַ before יִם;
+- with a prefix, the stress stays where the word has it: הַכֶּלֶב [haˈkelev], בַּבַּיִת [baˈbajit].
 
-**לָמָּה** is said LÁ-ma in speech and la-MÁ normatively: an editor decision.
+**Checked מִלְּרַע, as the teacher guessed** (the voice must not push them to מִלְעֵיל): שַׁבָּת, אַתָּה, תָּמָר, שָׁלוֹם, גָּדוֹל, גָּמָל, כַּדּוּר, חָתוּל, עוּגָה, טֶלֶפוֹן, כִּסֵּא, קֻפְסָה [kufˈsa], שִׂמְלָה [simˈla], תַּרְנְגוֹל [tarneˈgol], עַגְבָנִיָּה [agvaniˈja], בְּרָכָה [braˈχa], גְּלִידָה, שְׂמִיכָה, בֵּיצָה [beˈtsa], מָטוֹס, אֳנִיָּה. Words with a silent shva keep the stress on the last syllable too: יַלְדָּה [jalˈda], שֻׁלְחָן [ʃulˈχan], מִדְבָּר [midˈbar].
+
+**לָמָּה is said la-MÁ (מִלְּרַע)**, in speech and in careful reading alike (decided by the editor; the teacher's draft had LÁ-ma, which is not how Israeli children say it; the Hebrew Wiktionary gives la-MA). It is the same in every sentence.
 
 TTS voices often put the stress wrong in a word that stands alone. Each single-word clip must be checked for stress, and fixed through `say` (a stress mark or a respelling), never through the shown text.
 
@@ -96,7 +100,7 @@ Isolated sounds and CV units are hard for any TTS voice (`pronunciation-spec` §
 - **5 continuants alone:** מְ, שְׁ, ס, ל, פ (f). Pass if there is no added vowel.
 - **3 dagesh pairs:** בָּ / בָ (start of a clip), כָּ / כָ, פָּ / פָ.
 - **2 shva words:** גְּלִידָה, יַלְדָּה.
-- **5 letter names:** גִּימֶל, וָו, יוֹד, קוֹף, צָדִי (in the editor's chosen forms).
+- **5 letter names:** גִּימֶל, וָו, יוּד, קוּף, צָדִי (the editor's forms, §2; the first draft had יוֹד and קוֹף).
 - **2 unit-by-unit words:** פִּי… צָה… פִּיצָה; כַּ… דּוּר… כַּדּוּר.
 - **4 stress checks:** יֶלֶד, סֵפֶר, שַׁבָּת, חָתוּל.
 

@@ -1,0 +1,15 @@
+{
+  "schema": "audition/v1",
+  "title": "Hebrew course voice pilot, round 2: which voice can say isolated sounds, CV units, stress and shva words, and a teaching frame.",
+  "review": "needs-editor",
+  "note": "Written by the voice-and-sound-director on 2026-11-03 (docs/languages/voices.md). PLAN ONLY: nothing has been run or paid. This file is accepted by today's tool as it is (checked with the free plan command). The IPA clips are in pilot-ipa.json and wait for hand-off H1 in voices.md. The owner has to put the voice ids into content/voices.json first (docs/languages/voices-candidates.json). All Hebrew in the clips is draft wording for listening, not shipped text.",
+  "defaults": {"model": "eleven_v4", "format": "mp3_44100_64", "settings": {"stability": 0.5, "similarity_boost": 0.75, "use_speaker_boost": true}},
+  "clips": [
+    {"id": "nitzi-02-ma-ipa", "character": "nitzi", "text": "/ma/", "allow": ["ipa"], "tests": "IPA form: cleaner than the pointed letter?"},
+    {"id": "nitzi-02-mi-ipa", "character": "nitzi", "text": "/mi/", "allow": ["ipa"], "tests": "IPA form: cleaner than the pointed letter?"},
+    {"id": "nitzi-02-shu-ipa", "character": "nitzi", "text": "/ʃu/", "allow": ["ipa"], "tests": "IPA form: cleaner than the pointed letter?"},
+    {"id": "hero-son-02-ma-ipa", "character": "hero-son", "text": "/ma/", "allow": ["ipa"], "tests": "IPA form: cleaner than the pointed letter?"},
+    {"id": "hero-son-02-mi-ipa", "character": "hero-son", "text": "/mi/", "allow": ["ipa"], "tests": "IPA form: cleaner than the pointed letter?"},
+    {"id": "hero-son-02-shu-ipa", "character": "hero-son", "text": "/ʃu/", "allow": ["ipa"], "tests": "IPA form: cleaner than the pointed letter?"}
+  ]
+}

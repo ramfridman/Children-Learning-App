@@ -343,3 +343,112 @@ screen-reader label should say the stop before the tap (it is computed when the 
 if a check fell due meanwhile, rule section 6).
 Wording guard for QA: none of the ten strings contains `היום`, `עוד לא`, `כבר`, `שוב` as "again after a pause", a count or `{n}`;
 `שוב` in `adventurePlayAgain` is "play a known game once more", which the intent asks for.
+
+## 8. The Hebrew course (Languages category): the editor's pass, 2026-11-03
+
+Scope: the hebrew-language-teacher's drafts in `docs/languages/hebrew/syllabus.md` (§3 word lists S1 to S12, the examples in §2 and §6), `docs/languages/hebrew/voice-brief.md` (§1 to §5: letter names, vowel names, stress, pilot clips), the one Hebrew line of `docs/languages/russian/syllabus.md` §8, and the Hebrew in `docs/research/hebrew-course-2026-11-03.md`. The owner approved the course on 2026-11-03 (`docs/languages/decisions-2026-11-03.md`). Nothing was voiced or paid. The corrected text is **edited in those files directly**; the status of every item is `text-ready` (waiting for the owner) unless 8.7 says otherwise.
+
+### 8.1 What was checked, and how
+
+| What | Count | How |
+|---|---|---|
+| Decodable words, S1 to S8 | 143 words (after the changes; 138 before) and 13 CV units | every word read for nikud, stress, spelling and fit for a child, then **machine-checked** by `tools/check_hebrew_course_words.py` (new): for each word it finds the first step whose letters and signs are enough to read it; none needs a later step than its own; every word is in canonical (NFC) order; no final form in the middle of a word, no ש without a dot |
+| S9 (long words, prefixes, endings, "same tune"), S10 (frequent words), S12 (unpointed and full spelling) | 19 + 17 + 17 words | read by hand, one by one (the script lists them); S11 is not written yet |
+| Letter names | 22 letters, 27 forms with the 5 finals (26 rows in the voice brief) | spelling, nikud, stress, how a child decodes the pointed name, the Academy and reference works (8.3) |
+| Vowel signs | 9 names and 3 hataf names | spelling and stress |
+| Examples in the syllabus §2, §4, §5, §6 and in the research file | about 60 | one by one (syllabification, prepositions, agreement, vav before ב, dagesh) |
+| Pilot clip texts in the voice brief §5 | about 30 | read; the voice director's own pilot files (`pilot*.json`) were only looked at, see 8.7 |
+
+Re-run: `python -I tools/check_hebrew_course_words.py` (the default path is the syllabus). Its rules are in its docstring (the same as the syllabus §3: ב כ פ with a dagesh are S1/S4/S6, without it S7; שׂ ך ף S7; a final ָה S1 and a final ֶה S6; a shva on the first letter or a hataf S8; a silent shva S3; a patah gnuva S7; a silent א inside a word S7). It reports `כִּסֵּא` (S7) as readable from S6, which is deliberate: the word shows the final silent א after e.
+
+**The pointing standard of the course** is the app's (§2.4): the Academy's spelling for pointed text. Holam is a vav when the Academy writes one (שָׁלוֹם, גָּדוֹל, אוֹר) and a bare holam when it does not (וָרֹד, רֹאשׁ, זֹאת, לֹא); hiriq has a yod in a long, open syllable (שִׁירָה, פִּיל, תִּירָס) and none in a closed or doubled one (מִדְבָּר, אִמָּא, כִּנּוֹר, בִּנְיָן); u is וּ or ֻ as the word has it (סוּס, שֻׁלְחָן, קֻפְסָה). The course teaches both forms of each vowel, so no word needs "correcting" to one spelling. No word needs a qamats qatan (U+05C7).
+
+### 8.2 Every change
+
+| # | File | Was | Now | Why |
+|---|---|---|---|---|
+| 1 | syllabus S6 | `טִיל` | `מָטוֹס` | `טִיל` is a missile or rocket (Hebrew Wiktionary); a war word is kept out of a 5 to 8 year old's reading list. `מָטוֹס` (aeroplane) uses ט and o, is picturable, last-syllable stress |
+| 2 | syllabus S7 | `שַׂמְלָה` | `שִׂמְלָה` | the word is `שִׂמְלָה` (hiriq), stress on the last syllable (Wiktionary: sim-LA); the patah form is Biblical |
+| 3 | syllabus S9 | `חַיְּכָן` | `שַׂחְקָן` | `חַיְּכָן` is rare and has a yod with dagesh and shva, a trap for a child decoding; `שַׂחְקָן` (player, actor) is the same pattern (קַטְלָן), common and positive, and uses S5 to S7 letters. The line "מִי שֶׁמְּשַׂחֵק הוּא שַׂחְקָן" works like "מִי שֶׁרוֹקֵד הוּא רַקְדָן" |
+| 4 | syllabus S3 | 4 words | 8 words: added `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה` | settles the "only 4 picturable words" question (8.3). Checked: only S1 and S2 letters, a and i, a silent shva |
+| 5 | syllabus S8 to S6 | `אַרְיֵה` in S8 | in S6 | it needs only the e signs and a silent shva; no hataf and no initial shva |
+| 6 | syllabus S8 | (no hataf-segol word) | `אֱמֶת` added | the step teaches ֲ ֱ ֳ but had no ֱ word; `אֱמֶת` [ˈemet], known from `בֶּאֱמֶת`; a decoding word, no picture |
+| 7 | syllabus §2 | `חֻל–צָה` | `חֻלְ–צָה` | the silent shva is written in a syllable split, as in `יַלְ–דָּה` |
+| 8 | syllabus S7 | "silent א at the end (כִּסֵּא) and inside (רֹאשׁ)" | the final one is "the same as the final א of S1"; only the inside one is new | the syllabus's own note says a final silent א is read from S1 |
+| 9 | syllabus S12 | "helping nikud set by the editor" | `שולחן`, `חתול` need none; `ציפּור`, `כּיסא`, `תפּוח` carry the dot | the rule is in 8.5 |
+| 10 | voice brief §2 | `יוֹד`, `קוֹף` | `יוּד`, `קוּף` | 8.3 |
+| 11 | voice brief §2 | ב: `וֵית`; כ ך: `כַף`; פ ף: `פֵא` | ב: `בֵּית` (one name); כ ך: `כַּף`, `כַּף סוֹפִית`; פ ף: `פֵּא`, `פֵּא סוֹפִית` | one letter has one name; a name without its dagesh (`כַף`, `פֵא`) is not how it is said or written; `וֵית` starts with the letter ו and would teach the wrong letter |
+| 12 | voice brief §3 | `קָמַץ` (twice) | `קָמָץ` | `קָמַץ` with patah is the verb "he clenched"; the sign is `קָמָץ` (Wiktionary: ka-MATS) |
+| 13 | voice brief §1.8 | "זוֹ גִּימֶל. הִיא אוֹמֶרֶת גְּ… כְּמוֹ בְּגִיר" | "זוֹ גִּימֶל. הִיא אוֹמֶרֶת גָּ, כְּמוֹ בַּמִּלָּה גָּמָל." | the draft said a bare stop (the brief itself forbids it) and `כְּמוֹ בְּגִיר` means "like in chalk" |
+| 14 | voice brief §4 | a short stress guess | the full stress list (8.4) | `צְפַרְדֵּעַ` was listed as last-syllable and is stressed on `דֵּ`; the patah gnuva words, `לַיְלָה`, `בַּיִת`, `בַּבַּיִת`, `אֵיפֹה` were missing; `לָמָּה` decided |
+| 15 | voice brief §5 | pilot names `יוֹד`, `קוֹף` | `יוּד`, `קוּף` | follows 10 |
+| 16 | research | `ִפּי/צָה` (twice), `שִ`, `ילְ–דָּה` | `פִּי/צָה`, `שִׁ`, `יַלְ–דָּה` | a stray hiriq before the letter; a shin without its dot; a missing patah |
+| 17 | russian syllabus §8 | `נַגִּיד יַחַד` | `בּוֹאוּ נֹאמַר יַחַד.` | 8.8 |
+
+### 8.3 The teacher's open questions, settled
+
+1. **`יוֹד` or `יוּד`: `יוּד`.** Both are right (the Hebrew Mihlol writes `יוֹד/יוּד`; English Wikipedia lists /jud/ and /jod/). A child decodes the pointed name she sees on screen, and the voice says it, so the written and the spoken name must be the same; the form children say is `יוּד`. I could not find a source that counts which is commoner, so this rests on the teacher's note and mine. **Needs the owner's ear (8.7, question 1).**
+2. **`קוֹף` or `קוּף`: `קוּף`.** Both are right (`קוֹף/קוּף` in the Hebrew Mihlol). The decisive reason is the course itself: `קוֹף` is the word "monkey" in S7, a picture word. A child who learnt the letter as קוֹף and then sees the written word קוֹף must not hear one thing for two. `קוּף` for the letter keeps them apart. The parent area may write either; unpointed it is `קוף` in both.
+3. **`וָו` or `וָיו`: `וָו`.** It is the Academy's name and the way it is said ([vav]). `וָיו` is the traditional name, and a child who decodes it reads `va-yo`. `וָו` decodes to exactly [vav] with the consonant ו that S4 teaches. In the parent area the unpointed `וו` can look like two letters, so the parent text writes `ו (וָו)` once.
+4. **The stress of `לָמָּה`: la-MÁ (last syllable).** The Hebrew Wiktionary gives la-MA; that is how Israeli children say it. The teacher's "LÁ-ma in speech" is not right, and there is no spoken exception. Same in a question ("לָמָּה?") and in a sentence.
+5. **S3 (silent shva) with only 4 words: keep it as its own short step, with 8 words.** Four more words use only S1 and S2 letters: `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה`. The step is not merged into S4: S4 already brings four letters and a new vowel, and a silent shva needs a calm step of its own. It then comes back in S5 to S8 words (`שֻׁלְחָן`, `אֶצְבַּע`, `שִׂמְלָה`, `סַבְתָּא`, `קֻפְסָה`, `צְפַרְדֵּעַ`), which the activities use as review. Not used: `אַדְמָה` (the word is `אֲדָמָה`, with a hataf, three syllables).
+
+Two more choices the teacher left open: the names are the same for the hard and the soft sound (one `בֵּית`, one `כַּף`, one `פֵּא`; the sound is taught by the dot, not by a second name), and the final forms are "the name + `סוֹפִית`" (`כַּף סוֹפִית`, `מֵם סוֹפִית`, `נוּן סוֹפִית`, `פֵּא סוֹפִית`, `צָדִי סוֹפִית`).
+
+### 8.4 For the voice director: stress, shva, and what is sent
+
+The full stress list is in `voice-brief.md` §4. In short: **all words are stressed on the last syllable except** the segolate-like nouns (`יֶלֶד`, `לֶחֶם`, `גֶּשֶׁם`, `שֶׁמֶשׁ`, `דֶּלֶת`, `סֵפֶר`, `כֶּלֶב`, `מֶלֶךְ`, `מֶלַח`, `אֶצְבַּע`, `אֱמֶת`, `טַבַּעַת`), `אַבָּא`, `אִמָּא`, `סָבָא`, `סַבְתָּא`, `דֻּבִּי`, `בֻּבָּה`, `פִּיצָה`, `לַיְלָה`, `בַּיִת`, `אֵיפֹה`, the patah gnuva words (on the vowel before it), the dual (`עֵינַיִם`, `אוֹפַנַּיִם`, `מִשְׁקָפַיִם`) and a prefix + such a word (`הַכֶּלֶב`, `בַּבַּיִת`). `אֵיפֹה` is said [ˈejfo], the accepted spoken form (the Academy's standard is [eˈfo]; Wiktionary lists both). `טַבַּעַת` is [taˈbaʔat] (Wiktionary).
+
+**Shva in the words of S8 and S9** (the spoken form; the shva is never a full vowel):
+
+| Word | Said | Note |
+|---|---|---|
+| גְּלִידָה, שְׂמִיכָה, סְפָרִים, כְּלָבִים, פְּרָחִים, בְּרָכָה, צְפַרְדֵּעַ, סְפָרָיו | [gliˈda], [smiˈχa], [sfaˈrim], [klaˈvim], [praˈχim], [braˈχa], [tsfarˈdeʔa], [sfaˈrav] | the first shva is silent: two consonants in a row |
+| יְלָדִים, יְלָדוֹת | [jelaˈdim], [jelaˈdot] | the shva after י is said [e] |
+| וְהֶחָתוּל | [vehexaˈtul] | the shva of the prefix וְ is said [e] |
+| תַּרְנְגוֹל | [tarneˈgol] | the first shva is silent (it closes the syllable), the second is said [e]: a good S9 trap |
+| עַגְבָנִיָּה | [agvaniˈja] | the ב has no dot and is [v] even after a silent shva, because the word follows the pattern קַטְלָן (Wiktionary). This matches the S7 rule "no dot, soft" |
+| מִשְׁקָפַיִם | [miʃkaˈfajim] | the shva under שׁ is silent |
+| חֲמוֹר, אֲנִי, עֲנָנִים, חֲתוּלָה, אֱמֶת, אֳנִיָּה | [χaˈmor], [aˈni], [ʔanaˈnim], [χatuˈla], [ˈemet], [oniˈja] | a hataf sounds like its full vowel |
+
+**What is sent to the voice.** Single-word and CV clips are sent **pointed** in the pilot (the pilot decides whether the model reads pointed input better; until it answers, the editor does not strip the nikud). The marks U+05C7 and U+05B3 are never sent: `אֳנִיָּה` goes as **`אונייה`** (full spelling, the Academy's form); nothing else in the lists needs it. The letter names are sent pointed (`יוּד`, `קוּף`, `וָו`, `גִּימֶל`, `צָדִי`, `זַיִן`). `מָה` and `לָמָּה` keep their forms; `מַה` + dagesh before a non-guttural is the rule for the sentences of S10 and S11 (`מַה זֶּה?`).
+
+### 8.5 Helping nikud (`ניקוד עזר`) for S12
+
+Rule: in a full-spelling word (ktiv male), help only where the unpointed letters allow a **wrong sound the child has met**: the dot that makes **ב, כ or פ hard** ([b], [k], [p]; also when it is a dagesh chazak), and the **dot of שׂ**. A shin needs no dot (it is the default), and no vowel sign is added (the full spelling carries the vowels). So `שולחן` and `חתול` need nothing; `ציפּור` (the פ is [p]), `כּיסא` (the כ is [k]) and `תפּוח` (the פ is [p]) carry the dot. Kept short on purpose: the aim is to take the help away, step by step.
+
+### 8.6 Hebrew shape cues for the re-teach (syllabus §5), `text-ready` as words
+
+Said by the voice and shown, one short passage per pair. Letters are feminine (`אוֹת`), so `זוֹ` and `הִיא`; no left or right; no preposition is put on a letter name (it would change the dot).
+
+| Tag | Cue (to be re-read against the design-director's letters) |
+|---|---|
+| M-HEB-SHAPE-BK | זוֹ בֵּית — יֵשׁ לָהּ פִּנּוֹת וְרֶגֶל קְטַנָּה. וְזוֹ כַּף — הִיא עֲגֻלָּה. |
+| M-HEB-SHAPE-DR | זוֹ דָּלֶת — יֵשׁ לָהּ פִּנָּה. וְזוֹ רֵישׁ — הִיא עֲגֻלָּה. כַּף סוֹפִית יוֹרֶדֶת מִתַּחַת לַשּׁוּרָה. |
+| M-HEB-SHAPE-HXT | זוֹ הֵא — יֵשׁ לָהּ חוֹר קָטָן. זוֹ חֵית — הִיא סְגוּרָה לְמַעְלָה. וְזוֹ תָּו — יֵשׁ לָהּ רֶגֶל קְטַנָּה. |
+| M-HEB-SHAPE-VZN | זוֹ זַיִן — יֵשׁ לָהּ כּוֹבַע. וְזוֹ וָו — הִיא קַו יָשָׁר. נוּן סוֹפִית יוֹרֶדֶת מִתַּחַת לַשּׁוּרָה. וְיוּד — הִיא קְטַנָּה. (waits for the owner's answer on `זַיִן`, 8.7) |
+| M-HEB-SHAPE-SM | זוֹ סָמֶךְ — הִיא עֲגֻלָּה. וְזוֹ מֵם סוֹפִית — יֵשׁ לָהּ פִּנּוֹת, וְהִיא רַק בְּסוֹף מִלָּה. |
+| M-HEB-MIRROR | הַפֶּתַח שֶׁל הָאוֹת פּוֹנֶה לְאָן שֶׁהַקְּרִיאָה נִמְשֶׁכֶת. |
+| M-HEB-NAMESOUND | הַשֵּׁם הוּא גִּימֶל, וְהַצְּלִיל הוּא גָּ. |
+
+Not written: cues for ע/צ, ג/נ and ט/מ. A verbal description of a letter that does not match the drawn letter would teach the wrong shape; their re-teach stays "trace both" until the letterforms are fixed.
+
+### 8.7 For the owner, and for the other agents
+
+**For the owner (numbered):**
+1. **Letter names `יוּד` and `קוּף`** (and `וָו`, and one name for the hard and the soft ב כ פ). I chose the spoken forms for the reasons in 8.3. You are the native listener: if your children say `יוֹד` or `קוֹף` at gan, tell me; it is a small change (`voice-brief.md` §2 rows י and ק, §5 pilot).
+2. **The name of ז, `זַיִן`.** It is the Academy's name and what every gan says, but it is also a slang word that older children know. Options: (a) keep `זַיִן` (my recommendation: the name is standard, and a gan child expects it); (b) teach ז by its sound and a picture and say the name only in the parent text. Rows: voice brief §2 (ז), 8.6 (M-HEB-SHAPE-VZN).
+3. **Confirm the changed and added words:** `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה` (S3), `אֱמֶת` (S8), `מָטוֹס` (instead of `טִיל`) and `שַׂחְקָן` (instead of `חַיְּכָן`). `טִיל` was dropped on child-safety grounds; if you want other words of war or fear kept out of the lists, say so.
+
+**For the hebrew-language-teacher:**
+- Words for decoding only, not for a picture choice: `נָם` (literary, from lullabies), `מַר` (bitter, rare in speech), `שָׁמַר`, `סוֹד`, `כִּי`, `לוֹ`, `הִיא`, `הוּא`, `זֵר` and `עֵט` (low frequency; kept because the schools teach them), `תָּמָר` (a name; as a picture a girl or a date, to be decided in the picture list), `שָׁר` (picture: someone singing; its pair is `שָׂר`, minister, an adult word). `קוּם` is a command to one boy; if it ever goes in a sentence to the children it is `קוּמוּ`.
+- The research file line 248 still lists `חַיְּכָן`; I changed only the typos of the research record (item 16).
+- The paragraph of the Russian syllabus around the Hebrew line (§8) still says the recogniser is Hebrew only; the owner's decision 1 of 2026-11-03 changed that. It is the Russian teacher's text, not changed here.
+
+**For the voice-and-sound-director** (the untracked `docs/languages/hebrew/pilot*.json`, not edited by me): the letter-name clips must be `יוּד` and `קוּף` (they have `יוֹד`, `קוֹף`); the pair `כֶּלֶב / חֶלֶב` is a test of sounds only (`חֶלֶב` means "fat"; the milk of S7 is `חָלָב`); `אמרו` should be pointed `אִמְרוּ` (as in `VOICE_AUDIT_KEEP`; unpointed it can be read `אָמְרוּ`, "they said"); `נשחק בהן` is a little formal, `נשחק במילים` is plainer.
+
+**For the design-director:** the shape cues in 8.6 need the letterforms before they are final.
+
+### 8.8 The Russian course's Hebrew line
+
+The draft `נַגִּיד יַחַד` is correct Hebrew (`נַגִּיד`: first person plural of `הִגִּיד`; `יַחַד`: together), but as two words without an opener it reads like the idiom `נגיד` ("let us say, for instance"), and the app's invitations all begin with `בּוֹאוּ`. Final: **`בּוֹאוּ נֹאמַר יַחַד.`** on screen (the same form as `feedback.incorrect.0.caption.0.v`), voice text **`בואו נגיד יחד.`** (rule 3.4 of this file: `בואו נאמר` becomes `בואו נגיד`). Plural, no gender, no question. Status `text-ready`. Note for the voice director: unpointed `נגיד` can be read as the noun `נָגִיד` (a governor); the sentence makes the verb clear, and the existing lines with `נגיד` already work that way.

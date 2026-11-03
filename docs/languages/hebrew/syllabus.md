@@ -5,7 +5,7 @@ Evidence and sources: `docs/research/hebrew-course-2026-11-03.md` (cited below a
 
 **What this course is.** The Hebrew course teaches Hebrew as a language and its reading and writing, for any child aged 3 to 8 at any level. It runs from a child who has never noticed a letter to a child who reads and writes short pointed texts and the first unpointed words. It is **its own course** and has nothing to do with the app's Hebrew interface (owner decision 4, `docs/languages/README.md`): no other land depends on it, and it depends on no other land.
 
-**Every Hebrew word, syllable and sentence in this file is a draft**, `"review": "needs-editor"`. The hebrew-text-editor makes the wording and nikud final. Example words are chosen to be decodable and picturable; their pointing follows the app's standard (`docs/agents/hebrew-notes.md` §2.4: full nikud on the defective spelling) and must be checked.
+**The Hebrew words and syllables in this file were edited by the hebrew-text-editor on 2026-11-03: nikud, stress, spelling and fit for a child are checked, and the status is `text-ready`** (waiting for the owner's approval; the decisions and the changes are in `docs/agents/hebrew-notes.md` §8). New Hebrew written later stays `"review": "needs-editor"` until the editor has read it. Example words are chosen to be decodable and picturable; their pointing follows the app's standard (`docs/agents/hebrew-notes.md` §2.4: full nikud on the defective spelling, the Academy's spelling for pointed text). Sentences (S11), instructions, hints and praise are not written yet.
 
 ## 0. How to read this file
 
@@ -33,7 +33,7 @@ Hebrew speakers hear a syllable as **body + coda** (CV + C), not onset + rime (S
 
 1. **Rhyme:** enjoy, complete, judge (A-06, A-07).
 2. **Syllables:** count, blend (A-08, A-09), isolate the first one (B-07), delete one (B-08).
-   - Words go in this order: open syllables only (דֻּבִּי, מַתָּנָה), then open and closed (חָ–לָב, חֻל–צָה), then a cluster (גְּלִי–דָה), then closed only (סַפְ–סָל) (MoE-RW 2).
+   - Words go in this order: open syllables only (דֻּבִּי, מַתָּנָה), then open and closed (חָ–לָב, חֻלְ–צָה), then a cluster (גְּלִי–דָה), then closed only (סַפְ–סָל) (MoE-RW 2).
 3. **The opening CV unit** (B-09): תּוּ in תּוּת, מִ in מִבְרֶשֶׁת.
 4. **The final consonant** (B-10): ones that can be stretched first (ל, שׁ, ר, מ, ס, ח), stops later.
 5. **The initial consonant** (B-11): words that open with a cluster first (גְּלִידָה, שְׂמִיכָה), where the CV need not be split, then CV-initial words (בֻּבָּה), and continuants (שׁ ז ס ל ר ח מ נ) before stops (MoE-RW 3).
@@ -56,25 +56,25 @@ From step 3 on, every phonological activity can show the letters (Ehri et al. 20
 |---|---|---|---|---|
 | **S1** | א, בּ, מ ם, ל, שׁ, ת, ר | ָ ַ (a); final ָה | ם is מ at the end of a word | CV units: מָ לָ שָׁ רָ בָּ תָּ אָ. Words: אַבָּא, בַּת, שַׁבָּת, שָׁם, מָה, לָמָּה, אַתָּה, תָּמָר, שָׁר, בָּא, מַר, אָמַר, שָׁמַר |
 | **S2** | נ ן, ד, י, ס | ִ, ִי (i) | ד / ר; ס / ם; ן / נ | CV units: נִ דִּ סִ יָ מִי לִי. Words: יָם, יָד, לִי, מִי, אִי, שִׁיר, שִׁירָה, סַל, סִיר, סִירָה, דִּירָה, תִּירָס, אִמָּא, אִישׁ, נָם, מָנָה, שָׁנָה, נָמָל, סִינָר |
-| **S3** | (none) | silent shva ְ (closes a syllable) | a letter with no vowel closes the syllable | יַלְ–דָּה, תַּלְ–מִיד, נִרְ–דָּם, מִדְ–בָּר |
+| **S3** | (none) | silent shva ְ (closes a syllable) | a letter with no vowel closes the syllable | יַלְ–דָּה, תַּלְ–מִיד, נִרְ–דָּם, מִדְ–בָּר, תַּרְ–מִיל, סַנְ–דָּל, בִּנְ–יָן, לַיְ–לָה |
 | **S4** | גּ, כּ, ו (consonant v), ה (consonant) | וֹ, ֹ (o) | ו as a consonant (וָרֹד) / as a vowel (שָׁלוֹם); ה at the start (הַר) / silent at the end; כּ / בּ | שָׁלוֹם, דּוֹד, סוֹד, אוֹר, יוֹם, תּוֹר, לוֹ, בּוֹר, גָּדוֹל, גַּן, גִּיר, גָּמָל, דָּג, כִּי, כּוֹס, וָרֹד, הַר, הִיא, כִּנּוֹר, מוֹרָה, אָרוֹן, הוֹרִים |
 | **S5** | ח, ק, ע | וּ, ֻ (u) | וֹ / וּ (the dot's place); ח / ה / ת; ע carries the vowel and makes no sound of its own | סוּס, תּוּת, הוּא, קוּם, שׁוּק, כַּדּוּר, דֻּבִּי, בֻּבָּה, קוֹל, חַלּוֹן, מָקוֹם, חַם, חוּם, חוֹל, עוּגָה, שָׁעוֹן, שֻׁלְחָן, חָתוּל, עַמּוּד |
-| **S6** | צ ץ, פּ, ט, ז | ֵ, ֵי, ֶ, final ֶה (e) | ע / צ; ז / ו / ן; ט / מ; ֶ / ֻ (dot groups); ֵ and ֶ sound the same | עֵץ, עֵט, פֶּה, זֶה, לֶחֶם, יֶלֶד, צֵל, פִּיל, פִּיצָה, חוּט, גֶּשֶׁם, שֶׁמֶשׁ, דֶּלֶת, בֵּיצָה, עֵינַיִם, מוֹרֶה, טִיל, צִיּוּר, פַּח, זֵר, טַבַּעַת, אֶצְבַּע, מֶלַח |
-| **S7** | ב (v), כ ך (χ), פ ף (f), שׂ | (none) | the same letter, another sound: בּ/ב, כּ/כ, פּ/פ, שׁ/שׂ; ך ף ץ as final forms; patah gnuva (רוּחַ); silent א at the end (כִּסֵּא) and inside (רֹאשׁ) | כּוֹכָב, סֵפֶר, כֶּלֶב, אַרְנָב, זָנָב, זָהָב, סָבָא, קֻפְסָה, לֵב, חָלָב, עוֹף, כַּף, אַף, קוֹף, מֶלֶךְ, שַׂמְלָה, שָׂדֶה, סַבְתָּא, טֶלֶפוֹן, אוֹפַנַּיִם, רוּחַ, תַּפּוּחַ, יָרֵחַ, כִּסֵּא, רֹאשׁ |
-| **S8** | (none) | shva at the start of a word (said as in modern speech); ֲ ֱ ֳ (hatafs) | a shva at the start is said lightly or not at all ([gli-], [smi-]); a hataf sounds like its full vowel | גְּלִידָה, שְׂמִיכָה, סְפָרִים, כְּלָבִים, פְּרָחִים, בְּרָכָה, צְפַרְדֵּעַ, חֲמוֹר, אֲנִי, עֲנָנִים, חֲתוּלָה, אַרְיֵה, אֳנִיָּה |
-| **S9** | (none) | all combined | long words read by CV units; prefixes ה ו ב כ ל מ ש as units; morphemes ים ות תִּי יו | מִשְׁקָפַיִם, תַּרְנְגוֹל, עַגְבָנִיָּה, אֲבַטִּיחַ; הַכֶּלֶב, וְהֶחָתוּל, בַּבַּיִת, לַגַּן, מֵהַיָּם, שֶׁלִּי; יְלָדִים, יְלָדוֹת, שָׁמַרְתִּי, סְפָרָיו; "same tune": אָכִיל, שָׁבִיר, דָּבִיק; רַקְדָן, חַיְּכָן |
+| **S6** | צ ץ, פּ, ט, ז | ֵ, ֵי, ֶ, final ֶה (e) | ע / צ; ז / ו / ן; ט / מ; ֶ / ֻ (dot groups); ֵ and ֶ sound the same | עֵץ, עֵט, פֶּה, זֶה, לֶחֶם, יֶלֶד, צֵל, פִּיל, פִּיצָה, חוּט, גֶּשֶׁם, שֶׁמֶשׁ, דֶּלֶת, בֵּיצָה, עֵינַיִם, מוֹרֶה, מָטוֹס, צִיּוּר, פַּח, זֵר, טַבַּעַת, אֶצְבַּע, מֶלַח, אַרְיֵה |
+| **S7** | ב (v), כ ך (χ), פ ף (f), שׂ | (none) | the same letter, another sound: בּ/ב, כּ/כ, פּ/פ, שׁ/שׂ; ך ף ץ as final forms; patah gnuva (רוּחַ); silent א inside a word (רֹאשׁ); a final silent א after e (כִּסֵּא) is the same as the final א of S1 | כּוֹכָב, סֵפֶר, כֶּלֶב, אַרְנָב, זָנָב, זָהָב, סָבָא, קֻפְסָה, לֵב, חָלָב, עוֹף, כַּף, אַף, קוֹף, מֶלֶךְ, שִׂמְלָה, שָׂדֶה, סַבְתָּא, טֶלֶפוֹן, אוֹפַנַּיִם, רוּחַ, תַּפּוּחַ, יָרֵחַ, כִּסֵּא, רֹאשׁ |
+| **S8** | (none) | shva at the start of a word (said as in modern speech); ֲ ֱ ֳ (hatafs) | a shva at the start is said lightly or not at all ([gli-], [smi-]); a hataf sounds like its full vowel | גְּלִידָה, שְׂמִיכָה, סְפָרִים, כְּלָבִים, פְּרָחִים, בְּרָכָה, צְפַרְדֵּעַ, חֲמוֹר, אֲנִי, עֲנָנִים, חֲתוּלָה, אֳנִיָּה, אֱמֶת |
+| **S9** | (none) | all combined | long words read by CV units; prefixes ה ו ב כ ל מ ש as units; morphemes ים ות תִּי יו | מִשְׁקָפַיִם, תַּרְנְגוֹל, עַגְבָנִיָּה, אֲבַטִּיחַ; הַכֶּלֶב, וְהֶחָתוּל, בַּבַּיִת, לַגַּן, מֵהַיָּם, שֶׁלִּי; יְלָדִים, יְלָדוֹת, שָׁמַרְתִּי, סְפָרָיו; "same tune": אָכִיל, שָׁבִיר, דָּבִיק; רַקְדָן, שַׂחְקָן |
 | **S10** | (none) | (none) | frequent words known at a glance | אֲנִי, הוּא, הִיא, זֶה, זֹאת, יֵשׁ, אֵין, לֹא, כֵּן, עִם, אֶת, שֶׁל, עַל, גַּם, מָה, מִי, אֵיפֹה |
 | **S11** | (none) | punctuation . ? ! , | sentences and short texts (3–5 sentences), original, pointed | written per unit by the teacher and the editor |
-| **S12** | (none) | (nikud fades) | frequent short words unpointed; full spelling (ktiv male) with helping nikud | unpointed: אבא, אמא, ילד, גן, כן, לא, יש, זה, הוא, היא, אני, שלום; full spelling: שולחן, ציפור, כיסא, תפוח, חתול (helping nikud set by the editor) |
+| **S12** | (none) | (nikud fades) | frequent short words unpointed; full spelling (ktiv male) with helping nikud | unpointed: אבא, אמא, ילד, גן, כן, לא, יש, זה, הוא, היא, אני, שלום; full spelling, no help needed: שולחן, חתול; full spelling with helping nikud (the dot that makes ב כ פ hard): ציפּור, כּיסא, תפּוח. The editor's rule for helping nikud is in `hebrew-notes.md` §8.5 |
 
 **Notes on the steps.**
 - The CV unit is the unit a child reads and hears. Each step opens with its CV units (a letter with each vowel taught, the Ministry's "גלגל סימני ניקוד": בָּ בִּ בּוֹ…), then two-unit words, then longer ones (MoE-RW 4: each sign alone first, then combined).
 - A step can start before every letter of its group is mastered: decoding the first two or three letters of a group may begin once their sounds are known.
 - ה is used from S1 only as part of the final ָה ("one package", ML appendix). It is taught as a consonant in S4. A final א after a vowel (אַבָּא, בָּא, הִיא) is read the same way from S1: it makes no sound and ends the word. A silent א inside a word (רֹאשׁ) is taught in S7.
-- **Checked by script:** every word in S1–S8 uses only the letters and signs of its step or earlier (138 words; the check marks ב כ פ without a dagesh as S7, a shva on the first letter as S8, and so on). Four words were moved after the first run (סָבָא, קֻפְסָה and זָהָב have a soft ב or פ; חוּט has ט).
+- **Checked by script:** every word in S1–S8 uses only the letters and signs of its step or earlier (138 words; the check marks ב כ פ without a dagesh as S7, a shva on the first letter as S8, and so on). Four words were moved after the first run (סָבָא, קֻפְסָה and זָהָב have a soft ב or פ; חוּט has ט). **Re-run by the editor on 2026-11-03 after the changes: 143 words in S1–S8 (13 CV units besides), none needs a later step** (details, the script and what changed: `hebrew-notes.md` §8.1). S9–S12 are read by hand: 19 + 17 + 17 words.
 - Final forms: ם in S1 and ן in S2, each with its letter. ץ in S6. ך and ף in S7, because their usual sound is the soft one (ךְ = χ, ף = f).
 - Dagesh chazak (doubling: לָמָּה, אִמָּא) changes no sound in modern Hebrew. The child is told "the dot in מּ does not change the sound". Only in ב כ פ does it change the sound (S7).
-- At least **8 picturable words per step** are needed for the activities. S3 has only 4 so far (a silent shva with S1–S2 letters is rare in picturable words). S3 may borrow the closed syllables of S4–S5 words once those letters are known, or be merged into S4; the editor and I will settle it in the activity plan. The lists above give the candidates. The pictures are the design-director's, drawn from real references (`docs/art/`).
+- At least **8 picturable words per step** are needed for the activities. **S3 is settled (editor, 2026-11-03): it stays its own short step, with 8 picturable words** (יַלְדָּה, תַּלְמִיד, נִרְדָּם, מִדְבָּר, תַּרְמִיל, סַנְדָּל, בִּנְיָן, לַיְלָה: four were found with S1–S2 letters only). It is not merged into S4: that step already brings four letters and a vowel. The silent shva then comes back in S5–S8 words (שֻׁלְחָן, אֶצְבַּע, שִׂמְלָה, סַבְתָּא, קֻפְסָה, צְפַרְדֵּעַ), which the activities use as review. The lists above give the candidates. The pictures are the design-director's, drawn from real references (`docs/art/`).
 
 ## 4. Letter facts the course teaches (and the voice must say)
 
@@ -253,11 +253,11 @@ Two strands are placed separately (R §11): **L** = oral language and phonologic
 - **Revisits:** the curriculum's FSRS schedule. Confusable pairs are revisited together.
 - **Stuck:** after the hint ladder and a second representation (CV-first ↔ word-first, ML), a child who still struggles gets the prerequisite repair. After repeated repairs on the same code skill, the parent area shows a gentle note suggesting a talk with the gan teacher or the school. It gives no label (R §12).
 
-## 11. Hebrew drafts in this file (for the hebrew-text-editor)
+## 11. Hebrew in this file: status after the editor's pass (2026-11-03)
 
-All are `"review": "needs-editor"`:
-- the decodable word lists S1–S12 (§3), about 190 words, with nikud and stress to confirm;
+All `text-ready`, waiting for the owner's approval (`hebrew-notes.md` §8 has the checks, the changes and the open questions):
+- the decodable word lists S1–S12 (§3), 196 words, with nikud and stress confirmed (the stress list is in `voice-brief.md` §4);
 - the examples in §2, §4, §5 and §6 (phrases such as הַיֶּלֶד רָץ, כּוֹתֵב / מִכְתָּב / כְּתֹבֶת, מִי שֶׁרוֹקֵד הוּא…);
-- the shape cues in §5, which are placeholders in English until the editor writes them in Hebrew.
+- the shape cues in §5: the English lines stay as the teacher's intent; the Hebrew wording is in `hebrew-notes.md` §8.6, `text-ready` as words and to be re-read against the design-director's pictures.
 
 No child-facing instruction is written yet. Instructions, hints and praise come with the activity plan (the milestone), and the editor writes them.
