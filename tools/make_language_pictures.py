@@ -44,7 +44,12 @@ References looked at on 2026-11-03 (facts and photographs; the look is ours):
     head, upright ears).
   Elephant: Wikimedia Commons search "african elephant side" (grey, a big ear on the side of the head, the trunk hanging
     to the ground, pillar legs, a thin tail with a tuft, small tusks).
-  Everyday things (apple, ball, balloon, banana, boat, bowl, bread, cake, car, cat, cucumber, dog, doll, egg, fish,
+  Play ball (redrawn 2026-11-03 for the owner: it looked like a balloon without a string): Wikimedia Commons searches
+    "playground ball" and "rubber ball toy" (matte red rubber balls on grass, a pebbled "stipple" finish, a small
+    self-sealing valve) and retailer descriptions of rubber playground balls (laminated rubber cover, stipple finish,
+    self-sealing valve; e.g. https://www.marchants.com/rubber-playground-ball-8-1-2/). Ours: matte, a two-tone band with
+    seams, faint pebbles, a valve, sitting on the ground with a contact shadow, perfectly round.
+  Everyday things (apple, balloon, banana, boat, bowl, bread, cake, car, cat, cucumber, dog, doll, egg, fish,
     glass of juice, milk and water, hats, kite, oven, scarf, shirt, soup, spoon) are drawn from what they look like in
     any Israeli or Russian kitchen, toy box or park; colours checked against the brief of each course.
 """
@@ -56,6 +61,7 @@ import sys
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 OUT = os.path.join(ROOT, 'content', 'languages', 'pictures')
 SHEET = os.path.join(ROOT, 'docs', 'design', 'languages', 'pictures_batch1.png')
+BALLS = os.path.join(ROOT, 'docs', 'design', 'languages', 'ball_vs_balloon.png')
 CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
 
 INK = '#2B2350'
@@ -677,16 +683,44 @@ def soup():
 
 # ---- toys and things -----------------------------------------------------------------------------------------------
 
+def mix(a, b, t):
+    """a blended toward b by t (0..1), as #RRGGBB."""
+    a, b = a.lstrip('#'), b.lstrip('#')
+    return '#' + ''.join('%02X' % round(int(a[k:k + 2], 16) * (1 - t) + int(b[k:k + 2], 16) * t) for k in (0, 2, 4))
+
+
+# The play ball's band: a deeper tone of the same hue, so the ball stays one named colour, the band still shows at
+# 64 px, and the blue ball never carries a light-blue stripe (Russian sinij is not goluboj).
+BAND = {'red': mix(HUES['red'][0], HUES['red'][1], 0.75), 'blue': mix(HUES['blue'][0], HUES['blue'][1], 0.8),
+        'yellow': mix(HUES['yellow'][0], '#F08A00', 0.4), 'green': mix(HUES['green'][0], HUES['green'][1], 0.8),
+        'white': '#E4E0EE', 'black': mix(HUES['black'][0], WHITE, 0.2)}
+
+
 def ball(c='red'):
+    """A children's rubber play ball sitting on the ground: matte (no gloss), a curved two-tone band with seams round
+    its middle, a pebbled surface, a small valve; perfectly round (the balloon is the oval one, with a knot and string)."""
     f, s = HUES[c]
+    band = BAND[c]
     p = Pic()
-    p.shadow(cy=236, rx=74)
-    body = ell(128, 128, 92, 92)
-    cid = p.shaded(body, f, s, k=16)
-    p.clipped(cid, '<path d="M 44 96 C 96 132, 170 132, 216 92" fill="none" stroke="%s" stroke-width="3" opacity="0.3"/>'
-              % INK)
-    p.hl('M 70 92 Q 82 66 108 56', 11)
-    p.add('<circle cx="66" cy="114" r="5.5" fill="%s" opacity="0.55"/>' % WHITE)
+    p.shadow(cy=224, rx=78, ry=10)
+    p.add('<ellipse cx="128" cy="222" rx="40" ry="6" fill="%s" opacity="0.22"/>' % INK)
+    body = ell(128, 130, 92, 92)
+    cid = p.shaded(body, f, s, k=14, sw=0)
+    band_d = 'M 26 100 C 82 150, 174 150, 230 96 L 230 146 C 174 200, 82 200, 26 150 Z'
+    seam = '#000000' if c != 'black' else '#FFFFFF'
+    p.clipped(cid,
+              '<path d="%s" fill="%s"/>' % (band_d, band)
+              + '<path d="M 26 160 C 82 210, 174 210, 230 156 L 230 240 L 26 240 Z" fill="%s" opacity="0.25"/>' % s
+              + '<path d="M 26 100 C 82 150, 174 150, 230 96 M 26 150 C 82 200, 174 200, 230 146" fill="none" '
+                'stroke="%s" stroke-width="3" opacity="0.35"/>' % seam
+              + '<path d="M 26 92 C 82 142, 174 142, 230 88 M 26 158 C 82 208, 174 208, 230 154" fill="none" '
+                'stroke="%s" stroke-width="2" opacity="0.18"/>' % seam
+              + ''.join('<circle cx="%d" cy="%d" r="1.6" fill="%s" opacity="0.16"/>' % (x, y, seam)
+                        for x in range(46, 214, 14) for y in range(52, 218, 14)
+                        if (x - 128) ** 2 + (y - 130) ** 2 < 84 ** 2 and (x // 14 + y // 14) % 2 == 0)
+              + '<path d="%s" fill="%s" opacity="0.2"/>' % (ell(96, 86, 34, 24), mix(f, WHITE, 0.5)))
+    p.path(ell(150, 70, 5, 5), mix(s, INK, 0.3), 2.5, stroke=mix(s, INK, 0.5))
+    p.path(body, 'none')
     return p
 
 
@@ -1040,25 +1074,24 @@ def build():
     return out
 
 
-def sheet(ids):
+def sheet(ids, out=SHEET, cols=8):
     """The contact sheet: each picture on a white card at 200 px, and the whole set again at 64 px."""
     import pathlib
     big = ''.join('<div class="c"><img src="%s"><span>%s</span></div>' % ((pathlib.Path(OUT) / (i + '.svg')).as_uri(), i)
                   for i in ids)
     small = ''.join('<img class="s" src="%s">' % (pathlib.Path(OUT) / (i + '.svg')).as_uri() for i in ids)
-    cols = 8
     w = cols * 212 + 24
     rows = (len(ids) + cols - 1) // cols
-    h = rows * 236 + 24 + ((len(ids) + 15) // 16) * 76 + 60
+    h = rows * 236 + 24 + ((len(ids) + 2 * cols - 1) // (2 * cols)) * 76 + 60
     html = ('<html><body style="margin:0;padding:12px;background:#FFF6E8;width:%dpx;font:13px sans-serif;color:#2B2350">'
             '<style>.c{display:inline-block;width:200px;margin:6px;text-align:center}.c img{width:200px;height:200px;'
             'background:#fff;border-radius:16px}.s{width:64px;height:64px;margin:6px;background:#fff;border-radius:10px}'
-            '</style>%s<div style="margin-top:12px;width:%dpx">%s</div></body></html>' % (w - 24, big, 16 * 76, small))
-    tmp = SHEET + '.html'
+            '</style>%s<div style="margin-top:12px;width:%dpx">%s</div></body></html>' % (w - 24, big, cols * 2 * 76, small))
+    tmp = out + '.html'
     with open(tmp, 'w', encoding='utf-8') as fh:
         fh.write(html)
     subprocess.run([CHROME, '--headless=new', '--disable-gpu', '--hide-scrollbars', '--force-device-scale-factor=1',
-                    '--allow-file-access-from-files', '--screenshot=' + SHEET, '--window-size=%d,%d' % (w, h),
+                    '--allow-file-access-from-files', '--screenshot=' + out, '--window-size=%d,%d' % (w, h),
                     pathlib.Path(tmp).as_uri()], check=True, capture_output=True)
     os.remove(tmp)
 
@@ -1074,6 +1107,8 @@ def main():
     if '--sheet' in sys.argv:
         sheet(list(pics))
         print('sheet', os.path.relpath(SHEET, ROOT))
+        sheet(['ball-%s' % c for c in COLOURED['ball'][1]] + ['balloon-%s' % c for c in COLOURED['balloon'][1]], BALLS, cols=6)
+        print('sheet', os.path.relpath(BALLS, ROOT))
 
 
 if __name__ == '__main__':
