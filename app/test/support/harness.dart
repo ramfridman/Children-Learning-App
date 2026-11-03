@@ -9,23 +9,29 @@ import 'package:nitznutz/design/theme.dart';
 import 'package:nitznutz/design/token_types.dart';
 import 'package:nitznutz/strings/he.dart';
 
-/// Loads the two real font files so that tests (and golden screenshots) draw Hebrew with Heebo and
-/// Secular One instead of the test font's blocks.
+/// Loads the real font files so that tests (and golden screenshots) draw Hebrew with Heebo and Secular One, and English and
+/// Russian lesson text with Nitznutz Letters (Medium and Bold), instead of the test font's blocks.
 Future<void> loadAppFonts() async {
-  Future<void> load(String family, String path) async {
-    final FontLoader loader = FontLoader(family)
-      ..addFont(Future<ByteData>.value(ByteData.sublistView(File(path).readAsBytesSync())));
+  Future<void> load(String family, List<String> paths) async {
+    final FontLoader loader = FontLoader(family);
+    for (final String path in paths) {
+      loader.addFont(Future<ByteData>.value(ByteData.sublistView(File(path).readAsBytesSync())));
+    }
     await loader.load();
   }
 
-  await load('Heebo', 'assets/fonts/Heebo-Variable.ttf');
+  await load('Heebo', <String>['assets/fonts/Heebo-Variable.ttf']);
   // The Material icon font is not loaded by flutter test; take it from the SDK so icons are drawn in screenshots.
   final String? sdk = Platform.environment['FLUTTER_ROOT'];
   if (sdk != null) {
     final String icons = '$sdk/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf';
-    if (File(icons).existsSync()) await load('MaterialIcons', icons);
+    if (File(icons).existsSync()) await load('MaterialIcons', <String>[icons]);
   }
-  await load('SecularOne', 'assets/fonts/SecularOne-Regular.ttf');
+  await load('SecularOne', <String>['assets/fonts/SecularOne-Regular.ttf']);
+  await load('NitznutzLetters', <String>[
+    'assets/fonts/NitznutzLetters-Medium.ttf',
+    'assets/fonts/NitznutzLetters-Bold.ttf',
+  ]);
 }
 
 /// Pumps [child] the way the app shows it: Hebrew locale (so the layout is right to left), the

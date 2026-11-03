@@ -152,13 +152,17 @@ void main() {
   });
 
   group('fonts', () {
-    test('only Heebo and Secular One are declared and used', () {
+    // Heebo and Secular One are the interface. Nitznutz Letters is for English and Russian lesson text only (owner, 2026-11-03,
+    // CLAUDE.md): it is named in one file, `design/target_text.dart`, and every other file reaches it through `TargetText`.
+    const String targetFile = 'design/target_text.dart';
+
+    test('only Heebo, Secular One and, for lesson text, Nitznutz Letters are declared and used', () {
       final String pubspec = File('pubspec.yaml').readAsStringSync();
       final Set<String> families = RegExp(r'- family: (\S+)')
           .allMatches(pubspec)
           .map((RegExpMatch m) => m.group(1)!)
           .toSet();
-      expect(families, <String>{'Heebo', 'SecularOne'});
+      expect(families, <String>{'Heebo', 'SecularOne', 'NitznutzLetters'});
       for (final File f in lib) {
         final String text = f.readAsStringSync();
         for (final String banned in <String>[
@@ -178,6 +182,22 @@ void main() {
             reason: '${slashed(f)}: ${m.group(0)}',
           );
         }
+      }
+    });
+
+    test('Nitznutz Letters is named in one file only, the one that holds TargetText', () {
+      final List<String> named = <String>[
+        for (final File f in lib)
+          if (f.readAsStringSync().contains('NitznutzLetters')) slashed(f).split('lib/').last,
+      ];
+      expect(named, <String>[targetFile]);
+    });
+
+    test('target text is set only through TargetText or targetStyle, never with the family by hand', () {
+      for (final File f in lib) {
+        final String path = slashed(f).split('lib/').last;
+        if (path == targetFile) continue;
+        expect(f.readAsStringSync().contains('targetFontFamily'), isFalse, reason: path);
       }
     });
 
@@ -201,8 +221,12 @@ void main() {
       for (final String name in <String>[
         'Heebo-Variable.ttf',
         'SecularOne-Regular.ttf',
+        'NitznutzLetters-Medium.ttf',
+        'NitznutzLetters-Bold.ttf',
         'OFL-Heebo.txt',
         'OFL-SecularOne.txt',
+        'OFL-NitznutzLetters.txt',
+        'FONTLOG-NitznutzLetters.txt',
       ]) {
         expect(File('assets/fonts/$name').existsSync(), isTrue, reason: name);
       }
