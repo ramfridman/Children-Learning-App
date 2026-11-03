@@ -46,6 +46,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'tap_answer': '1.3',
   'story': '1.0',
   'listen_do': '1.0',
+  'sing_along': '1.0',
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
@@ -571,6 +572,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'tap_answer',
       'story',
       'listen_do',
+      'sing_along',
       'count_tap',
       'give_n',
       'flash',
@@ -1174,6 +1176,58 @@ SObject? activitySchemaFor(String template) => switch (template) {
       'answer': SField(_l4Answer(const <String>['hotspots', 'buttons', 'drag', 'place', 'embodied'])),
     }),
   ),
+  // LS12: an original song, chant or rhyme. `chant`: the lines are said one after another, the pictures of a line light while it is said, a
+  // touch on a picture says its word; joining in is practice and writes nothing. `rhyme`: the verse is heard whole, stops before its last
+  // word, the child chooses among 2 or 3 pictures (scored), and the whole verse is heard again. No melody: the lines are spoken to a beat.
+  'sing_along' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The pictures of the song: they light on their key words, and say their word when touched.
+          'pictures': SField(
+            SArray(
+              SObject(<String, SField>{
+                'picture': SField(_asset),
+                'label': SField(SString(minLength: 1, maxLength: 80)),
+                'clip': SField(_vo, required: false),
+              }),
+              minItems: 1,
+              maxItems: 6,
+            ),
+          ),
+          // `chant`: the lines, each with the pictures (by index) that light while it is said.
+          'lines': SField(
+            SArray(
+              SObject(<String, SField>{
+                'clips': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+                'lights': SField(SArray(SInt(min: 0, max: 5), maxItems: 3)),
+              }),
+              maxItems: 8,
+            ),
+            required: false,
+          ),
+          // `rhyme`: the verse heard whole, up to its gap, and whole again after the answer; `cue` is the end word of the first line
+          // (the hints say it, alone and before each option).
+          'verse': SField(
+            SObject(<String, SField>{
+              'whole': SField(SArray(_vo, minItems: 1, maxItems: 4)),
+              'open': SField(SArray(_vo, minItems: 1, maxItems: 4)),
+              'full': SField(SArray(_vo, minItems: 1, maxItems: 4)),
+              'cue': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+            }),
+            required: false,
+          ),
+        }),
+      ),
+      'answer': SField(
+        _l4Answer(
+          const <String>['chant', 'rhyme'],
+          extra: const <String, SField>{'question': SField(_spoken, required: false)},
+        ),
+      ),
+    }),
+  ),
   'trace' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1229,6 +1283,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.tap_answer': activitySchemaFor('tap_answer')!,
   'activity.story': activitySchemaFor('story')!,
   'activity.listen_do': activitySchemaFor('listen_do')!,
+  'activity.sing_along': activitySchemaFor('sing_along')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,

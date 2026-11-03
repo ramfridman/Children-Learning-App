@@ -420,3 +420,51 @@ Map<String, Object?> listenDoJson({
           },
   };
 }
+
+// ---- sing along (LS12) ----
+
+/// A picture of a song: its asset id, a label for a screen reader and the clip of its word.
+Map<String, Object?> songPicture(String asset, {String? clip}) => <String, Object?>{
+  'picture': 'asset:$asset',
+  'label': asset,
+  'clip': ?clip,
+};
+
+/// A chant (`lines`) or a rhyme (`verse`, with `options`) of [course] (LS12).
+Map<String, Object?> singJson({
+  String course = 'eng',
+  required String id,
+  String? skill,
+  required List<Map<String, Object?>> pictures,
+  List<Map<String, Object?>>? lines,
+  Map<String, Object?>? verse,
+  List<Map<String, Object?>>? options,
+  String? correct,
+}) {
+  final bool rhyme = options != null;
+  return <String, Object?>{
+    ..._common(
+      course,
+      id,
+      skill ?? '${course.toUpperCase()}-A-02',
+      'sing_along',
+      '1.0',
+      rhyme ? 'learn' : 'practice',
+      'A',
+      'story',
+    ),
+    ..._lines('$course.$id', promptText: 'בּוֹאוּ נְדַקְלֵם יַחַד, וְנַעֲשֶׂה אֶת הַתְּנוּעוֹת!'),
+    'scene': <String, Object?>{'pictures': pictures, 'lines': ?lines, 'verse': ?verse},
+    'answer': rhyme
+        ? <String, Object?>{
+            'type': 'choice',
+            'mode': 'rhyme',
+            'question': line('vo:$course.$id.q', 'אֵיזוֹ מִלָּה מַתְאִימָה לַסּוֹף?'),
+            'options': options,
+            'correct': correct,
+            'shuffle': true,
+            'unsureAllowed': true,
+          }
+        : <String, Object?>{'type': 'none', 'mode': 'chant'},
+  };
+}

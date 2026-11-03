@@ -146,6 +146,7 @@ sealed class Activity {
     'tap_answer' => TapAnswerActivity._(json, assets),
     'story' => StoryActivity._(json, assets),
     'listen_do' => ListenDoActivity._(json, assets),
+    'sing_along' => SingAlongActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
@@ -485,6 +486,63 @@ class ListenDoActivity extends Activity implements ChoiceActivity {
   final String correctId;
 
   bool get embodied => mode == 'embodied';
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The sing-along template (LS12, docs/languages/frame.md section 2.3): a chant, or a rhyme with a gap. In `chant` mode the [lines] are
+/// said one after another and the [pictures] of a line light while it is said; it is practice and writes nothing. In `rhyme` mode the
+/// [verse] is heard, stops before its last word, and the child chooses the picture that ends it (scored); then the verse is heard whole.
+class SingAlongActivity extends Activity implements ChoiceActivity {
+  SingAlongActivity._(super.json, super.assets)
+    : mode = _map(json['answer'])['mode']! as String,
+      pictures = <({String picture, String label, String? clip})>[
+        for (final Map<String, Object?> p in _maps(_map(json['scene'])['pictures']))
+          (picture: p['picture']! as String, label: p['label']! as String, clip: p['clip'] as String?),
+      ],
+      lines = <({List<String> clips, List<int> lights})>[
+        for (final Map<String, Object?> l in _maps(_map(json['scene'])['lines']))
+          (
+            clips: <String>[for (final Object? c in l['clips']! as List<Object?>) c! as String],
+            lights: <int>[for (final Object? i in l['lights']! as List<Object?>) i! as int],
+          ),
+      ],
+      verse = _verse(_maybe(_map(json['scene'])['verse'])),
+      question = _map(json['answer'])['question'] == null
+          ? null
+          : Spoken.fromJson(_map(json['answer'])['question']),
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  static ({List<String> whole, List<String> open, List<String> full, List<String> cue}) _verse(
+    Map<String, Object?> v,
+  ) {
+    List<String> clips(String k) => <String>[
+      for (final Object? c in (v[k] as List<Object?>?) ?? const <Object?>[]) c! as String,
+    ];
+    return (whole: clips('whole'), open: clips('open'), full: clips('full'), cue: clips('cue'));
+  }
+
+  /// `chant` or `rhyme`.
+  final String mode;
+  final List<({String picture, String label, String? clip})> pictures;
+  final List<({List<String> clips, List<int> lights})> lines;
+  final ({List<String> whole, List<String> open, List<String> full, List<String> cue}) verse;
+  final Spoken? question;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get rhyme => mode == 'rhyme';
 
   @override
   int get optionCount => options.length;

@@ -55,6 +55,7 @@ import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
 import 'spot_error_session.dart';
 import 'listen_do_session.dart';
+import 'sing_along_session.dart';
 import 'story_session.dart';
 import 'template_session.dart';
 
@@ -347,6 +348,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       relevant: replace ? null : () => c.actionNonce == move,
       replace: replace,
     );
+    // The future of the clips is that of their start: a session that goes on after the end of a line (a chant) waits for the voice.
+    await _director.untilQuiet();
   }
 
   /// Whether the word of the right picture shows after the answer, and whether it carries its stress marks: the child's route and
@@ -377,6 +380,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         TapAnswerActivity() => TapAnswerSession(c, a, captions: caption.captions, stress: caption.stress),
         StoryActivity() => StorySession(c, a, stress: caption.stress),
         ListenDoActivity() => ListenDoSession(c, a, stress: caption.stress),
+        SingAlongActivity() => SingAlongSession(c, a, stress: caption.stress),
         FlashActivity() => FlashSession(c, a),
         SortDragActivity() => SortDragSession(c, a),
         BuildPatternActivity() => BuildPatternSession(c, a),

@@ -324,6 +324,9 @@ List<Problem> validatePack({
       case 'listen_do':
         checkAsset(file, 'scene.background', scene['background']);
         _listenDo(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'sing_along':
+        checkAsset(file, 'scene.background', scene['background']);
+        _singAlong(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
       case 'count_tap':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
@@ -1077,6 +1080,76 @@ void _noOverlap(String file, List<(String, _Place?)> places, void Function(Strin
       }
     }
   }
+}
+
+/// LS12: the pictures, the lines and what each mode needs.
+void _singAlong(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final List<Map<String, Object?>> pictures = _maps(scene['pictures']);
+  for (final (int i, Map<String, Object?> p) in pictures.indexed) {
+    checkAsset(file, 'scene.pictures[$i].picture', p['picture']);
+    checkVo(file, 'scene.pictures[$i].clip', p['clip']);
+  }
+  final List<Map<String, Object?>> lines = _maps(scene['lines']);
+  for (final (int i, Map<String, Object?> l) in lines.indexed) {
+    for (final (int k, Object? c) in ((l['clips'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+      checkVo(file, 'scene.lines[$i].clips[$k]', c);
+    }
+    for (final (int k, Object? n) in ((l['lights'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+      if (n is int && n >= pictures.length) {
+        say(file, 'scene.lines[$i].lights[$k]', 'is not one of the ${pictures.length} pictures of the song');
+      }
+    }
+  }
+  final Map<String, Object?>? verse = scene['verse'] as Map<String, Object?>?;
+  if (verse != null) {
+    for (final String k in <String>['whole', 'open', 'full', 'cue']) {
+      for (final (int i, Object? c) in ((verse[k] as List<Object?>?) ?? const <Object?>[]).indexed) {
+        checkVo(file, 'scene.verse.$k[$i]', c);
+      }
+    }
+  }
+  final Object? question = answer['question'];
+  if (question is Map<String, Object?>) checkVo(file, 'answer.question.vo', question['vo']);
+  if (answer['mode'] == 'chant') {
+    _unscored(file, a, say, 'a chant');
+    if (lines.length < 2) say(file, 'scene.lines', 'a chant has at least two lines');
+    for (final String k in <String>['options', 'question']) {
+      if (answer.containsKey(k)) say(file, 'answer.$k', 'a chant has no gap and no question');
+    }
+    if (verse != null) say(file, 'scene.verse', 'a chant is its lines; a verse with a gap is a rhyme');
+    return;
+  }
+  // rhyme
+  if (answer['type'] != 'choice') say(file, 'answer.type', 'a rhyme asks a choice: the type is "choice"');
+  if (verse == null) {
+    say(
+      file,
+      'scene.verse',
+      'a rhyme needs its verse: heard whole, up to the gap, whole again, and the end word of its first line',
+    );
+  }
+  if (lines.isNotEmpty) say(file, 'scene.lines', 'a rhyme is its verse; the lines of a chant are not used');
+  if (question is! Map<String, Object?>) say(file, 'answer.question', 'a rhyme asks which word fits the end');
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (options.length < 2 || answer['correct'] == null) {
+    say(file, 'answer.options', 'a rhyme needs 2 or 3 picture options and the right one');
+    return;
+  }
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    if (o['sprite'] == null) {
+      say(file, 'answer.options[$i].sprite', 'a rhyme is completed by choosing a picture');
+    }
+  }
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
 }
 
 /// LS11: what each mode needs of its scene and its options.

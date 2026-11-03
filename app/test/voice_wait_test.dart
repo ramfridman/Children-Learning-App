@@ -1,5 +1,6 @@
 // The voice never cuts a sentence off (M8 phone test): a line waits for the one that is playing, only the newest line waits,
 // a screen closing silences only what it said, and the child's own touch still replaces what is playing.
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -52,6 +53,22 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(heard(), <String>['mp3:hero-son:a', 'mp3:hero-son:b']);
     expect(director.current, 'vo:b');
+  });
+
+  test('untilQuiet completes when the lines asked for have ended, and at once when nothing plays (L4: a chant waits for a line)', () async {
+    bool quiet = false;
+    await director.untilQuiet();
+    await director.sayClips(<String?>['vo:a', 'vo:b']);
+    unawaited(director.untilQuiet().then((_) => quiet = true));
+    await Future<void>.delayed(Duration.zero);
+    expect(quiet, isFalse, reason: 'a is playing and b waits');
+    player.finish();
+    await Future<void>.delayed(Duration.zero);
+    expect(quiet, isFalse, reason: 'b is playing now');
+    player.finish();
+    await Future<void>.delayed(Duration.zero);
+    expect(quiet, isTrue);
+    expect(heard(), <String>['mp3:hero-son:a', 'mp3:hero-son:b']);
   });
 
   test(
