@@ -234,6 +234,15 @@ abstract final class He {
   static const Str helloHeb = Str('שָׁלוֹם', nikud: true);
   static const Str doorsSemantics = Str('הדלתות של השפות');
   static const Str courseHomeSemantics = Str('בית השפה');
+  // The course home (L-course; all drafts for the editor). The host's invitation to the placement visit, said as a bubble: the
+  // placement is framed as a visit and shows no result (docs/languages/frame.md section 1.2); the labels of the path for a screen reader.
+  static const Str courseInvite = Str('בּוֹאוּ נֵצֵא לְבִקּוּר קָטָן!', nikud: true);
+  static const Str courseVisitSemantics = Str('ביקור קטן בבית השפה');
+  static const Str courseNextSemantics = Str('להמשיך בשפה');
+  static const Str courseStoneDoneSemantics = Str('שיעור שהיה');
+  static const Str courseStoneNextSemantics = Str('השיעור הבא');
+  static const Str courseStoneLaterSemantics = Str('שיעור בהמשך הדרך');
+  static const Str coursePathSemantics = Str('דרך השיעורים');
   // What the bottle says for a stop in a language (the owner picked these on 2026-11-03, including "with words" for the Hebrew
   // course): one line for each language, whatever the reason, with no variable, so a child with three doors hears which one
   // the bottle opens.

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 import '../child/calm_loading.dart';
 import '../child/ceremony_screen.dart';
+import '../child/course_home.dart';
 import '../child/land_screen.dart';
 import '../child/languages_doors.dart';
 import '../child/sticker_island.dart';
@@ -361,11 +362,13 @@ class _HomeState extends ConsumerState<_Home> {
   }
 
   Future<void> _openStop(TodaysAdventure stop, WorldView world) async {
-    // A stop in a language opens that course, whatever its kind: the course screens are its own (L0: a placeholder home).
+    // A stop in a language opens that course, whatever its kind: the course screens are its own.
     if (stop.land case final LanguageLand language) {
-      await Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (BuildContext c) => CourseHomeScreen(course: language.course)));
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (BuildContext c) => CourseHomeScreen(childId: widget.profile.id, course: language.course),
+        ),
+      );
       return;
     }
     switch (stop.kind) {
@@ -476,13 +479,15 @@ class _HomeState extends ConsumerState<_Home> {
   };
 
   /// The Languages island was touched: the door screen when two or three languages are on, the course itself when only one is
-  /// (docs/languages/frame.md section 1.2). Both open the course's placeholder home until the course screens exist (L0).
+  /// (docs/languages/frame.md section 1.2). Both open the course home.
   Future<void> _openLanguages() async {
     final List<String> courses = ref.read(languagesAvailableProvider(widget.profile.id));
     if (courses.isEmpty || !mounted) return;
-    Future<void> openCourse(String course) =>
-        Navigator.of(context)
-            .push(MaterialPageRoute<void>(builder: (BuildContext c) => CourseHomeScreen(course: course)));
+    Future<void> openCourse(String course) => Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext c) => CourseHomeScreen(childId: widget.profile.id, course: course),
+      ),
+    );
     if (courses.length == 1) return openCourse(courses.single);
     final GlobalKey<MapCompanionState> host = GlobalKey<MapCompanionState>();
     await Navigator.of(context).push(

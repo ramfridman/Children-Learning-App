@@ -1,8 +1,9 @@
 import '../content/models.dart';
 import '../data/app_database.dart';
+import '../engine/course.dart';
 import '../engine/staircase.dart';
 import '../play/lesson_controller.dart' show ItemFlow;
-import 'placement.dart' show placementIdFor;
+import 'placement.dart' show landPath, placementIdFor;
 
 // The placement game of a language course (docs/languages/frame.md section 3.2, LS13), wired to the app. The staircase itself is pure
 // (`engine/staircase.dart`); here the course's placement document becomes its strands, the answers recorded under the course's
@@ -39,6 +40,45 @@ PlacementGame? placementGameOf(
   return strands.isEmpty ? null : PlacementGame(strands: strands, perVisit: doc.perVisit);
 }
 
+/// The game of [content]'s course as it stands for one child: the answers that child already gave in the course's placement visits are
+/// replayed into it. Null when the pack has no placement document (or no strand is offered). [attempts] are the child's own answers;
+/// only those of the course's pack and its placement lesson count ([replayPlacement]).
+PlacementGame? placementGameFor(
+  PackContent content,
+  Iterable<Attempt> attempts, {
+  Map<String, String> answers = const <String, String>{},
+  int presentationBand = 0,
+}) {
+  final PlacementGame? game = placementGameOf(content, answers: answers, presentationBand: presentationBand);
+  if (game == null) return null;
+  replayPlacement(game, content.course, attempts.where((Attempt a) => a.packId == content.packId));
+  return game;
+}
+
+/// Where a child's placement stands in a course: what each strand found so far, and whether every strand has stopped. Read from a game
+/// ([PlacementStatus.of]); the screens and the parent's progress read this and never the staircase itself.
+class PlacementStatus {
+  const PlacementStatus({required this.results, required this.complete});
+
+  factory PlacementStatus.of(PlacementGame game) =>
+      PlacementStatus(results: game.results, complete: game.complete);
+
+  /// The result of each offered strand, by its id in the placement document.
+  final Map<String, StrandResult> results;
+
+  /// Every offered strand has stopped: the placement visits are over.
+  final bool complete;
+
+  /// At least one probe was answered.
+  bool get begun => results.values.any((StrandResult r) => r.asked > 0);
+
+  /// The level a strand starts at ("we start here"), counted from 0, or null while that strand has not stopped (or was not offered).
+  int? entryOf(String strand) {
+    final StrandResult? r = results[strand];
+    return r != null && r.stopped ? r.entry : null;
+  }
+}
+
 /// Feeds the answers of the course's placement visits into [game], in the order they were given. An answer of another lesson, or one
 /// that is neither right nor wrong (an "unsure"), is not part of the placement.
 void replayPlacement(PlacementGame game, String course, Iterable<Attempt> attempts) {
@@ -72,6 +112,16 @@ Set<String> assumedSkills(PackContent content, PlacementGame game) {
     }
   }
   return out;
+}
+
+/// The lessons whose every skill the placement assumed: they count as passed once, as the lessons a land's warm-up showed the child
+/// knows do. A lesson with no skill is never placed.
+Set<String> placedLanguageLessons(PackContent content, Set<String> assumed) {
+  if (assumed.isEmpty) return const <String>{};
+  return <String>{
+    for (final Lesson l in landPath(content, Course.languagesDomain))
+      if (l.skillIds.isNotEmpty && l.skillIds.every(assumed.contains)) l.id,
+  };
 }
 
 /// The placement visit of a language course: the staircase chooses each next probe by how the last one went. [doneThisVisit] counts

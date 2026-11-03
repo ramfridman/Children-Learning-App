@@ -12,7 +12,7 @@ import '../engine/course.dart';
 import '../strings/he.dart';
 import 'land_screen.dart' show IslandPainter;
 
-// The door screen of the Languages island and the placeholder of a course's home (docs/design/languages-island.md section 4).
+// The door screen of the Languages island (docs/design/languages-island.md section 4); a door opens the course home (`course_home.dart`).
 // One door for each language the parent turned on, in the fixed order of the doors, from the start (the right): English,
 // Hebrew, Russian. Never sorted by use, never locked, grey or "coming soon". The child picks a door without reading: each is a
 // host, a coloured door with a window shape of its own, and "hello" in the language's own script.
@@ -472,54 +472,4 @@ class _Tail extends CustomPainter {
 
   @override
   bool shouldRepaint(_Tail old) => false;
-}
-
-/// The placeholder of a course's home (L0): its host and its hello, and nothing else. The course's own screens come with the
-/// course (frame milestones ENG-1, HEB-1 and RUS-1); until then a door opens this, and it lists nothing.
-class CourseHomeScreen extends StatelessWidget {
-  const CourseHomeScreen({super.key, required this.course, this.onBack});
-
-  final String course;
-  final VoidCallback? onBack;
-
-  @override
-  Widget build(BuildContext context) {
-    final BoardClass board = AppLayout.of(context).board;
-    final double host = board.isTablet ? 320 : 220;
-    return Scaffold(
-      body: Semantics(
-        label: '${He.courseHomeSemantics.text}: ${languageName(course).text}',
-        child: BoardCanvas(
-          background: languagesColours.sea,
-          board: board,
-          children: <Widget>[
-            Positioned.fill(child: CustomPaint(painter: IslandPainter(languagesColours))),
-            Center(
-              child: ExcludeSemantics(
-                child: BoardSvg(
-                  'assets/art/languages/host_$course.svg',
-                  key: const Key('course-host'),
-                  width: host,
-                  height: host,
-                ),
-              ),
-            ),
-            PositionedDirectional(
-              start: 16,
-              top: 8,
-              child: PebbleButton(
-                key: const Key('course-back'),
-                semanticLabel: He.landBackSemantics.text,
-                size: 48,
-                fill: TokenColors.spark,
-                lip: TokenColors.sparkDeep,
-                onPressed: onBack ?? () => Navigator.of(context).pop(),
-                child: const BoardSvg('assets/art/ui/home_palm.svg', width: 24, height: 24),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

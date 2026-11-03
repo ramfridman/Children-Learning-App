@@ -13,8 +13,10 @@ import '../engine/types.dart' show AttemptEvent;
 import '../parent/language_progress.dart';
 import '../parent/language_settings.dart';
 import '../world/adventure_adapter.dart' show LanguageCourse;
+import '../world/course_path.dart';
 import '../world/language_placement.dart';
 import 'providers.dart' show clockProvider;
+import 'reward_providers.dart' show rewardsProvider;
 import 'state.dart';
 
 /// The parent's language settings of the family on this device (docs/languages/frame.md section 1.4): which languages are on
@@ -83,7 +85,7 @@ final FutureProvider<Map<String, PackContent>> languagePacksProvider =
       return out;
     });
 
-/// The child's language courses as Today's Adventure and the parent's progress read them: the installed pack of each
+/// The child's language courses as Today's Adventure, the course home and the parent's progress read them: the installed pack of each
 /// language and the child's engine on that course alone (their answers in that pack, replayed), so a revisit stays inside its
 /// course.
 final FutureProviderFamily<List<LanguageCourse>, String> languageCoursesProvider =
@@ -98,30 +100,61 @@ final FutureProviderFamily<List<LanguageCourse>, String> languageCoursesProvider
       return <LanguageCourse>[
         for (final String course in Course.languages)
           if (packs[course] case final PackContent pack?)
-            LanguageCourse(
-              content: pack,
-              engine: _engineOf(pack, attempts, family.of(childId, course), ageBand),
-            ),
+            languageCourseOf(pack, attempts, family.of(childId, course), ageBand),
       ];
     });
 
-/// The engine of one child on one course: the skills below the entry point that the placement game found are assumed (known with a prior
-/// of 0.85, until shown otherwise) before the child's answers are replayed (docs/languages/frame.md section 3.2).
-Engine _engineOf(PackContent pack, List<Attempt> attempts, LanguageSwitches switches, int ageBand) {
-  final Engine engine = Engine(catalog: engineCatalog(pack));
-  final PlacementGame? game = placementGameOf(
+/// One child's course: the skills below the entry point that the placement game found are assumed (known with a prior of 0.85, until
+/// shown otherwise) before the child's answers in this pack are replayed into the engine (docs/languages/frame.md section 3.2).
+/// [attempts] may hold every course's answers; only this pack's are read.
+LanguageCourse languageCourseOf(
+  PackContent pack,
+  List<Attempt> attempts,
+  LanguageSwitches switches,
+  int ageBand,
+) {
+  final List<Attempt> own = attempts.where((Attempt a) => a.packId == pack.packId).toList();
+  final PlacementGame? game = placementGameFor(
     pack,
+    own,
     answers: switches.questionnaire,
     presentationBand: switches.presentationBand(ageBand),
   );
-  final List<Attempt> own = attempts.where((Attempt a) => a.packId == pack.packId).toList();
-  if (game != null) {
-    replayPlacement(game, pack.course, own);
-    engine.assume(assumedSkills(pack, game));
-  }
-  return engine
-    ..replay(own.map(eventOf).toList()..sort((AttemptEvent x, AttemptEvent y) => x.at.compareTo(y.at)));
+  final Set<String> assumed = game == null ? const <String>{} : assumedSkills(pack, game);
+  final Engine engine = Engine(catalog: engineCatalog(pack))..assume(assumed);
+  engine.replay(own.map(eventOf).toList()..sort((AttemptEvent x, AttemptEvent y) => x.at.compareTo(y.at)));
+  return LanguageCourse(
+    content: pack,
+    engine: engine,
+    assumed: assumed,
+    placement: game == null ? null : PlacementStatus.of(game),
+  );
 }
+
+/// What the course home of one child shows (the path, where they stand on it, and what is next), or null when that language is not
+/// installed. Invalidate it, with [languageCoursesProvider] and the child's rewards, when a visit has ended.
+final FutureProviderFamily<CourseHomeModel?, ({String childId, String course})> courseHomeProvider =
+    FutureProvider.family<CourseHomeModel?, ({String childId, String course})>((
+      Ref ref,
+      ({String childId, String course}) key,
+    ) async {
+      final List<LanguageCourse> courses = await ref.watch(languageCoursesProvider(key.childId).future);
+      final LanguageCourse? c = courses.where((LanguageCourse x) => x.course == key.course).firstOrNull;
+      if (c == null) return null;
+      final AppDatabase db = await ref.watch(databaseProvider.future);
+      final int band =
+          (await db.allProfiles()).where((Profile p) => p.id == key.childId).firstOrNull?.ageBand ?? 1;
+      return buildCourseHome(
+        course: c,
+        attempts: await db.attemptsOf(key.childId),
+        sessions: await db.sessionsOf(key.childId),
+        rewardKeys: <String>[
+          for (final Reward r in await ref.watch(rewardsProvider(key.childId).future)) r.awardKey,
+        ],
+        now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
+        band: band,
+      );
+    });
 
 /// The parent's progress in one language of one child, or null when that language's pack is not installed on this device.
 final FutureProviderFamily<LanguageProgress?, ({String childId, String course})> languageProgressProvider =

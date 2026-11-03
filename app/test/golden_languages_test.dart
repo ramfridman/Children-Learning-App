@@ -1,5 +1,5 @@
 // Goldens of the Languages island: the 8-land map on the four boards (and the end of the phone's strip), the door screen with
-// three doors and with two, a course home, and the parent pages. The 7-land map's own goldens are untouched.
+// three doors and with two, and the parent pages (the course home's goldens are in `golden_course_home_test.dart`). The 7-land map's own goldens are untouched.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
@@ -115,15 +115,6 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 700));
       await tester.pumpAndSettle();
-    });
-
-    testWidgets('a course home, the placeholder', (WidgetTester tester) async {
-      await _map(tester, phone, const <String>['rus']);
-      final Finder tap = find.byKey(const Key('land-tap-languages'));
-      await tester.ensureVisible(tap);
-      await tester.pumpAndSettle();
-      await tester.tap(tap);
-      await _shot(tester, 'languages_course_home_phone');
     });
   });
 

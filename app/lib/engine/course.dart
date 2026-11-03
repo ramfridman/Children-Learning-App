@@ -22,6 +22,10 @@ abstract final class Course {
 
   static bool isLanguage(String course) => languages.contains(course);
 
+  /// Whether the course's own text runs right to left: Hebrew does, English and Russian run left to right. The screens of a course
+  /// lay out what they read (a path of lessons, its labels) in this direction; the rest of the app stays in Hebrew.
+  static bool readsRightToLeft(String course) => course == heb;
+
   /// The id a language course's pack has (`lang-eng`); null for `core`, whose packs choose their own ids.
   static String? packIdOf(String course) => isLanguage(course) ? 'lang-$course' : null;
 
