@@ -857,6 +857,21 @@ OWNER_APPROVED = [
     (r'^activity\.', r'^כֻּלָּם דּוֹמִים, חוּץ מֵאֶחָד\. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו\.$',
      'B-15 P1 (b15-hebrew.md 4): the owner chose the new Band A hint 3 in place of "אֶחָד מֵהֶם לֹא מַתְאִים" '
      '(owner-approved 2026-10-30). One clip, vo:hint.spot_but_one.h3.'),
+    # The owner's answer of 2026-11-03 to island-texts.md section 6 ("I approve all 3"; recorded in
+    # docs/languages/decisions-2026-11-03.md, "Later the same day"): the door line keeps its question, and the bottle's lines for a
+    # language stop (the Hebrew course says "with words").
+    (r'he\.dart$', r'^בּוֹאוּ נִפְתַּח דֶּלֶת\. מִי אוֹמֵר לָנוּ שָׁלוֹם\?$',
+     'L0 (island-texts.md section 6, question 1): the owner approved the door line with its question (owner-approved 2026-11-03).',
+     r'^languagesDoorsHello$'),
+    (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּאַנְגְּלִית\.$',
+     'L0 (island-texts.md section 4): the owner approved the bottle line for the English stop (owner-approved 2026-11-03).',
+     r'^adventureLangEnglish$'),
+    (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּרוּסִית\.$',
+     'L0 (island-texts.md section 4): the owner approved the bottle line for the Russian stop (owner-approved 2026-11-03).',
+     r'^adventureLangRussian$'),
+    (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּמִלִּים\.$',
+     'L0 (island-texts.md section 6, question 2): the owner approved "with words" for the Hebrew stop (owner-approved 2026-11-03).',
+     r'^adventureLangHebrew$'),
 ]
 
 
