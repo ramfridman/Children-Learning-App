@@ -163,6 +163,7 @@ void main() {
     Future<AppRig> page(WidgetTester tester, String course, {LanguageSwitches? switches}) async {
       final AppRig rig = await langRig(
         languages: <String, LanguageSwitches>{course: switches ?? const LanguageSwitches(on: true)},
+        installed: const <String>[], // no course pack is on this phone, as the progress test below expects
       );
       await pumpParentScreen(tester, rig, LanguagePage(profile: await langProfile(rig), course: course));
       return rig;

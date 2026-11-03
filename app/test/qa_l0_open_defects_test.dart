@@ -1,9 +1,5 @@
-// QA's open defects of milestone L0 (docs/qa/l0-languages-verification.md). Each test FAILS until its defect is fixed; it is the
-// proof of the fix. They are skipped in a normal run so that the suite stays green; run them with
-//
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_l0_open_defects_test.dart
-//
-// When a defect is fixed, the owner of the fix removes `skip: _open` from its test (it then runs in every build).
+// QA's defects of milestone L0 (docs/qa/l0-languages-verification.md): QA-L0-1 to QA-L0-4, each fixed. Their proofs run in
+// every build.
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -19,14 +15,11 @@ import 'package:nitznutz/parent/language_settings.dart';
 import 'support/app_harness.dart';
 import 'support/harness.dart';
 
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
-
 const String kid = 'child-lang-0001';
 
 /// [motion]: the test rig turns "reduce motion" on for every screen; this turns it off again just before the island is tapped.
 Future<void> toDoors(WidgetTester tester, Size size, {bool motion = false}) async {
-  final AppRig rig = AppRig();
+  final AppRig rig = AppRig()..installedLanguages = <String>['eng', 'heb', 'rus'];
   await rig.seedFinishedSetup(id: kid);
   FamilyLanguages f = const FamilyLanguages();
   for (final String c in <String>['eng', 'heb', 'rus']) {
@@ -75,7 +68,6 @@ void main() {
         expect(find.byType(CourseHomeScreen), findsNothing, reason: 'the child went back to the map');
         expect(find.byType(HomeScreen), findsOneWidget);
       },
-      skip: _open,
     );
   }
 
@@ -108,7 +100,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
       }
       expect(find.byType(CourseHomeScreen), findsNothing, reason: 'nothing the child touched was a door');
-    }, skip: _open);
+    });
   }
 
   // QA-L0-3. The budgerigar's long blue tail runs past the bottom of its door's picture (the tail reaches y 304.3 of a 300 high
@@ -149,7 +141,6 @@ void main() {
         }
         expect(blue, 0, reason: 'blue tail pixels on the last three rows of the picture: $blue');
       },
-      skip: _open,
     );
   }
 
@@ -159,7 +150,7 @@ void main() {
   testWidgets('QA-L0-4: no frame of the map shows the 7-land scene to a child who has a language on', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = AppRig();
+    final AppRig rig = AppRig()..installedLanguages = <String>['eng'];
     await rig.seedFinishedSetup(id: kid);
     final FamilyLanguages f = const FamilyLanguages().withSwitches(
       kid,
@@ -179,5 +170,5 @@ void main() {
     }
     expect(frames, isNotEmpty);
     expect(frames.toSet(), <String>{'8-land'}, reason: 'the frames of the map: $frames');
-  }, skip: _open);
+  });
 }

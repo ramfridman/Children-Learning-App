@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../design/app_text.dart';
@@ -107,6 +109,22 @@ class _DoorsSpec {
     helloSize: 34,
   );
 
+  /// How far the tap rectangle is inside the door box on each side: the stone frame starts door / 12 inside the box, and band A
+  /// allows a slop of 12 (docs/design/languages-island.md section 4.2.1): 3, 1, 10 and 8 on the four boards.
+  int get inset => (door / 12).round() - 12;
+
+  /// The width of a door's tap rectangle, which is also the widest its bubble can be: 178, 158, 244 and 224. Two rectangles are
+  /// the gap between two doors and twice [inset] apart: 38, 26, 76 and 40 with three doors.
+  double get unitWidth => door - 2 * inset;
+
+  /// The bottom of a door's tap rectangle: the bottom of its door box, but never in the bottom 24 of the screen (the edge rule),
+  /// so on the phone it is 369.
+  double unitBottom(double boardHeight) => math.min(doorTop + door * 1.25, boardHeight - 24);
+
+  /// The height of a door's tap rectangle: from the top of its bubble (no slop upward, so the back pebble and the title stay
+  /// clear) to [unitBottom]. The grass, the sea and the friend round it are not part of any door.
+  double unitHeight(double boardHeight) => unitBottom(boardHeight) - bubbleTop;
+
   static _DoorsSpec of(BoardClass b) => switch (b) {
     BoardClass.phone => phone,
     BoardClass.phoneSE => phoneSE,
@@ -200,7 +218,8 @@ class _LanguagesDoorsScreenState extends State<LanguagesDoorsScreen> with Ticker
     if (!MediaQuery.disableAnimationsOf(context)) _pulse.forward(from: 0);
     final bool played = widget.playHello == null ? false : await widget.playHello!(course);
     await Future<void>.delayed(Duration(milliseconds: played ? 250 : 600));
-    if (!mounted) return;
+    // The back pebble always works: a door the child has already left (its route is popping, or gone) does not open its course.
+    if (!mounted || ModalRoute.of(context)?.isCurrent == false) return;
     await widget.onOpenCourse(course);
     if (mounted) setState(() => _opening = null);
   }
@@ -254,39 +273,29 @@ class _LanguagesDoorsScreenState extends State<LanguagesDoorsScreen> with Ticker
               height: s.companion,
               child: widget.companion!,
             ),
-          // The doors, from the start (the right) in the fixed order. The ambient direction is right to left.
-          Positioned(
-            left: rowLeft,
-            top: 0,
-            width: rowWidth,
-            height: board.size.height,
-            child: Row(
-              children: <Widget>[
-                for (int i = 0; i < doors.length; i++) ...<Widget>[
-                  if (i > 0) SizedBox(width: gap),
-                  SizedBox(
-                    width: s.door,
-                    child: _DoorUnit(
-                      key: Key('door-${doors[i]}'),
-                      course: doors[i],
-                      spec: s,
-                      gap: gap,
-                      open: _opening == doors[i],
-                      still: still,
-                      pulse: _pulse,
-                      idle: AnimatedBuilder(
-                        animation: _idle,
-                        builder: (BuildContext c, Widget? w) =>
-                            Transform.scale(scale: _idleScale(i), child: w),
-                        child: _Hello(course: doors[i], spec: s, ringed: _opening == doors[i]),
-                      ),
-                      onTap: () => _open(doors[i]),
-                    ),
-                  ),
-                ],
-              ],
+          // The doors, from the start (the right) in the fixed order: the first is the rightmost. Each is a tap rectangle of its
+          // own, its bubble, its door and its host, and nothing round them (docs/design/languages-island.md section 4.2.1).
+          for (int i = 0; i < doors.length; i++)
+            Positioned(
+              left: rowLeft + (doors.length - 1 - i) * (s.door + gap) + s.inset,
+              top: s.bubbleTop,
+              width: s.unitWidth,
+              height: s.unitHeight(board.size.height),
+              child: _DoorUnit(
+                key: Key('door-${doors[i]}'),
+                course: doors[i],
+                spec: s,
+                open: _opening == doors[i],
+                still: still,
+                pulse: _pulse,
+                idle: AnimatedBuilder(
+                  animation: _idle,
+                  builder: (BuildContext c, Widget? w) => Transform.scale(scale: _idleScale(i), child: w),
+                  child: _Hello(course: doors[i], spec: s, ringed: _opening == doors[i]),
+                ),
+                onTap: () => _open(doors[i]),
+              ),
             ),
-          ),
           PositionedDirectional(
             start: 16,
             top: 8,
@@ -312,7 +321,6 @@ class _DoorUnit extends StatelessWidget {
     super.key,
     required this.course,
     required this.spec,
-    required this.gap,
     required this.open,
     required this.still,
     required this.pulse,
@@ -322,7 +330,6 @@ class _DoorUnit extends StatelessWidget {
 
   final String course;
   final _DoorsSpec spec;
-  final double gap;
   final bool open;
   final bool still;
   final Animation<double> pulse;
@@ -332,8 +339,7 @@ class _DoorUnit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double doorHeight = spec.door * 1.25;
-    // The bubble is never wider than the door and the gap, less 8, so two bubbles never touch (at any text scale).
-    final double bubbleMax = spec.door + gap - 8;
+    final double bubbleMax = spec.unitWidth;
     return Semantics(
       button: true,
       label: languageName(course).text,
@@ -345,8 +351,8 @@ class _DoorUnit extends StatelessWidget {
             clipBehavior: Clip.none,
             children: <Widget>[
               Positioned(
-                left: 0,
-                top: spec.doorTop,
+                left: -spec.inset.toDouble(),
+                top: spec.doorTop - spec.bubbleTop,
                 width: spec.door,
                 height: doorHeight,
                 // The closed door cross-fades to the open one in 200 ms (at once when motion is reduced).
@@ -367,8 +373,8 @@ class _DoorUnit extends StatelessWidget {
               ),
               // The bubble, centred over its door; the tail points down at it.
               Positioned(
-                left: (spec.door - bubbleMax) / 2,
-                top: spec.bubbleTop,
+                left: 0,
+                top: 0,
                 width: bubbleMax,
                 height: spec.bubbleHeight + 12,
                 child: Center(

@@ -341,10 +341,10 @@ class _HomeState extends ConsumerState<_Home> {
         now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
         band: widget.profile.ageBand,
         // Each language the parent turned on, with its installed pack, is a land of its own (docs/languages/frame.md 3.7).
-        languages: ref.read(languagesOnProvider(id)).isEmpty
+        languages: ref.read(languagesAvailableProvider(id)).isEmpty
             ? const <LanguageCourse>[]
             : await ref.read(languageCoursesProvider(id).future),
-        enabledCourses: ref.read(languagesOnProvider(id)).toSet(),
+        enabledCourses: ref.read(languagesAvailableProvider(id)).toSet(),
       );
       if (!mounted || bottle.gone) return;
       final AdventureLine? words = adventureLine(stop);
@@ -457,7 +457,10 @@ class _HomeState extends ConsumerState<_Home> {
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
     // Asks the server's helper switch now, while the map shows, so that a lesson finds the answer ready.
     ref.watch(tutorAvailableProvider);
-    if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue)) {
+    // The scene (seven lands or eight) is chosen from the settings and the installed packs, so the map waits for both rather
+    // than showing the 7-land scene for a frame first.
+    final bool languagesReady = ref.watch(languagesReadyProvider);
+    if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue) || !languagesReady) {
       return const CalmLoading();
     }
     return _map(friend.value);
@@ -475,7 +478,7 @@ class _HomeState extends ConsumerState<_Home> {
   /// The Languages island was touched: the door screen when two or three languages are on, the course itself when only one is
   /// (docs/languages/frame.md section 1.2). Both open the course's placeholder home until the course screens exist (L0).
   Future<void> _openLanguages() async {
-    final List<String> courses = ref.read(languagesOnProvider(widget.profile.id));
+    final List<String> courses = ref.read(languagesAvailableProvider(widget.profile.id));
     if (courses.isEmpty || !mounted) return;
     Future<void> openCourse(String course) =>
         Navigator.of(context)
@@ -494,7 +497,7 @@ class _HomeState extends ConsumerState<_Home> {
   }
 
   Widget _map(Character? friend) => HomeScreen(
-    languagesOn: ref.watch(languagesOnProvider(widget.profile.id)).isNotEmpty,
+    languagesOn: ref.watch(languagesAvailableProvider(widget.profile.id)).isNotEmpty,
     onOpenLanguages: _openLanguages,
     childName: _island.name,
     homeIsland: _island,

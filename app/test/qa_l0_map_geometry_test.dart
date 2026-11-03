@@ -32,7 +32,7 @@ const String kid = 'child-lang-0001';
 }
 
 Future<void> openMap(WidgetTester tester, Size size, {String name = 'נועה'}) async {
-  final AppRig rig = AppRig();
+  final AppRig rig = AppRig()..installedLanguages = <String>['eng', 'heb', 'rus'];
   await rig.seedFinishedSetup(id: kid, name: name);
   FamilyLanguages f = const FamilyLanguages();
   for (final String c in <String>['eng', 'heb', 'rus']) {

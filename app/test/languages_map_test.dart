@@ -20,7 +20,7 @@ const Map<String, Size> boards = <String, Size>{
 
 /// The app on [size] with the given languages on for the child `p-1`.
 Future<AppRig> home(WidgetTester tester, Size size, List<String> on) async {
-  final AppRig rig = AppRig();
+  final AppRig rig = AppRig()..installedLanguages = on;
   await rig.seedFinishedSetup(id: kid);
   FamilyLanguages f = const FamilyLanguages();
   for (final String c in on) {
@@ -208,8 +208,8 @@ void main() {
         final double rus = tester.getCenter(find.byKey(const Key('door-rus'))).dx;
         expect(eng, greaterThan(heb));
         expect(heb, greaterThan(rus));
-        // The doors are 184, 160, 264 and 240 wide, a hand's width above the band A target.
-        expect(tester.getSize(find.byKey(const Key('door-eng'))).width, greaterThanOrEqualTo(160));
+        // A door's tap rectangle is 178, 158, 244 and 224 wide (design 4.2.1), a hand's width above the band A target.
+        expect(tester.getSize(find.byKey(const Key('door-eng'))).width, greaterThanOrEqualTo(158));
       });
 
       testWidgets(

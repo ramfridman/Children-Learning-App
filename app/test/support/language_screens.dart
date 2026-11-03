@@ -17,8 +17,20 @@ import 'sample_pack.dart';
 const String langKid = 'child-lang-0001';
 
 /// A rig with a child and the given language switches stored for them.
-Future<AppRig> langRig({Map<String, LanguageSwitches> languages = const <String, LanguageSwitches>{}}) async {
-  final AppRig rig = AppRig();
+///
+/// The pack of each language that is on is installed too, unless [installed] says which are: a language gets its door and
+/// island only with its pack (L0, docs/languages/frame.md 1.1).
+Future<AppRig> langRig({
+  Map<String, LanguageSwitches> languages = const <String, LanguageSwitches>{},
+  List<String>? installed,
+}) async {
+  final AppRig rig = AppRig()
+    ..installedLanguages =
+        installed ??
+        <String>[
+          for (final MapEntry<String, LanguageSwitches> e in languages.entries)
+            if (e.value.on) e.key,
+        ];
   await rig.seedFinishedSetup(id: langKid);
   FamilyLanguages f = const FamilyLanguages();
   for (final MapEntry<String, LanguageSwitches> e in languages.entries) {

@@ -26,7 +26,7 @@ const String kid = 'child-lang-0001';
 /// The door screen. The test rig turns "reduce motion" on for every screen (the characters breathe for ever), so the builder's
 /// door tests and goldens never see the pulses; [motion] turns it off again just before the Languages island is tapped.
 Future<void> toDoors(WidgetTester tester, Size size, List<String> on, {bool motion = false}) async {
-  final AppRig rig = AppRig();
+  final AppRig rig = AppRig()..installedLanguages = on;
   await rig.seedFinishedSetup(id: kid);
   FamilyLanguages f = const FamilyLanguages();
   for (final String c in on) {
@@ -285,7 +285,11 @@ void main() {
               c: tester.getRect(find.byKey(Key('door-$c'))),
           };
           for (final Rect d in door.values) {
-            expect(d.width, greaterThanOrEqualTo(160));
+            expect(
+              d.width,
+              greaterThanOrEqualTo(158),
+              reason: 'the tap rectangle of design 4.2.1 is 178, 158, 244 or 224 wide',
+            );
           }
           expect(
             door['eng']!.left - door['heb']!.right,

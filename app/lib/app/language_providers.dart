@@ -38,10 +38,28 @@ class LanguagesNotifier extends AsyncNotifier<FamilyLanguages> {
 final AsyncNotifierProvider<LanguagesNotifier, FamilyLanguages> languagesProvider =
     AsyncNotifierProvider<LanguagesNotifier, FamilyLanguages>(LanguagesNotifier.new);
 
-/// The languages that are on for one child, in the fixed order of the doors. Empty when none is: the map is then the 7-land one.
-final ProviderFamily<List<String>, String> languagesOnProvider = Provider.family<List<String>, String>(
-  (Ref ref, String childId) => ref.watch(languagesProvider).value?.enabledFor(childId) ?? const <String>[],
+/// The languages that are on for one child, in the fixed order of the doors, and installed. A language is on in the settings
+/// the moment the parent switches it, but it gets a door, an island and a place in Today's Adventure only when its signed pack
+/// is also on this device and proves itself ([languagePacksProvider]); until then it is left out. Empty when none qualifies:
+/// the map is then the 7-land one. Empty too while either source is still being read; the map waits for both
+/// ([languagesReadyProvider]) so that it never shows the 7-land scene first.
+final ProviderFamily<List<String>, String> languagesAvailableProvider = Provider.family<List<String>, String>(
+  (Ref ref, String childId) {
+    final Map<String, PackContent> installed =
+        ref.watch(languagePacksProvider).value ?? const <String, PackContent>{};
+    return <String>[
+      for (final String course in ref.watch(languagesProvider).value?.enabledFor(childId) ?? const <String>[])
+        if (installed.containsKey(course)) course,
+    ];
+  },
 );
+
+/// Whether the parent's language settings and the installed language packs have both been read (or failed to be read: the
+/// map then has no island). Later changes keep the last answer on show, so the map is never rebuilt from nothing.
+final Provider<bool> languagesReadyProvider = Provider<bool>((Ref ref) {
+  bool settled(AsyncValue<Object?> v) => v.hasValue || !v.isLoading;
+  return settled(ref.watch(languagesProvider)) && settled(ref.watch(languagePacksProvider));
+});
 
 /// The language packs installed on this device, by course. A pack that does not prove itself again is left out (one damaged
 /// course never hurts another, or the lands).

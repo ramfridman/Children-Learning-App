@@ -119,7 +119,7 @@ void main() {
     testWidgets('a child with no language gets the 7-land map even when a sibling has all three on', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig()..installedLanguages = <String>['eng', 'heb', 'rus'];
       await rig.seedFinishedSetup(id: langKid, name: 'נועה');
       await rig.db.addProfile(
         ProfilesCompanion.insert(

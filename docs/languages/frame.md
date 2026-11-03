@@ -31,6 +31,7 @@ Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each c
 - **Its host is the language's own teacher character** (§1.3). The land itself is hosted by the child's companion, who walks the child to the doors.
 - **Growth works as on every land.** Each skill owns one object in its course's part of the island, for example a garden per language. The object is sketched while the skill is learning, coloured at fresh mastery, and gets a golden star at durable mastery. A due revisit raises the object's bell flag. Nothing decays or is taken away.
 - **If a parent turns every language off,** the land is hidden from the map, as for "hidden domains" (PLAN.md › Controls).
+- **A language is shown only when it is installed.** A language gets a door, an island and a place in Today's Adventure only when it is on for the child **and** its signed pack (`lang-<course>`) is installed and verified on the device. If no language qualifies, the child sees the 7-land map. A parent who turned a language on before its lessons arrived keeps the switch, and the parent's page says the lessons have not arrived yet (orchestrator decision, from QA's release note on L0, 2026-11-03).
 
 ### 1.2 Choosing a language (the child)
 - **Doors.** The entrance shows one door per language the parent turned on, and nothing for a language that is off: no greyed door, no lock, no "coming soon" (no scarcity).

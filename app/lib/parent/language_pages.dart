@@ -244,6 +244,16 @@ class LanguagePage extends ConsumerWidget {
           value: s.on,
           onChanged: (bool v) => set(s.copyWith(on: v)),
         ),
+        // On for the child, but the signed lessons are not on this device: the child sees no door or island until they are.
+        if (s.on && ref.watch(languagePacksProvider).value?.containsKey(course) == false)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              He.langProgressNoCourse.text,
+              key: const Key('page-no-course'),
+              style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+            ),
+          ),
       ]),
       _card(He.areaLangLessons.text, <Widget>[
         _SwitchRow(
