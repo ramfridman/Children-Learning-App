@@ -1,5 +1,8 @@
 // The sync engine with two simulated phones and a fake family server: the same child everywhere, nothing sent twice,
 // nothing lost when the network fails, and a deleted child gone from every device.
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:drift/drift.dart' show Value, driftRuntimeOptions;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,6 +10,7 @@ import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/core/errors.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/engine/engine.dart';
+import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
 import 'package:nitznutz/rewards/award.dart';
 import 'package:nitznutz/rewards/reward_rules.dart';
@@ -552,6 +556,100 @@ void main() {
         expect(r.second, 0);
       },
     );
+  });
+
+  group('the language settings of each child are a rule of the family', () {
+    late Phone kidPhone;
+    final Map<String, Object?> vector =
+        jsonDecode(File('../testvectors/language-settings.json').readAsStringSync()) as Map<String, Object?>;
+
+    setUp(() {
+      kidPhone = Phone(dev3, server, parent: false);
+      addTearDown(kidPhone.db.close);
+    });
+
+    Future<FamilyLanguages> languagesOf(Phone p) async =>
+        FamilyLanguages.decode(await p.db.setting(languagesSettingKey));
+
+    Future<void> set(Phone p, FamilyLanguages f) => p.db.putSetting(languagesSettingKey, f.encode());
+
+    test('a family that never touches a language syncs exactly the document it did before', () async {
+      await p1.engine.syncOnce();
+      expect(server.rules, isNotNull);
+      expect(server.rules!.containsKey('languages'), isFalse);
+      expect(server.rulesVersion, 1);
+      await p1.engine.syncOnce();
+      expect(server.rulesVersion, 1, reason: 'nothing changed, nothing was sent');
+    });
+
+    test('a language turned on in one parent phone reaches the other and a child device, and nothing is sent back', () async {
+      await p1.engine.syncOnce();
+      final FamilyLanguages f = const FamilyLanguages()
+          .withSwitches(kid, 'eng', const LanguageSwitches(on: true, oralOnly: true))!
+          .withSwitches(kid, 'rus', const LanguageSwitches(on: true, route: 'heritage', band: 1))!;
+      await set(p1, f);
+      await p1.engine.syncOnce();
+      expect(server.rulesVersion, 2);
+      expect(server.rules!['languages'], f.toJson());
+
+      final SyncReport got = await p2.engine.syncOnce();
+      expect(got.rulesApplied, isTrue);
+      expect((await languagesOf(p2)).enabledFor(kid), <String>['eng', 'rus']);
+      expect((await languagesOf(p2)).of(kid, 'rus').route, 'heritage');
+      expect(
+        server.rulesVersion,
+        2,
+        reason: 'the new phone did not send its (empty) settings over the family\'s',
+      );
+
+      await kidPhone.engine.syncOnce();
+      expect((await languagesOf(kidPhone)).of(kid, 'eng').oralOnly, isTrue);
+      await set(kidPhone, const FamilyLanguages());
+      await kidPhone.engine.syncOnce();
+      expect(
+        server.rules!['languages'],
+        f.toJson(),
+        reason: 'a child device cannot change the settings of the family',
+      );
+    });
+
+    test('the last change wins by the count of the server, as for every other rule', () async {
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      await set(p1, const FamilyLanguages().withSwitches(kid, 'eng', const LanguageSwitches(on: true))!);
+      await set(p2, const FamilyLanguages().withSwitches(kid, 'heb', const LanguageSwitches(on: true))!);
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      await p1.engine.syncOnce();
+      expect((await languagesOf(p1)).enabledFor(kid), <String>['heb']);
+      expect((await languagesOf(p2)).enabledFor(kid), <String>['heb']);
+    });
+
+    test('turning every language off again takes them off the other phones too', () async {
+      await p1.engine.syncOnce();
+      await set(p1, const FamilyLanguages().withSwitches(kid, 'eng', const LanguageSwitches(on: true))!);
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      expect((await languagesOf(p2)).enabledFor(kid), <String>['eng']);
+      await set(p1, const FamilyLanguages());
+      await p1.engine.syncOnce();
+      await p2.engine.syncOnce();
+      expect((await languagesOf(p2)).isEmpty, isTrue);
+      expect(server.rules!.containsKey('languages'), isFalse);
+    });
+
+    test('the other rules are untouched by the languages, and the document stays small', () async {
+      await p1.db.putSetting('parent_rules', const ParentRules(restOn: false).encode());
+      FamilyLanguages f = const FamilyLanguages();
+      for (final Object? example in (vector['examples']! as List<Object?>).take(1)) {
+        f = FamilyLanguages.fromJson(example);
+      }
+      await set(p1, f);
+      await p1.engine.syncOnce();
+      expect(server.rules!['restOn'], isFalse);
+      expect(server.rules!['languages'], f.toJson());
+      expect(jsonEncode(server.rules).length, lessThan(4000));
+    });
   });
 
   group('the family rules', () {

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../parent/language_settings.dart';
 import '../rewards/ribbons.dart';
 import 'tables.dart';
 
@@ -494,6 +495,11 @@ class AppDatabase extends _$AppDatabase {
     final String? promises = await setting('ribbons');
     if (promises != null) {
       await putSetting('ribbons', encodeRibbons(withoutChild(decodeRibbons(promises), profileId)));
+    }
+    // So do the settings of the languages.
+    final String? languages = await setting(languagesSettingKey);
+    if (languages != null) {
+      await putSetting(languagesSettingKey, FamilyLanguages.decode(languages).without(profileId).encode());
     }
   });
 

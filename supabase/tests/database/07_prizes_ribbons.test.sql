@@ -37,7 +37,7 @@ select lives_ok($$insert into app.family_settings (family_id, rules)
   values ('d7d7d7d7-0000-4000-8000-000000000001',
           jsonb_build_object('ribbons', (select jsonb_object_agg('trophy:land' || n || ':gold', repeat('א', 60)) from generate_series(1, 30) n)))$$,
   'thirty promises of sixty letters fit in the settings');
-select throws_ok($$update app.family_settings set rules = jsonb_build_object('x', repeat('a', 9000))$$,
+select throws_ok($$update app.family_settings set rules = jsonb_build_object('x', repeat('a', 13000))$$,
   '23514', null, 'a large document is still refused');
 
 -- ---- deleting a child takes that child's promises out of the settings -----------------------------------

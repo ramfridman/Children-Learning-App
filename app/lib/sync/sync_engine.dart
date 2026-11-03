@@ -9,6 +9,7 @@ import '../core/errors.dart';
 import '../core/log.dart';
 import '../data/app_database.dart';
 import '../data/child_name.dart';
+import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
 import '../play/response_code.dart';
 import '../rewards/ribbons.dart';
@@ -804,14 +805,20 @@ class SyncEngine {
   static const String _versionKey = 'settings_version';
   static const String _fingerprintKey = 'settings_fingerprint';
 
-  /// The family's rules as this device holds them: the time rules, whether the child's words are kept, and the AI helper.
-  Future<Map<String, Object?>> _localRules() async => <String, Object?>{
-    ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
-    'keepWords': await db.setting('keep_words') != 'off',
-    'aiHelper': await db.setting('ai_helper') == 'on',
-    'ceremonies': await db.setting('ceremonies') != 'off',
-    'ribbons': decodeRibbons(await db.setting('ribbons')),
-  };
+  /// The family's rules as this device holds them: the time rules, whether the child's words are kept, the AI helper, and
+  /// (only when a parent has turned a language on or changed one) the language settings of each child. A family that never
+  /// touches a language syncs exactly the document it did before.
+  Future<Map<String, Object?>> _localRules() async {
+    final FamilyLanguages languages = FamilyLanguages.decode(await db.setting(languagesSettingKey));
+    return <String, Object?>{
+      ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
+      'keepWords': await db.setting('keep_words') != 'off',
+      'aiHelper': await db.setting('ai_helper') == 'on',
+      'ceremonies': await db.setting('ceremonies') != 'off',
+      'ribbons': decodeRibbons(await db.setting('ribbons')),
+      if (!languages.isEmpty) 'languages': languages.toJson(),
+    };
+  }
 
   /// Keeps the family's rules the same on every device, the last write by the server's count winning. A parent device
   /// that changed the rules since it last synced sends them; any other device (and a parent device that has never
@@ -842,6 +849,8 @@ class SyncEngine {
         'ribbons',
         encodeRibbons(decodeRibbons(ribbons == null ? null : jsonEncode(ribbons))),
       );
+      // The language settings are taken as the server has them, each value checked again here.
+      await db.putSetting(languagesSettingKey, FamilyLanguages.fromJson(rules['languages']).encode());
       await db.putSetting(_versionKey, '$serverVersion');
       await db.putSetting(_fingerprintKey, jsonEncode(await _localRules()));
       return true;
