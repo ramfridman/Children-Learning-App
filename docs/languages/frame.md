@@ -824,6 +824,8 @@ Every milestone has its own plan file and the owner's OK before code (CLAUDE.md 
 ---
 
 ## 8. Questions for the owner (from this frame)
+
+**APPROVED by the owner on 2026-11-03:** this frame as a whole, and every recommendation below (Q-F1 to Q-F5). Also approved the same day: font option B ("Nitznutz Letters", from Andika, `docs/languages/fonts.md`), fontTools as a dev-only build tool, the Hebrew letter names יוּד, קוּף, וָו and זַיִן, the course's new words, and model files by cable (`adb push`) until the project's own storage hosts them. The owner: "there is a lot of work to do even without the voicing, so let's start": L0 and L1 start now.
 | # | Question | Recommendation |
 |---|---|---|
 | Q-F1 | When a child profile is set up, are the three languages on by default, or does the parent tick them? | Ask once at setup, with each language pre-ticked and one line each saying what it is. The Russian questionnaire follows if Russian is ticked |
