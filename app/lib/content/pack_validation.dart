@@ -655,6 +655,7 @@ List<Problem> validatePack({
     }
     final Map<String, Object?> cel = l['celebration']! as Map<String, Object?>;
     checkVo(file, 'celebration.vo', cel['vo']);
+    _targetClips(file, l, checkVo);
     _hebrew(file, l, say, pointed: l['band'] != 'C');
   });
 
@@ -693,7 +694,14 @@ List<Problem> validatePack({
     say: say,
   );
   if (Course.isLanguage(course)) {
-    checkLanguageContent(course: course, activities: activities, skills: skills, tags: tags, say: say);
+    checkLanguageContent(
+      course: course,
+      activities: activities,
+      lessons: lessons,
+      skills: skills,
+      tags: tags,
+      say: say,
+    );
   }
 
   // ---- characters ----
@@ -1192,6 +1200,7 @@ void _courseRules({
     final String file = 'lesson.$id.json';
     sameCourse(file, l);
     ownId(file, id);
+    if (!language) _languageFieldsInLands(file, l, say);
     for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
       if (s is String && !ownSkill(s)) say(file, 'skills[$i]', '$s is not a skill of the course $course');
     }
@@ -1342,6 +1351,9 @@ void _line(
   if (_latin.hasMatch(text)) say(file, path, 'contains Latin letters; the child space is Hebrew only');
   if (_cyrillic.hasMatch(text)) {
     say(file, path, 'contains Cyrillic letters; a Hebrew line holds no word of another language');
+  }
+  for (final String problem in hebrewLineProblems(text)) {
+    say(file, path, problem);
   }
   if (text.contains('<') || text.contains('>')) {
     say(file, path, 'contains < or >, which turn over in right-to-left text; write maths as a token');

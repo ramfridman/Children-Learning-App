@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../content/scripts.dart' show stripDirectionControls;
 import '../engine/course.dart';
 import 'app_text.dart';
 import 'target_text.dart';
@@ -29,8 +30,10 @@ TargetLanguage? targetLanguageOf(String course) => switch (course) {
 
 /// Wraps [run] in the Unicode left-to-right isolate (code points 0x2066 to 0x2069), for a target word that has to stand
 /// inside a line of another direction where a chip cannot be used (a screen reader's label, a parent's text). A child's
-/// prompt never uses it: a target word there goes in a [TargetChip].
-String isolateLtr(String run) => '${String.fromCharCode(0x2066)}$run${String.fromCharCode(0x2069)}';
+/// prompt never uses it: a target word there goes in a [TargetChip]. Direction controls inside [run] are taken out, so that the run
+/// cannot close the isolate early or reach out of it.
+String isolateLtr(String run) =>
+    '${String.fromCharCode(0x2066)}${stripDirectionControls(run)}${String.fromCharCode(0x2069)}';
 
 /// A word, a letter or a phrase of a course's own language: English and Russian through [TargetText] (the teaching font, a
 /// language tag, left to right), Hebrew in Heebo at the nikud line height, right to left.

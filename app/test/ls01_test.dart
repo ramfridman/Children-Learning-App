@@ -66,7 +66,12 @@ class Rig {
   final Heard heard = Heard();
   final List<AttemptRecord> attempts = <AttemptRecord>[];
 
-  Future<void> pump(WidgetTester t, {Size size = const Size(852, 393)}) async {
+  Future<void> pump(
+    WidgetTester t, {
+    Size size = const Size(852, 393),
+    Band band = Band.a,
+    String bubble = 'x',
+  }) async {
     t.view.devicePixelRatio = 1;
     addTearDown(() {
       if (!session.disposed) session.dispose();
@@ -75,9 +80,11 @@ class Rig {
       t,
       Builder(
         builder: (BuildContext c) {
-          final ActivitySpec spec = ActivitySpec.of(boardClassFor(size));
+          final ActivitySpec spec = session.layoutFor(ActivitySpec.of(boardClassFor(size)));
           return ActivityFrame(
-            bubbleText: 'x',
+            spec: spec,
+            bubbleAboveTiles: true,
+            bubbleText: bubble,
             stage: (Size room) => session.buildStage(c, room, spec),
             tiles: session.buildTiles(c, spec),
             trailTotal: 3,
@@ -87,7 +94,7 @@ class Rig {
         },
       ),
       size: size,
-      band: Band.a,
+      band: band,
     );
   }
 
@@ -243,6 +250,25 @@ void main() {
       await r.done(t);
     });
 
+    testWidgets('QA-L1-1: the face follows the item: all tiles alike, a short word among words is a word', (
+      WidgetTester t,
+    ) async {
+      for (final (String, List<String>, double, FontWeight) c in <(String, List<String>, double, FontWeight)>[
+        ('eng', <String>['on', 'cat', 'sun'], 30.8, FontWeight.w500),
+        ('eng', <String>['on', 'up', 'in'], 56, FontWeight.w700),
+        ('eng', <String>['b', 'd', 'p'], 56, FontWeight.w700),
+        ('heb', <String>['בֵּן', 'נוֹעָה', 'יַעַל'], 30.8, FontWeight.w500),
+      ]) {
+        final Rig r = Rig(words(c.$1, c.$2), 'words');
+        await r.pump(t);
+        for (final String id in <String>['o1', 'o2', 'o3']) {
+          expect(r.textIn(t, id).style!.fontSize, closeTo(c.$3, 0.01), reason: '${c.$2} $id');
+          expect(r.textIn(t, id).style!.fontWeight, c.$4, reason: '${c.$2} $id');
+        }
+        await r.done(t);
+      }
+    });
+
     test('isSingleLetter: a letter, a digraph or a letter with its marks; not a word', () {
       expect(isSingleLetter('a'), isTrue);
       expect(isSingleLetter('sh'), isTrue);
@@ -278,29 +304,89 @@ void main() {
       await r.done(t);
     });
 
-    testWidgets('the speaker is inside its tile, 48 points to touch, and a tap beside it answers', (
-      WidgetTester t,
-    ) async {
-      for (final MapEntry<String, Size> b in boards.entries) {
+    testWidgets(
+      'the speaker is under its tile, outside the tap margin of the tile, at the floor of the band; a tap on the tile answers',
+      (WidgetTester t) async {
+        for (final MapEntry<String, Size> b in boards.entries) {
+          for (final (Band band, double floor) in <(Band, double)>[
+            (Band.a, 64),
+            (Band.b, 56),
+            (Band.c, 56),
+          ]) {
+            final Rig r = Rig(words('eng', <String>['cat', 'dog', 'sun']), 'words');
+            await r.pump(t, size: b.value, band: band);
+            final Rect tile = t.getRect(
+              find.descendant(of: r.tile('o1'), matching: find.byKey(const Key('answer-tile'))),
+            );
+            final Rect speaker = t.getRect(find.byKey(const Key('speaker-o1')));
+            final Rect tapArea = t.getRect(r.tile('o1'));
+            expect(speaker.width, floor, reason: '${b.key} $band');
+            expect(speaker.height, floor, reason: '${b.key} $band');
+            expect(
+              speaker.top,
+              greaterThanOrEqualTo(tapArea.bottom - 0.01),
+              reason: '${b.key}: under the tap area of the tile',
+            );
+            expect(speaker.center.dx, closeTo(tile.center.dx, 0.5), reason: 'centred under its tile');
+            final double bottomLimit = b.value.height - 24;
+            expect(
+              speaker.bottom,
+              lessThanOrEqualTo(bottomLimit + 0.01),
+              reason: '${b.key} $band: above the no-hotspot edge',
+            );
+            // The whole tile still answers, even at its bottom edge, and the speaker does not.
+            await t.tapAt(Offset(tile.center.dx, tile.bottom - 2));
+            await t.pump(const Duration(milliseconds: 50));
+            expect(r.attempts, hasLength(1), reason: '${b.key} $band: a tap on the tile answers');
+            await r.done(t);
+          }
+        }
+      },
+    );
+  });
+
+  group('the bubble and the tiles with speakers', () {
+    testWidgets(
+      'a two-line Hebrew prompt stays clear of the tiles, on every board, and the speakers stay on the board',
+      (WidgetTester t) async {
+        const String line = 'הַקְשִׁיבוּ לַמִּלָּה, וּגְעוּ בַּמִּלָּה הַנְּכוֹנָה.';
+        for (final MapEntry<String, Size> b in boards.entries) {
+          final Rig r = Rig(words('eng', <String>['cat', 'dog', 'sun']), 'words');
+          await r.pump(t, size: b.value, bubble: line);
+          final Rect tile = t.getRect(
+            find.descendant(of: r.tile('o1'), matching: find.byKey(const Key('answer-tile'))),
+          );
+          expect(
+            t.getRect(find.byKey(const Key('bubble-body'))).bottom,
+            lessThanOrEqualTo(tile.top),
+            reason: b.key,
+          );
+          expect(
+            t.getRect(find.byKey(const Key('speaker-o3'))).bottom,
+            lessThanOrEqualTo(b.value.height - 24),
+            reason: b.key,
+          );
+          expect(t.takeException(), isNull, reason: b.key);
+          await r.done(t);
+        }
+      },
+    );
+
+    testWidgets(
+      'a board with the room keeps its tiles where they were; an item with no speaker is never moved',
+      (WidgetTester t) async {
         final Rig r = Rig(words('eng', <String>['cat', 'dog', 'sun']), 'words');
-        await r.pump(t, size: b.value);
-        final Rect tile = t.getRect(
-          find.descendant(of: r.tile('o1'), matching: find.byKey(const Key('answer-tile'))),
-        );
-        final Rect speaker = t.getRect(find.byKey(const Key('speaker-o1')));
-        expect(speaker.size, const Size(48, 48), reason: b.key);
-        expect(tile.contains(speaker.center), isTrue, reason: '${b.key}: the speaker is on its tile');
         expect(
-          tile.inflate(12).contains(speaker.topLeft) && tile.inflate(12).contains(speaker.bottomRight),
-          isTrue,
+          r.session.layoutFor(ActivitySpec.tabletLandscape).tilesTop,
+          ActivitySpec.tabletLandscape.tilesTop,
         );
-        expect(speaker.center.dx, lessThan(tile.center.dx), reason: 'in the corner where reading starts');
-        await t.tapAt(Offset(tile.left + 12, tile.top + 12));
-        await t.pump(const Duration(milliseconds: 50));
-        expect(r.attempts, hasLength(1), reason: '${b.key}: a tap on the tile answers');
+        expect(r.session.layoutFor(ActivitySpec.phone).tilesTop, lessThan(ActivitySpec.phone.tilesTop));
+        final Rig quiet = Rig(words('eng', <String>['cat', 'dog', 'sun'], clips: false), 'words');
+        expect(quiet.session.layoutFor(ActivitySpec.phone), same(ActivitySpec.phone));
         await r.done(t);
-      }
-    });
+        await quiet.done(t);
+      },
+    );
   });
 
   group('sound buttons and pictures that say their word', () {

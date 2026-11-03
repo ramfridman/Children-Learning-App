@@ -44,16 +44,23 @@ Set<String> skillsBelow(Iterable<String> from, Map<String, Map<String, Object?>>
 void checkLanguageContent({
   required String course,
   required Map<String, Map<String, Object?>> activities,
+  required Map<String, Map<String, Object?>> lessons,
   required Map<String, Map<String, Object?>> skills,
   required Map<String, Map<String, Object?>> tags,
   required Say say,
 }) {
   _tagCatalogue(tags, say);
+  // A lesson's celebration is a spoken line like any other: its word on show is held to the same rules.
+  lessons.forEach((String id, Map<String, Object?> l) {
+    for (final ({String path, String text, bool shown}) t in _targetTexts(l)) {
+      _text(course, 'lesson.$id.json', t.path, t.text, say, alone: t.shown);
+    }
+  });
   for (final String s in skills.keys) {
     final Map<String, Object?> doc = skills[s]!;
     for (final String key in <String>['graphemes', 'tricky']) {
       for (final (int i, Object? g) in ((doc[key] as List<Object?>?) ?? const <Object?>[]).indexed) {
-        if (g is String) _text(course, 'skill.$s.json', '$key[$i]', g, say);
+        if (g is String) _text(course, 'skill.$s.json', '$key[$i]', g, say, bareMarks: key == 'graphemes');
       }
     }
   }
@@ -152,8 +159,9 @@ void _text(
   Say say, {
   bool alone = false,
   bool pointed = false,
+  bool bareMarks = false,
 }) {
-  for (final String p in textProblems(course, text)) {
+  for (final String p in textProblems(course, text, bareMarks: bareMarks)) {
     say(file, path, '"$text" $p');
   }
   if (alone && RegExp(r'[.,:!?]').hasMatch(text)) {

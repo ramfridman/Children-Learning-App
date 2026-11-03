@@ -1,9 +1,5 @@
-// QA's open defects of milestone L1 (docs/qa/l1-languages-verification.md): QA-L1-1 to QA-L1-4. Each test FAILS until its defect
-// is fixed; it is the proof of the fix. They are skipped in a normal run so that the suite stays green; run them with
-//
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_l1_open_defects_test.dart
-//
-// When a defect is fixed, the owner of the fix removes `skip: _open` from its test (it then runs in every build).
+// QA's defects of milestone L1 (docs/qa/l1-languages-verification.md): QA-L1-1 to QA-L1-4. Each test was the failing proof of its
+// defect, skipped until the fix; the fixes are in, and the proofs now run in every build.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/activity_shell.dart';
@@ -19,9 +15,6 @@ import 'package:nitznutz/play/tap_answer_session.dart';
 import 'support/fakes.dart';
 import 'support/harness.dart';
 import 'support/language_content.dart';
-
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
 
 const Map<String, Size> boards = <String, Size>{
   'phone': Size(852, 393),
@@ -129,7 +122,6 @@ void main() {
   ]) {
     testWidgets(
       'QA-L1-1: ${c.$1}: a word of two letters is set like the words beside it, not like a letter',
-      skip: _open,
       (WidgetTester t) async {
         final _Rig r = _Rig(_words(c.$2, c.$3));
         await r.pump(t);
@@ -156,7 +148,7 @@ void main() {
     ('Band B', Band.b),
     ('Band C', Band.c),
   ]) {
-    testWidgets('QA-L1-2: the speaker on a tile is at least the ${b.$1} floor to touch', skip: _open, (
+    testWidgets('QA-L1-2: the speaker on a tile is at least the ${b.$1} floor to touch', (
       WidgetTester t,
     ) async {
       final _Rig r = _Rig(_words('eng', <String>['cat', 'dog', 'sun']));
@@ -185,7 +177,6 @@ void main() {
   // canonical order (and the same for `unpointedHebrewWords`).
   test(
     'QA-L1-3: a grapheme and a word with the same Hebrew marks in another order are the same grapheme',
-    skip: _open,
     () {
       final String canonical = '${_cp(0x5D3)}${_cp(0x5B8)}${_cp(0x5BC)}';
       final String typed = '${_cp(0x5D3)}${_cp(0x5BC)}${_cp(0x5B8)}';
@@ -205,29 +196,27 @@ void main() {
   // it: the tile (painted above the bubble) cuts the chip and the lip of the bubble. Nothing is lost for the child, but the
   // bubble "sits on" the tiles. The font is already at its floor (14), so the line cannot shrink; the bubble needs
   // another place (wider, or the chip beside a short line), or the line has to be shorter (hebrew-text-editor).
-  testWidgets(
-    'QA-L1-4: phone SE: a nine-word line with a word in its chip stays clear of the tiles',
-    skip: _open,
-    (WidgetTester t) async {
-      const String line = 'כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.';
-      final ActivitySpec spec = ActivitySpec.of(boardClassFor(boards['phoneSE']!));
-      await pumpScreen(
-        t,
-        ActivityFrame(
-          bubbleText: line,
-          bubbleTarget: (text: 'elephant', course: 'eng'),
-          stage: (Size room) => const SizedBox.expand(),
-          tiles: const SizedBox(height: 96),
-          trailTotal: 3,
-          trailDone: 1,
-          onHome: () {},
-        ),
-        size: boards['phoneSE']!,
-        band: Band.a,
-      );
-      await t.pump(const Duration(seconds: 2));
-      expect(t.getRect(find.byKey(const Key('target-chip'))).bottom, lessThanOrEqualTo(spec.tilesTop));
-      expect(t.getRect(find.byKey(const Key('bubble-body'))).bottom, lessThanOrEqualTo(spec.tilesTop));
-    },
-  );
+  testWidgets('QA-L1-4: phone SE: a nine-word line with a word in its chip stays clear of the tiles', (
+    WidgetTester t,
+  ) async {
+    const String line = 'כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.';
+    final ActivitySpec spec = ActivitySpec.of(boardClassFor(boards['phoneSE']!));
+    await pumpScreen(
+      t,
+      ActivityFrame(
+        bubbleText: line,
+        bubbleTarget: (text: 'elephant', course: 'eng'),
+        stage: (Size room) => const SizedBox.expand(),
+        tiles: const SizedBox(height: 96),
+        trailTotal: 3,
+        trailDone: 1,
+        onHome: () {},
+      ),
+      size: boards['phoneSE']!,
+      band: Band.a,
+    );
+    await t.pump(const Duration(seconds: 2));
+    expect(t.getRect(find.byKey(const Key('target-chip'))).bottom, lessThanOrEqualTo(spec.tilesTop));
+    expect(t.getRect(find.byKey(const Key('bubble-body'))).bottom, lessThanOrEqualTo(spec.tilesTop));
+  });
 }

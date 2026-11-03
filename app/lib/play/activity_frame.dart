@@ -37,6 +37,7 @@ class ActivityFrame extends StatelessWidget {
     this.onConfirmYes,
     this.onConfirmAgain,
     this.bubbleTarget,
+    this.bubbleAboveTiles = false,
   });
 
   /// The board numbers to lay out on, when the template's are not the board's own (see `TemplateSession.layoutFor`).
@@ -48,6 +49,10 @@ class ActivityFrame extends StatelessWidget {
   /// A target word on show with the line: it stands in a [TargetChip] on a row of its own under the line, never inside it
   /// (fonts.md section 6), in the teaching font of its [course].
   final ({String text, String course})? bubbleTarget;
+
+  /// The bubble keeps clear of the tiles under it: its text shrinks to the room and, when it must, it stands higher. On for the
+  /// items of a language course and for any bubble with a chip; the lands' layouts are as they were.
+  final bool bubbleAboveTiles;
 
   /// Builds the stage for the room it has (its width and height, in board points).
   final Widget Function(Size room) stage;
@@ -79,20 +84,31 @@ class ActivityFrame extends StatelessWidget {
   final VoidCallback? onConfirmYes;
   final VoidCallback? onConfirmAgain;
 
-  /// The largest font, down to [min], at which [text] fits the room the bubble has.
-  static double fitFont(String text, ActivitySpec s, {double min = 14, double reserve = 0}) {
+  /// The largest font, down to [min], at which [text] (and [reserve], the room of a chip under it) fits in [maxHeight] (the
+  /// board's own limit when null), and the height of the bubble at that font.
+  static ({double font, double height}) fitBubble(
+    String text,
+    ActivitySpec s, {
+    double min = 14,
+    double reserve = 0,
+    double? maxHeight,
+  }) {
     const EdgeInsets pad = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+    double heightAt(double size) =>
+        (TextPainter(
+          text: TextSpan(
+            text: text,
+            style: AppText.fixed(size: size, weight: 500),
+          ),
+          textDirection: TextDirection.rtl,
+        )..layout(maxWidth: s.bubbleMaxWidth - pad.horizontal)).height +
+        pad.vertical +
+        reserve;
     for (double size = s.bubbleFont; size > min; size -= 1) {
-      final TextPainter tp = TextPainter(
-        text: TextSpan(
-          text: text,
-          style: AppText.fixed(size: size, weight: 500),
-        ),
-        textDirection: TextDirection.rtl,
-      )..layout(maxWidth: s.bubbleMaxWidth - pad.horizontal);
-      if (tp.height + pad.vertical + reserve <= s.bubbleMaxHeight) return size;
+      final double height = heightAt(size);
+      if (height <= (maxHeight ?? s.bubbleMaxHeight)) return (font: size, height: height);
     }
-    return min;
+    return (font: min, height: heightAt(min));
   }
 
   @override
@@ -102,11 +118,21 @@ class ActivityFrame extends StatelessWidget {
     // The chip's word is a tenth larger than the Hebrew beside it (fonts.md section 6); its room is taken off the line's.
     final double chipSize = s.bubbleFont * 1.1;
     final ({String text, String course})? target = bubbleTarget;
-    final double font = fitFont(
+    // The bubble keeps clear of the tiles under it: its text shrinks to the room there is between the progress trail and the tiles
+    // (never below the minimum), and a bubble that is still too tall (a long line with a chip) stands higher, not over the tiles.
+    final double floorTop = s.trailTop + 36 + 4;
+    final bool clear = (bubbleAboveTiles || target != null) && s.tilesTop > s.bubbleTop;
+    final double ceiling = clear ? s.tilesTop - 4 : double.infinity;
+    final ({double font, double height}) fit = fitBubble(
       bubbleText,
       s,
       reserve: target == null ? 0 : 6 + TargetChip.heightFor(chipSize),
+      maxHeight: math.min(s.bubbleMaxHeight, ceiling - floorTop),
     );
+    final double font = fit.font;
+    final double bubbleTop = clear
+        ? math.max(floorTop, math.min(s.bubbleTop, ceiling - fit.height))
+        : s.bubbleTop;
     final Size room = s.stageIsCard ? Size(s.stage.width - 32, s.stage.height - 32) : s.stage.size;
     return Scaffold(
       body: BoardCanvas(
@@ -123,7 +149,7 @@ class ActivityFrame extends StatelessWidget {
             Positioned(
               left: s.bubbleLeft,
               right: s.bubbleRight,
-              top: s.bubbleTop,
+              top: bubbleTop,
               child: BoardBubble(
                 key: const Key('lesson-bubble'),
                 text: bubbleText,

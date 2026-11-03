@@ -19,15 +19,21 @@ bool isSingleLetter(String text) {
   return letters <= 2;
 }
 
-/// The text of a tile, in its course's font and direction, as large as the tile lets it be: a letter at the tile font in bold, a
-/// word a little over half of it in Medium, scaled down to fit the width (a long word never wraps and never overflows).
+/// Whether an item's options are letters: every one of them is a single letter (or a digraph). The face of a tile follows the item,
+/// never its own text, so that the options of one item are all set alike: a word of two letters beside longer words is a word,
+/// and the child's own short name among other names does not stand out by its look.
+bool isLetterItem(Iterable<String> texts) => texts.isNotEmpty && texts.every(isSingleLetter);
+
+/// The text of a tile, in its course's font and direction, as large as the tile lets it be: in a letter item ([letter]) the tile font
+/// in bold, in a word item a little over half of it in Medium, scaled down to fit the width (a long word never wraps and never
+/// overflows).
 class OptionTextFace extends StatelessWidget {
   const OptionTextFace({
     super.key,
     required this.text,
     required this.course,
     required this.tileFont,
-    this.roomBelow = 0,
+    required this.letter,
   });
 
   final String text;
@@ -36,14 +42,13 @@ class OptionTextFace extends StatelessWidget {
   /// The numeral size of the board's tiles (`ActivitySpec.tileFont`).
   final double tileFont;
 
-  /// Room kept free at the bottom of the tile for a speaker.
-  final double roomBelow;
+  /// The item is a letter item (see [isLetterItem]).
+  final bool letter;
 
   @override
   Widget build(BuildContext context) {
-    final bool letter = isSingleLetter(text);
     return Padding(
-      padding: EdgeInsets.fromLTRB(8, 0, 8, roomBelow),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Center(
         child: FittedBox(
           fit: BoxFit.scaleDown,
@@ -63,14 +68,19 @@ class SoundFace extends StatelessWidget {
       const Icon(Icons.volume_up_rounded, key: Key('sound-face'), size: 52, color: TokenColors.ink);
 }
 
-/// A small speaker on a text tile: a tap plays the tile's own clip and does not answer. Its disc is 36 points, its touch area 48.
+/// A speaker under a text tile: a tap plays the tile's own clip and does not answer. Its disc is 44 points; its touch area is
+/// [touch] square, the engineering floor of a child control in the band (64 in Band A, 56 in Bands B and C), and it lies wholly
+/// outside the tile and its tap margin, so that it takes nothing from the tile's own touch area and a miss lands on nothing.
 class SpeakerMark extends StatelessWidget {
-  const SpeakerMark({super.key, required this.onTap});
+  const SpeakerMark({super.key, required this.onTap, required this.touch});
 
-  static const double disc = 36;
-  static const double touch = 48;
+  static const double disc = 44;
+
+  /// The room under a tile that a speaker has, whatever the band (the larger of the two floors).
+  static const double room = 64;
 
   final VoidCallback onTap;
+  final double touch;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -91,7 +101,7 @@ class SpeakerMark extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: TokenColors.hairline, width: TokenBorder.thin),
             ),
-            child: const Icon(Icons.volume_up_rounded, size: 22, color: TokenColors.ink),
+            child: const Icon(Icons.volume_up_rounded, size: 26, color: TokenColors.ink),
           ),
         ),
       ),

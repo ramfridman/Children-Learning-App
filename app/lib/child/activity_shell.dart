@@ -13,6 +13,7 @@ import '../strings/he.dart';
 /// keeps every touch target at the board's size.
 class ActivitySpec {
   const ActivitySpec({
+    required this.boardHeight,
     required this.bubbleMaxWidth,
     required this.bubbleMaxHeight,
     required this.homeRight,
@@ -39,6 +40,9 @@ class ActivitySpec {
     required this.tilesWidth,
     required this.tileFont,
   });
+
+  /// The height of the board, in board points.
+  final double boardHeight;
 
   /// The room a long question has: its width and height limits, in board points.
   final double bubbleMaxWidth;
@@ -78,6 +82,7 @@ class ActivitySpec {
     required double tilesTop,
     required double tilesWidth,
   }) => ActivitySpec(
+    boardHeight: boardHeight,
     bubbleMaxWidth: bubbleMaxWidth,
     bubbleMaxHeight: bubbleMaxHeight,
     homeRight: homeRight,
@@ -107,6 +112,7 @@ class ActivitySpec {
 
   // Board 13.
   static const ActivitySpec phone = ActivitySpec(
+    boardHeight: 393,
     bubbleMaxWidth: 190,
     bubbleMaxHeight: 132,
     homeRight: 59,
@@ -135,6 +141,7 @@ class ActivitySpec {
 
   // No board: board 13 re-composed for 667 by 375 with the same sizes.
   static const ActivitySpec phoneSE = ActivitySpec(
+    boardHeight: 375,
     bubbleMaxWidth: 176,
     bubbleMaxHeight: 118,
     homeRight: 16,
@@ -165,6 +172,7 @@ class ActivitySpec {
 
   // Board 23.
   static const ActivitySpec tabletLandscape = ActivitySpec(
+    boardHeight: 820,
     bubbleMaxWidth: 600,
     bubbleMaxHeight: 112,
     homeRight: 24,
@@ -195,6 +203,7 @@ class ActivitySpec {
 
   // Board 26.
   static const ActivitySpec tabletPortrait = ActivitySpec(
+    boardHeight: 1180,
     bubbleMaxWidth: 440,
     bubbleMaxHeight: 208,
     homeRight: 24,

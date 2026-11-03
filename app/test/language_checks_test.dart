@@ -184,7 +184,6 @@ void main() {
       ('rus', 'a digit', (LangPack p) => 'кот2', 'has the digit 2'),
       ('heb', 'a Latin letter', (LangPack p) => 'כֶּלֶבa', 'Hebrew is written with Hebrew letters and nikud'),
       ('heb', 'a Cyrillic letter', (LangPack p) => 'כֶּלֶב${_cp(0x436)}', 'Cyrillic letter'),
-      ('heb', 'a digit', (LangPack p) => 'סוּס7', 'has the digit 7'),
     ];
 
     for (final (String course, String name, String Function(LangPack) text, String message) in cases) {
@@ -736,5 +735,133 @@ void main() {
         _refused('${_file(p, 'words.i01')} › answer.options', 'two options look the same'),
       );
     });
+  });
+
+  group('SEC-L1-1: the celebration of a lesson is a spoken line like the others', () {
+    test('a pack of the lands refuses a second clip and a word on show in it', () {
+      final SamplePack land = SamplePack();
+      (land.doc(lessonFile)['celebration']! as Map<String, Object?>)
+        ..['show'] = 'cat'
+        ..['target'] = 'vo:not.in.this.pack';
+      final List<Problem> ps = _run(land);
+      expect(ps, _refused('$lessonFile › celebration.show', 'belongs to a language course'));
+      expect(ps, _refused('$lessonFile › celebration.target', 'belongs to a language course'));
+    });
+
+    test('a language pack checks the clip against its voice lines and the word against the script rules', () {
+      final SamplePack lang = SamplePack.language('eng');
+      final String file = lang.docs.keys.firstWhere((String k) => k.startsWith('lesson.'));
+      (lang.doc(file)['celebration']! as Map<String, Object?>)
+        ..['show'] = 'c${_cp(0x202E)}at'
+        ..['target'] = 'vo:not.in.this.pack';
+      final List<Problem> ps = _run(lang);
+      expect(ps, _refused('$file › celebration.target', 'neither recorded nor listed'));
+      expect(ps, _refused('$file › celebration.show', 'direction control'));
+    });
+  });
+
+  group('SEC-L1-2: a Hebrew caption holds no direction control and no letter of another script', () {
+    final Map<String, String> crafted = <String, String>{
+      'a right-to-left override': 'א${_cp(0x202E)}ב',
+      'a left-to-right override': 'א${_cp(0x202D)}ב',
+      'an isolate': 'א${_cp(0x2066)}ב${_cp(0x2069)}',
+      'a zero-width joiner': 'א${_cp(0x200D)}ב',
+      'a soft hyphen': 'א${_cp(0xAD)}ב',
+      'a fullwidth word': 'א ${_cp(0xFF43)}${_cp(0xFF41)}${_cp(0xFF54)}',
+      'a Greek word': 'א ${_cp(0x39A)}${_cp(0x391)}${_cp(0x3A4)}',
+      'an accented letter': 'א caf${_cp(0xE9)}',
+      'mathematical letters': 'א ${String.fromCharCodes(<int>[0x1D5BC, 0x1D5BA, 0x1D5CD])}',
+    };
+    crafted.forEach((String name, String text) {
+      test(name, () {
+        final LangPack p = _valid();
+        final Map<String, Object?> prompt = p.activity('words.i01')['prompt']! as Map<String, Object?>;
+        ((prompt['caption']! as List<Object?>).single! as Map<String, Object?>)['v'] = text;
+        expect(
+          _run(p.pack).where((Problem x) => x.path == '${_file(p, 'words.i01')} › prompt.caption[0].v'),
+          isNotEmpty,
+        );
+        final SamplePack land = SamplePack();
+        ((((land.doc(tapFile)['prompt']! as Map<String, Object?>)['caption']!) as List<Object?>).single!
+                as Map<String, Object?>)['v'] =
+            text;
+        expect(_run(land).where((Problem x) => x.path.startsWith(tapFile)), isNotEmpty);
+      });
+    });
+
+    test('plain Hebrew with its points, a geresh and a maqaf is still clean', () {
+      expect(
+        hebrewLineProblems('הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה. צ${_cp(0x5F3)}יפּ חֲצִי${_cp(0x5BE)}חֲצִי'),
+        isEmpty,
+      );
+    });
+  });
+
+  group('SEC-L1-5: Hebrew nikud sits on a letter, at most three on one, and a text is not marks alone', () {
+    test('a point with no letter before it, four on a letter, and a text of marks only are refused', () {
+      final String dalet = _cp(0x5D3);
+      final List<(String, String)> cases = <(String, String)>[
+        (_cp(0x5B8), 'with no letter before it'),
+        ('$dalet ${_cp(0x5B8)}', 'with no letter before it'),
+        ('$dalet${_cp(0x5B0)}${_cp(0x5B8)}${_cp(0x5BC)}${_cp(0x5C1)}', 'more than 3 marks'),
+        ('${_cp(0x5B8)}${_cp(0x5BC)}', 'shows nothing'),
+        ('  ', 'shows nothing'),
+      ];
+      for (final (String text, String message) in cases) {
+        expect(
+          textProblems('heb', text).any((String m) => m.contains(message)),
+          isTrue,
+          reason: '$text: $message',
+        );
+      }
+    });
+
+    test('a pointed letter with three marks is valid, and so are the paseq-like signs refused as marks', () {
+      final String shin = _cp(0x5E9);
+      expect(textProblems('heb', '$shin${_cp(0x5C1)}${_cp(0x5BC)}${_cp(0x5B8)}'), isEmpty);
+      expect(textProblems('heb', '${_cp(0x5D3)}${_cp(0x5C0)}'), isNotEmpty, reason: 'the paseq is no point');
+    });
+
+    test('a vowel sign taught on its own is a grapheme, not a text', () {
+      final LangPack p = LangPack('heb');
+      p.pack.doc('skill.HEB-A-02.json')['graphemes'] = <Object?>[_cp(0x5B8), '${_cp(0x5D3)}${_cp(0x5BC)}'];
+      expect(_run(p.pack), isEmpty);
+    });
+  });
+
+  group('what a tile may show besides letters', () {
+    test('Hebrew numeral cards (HEB-A-10): digits and the shapes of the batch are valid; other courses refuse a digit', () {
+      for (final String card in <String>['5', '0', _cp(0x25CF), _cp(0x2665), _cp(0x273F), _cp(0x2600)]) {
+        expect(textProblems('heb', card), isEmpty, reason: card);
+      }
+      expect(textProblems('eng', '5'), isNotEmpty);
+      expect(textProblems('rus', '5'), isNotEmpty);
+      expect(textProblems('eng', _cp(0x25CF)), isNotEmpty);
+    });
+
+    test(
+      'a phrase may use the ellipsis, the dash, the slash and the double quote; a single word may not',
+      () {
+        for (final String mark in <String>[_cp(0x2026), _cp(0x2014), '/', '"']) {
+          expect(textProblems('eng', 'one $mark two'), isEmpty, reason: mark);
+          expect(textProblems('eng', 'one${mark}two'), isNotEmpty, reason: 'a word with $mark');
+        }
+      },
+    );
+
+    test('the curly apostrophe is an apostrophe, in a word as in a phrase', () {
+      expect(textProblems('eng', 'it${_cp(0x2019)}s'), isEmpty);
+      expect(textProblems('eng', 'it${_cp(0x2019)}s a cat'), isEmpty);
+    });
+
+    test(
+      'QA-L1-3: the marks of a Hebrew letter in the other order are the same grapheme, and the word decodes',
+      () {
+        final String a = '${_cp(0x5D1)}${_cp(0x5BC)}${_cp(0x5B8)}';
+        final String b = '${_cp(0x5D1)}${_cp(0x5B8)}${_cp(0x5BC)}';
+        expect(plainWord(a), plainWord(b));
+        expect(decodes(a, <String>{b}), isTrue);
+      },
+    );
   });
 }

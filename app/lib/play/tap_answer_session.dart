@@ -20,6 +20,7 @@ import 'hints/hint_player.dart';
 import 'hints/tap_geometry.dart';
 import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
+import '../design/layout.dart';
 import 'option_faces.dart';
 import 'sprite_group.dart';
 import 'template_session.dart';
@@ -117,6 +118,34 @@ class TapAnswerSession extends TemplateSession {
     }
   }
 
+  /// Some tile has a speaker (a text with a clip): the row of tiles then keeps the room under it, see [layoutFor].
+  bool get _hasSpeakers => activity.options.any((ChoiceOption o) => o.text != null && o.clip != null);
+
+  /// The tiles of an item with speakers stand higher, so that a speaker (64 points to touch) fits under each of them above the
+  /// bottom edge where no hotspot may be (24); the stage, empty in such an item, gives way. A board with the room is unchanged.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) {
+    if (!_hasSpeakers) return base;
+    const double tile = 96;
+    const double margin = 12;
+    final double top = math.min(
+      base.tilesTop,
+      base.boardHeight - TokenTouch.bottomNoHotspot - SpeakerMark.room - margin - tile - margin,
+    );
+    if (top >= base.tilesTop) return base;
+    return base.withStageAndTiles(
+      stage: Rect.fromLTWH(
+        base.stage.left,
+        base.stage.top,
+        base.stage.width,
+        math.max(0, math.min(base.stage.height, top - 16 - base.stage.top)),
+      ),
+      tilesLeft: base.tilesLeft,
+      tilesTop: top,
+      tilesWidth: base.tilesWidth,
+    );
+  }
+
   /// A picture, or a sound button, says its word as it is chosen. A text tile has a speaker of its own and does not.
   void _sayWord(String id) {
     final ChoiceOption o = activity.options.firstWhere((ChoiceOption o) => o.id == id);
@@ -206,6 +235,10 @@ class TapAnswerSession extends TemplateSession {
     // Numerals sit on square tiles; a set of things gets a wider one, as wide as the row allows.
     final bool sets = activity.options.any((ChoiceOption o) => o.set != null);
     final double width = TapGeometry.tileWidthOf(activity, spec);
+    final bool letterItem = isLetterItem(<String>[
+      for (final ChoiceOption o in activity.options)
+        if (o.text != null) o.text!,
+    ]);
     return ListenableBuilder(
       listenable: this,
       builder: (BuildContext c, Widget? _) => Directionality(
@@ -214,93 +247,106 @@ class TapAnswerSession extends TemplateSession {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             for (final (int i, ChoiceOption o) in activity.options.indexed)
-              Stack(
-                clipBehavior: Clip.none,
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Opacity(
-                    opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
-                    child: AnswerTile(
-                      key: Key('tile-${o.id}'),
-                      semanticLabel: o.label ?? '',
-                      width: width == 96 ? null : width,
-                      state: chosenId == o.id
-                          ? chosenState
-                          : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
-                                ? AnswerState.selected
-                                : AnswerState.idle),
-                      onPressed: () => choose(o.id),
-                      child: sets
-                          ? Padding(
-                              padding: const EdgeInsets.all(6),
-                              child: _face(activity, o, 96, spec.tileFont, stress),
-                            )
-                          : _face(activity, o, 96, spec.tileFont, stress),
-                    ),
-                  ),
-                  // A text tile with a clip has a speaker in its reading-start corner: it plays the word and does not answer.
-                  if (o.text != null && o.clip != null)
-                    PositionedDirectional(
-                      start: 10,
-                      bottom: 10,
-                      child: SpeakerMark(
-                        key: Key('speaker-${o.id}'),
-                        onTap: () => playClips?.call(<String>[o.clip!], replace: true),
-                      ),
-                    ),
-                  // The word of the right picture, under its tile, once the answer is accepted.
-                  if (captionWord != null && o.id == activity.correctId)
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 12 + 96 + 6,
-                      child: IgnorePointer(
-                        child: AnimatedOpacity(
-                          opacity: captionShown ? 1 : 0,
-                          duration: _fade(c),
-                          child: RevealCaption(
-                            key: const Key('reveal-caption'),
-                            text: captionWord!,
-                            course: activity.course,
-                            size: spec.tileFont * 0.5,
-                          ),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: <Widget>[
+                      Opacity(
+                        opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
+                        child: AnswerTile(
+                          key: Key('tile-${o.id}'),
+                          semanticLabel: o.label ?? '',
+                          width: width == 96 ? null : width,
+                          state: chosenId == o.id
+                              ? chosenState
+                              : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
+                                    ? AnswerState.selected
+                                    : AnswerState.idle),
+                          onPressed: () => choose(o.id),
+                          child: sets
+                              ? Padding(
+                                  padding: const EdgeInsets.all(6),
+                                  child: _face(activity, o, 96, spec.tileFont, stress, letter: letterItem),
+                                )
+                              : _face(activity, o, 96, spec.tileFont, stress, letter: letterItem),
                         ),
                       ),
-                    ),
-                  // A place badge, and a start flag at the first end of the row, stand on the tiles (a tile paints above the stage and
-                  // the speech bubble, so they are never covered by the bubble).
-                  for (final TileMark m in marks.whereType<TileMark>())
-                    if (m.tile == i)
-                      switch (m) {
-                        TileBadgeMark() => Positioned(
-                          top: 12 - 23 * hintScale(_stageSize ?? Size.zero),
+                      // The word of the right picture, under its tile, once the answer is accepted.
+                      if (captionWord != null && o.id == activity.correctId)
+                        Positioned(
                           left: 0,
                           right: 0,
+                          top: 12 + 96 + 6,
                           child: IgnorePointer(
-                            child: Center(
-                              child: HintBadge(n: m.n, scale: hintScale(_stageSize ?? Size.zero)),
+                            child: AnimatedOpacity(
+                              opacity: captionShown ? 1 : 0,
+                              duration: _fade(c),
+                              child: RevealCaption(
+                                key: const Key('reveal-caption'),
+                                text: captionWord!,
+                                course: activity.course,
+                                size: spec.tileFont * 0.5,
+                              ),
                             ),
                           ),
                         ),
-                        TileFlagMark() => Positioned(
-                          top: 12 - 26 * hintScale(_stageSize ?? Size.zero),
-                          right: 12 - 20 * hintScale(_stageSize ?? Size.zero),
-                          child: IgnorePointer(child: HintFlag(scale: hintScale(_stageSize ?? Size.zero))),
+                      // A place badge, and a start flag at the first end of the row, stand on the tiles (a tile paints above the stage and
+                      // the speech bubble, so they are never covered by the bubble).
+                      for (final TileMark m in marks.whereType<TileMark>())
+                        if (m.tile == i)
+                          switch (m) {
+                            TileBadgeMark() => Positioned(
+                              top: 12 - 23 * hintScale(_stageSize ?? Size.zero),
+                              left: 0,
+                              right: 0,
+                              child: IgnorePointer(
+                                child: Center(
+                                  child: HintBadge(n: m.n, scale: hintScale(_stageSize ?? Size.zero)),
+                                ),
+                              ),
+                            ),
+                            TileFlagMark() => Positioned(
+                              top: 12 - 26 * hintScale(_stageSize ?? Size.zero),
+                              right: 12 - 20 * hintScale(_stageSize ?? Size.zero),
+                              child: IgnorePointer(
+                                child: HintFlag(scale: hintScale(_stageSize ?? Size.zero)),
+                              ),
+                            ),
+                          },
+                      // Where the stage has nothing of the question to light, a first hint lights each answer in turn, the same for all.
+                      if (hintLit == i)
+                        Positioned.fill(
+                          left: 6,
+                          top: 6,
+                          right: 6,
+                          bottom: 6,
+                          child: IgnorePointer(
+                            child: const SkyRing(
+                              key: Key('hint-tile-glow'),
+                              round: false,
+                              radius: TokenRadius.xl + 6,
+                            ),
+                          ),
                         ),
-                      },
-                  // Where the stage has nothing of the question to light, a first hint lights each answer in turn, the same for all.
-                  if (hintLit == i)
-                    Positioned.fill(
-                      left: 6,
-                      top: 6,
-                      right: 6,
-                      bottom: 6,
-                      child: IgnorePointer(
-                        child: const SkyRing(
-                          key: Key('hint-tile-glow'),
-                          round: false,
-                          radius: TokenRadius.xl + 6,
-                        ),
-                      ),
+                    ],
+                  ),
+                  // A text tile with a clip has a speaker under it: it plays the word and does not answer. It lies wholly under
+                  // the tile and its tap margin, so it takes nothing from the tile's own touch area; every tile of the item has the
+                  // room, so the row stays level.
+                  if (_hasSpeakers)
+                    SizedBox(
+                      height: SpeakerMark.room,
+                      child: o.text != null && o.clip != null
+                          ? Center(
+                              child: SpeakerMark(
+                                key: Key('speaker-${o.id}'),
+                                touch: AppLayout.of(c).touch.minControl,
+                                onTap: () => playClips?.call(<String>[o.clip!], replace: true),
+                              ),
+                            )
+                          : null,
                     ),
                 ],
               ),
@@ -312,13 +358,20 @@ class TapAnswerSession extends TemplateSession {
 }
 
 /// What an option shows: a numeral on a tile with its dots, or a small set of things.
-Widget _face(TapAnswerActivity a, ChoiceOption o, double box, double font, bool stress) {
+Widget _face(
+  TapAnswerActivity a,
+  ChoiceOption o,
+  double box,
+  double font,
+  bool stress, {
+  bool letter = false,
+}) {
   if (o.text != null) {
     return OptionTextFace(
       text: withStress(o.text!, show: stress),
       course: a.course,
       tileFont: font,
-      roomBelow: o.clip == null ? 0 : SpeakerMark.touch - 18,
+      letter: letter,
     );
   }
   if (o.soundOnly) return const SoundFace();

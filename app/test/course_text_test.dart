@@ -19,6 +19,8 @@ import 'support/fakes.dart';
 import 'support/harness.dart';
 import 'support/language_content.dart';
 
+String _cp(int r) => String.fromCharCode(r);
+
 const Map<String, Size> _boards = <String, Size>{
   'phone': Size(852, 393),
   'phoneSE': Size(667, 375),
@@ -127,6 +129,11 @@ void main() {
     test('isolateLtr wraps a run in the left-to-right isolate and nothing else', () {
       final String s = isolateLtr('sun');
       expect(s.runes.toList(), <int>[0x2066, ...'sun'.runes, 0x2069]);
+    });
+
+    test('SEC-L1-6: a direction control inside the run is taken out, so the run cannot close its isolate or reach out', () {
+      final String s = isolateLtr('a${_cp(0x2069)}${_cp(0x202E)}b${_cp(0x2066)}${_cp(0x200F)}');
+      expect(s.runes.toList(), <int>[0x2066, 0x61, 0x62, 0x2069]);
     });
 
     testWidgets('inside a Hebrew line an isolated run keeps its own order and sits where the line puts it', (

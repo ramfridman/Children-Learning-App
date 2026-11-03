@@ -488,6 +488,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             voiceOf: guide.character.id,
           ),
           bubbleText: controller.bubble,
+          bubbleAboveTiles: controller.current.isLanguage,
           bubbleTarget: controller.bubbleShow == null
               ? null
               : (

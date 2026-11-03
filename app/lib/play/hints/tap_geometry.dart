@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../../child/activity_shell.dart';
 import '../../content/models.dart';
 import '../../design/course_text.dart';
-import '../option_faces.dart' show isSingleLetter;
+import '../option_faces.dart' show isLetterItem;
 import '../sprite_group.dart';
 
 /// Where the things of a `tap_answer` stage and of its answer tiles are, in the stage's own points ((0, 0) is the stage's top left
@@ -171,8 +171,11 @@ class TapGeometry {
   static double tileWidthOf(TapAnswerActivity a, ActivitySpec spec) {
     final double room = spec.tilesWidth / a.options.length - 24;
     if (a.options.any((ChoiceOption o) => o.set != null)) return math.min(170, room);
-    final bool words = a.options.any((ChoiceOption o) => o.text != null && !isSingleLetter(o.text!));
-    if (words) return math.min(220, room);
+    final List<String> texts = <String>[
+      for (final ChoiceOption o in a.options)
+        if (o.text != null) o.text!,
+    ];
+    if (texts.isNotEmpty && !isLetterItem(texts)) return math.min(220, room);
     return 96;
   }
 

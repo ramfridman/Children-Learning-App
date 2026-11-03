@@ -8,9 +8,13 @@ import '../engine/course.dart';
 // This file holds no Hebrew, Russian or accented text: every character it names is a code point.
 
 /// The text of a tile or a word on show, checked for the course it is in: one sentence for each thing wrong, empty when clean.
-/// Digits are refused (the number words are words, and a digit among look-alike letters is a trap), and so is anything that
-/// changes the direction of a run: the app isolates the run itself.
-List<String> textProblems(String course, String text) {
+/// Digits are refused (the number words are words, and a digit among look-alike letters is a trap) except in Hebrew, whose
+/// letter-and-numeral cards (HEB-A-10) show numerals and a few shapes; anything that changes the direction of a run is refused (the
+/// app isolates the run itself). A mark needs a letter before it, at most three sit on one letter (the rule of a child's name,
+/// B-32, which Hebrew nikud meets), and a text of marks alone shows nothing. A phrase (a text with a space) may also use the
+/// ellipsis, the dash, the slash and the double quote; a single word may not. [bareMarks] allows a text that is a mark on its own,
+/// for the graphemes of a skill (a vowel sign is taught by itself).
+List<String> textProblems(String course, String text, {bool bareMarks = false}) {
   final List<String> out = <String>[];
   if (text != text.trim() || text.contains('  ')) {
     out.add('has a space at an end or two spaces in a row');
@@ -21,15 +25,38 @@ List<String> textProblems(String course, String text) {
     if (said.add(message)) out.add(message);
   }
 
+  final Set<int> punctuation = text.contains(' ') ? _phrasePunctuation : _allowedPunctuation;
+  int marks = 0;
+  bool baseBefore = false;
+  bool visible = false;
   for (int i = 0; i < runes.length; i++) {
     final int r = runes[i];
-    if (_allowedPunctuation.contains(r)) continue;
+    if (punctuation.contains(r)) {
+      marks = 0;
+      baseBefore = false;
+      continue;
+    }
+    if (_markPattern.hasMatch(String.fromCharCode(r))) {
+      if (!bareMarks && !baseBefore) {
+        say('has the mark ${_name(r)} with no letter before it');
+      } else if (!bareMarks && ++marks > _maxMarks) {
+        say('has more than $_maxMarks marks on one letter');
+      }
+    } else {
+      marks = 0;
+      baseBefore = true;
+      visible = true;
+    }
     if (_isDirectionControl(r)) {
       say('has the direction control ${_name(r)}: the app isolates the run, the text must not');
     } else if (r < 0x20 || r == 0x7F || (r >= 0x80 && r < 0xA0)) {
       say('has the control character ${_name(r)}');
     } else if (r >= 0x30 && r <= 0x39) {
-      say('has the digit ${String.fromCharCode(r)}: a number in a tile is written as a word');
+      if (course != Course.heb) {
+        say('has the digit ${String.fromCharCode(r)}: a number in a tile is written as a word');
+      }
+    } else if (course == Course.heb && _hebrewCardSymbols.contains(r)) {
+      continue;
     } else if (r == _diaeresis) {
       say('has a separate diaeresis (${_name(r)}): write the letter yo (U+0451) as one letter');
     } else if (r == _stress) {
@@ -45,15 +72,39 @@ List<String> textProblems(String course, String text) {
       if (own != null) say(own);
     }
   }
+  if (!bareMarks && !visible && text.isNotEmpty) {
+    say('shows nothing: it has no letter, only marks, spaces or punctuation');
+  }
   return out;
 }
+
+/// What is wrong with a line of Hebrew that a child reads (a caption or a title): a direction control or an invisible
+/// character (a reversed or hidden word), and a letter of another script, other than the plain Latin and Cyrillic that the
+/// pack validator already names (accented Latin, Greek, fullwidth and mathematical letters, and the rest of Cyrillic).
+List<String> hebrewLineProblems(String text) {
+  final List<String> out = <String>[];
+  final Set<String> said = <String>{};
+  for (final int r in text.runes) {
+    final String? message = _isDirectionControl(r)
+        ? 'contains the direction or invisible character ${_name(r)}'
+        : _isOtherScriptLetter(r)
+        ? 'contains a letter of another script (${_name(r)}): a Hebrew line holds no word of another language'
+        : null;
+    if (message != null && said.add(message)) out.add(message);
+  }
+  return out;
+}
+
+/// [run] without any direction control, so that a run put between isolates cannot close them early or reach out of them.
+String stripDirectionControls(String run) =>
+    String.fromCharCodes(run.runes.where((int r) => !_isDirectionControl(r)));
 
 /// The words of [text]: runs of letters and combining marks, cut at spaces and punctuation.
 List<String> wordsOf(String text) {
   final List<String> out = <String>[];
   final StringBuffer word = StringBuffer();
   for (final int r in text.runes) {
-    if (_allowedPunctuation.contains(r)) {
+    if (_phrasePunctuation.contains(r)) {
       if (word.isNotEmpty) out.add(word.toString());
       word.clear();
     } else {
@@ -64,20 +115,46 @@ List<String> wordsOf(String text) {
   return out;
 }
 
-/// A word as the decodable check reads it: lower case, with the stress mark taken off (a mark does not make a different letter).
-String plainWord(String word) =>
-    String.fromCharCodes(word.toLowerCase().runes.where((int r) => r != _stress));
+/// A word as the decodable check reads it: lower case, with the stress mark taken off (a mark does not make a different letter)
+/// and the Hebrew marks of each letter in their canonical order (a vowel, the dagesh, a dot: the order a keyboard or a tool
+/// may change, which is no other grapheme).
+String plainWord(String word) {
+  final List<int> runes = <int>[
+    for (final int r in word.toLowerCase().runes)
+      if (r != _stress) r,
+  ];
+  final List<int> out = <int>[];
+  for (int i = 0; i < runes.length;) {
+    if (!_isHebrewPoint(runes[i])) {
+      out.add(runes[i++]);
+      continue;
+    }
+    int end = i;
+    while (end < runes.length && _isHebrewPoint(runes[end])) {
+      end++;
+    }
+    // A stable sort by canonical combining class (Unicode canonical ordering).
+    final List<MapEntry<int, int>> keyed = <MapEntry<int, int>>[
+      for (final (int k, int r) in runes.sublist(i, end).indexed)
+        MapEntry<int, int>(_markClass(r) * 1000 + k, r),
+    ]..sort((MapEntry<int, int> p, MapEntry<int, int> q) => p.key.compareTo(q.key));
+    out.addAll(keyed.map((MapEntry<int, int> e) => e.value));
+    i = end;
+  }
+  return String.fromCharCodes(out);
+}
 
 /// Whether [word] can be written with the [taught] graphemes alone: a grapheme is a letter, a digraph ("sh") or a vowel sign,
 /// at most three code points, and the word may be cut into taught graphemes in any way that works (so "shop" reads with "sh"
-/// even when "s" and "h" alone are not taught yet).
+/// even when "s" and "h" alone are not taught yet). Word and graphemes are compared in their plain form ([plainWord]).
 bool decodes(String word, Set<String> taught) {
+  final Set<String> known = <String>{for (final String g in taught) plainWord(g)};
   final List<String> chars = <String>[for (final int r in plainWord(word).runes) String.fromCharCode(r)];
   final List<bool> reaches = List<bool>.filled(chars.length + 1, false)..[0] = true;
   for (int from = 0; from < chars.length; from++) {
     if (!reaches[from]) continue;
     for (int len = 1; len <= 3 && from + len <= chars.length; len++) {
-      if (taught.contains(chars.sublist(from, from + len).join())) reaches[from + len] = true;
+      if (known.contains(chars.sublist(from, from + len).join())) reaches[from + len] = true;
     }
   }
   return reaches[chars.length];
@@ -103,7 +180,7 @@ List<String> unpointedHebrewWords(String text) {
     if (_isHebrewLetter(r)) {
       word.writeCharCode(r);
       letters++;
-    } else if (_isHebrewPoint(r) && letters > 0) {
+    } else if ((_isHebrewPoint(r) || r == _maqaf) && letters > 0) {
       word.writeCharCode(r);
       pointed = true;
     } else if (r == _geresh || r == _gershayim) {
@@ -124,10 +201,23 @@ const int _yoLower = 0x0451;
 const int _yoUpper = 0x0401;
 const int _geresh = 0x05F3;
 const int _gershayim = 0x05F4;
+const int _maqaf = 0x05BE;
 
-/// The marks that may stand between words of a tile: a space, an apostrophe, a hyphen, and the full stop, comma, colon,
-/// exclamation and question marks.
-const Set<int> _allowedPunctuation = <int>{0x20, 0x27, 0x2D, 0x2E, 0x2C, 0x3A, 0x21, 0x3F};
+/// The most marks that may stand on one letter: a shin with a dagesh, a dot and a vowel has three.
+const int _maxMarks = 3;
+
+final RegExp _markPattern = RegExp(r'\p{M}', unicode: true);
+
+/// The marks that may stand in a word or between words of a tile: a space, an apostrophe (plain or curly), a hyphen, and the full
+/// stop, comma, colon, exclamation and question marks.
+const Set<int> _allowedPunctuation = <int>{0x20, 0x27, 0x2019, 0x2D, 0x2E, 0x2C, 0x3A, 0x21, 0x3F};
+
+/// What a phrase (a text of more than one word) may also use: the ellipsis, the em dash, the slash and the double quote.
+final Set<int> _phrasePunctuation = <int>{..._allowedPunctuation, 0x2026, 0x2014, 0x2F, 0x22};
+
+/// What the Hebrew letter-and-numeral cards show besides letters and digits (HEB-A-10): a filled and an empty circle, a filled and
+/// an empty triangle, a sun, a star, a heart and a flower.
+const Set<int> _hebrewCardSymbols = <int>{0x25CF, 0x25CB, 0x25B2, 0x25B3, 0x2600, 0x2B50, 0x2665, 0x273F};
 
 /// The Russian vowel letters, both cases, yo (U+0451) apart (it takes no mark).
 final Set<int> _russianVowels = <int>{
@@ -140,6 +230,8 @@ final Set<int> _russianVowels = <int>{
 };
 
 bool _isDirectionControl(int r) =>
+    r == 0xAD ||
+    (r >= 0x2060 && r <= 0x2064) ||
     r == 0x200E ||
     r == 0x200F ||
     r == 0x061C ||
@@ -150,7 +242,52 @@ bool _isDirectionControl(int r) =>
 
 bool _isHebrewLetter(int r) => r >= 0x05D0 && r <= 0x05EA;
 
-bool _isHebrewPoint(int r) => r >= 0x05B0 && r <= 0x05C7;
+/// The Hebrew points: the vowel signs, the dagesh, the rafe, the shin and sin dots and the upper and lower dots (not the
+/// maqaf, the paseq and the other punctuation between U+05B0 and U+05C7).
+bool _isHebrewPoint(int r) =>
+    (r >= 0x05B0 && r <= 0x05BD) ||
+    r == 0x05BF ||
+    r == 0x05C1 ||
+    r == 0x05C2 ||
+    r == 0x05C4 ||
+    r == 0x05C5 ||
+    r == 0x05C7;
+
+/// The canonical combining class of a Hebrew point (Unicode), which gives the order of the marks on a letter.
+int _markClass(int r) => switch (r) {
+  0x05B0 => 10,
+  0x05B1 => 11,
+  0x05B2 => 12,
+  0x05B3 => 13,
+  0x05B4 => 14,
+  0x05B5 => 15,
+  0x05B6 => 16,
+  0x05B7 => 17,
+  0x05B8 || 0x05C7 => 18,
+  0x05B9 || 0x05BA => 19,
+  0x05BB => 20,
+  0x05BC => 21,
+  0x05BD => 22,
+  0x05BF => 23,
+  0x05C1 => 24,
+  0x05C2 => 25,
+  0x05C5 => 220,
+  _ => 230,
+};
+
+/// A letter of a script that no Hebrew line holds, other than the plain Latin (A to z) and Cyrillic (U+0400 to U+052F) that the
+/// validator names already: accented and extended Latin, fullwidth Latin, Greek, the rest of Cyrillic, and the mathematical
+/// alphanumerics (which draw Latin letters).
+bool _isOtherScriptLetter(int r) =>
+    (r >= 0xC0 && r <= 0x24F && r != 0xD7 && r != 0xF7) ||
+    (r >= 0x1E00 && r <= 0x1EFF) ||
+    (r >= 0xFF21 && r <= 0xFF3A) ||
+    (r >= 0xFF41 && r <= 0xFF5A) ||
+    (r >= 0x370 && r <= 0x3FF) ||
+    (r >= 0x1C80 && r <= 0x1C8F) ||
+    (r >= 0x2DE0 && r <= 0x2DFF) ||
+    (r >= 0xA640 && r <= 0xA69F) ||
+    (r >= 0x1D400 && r <= 0x1D7FF);
 
 bool _isLatinLetter(int r) => (r >= 0x41 && r <= 0x5A) || (r >= 0x61 && r <= 0x7A);
 
@@ -176,7 +313,7 @@ String? _foreignLetter(String course, int r) {
   final bool own = switch (course) {
     Course.eng => _isLatinLetter(r),
     Course.rus => _isRussianLetter(r),
-    Course.heb => _isHebrewLetter(r) || _isHebrewPoint(r) || r == _geresh || r == _gershayim,
+    Course.heb => _isHebrewLetter(r) || _isHebrewPoint(r) || r == _geresh || r == _gershayim || r == _maqaf,
     _ => false,
   };
   if (own) return null;
