@@ -868,6 +868,11 @@ class CountTapActivity extends Activity {
       seed = _map(_map(json['scene'])['objects'])['seed']! as int,
       sprite = _map(_map(json['scene'])['objects'])['sprite']! as String,
       litSprite = _map(_map(json['scene'])['objects'])['litSprite']! as String,
+      clips = <String>[
+        for (final Object? c
+            in (_map(_map(json['scene'])['objects'])['clips'] as List<Object?>? ?? const <Object?>[]))
+          c! as String,
+      ],
       targetSprite = _map(_map(json['scene'])['target'])['sprite']! as String,
       answerPrompt = Spoken.fromJson(json['answerPrompt']),
       traceTags = <String, String>{
@@ -889,6 +894,9 @@ class CountTapActivity extends Activity {
   final String sprite;
   final String litSprite;
   final String targetSprite;
+
+  /// A language course: the number word each counting tap plays, in counting order (practice, never scored).
+  final List<String> clips;
 
   /// Asked once every object has been counted: "how many?".
   final Spoken answerPrompt;

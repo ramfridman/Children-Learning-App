@@ -188,6 +188,32 @@ void main() {
         await _shot(t, 'sound_chip', b.key);
       });
 
+      testWidgets('count and tap in a course: the scored step, "how many?", on sound buttons', (
+        WidgetTester t,
+      ) async {
+        final LangPack p = LangPack();
+        p.add(
+          countJson(
+            id: 'cnt',
+            count: 3,
+            clips: <String>['vo:eng.n.one', 'vo:eng.n.two', 'vo:eng.n.three'],
+            options: <Map<String, Object?>>[
+              soundOption('o1', 'vo:eng.n.three', value: 3),
+              soundOption('o2', 'vo:eng.n.two', value: 2, tag: p.tag('lis.numword')),
+              soundOption('o3', 'vo:eng.n.four', value: 4, tag: p.tag('lis.numword')),
+            ],
+            correct: 'o1',
+            answerTarget: 'vo:eng.n.howmany',
+          ),
+        );
+        await _open(t, p, 'cnt', b.value);
+        for (int i = 0; i < 3; i++) {
+          await t.tap(find.byKey(Key('butterfly-$i')));
+          await _wait(t, 700);
+        }
+        await _shot(t, 'count_answer', b.key);
+      });
+
       testWidgets('the word under the right picture after the answer (the Russian reader)', (
         WidgetTester t,
       ) async {

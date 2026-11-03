@@ -7,6 +7,7 @@ import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
+import '../design/course_text.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
@@ -15,6 +16,7 @@ import 'hint_widgets.dart';
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'lesson_controller.dart';
+import 'option_faces.dart';
 import 'template_session.dart';
 
 /// Where the objects of a count-and-tap scene stand inside the stage, in the stage's own points.
@@ -65,6 +67,11 @@ class CountLayout {
 /// The count-and-tap template (T02): touch each object once, it flies to the flower (or lights up where
 /// it is) and a counter keeps the number; then "how many?" with the answer tiles. Touching the same
 /// object twice is kept as evidence of M-CNT-DOUBLE with the answer.
+///
+/// In a language course (docs/languages/frame.md section 2.2) the counting taps are practice and never scored: each tap plays the
+/// next number word, a touch on an object already counted lights it and starts the count again (a counting error is maths, not
+/// language, so it is no evidence and carries no tag), and the one scored step is "how many?", answered on sound buttons that
+/// each play a number word.
 class CountTapSession extends TemplateSession {
   CountTapSession(super.controller, this.activity);
 
@@ -101,8 +108,12 @@ class CountTapSession extends TemplateSession {
   int get counter => counted.length;
 
   void tapObject(int i) {
-    if (answering || (demoRunning && !_demoStep)) return;
+    if (answering || _recounting || (demoRunning && !_demoStep)) return;
     seen.clear();
+    if (counted.contains(i) && activity.isLanguage) {
+      _countAgain(i);
+      return;
+    }
     if (counted.contains(i)) {
       // Counting the same one again.
       touchedTwice = true;
@@ -115,6 +126,9 @@ class CountTapSession extends TemplateSession {
       return;
     }
     counted.add(i);
+    if (activity.isLanguage && counted.length <= activity.clips.length) {
+      playClips?.call(<String>[activity.clips[counted.length - 1]], replace: true);
+    }
     if (flies) {
       later(const Duration(milliseconds: 600), () {
         arrived.add(i);
@@ -128,6 +142,22 @@ class CountTapSession extends TemplateSession {
   }
 
   bool _demoStep = false;
+
+  /// In a course: the object that was counted twice is lighting, and the count is about to start again.
+  bool _recounting = false;
+
+  void _countAgain(int i) {
+    _recounting = true;
+    wiggling = i;
+    notify();
+    later(const Duration(milliseconds: 500), () {
+      _recounting = false;
+      wiggling = null;
+      counted.clear();
+      arrived.clear();
+      notify();
+    });
+  }
 
   void _finishCounting() {
     answering = true;
@@ -154,9 +184,11 @@ class CountTapSession extends TemplateSession {
     if (controller.guided && id != activity.correctId) return;
     _busy = true;
     chosenId = id;
+    final ChoiceOption chosen = activity.options.firstWhere((ChoiceOption o) => o.id == id);
+    if (chosen.clip != null && !byVoice) playClips?.call(<String>[chosen.clip!], replace: true);
     final Outcome o = await controller.chooseOption(
       id,
-      traceTag: touchedTwice ? activity.traceTags['same_object_tapped_twice'] : null,
+      traceTag: touchedTwice && !activity.isLanguage ? activity.traceTags['same_object_tapped_twice'] : null,
       byVoice: byVoice,
     );
     if (disposed) return;
@@ -173,7 +205,8 @@ class CountTapSession extends TemplateSession {
         _busy = false;
         if (controller.guided) {
           _workedExample();
-        } else {
+        } else if (!activity.isLanguage) {
+          // In a course the count was practice and is done: the scored step stays on offer, with the hint.
           controller.restartCount();
         }
         notify();
@@ -203,6 +236,13 @@ class CountTapSession extends TemplateSession {
 
   @override
   void onHint() {
+    // Sound buttons play again, one after the other, after the hint's own line.
+    if (activity.isLanguage && answering) {
+      playClips?.call(<String>[
+        for (final ChoiceOption o in activity.options)
+          if (o.clip != null) o.clip!,
+      ], replace: false);
+    }
     switch (hintPictureOf(activity)) {
       case HintPicture.countingAid:
         _showAid();
@@ -308,35 +348,42 @@ class CountTapSession extends TemplateSession {
           child: AnimatedOpacity(
             opacity: answering ? 1 : 0,
             duration: const Duration(milliseconds: 300),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                for (final ChoiceOption o in activity.options)
-                  Opacity(
-                    opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
-                    child: AnswerTile(
-                      key: Key('tile-${o.id}'),
-                      semanticLabel: '${o.value}',
-                      state: chosenId == o.id
-                          ? chosenState
-                          : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
-                                ? AnswerState.selected
-                                : AnswerState.idle),
-                      onPressed: () => choose(o.id),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            '${o.value}',
-                            style: AppText.fixed(size: spec.tileFont, weight: 800, lineHeight: 1),
-                          ),
-                          const SizedBox(height: 4),
-                          FittedBox(fit: BoxFit.scaleDown, child: Dots(o.value!)),
-                        ],
+            // The row follows the course's reading direction, as in every language item (F1).
+            child: Directionality(
+              textDirection: courseRowDirection(activity.course) ?? Directionality.of(c),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  for (final ChoiceOption o in activity.options)
+                    Opacity(
+                      opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
+                      child: AnswerTile(
+                        key: Key('tile-${o.id}'),
+                        // A sound button names nothing: the number word is the answer, and it is heard.
+                        semanticLabel: o.soundOnly ? He.optionSoundSemantics.text : '${o.value}',
+                        state: chosenId == o.id
+                            ? chosenState
+                            : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
+                                  ? AnswerState.selected
+                                  : AnswerState.idle),
+                        onPressed: () => choose(o.id),
+                        child: o.soundOnly
+                            ? const SoundFace()
+                            : Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    '${o.value}',
+                                    style: AppText.fixed(size: spec.tileFont, weight: 800, lineHeight: 1),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  FittedBox(fit: BoxFit.scaleDown, child: Dots(o.value!)),
+                                ],
+                              ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

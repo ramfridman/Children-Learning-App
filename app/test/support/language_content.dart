@@ -25,7 +25,8 @@ Map<String, Object?> textOption(String id, String text, {String? tag, String? cl
 Map<String, Object?> soundOption(String id, String clip, {String? tag, int? value}) => <String, Object?>{
   'id': id,
   'clip': clip,
-  'label': 'button $id',
+  // An option of a count has a value and no label (the schema of `count_tap`).
+  'label': ?(value == null ? 'button $id' : null),
   'value': ?value,
   'misconception': ?tag,
 };

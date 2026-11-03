@@ -74,6 +74,7 @@ void checkLanguageContent({
       );
     }
     _distractors(file, a, tags, say);
+    _countInCourse(file, a, say);
     _decodable(file, a, texts, skills, taughtCache, say);
     _pairs(file, id, a, activities, skills, say);
   });
@@ -241,6 +242,42 @@ void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, O
         file,
         path,
         '$tag is an accent tag: a difference of accent is never marked, so it is never on a distractor',
+      );
+    }
+  }
+}
+
+// ---- count and tap in a course ----
+
+/// Count-and-tap in a course (docs/languages/frame.md section 2.2): the counting taps are practice and never scored, so each plays
+/// a number word and none carries a tag (a counting error is maths, not language, and a course may not use a core tag); the one
+/// scored step, "how many?", is answered on sound buttons that each play a number word.
+void _countInCourse(String file, Map<String, Object?> a, Say say) {
+  if (a['template'] != 'count_tap') return;
+  final Map<String, Object?> objects = _map(_map(a['scene'])['objects']);
+  final List<Object?> clips = (objects['clips'] as List<Object?>?) ?? const <Object?>[];
+  if (clips.isEmpty) {
+    say(file, 'scene.objects.clips', 'a count in a course says a number word for each tap: list its clips');
+  } else if (clips.length != objects['count']) {
+    say(
+      file,
+      'scene.objects.clips',
+      'has ${clips.length} clips for ${objects['count']} objects: one number word for each tap',
+    );
+  }
+  if (_maps(a['traceClassifiers']).isNotEmpty) {
+    say(
+      file,
+      'traceClassifiers',
+      'a counting error is maths, not language: the counting taps are practice and carry no tag in a course',
+    );
+  }
+  for (final (int i, Map<String, Object?> o) in _maps(_map(a['answer'])['options']).indexed) {
+    if (o['clip'] == null) {
+      say(
+        file,
+        'answer.options[$i].clip',
+        'the scored step of a count in a course is on sound buttons: every option needs its clip',
       );
     }
   }

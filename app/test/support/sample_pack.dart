@@ -310,12 +310,29 @@ class SamplePack {
       // A language tag has a kind, and every distractor of a language item carries a tag (L1, the language checks).
       if (d.key.startsWith('misconception')) doc['kind'] = 'diagnostic';
     }
+    // The count of a course is practice with a number word for each tap and sound buttons for "how many?" (frame section 2.2).
+    final Map<String, Object?> count =
+        docs['activity.$course.count.butterflies.3.json']! as Map<String, Object?>;
+    final List<String> numberClips = <String>['vo:n.one', 'vo:n.two', 'vo:n.three'];
+    ((count['scene']! as Map<String, Object?>)['objects']! as Map<String, Object?>)['clips'] = numberClips;
+    count['traceClassifiers'] = <Object?>[];
+    final List<Object?> countOptions =
+        (count['answer']! as Map<String, Object?>)['options']! as List<Object?>;
+    for (final (int i, Object? o) in countOptions.indexed) {
+      (o! as Map<String, Object?>)['clip'] = <String>['vo:n.two', 'vo:n.three', 'vo:n.four'][i];
+    }
     final Map<String, Object?> pick = docs['activity.$course.pick.red.flower.json']! as Map<String, Object?>;
     (((pick['answer']! as Map<String, Object?>)['options']! as List<Object?>)[1]!
             as Map<String, Object?>)['misconception'] =
         '$course.cnt.skip';
     final Map<String, Object?> manifest = walk(base.manifest)! as Map<String, Object?>;
     manifest['course'] = course;
+    (manifest['voPending']! as List<Object?>).addAll(<String>[
+      'vo:n.one',
+      'vo:n.two',
+      'vo:n.three',
+      'vo:n.four',
+    ]);
     return SamplePack._(manifest, docs, <String>{for (final String f in base.files) rename(f)});
   }
 
