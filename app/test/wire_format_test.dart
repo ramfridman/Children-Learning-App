@@ -4,6 +4,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/world_providers.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
@@ -132,5 +133,23 @@ void main() {
     expect(SyncEngine.wireLessonId('mission-NUM-A-03'), 'mission-num-a-03');
     expect(SyncEngine.wireLessonId('butterflies'), 'butterflies');
     expect(SyncEngine.wireLessonId('l' * 41), '');
+  });
+
+  // R2: the number that resets the markers of refused rows is a number of this file. The file is the format; when it changes,
+  // the rows the server refused under the old one deserve another try, so `SyncEngine.currentWireFormat` goes up with it and
+  // the digest of the new file is written here. The engine number of the events is not touched.
+  test('the wire format number follows testvectors/wire-patterns.json: change the file, raise the number', () {
+    const Map<int, String> pinned = <int, String>{
+      1: '7e97bab38490a13af04d450cbc10057dbe948a10abe9a577dd3ba2232df16cf1',
+    };
+    final String digest = sha256.convert(utf8.encode(jsonEncode(wire))).toString();
+    expect(
+      pinned[SyncEngine.currentWireFormat],
+      digest,
+      reason:
+          'testvectors/wire-patterns.json changed (digest $digest): raise SyncEngine.currentWireFormat and add '
+          'the digest under the new number',
+    );
+    expect(pinned.keys.reduce((int a, int b) => a > b ? a : b), SyncEngine.currentWireFormat);
   });
 }

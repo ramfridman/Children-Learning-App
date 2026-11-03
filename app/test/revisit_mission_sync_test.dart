@@ -27,16 +27,17 @@ const String dev1 = 'd1d1d1d1-0000-4000-8000-000000000001';
 const String dev2 = 'd2d2d2d2-0000-4000-8000-000000000002';
 final int noon = DateTime.utc(2026, 11, 20, 12).millisecondsSinceEpoch;
 
-SyncEngine engineFor(AppDatabase db, FakeFamilyServer server, String device, {int version = 1}) => SyncEngine(
-  db: db,
-  call: server.callFor(device),
-  deviceId: device,
-  isParent: true,
-  nowMs: () => noon,
-  engineVersion: version,
-  pageSize: 4,
-  batch: 4,
-);
+SyncEngine engineFor(AppDatabase db, FakeFamilyServer server, String device, {int wireFormat = 1}) =>
+    SyncEngine(
+      db: db,
+      call: server.callFor(device),
+      deviceId: device,
+      isParent: true,
+      nowMs: () => noon,
+      wireFormat: wireFormat,
+      pageSize: 4,
+      batch: 4,
+    );
 
 Future<void> addKid(AppDatabase db) => db.addProfile(
   ProfilesCompanion.insert(
@@ -130,57 +131,52 @@ void main() {
     },
   );
 
-  test(
-    'an award refused under an older format is sent again once, after the engine version changes',
-    () async {
-      final AppDatabase db = AppDatabase(NativeDatabase.memory());
-      addTearDown(db.close);
-      await addKid(db);
-      final FakeFamilyServer server = FakeFamilyServer(checksFormat: true);
-      await db.recordAttempt(
-        AttemptsCompanion.insert(
-          at: DateTime.utc(2026, 11, 20, 10),
-          profileId: kid,
-          packId: 'starter',
-          packVersion: '0.8.0',
-          activityId: 'a.1',
-          activityRevision: 1,
-          template: 'count_tap',
-          templateVersion: '1.0',
-          skillId: 'NUM-A-03',
-          result: 'correct',
-          attemptNo: 1,
-          hintLevel: 0,
-        ),
-      );
-      await db.addReward(
-        RewardsCompanion.insert(
-          profileId: kid,
-          awardKey: 'star:NUM-A-03',
-          kind: 'star',
-          at: DateTime.utc(2026, 11, 20, 11),
-        ),
-      );
-      // A gateway that does not know the award's key: the answer gets in, the award alone is refused and marked.
-      server.forgets = <String>{'key'};
-      await engineFor(db, server, dev1).syncOnce();
-      expect(AppDatabase.wasRefusedBySync((await db.rewardsOf(kid)).single.syncedAt), isTrue);
-      expect(await db.unsyncedAttempts(), isEmpty);
+  test('an award refused under an older format is sent again once, after the wire format changes', () async {
+    final AppDatabase db = AppDatabase(NativeDatabase.memory());
+    addTearDown(db.close);
+    await addKid(db);
+    final FakeFamilyServer server = FakeFamilyServer(checksFormat: true);
+    await db.recordAttempt(
+      AttemptsCompanion.insert(
+        at: DateTime.utc(2026, 11, 20, 10),
+        profileId: kid,
+        packId: 'starter',
+        packVersion: '0.8.0',
+        activityId: 'a.1',
+        activityRevision: 1,
+        template: 'count_tap',
+        templateVersion: '1.0',
+        skillId: 'NUM-A-03',
+        result: 'correct',
+        attemptNo: 1,
+        hintLevel: 0,
+      ),
+    );
+    await engineFor(db, server, dev1).syncOnce();
+    // An award that a gateway refused on its own, as a build of the time marked it (when the answer of the same batch got in).
+    await db.addReward(
+      RewardsCompanion.insert(
+        profileId: kid,
+        awardKey: 'star:NUM-A-03',
+        kind: 'star',
+        at: DateTime.utc(2026, 11, 20, 11),
+      ),
+    );
+    final int star = (await db.rewardsOf(kid)).single.id;
+    await db.markRewardsSynced(<int>[star], AppDatabase.refusedBySync);
 
-      // The right gateway; the same version does not send it again.
-      server.forgets = <String>{};
-      await engineFor(db, server, dev1).syncOnce();
-      expect(AppDatabase.wasRefusedBySync((await db.rewardsOf(kid)).single.syncedAt), isTrue);
-      expect(server.log.where((Map<String, Object?> e) => e['type'] == 'reward'), isEmpty);
+    // The same wire format does not send it again.
+    await engineFor(db, server, dev1).syncOnce();
+    expect(AppDatabase.wasRefusedBySync((await db.rewardsOf(kid)).single.syncedAt), isTrue);
+    expect(server.log.where((Map<String, Object?> e) => e['type'] == 'reward'), isEmpty);
 
-      // A new version sends it once more, and it gets in.
-      final SyncReport r = await engineFor(db, server, dev1, version: 2).syncOnce();
-      expect(r.pushedEvents, 1);
-      expect(r.refusedEvents, 0);
-      final Reward star = (await db.rewardsOf(kid)).single;
-      expect(star.syncedAt, isNotNull);
-      expect(AppDatabase.wasRefusedBySync(star.syncedAt), isFalse);
-      expect(server.log.where((Map<String, Object?> e) => e['type'] == 'reward').length, 1);
-    },
-  );
+    // A new wire format sends it once more, and it gets in.
+    final SyncReport r = await engineFor(db, server, dev1, wireFormat: 2).syncOnce();
+    expect(r.pushedEvents, 1);
+    expect(r.refusedEvents, 0);
+    final Reward sent = (await db.rewardsOf(kid)).single;
+    expect(sent.syncedAt, isNotNull);
+    expect(AppDatabase.wasRefusedBySync(sent.syncedAt), isFalse);
+    expect(server.log.where((Map<String, Object?> e) => e['type'] == 'reward').length, 1);
+  });
 }

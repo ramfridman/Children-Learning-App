@@ -290,19 +290,21 @@ void main() {
     expect(hits, isEmpty, reason: hits.join('\n'));
   }, skip: _open);
 
-  // QA-17 and QA-18 (B-20 re-verification, SEC-12): the format-mismatch brake of the sync engine.
+  // QA-17 and QA-18 (B-20 re-verification, SEC-12): the format-mismatch brake of the sync engine. Fixed in B-20 (a brake per
+  // kind of event, bad rows set aside while the rows after them go on), so these two run in every build.
   group('the sync brake', () {
     const String kid = 'child-aaaa-0001';
     const String dev = 'd1d1d1d1-0000-4000-8000-000000000001';
     late AppDatabase db;
     late FakeFamilyServer server;
+    int clock = DateTime.utc(2026, 11, 20, 12).millisecondsSinceEpoch;
 
     SyncEngine engine() => SyncEngine(
       db: db,
       call: server.callFor(dev),
       deviceId: dev,
       isParent: true,
-      nowMs: () => DateTime.utc(2026, 11, 20, 12).millisecondsSinceEpoch,
+      nowMs: () => clock,
       pageSize: 4,
       batch: 4,
     );
@@ -364,10 +366,12 @@ void main() {
         isEmpty,
         reason: 'answers refused only for a key the gateway does not know were marked refused',
       );
+      // The right gateway is live; the answers go once the wait after the stalled round is over.
       server.forgets = <String>{};
+      clock += SyncEngine.stallBase.inMilliseconds;
       await engine().syncOnce();
       expect(server.log.where((Map<String, Object?> e) => e['type'] == 'attempt').length, 3);
-    }, skip: _open);
+    });
 
     test('QA-18 a full batch of rows the server refuses one by one (here a wrong phone clock, before 2017) does not stop '
         'the answers after them for good (PLAN: one bad row never stops the sync)', () async {
@@ -387,6 +391,6 @@ void main() {
         <String>['a.1', 'a.2'],
         reason: 'the good answers never reach the server while the four bad rows head the queue',
       );
-    }, skip: _open);
+    });
   });
 }

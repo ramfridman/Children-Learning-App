@@ -312,26 +312,40 @@ class AppDatabase extends _$AppDatabase {
   });
 
   /// Answers made on this device that have not been sent yet, oldest first. Those of the children in [except] are left
-  /// out (the sync engine holds them until the server has the child, B-32).
-  Future<List<Attempt>> unsyncedAttempts({int limit = 40, Set<String> except = const <String>{}}) =>
+  /// out (the sync engine holds them until the server has the child, B-32), and so are those numbered [after] or lower
+  /// (the rows of this round that wait for a verdict, QA-18).
+  Future<List<Attempt>> unsyncedAttempts({
+    int limit = 40,
+    Set<String> except = const <String>{},
+    int after = 0,
+  }) =>
       (select(attempts)
             ..where(
-              ($AttemptsTable t) => t.syncedAt.isNull() & t.eventId.isNull() & t.profileId.isNotIn(except),
+              ($AttemptsTable t) =>
+                  t.syncedAt.isNull() &
+                  t.eventId.isNull() &
+                  t.profileId.isNotIn(except) &
+                  t.id.isBiggerThanValue(after),
             )
             ..orderBy(<OrderClauseGenerator<$AttemptsTable>>[(t) => OrderingTerm.asc(t.id)])
             ..limit(limit))
           .get();
 
   /// Visits made on this device that have ended and have not been sent yet, oldest first, without those of the
-  /// children in [except].
-  Future<List<Session>> unsyncedSessions({int limit = 40, Set<String> except = const <String>{}}) =>
+  /// children in [except] and those numbered [after] or lower.
+  Future<List<Session>> unsyncedSessions({
+    int limit = 40,
+    Set<String> except = const <String>{},
+    int after = 0,
+  }) =>
       (select(sessions)
             ..where(
               ($SessionsTable t) =>
                   t.syncedAt.isNull() &
                   t.eventId.isNull() &
                   t.endedAt.isNotNull() &
-                  t.profileId.isNotIn(except),
+                  t.profileId.isNotIn(except) &
+                  t.id.isBiggerThanValue(after),
             )
             ..orderBy(<OrderClauseGenerator<$SessionsTable>>[(t) => OrderingTerm.asc(t.id)])
             ..limit(limit))
@@ -495,10 +509,17 @@ class AppDatabase extends _$AppDatabase {
     rewards,
   )..where(($RewardsTable t) => t.id.isIn(ids))).write(RewardsCompanion(seenAt: Value<DateTime?>(at)));
 
-  /// Awards not sent yet, oldest first, without those of the children in [except].
-  Future<List<Reward>> unsyncedRewards({int limit = 40, Set<String> except = const <String>{}}) =>
+  /// Awards not sent yet, oldest first, without those of the children in [except] and those numbered [after] or lower.
+  Future<List<Reward>> unsyncedRewards({
+    int limit = 40,
+    Set<String> except = const <String>{},
+    int after = 0,
+  }) =>
       (select(rewards)
-            ..where(($RewardsTable t) => t.syncedAt.isNull() & t.profileId.isNotIn(except))
+            ..where(
+              ($RewardsTable t) =>
+                  t.syncedAt.isNull() & t.profileId.isNotIn(except) & t.id.isBiggerThanValue(after),
+            )
             ..orderBy(<OrderingTerm Function($RewardsTable)>[($RewardsTable t) => OrderingTerm.asc(t.id)])
             ..limit(limit))
           .get();

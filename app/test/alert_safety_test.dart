@@ -148,7 +148,7 @@ void main() {
     });
     tearDown(() => db.close());
 
-    SyncEngine engine(Set<String> categories, {int version = 1, bool down = false}) => SyncEngine(
+    SyncEngine engine(Set<String> categories, {int wireFormat = 1, bool down = false}) => SyncEngine(
       db: db,
       call: (String name, Map<String, Object?> body) async {
         if (name != 'alert-create') return <String, Object?>{};
@@ -164,7 +164,7 @@ void main() {
       deviceId: dev,
       isParent: false,
       nowMs: () => noon.millisecondsSinceEpoch,
-      engineVersion: version,
+      wireFormat: wireFormat,
       batch: 4,
     );
 
@@ -224,10 +224,10 @@ void main() {
         expect(
           tried.where((Map<String, Object?> a) => a['key'] == 'words:1').length,
           2,
-          reason: 'not again this version',
+          reason: 'not again under this wire format',
         );
-        // A new version of the app sends what was refused once more (the gateway is right by then).
-        await engine(server, version: 2).syncOnce();
+        // A new wire format sends what was refused once more (the gateway is right by then).
+        await engine(server, wireFormat: 2).syncOnce();
         expect(stored.map((Map<String, Object?> a) => a['key']), contains('words:1'));
       },
     );
