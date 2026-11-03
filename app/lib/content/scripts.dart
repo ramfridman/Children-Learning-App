@@ -1,7 +1,7 @@
 import '../engine/course.dart';
 
 // The scripts of the language courses and the rules for the text a pack shows in one (docs/languages/frame.md section 2.1, F5):
-// English is Latin only, Russian is Cyrillic with ё and a stress mark (U+0301) only after a vowel, Hebrew is Hebrew letters and
+// English is Latin only, Russian is Cyrillic with yo (U+0451) and a stress mark (U+0301) only after a vowel, Hebrew is Hebrew letters and
 // nikud. A letter of another script that looks like one of the course's own is named, because that is the mistake an author
 // makes without seeing it. Pure functions of a string: they read the text, never the pack.
 //
@@ -31,14 +31,14 @@ List<String> textProblems(String course, String text) {
     } else if (r >= 0x30 && r <= 0x39) {
       say('has the digit ${String.fromCharCode(r)}: a number in a tile is written as a word');
     } else if (r == _diaeresis) {
-      say('has a separate diaeresis (${_name(r)}): write ё as one letter');
+      say('has a separate diaeresis (${_name(r)}): write the letter yo (U+0451) as one letter');
     } else if (r == _stress) {
       if (course != Course.rus) {
         say('has a stress mark (${_name(r)}), which only a Russian text may carry');
       } else if (i == 0 || !_russianVowels.contains(runes[i - 1])) {
         say('has a stress mark (${_name(r)}) that is not after a vowel');
       } else if (runes[i - 1] == _yoLower || runes[i - 1] == _yoUpper) {
-        say('has a stress mark after ё, which is always stressed already');
+        say('has a stress mark after yo (U+0451), which is always stressed already');
       }
     } else {
       final String? own = _foreignLetter(course, r);
@@ -129,7 +129,7 @@ const int _gershayim = 0x05F4;
 /// exclamation and question marks.
 const Set<int> _allowedPunctuation = <int>{0x20, 0x27, 0x2D, 0x2E, 0x2C, 0x3A, 0x21, 0x3F};
 
-/// The Russian vowel letters, both cases, ё apart (it takes no mark).
+/// The Russian vowel letters, both cases, yo (U+0451) apart (it takes no mark).
 final Set<int> _russianVowels = <int>{
   for (final int r in <int>[0x430, 0x435, 0x438, 0x43E, 0x443, 0x44B, 0x44D, 0x44E, 0x44F]) ...<int>[
     r,
@@ -189,7 +189,7 @@ String? _foreignLetter(String course, int r) {
   }
   return switch (course) {
     Course.eng => 'has the $shown: English is written with the letters a to z',
-    Course.rus => 'has the $shown: Russian is written with Cyrillic letters (А to я and ё)',
+    Course.rus => 'has the $shown: Russian is written with the Cyrillic letters of its alphabet',
     Course.heb => 'has the $shown: Hebrew is written with Hebrew letters and nikud',
     _ => 'has the $shown, which no language course writes',
   };
@@ -211,29 +211,29 @@ String? _lookAlike(String course, int r) {
 
 /// Cyrillic letters that look the same as a Latin letter in the teaching font (Cyrillic code point, Latin code point).
 const Map<int, int> _cyrillicToLatin = <int, int>{
-  0x430: 0x61, // а a
-  0x435: 0x65, // е e
-  0x43E: 0x6F, // о o
-  0x440: 0x70, // р p
-  0x441: 0x63, // с c
-  0x443: 0x79, // у y
-  0x445: 0x78, // х x
-  0x456: 0x69, // і i
-  0x458: 0x6A, // ј j
-  0x455: 0x73, // ѕ s
-  0x410: 0x41, // А A
-  0x412: 0x42, // В B
-  0x415: 0x45, // Е E
-  0x41A: 0x4B, // К K
-  0x41C: 0x4D, // М M
-  0x41D: 0x48, // Н H
-  0x41E: 0x4F, // О O
-  0x420: 0x50, // Р P
-  0x421: 0x43, // С C
-  0x422: 0x54, // Т T
-  0x425: 0x58, // Х X
-  0x423: 0x59, // У Y
-  0x406: 0x49, // І I
-  0x408: 0x4A, // Ј J
-  0x405: 0x53, // Ѕ S
+  0x430: 0x61, // looks like a
+  0x435: 0x65, // looks like e
+  0x43E: 0x6F, // looks like o
+  0x440: 0x70, // looks like p
+  0x441: 0x63, // looks like c
+  0x443: 0x79, // looks like y
+  0x445: 0x78, // looks like x
+  0x456: 0x69, // looks like i
+  0x458: 0x6A, // looks like j
+  0x455: 0x73, // looks like s
+  0x410: 0x41, // looks like A
+  0x412: 0x42, // looks like B
+  0x415: 0x45, // looks like E
+  0x41A: 0x4B, // looks like K
+  0x41C: 0x4D, // looks like M
+  0x41D: 0x48, // looks like H
+  0x41E: 0x4F, // looks like O
+  0x420: 0x50, // looks like P
+  0x421: 0x43, // looks like C
+  0x422: 0x54, // looks like T
+  0x425: 0x58, // looks like X
+  0x423: 0x59, // looks like Y
+  0x406: 0x49, // looks like I
+  0x408: 0x4A, // looks like J
+  0x405: 0x53, // looks like S
 };
