@@ -46,6 +46,14 @@ sources written in the generator), original characters only.
 | The neighbour | Russian A-01.06, .07 | A friendly older grown-up (not family): grey bun, a shopping bag with a loaf, a coat. | New, 2 pictures. |
 | A girl, a boy | Russian (де́вочка, ма́льчик, "about 5, alone, not from the family"); Hebrew (יַלְדָּה, a girl singing) | Two children of about 5, different skin tones from Mika and the family. | 3 pictures (the Hebrew girl is a singing pose). |
 
+**Model sheet (batch 3, step 1, waiting for the owner):** `docs/design/languages/characters_model_sheet.png`, made by
+`tools/make_language_characters.py`. Mika, Pip and Sasha each in front and side view with three expressions (happy,
+thinking, a soft frown with no tear); the shared family (grandfather with a cane and a flat cap, grandmother with round
+glasses, father, mother, sister and brother about 9, Mika, the baby; five skin tones, a mixed family) from the front and
+the side, every face in the three expressions; the same people as the family shapes of the personal turns (two parents,
+one parent, grandparents, siblings); everyone at 64 px. The people use the cast's faces with the objects' thin ink
+outline; Pip and Sasha keep their door art's look. None of the 60 people pictures is drawn until the owner approves it.
+
 ## 3. Batch 1: the 40 objects used by the most items (drawn)
 
 Counted by script over the item tables (English §4 and Russian §4 by picture id; Hebrew §4 and §5 by the word, so the
