@@ -118,6 +118,14 @@ Deno.test("content-publish: the shape is strict", async () => {
   await bad({ ...goodBody(), extra: 1 }, "unknown top-level field");
   await bad(goodBody({ pack_id: "Starter!" }), "pack id");
   await bad(goodBody({ pack_version: "1.0" }), "pack version");
+  // A skill of a language course is never published either, whatever the pack is called (SEC-L0-4).
+  for (const skill of ["ENG-A-01", "HEB-B-14", "RUS-C-08"]) {
+    await bad(goodBody({ items: [{ ...goodItem(), skill_ids: [skill] }] }), `an item of ${skill}`);
+    await bad(
+      goodBody({ misconceptions: [{ tag: "M-CNT-SKIP", skill_ids: [skill], description: "x" }] }),
+      `a misconception of ${skill}`,
+    );
+  }
   // A language course's pack is never published: the AI tutor is off in language lessons.
   for (const lang of ["lang-eng", "lang-heb", "lang-rus", "lang-xyz"]) {
     await bad(goodBody({ pack_id: lang }), `the pack of a language course (${lang})`);

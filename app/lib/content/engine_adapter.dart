@@ -1,4 +1,5 @@
 import '../data/app_database.dart';
+import '../engine/course.dart';
 import '../engine/engine.dart';
 import '../engine/gates.dart';
 import '../engine/state.dart';
@@ -96,6 +97,8 @@ AttemptEvent eventOf(Attempt row) => AttemptEvent(
   tag: row.misconceptionTag,
   sessionId: row.sessionId,
   attemptNo: row.attemptNo,
+  // The course of the pack the answer was given in; a `lang-` id that names no course matches no item at all.
+  course: Course.ofPackId(row.packId) ?? '',
 );
 
 /// What the engine concluded about one child, as plain text for the developer page.

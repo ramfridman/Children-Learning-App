@@ -93,10 +93,19 @@ function checkLanguages(value: unknown, bad: (why: string) => GatewayError): voi
     }
   }
 }
+/**
+ * The most bytes the document may take as UTF-8 JSON. The table holds at most 12,288 bytes of `jsonb` (`pg_column_size`), which is
+ * the text plus the structure; 10,000 leaves room, so a document that passes here can always be stored, and a parent who
+ * writes too much gets a 400 instead of a 500 (SEC-L0-3). The characters of `rules_json` are counted too (the shape), but a
+ * promise of emoji is four bytes a character.
+ */
+export const MAX_RULES_BYTES = 10_000;
+
 /** Throws `bad_request` unless [rules] is a settings document the app can read. */
 export function checkRules(rules: unknown): Record<string, unknown> {
   const bad = (why: string) => new GatewayError("bad_request", `rules_${why}`);
   if (!isObject(rules)) throw bad("not_object");
+  if (new TextEncoder().encode(JSON.stringify(rules)).length > MAX_RULES_BYTES) throw bad("too_large");
   for (const [key, value] of Object.entries(rules)) {
     switch (key) {
       case "limitByBand":

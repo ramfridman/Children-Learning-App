@@ -973,6 +973,7 @@ class SyncEngine {
       final String? course = Course.ofAnswer(
         skillId: d['skill_id']! as String,
         packId: d['pack_id']! as String,
+        activityId: d['activity_id']! as String,
         tag: d['misconception_tag'] as String? ?? '',
         course: d['course'] as String?,
       );

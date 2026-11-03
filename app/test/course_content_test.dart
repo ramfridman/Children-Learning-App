@@ -56,6 +56,12 @@ class Broken {
 
 final List<Broken> _cases = <Broken>[
   Broken(
+    'SEC-L0-2: a gate of a language pack that does not say its course',
+    (SamplePack p) => (p.docs[_gateFile]! as Map<String, Object?>).remove('course'),
+    'gate.eng.oral.json › course',
+    'says it on every document',
+  ),
+  Broken(
     'a gate that requires a skill that is not in the pack',
     (SamplePack p) => p.docs[_gateFile] = _gate(requires: <Object?>['ENG-A-09']),
     'gate.eng.oral.json › skills',

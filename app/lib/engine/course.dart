@@ -52,16 +52,28 @@ abstract final class Course {
     return core;
   }
 
-  /// The course an answer belongs to, read from every field that names one: its skill, its pack, its misconception tag and the
-  /// course it says itself. Null when they disagree: such an answer is damaged or forged, and evidence never crosses courses.
+  /// The course an activity or a lesson id belongs to: a language course's ids begin with `<course>.` (`eng.greet.i01`), so no two
+  /// courses, and no course and the lands, ever share an id; every other id is `core`.
+  static String ofActivityId(String id) {
+    for (final String c in languages) {
+      if (id.startsWith('$c.')) return c;
+    }
+    return core;
+  }
+
+  /// The course an answer belongs to, read from every field that names one: its skill, its pack, its activity, its misconception
+  /// tag and the course it says itself. Null when they disagree: such an answer is damaged or forged, and evidence never crosses
+  /// courses.
   static String? ofAnswer({
     required String skillId,
     required String packId,
+    String activityId = '',
     String tag = '',
     String? course,
   }) {
     final String own = ofSkillId(skillId);
     if (ofPackId(packId) != own) return null;
+    if (activityId.isNotEmpty && ofActivityId(activityId) != own) return null;
     if (tag.isNotEmpty && ofTag(tag) != own) return null;
     if (course != null && course != own) return null;
     return own;

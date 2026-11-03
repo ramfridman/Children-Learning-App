@@ -271,7 +271,8 @@ class SamplePack {
 
   /// The same small pack as a pack of a language [course] (not real content): the course on the manifest and on every
   /// skill, activity, lesson and misconception; skills `ENG-A-01` and `ENG-A-02`; tags `eng.cnt.double`, `eng.cnt.skip`
-  /// and `eng.cnt.card`; the domain `languages`; the pack id `lang-eng`. Change it in place, as with [SamplePack.new].
+  /// and `eng.cnt.card`; activities `eng.count.butterflies.3`, `eng.pick.red.flower` and `eng.give.three.jar` and the lesson
+  /// `eng.butterflies` (ids carry their course); the domain `languages`; the pack id `lang-eng`. Change it in place, as with [SamplePack.new].
   factory SamplePack.language([String course = 'eng']) {
     final SamplePack base = SamplePack();
     final String up = course.toUpperCase();
@@ -281,9 +282,19 @@ class SamplePack {
         .replaceAll('M-CNT-DOUBLE', '$course.cnt.double')
         .replaceAll('M-CNT-SKIP', '$course.cnt.skip')
         .replaceAll('M-CNT-CARD', '$course.cnt.card')
-        .replaceAll('sample-pack', 'lang-$course');
+        .replaceAll('sample-pack', 'lang-$course')
+        // Activity and lesson ids carry their course (SEC-L0-1).
+        .replaceAll('count.butterflies.3', '$course.count.butterflies.3')
+        .replaceAll('pick.red.flower', '$course.pick.red.flower')
+        .replaceAll('give.three.jar', '$course.give.three.jar')
+        .replaceAll('lesson.butterflies.json', 'lesson.$course.butterflies.json');
     Object? walk(Object? v) => switch (v) {
-      final String s => v == 'numbers' ? 'languages' : rename(s),
+      final String s =>
+        v == 'numbers'
+            ? 'languages'
+            : s == 'butterflies'
+            ? '$course.butterflies'
+            : rename(s),
       final List<Object?> l => <Object?>[for (final Object? e in l) walk(e)],
       final Map<String, Object?> m => <String, Object?>{
         for (final MapEntry<String, Object?> e in m.entries) rename(e.key): walk(e.value),

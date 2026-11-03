@@ -11,8 +11,8 @@ import 'package:nitznutz/engine/types.dart';
 import 'engine/course_fixtures.dart';
 import 'support/sample_pack.dart';
 
-const String _count = 'activity.count.butterflies.3.json';
-const String _lesson = 'lesson.butterflies.json';
+const String _count = 'activity.eng.count.butterflies.3.json';
+const String _lesson = 'lesson.eng.butterflies.json';
 const String _skill1 = 'skill.ENG-A-01.json';
 const String _skill2 = 'skill.ENG-A-02.json';
 const String _tag1 = 'misconception.eng.cnt.double.json';
@@ -80,13 +80,13 @@ final List<Broken> _eng = <Broken>[
   Broken(
     'a document of another course in the pack',
     (SamplePack p) => p.doc(_count)['course'] = 'rus',
-    'activity.count.butterflies.3.json › course',
+    'activity.eng.count.butterflies.3.json › course',
     'a pack holds one course',
   ),
   Broken(
     'a lesson of another course in the pack',
     (SamplePack p) => p.doc(_lesson)['course'] = 'heb',
-    'lesson.butterflies.json › course',
+    'lesson.eng.butterflies.json › course',
     'a pack holds one course',
   ),
   Broken(
@@ -122,13 +122,13 @@ final List<Broken> _eng = <Broken>[
   Broken(
     '2: an item that gives evidence for a skill of another course',
     (SamplePack p) => _l(p.doc(_count)['skills'])[0] = <String, Object?>{'id': 'HEB-A-01', 'weight': 1},
-    'activity.count.butterflies.3.json › skills[0].id',
+    'activity.eng.count.butterflies.3.json › skills[0].id',
     'evidence never crosses courses',
   ),
   Broken(
     '2: an item that gives evidence for a skill of core',
     (SamplePack p) => _l(p.doc(_count)['skills']).add(<String, Object?>{'id': 'NUM-A-03', 'weight': 0.5}),
-    'activity.count.butterflies.3.json › skills[1].id',
+    'activity.eng.count.butterflies.3.json › skills[1].id',
     'evidence never crosses courses',
   ),
   Broken(
@@ -152,7 +152,7 @@ final List<Broken> _eng = <Broken>[
   Broken(
     '2: an item or feedback that names a tag the pack does not have (a tag of another course)',
     (SamplePack p) => p.doc(_count)['contradicts'] = 'rus.cnt.double',
-    'activity.count.butterflies.3.json › contradicts',
+    'activity.eng.count.butterflies.3.json › contradicts',
     'not in the misconception catalogue of this pack',
   ),
   Broken(
@@ -164,7 +164,7 @@ final List<Broken> _eng = <Broken>[
   Broken(
     '5: a lesson that mixes courses (a skill of another course)',
     (SamplePack p) => _l(p.doc(_lesson)['skills']).add('RUS-A-01'),
-    'lesson.butterflies.json › skills[1]',
+    'lesson.eng.butterflies.json › skills[1]',
     'is not a skill of the course eng',
   ),
   Broken(
@@ -176,7 +176,7 @@ final List<Broken> _eng = <Broken>[
   Broken(
     'a language activity outside the domain languages',
     (SamplePack p) => p.doc(_count)['domain'] = 'colors',
-    'activity.count.butterflies.3.json › domain',
+    'activity.eng.count.butterflies.3.json › domain',
     'must be languages in the language course eng',
   ),
   Broken(
@@ -186,9 +186,45 @@ final List<Broken> _eng = <Broken>[
     'must be ENG-<BAND>-<NN>',
   ),
   Broken(
+    'SEC-L0-1: a language activity whose id does not begin with its course',
+    (SamplePack p) {
+      final Map<String, Object?> doc = p.docs.remove(_count)! as Map<String, Object?>;
+      p.files.remove(_count);
+      (p.manifest['files']! as List<Object?>).removeWhere(
+        (Object? f) => (f! as Map<String, Object?>)['name'] == _count,
+      );
+      ((p.manifest['entries']! as Map<String, Object?>)['activities']! as List<Object?>).remove(
+        'eng.count.butterflies.3',
+      );
+      _add(p, 'activity.count.butterflies.3.json', 'activities', 'count.butterflies.3', <String, Object?>{
+        ...doc,
+        'id': 'count.butterflies.3',
+      });
+    },
+    'activity.count.butterflies.3.json › id',
+    'must begin with "eng."',
+  ),
+  Broken(
+    'SEC-L0-1: a language lesson whose id does not begin with its course',
+    (SamplePack p) {
+      final Map<String, Object?> doc = p.docs.remove(_lesson)! as Map<String, Object?>;
+      p.files.remove(_lesson);
+      (p.manifest['files']! as List<Object?>).removeWhere(
+        (Object? f) => (f! as Map<String, Object?>)['name'] == _lesson,
+      );
+      ((p.manifest['entries']! as Map<String, Object?>)['lessons']! as List<Object?>).clear();
+      _add(p, 'lesson.butterflies.json', 'lessons', 'butterflies', <String, Object?>{
+        ...doc,
+        'id': 'butterflies',
+      });
+    },
+    'lesson.butterflies.json › id',
+    'must begin with "eng."',
+  ),
+  Broken(
     'the AI tutor allowed in a language activity',
     (SamplePack p) => _m(p.doc(_count)['tutor'])['llmAllowed'] = true,
-    'activity.count.butterflies.3.json › tutor.llmAllowed',
+    'activity.eng.count.butterflies.3.json › tutor.llmAllowed',
     'the AI tutor is off in language lessons',
   ),
   Broken(
@@ -219,7 +255,7 @@ final List<Broken> _eng = <Broken>[
     (SamplePack p) {
       _addSkill(p, 'ENG-A-01.G1');
     },
-    'activity.count.butterflies.3.json › skills[0].id',
+    'activity.eng.count.butterflies.3.json › skills[0].id',
     'is a roll-up with no estimate of its own',
   ),
 ];
@@ -236,10 +272,10 @@ void main() {
       _addSkill(p, 'ENG-A-01.G2');
       p.doc(_skill1)['prerequisites'] = <Object?>[];
       _l(p.doc(_count)['skills'])[0] = <String, Object?>{'id': 'ENG-A-01.G1', 'weight': 1};
-      p.doc('activity.pick.red.flower.json')['skills'] = <Object?>[
+      p.doc('activity.eng.pick.red.flower.json')['skills'] = <Object?>[
         <String, Object?>{'id': 'ENG-A-01.G2', 'weight': 1},
       ];
-      p.doc('activity.give.three.jar.json')['skills'] = <Object?>[
+      p.doc('activity.eng.give.three.jar.json')['skills'] = <Object?>[
         <String, Object?>{'id': 'ENG-A-01.G2', 'weight': 1},
       ];
       p.doc(_lesson)['skills'] = <Object?>['ENG-A-01.G1', 'ENG-A-01.G2'];
@@ -295,6 +331,30 @@ void main() {
               x.message.contains('not a misconception tag of the course core'),
         ),
         isNotEmpty,
+      );
+    });
+
+    test("SEC-L0-1: a core pack's activity ids never begin with a language course", () {
+      final SamplePack p = SamplePack();
+      final Map<String, Object?> doc = p.docs.remove(countFile)! as Map<String, Object?>;
+      p.files.remove(countFile);
+      (p.manifest['files']! as List<Object?>).removeWhere(
+        (Object? f) => (f! as Map<String, Object?>)['name'] == countFile,
+      );
+      ((p.manifest['entries']! as Map<String, Object?>)['activities']! as List<Object?>).remove(
+        'count.butterflies.3',
+      );
+      _add(p, 'activity.eng.count.json', 'activities', 'eng.count', <String, Object?>{
+        ...doc,
+        'id': 'eng.count',
+      });
+      expect(
+        _run(p).where(
+          (Problem x) =>
+              x.path == 'activity.eng.count.json › id' && x.message.contains('belong to the language packs'),
+        ),
+        isNotEmpty,
+        reason: _run(p).join('\n'),
       );
     });
 

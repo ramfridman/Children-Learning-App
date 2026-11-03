@@ -8,6 +8,7 @@ import 'package:nitznutz/content/schema.dart';
 import 'package:nitznutz/content/schemas.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/engine/course.dart';
+import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/engine/types.dart';
 import 'package:nitznutz/parent/progress.dart';
 import 'package:nitznutz/world/placement.dart';
@@ -201,6 +202,108 @@ void main() {
         expect(b.skills.length, 3, reason: b.key);
         expect(b.skills.every((SkillRow s) => Course.ofSkillId(s.id) == b.course), isTrue, reason: b.key);
       }
+    });
+  });
+
+  group('SEC-L0-1: evidence never crosses courses, even with an id in common', () {
+    Catalog eng() => Catalog(
+      skills: const <SkillNode>[SkillNode(id: 'ENG-A-01', course: Course.eng)],
+      items: const <ItemMeta>[
+        ItemMeta(id: 'count.butterflies.3', course: Course.eng, skills: <String, double>{'ENG-A-01': 1}),
+      ],
+    );
+
+    test('an answer given in the lands is no evidence for a language item that has the same activity id', () {
+      final Engine e = Engine(catalog: eng())
+        ..replay(<AttemptEvent>[
+          for (int i = 0; i < 6; i++)
+            AttemptEvent(
+              id: i + 1,
+              at: DateTime.utc(2026, 11, 3, 10, i),
+              activityId: 'count.butterflies.3',
+              result: Result.correct,
+              course: Course.core,
+            ),
+        ]);
+      expect(e.state.skills['ENG-A-01']?.started ?? false, isFalse);
+    });
+
+    test(
+      "its own course's answer is, and so is one that does not say its course (the simulator, a test)",
+      () {
+        for (final String? course in <String?>[Course.eng, null]) {
+          final Engine e = Engine(catalog: eng())
+            ..apply(
+              AttemptEvent(
+                at: DateTime.utc(2026, 11, 3),
+                activityId: 'count.butterflies.3',
+                result: Result.correct,
+                course: course,
+              ),
+            );
+          expect(e.state.skills['ENG-A-01']!.started, isTrue, reason: '$course');
+        }
+      },
+    );
+
+    test(
+      'the rows of the database say their course through their pack: eventOf, for every reader of them',
+      () {
+        Attempt row(String pack) => Attempt(
+          id: 1,
+          at: DateTime.utc(2026, 11, 3),
+          profileId: 'p-1',
+          packId: pack,
+          packVersion: '1.0.0',
+          lessonId: '',
+          activityId: 'count.butterflies.3',
+          activityRevision: 1,
+          template: 'count_tap',
+          templateVersion: '1.0',
+          skillId: 'NUM-A-03',
+          result: 'correct',
+          attemptNo: 1,
+          hintLevel: 0,
+          misconceptionTag: '',
+          response: '',
+          durationMs: 0,
+          input: 'tap',
+        );
+        expect(eventOf(row('starter')).course, 'core');
+        expect(eventOf(row('lang-rus')).course, 'rus');
+        expect(eventOf(row('lang-xyz')).course, '', reason: 'a pack that names no course matches no item');
+        // The core engine, which replays every row of the child, takes only the lands' rows.
+        final Catalog core = Catalog(
+          skills: const <SkillNode>[SkillNode(id: 'NUM-A-03')],
+          items: const <ItemMeta>[
+            ItemMeta(id: 'count.butterflies.3', skills: <String, double>{'NUM-A-03': 1}),
+          ],
+        );
+        final Engine e = Engine(catalog: core)
+          ..replay(<AttemptEvent>[eventOf(row('lang-eng')), eventOf(row('lang-xyz'))]);
+        expect(e.state.skills, isEmpty);
+        expect(
+          (Engine(catalog: core)..replay(<AttemptEvent>[eventOf(row('starter'))])).state.skills.keys,
+          <String>['NUM-A-03'],
+        );
+      },
+    );
+
+    test('an activity id says its course, and the pull guard looks at it', () {
+      expect(Course.ofActivityId('eng.greet.i01'), 'eng');
+      expect(Course.ofActivityId('rus.a'), 'rus');
+      expect(Course.ofActivityId('count.butterflies.3'), 'core');
+      expect(Course.ofActivityId('english.x'), 'core');
+      expect(Course.ofAnswer(skillId: 'ENG-A-01', packId: 'lang-eng', activityId: 'eng.greet.i01'), 'eng');
+      expect(
+        Course.ofAnswer(skillId: 'ENG-A-01', packId: 'lang-eng', activityId: 'count.butterflies.3'),
+        isNull,
+      );
+      expect(Course.ofAnswer(skillId: 'NUM-A-03', packId: 'starter', activityId: 'eng.greet.i01'), isNull);
+      expect(
+        Course.ofAnswer(skillId: 'NUM-A-03', packId: 'starter', activityId: 'count.butterflies.3'),
+        'core',
+      );
     });
   });
 

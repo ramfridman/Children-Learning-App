@@ -26,7 +26,7 @@ void main() {
     final FakeTutorClient client = FakeTutorClient();
     final LessonController c = LessonController(
       content: content,
-      lesson: content.lessons['butterflies']!,
+      lesson: content.lessons.values.single,
       profileId: 'p-1',
       clock: FixedClock(1793000000000),
       record: (AttemptRecord r) async {},
@@ -53,9 +53,13 @@ void main() {
   }
 
   /// The count activity is the second item of the fixture lesson; the lesson opens on it for this test.
-  PackContent countFirst(SamplePack p) {
-    final Map<String, Object?> lesson = p.doc('lesson.butterflies.json');
-    lesson['items'] = <Object?>['count.butterflies.3', 'pick.red.flower', 'give.three.jar'];
+  PackContent countFirst(SamplePack p, {String prefix = ''}) {
+    final Map<String, Object?> lesson = p.doc('lesson.${prefix}butterflies.json');
+    lesson['items'] = <Object?>[
+      '${prefix}count.butterflies.3',
+      '${prefix}pick.red.flower',
+      '${prefix}give.three.jar',
+    ];
     return _tutorFriendly(p);
   }
 
@@ -68,7 +72,7 @@ void main() {
     test(
       '$course: no line is asked for, ahead of time or after a mistake, and the authored help is used',
       () async {
-        final PackContent content = countFirst(SamplePack.language(course));
+        final PackContent content = countFirst(SamplePack.language(course), prefix: '$course.');
         expect(content.activities.values.every((Activity a) => !a.llmAllowed), isTrue);
         final (LessonController c, FakeTutorClient client) = await play(content);
         expect(client.asked, isEmpty, reason: 'not a question, not a prefetch');

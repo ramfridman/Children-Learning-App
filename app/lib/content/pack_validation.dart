@@ -1006,6 +1006,20 @@ void _courseRules({
 
   bool ownSkill(String id) => Course.ofSkillId(id) == course;
 
+  // Activity and lesson ids carry their course: `eng.greet.i01`. Two packs can then never share an id, and an answer is evidence
+  // for its own pack's item only (SEC-L0-1).
+  void ownId(String file, String id) {
+    if (Course.ofActivityId(id) != course) {
+      say(
+        file,
+        'id',
+        language
+            ? '"$id" must begin with "$course." (an id of a language course carries its course)'
+            : '"$id" begins with a language course; those ids belong to the language packs',
+      );
+    }
+  }
+
   // Which skills are roll-ups: those that have dotted groups. A roll-up has no estimate of its own.
   final Set<String> rollUps = <String>{for (final String id in skillIds) ?SkillIds.parentOf(id)};
 
@@ -1061,6 +1075,7 @@ void _courseRules({
   activities.forEach((String id, Map<String, Object?> a) {
     final String file = 'activity.$id.json';
     sameCourse(file, a);
+    ownId(file, id);
     domain(file, a);
     for (final (int i, Map<String, Object?> s) in _maps(a['skills']).indexed) {
       final Object? skill = s['id'];
@@ -1084,6 +1099,7 @@ void _courseRules({
   lessons.forEach((String id, Map<String, Object?> l) {
     final String file = 'lesson.$id.json';
     sameCourse(file, l);
+    ownId(file, id);
     for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
       if (s is String && !ownSkill(s)) say(file, 'skills[$i]', '$s is not a skill of the course $course');
     }
@@ -1153,11 +1169,12 @@ void _bundlesAndGates({
 
   gates.forEach((String id, Map<String, Object?> g) {
     final String file = 'gate.$id.json';
-    if (g['course'] != null && g['course'] != course) {
+    // A gate of a language pack carries its course like every other document of it (it is never read as core by default).
+    if ((Course.isLanguage(course) ? g['course'] : g['course'] ?? Course.core) != course) {
       say(
         file,
         'course',
-        'is ${g['course']}, but the pack is of the course $course (a pack holds one course)',
+        'is ${g['course']}, but the pack is of the course $course (a pack holds one course, and says it on every document)',
       );
     }
     if (!id.startsWith('$course.')) say(file, 'id', '"$id" must begin with "$course."');

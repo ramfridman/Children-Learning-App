@@ -204,11 +204,17 @@ class AttemptEvent {
     this.sessionId,
     this.attemptNo = 1,
     this.id = 0,
+    this.course,
   });
 
   final int id;
   final DateTime at;
   final String activityId;
+
+  /// The course of the pack the answer was given in, when it is known (the app's rows always know it). An answer of another
+  /// course than its item's is no evidence for that item: two packs that share an activity id never share evidence
+  /// (docs/languages/frame.md section 1.5, invariant 3). Null: not said, and the answer is taken as it is (tests, simulator).
+  final String? course;
   final Result result;
   final int hintLevel;
   final String tag;

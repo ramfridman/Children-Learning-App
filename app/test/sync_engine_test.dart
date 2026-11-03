@@ -240,7 +240,7 @@ void main() {
         'at': noon,
         'engine': 1,
         'type': 'attempt',
-        'seq': 100 + int.parse(n),
+        'seq': 100 + int.parse(n, radix: 16),
         'device_id': dev1,
         'data': <String, Object?>{
           'activity_id': 'eng.x$n',
@@ -265,6 +265,14 @@ void main() {
         event('6', <String, Object?>{'misconception_tag': 'M-CNT-DOUBLE'}),
         event('7', <String, Object?>{'pack_id': 'lang-xyz'}),
         event('8', <String, Object?>{'course': 'core'}),
+        // SEC-L0-1: every field says the language except the activity id, which is a land's item; or the reverse.
+        event('a', <String, Object?>{'activity_id': 'count.butterflies.3'}),
+        event('b', <String, Object?>{
+          'activity_id': 'eng.x1',
+          'pack_id': 'starter',
+          'skill_id': 'NUM-A-03',
+          'course': 'core',
+        }),
       ];
       final Map<String, Object?> good = event('9', <String, Object?>{'misconception_tag': 'eng.ph.dir'});
       strict.log.addAll(<Map<String, Object?>>[...forged, good]);

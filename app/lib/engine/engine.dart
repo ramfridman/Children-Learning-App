@@ -58,6 +58,8 @@ class Engine {
   void apply(AttemptEvent e) {
     final ItemMeta? item = catalog.items[e.activityId];
     if (item == null) return;
+    // Evidence never crosses courses, even when two packs use the same activity id.
+    if (e.course != null && e.course != item.course) return;
     state.lastEventAt = e.at;
     final bool probe = item.purpose == Purpose.probe;
     final int day = dayKey(e.at);

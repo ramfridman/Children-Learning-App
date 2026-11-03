@@ -14,6 +14,7 @@ import 'package:nitznutz/engine/course.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/engine/types.dart';
 import 'package:nitznutz/rewards/award.dart';
+import 'package:nitznutz/strings/he.dart';
 import 'package:nitznutz/world/adventure_adapter.dart';
 import 'package:nitznutz/world/adventure_land.dart';
 import 'package:nitznutz/world/todays_adventure.dart';
@@ -157,9 +158,14 @@ void main() {
       }
     });
 
-    test('the home island has no words for a language yet: the bubble stays calm', () {
-      expect(adventureLine(TodaysAdventure.lesson(eng, 'e1', AdventureReason.welcome)), isNull);
-      expect(adventureLine(TodaysAdventure.revisit(rus, 'RUS-A-01')), isNull);
+    test('a stop in a language has one line for each language, whatever the reason, with no variable', () {
+      final AdventureLine? e = adventureLine(TodaysAdventure.lesson(eng, 'e1', AdventureReason.welcome));
+      expect(e!.text, He.adventureLangEnglish.text);
+      expect(adventureLine(TodaysAdventure.revisit(rus, 'RUS-A-01'))!.text, He.adventureLangRussian.text);
+      expect(adventureLine(TodaysAdventure.replay(heb, 'h1'))!.text, He.adventureLangHebrew.text);
+      expect(adventureLine(TodaysAdventure.lesson(eng, 'e2', AdventureReason.sameLand))!.text, e.text);
+      expect(e.text.contains('{'), isFalse);
+      expect(e.voice, 'vo:core.adventure.lang.eng');
       expect(
         adventureLine(TodaysAdventure.lesson(TrophyLand.counting, 'n1', AdventureReason.welcome)),
         isNotNull,
@@ -178,7 +184,7 @@ void main() {
       starter = await loadStarter();
       final SamplePack p = SamplePack.language('eng');
       // One activity is a transfer check, so that the skill can reach fresh mastery.
-      p.doc('activity.pick.red.flower.json')['checkType'] = 'transfer';
+      p.doc('activity.eng.pick.red.flower.json')['checkType'] = 'transfer';
       english = PackContent.fromPack(p.verified());
     });
     setUp(() {
@@ -230,7 +236,7 @@ void main() {
       final AdventureInput a = build();
       expect(a.enabledLands, contains(eng));
       expect(a.enabledLands.length, TrophyLand.values.length + 1);
-      expect(a.paths[eng]!.map((PathLesson l) => l.id), <String>['butterflies']);
+      expect(a.paths[eng]!.map((PathLesson l) => l.id), <String>['eng.butterflies']);
       expect(a.paths[eng]!.single.level, 0);
     });
 
@@ -241,26 +247,23 @@ void main() {
       expect(build(enabled: const <String>{}).enabledLands, TrophyLand.values.toSet());
     });
 
-    test(
-      'a visit belongs to the course of the pack that its answers name, even if a lesson id is the same',
-      () async {
-        expect(starter.lessons.containsKey('butterflies'), isTrue);
-        expect(english.lessons.containsKey('butterflies'), isTrue);
-        await answer('starter', 'butterflies', 'NUM-A-03');
-        await answer('lang-eng', 'butterflies', 'ENG-A-01');
-        final List<Visit> visits = visitsFrom(
-          starter,
-          await db.attemptsOf('p-1'),
-          const <Session>[],
-          languages: <PackContent>[english],
-        );
-        expect(visits.map((Visit v) => v.land), <AdventureLand>[TrophyLand.counting, eng]);
-        expect(visits.map((Visit v) => v.kind), everyElement(VisitKind.lesson));
-      },
-    );
+    test('a visit belongs to the course of the pack that its answers name', () async {
+      expect(starter.lessons.containsKey('butterflies'), isTrue);
+      expect(english.lessons.containsKey('eng.butterflies'), isTrue);
+      await answer('starter', 'butterflies', 'NUM-A-03');
+      await answer('lang-eng', 'eng.butterflies', 'ENG-A-01');
+      final List<Visit> visits = visitsFrom(
+        starter,
+        await db.attemptsOf('p-1'),
+        const <Session>[],
+        languages: <PackContent>[english],
+      );
+      expect(visits.map((Visit v) => v.land), <AdventureLand>[TrophyLand.counting, eng]);
+      expect(visits.map((Visit v) => v.kind), everyElement(VisitKind.lesson));
+    });
 
     test('the visits of a language that is off are left out, as if it had never been played', () async {
-      await answer('lang-eng', 'butterflies', 'ENG-A-01');
+      await answer('lang-eng', 'eng.butterflies', 'ENG-A-01');
       await answer('lang-eng', 'placement-eng', 'ENG-A-01');
       expect(visitsFrom(starter, await db.attemptsOf('p-1'), const <Session>[]), isEmpty);
     });
@@ -284,11 +287,11 @@ void main() {
       final Engine e = emptyEnglish();
       // Four answers on two days, one of them a transfer check: fresh mastery of ENG-A-01.
       final List<(String, int)> story = <(String, int)>[
-        ('count.butterflies.3', 0),
-        ('give.three.jar', 0),
-        ('count.butterflies.3', 0),
-        ('pick.red.flower', 1),
-        ('give.three.jar', 1),
+        ('eng.count.butterflies.3', 0),
+        ('eng.give.three.jar', 0),
+        ('eng.count.butterflies.3', 0),
+        ('eng.pick.red.flower', 1),
+        ('eng.give.three.jar', 1),
       ];
       for (final (String item, int day) in story) {
         e.apply(
