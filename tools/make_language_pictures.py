@@ -164,13 +164,18 @@ def facing(p):
 
 # ---- animals -------------------------------------------------------------------------------------------------------
 
-def cat():
-    c, s = '#F2A25C', '#D97E36'
+def cat(c='#F2A25C', s='#D97E36', tabby=None):
+    """A sitting house cat; with tabby=<stripe colour> it is the big striped tomcat (Russian kot)."""
     p = Pic()
     p.shadow(cx=140, rx=88)
     p.outlined_line('M 200 222 C 238 222, 246 184, 222 164', c, 15)
+    if tabby:
+        p.line('M 220 210 L 220 226 M 230 196 L 245 202 M 226 180 L 241 176', tabby, 5)
     body = 'M 96 120 C 74 150, 70 206, 92 226 L 200 226 C 228 222, 230 176, 210 150 C 190 122, 140 108, 96 120 Z'
     cid = p.shaded(body, c, s)
+    if tabby:
+        p.clipped(cid, ''.join('<path d="M %d 118 Q %d 150 %d 186" fill="none" stroke="%s" stroke-width="8" stroke-linecap="round"/>'
+                               % (x, x + 14, x + 2, tabby) for x in (132, 154, 176, 198)))
     p.clipped(cid, '<path d="M 98 132 C 84 162, 88 198, 100 226 L 124 226 C 120 190, 118 156, 114 128 Z" fill="%s"/>'
               % CREAM)
     p.shaded(ell(182, 192, 36, 31), c, s)
@@ -181,8 +186,13 @@ def cat():
         p.path(d, c)
     p.fillp('M 70 70 L 72 44 L 94 60 Z', '#F7B6C6')
     p.fillp('M 116 56 L 138 42 L 142 70 Z', '#F7B6C6')
+    if tabby:  # the tomcat's broad cheeks
+        p.path('M 56 100 L 40 112 L 58 116 L 46 128 L 66 124 Z', c, 3)
+        p.path('M 152 100 L 168 112 L 150 116 L 162 128 L 142 124 Z', c, 3)
     p.shaded(ell(104, 96, 52, 45), c, s)
-    p.line('M 100 54 L 101 66 M 112 53 L 112 66 M 124 56 L 122 67', s, 5)
+    p.line('M 100 54 L 101 66 M 112 53 L 112 66 M 124 56 L 122 67', tabby or s, 5)
+    if tabby:
+        p.line('M 54 92 L 68 94 M 54 102 L 66 102 M 154 92 L 140 94 M 154 102 L 142 102', tabby, 4)
     p.fillp(ell(94, 114, 24, 14), CREAM)
     p.eye(80, 92, 7)
     p.eye(114, 92, 7)
@@ -1067,6 +1077,10 @@ def build():
     out = {}
     for name, draw in OBJECTS.items():
         out[name] = draw().svg()
+    import make_language_pictures_b2 as b2  # batch 2 (it imports this module's helpers)
+    for part in b2.PARTS.values():
+        for name, draw in part.items():
+            out[name] = draw().svg()
     for name, (draw, colours) in COLOURED.items():
         out[name] = draw('red').svg()
         for c in colours:
@@ -1105,8 +1119,14 @@ def main():
             fh.write(text)
     print('wrote', len(pics), 'pictures to', os.path.relpath(OUT, ROOT))
     if '--sheet' in sys.argv:
-        sheet(list(pics))
+        import make_language_pictures_b2 as b2
+        batch2 = {i for part in b2.PARTS.values() for i in part}
+        sheet([i for i in pics if i not in batch2])
         print('sheet', os.path.relpath(SHEET, ROOT))
+        for tag, part in b2.PARTS.items():
+            out = os.path.join(ROOT, 'docs', 'design', 'languages', 'pictures_%s.png' % tag)
+            sheet(list(part), out)
+            print('sheet', os.path.relpath(out, ROOT))
         sheet(['ball-%s' % c for c in COLOURED['ball'][1]] + ['balloon-%s' % c for c in COLOURED['balloon'][1]], BALLS, cols=6)
         print('sheet', os.path.relpath(BALLS, ROOT))
 
