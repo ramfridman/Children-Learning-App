@@ -367,7 +367,7 @@ Re-run: `python -I tools/check_hebrew_course_words.py` (the default path is the 
 
 | # | File | Was | Now | Why |
 |---|---|---|---|---|
-| 1 | syllabus S6 | `טִיל` | `מָטוֹס` | `טִיל` is a missile or rocket (Hebrew Wiktionary); a war word is kept out of a 5 to 8 year old's reading list. `מָטוֹס` (aeroplane) uses ט and o, is picturable, last-syllable stress |
+| 1 | syllabus S6 | `טִיל` | `טִיל` (kept) | REVERTED by the owner (2026-11-03): "This is not correct. Leave the טיל word." `טִיל` stays in S6. Do not remove everyday words such as טִיל from children's word lists for being war-related unless the owner asks. |
 | 2 | syllabus S7 | `שַׂמְלָה` | `שִׂמְלָה` | the word is `שִׂמְלָה` (hiriq), stress on the last syllable (Wiktionary: sim-LA); the patah form is Biblical |
 | 3 | syllabus S9 | `חַיְּכָן` | `שַׂחְקָן` | `חַיְּכָן` is rare and has a yod with dagesh and shva, a trap for a child decoding; `שַׂחְקָן` (player, actor) is the same pattern (קַטְלָן), common and positive, and uses S5 to S7 letters. The line "מִי שֶׁמְּשַׂחֵק הוּא שַׂחְקָן" works like "מִי שֶׁרוֹקֵד הוּא רַקְדָן" |
 | 4 | syllabus S3 | 4 words | 8 words: added `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה` | settles the "only 4 picturable words" question (8.3). Checked: only S1 and S2 letters, a and i, a silent shva |
@@ -438,7 +438,7 @@ Not written: cues for ע/צ, ג/נ and ט/מ. A verbal description of a letter t
 **For the owner (numbered):**
 1. **Letter names `יוּד` and `קוּף`** (and `וָו`, and one name for the hard and the soft ב כ פ). I chose the spoken forms for the reasons in 8.3. You are the native listener: if your children say `יוֹד` or `קוֹף` at gan, tell me; it is a small change (`voice-brief.md` §2 rows י and ק, §5 pilot).
 2. **The name of ז, `זַיִן`.** It is the Academy's name and what every gan says, but it is also a slang word that older children know. Options: (a) keep `זַיִן` (my recommendation: the name is standard, and a gan child expects it); (b) teach ז by its sound and a picture and say the name only in the parent text. Rows: voice brief §2 (ז), 8.6 (M-HEB-SHAPE-VZN).
-3. **Confirm the changed and added words:** `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה` (S3), `אֱמֶת` (S8), `מָטוֹס` (instead of `טִיל`) and `שַׂחְקָן` (instead of `חַיְּכָן`). `טִיל` was dropped on child-safety grounds; if you want other words of war or fear kept out of the lists, say so.
+3. **Confirm the changed and added words:** `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה` (S3), `אֱמֶת` (S8), `שַׂחְקָן` (instead of `חַיְּכָן`). `טִיל` was dropped on child-safety grounds; if you want other words of war or fear kept out of the lists, say so.
 
 **For the hebrew-language-teacher:**
 - Words for decoding only, not for a picture choice: `נָם` (literary, from lullabies), `מַר` (bitter, rare in speech), `שָׁמַר`, `סוֹד`, `כִּי`, `לוֹ`, `הִיא`, `הוּא`, `זֵר` and `עֵט` (low frequency; kept because the schools teach them), `תָּמָר` (a name; as a picture a girl or a date, to be decided in the picture list), `שָׁר` (picture: someone singing; its pair is `שָׂר`, minister, an adult word). `קוּם` is a command to one boy; if it ever goes in a sentence to the children it is `קוּמוּ`.
