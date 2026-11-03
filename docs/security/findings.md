@@ -10,13 +10,15 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-9 | Secret scanning: add rules for the pack-signing key file and the publish secret | low | open | 2026-10-28 |
 | SEC-10 | Voice tool: validate the voice id and output format before building the request URL | low | open | 2026-10-28 |
 | SEC-11 | Tutor-moves upload script: run the pinned CLI from the repository root | low | open | 2026-10-28 |
-| SEC-12 | Sync: a gateway and app format mismatch would mark a device's whole unsent backlog as refused | low | fixed on `b20-sync-fixes` (`a924828`: the brake per kind of event, R1, and the reset per wire format, R2, verified by reading); closes when its proof tests are re-run green | 2026-10-29 |
-| SEC-B20-3 | Sync: a stall of one kind of event holds the push of every kind for the wait | low | fixed on `b20-sync-fixes` (`83820df`, by reading); closes when its test runs green | 2026-11-03 |
-| SEC-B20-4 | Sync: the call budget of a stalled round is per kind (up to about 246 calls), PLAN says about 80 | info | fixed on `b20-sync-fixes` (`83820df`: one budget per round, at most 88 calls; by reading) | 2026-11-03 |
-| SEC-B20-5 | Sync: the stall setting is not range-checked when read (not reachable from outside) | info | fixed on `b20-sync-fixes` (`83820df`, by reading) | 2026-11-03 |
+| SEC-12 | Sync: a gateway and app format mismatch would mark a device's whole unsent backlog as refused | low | closed (`b20-sync-fixes`: the brake per kind of event and the reset per wire format; proof tests green in QA's full run, `79660b2`) | 2026-10-29 |
+| SEC-B20-1 | Sync: 80 or more bad rows of one kind at the head of the queue stopped that kind's sync for good | medium | closed (`83820df`: times re-timed at the boundary, a probe of the newest row before a kind is given up; tests green, `79660b2`) | 2026-11-03 |
+| SEC-B20-2 | Alerts: an alert raised under a phone clock before 2017 was refused, kept aside and then pruned | medium | closed (`83820df`, `18e6259`: sent with the server's time, restamped before pruning; tests green, `79660b2`) | 2026-11-03 |
+| SEC-B20-3 | Sync: a stall of one kind of event holds the push of every kind for the wait | low | closed (`83820df`; test green, `79660b2`) | 2026-11-03 |
+| SEC-B20-4 | Sync: the call budget of a stalled round is per kind (up to about 246 calls), PLAN says about 80 | info | closed (`83820df`: one budget per round, at most 88 calls; test green, `79660b2`) | 2026-11-03 |
+| SEC-B20-5 | Sync: the stall setting is not range-checked when read (not reachable from outside) | info | closed (`83820df`; test green, `79660b2`) | 2026-11-03 |
 | SEC-B20-6 | Sync: the wire-format pin test can be satisfied without raising the number | info | open | 2026-11-03 |
-| SEC-B20-7 | Gateway client: `bad_request` is recognised whatever the HTTP status | info | fixed on `b20-sync-fixes` (`83820df`: only with 400; by reading) | 2026-11-03 |
-| SEC-B20-8 | Alerts: with a phone clock that stays wrong, an undelivered alert is restamped every round and does not age out | low | open (needs the owner's choice on the words of a restamped alert) | 2026-11-03 |
+| SEC-B20-7 | Gateway client: `bad_request` is recognised whatever the HTTP status | info | closed (`83820df`: only with 400; test green, `79660b2`) | 2026-11-03 |
+| SEC-B20-8 | Alerts: with a phone clock that stays wrong, an undelivered alert is restamped every round and does not age out | low | closed (`18e6259`: restamped only when the clock is right; test green, `79660b2`); the owner's choice on the words of a restamped alert (kept, up to about 60 days, or cleared) is still open | 2026-11-03 |
 | SEC-B20-9 | Sync: the first push of an app start with a still-wrong clock is timed at the server's floor, not shifted | info | open | 2026-11-03 |
 | SEC-26 | Word-alert lists: validate a list's values and bounds when it is read, before lists can come from a pack | low | open (checks, bounds, step budget, background matching and the floor, checked first with a step budget of its own, are in on `alerts-tiers`; window rules can still be slow within the bounds) | 2026-10-30 |
 | SEC-29 | Alert row hardening (database checks and grants, the parent text's tier) | low | fixed on `alerts-tiers`; closes when CI's pgTAP 09 passes | 2026-10-30 |
@@ -194,4 +196,7 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   -4, -5 and -7 are fixed by reading. New: SEC-B20-8 (low) and SEC-B20-9 (info). Everything fixed here closes when its
   tests run green; `flutter test` was not run by the security-engineer; `flutter analyze` clean; gateway, packages and
   workflows unchanged.
+- **B-20 closed (2026-11-03).** QA's full suite on `b20-sync-fixes` (`79660b2`, 3,060 passed, 0 failed) ran every proof
+  test the security review named: SEC-12 and SEC-B20-1, -2, -3, -4, -5, -7 and -8 are closed. Still open: SEC-B20-6 and
+  -9 (info), and the owner's choice on the words of a restamped alert.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
