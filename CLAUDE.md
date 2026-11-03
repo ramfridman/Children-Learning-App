@@ -32,7 +32,7 @@ A Hebrew learning app (the interface is Hebrew; the Languages category also teac
 - No child audio is stored or sent. The mic opens only on tap, and only when a parent enabled voice.
 - No personal data to any vendor, with one exception the owner chose on 2026-10-25: a child's first name (parent-reviewed spelling) may be sent to ElevenLabs inside a line to be voiced. The model (Anthropic) only ever sees placeholders (`{child}`, `{companion}`). Never a surname, audio, transcript or device id to any vendor.
 - No ads, purchases, timers, streaks or guilt in the child's space.
-- Unclear speech is never "wrong". The tutor never asks personal questions, and says it is a computer helper when asked.
+- Unclear speech is never "wrong". The AI tutor never asks personal questions, and says it is a computer helper when asked. Scripted lesson items may ask a child's name, age, likes and family, handled on the device only; never an address (owner, 2026-11-03).
 
 ## Hebrew
 - The UI is RTL, but maths renders LTR in isolated tiles; number lines, clocks and robot arrows never mirror.

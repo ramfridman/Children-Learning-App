@@ -1,9 +1,9 @@
 # Languages: the owner's decisions after the research (2026-11-03)
 
-The three teachers finished their research and syllabi (English 65 skills, Hebrew 69, Russian 76). Each question below has the teacher's recommendation. **Status: waiting for the owner.**
+The three teachers finished their research and syllabi (English 65 skills, Hebrew 69, Russian 76). Each question below has the teacher's recommendation. **Status: APPROVED by the owner on 2026-11-03**, with three changes (below, marked CHANGED); all other recommendations stand as written.
 
 ## Common to all three
-1. **Speaking is practised but never scored** for now: repeat-after-me, role-play and "say it with me". The app's on-device speech recogniser is Hebrew-only. An English or Russian recogniser would be a new model or package, for later, with your OK.
+1. **CHANGED: speech recognition in every language.** The owner: the app must understand English and Russian too, to give the child real feedback. Each language gets an on-device recogniser (a model file per language, approved in principle; nothing is sent or stored). Feedback is per word (did the child say the word), not per sound. A confident match gets real praise; an unsure result gets "let's say it together" and a model of the word, never "wrong" (the child-safety rule stands).
 2. **If the text-to-speech pilot can't make clean isolated sounds**, the fallback is stretched whole words ("sssun") and syllables. A recorded native-speaking adult (about 120 short clips per language, no cloning) is a separate, paid decision.
 3. **Original or public-domain stories and rhymes only**, retold in our own words and pictures. No copyrighted books, no franchises. Songs need your OK on the melody.
 4. **Handwriting goes trace → copy → write from memory.** Tracing alone teaches little; writing from memory is what builds reading.
@@ -19,7 +19,7 @@ The three teachers finished their research and syllabi (English 65 skills, Hebre
    - a Hebrew translation appears only at hint level 2, after the child has heard the English with a picture.
 8. **A Latin teaching font** with the "a" and "g" shapes children write.
 9. **Parent co-play prompts** in the reading stages (the research found phonics apps work best with an adult involved).
-10. **Personal questions:** the Ministry's early syllabus teaches "my name is", "I am six", "I live in…". The app's rule is no personal questions, so these are taught only through puppets and pictures, and "Where do you live?" is left out.
+10. **CHANGED: personal questions in scripted lessons.** Scripted lesson items in any language may ask the child's name, age, what they like and who is in their family; the answer is heard and handled on the device only, never sent, stored or used to profile. "Where do you live?" (address) stays out, as an online-safety habit. The AI tutor's rule is unchanged: it never asks personal questions.
 
 ## Russian
 11. **Three routes, chosen by a short placement game:** a new learner, a heritage speaker, and a child who already reads. Five entry points.
@@ -27,7 +27,7 @@ The three teachers finished their research and syllabi (English 65 skills, Hebre
 13. **Print letters only.** Cursive (прописи) is left out for now.
 14. **The letters taught in 10 groups:** АУОМ · СНЫ · ЛРИ · КТВ · ЕПЗ · ДГЯЬ · БЧШЙ · ЖЁЮ · ХЦЭ · ЩФЪ. The groups follow the sounds and how often each letter is used, and keep look-alike letters apart.
 15. **Stress marks on screen** only in the stress skills and on new words in early reading. A parent switch can turn them off.
-16. **Letter names only at ages 7–8.** Sounds come first.
+16. **CHANGED: every letter is taught as a whole, in every language:** its shape, its sound, its name and its writing together (the owner; supported by Piasta and Wagner 2010 for names with sounds). In Russian, blending always uses the sound, never the name ("ма", not "эм-а").
 17. **New learners begin letters** only after a basic spoken vocabulary, and not before age 5 by default. A parent can override this.
 18. **Folk tales retold in our own words and pictures** (Репка, Колобок, Теремок).
 
