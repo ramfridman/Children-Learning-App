@@ -700,7 +700,260 @@ def part_b():
     return out
 
 
-PARTS = {'batch3a': part_a, 'batch3b': part_b}
+
+# ---- Mika's body, the close-ups, the faces and the mouth shapes (batch 3c) ------------------------------------------
+
+GLOW = '#FFC83D'
+
+
+def glow(cx, cy, rx, ry):
+    return ['<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="%s" opacity="0.14"/>' % (f(cx), f(cy), f(rx), f(ry), GLOW),
+            '<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="none" stroke="%s" stroke-width="5" opacity="0.9"/>' % (f(cx), f(cy), f(rx), f(ry), WHITE),
+            '<ellipse cx="%s" cy="%s" rx="%s" ry="%s" fill="none" stroke="%s" stroke-width="2.5"/>' % (f(cx), f(cy), f(rx), f(ry), '#F59E1B')]
+
+
+def nose(r, hc):
+    """Mika's small soft nose (the body words need one; the cast's faces leave it out)."""
+    return [P('M %s %s Q %s %s %s %s' % (f(-r * 0.09), f(hc + r * 0.26), f(0), f(hc + r * 0.36), f(r * 0.09), f(hc + r * 0.26)), 'none', 2.5)]
+
+
+def open_hand(x, y, ang, sp, scale=1.0):
+    """An open hand, palm to the viewer, five fingers spread, pointing along ang (degrees from straight down)."""
+    aw = ch.geometry(sp)[8] * scale
+    skin = ch.SKIN[sp['skin']]
+    out = ['<g transform="translate(%s %s) rotate(%s)">' % (f(x), f(y), f(ang))]
+    for k, (a, ln) in enumerate(((-58, 0.78), (-22, 1.0), (0, 1.08), (22, 1.0), (44, 0.86))):
+        rad = math.radians(a)
+        x1, y1 = aw * 0.95 * ln * math.sin(rad), aw * 0.4 + aw * 0.95 * ln * math.cos(rad)
+        out += limb([(0, aw * 0.25), (x1, y1)], skin, aw * 0.34)
+    out.append(E(0, aw * 0.18, aw * 0.62, aw * 0.58, skin))
+    out.append('</g>')
+    return out
+
+
+def toes(x, y, lw):
+    return [E(x + dx * lw, y + lw * 0.18, lw * 0.13, lw * 0.11, ch.SKIN[MIKA['skin']], 1.8) for dx in (-0.42, -0.2, 0.02, 0.22, 0.4)]
+
+
+def mika_open(arms, expr='happy', props_front=(), feet=True):
+    """Mika in the front view with open hands (fingers) and bare feet with toes."""
+    sp = MIKA
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
+    parts = posed(sp, arms=arms, expr=expr)
+    ua, fa = arm * 0.52, arm * 0.5
+    extra = []
+    for i, s in ((0, -1), (1, 1)):
+        x0, y0 = s * (tw / 2 - aw * 0.25), sh + aw * 0.55
+        pts = chain(x0, y0, [(ua, arms[i][0]), (fa, arms[i][1])], s, 'front')
+        a = arms[i][0] + arms[i][1]
+        extra += open_hand(pts[-1][0], pts[-1][1] - aw * 0.15, -s * a, sp)
+    if feet:
+        for s in (-1, 1):
+            x = s * (tw * 0.03 + lw / 2)
+            extra += toes(x + s * lw * 0.2, -lw * 0.2, lw)
+    return parts[:-1] + nose(r, hc) + extra + list(props_front) + [parts[-1]]
+
+
+def grin(r, hc):
+    mw, my = r * 0.34, hc + r * 0.44
+    return [P('M %s %s Q 0 %s %s %s Z' % (f(-mw), f(my - 3), f(my + mw * 1.2), f(mw), f(my - 3)), ch.MOUTH, 2.5),
+            P('M %s %s L %s %s Q 0 %s %s %s Z' % (f(-mw * 0.86), f(my - 1), f(mw * 0.86), f(my - 1), f(my + mw * 0.36), f(-mw * 0.86), f(my - 1)), WHITE, 1.5),
+            L(''.join('M %s %s L %s %s ' % (f(x), f(my - 1), f(x), f(my + mw * 0.24)) for x in (-mw * 0.4, 0, mw * 0.4)), '#D8D3E6', 1.5)]
+
+
+BODY_ARMS = ((32, 4), (32, 4))
+
+
+def mika_body():
+    sp = MIKA
+    H, r, hc = sp['H'], sp['hr'], -sp['H'] + sp['hr']
+    parts = mika_open(BODY_ARMS, expr='smile')
+    parts = parts[:-1] + [E(0, hc + r * 0.5, r * 0.36, r * 0.2, ch.SKIN[sp['skin']], 0)] + grin(r, hc) + [parts[-1]]
+    return canvas(parts, crop=BODY_CROP)
+
+
+BODY_CROP = (-84, -152, 168, 166)
+
+
+def hotspots():
+    """The tap areas of mika-body.svg in its 0..256 canvas: circles (cx, cy, r) or rectangles (x, y, w, h); no two
+    overlap, so any three of them can glow in an item (the Russian rule; English uses 8, Russian 11)."""
+    sp = MIKA
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
+    x, y, w, h = BODY_CROP
+    k = 256.0 / max(w, h)
+    tx, ty = (256 - w * k) / 2 - x * k, (256 - h * k) / 2 - y * k
+
+    def pt(px, py):
+        return round(px * k + tx, 1), round(py * k + ty, 1)
+
+    def circ(px, py, rr):
+        cx, cy = pt(px, py)
+        return {'circle': [cx, cy, round(rr * k, 1)]}
+
+    def rect(px, py, pw, ph):
+        x0, y0 = pt(px, py)
+        return {'rect': [x0, y0, round(pw * k, 1), round(ph * k, 1)]}
+
+    ua, fa = arm * 0.52, arm * 0.5
+    hand_pts = []
+    for i, s in ((0, -1), (1, 1)):
+        pts = chain(s * (tw / 2 - aw * 0.25), sh + aw * 0.55, [(ua, BODY_ARMS[i][0]), (fa, BODY_ARMS[i][1])], s, 'front')
+        hand_pts.append(pts)
+    spots = {
+        'hair': rect(-r * 0.9, hc - r * 1.2, r * 1.8, r * 0.5),
+        'head': rect(-r * 0.75, hc - r * 0.66, r * 1.5, r * 0.4),
+        'eyes': rect(-r * 0.62, hc - r * 0.18, r * 1.24, r * 0.4),
+        'nose': circ(0, hc + r * 0.3, r * 0.12),
+        'mouth': rect(-r * 0.4, hc + r * 0.44, r * 0.8, r * 0.38),
+        'teeth': rect(-r * 0.4, hc + r * 0.44, r * 0.8, r * 0.38),
+        'ears': [circ(-r * 1.02, hc + r * 0.12, r * 0.24), circ(r * 1.02, hc + r * 0.12, r * 0.24)],
+        'arms': [circ(*hand_pts[0][1], aw * 0.9), circ(*hand_pts[1][1], aw * 0.9)],
+        'hands': [circ(hand_pts[0][2][0], hand_pts[0][2][1] + aw * 0.3, aw * 1.15), circ(hand_pts[1][2][0], hand_pts[1][2][1] + aw * 0.3, aw * 1.15)],
+        'fingers': [circ(hand_pts[0][2][0], hand_pts[0][2][1] + aw * 0.3, aw * 1.15), circ(hand_pts[1][2][0], hand_pts[1][2][1] + aw * 0.3, aw * 1.15)],
+        'tummy': rect(-tw * 0.4, sh + body * 0.16, tw * 0.8, body * 0.22),
+        'belly': rect(-tw * 0.4, sh + body * 0.16, tw * 0.8, body * 0.22),
+        'legs': rect(-tw * 0.48, hip + lw * 0.6, tw * 0.96, (-hip) * 0.55),
+        'feet': rect(-tw * 0.62, -lw * 0.6, tw * 1.24, lw * 0.85),
+    }
+    note_ = ('Tap areas of mika-body.svg in its 256 x 256 canvas. teeth = mouth (the picture grins), hands = fingers, '
+             'tummy = belly (one place, two courses\' words). Regions of different parts never overlap.')
+    return {'picture': 'mika-body', 'note': note_, 'areas': spots}
+
+
+def close_up(which):
+    sp = MIKA
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
+    base = mika_open(BODY_ARMS, expr='happy')
+    if which == 'head':
+        return canvas(base + glow(0, hc, r * 1.22, r * 1.22), crop=(-r * 2.0, hc - r * 1.8, r * 4.0, r * 4.0))
+    if which == 'eyes':
+        return canvas(base + glow(0, hc + r * 0.1, r * 0.72, r * 0.3),
+                      crop=(-r * 1.1, hc - r * 0.9, r * 2.2, r * 2.2))
+    if which == 'ears':
+        return canvas(base + glow(-r * 1.0, hc + r * 0.12, r * 0.3, r * 0.34) + glow(r * 1.0, hc + r * 0.12, r * 0.3, r * 0.34),
+                      crop=(-r * 1.6, hc - r * 1.4, r * 3.2, r * 3.0))
+    if which == 'nose':
+        return canvas(base + glow(0, hc + r * 0.3, r * 0.2, r * 0.18), crop=(-r * 1.0, hc - r * 0.6, r * 2.0, r * 2.0))
+    if which == 'mouth':
+        return canvas(base + glow(0, hc + r * 0.55, r * 0.42, r * 0.28), crop=(-r * 1.0, hc - r * 0.3, r * 2.0, r * 2.0))
+    if which == 'hands':
+        up = mika_open(((150, 10), (150, 10)), expr='happy')
+        return canvas(up, crop=(-r * 2.1, hc - r * 2.5, r * 4.2, r * 3.4))
+    if which == 'feet':
+        return canvas(base + glow(-tw * 0.3, -lw * 0.2, lw * 0.95, lw * 0.6) + glow(tw * 0.3, -lw * 0.2, lw * 0.95, lw * 0.6),
+                      crop=(-tw * 0.95, -tw * 1.15, tw * 1.9, tw * 1.4))
+    if which == 'tummy':
+        return canvas(base + glow(0, sh + body * 0.27, tw * 0.46, body * 0.15), crop=(-tw * 1.15, sh - body * 0.12, tw * 2.3, tw * 2.0))
+
+
+def face_card(expr, props_back=(), props_front=(), arms=((8, 0), (8, 0)), hat=False, scarf=False):
+    sp = MIKA
+    H, r, hc = sp['H'], sp['hr'], -sp['H'] + sp['hr']
+    parts = posed(sp, expr=expr, arms=arms, props_back=props_back)
+    add = nose(r, hc)
+    if hat:
+        add += [P('M %s %s C %s %s, %s %s, %s %s Z' % (f(-r * 1.0), f(hc - r * 0.45), f(-r * 0.9), f(hc - r * 1.5), f(r * 0.9), f(hc - r * 1.5),
+                                                       f(r * 1.0), f(hc - r * 0.45)), '#E5484D'),
+                RR(-r * 1.08, hc - r * 0.62, r * 2.16, r * 0.34, r * 0.14, CREAM), E(0, hc - r * 1.42, r * 0.22, r * 0.22, CREAM)]
+    if scarf:
+        add += [RR(-r * 0.9, hc + r * 0.86, r * 1.8, r * 0.36, r * 0.16, '#2F7FE0'), RR(r * 0.2, hc + r * 1.0, r * 0.36, r * 1.0, r * 0.14, '#2F7FE0')]
+    parts = parts[:-1] + add + list(props_front) + [parts[-1]]
+    return canvas(parts, crop=(-r * 2.3, hc - r * 1.7, r * 4.6, r * 4.6))
+
+
+def thumb_up(x, y, sp):
+    aw = ch.geometry(sp)[8]
+    skin = ch.SKIN[sp['skin']]
+    return [RR(x - aw * 0.7, y - aw * 0.5, aw * 1.4, aw * 1.2, aw * 0.4, skin), RR(x - aw * 0.25, y - aw * 1.5, aw * 0.5, aw * 1.2, aw * 0.25, skin)]
+
+
+def mika_faces():
+    sp = MIKA
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
+    out = {'mika-happy': face_card('laugh'), 'mika-sad': face_card('frown')}
+    tx, ty = tw / 2 + aw * 1.2, sh - aw * 0.4
+    out['mika-fine'] = face_card('smile', arms=((8, 0), (40, 140)), props_front=thumb_up(tx - 6, ty + 6, sp))
+    flakes = [L(''.join('M %d %d L %.1f %.1f ' % (x, y, x + 6 * math.cos(k * math.pi / 3), y + 6 * math.sin(k * math.pi / 3)) for k in range(6)), '#5BB8E0', 2.5)
+              for x, y in ((-50, -150), (50, -160), (-56, -96), (58, -100))]
+    out['mika-cold'] = face_card('shiver', hat=True, scarf=True, props_front=flakes + [L('M -44 -118 q -6 6 0 12 q 6 6 0 12 M 44 -118 q 6 6 0 12 q -6 6 0 12', '#B8B0D0', 3)])
+    sun = ['<g transform="translate(-64 -170) scale(0.16)">%s</g>' % prefixed(__import__('make_language_pictures_b2').sun().parts, 'sun')]
+    drop = [P('M %s %s C %s %s, %s %s, %s %s C %s %s, %s %s, %s %s Z' % (f(r * 0.62), f(hc - r * 0.5), f(r * 0.52), f(hc - r * 0.3), f(r * 0.5), f(hc - r * 0.18),
+                                                                    f(r * 0.62), f(hc - r * 0.14), f(r * 0.74), f(hc - r * 0.18), f(r * 0.72), f(hc - r * 0.3),
+                                                                    f(r * 0.62), f(hc - r * 0.5)), '#8FD3F4', 2)]
+    fan = motion(r * 1.5, hc + r * 0.2, 8)
+    out['mika-hot'] = face_card('smile', arms=((8, 0), (150, 40)), props_back=sun, props_front=drop + fan)
+    sandwich = [P('M -16 -96 L 22 -96 L 22 -86 L -16 -86 Z', '#F2D3A0', 2.5), P('M -18 -86 L 24 -86 L 24 -82 L -18 -82 Z', '#5DB85A', 2),
+                P('M -16 -82 L 22 -82 L 22 -72 L -16 -72 Z', '#F2D3A0', 2.5)]
+    seat = hip + (-hip) * 0.5
+    eat = posed(sp, view='side', arms=((40, 90), (52, 96)), legs=((90, -90), (90, -90)), lift=-(-hip) * 0.5 + lw * 0.1, expr='smile',
+                props_back=side_chair(18, seat - lw * 0.1 + 2))
+    eat = eat[:-2] + ['<g transform="translate(%s %s)">%s</g>' % (f(-r * 0.95 - 3), f(hc + r * 0.62 + 84), ''.join(sandwich))] + eat[-2:]
+    out['mika-eat'] = canvas(eat, crop=mika_crop())
+    return out
+
+
+# ---- mouth shapes for the Russian sound hints (A-19, A-20) -----------------------------------------------------------
+
+def mouth_card(kind):
+    skin = ch.SKIN[MIKA['skin']]
+    out = ['<path d="M 8 0 L 248 0 L 248 140 C 248 214, 196 252, 128 252 C 60 252, 8 214, 8 140 Z" fill="%s" stroke="%s" stroke-width="5"/>' % (skin, INK),
+           '<ellipse cx="54" cy="96" rx="26" ry="15" fill="%s" opacity="0.6"/><ellipse cx="202" cy="96" rx="26" ry="15" fill="%s" opacity="0.6"/>' % (ch.CHEEK, ch.CHEEK),
+           '<path d="M 104 52 C 104 30, 152 30, 152 52 C 152 62, 104 62, 104 52 Z" fill="%s" stroke="%s" stroke-width="3.5"/>' % (m.mix(skin, INK, 0.12), INK),
+           '<ellipse cx="118" cy="40" rx="5" ry="3" fill="%s" opacity="0.5"/>' % WHITE]
+    lip = '#B35A5A'
+    if kind == 'lips':      # m: lips pressed together, a little puffed
+        out.append('<path d="M 70 150 Q 128 164 186 150 Q 128 176 70 150 Z" fill="%s" stroke="%s" stroke-width="5"/>' % (lip, INK))
+        out.append('<path d="M 70 150 Q 128 160 186 150" fill="none" stroke="%s" stroke-width="5"/>' % INK)
+    elif kind == 'teeth':   # s: a smile with the teeth together
+        out.append('<path d="M 64 140 Q 128 128 192 140 Q 180 184 128 186 Q 76 184 64 140 Z" fill="%s" stroke="%s" stroke-width="5"/>' % (ch.MOUTH, INK))
+        out.append('<path d="M 74 142 Q 128 132 182 142 L 178 160 Q 128 168 78 160 Z" fill="%s" stroke="%s" stroke-width="3"/>' % (WHITE, INK))
+        out.append('<path d="M 80 160 Q 128 168 176 160 L 172 174 Q 128 180 84 174 Z" fill="%s" stroke="%s" stroke-width="3"/>' % (WHITE, INK))
+    elif kind == 'round':   # sh: lips rounded and pushed forward
+        out.append('<ellipse cx="128" cy="160" rx="40" ry="34" fill="%s" stroke="%s" stroke-width="5"/>' % (lip, INK))
+        out.append('<ellipse cx="128" cy="160" rx="20" ry="16" fill="%s"/>' % ch.MOUTH)
+        out.append('<path d="M 118 152 L 138 152" stroke="%s" stroke-width="4"/>' % WHITE)
+    elif kind == 'tongue':  # n: mouth a little open, the tongue tip up behind the top teeth
+        out.append('<path d="M 76 140 Q 128 130 180 140 Q 172 198 128 200 Q 84 198 76 140 Z" fill="%s" stroke="%s" stroke-width="5"/>' % (ch.MOUTH, INK))
+        out.append('<path d="M 86 142 Q 128 134 170 142 L 166 154 Q 128 160 90 154 Z" fill="%s"/>' % WHITE)
+        out.append('<path d="M 96 196 C 96 170, 112 156, 128 156 C 144 156, 160 170, 160 196 Z" fill="#F28AA0" stroke="%s" stroke-width="3"/>' % INK)
+    elif kind == 'trill':   # r: the tongue tip trilling, with little lines of movement
+        out.append('<path d="M 72 136 Q 128 126 184 136 Q 176 204 128 206 Q 80 204 72 136 Z" fill="%s" stroke="%s" stroke-width="5"/>' % (ch.MOUTH, INK))
+        out.append('<path d="M 82 138 Q 128 130 174 138 L 170 150 Q 128 156 86 150 Z" fill="%s"/>' % WHITE)
+        out.append('<path d="M 100 200 C 100 176, 116 164, 124 160 L 132 160 C 140 164, 156 176, 156 200 Z" fill="#F28AA0" stroke="%s" stroke-width="3"/>' % INK)
+        out.append('<path d="M 112 160 L 104 150 M 128 156 L 128 146 M 144 160 L 152 150" stroke="%s" stroke-width="4"/>' % '#F28AA0')
+        out += ['<path d="M %d 170 q -10 8 0 16 M %d 170 q 10 8 0 16" fill="none" stroke="#B8B0D0" stroke-width="5"/>' % (x0, x1) for x0, x1 in ((50, 206),)]
+    elif kind == 'smile':   # soft sounds: a wide smile
+        out.append('<path d="M 46 132 Q 128 126 210 132 Q 196 186 128 190 Q 60 186 46 132 Z" fill="%s" stroke="%s" stroke-width="5"/>' % (ch.MOUTH, INK))
+        out.append('<path d="M 60 136 Q 128 130 196 136 L 190 152 Q 128 160 66 152 Z" fill="%s" stroke="%s" stroke-width="3"/>' % (WHITE, INK))
+        out.append('<path d="M 60 120 Q 46 128 44 140 M 196 120 Q 210 128 212 140" fill="none" stroke="%s" stroke-width="4"/>' % INK)
+    elif kind == 'puzzled':  # y: lips spread, a little open, the friend puzzled (one brow up)
+        out.append('<path d="M 70 150 Q 128 138 186 152 Q 176 178 128 178 Q 80 176 70 150 Z" fill="%s" stroke="%s" stroke-width="5"/>' % (ch.MOUTH, INK))
+        out.append('<path d="M 82 152 Q 128 144 174 154 L 170 160 Q 128 158 86 158 Z" fill="%s"/>' % WHITE)
+        out += ['<circle cx="%d" cy="%d" r="%d" fill="%s" stroke="%s" stroke-width="4"/>' % (x, y, rr, WHITE, INK)
+                for x, y, rr in ((206, 40, 8), (226, 22, 11))]
+    return canvas(out, clip=True)
+
+
+MOUTHS = (('lips', 'mouth-lips'), ('teeth', 'mouth-teeth'), ('round', 'mouth-round'), ('tongue', 'mouth-tongue'), ('trill', 'mouth-trill'),
+          ('smile', 'mouth-smile'), ('puzzled', 'mouth-puzzled'))
+
+
+def part_c():
+    out = {'mika-body': mika_body()}
+    for w in ('head', 'eyes', 'ears', 'nose', 'mouth', 'hands', 'feet', 'tummy'):
+        out['body-' + w] = close_up(w)
+    out.update(mika_faces())
+    for kind, name in MOUTHS:
+        out[name] = mouth_card(kind)
+    import json
+    with open(os.path.join(OUT, 'mika-body.hotspots.json'), 'w', encoding='utf-8', newline='\n') as fh:
+        json.dump(hotspots(), fh, ensure_ascii=False, indent=1)
+        fh.write('\n')
+    return out
+
+
+PARTS = {'batch3a': part_a, 'batch3b': part_b, 'batch3c': part_c}
 
 
 def main():

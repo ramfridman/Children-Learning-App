@@ -1,0 +1,149 @@
+{
+ "picture": "mika-body",
+ "note": "Tap areas of mika-body.svg in its 256 x 256 canvas. teeth = mouth (the picture grins), hands = fingers, tummy = belly (one place, two courses' words). Regions of different parts never overlap.",
+ "areas": {
+  "hair": {
+   "rect": [
+    89.6,
+    8.2,
+    76.8,
+    21.3
+   ]
+  },
+  "head": {
+   "rect": [
+    96.0,
+    31.3,
+    64.0,
+    17.1
+   ]
+  },
+  "eyes": {
+   "rect": [
+    101.5,
+    51.7,
+    52.9,
+    17.1
+   ]
+  },
+  "nose": {
+   "circle": [
+    128.0,
+    72.2,
+    5.1
+   ]
+  },
+  "mouth": {
+   "rect": [
+    110.9,
+    78.2,
+    34.1,
+    16.2
+   ]
+  },
+  "teeth": {
+   "rect": [
+    110.9,
+    78.2,
+    34.1,
+    16.2
+   ]
+  },
+  "ears": [
+   {
+    "circle": [
+     84.5,
+     64.5,
+     10.2
+    ]
+   },
+   {
+    "circle": [
+     171.5,
+     64.5,
+     10.2
+    ]
+   }
+  ],
+  "arms": [
+   {
+    "circle": [
+     82.7,
+     145.3,
+     18.4
+    ]
+   },
+   {
+    "circle": [
+     173.3,
+     145.3,
+     18.4
+    ]
+   }
+  ],
+  "hands": [
+   {
+    "circle": [
+     65.7,
+     174.7,
+     23.5
+    ]
+   },
+   {
+    "circle": [
+     190.3,
+     174.7,
+     23.5
+    ]
+   }
+  ],
+  "fingers": [
+   {
+    "circle": [
+     65.7,
+     174.7,
+     23.5
+    ]
+   },
+   {
+    "circle": [
+     190.3,
+     174.7,
+     23.5
+    ]
+   }
+  ],
+  "tummy": {
+   "rect": [
+    100.4,
+    129.6,
+    55.3,
+    28.8
+   ]
+  },
+  "belly": {
+   "rect": [
+    100.4,
+    129.6,
+    55.3,
+    28.8
+   ]
+  },
+  "legs": {
+   "rect": [
+    94.8,
+    178.6,
+    66.4,
+    38.2
+   ]
+  },
+  "feet": {
+   "rect": [
+    85.1,
+    218.2,
+    85.7,
+    21.2
+   ]
+  }
+ }
+}
