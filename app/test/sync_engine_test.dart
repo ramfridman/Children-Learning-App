@@ -30,11 +30,14 @@ class Phone {
       call: server.callFor(id, parent: parent),
       deviceId: id,
       isParent: parent,
-      nowMs: () => noon,
+      nowMs: () => clock,
       pageSize: 4,
       batch: 4,
     );
   }
+
+  /// The phone's clock: tests move it to get past the wait after a stalled round.
+  int clock = noon;
 
   final String id;
   final FakeFamilyServer server;
@@ -62,9 +65,10 @@ class Phone {
     int minute = 0,
     int no = 1,
     String response = '',
+    DateTime? at,
   }) => db.recordAttempt(
     AttemptsCompanion.insert(
-      at: DateTime.utc(2026, 11, 20, 10, minute),
+      at: at ?? DateTime.utc(2026, 11, 20, 10, minute),
       profileId: kid,
       packId: 'starter',
       packVersion: '0.2.0',
@@ -794,7 +798,7 @@ void main() {
     List<Attempt> refused(List<Attempt> rows) =>
         rows.where((Attempt a) => AppDatabase.wasRefusedBySync(a.syncedAt)).toList();
 
-    test('a server that refuses every event of a batch does not know this app\'s format: nothing is marked refused, the round stops', () async {
+    test('a server that refuses every event of a batch does not know the format of this app: nothing is marked refused, the round gives up', () async {
       // A gateway that does not know a key every answer carries (deployed too early, or with the field removed).
       strict.forgets = <String>{'duration_ms'};
       for (int i = 1; i <= 6; i++) {
@@ -806,14 +810,15 @@ void main() {
       expect(r.pushedEvents, 0);
       expect(
         pushes() - before,
-        1 + 4,
-        reason: 'the first batch, its four events one by one, and no other batch',
+        (1 + 4) + (1 + 2),
+        reason: 'the first batch and its four events one by one, then the last two looked at the same way, and no more',
       );
       expect(refused(await s1.db.attemptsOf(kid)), isEmpty, reason: 'no row is marked refused');
       expect((await s1.db.unsyncedAttempts(limit: 100)).length, 6, reason: 'all six wait for the next round');
 
-      // The gateway that knows the key is deployed: everything goes, nothing was lost.
+      // The gateway that knows the key is deployed: once the wait is over everything goes, nothing was lost.
       strict.forgets = <String>{};
+      s1.clock += SyncEngine.stallBase.inMilliseconds;
       final SyncReport next = await s1.engine.syncOnce();
       expect(next.pushedEvents, 6);
       expect(await s1.db.unsyncedAttempts(limit: 100), isEmpty);
@@ -845,47 +850,515 @@ void main() {
       },
     );
 
-    test(
-      'rows refused under an older format are sent again once, after the engine version changes',
-      () async {
-        final int visit = await s1.visit();
-        await s1.answer('a.1', 'correct', session: visit);
-        await s1.answer('a.2', 'correct', minute: 1);
-        await s1.answer('Not An Id', 'correct', minute: 2);
-        // This gateway does not know the visit's number: the visit and its answer are refused, the loose answer is not.
-        strict.forgets = <String>{'session_local'};
-        await s1.engine.syncOnce();
-        expect(refused(await s1.db.attemptsOf(kid)).map((Attempt a) => a.activityId), <String>[
-          'a.1',
-          'Not An Id',
-        ]);
-        expect(strict.log.length, 1);
+    test('rows refused under an older format are sent again once, after the wire format changes (not the engine version)', () async {
+      // A visit that is not over is not sent: its answer carries its number, which this gateway does not know.
+      final int open = await s1.db.startSession(
+        kid,
+        DateTime.utc(2026, 11, 20, 10),
+        plan: 'lesson:butterflies',
+      );
+      await s1.answer('a.1', 'correct', session: open);
+      await s1.answer('a.2', 'correct', minute: 1);
+      await s1.answer('Not An Id', 'correct', minute: 2);
+      strict.forgets = <String>{'session_local'};
+      await s1.engine.syncOnce();
+      expect(refused(await s1.db.attemptsOf(kid)).map((Attempt a) => a.activityId), <String>[
+        'a.1',
+        'Not An Id',
+      ]);
+      expect(strict.log.length, 1);
 
-        // The right gateway is deployed; the same version of the app does not send them again.
-        strict.forgets = <String>{};
+      // The right gateway is deployed; the same wire format does not send them again, whatever the engine version.
+      strict.forgets = <String>{};
+      final int before = pushes();
+      await s1.engine.syncOnce();
+      SyncEngine of({int engineVersion = 1, int wireFormat = 1}) => SyncEngine(
+        db: s1.db,
+        call: strict.callFor(dev1),
+        deviceId: dev1,
+        isParent: true,
+        nowMs: () => noon,
+        engineVersion: engineVersion,
+        wireFormat: wireFormat,
+        pageSize: 4,
+        batch: 4,
+      );
+      await of(engineVersion: 7).syncOnce();
+      expect(pushes(), before, reason: 'a new engine version alone resets nothing');
+
+      // A new wire format: the refused rows are sent once more. The answer of the visit gets in; the bad row is refused again.
+      final SyncEngine upgraded = of(wireFormat: 2);
+      final SyncReport r = await upgraded.syncOnce();
+      expect(r.pushedEvents, 1);
+      expect(r.refusedEvents, 1);
+      expect(strict.log.length, 2);
+      expect(refused(await s1.db.attemptsOf(kid)).single.activityId, 'Not An Id');
+      final int after = pushes();
+      await upgraded.syncOnce();
+      expect(pushes(), after, reason: 'reset once per wire format, not every round');
+    });
+
+    // QA-18: rows that are bad on their own, a whole batch of them, head the queue (here an activity id that sync-push
+    // refuses; a clock before 2017 is no longer such a cause, the time is set right at the boundary: SEC-B20-1).
+    Future<void> badAnswers(int n) async {
+      for (int i = 1; i <= n; i++) {
+        await s1.answer('Not An Id $i', 'correct', minute: i);
+      }
+    }
+
+    Future<void> oldClockAnswers(int n) async {
+      for (int i = 1; i <= n; i++) {
+        await s1.answer('old.$i', 'correct', at: DateTime.utc(2010, 1, 1, 10, i));
+      }
+    }
+
+    Iterable<Object?> sentIds() =>
+        strict.log.map((Map<String, Object?> e) => (e['data']! as Map<String, Object?>)['activity_id']);
+
+    test(
+      'QA-18 a whole batch of bad rows is set aside and the answers after it go in the same round',
+      () async {
+        await badAnswers(4);
+        for (int i = 1; i <= 3; i++) {
+          await s1.answer('a.$i', 'correct', minute: 10 + i);
+        }
+        final SyncReport r = await s1.engine.syncOnce();
+        expect(r.pushedEvents, 3);
+        expect(r.refusedEvents, 4);
+        expect(sentIds(), <String>['a.1', 'a.2', 'a.3']);
+        expect(refused(await s1.db.attemptsOf(kid)).map((Attempt a) => a.activityId), <String>[
+          'Not An Id 1',
+          'Not An Id 2',
+          'Not An Id 3',
+          'Not An Id 4',
+        ]);
+        expect(await s1.db.unsyncedAttempts(limit: 100), isEmpty);
         final int before = pushes();
         await s1.engine.syncOnce();
-        expect(pushes(), before);
+        expect(pushes(), before, reason: 'the bad rows are not looked at again');
+      },
+    );
 
-        // A new version: the refused rows are sent once more. The visit and its answer get in; the bad row is refused again.
-        final SyncEngine upgraded = SyncEngine(
+    test('QA-18 a visit and an award that are bad on their own are set aside too', () async {
+      // A visit with a plan the server refuses, and an award with a key it refuses, ahead of a good answer, a good visit and
+      // award.
+      final int old = await s1.db.startSession(kid, DateTime.utc(2026, 11, 20, 9), plan: 'Not A Plan');
+      await s1.db.endSession(old, DateTime.utc(2026, 11, 20, 9, 5), 'finished');
+      await s1.db.addReward(
+        RewardsCompanion.insert(
+          profileId: kid,
+          awardKey: 'star:bad key',
+          kind: 'star',
+          at: DateTime.utc(2026, 11, 20, 9, 6),
+        ),
+      );
+      await s1.answer('a.1', 'correct');
+      final int visit = await s1.visit();
+      await s1.db.addReward(
+        RewardsCompanion.insert(
+          profileId: kid,
+          awardKey: 'star:NUM-A-04',
+          kind: 'star',
+          at: DateTime.utc(2026, 11, 20, 11),
+        ),
+      );
+      // Nothing of the kinds visit or award has been taken yet in this round, so each bad one waits for its verdict: the
+      // good visit and the good award of the same round give it.
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 3, reason: 'the answer, the good visit and the good award');
+      expect(r.refusedEvents, 2);
+      expect(strict.log.map((Map<String, Object?> e) => e['type']).toSet(), <String>{
+        'attempt',
+        'session',
+        'reward',
+      });
+      expect(visit, greaterThan(old));
+      expect(
+        AppDatabase.wasRefusedBySync(
+          (await s1.db.sessionsOf(kid)).firstWhere((Session x) => x.id == old).syncedAt,
+        ),
+        isTrue,
+      );
+      expect(
+        AppDatabase.wasRefusedBySync(
+          (await s1.db.rewardsOf(kid)).firstWhere((Reward x) => x.awardKey == 'star:bad key').syncedAt,
+        ),
+        isTrue,
+      );
+    });
+
+    test('QA-18 a round gives up on a kind when even its newest row is refused, and it costs a bounded number of calls', () async {
+      await badAnswers(9);
+      final int before = pushes();
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(
+        pushes() - before,
+        2 * (1 + 4) + 2,
+        reason: 'two batches, each looked at event by event, then the newest row alone (refused as a batch of one, and again)',
+      );
+      expect(r.pushedEvents, 0);
+      expect(r.refusedEvents, 0, reason: 'no verdict: nothing is marked');
+      expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+      expect((await s1.db.unsyncedAttempts(limit: 100)).length, 9);
+    });
+
+    test('SEC-B20-1 a good answer behind more bad rows than a round looks at is sent, and the bad rows are set aside', () async {
+      await badAnswers(8);
+      await s1.answer('a.1', 'correct', minute: 20);
+      final int before = pushes();
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 1);
+      expect(r.refusedEvents, 8);
+      expect(sentIds(), <String>['a.1']);
+      expect(
+        pushes() - before,
+        2 * (1 + 4) + 1,
+        reason: 'two batches looked at one by one, then the probe is taken',
+      );
+      expect(refused(await s1.db.attemptsOf(kid)).length, 8);
+      expect(await s1.db.unsyncedAttempts(limit: 100), isEmpty);
+    });
+
+    test('SEC-B20-1 more bad rows than a round looks at, ahead of a good answer, never stop the good answer for good', () async {
+      for (int i = 1; i <= 9; i++) {
+        await s1.answer('Not An Id $i', 'correct', minute: i); // an activity id sync-push refuses
+      }
+      await s1.answer('a.1', 'correct', minute: 20);
+      for (int r = 0; r < 3; r++) {
+        await s1.engine.syncOnce();
+        s1.clock += SyncEngine.stallCap.inMilliseconds;
+      }
+      expect(sentIds(), contains('a.1'));
+      expect(refused(await s1.db.attemptsOf(kid)).length, 9);
+    });
+
+    test('SEC-B20-1 answers timed before 2017 are re-timed, not refused: all go in the first round, in the server\'s range', () async {
+      await oldClockAnswers(9);
+      await s1.answer('a.1', 'correct', minute: 20);
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 10);
+      expect(r.refusedEvents, 0);
+      expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+      for (final Map<String, Object?> e in strict.log) {
+        expect(e['at']! as int, inInclusiveRange(SyncEngine.minClientMs, noon));
+      }
+      // The phone keeps the time it had.
+      expect(
+        (await s1.db.attemptsOf(kid)).where((Attempt a) => a.activityId == 'old.1').single.at.toUtc(),
+        DateTime.utc(2010, 1, 1, 10, 1),
+      );
+    });
+
+    test('SEC-B20-1 a time before 2017 keeps its place by the phone\'s offset from the server\'s time; the future is held at the server\'s time', () async {
+      const int hour = 3600000;
+      final int floor = SyncEngine.minClientMs;
+      // The phone's clock reads 2010 while the server's reads 2026: times before 2017 are shifted by the difference.
+      final int wrongNow = DateTime.utc(2010, 1, 1, 12).millisecondsSinceEpoch;
+      final SyncEngine engine = SyncEngine(
+        db: s1.db,
+        call: strict.callFor(dev1),
+        deviceId: dev1,
+        isParent: true,
+        nowMs: () => wrongNow,
+        serverNowMs: () => noon,
+        pageSize: 4,
+        batch: 4,
+      );
+      await s1.answer('x.1', 'correct', at: DateTime.utc(2010, 1, 1, 10));
+      await s1.answer('x.2', 'correct', at: DateTime.utc(2010, 1, 1, 11));
+      await s1.answer('x.3', 'correct', at: DateTime.utc(1970));
+      await s1.answer('x.4', 'correct', at: DateTime.utc(2099));
+      await s1.answer('x.5', 'correct', at: DateTime.fromMillisecondsSinceEpoch(floor, isUtc: true));
+      final int visit = await s1.db.startSession(
+        kid,
+        DateTime.utc(2010, 1, 1, 10),
+        plan: 'lesson:butterflies',
+      );
+      await s1.db.endSession(visit, DateTime.utc(2010, 1, 1, 10, 8), 'finished');
+      await engine.syncOnce();
+      final Map<Object?, int> times = <Object?, int>{
+        for (final Map<String, Object?> e in strict.log)
+          if (e['type'] == 'attempt') (e['data']! as Map<String, Object?>)['activity_id']: e['at']! as int,
+      };
+      final int offset = noon - wrongNow;
+      expect(times['x.1'], DateTime.utc(2010, 1, 1, 10).millisecondsSinceEpoch + offset);
+      expect(times['x.2']! - times['x.1']!, hour, reason: 'the spacing is kept');
+      expect(times['x.3'], floor, reason: '1970 plus the offset is still before 2017: held at the floor');
+      expect(times['x.4'], noon, reason: 'a time ahead of the server is held at its time');
+      expect(times['x.5'], floor, reason: 'the floor itself is not moved');
+      final Map<String, Object?> session = strict.log.singleWhere(
+        (Map<String, Object?> e) => e['type'] == 'session',
+      );
+      final Map<String, Object?> data = session['data']! as Map<String, Object?>;
+      expect(data['started_at'], DateTime.utc(2010, 1, 1, 10).millisecondsSinceEpoch + offset);
+      expect(session['at'], data['started_at']);
+      expect(
+        (data['ended_at']! as int) - (data['started_at']! as int),
+        8 * 60000,
+        reason: 'start and end move together',
+      );
+    });
+
+    test('SEC-B20-1 a visit whose end is held by the server\'s time never ends before it starts', () async {
+      final int visit = await s1.db.startSession(
+        kid,
+        DateTime.utc(2026, 11, 20, 11, 59),
+        plan: 'lesson:butterflies',
+      );
+      await s1.db.endSession(visit, DateTime.utc(2026, 11, 20, 12, 40), 'finished');
+      await s1.engine.syncOnce();
+      final Map<String, Object?> data = strict.log.single['data']! as Map<String, Object?>;
+      expect(data['started_at'], DateTime.utc(2026, 11, 20, 11, 59).millisecondsSinceEpoch);
+      expect(data['ended_at'], noon, reason: 'held at the server\'s time');
+      expect((data['ended_at']! as int) >= (data['started_at']! as int), isTrue);
+    });
+
+    test('R1 the brake is held per kind of event: a visit the server takes does not make the answers of its batch bad rows', () async {
+      // A gateway that does not know a key every answer carries but takes the visit that comes with them.
+      final int visit = await s1.visit();
+      for (int i = 1; i <= 3; i++) {
+        await s1.answer('a.$i', 'correct', session: visit, minute: i);
+      }
+      strict.forgets = <String>{'duration_ms'};
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 1, reason: 'the visit');
+      expect(r.refusedEvents, 0);
+      expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+      expect((await s1.db.unsyncedAttempts()).length, 3);
+      expect(await s1.db.unsyncedSessions(), isEmpty, reason: 'the visit went');
+    });
+
+    test(
+      'R1 and the other way: answers the server takes do not make the visit it will not take a bad row',
+      () async {
+        final int visit = await s1.visit();
+        for (int i = 1; i <= 3; i++) {
+          await s1.answer('a.$i', 'correct', session: visit, minute: i);
+        }
+        // This gateway does not know a key of a visit.
+        strict.forgets = <String>{'end_reason'};
+        final SyncReport r = await s1.engine.syncOnce();
+        expect(r.pushedEvents, 3);
+        expect(r.refusedEvents, 0);
+        expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+        expect((await s1.db.sessionsOf(kid)).single.syncedAt, isNull, reason: 'the visit waits');
+        strict.forgets = <String>{};
+        s1.clock += SyncEngine.stallBase.inMilliseconds;
+        final SyncReport next = await s1.engine.syncOnce();
+        expect(next.pushedEvents, 1);
+        expect((await s1.db.sessionsOf(kid)).single.syncedAt, isNotNull);
+      },
+    );
+
+    Future<int> round() async {
+      final int before = pushes();
+      await s1.engine.syncOnce();
+      return pushes() - before;
+    }
+
+    const int minute = 60000;
+
+    test(
+      'the wait after a stalled round: no sync-push call until it is over; it doubles up to an hour',
+      () async {
+        expect(
+          <Duration>[
+            for (final int n in <int>[1, 2, 3, 4, 5, 6, 50]) SyncEngine.stallWait(n),
+          ],
+          <Duration>[
+            const Duration(minutes: 5),
+            const Duration(minutes: 10),
+            const Duration(minutes: 20),
+            const Duration(minutes: 40),
+            const Duration(hours: 1),
+            const Duration(hours: 1),
+            const Duration(hours: 1),
+          ],
+        );
+        strict.forgets = <String>{'duration_ms'};
+        await s1.answer('a.1', 'correct');
+        expect(await round(), 2, reason: 'the event, and the same event alone');
+        for (final int wait in <int>[5, 10, 20, 40, 60, 60]) {
+          s1.clock += (wait - 1) * minute;
+          expect(await round(), 0, reason: 'a minute before the end of a wait of $wait minutes');
+          s1.clock += minute;
+          expect(
+            await round(),
+            2,
+            reason: 'the wait of $wait minutes is over: one more look, which stalls again',
+          );
+        }
+        expect((await s1.db.unsyncedAttempts()).length, 1, reason: 'nothing was lost or marked');
+        expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+
+        // The gateway is right at last: the next look after the wait sends it, and the wait is forgotten.
+        strict.forgets = <String>{};
+        s1.clock += 60 * minute;
+        expect((await s1.engine.syncOnce()).pushedEvents, 1);
+        strict.forgets = <String>{'duration_ms'};
+        await s1.answer('a.2', 'correct', minute: 2);
+        expect(await round(), 2);
+        s1.clock += 4 * minute;
+        expect(await round(), 0, reason: 'a new stall waits five minutes again, not an hour');
+        s1.clock += minute;
+        expect(await round(), 2);
+      },
+    );
+
+    test('a stalled round does not stop the family from coming in, and a clock that went back does not hold the sync', () async {
+      strict.forgets = <String>{'duration_ms'};
+      await s1.answer('a.1', 'correct');
+      expect(await round(), 2);
+      expect(await round(), 0);
+
+      // Another phone of the family sends an answer (this gateway takes it now).
+      strict.forgets = <String>{};
+      await s2.engine.syncOnce();
+      await s2.answer('b.1', 'correct');
+      await s2.engine.syncOnce();
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pulledEvents, 1);
+      expect(r.appliedEvents, 1);
+      expect(r.pushedEvents, 0);
+
+      // The phone's clock was set back by a day: the wait is not kept for a day.
+      s1.clock -= 24 * 60 * minute;
+      expect((await s1.engine.syncOnce()).pushedEvents, 1);
+    });
+
+    test('R2 the engine version of the events is never what resets the markers; a build that had the old key resets once under the new one', () async {
+      await s1.answer('Not An Id', 'correct');
+      await s1.answer('a.1', 'correct', minute: 1);
+      await s1.engine.syncOnce();
+      expect(refused(await s1.db.attemptsOf(kid)).single.activityId, 'Not An Id');
+      expect(strict.log.single['engine'], 1);
+      // What a build before the wire format left behind: its key, at the engine version.
+      await s1.db.putSetting('sync_refused_reset_version', '1');
+      await s1.db.putSetting('sync_refused_reset_format', '');
+      // The row is sent once more, under the new key, with a new answer that the server takes: refused again.
+      await s1.answer('a.2', 'correct', minute: 2);
+      final int before = pushes();
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(pushes() - before, 1 + 2, reason: 'the two rows, then each alone');
+      expect(r.refusedEvents, 1);
+      expect(refused(await s1.db.attemptsOf(kid)).single.activityId, 'Not An Id');
+      await s1.engine.syncOnce();
+      expect(pushes() - before, 1 + 2, reason: 'and once only');
+    });
+
+    test(
+      'SEC-B20-3 in the wait after a stall only the kind that stalled waits: the others go on as usual',
+      () async {
+        await s1.db.addReward(
+          RewardsCompanion.insert(
+            profileId: kid,
+            awardKey: 'star:bad key',
+            kind: 'star',
+            at: DateTime.utc(2026, 11, 20, 10),
+          ),
+        );
+        await s1.answer('a.1', 'correct');
+        final SyncReport first = await s1.engine.syncOnce();
+        expect(first.pushedEvents, 1, reason: 'the answer; the award has no award to give it a verdict');
+        expect((await s1.db.unsyncedRewards()).length, 1);
+
+        s1.clock += minute;
+        await s1.answer('a.2', 'correct', minute: 2);
+        final int before = pushes();
+        final SyncReport second = await s1.engine.syncOnce();
+        expect(second.pushedEvents, 1, reason: 'today 0: every push waited');
+        expect(pushes() - before, 1, reason: 'the award is not asked about during the wait');
+
+        s1.clock += 4 * minute;
+        expect(
+          await round(),
+          2,
+          reason: 'five minutes after the stall: the award is looked at again, and stalls again',
+        );
+        s1.clock += 9 * minute;
+        expect(await round(), 0, reason: 'the wait after the second stall is ten minutes');
+      },
+    );
+
+    test(
+      'SEC-B20-4 the suspect batches are one budget for the whole round, and the probes are bounded',
+      () async {
+        strict.forgets = <String>{'duration_ms', 'end_reason', 'kind'};
+        for (int i = 1; i <= 8; i++) {
+          await s1.answer('a.$i', 'correct', minute: i);
+          final int v = await s1.db.startSession(
+            kid,
+            DateTime.utc(2026, 11, 20, 10, i),
+            plan: 'lesson:butterflies',
+          );
+          await s1.db.endSession(v, DateTime.utc(2026, 11, 20, 10, i, 30), 'finished');
+          await s1.db.addReward(
+            RewardsCompanion.insert(
+              profileId: kid,
+              awardKey: 'star:NUM-A-0$i',
+              kind: 'star',
+              at: DateTime.utc(2026, 11, 20, 10, i),
+            ),
+          );
+        }
+        final int before = pushes();
+        final SyncReport r = await s1.engine.syncOnce();
+        expect(r.pushedEvents, 0);
+        expect(r.refusedEvents, 0);
+        expect(
+          pushes() - before,
+          lessThanOrEqualTo(2 * (1 + 4) + 3 * 2),
+          reason: 'two suspect batches in all, then at most one probe (two calls) for each kind',
+        );
+        expect(await s1.db.setting('sync_stall'), '1,${s1.clock},attempt+reward+session');
+        expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+        expect((await s1.db.unsyncedSessions(limit: 100)).length, 8);
+        expect((await s1.db.unsyncedRewards(limit: 100)).length, 8);
+      },
+    );
+
+    test('SEC-B20-5 a stall setting with a count of 0 or less, or one that is not understood, does not stop the pushes', () async {
+      expect(SyncEngine.stallWait(0), SyncEngine.stallBase);
+      expect(SyncEngine.stallWait(-7), SyncEngine.stallBase);
+      for (final String bad in <String>[
+        '0,${s1.clock},attempt',
+        '-3,${s1.clock},attempt',
+        '1,x,attempt',
+        '1,${s1.clock},nothing',
+        '1,${s1.clock}',
+      ]) {
+        await s1.db.putSetting('sync_stall', bad);
+        await s1.answer('a.${bad.hashCode}', 'correct');
+        expect((await s1.engine.syncOnce()).pushedEvents, 1, reason: bad);
+      }
+    });
+
+    test(
+      'SEC-B20-7 a bad_request that is not a 400 is a failure, not a bad row: nothing is marked',
+      () async {
+        await s1.answer('a.1', 'correct');
+        final SyncEngine odd = SyncEngine(
           db: s1.db,
-          call: strict.callFor(dev1),
+          call: (String name, Map<String, Object?> body) async {
+            if (name == 'sync-push') throw const GatewayException('bad_request', status: 502);
+            return strict.callFor(dev1)(name, body);
+          },
           deviceId: dev1,
           isParent: true,
           nowMs: () => noon,
-          engineVersion: 2,
           pageSize: 4,
           batch: 4,
         );
-        final SyncReport r = await upgraded.syncOnce();
-        expect(r.pushedEvents, 2);
-        expect(r.refusedEvents, 1);
-        expect(strict.log.length, 3);
-        expect(refused(await s1.db.attemptsOf(kid)).single.activityId, 'Not An Id');
-        final int after = pushes();
-        await upgraded.syncOnce();
-        expect(pushes(), after, reason: 'reset once per version, not every round');
+        final int before = pushes();
+        final SyncReport r = await odd.syncOnce();
+        expect(r.refusedEvents, 0);
+        expect(refused(await s1.db.attemptsOf(kid)), isEmpty);
+        expect((await s1.db.unsyncedAttempts()).length, 1);
+        expect(
+          pushes(),
+          before,
+          reason: 'the fake server saw no sync-push; the one-by-one retry was not tried either',
+        );
       },
     );
 

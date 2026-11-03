@@ -148,7 +148,7 @@ void main() {
     });
     tearDown(() => db.close());
 
-    SyncEngine engine(Set<String> categories, {int version = 1, bool down = false}) => SyncEngine(
+    SyncEngine engine(Set<String> categories, {int wireFormat = 1, bool down = false}) => SyncEngine(
       db: db,
       call: (String name, Map<String, Object?> body) async {
         if (name != 'alert-create') return <String, Object?>{};
@@ -164,7 +164,7 @@ void main() {
       deviceId: dev,
       isParent: false,
       nowMs: () => noon.millisecondsSinceEpoch,
-      engineVersion: version,
+      wireFormat: wireFormat,
       batch: 4,
     );
 
@@ -224,10 +224,10 @@ void main() {
         expect(
           tried.where((Map<String, Object?> a) => a['key'] == 'words:1').length,
           2,
-          reason: 'not again this version',
+          reason: 'not again under this wire format',
         );
-        // A new version of the app sends what was refused once more (the gateway is right by then).
-        await engine(server, version: 2).syncOnce();
+        // A new wire format sends what was refused once more (the gateway is right by then).
+        await engine(server, wireFormat: 2).syncOnce();
         expect(stored.map((Map<String, Object?> a) => a['key']), contains('words:1'));
       },
     );
@@ -673,5 +673,112 @@ void main() {
         expect((await db.allAlerts()).single.words, isEmpty);
       },
     );
+  });
+
+  group('SEC-B20-2: an alert raised under a clock before 2017 reaches the parents', () {
+    final int floor = (wire['at']! as Map<String, Object?>)['min']! as int; // alert_create.at.min
+    final DateTime wrong = DateTime.utc(2010, 1, 1, 10);
+    late AppDatabase db;
+    late List<Map<String, Object?>> got;
+    setUp(() {
+      db = AppDatabase(NativeDatabase.memory());
+      got = <Map<String, Object?>>[];
+    });
+    tearDown(() => db.close());
+
+    SyncEngine engineAt(int Function() clock, {bool online = true}) => SyncEngine(
+      db: db,
+      call: (String name, Map<String, Object?> body) async {
+        if (name != 'alert-create') return <String, Object?>{};
+        if (!online) throw const GatewayException('network');
+        if ((body['at']! as int) < floor) throw const GatewayException('bad_request', status: 400);
+        got.add(body);
+        return <String, Object?>{'status': 'new'};
+      },
+      deviceId: dev,
+      isParent: false,
+      nowMs: clock,
+      serverNowMs: () => noon.millisecondsSinceEpoch,
+      batch: 4,
+    );
+
+    Future<void> raiseOld() => db.addAlert(
+      AlertsCompanion.insert(
+        at: wrong,
+        profileId: const Value<String?>(kid),
+        category: 'disclosure',
+        severity: 'info',
+        dedupeKey: 'words:old',
+      ),
+    );
+
+    test('the floor in the app is the one the gateway takes', () {
+      expect(SyncEngine.minClientMs, floor);
+      expect(AppDatabase.serverTimeFloorMs, floor);
+    });
+
+    test('the clock is put right while the phone is offline: the alert is not pruned unsent, and then it arrives', () async {
+      int clock = wrong.millisecondsSinceEpoch;
+      await raiseOld();
+      clock = noon.millisecondsSinceEpoch;
+      await engineAt(() => clock, online: false).syncOnce();
+      expect((await db.allAlerts()).map((Alert a) => a.dedupeKey), contains('words:old'));
+      await engineAt(() => clock).syncOnce();
+      expect(got.map((Map<String, Object?> a) => a['key']), <String>['words:old']);
+      expect(got.single['at']! as int, greaterThanOrEqualTo(floor));
+    });
+
+    test(
+      'the clock is still wrong when it is sent: it goes with the time of the server and is not kept aside',
+      () async {
+        await raiseOld();
+        await engineAt(() => wrong.millisecondsSinceEpoch).syncOnce();
+        expect(got.single['at'], noon.millisecondsSinceEpoch);
+        expect(AppDatabase.wasRefusedBySync((await db.allAlerts()).single.syncedAt), isFalse);
+        expect((await db.allAlerts()).single.syncedAt, isNotNull);
+      },
+    );
+
+    test('an alert kept aside as refused under a wrong time is timed again, and not pruned either', () async {
+      await raiseOld();
+      await db.markAlertsSynced(<int>[(await db.allAlerts()).single.id], AppDatabase.refusedBySync);
+      await db.tidyAlerts(noon);
+      final Alert a = (await db.allAlerts()).single;
+      expect(a.at.toUtc(), noon);
+    });
+
+    test(
+      'SEC-B20-8 a wrong clock that stays wrong does not keep an undelivered alert past 30 days',
+      () async {
+        await raiseOld();
+        final DateTime later = wrong.add(const Duration(days: 31));
+        for (DateTime d = wrong; d.isBefore(later); d = d.add(const Duration(days: 1))) {
+          await db.tidyAlerts(d); // the phone stays offline and its clock stays wrong
+        }
+        expect((await db.allAlerts()).single.at.toUtc(), wrong, reason: 'not moved while the clock is wrong');
+        await db.tidyAlerts(later);
+        expect(await db.allAlerts(), isEmpty);
+      },
+    );
+
+    test('an alert that was sent, or has a right time, is not touched', () async {
+      await raiseOld();
+      await db.markAlertsSynced(<int>[(await db.allAlerts()).single.id], noon);
+      await db.addAlert(
+        AlertsCompanion.insert(
+          at: noon.subtract(const Duration(days: 3)),
+          profileId: const Value<String?>(kid),
+          category: 'disclosure',
+          severity: 'info',
+          dedupeKey: 'words:fine',
+        ),
+      );
+      await db.tidyAlerts(noon);
+      final List<Alert> left = await db.allAlerts();
+      expect(left.map((Alert a) => a.dedupeKey), <String>[
+        'words:fine',
+      ], reason: 'the old sent one goes after 30 days');
+      expect(left.single.at.toUtc(), noon.subtract(const Duration(days: 3)));
+    });
   });
 }
