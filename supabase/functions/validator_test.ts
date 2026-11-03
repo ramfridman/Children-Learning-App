@@ -222,7 +222,7 @@ Deno.test("10. targets: highlights are this item's objects, the action is allowe
 
 Deno.test("a name is data: the guide's own name may be said, another name may not", () => {
   assert.ok(check(reply("אני ניצי")).ok);
-  assert.ok(fails(check(reply("אני דני"))).includes("vocabulary"));
+  assert.ok(fails(check(reply("אני גלעד"))).includes("vocabulary"));
 });
 
 Deno.test("all failures are reported, not only the first", () => {

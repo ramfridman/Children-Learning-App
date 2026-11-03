@@ -643,7 +643,7 @@ Deno.test({
       await store.upsertChild(family, { ...profile, nickname: "נועה כהן", companionId: "hero-son" }),
       "saved",
     );
-    assert.equal(await store.upsertChild(family, { ...profile, id: kid2, nickname: "דני" }), "saved");
+    assert.equal(await store.upsertChild(family, { ...profile, id: kid2, nickname: "גלעד" }), "saved");
     const kids = await store.listChildren(family);
     assert.equal(kids.length, 2);
     assert.equal(kids[0].nickname, "נועה כהן", "saving again changed the child, it did not add one");
