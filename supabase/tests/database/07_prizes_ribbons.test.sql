@@ -13,7 +13,7 @@ select lives_ok($$insert into app.child_profile (family_id, id, nickname, avatar
   values ('d7d7d7d7-0000-4000-8000-000000000001', 'child-7777-0001', 'נועה', 'avatar-noa', 'sky', 'f', 1)$$,
   'a child can wear a prize');
 select lives_ok($$insert into app.child_profile (family_id, id, nickname, avatar_id, address_form, age_band)
-  values ('d7d7d7d7-0000-4000-8000-000000000001', 'child-7777-0002', 'דני', 'avatar-dani', 'm', 0)$$,
+  values ('d7d7d7d7-0000-4000-8000-000000000001', 'child-7777-0002', 'גלעד', 'avatar-gilad', 'm', 0)$$,
   'a child may wear none');
 select throws_ok($$update app.child_profile set outfit_id = 'Has Spaces And Capitals' where id = 'child-7777-0001'$$,
   '23514', null, 'a prize is an id, not free text');

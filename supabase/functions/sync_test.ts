@@ -144,7 +144,7 @@ Deno.test("child-put: a child device cannot save children, and a nickname is pla
 Deno.test("child-delete: everything about the child goes, a tombstone is left, and every device learns of it", async () => {
   const { h, parent, child, other, store, profile, attempt, session, j } = await setup();
   await call(h.put, parent, "child-put", profile(KID));
-  await call(h.put, parent, "child-put", profile(KID2, { nickname: "דני", avatar_id: "avatar-dani" }));
+  await call(h.put, parent, "child-put", profile(KID2, { nickname: "גלעד", avatar_id: "avatar-gilad" }));
   await call(h.push, child, "sync-push", {
     events: [attempt(), session(), attempt({}, crypto.randomUUID(), KID2)],
   });
