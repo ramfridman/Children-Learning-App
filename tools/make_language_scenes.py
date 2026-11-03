@@ -499,7 +499,146 @@ def part_c():
     return out
 
 
-PARTS = {'batch4a': part_a, 'batch4b': ru_stories, 'batch4c': part_c}
+
+# ---- the Hebrew action animations (A-02): two key poses each, played by the app ------------------------------------
+# SVG in the app has no animation, so each action is two pictures of the same scene, frame a (the start) and frame b
+# (the action), drawn on one ground so nothing jumps but the moving part. The app plays them as in actions.anim.json:
+# a for 500 ms, b for 700 ms, three times, then it rests on b (with reduce-motion: b only).
+
+def grass_tile(parts, water=False):
+    bg = ['<rect x="0" y="0" width="256" height="256" fill="#DFF1FB"/>']
+    if water:
+        bg.append('<path d="M 0 120 C 80 112, 180 112, 256 120 L 256 256 L 0 256 Z" fill="#8FD3F4"/>')
+        bg.append('<path d="M 0 120 C 80 112, 180 112, 256 120" fill="none" stroke="#5BB8E0" stroke-width="3"/>')
+    else:
+        bg.append('<path d="M 0 170 C 80 160, 180 160, 256 170 L 256 256 L 0 256 Z" fill="#B5DFA0"/>')
+    text = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">'
+            '<clipPath id="page"><rect x="0" y="0" width="256" height="256" rx="20"/></clipPath>'
+            '<g clip-path="url(#page)" stroke-linejoin="round" stroke-linecap="round">%s</g></svg>\n' % ''.join(bg + parts))
+    return compact(text)
+
+
+def kitchen_tile(parts):
+    bg = ['<rect x="0" y="0" width="256" height="256" fill="#FFF3E0"/>', '<rect x="0" y="196" width="256" height="60" fill="#E8C590"/>',
+          '<rect x="0" y="192" width="256" height="8" fill="#C98F52"/>']
+    text = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">'
+            '<clipPath id="page"><rect x="0" y="0" width="256" height="256" rx="20"/></clipPath>'
+            '<g clip-path="url(#page)" stroke-linejoin="round" stroke-linecap="round">%s</g></svg>\n' % ''.join(bg + parts))
+    return compact(text)
+
+
+def stir_frames(cook, x0, bowl_pic, s_bowl=0.6):
+    """Someone stirring: the spoon leans left in frame a and right in frame b, the batter swirls."""
+    out = []
+    for lean in (-18, 22):
+        spoon = obj(m.spoon(), 128 + lean * 0.6, 174, 0.38, rot=40 + lean)
+        parts = cook + [obj(bowl_pic, 128, 214, s_bowl), spoon] + swirl(128, 168, 30)
+        out.append(kitchen_tile(parts))
+    return out
+
+
+def actions():
+    out = {}
+    MIKA_BOY = pe.EXTRA['boy']
+    # the rabbit kicks the ball
+    out['act-he-kick-rabbit-a'] = grass_tile([obj(m.rabbit(), 150, 226, 0.6), red_ball(70, 226, 0.18, air=False)])
+    out['act-he-kick-rabbit-b'] = grass_tile([obj(rabbit_kick(), 150, 226, 0.6), red_ball(46, 120, 0.16)] + bounce([(70, 216), (46, 130)]))
+    # the cat searches in a bush
+    out['act-he-search-cat-a'] = grass_tile([obj(b2.bush(), 80, 230, 0.6), obj(m.cat(), 196, 228, 0.5)])
+    out['act-he-search-cat-b'] = grass_tile([obj(m.cat(), 150, 228, 0.5), obj(b2.bush(), 96, 230, 0.6)]
+                                            + [L('M 60 120 l -6 -10 M 76 112 l 0 -12 M 92 118 l 6 -10', '#B8B0D0', 3.5)])
+    # Nitzi stirs a bowl (Nitzi behind the bowl, an apron on)
+    nitzi = [asset(NITZI, 128, 196, 0.5)] + apron(128, 150, 0.44)
+    a, b = stir_frames(nitzi, 128, m.bowl())
+    out['act-he-stir-nitzi-a'], out['act-he-stir-nitzi-b'] = a, b
+    # a fish swims (to the left, the reading direction of the Hebrew page)
+    for k, (x, tail) in enumerate(((168, 8), (96, -8))):
+        bub = [E(x + 70 + dx, 150 - dy, rr, rr, 'none', 2.5, stroke='#5BB8E0') for dx, dy, rr in ((0, 0, 5), (10, 18, 4), (4, 34, 3))]
+        out['act-he-swim-fish-%s' % 'ab'[k]] = grass_tile([obj(m.fish(), x, 214, 0.5, rot=tail, air=True)] + bub, water=True)
+    # the check scenes: a boy kicks, a duck swims, a girl searches in a box, the mother stirs a pot
+    for k, (legs, ballxy) in enumerate(((((-10, 10), (-30, 20)), (60, 226)), (((-10, 10), (70, -10)), (34, 120)))):
+        boy = pe.posed(MIKA_BOY, view='side', arms=((-30, 20), (30, 20)), legs=legs, expr='happy')
+        extra = bounce([(60, 216), (34, 130)]) if k else []
+        out['act-he-kick-boy-%s' % 'ab'[k]] = grass_tile([person(boy, 150, 228, 1.1), red_ball(ballxy[0], ballxy[1], 0.16, air=bool(k))] + extra)
+    for k, x in enumerate((170, 100)):
+        rip = [E(x + 60, 196, 26, 5, 'none', 2.5, stroke=WHITE), E(x + 84, 196, 16, 4, 'none', 2.5, stroke=WHITE)]
+        out['act-he-swim-duck-%s' % 'ab'[k]] = grass_tile([obj(m.duck(), x, 226, 0.5)] + rip, water=True)
+    girl_sp = pe.EXTRA['girl']
+    for k, (lean, arm) in enumerate(((0, ((8, 0), (30, 0))), (-30, ((20, 0), (50, 0))))):
+        g = pe.posed(girl_sp, view='side', arms=arm, legs=((-6, 4), (6, -4)), lean=lean, expr='smile')
+        box_back = open_box(front=False)
+        box_front = open_box(back=False)
+        scene_ = ['<g transform="translate(-10 40) scale(0.62)">%s</g>' % ''.join(box_back)]
+        scene_ += [person(g, 166, 228, 1.0)]
+        scene_ += ['<g transform="translate(-10 40) scale(0.62)">%s</g>' % ''.join(box_front)]
+        out['act-he-search-girl-%s' % 'ab'[k]] = grass_tile(scene_)
+    mum = ch.BY_ID['mother']
+    cook = [person(pe.posed(mum, arms=((20, -110), (20, -110)), expr='happy'), 128, 266, 1.0)]
+    pot = b2.pot()   # the pot without its lid: the lid, its knob and its highlight left out
+    pot.parts = [q for q in pot.parts if 'C 40 64' not in q and 'M 122 52' not in q and 'Q 90 72' not in q]
+    a, b = stir_frames(cook, 128, pot, 0.56)
+    out['act-he-stir-mother-a'], out['act-he-stir-mother-b'] = a, b
+    return out
+
+
+ANIM = {
+    'note': ('Each Hebrew action (A-02) is two key poses of one scene. Play a for 500 ms, then b for 700 ms, three times, '
+             'and rest on b; a 150 ms cross-fade between them. With reduce-motion on, show b only. No sound is tied to the frames.'),
+    'actions': {
+        'kick-rabbit': {'word': 'בּוֹעֵט', 'frames': ['act-he-kick-rabbit-a', 'act-he-kick-rabbit-b']},
+        'search-cat': {'word': 'מְחַפֶּשֶׂת', 'frames': ['act-he-search-cat-a', 'act-he-search-cat-b']},
+        'stir-nitzi': {'word': 'מְעַרְבֶּבֶת', 'frames': ['act-he-stir-nitzi-a', 'act-he-stir-nitzi-b']},
+        'swim-fish': {'word': 'שׂוֹחֶה', 'frames': ['act-he-swim-fish-a', 'act-he-swim-fish-b']},
+        'kick-boy': {'word': 'בּוֹעֵט', 'frames': ['act-he-kick-boy-a', 'act-he-kick-boy-b'], 'check': True},
+        'swim-duck': {'word': 'שׂוֹחֶה', 'frames': ['act-he-swim-duck-a', 'act-he-swim-duck-b'], 'check': True},
+        'search-girl': {'word': 'מְחַפֶּשֶׂת', 'frames': ['act-he-search-girl-a', 'act-he-search-girl-b'], 'check': True},
+        'stir-mother': {'word': 'מְעַרְבֶּבֶת', 'frames': ['act-he-stir-mother-a', 'act-he-stir-mother-b'], 'check': True},
+    },
+    'timing_ms': {'a': 500, 'b': 700, 'crossfade': 150, 'repeat': 3},
+}
+
+
+# ---- the composites: sets for counting, drum strips, big and small --------------------------------------------------
+
+def composite(parts, w=256, h=256):
+    text = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" width="%d" height="%d">'
+            '<g stroke-linejoin="round" stroke-linecap="round">%s</g></svg>\n' % (w, h, w, h, ''.join(parts)))
+    return compact(text)
+
+
+DICE = {1: [(0, 0)], 2: [(-1, -1), (1, 1)], 3: [(-1, -1), (0, 0), (1, 1)], 4: [(-1, -1), (1, -1), (-1, 1), (1, 1)],
+        5: [(-1, -1), (1, -1), (0, 0), (-1, 1), (1, 1)]}
+
+
+def composites():
+    out = {}
+    for n in range(1, 6):   # balls in the dice pattern, the same size in every set
+        out['set-balls-%d' % n] = composite([obj(m.ball('red'), 128 + dx * 62, 160 + dy * 62, 0.26, air=True) for dx, dy in DICE[n]])
+    for n in range(1, 6):   # identical yellow ducklings in a row, evenly spaced, the same size in every set
+        gap = 74   # a 384 x 216 strip, so five fit in a row at a size a child can count
+        x0 = 192 - gap * (n - 1) / 2
+        out['set-ducks-%d' % n] = composite([obj(m.duckling(), x0 + k * gap, 156, 0.32) for k in range(n)], 384, 216)
+    for n in range(1, 5):   # one to four drums in a row, the same 384 x 216 strip
+        gap = 92
+        x0 = 192 - gap * (n - 1) / 2
+        out['drum-strip-%d' % n] = composite([obj(m.drum(), x0 + k * gap, 156, 0.36) for k in range(n)], 384, 216)
+    out['dog-big'] = composite(['<ellipse cx="96" cy="150" rx="88" ry="74" fill="#FFC83D" opacity="0.25"/>',
+                                obj(m.dog(), 96, 226, 0.66), obj(m.dog(), 204, 226, 0.3)])
+    out['ball-pair'] = composite([obj(m.ball('red'), 92, 226, 0.58), obj(m.ball('red'), 204, 226, 0.26)])
+    return out
+
+
+def part_d():
+    out = actions()
+    out.update(composites())
+    import json
+    with open(os.path.join(OUT, 'actions.anim.json'), 'w', encoding='utf-8', newline='\n') as fh:
+        json.dump(ANIM, fh, ensure_ascii=False, indent=1)
+        fh.write('\n')
+    return out
+
+
+PARTS = {'batch4a': part_a, 'batch4b': ru_stories, 'batch4c': part_c, 'batch4d': part_d}
 
 
 def main():

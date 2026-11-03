@@ -1,0 +1,71 @@
+{
+ "note": "Each Hebrew action (A-02) is two key poses of one scene. Play a for 500 ms, then b for 700 ms, three times, and rest on b; a 150 ms cross-fade between them. With reduce-motion on, show b only. No sound is tied to the frames.",
+ "actions": {
+  "kick-rabbit": {
+   "word": "בּוֹעֵט",
+   "frames": [
+    "act-he-kick-rabbit-a",
+    "act-he-kick-rabbit-b"
+   ]
+  },
+  "search-cat": {
+   "word": "מְחַפֶּשֶׂת",
+   "frames": [
+    "act-he-search-cat-a",
+    "act-he-search-cat-b"
+   ]
+  },
+  "stir-nitzi": {
+   "word": "מְעַרְבֶּבֶת",
+   "frames": [
+    "act-he-stir-nitzi-a",
+    "act-he-stir-nitzi-b"
+   ]
+  },
+  "swim-fish": {
+   "word": "שׂוֹחֶה",
+   "frames": [
+    "act-he-swim-fish-a",
+    "act-he-swim-fish-b"
+   ]
+  },
+  "kick-boy": {
+   "word": "בּוֹעֵט",
+   "frames": [
+    "act-he-kick-boy-a",
+    "act-he-kick-boy-b"
+   ],
+   "check": true
+  },
+  "swim-duck": {
+   "word": "שׂוֹחֶה",
+   "frames": [
+    "act-he-swim-duck-a",
+    "act-he-swim-duck-b"
+   ],
+   "check": true
+  },
+  "search-girl": {
+   "word": "מְחַפֶּשֶׂת",
+   "frames": [
+    "act-he-search-girl-a",
+    "act-he-search-girl-b"
+   ],
+   "check": true
+  },
+  "stir-mother": {
+   "word": "מְעַרְבֶּבֶת",
+   "frames": [
+    "act-he-stir-mother-a",
+    "act-he-stir-mother-b"
+   ],
+   "check": true
+  }
+ },
+ "timing_ms": {
+  "a": 500,
+  "b": 700,
+  "crossfade": 150,
+  "repeat": 3
+ }
+}
