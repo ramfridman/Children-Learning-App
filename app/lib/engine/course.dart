@@ -52,6 +52,21 @@ abstract final class Course {
     return core;
   }
 
+  /// The course an answer belongs to, read from every field that names one: its skill, its pack, its misconception tag and the
+  /// course it says itself. Null when they disagree: such an answer is damaged or forged, and evidence never crosses courses.
+  static String? ofAnswer({
+    required String skillId,
+    required String packId,
+    String tag = '',
+    String? course,
+  }) {
+    final String own = ofSkillId(skillId);
+    if (ofPackId(packId) != own) return null;
+    if (tag.isNotEmpty && ofTag(tag) != own) return null;
+    if (course != null && course != own) return null;
+    return own;
+  }
+
   static const String _langPrefix = 'lang-';
 }
 

@@ -9,6 +9,7 @@ import '../core/errors.dart';
 import '../core/log.dart';
 import '../data/app_database.dart';
 import '../data/child_name.dart';
+import '../engine/course.dart';
 import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
 import '../play/response_code.dart';
@@ -352,6 +353,8 @@ class SyncEngine {
       'template': a.template,
       'template_version': a.templateVersion,
       'skill_id': a.skillId,
+      // The course of a language answer (the lands send none, and none means `core`).
+      if (Course.ofSkillId(a.skillId) != Course.core) 'course': Course.ofSkillId(a.skillId),
       'result': a.result,
       'attempt_no': a.attemptNo,
       'hint_level': a.hintLevel,
@@ -965,6 +968,15 @@ class SyncEngine {
     final String from = e['device_id']! as String;
     final DateTime at = DateTime.fromMillisecondsSinceEpoch(e['at']! as int, isUtc: true);
     if (e['type'] == 'attempt') {
+      // Evidence never crosses courses (docs/languages/frame.md section 1.5): an answer whose skill, pack, tag and course do
+      // not say the same course is not taken in.
+      final String? course = Course.ofAnswer(
+        skillId: d['skill_id']! as String,
+        packId: d['pack_id']! as String,
+        tag: d['misconception_tag'] as String? ?? '',
+        course: d['course'] as String?,
+      );
+      if (course == null) return false;
       final Object? local = d['session_local'];
       final String? key = local is int ? '$from:$local' : null;
       final int? sessionId = key == null ? null : await db.sessionIdForRemoteKey(key);

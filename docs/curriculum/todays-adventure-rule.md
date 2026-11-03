@@ -275,3 +275,15 @@ Every row was run through a small reference model of section 4 before it was wri
 4. **When everything is done, replay a known lesson?** Recommended: yes, never an empty bottle. Alternative: a calm bottle with nothing in it.
 5. **A parent switch to hide a land?** Recommended: not now; the rule is ready for it.
 6. **Rest a lesson for the day after the child leaves it right after an incorrect answer?** Recommended: yes (curriculum §10.4); it stays on the map.
+
+## 14. The languages as lands (L0, 2026-11-03; docs/languages/frame.md section 3.7)
+
+Each language a parent turned on for the child is a **land** for this rule, with the same steps and the same tie-breaks. Nothing in sections 3 to 7 changes; only the type of a land does.
+
+- **The land type.** `enabledLands`, `paths`, `Visit.land`, `DueSkill.land` and `TodaysAdventure.land` hold an `AdventureLand`: a `TrophyLand` (the six lands, order 0 to 5) or a `LanguageLand(course)` (`eng`, `heb`, `rus`; order 100, 101, 102, the order of the doors). Every sort that ended on the map order now ends on `order`, so the languages come after the lands and the order of the input never matters.
+- **Which languages are lands.** The adapter takes the language packs that are installed (`LanguageCourse`: the pack and the child's engine on it) and the set of courses the parent turned on (`enabledCourses`, from the child's language settings, `FamilyLanguages.enabledFor`). A language is a land when it is both. One that is off is not a land at all: its lessons are not offered, its due checks are not opened, and its visits are left out as if it had never been played. Its progress is kept untouched for when it is turned on again.
+- **Its path** is the pack's lessons in `sequence` order, by id after that (`landPath(pack, 'languages')`); `level` is the highest band letter among the lesson's skills, a group's dotted id (`ENG-B-19.G1`) counting as B.
+- **Its due checks** come from the child's engine on that course, so a revisit stays inside its course (frame section 3.4, rule 1). The rest of the rule is unchanged: a revisit first once a day, up to three lessons in the land played last, a lesson left after an error rests until the next day.
+- **Visits** belong to the course of the pack their answers name (`Attempt.packId`), so two courses may use the same lesson id; a placement visit is `placement-<course>` and a mission names its skill, whose id says its course.
+- **Words.** The bottle's line for a language stop (`adventureLine`) is `null` until the hebrew-text-editor writes the lines with the door; the bubble stays calm. The app does not open a language stop from the bottle until the island and its doors exist (`_openStop`).
+- **Tests.** `test/todays_adventure_languages_test.dart` (the rule with language lands, order, shuffling, off is not a land, the adapter with a language pack).

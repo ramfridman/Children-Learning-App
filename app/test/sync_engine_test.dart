@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/core/errors.dart';
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/engine/course.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
@@ -152,6 +153,165 @@ void main() {
       fingerprintOf(await p1.db.attemptsOf(kid)),
       reason: 'the same learning state on both phones',
     );
+  });
+
+  group('the course of an answer on the wire (L0, docs/languages/frame.md section 1.5)', () {
+    late FakeFamilyServer strict;
+    late Phone s1;
+    late Phone s2;
+
+    setUp(() async {
+      strict = FakeFamilyServer(checksFormat: true);
+      s1 = Phone(dev1, strict);
+      s2 = Phone(dev2, strict);
+      await s1.addChild();
+      await s1.engine.syncOnce();
+    });
+
+    tearDown(() async {
+      await s1.db.close();
+      await s2.db.close();
+    });
+
+    Future<void> languageAnswer(
+      Phone p, {
+      String pack = 'lang-eng',
+      String skill = 'ENG-B-19.G1',
+      String tag = 'eng.ph.dir',
+      String result = 'incorrect',
+      int minute = 0,
+    }) => p.db.recordAttempt(
+      AttemptsCompanion.insert(
+        at: DateTime.utc(2026, 11, 20, 10, minute),
+        profileId: kid,
+        packId: pack,
+        packVersion: '1.0.0',
+        activityId: 'eng.a$minute',
+        activityRevision: 1,
+        template: 'tap_answer',
+        templateVersion: '1.0',
+        skillId: skill,
+        result: result,
+        attemptNo: 1,
+        hintLevel: 0,
+        misconceptionTag: Value<String>(tag),
+        response: const Value<String>('o2'),
+      ),
+    );
+
+    Map<String, Object?> sentData(String activity) => strict.log
+        .map((Map<String, Object?> e) => e['data']! as Map<String, Object?>)
+        .firstWhere((Map<String, Object?> d) => d['activity_id'] == activity);
+
+    test('a language answer goes with its course, a dotted skill id and a language tag, and the format check takes it', () async {
+      await languageAnswer(s1);
+      await s1.answer('count.butterflies.3', 'correct', minute: 1);
+      final SyncReport r = await s1.engine.syncOnce();
+      expect(r.pushedEvents, 2);
+      expect(r.refusedEvents, 0);
+      expect(sentData('eng.a0')['course'], 'eng');
+      expect(sentData('eng.a0')['skill_id'], 'ENG-B-19.G1');
+      expect(sentData('eng.a0')['misconception_tag'], 'eng.ph.dir');
+      expect(sentData('eng.a0')['pack_id'], 'lang-eng');
+      expect(
+        sentData('count.butterflies.3').containsKey('course'),
+        isFalse,
+        reason: 'the lands send nothing new: missing means core',
+      );
+    });
+
+    test('the other phone takes the language answer in, as it was', () async {
+      await languageAnswer(s1);
+      await s1.engine.syncOnce();
+      final SyncReport got = await s2.engine.syncOnce();
+      expect(got.appliedEvents, 1);
+      final Attempt a = (await s2.db.attemptsOf(kid)).single;
+      expect(
+        <String>[a.packId, a.skillId, a.misconceptionTag],
+        <String>['lang-eng', 'ENG-B-19.G1', 'eng.ph.dir'],
+      );
+    });
+
+    test('an answer whose skill, pack, tag and course do not say the same course is not taken in', () async {
+      await s1.engine.syncOnce();
+      Map<String, Object?> event(String n, Map<String, Object?> over) => <String, Object?>{
+        'id': '00000000-0000-4000-8000-00000000000$n',
+        'child_id': kid,
+        'at': noon,
+        'engine': 1,
+        'type': 'attempt',
+        'seq': 100 + int.parse(n),
+        'device_id': dev1,
+        'data': <String, Object?>{
+          'activity_id': 'eng.x$n',
+          'activity_revision': 1,
+          'pack_id': 'lang-eng',
+          'pack_version': '1.0.0',
+          'template': 'tap_answer',
+          'template_version': '1.0',
+          'skill_id': 'ENG-A-01',
+          'course': 'eng',
+          'result': 'correct',
+          'attempt_no': 1,
+          ...over,
+        },
+      };
+      final List<Map<String, Object?>> forged = <Map<String, Object?>>[
+        event('1', <String, Object?>{'course': 'rus'}),
+        event('2', <String, Object?>{'pack_id': 'starter'}),
+        event('3', <String, Object?>{'pack_id': 'lang-rus'}),
+        event('4', <String, Object?>{'skill_id': 'SK-A-01'}),
+        event('5', <String, Object?>{'misconception_tag': 'rus.ph.dir'}),
+        event('6', <String, Object?>{'misconception_tag': 'M-CNT-DOUBLE'}),
+        event('7', <String, Object?>{'pack_id': 'lang-xyz'}),
+        event('8', <String, Object?>{'course': 'core'}),
+      ];
+      final Map<String, Object?> good = event('9', <String, Object?>{'misconception_tag': 'eng.ph.dir'});
+      strict.log.addAll(<Map<String, Object?>>[...forged, good]);
+      final SyncReport got = await s2.engine.syncOnce();
+      expect(got.pulledEvents, forged.length + 1);
+      expect(got.appliedEvents, 1, reason: 'only the one that agrees with itself');
+      expect((await s2.db.attemptsOf(kid)).single.activityId, 'eng.x9');
+    });
+
+    test('an answer from an older phone, with no course, is the course its skill says', () async {
+      await s1.engine.syncOnce();
+      strict.log.add(<String, Object?>{
+        'id': '00000000-0000-4000-8000-00000000000a',
+        'child_id': kid,
+        'at': noon,
+        'engine': 1,
+        'type': 'attempt',
+        'seq': 200,
+        'device_id': dev1,
+        'data': <String, Object?>{
+          'activity_id': 'old.1',
+          'activity_revision': 1,
+          'pack_id': 'starter',
+          'pack_version': '0.2.0',
+          'template': 'count_tap',
+          'template_version': '1.0',
+          'skill_id': 'NUM-A-03',
+          'result': 'correct',
+          'attempt_no': 1,
+        },
+      });
+      expect((await s2.engine.syncOnce()).appliedEvents, 1);
+    });
+
+    test('the pure rule, field by field', () {
+      String? read({String skill = 'ENG-A-01', String pack = 'lang-eng', String tag = '', String? course}) =>
+          Course.ofAnswer(skillId: skill, packId: pack, tag: tag, course: course);
+      expect(read(), 'eng');
+      expect(read(course: 'eng', tag: 'eng.ph.dir'), 'eng');
+      expect(read(skill: 'NUM-A-03', pack: 'starter'), 'core');
+      expect(read(skill: 'NUM-A-03', pack: 'char-nitzi', tag: 'M-CNT-SKIP', course: 'core'), 'core');
+      expect(read(course: 'heb'), isNull);
+      expect(read(pack: 'starter'), isNull);
+      expect(read(skill: 'NUM-A-03'), isNull);
+      expect(read(tag: 'heb.pa.x'), isNull);
+      expect(read(pack: 'lang-fra'), isNull);
+    });
   });
 
   group('B-28: names saved before the limit was 24', () {
