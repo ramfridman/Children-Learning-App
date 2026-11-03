@@ -48,3 +48,8 @@ The three teachers finished their research and syllabi (English 65 skills, Hebre
 - The **design-director** audits Heebo, chooses the Cyrillic and Latin teaching fonts, and shows you samples.
 - The **curriculum-expert** fits the three courses into the shared engine. Many new activity types are shared between the languages: text tiles with a sound per option, letter tracing in copy and memory modes, build-a-word, syllable reading, and a placement game.
 - Then a milestone plan for each language.
+
+## Later the same day (owner, 2026-11-03)
+- **The Languages island and its doors** (docs/design/languages-island.md, the open-book house beside home, the three hosts and doors): approved, "looks great".
+- **The Hebrew address rule** (docs/agents/hebrew-notes.md §9.1): the course voice speaks in the plural to every child and its own lines carry no gender: approved.
+- **The odd-one-out prompt** `מָה הִגִּיעַ לְכָאן בְּטָעוּת?` replaces "מִי לֹא שַׁיָּךְ?": approved.
