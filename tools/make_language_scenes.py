@@ -356,7 +356,150 @@ def ru_stories():
     return out
 
 
-PARTS = {'batch4a': part_a, 'batch4b': ru_stories}
+
+# ---- the Hebrew place pictures (A-04: on, in, under, next to; and the role swaps) -----------------------------------
+
+def tile(parts):
+    """A 256 picture of a small scene with a soft floor, so on, under and next to read at 64 px."""
+    body = ''.join(['<ellipse cx="128" cy="226" rx="120" ry="14" fill="#EDE6F7"/>'] + parts)
+    text = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">'
+            '<clipPath id="page"><rect x="0" y="0" width="256" height="256"/></clipPath>'
+            '<g clip-path="url(#page)" stroke-linejoin="round" stroke-linecap="round">%s</g></svg>\n' % body)
+    return compact(text)
+
+
+def sub(pic, a, b=None):
+    p = m.Pic()
+    p.parts = pic.parts[a:b]
+    return p
+
+
+def bird_alone():
+    b = m.bird()
+    p = m.Pic()
+    p.parts = [q for q in b.parts if '#9C6B3C' not in q and '#6DBE5A' not in q]
+    return p
+
+
+def open_box(front=True, back=True):
+    k, s, top = '#D9A866', '#B8874A', '#E8C08A'
+    out = []
+    if back:
+        out += [P('M 60 118 L 196 118 L 210 96 L 74 96 Z', s), P('M 60 118 L 30 86 L 70 80 L 96 110 Z', top),
+                P('M 196 118 L 226 86 L 186 80 L 160 110 Z', top)]
+    if front:
+        out += [P('M 60 118 L 196 118 L 196 214 L 60 214 Z', k), P('M 196 118 L 210 96 L 210 194 L 196 214 Z', s)]
+    return out
+
+
+def place():
+    out = {}
+
+    def ball(x, y, s=0.32, air=False):
+        return obj(m.ball('red'), x, y, s, air=air)
+
+    def box(x, y, s=0.58, air=False):
+        return obj(b2.box(), x, y, s, air=air)
+
+    out['place-ball-on-box'] = tile([box(128, 230), ball(124, 162, 0.36, air=True)])
+    out['place-box-on-ball'] = tile([ball(128, 232, 0.4), box(130, 166, 0.5, air=True)])
+    out['place-ball-in-box'] = tile(open_box(front=False) + [obj(m.ball('red'), 128, 150, 0.36, air=True)] + open_box(back=False))
+    basket = b2.basket()
+    out['place-cat-in-basket'] = tile([obj(basket, 128, 230, 0.8), obj(m.cat(), 128, 196, 0.44), obj(sub(basket, 3, 10), 128, 230, 0.8)])
+    out['place-basket-on-cat'] = tile([obj(m.cat(), 128, 230, 0.5), obj(sub(basket, 3, 10), 128, 146, 0.8, rot=180, ground=110)])
+    out['place-cat-by-basket'] = tile([obj(basket, 80, 230, 0.56), obj(m.cat(), 192, 230, 0.4)])
+    chair = b2.chair()
+    out['place-dog-under-chair'] = tile([obj(chair, 128, 232, 0.92), obj(m.dog(), 124, 228, 0.33)])
+    out['place-dog-on-chair'] = tile([obj(chair, 128, 232, 0.92), obj(b2.dog_2(), 120, 152, 0.36)])
+    out['place-dog-by-chair'] = tile([obj(chair, 90, 232, 0.72), obj(m.dog(), 196, 230, 0.36)])
+    boat = m.boat('blue')
+    out['place-bird-on-boat'] = tile([obj(boat, 128, 232, 0.82), obj(bird_alone(), 70, 166, 0.3)])
+    out['place-boat-on-bird'] = tile([obj(bird_alone(), 128, 236, 0.9), obj(boat, 136, 112, 0.34)])
+    out['place-bird-in-boat'] = tile([obj(boat, 128, 232, 0.82), obj(bird_alone(), 96, 204, 0.3), obj(sub(boat, 11), 128, 232, 0.82)])
+    bowl = m.bowl()
+    out['place-apple-in-bowl'] = tile([obj(bowl, 128, 230, 0.8), obj(m.apple(), 128, 166, 0.36, air=True), obj(sub(bowl, 2, 8), 128, 230, 0.8)])
+    out['place-bowl-on-apple'] = tile([obj(m.apple(), 132, 230, 0.4), obj(sub(bowl, 2, 10), 132, 164, 0.8, rot=180, ground=100)])
+    out['place-apple-by-bowl'] = tile([obj(bowl, 90, 230, 0.6), obj(m.apple(), 196, 230, 0.36)])
+    return out
+
+
+# ---- the Russian LS11 scenes, the new contexts, the bin box and the thumbs ---------------------------------------------
+
+SPOTS = {}
+
+
+def scene(name, parts, bg, spots):
+    SPOTS[name] = spots
+    return page(parts, bg)
+
+
+def russian_scenes():
+    out = {}
+    win = [RR(250, 26, 96, 80, 8, WHITE), RR(258, 34, 80, 64, 4, '#BFE6F7'), L('M 298 34 L 298 98 M 258 66 L 338 66', WHITE, 6),
+           RR(250, 26, 96, 80, 8, 'none')]
+    shelf = [RR(30, 70, 120, 10, 4, '#C98F52')]
+    rug = ['<ellipse cx="192" cy="190" rx="150" ry="22" fill="#B9A2F7" opacity="0.6"/>']
+    out['scene-room'] = scene('scene-room', win + shelf + rug, room(),
+                              {'spots': [[40, 20, 70, 50], [150, 120, 70, 70], [270, 120, 70, 70]],
+                               'note': 'three places for the object pictures: on the shelf, on the rug, by the window'})
+    out['scene-garden'] = scene('scene-garden', [obj(b2.tree(), 330, 170, 0.5), obj(b2.bush(), 50, 176, 0.4)], garden(True),
+                                {'spots': [[70, 80, 70, 110], [160, 80, 70, 110], [250, 80, 70, 110]],
+                                 'note': 'three places for the family pictures, standing on the path'})
+    cloth = ['<path d="M 30 140 L 354 140 L 380 210 L 4 210 Z" fill="#FFFFFF" stroke="%s" stroke-width="4"/>' % INK]
+    cloth += ['<path d="M %d 140 L %d 210" stroke="#E5484D" stroke-width="10" opacity="0.8"/>' % (x, x + (x - 192) // 6) for x in range(52, 354, 40)]
+    out['scene-picnic'] = scene('scene-picnic', cloth + [obj(b2.plate(), 300, 196, 0.36)], garden(),
+                                {'spots': [[40, 140, 60, 60], [110, 140, 60, 60], [180, 140, 60, 60]], 'target': [262, 150, 76, 50],
+                                 'note': "three foods on the cloth; the target is the friend's plate"})
+    tb = [RR(250, 110, 110, 80, 8, '#E5484D'), RR(244, 100, 122, 18, 6, '#B8282A'), P('M 250 100 L 230 64 L 250 60 L 270 98 Z', '#F28084'),
+          E(305, 150, 16, 16, '#FFC83D', 3)]
+    out['scene-toybox'] = scene('scene-toybox', tb, room(),
+                                {'spots': [[30, 130, 60, 60], [100, 130, 60, 60], [170, 130, 60, 60]], 'target': [250, 100, 110, 90],
+                                 'note': 'three toys on the floor; the target is the toy box'})
+    return out
+
+
+def button(c, s, up=True):
+    """A round pebble button with a clay lip and a white thumb (up: green; down: a calm blue, never red, never a cross)."""
+    hand = ['<g transform="%s">' % ('translate(0 0)' if up else 'rotate(180 128 124)'),
+            P('M 92 112 L 92 172 L 152 172 C 164 172, 172 164, 170 152 L 176 124 C 178 112, 170 106, 160 106 L 138 106 L 142 80 '
+              'C 144 64, 124 58, 120 74 L 112 104 Z', WHITE, 5),
+            RR(74, 110, 22, 64, 8, WHITE), L('M 140 126 L 172 126 M 140 142 L 170 142 M 140 158 L 168 158', '#D8D3E6', 3), '</g>']
+    return [E(128, 132, 96, 96, s, 0), E(128, 122, 96, 96, c, 5)] + hand
+
+
+def context_and_pieces():
+    out = {}
+    bench = [RR(150, 176, 90, 10, 4, '#C98F52'), RR(150, 160, 90, 8, 4, '#C98F52'), RR(158, 184, 8, 30, 3, '#8F6230'), RR(224, 184, 8, 30, 3, '#8F6230')]
+    park = ['<rect x="0" y="0" width="256" height="256" fill="#DFF1FB"/>', '<path d="M 0 170 C 80 160, 180 160, 256 170 L 256 256 L 0 256 Z" fill="#B5DFA0"/>',
+            '<path d="M 0 236 C 80 214, 170 214, 256 228 L 256 256 L 0 256 Z" fill="#EADBB8"/>', obj(b2.tree(), 210, 176, 0.46)]
+    out['ctx-bush-park'] = tile(park + bench + [obj(b2.bush(), 84, 214, 0.52)])
+    snowman = [E(128, 196, 54, 46, WHITE), E(128, 118, 40, 36, WHITE), E(116, 112, 4, 4, INK, 0), E(140, 112, 4, 4, INK, 0),
+               P('M 126 122 L 150 128 L 126 130 Z', '#FF8A3D', 2.5), E(128, 180, 4, 4, INK, 0), E(128, 200, 4, 4, INK, 0),
+               L('M 84 170 L 56 146 M 172 170 L 200 146', '#7A4A24', 5)]
+    out['ctx-hat-snowman'] = tile(snowman + [obj(m.hat(), 128, 98, 0.44, ground=196)])
+    wind = [L('M 10 70 C 50 66, 80 60, 110 50 C 124 44, 126 30, 116 28', '#8FBFE0', 6), L('M 0 110 C 50 106, 90 104, 130 96', '#8FBFE0', 6)]
+    sail = m.boat('green')
+    sail.parts = [q.replace('Q 186 110 206 160', 'Q 236 96 214 160') for q in sail.parts]
+    out['ctx-wind-sail'] = tile(wind + [obj(sail, 140, 236, 0.86)])
+    out['bin-box'] = tile(open_box(front=False) + open_box(back=False) + [RR(84, 134, 88, 64, 8, WHITE)])
+    out['thumb-up'] = tile(button('#36A852', '#237A3A', up=True))
+    out['thumb-down'] = tile(button('#5C8DDB', '#3E6FC2', up=False))
+    return out
+
+
+def part_c():
+    out = place()
+    out.update(russian_scenes())
+    out.update(context_and_pieces())
+    import json
+    with open(os.path.join(OUT, 'scenes.spots.json'), 'w', encoding='utf-8', newline='\n') as fh:
+        json.dump({'note': 'Places in the 384 x 216 scene backgrounds where the app puts pictures (x, y, w, h); the target is the drop place.',
+                   'scenes': SPOTS}, fh, ensure_ascii=False, indent=1)
+        fh.write('\n')
+    return out
+
+
+PARTS = {'batch4a': part_a, 'batch4b': ru_stories, 'batch4c': part_c}
 
 
 def main():
