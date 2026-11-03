@@ -323,7 +323,384 @@ def part_a():
     return out
 
 
-PARTS = {'batch3a': part_a}
+
+# ---- posed people (batch 3b): the model sheet's person with jointed arms and legs ------------------------------------
+# A limb is a round-capped stroke (the ink edge, then its colour), so a person can clap, wave, run or sit and still look
+# exactly like the model sheet in its rest pose. Angles are degrees from straight down; in the front view a positive
+# angle swings the limb outward, in the side view (facing left) forward.
+
+def limb(pts, col, w):
+    d = 'M ' + ' L '.join('%s %s' % (f(x), f(y)) for x, y in pts)
+    return [L(d, INK, w + 2 * ch.SW), L(d, col, w)]
+
+
+def chain(x, y, segs, side, view):
+    """Points of a jointed limb from (x, y): segs = [(length, angle), ...], each angle added to the last."""
+    pts, a = [(x, y)], 0.0
+    for length, da in segs:
+        a += da
+        rad = math.radians(a)
+        dx = (side * math.sin(rad)) if view == 'front' else (-math.sin(rad))
+        x, y = x + length * dx, y + length * math.cos(rad)
+        pts.append((x, y))
+    return pts
+
+
+def head_block(sp, expr, view, tilt=0):
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
+    skin = ch.SKIN[sp['skin']]
+    out = ['<g transform="rotate(%s 0 %s)">' % (f(tilt), f(hc + r))]
+    if view == 'front':
+        out.append(RR(-r * 0.24, hc + r * 0.7, r * 0.48, sh - hc - r * 0.6, r * 0.2, skin))
+        out += ch.hair_back_front(sp, r, hc)
+        out += [E(sx * r * 0.98, hc + r * 0.12, r * 0.2, r * 0.24, skin) for sx in (-1, 1)]
+        out.append(E(0, hc, r, r * 1.02, skin))
+        out += ch.hair_top_front(sp, r, hc)
+        out += face(sp, r, hc, expr)
+        if 'glasses' in sp['extras']:
+            out += [E(sx * r * 0.36, hc + r * 0.1, r * 0.24, r * 0.24, 'none', 2.5) for sx in (-1, 1)]
+            out.append(L('M %s %s Q 0 %s %s %s' % (f(-r * 0.12), f(hc + r * 0.06), f(hc), f(r * 0.12), f(hc + r * 0.06)), INK, 2.5))
+    else:
+        out.append(RR(-r * 0.2, hc + r * 0.7, r * 0.44, sh - hc - r * 0.6, r * 0.2, skin))
+        hs = ch.hair_side(sp, r, hc)
+        if sp['hair'] in ('bun', 'ponytail', 'curls'):
+            out.append(hs.pop(0))
+        out.append(E(r * 0.05, hc, r, r * 1.02, skin))
+        out.append(E(-r * 0.98, hc + r * 0.14, r * 0.15, r * 0.15, skin))
+        out.append(P('M %s %s C %s %s, %s %s, %s %s' % (f(r * 0.2), f(hc - r * 0.06), f(r * 0.46), f(hc - r * 0.12), f(r * 0.48), f(hc + r * 0.36),
+                                                       f(r * 0.22), f(hc + r * 0.32)), skin, 2.5))
+        out += hs
+        out += ch.face_side(r, hc)
+        if expr in ('happy', 'laugh'):
+            out.append(P('M %s %s Q %s %s %s %s Z' % (f(-r * 0.92), f(hc + r * 0.44), f(-r * 0.78), f(hc + r * 0.72), f(-r * 0.56), f(hc + r * 0.48)), ch.MOUTH, 2))
+        if 'glasses' in sp['extras']:
+            out.append(E(-r * 0.52, hc + r * 0.04, r * 0.24, r * 0.24, 'none', 2.5))
+            out.append(L('M %s %s L %s %s' % (f(-r * 0.28), f(hc), f(r * 0.2), f(hc - r * 0.02)), INK, 2.5))
+    out.append('</g>')
+    return out
+
+
+def face(sp, r, hc, expr):
+    if expr in ('happy', 'frown', 'smile', 'think'):
+        return ch.face_front(r, hc, expr)
+    ex, ey, er = r * 0.36, hc + r * 0.1, r * 0.13
+    out = [E(sx * r * 0.58, hc + r * 0.36, r * 0.17, r * 0.1, ch.CHEEK, 0, op=0.6) for sx in (-1, 1)]
+    if expr in ('closed', 'laugh', 'shiver'):
+        out += [L('M %s %s Q %s %s %s %s' % (f(sx * ex - er * 1.1), f(ey), f(sx * ex), f(ey + er * 1.1 * (1 if expr == 'closed' else -1)),
+                                             f(sx * ex + er * 1.1), f(ey)), INK, 3) for sx in (-1, 1)]
+    else:
+        lx = {'look': er * 0.45, 'sing': 0}.get(expr, 0)
+        for sx in (-1, 1):
+            out.append(E(sx * ex + lx, ey, er, er * 1.15, INK, 0))
+            out.append('<circle cx="%s" cy="%s" r="%s" fill="%s"/>' % (f(sx * ex + lx - er * 0.35), f(ey - er * 0.4), f(er * 0.38), WHITE))
+    mw, my = r * 0.26, hc + r * 0.46
+    if expr == 'laugh':
+        out.append(P('M %s %s Q 0 %s %s %s Z' % (f(-mw * 1.1), f(my - 3), f(my + mw * 1.6), f(mw * 1.1), f(my - 3)), ch.MOUTH, 2.5))
+        out.append(P('M %s %s Q 0 %s %s %s Z' % (f(-mw * 0.6), f(my + mw * 0.7), f(my + mw * 1.4), f(mw * 0.6), f(my + mw * 0.7)), '#F28AA0', 0))
+    elif expr == 'sing':
+        out.append(E(0, my + 2, r * 0.15, r * 0.19, ch.MOUTH, 2.5))
+    elif expr == 'shiver':
+        out.append(L('M %s %s l %s %s l %s %s l %s %s l %s %s' % (f(-mw * 0.8), f(my + 3), f(mw * 0.4), f(-5), f(mw * 0.4), f(5), f(mw * 0.4), f(-5),
+                                                               f(mw * 0.4), f(5)), INK, 2.5))
+    elif expr == 'eat':
+        out.append(E(0, my + 2, r * 0.14, r * 0.12, ch.MOUTH, 2.5))
+    else:
+        out.append(L('M %s %s Q 0 %s %s %s' % (f(-mw * 0.7), f(my), f(my + mw * 0.7), f(mw * 0.7), f(my)), ch.MOUTH, 2.5))
+    return out
+
+
+def posed(sp, view='front', arms=((8, 0), (8, 0)), legs=((3, 0), (3, 0)), lift=0, expr='smile', tilt=0, lean=0, flat=None,
+          props_back=(), props_front=(), reach=None, visor=None):
+    """A person in a pose. arms/legs: (shoulder or hip angle, elbow or knee bend) for (left, right) in the front view or
+    (far, near) in the side view; lift raises the body (a jump); lean tilts the body forward (side view)."""
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
+    skin = ch.SKIN[sp['skin']]
+    top = sp.get('top') or sp.get('dress') or sp.get('romper')
+    shorts = sp.get('bottomc') if sp.get('bottom') == 'shorts' else None
+    trousers = sp.get('bottomc') if sp.get('bottom') == 'trousers' else None
+    ua, fa = arm * 0.52, arm * 0.5
+    th, sn = (-hip) * 0.5, (-hip) * 0.5 - lw * 0.15
+    out = [ch.shadow(r * (1.6 if lift == 0 else 1.1))] + list(props_back)
+    out.append('<g transform="translate(0 %s)">' % f(-lift))
+    if view == 'front':
+        hips = [(-(tw * 0.03 + lw / 2), hip), ((tw * 0.03 + lw / 2), hip)]
+        shoulders = [(-(tw / 2 - aw * 0.25), sh + aw * 0.55), ((tw / 2 - aw * 0.25), sh + aw * 0.55)]
+        sides = (-1, 1)
+    else:
+        hips = [(lw * 0.2, hip), (-lw * 0.2, hip)]
+        shoulders = [(aw * 0.3, sh + aw * 0.55), (-aw * 0.1, sh + aw * 0.55)]
+        sides = (1, 1)
+
+    def dimc(c, dim):
+        return m.mix(c, INK, 0.2) if dim and c and c.startswith('#') else c
+
+    def draw_leg(i, dim):
+        (b1, b2), (x0, y0), s = legs[i], hips[i], sides[i]
+        pts = chain(x0, y0, [(th, b1), (sn, b2)], s, view)
+        o = limb(pts, dimc(trousers or skin, dim), lw)
+        if shorts:
+            mid = (pts[0][0] + (pts[1][0] - pts[0][0]) * 0.55, pts[0][1] + (pts[1][1] - pts[0][1]) * 0.55)
+            o += limb([pts[0], mid], dimc(shorts, dim), lw + 2)
+        fx, fy = pts[-1]
+        dx = (s * lw * 0.2) if view == 'front' else (-lw * 0.35)
+        o.append(E(fx + dx, fy + lw * 0.1, lw * (0.66 if view == 'front' else 0.8), lw * 0.32, dimc(sp['shoes'] or skin, dim)))
+        return o
+
+    def draw_arm(i, dim):
+        (a1, a2), (x0, y0), s = arms[i], shoulders[i], sides[i]
+        k = (reach or {}).get(i, 1.0)
+        pts = chain(x0, y0, [(ua * k, a1), (fa * k, a2)], s, view)
+        long_sleeve = sp.get('adult') and not sp.get('vest')
+        o = limb(pts, dimc(top if long_sleeve else skin, dim), aw)
+        if not long_sleeve:
+            t = 0.55 / k
+            mid = (pts[0][0] + (pts[1][0] - pts[0][0]) * t, pts[0][1] + (pts[1][1] - pts[0][1]) * t)
+            o += limb([pts[0], mid], dimc(top, dim), aw + 3)
+        hx, hy = pts[-1]
+        if visor is not None and visor == i:
+            o.append(E(hx - aw * 0.2, hy, aw * 1.05, aw * 0.45, skin))
+        elif flat is not None and flat == i:
+            o.append(RR(hx - aw * 0.5, hy - aw * 1.0, aw, aw * 1.9, aw * 0.45, skin))
+        else:
+            o.append(E(hx, hy, aw * 0.62, aw * 0.62, dimc(skin, dim)))
+        return o, (hx, hy)
+
+    hands = {}
+    far_arm = draw_arm(0, True)[0] if view == 'side' else []
+    if view == 'side':
+        out += draw_leg(0, True)
+    for i in ((0, 1) if view == 'front' else (1,)):
+        out += draw_leg(i, False)
+    if shorts and view == 'front':
+        out.append(RR(-tw / 2 + 1, hip - body * 0.06, tw - 2, lw * 0.95, lw * 0.4, shorts))
+    out.append('<g transform="rotate(%s 0 %s)">' % (f(lean), f(hip)))
+    out += far_arm
+    if sp.get('dress'):
+        hem = hip + (-hip) * 0.42
+        w0 = tw if view == 'front' else tw * 0.6
+        out.append(P('M %s %s L %s %s C %s %s, %s %s, %s %s L %s %s Z'
+                     % (f(-w0 / 2), f(sh + 4), f(-w0 * 0.78), f(hem), f(-w0 * 0.3), f(hem + 6), f(w0 * 0.3), f(hem + 6), f(w0 * 0.78), f(hem),
+                        f(w0 / 2), f(sh + 4)), sp['dress']))
+    elif sp.get('bottom') == 'skirt':
+        w0 = tw if view == 'front' else tw * 0.64
+        out.append(P('M %s %s L %s %s L %s %s L %s %s Z' % (f(-w0 / 2), f(hip - 6), f(-w0 * 0.72), f(-H * 0.1), f(w0 * 0.72), f(-H * 0.1),
+                                                            f(w0 / 2), f(hip - 6)), sp['bottomc']))
+        out.append(RR(-w0 / 2, sh, w0, hip - sh + body * 0.05, w0 * 0.3, top))
+    else:
+        w0 = tw if view == 'front' else tw * 0.64
+        out.append(RR(-w0 / 2, sh, w0, hip - sh + body * 0.05, w0 * 0.3, top))
+    out += head_block(sp, expr, view, tilt)
+    for i in ((0, 1) if view == 'front' else (1,)):
+        o, hands[i] = draw_arm(i, False)
+        out += o
+    out.append('</g>')
+    out += list(props_front)
+    out.append('</g>')
+    return out
+
+
+def motion(x, y, r, vertical=False, n=2):
+    """Motion arcs beside something that moves (a clap, a wave, a nod)."""
+    out = []
+    for k in range(n):
+        rr = r + k * 9
+        if vertical:
+            out.append(L('M %s %s Q %s %s %s %s' % (f(x - rr), f(y - 6), f(x), f(y - rr * 0.5 - 6), f(x + rr), f(y - 6)), '#B8B0D0', 4))
+        else:
+            out.append(L('M %s %s Q %s %s %s %s' % (f(x - rr * 0.4), f(y - rr), f(x - rr * 0.9), f(y), f(x - rr * 0.4), f(y + rr)), '#B8B0D0', 4))
+            out.append(L('M %s %s Q %s %s %s %s' % (f(x + rr * 0.4), f(y - rr), f(x + rr * 0.9), f(y), f(x + rr * 0.4), f(y + rr)), '#B8B0D0', 4))
+    return out
+
+
+MIKA = ch.BY_ID['mika']
+
+
+def mika_crop(pad=0):
+    return (-95 - pad, -186 - pad, 190 + 2 * pad, 200 + 2 * pad)
+
+
+def side_chair(x, seat_y, w=50):
+    wood, dark = '#C98F52', '#A8743C'
+    return [RR(x - w / 2, seat_y, w, 8, 3, wood), RR(x + w / 2 - 8, seat_y - 52, 8, 60, 3, dark),
+            RR(x - w / 2 + 2, seat_y + 6, 7, -seat_y - 6, 3, wood), RR(x + w / 2 - 9, seat_y + 6, 7, -seat_y - 6, 3, wood)]
+
+
+def front_chair(seat_y, w=62):
+    wood, dark = '#C98F52', '#A8743C'
+    return [RR(-w / 2, seat_y - 62, w, 60, 6, dark), RR(-w / 2 - 4, seat_y - 4, w + 8, 10, 4, wood),
+            RR(-w / 2, seat_y + 4, 8, -seat_y - 4, 3, wood), RR(w / 2 - 8, seat_y + 4, 8, -seat_y - 4, 3, wood)]
+
+
+def dust(x, y):
+    return [E(x + dx, y + dy, rr, rr * 0.8, '#E3D6C6', 2.5) for dx, dy, rr in ((0, 0, 10), (16, -6, 8), (30, 2, 6))]
+
+
+def ground(y=0, w=240, col='#B5DFA0'):
+    return ['<ellipse cx="0" cy="%s" rx="%s" ry="10" fill="%s"/>' % (f(y + 4), f(w / 2), col)]
+
+
+def act(name):
+    sp = MIKA
+    H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
+    if name == 'clap':
+        parts = posed(sp, arms=((62, -142), (62, -142)), expr='happy') + motion(0, sh + aw * 0.2, 14)
+    elif name == 'jump':
+        parts = posed(sp, arms=((150, 15), (150, 15)), legs=((25, -50), (25, -50)), lift=26, expr='laugh')
+        parts += [L('M -30 -6 L -40 6 M 0 -2 L 0 10 M 30 -6 L 40 6', '#B8B0D0', 4)]
+    elif name == 'listen':
+        parts = posed(sp, arms=((8, 0), (155, 148)), expr='closed', tilt=-6)
+        parts += [L('M 56 %s q 10 10 0 20 M 66 %s q 14 14 0 28' % (f(hc - 4), f(hc - 8)), '#B8B0D0', 4)]
+    elif name == 'look':
+        parts = posed(sp, arms=((8, 0), (175, 48)), expr='look', tilt=0, reach={1: 1.78}, visor=1)
+    elif name == 'sit':
+        seat = hip + (-hip) * 0.5
+        parts = posed(sp, view='side', arms=((10, -20), (10, -40)), legs=((90, -90), (90, -90)), lift=-(-hip) * 0.5 + lw * 0.1,
+                      props_back=side_chair(18, seat - lw * 0.1 + 2))
+    elif name == 'stand':
+        parts = posed(sp, arms=((160, 10), (160, 10)), expr='happy', props_back=front_chair(-38, 70))
+    elif name == 'stop':
+        parts = posed(sp, view='side', arms=((20, 10), (90, 0)), legs=((-14, 0), (16, 0)), flat=1, lean=4, props_back=dust(30, -6))
+    elif name == 'wave':
+        parts = posed(sp, arms=((8, 0), (140, 28)), expr='happy') + motion(62, -150, 12)
+    elif name == 'run':
+        parts = posed(sp, view='side', arms=((-40, 80), (50, 70)), legs=((-40, 60), (50, -70)), lean=-8, lift=8, expr='happy')
+        parts += [L('M 40 -110 L 70 -110 M 46 -90 L 80 -90 M 40 -70 L 66 -70', '#B8B0D0', 4)]
+    elif name == 'walk':
+        parts = posed(sp, view='side', arms=((-18, 20), (22, 20)), legs=((-18, 4), (20, -8)))
+    elif name == 'take':
+        ball = '<g transform="translate(-62 -30) scale(0.13)">%s</g>' % prefixed(m.ball('red').parts, 'ball')
+        ball = '<g transform="translate(-44 -30) scale(0.12)">%s</g>' % prefixed(m.ball('red').parts, 'ball')
+        parts = posed(sp, view='side', arms=((40, 0), (52, 0)), legs=((-10, 14), (30, -40)), lean=-34, lift=-3) + [ball]
+    return canvas(parts, crop=mika_crop())
+
+
+# ---- greetings, a gift, yes and no ---------------------------------------------------------------------------------
+
+def gate(x0=-110, x1=110, open_left=True):
+    wood, dark = '#C98F52', '#A8743C'
+    out = []
+    for x in range(int(x0), int(x1) + 1, 22):
+        if -30 < x < 30:
+            continue
+        out.append(P('M %d -10 L %d -86 L %d -96 L %d -86 L %d -10 Z' % (x - 7, x - 7, x, x + 7, x + 7), wood, 2.5))
+    out += [RR(x0 - 6, -78, 84, 9, 3, dark), RR(x1 - 78, -78, 84, 9, 3, dark), RR(x0 - 6, -40, 84, 9, 3, dark), RR(x1 - 78, -40, 84, 9, 3, dark)]
+    out += [RR(-38, -110, 12, 104, 4, dark), RR(26, -110, 12, 104, 4, dark)]
+    out += [P('M -26 -96 L -60 -84 L -60 -16 L -26 -8 Z', wood, 2.5)]
+    return out
+
+
+def mika_arrive():
+    return canvas(ground(0, 240) + gate() + posed(MIKA, arms=((8, 0), (140, 28)), expr='happy') + motion(62, -150, 12), crop=(-120, -196, 240, 212))
+
+
+def mika_leave():
+    body = posed(MIKA, view='side', arms=((-18, 20), (-150, -20)), legs=((-18, 4), (20, -8)), expr='happy')
+    walker = '<g transform="translate(0 0) scale(-1 1)">%s</g>' % ''.join(body)
+    return canvas(ground(0, 240) + gate() + [walker], crop=(-120, -196, 240, 212))
+
+
+def mika_gift():
+    apple = '<g transform="translate(-24 -102) scale(0.19)">%s</g>' % prefixed(m.apple().parts, 'ap')
+    giver = [L('M 140 -80 L 52 -86', INK, 22 + 6), L('M 140 -80 L 52 -86', '#2F7FE0', 22), E(44, -86, 13, 12, ch.SKIN[2])]
+    return canvas(posed(MIKA, arms=((20, -100), (20, -100)), expr='laugh') + [apple] + giver, crop=(-100, -196, 220, 212))
+
+
+def mika_nod(yes):
+    sp = MIKA
+    H, r, hc = sp['H'], sp['hr'], -sp['H'] + sp['hr']
+    parts = posed(sp, expr='happy' if yes else 'smile', tilt=10 if yes else 0)
+    col = '#B8B0D0'
+    for sx in (-1, 1):
+        x = sx * r * 1.55
+        if yes:   # up and down beside the head
+            parts += [L('M %s %s L %s %s' % (f(x), f(hc - r * 0.6), f(x), f(hc + r * 0.6)), col, 5),
+                      L('M %s %s l -7 9 M %s %s l 7 9' % (f(x), f(hc - r * 0.6), f(x), f(hc - r * 0.6)), col, 5),
+                      L('M %s %s l -7 -9 M %s %s l 7 -9' % (f(x), f(hc + r * 0.6), f(x), f(hc + r * 0.6)), col, 5)]
+        else:     # side to side beside the head
+            parts += [L('M %s %s Q %s %s %s %s' % (f(x - sx * 4), f(hc - r * 0.5), f(x + sx * 12), f(hc), f(x - sx * 4), f(hc + r * 0.5)), col, 5),
+                      L('M %s %s l %s -2 l %s 9' % (f(x - sx * 4), f(hc + r * 0.5), f(-sx * 10), f(sx * 2)), col, 5)]
+    return canvas(parts, crop=(-r * 2.4, hc - r * 1.9, r * 4.8, r * 4.8))
+
+
+# ---- the English scenes --------------------------------------------------------------------------------------------
+
+def scene_icecream():
+    cone = [P('M 58 -6 L 86 -14 L 76 6 Z', '#E2A85C', 2.5), P('M 30 -2 C 26 -22, 60 -24, 64 -6 C 56 4, 36 6, 30 -2 Z', '#F7A8C4', 2.5),
+            E(40, -14, 3, 3, '#E53935', 0), E(52, -10, 2.5, 2.5, '#4CAF50', 0)]
+    return canvas(ground(0, 240) + posed(MIKA, expr='frown', tilt=8, arms=((10, 0), (10, 0))) + cone, crop=(-110, -196, 220, 212))
+
+
+def scene_present():
+    import make_language_pictures_b2 as b2
+    box = ['<g transform="translate(-36 -100) scale(0.28)">%s</g>' % prefixed(b2.present().parts, 'pr')]
+    confetti = [E(x, y, 5, 3, c, 0) for x, y, c in ((-60, -170, '#E53935'), (64, -160, '#FFC83D'), (-74, -120, '#2F7FE0'), (80, -120, '#36A852'),
+                                                 (-40, -186, '#8A5CF0'), (40, -184, '#E04F9E'))]
+    return canvas(confetti + posed(MIKA, arms=((26, -96), (26, -96)), expr='laugh') + box, crop=(-110, -200, 220, 214))
+
+
+def scene_snow():
+    sp = dict(MIKA)
+    H, r, hc = sp['H'], sp['hr'], -sp['H'] + sp['hr']
+    hat = [P('M %s %s C %s %s, %s %s, %s %s Z' % (f(-r * 1.0), f(hc - r * 0.45), f(-r * 0.9), f(hc - r * 1.5), f(r * 0.9), f(hc - r * 1.5), f(r * 1.0), f(hc - r * 0.45)), '#E5484D'),
+           RR(-r * 1.08, hc - r * 0.62, r * 2.16, r * 0.34, r * 0.14, CREAM), E(0, hc - r * 1.42, r * 0.22, r * 0.22, CREAM)]
+    scarf = [RR(-r * 0.9, hc + r * 0.86, r * 1.8, r * 0.36, r * 0.16, '#2F7FE0'), RR(r * 0.2, hc + r * 1.0, r * 0.36, r * 1.1, r * 0.14, '#2F7FE0')]
+    flakes = []
+    for x, y, rr in ((-80, -170, 8), (70, -180, 7), (-60, -90, 6), (86, -100, 8), (-90, -40, 6), (60, -40, 5)):
+        flakes.append(L(''.join('M %d %d L %.1f %.1f ' % (x, y, x + rr * math.cos(k * math.pi / 3), y + rr * math.sin(k * math.pi / 3)) for k in range(6)), '#5BB8E0', 3))
+    body = posed(sp, expr='shiver', arms=((20, -100), (20, -100)))
+    body = body[:-1] + hat + scarf + [body[-1]]
+    shake = [L('M -46 -120 q -8 8 0 16 q 8 8 0 16 M 46 -120 q 8 8 0 16 q -8 8 0 16', '#B8B0D0', 4)]
+    return canvas(['<ellipse cx="0" cy="4" rx="130" ry="16" fill="#F4F8FF" stroke="#CFE3F5" stroke-width="3"/>'] + body + flakes + shake,
+                  crop=(-110, -200, 220, 214))
+
+
+def scene_walk():
+    tree = ['<g transform="translate(-2 -118) scale(0.42)">%s</g>' % prefixed(__import__('make_language_pictures_b2').tree().parts, 'tr')]
+    path = ['<path d="M -130 4 C -60 -10, 60 -10, 130 4 L 130 16 L -130 16 Z" fill="#E8D9B8"/>']
+    return canvas(tree + path + posed(MIKA, view='side', arms=((-18, 20), (22, 20)), legs=((-18, 4), (20, -8))), crop=(-110, -196, 220, 212))
+
+
+# ---- grown-ups of the courses ---------------------------------------------------------------------------------------
+
+def teacher_sing():
+    t, g, b = EXTRA['teacher'], EXTRA['girl'], EXTRA['boy']
+    parts = ['<g transform="translate(0 0)">%s</g>' % ''.join(posed(t, arms=((30, -40), (140, 30)), expr='sing'))]
+    parts.append('<g transform="translate(-86 0)">%s</g>' % ''.join(posed(g, expr='sing', arms=((10, 0), (10, 0)))))
+    parts.append('<g transform="translate(86 0)">%s</g>' % ''.join(posed(b, expr='sing', arms=((10, 0), (10, 0)))))
+    parts += note(70, -200, 0.9) + note(-70, -186, 0.8, '#E04F9E')
+    return canvas(parts, crop=(-130, -240, 260, 254))
+
+
+def plain_door():
+    return [RR(-60, -170, 120, 172, 10, '#E3D0AC'), RR(-46, -158, 92, 160, 8, '#FFE08A'),
+            P('M -46 2 L -46 -158 L -26 -150 L -26 -4 Z', '#9C6B3C'), E(-34, -80, 3, 3, '#FFC83D', 1.5)]
+
+
+def neighbour_arrive():
+    n = EXTRA['neighbour']
+    bag = [RR(-58, -100, 30, 34, 6, '#F2D3A0'), L('M -52 -100 Q -43 -118 -34 -100', INK, 3)]
+    return canvas(['<g transform="translate(-40 0)">%s</g>' % ''.join(plain_door())] + posed(n, arms=((10, 0), (140, 28)), expr='happy', props_front=bag)
+                  + motion(66, -190, 12), crop=(-120, -240, 240, 254))
+
+
+def neighbour_leave():
+    n = EXTRA['neighbour']
+    body = posed(n, view='side', arms=((-18, 20), (-150, -20)), legs=((-18, 4), (20, -8)), expr='happy')
+    walker = '<g transform="translate(30 0) scale(-1 1)">%s</g>' % ''.join(body)
+    return canvas(['<g transform="translate(-50 0)">%s</g>' % ''.join(plain_door())] + [walker], crop=(-120, -240, 240, 254))
+
+
+def part_b():
+    out = {'teacher-sing': teacher_sing(), 'neighbour-arrive': neighbour_arrive(), 'neighbour-leave': neighbour_leave()}
+    for a in ('clap', 'jump', 'listen', 'look', 'sit', 'stand', 'stop', 'wave', 'run', 'walk', 'take'):
+        out['act-' + a] = act(a)
+    out.update({'mika-arrive': mika_arrive(), 'mika-leave': mika_leave(), 'mika-gift': mika_gift(), 'mika-yes': mika_nod(True),
+                'mika-no': mika_nod(False), 'mika-icecream': scene_icecream(), 'mika-present': scene_present(), 'mika-snow': scene_snow(),
+                'mika-walk': scene_walk()})
+    return out
+
+
+PARTS = {'batch3a': part_a, 'batch3b': part_b}
 
 
 def main():
