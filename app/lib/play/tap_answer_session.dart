@@ -101,9 +101,10 @@ class TapAnswerSession extends TemplateSession {
     if ((controller.hintShown <= 1 || demonstrating) && marks.isNotEmpty) _hint.clear();
     final Outcome o = await controller.chooseOption(id, byVoice: byVoice);
     if (disposed) return;
-    if (o.correct) {
+    if (o.correct || o.settled) {
+      // A probe of the placement game ends on its one answer, right or not, and shows nothing "not yet".
       _hint.clear();
-      chosenState = AnswerState.correct;
+      chosenState = o.correct ? AnswerState.correct : AnswerState.selected;
       notify();
       later(TemplateSession.praisePause, controller.next);
     } else {

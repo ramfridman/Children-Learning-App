@@ -335,7 +335,12 @@ const Map<String, String> _opposite = <String, String>{
   'different': 'same',
 };
 
-int _choices(Map<String, Object?> a) => _maps(_map(a['answer'])['options']).length;
+/// How many choices the item has: only an answer that is a choice is scored, so a personal turn's cards or a story's pictures do not
+/// count (`type` is `none` for them).
+int _choices(Map<String, Object?> a) {
+  final Map<String, Object?> answer = _map(a['answer']);
+  return answer['type'] == 'none' ? 0 : _maps(answer['options']).length;
+}
 
 String _skillOf(Map<String, Object?> a) {
   final List<Map<String, Object?>> s = _maps(a['skills']);

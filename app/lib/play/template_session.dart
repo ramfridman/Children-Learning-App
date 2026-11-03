@@ -9,8 +9,10 @@ import '../content/models.dart' show Activity;
 import '../speech/answer_matcher.dart';
 import 'lesson_controller.dart';
 
-/// Plays clips (`vo:` references) in order; see [TemplateSession.playClips].
-typedef ClipPlayer = void Function(List<String> voIds, {bool replace});
+/// Plays clips (`vo:` references) in order; see [TemplateSession.playClips]. The result completes when the clips have been played
+/// (or were cut off): a session that needs the end of a line (a chant says its lines one after another) waits for it, and every
+/// other session ignores it.
+typedef ClipPlayer = FutureOr<void> Function(List<String> voIds, {bool replace});
 
 /// The state of one activity on screen. A template (count and tap, tap the answer, give N) is a
 /// session: it draws the stage and the answer tiles from one shared state, takes the child's moves,

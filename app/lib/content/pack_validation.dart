@@ -318,6 +318,9 @@ List<Problem> validatePack({
           for (final Map<String, Object?> o in _maps(answer['options'])) _look(o),
         ];
         if (looks.toSet().length != looks.length) say(file, 'answer.options', 'two options look the same');
+      case 'story':
+        checkAsset(file, 'scene.background', scene['background']);
+        _story(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
       case 'count_tap':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
@@ -637,6 +640,7 @@ List<Problem> validatePack({
         }
     }
     _targetClips(file, a, checkVo);
+    _languageOnlyTemplate(file, a, say, language: Course.isLanguage(course));
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
   });
@@ -896,6 +900,8 @@ void _lengths(String file, Map<String, Object?> a, void Function(String, String,
   atMost('prompt.caption', prompt['caption'], 14);
   final Object? answerPrompt = a['answerPrompt'];
   if (answerPrompt is Map<String, Object?>) atMost('answerPrompt.caption', answerPrompt['caption'], 14);
+  final Object? question = _mapOf(a['answer'])['question'];
+  if (question is Map<String, Object?>) atMost('answer.question.caption', question['caption'], 14);
   final Map<String, Object?> fb = a['feedback']! as Map<String, Object?>;
   atMost('feedback.correct.caption', (fb['correct']! as Map<String, Object?>)['caption'], 24);
   for (final (int i, Map<String, Object?> r) in _maps(fb['incorrect']).indexed) {
@@ -972,6 +978,132 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
   }
 
   walk(a, '');
+}
+
+/// The templates of the Band A wave of the language courses (L4) belong to a language course: a pack of the lands holds none.
+const Set<String> languageTemplates = <String>{
+  'story',
+  'listen_do',
+  'sing_along',
+  'puppet_talk',
+  'sound_boxes',
+};
+
+void _languageOnlyTemplate(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required bool language,
+}) {
+  if (!language && languageTemplates.contains(a['template'])) {
+    say(file, 'template', '${a['template']} belongs to a language course, not to the lands');
+  }
+}
+
+/// The options of a choice of a language template (a pause, a button, a bubble, a rhyme): between 2 and 3 of them, each a picture, a
+/// text or only a sound, with a label, and a hotspot (`at`) that lies inside its picture.
+void _l4Options(
+  String file,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkAsset,
+  void Function(String, String, Object?) checkVo,
+  void Function(String, String, Object?) checkTag, {
+  bool needCorrect = true,
+}) {
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (needCorrect) _options(file, answer, say, checkTag, checkAsset: checkAsset);
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    final String path = 'answer.options[$i]';
+    checkAsset(file, '$path.sprite', o['sprite']);
+    checkVo(file, '$path.clip', o['clip']);
+    final int faces = <String>['sprite', 'numeral', 'text'].where(o.containsKey).length;
+    if (faces > 1 || (faces == 0 && !o.containsKey('clip'))) {
+      say(
+        file,
+        path,
+        'must be exactly one of a sprite, a numeral or a text, or only a clip (a sound button)',
+      );
+    }
+    final Object? at = o['at'];
+    if (at is Map<String, Object?>) {
+      final double x = (at['x']! as num).toDouble() + (at['w']! as num).toDouble();
+      final double y = (at['y']! as num).toDouble() + (at['h']! as num).toDouble();
+      if (x > 1.001 || y > 1.001) say(file, '$path.at', 'reaches outside the picture');
+    }
+  }
+  final List<String> looks = <String>[for (final Map<String, Object?> o in options) _look(o)];
+  if (looks.toSet().length != looks.length) say(file, 'answer.options', 'two options look the same');
+}
+
+/// What an activity of a language template that is not scored must be: practice, with no options to choose and nothing right.
+void _unscored(String file, Map<String, Object?> a, void Function(String, String, String) say, String what) {
+  final Map<String, Object?> answer = _mapOf(a['answer']);
+  if (a['purpose'] != 'practice') say(file, 'purpose', '$what is never scored: it is practice');
+  if (answer['type'] != 'none') say(file, 'answer.type', '$what has no answer to choose: the type is "none"');
+  for (final String k in <String>['correct', 'pairWith', 'pole']) {
+    if (answer.containsKey(k)) say(file, 'answer.$k', '$what has no right answer');
+  }
+}
+
+/// LS08: the pages, the hotspots, the clips, and what each mode needs.
+void _story(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final List<Map<String, Object?>> pages = _maps(scene['pages']);
+  for (final (int i, Map<String, Object?> p) in pages.indexed) {
+    final String path = 'scene.pages[$i]';
+    checkAsset(file, '$path.picture', p['picture']);
+    for (final (int k, Object? c) in ((p['clips'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+      checkVo(file, '$path.clips[$k]', c);
+    }
+    for (final (int k, Map<String, Object?> w) in _maps(p['words']).indexed) {
+      checkVo(file, '$path.words[$k].clip', w['clip']);
+      final Map<String, Object?> at = w['at']! as Map<String, Object?>;
+      if ((at['x']! as num) + (at['w']! as num) > 1.001 || (at['y']! as num) + (at['h']! as num) > 1.001) {
+        say(file, '$path.words[$k].at', 'reaches outside the picture');
+      }
+    }
+  }
+  if (answer['mode'] == 'listen') {
+    _unscored(file, a, say, 'a story that is only heard');
+    for (final String k in <String>['options', 'pauseAfter', 'question']) {
+      if (answer.containsKey(k)) {
+        say(file, 'answer.$k', 'a story that is only heard has no pause and no question');
+      }
+    }
+    return;
+  }
+  // dialogic
+  if (answer['type'] != 'choice') {
+    say(file, 'answer.type', 'a dialogic story asks a choice: the type is "choice"');
+  }
+  final Object? pause = answer['pauseAfter'];
+  if (pause is! int || pause >= pages.length) {
+    say(
+      file,
+      'answer.pauseAfter',
+      'must be a page of the story (0 to ${pages.length - 1}): the page after which it asks',
+    );
+  }
+  final Object? question = answer['question'];
+  if (question is! Map<String, Object?>) {
+    say(file, 'answer.question', 'a dialogic story needs the question it asks at its pause');
+  } else {
+    checkVo(file, 'answer.question.vo', question['vo']);
+  }
+  if (_maps(answer['options']).length < 2 || answer['correct'] == null) {
+    say(file, 'answer.options', 'a dialogic story needs 2 or 3 options and the right one');
+    return;
+  }
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
 }
 
 /// The second clip of a spoken line (`target`) names a voice line of the pack, and only a language course has one.

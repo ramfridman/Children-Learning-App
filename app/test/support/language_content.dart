@@ -2,7 +2,11 @@
 // everything the validator wants around them (manifest entries, voice lines, tags). Not real content: the words are only
 // there to give the text, the sound and the tags something to be.
 
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/content/pack_verify.dart' show VerifiedPack;
 
 import 'sample_pack.dart';
 
@@ -239,7 +243,7 @@ class LangPack {
     final String id = activity['id']! as String;
     pack.addDocument('activity.$id.json', 'activities', id, activity);
     final Map<String, Object?> templates = pack.manifest['templates']! as Map<String, Object?>;
-    templates[activity['template']! as String] = activity['template'] == 'count_tap' ? '1.1' : '1.3';
+    templates[activity['template']! as String] = activity['templateVersion']! as String;
     final List<Object?> pending = pack.manifest['voPending']! as List<Object?>;
     void scan(Object? node) {
       if (node is String && node.startsWith('vo:') && !pending.contains(node)) pending.add(node);
@@ -257,5 +261,103 @@ class LangPack {
 
   Map<String, Object?> activity(String id) => pack.doc('activity.$course.$id.json');
 
-  PackContent get content => PackContent.fromPack(pack.verified(pictures: true));
+  /// The real pictures of the approved style (`content/languages/pictures`) that the pack shows instead of the fixture circle, by
+  /// asset id: `ball_red` is the file `ball-red.svg`.
+  final Set<String> realPictures = <String>{};
+
+  /// Adds the pictures [ids] to the pack's assets, drawn from the approved pictures when the file exists (a name that is not a picture
+  /// is drawn as the fixture circle). Run from the `app` folder, as `flutter test` does.
+  void addPictures(Iterable<String> ids) {
+    final List<Object?> assets = pack.manifest['assets']! as List<Object?>;
+    final List<Object?> files = pack.manifest['files']! as List<Object?>;
+    for (final String id in ids) {
+      if (assets.any((Object? a) => (a! as Map<String, Object?>)['id'] == id)) continue;
+      assets.add(<String, Object?>{'id': id, 'file': '$id.svg'});
+      files.add(<String, Object?>{'name': '$id.svg', 'sha256': '8' * 64, 'size': 1});
+      pack.files.add('$id.svg');
+      if (File(pictureFile(id)).existsSync()) realPictures.add(id);
+    }
+  }
+
+  static String pictureFile(String id) => '../content/languages/pictures/${id.replaceAll('_', '-')}.svg';
+
+  PackContent get content {
+    final VerifiedPack v = pack.verified(pictures: true);
+    final Map<String, Uint8List> files = <String, Uint8List>{
+      ...v.files,
+      for (final String id in realPictures) '$id.svg': File(pictureFile(id)).readAsBytesSync(),
+    };
+    return PackContent.fromPack(
+      VerifiedPack(
+        manifestBytes: v.manifestBytes,
+        signature: v.signature,
+        manifestSha256: v.manifestSha256,
+        manifest: v.manifest,
+        docs: v.docs,
+        files: files,
+      ),
+    );
+  }
+}
+
+// ---- stories (LS08) ----
+
+/// A page of a story: its picture (an asset id), the clips of its narration, what a screen reader says, and the things in it that
+/// say their word.
+Map<String, Object?> storyPage(
+  String picture,
+  List<String> clips, {
+  String alt = 'עַמּוּד בַּסִּפּוּר',
+  List<Map<String, Object?>> words = const <Map<String, Object?>>[],
+}) => <String, Object?>{
+  'picture': 'asset:$picture',
+  'clips': clips,
+  'alt': alt,
+  if (words.isNotEmpty) 'words': words,
+};
+
+Map<String, Object?> hotWord(String clip, {double x = 0.1, double y = 0.1, double w = 0.3, double h = 0.3}) =>
+    <String, Object?>{
+      'at': <String, Object?>{'x': x, 'y': y, 'w': w, 'h': h},
+      'clip': clip,
+    };
+
+/// A story of [course] (LS08). With [options] it is dialogic: it stops after the page [pauseAfter] and asks [question].
+Map<String, Object?> storyJson({
+  String course = 'eng',
+  required String id,
+  String? skill,
+  required List<Map<String, Object?>> pages,
+  int? pauseAfter,
+  String? question,
+  List<Map<String, Object?>>? options,
+  String? correct,
+}) {
+  final bool dialogic = options != null;
+  return <String, Object?>{
+    ..._common(
+      course,
+      id,
+      skill ?? '${course.toUpperCase()}-A-02',
+      'story',
+      '1.0',
+      dialogic ? 'learn' : 'practice',
+      'A',
+      'story',
+    ),
+    ..._lines('$course.$id', promptText: 'בּוֹאוּ נִשְׁמַע סִפּוּר. אֶפְשָׁר לָגַעַת בַּתְּמוּנוֹת.'),
+    'scene': <String, Object?>{'pages': pages},
+    'answer': dialogic
+        ? <String, Object?>{
+            'type': 'choice',
+            'mode': 'dialogic',
+            'pauseAfter': pauseAfter,
+            'question': line('vo:$course.$id.q', question ?? 'מִי זֶה?'),
+            'options': options,
+            'correct': correct,
+            'shuffle': true,
+            'unsureAllowed': true,
+          }
+        : <String, Object?>{'type': 'none', 'mode': 'listen'},
+  };
 }

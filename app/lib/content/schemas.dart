@@ -44,6 +44,7 @@ abstract final class SchemaIds {
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
   'tap_answer': '1.3',
+  'story': '1.0',
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
@@ -142,6 +143,14 @@ const Map<String, SField> _lineExtras = <String, SField>{
 
 /// The most characters of the text of a tile, a word on show or a revealed word.
 const int _targetTextMax = 40;
+
+/// A rectangle in a picture, as shares of the picture's width and height (a hotspot, a place, a thing in a room).
+const SObject _at = SObject(<String, SField>{
+  'x': SField(SNum(min: 0, max: 1)),
+  'y': SField(SNum(min: 0, max: 1)),
+  'w': SField(SNum(min: 0.04, max: 1)),
+  'h': SField(SNum(min: 0.04, max: 1)),
+});
 
 const SObject _spoken = SObject(<String, SField>{
   'vo': SField(_vo),
@@ -482,6 +491,36 @@ SObject _answerOptions(
   ...answerFields,
 });
 
+/// The fields of one option of a choice in the language templates of L4 (story, listen and do, sing along, puppet talk): a picture or
+/// a text or only a sound, its own clip, a label for screen readers, where it is in the scene (`at`) and the tag a wrong choice carries.
+const Map<String, SField> _l4Option = <String, SField>{
+  'id': SField(_optionId),
+  'sprite': SField(_asset, required: false),
+  'numeral': SField(SInt(min: 0, max: 100), required: false),
+  'text': SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
+  'clip': _optionClip,
+  'label': SField(SString(minLength: 1, maxLength: 80)),
+  'at': SField(_at, required: false),
+  'misconception': SField(_tag, required: false),
+};
+
+/// The `answer` of a template of L4: `type` is `choice` (options and the right one) or `none` (a step that is not scored). The mode
+/// says which; the validator checks that the rest fits it. [extra] are the fields of the template itself.
+SObject _l4Answer(List<String> modes, {Map<String, SField> extra = const <String, SField>{}}) => SObject(
+  <String, SField>{
+    'type': const SField(SEnum(<String>['choice', 'none'])),
+    'mode': SField(SEnum(modes)),
+    'options': SField(SArray(SObject(_l4Option), minItems: 2, maxItems: 3, uniqueKey: 'id'), required: false),
+    'correct': const SField(_optionId, required: false),
+    'shuffle': const SField(SBool(), required: false),
+    'unsureAllowed': const SField(SBool(), required: false),
+    // Which side of a two-way skill the item is, as in `tap_answer`.
+    'pole': const SField(SEnum(poles), required: false),
+    'pairWith': const SField(_id, required: false),
+    ...extra,
+  },
+);
+
 const SObject _feedback = SObject(<String, SField>{
   'correct': SField(_spoken),
   'incorrect': SField(
@@ -529,6 +568,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'template': const SField(
     SEnum(<String>[
       'tap_answer',
+      'story',
       'count_tap',
       'give_n',
       'flash',
@@ -1067,6 +1107,46 @@ SObject? activitySchemaFor(String template) => switch (template) {
     }),
   ),
   // T04: trace a numeral or a shape. Points are in a 100 x 100 box; a stroke is read from its first point to its last.
+  // LS08: a picture book of 2 to 10 pages, narrated page by page; the child turns the pages and may touch a picture to hear its word.
+  // `listen` is heard to its end and is never scored. `dialogic` stops after the page `pauseAfter` and asks `question`, a choice that
+  // is scored; the item's `feedback.correct` is the recast, and the story then goes on to its last page.
+  'story' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'pages': SField(
+            SArray(
+              SObject(<String, SField>{
+                'picture': SField(_asset),
+                // The page's narration: the clip (and the second clip of a two-clip line). It is never shown as text.
+                'clips': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+                // What a screen reader says of the page (Hebrew, for the adult).
+                'alt': SField(SString(minLength: 1, maxLength: 240)),
+                // The things in the picture that say their word when touched.
+                'words': SField(
+                  SArray(SObject(<String, SField>{'at': SField(_at), 'clip': SField(_vo)}), maxItems: 4),
+                  required: false,
+                ),
+              }),
+              minItems: 2,
+              maxItems: 10,
+            ),
+          ),
+        }),
+      ),
+      'answer': SField(
+        _l4Answer(
+          const <String>['listen', 'dialogic'],
+          extra: const <String, SField>{
+            // The page after which the story stops to ask (counted from 0), and what it asks.
+            'pauseAfter': SField(SInt(min: 0, max: 9), required: false),
+            'question': SField(_spoken, required: false),
+          },
+        ),
+      ),
+    }),
+  ),
   'trace' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1120,6 +1200,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'lesson': lessonSchema,
   'gate': gateSchema,
   'activity.tap_answer': activitySchemaFor('tap_answer')!,
+  'activity.story': activitySchemaFor('story')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,

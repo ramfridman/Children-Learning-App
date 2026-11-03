@@ -59,6 +59,9 @@ abstract final class He {
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);
   static const Str replaySemantics = Str('שמיעה חוזרת של השאלה');
   static const Str optionSoundSemantics = Str('שמיעה של האפשרות');
+  // L4: screen-reader labels of the Band A templates of the language courses (adult text, no nikud; all needs-editor).
+  static const Str storyNextSemantics = Str('העמוד הבא בסיפור');
+  static const Str storyEndSemantics = Str('סוף הסיפור');
   static const Str coinA10Semantics = Str('10 אגורות');
   static const Str coinH50Semantics = Str('חצי שקל');
   static const Str coinS1Semantics = Str('שקל');

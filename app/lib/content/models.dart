@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:ui' show Offset;
+import 'dart:ui' show Offset, Rect;
 
 import '../engine/course.dart';
 import 'pack_verify.dart';
@@ -141,6 +141,7 @@ sealed class Activity {
   factory Activity.fromJson(Map<String, Object?> json, PackAssets assets) => switch (json['template']) {
     'count_tap' => CountTapActivity._(json, assets),
     'tap_answer' => TapAnswerActivity._(json, assets),
+    'story' => StoryActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
@@ -248,6 +249,7 @@ class ChoiceOption {
     this.text,
     this.clip,
     this.reveal,
+    this.at,
   });
 
   final String id;
@@ -273,6 +275,10 @@ class ChoiceOption {
   final String? clip;
   final String? reveal;
 
+  /// Where the option is in the picture of the scene, as shares of its width and height (a part of a body, a thing in a room, a
+  /// place to put something): LS11. Null for an option that is a tile.
+  final Rect? at;
+
   /// A sound button: nothing to see on it, only a sound to hear (LS01 c).
   bool get soundOnly => clip != null && text == null && sprite == null && numeral == null && set == null;
 }
@@ -293,10 +299,30 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
       text: o['text'] as String?,
       clip: o['clip'] as String?,
       reveal: o['reveal'] as String?,
+      at: _rect(o['at']),
     ),
 ];
 
-class TapAnswerActivity extends Activity {
+/// A rectangle written `{x, y, w, h}` as shares of the picture it is in, or null when there is none.
+Rect? _rect(Object? o) {
+  if (o == null) return null;
+  final Map<String, Object?> m = _map(o);
+  return Rect.fromLTWH(
+    (m['x']! as num).toDouble(),
+    (m['y']! as num).toDouble(),
+    (m['w']! as num).toDouble(),
+    (m['h']! as num).toDouble(),
+  );
+}
+
+/// An activity whose answer is a choice among options, one of them right (`tap_answer`, `count_tap`, `flash` and every template of
+/// a language course whose answer is a choice): the lesson controller scores it by option id.
+abstract interface class ChoiceActivity {
+  List<ChoiceOption> get options;
+  String get correctId;
+}
+
+class TapAnswerActivity extends Activity implements ChoiceActivity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctId = _map(json['answer'])['correct']! as String,
@@ -319,7 +345,9 @@ class TapAnswerActivity extends Activity {
   /// The columns of a chart to read (1.2): each a picture and how many of it; empty when the scene has none.
   final List<({String sprite, int count})> chart;
 
+  @override
   final List<ChoiceOption> options;
+  @override
   final String correctId;
 
   /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
@@ -347,6 +375,66 @@ class TapAnswerActivity extends Activity {
     }
     return null;
   }
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// One page of a story: its picture, the clips of its narration, what a screen reader says, and the things in it that say their word
+/// when touched.
+class StoryPage {
+  const StoryPage({required this.picture, required this.clips, required this.alt, required this.words});
+
+  final String picture;
+  final List<String> clips;
+  final String alt;
+  final List<({Rect at, String clip})> words;
+}
+
+/// The story template (LS08, docs/languages/frame.md section 2.3): a picture book. In `listen` mode it is heard to its end and is
+/// never scored. In `dialogic` mode it stops after the page [pauseAfter] and asks [question], a choice that is scored (the item's
+/// `feedback.correct` is the recast), and then goes on to the last page.
+class StoryActivity extends Activity implements ChoiceActivity {
+  StoryActivity._(super.json, super.assets)
+    : pages = <StoryPage>[
+        for (final Map<String, Object?> p in _maps(_map(json['scene'])['pages']))
+          StoryPage(
+            picture: p['picture']! as String,
+            clips: <String>[for (final Object? c in p['clips']! as List<Object?>) c! as String],
+            alt: p['alt']! as String,
+            words: <({Rect at, String clip})>[
+              for (final Map<String, Object?> w in _maps(p['words']))
+                (at: _rect(w['at'])!, clip: w['clip']! as String),
+            ],
+          ),
+      ],
+      pauseAfter = _map(json['answer'])['pauseAfter'] as int?,
+      question = _map(json['answer'])['question'] == null
+          ? null
+          : Spoken.fromJson(_map(json['answer'])['question']),
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  final List<StoryPage> pages;
+
+  /// The page (from 0) after which a dialogic story stops to ask; null for a story that is only heard.
+  final int? pauseAfter;
+
+  /// What a dialogic story asks at its pause.
+  final Spoken? question;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get dialogic => question != null;
 
   @override
   int get optionCount => options.length;
@@ -839,7 +927,7 @@ class RobotPathActivity extends Activity {
 }
 
 /// The flash template (T14): a group is shown for [flashMs] and covered, and the child picks how many.
-class FlashActivity extends Activity {
+class FlashActivity extends Activity implements ChoiceActivity {
   FlashActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctId = _map(json['answer'])['correct']! as String,
@@ -847,7 +935,9 @@ class FlashActivity extends Activity {
       flashMs = _map(json['scene'])['flashMs']! as int,
       super._();
 
+  @override
   final List<ChoiceOption> options;
+  @override
   final String correctId;
   final SpriteSet group;
   final int flashMs;
@@ -862,7 +952,7 @@ class FlashActivity extends Activity {
   };
 }
 
-class CountTapActivity extends Activity {
+class CountTapActivity extends Activity implements ChoiceActivity {
   CountTapActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctId = _map(json['answer'])['correct']! as String,
@@ -885,7 +975,9 @@ class CountTapActivity extends Activity {
       },
       super._();
 
+  @override
   final List<ChoiceOption> options;
+  @override
   final String correctId;
   final int count;
 

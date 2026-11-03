@@ -54,14 +54,24 @@ import 'robot_path_session.dart';
 import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
 import 'spot_error_session.dart';
+import 'story_session.dart';
 import 'template_session.dart';
 
 /// Plays one lesson of the installed pack, activity after activity, until the celebration.
 class LessonScreen extends ConsumerStatefulWidget {
-  const LessonScreen({super.key, required this.profileId, this.lessonId = 'butterflies', this.mission});
+  const LessonScreen({
+    super.key,
+    required this.profileId,
+    this.lessonId = 'butterflies',
+    this.mission,
+    this.flow,
+  });
 
   final String profileId;
   final String lessonId;
+
+  /// An adaptive visit (the placement game of a language course): which activity comes next is the flow's to say.
+  final ItemFlow? flow;
 
   /// A short revisit lesson made for one skill (the bell flag on the map). Null for the pack's own lesson.
   final Lesson? mission;
@@ -267,6 +277,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       tutor: _tutor,
       tutorContext: _tutor == null ? null : _tutorContext(guide, content),
       timeIsUp: _timeIsUp,
+      flow: widget.flow,
     );
     made.addListener(_speak);
     // The first question is spoken as soon as the lesson opens.
@@ -323,19 +334,17 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   /// The sound of an answer, from its tile (a speaker, a sound button, a picture): the clips, at once when the child touched
   /// to hear, after the line that is playing otherwise (a hint's own line).
-  void _playClips(List<String> voIds, {bool replace = false}) {
+  Future<void> _playClips(List<String> voIds, {bool replace = false}) async {
     final LessonController? c = _controller;
     if (c == null || !mounted) return;
     if (_voice?.answer.state == MicState.listening) _voice?.hush();
     final int move = c.actionNonce;
-    unawaited(
-      _director.sayClips(
-        voIds,
-        owner: this,
-        // A hint's sounds are worth hearing only until the child's next move; a touch's own sound is always worth hearing.
-        relevant: replace ? null : () => c.actionNonce == move,
-        replace: replace,
-      ),
+    await _director.sayClips(
+      voIds,
+      owner: this,
+      // A hint's sounds are worth hearing only until the child's next move; a touch's own sound is always worth hearing.
+      relevant: replace ? null : () => c.actionNonce == move,
+      replace: replace,
     );
   }
 
@@ -365,6 +374,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       _session = switch (a) {
         CountTapActivity() => CountTapSession(c, a),
         TapAnswerActivity() => TapAnswerSession(c, a, captions: caption.captions, stress: caption.stress),
+        StoryActivity() => StorySession(c, a, stress: caption.stress),
         FlashActivity() => FlashSession(c, a),
         SortDragActivity() => SortDragSession(c, a),
         BuildPatternActivity() => BuildPatternSession(c, a),
@@ -495,12 +505,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                   text: withStress(controller.bubbleShow!, show: _captionsFor(controller.current).stress),
                   course: controller.current.course,
                 ),
-          trailTotal: controller.items.length,
-          trailDone: controller.finished ? controller.items.length : controller.index,
+          trailTotal: controller.trailLength,
+          trailDone: controller.finished ? controller.trailLength : controller.index,
           onHome: _home,
-          onHint: controller.finished ? null : controller.showHint,
+          onHint: controller.finished || controller.noHelp ? null : controller.showHint,
           hintGlow: helpOffered,
-          onShowMe: controller.finished ? null : () => controller.unsure(),
+          onShowMe: controller.finished || controller.noHelp ? null : () => controller.unsure(),
           onReplay: controller.finished ? null : controller.replayPrompt,
           mic: controller.finished ? null : _mic(spec, session, controller.current),
           onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
