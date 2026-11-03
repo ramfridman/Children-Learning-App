@@ -35,6 +35,11 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-31 | Alert pushes: routine alerts shared the daily push budget with acts; no collapse id on iOS | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-27 | Alert pushes: the per-device limit was higher than PLAN said; no per-family push cap | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-25 | One alert the gateway refused held up every later alert of that device, silently | medium | closed (`alerts-tiers`) | 2026-10-30 |
+| SEC-L0-1 | Course isolation: an answer counts by its activity id alone, and activity ids are not kept apart between courses | low (fix before the first language pack, L1) | open | 2026-11-03 |
+| SEC-L0-2 | A gate document of a language pack may omit its course and is then read as `core` | info | open | 2026-11-03 |
+| SEC-L0-3 | `settings-put` bounds the family's settings in characters, the table in bytes | low | open | 2026-11-03 |
+| SEC-L0-4 | `content-publish` and `tutor-prewarm` do not refuse language-course skills under a core pack id (`tutor-turn` does) | info | open | 2026-11-03 |
+| SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -199,4 +204,16 @@ this check, a format mismatch between a deployed gateway and an installed app, i
 - **B-20 closed (2026-11-03).** QA's full suite on `b20-sync-fixes` (`79660b2`, 3,060 passed, 0 failed) ran every proof
   test the security review named: SEC-12 and SEC-B20-1, -2, -3, -4, -5, -7 and -8 are closed. Still open: SEC-B20-6 and
   -9 (info), and the owner's choice on the words of a restamped alert.
+- **L0 Languages engine core, `languages-foundation` (`ef20f79..f5bb4dc`, merged at `eecc7e6`; 2026-11-03): safe to merge,
+  no finding above low.** Verified by reading: the four checks are unchanged on every changed function; `tutor-turn` refuses
+  a `lang-` pack before the config, caps, cache or model, and an item with an `ENG-`, `HEB-` or `RUS-` skill before the caps
+  and model, in `turn` and `prefetch` alike; the app never asks for a tutor line outside `core`; `content-publish` refuses
+  `lang-` packs, so `tutor-prewarm` finds none; language packs go through the same signature, hash, zip-limit and validator
+  path as the starter pack; the widened wire patterns are anchored, ASCII-only and bounded; the language settings are ids,
+  enums and booleans only, parent-only, and deleted with the child on the server and the phone; the wider size limit adds no
+  room for free text. The wire-format number is 2 and both pinned digests were recomputed independently (equal), so B-20's
+  reset fires once. New: SEC-L0-1 and SEC-L0-3 (low), SEC-L0-2, -4 and -5 (info), above. `deno task check`: 197 passed,
+  0 failed, 7 ignored; `flutter analyze` clean; gitleaks clean over the range; OSV.dev: no advisory for postgres 3.4.9,
+  jose 6.2.13, @noble/curves 2.0.1, @peculiar/x509 2.2.0, supabase CLI 2.122.0 (2026-11-03); no package, lock file or
+  workflow changed. Not run by the security-engineer: `flutter test`, pgTAP.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
