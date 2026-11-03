@@ -8,8 +8,8 @@ muzzle and a hanging tail, the fox orange with black socks and a white tail tip,
 tufts and a stub tail, the tomcat a striped grey cat; the rooster has a tall comb and an arched dark tail, the hen is
 brown with a short tail; the orange shows a cut half, the tomato a green star on top, the apple a stem and leaf; soup is a
 blue bowl of broth with steam, porridge a white bowl of thick oats with butter and an upright wooden spoon, rice a white
-dome of grains in a coral bowl; shoes are low with laces, boots reach the knee; the big balloon is round, the small one
-oval.
+dome of grains in a coral bowl; shoes are low with laces, boots reach the knee; the big balloon is the small one's oval
+scaled up past the tile, in violet (never the orange fruit's colour).
 
 References looked at on 2026-11-03 (facts and photographs; the look is ours):
   Part a (Russian animals, food, clothes, toys):
@@ -798,13 +798,19 @@ def mittens():
 # ---- part a: toys and a street thing -------------------------------------------------------------------------------
 
 def balloon_big():
+    """Russian shar: a big balloon. The same oval, knot and string as `balloon`, scaled up so it fills the tile and its
+    string runs off the bottom edge (the size cue), and in violet, a colour that is neither the orange fruit nor one of
+    the colour-set balloons or balls."""
+    f, s = '#8A5CF0', '#6C40D0'
     p = Pic()
-    p.line('M 128 214 C 112 226, 144 236, 124 252', INK, 3)
-    p.line('M 128 214 C 112 226, 144 236, 124 252', '#FFC83D', 1.5)
-    p.shaded(ell(128, 108, 102, 102), '#FF8A3D', '#D9692A', k=16)
-    p.path('M 118 218 L 128 206 L 138 218 Z', '#FF8A3D')
-    p.hl('M 62 70 Q 74 40 104 26', 11)
-    p.add('<circle cx="58" cy="96" r="5.5" fill="%s" opacity="0.55"/>' % WHITE)
+    p.line('M 128 228 C 110 238, 146 248, 124 262', INK, 3.5)
+    p.add('<g transform="translate(128 0) scale(1.18) translate(-128 0)">')
+    body = 'M 128 14 C 178 14, 202 56, 200 100 C 198 148, 162 180, 128 184 C 94 180, 58 148, 56 100 C 54 56, 78 14, 128 14 Z'
+    p.shaded(body, f, s, k=14)
+    p.path('M 118 194 L 128 182 L 138 194 Z', f)
+    p.hl('M 88 66 Q 96 42 118 34', 10)
+    p.add('<circle cx="84" cy="86" r="5" fill="%s" opacity="0.55"/>' % WHITE)
+    p.add('</g>')
     return p
 
 

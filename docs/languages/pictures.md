@@ -111,7 +111,7 @@ colour patches, the rabbit's tail and the English second looks). Choices made wh
   stripe) and horse (bay); chick (round, pointed beak, beside its eggshell) and duckling (flat bill); orange (a cut half),
   tomato (a green star on top), apple (stem and leaf); soup (a blue bowl of broth, steam), porridge (a white bowl of thick
   oats, butter, an upright wooden spoon), rice (a white dome in a coral bowl), sugar (cubes in a mint bowl); shoes (low,
-  laced) and boots (to the knee); `balloon-big` round, `balloon` oval; `sun` with rays, `star` with five points, `moon` a
+  laced) and boots (to the knee); `balloon-big` is the same oval balloon, knot and string, bigger (it fills the tile and its string runs off the bottom edge) and violet, never orange like the fruit or a colour of the colour sets (redrawn 2026-11-03: the first round orange disc read as the orange or a ball); `sun` with rays, `star` with five points, `moon` a
   crescent in a night circle (so it is never a banana); `bush` low with no trunk, `tree` with a trunk.
 - **`sandal` is a pair seen from above** (one sandal in side view read as loops on a board); for the
   hebrew-language-teacher, the word is סַנְדָּל (one), the picture shows two.
