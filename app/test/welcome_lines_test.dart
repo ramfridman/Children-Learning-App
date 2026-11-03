@@ -331,7 +331,7 @@ void main() {
 
     test('no line counts days, visits or streaks, or misses the child', () {
       // The unpointed words that would say "again today", "you were away" or "so many days", checked on every line.
-      final RegExp points = RegExp('[֑-ׇ]');
+      final RegExp points = RegExp(r'[\u0591-\u05C7]');
       const List<String> banned = <String>[
         'רצף',
         'התגעגע',

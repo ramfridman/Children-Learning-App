@@ -126,6 +126,20 @@ class AppDatabase extends _$AppDatabase {
   Future<void> putSetting(String key, String value) =>
       into(appSettings).insertOnConflictUpdate(AppSettingsCompanion.insert(key: key, value: value));
 
+  Future<void> removeSetting(String key) =>
+      (delete(appSettings)..where((AppSettings t) => t.key.equals(key))).go();
+
+  // ---- the daily welcome (B-42) ----
+
+  static String _welcomeKey(String profileId) => 'welcome_day:$profileId';
+
+  /// The day (`Engine.dayKey`) on which this child's daily welcome last started on this device, or null. A day number and
+  /// nothing else; it is not synced, so a child on two devices is welcomed once on each.
+  Future<int?> welcomeDayOf(String profileId) async =>
+      int.tryParse(await setting(_welcomeKey(profileId)) ?? '');
+
+  Future<void> setWelcomeDay(String profileId, int day) => putSetting(_welcomeKey(profileId), '$day');
+
   // ---- installed content packs ----
 
   Future<InstalledPack?> installedPack(String id) =>
@@ -450,6 +464,7 @@ class AppDatabase extends _$AppDatabase {
     await (delete(alerts)..where(($AlertsTable t) => t.profileId.equals(profileId))).go();
     await (delete(rewards)..where(($RewardsTable t) => t.profileId.equals(profileId))).go();
     await (delete(profiles)..where(($ProfilesTable t) => t.id.equals(profileId))).go();
+    await removeSetting(_welcomeKey(profileId));
     // The parents' promises for this child go with the child.
     final String? promises = await setting('ribbons');
     if (promises != null) {

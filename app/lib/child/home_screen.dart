@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 
 import '../design/app_text.dart';
@@ -10,6 +11,7 @@ import '../design/tokens.g.dart';
 import '../strings/he.dart';
 import 'art.dart';
 import 'home_island_name.dart';
+import 'welcome_shown.dart';
 
 /// A land of the world map, with the sign under its island.
 enum Land {
@@ -380,7 +382,17 @@ class HomeScreen extends StatelessWidget {
     this.hallGlow = false,
     this.homeIsland,
     this.onOpenHome,
+    this.welcome,
+    this.pillGlow,
   });
+
+  /// The sentence of the daily welcome the bubble says now (B-42), or null when it says its own words. The listenable is
+  /// null on a map that has no welcome.
+  final ValueListenable<WelcomeShown?>? welcome;
+
+  /// The pill with the bottle glows (the welcome's closing line points at it). It does not glow when the system asks for
+  /// reduced motion.
+  final ValueListenable<bool>? pillGlow;
 
   /// The home island's words, named after the child (B-26). Null: the sign says Nitzi's island, as before.
   final HomeIslandName? homeIsland;
@@ -591,7 +603,13 @@ class HomeScreen extends StatelessWidget {
         _bubble(
           s,
           IgnorePointer(
-            child: _MapBubble(spec: s, name: homeIsland?.name ?? childName),
+            child: welcome == null
+                ? _MapBubble(spec: s, name: homeIsland?.name ?? childName)
+                : ValueListenableBuilder<WelcomeShown?>(
+                    valueListenable: welcome!,
+                    builder: (BuildContext context, WelcomeShown? shown, Widget? _) =>
+                        _MapBubble(spec: s, name: homeIsland?.name ?? childName, welcome: shown),
+                  ),
           ),
         ),
       ],
@@ -624,7 +642,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _pill(_HomeSpec s) {
-    final Widget pill = _DailyPill(spec: s, onTap: onOpenHome);
+    final Widget pill = pillGlow == null
+        ? _DailyPill(spec: s, onTap: onOpenHome)
+        : ValueListenableBuilder<bool>(
+            valueListenable: pillGlow!,
+            builder: (BuildContext context, bool glow, Widget? _) =>
+                _DailyPill(spec: s, onTap: onOpenHome, glow: glow),
+          );
     if (s.pillFrameLeft != null) {
       return Positioned(
         left: s.pillFrameLeft,
@@ -677,9 +701,12 @@ class HomeScreen extends StatelessWidget {
 /// sign's rule ([shortenName]), so the bubble never takes three lines (QA-29, B-34: on the phones too).
 /// The name sits in an isolate ([isolatedName]). With no usable name it says [He.homeBubbleNoName].
 class _MapBubble extends StatelessWidget {
-  const _MapBubble({required this.spec, required this.name});
+  const _MapBubble({required this.spec, required this.name, this.welcome});
 
   final _HomeSpec spec;
+
+  /// The sentence of the daily welcome being said, or null: the bubble then says [He.homeBubble].
+  final WelcomeShown? welcome;
 
   /// The child's name as the bubble shows it (cleaned by [homeIslandName]); empty when there is none.
   final String name;
@@ -704,7 +731,16 @@ class _MapBubble extends StatelessWidget {
     // The name in an isolate, as on the sign, so a shortened Latin name keeps its "…" on its right.
     Map<String, String> named(String n) => <String, String>{'child': isolatedName(n)};
     final String text;
-    if (name.isEmpty) {
+    if (welcome != null) {
+      // One sentence of the welcome. The first has the name on a line of its own, shortened by the sign's rule so that it
+      // fits; with no usable name it is the sentence alone.
+      if (welcome!.withName && name.isNotEmpty) {
+        final String called = isolatedName(_fittedName(name, (String n) => fits('${isolatedName(n)},')));
+        text = '$called,\n${welcome!.text}';
+      } else {
+        text = welcome!.text;
+      }
+    } else if (name.isEmpty) {
       text = He.homeBubbleNoName.text;
     } else if (!spec.bubbleBreaks) {
       text = He.homeBubble.fill(named(_fittedName(name, (String n) => fits(He.homeBubble.fill(named(n))))));
@@ -746,10 +782,14 @@ final Str _breakAfterName = Str(He.homeBubble.text.replaceFirst('{child}, ', '{c
 /// Today's adventure. It opens the child's home when [onTap] is set, and only then is it announced as a button. The three
 /// stops of the daily plan are not drawn until that plan exists (B-26).
 class _DailyPill extends StatelessWidget {
-  const _DailyPill({required this.spec, this.onTap});
+  const _DailyPill({required this.spec, this.onTap, this.glow = false});
 
   final _HomeSpec spec;
   final VoidCallback? onTap;
+
+  /// The welcome points at the bottle: a soft light around the pill, for as long as the closing line is said. It does not
+  /// move; with reduced motion there is no light at all.
+  final bool glow;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -765,7 +805,11 @@ class _DailyPill extends StatelessWidget {
         decoration: BoxDecoration(
           color: TokenColors.sunset,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: clayShadows(TokenColors.sunsetDeep, soft16: true),
+          boxShadow: <BoxShadow>[
+            ...clayShadows(TokenColors.sunsetDeep, soft16: true),
+            if (glow && !MediaQuery.disableAnimationsOf(context))
+              const BoxShadow(color: _waitingGlow, blurRadius: 24, spreadRadius: 6),
+          ],
         ),
         child: ExcludeSemantics(
           child: Row(

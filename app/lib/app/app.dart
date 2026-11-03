@@ -15,12 +15,19 @@ import '../rewards/outfits.dart' show Outfit;
 import '../content/models.dart' show Lesson, PackContent;
 import '../rewards/award.dart';
 import '../rewards/sticker_design.dart';
+import '../engine/engine.dart' show Engine;
+import '../voice/voice_director.dart';
 import '../world/next_lesson.dart';
 import '../world/adventure_adapter.dart';
 import '../world/placement.dart';
 import '../world/todays_adventure.dart';
+import '../world/welcome_adapter.dart';
+import '../world/welcome_lines.dart';
+import '../world/welcome_table.dart';
 import '../child/adventure_line.dart' show AdventureLine, adventureLine;
 import 'bottle_hold.dart';
+import 'welcome_hold.dart';
+import 'welcome_providers.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
 import '../child/rest_scene.dart';
@@ -169,7 +176,7 @@ class _Home extends ConsumerStatefulWidget {
   ConsumerState<_Home> createState() => _HomeState();
 }
 
-class _HomeState extends ConsumerState<_Home> {
+class _HomeState extends ConsumerState<_Home> with WidgetsBindingObserver {
   final GlobalKey<MapCompanionState> _companion = GlobalKey<MapCompanionState>();
 
   String get _offeredKey => 'friends_offered:${widget.profile.id}';
@@ -189,18 +196,131 @@ class _HomeState extends ConsumerState<_Home> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Whatever the child has already earned is looked at once when the map opens (the first time, quietly; M8).
     unawaited(_lookAtRewards());
   }
 
-  /// The first look at what the child has earned. If it gave a trophy or a medal to celebrate, the ceremony follows.
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _welcome?.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The app left the front: the welcome stops, as for a touch.
+    if (state != AppLifecycleState.resumed) _welcome?.skip();
+  }
+
+  /// The first look at what the child has earned. If it gave a trophy or a medal to celebrate, the ceremony follows, and
+  /// only after it the day's welcome (a ceremony is never talked over).
   Future<void> _lookAtRewards() async {
     final List<Reward> fresh = await evaluateRewardsFor(ref, widget.profile.id);
     if (!mounted) return;
     if (fresh.any((Reward r) => r.seenAt == null && (r.kind == 'trophy' || r.kind == 'medal'))) {
       await _maybeCeremony();
     }
+    if (mounted) await _offerWelcome();
   }
+
+  /// The daily welcome in progress, if there is one: the friend's words in the bubble, the pill's glow, the voice.
+  WelcomeHold? _welcome;
+  bool _welcomeBusy = false;
+
+  /// Whether the map is the screen the child sees: nothing (a lesson, the friend choice, the parent area, a ceremony, the
+  /// rest scene) lies on top of it.
+  bool get _mapInFront => (ModalRoute.of(context)?.isCurrent ?? true) && !_ceremonyOpen;
+
+  /// The daily welcome (B-42, docs/milestones/B42.md section 2): once a day for each child, the first time their map is
+  /// shown and settled, the friend greets them and says what the bottle holds. Never on top of something else: if the map is
+  /// not in front, or the parent's time is up, it waits for the next time the map comes back (this runs again then).
+  Future<void> _offerWelcome() async {
+    if (_welcomeBusy || _welcome != null || !mounted || !ref.read(welcomeEnabledProvider)) return;
+    _welcomeBusy = true;
+    try {
+      await _giveWelcome();
+    } finally {
+      _welcomeBusy = false;
+    }
+  }
+
+  Future<void> _giveWelcome() async {
+    final Profile child = widget.profile;
+    if (!_mapInFront) return;
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final int today = Engine.dayKey(
+      DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
+    );
+    if (await db.welcomeDayOf(child.id) == today) return;
+    // The parent's time is up: the rest scene is all this child can open, so no adventure is offered.
+    final ({String id, int band}) who = (id: child.id, band: child.ageBand);
+    ref.invalidate(timeVerdictProvider(who));
+    if ((await ref.read(timeVerdictProvider(who).future)).locked) return;
+    final PackContent? content = ref.read(contentProvider).value;
+    final ({TodaysAdventure stop, WorldView world, List<Attempt> attempts})? adventure =
+        await _adventureNow();
+    if (content == null || adventure == null) return;
+    final WelcomeTable table = await ref.read(welcomeTableProvider.future);
+    final Uint8List? nameClip = await ref.read(nameClipProvider(child.id).future);
+    final bool warmUpOn = await ref.read(warmUpProvider.future);
+    // The map appears whole: the welcome waits for the friend and the voice to be ready, then for the map to be drawn.
+    await ref.read(characterForRoleProvider(CharacterRole.mapCompanion).future);
+    await ref.read(guideProvider.future);
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted || !_mapInFront) return;
+
+    final List<String> lines = welcomeLines(
+      stop: adventure.stop,
+      today: today,
+      hasNameClip: nameClip != null,
+      warmUpDue: (TrophyLand land) =>
+          child.ageBand >= 1 && warmUpOn && placementDue(content, land.domain, adventure.attempts),
+      skillOfLesson: (String lessonId, TrophyLand land) => firstSkillInLand(content, lessonId, land),
+      table: table,
+    );
+    final VoiceDirector director = ref.read(voiceDirectorProvider);
+    final List<WelcomeStep> steps = _welcomeSteps(lines, table, nameClip);
+    // Whole or not at all: a missing recording, or the sound off, makes the whole welcome text (no half-voiced sequence).
+    final bool voiced =
+        ref.read(welcomeSpokenProvider) &&
+        steps.every((WelcomeStep s) => director.bank?.has(s.voice!) ?? false);
+    if (voiced) await director.prefetch(<String>[for (final WelcomeStep s in steps) s.voice!]);
+    if (!mounted || !_mapInFront) return;
+
+    // Written when the welcome starts: leaving, a crash or a skip never brings it back the same day.
+    await db.setWelcomeDay(child.id, today);
+    final WelcomeHold hold = WelcomeHold(director, gap: _welcomeGap(child.ageBand));
+    setState(() => _welcome = hold);
+    await hold.run(steps, voiced: voiced);
+    if (mounted) setState(() => _welcome = null);
+    // The listeners of the bubble and the pill go with the next frame; the notifiers are let go after it.
+    WidgetsBinding.instance.addPostFrameCallback((_) => hold.dispose());
+  }
+
+  /// The sentences of [lines]: the first (a greeting) carries the child's name in its caption whenever the child has a usable
+  /// name, and the name clip when there is one; the last points at the bottle.
+  List<WelcomeStep> _welcomeSteps(List<String> lines, WelcomeTable table, Uint8List? nameClip) {
+    final bool named = _island.name.isNotEmpty;
+    final List<WelcomeStep> steps = <WelcomeStep>[];
+    for (final String id in lines) {
+      if (id == welcomeNameClip) continue;
+      steps.add(
+        WelcomeStep(
+          text: table.text(id),
+          withName: named && steps.isEmpty,
+          voice: id,
+          nameClip: steps.isEmpty ? nameClip : null,
+          pointsAtBottle: id == welcomeClose,
+        ),
+      );
+    }
+    return steps;
+  }
+
+  /// The pause between two sentences: the youngest get the longest (B42.md 2.5).
+  Duration _welcomeGap(int band) => Duration(milliseconds: const <int>[500, 350, 300][band.clamp(0, 2)]);
 
   bool _ceremonyOpen = false;
 
@@ -208,6 +328,7 @@ class _HomeState extends ConsumerState<_Home> {
   /// when a lesson or a revisit mission has ended, so at most one ceremony comes after a lesson (M8, Q8).
   Future<void> _maybeCeremony() async {
     if (_ceremonyOpen || !mounted) return;
+    _welcome?.skip();
     final AppDatabase db = await ref.read(databaseProvider.future);
     final ({Reward reward, Outfit? prize})? due = await nextCeremonyFor(db, widget.profile.id);
     if (due == null || !mounted) return;
@@ -237,6 +358,8 @@ class _HomeState extends ConsumerState<_Home> {
   void _refreshWorld() {
     ref.invalidate(rewardsProvider(widget.profile.id));
     ref.invalidate(worldProvider(widget.profile.id));
+    // Back on the map: if the day's welcome could not come before (something lay on top of it), it comes now.
+    unawaited(_offerWelcome());
   }
 
   /// A land with skills opens as an island with its objects; it has a way into the lesson if the pack has one for it.
@@ -320,36 +443,46 @@ class _HomeState extends ConsumerState<_Home> {
     // A second touch while the line waits goes on at once; while the stop is still being worked out it is not a second stop.
     if (bottle.waiting) return bottle.releaseNow();
     if (bottle.busy) return;
-    final PackContent? content = ref.read(contentProvider).value;
-    if (content == null) return;
+    if (ref.read(contentProvider).value == null) return;
     bottle.busy = true;
     try {
-      final String id = widget.profile.id;
-      final AppDatabase db = await ref.read(databaseProvider.future);
-      final WorldView world = await ref.read(worldProvider(id).future);
-      final List<Reward> rewards = await ref.read(rewardsProvider(id).future);
-      final List<Attempt> attempts = await db.attemptsOf(id);
-      final TodaysAdventure stop = todaysAdventureFor(
-        content: content,
-        engine: world.engine,
-        attempts: attempts,
-        sessions: await db.sessionsOf(id),
-        finished: finishedLessons(content, attempts, rewards.map((Reward r) => r.awardKey)),
-        now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
-        band: widget.profile.ageBand,
-      );
-      if (!mounted || bottle.gone) return;
+      final ({TodaysAdventure stop, WorldView world, List<Attempt> attempts})? adventure =
+          await _adventureNow();
+      if (adventure == null || !mounted || bottle.gone) return;
+      final TodaysAdventure stop = adventure.stop;
       final AdventureLine? words = adventureLine(stop);
       if (words == null) {
         bottle.nudge();
         return;
       }
       if (!await bottle.hold(words) || !mounted || bottle.gone) return;
-      await _openStop(stop, world);
+      await _openStop(stop, adventure.world);
     } finally {
       bottle.clear();
       bottle.busy = false;
     }
+  }
+
+  /// Today's Adventure for the playing child as of now, with the world and the answers it was worked out from (null while
+  /// the pack is not loaded). The bottle and the daily welcome both ask here, so they can never disagree about the stop.
+  Future<({TodaysAdventure stop, WorldView world, List<Attempt> attempts})?> _adventureNow() async {
+    final PackContent? content = ref.read(contentProvider).value;
+    if (content == null) return null;
+    final String id = widget.profile.id;
+    final AppDatabase db = await ref.read(databaseProvider.future);
+    final WorldView world = await ref.read(worldProvider(id).future);
+    final List<Reward> rewards = await ref.read(rewardsProvider(id).future);
+    final List<Attempt> attempts = await db.attemptsOf(id);
+    final TodaysAdventure stop = todaysAdventureFor(
+      content: content,
+      engine: world.engine,
+      attempts: attempts,
+      sessions: await db.sessionsOf(id),
+      finished: finishedLessons(content, attempts, rewards.map((Reward r) => r.awardKey)),
+      now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
+      band: widget.profile.ageBand,
+    );
+    return (stop: stop, world: world, attempts: attempts);
   }
 
   Future<void> _openStop(TodaysAdventure stop, WorldView world) async {
@@ -405,6 +538,7 @@ class _HomeState extends ConsumerState<_Home> {
   /// Opens a lesson (or the rest scene when time is up). True when the child played it to its end.
   Future<bool> _openLesson({Lesson? mission, String? lessonId}) async {
     // Time is up (rest hours, the schedule or the daily limit, with the lock on): a calm scene instead of the lesson.
+    _welcome?.skip();
     final ({String id, int band}) child = (id: widget.profile.id, band: widget.profile.ageBand);
     ref.invalidate(timeVerdictProvider(child));
     final TimeVerdict verdict = await ref.read(timeVerdictProvider(child).future);
@@ -455,8 +589,17 @@ class _HomeState extends ConsumerState<_Home> {
       Land.values.byName(t.name),
   };
 
-  Widget _map(Character? friend) => HomeScreen(
+  Widget _map(Character? friend) => Listener(
+    // Any touch stops the welcome; the touch itself goes on to do what it always does.
+    behavior: HitTestBehavior.translucent,
+    onPointerDown: (_) => _welcome?.skip(),
+    child: _homeScreen(friend),
+  );
+
+  Widget _homeScreen(Character? friend) => HomeScreen(
     childName: _island.name,
+    welcome: _welcome?.shown,
+    pillGlow: _welcome?.glow,
     homeIsland: _island,
     onOpenHome: _openHome,
     avatarId: widget.profile.avatar,
