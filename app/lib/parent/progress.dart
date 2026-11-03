@@ -1,4 +1,5 @@
 import '../data/app_database.dart';
+import '../engine/course.dart';
 import '../engine/engine.dart';
 import '../engine/state.dart';
 import '../engine/types.dart';
@@ -6,11 +7,14 @@ import 'time_rules.dart';
 
 /// What the progress view needs to know about a skill and a misconception, in words a parent reads.
 class SkillInfo {
-  const SkillInfo({required this.title, required this.domain});
+  const SkillInfo({required this.title, required this.domain, this.course = Course.core});
 
   /// "What the child can do", in plain Hebrew (the skill document's title).
   final String title;
   final String domain;
+
+  /// The course of the skill. A language course is shown as a block of its own, never mixed with another course.
+  final String course;
 }
 
 /// How a parent reads a skill's status (PLAN: understood, practising, needs a revisit, gap found).
@@ -34,10 +38,14 @@ class SkillRow {
 }
 
 class DomainBlock {
-  const DomainBlock({required this.domain, required this.skills});
+  const DomainBlock({required this.domain, required this.skills, this.course = Course.core});
 
   final String domain;
   final List<SkillRow> skills;
+  final String course;
+
+  /// What names this block: the domain of a land, or the course of a language (all languages share one domain).
+  String get key => course == Course.core ? domain : course;
 
   int get understood => skills.where((SkillRow s) => s.status == ParentStatus.understood).length;
 }
@@ -162,6 +170,9 @@ double? _domainUnderstanding(Engine engine, Iterable<String> skillIds, DateTime 
   return sum / ids.length;
 }
 
+/// A land's block is named by its domain; a language course's by the course (all languages have the one domain).
+String _blockKey(SkillInfo info) => info.course == Course.core ? info.domain : info.course;
+
 Engine _replayUntil(Catalog catalog, List<AttemptEvent> events, DateTime until) =>
     Engine(catalog: catalog)..replay(events.where((AttemptEvent e) => !e.at.isAfter(until)));
 
@@ -191,10 +202,12 @@ Progress buildProgress(ProgressSource src) {
   final DateTime nowUtc = now.toUtc();
   final Map<String, List<SkillRow>> byDomain = <String, List<SkillRow>>{};
   final List<String> ids = src.catalog.skills.keys.toList()..sort();
+  final Map<String, SkillInfo> blockInfo = <String, SkillInfo>{};
   for (final String id in ids) {
     final SkillInfo? info = src.skillInfo[id];
     if (info == null) continue;
-    (byDomain[info.domain] ??= <SkillRow>[]).add(
+    blockInfo.putIfAbsent(_blockKey(info), () => info);
+    (byDomain[_blockKey(info)] ??= <SkillRow>[]).add(
       SkillRow(
         id: id,
         title: info.title,
@@ -270,7 +283,7 @@ Progress buildProgress(ProgressSource src) {
     adventuresCompleted: week.where((Session s) => s.endReason == 'finished').length,
     domains: <DomainBlock>[
       for (final MapEntry<String, List<SkillRow>> e in byDomain.entries)
-        DomainBlock(domain: e.key, skills: e.value),
+        DomainBlock(domain: blockInfo[e.key]!.domain, course: blockInfo[e.key]!.course, skills: e.value),
     ],
     misconceptions: tags,
     helped: helped,

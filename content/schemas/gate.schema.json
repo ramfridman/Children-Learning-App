@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nitznutz:schema:gate",
+  "title": "Nitznutz gate",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "gate/v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 24,
+      "pattern": "^(?:[a-z]{3}\\.[a-z0-9_]{1,19})$"
+    },
+    "review": {
+      "type": "string",
+      "enum": [
+        "needs-editor",
+        "approved"
+      ]
+    },
+    "course": {
+      "type": "string",
+      "enum": [
+        "core",
+        "eng",
+        "heb",
+        "rus"
+      ]
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 6,
+        "maxLength": 14,
+        "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2}(?:\\.[A-Z][0-9]{1,2})?)$"
+      },
+      "minItems": 0,
+      "maxItems": 60
+    },
+    "requireAtLeast": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 6,
+              "maxLength": 14,
+              "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2}(?:\\.[A-Z][0-9]{1,2})?)$"
+            },
+            "minItems": 2,
+            "maxItems": 40
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 40
+          }
+        },
+        "required": [
+          "skills",
+          "count"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 6
+    },
+    "holds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 6,
+        "maxLength": 14,
+        "pattern": "^(?:[A-Z]{2,5}-[ABC]-\\d{2}(?:\\.[A-Z][0-9]{1,2})?)$"
+      },
+      "minItems": 1,
+      "maxItems": 200
+    },
+    "minAge": {
+      "type": "integer",
+      "minimum": 3,
+      "maximum": 8
+    },
+    "neverUnderBand": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "durableBelowBand": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2
+    },
+    "parentSwitch": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "oralOnly",
+            "lettersBefore5"
+          ]
+        },
+        "effect": {
+          "type": "string",
+          "enum": [
+            "closes",
+            "opens"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "effect"
+      ],
+      "additionalProperties": false
+    },
+    "routeBypass": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "new",
+          "heritage",
+          "reader"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 3
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "requires",
+    "holds"
+  ],
+  "additionalProperties": false
+}

@@ -5,7 +5,10 @@
 //   dart run tool/voice_gen.dart generate <character> [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
 //   dart run tool/voice_gen.dart audition-batch plan <spec.json> [--out <folder>] [--price <per 1,000 characters>]
 //   dart run tool/voice_gen.dart audition-batch run <spec.json> [--out <folder>]
-//   dart run tool/voice_gen.dart audition <character> "<text>" [--model <id>] [--settings stability=0.25,similarity=0.8,boost=true] [--format <mp3_44100_...>] [--allow exclamation,ipa] [--out <folder>]
+//   dart run tool/voice_gen.dart audition <character> "<text>" [--model <id>] [--settings stability=0.25,similarity=0.8,boost=true] [--format <mp3_44100_...>] [--allow exclamation,ipa] [--language he|en|ru] [--out <folder>]
+//
+// `audition-batch` writes to ~/nitznutz-voice/auditions/<spec name>, with the language in front for a spec that is not
+// Hebrew (en-pilot, ru-pilot), unless --out says otherwise.
 //
 // The free commands also take --repo <folder> (the repository root, `..` by default), so tests can run them on their
 // own data. A paid command refuses any --repo that is not this repository. Every plan starts with the repository folder.
@@ -140,7 +143,7 @@ Map<String, Object?> _config(List<String> args) {
 List<String> _characters(List<String> args, Map<String, Object?> config) {
   final String? given = _option(args, '--characters');
   if (given != null) return given.split(',').where((String s) => s.isNotEmpty).toList();
-  return (config['voices']! as Map<String, Object?>).keys.toList()..sort();
+  return packCharacters(config);
 }
 
 /// The price per 1,000 characters of [model]: --price, or the list price in content/voices.json, or 0.
@@ -299,7 +302,7 @@ Future<void> _gatedAudition(
     write: stdout.writeln,
     pricePer1000: _prices(args, _config(args)),
     runCommand: run,
-    heading: _repoHeading(args),
+    heading: '${_repoHeading(args)}\nClips go to ${out.path}',
   );
   if (files.isNotEmpty) stdout.writeln('Made ${files.length} clips in ${out.path}');
 }
@@ -316,9 +319,6 @@ Future<void> _auditionBatch(List<String> args) async {
   final Object? spec = jsonDecode(specFile.readAsStringSync());
   if (spec is! Map<String, Object?>) throw const VoiceGenFailed('the spec is not a JSON object');
   final String name = specFile.uri.pathSegments.last.replaceAll(RegExp(r'\.json$'), '');
-  final Directory out = Directory(
-    _option(args, '--out') ?? '${_home()}${Platform.pathSeparator}auditions${Platform.pathSeparator}$name',
-  );
   final bool needsLines =
       (spec['clips'] is List<Object?>) &&
       (spec['clips']! as List<Object?>).any(
@@ -329,6 +329,10 @@ Future<void> _auditionBatch(List<String> args) async {
     config: _config(args),
     lines: needsLines ? _lineTexts(args) : const LineTexts(),
   );
+  final Directory out = Directory(
+    _option(args, '--out') ??
+        '${_home()}${Platform.pathSeparator}auditions${Platform.pathSeparator}${auditionFolderName(name, clips)}',
+  );
   final String title = (spec['title'] ?? name) as String;
   final String runCommand = 'dart run tool/voice_gen.dart audition-batch run ${pos[1]}';
   if (run) {
@@ -336,6 +340,7 @@ Future<void> _auditionBatch(List<String> args) async {
   } else {
     stdout
       ..writeln(_repoHeading(args))
+      ..writeln('Clips go to ${out.path}')
       ..write(
         AuditionPlan(
           title: title,
@@ -392,6 +397,7 @@ Future<void> _audition(List<String> args) async {
     if (_option(args, '--format') != null) 'format': _option(args, '--format'),
     if (settings != null) 'settings': _settingsOf(settings),
     if (allow != null) 'allow': allow.split(','),
+    if (_option(args, '--language') != null) 'language': _option(args, '--language'),
   };
   // The id follows the text and the settings, so a different try is a different file.
   final String id = 'audition-${pos[0]}-${sha256Hex(utf8.encode(jsonEncode(clip))).substring(0, 8)}';

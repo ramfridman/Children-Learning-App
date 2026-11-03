@@ -20,7 +20,8 @@ final FutureProviderFamily<Progress, String> progressProvider = FutureProvider.f
     ProgressSource(
       catalog: engineCatalog(content),
       skillInfo: <String, SkillInfo>{
-        for (final SkillDoc s in content.skills.values) s.id: SkillInfo(title: s.title, domain: s.domain),
+        for (final SkillDoc s in content.skills.values)
+          s.id: SkillInfo(title: s.title, domain: s.domain, course: s.course),
       },
       tagText: <String, String>{for (final TagDoc t in content.tags.values) t.id: t.parentText},
       tagHome: <String, String>{

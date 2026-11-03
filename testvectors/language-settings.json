@@ -1,0 +1,146 @@
+{
+  "about": "The parent's settings for each language of each child (docs/languages/frame.md section 1.4), as they travel inside the family's rules document under the key `languages`: child id, then course, then only the values that differ from the default. settings-put/handler.ts (LANGUAGE_SWITCHES, LANGUAGE_QUESTIONNAIRE, MAX_LANGUAGE_CHILDREN) is asserted equal to this file by alerts_test.ts, and every example is pushed through the real settings-put; in Dart app/lib/parent/language_settings.dart is asserted equal to it by language_settings_test.dart, which also reads each example and writes it again unchanged. A new switch or value goes into the server and this file first (PLAN: Deploy order for the gateway). Defaults (not stored): on false, voice false, personal true, oralOnly false, lettersBefore5 false, readCheck false, stress and route and band absent, q empty.",
+  "max_children": 6,
+  "courses": ["eng", "heb", "rus"],
+  "switches": {
+    "on": { "t": "bool", "courses": ["eng", "heb", "rus"] },
+    "voice": { "t": "bool", "courses": ["eng", "heb", "rus"] },
+    "personal": { "t": "bool", "courses": ["eng", "heb", "rus"] },
+    "band": { "t": "int", "min": 0, "max": 2, "courses": ["eng", "heb", "rus"] },
+    "oralOnly": { "t": "bool", "courses": ["eng"] },
+    "readCheck": { "t": "bool", "courses": ["heb"] },
+    "lettersBefore5": { "t": "bool", "courses": ["rus"] },
+    "stress": { "t": "enum", "values": ["on", "off"], "courses": ["rus"] },
+    "route": { "t": "enum", "values": ["new", "heritage", "reader"], "courses": ["rus"] }
+  },
+  "questionnaire": {
+    "eng": { "knowsLetters": ["no", "some"] },
+    "heb": {},
+    "rus": {
+      "home": ["none", "oneParent", "bothParents", "grandparentsOthers"],
+      "understands": ["no", "some", "most"],
+      "speaks": ["no", "words", "sentences"],
+      "letters": ["no", "some", "most"],
+      "reads": ["no", "syllables", "words", "sentences"]
+    }
+  },
+  "examples": [
+    {
+      "child-aaaa-0001": {
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "rus": {
+          "on": true,
+          "voice": true,
+          "personal": false,
+          "lettersBefore5": true,
+          "stress": "off",
+          "route": "heritage",
+          "band": 1,
+          "q": { "home": "grandparentsOthers", "understands": "most", "speaks": "sentences", "letters": "most", "reads": "sentences" }
+        }
+      },
+      "child-aaaa-0002": {
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "rus": {
+          "on": true,
+          "voice": true,
+          "personal": false,
+          "lettersBefore5": true,
+          "stress": "off",
+          "route": "heritage",
+          "band": 1,
+          "q": { "home": "grandparentsOthers", "understands": "most", "speaks": "sentences", "letters": "most", "reads": "sentences" }
+        }
+      },
+      "child-aaaa-0003": {
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "rus": {
+          "on": true,
+          "voice": true,
+          "personal": false,
+          "lettersBefore5": true,
+          "stress": "off",
+          "route": "heritage",
+          "band": 1,
+          "q": { "home": "grandparentsOthers", "understands": "most", "speaks": "sentences", "letters": "most", "reads": "sentences" }
+        }
+      },
+      "child-aaaa-0004": {
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "rus": {
+          "on": true,
+          "voice": true,
+          "personal": false,
+          "lettersBefore5": true,
+          "stress": "off",
+          "route": "heritage",
+          "band": 1,
+          "q": { "home": "grandparentsOthers", "understands": "most", "speaks": "sentences", "letters": "most", "reads": "sentences" }
+        }
+      },
+      "child-aaaa-0005": {
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "rus": {
+          "on": true,
+          "voice": true,
+          "personal": false,
+          "lettersBefore5": true,
+          "stress": "off",
+          "route": "heritage",
+          "band": 1,
+          "q": { "home": "grandparentsOthers", "understands": "most", "speaks": "sentences", "letters": "most", "reads": "sentences" }
+        }
+      },
+      "child-aaaa-0006": {
+        "eng": { "on": true, "voice": true, "personal": false, "oralOnly": true, "band": 2, "q": { "knowsLetters": "some" } },
+        "heb": { "on": true, "voice": true, "personal": false, "readCheck": true, "band": 0 },
+        "rus": {
+          "on": true,
+          "voice": true,
+          "personal": false,
+          "lettersBefore5": true,
+          "stress": "on",
+          "route": "reader",
+          "band": 2,
+          "q": { "home": "bothParents", "understands": "some", "speaks": "words", "letters": "some", "reads": "syllables" }
+        }
+      }
+    },
+    {
+      "child-bbbb-0001": { "eng": { "on": true } },
+      "child-bbbb-0002": { "heb": { "on": true, "voice": true }, "rus": { "on": true, "route": "new", "q": { "home": "none" } } }
+    },
+    {}
+  ],
+  "refused": [
+    { "child-aaaa-0001": { "fra": { "on": true } } },
+    { "child-aaaa-0001": { "eng": { "on": "yes" } } },
+    { "child-aaaa-0001": { "eng": { "lettersBefore5": true } } },
+    { "child-aaaa-0001": { "eng": { "stress": "on" } } },
+    { "child-aaaa-0001": { "heb": { "oralOnly": true } } },
+    { "child-aaaa-0001": { "rus": { "readCheck": true } } },
+    { "child-aaaa-0001": { "rus": { "stress": "route" } } },
+    { "child-aaaa-0001": { "rus": { "route": "native" } } },
+    { "child-aaaa-0001": { "eng": { "band": 3 } } },
+    { "child-aaaa-0001": { "eng": { "band": 1.5 } } },
+    { "child-aaaa-0001": { "eng": { "band": -1 } } },
+    { "child-aaaa-0001": { "eng": { "name": "Noa" } } },
+    { "child-aaaa-0001": { "eng": { "q": { "knowsLetters": "all" } } } },
+    { "child-aaaa-0001": { "eng": { "q": { "home": "none" } } } },
+    { "child-aaaa-0001": { "heb": { "q": { "knowsLetters": "no" } } } },
+    { "child-aaaa-0001": { "rus": { "q": { "home": "Moscow" } } } },
+    { "child-aaaa-0001": { "rus": { "q": "none" } } },
+    { "child-aaaa-0001": { "rus": "on" } },
+    { "child-aaaa-0001": "eng" },
+    { "short": { "eng": { "on": true } } },
+    { "child with spaces": { "eng": { "on": true } } },
+    { "child-aaaa-0001": { "eng": { "on": true } }, "child-aaaa-0002": { "eng": { "on": true } }, "child-aaaa-0003": { "eng": { "on": true } }, "child-aaaa-0004": { "eng": { "on": true } }, "child-aaaa-0005": { "eng": { "on": true } }, "child-aaaa-0006": { "eng": { "on": true } }, "child-aaaa-0007": { "eng": { "on": true } } },
+    [],
+    "eng"
+  ]
+}

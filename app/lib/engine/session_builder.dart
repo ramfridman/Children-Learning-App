@@ -1,7 +1,9 @@
 import 'dart:math' as math;
 
+import 'course.dart';
 import 'engine.dart';
 import 'params.dart';
+import 'presentation.dart';
 import 'representation.dart';
 import 'state.dart';
 import 'types.dart';
@@ -26,12 +28,22 @@ class SessionContext {
     required this.served,
     this.limitReached = false,
     this.chosenDomain,
+    this.course = Course.core,
+    this.held = const <String>{},
   });
 
   final int sessionId;
 
-  /// 0, 1 or 2 for Bands A, B and C.
+  /// The presentation band: 0, 1 or 2 for Bands A, B and C. It sets the pace of a visit and what may be shown; the skills
+  /// served come from what the child has mastered, not from this (docs/languages/frame.md section 3.1).
   final int band;
+
+  /// The course this visit plays. A visit is one course: it serves no item, repair, revisit or probe of another
+  /// (docs/languages/frame.md section 3.5).
+  final String course;
+
+  /// Skills a closed gate holds back from this child (see `heldSkills` in gates.dart).
+  final Set<String> held;
   final DateTime now;
   final List<Served> served;
 
@@ -76,12 +88,16 @@ class SessionBuilder {
   EngineParams get params => engine.params;
   Catalog get catalog => engine.catalog;
 
-  /// How many items a session of this band holds.
-  int totalItems(int band) =>
-      math.max(4, (params.sessionMinutes[band] * 60 / params.secondsPerItem[band]).round());
+  /// How many items a session of this band holds. A course may set a shorter visit than the app's default.
+  int totalItems(int band, {String course = Course.core}) => math.max(
+    4,
+    (presentationSpec(band, course: course, params: params).sessionMinutes * 60 / params.secondsPerItem[band])
+        .round(),
+  );
 
   Pick next(SessionContext c) {
-    final int total = totalItems(c.band);
+    final int total = totalItems(c.band, course: c.course);
+    final _Scope scope = _Scope(c, catalog);
     final Served? last = c.served.isEmpty ? null : c.served.last;
 
     // The end: after the planned number of items, or when the parent's time is up; always on a success.
@@ -99,7 +115,8 @@ class SessionBuilder {
     // probe that has begun is finished).
     final int warmQuota = c.band == 2 ? 2 : 1;
     final int repairMax = (total * params.repairShareMax).floor();
-    final String? probeSkill = c.served.length < warmQuota ? null : engine.nextProbe();
+    final String? nextProbe = c.served.length < warmQuota ? null : engine.nextProbe();
+    final String? probeSkill = nextProbe != null && scope.course(nextProbe) ? nextProbe : null;
     if (probeSkill != null &&
         (engine.state.probesInSession[c.sessionId] ?? 0) < params.probeMaxPerSession &&
         (_count(c, Phase.repair) < repairMax || engine.probeNeedsConfirmation)) {
@@ -131,7 +148,13 @@ class SessionBuilder {
 
   int _count(SessionContext c, Phase p) => c.served.where((Served s) => s.phase == p).length;
 
-  bool _hasDelight() => catalog.items.values.any((ItemMeta i) => i.delight);
+  bool _hasDelight(_Scope scope) => catalog.items.values.any((ItemMeta i) => i.delight && scope.item(i));
+
+  /// The skills whose check is due, in this visit's course only: a revisit stays inside its course.
+  List<String> _due(SessionContext c) => <String>[
+    for (final String id in engine.dueChecks(c.now))
+      if (_Scope(c, catalog).course(id)) id,
+  ];
 
   Phase? _phase(SessionContext c, int total) {
     if (c.served.isEmpty) return Phase.warmUp;
@@ -141,12 +164,14 @@ class SessionBuilder {
     final double revisitShare = const <double>[0.175, 0.225, 0.275][c.band];
     final int repairMax = (total * params.repairShareMax).floor();
     final int revisitQuota = (total * revisitShare).round();
-    final int delightQuota = _hasDelight() ? (total * 0.2).round() : 0;
+    final _Scope scope = _Scope(c, catalog);
+    final int delightQuota = _hasDelight(scope) ? (total * 0.2).round() : 0;
     final int warmUsed = _count(c, Phase.warmUp);
     final int focusQuota = math.max(1, total - warmUsed - revisitQuota - delightQuota - repairMax);
 
-    final bool repairNeeded = engine.state.openGaps.isNotEmpty || engine.state.activeTags.isNotEmpty;
-    final bool revisitDue = engine.dueChecks(c.now).isNotEmpty;
+    final bool repairNeeded =
+        engine.state.openGaps.any((Gap g) => scope.course(g.skill)) || engine.state.activeTags.any(scope.tag);
+    final bool revisitDue = _due(c).isNotEmpty;
 
     // How far each phase is from its share, as a fraction; the most behind goes next. Repair is a cap,
     // not a quota: it takes at most its share, and only when there is something to repair.
@@ -177,6 +202,7 @@ class SessionBuilder {
   // ---- serving one phase ----
 
   ServeItem? _serve(Phase phase, SessionContext c) {
+    final _Scope scope = _Scope(c, catalog);
     final Set<String> used = <String>{for (final Served s in c.served) s.item.id};
     switch (phase) {
       case Phase.warmUp:
@@ -189,7 +215,7 @@ class SessionBuilder {
       case Phase.delight:
         final List<ItemMeta> d = <ItemMeta>[
           for (final ItemMeta i in catalog.items.values)
-            if (i.delight && !used.contains(i.id)) i,
+            if (i.delight && !used.contains(i.id) && scope.item(i)) i,
         ];
         return d.isEmpty
             ? null
@@ -202,8 +228,10 @@ class SessionBuilder {
   }
 
   ServeItem? _repair(SessionContext c, Set<String> used) {
+    final _Scope scope = _Scope(c, catalog);
     // 1. A gap that is open: items for the missing skill, in another representation than the one that failed.
     for (final Gap g in engine.state.openGaps) {
+      if (!scope.course(g.skill)) continue;
       final ItemMeta? i = _itemFor(
         g.skill,
         c,
@@ -213,20 +241,24 @@ class SessionBuilder {
       if (i != null) return ServeItem(i, Phase.repair, 'repair ${g.skill}');
     }
     // 2. An item built to expose a misconception that was repaired (or is active).
-    for (final String tag in engine.state.activeTags) {
+    for (final String tag in engine.state.activeTags.where(scope.tag)) {
       for (final ItemMeta i in catalog.items.values) {
-        if (i.contradicts == tag && !used.contains(i.id)) return ServeItem(i, Phase.repair, 'expose $tag');
+        if (i.contradicts == tag && !used.contains(i.id) && scope.item(i)) {
+          return ServeItem(i, Phase.repair, 'expose $tag');
+        }
       }
       for (final String id in catalog.tags[tag]?.repairActivities ?? const <String>[]) {
         final ItemMeta? i = catalog.items[id];
-        if (i != null && !used.contains(i.id)) return ServeItem(i, Phase.repair, 'repair activity of $tag');
+        if (i != null && !used.contains(i.id) && scope.item(i)) {
+          return ServeItem(i, Phase.repair, 'repair activity of $tag');
+        }
       }
     }
     return null;
   }
 
   ServeItem? _revisit(SessionContext c, Set<String> used) {
-    for (final String id in engine.dueChecks(c.now)) {
+    for (final String id in _due(c)) {
       final SkillState s = engine.state.skills[id]!;
       // A different item of the variant group than the one last used; another representation after a failure.
       final ItemMeta? i = _itemFor(
@@ -247,7 +279,12 @@ class SessionBuilder {
       for (final Served s in c.served)
         if (s.phase == Phase.focus) s.item.primarySkill,
     };
-    final Set<String> newInSession = engine.state.newSkillsInSession[c.sessionId] ?? const <String>{};
+    final _Scope scope = _Scope(c, catalog);
+    // A letter bundle counts as one new skill, not as one for each of its facets.
+    final Set<String> newInSession = <String>{
+      for (final String id in engine.state.newSkillsInSession[c.sessionId] ?? const <String>{})
+        catalog.unitOf(id),
+    };
     // A skill gets a few items and then the next takes over, so that about two are in focus in a session.
     final int perSkill = math.max(params.focusItemsPerSkill, (totalItems(c.band) * 0.275).ceil());
     final Map<String, int> doneToday = <String, int>{};
@@ -256,13 +293,15 @@ class SessionBuilder {
     }
     final List<String> candidates = <String>[];
     for (final String id in catalog.skills.keys) {
+      if (!scope.offered(id)) continue;
       final SkillStatus st = engine.statusOf(id, c.now);
       if (st != SkillStatus.ready && st != SkillStatus.learning) continue;
       if (engine.state.openGaps.any((Gap g) => g.skill == id && !g.repaired) && st != SkillStatus.learning) {
         continue;
       }
       if (!(engine.state.skills[id]?.started ?? false) &&
-          newInSession.length >= params.maxNewSkillsPerSession) {
+          newInSession.length >= params.maxNewSkillsPerSession &&
+          !newInSession.contains(catalog.unitOf(id))) {
         continue;
       }
       // Enough of this one for today: a skill gets a few items, then the next takes over.
@@ -341,6 +380,12 @@ class SessionBuilder {
       final List<ItemMeta> unseen = pool.where((ItemMeta i) => !preferNotIn.contains(i.id)).toList();
       if (unseen.isNotEmpty) pool = unseen;
     }
+    // A set of words (or letters): the items rotate through the ones not yet answered right until the set is covered.
+    final Set<String> uncovered = engine.uncoveredGroups(skillId);
+    if (uncovered.isNotEmpty) {
+      final List<ItemMeta> toCover = pool.where((ItemMeta i) => uncovered.contains(i.variantGroup)).toList();
+      if (toCover.isNotEmpty) pool = toCover;
+    }
     final Set<Representation> reps = <Representation>{for (final ItemMeta i in pool) i.representation};
     final Representation rep = _chooser.choose(
       engine: engine,
@@ -391,11 +436,12 @@ class SessionBuilder {
 
   /// The easiest item in a skill the child is surest of (for the warm-up and the end).
   ItemMeta? _easiestWin(SessionContext c, {String? exceptSkill}) {
+    final _Scope scope = _Scope(c, catalog);
     final Set<String> used = <String>{for (final Served s in c.served) s.item.id};
     String? bestSkill;
     double bestP = -1;
     for (final MapEntry<String, SkillState> e in engine.state.skills.entries) {
-      if (e.key == exceptSkill || !e.value.started) continue;
+      if (e.key == exceptSkill || !e.value.started || !scope.course(e.key)) continue;
       if (engine.state.openGaps.any((Gap g) => g.skill == e.key)) continue;
       if (e.value.p > bestP) {
         bestP = e.value.p;
@@ -405,7 +451,9 @@ class SessionBuilder {
     if (bestSkill == null) {
       // A brand-new child: the easiest item of the shallowest skill.
       final List<String> roots =
-          catalog.skills.keys.where((String id) => id != exceptSkill && engine.isUnlocked(id)).toList()
+          catalog.skills.keys
+              .where((String id) => id != exceptSkill && scope.offered(id) && engine.isUnlocked(id))
+              .toList()
             ..sort((String a, String b) => engine.graph.depth(a).compareTo(engine.graph.depth(b)));
       for (final String id in roots) {
         final List<ItemMeta> pool = <ItemMeta>[
@@ -435,4 +483,32 @@ class SessionBuilder {
     final double p = engine.state.skills[i.primarySkill]?.p ?? 0;
     return p >= params.endOnSuccessAbove ? i : null;
   }
+}
+
+/// What one visit may serve (docs/languages/frame.md sections 3.1, 3.3.6 and 3.5): the skills and items of its course only,
+/// and for a new skill also not a roll-up (it has no items), not one a closed gate holds back, and not letter work under the
+/// youngest presentation band.
+class _Scope {
+  const _Scope(this.c, this.catalog);
+
+  final SessionContext c;
+  final Catalog catalog;
+
+  /// Is [skillId] a skill of this visit's course?
+  bool course(String skillId) => catalog.skills[skillId]?.course == c.course;
+
+  /// May [skillId] be offered as something new or in focus?
+  bool offered(String skillId) {
+    final SkillNode? n = catalog.skills[skillId];
+    return n != null &&
+        n.course == c.course &&
+        !catalog.isRollUp(skillId) &&
+        !c.held.contains(skillId) &&
+        offeredUnder(c.band, n);
+  }
+
+  bool item(ItemMeta i) => i.course == c.course;
+
+  /// Is the misconception [tag] one of this visit's course?
+  bool tag(String tag) => (catalog.tags[tag]?.course ?? Course.ofTag(tag)) == c.course;
 }

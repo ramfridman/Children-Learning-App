@@ -169,7 +169,7 @@ class ProgressScreen extends ConsumerWidget {
   );
 
   Widget _view(Progress p) {
-    final List<String> domainIds = <String>[for (final DomainBlock d in p.domains) d.domain];
+    final List<String> domainIds = <String>[for (final DomainBlock d in p.domains) d.key];
     final List<Map<String, double?>> weeks = <Map<String, double?>>[
       for (final WeekPoint w in p.growth) w.byDomain,
     ];

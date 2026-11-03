@@ -9,6 +9,8 @@ import '../core/errors.dart';
 import '../core/log.dart';
 import '../data/app_database.dart';
 import '../data/child_name.dart';
+import '../engine/course.dart';
+import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
 import '../play/response_code.dart';
 import '../rewards/ribbons.dart';
@@ -145,7 +147,7 @@ class SyncEngine {
   static final String _namespace = Namespace.url.value;
 
   /// The wire format of this build (see [wireFormat]).
-  static const int currentWireFormat = 1;
+  static const int currentWireFormat = 2;
 
   /// The wire format the rows refused by the server were last reset under (SEC-12). Not the key of the engine version that
   /// came before it (`sync_refused_reset_version`): the first start of the build that brought this resets once more, which
@@ -351,6 +353,8 @@ class SyncEngine {
       'template': a.template,
       'template_version': a.templateVersion,
       'skill_id': a.skillId,
+      // The course of a language answer (the lands send none, and none means `core`).
+      if (Course.ofSkillId(a.skillId) != Course.core) 'course': Course.ofSkillId(a.skillId),
       'result': a.result,
       'attempt_no': a.attemptNo,
       'hint_level': a.hintLevel,
@@ -804,14 +808,20 @@ class SyncEngine {
   static const String _versionKey = 'settings_version';
   static const String _fingerprintKey = 'settings_fingerprint';
 
-  /// The family's rules as this device holds them: the time rules, whether the child's words are kept, and the AI helper.
-  Future<Map<String, Object?>> _localRules() async => <String, Object?>{
-    ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
-    'keepWords': await db.setting('keep_words') != 'off',
-    'aiHelper': await db.setting('ai_helper') == 'on',
-    'ceremonies': await db.setting('ceremonies') != 'off',
-    'ribbons': decodeRibbons(await db.setting('ribbons')),
-  };
+  /// The family's rules as this device holds them: the time rules, whether the child's words are kept, the AI helper, and
+  /// (only when a parent has turned a language on or changed one) the language settings of each child. A family that never
+  /// touches a language syncs exactly the document it did before.
+  Future<Map<String, Object?>> _localRules() async {
+    final FamilyLanguages languages = FamilyLanguages.decode(await db.setting(languagesSettingKey));
+    return <String, Object?>{
+      ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
+      'keepWords': await db.setting('keep_words') != 'off',
+      'aiHelper': await db.setting('ai_helper') == 'on',
+      'ceremonies': await db.setting('ceremonies') != 'off',
+      'ribbons': decodeRibbons(await db.setting('ribbons')),
+      if (!languages.isEmpty) 'languages': languages.toJson(),
+    };
+  }
 
   /// Keeps the family's rules the same on every device, the last write by the server's count winning. A parent device
   /// that changed the rules since it last synced sends them; any other device (and a parent device that has never
@@ -842,6 +852,8 @@ class SyncEngine {
         'ribbons',
         encodeRibbons(decodeRibbons(ribbons == null ? null : jsonEncode(ribbons))),
       );
+      // The language settings are taken as the server has them, each value checked again here.
+      await db.putSetting(languagesSettingKey, FamilyLanguages.fromJson(rules['languages']).encode());
       await db.putSetting(_versionKey, '$serverVersion');
       await db.putSetting(_fingerprintKey, jsonEncode(await _localRules()));
       return true;
@@ -956,6 +968,16 @@ class SyncEngine {
     final String from = e['device_id']! as String;
     final DateTime at = DateTime.fromMillisecondsSinceEpoch(e['at']! as int, isUtc: true);
     if (e['type'] == 'attempt') {
+      // Evidence never crosses courses (docs/languages/frame.md section 1.5): an answer whose skill, pack, tag and course do
+      // not say the same course is not taken in.
+      final String? course = Course.ofAnswer(
+        skillId: d['skill_id']! as String,
+        packId: d['pack_id']! as String,
+        activityId: d['activity_id']! as String,
+        tag: d['misconception_tag'] as String? ?? '',
+        course: d['course'] as String?,
+      );
+      if (course == null) return false;
       final Object? local = d['session_local'];
       final String? key = local is int ? '$from:$local' : null;
       final int? sessionId = key == null ? null : await db.sessionIdForRemoteKey(key);

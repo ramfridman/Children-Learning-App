@@ -1,6 +1,8 @@
+import '../engine/course.dart';
 import '../rewards/award.dart';
 import '../rewards/names.dart';
 import '../strings/he.dart';
+import '../world/adventure_land.dart';
 import '../world/todays_adventure.dart';
 
 /// What the companion says in the home island's bubble when the child taps the bottle (B-39, rule section 8): the line for
@@ -23,8 +25,20 @@ AdventureLine? adventureLine(TodaysAdventure stop) {
     AdventureReason.playAgain => (He.adventurePlayAgain, He.adventurePlayAgainSemantics),
     AdventureReason.nothing => null,
   };
-  final TrophyLand? land = stop.land;
-  if (pair == null || land == null) return null;
+  final AdventureLand? place = stop.land;
+  if (pair == null || place == null) return null;
+  // A stop in a language has one line for each language, whatever the reason: it says what the child will do, never "again",
+  // "new" or "help", and has no variable (proposals of the hebrew-text-editor, waiting for the owner's pick).
+  if (place is LanguageLand) {
+    final (Str, Str) line = switch (place.course) {
+      Course.eng => (He.adventureLangEnglish, He.adventureLangEnglishSemantics),
+      Course.rus => (He.adventureLangRussian, He.adventureLangRussianSemantics),
+      _ => (He.adventureLangHebrew, He.adventureLangHebrewSemantics),
+    };
+    return (text: line.$1.text, semantics: line.$2.text, voice: 'vo:core.adventure.lang.${place.course}');
+  }
+  if (place is! TrophyLand) return null;
+  final TrophyLand land = place;
   return (
     text: pair.$1.fill(<String, String>{'land': landName(land).text}),
     semantics: pair.$2.fill(<String, String>{'land': landSemanticsName(land).text}),

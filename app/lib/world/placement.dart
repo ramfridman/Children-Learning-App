@@ -1,5 +1,6 @@
 import '../content/models.dart';
 import '../data/app_database.dart';
+import '../engine/course.dart';
 import '../strings/he.dart';
 
 /// The warm-up game at the first visit to a land (M9): a few activities spread along the path, from the first lesson to the
@@ -7,6 +8,19 @@ import '../strings/he.dart';
 /// is the same as in a lesson, nothing says "wrong", and when the child needs the full help twice in a row the game ends
 /// kindly and the path starts at the beginning.
 const String placementId = 'placement';
+
+/// The id of a course's placement visit: `placement` for the lands that exist, `placement-eng` for a language. A course is
+/// placed on its own, strand by strand (docs/languages/frame.md section 3.2), so its answers are told apart from every other
+/// course's by this id.
+String placementIdFor(String course) => course == Course.core ? placementId : '$placementId-$course';
+
+/// The course a placement lesson id belongs to, or null when [lessonId] is not a placement id.
+String? courseOfPlacementId(String lessonId) {
+  if (lessonId == placementId) return Course.core;
+  if (!lessonId.startsWith('$placementId-')) return null;
+  final String course = lessonId.substring(placementId.length + 1);
+  return Course.isLanguage(course) ? course : null;
+}
 
 /// How many activities the warm-up has at most, and how many struggles end it.
 const int placementItems = 8;

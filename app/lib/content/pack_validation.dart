@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import '../engine/course.dart';
 import '../speech/answer_matcher.dart';
 import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
@@ -30,6 +31,8 @@ List<Problem> validatePack({
     add('manifest.json', p);
   }
   if (out.isNotEmpty) return out; // the rest relies on the manifest's shape
+  final String course = (manifest['course'] as String?) ?? Course.core;
+  _packCourse(course, manifest['id']! as String, say);
 
   final List<Map<String, Object?>> listed = _maps(manifest['files']);
   final Set<String> listedNames = <String>{for (final Map<String, Object?> f in listed) f['name']! as String};
@@ -64,11 +67,13 @@ List<Problem> validatePack({
   final Map<String, Map<String, Object?>> lessons = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> skills = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> tags = <String, Map<String, Object?>>{};
+  final Map<String, Map<String, Object?>> gates = <String, Map<String, Object?>>{};
   // Every id that has a file, even one that failed its schema; only valid documents are cross-checked.
   final Set<String> activityIds = <String>{};
   final Set<String> lessonIds = <String>{};
   final Set<String> skillIds = <String>{};
   final Set<String> tagIds = <String>{};
+  final Set<String> gateIds = <String>{};
   final Map<String, Map<String, Object?>> characters = <String, Map<String, Object?>>{};
   final Set<String> characterIds = <String>{};
   final Map<String, Map<String, Object?>> cues = <String, Map<String, Object?>>{};
@@ -137,6 +142,14 @@ List<Problem> validatePack({
         }
         if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
         if (found.isEmpty) tags[middle] = doc;
+      case 'gate':
+        gateIds.add(middle);
+        final List<Problem> found = validate(gateSchema, doc);
+        for (final Problem p in found) {
+          add(name, p);
+        }
+        if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
+        if (found.isEmpty) gates[middle] = doc;
       case 'character':
         characterIds.add(middle);
         final List<Problem> found = validate(characterSchema, doc);
@@ -176,6 +189,7 @@ List<Problem> validatePack({
   sameSet('lessons', lessonIds);
   sameSet('skills', skillIds);
   sameSet('misconceptions', tagIds);
+  sameSet('gates', gateIds);
   sameSet('characters', characterIds);
   sameSet('cues', cueIds);
 
@@ -638,7 +652,7 @@ List<Problem> validatePack({
 
   skills.forEach((String id, Map<String, Object?> s) {
     final String file = 'skill.$id.json';
-    _skillId(file, id, s, say);
+    _skillId(file, id, s, say, course: course);
     for (final (int i, Map<String, Object?> p) in _maps(s['prerequisites']).indexed) {
       if (p['skill'] == id) say(file, 'prerequisites[$i].skill', 'a skill cannot need itself');
     }
@@ -658,6 +672,18 @@ List<Problem> validatePack({
       }
     }
   });
+
+  // ---- courses never mix (docs/languages/frame.md section 1.5) ----
+  _courseRules(
+    course: course,
+    activities: activities,
+    lessons: lessons,
+    skills: skills,
+    tags: tags,
+    skillIds: skillIds,
+    gates: gates,
+    say: say,
+  );
 
   // ---- characters ----
   characters.forEach((String id, Map<String, Object?> c) {
@@ -883,12 +909,33 @@ const Map<String, String> skillDomainCodes = <String, String>{
   'cs': 'CS',
 };
 
-final RegExp _skillIdPattern = RegExp(r'^([A-Z]+)-([ABC])-(\d{2})$');
+final RegExp _skillIdPattern = RegExp(r'^([A-Z]+)-([ABC])-(\d{2})(?:\.[A-Z]\d{1,2})?$');
 
 /// A skill id is `<DOMAIN>-<BAND>-<NN>`: the code of the skill's own domain, its own band letter and two digits
-/// (board B-15). The schema only asks for the shape; this checks that the id says what the skill file says.
-void _skillId(String file, String id, Map<String, Object?> s, void Function(String, String, String) say) {
+/// (board B-15); in a language course the code is the course in capitals (`ENG-A-01`), and a skill taught group by group
+/// has a dotted id for each group (`ENG-B-19.G1`). The schema only asks for the shape; this checks that the id says what
+/// the skill file says.
+void _skillId(
+  String file,
+  String id,
+  Map<String, Object?> s,
+  void Function(String, String, String) say, {
+  required String course,
+}) {
   final RegExpMatch? m = _skillIdPattern.firstMatch(id);
+  if (Course.isLanguage(course)) {
+    if (m == null || m[1] != Course.skillPrefixOf(course)) {
+      say(
+        file,
+        'id',
+        '"$id" must be ${Course.skillPrefixOf(course)}-<BAND>-<NN>, the capitals of the course $course',
+      );
+    } else if (m[2] != s['band']) {
+      say(file, 'id', '"$id" has the band letter ${m[2]}, but the skill is in band ${s['band']}');
+    }
+    return;
+  }
+  if (s['domain'] == languagesDomain) return; // `_courseRules` says that a core pack has no language skills
   final String? code = skillDomainCodes[s['domain']];
   if (m == null || !skillDomainCodes.containsValue(m[1])) {
     say(
@@ -904,6 +951,275 @@ void _skillId(String file, String id, Map<String, Object?> s, void Function(Stri
   if (m[2] != s['band']) {
     say(file, 'id', '"$id" has the band letter ${m[2]}, but the skill is in band ${s['band']}');
   }
+}
+
+/// A pack of a language course is named `lang-<course>`, and no other pack is named `lang-` anything: one signed pack per
+/// course (docs/languages/frame.md section 1.5), recognised by its id alone (the gateway does too).
+void _packCourse(String course, String packId, void Function(String, String, String) say) {
+  final String? named = Course.ofPackId(packId);
+  if (named == null) {
+    say('manifest.json', 'id', '"$packId" begins with lang- but names no language course');
+  } else if (named != course) {
+    final String? want = Course.packIdOf(course);
+    say(
+      'manifest.json',
+      'id',
+      want == null
+          ? '"$packId" is the id of a language pack, but the pack says it is core'
+          : 'a pack of the course $course must be named "$want"',
+    );
+  }
+}
+
+/// The invariants of docs/languages/frame.md section 1.5. Courses never mix: a pack holds one course, and inside it every
+/// skill, prerequisite, activity, lesson and misconception tag belongs to that course. Evidence, repair and revisits can
+/// therefore never cross, because nothing that could carry them across is allowed to exist.
+void _courseRules({
+  required String course,
+  required Map<String, Map<String, Object?>> activities,
+  required Map<String, Map<String, Object?>> lessons,
+  required Map<String, Map<String, Object?>> skills,
+  required Map<String, Map<String, Object?>> tags,
+  required Set<String> skillIds,
+  required Map<String, Map<String, Object?>> gates,
+  required void Function(String, String, String) say,
+}) {
+  final bool language = Course.isLanguage(course);
+  void sameCourse(String file, Map<String, Object?> doc) {
+    final Object? own = doc['course'];
+    if ((own ?? Course.core) != course) {
+      say(file, 'course', 'is $own, but the pack is of the course $course (a pack holds one course)');
+    }
+  }
+
+  void domain(String file, Map<String, Object?> doc) {
+    if ((doc['domain'] == languagesDomain) != language) {
+      say(
+        file,
+        'domain',
+        language
+            ? 'must be $languagesDomain in the language course $course'
+            : '$languagesDomain belongs to a language course, not to core',
+      );
+    }
+  }
+
+  bool ownSkill(String id) => Course.ofSkillId(id) == course;
+
+  // Activity and lesson ids carry their course: `eng.greet.i01`. Two packs can then never share an id, and an answer is evidence
+  // for its own pack's item only (SEC-L0-1).
+  void ownId(String file, String id) {
+    if (Course.ofActivityId(id) != course) {
+      say(
+        file,
+        'id',
+        language
+            ? '"$id" must begin with "$course." (an id of a language course carries its course)'
+            : '"$id" begins with a language course; those ids belong to the language packs',
+      );
+    }
+  }
+
+  // Which skills are roll-ups: those that have dotted groups. A roll-up has no estimate of its own.
+  final Set<String> rollUps = <String>{for (final String id in skillIds) ?SkillIds.parentOf(id)};
+
+  skills.forEach((String id, Map<String, Object?> s) {
+    final String file = 'skill.$id.json';
+    sameCourse(file, s);
+    domain(file, s);
+    if (!ownSkill(id)) say(file, 'id', '"$id" is not a skill of the course $course');
+    final String? parent = SkillIds.parentOf(id);
+    if (parent != null && !skillIds.contains(parent)) {
+      say(file, 'id', 'is a group of $parent, which is not in this pack (the roll-up skill is needed)');
+    }
+    for (final (int i, Map<String, Object?> p) in _maps(s['prerequisites']).indexed) {
+      final Object? need = p['skill'];
+      if (need is! String) continue;
+      if (!ownSkill(need)) {
+        say(
+          file,
+          'prerequisites[$i].skill',
+          '$need is not a skill of the course $course (no prerequisite across courses)',
+        );
+      } else if (!skillIds.contains(need)) {
+        say(file, 'prerequisites[$i].skill', 'the skill $need is not in this pack');
+      }
+      if (need == parent) {
+        say(file, 'prerequisites[$i].skill', 'a group cannot need its own roll-up skill $need');
+      }
+    }
+    if (rollUps.contains(id) && _maps(s['prerequisites']).isNotEmpty) {
+      say(file, 'prerequisites', 'a roll-up has none of its own: put them on its groups');
+    }
+  });
+
+  _bundlesAndGates(
+    course: course,
+    skills: skills,
+    skillIds: skillIds,
+    rollUps: rollUps,
+    gates: gates,
+    say: say,
+  );
+
+  tags.forEach((String id, Map<String, Object?> t) {
+    final String file = 'misconception.$id.json';
+    sameCourse(file, t);
+    if (Course.ofTag(id) != course) say(file, 'id', '"$id" is not a misconception tag of the course $course');
+    if (language && !id.startsWith('$course.')) say(file, 'id', 'must begin with "$course."');
+    for (final (int i, Object? s) in (t['skills']! as List<Object?>).indexed) {
+      if (s is String && !ownSkill(s)) say(file, 'skills[$i]', '$s is not a skill of the course $course');
+    }
+  });
+
+  activities.forEach((String id, Map<String, Object?> a) {
+    final String file = 'activity.$id.json';
+    sameCourse(file, a);
+    ownId(file, id);
+    domain(file, a);
+    for (final (int i, Map<String, Object?> s) in _maps(a['skills']).indexed) {
+      final Object? skill = s['id'];
+      if (skill is! String) continue;
+      if (!ownSkill(skill)) {
+        say(
+          file,
+          'skills[$i].id',
+          '$skill is not a skill of the course $course (evidence never crosses courses)',
+        );
+      } else if (rollUps.contains(skill)) {
+        say(file, 'skills[$i].id', '$skill is a roll-up with no estimate of its own: name one of its groups');
+      }
+    }
+    final Object? tutor = a['tutor'];
+    if (language && tutor is Map<String, Object?> && tutor['llmAllowed'] == true) {
+      say(file, 'tutor.llmAllowed', 'must be false: the AI tutor is off in language lessons');
+    }
+  });
+
+  lessons.forEach((String id, Map<String, Object?> l) {
+    final String file = 'lesson.$id.json';
+    sameCourse(file, l);
+    ownId(file, id);
+    for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
+      if (s is String && !ownSkill(s)) say(file, 'skills[$i]', '$s is not a skill of the course $course');
+    }
+  });
+}
+
+/// Every skill below the given ones (their prerequisites, and theirs), where a prerequisite on a roll-up means all its groups.
+Set<String> _below(Iterable<String> from, Map<String, Map<String, Object?>> skills) {
+  final Set<String> out = <String>{};
+  List<String> groupsOf(String id) => <String>[
+    for (final String k in skills.keys)
+      if (SkillIds.parentOf(k) == id) k,
+  ];
+  final List<String> stack = <String>[
+    for (final String id in from) ...(groupsOf(id).isEmpty ? <String>[id] : groupsOf(id)),
+  ];
+  while (stack.isNotEmpty) {
+    final String id = stack.removeLast();
+    final List<String> needs = <String>[
+      for (final Map<String, Object?> p in _maps(skills[id]?['prerequisites'])) p['skill']! as String,
+    ];
+    for (final String need in needs) {
+      final List<String> groups = groupsOf(need);
+      for (final String n in groups.isEmpty ? <String>[need] : groups) {
+        if (out.add(n)) stack.add(n);
+      }
+    }
+  }
+  return out;
+}
+
+/// The rules for letter bundles and gates (docs/languages/frame.md sections 3.3.3 and 3.3.6).
+void _bundlesAndGates({
+  required String course,
+  required Map<String, Map<String, Object?>> skills,
+  required Set<String> skillIds,
+  required Set<String> rollUps,
+  required Map<String, Map<String, Object?>> gates,
+  required void Function(String, String, String) say,
+}) {
+  final Map<String, List<String>> bundles = <String, List<String>>{};
+  skills.forEach((String id, Map<String, Object?> s) {
+    final Object? b = s['bundle'];
+    if (b is! String) return;
+    final String file = 'skill.$id.json';
+    if (!b.startsWith('$course.')) say(file, 'bundle', '"$b" must begin with "$course."');
+    if (rollUps.contains(id)) say(file, 'bundle', 'a roll-up has no estimate, so it is no facet of a bundle');
+    (bundles[b] ??= <String>[]).add(id);
+  });
+  bundles.forEach((String bundle, List<String> members) {
+    if (members.length < 2) {
+      say('skill.${members.first}.json', 'bundle', 'a bundle has at least two facets; "$bundle" has one');
+    }
+    for (final String m in members) {
+      final Set<String> below = _below(<String>[m], skills);
+      for (final String other in members) {
+        if (other != m && below.contains(other)) {
+          say(
+            'skill.$m.json',
+            'prerequisites',
+            'a facet of "$bundle" cannot need another facet of it ($other)',
+          );
+        }
+      }
+    }
+  });
+
+  gates.forEach((String id, Map<String, Object?> g) {
+    final String file = 'gate.$id.json';
+    // A gate of a language pack carries its course like every other document of it (it is never read as core by default).
+    if ((Course.isLanguage(course) ? g['course'] : g['course'] ?? Course.core) != course) {
+      say(
+        file,
+        'course',
+        'is ${g['course']}, but the pack is of the course $course (a pack holds one course, and says it on every document)',
+      );
+    }
+    if (!id.startsWith('$course.')) say(file, 'id', '"$id" must begin with "$course."');
+    final Set<String> requires = <String>{
+      for (final Object? s in g['requires']! as List<Object?>) s! as String,
+    };
+    final Set<String> holds = <String>{for (final Object? s in g['holds']! as List<Object?>) s! as String};
+    final Set<String> named = <String>{...requires, ...holds};
+    for (final Map<String, Object?> q in _maps(g['requireAtLeast'])) {
+      final List<Object?> quota = q['skills']! as List<Object?>;
+      named.addAll(<String>[for (final Object? s in quota) s! as String]);
+      if ((q['count']! as int) > quota.length) {
+        say(file, 'requireAtLeast', 'asks for ${q['count']} skills out of ${quota.length}');
+      }
+    }
+    for (final String s in named) {
+      if (Course.ofSkillId(s) != course) {
+        say(
+          file,
+          'skills',
+          '$s is not a skill of the course $course (a gate never reaches into another course)',
+        );
+      } else if (!skillIds.contains(s)) {
+        say(file, 'skills', 'the skill $s is not in this pack');
+      }
+    }
+    for (final String h in holds) {
+      if (rollUps.contains(h)) say(file, 'holds', '$h is a roll-up: hold its groups');
+      if (requires.contains(h)) {
+        say(file, 'holds', '$h is both required and held, so the gate could never open');
+      }
+    }
+    // A gate can never open if what it asks for needs something it holds back.
+    final Set<String> asked = <String>{
+      ...requires,
+      for (final Map<String, Object?> q in _maps(g['requireAtLeast']))
+        for (final Object? s in q['skills']! as List<Object?>) s! as String,
+    };
+    final Set<String> needed = <String>{...asked, ..._below(asked, skills)};
+    for (final String h in holds) {
+      if (needed.contains(h)) {
+        say(file, 'holds', '$h is needed by what the gate asks for, so the gate could never open');
+      }
+    }
+  });
 }
 
 String _range(int from, int to) => '${String.fromCharCode(from)}-${String.fromCharCode(to)}';

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import '../child/calm_loading.dart';
 import '../child/ceremony_screen.dart';
 import '../child/land_screen.dart';
+import '../child/languages_doors.dart';
 import '../child/sticker_island.dart';
 import '../child/trophy_hall.dart';
 import '../rewards/ceremony.dart';
@@ -17,10 +18,12 @@ import '../rewards/award.dart';
 import '../rewards/sticker_design.dart';
 import '../world/next_lesson.dart';
 import '../world/adventure_adapter.dart';
+import '../world/adventure_land.dart';
 import '../world/placement.dart';
 import '../world/todays_adventure.dart';
 import '../child/adventure_line.dart' show AdventureLine, adventureLine;
 import 'bottle_hold.dart';
+import 'language_providers.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
 import '../child/rest_scene.dart';
@@ -337,6 +340,11 @@ class _HomeState extends ConsumerState<_Home> {
         finished: finishedLessons(content, attempts, rewards.map((Reward r) => r.awardKey)),
         now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
         band: widget.profile.ageBand,
+        // Each language the parent turned on, with its installed pack, is a land of its own (docs/languages/frame.md 3.7).
+        languages: ref.read(languagesAvailableProvider(id)).isEmpty
+            ? const <LanguageCourse>[]
+            : await ref.read(languageCoursesProvider(id).future),
+        enabledCourses: ref.read(languagesAvailableProvider(id)).toSet(),
       );
       if (!mounted || bottle.gone) return;
       final AdventureLine? words = adventureLine(stop);
@@ -353,12 +361,21 @@ class _HomeState extends ConsumerState<_Home> {
   }
 
   Future<void> _openStop(TodaysAdventure stop, WorldView world) async {
+    // A stop in a language opens that course, whatever its kind: the course screens are its own (L0: a placeholder home).
+    if (stop.land case final LanguageLand language) {
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute<void>(builder: (BuildContext c) => CourseHomeScreen(course: language.course)));
+      return;
+    }
     switch (stop.kind) {
       case AdventureKind.revisit:
         final Lesson? mission = world.missionFor(stop.skillId!);
         if (mission != null) await _openLesson(mission: mission);
       case AdventureKind.lesson:
-        await _playLand(stop.land!.domain);
+        // A language is played from its own door (docs/languages/frame.md section 1.2); the bottle has no words for one yet
+        // (`adventureLine` is null), so it never opens a language stop.
+        if (stop.land is TrophyLand) await _playLand(stop.land!.domain);
       case AdventureKind.replay:
         await _openLesson(lessonId: stop.lessonId);
       case AdventureKind.none:
@@ -440,7 +457,10 @@ class _HomeState extends ConsumerState<_Home> {
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
     // Asks the server's helper switch now, while the map shows, so that a lesson finds the answer ready.
     ref.watch(tutorAvailableProvider);
-    if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue)) {
+    // The scene (seven lands or eight) is chosen from the settings and the installed packs, so the map waits for both rather
+    // than showing the 7-land scene for a frame first.
+    final bool languagesReady = ref.watch(languagesReadyProvider);
+    if ((friend.isLoading && !friend.hasValue) || (guide.isLoading && !guide.hasValue) || !languagesReady) {
       return const CalmLoading();
     }
     return _map(friend.value);
@@ -455,7 +475,30 @@ class _HomeState extends ConsumerState<_Home> {
       Land.values.byName(t.name),
   };
 
+  /// The Languages island was touched: the door screen when two or three languages are on, the course itself when only one is
+  /// (docs/languages/frame.md section 1.2). Both open the course's placeholder home until the course screens exist (L0).
+  Future<void> _openLanguages() async {
+    final List<String> courses = ref.read(languagesAvailableProvider(widget.profile.id));
+    if (courses.isEmpty || !mounted) return;
+    Future<void> openCourse(String course) =>
+        Navigator.of(context)
+            .push(MaterialPageRoute<void>(builder: (BuildContext c) => CourseHomeScreen(course: course)));
+    if (courses.length == 1) return openCourse(courses.single);
+    final GlobalKey<MapCompanionState> host = GlobalKey<MapCompanionState>();
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext c) => LanguagesDoorsScreen(
+          courses: courses,
+          onOpenCourse: openCourse,
+          companion: MapCompanion(key: host),
+        ),
+      ),
+    );
+  }
+
   Widget _map(Character? friend) => HomeScreen(
+    languagesOn: ref.watch(languagesAvailableProvider(widget.profile.id)).isNotEmpty,
+    onOpenLanguages: _openLanguages,
     childName: _island.name,
     homeIsland: _island,
     onOpenHome: _openHome,

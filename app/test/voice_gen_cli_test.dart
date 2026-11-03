@@ -61,6 +61,7 @@ void main() {
         'listPricePer1000Chars': <String, Object?>{'eleven_v4': 0.08, 'eleven_v4_turbo': 0.04},
         'voices': <String, Object?>{
           'nitzi': <String, Object?>{'voiceId': 'FixtureVoice0001'},
+          'lang-ru-fixture': <String, Object?>{'candidate': true, 'voiceId': '', 'idStatus': 'OWNER-TO-FILL'},
         },
       }),
     );
@@ -188,6 +189,47 @@ void main() {
       expect(Directory(out).existsSync(), isFalse);
     },
   );
+
+  test('audition-batch plan names a candidate voice with no id instead of crashing, shows the language, and puts '
+      'a Russian spec in its own default folder', () async {
+    final File spec = File('${tmp.path}${Platform.pathSeparator}pilot.json')
+      ..writeAsStringSync(
+        jsonEncode(<String, Object?>{
+          'schema': 'audition/v1',
+          'title': 'Russian fixture',
+          'defaults': <String, Object?>{
+            'character': 'lang-ru-fixture',
+            'language': 'ru',
+            'model': 'eleven_v4',
+            'settings': <String, Object?>{'stability': 0.5, 'similarity_boost': 0.75},
+          },
+          'clips': <Object?>[
+            <String, Object?>{'id': 'ru-1', 'text': 'мама.'},
+            <String, Object?>{
+              'id': 'ru-2',
+              'text': '/mʲa/',
+              'allow': <Object?>['ipa'],
+            },
+            <String, Object?>{'id': 'he-1', 'text': 'הקשיבו.', 'language': 'he', 'character': 'nitzi'},
+          ],
+        }),
+      );
+    final ProcessResult r = await run(<String>['audition-batch', 'plan', spec.path]);
+    expect(r.exitCode, 0, reason: '${r.stderr}');
+    final String out = r.stdout as String;
+    expect(out, contains('ru-1: lang-ru-fixture, language ru, eleven_v4'));
+    expect(out, contains('he-1: nitzi, language he, eleven_v4'));
+    expect(out, contains('VOICE ID MISSING'));
+    expect(out, contains('VOICE IDS MISSING for 1 voices'));
+    expect(out, contains('  lang-ru-fixture: 2 clips, 10 characters'));
+    expect(out, contains('Characters by language: ru 10, he 7'));
+    expect(out, contains('${Platform.pathSeparator}auditions${Platform.pathSeparator}ru-pilot'));
+    expect(out, isNot(contains('run in a terminal')));
+    expect(home.listSync(), isEmpty, reason: 'a plan writes nothing');
+    final ProcessResult paid = await run(<String>['plan', '--characters', 'lang-ru-fixture']);
+    expect(paid.exitCode, 1);
+    expect(paid.stderr, contains('audition candidate only'));
+  });
 
   test('every paid command refuses without a terminal, with or without --confirm-chars, before planning, reading '
       'the key or naming the count', () async {

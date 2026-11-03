@@ -47,7 +47,7 @@ void main() {
         WidgetTester tester,
       ) async {
         await home(tester, board.value);
-        for (final Land l in Land.values) {
+        for (final Land l in Land.values.where((Land l) => l != Land.languages)) {
           expect(find.byKey(Key('sign-${l.name}')), findsOneWidget, reason: l.name);
         }
         expect(find.byKey(const Key('land-tap-nitzi')), findsOneWidget);

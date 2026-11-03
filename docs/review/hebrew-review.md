@@ -8,13 +8,13 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 
 | Group | Texts |
 |---|---|
-| 1. App screens and buttons | 400 |
+| 1. App screens and buttons | 512 |
 | 2. Core voice lines (spoken by every friend) | 27 |
 | 3. Lesson content (skills, activities, misconceptions) | 11381 |
 | 4. Reviewed helper (tutor) lines | 66 |
 | 5. Alert word lists (for an editor and someone who works with children) | 649 |
 | 6. Helper lexicon (the words the AI helper may use) | 122 |
-| **Total** | **12645** |
+| **Total** | **12757** |
 
 ## 1. App screens and buttons
 
@@ -152,6 +152,18 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | landLogicSemantics | מערת החידות | needs-editor |
 | app/lib/strings/he.dart | landRobotsSemantics | נמל הרובוטים | needs-editor |
 | app/lib/strings/he.dart | landMarketSemantics | כפר השוק | needs-editor |
+| app/lib/strings/he.dart | landLanguages | אִי הַשָּׂפוֹת | needs-editor |
+| app/lib/strings/he.dart | landLanguagesSemantics | אי השפות | needs-editor |
+| app/lib/strings/he.dart | languagesDoorsHello | בּוֹאוּ נִפְתַּח דֶּלֶת. מִי אוֹמֵר לָנוּ שָׁלוֹם? | needs-editor |
+| app/lib/strings/he.dart | helloHeb | שָׁלוֹם | needs-editor |
+| app/lib/strings/he.dart | doorsSemantics | הדלתות של השפות | needs-editor |
+| app/lib/strings/he.dart | courseHomeSemantics | בית השפה | needs-editor |
+| app/lib/strings/he.dart | adventureLangEnglish | בּוֹאוּ נְשַׂחֵק בְּאַנְגְּלִית. | needs-editor |
+| app/lib/strings/he.dart | adventureLangRussian | בּוֹאוּ נְשַׂחֵק בְּרוּסִית. | needs-editor |
+| app/lib/strings/he.dart | adventureLangHebrew | בּוֹאוּ נְשַׂחֵק בְּמִלִּים. | needs-editor |
+| app/lib/strings/he.dart | adventureLangEnglishSemantics | הבקבוק: לשחק באנגלית | needs-editor |
+| app/lib/strings/he.dart | adventureLangRussianSemantics | הבקבוק: לשחק ברוסית | needs-editor |
+| app/lib/strings/he.dart | adventureLangHebrewSemantics | הבקבוק: לשחק במילים בעברית | needs-editor |
 | app/lib/strings/he.dart | gateTitle | לפני שנמשיך | needs-editor |
 | app/lib/strings/he.dart | gateHint | השאלה הזו מיועדת להורים. ענו עליה כדי להיכנס. | needs-editor |
 | app/lib/strings/he.dart | gateQuestion | כמה זה? | needs-editor |
@@ -420,6 +432,106 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | app/lib/strings/he.dart | confirmNo | ביטול | needs-editor |
 | app/lib/strings/he.dart | roleParent | הורה | needs-editor |
 | app/lib/strings/he.dart | roleChild | ילד | needs-editor |
+| app/lib/strings/he.dart | areaLanguages | שפות | needs-editor |
+| app/lib/strings/he.dart | areaLanguagesHelp | כל שפה פעילה מקבלת דלת משלה באי השפות. כשמכבים שפה, הדלת נעלמת וכל מה שנלמד נשמר. | needs-editor |
+| app/lib/strings/he.dart | areaLangStateOn | פעילה · יש לה דלת באי השפות | needs-editor |
+| app/lib/strings/he.dart | areaLangStateOff | כבויה · אין לה דלת, וכל מה שנלמד נשמר | needs-editor |
+| app/lib/strings/he.dart | areaLangRowSemantics | הגדרות השפה: {lang} | needs-editor |
+| app/lib/strings/he.dart | areaLangSwitchSemantics | הפעלת {lang} | needs-editor |
+| app/lib/strings/he.dart | areaLangSwitch | השפה פעילה | needs-editor |
+| app/lib/strings/he.dart | areaLangSwitchOnHelp | הדלת של {lang} מופיעה באי השפות. | needs-editor |
+| app/lib/strings/he.dart | areaLangSwitchOffHelp | אין דלת באי השפות. כל מה שנלמד נשמר. | needs-editor |
+| app/lib/strings/he.dart | areaLangLessons | הגדרות השיעורים | needs-editor |
+| app/lib/strings/he.dart | areaLangVoiceHelp | המיקרופון נפתח רק כשהילד לוחץ עליו. שום קול לא נשמר ולא נשלח. כשמפעילים, מודל הזיהוי של {lang} יורד למכשיר. | needs-editor |
+| app/lib/strings/he.dart | areaLangVoiceHelpHeb | המיקרופון נפתח רק כשהילד לוחץ עליו. שום קול לא נשמר ולא נשלח. | needs-editor |
+| app/lib/strings/he.dart | areaLangPersonal | שאלות אישיות בשיעור | needs-editor |
+| app/lib/strings/he.dart | areaLangPersonalHelp | בשיעור יש שאלות קצרות על שם, גיל, משפחה ומה אוהבים. אפשר לדלג על כל שאלה, והתשובה לא נשמרת. | needs-editor |
+| app/lib/strings/he.dart | areaLangOralOnly | הקשבה ודיבור בלבד | needs-editor |
+| app/lib/strings/he.dart | areaLangOralOnlyHelp | כשמפעילים, הילד לומד אנגלית רק בשמיעה ובדיבור, בלי אותיות וקריאה. כשהאפשרות כבויה, האותיות נפתחות כשהילד מוכן. | needs-editor |
+| app/lib/strings/he.dart | areaLangLetters | אותיות לפני גיל 5 | needs-editor |
+| app/lib/strings/he.dart | areaLangLettersOff | כבוי: עד גיל 5 רק שומעים ומדברים | needs-editor |
+| app/lib/strings/he.dart | areaLangLettersOn | מופעל: אפשר להתחיל באותיות גם לפני גיל 5 | needs-editor |
+| app/lib/strings/he.dart | areaLangStress | סימני הטעמה על המסך | needs-editor |
+| app/lib/strings/he.dart | areaLangStressHelp | סימן קטן שמראה על איזו אות ההטעמה במילה. בשיעורים על הטעמה הוא מופיע תמיד. ברירת המחדל במסלול של {route}: {default}. | needs-editor |
+| app/lib/strings/he.dart | routeNew | לומדים חדשים | needs-editor |
+| app/lib/strings/he.dart | routeHeritage | רוסית בבית | needs-editor |
+| app/lib/strings/he.dart | routeReader | קוראים | needs-editor |
+| app/lib/strings/he.dart | stressDefaultNew | מופיע גם על מילים חדשות בקריאה | needs-editor |
+| app/lib/strings/he.dart | stressDefaultOther | לא מופיע מחוץ לשיעורי ההטעמה | needs-editor |
+| app/lib/strings/he.dart | areaLangStressRoute | לפי המסלול | needs-editor |
+| app/lib/strings/he.dart | areaLangStressOn | גם על מילים חדשות | needs-editor |
+| app/lib/strings/he.dart | areaLangStressOff | רק בשיעורי הטעמה | needs-editor |
+| app/lib/strings/he.dart | areaLangReadCheck | בדיקת הקראה להורים | needs-editor |
+| app/lib/strings/he.dart | areaLangReadCheckHelp | קריאה בקול היא תרגול, בלי ציון. הבדיקה מיועדת להורים, ואינה משפיעה על ההתקדמות. | needs-editor |
+| app/lib/strings/he.dart | areaLangQuestTitle | שאלון שפת הבית | needs-editor |
+| app/lib/strings/he.dart | areaLangQuestHelp | התשובות קובעות רק מאיפה מתחילים. אפשר לשנות אותן בכל זמן. | needs-editor |
+| app/lib/strings/he.dart | areaLangQuestButton | לשאלון | needs-editor |
+| app/lib/strings/he.dart | areaLangProgressEng | התקדמות באנגלית | needs-editor |
+| app/lib/strings/he.dart | areaLangProgressHeb | התקדמות בעברית | needs-editor |
+| app/lib/strings/he.dart | areaLangProgressRus | התקדמות ברוסית | needs-editor |
+| app/lib/strings/he.dart | areaLangProgressIntro | כאן רואים מה נמצא בתרגול, מה כבר מובן ומה כדאי לחזור אליו. אין השוואה לשפה אחרת או לילד אחר. | needs-editor |
+| app/lib/strings/he.dart | statusRemembered | מובן וזכור | needs-editor |
+| app/lib/strings/he.dart | areaLangStrandStart | מתחילים כאן: רמה {n} | needs-editor |
+| app/lib/strings/he.dart | areaLangGates | שערים | needs-editor |
+| app/lib/strings/he.dart | areaLangGateEng | שער הקריאה | needs-editor |
+| app/lib/strings/he.dart | areaLangGateRus | שער האותיות | needs-editor |
+| app/lib/strings/he.dart | areaLangGateChipOpen | פתוח | needs-editor |
+| app/lib/strings/he.dart | areaLangGateChipNotYet | עוד לא | needs-editor |
+| app/lib/strings/he.dart | areaLangGateChipClosed | סגור | needs-editor |
+| app/lib/strings/he.dart | areaLangGateOpen | הילד מכיר מספיק מילים בשמיעה, ואפשר להתחיל באותיות. | needs-editor |
+| app/lib/strings/he.dart | areaLangGateClosed | קודם מקשיבים ומדברים. כשהילד יכיר מספיק מילים בשמיעה, השער ייפתח. | needs-editor |
+| app/lib/strings/he.dart | areaLangGateByParent | בחרתם הקשבה ודיבור בלבד. | needs-editor |
+| app/lib/strings/he.dart | areaLangSpeaking | דיבור | needs-editor |
+| app/lib/strings/he.dart | areaLangSpeakingHelp | דיבור מוצג רק כ"תורגל" או "נאמר". זה לא ציון. | needs-editor |
+| app/lib/strings/he.dart | areaLangPractised | תורגל | needs-editor |
+| app/lib/strings/he.dart | areaLangSaid | נאמר | needs-editor |
+| app/lib/strings/he.dart | areaLangNoticeFound | נמצא | needs-editor |
+| app/lib/strings/he.dart | childSettingsTitle | ההגדרות של {child} | needs-editor |
+| app/lib/strings/he.dart | langEnglish | אנגלית | needs-editor |
+| app/lib/strings/he.dart | langHebrew | עברית | needs-editor |
+| app/lib/strings/he.dart | langRussian | רוסית | needs-editor |
+| app/lib/strings/he.dart | langBand | התאמה לגיל | needs-editor |
+| app/lib/strings/he.dart | langBandHelp | ברירת המחדל לפי גיל הילד. אפשר לבחור את ההצגה של קבוצת גיל אחרת: כמה בחירות יש על המסך וכמה זמן נמשך השיעור. | needs-editor |
+| app/lib/strings/he.dart | langBandAge | לפי גיל הילד | needs-editor |
+| app/lib/strings/he.dart | langBandA | גילאי 3 עד 4 | needs-editor |
+| app/lib/strings/he.dart | langBandB | גילאי 5 עד 6 | needs-editor |
+| app/lib/strings/he.dart | langBandC | גילאי 7 עד 8 | needs-editor |
+| app/lib/strings/he.dart | langRoute | מסלול הלמידה | needs-editor |
+| app/lib/strings/he.dart | langQuestionnaireDone | סיום | needs-editor |
+| app/lib/strings/he.dart | qKnowsLetters | הילד מכיר אותיות באנגלית? | needs-editor |
+| app/lib/strings/he.dart | qHome | מי מדבר רוסית בבית? | needs-editor |
+| app/lib/strings/he.dart | qUnderstands | הילד מבין רוסית? | needs-editor |
+| app/lib/strings/he.dart | qSpeaks | הילד מדבר רוסית? | needs-editor |
+| app/lib/strings/he.dart | qLetters | הילד מכיר אותיות ברוסית? | needs-editor |
+| app/lib/strings/he.dart | qReads | הילד קורא ברוסית? | needs-editor |
+| app/lib/strings/he.dart | aNo | לא | needs-editor |
+| app/lib/strings/he.dart | aSome | קצת | needs-editor |
+| app/lib/strings/he.dart | aMost | הרבה | needs-editor |
+| app/lib/strings/he.dart | aNone | אף אחד | needs-editor |
+| app/lib/strings/he.dart | aOneParent | אחד ההורים | needs-editor |
+| app/lib/strings/he.dart | aBothParents | שני ההורים | needs-editor |
+| app/lib/strings/he.dart | aGrandparentsOthers | סבא וסבתא או אחרים | needs-editor |
+| app/lib/strings/he.dart | aWords | מילים | needs-editor |
+| app/lib/strings/he.dart | aSentences | משפטים | needs-editor |
+| app/lib/strings/he.dart | aSyllables | הברות | needs-editor |
+| app/lib/strings/he.dart | langProgressNoCourse | השיעורים של השפה הזאת עוד לא הגיעו למכשיר הזה, ולכן אין מה להראות כאן. | needs-editor |
+| app/lib/strings/he.dart | langStrandEngLisSpk | הקשבה ודיבור | needs-editor |
+| app/lib/strings/he.dart | langStrandEngPhon | צלילים ואותיות | needs-editor |
+| app/lib/strings/he.dart | langStrandEngRead | קריאה | needs-editor |
+| app/lib/strings/he.dart | langStrandEngWrite | כתיבה | needs-editor |
+| app/lib/strings/he.dart | langStrandHebOral | הקשבה, דיבור וצלילים | needs-editor |
+| app/lib/strings/he.dart | langStrandHebCode | אותיות, קריאה וכתיבה | needs-editor |
+| app/lib/strings/he.dart | langStrandRusUnderstand | הקשבה ודיבור | needs-editor |
+| app/lib/strings/he.dart | langStrandRusSounds | צלילים | needs-editor |
+| app/lib/strings/he.dart | langStrandRusLetters | אותיות | needs-editor |
+| app/lib/strings/he.dart | langStrandRusRead | קריאה | needs-editor |
+| app/lib/strings/he.dart | langStrandRusWrite | כתיבה | needs-editor |
+| app/lib/strings/he.dart | langStrandAll | נושאים נוספים | needs-editor |
+| app/lib/strings/he.dart | langSetupTitle | אילו שפות לפתוח לילד? | needs-editor |
+| app/lib/strings/he.dart | langSetupHelp | כל שפה שמסמנים מקבלת דלת באי השפות. אפשר לשנות בכל זמן באזור ההורים. | needs-editor |
+| app/lib/strings/he.dart | langSetupEnglish | אנגלית: לשמוע, לדבר ובהמשך לקרוא ולכתוב | needs-editor |
+| app/lib/strings/he.dart | langSetupHebrew | עברית: מילים, סיפורים וצלילים, ובהמשך אותיות, קריאה וכתיבה | needs-editor |
+| app/lib/strings/he.dart | langSetupRussian | רוסית: לשמוע, לדבר ובהמשך לקרוא ולכתוב, גם אם אין רוסית בבית | needs-editor |
 
 ## 2. Core voice lines (spoken by every friend)
 

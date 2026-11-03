@@ -244,6 +244,50 @@ Deno.test("tutor-turn: the kill switch, a missing key and an item that does not 
   assert.equal(d.model.calls.length, 0);
 });
 
+Deno.test("tutor-turn: a language course never reaches the model, by its pack or by the skills of its item (docs/languages/frame.md 1.6)", async () => {
+  const { turn, store, model, voice } = await setup();
+  const english = toPack();
+  // The pack of a course is named lang-<course>; the same items under that name.
+  store.packs.set("lang-eng", { ...english, packId: "lang-eng" });
+  for (const pack_id of ["lang-eng", "lang-heb", "lang-rus", "lang-xyz"]) {
+    const r = await json(await turn({ pack_id }));
+    // A pack the server does not know is refused before it is looked up, so its name alone is enough.
+    assert.equal(r.results[0].rule, "course_not_allowed", pack_id);
+  }
+  // The model, the voice and the cache were never asked, and nothing was counted against the family's caps.
+  assert.equal(model.calls.length, 0);
+  assert.equal(voice.calls.length, 0);
+  assert.equal(store.tutorCounters.size, 0);
+  assert.equal(store.cacheGets, 0);
+
+  // Another name for the pack does not help if the item's skills say the course: each skill id starts with it.
+  for (const skill of ["ENG-A-01", "HEB-B-14", "RUS-C-08"]) {
+    const sneaky = toPack();
+    sneaky.packId = "starter-lite";
+    sneaky.items = sneaky.items.map((i) => ({ ...i, skillIds: [skill] }));
+    store.packs.set("starter-lite", sneaky);
+    const r = await json(await turn({ pack_id: "starter-lite" }));
+    assert.equal(r.results[0].rule, "course_not_allowed", skill);
+  }
+  assert.equal(model.calls.length, 0);
+  assert.equal(voice.calls.length, 0);
+
+  // The lands are as they were: the starter pack still gets a line.
+  const ok = await json(await turn());
+  assert.equal(ok.results[0].source, "live");
+  assert.equal(model.calls.length, 1);
+});
+
+Deno.test("tutor-turn: a misconception of a language course is not a mistake this function takes", async () => {
+  const { turn } = await setup();
+  const r = await turn({
+    pack_id: "lang-eng",
+    mistakes: ["eng.ph.dir"],
+    attempts: [{ option: "o2", result: "incorrect", misconception: "eng.ph.dir" }],
+  });
+  assert.equal(r.status, 400, "the shape only takes the tags of the lands");
+});
+
 Deno.test("tutor-turn: caps are exact, a refused turn calls nothing, and the cost cap stops everything", async () => {
   const a = await setup();
   a.store.config.set("tutor_session_cap", 2);

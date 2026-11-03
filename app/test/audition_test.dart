@@ -246,12 +246,13 @@ void main() {
         expect(p.cost(prices), closeTo(25 / 1000 * 0.04 + 16 / 1000 * 0.08, 1e-12));
         final String text = p.describe(prices, runCommand: 'RUN');
         for (final String s in <String>[
-          'L1-turbo: nitzi, eleven_v4_turbo, mp3_44100_64, {"similarity_boost":0.75,"stability":0.5,"use_speaker_boost":true}, 16 characters',
-          'L1-v4: nitzi, eleven_v4, mp3_44100_64',
-          'L4x: nitzi, eleven_v4_turbo, mp3_44100_64, {"similarity_boost":0.75,"stability":0.1,"use_speaker_boost":true}, 9 characters',
+          'L1-turbo: nitzi, language he, eleven_v4_turbo, mp3_44100_64, {"similarity_boost":0.75,"stability":0.5,"use_speaker_boost":true}, 16 characters',
+          'L1-v4: nitzi, language he, eleven_v4, mp3_44100_64',
+          'L4x: nitzi, language he, eleven_v4_turbo, mp3_44100_64, {"similarity_boost":0.75,"stability":0.1,"use_speaker_boost":true}, 9 characters',
           '  text (text): איפה הפרח האדום?',
           '  allowed in this clip: exclamation',
           'Characters by model: eleven_v4_turbo 25, eleven_v4 16',
+          'Characters by language: he 41',
           'Characters of text in total: 41',
           'Estimated cost at list prices: 0.0023 USD',
           'run in a terminal:  RUN',

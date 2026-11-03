@@ -36,7 +36,14 @@ import { spec as childPut } from "./child-put/handler.ts";
 import { spec as pushToken } from "./push-token-register/handler.ts";
 import { spec as pushTokenRemove } from "./push-token-remove/handler.ts";
 import { spec as settingsGet } from "./settings-get/handler.ts";
-import { spec as settingsPut } from "./settings-put/handler.ts";
+import {
+  LANGUAGE_COURSES,
+  LANGUAGE_QUESTIONNAIRE,
+  LANGUAGE_SWITCHES,
+  MAX_LANGUAGE_CHILDREN,
+  MAX_RULES_BYTES,
+  spec as settingsPut,
+} from "./settings-put/handler.ts";
 import { spec as tutorLog } from "./tutor-log/handler.ts";
 
 const KID = "child-aaaa-0001";
@@ -710,4 +717,89 @@ Deno.test("alert store: the words are decided by the family's rules at the inser
     clientAtMs: NOW - 1000,
   });
   assert.equal(store.alerts.find((a) => a.key === "w:race")!.words, "");
+});
+
+Deno.test("settings-put: the language settings are part of the family's rules, equal to testvectors/language-settings.json, and a child device reads them", async () => {
+  const v = JSON.parse(
+    await Deno.readTextFile(new URL("../../testvectors/language-settings.json", import.meta.url)),
+  ) as {
+    max_children: number;
+    courses: string[];
+    switches: Record<string, unknown>;
+    questionnaire: Record<string, Record<string, string[]>>;
+    examples: Array<Record<string, unknown>>;
+    refused: unknown[];
+  };
+  assert.equal(MAX_LANGUAGE_CHILDREN, v.max_children);
+  assert.deepEqual([...LANGUAGE_COURSES], v.courses);
+  assert.deepEqual(LANGUAGE_SWITCHES, v.switches);
+  assert.deepEqual(LANGUAGE_QUESTIONNAIRE, v.questionnaire);
+
+  const { h, parent, child, j } = await setup();
+  let version = 0;
+  for (const languages of v.examples) {
+    const rules = { ceremonies: false, languages };
+    const json = JSON.stringify(rules);
+    assert.ok(json.length < 4000, `the worst case is small (${json.length} characters)`);
+    assert.deepEqual(await j(await call(h.put, parent, "settings-put", { rules_json: json })), {
+      version: ++version,
+    });
+    assert.deepEqual((await j(await call(h.get, child, "settings-get", {}))).rules, rules);
+    assert.equal((await call(h.put, child, "settings-put", { rules_json: json })).status, 403);
+  }
+  for (const languages of v.refused) {
+    const rules_json = JSON.stringify({ languages });
+    assert.equal((await call(h.put, parent, "settings-put", { rules_json })).status, 400, rules_json);
+  }
+  // Nothing rides in a key the table does not name, even one that looks harmless.
+  for (const key of ["__proto__", "constructor", "toString"]) {
+    const rules_json = `{"languages":{"child-aaaa-0001":{"eng":{"${key}":true}}}}`;
+    assert.equal((await call(h.put, parent, "settings-put", { rules_json })).status, 400, key);
+  }
+});
+
+Deno.test("settings-put: the document is bounded in bytes, so what the gateway takes the table can hold (SEC-L0-3)", async () => {
+  const { h, parent } = await setup();
+  const emoji = "\u{1F600}".repeat(60);
+  const lands = ["counting", "colors", "shapes", "logic", "robots", "market"];
+  const ribbons: Record<string, Record<string, string>> = {};
+  let n = 0;
+  for (const child of ["child-aaaa-0001", "child-aaaa-0002"]) {
+    ribbons[child] = {};
+    for (const land of lands) {
+      for (const tier of ["bronze", "silver", "gold"]) {
+        if (n++ < 30) ribbons[child][`trophy:${land}:${tier}`] = emoji;
+      }
+    }
+  }
+  const full = {
+    eng: { on: true, voice: true, personal: false, oralOnly: true, band: 2, q: { knowsLetters: "some" } },
+    heb: { on: true, voice: true, personal: false, readCheck: true, band: 0 },
+    rus: {
+      on: true,
+      voice: true,
+      personal: false,
+      lettersBefore5: true,
+      stress: "off",
+      route: "heritage",
+      band: 1,
+      q: {
+        home: "grandparentsOthers",
+        understands: "most",
+        speaks: "sentences",
+        letters: "most",
+        reads: "sentences",
+      },
+    },
+  };
+  const languages: Record<string, unknown> = {};
+  for (let i = 1; i <= 6; i++) languages[`child-aaaa-000${i}`] = full;
+  const put = (rules: unknown) => call(h.put, parent, "settings-put", { rules_json: JSON.stringify(rules) });
+  // Thirty promises of sixty emoji alone are 7 KB of UTF-8 and are stored.
+  const alone = await put({ ribbons });
+  assert.equal(alone.status, 200);
+  // With six children's full language settings beside them they pass 10,000 bytes: a 400 the parent can be told, never a 500.
+  const both = await put({ ribbons, languages });
+  assert.equal(both.status, 400);
+  assert.equal(MAX_RULES_BYTES, 10_000);
 });

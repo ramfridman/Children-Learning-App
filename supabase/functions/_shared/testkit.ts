@@ -283,6 +283,7 @@ export class FakeStore implements Store {
     const c = this.characters.get(characterId);
     const ctx: TutorContext = {
       itemId: it.itemId,
+      skillIds: it.skillIds,
       band: it.band,
       llmAllowed: it.llmAllowed,
       goal: it.goal,

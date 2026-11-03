@@ -25,6 +25,15 @@
       "maxLength": 11,
       "pattern": "^(?:\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})$"
     },
+    "course": {
+      "type": "string",
+      "enum": [
+        "core",
+        "eng",
+        "heb",
+        "rus"
+      ]
+    },
     "assets": {
       "type": "array",
       "items": {

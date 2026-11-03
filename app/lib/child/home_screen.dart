@@ -19,7 +19,11 @@ enum Land {
   shapes(He.landShapes, 'land_shapes'),
   logic(He.landLogic, 'land_logic'),
   robots(He.landRobots, 'land_robots'),
-  market(He.landMarket, 'land_market');
+  market(He.landMarket, 'land_market'),
+
+  /// The Languages island (docs/design/languages-island.md): drawn only in the 8-land map, which is used when at least one
+  /// language is on. It is not a land with skills and has no growth objects on the map; a tap opens the door screen.
+  languages(He.landLanguages, 'land_languages');
 
   const Land(this.label, this.icon);
 
@@ -97,6 +101,7 @@ class _HomeSpec {
     this.pillFrameInset = 0,
     required this.bubbleMaxWidth,
     this.bubbleBreaks = false,
+    this.languages = false,
   });
 
   final String scene;
@@ -151,6 +156,9 @@ class _HomeSpec {
   final double bubbleMaxWidth;
   final bool bubbleBreaks;
   final List<_Sign> signs;
+
+  /// This is the 8-land map (at least one language is on).
+  final bool languages;
 
   /// Where the companion stands on the map: the place Nitzi's art had in the board, at 0.3 of its 512 point canvas.
   final double companionLeft;
@@ -348,11 +356,144 @@ class _HomeSpec {
     ],
   );
 
-  static _HomeSpec of(BoardClass b) => switch (b) {
-    BoardClass.phone => phone,
-    BoardClass.phoneSE => phoneSE,
-    BoardClass.tabletLandscape => tabletLandscape,
-    BoardClass.tabletPortrait => tabletPortrait,
+  /// This board with the numbers of its 8-land variant (docs/design/languages-island.md section 2): everything not named
+  /// here is exactly today's value.
+  _HomeSpec _withLanguages({
+    required String scene,
+    double? worldWidth,
+    double? worldHeight,
+    double? plusLeft,
+    double? plusTop,
+    double? companionLeft,
+    double? companionTop,
+    double? homeSignLeft,
+    double? homeSignRight,
+    required List<_Sign> signs,
+  }) => _HomeSpec(
+    scene: scene,
+    worldWidth: worldWidth ?? this.worldWidth,
+    worldHeight: worldHeight ?? this.worldHeight,
+    scrollAxis: scrollAxis,
+    tapWidth: tapWidth,
+    plusLeft: plusLeft ?? this.plusLeft,
+    plusTop: plusTop ?? this.plusTop,
+    bubbleAtBoardPlace: bubbleAtBoardPlace,
+    avatarRight: avatarRight,
+    avatarTop: avatarTop,
+    avatarSize: avatarSize,
+    clusterLeft: clusterLeft,
+    clusterTop: clusterTop,
+    parentsRowHeight: parentsRowHeight,
+    pillTop: pillTop,
+    pillHeight: pillHeight,
+    pillIcon: pillIcon,
+    pillTitle: pillTitle,
+    pillPadLeft: pillPadLeft,
+    pillPadRight: pillPadRight,
+    pillGap: pillGap,
+    bubbleRight: bubbleRight,
+    bubbleTop: bubbleTop,
+    bubbleFont: bubbleFont,
+    bubblePad: bubblePad,
+    signs: signs,
+    companionLeft: companionLeft ?? this.companionLeft,
+    companionTop: companionTop ?? this.companionTop,
+    homeSignLeft: homeSignLeft ?? this.homeSignLeft,
+    homeSignRight: homeSignRight ?? this.homeSignRight,
+    pillFrameLeft: pillFrameLeft,
+    pillFrameWidth: pillFrameWidth,
+    pillFrameInset: pillFrameInset,
+    bubbleMaxWidth: bubbleMaxWidth,
+    bubbleBreaks: bubbleBreaks,
+    languages: true,
+  );
+
+  /// The 8-land maps, one per board (docs/design/languages-island.md section 2). Home and everything that belongs to it move
+  /// right on the phones (the island sits between home and Counting Hills); Market Village moves left on the landscape
+  /// tablet; the portrait tablet gets a new band of sea at the bottom.
+  static final _HomeSpec phoneLanguages = phone._withLanguages(
+    scene: 'assets/art/scenes/home_phone_lang.svg',
+    worldWidth: 2382,
+    plusLeft: 2270,
+    plusTop: 268,
+    companionLeft: 2139,
+    companionTop: 154,
+    homeSignLeft: 2050,
+    homeSignRight: 2258,
+    // The start view is world x 1530 to 2382: home, the Languages island, and half of Counting Hills.
+    signs: const <_Sign>[
+      _Sign(Land.nitzi, 2170, 320),
+      _Sign(Land.languages, 1890, 320),
+      // The half island at the edge: its whole sign stays on screen, 12 inside it, as Colour Bay's was.
+      _Sign(Land.counting, 1610, 320, labelLeft: 1530 + 12, labelMaxWidth: 230),
+      _Sign(Land.colors, 1320, 320),
+      _Sign(Land.shapes, 1040, 320),
+      _Sign(Land.logic, 760, 320),
+      _Sign(Land.robots, 480, 320),
+      _Sign(Land.market, 200, 320),
+    ],
+  );
+
+  static final _HomeSpec phoneSELanguages = phoneSE._withLanguages(
+    scene: 'assets/art/scenes/home_phone_se_lang.svg',
+    worldWidth: 2086,
+    plusLeft: 2028,
+    plusTop: 256,
+    companionLeft: 1903,
+    companionTop: 164.6,
+    homeSignLeft: 1829,
+    homeSignRight: 2016,
+    // The start view is world x 1419 to 2086.
+    signs: const <_Sign>[
+      _Sign(Land.nitzi, 1939, 314),
+      _Sign(Land.languages, 1687, 314),
+      _Sign(Land.counting, 1435, 314, labelLeft: 1419 + 8, labelMaxWidth: 156),
+      _Sign(Land.colors, 1189, 314),
+      _Sign(Land.shapes, 937, 314),
+      _Sign(Land.logic, 685, 314),
+      _Sign(Land.robots, 433, 314),
+      _Sign(Land.market, 181, 314),
+    ],
+  );
+
+  static final _HomeSpec tabletLandscapeLanguages = tabletLandscape._withLanguages(
+    scene: 'assets/art/scenes/home_tablet_landscape_lang.svg',
+    signs: const <_Sign>[
+      _Sign(Land.nitzi, 1010, 676),
+      _Sign(Land.counting, 700, 666),
+      _Sign(Land.colors, 420, 700, tapLeft: 348, tapTop: 536),
+      _Sign(Land.shapes, 220, 572, tapRight: 332),
+      _Sign(Land.logic, 400, 372, tapLeft: 282, tapRight: 508),
+      // Robot Harbour ends 24 before Market Village, which moved 50 to the left to make room.
+      _Sign(Land.robots, 640, 276, tapLeft: 532, tapRight: 720),
+      _Sign(Land.market, 850, 372, tapLeft: 736, tapRight: 964),
+      // To the screen's edge (the edge rule), 118 under the avatar.
+      _Sign(Land.languages, 1082, 372, tapLeft: 984, tapRight: 1180),
+    ],
+  );
+
+  static final _HomeSpec tabletPortraitLanguages = tabletPortrait._withLanguages(
+    scene: 'assets/art/scenes/home_tablet_portrait_lang.svg',
+    worldHeight: 1720,
+    // Every existing world y stays: the new sea is at the bottom, so the start view shows 140 more of it.
+    signs: const <_Sign>[
+      _Sign(Land.nitzi, 600, 1510),
+      _Sign(Land.counting, 260, 1396),
+      _Sign(Land.colors, 600, 1230),
+      _Sign(Land.shapes, 230, 1054),
+      _Sign(Land.logic, 600, 848),
+      _Sign(Land.robots, 300, 716),
+      _Sign(Land.market, 560, 348),
+      _Sign(Land.languages, 232, 1652),
+    ],
+  );
+
+  /// The map for a board: the 7-land one, or with [languages] (at least one language is on) the 8-land one.
+  static _HomeSpec of(BoardClass b, {bool languages = false}) => switch (b) {
+    BoardClass.phone => languages ? phoneLanguages : phone,
+    BoardClass.phoneSE => languages ? phoneSELanguages : phoneSE,
+    BoardClass.tabletLandscape => languages ? tabletLandscapeLanguages : tabletLandscape,
+    BoardClass.tabletPortrait => languages ? tabletPortraitLanguages : tabletPortrait,
   };
 }
 
@@ -380,7 +521,16 @@ class HomeScreen extends StatelessWidget {
     this.hallGlow = false,
     this.homeIsland,
     this.onOpenHome,
+    this.languagesOn = false,
+    this.onOpenLanguages,
   });
+
+  /// At least one language is on for this child: the map is the 8-land one, with the Languages island (every language off,
+  /// and it is exactly the 7-land map it was).
+  final bool languagesOn;
+
+  /// The Languages island was touched: the door screen, or the course itself when only one language is on.
+  final VoidCallback? onOpenLanguages;
 
   /// The home island's words, named after the child (B-26). Null: the sign says Nitzi's island, as before.
   final HomeIslandName? homeIsland;
@@ -428,6 +578,7 @@ class HomeScreen extends StatelessWidget {
   VoidCallback? _tapFor(Land land) {
     // The home island is not a land with skills: it never goes through [onOpenLand].
     if (land == Land.nitzi) return onOpenHome;
+    if (land == Land.languages) return languagesOn ? onOpenLanguages : null;
     final void Function(Land)? open = onOpenLand;
     if (open != null) return openableLands.contains(land) ? () => open(land) : null;
     return land == Land.counting ? onOpenActivity : null;
@@ -436,7 +587,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
-    final _HomeSpec s = _HomeSpec.of(board);
+    final _HomeSpec s = _HomeSpec.of(board, languages: languagesOn);
     return Scaffold(
       body: BoardCanvas(
         background: TokenColors.worldSea1,
@@ -448,7 +599,8 @@ class HomeScreen extends StatelessWidget {
             child: s.scrollAxis == null
                 ? _world(s)
                 : SingleChildScrollView(
-                    key: const PageStorageKey<String>('home-map'),
+                    // A stored offset of one map is wrong in the other.
+                    key: PageStorageKey<String>(s.languages ? 'home-map-lang' : 'home-map'),
                     scrollDirection: s.scrollAxis!,
                     // Right to left, offset 0 of a horizontal view is its right end already; a vertical one is turned
                     // so that offset 0 is its bottom.
@@ -599,7 +751,11 @@ class HomeScreen extends StatelessWidget {
   );
 
   /// What a screen reader says for a land's tap area: for the home island the whole name, never shortened.
-  String _semanticsOf(Land land) => land == Land.nitzi ? _homeSemantics : land.label.text;
+  String _semanticsOf(Land land) => switch (land) {
+    Land.nitzi => _homeSemantics,
+    Land.languages => He.landLanguagesSemantics.text,
+    _ => land.label.text,
+  };
 
   /// The home island's label: the whole name, and that something waits in the Hall when it does.
   String get _homeSemantics {
@@ -648,7 +804,7 @@ class HomeScreen extends StatelessWidget {
       child: _LandSign(
         land: sign.land,
         text: sign.land.label.text,
-        semantics: sign.land.label.text,
+        semantics: _semanticsOf(sign.land),
         maxTextWidth: sign.labelMaxWidth == null ? null : sign.labelMaxWidth! - _LandSign.frame,
       ),
     );

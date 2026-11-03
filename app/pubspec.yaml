@@ -60,6 +60,7 @@ flutter:
     - assets/art/decorations/
     - assets/art/ceremony/
     - assets/art/prizes/
+    - assets/art/languages/
     - assets/world/objects.json
   fonts:
     # Heebo is a variable font (weight axis 100 to 900); each family entry maps a real weight to it.
@@ -69,3 +70,11 @@ flutter:
     - family: SecularOne
       fonts:
         - asset: assets/fonts/SecularOne-Regular.ttf
+    # English and Russian lesson text only (docs/languages/fonts.md, option B): a renamed subset of Andika 7.000 with a
+    # two-storey Cyrillic a, built by tools/make_letters_font.py. Upright only: no italic file, never FontStyle.italic.
+    - family: NitznutzLetters
+      fonts:
+        - asset: assets/fonts/NitznutzLetters-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NitznutzLetters-Bold.ttf
+          weight: 700

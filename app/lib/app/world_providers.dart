@@ -63,7 +63,8 @@ final FutureProviderFamily<WorldView, String> worldProvider = FutureProvider.fam
     lands: buildWorld(
       engine: engine,
       skills: <String, SkillInfo>{
-        for (final SkillDoc s in content.skills.values) s.id: SkillInfo(title: s.title, domain: s.domain),
+        for (final SkillDoc s in content.skills.values)
+          s.id: SkillInfo(title: s.title, domain: s.domain, course: s.course),
       },
       starredSkills: <String>{
         for (final Reward r in given)

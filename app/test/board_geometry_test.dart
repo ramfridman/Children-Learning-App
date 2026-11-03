@@ -27,6 +27,13 @@ void expectRect(Rect actual, double left, double top, double width, double heigh
   expect(actual.height, closeTo(height, 0.6), reason: '$why height');
 }
 
+/// The seven lands of the 7-land map: every board test below is about that map, which is what the home screen draws when no
+/// language is on (the 8-land map has its own tests in languages_map_test.dart).
+final List<Land> sevenLands = <Land>[
+  for (final Land l in Land.values)
+    if (l != Land.languages) l,
+];
+
 /// The six learning lands; the home island opens the child's home through `onOpenHome`, never as a land (B-26).
 const Set<Land> learningLands = <Land>{
   Land.counting,
@@ -76,14 +83,14 @@ List<Rect> fixedRects(WidgetTester tester) => <Rect>[
 
 /// Every sign's centre and top on screen now.
 Map<String, Offset> signsNow(WidgetTester tester) => <String, Offset>{
-  for (final Land l in Land.values) l.name: rectOf(tester, 'sign-${l.name}').topCenter,
+  for (final Land l in sevenLands) l.name: rectOf(tester, 'sign-${l.name}').topCenter,
 };
 
 /// The land tap areas and the home island's (in one frame of reference), each at least 64 wide and [width] wide when it
 /// is given, and at least [minGap] apart (24, as the board's touch rules ask; 16 on the landscape tablet, B-27).
 void expectTapAreasApart(WidgetTester tester, double? width, {double minGap = 24}) {
   final Map<Land, Rect> areas = <Land, Rect>{
-    for (final Land l in Land.values) l: rectOf(tester, 'land-tap-${l.name}'),
+    for (final Land l in sevenLands) l: rectOf(tester, 'land-tap-${l.name}'),
   };
   expect(areas[Land.nitzi], isNotNull, reason: 'the home island\'s sign opens the child\'s home (B-26)');
   for (final Rect r in areas.values) {
@@ -105,7 +112,7 @@ void expectTapAreasApart(WidgetTester tester, double? width, {double minGap = 24
 void expectSignsWholeOrOff(WidgetTester tester, Size screen, {double inset = 8}) {
   final Rect view = Offset.zero & screen;
   final Map<Land, Rect> signs = <Land, Rect>{
-    for (final Land l in Land.values) l: rectOf(tester, 'sign-${l.name}'),
+    for (final Land l in sevenLands) l: rectOf(tester, 'sign-${l.name}'),
   };
   signs.forEach((Land l, Rect r) {
     final bool off = !r.overlaps(view);

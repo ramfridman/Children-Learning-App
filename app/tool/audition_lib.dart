@@ -23,6 +23,12 @@
 //
 // A clip has either "text" (sent exactly as written) or "line" and "from": "voice_text" is the master table's spoken
 // text of that line, respelled as the packs are; "caption" is today's screen caption, to compare with the old clips.
+// "language" (he, en or ru; he when absent) is sent as `language_code` and decides which letters the pre-flight check
+// lets through: Hebrew, English (a to z) or Russian (Cyrillic, Ёё, U+0301). A letter of another language is refused, so
+// a Hebrew instruction and the English or Russian word it introduces are two clips. A clip that is only an IPA word
+// (allow "ipa") is accepted in any language. A voice that content/voices.json marks `"candidate": true` is for
+// auditions only; one with no voiceId yet is named by the plan, and run refuses until the owner has filled it in.
+// The default output folder of a non-Hebrew spec starts with its language (`en-pilot`).
 // "character", "model", "format" and "settings" replace the defaults (settings key by key, over the usual settings of
 // content/voices.json); every clip is still sent with an explicit stability and similarity, never with style or speed
 // on a v4 model, and only at 44.1 kHz. "allow" lets one clip carry what packs never may: "exclamation" (!),
@@ -68,6 +74,32 @@ class AuditionClip {
   final List<String> dropped;
   final String tests;
   final String note;
+
+  /// The voice has no id in content/voices.json yet (an audition candidate the owner still has to fill in).
+  bool get voiceMissing => request.voiceId.isEmpty;
+}
+
+/// The language of a whole spec: the language most of its clips are in (the first one wins a tie).
+String auditionLanguage(List<AuditionClip> clips) {
+  final Map<String, int> count = <String, int>{};
+  for (final AuditionClip c in clips) {
+    count[c.request.languageCode] = (count[c.request.languageCode] ?? 0) + 1;
+  }
+  return count.entries
+      .fold<MapEntry<String, int>?>(
+        null,
+        (MapEntry<String, int>? best, MapEntry<String, int> e) =>
+            best == null || e.value > best.value ? e : best,
+      )!
+      .key;
+}
+
+/// The default output folder name of a spec file called [specName] (without `.json`). A Hebrew spec keeps the name it
+/// always had, so the clips already made for it are still found and not paid for again; another language puts its code
+/// in front (`en-pilot`, `ru-pilot`), so that the `pilot.json` of the three languages never share a folder.
+String auditionFolderName(String specName, List<AuditionClip> clips) {
+  final String language = auditionLanguage(clips);
+  return language == defaultVoiceLanguage ? specName : '$language-$specName';
 }
 
 /// The texts a "line" clip can refer to: the master table's voice_text and the screen caption of each voice id.
@@ -79,10 +111,11 @@ class LineTexts {
 }
 
 const Set<String> _specKeys = <String>{'schema', 'title', 'note', 'review', 'defaults', 'clips'};
-const Set<String> _defaultKeys = <String>{'character', 'model', 'format', 'settings'};
+const Set<String> _defaultKeys = <String>{'character', 'language', 'model', 'format', 'settings'};
 const Set<String> _clipKeys = <String>{
   'id',
   'character',
+  'language',
   'model',
   'format',
   'settings',
@@ -150,7 +183,14 @@ AuditionClip _clip(
   String? pick(String key) => _as<String?>(clip[key] ?? defaults[key], 'clip $id › $key');
   final String? character = pick('character');
   if (character == null) throw VoiceGenFailed('clip $id has no character');
-  final VoiceProfile profile = VoiceProfile.fromConfig(config, character, model: pick('model'));
+  final VoiceProfile profile = VoiceProfile.fromConfig(
+    config,
+    character,
+    model: pick('model'),
+    audition: true,
+  );
+  final String language = pick('language') ?? defaultVoiceLanguage;
+  checkVoiceLanguage(language);
   final String format = pick('format') ?? profile.outputFormat;
   checkFormat(format);
   final Map<String, Object?> asked = <String, Object?>{
@@ -193,6 +233,7 @@ AuditionClip _clip(
       modelId: profile.modelId,
       settings: settingsToSend(profile.modelId, asked),
       outputFormat: format,
+      languageCode: language,
       allow: <Allowance>{
         for (final Object? a in _as<List<Object?>>(clip['allow'] ?? <Object?>[], 'clip $id › allow'))
           Allowance.parse(_as<String>(a, 'clip $id › allow')),
@@ -251,6 +292,24 @@ class AuditionPlan {
     return out;
   }
 
+  /// The clips still to make whose voice has no id yet, by character.
+  Map<String, List<AuditionClip>> get missingVoices {
+    final Map<String, List<AuditionClip>> out = <String, List<AuditionClip>>{};
+    for (final AuditionClip c in toMake.where((AuditionClip c) => c.voiceMissing)) {
+      (out[c.character] ??= <AuditionClip>[]).add(c);
+    }
+    return out;
+  }
+
+  /// Characters still to send, by language.
+  Map<String, int> get byLanguage {
+    final Map<String, int> out = <String, int>{};
+    for (final AuditionClip c in toMake) {
+      out[c.request.languageCode] = (out[c.request.languageCode] ?? 0) + c.request.characters;
+    }
+    return out;
+  }
+
   /// What the pre-flight check refuses among the clips still to make.
   List<TextProblem> get problems => <TextProblem>[
     for (final AuditionClip c in toMake) ...c.request.problems(c.id),
@@ -274,8 +333,9 @@ class AuditionPlan {
       b
         ..writeln()
         ..writeln(
-          '${c.id}${made.contains(c.id) ? ' (already made, not sent again)' : ''}: ${c.character}, ${r.modelId}, '
-          '${r.outputFormat}, ${jsonEncode(r.settings)}, ${r.characters} characters',
+          '${c.id}${made.contains(c.id) ? ' (already made, not sent again)' : ''}: ${c.character}, '
+          'language ${r.languageCode}, ${r.modelId}, ${r.outputFormat}, ${jsonEncode(r.settings)}, '
+          '${r.characters} characters${c.voiceMissing ? ', VOICE ID MISSING' : ''}',
         )
         ..writeln('  text (${c.source}): ${r.text}');
       if (c.dropped.isNotEmpty) b.writeln('  not sent, ${r.modelId} does not use: ${c.dropped.join(', ')}');
@@ -291,6 +351,9 @@ class AuditionPlan {
       ..writeln(
         'Characters by model: ${byModel.entries.map((MapEntry<String, int> e) => '${e.key} ${e.value}').join(', ')}',
       )
+      ..writeln(
+        'Characters by language: ${byLanguage.entries.map((MapEntry<String, int> e) => '${e.key} ${e.value}').join(', ')}',
+      )
       ..writeln('Characters of text in total: $total');
     final double price = cost(pricePer1000);
     b.writeln(
@@ -300,6 +363,18 @@ class AuditionPlan {
                 '(your ElevenLabs plan may differ)',
     );
     final List<TextProblem> refused = problems;
+    final Map<String, List<AuditionClip>> missing = missingVoices;
+    if (missing.isNotEmpty) {
+      b.writeln(
+        'VOICE IDS MISSING for ${missing.length} voices; run sends nothing until the owner has filled them in '
+        '(content/voices.json › voices › <name> › voiceId; copy the id from the ElevenLabs Voice Library):',
+      );
+      for (final MapEntry<String, List<AuditionClip>> e in missing.entries) {
+        b.writeln(
+          '  ${e.key}: ${e.value.length} clips, ${e.value.fold<int>(0, (int s, AuditionClip c) => s + c.request.characters)} characters',
+        );
+      }
+    }
     if (refused.isNotEmpty) {
       b.writeln(
         'The pre-flight check refuses ${refused.length} texts; run sends nothing until they are fixed:',
@@ -307,9 +382,9 @@ class AuditionPlan {
       for (final TextProblem p in refused) {
         b.writeln('  $p');
       }
-    } else if (total > 0 && inRun) {
+    } else if (missing.isEmpty && total > 0 && inRun) {
       b.writeln('Type the total below to make them; anything else stops and sends nothing.');
-    } else if (total > 0) {
+    } else if (missing.isEmpty && total > 0) {
       b.writeln(
         'Nothing was sent. To make them, run in a terminal:  $runCommand  (it plans again, shows this plan and asks '
         'you to type the total)',
@@ -340,6 +415,13 @@ Future<List<File>> runAudition(
   requireTerminal(keyboard, 'this audition');
   if (heading.isNotEmpty) write(heading);
   write(plan.describe(pricePer1000, runCommand: runCommand, inRun: true));
+  final Map<String, List<AuditionClip>> missing = plan.missingVoices;
+  if (missing.isNotEmpty) {
+    throw VoiceGenFailed(
+      'no voice id yet for ${missing.keys.join(', ')} in content/voices.json. Nothing was sent. The owner copies '
+      'each id from the ElevenLabs Voice Library first.',
+    );
+  }
   final List<TextProblem> refused = plan.problems;
   if (refused.isNotEmpty) {
     throw VoiceGenFailed(

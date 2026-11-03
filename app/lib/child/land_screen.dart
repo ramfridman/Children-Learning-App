@@ -60,7 +60,7 @@ class _LandScreenState extends ConsumerState<LandScreen> {
       body: SafeArea(
         child: Stack(
           children: <Widget>[
-            Positioned.fill(child: CustomPaint(painter: _IslandPainter(colours))),
+            Positioned.fill(child: CustomPaint(painter: IslandPainter(colours))),
             // The drawings have the room between the name (and the card of a touched drawing) above and the play button and
             // the legend below, and are made as large as that room lets all of them be.
             Positioned.fill(
@@ -348,8 +348,8 @@ class _Legend extends StatelessWidget {
   );
 }
 
-class _IslandPainter extends CustomPainter {
-  const _IslandPainter(this.colours);
+class IslandPainter extends CustomPainter {
+  const IslandPainter(this.colours);
 
   final ({Color sea, Color grass, Color sand}) colours;
 
@@ -365,5 +365,5 @@ class _IslandPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_IslandPainter old) => old.colours != colours;
+  bool shouldRepaint(IslandPainter old) => old.colours != colours;
 }

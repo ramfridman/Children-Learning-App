@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/companion.dart';
+import '../../app/language_providers.dart' show languagePacksProvider;
 import '../../app/providers.dart';
 import '../../app/tutor_providers.dart';
 import '../../app/state.dart';
@@ -229,6 +230,8 @@ class _DevHomePageState extends ConsumerState<DevHomePage> {
     // New characters and voices show up without restarting the app.
     ref.invalidate(resolverProvider);
     ref.invalidate(guideProvider);
+    // A language pack installed here gives its island to the map at once.
+    ref.invalidate(languagePacksProvider);
     return out.isEmpty ? 'no .nnpack files in the folder' : out.join('\n');
   });
 

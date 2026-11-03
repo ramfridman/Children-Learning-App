@@ -8,6 +8,7 @@
   "settings": { "stability": 0.5, "similarity_boost": 0.75, "use_speaker_boost": true },
   "_settingsNote": "Sent explicitly with every line (voice_gen refuses settings without stability and similarity_boost), so nothing depends on the settings stored with a voice in the ElevenLabs account. 0.5 and 0.75 are ElevenLabs' API defaults and the values of round 1 of the diagnostic audition (docs/audio/voice-quality-diagnosis.md); the voice-and-sound-director sets the final values after round 2. A style's settings go on top of these, key by key. style and speed are never sent to a v4 model (v4 does not use them), so on eleven_v4 and eleven_v4_turbo the cheer is stability 0.1 only.",
   "listPricePer1000Chars": { "eleven_v4": 0.08, "eleven_v4_turbo": 0.04 },
+  "_candidatesNote": "Voices with \"candidate\": true are for voice_gen auditions only (the Languages voice pilot, docs/languages/voices.md): voice_gen plan and generate never use them, and no pack or character points at them. idStatus OWNER-TO-FILL means the voiceId is empty on purpose: the owner copies it from the ElevenLabs Voice Library (add the voice to My Voices first), and audition-batch plan names the voice until he has. from-third-party-list-unverified ids come from a public list of ElevenLabs default voices and are not checked against his account.",
   "_priceNote": "USD per 1,000 characters, list API prices (PLAN.md › costs), used only for the estimate that voice_gen plan prints. The owner's plan may differ; --price replaces them.",
   "pronunciation": {},
   "voices": {
@@ -38,6 +39,46 @@
     
     "weaver-keshet": {
       "voiceId": "6Ijsl5024dyMrE00loVE"
+    },
+    "lang-en-jessica": {
+      "candidate": true,
+      "voiceId": "cgSgspJ2msm6clMCkdW9",
+      "idStatus": "from-third-party-list-unverified"
+    },
+    "lang-en-sarah": {
+      "candidate": true,
+      "voiceId": "EXAVITQu4vr4xnSDxMaL",
+      "idStatus": "from-third-party-list-unverified"
+    },
+    "lang-en-matilda": {
+      "candidate": true,
+      "voiceId": "XrExE9yKIg1WjnnlVkGX",
+      "idStatus": "from-third-party-list-unverified"
+    },
+    "lang-en-brian": {
+      "candidate": true,
+      "voiceId": "nPczCjzI2devNBz1zQrb",
+      "idStatus": "from-third-party-list-unverified"
+    },
+    "lang-ru-marina": {
+      "candidate": true,
+      "voiceId": "",
+      "idStatus": "OWNER-TO-FILL"
+    },
+    "lang-ru-ekaterina": {
+      "candidate": true,
+      "voiceId": "",
+      "idStatus": "OWNER-TO-FILL"
+    },
+    "lang-ru-maxim": {
+      "candidate": true,
+      "voiceId": "",
+      "idStatus": "OWNER-TO-FILL"
+    },
+    "lang-ru-ivan": {
+      "candidate": true,
+      "voiceId": "",
+      "idStatus": "OWNER-TO-FILL"
     }
   }
 }

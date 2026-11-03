@@ -228,7 +228,7 @@ void main() {
         WidgetTester tester,
       ) async {
         await _home(tester, size: b.value, textScale: 1.3);
-        for (final Land l in Land.values) {
+        for (final Land l in Land.values.where((Land l) => l != Land.languages)) {
           expect(find.byKey(Key('sign-${l.name}')), findsOneWidget);
         }
         await _opensEveryLand(tester, b.value);

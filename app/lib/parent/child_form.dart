@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../app/language_providers.dart';
 import '../app/state.dart';
 import '../child/art.dart';
 import '../data/app_database.dart';
@@ -11,6 +12,8 @@ import '../data/child_name.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../engine/course.dart';
+import 'language_settings.dart';
 import '../strings/he.dart';
 
 /// Adds a child profile: first name, age, avatar and how the app addresses the child. Adult UI.
@@ -31,6 +34,10 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
   String _avatar = avatarIds.first;
   String _address = 'n';
   bool _saving = false;
+
+  /// The languages the child will play: all three are ticked at first, and the parent unticks what the family does not want
+  /// (frame question Q-F1: asked once, here, with a line for each). A ticked language gets a door; none changes anything else.
+  final Set<String> _languages = <String>{...Course.languages};
 
   @override
   void initState() {
@@ -77,9 +84,10 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
     if (!_valid || _saving) return;
     setState(() => _saving = true);
     final AppDatabase db = await ref.read(databaseProvider.future);
+    final String id = const Uuid().v4();
     await db.addProfile(
       ProfilesCompanion(
-        id: Value<String>(const Uuid().v4()),
+        id: Value<String>(id),
         name: Value<String>(_name.text.trim()),
         avatar: Value<String>(_avatar),
         addressForm: Value<String>(_address),
@@ -87,6 +95,9 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
         createdAt: Value<DateTime>(DateTime.now().toUtc()),
       ),
     );
+    for (final String course in _languages) {
+      await ref.read(languagesProvider.notifier).setSwitches(id, course, const LanguageSwitches(on: true));
+    }
     await ref.read(appStateProvider.notifier).reload();
     if (!mounted) return;
     widget.onSaved();
@@ -197,6 +208,30 @@ class _ChildFormScreenState extends ConsumerState<ChildFormScreen> {
                       ),
                   ],
                 ),
+                _label(He.langSetupTitle.text),
+                Text(
+                  He.langSetupHelp.text,
+                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                ),
+                for (final (String course, Str line) in <(String, Str)>[
+                  (Course.eng, He.langSetupEnglish),
+                  (Course.heb, He.langSetupHebrew),
+                  (Course.rus, He.langSetupRussian),
+                ])
+                  CheckboxListTile(
+                    key: Key('setup-language-$course'),
+                    contentPadding: EdgeInsets.zero,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: _languages.contains(course),
+                    title: Text(line.text, style: AppText.parent(TokenType.parentBody)),
+                    onChanged: (bool? on) => setState(() {
+                      if (on ?? false) {
+                        _languages.add(course);
+                      } else {
+                        _languages.remove(course);
+                      }
+                    }),
+                  ),
               ],
             ),
           ),

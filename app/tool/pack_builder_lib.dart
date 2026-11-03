@@ -228,6 +228,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'misconceptions': <String>[],
     'characters': <String>[],
     'cues': <String>[],
+    'gates': <String>[],
   };
   const Map<String, String> kinds = <String, String>{
     'activity': 'activities',
@@ -236,6 +237,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'misconception': 'misconceptions',
     'character': 'characters',
     'cue': 'cues',
+    'gate': 'gates',
   };
   for (final String name in docs.keys) {
     final RegExpMatch? m = RegExp(r'^([a-z]+)\.(.+)\.json$').firstMatch(name);
@@ -285,6 +287,8 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'id': pack['id'],
     'version': pack['version'],
     'minAppVersion': pack['minAppVersion'],
+    // A language pack names its course; a pack that does not is `core` and its manifest is exactly what it was before.
+    if (pack['course'] is String) 'course': pack['course'],
     'templates': <String, Object?>{for (final String t in (templates.keys.toList()..sort())) t: templates[t]},
     'files': <Object?>[
       for (final String n in names)
@@ -296,7 +300,8 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     // Lists of the kinds that M2 packs know are always there; characters and cues only when the pack has some.
     'entries': <String, List<String>>{
       for (final MapEntry<String, List<String>> e in entries.entries)
-        if (e.value.isNotEmpty || !const <String>{'characters', 'cues'}.contains(e.key)) e.key: e.value,
+        if (e.value.isNotEmpty || !const <String>{'characters', 'cues', 'gates'}.contains(e.key))
+          e.key: e.value,
     },
   };
   problems.addAll(validatePack(manifest: manifest, docs: docs, files: names.toSet()));

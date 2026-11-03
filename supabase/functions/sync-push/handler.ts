@@ -11,7 +11,7 @@ export const PUSHES_PER_HOUR_PER_DEVICE = 600;
 
 /** An award key: `sticker:<lesson>:<n>`, `star:<skill>`, `trophy:<land>:<tier>`, `medal:<id>` or `deco:<n>`. */
 export const AWARD_KEY =
-  /^(sticker:[a-z0-9._-]{1,40}:[0-9]{1,4}|star:[A-Z]{2,5}-[A-C]-[0-9]{2}|trophy:[a-z]{3,12}:(bronze|silver|gold)|medal:[a-z0-9-]{2,30}|deco:[0-9]{1,3})$/;
+  /^(sticker:[a-z0-9._-]{1,40}:[0-9]{1,4}|star:[A-Z]{2,5}-[A-C]-[0-9]{2}(\.[A-Z][0-9]{1,2})?|trophy:[a-z]{3,12}:(bronze|silver|gold)|medal:[a-z0-9-]{2,30}|deco:[0-9]{1,3})$/;
 
 const ms = { t: "int", min: 1_500_000_000_000, max: 4_100_000_000_000 } as const;
 const word = (re: RegExp, max: number) => ({ t: "string", max, pattern: re, optional: true }) as const;
@@ -30,11 +30,15 @@ export const DATA = {
   lesson_id: word(/^[a-z0-9._-]{0,40}$/, 40),
   template: word(/^[a-z_]{2,30}$/, 30),
   template_version: word(/^[0-9.]{1,10}$/, 10),
-  skill_id: word(/^[A-Z]{2,5}-[A-C]-[0-9]{2}$/, 11),
+  // A skill taught group by group has a dotted id for each group (`HEB-B-14.S1`, `ENG-B-19.G1`).
+  skill_id: word(/^[A-Z]{2,5}-[A-C]-[0-9]{2}(\.[A-Z][0-9]{1,2})?$/, 14),
+  // The course the answer belongs to; the device derives it from the skill and the pack, and the other devices check it.
+  course: { t: "enum", values: ["core", "eng", "heb", "rus"], optional: true },
   result: { t: "enum", values: ["correct", "incorrect", "unsure"], optional: true },
   attempt_no: { t: "int", min: 1, max: 1000, optional: true },
   hint_level: { t: "int", min: 0, max: 3, optional: true },
-  misconception_tag: word(/^(M-[A-Z]{2,5}-[A-Z0-9]{2,12})?$/, 20),
+  // `M-CNT-DOUBLE` in the lands; `eng.ph.dir` (course, strand, slug) in a language course.
+  misconception_tag: word(/^(M-[A-Z]{2,5}-[A-Z0-9]{2,12}|[a-z]{3}\.[a-z]{2,4}\.[a-z0-9_]{1,24})?$/, 36),
   response: word(/^[A-Za-z0-9=._-]{0,40}$/, 40),
   duration_ms: { t: "int", min: 0, max: 3_600_000, optional: true },
   input: { t: "enum", values: ["tap", "voice"], optional: true },

@@ -35,10 +35,49 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-31 | Alert pushes: routine alerts shared the daily push budget with acts; no collapse id on iOS | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-27 | Alert pushes: the per-device limit was higher than PLAN said; no per-family push cap | low | closed (`alerts-tiers`) | 2026-10-30 |
 | SEC-25 | One alert the gateway refused held up every later alert of that device, silently | medium | closed (`alerts-tiers`) | 2026-10-30 |
+| SEC-L0-1 | Course isolation: an answer counts by its activity id alone, and activity ids are not kept apart between courses | low | closed (`a399488`: course-prefixed ids, the course on every replayed answer, the activity id in the pull guard; proof re-run) | 2026-11-03 |
+| SEC-L0-2 | A gate document of a language pack may omit its course and is then read as `core` | info | closed (`a399488`; proof re-run) | 2026-11-03 |
+| SEC-L0-3 | `settings-put` bounds the family's settings in characters, the table in bytes | low | fixed (`a399488`: 10,000 UTF-8 bytes at the gateway; Deno test green); closes when a pgTAP case stores the largest document the gateway takes | 2026-11-03 |
+| SEC-L0-4 | `content-publish` and `tutor-prewarm` do not refuse language-course skills under a core pack id (`tutor-turn` does) | info | closed (`a399488`: `content-publish` refuses them under any pack id; proof re-run) | 2026-11-03 |
+| SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
 ## Closed findings
+
+### SEC-L0-1: an answer counted by its activity id alone, and activity ids were not kept apart between courses (low, closed 2026-11-03)
+
+**What it was.** The engine read an answer only through its activity id (`Engine.apply`), and `eventOf` dropped the answer's
+pack and skill. The core engine replayed every answer of a child, from any pack, and nothing stopped a language pack from
+reusing a core activity id (the test fixture did). The pull guard checked the skill, the pack, the tag and the course, but
+not the activity id. If two packs shared an item id, answers to one became evidence for the other course's skills: frame §1.5
+invariant 3, broken with no attacker. The impact was a child's learning state and the parent's progress view; nothing was
+exposed. No language pack had been installed anywhere.
+
+**The fix (`a399488`).** (1) Activity and lesson ids of a language pack must begin with `<course>.`, and a core pack's ids
+never do (validator). (2) `eventOf` gives each answer the course of its pack, and `Engine.apply` ignores an answer whose
+course is not its item's, so every engine replays only its own course. (3) `Course.ofActivityId` is part of `Course.ofAnswer`,
+and the pull guard drops a pulled answer whose activity id names another course. The language engines also replay only their
+own pack's rows.
+
+**Proof re-run by the security-engineer, 2026-11-03** (plain Dart against the branch). The pull guard drops a `core` answer
+with an `eng.` activity id, and the reverse. An English engine ignores six answers marked `core` (or a `lang-` id that names
+no course) for an item with the same id, and still takes an English one. The validator refuses an English pack with an
+unprefixed activity id, and a core pack with an `eng.` one. The two sample packs share no activity or lesson file. The
+Flutter regression tests in `a399488` run in the QA pass.
+
+### SEC-L0-2: a language pack's gate could omit its course and was then read as `core` (info, closed 2026-11-03)
+
+A gate without `course` was taken in a language pack and then labelled `core`. Fixed in `a399488`: a gate of a language pack
+must carry its course, like every other document. Proof re-run 2026-11-03: a gate without its course is refused, and one with
+its course is taken.
+
+### SEC-L0-4: `content-publish` stored language-course skills under a core pack id (info, closed 2026-11-03)
+
+Only the pack id was refused, so an item or misconception with an `ENG-`, `HEB-` or `RUS-` skill could be published under
+another name and pre-warmed. `tutor-turn` would never have served such a line. Fixed in `a399488`: those skills are refused
+in items and misconceptions under any pack id, so `tutor-prewarm` cannot find any. Proof re-run 2026-11-03: the publish now
+gets a 400 (it got a 200 before). `deno task check`: 198 passed.
 
 ### SEC-25: one alert the gateway refused held up every later alert of that device (medium, closed 2026-10-30)
 
@@ -199,4 +238,24 @@ this check, a format mismatch between a deployed gateway and an installed app, i
 - **B-20 closed (2026-11-03).** QA's full suite on `b20-sync-fixes` (`79660b2`, 3,060 passed, 0 failed) ran every proof
   test the security review named: SEC-12 and SEC-B20-1, -2, -3, -4, -5, -7 and -8 are closed. Still open: SEC-B20-6 and
   -9 (info), and the owner's choice on the words of a restamped alert.
+- **L0 Languages engine core, `languages-foundation` (`ef20f79..f5bb4dc`, merged at `eecc7e6`; 2026-11-03): safe to merge,
+  no finding above low.** Verified by reading: the four checks are unchanged on every changed function; `tutor-turn` refuses
+  a `lang-` pack before the config, caps, cache or model, and an item with an `ENG-`, `HEB-` or `RUS-` skill before the caps
+  and model, in `turn` and `prefetch` alike; the app never asks for a tutor line outside `core`; `content-publish` refuses
+  `lang-` packs, so `tutor-prewarm` finds none; language packs go through the same signature, hash, zip-limit and validator
+  path as the starter pack; the widened wire patterns are anchored, ASCII-only and bounded; the language settings are ids,
+  enums and booleans only, parent-only, and deleted with the child on the server and the phone; the wider size limit adds no
+  room for free text. The wire-format number is 2 and both pinned digests were recomputed independently (equal), so B-20's
+  reset fires once. New: SEC-L0-1 and SEC-L0-3 (low), SEC-L0-2, -4 and -5 (info), above. `deno task check`: 197 passed,
+  0 failed, 7 ignored; `flutter analyze` clean; gitleaks clean over the range; OSV.dev: no advisory for postgres 3.4.9,
+  jose 6.2.13, @noble/curves 2.0.1, @peculiar/x509 2.2.0, supabase CLI 2.122.0 (2026-11-03); no package, lock file or
+  workflow changed. Not run by the security-engineer: `flutter test`, pgTAP.
+- **L0 fixes re-checked, `a399488` (2026-11-03).** SEC-L0-1, -2 and -4 are closed: the proofs were re-run against the new
+  code and pass (above). SEC-L0-3 is fixed at the gateway (`MAX_RULES_BYTES`, 10,000 UTF-8 bytes of the parsed document).
+  Re-measured with `checkRules`: the largest document with 3-byte characters (9,902 bytes) is taken, and the emoji one
+  (11,702 bytes) gets a 400. It closes when a pgTAP case proves that the largest document the gateway takes fits the table's
+  12,288 bytes of `jsonb` (no local database here). SEC-L0-5 stays open (info). Also read: `language_providers.dart` replays
+  only the pack's own rows into each language engine; a damaged language pack is left out without touching the others; packs
+  are loaded only through the verifying installer and never bundled. `deno task check`: 198 passed, 0 failed, 7 ignored;
+  `flutter analyze` clean. Not run by the security-engineer: `flutter test` (the QA pass follows).
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.

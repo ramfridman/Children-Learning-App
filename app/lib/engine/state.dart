@@ -20,6 +20,9 @@ class SkillState {
   final Set<Representation> representationsPassed = <Representation>{};
   final Set<CheckType> checksPassed = <CheckType>{};
   final Set<String> successItems = <String>{};
+
+  /// The variant groups (the words, or the letters of a set skill) answered right without a hint, outside probes.
+  final Set<String> successGroups = <String>{};
   Set<String> itemsAtFresh = <String>{};
   DateTime? freshAt;
   DateTime? durableAt;

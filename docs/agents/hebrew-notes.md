@@ -343,3 +343,219 @@ screen-reader label should say the stop before the tap (it is computed when the 
 if a check fell due meanwhile, rule section 6).
 Wording guard for QA: none of the ten strings contains `היום`, `עוד לא`, `כבר`, `שוב` as "again after a pause", a count or `{n}`;
 `שוב` in `adventurePlayAgain` is "play a known game once more", which the intent asks for.
+
+## 8. The Hebrew course (Languages category): the editor's pass, 2026-11-03
+
+Scope: the hebrew-language-teacher's drafts in `docs/languages/hebrew/syllabus.md` (§3 word lists S1 to S12, the examples in §2 and §6), `docs/languages/hebrew/voice-brief.md` (§1 to §5: letter names, vowel names, stress, pilot clips), the one Hebrew line of `docs/languages/russian/syllabus.md` §8, and the Hebrew in `docs/research/hebrew-course-2026-11-03.md`. The owner approved the course on 2026-11-03 (`docs/languages/decisions-2026-11-03.md`). Nothing was voiced or paid. The corrected text is **edited in those files directly**; the status of every item is `text-ready` (waiting for the owner) unless 8.7 says otherwise.
+
+### 8.1 What was checked, and how
+
+| What | Count | How |
+|---|---|---|
+| Decodable words, S1 to S8 | 143 words (after the changes; 138 before) and 13 CV units | every word read for nikud, stress, spelling and fit for a child, then **machine-checked** by `tools/check_hebrew_course_words.py` (new): for each word it finds the first step whose letters and signs are enough to read it; none needs a later step than its own; every word is in canonical (NFC) order; no final form in the middle of a word, no ש without a dot |
+| S9 (long words, prefixes, endings, "same tune"), S10 (frequent words), S12 (unpointed and full spelling) | 19 + 17 + 17 words | read by hand, one by one (the script lists them); S11 is not written yet |
+| Letter names | 22 letters, 27 forms with the 5 finals (26 rows in the voice brief) | spelling, nikud, stress, how a child decodes the pointed name, the Academy and reference works (8.3) |
+| Vowel signs | 9 names and 3 hataf names | spelling and stress |
+| Examples in the syllabus §2, §4, §5, §6 and in the research file | about 60 | one by one (syllabification, prepositions, agreement, vav before ב, dagesh) |
+| Pilot clip texts in the voice brief §5 | about 30 | read; the voice director's own pilot files (`pilot*.json`) were only looked at, see 8.7 |
+
+Re-run: `python -I tools/check_hebrew_course_words.py` (the default path is the syllabus). Its rules are in its docstring (the same as the syllabus §3: ב כ פ with a dagesh are S1/S4/S6, without it S7; שׂ ך ף S7; a final ָה S1 and a final ֶה S6; a shva on the first letter or a hataf S8; a silent shva S3; a patah gnuva S7; a silent א inside a word S7). It reports `כִּסֵּא` (S7) as readable from S6, which is deliberate: the word shows the final silent א after e.
+
+**The pointing standard of the course** is the app's (§2.4): the Academy's spelling for pointed text. Holam is a vav when the Academy writes one (שָׁלוֹם, גָּדוֹל, אוֹר) and a bare holam when it does not (וָרֹד, רֹאשׁ, זֹאת, לֹא); hiriq has a yod in a long, open syllable (שִׁירָה, פִּיל, תִּירָס) and none in a closed or doubled one (מִדְבָּר, אִמָּא, כִּנּוֹר, בִּנְיָן); u is וּ or ֻ as the word has it (סוּס, שֻׁלְחָן, קֻפְסָה). The course teaches both forms of each vowel, so no word needs "correcting" to one spelling. No word needs a qamats qatan (U+05C7).
+
+### 8.2 Every change
+
+| # | File | Was | Now | Why |
+|---|---|---|---|---|
+| 1 | syllabus S6 | `טִיל` | `טִיל` (kept) | REVERTED by the owner (2026-11-03): "This is not correct. Leave the טיל word." `טִיל` stays in S6. Do not remove everyday words such as טִיל from children's word lists for being war-related unless the owner asks. |
+| 2 | syllabus S7 | `שַׂמְלָה` | `שִׂמְלָה` | the word is `שִׂמְלָה` (hiriq), stress on the last syllable (Wiktionary: sim-LA); the patah form is Biblical |
+| 3 | syllabus S9 | `חַיְּכָן` | `שַׂחְקָן` | `חַיְּכָן` is rare and has a yod with dagesh and shva, a trap for a child decoding; `שַׂחְקָן` (player, actor) is the same pattern (קַטְלָן), common and positive, and uses S5 to S7 letters. The line "מִי שֶׁמְּשַׂחֵק הוּא שַׂחְקָן" works like "מִי שֶׁרוֹקֵד הוּא רַקְדָן" |
+| 4 | syllabus S3 | 4 words | 8 words: added `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה` | settles the "only 4 picturable words" question (8.3). Checked: only S1 and S2 letters, a and i, a silent shva |
+| 5 | syllabus S8 to S6 | `אַרְיֵה` in S8 | in S6 | it needs only the e signs and a silent shva; no hataf and no initial shva |
+| 6 | syllabus S8 | (no hataf-segol word) | `אֱמֶת` added | the step teaches ֲ ֱ ֳ but had no ֱ word; `אֱמֶת` [ˈemet], known from `בֶּאֱמֶת`; a decoding word, no picture |
+| 7 | syllabus §2 | `חֻל–צָה` | `חֻלְ–צָה` | the silent shva is written in a syllable split, as in `יַלְ–דָּה` |
+| 8 | syllabus S7 | "silent א at the end (כִּסֵּא) and inside (רֹאשׁ)" | the final one is "the same as the final א of S1"; only the inside one is new | the syllabus's own note says a final silent א is read from S1 |
+| 9 | syllabus S12 | "helping nikud set by the editor" | `שולחן`, `חתול` need none; `ציפּור`, `כּיסא`, `תפּוח` carry the dot | the rule is in 8.5 |
+| 10 | voice brief §2 | `יוֹד`, `קוֹף` | `יוּד`, `קוּף` | 8.3 |
+| 11 | voice brief §2 | ב: `וֵית`; כ ך: `כַף`; פ ף: `פֵא` | ב: `בֵּית` (one name); כ ך: `כַּף`, `כַּף סוֹפִית`; פ ף: `פֵּא`, `פֵּא סוֹפִית` | one letter has one name; a name without its dagesh (`כַף`, `פֵא`) is not how it is said or written; `וֵית` starts with the letter ו and would teach the wrong letter |
+| 12 | voice brief §3 | `קָמַץ` (twice) | `קָמָץ` | `קָמַץ` with patah is the verb "he clenched"; the sign is `קָמָץ` (Wiktionary: ka-MATS) |
+| 13 | voice brief §1.8 | "זוֹ גִּימֶל. הִיא אוֹמֶרֶת גְּ… כְּמוֹ בְּגִיר" | "זוֹ גִּימֶל. הִיא אוֹמֶרֶת גָּ, כְּמוֹ בַּמִּלָּה גָּמָל." | the draft said a bare stop (the brief itself forbids it) and `כְּמוֹ בְּגִיר` means "like in chalk" |
+| 14 | voice brief §4 | a short stress guess | the full stress list (8.4) | `צְפַרְדֵּעַ` was listed as last-syllable and is stressed on `דֵּ`; the patah gnuva words, `לַיְלָה`, `בַּיִת`, `בַּבַּיִת`, `אֵיפֹה` were missing; `לָמָּה` decided |
+| 15 | voice brief §5 | pilot names `יוֹד`, `קוֹף` | `יוּד`, `קוּף` | follows 10 |
+| 16 | research | `ִפּי/צָה` (twice), `שִ`, `ילְ–דָּה` | `פִּי/צָה`, `שִׁ`, `יַלְ–דָּה` | a stray hiriq before the letter; a shin without its dot; a missing patah |
+| 17 | russian syllabus §8 | `נַגִּיד יַחַד` | `בּוֹאוּ נֹאמַר יַחַד.` | 8.8 |
+
+### 8.3 The teacher's open questions, settled
+
+1. **`יוֹד` or `יוּד`: `יוּד`.** Both are right (the Hebrew Mihlol writes `יוֹד/יוּד`; English Wikipedia lists /jud/ and /jod/). A child decodes the pointed name she sees on screen, and the voice says it, so the written and the spoken name must be the same; the form children say is `יוּד`. I could not find a source that counts which is commoner, so this rests on the teacher's note and mine. **Needs the owner's ear (8.7, question 1).**
+2. **`קוֹף` or `קוּף`: `קוּף`.** Both are right (`קוֹף/קוּף` in the Hebrew Mihlol). The decisive reason is the course itself: `קוֹף` is the word "monkey" in S7, a picture word. A child who learnt the letter as קוֹף and then sees the written word קוֹף must not hear one thing for two. `קוּף` for the letter keeps them apart. The parent area may write either; unpointed it is `קוף` in both.
+3. **`וָו` or `וָיו`: `וָו`.** It is the Academy's name and the way it is said ([vav]). `וָיו` is the traditional name, and a child who decodes it reads `va-yo`. `וָו` decodes to exactly [vav] with the consonant ו that S4 teaches. In the parent area the unpointed `וו` can look like two letters, so the parent text writes `ו (וָו)` once.
+4. **The stress of `לָמָּה`: la-MÁ (last syllable).** The Hebrew Wiktionary gives la-MA; that is how Israeli children say it. The teacher's "LÁ-ma in speech" is not right, and there is no spoken exception. Same in a question ("לָמָּה?") and in a sentence.
+5. **S3 (silent shva) with only 4 words: keep it as its own short step, with 8 words.** Four more words use only S1 and S2 letters: `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה`. The step is not merged into S4: S4 already brings four letters and a new vowel, and a silent shva needs a calm step of its own. It then comes back in S5 to S8 words (`שֻׁלְחָן`, `אֶצְבַּע`, `שִׂמְלָה`, `סַבְתָּא`, `קֻפְסָה`, `צְפַרְדֵּעַ`), which the activities use as review. Not used: `אַדְמָה` (the word is `אֲדָמָה`, with a hataf, three syllables).
+
+Two more choices the teacher left open: the names are the same for the hard and the soft sound (one `בֵּית`, one `כַּף`, one `פֵּא`; the sound is taught by the dot, not by a second name), and the final forms are "the name + `סוֹפִית`" (`כַּף סוֹפִית`, `מֵם סוֹפִית`, `נוּן סוֹפִית`, `פֵּא סוֹפִית`, `צָדִי סוֹפִית`).
+
+### 8.4 For the voice director: stress, shva, and what is sent
+
+The full stress list is in `voice-brief.md` §4. In short: **all words are stressed on the last syllable except** the segolate-like nouns (`יֶלֶד`, `לֶחֶם`, `גֶּשֶׁם`, `שֶׁמֶשׁ`, `דֶּלֶת`, `סֵפֶר`, `כֶּלֶב`, `מֶלֶךְ`, `מֶלַח`, `אֶצְבַּע`, `אֱמֶת`, `טַבַּעַת`), `אַבָּא`, `אִמָּא`, `סָבָא`, `סַבְתָּא`, `דֻּבִּי`, `בֻּבָּה`, `פִּיצָה`, `לַיְלָה`, `בַּיִת`, `אֵיפֹה`, the patah gnuva words (on the vowel before it), the dual (`עֵינַיִם`, `אוֹפַנַּיִם`, `מִשְׁקָפַיִם`) and a prefix + such a word (`הַכֶּלֶב`, `בַּבַּיִת`). `אֵיפֹה` is said [ˈejfo], the accepted spoken form (the Academy's standard is [eˈfo]; Wiktionary lists both). `טַבַּעַת` is [taˈbaʔat] (Wiktionary).
+
+**Shva in the words of S8 and S9** (the spoken form; the shva is never a full vowel):
+
+| Word | Said | Note |
+|---|---|---|
+| גְּלִידָה, שְׂמִיכָה, סְפָרִים, כְּלָבִים, פְּרָחִים, בְּרָכָה, צְפַרְדֵּעַ, סְפָרָיו | [gliˈda], [smiˈχa], [sfaˈrim], [klaˈvim], [praˈχim], [braˈχa], [tsfarˈdeʔa], [sfaˈrav] | the first shva is silent: two consonants in a row |
+| יְלָדִים, יְלָדוֹת | [jelaˈdim], [jelaˈdot] | the shva after י is said [e] |
+| וְהֶחָתוּל | [vehexaˈtul] | the shva of the prefix וְ is said [e] |
+| תַּרְנְגוֹל | [tarneˈgol] | the first shva is silent (it closes the syllable), the second is said [e]: a good S9 trap |
+| עַגְבָנִיָּה | [agvaniˈja] | the ב has no dot and is [v] even after a silent shva, because the word follows the pattern קַטְלָן (Wiktionary). This matches the S7 rule "no dot, soft" |
+| מִשְׁקָפַיִם | [miʃkaˈfajim] | the shva under שׁ is silent |
+| חֲמוֹר, אֲנִי, עֲנָנִים, חֲתוּלָה, אֱמֶת, אֳנִיָּה | [χaˈmor], [aˈni], [ʔanaˈnim], [χatuˈla], [ˈemet], [oniˈja] | a hataf sounds like its full vowel |
+
+**What is sent to the voice.** Single-word and CV clips are sent **pointed** in the pilot (the pilot decides whether the model reads pointed input better; until it answers, the editor does not strip the nikud). The marks U+05C7 and U+05B3 are never sent: `אֳנִיָּה` goes as **`אונייה`** (full spelling, the Academy's form); nothing else in the lists needs it. The letter names are sent pointed (`יוּד`, `קוּף`, `וָו`, `גִּימֶל`, `צָדִי`, `זַיִן`). `מָה` and `לָמָּה` keep their forms; `מַה` + dagesh before a non-guttural is the rule for the sentences of S10 and S11 (`מַה זֶּה?`).
+
+### 8.5 Helping nikud (`ניקוד עזר`) for S12
+
+Rule: in a full-spelling word (ktiv male), help only where the unpointed letters allow a **wrong sound the child has met**: the dot that makes **ב, כ or פ hard** ([b], [k], [p]; also when it is a dagesh chazak), and the **dot of שׂ**. A shin needs no dot (it is the default), and no vowel sign is added (the full spelling carries the vowels). So `שולחן` and `חתול` need nothing; `ציפּור` (the פ is [p]), `כּיסא` (the כ is [k]) and `תפּוח` (the פ is [p]) carry the dot. Kept short on purpose: the aim is to take the help away, step by step.
+
+### 8.6 Hebrew shape cues for the re-teach (syllabus §5), `text-ready` as words
+
+Said by the voice and shown, one short passage per pair. Letters are feminine (`אוֹת`), so `זוֹ` and `הִיא`; no left or right; no preposition is put on a letter name (it would change the dot).
+
+| Tag | Cue (to be re-read against the design-director's letters) |
+|---|---|
+| M-HEB-SHAPE-BK | זוֹ בֵּית — יֵשׁ לָהּ פִּנּוֹת וְרֶגֶל קְטַנָּה. וְזוֹ כַּף — הִיא עֲגֻלָּה. |
+| M-HEB-SHAPE-DR | זוֹ דָּלֶת — יֵשׁ לָהּ פִּנָּה. וְזוֹ רֵישׁ — הִיא עֲגֻלָּה. כַּף סוֹפִית יוֹרֶדֶת מִתַּחַת לַשּׁוּרָה. |
+| M-HEB-SHAPE-HXT | זוֹ הֵא — יֵשׁ לָהּ חוֹר קָטָן. זוֹ חֵית — הִיא סְגוּרָה לְמַעְלָה. וְזוֹ תָּו — יֵשׁ לָהּ רֶגֶל קְטַנָּה. |
+| M-HEB-SHAPE-VZN | זוֹ זַיִן — יֵשׁ לָהּ כּוֹבַע. וְזוֹ וָו — הִיא קַו יָשָׁר. נוּן סוֹפִית יוֹרֶדֶת מִתַּחַת לַשּׁוּרָה. וְיוּד — הִיא קְטַנָּה. (waits for the owner's answer on `זַיִן`, 8.7) |
+| M-HEB-SHAPE-SM | זוֹ סָמֶךְ — הִיא עֲגֻלָּה. וְזוֹ מֵם סוֹפִית — יֵשׁ לָהּ פִּנּוֹת, וְהִיא רַק בְּסוֹף מִלָּה. |
+| M-HEB-MIRROR | הַפֶּתַח שֶׁל הָאוֹת פּוֹנֶה לְאָן שֶׁהַקְּרִיאָה נִמְשֶׁכֶת. |
+| M-HEB-NAMESOUND | הַשֵּׁם הוּא גִּימֶל, וְהַצְּלִיל הוּא גָּ. |
+
+Not written: cues for ע/צ, ג/נ and ט/מ. A verbal description of a letter that does not match the drawn letter would teach the wrong shape; their re-teach stays "trace both" until the letterforms are fixed.
+
+### 8.7 For the owner, and for the other agents
+
+**For the owner (numbered):**
+1. **Letter names `יוּד` and `קוּף`** (and `וָו`, and one name for the hard and the soft ב כ פ). I chose the spoken forms for the reasons in 8.3. You are the native listener: if your children say `יוֹד` or `קוֹף` at gan, tell me; it is a small change (`voice-brief.md` §2 rows י and ק, §5 pilot).
+2. **The name of ז, `זַיִן`.** It is the Academy's name and what every gan says, but it is also a slang word that older children know. Options: (a) keep `זַיִן` (my recommendation: the name is standard, and a gan child expects it); (b) teach ז by its sound and a picture and say the name only in the parent text. Rows: voice brief §2 (ז), 8.6 (M-HEB-SHAPE-VZN).
+3. **Confirm the changed and added words:** `תַּרְמִיל`, `סַנְדָּל`, `בִּנְיָן`, `לַיְלָה` (S3), `אֱמֶת` (S8), `שַׂחְקָן` (instead of `חַיְּכָן`). `טִיל` was dropped on child-safety grounds; if you want other words of war or fear kept out of the lists, say so.
+
+**For the hebrew-language-teacher:**
+- Words for decoding only, not for a picture choice: `נָם` (literary, from lullabies), `מַר` (bitter, rare in speech), `שָׁמַר`, `סוֹד`, `כִּי`, `לוֹ`, `הִיא`, `הוּא`, `זֵר` and `עֵט` (low frequency; kept because the schools teach them), `תָּמָר` (a name; as a picture a girl or a date, to be decided in the picture list), `שָׁר` (picture: someone singing; its pair is `שָׂר`, minister, an adult word). `קוּם` is a command to one boy; if it ever goes in a sentence to the children it is `קוּמוּ`.
+- The research file line 248 still lists `חַיְּכָן`; I changed only the typos of the research record (item 16).
+- The paragraph of the Russian syllabus around the Hebrew line (§8) still says the recogniser is Hebrew only; the owner's decision 1 of 2026-11-03 changed that. It is the Russian teacher's text, not changed here.
+
+**For the voice-and-sound-director** (the untracked `docs/languages/hebrew/pilot*.json`, not edited by me): the letter-name clips must be `יוּד` and `קוּף` (they have `יוֹד`, `קוֹף`); the pair `כֶּלֶב / חֶלֶב` is a test of sounds only (`חֶלֶב` means "fat"; the milk of S7 is `חָלָב`); `אמרו` should be pointed `אִמְרוּ` (as in `VOICE_AUDIT_KEEP`; unpointed it can be read `אָמְרוּ`, "they said"); `נשחק בהן` is a little formal, `נשחק במילים` is plainer.
+
+**For the design-director:** the shape cues in 8.6 need the letterforms before they are final.
+
+### 8.8 The Russian course's Hebrew line
+
+The draft `נַגִּיד יַחַד` is correct Hebrew (`נַגִּיד`: first person plural of `הִגִּיד`; `יַחַד`: together), but as two words without an opener it reads like the idiom `נגיד` ("let us say, for instance"), and the app's invitations all begin with `בּוֹאוּ`. Final: **`בּוֹאוּ נֹאמַר יַחַד.`** on screen (the same form as `feedback.incorrect.0.caption.0.v`), voice text **`בואו נגיד יחד.`** (rule 3.4 of this file: `בואו נאמר` becomes `בואו נגיד`). Plural, no gender, no question. Status `text-ready`. Note for the voice director: unpointed `נגיד` can be read as the noun `נָגִיד` (a governor); the sentence makes the verb clear, and the existing lines with `נגיד` already work that way.
+
+## 9. The three Band A batches (English, Hebrew, Russian): the editor's pass, 2026-11-03
+
+Scope: the Hebrew in `docs/languages/english/band-a-content.md` §2 (51 frame lines, 68 glosses), `docs/languages/hebrew/band-a-content.md` with `pronunciation.csv` (218 `needs-editor` rows, the 3 parent co-play cards, the 52 names, and the B-12 example in `syllabus.md`), and `docs/languages/russian/band-a-content.md` §2 and §3 (F01 to F39, 13 tags with a `parentText` and a `homeActivity`), the two letter-name lines of the Russian `syllabus.md` §3.1 and its §8 `שמעתי:`. The owner approved the three courses in principle on 2026-11-03. All items are now `text-ready`, waiting for the owner. Edited in those files directly (the tables carry the final Hebrew, the voice text and, for the lines I changed, the reason). Nothing was voiced or paid. Two owner notes were applied: the app is for any child at any level, and an ordinary word is never removed as unsuitable (טִיל stays; no word was removed from any list).
+
+### 9.1 The rule for all three courses: how the teaching voice speaks to the child, and the voice's own gender
+
+**Decision (hebrew-text-editor, for the owner's OK).**
+1. **The recorded course voice does not follow the child's address form.** Every Hebrew line a course voice says is plural or neutral, whatever the profile says: the plural imperative (`גְּעוּ`, `הַקְשִׁיבוּ`), "let's" (`בּוֹאוּ נִסְפֹּר`), the impersonal present (`הוֹלְכִים עִם הָאֶצְבַּע`), the infinitive, and the past plural for praise (`מְצָאתֶם`, `שְׁמַעְתֶּם טוֹב`). The possessive is plural too (`הַשֵּׁם שֶׁלָּכֶם`). One clip per line, not three.
+2. **The voice has no gender in its lines.** No present or adjective in the first person that has a gender (`אֲנִי קוֹרֵאת`, `אֲנִי שָׂמֵחַ`). A first-person past verb is allowed because its form is the same for a man and a woman (`שָׁמַעְתִּי`, `אָמַרְתִּי`, `סִיַּמְתִּי`), and so is "let's" (`נֹאמַר`). So any voice can say any line, and the voice director can change or add a voice without any change of the text.
+3. **A character is spoken of in the third person only when its gender is fixed in the course.** Nitzi is "she" (`הִיא שָׂמָה קֶמַח`), Kubi the tortoise is "he", the cat of story 1 is "she" (`הַחֲתוּלָה`). For the characters whose gender the art has not fixed (Pip, Mika, the Russian "friend", the English "friend") a line uses the name or `הֶחָבֵר` (the app's word for the companion) and **no pronoun and no verb or adjective about them**: `וְהַרְאוּ לְמִיקָה מַה לַּעֲשׂוֹת` (was "ומיקה יעשה את זה", a masculine verb for Mika), `הַקְשִׁיבוּ לַשְּׁאֵלָה` (was "החבר שואל"), `מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ?` (was "החבר בא, או הולך?"), `הַקְשִׁיבוּ לַבַּקָּשָׁה, וּתְנוּ לֶחָבֵר אֶת מַה שֶּׁמְּבַקְשִׁים` (was "מה שהוא מבקש"). A gloss or a word card names a word in its dictionary form and says nothing about a person.
+
+**Why.** (a) PLAN.md › Speaking to the child: recorded voice is gender-neutral, and core lines never reveal the speaker's gender; curriculum §9.3 says the same for the praise lines. (b) The only thing in the app that follows the address form is the AI tutor, and it is off in language lessons (`frame.md` §1.6), so nothing in a course has a per-profile form to choose. (c) A per-profile form would need three recordings of every line in every course, for no teaching gain. (d) The three courses then say the same words the same way (`הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.` is one line in English and Russian). **What the owner gives up:** a child who plays alone is still addressed as "אתם", like everywhere else in the app.
+
+**Changed because of it:** `frame.md` §1.3 said the address form "follows the child's profile in the Hebrew frame, as everywhere"; it now says the recorded frame is neutral and the profile form belongs to the tutor (one sentence; the curriculum-expert to confirm). The Hebrew course voice's own gender is therefore not decided in the text: the one line that said `אֲנִי קוֹרֵאת` (`i-follow`) became `הַקְשִׁיבוּ לְכׇל מִלָּה, וּגְעוּ בָּהּ.`
+
+Not covered by the rule: parent texts (adult, no nikud) say "הילד", as the rest of the parent area does.
+
+### 9.2 What was checked, and the counts
+
+| Course | Checked | Changed in wording | Nikud, voice text, status | Text-ready |
+|---|---|---|---|---|
+| English | 51 frame lines, 68 glosses | 11 lines changed in meaning or register (the list under the table in `english/band-a-content.md` §2: the friend and Mika lines, the two buttons, drum, strip, ball-first, personal, show-me, beats, say-together), 2 glosses (clap, feet); `he-fb-check` and 3 glosses differ only in spelling | all 51 lines and 68 glosses pointed in full and given a voice text | 119 |
+| Hebrew | 218 rows (60 new words, 12 syllable clips, 9 rhyme ends, labels, 67 instruction and feedback rows, 16 verse rows, 41 story rows), 3 parent cards, 52 names, B-12 | 20 rows (table 9.3) and 2 of the 3 parent cards; B-12 `סוּ + ס → סוּס` checked and unchanged | 129 `say` cells filled (every sentence row; words, syllables and rhyme ends stay pointed); the unit clip of `אֳנִיָּה` is sent as `אוֹ… נִי… יָה` | 218 rows, the 3 cards, the 52 names, B-12 |
+| Russian | 39 frame lines (F03 was already final), 13 tags (26 texts), 2 letter-name lines, `שמעתי:` | 4 lines (F17, F19, F20, F39) in meaning, F06 and F07 in form; 16 of the 26 parent texts rewritten (a subject added, passives and "school form" replaced) | all 39 lines pointed and given a voice text; the adult texts have no nikud | 39 + 26 + 2 + 1 |
+
+Checks run: `python -I tools/check_hebrew_course_words.py` (156 decodable words of S1 to S8, none needs a later step; the S9 to S12 lists are unchanged) and its new mode `--text FILE...` (hygiene of any file: canonical order, no final letter inside a word, no non-final at the end except a hard pe, a dot on every shin of a pointed word): 4,438 Hebrew words in the five files, one note, which is the teacher's suffix `־ִים` in a grammar remark. The CSV `say` column has no U+05B3 or U+05C7, no digit, no Latin letter, no "!" and no quote. `tools/test_hebrew_sources.py` passes (10 tests), and a rerun of `tools/hebrew_voice_review.py` leaves the app's master table as it was (the one difference it shows, `setupNameBadChars`, is older than this pass and was reverted).
+
+### 9.3 Every change to the Hebrew course (the other rows only got `text-ready`; their `say` cells are new)
+
+| Row | Was | Now | Why |
+|---|---|---|---|
+| `i-rhyme` | אֵיזוֹ מִלָּה נִגְמֶרֶת כָּמוֹהָ? | אֵיזוֹ מִלָּה נִגְמֶרֶת אוֹתוֹ דָּבָר? | `כָּמוֹהָ` is literary; the hint lines already say "אותו דבר" |
+| `i-odd` | מִי לֹא שַׁיָּךְ? | מָה הִגִּיעַ לְכָאן בְּטָעוּת? | **the teacher's question 3.** Band A asks no "not" question (curriculum §8.3). The same game has had this line since 2026-10-29 (owner-approved, 2.9 above), so one game has one wording |
+| `i-follow` | גְּעוּ בְּכׇל מִלָּה כְּשֶׁאֲנִי קוֹרֵאת. | הַקְשִׁיבוּ לְכׇל מִלָּה, וּגְעוּ בָּהּ. | **question 2.** The gender of the voice (9.1); also it is the voice that reads one word and waits |
+| `i-strip` | כַּמָּה תּוֹפִים? | כַּמָּה תֻּפִּים? | the plural of תֹּף |
+| `ok-2` | כֵּן, זֶה זֶה! | כֵּן, זֶהוּ זֶה! | "זה זה" is not a phrase, "זהו זה" is |
+| `ok-8` | וְזֶה נָכוֹן! | כׇּל הַכָּבוֹד! | it repeated `ok-1` and read like a continuation |
+| `why` | כִּי שְׁנֵיהֶם… | כִּי אֵלֶּה… | "שניהם" is masculine; two feminine words (פִּיצָה, פִּתָּה) need "שתיהן" |
+| `d-sem` | זֶה דּוֹמֶה, אֲבָל זֶה לֹא זֶה. בּוֹאוּ נִשְׁמַע שׁוּב. | זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב. | a misconception line names what the eye caught and ends in the strategy, **without `לֹא`** (owner Q2, 2.9). Same for the next five |
+| `d-sem-rhyme` | זֶה מַתְאִים, אֲבָל לֹא נִגְמָר אוֹתוֹ דָּבָר. | זֶה מַתְאִים. בּוֹאוּ נַקְשִׁיב לַסּוֹף. | rule above |
+| `d-allit` | זֶה מַתְחִיל אוֹתוֹ דָּבָר, אֲבָל נִגְמָר אַחֶרֶת. | זֶה מַתְחִיל אוֹתוֹ דָּבָר. בּוֹאוּ נַקְשִׁיב לַסּוֹף. | rule above; `אַחֶרֶת` is written register |
+| `d-cat-theme` | הֵם הוֹלְכִים יַחַד, אֲבָל הֵם לֹא מֵאוֹתוֹ סוּג. | הֵם הוֹלְכִים יַחַד. בּוֹאוּ נִבְדֹּק מֵאֵיזֶה סוּג הֵם. | rule above |
+| `d-print-picture` | קוֹרְאִים אֶת הַמִּלִּים, לֹא אֶת הַצִּיּוּר. | זוֹ תְּמוּנָה. קוֹרְאִים אֶת הַמִּלִּים. | rule above |
+| `d-cat-atypical` | גַּם הוּא חַי: הוּא זָז וְאוֹכֵל. | גַּם זֶה חַי: זֶה זָז וְאוֹכֵל. | the card can be נְמָלָה (feminine) |
+| `d-role-swap` | מִי זָז? | עַל מַה מְדַבְּרִים? | the picture items are static, so "who moved?" has no answer; "what are we talking about?" + the thing's word clip points at the subject of the sentence (to be heard in the pilot) |
+| `d-letters` | אוֹתִיּוֹת הֵן מַה שֶּׁקּוֹרְאִים. | בָּאוֹתִיּוֹת קוֹרְאִים וְכוֹתְבִים. | letters are not "what is read" (words are); same pattern as `בָּזֶה סוֹפְרִים` |
+| `m-boet` | בּוֹעֵט זֶה נוֹתֵן מַכָּה בָּרֶגֶל. בּוֹעֲטִים בְּכַדּוּר. | בּוֹעֲטִים בְּכַדּוּר בָּרֶגֶל, וְהוּא עָף רָחוֹק. | "נותן מכה" is a blow (a hurt), not a kick; the example says it |
+| `m-mechapeset`, `m-meurbevet`, `m-soche` | X זֶה מְנַסָּה / מְסוֹבֶבֶת / זָז | X זֶה לְנַסּוֹת / לְסוֹבֵב / לָזוּז | the head word is feminine (or masculine) and the definition did not agree with it; the infinitive agrees with every head word |
+| `m-tanur` | מְאוֹד | מְאֹד | the app's pointing |
+
+Parent cards: story 1 "בקשו מהילד לספר את הסיפור עם הכדור שלו" ("with his ball", whose?) became "אפשר גם לבקש מהילד להמציא סיפור משלו על כדור"; story 3 had a fragment ("בגינה או באמבטיה: מה עף ברוח?") and now says "אפשר לשחק". Story 2 is unchanged.
+
+Read and kept, and why: `bin-one` is `אֶחָד` (one thing: a label for a bin of masculine and feminine singulars, so a feminine `אַחַת` would be wrong for half the cards; the "one thing" case of 2.2). `d-cat-theme` and `d-cat-look` keep `הֵם`, the plural default for a pair of unspecified gender. `i-name` and `d-name-length` use `שֶׁלָּכֶם` for one child (plural address, 9.1). `d-blend-last` `מֵהַהַתְחָלָה` is correct and spoken ("מההתחלה"). `בַּעֲלֵי חַיִּים` (the teacher's reason is right: חיות is wild animals for many children). The verses rhyme in speech (all pairs are stressed on the last syllable, except בַּיִת / זַיִת, which both fall on the first). All 60 new words have the nikud and the stress that the Academy and Wiktionary give (`אֶפְרוֹחַ`, `שִׂיחַ`, `בּוֹרֵחַ` are patah-gnuva words, stress before it). The 52 names: ordinary Israeli first names of both genders and the 9 cast names, in the usual spelling, no nikud (the child sees them without; A-11); `קשת` is also a picture word but only appears as a name option. The child's own name is never in the list and never voiced.
+
+**English course, wording that is not only nikud.** `he-ins-who-doing` is now "the picture of the action" (the pictures show one friend, and "the friend who is doing it" needs a participle with a gender); `he-ins-make-do` (Mika, 9.1); the two buttons are named in the line (`בַּכַּפְתּוֹר "סִיַּמְתִּי"`, `"אָמַרְתִּי"`); `he-ins-strip` is the Hebrew course's `כַּמָּה תֻּפִּים?`; `he-q-ball-first` says `בַּהַתְחָלָה` instead of the number word `ראשון`; `he-ins-personal` says first that the child may answer with a picture or aloud and then that skipping is fine; `he-hint-showme` is `הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים` (the draft was a future form used as an order); `he-hint-beats` is `נִמְחָא כַּפַּיִם`; `he-fb-together` is the same line as the Hebrew and Russian courses (`בּוֹאוּ נֹאמַר יַחַד.`, 8.8). Glosses: the dictionary form for adjectives and nouns (`שָׂמֵחַ`, `עָצוּב`, `תִּינוֹק` do not follow the character shown), the feminine counting numbers, the dual for `אוֹפַנַּיִם`, `רַגְלַיִם` for feet (the word children use; the draft's `כפות רגליים` is the soles), `תֹּף` (not `תּוּף`), and for "clap" the noun `מְחִיאַת כַּפַּיִם`, because I could not confirm the plural imperative of מחא in a dictionary (Hebrew Wiktionary lists only `מְחָא`). `נִמְחָא` (we will clap) follows the paradigm of the listed `יִמְחָא`; the risk is low.
+
+**Russian course.** F01 is the English `he-ins-listen-tap` and F03 the English `he-fb-together`. F06 uses `לְהַגִּיד` (spoken) and `מַה זֶּה` (the dagesh). F07 to F13 call the friend `הֶחָבֵר`. F19 had lost its object. F29 to F31 use `שָׁלוֹשׁ` / `שְׁתֵּי` / `אַחַת` with the feminine `מְחִיאוֹת`. F33 is `מַתְחִילוֹת` (מילים is feminine). The parent texts: a subject was added where "מכירים כבר את הנושא" had none; "זו צורת בית הספר" is "זו הצורה המנומסת"; the `да` text no longer says the answer "shows" something about the child; `кто` is for people and animals (not only animals). The letter-name lines are `קוֹרְאִים לָהּ` + the name and `וְהִיא אוֹמֶרֶת` + the sound (`אוֹת` is feminine; the same pattern as the Hebrew course's `הִיא אוֹמֶרֶת גָּ`). `שָׁמַעְתִּי:` is the same line in the three courses.
+
+### 9.4 For the voice director: the voice text
+
+The Hebrew course's `say` column and the `Voice text` columns of the English and Russian tables were made by the new `course_voice_text()` in `tools/hebrew_voice_review.py` (the app's rules of section 3, plus the following; nothing in the app's table changes):
+- **A word with the sin dot keeps its nikud** (`שִׂימוּ`, `הִיא שָׂמָה`, `מְחַפֶּשֶׂת`, `שׂוֹחֶה`, `לַעֲשׂוֹת`): an unpointed ש is read [ʃ]. `וְאִמְרוּ` and `לֶחָבֵר` (plain "לחבר" is also "to connect") keep theirs; so do number words, `אֵלֶּה` and `בַּשָּׁמַיִם`, as before.
+- **A carrier line ends with a colon and no full stop** (`בּוֹאוּ נִמְצָא:`, `שָׁמַעְתִּי:`, `בּוֹאוּ נַקְשִׁיב שׁוּב:`, `שִׁמְעוּ אֵיפֹה:`, `קוֹרְאִים לָהּ:`), because the next clip is the word. `זֶה` (`he-fb-thats`) is sent as `זה:`. Please test in the pilot that the voice does not fall on the colon; if it does, `…` is the alternative.
+- A quoted button label loses its quotes and gets a beat: `געו בכפתור — סיימתי.` A maqaf becomes a space (`תיק תק`). New spellings in `KTIV`: `לקרוא`, `למצוא`, `כפיים`, and the hand `ביד` (not `בייד`).
+- **Said differently from the screen:** `נֹאמַר` is `נגיד` (as in 8.8); `הַמְּמ…` is `המממ…`; every "!" is a comma after a one- or two-word cheer and a full stop otherwise.
+- **Single words, syllables and rhyme ends stay fully pointed** (the pilot decides). `אֳנִיָּה` as a word is `אונייה`; its unit clip is `אוֹ… נִי… יָה`. The other unit clips with a hataf on the first syllable keep the teacher's `say` (a plain patah).
+- **Names:** `פִּיפּ` (Pip) ends in a hard pe. `מִיקָה` is pointed with a final qamats-he, which a voice stresses on the last syllable (mi-KA); the English name is stressed on the first (MI-ka). The director should listen to this one in the pilot and, if needed, choose a spelling or a pointing before voicing.
+- **Same words in the three courses** (`הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.`, `בּוֹאוּ נֹאמַר יַחַד.`, `שָׁמַעְתִּי:`, `הַקְשִׁיבוּ שׁוּב.`): if the courses share a voice they can share a clip; if each course has its own voice they cannot. That is the director's plan; the text does not depend on it.
+- Counts (characters as sent): English 1,163 (51 lines) + 460 (68 glosses); Russian 938 (39 lines); Hebrew Band A 3,937 as sent (5,400 when every sentence was sent pointed). The tables in the three files give the details; the director makes the plan and the cost.
+
+### 9.5 For the owner (numbered)
+
+1. **The address rule (9.1) for all three courses:** recorded lines speak to the children in the plural whatever the profile says, and no line gives the voice a gender. Is that right for the language courses too? (My recommendation: yes. It is what the rest of the app does.)
+2. **"מִי לֹא שַׁיָּךְ?" does not stay.** The odd-one-out question is `מָה הִגִּיעַ לְכָאן בְּטָעוּת?`, the line you already approved for the same game in the maths lands (2026-10-29). Row: `heb-a-i-odd`. OK?
+3. **Pip, Mika and the "friend" have no gender in the Hebrew lines** (no pronoun, no verb about them). If the design-director fixes a gender for Mika or Pip, tell me: a few lines would then sound more natural (`וּמִיקָה תַּעֲשֶׂה אֶת זֶה`). I recommend leaving them neutral, because a rename or a redraw is expected. Rows: `he-ins-make-do`, `he-ins-who-doing`, Russian F17, F20, F39.
+4. **The 52 names** of A-11 (43 ordinary first names and the 9 cast names): please look at the list once (`hebrew/band-a-content.md`, A-11) and say if a name should go or a name from your family should be added. A name is shown without nikud and never voiced.
+5. **Parent texts say "הילד"** (generic masculine), as the rest of the parent area does. If you prefer "הילד או הילדה" or "הילדים", it is one replacement in the three files.
+6. **Small choices you may overrule:** `רַגְלַיִם` for "feet", the noun `מְחִיאַת כַּפַּיִם` for "clap", the dictionary (masculine) form of "happy / sad / baby", `בֻּעָה` for a bubble (the course's spelling) and `אֲגוּדָל` for a thumb.
+
+### 9.6 For the other agents
+
+- **voice-and-sound-director:** 9.4. The pilot should include `מִיקָה` / `פִּיפּ`, a colon carrier (`שָׁמַעְתִּי:` + a word clip) and `עַל מַה מְדַבְּרִים?` + a word clip.
+- **curriculum-expert:** `frame.md` §1.3 was changed by one sentence (9.1); please confirm. The Hebrew syllabus B-12 example `סוּ + ס → סוּס` is `text-ready`: סוּס is an S5 picture word, the unit סוּ is a stretchable consonant with u, and a final ס can be said alone. The odd-one-out line of A-03 changed, and the `לֹא` diagnostics (A-02, A-03, A-05 to A-07, A-10, A-12) are reworded; the tags and the items are unchanged.
+- **design-director:** Mika and Pip are not gendered by any line (9.5, 3); the thumbs in A-16 are `אֲגוּדָל`; the bubble is `בֻּעָה`.
+- **app-developer:** the A-11 closed list of names (52) is final; the two buttons are labelled `סִיַּמְתִּי` and `אָמַרְתִּי`; the pass button is `לדלג`; the parent texts of the 13 tags are final (adult, no nikud). Bring the lines into the sources following the tables; I check the result there.
+- **qa-engineer:** no code was changed except `tools/hebrew_voice_review.py` (a new function `course_voice_text`, four KTIV words, `SIN_KEEP`; the app's master table is unchanged) and `tools/check_hebrew_course_words.py` (a new `--text` mode; its default mode is as before).
+
+## 10. The last Languages drafts made final: the editor's second pass, 2026-11-03
+
+Scope: the `needs-editor` drafts that the three Band A batches and the design-director's Languages island left open, and the bottle's lines for a language stop. The address rule of 9.1 applied to every line (plural to every child, no gender in the voice's lines, no pronoun for the friend). All items are `text-ready`, waiting for the owner; the bottle's lines are **proposals**. Nothing was voiced or paid; no code was changed except two words in `tools/hebrew_voice_review.py` (`COURSE_KEEP`). The full texts, with the Hebrew before and after, are in `docs/languages/island-texts.md` (the new file for the developer); the other texts are edited in their own files.
+
+| Text | Decision | Where |
+|---|---|---|
+| `he-ins-how-many` (English) and Russian F40 | one line for both courses: `כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.` (7 words). The Russian teacher's `כמה ספרנו?` was not kept: unpointed `ספרנו` reads as "our book", and the question is "how many", not "how many did we count" (the counting is practice). One clip can serve both courses | `english/band-a-content.md` §2, `russian/band-a-content.md` §2 |
+| `i-odd-animals`, `-food`, `-clothes` | the drafts are right and stay (`לַקֻּפְסָה שֶׁל …`, 7 words, the pattern of `i-odd`). Voice texts added; the alternative `לַמָּקוֹם שֶׁל …` (the wording of `i-sort-cat`) is written next to each row for a bin that is not drawn as a box; the design-director's spec draws a box, so it is not needed | `hebrew/band-a-content.md` §3, `hebrew/pronunciation.csv` |
+| M-RUS-YESNO and M-RUS-NUMWORD parent texts | rewritten as one condition and two calm sentences; no quoted phrase with a vav inside; `סמוכים` (adjacent) for три and четыре, because they are neighbours in value, not necessarily close in sound | `russian/band-a-content.md` §3 |
+| The island's name, the three names, `שָׁלוֹם` | `אִי הַשָּׂפוֹת`, `אנגלית`, `עברית`, `רוסית`, `שָׁלוֹם` checked and kept | `island-texts.md` §1, §2 |
+| The companion's door line | `בּוֹאוּ נִפְתַּח דֶּלֶת. מִי אוֹמֵר לָנוּ שָׁלוֹם?`: "a door", never a number of doors (two or three may be on); a wondering that is true to what the tap does; no name | `island-texts.md` §1 |
+| The parent pages | 52 rows; the draft had the child's name with a feminine verb in the progress intro (`נֹעָה לומדת … הבינה`): now gender-free. `פועלת` → `פעילה`; the status words are the app's (`בתרגול`, `מובן`, `כדאי לחזור`) plus `מובן וזכור`; the chips `תרגלו / אמרו` (orders when unpointed) → `תורגל / נאמר`; the English gate `שער הדיבור` → `שער הקריאה` (it decides when letters open). Texts the previews did not show (the other state of a switch, the Russian gate) were written | `island-texts.md` §3 |
+| The bottle for a language stop (proposals) | no `core.adventure.*` exists in `core.he.json`: the lines are `adventure*` in `he.dart` (section 7 above). One fixed line per language, the same for every reason, no `{land}`: `בּוֹאוּ נְשַׂחֵק בְּאַנְגְּלִית.`, `… בְּרוּסִית.`, `… בְּמִלִּים.` (Hebrew is "with words": the whole app is Hebrew). The five existing lines would also work with `{land}` = `אִי הַשָּׂפוֹת`, except `callForHelp` (no language "needs help") | `island-texts.md` §4 |
+
+**Voice rules added** (`COURSE_KEEP`, courses only; the app's table is unchanged): `הָאֹכֶל` keeps its nikud in the voice text (plain `האוכל` is read with the stress on the last syllable: "the one who eats"), so `he-ins-give` of the English course changed from `את האוכל` to `את הָאֹכֶל` (3 characters more), and `אִי` (plain `אי` is read "ai" or "ee").
+
+**Counts.** Voice-text characters: English 52 lines 1,207 (+44; with the 68 glosses 1,667); Russian 40 lines 979 (+41); Hebrew Band A 4,035 (was 4,093: the three rows were counted pointed before they had a voice text). Checks: `tools/check_hebrew_course_words.py --text` on the four files (3,505 Hebrew words; the one note is the teacher's suffix in a grammar remark), `tools/test_hebrew_sources.py` (10 tests, OK).
+
+**Not decided here (the owner, `island-texts.md` §6):** the door line with or without the question, the Hebrew bottle line, the three route names of the Russian stress setting, how the Hebrew "parent check of reading aloud" works (the help text says only what is certain), and the status words of the parent progress page.

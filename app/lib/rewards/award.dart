@@ -1,3 +1,5 @@
+import '../world/adventure_land.dart';
+
 /// What a child can be given (PLAN: Awards, prizes & the Trophy Hall). Every award has a key that is the same on every
 /// device, so an award is given once however many phones work it out, and the key says what it is for.
 enum AwardKind { sticker, star, trophy, medal, decoration }
@@ -5,7 +7,7 @@ enum AwardKind { sticker, star, trophy, medal, decoration }
 enum TrophyTier { bronze, silver, gold }
 
 /// The lands that can hold trophies, in the order of the Trophy Hall. Nitzi's own island has none.
-enum TrophyLand {
+enum TrophyLand implements AdventureLand {
   counting('numbers'),
   colors('colors'),
   shapes('shapes'),
@@ -16,7 +18,14 @@ enum TrophyLand {
   const TrophyLand(this.domain);
 
   /// The skill domain whose skills this land grows.
+  @override
   final String domain;
+
+  @override
+  int get order => index;
+
+  @override
+  String get key => name;
 
   static TrophyLand? ofDomain(String domain) {
     for (final TrophyLand l in values) {

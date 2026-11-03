@@ -1,5 +1,7 @@
 import '../data/app_database.dart';
+import '../engine/course.dart';
 import '../engine/engine.dart';
+import '../engine/gates.dart';
 import '../engine/state.dart';
 import '../engine/types.dart';
 import 'models.dart';
@@ -12,6 +14,7 @@ Catalog engineCatalog(PackContent content) {
       for (final SkillDoc s in content.skills.values)
         SkillNode(
           id: s.id,
+          course: s.course,
           prerequisites: s.prerequisites,
           core: s.core,
           representations: <Representation>{for (final String r in s.representations) rep(r)},
@@ -22,12 +25,17 @@ Catalog engineCatalog(PackContent content) {
           needDays: s.masteryRequires['days'] as int?,
           needRepresentations: s.masteryRequires['representations'] as int?,
           needChecks: s.masteryRequires['checks'] as int?,
+          bundle: s.bundle,
+          setCoverage: s.setCoverage,
+          soundRight: s.soundRight == 'accepts' ? SoundRightPolicy.accepts : SoundRightPolicy.teaches,
+          letters: s.letters,
         ),
     ],
     items: <ItemMeta>[
       for (final Activity a in content.activities.values)
         ItemMeta(
           id: a.id,
+          course: a.course,
           skills: <String, double>{for (final Skill s in a.skills) s.id: s.weight},
           purpose: purposeOf(a.purpose),
           checkType: checkTypeOf(a.checkType),
@@ -44,6 +52,7 @@ Catalog engineCatalog(PackContent content) {
       for (final TagDoc t in content.tags.values)
         TagInfo(
           id: t.id,
+          course: t.course,
           skills: t.skills,
           repairActivities: t.repairActivities,
           preferredRepresentations: <Representation>[
@@ -53,6 +62,30 @@ Catalog engineCatalog(PackContent content) {
     ],
   );
 }
+
+/// The gates of a pack as the engine reads them (docs/languages/frame.md section 3.3.6).
+List<CourseGate> courseGates(PackContent content) => <CourseGate>[
+  for (final GateDoc g in content.gates.values)
+    CourseGate(
+      id: g.id,
+      course: g.course,
+      requires: g.requires,
+      requireAtLeast: <SkillQuota>[
+        for (final q in g.requireAtLeast) SkillQuota(skills: q.skills, count: q.count),
+      ],
+      holds: g.holds,
+      minAge: g.minAge,
+      neverUnderBand: g.neverUnderBand,
+      durableBelowBand: g.durableBelowBand,
+      switchName: g.switchName,
+      switchEffect: switch (g.switchEffect) {
+        'closes' => SwitchEffect.closes,
+        'opens' => SwitchEffect.opens,
+        _ => null,
+      },
+      routeBypass: g.routeBypass,
+    ),
+];
 
 /// One row of the `attempt` table as the engine reads it.
 AttemptEvent eventOf(Attempt row) => AttemptEvent(
@@ -64,6 +97,8 @@ AttemptEvent eventOf(Attempt row) => AttemptEvent(
   tag: row.misconceptionTag,
   sessionId: row.sessionId,
   attemptNo: row.attemptNo,
+  // The course of the pack the answer was given in; a `lang-` id that names no course matches no item at all.
+  course: Course.ofPackId(row.packId) ?? '',
 );
 
 /// What the engine concluded about one child, as plain text for the developer page.

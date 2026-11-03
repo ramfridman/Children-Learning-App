@@ -29,6 +29,7 @@ import 'child_form.dart';
 import 'pin_screens.dart';
 import 'prizes_screen.dart';
 import 'progress_screen.dart';
+import 'language_pages.dart';
 import 'rules_screen.dart';
 import 'tutor_log_screen.dart';
 
@@ -262,6 +263,22 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                               style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
                             )
                           : null,
+                      // The languages of this child: its own row under the name, so the two buttons beside the name keep
+                      // the room they have (a long name still stacks them under it).
+                      extra: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: ParentButton(
+                          key: Key('languages-${p.id}'),
+                          label: He.areaLanguages.text,
+                          quiet: true,
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext c) =>
+                                  ChildSettingsScreen(profile: p, onClose: () => Navigator.pop(c)),
+                            ),
+                          ),
+                        ),
+                      ),
                       buttons: <Widget>[
                         ParentButton(
                           key: Key('progress-${p.id}'),
@@ -415,11 +432,14 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
 /// not fit beside them (it would wrap in the middle of a word), the buttons in their own row under it. The note, if any,
 /// has the row under both, the width of the card.
 class _ChildRow extends StatelessWidget {
-  const _ChildRow({required this.name, required this.buttons, this.note});
+  const _ChildRow({required this.name, required this.buttons, this.note, this.extra});
 
   final String name;
   final List<Widget> buttons;
   final Widget? note;
+
+  /// A row of its own under everything else (the languages button).
+  final Widget? extra;
 
   /// What the two buttons and the gap need, at a text scale of 1.
   static const double _buttonsWidth = 190;
@@ -450,6 +470,7 @@ class _ChildRow extends StatelessWidget {
               ],
             ),
           ?note,
+          if (extra != null) ...<Widget>[const SizedBox(height: 4), extra!],
         ],
       );
     },

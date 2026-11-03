@@ -92,6 +92,7 @@ export type RuleReason =
   | "kill_switch"
   | "not_configured"
   | "item_not_allowed"
+  | "course_not_allowed"
   | "session_cap"
   | "day_cap"
   | "prefetch_cap"

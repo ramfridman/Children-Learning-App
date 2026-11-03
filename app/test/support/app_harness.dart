@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
 import 'package:nitznutz/app/app.dart';
 import 'package:nitznutz/app/companion.dart';
+import 'package:nitznutz/app/language_providers.dart';
 import 'package:nitznutz/app/sync_providers.dart';
 import 'package:nitznutz/app/tutor_providers.dart';
 import 'package:nitznutz/app/voice_input.dart';
@@ -31,6 +32,7 @@ import 'fake_speech.dart';
 import 'fakes.dart';
 import 'security_fakes.dart';
 import 'voice_fixtures.dart';
+import 'sample_pack.dart';
 import 'starter.dart';
 
 const String testPin = '4831';
@@ -145,6 +147,14 @@ class AppRig {
   /// The pack the app plays, when a test needs a different one (the bundled starter pack when null).
   final PackContent? content;
 
+  /// The language courses whose signed pack is installed and verified on this phone (the fixture pack of each). None by default:
+  /// a language is on in the settings, but gets a door and an island only with its pack (L0, docs/languages/frame.md 1.1). A
+  /// test that wants the island sets this before it pumps.
+  List<String> installedLanguages = const <String>[];
+
+  /// While set and not completed, the phone is still looking at its installed language packs.
+  Completer<void>? holdLanguagePacks;
+
   /// How long the server takes to answer the helper switch (the first call after the function slept).
   final Duration switchAnswersAfter;
 
@@ -165,6 +175,7 @@ class AppRig {
     int ageBand = 1,
     String avatar = 'avatar-noa',
     bool warmUp = false,
+    String id = 'p-1',
   }) async {
     // The warm-up game (M9) is off in the tests that are about something else; its own tests turn it on.
     await db.putSetting('warm_up', warmUp ? 'on' : 'off');
@@ -178,7 +189,7 @@ class AppRig {
     ).setPin(testPin);
     await db.addProfile(
       ProfilesCompanion.insert(
-        id: 'p-1',
+        id: id,
         name: name,
         avatar: avatar,
         addressForm: 'f',
@@ -233,6 +244,13 @@ class AppRig {
         onEvent: (String k, String d) => db.recordEvent(k, DateTime.utc(2026, 10, 26), detail: d),
       ),
     ),
+    // The language packs are the rig's own, never the installer's folder (that needs the platform's files).
+    languagePacksProvider.overrideWith((Ref ref) async {
+      if (holdLanguagePacks != null) await holdLanguagePacks!.future;
+      return <String, PackContent>{
+        for (final String c in installedLanguages) c: PackContent.fromPack(SamplePack.language(c).verified()),
+      };
+    }),
     ...extraOverrides,
   ];
 
