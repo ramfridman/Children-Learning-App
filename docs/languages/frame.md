@@ -1,6 +1,6 @@
 # The Languages category: the shared frame
 
-Owner: **curriculum-expert** (head of curriculum). Date: 2026-11-03. Status: **plan for the owner's OK. Nothing here is built.**
+Owner: **curriculum-expert** (head of curriculum). Date: 2026-11-03. Status: **approved by the owner on 2026-11-03 (§8). Nothing here is built.** The catalogue (§4) was settled the same day, after the three Band A content batches (§4.4); the engine rules are also in `docs/curriculum.md` §10.9.
 The three courses (`english/`, `hebrew/`, `russian/`) are owned by their teachers. This file owns what they share: where the category sits in the app, one engine with a course id, one set of templates, placement, mastery, revisits and session shape, one misconception catalogue format, and the order of the milestones. It applies the owner's 27 decisions (`decisions-2026-11-03.md`, all APPROVED, three CHANGED).
 
 Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each course's `syllabus.md` and `templates.md`, `docs/research/{english,hebrew,russian}-course-2026-11-03.md`, `docs/curriculum.md` §5.7 and §10.
@@ -45,7 +45,7 @@ Read with: `README.md` (the category's rules), `decisions-2026-11-03.md`, each c
   - This is a change to PLAN.md › "Every character speaks in its own voice, everywhere". The orchestrator updates PLAN.md once the owner approves this frame.
 - **Clips.** Every mixed line is **two clips**, a Hebrew frame clip and a target clip, played in sequence (the teachers' S3, `pronunciation-spec` §3). A target clip is reusable, and its pronunciation spec belongs to its teacher.
 - **If no single voice is excellent in both languages** (the D6 fallback), the frame accepts **two characters**: a Hebrew-speaking host and a native-speaking puppet friend. Never one character with two voices, because a voice change must be visible as a change of speaker. This is also the common "one person, one language" practice of bilingual homes. The evidence that children *need* it is mixed, so it is a fallback, not a goal.
-- **The address form** (masculine, feminine, plural) follows the child's profile in the Hebrew frame, as everywhere. Target-language lines keep the teachers' gender rules (the Russian voice never reveals its own gender, syllabus §6).
+- **The address form.** The recorded Hebrew frame lines are plural and gender-neutral for every profile, like every core line of the app (the hebrew-text-editor's rule, `docs/agents/hebrew-notes.md` §9.1: one clip per line, and no first-person verb or adjective with a gender, so any voice can say them). The profile's address form (masculine, feminine, plural) applies only to the AI tutor, which is off in language lessons (§1.6). Target-language lines keep the teachers' gender rules (the Russian voice never reveals its own gender, syllabus §6).
 
 ### 1.4 The parent area: a language on or off, and progress per language
 **Controls** (one page per language, in the existing Controls area):
@@ -114,7 +114,7 @@ These merge the teachers' cross-cutting needs: English S1 to S8, Russian §1, an
 | F2 | **Course fonts.** All text tiles go through `AppText`, with the nikud rules: line height 1.7 or more, no letter spacing. | eng: the Latin teaching font (single-storey a and g, clear b d p q; D8). rus: the Cyrillic font (D1). heb: Heebo if the design audit passes, else one open-licensed teaching font (D24) | eng S4; rus §1.1; heb voice-brief §6 |
 | F3 | **Two-clip lines.** A Hebrew frame clip and a target clip in sequence, from one voice id or from two (§1.3). | all | eng S3; rus §1.3 |
 | F4 | **Course id** in the engine, packs, progress and sync (§1.5). | all | eng S7; heb Q4 |
-| F5 | **Content checks in the validator**: script per course (Latin; Cyrillic, plus U+0301 only where a skill shows stress; Hebrew with nikud from the editor's tables); ё never replaced by е, and no stress mark on ё; **decodable check** (every reading word uses only taught graphemes, or is a taught tricky word, per step or group); every item has at least two tagged distractors; personal-turn rules (§5.2). | all | rus §1.4; eng LT10 note; heb §3 |
+| F5 | **Content checks in the validator**: script per course (Latin; Cyrillic, plus U+0301 only where a skill shows stress; Hebrew with nikud from the editor's tables); ё never replaced by е, and no stress mark on ё; **decodable check** (every reading word uses only taught graphemes, or is a taught tricky word, per step or group); every distractor is tagged with a tag of its own course that is in the catalogue (§4.2) and is not an accent tag; the distractor rule of §2.3 (at least two tagged distractors, and the 2-choice rule); personal-turn rules (§5.2). | all | rus §1.4; eng LT10 note; heb §3 |
 | F6 | **Letter stroke data** per script, in the trace box (100 × 100), with start, direction and order, and the guide lines of the script. | eng: 26 lowercase and 26 capitals, four lines. rus: 33 capitals and 33 small, ё and й marks as their own strokes. heb: 27 print forms (22 letters and 5 finals) and 27 script forms, with the hanging top line and the "basement" for ק ך ן ף ץ. The design-director draws all paths | eng S8; rus T04; heb H4(a) |
 | F7 | **On-device recogniser per language** and the per-word matcher (§5.1). | heb: the existing `zipformer2-66m-streaming-he`. eng, rus: new models (the owner's OK for each; security review) | eng S6; rus R8; heb N6 |
 | F8 | **The Languages land, its doors and the parent pages** (§1.1 to §1.4). | all | heb Q4 |
@@ -123,7 +123,7 @@ These merge the teachers' cross-cutting needs: English S1 to S8, Russian §1, an
 ### 2.2 Existing templates reused (with F1 to F3 and the LS01 extension only)
 | Template | Language use | Courses |
 |---|---|---|
-| T02 `count_tap` | Counting in the target language (number clips per tap) | eng (A-04, B-02), rus (A-10, A-11) |
+| T02 `count_tap` | Counting in the target language (number clips per tap). **In a course, the counting taps are practice, never scored** (decided 2026-11-03): a skipped or double-tapped object is a counting error, which is maths and not the language, and the child selects no word while the app plays the clips. The scored step is T02's own last step, "how many?", answered from 3 **number-word options heard on a tap** (LS01 c); its distractors carry the course's number-word tags (rus `M-RUS-NUMWORD`, `-SOUND`; eng `M-ENG-SEM`). Representation `concrete` | eng (A-04, B-02), rus (A-10, A-11) |
 | T18 `clock_set` | "It's three o'clock." | eng (C-20) |
 | `give_n` | "Дай мне три яблока" (later) | rus (C-28, optional) |
 | T14 `flash` | **Never for reading, in any course.** No exposure limit, no "quick look" with a timer. The English "the word stays until tapped" idea is a mode of LS01, not of `flash`. | none |
@@ -135,9 +135,18 @@ Every template keeps the rules of curriculum §6.1, without exception:
 - the tap path always works, and the microphone is optional;
 - a three-step hint ladder in which **level 2 changes the representation** and level 3 is "show me";
 - a replay button, big targets, no timer;
-- at least two tagged distractors;
+- at least two tagged distractors (every distractor tagged), with the 2-choice rule below;
 - the course's direction (F1) and font (F2);
 - Band-A presentation allows at most 3 choices and one instruction at a time.
+
+**The 2-choice rule** (decided 2026-11-03, the Russian teacher's question; it matches what all three Band A batches do):
+- An item with **3 choices** has two tagged distractors. The two may carry the **same tag** when one misconception explains both (one beat more and one beat fewer are both `M-HEB-SYLL`).
+- An item with **2 choices** (yes / no, same / different, two names, the guided step of a 3-choice item) has **one** distractor, and it is tagged. This is allowed only when:
+  1. the skill also has items with 3 choices, **or** the skill is binary by nature (yes / no, same / different), and its items are balanced (as many "yes" as "no" answers right, as many "same" as "different");
+  2. 2-choice items are **at most half of the skill's scored items** (the authoring side of the engine's 2-choice guard, curriculum §10.2, which caps them at 50% of the success evidence);
+  3. a 2-choice item is **never a check on its own**. An understanding check or a delayed check uses a 3-choice item, or, in a binary skill, a **balanced pair** (one item of each answer) that passes only if both are right (chance 1 in 4, not 1 in 2).
+- A 2-choice item allows one retry only (curriculum §9.2), and a guided 2-choice item (the Hebrew "hidden second distractor") is a scaffold step that the engine credits as a 2-choice item.
+- **Free-response modes** (LS02 trace, LS03 drum, LS06 build) have no fixed distractors. Their classifiers map each error they can name to a tag; an error they cannot name (a beat count off by 2, leaving a trace path) is a retry with no tag and no misconception evidence.
 
 Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
 
@@ -149,6 +158,7 @@ Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
   - (d) **A text stem:** a written word or sentence in the scene, to read, with picture options ("read and choose"). The "read it to me" button is hint level 1 and lowers the credit to 0.8.
   - (e) **Cloze:** a sentence with a gap and 3 word tiles.
   - (f) **Sequence:** picture or text tiles into slots in the course's direction (the Hebrew H6, ordering a story).
+  - (g) **A caption after the answer** (decided 2026-11-03 for the Russian reader route; wave 1, last): once the child's answer to a listening item is accepted, the target word appears under its picture, in the course's font, with no demand and no score. It is shown **only after** the answer, so the item stays a listening item, and never under Band A presentation (§3.1). Settings: a per-course, per-route flag (rus `reader` with Band B or C presentation; off for every other route); stress marks follow the route's display default (§3.3.7); a parent can turn it off. Why: seeing a new word's spelling while learning it helps children remember the word (orthographic facilitation, Rosenthal and Ehri 2008), and a reader of Russian gets this at no cost. It reuses LS01's text face (a), so it adds no template; if wave 1 runs late it is the first thing to leave for wave 2, and RUS-1 does not wait for it.
 - **Per language.**
   - Direction and font: F1 and F2.
   - heb: nikud always, from the editor's tables. Option sizes are never below the band's reading size, which the design-director sets.
@@ -180,7 +190,7 @@ Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
   - (later) puts letters on the tokens.
 - **Drum mode** (Band A): tap a drum once per syllable. Choosing "the strip with 3 beats" is LS01.
 - **The unit per language.** eng: the phoneme (digraphs are one token). heb: the syllable, then the CV unit or a consonant (body plus coda, research R §4). rus: the phoneme, with colour.
-- **Classifiers.** A count of ±1, mapped to the course's tag: one token per syllable (`M-ENG-SEG-SYLL`, `M-HEB-SYLL`); a dropped cluster consonant (`M-ENG-CLUSTER`); a vowel coloured as a consonant; soft taken for hard (`M-RUS-HARDSOFT`); the last syllable stressed by default (`M-RUS-STRESS`); a CV given for a C (`M-HEB-CV-FOR-C`).
+- **Classifiers.** A count of ±1, mapped to the course's tag: in drum mode, eng one beat more → `M-ENG-SYLL`, one beat fewer → `M-ENG-WEAK-SYLL`; heb and rus either way → `M-HEB-SYLL`, `M-RUS-SYLL` (a count off by 2 or more is a retry with no tag); one token per syllable (`M-ENG-SEG-SYLL`, `M-HEB-SYLL`); a dropped cluster consonant (`M-ENG-CLUSTER`); a vowel coloured as a consonant; soft taken for hard (`M-RUS-HARDSOFT`); the last syllable stressed by default (`M-RUS-STRESS`); a CV given for a C (`M-HEB-CV-FOR-C`).
 - **Response.** The count and the colours: `n=3.rbg`.
 - **Courses.** All three: eng A-14, B-15, C-05 (LT06); heb A-08, A-09, B-08, B-12, B-13 (N2); rus A-18, A-19, B-09, B-12 to B-17 (R1).
 
@@ -310,7 +320,7 @@ Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
 | Wave | When | Templates | Why first |
 |---|---|---|---|
 | 0 | Before any course content | F1 to F9 | Everything depends on them |
-| 1 (Band A of all three) | With the first course milestones | **LS01** → **LS09** (with the F7 recognisers) → **LS08** `listen` and `dialogic` → **LS11** → **LS12** → **LS10** → **LS03** drum mode → **LS13** | The owner's Q4: Band A of every land first. Band A in all three courses is listening, speaking, stories, songs and sound play. LS02 trace for Hebrew A-14 already exists. Until LS13 exists, the parent chooses the start ("from the beginning" or one step up). |
+| 1 (Band A of all three) | With the first course milestones | **LS01** → **LS09** (with the F7 recognisers) → **LS08** `listen` and `dialogic` → **LS11** → **LS12** → **LS10** → **LS03** drum mode → **LS13** → LS01 (g) caption after the answer (droppable to wave 2) | The owner's Q4: Band A of every land first. Band A in all three courses is listening, speaking, stories, songs and sound play. LS02 trace for Hebrew A-14 already exists. Until LS13 exists, the parent chooses the start ("from the beginning" or one step up). |
 | 2 (Band B) | Before the first letter group | **LS02** copy and memory, with F6 stroke data → **LS03** full → **LS05** → **LS04** → **LS06** | D16: a letter's writing is introduced with its sound and name, so LS02 must be ready for the first letter. LS05 is Hebrew's core screen; LS04 and LS06 serve all three. |
 | 3 (Band C) | Before sentences and texts | **LS07** → **LS08** `read_first` and `read_along` → (later) **LS14** | Sentences and texts come in stage 6 and later (eng), S9 and later (heb), and group 5 and later (rus) |
 
@@ -413,6 +423,9 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 - **What it never changes:** mastery rules.
 
 **3.3.8 Speech evidence** (§5.1): limited, positive-only evidence for speaking skills, and none for any reading skill.
+- **A speaking skill never blocks progress** (added 2026-11-03). The microphone is the parent's privacy choice, so a child must not be held back by it. When a speaking (SPK) skill is a prerequisite (eng A-12 → B-11; eng A-17 → B-08; rus A-01 → A-03, A-14, A-17; rus B-08 → C-27, C-30; checked by script on the three syllabi), it counts as met at **"practised"**: its practice set done (every word of its set met at least once in LS09, or by the "I said it" tap), whatever the microphone setting. Its own mastery is unchanged (§5.1).
+
+**3.3.9 Two-choice items:** the rule of §2.3. The engine's 2-choice guard (curriculum §10.2) is unchanged; a check in a binary skill is a balanced pair.
 
 ### 3.4 Revisits
 - **The schedule** is that of curriculum §5.7, unchanged: FSRS, about 1, 3, 7, 21 and 60 days, checks of 1 to 3 items interleaved into play with a different item and representation, and the re-teach after a failed check.
@@ -462,10 +475,10 @@ Every tag of every course becomes one record with these fields.
 | Field | Meaning |
 |---|---|
 | `tag` | The teacher's id (`M-ENG-V-W`) |
-| `id` | The engine id `<course>.<strand>.<slug>`: the course; the strand of the first skill that uses it (lowercase: `lis`, `spk`, `pa`, `ph`, `rd`, `wr`; `ol`, `pk`, `dec`; `voc`, `grm`, `pho`, `let`, `rea`, `wri`); the slug is the tag's remainder in lowercase with `-` → `_`. Example: `M-RUS-HARDSOFT` → `rus.pho.hardsoft` |
+| `id` | The engine id `<course>.<strand>.<slug>`: the course; the strand of the first skill that uses it (lowercase: eng `lis`, `spk`, `pa`, `ph`, `rd`, `wr`; heb `ol`, `pa`, `pk`, `dec`, `wr`; rus `lis`, `spk`, `voc`, `grm`, `pho`, `let`, `rea`, `wri`, `num`); the slug is the tag's remainder in lowercase with `-` → `_`. Example: `M-RUS-HARDSOFT` → `rus.pho.hardsoft`. **Precisely:** "the first skill" is the lowest skill id (band letter, then number) that names the tag in its syllabus row or in a content-batch item; a skill with a two-part strand (`LIS/SPK`, `PHO/LIS`) gives its first part; where no row names the tag (the Russian skill rows list no tags), the first skill is the one the tag's own row or template classifier points to (listed in §4.2). **An id is frozen once assigned**: a later change of skill order or strand never renames it |
 | `course` | `eng`, `heb` or `rus` |
 | `kind` | **diagnostic** (a wrong choice reveals it and counts as misconception evidence); **on-the-way** (accepted as success in early skills, §3.3.5; diagnostic in later ones); **accent** (speech only: never marked, never evidence, it only steers listening practice); **practice** (no signal in the app) |
-| `family` | One of the 14 cross-course families below, for the parent view and shared re-teach screens. Never used to move evidence between courses |
+| `family` | One of the 15 cross-course families below, for the parent view and shared re-teach screens. Never used to move evidence between courses |
 | `skills` | The skills it traces back to, most likely first |
 | `signal` | The distractor or classifier that catches it |
 | `reteach` | The **level-2 representation** that repairs it (a different representation from the item's) |
@@ -486,88 +499,238 @@ Every tag of every course becomes one record with these fields.
 | **RHYME** | rhyme |
 | **VOWEL** | vowel signs and vowel letters |
 | **CODE** | spelling and reading conventions |
-| **GRAMMAR** | grammar |
-| **PRINT** | case, punctuation, spaces |
-| **GUESS** | guessing strategies |
+| **GRAMMAR** | grammar, and how a sentence is said (word order, agreement, place words, the plural, ты / вы) |
+| **PRINT** | concepts of print: what print is (letters, not numerals, shapes or pictures, carry the words read), case, punctuation, spaces |
+| **GUESS** | answering from **part of the evidence**: the first letter, part of a word's sound, a familiar picture, a name's length, the habit of always saying "yes" |
+| **MEANING** | word meanings, categories and story understanding: a meaning neighbour taken for the word, grouping by theme or look instead of kind, who did what and in what order in a story (added 2026-11-03, §4.4) |
 | **ACCENT** | speech-only differences |
 | **FLUENCY** | reading fluency |
 
-### 4.2 The catalogue (signals and re-teach as in each syllabus; this table adds kind and family)
-The teachers' tables remain the source for the signal and the re-teach. Gaps found are listed in §4.3.
+### 4.2 The catalogue (kind, family and engine id of every tag)
+**Settled 2026-11-03**, after the three Band A batches (decisions and reasons in §4.4). The teachers' tables remain the source for each tag's signal, re-teach and `revisitWith` (eng syllabus §8, heb syllabus §5, rus syllabus §11); these tables add the kind, the family and the engine id. Each tag is defined **exactly once**.
 
-**English** (52 defined; syllabus §8):
+**How the tables are made and checked.** A script reads the three syllabi and Band A batches, finds every tag a skill row or a batch item uses (the Hebrew batch's short tags, `[SEM]`, are `M-HEB-SEM`; `M-HEB-SHAPE-*` is the eight pair tags), works out each engine id by the §4.1 rule, and checks: every tag used is in exactly one row; every engine id is unique; every kind and family is in §4.1; no accent tag sits on a batch distractor. Run on 2026-11-03: **127 tags** (eng 56, heb 45, rus 26), **49 of them used in the Band A batches**; no duplicate, no unknown tag, no accent tag on a distractor. One finding: `M-RUS-COUNT` (20 uses in the Russian batch) is not adopted (§4.4), so those items change (§4.5). The script is to become a qa-engineer test over the content packs (§4.5).
 
-| Tag | Kind | Family | | Tag | Kind | Family |
-|---|---|---|---|---|---|---|
-| M-ENG-V-W | diagnostic | CONTRAST | | M-ENG-E-SILENT | diagnostic | CODE |
-| M-ENG-TH | diagnostic | CONTRAST | | M-ENG-OPEN | diagnostic | CODE |
-| M-ENG-IH | diagnostic | CONTRAST | | M-ENG-DIGRAPH-SPLIT | diagnostic | CODE |
-| M-ENG-AE | accent | ACCENT | | M-ENG-VOWELTEAM-SPLIT | diagnostic | CODE |
-| M-ENG-AE-E | diagnostic | CONTRAST | | M-ENG-ER-SPELL | on-the-way → diagnostic from C-09 | CODE |
-| M-ENG-UH | diagnostic | CONTRAST | | M-ENG-OW | diagnostic | CODE |
-| M-ENG-O | accent | ACCENT | | M-ENG-X | diagnostic | CODE |
-| M-ENG-SCHWA | accent | ACCENT | | M-ENG-Y-J | diagnostic | CODE |
-| M-ENG-H | accent | ACCENT | | M-ENG-S-Z | diagnostic (listening sort, C-12); accent in speech | CONTRAST |
-| M-ENG-R | accent | ACCENT | | M-ENG-PLURAL | diagnostic | GRAMMAR |
-| M-ENG-NG | diagnostic | CONTRAST | | M-ENG-ARTICLE | diagnostic | GRAMMAR |
-| M-ENG-SH-S | diagnostic | CONTRAST | | M-ENG-COPULA | diagnostic | GRAMMAR |
-| M-ENG-CLUSTER | diagnostic | SEGMENT | | M-ENG-ADJ-ORDER | diagnostic | GRAMMAR |
-| M-ENG-SYLL | diagnostic | SEGMENT | | M-ENG-DO | diagnostic | GRAMMAR |
-| M-ENG-ADDVOWEL | diagnostic (blending) | SEGMENT | | M-ENG-WORDORDER-Q | diagnostic | GRAMMAR |
-| M-ENG-LETTERNAME | diagnostic | NAME | | M-ENG-PREP | diagnostic | GRAMMAR |
-| M-ENG-DIR | diagnostic | DIR | | M-ENG-CASE | diagnostic | PRINT |
-| M-ENG-BD | diagnostic | SHAPE | | M-ENG-PUNCT | diagnostic | PRINT |
-| M-ENG-LOOKALIKE | diagnostic | SHAPE | | M-ENG-SPACE | diagnostic | PRINT |
-| M-ENG-VOWEL-SKIP | diagnostic | VOWEL | | M-ENG-STROKE-CW | diagnostic | STROKE |
-| M-ENG-FIRSTLETTER-GUESS | diagnostic | GUESS | | M-ENG-STROKE-RTL | diagnostic | STROKE |
-| M-ENG-C-K | on-the-way → diagnostic once the rule card is taught | CODE | | M-ENG-LINES | diagnostic | STROKE |
-| M-ENG-THE | diagnostic | CODE | | M-ENG-RHYME-ONSET | diagnostic | RHYME |
-| M-ENG-SEG-SYLL | diagnostic | SEGMENT | | M-ENG-BLEND-LAST | diagnostic | SEGMENT |
-| M-ENG-YESNO | diagnostic (tag on the "yes" distractor of a "no" item) | GUESS | | M-ENG-L1-GUESS | diagnostic | GUESS |
-| M-ENG-WORD-BY-WORD | practice | FLUENCY | | M-ENG-STORY-RECALL | diagnostic | GUESS |
+"First skill" is the skill that fixes the engine id's strand. "Band A batch" marks the tags the batches use today. Rows are grouped by family.
 
-**Hebrew** (26 defined; syllabus §5):
+**English** (56 tags; syllabus §8):
 
-| Tag | Kind | Family | | Tag | Kind | Family |
-|---|---|---|---|---|---|---|
-| M-HEB-SHAPE-BK, -DR, -HXT, -VZN, -SM, -AZ, -GN, -TM | diagnostic (`revisitWith` the pair) | SHAPE | | M-HEB-MATER | diagnostic | VOWEL |
-| M-HEB-DOT | diagnostic | CODE | | M-HEB-SHVA | diagnostic | VOWEL |
-| M-HEB-NAMESOUND | diagnostic | NAME | | M-HEB-PARTIAL | on-the-way in B-28 → diagnostic in C-19 | SEGMENT |
-| M-HEB-VOWEL-SKIP | diagnostic | VOWEL | | M-HEB-HOMOPHONE | on-the-way in B-28, C-19 → diagnostic in C-21, C-22 | CODE |
-| M-HEB-VOWEL-OU | diagnostic | VOWEL | | M-HEB-SYLL | diagnostic | SEGMENT |
-| M-HEB-VOWEL-SHAPE | diagnostic | VOWEL | | M-HEB-ALLIT | diagnostic | RHYME |
-| M-HEB-ORDER | diagnostic | DIR | | M-HEB-CV-FOR-C | diagnostic | SEGMENT |
-| M-HEB-FINAL | diagnostic (the final form is automatic in B-28) | CODE | | M-HEB-STROKE | diagnostic | STROKE |
-| M-HEB-AGREE | diagnostic | GRAMMAR | | M-HEB-MIRROR | diagnostic | SHAPE |
-| M-HEB-SEM | diagnostic | GUESS | | | | |
+<!-- catalogue:eng:start -->
+| Tag | Engine id | Kind | Family | First skill | Band A batch |
+|---|---|---|---|---|---|
+| M-ENG-DIR | `eng.ph.dir` | diagnostic | DIR | B-18 |  |
+| M-ENG-WAS-SAW | `eng.rd.was_saw` | diagnostic | DIR | C-11 |  |
+| M-ENG-LETTERNAME | `eng.pa.lettername` | diagnostic | NAME | B-13 |  |
+| M-ENG-BD | `eng.ph.bd` | diagnostic | SHAPE | B-17 |  |
+| M-ENG-LOOKALIKE | `eng.ph.lookalike` | diagnostic | SHAPE | B-16 |  |
+| M-ENG-LINES | `eng.wr.lines` | diagnostic | STROKE | B-19 |  |
+| M-ENG-STROKE-CW | `eng.wr.stroke_cw` | diagnostic | STROKE | B-19 |  |
+| M-ENG-STROKE-RTL | `eng.wr.stroke_rtl` | diagnostic | STROKE | B-19 |  |
+| M-ENG-AE-E | `eng.lis.ae_e` | diagnostic | CONTRAST | B-04 |  |
+| M-ENG-IH | `eng.lis.ih` | diagnostic | CONTRAST | A-05 |  |
+| M-ENG-NG | `eng.lis.ng` | diagnostic | CONTRAST | B-05 |  |
+| M-ENG-S-Z | `eng.rd.s_z` | diagnostic (listening sort, C-12); accent in speech | CONTRAST | B-21 |  |
+| M-ENG-SH-S | `eng.lis.sh_s` | diagnostic | CONTRAST | B-03 |  |
+| M-ENG-TH | `eng.lis.th` | diagnostic | CONTRAST | A-04 |  |
+| M-ENG-UH | `eng.ph.uh` | diagnostic | CONTRAST | C-01 |  |
+| M-ENG-V-W | `eng.lis.v_w` | diagnostic | CONTRAST | B-02 |  |
+| M-ENG-ADDVOWEL | `eng.spk.addvowel` | diagnostic | SEGMENT | A-12 |  |
+| M-ENG-BLEND-LAST | `eng.pa.blend_last` | diagnostic | SEGMENT | B-14 |  |
+| M-ENG-CLUSTER | `eng.ph.cluster` | diagnostic | SEGMENT | C-05 |  |
+| M-ENG-SEG-SYLL | `eng.pa.seg_syll` | diagnostic | SEGMENT | B-15 |  |
+| M-ENG-SYLL | `eng.pa.syll` | diagnostic | SEGMENT | A-14 | yes |
+| M-ENG-WEAK-SYLL | `eng.pa.weak_syll` | diagnostic | SEGMENT | A-14 | yes |
+| M-ENG-RHYME-ONSET | `eng.pa.rhyme_onset` | diagnostic | RHYME | B-12 |  |
+| M-ENG-VOWEL-SKIP | `eng.ph.vowel_skip` | diagnostic | VOWEL | B-18 |  |
+| M-ENG-C-K | `eng.ph.c_k` | on-the-way → diagnostic once the rule card is taught | CODE | B-17 |  |
+| M-ENG-DIGRAPH-SPLIT | `eng.ph.digraph_split` | diagnostic | CODE | C-03 |  |
+| M-ENG-E-SILENT | `eng.ph.e_silent` | diagnostic | CODE | C-08 |  |
+| M-ENG-ER-SPELL | `eng.ph.er_spell` | on-the-way → diagnostic from C-09 | CODE | C-09 |  |
+| M-ENG-OPEN | `eng.ph.open` | diagnostic | CODE | C-06 |  |
+| M-ENG-OW | `eng.ph.ow` | diagnostic | CODE | C-10 |  |
+| M-ENG-THE | `eng.rd.the` | diagnostic | CODE | B-21 |  |
+| M-ENG-VOWELTEAM-SPLIT | `eng.ph.vowelteam_split` | diagnostic | CODE | C-07 |  |
+| M-ENG-X | `eng.ph.x` | diagnostic | CODE | C-02 |  |
+| M-ENG-Y-J | `eng.ph.y_j` | diagnostic | CODE | C-02 |  |
+| M-ENG-ADJ-ORDER | `eng.lis.adj_order` | diagnostic | GRAMMAR | B-10 |  |
+| M-ENG-ARTICLE | `eng.lis.article` | diagnostic | GRAMMAR | A-11 |  |
+| M-ENG-COPULA | `eng.spk.copula` | diagnostic | GRAMMAR | A-17 |  |
+| M-ENG-DO | `eng.spk.do` | diagnostic | GRAMMAR | B-08 |  |
+| M-ENG-PLURAL | `eng.ph.plural` | diagnostic | GRAMMAR | C-12 |  |
+| M-ENG-PREP | `eng.lis.prep` | diagnostic | GRAMMAR | B-06 |  |
+| M-ENG-WORDORDER-Q | `eng.wr.wordorder_q` | diagnostic | GRAMMAR | C-18 |  |
+| M-ENG-CASE | `eng.wr.case` | diagnostic | PRINT | C-13 |  |
+| M-ENG-PUNCT | `eng.wr.punct` | diagnostic | PRINT | C-14 |  |
+| M-ENG-SPACE | `eng.wr.space` | diagnostic | PRINT | C-14 |  |
+| M-ENG-FIRSTLETTER-GUESS | `eng.ph.firstletter_guess` | diagnostic | GUESS | B-18 |  |
+| M-ENG-L1-GUESS | `eng.lis.l1_guess` | diagnostic | GUESS | A-01 | yes |
+| M-ENG-YESNO | `eng.lis.yesno` | diagnostic | GUESS | A-16 | yes |
+| M-ENG-SEM | `eng.lis.sem` | diagnostic | MEANING | A-01 | yes |
+| M-ENG-STORY-RECALL | `eng.lis.story_recall` | diagnostic | MEANING | A-15 | yes |
+| M-ENG-AE | `eng.lis.ae` | accent | ACCENT | A-05 |  |
+| M-ENG-H | `eng.lis.h` | accent | ACCENT | A-01 |  |
+| M-ENG-O | `eng.ph.o` | accent | ACCENT | B-17 |  |
+| M-ENG-R | `eng.lis.r` | accent | ACCENT | A-03 |  |
+| M-ENG-SCHWA | `eng.lis.schwa` | accent | ACCENT | A-07 |  |
+| M-ENG-W | `eng.lis.w` | accent | ACCENT | A-04 |  |
+| M-ENG-WORD-BY-WORD | `eng.rd.word_by_word` | practice | FLUENCY | C-24 |  |
+<!-- catalogue:eng:end -->
 
-**Russian** (14 defined and 2 named without a row; syllabus §11):
+**Hebrew** (45 tags: 26 from the first syllabus, 18 added for Band A, and `M-HEB-SEM-READ` split from `M-HEB-SEM`; syllabus §5):
 
-| Tag | Kind | Family | | Tag | Kind | Family |
-|---|---|---|---|---|---|---|
-| M-RUS-HARDSOFT | diagnostic | CONTRAST | | M-RUS-YOT | diagnostic | CODE |
-| M-RUS-YI | diagnostic | CONTRAST | | M-RUS-NAME | diagnostic | NAME |
-| M-RUS-REDUCE | on-the-way → diagnostic from C-21 (and in C-11 listening) | CODE | | M-RUS-HUSH | on-the-way → diagnostic from C-18 | CODE |
-| M-RUS-STRESS | diagnostic | CONTRAST | | M-RUS-DEVOICE | on-the-way → diagnostic from C-20 | CODE |
-| M-RUS-SHAPE | diagnostic (`revisitWith` the pair) | SHAPE | | M-RUS-GENDER | diagnostic | GRAMMAR |
-| M-RUS-LATIN | diagnostic | SHAPE | | M-RUS-ACC | diagnostic | GRAMMAR |
-| M-RUS-RTL | diagnostic | DIR | | M-RUS-NUMNOUN | diagnostic | GRAMMAR |
-| M-RUS-R | accent (row missing) | ACCENT | | M-RUS-SOFTSIGN | diagnostic from C-17 (row missing) | CODE |
+<!-- catalogue:heb:start -->
+| Tag | Engine id | Kind | Family | First skill | Band A batch |
+|---|---|---|---|---|---|
+| M-HEB-ORDER | `heb.pk.order` | diagnostic | DIR | A-11 | yes |
+| M-HEB-NAMESOUND | `heb.pk.namesound` | diagnostic | NAME | B-14 |  |
+| M-HEB-MIRROR | `heb.wr.mirror` | diagnostic | SHAPE | B-25 |  |
+| M-HEB-SHAPE-AZ | `heb.pk.shape_az` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-SHAPE-BK | `heb.pk.shape_bk` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-SHAPE-DR | `heb.pk.shape_dr` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-SHAPE-GN | `heb.pk.shape_gn` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-SHAPE-HXT | `heb.pk.shape_hxt` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-SHAPE-SM | `heb.pk.shape_sm` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-SHAPE-TM | `heb.pk.shape_tm` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-SHAPE-VZN | `heb.pk.shape_vzn` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
+| M-HEB-STROKE | `heb.wr.stroke` | diagnostic | STROKE | A-14 | yes |
+| M-HEB-BLEND-FIRST | `heb.pa.blend_first` | diagnostic | SEGMENT | A-09 | yes |
+| M-HEB-BLEND-LAST | `heb.pa.blend_last` | diagnostic | SEGMENT | A-09 | yes |
+| M-HEB-CV-FOR-C | `heb.pa.cv_for_c` | diagnostic | SEGMENT | B-11 |  |
+| M-HEB-PARTIAL | `heb.wr.partial` | on-the-way in B-28 → diagnostic in C-19 | SEGMENT | B-28 |  |
+| M-HEB-SYLL | `heb.pa.syll` | diagnostic | SEGMENT | A-08 | yes |
+| M-HEB-ALLIT | `heb.pa.allit` | diagnostic | RHYME | A-06 | yes |
+| M-HEB-MATER | `heb.dec.mater` | diagnostic | VOWEL | C-01 |  |
+| M-HEB-SHVA | `heb.dec.shva` | diagnostic | VOWEL | C-05 |  |
+| M-HEB-VOWEL-OU | `heb.dec.vowel_ou` | diagnostic | VOWEL | C-02 |  |
+| M-HEB-VOWEL-SHAPE | `heb.dec.vowel_shape` | diagnostic | VOWEL | C-03 |  |
+| M-HEB-VOWEL-SKIP | `heb.dec.vowel_skip` | diagnostic | VOWEL | B-19 |  |
+| M-HEB-DOT | `heb.dec.dot` | diagnostic | CODE | C-04 |  |
+| M-HEB-FINAL | `heb.pk.final` | diagnostic (the final form is automatic in B-28) | CODE | B-17 |  |
+| M-HEB-HOMOPHONE | `heb.wr.homophone` | on-the-way in B-28, C-19 → diagnostic in C-21, C-22 | CODE | B-28 |  |
+| M-HEB-AGREE | `heb.ol.agree` | diagnostic | GRAMMAR | B-03 |  |
+| M-HEB-PLURAL | `heb.ol.plural` | diagnostic | GRAMMAR | A-05 | yes |
+| M-HEB-PREP | `heb.ol.prep` | diagnostic | GRAMMAR | A-04 | yes |
+| M-HEB-ROLE-SWAP | `heb.ol.role_swap` | diagnostic | GRAMMAR | A-04 | yes |
+| M-HEB-PRINT-NUM | `heb.pk.print_num` | diagnostic | PRINT | A-10 | yes |
+| M-HEB-PRINT-PICTURE | `heb.pk.print_picture` | diagnostic | PRINT | A-12 | yes |
+| M-HEB-PRINT-SHAPE | `heb.pk.print_shape` | diagnostic | PRINT | A-10 | yes |
+| M-HEB-NAME-FIRST | `heb.pk.name_first` | diagnostic | GUESS | A-11 | yes |
+| M-HEB-NAME-LENGTH | `heb.pk.name_length` | diagnostic | GUESS | A-11 | yes |
+| M-HEB-SEM-READ | `heb.dec.sem_read` | diagnostic | GUESS | C-10 |  |
+| M-HEB-SOUNDALIKE | `heb.ol.soundalike` | diagnostic | GUESS | A-02 | yes |
+| M-HEB-CAT-ATYPICAL | `heb.ol.cat_atypical` | diagnostic | MEANING | A-03 | yes |
+| M-HEB-CAT-LOOK | `heb.ol.cat_look` | diagnostic | MEANING | A-03 | yes |
+| M-HEB-CAT-THEME | `heb.ol.cat_theme` | diagnostic | MEANING | A-03 | yes |
+| M-HEB-SEM | `heb.ol.sem` | diagnostic | MEANING | A-02 | yes |
+| M-HEB-STORY-ORDER | `heb.ol.story_order` | diagnostic | MEANING | A-13 | yes |
+| M-HEB-STORY-ROLE | `heb.ol.story_role` | diagnostic | MEANING | A-01 | yes |
+| M-HEB-STORY-SEEN | `heb.ol.story_seen` | diagnostic | MEANING | A-01 | yes |
+| M-HEB-STORY-WORLD | `heb.ol.story_world` | diagnostic | MEANING | A-01 | yes |
+<!-- catalogue:heb:end -->
+
+**Russian** (26 tags: 16 of syllabus §11 and 10 of the 11 proposed with the Band A batch):
+
+<!-- catalogue:rus:start -->
+| Tag | Engine id | Kind | Family | First skill | Band A batch |
+|---|---|---|---|---|---|
+| M-RUS-RTL | `rus.rea.rtl` | diagnostic | DIR | B-19 |  |
+| M-RUS-NAME | `rus.let.name` | diagnostic | NAME | B-18 |  |
+| M-RUS-LATIN | `rus.let.latin` | diagnostic | SHAPE | B-18 |  |
+| M-RUS-SHAPE | `rus.let.shape` | diagnostic (`revisitWith` the pair) | SHAPE | B-18 |  |
+| M-RUS-HARDSOFT | `rus.pho.hardsoft` | diagnostic | CONTRAST | A-20 | yes |
+| M-RUS-STRESS | `rus.pho.stress` | diagnostic | CONTRAST | B-17 |  |
+| M-RUS-YI | `rus.pho.yi` | diagnostic | CONTRAST | A-20 | yes |
+| M-RUS-NOTFIRST | `rus.pho.notfirst` | diagnostic | SEGMENT | A-19 | yes |
+| M-RUS-SYLL | `rus.pho.syll` | diagnostic | SEGMENT | A-18 | yes |
+| M-RUS-RHYME-ONSET | `rus.pho.rhyme_onset` | diagnostic | RHYME | A-17 | yes |
+| M-RUS-DEVOICE | `rus.wri.devoice` | on-the-way → diagnostic from C-20 | CODE | B-25 |  |
+| M-RUS-HUSH | `rus.wri.hush` | on-the-way → diagnostic from C-18 | CODE | B-25 |  |
+| M-RUS-REDUCE | `rus.wri.reduce` | on-the-way → diagnostic from C-21 (and in C-11 listening) | CODE | B-25 |  |
+| M-RUS-SOFTSIGN | `rus.let.softsign` | diagnostic in the C-02 ь items and from C-17 | CODE | C-02 |  |
+| M-RUS-YOT | `rus.let.yot` | diagnostic | CODE | C-02 |  |
+| M-RUS-ACC | `rus.grm.acc` | diagnostic | GRAMMAR | B-07 |  |
+| M-RUS-GENDER | `rus.grm.gender` | diagnostic | GRAMMAR | B-03 |  |
+| M-RUS-KTO | `rus.grm.kto` | diagnostic | GRAMMAR | A-12 | yes |
+| M-RUS-NUMNOUN | `rus.grm.numnoun` | diagnostic | GRAMMAR | C-28 |  |
+| M-RUS-TYVY | `rus.lis.tyvy` | diagnostic | GRAMMAR | A-01 | yes |
+| M-RUS-SOUND | `rus.voc.sound` | diagnostic | GUESS | A-02 | yes |
+| M-RUS-YESNO | `rus.grm.yesno` | diagnostic | GUESS | A-12 | yes |
+| M-RUS-NUMWORD | `rus.num.numword` | diagnostic | MEANING | A-10 | yes |
+| M-RUS-SEM | `rus.lis.sem` | diagnostic | MEANING | A-01 | yes |
+| M-RUS-SEQ | `rus.lis.seq` | diagnostic | MEANING | A-16 | yes |
+| M-RUS-R | `rus.lis.r` | accent | ACCENT | A-01 |  |
+<!-- catalogue:rus:end -->
+
+First skills set by hand (no skill row names these tags): `M-RUS-REDUCE`, `-DEVOICE`, `-HUSH` B-25 (the first LS06 skill that meets them as sound-right spellings); `-STRESS` B-17 (the "calling" skill of its re-teach); `-SHAPE`, `-LATIN`, `-NAME` B-18 (the first letter group); `-RTL` B-19 (the first LS04 slide); `-YOT`, `-SOFTSIGN` C-02 (я and ь are taught there); `-GENDER` B-03; `-ACC` B-07; `-NUMNOUN` C-28 (the skills of their re-teach); `-R` A-01 (the first say step); `M-HEB-SEM-READ` C-10 (the first reading item that uses it).
 
 **Rules for every record.**
 - **Accent tags** are never attached to a distractor and never reached by speech evidence (§5.1).
 - **Grammar tags of heritage speakers** (`M-RUS-ACC`, `-GENDER`, `-NUMNOUN`) get parent texts that respect the home variety: "the school form", never "wrong Russian".
 
 ### 4.3 Gaps found (to the teachers)
-| # | Course | Gap | Fix |
-|---|---|---|---|
-| G1 | eng | `M-ENG-W` is used (B-04, B-05, C-20) and has no row | Add a row (w said as v alone, outside minimal pairs) or fold it into `M-ENG-V-W` |
-| G2 | eng | `M-ENG-WAS-SAW` (C-11) has no row; it is written as an alias of `M-ENG-DIR` | Use `M-ENG-DIR` in C-11 |
-| G3 | eng | `M-ENG-AE / M-ENG-AE-E` share one row, but one is speech and one is choice | Two rows: AE accent, AE-E diagnostic |
-| G4 | rus | `M-RUS-R` and `M-RUS-SOFTSIGN` are named in §11 but have no row | Add both rows (signal, level-2 re-teach) |
-| G5 | heb | Shape cues are English placeholders (syllabus §11) | With the hebrew-text-editor, before the content batch |
-| G6 | all | No tag has `parentText` or `homeActivity` yet | Written with the content batch of each course, then by the editor |
-| G7 | rus | `RUS-C-14` lists `C-27` as a prerequisite, a later number in the same band. This is not a cycle (checked by script: no cycles in any course, no missing prerequisite) | The path `sequence` must put C-27 before C-14 |
+| # | Course | Gap | Fix | Status (2026-11-03) |
+|---|---|---|---|---|
+| G1 | eng | `M-ENG-W` is used (B-04, B-05, C-20) and has no row | Add a row (w said as v alone, outside minimal pairs) or fold it into `M-ENG-V-W` | **Done**: its own row, accent |
+| G2 | eng | `M-ENG-WAS-SAW` (C-11) has no row; it is written as an alias of `M-ENG-DIR` | Use `M-ENG-DIR` in C-11 | **Reversed**: it keeps its own row in family DIR (§4.4 E3) |
+| G3 | eng | `M-ENG-AE / M-ENG-AE-E` share one row, but one is speech and one is choice | Two rows: AE accent, AE-E diagnostic | **Done** |
+| G4 | rus | `M-RUS-R` and `M-RUS-SOFTSIGN` are named in §11 but have no row | Add both rows (signal, level-2 re-teach) | **Done**; the kind of SOFTSIGN is settled in §4.4 R4 |
+| G5 | heb | Shape cues are English placeholders (syllabus §11) | With the hebrew-text-editor, before the content batch | **Done** by the teacher with the editor's wording; ע/צ, ג/נ and ט/מ keep "trace both" until the letterforms are fixed |
+| G6 | all | No tag has `parentText` or `homeActivity` yet | Written with the content batch of each course, then by the editor | **Partly**: the Russian Band A tags have drafts (rus batch §3); English and Hebrew still to write |
+| G7 | rus | `RUS-C-14` lists `C-27` as a prerequisite, a later number in the same band. This is not a cycle (checked by script: no cycles in any course, no missing prerequisite) | The path `sequence` must put C-27 before C-14 | Open (when the path is written) |
+
+### 4.4 Decisions on the Band A batches (2026-11-03)
+The three teachers sent their Band A batches with tag proposals and rule questions. Each decision below gives the reason, and the evidence where there is some.
+
+**English**
+- **E1. `M-ENG-SEM`: adopted, diagnostic, family MEANING** (the teacher proposed GUESS). Taking *cow* for *pig* while a set is being learnt is not a guessing strategy: the new word's meaning is not yet separate from its neighbour's, which is the normal state of a new word. Under GUESS the parent would read "guesses". It stays separate from `M-ENG-L1-GUESS` (a picture from another set, picked because it is familiar): together the two tell "does not know this word yet" from "is not listening to the English".
+- **E2. `M-ENG-WEAK-SYLL`: adopted, diagnostic, SEGMENT.** The LS03 classifier maps one beat fewer to it and one beat more to `M-ENG-SYLL` (§2.3 LS03). The evidence is thin, as the teacher says: young English-speaking children leave out weak syllables, most of all a weak first syllable (banana → "nana"; Gerken 1994), and Hebrew has no reduced vowels, so an English schwa is easy to miss; no study measures this exact task. Two conditions:
+  1. Every beat word is voiced with all its syllables audible ("every beat audible" in its pronunciation spec, confirmed by the listening check). Words whose count varies in ordinary speech (family, chocolate, camera, vegetable, different) are never beat items.
+  2. In LS01 strip items the strips are centred on the right count when it is 2 or more (banana: 2, 3 or 4 beats), so each distractor is one beat away and carries the tag of its direction.
+- **E3. `M-ENG-WAS-SAW`: stays its own tag** (my G2 proposal is withdrawn). Its signal (a whole tricky word, recognised by its look, read backwards in C-11 and C-17) and its re-teach (the tricky-word card with a left-to-right arrow and the first letter marked) differ from `M-ENG-DIR`'s (building or blending a decodable word from the right; the start dot and the slide). A different signal and a different repair make a separate record. The two share the family DIR and are revisited together (`revisitWith`). For the C-11 items (not Band A): the reversed word must be a real word that the sentence picture can show (on / no, tops / stop), or the distractor is wrong for a reason the child cannot see.
+- **E4. The five vowels: adopted, with a limit.** a, e, i, o and u join §5.3's English list: their names are their long sounds (/eɪ/, /i/, /aɪ/, /oʊ/, /ju/), while the first sound taught is the short one (/æ/, /ɛ/, /ɪ/, /ɑ/, /ʌ/). Beginning spellers use letter names to write sounds (Read 1971), and names that contain a sound are the ones children lean on (Piasta and Wagner 2010), so the vowel's own name is the most likely wrong sound. **The limit:** the name is a NAME distractor (`M-ENG-LETTERNAME`) only where the target is the short sound (B-16 to C-07). From the open-syllable and final-e skills (C-06, C-08) the long sound is right ("the e makes the vowel say its name"); there the distractors are `M-ENG-OPEN` and `M-ENG-E-SILENT`.
+
+**Hebrew**
+- **H1. The 18 Band A tags: all adopted, all diagnostic**, with engine ids by the §4.1 rule. Families as the teacher proposed, except:
+  - STORY-ROLE, -SEEN, -WORLD, -ORDER and CAT-THEME, -LOOK, -ATYPICAL go to the new **MEANING** family (H2), not GUESS;
+  - **NAME-FIRST and NAME-LENGTH go to GUESS**, not PRINT. Knowing one's name by its first letter or its length is reading from a partial look, the way young children first "read" words before they use letters for sounds (Ehri 2005). The first letter of their own name is the letter children know best (Treiman and Broderick 1998), so NAME-FIRST is the expected cue to grow out of.
+  - The others stay: SOUNDALIKE GUESS (part of a word's sound, as the first letter is part of a written word); PREP, ROLE-SWAP and PLURAL GRAMMAR; BLEND-FIRST and BLEND-LAST SEGMENT; PRINT-NUM, -SHAPE and -PICTURE PRINT, with PRINT widened to "concepts of print" (§4.1).
+- **H2. MEANING: adopted as the 15th family.** Band A is mostly oral language in all three courses, and its errors are about meaning: a set neighbour, a category, a story event. None is a guessing strategy, and under GUESS a parent would read "your child guesses" about the normal state of a new word or a 3-year-old's way of grouping. With MEANING, GUESS keeps one sense (answering from part of the evidence). Members: eng SEM, STORY-RECALL; heb SEM, STORY-*, CAT-*; rus SEM, NUMWORD, SEQ.
+- **H3. `M-HEB-SEM` is split in two.** Its row covered two errors with two repairs: in listening, hear the word again beside the two pictures; in reading, read again unit by unit. One tag must have one repair, and the parent texts differ ("still learning this word" and "chose from the picture instead of reading"). `M-HEB-SEM` stays the **listening** tag (MEANING; the batch's 34 uses do not change). **`M-HEB-SEM-READ`** (GUESS, `heb.dec.sem_read`) is the **reading** tag, first in C-10.
+- **H4. The A-03 check: approved, with a condition.** The "say why" check could not carry two tagged distractors (its wrong options reveal nothing nameable), so the checks are A-03.7 to .9 (new pictures, an untypical member), and "why" stays unscored talk after the answer.
+  - **The condition:** every scored odd-one-out **names its kind and shows the bin's picture** ("which one does not go in the animals box?"), never the bare "מִי לֹא שַׁיָּךְ?". With no kind named, the colour answer (A-03.4: the dog is the only one that is not yellow) and the theme answer are both defensible, and an unclear question must never make an answer wrong. Young children readily group things that go together; they look for things of one kind when the kind is named (Markman and Hutchinson 1984). So CAT-THEME and CAT-LOOK are evidence only in an item that named the kind.
+  - "Not" is a load for 3-to-4-year-olds, so **at least one of a child's two A-03 checks is a sort** (an A-03.8 kind). The wording is the hebrew-text-editor's.
+
+**Russian**
+- **R1. The 11 proposed tags: 10 adopted, `M-RUS-COUNT` not.**
+  - Families as the teacher proposed, except SEM, NUMWORD and SEQ to MEANING (H2). TYVY stays GRAMMAR (it is register; the parent view groups it with how sentences are said), and its parent text keeps the heritage rule ("the school form").
+  - **Engine ids follow the §4.1 rule**, so four proposed ids change: `rus.voc.sem` → `rus.lis.sem`; `rus.voc.seq` → `rus.lis.seq`; `rus.voc.numword` → `rus.num.numword`; `rus.grm.tyvy` → `rus.lis.tyvy`.
+  - **Why not COUNT.** A skipped or double-tapped object in count-and-tap is a one-to-one counting error. That is maths (the core land's `M-CNT-SKIP` and `M-CNT-DOUBLE`), not a gap in Russian, and while the child taps, the app plays the number words, so the child picks no Russian word at all. A course may not use a core tag (§1.5 invariant 2), and a course copy would put maths evidence into a Russian skill. So count-and-tap in a course is practice, and its scored step is the "how many?" choice of a number word (§2.2). The same applies to English A-04 i06 and i07, whose "T02 own classifier" would have put core tags into an English item. RUS-A-10 and A-11 keep two representations: count-then-choose is concrete, and number → set is pictorial.
+  - **Number words and number knowledge.** A wrong set in a number → set item may mean the amount is not yet known in any language, not that the Russian word is unknown. The batch's representations are right and should stay: 1 to 3 in any arrangement, 4 and 5 as dice or finger patterns, 6 to 10 as ten-frames (5 and more). The NUMWORD parent text should say both ("the number word, or the amount itself, is still new").
+- **R2. A 2-choice item may carry one tagged distractor: yes**, under the rule of §2.3. Checked by script on the batch: 38 Russian 2-choice items, all tagged.
+  - Two skills are above half: **RUS-A-19 (6 of 11) and RUS-A-20 (10 of 16)**. Bring both to at most half, preferably with more picture minimal pairs (a20.01 to .06). Under Band A presentation, pointing to the picture of a heard word is the better evidence for a 3-to-4-year-old than a same / different judgement about syllables with no meaning. This is an assumption, to check in the owner's play tests.
+  - **A tag that does not fit.** In same / different items, "different" for two identical clips (a20.11, .14, .16) is tagged `M-RUS-SOUND`, but no sound-alike explains it: it is an answer habit. `M-RUS-YESNO` is widened to "a two-way answer given by habit (да / нет, same / different)". The wrong answer on a "same" pair is YESNO; the wrong answer on a "different" pair keeps its contrast tag (HARDSOFT, YI, SOUND). The habit shows in the rate across a balanced set, as YESNO's signal already says.
+- **R3. The reader route's caption after the answer: in wave 1**, as LS01 (g) (§2.3), last in the wave and droppable to wave 2. Reasons: it costs no template, it carries no demand and no score, and seeing a new word's spelling helps children remember it (Rosenthal and Ehri 2008). It appears only after the answer and never under Band A presentation.
+- **R4. `M-RUS-SOFTSIGN` is diagnostic in the C-02 ь items as well: adopted.** C-02 teaches what ь does, and its items ask for the written word with or without ь for a heard word (конь / кон), so a wrong choice is evidence about the letter just taught. Two conditions:
+  1. The tag's `skills` lists C-02, then the hard / soft listening skills B-13 and A-20, and `revisitWith` has `M-RUS-HARDSOFT`. A child who does not yet hear the soft end cannot choose ь, so repeated SOFTSIGN evidence first probes the listening (curriculum §5.3).
+  2. No ь word is a spelling item before C-17 (B-25, C-16), so no sound-right ь outcome is needed. The F5 taught-grapheme check guards this.
+
+### 4.5 Changes each teacher must make (through the orchestrator)
+| Course | File and place | Change |
+|---|---|---|
+| eng | syllabus §8 | `M-ENG-SEM` and `M-ENG-STORY-RECALL`: family MEANING. `M-ENG-WAS-SAW`: add the C-11 condition (E3) |
+| eng | syllabus §3.4 (the line on letters whose names do not carry their sound) | Keep the vowels; add the limit of E4 (short-sound targets only, B-16 to C-07; from C-06 and C-08 the name's sound is right) |
+| eng | band-a-content ENG-A-04 i06, i07 | The counting taps become practice; add T02's "how many?" step with 3 number words heard on a tap (`M-ENG-SEM` on both distractors) as the scored part (§2.2); recount §7 |
+| eng | band-a-content ENG-A-14 | i11 (banana): strips 2, 3, 4 (2 `WEAK-SYLL`, 4 `SYLL`). Drum rows list the classifier's outcomes: one-syllable words "2 beats (SYLL)"; i07 and i08 "2 beats (WEAK-SYLL); 4 beats (SYLL)". The beat words' pronunciation rows say "every beat audible" (E2) |
+| eng | band-a-content §1, §7 and §8 | Mark the checks (C), as the Hebrew batch does. ENG-A-16's check is a balanced pair (§2.3). Add "no 2-choice item alone as a check" to the batch script |
+| heb | syllabus §5 | Split `M-HEB-SEM`: the listening row stays; a new row `M-HEB-SEM-READ` (reading: "read again, unit by unit"). Band A tags: STORY-* and CAT-* family MEANING; NAME-FIRST and NAME-LENGTH GUESS. The note proposing MEANING becomes "adopted" |
+| heb | syllabus §6 HEB-C-10 | Tag `M-HEB-SEM-READ` instead of `M-HEB-SEM` |
+| heb | band-a-content A-03, §3 line i-odd | The scored odd-one-out prompts name the kind and show the bin picture (H4), with the hebrew-text-editor; at least one A-03 check is a sort |
+| rus | syllabus §11 | Add rows for the 10 adopted tags (kind, family, signal, re-teach), so each tag is defined once in the syllabus. Batch §3 keeps the engine id, `parentText` and `homeActivity`. Widen `M-RUS-YESNO` to same / different (R2). `M-RUS-SOFTSIGN`: `skills` C-02, B-13, A-20; `revisitWith` HARDSOFT (R4) |
+| rus | band-a-content §3 | Engine ids: `rus.lis.sem`, `rus.lis.seq`, `rus.num.numword`, `rus.lis.tyvy`. Families: SEM, NUMWORD, SEQ to MEANING. Remove `M-RUS-COUNT`. NUMWORD `parentText`: the number word, or the amount itself (R1; then the hebrew-text-editor) |
+| rus | band-a-content RUS-A-10, A-11 items 01 to 05 | Counting is practice; the scored step is "how many?" with 3 number words heard on a tap (NUMWORD and SOUND tags); recount §6 (items with tagged distractors) |
+| rus | band-a-content RUS-A-19, A-20 | 2-choice items at most half of each skill. The wrong answer on a "same" pair is `M-RUS-YESNO` (a20.11, .14, .16, and the a19 "same" pairs) |
+| rus | band-a-content §1 "Distractors" | Point to frame §2.3. Mark the checks; no check is a single 2-choice item |
+| all | the batch scripts | Use the catalogue check of §4.2 (the qa-engineer turns it into a content test) |
 
 ---
 
@@ -605,7 +768,7 @@ The teachers' tables remain the source for the signal and the re-teach. Gaps fou
   - for a chunk, every key word the author marks is confident.
 - **Unsure:** everything else, including a confidently heard foil and silence. There is **no "wrong" outcome** and no "did you say …?" question in a language lesson.
 
-**Feedback.** The lines are drafts, unpointed, `"review": "needs-editor"`; the target word is a target clip.
+**Feedback.** The lines are `text-ready` (hebrew-text-editor, 2026-11-03: `שָׁמַעְתִּי:` and `בּוֹאוּ נֹאמַר יַחַד.`, the same in the three courses); the target word is a target clip.
 - **Confident:** specific praise naming the word: "שמעתי: apple!" (*I heard: apple!*). It praises the saying, not the child.
 - **Unsure:** "בואו נגיד יחד" (*let's say it together*). The voice models the word; there is a choral pause; then the activity moves on.
 - **At most one more try,** offered by a tap and never required. There is no retry loop.
@@ -674,7 +837,7 @@ The teachers' tables remain the source for the signal and the re-teach. Gaps fou
 - **Practice mixes the four facets.** Mastery is per facet (§3.3.3 bundles). Copy and memory writing follow within the same group (D4).
 - **Blending always uses sounds,** never names, in every course: "ма", not "эм-а"; "sat", not "ess-ay-tee"; בָּ, not "bet-kamats".
 - **Letters whose name does not carry their sound** get an explicit "name …, sound …" line and a NAME-family distractor in their items:
-  - eng: h, w, y, c, g, x;
+  - eng: h, w, y, c, g, x; and the five vowels a, e, i, o, u, whose names are their long sounds while the first sound taught is the short one (added 2026-11-03, §4.4 E4). For a vowel, the name is a distractor only where the target is the short sound (B-16 to C-07); from C-06 and C-08 the long sound is right;
   - heb: א, ע (no sound of their own) and ו;
   - rus: ы, ь, ъ, й, and the consonants whose names put the sound last (эм, эл, эн, эр, эс, эф, ха).
 - **Letters with no sound of their own** are taught by what they do: א, ע and ה at the end of a word (heb); ь and ъ (rus).
@@ -771,7 +934,7 @@ I do not edit the syllabus files. Each line below is for its teacher, through th
 **Also outside the teachers' files** (for the orchestrator, after the owner approves this frame):
 - PLAN.md: the lands table gets an 8th land; "every character speaks in its own voice, everywhere" gets the language exception (§1.3).
 - PLAN.md and CLAUDE.md: "Fonts are Heebo and Secular One only" changes once the design-director's fonts are approved (D1, D8, D24).
-- `docs/curriculum.md`: §10 gets the presentation band, bundles, sub-skills, set coverage, sound-right, gates and per-course revisits; §11.2 notes that the tutor is off in language lessons and that scripted personal turns are not the tutor. I own that file and will write it after the owner's OK.
+- `docs/curriculum.md`: §10 gets the presentation band, bundles, sub-skills, set coverage, sound-right, gates and per-course revisits; §11.2 notes that the tutor is off in language lessons and that scripted personal turns are not the tutor. **Done 2026-11-03** (curriculum §10.9, §11.2, and a pointer in §5.2).
 
 ---
 
@@ -843,6 +1006,15 @@ Every milestone has its own plan file and the owner's OK before code (CLAUDE.md 
 - Bhardwaj, V. et al. (2022). Automatic Speech Recognition (ASR) Systems for Children: A Systematic Literature Review. *Applied Sciences* 12(9), 4419. [MDPI](https://www2.mdpi.com/2076-3417/12/9/4419).
 - McKechnie, J. et al. (2018). Automated speech analysis tools for children's speech production: a systematic literature review (accuracy typically under 80% on words with mispronunciations). [Figshare](https://figshare.com/articles/Automated_speech_analysis_tools_for_children_s_speech_production_A_systematic_literature_review/6808892).
 - sherpa-onnx pre-trained models, including English and Russian zipformers; keyword spotting documented. Fit for children and for keyword spotting is not yet confirmed. [k2-fsa docs](https://k2-fsa.github.io/sherpa/onnx/pretrained_models).
+- For the catalogue decisions of §4.4 (2026-11-03):
+  - Read, C. (1971). Pre-school children's knowledge of English phonology. *Harvard Educational Review* 41(1), 1–34 (children's early spellings use letter names for sounds). [UW–Madison](https://langsci.wisc.edu/staff/charles-read).
+  - Gerken, L. (1994). A metrical template account of children's weak syllable omissions from multisyllabic words. *Journal of Child Language* 21, 565–584 (weak syllables dropped most often at the start of a word). [Arizona](https://experts.arizona.edu/en/publications/a-metrical-template-account-of-childrens-weak-syllable-omissions-/).
+  - Markman, E. M. and Hutchinson, J. E. (1984). Children's sensitivity to constraints on word meaning: taxonomic versus thematic relations. *Cognitive Psychology* 16, 1–27 (children group by theme freely, and look for a kind when a word for it is given).
+  - Treiman, R. and Broderick, V. (1998). What's in a name: children's knowledge about the letters in their own names. *Journal of Experimental Child Psychology* 70(2), 97–116 (the first letter of the child's own name is known best). [PDF](https://sites.wustl.edu/treiman/files/2020/02/Treiman-Broderick-1998-Whats-in-a-name.pdf).
+  - Ehri, L. C. (2005). Learning to read words: theory, findings, and issues. *Scientific Studies of Reading* 9(2), 167–188 (the pre-alphabetic phase: words recognised by a salient visual cue).
+  - Rosenthal, J. and Ehri, L. C. (2008). The mnemonic value of orthography for vocabulary learning. *Journal of Educational Psychology* 100(1), 175–191 (seeing a new word's spelling helps children remember the word).
 - Evidence that is thin, said plainly:
+  - **`M-ENG-WEAK-SYLL`** (§4.4 E2) rests on studies of children's own speech, not of beat counting by Hebrew-speaking learners.
+  - **Same / different judgements** being harder than picture pointing for 3-to-4-year-olds (§4.4 R2) is my working assumption, to check in the owner's play tests.
   - **One person, one language** (§1.3) is common practice, but the evidence that young learners need it is mixed, so it is only the voice fallback.
   - **The 60% unsure fallback and the 1-in-20 false-confident bar** (§5.1) are starting values to tune on the device, not research numbers.

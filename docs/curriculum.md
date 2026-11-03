@@ -525,6 +525,8 @@ This section is the spine of the product. Every other section serves it.
 
 Every distractor and every likely spoken wrong answer carries one of these tags. Authors pick from this list; new tags need curriculum-lead approval. "Repair" names the representation the engine switches to (R codes in §5.5).
 
+The tags of the three language courses (English, Hebrew, Russian) are not in this table. Their catalogue, with each tag's kind, family and engine id (127 tags, 2026-11-03), is `docs/languages/frame.md` §4, and the signals and re-teaches are in each course's syllabus. A language tag is never used in a core item, and a core tag is never used in a language item (§10.9).
+
 | Tag | What the child does | Signal (tagged distractor / spoken answer) | Trace back to | Repair |
 |---|---|---|---|---|
 | M-CNT-SEQ | Says counting words out of order or skips them (1,2,3,5) | Selects 5 when there are 4; sung sequence breaks | NUM-A-01/02 | R4 counting song with gesture; tap-along |
@@ -1412,6 +1414,49 @@ The engine keeps, per child and domain, a success rate for each representation (
 
 The bottle opens one stop, chosen by a pure, deterministic rule: a due revisit first once a day, then up to two lessons before the next revisit; new learning continues the land played last for up to three lessons, then moves to another land (lowest level first, then the land played longest ago); a lesson left right after an incorrect answer, and a skill already checked today, rest until the next day; when everything is finished, a known lesson is played again. Age enters only as parameters (band today, the school stage after B-29). Full rule, inputs and 28 worked examples: `docs/curriculum/todays-adventure-rule.md`.
 
+### 10.9 Language courses (the Languages island)
+
+The Languages island holds three courses, English (`eng`), Hebrew (`heb`) and Russian (`rus`), approved by the owner on 2026-11-03 (`docs/languages/frame.md`; the decisions in `docs/languages/decisions-2026-11-03.md`). §10.1 to §10.8 apply to them unchanged, with the additions below. The existing lands are course `core`, and nothing here changes them. Section numbers in brackets are the frame's.
+
+**Courses never mix** (§1.5).
+- `course` is a field on skills, items, misconception tags, placement results, progress, rewards keys and packs. A skill id's prefix (`ENG-`, `HEB-`, `RUS-`) must agree with it.
+- A prerequisite, a tag, a `contradicts` link or a repair activity never crosses courses, and never links a course to `core`. Evidence never flows across courses.
+- The representation profile (§10.5) is kept per child, course and strand. The band setting is per course.
+- A session, a revisit check or a repair contains one course only. Turning a course on or off changes nothing elsewhere.
+- Response codes stay ids and numbers: no letters, words or transcripts. Personal turns, own-name items and free writing write no content.
+
+**Two bands** (§3.1). The **presentation band** comes from the child's age (the parent can override it). It sets the screen and the pace: choices and targets (Band A presentation: at most 3 choices, one instruction, no reading, no left and right words), items per activity, session length and hint speed. The **content level** comes from mastery. The two are independent: a 7-year-old new to English does `ENG-A-01` with Band C presentation. Letters are never offered under Band A presentation, except Hebrew A-10 to A-12.
+
+**Placement** (§3.2). §10.1's staircase, per **strand** of a course (eng 2, heb 2, rus 5). Additions:
+1. A parent's questionnaire answer sets where a staircase starts, never where it ends.
+2. A strand whose first two probes fail at its floor stops at once.
+3. The strands run over the first 2 to 3 visits, oral first, with at most about 8 probes per visit.
+4. Speech is never a probe.
+5. Gates are checked after placement.
+
+**Mastery** (§3.3). §10.2 applies, with these additions:
+- **Representations in a course:** concrete = something moved (tokens, tiles, a wheel); pictorial = hear, then choose a picture; story = inside a story, song, scene or dialogue; embodied = act, trace, write or say it; symbolic = written text.
+- **Sub-skills and roll-ups.** A skill taught group by group is split into sub-skills with dotted ids (`HEB-B-14.S1`, `RUS-B-24.G1`), each with its own BKT, revisits and prerequisites. The plain id becomes a **roll-up** with no BKT: fresh when all its groups are fresh, durable when all are durable, and "all groups" as a prerequisite.
+- **Letter bundles.** A letter's shape, sound, name and writing are introduced together. Their skills open as one bundle when all members' prerequisites reach 0.8. Members never require each other. A bundle counts as **one** new skill against the limit of 2 per session. Mastery stays per member.
+- **Set coverage.** A word-set skill (or a letter group) is fresh only when each word of the set has been answered right at least once without a hint. Each word is a `variantGroup`.
+- **The sound-right outcome.** LS06 (build a word) has three outcomes: exact, sound-right (a spelling on the author's closed list for that item) and not yet. The engine stays three-valued: a skill that accepts sound-right counts it as `correct` and gives no misconception evidence; a skill that teaches the convention counts it as `incorrect`, with the tag as evidence. A new attempt field `detail` (`exact`, `sound_right`) feeds the parent view. Sound-right is never called wrong.
+- **Course gates.** A named condition on skills (fresh mastery), with a default minimum age and a parent switch: the English oral gate, and the Russian letters gate for new learners. Gates hold skills back and are never shown to the child as locks.
+- **Routes** (Russian): `new`, `heritage` or `reader`, per child. A route changes priorities, the gate and display defaults, never the mastery rules.
+- **Speech evidence.** Per word, two outcomes only: confident or unsure. Confident is one success for a **speaking** skill (representation embodied), capped at 50% of that skill's success evidence. Unsure gives no evidence of any kind. Reading aloud gives no mastery evidence in any course. With the microphone off, speaking skills are fed by comprehension taps, bubble choices and the parent's confirmation; otherwise they stay "practised".
+- **A speaking skill never blocks progress.** When a speaking skill is a prerequisite, it counts as met at "practised" (its practice set done), whatever the microphone setting. The microphone is the parent's privacy choice and must never hold a child back (added 2026-11-03).
+- **Two-choice items.** Every distractor is tagged. An item with 3 choices has two tagged distractors (they may share a tag). A 2-choice item has one tagged distractor and is allowed only if: the skill also has 3-choice items, or is binary by nature (yes / no, same / different) with balanced answers; 2-choice items are at most half of the skill's scored items; and it is never a check on its own. A check in a binary skill is a **balanced pair** (one item of each answer) that passes only if both are right. Free-response modes (trace, drum, build) map the errors they can name to tags; other errors are retries with no tag (frame §2.3, decided 2026-11-03).
+- **Counting in a course is practice.** In count-and-tap (T02) inside a course, the counting taps are never scored: a counting error is maths, not the language. The scored step is the final "how many?" choice of a number word (frame §2.2).
+
+**Revisits** (§3.4). §5.7's schedule, with four additions: revisits stay inside their course; confusable pairs (`revisitWith`: ב/כ, b/d, ш/щ …) are checked together; every visit opens with retrieval of earlier letters, words or a known song; a durable check of a word set uses words not used in its last practice.
+
+**Session composition** (§3.5). §10.3's segments, inside one course. The mood check is met by the child choosing the door. Course rules kept: English Band B never opens a new letter group and a new word set in the same visit; Hebrew Bands B and C mix one code activity, one listening or story activity, and one writing activity per visit.
+
+**Stuck and bored** (§3.6). §10.4, inside the course: the easier related item and the delight segment come from the same course. Inactivity counts only from the end of the last clip; story pages and songs never trigger it. Repeated repairs of the same Hebrew code skill give the parent a gentle suggestion to talk with the gan teacher or the school, with no label.
+
+**Today's Adventure** (§3.7). Each language turned on is a land for §10.8's rule. The rule's inputs gain the course of each land and lesson. A course that is off is not a land.
+
+**Misconceptions** (§4). One record format for the three courses: tag, engine id `<course>.<strand>.<slug>`, kind (diagnostic, on-the-way, accent, practice), one of 15 families (for the parent view and shared re-teach screens, never to move evidence), skills, signal, level-2 re-teach, repair activities, parent text, home activity, `revisitWith`. Accent tags are never on a distractor and never judged. The catalogue is frame §4.2.
+
 ## 11. The AI tutor's pedagogical behaviour
 
 The AI tutor is the *dynamic layer* on top of authored content. Most of what children hear comes from authored core lines. The tutor speaks when a response needs a personalised next step: an unexpected spoken answer, an explain-back, or a choice of representation.
@@ -1439,6 +1484,13 @@ The AI tutor is the *dynamic layer* on top of authored content. Most of what chi
 | Redirect politely to the task when the child goes off-topic | Promise rewards, create urgency, guilt ("אַל תֵּלֵךְ", *don't go*), or mention purchases |
 | Say "I don't know" about non-task questions and redirect | Claim to be human, to have feelings, or to be the child's friend "more than" people |
 | Hand off to the parent for anything sensitive (a script, §11.6) | Store or repeat anything personal the child volunteers; infer emotions for profiling |
+
+**In language lessons the AI tutor is off** (the owner's decision Q-F5, 2026-11-03; `docs/languages/frame.md` §1.6). No English or Russian text may reach a child without its teacher's approval, and no Hebrew without the hebrew-text-editor's, and the live validator cannot judge English, Russian or a Hebrew reading lesson's nikud. So:
+- hints in a language course are the authored ladders, played by RuleTutor;
+- `tutor-turn` refuses any item whose course is not `core` (a gateway check);
+- "Talking to Nitzi" is not offered inside a course.
+
+**Scripted personal turns are not the tutor.** Language lessons may ask a child's name, age, likes and family, in authored puppet turns only (decision D10; frame §5.2). The puppet answers first; there is always a "pass"; the answer is used for the next line and then forgotten; it is never stored, sent, logged or used to choose content; and a parent can turn these turns off. Where the child lives, the gan or school, and feelings about home are never asked. The tutor's rule above is unchanged: the tutor never asks anything personal.
 
 ### 11.3 Socratic patterns per band
 

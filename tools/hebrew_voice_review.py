@@ -497,7 +497,8 @@ KTIV = {  # the plain form that the rules give -> the full spelling (only what t
     'ואו': 'וואו', 'הממ': 'המממ', 'קוביה': 'קובייה', 'האזניים': 'האוזניים', 'אזניים': 'אוזניים',
     'התכנית': 'התוכנית', 'תכנית': 'תוכנית', 'כסא': 'כיסא', 'צוהריים': 'צהריים', 'צהוריים': 'צהריים',
     'מחווג': 'מחוג', 'מחווגים': 'מחוגים', 'חייה': 'חיה', 'חייות': 'חיות',
-    'מיבשים': 'מייבשים', 'שבקשו': 'שביקשו',
+    'מיבשים': 'מייבשים', 'שבקשו': 'שביקשו', 'כפים': 'כפיים',
+    'לקרא': 'לקרוא', 'למצא': 'למצוא', 'בייד': 'ביד', 'הייד': 'היד',  # language courses: holam before an aleph; בַּיָּד is not a doubled yod
 }
 KTIV_NO_PREFIX = {'ואו', 'הממ', 'שנים', 'שתים'}  # never looked up after a prefix letter (בשנים is "in years")
 # words where the hiriq is not written with a yod (a prefix, or a dagesh for a nun that dropped): the plain form
@@ -597,13 +598,17 @@ def ktiv_lookup(p):
     return p
 
 
+SIN_KEEP = False  # language courses only (course_voice_text): a word with the sin dot keeps its nikud
+COURSE_KEEP = set()  # filled below, canonical forms
+
+
 def partial_nikud(text):
     out = []
     for m in TOKEN.finditer(text):
         tok = m.group(0)
         if not HE_WORD.match(tok):
             out.append(tok)
-        elif is_number_token(tok) or tok in KEEP_POINTED:
+        elif is_number_token(tok) or tok in KEEP_POINTED or canon(tok) in COURSE_KEEP or (SIN_KEEP and 'ׂ' in tok):
             out.append(tok)
         else:
             out.append(ktiv_lookup(ktiv_token(tok)))
@@ -716,6 +721,34 @@ def eleven(text):
     if t and t[-1] not in '.?…':
         t += '.'
         notes.append('voice: a full stop at the end, so the line closes')
+    return t, notes
+
+
+# The language courses (docs/languages/*/band-a-content.md, hebrew-notes.md section 9): the voice text of a course line is
+# made with the same rules as the app's lines, plus three more. (1) A word with the sin dot keeps its nikud, because an
+# unpointed ש is read [ʃ] (שִׂימוּ, הִיא שָׂמָה). (2) A few words keep their nikud because the plain form can be read
+# another way (COURSE_KEEP). (3) A carrier line that ends in a colon (the next clip is the word) keeps the colon and gets no
+# full stop. Straight double quotes are dropped. The tool only changes `partial_nikud`, `soften`, the final full stop and
+# these three things; the app's own table is not affected (SIN_KEEP is off outside this function).
+COURSE_KEEP |= {canon(w) for w in (
+    'וְאִמְרוּ',    # plain "ואמרו" is read "ve-amru" (and they said); here it is "ve-imru" (and say)
+    'לֶחָבֵר',      # plain "לחבר" is also the infinitive "to connect"; here it is "to the friend"
+)}
+
+
+def course_voice_text(text):
+    """The voice text of a line of a language course (see the comment above). Returns (text, notes)."""
+    global SIN_KEEP
+    src = text.replace('"', '').replace('״', '').replace('־', ' ')  # a maqaf is a nikud-range mark and would be dropped: תִּיק־תַּק → "תיק תק"
+    carrier = src.rstrip().endswith(':')
+    SIN_KEEP = True
+    try:
+        t, notes = eleven(src)
+    finally:
+        SIN_KEEP = False
+    if carrier and t.endswith(':.'):
+        t = t[:-1]
+        notes = [n for n in notes if 'full stop at the end' not in n] + ['carrier: ends in a colon on purpose (the next clip is the word)']
     return t, notes
 
 

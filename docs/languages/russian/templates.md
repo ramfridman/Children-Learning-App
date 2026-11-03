@@ -1,51 +1,46 @@
 # The Russian course: templates needed
 
-*Owner: russian-language-teacher, with the curriculum-expert (shared engine) and the app-developer (code). Draft 2026-11-03. Plan only.*
-*What exists was read from `app/lib/play/*_session.dart` (the template sessions) and `docs/curriculum.md` §6.2 (the catalogue). Skill ids are in `docs/languages/russian/syllabus.md`.*
+*Owner: russian-language-teacher, with the curriculum-expert (shared engine) and the app-developer (code). Draft 2026-11-03; renamed to the shared template ids and updated to the owner's decisions the same day (frame `docs/languages/frame.md` §2 and §5.4). Plan only.*
+*What exists was read from `app/lib/play/*_session.dart` (the template sessions) and `docs/curriculum.md` §6.2 (the catalogue). Skill ids are in `docs/languages/russian/syllabus.md`. The shared specs of every template are in frame §2.3; this file says only what the Russian course needs from each.*
 
-## 1. What every Russian activity needs from the app (cross-cutting)
-1. **A Cyrillic font** beside Heebo and Secular One (owner's decision 1; the design-director chooses it; requirements in `voice-brief.md` › Font requirement).
-2. **Left-to-right isolated runs** for every Russian word, syllable, tile row and sentence inside the right-to-left screens; tile rows, the syllable slide, the sound-scheme boxes and the vowel strip always run left to right, whatever the app language (as the matching and pattern templates already do).
-3. **Split audio**: a Hebrew instruction clip and a Russian target clip, played in sequence (`.claude/skills/pronunciation-spec/SKILL.md` §3). The lesson voice code must queue clips from two voice ids if one voice does not speak both.
-4. **Content checks** in the validator: Russian text only Cyrillic (plus U+0301 only where a skill shows stress); ё never replaced by е in Russian text; decodable items use only letters taught (by group, syllabus §3); a stress mark is never on ё.
-5. **Russian misconception tags** (syllabus §11) in the misconception catalogue.
+## 1. What every Russian activity needs from the app (the shared foundations, frame §2.1)
+1. **F2 course font:** the Cyrillic teaching font "Nitznutz Letters" (from Andika; approved by the owner on 2026-11-03, `docs/languages/fonts.md`); upright only, Russian letter forms (never a `bg` or `sr` language tag), U+0301 placed over every Cyrillic vowel (`voice-brief.md` §8).
+2. **F1 left-to-right runs** for every Russian word, syllable, tile row and sentence inside the right-to-left screens; tile rows, the syllable slide, the sound-scheme boxes and the vowel strip always run left to right.
+3. **F3 two-clip lines:** a Hebrew frame clip and a Russian target clip in sequence, from one voice id or two (`.claude/skills/pronunciation-spec/SKILL.md` §3; `voice-brief.md` §1).
+4. **F5 content checks** in the validator: Russian text only Cyrillic (plus U+0301 only where a skill shows stress, syllabus §7.1); ё never replaced by е; no stress mark on ё; decodable items use only letters taught (by group, syllabus §3); every item has at least two tagged distractors; the personal-turn rules of frame §5.2.
+5. **F4 course id** `rus` on every skill, item, tag, placement result, progress row and pack.
+6. **F6 stroke data** for 66 letter forms (33 capitals, 33 small; the marks of ё and й as their own strokes), three guide lines with descenders (д щ ц у р). The design-director draws the paths.
+7. **F7 a Russian on-device recogniser** and the per-word matcher (syllabus §8, frame §5.1).
+8. The Russian misconception tags (syllabus §11) in the shared catalogue format (frame §4.1).
 
-## 2. Existing templates that can carry Russian content
+## 2. Existing templates that carry Russian content (with LS01 or LS02)
 
-| Template (code) | Exists in | Russian use | Skills | Change needed |
+| Template (code) | Russian use | Skills | What the Russian course needs |
+|---|---|---|---|
+| **LS01** text and sound options: `tap_answer`, `sort_drag`, `match_pairs`, `spot_error`, `build_pattern` | hear a word → tap its picture; hear a sound → tap the letter; letter → picture; name ↔ letter; same / different (audio-only options); rhyme choice; sort by first sound, hard / soft, мой / моя́ / моё, syllable count; capital ↔ small letter; word ↔ check word (вода́ ↔ во́ды); a friend's wrong tile or chip; a text stem ("read and choose", was R5; "read it to me" is hint level 1 and lowers the credit to 0.8); copy a shown word with tiles (`build_pattern`, the scaffold of B-25 and C-16) | A-01 to A-14, A-17, A-19, A-20, B-01 to B-07, B-10 to B-13, B-15, B-16, B-18, B-20 to B-23, B-25, C-01 to C-06, C-08 to C-10, C-12, C-13, C-16, C-18, C-19, C-21, C-26, C-29 | Text faces in Cyrillic with the course font, left to right; a sound per option; stress marks only where syllabus §7.1 allows; a Russian clip after the Hebrew clip in the prompt |
+| T02 `count_tap` | counting in Russian (оди́н, два …), one number clip per tap | A-10, A-11 | Russian number clips |
+| **LS02** write a letter (an extension of `trace`) | trace, **copy** and **memory** modes for the printed Cyrillic capitals and small letters; a word canvas for short words | B-24 (trace), B-26 (copy, then memory), C-22, C-23 | **Code:** the copy and memory modes and the free-stroke check (start, direction, order and shape, judged at the end of a stroke) are new code, not content. Content: the F6 stroke data. Was T04 and R10 |
+| `give_n` (later) | "Дай мне три я́блока" | C-28 (optional) | Russian clips |
+| T14 `flash` | **never** for reading (frame §2.2) | none | none |
+
+Not used by the Russian course: T07 robot, T08 balance, T09 number line, T10 shape builder, T17 shop, T18 clock.
+
+## 3. The shared new templates the Russian course uses
+
+| Shared id (was) | Template | What the child does in Russian | Skills | Russian settings |
 |---|---|---|---|---|
-| T01 tap the answer (`tap_answer` 1.1) | `app/lib/play/tap_answer_session.dart` | hear a word → tap its picture; hear a sound → tap the letter; letter → picture; same / different; rhyme choice; colour, animal, food | A-01…A-14, A-17, A-19, A-20, B-01…B-07, B-10, B-11, B-18, B-20…B-22, C-01…C-06, C-26, C-29 | **Text answers on tiles in Cyrillic** (a letter, a syllable, a word, a phrase) with the new font, LTR; the prompt can be a Russian clip after the Hebrew clip. Probably content plus a small text-tile option. |
-| T02 count and tap (`count_tap` 1.0) | `count_tap_session.dart` | counting in Russian (оди́н, два …) | A-10, A-11 | Russian number clips; nothing else. |
-| T03 sort and drag (`sort_drag`) | `sort_drag_session.dart` | sort pictures by first sound, by hard / soft, by мой / моя́ / моё, by syllable count; tidy-up of toys | A-08, B-03, B-10, B-12, B-13, B-16 | Bin labels as Cyrillic text or coloured chips; content only otherwise. |
-| T04 trace (`trace`) | `trace_session.dart` (strokes are content: a list of strokes in a 100 × 100 box; `guide: start`; full guide after three mistakes) | trace printed Cyrillic capital and small letters | B-24 | **Stroke data for 66 letter forms** (33 capitals, 33 small; ё and й with their marks as separate strokes). Code: none expected. |
-| T05 build the pattern (`build_pattern`) | `build_pattern_session.dart` | copy a shown word with letter tiles (a first step before spelling from sound) | B-25 (scaffold), C-16 (scaffold) | Tiles as Cyrillic letters; content. |
-| T14 flash (`flash`) | `flash_session.dart` | **not used** for reading: the flash is about a glance, and reading is never timed. Possibly a "look again" sight-word game later. | — | — |
-| T16 match pairs (`match_pairs`) | `match_pairs_session.dart` | capital ↔ small letter; letter ↔ picture; word ↔ picture; word ↔ check word (вода́ ↔ во́ды) | B-18, B-20…B-22, C-01…C-06, C-21 | Faces as Cyrillic text tiles. |
-| T21 spot the mistake (`spot_error`) | `spot_error_session.dart` | a friend's wrong tile in a word, a wrong chip in a sound scheme, жы in a word, a misread syllable in a table | B-15, B-25, C-08, C-16, C-18, C-19 | Cells as Cyrillic tiles or chips; content. |
+| **LS03** (R1) | Sound boxes (звукова́я схе́ма) | Hears a word stretched sound by sound; drags a chip into each box left to right; colours the chips red (vowel), blue (hard), green (soft); later marks the stressed vowel. **Drum mode** in Band A: a tap on the drum per syllable | A-18 (drum), B-09, B-12 to B-17 | Unit: the phoneme, with colour. Classifiers: count ±1 (M-RUS-SYLL in drum mode); a vowel coloured as a consonant; soft taken for hard (M-RUS-HARDSOFT); the last syllable stressed by default (M-RUS-STRESS) |
+| **LS04** (R2) | Blend slide, mode `merge` (слия́ние) | Slides a consonant tile to a vowel tile; the voice holds a continuant as it slides (ммм…) and says the merged syllable as they meet (ма); a stop gives only the merged syllable; then the child chooses the syllable heard or the picture | B-19 to B-22, C-01 to C-08 | Always left to right. Classifiers: M-RUS-NAME (the name used in the blend), M-RUS-RTL. It is also the level-2 re-teach of M-RUS-NAME |
+| **LS05** (R3) | Change one part: the vowel strip | A word or syllable with one vowel place; the child slides a strip of vowel letters in pairs а–я, о–ё, у–ю, ы–и, э–е and hears each new word (мал → мял, кот → кит) | B-21, C-07 | Modes `explore` and `make`. The level-2 hint of M-RUS-HARDSOFT, -YI and -YOT |
+| **LS06** (R4; T05 as its `copy` mode) | Build a word (разрезна́я а́збука) | Hears a word and builds it from letter tiles, left to right; a filled slot sounds and a tap empties it | B-25, C-16 to C-23 | Outcomes exact / sound-right / not yet (frame §3.3.5): sound-right is accepted in B-25 and in C-16 before C-18, C-20, C-21 ("дуп", "вада", "жыраф" written as heard); it is evidence of the convention not yet known in C-18 to C-21. Classifiers: M-RUS-RTL, M-RUS-SOFTSIGN, M-RUS-HUSH, M-RUS-DEVOICE, M-RUS-REDUCE. Response: tile indexes only |
+| **LS07** (R9) | Build a sentence | Puts 2–5 word cards in order to match a picture or a heard sentence; agreement choices on a card (кра́сный / кра́сная); capital and full-stop tiles | B-02, B-07, C-15, C-23, C-24, C-27, C-28 | Every correct order listed by the author. Classifiers: M-RUS-GENDER, -ACC, -NUMNOUN |
+| **LS08** (R7) | Story | A picture book of 3–10 pages: `listen`, `dialogic` (planned pauses with an LS01 question), `read_along` (each word lit as it is read), `read_first` (the child reads; a tap plays a word), `echo` | A-16, B-08, C-13, C-14, C-30 | Original stories and folk tales retold in our own words and pictures (D3, D18). Reading in a story is unscored; the questions are scored. Word timing per clip for `read_along` (the voice-and-sound-director's answer). The decodable check on `read_first` texts |
+| **LS09** (R8) | Say it with me | The voice says a word or chunk with its picture; a pause for the child; the voice says it again. With voice on: a tap on the microphone and per-word feedback, confident or unsure. With voice off: an "I said it" tap (practice). Then a tap on the picture | A-15 and every new word | Per-word matching with the item's variants and foils (syllabus §8, frame §5.1); still **no recording**, no transcript, no score beyond the capped speaking evidence |
+| **LS10** (the role-play of A-14, C-27, C-30) | Puppet talk | A puppet speaks one turn ("Приве́т!", "Кто э́то?", "На!"); the child picks the answer bubble that fits (2 or 3, picture-supported, each heard on tap); the puppet answers; the child may then say the bubble (an LS09 step) | A-01, A-14, C-27, C-30 | `personal` mode (D10, frame §5.2): Как тебя́ зову́т?, Ско́лько тебе́ лет?, Что ты лю́бишь?, Кто у тебя́ в семье́?, with a pass, never checked or kept. Classifiers: M-RUS-ACC, -GENDER, -TYVY |
+| **LS11** (R6) | Listen and do (TPR) | Hears a command in Russian and makes the friend do it: tap a body part, drag a thing to a place (Положи́ мяч на стол), or tap one of 2–3 action buttons. The embodied version (the child does it and taps "done") is self-report and never counted alone | A-03, A-04, A-07, A-08, A-09, A-13, A-14, B-05, B-06 | Band A presentation: at most 3 targets glow; the rest of the scene is inert |
+| **LS12** | Sing along | An original chant or rhyme; pictures light on the key words. Rhyme mode: a pause at a line end with 2–3 picture choices | A-17 | Spoken chants need no melody; a sung tune needs the owner's OK (D3) |
+| **LS13** (R11) | Placement game | The five staircases of syllabus §7.3 with LS01, LS03 and LS06 probes, plus the parent questionnaire | placement | Routes new / heritage / reader set by the questionnaire and strand 1; the letters gate (D17) |
+| **LS14** (later, optional) | Writing tray | A Cyrillic letter tray to write a caption with or without a word bank; free text never scored, stored or synced | C-24 | |
 
-Not used for Russian: T07 robot, T08 balance, T09 number line, T10 shape builder, T17 shop, T18 clock, `give_n` (could later serve "дай мне три я́блока", C-28).
-
-## 3. New templates
-
-| # | Template | What the child does | Skills | Notes for the design-director and app-developer |
-|---|---|---|---|---|
-| R1 | **Sound scheme** (звукова́я схе́ма; Elkonin boxes) | Hears a word stretched sound by sound; drags a chip into each box; then colours the chips red (vowel), blue (hard), green (soft); later marks the stressed vowel | B-09, B-12…B-17, A-19 (one-box version) | The method's core [ZHU]. Boxes left to right; the picture of the word above; tap-tap for drags. Classifiers: wrong count of sounds; vowel coloured as consonant; soft as hard (M-RUS-HARDSOFT); stress on the last syllable by default (M-RUS-STRESS). |
-| R2 | **Syllable slide** (слия́ние) | Drags a consonant tile along a track to a vowel tile; the voice says the consonant as it slides (ммм…) and the merged syllable as they meet (ма); then the child chooses which syllable they heard or which picture it starts | B-19, B-20…B-22, C-01…C-07 | The track always runs left to right. Stops (к, т, п) do not stretch: the voice says only the merged syllable. Classifier: letter-name reading (M-RUS-NAME). |
-| R3 | **Vowel strip** | A word or syllable with one vowel place; the child slides a strip of vowel letters (in pairs а–я, о–ё, у–ю, ы–и, э–е) to change the word and hears it (мал → мял, кот → кит) | C-07, B-21 | From Zhurova's vowel strip [ZHU]. Also the hint at level 2 for M-RUS-HARDSOFT. |
-| R4 | **Spell with tiles** (разрезна́я а́збука) | Hears a word; builds it from letter tiles (with a few distractor tiles) left to right; a filled slot can be emptied by a tap | B-25, C-16, C-17, C-18, C-19, C-20, C-21, C-22, C-23 | Shares slots and palette with T05, but the model is heard, not shown. Classifiers: reversed order (M-RUS-RTL), ь missing, жы / шы, devoicing, unstressed vowel as heard. |
-| R5 | **Read and find** | Reads a syllable, word or sentence shown in Cyrillic (no audio until asked) and taps the picture | B-23, C-09, C-10, C-12, C-13 | Could be a T01 mode (text prompt, picture answers). The "read to me" button is a hint and lowers the credit. Must never be timed. |
-| R6 | **Listen and do** (TPR) | Hears a command or a sentence in Russian and makes the friend do it in a scene: tap the action, drag the thing (Положи́ мяч на стол) | A-03, A-04, A-14, B-05, B-06 | A scene with draggable things and two or three action buttons. |
-| R7 | **Story reader** | A picture book of 3–10 pages; the voice reads with the words lit as they are read (karaoke); in Band C the child reads first and taps a word to hear it; one or two questions after | A-16, B-08, C-13, C-14, C-30 | Shared reading [MOL]. Word-level timing per clip (the voice director will say whether ElevenLabs timestamps can be used, or it is marked by hand). Questions use T01. |
-| R8 | **Say it with me** (echo) | The voice says a word or phrase; a pause for the child; the voice says it again; the child may tap "I said it" | A-15, B-08, C-30, all vocabulary | No recording, no recogniser, no score (syllabus §8). Optional later: a Russian recogniser (owner question 4). |
-| R9 | **Sentence builder** | Puts 2–5 word tiles in order to match a picture or a heard sentence; the ending tiles show agreement choices (кра́сный / кра́сная) | B-02, B-07, C-15, C-23, C-24, C-27, C-28 | Tiles left to right; capital and full stop as tiles in C-15. |
-| R10 | **Write from memory** | Writes a letter (later a short word) on a blank box with no guide; recognised by comparing strokes with the letter's stroke data | B-26, C-22 | A T04 extension: a `guide: none` mode and a recogniser tolerant of child shapes; the help ladder brings back the start dot, then the full guide. [JAM] is the reason this matters. |
-| R11 | **Placement game** | The five staircases of syllabus §7.3 with T01, R4 and R5 items, plus the parent questionnaire in the parent area | placement | Reuses the existing placement frame (`docs/curriculum.md` §10.1) if the engine has one by then. |
-
-## 4. Order of building (proposal for the milestone plan)
-1. Font, LTR runs, split audio, validator checks (§1).
-2. T01 text tiles, T03, T16 with Russian content: Band A oral and first sound play.
-3. R1 sound scheme, R2 syllable slide, T04 letter strokes: Band B core.
-4. R4 tiles, R5 read and find, R3 vowel strip: early reading and spelling.
-5. R6, R7, R9, R10, R8, R11.
-
-Hand-off: the curriculum-expert decides how these sit in the shared engine for all three languages (the English and Hebrew courses will likely need R1, R2, R4, R5, R7 too).
+## 4. Order of building
+The Russian course follows the shared waves of frame §2.5: wave 0 the foundations F1 to F9; wave 1 (Band A) LS01 → LS09 → LS08 `listen` and `dialogic` → LS11 → LS12 → LS10 → LS03 drum → LS13; wave 2 (Band B) LS02 copy and memory with the stroke data → LS03 full → LS05 → LS04 → LS06; wave 3 (Band C) LS07 → LS08 `read_first` and `read_along` → LS14 later. Russian Band A (RUS-1, `band-a-content.md`) needs only wave 1 and T02; it can ship with LS09 in echo mode if the recogniser (L3) is late.
