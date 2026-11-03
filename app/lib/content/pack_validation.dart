@@ -6,8 +6,10 @@ import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
 import '../speech/spoken_options.dart';
 import 'hint_ladder.dart';
+import 'language_checks.dart';
 import 'schema.dart';
 import 'schemas.dart';
+import 'scripts.dart';
 
 /// Checks that need more than one file: every reference points at something that exists, ids are
 /// unique, the manifest lists exactly what the pack holds, tags come from the catalogue, and the
@@ -306,10 +308,8 @@ List<Problem> validatePack({
           if (group is Map<String, Object?>) checkAsset(file, 'scene.$g.sprite', group['sprite']);
         }
         for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
-          final int kinds = <String>['sprite', 'numeral', 'set'].where(o.containsKey).length;
-          if (kinds != 1) {
-            say(file, 'answer.options[$i]', 'must be exactly one of a sprite, a numeral or a set');
-          }
+          _optionKind(file, 'answer.options[$i]', o, say, language: Course.isLanguage(course));
+          checkVo(file, 'answer.options[$i].clip', o['clip']);
           final Object? set = o['set'];
           if (set is Map<String, Object?>) checkAsset(file, 'answer.options[$i].set.sprite', set['sprite']);
         }
@@ -326,6 +326,13 @@ List<Problem> validatePack({
         checkAsset(file, 'scene.target.sprite', (scene['target']! as Map<String, Object?>)['sprite']);
         checkVo(file, 'answerPrompt.vo', (a['answerPrompt']! as Map<String, Object?>)['vo']);
         _options(file, answer, say, checkTag);
+        for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
+          checkVo(file, 'answer.options[$i].clip', o['clip']);
+        }
+        for (final (int i, Object? c)
+            in ((objects['clips'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+          checkVo(file, 'scene.objects.clips[$i]', c);
+        }
         final Map<String, Object?>? right = _correctOption(answer);
         if (right != null && right['value'] != objects['count']) {
           say(
@@ -629,6 +636,7 @@ List<Problem> validatePack({
           checkTag(file, 'answer.classifiers[$i].misconception', c['misconception']);
         }
     }
+    _targetClips(file, a, checkVo);
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
   });
@@ -684,6 +692,9 @@ List<Problem> validatePack({
     gates: gates,
     say: say,
   );
+  if (Course.isLanguage(course)) {
+    checkLanguageContent(course: course, activities: activities, skills: skills, tags: tags, say: say);
+  }
 
   // ---- characters ----
   characters.forEach((String id, Map<String, Object?> c) {
@@ -894,7 +905,87 @@ String _look(Map<String, Object?> o) {
     if (set is Map<String, Object?>)
       for (final MapEntry<String, Object?> e in set.entries) '${e.key}=${e.value}',
   ]..sort();
-  return '${o['sprite']}|${o['numeral']}|${parts.join(',')}';
+  // A sound button has no face, so its sound is all there is to tell it by.
+  final bool faceless = o['sprite'] == null && o['numeral'] == null && o['text'] == null && set == null;
+  return '${o['sprite']}|${o['numeral']}|${o['text']}|${parts.join(',')}${faceless ? '|${o['clip']}' : ''}';
+}
+
+/// What an option of a `tap_answer` is: exactly one of a sprite, a numeral or a set; in a language course also a text, or only a
+/// sound (a sound button). A clip may go with any of them (a speaker on the tile); a revealed word goes under a picture.
+void _optionKind(
+  String file,
+  String path,
+  Map<String, Object?> o,
+  void Function(String, String, String) say, {
+  required bool language,
+}) {
+  final int faces = <String>['sprite', 'numeral', 'set', 'text'].where(o.containsKey).length;
+  if (!language) {
+    if (faces - (o.containsKey('text') ? 1 : 0) != 1) {
+      say(file, path, 'must be exactly one of a sprite, a numeral or a set');
+    }
+    return;
+  }
+  if (faces > 1 || (faces == 0 && !o.containsKey('clip'))) {
+    say(
+      file,
+      path,
+      'must be exactly one of a sprite, a numeral, a set or a text, or only a clip (a sound button)',
+    );
+  }
+  if (o.containsKey('reveal') && !(o.containsKey('sprite') || o.containsKey('set'))) {
+    say(file, '$path.reveal', 'is the word under a picture: the option needs a sprite or a set');
+  }
+}
+
+/// The fields that only a language course has (text and sound on an option, a second clip and a word on show on a line, the
+/// number clips of counting, the sides of a pair): a pack of the lands holds none of them.
+void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(String, String, String) say) {
+  void walk(Object? node, String path) {
+    if (node is Map<String, Object?>) {
+      node.forEach((String k, Object? v) {
+        final String here = path.isEmpty ? k : '$path.$k';
+        final bool option = RegExp(r'^answer\.options\[\d+\]$').hasMatch(path);
+        final bool own =
+            const <String>{'show', 'clips', 'pole', 'pairWith'}.contains(k) ||
+            (k == 'target' && v is String) ||
+            (option && const <String>{'text', 'clip', 'reveal'}.contains(k));
+        if (own) {
+          say(file, here, 'belongs to a language course, not to the lands');
+        } else {
+          walk(v, here);
+        }
+      });
+    } else if (node is List<Object?>) {
+      for (final (int i, Object? e) in node.indexed) {
+        walk(e, '$path[$i]');
+      }
+    }
+  }
+
+  walk(a, '');
+}
+
+/// The second clip of a spoken line (`target`) names a voice line of the pack, and only a language course has one.
+void _targetClips(String file, Map<String, Object?> a, void Function(String, String, Object?) checkVo) {
+  void walk(Object? node, String path) {
+    if (node is Map<String, Object?>) {
+      node.forEach((String k, Object? v) {
+        final String here = path.isEmpty ? k : '$path.$k';
+        if (k == 'target' && v is String) {
+          checkVo(file, here, v);
+        } else {
+          walk(v, here);
+        }
+      });
+    } else if (node is List<Object?>) {
+      for (final (int i, Object? e) in node.indexed) {
+        walk(e, '$path[$i]');
+      }
+    }
+  }
+
+  walk(a, '');
 }
 
 final RegExp _jsonName = RegExp(r'^([a-z]+)\.(.+)\.json$');
@@ -1090,6 +1181,7 @@ void _courseRules({
         say(file, 'skills[$i].id', '$skill is a roll-up with no estimate of its own: name one of its groups');
       }
     }
+    if (!language) _languageFieldsInLands(file, a, say);
     final Object? tutor = a['tutor'];
     if (language && tutor is Map<String, Object?> && tutor['llmAllowed'] == true) {
       say(file, 'tutor.llmAllowed', 'must be false: the AI tutor is off in language lessons');
@@ -1104,31 +1196,6 @@ void _courseRules({
       if (s is String && !ownSkill(s)) say(file, 'skills[$i]', '$s is not a skill of the course $course');
     }
   });
-}
-
-/// Every skill below the given ones (their prerequisites, and theirs), where a prerequisite on a roll-up means all its groups.
-Set<String> _below(Iterable<String> from, Map<String, Map<String, Object?>> skills) {
-  final Set<String> out = <String>{};
-  List<String> groupsOf(String id) => <String>[
-    for (final String k in skills.keys)
-      if (SkillIds.parentOf(k) == id) k,
-  ];
-  final List<String> stack = <String>[
-    for (final String id in from) ...(groupsOf(id).isEmpty ? <String>[id] : groupsOf(id)),
-  ];
-  while (stack.isNotEmpty) {
-    final String id = stack.removeLast();
-    final List<String> needs = <String>[
-      for (final Map<String, Object?> p in _maps(skills[id]?['prerequisites'])) p['skill']! as String,
-    ];
-    for (final String need in needs) {
-      final List<String> groups = groupsOf(need);
-      for (final String n in groups.isEmpty ? <String>[need] : groups) {
-        if (out.add(n)) stack.add(n);
-      }
-    }
-  }
-  return out;
 }
 
 /// The rules for letter bundles and gates (docs/languages/frame.md sections 3.3.3 and 3.3.6).
@@ -1154,7 +1221,7 @@ void _bundlesAndGates({
       say('skill.${members.first}.json', 'bundle', 'a bundle has at least two facets; "$bundle" has one');
     }
     for (final String m in members) {
-      final Set<String> below = _below(<String>[m], skills);
+      final Set<String> below = skillsBelow(<String>[m], skills);
       for (final String other in members) {
         if (other != m && below.contains(other)) {
           say(
@@ -1213,7 +1280,7 @@ void _bundlesAndGates({
       for (final Map<String, Object?> q in _maps(g['requireAtLeast']))
         for (final Object? s in q['skills']! as List<Object?>) s! as String,
     };
-    final Set<String> needed = <String>{...asked, ..._below(asked, skills)};
+    final Set<String> needed = <String>{...asked, ...skillsBelow(asked, skills)};
     for (final String h in holds) {
       if (needed.contains(h)) {
         say(file, 'holds', '$h is needed by what the gate asks for, so the gate could never open');
@@ -1231,8 +1298,8 @@ final String _points = _range(0x05B0, 0x05C7);
 final RegExp _hebrewWord = RegExp(
   '[$_letters][$_points$_letters${String.fromCharCodes(<int>[0x05F3, 0x05F4, 0x05BE])}]*',
 );
-final RegExp _niqqud = RegExp('[$_points]');
 final RegExp _latin = RegExp('[A-Za-z]');
+final RegExp _cyrillic = RegExp('[${_range(0x0400, 0x052F)}]');
 
 /// The house rules for child-facing Hebrew: Hebrew only, no Latin letters, and in Bands A and B
 /// every word of two letters or more carries niqqud.
@@ -1273,16 +1340,15 @@ void _line(
 }) {
   if (text is! String) return;
   if (_latin.hasMatch(text)) say(file, path, 'contains Latin letters; the child space is Hebrew only');
+  if (_cyrillic.hasMatch(text)) {
+    say(file, path, 'contains Cyrillic letters; a Hebrew line holds no word of another language');
+  }
   if (text.contains('<') || text.contains('>')) {
     say(file, path, 'contains < or >, which turn over in right-to-left text; write maths as a token');
   }
   if (!_hebrewWord.hasMatch(text) && !allowNoHebrew) say(file, path, 'contains no Hebrew');
   if (!pointed) return;
-  for (final RegExpMatch m in _hebrewWord.allMatches(text)) {
-    final String word = m.group(0)!;
-    final int letters = word.runes.where((int r) => r >= 0x05D0 && r <= 0x05EA).length;
-    if (letters >= 2 && !_niqqud.hasMatch(word)) {
-      say(file, path, 'the word "$word" has no niqqud (Bands A and B are fully pointed)');
-    }
+  for (final String word in unpointedHebrewWords(text)) {
+    say(file, path, 'the word "$word" has no niqqud (Bands A and B are fully pointed)');
   }
 }

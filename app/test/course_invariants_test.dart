@@ -272,8 +272,9 @@ void main() {
       _addSkill(p, 'ENG-A-01.G2');
       p.doc(_skill1)['prerequisites'] = <Object?>[];
       _l(p.doc(_count)['skills'])[0] = <String, Object?>{'id': 'ENG-A-01.G1', 'weight': 1};
+      // The two-choice item stays with the three-choice one (a skill of only two-choice items is refused, L1).
       p.doc('activity.eng.pick.red.flower.json')['skills'] = <Object?>[
-        <String, Object?>{'id': 'ENG-A-01.G2', 'weight': 1},
+        <String, Object?>{'id': 'ENG-A-01.G1', 'weight': 1},
       ];
       p.doc('activity.eng.give.three.jar.json')['skills'] = <Object?>[
         <String, Object?>{'id': 'ENG-A-01.G2', 'weight': 1},

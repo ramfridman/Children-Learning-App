@@ -29,6 +29,15 @@
         "rus"
       ]
     },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "diagnostic",
+        "on_the_way",
+        "accent",
+        "practice"
+      ]
+    },
     "skills": {
       "type": "array",
       "items": {

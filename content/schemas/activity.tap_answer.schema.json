@@ -197,6 +197,17 @@
         },
         "replayButton": {
           "type": "boolean"
+        },
+        "target": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 83,
+          "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+        },
+        "show": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
         }
       },
       "required": [
@@ -412,6 +423,22 @@
                 ],
                 "additionalProperties": false
               },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "clip": {
+                "type": "string",
+                "minLength": 4,
+                "maxLength": 83,
+                "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+              },
+              "reveal": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
               "label": {
                 "type": "string",
                 "minLength": 1,
@@ -454,6 +481,21 @@
         },
         "unsureAllowed": {
           "type": "boolean"
+        },
+        "pole": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "same",
+            "different"
+          ]
+        },
+        "pairWith": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 81,
+          "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
         }
       },
       "required": [
@@ -502,6 +544,17 @@
               },
               "minItems": 1,
               "maxItems": 1
+            },
+            "target": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "show": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
             }
           },
           "required": [
@@ -549,6 +602,17 @@
                 },
                 "minItems": 1,
                 "maxItems": 1
+              },
+              "target": {
+                "type": "string",
+                "minLength": 4,
+                "maxLength": 83,
+                "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+              },
+              "show": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
               }
             },
             "required": [
@@ -592,6 +656,17 @@
               },
               "minItems": 1,
               "maxItems": 1
+            },
+            "target": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            },
+            "show": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
             }
           },
           "required": [
@@ -655,6 +730,17 @@
             },
             "minItems": 1,
             "maxItems": 1
+          },
+          "target": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 83,
+            "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+          },
+          "show": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
           }
         },
         "required": [

@@ -307,7 +307,13 @@ class SamplePack {
       if (<String>['activity', 'lesson', 'skill', 'misconception'].any(d.key.startsWith)) {
         doc['course'] = course;
       }
+      // A language tag has a kind, and every distractor of a language item carries a tag (L1, the language checks).
+      if (d.key.startsWith('misconception')) doc['kind'] = 'diagnostic';
     }
+    final Map<String, Object?> pick = docs['activity.$course.pick.red.flower.json']! as Map<String, Object?>;
+    (((pick['answer']! as Map<String, Object?>)['options']! as List<Object?>)[1]!
+            as Map<String, Object?>)['misconception'] =
+        '$course.cnt.skip';
     final Map<String, Object?> manifest = walk(base.manifest)! as Map<String, Object?>;
     manifest['course'] = course;
     return SamplePack._(manifest, docs, <String>{for (final String f in base.files) rename(f)});

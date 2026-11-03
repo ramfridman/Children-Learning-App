@@ -43,8 +43,8 @@ abstract final class SchemaIds {
 
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
-  'tap_answer': '1.2',
-  'count_tap': '1.0',
+  'tap_answer': '1.3',
+  'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
   'sort_drag': '1.0',
@@ -101,6 +101,12 @@ const List<String> gateSwitchNames = <String>['oralOnly', 'lettersBefore5'];
 const List<String> courseRoutes = <String>['new', 'heritage', 'reader'];
 const List<String> representations = <String>['concrete', 'pictorial', 'story', 'embodied', 'symbolic'];
 
+/// The kinds of misconception tag of a language course (docs/languages/frame.md section 4.1).
+const List<String> tagKinds = <String>['diagnostic', 'on_the_way', 'accent', 'practice'];
+
+/// The sides of a two-way skill (yes or no, same or different), and the pairs they come in.
+const List<String> poles = <String>['yes', 'no', 'same', 'different'];
+
 const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activityId);
 
 /// Every answer carries its lesson id, and `sync-push` takes at most 40 characters (SEC-12).
@@ -127,7 +133,21 @@ const SArray _caption = SArray(
   maxItems: 1,
 );
 
-const SObject _spoken = SObject(<String, SField>{'vo': SField(_vo), 'caption': SField(_caption)});
+/// What any spoken line may carry in a language course (docs/languages/frame.md F1 and F3): the target clip that follows the
+/// Hebrew frame clip (a two-clip line), and a target word to show in a chip under the line (never inside the Hebrew).
+const Map<String, SField> _lineExtras = <String, SField>{
+  'target': SField(_vo, required: false),
+  'show': SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
+};
+
+/// The most characters of the text of a tile, a word on show or a revealed word.
+const int _targetTextMax = 40;
+
+const SObject _spoken = SObject(<String, SField>{
+  'vo': SField(_vo),
+  'caption': SField(_caption),
+  ..._lineExtras,
+});
 
 // ---- manifest ----
 
@@ -308,6 +328,13 @@ const SObject skillSchema = SObject(<String, SField>{
   'setCoverage': SField(SBool(), required: false),
   'soundRight': SField(SEnum(<String>['accepts', 'teaches']), required: false),
   'letters': SField(SBool(), required: false),
+  // The graphemes this skill teaches (a letter, a digraph, a vowel sign), and the whole words it teaches as they are. A skill
+  // that is letter work may offer only words made of the graphemes taught by it and by the skills below it, and its tricky
+  // words (the decodable check, docs/languages/frame.md F5).
+  'graphemes': SField(SArray(SString(minLength: 1, maxLength: 3), maxItems: 40), required: false),
+  'tricky': SField(SArray(SString(minLength: 1, maxLength: _targetTextMax), maxItems: 60), required: false),
+  // A skill that is two-way by nature (yes or no, same or different): its two-choice items must be balanced.
+  'binary': SField(SBool(), required: false),
   // The strand of the course the skill is in (frame section 4.1: `lis`, `spk`, `pa`, `ph`, `rd`, `wr`; `ol`, `pk`, `dec`; `voc`,
   // `grm`, `pho`, `let`, `rea`, `wri`): the parent's progress view groups a language's skills by it.
   'strand': SField(SString(minLength: 2, maxLength: 4, pattern: r'[a-z]{2,4}'), required: false),
@@ -361,6 +388,10 @@ const SObject misconceptionSchema = SObject(<String, SField>{
   'id': SField(_tag),
   'review': _review,
   'course': _course,
+  // What a wrong choice of this tag means (docs/languages/frame.md section 4.1): `diagnostic` is misconception evidence,
+  // `on_the_way` is accepted as success in early skills, `accent` is speech only (never on a distractor), `practice` gives no signal.
+  // Optional in the lands; a language pack must give it (the validator).
+  'kind': SField(SEnum(tagKinds), required: false),
   'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
   'parentText': SField(SString(minLength: 1, maxLength: 240)),
   // Something a parent can do at home in about five minutes (M7, pack 0.3.0). Plain Hebrew for the parent.
@@ -436,12 +467,19 @@ const SField _speechWords = SField(
   required: false,
 );
 
-SObject _answerOptions(Map<String, SField> optionFields) => SObject(<String, SField>{
+/// An option's own sound (a `vo:` reference), played by a speaker on its tile or by the tile itself (LS01 b and c).
+const SField _optionClip = SField(_vo, required: false);
+
+SObject _answerOptions(
+  Map<String, SField> optionFields, {
+  Map<String, SField> answerFields = const <String, SField>{},
+}) => SObject(<String, SField>{
   'type': const SField(SConst('choice')),
   'options': SField(SArray(SObject(optionFields), minItems: 2, maxItems: 4, uniqueKey: 'id')),
   'correct': const SField(_optionId),
   'shuffle': const SField(SBool()),
   'unsureAllowed': const SField(SBool()),
+  ...answerFields,
 });
 
 const SObject _feedback = SObject(<String, SField>{
@@ -455,6 +493,7 @@ const SObject _feedback = SObject(<String, SField>{
         ),
         'vo': SField(_vo),
         'caption': SField(_caption),
+        ..._lineExtras,
       }),
       minItems: 1,
       maxItems: 8,
@@ -476,6 +515,7 @@ const SArray _hints = SArray(
     ),
     'vo': SField(_vo),
     'caption': SField(_caption),
+    ..._lineExtras,
   }),
   maxItems: 3,
   uniqueKey: 'level',
@@ -531,6 +571,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'vo': SField(_vo),
       'caption': SField(_caption),
       'replayButton': SField(SBool()),
+      ..._lineExtras,
     }),
   ),
   ...templateParts,
@@ -604,16 +645,28 @@ SObject? activitySchemaFor(String template) => switch (template) {
         }),
       ),
       'answer': SField(
-        _answerOptions(<String, SField>{
-          'id': const SField(_optionId),
-          // An option is a picture, a numeral, or a set (1.1): exactly one of the three.
-          'sprite': const SField(_asset, required: false),
-          'numeral': const SField(SInt(min: 0, max: 100), required: false),
-          'set': const SField(_spriteSet, required: false),
-          'label': const SField(SString(minLength: 1, maxLength: 80)),
-          'speech': _speechWords,
-          'misconception': const SField(_tag, required: false),
-        }),
+        _answerOptions(
+          <String, SField>{
+            'id': const SField(_optionId),
+            // An option is a picture, a numeral, or a set (1.1): exactly one of the three. In a language course it may also be
+            // a text (1.3), or only a sound (a `clip` and nothing else, a sound button); the validator allows both there only.
+            'sprite': const SField(_asset, required: false),
+            'numeral': const SField(SInt(min: 0, max: 100), required: false),
+            'set': const SField(_spriteSet, required: false),
+            'text': const SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
+            'clip': _optionClip,
+            // The word shown under the picture once the answer is accepted (LS01 g), in the course's font.
+            'reveal': const SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
+            'label': const SField(SString(minLength: 1, maxLength: 80)),
+            'speech': _speechWords,
+            'misconception': const SField(_tag, required: false),
+          },
+          answerFields: <String, SField>{
+            // Which side of a two-way skill this item is, and the item it is paired with in a check (frame section 2.3).
+            'pole': const SField(SEnum(poles), required: false),
+            'pairWith': const SField(_id, required: false),
+          },
+        ),
       ),
     }),
   ),
@@ -630,6 +683,8 @@ SObject? activitySchemaFor(String template) => switch (template) {
               'arrangement': SField(SEnum(<String>['line', 'scatter'])),
               'onTap': SField(SEnum(<String>['fly_to_target', 'glow'])),
               'seed': SField(SInt(min: 0, max: 9999)),
+              // In a language course: the number word each tap plays, in counting order (practice, never scored).
+              'clips': SField(SArray(_vo, minItems: 1, maxItems: 20), required: false),
             }),
           ),
           'target': SField(_sprite),
@@ -639,6 +694,8 @@ SObject? activitySchemaFor(String template) => switch (template) {
         _answerOptions(<String, SField>{
           'id': const SField(_optionId),
           'value': const SField(SInt(min: 0, max: 20)),
+          // In a language course the options of "how many?" are sound buttons: the number word each one plays.
+          'clip': _optionClip,
           'speech': _speechWords,
           'misconception': const SField(_tag, required: false),
         }),
