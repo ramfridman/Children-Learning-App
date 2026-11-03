@@ -125,11 +125,16 @@ class BoardBubble extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.maxWidth,
     this.tailTip,
+    this.chip,
   });
 
   final String text;
   final double fontSize;
   final EdgeInsets padding;
+
+  /// A target word on show (a `TargetChip`), under the line on a row of its own: a prompt never prints a word of another
+  /// language inside the Hebrew.
+  final Widget? chip;
 
   /// When set, a long line wraps inside this width (the bubble of a lesson); when null the line
   /// stays on one row, as on the design boards.
@@ -138,6 +143,12 @@ class BoardBubble extends StatelessWidget {
   /// Where the wedge tail ends, from the bubble's top left corner (the child's home, B-26: beside the friend's mouth).
   /// The tip stays put when the bubble grows; only the wedge gets shorter. Null: the small tail on the right edge.
   final Offset? tailTip;
+
+  Widget get _line => Text(
+    text,
+    style: AppText.fixed(size: fontSize, weight: 500),
+    softWrap: maxWidth != null,
+  );
 
   @override
   Widget build(BuildContext context) => Stack(
@@ -171,11 +182,12 @@ class BoardBubble extends StatelessWidget {
           borderRadius: BorderRadius.circular(TokenRadius.lg),
           boxShadow: softShadow,
         ),
-        child: Text(
-          text,
-          style: AppText.fixed(size: fontSize, weight: 500),
-          softWrap: maxWidth != null,
-        ),
+        child: chip == null
+            ? _line
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[_line, const SizedBox(height: 6), chip!],
+              ),
       ),
       // One outline around the body and the wedge together, over both, so no line crosses where they join.
       if (tailTip != null)

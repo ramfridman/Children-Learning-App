@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../child/activity_shell.dart';
 import '../../content/models.dart';
+import '../../design/course_text.dart';
 import '../sprite_group.dart';
 
 /// Where the things of a `tap_answer` stage and of its answer tiles are, in the stage's own points ((0, 0) is the stage's top left
@@ -132,7 +133,11 @@ class TapGeometry {
   /// The place of the numeral that the stage shows large.
   Rect get stageNumeral => Rect.fromCenter(center: Offset(w / 2, h / 2), width: h * 0.55, height: h * 0.7);
 
-  /// The places of the options that stand on the stage itself (those that are not on tiles).
+  /// True when the pictures on the stage run from the right: the activity is of a course that reads right to left (Hebrew). The
+  /// lands keep the order they always had, first picture on the left.
+  bool get stageFromRight => courseRowDirection(a.course) == TextDirection.rtl;
+
+  /// The places of the options that stand on the stage itself (those that are not on tiles), in the order of the options.
   List<Rect> stageOptions() {
     final int n = a.options.length;
     final double top = _groupAboveOptions ? h * 0.5 : 0;
@@ -140,7 +145,8 @@ class TapGeometry {
     final double box = math.min(room * (_groupAboveOptions ? 0.9 : 0.86), w / (n + 0.5));
     final double gap = (w - box * n) / (n + 1);
     return <Rect>[
-      for (int i = 0; i < n; i++) Rect.fromLTWH(gap + i * (box + gap), top + (room - box) / 2, box, box),
+      for (int i = 0; i < n; i++)
+        Rect.fromLTWH(gap + (stageFromRight ? n - 1 - i : i) * (box + gap), top + (room - box) / 2, box, box),
     ];
   }
 
@@ -159,6 +165,13 @@ class TapGeometry {
   /// True when the options are tiles below the stage.
   bool get tiles => a.optionsInTiles;
 
+  /// The width of one answer tile of [a] on [spec]'s board: a square 96 points for a numeral, a sound or a picture; as wide as the
+  /// row allows (170 at most) for a set of things.
+  static double tileWidthOf(TapAnswerActivity a, ActivitySpec spec) {
+    final bool sets = a.options.any((ChoiceOption o) => o.set != null);
+    return sets ? math.min(170, spec.tilesWidth / a.options.length - 24) : 96;
+  }
+
   /// The point on the top edge of option [i]'s tile (or, for an option on the stage, of its picture) where the hand's fingertip
   /// ends. For a tile this is below the stage: the hand reaches over its edge.
   Offset optionTip(int i) {
@@ -167,9 +180,8 @@ class TapGeometry {
       return Offset(r.center.dx, r.top + r.height * 0.18);
     }
     final int n = a.options.length;
-    final bool sets = a.options.any((ChoiceOption o) => o.set != null);
     // Each tile takes its width and a 12 point tap margin on both sides (see `AnswerTile`).
-    final double tileW = (sets ? math.min(170, spec.tilesWidth / n - 24) : 96) + 24;
+    final double tileW = tileWidthOf(a, spec) + 24;
     final double fromStart = (spec.tilesWidth - n * tileW) / 2 + (i + 0.5) * tileW;
     final double cx = dir == TextDirection.rtl
         ? spec.tilesLeft + spec.tilesWidth - fromStart

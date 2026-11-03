@@ -315,13 +315,22 @@ class SamplePack {
 
   /// The pack as the app holds one that passed `verifyPack`, but with no signature and no bytes: for tests of what is built
   /// from the documents (the models, the engine's catalogue), which never look at either.
-  VerifiedPack verified() => VerifiedPack(
+  /// With [pictures] every picture of the manifest is a small drawn square (a screen that draws the pack needs them).
+  VerifiedPack verified({bool pictures = false}) => VerifiedPack(
     manifestBytes: Uint8List.fromList(utf8.encode(jsonEncode(manifest))),
     signature: Uint8List(64),
     manifestSha256: '0' * 64,
     manifest: manifest,
     docs: docs,
-    files: const <String, Uint8List>{},
+    files: <String, Uint8List>{
+      if (pictures)
+        for (final Map<String, Object?> a in manifestList('assets'))
+          a['file']! as String: Uint8List.fromList(
+            utf8.encode(
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#E8A33D"/></svg>',
+            ),
+          ),
+    },
   );
 
   /// Adds a JSON document to the pack and to the manifest, under the list [entriesKey] of its kind (`skills`, `gates`, ...), as

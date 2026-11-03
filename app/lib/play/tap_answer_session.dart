@@ -7,6 +7,7 @@ import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
+import '../design/course_text.dart';
 import '../design/tokens.g.dart';
 import '../speech/answer_matcher.dart';
 import '../speech/spoken_options.dart';
@@ -37,6 +38,10 @@ class TapAnswerSession extends TemplateSession {
   Size? _stageSize;
   ActivitySpec? _spec;
   TextDirection _dir = TextDirection.rtl;
+
+  /// The direction the row of answers runs in (and the hint's geometry is laid out in): the course's own for a language
+  /// activity, the screen's for every land (docs/languages/frame.md, F1).
+  TextDirection get _rowDir => courseRowDirection(activity.course) ?? _dir;
 
   String? chosenId;
   AnswerState chosenState = AnswerState.idle;
@@ -121,7 +126,7 @@ class TapAnswerSession extends TemplateSession {
   TapGeometry? _geometry() {
     final Size? size = _stageSize;
     final ActivitySpec? spec = _spec;
-    return size == null || spec == null ? null : TapGeometry(activity, size, spec, dir: _dir);
+    return size == null || spec == null ? null : TapGeometry(activity, size, spec, dir: _rowDir);
   }
 
   /// Plays a hint: each step of [plan] on the stage for its time, then what stays. Starting another hint (or an answer) stops it.
@@ -151,11 +156,10 @@ class TapAnswerSession extends TemplateSession {
   @override
   Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) {
     // A tile of sets is wider than a numeral's tile (see `buildTiles`): the hand that comes in from the side stops at its edge.
-    final bool sets = activity.options.any((ChoiceOption o) => o.set != null);
-    final double width = sets ? math.min(170, spec.tilesWidth / activity.options.length - 24) : 96;
+    final double width = TapGeometry.tileWidthOf(activity, spec);
     double? rowEnd;
     if (activity.optionsInTiles) {
-      final TapGeometry g = TapGeometry(activity, size, spec, dir: _dir);
+      final TapGeometry g = TapGeometry(activity, size, spec, dir: _rowDir);
       rowEnd =
           <double>[for (int i = 0; i < activity.options.length; i++) g.optionTip(i).dx].reduce(math.max) +
           width / 2;
@@ -166,78 +170,80 @@ class TapAnswerSession extends TemplateSession {
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) {
     if (!activity.optionsInTiles) return null;
-    final int n = activity.options.length;
     // Numerals sit on square tiles; a set of things gets a wider one, as wide as the row allows.
     final bool sets = activity.options.any((ChoiceOption o) => o.set != null);
-    final double width = math.min(170, spec.tilesWidth / n - 24);
+    final double width = TapGeometry.tileWidthOf(activity, spec);
     return ListenableBuilder(
       listenable: this,
-      builder: (BuildContext c, Widget? _) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          for (final (int i, ChoiceOption o) in activity.options.indexed)
-            Stack(
-              clipBehavior: Clip.none,
-              children: <Widget>[
-                Opacity(
-                  opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
-                  child: AnswerTile(
-                    key: Key('tile-${o.id}'),
-                    semanticLabel: o.label ?? '',
-                    width: sets ? width : null,
-                    state: chosenId == o.id
-                        ? chosenState
-                        : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
-                              ? AnswerState.selected
-                              : AnswerState.idle),
-                    onPressed: () => choose(o.id),
-                    child: sets
-                        ? Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: _face(activity, o, 96, spec.tileFont),
-                          )
-                        : _face(activity, o, 96, spec.tileFont),
-                  ),
-                ),
-                // A place badge, and a start flag at the first end of the row, stand on the tiles (a tile paints above the stage and
-                // the speech bubble, so they are never covered by the bubble).
-                for (final TileMark m in marks.whereType<TileMark>())
-                  if (m.tile == i)
-                    switch (m) {
-                      TileBadgeMark() => Positioned(
-                        top: 12 - 23 * hintScale(_stageSize ?? Size.zero),
-                        left: 0,
-                        right: 0,
-                        child: IgnorePointer(
-                          child: Center(
-                            child: HintBadge(n: m.n, scale: hintScale(_stageSize ?? Size.zero)),
-                          ),
-                        ),
-                      ),
-                      TileFlagMark() => Positioned(
-                        top: 12 - 26 * hintScale(_stageSize ?? Size.zero),
-                        right: 12 - 20 * hintScale(_stageSize ?? Size.zero),
-                        child: IgnorePointer(child: HintFlag(scale: hintScale(_stageSize ?? Size.zero))),
-                      ),
-                    },
-                // Where the stage has nothing of the question to light, a first hint lights each answer in turn, the same for all.
-                if (hintLit == i)
-                  Positioned.fill(
-                    left: 6,
-                    top: 6,
-                    right: 6,
-                    bottom: 6,
-                    child: IgnorePointer(
-                      child: const SkyRing(
-                        key: Key('hint-tile-glow'),
-                        round: false,
-                        radius: TokenRadius.xl + 6,
-                      ),
+      builder: (BuildContext c, Widget? _) => Directionality(
+        textDirection: _rowDir,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            for (final (int i, ChoiceOption o) in activity.options.indexed)
+              Stack(
+                clipBehavior: Clip.none,
+                children: <Widget>[
+                  Opacity(
+                    opacity: controller.answerShown && o.id != activity.correctId ? 0.35 : 1,
+                    child: AnswerTile(
+                      key: Key('tile-${o.id}'),
+                      semanticLabel: o.label ?? '',
+                      width: sets ? width : null,
+                      state: chosenId == o.id
+                          ? chosenState
+                          : ((controller.answerShown && o.id == activity.correctId) || voiceLit == o.id
+                                ? AnswerState.selected
+                                : AnswerState.idle),
+                      onPressed: () => choose(o.id),
+                      child: sets
+                          ? Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: _face(activity, o, 96, spec.tileFont),
+                            )
+                          : _face(activity, o, 96, spec.tileFont),
                     ),
                   ),
-              ],
-            ),
-        ],
+                  // A place badge, and a start flag at the first end of the row, stand on the tiles (a tile paints above the stage and
+                  // the speech bubble, so they are never covered by the bubble).
+                  for (final TileMark m in marks.whereType<TileMark>())
+                    if (m.tile == i)
+                      switch (m) {
+                        TileBadgeMark() => Positioned(
+                          top: 12 - 23 * hintScale(_stageSize ?? Size.zero),
+                          left: 0,
+                          right: 0,
+                          child: IgnorePointer(
+                            child: Center(
+                              child: HintBadge(n: m.n, scale: hintScale(_stageSize ?? Size.zero)),
+                            ),
+                          ),
+                        ),
+                        TileFlagMark() => Positioned(
+                          top: 12 - 26 * hintScale(_stageSize ?? Size.zero),
+                          right: 12 - 20 * hintScale(_stageSize ?? Size.zero),
+                          child: IgnorePointer(child: HintFlag(scale: hintScale(_stageSize ?? Size.zero))),
+                        ),
+                      },
+                  // Where the stage has nothing of the question to light, a first hint lights each answer in turn, the same for all.
+                  if (hintLit == i)
+                    Positioned.fill(
+                      left: 6,
+                      top: 6,
+                      right: 6,
+                      bottom: 6,
+                      child: IgnorePointer(
+                        child: const SkyRing(
+                          key: Key('hint-tile-glow'),
+                          round: false,
+                          radius: TokenRadius.xl + 6,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -293,6 +299,8 @@ class _TapStage extends StatelessWidget {
     final double room = size.height - top;
     final double box = math.min(room * (hasGroup ? 0.9 : 0.86), size.width / (n + 0.5));
     final double gap = (size.width - box * n) / (n + 1);
+    // A course that reads right to left lays its pictures out from the right (F1); the lands keep the first on the left.
+    final bool fromRight = courseRowDirection(a.course) == TextDirection.rtl;
     final Widget stage = ClipRRect(
       borderRadius: BorderRadius.circular(TokenRadius.lg),
       child: Stack(
@@ -330,7 +338,7 @@ class _TapStage extends StatelessWidget {
           if (!a.optionsInTiles)
             for (final (int i, ChoiceOption o) in a.options.indexed)
               Positioned(
-                left: gap + i * (box + gap),
+                left: gap + (fromRight ? n - 1 - i : i) * (box + gap),
                 top: top + (room - box) / 2,
                 width: box,
                 height: box,

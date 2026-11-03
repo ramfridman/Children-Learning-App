@@ -6,6 +6,7 @@ import '../child/activity_shell.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
+import '../design/course_text.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../rewards/sticker_design.dart';
@@ -35,6 +36,7 @@ class ActivityFrame extends StatelessWidget {
     this.mic,
     this.onConfirmYes,
     this.onConfirmAgain,
+    this.bubbleTarget,
   });
 
   /// The board numbers to lay out on, when the template's are not the board's own (see `TemplateSession.layoutFor`).
@@ -42,6 +44,10 @@ class ActivityFrame extends StatelessWidget {
 
   /// What the guide says now.
   final String bubbleText;
+
+  /// A target word on show with the line: it stands in a [TargetChip] on a row of its own under the line, never inside it
+  /// (fonts.md section 6), in the teaching font of its [course].
+  final ({String text, String course})? bubbleTarget;
 
   /// Builds the stage for the room it has (its width and height, in board points).
   final Widget Function(Size room) stage;
@@ -74,7 +80,7 @@ class ActivityFrame extends StatelessWidget {
   final VoidCallback? onConfirmAgain;
 
   /// The largest font, down to [min], at which [text] fits the room the bubble has.
-  static double fitFont(String text, ActivitySpec s, {double min = 14}) {
+  static double fitFont(String text, ActivitySpec s, {double min = 14, double reserve = 0}) {
     const EdgeInsets pad = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
     for (double size = s.bubbleFont; size > min; size -= 1) {
       final TextPainter tp = TextPainter(
@@ -84,7 +90,7 @@ class ActivityFrame extends StatelessWidget {
         ),
         textDirection: TextDirection.rtl,
       )..layout(maxWidth: s.bubbleMaxWidth - pad.horizontal);
-      if (tp.height + pad.vertical <= s.bubbleMaxHeight) return size;
+      if (tp.height + pad.vertical + reserve <= s.bubbleMaxHeight) return size;
     }
     return min;
   }
@@ -93,7 +99,14 @@ class ActivityFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
     final ActivitySpec s = spec ?? ActivitySpec.of(board);
-    final double font = fitFont(bubbleText, s);
+    // The chip's word is a tenth larger than the Hebrew beside it (fonts.md section 6); its room is taken off the line's.
+    final double chipSize = s.bubbleFont * 1.1;
+    final ({String text, String course})? target = bubbleTarget;
+    final double font = fitFont(
+      bubbleText,
+      s,
+      reserve: target == null ? 0 : 6 + TargetChip.heightFor(chipSize),
+    );
     final Size room = s.stageIsCard ? Size(s.stage.width - 32, s.stage.height - 32) : s.stage.size;
     return Scaffold(
       body: BoardCanvas(
@@ -116,6 +129,7 @@ class ActivityFrame extends StatelessWidget {
                 text: bubbleText,
                 fontSize: font,
                 maxWidth: s.bubbleMaxWidth,
+                chip: target == null ? null : TargetChip(target.text, course: target.course, size: chipSize),
               ),
             ),
           Positioned(
