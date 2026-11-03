@@ -966,6 +966,7 @@ class SkillDoc {
       setCoverage = (json['setCoverage'] as bool?) ?? false,
       soundRight = (json['soundRight'] as String?) ?? 'teaches',
       letters = (json['letters'] as bool?) ?? false,
+      strand = json['strand'] as String?,
       masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
       initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
       targetRetention = (_map(json['retention'])['targetRetention']! as num).toDouble();
@@ -993,6 +994,9 @@ class SkillDoc {
   final bool setCoverage;
   final String soundRight;
   final bool letters;
+
+  /// The strand of the course (`lis`, `ph`, `rea` ...) the progress view groups the skill under; null in the lands.
+  final String? strand;
   final Map<String, Object?> masteryRequires;
   final double initialStabilityDays;
   final double targetRetention;

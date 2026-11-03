@@ -308,6 +308,9 @@ const SObject skillSchema = SObject(<String, SField>{
   'setCoverage': SField(SBool(), required: false),
   'soundRight': SField(SEnum(<String>['accepts', 'teaches']), required: false),
   'letters': SField(SBool(), required: false),
+  // The strand of the course the skill is in (frame section 4.1: `lis`, `spk`, `pa`, `ph`, `rd`, `wr`; `ol`, `pk`, `dec`; `voc`,
+  // `grm`, `pho`, `let`, `rea`, `wri`): the parent's progress view groups a language's skills by it.
+  'strand': SField(SString(minLength: 2, maxLength: 4, pattern: r'[a-z]{2,4}'), required: false),
   'masteryRequires': SField(
     SObject(<String, SField>{
       'successes': SField(SInt(min: 1, max: 20), required: false),

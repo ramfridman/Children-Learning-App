@@ -195,6 +195,12 @@
     "letters": {
       "type": "boolean"
     },
+    "strand": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 4,
+      "pattern": "^(?:[a-z]{2,4})$"
+    },
     "masteryRequires": {
       "type": "object",
       "properties": {

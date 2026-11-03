@@ -116,7 +116,24 @@ void main() {
             .allMatches(source)
             .map((RegExpMatch m) => m.group(1))
             .toSet();
-        expect(names, <String?>{'child', 's', 'm', 't', 'n', 'a', 'b', 'how', 'title', 'w', 'land'});
+        // `lang` and `route` and `default` are the parent texts of the Languages pages (docs/languages/island-texts.md): the name of
+        // a language and of a route, filled on the device from fixed strings and never from the child, the pack or a server.
+        expect(names, <String?>{
+          'child',
+          's',
+          'm',
+          't',
+          'n',
+          'a',
+          'b',
+          'how',
+          'title',
+          'w',
+          'land',
+          'lang',
+          'route',
+          'default',
+        });
       },
     );
 

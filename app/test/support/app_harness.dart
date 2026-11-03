@@ -165,6 +165,7 @@ class AppRig {
     int ageBand = 1,
     String avatar = 'avatar-noa',
     bool warmUp = false,
+    String id = 'p-1',
   }) async {
     // The warm-up game (M9) is off in the tests that are about something else; its own tests turn it on.
     await db.putSetting('warm_up', warmUp ? 'on' : 'off');
@@ -178,7 +179,7 @@ class AppRig {
     ).setPin(testPin);
     await db.addProfile(
       ProfilesCompanion.insert(
-        id: 'p-1',
+        id: id,
         name: name,
         avatar: avatar,
         addressForm: 'f',
