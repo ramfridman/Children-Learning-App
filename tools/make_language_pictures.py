@@ -257,7 +257,8 @@ def fish():
     return facing(p)
 
 
-def cow():
+def cow(grazing=False):
+    """A Holstein cow standing in grass; grazing=True lowers the head to the grass (the English match-pair look)."""
     w, s, blk, pink = '#FFFFFF', '#E3DFEA', '#2E2A3E', '#F6A6B9'
     p = Pic()
     p.fillp(ell(128, 230, 112, 11), '#8CCB6B')
@@ -278,6 +279,8 @@ def cow():
         p.path(rrect(x, 216, 20, 12, 4), blk, 3)
     for x in (100, 186):
         p.path(rrect(x, 216, 18, 12, 4), blk, 3)
+    if grazing:
+        p.add('<g transform="translate(-6 58) rotate(-34 94 100)">')
     p.path('M 84 76 C 100 64, 118 70, 114 82 C 106 88, 92 86, 84 76 Z', w)
     p.fillp('M 92 77 C 100 72, 108 74, 108 80 C 102 82, 96 81, 92 77 Z', pink)
     p.path('M 66 66 C 64 50, 72 40, 80 42 C 76 50, 74 58, 76 68 Z', '#FFF0C8', 3)
@@ -289,6 +292,9 @@ def cow():
     p.path(ell(50, 118, 4, 5), INK, 0)
     p.eye(62, 90, 6.5)
     p.cheek(70, 108)
+    if grazing:
+        p.add('</g>')
+        p.line('M 22 230 L 18 214 M 30 230 L 34 212 M 40 230 L 40 216', '#5BA84A', 4)
     p.hl('M 96 104 Q 112 98 140 98')
     return facing(p)
 

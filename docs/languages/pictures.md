@@ -1,6 +1,6 @@
 # The Languages courses: one shared picture set
 
-Owner: design-director. Date: 2026-11-03. Status: **batch 1 drawn (40 objects: 51 pictures in 54 files); its style approved by the owner (2026-11-03, "looks great"); the rest is a plan.** For the
+Owner: design-director. Date: 2026-11-03. Status: **batch 1 drawn (40 objects: 51 pictures in 54 files), its style approved by the owner (2026-11-03, "looks great"); batch 2 drawn (the other 122 objects, so every shared object is drawn); characters and scenes are a plan.** For the
 teachers of the three courses, the curriculum-expert, the app-developer and the owner.
 
 Built from the three Band A batches: `english/band-a-content.md` §6 (111 briefs), `hebrew/band-a-content.md` §2 and §5
@@ -100,70 +100,91 @@ Contact sheet (every file at 200 px, then at 64 px): `docs/design/languages/pict
 
 Every unique picture of the three Band A batches, by group. E, H, R = English, Hebrew, Russian.
 
-### 4.1 Shared objects (173)
+### 4.1 Shared objects (173, all drawn)
+
+All 173 are drawn: batch 1 (51 pictures) and batch 2 (122 objects, in three parts: `docs/design/languages/pictures_batch2a.png`
+Russian animals, food, clothes and toys; `pictures_batch2b.png` the Hebrew things; `pictures_batch2c.png` vehicles, nature,
+colour patches, the rabbit's tail and the English second looks). Choices made while drawing, for the teachers:
+- **Look-alikes kept apart at 64 px:** wolf (grey, long muzzle, tail down), fox (orange, black socks, white tail tip), lynx
+  (tawny, spots, ear tufts, stub tail), tomcat (a grey striped `cat`); rooster (tall red comb, arched dark tail) and hen
+  (brown, short tail); goat (beard, horns, short coat) and sheep (woolly body, dark face); donkey (long ears, grey, dark
+  stripe) and horse (bay); chick (round, pointed beak, beside its eggshell) and duckling (flat bill); orange (a cut half),
+  tomato (a green star on top), apple (stem and leaf); soup (a blue bowl of broth, steam), porridge (a white bowl of thick
+  oats, butter, an upright wooden spoon), rice (a white dome in a coral bowl), sugar (cubes in a mint bowl); shoes (low,
+  laced) and boots (to the knee); `balloon-big` round, `balloon` oval; `sun` with rays, `star` with five points, `moon` a
+  crescent in a night circle (so it is never a banana); `bush` low with no trunk, `tree` with a trunk.
+- **`sandal` is a pair seen from above** (one sandal in side view read as loops on a board); for the
+  hebrew-language-teacher, the word is סַנְדָּל (one), the picture shows two.
+- **`tea` is a cup and saucer** with steam and a blank tea-bag tag; `cup-cold` is the same cup with ice cubes and frost, so
+  English hot/cold differ only in hot and cold; `cup` (H כּוֹס) is a plain yellow mug.
+- **`teddy-nose`, `house-roof`, `rabbit-tail`** are `teddy`, `house` and `rabbit` with a gold glow on the part.
+- **`frog`** sits on a stone (the English story's page 4); `cow-2` grazes; `dog-2` sits; `cat-2` lies down; `bird-2` flies;
+  `duck-2` stands on the bank; `ball-2` is a beach ball; `boat-2` a rowing boat; `car-2` a blue hatchback; `drum-2` a
+  darbuka; `kite-2` a delta kite; `bike-2` a small bike with training wheels and a basket.
+
 
 **Animals (42).**
 
 | Id | Courses | Status | Notes and reference to look up |
 |---|---|---|---|
 | `cat` | E H R | drawn | |
-| `cat-2` | E (pairs) | to draw | a second pose (lying, tail curled) |
-| `cat-tomcat` | R кот | to draw | "a big striped tomcat": grey tabby, bigger than `cat`; never in one item with `cat` (R rule) |
+| `cat-2` | E (pairs) | drawn | a second pose (lying, tail curled) |
+| `cat-tomcat` | R кот | drawn | "a big striped tomcat": grey tabby, bigger than `cat`; never in one item with `cat` (R rule) |
 | `dog` | E H R | drawn | |
-| `dog-2` | E | to draw | sitting |
-| `dog-shaggy` | R пёс | to draw | a shaggy friendly dog (the chant) |
+| `dog-2` | E | drawn | sitting |
+| `dog-shaggy` | R пёс | drawn | a shaggy friendly dog (the chant) |
 | `fish` | E H R | drawn | |
 | `bird` | E H R | drawn | |
-| `bird-2` | E | to draw | flying |
+| `bird-2` | E | drawn | flying |
 | `duck` | E R | drawn | |
-| `duck-2` | E | to draw | standing on the bank |
+| `duck-2` | E | drawn | standing on the bank |
 | `duckling` | E (sets) | drawn | |
 | `cow` | E R | drawn | |
-| `cow-2` | E | to draw | grazing |
+| `cow-2` | E | drawn | grazing |
 | `pig` | E R | drawn | |
-| `frog` | E (and story page 4) | to draw | a green frog sitting; Wikipedia "Frog" (`content/starter/frog.svg` is a counting placeholder) |
-| `frog-2` | E | to draw | leaping |
+| `frog` | E (and story page 4) | drawn | a green frog sitting; Wikipedia "Frog" (`content/starter/frog.svg` is a counting placeholder) |
+| `frog-2` | E | drawn | leaping |
 | `elephant` | E H R | drawn | |
 | `horse` | H R | drawn | |
 | `rabbit` | H R | drawn | **for the russian-language-teacher:** one sitting rabbit serves за́яц too (no black ear tips); a true hare is one more picture if you want it |
-| `rabbit-tail` | H זָנָב | to draw | `rabbit` with the tail lit (a composite) |
+| `rabbit-tail` | H זָנָב | drawn | `rabbit` with the tail lit (a composite) |
 | `mouse` | R | drawn | |
-| `rooster` | H R | to draw | big red comb and tail (R brief) |
-| `hen` | R | to draw | brown hen, small comb |
-| `goat` | R | to draw | white goat, beard, small horns |
-| `wolf`, `fox`, `bear`, `hedgehog`, `squirrel`, `whale`, `beetle`, `lynx` | R | to draw | bear: a real brown bear, not a toy (R brief); lynx: ear tufts, short tail; hedgehog also the story |
-| `giraffe` | R | to draw | a realistic-proportion giraffe, so it differs from the chibi host Са́ша |
-| `camel`, `donkey`, `butterfly`, `tortoise`, `ant`, `chick`, `sheep`, `bat` | H | to draw | chick: a round yellow chicken chick with a pointed beak (not the duckling); sheep: woolly white (A-03.7); butterfly also the kite look-alike (A-03.9); bat: friendly, never scary |
+| `rooster` | H R | drawn | big red comb and tail (R brief) |
+| `hen` | R | drawn | brown hen, small comb |
+| `goat` | R | drawn | white goat, beard, small horns |
+| `wolf`, `fox`, `bear`, `hedgehog`, `squirrel`, `whale`, `beetle`, `lynx` | R | drawn | bear: a real brown bear, not a toy (R brief); lynx: ear tufts, short tail; hedgehog also the story |
+| `giraffe` | R | drawn | a realistic-proportion giraffe, so it differs from the chibi host Са́ша |
+| `camel`, `donkey`, `butterfly`, `tortoise`, `ant`, `chick`, `sheep`, `bat` | H | drawn | chick: a round yellow chicken chick with a pointed beak (not the duckling); sheep: woolly white (A-03.7); butterfly also the kite look-alike (A-03.9); bat: friendly, never scary |
 
 **Food and drink (30).** `apple`, `banana`, `bread`, `egg`, `cake`, `milk`, `juice`, `water`, `cheese`, `soup`, `cucumber`
 (drawn); `strawberry` (H תּוּת, R клубни́ка: two or three berries), `carrot` (H R), `cookie` (H עוּגִיָּה, R пече́нье: a round
 biscuit), `pizza`, `pita` (round and pale, so it can trap with the plate, A-03.5), `flour` (a bag with some spilt), `sugar`
 (a bowl of cubes), `olive` (green, a leaf) for H; `orange`, `pear`, `grapes`, `watermelon`, `tomato`, `potato`, `porridge`,
 `rice` (a bowl of white rice), `onion` for R; `tea` (a mug of tea with steam: R чай **and** E cup-hot), `cup-cold` (E: ice
-and frost). (to draw)
+and frost). (drawn)
 
 **Clothes (18).** `hat`, `hat-warm`, `scarf`, `shirt` (drawn); `hat-cat-ears`, `shirt-striped` (blue-white), `dress-strawberries`,
 `apron`, `sandal`, `swimsuit` for H; `dress` (plain), `jacket`, `trousers`, `socks`, `sock` (one), `shoes`, `boots`, `mittens`
-for R. (to draw) The dress for R stays plain, so it never traps with the strawberries of A-07.
+for R. (drawn) The dress for R stays plain, so it never traps with the strawberries of A-07.
 
 **Toys and play (36).** `ball` x 6 colours, `balloon` x 4 colours, `boat` x 4 colours, `car`, `doll`, `teddy`, `drum`,
 `book`, `blocks`, `kite` (drawn); `ball-2`, `boat-2`, `car-2`, `drum-2`, `kite-2`, `bike` and `bike-2` for E;
 `balloon-big` (R шар), `pencil` (R; starter `pencil.svg` is a placeholder), `top`, `stacker` for R; `teddy-nose` (H אַף: the
 teddy's face, nose lit), `kite-butterfly` (H), `present` (H מַתָּנָה **and** E pic.box, the gift box; the app draws the "?"),
-`wool` (H, a ball of white wool). (to draw)
+`wool` (H, a ball of white wool). (drawn)
 
 **House, kitchen and things (27).** `bowl`, `oven`, `spoon` (drawn); `cup` (H כּוֹס, a plain cup), `chair`, `table`, `pot`,
 `fork`, `fridge`, `plate` (also the R picnic plate), `towel-striped`, `umbrella`, `bed`, `box`, `basket`, `cupboard`,
 `window`, `clock` (hands only, no numerals), `house` (H בַּיִת, R дом), `house-roof` (H גַּג: the house, roof lit), `tent`,
-`pram`, `soap-bubble`, `needle`, `thread` (a reel), `ring` for H; `manhole` (R люк). (to draw)
+`pram`, `soap-bubble`, `needle`, `thread` (a reel), `ring` for H; `manhole` (R люк). (drawn)
 
-**Vehicles (3).** `ship`, `plane`, `rocket` (flying to the moon) for H. (to draw)
+**Vehicles (3).** `ship`, `plane`, `rocket` (flying to the moon) for H. (drawn)
 
 **Nature (11).** `star`, `moon`, `sea`, `tree`, `bush` (round, green), `wind` (leaves and a hat blown sideways), `rain`,
-`clouds`, `sun`, `rainbow`, `cave` for H. (to draw)
+`clouds`, `sun`, `rainbow`, `cave` for H. (drawn)
 
 **Colour patches (6).** `col-red`, `col-blue` (medium-dark), `col-yellow`, `col-green`, `col-white` (grey edge), `col-black`
-for R: a paint splash, the same shape in every colour. (to draw)
+for R: a paint splash, the same shape in every colour. (drawn)
 
 ### 4.2 People and characters (66)
 
@@ -200,18 +221,18 @@ A-12; drawn by the app in Heebo), the windows of R A-12 (a component around obje
 
 | Group | Unique pictures | Drawn |
 |---|---|---|
-| Shared objects (4.1) | 173 (42 + 30 + 18 + 36 + 27 + 3 + 11 + 6) | 51 (the 40 objects; the ball, balloon and boat sets give 14 colour pictures) |
+| Shared objects (4.1) | 173 (42 + 30 + 18 + 36 + 27 + 3 + 11 + 6) | 173 (batch 1: 51; batch 2: 122) |
 | People and characters (4.2) | 66 | 0 (the three hosts on the doors exist and are not counted) |
 | Scenes, stories and course pieces (4.3) | 94 | 0 |
-| **Total** | **333** | **51** (54 files: `ball`, `balloon` and `boat` are aliases of their red pictures) |
+| **Total** | **333** | **173** (176 files: `ball`, `balloon` and `boat` are aliases of their red pictures) |
 
-Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**: **51 drawn, 266 left**
-(122 objects, 66 people and characters, 78 scenes and pieces), plus the 16 composites.
+Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**: **173 drawn, 144 left**
+(66 people and characters, 78 scenes and pieces), plus the 16 composites.
 
 ## 5. The next batches
 
-1. **Batch 2, objects (122):** the rest of §4.1, the R animals and food first (the biggest R skills, A-05 and A-07),
-   then the H things of A-06, A-07 and A-09 (rhyme pairs), then the E second looks. Same generator.
+1. **Batch 2, objects (122): drawn** (2026-11-03, `tools/make_language_pictures_b2.py`, sheets
+   `docs/design/languages/pictures_batch2a.png`, `2b`, `2c`).
 2. **Batch 3, characters:** a model sheet of Mika and the family (front, side, colours, hotspot map) for the owner and the
    teachers, then Pip's poses, Mika's 42 pictures, the family portraits (66 in all).
 3. **Batch 4, scenes and stories (78, and the 16 composites):** the 36 story pages, 8 actions, 9 stroke scenes (after the stroke directions F6 are
@@ -219,7 +240,7 @@ Of the 333, 16 are composites the generator makes from drawn pictures, so **317 
 
 ## 6. Open questions
 
-- **hebrew-language-teacher:** animals facing left or right (§1); the hyrax instead of a parrot in A-09 (§2).
+- **hebrew-language-teacher:** animals facing left or right (§1); the hyrax instead of a parrot in A-09 (§2); `sandal` drawn as a pair (§4.1).
 - **english-language-teacher:** Pip is the budgerigar host; the family is Mika's, Pip's own family one budgerigar picture
   (§2); no tear on the sad faces (§4.2).
 - **russian-language-teacher:** the puppet's name Са́ша is approved (§2): into `pronunciation.csv`; Mika as the friend (§2); one rabbit for

@@ -1747,4 +1747,535 @@ PART_B = {
     'pram': pram, 'soap-bubble': soap_bubble, 'needle': needle, 'thread': thread, 'ring': ring,
 }
 
-PARTS = {'batch2a': PART_A, 'batch2b': PART_B}
+
+
+# ---- part c: vehicles, nature, colour patches, the rabbit's tail, the English second looks ---------------------------
+# References looked at on 2026-11-03 for part c: Commons "Hyla savignyi" (the Middle East tree frog: bright green, a
+# dark stripe from the snout through the eye along the flank, round toe pads); Commons "children bicycle training wheels"
+# (a small frame, a saddle, a handlebar, a chain guard, two little side wheels); Commons "darbuka" (the goblet drum: a
+# skin on a wide bowl, a narrow neck and a flared foot, often a mosaic of triangles); a beach ball, a rowing boat, a
+# delta kite, a ship, a plane, a rocket and the sky and sea from everyday life. Colour patches are one paint-splash
+# shape in the six named hues of make_language_pictures.HUES (blue medium-dark for Russian sinij).
+
+def ship():
+    p = Pic()
+    p.path(rrect(150, 34, 26, 44, 4), '#E53935')
+    p.fillp(rrect(150, 34, 26, 10, 4), '#2E2A3E')
+    p.path(rrect(108, 46, 26, 32, 4), '#E53935')
+    p.fillp(rrect(108, 46, 26, 9, 4), '#2E2A3E')
+    p.shaded(rrect(60, 76, 150, 32, 6), WHITE, '#E2DEEC', k=4)
+    p.shaded(rrect(44, 104, 178, 30, 6), WHITE, '#E2DEEC', k=4)
+    p.add(''.join('<circle cx="%d" cy="%d" r="5" fill="#8FD3F4" stroke="%s" stroke-width="2"/>' % (x, y, INK)
+                  for y, xs in ((92, range(76, 200, 18)), (119, range(60, 214, 18))) for x in xs))
+    hull = 'M 16 134 L 244 134 L 220 196 L 40 196 Z'
+    cid = p.shaded(hull, '#2A4C9C', '#1C3570', k=6)
+    p.clipped(cid, '<rect x="0" y="178" width="256" height="20" fill="#E53935"/>')
+    p.path(hull, 'none')
+    p.fillp('M 8 192 Q 32 182 56 192 T 104 192 T 152 192 T 200 192 T 248 190 L 248 232 Q 128 244 8 232 Z', '#8FD3F4')
+    p.line('M 8 192 Q 32 182 56 192 T 104 192 T 152 192 T 200 192 T 248 190', '#3FB6D9', 4)
+    p.line('M 30 214 L 64 214 M 160 222 L 200 222', WHITE, 4, op=0.8)
+    p.add('<path d="M 186 40 C 196 26, 214 22, 224 30 C 232 20, 248 24, 248 34" fill="none" stroke="#B8B0D0" stroke-width="6" '
+          'stroke-linecap="round" opacity="0.7"/>')
+    return facing(p)
+
+
+def plane():
+    p = Pic()
+    p.fillp('M 150 210 C 150 194, 168 188, 180 194 C 186 180, 210 180, 216 196 C 230 194, 236 210, 224 216 L 158 216 C 150 216, 150 214, 150 210 Z',
+            '#DEEBFC')
+    p.path('M 190 108 L 222 52 L 240 52 L 232 112 Z', '#2F7FE0')
+    p.path('M 116 132 L 190 132 L 150 66 L 130 66 Z', '#C9CFDD')
+    body = 'M 24 124 C 24 108, 44 100, 70 100 L 214 100 C 236 100, 244 112, 244 122 C 244 134, 232 142, 210 142 L 60 142 C 40 142, 24 136, 24 124 Z'
+    cid = p.shaded(body, WHITE, '#E2DEEC', k=6)
+    p.clipped(cid, '<rect x="0" y="122" width="256" height="8" fill="#2F7FE0"/>')
+    p.path(body, 'none')
+    p.path('M 40 112 C 44 106, 56 104, 64 106 L 60 118 L 40 118 Z', '#5BB8E0', 3)
+    p.add(''.join('<circle cx="%d" cy="112" r="5" fill="#8FD3F4" stroke="%s" stroke-width="2"/>' % (x, INK) for x in range(84, 210, 18)))
+    p.path('M 96 136 L 170 136 L 128 200 L 108 200 Z', '#C9CFDD')
+    p.path(rrect(118, 150, 34, 16, 8), '#9AA0B4', 3)
+    p.path('M 196 112 L 236 98 L 238 108 L 204 118 Z', '#2F7FE0', 3)
+    return facing(p)
+
+
+def rocket():
+    p = Pic()
+    p.add('<circle cx="62" cy="62" r="44" fill="#FFF3C2" stroke="%s" stroke-width="4"/><circle cx="82" cy="50" r="40" fill="%s"/>'
+          % (INK, WHITE))
+    for x, y in ((150, 30), (224, 70), (40, 190), (120, 120)):
+        p.path('M %d %d l 4 9 l 9 4 l -9 4 l -4 9 l -4 -9 l -9 -4 l 9 -4 Z' % (x, y - 13), '#FFC83D', 2)
+    p.add('<g transform="rotate(40 150 150)">')
+    p.path('M 136 214 C 128 240, 150 252, 150 252 C 150 252, 172 240, 164 214 Z', '#FF8A3D')
+    p.fillp('M 142 214 C 138 232, 150 240, 150 240 C 150 240, 162 232, 158 214 Z', '#FFE27A')
+    p.path('M 118 180 L 98 214 L 124 208 Z', '#E53935')
+    p.path('M 182 180 L 202 214 L 176 208 Z', '#E53935')
+    body = 'M 150 66 C 176 92, 184 140, 178 210 L 122 210 C 116 140, 124 92, 150 66 Z'
+    cid = p.shaded(body, WHITE, '#E2DEEC', k=6)
+    p.clipped(cid, '<path d="M 110 60 L 190 60 L 190 104 C 170 96, 130 96, 110 104 Z" fill="#E53935"/>')
+    p.path(body, 'none')
+    p.path(ell(150, 140, 16, 16), '#8FD3F4', 4)
+    p.add('</g>')
+    return p
+
+
+def star():
+    p = Pic()
+    p.shadow(cy=232, rx=70)
+    pts = []
+    for k in range(10):
+        r = 104 if k % 2 == 0 else 46
+        a = -math.pi / 2 + k * math.pi / 5
+        pts.append((128 + r * math.cos(a), 132 + r * math.sin(a)))
+    d = 'M %.1f %.1f ' % pts[0] + ' '.join('L %.1f %.1f' % q for q in pts[1:]) + ' Z'
+    p.shaded(d, '#FFC83D', '#E0A21A', k=10)
+    p.hl('M 112 74 L 124 44', 6)
+    return p
+
+
+def moon():
+    p = Pic()
+    p.path(ell(128, 128, 112, 112), '#3B2C85', 0)
+    for x, y, r in ((60, 70, 4), (196, 60, 5), (210, 170, 4), (80, 200, 3), (170, 110, 3)):
+        p.add('<circle cx="%d" cy="%d" r="%d" fill="%s"/>' % (x, y, r, WHITE))
+    p.path('M 150 40 C 96 46, 70 104, 92 156 C 112 198, 160 214, 196 196 C 150 196, 112 160, 112 114 C 112 80, 128 54, 150 40 Z',
+           '#FFE27A', 4)
+    p.fillp('M 120 72 C 108 92, 104 120, 112 146 C 100 130, 98 98, 120 72 Z', WHITE, op=0.5)
+    return p
+
+
+def sea():
+    p = Pic()
+    tile = rrect(12, 24, 232, 208, 24)
+    p.add('<clipPath id="tile"><path d="%s"/></clipPath><g clip-path="url(#tile)">' % tile)
+    p.fillp('M 0 0 L 256 0 L 256 110 L 0 110 Z', '#BFE6F7')
+    p.fillp('M 150 64 C 150 54, 164 50, 172 56 C 178 46, 196 48, 198 60 C 210 60, 212 74, 202 76 L 156 76 C 150 76, 150 70, 150 64 Z', WHITE)
+    for y, col in ((110, '#4FA9D0'), (140, '#3C8FC2'), (170, '#2F7FB8'), (200, '#2A6EA8')):
+        p.fillp('M 0 %d Q 32 %d 64 %d T 128 %d T 192 %d T 256 %d L 256 256 L 0 256 Z' % (y, y - 12, y, y, y, y), col)
+        p.line('M 0 %d Q 32 %d 64 %d T 128 %d T 192 %d T 256 %d' % (y, y - 12, y, y, y, y), WHITE, 3, op=0.7)
+    p.add('</g>')
+    p.path(tile, 'none')
+    p.line('M 60 96 Q 66 90 72 96 Q 78 90 84 96', INK, 3)
+    return p
+
+
+def tree():
+    p = Pic()
+    p.shadow(cy=232, rx=84)
+    p.path('M 112 236 L 116 150 L 140 150 L 144 236 Z', '#9C6B3C')
+    p.line('M 128 176 L 108 158 M 132 190 L 150 170', '#9C6B3C', 8)
+    p.shaded(bumpy(128, 104, 92, 82, 14, 0.1), '#5DB85A', '#3E8E41', k=12)
+    p.add(''.join('<circle cx="%d" cy="%d" r="6" fill="#E53935" stroke="%s" stroke-width="2"/>' % (x, y, INK)
+                  for x, y in ((88, 92), (150, 70), (176, 122), (112, 138), (66, 126))))
+    p.hl('M 62 82 Q 76 50 110 36', 8)
+    return p
+
+
+def bush():
+    p = Pic()
+    p.shadow(cy=222, rx=108)
+    d = bumpy(128, 160, 110, 62, 16, 0.1, math.pi)
+    p.add('<clipPath id="soil"><rect x="0" y="0" width="256" height="216"/></clipPath><g clip-path="url(#soil)">')
+    cid = p.shaded(d, '#5DB85A', '#3E8E41', k=10)
+    p.clipped(cid, ''.join('<path d="M %d %d q 8 -10 16 0" fill="none" stroke="#3E8E41" stroke-width="3"/>' % xy
+                           for xy in ((60, 160), (100, 136), (150, 150), (186, 176), (84, 190), (128, 182), (176, 124))))
+    p.path(d, 'none')
+    p.add('</g>')
+    p.line('M 22 216 L 234 216', INK, 4)
+    p.hl('M 40 160 Q 54 126 92 108', 7)
+    return p
+
+
+def wind():
+    p = Pic()
+    for d in ('M 20 80 C 80 80, 130 70, 160 60 C 184 52, 196 30, 178 24 C 164 20, 156 34, 166 40',
+              'M 10 130 C 90 130, 150 128, 196 118 C 226 112, 236 90, 220 82 C 206 76, 196 90, 206 96',
+              'M 30 182 C 90 182, 140 186, 180 196 C 204 202, 214 222, 200 228 C 188 232, 180 222, 188 216'):
+        p.line(d, '#8FBFE0', 9)
+    for x, y, a in ((70, 50, -30), (120, 100, 20), (60, 160, -10)):
+        p.add('<g transform="rotate(%d %d %d)">' % (a, x, y))
+        p.path('M %d %d C %d %d, %d %d, %d %d C %d %d, %d %d, %d %d Z'
+               % (x - 18, y, x - 8, y - 14, x + 10, y - 14, x + 18, y, x + 10, y + 10, x - 8, y + 10, x - 18, y), '#6DBE5A', 3)
+        p.line('M %d %d L %d %d' % (x - 16, y, x + 16, y), '#3E8E41', 2.5)
+        p.add('</g>')
+    p.add('<g transform="translate(150 140) rotate(-24) scale(0.42) translate(-128 -140)">')
+    p.parts += m.hat().parts
+    p.add('</g>')
+    return p
+
+
+def rain():
+    p = Pic()
+    p.fillp(ell(128, 230, 86, 10), '#8FD3F4')
+    p.path(ell(128, 230, 86, 10), 'none', 3, stroke='#5BB8E0')
+    for x, y in ((64, 140), (104, 168), (144, 140), (184, 168), (84, 196), (164, 196), (124, 210)):
+        p.path('M %d %d C %d %d, %d %d, %d %d C %d %d, %d %d, %d %d C %d %d, %d %d, %d %d Z'
+               % (x, y - 16, x - 4, y - 8, x - 9, y - 2, x - 9, y + 4, x - 9, y + 10, x + 9, y + 10, x + 9, y + 4, x + 9, y - 2,
+                  x + 4, y - 8, x, y - 16), '#4D9BE6', 3)
+    cl = 'M 30 104 C 22 80, 44 62, 66 70 C 72 42, 110 30, 132 50 C 150 30, 194 38, 196 70 C 222 68, 238 92, 224 112 C 216 124, 200 124, 196 124 L 50 124 C 38 124, 32 114, 30 104 Z'
+    p.shaded(cl, '#AEB5C6', '#8E95A8', k=8)
+    p.hl('M 56 82 Q 70 66 92 66', 6)
+    return p
+
+
+def clouds():
+    p = Pic()
+    tile = rrect(12, 24, 232, 208, 24)
+    p.path(tile, '#BFE6F7', 0)
+    for t in ('translate(22 36) scale(0.62)', 'translate(92 108) scale(0.62)'):
+        p.add('<g transform="%s">' % t)
+        cl = ('M 30 104 C 22 80, 44 62, 66 70 C 72 42, 110 30, 132 50 C 150 30, 194 38, 196 70 C 222 68, 238 92, 224 112 '
+              'C 216 124, 200 124, 196 124 L 50 124 C 38 124, 32 114, 30 104 Z')
+        p.shaded(cl, WHITE, '#E2DEEC', k=6)
+        p.add('</g>')
+    p.path(tile, 'none')
+    return p
+
+
+def sun():
+    p = Pic()
+    for k in range(12):
+        a = k * math.pi / 6
+        x0, y0 = 128 + 70 * math.cos(a), 128 + 70 * math.sin(a)
+        xl, yl = 128 + 70 * math.cos(a - 0.16), 128 + 70 * math.sin(a - 0.16)
+        xr, yr = 128 + 70 * math.cos(a + 0.16), 128 + 70 * math.sin(a + 0.16)
+        xt, yt = 128 + 116 * math.cos(a), 128 + 116 * math.sin(a)
+        p.path('M %.1f %.1f L %.1f %.1f L %.1f %.1f Z' % (xl, yl, xt, yt, xr, yr), '#FFB52E', 3)
+    p.shaded(ell(128, 128, 72, 72), '#FFD23F', '#F2A91F', k=10)
+    p.hl('M 84 108 Q 92 82 116 72', 8)
+    return p
+
+
+def rainbow():
+    p = Pic()
+    for i, c in enumerate(('#E53935', '#FF8A3D', '#FFD23F', '#36A852', '#2F7FE0', '#8A5CF0')):
+        r = 104 - i * 13
+        p.add('<path d="M %d 180 A %d %d 0 0 1 %d 180" fill="none" stroke="%s" stroke-width="13"/>' % (128 - r, r, r, 128 + r, c))
+    p.add('<path d="M 18 180 A 110 110 0 0 1 238 180" fill="none" stroke="%s" stroke-width="3"/>' % INK)
+    p.add('<path d="M 57 180 A 71 71 0 0 1 199 180" fill="none" stroke="%s" stroke-width="3"/>' % INK)
+    for cx in (40, 216):
+        p.shaded(bumpy(cx, 186, 38, 24, 9, 0.18), WHITE, '#E2DEEC', k=4)
+    return p
+
+
+def cave():
+    p = Pic()
+    p.shadow(cy=226, rx=112)
+    hill = 'M 12 220 C 20 140, 60 70, 128 60 C 196 70, 236 140, 244 220 Z'
+    cid = p.shaded(hill, '#B8A48A', '#97836A', k=10)
+    p.clipped(cid, ''.join('<path d="%s" fill="#A8947A"/>' % ell(x, y, rx, ry)
+                           for x, y, rx, ry in ((70, 120, 22, 14), (190, 130, 26, 16), (160, 84, 16, 10), (54, 180, 18, 12))))
+    p.path(hill, 'none')
+    p.path('M 78 220 C 78 150, 100 124, 128 124 C 156 124, 178 150, 178 220 Z', '#3A3050')
+    p.fillp('M 92 220 C 92 166, 108 142, 128 142 C 148 142, 164 166, 164 220 Z', '#2A2240')
+    p.path(ell(60, 216, 18, 10), '#9AA0B4', 3)
+    p.path(ell(204, 214, 14, 9), '#9AA0B4', 3)
+    p.line('M 30 220 L 26 206 M 38 220 L 40 204 M 220 220 L 224 206 M 228 220 L 232 208', '#5BA84A', 3)
+    return p
+
+
+SPLASH_R = (1.0, 0.82, 1.05, 0.9, 1.08, 0.86, 1.0, 0.8, 1.06, 0.9, 1.02, 0.84)
+
+
+def splash(c):
+    f, s = m.HUES[c]
+    p = Pic()
+    n = len(SPLASH_R)
+    pts = [(128 + 84 * r * math.cos(2 * math.pi * k / n), 128 + 80 * r * math.sin(2 * math.pi * k / n)) for k, r in enumerate(SPLASH_R)]
+    d = 'M %.1f %.1f' % pts[0]
+    for k in range(n):
+        a = 2 * math.pi * (k + 0.5) / n
+        rr = (SPLASH_R[k] + SPLASH_R[(k + 1) % n]) / 2 * 1.12
+        d += ' Q %.1f %.1f %.1f %.1f' % (128 + 84 * rr * math.cos(a), 128 + 80 * rr * math.sin(a), pts[(k + 1) % n][0], pts[(k + 1) % n][1])
+    d += ' Z'
+    edge = '#9AA0B4' if c == 'white' else INK
+    p.shaded(d, f, s, k=8, sw=0)
+    p.path(d, 'none', 4, stroke=edge)
+    for x, y, r in ((222, 64, 9), (34, 196, 8), (214, 214, 6), (40, 52, 5)):
+        p.path(ell(x, y, r, r), f, 3, stroke=edge)
+    return p
+
+
+def rabbit_tail():
+    p = m.rabbit()
+    p.add('<circle cx="216" cy="186" r="26" fill="#FFC83D" opacity="0.35"/>')
+    p.path(ell(216, 186, 26, 26), 'none', 5, stroke='#FFC83D')
+    return p
+
+
+def cat_2():
+    c, s = '#F2A25C', '#D97E36'
+    p = Pic()
+    p.shadow(cy=226, rx=104)
+    p.outlined_line('M 208 206 C 244 200, 240 236, 200 226 L 120 224', c, 14)
+    p.shaded(ell(146, 184, 86, 40), c, s)
+    p.line('M 160 150 Q 170 170 162 190 M 182 152 Q 194 172 186 194 M 204 160 Q 214 178 208 196', s, 6)
+    for d in ('M 34 140 L 38 92 L 70 118 Z', 'M 76 112 L 104 88 L 112 130 Z'):
+        p.path(d, c)
+    p.shaded(ell(72, 152, 46, 40), c, s)
+    p.fillp(ell(64, 168, 22, 13), CREAM)
+    p.path(ell(64, 220, 20, 9), CREAM)
+    p.path(ell(100, 222, 20, 9), CREAM)
+    p.line('M 46 150 Q 54 156 62 150 M 74 150 Q 82 156 90 150', INK, 3.5)
+    p.path('M 62 162 L 72 162 L 67 168 Z', '#F28AA0', 2)
+    p.line('M 67 168 Q 67 174 60 175 M 67 168 Q 68 174 74 175', INK, 2.5)
+    p.cheek(46, 166)
+    p.cheek(92, 166)
+    p.hl('M 40 128 Q 50 116 66 114')
+    return facing(p)
+
+
+def dog_2():
+    c, s, ear = '#D9A066', '#B77D45', '#8C5A2E'
+    p = Pic()
+    p.shadow(cx=136, rx=84)
+    p.outlined_line('M 186 214 C 214 214, 226 196, 224 178', c, 12)
+    cid = p.shaded('M 96 120 C 82 150, 84 200, 100 226 L 196 226 C 214 210, 206 168, 182 144 C 160 122, 120 110, 96 120 Z', c, s)
+    p.clipped(cid, '<path d="%s" fill="%s"/>' % (ell(100, 160, 18, 30), CREAM))
+    p.shaded(ell(172, 196, 34, 30), c, s)
+    p.path(ell(160, 226, 22, 7), CREAM)
+    for x in (94, 120):
+        p.path(rrect(x, 154, 20, 72, 9), c)
+        p.fillp(ell(x + 10, 222, 11, 5), CREAM)
+    p.line('M 92 112 Q 104 128 120 120', '#2F7FE0', 9)
+    p.shaded(ell(92, 82, 38, 36), c, s)
+    p.path('M 30 94 C 30 80, 44 78, 58 80 C 74 82, 82 92, 80 104 C 78 116, 64 120, 50 118 C 38 116, 30 106, 30 94 Z', CREAM)
+    p.path(ell(38, 88, 8, 6), INK, 0)
+    p.line('M 42 104 Q 54 112 70 104', INK, 3)
+    p.eye(80, 72, 6.5)
+    p.path('M 104 48 C 128 46, 134 80, 124 110 C 118 120, 106 114, 106 102 C 104 84, 98 66, 104 48 Z', ear)
+    p.cheek(88, 96)
+    p.hl('M 66 60 Q 76 46 94 44')
+    return facing(p)
+
+
+def bird_2():
+    c, s = '#B88655', '#92653A'
+    p = Pic()
+    p.shadow(cy=236, rx=50)
+    p.path('M 150 132 L 214 118 L 206 136 L 216 148 L 150 150 Z', '#6E4E32')
+    p.shaded('M 120 112 C 112 66, 140 26, 186 18 C 176 52, 160 86, 148 116 Z', '#8A5E36', '#6E4E32', k=5)
+    p.line('M 140 96 L 160 52 M 150 104 L 172 64', '#5E3F22', 3)
+    body = 'M 52 126 C 52 98, 84 86, 114 92 C 150 100, 172 122, 160 146 C 150 166, 112 170, 88 162 C 64 154, 52 144, 52 126 Z'
+    cid = p.shaded(body, c, s)
+    p.clipped(cid, '<path d="%s" fill="#EADFCB"/><path d="M 44 116 C 54 92, 90 84, 110 96 C 96 104, 72 108, 56 122 Z" fill="#8E8A9A"/>'
+              '<path d="%s" fill="#F7F1E6"/><path d="%s" fill="#3A3340"/>'
+              % (ell(100, 152, 44, 18), ell(78, 124, 14, 9), ell(62, 138, 7, 7)))
+    p.path(body, 'none')
+    p.shaded('M 104 120 C 84 92, 70 56, 82 32 C 106 50, 120 82, 126 116 Z', '#9C6E42', '#7A5230', k=4)
+    p.path('M 54 112 L 32 120 L 54 126 Z', '#4A4458', 3)
+    p.eye(70, 112, 5.5)
+    return facing(p)
+
+
+def duck_2():
+    w, s = '#FFFFFF', '#E3DFEA'
+    p = Pic()
+    p.fillp(ell(128, 228, 112, 12), '#8CCB6B')
+    p.line('M 110 186 L 106 222 M 142 186 L 146 222', '#FF9F43', 6)
+    p.path('M 86 226 L 106 216 L 120 226 Z', '#FF9F43', 3)
+    p.path('M 126 226 L 146 216 L 160 226 Z', '#FF9F43', 3)
+    neck = 'M 102 140 C 96 118, 106 100, 106 78 C 106 56, 92 44, 78 44 C 58 44, 50 62, 52 78 C 54 94, 62 112, 60 140 Z'
+    p.shaded(neck, w, s, k=8)
+    p.shaded('M 60 150 C 60 120, 96 110, 150 114 C 190 116, 214 104, 228 84 C 234 122, 222 180, 160 190 L 96 190 C 72 190, 60 176, 60 150 Z',
+             w, s)
+    p.shaded('M 112 142 C 130 122, 182 122, 198 140 C 182 164, 140 168, 112 142 Z', w, s, k=7)
+    p.path('M 54 68 C 36 66, 16 74, 14 82 C 18 90, 40 90, 58 86 Z', '#FF9F43')
+    p.eye(72, 66, 6.5)
+    p.cheek(80, 82)
+    return facing(p)
+
+
+def frog_body(p):
+    g, s = '#5DBE4A', '#3E9A32'
+    p.shaded('M 150 170 C 196 150, 230 176, 222 208 C 214 226, 176 228, 150 214 Z', g, s, k=6)
+    p.path('M 196 214 L 236 222 L 232 230 L 192 226 Z', g, 3)
+    body = 'M 50 150 C 46 112, 82 92, 120 96 C 168 100, 196 136, 186 176 C 178 206, 140 216, 104 212 C 70 208, 52 184, 50 150 Z'
+    cid = p.shaded(body, g, s, k=10)
+    p.clipped(cid, '<path d="M 40 160 C 80 190, 150 196, 196 170 L 196 230 L 40 230 Z" fill="#F3EFC8"/>'
+                   '<path d="M 36 118 C 80 126, 140 140, 190 150" fill="none" stroke="#3E6B2E" stroke-width="7"/>')
+    p.path(body, 'none')
+    p.path(rrect(84, 170, 16, 46, 7), g)
+    p.path(ell(92, 216, 14, 6), g, 3)
+    p.shaded(ell(78, 98, 20, 18), g, s, k=3)
+    p.path(ell(76, 96, 12, 12), WHITE, 3)
+    p.eye(74, 97, 6)
+    p.line('M 52 140 Q 70 152 92 146', INK, 3)
+    p.cheek(66, 132, 6, 4)
+
+
+def frog():
+    p = Pic()
+    p.shadow(cy=232, rx=100)
+    p.shaded('M 30 226 C 30 196, 80 186, 128 188 C 180 190, 226 198, 228 226 Z', '#9AA0B4', '#7E8498', k=6)
+    p.add('<g transform="translate(0 -10)">')
+    frog_body(p)
+    p.add('</g>')
+    return facing(p)
+
+
+def frog_2():
+    g, s = '#5DBE4A', '#3E9A32'
+    p = Pic()
+    p.shadow(cy=236, rx=60)
+    p.line('M 150 150 L 196 170 L 244 200', INK, 22)
+    p.line('M 150 150 L 196 170 L 244 200', g, 15)
+    p.line('M 140 160 L 180 196 L 226 228', INK, 22)
+    p.line('M 140 160 L 180 196 L 226 228', g, 15)
+    body = 'M 40 92 C 50 66, 90 60, 120 76 C 150 92, 170 118, 162 146 C 154 170, 120 172, 96 160 C 66 146, 32 120, 40 92 Z'
+    cid = p.shaded(body, g, s, k=8)
+    p.clipped(cid, '<path d="M 40 110 C 70 150, 130 170, 170 150 L 170 200 L 40 200 Z" fill="#F3EFC8"/>'
+                   '<path d="M 30 80 C 80 86, 130 104, 170 128" fill="none" stroke="#3E6B2E" stroke-width="7"/>')
+    p.path(body, 'none')
+    p.line('M 60 120 L 30 140 L 14 132', INK, 14)
+    p.line('M 60 120 L 30 140 L 14 132', g, 8)
+    p.shaded(ell(64, 66, 18, 16), g, s, k=3)
+    p.path(ell(62, 64, 11, 11), WHITE, 3)
+    p.eye(60, 65, 5.5)
+    p.line('M 38 98 Q 50 106 66 102', INK, 3)
+    p.line('M 190 120 Q 200 110 214 112 M 196 140 Q 210 134 224 138', '#B8B0D0', 4)
+    return facing(p)
+
+
+def ball_2():
+    p = Pic()
+    p.shadow(cy=224, rx=78, ry=10)
+    body = ell(128, 130, 92, 92)
+    cid = p.shaded(body, WHITE, '#E2DEEC', k=12, sw=0)
+    segs = (('#E53935', -150), ('#FFD23F', -90), ('#2F7FE0', -30), ('#E53935', 30), ('#FFD23F', 90), ('#2F7FE0', 150))
+    inner = ''
+    for col, a in segs:
+        a0, a1 = math.radians(a - 22), math.radians(a + 22)
+        inner += ('<path d="M 128 70 C %.1f %.1f, %.1f %.1f, %.1f %.1f L %.1f %.1f Z" fill="%s" opacity="0.95"/>'
+                  % (128 + 160 * math.cos(a0), 70 + 160 * math.sin(a0) * 0.4 + 80, 128 + 160 * math.cos(a1), 70 + 160 * math.sin(a1) * 0.4 + 80,
+                     128 + 92 * math.cos(a1), 130 + 92 * math.sin(a1), 128 + 92 * math.cos(a0), 130 + 92 * math.sin(a0), col))
+    p.clipped(cid, inner)
+    p.path(ell(128, 70, 22, 12), WHITE, 3)
+    p.path(body, 'none')
+    p.hl('M 70 104 Q 80 78 104 64', 8)
+    return p
+
+
+def boat_2():
+    p = Pic()
+    p.line('M 40 150 L 90 120 M 216 150 L 166 120', INK, 9)
+    p.line('M 40 150 L 90 120 M 216 150 L 166 120', '#C98F52', 5)
+    p.path(ell(34, 156, 14, 7), '#C98F52', 3)
+    p.path(ell(222, 156, 14, 7), '#C98F52', 3)
+    hull = 'M 30 118 L 226 118 C 216 168, 186 186, 150 186 L 106 186 C 70 186, 40 168, 30 118 Z'
+    cid = p.shaded(hull, '#C98F52', '#A8743C', k=8)
+    p.clipped(cid, ''.join('<path d="M 20 %d L 236 %d" stroke="#A8743C" stroke-width="3"/>' % (y, y) for y in (138, 156, 172)))
+    p.path(hull, 'none')
+    p.path(rrect(26, 112, 204, 12, 6), '#8F6230')
+    p.path(rrect(112, 116, 32, 10, 3), '#E8C590', 2.5)
+    p.fillp('M 8 176 Q 32 166 56 176 T 104 176 T 152 176 T 200 176 T 248 174 L 248 232 Q 128 244 8 232 Z', '#8FD3F4')
+    p.line('M 8 176 Q 32 166 56 176 T 104 176 T 152 176 T 200 176 T 248 174', '#3FB6D9', 4)
+    p.line('M 40 206 L 70 206 M 170 214 L 204 214', WHITE, 4, op=0.8)
+    return p
+
+
+def car_2():
+    f, s = '#2F7FE0', '#1F5FB0'
+    p = Pic()
+    p.shadow(cy=214, rx=100)
+    body = ('M 30 170 C 26 150, 34 134, 52 130 L 70 92 C 74 82, 84 76, 96 76 L 190 76 C 206 76, 216 86, 218 100 L 226 140 '
+            'C 236 146, 238 162, 234 172 C 232 180, 226 184, 218 184 L 40 184 C 34 184, 30 178, 30 170 Z')
+    p.shaded(body, f, s, k=10)
+    p.path('M 80 128 L 96 90 C 98 86, 102 84, 106 84 L 140 84 L 140 128 Z', '#BFE6F7', 3)
+    p.path('M 148 84 L 190 84 C 200 84, 206 90, 208 98 L 214 128 L 148 128 Z', '#BFE6F7', 3)
+    p.line('M 144 132 L 144 178 M 120 142 L 132 142', INK, 3.5)
+    p.path(ell(38, 150, 7, 9), '#FFE08A', 3)
+    p.path(rrect(212, 66, 12, 10, 3), '#FFC83D', 2.5)
+    for x in (74, 190):
+        p.path(ell(x, 184, 26, 26), '#3A3550')
+        p.path(ell(x, 184, 11, 11), '#C9CFDD', 3)
+    p.hl('M 100 82 L 180 82', 5)
+    return p
+
+
+def drum_2():
+    p = Pic()
+    p.shadow(cy=236, rx=56)
+    body = ('M 56 64 C 56 120, 92 140, 104 160 C 110 172, 96 196, 84 222 L 172 222 C 160 196, 146 172, 152 160 '
+            'C 164 140, 200 120, 200 64 Z')
+    cid = p.shaded(body, '#2F7FE0', '#1F5FB0', k=8)
+    mosaic = ''.join('<path d="M %d %d l 10 -14 l 10 14 Z" fill="%s"/>' % (x, y, '#FFC83D' if (x // 20 + y // 16) % 2 else WHITE)
+                     for y in (96, 112, 128) for x in range(50, 206, 20))
+    mosaic += ''.join('<path d="M %d %d l 9 -12 l 9 12 Z" fill="%s"/>' % (x, 214, '#FFC83D') for x in range(80, 180, 18))
+    p.clipped(cid, mosaic + '<rect x="40" y="150" width="180" height="12" fill="#FFC83D"/>')
+    p.path(body, 'none')
+    p.path(ell(128, 64, 74, 18), CREAM)
+    p.path(ell(128, 64, 74, 18), 'none', 7, stroke='#C9CFDD')
+    p.path(ell(128, 64, 74, 18), 'none', 3)
+    p.hl('M 70 84 Q 80 110 98 128', 6)
+    return p
+
+
+def kite_2():
+    p = Pic()
+    p.fillp('M 160 214 C 160 198, 178 192, 190 198 C 196 184, 220 184, 226 200 C 240 198, 246 214, 234 220 L 168 220 C 160 220, 160 218, 160 214 Z',
+            '#DEEBFC')
+    p.line('M 128 118 Q 70 160 24 246', INK, 2, op=0.6)
+    p.line('M 128 132 C 120 160, 140 176, 128 200 S 118 230, 132 250', INK, 3)
+    for y, col in ((166, '#36A852'), (200, '#E53935'), (232, '#FFC83D')):
+        x = 130
+        p.path('M %d %d L %d %d L %d %d Z M %d %d L %d %d L %d %d Z' % (x, y, x - 11, y - 7, x - 11, y + 7, x, y, x + 11, y - 7, x + 11, y + 7),
+               col, 2.5)
+    d = 'M 128 18 L 232 128 C 196 120, 160 124, 128 134 C 96 124, 60 120, 24 128 Z'
+    cid = p.shaded(d, '#8A5CF0', '#6C40D0', k=6, sw=0)
+    p.clipped(cid, '<path d="M 128 18 L 128 140 L 60 126 Z" fill="#FFC83D"/><path d="M 128 18 L 128 140 L 196 126 Z" fill="#36A852"/>')
+    p.path(d, 'none')
+    p.line('M 128 18 L 128 134 M 56 120 L 200 120', INK, 3, op=0.6)
+    return p
+
+
+def draw_bike(p, frame, small=False):
+    r = 40 if not small else 34
+    fx, bx, y = (62, 192, 186) if not small else (70, 178, 192)
+    for cx in (fx, bx):
+        p.path(ell(cx, y, r, r), 'none', 9, stroke='#3A3550')
+        p.path(ell(cx, y, r - 6, r - 6), 'none', 2.5, stroke='#C9CFDD')
+        p.line(''.join('M %d %d L %.1f %.1f ' % (cx, y, cx + (r - 6) * math.cos(k * math.pi / 4), y + (r - 6) * math.sin(k * math.pi / 4))
+                       for k in range(8)), '#C9CFDD', 2)
+        p.path(ell(cx, y, 5, 5), '#7A7490', 2)
+    px, py = (bx + fx) // 2 + 6, y
+    seat = (bx - 22, y - 70)
+    head = (fx + 18, y - 82)
+    for a, b in (((bx, y), (px, py)), ((px, py), seat), (seat, (head[0] + 8, head[1] + 30)), ((head[0] + 8, head[1] + 30), (px, py)),
+                 ((fx, y), head), ((bx, y), (seat[0] + 6, seat[1] + 12))):
+        p.line('M %d %d L %d %d' % (a + b), INK, 12)
+        p.line('M %d %d L %d %d' % (a + b), frame, 6)
+    p.path(rrect(seat[0] - 18, seat[1] - 12, 40, 12, 6), '#3A3550')
+    p.line('M %d %d L %d %d' % (head[0], head[1], head[0] - 16, head[1] - 4), '#3A3550', 8)
+    p.path(ell(px, py, 12, 12), '#C9CFDD', 3)
+    p.line('M %d %d L %d %d' % (px, py, px - 8, py + 18), '#3A3550', 6)
+
+
+def bike():
+    p = Pic()
+    p.shadow(cy=232, rx=110)
+    draw_bike(p, '#E53935')
+    return facing(p)
+
+
+def bike_2():
+    p = Pic()
+    p.shadow(cy=234, rx=104)
+    p.line('M 178 192 L 206 214', '#7A7490', 5)
+    p.path(ell(212, 218, 12, 12), '#3A3550', 3)
+    draw_bike(p, '#36A852', small=True)
+    p.path('M 54 110 L 86 110 L 82 134 L 58 134 Z', '#C98F52', 3)
+    return facing(p)
+
+
+PART_C = {
+    'ship': ship, 'plane': plane, 'rocket': rocket,
+    'star': star, 'moon': moon, 'sea': sea, 'tree': tree, 'bush': bush, 'wind': wind, 'rain': rain, 'clouds': clouds,
+    'sun': sun, 'rainbow': rainbow, 'cave': cave,
+    'col-red': lambda: splash('red'), 'col-blue': lambda: splash('blue'), 'col-yellow': lambda: splash('yellow'),
+    'col-green': lambda: splash('green'), 'col-white': lambda: splash('white'), 'col-black': lambda: splash('black'),
+    'rabbit-tail': rabbit_tail,
+    'cat-2': cat_2, 'dog-2': dog_2, 'bird-2': bird_2, 'duck-2': duck_2, 'cow-2': lambda: m.cow(grazing=True),
+    'frog': frog, 'frog-2': frog_2, 'ball-2': ball_2, 'boat-2': boat_2, 'car-2': car_2, 'drum-2': drum_2,
+    'kite-2': kite_2, 'bike': bike, 'bike-2': bike_2,
+}
+
+PARTS = {'batch2a': PART_A, 'batch2b': PART_B, 'batch2c': PART_C}
