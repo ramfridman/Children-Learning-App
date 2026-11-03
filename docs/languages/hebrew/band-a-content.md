@@ -1,6 +1,6 @@
 # The Hebrew course: Band A content batch (HEB-1)
 
-Owner: hebrew-language-teacher. Date: 2026-11-03. Status: **text-ready** (the hebrew-text-editor, 2026-11-03: every text below has its final wording, nikud and voice text, and waits for the owner; `docs/agents/hebrew-notes.md` §9). Words taken from the syllabus lists (`syllabus.md` §3, already `text-ready`) are marked **(tr)**; the new words are `text-ready` too. Nothing is built, drawn or voiced.
+Owner: hebrew-language-teacher. Date: 2026-11-03. Status: **text-ready** (the hebrew-text-editor, 2026-11-03: every text below has its final wording, nikud and voice text, and waits for the owner; `docs/agents/hebrew-notes.md` §9). Words taken from the syllabus lists (`syllabus.md` §3, already `text-ready`) are marked **(tr)**; the new words are `text-ready` too. Nothing is built, drawn or voiced. **Except** the three A-03 kind lines (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`, §3), new drafts of 2026-11-03 after the catalogue (frame §4.4 H4): `needs-editor`.
 Skills: `syllabus.md` §6.1 (HEB-A-01 to A-14). Templates: the shared LS ids (`frame.md` §2.3; `templates.md` §2). Tags: `syllabus.md` §5 (the Band A tags are new there). Pronunciation: `pronunciation.csv` (rows `heb-a-…`). Voicing count: §9.
 
 ## 0. The rules this batch keeps
@@ -57,7 +57,10 @@ Ids are `pic.<word>`. Every picture is one clear object (or a small scene), no t
 | i-strip | כַּמָּה תֻּפִּים? | A-08 strips |
 | i-blend | מָה אָמַר הַתֻּכִּי? | A-09 (the puppet is an original parrot, תֻּכִּי) |
 | i-sort-cat | שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ. | A-03, A-05 sorts |
-| i-odd | מָה הִגִּיעַ לְכָאן בְּטָעוּת? | A-03 odd one out. Was "מִי לֹא שַׁיָּךְ?": Band A asks no "not" question (curriculum §8.3), and the same game has had this owner-approved line since 2026-10-29 (`hebrew-notes.md` §2.9) |
+| i-odd | מָה הִגִּיעַ לְכָאן בְּטָעוּת? | The editor's odd-one-out line (the maths lands' game). Was "מִי לֹא שַׁיָּךְ?": Band A asks no "not" question (curriculum §8.3), and the same game has had this owner-approved line since 2026-10-29 (`hebrew-notes.md` §2.9). **Not the prompt of a scored A-03 item** (frame §4.4 H4): it names no kind, so the colour and the theme answers are both defensible. The three lines below build on it |
+| i-odd-animals | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל בַּעֲלֵי הַחַיִּים? | **draft, `needs-editor`.** A-03.4, .7, .9: the odd one out names its kind; the animals box with its picture holds the three cards (§4 A-03) |
+| i-odd-food | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הָאֹכֶל? | **draft, `needs-editor`.** A-03.5 |
+| i-odd-clothes | מָה הִגִּיעַ בְּטָעוּת לַקֻּפְסָה שֶׁל הַבְּגָדִים? | **draft, `needs-editor`.** A-03.6 |
 | i-letters | אֵיפֹה הָאוֹתִיּוֹת? גְּעוּ בְּכׇל הָאוֹתִיּוֹת. | A-10 tap all |
 | i-bin-letters / i-bin-other | אוֹתִיּוֹת / דְּבָרִים אֲחֵרִים | A-10 bin labels |
 | i-name | אֵיפֹה הַשֵּׁם שֶׁלָּכֶם? | A-11 |
@@ -128,19 +131,23 @@ Verb items keep the verb's gender with the doer (the rabbit and the fish are "he
 ### HEB-A-03 Sorts pictures into simple categories (OL)
 **Template:** LS01 `sort_drag` with picture cards (`con`) and LS01 odd one out (`pic`). Bins: בַּעֲלֵי חַיִּים, אֹכֶל, בְּגָדִים (the bin label is heard on a tap, with a picture of a typical member). "בַּעֲלֵי חַיִּים", not "חַיּוֹת": many children use חַיּוֹת for wild animals only, and the set includes a butterfly and an ant.
 
+**The bins (the same in the sorts and the odd ones out).** Each bin is an open box with its typical member's picture on the front: animals the elephant (פִּיל), food the banana (בָּנָנָה), clothes the plain shirt (חֻלְצָה). None of them is a card in an odd-one-out item, and none looks like a trap card (for the design-director).
+
+**Every scored odd one out names its kind and shows its bin** (frame §4.4 H4). The three cards sit in the kind's box, and the prompt is the kind's line (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`, §3; drafts, `needs-editor`); the bare `i-odd` names no kind and is never the prompt of a scored item. With no kind named, the colour answer (A-03.4: the dog is the only one that is not yellow) and the theme answer are both defensible, and an unclear question never makes an answer wrong. So CAT-THEME and CAT-LOOK are evidence only in an item that named the kind: every odd one out below names it, and every sort shows both bins with their labels. Young children readily group things that go together, and look for things of one kind when the kind is named (Markman and Hutchinson 1984).
+
 | Item | Template | Cards or options | Right | Traps and tags | Rep |
 |---|---|---|---|---|---|
 | A-03.1 P | sort, animals / food | rabbit, butterfly, carrot, bread | animals: rabbit, butterfly; food: carrot, bread | carrot → animals [CAT-THEME] · butterfly → food [CAT-ATYPICAL] | con |
 | A-03.2 P | sort, food / clothes | cake, strawberry, shirt, apron, dress with strawberries | food: cake, strawberry; clothes: shirt, apron, dress | apron → food [CAT-THEME] · strawberry dress → food [CAT-LOOK] | con |
 | A-03.3 P | sort, animals / clothes | cat, horse, tortoise, sandal, hat with cat ears | animals: cat, horse, tortoise; clothes: sandal, hat | tortoise → clothes [CAT-ATYPICAL] · cat-ear hat → animals [CAT-LOOK] | con |
-| A-03.4 P | odd one out (3) | dog, yellow chick, yellow ball | the ball | dog [CAT-LOOK: grouped chick and ball by colour] · chick [CAT-THEME: grouped dog and ball] | pic |
-| A-03.5 P | odd one out | pizza, pita, plate | the plate | pizza [CAT-LOOK: pita and plate are round and pale] · pita [CAT-THEME: pizza goes on a plate] | pic |
-| A-03.6 P | odd one out | striped shirt, swimsuit, striped towel | the towel | swimsuit [CAT-LOOK] · shirt [CAT-THEME: swimsuit and towel go to the sea] | pic |
-| A-03.7 C | odd one out | cat, sheep, ball of white wool | the wool | cat [CAT-LOOK: sheep and wool are white and woolly] · sheep [CAT-THEME: a cat plays with wool] | pic |
-| A-03.8 C | sort, animals / food (new set) | rooster, ant, cookie, egg | animals: rooster, ant; food: cookie, egg | egg → animals [CAT-THEME] · ant → food [CAT-ATYPICAL] | con |
-| A-03.9 C | odd one out | horse, butterfly, butterfly kite | the kite | horse [CAT-LOOK: butterfly and kite look alike] · butterfly [CAT-ATYPICAL] | pic |
+| A-03.4 P | odd one out (3), the animals box; i-odd-animals | dog, yellow chick, yellow ball | the ball | dog [CAT-LOOK: grouped chick and ball by colour] · chick [CAT-THEME: grouped dog and ball] | pic |
+| A-03.5 P | odd one out, the food box; i-odd-food | pizza, pita, plate | the plate | pizza [CAT-LOOK: pita and plate are round and pale] · pita [CAT-THEME: pizza goes on a plate] | pic |
+| A-03.6 P | odd one out, the clothes box; i-odd-clothes | striped shirt, swimsuit, striped towel | the towel | swimsuit [CAT-LOOK] · shirt [CAT-THEME: swimsuit and towel go to the sea] | pic |
+| A-03.7 C | odd one out, the animals box; i-odd-animals | cat, sheep, ball of white wool | the wool | cat [CAT-LOOK: sheep and wool are white and woolly] · sheep [CAT-THEME: a cat plays with wool] | pic |
+| A-03.8 C | sort, animals / food (new set); i-sort-cat | rooster, ant, cookie, egg | animals: rooster, ant; food: cookie, egg | egg → animals [CAT-THEME] · ant → food [CAT-ATYPICAL] | con |
+| A-03.9 C | odd one out, the animals box; i-odd-animals | horse, butterfly, butterfly kite | the kite | horse [CAT-LOOK: butterfly and kite look alike] · butterfly [CAT-ATYPICAL] | pic |
 
-**Change to the syllabus check (proposed):** the A-03 check was "say why (tap the category picture)". Its wrong options (the other categories) reveal nothing nameable, so it cannot carry two tagged distractors. The checks are A-03.7 to .9 instead (new pictures, an untypical member); the "why" stays as unscored talk: after an odd one out the voice says why + the bin label ("כִּי אֵלֶּה… בַּעֲלֵי חַיִּים!") with the bin picture.
+**The checks (approved, frame §4.4 H4).** The A-03 check was "say why (tap the category picture)". Its wrong options (the other categories) reveal nothing nameable, so it cannot carry two tagged distractors. The checks are A-03.7 to .9 instead (new pictures, an untypical member). **A child's two A-03 checks are A-03.8 (a sort, always) and one odd one out (A-03.7 or .9)**: "not" is a load for 3-to-4-year-olds, and the sort asks no "not". The "why" stays as unscored talk: after an odd one out the voice says why + the bin label ("כִּי אֵלֶּה… בַּעֲלֵי חַיִּים!") with the bin picture.
 **Hint ladder.** (1) Each card named by the voice, with the bin labels (diagnostic: THEME "הֵם הוֹלְכִים יַחַד. בּוֹאוּ נִבְדֹּק מֵאֵיזֶה סוּג הֵם."; LOOK "הֵם דּוֹמִים בַּצֶּבַע. מָה הֵם בֶּאֱמֶת?"; ATYPICAL "גַּם זֶה חַי: זֶה זָז וְאוֹכֵל."). (2) The bin opens as a family of 4 typical members, and the card is shown beside them (a new representation: a set, not a label). (3) Show me: the voice puts one card in its bin and names why; the child puts the rest.
 
 ### HEB-A-04 Follows a one-step instruction with a place word (OL)
@@ -439,12 +446,12 @@ A visit (8 minutes) has: a warm-up (a verse the child knows, A-06), one focus (o
 | What | Count |
 |---|---|
 | Skills | 14 (A-01 to A-14) |
-| Items | 125: A-01 8 · A-02 18 · A-03 9 · A-04 10 · A-05 9 · A-06 8 · A-07 10 · A-08 12 · A-09 9 · A-10 6 · A-11 5 · A-12 7 · A-13 5 · A-14 9; of them 28 checks (C) |
+| Items | 125: A-01 8 · A-02 18 · A-03 9 · A-04 10 · A-05 9 · A-06 8 · A-07 10 · A-08 12 · A-09 9 · A-10 6 · A-11 5 · A-12 7 · A-13 5 · A-14 9; of them 28 checks (C), every skill with at least one, none a single 2-choice item; A-03's two checks per child are A-03.8 (a sort) and A-03.7 or .9 |
 | Pictures | 91 objects (§2) + 14 plural sets + 8 action animations + 15 story pages + 9 stroke scenes |
 | Word clips | 131 (words, plurals, verbs, bin labels, place and sequence words); 57 are `text-ready` (the syllabus lists and the editor's notes), 74 new |
 | Stories | 3 (3 titles, 15 pages, 6 questions, 6 recasts, 11 word cards, 3 parent cards) |
 | Verses | 8 (open and full clips) |
-| New tags | 18 (`syllabus.md` §5) |
+| New tags | 18 (`syllabus.md` §5), settled in the catalogue (frame §4.2): 7 MEANING (STORY-*, CAT-*), 3 GUESS (SOUNDALIKE, NAME-FIRST, NAME-LENGTH), 3 GRAMMAR, 2 SEGMENT, 3 PRINT; all diagnostic |
 | Letters shown | 20 letters as print-awareness marks (A-10), none taught by name or sound (Band A) |
 
 ## 9. Voicing (plan only; Claude never runs a paid voice command)
@@ -458,10 +465,10 @@ Counted again by the editor on 2026-11-03 after the final wording (the text sent
 | Words (`heb-a-w-…`, bins, place and sequence words) | 131 | 929 | 524 |
 | Syllable clips (`heb-a-u-…`, A-08 slow and A-09) | 12 | 123 | 84 |
 | Rhyme ends (`heb-a-e-…`) | 9 | 34 | 24 |
-| Instructions, praise, hints, place sentences (`heb-a-i-…`, `ok-`, `d-`, `pl-` …) | 67 | 1,274 | 1,240 |
+| Instructions, praise, hints, place sentences (`heb-a-i-…`, `ok-`, `d-`, `pl-` …) | 70 | 1,430 | 1,332 |
 | Verses (open and full) | 16 | 514 | 480 |
 | Stories (titles, pages, questions, recasts, word cards) | 41 | 1,063 | 1,004 |
-| **All of Band A** | **276** | **3,937** | **3,356** |
+| **All of Band A** | **279** | **4,093** | **3,448** |
 
 - Of the 929 word characters, 352 (201 unpointed) are the 57 `text-ready` words whose whole-word clips the syllabus voicing plan needs anyway for Bands B and C (`voice-brief.md` §5): one clip serves all three bands.
 - Several Hebrew frame lines are the same words in the three courses (for example `הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.`, `בּוֹאוּ נֹאמַר יַחַד.`, `שָׁמַעְתִּי:`); if the voice director uses one voice for them they can be one clip. That is a saving the director plans, not a text change.
@@ -471,9 +478,9 @@ Counted again by the editor on 2026-11-03 after the final wording (the text sent
 
 ## 10. Hand-offs
 
-- **hebrew-text-editor:** done on 2026-11-03 (`text-ready`, waiting for the owner): every line, word card, verse, story page, question, recast, feedback line and the name list. The three questions are settled in `hebrew-notes.md` §9: the course voice speaks in the plural (§9.1); the voice has no gender in its lines, and i-follow no longer uses קוֹרֵאת (§9.1); "מִי לֹא שַׁיָּךְ?" does not stay, it is "מָה הִגִּיעַ לְכָאן בְּטָעוּת?" (§9.3).
-- **design-director:** the pictures of §2 and the stories (drawn from real references), the A-10 marks, the A-14 picture paths, and the stroke directions of the arch and the circle (F6).
+- **hebrew-text-editor (open, 2026-11-03):** the three A-03 kind lines of §3 (`i-odd-animals`, `i-odd-food`, `i-odd-clothes`), drafts after frame §4.4 H4: wording, nikud and voice text (their `say` cells are empty). They keep your `i-odd` pattern, "מָה הִגִּיעַ … בְּטָעוּת", and add the kind's box; if the bin is not drawn as a box, "לַמָּקוֹם שֶׁל" (as `i-sort-cat`) is the alternative. (`text-ready`, waiting for the owner): every line, word card, verse, story page, question, recast, feedback line and the name list. The three questions are settled in `hebrew-notes.md` §9: the course voice speaks in the plural (§9.1); the voice has no gender in its lines, and i-follow no longer uses קוֹרֵאת (§9.1); "מִי לֹא שַׁיָּךְ?" does not stay, it is "מָה הִגִּיעַ לְכָאן בְּטָעוּת?" (§9.3).
+- **design-director:** the A-03 bins as open boxes with the typical member's picture on the front (elephant, banana, plain shirt; A-03), holding the three cards of an odd one out; the pictures of §2 and the stories (drawn from real references), the A-10 marks, the A-14 picture paths, and the stroke directions of the arch and the circle (F6).
 - **voice-and-sound-director:** the voicing plan from `pronunciation.csv`; whether a carrier line + a word clip joins naturally (§0); the syllable clips of A-09 (about 0.5 s gaps, each syllable a clean CV, level pitch).
-- **curriculum-expert:** the 18 new tags (kind and family, and the suggested MEANING family); the A-03 check change (§4).
+- **curriculum-expert:** the 18 new tags (kind and family, and the suggested MEANING family); the A-03 check change (§4). **Settled** (frame §4.4 H1 to H4) and applied here on 2026-11-03: every A-03 odd one out names its kind and shows its bin; A-03.8, a sort, is always one of a child's two checks.
 - **app-developer:** LS01 audio-only cards in a sort (A-05.7, .9); the A-11 name rules (strip marks, closed list, NAME-FIRST and NAME-LENGTH choice); LS03 drum count classifier.
 - **qa-engineer:** once, when HEB-1 is finished.

@@ -1,11 +1,11 @@
 # The Russian course: Band A content batch (RUS-1)
 
-*Owner: russian-language-teacher. Draft 2026-11-03, for the owner's OK, then the design-director (the pictures) and the voice-and-sound-director (the clips). **The Hebrew frame lines (§2) and the parent texts (§3) are `text-ready`** (hebrew-text-editor, 2026-11-03). Plan only; nothing here is built or voiced.*
+*Owner: russian-language-teacher. Draft 2026-11-03, for the owner's OK, then the design-director (the pictures) and the voice-and-sound-director (the clips). **The Hebrew frame lines (§2) and the parent texts (§3) are `text-ready`** (hebrew-text-editor, 2026-11-03). Changed the same day for the settled catalogue (frame §4.5): three Hebrew drafts are `needs-editor` (F40, and the `parentText` of M-RUS-YESNO and M-RUS-NUMWORD). Plan only; nothing here is built or voiced.*
 *Built on: `syllabus.md` (skills RUS-A-01 to A-20, §5 vocabulary, §8 speaking, §11 tags), `templates.md`, the shared frame `docs/languages/frame.md` (templates LS01 to LS14 §2.3, mastery §3.3, catalogue format §4.1, speech §5.1, personal turns §5.2), `docs/curriculum.md` §6.1, §9.2 and §10. Every Russian clip id is a row of `pronunciation.csv`.*
 
 ## 1. How the batch works
 
-**Skills and templates.** All 20 Band A skills. Templates are wave 1 of the frame (LS01, LS03 drum, LS08 `listen` and `dialogic`, LS09, LS10, LS11, LS12) and the existing T02 `count_tap`. Nothing here needs wave 2 or 3, and nothing shows Russian text to the child.
+**Skills and templates.** All 20 Band A skills. Templates are wave 1 of the frame (LS01, LS03 drum, LS08 `listen` and `dialogic`, LS09, LS10, LS11, LS12) and the existing T02 `count_tap` (its counting taps are practice; its scored step is "how many?", frame §2.2). Nothing here needs wave 2 or 3, and nothing shows Russian text to the child.
 
 **Presentation.** Band A presentation (frame §3.1): at most 3 choices, one instruction at a time, no reading, no left and right words, big targets, no timer; 3 to 5 items per activity, activities of 2 to 4 minutes, visits of 8 minutes by default (syllabus §1). A child with Band B or C presentation who is placed here gets the same items, fewer per skill.
 
@@ -15,7 +15,9 @@
 
 **Hints.** Each skill has one three-step ladder: 1 attention (the clip again, slower, F02); 2 a **new representation** (an action, a scene, the mouth, fingers, a row of pages); 3 show me (the answer is played and lit, a tap goes on, the item returns later). Credit by hint level as curriculum §10.2.
 
-**Distractors.** Every scored item has tagged distractors, and every activity at least two (a 2-choice item, yes / no or same / different, has one; those items give at most half of a skill's evidence). The tags are in §3.
+**Distractors** (frame §2.3). Every scored item has tagged distractors: a 3-choice item has two (they may share a tag when one misconception explains both); a 2-choice item (yes / no, same / different, two sound buttons) has one, it allows one retry only, and 2-choice items are **at most half of each skill's scored items**. In a same / different item, the wrong answer on a "same" pair is `M-RUS-YESNO` (an answer habit), and on a "different" pair it keeps its contrast tag. Counting taps (T02) are practice and carry no tag (frame §2.2). The tags are in §3.
+
+**Checks.** An item marked **C** after its id is an understanding or delayed check: a new item or a second representation, always with 3 choices (never a single 2-choice item; frame §2.3). Every skill has at least two, a core skill (●) three, so the delayed check can use a different item.
 
 **Coverage** (frame §3.3.4). A word-set skill is mastered only when each of its words has been answered right once without a hint. Items rotate the words until coverage is met.
 
@@ -74,6 +76,9 @@ Full nikud (child text), plural and gender-neutral as in the rest of the app (th
 | F37 | מִי עוֹשֶׂה אֶת הַקּוֹל הַזֶּה? הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים. | מי עוֹשֶׂה את הקול הזה? הקשיבו לִשְׁתֵּי המילים. | A-05 animal sound → word | text-ready |
 | F38 | אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה? | איזו מילה מתאימה לתמונה? | A-02 picture → two words | text-ready |
 | F39 | מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ? | מישהו בא, או הולך? | A-01 picture choice | text-ready |
+| F40 | כמה ספרנו? הקשיבו, וגעו במספר. (draft, no nikud) | (the editor's) | T02 "how many?" after the counting (A-10, A-11 items 01–05; frame §2.2) | **needs-editor** |
+
+**F40** is a new draft by the Russian teacher (2026-11-03, for the "how many?" step of frame §2.2): the child has just counted along with the voice, and now chooses the number word from 3 sound buttons. It needs the editor's wording, nikud and voice text.
 
 **What the editor changed** (the other lines only got nikud and the voice text):
 - F04: first-person past: the same for every voice; a carrier before the word clip.
@@ -90,21 +95,20 @@ Full nikud (child text), plural and gender-neutral as in the rest of the app (th
 - The friend is called "הֶחָבֵר" (the app's word for the companion) and never "הוא" or "היא"; no verb is said about the friend in these lines, so the friend's gender is not guessed (`hebrew-notes.md` §9.1). The Hebrew clip never contains a Russian word, and the lines address the children in the plural.
 
 ## 3. Misconception tags used in Band A
-Kinds and families as frame §4.1. The eleven tags marked **new** are proposals for the shared catalogue (the curriculum-expert decides the ids and families); the rest are in syllabus §11. `parentText` and `homeActivity` are Hebrew texts for the parent area, `text-ready` (hebrew-text-editor, 2026-11-03; adult text, no nikud, "הילד" as in the rest of the parent area), filling gap G6 for these tags. Russian words inside them are left-to-right runs.
+Kinds, families and engine ids as the shared catalogue (frame §4.2, settled 2026-11-03). The ten tags marked **new** came with this batch and were adopted (frame §4.4 R1). Each tag's kind, family, signal and re-teach are defined once, in syllabus §11; this table keeps the engine id, `parentText` and `homeActivity`, and repeats the Band A signal and re-teach for the batch. `M-RUS-COUNT` was **not adopted** and is removed: counting taps are practice (frame §2.2). `parentText` and `homeActivity` are Hebrew texts for the parent area, `text-ready` (hebrew-text-editor, 2026-11-03; adult text, no nikud, "הילד" as in the rest of the parent area), filling gap G6 for these tags. Russian words inside them are left-to-right runs.
 
-| Tag | Engine id (proposed) | Kind | Family | Signal (Band A) | Level-2 re-teach | parentText (final) | homeActivity (final) |
+| Tag | Engine id | Kind | Family | Signal (Band A) | Level-2 re-teach | parentText (final) | homeActivity (final) |
 |---|---|---|---|---|---|---|---|
-| M-RUS-SEM **new** | `rus.voc.sem` | diagnostic | GUESS | a word of the same theme chosen (another animal, another family member) | the word in its scene (the skill's level 2) | הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות. | הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו. |
+| M-RUS-SEM **new** | `rus.lis.sem` | diagnostic | MEANING | a word of the same theme chosen (another animal, another family member) | the word in its scene (the skill's level 2) | הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות. | הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו. |
 | M-RUS-SOUND **new** | `rus.voc.sound` | diagnostic | GUESS | a word that sounds like the target chosen (сок / суп, кот / кит, семь / во́семь) | the two words said one after the other, each with its picture | מילים שנשמעות דומה (сок ו־суп) עדיין מתחלפות לילד. זה שלב רגיל בלמידת שפה חדשה. | אמרו לאט שתי מילים דומות, אחת אחרי השנייה, והצביעו על התמונה של כל אחת. |
 | M-RUS-KTO **new** | `rus.grm.kto` | diagnostic | GRAMMAR | a thing chosen for Кто э́то?, or a living being for Что э́то? | alive or not: the living ones move, the things stay still | ברוסית שואלים кто ("מי") על אנשים ועל בעלי חיים, ו־что ("מה") על חפצים. בעברית אומרים "מה זה?" גם על חתול, ולכן זה מבלבל בהתחלה. | בספר תמונות: על חיה או על אדם שאלו "Кто это?", ועל חפץ שאלו "Что это?". |
-| M-RUS-TYVY **new** | `rus.grm.tyvy` | diagnostic | GRAMMAR | приве́т or пока́ chosen for a grown-up who is not family | the scene acted: the grown-up arrives, the friend greets with здра́вствуйте | למבוגר שאינו מהמשפחה אומרים ברוסית здравствуйте ו־до свидания, ולחבר привет ו־пока. זו הצורה המנומסת; במשפחה ובין חברים מדברים כרגיל. | כשפוגשים מבוגר שמדבר רוסית, אמרו יחד "здравствуйте". |
-| M-RUS-YESNO **new** | `rus.grm.yesno` | diagnostic | GUESS | да on a "no" item, or нет on a "yes" item | the friend points and says the thing's real name | בשאלות של כן ולא, אם הילד עונה כל פעם да, כנראה שהשאלה עדיין לא ברורה לו עד הסוף. זה נורמלי בהתחלה. | שאלו בצחוק "Это кот?" על דברים בבית, לפעמים נכון ולפעמים לא, וענו יחד да או нет. |
-| M-RUS-NUMWORD **new** | `rus.voc.numword` | diagnostic | GUESS | the set next to the heard number chosen | fingers: the number shown one finger at a time | מספרים שנשמעים קרובים ברוסית (три ו־четыре) עדיין מתחלפים לילד. | ספרו יחד ברוסית דברים בבית: מדרגות, כפיות, צעצועים. |
-| M-RUS-COUNT **new** | `rus.voc.count` | diagnostic | SEGMENT | in count-and-tap, an object skipped or counted twice | the friend's finger touches each object once as it is counted | בספירה ילדים מדלגים לפעמים על חפץ או סופרים אותו פעמיים. זה קורה גם בעברית בגיל הזה. | ספרו יחד ברוסית, ונגעו בכל חפץ פעם אחת בדיוק. |
+| M-RUS-TYVY **new** | `rus.lis.tyvy` | diagnostic | GRAMMAR | приве́т or пока́ chosen for a grown-up who is not family | the scene acted: the grown-up arrives, the friend greets with здра́вствуйте | למבוגר שאינו מהמשפחה אומרים ברוסית здравствуйте ו־до свидания, ולחבר привет ו־пока. זו הצורה המנומסת; במשפחה ובין חברים מדברים כרגיל. | כשפוגשים מבוגר שמדבר רוסית, אמרו יחד "здравствуйте". |
+| M-RUS-YESNO **new** | `rus.grm.yesno` | diagnostic | GUESS | a two-way answer given by habit: да on a "no" item, нет on a "yes" item, or "different" on a "same" pair (A-19, A-20) | yes / no: the friend points and says the thing's real name; same / different: the two clips again, each lighting its own card | **Draft, needs-editor** (widened to same / different, frame §4.4 R2): בשאלות של כן ולא, או של "אותו דבר" ו"לא אותו דבר", אם הילד עונה כל פעם אותה תשובה, כנראה שהשאלה עדיין לא ברורה לו עד הסוף. זה נורמלי בהתחלה. *Was (text-ready):* בשאלות של כן ולא, אם הילד עונה כל פעם да, כנראה שהשאלה עדיין לא ברורה לו עד הסוף. זה נורמלי בהתחלה. | שאלו בצחוק "Это кот?" על דברים בבית, לפעמים נכון ולפעמים לא, וענו יחד да או нет. |
+| M-RUS-NUMWORD **new** | `rus.num.numword` | diagnostic | MEANING | the set next to the heard number chosen (number → set), or the number word next to the count chosen after counting ("how many?") | fingers: the number shown one finger at a time | **Draft, needs-editor** (the number word, or the amount itself, frame §4.4 R1): מילת המספר ברוסית, או אולי הכמות עצמה, עדיין חדשה לילד, ולכן מספרים קרובים (три ו־четыре) מתחלפים לפעמים. זה רגיל בגיל הזה. *Was (text-ready):* מספרים שנשמעים קרובים ברוסית (три ו־четыре) עדיין מתחלפים לילד. | ספרו יחד ברוסית דברים בבית: מדרגות, כפיות, צעצועים. |
 | M-RUS-RHYME-ONSET **new** | `rus.pho.rhyme_onset` | diagnostic | RHYME | a word with the same start chosen instead of the rhyme (но́ги for нос) | word pairs: the line-1 rhyme word before each option | כשמחפשים חרוז, ילדים בוחרים לפעמים מילה שמתחילה אותו דבר (нос ו־ноги) במקום מילה שנגמרת אותו דבר. | אמרו שתי מילים מתחרזות ברוסית (кот – рот) ושאלו: נשמע דומה בסוף? |
 | M-RUS-SYLL **new** | `rus.pho.syll` | diagnostic | SEGMENT | one beat more or fewer on the drum, or the picture with the wrong number of claps | a hand claps with the child on each beat | בספירת חלקי מילה במחיאות כפיים, קורה שהילד מוחא פעם אחת יותר או פחות. | מחאו כפיים יחד לכל חלק בשמות של צעצועים: ку-кла, ма-ши-на. |
 | M-RUS-NOTFIRST **new** | `rus.pho.notfirst` | diagnostic | SEGMENT | a word with the sound at the end chosen (дом for м) | the mouth shows the first sound while each option is said with its first sound held | הילד שומע את הצליל במילה, אבל עוד לא ברור לו שהוא בהתחלה. | משחק "מה מתחיל ב־ммм?": משכו את הצליל הראשון של מילה, ומצאו עוד דבר שמתחיל כך. |
-| M-RUS-SEQ **new** | `rus.voc.seq` | diagnostic | GUESS | after a story, a picture that did not happen in it | the pages laid out in a row and replayed | אחרי הסיפור הילד בחר תמונה שלא הייתה בו. כדאי להקשיב לסיפור שוב, עם התמונות. | קראו יחד ספר תמונות ושאלו "מה יקרה עכשיו?" לפני שמדפדפים. |
+| M-RUS-SEQ **new** | `rus.lis.seq` | diagnostic | MEANING | after a story, a picture that did not happen in it | the pages laid out in a row and replayed | אחרי הסיפור הילד בחר תמונה שלא הייתה בו. כדאי להקשיב לסיפור שוב, עם התמונות. | קראו יחד ספר תמונות ושאלו "מה יקרה עכשיו?" לפני שמדפדפים. |
 | M-RUS-HARDSOFT | `rus.pho.hardsoft` | diagnostic | CONTRAST | лук chosen for люк (A-20) | the mouth: a wide smile for the soft one | ברוסית יש עיצורים "רכים" ו"קשים" (лук "בצל", люк "מכסה בכביש"). בעברית אין הבדל כזה, ולכן לוקח זמן לשמוע אותו. | אמרו את הזוג лук – люк, עם חיוך רחב ב־люк, ושחקו "איזו מילה שמעתם?". |
 | M-RUS-YI | `rus.pho.yi` | diagnostic | CONTRAST | ми́шка chosen for мы́шка; "same" for мы / ми (A-20) | the puzzled friend says "ы…" | הצליל ы לא קיים בעברית, ולכן мышка ("עכבר") ו־мишка ("דובי") נשמעות דומה. | עשו יחד "פרצוף מתלבט" ואמרו ы…, ואחר כך мышка ו־мишка. |
 
@@ -127,11 +131,11 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 |---|---|---|---|---|---|---|
 | `rus.a01.01` | LS01 pictorial | F39 → `w-privet` | приве́т `pic.rus.arrive` | пока́ `pic.rus.leave` (M-RUS-SEM) · спаси́бо `pic.rus.gift` (M-RUS-SEM) | NHR | pictures: arriving ✓, leaving, being given an apple |
 | `rus.a01.02` | LS01 pictorial | F39 → `w-poka` | пока́ `pic.rus.leave` | приве́т `pic.rus.arrive` (M-RUS-SEM) · спаси́бо `pic.rus.gift` (M-RUS-SEM) | NHR |  |
-| `rus.a01.03` | LS01 pictorial | F39 → `w-do-svidanija` | `pic.rus.leave` | приве́т `pic.rus.arrive` (M-RUS-SEM) · спаси́бо `pic.rus.gift` (M-RUS-SEM) | NHR | до свида́ния heard; the leaving picture is the answer (both are goodbye) |
+| `rus.a01.03` C | LS01 pictorial | F39 → `w-do-svidanija` | `pic.rus.leave` | приве́т `pic.rus.arrive` (M-RUS-SEM) · спаси́бо `pic.rus.gift` (M-RUS-SEM) | NHR | до свида́ния heard; the leaving picture is the answer (both are goodbye) |
 | `rus.a01.04` | LS10 bubbles | F07 → `w-privet` | приве́т `pic.rus.arrive` | пока́ `pic.rus.leave` (M-RUS-SEM) · спаси́бо `pic.rus.gift` (M-RUS-SEM) | NHR | a child friend arrives and says Приве́т!; the bubbles are heard on tap; then the say step |
 | `rus.a01.05` | LS10 bubbles | F07 → `w-poka` | пока́ `pic.rus.leave` | приве́т `pic.rus.arrive` (M-RUS-SEM) · здра́вствуйте `w-zdravstvujte` (M-RUS-SEM) | NHR | the child friend leaves |
 | `rus.a01.06` | LS10 bubbles | F07 → `w-zdravstvuj` | здра́вствуйте `w-zdravstvujte` | приве́т `pic.rus.arrive` (M-RUS-TYVY) · пока́ `pic.rus.leave` (M-RUS-SEM) | NHR | a grown-up neighbour (not family) arrives and greets the child with Здра́вствуй!; the child answers a grown-up with Здра́вствуйте |
-| `rus.a01.07` | LS10 bubbles | F07 → `w-do-svidanija` | до свида́ния `w-do-svidanija` | пока́ `pic.rus.leave` (M-RUS-TYVY) · приве́т `pic.rus.arrive` (M-RUS-SEM) | NHR | the neighbour leaves with До свида́ния! |
+| `rus.a01.07` C | LS10 bubbles | F07 → `w-do-svidanija` | до свида́ния `w-do-svidanija` | пока́ `pic.rus.leave` (M-RUS-TYVY) · приве́т `pic.rus.arrive` (M-RUS-SEM) | NHR | the neighbour leaves with До свида́ния! |
 | `rus.a01.08` | LS10 personal | — → `ch-menja-zovut` + `ch-kak-tebja-zovut` | (not checked) | — | NHR | optional, never scored (frame §5.2): the puppet says its own name first; the child says a name (voice on) or taps "pass"; the puppet answers ch-ochen-prijatno, or ch-horosho after a pass. The name is never matched, kept or repeated |
 
 **Hint ladder.** 1: the line again, slower, with the friend's hand already waving in or out (F02). 2: the scene is acted (story): the door opens and the friend walks in, or out, while the voice says the word. 3: show me: the right picture or bubble glows, the voice says the word, the friend waves; the child taps it to go on (no credit), and the word comes back later in a fresh item.
@@ -159,8 +163,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a02.06` | LS01 pictorial | F01 → — | сестра́ `pic.fam.sister` | брат `pic.fam.brother` (M-RUS-SEM) · ба́бушка `pic.fam.grandmother` (M-RUS-SEM) | NHR |  |
 | `rus.a02.07` | LS01 pictorial | F01 → — | малы́ш `pic.fam.baby` | де́душка `pic.fam.grandfather` (M-RUS-SEM) · ба́бушка `pic.fam.grandmother` (M-RUS-SEM) | NHR |  |
 | `rus.a02.08` | LS01 pictorial | F01 → — | ма́льчик `pic.boy` | де́вочка `pic.girl` (M-RUS-SEM) · де́душка `pic.fam.grandfather` (M-RUS-SEM) | NHR |  |
-| `rus.a02.09` | LS01 pictorial | F01 → — | де́вочка `pic.girl` | ма́льчик `pic.boy` (M-RUS-SEM) · ба́бушка `pic.fam.grandmother` (M-RUS-SEM) | NHR |  |
-| `rus.a02.10` | LS01 pictorial | F01 → — | семья́ `pic.fam.all` | ма́ма `pic.fam.mother` (M-RUS-SEM) · малы́ш `pic.fam.baby` (M-RUS-SEM) | NHR |  |
+| `rus.a02.09` C | LS01 pictorial | F01 → — | де́вочка `pic.girl` | ма́льчик `pic.boy` (M-RUS-SEM) · ба́бушка `pic.fam.grandmother` (M-RUS-SEM) | NHR |  |
+| `rus.a02.10` C | LS01 pictorial | F01 → — | семья́ `pic.fam.all` | ма́ма `pic.fam.mother` (M-RUS-SEM) · малы́ш `pic.fam.baby` (M-RUS-SEM) | NHR |  |
 | `rus.a02.11` | LS01 audio options (2) | F38 → — | ба́бушка `pic.fam.grandmother` | де́душка `pic.fam.grandfather` (M-RUS-SOUND) | NHR | picture: the grandmother; two sound buttons |
 | `rus.a02.12` | LS01 audio options (2) | F38 → — | па́па `pic.fam.father` | ма́ма `pic.fam.mother` (M-RUS-SOUND) | NHR | picture: the father |
 | `rus.a02.13` | LS01 audio options (2) | F38 → — | сестра́ `pic.fam.sister` | брат `pic.fam.brother` (M-RUS-SEM) | NHR | picture: the sister |
@@ -197,8 +201,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a03.11` | LS11 hotspots | F08 → `ch-pokazhi-golovu` | голова́ `hot.head` | но́ги `hot.legs` (M-RUS-SEM) · живо́т `hot.belly` (M-RUS-SEM) | NHR |  |
 | `rus.a03.12` | LS11 hotspots (doll) | F08 → `ch-pokazhi-nos` | нос `hot.nose` | рот `hot.mouth` (M-RUS-SOUND) · глаза́ `hot.eyes` (M-RUS-SEM) | NHR | the same command on a doll in a dress-up scene (second representation) |
 | `rus.a03.13` | LS11 hotspots (doll) | F08 → `ch-pokazhi-ushi` | у́ши `hot.ears` | глаза́ `hot.eyes` (M-RUS-SEM) · ру́ки `hot.arms` (M-RUS-SOUND) | NHR |  |
-| `rus.a03.14` | LS11 hotspots (doll) | F08 → `ch-pokazhi-nogi` | но́ги `hot.legs` | ру́ки `hot.arms` (M-RUS-SEM) · нос `hot.nose` (M-RUS-SOUND) | NHR |  |
-| `rus.a03.15` | LS11 hotspots (doll) | F08 → `ch-pokazhi-zhivot` | живо́т `hot.belly` | голова́ `hot.head` (M-RUS-SEM) · но́ги `hot.legs` (M-RUS-SEM) | NHR |  |
+| `rus.a03.14` C | LS11 hotspots (doll) | F08 → `ch-pokazhi-nogi` | но́ги `hot.legs` | ру́ки `hot.arms` (M-RUS-SEM) · нос `hot.nose` (M-RUS-SOUND) | NHR |  |
+| `rus.a03.15` C | LS11 hotspots (doll) | F08 → `ch-pokazhi-zhivot` | живо́т `hot.belly` | голова́ `hot.head` (M-RUS-SEM) · но́ги `hot.legs` (M-RUS-SEM) | NHR |  |
 
 **Hint ladder.** 1: the command again, slowly (F02). 2: embodied: the friend touches its own part and wiggles it while the word is said (a new representation: action). 3: show me: the part glows and the word clip plays; a tap goes on.
 
@@ -223,13 +227,13 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a04.04` | LS01 pictorial | F01 → — | хло́пай `pic.act.clap` | пры́гай `pic.act.jump` (M-RUS-SOUND) · встань `pic.act.stand` (M-RUS-SEM) | NHR |  |
 | `rus.a04.05` | LS01 pictorial | F01 → — | сядь `pic.act.sit` | встань `pic.act.stand` (M-RUS-SEM) · иди́ `pic.act.walk` (M-RUS-SEM) | NHR |  |
 | `rus.a04.06` | LS01 pictorial | F01 → — | встань `pic.act.stand` | сядь `pic.act.sit` (M-RUS-SEM) · хло́пай `pic.act.clap` (M-RUS-SEM) | NHR |  |
-| `rus.a04.07` | LS01 pictorial | F01 → — | возьми́ мяч `pic.act.take` | сядь `pic.act.sit` (M-RUS-SEM) · хло́пай `pic.act.clap` (M-RUS-SEM) | NHR |  |
+| `rus.a04.07` C | LS01 pictorial | F01 → — | возьми́ мяч `pic.act.take` | сядь `pic.act.sit` (M-RUS-SEM) · хло́пай `pic.act.clap` (M-RUS-SEM) | NHR |  |
 | `rus.a04.08` | LS11 action buttons | F09 → — | иди́ `pic.act.walk` | беги́ `pic.act.run` (M-RUS-SEM) · сядь `pic.act.sit` (M-RUS-SEM) | NHR | the friend in a playground does what the child taps |
 | `rus.a04.09` | LS11 action buttons | F09 → — | беги́ `pic.act.run` | иди́ `pic.act.walk` (M-RUS-SEM) · пры́гай `pic.act.jump` (M-RUS-SEM) | NHR |  |
 | `rus.a04.10` | LS11 action buttons | F09 → — | пры́гай `pic.act.jump` | хло́пай `pic.act.clap` (M-RUS-SOUND) · беги́ `pic.act.run` (M-RUS-SEM) | NHR |  |
 | `rus.a04.11` | LS11 action buttons | F09 → — | хло́пай `pic.act.clap` | пры́гай `pic.act.jump` (M-RUS-SOUND) · встань `pic.act.stand` (M-RUS-SEM) | NHR |  |
-| `rus.a04.12` | LS11 action buttons | F09 → — | сядь `pic.act.sit` | встань `pic.act.stand` (M-RUS-SEM) · иди́ `pic.act.walk` (M-RUS-SEM) | NHR |  |
-| `rus.a04.13` | LS11 action buttons | F09 → — | встань `pic.act.stand` | сядь `pic.act.sit` (M-RUS-SEM) · хло́пай `pic.act.clap` (M-RUS-SEM) | NHR |  |
+| `rus.a04.12` C | LS11 action buttons | F09 → — | сядь `pic.act.sit` | встань `pic.act.stand` (M-RUS-SEM) · иди́ `pic.act.walk` (M-RUS-SEM) | NHR |  |
+| `rus.a04.13` C | LS11 action buttons | F09 → — | встань `pic.act.stand` | сядь `pic.act.sit` (M-RUS-SEM) · хло́пай `pic.act.clap` (M-RUS-SEM) | NHR |  |
 
 **Hint ladder.** 1: the command again, with the friend getting ready (no hint of which action) (F02). 2: embodied: the voice says the command and a small figure does the action once, in a new place (motion instead of a still picture). 3: show me: the friend does it while the command is said; a tap goes on.
 
@@ -268,8 +272,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a05.18` | LS01 pictorial | F01 → — | ёж `pic.hedgehog` | за́яц `pic.hare` (M-RUS-SEM) · мышь `pic.mouse` (M-RUS-SEM) | NHR |  |
 | `rus.a05.19` | LS01 pictorial | F01 → — | бе́лка `pic.squirrel` | за́яц `pic.hare` (M-RUS-SEM) · лиса́ `pic.fox` (M-RUS-SEM) | NHR |  |
 | `rus.a05.20` | LS01 pictorial | F01 → — | слон `pic.elephant` | медве́дь `pic.bear` (M-RUS-SEM) · жира́ф `pic.giraffe` (M-RUS-SEM) | NHR |  |
-| `rus.a05.21` | LS01 pictorial | F01 → — | жира́ф `pic.giraffe` | слон `pic.elephant` (M-RUS-SEM) · шарф `pic.scarf` (M-RUS-SOUND) | NHR |  |
-| `rus.a05.22` | LS01 pictorial | F01 → — | кит `pic.whale` | ры́ба `pic.fish` (M-RUS-SEM) · кот `pic.tomcat` (M-RUS-SOUND) | NHR |  |
+| `rus.a05.21` C | LS01 pictorial | F01 → — | жира́ф `pic.giraffe` | слон `pic.elephant` (M-RUS-SEM) · шарф `pic.scarf` (M-RUS-SOUND) | NHR |  |
+| `rus.a05.22` C | LS01 pictorial | F01 → — | кит `pic.whale` | ры́ба `pic.fish` (M-RUS-SEM) · кот `pic.tomcat` (M-RUS-SOUND) | NHR |  |
 | `rus.a05.23` | LS01 audio options (2) | F37 → — | ко́шка `pic.cat` | соба́ка `pic.dog` (M-RUS-SEM) | NHR | a real animal sound effect (no words), then two sound buttons |
 | `rus.a05.24` | LS01 audio options (2) | F37 → — | соба́ка `pic.dog` | ко́шка `pic.cat` (M-RUS-SEM) | NHR |  |
 | `rus.a05.25` | LS01 audio options (2) | F37 → — | коро́ва `pic.cow` | коза́ `pic.goat` (M-RUS-SOUND) | NHR |  |
@@ -308,8 +312,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a06.08` | LS01 object colour | F14 → — | си́ний `col.blue` | зелёный `col.green` (M-RUS-SEM) · чёрный `col.black` (M-RUS-SEM) | NHR |  |
 | `rus.a06.09` | LS01 object colour | F14 → — | жёлтый `col.yellow` | зелёный `col.green` (M-RUS-SOUND) · бе́лый `col.white` (M-RUS-SEM) | NHR |  |
 | `rus.a06.10` | LS01 object colour | F14 → — | зелёный `col.green` | жёлтый `col.yellow` (M-RUS-SOUND) · си́ний `col.blue` (M-RUS-SEM) | NHR |  |
-| `rus.a06.11` | LS01 object colour | F14 → — | бе́лый `col.white` | чёрный `col.black` (M-RUS-SEM) · жёлтый `col.yellow` (M-RUS-SEM) | NHR |  |
-| `rus.a06.12` | LS01 object colour | F14 → — | чёрный `col.black` | бе́лый `col.white` (M-RUS-SEM) · кра́сный `col.red` (M-RUS-SOUND) | NHR |  |
+| `rus.a06.11` C | LS01 object colour | F14 → — | бе́лый `col.white` | чёрный `col.black` (M-RUS-SEM) · жёлтый `col.yellow` (M-RUS-SEM) | NHR |  |
+| `rus.a06.12` C | LS01 object colour | F14 → — | чёрный `col.black` | бе́лый `col.white` (M-RUS-SEM) · кра́сный `col.red` (M-RUS-SOUND) | NHR |  |
 
 **Hint ladder.** 1: the word again, slowly (F02). 2: the colour on a familiar thing, shown without words: red on an apple, yellow on the sun, green on grass, blue on the sea, white on snow, black on a night sky (a new representation: the world instead of a patch). 3: show me: the patch glows and the word is said.
 
@@ -353,8 +357,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a07.23` | LS11 picnic (drag) | F11 → — | сыр `pic.cheese` | суп `pic.soup` (M-RUS-SOUND) · хлеб `pic.bread` (M-RUS-SEM) | NHR |  |
 | `rus.a07.24` | LS11 picnic (drag) | F11 → — | я́блоко `pic.apple` | гру́ша `pic.pear` (M-RUS-SEM) · молоко́ `pic.milk` (M-RUS-SOUND) | NHR |  |
 | `rus.a07.25` | LS11 picnic (drag) | F11 → — | бана́н `pic.banana` | апельси́н `pic.orange` (M-RUS-SEM) · гру́ша `pic.pear` (M-RUS-SEM) | NHR |  |
-| `rus.a07.26` | LS11 picnic (drag) | F11 → — | морко́вь `pic.carrot` | огуре́ц `pic.cucumber` (M-RUS-SEM) · карто́шка `pic.potato` (M-RUS-SEM) | NHR |  |
-| `rus.a07.27` | LS11 picnic (drag) | F11 → — | огуре́ц `pic.cucumber` | помидо́р `pic.tomato` (M-RUS-SEM) · морко́вь `pic.carrot` (M-RUS-SEM) | NHR |  |
+| `rus.a07.26` C | LS11 picnic (drag) | F11 → — | морко́вь `pic.carrot` | огуре́ц `pic.cucumber` (M-RUS-SEM) · карто́шка `pic.potato` (M-RUS-SEM) | NHR |  |
+| `rus.a07.27` C | LS11 picnic (drag) | F11 → — | огуре́ц `pic.cucumber` | помидо́р `pic.tomato` (M-RUS-SEM) · морко́вь `pic.carrot` (M-RUS-SEM) | NHR |  |
 
 **Hint ladder.** 1: the word again, slowly, twice (F02). 2: the food in use: milk pours into a cup, the friend bites the apple, soup steams in a bowl (a scene instead of a still picture). 3: show me: the right food glows and the word is said.
 
@@ -386,8 +390,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a08.11` | LS11 tidy-up (drag) | F12 → — | мяч `pic.ball` | ша́рик `pic.balloon` (M-RUS-SEM) · ку́бики `pic.blocks` (M-RUS-SEM) | NHR | three toys glow on the floor; the child drags one into the toy box |
 | `rus.a08.12` | LS11 tidy-up (drag) | F12 → — | ку́кла `pic.doll` | ку́бики `pic.blocks` (M-RUS-SOUND) · ми́шка `pic.teddy` (M-RUS-SEM) | NHR |  |
 | `rus.a08.13` | LS11 tidy-up (drag) | F12 → — | ми́шка `pic.teddy` | мышь `pic.mouse` (M-RUS-SOUND) · ку́кла `pic.doll` (M-RUS-SEM) | NHR |  |
-| `rus.a08.14` | LS11 tidy-up (drag) | F12 → — | кни́га `pic.book` | каранда́ш `pic.pencil` (M-RUS-SEM) · ку́кла `pic.doll` (M-RUS-SEM) | NHR |  |
-| `rus.a08.15` | LS11 tidy-up (drag) | F12 → — | юла́ `pic.top` | мяч `pic.ball` (M-RUS-SEM) · пирами́дка `pic.stacker` (M-RUS-SEM) | NHR |  |
+| `rus.a08.14` C | LS11 tidy-up (drag) | F12 → — | кни́га `pic.book` | каранда́ш `pic.pencil` (M-RUS-SEM) · ку́кла `pic.doll` (M-RUS-SEM) | NHR |  |
+| `rus.a08.15` C | LS11 tidy-up (drag) | F12 → — | юла́ `pic.top` | мяч `pic.ball` (M-RUS-SEM) · пирами́дка `pic.stacker` (M-RUS-SEM) | NHR |  |
 
 **Hint ladder.** 1: the word again, slowly (F02). 2: the toy plays: the ball bounces, the top spins, the car drives (motion instead of a still picture). 3: show me: the toy glows and the word is said.
 
@@ -419,15 +423,15 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a09.11` | LS11 dress the friend (drag) | F13 → — | ша́пка `pic.hat` | шарф `pic.scarf` (M-RUS-SOUND) · ку́ртка `pic.jacket` (M-RUS-SEM) | NHR | three clothes glow beside the friend; the child drags one onto it |
 | `rus.a09.12` | LS11 dress the friend (drag) | F13 → — | пла́тье `pic.dress` | футбо́лка `pic.tshirt` (M-RUS-SEM) · штаны́ `pic.trousers` (M-RUS-SEM) | NHR |  |
 | `rus.a09.13` | LS11 dress the friend (drag) | F13 → — | носки́ `pic.socks` | боти́нки `pic.shoes` (M-RUS-SEM) · нос `hot.nose` (M-RUS-SOUND) | NHR |  |
-| `rus.a09.14` | LS11 dress the friend (drag) | F13 → — | шарф `pic.scarf` | ша́пка `pic.hat` (M-RUS-SOUND) · ва́режки `pic.mittens` (M-RUS-SEM) | NHR |  |
-| `rus.a09.15` | LS11 dress the friend (drag) | F13 → — | ва́режки `pic.mittens` | шарф `pic.scarf` (M-RUS-SEM) · носки́ `pic.socks` (M-RUS-SEM) | NHR |  |
+| `rus.a09.14` C | LS11 dress the friend (drag) | F13 → — | шарф `pic.scarf` | ша́пка `pic.hat` (M-RUS-SOUND) · ва́режки `pic.mittens` (M-RUS-SEM) | NHR |  |
+| `rus.a09.15` C | LS11 dress the friend (drag) | F13 → — | ва́режки `pic.mittens` | шарф `pic.scarf` (M-RUS-SEM) · носки́ `pic.socks` (M-RUS-SEM) | NHR |  |
 
 **Hint ladder.** 1: the word again, slowly (F02). 2: the clothing is put on the friend for a moment (the hat on the head, the socks on the feet), then taken off again. 3: show me: the clothing glows and the word is said.
 
 **Mastery and notes.** Any clothes on any friend: no item says who may wear what.
 
 ### RUS-A-10 Numbers 1–5
-*Strand NUM · prerequisites — · templates: T02 count and tap (Russian number clips), LS01 number → set*
+*Strand NUM · prerequisites — · templates: T02 count and tap (Russian number clips; the taps are practice) with its scored "how many?" step (3 number words heard on a tap), LS01 number → set*
 
 **Teach screens (LS09, new-learner route):** set 1: оди́н, два, три, четы́ре, пять. Each word: the picture, the word clip twice with F05 between (F03 if the child is shy), then on.
 
@@ -439,20 +443,20 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 
 | Item | Template | Frame (Hebrew) → Russian clip | Right answer | Distractors (tag) | Routes | Notes |
 |---|---|---|---|---|---|---|
-| `rus.a10.01` | T02 count and tap | F15 → — | 2 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR | one number clip per tap; the last number is said again as the answer |
-| `rus.a10.02` | T02 count and tap | F15 → — | 3 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
-| `rus.a10.03` | T02 count and tap | F15 → — | 4 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
-| `rus.a10.04` | T02 count and tap | F15 → — | 5 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
-| `rus.a10.05` | T02 count and tap | F15 → — | 3 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
+| `rus.a10.01` | T02 count, then "how many?" | F15 → — (count 2, practice); F40 → `ch-skolko` | два `n-2` | оди́н `n-1` (M-RUS-NUMWORD) · три `n-3` (M-RUS-NUMWORD) | NHR | the counting: one number clip per tap (practice, no tag; the count is not said again before the question); then F40 → `ch-skolko` and 3 sound buttons with no numeral and no picture (LS01 c), since a numeral could be answered without the Russian word |
+| `rus.a10.02` | T02 count, then "how many?" | F15 → — (count 3, practice); F40 → `ch-skolko` | три `n-3` | два `n-2` (M-RUS-NUMWORD) · четы́ре `n-4` (M-RUS-NUMWORD) | NHR |  |
+| `rus.a10.03` | T02 count, then "how many?" | F15 → — (count 4, practice); F40 → `ch-skolko` | четы́ре `n-4` | три `n-3` (M-RUS-NUMWORD) · пять `n-5` (M-RUS-NUMWORD) | NHR |  |
+| `rus.a10.04` | T02 count, then "how many?" | F15 → — (count 5, practice); F40 → `ch-skolko` | пять `n-5` | четы́ре `n-4` (M-RUS-NUMWORD) · три `n-3` (M-RUS-NUMWORD) | NHR |  |
+| `rus.a10.05` C | T02 count, then "how many?" | F15 → — (count 3, practice); F40 → `ch-skolko` | три `n-3` | четы́ре `n-4` (M-RUS-NUMWORD) · два `n-2` (M-RUS-NUMWORD) | NHR | new objects in a row (not a dice pattern); the buttons in another order |
 | `rus.a10.06` | LS01 number → set | F16 → `n-1` | a set of 1 (оди́н) | a set of 2 (два) (M-RUS-NUMWORD) · a set of 3 (три) (M-RUS-NUMWORD) | NHR | sets of the same objects (apples, balls, ducks), in a dice or ten-frame pattern |
 | `rus.a10.07` | LS01 number → set | F16 → `n-2` | a set of 2 (два) | a set of 1 (оди́н) (M-RUS-NUMWORD) · a set of 3 (три) (M-RUS-NUMWORD) | NHR |  |
 | `rus.a10.08` | LS01 number → set | F16 → `n-3` | a set of 3 (три) | a set of 2 (два) (M-RUS-NUMWORD) · a set of 4 (четы́ре) (M-RUS-NUMWORD) | NHR |  |
 | `rus.a10.09` | LS01 number → set | F16 → `n-4` | a set of 4 (четы́ре) | a set of 3 (три) (M-RUS-NUMWORD) · a set of 5 (пять) (M-RUS-NUMWORD) | NHR |  |
-| `rus.a10.10` | LS01 number → set | F16 → `n-5` | a set of 5 (пять) | a set of 4 (четы́ре) (M-RUS-NUMWORD) · a set of 3 (три) (M-RUS-NUMWORD) | NHR |  |
+| `rus.a10.10` C | LS01 number → set | F16 → `n-5` | a set of 5 (пять) | a set of 4 (четы́ре) (M-RUS-NUMWORD) · a set of 3 (три) (M-RUS-NUMWORD) | NHR |  |
 
-**Hint ladder.** 1: the number again; the friend points at the first object (F02). 2: fingers: the friend's hand shows the number, one finger at a time, while the voice counts (a new representation). 3: show me: the right set lights and the voice counts it up to the number.
+**Hint ladder.** 1: the number (after counting: the three number words) again; the friend points at the first object (F02). 2: fingers: the friend's hand shows the number, one finger at a time, while the voice counts (a new representation). 3: show me: number → set: the right set lights and the voice counts it up to the number; "how many?": the voice counts the objects again and the right button glows and plays.
 
-**Mastery and notes.** Counting is said without a noun (оди́н, два, три), so number–noun agreement (C-28) is not met here.
+**Mastery and notes.** Two representations (frame §4.4 R1): count, then choose (concrete), and number → set (pictorial). The counting taps are practice and never scored: a skipped or double-tapped object is a counting error (maths), and the app says the number words while the child taps, so the friend simply counts again with the child. The scored step is "how many?" (frame §2.2). Amounts: 1 to 3 in any arrangement, 4 and 5 as dice or finger patterns, 6 to 10 as ten-frames. A wrong number word may mean the amount itself is still new, not only the Russian word (the NUMWORD parent text says both). Counting is said without a noun (оди́н, два, три), so number–noun agreement (C-28) is not met here.
 
 ### RUS-A-11 Numbers 6–10
 *Strand NUM · prerequisites A-10 · templates: as A-10*
@@ -467,20 +471,20 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 
 | Item | Template | Frame (Hebrew) → Russian clip | Right answer | Distractors (tag) | Routes | Notes |
 |---|---|---|---|---|---|---|
-| `rus.a11.01` | T02 count and tap | F15 → — | 6 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
-| `rus.a11.02` | T02 count and tap | F15 → — | 7 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
-| `rus.a11.03` | T02 count and tap | F15 → — | 8 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
-| `rus.a11.04` | T02 count and tap | F15 → — | 9 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
-| `rus.a11.05` | T02 count and tap | F15 → — | 10 taps | skips an object (M-RUS-COUNT) · counts one object twice (M-RUS-COUNT) | NHR |  |
+| `rus.a11.01` | T02 count, then "how many?" | F15 → — (count 6, practice); F40 → `ch-skolko` | шесть `n-6` | семь `n-7` (M-RUS-SOUND) · пять `n-5` (M-RUS-NUMWORD) | NHR | the objects in a ten-frame; otherwise as A-10 01 |
+| `rus.a11.02` | T02 count, then "how many?" | F15 → — (count 7, practice); F40 → `ch-skolko` | семь `n-7` | во́семь `n-8` (M-RUS-SOUND) · шесть `n-6` (M-RUS-NUMWORD) | NHR |  |
+| `rus.a11.03` | T02 count, then "how many?" | F15 → — (count 8, practice); F40 → `ch-skolko` | во́семь `n-8` | семь `n-7` (M-RUS-SOUND) · де́вять `n-9` (M-RUS-NUMWORD) | NHR |  |
+| `rus.a11.04` | T02 count, then "how many?" | F15 → — (count 9, practice); F40 → `ch-skolko` | де́вять `n-9` | де́сять `n-10` (M-RUS-SOUND) · во́семь `n-8` (M-RUS-NUMWORD) | NHR |  |
+| `rus.a11.05` C | T02 count, then "how many?" | F15 → — (count 10, practice); F40 → `ch-skolko` | де́сять `n-10` | де́вять `n-9` (M-RUS-SOUND) · во́семь `n-8` (M-RUS-NUMWORD) | NHR |  |
 | `rus.a11.06` | LS01 number → set | F16 → `n-6` | a set of 6 (шесть) | a set of 7 (семь) (M-RUS-SOUND) · a set of 5 (пять) (M-RUS-NUMWORD) | NHR | sets of the same objects (apples, balls, ducks), in a dice or ten-frame pattern |
 | `rus.a11.07` | LS01 number → set | F16 → `n-7` | a set of 7 (семь) | a set of 8 (во́семь) (M-RUS-SOUND) · a set of 6 (шесть) (M-RUS-NUMWORD) | NHR |  |
 | `rus.a11.08` | LS01 number → set | F16 → `n-8` | a set of 8 (во́семь) | a set of 7 (семь) (M-RUS-SOUND) · a set of 9 (де́вять) (M-RUS-NUMWORD) | NHR |  |
 | `rus.a11.09` | LS01 number → set | F16 → `n-9` | a set of 9 (де́вять) | a set of 10 (де́сять) (M-RUS-SOUND) · a set of 8 (во́семь) (M-RUS-NUMWORD) | NHR |  |
-| `rus.a11.10` | LS01 number → set | F16 → `n-10` | a set of 10 (де́сять) | a set of 9 (де́вять) (M-RUS-SOUND) · a set of 8 (во́семь) (M-RUS-NUMWORD) | NHR |  |
+| `rus.a11.10` C | LS01 number → set | F16 → `n-10` | a set of 10 (де́сять) | a set of 9 (де́вять) (M-RUS-SOUND) · a set of 8 (во́семь) (M-RUS-NUMWORD) | NHR |  |
 
 **Hint ladder.** 1: as A-10 (F02). 2: as A-10 (two hands). 3: as A-10.
 
-**Mastery and notes.** The sound-alikes are the point: шесть / семь, семь / во́семь, де́вять / де́сять (M-RUS-SOUND).
+**Mastery and notes.** As A-10 (the counting is practice; "how many?" is scored). The sound-alikes are the point: шесть / семь, семь / во́семь, де́вять / де́сять (M-RUS-SOUND).
 
 ### RUS-A-12 ● Что э́то? / Кто э́то? — Э́то …
 *Strand GRM · prerequisites A-05, A-08 · templates: LS01 audio options, LS01 windows, LS01 yes / no (2 choices)*
@@ -496,11 +500,11 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a12.01` | LS01 audio options | F17 → `ch-chto-eto` | «Э́то мяч.» `ch-eto-mjach` | «Э́то ку́кла.» `ch-eto-kukla` (M-RUS-SEM) · «Э́то кот.» `sen-2` (M-RUS-SEM) | NHR | picture: a ball; three spoken answers |
 | `rus.a12.02` | LS01 audio options | F17 → `ch-kto-eto` | «Э́то ко́шка.» `ch-eto-koshka` | «Э́то соба́ка.» `ch-eto-sobaka` (M-RUS-SEM) · «Э́то мяч.» `ch-eto-mjach` (M-RUS-SEM) | NHR | picture: a cat |
 | `rus.a12.03` | LS01 audio options | F17 → `ch-chto-eto` | «Э́то я́блоко.» `ch-eto-jabloko` | «Э́то бана́н.» `ch-eto-banan` (M-RUS-SEM) · «Э́то молоко́.» `ch-eto-moloko` (M-RUS-SOUND) | NHR | picture: an apple |
-| `rus.a12.04` | LS01 audio options | F17 → `ch-kto-eto` | «Э́то ма́ма.» `ch-eto-mama` | «Э́то па́па.» `ch-eto-papa` (M-RUS-SOUND) · «Э́то ба́бушка.» `ch-eto-babushka` (M-RUS-SEM) | NHR | picture: the mother |
+| `rus.a12.04` C | LS01 audio options | F17 → `ch-kto-eto` | «Э́то ма́ма.» `ch-eto-mama` | «Э́то па́па.» `ch-eto-papa` (M-RUS-SOUND) · «Э́то ба́бушка.» `ch-eto-babushka` (M-RUS-SEM) | NHR | picture: the mother |
 | `rus.a12.05` | LS01 windows | F17 → `ch-kto-eto` | соба́ка `pic.dog` | мяч `pic.ball` (M-RUS-KTO) · маши́на `pic.car` (M-RUS-KTO) | NHR | three windows open; the answer is the living one; the recast is ch-eto-sobaka |
 | `rus.a12.06` | LS01 windows | F17 → `ch-kto-eto` | ба́бушка `pic.fam.grandmother` | хлеб `pic.bread` (M-RUS-KTO) · ша́пка `pic.hat` (M-RUS-KTO) | NHR | recast ch-eto-babushka |
-| `rus.a12.07` | LS01 windows | F17 → `ch-chto-eto` | маши́на `pic.car` | ко́шка `pic.cat` (M-RUS-KTO) · ма́льчик `pic.boy` (M-RUS-KTO) | NHR | the answer is the thing; recast ch-eto-mashina |
-| `rus.a12.08` | LS01 windows | F17 → `ch-chto-eto` | я́блоко `pic.apple` | ёж `pic.hedgehog` (M-RUS-KTO) · де́вочка `pic.girl` (M-RUS-KTO) | NHR | recast ch-eto-jabloko |
+| `rus.a12.07` C | LS01 windows | F17 → `ch-chto-eto` | маши́на `pic.car` | ко́шка `pic.cat` (M-RUS-KTO) · ма́льчик `pic.boy` (M-RUS-KTO) | NHR | the answer is the thing; recast ch-eto-mashina |
+| `rus.a12.08` C | LS01 windows | F17 → `ch-chto-eto` | я́блоко `pic.apple` | ёж `pic.hedgehog` (M-RUS-KTO) · де́вочка `pic.girl` (M-RUS-KTO) | NHR | recast ch-eto-jabloko |
 | `rus.a12.09` | LS01 yes / no | F18 → `ch-eto-kot-q` | нет `pic.no` | да `pic.yes` (M-RUS-YESNO) | NHR | picture: a dog; the recast is w-net then ch-eto-sobaka |
 | `rus.a12.10` | LS01 yes / no | F18 → `ch-eto-mjach-q` | да `pic.yes` | нет `pic.no` (M-RUS-YESNO) | NHR | picture: a ball; recast w-da then ch-eto-mjach |
 | `rus.a12.11` | LS01 yes / no | F18 → `ch-eto-ryba-q` | нет `pic.no` | да `pic.yes` (M-RUS-YESNO) | NHR | picture: a bird |
@@ -525,8 +529,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a13.02` | LS11 scene search | F19 → `ch-gde-koshka` | ко́шка `pic.cat` | соба́ка `pic.dog` (M-RUS-SEM) · ка́ша `pic.porridge` (M-RUS-SOUND) | NHR | recast ch-vot-koshka |
 | `rus.a13.03` | LS11 scene search | F19 → `ch-gde-mysh` | мышь `pic.mouse` | ми́шка `pic.teddy` (M-RUS-SOUND) · ко́шка `pic.cat` (M-RUS-SEM) | NHR | recast ch-vot-mysh |
 | `rus.a13.04` | LS11 scene search | F19 → `ch-gde-shapka` | ша́пка `pic.hat` | шарф `pic.scarf` (M-RUS-SOUND) · ку́ртка `pic.jacket` (M-RUS-SEM) | NHR | recast ch-vot-shapka |
-| `rus.a13.05` | LS11 scene search | F19 → `ch-gde-jabloko` | я́блоко `pic.apple` | молоко́ `pic.milk` (M-RUS-SOUND) · гру́ша `pic.pear` (M-RUS-SEM) | NHR | recast ch-vot-jabloko |
-| `rus.a13.06` | LS11 scene search | F19 → `ch-gde-mama` | ма́ма `pic.fam.mother` | па́па `pic.fam.father` (M-RUS-SOUND) · ба́бушка `pic.fam.grandmother` (M-RUS-SEM) | NHR | the original family in a garden; recast ch-vot-mama |
+| `rus.a13.05` C | LS11 scene search | F19 → `ch-gde-jabloko` | я́блоко `pic.apple` | молоко́ `pic.milk` (M-RUS-SOUND) · гру́ша `pic.pear` (M-RUS-SEM) | NHR | recast ch-vot-jabloko |
+| `rus.a13.06` C | LS11 scene search | F19 → `ch-gde-mama` | ма́ма `pic.fam.mother` | па́па `pic.fam.father` (M-RUS-SOUND) · ба́бушка `pic.fam.grandmother` (M-RUS-SEM) | NHR | the original family in a garden; recast ch-vot-mama |
 | `rus.a13.07` | LS01 yes / no | F18 → `ch-vot-mjach` | нет `pic.no` | да `pic.yes` (M-RUS-YESNO) | NHR | the friend holds up a doll and says Вот мяч! |
 | `rus.a13.08` | LS01 yes / no | F18 → `ch-vot-koshka` | да `pic.yes` | нет `pic.no` (M-RUS-YESNO) | NHR | the friend points at the cat |
 | `rus.a13.09` | LS01 yes / no | F18 → `ch-vot-shapka` | нет `pic.no` | да `pic.yes` (M-RUS-YESNO) | NHR | the friend holds up a scarf |
@@ -555,9 +559,9 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a14.06` | LS11 give (drag) | F20 → `ch-daj-karandash` | каранда́ш `pic.pencil` | кни́га `pic.book` (M-RUS-SEM) · мяч `pic.ball` (M-RUS-SEM) | NHR |  |
 | `rus.a14.07` | LS11 give (drag) | F20 → `ch-hochu-syr` | сыр `pic.cheese` | сок `pic.juice` (M-RUS-SOUND) · хлеб `pic.bread` (M-RUS-SEM) | NHR |  |
 | `rus.a14.08` | LS11 give (drag) | F20 → `ch-hochu-apelsin` | апельси́н `pic.orange` | арбу́з `pic.watermelon` (M-RUS-SOUND) · бана́н `pic.banana` (M-RUS-SEM) | NHR |  |
-| `rus.a14.09` | LS11 give (drag) | F20 → `ch-hochu-moloko` | молоко́ `pic.milk` | вода́ `pic.water` (M-RUS-SEM) · я́блоко `pic.apple` (M-RUS-SOUND) | NHR |  |
+| `rus.a14.09` C | LS11 give (drag) | F20 → `ch-hochu-moloko` | молоко́ `pic.milk` | вода́ `pic.water` (M-RUS-SEM) · я́блоко `pic.apple` (M-RUS-SOUND) | NHR |  |
 | `rus.a14.10` | LS10 bubbles | F07 → `w-na` | спаси́бо `pic.rus.gift` | пока́ `pic.rus.leave` (M-RUS-SEM) · приве́т `pic.rus.arrive` (M-RUS-SEM) | NHR | the friend hands the child an apple: На!; after the answer the friend says w-pozhalujsta; then the say step |
-| `rus.a14.11` | LS10 bubbles | F07 → — | «Дай, пожа́луйста, сок.» `ch-daj-sok` | «Дай, пожа́луйста, суп.» `ch-daj-sup` (M-RUS-SOUND) · спаси́бо `pic.rus.gift` (M-RUS-SEM) | NHR | a thought bubble shows juice; the child picks what to say; the say step marks пожа́луйста and сок as key words |
+| `rus.a14.11` C | LS10 bubbles | F07 → — | «Дай, пожа́луйста, сок.» `ch-daj-sok` | «Дай, пожа́луйста, суп.» `ch-daj-sup` (M-RUS-SOUND) · спаси́бо `pic.rus.gift` (M-RUS-SEM) | NHR | a thought bubble shows juice; the child picks what to say; the say step marks пожа́луйста and сок as key words |
 
 **Hint ladder.** 1: the request again, slowly (F02). 2: the friend reaches toward the thing and mimes it (eats, drinks, draws) while asking again (a new representation: action). 3: show me: the thing glows and slides to the friend; a tap goes on.
 
@@ -580,12 +584,12 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a15.04` | LS09 say-it | F06 → — | кот `pic.tomcat` | — | NHR | variants: ко́тик; foils: кит, рот |
 | `rus.a15.05` | LS09 say-it | F06 → — | ко́шка `pic.cat` | — | NHR | variants: ко́шечка, ки́ска; foils: ка́ша, ку́кла |
 | `rus.a15.06` | LS09 say-it | F06 → — | соба́ка `pic.dog` | — | NHR | variants: соба́чка; foils: ко́шка |
-| `rus.a15.07` | LS09 say-it | F06 → — | мышь `pic.mouse` | — | NHR | variants: мы́шка; foils: ми́шка |
+| `rus.a15.07` C | LS09 say-it | F06 → — | мышь `pic.mouse` | — | NHR | variants: мы́шка; foils: ми́шка |
 | `rus.a15.08` | LS09 say-it | F06 → — | ры́ба `pic.fish` | — | NHR | variants: ры́бка; foils: ру́ки |
 | `rus.a15.09` | LS09 say-it | F06 → — | мяч `pic.ball` | — | NHR | variants: мя́чик; foils: мышь, меч |
 | `rus.a15.10` | LS09 say-it | F06 → — | ку́кла `pic.doll` | — | NHR | variants: ку́колка; foils: ку́бики, ку́ртка |
 | `rus.a15.11` | LS09 say-it | F06 → — | маши́на `pic.car` | — | NHR | variants: маши́нка; foils: мали́на |
-| `rus.a15.12` | LS09 say-it | F06 → — | ми́шка `pic.teddy` | — | NHR | variants: медве́дь; foils: мы́шка, мышь |
+| `rus.a15.12` C | LS09 say-it | F06 → — | ми́шка `pic.teddy` | — | NHR | variants: медве́дь; foils: мы́шка, мышь |
 | `rus.a15.13` | LS09 say-it | F06 → — | нос `hot.nose` | — | NHR | variants: но́сик; foils: рот, сок |
 | `rus.a15.14` | LS09 say-it | F06 → — | рот `hot.mouth` | — | NHR | variants: ро́тик; foils: кот, нос |
 | `rus.a15.15` | LS09 say-it | F06 → — | ру́ки `hot.arms` | — | NHR | variants: рука́, ру́чки; foils: но́ги |
@@ -594,14 +598,14 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a15.18` | LS09 say-it | F06 → — | молоко́ `pic.milk` | — | NHR | variants: —; foils: я́блоко |
 | `rus.a15.19` | LS09 say-it | F06 → — | я́блоко `pic.apple` | — | NHR | variants: я́блочко; foils: молоко́ |
 | `rus.a15.20` | LS09 say-it | F06 → — | бана́н `pic.banana` | — | NHR | variants: —; foils: бара́н |
-| `rus.a15.21` | LS09 say-it | F06 → — | ша́пка `pic.hat` | — | NHR | variants: ша́почка; foils: шарф, па́пка |
+| `rus.a15.21` C | LS09 say-it | F06 → — | ша́пка `pic.hat` | — | NHR | variants: ша́почка; foils: шарф, па́пка |
 | `rus.a15.22` | LS09 say-it | F06 → — | a set of 1 (оди́н) | — | NHR | variants: —; foils: два |
 | `rus.a15.23` | LS09 say-it | F06 → — | a set of 3 (три) | — | NHR | variants: —; foils: два |
 | `rus.a15.24` | LS09 say-it | F06 → — | a set of 5 (пять) | — | NHR | variants: —; foils: шесть |
 
 **Hint ladder.** 1: the word's first syllable is said, then a pause ("ма…") (F02). 2: the whole word modelled (F03 בּוֹאוּ נֹאמַר יַחַד.) with a choral pause: the voice and the child together. 3: show me: the word is said twice with its picture; "I said it" or a tap goes on.
 
-**Mastery and notes.** Core skill. Speech evidence (confident only) is capped at 50%; the rest is the picture tap and the parent's weekly confirmation (syllabus §8). With the microphone off: "I said it" (practice) and the confirmation. Variants are accepted as the target; foils are the item's other options and the minimal-pair partner, for the matcher only (never voiced, never shown).
+**Mastery and notes.** Core skill. Speech evidence (confident only) is capped at 50%; the rest is the picture tap and the parent's weekly confirmation (syllabus §8). With the microphone off: "I said it" (practice) and the confirmation. Variants are accepted as the target; foils are the item's other options and the minimal-pair partner, for the matcher only (never voiced, never shown). The checks (07, 12, 21: words with a minimal-pair foil) are served picture first (F06) with no model before them, on a later visit; the picture tap that follows has 3 pictures, so a check is never a single 2-choice item.
 
 ### RUS-A-16 A 3-picture story
 *Strand LIS · prerequisites A-04, A-12 · templates: LS08 `listen` and `dialogic`, LS01 after the story*
@@ -619,10 +623,10 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a16.03` | LS01 after the story | F23 → — | соба́ка `pic.dog` | ко́шка `pic.cat` (M-RUS-SEQ) · коро́ва `pic.cow` (M-RUS-SEQ) | NHR | who was in the story |
 | `rus.a16.04` | LS08 listen | F21 → `st2-t` + `st2-1` + `st2-2` + `st2-3` | (listen) | — | N | story 2 |
 | `rus.a16.05` | LS08 dialogic | F22 → `st2-1` + `st2-2` | `pic.st2.p3` | `pic.st2.sleep` (M-RUS-SEQ) · `pic.st2.bear` (M-RUS-SEQ) | NHR | after page 2: the hedgehog eating the apple ✓; the hedgehog asleep; a bear eating the apple |
-| `rus.a16.06` | LS01 after the story | F24 → — | я́блоко `pic.apple` | бана́н `pic.banana` (M-RUS-SEQ) · мяч `pic.ball` (M-RUS-SEQ) | NHR | what the hedgehog found |
+| `rus.a16.06` C | LS01 after the story | F24 → — | я́блоко `pic.apple` | бана́н `pic.banana` (M-RUS-SEQ) · мяч `pic.ball` (M-RUS-SEQ) | NHR | what the hedgehog found |
 | `rus.a16.07` | LS08 listen | F21 → `st3-1` + `st3-2` + `st3-3` | (listen) | — | N | story 3 (title w-shapka) |
 | `rus.a16.08` | LS08 dialogic | F22 → `st3-1` + `st3-2` | `pic.st3.p3` | `pic.st3.beach` (M-RUS-SEQ) · `pic.st3.boy` (M-RUS-SEQ) | NHR | after page 2: the girl finds the hat ✓; the girl on a hot beach; a boy with a ball |
-| `rus.a16.09` | LS01 after the story | F25 → — | ша́пка `pic.hat` | шарф `pic.scarf` (M-RUS-SEM) · мяч `pic.ball` (M-RUS-SEQ) | NHR | what the girl looked for |
+| `rus.a16.09` C | LS01 after the story | F25 → — | ша́пка `pic.hat` | шарф `pic.scarf` (M-RUS-SEM) · мяч `pic.ball` (M-RUS-SEQ) | NHR | what the girl looked for |
 
 **Hint ladder.** 1: the last page is read again (F02). 2: the pages so far are shown in a row and replayed one by one (a new representation: the sequence laid out). 3: show me: page 3 is turned and read; a tap goes on.
 
@@ -642,8 +646,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a17.01` | LS12 rhyme gap | F27 → `rh1-gap` | нос `hot.nose` | но́ги `hot.legs` (M-RUS-RHYME-ONSET) · рот `hot.mouth` (M-RUS-SEM) | NHR | the chant rh1 is heard whole first (F26); after the answer the whole chant again |
 | `rus.a17.02` | LS12 rhyme gap | F27 → `rh2-gap` | рот `hot.mouth` | ру́ки `hot.arms` (M-RUS-RHYME-ONSET) · нос `hot.nose` (M-RUS-SEM) | NHR | chant rh2 |
 | `rus.a17.03` | LS12 rhyme gap | F27 → `rh3-gap` | кит `pic.whale` | кот `pic.tomcat` (M-RUS-RHYME-ONSET) · ры́ба `pic.fish` (M-RUS-SEM) | NHR | chant rh3 |
-| `rus.a17.04` | LS12 rhyme gap | F27 → `rh4-gap` | носо́к `pic.sock` | нос `hot.nose` (M-RUS-RHYME-ONSET) · ша́пка `pic.hat` (M-RUS-SEM) | NHR | chant rh4 |
-| `rus.a17.05` | LS12 rhyme gap | F27 → `rh5-gap` | кни́жка `pic.book` | ку́кла `pic.doll` (M-RUS-RHYME-ONSET) · мяч `pic.ball` (M-RUS-SEM) | NHR | chant rh5 |
+| `rus.a17.04` C | LS12 rhyme gap | F27 → `rh4-gap` | носо́к `pic.sock` | нос `hot.nose` (M-RUS-RHYME-ONSET) · ша́пка `pic.hat` (M-RUS-SEM) | NHR | chant rh4 |
+| `rus.a17.05` C | LS12 rhyme gap | F27 → `rh5-gap` | кни́жка `pic.book` | ку́кла `pic.doll` (M-RUS-RHYME-ONSET) · мяч `pic.ball` (M-RUS-SEM) | NHR | chant rh5 |
 
 **Hint ladder.** 1: the chant again, slower, with a beat on the line ends (F02). 2: word pairs (a new representation: two words side by side): the rhyme word of line 1 is said before each option (пёс … но́ги? пёс … нос? пёс … рот?), using the clips w-pjos, w-kot, w-spit, w-sok, w-mishka. 3: show me: the whole chant with the right picture lit.
 
@@ -677,8 +681,8 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a18.15` | LS01 pictorial | F29 → — | маши́на `pic.car` | ку́кла `pic.doll` (M-RUS-SYLL) · мяч `pic.ball` (M-RUS-SYLL) | NHR |  |
 | `rus.a18.16` | LS01 pictorial | F29 → — | молоко́ `pic.milk` | ры́ба `pic.fish` (M-RUS-SYLL) · сыр `pic.cheese` (M-RUS-SYLL) | NHR |  |
 | `rus.a18.17` | LS01 pictorial | F30 → — | ма́ма `pic.fam.mother` | кот `pic.tomcat` (M-RUS-SYLL) · ба́бушка `pic.fam.grandmother` (M-RUS-SYLL) | NHR |  |
-| `rus.a18.18` | LS01 pictorial | F30 → — | ры́ба `pic.fish` | нос `hot.nose` (M-RUS-SYLL) · соба́ка `pic.dog` (M-RUS-SYLL) | NHR |  |
-| `rus.a18.19` | LS01 pictorial | F31 → — | нос `hot.nose` | ру́ки `hot.arms` (M-RUS-SYLL) · голова́ `hot.head` (M-RUS-SYLL) | NHR |  |
+| `rus.a18.18` C | LS01 pictorial | F30 → — | ры́ба `pic.fish` | нос `hot.nose` (M-RUS-SYLL) · соба́ка `pic.dog` (M-RUS-SYLL) | NHR |  |
+| `rus.a18.19` C | LS01 pictorial | F31 → — | нос `hot.nose` | ру́ки `hot.arms` (M-RUS-SYLL) · голова́ `hot.head` (M-RUS-SYLL) | NHR |  |
 
 **Hint ladder.** 1: the syllable clip again, slower (F02). 2: the friend claps with the child: a hand appears on each beat (a new representation: seeing the beats). 3: show me: the drum is tapped for the child, beat by beat, with the syllables.
 
@@ -689,7 +693,7 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 
 | Route | How the skill is served |
 |---|---|
-| New learner | Items 01–05 first; 06–11 on a later visit |
+| New learner | Items 01–05 and 12 first; 06–11 on a later visit |
 | Heritage | All items mixed |
 | Reader | As heritage |
 
@@ -699,17 +703,18 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a19.02` | LS01 pictorial | F32 → `sf-sok` | сыр `pic.cheese` | шар `pic.bigballoon` (M-RUS-SOUND) · нос `hot.nose` (M-RUS-NOTFIRST) | NHR |  |
 | `rus.a19.03` | LS01 pictorial | F32 → `sf-shapka` | шарф `pic.scarf` | сок `pic.juice` (M-RUS-SOUND) · мышь `pic.mouse` (M-RUS-NOTFIRST) | NHR |  |
 | `rus.a19.04` | LS01 pictorial | F32 → `sf-nos` | но́ги `hot.legs` | ма́ма `pic.fam.mother` (M-RUS-SOUND) · слон `pic.elephant` (M-RUS-NOTFIRST) | NHR |  |
-| `rus.a19.05` | LS01 pictorial | F32 → `sf-ryba` | рот `hot.mouth` | кот `pic.tomcat` (M-RUS-SOUND) · шар `pic.bigballoon` (M-RUS-NOTFIRST) | NHR |  |
-| `rus.a19.06` | LS01 audio options (same / different) | F33 → `w-mysh` + `w-mama` | "same" | "different" (M-RUS-SOUND) | NHR | two words, each with its picture |
+| `rus.a19.05` C | LS01 pictorial | F32 → `sf-ryba` | рот `hot.mouth` | кот `pic.tomcat` (M-RUS-SOUND) · шар `pic.bigballoon` (M-RUS-NOTFIRST) | NHR |  |
+| `rus.a19.06` | LS01 audio options (same / different) | F33 → `w-mysh` + `w-mama` | "same" | "different" (M-RUS-YESNO) | NHR | two words, each with its picture |
 | `rus.a19.07` | LS01 audio options (same / different) | F33 → `w-sok` + `w-shar` | "different" | "same" (M-RUS-SOUND) | NHR |  |
-| `rus.a19.08` | LS01 audio options (same / different) | F33 → `w-shapka` + `w-sharf` | "same" | "different" (M-RUS-SOUND) | NHR |  |
+| `rus.a19.08` | LS01 audio options (same / different) | F33 → `w-shapka` + `w-sharf` | "same" | "different" (M-RUS-YESNO) | NHR |  |
 | `rus.a19.09` | LS01 audio options (same / different) | F33 → `w-nos` + `w-rot` | "different" | "same" (M-RUS-SOUND) | NHR |  |
-| `rus.a19.10` | LS01 audio options (same / different) | F33 → `w-ryba` + `w-rot` | "same" | "different" (M-RUS-SOUND) | NHR |  |
-| `rus.a19.11` | LS01 audio options (same / different) | F33 → `w-syr` + `w-sok` | "same" | "different" (M-RUS-SOUND) | NHR |  |
+| `rus.a19.10` | LS01 audio options (same / different) | F33 → `w-ryba` + `w-rot` | "same" | "different" (M-RUS-YESNO) | NHR |  |
+| `rus.a19.11` | LS01 audio options (same / different) | F33 → `w-mysh` + `w-nos` | "different" | "same" (M-RUS-SOUND) | NHR | м and н: two nasals, the likeliest sound-alike start |
+| `rus.a19.12` C | LS01 pictorial | F32 → `sf-sok` | слон `pic.elephant` | шар `pic.bigballoon` (M-RUS-SOUND) · нос `hot.nose` (M-RUS-NOTFIRST) | NHR | a new target for a known model: слон starts with the held с |
 
 **Hint ladder.** 1: the model again, with the first sound held longer (F02). 2: the mouth picture: the friend's mouth shows the first sound (lips closed for м, teeth for с, rounded for ш, tongue up for н, a tongue-tip trill for р) while each option is said with its first sound held. 3: show me: the right picture glows and both words are said with their first sound held.
 
-**Mastery and notes.** Only hard consonants that can be held (м, с, ш, н, р) are targets, so the hard / soft difference (A-20) is not mixed in: мяч (soft м) is never an option for м. Same / different items are 2-choice (at most half of the evidence).
+**Mastery and notes.** Only hard consonants that can be held (м, с, ш, н, р) are targets, so the hard / soft difference (A-20) is not mixed in: мяч (soft м) is never an option for м. Same / different items (06–11) are 2-choice: 6 of the 12 scored items (at most half, frame §2.3), balanced (3 "same": 06, 08, 10; 3 "different": 07, 09, 11). A wrong answer on a "same" pair is M-RUS-YESNO; on a "different" pair, M-RUS-SOUND. The checks (05, 12) are picture items.
 
 ### RUS-A-20 ● Hard / soft and ы / и
 *Strand PHO/LIS · prerequisites A-19 · templates: LS09 teach (meaning first), LS01 pictorial minimal pairs, LS01 same / different (audio only, 2 choices)*
@@ -718,7 +723,7 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 
 | Route | How the skill is served |
 |---|---|
-| New learner | Teach all six words (meaning first; люк, рысь, рис and мы́шка are new); items 01–06, then 07–16 on later visits |
+| New learner | Teach all six words (meaning first; люк, рысь, рис and мы́шка are new); items 01–06 and 17–20, then 07–16 on later visits |
 | Heritage | Teach screens shortened to one hearing; all items mixed |
 | Reader | As heritage |
 
@@ -734,16 +739,20 @@ Kinds and families as frame §4.1. The eleven tags marked **new** are proposals 
 | `rus.a20.08` | LS01 same / different | F34 → `mp-luk` + `mp-ljuk` | "different" | "same" (M-RUS-HARDSOFT) | NHR |  |
 | `rus.a20.09` | LS01 same / different | F34 → `syl-ly` + `syl-li` | "different" | "same" (M-RUS-YI) | NHR |  |
 | `rus.a20.10` | LS01 same / different | F34 → `syl-la` + `syl-lja` | "different" | "same" (M-RUS-HARDSOFT) | NHR |  |
-| `rus.a20.11` | LS01 same / different | F34 → `syl-my` + `syl-my` | "same" | "different" (M-RUS-SOUND) | NHR |  |
-| `rus.a20.12` | LS01 same / different | F34 → `syl-sy` + `syl-si` | "different" | "same" (M-RUS-YI) | NHR |  |
+| `rus.a20.11` | LS01 same / different | F34 → `syl-my` + `syl-my` | "same" | "different" (M-RUS-YESNO) | NHR |  |
+| `rus.a20.12` | LS01 same / different | F34 → `syl-sy` + `syl-sy` | "same" | "different" (M-RUS-YESNO) | NHR | one clip played twice |
 | `rus.a20.13` | LS01 same / different | F34 → `syl-no` + `syl-njo` | "different" | "same" (M-RUS-HARDSOFT) | NHR |  |
-| `rus.a20.14` | LS01 same / different | F34 → `mp-luk` + `mp-luk` | "same" | "different" (M-RUS-SOUND) | NHR |  |
-| `rus.a20.15` | LS01 same / different | F34 → `w-rys` + `w-ris` | "different" | "same" (M-RUS-YI) | NHR |  |
-| `rus.a20.16` | LS01 same / different | F34 → `syl-mi` + `syl-mi` | "same" | "different" (M-RUS-SOUND) | NHR |  |
+| `rus.a20.14` | LS01 same / different | F34 → `mp-luk` + `mp-luk` | "same" | "different" (M-RUS-YESNO) | NHR |  |
+| `rus.a20.15` | LS01 same / different | F34 → `w-rys` + `w-rys` | "same" | "different" (M-RUS-YESNO) | NHR | one clip played twice (рысь / рис is tested with pictures: 05, 06, 19, 20) |
+| `rus.a20.16` | LS01 same / different | F34 → `syl-mi` + `syl-mi` | "same" | "different" (M-RUS-YESNO) | NHR |  |
+| `rus.a20.17` | LS01 pictorial | F35 → `w-myshka` | мы́шка `pic.mouse` | ми́шка `pic.teddy` (M-RUS-YI) · кни́жка `pic.book` (M-RUS-SOUND) | NHR | as 03, with another sound-alike |
+| `rus.a20.18` C | LS01 pictorial | F35 → `w-mishka` | ми́шка `pic.teddy` | мы́шка `pic.mouse` (M-RUS-YI) · ко́шка `pic.cat` (M-RUS-SOUND) | NHR | as 04, with another sound-alike |
+| `rus.a20.19` C | LS01 pictorial | F35 → `w-rys` | рысь `pic.lynx` | рис `pic.rice` (M-RUS-YI) · мышь `pic.mouse` (M-RUS-SOUND) | NHR | мышь nearly rhymes with рысь (the same ы) |
+| `rus.a20.20` C | LS01 pictorial | F35 → `w-ris` | рис `pic.rice` | рысь `pic.lynx` (M-RUS-YI) · ры́ба `pic.fish` (M-RUS-SOUND) | NHR |  |
 
 **Hint ladder.** 1: the two words again, slower, each with its picture (F02). 2: the mouth (F36): the friend smiles wide for the soft one (люк, ми́шка, рис, ли, ля, нё) and keeps a round or neutral mouth for the hard one; for ы, the puzzled friend says "ы…" (the M-RUS-YI re-teach). 3: show me: the pair is played, the target lit: лук … люк.
 
-**Mastery and notes.** Core skill: 6 correct over 2 days, 2 checks, at least 2 representations; same / different (07–16) at most half of the evidence. Minimal-pair clips have the same pitch and loudness (pronunciation.csv `check`). `revisitWith`: HARDSOFT and YI items are checked together.
+**Mastery and notes.** Core skill: 6 correct over 2 days, 2 checks, at least 2 representations. Same / different (07–16) is 10 of the 20 scored items (at most half, frame §2.3), balanced (5 "same": 11, 12, 14, 15, 16, each one clip played twice; 5 "different": 07, 08, 09, 10, 13). A wrong answer on a "same" pair is M-RUS-YESNO; on a "different" pair, its contrast tag (HARDSOFT or YI). The checks (18, 19, 20) are picture minimal pairs: pointing to the picture of a heard word is the better evidence at 3 to 4 (frame §4.4 R2; an assumption to check in the owner's play tests). Minimal-pair clips have the same pitch and loudness (pronunciation.csv `check`). `revisitWith`: HARDSOFT and YI items are checked together.
 
 
 ## 5. Words and pictures
@@ -889,14 +898,14 @@ Every Russian word met in Band A, its clip and its picture. Picture ids are prop
 | RUS-A-16 | 9 |
 | RUS-A-17 | 5 |
 | RUS-A-18 | 19 |
-| RUS-A-19 | 11 |
-| RUS-A-20 ● | 16 |
+| RUS-A-19 | 12 |
+| RUS-A-20 ● | 20 |
 
-- **Items:** 289 in 20 skills, of which 260 have tagged distractors (the rest are LS09 say-it, story listening and the two optional personal turns); plus **117 teach screens** (LS09) for the new-learner route.
-- **Words:** 116 Russian words with a picture or a clip; **39 Hebrew frame lines** (§2).
-- **Pronunciation specs:** **214 new rows** in `pronunciation.csv` (status `draft`), and 20 pilot rows reused; the table now has 269 rows. Every new row has its stress (the `stress` column; U+0301 in `say`).
+- **Items:** 294 in 20 skills, of which 265 have tagged distractors (the rest are LS09 say-it, story listening and the two optional personal turns); plus **117 teach screens** (LS09) for the new-learner route. **44 checks** (C): two per skill, three per core skill, none a single 2-choice item. **38 two-choice items**, at most half of every skill's scored items (A-19 6 of 12, A-20 10 of 20, both balanced same / different). The 10 counting steps of A-10 and A-11 are practice; their scored part is "how many?" (frame §2.2). Changed on 2026-11-03 for frame §4.5: A-19 +1 item, A-20 +4.
+- **Words:** 116 Russian words with a picture or a clip; **39 Hebrew frame lines** (§2), plus the draft F40 (needs-editor).
+- **Pronunciation specs:** **214 new rows** in `pronunciation.csv` (status `draft`), and 20 pilot rows reused; the table has 269 rows. On 2026-11-03 `ch-skolko` (Ско́лько?, for "how many?") was added and `syl-si` removed (its only item, a20.12, is now the "same" pair сы / сы). Every new row has its stress (the `stress` column; U+0301 in `say`).
 - **Characters for voicing (for the voice-and-sound-director's plan; nothing is run by Claude):**
-  - Russian, the new rows' `say` text: **2356 characters** with the stress marks (U+0301 counted), 2121 without them. The 20 reused pilot rows add 104 characters if they are voiced again for the course.
-  - Hebrew frame lines: **938 characters** of voice text for all 39 lines (924 without F03, already approved), counted by the hebrew-text-editor on 2026-11-03 after the final wording (the drafts counted 877). The voice text has partial nikud (number words, sin-dot words and a few ambiguous words keep theirs).
+  - Russian, the new rows' `say` text: **2363 characters** with the stress marks (U+0301 counted), 2127 without them (was 2356 and 2121: +9 for Ско́лько?, −2 for си). The 20 reused pilot rows add 104 characters if they are voiced again for the course.
+  - Hebrew frame lines: **938 characters** of voice text for the 39 final lines (924 without F03, already approved), counted by the hebrew-text-editor on 2026-11-03 after the final wording (the drafts counted 877). The voice text has partial nikud (number words, sin-dot words and a few ambiguous words keep theirs). F40 (draft) is counted once the editor has written its voice text; its draft has 30 characters.
   - The owner runs and pays for every generation, after the voice-and-sound-director shows the count and the cost.
 - **Clip check (by script):** clips referenced but missing from the CSV: []; batch rows referenced nowhere: [].

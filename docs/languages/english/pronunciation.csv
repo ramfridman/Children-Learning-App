@@ -1,8 +1,8 @@
 id,shown,say,ipa,stress,accent,traps,check,status
-en-apple,apple,apple.,/ˈæpəl/,AP-ple,General American,/a/ or /ɛ/; stress on the second,/æ/; stress first; weak second syllable; dark l,draft
+en-apple,apple,apple.,/ˈæpəl/,AP-ple,General American,/a/ or /ɛ/; stress on the second,"/æ/; stress first; weak second syllable; dark l; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2)",draft
 en-baby,baby,baby.,/ˈbeɪbi/,BA-by,General American,flat e,/eɪ/ glide; stress first,draft
 en-ball,ball,ball.,/bɔl/,ball,General American,Hebrew o; a light l,GA /ɔ/ or /ɑ/; dark l at the end,draft
-en-banana,banana,banana.,/bəˈnænə/,ba-NA-na,General American,"three full a's (""ba-na-na"")",weak first and last syllables; /æ/ in NA,draft
+en-banana,banana,banana.,/bəˈnænə/,ba-NA-na,General American,"three full a's (""ba-na-na"")","weak first and last syllables; /æ/ in NA; beat word (A-14, 3 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2)",draft
 en-big,big,big.,/bɪɡ/,big,General American,/i/ for /ɪ/,short /ɪ/,draft
 en-bike,bike,bike.,/baɪk/,bike,General American,none expected,a full /aɪ/; final k,draft
 en-bird,bird,bird.,/bɝd/,bird,General American,Hebrew e plus uvular r,one r-colored vowel /ɝ/,draft
@@ -14,7 +14,7 @@ en-brother,brother,brother.,/ˈbɹʌðɚ/,BROTH-er,General American,th said as d
 en-bye,Bye!,Bye!,/baɪ/,bye,General American,none expected,a full /aɪ/,draft
 en-cake,cake,cake.,/keɪk/,cake,General American,"flat e (""kek"")",/eɪ/ glide,draft
 en-car,car,car.,/kɑɹ/,car,General American,r dropped or uvular,American /ɑɹ/,draft
-en-cat,cat,cat.,/kæt/,cat,General American,"/ɛ/ (""ket"") or Hebrew /a/",front open /æ/; the final t heard,draft
+en-cat,cat,cat.,/kæt/,cat,General American,"/ɛ/ (""ket"") or Hebrew /a/","front open /æ/; the final t heard; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2)",draft
 en-ch-body-1,Touch your head! Head!,Touch your head! Head!,/ˈtʌtʃ jɚ ˈhɛd | ˈhɛd/,on the beat,General American,"weak words (""to"", ""with"", ""your"") sung strong; w as v; th",a steady beat; weak words stay weak; every target word clear,draft
 en-ch-body-2,Touch your nose! Nose!,Touch your nose! Nose!,/ˈtʌtʃ jɚ ˈnoʊz | ˈnoʊz/,on the beat,General American,"weak words (""to"", ""with"", ""your"") sung strong; w as v; th",a steady beat; weak words stay weak; every target word clear,draft
 en-ch-body-3,Touch your mouth! Mouth!,Touch your mouth! Mouth!,/ˈtʌtʃ jɚ ˈmaʊθ | ˈmaʊθ/,on the beat,General American,"weak words (""to"", ""with"", ""your"") sung strong; w as v; th",a steady beat; weak words stay weak; every target word clear,draft
@@ -41,13 +41,13 @@ en-cold,cold,cold.,/koʊld/,cold,General American,final d dropped; flat o,/oʊ/;
 en-cousin,cousin,cousin.,/ˈkʌzən/,COU-sin,General American,"said ""kuzin"" with a full i; s for z",/ʌ/; voiced /z/; weak second syllable,draft
 en-cow,cow,cow.,/kaʊ/,cow,General American,none expected,a full /aʊ/,draft
 en-dad,dad,dad.,/dæd/,dad,General American,/a/ or /ɛ/ for /æ/,/æ/; voiced final d,draft
-en-dog,dog,dog.,/dɔɡ/,dog,General American,none (GA /dɔɡ/ or /dɑɡ/ both fine),either GA vowel; voiced final g,draft
+en-dog,dog,dog.,/dɔɡ/,dog,General American,none (GA /dɔɡ/ or /dɑɡ/ both fine),"either GA vowel; voiced final g; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2)",draft
 en-drum,drum,drum.,/dɹʌm/,drum,General American,a vowel inside dr; /a/ for /ʌ/,dr tight; /ʌ/,draft
-en-duck,duck,duck.,/dʌk/,duck,General American,/a/ or /u/ for /ʌ/,/ʌ/; must not sound like dock or dog,draft
+en-duck,duck,duck.,/dʌk/,duck,General American,/a/ or /u/ for /ʌ/,"/ʌ/; must not sound like dock or dog; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2)",draft
 en-ears,ears,ears.,/ɪɹz/,ears,General American,"a /j/ added (""years""); final s",no /j/; /ɪɹ/; voiced final /z/,draft
 en-egg,egg,egg.,/ɛɡ/,egg,General American,"said ""ek""; a regional /eɪɡ/",/ɛ/; voiced final g,draft
 en-eight,eight,eight.,/eɪt/,eight,General American,flat e,/eɪ/ glide; final t,draft
-en-elephant,elephant,elephant.,/ˈɛləfənt/,EL-e-phant,General American,stress on the second syllable; full vowels,stress first; two weak syllables,draft
+en-elephant,elephant,elephant.,/ˈɛləfənt/,EL-e-phant,General American,stress on the second syllable; full vowels,"stress first; two weak syllables; beat word (A-14, 3 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2)",draft
 en-eyes,eyes,eyes.,/aɪz/,eyes,General American,final z said as s,a voiced final /z/,draft
 en-feet,feet,feet.,/fit/,feet,General American,"short /ɪ/ (""fit"")",long /i/; final t,draft
 en-fine,fine,fine.,/faɪn/,fine,General American,none expected,a full /aɪ/,draft
@@ -104,7 +104,7 @@ en-jump,Jump!,Jump!,/dʒʌmp/,jump,General American,/ʌ/ as /a/ or /u/; final p 
 en-kite,kite,kite.,/kaɪt/,kite,General American,none expected,a full /aɪ/; final t,draft
 en-listen,Listen!,Listen!,/ˈlɪsən/,LIS-ten,General American,the t said; /i/ for /ɪ/,no t; short /ɪ/; weak second syllable,draft
 en-look,Look!,Look!,/lʊk/,look,General American,"long /u/ (""luke"")",short /ʊ/,draft
-en-milk,milk,milk.,/mɪlk/,milk,General American,"a vowel added (""mi-lik""); /i/",short /ɪ/; dark l; final k,draft
+en-milk,milk,milk.,/mɪlk/,milk,General American,"a vowel added (""mi-lik""); /i/","short /ɪ/; dark l; final k; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2)",draft
 en-mom,mom,mom.,/mɑm/,mom,General American,"Hebrew round o (British ""mum"" is not used)",open American /ɑ/,draft
 en-mouth,mouth,mouth.,/maʊθ/,mouth,General American,"final th said as s or f (""maus"")",a voiceless final /θ/,draft
 en-nice,Nice!,Nice!,/naɪs/,nice,General American,none expected,"a warm, short reply",draft
@@ -130,7 +130,7 @@ en-st-bounce-5,"Hello, dog! Stop, ball, stop!","Hello, dog! Stop, ball, stop!",/
 en-st-bounce-6,"The dog gives Pip the ball. Thank you, dog!","The dog gives Pip the ball. Thank you, dog!",/ðə ˈdɔɡ ˈɡɪvz ˈpɪp ðə ˈbɔl | ˈθæŋk ju ˈdɔɡ/,storytelling,General American,"th in ""the"" and ""thank"" said as d or t; final z of gives said as s",natural storytelling pace; the repeated line said the same way each time,draft
 en-stand-up,Stand up!,Stand up!,/ˌstænd ˈʌp/,stand UP,General American,"a vowel before st (""es-tand""); /æ/ as /ɛ/; d dropped",st with no vowel before; /æ/; d linked into up,draft
 en-stop,Stop!,Stop!,/stɑp/,stop,General American,"a vowel before st (""es-top""); Hebrew round o",st tight; open /ɑ/; the final p heard,draft
-en-teddy,teddy,teddy.,/ˈtɛdi/,TED-dy,General American,none expected,stress first; the d may flap,draft
+en-teddy,teddy,teddy.,/ˈtɛdi/,TED-dy,General American,none expected,"stress first; the d may flap; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2)",draft
 en-thats-ok,That's OK!,That's OK!,/ˌðæts oʊˈkeɪ/,o-KAY,General American,th as d or z,a voiced /ð/; warm and easy,draft
 en-this-is-my-family,"This is my family: Mom, Dad and my sister.","This is my family: Mom, Dad and my sister.",/ðɪs ɪz maɪ ˈfæməli | ˈmɑm ˈdæd ən maɪ ˈsɪstɚ/,FAM-i-ly,General American,"th as d; ""family"" with a full middle vowel","a voiced /ð/; a weak ""and""",draft
 en-three,three,three.,/θɹi/,three,General American,"said ""tree"", ""sree"" or ""fri""","/θ/ with the tongue between the teeth, then /ɹ/; must not sound like tree",draft
@@ -141,9 +141,9 @@ en-touch-head,Touch your head!,Touch your head!,/ˈtʌtʃ jɚ ˈhɛd/,TOUCH · H
 en-touch-mouth,Touch your mouth!,Touch your mouth!,/ˈtʌtʃ jɚ ˈmaʊθ/,TOUCH · MOUTH,General American,"""your"" with a full vowel; final th said as s or f (""maus"")","weak ""your""; a voiceless final /θ/",draft
 en-touch-nose,Touch your nose!,Touch your nose!,/ˈtʌtʃ jɚ ˈnoʊz/,TOUCH · NOSE,General American,"""your"" with a full vowel; flat o; final s","weak ""your""; /oʊ/ glide; voiced final /z/",draft
 en-touch-tummy,Touch your tummy!,Touch your tummy!,/ˈtʌtʃ jɚ ˈtʌmi/,TOUCH · TUMMY,General American,"""your"" with a full vowel; /a/ for /ʌ/","weak ""your""; /ʌ/; stress first",draft
-en-tummy,tummy,tummy.,/ˈtʌmi/,TUM-my,General American,/a/ for /ʌ/,/ʌ/; stress first,draft
+en-tummy,tummy,tummy.,/ˈtʌmi/,TUM-my,General American,/a/ for /ʌ/,"/ʌ/; stress first; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2)",draft
 en-two,two,two.,/tu/,two,General American,dental unaspirated t,aspirated /tʰ/; long /u/,draft
-en-water,water,water.,/ˈwɑɾɚ/,WA-ter,General American,"w said as v (""vater""); a hard t",rounded /w/; American flapped t; r-colored end,draft
+en-water,water,water.,/ˈwɑɾɚ/,WA-ter,General American,"w said as v (""vater""); a hard t","rounded /w/; American flapped t; r-colored end; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2)",draft
 en-wave,Wave!,Wave!,/weɪv/,wave,General American,"w said as v (""vave""); flat e; final v as f",rounded /w/ with no teeth on the lip; /eɪ/ glide; voiced final /v/,draft
 en-well-done,Well done!,Well done!,/ˌwɛl ˈdʌn/,well DONE,General American,w as v,rounded /w/; /ʌ/ in done,draft
 en-whats-in-the-box,What's in the box?,What's in the box?,/ˌwʌts ɪn ðə ˈbɑks/,BOX,General American,w as v; th as d,"weak ""the"" /ðə/; open /ɑ/ in box",draft
@@ -151,13 +151,13 @@ en-whats-this,What's this?,What's this?,/ˌwʌts ˈðɪs/,THIS,General American,
 en-whats-your-name,What's your name?,What's your name?,/ˌwʌts jɚ ˈneɪm/,NAME,General American,"w as v; ""your"" with a full vowel","weak ""your""; a rising-falling question",draft
 en-who-in-family,Who is in your family?,Who is in your family?,/ˈhu ɪz ɪn jɚ ˈfæməli/,WHO · FAM,General American,w said in who; h dropped,who as /hu/ (no w sound),draft
 en-wow,Wow!,Wow!,/waʊ/,wow,General American,"said ""vau""",rounded /w/,draft
-en-yellow,yellow,yellow.,/ˈjɛloʊ/,YEL-low,General American,stress on the second syllable; /j/ dropped,/j/ at the start; stress first; /oʊ/ at the end,draft
+en-yellow,yellow,yellow.,/ˈjɛloʊ/,YEL-low,General American,stress on the second syllable; /j/ dropped,"/j/ at the start; stress first; /oʊ/ at the end; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2)",draft
 en-yes,Yes!,Yes!,/jɛs/,yes,General American,"/j/ dropped (""es"")",a clear /j/,draft
 en-yum,Yum!,Yum!,/jʌm/,yum,General American,/j/ dropped,a clear /j/; /ʌ/,draft
-en-apple-slow,apple,apple.,/ˈæpəl/,AP-ple,General American,/a/ or /ɛ/; stress on the second,"/æ/; stress first; weak second syllable; dark l; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-apple-slow,apple,apple.,/ˈæpəl/,AP-ple,General American,/a/ or /ɛ/; stress on the second,"/æ/; stress first; weak second syllable; dark l; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-baby-slow,baby,baby.,/ˈbeɪbi/,BA-by,General American,flat e,"/eɪ/ glide; stress first; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-ball-slow,ball,ball.,/bɔl/,ball,General American,Hebrew o; a light l,"GA /ɔ/ or /ɑ/; dark l at the end; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-banana-slow,banana,banana.,/bəˈnænə/,ba-NA-na,General American,"three full a's (""ba-na-na"")","weak first and last syllables; /æ/ in NA; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-banana-slow,banana,banana.,/bəˈnænə/,ba-NA-na,General American,"three full a's (""ba-na-na"")","weak first and last syllables; /æ/ in NA; beat word (A-14, 3 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-big-slow,big,big.,/bɪɡ/,big,General American,/i/ for /ɪ/,"short /ɪ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-bike-slow,bike,bike.,/baɪk/,bike,General American,none expected,"a full /aɪ/; final k; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-bird-slow,bird,bird.,/bɝd/,bird,General American,Hebrew e plus uvular r,"one r-colored vowel /ɝ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
@@ -169,17 +169,17 @@ en-brother-slow,brother,brother.,/ˈbɹʌðɚ/,BROTH-er,General American,th said
 en-bye-slow,Bye!,Bye!,/baɪ/,bye,General American,none expected,"a full /aɪ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-cake-slow,cake,cake.,/keɪk/,cake,General American,"flat e (""kek"")","/eɪ/ glide; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-car-slow,car,car.,/kɑɹ/,car,General American,r dropped or uvular,"American /ɑɹ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-cat-slow,cat,cat.,/kæt/,cat,General American,"/ɛ/ (""ket"") or Hebrew /a/","front open /æ/; the final t heard; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-cat-slow,cat,cat.,/kæt/,cat,General American,"/ɛ/ (""ket"") or Hebrew /a/","front open /æ/; the final t heard; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-clap-slow,Clap!,Clap!,/klæp/,clap,General American,"a vowel inside kl (""ke-lap""); /æ/ as /ɛ/","kl tight; /æ/; the final p heard; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-cold-slow,cold,cold.,/koʊld/,cold,General American,final d dropped; flat o,"/oʊ/; l and d both heard; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-cow-slow,cow,cow.,/kaʊ/,cow,General American,none expected,"a full /aʊ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-dad-slow,dad,dad.,/dæd/,dad,General American,/a/ or /ɛ/ for /æ/,"/æ/; voiced final d; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-dog-slow,dog,dog.,/dɔɡ/,dog,General American,none (GA /dɔɡ/ or /dɑɡ/ both fine),"either GA vowel; voiced final g; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-dog-slow,dog,dog.,/dɔɡ/,dog,General American,none (GA /dɔɡ/ or /dɑɡ/ both fine),"either GA vowel; voiced final g; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-drum-slow,drum,drum.,/dɹʌm/,drum,General American,a vowel inside dr; /a/ for /ʌ/,"dr tight; /ʌ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-duck-slow,duck,duck.,/dʌk/,duck,General American,/a/ or /u/ for /ʌ/,"/ʌ/; must not sound like dock or dog; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-duck-slow,duck,duck.,/dʌk/,duck,General American,/a/ or /u/ for /ʌ/,"/ʌ/; must not sound like dock or dog; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-ears-slow,ears,ears.,/ɪɹz/,ears,General American,"a /j/ added (""years""); final s","no /j/; /ɪɹ/; voiced final /z/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-egg-slow,egg,egg.,/ɛɡ/,egg,General American,"said ""ek""; a regional /eɪɡ/","/ɛ/; voiced final g; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-elephant-slow,elephant,elephant.,/ˈɛləfənt/,EL-e-phant,General American,stress on the second syllable; full vowels,"stress first; two weak syllables; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-elephant-slow,elephant,elephant.,/ˈɛləfənt/,EL-e-phant,General American,stress on the second syllable; full vowels,"stress first; two weak syllables; beat word (A-14, 3 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-eyes-slow,eyes,eyes.,/aɪz/,eyes,General American,final z said as s,"a voiced final /z/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-feet-slow,feet,feet.,/fit/,feet,General American,"short /ɪ/ (""fit"")","long /i/; final t; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-fine-slow,fine,fine.,/faɪn/,fine,General American,none expected,"a full /aɪ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
@@ -202,7 +202,7 @@ en-jump-slow,Jump!,Jump!,/dʒʌmp/,jump,General American,/ʌ/ as /a/ or /u/; fin
 en-kite-slow,kite,kite.,/kaɪt/,kite,General American,none expected,"a full /aɪ/; final t; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-listen-slow,Listen!,Listen!,/ˈlɪsən/,LIS-ten,General American,the t said; /i/ for /ɪ/,"no t; short /ɪ/; weak second syllable; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-look-slow,Look!,Look!,/lʊk/,look,General American,"long /u/ (""luke"")","short /ʊ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-milk-slow,milk,milk.,/mɪlk/,milk,General American,"a vowel added (""mi-lik""); /i/","short /ɪ/; dark l; final k; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-milk-slow,milk,milk.,/mɪlk/,milk,General American,"a vowel added (""mi-lik""); /i/","short /ɪ/; dark l; final k; beat word (A-14, 1 beat): every beat audible: one clean beat, no vowel after the final consonant (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-mom-slow,mom,mom.,/mɑm/,mom,General American,"Hebrew round o (British ""mum"" is not used)","open American /ɑ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-mouth-slow,mouth,mouth.,/maʊθ/,mouth,General American,"final th said as s or f (""maus"")","a voiceless final /θ/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-nose-slow,nose,nose.,/noʊz/,nose,General American,flat o; final s,"/oʊ/ glide; voiced final /z/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
@@ -215,10 +215,10 @@ en-sit-down-slow,Sit down!,Sit down!,/ˌsɪt ˈdaʊn/,sit DOWN,General American,
 en-small-slow,small,small.,/smɔl/,small,General American,"a vowel before sm (""es-mal"")","sm tight; dark l; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-stand-up-slow,Stand up!,Stand up!,/ˌstænd ˈʌp/,stand UP,General American,"a vowel before st (""es-tand""); /æ/ as /ɛ/; d dropped","st with no vowel before; /æ/; d linked into up; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-stop-slow,Stop!,Stop!,/stɑp/,stop,General American,"a vowel before st (""es-top""); Hebrew round o","st tight; open /ɑ/; the final p heard; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-teddy-slow,teddy,teddy.,/ˈtɛdi/,TED-dy,General American,none expected,"stress first; the d may flap; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-teddy-slow,teddy,teddy.,/ˈtɛdi/,TED-dy,General American,none expected,"stress first; the d may flap; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-three-slow,three,three.,/θɹi/,three,General American,"said ""tree"", ""sree"" or ""fri""","/θ/ with the tongue between the teeth, then /ɹ/; must not sound like tree; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-tummy-slow,tummy,tummy.,/ˈtʌmi/,TUM-my,General American,/a/ for /ʌ/,"/ʌ/; stress first; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-tummy-slow,tummy,tummy.,/ˈtʌmi/,TUM-my,General American,/a/ for /ʌ/,"/ʌ/; stress first; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-two-slow,two,two.,/tu/,two,General American,dental unaspirated t,"aspirated /tʰ/; long /u/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-water-slow,water,water.,/ˈwɑɾɚ/,WA-ter,General American,"w said as v (""vater""); a hard t","rounded /w/; American flapped t; r-colored end; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-water-slow,water,water.,/ˈwɑɾɚ/,WA-ter,General American,"w said as v (""vater""); a hard t","rounded /w/; American flapped t; r-colored end; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
 en-wave-slow,Wave!,Wave!,/weɪv/,wave,General American,"w said as v (""vave""); flat e; final v as f","rounded /w/ with no teeth on the lip; /eɪ/ glide; voiced final /v/; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
-en-yellow-slow,yellow,yellow.,/ˈjɛloʊ/,YEL-low,General American,stress on the second syllable; /j/ dropped,"/j/ at the start; stress first; /oʊ/ at the end; slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft
+en-yellow-slow,yellow,yellow.,/ˈjɛloʊ/,YEL-low,General American,stress on the second syllable; /j/ dropped,"/j/ at the start; stress first; /oʊ/ at the end; beat word (A-14, 2 beats): every beat audible, the weak ones too; no beat dropped or added (frame §4.4 E2); slow version: about 70% speed, the vowel a little longer, nothing distorted (voice-brief §4.1)",draft

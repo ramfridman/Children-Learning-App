@@ -217,7 +217,7 @@ Columns: **id**, **strand**, **can do** (what a parent understands), **prereq**,
 | RUS-A-07 | VOC | Knows food, drink and fruit words | — | Pre-A1 | hear → picture; shop / picnic scene |
 | RUS-A-08 | VOC | Knows toys and play words | — | Pre-A1 | hear → picture; tidy-up (sort into the box) |
 | RUS-A-09 | VOC | Knows clothes words | A-08 | Pre-A1 | dress the friend; hear → picture |
-| RUS-A-10 | NUM | Understands оди́н to пять; counts along | — | Pre-A1 numbers | count-and-tap in Russian; hear → set |
+| RUS-A-10 | NUM | Understands оди́н to пять; counts along | — | Pre-A1 numbers | count-and-tap in Russian (the taps are practice), then "how many?" from 3 number words heard on a tap (scored); hear → set |
 | RUS-A-11 | NUM | Understands шесть to де́сять | A-10 | Pre-A1 | as A-10 |
 | RUS-A-12 ● | GRM | Understands Что э́то? / Кто э́то? and the answer Э́то … | A-05, A-08 | Pre-A1; [KDP20] form noticing | picture choice; true / false (Э́то кот? with a dog picture) |
 | RUS-A-13 | GRM | Understands Где …? — Вот …, да / нет | A-12 | Pre-A1 | find in a scene; yes / no |
@@ -227,7 +227,7 @@ Columns: **id**, **strand**, **can do** (what a parent understands), **prereq**,
 | RUS-A-17 | PHO | Hears rhyme in потешки; picks the rhyming end word | A-01 | FOP sound culture; [ZHU] (play at 3–4) | 3 pictures, which rhymes; song with a gap |
 | RUS-A-18 | PHO | Claps the syllables of a familiar word (2–3 syllables) | A-17 | FOP; [ZHU] | tap per syllable; pick the picture with 3 claps |
 | RUS-A-19 | PHO | Hears a long first sound that can be stretched (А́ня, ммма́ма, сссок) | A-18 | [ZHU] intonational highlighting | which picture starts with the sound; same / different start |
-| RUS-A-20 ● | PHO/LIS | Hears the difference hard / soft and ы / и in pairs (лук / люк, мы / ми) | A-19 | [YAN][LAU] contrast; research report §3.6 | same or different; tap the picture (лук or люк) |
+| RUS-A-20 ● | PHO/LIS | Hears the difference hard / soft and ы / и in pairs (лук / люк, мы / ми) | A-19 | [YAN][LAU] contrast; research report §3.6 | tap the picture (лук or люк); same or different (at most half of the items, frame §2.3) |
 
 ### Band B (26 skills): sounds, syllables, first letters
 
@@ -303,7 +303,7 @@ The `sequence` the engine uses to break ties among skills that are open. Every p
 A-01 … A-20 · B-01 … B-26 (each `B-24.Gn` with its letter group; `B-26.Gn` after it) · C-01 … C-13 · **C-27** · C-14 … C-26 · C-28 … C-30
 
 ## 11. Misconceptions to diagnose
-Tags (research report §3.6), with the kind and family of the shared catalogue (frame §4.2). Kinds: **diagnostic** (a wrong choice reveals it); **on-the-way** (accepted as success in early skills, frame §3.3.5); **accent** (speech only: never marked, never evidence, never on a distractor). Grammar tags of heritage speakers get parent texts that respect the home variety ("the school form", never "wrong Russian").
+Tags (research report §3.6, and the Band A batch), with the kind and family of the shared catalogue (frame §4.2, settled 2026-11-03). Each tag is defined **once**, here; the engine id, `parentText` and `homeActivity` of the Band A tags are in `band-a-content.md` §3, and the engine ids of all tags in frame §4.2. Kinds: **diagnostic** (a wrong choice reveals it); **on-the-way** (accepted as success in early skills, frame §3.3.5); **accent** (speech only: never marked, never evidence, never on a distractor). Grammar tags of heritage speakers get parent texts that respect the home variety ("the school form", never "wrong Russian").
 
 | Tag | Kind | Family | Signal | Re-teach (the hint at level 2 changes the representation) |
 |---|---|---|---|---|
@@ -322,9 +322,19 @@ Tags (research report §3.6), with the kind and family of the shared catalogue (
 | M-RUS-ACC | diagnostic | GRAMMAR | я ви́жу ко́шка chosen | two pictures: who sees whom (B-07) |
 | M-RUS-NUMNOUN | diagnostic | GRAMMAR | пять кот | counting with the noun changing (C-28) |
 | M-RUS-R | accent | ACCENT | speech only: р said at the back of the throat (the Hebrew ר). Never marked, never evidence, never on a distractor, never judged by the recogniser | more listening to р words in LS09 models (ры́ба, рот, рука́); a parent play card (the tongue-tip "тр-р-р" of a tractor or a motorbike) |
-| M-RUS-SOFTSIGN | diagnostic in the C-02 ь items and from C-17 | CODE | ь left out of a built word (кон for конь, пят for пять), or ь added after a hard final consonant (сомь) | the sound scheme with the last chip green, then the ь tile dropped on it; the pair heard with and without the soft end (кон / конь) |
+| M-RUS-SOFTSIGN | diagnostic in the C-02 ь items and from C-17 | CODE | ь left out of a built word (кон for конь, пят for пять), or ь added after a hard final consonant (сомь); in C-02, the written word without ь chosen for a heard word with a soft end (кон for конь) | the sound scheme with the last chip green, then the ь tile dropped on it; the pair heard with and without the soft end (кон / конь). `skills`: C-02, then B-13 and A-20 (a child who does not yet hear the soft end cannot choose ь, so repeated evidence first probes the listening, curriculum §5.3). `revisitWith`: M-RUS-HARDSOFT (frame §4.4 R4). No ь word is a spelling item before C-17 |
+| M-RUS-SEM | diagnostic | MEANING | a word of the same theme chosen (another animal, another family member, another greeting) | the word in its scene (the skill's level 2): the action, the room or the story page where the word lives |
+| M-RUS-SOUND | diagnostic | GUESS | a word that sounds like the target chosen (сок / суп, кот / кит, шесть / семь, семь / во́семь, де́вять / де́сять); in a same / different item, "same" for a "different" pair whose sounds are not one of the contrast pairs | the two words said one after the other, each with its picture |
+| M-RUS-KTO | diagnostic | GRAMMAR | a thing chosen for Кто э́то?, or a living being for Что э́то? | alive or not: the living ones breathe and blink, the things stay still |
+| M-RUS-TYVY | diagnostic | GRAMMAR | приве́т or пока́ chosen for a grown-up who is not family | the scene acted: the grown-up arrives, the friend greets with здра́вствуйте. Parent text in the heritage rule: "the polite form", never "wrong Russian" |
+| M-RUS-YESNO | diagnostic | GUESS | a two-way answer given by habit: да on a "no" item or нет on a "yes" item; **"different" on a "same" pair** in a same / different item (frame §4.4 R2). The habit shows in the rate across a balanced set, not in one answer | yes / no: the friend points and says the thing's real name. Same / different: the two clips played again, each lighting its own card, and the two cards shown side by side |
+| M-RUS-NUMWORD | diagnostic | MEANING | the set next to the heard number chosen (number → set); the number word next to the count chosen in count-and-tap's "how many?". It may mean the Russian number word is new, or the amount itself is not yet known in any language | fingers: the friend's hand shows the number one finger at a time while the voice counts. The amounts stay subitisable or patterned: 1 to 3 in any arrangement, 4 and 5 as dice or finger patterns, 6 to 10 as ten-frames (frame §4.4 R1) |
+| M-RUS-RHYME-ONSET | diagnostic | RHYME | a word with the same start chosen instead of the rhyme (но́ги for нос) | word pairs: the line-1 rhyme word said before each option |
+| M-RUS-SYLL | diagnostic | SEGMENT | one beat more or fewer on the drum (the LS03 classifier), or the picture with the wrong number of claps | a hand claps with the child on each beat |
+| M-RUS-NOTFIRST | diagnostic | SEGMENT | a word with the sound at the end chosen (дом for м) | the mouth shows the first sound while each option is said with its first sound held |
+| M-RUS-SEQ | diagnostic | MEANING | after a story or at its pause, a picture that did not happen in it (another character, an event not in the story) | the pages laid out in a row and replayed one by one |
 
-**Tags proposed with the Band A content batch** (`band-a-content.md` §3; for the curriculum-expert's catalogue): M-RUS-SEM, M-RUS-SOUND, M-RUS-KTO, M-RUS-TYVY, M-RUS-YESNO, M-RUS-NUMWORD, M-RUS-COUNT, M-RUS-RHYME-ONSET, M-RUS-SYLL, M-RUS-NOTFIRST, M-RUS-SEQ.
+**The ten tags of the Band A batch** (the last ten rows) were adopted on 2026-11-03 (frame §4.4 R1), with SEM, NUMWORD and SEQ in the family MEANING. **`M-RUS-COUNT` was not adopted**: a skipped or double-tapped object in count-and-tap is a counting error (maths, not Russian), and the app says the number words while the child taps. So the counting taps are practice, never scored, and the scored step is the "how many?" choice of a number word (frame §2.2). `revisitWith`: HARDSOFT with YI and SOFTSIGN; SOUND with its pair (сок / суп, кот / кит, мышь / ми́шка, шесть / семь, семь / во́семь, де́вять / де́сять); YESNO and SOUND items read across a balanced set.
 
 ## 12. What is out of scope, and why
 - **Cursive** (прописи): not in this plan (research report §3.5; D13).

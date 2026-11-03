@@ -7,8 +7,10 @@ Built on: `syllabus.md` §2 Band A (ENG-A-01 to A-17), `templates.md` (the share
 ## 1. The rules every item here follows
 - **Band A presentation:** at most 3 choices, one instruction at a time, no reading, no left/right words, big targets. 3 to 5 items per activity. A 7-year-old new to English meets the same items with Band C presentation (fewer per skill).
 - **Hebrew frame, English target (D7):** the Hebrew instruction is its own clip, then the English clip (F3). From the second visit, "Listen!" (en-listen) and "Look!" (en-look) start to replace he-ins-listen-tap, with the same icon; the Hebrew stays on the replay button.
-- **One right answer, two tagged distractors.** Every scored item has one right answer and every distractor carries the error it reveals (§8 of the syllabus): `M-ENG-SEM` a same-set neighbour; `M-ENG-L1-GUESS` a familiar picture from another set; `M-ENG-YESNO`; `M-ENG-SYLL` and `M-ENG-WEAK-SYLL` in beat counting; `M-ENG-STORY-RECALL` a story detail from the wrong page. Accent tags are never on a distractor.
-- **2-choice guard:** in every skill at most half the scored items have 2 choices.
+- **One right answer, every distractor tagged (frame §2.3).** Every scored item has one right answer and every distractor carries the error it reveals (§8 of the syllabus): `M-ENG-SEM` a same-set neighbour; `M-ENG-L1-GUESS` a familiar picture from another set; `M-ENG-YESNO`; `M-ENG-SYLL` and `M-ENG-WEAK-SYLL` in beat counting; `M-ENG-STORY-RECALL` a story detail from the wrong page. A 3-choice item has two tagged distractors (they may share a tag); a 2-choice item has one. Accent tags are never on a distractor. The drum (LS03, free response) has no fixed distractors: its classifier maps one beat more or fewer to a tag, and any other count is a retry with no tag.
+- **The 2-choice rule (frame §2.3):** 2-choice items are at most half of each skill's scored items; every skill with 2-choice items also has 3-choice items (A-01, A-10, A-16), and ENG-A-16's thumbs items are balanced (3 "yes", 3 "no"); a 2-choice item allows one retry only.
+- **Checks (C):** each skill has at least two checks with different words (an understanding check, and a different item for the delayed check). A check is a 3-choice item, or in ENG-A-16 a **balanced pair** (one "yes" and one "no", served together, passing only if both are right). A 2-choice item is never a check on its own; a drum item or a probe is never a check.
+- **Counting is practice (frame §2.2):** in T02 the counting taps play the number words and are never scored (a skipped or double tap is maths, not English); the scored step is "how many?" with 3 number words heard on a tap.
 - **Set coverage (frame §3.3.4):** each word of a set is the right answer of at least one item; each word is its own `variantGroup`. Distractor roles rotate so no picture is always wrong.
 - **Feedback** (curriculum §9.1, §9.2): right → one of 8 Hebrew praise lines (he-fb-right-1 to 8) + the English word ("בדיוק! cat"). First error → he-fb-check, then the diagnostic line: he-fb-thats + the English word of the chosen picture + he-fb-listen-again + the target word (the child hears the two words side by side). No red, no buzzer. The hint ladder (§3) follows. After 3 errors in a row on a skill, an easier item.
 - **Speech (frame §5.1):** only in LS09 and the say step of LS10, only when a parent turned English voice on; **confident** → he-fb-heard + the word; **unsure** → he-fb-together + the word and a choral pause; at most one more try (he-fb-try-once, by a tap). Never "wrong". Voice off → "I said it".
@@ -29,6 +31,7 @@ The rule (`hebrew-notes.md` §9.1): the teaching voice speaks to the children in
 | he-ins-make-do | הַקְשִׁיבוּ, וְהַרְאוּ לְמִיקָה מַה לַּעֲשׂוֹת: גְּעוּ בַּכַּפְתּוֹר. | הקשיבו, והראו למיקה מה לַעֲשׂוֹת: געו בכפתור. | Listen, and show Mika what to do: touch the button. | A-02 LS11 buttons | text-ready |
 | he-ins-do-too | עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר "סִיַּמְתִּי". | עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור — סיימתי. | Now you! Do it, then touch the button "done". | LS11 embodied | text-ready |
 | he-ins-count | בּוֹאוּ נִסְפֹּר בְּאַנְגְּלִית. גְּעוּ בְּכׇל אֶחָד. | בואו נספור באנגלית. געו בכל אֶחָד. | Let's count in English. Touch each one. | A-04 T02 | text-ready |
+| he-ins-how-many | כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון. (draft, unpointed) | (the editor writes it) | How many are there? Listen to the buttons, and touch the right number. | A-04 T02, the scored "how many?" step after the counting (frame §2.2); added 2026-11-03 by the English teacher | needs-editor |
 | he-ins-touch-body | הַקְשִׁיבוּ, וּגְעוּ בַּגּוּף שֶׁל מִיקָה. | הקשיבו, וגעו בגוף של מיקה. | Listen, and touch Mika's body. | A-06 LS11 hotspots | text-ready |
 | he-ins-give | הַקְשִׁיבוּ, וְגִרְרוּ אֶת הָאֹכֶל לְפִיפּ. | הקשיבו, וגררו את האוכל לפיפ. | Listen, and drag the food to Pip. | A-08 LS11 drag | text-ready |
 | he-ins-say | עַכְשָׁו תּוֹרְכֶם. אִמְרוּ גַּם אַתֶּם! | עכשיו תורכם. אִמְרוּ גם אתם. | Now it's your turn. You say it too! | LS09 | text-ready |
@@ -107,12 +110,13 @@ Editor's notes on the glosses: (1) The voice text of a gloss is the pointed word
 | HL-PAIRS | H1: the two cards of one pair play their words again, slowly. H2: one pair is shown joined with its Hebrew gloss. H3: he-hint-showme; the friend matches one pair; the child matches the rest. |
 | HL-BUBBLE | H1: the puppet's line again, then each bubble plays slowly. H2: the scene's key picture glows and the key word's Hebrew gloss plays (he-hint-hebrew + gloss + he-hint-english + word). H3: he-hint-showme; the puppet points at the right bubble and says it; the child taps it. |
 | HL-DRUM | H1: the word again, slowly, each beat a little apart. H2: he-hint-beats; hands clap once per beat while each beat lights (a new representation: movement and light). H3: he-hint-showme; the friend drums it; the child drums it after. |
+| HL-COUNT | For the scored "how many?" step (the counting taps before it keep the T02 ladder and are never scored). H1: the objects light one by one while the voice counts them again in English, the last number a little longer; then the three buttons play again. H2: that many fingers appear beside the set (a new representation) with he-hint-hebrew + the Hebrew number (he-gl-<n>); the buttons play again. H3: he-hint-showme; the friend taps the right button and it plays; the child taps it. |
 | HL-YN | 2-choice items allow one retry only (curriculum §9.2). H1: the question again, slowly, with the picture lit. H2: he-hint-hebrew + the gloss of the asked word + he-hint-english + the word, beside the picture. H3: he-hint-showme; the friend nods or shakes its head and taps the thumb; the child taps it. |
 | HL-STORY | H1: the page that answers it plays again. H2: he-hint-page; the page picture comes back with the word pictures lit (the story representation). H3: he-hint-showme; the friend points to the answer on the page and taps it; the child taps it. |
-| T02 ladder | The existing `count_tap` ladder, with English number clips. |
+| T02 ladder | The existing `count_tap` ladder, with English number clips, for the counting taps only (practice, never scored); the scored "how many?" step uses HL-COUNT. |
 
 ## 4. Items per skill
-Columns: the item id; the template (shared ids); the Hebrew frame line; the English prompt (clip ids, `en-…` in `pronunciation.csv`); the options (picture ids, §6); the right answer; the distractors with their tags; the hint ladder; the representation (frame §3.3.1). Items marked *not scored* are practice. **P** marks a placement probe (§5).
+Columns: the item id; the template (shared ids); the Hebrew frame line; the English prompt (clip ids, `en-…` in `pronunciation.csv`); the options (picture ids, §6); the right answer; the distractors with their tags; the hint ladder; the representation (frame §3.3.1). Items marked *not scored* are practice. **P** marks a placement probe (§5). **C** marks an understanding or delayed check (a 3-choice item, or in ENG-A-16 a balanced pair; never a 2-choice item alone, frame §2.3); each skill has at least two, with different words, so the delayed check uses a different item.
 
 ### ENG-A-01 Greetings
 Set (each a `variantGroup`): Hello!, Hi!, Goodbye!, Bye!.
@@ -121,10 +125,10 @@ Set (each a `variantGroup`): Hello!, Hi!, Goodbye!, Bye!.
 |---|---|---|---|---|---|---|---|---|
 | i01 **P** | LS01 tap | he-ins-listen-tap | en-hello | pic.greet-arrive-pip; pic.greet-leave-pip | pic.greet-arrive-pip | pic.greet-leave-pip (M-ENG-SEM) | HL-PIC | pictorial |
 | i02 | LS01 tap | he-ins-listen-tap | en-goodbye | pic.greet-leave-pip; pic.greet-arrive-pip; pic.mika-eat | pic.greet-leave-pip | pic.greet-arrive-pip (M-ENG-SEM); pic.mika-eat (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i03 | LS01 tap | he-ins-listen-tap | en-hi | pic.greet-arrive-mika; pic.greet-leave-mika; pic.mika-eat | pic.greet-arrive-mika | pic.greet-leave-mika (M-ENG-SEM); pic.mika-eat (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i03 **C** | LS01 tap | he-ins-listen-tap | en-hi | pic.greet-arrive-mika; pic.greet-leave-mika; pic.mika-eat | pic.greet-arrive-mika | pic.greet-leave-mika (M-ENG-SEM); pic.mika-eat (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i04 | LS01 tap | he-ins-listen-tap | en-bye | pic.greet-leave-mika; pic.greet-arrive-mika | pic.greet-leave-mika | pic.greet-arrive-mika (M-ENG-SEM) | HL-PIC | pictorial |
 | i05 | LS01 tap | he-ins-listen-tap | en-hello | pic.greet-arrive-mika; pic.greet-leave-mika; pic.mika-eat | pic.greet-arrive-mika | pic.greet-leave-mika (M-ENG-SEM); pic.mika-eat (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i06 | LS01 tap | he-ins-listen-tap | en-goodbye | pic.greet-leave-mika; pic.greet-arrive-mika; pic.mika-eat | pic.greet-leave-mika | pic.greet-arrive-mika (M-ENG-SEM); pic.mika-eat (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i06 **C** | LS01 tap | he-ins-listen-tap | en-goodbye | pic.greet-leave-mika; pic.greet-arrive-mika; pic.mika-eat | pic.greet-leave-mika | pic.greet-arrive-mika (M-ENG-SEM); pic.mika-eat (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i07 | LS10 bubble | he-ins-bubble | en-pip-hello (Pip arrives) | bubble: en-hello (wave); bubble: en-goodbye (leaving) | bubble: en-hello (wave) | bubble: en-goodbye (leaving) (M-ENG-SEM) | HL-BUBBLE | story |
 | i08 | LS10 bubble | he-ins-bubble | en-goodbye (Pip leaves) | bubble: en-bye (wave); bubble: en-hi (arriving) | bubble: en-bye (wave) | bubble: en-hi (arriving) (M-ENG-SEM) | HL-BUBBLE | story |
 | p01 *not scored* | LS10 personal (name) | he-ins-personal | en-pip-hello, en-whats-your-name | voice (if on) or "I said it"; pass | - | - | - | story |
@@ -148,8 +152,8 @@ Set (each a `variantGroup`): Stand up!, Sit down!, Clap!, Jump!, Stop!, Look!, L
 | i08 | LS01 tap | he-ins-who-doing | en-wave | pic.act-wave; pic.act-clap; pic.act-sitdown | pic.act-wave | pic.act-clap (M-ENG-SEM); pic.act-sitdown (M-ENG-L1-GUESS) | HL-ACT | pictorial |
 | i09 | LS11 buttons | he-ins-make-do | en-jump | button jump; button stop; button listen | button jump | button stop (M-ENG-SEM); button listen (M-ENG-L1-GUESS) | HL-ACT | embodied |
 | i10 | LS11 buttons | he-ins-make-do | en-clap | button clap; button wave; button look | button clap | button wave (M-ENG-SEM); button look (M-ENG-L1-GUESS) | HL-ACT | embodied |
-| i11 | LS11 buttons | he-ins-make-do | en-sit-down | button sit-down; button stand-up; button jump | button sit-down | button stand-up (M-ENG-SEM); button jump (M-ENG-L1-GUESS) | HL-ACT | embodied |
-| i12 | LS11 buttons | he-ins-make-do | en-wave | button wave; button clap; button sit-down | button wave | button clap (M-ENG-SEM); button sit-down (M-ENG-L1-GUESS) | HL-ACT | embodied |
+| i11 **C** | LS11 buttons | he-ins-make-do | en-sit-down | button sit-down; button stand-up; button jump | button sit-down | button stand-up (M-ENG-SEM); button jump (M-ENG-L1-GUESS) | HL-ACT | embodied |
+| i12 **C** | LS11 buttons | he-ins-make-do | en-wave | button wave; button clap; button sit-down | button wave | button clap (M-ENG-SEM); button sit-down (M-ENG-L1-GUESS) | HL-ACT | embodied |
 | e01 *not scored* | LS11 embodied | he-ins-do-too | en-stand-up, then en-sit-down | "done" | - | - | - | embodied |
 | e02 *not scored* | LS11 embodied | he-ins-do-too | en-jump, en-stop | "done" | - | - | - | embodied |
 
@@ -167,8 +171,8 @@ Set (each a `variantGroup`): red, blue, yellow, green.
 | i04 | LS01 tap | he-ins-listen-tap | en-green | pic.balloon-green; pic.balloon-yellow; pic.balloon-blue | pic.balloon-green | pic.balloon-yellow (M-ENG-SEM); pic.balloon-blue (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i05 | LS01 tap | he-ins-listen-tap | en-red | pic.boat-red; pic.boat-yellow; pic.boat-blue | pic.boat-red | pic.boat-yellow (M-ENG-SEM); pic.boat-blue (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i06 | LS01 tap | he-ins-listen-tap | en-blue | pic.boat-blue; pic.boat-red; pic.boat-green | pic.boat-blue | pic.boat-red (M-ENG-SEM); pic.boat-green (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i07 | LS01 tap | he-ins-listen-tap | en-yellow | pic.boat-yellow; pic.boat-blue; pic.boat-red | pic.boat-yellow | pic.boat-blue (M-ENG-SEM); pic.boat-red (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i08 | LS01 tap | he-ins-listen-tap | en-green | pic.boat-green; pic.boat-blue; pic.boat-yellow | pic.boat-green | pic.boat-blue (M-ENG-SEM); pic.boat-yellow (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i07 **C** | LS01 tap | he-ins-listen-tap | en-yellow | pic.boat-yellow; pic.boat-blue; pic.boat-red | pic.boat-yellow | pic.boat-blue (M-ENG-SEM); pic.boat-red (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i08 **C** | LS01 tap | he-ins-listen-tap | en-green | pic.boat-green; pic.boat-blue; pic.boat-yellow | pic.boat-green | pic.boat-blue (M-ENG-SEM); pic.boat-yellow (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 
 ### ENG-A-04 Numbers 1 to 5
 Set (each a `variantGroup`): one, two, three, four, five.
@@ -180,13 +184,13 @@ Set (each a `variantGroup`): one, two, three, four, five.
 | i03 | LS01 tap | he-ins-listen-tap | en-three | pic.set-ducks-3; pic.set-ducks-2; pic.set-ducks-4 | pic.set-ducks-3 | pic.set-ducks-2 (M-ENG-SEM); pic.set-ducks-4 (M-ENG-SEM) | HL-SET | pictorial |
 | i04 | LS01 tap | he-ins-listen-tap | en-four | pic.set-balls-4; pic.set-balls-3; pic.set-balls-5 | pic.set-balls-4 | pic.set-balls-3 (M-ENG-SEM); pic.set-balls-5 (M-ENG-SEM) | HL-SET | pictorial |
 | i05 | LS01 tap | he-ins-listen-tap | en-five | pic.set-ducks-5; pic.set-ducks-3; pic.set-ducks-4 | pic.set-ducks-5 | pic.set-ducks-3 (M-ENG-SEM); pic.set-ducks-4 (M-ENG-SEM) | HL-SET | pictorial |
-| i06 | T02 count | he-ins-count | en-one … en-three (a clip per tap) | pic.set-ducks-3 | each duck tapped once | a duck tapped twice or skipped (T02 own classifier) | T02 ladder | concrete |
-| i07 | T02 count | he-ins-count | en-one … en-five | pic.set-balls-5 | each ball tapped once | a ball tapped twice or skipped (T02 own classifier) | T02 ladder | concrete |
+| i06 **C** | T02 count, then LS01 sound options | he-ins-count, then he-ins-how-many | pic.set-ducks-3: counting en-one … en-three, a clip per tap (practice); then the buttons | button en-three; button en-two; button en-four | button en-three | button en-two (M-ENG-SEM); button en-four (M-ENG-SEM) | HL-COUNT | concrete |
+| i07 **C** | T02 count, then LS01 sound options | he-ins-count, then he-ins-how-many | pic.set-balls-5: counting en-one … en-five, a clip per tap (practice); then the buttons | button en-five; button en-four; button en-three | button en-five | button en-four (M-ENG-SEM); button en-three (M-ENG-SEM) | HL-COUNT | concrete |
 | i08 **P** | LS01 tap | he-ins-listen-tap | en-four | pic.set-ducks-4; pic.set-ducks-5; pic.set-ducks-3 | pic.set-ducks-4 | pic.set-ducks-5 (M-ENG-SEM); pic.set-ducks-3 (M-ENG-SEM) | HL-SET | pictorial |
 | p01 *not scored* | LS10 personal (age) | he-ins-personal | en-im-five-how-old | pic.cards-age (3 to 9, each card plays en-three … en-nine); voice (if on); pass | - | - | - | story |
 
-- i06: The existing T02 rule scores the count.
-- i07: The existing T02 rule scores the count.
+- i06: The counting taps are practice, never scored (frame §2.2): a skipped or double-tapped duck gets T02's own help (the duck lights and the count starts again) and no tag, since a counting error is maths, not English. The scored step is "how many?": three sound buttons with no picture (LS01 c), each plays its number word on a tap; the child taps the one that says how many.
+- i07: The counting taps are practice, never scored (frame §2.2): a skipped or double-tapped ball gets T02's own help (the ball lights and the count starts again) and no tag, since a counting error is maths, not English. The scored step is "how many?": three sound buttons with no picture (LS01 c), each plays its number word on a tap; the child taps the one that says how many.
 - p01: Pip answers first. Reply: the number word clip the child chose ("Four!"), then en-wow; on pass en-thats-ok. Never scored, stored or sent; response empty.
 
 ### ENG-A-05 Eight animals
@@ -202,8 +206,8 @@ Set (each a `variantGroup`): cat, dog, fish, bird, cow, duck, pig, frog.
 | i06 | LS01 tap | he-ins-listen-tap | en-duck | pic.duck; pic.bird; pic.dog | pic.duck | pic.bird (M-ENG-SEM); pic.dog (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i07 | LS01 tap | he-ins-listen-tap | en-pig | pic.pig; pic.cow; pic.frog | pic.pig | pic.cow (M-ENG-SEM); pic.frog (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i08 | LS01 tap | he-ins-listen-tap | en-frog | pic.frog; pic.fish; pic.duck | pic.frog | pic.fish (M-ENG-SEM); pic.duck (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| m01 | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.cat / pic.cat-2; pic.dog / pic.dog-2; pic.cow / pic.cow-2 | 3 pairs | cat with dog (M-ENG-SEM); cow with dog (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
-| m02 | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.duck / pic.duck-2; pic.bird / pic.bird-2; pic.frog / pic.frog-2 | 3 pairs | duck with bird (M-ENG-SEM); frog with duck (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
+| m01 **C** | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.cat / pic.cat-2; pic.dog / pic.dog-2; pic.cow / pic.cow-2 | 3 pairs | cat with dog (M-ENG-SEM); cow with dog (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
+| m02 **C** | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.duck / pic.duck-2; pic.bird / pic.bird-2; pic.frog / pic.frog-2 | 3 pairs | duck with bird (M-ENG-SEM); frog with duck (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
 
 - m01: Two rows of three cards; each match is a choice among three (Band A). Each card says its word on a tap; a wrong pairing hears both words.
 - m02: as m01
@@ -223,8 +227,8 @@ Set (each a `variantGroup`): head, eyes, ears, nose, mouth, hands, feet, tummy.
 | i08 | LS11 hotspot | he-ins-touch-body | en-touch-tummy | pic.body-mika: tap areas tummy, head, hands (the other parts inactive) | tummy | head (M-ENG-SEM); hands (M-ENG-L1-GUESS) | HL-BODY | embodied |
 | i09 | LS01 tap | he-ins-listen-tap | en-nose | pic.body-nose; pic.body-mouth; pic.body-ears | pic.body-nose | pic.body-mouth (M-ENG-SEM); pic.body-ears (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i10 | LS01 tap | he-ins-listen-tap | en-ears | pic.body-ears; pic.body-eyes; pic.body-nose | pic.body-ears | pic.body-eyes (M-ENG-SEM); pic.body-nose (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i11 | LS01 tap | he-ins-listen-tap | en-feet | pic.body-feet; pic.body-hands; pic.body-head | pic.body-feet | pic.body-hands (M-ENG-SEM); pic.body-head (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i12 | LS01 tap | he-ins-listen-tap | en-tummy | pic.body-tummy; pic.body-head; pic.body-hands | pic.body-tummy | pic.body-head (M-ENG-SEM); pic.body-hands (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i11 **C** | LS01 tap | he-ins-listen-tap | en-feet | pic.body-feet; pic.body-hands; pic.body-head | pic.body-feet | pic.body-hands (M-ENG-SEM); pic.body-head (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i12 **C** | LS01 tap | he-ins-listen-tap | en-tummy | pic.body-tummy; pic.body-head; pic.body-hands | pic.body-tummy | pic.body-head (M-ENG-SEM); pic.body-hands (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | e01 *not scored* | LS11 embodied | he-ins-do-too | en-touch-head, en-touch-nose, en-touch-feet | "done" | - | - | - | embodied |
 
 - e01: Self-report; never counted alone.
@@ -240,8 +244,8 @@ Set (each a `variantGroup`): mom, dad, baby, brother, sister, grandma, grandpa.
 | i04 | LS01 tap | he-ins-listen-tap | en-brother | pic.fam-brother; pic.fam-sister; pic.fam-mom | pic.fam-brother | pic.fam-sister (M-ENG-SEM); pic.fam-mom (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i05 | LS01 tap | he-ins-listen-tap | en-sister | pic.fam-sister; pic.fam-brother; pic.fam-dad | pic.fam-sister | pic.fam-brother (M-ENG-SEM); pic.fam-dad (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i06 | LS01 tap | he-ins-listen-tap | en-grandma | pic.fam-grandma; pic.fam-mom; pic.fam-brother | pic.fam-grandma | pic.fam-mom (M-ENG-SEM); pic.fam-brother (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i07 | LS01 tap | he-ins-listen-tap | en-grandpa | pic.fam-grandpa; pic.fam-dad; pic.fam-baby | pic.fam-grandpa | pic.fam-dad (M-ENG-SEM); pic.fam-baby (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i08 | LS01 tap | he-ins-listen-tap | en-sister (on pic.fam-pip, the whole family) | pic.fam-sister; pic.fam-mom; pic.fam-baby | pic.fam-sister | pic.fam-mom (M-ENG-SEM); pic.fam-baby (M-ENG-L1-GUESS) | HL-PIC | story |
+| i07 **C** | LS01 tap | he-ins-listen-tap | en-grandpa | pic.fam-grandpa; pic.fam-dad; pic.fam-baby | pic.fam-grandpa | pic.fam-dad (M-ENG-SEM); pic.fam-baby (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i08 **C** | LS01 tap | he-ins-listen-tap | en-sister (on pic.fam-pip, the whole family) | pic.fam-sister; pic.fam-mom; pic.fam-baby | pic.fam-sister | pic.fam-mom (M-ENG-SEM); pic.fam-baby (M-ENG-L1-GUESS) | HL-PIC | story |
 | p01 *not scored* | LS10 personal (family) | he-ins-personal | en-this-is-my-family, en-who-in-family | cards (any number, each plays its word): mom, dad, baby, brother, sister, grandma, grandpa, cousin, pet (en-cat, en-dog), someone else; pass | - | - | - | story |
 
 - i08: The whole family picture first, then the three cards.
@@ -262,8 +266,8 @@ Set (each a `variantGroup`): apple, banana, milk, water, bread, egg, cake, juice
 | i08 | LS01 tap | he-ins-listen-tap | en-juice | pic.juice; pic.milk; pic.banana | pic.juice | pic.milk (M-ENG-SEM); pic.banana (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i09 | LS11 drag | he-ins-give | en-give-apple | pic.apple; pic.banana; pic.bread | pic.apple to Pip | pic.banana (M-ENG-SEM); pic.bread (M-ENG-L1-GUESS) | HL-PIC | embodied |
 | i10 | LS11 drag | he-ins-give | en-give-milk | pic.milk; pic.water; pic.cake | pic.milk to Pip | pic.water (M-ENG-SEM); pic.cake (M-ENG-L1-GUESS) | HL-PIC | embodied |
-| i11 | LS11 drag | he-ins-give | en-give-bread | pic.bread; pic.cake; pic.juice | pic.bread to Pip | pic.cake (M-ENG-SEM); pic.juice (M-ENG-L1-GUESS) | HL-PIC | embodied |
-| i12 | LS11 drag | he-ins-give | en-give-juice | pic.juice; pic.milk; pic.banana | pic.juice to Pip | pic.milk (M-ENG-SEM); pic.banana (M-ENG-L1-GUESS) | HL-PIC | embodied |
+| i11 **C** | LS11 drag | he-ins-give | en-give-bread | pic.bread; pic.cake; pic.juice | pic.bread to Pip | pic.cake (M-ENG-SEM); pic.juice (M-ENG-L1-GUESS) | HL-PIC | embodied |
+| i12 **C** | LS11 drag | he-ins-give | en-give-juice | pic.juice; pic.milk; pic.banana | pic.juice to Pip | pic.milk (M-ENG-SEM); pic.banana (M-ENG-L1-GUESS) | HL-PIC | embodied |
 | p01 *not scored* | LS10 personal (likes) | he-ins-personal | en-i-like-bananas | 6 food cards (each plays its word); voice (if on); pass | - | - | - | story |
 
 - p01: Reply: the food word the child chose ("Apple!"), then en-yum; on pass en-thats-ok. Never used to choose content. Response empty.
@@ -281,8 +285,8 @@ Set (each a `variantGroup`): ball, car, teddy, book, bike, boat, drum, kite.
 | i06 | LS01 tap | he-ins-listen-tap | en-boat | pic.boat; pic.car; pic.ball | pic.boat | pic.car (M-ENG-SEM); pic.ball (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i07 | LS01 tap | he-ins-listen-tap | en-drum | pic.drum; pic.ball; pic.bike | pic.drum | pic.ball (M-ENG-SEM); pic.bike (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i08 **P** | LS01 tap | he-ins-listen-tap | en-kite | pic.kite; pic.boat; pic.car | pic.kite | pic.boat (M-ENG-SEM); pic.car (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| m01 | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.ball / pic.ball-2; pic.drum / pic.drum-2; pic.kite / pic.kite-2 | 3 pairs | ball with drum (M-ENG-SEM); kite with ball (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
-| m02 | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.car / pic.car-2; pic.bike / pic.bike-2; pic.boat / pic.boat-2 | 3 pairs | car with bike (M-ENG-SEM); boat with car (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
+| m01 **C** | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.ball / pic.ball-2; pic.drum / pic.drum-2; pic.kite / pic.kite-2 | 3 pairs | ball with drum (M-ENG-SEM); kite with ball (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
+| m02 **C** | LS01 pairs | he-ins-pairs | (each card plays its word) | pic.car / pic.car-2; pic.bike / pic.bike-2; pic.boat / pic.boat-2 | 3 pairs | car with bike (M-ENG-SEM); boat with car (M-ENG-L1-GUESS) | HL-PAIRS | pictorial |
 
 - m01: as A-05 m01
 - m02: as A-05 m01
@@ -300,8 +304,8 @@ Set (each a `variantGroup`): big, small, hot, cold, happy, sad.
 | i06 | LS01 tap | he-ins-listen-tap | en-cold | pic.mika-cold; pic.mika-hot; pic.pip-happy | pic.mika-cold | pic.mika-hot (M-ENG-SEM); pic.pip-happy (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i07 | LS01 tap | he-ins-listen-tap | en-happy | pic.mika-happy; pic.mika-sad; pic.cup-hot | pic.mika-happy | pic.mika-sad (M-ENG-SEM); pic.cup-hot (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i08 | LS01 tap | he-ins-listen-tap | en-sad | pic.pip-sad; pic.pip-happy; pic.cup-cold | pic.pip-sad | pic.pip-happy (M-ENG-SEM); pic.cup-cold (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i09 | LS01 tap | he-ins-listen-tap | en-hot | pic.mika-hot; pic.mika-cold; pic.cup-cold | pic.mika-hot | pic.mika-cold (M-ENG-SEM); pic.cup-cold (M-ENG-L1-GUESS) | HL-PIC | pictorial |
-| i10 | LS01 tap | he-ins-listen-tap | en-cold | pic.cup-cold; pic.cup-hot; pic.mika-happy | pic.cup-cold | pic.cup-hot (M-ENG-SEM); pic.mika-happy (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i09 **C** | LS01 tap | he-ins-listen-tap | en-hot | pic.mika-hot; pic.mika-cold; pic.cup-cold | pic.mika-hot | pic.mika-cold (M-ENG-SEM); pic.cup-cold (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i10 **C** | LS01 tap | he-ins-listen-tap | en-cold | pic.cup-cold; pic.cup-hot; pic.mika-happy | pic.cup-cold | pic.cup-hot (M-ENG-SEM); pic.mika-happy (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 
 - i09: pic.cup-cold is cold, not hot: still one right answer.
 
@@ -318,8 +322,8 @@ Set (each a `variantGroup`): ball, car, book, kite, duck, apple, egg.
 | i06 | LS01 tap | he-ins-whats-this | en-whats-this, en-its-egg | pic.egg; pic.bread; pic.kite | pic.egg | pic.bread (M-ENG-SEM); pic.kite (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i07 | LS10 bubble | he-ins-bubble | en-whats-this (Pip shows pic.car in pic.pip-holds) | bubble: en-its-car; bubble: en-its-boat; bubble: en-hello | bubble: en-its-car | bubble: en-its-boat (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
 | i08 | LS10 bubble | he-ins-bubble | en-whats-this (Pip shows pic.book in pic.pip-holds) | bubble: en-its-book; bubble: en-its-ball; bubble: en-hello | bubble: en-its-book | bubble: en-its-ball (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
-| i09 | LS10 bubble | he-ins-bubble | en-whats-this (Pip shows pic.duck in pic.pip-holds) | bubble: en-its-duck; bubble: en-its-frog; bubble: en-hello | bubble: en-its-duck | bubble: en-its-frog (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
-| i10 | LS10 bubble | he-ins-bubble | en-whats-this (Pip shows pic.egg in pic.pip-holds) | bubble: en-its-egg; bubble: en-its-apple; bubble: en-hello | bubble: en-its-egg | bubble: en-its-apple (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
+| i09 **C** | LS10 bubble | he-ins-bubble | en-whats-this (Pip shows pic.duck in pic.pip-holds) | bubble: en-its-duck; bubble: en-its-frog; bubble: en-hello | bubble: en-its-duck | bubble: en-its-frog (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
+| i10 **C** | LS10 bubble | he-ins-bubble | en-whats-this (Pip shows pic.egg in pic.pip-holds) | bubble: en-its-egg; bubble: en-its-apple; bubble: en-hello | bubble: en-its-egg | bubble: en-its-apple (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
 
 ### ENG-A-12 Say a word (LS09)
 Set (each a `variantGroup`): cat, dog, fish, duck, red, blue, apple, ball.
@@ -332,8 +336,8 @@ Set (each a `variantGroup`): cat, dog, fish, duck, red, blue, apple, ball.
 | i04 | LS09 say + LS01 tap | he-ins-say / he-ins-mic or he-ins-said-it, then he-ins-find-said | en-duck (twice, with a pause) | pic.duck; pic.bird; pic.dog | pic.duck | pic.bird (M-ENG-SEM); pic.dog (M-ENG-L1-GUESS) | HL-PIC (the tap) | embodied + pictorial |
 | i05 | LS09 say + LS01 tap | he-ins-say / he-ins-mic or he-ins-said-it, then he-ins-find-said | en-red (twice, with a pause) | pic.balloon-red; pic.balloon-blue; pic.balloon-yellow | pic.balloon-red | pic.balloon-blue (M-ENG-SEM); pic.balloon-yellow (M-ENG-L1-GUESS) | HL-PIC (the tap) | embodied + pictorial |
 | i06 | LS09 say + LS01 tap | he-ins-say / he-ins-mic or he-ins-said-it, then he-ins-find-said | en-blue (twice, with a pause) | pic.balloon-blue; pic.balloon-green; pic.balloon-red | pic.balloon-blue | pic.balloon-green (M-ENG-SEM); pic.balloon-red (M-ENG-L1-GUESS) | HL-PIC (the tap) | embodied + pictorial |
-| i07 | LS09 say + LS01 tap | he-ins-say / he-ins-mic or he-ins-said-it, then he-ins-find-said | en-apple (twice, with a pause) | pic.apple; pic.banana; pic.bread | pic.apple | pic.banana (M-ENG-SEM); pic.bread (M-ENG-L1-GUESS) | HL-PIC (the tap) | embodied + pictorial |
-| i08 | LS09 say + LS01 tap | he-ins-say / he-ins-mic or he-ins-said-it, then he-ins-find-said | en-ball (twice, with a pause) | pic.ball; pic.drum; pic.book | pic.ball | pic.drum (M-ENG-SEM); pic.book (M-ENG-L1-GUESS) | HL-PIC (the tap) | embodied + pictorial |
+| i07 **C** | LS09 say + LS01 tap | he-ins-say / he-ins-mic or he-ins-said-it, then he-ins-find-said | en-apple (twice, with a pause) | pic.apple; pic.banana; pic.bread | pic.apple | pic.banana (M-ENG-SEM); pic.bread (M-ENG-L1-GUESS) | HL-PIC (the tap) | embodied + pictorial |
+| i08 **C** | LS09 say + LS01 tap | he-ins-say / he-ins-mic or he-ins-said-it, then he-ins-find-said | en-ball (twice, with a pause) | pic.ball; pic.drum; pic.book | pic.ball | pic.drum (M-ENG-SEM); pic.book (M-ENG-L1-GUESS) | HL-PIC (the tap) | embodied + pictorial |
 
 - i01: Expected set: cat, a cat. Foils: cut, cap, dog, pig. Confident → he-fb-heard + en-cat; unsure → he-fb-together + en-cat. The tap counts for ENG-A-12.
 - i02: Expected set: dog, a dog. Foils: duck, dig, cat, cow. Confident → he-fb-heard + en-dog; unsure → he-fb-together + en-dog. The tap counts for ENG-A-12.
@@ -355,15 +359,15 @@ Set (each a `variantGroup`): Clap!, Wave!, Jump!, nose, five.
 | Item | Template | Hebrew frame | English prompt | Options | Right | Distractors (tag) | Hints | Rep. |
 |---|---|---|---|---|---|---|---|---|
 | c01 *not scored* | LS12 chant | he-ins-chant | en-ch-hello-1 … 4 | - | - | - | - | story |
-| i01 | LS01 tap | he-ins-listen-tap | en-clap | pic.act-clap; pic.act-wave; pic.act-sitdown | pic.act-clap | pic.act-wave (M-ENG-SEM); pic.act-sitdown (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i01 **C** | LS01 tap | he-ins-listen-tap | en-clap | pic.act-clap; pic.act-wave; pic.act-sitdown | pic.act-clap | pic.act-wave (M-ENG-SEM); pic.act-sitdown (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | c02 *not scored* | LS12 chant | he-ins-chant | en-ch-bye-1 … 4 | - | - | - | - | story |
-| i02 | LS01 tap | he-ins-listen-tap | en-wave | pic.act-wave; pic.act-clap; pic.act-look | pic.act-wave | pic.act-clap (M-ENG-SEM); pic.act-look (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i02 **C** | LS01 tap | he-ins-listen-tap | en-wave | pic.act-wave; pic.act-clap; pic.act-look | pic.act-wave | pic.act-clap (M-ENG-SEM); pic.act-look (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | c03 *not scored* | LS12 chant | he-ins-chant | en-ch-move-1 … 4 | - | - | - | - | story |
-| i03 | LS01 tap | he-ins-listen-tap | en-jump | pic.act-jump; pic.act-stop; pic.act-listen | pic.act-jump | pic.act-stop (M-ENG-SEM); pic.act-listen (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i03 **C** | LS01 tap | he-ins-listen-tap | en-jump | pic.act-jump; pic.act-stop; pic.act-listen | pic.act-jump | pic.act-stop (M-ENG-SEM); pic.act-listen (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | c04 *not scored* | LS12 chant | he-ins-chant | en-ch-body-1 … 4 | - | - | - | - | story |
-| i04 | LS01 tap | he-ins-listen-tap | en-nose | pic.body-nose; pic.body-mouth; pic.body-feet | pic.body-nose | pic.body-mouth (M-ENG-SEM); pic.body-feet (M-ENG-L1-GUESS) | HL-PIC | pictorial |
+| i04 **C** | LS01 tap | he-ins-listen-tap | en-nose | pic.body-nose; pic.body-mouth; pic.body-feet | pic.body-nose | pic.body-mouth (M-ENG-SEM); pic.body-feet (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | c05 *not scored* | LS12 chant | he-ins-chant | en-ch-count-1 … 4 | - | - | - | - | story |
-| i05 | LS01 tap | he-ins-listen-tap | en-five | pic.set-ducks-5; pic.set-ducks-4; pic.set-ducks-3 | pic.set-ducks-5 | pic.set-ducks-4 (M-ENG-SEM); pic.set-ducks-3 (M-ENG-SEM) | HL-PIC | pictorial |
+| i05 **C** | LS01 tap | he-ins-listen-tap | en-five | pic.set-ducks-5; pic.set-ducks-4; pic.set-ducks-3 | pic.set-ducks-5 | pic.set-ducks-4 (M-ENG-SEM); pic.set-ducks-3 (M-ENG-SEM) | HL-PIC | pictorial |
 
 - c01: Pictures light on the key words; joining in is practice.
 - i01: The understanding check after the chant.
@@ -378,21 +382,22 @@ Set (each a `variantGroup`): Clap!, Wave!, Jump!, nose, five.
 
 ### ENG-A-14 Beats (syllables)
 Set (each a `variantGroup`): cat, duck, milk, apple, teddy, water, banana, elephant.
+**Drum items (LS03, free response, frame §2.3):** the drum has no fixed distractors. Its classifier maps one beat more to `M-ENG-SYLL` and one beat fewer to `M-ENG-WEAK-SYLL`, so the distractor column lists only those outcomes; a count off by 2 or more is a retry with no tag and no misconception evidence. Every beat word is voiced with every beat audible (`pronunciation.csv` `check`). **Strips (LS01):** centred on the right count when it is 2 or more, so each distractor is one beat away (banana: 2, 3 or 4 drums).
 
 | Item | Template | Hebrew frame | English prompt | Options | Right | Distractors (tag) | Hints | Rep. |
 |---|---|---|---|---|---|---|---|---|
-| i01 | LS03 drum | he-ins-drum | en-cat (with pic.cat) | drum taps | 1 beat | 2 beats (M-ENG-SYLL); 3 beats (M-ENG-SYLL) | HL-DRUM | concrete |
-| i02 | LS03 drum | he-ins-drum | en-duck (with pic.duck) | drum taps | 1 beat | 2 beats (M-ENG-SYLL); 3 beats (M-ENG-SYLL) | HL-DRUM | concrete |
-| i03 | LS03 drum | he-ins-drum | en-milk (with pic.milk) | drum taps | 1 beat | 2 beats (M-ENG-SYLL); 3 beats (M-ENG-SYLL) | HL-DRUM | concrete |
+| i01 | LS03 drum | he-ins-drum | en-cat (with pic.cat) | drum taps | 1 beat | 2 beats (M-ENG-SYLL) | HL-DRUM | concrete |
+| i02 | LS03 drum | he-ins-drum | en-duck (with pic.duck) | drum taps | 1 beat | 2 beats (M-ENG-SYLL) | HL-DRUM | concrete |
+| i03 | LS03 drum | he-ins-drum | en-milk (with pic.milk) | drum taps | 1 beat | 2 beats (M-ENG-SYLL) | HL-DRUM | concrete |
 | i04 | LS03 drum | he-ins-drum | en-apple (with pic.apple) | drum taps | 2 beats | 1 beat (M-ENG-WEAK-SYLL); 3 beats (M-ENG-SYLL) | HL-DRUM | concrete |
 | i05 | LS03 drum | he-ins-drum | en-teddy (with pic.teddy) | drum taps | 2 beats | 1 beat (M-ENG-WEAK-SYLL); 3 beats (M-ENG-SYLL) | HL-DRUM | concrete |
 | i06 | LS03 drum | he-ins-drum | en-water (with pic.water) | drum taps | 2 beats | 1 beat (M-ENG-WEAK-SYLL); 3 beats (M-ENG-SYLL) | HL-DRUM | concrete |
-| i07 | LS03 drum | he-ins-drum | en-banana (with pic.banana) | drum taps | 3 beats | 2 beats (M-ENG-WEAK-SYLL); 1 beat (M-ENG-WEAK-SYLL) | HL-DRUM | concrete |
-| i08 | LS03 drum | he-ins-drum | en-elephant (with pic.elephant) | drum taps | 3 beats | 2 beats (M-ENG-WEAK-SYLL); 1 beat (M-ENG-WEAK-SYLL) | HL-DRUM | concrete |
+| i07 | LS03 drum | he-ins-drum | en-banana (with pic.banana) | drum taps | 3 beats | 2 beats (M-ENG-WEAK-SYLL); 4 beats (M-ENG-SYLL) | HL-DRUM | concrete |
+| i08 | LS03 drum | he-ins-drum | en-elephant (with pic.elephant) | drum taps | 3 beats | 2 beats (M-ENG-WEAK-SYLL); 4 beats (M-ENG-SYLL) | HL-DRUM | concrete |
 | i09 | LS01 tap | he-ins-strip | en-dog | pic.drum-strip-1; pic.drum-strip-2; pic.drum-strip-3 | pic.drum-strip-1 | pic.drum-strip-2 (M-ENG-SYLL); pic.drum-strip-3 (M-ENG-SYLL) | HL-DRUM | pictorial |
 | i10 | LS01 tap | he-ins-strip | en-tummy | pic.drum-strip-1; pic.drum-strip-2; pic.drum-strip-3 | pic.drum-strip-2 | pic.drum-strip-1 (M-ENG-WEAK-SYLL); pic.drum-strip-3 (M-ENG-SYLL) | HL-DRUM | pictorial |
-| i11 | LS01 tap | he-ins-strip | en-banana | pic.drum-strip-1; pic.drum-strip-2; pic.drum-strip-3 | pic.drum-strip-3 | pic.drum-strip-1 (M-ENG-WEAK-SYLL); pic.drum-strip-2 (M-ENG-WEAK-SYLL) | HL-DRUM | pictorial |
-| i12 | LS01 tap | he-ins-strip | en-yellow | pic.drum-strip-1; pic.drum-strip-2; pic.drum-strip-3 | pic.drum-strip-2 | pic.drum-strip-1 (M-ENG-WEAK-SYLL); pic.drum-strip-3 (M-ENG-SYLL) | HL-DRUM | pictorial |
+| i11 **C** | LS01 tap | he-ins-strip | en-banana | pic.drum-strip-2; pic.drum-strip-3; pic.drum-strip-4 | pic.drum-strip-3 | pic.drum-strip-2 (M-ENG-WEAK-SYLL); pic.drum-strip-4 (M-ENG-SYLL) | HL-DRUM | pictorial |
+| i12 **C** | LS01 tap | he-ins-strip | en-yellow | pic.drum-strip-1; pic.drum-strip-2; pic.drum-strip-3 | pic.drum-strip-2 | pic.drum-strip-1 (M-ENG-WEAK-SYLL); pic.drum-strip-3 (M-ENG-SYLL) | HL-DRUM | pictorial |
 
 ### ENG-A-15 A picture story
 Set (each a `variantGroup`): cat, duck, frog, dog, ball, red.
@@ -408,9 +413,9 @@ Set (each a `variantGroup`): cat, duck, frog, dog, ball, red.
 |---|---|---|---|---|---|---|---|---|
 | s01 *not scored* | LS08 listen + dialogic | he-ins-story | en-st-bounce-1 … 6 on pic.story-bounce-1 … 6 | tap a picture: its word clip (cat, duck, frog, dog, ball) | - | - | - | story |
 | d01 | LS08 dialogic pause (LS01 tap) | he-q-who | (before page 3) | pic.duck; pic.cat; pic.frog | pic.duck | pic.cat (M-ENG-STORY-RECALL); pic.frog (M-ENG-SEM) | HL-STORY | story |
-| q01 | LS01 tap | he-q-ball-end | (after the story) | pic.dog; pic.cat; pic.frog | pic.dog | pic.cat (M-ENG-STORY-RECALL); pic.frog (M-ENG-STORY-RECALL) | HL-STORY | story |
+| q01 **C** | LS01 tap | he-q-ball-end | (after the story) | pic.dog; pic.cat; pic.frog | pic.dog | pic.cat (M-ENG-STORY-RECALL); pic.frog (M-ENG-STORY-RECALL) | HL-STORY | story |
 | q02 | LS01 tap | he-q-ball-which | (after the story) | pic.ball-red; pic.ball-blue; pic.ball-yellow | pic.ball-red | pic.ball-blue (M-ENG-SEM); pic.ball-yellow (M-ENG-L1-GUESS) | HL-STORY | story |
-| q03 | LS01 tap | he-q-ball-first | (after the story) | pic.cat; pic.duck; pic.dog | pic.cat | pic.duck (M-ENG-STORY-RECALL); pic.dog (M-ENG-STORY-RECALL) | HL-STORY | story |
+| q03 **C** | LS01 tap | he-q-ball-first | (after the story) | pic.cat; pic.duck; pic.dog | pic.cat | pic.duck (M-ENG-STORY-RECALL); pic.dog (M-ENG-STORY-RECALL) | HL-STORY | story |
 | q04 | LS01 tap | he-ins-listen-tap | en-frog (on page 4 shown again) | pic.frog; pic.fish; pic.duck | pic.frog | pic.fish (M-ENG-SEM); pic.duck (M-ENG-STORY-RECALL) | HL-PIC | story |
 
 - s01: The story itself is practice.
@@ -426,15 +431,17 @@ Set (each a `variantGroup`): Yes!, No!.
 | i02 | LS01 tap (thumbs) | he-ins-thumbs | pic.cat shown; en-isit-dog | pic.thumb-up; pic.thumb-down | pic.thumb-down (then en-no) | pic.thumb-up (M-ENG-YESNO) | HL-YN | pictorial |
 | i03 | LS01 tap (thumbs) | he-ins-thumbs | pic.duck shown; en-isit-duck | pic.thumb-up; pic.thumb-down | pic.thumb-up (then en-yes) | pic.thumb-down (M-ENG-YESNO) | HL-YN | pictorial |
 | i04 **P** | LS01 tap (thumbs) | he-ins-thumbs | pic.car shown; en-isit-ball | pic.thumb-up; pic.thumb-down | pic.thumb-down (then en-no) | pic.thumb-up (M-ENG-YESNO) | HL-YN | pictorial |
-| i05 | LS01 tap (thumbs) | he-ins-thumbs | pic.cake shown; en-isit-cake | pic.thumb-up; pic.thumb-down | pic.thumb-up (then en-yes) | pic.thumb-down (M-ENG-YESNO) | HL-YN | pictorial |
-| i06 | LS01 tap (thumbs) | he-ins-thumbs | pic.egg shown; en-isit-apple | pic.thumb-up; pic.thumb-down | pic.thumb-down (then en-no) | pic.thumb-up (M-ENG-YESNO) | HL-YN | pictorial |
+| i05 **C** (pair with i06) | LS01 tap (thumbs) | he-ins-thumbs | pic.cake shown; en-isit-cake | pic.thumb-up; pic.thumb-down | pic.thumb-up (then en-yes) | pic.thumb-down (M-ENG-YESNO) | HL-YN | pictorial |
+| i06 **C** (pair with i05) | LS01 tap (thumbs) | he-ins-thumbs | pic.egg shown; en-isit-apple | pic.thumb-up; pic.thumb-down | pic.thumb-down (then en-no) | pic.thumb-up (M-ENG-YESNO) | HL-YN | pictorial |
 | g01 | LS08 dialogic + LS01 tap | he-ins-box, then he-ins-box-pick | en-whats-in-the-box; en-isit-cat → en-no, en-isit-dog → en-no, en-isit-duck → en-yes | pic.cat; pic.dog; pic.duck | pic.duck | pic.cat (M-ENG-YESNO); pic.dog (M-ENG-YESNO) | HL-YN | story |
 | g02 | LS08 dialogic + LS01 tap | he-ins-box, then he-ins-box-pick | en-whats-in-the-box; en-isit-car → en-no, en-isit-ball → en-yes | pic.car; pic.ball; pic.kite | pic.ball | pic.car (M-ENG-YESNO); pic.kite (M-ENG-L1-GUESS) | HL-YN | story |
 | g03 | LS08 dialogic + LS01 tap | he-ins-box, then he-ins-box-pick | en-whats-in-the-box; en-isit-apple → en-no, en-isit-cake → en-no, en-isit-egg → en-yes | pic.apple; pic.cake; pic.egg | pic.egg | pic.apple (M-ENG-YESNO); pic.cake (M-ENG-YESNO) | HL-YN | story |
 | g04 | LS08 dialogic + LS01 tap | he-ins-box, then he-ins-box-pick | en-whats-in-the-box; en-isit-fish → en-no, en-isit-frog → en-yes | pic.fish; pic.frog; pic.bird | pic.frog | pic.fish (M-ENG-YESNO); pic.bird (M-ENG-L1-GUESS) | HL-YN | story |
 | g05 | LS08 dialogic + LS01 tap | he-ins-box, then he-ins-box-pick | en-whats-in-the-box; en-isit-boat → en-yes | pic.boat; pic.drum; pic.bike | pic.boat | pic.drum (M-ENG-L1-GUESS); pic.bike (M-ENG-L1-GUESS) | HL-YN | story |
-| g06 | LS08 dialogic + LS01 tap | he-ins-box, then he-ins-box-pick | en-whats-in-the-box; en-isit-pig → en-no, en-isit-cow → en-yes | pic.pig; pic.cow; pic.duck | pic.cow | pic.pig (M-ENG-YESNO); pic.duck (M-ENG-L1-GUESS) | HL-YN | story |
+| g06 **C** | LS08 dialogic + LS01 tap | he-ins-box, then he-ins-box-pick | en-whats-in-the-box; en-isit-pig → en-no, en-isit-cow → en-yes | pic.pig; pic.cow; pic.duck | pic.cow | pic.pig (M-ENG-YESNO); pic.duck (M-ENG-L1-GUESS) | HL-YN | story |
 
+- i05: The understanding check is the balanced pair i05 + i06 (one "yes", one "no"), served together; it passes only if both are right (frame §2.3).
+- i06: Checked with i05 as one balanced pair.
 - g01: The box stays closed until the child taps; then it opens.
 - g02: The box stays closed until the child taps; then it opens.
 - g03: The box stays closed until the child taps; then it opens.
@@ -453,8 +460,8 @@ Set (each a `variantGroup`): happy, sad, fine.
 | i04 | LS01 tap | he-ins-face | en-im-sad | pic.mika-sad; pic.mika-fine; pic.mika-cold | pic.mika-sad | pic.mika-fine (M-ENG-SEM); pic.mika-cold (M-ENG-L1-GUESS) | HL-PIC | pictorial |
 | i05 | LS10 bubble + LS09 say | he-ins-bubble, then he-ins-say | pic.scene-mika-icecream; Pip asks Mika en-how-are-you | bubble: en-im-sad; bubble: en-im-happy; bubble: en-goodbye | bubble: en-im-sad | bubble: en-im-happy (M-ENG-SEM); bubble: en-goodbye (M-ENG-L1-GUESS) | HL-BUBBLE | story |
 | i06 | LS10 bubble + LS09 say | he-ins-bubble, then he-ins-say | pic.scene-mika-present; Pip asks Mika en-how-are-you | bubble: en-im-happy; bubble: en-im-sad; bubble: en-hello | bubble: en-im-happy | bubble: en-im-sad (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
-| i07 | LS10 bubble + LS09 say | he-ins-bubble, then he-ins-say | pic.scene-mika-walk; Pip asks Mika en-how-are-you | bubble: en-im-fine; bubble: en-im-sad; bubble: en-goodbye | bubble: en-im-fine | bubble: en-im-sad (M-ENG-SEM); bubble: en-goodbye (M-ENG-L1-GUESS) | HL-BUBBLE | story |
-| i08 | LS10 bubble + LS09 say | he-ins-bubble, then he-ins-say | pic.scene-mika-snow; Pip asks Mika en-how-are-you | bubble: en-im-cold; bubble: en-im-happy; bubble: en-hello | bubble: en-im-cold | bubble: en-im-happy (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
+| i07 **C** | LS10 bubble + LS09 say | he-ins-bubble, then he-ins-say | pic.scene-mika-walk; Pip asks Mika en-how-are-you | bubble: en-im-fine; bubble: en-im-sad; bubble: en-goodbye | bubble: en-im-fine | bubble: en-im-sad (M-ENG-SEM); bubble: en-goodbye (M-ENG-L1-GUESS) | HL-BUBBLE | story |
+| i08 **C** | LS10 bubble + LS09 say | he-ins-bubble, then he-ins-say | pic.scene-mika-snow; Pip asks Mika en-how-are-you | bubble: en-im-cold; bubble: en-im-happy; bubble: en-hello | bubble: en-im-cold | bubble: en-im-happy (M-ENG-SEM); bubble: en-hello (M-ENG-L1-GUESS) | HL-BUBBLE | story |
 
 - i01: Happy and fine are never options together (one right answer).
 - i02: Happy and fine are never options together (one right answer).
@@ -525,6 +532,7 @@ All original, no text, no brands, no franchise look; one consistent style; Pip a
 | pic.drum-strip-1 | One drum in a row. |
 | pic.drum-strip-2 | Two drums in a row. |
 | pic.drum-strip-3 | Three drums in a row. |
+| pic.drum-strip-4 | Four drums in a row. |
 | pic.duck | a duck on water; one animal, whole, side view, no text. A second pose (`-2`) for match pairs. |
 | pic.egg | a whole white egg; on its own, no text or brand. |
 | pic.elephant | an elephant, whole body; one animal, whole, side view, no text. A second pose (`-2`) for match pairs. |
@@ -606,12 +614,12 @@ All original, no text, no brands, no franchise look; one consistent style; Pip a
 | ENG-A-17 | 8 | 8 | 0 |
 | **Total** | **172** | **158** | **14** |
 
-- **Skills:** 17 (ENG-A-01 to A-17). **Words taught in sets:** 69. **Personal turns:** 4. **Chants:** 5. **Stories:** 1 (6 pages). **Pictures:** 110 briefs.
+- **Skills:** 17 (ENG-A-01 to A-17). **Words taught in sets:** 69. **Personal turns:** 4. **Chants:** 5. **Stories:** 1 (6 pages). **Pictures:** 111 briefs.
 - **English clips:** 223 (75 words, 68 slow words for hint level 1, 80 chunks, chant lines and story pages); **2,148 characters** (1,780 without the slow clips). Each has a row in `pronunciation.csv`.
-- **Hebrew clips:** 51 frame lines (1,163 characters as voice text) and 68 glosses (460 characters, pointed, as for every single word until the pilot decides): **1,623 characters** (counted by the hebrew-text-editor on 2026-11-03 after the final wording; before the editor it was 1,382 unpointed).
-- **Total for one voicing of Band A:** about **3,771 characters**, about **0.30 USD** at the list price used in `voices.md` (0.08 USD per 1,000 characters, `eleven_v4`). Counting rule: Unicode code points of the exact `say` text (as `voice_gen` counts). Not counted: re-takes after a `heard-wrong`, isolated letter sounds (Band B), the drum and animal sound effects.
+- **Hebrew clips:** 52 frame lines and 68 glosses. The 51 final lines (1,163 characters as voice text) and the 68 glosses (460 characters, pointed, as for every single word until the pilot decides) are **1,623 characters** (counted by the hebrew-text-editor on 2026-11-03 after the final wording; before the editor it was 1,382 unpointed). The new draft `he-ins-how-many` (needs-editor) is 42 characters unpointed, so about **1,665 characters**; the editor's voice text may change it by a few.
+- **Total for one voicing of Band A:** about **3,813 characters** (English 2,148 + Hebrew about 1,665), about **0.31 USD** at the list price used in `voices.md` (0.08 USD per 1,000 characters, `eleven_v4`). Counting rule: Unicode code points of the exact `say` text (as `voice_gen` counts). Not counted: re-takes after a `heard-wrong`, isolated letter sounds (Band B), the drum and animal sound effects.
 - **Nothing is voiced by Claude.** The owner runs every paid command and types the character count (CLAUDE.md › Characters and money).
 
 ## 8. Checked by script, and not checked
-Checked: at most 3 choices; the right answer among the options; every distractor tagged with a known, non-accent tag; at least 2 tagged distractors per skill; 2-choice items at most half of each skill's scored items; every set word is the right answer at least once; every picture has a brief; every Hebrew line referenced exists; English clips are Latin only; Hebrew lines have no Latin letters; every English clip has a CSV row. Result: **all pass**.
+Checked: at most 3 choices; the right answer among the options; every distractor tagged with a known, non-accent tag; at least 2 tagged distractors per skill; the 2-choice rule of frame §2.3 (a 3-choice item has two tagged distractors, a 2-choice item one; 2-choice items at most half of each skill's scored items; a skill with 2-choice items also has 3-choice items, or its answers are balanced, and ENG-A-16 has as many yes as no); the drum (free response) maps only one beat more or fewer; every skill has at least two checks with different answers; **no 2-choice item alone as a check** (a check is a 3-choice item or a balanced pair), and no free-response item or probe as a check; every set word is the right answer at least once; every picture has a brief; every Hebrew line referenced exists; English clips are Latin only; Hebrew lines have no Latin letters; every English clip has a CSV row. Result: **all pass** (re-run 2026-11-03 after the frame §4.5 changes; the script also fails on a deliberately broken copy: a lone 2-choice check, a skill with one check, a drum row with an off-by-2 tag). The frame §4.2 catalogue check (`catalogue.py`) also passes for English: 56 tags, each defined once in syllabus §8 with the kind and family of the catalogue; the 6 tags on Band A distractors are all in it, none an accent tag.
 Not checked: the pictures (none drawn); the voice (nothing voiced; every row is `draft`); the Hebrew wording (checked by the hebrew-text-editor on 2026-11-03: `text-ready`); the timing of chant pictures (the voice-and-sound-director); the recogniser foils against a real model (L3).
