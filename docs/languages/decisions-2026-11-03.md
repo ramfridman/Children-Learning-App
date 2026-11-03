@@ -1,0 +1,50 @@
+# Languages: the owner's decisions after the research (2026-11-03)
+
+The three teachers finished their research and syllabi (English 65 skills, Hebrew 69, Russian 76). Each question below has the teacher's recommendation. **Status: waiting for the owner.**
+
+## Common to all three
+1. **Speaking is practised but never scored** for now: repeat-after-me, role-play and "say it with me". The app's on-device speech recogniser is Hebrew-only. An English or Russian recogniser would be a new model or package, for later, with your OK.
+2. **If the text-to-speech pilot can't make clean isolated sounds**, the fallback is stretched whole words ("sssun") and syllables. A recorded native-speaking adult (about 120 short clips per language, no cloning) is a separate, paid decision.
+3. **Original or public-domain stories and rhymes only**, retold in our own words and pictures. No copyrighted books, no franchises. Songs need your OK on the melody.
+4. **Handwriting goes trace → copy → write from memory.** Tracing alone teaches little; writing from memory is what builds reading.
+
+## English
+5. **American spelling with a General American voice.** The Ministry's English documents use American spelling.
+6. **When reading starts:**
+   - ages 3–4: listening and speaking only;
+   - ages 5–6: letter sounds and simple words only after a spoken "gate", with a parent switch for "oral only";
+   - ages 7–8: full reading and writing.
+7. **"Hebrew frame, English target":**
+   - instructions are in Hebrew at first, and 10 classroom phrases move into English over time;
+   - a Hebrew translation appears only at hint level 2, after the child has heard the English with a picture.
+8. **A Latin teaching font** with the "a" and "g" shapes children write.
+9. **Parent co-play prompts** in the reading stages (the research found phonics apps work best with an adult involved).
+10. **Personal questions:** the Ministry's early syllabus teaches "my name is", "I am six", "I live in…". The app's rule is no personal questions, so these are taught only through puppets and pictures, and "Where do you live?" is left out.
+
+## Russian
+11. **Three routes, chosen by a short placement game:** a new learner, a heritage speaker, and a child who already reads. Five entry points.
+12. **Instructions in Hebrew for every child** in the first version. A parent switch for Russian-first instructions can come later.
+13. **Print letters only.** Cursive (прописи) is left out for now.
+14. **The letters taught in 10 groups:** АУОМ · СНЫ · ЛРИ · КТВ · ЕПЗ · ДГЯЬ · БЧШЙ · ЖЁЮ · ХЦЭ · ЩФЪ. The groups follow the sounds and how often each letter is used, and keep look-alike letters apart.
+15. **Stress marks on screen** only in the stress skills and on new words in early reading. A parent switch can turn them off.
+16. **Letter names only at ages 7–8.** Sounds come first.
+17. **New learners begin letters** only after a basic spoken vocabulary, and not before age 5 by default. A parent can override this.
+18. **Folk tales retold in our own words and pictures** (Репка, Колобок, Теремок).
+
+## Hebrew
+19. **Vowels in the order** a → i → o → u → e → shva → hataf.
+20. **Six letter groups**, with look-alike letters taught apart in time, and the soft ב כ פ and שׂ as a step of their own.
+21. **The child reads and hears consonant-plus-vowel units** (בָּ, מִ). A single consonant is voiced alone only if it can be stretched, after a pilot.
+22. **Reading aloud is unscored practice**, with an optional parent check in the parent area.
+23. **Print letters at ages 5–6, script letters at 7–8**, plus parent cards for pencil and paper.
+24. **Keep Heebo** for teaching letters if the design audit passes. Otherwise, one open-licensed teaching font and a set of stroke paths for script letters.
+25. **The child's first name as early letter material** ("the first letter of your name"). It stays on the device only, with a fallback when no name is set.
+26. **The course ends at reading without nikud**, which opens as an extension once the earlier steps are mastered.
+27. **Spelling by sound is never wrong** in the early stages (for example קלב for כלב). Conventional spelling is a later, separate skill.
+
+## After your answers
+- The **hebrew-text-editor** makes the Hebrew drafts final.
+- The **voice-and-sound-director** plans a pilot for each language, with its character count and cost, for you to run. Its first test is whether a voice can say isolated sounds cleanly in both Hebrew and the target language.
+- The **design-director** audits Heebo, chooses the Cyrillic and Latin teaching fonts, and shows you samples.
+- The **curriculum-expert** fits the three courses into the shared engine. Many new activity types are shared between the languages: text tiles with a sound per option, letter tracing in copy and memory modes, build-a-word, syllable reading, and a placement game.
+- Then a milestone plan for each language.

@@ -1,0 +1,56 @@
+id,shown,say,ipa,stress,accent,traps,check,status
+snd-m,[м],ммм,[mː],-,standard Russian,letter name эм instead of the sound; a vowel after it,a held hum with closed lips and no vowel,draft
+snd-mj,[м’],мь,[mʲ],-,standard Russian,turns into the syllable ми,soft m with no vowel; if not clean use the syllable мя (syl-mja),draft
+snd-s,[с],ссс,[sː],-,standard Russian,letter name эс; a vowel after it,a held hiss and no vowel,draft
+snd-sh,[ш],шшш,[ʂː],-,standard Russian,the softer Hebrew ש [ʃ],a hard low hush; not soft,draft
+snd-a,[а],а,[a],-,standard Russian,none expected,an open a,draft
+snd-y,[ы],ы,[ɨ],-,standard Russian,said as [i] or [uj],a central close vowel; clearly not и,draft
+snd-k,[к],к,[k],-,standard Russian,"a vowel after it (ка, кэ)",a short burst with no vowel; if not clean use the syllable ка,draft
+snd-shch,[щ’],щщщ,[ɕː],-,standard Russian,said as [ʃ] or [ʃtʃ],a long soft hush,draft
+syl-ma,ма,ма,[ma],ма,standard Russian,none expected,hard m then a,draft
+syl-mja,мя,мя,[mʲa],мя,standard Russian,said as ма or as м + я [mja],soft m merged with a,draft
+syl-my,мы,мы,[mɨ],мы,standard Russian,said as ми,hard m and a true ы,draft
+syl-mi,ми,ми,[mʲi],ми,standard Russian,none expected,soft m and и,draft
+syl-la,ла,ла,[ɫa],ла,standard Russian,a clear Hebrew-like l,a dark hard l,draft
+syl-lja,ля,ля,[lʲa],ля,standard Russian,said as ла,soft l merged with a,draft
+mp-luk,лук,лук,[ɫuk],лук,standard Russian,l not dark enough to contrast with люк,hard dark l; same pitch as mp-ljuk,draft
+mp-ljuk,люк,люк,[lʲuk],люк,standard Russian,said as лук or as л + ю [lju],soft l; same pitch as mp-luk,draft
+mp-sel,сел,сел,[sʲeɫ],сел,standard Russian,s not soft,soft s; same pitch as mp-sjel,draft
+mp-sjel,съел,съел,[sjeɫ],съел,standard Russian,said like сел,a [j] after the s; same pitch as mp-sel,draft
+mp-mal,мал,мал,[maɫ],мал,standard Russian,none expected,hard m; same pitch as mp-mjal,draft
+mp-mjal,мял,мял,[mʲaɫ],мял,standard Russian,said as мал,soft m; same pitch as mp-mal,draft
+mp-byl,был,был,[bɨɫ],был,standard Russian,ы said as и,hard b and ы; same pitch as mp-bil,draft
+mp-bil,бил,бил,[bʲiɫ],бил,standard Russian,none expected,soft b and и; same pitch as mp-byl,draft
+str-som-1,сом,с-с-сом,[sːom],сом,standard Russian,the word broken into letters,the first sound held about one second then the word natural,draft
+str-som-2,сом,со-о-ом,[soːm],сом,standard Russian,the word broken into letters,the vowel held then the word natural,draft
+str-som-3,сом,сом-м-м,[somː],сом,standard Russian,the word broken into letters,the last sound held,draft
+call-ruka,рука,ру-ка́-а!,[rʊˈkaː],ка,standard Russian,stress moved to the first syllable while calling,a friendly call; the second syllable long and stressed,draft
+w-mama,мама,ма́ма,[ˈmamə],ма,standard Russian,final stress (Hebrew habit); full a at the end,first syllable stressed; the end reduced,draft
+w-moloko,молоко,молоко́,[məlɐˈko],ко,standard Russian,full o in every syllable,two reduced vowels then a stressed ко,draft
+w-voda,вода,вода́,[vɐˈda],да,standard Russian,full o,reduced first vowel,draft
+w-vody,воды,во́ды,[ˈvodɨ],во,standard Russian,stress copied from вода́,stress on во and a true ы,draft
+w-ruka,рука,рука́,[rʊˈka],ка,standard Russian,uvular r; stress on ру,trilled r; stress on ка,draft
+w-ruku,руку,ру́ку,[ˈrukʊ],ру,standard Russian,stress copied from рука́,stress on ру,draft
+w-lisa,лиса,лиса́,[lʲɪˈsa],са,standard Russian,full e or i quality wrong; hard l,soft l and a short [ɪ],draft
+w-kon,конь,конь,[konʲ],конь,standard Russian,final n hard (кон),soft final n,draft
+w-dub,дуб,дуб,[dup],дуб,standard Russian,final b voiced,a final [p],draft
+w-hleb,хлеб,хлеб,[xlʲep],хлеб,standard Russian,final b voiced; l hard,soft l and a final [p],draft
+w-yozh,ёж,ёж,[joʂ],ёж,standard Russian,final ж voiced; ё said as о,[jo] and a final voiceless hush,draft
+w-yolka,ёлка,ёлка,[ˈjoɫkə],ё,standard Russian,ё said as е,[jo] at the start; dark l,draft
+w-shchuka,щука,щу́ка,[ˈɕːukə],щу,standard Russian,щ said as ш or шч,a long soft hush,draft
+w-mjach,мяч,мяч,[mʲætɕ],мяч,standard Russian,ч hard like Hebrew צ׳ [tʃ],soft m and a soft ч,draft
+w-ryba,рыба,ры́ба,[ˈrɨbə],ры,standard Russian,uvular r; ы said as и,trilled r and a true ы,draft
+w-zhiraf,жираф,жира́ф,[ʐɨˈraf],раф,standard Russian,жи said with [i],a hard ж and [ɨ] after it,draft
+w-solntse,солнце,со́лнце,[ˈsont͡sə],сол,standard Russian,the л pronounced,no л heard,draft
+w-zdravstvujte,здравствуйте,здра́вствуйте,[ˈzdrastvʊjtʲe],здра,standard Russian,the first в pronounced; stress moved,no first в; stress on здра,draft
+w-chto,что,что,[ʂto],что,standard Russian,said [tʃto],a hard [ʂ] at the start,draft
+w-pozhalujsta,пожалуйста,пожа́луйста,[pɐˈʐaɫəstə],жа,standard Russian,every letter pronounced,natural and fluent; stress on жа,draft
+w-spasibo,спасибо,спаси́бо,[spɐˈsʲibə],си,standard Russian,full a and o,stress on си; ends reduced,draft
+w-lozhka,ложка,ло́жка,[ˈɫoʂkə],лож,standard Russian,ж voiced before к,a voiceless hush before к,draft
+w-skazka,сказка,ска́зка,[ˈskaskə],ска,standard Russian,з voiced before к,a voiceless [s] before к,draft
+w-deti,дети,де́ти,[ˈdʲetʲɪ],де,standard Russian,hard д or т,both consonants soft,draft
+w-tsyplyonok,цыплёнок,цыплёнок,[t͡sɨˈplʲonək],лё,standard Russian,ц softened; ё said as е,hard ц and ы; stress on лё,draft
+w-yabloko,яблоко,я́блоко,[ˈjabləkə],я,standard Russian,stress on ло; full o,stress on я and two reduced vowels,draft
+sen-1,Я вижу кошку.,Я ви́жу ко́шку.,[ja ˈvʲiʐʊ ˈkoʂkʊ],ви; кош,standard Russian,ко́шка said for ко́шку,the ending у clearly heard,draft
+sen-2,Это кот.,Э́то кот.,[ˈɛtə kot],э; кот,standard Russian,full o in это,это with a reduced end,draft
+aw-moloko,молоко,мо-ло-ко́,[mo.lo.ˈko],ко,standard Russian (as-written clip),used as a speaking model,each syllable with a full o; only for skills C-11 and C-21,draft
