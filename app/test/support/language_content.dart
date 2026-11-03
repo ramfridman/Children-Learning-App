@@ -468,3 +468,55 @@ Map<String, Object?> singJson({
         : <String, Object?>{'type': 'none', 'mode': 'chant'},
   };
 }
+
+// ---- puppet talk (LS10) ----
+
+/// A turn of a puppet in [course] (LS10). `bubble`: [options] and the [correct] one. `personal`: the [topic], the cards in [options]
+/// (none for a name), and the [pass] line.
+Map<String, Object?> puppetJson({
+  String course = 'eng',
+  required String id,
+  String? skill,
+  required String mode,
+  String picture = 'cat',
+  Map<String, Object?>? key,
+  List<Map<String, Object?>> options = const <Map<String, Object?>>[],
+  String? correct,
+  String? topic,
+}) {
+  final bool personal = mode == 'personal';
+  return <String, Object?>{
+    ..._common(
+      course,
+      id,
+      skill ?? '${course.toUpperCase()}-A-02',
+      'puppet_talk',
+      '1.0',
+      personal ? 'practice' : 'learn',
+      'A',
+      'story',
+    ),
+    ..._lines(
+      '$course.$id',
+      promptText: 'הַקְשִׁיבוּ לַבֻּבָּה, וְאָז גְּעוּ בַּבֻּעָה.',
+      target: 'vo:$course.$id.puppet',
+    ),
+    'scene': <String, Object?>{'picture': 'asset:$picture', 'key': ?key},
+    'answer': personal
+        ? <String, Object?>{
+            'type': 'none',
+            'mode': 'personal',
+            'topic': topic,
+            'options': options,
+            'pass': line('vo:$course.$id.pass', 'זֶה בְּסֵדֶר!'),
+          }
+        : <String, Object?>{
+            'type': 'choice',
+            'mode': 'bubble',
+            'options': options,
+            'correct': correct,
+            'shuffle': true,
+            'unsureAllowed': true,
+          },
+  };
+}

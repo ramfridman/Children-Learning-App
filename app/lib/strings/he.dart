@@ -63,6 +63,8 @@ abstract final class He {
   static const Str storyNextSemantics = Str('העמוד הבא בסיפור');
   static const Str storyEndSemantics = Str('סוף הסיפור');
   static const Str listenDoneSemantics = Str('סיימנו');
+  static const Str personalSaidSemantics = Str('אמרתי');
+  static const Str personalPassSemantics = Str('דילוג');
   static const Str coinA10Semantics = Str('10 אגורות');
   static const Str coinH50Semantics = Str('חצי שקל');
   static const Str coinS1Semantics = Str('שקל');

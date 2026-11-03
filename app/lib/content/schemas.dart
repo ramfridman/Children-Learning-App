@@ -47,6 +47,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'story': '1.0',
   'listen_do': '1.0',
   'sing_along': '1.0',
+  'puppet_talk': '1.0',
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
@@ -106,6 +107,10 @@ const List<String> representations = <String>['concrete', 'pictorial', 'story', 
 
 /// The kinds of misconception tag of a language course (docs/languages/frame.md section 4.1).
 const List<String> tagKinds = <String>['diagnostic', 'on_the_way', 'accent', 'practice'];
+
+/// The only four things a scripted personal turn may ask (docs/languages/frame.md section 5.2): the child's name, age, likes and family.
+/// Never where the child lives, an address, a city, the gan or school, a phone number, photos or feelings about home.
+const List<String> personalTopics = <String>['name', 'age', 'likes', 'family'];
 
 /// The sides of a two-way skill (yes or no, same or different), and the pairs they come in.
 const List<String> poles = <String>['yes', 'no', 'same', 'different'];
@@ -508,20 +513,26 @@ const Map<String, SField> _l4Option = <String, SField>{
 
 /// The `answer` of a template of L4: `type` is `choice` (options and the right one) or `none` (a step that is not scored). The mode
 /// says which; the validator checks that the rest fits it. [extra] are the fields of the template itself.
-SObject _l4Answer(List<String> modes, {Map<String, SField> extra = const <String, SField>{}}) => SObject(
-  <String, SField>{
-    'type': const SField(SEnum(<String>['choice', 'none'])),
-    'mode': SField(SEnum(modes)),
-    'options': SField(SArray(SObject(_l4Option), minItems: 2, maxItems: 3, uniqueKey: 'id'), required: false),
-    'correct': const SField(_optionId, required: false),
-    'shuffle': const SField(SBool(), required: false),
-    'unsureAllowed': const SField(SBool(), required: false),
-    // Which side of a two-way skill the item is, as in `tap_answer`.
-    'pole': const SField(SEnum(poles), required: false),
-    'pairWith': const SField(_id, required: false),
-    ...extra,
-  },
-);
+SObject _l4Answer(
+  List<String> modes, {
+  Map<String, SField> extra = const <String, SField>{},
+  int minOptions = 2,
+  int maxOptions = 3,
+}) => SObject(<String, SField>{
+  'type': const SField(SEnum(<String>['choice', 'none'])),
+  'mode': SField(SEnum(modes)),
+  'options': SField(
+    SArray(SObject(_l4Option), minItems: minOptions, maxItems: maxOptions, uniqueKey: 'id'),
+    required: false,
+  ),
+  'correct': const SField(_optionId, required: false),
+  'shuffle': const SField(SBool(), required: false),
+  'unsureAllowed': const SField(SBool(), required: false),
+  // Which side of a two-way skill the item is, as in `tap_answer`.
+  'pole': const SField(SEnum(poles), required: false),
+  'pairWith': const SField(_id, required: false),
+  ...extra,
+});
 
 const SObject _feedback = SObject(<String, SField>{
   'correct': SField(_spoken),
@@ -573,6 +584,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'story',
       'listen_do',
       'sing_along',
+      'puppet_talk',
       'count_tap',
       'give_n',
       'flash',
@@ -1228,6 +1240,35 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // LS10: a puppet speaks one turn (the prompt, two clips), and the child answers. `bubble`: one of 2 or 3 answer bubbles that fit the
+  // scene (a picture or a text, each with a speaker), scored; the puppet answers with the item's right line. `personal` (docs/languages/
+  // frame.md section 5.2): one of the four things a lesson may ask (`topic`), the puppet goes first, the child touches a card or passes;
+  // the reply is generic and warm; the answer is never checked, kept, logged, synced or used, and nothing is written.
+  'puppet_talk' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The scene of the turn: the puppet, the friend, the thing in the room.
+          'picture': SField(_asset),
+          // The key picture of the scene: it glows at the second hint (a place in `picture`).
+          'key': SField(SObject(<String, SField>{'at': SField(_at)}), required: false),
+        }),
+      ),
+      'answer': SField(
+        _l4Answer(
+          const <String>['bubble', 'personal'],
+          minOptions: 0,
+          maxOptions: 8,
+          extra: const <String, SField>{
+            'topic': SField(SEnum(personalTopics), required: false),
+            // The puppet's reply to a pass ("That's OK!").
+            'pass': SField(_spoken, required: false),
+          },
+        ),
+      ),
+    }),
+  ),
   'trace' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1284,6 +1325,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.story': activitySchemaFor('story')!,
   'activity.listen_do': activitySchemaFor('listen_do')!,
   'activity.sing_along': activitySchemaFor('sing_along')!,
+  'activity.puppet_talk': activitySchemaFor('puppet_talk')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,

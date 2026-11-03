@@ -147,6 +147,7 @@ sealed class Activity {
     'story' => StoryActivity._(json, assets),
     'listen_do' => ListenDoActivity._(json, assets),
     'sing_along' => SingAlongActivity._(json, assets),
+    'puppet_talk' => PuppetTalkActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
@@ -551,6 +552,48 @@ class SingAlongActivity extends Activity implements ChoiceActivity {
   Set<String> get engineTags => <String>{
     for (final ChoiceOption o in options)
       if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The puppet-talk template (LS10, docs/languages/frame.md section 2.3 and 5.2): a puppet speaks one turn and the child answers. In
+/// `bubble` mode the options are answer bubbles, one fits the scene (scored). In `personal` mode there is nothing right: the [topic]
+/// (the name, the age, the likes or the family) is answered by touching a card, or [pass] is touched; nothing is written.
+class PuppetTalkActivity extends Activity implements ChoiceActivity {
+  PuppetTalkActivity._(super.json, super.assets)
+    : mode = _map(json['answer'])['mode']! as String,
+      picture = _map(json['scene'])['picture']! as String,
+      keyAt = _rect(_maybe(_map(json['scene'])['key'])['at']),
+      topic = _map(json['answer'])['topic'] as String?,
+      pass = _map(json['answer'])['pass'] == null ? null : Spoken.fromJson(_map(json['answer'])['pass']),
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  /// `bubble` or `personal`.
+  final String mode;
+
+  /// The scene's picture (an `asset:` reference), and the place in it that glows at the second hint.
+  final String picture;
+  final Rect? keyAt;
+
+  /// The thing a personal turn asks (`name`, `age`, `likes` or `family`), and what the puppet says to a pass.
+  final String? topic;
+  final Spoken? pass;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get personal => mode == 'personal';
+
+  @override
+  int get optionCount => personal ? 0 : options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    if (!personal)
+      for (final ChoiceOption o in options)
+        if (o.misconception != null) o.misconception!,
   };
 }
 

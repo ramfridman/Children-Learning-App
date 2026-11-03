@@ -55,6 +55,7 @@ import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
 import 'spot_error_session.dart';
 import 'listen_do_session.dart';
+import 'puppet_talk_session.dart';
 import 'sing_along_session.dart';
 import 'story_session.dart';
 import 'template_session.dart';
@@ -369,6 +370,11 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
+  /// The parent's switch for scripted personal questions in this language (docs/languages/frame.md section 1.4); on unless turned off.
+  bool _personalAllowed(Activity a) =>
+      (ref.read(languagesProvider).value?.of(widget.profileId, a.course) ?? const LanguageSwitches())
+          .personal;
+
   /// A fresh session whenever the lesson moves to the next activity.
   TemplateSession _sessionFor(LessonController c) {
     if (_session == null || _sessionIndex != c.index) {
@@ -381,6 +387,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         StoryActivity() => StorySession(c, a, stress: caption.stress),
         ListenDoActivity() => ListenDoSession(c, a, stress: caption.stress),
         SingAlongActivity() => SingAlongSession(c, a, stress: caption.stress),
+        PuppetTalkActivity() => PuppetTalkSession(
+          c,
+          a,
+          personalAllowed: _personalAllowed(a),
+          stress: caption.stress,
+        ),
         FlashActivity() => FlashSession(c, a),
         SortDragActivity() => SortDragSession(c, a),
         BuildPatternActivity() => BuildPatternSession(c, a),

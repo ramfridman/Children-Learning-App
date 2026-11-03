@@ -240,6 +240,8 @@ void _decodable(
 /// tagged distractors and a 2-choice item one (frame section 2.3).
 void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, Object?>> tags, Say say) {
   final Map<String, Object?> answer = _map(a['answer']);
+  // A step that is not scored has no right answer, so no distractor: a personal turn's cards are none of them wrong.
+  if (answer['type'] == 'none') return;
   for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
     if (o['id'] == answer['correct']) continue;
     final Object? tag = o['misconception'];

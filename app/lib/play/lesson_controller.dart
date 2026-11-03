@@ -558,12 +558,12 @@ class LessonController extends ChangeNotifier {
   /// A step that is never scored was done (a story heard to its end, a chant, the embodied "done", a personal turn): the item's
   /// warm line is said, and **nothing is written**: no attempt, so no evidence, no log, no sync. The session moves on after the
   /// praise, as for a right answer.
-  void completePractice() {
+  void completePractice({Spoken? line}) {
     if (finished || solved) return;
     actionNonce++;
     solved = true;
     feedback = FeedbackKind.correct;
-    _say(current.feedback.correct);
+    _say(line ?? current.feedback.correct);
     notifyListeners();
   }
 

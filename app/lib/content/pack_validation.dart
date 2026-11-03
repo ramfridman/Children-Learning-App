@@ -327,6 +327,9 @@ List<Problem> validatePack({
       case 'sing_along':
         checkAsset(file, 'scene.background', scene['background']);
         _singAlong(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'puppet_talk':
+        checkAsset(file, 'scene.background', scene['background']);
+        _puppetTalk(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
       case 'count_tap':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
@@ -1080,6 +1083,75 @@ void _noOverlap(String file, List<(String, _Place?)> places, void Function(Strin
       }
     }
   }
+}
+
+/// LS10: a bubble turn is a scored choice; a personal turn is the four things of frame section 5.2 and nothing else, answered by
+/// touch, never scored, never checked, with a pass.
+void _puppetTalk(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  checkAsset(file, 'scene.picture', scene['picture']);
+  final _Place? key = _share((scene['key'] as Map<String, Object?>?)?['at']);
+  if (key != null && (key.right > 1.001 || key.bottom > 1.001)) {
+    say(file, 'scene.key.at', 'reaches outside the picture');
+  }
+  final Object? pass = answer['pass'];
+  if (pass is Map<String, Object?>) checkVo(file, 'answer.pass.vo', pass['vo']);
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (answer['mode'] == 'bubble') {
+    for (final String k in <String>['topic', 'pass']) {
+      if (answer.containsKey(k)) say(file, 'answer.$k', 'only a personal turn has a $k');
+    }
+    if (answer['type'] != 'choice') {
+      say(file, 'answer.type', 'a bubble turn is a choice: the type is "choice"');
+    }
+    if (options.length < 2 || answer['correct'] == null) {
+      say(file, 'answer.options', 'a bubble turn needs 2 or 3 answer bubbles and the right one');
+      return;
+    }
+    if (options.length > 3) say(file, 'answer.options', 'Band A shows at most 3 bubbles');
+    _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
+    return;
+  }
+  // personal (frame section 5.2): never scored, never checked, never kept
+  _unscored(file, a, say, 'a personal turn');
+  if (a['voiceAnswer'] == true) {
+    say(
+      file,
+      'voiceAnswer',
+      'a personal turn is answered by touch: nothing the child says is taken, checked or kept',
+    );
+  }
+  if (answer['topic'] == null) {
+    say(
+      file,
+      'answer.topic',
+      'a personal turn says what it asks: the name, the age, the likes or the family',
+    );
+  }
+  if (pass is! Map<String, Object?>) {
+    say(file, 'answer.pass', 'a personal turn always has a pass, and the puppet\'s answer to it');
+  }
+  if (answer['topic'] != 'name' && options.length < 2) {
+    say(file, 'answer.options', 'a personal turn about the ${answer['topic']} needs cards to touch (2 to 8)');
+  }
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    if (o.containsKey('misconception')) {
+      say(
+        file,
+        'answer.options[$i].misconception',
+        'nothing is wrong in a personal turn: no tag, no evidence',
+      );
+    }
+  }
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag, needCorrect: false);
 }
 
 /// LS12: the pictures, the lines and what each mode needs.
