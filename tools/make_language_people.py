@@ -803,22 +803,45 @@ def hotspots():
     spots = {
         'hair': rect(-r * 0.9, hc - r * 1.2, r * 1.8, r * 0.5),
         'head': rect(-r * 0.75, hc - r * 0.66, r * 1.5, r * 0.4),
-        'eyes': rect(-r * 0.62, hc - r * 0.18, r * 1.24, r * 0.4),
-        'nose': circ(0, hc + r * 0.3, r * 0.12),
+        'eyes': rect(-r * 0.62, hc - r * 0.12, r * 1.24, r * 0.31),
+        'nose': circ(0, hc + r * 0.3, r * 0.1),
         'mouth': rect(-r * 0.4, hc + r * 0.44, r * 0.8, r * 0.38),
         'teeth': rect(-r * 0.4, hc + r * 0.44, r * 0.8, r * 0.38),
         'ears': [circ(-r * 1.02, hc + r * 0.12, r * 0.24), circ(r * 1.02, hc + r * 0.12, r * 0.24)],
-        'arms': [circ(*hand_pts[0][1], aw * 0.9), circ(*hand_pts[1][1], aw * 0.9)],
-        'hands': [circ(hand_pts[0][2][0], hand_pts[0][2][1] + aw * 0.3, aw * 1.15), circ(hand_pts[1][2][0], hand_pts[1][2][1] + aw * 0.3, aw * 1.15)],
-        'fingers': [circ(hand_pts[0][2][0], hand_pts[0][2][1] + aw * 0.3, aw * 1.15), circ(hand_pts[1][2][0], hand_pts[1][2][1] + aw * 0.3, aw * 1.15)],
-        'tummy': rect(-tw * 0.4, sh + body * 0.16, tw * 0.8, body * 0.22),
-        'belly': rect(-tw * 0.4, sh + body * 0.16, tw * 0.8, body * 0.22),
+        'arms': [circ((q[0][0] + q[1][0]) / 2, (q[0][1] + q[1][1]) / 2 + aw * 0.2, aw * 0.72) for q in hand_pts],
+        'hands': [circ(q[2][0], q[2][1] + aw * 0.4, aw * 1.05) for q in hand_pts],
+        'fingers': [circ(q[2][0], q[2][1] + aw * 0.4, aw * 1.05) for q in hand_pts],
+        'tummy': rect(-tw * 0.3, sh + body * 0.16, tw * 0.6, body * 0.22),
+        'belly': rect(-tw * 0.3, sh + body * 0.16, tw * 0.6, body * 0.22),
         'legs': rect(-tw * 0.48, hip + lw * 0.6, tw * 0.96, (-hip) * 0.55),
         'feet': rect(-tw * 0.62, -lw * 0.6, tw * 1.24, lw * 0.85),
     }
     note_ = ('Tap areas of mika-body.svg in its 256 x 256 canvas. teeth = mouth (the picture grins), hands = fingers, '
              'tummy = belly (one place, two courses\' words). Regions of different parts never overlap.')
+    check_apart(spots)
     return {'picture': 'mika-body', 'note': note_, 'areas': spots}
+
+
+def check_apart(spots):
+    """No two body parts' tap areas overlap (their bounding boxes, a safe test); the alias pairs share one place."""
+    same = {frozenset(('mouth', 'teeth')), frozenset(('hands', 'fingers')), frozenset(('tummy', 'belly'))}
+    boxes = {}
+    for name, a in spots.items():
+        for one in (a if isinstance(a, list) else [a]):
+            if 'rect' in one:
+                x, y, w, h = one['rect']
+            else:
+                cx, cy, rr = one['circle']
+                x, y, w, h = cx - rr, cy - rr, 2 * rr, 2 * rr
+            boxes.setdefault(name, []).append((x, y, x + w, y + h))
+    names = sorted(boxes)
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            if frozenset((a, b)) in same:
+                continue
+            for p in boxes[a]:
+                for q in boxes[b]:
+                    assert p[2] <= q[0] or q[2] <= p[0] or p[3] <= q[1] or q[3] <= p[1], ('overlap', a, b, p, q)
 
 
 def close_up(which):
