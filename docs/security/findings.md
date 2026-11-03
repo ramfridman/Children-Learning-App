@@ -47,6 +47,9 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
 | SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |
 | SEC-L1-7 | A language pack's clip ids are bound to the pack by naming only (for L2) | info | open | 2026-11-03 |
+| SEC-L4-2 | The parent's switch for personal questions fails open while the family's language settings are not loaded (not reachable today) | low | open | 2026-11-04 |
+| SEC-L4-3 | Placement replay counts a probe answered twice (two devices, or a re-sent row), so one probe can move a strand up | low | open | 2026-11-04 |
+| SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | open | 2026-11-04 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -284,4 +287,27 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   - no package, lock file, host, workflow or gateway change.
 
   Not run by the security-engineer: `flutter test` (the qa-engineer's pass).
+- **L4 Languages, the Band A templates, `languages-l4` (`117769e`; 2026-11-04): one finding above low is held privately and
+  must be fixed before merge.** Scope: the six templates (LS08, LS11, LS12, LS10, LS03 drum, LS13), the shared choice base,
+  `completePractice`, `untilQuiet`, the new schemas and validator rules, and the placement replay into `Engine.assume`.
+  Verified by reading:
+  - A personal turn's card, "I said it" and pass write nothing, log nothing and reach no vendor or tutor.
+  - The microphone stays closed: no new template can be voice-answered.
+  - The validator refuses a scored, voiced or tagged personal turn, and a probe that is voiced, personal, unscored, of
+    another course or of a story, command, song or talk template.
+  - Every new picture and clip field is a pack-manifest key, never a path.
+  - Hit areas and counts are bounded by the schema.
+  - Answers of another lesson or course cannot move a placement.
+  - A probe looks the same for a right and a wrong answer.
+  - There is no timer, streak or red.
+  - Rules 2 and 5 hold: the gateway is unchanged, and the tutor is off in every language item.
+
+  New: SEC-L4-2 and SEC-L4-3 (low, proof of -3 run in pure Dart) and SEC-L4-4 (info), above. Also checked:
+  - gitleaks clean over `origin/main..HEAD`;
+  - `flutter analyze` clean;
+  - OSV.dev: no advisory for crypto 3.0.8, cryptography 2.9.0, drift 2.35.3, flutter_riverpod 3.4.3,
+    flutter_secure_storage 11.2.0, flutter_svg 2.3.2, http 1.6.0, vector_graphics 1.2.4 or xml 7.0.1 (2026-11-04);
+  - no package, lock file, host, workflow or gateway change.
+
+  Not run by the security-engineer: `flutter test`.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
