@@ -278,27 +278,27 @@ abstract final class He {
   static const Str areaDevices = Str('מכשירים');
   static const Str areaThisDevice = Str('המכשיר הזה');
   static const Str areaRevoke = Str('ניתוק');
-  // ---- parent area: how a child's name is said (B-42; proposed, for the hebrew-text-editor) ----
+  // ---- parent area: how a child's name is said (B-42; reviewed by the hebrew-text-editor 2026-11-03, waiting for the owner) ----
   static const Str areaNameSpoken = Str('איך אומרים את השם');
   static const Str nameSpokenTitle = Str('איך אומרים את השם של {child}');
   static const Str nameSpokenHelp = Str(
-    'כתבו את השם כמו שצריך להגיד אותו, עם ניקוד אם צריך. בלחיצה על "להאזין" הדמות שהילד בחר אומרת אותו, ואז הוא נשמע בברכה של כל יום.',
+    'כתבו את השם הפרטי כמו שצריך להגיד אותו, ואם צריך, גם עם ניקוד. אחרי לחיצה על "השמעה" השם יישמע בקול של החבר שנבחר, וכך גם בברכה היומית.',
   );
-  static const Str nameSpokenField = Str('איך אומרים');
+  static const Str nameSpokenField = Str('איך להגיד את השם');
   static const Str nameSpokenBadChars = Str(
-    'אפשר רק אותיות בעברית, ניקוד, רווח, מקף וגרש. ניקוד רק אחרי אות, ולא יותר משלושה סימנים על אות.',
+    'אפשר להקליד רק אותיות בעברית, ניקוד, רווח, מקף וגרש. הניקוד חייב לבוא אחרי אות, ולא יותר משלושה סימנים על אות אחת. אין תמיכה בחטף קמץ ובקמץ קטן.',
   );
-  static const Str nameSpokenTooLong = Str('אפשר לכתוב עד 24 תווים.');
-  static const Str nameSpokenListen = Str('להאזין');
-  static const Str nameSpokenWorking = Str('מכינים את ההקלטה...');
-  static const Str nameSpokenSaved = Str('נשמר.');
-  static const Str nameSpokenHeard = Str('ההקלטה נשמרה במכשיר הזה בלבד.');
+  static const Str nameSpokenTooLong = Str('אפשר לכתוב עד 24 תווים, וסימני הניקוד נספרים.');
+  static const Str nameSpokenListen = Str('השמעה');
+  static const Str nameSpokenWorking = Str('מכינים את קטע השמע…');
+  static const Str nameSpokenSaved = Str('השם נשמר.');
+  static const Str nameSpokenHeard = Str('קטע השמע נשמר במכשיר הזה בלבד.');
   static const Str nameSpokenPrivacy = Str(
-    'השם נשלח לשירות הקול רק כדי להכין את ההקלטה. ההקלטה נשמרת במכשיר הזה בלבד ואינה מסונכרנת.',
+    'השם נשלח לשירות הקול רק כדי להכין את קטע השמע. קטע השמע נשמר במכשיר הזה בלבד ולא עובר למכשירים אחרים.',
   );
-  static const Str nameSpokenOff = Str('ההקלטה של שמות לא זמינה כרגע.');
-  static const Str nameSpokenCap = Str('הגעתם למספר ההקלטות של היום. אפשר לנסות שוב מחר.');
-  static const Str nameSpokenOffline = Str('לא הצלחנו להתחבר. בדקו את החיבור ונסו שוב.');
+  static const Str nameSpokenOff = Str('הכנת קטעי שמע לשמות לא זמינה כרגע. נסו שוב מאוחר יותר.');
+  static const Str nameSpokenCap = Str('הגעתם למכסה היומית של קטעי השמע. אפשר לנסות שוב מחר.');
+  static const Str nameSpokenOffline = Str('לא הצלחנו להתחבר. בדקו את החיבור לאינטרנט ונסו שוב.');
   static const Str areaRefresh = Str('רענון');
   static const Str areaProfiles = Str('ילדים');
   static const Str areaAddChild = Str('הוספת ילד');
