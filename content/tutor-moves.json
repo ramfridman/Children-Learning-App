@@ -599,6 +599,110 @@
       [
         "Say which flat shape the solid leaves in the sand and point at it."
       ]
+    ],
+    "M-MUL-ADD": [
+      [
+        "Invite the child to look at the plates again: there is a group on every plate, not one number and another number.",
+        "Suggest pointing at each plate and saying how many are on it."
+      ],
+      [
+        "Suggest counting everything on the first plate, then going on counting on the next plate, without starting again.",
+        "Suggest touching each thing once, plate after plate, and saying one number for each."
+      ],
+      [
+        "Count the first plate together, then go on counting on each next plate, and let the child say the last number."
+      ]
+    ],
+    "M-OP-SWAP": [
+      [
+        "Invite the child to look at the sign again and say whether we add or take away.",
+        "Ask the child to tell the sum as a little story: do things come or go?"
+      ],
+      [
+        "Suggest showing the first number with fingers, then putting fingers down for a take-away or up for an add.",
+        "Suggest thinking of the things: if some go away, there are fewer than before."
+      ],
+      [
+        "Read the sign aloud together, act it out with fingers step by step, and let the child say how many are left."
+      ]
+    ],
+    "M-TIME-SEQ": [
+      [
+        "Invite the child to say the times of the day (or the days of the week) in order from the start, slowly.",
+        "Suggest thinking about what we do at each time of the day."
+      ],
+      [
+        "Suggest going through the day as a story: we wake up, we eat lunch, we take a bath, we go to sleep.",
+        "Suggest counting the days on the fingers, one finger for each day, starting on Sunday."
+      ],
+      [
+        "Say the order together up to the time in the question, stop, and let the child say what comes next."
+      ]
+    ],
+    "M-NUM-NAME": [
+      [
+        "Invite the child to listen to the number again and look at each numeral, one at a time.",
+        "Suggest saying the name of each numeral softly while pointing at it."
+      ],
+      [
+        "Suggest holding up that many fingers, then finding the numeral that goes with them.",
+        "Suggest counting up from one on the fingers until reaching the number that was asked for."
+      ],
+      [
+        "Count up to the number together with fingers, then point at its numeral and let the child tap it."
+      ]
+    ],
+    "M-SHP-NAME": [
+      [
+        "Invite the child to look again at the lines and corners of each shape.",
+        "Suggest saying the name of the shape in the question and thinking how it looks."
+      ],
+      [
+        "Suggest running a finger around the edge of the shape: does it go round, or are there corners to count?",
+        "Suggest counting the corners: a triangle has three, a square has four, a circle has none."
+      ],
+      [
+        "Trace the shape together, count its corners aloud, say its name, and let the child find it."
+      ]
+    ],
+    "M-RULE-ONE": [
+      [
+        "Invite the child to look at every one in the row, not only the first one.",
+        "Ask whether the answer is true for all of them."
+      ],
+      [
+        "Suggest checking the rule on each one in turn, saying yes or no for each.",
+        "Suggest covering all but one, checking it, then moving to the next."
+      ],
+      [
+        "Check each one together, out loud, and keep only the rule that fits all of them."
+      ]
+    ],
+    "M-SEQ-SCRIPT": [
+      [
+        "Invite the child to think about the routine and what we really use in it.",
+        "Suggest picturing doing it at home, step by step."
+      ],
+      [
+        "Suggest saying the steps of the routine in order, out loud, and checking each picture against them.",
+        "Suggest acting out the routine with the hands, one step at a time."
+      ],
+      [
+        "Say the steps of the routine together, one by one, and let the child find the picture that is not one of them."
+      ]
+    ],
+    "M-ASSOC-LOOK": [
+      [
+        "Invite the child to think about what we do with the thing, not how it looks.",
+        "Ask where we usually see the thing and what we use with it."
+      ],
+      [
+        "Suggest telling a tiny story of using the thing: what else do we need for it?",
+        "Suggest acting out using the thing with the hands, and thinking what the other hand holds."
+      ],
+      [
+        "Tell the little story of using the thing together, and let the child pick what we use with it."
+      ]
     ]
   }
 }

@@ -82,7 +82,7 @@ class FakeVoice implements VoiceClient {
   }
   deleteHistory(id: string) {
     this.deleted.push(id);
-    return Promise.resolve();
+    return Promise.resolve(true);
   }
 }
 

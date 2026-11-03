@@ -28,7 +28,8 @@
     }
   ],
   "representations": [
-    "pictorial"
+    "pictorial",
+    "concrete"
   ],
   "misconceptions": [
     "M-CNT-SIZE"

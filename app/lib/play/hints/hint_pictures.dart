@@ -321,6 +321,8 @@ class HintOverlay extends StatelessWidget {
           child: Appear(child: SeesawPicture(mark: m)),
         );
       case HandMark():
+        final _SidePose? side = _sidePoseOf(m.from);
+        if (side != null) return _handOnItsSide(context, key, m, k, side);
         return m.from == HandFrom.below ? _handFromBelow(context, key, m, k) : _hand(context, key, m, k);
       case TileMark():
         return const SizedBox.shrink(); // never reached: [build] leaves them to the tiles
@@ -347,7 +349,8 @@ class HintOverlay extends StatelessWidget {
   }
 
   Widget _bigBadge(Key key, BadgeMark m, double k) {
-    final double side = 64 * k;
+    final double side = m.side ?? 64 * k;
+    final double f = side / (64 * k);
     return Positioned(
       key: key,
       left: m.at.dx - side / 2,
@@ -361,12 +364,12 @@ class HintOverlay extends StatelessWidget {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: TokenColors.paper,
-            borderRadius: BorderRadius.circular(18 * k),
+            borderRadius: BorderRadius.circular(18 * k * f),
             border: Border.all(color: TokenColors.hintHalo, width: 3),
           ),
           child: Directionality(
             textDirection: TextDirection.ltr,
-            child: Text('${m.n}', style: AppText.fixed(size: 44 * k, weight: 800, lineHeight: 1)),
+            child: Text('${m.n}', style: AppText.fixed(size: 44 * k * f, weight: 800, lineHeight: 1)),
           ),
         ),
       ),
@@ -481,6 +484,114 @@ Widget _handFromBelow(BuildContext context, Key key, HandMark m, double k) {
     ),
   );
 }
+
+/// How a hand on its side ([HandFrom.rightHigh] and the others) is drawn: the art mirrored first or not, then turned [turn]
+/// radians (clockwise) round the fingertip.
+typedef _SidePose = ({bool flip, double turn});
+
+/// The art of the hand points down and a little left: the line from its fingertip to its cuff (its axis) rises 70 degrees to the
+/// right, its palm and curled fingers are on the axis's left (160 degrees round from the right) and its thumb on the axis's right.
+/// Mirrored, the axis rises 70 degrees to the left. A high hand also rises 15 degrees from level toward its cuff, which keeps
+/// its thumb clear of the number under the place it counts.
+const double _artAxis = -70 * math.pi / 180, _artPalm = -160 * math.pi / 180, _rise = 15 * math.pi / 180;
+
+/// The pose that lays the axis at [axis] (0 is to the right, angles clockwise): the art, or its mirror image, turned.
+_SidePose _laid(double axis, {required bool flip}) =>
+    (flip: flip, turn: axis - (flip ? math.pi - _artAxis : _artAxis));
+
+_SidePose? _sidePoseOf(HandFrom f) => switch (f) {
+  // The body to the right: the art turned 55 degrees (the palm up), or its mirror image turned 110 (the palm down).
+  HandFrom.rightHigh => _laid(-_rise, flip: false),
+  HandFrom.rightLow => _laid(0, flip: true),
+  // The body to the left: the mirror image turned back 55 degrees (the palm up), or the art turned back 110 (the palm down).
+  HandFrom.leftHigh => _laid(math.pi + _rise, flip: true),
+  HandFrom.leftLow => _laid(math.pi, flip: false),
+  _ => null,
+};
+
+/// The pointing hand drawn at its height for a hint scale [k] (72 on a phone, 96 on a tablet, never under 40).
+double _handHeight(double k) => (72 * k).clamp(40, 96).toDouble();
+
+/// A hand on its side: its fingertip on [HandMark.tip], its finger level, its body toward the side [HandMark.from] names.
+Widget _handOnItsSide(BuildContext context, Key key, HandMark m, double k, _SidePose pose) {
+  final bool still = MediaQuery.disableAnimationsOf(context);
+  final double h = _handHeight(k);
+  final double w = PointingHand.widthAt(h);
+  final Offset art = PointingHand.tipAt(h);
+  final Offset tip = pose.flip ? Offset(w - art.dx, art.dy) : art;
+  final Widget hand = PointingHand(height: h);
+  return Positioned.fill(
+    key: key,
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        if (m.press)
+          Positioned(
+            key: ValueKey<String>('ripple-${m.tip.dx.round()}-${m.tip.dy.round()}'),
+            left: m.tip.dx - 17 * k,
+            top: m.tip.dy - 17 * k,
+            width: 34 * k,
+            height: 34 * k,
+            child: _Ripple(still: still, scale: k),
+          ),
+        AnimatedPositioned(
+          key: const ValueKey<String>('hand'),
+          duration: still || m.snap ? Duration.zero : const Duration(milliseconds: 450),
+          curve: Curves.easeInOut,
+          left: m.tip.dx - tip.dx,
+          top: m.tip.dy - tip.dy,
+          child: Appear(
+            child: SizedBox(
+              key: const Key('hint-p12'),
+              width: w,
+              height: h,
+              child: Transform.rotate(
+                angle: pose.turn,
+                origin: tip - Offset(w / 2, h / 2),
+                child: pose.flip ? Transform.flip(flipX: true, child: hand) : hand,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// The boxes round the drawn parts of a hand on its side (the finger, the palm with the curled fingers, the thumb, the cuff, each
+/// with its outline and its shadow), in the stage's points, for a fingertip on [HandMark.tip] at hint scale [k]; null for any
+/// other hand. A test checks with them that the hand covers no number, sign, tile or button (QA-B36-11).
+@visibleForTesting
+List<Rect>? sideHandParts(HandMark m, double k) {
+  final _SidePose? pose = _sidePoseOf(m.from);
+  if (pose == null) return null;
+  final double s = _handHeight(k) / PointingHand.artSize.height;
+  // Mirroring reflects an angle about the vertical (a -> 180 - a); the turn is then added.
+  double turned(double a) => (pose.flip ? math.pi - a : a) + pose.turn;
+  final Offset axis = Offset.fromDirection(turned(_artAxis));
+  final Offset palm = Offset.fromDirection(turned(_artPalm));
+  // In the art's own units: along the axis from the fingertip, and across it toward the palm (negative: toward the thumb).
+  const List<(double, double, double, double)> parts = <(double, double, double, double)>[
+    (-10.8, 70.3, -15, 12.6), // the pointing finger
+    (25, 102.3, -16.8, 52.3), // the palm and the curled fingers
+    (48, 105.5, -43.2, 22.2), // the thumb
+    (75.7, 120.3, -3.8, 42.3), // the cuff
+  ];
+  return <Rect>[
+    for (final (double a0, double a1, double c0, double c1) in parts)
+      _boxOf(<Offset>[
+        for (final double a in <double>[a0, a1])
+          for (final double c in <double>[c0, c1]) m.tip + (axis * a + palm * c) * s,
+      ]),
+  ];
+}
+
+Rect _boxOf(List<Offset> p) => Rect.fromLTRB(
+  p.map((Offset o) => o.dx).reduce(math.min),
+  p.map((Offset o) => o.dy).reduce(math.min),
+  p.map((Offset o) => o.dx).reduce(math.max),
+  p.map((Offset o) => o.dy).reduce(math.max),
+);
 
 /// A picture that moves to its new [rect] in 450 ms, easing, when a later step puts it somewhere else. It must sit directly in the
 /// overlay's stack (it is a positioned child).

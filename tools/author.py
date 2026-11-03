@@ -10,9 +10,12 @@ pack is built, and is the same every time it runs. Every text it writes is `need
 import json
 import os
 import sys
+import unicodedata
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'content', 'starter')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hint_lines  # noqa: E402  (B-40: the hint lines of Band A follow the hint pictures)
 
 # ---------------------------------------------------------------- one-letter prefixes, pointed by the word they join
 SHVA, HIRIQ, DAGESH = '\u05b0', '\u05b4', '\u05bc'
@@ -61,14 +64,22 @@ def prefix(p, word):
     return base + SHVA + dagesh + letter + marks + rest
 
 
-# The words the reviewed table writes with מֵ (hebrew-notes G9, G10). It keeps "מִאַרְבַּע" (activity.b.numb13.14), which
-# G9 would write "מֵאַרְבַּע": a question for the hebrew-text-editor; until it is answered the generator follows the table.
-FROM_TSERE = ('אֶפֶס', 'אַחַת')
+# מִ before a word of the pack (hebrew-notes G9, G10; part F of B-36 answered the open question about "מִאַרְבַּע"): מֵ before a
+# guttural (א ה ח ע ר: מֵאֶפֶס, מֵאַרְבַּע, מֵעֶשֶׂר, מֵחָמֵשׁ, מֵהַמִּסְפָּר); any other letter takes the dagesh of the dropped
+# nun (מִשֵּׁשׁ, מִשֶּׁבַע, מִשָּׁלוֹשׁ, מִשְּׁמוֹנֶה; מִתֵּשַׁע has it already).
+FROM_GUTTURAL = 'אהחער'
 
 
 def from_(word):
-    """מִ before a word; מֵ before the article and the words of FROM_TSERE (מֵאֶפֶס, מֵאַחַת, מֵהַמִּסְפָּר)."""
-    return ('מֵ' if word.startswith(FROM_TSERE) or word.startswith('ה') else 'מִ') + word
+    """The word with "from" in front of it, pointed by its first letter."""
+    letter, marks, rest = _first(word)
+    if letter in FROM_GUTTURAL:
+        return 'מֵ' + word
+    if DAGESH in marks or letter not in 'דזלמנסצקשתגט':
+        return 'מִ' + word
+    # the dagesh comes after the vowel and before the shin dot, as in every text of the pack
+    parts = sorted(set(marks) | {DAGESH}, key=unicodedata.combining)
+    return 'מִ' + letter + ''.join(parts) + rest
 
 
 # Counting words with niqqud. F: the abstract count and the numeral on a tile; M: with a masculine noun.
@@ -123,18 +134,21 @@ TAG_FEEDBACK = {
     'M-CNT-SKIP': ('vo:fb.skip_set', 'אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק.'),
     # D4 (owner-approved 2026-10-29): true in every give-N activity, whatever number it asks for
     'M-CNT-CARD': ('vo:fb.card', 'לָקַחְנוּ אֶת כֻּלָּם. בּוֹאוּ נִסְפֹּר וְנַעֲצֹר בַּמִּסְפָּר שֶׁצָּרִיךְ.'),
-    # the line where no cue line is chosen (SIZE_BY_CUE): the NUM-A-11 "same?" items and NUM-A-07 keep it until the owner
-    # approves their drafts (hebrew-notes §4.2 D1: "בּוֹאוּ נַעֲשֶׂה זוּגוֹת…" as vo:fb.size.pairs, and a counting line)
+    # the line where no cue line is chosen (SIZE_BY_CUE); no item uses it since the owner approved the Q2 drafts (2026-11-01):
+    # the NUM-A-11 "same?" items say vo:fb.size.pairs and the NUM-A-07 matches say vo:fb.size.count
     'M-CNT-SIZE': ('vo:fb.size', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.'),
     'M-NUM-ZERO': ('vo:fb.zero', 'גַּם אֶפֶס הוּא מִסְפָּר: כְּשֶׁאֵין כְּלוּם, יֵשׁ אֶפֶס.'),
-    # G8 ("אֵינוֹ" → "הוּא לֹא") waits: its 7 rows are V1 rows the owner has not approved yet
-    'M-ORD-CARD': ('vo:fb.ord', 'הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.'),
+    # G8 / D4 (owner-approved 2026-11-01): "אֵינוֹ" is written Hebrew; "הוּא לֹא" for a child
+    'M-ORD-CARD': ('vo:fb.ord', 'הַמָּקוֹם בַּתּוֹר הוּא לֹא כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.'),
 }
 # D1 (owner Q2, 2026-10-29): the M-CNT-SIZE line names the cue that misled the child, then the strategy
 SIZE_BY_CUE = {
     'big': ('vo:fb.size.big', 'הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
     'small': ('vo:fb.size.small', 'הֵם קְטַנִּים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
     'spread': ('vo:fb.size.spread', 'הֵם רְחוֹקִים זֶה מִזֶּה, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.'),
+    # Q2 a and b (owner-approved 2026-11-01, B-36 sheet D2): the "same number?" items compare by pairing; the matches count
+    'pairs': ('vo:fb.size.pairs', 'בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?'),
+    'count': ('vo:fb.size.count', 'בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.'),
 }
 # A5 (B-15 addendum): the M-SORT-SHIFT line follows the item's sorting rule (`rule`: colour, shape or kind). The colour rule
 # (and an item with no rule) keeps the shared line, which says "the same colour"; the shape and kind rules say what the child
@@ -151,12 +165,21 @@ ALMOST = ('vo:fb.almost', 'כִּמְעַט! בּוֹאוּ נְנַסֶּה ש�
 UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד.')
 
 lines = {}  # voice id -> caption: one text for every id, checked below
+superseded = {}  # voice id -> the text a kind first wrote for it, before B-40 (hint_lines.retext) gave it a new one
 
 
 def say(vo, text):
-    assert vo not in lines or lines[vo] == text, 'the line %s has two texts: %r and %r' % (vo, lines[vo], text)
-    lines[vo] = text
+    if superseded.get(vo) != text:  # a kind that writes its old text again (a second item of the same id) is not a second text
+        assert vo not in lines or lines[vo] == text, 'the line %s has two texts: %r and %r' % (vo, lines[vo], text)
+        lines[vo] = text
     return {'vo': vo, 'caption': [{'t': 'he', 'v': text}]}
+
+
+def reword(vo, text):
+    """The line [vo] is said as [text] from now on (B-40): the id keeps its place in the pack, the old text is forgotten."""
+    if vo in lines:
+        superseded[vo] = lines.pop(vo)
+    return say(vo, text)
 
 
 def qty(n, obj):
@@ -294,6 +317,7 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
         'unsure': say(*UNSURE),
     }
     d['hints'] = h
+    hint_lines.retext(d, say, reword, F, count_words, own_h2=bool(a.get('h2')))  # B-40: Band A tap_answer hint lines say what the picture shows
     d['scoring'] = {'maxAttempts': 3, 'creditByHintLevel': [1, 0.8, 0.5, 0]}
     d['tutor'] = {'llmAllowed': True, 'goal': goal, 'mustNotRevealBeforeHint': 3}
     d['a11y'] = {'altText': alt or prompt.replace('!', '.')}
@@ -370,7 +394,7 @@ def k_flash(a, ctx):
         a, 'flash', skills_of(a), 'learn', 'practice',
         {'background': 'asset:meadow', 'group': group, 'flashMs': a.get('flashMs', 1500)}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב, לְאַט.', 'נָרִים אֶצְבָּעוֹת וְנִסְפֹּר: %s.' % count_words(n),
-              '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (this_qty(n, obj), F[n]),
+              'סוֹפְרִים אֶת כֻּלָּם. %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (this_qty(n, obj), F[n]),
               actions=('replay_prompt_slow', 'show_fingers', 'worked_example'), shared=('flash', None)),
         'child sees the number at a glance, without counting one by one',
         prompt='הִסְתַּכְּלוּ טוֹב… כַּמָּה %s?' % obj['many'], correct='%s! רְאִיתֶם בְּלִי לִסְפֹּר.' % F[n],
@@ -396,7 +420,7 @@ def k_give(a, ctx):
 
 def k_count_tap(a, ctx):
     obj, n = ctx['objects'][a['obj']], a['count']
-    opts, cid, tags = options(a['options'], n, near_tag(n), lambda v: {'value': v}, lambda v: F[v])
+    opts, cid, tags = options(a['options'], n, near_tag(n), lambda v: {'value': v}, lambda v: F[v], own=a.get('tags'))
     for o in opts:
         o.pop('label')
     return activity(
@@ -446,10 +470,12 @@ def k_numeral_to_set(a, ctx):
     return activity(
         a, 'tap_answer', skills_of(a), 'practice', 'reverse',
         {'background': 'asset:meadow', 'numeral': n}, choice(opts, cid), tags,
-        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר.', 'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
-              '%s. %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (count_words(n), this_qty(n, obj))),
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַמִּסְפָּר.', a.get('h2') or 'נִסְפֹּר עִם הָאֶצְבָּעוֹת: %s.' % count_words(n),
+              a.get('h3') or '%s. %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (count_words(n), this_qty(n, obj)),
+              actions=('replay_prompt_slow', a.get('h2_action', 'show_fingers'), 'worked_example')),
         'child finds the group that has the number named',
-        prompt='אֵיפֹה יֵשׁ %s?' % qty(n, obj), correct='כֵּן! %s.' % this_qty(n, obj))
+        prompt=a.get('prompt') or 'אֵיפֹה יֵשׁ %s?' % qty(n, obj),
+        correct=a.get('correct_text') or 'כֵּן! %s.' % this_qty(n, obj))
 
 
 def k_pick_numeral(a, ctx):
@@ -462,6 +488,14 @@ def k_pick_numeral(a, ctx):
               '%s. הַמִּסְפָּר הָאַחֲרוֹן הוּא %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), F[n], F[n])),
         'child finds the numeral that is named',
         prompt='אֵיפֹה הַמִּסְפָּר %s?' % F[n], correct='%s! מְצָאתֶם אֶת הַמִּסְפָּר.' % F[n])
+
+
+def leftover_line(diff, obj, tail='שָׁם יֵשׁ יוֹתֵר.'):
+    """B-40: the worked example of a comparison pairs the two groups one to one and counts what has no partner (the picture:
+    pair lines, then the leftovers ringed and counted), so the line does the same, and says the result last."""
+    left = 'נִשְׁאֲרָה %s' % qty(1, obj) if (diff == 1 and obj['g'] == 'f') else (
+        'נִשְׁאַר %s' % qty(1, obj) if diff == 1 else 'נִשְׁאֲרוּ %s' % qty(diff, obj))
+    return 'מְחַבְּרִים אֶחָד לְאֶחָד. %s בְּלִי זוּג, אָז %s' % (left, tail)
 
 
 def k_compare_more(a, ctx):
@@ -490,8 +524,7 @@ def k_compare_more(a, ctx):
         {'background': 'asset:meadow'}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים.',
               'נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה.',
-              'בְּצַד אֶחָד יֵשׁ %s, וּבַצַּד הָאַחֵר %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.' % (
-                  qty(want, obj), qty(small if more else big, obj)),
+              leftover_line(big - small, obj) + ' עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנְּכוֹנָה.',
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child compares by number, not by how big or spread out the things look',
         prompt='אֵיפֹה יֵשׁ %s %s?' % (word, obj['many']), correct='כֵּן! כָּאן יֵשׁ %s %s.' % (word, obj['many']),
@@ -514,11 +547,11 @@ def k_compare_same(a, ctx):
         choice(opts, cid), {'M-CNT-SIZE'},
         hints(a['id'], 'בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל שְׁנֵי הַצְּדָדִים.',
               'נַשְׁוֶה אֶחָד אֶחָד: לְכׇל אֶחָד מִצַּד זֶה, אֶחָד מִצַּד זֶה.',
-              ('בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: %s.' % F[l]) if same else
-              ('בְּצַד אֶחָד יֵשׁ %s, וּבַצַּד הָאַחֵר %s. זֶה לֹא אוֹתוֹ דָּבָר.' % (qty(l, obj), qty(r, obj))),
+              ('מְחַבְּרִים אֶחָד לְאֶחָד — לְכֻלָּם יֵשׁ זוּג. בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: %s. עַכְשָׁו תּוֹרְכֶם.' % F[l])
+              if same else (leftover_line(abs(l - r), obj, 'זֶה לֹא אוֹתוֹ מִסְפָּר.') + ' עַכְשָׁו תּוֹרְכֶם.'),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child decides whether two groups have the same number, whatever their look',
-        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צָדַקְתֶּם!')
+        prompt='יֵשׁ אוֹתוֹ מִסְפָּר בִּשְׁנֵי הַצְּדָדִים?', correct='כֵּן, צְדַקְתֶּם!', size_cue='pairs')
 
 
 def k_ordinal(a, ctx):
@@ -544,7 +577,8 @@ def k_ordinal(a, ctx):
         {'background': 'asset:meadow', 'optionsOnTiles': True}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְפֹּר בַּתּוֹר מֵהַהַתְחָלָה: %s.' % ', '.join(
             ORD_M[:pos + 1] if k != -1 else ORD_M[:len(order)]),
-              'זֶה %s בַּתּוֹר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (LAST_DEF if k == -1 else ORD_DEF[pos]),
+              'מַתְחִילִים מֵהַדֶּגֶל: %s. זֶה %s בַּתּוֹר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו.' % (
+                  ', '.join(ORD_M[:pos + 1]), LAST_DEF if k == -1 else ORD_DEF[pos]),
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example')),
         'child finds the place in the line, not how many there are',
         prompt='מִי %s בַּתּוֹר?' % word if k == -1 else 'מִי %s בַּתּוֹר?' % word,
@@ -592,9 +626,11 @@ def k_pick(a, ctx):
             o = {'id': 'o%d' % k, 'numeral': v, 'label': F[v]}
         elif '*' in sp:  # "ball_red*3": a set of three things as the answer
             base, rest = sp.split('*')
+            rest, _, arrangement = rest.partition('#')  # "fish*13#ten_frame": the arrangement (B-36 G4)
             count, _, scale = rest.partition('@')
-            o = {'id': 'o%d' % k, 'set': {'sprite': 'asset:' + base, 'count': int(count), 'arrangement': 'line', 'seed': k},
-                 'label': names[base]['one']}
+            objs = ctx.get('objects', {})
+            o = {'id': 'o%d' % k, 'set': {'sprite': 'asset:' + base, 'count': int(count), 'arrangement': arrangement or 'line', 'seed': k},
+                 'label': qty(int(count), objs[base]) if base in objs else names[base]['one']}
             if scale:
                 o['set']['scale'] = float(scale)
         else:
@@ -635,7 +671,7 @@ def k_pick(a, ctx):
               actions=('replay_prompt_slow', a.get('h2_action', 'highlight_objects_sequentially'), 'worked_example'),
               shared=('pick', None if a.get('h2') else 'pick')),
         a.get('goal', 'child picks the right picture'),
-        prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right))
+        prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right), size_cue=a.get('size_cue'))
 
 
 def k_sort(a, ctx):
@@ -680,12 +716,13 @@ def k_share(a, ctx):
 def k_build(a, ctx):
     """Copy a pattern: fill the places from a palette."""
     seq = a.get('sequence') or a['model']
+    tag = a.get('tag', 'M-PAT-COPY')
     scene = {'background': 'asset:meadow', 'slots': len(seq), 'palette': ['asset:' + p for p in a['palette']]}
     if a.get('model'):
         scene['model'] = ['asset:' + m for m in a['model']]
     return activity(
         a, 'build_pattern', skills_of(a), 'practice', 'practice',
-        scene, {'type': 'build', 'sequence': ['asset:' + p for p in seq], 'misconception': 'M-PAT-COPY'}, {'M-PAT-COPY'},
+        scene, {'type': 'build', 'sequence': ['asset:' + p for p in seq], 'misconception': tag}, {tag},
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד.',
               a.get('h3') or 'נַעֲתִיק אֶת הַסֵּדֶר מֵהַהַתְחָלָה, תְּמוּנָה אַחַר תְּמוּנָה. עַכְשָׁו תּוֹרְכֶם.',
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
@@ -924,6 +961,7 @@ def k_pair(a, ctx):
     names = ctx['names']
     return k_pick(pick_spec(a, prompt='מָה הוֹלֵךְ עִם %s?' % names[a['ref']]['def'], group={'sprite': a['ref'], 'count': 1},
                             options=place(a['partner'], a['others'], a.get('pos', 1)), correct=a['partner'],
+                            tags=a.get('tags', {}),
                             h3='%s %s %s יַחַד. עַכְשָׁו תּוֹרְכֶם.' % (
                                     names[a['ref']]['one'], vav(names[a['partner']]['one']),
                                     'הוֹלְכוֹת' if names[a['ref']]['g'] == names[a['partner']]['g'] == 'f' else 'הוֹלְכִים')), ctx)
@@ -960,7 +998,7 @@ def k_madd(a, ctx):
     opts = sorted({x, r, r + 1})
     return k_pick(pick_spec(a, prompt='יֵשׁ %s. מוֹסִיפִים עוֹד %s. כַּמָּה עַכְשָׁו?' % (qty(x, obj), qty(y, obj)),
                             group={'sprite': a['obj'], 'count': x}, group2={'sprite': a['obj'], 'count': y},
-                            options=['n:%d' % v for v in opts], correct='n:%d' % r, tags={'n:%d' % (r + 1): 'M-CNT-DOUBLE'},
+                            options=['n:%d' % v for v in opts], correct='n:%d' % r, tags={'n:%d' % (r + 1): 'M-CNT-DOUBLE', **a.get('tags', {})},
                             correct_text='%s! %s וְעוֹד %s.' % (F[r], F[x], F[y]),
                             h3=a.get('h3') or '%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], count_words(r), F[r])), ctx)
 
@@ -975,7 +1013,7 @@ def k_mtake(a, ctx):
     # B-15 §3: one missed; the start (nothing taken, M-CNT-CARD) stays untagged as in k_madd
     return k_pick(pick_spec(a, prompt='יֵשׁ %s. לוֹקְחִים אֶחָד. כַּמָּה נִשְׁאֲרוּ?' % qty(n, obj),
                             group={'sprite': a['obj'], 'count': n}, options=['n:%d' % v for v in opts], correct='n:%d' % r,
-                            tags={'n:%d' % (r - 1): 'M-CNT-SKIP'}, correct_text='%s! %s פָּחוֹת אַחַת.' % (F[r], F[n]),
+                            tags={'n:%d' % (r - 1): 'M-CNT-SKIP', **a.get('tags', {})}, correct_text='%s! %s פָּחוֹת אַחַת.' % (F[r], F[n]),
                             h3=a.get('h3') or '%s פָּחוֹת אַחַת: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[n], count_words(max(r, 1)), F[r])), ctx)
 
 
@@ -1009,8 +1047,16 @@ def k_numline(a, ctx):
     if jump:
         scene['start'] = a['start']
         scene['hops'] = a['hops']
-    h3 = a.get('h3') or ('מַתְחִילִים %s וְסוֹפְרִים: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[a['start']] if jump else F[frm]),
-                                                                           count_words(target) if not jump else F[target]))
+    if a.get('h3'):
+        h3 = a['h3']
+    elif not jump and frm > 0:
+        # B-36 part F: counting on from a number that is not zero says the numbers after it ("start from ten and count: eleven, twelve"),
+        # not "from one to fourteen"
+        after = (': ' + ', '.join(F[i] for i in range(frm + 1, target + 1))) if target - frm <= 5 else ' הָלְאָה עַד %s' % F[target]
+        h3 = 'מַתְחִילִים %s וְסוֹפְרִים%s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[frm]), after)
+    else:
+        h3 = 'מַתְחִילִים %s וְסוֹפְרִים: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[a['start']] if jump else F[frm]),
+                                                              count_words(target) if not jump else F[target])
     return activity(
         a, 'number_line', skills_of(a), 'practice', 'practice',
         scene, answer, tags, hint_set(a, h3, ('pick', 'line')), a.get('goal', 'child finds the number on the line'),
@@ -1092,7 +1138,7 @@ def k_sum(a, ctx):
         others = [x, r + 1] if x != r + 1 else [r + 1, r + 2]
         tags = {'n:%d' % x: 'M-PART-MISS'}
     return k_pick(pick_spec(a, prompt=prompt, options=['n:%d' % v for v in place(r, others, a.get('pos', 1))], correct='n:%d' % r,
-                            tags=tags, correct_text=text, h3=h3, **extra), ctx)
+                            tags={**tags, **a.get('tags', {})}, correct_text=text, h3=h3, **extra), ctx)
 
 
 
@@ -1127,16 +1173,20 @@ def k_match(a, ctx):
         {'background': 'asset:meadow', 'left': left, 'right': right}, answer, {tag} if tag else set(),
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל לְאַט עַל כׇּל אֶחָד.', a['h3'],
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'match')),
-        a.get('goal', 'child joins each picture with the one that goes with it'), prompt=a['prompt'], correct=a['correct_text'])
+        a.get('goal', 'child joins each picture with the one that goes with it'), prompt=a['prompt'], correct=a['correct_text'],
+        size_cue=a.get('size_cue'))
 
 
 def k_pay(a, ctx):
     """Pay a price, in agorot, with the coins of a purse."""
+    answer = {'type': 'pay', 'countMisconception': a['tag']}
+    if a.get('misconception'):  # B-36 G3: the general tag of a wrong sum, besides the tag of counting the coins
+        answer['misconception'] = a['misconception']
     return activity(
         a, 'shop_pay', skills_of(a), 'practice', 'practice',
         {'background': 'asset:meadow', 'itemSprite': 'asset:' + a['item'], 'itemCount': a.get('itemCount', 1), 'price': a['price'],
          'purse': [{'kind': k, 'count': c} for k, c in a['purse']]},
-        {'type': 'pay', 'countMisconception': a['tag']}, {a['tag']},
+        answer, {a['tag'], *([a['misconception']] if a.get('misconception') else [])},
         hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו.', a['h3'],
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'), shared=('pick', 'pay')),
         'child pays the exact price by adding the values of the coins', prompt=a['prompt'], correct=a['correct_text'])

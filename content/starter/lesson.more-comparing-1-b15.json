@@ -16,7 +16,11 @@
   ],
   "items": [
     "b15.numa12.1",
-    "b15.numa12.2"
+    "b15.numa12.2",
+    "b36.numa11.1",
+    "b36.numa11.2",
+    "b36.numa12.1",
+    "b36.numa12.2"
   ],
   "estimatedMinutes": 5,
   "sequence": 25,

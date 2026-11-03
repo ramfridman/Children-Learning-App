@@ -24,9 +24,12 @@
     }
   ],
   "representations": [
-    "symbolic"
+    "symbolic",
+    "concrete"
   ],
-  "misconceptions": [],
+  "misconceptions": [
+    "M-TIME-SEQ"
+  ],
   "retention": {
     "targetRetention": 0.9,
     "initialStabilityDays": 1

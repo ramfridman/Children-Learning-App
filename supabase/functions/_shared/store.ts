@@ -129,8 +129,20 @@ export interface Store {
   logTutor(row: TutorLogRow): Promise<void>;
 
   // The parent area (M7b): children, the log of what they did, and deleting a child
-  /** Saves a child (the nickname is the one personal text on the server). `deleted`: that child was deleted. */
+  /** Saves a child (the nickname and how it is said are the personal text on the server). `deleted`: that child was deleted. */
   upsertChild(familyId: string, c: ChildProfile): Promise<"saved" | "deleted">;
+  /**
+   * How the family's child says their name (B-42): null when the family has no such child, `spelling` null when none was
+   * given; `companionId` is the friend the child chose (null: the house character).
+   */
+  childNameSpoken(
+    familyId: string,
+    childId: string,
+  ): Promise<{ spelling: string | null; companionId: string | null } | null>;
+  /** What the family has spent today on generated voice, in millionths of a dollar. */
+  tutorCostToday(familyId: string, nowMs: number): Promise<number>;
+  /** The voice a character speaks with: null when the server has no such character, `voiceId` null when it has no voice yet. */
+  characterVoice(characterId: string): Promise<{ voiceId: string | null } | null>;
   listChildren(familyId: string): Promise<ChildProfile[]>;
   /** The ids of the children deleted in this family (every device deletes their local data). */
   listTombstones(familyId: string): Promise<string[]>;
@@ -290,6 +302,11 @@ export const APPROVED_PROMPT_VERSION = "approved";
 export interface ChildProfile {
   id: string;
   nickname: string;
+  /**
+   * How the name is said (the spelling a parent checked, `_shared/name_spoken.ts`). null clears it; undefined leaves what
+   * the server has (a phone from before B-42 does not send it).
+   */
+  nameSpoken?: string | null;
   avatarId: string;
   companionId: string | null;
   /** The prize (a colour set of the app) the companion wears; an id of the app and nothing else. */

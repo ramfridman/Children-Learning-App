@@ -16,6 +16,7 @@ Nothing is written back to the pack: the owner decides which rows to take. What 
 start with "[editor]" and are rewritten on every run.
 """
 import csv
+import hashlib
 import os
 import re
 import sys
@@ -25,6 +26,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']
 from author import F, M  # noqa: E402
 from band_b import NAMES, OBJECTS  # noqa: E402
+import hint_lines  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 SRC = os.path.join(ROOT, 'docs', 'review', 'hebrew-review.csv')
@@ -270,6 +272,15 @@ SUBS = [
     (B + 'אֵיזֶה יֵשׁ הֲכִי הַרְבֵּה\?', 'מִמָּה יֵשׁ הֲכִי הַרְבֵּה?', 'syntax: "מִמָּה יֵשׁ הֲכִי הַרְבֵּה?" (of which kind is there most)'),
     (B + 'אֵיזֶה יֵשׁ הֲכִי פָּחוֹת\?', 'מִמָּה יֵשׁ הֲכִי מְעַט?', 'syntax: "מִמָּה יֵשׁ הֲכִי מְעַט?" (of which kind is there least)'),
     (r' הוּא (?=[^ .?]+(?: [^ .?]+)? וְעוֹד כַּמָּה\?)', ' זֶה ','syntax: "אַחַת עֶשְׂרֵה זֶה עֶשֶׂר וְעוֹד כַּמָּה?" (as in "עֶשֶׂר זֶה שָׁלוֹשׁ וְעוֹד כַּמָּה?")'),
+    # B-36 part F (2026-11-01): pointing found in the new lines
+    (B + 'מִ(אַרְבַּע|אַרְבָּעִים|עֶשֶׂר|עֶשְׂרִים|חֲמֵשׁ|חֲמִשִּׁים)' + E, r'מֵ\1', 'nikud: מֵ before a guttural (מֵאַרְבַּע, מֵעֶשֶׂר, מֵחֲמֵשׁ)'),
+    (B + 'מִשֵׁשׁ' + E, 'מִשֵּׁשׁ', 'nikud: the dagesh after מִ (מִשֵּׁשׁ)'),
+    (B + 'מִשֶׁבַע' + E, 'מִשֶּׁבַע', 'nikud: the dagesh after מִ (מִשֶּׁבַע)'),
+    (B + 'כֹּל' + E, 'כׇּל', 'nikud: כׇּל with a qamatz qatan, as in the rest of the pack'),
+    (B + '(וּ?)בַּסַּךְ הַכֹּל' + E, lambda m: ('וּ' if m.group(1) else '') + 'בְּסַךְ הַכֹּל', 'spelling: בְּסַךְ הַכֹּל (no article)'),
+    (B + '(הַ|לַ)חָתוּל' + E, lambda m: ('הֶ' if m.group(1) == 'הַ' else 'לֶ') + 'חָתוּל', 'nikud: הֶחָתוּל, לֶחָתוּל (the article before ח with a qamatz)'),
+    (B + 'הֶחוּם' + E, 'הַחוּם', 'nikud: הַחוּם (the article before ח with a shuruk is הַ)'),
+    (B + 'אוֹפְּס' + E, 'אוּפְּס', 'nikud: אוּפְּס, "ups" (Milog, Hebrew Wiktionary); אוֹפְּס would be read "ofs"'),
     # B-13 (board, 2026-10-28): the child's space has no speed language (CLAUDE.md, design-spec §5.4; design audit F3)
     (B + 'הִסְתַּכְּלוּ מַהֵר!', 'הִסְתַּכְּלוּ טוֹב…', 'tone (B-13, design audit F3): no speed language in the child\'s space; '
      '"הִסְתַּכְּלוּ טוֹב…" (look carefully), the dots give the look a beat'),
@@ -286,7 +297,7 @@ SUBS = [
      'that is down; draft'),
     (B + 'וּבַצַּד הַיְמָנִי' + E, 'וּבַצַּד שֶׁלְּמַעְלָה', 'band B (B-13, curriculum audit F8): the light side is the one that is up; draft'),
 ]
-SUBS = [(re.compile(canon(p)), canon(r), why) for p, r, why in SUBS]
+SUBS = [(re.compile(canon(p)), (r if callable(r) else canon(r)), why) for p, r, why in SUBS]
 
 # The reviewed helper lines (group 4) have no nikud: full spelling and the right future forms.
 TUTOR_SUBS = [
@@ -507,11 +518,15 @@ WATER_SKY = {p + w for p in ('', 'ב', 'ה', 'ל', 'ו', 'מ', 'וה', 'מה', '
 NUMBER_PREFIX = ('וּבִ', 'וּבְ', 'וּלְ', 'וּמִ', 'וְ', 'וּ', 'וַ', 'לְ', 'לַ', 'לִ', 'בְּ', 'בַּ', 'בִּ', 'מִ', 'מֵ', 'שֶׁ', 'כְּ', 'כִּ', 'הַ')
 
 
+NUM_NO_DAGESH = {w.replace(DAGESH, '') for w in NUM_WORDS}
+
+
 def is_number_token(tok):
     if tok in NUM_WORDS:
         return True
     for p in NUMBER_PREFIX:
-        if tok.startswith(p) and tok[len(p):] in NUM_WORDS:
+        # after מִ the first letter may carry the dagesh of the dropped nun (מִשֵּׁשׁ, מִשֶּׁבַע): still a number word, kept pointed
+        if tok.startswith(p) and (tok[len(p):] in NUM_WORDS or tok[len(p):].replace(DAGESH, '') in NUM_NO_DAGESH):
             return True
     return False
 
@@ -656,16 +671,21 @@ KEEP_POINTED = {'שֵׁנִי', 'הַשֵּׁנִי', 'הַוִּי', 'לְהֵ�
 # The pronunciation audit of 2026-10-29 (docs/agents/voice-pronunciation-audit.md): plain words a voice can read as
 # another word. They keep their nikud in the voice text; each row they change stays `proposed` until the owner agrees.
 VOICE_AUDIT_KEEP = {
-    'שָׂמִים': 'plain "שמים" is read "shamayim" (sky); here it is "samim" (we put)',
-    'סָפַר': 'plain "ספר" is read "sefer" (a book); here it is "safar" (counted)',
-    'גְּדֵלִים': 'plain "גדלים" can be read "gdalim" (sizes); here it is "gdelim" (grow)',
-    'בַּתּוֹר': 'plain "בתור" is often read "betor" (as a); here it is "ba-tor" (in the line)',
-    'אִמְרוּ': 'plain "אמרו" is read "amru" (they said); here it is the request "imru" (say)',
-    'נְגַלֶּה': 'plain "נגלה" can be read "nigla" (was revealed); here it is "negale" (we will find out)',
-    'אוֹפְּס': 'plain "אופס" can be read with an f ("ofes"); the dagesh keeps the p of "oops"',
-    'מֵדַלְיָה': 'a loanword: plain "מדליה" can be read "madliya"; the nikud gives "medalya"',
-    'אֵלֶּה': 'plain "אלה" can be read "ela"; here it is "ele" (these)',
-    'בַּשָּׁמַיִם': 'plain "בשמים" can be read "besamim" (spices); here it is "ba-shamayim" (in the sky)',
+    # reasons re-checked 2026-11-01 against Pealim, Milog and Wiktionary (docs/agents/hebrew-notes.md section 15); stress in capitals
+    'שָׂמִים': 'plain "שמים" can be read "shamayim" (sha-MA-yim, the sky); here it is "samim" (sa-MIM), the plural present of שָׂם, "put"',
+    'סָפַר': 'plain "ספר" can be read "sefer" (SE-fer, a book) or "sapar" (sa-PAR, a barber); here it is "safar" (sa-FAR), "counted"',
+    'גְּדֵלִים': 'plain "גדלים" is spelled like "gdalim" (gda-LIM, sizes, the plural of גֹּדֶל); here it is "gdelim" (gde-LIM), '
+                 'the plural present of גָּדֵל, "grow, get bigger"',
+    'בַּתּוֹר': 'plain "בתור" can be read "betor" (be-TOR, "as, in the role of"); here it is "ba-tor" (ba-TOR), "in the line"',
+    'נְגַלֶּה': 'plain "נגלה" can be read "nigle" or "nigale" (nifal, "we will be revealed"), or "nigla" ("was revealed"); here it is '
+                'the piel "negale" (ne-ga-LE), "we will discover"',
+    'אוּפְּס': 'plain "אופס" can be read "ofes" (o-FES, אוֹפֵס, "is running out") or "upas" (u-PAS, אֻפַּס, "was reset"); here it is the '
+               'interjection "ups" (one syllable, "oops")',
+    'מֵדַלְיָה': 'a loanword: plain "מדליה" leaves the first vowel and the stress open ("madalya", or final stress); the nikud '
+                 'gives "medalya" (me-DAL-ya, stress on the second syllable)',
+    'אֵלֶּה': 'plain "אלה" can be read "ela" (e-LA, אֵלָה "terebinth" or a name) or "ala" (a-LA, a club); here it is "ele" (E-le, '
+              'stress on the first syllable), "these"',
+    'בַּשָּׁמַיִם': 'plain "בשמים" can be read "bsamim" (bsa-MIM, בְּשָׂמִים, "in perfumes"); here it is "ba-shamayim" (ba-sha-MA-yim), "in the sky"',
 }
 VOICE_AUDIT_KEEP = {canon(w): why for w, why in VOICE_AUDIT_KEEP.items()}
 KEEP_POINTED |= set(VOICE_AUDIT_KEEP)
@@ -683,6 +703,43 @@ VOICE_MANUAL.update({
     canon('בּוֹאוּ נַמְשִׁיךְ בַּהַרְפַּתְקָה שֶׁל {land}.'): ('בואו נמשיך בהרפתקה של {land}.', PER_LAND),
     canon('בּוֹאוּ נְבַקֵּר אֶת {land}.'): ('בואו נְבַקֵּר את {land}.', PER_LAND),
 })
+# B-45 (2026-11-02): the bottle's lines as the clips the app asks for, `core.adventure.<reason>.<land>` (24 lines) and
+# `core.adventure.play_again` (content/lines/core.he.json, group 2). The screen text is the template with the land's own
+# pointed name (`He.landCounting` .. `He.landMarket`); the voice text is the template's voice text with the land's voice name.
+LAND_SCREEN = {'counting': 'גִּבְעוֹת הַסְּפִירָה', 'colors': 'מִפְרַץ הַצְּבָעִים', 'shapes': 'יַעַר הַצּוּרוֹת',
+               'logic': 'מְעָרַת הַחִידוֹת', 'robots': 'נְמַל הָרוֹבּוֹטִים', 'market': 'כְּפַר הַשּׁוּק'}
+LAND_VOICE = {'counting': 'גבעות הספירה', 'colors': 'מפרץ הצבעים', 'shapes': 'יַעַר הצורות',
+              'logic': 'מְעָרַת החידות', 'robots': 'נְמַל הרובוטים', 'market': 'כְּפַר השוק'}
+PER_LAND_CORE = ('B-45: one clip of the bottle\'s per-land line (B-39), the land\'s voice name in place of {land}; the pointed words are the '
+                 'ones a voice can misread (יַעַר, מְעָרַת, נְמַל, כְּפַר); no child or friend name; no "!"')
+# B-45 (the map card's childLine, hebrew-notes section 19): plain "מגדלים" is read "megadlim" (they raise) more often than "migdalim"
+# (towers); here it is the towers that grow.
+VOICE_MANUAL[canon('מִגְדָּלִים שֶׁגְּדֵלִים')] = (
+    'מִגְדָּלִים שגדלים.', 'pronunciation: plain "מגדלים" can be read "megadlim" (they raise); here it is "migdalim", towers')
+for _tmpl, (_voice, _why) in list(VOICE_MANUAL.items()):
+    if '{land}' not in _tmpl:
+        continue
+    for _land, _screen in LAND_SCREEN.items():
+        VOICE_MANUAL[canon(_tmpl.replace('{land}', _screen))] = (_voice.replace('{land}', LAND_VOICE[_land]), PER_LAND_CORE)
+
+
+# B-42 (daily welcome, hebrew-notes section 21): the pointing the voice must keep. נִפְרֹק / נְפָרֵק, נַחֲלֹק / נְחַלֵּק and נֵצֵא are the
+# pi'el (or the future of יצא) that plain spelling can turn into another verb; the land lines keep the four pointed land words of the bottle.
+WELCOME_WHY = ('B-42: pointing kept so a voice cannot misread the verb (נְפָרֵק, נְחַלֵּק, נֵצֵא) or the land word (יַעַר, מְעָרַת, נְמַל, כְּפַר), '
+               'as in the bottle lines (hebrew-notes section 21)')
+VOICE_MANUAL[canon('הַיּוֹם נְפָרֵק מִסְפָּרִים לַחֲלָקִים.')] = ('היום נְפָרֵק מספרים לחלקים.', WELCOME_WHY)
+VOICE_MANUAL[canon('הַיּוֹם נְחַלֵּק שָׁוֶה בְּשָׁוֶה.')] = ('היום נְחַלֵּק שווה בשווה.', WELCOME_WHY)
+for _land, _screen in LAND_SCREEN.items():
+    VOICE_MANUAL[canon('הַיּוֹם נֵצֵא אֶל %s.' % _screen)] = ('היום נֵצֵא אל %s.' % LAND_VOICE[_land], WELCOME_WHY)
+# B-45 job 4 (2026-11-02): the owner said yes to the 48 daily-welcome lines (B-42) and to the 98 + 2 `childLine` clips, and the lines he
+# read carry the pointing that the voice audit keeps (נְגַלֶּה in five welcome topics, אֶפֶס in the NUM-A-14 line, as in the
+# already approved pack rows). The audit's "please confirm" (V1) is therefore answered for exactly these rows: they are `text-ready`
+# for the voice director, not `proposed`.
+V1_ANSWERED = {('content/lines/core.he.json', i) for i in (
+    'welcome.topic.counting.compare', 'welcome.topic.counting.ordinal', 'welcome.topic.shapes.position',
+    'welcome.topic.logic.patterns', 'welcome.topic.market.missing', 'core.skill.num_a_14')}
+V1_ANSWERED_NOTE = ('B-45 job 4: the kept pointing (V1 of the voice audit) was in the line the owner approved in chat on 2026-11-02; '
+                    'text-ready for the voice director direction row.')
 
 
 def eleven(text):
@@ -744,46 +801,247 @@ def analyse(text, is_spoken, groups=()):
 REVIEWED = [
     ('1', r'', r''), ('2', r'', r''), ('3', r'', r''), ('4', r'', r''), ('6', r'', r''),
 ]
-# Rows added after the master pass that the editor has not signed: (group digit, regex on the id, regex on the source,
-# the comment). They stay `proposed` for the owner although their group is in REVIEWED; this list wins over REVIEWED,
-# DOUBT and NOTE. A new string in a REVIEWED group goes here until the editor has read it (the run prints the new rows).
+# The comments the editor gave the rows of each batch while they waited for the part F pass of B-36 (kept for the history of the table; PENDING
+# below is empty now). A new string in a REVIEWED group goes into PENDING again until the editor has read it (the run prints the new rows).
 B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by the editor, not yet read by the owner. '
 B39 = 'B-39 (docs/curriculum/todays-adventure-rule.md section 8, docs/agents/hebrew-notes.md): new, worded by the editor, not yet read by the owner. '
 B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
-PENDING = [
-    ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
-     'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
-    ('1', r'^homeIsland(Mine)?Semantics$', r'he\.dart$', B26 + 'Screen-reader text, plain; the whole name, never shortened.'),
-    ('1', r'^nitziHomeTreasures$', r'he\.dart$', B26 + 'True once the Hall and the stickers live in the home (decision 1); '
-     'mixed group, so masculine plural "גָּרִים".'),
-    ('1', r'^nitziHomeBottle$', r'he\.dart$', B26 + 'The bottle holds a revisit or the next lesson (decision 3), so not '
-     '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
-    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)$', r'he\.dart$', B39 + 'The bottle line for one reason '
-     '(todays-adventure-rule.md section 8). "we" and "let us" only: no child name, no friend name, no gender, no time word. {land} follows '
-     'only a separate word (אֶל, אֶת, שֶׁל), so the construct and the pointing of the land name never change.'),
-    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)Semantics$', r'he\.dart$', B39 + 'Screen-reader label of the '
-     'bottle for that reason, plain text; {land} is the plain land name (land*Semantics).'),
-    ('1', r'^land(Counting|Colors|Shapes|Logic|Robots|Market)Semantics$', r'he\.dart$', B39 + 'The plain land name for the '
-     'bottle screen-reader label (the pointed names are land*).'),
-    # B-15 part 2 (docs/knowledge/b15-hebrew.md): the editor's own strings are text-ready there. These are the lines the generator
-    # made from a pattern that the tables do not give, so the editor reads them; the last element is a regex on the text.
-    ('3', r'feedback\.correct', r'^activity\.b15\.matha04\.', B15 + 'The correct line of the fish and star size items (editor read it, 2026-10-30: correct, '
-     '"זֶה" agrees with "דָּג" and "כּוֹכָב"). The owner approved only the two hints (2026-10-30); this line waits.',
-     r'כֵּן! זֶה הַדָּג הַגָּדוֹל|כֵּן! זֶה הַכּוֹכָב הַקָּטָן'),
-    ('3', r'hints\.2', r'^activity\.b15\.cola05\.', B15 + 'The hint of a tick answer: "לִלְחֹץ עַל הַוִּי" (H7a, the editor) in the pattern of the other hints.',
-     r'לִלְחֹץ עַל הַוִּי'),
-    # 2026-10-30: the owner approved P3-P5, the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints and the COL-A-05
-    # correct lines (OWNER_APPROVED below), so they are no longer pending.
-    # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
-    # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
+B38 = 'B-38 (docs/curriculum/b38-decisions.md), next pack: new or changed, worded by the editor, not yet read by the owner. '
+B36 = 'B-36 (docs/milestones/B36.md), next pack: a draft by the curriculum-expert, not yet read by the editor or the owner. '
+# The B-36 feedback lines (tools/band_b.py CARD, the tagFeedback of the units, band_b2.py), exactly as the sources write them
+B36_LINES = [
+    'זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד.',
+    'זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ.',
+    'זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה. בּוֹאוּ נִסְתַּכֵּל שׁוּב: כַּמָּה נִשְׁאֲרוּ עַכְשָׁו?',
+    'זֶה כַּמָּה שֶׁכְּבָר יֵשׁ. בּוֹאוּ נַמְשִׁיךְ לִסְפֹּר עַד עֶשֶׂר, וְנִרְאֶה כַּמָּה הוֹסַפְנוּ.',
+    'הַשְּׁאֵלָה הִיא כַּמָּה צַלָּחוֹת. בּוֹאוּ נִסְפֹּר אֶת הַצַּלָּחוֹת.',
+    'זֶה הָעֶשֶׂר שֶׁכְּבָר יֵשׁ. כַּמָּה יֵשׁ עוֹד, אַחֲרֵי הָעֶשֶׂר?',
+    'חִבַּרְנוּ אֶת שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם, צַלַּחַת אַחַר צַלַּחַת.',
+    'בּוֹאוּ נִסְתַּכֵּל שׁוּב בַּסִּימָן: מוֹסִיפִים אוֹ לוֹקְחִים?',
+    'בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אַחֲרֵי הַשֵּׁנִי.',
+    'לְכׇל מִסְפָּר יֵשׁ סִפְרָה מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל כׇּל סִפְרָה.',
+    'לְכׇל צוּרָה יֵשׁ שֵׁם מִשֶּׁלָּהּ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַקַּוִּים וְהַפִּנּוֹת.',
+    'לְכׇל גּוּף יֵשׁ שֵׁם מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל: הוּא מִתְגַּלְגֵּל? יֵשׁ לוֹ פִּנּוֹת?',
+    'זֶה נָכוֹן לְאֶחָד מֵהֶם. בּוֹאוּ נִבְדֹּק אִם זֶה נָכוֹן לְכֻלָּם, אֶחָד אֶחָד.',
+    'זֶה חֵלֶק מֵהַשְּׁלַבִּים. בּוֹאוּ נַעֲבֹר עֲלֵיהֶם, אֶחָד אַחֲרֵי הַשֵּׁנִי.',
+    'זֶה נִרְאֶה דּוֹמֶה. בּוֹאוּ נַחְשֹׁב מָה עוֹשִׂים עִם כׇּל דָּבָר, וּמָה הוֹלֵךְ יַחַד.',
 ]
+B36D = 'B-36 part D (second representations), next pack: a draft by the app-developer from the curriculum-expert spec, not yet read by the editor or the owner. '
+B36_D_ITEMS = [
+    'b36.numa05.1', 'b36.numa05.2', 'b36.numa10.1', 'b36.numa10.2', 'b36.numa06.1', 'b36.numa06.2',
+    'b36.numa07.1', 'b36.numa07.2', 'b36.numa09.1', 'b36.numa09.2', 'b36.numa11.1', 'b36.numa11.2',
+    'b36.numa12.1', 'b36.numa12.2', 'b36.numa13.1', 'b36.numa13.2', 'b36.numa14.1', 'b36.numa14.2',
+    'b36.cola01.1', 'b36.cola01.2', 'b36.cola05.1', 'b36.cola05.2', 'b36.cola06.1', 'b36.cola06.2',
+    'b36.cola07.1', 'b36.cola07.2', 'b36.shpa01.1', 'b36.shpa01.2', 'b36.shpa04.1', 'b36.shpa04.2',
+    'b36.shpa05.1', 'b36.shpa05.2', 'b36.shpa06.1', 'b36.shpa06.2', 'b36.shpa07.1', 'b36.shpa07.2',
+    'b36.shpa08.1', 'b36.shpa08.2', 'b36.shpa10.1', 'b36.shpa10.2', 'b36.loga02.1', 'b36.loga02.2',
+    'b36.loga04.1', 'b36.loga04.2', 'b36.loga05.1', 'b36.loga05.2', 'b36.loga06.1', 'b36.loga06.2',
+    'b36.loga07.1', 'b36.loga07.2', 'b36.loga08.1', 'b36.loga08.2', 'b36.loga09.1', 'b36.loga09.2',
+    'b36.loga10.1', 'b36.loga10.2', 'b36.csa01.1', 'b36.csa01.2', 'b36.csa03.1', 'b36.csa03.2',
+    'b36.csa05.1', 'b36.csa05.2', 'b36.matha01.1', 'b36.matha01.2', 'b36.matha02.1', 'b36.matha02.2',
+    'b36.matha03.1', 'b36.matha03.2', 'b36.matha04.1', 'b36.matha04.2', 'b36.matha05.1', 'b36.matha05.2',
+    'b36.matha07.1', 'b36.matha07.2', 'b.numb01.10', 'b.numb01.11', 'b.numb02.10', 'b.numb02.11',
+    'b.numb03.11', 'b.numb03.12', 'b.numb04.12', 'b.numb04.13', 'b.numb05.11', 'b.numb05.12',
+    'x.numb07.21', 'x.numb07.22', 'b.numb08.15', 'b.numb08.16', 'b.numb10.11', 'b.numb10.12',
+    'b.numb11.19', 'b.numb11.20', 'b.numb13.22', 'b.numb13.23', 'b.numb14.11', 'b.numb14.12',
+    'b.numb17.13', 'b.numb17.14', 'b.numb18.11', 'b.numb18.12', 'b.colb01.10', 'b.colb01.11',
+    'b.colb02.13', 'b.colb02.14', 'b.colb03.11', 'b.colb03.12', 'b.shpb01.11', 'b.shpb01.12',
+    'b.shpb02.11', 'b.shpb02.12', 'b.shpb03.8', 'b.shpb03.9', 'b.shpb04.10', 'b.shpb04.11',
+    'b.shpb08.11', 'b.shpb08.12', 'x.shpb09.7', 'x.shpb09.8', 'b.logb01.11', 'b.logb01.12',
+    'b.logb02.7', 'b.logb02.8', 'b.logb04.9', 'b.logb04.10', 'b.logb06.9', 'b.logb06.10',
+    'b.logb08.7', 'b.logb08.8', 'b.logb09.9', 'b.logb09.10', 'b.csb04.7', 'b.csb04.8',
+    'b.mathb06.11', 'b.mathb06.12', 'b.mathb07.9', 'b.mathb07.10', 'b.mathb08.15', 'b.mathb08.16',
+    'b.mathb10.9', 'b.mathb10.10', 'b.mathb14.12', 'b.mathb14.13', 'x.mathb16.9', 'x.mathb16.10',
+    'x.mathb17.12', 'x.mathb17.13', 'b.mathb18.10', 'b.mathb18.11', 'x.mathb19.12', 'x.mathb19.13',
+]
+B36_D_LESSONS = ['more-glances-1-b36', 'more-queues-and-zero-1-b36', 'copy-patterns-1-b36', 'build-with-shapes-1-b36', 'big-small-long-heavy-1-b36', 'days-of-the-week-1-b36', 'one-more-one-less-1-b36', 'tens-and-twos-1-b36']
+
+# B-36 part F (hebrew-text-editor, 2026-11-01): the drafts of the pack that the editor reworded in the SOURCES (units, generators). The
+# table holds the final text; the `changes` column says what the draft was and why. (new text, the draft, why)
+PART_F_LIST = [
+    ('שָׁלוֹשׁ צְפַרְדְּעִים גְּדוֹלוֹת וַחֲמִשָּׁה אֶפְרוֹחִים קְטַנִּים. אַחַת הַצְּפַרְדְּעִים אוֹמֶרֶת: "אֲנַחְנוּ יוֹתֵר!" הִיא צוֹדֶקֶת?',
+     'שְׁלוֹשָׁה צְפַרְדְּעִים גְּדוֹלִים וַחֲמִשָּׁה אֶפְרוֹחִים קְטַנִּים. הַצְּפַרְדֵּעַ אוֹמֶרֶת: "אֲנַחְנוּ יוֹתֵר!" הִיא צוֹדֶקֶת?',
+     'gender: צְפַרְדֵּעַ is feminine (שָׁלוֹשׁ צְפַרְדְּעִים גְּדוֹלוֹת); the speaker is one of the frogs'),
+    ('שָׁלוֹשׁ צְפַרְדְּעִים גְּדוֹלוֹת וַחֲמִשָּׁה אֶפְרוֹחִים קְטַנִּים. אַחַת הַצְּפַרְדְּעִים אוֹמֶרֶת: "אֲנַחְנוּ יוֹתֵר." הִיא צוֹדֶקֶת?',
+     'שְׁלוֹשָׁה צְפַרְדְּעִים גְּדוֹלִים וַחֲמִשָּׁה אֶפְרוֹחִים קְטַנִּים. הַצְּפַרְדֵּעַ אוֹמֶרֶת: "אֲנַחְנוּ יוֹתֵר." הִיא צוֹדֶקֶת?',
+     'gender: צְפַרְדֵּעַ is feminine (alt text of the prompt)'),
+    ('הַצְּפַרְדְּעִים רְחוֹקוֹת זוֹ מִזּוֹ. הָאֶפְרוֹחַ אוֹמֵר: "לַצְּפַרְדְּעִים יֵשׁ יוֹתֵר!" הוּא צוֹדֵק?',
+     'הַצְּפַרְדְּעִים רְחוֹקִים זֶה מִזֶּה. הָאֶפְרוֹחַ אוֹמֵר: "לַצְּפַרְדְּעִים יֵשׁ יוֹתֵר!" הוּא צוֹדֵק?', 'gender: the frogs are feminine'),
+    ('הַצְּפַרְדְּעִים רְחוֹקוֹת זוֹ מִזּוֹ. הָאֶפְרוֹחַ אוֹמֵר: "לַצְּפַרְדְּעִים יֵשׁ יוֹתֵר." הוּא צוֹדֵק?',
+     'הַצְּפַרְדְּעִים רְחוֹקִים זֶה מִזֶּה. הָאֶפְרוֹחַ אוֹמֵר: "לַצְּפַרְדְּעִים יֵשׁ יוֹתֵר." הוּא צוֹדֵק?', 'gender: the frogs are feminine (alt text)'),
+    ('בּוֹאוּ נִסְפֹּר כַּמָּה קֻבִּיּוֹת יֵשׁ בְּכׇל צַד.', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.',
+     'sense (owner Q2, 2026-10-29): the old M-CNT-SIZE line says the reverse of the strategy; the balance of NUM-A-11 gets a counting line of its own'),
+    ('כֵּן! הַצְּפַרְדֵּעַ שְׁנִיָּה בַּתּוֹר.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item builds a line by the place named; it does not copy a model'),
+    ('כֵּן! הֶחָתוּל שְׁלִישִׁי בַּתּוֹר.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item builds a line by the place named; it does not copy a model'),
+    ('חוּם לְכָאן, וְאָפֹר לְכָאן.', 'הַחוּמִים עִם הַכַּדּוּר הֶחוּם, וְהָאֲפוֹרִים עִם הַכַּדּוּר הָאָפֹר.',
+     'nikud (הַחוּם, not הֶחוּם) and register: short, like the other sorts ("כָּחֹל לְכָאן, וְאָדֹם לְכָאן")'),
+    ('שָׂמִים כׇּל אֶחָד עִם זֶה שֶׁדּוֹמֶה לוֹ בְּדִיּוּק: אוֹתוֹ דָּבָר וְאוֹתוֹ צֶבַע.',
+     'שָׂמִים כׇּל אֶחָד עִם זֶה שֶׁהוּא בְּדִיּוּק כָּמוֹהוּ: אוֹתוֹ דָּבָר וְאוֹתוֹ צֶבַע.', 'register: "כָּמוֹהוּ" is literary'),
+    ('כֵּן! סִדַּרְתֶּם אֶת הַצְּעָדִים.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item puts the steps of a routine in order; it does not copy'),
+    ('כׇּל צַעַד שַׁיָּךְ לְצִחְצוּחַ שִׁנַּיִם אוֹ לִרְחִיצַת יָדַיִם.', 'כׇּל צַעַד אֶל הַשִּׁגְרָה שֶׁלּוֹ: צִחְצוּחַ שִׁנַּיִם אוֹ רְחִיצַת יָדַיִם.',
+     'vocabulary: "שִׁגְרָה" is an adult word; "שַׁיָּךְ" is the word of the other sorts'),
+    ('בּוֹאוּ נַעֲבֹר עַל הַצְּעָדִים שֶׁל כׇּל אֶחָד, צַעַד אַחַר צַעַד, וְנִרְאֶה לְאֵיפֹה זֶה שַׁיָּךְ.',
+     'זֶה חֵלֶק מֵהַשְּׁלַבִּים. בּוֹאוּ נַעֲבֹר עֲלֵיהֶם, אֶחָד אַחֲרֵי הַשֵּׁנִי.',
+     'sense: the old line says the step the child put in the wrong place "is one of the steps" and does not say what to do; the new one is the strategy'),
+    ('הִנֵּה חָתוּל וְכֶלֶב. בּוֹנִים שׁוּרָה: הֵם חוֹזְרִים שׁוּב וָשׁוּב.', 'הִנֵּה חָתוּל וְכֶלֶב. עוֹשִׂים שֶׁהֵם יַחְזְרוּ שׁוּב וָשׁוּב.',
+     'syntax: "עוֹשִׂים שֶׁהֵם יַחְזְרוּ" is not Hebrew'),
+    ('הִנֵּה דָּג וְצִפּוֹר. בּוֹנִים שׁוּרָה: הֵם חוֹזְרִים שׁוּב וָשׁוּב.', 'הִנֵּה דָּג וְצִפּוֹר. עוֹשִׂים שֶׁהֵם יַחְזְרוּ שׁוּב וָשׁוּב.',
+     'syntax: "עוֹשִׂים שֶׁהֵם יַחְזְרוּ" is not Hebrew'),
+    ('כֵּן! בְּנִיתֶם שׁוּרָה שֶׁחוֹזֶרֶת שׁוּב וָשׁוּב.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item asks for a row that repeats, not a copy'),
+    ('מַעֲתִיקִים אֶת הַסֵּדֶר. מַתְחִילִים בְּחָתוּל. מַה בָּא אַחֲרָיו?', 'מַעֲתִיקִים אֶת הַסֵּדֶר. הָעֶתֶק שֶׁלָּנוּ מַתְחִיל בְּחָתוּל. מַה בָּא אַחֲרָיו?',
+     'word: "הָעֶתֶק" is not "the copy" (הֶעְתֵּק) and is an adult word'),
+    ('מַעֲתִיקִים אֶת הַסֵּדֶר. יֵשׁ כְּבָר דָּג וְכוֹכָב. מַה בָּא עַכְשָׁו?', 'מַעֲתִיקִים אֶת הַסֵּדֶר. בֶּעָתֶק שֶׁלָּנוּ יֵשׁ דָּג וְכוֹכָב. מַה בָּא עַכְשָׁו?',
+     'word: "בֶּעָתֶק" is not "in the copy" and is an adult word'),
+    ('חָתוּל, כֶּלֶב — אַחֲרֵי הֶחָתוּל בָּא כֶּלֶב. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַכֶּלֶב.', 'חָתוּל, כֶּלֶב — אַחֲרֵי הַחָתוּל בָּא כֶּלֶב. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַכֶּלֶב.',
+     'nikud: הֶחָתוּל'),
+    ('כֵּן! סִדַּרְתֶּם אֶת הַסִּפּוּר.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item puts a story in order'),
+    ('כֵּן! סִדַּרְתֶּם אֶת הַמִּגְדָּלִים.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item puts the towers in order of size'),
+    ('כֵּן! סִדַּרְתֶּם אֶת הַדָּגִים.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item puts the fish in order of size'),
+    ('כֵּן! סִדַּרְתֶּם אֶת הַיּוֹם.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item puts the parts of the day in order'),
+    ('כֵּן! סִדַּרְתֶּם אֶת הַיָּמִים.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item puts the days in order'),
+    ('כֵּן! סִדַּרְתֶּם מֵהַבָּהִיר אֶל הַכֵּהֶה.', 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.', 'sense: the item puts the shades in order, from light to dark'),
+    ('כֵּן, לֶחָתוּל יֵשׁ יוֹתֵר מֵהַכֶּלֶב.', 'כֵּן, לֶחָתוּל יֵשׁ יוֹתֵר מִלַּכֶּלֶב.', 'syntax: "מִלַּכֶּלֶב" is not Hebrew; "מֵהַכֶּלֶב"'),
+    ('מְחַבְּרִים אֶחָד לְאֶחָד. לֶחָתוּל נִשְׁאֲרוּ שְׁנֵי תַּפּוּחִים בְּלִי זוּג, אָז אֵין אוֹתוֹ מִסְפָּר. עַכְשָׁו תּוֹרְכֶם.',
+     'מְחַבְּרִים אֶחָד לְאֶחָד. לַחָתוּל נִשְׁאֲרוּ שְׁנֵי תַּפּוּחִים בְּלִי זוּג, אָז הֵם שׁוֹנִים. עַכְשָׁו תּוֹרְכֶם.',
+     'nikud (לֶחָתוּל) and sense: "הֵם שׁוֹנִים" does not say what is different'),
+    ('תַּפּוּחִים לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ רוֹאִים כַּמָּה יֵשׁ מִכָּל אֶחָד.', 'תַּפּוּחִים לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ בּוֹנִים גְּרָף תְּמוּנוֹת.',
+     'vocabulary: "גְּרָף" is an adult word'),
+    ('בָּנָנוֹת לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ רוֹאִים כַּמָּה יֵשׁ מִכָּל אֶחָד.', 'בָּנָנוֹת לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ בּוֹנִים גְּרָף תְּמוּנוֹת.',
+     'vocabulary: "גְּרָף" is an adult word'),
+    ('דְּבָרִים שֶׁמִּתְגַּלְגְּלִים לְכָאן, וּדְבָרִים שֶׁאֶפְשָׁר לַעֲרֹם לְכָאן.', 'דְּבָרִים שֶׁמִּתְגַּלְגְּלִים לְכָאן, וּדְבָרִים שֶׁעוֹמְדִים וְנֶעֱרָמִים לְכָאן.',
+     'vocabulary: "נֶעֱרָמִים" is hard for a five-year-old; "אֶפְשָׁר לַעֲרֹם"'),
+    ('דְּבָרִים שֶׁאֶפְשָׁר לַעֲרֹם לְכָאן, וּדְבָרִים שֶׁמִּתְגַּלְגְּלִים לְכָאן.', 'דְּבָרִים שֶׁעוֹמְדִים וְנֶעֱרָמִים לְכָאן, וּדְבָרִים שֶׁמִּתְגַּלְגְּלִים לְכָאן.',
+     'vocabulary: "נֶעֱרָמִים" is hard for a five-year-old; "אֶפְשָׁר לַעֲרֹם"'),
+    ('כֵּן! הַמִּסְפָּר תֵּשַׁע גָּדוֹל יוֹתֵר.', 'כֵּן! תֵּשַׁע גָּדוֹל יוֹתֵר.', 'syntax: an adjective needs its noun ("הַמִּסְפָּר תֵּשַׁע")'),
+    ('כֵּן! הַמִּסְפָּר אַרְבַּע קָטָן יוֹתֵר.', 'כֵּן! אַרְבַּע קָטָן יוֹתֵר.', 'syntax: an adjective needs its noun ("הַמִּסְפָּר אַרְבַּע")'),
+    ('עֶשֶׂר! סְפַרְתֶּם זוּג אַחַר זוּג.', 'עֶשֶׂר! כֹּל זוּג, וְעוֹד זוּג.', 'sense and nikud: "כֹּל זוּג, וְעוֹד זוּג" does not say what was done'),
+    ('כּוֹתְבִים שָׁלוֹשׁ בִּשְׁתֵּי קְשָׁתוֹת שֶׁנִּפְתָּחוֹת שְׂמֹאלָה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשָּׁלוֹשׁ הַנְּכוֹנָה.',
+     'כּוֹתְבִים שָׁלוֹשׁ בִּשְׁתֵּי עִקּוּלִים שֶׁנִּפְתָּחִים לְצַד שְׂמֹאל. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשָּׁלוֹשׁ הַנְּכוֹנָה.',
+     'gender and vocabulary: עִקּוּל is masculine (שְׁנֵי עִקּוּלִים), and an adult word; "שְׁתֵּי קְשָׁתוֹת"'),
+    ('כּוֹתְבִים שֶׁבַע: קַו שׁוֹכֵב, וְאַחֲרָיו קַו שֶׁיּוֹרֵד כְּמוֹ מַגְלֵשָׁה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשֶּׁבַע הַנְּכוֹנָה.',
+     'כּוֹתְבִים שֶׁבַע בְּקַו שֶׁכָּבוּי וְקַו אֶלְכְּסוֹן שֶׁיּוֹרֵד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַשֶּׁבַע הַנְּכוֹנָה.',
+     'word: "שֶׁכָּבוּי" is "turned off"; "אֶלְכְּסוֹן" is a school word; a slide a child knows'),
+    ('הַסִּפְרָה הַזֹּאת הֲפוּכָה, כְּמוֹ בַּמַּרְאָה. בּוֹאוּ נִסְתַּכֵּל לְאֵיזֶה צַד הִיא פּוֹנָה.', 'הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב.',
+     'sense: the shared M-NUM-REV line is about two digits swapped (12 and 21); the mirrored 3 and 7 get a line about the mirror. For the curriculum-expert: the tag of a mirrored digit is M-NUM-WRITE'),
+    ('בְּסַךְ הַכֹּל יֵשׁ שִׁבְעָה דָּגִים. רוֹאִים שְׁלוֹשָׁה דָּגִים, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?',
+     'בְּסַךְ הַכֹּל יֵשׁ שִׁבְעָה דָּגִים. רוֹאִים שָׁלוֹשׁ, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?',
+     'number (owner Q8): the noun is said with its number'),
+    ('בְּסַךְ הַכֹּל יֵשׁ תִּשְׁעָה דָּגִים. רוֹאִים חֲמִשָּׁה דָּגִים, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?',
+     'בְּסַךְ הַכֹּל יֵשׁ תִּשְׁעָה דָּגִים. רוֹאִים חָמֵשׁ, וְהַשְּׁאָר מֻסְתָּרִים מֵאֲחוֹרֵי הָאֶבֶן. כַּמָּה מֻסְתָּרִים?',
+     'number (owner Q8): the noun is said with its number'),
+    ('מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי בָּהִיר וְלֹא הֲכִי כֵּהֶה.', 'הָאֶמְצָעִי אֵינוֹ הֶחָלָשׁ בְּיוֹתֵר וְאֵינוֹ הֶחָזָק בְּיוֹתֵר. בּוֹאוּ נַתְחִיל מֵהַבָּהִיר.',
+     'curriculum-expert (b36 section 10): size words for a shade; the middle items COL-B-02 .9 to .12 get this line too, instead of the shared "not the smallest and not the biggest"'),
+    ('זֶה הָאֶמְצַע. בּוֹאוּ נַשְׁוֶה אֶת כֻּלָּם: בָּהִיר, אֶמְצָעִי, כֵּהֶה.', 'מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.',
+     'found on the way: when the question asks for the darkest or the lightest and the child picks the middle, the shared line said "we look for the middle"'),
+    ('בָּהִיר אוֹ כֵּהֶה, זֶה אוֹתוֹ צֶבַע. בּוֹאוּ נִבְדֹּק שׁוּב.', 'כָּחֹל בָּהִיר וְכָחֹל כֵּהֶה הֵם שְׁנֵיהֶם כָּחֹל. בּוֹאוּ נִסְתַּכֵּל עַל הַצֶּבַע.',
+     'curriculum-expert (b36 section 10): the shared line says "blue"; it stays for the blue items only, the green, red and purple items of COL-B-02 and COL-B-03 get this colour-free line'),
+    ('אַחֲרֵי הַתֵּשַׁע מַתְחִילָה קְבוּצָה חֲדָשָׁה שֶׁל עֶשֶׂר. בּוֹאוּ נִסְפֹּר יַחַד.', 'אַחֲרֵי הַתֵּשַׁע בָּא עֶשֶׂר חָדָשׁ. בּוֹאוּ נִסְפֹּר יַחַד.', 'gender and sense: "עֶשֶׂר חָדָשׁ" mixes the genders; a new group of ten'),
+    ('כׇּל הַקְּפִיצוֹת שָׁווֹת. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר.', 'כׇּל קְפִיצָה שָׁוָה. בּוֹאוּ נִקְפֹּץ יַחַד וְנִסְפֹּר.', 'sense: "כׇּל קְפִיצָה שָׁוָה" reads as "worth"; the hops are equal'),
+    ('מִסְגֶּרֶת אַחַת מְלֵאָה, עֶשֶׂר מִשְׁבְּצוֹת. בַּמִּסְגֶּרֶת הַשְּׁנִיָּה יֵשׁ עוֹד כַּמָּה.', 'לוּחַ אֶחָד מָלֵא, עֶשֶׂר מִשְׁבְּצוֹת. בַּלּוּחַ הַשֵּׁנִי יֵשׁ עוֹד כַּמָּה.',
+     'vocabulary: one word for the ten-frame in the whole pack, the established מִסְגֶּרֶת (b.numb16, NUM-A-14), not the new לוּחַ'),
+    ('סוֹפְרִים כׇּל עַמּוּד: שָׁלוֹשׁ, חָמֵשׁ, שְׁתַּיִם. הָעַמּוּד הֲכִי גָּבוֹהַּ הוּא זֶה שֶׁיֵּשׁ בּוֹ הֲכִי הַרְבֵּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן.',
+     'סוֹפְרִים כׇּל עַמּוּד: שָׁלוֹשׁ, חָמֵשׁ, שְׁתַּיִם. הָעַמּוּד הַגָּבוֹהַּ בְּיוֹתֵר הוּא זֶה שֶׁיֵּשׁ בּוֹ הֲכִי הַרְבֵּה. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן.',
+     'register: "בְּיוֹתֵר" is written Hebrew; "הֲכִי גָּבוֹהַּ" (all the chart lines of MATH-B-19)'),
+    ('הילד בוחר את מה שנראה דומה (בצורה או בצבע), ולא את מה שהולך יחד בשימוש. למשל, ליד מפתח הוא בוחר עיפרון, כי שניהם ארוכים וצהובים.',
+     'הילד בוחר את מה שנראה דומה (צורה או צבע), ולא את מה שהולך יחד בשימוש: למפתח הוא מתאים עיפרון, כי שניהם ארוכים וצהובים.', 'clarity: who chooses what (parent text)'),
+    ('הילד בודק את הכלל רק על אחד הפריטים ולא על כולם: רואה שהראשון עיגול ובוחר בכלל "כולם עיגולים", גם כשהאחרים אינם עיגולים.',
+     'הילד בודק את הכלל רק על אחד הפריטים ולא על כולם: רואה שהראשון עיגול ובוחר "הצורה", גם כשהאחרים אינם עיגולים.', 'clarity: which rule the child picks (parent text)'),
+    ('הילד עושה את הפעולה ההפוכה: מחבר כשצריך לחסר (עונה 13 על 9 פחות 4), או מחסר כשצריך לחבר.',
+     'הילד עושה את הפעולה ההפוכה: מחבר כשצריך לחסר (13 בתרגיל 9 פחות 4), או מחסר כשצריך לחבר.', 'clarity: the example says what the child answers (parent text)'),
+    ('הילד מחבר את מספר הקבוצות ואת מה שיש בקבוצה אחת (שתי צלחות, שלושה פירות על כל אחת: הוא עונה חמש), במקום לספור את כל הפריטים.',
+     'הילד מחבר את מספר הקבוצות ואת מה שיש בקבוצה אחת (שתי צלחות, שלושה על כל אחת: חמש), במקום לספור את כל הפריטים.', 'clarity: the noun is said (parent text)'),
+]
+# The owner's answers of 2026-11-01 (B-36 sheet, "All proposed looks good"): the drafts he approved, now in the sources. (new text, the draft, why)
+PART_F_LIST += [
+    ('הַמָּקוֹם בַּתּוֹר הוּא לֹא כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.', 'הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.',
+     'register (owner D4, 2026-11-01): "אֵינוֹ" is written Hebrew; "הוּא לֹא" for a child'),
+    ('בְּבַקָּשָׁה, תַּגִּידוּ לִי.', 'בְּבַקָּשָׁה, אִמְרוּ לִי.',
+     'register (owner D1, 2026-11-01, the "say!" question): the spoken imperative of לוֹמַר is תַּגִּידוּ (Pealim); אִמְרוּ is literary and left the V1 list'),
+    ('בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.',
+     'sense (owner Q2 a, 2026-11-01): the "same number?" items compare by pairing; the old M-CNT-SIZE line said the reverse'),
+    ('בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.', 'יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.',
+     'sense (owner Q2 b, 2026-11-01): the numeral-to-set matches count each group; the old M-CNT-SIZE line said the reverse'),
+    ('הַצַּד שֶׁלְּמַעְלָה קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.',
+     'הַצַּד הַיְמָנִי קַל יוֹתֵר. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַמֹּאזְנַיִם שָׁווֹת.',
+     'curriculum and agreement (owner D3, 2026-11-01): the sides of the balance are named by where they are, not by right and left; the scales are not "שָׁווֹת", the sides are equal. True only if the beam tilts (design-director)'),
+]
+# QA-B36-6 (2026-11-01, hebrew-text-editor): the level-2 hint line (hints.1) of ten second-way items was the generic "look slowly at all of them"
+# over a picture that is new (docs/qa/b36-verification.md). The rows below got a line that says what the picture shows
+# (tools/hint_lines.py); each is a new text that the owner has not read, so it is `text-ready`, never `owner-approved`
+# (docs/review/b36-qa6-owner-sample.md). Keyed by the pack file (source); the id is always hints.1.caption.0.v.
+QA6_DRAFT = 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.'
+QA6_SOURCES = {
+    'activity.b36.numa06.1.json': 'the asked number on fingers beside the pile',
+    'activity.b36.numa06.2.json': 'the asked number on fingers beside the pile',
+    'activity.x.numb07.21.json': 'the numeral written the right way, on its own',
+    'activity.x.numb07.22.json': 'the numeral written the right way, on its own',
+    'activity.b.numb17.13.json': 'a ring round each pair of socks, with the count so far',
+    'activity.x.mathb17.12.json': 'the value of each coin beside it',
+    'activity.x.mathb17.13.json': 'the value of each coin beside it',
+    'activity.b.mathb18.10.json': 'the whole as a frame: the seen places filled, the hidden ones empty',
+    'activity.b.mathb18.11.json': 'the whole as a frame: the seen places filled, the hidden ones empty',
+    'activity.b.shpb08.10.json': 'the cube as an outline, like every other solid of SHP-B-08 (the shared line vo:hint.solid_outline.h2)',
+}
+
+
+# The owner approved the ten rows on 2026-11-02 (chat, verbatim: "Yes, 1-6 OK"; the sheet docs/review/b36-qa6-owner-sample.md). Their hashes are in
+# docs/review/b36-approved-rows.tsv (the nine rows whose old hash no longer matched were updated, b.shpb08.10 was added). A row whose line
+# changes later is not in the list any more and goes back to `text-ready` with the QA-B36-6 comment below.
+QA6_APPROVED_COMMENT = ('QA-B36-6 (docs/review/b36-qa6-owner-sample.md): the owner approved this level-2 hint line on 2026-11-02 '
+                        '("Yes, 1-6 OK"); the voice id of its family is shared by the items of the family.')
+
+# The third hint line of b.mathb01.15 and .16 ("how many did we add?": 3 apples, now 5; 4 fish, now 7). The first version counted everything up to the
+# total (the last number heard was the wrong answer, tagged M-PART-MISS). The voice director flagged it; the editor proposed the line that counts only
+# the added ones (hebrew-notes section 18.1 on branch b45-voicing-plan, commit 78f0887); the owner read both texts in chat and said "Fix them" on
+# 2026-11-02. The two rows are in docs/review/b36-approved-rows.tsv with the hash of the text, screen text and voice text exactly as approved.
+H3_COUNT_ADDED_SOURCES = ('activity.b.mathb01.15.json', 'activity.b.mathb01.16.json')
+H3_COUNT_ADDED_COMMENT = ('the owner read this third hint line in chat and approved it on 2026-11-02 ("Fix them"): it counts only the added ones, '
+                          'as the director asked (hebrew-notes section 17.1); the voice id is vo:b.mathb01.15.h3 / .16.h3.')
+
+
+def qa6_note(r):
+    if r['id'] == 'hints.1.caption.0.v' and r['source'] in QA6_SOURCES:
+        return ('QA-B36-6 (editor, 2026-11-01): the level-2 line said "look slowly at all of them" over a new picture (%s); it now says '
+                'what the picture shows; the draft was: %s' % (QA6_SOURCES[r['source']], QA6_DRAFT))
+    return None
+
+
+PART_F = {}
+for _new, _old, _why in PART_F_LIST:
+    PART_F[canon(_new)] = (_old, _why)
+# the same kind of rewording over many rows: (regex on the new text, the draft in words, why)
+PART_F_RX = [
+    # the owner's answers of 2026-11-01 (B-36 sheet): D3 (the sides of the balance), D5 and the copula of the LOG-B-08 shape rules
+    (re.compile(canon(r'^בַּצַּד שֶׁלְּמַטָּה יֵשׁ .* וּבַצַּד שֶׁלְּמַעְלָה .* צָרִיךְ עוֹד ')), 'the same line with "בַּצַּד הַשְּׂמָאלִי … וּבַצַּד הַיְמָנִי"',
+     'curriculum (owner D3, 2026-11-01): the sides are named by where they are (down is the heavy side, up the light side), not by right and left; true only if the beam tilts'),
+    (re.compile(canon(r'^אִם הַצּוּרָה הִיא .*אִם לֹא — לָעֵשֶׂב\.$')), 'the same line without "הִיא" and with "אַחֶרֶת — לָעֵשֶׂב"',
+     'syntax and register (owner D5, 2026-11-01): a shape needs "הִיא" (אִם הַצּוּרָה הִיא עִגּוּל); "אַחֶרֶת" is school register, "אִם לֹא" for ages 3 to 6'),
+    (re.compile(canon(r'^אִם הַצּוּרָה .*אִם לֹא — לָעֵשֶׂב\.$')), 'the same line with "אַחֶרֶת — לָעֵשֶׂב"',
+     'register (owner D5, 2026-11-01): "אַחֶרֶת" is school register, "אִם לֹא" for ages 3 to 6'),
+    # D1 research (hebrew-text-editor, 2026-11-01): two wrong 2nd person plural past forms found in the sources (Pealim)
+    (re.compile(canon(r'^כֵּן, צְדַקְתֶּם!$')), '"כֵּן, צָדַקְתֶּם!"',
+     'nikud: a paal verb in the 2nd person plural past takes a shva, צְדַקְתֶּם (tzdaktem), not צָדַקְתֶּם (Pealim)'),
+    (re.compile(canon(r'עֲבַרְתֶּם')), 'the same line with עָבַרְתֶּם',
+     'nikud: a guttural first letter takes a hataf-patach, עֲבַרְתֶּם (avartem), not עָבַרְתֶּם (Pealim)'),
+    (re.compile(canon(r'^סוֹפְרִים אֶת כֻּלָּם\. אֵלֶּה ')), 'the same line without "סוֹפְרִים אֶת כֻּלָּם."',
+     'teaching: the third hint is a worked example, and a bare answer ("these are three apples") opened it; the hand counts first (16 flash items)'),
+    (re.compile(canon(r'הָעַמּוּד הֲכִי (גָּבוֹהַּ|נָמוּךְ) הוּא זֶה')), '"הָעַמּוּד הַגָּבוֹהַּ / הַנָּמוּךְ בְּיוֹתֵר"',
+     'register: "בְּיוֹתֵר" is written Hebrew; "הֲכִי גָּבוֹהַּ" (the chart lines of MATH-B-19)'),
+    (re.compile(canon(r'^מַתְחִילִים מֵ(עֶשֶׂר|חֲמֵשׁ עֶשְׂרֵה) וְסוֹפְרִים(: | הָלְאָה עַד )')), '"מַתְחִילִים מִ… וְסוֹפְרִים: מֵאַחַת עַד …"',
+     'sense and nikud: counting on from ten or fifteen says the numbers after it, not "from one"; מֵעֶשֶׂר, מֵחֲמֵשׁ (a guttural takes מֵ)'),
+]
+
+# Rows added after the master pass that the editor has not signed: (group digit, regex on the id, regex on the source, the comment).
+# They stay `proposed` for the owner although their group is in REVIEWED; this list wins over REVIEWED, DOUBT and NOTE. A new string in
+# a REVIEWED group goes here until the editor has read it (the run prints the new rows).
+# B-36 part F (2026-11-01): the editor read every new or changed row of the pack and of the app (the B-40 hint lines, parts B to E, the
+# B-38 cube and cat lines, the B-39 bottle lines, the B-32 refusal message, the 150 part D items and their lessons) and reworded what was
+# wrong in the SOURCES (PART_F_LIST above). They are `text-ready` and wait for the owner's sample-and-rule review (docs/review/b36-owner-sample.md).
+# What stays `proposed` is a question only the owner can answer: pending() below (B40_Q3, B40_SPOT, B40_TEN), DOUBT, ROW_RULES (Q2, D12) and the V1 rows.
+PENDING = []  # empty: the owner approved the whole B-36 pass on 2026-11-01 (docs/review/b36-owner-sample.md)
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
-DOUBT = [
-    (r'הַצַּד הַיְמָנִי קַל|בַּצַּד הַשְּׂ?מָ?ֹ?אלִי יֵשׁ', 'B-13 (curriculum audit F8, F13): draft. Right and left are not taught before '
-     'SHP-B-12, so the sides are named by where they are: the light side is up, the heavy side is down. True only if the '
-     'balance picture tilts (design-director to confirm).'),
-]
+DOUBT = []  # empty: D12 (the balance sides) was approved on 2026-11-01 and is in the sources (tools/band_b.py)
 # Rows the OWNER approved (his own answers, relayed by the orchestrator; the editor never approves): (regex on the source,
 # regex on the original text, the comment). Their status is `owner-approved`. Nothing else is ever set to it by this script.
 OWNER_APPROVED = [
@@ -823,6 +1081,51 @@ OWNER_APPROVED = [
      'B-15 P1 (b15-hebrew.md 4): the owner chose the new Band A hint 3 in place of "אֶחָד מֵהֶם לֹא מַתְאִים" '
      '(owner-approved 2026-10-30). One clip, vo:hint.spot_but_one.h3.'),
 ]
+
+
+# B-36 (2026-11-01): the owner approved the whole B-36 pass ("All proposed looks good"): the sample rows S1 to S88, the questions D1
+# to D5 as proposed (D1: `תַּגִּידוּ לִי`, not `אִמְרוּ לִי`), F1 to F6 as recommended (F1 A, F2 yes, F3 yes, F4 keep אֶל, F5 keep, F6 ok),
+# and, by the rule of part 5 of docs/review/b36-owner-sample.md, every row the editor read in that pass. The rows are listed in
+# docs/review/b36-approved-rows.tsv as (source, id, hash of the text, the screen text and the voice text exactly as approved): a row
+# whose text, screen text or voice text changes later is not in the list any more and goes back to the editor's own status.
+# The list was made from the table after the sources had the approved wording (the rows that were `proposed`, and the rows that were
+# not `text-ready`/`owner-approved`/`unchanged` with the same text and screen text in the table before B-36). The editor never adds a row.
+B36_APPROVED_FILE = os.path.join(ROOT, 'docs', 'review', 'b36-approved-rows.tsv')
+B36_APPROVED_COMMENT = ('B-36 sheet (docs/review/b36-owner-sample.md): the owner approved this row on 2026-11-01 ("All proposed looks good"; '
+                        'sample S1-S88, D1-D5, F1-F6, and the rule of part 5).')
+_b36 = None
+
+# 2026-11-02 (B-45): the owner, in chat, verbatim: "If they are already checked by the text agent and the voice agent its fine by me"
+# (answering whether signing pack 0.11.0 also approves its spoken texts for voicing). A CONDITIONAL approval: a spoken row is
+# `owner-approved` only if (a) the editor has checked it (it is `text-ready`, not flagged) and (b) the voice director has a direction
+# row for exactly its voice text in docs/audio/voice-direction.csv, with no open ask. The rows that met both are in
+# docs/review/b45-approved-rows.tsv, hash-locked like the B-36 list (source, id, hash of text, screen text and voice text): a later change
+# of any of the three takes the row out of the list and back to `text-ready`. The rows that did not are listed, with the reason, in
+# docs/review/b45-held-rows.tsv (they stay as they are). docs/agents/hebrew-notes.md section 18 has the rules and the counts.
+B45_APPROVED_FILE = os.path.join(ROOT, 'docs', 'review', 'b45-approved-rows.tsv')
+B45_APPROVED_COMMENT = ('owner approved 2026-11-02, conditional: checked by the text and voice agents (the owner, in chat: "If they are already '
+                        'checked by the text agent and the voice agent its fine by me"; docs/agents/hebrew-notes.md section 18).')
+_b45 = None
+
+
+def b36_hash(text, ui, voice):
+    return hashlib.sha1(chr(0x1f).join((text, ui, voice)).encode('utf-8')).hexdigest()[:12]
+
+
+def b36_approved(r, ui, voice):
+    global _b36
+    if _b36 is None:
+        with open(B36_APPROVED_FILE, encoding='utf-8') as fh:
+            _b36 = {tuple(line.rstrip(chr(10)).split(chr(9))) for line in fh if line.strip()}
+    return (r['source'], r['id'], b36_hash(r['text'], ui, voice)) in _b36
+
+
+def b45_approved(r, ui, voice):
+    global _b45
+    if _b45 is None:
+        with open(B45_APPROVED_FILE, encoding='utf-8') as fh:
+            _b45 = {tuple(line.rstrip(chr(10)).split(chr(9))) for line in fh if line.strip()}
+    return (r['source'], r['id'], b36_hash(r['text'], ui, voice)) in _b45
 
 
 def owner_approved(r):
@@ -874,6 +1177,8 @@ def masc_before_noun(n):
 
 def missing_addend_model(r, ctx):
     """Owner Q3, hint 2 (level 2): a concrete model first; the answer is not said before hint 3."""
+    if hint_lines.is_b40_text(r['text']):
+        return None
     words = addend_words(ctx)
     if not words:
         return None
@@ -882,6 +1187,8 @@ def missing_addend_model(r, ctx):
 
 def missing_addend_count_on(r, ctx):
     """Owner Q3, hint 3 (level 3): count on from the first number, one finger per count, then the answer."""
+    if hint_lines.is_b40_text(r['text']):
+        return None  # B-40 part 4: the line now says what the picture draws (the empty places counted from one, no fingers)
     words = addend_words(ctx)
     if not words:
         return None
@@ -944,8 +1251,6 @@ SIZE_LINES = {
     'big': 'הֵם גְּדוֹלִים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
     'small': 'הֵם קְטַנִּים, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
     'spread': 'הֵם רְחוֹקִים זֶה מִזֶּה, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נִסְפֹּר.',
-    'pairs': 'בּוֹאוּ נַעֲשֶׂה זוּגוֹת: לְכֻלָּם יֵשׁ זוּג?',
-    'count': 'בּוֹאוּ נִסְפֹּר כַּמָּה יֵשׁ בְּכׇל קְבוּצָה.',
 }
 SIZE_OLD = r'^יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר'
 Q2 = 'sense (owner Q2, 2026-10-29): the M-CNT-SIZE line is chosen by the item\'s cue, names what the eye caught, has no ' \
@@ -963,12 +1268,6 @@ ROW_RULES = [
      'round). vo:fb.size must split by cue (hebrew-notes.md D2).'),
     (r'^activity\.more\.spread\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['spread'], Q2 + ' (spread)', TR,
      'Q2 (owner 2026-10-29): the child picked the spread-out ones. vo:fb.size must split by cue (hebrew-notes.md D2).'),
-    (r'^activity\.same\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['pairs'], Q2 + ' (pairs)', PR,
-     'Q2 draft: NUM-A-11 compares by pairing, but its items ask "the same number?" (yes or no), not "more" or "fewer", so '
-     'the two matching lines of the teaching view do not fit; this pairing line is new. Please confirm.'),
-    (r'^activity\.x\.numa07\.', r'^feedback\.incorrect', SIZE_OLD, SIZE_LINES['count'], Q2 + ' (counting; NUM-A-07)', PR,
-     'Q2 draft: NUM-A-07 (match a numeral to a set) should lose the M-CNT-SIZE tag (curriculum audit F4); then this row '
-     'goes away. Until then, the counting line.'),
     # Q3: the missing addend, a concrete model at hint 2, count on at hint 3
     (r'^activity\.b\.mathb18\.', r'^hints\.1\.caption', r'', missing_addend_model,
      'teaching (owner Q3, 2026-10-29): hint 2 builds the model first (the start is there, add one at a time up to the total, '
@@ -1119,6 +1418,12 @@ def master(rows, result, rules):
             rule = rules[n]
             ui, g_notes, el, e_notes = result[(r['text'], rule[0] if rule else None, rule[1] if rule else None)]
             notes = g_notes + e_notes
+            pf = PART_F.get(canon(r['text'])) or next(((o_, w_) for rx, o_, w_ in PART_F_RX if rx.search(canon(r['text']))), None)
+            if pf:
+                notes = ['B-36 part F (editor, 2026-11-01): %s; the draft was: %s' % (pf[1], pf[0])] + notes
+            q6 = qa6_note(r)
+            if q6:
+                notes = [q6] + notes
             status = 'proposed' if (g_notes or is_spoken) else 'unchanged'
             comment = ''
             if (r['source'], r['id'], r['text']) not in kept:
@@ -1139,6 +1444,8 @@ def master(rows, result, rules):
                     status, comment = 'proposed', EDITOR + doubt
                 elif any(n.startswith('REVIEW') for n in notes):
                     status, comment = 'proposed', EDITOR + 'a rule flagged this row; not yet decided'
+                elif (r['source'], r['id']) in V1_ANSWERED and is_spoken and any(n.startswith(VOICE_AUDIT) for n in notes):
+                    status, comment = 'text-ready', EDITOR + V1_ANSWERED_NOTE
                 elif is_spoken and any(n.startswith(VOICE_AUDIT) for n in notes):
                     status, comment = 'proposed', EDITOR + (
                         'V1 (pronunciation audit 2026-10-29): the voice text changed so a voice cannot misread it '
@@ -1150,13 +1457,25 @@ def master(rows, result, rules):
             elif r['group'].startswith('5'):
                 comment = EDITOR + ALERT_NOTE
             approved = owner_approved(r)
+            if not approved and b36_approved(r, ui, el):
+                approved = QA6_APPROVED_COMMENT if q6 else B36_APPROVED_COMMENT
+                if r['id'] == 'hints.2.caption.0.v' and r['source'] in H3_COUNT_ADDED_SOURCES:
+                    approved = H3_COUNT_ADDED_COMMENT
+            if not approved and b45_approved(r, ui, el):
+                approved = B45_APPROVED_COMMENT
+            if q6 and status == 'text-ready':
+                comment = EDITOR + 'new text (QA-B36-6): waits for the owner, docs/review/b36-qa6-owner-sample.md'
             if approved:
                 status, comment = 'owner-approved', EDITOR + approved
             old = kept.get((r['source'], r['id'], r['text']))
             correction = r['correction (fill in)']
             if old:
                 owner_comment = old['comment'].strip() and not old['comment'].startswith(EDITOR.strip())
-                if old['correction (fill in)'].strip() or owner_comment or old['status'] in OWNER_STATUSES:
+                # A B-45 row whose hash is no longer in the list is not kept as approved from the last table: it goes back to the editor's status.
+                lost_b45 = old['comment'].startswith(EDITOR + B45_APPROVED_COMMENT) and approved != B45_APPROVED_COMMENT
+                if lost_b45:
+                    pass
+                elif old['correction (fill in)'].strip() or owner_comment or old['status'] in OWNER_STATUSES:
                     status = old['status'] if old['status'] in OWNER_STATUSES or old['correction (fill in)'].strip() else status
                     correction = old['correction (fill in)']
                     comment = old['comment'] if owner_comment else comment

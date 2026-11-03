@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 
 import '../design/app_text.dart';
@@ -10,6 +11,7 @@ import '../design/tokens.g.dart';
 import '../strings/he.dart';
 import 'art.dart';
 import 'home_island_name.dart';
+import 'welcome_shown.dart';
 
 /// A land of the world map, with the sign under its island.
 enum Land {
@@ -97,6 +99,9 @@ class _HomeSpec {
     this.pillFrameInset = 0,
     required this.bubbleMaxWidth,
     this.bubbleBreaks = false,
+    this.welcomeTop,
+    this.welcomeBottom,
+    this.welcomeMaxWidth,
   });
 
   final String scene;
@@ -150,6 +155,15 @@ class _HomeSpec {
   /// ([bubbleBreaks], design review of B-26 step 2 and B-34), so it stays beside the friend and off Counting Hills.
   final double bubbleMaxWidth;
   final bool bubbleBreaks;
+
+  /// The band beside the friend that the daily welcome's bubble stays in (B-42), in world y: under the land's sign above
+  /// the friend and over the home island's sign (at text scale 1.3, 6 to 8 clear of each). A sentence too tall for the
+  /// band at [bubbleMaxWidth] makes the bubble wider, up to [welcomeMaxWidth] (still clear of Counting Hills' stairs and
+  /// sign); a bubble taller than the room above the mouth stands lower, its tail moved up its edge to the mouth. Null on
+  /// the phones, where every sentence fits above the mouth as the map's own bubble does.
+  final double? welcomeTop;
+  final double? welcomeBottom;
+  final double? welcomeMaxWidth;
   final List<_Sign> signs;
 
   /// Where the companion stands on the map: the place Nitzi's art had in the board, at 0.3 of its 512 point canvas.
@@ -285,6 +299,11 @@ class _HomeSpec {
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     bubbleMaxWidth: 210,
     bubbleBreaks: true,
+    // Market Village's sign ends at 418 at text scale 1.3, Counting Hills' sign starts at 666 (the home sign at 676); 245
+    // wide the bubble starts at 760, 12 clear of the Counting Hills stairs.
+    welcomeTop: 426,
+    welcomeBottom: 660,
+    welcomeMaxWidth: 245,
     companionLeft: 975,
     companionTop: 450.4,
     homeSignLeft: 890,
@@ -331,6 +350,11 @@ class _HomeSpec {
     bubblePad: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     bubbleMaxWidth: 210,
     bubbleBreaks: true,
+    // Colour Bay's sign ends at 1276 at text scale 1.3, the home sign starts at 1510; 245 wide the bubble starts at 376,
+    // 20 clear of the Counting Hills sign.
+    welcomeTop: 1282,
+    welcomeBottom: 1504,
+    welcomeMaxWidth: 245,
     companionLeft: 590,
     companionTop: 1289.2,
     homeSignLeft: 480,
@@ -380,7 +404,17 @@ class HomeScreen extends StatelessWidget {
     this.hallGlow = false,
     this.homeIsland,
     this.onOpenHome,
+    this.welcome,
+    this.pillGlow,
   });
+
+  /// The sentence of the daily welcome the bubble says now (B-42), or null when it says its own words. The listenable is
+  /// null on a map that has no welcome.
+  final ValueListenable<WelcomeShown?>? welcome;
+
+  /// The pill with the bottle glows (the welcome's closing line points at it). It does not glow when the system asks for
+  /// reduced motion.
+  final ValueListenable<bool>? pillGlow;
 
   /// The home island's words, named after the child (B-26). Null: the sign says Nitzi's island, as before.
   final HomeIslandName? homeIsland;
@@ -588,12 +622,14 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         // The bubble only speaks: a touch on it goes on to the land under it (on a tablet it reaches over Counting Hills).
-        _bubble(
-          s,
-          IgnorePointer(
-            child: _MapBubble(spec: s, name: homeIsland?.name ?? childName),
+        if (welcome == null)
+          _MapBubble(spec: s, name: homeIsland?.name ?? childName, mouth: _mouth)
+        else
+          ValueListenableBuilder<WelcomeShown?>(
+            valueListenable: welcome!,
+            builder: (BuildContext context, WelcomeShown? shown, Widget? _) =>
+                _MapBubble(spec: s, name: homeIsland?.name ?? childName, mouth: _mouth, welcome: shown),
           ),
-        ),
       ],
     ),
   );
@@ -607,24 +643,17 @@ class HomeScreen extends StatelessWidget {
     return hallGlow ? '$island, ${He.trophyNewSemantics.text}' : island;
   }
 
-  /// The bubble: at the board's own place when no friend is on the map; otherwise beside the friend's head, with its tail (a corner at the bubble's lower right) pointing at the mouth. In world coordinates.
-  Widget _bubble(_HomeSpec s, Widget bubble) {
-    final Offset? m = companion == null ? null : companionMouth;
-    if (m == null || s.bubbleAtBoardPlace) {
-      return Positioned(right: s.bubbleRight, top: s.bubbleTop, child: bubble);
-    }
-    const double size = _HomeSpec.companionSize;
-    final double mouthX = s.companionLeft + m.dx * size;
-    final double mouthY = s.companionTop + m.dy * size;
-    // The tail's tip sticks out 14.5 beyond the bubble; a head reaches about 0.18 of the picture to each side of the mouth.
-    final double rightEdge = mouthX - 0.18 * size - 4 - 14.5;
-    // The tail sits 29 above the bubble's bottom edge.
-    final double bottomEdge = mouthY + 29;
-    return Positioned(right: s.worldWidth - rightEdge, bottom: s.worldHeight - bottomEdge, child: bubble);
-  }
+  /// The friend's mouth the bubble points at, or null when no friend is on the map.
+  Offset? get _mouth => companion == null ? null : companionMouth;
 
   Widget _pill(_HomeSpec s) {
-    final Widget pill = _DailyPill(spec: s, onTap: onOpenHome);
+    final Widget pill = pillGlow == null
+        ? _DailyPill(spec: s, onTap: onOpenHome)
+        : ValueListenableBuilder<bool>(
+            valueListenable: pillGlow!,
+            builder: (BuildContext context, bool glow, Widget? _) =>
+                _DailyPill(spec: s, onTap: onOpenHome, glow: glow),
+          );
     if (s.pillFrameLeft != null) {
       return Positioned(
         left: s.pillFrameLeft,
@@ -677,9 +706,15 @@ class HomeScreen extends StatelessWidget {
 /// sign's rule ([shortenName]), so the bubble never takes three lines (QA-29, B-34: on the phones too).
 /// The name sits in an isolate ([isolatedName]). With no usable name it says [He.homeBubbleNoName].
 class _MapBubble extends StatelessWidget {
-  const _MapBubble({required this.spec, required this.name});
+  const _MapBubble({required this.spec, required this.name, this.mouth, this.welcome});
 
   final _HomeSpec spec;
+
+  /// The friend's mouth, as a share of its picture; null when no friend is on the map.
+  final Offset? mouth;
+
+  /// The sentence of the daily welcome being said, or null: the bubble then says [He.homeBubble].
+  final WelcomeShown? welcome;
 
   /// The child's name as the bubble shows it (cleaned by [homeIslandName]); empty when there is none.
   final String name;
@@ -704,7 +739,16 @@ class _MapBubble extends StatelessWidget {
     // The name in an isolate, as on the sign, so a shortened Latin name keeps its "…" on its right.
     Map<String, String> named(String n) => <String, String>{'child': isolatedName(n)};
     final String text;
-    if (name.isEmpty) {
+    if (welcome != null) {
+      // One sentence of the welcome. The first has the name on a line of its own, shortened by the sign's rule so that it
+      // fits; with no usable name it is the sentence alone.
+      if (welcome!.withName && name.isNotEmpty) {
+        final String called = isolatedName(_fittedName(name, (String n) => fits('${isolatedName(n)},')));
+        text = '$called,\n${welcome!.text}';
+      } else {
+        text = welcome!.text;
+      }
+    } else if (name.isEmpty) {
       text = He.homeBubbleNoName.text;
     } else if (!spec.bubbleBreaks) {
       text = He.homeBubble.fill(named(_fittedName(name, (String n) => fits(He.homeBubble.fill(named(n))))));
@@ -718,13 +762,66 @@ class _MapBubble extends StatelessWidget {
       text = _breakAfterName.fill(named(n));
     }
     painter.dispose();
-    return BoardBubble(
-      text: text,
-      fontSize: spec.bubbleFont,
-      padding: spec.bubblePad,
-      maxWidth: spec.bubbleBreaks ? spec.bubbleMaxWidth : null,
+    final Offset? m = mouth;
+    if (m == null || spec.bubbleAtBoardPlace) {
+      return Positioned(
+        right: spec.bubbleRight,
+        top: spec.bubbleTop,
+        child: IgnorePointer(child: _body(text)),
+      );
+    }
+    // Beside the friend's head, with its tail (a corner at the bubble's right edge) pointing at the mouth. World coordinates.
+    const double size = _HomeSpec.companionSize;
+    final double mouthX = spec.companionLeft + m.dx * size;
+    final double mouthY = spec.companionTop + m.dy * size;
+    // The tail's tip sticks out 14.5 beyond the bubble; a head reaches about 0.18 of the picture to each side of the mouth.
+    final double rightEdge = mouthX - 0.18 * size - 4 - 14.5;
+    // The tail sits 29 above the bubble's bottom edge.
+    final double bottomEdge = mouthY + 29;
+    double width = spec.bubbleMaxWidth;
+    double lower = 0;
+    final double? top = spec.welcomeTop;
+    if (welcome != null && top != null) {
+      // The welcome on a tablet stays in its band: wider while it is too tall for it, then lower while it would reach
+      // the sign above.
+      final TextPainter lines = TextPainter(
+        textDirection: TextDirection.rtl,
+        textScaler: MediaQuery.textScalerOf(context),
+      );
+      double heightAt(double w) {
+        lines.text = TextSpan(
+          text: text,
+          style: AppText.fixed(size: spec.bubbleFont, weight: 500),
+        );
+        lines.layout(maxWidth: w - spec.bubblePad.horizontal);
+        return lines.height + spec.bubblePad.vertical;
+      }
+
+      final double room = spec.welcomeBottom! - top;
+      double height = heightAt(width);
+      while (height > room && width < spec.welcomeMaxWidth!) {
+        width = math.min(width + 5, spec.welcomeMaxWidth!);
+        height = heightAt(width);
+      }
+      lines.dispose();
+      lower = math.max(0, top - (bottomEdge - height));
+    }
+    return Positioned(
+      right: spec.worldWidth - rightEdge,
+      bottom: spec.worldHeight - bottomEdge - lower,
+      child: IgnorePointer(
+        child: _body(text, maxWidth: width, tailBottom: 18 + lower),
+      ),
     );
   }
+
+  Widget _body(String text, {double? maxWidth, double tailBottom = 18}) => BoardBubble(
+    text: text,
+    fontSize: spec.bubbleFont,
+    padding: spec.bubblePad,
+    maxWidth: spec.bubbleBreaks ? (maxWidth ?? spec.bubbleMaxWidth) : null,
+    tailBottom: tailBottom,
+  );
 }
 
 /// [name] whole when it [fits], otherwise the longest form of [shortenName] that does (at least three clusters).
@@ -746,10 +843,14 @@ final Str _breakAfterName = Str(He.homeBubble.text.replaceFirst('{child}, ', '{c
 /// Today's adventure. It opens the child's home when [onTap] is set, and only then is it announced as a button. The three
 /// stops of the daily plan are not drawn until that plan exists (B-26).
 class _DailyPill extends StatelessWidget {
-  const _DailyPill({required this.spec, this.onTap});
+  const _DailyPill({required this.spec, this.onTap, this.glow = false});
 
   final _HomeSpec spec;
   final VoidCallback? onTap;
+
+  /// The welcome points at the bottle: a soft light around the pill, for as long as the closing line is said. It does not
+  /// move; with reduced motion there is no light at all.
+  final bool glow;
 
   @override
   Widget build(BuildContext context) => Semantics(
@@ -765,7 +866,11 @@ class _DailyPill extends StatelessWidget {
         decoration: BoxDecoration(
           color: TokenColors.sunset,
           borderRadius: BorderRadius.circular(999),
-          boxShadow: clayShadows(TokenColors.sunsetDeep, soft16: true),
+          boxShadow: <BoxShadow>[
+            // Under the pill's own lip, so it keeps its clay edge: a warm gold rim and a soft light around it.
+            if (glow && !MediaQuery.disableAnimationsOf(context)) ..._pillGlow,
+            ...clayShadows(TokenColors.sunsetDeep, soft16: true),
+          ],
         ),
         child: ExcludeSemantics(
           child: Row(
@@ -881,6 +986,13 @@ class _HomeSign extends StatelessWidget {
 
 /// The soft glow of "something waits in the Hall".
 const Color _waitingGlow = Color(0xAAFFD45C);
+
+/// The light around the pill while the welcome points at the bottle: a pale glow and a gold rim close to the pill, which
+/// read on the sea's light blue without turning green where the two mix. It is still; nothing pulses.
+const List<BoxShadow> _pillGlow = <BoxShadow>[
+  BoxShadow(color: Color(0xCCFFF1C4), blurRadius: 28, spreadRadius: 12),
+  BoxShadow(color: TokenColors.spark, blurRadius: 4, spreadRadius: 5),
+];
 
 /// The home sign's line, its size in points (before the text scale) and its measured width.
 typedef HomeSignFit = ({String text, double size, double width});

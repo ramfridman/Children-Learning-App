@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-MUL-ADD",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-B-10"
+  ],
+  "parentText": "הילד מחבר את מספר הקבוצות ואת מה שיש בקבוצה אחת (שתי צלחות, שלושה פירות על כל אחת: הוא עונה חמש), במקום לספור את כל הפריטים.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לשים על השולחן שתי צלחות ושלושה פירות על כל אחת, ולספור יחד את כל הפירות, צלחת אחר צלחת: אחת, שתיים, שלוש… ארבע, חמש, שש."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

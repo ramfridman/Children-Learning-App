@@ -51,7 +51,8 @@
       {
         "id": "o3",
         "sprite": "asset:shape_triangle_yellow",
-        "label": "מְשֻׁלָּשׁ"
+        "label": "מְשֻׁלָּשׁ",
+        "misconception": "M-SHP-NAME"
       }
     ],
     "correct": "o1",
@@ -70,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-NAME",
+        "vo": "vo:fb.shp_name",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְכׇל צוּרָה יֵשׁ שֵׁם מִשֶּׁלָּהּ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַקַּוִּים וְהַפִּנּוֹת."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-SQRECT",
         "vo": "vo:fb.shp_sqrect",
@@ -116,11 +127,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.ghost.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "הִנֵּה רַק הַצּוּרָה, בְּלִי צֶבַע. נִסְתַּכֵּל עָלֶיהָ טוֹב."
         }
       ]
     },
@@ -131,7 +142,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "זֶה רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
+          "v": "הַצּוּרָה עוֹבֶרֶת עַל כֻּלָּם, וְעוֹצֶרֶת אֵצֶל הַמַּתְאִים. זֶה רִבּוּעַ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עָלָיו."
         }
       ]
     }

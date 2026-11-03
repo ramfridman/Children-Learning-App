@@ -27,18 +27,8 @@ DONE = ('text-ready', 'owner-approved')
 
 # Done rows whose source text is, on purpose, not the table's ui_text yet: (source, id) -> (the text the source has, why).
 # Each is checked exactly; remove an entry when its reason is gone.
-HELD = {
-    **{('activity.b.logb08.%d.json' % k, 'a11y.altText'): (
-        alt, 'the alt text is the prompt, and the prompt row is proposed (V1, waits for the owner)')
-       for k, alt in enumerate([
-           'אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           # B-15 part 2: the triangle and the rectangle, in the form of the other four until the owner decides V1
-           'אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.'], start=1)},
-}
+# Empty since 2026-11-01: the owner approved the V1 prompts of LOG-B-08 ("אִם לֹא", "הִיא"), so the sources carry them.
+HELD = {}
 
 
 def load_rows():
@@ -130,11 +120,39 @@ class HebrewMasterTableTest(unittest.TestCase):
 
     def test_table_counts(self):
         changed = [r for r in self.rows if r['ui_text'] != r['text']]
-        # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main)
-        # 12645 since B-39 (16 bottle and land-name rows added by the hebrew-text-editor)
-        self.assertEqual(len(self.rows), 12645)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
+        # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main); 12645 with
+        # B-39 (the bottle's five lines) and B-32 (the reworded name refusal); 12659 with the 14 rows of B-38 (2026-11-01)
+        # B-36 part A (2026-11-01), the 1,142 B-40 hint lines: the rows stay 12659 (a hint line replaces a line, it adds none) and the
+        # corrected-and-done rows go from 1306 to 1204, because 102 lines the table had corrected (the dagesh after the vav in
+        # שְׁנֵי / שְׁתֵּי and the like; B-40 counted 6 + 97 on the older table) were replaced by new lines that carry the corrections already and are
+        # `proposed`; the three new B-38 lines (vo:hint.pos_cat_in / pos_cat_on / match_print on the cat and cube items) add no row
+        # B-36 parts B, C and E (2026-11-01): 12801 rows (+142: the feedback rows of the newly tagged wrong answers and the 16 rows
+        # of the 8 new misconception files, less the LOG-B-06 "size" options taken out); the corrected-and-done rows go from 1204
+        # to 1189, because 15 corrected lines moved to another index of `feedback.incorrect` (a new tag line sorts before them) and
+        # the table now holds them as they are in the source, already corrected. The proposed count stays 64
+        # B-36 part D (2026-11-01): 14434 rows (+1633: the texts of the 150 second-representation items, 8 continuation lessons, the
+        # two LOG-A-09 items with a look-alike, and the own lines of five items). The corrected-and-done rows stay 1189 (the sources
+        # were written in the editor's form where a rule had a correction: מַה, שְׁנֵי הַצְּדָדִים שָׁוִים, the qamats qatan of תׇּכְנִית), and the
+        # proposed rows whose correction differs from the text go from 64 to 75 (11 new draft lines the editor's rules would still change)
+        # B-36 part F (2026-11-01), the editor's pass over the pack and the app: the sources carry the editor's rewordings and the
+        # nikud rules (the shade lines, the "all hops are equal" line, מֵעֶשֶׂר, the 28 שְׂמָאלִי lines and the like), so 30 corrected-and-done
+        # rows (the older shade and number-line lines) now say the corrected text in the source: 1189 to 1159. The proposed rows whose
+        # correction differs from the text go from 75 to 39: the 36 nikud-only corrections (שְׂמָאלִי, כׇּל, וִידַעְתֶּם) are in the
+        # sources, and what is left waits for the owner's decision 8 (the 11 "אֵינוֹ" lines of V1, the 10 Q2 drafts, the 12 balance sides
+        # of D12 and the 6 "אַחֶרֶת" prompts)
+        # B-36 owner approval (2026-11-01, "All proposed looks good"): the decisions D1 to D5 and Q2 a and b are in the sources (the 11 "הוּא לֹא"
+        # lines, the 6 "אִם לֹא" prompts, the 12 balance rows, the 10 Q2 lines, `תַּגִּידוּ`), so the 39 proposed rows with a correction are
+        # gone (39 to 0) and no row is `proposed` or its text still a draft. The corrected-and-done rows go from 1159 to 1163: the `text` column of
+        # the four LOG-B-08 shape-rule prompts (b.logb08.3 to .6) keeps the draft without the copula "הִיא" (the table keeps the last draft it
+        # held as `text`; the sources say the `ui_text`).
+        # B-45 (2026-11-02): 27 new core lines the app already asks for (`core.rest.goodbye`, the bottle's 24 per-land lines and the play-again
+        # line, and `core.home.bubble`, hebrew-notes section 19): 14434 to 14461 rows
+        # B-45 job 4 (2026-11-02): the 48 daily-welcome lines of B-42 (`welcome.*`) and the 100 map-card lines (`core.skill.<skill id>`,
+        # the text of the skill's childLine; hebrew-notes sections 21 and 22): 14461 to 14609 rows
+        self.assertEqual(len(self.rows), 14609)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1163)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 0)
+        self.assertEqual(sum(1 for r in self.rows if r['status'] == 'proposed'), 0)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
@@ -157,6 +175,69 @@ class HebrewMasterTableTest(unittest.TestCase):
     def test_unchanged_rows_keep_their_text(self):
         bad = ['%s › %s' % (r['source'], r['id']) for r, t in self.current if r['status'] == 'unchanged' and t != r['text']]
         self.assertEqual(bad, [])
+
+
+class CoreLinesTest(unittest.TestCase):
+    """The clips that are not in the pack (B-45 job 4, 2026-11-02): the map-card lines and the daily welcome."""
+
+    @classmethod
+    def setUpClass(cls):
+        core = read_json(os.path.join(ROOT, 'content', 'lines', 'core.he.json'))
+        cls.core = {line['id']: line['text'] for line in core['lines']}
+        cls.skills = {}
+        for f in sorted(glob.glob(os.path.join(ROOT, 'content', 'starter', 'skill.*.json'))):
+            d = read_json(f)
+            cls.skills[d['id']] = ''.join(c['v'] for c in d['childLine'] if c['t'] == 'he')
+        cls.master = {r['id']: r for r in load_rows() if r['source'] == 'content/lines/core.he.json'}
+        cls.own = set(read_json(os.path.join(ROOT, 'content', 'voices.json'))['ownLines'])
+
+    @staticmethod
+    def skill_line_id(skill_id):
+        return 'core.skill.' + skill_id.lower().replace('-', '_')
+
+    def test_every_skill_has_a_map_card_line_with_its_childline_text(self):
+        """vo:core.skill.<skill id> says what the map card shows: the two cannot drift apart."""
+        self.assertEqual(len(self.skills), 100)
+        bad = []
+        for sid, child_line in self.skills.items():
+            lid = self.skill_line_id(sid)
+            if self.core.get(lid) != child_line:
+                bad.append('%s: core line %r, childLine %r' % (lid, self.core.get(lid), child_line))
+        self.assertEqual(bad, [])
+
+    def test_no_map_card_line_without_a_skill(self):
+        wanted = {self.skill_line_id(sid) for sid in self.skills}
+        have = {i for i in self.core if i.startswith('core.skill.')}
+        self.assertEqual(have - wanted, set())
+        self.assertEqual(len(have), 100)
+
+    def test_the_welcome_set_is_48_lines_a_friend_says_in_its_own_voice(self):
+        welcome = [i for i in self.core if i.startswith('welcome.')]
+        self.assertEqual(len(welcome), 48)
+        self.assertEqual({'vo:' + i for i in welcome} - self.own, set())
+        self.assertEqual([i for i in self.own if i.startswith('vo:welcome.')].__len__(), 48)
+
+    def test_the_new_lines_are_clean_for_a_voice(self):
+        """No name or variable in a line, and a voice text without "!", the qamats qatan sign, digits, Latin letters or brackets."""
+        bad = []
+        for i, text in self.core.items():
+            if not (i.startswith('welcome.') or i.startswith('core.skill.')):
+                continue
+            row = self.master[i]
+            if re.search(r'[{}]', text):
+                bad.append('%s: a variable in the screen text' % i)
+            voice = row['voice_text']
+            if not voice or re.search(r'[!A-Za-z0-9{}ׇ]', voice):
+                bad.append('%s: voice text %r' % (i, voice))
+            if row['status'] not in ('text-ready', 'owner-approved'):
+                bad.append('%s: status %s' % (i, row['status']))
+        self.assertEqual(bad, [])
+
+    def test_a_greeting_stands_alone_after_a_name_clip(self):
+        """B-42: every greeting starts with a call and a full sentence, and only a greeting may follow a name clip."""
+        for i, text in self.core.items():
+            if i.startswith('welcome.hello.'):
+                self.assertTrue(self.master[i]['voice_text'].startswith('שלום,'), i)
 
 
 class PrefixHelpersTest(unittest.TestCase):
@@ -194,8 +275,14 @@ class PrefixHelpersTest(unittest.TestCase):
         self.assertEqual(self.a.from_('אֶפֶס'), 'מֵאֶפֶס')
         self.assertEqual(self.a.from_('אַחַת'), 'מֵאַחַת')
         self.assertEqual(self.a.from_('הַמִּסְפָּר'), 'מֵהַמִּסְפָּר')
-        self.assertEqual(self.a.from_('שָׁלוֹשׁ'), 'מִ' + 'שָׁלוֹשׁ')
-        self.assertEqual(self.a.from_('אַרְבַּע'), 'מִאַרְבַּע')  # as the table has it (a question for the editor)
+        # B-36 part F (2026-11-01): מֵ before every guttural, and the dagesh of the dropped nun in the other letters
+        self.assertEqual(self.a.from_('אַרְבַּע'), 'מֵאַרְבַּע')
+        self.assertEqual(self.a.from_('עֶשֶׂר'), 'מֵעֶשֶׂר')
+        self.assertEqual(self.a.from_('חֲמֵשׁ עֶשְׂרֵה'), 'מֵחֲמֵשׁ עֶשְׂרֵה')
+        self.assertEqual(self.a.from_('שָׁלוֹשׁ'), 'מִשָּׁלוֹשׁ')
+        self.assertEqual(self.a.from_('שֵׁשׁ'), 'מִשֵּׁשׁ')
+        self.assertEqual(self.a.from_('שֶׁבַע'), 'מִשֶּׁבַע')
+        self.assertEqual(self.a.from_('תֵּשַׁע'), 'מִתֵּשַׁע')
 
     def test_robot_steps(self):
         self.assertEqual(self.a.robot_steps(['right', 'right', 'down']), 'שְׁנֵי צְעָדִים לְכִוּוּן הַדֶּגֶל, וְאָז צַעַד אֶחָד לְמַטָּה')

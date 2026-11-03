@@ -28,10 +28,13 @@
     }
   ],
   "representations": [
-    "symbolic"
+    "symbolic",
+    "pictorial"
   ],
   "misconceptions": [
-    "M-ADD-RECOUNT"
+    "M-ADD-RECOUNT",
+    "M-CNT-CARD",
+    "M-OP-SWAP"
   ],
   "retention": {
     "targetRetention": 0.9,

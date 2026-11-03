@@ -32,42 +32,42 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "aspect": 1.0,
+    "aspect": 0.893,
     "slots": [
       {
         "id": "s1",
         "sprite": "asset:shape_rect_red",
         "x": 0.0,
-        "y": 0.0,
+        "y": 0.10709999999999997,
         "w": 1.0,
-        "h": 1.0,
+        "h": 0.8929,
         "rot": 0
       },
       {
         "id": "s2",
-        "sprite": "asset:shape_square_blue",
-        "x": 0.28,
-        "y": 0.04,
-        "w": 0.36,
-        "h": 0.36,
+        "sprite": "asset:shape_rect_blue",
+        "x": 0.18,
+        "y": 0.0,
+        "w": 0.56,
+        "h": 0.5,
         "rot": 0
       },
       {
         "id": "s3",
         "sprite": "asset:shape_circle_orange",
-        "x": 0.14,
-        "y": 0.6,
-        "w": 0.24,
-        "h": 0.24,
+        "x": 0.12,
+        "y": 0.6161,
+        "w": 0.3,
+        "h": 0.2679,
         "rot": 0
       },
       {
         "id": "s4",
         "sprite": "asset:shape_circle_orange",
-        "x": 0.62,
-        "y": 0.6,
-        "w": 0.24,
-        "h": 0.24,
+        "x": 0.58,
+        "y": 0.6161,
+        "w": 0.3,
+        "h": 0.2679,
         "rot": 0
       }
     ],
@@ -126,11 +126,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.sb.h2",
+      "vo": "vo:hint.sb_ghost.h2",
       "caption": [
         {
           "t": "he",
-          "v": "לְכׇל צוּרָה יֵשׁ מָקוֹם אֶחָד, כְּמוֹ הַצֵּל שֶׁלָּהּ."
+          "v": "הַצֵּל שֶׁל הַמָּקוֹם הַבָּא צָף לְיַד הַתְּמוּנָה. נַשְׁוֶה אוֹתוֹ לַצּוּרוֹת שֶׁלְּמַטָּה."
         }
       ]
     },

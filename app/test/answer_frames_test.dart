@@ -75,7 +75,13 @@ void main() {
         isTrue,
         reason: '${a.id}: $framed of ${sets.length} answers have a board',
       );
-      expect(framed, 0, reason: '${a.id}: answers are drawn with no board');
+      // B-36 G6: an item with an empty set among its answers draws every answer on its board (zero is an empty board).
+      final bool hasEmpty = sets.any((ChoiceOption o) => o.set!.count == 0);
+      expect(
+        framed,
+        hasEmpty ? sets.length : 0,
+        reason: '${a.id}: answers are drawn ${hasEmpty ? 'all on a board' : 'with no board'}',
+      );
       s.dispose();
     }
     expect(swept, greaterThanOrEqualTo(2));

@@ -17,6 +17,15 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-33 | Alerts screen: the kept words can be selected and copied to the system clipboard | low | fixed on `alerts-tiers` (the line with the words cannot be selected) | 2026-10-30 |
 | SEC-34 | B-40 hint SVG readers threw on valid SVG numbers (`1.2.3`, a lone `.`) in a signed pack sprite, breaking the activity screen | low | fixed on `b40-visual-hints` (`tryParse`, whole-box fallback; character-pack viewBox reported as a problem) | 2026-10-31 |
 | SEC-35 | B-40 `inkBoxOf`/`outlineOf` were quadratic on an unclosed SVG tag (100 KB took 20 s, in `build`) | low | fixed on `b40-visual-hints` (linear tag reader, 64 KB cap, 8 KB tag cap, cache) | 2026-10-31 |
+| SEC-B36-1 | `content-publish` caps `items` at 1,000; pack 0.11.0 has 1,118 activities, so its publish fails closed (`bad_request`, tutor stays RuleTutor) | low | fixed on `b36-sec-fixes` (2,000 items, pre-flight in `pack_builder publish`, limits pinned; closes when CI's Deno suite passes) | 2026-11-01 |
+| SEC-B36-2 | compiled `tools/__pycache__/*.pyc` were tracked; a planted unchecked .pyc could run instead of the reviewed generator on the signing PC | low | fixed on `next-pack` (untracked, root .gitignore, hygiene.sh forbids them) | 2026-11-01 |
+| SEC-B36-3 | a newer pack the app cannot play is stored hidden and the playable version is deleted, leaving no lessons (dev sideload or downgrade only; older than B-36) | low | fixed on `b36-sec-fixes` (`InstallOutcome.keptPlayable`; re-reviewed, no downgrade use) | 2026-11-01 |
+| SEC-B36-4 | after an app downgrade with data kept, the first start has no lessons (the newer pack's row says playable, so the bundled older pack is refused; the second start works) | low | fixed on `b36-sec-fixes` as the review specified (the installed copy is always re-proved for an older playable pack; downgrade and rollback proof tests) | 2026-11-01 |
+| SEC-B42-1 | The provider-history delete after a name clip failed open (status unchecked, no timeout) and relied on a sweep that does not exist | medium | closed (`99bca54`, minimal by the owner's choice; see below) | 2026-11-03 |
+| SEC-B42-2 | `name-voice` accepted any character id, not only the child's own friend | low | closed (`99bca54`: the child's `companion_id` or the house character only) | 2026-11-03 |
+| SEC-B42-3 | The parent's "listen" could keep a clip of the previous spelling under the new one | low | closed (`99bca54`: the answer carries `spelling_hash`, the phone keeps the clip only on a match) | 2026-11-03 |
+| SEC-B42-4 | Name clips: no cross-family daily ceiling, the family spend cap was not checked, the runbook omitted `name_voice_enabled` | low | open, partly fixed in `99bca54` (spend cap checked before the call, runbook row updated; no cross-family ceiling yet) | 2026-11-03 |
+| SEC-B42-5 | The spoken-name field and its test vectors invite a family name (first name only to a vendor) | low | accepted by the owner (2026-11-03: children's first names need only simple protection); not changed | 2026-11-03 |
 | SEC-B28-2 | The app's stricter name set was incomplete; a name of only invisible characters was valid | low | fixed on `b32-name-safety` (`safeChildName`; 15 app-only vectors) | 2026-10-30 |
 | SEC-B28-3 | Names that arrive by sync and old local names were not checked | low | open, partly fixed on `b32-name-safety` (pulled names and the home island are cleaned; old local names still show raw in the picker and parent screens, repair skipped) | 2026-10-30 |
 | SEC-B28-4 | Answers of a child the server does not have were refused and lost (a failed `child-put` too) | low | fixed on `b32-name-safety` (held until the first good `child-put`); see SEC-B32-2 | 2026-10-30 |
@@ -30,6 +39,24 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
 ## Closed findings
+
+### SEC-B42-1: the provider-history delete after a name clip failed open (medium, closed 2026-11-03)
+
+**What it was.** `name-voice` sends a child's first name (the spelling a parent checked) to ElevenLabs and then deletes
+the provider's history item. `deleteHistory` in `supabase/functions/_shared/elevenlabs.ts` never checked the answer's
+status and had no timeout, and its comment relied on a nightly sweep that does not exist. With a key that lacks the
+history permission (PLAN said the key is limited to text-to-speech), or on a 429 or 5xx, every name would stay in the
+provider's history with no signal to anyone.
+
+**The fix (`99bca54`, kept minimal by the owner's choice of 2026-11-03).** `deleteHistory` returns true only for 2xx or
+404, gives up after 3 s, and is tried once more after a failure (`deleteHistoryWithRetry`). If the item is still there,
+`name-voice` writes one fixed log line with the reason `history_kept` (no name, no id) and returns the clip. There is no
+pending table or sweep, so a name whose two deletes both fail stays at the provider; the log line is the signal. The
+owner checks that the gateway's ElevenLabs key has the history-write permission.
+
+**Proof re-run.** The review's proof (a DELETE answered 401 must be reported) passes; `vendors_test.ts` and
+`name_voice_test.ts` keep it (2xx and 404 true, 401 and 500 false, a hang given up after about 3 s, one retry only after a
+failure, `history_kept` logged only when both tries fail and holding no name).
 
 ### SEC-25: one alert the gateway refused held up every later alert of that device (medium, closed 2026-10-30)
 
@@ -170,3 +197,6 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   fixed and the phone side needs one more change. Re-run: `deno test` 188 passed, 0 failed, 7 ignored; Flutter alert,
   safety and sync tests 307 passed.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
+- **B-36 next pack (2026-11-01).** Reviewed the 21 commits of `next-pack`: controls, validator, installer, keys and `supabase/` untouched; no new package or host; gitleaks clean; generators local only; 238 SVGs clean; every pack string fits the wire and prompt rules; pronunciation respelling matches only forms of two. minAppVersion 0.6.0 correct; publishing 0.10.0 as it is is safe (phones play only their bundled pack). Three lows: SEC-B36-1..3. Record: `docs/security/b36-review.md`.
+- **B-42 name path and daily welcome (2026-11-03).** Reviewed `530a6fb`, `c8dfe0a`, `0ec65ee` and `2432bbf` on `b42-daily-welcome`. Verified: `name-voice` runs the four checks of rule 3 and allows only a parent device; the body is the two ids and nothing else; the spelling is read on the server from that child of the caller's family and checked again, the voice from the server's character table; only `<spelling>,` is sent; nothing is stored, and the log holds only the fixed outcome line; the kill switch is off by default and the per-family daily cap holds. `name_spoken` has one rule in the migration's check, the gateway and the app, held to `testvectors/name-spoken.json`; no grant changed (rule 4). The phone never sends a name for voicing; the clip lives only in the encrypted database, keyed by child, character and spelling hash, deleted on any change or with the child, never synced or logged. The welcome opens no microphone, has no timer, streak or guilt, and plays the name only before a greeting or the map bubble's clip. No package or host added; gitleaks clean; `deno test` 215 passed. Four lows (SEC-B42-2 to -5); one finding above low is held privately and must be fixed before `name_voice_enabled` is switched on.
+- **B-42 fixes re-checked (2026-11-03, `99bca54`, head `0a44ef8`).** SEC-B42-1 (medium, the one held privately), -2 and -3 closed; their proofs pass again. SEC-B42-4 partly fixed (the family spend cap is checked before the paid call, and the runbook's "Spending jumps" row names `name_voice_enabled`; no cross-family ceiling). SEC-B42-5 accepted by the owner. The review's observations are fixed too: a child device no longer shows the name button, and `child-put` keeps `name_spoken` when the field is absent (null clears). `deno test` 223 passed, 0 failed; `deno lint` and `deno check` clean. Nothing blocks switching `name_voice_enabled` on once the owner has confirmed the key's history permission.

@@ -1,0 +1,146 @@
+{
+  "schema": "activity/v1",
+  "id": "b36.loga10.2",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "build_pattern",
+  "templateVersion": "1.0",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "transfer",
+  "representation": "concrete",
+  "variantGroup": "build",
+  "difficulty": {
+    "authored": 0.4
+  },
+  "prompt": {
+    "vo": "vo:b36.loga10.2.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְסַדְּרִים אֶת הַדָּגִים מִגָּדוֹל לְקָטָן."
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "slots": 3,
+    "palette": [
+      "asset:fish_size_s",
+      "asset:fish_size_l",
+      "asset:fish_size_m"
+    ]
+  },
+  "answer": {
+    "type": "build",
+    "sequence": [
+      "asset:fish_size_l",
+      "asset:fish_size_m",
+      "asset:fish_size_s"
+    ],
+    "misconception": "M-SER-ENDS"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b36.loga10.2.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! סִדַּרְתֶּם אֶת הַדָּגִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.build.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b36.loga10.2.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַתְחִילִים בַּגָּדוֹל, אַחֲרָיו הַבֵּינוֹנִי, וּבַסּוֹף הַקָּטָן. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child copies the pattern in the same order",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "מְסַדְּרִים אֶת הַדָּגִים מִגָּדוֹל לְקָטָן."
+  }
+}

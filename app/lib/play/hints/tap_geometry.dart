@@ -32,20 +32,44 @@ class TapGeometry {
   /// True when the group stands above the stage's own options (the options are on the stage, not on tiles).
   bool get _groupAboveOptions => a.group != null && !a.optionsInTiles;
 
+  /// True when the stage has a group (or the two groups) and also a numeral or a row: the groups stand on top and the numeral or the
+  /// row under them, never over them (B-36: the two ten-frames and the teen they make). Any other stage keeps the whole room.
+  bool get stacked => stackedOf(a);
+
+  static bool stackedOf(TapAnswerActivity a) =>
+      a.group != null && (a.stageNumeral != null || a.row.isNotEmpty);
+
+  /// How much of the stage's height (above the options, if the options stand on it) the numeral or row of a [stacked] stage takes.
+  /// A ten-frame on a phone is about 55 points tall in a 128 point stage: the groups keep the upper 58 percent, which is room for
+  /// the frames on every board (the frames are as wide as the room allows), and the numeral under them gets the rest.
+  static const double lowerShare = 0.42;
+
+  /// The room the stage's group(s) and, if [stacked], the numeral or row have: from the top to the options (or the stage's bottom).
+  double get _zoneH => _groupAboveOptions ? h * 0.5 : h;
+
+  /// The space round the groups, and round each group, in points. A [stacked] stage spends less of its height on margins.
+  static double groupInsetOf(TapAnswerActivity a) => stackedOf(a) ? 4 : 12;
+  static double cellInsetOf(TapAnswerActivity a) => stackedOf(a) ? 2 : 6;
+
   /// The box the group (or the two groups) is drawn in.
-  Rect get groupArea => Rect.fromLTWH(reserve, 0, w - reserve, _groupAboveOptions ? h * 0.5 : h);
+  Rect get groupArea => Rect.fromLTWH(reserve, 0, w - reserve, stacked ? _zoneH * (1 - lowerShare) : _zoneH);
+
+  /// The box under the groups of a [stacked] stage, for its numeral or its row. It follows the groups when a card takes the stage's
+  /// end side.
+  Rect get lowerArea => Rect.fromLTRB(reserve, groupArea.bottom, w, _zoneH);
 
   /// The places of the pictures of group [which] (0, or 1 for the second group of a comparison), the same as the stage draws them.
   /// With [count] the places of a group of that many (a ten-frame of ten, to see the cells that are still empty).
   List<Rect> groupObjects(int which, {int? count}) {
     final List<SpriteSet> sets = <SpriteSet>[a.group!, ?a.group2];
-    final Rect inner = groupArea.deflate(12);
+    final Rect inner = groupArea.deflate(groupInsetOf(a));
     final double cellW = inner.width / sets.length;
+    final double pad = cellInsetOf(a);
     final Rect cell = Rect.fromLTWH(
-      inner.left + which * cellW + 6,
-      inner.top + 6,
-      cellW - 12,
-      inner.height - 12,
+      inner.left + which * cellW + pad,
+      inner.top + pad,
+      cellW - 2 * pad,
+      inner.height - 2 * pad,
     );
     final SpriteSet g = sets[which];
     return <Rect>[
@@ -73,9 +97,15 @@ class TapGeometry {
   /// The whole box of group [which], for a group with no pictures (a count of 0) that still has a place.
   Rect groupCell(int which) {
     final int n = a.group2 == null ? 1 : 2;
-    final Rect inner = groupArea.deflate(12);
+    final Rect inner = groupArea.deflate(groupInsetOf(a));
     final double cellW = inner.width / n;
-    return Rect.fromLTWH(inner.left + which * cellW + 6, inner.top + 6, cellW - 12, inner.height - 12);
+    final double pad = cellInsetOf(a);
+    return Rect.fromLTWH(
+      inner.left + which * cellW + pad,
+      inner.top + pad,
+      cellW - 2 * pad,
+      inner.height - 2 * pad,
+    );
   }
 
   /// A group's pictures in reading order: row by row from the top, each row from the left.
@@ -91,22 +121,34 @@ class TapGeometry {
   }
 
   /// How far a number sentence (a row with a sign in it) stands lower than the stage's top: the room over the numbers where the
-  /// hint stands their cubes, big enough to count. 0 for any other row. The stage pads its row by the same.
+  /// hint stands their cubes, big enough to count. 0 for any other row, and for a row under groups (the groups are what the hint
+  /// stands on there). The stage pads its row by the same.
   static double rowLiftOf(TapAnswerActivity a, double stageH) =>
-      a.row.any((String r) => r.startsWith('op:')) ? (stageH * 0.26).roundToDouble() : 0;
+      !stackedOf(a) && a.row.any((String r) => r.startsWith('op:')) ? (stageH * 0.26).roundToDouble() : 0;
+
+  /// The space over and under the cells of the row: 10, and less in the narrow band under groups.
+  static double rowPadOf(TapAnswerActivity a) => stackedOf(a) ? 4 : 10;
+
+  /// The box the row is drawn in: the whole stage, or the band under the groups.
+  Rect get _rowBox => stacked ? lowerArea : Offset.zero & size;
 
   /// The top of the drawn cells of the row (a cell is as tall as the row; a numeral in it may reach above [rowCells]' square).
-  double get rowTop => 13 + rowLiftOf(a, h);
+  double get rowTop => _rowBox.top + rowPadOf(a) + 3 + rowLiftOf(a, h);
 
   /// The squares of the cells of the stage's row, left to right.
   List<Rect> rowCells() {
     final int n = a.row.length;
     final double lift = rowLiftOf(a, h);
-    final double cellW = (w - 20) / n;
-    final double side = math.min(cellW - 6, h - 26 - lift);
+    final Rect box = _rowBox;
+    final double cellW = (box.width - 20) / n;
+    final double side = math.min(cellW - 6, box.height - 2 * rowPadOf(a) - 6 - lift);
     return <Rect>[
       for (int i = 0; i < n; i++)
-        Rect.fromCenter(center: Offset(10 + (i + 0.5) * cellW, (h + lift) / 2), width: side, height: side),
+        Rect.fromCenter(
+          center: Offset(box.left + 10 + (i + 0.5) * cellW, box.top + (box.height + lift) / 2),
+          width: side,
+          height: side,
+        ),
     ];
   }
 
@@ -129,8 +171,21 @@ class TapGeometry {
     ];
   }
 
-  /// The place of the numeral that the stage shows large.
-  Rect get stageNumeral => Rect.fromCenter(center: Offset(w / 2, h / 2), width: h * 0.55, height: h * 0.7);
+  /// The size, in points, of the numeral the stage shows large: most of the stage's height when it stands alone, and most of the
+  /// band under the groups when [stacked].
+  double get stageNumeralFont => stacked ? lowerArea.height * 0.82 : h * 0.7;
+
+  /// The place of the numeral that the stage shows large: in the middle of the stage, or under the groups when [stacked].
+  Rect get stageNumeral {
+    if (!stacked) return Rect.fromCenter(center: Offset(w / 2, h / 2), width: h * 0.55, height: h * 0.7);
+    final Rect band = lowerArea;
+    final double digits = '${a.stageNumeral}'.length * stageNumeralFont * 0.62;
+    return Rect.fromCenter(
+      center: band.center,
+      width: math.min(band.width, digits),
+      height: band.height * 0.92,
+    );
+  }
 
   /// The places of the options that stand on the stage itself (those that are not on tiles).
   List<Rect> stageOptions() {
@@ -155,6 +210,16 @@ class TapGeometry {
   }
 
   // ---- the answers ----
+
+  /// The height of an answer tile (`AnswerTile`, every board); its clay lip and shadow reach 6 below it.
+  static const double tileHeight = 96;
+
+  /// The box the speech bubble may take on this board ([ActivitySpec.bubbleRoom]), in the stage's own points: a hint's picture
+  /// that stands outside the stage stays out of it.
+  Rect get bubbleRoom {
+    final double inset = spec.stageIsCard ? 16 : 0;
+    return spec.bubbleRoom.shift(Offset(-(spec.stage.left + inset), -(spec.stage.top + inset)));
+  }
 
   /// True when the options are tiles below the stage.
   bool get tiles => a.optionsInTiles;

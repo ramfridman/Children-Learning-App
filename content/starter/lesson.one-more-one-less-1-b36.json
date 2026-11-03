@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "one-more-one-less-1-b36",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֶחָד יוֹתֵר, אֶחָד פָּחוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-B-11"
+  ],
+  "items": [
+    "b.numb11.19",
+    "b.numb11.20"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 53,
+  "celebration": {
+    "vo": "vo:celebrate.one_more_one_less_1_b36",
+    "caption": [
+      {
+        "t": "he",
+        "v": "נִפְלָא! אֶחָד יוֹתֵר וְאֶחָד פָּחוֹת."
+      }
+    ]
+  }
+}

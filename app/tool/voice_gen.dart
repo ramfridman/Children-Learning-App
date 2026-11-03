@@ -1,8 +1,9 @@
 // The voice generator. Run from the app/ folder:
 //
-//   dart run tool/voice_gen.dart plan [--characters a,b,c] [--price <per 1,000 characters>] [--list] [--out <folder>]
-//   dart run tool/voice_gen.dart mock <character> [--key <key file>] [--out <folder>]
-//   dart run tool/voice_gen.dart generate <character> [--key <key file>] [--out <folder>] [--pack-version <x.y.z>]
+//   dart run tool/voice_gen.dart plan [--characters a,b,c] [--price <per 1,000 characters>] [--list] [--out <folder>] [--max-lines <n>]
+//   dart run tool/voice_gen.dart mock <character> [--key <key file>] [--out <folder>] [--max-lines <n>]
+//   dart run tool/voice_gen.dart generate <character> [--key <key file>] [--out <folder>] [--pack-version <x.y.z>] [--max-lines <n>]
+//   dart run tool/voice_gen.dart pack <character> [--key <key file>] [--out <folder>] [--pack-version <x.y.z>] [--max-lines <n>]
 //   dart run tool/voice_gen.dart audition-batch plan <spec.json> [--out <folder>] [--price <per 1,000 characters>]
 //   dart run tool/voice_gen.dart audition-batch run <spec.json> [--out <folder>]
 //   dart run tool/voice_gen.dart audition <character> "<text>" [--model <id>] [--settings stability=0.25,similarity=0.8,boost=true] [--format <mp3_44100_...>] [--allow exclamation,ipa] [--out <folder>]
@@ -16,9 +17,19 @@
 // v4 model) and asks for 44.1 kHz audio. Each clip's hash (text, voice, model, settings, format) is recorded next to the
 // work folder, so a changed line is said again and an unchanged one is reused.
 //
-// `plan`, `audition-batch plan` and `mock` are free and need no terminal: `plan` counts new, changed and unchanged lines
-// for each voice, the characters and the cost (--list prints every line still to say with its exact text); `mock` makes
-// a voice pack of test tones (no network). The paid commands, `generate`, `audition-batch run` and `audition`, work only
+// A character named in `narrators` (content/voices.json) says every line. Any other character, a friend, says only the
+// lines in `ownLines`: its plan, its pack and the lines it waits for are those alone (the app plays the narrator's clip
+// for the rest). With no `narrators` in the file, every character says every line.
+//
+// A narrator's voice is several packs, not one (voice_packs_lib.dart): the shared lines in `voice-<character>`, and the
+// rest by land and band in `voice-<character>-part-<land>-<band>[-n]`, none over 40 MiB or 3,000 files. A friend's few
+// lines are one pack. `plan` shows the packs with their lines, characters and an estimated size.
+//
+// `plan`, `audition-batch plan`, `mock` and `pack` are free and need no terminal: `plan` counts new, changed and unchanged
+// lines for each voice, the characters and the cost (--list prints every line still to say with its exact text); `mock`
+// makes voice packs of test tones (no network); `pack` makes the signed packs again from the clips `generate` already saved
+// (a pack that was too big, a new pack version): it has no voice to ask and sends nothing, so it costs nothing, and it
+// refuses if any line has no clip made from its current text. The paid commands, `generate`, `audition-batch run` and `audition`, work only
 // in an interactive terminal: in the same process they plan exactly what they will send, print that plan, and go ahead
 // only when the owner types its total on the keyboard. No flag can pass that gate.
 //
@@ -65,6 +76,8 @@ Future<void> main(List<String> args) async {
         _plan(rest);
       case 'mock':
         await _mock(rest);
+      case 'pack':
+        await _pack(rest);
       case 'generate':
         await _generate(rest);
       case 'audition-batch':
@@ -161,20 +174,45 @@ VoiceTexts _voiceTexts(List<String> args) {
   );
 }
 
+/// The most lines in one voice pack: --max-lines, or the usual ([VoicePackLimits.maxLines]).
+int _maxLines(List<String> args) {
+  final String? given = _option(args, '--max-lines');
+  if (given == null) return VoicePackLimits.maxLines;
+  final int? n = int.tryParse(given);
+  if (n == null || n < 1) throw VoiceGenFailed('--max-lines is a whole number of lines, not "$given"');
+  return n;
+}
+
 String _home() => '${Platform.environment['USERPROFILE'] ?? '.'}${Platform.pathSeparator}nitznutz-voice';
 
 String _outFolder(List<String> args, String character) =>
     _option(args, '--out') ?? '${_home()}${Platform.pathSeparator}$character';
 
+/// [texts] cut down to the lines that one of [profiles] says, after checking that every own line of a friend exists: a
+/// friend's plan must not list, or wait for, the lines it never says.
+VoiceTexts _neededBy(VoiceTexts texts, Iterable<VoiceProfile> profiles) {
+  final Set<String> all = <String>{for (final VoicedLine l in texts.lines) l.voId};
+  for (final VoiceProfile p in profiles) {
+    p.checkOwnLines(all);
+  }
+  return VoiceTexts(<VoicedLine>[
+    for (final VoicedLine l in texts.lines)
+      if (profiles.any((VoiceProfile p) => p.says(l.voId))) l,
+  ]);
+}
+
 void _plan(List<String> args) {
   final Map<String, Object?> config = _config(args);
-  final VoiceTexts texts = _voiceTexts(args);
   final List<String> characters = _characters(args, config);
+  final Map<String, VoiceProfile> profiles = <String, VoiceProfile>{
+    for (final String c in characters) c: VoiceProfile.fromConfig(config, c),
+  };
+  final VoiceTexts texts = _neededBy(_voiceTexts(args), profiles.values);
   final Map<String, Map<String, String>> made = <String, Map<String, String>>{
     for (final String c in characters) c: ClipLedger(Directory(_outFolder(args, c))).hashes(),
   };
   final VoicePlan plan = planVoices(
-    <String, VoiceProfile>{for (final String c in characters) c: VoiceProfile.fromConfig(config, c)},
+    profiles,
     texts.ready,
     stateOf: (String c, SpokenLine l, ClipRequest r) =>
         clipState(Directory(_outFolder(args, c)), l.fileId, r, made[c]!),
@@ -195,6 +233,22 @@ void _plan(List<String> args) {
       priceSource: _option(args, '--price') != null ? '' : ' ($model list price in content/voices.json)',
     ),
   );
+  for (final MapEntry<String, VoiceProfile> p in profiles.entries) {
+    stdout
+      ..writeln()
+      ..write(
+        describeVoicePacks(
+          p.key,
+          voicePackLayout(p.key, p.value, texts.ready, maxLines: _maxLines(args)),
+          <String, int>{
+            for (final PlannedClip c in plan.clips)
+              if (c.character == p.key) c.line.voId: c.request.characters,
+          },
+          version: _option(args, '--pack-version'),
+          maxLines: _maxLines(args),
+        ),
+      );
+  }
   if (texts.blocked.isNotEmpty) {
     stdout
       ..writeln()
@@ -227,22 +281,51 @@ Future<void> _mock(List<String> args) async {
       '${dir.path} holds ElevenLabs clips, and test tones would replace them. Use another --out',
     );
   }
-  final BuiltPack built = await generateVoicePack(
+  final List<BuiltPack> built = await generateVoicePack(
     characterId: character,
     lines: _voiceTexts(args).forTestVoices,
     synth: MockSynthesizer(character),
     profile: VoiceProfile.mock,
     key: readKeyFile(_option(args, '--key') ?? defaultKeyPath()),
     workDir: dir,
+    maxLines: _maxLines(args),
     progress: stdout.writeln,
   );
-  _writePack(dir, built);
+  _writePacks(dir, built);
 }
 
-void _writePack(Directory dir, BuiltPack built) {
-  final File file = File('${dir.path}${Platform.pathSeparator}${built.fileName}')
-    ..writeAsBytesSync(built.bytes);
-  stdout.writeln('Built ${file.path}: ${built.bytes.length} bytes');
+void _writePacks(Directory dir, List<BuiltPack> built) {
+  for (final BuiltPack pack in built) {
+    final File file = File('${dir.path}${Platform.pathSeparator}${pack.fileName}')
+      ..writeAsBytesSync(pack.bytes);
+    stdout.writeln('Built ${file.path}: ${pack.bytes.length} bytes');
+  }
+  stdout.writeln(
+    'Built ${built.length} voice pack${built.length == 1 ? '' : 's'}, '
+    '${built.fold<int>(0, (int s, BuiltPack p) => s + p.bytes.length)} bytes in all.',
+  );
+}
+
+/// Free: the signed packs of [character] again, from the clips the paid run saved. No voice, no ElevenLabs key, no network.
+Future<void> _pack(List<String> args) async {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) throw const VoiceGenFailed('pack needs one character id');
+  final String character = pos.single;
+  final VoiceProfile profile = VoiceProfile.fromConfig(_config(args), character);
+  final VoiceTexts texts = _neededBy(_voiceTexts(args), <VoiceProfile>[profile]);
+  if (texts.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was built. ${texts.describeBlocked()}');
+  final Directory work = Directory(_outFolder(args, character));
+  final List<BuiltPack> built = await repackVoicePacks(
+    characterId: character,
+    lines: texts.ready,
+    profile: profile,
+    key: readKeyFile(_option(args, '--key') ?? defaultKeyPath()),
+    workDir: work,
+    version: _option(args, '--pack-version') ?? '1.0.0',
+    maxLines: _maxLines(args),
+    progress: stdout.writeln,
+  );
+  _writePacks(work, built);
 }
 
 Future<void> _generate(List<String> args) async {
@@ -251,11 +334,11 @@ Future<void> _generate(List<String> args) async {
   final String character = pos.single;
   requireTerminal(_keyboard, 'generate');
   final Map<String, Object?> config = _config(args);
-  final VoiceTexts texts = _voiceTexts(args);
-  if (texts.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was sent. ${texts.describeBlocked()}');
   final VoiceProfile profile = VoiceProfile.fromConfig(config, character);
+  final VoiceTexts texts = _neededBy(_voiceTexts(args), <VoiceProfile>[profile]);
+  if (texts.blocked.isNotEmpty) throw VoiceGenFailed('Nothing was sent. ${texts.describeBlocked()}');
   final Directory work = Directory(_outFolder(args, character));
-  final BuiltPack built = await generateGated(
+  final List<BuiltPack> built = await generateGated(
     characterId: character,
     lines: texts.ready,
     profile: profile,
@@ -267,8 +350,9 @@ Future<void> _generate(List<String> args) async {
     pricePer1000Chars: _prices(args, config)(profile.modelId),
     heading: _repoHeading(args),
     version: _option(args, '--pack-version') ?? '1.0.0',
+    maxLines: _maxLines(args),
   );
-  _writePack(work, built);
+  _writePacks(work, built);
 }
 
 /// The ElevenLabs voice, made only after the gate: the key is read from the environment here and nowhere else, and

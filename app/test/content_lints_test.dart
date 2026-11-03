@@ -62,8 +62,17 @@ String _expectedRepresentation(Map<String, Object?> a) {
   throw StateError('no label rule for template ${a['template']}');
 }
 
-/// Items spec section 2 lets keep `story` (a tale told in words) and the one skill whose day cards stay symbols.
-const Set<String> _storySkills = <String>{'CS-A-01', 'LOG-A-08', 'MATH-A-05', 'NUM-A-14'};
+/// Items spec section 2 lets keep `story` (a tale told in words) and the one skill whose day cards stay symbols. B-36 part D adds
+/// the three skills whose second item is an authored story (spec section 4): NUM-A-12, LOG-A-07 and COL-B-01.
+const Set<String> _storySkills = <String>{
+  'CS-A-01',
+  'LOG-A-08',
+  'MATH-A-05',
+  'NUM-A-14',
+  'NUM-A-12',
+  'LOG-A-07',
+  'COL-B-01',
+};
 const String _symbolCardSkill = 'MATH-B-14';
 
 String _skill(Map<String, Object?> a) => _m(_l(a['skills']).first)['id']! as String;
@@ -86,26 +95,14 @@ List<String> _tagGaps(Map<String, Map<String, Object?>> acts) {
   return gaps;
 }
 
-/// The items B-15 added whose gap is known and explained (spec section 3), by class:
-/// M-CNT-CARD has no feedback line outside "give N" (hand-off for the curriculum-expert), E2 has no catalogue tag
-/// (owner decision 5), the rest are rows the spec gives a single tag or none.
+/// The items B-15 added whose gap is still known and explained (spec section 3): B-36 parts B and C gave the other fourteen
+/// (M-CNT-CARD lines, the E2 tags) their second tagged wrong answer, so they came off this list. These seven have one
+/// wrong answer that can carry a tag, or none, by the spec: LOG-A-09 (b15.loga09.*: one look-alike per item, M-ASSOC-LOOK, and the
+/// other wrong answer is a random thing by design), the two patterns that have no second wrong place, NUM-A-13 (one tag,
+/// M-ORD-CARD) and the count item with one tag.
 const Map<String, String> _knownNewGaps = <String, String>{
-  'b.mathb03.15': 'M-CNT-CARD',
-  'b.mathb03.16': 'M-CNT-CARD',
-  'b.mathb06.9': 'M-CNT-CARD',
-  'b.mathb06.10': 'M-CNT-CARD',
-  'b15.matha01.1': 'M-CNT-CARD',
-  'b15.matha01.2': 'M-CNT-CARD',
-  'b15.matha02.1': 'M-CNT-CARD',
-  'b15.matha02.2': 'M-CNT-CARD',
-  'b15.numa14.1': 'M-CNT-CARD',
-  'b15.numa14.2': 'M-CNT-CARD',
-  'b.mathb10.7': 'E2',
-  'b.mathb10.8': 'E2',
-  'b15.loga09.1': 'E2',
-  'b15.loga09.2': 'E2',
-  'b15.shpa02.1': 'E2',
-  'b15.shpa02.2': 'E2',
+  'b15.loga09.1': 'one look-alike per item (M-ASSOC-LOOK); the other wrong answer is a random thing',
+  'b15.loga09.2': 'one look-alike per item (M-ASSOC-LOOK); the other wrong answer is a random thing',
   'b.logb01.9': 'one tag only: the pattern has no second wrong place',
   'b.logb01.10': 'one tag only: the pattern has no second wrong place',
   'b15.numa13.1': 'spec: one tag (M-ORD-CARD)',
@@ -117,8 +114,9 @@ void main() {
   final Map<String, Map<String, Object?>> acts = _load('activity.');
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
-  test('the sources are the 967 activities and 100 skills of pack 0.10.0', () {
-    expect(acts.length, 967);
+  // 967 of pack 0.10.0, plus the 150 second-representation items of B-36 part D (2 for each of 75 skills) and the B-38 item
+  test('the sources are the 1,118 activities and 100 skills of the next pack', () {
+    expect(acts.length, 1118);
     expect(skills.length, 100);
   });
 
@@ -175,21 +173,21 @@ void main() {
   group('section 5.3: two tagged wrong answers on an item with three or more options', () {
     final List<String> gaps = _tagGaps(acts);
 
-    test('the 21 new items B-15 added with a gap are exactly the explained ones', () {
+    test('the 7 items that still have an explained gap are exactly the listed ones', () {
       final Set<String> newGaps = gaps.where(_knownNewGaps.containsKey).toSet();
       expect(
         newGaps,
         _knownNewGaps.keys.toSet(),
         reason: 'a gap on this list got fixed (take it off), or the item changed its id',
       );
-      expect(_knownNewGaps.length, 21);
+      expect(_knownNewGaps.length, 7);
     });
 
-    test('no other new item falls short: the old gaps are pinned at 310', () {
+    test('no other new item falls short: the old gaps are pinned at 202', () {
       final List<String> older = gaps.where((String id) => !_knownNewGaps.containsKey(id)).toList();
       expect(
         older.length,
-        310,
+        202,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

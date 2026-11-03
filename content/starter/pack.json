@@ -1,8 +1,8 @@
 {
   "schema": "pack-source/v1",
   "id": "starter",
-  "version": "0.10.0",
-  "minAppVersion": "0.5.0",
+  "version": "0.11.0",
+  "minAppVersion": "0.6.0",
   "assets": [
     {
       "id": "meadow",
@@ -871,6 +871,90 @@
     {
       "id": "note_200",
       "file": "note_200.svg"
+    },
+    {
+      "id": "pos_cat_in",
+      "file": "pos_cat_in.svg"
+    },
+    {
+      "id": "pos_cat_next",
+      "file": "pos_cat_next.svg"
+    },
+    {
+      "id": "pos_cat_on",
+      "file": "pos_cat_on.svg"
+    },
+    {
+      "id": "solid_cube",
+      "file": "solid_cube.svg"
+    },
+    {
+      "id": "shape_open_quad",
+      "file": "shape_open_quad.svg"
+    },
+    {
+      "id": "pos_cat_above",
+      "file": "pos_cat_above.svg"
+    },
+    {
+      "id": "pos_cat_under",
+      "file": "pos_cat_under.svg"
+    },
+    {
+      "id": "obj_mitten",
+      "file": "obj_mitten.svg"
+    },
+    {
+      "id": "obj_toy_boat",
+      "file": "obj_toy_boat.svg"
+    },
+    {
+      "id": "outline_square_tilt",
+      "file": "outline_square_tilt.svg"
+    },
+    {
+      "id": "outline_triangle_down",
+      "file": "outline_triangle_down.svg"
+    },
+    {
+      "id": "obj_can",
+      "file": "obj_can.svg"
+    },
+    {
+      "id": "obj_drum",
+      "file": "obj_drum.svg"
+    },
+    {
+      "id": "obj_party_hat",
+      "file": "obj_party_hat.svg"
+    },
+    {
+      "id": "obj_gift",
+      "file": "obj_gift.svg"
+    },
+    {
+      "id": "glyph_1",
+      "file": "glyph_1.svg"
+    },
+    {
+      "id": "glyph_3",
+      "file": "glyph_3.svg"
+    },
+    {
+      "id": "glyph_3_rev",
+      "file": "glyph_3_rev.svg"
+    },
+    {
+      "id": "glyph_7",
+      "file": "glyph_7.svg"
+    },
+    {
+      "id": "glyph_7_rev",
+      "file": "glyph_7_rev.svg"
+    },
+    {
+      "id": "glyph_8",
+      "file": "glyph_8.svg"
     }
   ],
   "vo": []

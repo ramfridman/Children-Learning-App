@@ -28,10 +28,12 @@
     }
   ],
   "representations": [
-    "symbolic"
+    "symbolic",
+    "pictorial"
   ],
   "misconceptions": [
-    "M-NUM-ZERO"
+    "M-NUM-ZERO",
+    "M-CNT-CARD"
   ],
   "retention": {
     "targetRetention": 0.9,

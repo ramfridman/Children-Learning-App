@@ -47,7 +47,8 @@
       {
         "id": "o1",
         "numeral": 8,
-        "label": "שְׁמוֹנֶה"
+        "label": "שְׁמוֹנֶה",
+        "misconception": "M-CNT-CARD"
       },
       {
         "id": "o2",
@@ -77,6 +78,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.take",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+          }
+        ]
+      },
       {
         "when": "misconception:M-PART-MISS",
         "vo": "vo:fb.part_miss",

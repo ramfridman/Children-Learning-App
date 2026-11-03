@@ -1,6 +1,6 @@
 """The voice director's table: one row for every distinct voiced text of the app, with its direction.
 
-Reads docs/review/hebrew-master.csv (only rows with status `text-ready`, spoken, and their `voice_text`), the content
+Reads docs/review/hebrew-master.csv (spoken rows with status `text-ready`, `owner-approved`, `voice-ready` or `voiced`, and their `voice_text`), the content
 files (to find each row's `vo:` id and band) and content/voices.proposed.json (the styles), and writes
 docs/audio/voice-direction.csv. It also prints the character counts and the cost of the voicing plan.
 
@@ -28,6 +28,9 @@ PROPOSED = os.path.join(ROOT, 'content', 'voices.proposed.json')
 OUT = os.path.join(ROOT, 'docs', 'audio', 'voice-direction.csv')
 VOICE_HOME = os.path.join(os.environ.get('USERPROFILE', os.path.expanduser('~')), 'nitznutz-voice')
 
+# Rows the table covers: text read by the editor (`text-ready`) and every later step (the owner approved it, it is
+# marked for voicing, it was voiced). Reading only `text-ready` would drop a line once the owner approves it.
+READ_STATUS = ('text-ready', 'owner-approved', 'voice-ready', 'voiced')
 NIKUD = re.compile('[֑-ׇ]')
 HE_LETTER = re.compile('[א-ת]')
 PRICE_PER_1000 = 0.04          # eleven_v4_turbo API list price (docs/PLAN.md, ElevenLabs pricing)
@@ -36,6 +39,7 @@ CREATOR_MONTH = 275_000        # characters a month on the Creator plan (docs/PL
 NARRATORS = ['nitzi', 'hero-son']
 FRIENDS = ['alien-jili', 'climber-tzuri', 'compass-romi', 'friend-daughter', 'inventor-gali', 'tower-tamir',
            'weaver-keshet']
+OWN_LINES = set(json.load(open(os.path.join(ROOT, 'content', 'voices.json'), encoding='utf-8'))['ownLines'])
 NARRATOR_OF = {'nitzi': 'nitzi', 'alien-jili': 'nitzi', 'compass-romi': 'nitzi', 'friend-daughter': 'nitzi',
                'inventor-gali': 'nitzi', 'weaver-keshet': 'nitzi', 'hero-son': 'hero-son',
                'climber-tzuri': 'hero-son', 'tower-tamir': 'hero-son'}   # app/lib/app/companion.dart
@@ -87,13 +91,17 @@ STYLE_OF_KIND = {
     'correct': 'warm', 'not-yet': 'gentle', 'unsure': 'warm',
     'celebration': 'cheer', 'cheer': 'cheer', 'ceremony': 'ceremony', 'greeting': 'greet',
     'encourage': 'warm', 'thinking': 'think', 'listen': 'gentle', 'calm': 'calm', 'goodbye': 'calm',
-    'tutor': 'tutor',
+    'tutor': 'tutor', 'invite': 'warm',
+    # 2026-11-02, the 148 lines of b45-new-lines-2.tsv: the welcome is the default 0.50 ('warm'), the map card the
+    # calm 0.60 of an instruction ('ask'; the rule `vo:core.skill.` in content/voices.json).
+    'welcome-hello': 'warm', 'welcome-topic': 'warm', 'welcome-land': 'warm', 'welcome-close': 'warm', 'card': 'ask',
 }
 # Seconds the line should fit in (pause budget), at the style's speed; a longer line is flagged.
 BUDGET = {   # a guess from the design spec (Tier 1 is short, Tier 2 is 2 to 3 s) and the measured rate; not measured
     'question': 8, 'instruction': 8, 'answer-prompt': 3, 'hint-1': 6, 'hint-2': 8, 'hint-3': 12, 'list': 16,
     'correct': 6, 'not-yet': 6.5, 'unsure': 3.5, 'celebration': 4.5, 'cheer': 2.5, 'ceremony': 3, 'greeting': 3,
-    'encourage': 5, 'thinking': 3, 'listen': 5.5, 'calm': 4.5, 'goodbye': 5, 'tutor': 7,
+    'encourage': 5, 'thinking': 3, 'listen': 5.5, 'calm': 4.5, 'goodbye': 5, 'tutor': 7, 'invite': 4,
+    'welcome-hello': 4, 'welcome-topic': 4, 'welcome-land': 4, 'welcome-close': 3, 'card': 4,
 }
 BAND_SPEED = {'A': -0.03, 'B': 0.0, 'C': 0.03, '': 0.0, 'mixed': -0.02}
 
@@ -132,8 +140,11 @@ def kind_of(row, node_path, text):
         for pre, k in (('core.greeting', 'greeting'), ('core.celebrate', 'cheer'), ('core.ceremony', 'ceremony'),
                        ('core.placement', 'encourage'), ('core.thinking', 'thinking'), ('core.listen', 'listen'),
                        ('core.stuck', 'calm'), ('core.breathe', 'calm'), ('core.goodbye', 'goodbye'),
+                       ('core.rest.goodbye', 'goodbye'), ('core.adventure', 'invite'), ('core.home.bubble', 'question'),
                        ('core.encourage.check', 'thinking'), ('core.encourage.almost', 'not-yet'),
-                       ('core.encourage', 'encourage')):
+                       ('core.encourage', 'encourage'), ('core.skill.', 'card'),
+                       ('welcome.hello', 'welcome-hello'), ('welcome.topic', 'welcome-topic'),
+                       ('welcome.land', 'welcome-land'), ('welcome.close', 'welcome-close')):
             if cid.startswith(pre):
                 return k, is_list
     if g == '4':
@@ -178,6 +189,13 @@ def pause_notes(text, kind, is_list):
                      'the last item lands down' % n)
     if text.count('.') + text.count('?') >= 2 and not is_list:
         notes.append('%d sentences: a full stop is a real pause (about 450 ms)' % (text.count('.') + text.count('?')))
+    if kind == 'welcome-hello':
+        notes.append('plays after a short name clip (a gap of about 300 to 500 ms set by the app); this clip starts on '
+                     '"שלום" with at most 50 ms of silence; the comma after "שלום" is a light beat (about 200 ms)')
+    if kind in ('welcome-topic', 'welcome-land', 'welcome-close'):
+        notes.append('one short sentence; the app puts about 300 to 500 ms between the clips of a welcome')
+    if kind == 'card':
+        notes.append('said alone when the child taps a picture on the map; a quiet start and a soft end')
     if text.rstrip().endswith('?'):
         notes.append('question: a soft rise at the end, curious, not testing')
     return '; '.join(notes)
@@ -204,12 +222,49 @@ def listen_for(text, kind, is_list):
         'listen': 'soft, the fault is the helper\'s ears, never the child\'s speech',
         'calm': 'slow and soft, a quiet ending',
         'goodbye': 'soft, warm, a quiet end; no "come back" pressure',
+        'invite': 'the bubble of the bottle: a warm invitation to an adventure, even and unhurried, no shout; the land name '
+                  'said whole and clearly (pointed words read as pointed); it ends level, not on a question rise',
+        'welcome-hello': 'the call after a name clip: starts at once on "שלום" (no lead-in silence over 50 ms), warm and '
+                         'glad to see the child, level and unhurried, no shout; ends down softly; the same voice and '
+                         'settings as the name clip so the seam does not show',
+        'welcome-topic': 'a light preview of the day, not a promise and not pressure: even, ends level-down; "היום" '
+                         'unstressed; no rise at the end (it is not a question)',
+        'welcome-land': 'a light invitation to a place; the land name said whole and clearly (pointed words read as '
+                        'pointed); ends level-down',
+        'welcome-close': 'the invitation to open the bottle: warm, a little brighter than the topic, still short and '
+                         'soft; not a command',
+        'card': 'a calm naming of what the picture is, as a friend would say it when asked; short, even, '
+                'no teaching voice and no question rise; ends down softly',
         'tutor': 'same voice and loudness as the lesson lines around it; addressed in the right gender form',
     }[kind]
     extra = []
     pointed = [w for w in re.findall(r'\S+', text) if NIKUD.search(w)]
     if pointed:
         extra.append('pointed words read as pointed: ' + ' '.join(w.strip('.,?:…—') for w in pointed[:6]))
+    if kind == 'correct' and PLAIN(text).startswith('לא,'):
+        extra.append('LISTEN FIRST (ask withdrawn 2026-11-02): the line echoes the tap the child just made on "לא" (a yes/no '
+                     'question); the "לא" must be bright and sure and run on into the reason, not a falling "no"; '
+                     'only if it sounds like a not-yet, ask the editor for "לֹא." (a full stop)')
+    if PLAIN(text).startswith('לא שמעתי'):
+        extra.append('LISTEN FIRST (ask withdrawn 2026-11-02): one dash beat already splits the line; the fault is '
+                     'the ears of the helper, said soft and unhurried')
+    if PLAIN(text).startswith('כדי לדעת כמה יותר'):
+        extra.append('LISTEN FIRST (ask withdrawn 2026-11-02): already two sentences; a full stop is a real pause '
+                     'before "בואו נשווה"')
+    if kind.startswith('welcome') or kind == 'card':
+        plain = PLAIN(text)
+        if re.search(r'(^|\s)(שווה|שווים)(\s|[.,:…]|$)', plain):
+            extra.append('LISTEN (joins the "equals" check of the pilot): שווה = sha-VE, שווים = sha-VIM, not "sh-VA"')
+        if re.search(r'(^|\s)(נשווה|משווים)(\s|[.,:…]|$)', plain):
+            extra.append('LISTEN: the verb "compare" (נשווה = nash-VE, משווים = mash-VIM), not the adjective "equal"')
+        for w, how in (('גליל', 'ga-LIL'), ('חרוט', 'cha-RUT'), ('פירמידה', 'pi-ra-MI-da'), ('מרובע', 'me-ru-BA'),
+                       ('מחומש', 'me-chu-MASH'), ('משושה', 'me-shu-SHE'), ('קובייה', 'ku-BI-ya'), ('כבד', 'ka-VED'),
+                       ('בלשים', 'ba-la-SHIM'), ('ציר', 'TSIR'), ('הקשת', 'ha-KE-shet')):
+            if re.search(r'(^|\s)ו?ה?' + w + r'(\s|[.,:…]|$)', plain):
+                extra.append('LISTEN: %s read %s' % (w, how))
+        if '…' in text:
+            extra.append('LISTEN: each "…" is a short beat (about 400 ms), the pitch stays level; it must not sound like '
+                         'the thinking hum or like trailing off')
     if 'שֵׁנִי' in text or 'הַשֵּׁנִי' in text:
         extra.append('שני is the ordinal (sheni), not "two of" (shnei)')
     if re.search(r'(^|\s)ו?ה?ממ', PLAIN(text)) or 'המממ' in text:
@@ -233,15 +288,16 @@ def editor_note(text, kind, est, budget, is_list, row_ids):
         notes.append('LONG LIST: %d items; the commas are the breaths. Only if the audition shows it rushed: ask for '
                      '"…" instead of "," between the numbers (hebrew-notes.md section 6 offers it); no change asked '
                      'before that' % (text.count(',') + 1))
-    if est > budget * 1.25:
-        notes.append('LONG: about %.0f s against a %.0f s budget; ask the editor for a full stop to split it into two '
-                     'breaths, or a shorter wording' % (est, budget))
+    # 2026-11-02: no more "LONG" ask from a time estimate. The estimate used the speed of a style, and the v4 models
+    # drop speed (voice-direction.md; b45-voicing-plan.md section 2), and round 3 approved long hint-3 lines. A real
+    # problem is a stretch of more than 18 words with no full stop, question mark, colon, dash or ellipsis in it.
+    longest = max((len(x.split()) for x in re.split(r'[.?!:—…]', text) if x.strip()), default=0)
+    if longest > 18:
+        notes.append('LONG: %d words with no full stop, colon or dash; ask the editor for a full stop to split it '
+                     'into two breaths' % longest)
     if re.search(r'^\S+, ועוד', text):
         notes.append('comma between a number and "ועוד" makes a pause inside the sum; the other sums have none '
                      '(e.g. "שֵׁשׁ ועוד שָׁלוֹשׁ:"); ask to drop the comma for a single sum phrase')
-    if kind == 'correct' and text.startswith('לא,'):
-        notes.append('a correct line that starts "לא," can sound like a not-yet; ask for "לא." (the answer alone, '
-                     'then the reason, as for number answers)')
     m = re.search(r'ללחוץ על (\S+)\.$', text)
     if is_list and m and re.match(r'^\S+,? ועוד \S+:', text):
         listed = [w.strip() for w in text.split(':', 1)[1].split('.')[0].split(',')]
@@ -254,7 +310,7 @@ def editor_note(text, kind, est, budget, is_list, row_ids):
 def main():
     styles = load_styles()
     rows = list(csv.DictReader(open(MASTER, encoding='utf-8-sig')))
-    ready = [r for r in rows if r['status'] == 'text-ready' and r['spoken'] == 'yes' and r['voice_text'].strip()]
+    ready = [r for r in rows if r['status'] in READ_STATUS and r['spoken'] == 'yes' and r['voice_text'].strip()]
     docs = {}
 
     def doc(name):
@@ -307,7 +363,7 @@ def main():
         band = bands[0] if len(set(bands)) == 1 else ('mixed' if bands else '')
         g = info['group']
         style = STYLE_OF_KIND[kind]
-        if g == '2':
+        if g == '2' and next(iter(info['vos'])) in OWN_LINES:
             voices = 'own: every friend in its own voice (9)'
             scope = 'own'
         elif g == '4':
@@ -391,7 +447,7 @@ def main():
                       len(gone))
 
     p = PRICE_PER_1000 / 1000
-    print('Distinct voiced texts: %d (narrator %d, own core %d, tutor %d) from %d text-ready spoken rows'
+    print('Distinct voiced texts: %d (narrator %d, own core %d, tutor %d) from %d spoken rows (text-ready or later)'
           % (len(out_rows), n_lines['narrator'], n_lines['own'], n_lines['tutor'], len(ready)))
     print('Not voiced by the app:', dict(unvoiced))
     print('Narrator lesson lines: %d distinct texts, %d characters per voice (voiced per vo id instead: %d vo ids, '

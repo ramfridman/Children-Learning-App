@@ -33,6 +33,7 @@ import '../speech/voice_answer.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
 import '../voice/voice_director.dart';
+import '../voice/voice_lines.dart';
 import 'activity_frame.dart';
 import 'count_tap_session.dart';
 import 'flash_session.dart';
@@ -266,6 +267,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       timeIsUp: _timeIsUp,
     );
     made.addListener(_speak);
+    // The part of the narrator's voice that holds this lesson's lines is read now, not at the first question.
+    unawaited(
+      _director.prefetch(voiceLinesOf(<Map<String, Object?>>[for (final Activity a in made.items) a.json])),
+    );
     // The first question is spoken as soon as the lesson opens.
     SchedulerBinding.instance.addPostFrameCallback((_) => _speak());
     return made;

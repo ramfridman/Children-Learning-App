@@ -61,7 +61,11 @@ void main() {
     'the warm-up is due once: not after it was played, and not for a child who already played in the land',
     () {
       expect(placementDue(content, 'numbers', const <Attempt>[]), isTrue);
-      expect(placementDue(content, 'numbers', <Attempt>[_attempt(placementId, 'give.dogs.4')]), isFalse);
+      // The warm-up played (whichever activities the pack chose for it) uses it up.
+      final List<Attempt> played = <Attempt>[
+        for (final String id in placementLesson(content, 'numbers')!.itemIds) _attempt(placementId, id),
+      ];
+      expect(placementDue(content, 'numbers', played), isFalse);
       expect(
         placementDue(content, 'numbers', <Attempt>[_attempt('butterflies', 'count.butterflies.3')]),
         isFalse,

@@ -183,6 +183,8 @@ void main() {
       await v2.customStatement('DROP TABLE voice_listens');
       await v2.customStatement('ALTER TABLE profiles DROP COLUMN companion_id');
       await v2.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v2.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+      await v2.customStatement('DROP TABLE name_clips');
       await v2.customStatement('PRAGMA user_version = 1');
       await v2.close();
 
@@ -226,7 +228,7 @@ void main() {
       expect(await db.allInstalledPacks(), isEmpty);
       expect(await db.attemptsOf('nobody'), isEmpty);
       expect(await db.sessionsOf('nobody'), isEmpty);
-      expect(AppDatabase.currentSchemaVersion, 9);
+      expect(AppDatabase.currentSchemaVersion, 10);
     });
 
     test('an attempt holds ids, numbers and fixed words only (no column can carry a name or free text of any size)', () async {
@@ -273,6 +275,8 @@ void main() {
       await v3.customStatement('ALTER TABLE attempts DROP COLUMN synced_at');
       await v3.customStatement('ALTER TABLE attempts DROP COLUMN remote_session');
       await v3.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v3.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+      await v3.customStatement('DROP TABLE name_clips');
       await v3.customStatement('PRAGMA user_version = 2');
       await v3.close();
 
@@ -328,6 +332,8 @@ void main() {
       await v4.customStatement('ALTER TABLE sessions DROP COLUMN synced_at');
       await v4.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
       await v4.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v4.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+      await v4.customStatement('DROP TABLE name_clips');
       await v4.customStatement('PRAGMA user_version = 3');
       await v4.close();
 
@@ -387,6 +393,8 @@ void main() {
       await v5.customStatement('ALTER TABLE sessions DROP COLUMN synced_at');
       await v5.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
       await v5.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v5.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+      await v5.customStatement('DROP TABLE name_clips');
       await v5.customStatement('PRAGMA user_version = 4');
       await v5.close();
 
@@ -447,6 +455,8 @@ void main() {
       await v6.customStatement('ALTER TABLE sessions DROP COLUMN synced_at');
       await v6.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
       await v6.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v6.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+      await v6.customStatement('DROP TABLE name_clips');
       await v6.customStatement('PRAGMA user_version = 5');
       await v6.close();
 
@@ -553,6 +563,8 @@ void main() {
         await v7.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
         await v7.customStatement('ALTER TABLE alerts DROP COLUMN synced_at');
         await v7.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+        await v7.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+        await v7.customStatement('DROP TABLE name_clips');
         await v7.customStatement('PRAGMA user_version = 6');
         await v7.close();
 
@@ -579,6 +591,8 @@ void main() {
       await v8.endSession(session, DateTime.utc(2026, 11, 1, 0, 5), 'finished');
       await v8.customStatement('DROP TABLE rewards');
       await v8.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v8.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+      await v8.customStatement('DROP TABLE name_clips');
       await v8.customStatement('PRAGMA user_version = 7');
       await v8.close();
 
@@ -629,6 +643,8 @@ void main() {
         ),
       );
       await v9.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v9.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+      await v9.customStatement('DROP TABLE name_clips');
       await v9.customStatement('PRAGMA user_version = 8');
       await v9.close();
 
@@ -643,5 +659,77 @@ void main() {
       final rows = await db.customSelect('PRAGMA user_version').get();
       expect(rows.single.data['user_version'], AppDatabase.currentSchemaVersion);
     });
+  });
+
+  group('migration from version 9 to 10 (B-42)', () {
+    test(
+      'a version 9 file keeps its children and gets the spelling column and the name-clip table, empty',
+      () async {
+        final String keyHex = await keys.keyHex();
+        final AppDatabase v10 = openAppDatabase(folder: dir.path, keyHex: keyHex);
+        await v10.addProfile(
+          ProfilesCompanion.insert(
+            id: 'p1',
+            name: 'נועה',
+            avatar: 'avatar-noa',
+            addressForm: 'f',
+            ageBand: 1,
+            createdAt: DateTime.utc(2026, 11, 1),
+          ),
+        );
+        await v10.customStatement('ALTER TABLE profiles DROP COLUMN name_spoken');
+        await v10.customStatement('DROP TABLE name_clips');
+        await v10.customStatement('PRAGMA user_version = 9');
+        await v10.close();
+
+        final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: keyHex);
+        addTearDown(db.close);
+        expect((await db.allProfiles()).single.name, 'נועה');
+        expect(await db.nameSpokenOf('p1'), isNull, reason: 'no child has a spelling yet');
+        expect(await db.select(db.nameClips).get(), isEmpty);
+        await db.setNameSpoken('p1', 'נֹעָה');
+        expect(await db.nameSpokenOf('p1'), 'נֹעָה');
+        await db.putNameClip(
+          profileId: 'p1',
+          characterId: 'nitzi',
+          spellingHash: '0123456789abcdef',
+          sound: Uint8List.fromList(<int>[1, 2, 3]),
+          at: DateTime.utc(2026, 11, 3),
+        );
+        expect(await db.nameClipOf('p1', 'nitzi', '0123456789abcdef'), <int>[1, 2, 3]);
+        final rows = await db.customSelect('PRAGMA user_version').get();
+        expect(rows.single.data['user_version'], AppDatabase.currentSchemaVersion);
+      },
+    );
+
+    test(
+      'the clips are in the encrypted file: no sound and no spelling can be read without the key',
+      () async {
+        final String keyHex = await keys.keyHex();
+        final AppDatabase db = openAppDatabase(folder: dir.path, keyHex: keyHex);
+        await db.addProfile(
+          ProfilesCompanion.insert(
+            id: 'p1',
+            name: 'נועה',
+            avatar: 'avatar-noa',
+            addressForm: 'f',
+            ageBand: 1,
+            createdAt: DateTime.utc(2026, 11, 1),
+          ),
+        );
+        final List<int> marker = List<int>.generate(64, (int i) => 0xA0 + i % 16);
+        await db.putNameClip(
+          profileId: 'p1',
+          characterId: 'nitzi',
+          spellingHash: '0123456789abcdef',
+          sound: Uint8List.fromList(marker),
+          at: DateTime.utc(2026, 11, 3),
+        );
+        await db.close();
+        final Uint8List bytes = databaseFile(dir.path).readAsBytesSync();
+        expect(_contains(bytes, marker), isFalse, reason: 'a name clip is never readable from the file');
+        expect(_contains(bytes, 'name_clips'.codeUnits), isFalse);
+      },
+    );
   });
 }

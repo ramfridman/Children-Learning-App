@@ -27,7 +27,8 @@
     "chick",
     "frog",
     "butterfly",
-    "butterfly_lit"
+    "butterfly_lit",
+    "block"
   ],
   "objects": {
     "ladybug": {
@@ -123,6 +124,18 @@
         "concrete",
         "embodied"
       ]
+    },
+    {
+      "id": "M-NUM-NAME",
+      "skills": [
+        "NUM-A-08"
+      ],
+      "parent": "הילד עדיין לא מחבר בין הספרה הכתובה לבין שם המספר: כששומע \"שלוש\" הוא בוחר ספרה אחרת.",
+      "home": "לחפש ספרות בבית ובחוץ (על שלט, על שעון, במעלית), לקרוא אותן יחד בקול, ולהרים כמה אצבעות שהספרה אומרת.",
+      "reps": [
+        "symbolic",
+        "pictorial"
+      ]
     }
   ],
   "skills": [
@@ -182,7 +195,9 @@
       "reps": [
         "symbolic"
       ],
-      "tags": []
+      "tags": [
+        "M-NUM-NAME"
+      ]
     },
     {
       "id": "NUM-A-09",
@@ -276,7 +291,8 @@
         "concrete"
       ],
       "tags": [
-        "M-NUM-ZERO"
+        "M-NUM-ZERO",
+        "M-CNT-CARD"
       ]
     }
   ],
@@ -557,7 +573,11 @@
         2,
         3
       ],
-      "difficulty": 0.1
+      "difficulty": 0.1,
+      "tags": {
+        "1": "M-NUM-NAME",
+        "3": "M-NUM-NAME"
+      }
     },
     {
       "kind": "pick_numeral",
@@ -569,7 +589,11 @@
         3,
         5
       ],
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "2": "M-NUM-NAME",
+        "5": "M-NUM-NAME"
+      }
     },
     {
       "kind": "pick_numeral",
@@ -581,7 +605,11 @@
         4,
         5
       ],
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "3": "M-NUM-NAME",
+        "5": "M-NUM-NAME"
+      }
     },
     {
       "kind": "pick_numeral",
@@ -593,7 +621,11 @@
         4,
         5
       ],
-      "difficulty": 0.25
+      "difficulty": 0.25,
+      "tags": {
+        "1": "M-NUM-NAME",
+        "4": "M-NUM-NAME"
+      }
     },
     {
       "kind": "count_tap",
@@ -915,7 +947,10 @@
         1,
         2
       ],
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "2": "M-NUM-ZERO"
+      }
     },
     {
       "kind": "zero",
@@ -930,7 +965,10 @@
         1,
         2
       ],
-      "difficulty": 0.35
+      "difficulty": 0.35,
+      "tags": {
+        "2": "M-NUM-ZERO"
+      }
     },
     {
       "kind": "zero",
@@ -945,7 +983,10 @@
         1,
         3
       ],
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "tags": {
+        "3": "M-NUM-ZERO"
+      }
     },
     {
       "kind": "zero",
@@ -1254,7 +1295,11 @@
         2,
         3
       ],
-      "difficulty": 0.05
+      "difficulty": 0.05,
+      "tags": {
+        "2": "M-NUM-NAME",
+        "3": "M-NUM-NAME"
+      }
     },
     {
       "kind": "pick_numeral",
@@ -1266,7 +1311,11 @@
         4,
         5
       ],
-      "difficulty": 0.25
+      "difficulty": 0.25,
+      "tags": {
+        "2": "M-NUM-NAME",
+        "5": "M-NUM-NAME"
+      }
     },
     {
       "kind": "pick_numeral",
@@ -1278,7 +1327,11 @@
         4,
         1
       ],
-      "difficulty": 0.15
+      "difficulty": 0.15,
+      "tags": {
+        "4": "M-NUM-NAME",
+        "1": "M-NUM-NAME"
+      }
     },
     {
       "kind": "count_tap",
@@ -1495,7 +1548,10 @@
         2,
         1
       ],
-      "difficulty": 0.35
+      "difficulty": 0.35,
+      "tags": {
+        "2": "M-NUM-ZERO"
+      }
     },
     {
       "kind": "count_tap",
@@ -2126,12 +2182,19 @@
       ],
       "correct": "n:0",
       "tags": {
-        "n:1": "M-NUM-ZERO"
+        "n:1": "M-NUM-ZERO",
+        "n:3": "M-CNT-CARD"
       },
       "correct_text": "אֶפֶס! אֵין אַף צִפּוֹר.",
       "h3": "אֵין אַף צִפּוֹר. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם.",
       "difficulty": 0.4,
-      "voice": true
+      "voice": true,
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.zero",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה. בּוֹאוּ נִסְתַּכֵּל שׁוּב: כַּמָּה נִשְׁאֲרוּ עַכְשָׁו?"
+        ]
+      }
     },
     {
       "kind": "pick",
@@ -2151,12 +2214,380 @@
       ],
       "correct": "n:0",
       "tags": {
-        "n:1": "M-NUM-ZERO"
+        "n:1": "M-NUM-ZERO",
+        "n:2": "M-CNT-CARD"
       },
       "correct_text": "אֶפֶס! אֵין אַף דָּג.",
       "h3": "אֵין אַף דָּג. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם.",
       "difficulty": 0.45,
-      "voice": true
+      "voice": true,
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.zero",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה. בּוֹאוּ נִסְתַּכֵּל שׁוּב: כַּמָּה נִשְׁאֲרוּ עַכְשָׁו?"
+        ]
+      }
+    },
+    {
+      "kind": "give",
+      "id": "b36.numa05.1",
+      "skill": "NUM-A-05",
+      "obj": "fish",
+      "n": 2,
+      "source": 4,
+      "target": "bowl_empty",
+      "check": "transfer",
+      "weights": {
+        "NUM-A-05": 1,
+        "NUM-A-06": 0.5
+      },
+      "difficulty": 0.17
+    },
+    {
+      "kind": "give",
+      "id": "b36.numa05.2",
+      "skill": "NUM-A-05",
+      "obj": "bird",
+      "n": 3,
+      "source": 5,
+      "target": "nest_empty",
+      "check": "practice",
+      "weights": {
+        "NUM-A-05": 1,
+        "NUM-A-06": 0.5
+      },
+      "difficulty": 0.17
+    },
+    {
+      "kind": "give",
+      "id": "b36.numa10.1",
+      "skill": "NUM-A-10",
+      "obj": "apple",
+      "n": 4,
+      "source": 7,
+      "target": "basket_target",
+      "check": "transfer",
+      "weights": {
+        "NUM-A-10": 1,
+        "NUM-A-06": 0.5
+      },
+      "difficulty": 0.38
+    },
+    {
+      "kind": "give",
+      "id": "b36.numa10.2",
+      "skill": "NUM-A-10",
+      "obj": "ladybug",
+      "n": 5,
+      "source": 8,
+      "target": "basket_target",
+      "check": "practice",
+      "weights": {
+        "NUM-A-10": 1,
+        "NUM-A-06": 0.5
+      },
+      "difficulty": 0.38
+    },
+    {
+      "kind": "pick",
+      "id": "b36.numa06.1",
+      "skill": "NUM-A-06",
+      "check": "reverse",
+      "prompt": "יֵשׁ כָּאן שִׁבְעָה דָּגִים. הֶחָתוּל בִּקֵּשׁ שְׁלוֹשָׁה דָּגִים. אֵיזוֹ צַלַּחַת נְכוֹנָה?",
+      "group": {
+        "sprite": "fish",
+        "count": 7,
+        "arrangement": "scatter",
+        "seed": 4
+      },
+      "options": [
+        "fish*3",
+        "fish*7",
+        "fish*4"
+      ],
+      "correct": "fish*3",
+      "tags": {
+        "fish*7": "M-CNT-CARD",
+        "fish*4": "M-CNT-DOUBLE"
+      },
+      "correct_text": "כֵּן! שְׁלוֹשָׁה דָּגִים.",
+      "h3": "סוֹפְרִים וְעוֹצְרִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצַּלַּחַת.",
+      "goal": "child gives the number asked for, not the whole pile",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "pick",
+      "id": "b36.numa06.2",
+      "skill": "NUM-A-06",
+      "check": "transfer",
+      "prompt": "יֵשׁ כָּאן שֵׁשׁ צִפֳּרִים. הַבַּרְוָז בִּקֵּשׁ שְׁתֵּי צִפֳּרִים. אֵיזוֹ צַלַּחַת נְכוֹנָה?",
+      "group": {
+        "sprite": "bird",
+        "count": 6,
+        "arrangement": "scatter",
+        "seed": 6
+      },
+      "options": [
+        "bird*6",
+        "bird*2",
+        "bird*3"
+      ],
+      "correct": "bird*2",
+      "tags": {
+        "bird*6": "M-CNT-CARD",
+        "bird*3": "M-CNT-DOUBLE"
+      },
+      "correct_text": "כֵּן! שְׁתֵּי צִפֳּרִים.",
+      "h3": "סוֹפְרִים וְעוֹצְרִים: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצַּלַּחַת.",
+      "goal": "child gives the number asked for, not the whole pile",
+      "difficulty": 0.4
+    },
+    {
+      "kind": "set_to_numeral",
+      "id": "b36.numa09.1",
+      "skill": "NUM-A-09",
+      "check": "practice",
+      "obj": "chick",
+      "count": 8,
+      "options": [
+        7,
+        8,
+        9
+      ],
+      "arrangement": "scatter",
+      "difficulty": 0.53
+    },
+    {
+      "kind": "set_to_numeral",
+      "id": "b36.numa09.2",
+      "skill": "NUM-A-09",
+      "check": "transfer",
+      "obj": "duck",
+      "count": 9,
+      "options": [
+        8,
+        9,
+        10
+      ],
+      "arrangement": "ten_frame",
+      "difficulty": 0.53
+    },
+    {
+      "kind": "scale",
+      "id": "b36.numa11.1",
+      "skill": "NUM-A-11",
+      "check": "practice",
+      "mode": "balance",
+      "left": [
+        [
+          "block",
+          3,
+          1
+        ]
+      ],
+      "right": [],
+      "block": "block",
+      "result": 3,
+      "tag": "M-CNT-SIZE",
+      "prompt": "מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.",
+      "h3": "בְּצַד אֶחָד יֵשׁ שָׁלוֹשׁ קֻבִּיּוֹת. מוֹסִיפִים לַצַּד הַשֵּׁנִי קֻבִּיָּה אַחַר קֻבִּיָּה, עַד שְׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר.",
+      "goal": "child makes both sides the same by adding blocks",
+      "difficulty": 0.35,
+      "tag_lines": {
+        "M-CNT-SIZE": [
+          "vo:fb.size.sides",
+          "בּוֹאוּ נִסְפֹּר כַּמָּה קֻבִּיּוֹת יֵשׁ בְּכׇל צַד."
+        ]
+      }
+    },
+    {
+      "kind": "scale",
+      "id": "b36.numa11.2",
+      "skill": "NUM-A-11",
+      "check": "transfer",
+      "mode": "balance",
+      "left": [
+        [
+          "block",
+          5,
+          1
+        ]
+      ],
+      "right": [],
+      "block": "block",
+      "result": 5,
+      "tag": "M-CNT-SIZE",
+      "prompt": "מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁשְּׁנֵי הַצְּדָדִים שָׁוִים.",
+      "h3": "בְּצַד אֶחָד יֵשׁ חָמֵשׁ קֻבִּיּוֹת. מוֹסִיפִים לַצַּד הַשֵּׁנִי קֻבִּיָּה אַחַר קֻבִּיָּה, עַד חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "correct_text": "כֵּן! בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר.",
+      "goal": "child makes both sides the same by adding blocks",
+      "difficulty": 0.35,
+      "tag_lines": {
+        "M-CNT-SIZE": [
+          "vo:fb.size.sides",
+          "בּוֹאוּ נִסְפֹּר כַּמָּה קֻבִּיּוֹת יֵשׁ בְּכׇל צַד."
+        ]
+      }
+    },
+    {
+      "kind": "pick",
+      "id": "b36.numa12.1",
+      "skill": "NUM-A-12",
+      "check": "error_spotting",
+      "rep": "story",
+      "prompt": "שָׁלוֹשׁ צְפַרְדְּעִים גְּדוֹלוֹת וַחֲמִשָּׁה אֶפְרוֹחִים קְטַנִּים. אַחַת הַצְּפַרְדְּעִים אוֹמֶרֶת: \"אֲנַחְנוּ יוֹתֵר!\" הִיא צוֹדֶקֶת?",
+      "group": {
+        "sprite": "frog",
+        "count": 3,
+        "arrangement": "line",
+        "seed": 3,
+        "scale": 1.5
+      },
+      "group2": {
+        "sprite": "chick",
+        "count": 5,
+        "arrangement": "line",
+        "seed": 8,
+        "scale": 0.7
+      },
+      "options": [
+        "tick",
+        "cross"
+      ],
+      "correct": "cross",
+      "tags": {
+        "tick": "M-CNT-SIZE"
+      },
+      "size_cue": "big",
+      "correct_text": "צְדַקְתֶּם, שָׁם יֵשׁ יוֹתֵר אֶפְרוֹחִים.",
+      "h3": "מְחַבְּרִים אֶחָד לְאֶחָד. נִשְׁאֲרוּ שְׁנֵי אֶפְרוֹחִים בְּלִי זוּג, אָז שָׁם יֵשׁ יוֹתֵר. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child judges a claim about more by number, not by size",
+      "difficulty": 0.55
+    },
+    {
+      "kind": "pick",
+      "id": "b36.numa12.2",
+      "skill": "NUM-A-12",
+      "check": "error_spotting",
+      "rep": "story",
+      "prompt": "הַצְּפַרְדְּעִים רְחוֹקוֹת זוֹ מִזּוֹ. הָאֶפְרוֹחַ אוֹמֵר: \"לַצְּפַרְדְּעִים יֵשׁ יוֹתֵר!\" הוּא צוֹדֵק?",
+      "group": {
+        "sprite": "chick",
+        "count": 5,
+        "arrangement": "line",
+        "seed": 3
+      },
+      "group2": {
+        "sprite": "frog",
+        "count": 4,
+        "arrangement": "scatter",
+        "seed": 8
+      },
+      "options": [
+        "tick",
+        "cross"
+      ],
+      "correct": "cross",
+      "tags": {
+        "tick": "M-CNT-SIZE"
+      },
+      "size_cue": "spread",
+      "correct_text": "צְדַקְתֶּם, יֵשׁ יוֹתֵר אֶפְרוֹחִים.",
+      "h3": "מְחַבְּרִים אֶחָד לְאֶחָד. נִשְׁאַר אֶפְרוֹחַ אֶחָד בְּלִי זוּג, אָז שָׁם יֵשׁ יוֹתֵר. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child judges a claim about more by number, not by spread",
+      "difficulty": 0.55
+    },
+    {
+      "kind": "build",
+      "id": "b36.numa13.1",
+      "skill": "NUM-A-13",
+      "check": "practice",
+      "prompt": "בּוֹנִים שׁוּרָה שֶׁל אֶפְרוֹחִים. הַצְּפַרְדֵּעַ שְׁנִיָּה.",
+      "palette": [
+        "chick",
+        "frog"
+      ],
+      "h3": "הָרִאשׁוֹן אֶפְרוֹחַ, הַשֵּׁנִי צְפַרְדֵּעַ, הַשְּׁלִישִׁי אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-ORD-CARD",
+      "sequence": [
+        "chick",
+        "frog",
+        "chick"
+      ],
+      "goal": "child builds a line by the place named",
+      "difficulty": 0.4,
+      "correct_text": "כֵּן! הַצְּפַרְדֵּעַ שְׁנִיָּה בַּתּוֹר."
+    },
+    {
+      "kind": "build",
+      "id": "b36.numa13.2",
+      "skill": "NUM-A-13",
+      "check": "transfer",
+      "prompt": "בּוֹנִים שׁוּרָה שֶׁל בַּרְוָזִים. הֶחָתוּל שְׁלִישִׁי.",
+      "palette": [
+        "duck",
+        "cat"
+      ],
+      "h3": "הָרִאשׁוֹן בַּרְוָז, הַשֵּׁנִי בַּרְוָז, הַשְּׁלִישִׁי חָתוּל, הָרְבִיעִי בַּרְוָז. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-ORD-CARD",
+      "sequence": [
+        "duck",
+        "duck",
+        "cat",
+        "duck"
+      ],
+      "goal": "child builds a line by the place named",
+      "difficulty": 0.4,
+      "correct_text": "כֵּן! הֶחָתוּל שְׁלִישִׁי בַּתּוֹר."
+    },
+    {
+      "kind": "numeral_to_set",
+      "id": "b36.numa14.1",
+      "skill": "NUM-A-14",
+      "check": "reverse",
+      "obj": "fish",
+      "n": 0,
+      "options": [
+        1,
+        0,
+        2
+      ],
+      "arrangement": "ten_frame",
+      "tags": {
+        "1": "M-NUM-ZERO",
+        "2": "M-NUM-ZERO"
+      },
+      "prompt": "אֵיפֹה יֵשׁ אֶפֶס דָּגִים?",
+      "h2": "נִסְתַּכֵּל עַל כׇּל מִסְגֶּרֶת: אֵיפֹה הִיא רֵיקָה?",
+      "h3": "מְחַפְּשִׂים מִסְגֶּרֶת בְּלִי אַף דָּג. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּסְגֶּרֶת הָרֵיקָה.",
+      "correct_text": "כֵּן! אֵין כָּאן אַף דָּג.",
+      "difficulty": 0.35,
+      "h2_action": "highlight_objects_sequentially"
+    },
+    {
+      "kind": "numeral_to_set",
+      "id": "b36.numa14.2",
+      "skill": "NUM-A-14",
+      "check": "transfer",
+      "obj": "apple",
+      "n": 0,
+      "options": [
+        0,
+        3,
+        1
+      ],
+      "arrangement": "ten_frame",
+      "tags": {
+        "3": "M-NUM-ZERO",
+        "1": "M-NUM-ZERO"
+      },
+      "prompt": "אֵיפֹה יֵשׁ אֶפֶס תַּפּוּחִים?",
+      "h2": "נִסְתַּכֵּל עַל כׇּל מִסְגֶּרֶת: אֵיפֹה הִיא רֵיקָה?",
+      "h3": "מְחַפְּשִׂים מִסְגֶּרֶת בְּלִי אַף תַּפּוּחַ. כְּשֶׁאֵין כְּלוּם, הַמִּסְפָּר הוּא אֶפֶס. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּסְגֶּרֶת הָרֵיקָה.",
+      "correct_text": "כֵּן! אֵין כָּאן אַף תַּפּוּחַ.",
+      "difficulty": 0.35,
+      "h2_action": "highlight_objects_sequentially"
     }
   ],
   "lessons": [
@@ -2401,7 +2832,9 @@
         "give.ducks.3",
         "give.dogs.4",
         "b15.numa06.1",
-        "b15.numa06.2"
+        "b15.numa06.2",
+        "b36.numa06.1",
+        "b36.numa06.2"
       ],
       "minutes": 3,
       "done": "כׇּל הַכָּבוֹד! נְתַתֶּם בְּדִיּוּק כַּמָּה שֶׁבִּקְשׁוּ."
@@ -2435,7 +2868,9 @@
         "count.dogs.8",
         "count.ladybugs.10",
         "b15.numa09.1",
-        "b15.numa09.2"
+        "b15.numa09.2",
+        "b36.numa09.1",
+        "b36.numa09.2"
       ],
       "minutes": 4,
       "done": "וַאוּ! סְפַרְתֶּם עַד עֶשֶׂר."
@@ -2478,7 +2913,7 @@
         "b15.numa14.2"
       ],
       "minutes": 4,
-      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי בַּתּוֹר, וְיְדַעְתֶּם מָה זֶה אֶפֶס."
+      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי בַּתּוֹר, וִידַעְתֶּם מַה זֶּה אֶפֶס."
     },
     {
       "id": "more-counting-words-1-b15",
@@ -2555,13 +2990,84 @@
       ],
       "items": [
         "b15.numa12.1",
-        "b15.numa12.2"
+        "b15.numa12.2",
+        "b36.numa11.1",
+        "b36.numa11.2",
+        "b36.numa12.1",
+        "b36.numa12.2"
       ],
       "minutes": 5,
       "done": "חֲכָמִים! בְּדַקְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."
+    },
+    {
+      "id": "more-glances-1-b36",
+      "title": "עוֹד רוֹאִים בְּמַבָּט",
+      "skills": [
+        "NUM-A-05",
+        "NUM-A-10"
+      ],
+      "items": [
+        "b36.numa05.1",
+        "b36.numa05.2",
+        "b36.numa10.1",
+        "b36.numa10.2"
+      ],
+      "minutes": 3,
+      "done": "מַדְהִים! רְאִיתֶם כַּמָּה בְּלִי לִסְפֹּר."
+    },
+    {
+      "id": "more-queues-and-zero-1-b36",
+      "title": "עוֹד תּוֹר וְאֶפֶס",
+      "skills": [
+        "NUM-A-13",
+        "NUM-A-14"
+      ],
+      "items": [
+        "b36.numa13.1",
+        "b36.numa13.2",
+        "b36.numa14.1",
+        "b36.numa14.2"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מִי בַּתּוֹר, וִידַעְתֶּם מַה זֶּה אֶפֶס."
     }
   ],
   "tagFeedback": {
-    "M-NUM-REV": "הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+    "M-NUM-REV": "הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
+    "M-NUM-NAME": "לְכׇל מִסְפָּר יֵשׁ סִפְרָה מִשֶּׁלּוֹ. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל כׇּל סִפְרָה."
+  },
+  "names": {
+    "fish": {
+      "one": "דָּג",
+      "g": "m"
+    },
+    "bird": {
+      "one": "צִפּוֹר",
+      "g": "f"
+    },
+    "chick": {
+      "one": "אֶפְרוֹחַ",
+      "g": "m"
+    },
+    "frog": {
+      "one": "צְפַרְדֵּעַ",
+      "g": "f"
+    },
+    "duck": {
+      "one": "בַּרְוָז",
+      "g": "m"
+    },
+    "cat": {
+      "one": "חָתוּל",
+      "g": "m"
+    },
+    "tick": {
+      "one": "כֵּן",
+      "g": "m"
+    },
+    "cross": {
+      "one": "לֹא",
+      "g": "m"
+    }
   }
 }

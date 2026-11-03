@@ -1,0 +1,336 @@
+{
+  "schema": "audition/v1",
+  "title": "B-45 pilot: the number two at the start of a sentence and in hero-son, the word equals, the five new hint clips, and the B-42 welcome seam (a made-up name, then a greeting, a topic and the closing line)",
+  "review": "needs-editor",
+  "note": "Written by the voice-and-sound-director on 2026-11-02. Real lines of pack 0.11.0 said the way the full voicing will send them (explicit settings per kind: correct 0.5, question 0.6, hint 2 0.65, hint 3 0.7; similarity 0.8; eleven_v4_turbo; mp3_44100_64). Line clips take the voice_text of the master table and the respelling of content/voices.json. Nothing here changes a screen text. Added 2026-11-02 (B-42 seam check, docs/milestones/B42.md section 6): clips 51 to 54 per narrator. The name clip says only a made-up name that is not one of the children's; it is NOT the real name clip (that is a separate later step through the gateway, made at a parent's tap, never by Claude). The three lines after it are the exact welcome lines of the run.",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4_turbo",
+    "format": "mp3_44100_64",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.8,
+      "use_speaker_boost": true
+    }
+  },
+  "clips": [
+    {
+      "id": "N41-two-first-short",
+      "line": "vo:b.numb03.8.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The number two as the FIRST word of a sentence: \"shTA-yim. kach sof-RIM.\" Stress on TA, a clean sh-t start, no gap, no extra syllable. (D was not heard at the start of a sentence, nor in hero-son.)"
+    },
+    {
+      "id": "N42-two-first-sum",
+      "line": "vo:b.mathb09.6.prompt",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Two at the start of a question, and again after \"ve-OD\": \"shTA-yim ve-OD shTA-yim, mul...\" Both twos stressed on TA; the question at the end rises."
+    },
+    {
+      "id": "N43-two-middle-plain-equals",
+      "line": "vo:b.mathb01.1.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Two in the middle, with the word \"equals\" as the pack sends it today (plain letters): \"sha-VE\" or \"SHA-ve\"? Compare with the next clip."
+    },
+    {
+      "id": "N44-two-middle-pointed-equals",
+      "text": "חָמֵשׁ. שָׁלוֹשׁ ועוד שתַּיִם שָׁוֶה חָמֵשׁ.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The same line with שָׁוֶה pointed: \"sha-VE\". If it is clearly better than the previous clip, the pack needs a pronunciation entry for שווה (120 lines)."
+    },
+    {
+      "id": "N45-two-in-a-list",
+      "line": "vo:b.logb04.10.h3",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.7,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Two inside a counted list at hint-3 steadiness: \"shTA-yim, sha-LOSH, ar-BA, cha-MESH\"; calm, even, nothing rushed."
+    },
+    {
+      "id": "N46-hint-plate-h2",
+      "line": "vo:hint.plate.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "New hint 2 (QA-B36-6). \"The fingers show how many to give\": soft and clear, nothing counted aloud."
+    },
+    {
+      "id": "N47-hint-glyph-h2",
+      "line": "vo:hint.glyph.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "New hint 2 (QA-B36-6). \"Here is the number written right. We look at it well.\" Two short sentences; a small beat between."
+    },
+    {
+      "id": "N48-hint-in_twos-h2",
+      "line": "vo:hint.in_twos.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "New hint 2 (QA-B36-6). \"Every pair in a ring, and we count pair after pair\": the rhythm of pairs, calm."
+    },
+    {
+      "id": "N49-hint-coin_values-h2",
+      "line": "vo:hint.coin_values.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "New hint 2 (QA-B36-6). \"Next to every coin it says how much it is worth\": \"sha-VE\" in the plain text; which way does the voice read it?"
+    },
+    {
+      "id": "N50-hint-hidden_part-h2",
+      "line": "vo:hint.hidden_part.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "New hint 2 (QA-B36-6). The longest new hint: \"The frame is everything. The full squares are what we see, and the empty ones - what is hidden.\" Check the dash: a beat, not a stop; keep the voice level to the end."
+    },
+    {
+      "id": "H41-two-first-short",
+      "line": "vo:b.numb03.8.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "The number two as the FIRST word of a sentence: \"shTA-yim. kach sof-RIM.\" Stress on TA, a clean sh-t start, no gap, no extra syllable. (D was not heard at the start of a sentence, nor in hero-son.)"
+    },
+    {
+      "id": "H42-two-first-sum",
+      "line": "vo:b.mathb09.6.prompt",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "Two at the start of a question, and again after \"ve-OD\": \"shTA-yim ve-OD shTA-yim, mul...\" Both twos stressed on TA; the question at the end rises."
+    },
+    {
+      "id": "H43-two-middle-plain-equals",
+      "line": "vo:b.mathb01.1.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "Two in the middle, with the word \"equals\" as the pack sends it today (plain letters): \"sha-VE\" or \"SHA-ve\"? Compare with the next clip."
+    },
+    {
+      "id": "H44-two-middle-pointed-equals",
+      "text": "חָמֵשׁ. שָׁלוֹשׁ ועוד שתַּיִם שָׁוֶה חָמֵשׁ.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "The same line with שָׁוֶה pointed: \"sha-VE\". If it is clearly better than the previous clip, the pack needs a pronunciation entry for שווה (120 lines)."
+    },
+    {
+      "id": "H45-two-in-a-list",
+      "line": "vo:b.logb04.10.h3",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.7,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "Two inside a counted list at hint-3 steadiness: \"shTA-yim, sha-LOSH, ar-BA, cha-MESH\"; calm, even, nothing rushed."
+    },
+    {
+      "id": "H46-hint-plate-h2",
+      "line": "vo:hint.plate.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "New hint 2 (QA-B36-6). \"The fingers show how many to give\": soft and clear, nothing counted aloud."
+    },
+    {
+      "id": "H47-hint-glyph-h2",
+      "line": "vo:hint.glyph.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "New hint 2 (QA-B36-6). \"Here is the number written right. We look at it well.\" Two short sentences; a small beat between."
+    },
+    {
+      "id": "H48-hint-in_twos-h2",
+      "line": "vo:hint.in_twos.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "New hint 2 (QA-B36-6). \"Every pair in a ring, and we count pair after pair\": the rhythm of pairs, calm."
+    },
+    {
+      "id": "H49-hint-coin_values-h2",
+      "line": "vo:hint.coin_values.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "New hint 2 (QA-B36-6). \"Next to every coin it says how much it is worth\": \"sha-VE\" in the plain text; which way does the voice read it?"
+    },
+    {
+      "id": "H50-hint-hidden_part-h2",
+      "line": "vo:hint.hidden_part.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "New hint 2 (QA-B36-6). The longest new hint: \"The frame is everything. The full squares are what we see, and the empty ones - what is hidden.\" Check the dash: a beat, not a stop; keep the voice level to the end."
+    },
+    {
+      "id": "N51-seam-name",
+      "text": "אַלְמוֹג,",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The made-up name alone, as the call that opens a welcome: \"al-MOG,\" a short rise, a small pause, a quiet start. Same voice and settings as the greeting that follows. Made-up name only; a name of one of the children must never be used here."
+    },
+    {
+      "id": "N52-seam-hello1",
+      "line": "vo:welcome.hello.1",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Play it right after clip 51 with a gap of about 400 ms (play both, then try 300 and 500). Does \"al-MOG ... sha-LOM, EI-ze kef lir-OT et-KHEM\" sound like one voice saying one sentence? Check: no click at the start, no long lead-in silence, same loudness as 51, \"shalom\" not louder or higher than the name."
+    },
+    {
+      "id": "N53-seam-glance",
+      "line": "vo:welcome.topic.counting.glance",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The topic after the greeting: \"ha-YOM nir-E ka-MA yesh be-ma-BAT e-KHAD.\" A light preview, level, no rise, not a promise. Same pace and loudness as the greeting before it."
+    },
+    {
+      "id": "N54-seam-close",
+      "line": "vo:welcome.close",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The closing line: \"bo-U nif-TAKH et ha-bak-BUK.\" Warm and short, a soft end, an invitation and not a command. Then listen to 51, 52, 53, 54 in a row (the whole welcome, about 8 s): too long? too even? pleasant for a 3 year old?"
+    },
+    {
+      "id": "H51-seam-name",
+      "text": "אַלְמוֹג,",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "The made-up name alone, as the call that opens a welcome: \"al-MOG,\" a short rise, a small pause, a quiet start. Same voice and settings as the greeting that follows. Made-up name only; a name of one of the children must never be used here."
+    },
+    {
+      "id": "H52-seam-hello1",
+      "line": "vo:welcome.hello.1",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "Play it right after clip 51 with a gap of about 400 ms (play both, then try 300 and 500). Does \"al-MOG ... sha-LOM, EI-ze kef lir-OT et-KHEM\" sound like one voice saying one sentence? Check: no click at the start, no long lead-in silence, same loudness as 51, \"shalom\" not louder or higher than the name."
+    },
+    {
+      "id": "H53-seam-glance",
+      "line": "vo:welcome.topic.counting.glance",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "The topic after the greeting: \"ha-YOM nir-E ka-MA yesh be-ma-BAT e-KHAD.\" A light preview, level, no rise, not a promise. Same pace and loudness as the greeting before it."
+    },
+    {
+      "id": "H54-seam-close",
+      "line": "vo:welcome.close",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "The closing line: \"bo-U nif-TAKH et ha-bak-BUK.\" Warm and short, a soft end, an invitation and not a command. Then listen to 51, 52, 53, 54 in a row (the whole welcome, about 8 s): too long? too even? pleasant for a 3 year old?"
+    }
+  ]
+}

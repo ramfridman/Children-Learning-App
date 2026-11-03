@@ -38,7 +38,7 @@ abstract final class He {
   static const Str restScene = Str('עַכְשָׁו נָחִים קְצָת. נִפָּגֵשׁ שׁוּב אַחַר כָּךְ!', nikud: true);
   static const Str restBackSemantics = Str('חזרה');
   static const Str restGoodbye = Str(
-    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.',
+    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וּנְשַׂחֵק שׁוּב אַחַר כָּךְ.',
     nikud: true,
   );
   static const Str placementDone = Str('יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.', nikud: true);
@@ -86,7 +86,7 @@ abstract final class He {
   static const Str confirmAgainSemantics = Str('לומר שוב');
   static const Str thinkHmm = Str('הַמְּמ… בּוֹאוּ נַחְשֹׁב.', nikud: true);
   static const Str listenMixed = Str(
-    'אוֹפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב?',
+    'אוּפְּס, הָאָזְנַיִם שֶׁלִּי הִתְבַּלְבְּלוּ! אֶפְשָׁר לְהַגִּיד שׁוּב?',
     nikud: true,
   );
   static const Str listenConfirm = Str('שָׁמַעְתִּי… נָכוֹן?', nikud: true);
@@ -255,7 +255,7 @@ abstract final class He {
   static const Str setupName = Str('שם פרטי');
   static const Str setupNameTooLong = Str('אפשר לכתוב עד 24 תווים.');
   static const Str setupNameBadChars = Str(
-    'בלי הסימנים < או > ובלי תווים בלתי נראים או מיוחדים. ניקוד צריך לבוא אחרי אות, עד שלושה סימנים על אות. אם השם הודבק, אפשר להקליד אותו מחדש.',
+    'בלי הסימנים < או > ובלי תווים בלתי נראים או מיוחדים. ניקוד אפשר רק אחרי אות, ולא יותר משלושה סימנים על אות. אם השם הודבק, אפשר להקליד אותו מחדש.',
   );
   static const Str setupNameLegacyShortened = Str(
     'השם ארוך מ-24 תווים, ולכן בחשבון המשפחה נשמרו רק 24 התווים הראשונים.',
@@ -278,6 +278,28 @@ abstract final class He {
   static const Str areaDevices = Str('מכשירים');
   static const Str areaThisDevice = Str('המכשיר הזה');
   static const Str areaRevoke = Str('ניתוק');
+  // ---- parent area: how a child's name is said (B-42; reviewed by the hebrew-text-editor 2026-11-03, waiting for the owner) ----
+  static const Str areaNameSpoken = Str('איך אומרים את השם');
+  static const Str nameSpokenTitle = Str('איך אומרים את השם של {child}');
+  static const Str nameSpokenHelp = Str(
+    'כתבו את השם הפרטי כמו שצריך להגיד אותו, ואם צריך, גם עם ניקוד. אחרי לחיצה על "השמעה" השם יישמע בקול של החבר שנבחר, וכך גם בברכה היומית.',
+  );
+  static const Str nameSpokenField = Str('איך להגיד את השם');
+  static const Str nameSpokenBadChars = Str(
+    'אפשר להקליד רק אותיות בעברית, ניקוד, רווח, מקף וגרש. הניקוד חייב לבוא אחרי אות, ולא יותר משלושה סימנים על אות אחת. אין תמיכה בחטף קמץ ובקמץ קטן.',
+  );
+  static const Str nameSpokenTooLong = Str('אפשר לכתוב עד 24 תווים, וסימני הניקוד נספרים.');
+  static const Str nameSpokenListen = Str('השמעה');
+  static const Str nameSpokenWorking = Str('מכינים את קטע השמע…');
+  static const Str nameSpokenSaved = Str('השם נשמר.');
+  static const Str nameSpokenHeard = Str('קטע השמע נשמר במכשיר הזה בלבד.');
+  static const Str nameSpokenPrivacy = Str(
+    'השם נשלח לשירות הקול רק כדי להכין את קטע השמע. קטע השמע נשמר במכשיר הזה בלבד ולא עובר למכשירים אחרים.',
+  );
+  static const Str nameSpokenOff = Str('הכנת קטעי שמע לשמות לא זמינה כרגע. נסו שוב מאוחר יותר.');
+  static const Str nameSpokenCap = Str('הגעתם למכסה היומית של קטעי השמע. אפשר לנסות שוב מחר.');
+  static const Str nameSpokenNotYet = Str('השם החדש עוד לא הגיע לשרת, וקטע השמע לא נשמר. נסו שוב בעוד רגע.');
+  static const Str nameSpokenOffline = Str('לא הצלחנו להתחבר. בדקו את החיבור לאינטרנט ונסו שוב.');
   static const Str areaRefresh = Str('רענון');
   static const Str areaProfiles = Str('ילדים');
   static const Str areaAddChild = Str('הוספת ילד');

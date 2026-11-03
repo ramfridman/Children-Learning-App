@@ -107,11 +107,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.pairs2.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "מְחַבְּרִים בְּקַו זוּג אַחַר זוּג. מִי נִשְׁאָר בְּלִי זוּג?"
         }
       ]
     },

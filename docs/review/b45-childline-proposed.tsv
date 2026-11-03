@@ -1,0 +1,101 @@
+vo_id	voice_text	kind	source	master_status	chars
+vo:core.skill.col_a_01	מוצאים את אותו צבע.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-A-01.json > childLine.0.v	text-ready	19
+vo:core.skill.col_a_02	מצביעים על אדום, כחול, צהוב וירוק.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-A-02.json > childLine.0.v	text-ready	34
+vo:core.skill.col_a_03	מכירים עוד צבעים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-A-03.json > childLine.0.v	text-ready	17
+vo:core.skill.col_a_04	ממיינים לפי צבע.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-A-04.json > childLine.0.v	text-ready	16
+vo:core.skill.col_a_05	יודעים איזה צבע יש לדברים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-A-05.json > childLine.0.v	text-ready	26
+vo:core.skill.col_a_06	מכירים חום ואפור.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-A-06.json > childLine.0.v	text-ready	17
+vo:core.skill.col_a_07	מוצאים את הדבר הנכון לפי הצבע.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-A-07.json > childLine.0.v	text-ready	30
+vo:core.skill.col_b_01	מערבבים ומקבלים צבע חדש.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-B-01.json > childLine.0.v	text-ready	24
+vo:core.skill.col_b_02	מסדרים מבהיר לכהה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-B-02.json > childLine.0.v	text-ready	18
+vo:core.skill.col_b_03	כחול בהיר הוא גם כחול.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-B-03.json > childLine.0.v	text-ready	22
+vo:core.skill.col_b_04	ממיינים לפי צבע ולפי צורה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-B-04.json > childLine.0.v	text-ready	26
+vo:core.skill.col_b_06	מסדרים את הקשת.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.COL-B-06.json > childLine.0.v	text-ready	15
+vo:core.skill.cs_a_01	מסדרים שלבים: מה קודם, מה בסוף.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.CS-A-01.json > childLine.0.v	text-ready	31
+vo:core.skill.cs_a_03	מזיזים רובוט בחיצים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.CS-A-03.json > childLine.0.v	text-ready	20
+vo:core.skill.cs_a_04	מתכננים את הדרך ואז יוצאים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.CS-A-04.json > childLine.0.v	text-ready	27
+vo:core.skill.cs_a_05	מוצאים את השלב שלא שייך.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.CS-A-05.json > childLine.0.v	text-ready	24
+vo:core.skill.cs_b_01	מתכננים דרך של כמה צעדים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.CS-B-01.json > childLine.0.v	text-ready	25
+vo:core.skill.cs_b_04	מוצאים את הצעד הלא נכון.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.CS-B-04.json > childLine.0.v	text-ready	24
+vo:core.skill.log_a_01	מוצאים את הדבר הזהה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-01.json > childLine.0.v	text-ready	20
+vo:core.skill.log_a_02	מוצאים מי שונה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-02.json > childLine.0.v	text-ready	15
+vo:core.skill.log_a_03	ממיינים לִשְׁתֵּי קבוצות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-03.json > childLine.0.v	text-ready	25
+vo:core.skill.log_a_04	מכירים סדר שחוזר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-04.json > childLine.0.v	text-ready	17
+vo:core.skill.log_a_05	מעתיקים את הסדר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-05.json > childLine.0.v	owner-approved	16
+vo:core.skill.log_a_06	ממשיכים את הסדר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-06.json > childLine.0.v	text-ready	16
+vo:core.skill.log_a_07	מתקנים סדר שנשבר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-07.json > childLine.0.v	text-ready	17
+vo:core.skill.log_a_08	מסדרים סיפור: קודם, אחר כך, בסוף.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-08.json > childLine.0.v	text-ready	33
+vo:core.skill.log_a_09	מוצאים מה הולך יחד.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-09.json > childLine.0.v	text-ready	19
+vo:core.skill.log_a_10	מסדרים לפי גודל.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-A-10.json > childLine.0.v	text-ready	16
+vo:core.skill.log_b_01	ממשיכים סדר של שְׁלוֹשָׁה דברים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-B-01.json > childLine.0.v	text-ready	32
+vo:core.skill.log_b_02	מוצאים מה נשבר בסדר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-B-02.json > childLine.0.v	text-ready	20
+vo:core.skill.log_b_04	מִגְדָּלִים שגדלים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-B-04.json > childLine.0.v	text-ready	19
+vo:core.skill.log_b_06	מוצאים מה משותף.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-B-06.json > childLine.0.v	text-ready	16
+vo:core.skill.log_b_08	אם… אז…	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-B-08.json > childLine.0.v	text-ready	7
+vo:core.skill.log_b_09	לא זה ולא זה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-B-09.json > childLine.0.v	text-ready	13
+vo:core.skill.log_b_11	מסדרים מנמוך לגבוה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.LOG-B-11.json > childLine.0.v	text-ready	19
+vo:core.skill.math_a_01	מוסיפים עוד וסופרים כמה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-A-01.json > childLine.0.v	text-ready	24
+vo:core.skill.math_a_02	לוקחים אֶחָד וסופרים כמה נשאר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-A-02.json > childLine.0.v	text-ready	30
+vo:core.skill.math_a_03	מחלקים בהגינות: לכל אֶחָד אותו מספר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-A-03.json > childLine.0.v	text-ready	36
+vo:core.skill.math_a_04	משווים גדול וקטן, ארוך וקצר, כבד וקל.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-A-04.json > childLine.0.v	text-ready	37
+vo:core.skill.math_a_05	מכירים בוקר, צהריים, ערב ולילה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-A-05.json > childLine.0.v	text-ready	31
+vo:core.skill.math_a_06	קונים בחנות: מטבע לכל דבר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-A-06.json > childLine.0.v	text-ready	26
+vo:core.skill.math_a_07	משווים בתרשים תמונות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-A-07.json > childLine.0.v	text-ready	21
+vo:core.skill.math_b_01	מוסיפים ולוקחים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-01.json > childLine.0.v	text-ready	16
+vo:core.skill.math_b_02	מוצאים את החלק שחסר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-02.json > childLine.0.v	text-ready	20
+vo:core.skill.math_b_03	קוראים תרגילים עם פלוס ומינוס.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-03.json > childLine.0.v	text-ready	30
+vo:core.skill.math_b_06	משלימים לְעֶשֶׂר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-06.json > childLine.0.v	text-ready	17
+vo:core.skill.math_b_07	אֶפֶס לא משנה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-07.json > childLine.0.v	text-ready	14
+vo:core.skill.math_b_08	מחברים עד עֶשְׂרִים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-08.json > childLine.0.v	text-ready	20
+vo:core.skill.math_b_09	שְׁנֵי הצדדים אותו דבר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-09.json > childLine.0.v	text-ready	23
+vo:core.skill.math_b_10	קבוצות עם אותו מספר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-10.json > childLine.0.v	text-ready	20
+vo:core.skill.math_b_13	מי כבד יותר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-13.json > childLine.0.v	text-ready	12
+vo:core.skill.math_b_14	יום ראשון, יום שֵׁנִי…	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-14.json > childLine.0.v	text-ready	22
+vo:core.skill.math_b_15	קוראים שעות עגולות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-15.json > childLine.0.v	text-ready	19
+vo:core.skill.math_b_16	מכירים את המטבעות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-16.json > childLine.0.v	text-ready	18
+vo:core.skill.math_b_17	משלמים בדיוק.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-17.json > childLine.0.v	text-ready	13
+vo:core.skill.math_b_18	מוצאים את המספר החסר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-18.json > childLine.0.v	text-ready	21
+vo:core.skill.math_b_19	קוראים תרשים של תמונות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.MATH-B-19.json > childLine.0.v	text-ready	23
+vo:core.skill.num_a_01	סופרים עד חָמֵשׁ, לפי הסדר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-01.json > childLine.0.v	text-ready	27
+vo:core.skill.num_a_02	סופרים עד עֶשֶׂר, לפי הסדר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-02.json > childLine.0.v	text-ready	27
+vo:core.skill.num_a_03	נוגעים בכל אֶחָד פעם אַחַת כשסופרים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-03.json > childLine.0.v	text-ready	36
+vo:core.skill.num_a_04	יודעים כמה יש: המספר האחרון שספרנו.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-04.json > childLine.0.v	text-ready	35
+vo:core.skill.num_a_05	רואים כמה במבט אֶחָד.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-05.json > childLine.0.v	text-ready	21
+vo:core.skill.num_a_06	נותנים בדיוק כמה שביקשו.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-06.json > childLine.0.v	text-ready	24
+vo:core.skill.num_a_07	מתאימים מספר לכמות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-07.json > childLine.0.v	text-ready	19
+vo:core.skill.num_a_08	מוצאים את המספר שאומרים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-08.json > childLine.0.v	text-ready	24
+vo:core.skill.num_a_09	סופרים עד עֶשֶׂר.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-09.json > childLine.0.v	text-ready	17
+vo:core.skill.num_a_10	רואים אַרְבַּע וְחָמֵשׁ במבט אֶחָד.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-10.json > childLine.0.v	text-ready	35
+vo:core.skill.num_a_11	יודעים איפה יותר ואיפה פחות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-11.json > childLine.0.v	text-ready	28
+vo:core.skill.num_a_12	סופרים כדי להשוות, לא מסתכלים על הגודל.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-12.json > childLine.0.v	text-ready	39
+vo:core.skill.num_a_13	יודעים מי ראשון, שֵׁנִי, שלישי ואחרון.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-13.json > childLine.0.v	text-ready	38
+vo:core.skill.num_a_14	יודעים שאין כלום — זה אֶפֶס.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-A-14.json > childLine.0.v	owner-approved	28
+vo:core.skill.num_b_01	סופרים עד עֶשְׂרִים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-01.json > childLine.0.v	text-ready	20
+vo:core.skill.num_b_02	סופרים עד שְׁלוֹשִׁים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-02.json > childLine.0.v	text-ready	22
+vo:core.skill.num_b_03	סופרים אחורה כמו בחללית.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-03.json > childLine.0.v	text-ready	24
+vo:core.skill.num_b_04	סופרים עד עֶשְׂרִים חפצים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-04.json > childLine.0.v	text-ready	26
+vo:core.skill.num_b_05	נותנים בדיוק כמה שמבקשים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-05.json > childLine.0.v	text-ready	25
+vo:core.skill.num_b_07	כותבים את המספרים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-07.json > childLine.0.v	text-ready	18
+vo:core.skill.num_b_08	קוראים את המספרים עד עֶשְׂרִים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-08.json > childLine.0.v	text-ready	31
+vo:core.skill.num_b_10	משווים שְׁנֵי מספרים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-10.json > childLine.0.v	text-ready	21
+vo:core.skill.num_b_11	מוצאים מספר שחסר, אֶחָד יותר וְאֶחָד פחות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-11.json > childLine.0.v	text-ready	42
+vo:core.skill.num_b_13	קופצים על ציר המספרים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-13.json > childLine.0.v	text-ready	22
+vo:core.skill.num_b_14	מפרקים מספר לִשְׁנֵי חלקים.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-14.json > childLine.0.v	text-ready	27
+vo:core.skill.num_b_16	רואים עֶשֶׂר ועוד כמה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-16.json > childLine.0.v	text-ready	22
+vo:core.skill.num_b_17	סופרים בעשרות וּבִשְׁתַּיִם.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-17.json > childLine.0.v	text-ready	28
+vo:core.skill.num_b_18	מחלקים לזוגות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.NUM-B-18.json > childLine.0.v	text-ready	14
+vo:core.skill.shp_a_01	מוצאים את אותה צורה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-01.json > childLine.0.v	text-ready	20
+vo:core.skill.shp_a_02	מכירים עיגול, ריבוע ומשולש.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-02.json > childLine.0.v	text-ready	27
+vo:core.skill.shp_a_03	מכירים צורות גדולות, קטנות ומסובבות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-03.json > childLine.0.v	text-ready	36
+vo:core.skill.shp_a_04	מכירים מלבן.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-04.json > childLine.0.v	text-ready	12
+vo:core.skill.shp_a_05	מוצאים צורות בעולם.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-05.json > childLine.0.v	text-ready	19
+vo:core.skill.shp_a_06	בונים תמונה מצורות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-06.json > childLine.0.v	text-ready	19
+vo:core.skill.shp_a_07	יודעים מה מתגלגל ומה נערם.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-07.json > childLine.0.v	text-ready	26
+vo:core.skill.shp_a_08	מבינים על, מתחת, בתוך וליד.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-08.json > childLine.0.v	text-ready	27
+vo:core.skill.shp_a_10	מכירים קו ישר וקו עקום.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-A-10.json > childLine.0.v	text-ready	23
+vo:core.skill.shp_b_01	מכירים משולש, מרובע, מחומש ומשושה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-B-01.json > childLine.0.v	text-ready	34
+vo:core.skill.shp_b_02	סופרים צלעות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-B-02.json > childLine.0.v	text-ready	13
+vo:core.skill.shp_b_03	ריבוע ומלבן.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-B-03.json > childLine.0.v	text-ready	12
+vo:core.skill.shp_b_04	צורה סגורה עם צלעות ישרות.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-B-04.json > childLine.0.v	text-ready	26
+vo:core.skill.shp_b_08	גליל, חרוט, כדור ופירמידה.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-B-08.json > childLine.0.v	text-ready	26
+vo:core.skill.shp_b_09	כל גוף והצורה שעליו.	proposed: map-card line of a skill (owner has not decided; see hebrew-notes section 19)	skill.SHP-B-09.json > childLine.0.v	text-ready	20

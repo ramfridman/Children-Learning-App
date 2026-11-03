@@ -54,7 +54,8 @@
       {
         "id": "o1",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-CNT-CARD"
       },
       {
         "id": "o2",
@@ -84,6 +85,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-CARD",
+        "vo": "vo:fb.card.join",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+          }
+        ]
+      },
       {
         "when": "misconception:M-CNT-DOUBLE",
         "vo": "vo:fb.double_set",
@@ -130,11 +141,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.hands_add.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "הָאֶצְבָּעוֹת מַרְאוֹת כַּמָּה הָיָה, וְסוֹפְרִים אֶת הַחֲדָשִׁים אֶחָד אֶחָד."
         }
       ]
     },

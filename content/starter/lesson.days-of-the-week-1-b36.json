@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "days-of-the-week-1-b36",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "יְמֵי הַשָּׁבוּעַ"
+    }
+  ],
+  "skills": [
+    "MATH-B-14"
+  ],
+  "items": [
+    "b.mathb14.12",
+    "b.mathb14.13"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 50,
+  "celebration": {
+    "vo": "vo:celebrate.days_of_the_week_1_b36",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים אֶת הַיָּמִים."
+      }
+    ]
+  }
+}

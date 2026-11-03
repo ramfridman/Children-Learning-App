@@ -26,7 +26,9 @@
     "paper",
     "plate",
     "tower_*",
-    "apple_green"
+    "apple_green",
+    "obj_mitten",
+    "obj_toy_boat"
   ],
   "assets": [
     "cat",
@@ -44,7 +46,12 @@
     "bird",
     "bird_lit",
     "tick",
-    "cross"
+    "cross",
+    "coin",
+    "ball_pink",
+    "bloom_white",
+    "basket_empty",
+    "grass"
   ],
   "things": {
     "ball": [
@@ -266,6 +273,26 @@
     "tower_6": {
       "one": "מִגְדָּל מִסְפָּר שֵׁשׁ",
       "g": "m"
+    },
+    "coin": {
+      "one": "מַטְבֵּעַ",
+      "g": "m"
+    },
+    "ball_pink": {
+      "one": "כַּדּוּר וָרֹד",
+      "g": "m"
+    },
+    "bloom_white": {
+      "one": "פֶּרַח לָבָן",
+      "g": "m"
+    },
+    "obj_mitten": {
+      "one": "כְּפָפָה",
+      "g": "f"
+    },
+    "obj_toy_boat": {
+      "one": "סִירָה",
+      "g": "f"
     }
   },
   "tagFeedback": {
@@ -275,7 +302,8 @@
     "M-SER-ENDS": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.",
     "M-PAT-COPY": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?",
     "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.",
-    "M-PAT-UNIT": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+    "M-PAT-UNIT": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ.",
+    "M-ASSOC-LOOK": "זֶה נִרְאֶה דּוֹמֶה. בּוֹאוּ נַחְשֹׁב מָה עוֹשִׂים עִם כׇּל דָּבָר, וּמָה הוֹלֵךְ יַחַד."
   },
   "misconceptions": [
     {
@@ -324,6 +352,18 @@
       "reps": [
         "concrete",
         "embodied"
+      ]
+    },
+    {
+      "id": "M-ASSOC-LOOK",
+      "skills": [
+        "LOG-A-09"
+      ],
+      "parent": "הילד בוחר את מה שנראה דומה (בצורה או בצבע), ולא את מה שהולך יחד בשימוש. למשל, ליד מפתח הוא בוחר עיפרון, כי שניהם ארוכים וצהובים.",
+      "home": "לשחק \"מה הולך עם מה\" בבית: מברשת ומשחה, נעל וגרב, מפתח ומנעול. לשאול על כל זוג: מה עושים איתם יחד?",
+      "reps": [
+        "concrete",
+        "story"
       ]
     }
   ],
@@ -433,11 +473,15 @@
       "title": "מתאימים דברים שהולכים יחד",
       "child": "מוֹצְאִים מָה הוֹלֵךְ יַחַד",
       "world": "dock",
-      "needs": [],
+      "needs": [
+        "LOG-A-01"
+      ],
       "reps": [
         "pictorial"
       ],
-      "tags": []
+      "tags": [
+        "M-ASSOC-LOOK"
+      ]
     },
     {
       "id": "LOG-A-10",
@@ -973,13 +1017,16 @@
         "count": 1
       },
       "options": [
-        "lock",
+        "obj_mitten",
         "shoe",
-        "paste"
+        "lock"
       ],
       "correct": "shoe",
       "difficulty": 0.15,
-      "h3": "גֶּרֶב וְנַעַל הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנַּעַל."
+      "h3": "גֶּרֶב וְנַעַל הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנַּעַל.",
+      "tags": {
+        "obj_mitten": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pick",
@@ -992,12 +1039,15 @@
       },
       "options": [
         "sock",
-        "brush",
+        "pencil",
         "lock"
       ],
       "correct": "lock",
       "difficulty": 0.2,
-      "h3": "מַפְתֵּחַ וּמַנְעוּל הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּנְעוּל."
+      "h3": "מַפְתֵּחַ וּמַנְעוּל הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמַּנְעוּל.",
+      "tags": {
+        "pencil": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pick",
@@ -1011,11 +1061,14 @@
       "options": [
         "paste",
         "key",
-        "shoe"
+        "pencil"
       ],
       "correct": "paste",
       "difficulty": 0.25,
-      "h3": "מִבְרֶשֶׁת וּמִשְׁחָה הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה."
+      "h3": "מִבְרֶשֶׁת וּמִשְׁחָה הוֹלְכוֹת יַחַד. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַמִּשְׁחָה.",
+      "tags": {
+        "pencil": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pick",
@@ -1497,11 +1550,14 @@
       "ref": "bowl",
       "partner": "spoon",
       "others": [
-        "key",
+        "ball_pink",
         "sock"
       ],
       "pos": 1,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "ball_pink": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pair",
@@ -1510,11 +1566,14 @@
       "ref": "pencil",
       "partner": "paper",
       "others": [
-        "lock",
+        "brush",
         "shoe"
       ],
       "pos": 2,
-      "difficulty": 0.25
+      "difficulty": 0.25,
+      "tags": {
+        "brush": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pair",
@@ -1523,11 +1582,14 @@
       "ref": "shoe",
       "partner": "sock",
       "others": [
-        "paste",
-        "bowl"
+        "obj_toy_boat",
+        "paste"
       ],
       "pos": 0,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "obj_toy_boat": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "size3",
@@ -2047,10 +2109,13 @@
       "partner": "spoon",
       "others": [
         "lock",
-        "shoe"
+        "coin"
       ],
       "pos": 1,
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "tags": {
+        "coin": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pair",
@@ -2060,11 +2125,14 @@
       "ref": "cloud",
       "partner": "rain",
       "others": [
-        "key",
+        "bloom_white",
         "sock"
       ],
       "pos": 2,
-      "difficulty": 0.4
+      "difficulty": 0.4,
+      "tags": {
+        "bloom_white": "M-ASSOC-LOOK"
+      }
     },
     {
       "kind": "pick",
@@ -2111,6 +2179,464 @@
         "tower_3": "M-SER-ENDS"
       },
       "difficulty": 0.45
+    },
+    {
+      "kind": "sort",
+      "id": "b36.loga02.1",
+      "skill": "LOG-A-02",
+      "check": "practice",
+      "prompt": "מַכְנִיסִים לַסַּל אֶת זֶה שֶׁשּׁוֹנֶה, וְהַשְּׁאָר עַל הַדֶּשֶׁא.",
+      "bins": [
+        {
+          "sprite": "basket_empty",
+          "label": "סַל"
+        },
+        {
+          "sprite": "grass",
+          "label": "דֶּשֶׁא"
+        }
+      ],
+      "items": [
+        [
+          "ball_red",
+          2
+        ],
+        [
+          "ball_red",
+          2
+        ],
+        [
+          "ball_blue",
+          1
+        ],
+        [
+          "ball_red",
+          2
+        ]
+      ],
+      "rule": "colour",
+      "difficulty": 0.25
+    },
+    {
+      "kind": "sort",
+      "id": "b36.loga02.2",
+      "skill": "LOG-A-02",
+      "check": "transfer",
+      "prompt": "מַכְנִיסִים לַסַּל אֶת זֶה שֶׁשּׁוֹנֶה, וְהַשְּׁאָר עַל הַדֶּשֶׁא.",
+      "bins": [
+        {
+          "sprite": "basket_empty",
+          "label": "סַל"
+        },
+        {
+          "sprite": "grass",
+          "label": "דֶּשֶׁא"
+        }
+      ],
+      "items": [
+        [
+          "shape_circle_blue",
+          2
+        ],
+        [
+          "shape_circle_blue",
+          2
+        ],
+        [
+          "shape_triangle_blue",
+          1
+        ],
+        [
+          "shape_circle_blue",
+          2
+        ]
+      ],
+      "rule": "shape",
+      "difficulty": 0.25
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga04.1",
+      "skill": "LOG-A-04",
+      "check": "practice",
+      "prompt": "הִנֵּה חָתוּל וְכֶלֶב. בּוֹנִים שׁוּרָה: הֵם חוֹזְרִים שׁוּב וָשׁוּב.",
+      "palette": [
+        "cat",
+        "dog"
+      ],
+      "h3": "חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-PAT-UNIT",
+      "model": [
+        "cat",
+        "dog"
+      ],
+      "sequence": [
+        "cat",
+        "dog",
+        "cat",
+        "dog",
+        "cat",
+        "dog"
+      ],
+      "goal": "child repeats the unit of a pattern again and again",
+      "difficulty": 0.33,
+      "correct_text": "כֵּן! בְּנִיתֶם שׁוּרָה שֶׁחוֹזֶרֶת שׁוּב וָשׁוּב."
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga04.2",
+      "skill": "LOG-A-04",
+      "check": "transfer",
+      "prompt": "הִנֵּה דָּג וְצִפּוֹר. בּוֹנִים שׁוּרָה: הֵם חוֹזְרִים שׁוּב וָשׁוּב.",
+      "palette": [
+        "fish",
+        "bird",
+        "star"
+      ],
+      "h3": "דָּג, צִפּוֹר, דָּג, צִפּוֹר, דָּג, צִפּוֹר. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-PAT-UNIT",
+      "model": [
+        "fish",
+        "bird"
+      ],
+      "sequence": [
+        "fish",
+        "bird",
+        "fish",
+        "bird",
+        "fish",
+        "bird"
+      ],
+      "goal": "child repeats the unit of a pattern again and again",
+      "difficulty": 0.33,
+      "correct_text": "כֵּן! בְּנִיתֶם שׁוּרָה שֶׁחוֹזֶרֶת שׁוּב וָשׁוּב."
+    },
+    {
+      "kind": "pick",
+      "id": "b36.loga05.1",
+      "skill": "LOG-A-05",
+      "check": "practice",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר. מַתְחִילִים בְּחָתוּל. מַה בָּא אַחֲרָיו?",
+      "row": [
+        "cat",
+        "dog",
+        "cat",
+        "dog"
+      ],
+      "options": [
+        "dog",
+        "cat"
+      ],
+      "correct": "dog",
+      "tags": {
+        "cat": "M-PAT-COPY"
+      },
+      "correct_text": "כֵּן! חָתוּל, כֶּלֶב.",
+      "h3": "חָתוּל, כֶּלֶב — אַחֲרֵי הֶחָתוּל בָּא כֶּלֶב. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַכֶּלֶב.",
+      "goal": "child copies the order of a pattern",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "b36.loga05.2",
+      "skill": "LOG-A-05",
+      "check": "transfer",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר. יֵשׁ כְּבָר דָּג וְכוֹכָב. מַה בָּא עַכְשָׁו?",
+      "row": [
+        "fish",
+        "star",
+        "star",
+        "fish",
+        "star",
+        "star"
+      ],
+      "options": [
+        "star",
+        "fish"
+      ],
+      "correct": "star",
+      "tags": {
+        "fish": "M-PAT-COPY"
+      },
+      "correct_text": "כֵּן! דָּג, כּוֹכָב, כּוֹכָב.",
+      "h3": "דָּג, כּוֹכָב, כּוֹכָב — אַחֲרֵי הַכּוֹכָב הָרִאשׁוֹן בָּא עוֹד כּוֹכָב. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַכּוֹכָב.",
+      "goal": "child copies the order of a pattern",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga06.1",
+      "skill": "LOG-A-06",
+      "check": "practice",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר וְעוֹשִׂים אוֹתוֹ אָרֹךְ יוֹתֵר.",
+      "palette": [
+        "cat",
+        "dog"
+      ],
+      "h3": "חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב, חָתוּל, כֶּלֶב. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-PAT-NEXT",
+      "model": [
+        "cat",
+        "dog",
+        "cat",
+        "dog"
+      ],
+      "sequence": [
+        "cat",
+        "dog",
+        "cat",
+        "dog",
+        "cat",
+        "dog"
+      ],
+      "goal": "child continues a pattern",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga06.2",
+      "skill": "LOG-A-06",
+      "check": "transfer",
+      "prompt": "מַעֲתִיקִים אֶת הַסֵּדֶר וְעוֹשִׂים אוֹתוֹ אָרֹךְ יוֹתֵר.",
+      "palette": [
+        "star_size_l",
+        "star_size_s",
+        "star_size_m"
+      ],
+      "h3": "גָּדוֹל, קָטָן, גָּדוֹל, קָטָן, גָּדוֹל, קָטָן. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-PAT-NEXT",
+      "model": [
+        "star_size_l",
+        "star_size_s",
+        "star_size_l",
+        "star_size_s"
+      ],
+      "sequence": [
+        "star_size_l",
+        "star_size_s",
+        "star_size_l",
+        "star_size_s",
+        "star_size_l",
+        "star_size_s"
+      ],
+      "goal": "child continues a pattern",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "b36.loga07.1",
+      "skill": "LOG-A-07",
+      "check": "practice",
+      "rep": "story",
+      "prompt": "הַדָּגִים שָׁחוּ בְּשׁוּרָה: גָּדוֹל, קָטָן, גָּדוֹל, קָטָן. דָּג אֶחָד שָׂחָה הַרְחֵק. אֵיזֶה דָּג חוֹזֵר?",
+      "row": [
+        "fish_size_l",
+        "fish_size_s",
+        "fish_size_l",
+        "?",
+        "fish_size_l",
+        "fish_size_s"
+      ],
+      "options": [
+        "fish_size_s",
+        "fish_size_l",
+        "fish_size_m"
+      ],
+      "correct": "fish_size_s",
+      "tags": {
+        "fish_size_l": "M-PAT-NEXT",
+        "fish_size_m": "M-PAT-UNIT"
+      },
+      "correct_text": "כֵּן! חוֹזֵר דָּג קָטָן.",
+      "h3": "גָּדוֹל, קָטָן, גָּדוֹל, קָטָן, גָּדוֹל, קָטָן — בַּמָּקוֹם הֶחָסֵר בָּא דָּג קָטָן. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child repairs a pattern in a story",
+      "difficulty": 0.45
+    },
+    {
+      "kind": "pick",
+      "id": "b36.loga07.2",
+      "skill": "LOG-A-07",
+      "check": "transfer",
+      "rep": "story",
+      "prompt": "בָּלוֹנִים לַמְּסִבָּה: אָדֹם, צָהֹב, אָדֹם, צָהֹב. הָרוּחַ לָקְחָה בָּלוֹן. אֵיזֶה בָּלוֹן חוֹזֵר?",
+      "row": [
+        "balloon_red",
+        "balloon_yellow",
+        "balloon_red",
+        "balloon_yellow",
+        "?",
+        "balloon_yellow"
+      ],
+      "options": [
+        "balloon_red",
+        "balloon_yellow",
+        "balloon_green"
+      ],
+      "correct": "balloon_red",
+      "tags": {
+        "balloon_yellow": "M-PAT-NEXT",
+        "balloon_green": "M-PAT-UNIT"
+      },
+      "correct_text": "כֵּן! חוֹזֵר בָּלוֹן אָדֹם.",
+      "h3": "אָדֹם, צָהֹב, אָדֹם, צָהֹב, אָדֹם, צָהֹב — בַּמָּקוֹם הֶחָסֵר בָּא בָּלוֹן אָדֹם. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child repairs a pattern in a story",
+      "difficulty": 0.45
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga08.1",
+      "skill": "LOG-A-08",
+      "check": "practice",
+      "prompt": "מְסַדְּרִים אֶת הַסִּפּוּר: קֹדֶם, אַחַר כָּךְ, וּבַסּוֹף.",
+      "palette": [
+        "chick",
+        "egg",
+        "egg_crack"
+      ],
+      "h3": "קֹדֶם בֵּיצָה, אַחַר כָּךְ הַבֵּיצָה נִסְדֶּקֶת, וּבַסּוֹף אֶפְרוֹחַ. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-SEQ-CAUSE",
+      "sequence": [
+        "egg",
+        "egg_crack",
+        "chick"
+      ],
+      "goal": "child puts a story in order",
+      "difficulty": 0.37,
+      "correct_text": "כֵּן! סִדַּרְתֶּם אֶת הַסִּפּוּר."
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga08.2",
+      "skill": "LOG-A-08",
+      "check": "transfer",
+      "prompt": "מְסַדְּרִים אֶת הַסִּפּוּר: קֹדֶם, אַחַר כָּךְ, וּבַסּוֹף.",
+      "palette": [
+        "rainbow",
+        "cloud",
+        "rain"
+      ],
+      "h3": "קֹדֶם עָנָן, אַחַר כָּךְ גֶּשֶׁם, וּבַסּוֹף קֶשֶׁת. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-SEQ-CAUSE",
+      "sequence": [
+        "cloud",
+        "rain",
+        "rainbow"
+      ],
+      "goal": "child puts a story in order",
+      "difficulty": 0.37,
+      "correct_text": "כֵּן! סִדַּרְתֶּם אֶת הַסִּפּוּר."
+    },
+    {
+      "kind": "sort",
+      "id": "b36.loga09.1",
+      "skill": "LOG-A-09",
+      "check": "practice",
+      "prompt": "שָׂמִים כׇּל דָּבָר עִם מַה שֶּׁהוֹלֵךְ אִתּוֹ.",
+      "bins": [
+        {
+          "sprite": "shoe"
+        },
+        {
+          "sprite": "lock"
+        },
+        {
+          "sprite": "paper"
+        }
+      ],
+      "items": [
+        [
+          "sock",
+          1
+        ],
+        [
+          "key",
+          2
+        ],
+        [
+          "pencil",
+          3
+        ]
+      ],
+      "tag": "M-ASSOC-LOOK",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "sort",
+      "id": "b36.loga09.2",
+      "skill": "LOG-A-09",
+      "check": "transfer",
+      "prompt": "שָׂמִים כׇּל דָּבָר עִם מַה שֶּׁהוֹלֵךְ אִתּוֹ.",
+      "bins": [
+        {
+          "sprite": "bowl"
+        },
+        {
+          "sprite": "brush"
+        },
+        {
+          "sprite": "cloud"
+        }
+      ],
+      "items": [
+        [
+          "spoon",
+          1
+        ],
+        [
+          "paste",
+          2
+        ],
+        [
+          "rain",
+          3
+        ]
+      ],
+      "tag": "M-ASSOC-LOOK",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga10.1",
+      "skill": "LOG-A-10",
+      "check": "practice",
+      "prompt": "מְסַדְּרִים אֶת הַמִּגְדָּלִים מִקָּטָן לְגָדוֹל.",
+      "palette": [
+        "tower_3",
+        "tower_1",
+        "tower_2"
+      ],
+      "h3": "מַתְחִילִים בַּקָּטָן, אַחֲרָיו הַגָּבוֹהַּ יוֹתֵר, וּבַסּוֹף הַגָּדוֹל. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-SER-ENDS",
+      "sequence": [
+        "tower_1",
+        "tower_2",
+        "tower_3"
+      ],
+      "goal": "child orders by size by hand",
+      "difficulty": 0.4,
+      "correct_text": "כֵּן! סִדַּרְתֶּם אֶת הַמִּגְדָּלִים."
+    },
+    {
+      "kind": "build",
+      "id": "b36.loga10.2",
+      "skill": "LOG-A-10",
+      "check": "transfer",
+      "prompt": "מְסַדְּרִים אֶת הַדָּגִים מִגָּדוֹל לְקָטָן.",
+      "palette": [
+        "fish_size_s",
+        "fish_size_l",
+        "fish_size_m"
+      ],
+      "h3": "מַתְחִילִים בַּגָּדוֹל, אַחֲרָיו הַבֵּינוֹנִי, וּבַסּוֹף הַקָּטָן. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-SER-ENDS",
+      "sequence": [
+        "fish_size_l",
+        "fish_size_m",
+        "fish_size_s"
+      ],
+      "goal": "child orders by size by hand",
+      "difficulty": 0.4,
+      "correct_text": "כֵּן! סִדַּרְתֶּם אֶת הַדָּגִים."
     }
   ],
   "firstSequence": 1,
@@ -2298,7 +2824,9 @@
         "log.fix.things",
         "log.fix.pets",
         "b15.loga07.1",
-        "b15.loga07.2"
+        "b15.loga07.2",
+        "b36.loga07.1",
+        "b36.loga07.2"
       ],
       "minutes": 3,
       "done": "חֲכָמִים! תִּקַּנְתֶּם אֶת הַסֵּדֶר."
@@ -2334,7 +2862,9 @@
         "log.size.apples.last",
         "log.size.fish.first",
         "b15.loga10.1",
-        "b15.loga10.2"
+        "b15.loga10.2",
+        "b36.loga10.1",
+        "b36.loga10.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! סִדַּרְתֶּם לְפִי גֹּדֶל."
@@ -2352,7 +2882,9 @@
         "b15.loga01.5",
         "b15.loga01.6",
         "b15.loga02.1",
-        "b15.loga02.2"
+        "b15.loga02.2",
+        "b36.loga02.1",
+        "b36.loga02.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! מְצָאתֶם אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה."
@@ -2365,7 +2897,11 @@
         "LOG-A-06"
       ],
       "items": [
-        "b15.loga06.2"
+        "b15.loga06.2",
+        "b36.loga04.1",
+        "b36.loga04.2",
+        "b36.loga06.1",
+        "b36.loga06.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! יְדַעְתֶּם מַה בָּא אַחַר כָּךְ."
@@ -2379,10 +2915,27 @@
       ],
       "items": [
         "b15.loga09.1",
-        "b15.loga09.2"
+        "b15.loga09.2",
+        "b36.loga08.1",
+        "b36.loga08.2",
+        "b36.loga09.1",
+        "b36.loga09.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! מְצָאתֶם מָה הוֹלֵךְ יַחַד."
+    },
+    {
+      "id": "copy-patterns-1-b36",
+      "title": "מַעֲתִיקִים סֵדֶר",
+      "skills": [
+        "LOG-A-05"
+      ],
+      "items": [
+        "b36.loga05.1",
+        "b36.loga05.2"
+      ],
+      "minutes": 4,
+      "done": "כׇּל הַכָּבוֹד! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."
     }
   ]
 }

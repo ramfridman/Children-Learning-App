@@ -38,6 +38,7 @@ export const spec: FunctionSpec = {
       children: children.map((c) => ({
         id: c.id,
         nickname: c.nickname,
+        name_spoken: c.nameSpoken ?? null,
         avatar_id: c.avatarId,
         companion_id: c.companionId,
         outfit_id: c.outfitId ?? null,

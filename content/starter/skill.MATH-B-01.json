@@ -32,7 +32,8 @@
     "pictorial"
   ],
   "misconceptions": [
-    "M-ADD-RECOUNT"
+    "M-ADD-RECOUNT",
+    "M-CNT-CARD"
   ],
   "retention": {
     "targetRetention": 0.9,

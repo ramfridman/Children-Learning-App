@@ -228,22 +228,36 @@ class SyncEngine {
 
   // ---- out ----
 
+  /// What of a child the server has been told: the key `profile_pushed_<id>` holds it after a successful `child-put`.
+  static String _fingerprint(Profile p) =>
+      '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}|${p.outfitId ?? ''}|${p.nameSpoken ?? ''}';
+
   Future<void> _pushProfiles() async {
     final Set<String> gone = await _tombstoned();
     for (final Profile p in await db.allProfiles()) {
       if (gone.contains(p.id)) continue;
-      final String fingerprint =
-          '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}|${p.outfitId ?? ''}';
+      final String fingerprint = _fingerprint(p);
       if (await db.setting('profile_pushed_${p.id}') == fingerprint) continue;
       // A name saved before B-28 could be longer than the server takes, or hold a character it refuses: it goes cut to
       // fit. One with nothing left would only be refused, so it is not sent (its answers are then refused like those of
       // any child the server does not have).
       final String nickname = fitChildNameForServer(p.name);
       if (nickname.isEmpty) continue;
+      // The server keeps the spelling when the field is absent (an older build does not send it), so a spelling this phone
+      // cleared is sent as an explicit null: only when the server was last told one. A spelling outside the rule would make
+      // the server refuse the whole child: it stays on the phone.
+      final bool valid = p.nameSpoken != null && isSpokenName(p.nameSpoken!);
+      final String? told = await db.setting('profile_pushed_${p.id}');
+      final bool cleared =
+          p.nameSpoken == null &&
+          told != null &&
+          told.split('|').last.isNotEmpty &&
+          told.split('|').length >= 7;
       try {
         await call('child-put', <String, Object?>{
           'child_id': p.id,
           'nickname': nickname,
+          if (valid) 'name_spoken': p.nameSpoken else if (cleared) 'name_spoken': null,
           'avatar_id': p.avatar,
           'companion_id': ?p.companionId,
           'outfit_id': ?p.outfitId,
@@ -649,9 +663,16 @@ class SyncEngine {
         final String name = here != null && (nickname.isEmpty || fitChildNameForServer(here.name) == nickname)
             ? here.name
             : nickname;
+        // How the name is said (B-42) is untrusted like the nickname: kept only if it is a spelling the voice is sent. The
+        // server's copy never wipes a spelling this phone has changed and not yet sent.
+        final String? spoken = m['name_spoken'] is String && isSpokenName(m['name_spoken']! as String)
+            ? m['name_spoken']! as String
+            : null;
+        final bool unsent = here != null && await db.setting('profile_pushed_$id') != _fingerprint(here);
         final ProfilesCompanion row = ProfilesCompanion(
           id: Value<String>(id),
           name: Value<String>(name),
+          nameSpoken: unsent ? const Value<String?>.absent() : Value<String?>(spoken),
           avatar: Value<String>(m['avatar_id']! as String),
           addressForm: Value<String>(m['address_form']! as String),
           ageBand: Value<int>(m['age_band']! as int),
@@ -668,7 +689,7 @@ class SyncEngine {
         // What the server has is now what this device has: no need to push it back.
         await db.putSetting(
           'profile_pushed_$id',
-          '$name|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}|${m['outfit_id'] ?? ''}',
+          '$name|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}|${m['outfit_id'] ?? ''}|${spoken ?? ''}',
         );
       }
 

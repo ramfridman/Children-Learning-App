@@ -32,7 +32,9 @@
     "pictorial"
   ],
   "misconceptions": [
-    "M-EQ-OPER"
+    "M-EQ-OPER",
+    "M-CNT-CARD",
+    "M-OP-SWAP"
   ],
   "retention": {
     "targetRetention": 0.9,

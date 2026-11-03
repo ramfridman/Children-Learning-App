@@ -122,6 +122,16 @@ const Map<String, TapFamily> _tapFamilyOfSkill = <String, TapFamily>{
   'NUM-A-07': TapFamily
       .count, // numeral to set items (a numeral on the stage) belong to TapFamily.numerals, see tapFamilyOf
   'NUM-A-14': TapFamily.count,
+  // B-36 part D (second representations), the skills whose new items are a `tap_answer` and had none before
+  'NUM-A-06': TapFamily.count,
+  'NUM-A-09': TapFamily.count,
+  'MATH-A-03': TapFamily.compare,
+  'SHP-A-06': TapFamily.shapes,
+  'LOG-A-05': TapFamily.pattern,
+  'NUM-B-04': TapFamily.count,
+  'NUM-B-05': TapFamily.numerals,
+  'NUM-B-07': TapFamily.numerals,
+  'MATH-B-17': TapFamily.clockMoney,
   'MATH-A-06': TapFamily.count,
   'CS-A-04': TapFamily.count,
   'NUM-A-08': TapFamily.numerals,
@@ -202,7 +212,7 @@ const Map<String, TapFamily> _tapFamilyOfSkill = <String, TapFamily>{
 /// The family of a `tap_answer` activity with skill [skillId] whose stage shows a numeral ([numeralOnStage]) or not: null for a
 /// skill that is not in the table.
 TapFamily? tapFamilyOf(String skillId, {bool numeralOnStage = false}) {
-  if (skillId == 'NUM-A-07' && numeralOnStage) return TapFamily.numerals;
+  if ((skillId == 'NUM-A-07' || skillId == 'NUM-A-14') && numeralOnStage) return TapFamily.numerals;
   return _tapFamilyOfSkill[skillId];
 }
 

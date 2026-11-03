@@ -32,42 +32,42 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "aspect": 0.867,
+    "aspect": 0.996,
     "slots": [
       {
         "id": "s1",
-        "sprite": "asset:shape_rect_blue",
-        "x": 0.14529999999999998,
-        "y": 0.2593,
-        "w": 0.8547,
-        "h": 0.7407,
-        "rot": 0
+        "sprite": "asset:shape_triangle_blue",
+        "x": 0.0,
+        "y": 0.4537,
+        "w": 0.4099,
+        "h": 0.4082,
+        "rot": 180
       },
       {
         "id": "s2",
-        "sprite": "asset:shape_rect_orange",
-        "x": 0.3675,
-        "y": 0.1556,
-        "w": 0.4103,
-        "h": 0.3556,
-        "rot": 90
+        "sprite": "asset:shape_triangle_blue",
+        "x": 0.5901,
+        "y": 0.4537,
+        "w": 0.4099,
+        "h": 0.4082,
+        "rot": 180
       },
       {
         "id": "s3",
-        "sprite": "asset:shape_triangle_red",
-        "x": 0.5556,
-        "y": 0.1407,
-        "w": 0.3419,
-        "h": 0.2963,
+        "sprite": "asset:shape_rect_red",
+        "x": 0.1647,
+        "y": 0.3322,
+        "w": 0.6706,
+        "h": 0.6678,
         "rot": 0
       },
       {
         "id": "s4",
-        "sprite": "asset:shape_circle_yellow",
-        "x": 0.0,
+        "sprite": "asset:shape_triangle_yellow",
+        "x": 0.1899,
         "y": 0.0,
-        "w": 0.188,
-        "h": 0.163,
+        "w": 0.6203,
+        "h": 0.6177,
         "rot": 0
       }
     ],
@@ -126,11 +126,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.sb.h2",
+      "vo": "vo:hint.sb_ghost.h2",
       "caption": [
         {
           "t": "he",
-          "v": "לְכׇל צוּרָה יֵשׁ מָקוֹם אֶחָד, כְּמוֹ הַצֵּל שֶׁלָּהּ."
+          "v": "הַצֵּל שֶׁל הַמָּקוֹם הַבָּא צָף לְיַד הַתְּמוּנָה. נַשְׁוֶה אוֹתוֹ לַצּוּרוֹת שֶׁלְּמַטָּה."
         }
       ]
     },

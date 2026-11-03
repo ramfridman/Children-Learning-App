@@ -68,3 +68,6 @@ app/android/app/src/*/google-services.json
 
 # ---- Open security findings stay private while the repo is public ----
 docs/security/private/
+
+__pycache__/
+*.pyc

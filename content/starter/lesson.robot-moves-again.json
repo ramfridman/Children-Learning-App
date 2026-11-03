@@ -18,7 +18,9 @@
     "cs.robot.direct.5",
     "cs.robot.direct.6",
     "b15.csa03.1",
-    "b15.csa03.2"
+    "b15.csa03.2",
+    "b36.csa03.1",
+    "b36.csa03.2"
   ],
   "estimatedMinutes": 4,
   "sequence": 5,

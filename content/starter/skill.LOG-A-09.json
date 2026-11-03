@@ -17,11 +17,19 @@
       "v": "מוֹצְאִים מָה הוֹלֵךְ יַחַד"
     }
   ],
-  "prerequisites": [],
-  "representations": [
-    "pictorial"
+  "prerequisites": [
+    {
+      "skill": "LOG-A-01",
+      "weight": 1
+    }
   ],
-  "misconceptions": [],
+  "representations": [
+    "pictorial",
+    "concrete"
+  ],
+  "misconceptions": [
+    "M-ASSOC-LOOK"
+  ],
   "retention": {
     "targetRetention": 0.9,
     "initialStabilityDays": 1

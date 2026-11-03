@@ -120,7 +120,7 @@ and how any line sounds (that needs audio and the voice director).
    `הגיע`, `הנה`), or before a silent aleph (`ראשון`). Exceptions are in `KTIV` (`התוכנית`, `צהריים`, `המחוג`, `חיה`).
 2. **Nikud kept** on every number word (gender) and on words a TTS can misread: `שֵׁנִי / הַשֵּׁנִי` (ordinal, not "two of"),
    `הַוִּי` (the tick), `נִסְפַּר`, `נְחַתֶּם`, `לְהֵרָאוֹת` (`KEEP_POINTED`). Proposed on 2026-10-29 (`VOICE_AUDIT_KEEP`,
-   rows `proposed` with "V1", 100 rows, still waiting): `שָׂמִים`, `סָפַר`, `גְּדֵלִים`, `בַּתּוֹר`, `אִמְרוּ`, `נְגַלֶּה`, `אוֹפְּס`,
+   rows `proposed` with "V1", 100 rows, still waiting): `שָׂמִים`, `סָפַר`, `גְּדֵלִים`, `בַּתּוֹר`, `אִמְרוּ`, `נְגַלֶּה`, `אוּפְּס`,
    `מֵדַלְיָה`, `אֵלֶּה`, `בַּשָּׁמַיִם`, and a beat in `אין כלום — זה אֶפֶס`; see `docs/agents/voice-pronunciation-audit.md`. No
    rare mark (U+05C7 qamatz qatan, U+05B3 hataf qamats) is ever sent to a voice.
 3. **Punctuation.** `!` is never sent. A short opening cheer becomes a comma (`כֵּן, …`, `כִּמְעַט, …`); **a number said as the
@@ -343,3 +343,546 @@ screen-reader label should say the stop before the tap (it is computed when the 
 if a check fell due meanwhile, rule section 6).
 Wording guard for QA: none of the ten strings contains `היום`, `עוד לא`, `כבר`, `שוב` as "again after a pause", a count or `{n}`;
 `שוב` in `adventurePlayAgain` is "play a known game once more", which the intent asks for.
+
+## 11. B-38 wording for the next pack (2026-11-01, `proposed` / `needs-editor`)
+
+Sources: `content/units/shapes.json` (the two cat items, the b15.shpa07.2 h3, the shared M-SPACE-WORD line), `tools/band_b2.py` (the
+box bridge, the new `b.shpb08.10`, the solids' own SQRECT line). Rows: `PENDING` in `tools/hebrew_voice_review.py` (B38).
+- **Cat items:** the prompt names the place (`אֵיפֹה הֶחָתוּל? בְּתוֹךְ הַסַּל.`); the labels are the plain place words; h3 = look at
+  the basket, then why (`הוּא מִסָּבִיב לֶחָתוּל` / `הוּא סָגוּר, וְהֶחָתוּל יוֹשֵׁב לְמַעְלָה`), the answer last.
+- **`fb.space_word`** has no object: `הַמִּלָּה אוֹמֶרֶת לָנוּ אֵיפֹה זֶה נִמְצָא.` (`זֶה` fits a ball, a cat and a box). It is one clip for
+  eight items; voice it again if the old one was made.
+- **Box and cube:** Band B `תֵּבָה` / `קֻבִּיָּה`; Band A `קֻפְסָה`, and `קֻבִּיָּה` only for a real cube. The faces of a solid are
+  `צְדָדִים` (Band A `צַד שָׁטוּחַ`), the sides of a flat shape stay `צְלָעוֹת`.
+- **SQRECT for solids:** the shared line (`בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת…`) speaks of flat shapes and does not tell a cube from a
+  box, so the two cube-and-box items have their own line (`tag_lines`, `vo:fb.sqrect.solids`).
+
+## 12. B-40: the hint lines follow the hint pictures (hebrew-text-editor, 2026-10-31)
+
+**What was done.** The generators now write the Band A `tap_answer` hint lines from what the picture of the family shows
+(`tools/hint_lines.py`, called by `activity()` in `tools/author.py`; the family and the fall-backs mirror
+`app/lib/play/hints/tap_plans.dart`, so a line follows the picture even where the plan falls back to a generic card).
+466 lines changed in 290 activity files (L1 36, L2 279, L3 151); every one is `proposed` in the master table (`PENDING`
+in `tools/hebrew_voice_review.py`, comment "B-40") and the activity stays `"review": "needs-editor"`. Band B is untouched.
+
+**The rules (for whoever adds a family or a picture).**
+1. Level 1 never counts aloud (design spec F2). A sequence says where to look ("the number, and the empty place next to
+   it"); the 13 old lines that counted `אַחַת, שְׁתַּיִם…` are gone. A line that only replays the question stays.
+2. Level 2 says what the new picture is, in one short line shared by the whole family (one clip for 53 colour items).
+   A number is said only where the picture counts it (hands, hops, numbered places, the path to N). The hands lines say
+   `אֶצְבָּעוֹת` only where hands are drawn; the path, the empty frame, the brackets and the pairing lines have their own.
+3. Level 3 may name the answer, because the plan (section 1, T2) lets the answer be the LAST step of the demonstration. What
+   the plan does not allow is a line that opens with the bare answer (`זֶה כַּדּוּר אָדֹם`) while the hand has not moved.
+   So: a bare answer (four words or fewer before `עַכְשָׁו`) gets one process clause in front (`הַצֶּבַע עוֹבֵר עַל כֻּלָּם,
+   וְעוֹצֵר אֵצֶל הַמַּתְאִים.` for the swatch, the same for the outline, the model and the hand); a line that already is a
+   process (it counts, reads the row, walks the story, compares) is kept; the owner-approved lines (matha04, loga02, the
+   spot line) are untouched.
+4. Compare: L1 (off the stage) says the two groups stand in two rows; L2 says the pairing lines and asks who is left
+   without a pair; L3 pairs one to one, counts what is left and says where there is more (the old line gave both numbers).
+5. The ordinal L3 starts from the flag and says the places up to the answer; zero keeps its line; the hops (CS-A-04) and
+   the coins (MATH-A-06) count in time with the hand.
+
+**Words chosen (please check, owner).** `הִנֵּה רַק הַצֶּבַע` / `רַק הַצּוּרָה, בְּלִי צֶבַע` (the attribute on its own);
+`הַדּוּגְמָה` (the model); `מְחַפְּשִׂים זוּג לַתְּמוּנָה הַזֹּאת` (LOG-A-09); `הַמִּשְׁבְּצוֹת רֵיקוֹת` (the empty ten-frame);
+`אֵיפֹה הַבַּרְוָז? …` (SHP-A-08: the picture draws a small duck, so the line says duck and not the ball of the question);
+`נִרְאֶה מַה קּוֹרֶה כְּשֶׁדּוֹחֲפִים אֶת שְׁנֵיהֶם` / `…כְּשֶׁשָּׂמִים עוֹד אֶחָד מֵעַל כָּל אֶחָד` (SHP-A-07: watch what
+happens, the result is not said). `כׇּל` is written with a qamats qatan, as everywhere in the pack.
+
+**Not changed, and why.** MATH-A-04 heavy/light (2): the picture is still a question-mark card until the seesaw exists, so
+the generic line stays. COL-A-05 tick/cross items (2): their L3 `כֵּן…` stays (the swatch tour over a tick and a cross
+says nothing). `pick.red.flower` has one hint only. The other Band A templates (count, give, flash, sort, build, match,
+shape builder, robot, spot the mistake, trace) keep their lines: they still agree with their pictures except as listed in
+the report to the orchestrator.
+
+## 13. B-40 part 4: the hint lines of Band B and of the other templates (hebrew-text-editor, 2026-10-31)
+
+**What was done.** `tools/hint_lines.py` now also reads Band B `tap_answer` (one function for each plan of
+`app/lib/play/hints/tap_plans_b.dart`, `B_FAMILIES`) and the number line, clock, match, sort, build a pattern, shape builder, robot
+and spot-the-mistake templates (`retext_other`), with the same guards and fall-backs as the app (a plan that falls back to the
+generic card, or to the Band A family plan, keeps the lines it has). 676 lines changed in 383 activity files (L1 46, L2 357, L3 273);
+every one is `proposed` in the master table (`PENDING` / `is_b40_text`), the activity stays `needs-editor`. The grammar rules found
+nothing to correct in them (`ui_text` equals `text`); 97 older Band B rows whose table corrections (the dagesh after the vav and the
+like) are now in the source text were replaced, so the pinned count of corrected rows in `test_hebrew_sources.py` went from 1302 to 1205.
+
+**Lines changed, by family.**
+
+| Family | Level 1 | Level 2 | Level 3 | Items |
+| --- | --- | --- | --- | --- |
+| The number path: NUM-B-01, 02, 03, 11 | the number and the empty place (`vo:hint.gap.h1`, as in Band A; no counting) | the path of ten, the number marked, the empty place beside it | one hop from the number given, forward or back, the answer last (NUM-B-02: nineteen to twenty is one square) | 9 + 9 + 8 + 12 |
+| NUM-B-17 (skip counting) | stays | the hops between the numbers said | the numbers said, one more hop, the answer last | 5 of 6 |
+| NUM-B-08 (a teen) | stays | ten squares full, the ones on the second board | build: a full board, the ones, together | 14 |
+| MATH-B-02 (no picture), 06 | stays | cubes or empty squares: what is there, what is missing | count the empty places (from one) | 4, 10 |
+| MATH-B-03, 07, 08, 18, NUM-B-16 with a row | stays | cubes over each number (over the whole: cubes and empty places) | the cubes of each number, the answer last | 10, 8, 14, 9, 4 |
+| NUM-B-10, MATH-B-16 | stays | a bar of cubes for each number or coin, from one line | the count of each bar, the longer or shorter one last | 10, 2 |
+| NUM-B-18 | stays | pair lines, who is left without a pair | the old line stays (it follows the picture) | 10 |
+| MATH-B-10, 19 | stays | a count beside each column | the running total (plates) or the counts (chart), then the question | 8, 11 |
+| MATH-B-14 (the week) | stays | the seven days, the day of the question marked | the walk along the week, the answer last | 11 |
+| MATH-B-15 (read the clock) | stays | the dotted line to the rim, 12 marked | count the hours round the dial | 10 |
+| SHP-B-01, 02, 03, 04 | stays | the sides lit one by one (SHP-B-03: a stick for each side) | the hand along the corners (B-01 counts; B-04 says closed, open or curved) | 8, 10, 6, 8 |
+| SHP-B-08, 09 | stays | the lines of the solid; the print under each solid | the lines go over the options; the solids are pressed in sand | 8, 2 |
+| COL-B-01, 02 | stays | two paints, an arrow, an empty circle; the shades in a row with an arrow | the mix, last; light to dark | 9, 12 |
+| LOG-B-06, 09 | stays | links between neighbours; the first clue fades one | the walk and the compare; the second clue fades another | 6, 8 |
+| COL-A-05 (4 items) | stays | an empty paint spot: "which colour fits this?" | stays | 4 |
+| number_line | stays | one dotted hop, the number one | the frog counts its hops and lands (a line put on by touch: a running number) | 25 |
+| clock_set | the short hand (the old level 2 line, moved up) | the card and the numeral on the dial have the same ring | the plus is pressed hour by hour, the hours said | 8 |
+| match_pairs | stays | dots under the numeral or the coin; the print under the solid | stays | 7 + 6 + 4 |
+| sort (not share), build a pattern with a model, shape builder, robot | stays | a picture passes each group; the picture above the empty place is lit (and a line marks the repeat); the shadow floats beside the picture; the first arrow and the footprint "1" | stays | 25 + 11 + 7 + 22 |
+| spot the mistake (Band A, the shared line) | stays | stays | the hand stops on the odd one and the right picture appears above it | 9 of 12 |
+
+**Rules added.**
+1. A level 3 line keeps each item's own ending ("now your turn — click on seven"), so the process comes first and the answer is the
+   last number or word before the ending.
+2. A line that counts cubes writes the number in agreement with the noun (`שְׁתֵּי קֻבִּיּוֹת`, `קֻבִּיָּה אַחַת`, `אֵין קֻבִּיּוֹת`);
+   a bare number is feminine.
+3. The conjunctive vav comes from `F.vav` (`וְכָחֹל`, no dagesh); `לְ` before a number word is pointed by `lamed()` (`לִשְׁמוֹנֶה`).
+4. A line is never longer than 24 words (the longest is 22).
+
+**Decisions for the owner (all rows `proposed`, comment "B-40").**
+1. **MATH-B-18 (9 items).** The owner's Q3 (2026-10-29) asked for "count on from the first number, one finger per count". The picture
+   in the app counts the empty places from one (badges 1, 2, 3...) and draws no fingers, so the new line says that. Two teachings,
+   one picture: either the line stays as it is now, or the picture changes to the count-on (the app-developer and the curriculum-expert).
+   Likewise NUM-B-16 with a row (4 items): "ten, and one more, two" became "ten cubes are there, count the empty places".
+2. **MATH-B-08 above ten (8 items, e.g. 8 + 5).** The old line made a ten ("eight and two are ten, three more, thirteen"). The picture is
+   two groups of cubes, not a ten, so the new line is `שְׁמוֹנֶה קֻבִּיּוֹת וְעוֹד חָמֵשׁ קֻבִּיּוֹת. בַּכֹּל — שְׁלֹשׁ עֶשְׂרֵה.` The make-ten
+   strategy is gone from level 3 until a picture of a ten exists.
+3. **The owner-approved P1 line** `vo:hint.spot_but_one.h3` ("all alike except one") is replaced by `vo:hint.spot_right.h3` in the 9
+   Band A spots where the app draws the right picture above the mistake; it stays in the other 3. Spots that have their own third hint
+   (the order of washing, the counting, the patterns) are not changed.
+4. **New words:** `לוּחַ` (a ten-frame: `לוּחַ אֶחָד מָלֵא, עֶשֶׂר מִשְׁבְּצוֹת`), `הַפְּלוּס` (the plus tile of the clock), `קַו מְנֻקָּד` (the
+   dotted arc and the dotted line to the rim), `מַקְלוֹת` (the sticks of SHP-B-03), `הַצֵּל` (the ghost outline of the shape builder),
+   `הָרוֹבּוֹט הַשָּׁקוּף` (the ghost robot), `דּוֹהָה` (a shape fades, LOG-B-09).
+
+**For the app-developer and the curriculum-expert (found while reading the plans).**
+- `numbersIn` (`hints/prompt_numbers.dart`) reads "שֵׁשׁ, שְׁמוֹנֶה, עֶשֶׂר" as 6 and 18 (a comma is a break, the tokens are neighbours), so
+  `b.numb17.12` gets no number path and plays the generic card; its lines were left as they are.
+- MATH-B-10 "how many plates?" (2 items, `reverse`): the picture shows the running total of the things (2, 4, 6), not the number of
+  plates. The line says it ("when we reached six, there were three plates"), but the picture does not show the plates counted.
+- The sphere of SHP-B-08 is drawn as a circle (its outline on paper); its line says "lines of the solid".
+- Not done, because the picture is not built or the plan is the Band A family plan: shop_pay, balance, COL-B-03, MATH-B-01, NUM-B-14,
+  NUM-B-16 with groups, MATH-B-02 with groups, LOG-B-01 and 04, trace.
+
+## 14. B-36 part F: the text pass over the next pack and the app (hebrew-text-editor, 2026-11-01)
+
+**What was read.** Every `proposed` row of `docs/review/hebrew-master.csv` on branch `next-pack`: 3,147 rows, 997 distinct texts. They are
+the 1,142 B-40 hint lines, the part B/C/E lines (`vo:fb.card.*`, the 8 new tags, `vo:fb.shp_name.solids`, the 8 misconception files,
+the LOG-A-09 labels), the 150 part D items with their 8 `-1-b36` lessons, the B-38 cube and cat lines, the 9 `vo:hint.spot_but_one.h3`
+rows that went back to proposed, the B-39 bottle lines and the B-32 refusal message. Each text was read as the child sees it (grammar,
+nikud, gender and number, plural address, length, the word a 3 to 8 year old knows), with the item next to it where the line depends on the picture
+or on the answer (`ditems` view: prompt, options, correct line, every wrong-answer line, the three hints).
+
+**Result.** 2,928 rows are `text-ready`; 219 stay `proposed` because only the owner can answer them: 171 V1 rows (decision 8), 12 balance
+rows (D12), 10 Q2 drafts, and 26 B-40 hint rows with a real teaching question (section 14.3). 185 rows (94 distinct texts) were reworded in
+the SOURCES; the table keeps the draft and the reason in the `changes` column (`PART_F_LIST` and `PART_F_RX` in `tools/hebrew_voice_review.py`).
+Another 60 older rows that were `text-ready` already changed with them (the shade lines of COL-B-02 and COL-B-03, the M-SEQ-SCRIPT line of the six `cs.wrong` items, the number-line line `כׇּל הַקְּפִיצוֹת שָׁווֹת`, the B-32 refusal message): 245 rows in all have a new text.
+Owner-approved rows: 115 before, 115 after, none changed.
+
+### 14.1 What was wrong, by kind (the drafts of the app-developer and the curriculum-expert)
+
+| Kind | Examples | Fix (source) |
+|---|---|---|
+| Gender | `שְׁלוֹשָׁה צְפַרְדְּעִים גְּדוֹלִים` (a frog is feminine); `שְׁתֵּי עִקּוּלִים` (עִקּוּל is masculine) | `counting-hills.json`, `band_b36.py` |
+| Words that are not Hebrew, or the wrong word | `עוֹשִׂים שֶׁהֵם יַחְזְרוּ`; `הָעֶתֶק` / `בֶּעָתֶק` (not "the copy"); `מִלַּכֶּלֶב`; `קַו שֶׁכָּבוּי` ("turned off"); `חֲסֵרוֹת` with no noun | `logic.json`, `math.json`, `band_b36.py` |
+| Sense: the line did not fit the item | "you copied the order" after putting a routine, a story, towers or days in order (12 items: now `סִדַּרְתֶּם`); the old M-CNT-SIZE line ("more is not always bigger") on the NUM-A-11 balance; the mirrored 3 and 7 answered with the line about two digits swapped; `הֵם שׁוֹנִים` with no "different in what" | `correct_text`, `tag_lines` |
+| Nikud | `מִעֶשֶׂר` → `מֵעֶשֶׂר`, `מִשֵׁשׁ` → `מִשֵּׁשׁ`, `הַחָתוּל` → `הֶחָתוּל`, `הֶחוּם` → `הַחוּם`, (`אוּפְּס` → `אוֹפְּס` was a mistake, undone in section 15), `בַּסַּךְ הַכֹּל` → `בְּסַךְ הַכֹּל`, `כֹּל` → `כׇּל` | `author.py from_()` (gutturals take מֵ; the dagesh after מִ), `SUBS` |
+| Register / vocabulary | `שִׁגְרָה`, `גְּרָף`, `נֶעֱרָמִים`, `כָּמוֹהוּ`, `אֶלְכְּסוֹן`, `בְּיוֹתֵר` | `אֶפְשָׁר לַעֲרֹם`, `שַׁיָּךְ`, `הֲכִי גָּבוֹהַּ`, a slide a child knows |
+| Templates | the default level 3 of a number line that starts at ten said "start from ten and count from one to fourteen" | `author.py k_numline`: "start from ten and count: eleven, twelve…" |
+| Level 3 opens with the answer | the 16 flash lines began `אֵלֶּה שְׁלוֹשָׁה תַּפּוּחִים.` | `author.py k_flash`: `סוֹפְרִים אֶת כֻּלָּם.` first |
+| One word for one thing | the ten-frame was `לוּחַ` (my B-40 draft, 23 rows) and `מִסְגֶּרֶת` (older lines, NUM-A-14, MATH-B-08) | `מִסְגֶּרֶת` everywhere (`hint_lines.py` TEEN templates); `לוּחַ` is gone |
+| The sides of a scale | `עַל קַעֲרָה אַחַת` (a bowl) in 4 balance items; `חֲסֵרוֹת` | `בְּצַד אֶחָד … בַּצַּד הַשֵּׁנִי`, as every other balance line says |
+
+### 14.2 The two lines of the curriculum-expert (b36 section 10), and what was found next to them
+
+- COL-B-02 `.9` to `.12` (the middle shade): the shared M-SER-ENDS line said "not the smallest and not the biggest". They and `b.colb02.13`/`.14`
+  say `מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי בָּהִיר וְלֹא הֲכִי כֵּהֶה.` (`SHADE_ENDS`, one clip).
+- COL-B-03 green, red and purple (and the same three colours in COL-B-02): the shared M-COL-SHADE line said "light blue and dark blue are both blue".
+  They say `בָּהִיר אוֹ כֵּהֶה, זֶה אוֹתוֹ צֶבַע. בּוֹאוּ נִבְדֹּק שׁוּב.` (`SHADE_SAME`); the blue items keep the old line.
+- **Found next to it:** in `b.colb02.1` to `.8` ("which is the darkest / lightest?") a child who picked the middle shade heard "we look for the middle". They now
+  hear `זֶה הָאֶמְצַע. בּוֹאוּ נַשְׁוֶה אֶת כֻּלָּם: בָּהִיר, אֶמְצָעִי, כֵּהֶה.` (`SHADE_END_PICK`).
+
+### 14.3 Left for the owner (still `proposed`), besides V1, Q2 and D12
+
+1. **MATH-B-18, level 3 (9 items):** the B-40 line counts the empty places from one (what the picture draws); the owner's Q3 asked for count on with fingers.
+2. **Spot the mistake, level 3 (9 Band A items):** the B-40 line `vo:hint.spot_right.h3` replaces the owner-approved P1 line where the app draws the right picture above the mistake.
+3. **MATH-B-08 above ten, level 3 (8 items):** two groups and the sum; the make-ten strategy is gone until a picture of a ten exists.
+
+### 14.4 Not text, for others
+
+- **curriculum-expert:** `x.numb07.21` and `.22` tag the mirrored 3 and 7 `M-NUM-REV` ("swaps two digits"); the tag that fits is `M-NUM-WRITE`. The line is fixed (own `tag_lines`), the tag is not.
+  Older lines worth a second look (all `text-ready`, I did not touch them): `יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ` (M-PART-MISS, 40 rows) and the NUM-A-11 "same?" correct line `כֵּן, צָדַקְתֶּם!` after a child's "לֹא".
+- **voice director:** V1 is 171 rows now (was 126): the new rows use the same 10 words (`בַּתּוֹר` 51, `גְּדֵלִים` 43, `אֵלֶּה` 37, `שָׂמִים` 19, `סָפַר` 13, and 5 single words) and the beat before `זֶה אֶפֶס`.
+  Number words keep their nikud also after `מִ` (`מִשֵּׁשׁ`, `מִשֶּׁבַע`): `is_number_token` strips the dagesh of the dropped nun. The five B-39 lines stay PER-LAND.
+- **app-developer:** nothing to fold in; the sources are already corrected (`content/units`, `tools/`, `he.dart` › `setupNameBadChars`). The two tool pins moved with a comment
+  (`test_hebrew_sources.py`: corrected-and-done rows 1189 → 1159, proposed-and-corrected rows 75 → 39).
+- **qa-engineer:** the label `אֵיפֹה הַבַּרְוָז?` of the cat items is right: the hint card draws a small duck (`tap_plans.dart _position`), not the cat.
+
+
+## 15. The research pass on the V1 words (hebrew-text-editor, 2026-11-01; the owner said some pronunciations and translations in the B-36 sheet were wrong)
+
+Method: every word of the V1 list looked up in Pealim (forms, nikud, transliteration), Milog (Hebrew-Hebrew meaning and nikud), Hebrew and English Wiktionary
+(stress, readings); the results are in the D1 table of `docs/review/b36-owner-sample.md` with a link for each word. What it changed:
+
+| Finding | Fix |
+|---|---|
+| **`אוֹפְּס` is wrong; the pointing is `אוּפְּס`** ("ups"; Milog, Hebrew Wiktionary). I had changed `אוּפְּס` to `אוֹפְּס` in B-36 part F ("as in core.listen.mixed"); the helper line had `אוֹפְּס` since M5. The competing readings of plain אופס are `אוֹפֵס` (o-FES, "is running out") and `אֻפַּס` (u-PAS, "was reset") | `he.dart` listenMixed, `core.he.json` core.listen.mixed, `tools/band_b36.py` (the robot item `b.csb04.7`, regenerated), the rule in `hebrew_voice_review.py` now maps `אוֹפְּס` to `אוּפְּס`; the part F entry for this line is removed. The clips of 2026-10-28 (`core.listen.mixed`) were sent as `אוֹפְּס` and need voicing again. Not touched (they are audition inputs the director may have used): `docs/audio/audition/round2.json` H1-mixed-*, six lines with `אוֹפְּס` |
+| `צָדַקְתֶּם` → `צְדַקְתֶּם` (3 rows, `tools/author.py`); `עָבַרְתֶּם` → `עֲבַרְתֶּם` (3 rows, `band_b.py`, `band_b36.py`) | Pa'al 2nd person plural past: shva, and a hataf-patach after ע (Pealim). The 6 rows are `proposed` again (`PENDING`). I scanned every 2nd person plural past in the table (the `-תֶּם` forms); no other form is off |
+| Glosses and stress | `VOICE_AUDIT_KEEP` has the corrected reasons (stress in capitals, the real competing word). `שָׂמִים` is the plural present of שָׂם ("put", the impersonal instruction); `גְּדֵלִים` has a real competitor, `גְּדָלִים` ("sizes", Pealim lists both); `בַּתּוֹר` against `בְּתוֹר` ("as"); `אֵלֶּה` against `אֵלָה` / `אַלָּה`; `נְגַלֶּה` against `נִגְלֶה` / `נִגָּלֶה`; `בַּשָּׁמַיִם` against `בְּשָׂמִים`; `מֵדַלְיָה` is me-DAL-ya (Wiktionary) |
+| Left as it is | plain `ספרנו` (130 rows, `סָפַרְנוּ`; the other reading, `סִפְרֵנוּ` "our book", does not fit "אוּלַי ___ אֶחָד פַּעֲמַיִם?"); `הַוִּי` (Milog: וִי); the number words |
+| Suggested, not done | `אִמְרוּ לִי` → `תַּגִּידוּ לִי` (Pealim: the spoken imperative of לוֹמַר is from לְהַגִּיד; the audit's Q5); `אֵלֶּה מַה שֶּׁחָסֵר` (10 rows) and `לְכִוּוּן הַחֵץ` → `בְּכִוּוּן הַחֵץ` (28 rows) wait for the owner's word |
+
+Checks: `regen_content.py` twice, byte-identical; `test_hebrew_sources` (10) and `test_generators` (58) pass. Not run: the Flutter tests (`app/test/voice_text_test.dart` has the fixture text `אוּפְּס` now; it is a fake core file, it pins nothing of the real text).
+
+## 16. The owner's answer to the B-36 sheet (recorded by the hebrew-text-editor, 2026-11-01)
+
+The owner's words: "All proposed looks good." (after the corrected sheet `docs/review/b36-owner-sample.md`). Recorded as follows.
+
+| Question | Answer | Where it is now |
+|---|---|---|
+| D1 V1 words kept pointed in the voice text | yes | `VOICE_AUDIT_KEEP`, unchanged except the next line |
+| D1 "say!" | **`תַּגִּידוּ לִי`** (my recommendation, not `אִמְרוּ לִי`) | `content/lines/core.he.json` `core.listen.say` (voice text plain: `תגידו`); `אִמְרוּ` left `VOICE_AUDIT_KEEP` (V1 is 170 rows now) |
+| D2 Q2 a, b, c | yes, yes, yes | `tools/author.py` `SIZE_BY_CUE` (`pairs` for the 3 NUM-A-11 "same?" items, vo:fb.size.pairs; `count` for the 7 NUM-A-07 matches, vo:fb.size.count, set in `band_b3.py`); c was in already |
+| D3 balance sides (12 rows) | yes (true only if the beam tilts; the design-director still confirms) | `tools/band_b.py` (MATH-B-13 balance items) |
+| D4 `הוּא לֹא` (11 rows) | yes | `tools/author.py` `TAG_FEEDBACK['M-ORD-CARD']` |
+| D5 `אִם לֹא` (6 prompts) | yes; the shape rules also carry the copula `הַצּוּרָה הִיא עִגּוּל` the table had corrected | `tools/band_b2.py` (LOG-B-08); the `HELD` list of `tools/test_hebrew_sources.py` is empty |
+| F1 | A (the line matches the picture) | the B-40 line stays |
+| F2 | yes (`vo:hint.spot_right.h3` in the 9 spots) | unchanged |
+| F3 | yes | unchanged |
+| F4 | keep `אֶל` | `he.dart` `adventureWelcome` unchanged |
+| F5 | keep `לִלְחֹץ עַל` | unchanged |
+| F6 | ok (`לִלְחֹץ עָלָיו` after a number stays) | unchanged |
+| S1 to S88 | OK | |
+| The rule of part 5 | every row the pass read | 3,233 rows `owner-approved` |
+
+**How the approval is kept.** `docs/review/b36-approved-rows.tsv` lists (source, id, hash of the text, screen text and voice text) of the 3,233 rows
+the pass covered: the 3,147 that were `proposed` and the older rows whose text changed with them (the rows not `text-ready`, `owner-approved` or
+`unchanged` with the same text and screen text in the table before B-36, plus every row still `proposed`). `tools/hebrew_voice_review.py`
+(`b36_approved`) sets `owner-approved` for a row whose hash is in the list; a row whose text or voice text changes later is not in it any more, and goes
+back to the editor's own status (`text-ready` or `proposed`). The list is data made once by the editor from the table and read by the script;
+the editor never adds a row to it without the owner's word. The `PENDING`, `DOUBT` and Q2/Q3 `PR` entries, the B-40 `pending()` branches and the D1 rules for
+`אִמְרוּ` were removed, because their questions are answered.
+
+**Counts.** Master table, 14,434 rows: `owner-approved` 115 before, 3,348 after (115 + 3,233); `proposed` 225 before, 0 after; `text-ready` 13,445 before, 10,437 after;
+`unchanged` 649. The 10,437 `text-ready` rows are older rows (M-era, B-13 to B-15) that were never part of this sheet: the pass did not touch them
+and the owner did not approve them; they are not `proposed`.
+
+**What stays marked `needs-editor` in the code, and why.** (1) `app/lib/strings/he.dart`: `Str.review` is one getter, `'needs-editor'`, for all
+strings; `source_rules_m1_test.dart` pins that it is there and that `'approved'` is not in the file. The repo records an app string's approval only in the master
+table (as for `nitziHomeHi` on 2026-10-29), so the bottle lines (B-39) and the refusal message (B-32) are `owner-approved` there. (2) Every pack document has
+`"review": "needs-editor"` (1,454 files, written by `tools/author.py`); `starter_pack_test.dart` pins that none is `approved`. (3) The `status` column of the exported
+`hebrew-review.csv` says `needs-editor` for every row (it is the raw export). Changing (1) or (2) to a per-string or per-document `approved` marker is a code and
+test decision for the app-developer and the owner, not a text decision.
+
+**Also fixed.** `docs/audio/audition/round2.json`: the six `H1-mixed-*` inputs had `אוֹפְּס`; now `אוּפְּס`.
+
+## 17. QA-B36-6: the second hint line of ten second-way items (hebrew-text-editor, 2026-11-01)
+
+QA found that the level 2 line of `b36.numa06.1/.2`, `x.numb07.21/.22`, `b.numb17.13`, `x.mathb17.12/.13`, `b.mathb18.10/.11` and `b.shpb08.10` was the generic
+`נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.` over a picture that is new (`app/lib/play/hints/tap_plans_c.dart`, and `tap_plans.dart` for the cube).
+Cause: `tools/hint_lines.py` had no class for the new plans (`tap_class` gave `card`, or None, and `retext_b` gave None), so the generator kept the generic line.
+
+**Fixed in the source (`tools/hint_lines.py`), no pack content was written by hand.** New classes, each read the way the Dart plan reads the item:
+
+| Item(s) | Class | Line (shared, one clip) | Voice id |
+|---|---|---|---|
+| NUM-A-06 with a pile and plates | `plate` | `הָאֶצְבָּעוֹת מַרְאוֹת כַּמָּה צָרִיךְ לָתֵת.` | `vo:hint.plate.h2` |
+| NUM-B-07 with drawn numerals (`glyph_N`) | `glyph` | `הִנֵּה הַמִּסְפָּר כָּתוּב נָכוֹן. נִסְתַּכֵּל עָלָיו טוֹב.` | `vo:hint.glyph.h2` |
+| MATH-B-17 with a chart of whole-shekel coins | `coin_values` | `לְיַד כׇּל מַטְבֵּעַ כָּתוּב כַּמָּה הוּא שָׁוֶה.` | `vo:hint.coin_values.h2` |
+| NUM-B-17 with a pile and no numbers in the question (`_skip`) | `INTWOS_H2` | `כׇּל זוּג בְּטַבַּעַת, וְסוֹפְרִים זוּג אַחַר זוּג.` | `vo:hint.in_twos.h2` |
+| MATH-B-18 with a pile and a stone (`_hidden`; a row stays with `_sentence`) | `HIDDEN_H2` | `הַמִּסְגֶּרֶת הִיא הַכֹּל. הַמִּשְׁבְּצוֹת הַמְּלֵאוֹת הֵן מַה שֶּׁרוֹאִים, וְהָרֵיקוֹת — מַה שֶּׁמֻּסְתָּר.` | `vo:hint.hidden_part.h2` |
+| SHP-B-08, the cube | `ghost_solid` (level 3 stays `walk`: the item's own sides line) | the existing `vo:hint.solid_outline.h2` | no new clip |
+
+Rules kept: level 2 says what the picture is and never counts aloud where the picture does not; the question has said the numbers, so no line says one;
+plural or impersonal; no gender guessed. The NUM-A-06 line says "fingers", so `test_a_line_that_says_fingers_has_hands_on_the_screen` accepts the class `plate`
+(the plate plan draws fingers); no pinned count changed. Only these ten files of `content/starter` changed; regeneration is byte-identical on the second run.
+
+Rows: the nine that were `owner-approved` (their hash is no longer in `b36-approved-rows.tsv`) and `b.shpb08.10` (was `text-ready`) are `text-ready` with the comment
+`new text (QA-B36-6): waits for the owner` (`QA6_SOURCES` in `tools/hebrew_voice_review.py`; the draft is in `changes`). Master table: `owner-approved` 3,348 to 3,339,
+`text-ready` 10,437 to 10,446. The owner's sheet is `docs/review/b36-qa6-owner-sample.md`.
+
+**The owner's answer (2026-11-02, recorded by the hebrew-text-editor).** In chat, verbatim: "Yes, 1–6 OK" (the six families of the sheet; he did not ask for a new line for
+`b.numb17.12`, which stays as it is). The ten rows are `owner-approved`. How it is kept: `docs/review/b36-approved-rows.tsv` has the ten `hints.1.caption.0.v` rows with the hash of
+their text, screen text and voice text as approved (nine old entries, whose hash no longer matched the new line, got the new hash; `b.shpb08.10` is a new entry; the list has
+3,234 rows now, in the order of the master table). `tools/hebrew_voice_review.py` gives these rows the comment `QA6_APPROVED_COMMENT` (the other rows of the list keep
+`B36_APPROVED_COMMENT`); if one of the ten lines changes later its hash is not in the list and the row goes back to `text-ready` with the QA-B36-6 comment. Pack, generators
+(`tools/hint_lines.py`) and the voice ids are unchanged by the approval; the pack documents stay `"review": "needs-editor"` (§16). Counts, master table (14,434 rows): `owner-approved`
+3,339 to 3,349, `text-ready` 10,446 to 10,436, `unchanged` 649. Next for the voice director: the five new clips (`vo:hint.plate.h2`, `vo:hint.glyph.h2`, `vo:hint.in_twos.h2`,
+`vo:hint.coin_values.h2`, `vo:hint.hidden_part.h2`); `vo:hint.solid_outline.h2` exists.
+
+**The `בשְׁתַּיִם` and `וְשְׁתַּיִם` rows the security reviewer saw are not errors in the pack.** They are in the `text` column of `hebrew-master.csv`, which keeps the ORIGINAL draft
+on purpose (`export-hebrew-review.py` writes the original of a `text-ready` row from the last master table: "the master table's `text` ... depend on it"). The pack and the `ui_text`
+column already say `בִּשְׁתַּיִם` (`b.numb17.4/.5/.6`, whose line is now `כׇּל מִסְפָּר גָּדוֹל מֵהַמִּסְפָּר שֶׁלְּפָנָיו בִּשְׁתַּיִם`) and `וּשְׁתַּיִם` (`b.mathb09.7`); the corrections
+are the `SUBS` rule of `hebrew_voice_review.py` and the `changes` column says so. The voice text is plain and right. Nothing to fix at the source.
+
+### 17.1 `b.mathb01.15` and `.16`: the third hint line fixed and approved (hebrew-text-editor, 2026-11-02, next-pack)
+
+The voice director found that the third hint (`hints.2`, voice ids `vo:b.mathb01.15.h3` and `.16.h3`) of the two "how many did we add?" items counted everything up to the
+total (`שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. …`), so the last number the child heard was the wrong answer `M-PART-MISS`. I proposed a line that counts
+only the added ones (§18.1 on branch `b45-voicing-plan`, commit 78f0887). **The owner read the two texts in chat on 2026-11-02 and said "Fix them"**; the two texts are owner-approved as written.
+
+**Source.** One argument of the `numpick3` call in `tools/band_b.py` (the loop over `('apple', 3, 5), ('fish', 4, 7)`, MATH-B-01):
+`h3='%s כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (qty(x, OBJECTS[obj]), count_words(r), F[r])`. Regenerated twice, byte-identical.
+Changed under `content/`: `starter/activity.b.mathb01.15.json`, `starter/activity.b.mathb01.16.json` and the unit spec `units/band-b-math.json` (the two `h3` values); nothing else.
+
+| Row | Screen text (= `ui_text`) | Voice text |
+|---|---|---|
+| `activity.b.mathb01.15.json` › `hints.2.caption.0.v` | `שְׁלוֹשָׁה תַּפּוּחִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.` | `שְׁלוֹשָׁה תפוחים כבר יש. סופרים רק את אֵלֶּה שהוספנו: אַחַת, שְׁתַּיִם. עכשיו תורכם — ללחוץ על שְׁתַּיִם.` |
+| `activity.b.mathb01.16.json` › `hints.2.caption.0.v` | `אַרְבָּעָה דָּגִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.` | `אַרְבָּעָה דגים כבר יש. סופרים רק את אֵלֶּה שהוספנו: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.` |
+
+The voice texts differ from the plain ones in §18.1 in two places, both by rules that already exist and that I checked: `אֵלֶּה` keeps its nikud (V1 audit of 2026-10-29: plain `אלה` can be read `אֵלָה` or `אַלָּה`), and the
+counted number word before a noun (`שְׁלוֹשָׁה`) keeps its nikud (number words carry gender).
+
+**Approval, hash-locked as B-36.** The two rows are in `docs/review/b36-approved-rows.tsv` (3,236 rows now) with the hash of the text, screen text and voice text above. `tools/hebrew_voice_review.py` gives them the comment
+`H3_COUNT_ADDED_COMMENT` (the owner's words "Fix them"); if either line changes later its hash is not in the list and the row goes back to `text-ready`. Master table (14,434 rows): `owner-approved` 3,349 to **3,351**, `text-ready`
+10,434 (the two rows were `proposed` for a moment as new text), `unchanged` 649. The pack documents stay `"review": "needs-editor"`.
+
+**The hint picture does not match the new line (for the app-developer, not changed here).** `MATH-B-01` is in the `add` family (`app/lib/content/hint_ladder.dart`), and `_Plans.add` (`app/lib/play/hints/tap_plans.dart`, line ~1190) has a
+count-on picture only when the stage has a second group (`a.group2 != null`). These two items have one group (3 apples, 4 fish) and no second one, so level 3 takes the take-away branch: the hand card shows 3 (4), the hand presses the last
+apple (fish) as if one were taken away, and the result badge shows 2 (3). Measured with a test probe on the phone stage: frames `CardMark`, `CardMark + HandMark`, `BadgeMark(2) + HandMark` (`.15`); `BadgeMark(3)` at the end (`.16`). The line now says
+"3 apples are already here; we count only the ones we added: one, two". The picture should be: the group of three raised as the hand (it "hugs" into its number, as `docs/curriculum/b40-visual-hint-ladder.md` TA-5 says for MATH-B-01), then
+the hand lights two new places beside it, counting 1, 2 (`asksMore` of the existing branch counts that way), ending on the badge 2. The picture was wrong before this fix too (a take-away over an add question).
+
+**Fixed in the app (app-developer, 2026-11-02).** `countsAddedOnes` (`tap_plans.dart`) gives these two items their own picture: the group hugs into its number on the hand card, one cube lights up for each added one in a row under the group (badge 1, 2, (3)), and the last step is the answer badge and the right tile. Level 2 only counts the group. Test: `app/test/hint_count_added_test.dart`; no other item changes.
+
+## 18. B-45: the owner's conditional approval of the spoken texts (hebrew-text-editor, 2026-11-02)
+
+**The owner's words** (chat, 2026-11-02, answering whether signing pack 0.11.0 should also approve all its spoken texts for voicing, decision 1 of `docs/audio/b45-voicing-plan.md`): "If they are already checked by the text agent and the voice agent its fine by me". The approval is conditional, so a spoken row became `owner-approved` only if **both** held:
+
+- **(a) The text editor has checked it:** the row is `text-ready` (read in the editor's passes; not `proposed`, not flagged). The two "second look" notes of section 14.4 were closed for this: the 27 `text-ready` rows of `יֵשׁ הַרְבֵּה בְּסַךְ הַכֹּל, וְחֵלֶק מֵהֶם כְּבָר רָאִינוּ. כַּמָּה חָסֵר?` were read again (grammar, age and sense are right for Band B, and the same sentence is already `owner-approved` in 19 rows from the B-36 pass); the 12 `cs.robot.direct` hint rows ("curriculum-expert to confirm") follow the Band A landmark rule that `docs/curriculum/b40-visual-hint-ladder.md` builds on. The other note of 14.4 (`כֵּן, צָדַקְתֶּם!` after a child's "לֹא") has no `text-ready` row left: its three rows were approved in B-36, and the question stays with the curriculum-expert.
+- **(b) The voice director has checked it for voicing:** `docs/audio/voice-direction.csv` (the director's per-text table, made by `tools/voice_direction.py` on 2026-10-28) has a row for **exactly this voice text**, and that row carries no open ask to the editor (`note_for_text_editor` is empty, or only "long list, no change asked before the audition").
+
+**How sure (b) is, said plainly.** There is no per-row human sign-off by the director, and nobody has listened. The only per-row record is that script-made direction table (a tone, a pace, `listen_for`, flags). The director's plan of 2026-11-02 (`docs/audio/b45-voicing-plan.md`) is category-level (tone by the end of an id, the number "two", "equals"); it says no line needs more and that no punctuation change is asked. I took "a direction row for this exact voice text, and no open ask" as the per-row check. If the owner meant more than that, the director must sign the rows (below).
+
+**Scope.** The spoken rows of the pack documents (group 3) and the core lines (group 2, voiced in the same run). Not touched: the 66 live-helper rows (group 4: gateway, its own prewarm step) and the 2 per-name app strings (`homeBubble`, `homeBubbleNoName`, group 1).
+
+**Result** (master table, 14,434 rows; 6,720 spoken rows were `text-ready`):
+
+| | Rows |
+|---|---|
+| Now `owner-approved` (met both): 6,070 pack rows (group 3) and 21 core rows | **6,091** |
+| Held: no direction row for the exact voice text (text new or changed since 2026-10-28 by B-13, B-15, B-36, B-40, QA-B36-6; 438 distinct voice texts, mostly `b.*` 196 rows and `b15.*` 159 rows) | 547 |
+| Held: the director's table has an open ask for the line (5 voice texts: three correct lines that start with `לא,` (10 rows) which can sound like a "not yet"; the `x.mathb19.7`/`.8` line "LONG, split at a full stop" (3 rows); `core.listen.again` "LONG" (1 row)) | 14 |
+| Held: outside the signed pack, live helper (group 4) | 66 |
+| Held: outside the signed pack, app strings (group 1) | 2 |
+
+Master counts: `owner-approved` 3,349 to **9,440**, `text-ready` 10,436 to **4,345**, `unchanged` 649. No `proposed` rows. Every held row is listed with its reason in `docs/review/b45-held-rows.tsv`.
+
+**How it is kept (hash-locked, as B-36).** `docs/review/b45-approved-rows.tsv` has the 6,091 rows as (source, id, hash of the text, the screen text and the voice text), the same hash as `b36-approved-rows.tsv`. `tools/hebrew_voice_review.py` (`b45_approved`, `B45_APPROVED_COMMENT`) sets `owner-approved` with the comment "owner approved 2026-11-02, conditional: checked by the text and voice agents" and the owner's words. If the pack text, the screen text or the voice text of a row changes later, its hash is not in the list and the row goes back to `text-ready`; a row that leaves the list is also not kept as approved from the last table (`lost_b45`). Tested by breaking one hash (the row returned to `text-ready`; restoring it gave a byte-identical table). The editor adds no row to the list without the owner's word. Pack documents stay `"review": "needs-editor"` (section 16); `content/` was not touched (regeneration is byte-identical; `git status` shows no change under `content/`).
+
+**What the voice director needs to do for the held rows** (then I add them to the list; no text changes unless the director asks for punctuation):
+1. The **547 rows / 438 voice texts** with no direction row: rerun `tools/voice_direction.py` (or an equivalent check) so each gets a direction row, and say they are checked. **Caution:** that tool reads only `text-ready` rows (`tools/voice_direction.py` line 257). The 6,091 rows are `owner-approved` now, so a plain rerun would write a table without them and lose their direction record. Make it read `owner-approved` too, or write the new rows to a second file.
+2. The **14 rows with an open ask**: confirm in one line that the asks of 2026-10-28 are withdrawn (the plan says "I asked for no punctuation change"), or send the punctuation change (`לא.` for `לא,`; a full stop in the `x.mathb19.7` line and in `core.listen.again`). I change `voice_text`, and the row is checked again.
+3. The group 4 and group 1 rows need the owner's word that they are meant too (the live helper and the per-name lines are not in this run).
+
+Effect on the plan (free `voice_gen plan`, all nine voices): each narrator plans **3,546 of 3,991 lines** (153,615 characters; it was 1,173 lines); each friend plans all its 9 lines (190 characters); 445 lines per narrator still wait (433 for no direction row, 12 for an open ask). `generate` still refuses until every line is approved.
+
+### 18.1 Second pass, after the voice director's check (hebrew-text-editor, 2026-11-02)
+
+**Trigger.** The voice-and-sound-director read the held rows (`docs/audio/b45-direction-checked.tsv`, `docs/audio/voice-direction.md` section 14, commit 524d167) and rewrote `voice-direction.csv` (`tools/voice_direction.py` now reads `owner-approved` rows too). Condition (b) of section 18 is now met for the rows below. Condition (a), my own check, was re-read on the master table: all 561 checked rows are `spoken: yes`, `text-ready`, group 3 (one is the core line `core.listen.again`, group 2), and none is flagged.
+
+| Director's result | Rows | What I did |
+|---|---|---|
+| `directed` | 447 | added to `docs/review/b45-approved-rows.tsv` (same hash lock, same comment); now `owner-approved` |
+| `ask-withdrawn` | 14 | added; now `owner-approved`. The asks the director withdrew: `לא,` to `לא.` (10 rows, 3 texts; the text stays `לא,` and the 10 rows are the first item of the batch-1 listening check), `core.listen.again` "LONG" (1 row), `x.mathb19.7`/`.8`/`.9` "LONG" (3 rows) |
+| `directed-flag` | 2 | **HELD: the wording is wrong, see below** |
+| `not-voiced` | 98 | **left out of the voicing approval, see below** |
+
+Total added: **461**. The list has **6,552** lines (6,530 pack rows and 22 core rows), no header, all distinct. Master: `owner-approved` 9,440 to **9,901**, `text-ready` 4,345 to **3,884**, `unchanged` 649. Spoken and still `text-ready`: 98 `childLine`, 2 `h3` rows, 66 live helper, 2 per-name strings. `docs/review/b45-held-rows.tsv` now has 168 rows (it had 629), each with its new reason.
+
+**6,090 or 6,091?** 6,091 is right. `b45-approved-rows.tsv` as committed in dcee186 has 6,091 lines, all distinct (source, id, hash), with no header line, and the master has exactly 6,091 rows that carry the B-45 comment (checked in the first pass and again now, hash by hash). The director's 6,090 is what a reader gets who treats the first line as a header (the first row is `core.greeting.hello`). No row was lost.
+
+**The two flagged rows: the director is right, the wording does not teach the right thing.** `b.mathb01.15` and `.16` ask `כַּמָּה הוֹסַפְנוּ?` ("how many did we add?"; 3 apples, now 5; 4 fish, now 7) and hint 3 reads `שָׁלוֹשׁ וְעוֹד שְׁתַּיִם: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.` (and the same with 4, 3, 7). The child hears a count of everything that ends on the total, and is then asked for the other number. The last number the child hears (5, 7) is exactly the wrong choice of the item, tagged `M-PART-MISS` ("the total": `o2` in .15, `o1` in .16). At the moment of need the hint points at the mistake it should repair. It is also the wrong model for "how many were added": the child has to count only the new ones, or count on from the first number. The sentence is right for the item "how many in all?" (the same pattern in `tools/band_b.py` line 196, where the count does end on the answer); it is wrong only for the reverse item. Sister hints that do it right: `b.mathb02.7` and `b.mathb18.2` (`שְׁתֵּי קֻבִּיּוֹת כְּבָר יֵשׁ. סוֹפְרִים אֶת הַמְּקוֹמוֹת הָרֵיקִים: …`, owner-approved) count only the empty places, and decision D2 above (missing addend) has the same rule. `docs/curriculum/b40-visual-hint-ladder.md` (TA-5) says for MATH-B-01 "count on (the first group hugs into its number, the rest light on)", so the fix needs no new curriculum decision; only the picture follows the words (the app-developer, hint action `worked_example`).
+
+I did not change `content/` and did not approve the two rows. **Proposed fix**: one argument in the generator, the `h3=` of the `numpick3` call at `tools/band_b.py` line 565 (the loop over `('apple', 3, 5), ('fish', 4, 7)`). It changes `content/starter/activity.b.mathb01.15.json` and `.16.json`, so it changes pack 0.11.0 before it is signed.
+
+```
+h3='%s כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (qty(x, OBJECTS[obj]), count_words(r), F[r])
+```
+
+Resulting texts (16 and 17 words, under the limit):
+- `b.mathb01.15.h3`: `שְׁלוֹשָׁה תַּפּוּחִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.`
+- `b.mathb01.16.h3`: `אַרְבָּעָה דָּגִים כְּבָר יֵשׁ. סוֹפְרִים רַק אֶת אֵלֶּה שֶׁהוֹסַפְנוּ: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.`
+- voice text `.15`: `שְׁלוֹשָׁה תפוחים כבר יש. סופרים רק את אלה שהוספנו: אַחַת, שְׁתַּיִם. עכשיו תורכם — ללחוץ על שְׁתַּיִם.`
+- voice text `.16`: `אַרְבָּעָה דגים כבר יש. סופרים רק את אלה שהוספנו: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עכשיו תורכם — ללחוץ על שָׁלוֹשׁ.`
+
+Agreement: the counted noun takes its own gender (`שְׁלוֹשָׁה תַּפּוּחִים`, `אַרְבָּעָה דָּגִים`, as in the prompt); the bare numbers in the count and on the button are feminine. After the generator change the two rows are new text (`needs-editor` until I read them again; they are two lines of a shape the director has already directed). If the orchestrator keeps pack 0.11.0 as it is, the two rows stay `text-ready` and `voice_gen` skips them (plan below; `generate` refuses until they are approved or changed). The other 12 rows of the director's T3 (`mathb02.7` to `.10`, `mathb06.1` to `.8`, `hints.2`) are not the same problem: they count the empty places only (`סוֹפְרִים אֶת הַמְּקוֹמוֹת הָרֵיקִים`), the count ends on the number the child is asked to press, and they are already `owner-approved`.
+
+**The 98 `childLine` rows.** They are the sentence on a skill's map card. They have no `vo:` id and the app never says them (`voice_direction.py` and `voice_gen` both skip them), so a voice approval has nothing to approve. I left them out of the voicing approval: they stay `text-ready` (the text is checked; the owner's approval of the text comes with the signed pack) and are in `b45-held-rows.tsv` with that reason. The master still says `spoken: yes` for them because `spoken()` in `tools/hebrew_voice_review.py` treats every `childLine` as spoken (T9 of the voice director). I did not change that: it would change the voice-text column of about 100 rows, and the owner has not said whether the map card should ever be voiced. Proposal for the owner: `spoken: no` for `childLine`, or a voiced map card (then the units need `vo:` ids; their voice text is already made). One other `childLine` row (`skill.LOG-A-05`) was approved in the first pass because the old direction table had it; no change.
+
+**The director's note on `שְׁמוֹנָה` (masculine eight): note only, no change.** Ten voice texts carry it (for example `יש שְׁמוֹנָה דגים`, `המחיר הוא שְׁמוֹנָה שקלים`); each is before a masculine noun, so the masculine form is right, and the bare number in the same family is the feminine `שְׁמוֹנֶה` (`ללחוץ על שְׁמוֹנֶה`). The pointing is kept in the voice text on purpose. If the pilot reads it badly, the fix is a pronunciation entry, not a text change.
+
+**Plan (free `dart run tool/voice_gen.dart plan`, 2026-11-02).** Each of `nitzi` and `hero-son`: **3,989 of 3,991 lines**, 174,559 characters a voice (was 3,546 lines, 153,615 characters). Each of the 7 friends: 9 lines, 190 characters. Over all nine voices: 350,448 characters, 14.02 USD at the list price (an estimate, not a spend). Blocked: 2 lines, `vo:b.mathb01.15.h3` and `vo:b.mathb01.16.h3`. Nothing else waits, so `generate` will accept the plan as soon as those two are approved or changed. The other held rows are not in the plan for their own reasons (98 never voiced, 66 live helper, 2 per-name). **Closed on 2026-11-02:** the two `h3` rows were fixed as proposed and approved by the owner ("Fix them", section 17.1); see 19.1.
+
+
+## 19. B-45 job 3: every spoken text that was not in the plan (hebrew-text-editor, 2026-11-02, after merging `next-pack`)
+
+**Why.** The owner wants one paid run for all voices. Every text the app says, or will say, must have a `vo:` id the tool can plan, a voice text, and a direction row. I looked for the spoken texts that were still outside the plan: the app's `vo:` references against `content/lines/core.he.json` and the pack, every caption in the pack documents (all 3,964 have a `vo`, no caption is without one), and every child string of `app/lib/strings/he.dart` (group 1; there is no other Hebrew in `app/lib` except the speech lists).
+
+### 19.0 The merge with `next-pack`
+
+Conflicts: `tools/hebrew_voice_review.py` (the approval chain: kept `b36_approved` with the QA6 comment and the `H3_COUNT_ADDED_*` override, then `b45_approved`; both constants and `lost_b45` stay), `docs/agents/hebrew-notes.md` (next-pack's 17.1 stays under 17, then 18 and 18.1 from this branch; no renumbering was needed) and `docs/review/hebrew-master.csv` (not hand-merged: the branch's own table was put back and the table was regenerated: `regen_content.py`, `export-hebrew-review.py`, `hebrew_voice_review.py`, twice, byte-identical). No approval was lost: every row that was `owner-approved` on either side is `owner-approved` after the merge (9,901 on this branch + the 2 `h3` rows that next-pack approved = 9,903).
+
+### 19.1 `b.mathb01.15.h3` and `.16.h3`
+
+The fix of 18.1 is in the sources (`tools/band_b.py`, next-pack) and the owner approved the two texts himself ("Fix them"; `H3_COUNT_ADDED_COMMENT`, hash-locked in `b36-approved-rows.tsv`). They are therefore `owner-approved` already, by the owner's own word. They are not in `b45-approved-rows.tsv` (that list is the conditional approval), and I did not remove an approval the owner gave. They are in the plan again (3,991 lines per narrator). What is missing is the director's direction row for this exact voice text; they are the first two rows of `docs/review/b45-new-lines.tsv`. They are no longer in `b45-held-rows.tsv`.
+
+### 19.2 The bottle's lines (B-39): ids for the clips the app already asks for
+
+The five lines were worded in section 7 and the owner approved them on 2026-11-01 (the B-36 sheet), so there is no new wording. What was missing is the clip. `app/lib/child/adventure_line.dart` asks for `vo:core.adventure.<reason>.<land>` (reasons `welcome`, `call_for_help`, `same_land`, `other_land`; lands `counting`, `colors`, `shapes`, `logic`, `robots`, `market`) and `vo:core.adventure.play_again`; no such line existed, so the bottle was silent. Added to `content/lines/core.he.json`: **25 lines** (4 x 6 + 1). The screen text of each is the template with the land's own pointed name (`He.landCounting` .. `He.landMarket`), word for word what `adventureLine(...).text` shows. The voice text is the template's voice text with the land's voice name (`גבעות הספירה`, `מפרץ הצבעים`, `יַעַר הצורות`, `מְעָרַת החידות`, `נְמַל הרובוטים`, `כְּפַר השוק`; the four pointed words are the ones a voice can misread, the director confirms); rule: `LAND_SCREEN` and `LAND_VOICE` in `tools/hebrew_voice_review.py`. The five template rows in group 1 stay as they are (`spoken: yes`, owner-approved: changing them would change their hash); the clips are the 25 group 2 rows. All 25 are `text-ready` (new rows; not approved until the director's direction row exists). The narrators say them (a friend borrows Nitzi or hero-son by voice gender, as for every lesson line). Nothing about speed, time, the child or guilt.
+
+For the app-developer: the ids already match the code. Add a test that each `core.adventure.*` line equals `adventureLine(...).text` for its land (a land name change in `he.dart` would otherwise leave an old clip). Nothing else in code.
+
+### 19.2b Why `voice_gen` did not see these lines, and the shared `homeBubble` clip
+
+`voice_gen` plans only what it reads in `content/starter` (a `vo` next to a `caption`) and in `content/lines/core.he.json`. A line that lives only in `app/lib/strings/he.dart` (a `Str` with a voice id built in code) is never in the plan, whatever its status in the table. That is why the bottle's 25 lines and `core.rest.goodbye` were silent. **I fixed it on the content side, with no app code:** the 26 lines are now in `core.he.json` (19.2, 19.3), and one more: `core.home.bubble` = `מַה בַּבַּקְבּוּק?`, the shared clip of the home bubble (`homeBubble` plays the child's name clip first and then this one; `homeBubbleNoName` plays it alone, `he.dart` line 48). Voice text `מה בבקבוק?`. The name clip is per child and stays out of the run. The two `he.dart` rows keep their status (`text-ready`); the clip is the group 2 row, `text-ready` until it has a direction row. The app plays nothing there yet (owner decision 6 of B-26); the wiring is the app-developer's.
+
+What the app-developer must do so that the plan keeps seeing them: nothing for planning. For correctness: (1) a test per family that the core line equals the `he.dart` output (`core.adventure.*` against `adventureLine(...).text`, `core.rest.goodbye` against `He.restGoodbye.text`, `core.home.bubble` against `He.homeBubbleNoName.text`), so that a later change of a `he.dart` string cannot leave an old clip behind; (2) any new spoken string in code gets its core line first (or a `{vo, caption}` object in a pack document), never only a `Str`; (3) play `vo:core.home.bubble` in `home_screen.dart` after the name clip, if the owner wants the bubble spoken.
+
+### 19.3 `core.rest.goodbye`, and a nikud error found on the way
+
+`lesson_controller.dart` asks for `vo:core.rest.goodbye` (the lesson ends for rest) and no such line existed. Added (text = `He.restGoodbye`). **The screen text had a wrong word:** `וְנִשְׁחַק` with a shin dot is "and we will be worn down" (from שחק, "to grind, to wear"); "and we will play" is `וּנְשַׂחֵק` (שִׂחֵק with a sin dot, the same word as in `core.greeting.hello` and `adventurePlayAgain`). I scanned every row of the table for the shin-dot root שחק: this was the only one. Fixed in `app/lib/strings/he.dart` (`restGoodbye`: `הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וּנְשַׂחֵק שׁוּב אַחַר כָּךְ.`) and in the new core line. The test `rest_rules_test.dart` reads `He.restGoodbye.text`, so no test pins the old word. Voice text: `היה כיף, עכשיו נחים קצת, ונשחק שוב אחר כך.` (a calm line; `voices.proposed.json` already treats `vo:core.rest.` as calm). Not the rest scene (`restScene`): see 19.5.
+
+### 19.4 The 98 `childLine` rows (map card): recommendation
+
+**Recommendation: voice them, yes.** `childLine` is the sentence under a picture on the land map (a touch on a drawing) and the line of an earned star in the Trophy Hall ("מוֹצְאִים אֶת אוֹתוֹ צֶבַע"). It is the one place where a child asks "what is this one?", and a child of 3 to 8 mostly cannot read the answer. The lines are short (2 to 7 words, 23 characters on average), already in the child's "we" form, and the text is checked. Cost: 100 lines (the 98 held + `skill.LOG-A-05` and `skill.NUM-A-14`) are 2,308 characters per narrator, about 0.09 USD a narrator and 0.19 USD for both. The risk is not money but wiring: until the app plays a clip on that card the clips are never heard.
+
+What I prepared: `docs/review/b45-childline-proposed.tsv` (100 rows: id, voice text, source, status). Id scheme: `vo:core.skill.<skill id in lower case, hyphens to underscores>` (for example `COL-A-01` is `vo:core.skill.col_a_01`; the pattern `vo:[a-z0-9_.]{1,80}` allows it, and all 100 are distinct). One voice text changed: `skill.LOG-B-04` is now `מִגְדָּלִים שגדלים.` (plain "מגדלים" is read "megadlim", they raise; here it is towers that grow; `VOICE_MANUAL`). I read the other 99 voice texts for sound and found nothing else.
+
+I did **not** add them to `core.he.json`, because the owner has not said yes and the app has no place for them yet. If he says yes, the cheapest way to have them in the single run needs no schema change: append the 100 lines to `content/lines/core.he.json` as `core.skill.<id>` (text = the skill's `childLine`; I do it in one step, and a test keeps the two texts equal), then the director directs them. Measured with the free `voice_gen plan` on a copy of the repository with the 100 added: **4,118 lines per narrator and 178,029 characters** (with only the 27 lines of this section: 4,018 lines and 175,723 characters; with neither: 3,991 lines and 174,772 characters). The cleaner alternative is a `childSpoken` object (`vo` + `caption`) on the skill document, which `voice_gen` already finds; that is a schema and generator change.
+
+What the app-developer would need (nothing was changed): (1) in `land_screen.dart` (the object card) and `trophy_hall.dart` (the star lines): on the touch, say `vo:core.skill.<id>` through the voice director if the bank has it (the same call the bottle makes); `WorldObject` already carries the skill id; (2) a test that every `childLine` has its core line; (3) the card's stage word (`stageSketch` "עוֹד מְתַרְגְּלִים", `stageColour` "יוֹדְעִים!", `stageFruit` "יוֹדְעִים וְגַם זוֹכְרִים!") is not voiced: three more short core lines can be added if the owner wants the whole card spoken. `spoken()` in `hebrew_voice_review.py` still says `spoken: yes` for `childLine`; unchanged until the owner decides.
+
+### 19.5 The other child strings of `he.dart` (73 rows, `spoken: no`) and what I did
+
+| Kind | Strings | Decision |
+|---|---|---|
+| Already voiced as a core line with the same text (checked equal) | `placementDone`, `thinkHmm`, `listenMixed`, `listenConfirm`, `listenTap`, `celebrateWell`, `ceremonyBronze/Silver/Gold/Medal` | nothing to do |
+| The app asks for a clip that did not exist | `restGoodbye` | added, 19.3 |
+| The home island's bubble | `nitziHomeHi`, `nitziHomeWelcome`, `nitziHomeWelcomeNoName` | silent by the owner's decision 6 of B-26 ("nothing is voiced here yet"); the with-name welcome is per-name and the daily welcome is B-42; not touched |
+| Strings no code uses | `nitziHomeTreasures`, `nitziHomeBottle`, `nitziHomeBottleDone` | dead text; not voiced until something shows them |
+| The rest scene | `restScene`: the screen when the parent's rest hours begin (sea, one sentence, one button) | not voiced. **Optional:** a calm clip `core.rest.scene` ("עכשיו נחים קצת. ניפגש שוב אחר כך.") would help a child who cannot read; it needs the owner's word and one line in `rest_scene.dart` |
+| Labels, titles and explanations | lands, hall, medals, outfits, stickers, `trophyHow`, `stickersHow`, `lessonUnavailable`, `activityQuestion` ... | a child knows these by the picture; the explanations are read with a parent; screen only |
+| Pack texts that are not spoken | 183 lesson titles, 1,884 answer labels, 1,118 alt texts, 294 scene labels | labels and descriptions for a screen reader; screen only |
+
+### 19.6 Plan totals (free `voice_gen plan`, 2026-11-02, after this section)
+
+| | Lines per narrator | Characters per narrator | Characters, all nine voices | USD (list) |
+|---|---|---|---|---|
+| Before (after the merge; the two `h3` lines are in) | 3,991 | 174,772 | 350,874 | 14.03 |
+| With the 27 new lines approved (`core.rest.goodbye`, 24 per-land bottle lines, `play_again`, `core.home.bubble`) | 4,018 | 175,723 | 352,776 | 14.11 |
+| And the 100 `childLine` lines too, if the owner says yes | 4,118 | 178,029 | 357,388 | 14.30 |
+
+Each friend still plans 9 lines and 190 characters (the new lines are the narrators'). Until the 27 lines have a direction row and are approved they are not planned: the plan prints them under "cannot be voiced yet", and `generate` refuses. The list for the director is `docs/review/b45-new-lines.tsv` (29 rows, 1,170 characters: the 2 `h3` lines and the 27 new lines). The approval of the 27 follows the rule of section 18: a direction row for exactly their voice text with no open ask; then they go into `b45-approved-rows.tsv`.
+
+
+## 20. The live helper line `give.butterflies.4` (band C, form m, hint 0) fails the server's checks (hebrew-text-editor, 2026-11-02; **needs-editor**, proposal only)
+
+**Found by the curriculum-expert, reproduced here.** I ran all 66 reviewed lines of `content/tutor-lines/hero-son.json` through `supabase/functions/_shared/validator.ts` (the ten checks) against `testvectors/publish-starter.json` with the new free script `tools/check_tutor_lines.mjs` (Node 22, no package, no network). Exactly one line fails (the other 65 pass):
+
+`בוֹא נְנַסֶּה לְהַצְבִּיעַ עַל כׇּל פַּרְפָּר אֶחָד אֶחָד, וְלַעֲצֹר כְּשֶׁמַּגִּיעִים לְאַרְבַּע.` (plain: `בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור כשמגיעים לארבע.`)
+
+Two causes, both in the last words:
+- **vocabulary:** `כשמגיעים` ("when we arrive") is not in the helper's lexicon (`he-child.v1.json`); a line may only use lexicon words and the item's own prompt words.
+- **leak:** `ארבע` (the feminine bare number) is the answer of the item and is not a word of the prompt (`תְּנוּ לַפֶּרַח אַרְבָּעָה פַּרְפָּרִים`, which has `ארבעה`). At hint 0 (below the item's threshold) the validator treats the answer word as a leak. The prompt's own `ארבעה` is allowed, which is why the sister lines (`ונעצור בארבעה`) pass.
+
+**Proposed rewording** (same teaching: point at each butterfly one by one and stop at the number asked for; band C, 11 words (limit 20), one sentence, `בוא` for form m, as before):
+
+`בוֹא נְנַסֶּה לְהַצְבִּיעַ עַל כׇּל פַּרְפָּר אֶחָד אֶחָד, וְלַעֲצֹר בְּאַרְבָּעָה.` (plain for the server: `בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור בארבעה.`)
+
+Checked: `SAY="בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור בארבעה." node tools/check_tutor_lines.mjs` gives `checked 66 failing 0`. Grammar: `ארבעה` is masculine because it counts the butterflies (`פרפרים`), the same as the approved sister lines `בוא נספור פרפרים אחד אחד, ונעצור בארבעה` (band A) and `...ונעצור כשנגיע לארבעה` (band B); a bare number would be feminine, but this one stands for the butterflies. Nothing in the line gives the answer away beyond what the prompt says.
+
+**Status.** Not changed: the line is `"review": "approved"` in the file, and a different text is a new text. If the owner agrees, the app-developer or the curriculum-expert (owner of the tutor-line file) puts it in with `"review": "needs-editor"` until he approves it; the row is `text-ready` in the master table and, being outside the signed pack and the gateway change in progress, still not part of the B-45 run. Whenever tutor lines change, run `node tools/check_tutor_lines.mjs`: it must say `failing 0`.
+
+**Owner approved, 2026-11-02 (chat: "Yes" to the rewording).** The line is now in `content/tutor-lines/hero-son.json` on branch `live-helper-voice-format` (`D:\nitznutz-live`) as `בוא ננסה להצביע על כל פרפר אחד אחד, ולעצור בארבעה.` with `"review": "approved"` (the value of the file's convention for an owner-approved line; it never needed `needs-editor` in between, the owner approved before it was written). The table rows there (`hebrew-master.csv`, `hebrew-review.*`, `hebrew-elevenlabs-review.*`) carry the new text for the row `give.butterflies.4 / mistake default / hint 0 / band C`, `text-ready`. Checked there with `tools/check_tutor_lines.mjs` (copied from this branch for the run, not left in the live branch): `checked 66 failing 0`; `tools/test_hebrew_sources.py` passes. This branch (b45) still has the old line in its copy of the file: the change comes in when the live branch is merged. Not in the B-45 run.
+
+### 19.7 The 27 new lines approved (hebrew-text-editor, 2026-11-02, after the director's direction)
+
+The voice director directed all 29 rows of `docs/review/b45-new-lines.tsv` (commit edb3c68, no asks, no text change). Condition (a) of section 18 was met by my own check in 19.2 to 19.4, condition (b) by a direction row for exactly each voice text with no open ask (checked row by row against `voice-direction.csv`). The 27 core lines (`core.rest.goodbye`, the 24 per-land bottle lines, `core.adventure.play_again`, `core.home.bubble`) are in `b45-approved-rows.tsv` (6,579 lines) with the hash of text, screen text and voice text, and are `owner-approved` under the owner's conditional approval of 2026-11-02; they are out of `b45-held-rows.tsv` (166 rows). The two `h3` lines were approved by the owner himself earlier. Master: `owner-approved` 9,903 to 9,930, `text-ready` 3,882, `unchanged` 649; regenerated twice, byte-identical. Free `voice_gen plan`: 4,018 lines and 175,723 characters a narrator, 9 lines and 190 characters a friend, 352,776 characters over nine voices, 14.11 USD; nothing under "cannot be voiced yet".
+
+
+## 22. B-45 job 4: the 48 welcome lines and the 100 map-card lines are core lines (hebrew-text-editor, 2026-11-02)
+
+**The owner's words** (chat, 2026-11-02): (1) the 48 B-42 daily-welcome lines join the one paid voicing run; (2) the 98 map-card `childLine` rows are voiced (the proposal `docs/review/b45-childline-proposed.tsv`, 100 rows); (3) the rewording of the live helper row `give.butterflies.4` (section 20) is approved. The wording and the voice texts of the welcome lines are those of section 21, which is on branch `b42-welcome-plan` (commit ecd0de9; the two branches both append after section 17, so on the merge keep the order 18, 19, 20, 21, 22).
+
+### 22.1 What is in `content/lines/core.he.json` now (202 lines: 54 + 148)
+
+- **48 welcome lines** with the ids of the plan: `welcome.hello.1` / `.2` / `.3` / `.first`, `welcome.topic.<land>.<topic>` (37), `welcome.land.<land>` (6), `welcome.close`, so the voice ids are `vo:welcome.*` exactly as in `docs/milestones/B42.md` (they do not start with `core.`; `voice_gen` makes `vo:` + the line id, the pattern allows it). Screen text and voice text are the TSV of section 21, word for word. The plan estimated 1,234 unpointed characters a voice; the voice texts have 1,286 (the pointing kept on `נְגַלֶּה`, `נְפָרֵק`, `נְחַלֵּק`, `נֵצֵא`, the land words `יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר`, `אֶחָד`, `לִשְׁתֵּי`, `שְׁנֵי`).
+- **100 map-card lines** `core.skill.<skill id in lower case, hyphens to underscores>` (`COL-A-01` is `vo:core.skill.col_a_01`), text = the skill's `childLine` (screen text with nikud, no full stop; the voice text adds the stop and drops the pointing a voice does not need). One manual voice text: `core.skill.log_b_04` is `מִגְדָּלִים שגדלים.` (section 19.4).
+- All 148 rows are **`text-ready`** in the master table: owner-approved in wording by the owner's chat answer, waiting for the voice director's direction row for exactly their voice text (the same rule as the 27 lines of 19.7); then they go into `b45-approved-rows.tsv`.
+
+### 22.2 Rules added to `tools/hebrew_voice_review.py`
+
+1. `VOICE_MANUAL` (`WELCOME_WHY`): eight welcome voice texts the general rules would have un-pointed (`נְפָרֵק`, `נְחַלֵּק`, the six `היום נֵצֵא אל <land>` lines with the bottle's four pointed land words), so that the table gives exactly the voice texts of section 21 (1,286 characters). Before this the table said `נפרק`, `נחלק`, `נצא`, `יער`, `מערת`, `נמל`, `כפר`.
+2. `V1_ANSWERED`: six rows whose voice text keeps a pointed word that the pronunciation audit asks the owner to confirm (V1): `נְגַלֶּה` in five welcome topics (`counting.compare`, `counting.ordinal`, `shapes.position`, `logic.patterns`, `market.missing`) and `אֶפֶס` in `core.skill.num_a_14` (the same `childLine` row is already owner-approved from the B-36 sheet). The owner's yes of 2026-11-02 covered these lines, so they are `text-ready` and not `proposed`; the rule names exactly these six ids.
+
+### 22.3 `content/voices.json`
+
+`ownLines` is now **57** ids: the nine of B-45 and the 48 welcome ids (each friend greets in its own voice, the plan's decision 2, accepted by the owner's approval of the cost of all nine voices). The map-card lines are the narrators' (a friend borrows the narrator's clip, as for every lesson line). Tone: all welcome lines take the default stability 0.50 (greeting); nothing in `styleRules` matches `vo:welcome.` or `vo:core.skill.`.
+
+### 22.4 Voice packs: two new small groups (`app/tool/voice_packs_lib.dart`)
+
+Adding 148 lines to the shared pack (422 lines, limit 450) would have cut `voice-<character>` into two parts and taken the plain id away, which the pack tests (and the app's lookup of the shared pack) rely on. `voiceGroupOf` now gives `welcome.*` the group **`welcome`** (48 lines, ~2.8 MiB) and `core.skill.*` the group **`skill`** (100 lines, ~5.9 MiB), so a narrator is **18 packs** (was 16) and `core` stays 422 lines. It also keeps a map-card tap or the day's first welcome from pulling a 25 MiB lesson pack into memory for one short clip. A friend is still one pack (57 lines). The app looks a line up in all the packs of a character, so playback is unchanged; whether the welcome pack should be pinned like the shared pack is the app-developer's call.
+
+### 22.5 Tests
+
+- `tools/test_hebrew_sources.py`: the row count is 14,609; new `CoreLinesTest`: every skill has `core.skill.<id>` and its text equals the skill's `childLine` (so they cannot drift), no map-card line without a skill, the welcome set is 48 lines and all in `ownLines`, no variable or `!` / U+05C7 / digit / Latin letter / bracket in the screen or voice text of the new lines, every greeting's voice text starts with `שלום,`.
+- `app/test/voice_gen_roles_test.dart` (57 own lines, new test: a friend says all 48 welcome lines and the nine of before, no map card), `app/test/voice_packs_test.dart` (the welcome and skill groups; the "unknown id is core" example is `mystery.daily.1` now, because `welcome.daily.1` is a group of its own), `app/test/qa_b45_voice_packs_end_to_end_test.dart` (its counts were already out of date: it pinned 3,991 planned lines, 16 packs, 15 parts, 9 own lines; now 4,166, 18, 17 and 57; the QA owner should look at the new pins).
+
+### 22.6 Plan totals (free `voice_gen plan --repo <copy>`; the 148 rows counted as if approved in a scratch copy, nothing changed in the repository)
+
+| | Lines per narrator | Characters per narrator | Lines and characters per friend | Characters, all nine voices | USD (list, 0.04 per 1,000) |
+|---|---|---|---|---|---|
+| Before (section 19.7) | 4,018 | 175,723 | 9 / 190 | 352,776 | 14.11 |
+| And the 48 welcome lines (nine voices) | 4,066 | 177,009 | 57 / 1,476 | 364,350 | 14.57 |
+| And the 100 map-card lines (two narrators) | **4,166** | **179,315** | **57 / 1,476** | **368,962** | **14.76** |
+
+The welcome costs 1,286 characters a voice: 11,574 over nine voices (0.46 USD), of which the seven friends 9,002 (0.36 USD) and the two narrators 2,572 (0.10 USD). The map cards are 2,306 characters a narrator, 4,612 for two (0.18 USD). Narrator packs: `voice-<id>` 422 lines, 15 land-and-band parts as before, `-part-skill` 100 lines (2,306 characters), `-part-welcome` 48 lines (1,286). Until the director's rows exist the plan lists the 148 lines under "cannot be voiced yet". The list for the director is `docs/review/b45-new-lines-2.tsv` (148 rows, 3,592 characters a narrator).
+
+### 22.7 What is left
+
+For the **voice director**: a direction row for each of the 148 voice texts (`b45-new-lines-2.tsv`); the greeting lines must read well right after a name clip (`שלום,` opens each); the pilot of B-42 section 6 (a made-up name, `hello.1`, `topic.counting.glance`, `close`) is still the way to hear the seam; the two plain `שווה` / `שווים` welcome lines (`market.share`, `market.equal`) join the listening check of decision 3. For the **app-developer**: the clip ids above for the map card and the welcome (B-42 section 8, item 4); a test per family that the core line equals what the screen shows (the welcome captions come from the same file); the `welcome` and `skill` pack groups (22.4). For the **owner**: nothing new; the lines are approved in wording, and the approval for the run follows the rule of section 18 after the direction rows.
+
+### 22.8 The 148 lines approved, and the `h3` gate (hebrew-text-editor, 2026-11-02, after the director's direction, commit 568dfc2)
+
+**Condition (a)** (my own check): the 148 rows are `spoken: yes`, `text-ready`, group 2, none flagged (section 22.1, 22.2). **Condition (b)**: `docs/audio/b45-direction-checked.tsv` has 148 `directed` rows for them; I checked each against `docs/audio/voice-direction.csv`: a row for exactly the master's voice text, `note_for_text_editor` empty in all 148. They are in `docs/review/b45-approved-rows.tsv` (6,579 to **6,727** lines, hash of text, screen text and voice text) and are `owner-approved` with the comment of section 18. Master: `owner-approved` 9,930 to **10,078**, `text-ready` 3,882, `unchanged` 649; regenerated twice, byte-identical (only `hebrew-master.csv` changes). `b45-held-rows.tsv` has no row for the 148; the 98 group 3 `childLine` captions stay held (they have no clip of their own; their reason says the clip is the approved core line).
+
+**Plan (free `voice_gen plan`):** 4,166 lines and 179,315 characters a narrator, 57 lines and 1,476 characters a friend, 368,962 characters over nine voices (14.76 USD), 18 packs a narrator, and **nothing under "cannot be voiced yet"**.
+
+**Does `generate` still refuse the two `h3` lines? No.** `b.mathb01.15.h3` and `.16.h3` are `owner-approved` in the master by the owner's own word ("Fix them", `H3_COUNT_ADDED_COMMENT`, hash-locked in `b36-approved-rows.tsv`, not in the B-45 list on purpose: section 19.1). They have a direction row for exactly their voice text with no open ask (`b45-direction-checked.tsv`, the 29 `directed` rows of 19.7), and `plan --list` shows both as `[new] vo:b.mathb01.15.h3` and `.16.h3` at stability 0.70 (hint 3). `generate` refuses only when `texts.blocked` is not empty, and `plan` prints that same list: it is empty. No list is missing them. What is stale is the prose: `docs/audio/b45-voicing-plan.md` (the lines that say two held `h3` lines keep `generate` refusing) and the "two flags" paragraph of `docs/audio/voice-direction.md` section 14 were written before the owner's "Fix them" and the new `h3` wording; the director should correct them. (`generate` also needs an interactive terminal and the owner's typed figure; that is the owner's step, I did not run it.)
+
+## 23. The made-up name of the welcome-seam test clips (hebrew-text-editor, 2026-11-03)
+
+The pilot's name clips (`N51-seam-name`, `H51-seam-name` in `docs/audio/b45/pilot.json`, and the example in `docs/milestones/B42.md` section 6) use the made-up name **אַלְמוֹג,** (al-MOG, stress on the last syllable). It is a made-up name for a sound test only, and it is not used outside the pilot.
+
+My check: the spelling is אַ + לְ + מוֹ + ג (patach, a shva that closes the first syllable, a full vav with a holam, a plain gimel); nothing is ambiguous, so the pointing is full and the clip stays as authored. It is unisex, two syllables, a closed first syllable (`al`) and a stressed final syllable (`mog`): a name that opens a greeting as the real name clips will (name, a pause of about 400 ms, `שלום,`). I see no sound that ElevenLabs is likely to get wrong (no gemination, no guttural at the end, no foreign sound). It is 9 characters with the comma, 18 for the two voices; the pilot is **1,040 characters** (0.0416 USD), the whole plan 370,002 characters (14.80 USD). No text of the pack changes.
+
+## 21. B-42: the 48 daily-welcome lines (hebrew-text-editor, 2026-11-02; `needs-editor` in the pack once they exist, `text-ready` here)
+
+`docs/review/b42-welcome-lines.tsv` now has, per line, the final screen text (`hebrew`), the `voice_text`, `status` (`text-ready`), `chars`, `changes` (why, and the pipeline's own notes), `draft` (the old text when it changed) and the curriculum-expert's `note`. The voice text was made with the editor's own rules (`analyse()` of `tools/hebrew_voice_review.py`, so `!` became a comma, number words and the audited words keep their nikud) and checked: no `!`, no U+05C7, no digit, Latin letter or curly bracket. Nothing was added to `core.he.json` (the owner has not approved the B-42 plan), and the master table has no welcome rows yet.
+
+**Size:** 1,286 characters a voice (the plan estimated 1,234 unpointed); 2,572 for the two narrators, 11,574 for nine voices (about 0.46 USD at 0.04 per 1,000).
+
+**The open points**
+1. **שְׁלָבִים, not שְׁלַבִּים.** The plural of שָׁלָב is שְׁלָבִים (as the CS-A-01 childLine writes it). Fixed in `topic.robots.steps`.
+2. **מַה / מָה.** The rule: מָה before א ה ח ע (and ר), מַה with a dagesh in the next letter before the other letters. Checked: `logic.same` (דּוֹמֶה, שּׁוֹנֶה), `logic.story` (קֹּדֶם, בַּסּוֹף) and `market.missing` (מָה חָסֵר) were right; `robots.steps` had `מַה אַחַר כָּךְ` and is now `מָה אַחַר כָּךְ`. `market.measure` is reworded so that it needs no question word.
+3. **גּוּפִים for Band A.** Dropped: `topic.shapes.solids` is now `כַּדּוּר, קֻבִּיָּה וְגָלִיל` (words a 3 to 4 year old knows). Curriculum-expert: confirm that SHP-A-07 uses ball, cube and cylinder.
+4. **נִקַּח / נוֹרִיד.** נִקַּח stays: it is the child word of the skills (`מוֹסִיפִים וְלוֹקְחִים`, `לוֹקְחִים אֶחָד`); נוֹרִיד is the school word for subtract.
+5. **שָׁוֶה.** `market.share` keeps the idiom `שָׁוֶה בְּשָׁוֶה`; `market.equal` is now `נִבְדֹּק אִם שְׁנֵי הַצְּדָדִים שָׁוִים` (the draft `שֶׁשָּׁוֶה זֶה אוֹתוֹ דָּבָר מִשְּׁנֵי הַצְּדָדִים` was heavy to say). Voice texts have plain `שווה` / `שווים`, following decision 3 of the B-45 plan; if the owner picks the pointed form after the pilot, change both lines together.
+6. **Shortening `shapes.position`:** `הַיּוֹם נְגַלֶּה אֵיפֹה כׇּל דָּבָר נִמְצָא.` (27 characters unpointed instead of 45); still no left or right.
+
+**Other changes:** `hello.1` (`אֵיזֶה כֵּיף לְהִתְרָאוֹת` is the word for goodbye; now `אֵיזֶה כֵּיף לִרְאוֹת אֶתְכֶם`); `counting.big` (`נִסְפֹּר עַד מִסְפָּרִים` was not Hebrew; now `נִסְפֹּר מִסְפָּרִים גְּדוֹלִים`); `counting.order` (`צִיר הַמִּסְפָּרִים`, the word of the skills, not `שׁוּרַת`). Kept: `logic.think` (בַּלָּשִׁים), `robots.fix` (screen `הַתׇּכְנִית`, voice `התוכנית`), the land lines and `close`.
+
+**For the voice director.** (a) Greetings follow a name clip that says only the name as a call: each begins `שלום,` and stands alone as well. (b) Keep the pointing in the voice texts: `נְגַלֶּה`, `נֵצֵא`, `נְחַלֵּק`, `נְפָרֵק`, `אֶחָד`, `לִשְׁתֵּי`, `שְׁנֵי`, and the land names `יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר` (as in the bottle lines). (c) `topic.market.share` and `.equal` carry plain `שווה` / `שווים`: they join the listening check of decision 3. (d) `topic.shapes.solids` has `גליל` (cylinder, "galil"), not `גְּלִיל`: listen. (e) No new tone: all are greeting-level.
+
+## 24. B-42: the parent screen "how the name is said" (hebrew-text-editor, 2026-11-03; screen-only, `needs-editor` in `he.dart` until the owner approves)
+
+Fourteen strings in `app/lib/strings/he.dart` (`areaNameSpoken`, `nameSpoken*`), all for the parent, plain Hebrew without nikud, plural "you". Nothing is voiced and no welcome line changed. The `Str` mechanism has one global `review` of `needs-editor`; there is no per-string reviewed state, so the section comment in `he.dart` now says "reviewed by the hebrew-text-editor 2026-11-03, waiting for the owner".
+
+**Decisions**
+1. **"הקלטה" is gone.** In the parent area `ההקלטה` already means the microphone (`ההקלטה נמחקת מיד ולא נשמרת`, the voice-answers line). A made voice clip of the name is not a recording, and next to "the name is sent to the voice service" a parent could read it as a recording of the child. Every use is now `קטע השמע` (and `הכנת קטעי שמע` in the off message). A parent hears the difference in the privacy line.
+2. **`להאזין` became `השמעה`.** The buttons of the parent area are nouns (`שמירה`, `רענון`, `ניתוק`); the button also plays the clip. The help line quotes the same word.
+3. **The help line asks for a first name only** (`כתבו את השם הפרטי`), the owner's rule of 2026-10-25 (only a first name may reach ElevenLabs); the screen does not enforce it, so the wording has to. The friend is `החבר שנבחר` (the word of the parent area and of `friendChosenSemantics`), in place of `הדמות שהילד בחר` and `בקולו`, which had a gender; the daily welcome is `הברכה היומית` in place of `ברכה של כל יום`.
+4. **Errors say what to do.** `nameSpokenBadChars` also tells that the nikud follows a letter and that hataf qamats and qamats qatan are not accepted (the validator refuses U+05B3 and U+05C7; before, a parent who typed `חֳ` got a message that did not explain it). `nameSpokenTooLong` says that the nikud marks count toward the 24 (the limit counts them). `nameSpokenCap` is `המכסה היומית של קטעי השמע` (not "the number of recordings of today"). `nameSpokenOffline` has `לאינטרנט`, like `setupError`. `nameSpokenSaved` is `השם נשמר.` (what was saved).
+5. **Kept:** `areaNameSpoken` and `nameSpokenTitle` (a friendly spoken label that names the thing), the privacy line's structure, the `{child}` placeholder (filled with `displayChildName`; no digit, Latin letter or variable but `{child}`). `nameSpokenField` became `איך להגיד את השם` so the floating label is a full phrase.
+
+**Open for the owner**
+1. `nameSpokenBadChars` says the screen does not accept hataf qamats or qamats qatan. Is that the wording you want, or should the screen say which letter to type instead (a parent who needs the "o" sound of `חָכְמָה` has no way to write it)? That is a product question for the voice director and the app-developer.
+2. `nameSpokenOffline` is also shown when the server does not have the child yet (`NameVoiceFailure.notThere`). The wording is true enough (nothing could be reached) but a different line for that case would be more exact; I did not write one because the screen's `switch` is the app-developer's.

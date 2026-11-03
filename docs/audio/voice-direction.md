@@ -61,6 +61,19 @@ are corrected in place where they said otherwise.
 
 ---
 
+### Addendum of 2026-11-02 (B-45, read before sections 3, 4 and 8)
+
+The full voicing plan is `docs/audio/b45-voicing-plan.md`; the pilot spec is `docs/audio/b45/pilot.json`. What changed:
+
+- **Tones are now stabilities in `content/voices.json`** (`styles`, `styleRules`), the values the owner approved in round 3:
+  similarity 0.8; stability 0.5 default, ask 0.60, hint 0.65, hint 3 0.70, thinking 0.55, ceremony 0.45, cheer 0.35 (not 0.1).
+  This **supersedes the `style` and `speed` columns of `voice-direction.csv` and the tables of sections 3 and 8**; the CSV's
+  `pace`, `pause_notes`, `listen_for` and `pronunciation` columns still guide the listening.
+- A rule that starts with `*` matches the end of an id (`*.h3`); it needs a small change in `voice_gen_lib.dart` (`styleOf`).
+- Friends say only their 9 own lines (section 2.3) once `voice_gen` has a narrators/ownLines scope; Nitzi and hero-son say all
+  3,991 lines of pack 0.11.0 (174,772 characters each, 6.99 USD each at Turbo list price).
+- The number two is respelled `שתַּיִם` (choice D) in `voices.json` › `pronunciation`.
+
 ## 1. What exists today (the starting point)
 
 ### 1.1 Voices
@@ -490,10 +503,10 @@ pronunciation entries) and about 186 for each friend. The number the tool prints
 | # | Rows | Request |
 |---|---|---|
 | T1 | `activity.b.mathb06.1`–`.8` › `hints.2` (8 rows) | drop the comma in `N, ועוד M:` so the sum is one phrase, as in `mathb01`/`mathb02` (`שֵׁשׁ ועוד שָׁלוֹשׁ:`) |
-| T2 | `activity.b.numb18.2`, `activity.b.shpb04.2`, `activity.log.pat.no.mixed` › `feedback.correct` | `לא,` → `לא.` (the answer alone, then the reason, as for number answers); `לא,` at the start of a correct line can sound like a not-yet |
+| T2 | **WITHDRAWN 2026-11-02 (section 14)** `activity.b.numb18.2`, `activity.b.shpb04.2`, `activity.log.pat.no.mixed` › `feedback.correct` | `לא,` → `לא.` (the answer alone, then the reason, as for number answers); `לא,` at the start of a correct line can sound like a not-yet |
 | T3 | `activity.b.mathb02.7`–`.10`, `activity.b.mathb06.1`–`.8` › `hints.2` (12 rows) | heard aloud, the count ends on the total but the child is asked to press the addend: the same problem as G1 (`mathb18`), but these rows are `text-ready`. Wording question for the editor and the owner |
-| T4 | `core.listen.again` | about 7 s; a full stop instead of the dash would give a real breath: `לא שמעתי טוב. אפשר להגיד שוב, או ללחוץ על התשובה.` |
-| T5 | `activity.x.mathb19.7` › `feedback.incorrect.0` | about 9 s for a not-yet; shorter wording if possible |
+| T4 | **WITHDRAWN 2026-11-02 (section 14)** `core.listen.again` | about 7 s; a full stop instead of the dash would give a real breath: `לא שמעתי טוב. אפשר להגיד שוב, או ללחוץ על התשובה.` |
+| T5 | **WITHDRAWN 2026-11-02 (section 14)** `activity.x.mathb19.7` › `feedback.incorrect.0` | about 9 s for a not-yet; shorter wording if possible |
 | T6 | 26 long count lists (`LONG LIST` in the CSV) | no change now; only if the pilot shows them rushed: `…` between the numbers (as offered in hebrew-notes.md section 6) |
 | T7 | the 23 pronunciation words (`pronunciation` column) | confirm the pointing of each proposed entry |
 | T8 | `המממ` (core lines and 60 rows) | if the audition reads it as letters, the editor chooses another spelling |
@@ -555,3 +568,79 @@ See the report; the same list with audio descriptions, kept here for the record:
 - AES TD1004.1.15-10, loudness for streaming and network file playback (−16 to −20 LUFS for mobile): https://www.production-expert.com/home-page/2015/11/17/aes-release-recommendations-for-loudness-of-audio-streaming-and-network-file-playback
 - ITU-R BS.2434 (−16 LUFS, −1 dBTP for short-form content): https://www.itu.int/dms_pub/itu-r/opb/rep/R-REP-BS.2434-2018-PDF-E.pdf
 - Repo: `docs/design-spec.md` sections 5.4, 10 and 11; `docs/PLAN.md` (ElevenLabs prices); `docs/milestones/M9.md` Q5.
+
+---
+
+## 14. B-45 follow-up (2026-11-02): direction for the held rows, and the old asks
+
+**Direction rows.** `tools/voice_direction.py` now reads spoken rows with status `text-ready`, `owner-approved`,
+`voice-ready` or `voiced` (it read only `text-ready`, so a rerun would have dropped every approved row). The table
+`docs/audio/voice-direction.csv` has 2,546 rows: 1,446 of the 1,862 rows of 2026-10-28 (their text is unchanged) plus
+1,100 texts that had none. 416 old rows described a text that has changed since (points added, wording changed by
+B-13, B-15, B-36, B-40); they are kept in `docs/audio/voice-direction-superseded.csv` and no longer in the table. The
+script is a pure function of the master table: two runs give the same bytes.
+`docs/audio/b45-direction-checked.tsv` lists the 561 held rows I looked at and the result for each:
+447 `directed`, 2 `directed-flag`, 98 `not-voiced`, 14 `ask-withdrawn`.
+
+**What I read in the 340 new texts (449 rows).** Numbers are in the right gender for the noun (שִׁשָּׁה צעדים,
+שָׁלוֹשׁ צלחות, the teens in the feminine); `שווה` and `מספר` carry the pronunciation entries of the table; each
+number-answer line starts with the number alone and a full stop; the lists (`LONG LIST`, 9 to 11 items) need no change
+before the pilot. Nothing here needs a punctuation change before voicing.
+
+**The 98 `childLine` rows** have no `vo:` id: the app shows them on the map card and never says them. There is nothing to
+direct. They are `not-voiced` in the checked list (T9 stands: `spoken: no` is the editor's decision).
+
+**Two flags for the editor and the curriculum-expert (a wording question, not a sound problem; the lines can be said). Closed later on 2026-11-02: the two lines were fixed and are `owner-approved` through the b36 list, directed (0.70); `generate` no longer refuses on them.**
+`b.mathb01.15.h3` and `b.mathb01.16.h3` count up to the total (5, 7) and then ask the child to press the added number
+(2, 3). It is the same pattern as T3. The line is said clearly either way; whether the child understands it is theirs.
+
+**The three old asks, decided.**
+- **T2, `לא,` → `לא.` (10 rows, 3 texts): withdrawn.** All three answer a yes/no question where the child just tapped
+  "לא"; the voice echoes the child's own answer, so "לא, ..." is agreement. A full stop would end the word on a falling
+  pitch and make it a flat "no" next to a correct tick, which is the thing I wanted to avoid. Round 3 did not test this
+  form, so I have not heard it: it is the first item of the batch-1 listening check (below). If it sounds like a
+  not-yet, the ask comes back as `לֹא.` for those 10 rows (a punctuation change only).
+- **T4, `core.listen.again` ("LONG", 1 row): withdrawn.** The 7 s was an estimate from the speed of the style, and the v4
+  models drop speed. The line is 9 words and has one dash, which is already a beat.
+- **T5, `x.mathb19.7`/`.8`/`.9` ("LONG", 3 rows): withdrawn.** It is already two sentences with a full stop between
+  them, so "split at a full stop" asked for what the text has. The "LONG" test (time over a guessed budget) was also
+  the wrong test; round 3 approved the long hint-3 line (N08) and the "try again with a reason" lines (N12, N15).
+  The script now asks for a split only when 18 or more words run with no full stop, colon or dash (none today).
+
+**Added to the listening check of batch 1.** The 10 rows `b.numb18.2/.4/.5/.7.correct`, `b.shpb04.2/.4/.7/.8.correct`,
+`log.pat.no.mixed.correct`, `log.pat.no.things.correct`: the "לא" is bright and sure and runs into the reason; it must
+not sound like a "not yet". `core.listen.again`: soft, unhurried, the fault is the helper's ears. `x.mathb19.7`: a real
+pause at the full stop before "בואו נשווה".
+
+**Not changed:** the 66 live-helper rows and the 2 per-name app strings are outside this run.
+
+**Addition (2026-11-02, the 29 lines of `docs/review/b45-new-lines.tsv`).** Every one has a direction row for exactly its
+voice text and no open ask (`docs/audio/b45-direction-checked.tsv`, 29 `directed`): the two fixed MATH-B-01 `h3` lines
+(hint3, 0.70, the added numbers counted in the feminine) and 27 core lines. The 25 `core.adventure.*` lines are an
+invitation (new kind `invite`, default 0.50, even, ends level); `core.rest.goodbye` is a goodbye (0.50, soft);
+`core.home.bubble` is a question and has a new `ask` rule in `content/voices.json` (0.60). The pointed land words
+`יַעַר`, `מְעָרַת`, `נְמַל`, `כְּפַר` are right and stay; `מה בבקבוק?` stays plain. `tools/voice_direction.py` now marks as
+"own" only the nine `ownLines` of `content/voices.json`; the other core lines are narrator lines (the older rows said
+"own" for all core lines).
+
+**Addition (2026-11-02, evening: the 148 lines of `docs/review/b45-new-lines-2.tsv`).** Every one has a direction row for
+exactly its voice text and no open ask (`docs/audio/b45-direction-checked.tsv`, 148 `directed`). `tools/voice_direction.py`
+has five new kinds: `welcome-hello` (4), `welcome-topic` (37), `welcome-land` (6), `welcome-close` (1) and `card` (100).
+- **Welcome (48, the nine voices, each friend in his or her own voice).** Default 0.50 for all four kinds, so the name clip
+  (also 0.50), the greeting and the topic sit at one level. Every greeting starts `שלום,`: the clip must start on "shalom" with at most
+  50 ms of silence, and the comma is a light beat (about 200 ms); the app sets the gap after the name clip (about 500 ms Band A, 350
+  Band B, 300 Band C, B42.md 2.5). A topic is a light preview, level, ending down, never a question and never a promise; the land
+  line names the place whole (pointed land words read as pointed); the closing line is an invitation, warm and short. All lines are
+  "we" or genderless, so a friend of either gender says them with no grammar to fix; the voice id decides the timbre
+  (Keshet still has a male voice id, plan section 8 decision 4). The pilot has the seam check with a made-up name only; the real
+  name clip is a separate later step and never Claude's.
+- **Map cards (100, narrators only).** A calm naming of what a picture is, short, ending down softly. New `styleRules` entry
+  `vo:core.skill.` in `ask` (0.60, the level of the prompts: the same kind of sentence, and 100 short clips should sound alike).
+  Undo = remove that one line (plan decision 9).
+- **The listening check** gets: `market.share` and `market.equal` join the `שווה`/`שווים` check (sha-VE, sha-VIM; the pilot's
+  clips 43 and 44 decide whether a pronunciation entry is needed); `נשווה` (nash-VE) and `משווים` (mash-VIM) are the verb
+  "compare", a separate small check; the rare words in the cards (`מרובע`, `מחומש`, `משושה`, `גליל`, `חרוט`, `פירמידה`, `ציר`,
+  `כבד`, `הקשת`, `בלשים`, `קובייה`) are in plain letters like the approved lessons that use them; they are read by ear in batch
+  1 before any entry is added. The two cards with "…" (`log_b_08`, `math_b_14`) must keep a short level beat, not a hum.
+- **Asks:** none. A text was not changed. The "OVER" flags of the table (a guessed budget at a speed the v4 models drop) are
+  not asks (see above).

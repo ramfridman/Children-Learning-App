@@ -36,11 +36,14 @@ final class SeenMark extends HintMark {
 
 /// A number badge (paper, a sky ring): [n] things counted so far. [big] is the count card of the end of a count.
 final class BadgeMark extends HintMark {
-  const BadgeMark(this.at, this.n, {this.big = false});
+  const BadgeMark(this.at, this.n, {this.big = false, this.side});
 
   final Offset at;
   final int n;
   final bool big;
+
+  /// The side of a [big] badge, where it must be smaller than its own 64 (a sample under a tile, QA-B36-1); null for its own.
+  final double? side;
 }
 
 /// P5 (pair lines): dotted lines between partners; the things in [unpaired] get a sky ring.
@@ -246,7 +249,13 @@ final class SeesawMark extends HintMark {
 /// Where the body of a pointing hand lies: [guide] is the hand's own way, from the guide's side above the fingertip (it never
 /// reaches the speech bubble, see `HintOverlay`); [below] turns the hand half round so that its body lies under the fingertip, for
 /// a target whose surroundings above it (the shop's total, a bin's label) have to stay in view.
-enum HandFrom { guide, below }
+///
+/// The four level hands lie on their side, the pointing finger level: [rightHigh] and [rightLow] have their body to the right of
+/// the fingertip (the hand points left), [leftHigh] and [leftLow] to the left (it points right). A high hand has its palm and
+/// curled fingers above the line of the pointing finger and its thumb under it; a low hand the other way round. They count a
+/// small thing in a narrow band, between the top bar and a number under it, that a hand from above or below would cover
+/// (QA-B36-11: the empty places over a number sentence on a phone).
+enum HandFrom { guide, below, rightHigh, rightLow, leftHigh, leftLow }
 
 /// P12 (the pointing hand): the fingertip is on [tip]. [press] makes a sky ripple at the tip (the "tok"). [snap] puts the hand where
 /// it is told at once, with no glide: the hand of a trace follows a walking dot a few points at a time. [from] is where the hand's

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import '../app/reward_providers.dart';
 import '../characters/character.dart';
 import '../characters/character_view.dart';
 import '../rewards/outfits.dart';
+import '../voice/name_clips.dart';
 import '../voice/voice_director.dart';
 
 /// A character that talks when the voice director says its line is playing and rests in [resting] otherwise.
@@ -77,12 +79,18 @@ class MapCompanionState extends ConsumerState<MapCompanion> with SingleTickerPro
         if (s == AnimationStatus.completed && mounted) setState(() => _waving = false);
       });
 
-  /// Waves and greets.
-  void greet() {
+  /// Waves and greets: says [voice] (the widget's greeting when null). With a [nameClip] the child's name comes first, as a
+  /// call; only a line that may follow a name ([sayWithName]) is said that way.
+  void greet({String? voice, Uint8List? nameClip}) {
     _wave.forward(from: 0);
     setState(() => _waving = true);
-    final String? voice = widget.greetingVoice;
-    if (voice != null) unawaited(_director.say(voice));
+    final String? line = voice ?? widget.greetingVoice;
+    if (line == null) return;
+    if (nameClip == null) {
+      unawaited(_director.say(line));
+    } else {
+      unawaited(sayWithName(_director, nameClip, line));
+    }
   }
 
   @override

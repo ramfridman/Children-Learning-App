@@ -2,11 +2,25 @@
 // the server's own character table, and the history item is deleted right after use.
 const BASE = "https://api.elevenlabs.io";
 
+/** The voice settings sent with a request (the same shape `content/voices.json` has). */
+export interface VoiceSettings {
+  stability: number;
+  similarity_boost: number;
+  use_speaker_boost: boolean;
+}
+
+/** The small format a tutor line uses unless the caller names another. */
+export const DEFAULT_OUTPUT_FORMAT = "mp3_22050_32";
+
 export interface VoiceRequest {
   voiceId: string;
   modelId: string;
   text: string;
   timeoutMs: number;
+  /** An `mp3_<rate>_<kbps>` format; [DEFAULT_OUTPUT_FORMAT] when absent. */
+  outputFormat?: string;
+  /** Sent as `voice_settings` when given (the child's name clip uses the pack's settings). */
+  settings?: VoiceSettings;
 }
 
 export interface VoiceAnswer {
@@ -18,8 +32,19 @@ export interface VoiceAnswer {
 
 export interface VoiceClient {
   speak(req: VoiceRequest): Promise<VoiceAnswer>;
-  /** Best effort: a failure is not an error for the child. */
-  deleteHistory(historyItemId: string): Promise<void>;
+  /**
+   * Deletes the provider's copy of a line. True when it is gone (or was already); false when the provider refused, was
+   * slow (3 s) or could not be reached. A failure is never an error for the child, but the caller says so in its log.
+   */
+  deleteHistory(historyItemId: string): Promise<boolean>;
+}
+
+/** How long one delete of the provider's history may take. */
+const HISTORY_DELETE_MS = 3000;
+
+/** [VoiceClient.deleteHistory] with one more try after a failure. */
+export async function deleteHistoryWithRetry(voice: VoiceClient, historyItemId: string): Promise<boolean> {
+  return await voice.deleteHistory(historyItemId) || await voice.deleteHistory(historyItemId);
 }
 
 export class VoiceFailed extends Error {
@@ -46,12 +71,19 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
       const timer = setTimeout(() => ctl.abort(), req.timeoutMs);
       try {
         const res = await fetchFn(
-          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=mp3_22050_32`,
+          `${BASE}/v1/text-to-speech/${encodeURIComponent(req.voiceId)}?output_format=${
+            encodeURIComponent(req.outputFormat ?? DEFAULT_OUTPUT_FORMAT)
+          }`,
           {
             method: "POST",
             signal: ctl.signal,
             headers: { "xi-api-key": apiKey, "content-type": "application/json" },
-            body: JSON.stringify({ text: req.text, model_id: req.modelId, language_code: "he" }),
+            body: JSON.stringify({
+              text: req.text,
+              model_id: req.modelId,
+              language_code: "he",
+              ...(req.settings ? { voice_settings: req.settings } : {}),
+            }),
           },
         );
         if (!res.ok) {
@@ -74,15 +106,22 @@ export function elevenLabsClient(apiKey: string, fetchFn: typeof fetch = fetch):
     },
 
     async deleteHistory(id) {
-      if (!/^[A-Za-z0-9]{6,60}$/.test(id)) return;
+      if (!/^[A-Za-z0-9]{6,60}$/.test(id)) return false;
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), HISTORY_DELETE_MS);
       try {
         const res = await fetchFn(`${BASE}/v1/history/${id}`, {
           method: "DELETE",
+          signal: ctl.signal,
           headers: { "xi-api-key": apiKey },
         });
         await res.body?.cancel();
+        // Gone, or already gone (404). A refusal (a key without the history permission, a 429, a 5xx) is not "deleted".
+        return res.ok || res.status === 404;
       } catch {
-        // The nightly sweep (M7) catches what this misses.
+        return false;
+      } finally {
+        clearTimeout(timer);
       }
     },
   };

@@ -61,7 +61,8 @@ GLYPHS = {
     '5': [thin([[72, 12], [30, 12], [26, 46]] + arc(48, 66, 28, 24, -120, 140, 16))],
     '6': [thin([[66, 12], [44, 26], [28, 50]] + arc(50, 66, 26, 24, 180, -180, 22))],
     '7': [[[22, 14], [78, 14], [40, 90]]],
-    '8': [thin(arc(50, 31, 20, 18, -90, -450, 20) + arc(50, 69, 24, 21, -90, -450, 22))],
+    # one stroke: down the left of the top loop, round the bottom loop, and up the right of the top loop; it crosses itself in the middle
+    '8': [thin(arc(50, 31, 20, 18, -90, -270, 10) + arc(50, 69, 24, 21, -90, 270, 22) + arc(50, 31, 20, 18, 90, -90, 10))],
     '9': [thin(arc(50, 34, 24, 22, 0, -360, 22) + [[74, 36], [70, 62], [46, 90]])],
     'circle': [thin(arc(50, 50, 34, 34, -90, -450, 28))],
     'square': [[[22, 22], [78, 22], [78, 78], [22, 78], [22, 22]]],
@@ -77,7 +78,7 @@ def lesson_ids(u, skill, a=0, b=None):
 def extra_numbers():
     u = Unit('band-b-extra-numbers', 'numbers',
              'Tracing the numerals 0 to 9 (T04) and matching numerals to sets (T16). Hebrew is a draft by Claude, needs-editor.', 60,
-             assets=['apple', 'star', 'fish', 'duck'], prefix='x')
+             assets=['apple', 'star', 'fish', 'duck', 'glyph_1', 'glyph_3', 'glyph_3_rev', 'glyph_7', 'glyph_7_rev', 'glyph_8'], prefix='x')
     u.tag('M-NUM-WRITE', ['NUM-B-07'], 'הילד מתחיל לכתוב ספרה מהקצה הלא נכון, או מצייר אותה בכיוון הפוך.',
           'לכתוב ספרה גדולה באצבע על חול או על קמח במגש, ולהתחיל תמיד מהנקודה: מלמעלה.',
           ['embodied', 'symbolic'], 'מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה, וְהוֹלְכִים בַּכִּוּוּן שֶׁל הַנְּקֻדּוֹת. בּוֹאוּ נְנַסֶּה שׁוּב.')
@@ -94,7 +95,7 @@ def extra_numbers():
             ([2, 4, 6], 'apple', [1, 0, 2]), ([4, 5, 6], 'star', [0, 2, 1]), ([1, 2, 3, 4], 'fish', [2, 3, 0, 1])]
     for ns, obj, order in sets:
         o = OBJECTS[obj]
-        u.act('NUM-A-07', 'match', band='A', domain='numbers', pairs=[['n:%d' % n, '%s*%d' % (obj, n)] for n in ns], order=order, tag='M-CNT-SIZE',
+        u.act('NUM-A-07', 'match', band='A', domain='numbers', pairs=[['n:%d' % n, '%s*%d' % (obj, n)] for n in ns], order=order, tag='M-CNT-SIZE', size_cue='count',
               prompt='מַתְאִימִים כׇּל מִסְפָּר לַקְּבוּצָה שֶׁלּוֹ.', h3='סוֹפְרִים אֶת הַדְּבָרִים בְּכׇל קְבוּצָה, וּמוֹצְאִים אֶת הַמִּסְפָּר. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כׇּל מִסְפָּר עִם הַקְּבוּצָה שֶׁלּוֹ.')
     ids = lambda s, a=0, b=None: lesson_ids(u, s, a, b)
@@ -107,6 +108,7 @@ def extra_numbers():
     for l in u.d['lessons']:
         if l['skills'] == ['NUM-A-07']:
             l['band'] = 'A'
+    import band_b36; band_b36.extra_numbers(u, NAMES)  # noqa: E702
     u.save()
 
 
@@ -225,6 +227,7 @@ def extra_math():
     u.lesson('read-the-chart-more', 'כַּמָּה יוֹתֵר', ['MATH-B-19'], ids('MATH-B-19', 6), 'יָפֶה! אַתֶּם יוֹדְעִים לְהַשְׁווֹת.')
     u.lesson('set-the-clock', 'מְכַוְּנִים שָׁעוֹן', ['MATH-B-15'], ids('MATH-B-15', 0, 4), 'כׇּל הַכָּבוֹד! הַשָּׁעוֹן מְכֻוָּן.')
     u.lesson('set-the-clock-more', 'עוֹד שָׁעוֹת', ['MATH-B-15'], ids('MATH-B-15', 4), 'מְצֻיָּן! הַמַּחֲוָג הַקָּצָר אוֹמֵר אֶת הַשָּׁעָה.')
+    import band_b36; band_b36.extra_math(u, shekels, solution, coins_said)  # noqa: E702
     u.save()
 
 
@@ -232,7 +235,7 @@ def extra_math():
 def extra_shapes():
     u = Unit('band-b-extra-shapes', 'shapes',
              'Tracing the first shapes (T04) and matching a solid to its face (T16). Hebrew is a draft by Claude, needs-editor.', 60,
-             assets=['shape_circle', 'shape_square', 'shape_triangle', 'shape_rect', 'solid_cylinder', 'solid_cone', 'solid_pyramid', 'solid_box', 'solid_sphere'], prefix='x')
+             assets=['shape_circle', 'shape_square', 'shape_triangle', 'shape_rect', 'solid_cylinder', 'solid_cone', 'solid_pyramid', 'solid_box', 'solid_sphere', 'solid_cube'], prefix='x')
     u.tag('M-SHP-FACE', ['SHP-B-09'], 'הילד לא רואה איזו צורה שטוחה יש על הגוף: את העיגול על הגליל, את המשולש על הפירמידה.',
           'להטביע בפלסטלינה בסיס של כוס, של קופסה ושל קונוס, ולראות איזו צורה נשארת.', ['concrete', 'pictorial'],
           'כְּשֶׁמַּטְבִּיעִים אֶת הַגּוּף בַּחוֹל, נִשְׁאֶרֶת צוּרָה. בּוֹאוּ נְדַמְיֵן אֶת זֶה.')
@@ -245,14 +248,15 @@ def extra_shapes():
     pairs = [[('solid_cylinder', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')],
              [('solid_cone', 'shape_circle'), ('solid_box', 'shape_rect'), ('solid_pyramid', 'shape_triangle')],
              [('solid_cylinder', 'shape_circle'), ('solid_box', 'shape_rect')],
-             [('solid_sphere', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
+             # B-38: a sphere has no flat face, so the cube and its square take its place
+             [('solid_cube', 'shape_square'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
     for i, ps in enumerate(pairs):
         order = list(range(len(ps)))
         order = order[1:] + order[:1] if i % 2 == 0 else order[::-1]
         u.act('SHP-B-09', 'match', domain='shapes', pairs=[[l, r] for l, r in ps], order=order, tag='M-SHP-FACE',
               prompt='מַתְאִימִים כׇּל גּוּף לַצּוּרָה הַשְּׁטוּחָה שֶׁיֵּשׁ עָלָיו.', h3='מַטְבִּיעִים אֶת הַגּוּף וְרוֹאִים אֶת הַצּוּרָה שֶׁנִּשְׁאֶרֶת. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כׇּל גּוּף עִם הַצּוּרָה שֶׁלּוֹ.')
-    # B-15 addendum A2: which solid leaves a circle in the sand? The box leaves a square, and no sphere is offered
+    # B-15 addendum A2: which solid leaves a circle in the sand? The box leaves a rectangle, and no sphere is offered
     for i, right in enumerate(['solid_cylinder', 'solid_cone']):
         u.act('SHP-B-09', 'pick', domain='shapes', prompt='מַטְבִּיעִים בַּחוֹל, כְּמוֹ חוֹתֶמֶת. אֵיזֶה גּוּף מַשְׁאִיר עִגּוּל?',
               options=place(right, ['solid_box'], i), correct=right, tags={'solid_box': 'M-SHP-FACE'}, check='reverse', difficulty=0.6,
@@ -265,6 +269,7 @@ def extra_shapes():
     for l in u.d['lessons']:
         if l['skills'] == ['SHP-A-02']:
             l['band'] = 'A'
+    import band_b36; band_b36.extra_shapes(u)  # noqa: E702
     u.save()
 
 

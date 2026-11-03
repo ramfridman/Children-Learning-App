@@ -24,10 +24,13 @@
     }
   ],
   "representations": [
+    "concrete",
     "pictorial"
   ],
   "misconceptions": [
-    "M-SHARE-UNEQ"
+    "M-SHARE-UNEQ",
+    "M-MUL-ADD",
+    "M-CNT-CARD"
   ],
   "retention": {
     "targetRetention": 0.9,

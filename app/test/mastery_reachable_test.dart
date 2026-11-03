@@ -20,13 +20,8 @@ import 'support/pack_fixtures.dart';
 /// two of them and two representations for a core skill).
 ///
 /// The target is every skill reachable and `graph.report()` empty on the real pack. After B-15 part 2 every skill is
-/// reachable and the first test guards it in every run. `graph.report()` still lists skills that have items in only one
-/// representation: the rule asks for two for every skill, B-15 §1 only gave two to the core ones and to a few more (a
-/// decision for the curriculum-expert and the owner), so that test stays skipped. Run it with
-///
-///   flutter test --no-pub --dart-define=QA_OPEN=true test/mastery_reachable_test.dart
-///
-const bool _open = !bool.fromEnvironment('QA_OPEN');
+/// reachable, and since B-36 part D (a second representation for each of the 75 skills that had one, and LOG-A-01 as the
+/// prerequisite of LOG-A-09) `graph.report()` is empty too: both guards run in every run.
 
 /// Days the invented child plays; the rule needs 2, so 4 leaves room.
 const int _days = 4;
@@ -170,5 +165,5 @@ void main() {
   test('graph.report() is empty on the starter pack (every skill in at least two representations)', () {
     final List<String> report = SkillGraph(catalog).report();
     expect(report, isEmpty, reason: report.join('\n'));
-  }, skip: _open);
+  });
 }

@@ -10,7 +10,7 @@ while IFS= read -r -d '' f; do
     .env.example) continue ;;
   esac
   case "$f" in
-    .env|.env.*|*/.env|*/.env.*|*.p8|*.p12|*.pem|*.key|*.jks|*.keystore|*/key.properties|key.properties|build/*|*/build/*)
+    .env|.env.*|*/.env|*/.env.*|*.p8|*.p12|*.pem|*.key|*.jks|*.keystore|*/key.properties|key.properties|build/*|*/build/*|*.pyc|*/__pycache__/*|__pycache__/*)
       echo "Forbidden tracked file: $f" >&2
       fail=1 ;;
   esac

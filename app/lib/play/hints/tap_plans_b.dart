@@ -17,13 +17,20 @@ extension _BandB on _Plans {
     'COL-B-01' => _mix(level),
     'COL-B-02' => _shades(level),
     'NUM-B-08' => _teens(level),
+    // "Twenty fish, the cat asked for twelve": the plate to pick is a number between ten and twenty, drawn as a set.
+    'NUM-B-05' when _right.set != null => _teens(level),
     'NUM-B-10' => _barsOfOptions(level),
     'NUM-B-17' => _skipCount(level),
     'NUM-B-18' => _pairsUp(level),
     'MATH-B-10' || 'MATH-B-19' => _chart(level),
     'MATH-B-02' when a.group == null => _wholeParts(level),
+    // The same skill drawn as pictures: the part that hides behind a stone has a frame of its own, the others have no sentence to
+    // read and the family's plan (count on, take away) serves them.
+    'MATH-B-18' when a.row.isEmpty && a.group != null && a.group2 != null => _hiddenPart(level),
     'MATH-B-03' || 'MATH-B-07' || 'MATH-B-08' || 'MATH-B-18' => _sentence(level),
-    'NUM-B-16' when a.row.isNotEmpty => _sentence(level),
+    // With the two ten-frames on the stage the sentence stands under them, with no room over its numbers for cubes: the frames are
+    // what the hint counts then (the family's own plan).
+    'NUM-B-16' when a.row.isNotEmpty && !g.stacked => _sentence(level),
     'MATH-B-06' => _toTen(level),
     'MATH-B-14' => _week(level),
     'MATH-B-15' => _clockHour(level),
@@ -149,7 +156,8 @@ extension _BandB on _Plans {
   /// A teen as a full ten-frame and the ones on another; level 3 builds it frame by frame and shows the numeral last. A number that
   /// is missing from a row is found on a path of numbers.
   HintPlan _teens(int level) {
-    final int? n = _right.numeral;
+    // The number is the answer, the numeral of the stage, or (when the answers are plates) how many things the right plate holds.
+    final int? n = _right.numeral ?? a.stageNumeral ?? _right.set?.count;
     if (a.row.isNotEmpty) return sequence(level);
     if (n == null || n < 10 || n > 20) return generic(level);
     if (level == 1) return tilesInTurn();
@@ -190,6 +198,8 @@ extension _BandB on _Plans {
   HintPlan _skipCount(int level) {
     final int? c = _right.numeral;
     final List<int> said = numbersIn(a.promptLine.caption);
+    // A pile to count in twos (the sock pairs of the ten-frame) has no numbers in its question.
+    if (a.group != null && said.isEmpty) return _inTwos(level);
     if (c == null || said.length < 2) return generic(level);
     final int step = said[1] - said[0];
     if (step <= 0 || said.last + step != c) return generic(level);
@@ -468,9 +478,9 @@ extension _BandB on _Plans {
 
   /// Level 1 lights the signs; level 2 puts cubes over the numbers (for a missing part, over the whole: the known part cubes, the rest
   /// empty places to count); level 3 the hand goes over the numbers and the answer comes in the empty cell last.
-  HintPlan _sentence(int level) {
+  HintPlan? _sentence(int level) {
     final _Sentence? s = _readSentence();
-    if (s == null) return generic(level);
+    if (s == null) return null;
     final List<Rect> cells = g.rowCells();
     if (level == 1) {
       return HintPlan(<HintFrame>[
@@ -524,17 +534,50 @@ extension _BandB on _Plans {
     }
     // The empty places are counted one by one in the cell of the unknown: a badge with how many so far.
     final Offset counted = cells[s.unknown].center + Offset(0, 24 * k);
-    final List<HintMark> places = _cubesAbove(cells[s.r], whole, filled: known);
+    final List<HandMark> hands = _countHands(cells[s.r], whole, known);
     return _demo(<HintFrame>[
       HintFrame(<HintMark>[...parts, HandMark(cells[knownCell].center, press: true)], hold: _ms(800)),
-      for (int j = 1; j <= left; j++)
-        HintFrame(<HintMark>[
-          ...parts,
-          BadgeMark(counted, j),
-          HandMark((places[known + j - 1] as BlockMark).rect.center, press: true),
-        ], hold: _ms(650)),
+      for (final (int i, HandMark hand) in hands.indexed)
+        HintFrame(<HintMark>[...parts, BadgeMark(counted, i + 1), hand], hold: _ms(650)),
       _toAnswer(<HintMark>[...parts, BadgeMark(counted, left)]),
     ]);
+  }
+
+  /// The hand of each count of the missing part, in the order counted: the empty places of the whole's stack over [wholeCell]
+  /// ([whole] places, the first [known] full).
+  ///
+  /// On a tablet the hand comes from the guide's side, place after place in the stack's order. On a phone the stage stands right
+  /// under the top bar and the stack stands right on the whole's number, so a hand from above lies behind the eye button
+  /// (QA-B36-2) and a hand from below lies over the number (QA-B36-11). There the hand lies on its side, in the band of the
+  /// cubes: it comes in from the middle of the sentence (the whole is its first or its last number, and its neighbour is a sign
+  /// with nothing over it) and counts toward the stage's edge, so its body is always over places it has already counted. In the
+  /// stack's upper half its palm hangs under the finger (its thumb stays clear of the top bar); in the lower half, nearer the
+  /// number, the palm is above the finger and the thumb, the hand's smallest side, is under it, the hand rising a little.
+  List<HandMark> _countHands(Rect wholeCell, int whole, int known) {
+    final List<Rect> empty = <Rect>[
+      for (final HintMark m in _cubesAbove(wholeCell, whole, filled: known).sublist(known))
+        (m as BlockMark).rect,
+    ];
+    if (g.spec.stageIsCard) {
+      return <HandMark>[for (final Rect r in empty) HandMark(r.center, press: true)];
+    }
+    final bool fromRight = wholeCell.center.dx < g.w / 2;
+    // Toward the edge: from the right, the rightmost place first; from the left, the leftmost. A column's lower place first.
+    final List<Rect> order = List<Rect>.of(empty)
+      ..sort((Rect p, Rect q) {
+        final int x = fromRight ? q.center.dx.compareTo(p.center.dx) : p.center.dx.compareTo(q.center.dx);
+        return x != 0 ? x : q.center.dy.compareTo(p.center.dy);
+      });
+    return <HandMark>[
+      for (final Rect r in order)
+        HandMark(
+          r.center,
+          press: true,
+          from: r.center.dy > g.rowTop / 2
+              ? (fromRight ? HandFrom.rightHigh : HandFrom.leftHigh)
+              : (fromRight ? HandFrom.rightLow : HandFrom.leftLow),
+        ),
+    ];
   }
 
   // ---- MATH-B-02: a whole and its parts, with no picture on the stage ----

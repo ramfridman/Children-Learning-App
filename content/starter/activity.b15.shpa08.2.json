@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַכַּדּוּר? מִתַּחַת לַשֻּׁלְחָן."
+        "v": "אֵיפֹה הֶחָתוּל? עַל הַסַּל."
       }
     ],
     "replayButton": true
@@ -39,23 +39,23 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:pos_in",
-        "label": "בְּתוֹךְ",
+        "sprite": "asset:pos_cat_next",
+        "label": "לְיַד",
         "misconception": "M-SPACE-WORD"
       },
       {
         "id": "o2",
-        "sprite": "asset:pos_under",
-        "label": "מִתַּחַת"
+        "sprite": "asset:pos_cat_in",
+        "label": "בְּתוֹךְ",
+        "misconception": "M-SPACE-WORD"
       },
       {
         "id": "o3",
-        "sprite": "asset:pos_above",
-        "label": "מֵעַל",
-        "misconception": "M-SPACE-WORD"
+        "sprite": "asset:pos_cat_on",
+        "label": "עַל"
       }
     ],
-    "correct": "o2",
+    "correct": "o3",
     "shuffle": false,
     "unsureAllowed": true
   },
@@ -66,7 +66,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! הַכַּדּוּר מִתַּחַת לַשֻּׁלְחָן."
+          "v": "כֵּן! הֶחָתוּל עַל הַסַּל."
         }
       ]
     },
@@ -77,7 +77,7 @@
         "caption": [
           {
             "t": "he",
-            "v": "הַמִּלָּה אוֹמֶרֶת אֵיפֹה הַכַּדּוּר. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+            "v": "הַמִּלָּה אוֹמֶרֶת לָנוּ אֵיפֹה זֶה נִמְצָא. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
           }
         ]
       },
@@ -117,11 +117,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.pos_cat_on.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "אֵיפֹה הַבַּרְוָז? עַל הַסַּל."
         }
       ]
     },
@@ -132,7 +132,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הַשֻּׁלְחָן לְמַעְלָה, וְהַכַּדּוּר מִתַּחְתָּיו. עַכְשָׁו תּוֹרְכֶם."
+          "v": "נִסְתַּכֵּל עַל הַסַּל. הוּא סָגוּר, וְהֶחָתוּל יוֹשֵׁב לְמַעְלָה, אָז הֶחָתוּל עַל הַסַּל. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -152,6 +152,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַכַּדּוּר? מִתַּחַת לַשֻּׁלְחָן."
+    "altText": "אֵיפֹה הֶחָתוּל? עַל הַסַּל."
   }
 }

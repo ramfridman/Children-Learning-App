@@ -167,6 +167,79 @@ void main() {
   );
 
   test(
+    'plan gives a friend only its own lines, and lists only what the voices in the plan wait for',
+    () async {
+      // The same fixture, with Nitzi as the narrator and a friend who says only the greeting.
+      final Directory friendRepo = Directory('${tmp.path}${Platform.pathSeparator}friend-repo');
+      for (final FileSystemEntity e in repo.listSync(recursive: true)) {
+        if (e is! File) continue;
+        final String rel = e.path.substring(repo.path.length + 1);
+        _put(friendRepo, rel.replaceAll(Platform.pathSeparator, '/'), e.readAsStringSync());
+      }
+      _put(
+        friendRepo,
+        'content/voices.json',
+        jsonEncode(<String, Object?>{
+          'schema': 'voices/v1',
+          'modelId': 'eleven_v4_turbo',
+          'outputFormat': 'mp3_44100_64',
+          'settings': <String, Object?>{
+            'stability': 0.5,
+            'similarity_boost': 0.75,
+            'use_speaker_boost': true,
+          },
+          'narrators': <String>['nitzi'],
+          'ownLines': <String>['vo:core.greeting.hello'],
+          'voices': <String, Object?>{
+            'nitzi': <String, Object?>{'voiceId': 'FixtureVoice0001'},
+            'friend-x': <String, Object?>{'voiceId': 'FixtureVoice0002'},
+          },
+        }),
+      );
+      final String out = '${tmp.path}${Platform.pathSeparator}friend-out';
+      final List<String> base = <String>['plan', '--out', out, '--repo', friendRepo.path];
+      final ProcessResult friend = await run(<String>[...base, '--characters', 'friend-x'], fixture: false);
+      expect(friend.exitCode, 0, reason: '${friend.stderr}');
+      final String text = friend.stdout as String;
+      expect(text, contains('Lines per voice: 1'));
+      expect(
+        text,
+        contains(
+          'friend-x (eleven_v4_turbo, mp3_44100_64): new 1, changed 0, unchanged 0; characters to send for this voice 16',
+        ),
+      );
+      expect(
+        text,
+        isNot(contains('cannot be voiced yet')),
+        reason: 'the text-ready line is not the friend\'s',
+      );
+      final ProcessResult both = await run(<String>[
+        ...base,
+        '--characters',
+        'nitzi,friend-x',
+      ], fixture: false);
+      expect(both.exitCode, 0, reason: '${both.stderr}');
+      expect(both.stdout, contains('Lines per voice: nitzi 3, friend-x 1'));
+      expect(both.stdout, contains('vo:core.wait.fixture'), reason: 'the narrator waits for it');
+      // A misspelt own line stops the plan instead of shrinking the pack.
+      _put(
+        friendRepo,
+        'content/voices.json',
+        (friendRepo
+                .listSync(recursive: true)
+                .whereType<File>()
+                .firstWhere((File f) => f.path.endsWith('voices.json')))
+            .readAsStringSync()
+            .replaceAll('vo:core.greeting.hello', 'vo:core.greeting.helo'),
+      );
+      final ProcessResult typo = await run(<String>[...base, '--characters', 'friend-x'], fixture: false);
+      expect(typo.exitCode, 1);
+      expect(typo.stderr, contains('ownLines'));
+      expect(Directory(out).existsSync(), isFalse);
+    },
+  );
+
+  test(
     'audition-batch plan is free: every clip, the characters by model and the total, nothing written',
     () async {
       final String out = '${tmp.path}${Platform.pathSeparator}aud-plan';

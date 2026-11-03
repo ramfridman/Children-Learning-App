@@ -24,9 +24,12 @@
     }
   ],
   "representations": [
+    "concrete",
     "pictorial"
   ],
-  "misconceptions": [],
+  "misconceptions": [
+    "M-CNT-CARD"
+  ],
   "retention": {
     "targetRetention": 0.9,
     "initialStabilityDays": 1

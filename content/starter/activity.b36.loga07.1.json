@@ -1,0 +1,175 @@
+{
+  "schema": "activity/v1",
+  "id": "b36.loga07.1",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "logic",
+  "band": "A",
+  "skills": [
+    {
+      "id": "LOG-A-07",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "story",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.45
+  },
+  "prompt": {
+    "vo": "vo:b36.loga07.1.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַדָּגִים שָׁחוּ בְּשׁוּרָה: גָּדוֹל, קָטָן, גָּדוֹל, קָטָן. דָּג אֶחָד שָׂחָה הַרְחֵק. אֵיזֶה דָּג חוֹזֵר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "asset:fish_size_l",
+      "asset:fish_size_s",
+      "asset:fish_size_l",
+      "?",
+      "asset:fish_size_l",
+      "asset:fish_size_s"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:fish_size_s",
+        "label": "דָּג קָטָן"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:fish_size_l",
+        "label": "דָּג גָּדוֹל",
+        "misconception": "M-PAT-NEXT"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:fish_size_m",
+        "label": "דָּג בֵּינוֹנִי",
+        "misconception": "M-PAT-UNIT"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:b36.loga07.1.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! חוֹזֵר דָּג קָטָן."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-PAT-NEXT",
+        "vo": "vo:fb.pat_next",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PAT-UNIT",
+        "vo": "vo:fb.pat_unit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.core.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל חֵלֶק שֶׁחוֹזֵר מְסֻמָּן בְּקַו. נִסְתַּכֵּל אֵיךְ הוּא חוֹזֵר."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:b36.loga07.1.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "גָּדוֹל, קָטָן, גָּדוֹל, קָטָן, גָּדוֹל, קָטָן — בַּמָּקוֹם הֶחָסֵר בָּא דָּג קָטָן. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child repairs a pattern in a story",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "הַדָּגִים שָׁחוּ בְּשׁוּרָה: גָּדוֹל, קָטָן, גָּדוֹל, קָטָן. דָּג אֶחָד שָׂחָה הַרְחֵק. אֵיזֶה דָּג חוֹזֵר?"
+  }
+}

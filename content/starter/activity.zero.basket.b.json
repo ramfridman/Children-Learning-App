@@ -50,7 +50,8 @@
       {
         "id": "o2",
         "numeral": 2,
-        "label": "שְׁתַּיִם"
+        "label": "שְׁתַּיִם",
+        "misconception": "M-NUM-ZERO"
       },
       {
         "id": "o3",
@@ -121,11 +122,11 @@
     {
       "level": 2,
       "action": "show_fingers",
-      "vo": "vo:zero.basket.b.h2",
+      "vo": "vo:hint.empty_frame.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְפֹּר עִם הָאֶצְבָּעוֹת: אֵין כְּלוּם לִסְפֹּר."
+          "v": "הַמִּשְׁבְּצוֹת רֵיקוֹת — אֵין כְּלוּם לִסְפֹּר."
         }
       ]
     },

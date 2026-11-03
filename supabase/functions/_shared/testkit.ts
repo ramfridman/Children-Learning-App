@@ -355,12 +355,27 @@ export class FakeStore implements Store {
   upsertChild(familyId: string, c: ChildProfile) {
     if (this.tombstones.get(familyId)?.has(c.id)) return Promise.resolve("deleted" as const);
     const m = this.children.get(familyId) ?? new Map<string, ChildProfile>();
-    m.set(c.id, { ...c });
+    // As the database: no spelling in the request leaves the one the server has.
+    m.set(c.id, {
+      ...c,
+      nameSpoken: c.nameSpoken === undefined ? (m.get(c.id)?.nameSpoken ?? null) : c.nameSpoken,
+    });
     this.children.set(familyId, m);
     return Promise.resolve("saved" as const);
   }
   listChildren(familyId: string) {
     return Promise.resolve([...(this.children.get(familyId)?.values() ?? [])]);
+  }
+  childNameSpoken(familyId: string, childId: string) {
+    const c = this.children.get(familyId)?.get(childId);
+    return Promise.resolve(c ? { spelling: c.nameSpoken ?? null, companionId: c.companionId } : null);
+  }
+  tutorCostToday(familyId: string, nowMs: number) {
+    return Promise.resolve(this.costMicro.get(`${familyId}/${Math.floor(nowMs / 86_400_000)}`) ?? 0);
+  }
+  characterVoice(characterId: string) {
+    const c = this.characters.get(characterId);
+    return Promise.resolve(c ? { voiceId: c.voiceId } : null);
   }
   listTombstones(familyId: string) {
     return Promise.resolve([...(this.tombstones.get(familyId) ?? [])]);

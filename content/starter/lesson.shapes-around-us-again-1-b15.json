@@ -15,7 +15,11 @@
     "SHP-A-10"
   ],
   "items": [
-    "b15.shpa10.2"
+    "b15.shpa10.2",
+    "b36.shpa05.1",
+    "b36.shpa05.2",
+    "b36.shpa10.1",
+    "b36.shpa10.2"
   ],
   "estimatedMinutes": 5,
   "sequence": 15,

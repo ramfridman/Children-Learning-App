@@ -1,0 +1,393 @@
+{
+  "schema": "welcome-lines/v1",
+  "note": "Made by tool/welcome_lines_asset.dart from content/lines/core.he.json and content/lines/welcome-topics.json. Do not edit.",
+  "lines": {
+    "vo:welcome.hello.1": "שָׁלוֹם! אֵיזֶה כֵּיף לִרְאוֹת אֶתְכֶם.",
+    "vo:welcome.hello.2": "שָׁלוֹם! כֵּיף שֶׁאֲנַחְנוּ בְּיַחַד.",
+    "vo:welcome.hello.3": "שָׁלוֹם! יֵשׁ לִי רַעְיוֹן לְהַרְפַּתְקָה.",
+    "vo:welcome.hello.first": "שָׁלוֹם! הַיּוֹם מַתְחִילָה הַהַרְפַּתְקָה שֶׁלָּנוּ.",
+    "vo:welcome.topic.counting.count": "הַיּוֹם נִסְפֹּר יַחַד.",
+    "vo:welcome.topic.counting.glance": "הַיּוֹם נִרְאֶה כַּמָּה יֵשׁ בְּמַבָּט אֶחָד.",
+    "vo:welcome.topic.counting.numerals": "הַיּוֹם נַכִּיר אֶת הַמִּסְפָּרִים.",
+    "vo:welcome.topic.counting.compare": "הַיּוֹם נְגַלֶּה אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת.",
+    "vo:welcome.topic.counting.ordinal": "הַיּוֹם נְגַלֶּה מִי רִאשׁוֹן וּמִי אַחֲרוֹן.",
+    "vo:welcome.topic.counting.big": "הַיּוֹם נִסְפֹּר מִסְפָּרִים גְּדוֹלִים.",
+    "vo:welcome.topic.counting.order": "הַיּוֹם נְטַיֵּל עַל צִיר הַמִּסְפָּרִים.",
+    "vo:welcome.topic.counting.parts": "הַיּוֹם נְפָרֵק מִסְפָּרִים לַחֲלָקִים.",
+    "vo:welcome.topic.colors.match": "הַיּוֹם נְמַיֵּן וְנַתְאִים לְפִי צֶבַע.",
+    "vo:welcome.topic.colors.names": "הַיּוֹם נַכִּיר אֶת הַצְּבָעִים.",
+    "vo:welcome.topic.colors.mix": "הַיּוֹם נְעַרְבֵּב צְבָעִים וּנְקַבֵּל צֶבַע חָדָשׁ.",
+    "vo:welcome.topic.colors.shades": "הַיּוֹם נַכִּיר צֶבַע בָּהִיר וְצֶבַע כֵּהֶה.",
+    "vo:welcome.topic.colors.rainbow": "הַיּוֹם נְסַדֵּר אֶת צִבְעֵי הַקֶּשֶׁת.",
+    "vo:welcome.topic.shapes.names": "הַיּוֹם נַכִּיר צוּרוֹת.",
+    "vo:welcome.topic.shapes.world": "הַיּוֹם נְחַפֵּשׂ צוּרוֹת בָּעוֹלָם.",
+    "vo:welcome.topic.shapes.build": "הַיּוֹם נִבְנֶה תְּמוּנָה מִצּוּרוֹת.",
+    "vo:welcome.topic.shapes.solids": "הַיּוֹם נַכִּיר כַּדּוּר, קֻבִּיָּה וְגָלִיל.",
+    "vo:welcome.topic.shapes.position": "הַיּוֹם נְגַלֶּה אֵיפֹה כׇּל דָּבָר נִמְצָא.",
+    "vo:welcome.topic.shapes.lines": "הַיּוֹם נַכִּיר קַו יָשָׁר וְקַו עָקֹם.",
+    "vo:welcome.topic.shapes.sides": "הַיּוֹם נִבְדֹּק אֶת הַצְּלָעוֹת שֶׁל הַצּוּרוֹת.",
+    "vo:welcome.topic.logic.same": "הַיּוֹם נְחַפֵּשׂ מַה דּוֹמֶה וּמַה שּׁוֹנֶה.",
+    "vo:welcome.topic.logic.sort": "הַיּוֹם נְמַיֵּן לִשְׁתֵּי קְבוּצוֹת.",
+    "vo:welcome.topic.logic.patterns": "הַיּוֹם נְגַלֶּה אֵיךְ הַסֵּדֶר מַמְשִׁיךְ.",
+    "vo:welcome.topic.logic.story": "הַיּוֹם נְסַדֵּר סִפּוּר: מַה קֹּדֶם וּמַה בַּסּוֹף.",
+    "vo:welcome.topic.logic.size": "הַיּוֹם נְסַדֵּר דְּבָרִים לְפִי הַגֹּדֶל.",
+    "vo:welcome.topic.logic.think": "הַיּוֹם נַחְשֹׁב כְּמוֹ בַּלָּשִׁים.",
+    "vo:welcome.topic.robots.steps": "הַיּוֹם נְסַדֵּר שְׁלָבִים: מַה קֹּדֶם וּמָה אַחַר כָּךְ.",
+    "vo:welcome.topic.robots.move": "הַיּוֹם נַגִּיד לָרוֹבּוֹט לְאָן לָלֶכֶת.",
+    "vo:welcome.topic.robots.fix": "הַיּוֹם נְתַקֵּן אֶת הַתׇּכְנִית שֶׁל הָרוֹבּוֹט.",
+    "vo:welcome.topic.market.addsub": "הַיּוֹם נוֹסִיף וְנִקַּח, וְנִסְפֹּר כַּמָּה יֵשׁ.",
+    "vo:welcome.topic.market.share": "הַיּוֹם נְחַלֵּק שָׁוֶה בְּשָׁוֶה.",
+    "vo:welcome.topic.market.missing": "הַיּוֹם נְגַלֶּה מָה חָסֵר.",
+    "vo:welcome.topic.market.equal": "הַיּוֹם נִבְדֹּק אִם שְׁנֵי הַצְּדָדִים שָׁוִים.",
+    "vo:welcome.topic.market.measure": "הַיּוֹם נַשְׁוֶה גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל.",
+    "vo:welcome.topic.market.graph": "הַיּוֹם נִקְרָא תַּרְשִׁים שֶׁל תְּמוּנוֹת.",
+    "vo:welcome.topic.market.time": "הַיּוֹם נִלְמַד עַל הַזְּמַן.",
+    "vo:welcome.topic.market.money": "הַיּוֹם נְשַׂחֵק בַּחֲנוּת עִם מַטְבְּעוֹת.",
+    "vo:welcome.land.counting": "הַיּוֹם נֵצֵא אֶל גִּבְעוֹת הַסְּפִירָה.",
+    "vo:welcome.land.colors": "הַיּוֹם נֵצֵא אֶל מִפְרַץ הַצְּבָעִים.",
+    "vo:welcome.land.shapes": "הַיּוֹם נֵצֵא אֶל יַעַר הַצּוּרוֹת.",
+    "vo:welcome.land.logic": "הַיּוֹם נֵצֵא אֶל מְעָרַת הַחִידוֹת.",
+    "vo:welcome.land.robots": "הַיּוֹם נֵצֵא אֶל נְמַל הָרוֹבּוֹטִים.",
+    "vo:welcome.land.market": "הַיּוֹם נֵצֵא אֶל כְּפַר הַשּׁוּק.",
+    "vo:welcome.close": "בּוֹאוּ נִפְתַּח אֶת הַבַּקְבּוּק."
+  },
+  "lands": [
+    {
+      "land": "counting",
+      "domain": "numbers",
+      "line": "vo:welcome.land.counting",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.counting.count",
+          "skills": [
+            "NUM-A-01",
+            "NUM-A-02",
+            "NUM-A-03",
+            "NUM-A-04",
+            "NUM-A-06",
+            "NUM-A-09",
+            "NUM-A-14",
+            "NUM-B-03",
+            "NUM-B-11"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.counting.glance",
+          "skills": [
+            "NUM-A-05",
+            "NUM-A-10"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.counting.numerals",
+          "skills": [
+            "NUM-A-07",
+            "NUM-A-08",
+            "NUM-B-07",
+            "NUM-B-08"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.counting.compare",
+          "skills": [
+            "NUM-A-11",
+            "NUM-A-12",
+            "NUM-B-10"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.counting.ordinal",
+          "skills": [
+            "NUM-A-13"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.counting.big",
+          "skills": [
+            "NUM-B-01",
+            "NUM-B-02",
+            "NUM-B-04",
+            "NUM-B-05",
+            "NUM-B-17"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.counting.order",
+          "skills": [
+            "NUM-B-13"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.counting.parts",
+          "skills": [
+            "NUM-B-14",
+            "NUM-B-16",
+            "NUM-B-18"
+          ]
+        }
+      ],
+      "landLine": []
+    },
+    {
+      "land": "colors",
+      "domain": "colors",
+      "line": "vo:welcome.land.colors",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.colors.match",
+          "skills": [
+            "COL-A-01",
+            "COL-A-04",
+            "COL-A-07",
+            "COL-B-04"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.colors.names",
+          "skills": [
+            "COL-A-02",
+            "COL-A-03",
+            "COL-A-05",
+            "COL-A-06"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.colors.mix",
+          "skills": [
+            "COL-B-01"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.colors.shades",
+          "skills": [
+            "COL-B-02",
+            "COL-B-03"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.colors.rainbow",
+          "skills": [
+            "COL-B-06"
+          ]
+        }
+      ],
+      "landLine": []
+    },
+    {
+      "land": "shapes",
+      "domain": "shapes",
+      "line": "vo:welcome.land.shapes",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.shapes.names",
+          "skills": [
+            "SHP-A-01",
+            "SHP-A-02",
+            "SHP-A-03",
+            "SHP-A-04",
+            "SHP-B-01",
+            "SHP-B-03"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.world",
+          "skills": [
+            "SHP-A-05"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.build",
+          "skills": [
+            "SHP-A-06"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.solids",
+          "skills": [
+            "SHP-B-08"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.position",
+          "skills": [
+            "SHP-A-08"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.lines",
+          "skills": [
+            "SHP-A-10"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.sides",
+          "skills": [
+            "SHP-B-02",
+            "SHP-B-04"
+          ]
+        }
+      ],
+      "landLine": [
+        "SHP-A-07",
+        "SHP-B-09"
+      ]
+    },
+    {
+      "land": "logic",
+      "domain": "logic",
+      "line": "vo:welcome.land.logic",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.logic.same",
+          "skills": [
+            "LOG-A-01",
+            "LOG-A-02",
+            "LOG-B-06"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.logic.sort",
+          "skills": [
+            "LOG-A-03"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.logic.patterns",
+          "skills": [
+            "LOG-A-04",
+            "LOG-A-05",
+            "LOG-A-06",
+            "LOG-A-07",
+            "LOG-B-01",
+            "LOG-B-02",
+            "LOG-B-04"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.logic.story",
+          "skills": [
+            "LOG-A-08"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.logic.size",
+          "skills": [
+            "LOG-A-10",
+            "LOG-B-11"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.logic.think",
+          "skills": [
+            "LOG-B-08",
+            "LOG-B-09"
+          ]
+        }
+      ],
+      "landLine": [
+        "LOG-A-09"
+      ]
+    },
+    {
+      "land": "robots",
+      "domain": "cs",
+      "line": "vo:welcome.land.robots",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.robots.steps",
+          "skills": [
+            "CS-A-01"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.robots.move",
+          "skills": [
+            "CS-A-03",
+            "CS-A-04",
+            "CS-B-01"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.robots.fix",
+          "skills": [
+            "CS-B-04"
+          ]
+        }
+      ],
+      "landLine": [
+        "CS-A-05"
+      ]
+    },
+    {
+      "land": "market",
+      "domain": "math",
+      "line": "vo:welcome.land.market",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.market.addsub",
+          "skills": [
+            "MATH-B-01",
+            "MATH-B-03",
+            "MATH-B-07",
+            "MATH-B-08"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.market.share",
+          "skills": [
+            "MATH-A-03"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.market.missing",
+          "skills": [
+            "MATH-B-02",
+            "MATH-B-06",
+            "MATH-B-18"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.market.equal",
+          "skills": [
+            "MATH-B-09",
+            "MATH-B-13"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.market.measure",
+          "skills": [
+            "MATH-A-04"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.market.graph",
+          "skills": [
+            "MATH-A-07",
+            "MATH-B-19"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.market.time",
+          "skills": [
+            "MATH-A-05",
+            "MATH-B-14",
+            "MATH-B-15"
+          ]
+        },
+        {
+          "line": "vo:welcome.topic.market.money",
+          "skills": [
+            "MATH-A-06",
+            "MATH-B-17"
+          ]
+        }
+      ],
+      "landLine": [
+        "MATH-A-01",
+        "MATH-A-02",
+        "MATH-B-10",
+        "MATH-B-16"
+      ]
+    }
+  ]
+}

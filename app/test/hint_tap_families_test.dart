@@ -294,13 +294,21 @@ void main() {
           for (final SwatchMark s in f.marks.whereType<SwatchMark>()) s.rect,
       ];
       final TapGeometry g = geo(a);
+      // Over each tile (just before the fingertip), or, on a phone where the first tiles stand under the speech bubble, under each
+      // tile, centred (QA-B36-1).
       for (int i = 0; i < a.options.length; i++) {
         expect(
-          over.any((Rect r) => (r.center.dx - (g.optionTip(i).dx - 26)).abs() < 1),
+          over.any(
+            (Rect r) =>
+                (r.center.dx - (g.optionTip(i).dx - 26)).abs() < 1 ||
+                ((r.center.dx - g.optionTip(i).dx).abs() < 1 &&
+                    r.top > g.optionTip(i).dy + TapGeometry.tileHeight),
+          ),
           isTrue,
           reason: 'over tile $i',
         );
       }
+      expect(over.where((Rect r) => r.overlaps(g.bubbleRoom)), isEmpty, reason: 'no sample under the bubble');
     });
 
     test('shapes: the outline is the shape of the right option', () {
@@ -417,6 +425,8 @@ void main() {
               jsonDecode(File(f.path).readAsStringSync()) as Map<String, Object?>;
           final List<Object?> skills = json['skills']! as List<Object?>;
           if (!skills.any((Object? s) => (s! as Map<String, Object?>)['id'] == 'NUM-A-13')) continue;
+          // B-36: the second way of NUM-A-13 is a line the child builds (build_pattern), with no answer tiles to order
+          if (json['template'] != 'tap_answer') continue;
           seen++;
           final Map<String, Object?> answer = json['answer']! as Map<String, Object?>;
           final List<Object?> options = answer['options']! as List<Object?>;

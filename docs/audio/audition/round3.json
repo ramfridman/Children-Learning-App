@@ -1,0 +1,469 @@
+{
+  "schema": "audition/v1",
+  "title": "Round 3, the last check before voicing every line (B-45): the corrected and risky words in their real pack lines, one sample of each tone, the two flagship narrators, and two friends' own voices next to the borrowed narrator.",
+  "review": "needs-editor",
+  "note": "Written by the voice-and-sound-director on 2026-11-01. Texts are the approved voice_text of the pack (line clips) or, where the pack has no voice_text yet (the sum with שָׁוֶה, the times sentence, the bottle lines with a land name), the exact sentence written here. Model eleven_v4_turbo, as content/voices.json; four clips repeat on eleven_v4 for the model A/B. Style and speed are not sent on any v4 model, so a line's tone here is its stability alone: ask 0.60, hint 0.65, hint 3 0.70, calm try-again 0.60, praise and bottle 0.50, thinking 0.55, celebration 0.35, ceremony 0.45; the two 0.10 clips are today's cheer, to compare. Similarity 0.8 for all.",
+  "defaults": {
+    "character": "nitzi",
+    "model": "eleven_v4_turbo",
+    "format": "mp3_44100_64",
+    "settings": {
+      "stability": 0.5,
+      "similarity_boost": 0.8,
+      "use_speaker_boost": true
+    }
+  },
+  "clips": [
+    {
+      "id": "N01-oops",
+      "line": "vo:core.listen.mixed",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "אוּפְּס said 'UPS' (not 'ofs'); האוזניים said 'ha-oz-NA-yim'; kind and curious, the question rises. Tone: a calm 'say it again'."
+    },
+    {
+      "id": "N02-say",
+      "line": "vo:core.listen.say",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "תגידו לי said 'ta-gi-DU li' (not 'im-RU li'); a warm invitation."
+    },
+    {
+      "id": "N03-discover",
+      "line": "vo:core.thinking.together",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.55,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "נְגַלֶּה said 'ne-ga-LE' (we will find out), not 'nig-LE'; a thinking, curious tone."
+    },
+    {
+      "id": "N04-put",
+      "line": "vo:b36.shpa01.1.prompt",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "שָׂמִים said 'sa-MIM' (we put); a clear instruction, not a scold."
+    },
+    {
+      "id": "N05-queue",
+      "line": "vo:ordinal.first.prompt",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "בַּתּוֹר said 'ba-TOR' (in the queue), not 'be-TOR' (as); a real question: the pitch rises at the end."
+    },
+    {
+      "id": "N06-hint1",
+      "line": "vo:ordinal.first.h1",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Hint 1: very short, slow and soft, an invitation to listen again; no sigh, no scold."
+    },
+    {
+      "id": "N07-hint2",
+      "line": "vo:ordinal.first.h2",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.65,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Hint 2: a little more help, calm; 'ba-TOR' again; 'ri-SHON' clear."
+    },
+    {
+      "id": "N08-hint3",
+      "line": "vo:ordinal.first.h3",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.7,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Hint 3: shows the answer; the slowest and steadiest; a short beat at the dash before 'ללחוץ עליו'; ends warm."
+    },
+    {
+      "id": "N09-sky",
+      "line": "vo:math.time.noon.h3",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.7,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "בַּשָּׁמַיִם said 'ba-sha-MA-yim' (in the sky), stress on MA; בצהריים clear; a beat at the dash."
+    },
+    {
+      "id": "N10-praise",
+      "line": "vo:show.stars.5.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Praise: אֵלֶּה said 'E-le' (these), not 'e-LA'; חֲמִשָּׁה 'cha-mi-SHA'; glad, not shouting."
+    },
+    {
+      "id": "N11-right",
+      "line": "vo:b36.numa12.1.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "צדקתם said 'tz'dak-TEM' (you were right), not 'tza-dak-TEM'; praise that is glad and short."
+    },
+    {
+      "id": "N12-tryagain",
+      "line": "vo:fb.ord",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "A calm 'try again' after a mistake: curious and kind, never a scold; בַּתּוֹר 'ba-TOR'."
+    },
+    {
+      "id": "N13-box",
+      "line": "vo:b.shpb08.5.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "תיבה said 'tei-VA' (a box shape) and קופסה 'kuf-SA' (a shoebox): two different words; a beat at the dash."
+    },
+    {
+      "id": "N14-cube-q",
+      "line": "vo:b.shpb08.10.prompt",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "קובייה said 'ku-BI-ya' (cube), stress on BI; a short question with a rising end."
+    },
+    {
+      "id": "N15-cube-vs-box",
+      "line": "vo:fb.sqrect.solids",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "בקובייה 'ba-ku-BI-ya' against ולתיבה 've-la-tei-VA'; מלבן 'mal-BEN'; a calm 'try again' with a reason, never a lecture."
+    },
+    {
+      "id": "N16-teen",
+      "line": "vo:b.numb05.12.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "A teen number: שֵׁשׁ עֶשְׂרֵה 'shesh es-RE' (sixteen, feminine, for birds); a steady, clear number; praise tone."
+    },
+    {
+      "id": "N17-equals-plain",
+      "line": "vo:b.mathb03.10.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "= read from the plain word שווה: 'sha-VE' (equals) or 'SHA-ve'? The numbers shesh, shtayim, shmone clear.",
+      "note": "plain שווה is what the pack sends today (voices.json pronunciation is empty). If it is wrong, N18 is the fix: a pronunciation entry שווה = שָׁוֶה."
+    },
+    {
+      "id": "N18-equals-pointed",
+      "text": "כן, שֵׁשׁ ועוד שְׁתַּיִם שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The same sentence with שָׁוֶה pointed (what the pronunciation entry would send): 'sha-VE'. Better than N17?"
+    },
+    {
+      "id": "N19-times",
+      "text": "שְׁתַּיִם כָּפוּל שָׁלוֹשׁ שָׁוֶה שֵׁשׁ.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "× read as כָּפוּל 'ka-FUL' (times); a clean sum. The pack has no × line yet; this is the form CLAUDE.md fixes.",
+      "note": "a test sentence, not a pack line"
+    },
+    {
+      "id": "N20-cheer-count",
+      "line": "vo:celebrate.count_to_30",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Celebration at stability 0.35: עברתם 'a-va-r'TEM' (you passed); glad and short, never a shout."
+    },
+    {
+      "id": "N21-cheer-towers-035",
+      "line": "vo:celebrate.growing_towers",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "גְּדֵלִים said 'g'de-LIM' (they grow), not 'g'da-LIM' (sizes); celebration at 0.35: bright but even."
+    },
+    {
+      "id": "N22-cheer-towers-010",
+      "line": "vo:celebrate.growing_towers",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.1,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The same line at today's cheer stability 0.1: wobbly or shouted next to N21?"
+    },
+    {
+      "id": "N23-medal-045",
+      "line": "vo:core.ceremony.medal",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "מֵדַלְיָה said 'me-DAL-ya' (stress on DAL); ceremony at 0.45: proud and warm."
+    },
+    {
+      "id": "N24-medal-010",
+      "line": "vo:core.ceremony.medal",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.1,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The same line at today's ceremony stability 0.1: compare with N23."
+    },
+    {
+      "id": "N25-bottle-land",
+      "text": "בואו נֵצֵא להרפתקה אל גִּבְעוֹת הַסְּפִירָה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "Bottle invitation with a pointed land name: 'gi-vOT ha-s'fi-RA'; the name flows as part of the sentence; an inviting 'we', glad.",
+      "note": "voice_text of adventureWelcome with the land name of He.landCounting"
+    },
+    {
+      "id": "N26-bottle-land-plain",
+      "text": "בואו נֵצֵא להרפתקה אל גבעות הספירה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The same with the plain land name (no points). Same as N25, or a different reading?",
+      "note": "same sentence, land name plain"
+    },
+    {
+      "id": "N27-bottle-robots",
+      "text": "בואו נְבַקֵּר את נְמַל הָרוֹבּוֹטִים.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "tests": "The second bottle line; the land 'ne-MAL ha-ro-bo-TIM' (robot port): 'ro-BOT' stress.",
+      "note": "voice_text of adventureOtherLand with He.landRobots"
+    },
+    {
+      "id": "N01-oops-v4",
+      "line": "vo:core.listen.mixed",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "model": "eleven_v4",
+      "tests": "The same as N01 on the model eleven_v4 (twice the price per character): clearer or warmer?"
+    },
+    {
+      "id": "N08-hint3-v4",
+      "line": "vo:ordinal.first.h3",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.7,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "model": "eleven_v4",
+      "tests": "The same as N08 on eleven_v4."
+    },
+    {
+      "id": "N18-equals-pointed-v4",
+      "text": "כן, שֵׁשׁ ועוד שְׁתַּיִם שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "model": "eleven_v4",
+      "tests": "The same as N18 on eleven_v4."
+    },
+    {
+      "id": "N23-medal-045-v4",
+      "line": "vo:core.ceremony.medal",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "model": "eleven_v4",
+      "tests": "The same as N23 on eleven_v4."
+    },
+    {
+      "id": "H01-queue",
+      "line": "vo:ordinal.first.prompt",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son: ba-TOR; a natural male voice, a real question. This is also how Tzuri and Tamir ask a lesson question (they borrow hero-son)."
+    },
+    {
+      "id": "H02-sky",
+      "line": "vo:math.time.noon.h3",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.7,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son hint 3: ba-sha-MA-yim; calm and steady."
+    },
+    {
+      "id": "H03-praise",
+      "line": "vo:show.stars.5.correct",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son praise: E-le; glad, not shouting."
+    },
+    {
+      "id": "H04-cube-vs-box",
+      "line": "vo:fb.sqrect.solids",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son calm 'try again' with ku-BI-ya and tei-VA."
+    },
+    {
+      "id": "H06-equals-pointed",
+      "text": "כן, שֵׁשׁ ועוד שְׁתַּיִם שָׁוֶה שְׁמוֹנֶה.",
+      "settings": {
+        "stability": 0.5,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son: sha-VE."
+    },
+    {
+      "id": "H07-oops",
+      "line": "vo:core.listen.mixed",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.6,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son: UPS; a male helper whose 'ears got mixed up' sounds kind, not annoyed."
+    },
+    {
+      "id": "H08-cheer-towers",
+      "line": "vo:celebrate.growing_towers",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.35,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "hero-son",
+      "tests": "hero-son celebration at 0.35: g'de-LIM; bright but even."
+    },
+    {
+      "id": "F1-tzuri-own-medal",
+      "line": "vo:core.ceremony.medal",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "climber-tzuri",
+      "tests": "Climber Tzuri's OWN voice says the medal line (friends keep their own ceremonies); H01 is how he asks a lesson line (borrowed hero-son). One man, or two people?"
+    },
+    {
+      "id": "F2-tamir-own-medal",
+      "line": "vo:core.ceremony.medal",
+      "from": "voice_text",
+      "settings": {
+        "stability": 0.45,
+        "similarity_boost": 0.8,
+        "use_speaker_boost": true
+      },
+      "character": "tower-tamir",
+      "tests": "Tower Tamir's OWN voice says the medal line: deep, slow, gentle? H01 is his borrowed lesson voice."
+    }
+  ]
+}

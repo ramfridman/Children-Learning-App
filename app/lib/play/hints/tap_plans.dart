@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../content/hint_ladder.dart';
 import '../../content/models.dart';
 import '../../design/app_text.dart';
+import '../../design/tokens.g.dart';
 import '../count_tap_session.dart' show Dots;
 import '../hint_hand.dart';
 import '../hint_widgets.dart';
@@ -16,6 +17,7 @@ import 'sprite_outline.dart';
 import 'tap_geometry.dart';
 
 part 'tap_plans_b.dart';
+part 'tap_plans_c.dart';
 
 // What each family of `tap_answer` draws at each hint level (B-40 part 2; the plan is docs/curriculum/b40-visual-hint-ladder.md
 // section 5.1, the pictures are docs/design/b40-visual-hints.md section 5). Each level is a [HintPlan]: steps shown one after the
@@ -49,9 +51,19 @@ HintPlan? tapHintPlan(TapAnswerActivity a, TapGeometry g, int level) {
     TapFamily.add => p.add(l),
     TapFamily.numerals => p.numerals(l),
     TapFamily.measure => p.measure(l),
-    TapFamily.clockMoney => p.generic(l),
+    TapFamily.clockMoney => p.money(l),
   };
 }
+
+/// True for the items whose question is "how many did we add?" over one group on the stage: MATH-B-01, checked in reverse (the
+/// stage shows what was there, the answer is the added part). Only these two items (`b.mathb01.15` and `.16`) are drawn as a count
+/// of the added ones; every other item of the add family keeps its count on or its take away.
+bool countsAddedOnes(TapAnswerActivity a) =>
+    a.skillId == 'MATH-B-01' &&
+    a.checkType == 'reverse' &&
+    (a.group?.count ?? 0) > 0 &&
+    a.group2 == null &&
+    a.options.any((ChoiceOption o) => o.id == a.correctId && (o.numeral ?? 0) > 0);
 
 /// The colour a sprite name says (`ball_red`, `shape_circle_yellow`, `shade_blue_1`: the last part that is a colour), or null.
 String? colourOfSprite(String? ref) {
@@ -394,8 +406,9 @@ class _Plans {
   // ---- a sample the child compares the options with (TA-6 colour, TA-7 shapes, TA-9 same) ----
 
   /// Level 2 shows the sample (a swatch, an outline, a copy of the model) in a sky card; level 3 glides it over each option in
-  /// turn, and it stops on the one that matches. [make] draws the sample in a given box.
-  HintPlan _sample(int level, HintMark Function(Rect box) make) {
+  /// turn, and it stops on the one that matches. [make] draws the sample in a given box; [makeUnder] draws it in the smaller box
+  /// under a tile (the same as [make] when null).
+  HintPlan _sample(int level, HintMark Function(Rect box) make, {HintMark Function(Rect box)? makeUnder}) {
     if (level == 1) return look();
     final bool beside = _questionParts().isNotEmpty;
     final Rect card = beside ? _card : g.centre(110 * k, 100 * k);
@@ -415,11 +428,26 @@ class _Plans {
     final double s = math.min(50 * k, 60);
     Rect above(int i) =>
         Rect.fromCenter(center: g.optionTip(i) - Offset(26 * k, s / 2 + 1), width: s, height: s);
+    // On a phone the first tiles of a right-to-left row stand under the speech bubble, and a sample above them would be hidden
+    // (QA-B36-1). Then the sample glides under the tiles instead, centred under each one, in the room between the tiles' lip and
+    // the foot of the board (40, the room a phone has there); the hand still presses the tile's top edge. The whole glide goes
+    // under, so the sample keeps one path.
+    final Rect bubble = g.bubbleRoom;
+    final bool under =
+        g.tiles && <int>[for (int i = 0; i < _n; i++) i].any((int i) => above(i).overlaps(bubble));
+    final double su = math.min(s, 40);
+    Rect below(int i) => Rect.fromCenter(
+      center: g.optionTip(i) + Offset(0, TapGeometry.tileHeight + 8 + su / 2),
+      width: su,
+      height: su,
+    );
+    final HintMark Function(Rect box) small = makeUnder ?? make;
+    HintMark at(int i) => under ? small(below(i)) : make(above(i));
     return _demo(<HintFrame>[
       HintFrame(<HintMark>[make(home)], hold: _ms(700), reserve: reserve),
-      for (int i = 0; i < _n; i++) HintFrame(<HintMark>[make(above(i))], hold: _ms(800), reserve: reserve),
+      for (int i = 0; i < _n; i++) HintFrame(<HintMark>[at(i)], hold: _ms(800), reserve: reserve),
       HintFrame(
-        <HintMark>[make(above(_ci)), HandMark(g.optionTip(_ci), press: true)],
+        <HintMark>[at(_ci), HandMark(g.optionTip(_ci), press: true)],
         hold: _ms(1300),
         reserve: reserve,
       ),
@@ -492,7 +520,7 @@ class _Plans {
         'cone' => GhostKind.cone,
         'sphere' => GhostKind.circle,
         'pyramid' => GhostKind.pyramid,
-        'box' => GhostKind.box,
+        'box' || 'cube' => GhostKind.box,
         _ => null,
       };
     }
@@ -512,7 +540,7 @@ class _Plans {
   /// word says whether it is about stacking.
   HintPlan _solids(int level) {
     final ChoiceOption? ball = _first((String s) => s.contains('sphere') || s.contains('ball'));
-    final ChoiceOption? box = _first((String s) => s.contains('box'));
+    final ChoiceOption? box = _first((String s) => s.contains('box') || s.contains('cube'));
     if (_n != 2 || ball == null || box == null || _svg(ball.sprite) == null || _svg(box.sprite) == null) {
       return generic(level);
     }
@@ -613,33 +641,47 @@ class _Plans {
         ? (svg: _tableSvg, top: 0.18, foot: 0.96)
         : (where == 'in' ? (svg: _binSvg, top: 0.40, foot: 0.92) : (svg: _boxSvg, top: 0.22, foot: 0.92));
     final Rect card = g.centre(150 * k, 112 * k);
-    final double b = 52 * k;
-    final double d = 30 * k;
-    final Offset c = card.center;
-    Rect thing(double dx, double dy) =>
-        Rect.fromCenter(center: c + Offset(dx * k, dy * k), width: b, height: b);
+    // The scene is laid out at a size of its own (the thing 52, the toy 30), then the two together are scaled to fill the card and
+    // centred in it, so a basket and its duck read well at every relation (QA-B36-9: they were about 40 points in a card of 150).
+    const double b = 52;
+    const double d = 30;
+    Rect thing(double dx, double dy) => Rect.fromCenter(center: Offset(dx, dy), width: b, height: b);
     Rect small(double x, double y) => Rect.fromCenter(center: Offset(x, y), width: d, height: d);
     double top(Rect o) => o.top + shape.top * b;
     double foot(Rect o) => o.top + shape.foot * b;
-    final Rect o;
-    final Rect t;
+    final Rect o0;
+    final Rect t0;
     switch (where) {
       case 'above':
-        o = thing(0, 24);
-        t = small(c.dx, top(o) - 16 * k - d / 2);
+        o0 = thing(0, 24);
+        t0 = small(0, top(o0) - 16 - d / 2);
       case 'on':
-        o = thing(0, 18);
-        t = small(c.dx, top(o) - d / 2 + 1);
+        o0 = thing(0, 18);
+        t0 = small(0, top(o0) - d / 2 + 1);
       case 'next':
-        o = thing(-28, 8);
-        t = small(c.dx + 36 * k, foot(o) - d / 2);
+        o0 = thing(-28, 8);
+        t0 = small(36, foot(o0) - d / 2);
       case 'under':
-        o = thing(0, 0);
-        t = small(c.dx, foot(o) - d / 2 - 1);
+        o0 = thing(0, 0);
+        t0 = small(0, foot(o0) - d / 2 - 1);
       default:
-        o = thing(0, 14);
-        t = small(c.dx, top(o) - d * 0.1);
+        o0 = thing(0, 14);
+        t0 = small(0, top(o0) - d * 0.1);
     }
+    // What is drawn: the thing from its drawn top to its foot, and the toy.
+    final Rect drawn = Rect.fromLTRB(o0.left, top(o0), o0.right, foot(o0)).expandToInclude(t0);
+    final double z = math.min(
+      2,
+      math.min((card.width - 24 * k) / drawn.width, (card.height - 20 * k) / drawn.height),
+    );
+    Rect fit(Rect r) => Rect.fromLTWH(
+      card.center.dx + (r.left - drawn.center.dx) * z,
+      card.center.dy + (r.top - drawn.center.dy) * z,
+      r.width * z,
+      r.height * z,
+    );
+    final Rect o = fit(o0);
+    final Rect t = fit(t0);
     final List<HintMark> scene = <HintMark>[
       CardMark(card, const SizedBox.shrink()),
       // Something that holds the toy is drawn over it; anything else is drawn first.
@@ -758,7 +800,9 @@ class _Plans {
 
   HintPlan count(int level) {
     if (a.row.isNotEmpty) return _steps(level);
-    if (a.group == null) return generic(level);
+    // The answer is a plate of things (B-36 NUM-A-06, "give three of the seven"): counting the pile would count the wrong number.
+    if (_right.numeral == null && _right.set != null) return _plate(level);
+    if (a.group == null || _right.numeral == null) return generic(level);
     if (_right.numeral == 0) return _zero(level);
     final TapGeometry g2 = g.withReserve(_reserve);
     final List<Rect> objs = _groupRects(level == 1 ? g : g2, 0);
@@ -800,12 +844,14 @@ class _Plans {
       for (int j = 0; j < upTo; j++) BadgeMark(objs[j].topRight, j + 1),
     ];
     final List<HintMark> counted = <HintMark>[...badges(n), BadgeMark(_card.center, n, big: true)];
+    // A pile of nine or more is counted a little faster, so that the whole demonstration stays under ten seconds.
+    final int each = math.min(850, 7000 ~/ n);
     return _demo(<HintFrame>[
       HintFrame(const <HintMark>[], hold: _ms(500), reserve: _reserve),
       for (int i = 0; i < n; i++)
         HintFrame(
           <HintMark>[...badges(i + 1), HandMark(objs[i].center, press: true)],
-          hold: _ms(850),
+          hold: _ms(each),
           reserve: _reserve,
         ),
       HintFrame(<HintMark>[...counted, HandMark(objs[n - 1].center)], hold: _ms(900), reserve: _reserve),
@@ -823,7 +869,13 @@ class _Plans {
         ], hold: _ms(2400)),
       ]);
     }
-    final Rect card = g.centre(170 * k, 92 * k);
+    // Where the stage shows the zero itself (NUM-A-14), the card covers the whole numeral: on a tablet the numeral is taller than
+    // the card, and its top showed above it as a dark cap (QA-B36-10).
+    final Rect? numeral = a.stageNumeral == null ? null : g.stageNumeral;
+    final Rect card = g.centre(
+      math.max(170 * k, (numeral?.width ?? 0) + 24 * k),
+      math.min(g.h - 8, math.max(92 * k, (numeral?.height ?? 0) + 16 * k)),
+    );
     final List<HintMark> frame = <HintMark>[CardMark(card, const TenFrames(total: 10, filled: 0))];
     if (level == 2) return HintPlan(<HintFrame>[HintFrame(frame, hold: _ms(2600))], rest: frame);
     final List<Offset> cells = <Offset>[
@@ -1158,7 +1210,10 @@ class _Plans {
     if (level == 1) {
       return HintPlan(<HintFrame>[
         HintFrame(<HintMark>[VeilMark(first)], hold: _ms(1500)),
-        if (adds) HintFrame(<HintMark>[VeilMark(second)], hold: _ms(1500)),
+        if (adds)
+          HintFrame(<HintMark>[
+            VeilMark(second.isEmpty ? <Rect>[g.groupCell(1)] : second),
+          ], hold: _ms(1500)),
       ]);
     }
     // Up to ten a number is shown as hands; above ten (Band B) the card holds the numeral.
@@ -1167,6 +1222,7 @@ class _Plans {
         : (raised <= 5
               ? HintHand(fingers: math.max(0, raised), side: HandSide.left, height: 84)
               : CountingHands(raised: raised));
+    if (countsAddedOnes(a)) return _addedOnes(level, first, hands);
     if (adds) {
       // Count on: the hand shows the first group, and the second group is counted one by one on top of it.
       final int more = second.length;
@@ -1236,11 +1292,70 @@ class _Plans {
     ]);
   }
 
+  /// MATH-B-01 "how many did we add?": the group on the stage is what was already there, and the answer is how many were added to
+  /// it. The hint never counts the group again (TA-5, the third line says "we count only the ones we added"). The group hugs into its
+  /// number on the hand card; the places of the added ones are not on the stage, so the hint draws them in a row under the group
+  /// and counts them from one. Level 2 only counts the group (the added places would be the answer); level 3 ends on the badge.
+  HintPlan _addedOnes(int level, List<Rect> first, Widget Function(int) hands) {
+    final int start = first.length;
+    final int more = _right.numeral!;
+    final List<Rect> places = _addedPlaces(first, more);
+    final HintMark card = CardMark(_card, hands(start));
+    List<HintMark> seenGroup() => <HintMark>[for (final Rect r in first) SeenMark(r)];
+    if (level == 2) {
+      return HintPlan(
+        _lightEach(first, base: <HintMark>[card], reserve: _reserve),
+        rest: <HintMark>[card, ...seenGroup()],
+        restReserve: _reserve,
+      );
+    }
+    // Each added one is a cube that lights up as it is counted; the dots stay on the group, which is not counted again.
+    List<HintMark> counted(int j) => <HintMark>[
+      ...seenGroup(),
+      for (int i = 0; i < j; i++) BlockMark(places[i]),
+    ];
+    return _demo(<HintFrame>[
+      HintFrame(<HintMark>[card, ...seenGroup()], hold: _ms(800), reserve: _reserve),
+      for (int j = 1; j <= more; j++)
+        HintFrame(
+          <HintMark>[
+            card,
+            ...counted(j),
+            BadgeMark(places[j - 1].topLeft, j),
+            HandMark(places[j - 1].center, press: true),
+          ],
+          hold: _ms(more > 6 ? 600 : 900),
+          reserve: _reserve,
+        ),
+      // The count card takes the hand card's place, as in every count.
+      _toAnswer(<HintMark>[...counted(more), BadgeMark(_card.center, more, big: true)], reserve: _reserve),
+    ]);
+  }
+
+  /// A row of [n] places for the added ones, centred under the group [first] (which stands in a row of its own, with the stage's
+  /// room under it): as big as a picture of the group, no taller than that room, and inside the part of the stage the card leaves.
+  List<Rect> _addedPlaces(List<Rect> first, int n) {
+    final Rect span = first.fold(first.first, (Rect s, Rect r) => s.expandToInclude(r));
+    final double gap = 4 * k;
+    final double room = g.h - span.bottom - 10 * k;
+    final double across = g.w - _reserve - 12 * k;
+    final double side = math.min(first.first.height * 0.8, math.min(room, (across - (n - 1) * gap) / n));
+    final double rowW = n * side + (n - 1) * gap;
+    final double left = (span.center.dx - rowW / 2).clamp(
+      _reserve + 6 * k,
+      math.max(_reserve + 6 * k, g.w - 6 * k - rowW),
+    );
+    final double top = span.bottom + 6 * k;
+    return <Rect>[for (int i = 0; i < n; i++) Rect.fromLTWH(left + i * (side + gap), top, side, side)];
+  }
+
   // ---- TA-2 numerals ----
 
   HintPlan numerals(int level) {
     final int? n = a.stageNumeral ?? _right.numeral;
-    if (n == null || n < 1) return generic(level);
+    if (n == null) return _writtenNumeral(level);
+    if (n == 0) return _zeroOnStage(level);
+    if (n < 1) return generic(level);
     final Rect path = Rect.fromCenter(
       center: Offset(g.w / 2, g.h / 2 + 6 * k),
       width: math.min(g.w - 20, 5 * 40 * k),

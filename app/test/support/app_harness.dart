@@ -12,6 +12,7 @@ import 'package:nitznutz/app/companion.dart';
 import 'package:nitznutz/app/sync_providers.dart';
 import 'package:nitznutz/app/tutor_providers.dart';
 import 'package:nitznutz/app/voice_input.dart';
+import 'package:nitznutz/app/welcome_providers.dart';
 import 'package:nitznutz/tutor/tutor.dart';
 import 'package:nitznutz/characters/character_source.dart';
 import 'package:nitznutz/content/models.dart';
@@ -107,6 +108,7 @@ class AppRig {
     this.rules,
     this.extraOverrides = const <Override>[],
     this.content,
+    this.welcome = false,
     int? clockMs,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
@@ -144,6 +146,10 @@ class AppRig {
 
   /// The pack the app plays, when a test needs a different one (the bundled starter pack when null).
   final PackContent? content;
+
+  /// The daily welcome is given (B-42). Off by default: the tests that are about something else see the first map of
+  /// the day as it always was; the welcome's own tests turn it on.
+  final bool welcome;
 
   /// How long the server takes to answer the helper switch (the first call after the function slept).
   final Duration switchAnswersAfter;
@@ -202,6 +208,7 @@ class AppRig {
       return characters ?? await makeSource();
     }),
     voicePlayerProvider.overrideWithValue(player),
+    welcomeEnabledProvider.overrideWithValue(welcome),
     speechEngineProvider.overrideWithValue(speech),
     if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),
     // Nothing reaches for the network behind a test's back; sync tests give their own engine.

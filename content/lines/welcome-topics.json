@@ -1,0 +1,220 @@
+{
+  "schema": "welcome-topics/v1",
+  "note": "The topic table of the daily welcome (B-42, docs/milestones/B42.md sections 2.2, 4 and 7.2). For each land in map order: its domain, its land line and its topics; every topic line is true for every skill under it, in both bands. Each skill of the installed pack appears exactly once, under its own land: in one topic, or in landLine (the topic sentence would not be true for it, so the welcome says the land line). A skill that is not in this file at all (a future pack) also gets its land line until the curriculum-expert maps it. The lines are the welcome.* rows of content/lines/core.he.json (vo id = \"vo:\" + id). Nothing in this file is shown or said to a child. Owner: curriculum-expert.",
+  "checked": {
+    "by": "curriculum-expert",
+    "date": "2026-11-03",
+    "pack": "content/starter",
+    "skills": 100
+  },
+  "lands": [
+    {
+      "land": "counting",
+      "domain": "numbers",
+      "line": "vo:welcome.land.counting",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.counting.count",
+          "skills": ["NUM-A-01", "NUM-A-02", "NUM-A-03", "NUM-A-04", "NUM-A-06", "NUM-A-09", "NUM-A-14", "NUM-B-03", "NUM-B-11"]
+        },
+        {
+          "line": "vo:welcome.topic.counting.glance",
+          "skills": ["NUM-A-05", "NUM-A-10"]
+        },
+        {
+          "line": "vo:welcome.topic.counting.numerals",
+          "skills": ["NUM-A-07", "NUM-A-08", "NUM-B-07", "NUM-B-08"]
+        },
+        {
+          "line": "vo:welcome.topic.counting.compare",
+          "skills": ["NUM-A-11", "NUM-A-12", "NUM-B-10"]
+        },
+        {
+          "line": "vo:welcome.topic.counting.ordinal",
+          "skills": ["NUM-A-13"]
+        },
+        {
+          "line": "vo:welcome.topic.counting.big",
+          "skills": ["NUM-B-01", "NUM-B-02", "NUM-B-04", "NUM-B-05", "NUM-B-17"]
+        },
+        {
+          "line": "vo:welcome.topic.counting.order",
+          "skills": ["NUM-B-13"]
+        },
+        {
+          "line": "vo:welcome.topic.counting.parts",
+          "skills": ["NUM-B-14", "NUM-B-16", "NUM-B-18"]
+        }
+      ],
+      "landLine": []
+    },
+    {
+      "land": "colors",
+      "domain": "colors",
+      "line": "vo:welcome.land.colors",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.colors.match",
+          "skills": ["COL-A-01", "COL-A-04", "COL-A-07", "COL-B-04"]
+        },
+        {
+          "line": "vo:welcome.topic.colors.names",
+          "skills": ["COL-A-02", "COL-A-03", "COL-A-05", "COL-A-06"]
+        },
+        {
+          "line": "vo:welcome.topic.colors.mix",
+          "skills": ["COL-B-01"]
+        },
+        {
+          "line": "vo:welcome.topic.colors.shades",
+          "skills": ["COL-B-02", "COL-B-03"]
+        },
+        {
+          "line": "vo:welcome.topic.colors.rainbow",
+          "skills": ["COL-B-06"]
+        }
+      ],
+      "landLine": []
+    },
+    {
+      "land": "shapes",
+      "domain": "shapes",
+      "line": "vo:welcome.land.shapes",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.shapes.names",
+          "skills": ["SHP-A-01", "SHP-A-02", "SHP-A-03", "SHP-A-04", "SHP-B-01", "SHP-B-03"]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.world",
+          "skills": ["SHP-A-05"]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.build",
+          "skills": ["SHP-A-06"]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.solids",
+          "skills": ["SHP-B-08"]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.position",
+          "skills": ["SHP-A-08"]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.lines",
+          "skills": ["SHP-A-10"]
+        },
+        {
+          "line": "vo:welcome.topic.shapes.sides",
+          "skills": ["SHP-B-02", "SHP-B-04"]
+        }
+      ],
+      "landLine": ["SHP-A-07", "SHP-B-09"]
+    },
+    {
+      "land": "logic",
+      "domain": "logic",
+      "line": "vo:welcome.land.logic",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.logic.same",
+          "skills": ["LOG-A-01", "LOG-A-02", "LOG-B-06"]
+        },
+        {
+          "line": "vo:welcome.topic.logic.sort",
+          "skills": ["LOG-A-03"]
+        },
+        {
+          "line": "vo:welcome.topic.logic.patterns",
+          "skills": ["LOG-A-04", "LOG-A-05", "LOG-A-06", "LOG-A-07", "LOG-B-01", "LOG-B-02", "LOG-B-04"]
+        },
+        {
+          "line": "vo:welcome.topic.logic.story",
+          "skills": ["LOG-A-08"]
+        },
+        {
+          "line": "vo:welcome.topic.logic.size",
+          "skills": ["LOG-A-10", "LOG-B-11"]
+        },
+        {
+          "line": "vo:welcome.topic.logic.think",
+          "skills": ["LOG-B-08", "LOG-B-09"]
+        }
+      ],
+      "landLine": ["LOG-A-09"]
+    },
+    {
+      "land": "robots",
+      "domain": "cs",
+      "line": "vo:welcome.land.robots",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.robots.steps",
+          "skills": ["CS-A-01"]
+        },
+        {
+          "line": "vo:welcome.topic.robots.move",
+          "skills": ["CS-A-03", "CS-A-04", "CS-B-01"]
+        },
+        {
+          "line": "vo:welcome.topic.robots.fix",
+          "skills": ["CS-B-04"]
+        }
+      ],
+      "landLine": ["CS-A-05"]
+    },
+    {
+      "land": "market",
+      "domain": "math",
+      "line": "vo:welcome.land.market",
+      "topics": [
+        {
+          "line": "vo:welcome.topic.market.addsub",
+          "skills": ["MATH-B-01", "MATH-B-03", "MATH-B-07", "MATH-B-08"]
+        },
+        {
+          "line": "vo:welcome.topic.market.share",
+          "skills": ["MATH-A-03"]
+        },
+        {
+          "line": "vo:welcome.topic.market.missing",
+          "skills": ["MATH-B-02", "MATH-B-06", "MATH-B-18"]
+        },
+        {
+          "line": "vo:welcome.topic.market.equal",
+          "skills": ["MATH-B-09", "MATH-B-13"]
+        },
+        {
+          "line": "vo:welcome.topic.market.measure",
+          "skills": ["MATH-A-04"]
+        },
+        {
+          "line": "vo:welcome.topic.market.graph",
+          "skills": ["MATH-A-07", "MATH-B-19"]
+        },
+        {
+          "line": "vo:welcome.topic.market.time",
+          "skills": ["MATH-A-05", "MATH-B-14", "MATH-B-15"]
+        },
+        {
+          "line": "vo:welcome.topic.market.money",
+          "skills": ["MATH-A-06", "MATH-B-17"]
+        }
+      ],
+      "landLine": ["MATH-A-01", "MATH-A-02", "MATH-B-10", "MATH-B-16"]
+    }
+  ],
+  "why": {
+    "NUM-B-11": "Moved from topic.counting.order to topic.counting.count. The final line of counting.order names the number line (ציר המספרים), but 18 of the 20 NUM-B-11 items have no number line (one more, one less, a counting error); counting on and back by one is counting, as NUM-B-03 (back from ten) already is.",
+    "SHP-A-07": "Land line (was topic.shapes.solids). The final line names ball, cube and cylinder; SHP-A-07 shows a ball, a cube and a box (rolls or stacks) and never a cylinder, so the line would name a solid the child does not meet. The editor's open check, answered: no cylinder in SHP-A-07.",
+    "SHP-B-09": "Land line (was topic.shapes.solids). SHP-B-09 (the flat face of a solid) shows box, cube, cylinder, cone and pyramid but never a ball, so a line that names the ball is not true for it.",
+    "LOG-A-09": "Land line (was topic.logic.same). The skill is things that go together (plate and spoon, key and lock); \"what is similar and what is different\" would prime the wrong rule (a child looking for a similar thing picks the bowl, not the spoon).",
+    "CS-A-05": "Land line (was topic.robots.steps). The skill is finding the step that does not belong to the routine; the child does not order steps, and \"what first and what next\" would prime ordering.",
+    "MATH-A-01": "Land line (was topic.market.addsub). MATH-A-01 only adds; the line says we will add and take. Back to topic.market.addsub if the line says add or take instead of add and take (optional hand-off to the hebrew-text-editor, B-42 section 7.2).",
+    "MATH-A-02": "Land line (was topic.market.addsub). MATH-A-02 only takes one away; the line says we will add and take. Back to topic.market.addsub with the same optional wording change.",
+    "MATH-B-10": "Land line (was topic.market.share). Equal groups: 6 of the 10 items find the total of equal groups and 2 the number of groups; only 2 share, so \"we will share equally\" is not what the skill does.",
+    "MATH-B-13": "Moved from topic.market.measure to topic.market.equal. The final measure line lists big and small, long and short, heavy and light; MATH-B-13 only weighs. Every MATH-B-13 item asks whether the two pans are equal or which is heavier, or adds blocks until both sides are equal, so \"we will check whether the two sides are equal\" is true, and it ties the balance to the meaning of = in MATH-B-09.",
+    "MATH-B-16": "Land line (was topic.market.money). Knowing the coins: 8 of the 10 items match a coin to its value or compare two coins, only 2 pay in a shop, so \"we will play shop with coins\" is not what the skill does."
+  }
+}

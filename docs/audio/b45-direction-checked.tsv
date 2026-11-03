@@ -1,0 +1,739 @@
+source	id	result	note
+content/lines/core.he.json	core.listen.again	ask-withdrawn	content/lines/core.he.json › core.listen.again | see docs/audio/voice-direction.md section 9
+activity.b.colb04.5.json	prompt.caption.0.v	directed	activity.b.colb04.5.json › prompt.caption.0.v
+activity.b.colb04.5.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.colb04.6.json	prompt.caption.0.v	directed	activity.b.colb04.6.json › prompt.caption.0.v
+activity.b.colb04.6.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.colb06.5.json	prompt.caption.0.v	directed	activity.b.colb06.5.json › prompt.caption.0.v
+activity.b.csb01.10.json	prompt.caption.0.v	directed	activity.b.csb01.10.json › prompt.caption.0.v
+activity.b.csb01.10.json	feedback.correct.caption.0.v	directed	activity.b.csb01.10.json › feedback.correct.caption.0.v
+activity.b.csb01.9.json	prompt.caption.0.v	directed	activity.b.csb01.10.json › prompt.caption.0.v
+activity.b.csb01.9.json	feedback.correct.caption.0.v	directed	activity.b.csb01.9.json › feedback.correct.caption.0.v
+activity.b.logb01.10.json	hints.2.caption.0.v	directed	activity.b.logb01.10.json › hints.2.caption.0.v
+activity.b.logb01.9.json	hints.2.caption.0.v	directed	activity.b.logb01.9.json › hints.2.caption.0.v
+activity.b.logb04.7.json	feedback.correct.caption.0.v	directed	activity.b.logb04.7.json › feedback.correct.caption.0.v
+activity.b.logb04.7.json	hints.2.caption.0.v	directed	activity.b.logb04.7.json › hints.2.caption.0.v
+activity.b.logb04.8.json	feedback.correct.caption.0.v	directed	activity.b.logb04.8.json › feedback.correct.caption.0.v
+activity.b.logb04.8.json	hints.2.caption.0.v	directed	activity.b.logb04.8.json › hints.2.caption.0.v
+activity.b.logb06.7.json	prompt.caption.0.v	directed	activity.b.colb04.5.json › prompt.caption.0.v
+activity.b.logb06.7.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.logb06.8.json	prompt.caption.0.v	directed	activity.b.colb04.6.json › prompt.caption.0.v
+activity.b.logb06.8.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.logb09.7.json	prompt.caption.0.v	directed	activity.b.logb09.7.json › prompt.caption.0.v
+activity.b.logb09.7.json	feedback.correct.caption.0.v	directed	activity.b.logb09.7.json › feedback.correct.caption.0.v
+activity.b.logb09.8.json	prompt.caption.0.v	directed	activity.b.logb09.8.json › prompt.caption.0.v
+activity.b.logb09.8.json	feedback.correct.caption.0.v	directed	activity.b.logb09.8.json › feedback.correct.caption.0.v
+activity.b.logb11.4.json	prompt.caption.0.v	directed	activity.b.logb11.4.json › prompt.caption.0.v
+activity.b.logb11.5.json	prompt.caption.0.v	directed	activity.b.logb11.4.json › prompt.caption.0.v
+activity.b.mathb01.1.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.1.json › feedback.correct.caption.0.v
+activity.b.mathb01.1.json	hints.2.caption.0.v	directed	activity.b.mathb01.1.json › hints.2.caption.0.v
+activity.b.mathb01.10.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.10.json › feedback.correct.caption.0.v
+activity.b.mathb01.10.json	hints.2.caption.0.v	directed	activity.b.mathb01.10.json › hints.2.caption.0.v
+activity.b.mathb01.14.json	prompt.caption.0.v	directed	activity.b.mathb01.14.json › prompt.caption.0.v
+activity.b.mathb01.15.json	prompt.caption.0.v	directed	activity.b.mathb01.15.json › prompt.caption.0.v
+activity.b.mathb01.15.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.15.json › feedback.correct.caption.0.v
+activity.b.mathb01.15.json	hints.2.caption.0.v	directed-flag	activity.b.mathb01.15.json › hints.2.caption.0.v | flag for editor and curriculum-expert: the count ends on a different number than the one the child is asked to press (not a sound problem; the line can be said well)
+activity.b.mathb01.16.json	prompt.caption.0.v	directed	activity.b.mathb01.16.json › prompt.caption.0.v
+activity.b.mathb01.16.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.16.json › feedback.correct.caption.0.v
+activity.b.mathb01.16.json	hints.2.caption.0.v	directed-flag	activity.b.mathb01.16.json › hints.2.caption.0.v | flag for editor and curriculum-expert: the count ends on a different number than the one the child is asked to press (not a sound problem; the line can be said well)
+activity.b.mathb01.17.json	prompt.caption.0.v	directed	activity.b.mathb01.17.json › prompt.caption.0.v
+activity.b.mathb01.18.json	prompt.caption.0.v	directed	activity.b.mathb01.18.json › prompt.caption.0.v
+activity.b.mathb01.2.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.2.json › feedback.correct.caption.0.v
+activity.b.mathb01.2.json	hints.2.caption.0.v	directed	activity.b.mathb01.2.json › hints.2.caption.0.v
+activity.b.mathb01.4.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.4.json › feedback.correct.caption.0.v
+activity.b.mathb01.4.json	hints.2.caption.0.v	directed	activity.b.mathb01.4.json › hints.2.caption.0.v
+activity.b.mathb01.7.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.7.json › feedback.correct.caption.0.v
+activity.b.mathb01.7.json	hints.2.caption.0.v	directed	activity.b.mathb01.7.json › hints.2.caption.0.v
+activity.b.mathb01.9.json	feedback.correct.caption.0.v	directed	activity.b.mathb01.9.json › feedback.correct.caption.0.v
+activity.b.mathb01.9.json	hints.2.caption.0.v	directed	activity.b.mathb01.9.json › hints.2.caption.0.v
+activity.b.mathb02.1.json	feedback.correct.caption.0.v	directed	activity.b.mathb02.1.json › feedback.correct.caption.0.v
+activity.b.mathb02.1.json	hints.2.caption.0.v	directed	activity.b.mathb02.1.json › hints.2.caption.0.v
+activity.b.mathb02.11.json	prompt.caption.0.v	directed	activity.b.mathb02.11.json › prompt.caption.0.v
+activity.b.mathb02.11.json	feedback.correct.caption.0.v	directed	activity.b.mathb02.11.json › feedback.correct.caption.0.v
+activity.b.mathb02.11.json	hints.2.caption.0.v	directed	activity.b.mathb02.11.json › hints.2.caption.0.v
+activity.b.mathb02.12.json	prompt.caption.0.v	directed	activity.b.mathb02.12.json › prompt.caption.0.v
+activity.b.mathb02.12.json	feedback.correct.caption.0.v	directed	activity.b.mathb02.12.json › feedback.correct.caption.0.v
+activity.b.mathb02.12.json	hints.2.caption.0.v	directed	activity.b.mathb02.12.json › hints.2.caption.0.v
+activity.b.mathb02.2.json	feedback.correct.caption.0.v	directed	activity.b.mathb02.2.json › feedback.correct.caption.0.v
+activity.b.mathb02.2.json	hints.2.caption.0.v	directed	activity.b.mathb02.2.json › hints.2.caption.0.v
+activity.b.mathb02.3.json	feedback.correct.caption.0.v	directed	activity.b.mathb02.3.json › feedback.correct.caption.0.v
+activity.b.mathb02.3.json	hints.2.caption.0.v	directed	activity.b.mathb02.3.json › hints.2.caption.0.v
+activity.b.mathb02.4.json	feedback.correct.caption.0.v	directed	activity.b.mathb02.4.json › feedback.correct.caption.0.v
+activity.b.mathb02.4.json	hints.2.caption.0.v	directed	activity.b.mathb02.4.json › hints.2.caption.0.v
+activity.b.mathb03.13.json	prompt.caption.0.v	directed	activity.b.mathb03.13.json › prompt.caption.0.v
+activity.b.mathb03.14.json	prompt.caption.0.v	directed	activity.b.mathb03.14.json › prompt.caption.0.v
+activity.b.mathb03.15.json	prompt.caption.0.v	directed	activity.b.mathb03.15.json › prompt.caption.0.v
+activity.b.mathb03.16.json	prompt.caption.0.v	directed	activity.b.mathb03.16.json › prompt.caption.0.v
+activity.b.mathb06.10.json	prompt.caption.0.v	directed	activity.b.mathb06.10.json › prompt.caption.0.v
+activity.b.mathb06.9.json	prompt.caption.0.v	directed	activity.b.mathb06.9.json › prompt.caption.0.v
+activity.b.mathb07.7.json	prompt.caption.0.v	directed	activity.b.mathb07.7.json › prompt.caption.0.v
+activity.b.mathb07.7.json	feedback.correct.caption.0.v	directed	activity.b.mathb07.7.json › feedback.correct.caption.0.v
+activity.b.mathb07.7.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb07.7.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb07.7.json	hints.1.caption.0.v	directed	activity.b.mathb07.7.json › hints.1.caption.0.v
+activity.b.mathb07.8.json	prompt.caption.0.v	directed	activity.b.mathb07.8.json › prompt.caption.0.v
+activity.b.mathb07.8.json	feedback.correct.caption.0.v	directed	activity.b.mathb07.8.json › feedback.correct.caption.0.v
+activity.b.mathb07.8.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb07.8.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb07.8.json	hints.1.caption.0.v	directed	activity.b.mathb07.8.json › hints.1.caption.0.v
+activity.b.mathb08.13.json	prompt.caption.0.v	directed	activity.b.mathb08.13.json › prompt.caption.0.v
+activity.b.mathb08.13.json	feedback.correct.caption.0.v	directed	activity.b.mathb08.13.json › feedback.correct.caption.0.v
+activity.b.mathb08.13.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb08.13.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb08.13.json	hints.1.caption.0.v	directed	activity.b.mathb08.13.json › hints.1.caption.0.v
+activity.b.mathb08.14.json	prompt.caption.0.v	directed	activity.b.mathb08.14.json › prompt.caption.0.v
+activity.b.mathb08.14.json	feedback.correct.caption.0.v	directed	activity.b.mathb08.14.json › feedback.correct.caption.0.v
+activity.b.mathb08.14.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb08.14.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb08.14.json	hints.1.caption.0.v	directed	activity.b.mathb08.14.json › hints.1.caption.0.v
+activity.b.mathb10.7.json	prompt.caption.0.v	directed	activity.b.mathb10.7.json › prompt.caption.0.v
+activity.b.mathb10.7.json	feedback.correct.caption.0.v	directed	activity.b.mathb10.7.json › feedback.correct.caption.0.v
+activity.b.mathb10.8.json	prompt.caption.0.v	directed	activity.b.mathb10.8.json › prompt.caption.0.v
+activity.b.mathb10.8.json	feedback.correct.caption.0.v	directed	activity.b.mathb10.8.json › feedback.correct.caption.0.v
+activity.b.mathb13.11.json	prompt.caption.0.v	directed	activity.b.mathb13.11.json › prompt.caption.0.v
+activity.b.mathb13.12.json	prompt.caption.0.v	directed	activity.b.mathb13.11.json › prompt.caption.0.v
+activity.b.mathb18.1.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.1.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.1.json	hints.1.caption.0.v	directed	activity.b.mathb18.1.json › hints.1.caption.0.v
+activity.b.mathb18.2.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.2.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.2.json	hints.1.caption.0.v	directed	activity.b.mathb18.2.json › hints.1.caption.0.v
+activity.b.mathb18.3.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.3.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.3.json	hints.1.caption.0.v	directed	activity.b.mathb18.3.json › hints.1.caption.0.v
+activity.b.mathb18.4.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.4.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.4.json	hints.1.caption.0.v	directed	activity.b.mathb18.4.json › hints.1.caption.0.v
+activity.b.mathb18.5.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.5.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.5.json	hints.1.caption.0.v	directed	activity.b.mathb18.5.json › hints.1.caption.0.v
+activity.b.mathb18.6.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.6.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.6.json	hints.1.caption.0.v	directed	activity.b.mathb18.6.json › hints.1.caption.0.v
+activity.b.mathb18.7.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.7.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.7.json	hints.1.caption.0.v	directed	activity.b.mathb18.7.json › hints.1.caption.0.v
+activity.b.mathb18.8.json	prompt.caption.0.v	directed	activity.b.mathb18.8.json › prompt.caption.0.v
+activity.b.mathb18.8.json	feedback.correct.caption.0.v	directed	activity.b.mathb18.8.json › feedback.correct.caption.0.v
+activity.b.mathb18.8.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.1.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.8.json	hints.1.caption.0.v	directed	activity.b.mathb18.1.json › hints.1.caption.0.v
+activity.b.mathb18.9.json	prompt.caption.0.v	directed	activity.b.mathb18.9.json › prompt.caption.0.v
+activity.b.mathb18.9.json	feedback.correct.caption.0.v	directed	activity.b.mathb18.9.json › feedback.correct.caption.0.v
+activity.b.mathb18.9.json	feedback.incorrect.1.caption.0.v	directed	activity.b.mathb18.9.json › feedback.incorrect.1.caption.0.v
+activity.b.mathb18.9.json	hints.1.caption.0.v	directed	activity.b.mathb18.9.json › hints.1.caption.0.v
+activity.b.numb02.2.json	prompt.caption.0.v	directed	activity.b.numb02.2.json › prompt.caption.0.v
+activity.b.numb02.5.json	feedback.correct.caption.0.v	directed	activity.b.numb02.5.json › feedback.correct.caption.0.v
+activity.b.numb02.7.json	feedback.correct.caption.0.v	directed	activity.b.numb02.5.json › feedback.correct.caption.0.v
+activity.b.numb03.10.json	feedback.correct.caption.0.v	directed	activity.b.numb03.10.json › feedback.correct.caption.0.v
+activity.b.numb03.10.json	hints.2.caption.0.v	directed	activity.b.numb03.10.json › hints.2.caption.0.v
+activity.b.numb03.9.json	hints.2.caption.0.v	directed	activity.b.numb03.9.json › hints.2.caption.0.v
+activity.b.numb05.10.json	prompt.caption.0.v	directed	activity.b.numb05.10.json › prompt.caption.0.v
+activity.b.numb05.10.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb05.1.json › feedback.incorrect.0.caption.0.v
+activity.b.numb05.10.json	hints.0.caption.0.v	directed	activity.b.numb05.10.json › hints.0.caption.0.v
+activity.b.numb05.9.json	prompt.caption.0.v	directed	activity.b.numb05.9.json › prompt.caption.0.v
+activity.b.numb05.9.json	feedback.correct.caption.0.v	directed	activity.b.numb05.9.json › feedback.correct.caption.0.v
+activity.b.numb05.9.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb05.1.json › feedback.incorrect.0.caption.0.v
+activity.b.numb05.9.json	hints.0.caption.0.v	directed	activity.b.numb05.9.json › hints.0.caption.0.v
+activity.b.numb05.9.json	hints.1.caption.0.v	directed	activity.b.numb05.9.json › hints.1.caption.0.v
+activity.b.numb05.9.json	hints.2.caption.0.v	directed	activity.b.numb05.9.json › hints.2.caption.0.v
+activity.b.numb11.10.json	prompt.caption.0.v	directed	activity.b.numb11.10.json › prompt.caption.0.v
+activity.b.numb11.10.json	feedback.correct.caption.0.v	directed	activity.b.numb11.10.json › feedback.correct.caption.0.v
+activity.b.numb11.11.json	prompt.caption.0.v	directed	activity.b.numb11.11.json › prompt.caption.0.v
+activity.b.numb11.11.json	feedback.correct.caption.0.v	directed	activity.b.numb11.11.json › feedback.correct.caption.0.v
+activity.b.numb11.12.json	prompt.caption.0.v	directed	activity.b.numb11.12.json › prompt.caption.0.v
+activity.b.numb11.12.json	feedback.correct.caption.0.v	directed	activity.b.numb11.12.json › feedback.correct.caption.0.v
+activity.b.numb11.13.json	prompt.caption.0.v	directed	activity.b.numb11.13.json › prompt.caption.0.v
+activity.b.numb11.13.json	feedback.correct.caption.0.v	directed	activity.b.numb11.13.json › feedback.correct.caption.0.v
+activity.b.numb11.14.json	prompt.caption.0.v	directed	activity.b.numb11.14.json › prompt.caption.0.v
+activity.b.numb11.14.json	feedback.correct.caption.0.v	directed	activity.b.numb11.14.json › feedback.correct.caption.0.v
+activity.b.numb11.15.json	prompt.caption.0.v	directed	activity.b.numb11.15.json › prompt.caption.0.v
+activity.b.numb11.15.json	feedback.correct.caption.0.v	directed	activity.b.numb11.15.json › feedback.correct.caption.0.v
+activity.b.numb11.16.json	prompt.caption.0.v	directed	activity.b.numb11.16.json › prompt.caption.0.v
+activity.b.numb11.16.json	feedback.correct.caption.0.v	directed	activity.b.numb11.16.json › feedback.correct.caption.0.v
+activity.b.numb11.17.json	prompt.caption.0.v	directed	activity.b.numb11.17.json › prompt.caption.0.v
+activity.b.numb11.17.json	feedback.correct.caption.0.v	directed	activity.b.numb11.17.json › feedback.correct.caption.0.v
+activity.b.numb11.18.json	prompt.caption.0.v	directed	activity.b.numb11.18.json › prompt.caption.0.v
+activity.b.numb11.18.json	feedback.correct.caption.0.v	directed	activity.b.numb11.18.json › feedback.correct.caption.0.v
+activity.b.numb11.7.json	prompt.caption.0.v	directed	activity.b.numb11.7.json › prompt.caption.0.v
+activity.b.numb11.7.json	feedback.correct.caption.0.v	directed	activity.b.numb11.7.json › feedback.correct.caption.0.v
+activity.b.numb11.8.json	prompt.caption.0.v	directed	activity.b.numb11.8.json › prompt.caption.0.v
+activity.b.numb11.8.json	feedback.correct.caption.0.v	directed	activity.b.numb11.8.json › feedback.correct.caption.0.v
+activity.b.numb11.9.json	prompt.caption.0.v	directed	activity.b.numb11.9.json › prompt.caption.0.v
+activity.b.numb11.9.json	feedback.correct.caption.0.v	directed	activity.b.numb11.9.json › feedback.correct.caption.0.v
+activity.b.numb14.1.json	feedback.correct.caption.0.v	directed	activity.b.numb14.1.json › feedback.correct.caption.0.v
+activity.b.numb14.1.json	hints.2.caption.0.v	directed	activity.b.numb14.1.json › hints.2.caption.0.v
+activity.b.numb14.10.json	prompt.caption.0.v	directed	activity.b.numb14.10.json › prompt.caption.0.v
+activity.b.numb14.10.json	feedback.correct.caption.0.v	directed	activity.b.numb14.10.json › feedback.correct.caption.0.v
+activity.b.numb14.10.json	hints.2.caption.0.v	directed	activity.b.numb14.10.json › hints.2.caption.0.v
+activity.b.numb14.2.json	feedback.correct.caption.0.v	directed	activity.b.numb14.2.json › feedback.correct.caption.0.v
+activity.b.numb14.2.json	hints.2.caption.0.v	directed	activity.b.numb14.2.json › hints.2.caption.0.v
+activity.b.numb14.3.json	feedback.correct.caption.0.v	directed	activity.b.numb14.3.json › feedback.correct.caption.0.v
+activity.b.numb14.3.json	hints.2.caption.0.v	directed	activity.b.numb14.3.json › hints.2.caption.0.v
+activity.b.numb14.4.json	feedback.correct.caption.0.v	directed	activity.b.numb14.4.json › feedback.correct.caption.0.v
+activity.b.numb14.4.json	hints.2.caption.0.v	directed	activity.b.numb14.4.json › hints.2.caption.0.v
+activity.b.numb14.7.json	feedback.correct.caption.0.v	directed	activity.b.numb14.7.json › feedback.correct.caption.0.v
+activity.b.numb14.7.json	hints.2.caption.0.v	directed	activity.b.numb14.7.json › hints.2.caption.0.v
+activity.b.numb14.8.json	feedback.correct.caption.0.v	directed	activity.b.numb14.8.json › feedback.correct.caption.0.v
+activity.b.numb14.8.json	hints.2.caption.0.v	directed	activity.b.numb14.8.json › hints.2.caption.0.v
+activity.b.numb14.9.json	prompt.caption.0.v	directed	activity.b.numb14.9.json › prompt.caption.0.v
+activity.b.numb14.9.json	feedback.correct.caption.0.v	directed	activity.b.numb14.9.json › feedback.correct.caption.0.v
+activity.b.numb14.9.json	hints.2.caption.0.v	directed	activity.b.numb14.9.json › hints.2.caption.0.v
+activity.b.numb16.1.json	hints.1.caption.0.v	directed	activity.b.numb16.1.json › hints.1.caption.0.v
+activity.b.numb16.10.json	prompt.caption.0.v	directed	activity.b.numb16.10.json › prompt.caption.0.v
+activity.b.numb16.10.json	feedback.correct.caption.0.v	directed	activity.b.numb16.10.json › feedback.correct.caption.0.v
+activity.b.numb16.10.json	hints.2.caption.0.v	directed	activity.b.numb16.10.json › hints.2.caption.0.v
+activity.b.numb16.11.json	prompt.caption.0.v	directed	activity.b.numb16.11.json › prompt.caption.0.v
+activity.b.numb16.11.json	feedback.correct.caption.0.v	directed	activity.b.numb16.11.json › feedback.correct.caption.0.v
+activity.b.numb16.11.json	hints.2.caption.0.v	directed	activity.b.numb16.11.json › hints.2.caption.0.v
+activity.b.numb16.2.json	hints.1.caption.0.v	directed	activity.b.numb16.2.json › hints.1.caption.0.v
+activity.b.numb16.3.json	hints.1.caption.0.v	directed	activity.b.numb16.1.json › hints.1.caption.0.v
+activity.b.numb16.4.json	hints.1.caption.0.v	directed	activity.b.numb16.2.json › hints.1.caption.0.v
+activity.b.numb16.5.json	hints.1.caption.0.v	directed	activity.b.numb16.1.json › hints.1.caption.0.v
+activity.b.numb16.6.json	hints.1.caption.0.v	directed	activity.b.numb16.2.json › hints.1.caption.0.v
+activity.b.numb16.7.json	hints.1.caption.0.v	directed	activity.b.numb16.1.json › hints.1.caption.0.v
+activity.b.numb16.8.json	hints.1.caption.0.v	directed	activity.b.numb16.2.json › hints.1.caption.0.v
+activity.b.numb16.9.json	hints.1.caption.0.v	directed	activity.b.numb16.1.json › hints.1.caption.0.v
+activity.b.numb18.10.json	prompt.caption.0.v	directed	activity.b.numb18.10.json › prompt.caption.0.v
+activity.b.numb18.2.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.numb18.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.numb18.4.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.numb18.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.numb18.5.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.numb18.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.numb18.7.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.numb18.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.numb18.9.json	prompt.caption.0.v	directed	activity.b.numb18.10.json › prompt.caption.0.v
+activity.b.numb18.9.json	feedback.correct.caption.0.v	directed	activity.b.numb18.9.json › feedback.correct.caption.0.v
+activity.b.numb18.9.json	hints.2.caption.0.v	directed	activity.b.numb18.9.json › hints.2.caption.0.v
+activity.b.shpb01.10.json	prompt.caption.0.v	directed	activity.b.shpb01.10.json › prompt.caption.0.v
+activity.b.shpb01.10.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.shpb01.9.json	prompt.caption.0.v	directed	activity.b.shpb01.10.json › prompt.caption.0.v
+activity.b.shpb01.9.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.shpb03.7.json	prompt.caption.0.v	directed	activity.b.shpb03.7.json › prompt.caption.0.v
+activity.b.shpb03.7.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.shpb04.2.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.shpb04.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.shpb04.4.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.shpb04.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.shpb04.7.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.shpb04.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.shpb04.8.json	feedback.correct.caption.0.v	ask-withdrawn	activity.b.shpb04.2.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.b.shpb04.9.json	prompt.caption.0.v	directed	activity.b.shpb04.9.json › prompt.caption.0.v
+activity.b.shpb04.9.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b.shpb08.9.json	prompt.caption.0.v	directed	activity.b.shpb08.9.json › prompt.caption.0.v
+activity.b.shpb08.9.json	hints.2.caption.0.v	directed	activity.b.colb04.5.json › hints.2.caption.0.v
+activity.b15.cola02.1.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.cola02.2.json	prompt.caption.0.v	directed	activity.b15.cola02.2.json › prompt.caption.0.v
+activity.b15.cola02.2.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.cola02.3.json	prompt.caption.0.v	directed	activity.b15.cola02.3.json › prompt.caption.0.v
+activity.b15.cola02.3.json	feedback.correct.caption.0.v	directed	activity.b15.cola02.3.json › feedback.correct.caption.0.v
+activity.b15.cola02.4.json	prompt.caption.0.v	directed	activity.b15.cola02.4.json › prompt.caption.0.v
+activity.b15.cola02.4.json	feedback.correct.caption.0.v	directed	activity.b15.cola02.4.json › feedback.correct.caption.0.v
+activity.b15.cola02.5.json	prompt.caption.0.v	directed	activity.b15.cola02.5.json › prompt.caption.0.v
+activity.b15.cola02.6.json	prompt.caption.0.v	directed	activity.b15.cola02.6.json › prompt.caption.0.v
+activity.b15.cola03.1.json	prompt.caption.0.v	directed	activity.b15.cola03.1.json › prompt.caption.0.v
+activity.b15.cola03.1.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.cola03.2.json	prompt.caption.0.v	directed	activity.b15.cola03.2.json › prompt.caption.0.v
+activity.b15.cola03.2.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.cola03.3.json	prompt.caption.0.v	directed	activity.b15.cola03.3.json › prompt.caption.0.v
+activity.b15.cola03.3.json	feedback.correct.caption.0.v	directed	activity.b15.cola03.3.json › feedback.correct.caption.0.v
+activity.b15.cola03.4.json	prompt.caption.0.v	directed	activity.b15.cola03.3.json › prompt.caption.0.v
+activity.b15.cola03.4.json	feedback.correct.caption.0.v	directed	activity.b15.cola03.4.json › feedback.correct.caption.0.v
+activity.b15.cola03.5.json	prompt.caption.0.v	directed	activity.b15.cola03.5.json › prompt.caption.0.v
+activity.b15.cola03.6.json	prompt.caption.0.v	directed	activity.b15.cola03.6.json › prompt.caption.0.v
+activity.b15.cola04.1.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.cola04.2.json	prompt.caption.0.v	directed	activity.b15.cola02.2.json › prompt.caption.0.v
+activity.b15.cola04.2.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.cola05.1.json	prompt.caption.0.v	directed	activity.b15.cola05.1.json › prompt.caption.0.v
+activity.b15.cola05.2.json	prompt.caption.0.v	directed	activity.b15.cola05.2.json › prompt.caption.0.v
+activity.b15.cola06.1.json	prompt.caption.0.v	directed	activity.b15.cola06.1.json › prompt.caption.0.v
+activity.b15.cola06.2.json	prompt.caption.0.v	directed	activity.b15.cola06.2.json › prompt.caption.0.v
+activity.b15.cola07.1.json	prompt.caption.0.v	directed	activity.b15.cola07.1.json › prompt.caption.0.v
+activity.b15.cola07.2.json	feedback.correct.caption.0.v	directed	activity.b15.cola07.2.json › feedback.correct.caption.0.v
+activity.b15.csa01.1.json	prompt.caption.0.v	directed	activity.b15.csa01.1.json › prompt.caption.0.v
+activity.b15.csa01.1.json	feedback.correct.caption.0.v	directed	activity.b15.csa01.1.json › feedback.correct.caption.0.v
+activity.b15.csa01.2.json	prompt.caption.0.v	directed	activity.b15.csa01.2.json › prompt.caption.0.v
+activity.b15.csa01.2.json	feedback.correct.caption.0.v	directed	activity.b15.csa01.2.json › feedback.correct.caption.0.v
+activity.b15.csa03.1.json	hints.2.caption.0.v	directed	activity.b15.csa03.1.json › hints.2.caption.0.v
+activity.b15.csa03.2.json	hints.2.caption.0.v	directed	activity.b15.csa03.2.json › hints.2.caption.0.v
+activity.b15.csa04.1.json	prompt.caption.0.v	directed	activity.b.csb01.10.json › prompt.caption.0.v
+activity.b15.csa04.1.json	feedback.correct.caption.0.v	directed	activity.b15.csa04.1.json › feedback.correct.caption.0.v
+activity.b15.csa04.2.json	prompt.caption.0.v	directed	activity.b.csb01.10.json › prompt.caption.0.v
+activity.b15.csa04.2.json	feedback.correct.caption.0.v	directed	activity.b15.csa04.2.json › feedback.correct.caption.0.v
+activity.b15.csa05.1.json	prompt.caption.0.v	directed	activity.b15.csa05.1.json › prompt.caption.0.v
+activity.b15.csa05.2.json	prompt.caption.0.v	directed	activity.b15.csa05.2.json › prompt.caption.0.v
+activity.b15.loga01.1.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.loga01.2.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.loga01.5.json	prompt.caption.0.v	directed	activity.b15.loga01.5.json › prompt.caption.0.v
+activity.b15.loga01.6.json	prompt.caption.0.v	directed	activity.b15.loga01.6.json › prompt.caption.0.v
+activity.b15.loga02.1.json	feedback.correct.caption.0.v	directed	activity.b15.loga02.1.json › feedback.correct.caption.0.v
+activity.b15.loga02.2.json	feedback.correct.caption.0.v	directed	activity.b15.loga02.2.json › feedback.correct.caption.0.v
+activity.b15.loga03.1.json	prompt.caption.0.v	directed	activity.b15.loga03.1.json › prompt.caption.0.v
+activity.b15.loga03.1.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.loga03.2.json	prompt.caption.0.v	directed	activity.b15.loga03.1.json › prompt.caption.0.v
+activity.b15.loga03.2.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.loga04.1.json	prompt.caption.0.v	directed	activity.b15.loga04.1.json › prompt.caption.0.v
+activity.b15.loga04.1.json	hints.2.caption.0.v	directed	activity.b15.loga04.1.json › hints.2.caption.0.v
+activity.b15.loga04.2.json	prompt.caption.0.v	directed	activity.b15.loga04.1.json › prompt.caption.0.v
+activity.b15.loga04.2.json	hints.2.caption.0.v	directed	activity.b15.loga04.2.json › hints.2.caption.0.v
+activity.b15.loga05.1.json	hints.2.caption.0.v	directed	activity.b15.loga05.1.json › hints.2.caption.0.v
+activity.b15.loga05.2.json	hints.2.caption.0.v	directed	activity.b15.loga05.1.json › hints.2.caption.0.v
+activity.b15.loga06.1.json	feedback.correct.caption.0.v	directed	activity.b15.loga06.1.json › feedback.correct.caption.0.v
+activity.b15.loga06.1.json	hints.2.caption.0.v	directed	activity.b15.loga06.1.json › hints.2.caption.0.v
+activity.b15.loga06.2.json	feedback.correct.caption.0.v	directed	activity.b15.loga06.2.json › feedback.correct.caption.0.v
+activity.b15.loga06.2.json	hints.2.caption.0.v	directed	activity.b15.loga06.2.json › hints.2.caption.0.v
+activity.b15.loga07.1.json	prompt.caption.0.v	directed	activity.b15.loga04.1.json › prompt.caption.0.v
+activity.b15.loga07.1.json	hints.2.caption.0.v	directed	activity.b15.loga07.1.json › hints.2.caption.0.v
+activity.b15.loga07.2.json	prompt.caption.0.v	directed	activity.b15.loga04.1.json › prompt.caption.0.v
+activity.b15.loga07.2.json	hints.2.caption.0.v	directed	activity.b15.loga07.2.json › hints.2.caption.0.v
+activity.b15.loga08.1.json	prompt.caption.0.v	directed	activity.b15.loga08.1.json › prompt.caption.0.v
+activity.b15.loga08.1.json	feedback.correct.caption.0.v	directed	activity.b15.loga08.1.json › feedback.correct.caption.0.v
+activity.b15.loga08.2.json	prompt.caption.0.v	directed	activity.b15.loga08.2.json › prompt.caption.0.v
+activity.b15.loga08.2.json	feedback.correct.caption.0.v	directed	activity.b15.loga08.2.json › feedback.correct.caption.0.v
+activity.b15.loga09.1.json	prompt.caption.0.v	directed	activity.b15.loga09.1.json › prompt.caption.0.v
+activity.b15.loga09.1.json	hints.2.caption.0.v	directed	activity.b15.loga09.1.json › hints.2.caption.0.v
+activity.b15.loga09.2.json	prompt.caption.0.v	directed	activity.b15.loga09.2.json › prompt.caption.0.v
+activity.b15.loga09.2.json	feedback.correct.caption.0.v	directed	activity.b15.loga09.2.json › feedback.correct.caption.0.v
+activity.b15.loga09.2.json	hints.2.caption.0.v	directed	activity.b15.loga09.2.json › hints.2.caption.0.v
+activity.b15.loga10.1.json	feedback.correct.caption.0.v	directed	activity.b15.loga10.1.json › feedback.correct.caption.0.v
+activity.b15.loga10.2.json	feedback.correct.caption.0.v	directed	activity.b15.loga10.2.json › feedback.correct.caption.0.v
+activity.b15.matha01.1.json	prompt.caption.0.v	directed	activity.b15.matha01.1.json › prompt.caption.0.v
+activity.b15.matha01.1.json	feedback.correct.caption.0.v	directed	activity.b15.matha01.1.json › feedback.correct.caption.0.v
+activity.b15.matha01.1.json	hints.2.caption.0.v	directed	activity.b15.matha01.1.json › hints.2.caption.0.v
+activity.b15.matha01.2.json	prompt.caption.0.v	directed	activity.b15.matha01.2.json › prompt.caption.0.v
+activity.b15.matha01.2.json	feedback.correct.caption.0.v	directed	activity.b15.matha01.2.json › feedback.correct.caption.0.v
+activity.b15.matha01.2.json	hints.2.caption.0.v	directed	activity.b15.matha01.2.json › hints.2.caption.0.v
+activity.b15.matha02.1.json	prompt.caption.0.v	directed	activity.b15.matha02.1.json › prompt.caption.0.v
+activity.b15.matha02.1.json	feedback.correct.caption.0.v	directed	activity.b15.matha02.1.json › feedback.correct.caption.0.v
+activity.b15.matha02.1.json	hints.2.caption.0.v	directed	activity.b15.matha02.1.json › hints.2.caption.0.v
+activity.b15.matha02.2.json	prompt.caption.0.v	directed	activity.b15.matha02.2.json › prompt.caption.0.v
+activity.b15.matha02.2.json	feedback.correct.caption.0.v	directed	activity.b15.matha02.2.json › feedback.correct.caption.0.v
+activity.b15.matha02.2.json	hints.2.caption.0.v	directed	activity.b15.matha02.2.json › hints.2.caption.0.v
+activity.b15.matha03.1.json	prompt.caption.0.v	directed	activity.b.mathb10.10.json › prompt.caption.0.v
+activity.b15.matha03.1.json	feedback.correct.caption.0.v	directed	activity.b15.matha03.1.json › feedback.correct.caption.0.v
+activity.b15.matha03.2.json	prompt.caption.0.v	directed	activity.b15.matha03.2.json › prompt.caption.0.v
+activity.b15.matha03.2.json	feedback.correct.caption.0.v	directed	activity.b15.matha03.1.json › feedback.correct.caption.0.v
+activity.b15.matha04.1.json	prompt.caption.0.v	directed	activity.b15.matha04.1.json › prompt.caption.0.v
+activity.b15.matha04.2.json	prompt.caption.0.v	directed	activity.b15.matha04.2.json › prompt.caption.0.v
+activity.b15.matha06.1.json	prompt.caption.0.v	directed	activity.b15.matha06.1.json › prompt.caption.0.v
+activity.b15.matha06.2.json	prompt.caption.0.v	directed	activity.b15.matha06.2.json › prompt.caption.0.v
+activity.b15.matha06.2.json	feedback.correct.caption.0.v	directed	activity.b15.matha06.2.json › feedback.correct.caption.0.v
+activity.b15.matha07.1.json	prompt.caption.0.v	directed	activity.b15.matha07.1.json › prompt.caption.0.v
+activity.b15.matha07.1.json	feedback.correct.caption.0.v	directed	activity.b15.matha07.1.json › feedback.correct.caption.0.v
+activity.b15.matha07.1.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.11.json › feedback.incorrect.0.caption.0.v
+activity.b15.matha07.2.json	prompt.caption.0.v	directed	activity.b15.matha07.2.json › prompt.caption.0.v
+activity.b15.matha07.2.json	feedback.correct.caption.0.v	directed	activity.b15.matha07.2.json › feedback.correct.caption.0.v
+activity.b15.matha07.2.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.12.json › feedback.incorrect.0.caption.0.v
+activity.b15.numa01.4.json	feedback.correct.caption.0.v	directed	activity.b15.numa01.4.json › feedback.correct.caption.0.v
+activity.b15.numa01.4.json	hints.2.caption.0.v	directed	activity.b15.numa01.4.json › hints.2.caption.0.v
+activity.b15.numa01.5.json	feedback.correct.caption.0.v	directed	activity.b15.numa01.5.json › feedback.correct.caption.0.v
+activity.b15.numa01.5.json	hints.2.caption.0.v	directed	activity.b15.numa01.4.json › hints.2.caption.0.v
+activity.b15.numa02.4.json	hints.2.caption.0.v	directed	activity.b15.numa02.4.json › hints.2.caption.0.v
+activity.b15.numa02.5.json	hints.2.caption.0.v	directed	activity.b15.numa02.5.json › hints.2.caption.0.v
+activity.b15.numa03.1.json	prompt.caption.0.v	directed	activity.b15.numa03.1.json › prompt.caption.0.v
+activity.b15.numa03.1.json	hints.2.caption.0.v	directed	activity.b15.numa03.1.json › hints.2.caption.0.v
+activity.b15.numa03.5.json	hints.2.caption.0.v	directed	activity.b15.numa01.4.json › hints.2.caption.0.v
+activity.b15.numa04.1.json	hints.2.caption.0.v	directed	activity.b15.numa04.1.json › hints.2.caption.0.v
+activity.b15.numa04.2.json	prompt.caption.0.v	directed	activity.b15.numa04.2.json › prompt.caption.0.v
+activity.b15.numa04.2.json	hints.2.caption.0.v	directed	activity.b15.numa04.2.json › hints.2.caption.0.v
+activity.b15.numa05.1.json	prompt.caption.0.v	directed	activity.b15.numa05.1.json › prompt.caption.0.v
+activity.b15.numa05.2.json	prompt.caption.0.v	directed	activity.b15.numa05.2.json › prompt.caption.0.v
+activity.b15.numa06.1.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb05.1.json › feedback.incorrect.0.caption.0.v
+activity.b15.numa06.2.json	prompt.caption.0.v	directed	activity.b15.numa06.2.json › prompt.caption.0.v
+activity.b15.numa06.2.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb05.1.json › feedback.incorrect.0.caption.0.v
+activity.b15.numa06.2.json	hints.0.caption.0.v	directed	activity.b15.numa06.2.json › hints.0.caption.0.v
+activity.b15.numa08.1.json	prompt.caption.0.v	directed	activity.b15.numa08.1.json › prompt.caption.0.v
+activity.b15.numa08.2.json	prompt.caption.0.v	directed	activity.b15.numa08.2.json › prompt.caption.0.v
+activity.b15.numa08.3.json	prompt.caption.0.v	directed	activity.b15.numa08.3.json › prompt.caption.0.v
+activity.b15.numa08.3.json	feedback.correct.caption.0.v	directed	activity.b15.numa01.5.json › feedback.correct.caption.0.v
+activity.b15.numa08.3.json	hints.2.caption.0.v	directed	activity.b15.numa01.4.json › hints.2.caption.0.v
+activity.b15.numa08.4.json	prompt.caption.0.v	directed	activity.b15.numa08.3.json › prompt.caption.0.v
+activity.b15.numa08.4.json	feedback.correct.caption.0.v	directed	activity.b.numb03.10.json › feedback.correct.caption.0.v
+activity.b15.numa08.4.json	hints.2.caption.0.v	directed	activity.b15.numa01.4.json › hints.2.caption.0.v
+activity.b15.numa10.1.json	prompt.caption.0.v	directed	activity.b15.numa05.1.json › prompt.caption.0.v
+activity.b15.numa10.2.json	prompt.caption.0.v	directed	activity.b15.numa05.2.json › prompt.caption.0.v
+activity.b15.numa11.1.json	prompt.caption.0.v	directed	activity.b15.matha07.1.json › prompt.caption.0.v
+activity.b15.numa11.1.json	feedback.correct.caption.0.v	directed	activity.b15.matha07.1.json › feedback.correct.caption.0.v
+activity.b15.numa11.1.json	feedback.incorrect.0.caption.0.v	directed	activity.b15.numa11.1.json › feedback.incorrect.0.caption.0.v
+activity.b15.numa11.2.json	prompt.caption.0.v	directed	activity.b15.numa11.2.json › prompt.caption.0.v
+activity.b15.numa11.2.json	feedback.correct.caption.0.v	directed	activity.b15.numa11.2.json › feedback.correct.caption.0.v
+activity.b15.numa11.2.json	feedback.incorrect.0.caption.0.v	directed	activity.b15.numa11.1.json › feedback.incorrect.0.caption.0.v
+activity.b15.numa12.1.json	prompt.caption.0.v	directed	activity.b15.matha07.1.json › prompt.caption.0.v
+activity.b15.numa12.1.json	feedback.correct.caption.0.v	directed	activity.b15.matha07.1.json › feedback.correct.caption.0.v
+activity.b15.numa12.1.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.11.json › feedback.incorrect.0.caption.0.v
+activity.b15.numa12.2.json	prompt.caption.0.v	directed	activity.b15.matha07.2.json › prompt.caption.0.v
+activity.b15.numa12.2.json	feedback.correct.caption.0.v	directed	activity.b15.matha07.2.json › feedback.correct.caption.0.v
+activity.b15.numa12.2.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.12.json › feedback.incorrect.0.caption.0.v
+activity.b15.numa14.1.json	prompt.caption.0.v	directed	activity.b15.numa14.1.json › prompt.caption.0.v
+activity.b15.numa14.2.json	prompt.caption.0.v	directed	activity.b15.numa14.2.json › prompt.caption.0.v
+activity.b15.shpa02.3.json	prompt.caption.0.v	directed	activity.b15.shpa02.3.json › prompt.caption.0.v
+activity.b15.shpa02.4.json	prompt.caption.0.v	directed	activity.b15.shpa02.4.json › prompt.caption.0.v
+activity.b15.shpa03.1.json	prompt.caption.0.v	directed	activity.b15.shpa03.1.json › prompt.caption.0.v
+activity.b15.shpa03.1.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.shpa03.2.json	prompt.caption.0.v	directed	activity.b15.shpa03.1.json › prompt.caption.0.v
+activity.b15.shpa03.2.json	hints.2.caption.0.v	directed	activity.b.colb03.11.json › hints.2.caption.0.v
+activity.b15.shpa03.3.json	prompt.caption.0.v	directed	activity.b.shpb01.10.json › prompt.caption.0.v
+activity.b15.shpa03.4.json	prompt.caption.0.v	directed	activity.b15.shpa02.4.json › prompt.caption.0.v
+activity.b15.shpa06.1.json	prompt.caption.0.v	directed	activity.b15.shpa06.1.json › prompt.caption.0.v
+activity.b15.shpa06.1.json	feedback.correct.caption.0.v	directed	activity.b15.shpa06.1.json › feedback.correct.caption.0.v
+activity.b15.shpa06.2.json	prompt.caption.0.v	directed	activity.b15.shpa06.2.json › prompt.caption.0.v
+activity.b15.shpa06.2.json	feedback.correct.caption.0.v	directed	activity.b15.shpa06.2.json › feedback.correct.caption.0.v
+activity.b15.shpa07.1.json	feedback.correct.caption.0.v	directed	activity.b15.shpa07.1.json › feedback.correct.caption.0.v
+activity.b15.shpa10.1.json	prompt.caption.0.v	directed	activity.b15.shpa10.1.json › prompt.caption.0.v
+activity.b15.shpa10.2.json	prompt.caption.0.v	directed	activity.b15.shpa10.1.json › prompt.caption.0.v
+activity.cs.robot.direct.1.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.1.json › hints.2.caption.0.v
+activity.cs.robot.direct.2.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.2.json › hints.2.caption.0.v
+activity.cs.robot.direct.3.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.3.json › hints.2.caption.0.v
+activity.cs.robot.direct.4.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.4.json › hints.2.caption.0.v
+activity.cs.robot.direct.5.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.5.json › hints.2.caption.0.v
+activity.cs.robot.direct.6.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.6.json › hints.2.caption.0.v
+activity.cs.robot.plan.1.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.1.json › hints.2.caption.0.v
+activity.cs.robot.plan.2.json	hints.2.caption.0.v	directed	activity.cs.robot.plan.2.json › hints.2.caption.0.v
+activity.cs.robot.plan.3.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.4.json › hints.2.caption.0.v
+activity.cs.robot.plan.4.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.5.json › hints.2.caption.0.v
+activity.cs.robot.plan.5.json	hints.2.caption.0.v	directed	activity.cs.robot.plan.5.json › hints.2.caption.0.v
+activity.cs.robot.plan.6.json	hints.2.caption.0.v	directed	activity.cs.robot.direct.3.json › hints.2.caption.0.v
+activity.fewer.big.ducks.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.12.json › feedback.incorrect.0.caption.0.v
+activity.fewer.big.fish.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.12.json › feedback.incorrect.0.caption.0.v
+activity.flash.dice.1.json	prompt.caption.0.v	directed	activity.flash.dice.1.json › prompt.caption.0.v
+activity.flash.dice.2.json	prompt.caption.0.v	directed	activity.flash.dice.2.json › prompt.caption.0.v
+activity.flash.dice.3.json	prompt.caption.0.v	directed	activity.flash.dice.3.json › prompt.caption.0.v
+activity.flash.dice.4.json	prompt.caption.0.v	directed	activity.flash.dice.1.json › prompt.caption.0.v
+activity.flash.dice.4b.json	prompt.caption.0.v	directed	activity.flash.dice.4b.json › prompt.caption.0.v
+activity.flash.dice.5.json	prompt.caption.0.v	directed	activity.flash.dice.2.json › prompt.caption.0.v
+activity.flash.frame.3.json	prompt.caption.0.v	directed	activity.flash.frame.3.json › prompt.caption.0.v
+activity.flash.frame.4.json	prompt.caption.0.v	directed	activity.flash.dice.3.json › prompt.caption.0.v
+activity.flash.frame.5.json	prompt.caption.0.v	directed	activity.flash.frame.3.json › prompt.caption.0.v
+activity.flash.frame.5b.json	prompt.caption.0.v	directed	activity.flash.dice.3.json › prompt.caption.0.v
+activity.flash.scatter.2.json	prompt.caption.0.v	directed	activity.flash.dice.2.json › prompt.caption.0.v
+activity.flash.scatter.3.json	prompt.caption.0.v	directed	activity.flash.dice.1.json › prompt.caption.0.v
+activity.give.butterflies.4.json	feedback.correct.caption.0.v	directed	activity.give.butterflies.4.json › feedback.correct.caption.0.v
+activity.log.pair.shoe.json	feedback.correct.caption.0.v	directed	activity.log.pair.shoe.json › feedback.correct.caption.0.v
+activity.log.pair.shoe.json	hints.2.caption.0.v	directed	activity.log.pair.shoe.json › hints.2.caption.0.v
+activity.log.pair.sock.json	prompt.caption.0.v	directed	activity.log.pair.sock.json › prompt.caption.0.v
+activity.log.pair.sock.json	hints.2.caption.0.v	directed	activity.log.pair.sock.json › hints.2.caption.0.v
+activity.log.pat.no.mixed.json	feedback.correct.caption.0.v	ask-withdrawn	activity.log.pat.no.mixed.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.log.pat.no.things.json	feedback.correct.caption.0.v	ask-withdrawn	activity.log.pat.no.mixed.json › feedback.correct.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.math.add.apples.json	feedback.correct.caption.0.v	directed	activity.b15.matha01.2.json › feedback.correct.caption.0.v
+activity.math.add.apples.json	hints.2.caption.0.v	directed	activity.math.add.apples.json › hints.2.caption.0.v
+activity.math.add.ducks.json	feedback.correct.caption.0.v	directed	activity.math.add.ducks.json › feedback.correct.caption.0.v
+activity.math.add.ducks.json	hints.2.caption.0.v	directed	activity.math.add.ducks.json › hints.2.caption.0.v
+activity.math.add.fish.json	feedback.correct.caption.0.v	directed	activity.b15.matha01.1.json › feedback.correct.caption.0.v
+activity.math.add.fish.json	hints.2.caption.0.v	directed	activity.math.add.fish.json › hints.2.caption.0.v
+activity.math.add.fish2.json	feedback.correct.caption.0.v	directed	activity.math.add.fish2.json › feedback.correct.caption.0.v
+activity.math.add.fish2.json	hints.2.caption.0.v	directed	activity.math.add.fish2.json › hints.2.caption.0.v
+activity.math.add.stars.json	feedback.correct.caption.0.v	directed	activity.math.add.stars.json › feedback.correct.caption.0.v
+activity.math.add.stars.json	hints.2.caption.0.v	directed	activity.math.add.stars.json › hints.2.caption.0.v
+activity.math.add.stars2.json	feedback.correct.caption.0.v	directed	activity.math.add.stars2.json › feedback.correct.caption.0.v
+activity.math.add.stars2.json	hints.2.caption.0.v	directed	activity.math.add.stars2.json › hints.2.caption.0.v
+activity.math.take.apples.json	feedback.correct.caption.0.v	directed	activity.b15.matha02.1.json › feedback.correct.caption.0.v
+activity.math.take.apples.json	hints.2.caption.0.v	directed	activity.b15.matha02.1.json › hints.2.caption.0.v
+activity.math.take.apples2.json	feedback.correct.caption.0.v	directed	activity.math.take.apples2.json › feedback.correct.caption.0.v
+activity.math.take.apples2.json	hints.2.caption.0.v	directed	activity.math.take.apples2.json › hints.2.caption.0.v
+activity.math.take.ducks.json	feedback.correct.caption.0.v	directed	activity.b15.matha02.1.json › feedback.correct.caption.0.v
+activity.math.take.ducks.json	hints.2.caption.0.v	directed	activity.b15.matha02.1.json › hints.2.caption.0.v
+activity.math.take.fish.json	feedback.correct.caption.0.v	directed	activity.math.take.apples2.json › feedback.correct.caption.0.v
+activity.math.take.fish.json	hints.2.caption.0.v	directed	activity.math.take.apples2.json › hints.2.caption.0.v
+activity.math.take.fish2.json	feedback.correct.caption.0.v	directed	activity.b15.matha02.2.json › feedback.correct.caption.0.v
+activity.math.take.fish2.json	hints.2.caption.0.v	directed	activity.b15.matha02.2.json › hints.2.caption.0.v
+activity.math.take.stars.json	feedback.correct.caption.0.v	directed	activity.b15.matha02.2.json › feedback.correct.caption.0.v
+activity.math.take.stars.json	hints.2.caption.0.v	directed	activity.b15.matha02.2.json › hints.2.caption.0.v
+activity.more.big.apples.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.11.json › feedback.incorrect.0.caption.0.v
+activity.more.big.stars.json	feedback.incorrect.0.caption.0.v	directed	activity.b.numb10.11.json › feedback.incorrect.0.caption.0.v
+activity.more.spread.fish.json	feedback.incorrect.0.caption.0.v	directed	activity.b15.numa11.1.json › feedback.incorrect.0.caption.0.v
+activity.more.spread.stars.json	feedback.incorrect.0.caption.0.v	directed	activity.b15.numa11.1.json › feedback.incorrect.0.caption.0.v
+activity.same.bugs.3v3.json	hints.2.caption.0.v	directed	activity.b36.matha03.2.json › hints.2.caption.0.v
+activity.same.fish.2v2.json	hints.2.caption.0.v	directed	activity.same.fish.2v2.json › hints.2.caption.0.v
+activity.shp.solid.stacks.blue.json	feedback.correct.caption.0.v	directed	activity.shp.solid.stacks.blue.json › feedback.correct.caption.0.v
+activity.shp.solid.stacks.json	feedback.correct.caption.0.v	directed	activity.shp.solid.stacks.blue.json › feedback.correct.caption.0.v
+activity.shp.solid.which.json	feedback.correct.caption.0.v	directed	activity.shp.solid.stacks.blue.json › feedback.correct.caption.0.v
+activity.shp.solid.which2.json	feedback.correct.caption.0.v	directed	activity.shp.solid.stacks.blue.json › feedback.correct.caption.0.v
+activity.x.mathb16.7.json	prompt.caption.0.v	directed	activity.x.mathb16.7.json › prompt.caption.0.v
+activity.x.mathb16.7.json	feedback.correct.caption.0.v	directed	activity.x.mathb16.7.json › feedback.correct.caption.0.v
+activity.x.mathb16.8.json	prompt.caption.0.v	directed	activity.x.mathb16.7.json › prompt.caption.0.v
+activity.x.mathb16.8.json	feedback.correct.caption.0.v	directed	activity.x.mathb16.8.json › feedback.correct.caption.0.v
+activity.x.mathb17.1.json	hints.2.caption.0.v	directed	activity.x.mathb17.1.json › hints.2.caption.0.v
+activity.x.mathb17.10.json	hints.2.caption.0.v	directed	activity.x.mathb17.10.json › hints.2.caption.0.v
+activity.x.mathb17.11.json	prompt.caption.0.v	directed	activity.x.mathb17.11.json › prompt.caption.0.v
+activity.x.mathb17.11.json	feedback.correct.caption.0.v	directed	activity.x.mathb17.11.json › feedback.correct.caption.0.v
+activity.x.mathb17.11.json	hints.2.caption.0.v	directed	activity.x.mathb17.11.json › hints.2.caption.0.v
+activity.x.mathb17.2.json	hints.2.caption.0.v	directed	activity.x.mathb16.9.json › hints.2.caption.0.v
+activity.x.mathb17.3.json	hints.2.caption.0.v	directed	activity.x.mathb17.3.json › hints.2.caption.0.v
+activity.x.mathb17.4.json	hints.2.caption.0.v	directed	activity.x.mathb17.10.json › hints.2.caption.0.v
+activity.x.mathb17.5.json	hints.2.caption.0.v	directed	activity.x.mathb17.5.json › hints.2.caption.0.v
+activity.x.mathb17.6.json	hints.2.caption.0.v	directed	activity.x.mathb17.6.json › hints.2.caption.0.v
+activity.x.mathb17.7.json	hints.2.caption.0.v	directed	activity.x.mathb17.7.json › hints.2.caption.0.v
+activity.x.mathb17.8.json	hints.2.caption.0.v	directed	activity.x.mathb16.10.json › hints.2.caption.0.v
+activity.x.mathb17.9.json	hints.2.caption.0.v	directed	activity.x.mathb17.9.json › hints.2.caption.0.v
+activity.x.mathb19.1.json	feedback.incorrect.0.caption.0.v	directed	activity.x.mathb19.1.json › feedback.incorrect.0.caption.0.v
+activity.x.mathb19.10.json	prompt.caption.0.v	directed	activity.x.mathb19.10.json › prompt.caption.0.v
+activity.x.mathb19.10.json	feedback.correct.caption.0.v	directed	activity.x.mathb19.10.json › feedback.correct.caption.0.v
+activity.x.mathb19.11.json	prompt.caption.0.v	directed	activity.x.mathb19.11.json › prompt.caption.0.v
+activity.x.mathb19.11.json	feedback.correct.caption.0.v	directed	activity.x.mathb19.11.json › feedback.correct.caption.0.v
+activity.x.mathb19.2.json	feedback.incorrect.0.caption.0.v	directed	activity.x.mathb19.1.json › feedback.incorrect.0.caption.0.v
+activity.x.mathb19.3.json	feedback.incorrect.0.caption.0.v	directed	activity.x.mathb19.1.json › feedback.incorrect.0.caption.0.v
+activity.x.mathb19.4.json	feedback.incorrect.0.caption.0.v	directed	activity.x.mathb19.1.json › feedback.incorrect.0.caption.0.v
+activity.x.mathb19.7.json	feedback.incorrect.0.caption.0.v	ask-withdrawn	activity.x.mathb19.7.json › feedback.incorrect.0.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.x.mathb19.8.json	feedback.incorrect.0.caption.0.v	ask-withdrawn	activity.x.mathb19.7.json › feedback.incorrect.0.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.x.mathb19.9.json	feedback.incorrect.0.caption.0.v	ask-withdrawn	activity.x.mathb19.7.json › feedback.incorrect.0.caption.0.v | see docs/audio/voice-direction.md section 9
+activity.x.shpb09.5.json	prompt.caption.0.v	directed	activity.x.shpb09.5.json › prompt.caption.0.v
+activity.x.shpb09.5.json	feedback.correct.caption.0.v	directed	activity.x.shpb09.5.json › feedback.correct.caption.0.v
+activity.x.shpb09.6.json	prompt.caption.0.v	directed	activity.x.shpb09.5.json › prompt.caption.0.v
+activity.x.shpb09.6.json	feedback.correct.caption.0.v	directed	activity.x.shpb09.6.json › feedback.correct.caption.0.v
+skill.COL-A-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-A-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-A-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-A-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-A-05.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-A-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-A-07.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-B-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-B-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-B-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-B-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.COL-B-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.CS-A-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.CS-A-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.CS-A-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.CS-A-05.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.CS-B-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.CS-B-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-07.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-09.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-A-10.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-B-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-B-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-B-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-B-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-B-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-B-09.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.LOG-B-11.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-A-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-A-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-A-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-A-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-A-05.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-A-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-A-07.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-07.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-09.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-10.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-13.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-14.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-15.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-16.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-17.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-18.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.MATH-B-19.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-05.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-07.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-09.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-10.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-11.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-12.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-A-13.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-05.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-07.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-10.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-11.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-13.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-14.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-16.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-17.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.NUM-B-18.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-05.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-06.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-07.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-A-10.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-B-01.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-B-02.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-B-03.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-B-04.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-B-08.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+skill.SHP-B-09.json	childLine.0.v	not-voiced	skill childLine: shown on the map card, no vo id, the app never speaks it; nothing to direct
+activity.b.mathb01.15.json	hints.2.caption.0.v	directed	directed: MATH-B-01 hint 3 (added ones only): slowest and steadiest (hint3 0.70); the added numbers are counted in the feminine, a beat at the dash, "now your turn" bright; "שְׁתַּיִם"/"שָׁלוֹשׁ" per the pronunciation entry; no ask (B-45 follow-up 2026-11-02)
+activity.b.mathb01.16.json	hints.2.caption.0.v	directed	directed: MATH-B-01 hint 3 (added ones only): slowest and steadiest (hint3 0.70); the added numbers are counted in the feminine, a beat at the dash, "now your turn" bright; "שְׁתַּיִם"/"שָׁלוֹשׁ" per the pronunciation entry; no ask (B-45 follow-up 2026-11-02)
+content/lines/core.he.json	core.rest.goodbye	directed	directed: goodbye 0.50 default, soft, no come-back pressure; no ask
+content/lines/core.he.json	core.adventure.welcome.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.welcome.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.call_for_help.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.same_land.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.counting	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.colors	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.shapes	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.logic	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.robots	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.other_land.market	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.adventure.play_again	directed	directed: bottle invitation (stability 0.50 default, warm and even, ends level); the pointed land word read as pointed; no ask
+content/lines/core.he.json	core.home.bubble	directed	directed: ask 0.60 (new styleRules entry), a curious soft rise; plain letters kept, first item of the listening check; no ask
+content/lines/core.he.json	welcome.hello.1	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.hello.2	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.hello.3	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.hello.first	directed	directed: welcome greeting after a name clip (default 0.50, starts on שלום within 50 ms, level and glad, same voice and settings as the name clip); no ask
+content/lines/core.he.json	welcome.topic.counting.count	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.glance	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.numerals	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.compare	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.ordinal	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.big	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.counting.order	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.counting.parts	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.match	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.names	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.mix	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.shades	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.colors.rainbow	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.shapes.names	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.world	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.build	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.solids	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.shapes.position	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.lines	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.shapes.sides	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.same	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.sort	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.patterns	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.story	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.size	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.logic.think	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.robots.steps	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.robots.move	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.robots.fix	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.addsub	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.share	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.market.missing	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.equal	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.market.measure	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); listening check noted; no ask
+content/lines/core.he.json	welcome.topic.market.graph	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.time	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.topic.market.money	directed	directed: welcome topic, a light preview (default 0.50, even, ends level-down, not a question); no ask
+content/lines/core.he.json	welcome.land.counting	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.colors	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.shapes	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.logic	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.robots	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.land.market	directed	directed: welcome land line (default 0.50, even, pointed land word read as pointed); no ask
+content/lines/core.he.json	welcome.close	directed	directed: welcome closing invitation (default 0.50, warm and short); no ask
+content/lines/core.he.json	core.skill.col_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.col_b_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.cs_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.cs_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_a_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.log_b_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.log_b_11	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_13	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_b_14	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.math_b_15	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_16	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_17	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_18	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.math_b_19	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_11	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_12	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_13	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_a_14	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.num_b_11	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_13	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.num_b_14	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_16	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_17	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.num_b_18	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_05	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_06	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_07	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_a_10	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_01	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.shp_b_02	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_03	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_04	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask
+content/lines/core.he.json	core.skill.shp_b_08	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); listening check noted; no ask
+content/lines/core.he.json	core.skill.shp_b_09	directed	directed: map-card naming (styleRules entry vo:core.skill. -> ask 0.60, calm, short, ends down softly); no ask

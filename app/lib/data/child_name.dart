@@ -96,3 +96,37 @@ String cutToUtf16Units(String text, int max) {
 }
 
 bool _isHighSurrogate(int unit) => unit >= 0xD800 && unit <= 0xDBFF;
+
+// ---- how a name is said (B-42) ----
+
+/// The longest spelling of how a name is said, in UTF-16 units (the same limit as the nickname).
+const int spokenNameMaxLength = 24;
+
+// Hebrew letters; their nikud (never U+05B3 hataf qamats or U+05C7 qamats qatan: the voice is never sent them); a space, a
+// hyphen (ASCII or maqaf) and a geresh (ASCII apostrophe or U+05F3).
+const String _letter = '\u05D0-\u05EA';
+const String _nikud = '\u05B0-\u05B2\u05B4-\u05BC\u05C1\u05C2';
+const String _joiner = " '\u05BE\u05F3-";
+
+/// The one rule for how a name is said, the same as the gateway's `NAME_SPOKEN` and the database check
+/// (`testvectors/name-spoken.json` holds all three to the same answers): a mark only on a letter, at most three in a row,
+/// no leading, trailing or double space, at least one letter. It counts UTF-16 units, as the server does.
+final RegExp _spokenName = RegExp(
+  '^(?=.*[$_letter])(?! )(?!.* \$)(?!.* {2})(?:[$_letter][$_nikud]{0,3}|[$_joiner])+\$',
+);
+
+/// Whether [value] is a spelling the gateway will voice, exactly as it stands (no trimming).
+bool isSpokenName(String value) =>
+    value.isNotEmpty && value.length <= spokenNameMaxLength && _spokenName.hasMatch(value);
+
+/// What is wrong with a spelling a parent typed, if anything. Nothing typed is [ok]: the parent has no spelling to give
+/// (the field is cleared).
+enum SpokenNameProblem { ok, tooLong, badChars }
+
+/// Checks a spelling as it will be saved: trimmed first. An empty one is fine (it clears the spelling).
+SpokenNameProblem validateSpokenName(String raw) {
+  final String value = raw.trim();
+  if (value.isEmpty) return SpokenNameProblem.ok;
+  if (value.length > spokenNameMaxLength) return SpokenNameProblem.tooLong;
+  return isSpokenName(value) ? SpokenNameProblem.ok : SpokenNameProblem.badChars;
+}

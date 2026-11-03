@@ -32,7 +32,9 @@
     "symbolic"
   ],
   "misconceptions": [
-    "M-NUM-TEEN"
+    "M-NUM-TEEN",
+    "M-NUM-REV",
+    "M-CNT-CARD"
   ],
   "retention": {
     "targetRetention": 0.9,

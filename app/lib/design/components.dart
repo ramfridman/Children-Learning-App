@@ -125,6 +125,7 @@ class BoardBubble extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     this.maxWidth,
     this.tailTip,
+    this.tailBottom = 18,
   });
 
   final String text;
@@ -139,6 +140,11 @@ class BoardBubble extends StatelessWidget {
   /// The tip stays put when the bubble grows; only the wedge gets shorter. Null: the small tail on the right edge.
   final Offset? tailTip;
 
+  /// How far the small tail on the right edge sits above the bubble's bottom edge (its centre is 11 higher). A bubble that
+  /// has to stand lower than its speaker's mouth (the daily welcome on a tablet, held under a land's sign) raises it, so
+  /// the tail still points at the mouth.
+  final double tailBottom;
+
   @override
   Widget build(BuildContext context) => Stack(
     clipBehavior: Clip.none,
@@ -152,7 +158,7 @@ class BoardBubble extends StatelessWidget {
       else
         Positioned(
           right: -10,
-          bottom: 18,
+          bottom: tailBottom,
           child: Transform.rotate(
             angle: 0.785398,
             child: Container(

@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "tens-and-twos-1-b36",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עֲשָׂרוֹת וְזוּגוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-B-17"
+  ],
+  "items": [
+    "b.numb17.13",
+    "b.numb17.14"
+  ],
+  "estimatedMinutes": 5,
+  "sequence": 54,
+  "celebration": {
+    "vo": "vo:celebrate.tens_and_twos_1_b36",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! סְפַרְתֶּם בִּקְפִיצוֹת."
+      }
+    ]
+  }
+}

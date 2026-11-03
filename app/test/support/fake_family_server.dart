@@ -62,6 +62,13 @@ final RegExp _nickname = RegExp(
       as String,
 );
 
+/// How a name is said, which `child-put` takes (`testvectors/name-spoken.json`, tested equal to the server).
+final RegExp _spokenName = RegExp(
+  (jsonDecode(File('../testvectors/name-spoken.json').readAsStringSync())
+          as Map<String, Object?>)['server_pattern']!
+      as String,
+);
+
 class FakeFamilyServer {
   FakeFamilyServer({this.checksFormat = false});
 
@@ -128,9 +135,15 @@ class FakeFamilyServer {
         if (nickname is! String || !_nickname.hasMatch(nickname)) {
           throw const GatewayException('bad_request', status: 400);
         }
+        final Object? spoken = body['name_spoken'];
+        if (spoken != null && (spoken is! String || spoken.length > 24 || !_spokenName.hasMatch(spoken))) {
+          throw const GatewayException('bad_request', status: 400);
+        }
         children[id] = <String, Object?>{
           'id': id,
           'nickname': body['nickname'],
+          // As the server: absent keeps what it has, null clears it.
+          'name_spoken': body.containsKey('name_spoken') ? spoken : children[id]?['name_spoken'],
           'avatar_id': body['avatar_id'],
           'companion_id': body['companion_id'],
           'outfit_id': body['outfit_id'],

@@ -11,6 +11,10 @@ import '../design/tokens.g.dart';
 import '../rewards/sticker_design.dart';
 import '../strings/he.dart';
 
+/// Where a bubble stands and how it is drawn: its font, its left edge (null where the board places it by its right edge), its
+/// top, its widest, the height of its body for the text it was fitted to, and whether it took the board's grown box.
+typedef BubbleFit = ({double font, double? left, double top, double maxWidth, double height, bool grown});
+
 /// The frame of a playable activity: the same positions as the boards (the [ActivitySpec] numbers),
 /// with the real question in the bubble, the template's stage, its answer tiles, the progress trail,
 /// and the child's own controls: home, the hint lamp, "show me", and the guide, who repeats the
@@ -73,27 +77,69 @@ class ActivityFrame extends StatelessWidget {
   final VoidCallback? onConfirmYes;
   final VoidCallback? onConfirmAgain;
 
-  /// The largest font, down to [min], at which [text] fits the room the bubble has.
-  static double fitFont(String text, ActivitySpec s, {double min = 14}) {
-    const EdgeInsets pad = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-    for (double size = s.bubbleFont; size > min; size -= 1) {
-      final TextPainter tp = TextPainter(
-        text: TextSpan(
-          text: text,
-          style: AppText.fixed(size: size, weight: 500),
-        ),
-        textDirection: TextDirection.rtl,
-      )..layout(maxWidth: s.bubbleMaxWidth - pad.horizontal);
-      if (tp.height + pad.vertical <= s.bubbleMaxHeight) return size;
+  /// The smallest font of a line in the bubble's own box; a line that needs less grows the bubble instead (QA-B36-3).
+  static const double comfortFont = 16;
+
+  /// The smallest font of the bubble at all.
+  static const double minFont = 14;
+
+  /// The padding of the bubble's body (as [BoardBubble] draws it).
+  static const EdgeInsets bubblePad = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+
+  /// The height of the bubble's body for [text] at [font] in a bubble at most [maxWidth] wide.
+  static double bubbleHeight(String text, double font, double maxWidth) {
+    final TextPainter tp = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: AppText.fixed(size: font, weight: 500),
+      ),
+      textDirection: TextDirection.rtl,
+    )..layout(maxWidth: maxWidth - bubblePad.horizontal);
+    return tp.height + bubblePad.vertical;
+  }
+
+  /// Where the bubble of [text] stands and at what size (QA-B36-3). A line that fits the bubble's own box (its top, its width, down
+  /// to just above the answer tiles) at [comfortFont] or more stays there. A longer line (a worked example) takes the grown box of
+  /// the board ([ActivitySpec.bubbleRoom]): a little wider toward the guide, and taller upward into the free place under the progress
+  /// trail, its bottom never lower than 12 above the tiles, at the largest font down to [minFont] that fits. The texts are never cut.
+  static BubbleFit fitBubble(String text, ActivitySpec s) {
+    final Rect room = s.bubbleRoom;
+    final double ownHeight = math.min(s.bubbleMaxHeight, room.bottom - s.bubbleTop);
+    for (double size = s.bubbleFont; size >= comfortFont; size -= 1) {
+      final double h = bubbleHeight(text, size, s.bubbleMaxWidth);
+      if (h <= ownHeight) {
+        return (
+          font: size,
+          left: s.bubbleLeft,
+          top: s.bubbleTop,
+          maxWidth: s.bubbleMaxWidth,
+          height: h,
+          grown: false,
+        );
+      }
     }
-    return min;
+    double size = s.bubbleFont;
+    double h = bubbleHeight(text, size, room.width);
+    while (h > room.height && size > minFont) {
+      size -= 1;
+      h = bubbleHeight(text, size, room.width);
+    }
+    final double top = math.max(room.top, math.min(s.bubbleTop, room.bottom - h));
+    return (
+      font: size,
+      left: s.bubbleLeft == null ? null : room.left,
+      top: top,
+      maxWidth: room.width,
+      height: h,
+      grown: true,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final BoardClass board = AppLayout.of(context).board;
     final ActivitySpec s = spec ?? ActivitySpec.of(board);
-    final double font = fitFont(bubbleText, s);
+    final BubbleFit fit = fitBubble(bubbleText, s);
     final Size room = s.stageIsCard ? Size(s.stage.width - 32, s.stage.height - 32) : s.stage.size;
     return Scaffold(
       body: BoardCanvas(
@@ -108,14 +154,14 @@ class ActivityFrame extends StatelessWidget {
           // The celebration says its own line; the bubble stays quiet behind it.
           if (overlay == null && bubbleText.isNotEmpty)
             Positioned(
-              left: s.bubbleLeft,
+              left: fit.left,
               right: s.bubbleRight,
-              top: s.bubbleTop,
+              top: fit.top,
               child: BoardBubble(
                 key: const Key('lesson-bubble'),
                 text: bubbleText,
-                fontSize: font,
-                maxWidth: s.bubbleMaxWidth,
+                fontSize: fit.font,
+                maxWidth: fit.maxWidth,
               ),
             ),
           Positioned(

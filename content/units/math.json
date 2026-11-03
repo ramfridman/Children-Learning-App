@@ -32,7 +32,9 @@
     "bird_lit",
     "chick",
     "frog",
-    "butterfly"
+    "butterfly",
+    "tick",
+    "cross"
   ],
   "things": {
     "ball": [
@@ -93,6 +95,11 @@
       "g": "f",
       "one": "צְפַרְדֵּעַ",
       "many": "צְפַרְדְּעִים"
+    },
+    "cat": {
+      "g": "m",
+      "one": "חָתוּל",
+      "many": "חֲתוּלִים"
     }
   },
   "names": {
@@ -155,10 +162,19 @@
     "star_size_s": {
       "one": "כּוֹכָב קָטָן",
       "g": "m"
+    },
+    "tick": {
+      "one": "כֵּן",
+      "g": "m"
+    },
+    "cross": {
+      "one": "לֹא",
+      "g": "m"
     }
   },
   "tagFeedback": {
-    "M-SHARE-UNEQ": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר לְפִי הַתּוֹר."
+    "M-SHARE-UNEQ": "בּוֹאוּ נַחֲלֹק אֶחָד אֶחָד, לְכׇל חָבֵר לְפִי הַתּוֹר.",
+    "M-TIME-SEQ": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אַחֲרֵי הַשֵּׁנִי."
   },
   "misconceptions": [
     {
@@ -171,6 +187,19 @@
       "reps": [
         "concrete",
         "embodied"
+      ]
+    },
+    {
+      "id": "M-TIME-SEQ",
+      "skills": [
+        "MATH-A-05",
+        "MATH-B-14"
+      ],
+      "parent": "הילד עדיין לא מכיר את הסדר של חלקי היום או של ימי השבוע: בוחר את הזמן שנאמר בשאלה, או מדלג על אחד.",
+      "home": "בערב, לספר יחד את היום מההתחלה: בבוקר קמנו, בצהריים אכלנו, בערב התרחצנו, ועכשיו לילה. ובשבוע: לומר יחד את הימים מיום ראשון עד שבת.",
+      "reps": [
+        "story",
+        "pictorial"
       ]
     }
   ],
@@ -187,7 +216,9 @@
         "concrete",
         "pictorial"
       ],
-      "tags": []
+      "tags": [
+        "M-CNT-CARD"
+      ]
     },
     {
       "id": "MATH-A-02",
@@ -201,7 +232,9 @@
         "concrete",
         "pictorial"
       ],
-      "tags": []
+      "tags": [
+        "M-CNT-CARD"
+      ]
     },
     {
       "id": "MATH-A-04",
@@ -227,7 +260,9 @@
         "story",
         "pictorial"
       ],
-      "tags": []
+      "tags": [
+        "M-TIME-SEQ"
+      ]
     },
     {
       "id": "MATH-A-06",
@@ -303,7 +338,14 @@
       "correct_text": "אַרְבַּע! שָׁלוֹשׁ וְעוֹד אַחַת.",
       "h3": "שְׁלוֹשָׁה תַּפּוּחִים וְעוֹד תַּפּוּחַ אֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.",
       "tags": {
-        "n:5": "M-CNT-DOUBLE"
+        "n:5": "M-CNT-DOUBLE",
+        "n:3": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
       }
     },
     {
@@ -330,7 +372,14 @@
       "correct_text": "אַרְבַּע! שְׁתַּיִם וְעוֹד שְׁתַּיִם.",
       "h3": "שְׁנֵי דָּגִים וְעוֹד שְׁנֵי דָּגִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.",
       "tags": {
-        "n:5": "M-CNT-DOUBLE"
+        "n:5": "M-CNT-DOUBLE",
+        "n:2": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
       }
     },
     {
@@ -357,7 +406,14 @@
       "correct_text": "חָמֵשׁ! שָׁלוֹשׁ וְעוֹד שְׁתַּיִם.",
       "h3": "שְׁלוֹשָׁה כּוֹכָבִים וְעוֹד שְׁנֵי כּוֹכָבִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע, חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ.",
       "tags": {
-        "n:6": "M-CNT-DOUBLE"
+        "n:6": "M-CNT-DOUBLE",
+        "n:3": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
       }
     },
     {
@@ -384,7 +440,14 @@
       "correct_text": "שָׁלוֹשׁ! שְׁתַּיִם וְעוֹד אַחַת.",
       "h3": "שְׁנֵי בַּרְוָזִים וְעוֹד בַּרְוָז אֶחָד: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.",
       "tags": {
-        "n:4": "M-CNT-DOUBLE"
+        "n:4": "M-CNT-DOUBLE",
+        "n:2": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
       }
     },
     {
@@ -407,7 +470,14 @@
       "correct_text": "שָׁלוֹשׁ! אַרְבַּע פָּחוֹת אַחַת.",
       "h3": "אַרְבַּע פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שָׁלוֹשׁ.",
       "tags": {
-        "n:2": "M-CNT-SKIP"
+        "n:2": "M-CNT-SKIP",
+        "n:4": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
       }
     },
     {
@@ -430,7 +500,14 @@
       "correct_text": "שְׁתַּיִם! שָׁלוֹשׁ פָּחוֹת אַחַת.",
       "h3": "שָׁלוֹשׁ פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם.",
       "tags": {
-        "n:1": "M-CNT-SKIP"
+        "n:1": "M-CNT-SKIP",
+        "n:3": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
       }
     },
     {
@@ -453,7 +530,14 @@
       "correct_text": "אַרְבַּע! חָמֵשׁ פָּחוֹת אַחַת.",
       "h3": "חָמֵשׁ פָּחוֹת אַחַת: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ, אַרְבַּע. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַרְבַּע.",
       "tags": {
-        "n:3": "M-CNT-SKIP"
+        "n:3": "M-CNT-SKIP",
+        "n:5": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
       }
     },
     {
@@ -554,7 +638,11 @@
       "difficulty": 0.2,
       "rep": "story",
       "correct_text": "כֵּן! בַּבֹּקֶר הַשֶּׁמֶשׁ עוֹלָה.",
-      "h3": "בַּבֹּקֶר הַשֶּׁמֶשׁ עוֹלָה לְאַט. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַבֹּקֶר."
+      "h3": "בַּבֹּקֶר הַשֶּׁמֶשׁ עוֹלָה לְאַט. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַבֹּקֶר.",
+      "tags": {
+        "time_night": "M-TIME-SEQ",
+        "time_noon": "M-TIME-SEQ"
+      }
     },
     {
       "kind": "pick",
@@ -570,7 +658,11 @@
       "difficulty": 0.25,
       "rep": "story",
       "correct_text": "כֵּן! בַּצָּהֳרַיִם הַשֶּׁמֶשׁ גְּבוֹהָה.",
-      "h3": "בַּצָּהֳרַיִם הַשֶּׁמֶשׁ גְּבוֹהָה בַּשָּׁמַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצָּהֳרַיִם."
+      "h3": "בַּצָּהֳרַיִם הַשֶּׁמֶשׁ גְּבוֹהָה בַּשָּׁמַיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַצָּהֳרַיִם.",
+      "tags": {
+        "time_evening": "M-TIME-SEQ",
+        "time_night": "M-TIME-SEQ"
+      }
     },
     {
       "kind": "pick",
@@ -586,7 +678,11 @@
       "difficulty": 0.3,
       "rep": "story",
       "correct_text": "כֵּן! בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת.",
-      "h3": "בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת וְהַשָּׁמַיִם כְּתֻמִּים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָעֶרֶב."
+      "h3": "בָּעֶרֶב הַשֶּׁמֶשׁ יוֹרֶדֶת וְהַשָּׁמַיִם כְּתֻמִּים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הָעֶרֶב.",
+      "tags": {
+        "time_morning": "M-TIME-SEQ",
+        "time_noon": "M-TIME-SEQ"
+      }
     },
     {
       "kind": "pick",
@@ -602,7 +698,11 @@
       "difficulty": 0.15,
       "rep": "story",
       "correct_text": "כֵּן! בַּלַּיְלָה יֵשׁ יָרֵחַ וְכוֹכָבִים.",
-      "h3": "בַּלַּיְלָה חָשׁוּךְ, וְיֵשׁ יָרֵחַ וְכוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַלַּיְלָה."
+      "h3": "בַּלַּיְלָה חָשׁוּךְ, וְיֵשׁ יָרֵחַ וְכוֹכָבִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַלַּיְלָה.",
+      "tags": {
+        "time_noon": "M-TIME-SEQ",
+        "time_morning": "M-TIME-SEQ"
+      }
     },
     {
       "kind": "pick",
@@ -619,7 +719,11 @@
       "difficulty": 0.4,
       "rep": "story",
       "correct_text": "כֵּן! אַחֲרֵי הַבֹּקֶר בָּאִים הַצָּהֳרַיִם.",
-      "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב, וּבַסּוֹף לַיְלָה. עַכְשָׁו תּוֹרְכֶם."
+      "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב, וּבַסּוֹף לַיְלָה. עַכְשָׁו תּוֹרְכֶם.",
+      "tags": {
+        "time_night": "M-TIME-SEQ",
+        "time_morning": "M-TIME-SEQ"
+      }
     },
     {
       "kind": "give",
@@ -749,7 +853,17 @@
       "obj": "fish",
       "a": 1,
       "b": 2,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "n:4": "M-CNT-DOUBLE",
+        "n:1": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      }
     },
     {
       "kind": "madd",
@@ -758,7 +872,17 @@
       "obj": "star",
       "a": 4,
       "b": 1,
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "n:6": "M-CNT-DOUBLE",
+        "n:4": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      }
     },
     {
       "kind": "mtake",
@@ -766,7 +890,17 @@
       "skill": "MATH-A-02",
       "obj": "apple",
       "n": 3,
-      "difficulty": 0.2
+      "difficulty": 0.2,
+      "tags": {
+        "n:1": "M-CNT-SKIP",
+        "n:3": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      }
     },
     {
       "kind": "mtake",
@@ -774,7 +908,17 @@
       "skill": "MATH-A-02",
       "obj": "fish",
       "n": 5,
-      "difficulty": 0.3
+      "difficulty": 0.3,
+      "tags": {
+        "n:3": "M-CNT-SKIP",
+        "n:5": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      }
     },
     {
       "kind": "mtake",
@@ -782,7 +926,17 @@
       "skill": "MATH-A-02",
       "obj": "duck",
       "n": 4,
-      "difficulty": 0.25
+      "difficulty": 0.25,
+      "tags": {
+        "n:2": "M-CNT-SKIP",
+        "n:4": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      }
     },
     {
       "kind": "share",
@@ -836,7 +990,11 @@
       "rep": "story",
       "correct_text": "כֵּן! לִפְנֵי הָעֶרֶב בָּאִים הַצָּהֳרַיִם.",
       "h3": "קֹדֶם בֹּקֶר, אַחַר כָּךְ צָהֳרַיִם, אַחַר כָּךְ עֶרֶב. עַכְשָׁו תּוֹרְכֶם.",
-      "check": "reverse"
+      "check": "reverse",
+      "tags": {
+        "time_night": "M-TIME-SEQ",
+        "time_evening": "M-TIME-SEQ"
+      }
     },
     {
       "kind": "shop",
@@ -923,7 +1081,17 @@
       "b": 2,
       "check": "transfer",
       "difficulty": 0.35,
-      "domain": "math"
+      "domain": "math",
+      "tags": {
+        "n:5": "M-CNT-DOUBLE",
+        "n:2": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      }
     },
     {
       "kind": "madd",
@@ -934,7 +1102,17 @@
       "b": 1,
       "check": "transfer",
       "difficulty": 0.35,
-      "domain": "math"
+      "domain": "math",
+      "tags": {
+        "n:5": "M-CNT-DOUBLE",
+        "n:3": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      }
     },
     {
       "kind": "mtake",
@@ -944,7 +1122,17 @@
       "n": 4,
       "check": "transfer",
       "difficulty": 0.35,
-      "domain": "math"
+      "domain": "math",
+      "tags": {
+        "n:2": "M-CNT-SKIP",
+        "n:4": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      }
     },
     {
       "kind": "mtake",
@@ -954,7 +1142,17 @@
       "n": 5,
       "check": "transfer",
       "difficulty": 0.35,
-      "domain": "math"
+      "domain": "math",
+      "tags": {
+        "n:3": "M-CNT-SKIP",
+        "n:5": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      }
     },
     {
       "kind": "share",
@@ -1106,6 +1304,387 @@
       "check": "transfer",
       "difficulty": 0.45,
       "domain": "math"
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha01.1",
+      "skill": "MATH-A-01",
+      "check": "practice",
+      "obj": "cat",
+      "count": 4,
+      "options": [
+        4,
+        2,
+        5
+      ],
+      "seed": 31,
+      "tags": {
+        "2": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      },
+      "prompt": "יֵשׁ שְׁנֵי חֲתוּלִים, וְעוֹד שְׁנֵי חֲתוּלִים בָּאוּ. נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha01.2",
+      "skill": "MATH-A-01",
+      "check": "transfer",
+      "obj": "ladybug",
+      "count": 5,
+      "options": [
+        5,
+        3,
+        6
+      ],
+      "seed": 32,
+      "tags": {
+        "3": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.join",
+          "זֶה רַק חֵלֶק אֶחָד. בּוֹאוּ נִסְפֹּר אֶת כֻּלָּם יַחַד."
+        ]
+      },
+      "prompt": "יֵשׁ שָׁלוֹשׁ חִפּוּשִׁיּוֹת, וְעוֹד שְׁתֵּי חִפּוּשִׁיּוֹת בָּאוּ. נוֹגְעִים בְּכׇל אֶחָד פַּעַם אַחַת, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha02.1",
+      "skill": "MATH-A-02",
+      "check": "practice",
+      "obj": "duck",
+      "count": 3,
+      "options": [
+        3,
+        4,
+        2
+      ],
+      "seed": 33,
+      "tags": {
+        "4": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      },
+      "prompt": "הָיוּ אַרְבָּעָה בַּרְוָזִים. אֶחָד שָׂחָה הַרְחֵק. נוֹגְעִים בְּאֵלֶּה שֶׁנִּשְׁאֲרוּ, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "count_tap",
+      "id": "b36.matha02.2",
+      "skill": "MATH-A-02",
+      "check": "transfer",
+      "obj": "fish",
+      "count": 4,
+      "options": [
+        4,
+        5,
+        3
+      ],
+      "seed": 34,
+      "tags": {
+        "5": "M-CNT-CARD"
+      },
+      "tag_lines": {
+        "M-CNT-CARD": [
+          "vo:fb.card.take",
+          "זֶה כַּמָּה שֶׁהָיוּ בַּהַתְחָלָה, לִפְנֵי שֶׁלָּקַחְנוּ. בּוֹאוּ נִסְפֹּר כַּמָּה נִשְׁאֲרוּ."
+        ]
+      },
+      "prompt": "הָיוּ חֲמִשָּׁה דָּגִים. אֶחָד שָׂחָה הַרְחֵק. נוֹגְעִים בְּאֵלֶּה שֶׁנִּשְׁאֲרוּ, וְסוֹפְרִים.",
+      "difficulty": 0.23
+    },
+    {
+      "kind": "pick",
+      "id": "b36.matha03.1",
+      "skill": "MATH-A-03",
+      "check": "transfer",
+      "prompt": "הֶחָתוּל קִבֵּל אֶת אֵלֶּה, וְהַכֶּלֶב קִבֵּל אֶת אֵלֶּה. לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר?",
+      "group": {
+        "sprite": "apple",
+        "count": 3,
+        "arrangement": "line",
+        "seed": 3
+      },
+      "group2": {
+        "sprite": "apple",
+        "count": 1,
+        "arrangement": "line",
+        "seed": 8
+      },
+      "options": [
+        "tick",
+        "cross"
+      ],
+      "correct": "cross",
+      "tags": {
+        "tick": "M-SHARE-UNEQ"
+      },
+      "correct_text": "כֵּן, לֶחָתוּל יֵשׁ יוֹתֵר מֵהַכֶּלֶב.",
+      "h3": "מְחַבְּרִים אֶחָד לְאֶחָד. לֶחָתוּל נִשְׁאֲרוּ שְׁנֵי תַּפּוּחִים בְּלִי זוּג, אָז אֵין אוֹתוֹ מִסְפָּר. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child judges whether a share is equal",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "pick",
+      "id": "b36.matha03.2",
+      "skill": "MATH-A-03",
+      "check": "transfer",
+      "prompt": "הֶחָתוּל קִבֵּל אֶת אֵלֶּה, וְהַכֶּלֶב קִבֵּל אֶת אֵלֶּה. לִשְׁנֵיהֶם יֵשׁ אוֹתוֹ מִסְפָּר?",
+      "group": {
+        "sprite": "star",
+        "count": 3,
+        "arrangement": "scatter",
+        "seed": 3
+      },
+      "group2": {
+        "sprite": "star",
+        "count": 3,
+        "arrangement": "line",
+        "seed": 8
+      },
+      "options": [
+        "tick",
+        "cross"
+      ],
+      "correct": "tick",
+      "tags": {
+        "cross": "M-CNT-SIZE"
+      },
+      "size_cue": "spread",
+      "correct_text": "כֵּן, לִשְׁנֵיהֶם יֵשׁ שָׁלוֹשׁ.",
+      "h3": "מְחַבְּרִים אֶחָד לְאֶחָד — לְכֻלָּם יֵשׁ זוּג. בִּשְׁנֵי הַצְּדָדִים יֵשׁ אוֹתוֹ מִסְפָּר: שָׁלוֹשׁ. עַכְשָׁו תּוֹרְכֶם.",
+      "goal": "child judges whether a share is equal",
+      "difficulty": 0.35
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha04.1",
+      "skill": "MATH-A-04",
+      "check": "practice",
+      "prompt": "גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "ball_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "ball_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "apple_size_l",
+          1
+        ],
+        [
+          "fish_size_s",
+          2
+        ],
+        [
+          "star_size_l",
+          1
+        ],
+        [
+          "apple_size_s",
+          2
+        ],
+        [
+          "fish_size_l",
+          1
+        ],
+        [
+          "star_size_s",
+          2
+        ]
+      ],
+      "rule": "size",
+      "difficulty": 0.17
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha04.2",
+      "skill": "MATH-A-04",
+      "check": "transfer",
+      "prompt": "גְּדוֹלִים לְכָאן, וּקְטַנִּים לְכָאן.",
+      "bins": [
+        {
+          "sprite": "fish_size_l",
+          "label": "גְּדוֹלִים"
+        },
+        {
+          "sprite": "fish_size_s",
+          "label": "קְטַנִּים"
+        }
+      ],
+      "items": [
+        [
+          "ball_size_s",
+          2
+        ],
+        [
+          "star_size_l",
+          1
+        ],
+        [
+          "apple_size_l",
+          1
+        ],
+        [
+          "ball_size_l",
+          1
+        ],
+        [
+          "star_size_s",
+          2
+        ]
+      ],
+      "rule": "size",
+      "difficulty": 0.17
+    },
+    {
+      "kind": "build",
+      "id": "b36.matha05.1",
+      "skill": "MATH-A-05",
+      "check": "practice",
+      "prompt": "מְסַדְּרִים אֶת הַיּוֹם, מֵהַבֹּקֶר.",
+      "palette": [
+        "time_noon",
+        "time_night",
+        "time_morning",
+        "time_evening"
+      ],
+      "h3": "בֹּקֶר, צָהֳרַיִם, עֶרֶב, לַיְלָה. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-TIME-SEQ",
+      "sequence": [
+        "time_morning",
+        "time_noon",
+        "time_evening",
+        "time_night"
+      ],
+      "goal": "child puts the parts of the day in order",
+      "difficulty": 0.33,
+      "correct_text": "כֵּן! סִדַּרְתֶּם אֶת הַיּוֹם."
+    },
+    {
+      "kind": "build",
+      "id": "b36.matha05.2",
+      "skill": "MATH-A-05",
+      "check": "transfer",
+      "prompt": "מַתְחִילִים בָּעֶרֶב, וּמְסַדְּרִים אֶת הַשְּׁאָר.",
+      "palette": [
+        "time_morning",
+        "time_evening",
+        "time_night"
+      ],
+      "h3": "עֶרֶב, לַיְלָה, וְאַחֲרֵי הַלַּיְלָה שׁוּב בֹּקֶר. עַכְשָׁו תּוֹרְכֶם.",
+      "tag": "M-TIME-SEQ",
+      "sequence": [
+        "time_evening",
+        "time_night",
+        "time_morning"
+      ],
+      "goal": "child puts the parts of the day in order",
+      "difficulty": 0.33,
+      "correct_text": "כֵּן! סִדַּרְתֶּם אֶת הַיּוֹם."
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha07.1",
+      "skill": "MATH-A-07",
+      "check": "practice",
+      "prompt": "תַּפּוּחִים לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ רוֹאִים כַּמָּה יֵשׁ מִכָּל אֶחָד.",
+      "bins": [
+        {
+          "sprite": "apple",
+          "label": "תַּפּוּחִים"
+        },
+        {
+          "sprite": "ball_red",
+          "label": "כַּדּוּרִים"
+        }
+      ],
+      "items": [
+        [
+          "apple",
+          1
+        ],
+        [
+          "ball_red",
+          2
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "apple",
+          1
+        ],
+        [
+          "ball_red",
+          2
+        ]
+      ],
+      "rule": "kind",
+      "difficulty": 0.32
+    },
+    {
+      "kind": "sort",
+      "id": "b36.matha07.2",
+      "skill": "MATH-A-07",
+      "check": "transfer",
+      "prompt": "בָּנָנוֹת לְכָאן, וְכַדּוּרִים לְכָאן. כָּךְ רוֹאִים כַּמָּה יֵשׁ מִכָּל אֶחָד.",
+      "bins": [
+        {
+          "sprite": "banana_yellow",
+          "label": "בָּנָנוֹת"
+        },
+        {
+          "sprite": "ball_yellow",
+          "label": "כַּדּוּרִים"
+        }
+      ],
+      "items": [
+        [
+          "banana_yellow",
+          1
+        ],
+        [
+          "ball_yellow",
+          2
+        ],
+        [
+          "ball_yellow",
+          2
+        ],
+        [
+          "banana_yellow",
+          1
+        ],
+        [
+          "ball_yellow",
+          2
+        ],
+        [
+          "ball_yellow",
+          2
+        ]
+      ],
+      "rule": "kind",
+      "difficulty": 0.32
     }
   ],
   "firstSequence": 1,
@@ -1170,7 +1749,9 @@
         "math.time.noon",
         "math.time.evening",
         "math.time.after",
-        "math.time.before"
+        "math.time.before",
+        "b36.matha05.1",
+        "b36.matha05.2"
       ],
       "minutes": 4,
       "done": "וַאוּ! הִכַּרְתֶּם אֶת הַיּוֹם: בֹּקֶר, צָהֳרַיִם, עֶרֶב וְלַיְלָה."
@@ -1227,7 +1808,9 @@
         "math.add.fish2",
         "math.add.stars2",
         "b15.matha01.1",
-        "b15.matha01.2"
+        "b15.matha01.2",
+        "b36.matha01.1",
+        "b36.matha01.2"
       ],
       "minutes": 3,
       "done": "כׇּל הַכָּבוֹד! הוֹסַפְתֶּם וּסְפַרְתֶּם."
@@ -1243,7 +1826,9 @@
         "math.take.ducks",
         "math.take.fish2",
         "b15.matha02.1",
-        "b15.matha02.2"
+        "b15.matha02.2",
+        "b36.matha02.1",
+        "b36.matha02.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! יְדַעְתֶּם כַּמָּה נִשְׁאֲרוּ."
@@ -1259,7 +1844,9 @@
         "math.share.ducks",
         "math.share.ladybugs",
         "b15.matha03.1",
-        "b15.matha03.2"
+        "b15.matha03.2",
+        "b36.matha03.1",
+        "b36.matha03.2"
       ],
       "minutes": 4,
       "done": "כׇּל הַכָּבוֹד! חִלַּקְתֶּם בַּהֲגִינוּת."
@@ -1291,10 +1878,25 @@
         "math.graph.stars2",
         "math.graph.apples2",
         "b15.matha07.1",
-        "b15.matha07.2"
+        "b15.matha07.2",
+        "b36.matha07.1",
+        "b36.matha07.2"
       ],
       "minutes": 3,
       "done": "יָפֶה מְאֹד! יְדַעְתֶּם אֵיפֹה יוֹתֵר וְאֵיפֹה פָּחוֹת."
+    },
+    {
+      "id": "big-small-long-heavy-1-b36",
+      "title": "גָּדוֹל, אָרֹךְ, כָּבֵד",
+      "skills": [
+        "MATH-A-04"
+      ],
+      "items": [
+        "b36.matha04.1",
+        "b36.matha04.2"
+      ],
+      "minutes": 4,
+      "done": "חֲכָמִים! הִשְׁוִיתֶם גָּדוֹל וְקָטָן, אָרֹךְ וְקָצָר, כָּבֵד וְקַל."
     }
   ]
 }

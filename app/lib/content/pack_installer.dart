@@ -1,5 +1,6 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -9,6 +10,23 @@ import '../core/clock.dart';
 import '../data/app_database.dart';
 import 'capabilities.dart';
 import 'pack_verify.dart';
+
+/// Reads every file in the folder [path] and proves them as a pack ([verifyEntries]). Throws [PackRejected].
+Future<VerifiedPack> readAndVerifyInstalled(
+  String path,
+  Uint8List publicKey,
+  AppCapabilities capabilities,
+  JsonParse decode,
+) async {
+  final Map<String, Uint8List> entries = <String, Uint8List>{};
+  for (final FileSystemEntity e in Directory(path).listSync(followLinks: false)) {
+    if (e is! File) {
+      throw const PackRejected('disk', 'the installed pack holds something that is not a file');
+    }
+    entries[e.uri.pathSegments.last] = e.readAsBytesSync();
+  }
+  return verifyEntries(entries, publicKey: publicKey, decode: decode, capabilities: capabilities);
+}
 
 /// Where the list of installed packs is kept. The database implements it; tests use a failing one to
 /// prove a crash between the files and the list never leaves half a pack.
@@ -58,7 +76,8 @@ class DbPackRegistry implements PackRegistry {
   );
 }
 
-enum InstallOutcome { installed, alreadyInstalled }
+/// [keptPlayable]: the pack needs a newer app than this one and a playable version is installed, so nothing was changed.
+enum InstallOutcome { installed, alreadyInstalled, keptPlayable }
 
 class InstallResult {
   const InstallResult(this.outcome, this.pack);
@@ -72,7 +91,7 @@ class InstallResult {
 /// Installs content packs. Everything about a pack is proven in memory first (`verifyPack`); nothing
 /// touches the disk or the database until the signature, every hash and every content rule have passed.
 ///
-/// On disk: `<root>/<pack id>/<version>/…`, written into a temporary folder and moved into place in
+/// On disk: `<root>/<pack id>/<version>/ג€¦`, written into a temporary folder and moved into place in
 /// one step, then recorded in the registry. A crash at any point leaves the old pack or the new one,
 /// never half of one; leftovers are removed by [sweep].
 class PackInstaller {
@@ -119,13 +138,26 @@ class PackInstaller {
     final InstalledPack? existing = await registry.find(pack.id);
     if (existing != null) {
       final int order = compareSemver(pack.version, existing.version);
-      if (order < 0) {
+      // The installed copy is proven again only when the answer depends on it (it is the costly part).
+      // The row's `hidden` is not trusted for this: after an app downgrade it still says playable, so the copy on disk is
+      // proven with this app's capabilities.
+      final bool needsCopy = order == 0 || (order < 0 && !pack.hidden) || (order > 0 && pack.hidden);
+      final VerifiedPack? copy = needsCopy ? await _installedCopy(pack.id, existing) : null;
+      final bool copyPlayable = copy != null && !copy.hidden;
+      if (order < 0 && !(!pack.hidden && !copyPlayable)) {
+        // Only one case lets an older pack in: this one can be played and the installed newer one cannot (this app cannot
+        // play it, or it is not there or no longer proves itself).
         throw PackRejected(
           'rules',
           'version ${pack.version} is older than the installed ${existing.version}',
         );
       }
-      if (order == 0 && await _installedCopyIsGood(pack.id, pack.version, existing.manifestSha256)) {
+      if (order > 0 && pack.hidden && copyPlayable) {
+        // A newer pack this app cannot play never replaces one it can: the playable version stays, and the hidden one is
+        // not stored (an app that can play it brings it, or it is installed again then).
+        return InstallResult(InstallOutcome.keptPlayable, pack);
+      }
+      if (order == 0 && copy != null) {
         // A copy that still proves itself with this app's key is protected: the same version never changes its contents.
         if (existing.manifestSha256 != pack.manifestSha256) {
           throw PackRejected(
@@ -183,27 +215,32 @@ class PackInstaller {
     return InstallResult(InstallOutcome.installed, pack);
   });
 
-  /// Whether the installed copy of [id] at [version] is on disk and proves itself again with this app's key, and is the one
-  /// that was recorded. Must not take the install queue (it is called from inside it).
-  Future<bool> _installedCopyIsGood(String id, String version, String manifestSha256) async {
-    final Directory dir = packDir(id, version);
-    if (!dir.existsSync()) return false;
+  /// The recorded copy of [row] read back from disk, if it is there, proves itself again with this app's key and is the one
+  /// that was recorded; otherwise null. Its `hidden` says whether this app can play it. Must not take the install queue
+  /// (it is called from inside it).
+  Future<VerifiedPack?> _installedCopy(String id, InstalledPack row) async {
+    final Directory dir = packDir(id, row.version);
+    if (!dir.existsSync()) return null;
     try {
-      final Map<String, Uint8List> entries = <String, Uint8List>{};
-      for (final FileSystemEntity e in dir.listSync(followLinks: false)) {
-        if (e is! File) return false;
-        entries[e.uri.pathSegments.last] = e.readAsBytesSync();
-      }
-      final VerifiedPack pack = await verifyEntries(
-        entries,
-        publicKey: publicKey,
-        decode: decode,
-        capabilities: capabilities,
-      );
-      return pack.manifestSha256 == manifestSha256 && pack.version == version && pack.id == id;
+      final VerifiedPack pack = await _readAndVerify(dir);
+      final bool recorded =
+          pack.manifestSha256 == row.manifestSha256 && pack.version == row.version && pack.id == id;
+      return recorded ? pack : null;
     } on PackRejected {
-      return false;
+      return null;
     }
+  }
+
+  /// Reads the files of an installed pack folder and proves them (signature, every hash, the content rules), off the UI
+  /// isolate: a pack of 27 MiB takes about half a second to read and hash, which would stop the screen. The result and the
+  /// errors are the same as doing it here; the bytes come back to this isolate without being copied. With a `decode` other
+  /// than `jsonDecode` (a test's spy, which cannot cross) it is done here.
+  Future<VerifiedPack> _readAndVerify(Directory dir) {
+    final String path = dir.path;
+    final Uint8List key = publicKey;
+    final AppCapabilities caps = capabilities;
+    if (!identical(decode, jsonDecode)) return readAndVerifyInstalled(path, key, caps, decode);
+    return Isolate.run(() => readAndVerifyInstalled(path, key, caps, jsonDecode));
   }
 
   /// Reads an installed pack back from disk and proves it again, as if it had just arrived. A file
@@ -214,19 +251,7 @@ class PackInstaller {
     if (row == null) return null;
     final Directory dir = packDir(id, row.version);
     if (!dir.existsSync()) throw const PackRejected('disk', 'the files of the installed pack are missing');
-    final Map<String, Uint8List> entries = <String, Uint8List>{};
-    for (final FileSystemEntity e in dir.listSync(followLinks: false)) {
-      if (e is! File) {
-        throw const PackRejected('disk', 'the installed pack holds something that is not a file');
-      }
-      entries[e.uri.pathSegments.last] = e.readAsBytesSync();
-    }
-    final VerifiedPack pack = await verifyEntries(
-      entries,
-      publicKey: publicKey,
-      decode: decode,
-      capabilities: capabilities,
-    );
+    final VerifiedPack pack = await _readAndVerify(dir);
     if (pack.manifestSha256 != row.manifestSha256 || pack.version != row.version || pack.id != row.id) {
       throw const PackRejected('disk', 'the installed pack is not the one that was recorded');
     }
@@ -241,6 +266,25 @@ class PackInstaller {
       );
     }
     return pack;
+  });
+
+  /// The manifest of the installed pack [id], to learn which lines it holds without reading its sounds. It is read from disk
+  /// and must be the exact bytes recorded at install (their SHA-256 is the row's), so it is the manifest that was verified
+  /// then; the pack itself is proven whole only by [load], which anything that plays a sound must go through. Null if the
+  /// pack is not installed or its manifest is missing or changed.
+  Future<Map<String, Object?>?> installedManifest(String id) => _serial(() async {
+    final InstalledPack? row = await registry.find(id);
+    if (row == null) return null;
+    final File file = File('${packDir(id, row.version).path}${Platform.pathSeparator}$manifestName');
+    if (!file.existsSync()) return null;
+    final Uint8List bytes = file.readAsBytesSync();
+    if (sha256Hex(bytes) != row.manifestSha256) return null;
+    try {
+      final Object? manifest = decode(utf8.decode(bytes));
+      return manifest is Map<String, Object?> ? manifest : null;
+    } on FormatException {
+      return null;
+    }
   });
 
   /// Removes what an interrupted install left behind: temporary folders, versions the registry does

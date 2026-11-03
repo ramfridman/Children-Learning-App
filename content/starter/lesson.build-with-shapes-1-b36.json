@@ -1,0 +1,31 @@
+{
+  "schema": "lesson/v1",
+  "id": "build-with-shapes-1-b36",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "בּוֹנִים מִצּוּרוֹת"
+    }
+  ],
+  "skills": [
+    "SHP-A-06"
+  ],
+  "items": [
+    "b36.shpa06.1",
+    "b36.shpa06.2"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 16,
+  "celebration": {
+    "vo": "vo:celebrate.build_with_shapes_1_b36",
+    "caption": [
+      {
+        "t": "he",
+        "v": "וַאוּ! בְּנִיתֶם תְּמוּנוֹת מִצּוּרוֹת."
+      }
+    ]
+  }
+}

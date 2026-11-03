@@ -40,7 +40,8 @@
       {
         "id": "o1",
         "sprite": "asset:time_night",
-        "label": "לַיְלָה"
+        "label": "לַיְלָה",
+        "misconception": "M-TIME-SEQ"
       },
       {
         "id": "o2",
@@ -50,7 +51,8 @@
       {
         "id": "o3",
         "sprite": "asset:time_noon",
-        "label": "צָהֳרַיִם"
+        "label": "צָהֳרַיִם",
+        "misconception": "M-TIME-SEQ"
       }
     ],
     "correct": "o2",
@@ -69,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-TIME-SEQ",
+        "vo": "vo:fb.time_seq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אַחֲרֵי הַשֵּׁנִי."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -105,11 +117,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.order.3.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "הַמִּסְפָּרִים מַרְאִים אֶת הַסֵּדֶר: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ."
         }
       ]
     },

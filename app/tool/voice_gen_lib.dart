@@ -1,7 +1,8 @@
 // The working parts of `voice_gen`: exactly what is sent for each line (the request and its hash), which clips are
 // new, changed or up to date, what generating them would cost, the gate before any money is spent, the ElevenLabs
-// call, the conversion of its character timestamps into mouth cues, and the voice pack. Which lines and which words
-// are in voice_text_lib.dart; the audition is in audition_lib.dart.
+// call, the conversion of its character timestamps into mouth cues, and the voice packs. Which lines and which words
+// are in voice_text_lib.dart; how the lines are shared among the packs of a character is in voice_packs_lib.dart; the
+// audition is in audition_lib.dart.
 //
 // This runs on the owner's PC only, never in the app. The ElevenLabs key is passed in by the command line
 // (from an environment variable) and is never written anywhere.
@@ -15,8 +16,10 @@ import 'package:http/http.dart' as http;
 import 'package:nitznutz/content/pack_verify.dart';
 
 import 'pack_builder_lib.dart';
+import 'voice_packs_lib.dart';
 import 'voice_text_lib.dart';
 
+export 'voice_packs_lib.dart';
 export 'voice_text_lib.dart';
 
 /// Respells known tricky words (names, words the voice gets wrong) before they are sent.
@@ -165,6 +168,7 @@ class VoiceProfile {
     this.styles = const <String, Map<String, Object?>>{},
     this.styleRules = const <String, List<String>>{},
     this.pronunciation = const <String, String>{},
+    this.ownLines,
   });
 
   /// The profile of [character]. [model] replaces the configured model (an audition compares two).
@@ -198,17 +202,53 @@ class VoiceProfile {
         for (final MapEntry<String, Object?> e in map(config['pronunciation']).entries)
           e.key: e.value! as String,
       },
+      ownLines: _ownLinesOf(config, character),
     );
     // Fail now, not after the first lines were paid for.
     settingsToSend(modelId, p.settings);
-    for (final String style in p.styleRules.keys) {
-      final Map<String, Object?>? s = p.styles[style];
+    for (final MapEntry<String, List<String>> rule in p.styleRules.entries) {
+      final Map<String, Object?>? s = p.styles[rule.key];
       if (s == null) {
-        throw VoiceGenFailed('content/voices.json › styleRules names "$style", which has no style');
+        throw VoiceGenFailed('content/voices.json › styleRules names "${rule.key}", which has no style');
+      }
+      if (rule.value.any((String pattern) => pattern.isEmpty || pattern == _endMark)) {
+        throw VoiceGenFailed(
+          'content/voices.json › styleRules › ${rule.key} has a pattern that matches every line',
+        );
       }
       settingsToSend(modelId, p.settings, s);
     }
     return p;
+  }
+
+  /// The lines [character] says alone, from `narrators` and `ownLines` in content/voices.json: null for a narrator, and
+  /// for every character when the file names no narrators (each says every line). A character that is not a narrator
+  /// says only the lines in `ownLines`; the app plays the narrator's clip for any other line.
+  static Set<String>? _ownLinesOf(Map<String, Object?> config, String character) {
+    final Object? narrators = config['narrators'];
+    if (narrators == null) return null;
+    final Map<String, Object?> voices = (config['voices'] ?? <String, Object?>{}) as Map<String, Object?>;
+    final List<String> names = _strings(narrators, 'narrators');
+    for (final String n in names) {
+      if (!voices.containsKey(n)) {
+        throw VoiceGenFailed('content/voices.json › narrators names "$n", which has no voice');
+      }
+    }
+    if (names.contains(character)) return null;
+    final List<String> own = _strings(config['ownLines'], 'ownLines');
+    if (own.isEmpty || own.any((String id) => !id.startsWith('vo:'))) {
+      throw const VoiceGenFailed(
+        'content/voices.json › ownLines is the list of "vo:" ids a character that is not a narrator says',
+      );
+    }
+    return own.toSet();
+  }
+
+  static List<String> _strings(Object? list, String name) {
+    if (list is! List<Object?> || list.any((Object? e) => e is! String)) {
+      throw VoiceGenFailed('content/voices.json › $name is a list of strings');
+    }
+    return list.cast<String>();
   }
 
   /// The free test voices: no account and no model; the mock synthesizer uses only the text.
@@ -226,6 +266,35 @@ class VoiceProfile {
   final Map<String, Map<String, Object?>> styles;
   final Map<String, List<String>> styleRules;
   final Map<String, String> pronunciation;
+
+  /// The voice ids of the only lines this character says (a friend, whose voice is heard at the edges of play), or
+  /// null when it says every line (a narrator).
+  final Set<String>? ownLines;
+
+  /// Whether this character says the line [voId].
+  bool says(String voId) => ownLines?.contains(voId) ?? true;
+
+  /// The part of [lines] this character says, in the order given.
+  List<SpokenLine> linesOf(List<SpokenLine> lines) => ownLines == null
+      ? lines
+      : <SpokenLine>[
+          for (final SpokenLine l in lines)
+            if (says(l.voId)) l,
+        ];
+
+  /// Refuses an own line that no content asks for (a misspelt id would silently shrink the pack). [voIds] is every
+  /// voice id of the content, ready or not.
+  void checkOwnLines(Set<String> voIds) {
+    final List<String> unknown = <String>[
+      for (final String id in ownLines ?? <String>{})
+        if (!voIds.contains(id)) id,
+    ];
+    if (unknown.isNotEmpty) {
+      throw VoiceGenFailed(
+        'content/voices.json › ownLines names lines that no content asks for: ${unknown.join(', ')}',
+      );
+    }
+  }
 
   /// The request for [line]: its text respelled, and the usual settings with the line's style on top.
   ClipRequest requestFor(SpokenLine line) {
@@ -246,11 +315,19 @@ class VoiceProfile {
   ]..sort();
 }
 
-/// The name of the style a line is said in (for example `cheer` for the celebrations), by the start of its voice id, or
-/// null for the usual voice. [rules] maps a style to the voice-id prefixes it covers.
+/// A style pattern that starts with this matches the END of a voice id (`*.h3`); any other matches the start.
+const String _endMark = '*';
+
+/// Whether [pattern] covers [voId]: `*` and a suffix for the end of the id, otherwise a prefix.
+bool _matches(String voId, String pattern) =>
+    pattern.startsWith(_endMark) ? voId.endsWith(pattern.substring(1)) : voId.startsWith(pattern);
+
+/// The name of the style a line is said in (for example `cheer` for the celebrations), or null for the usual voice.
+/// [rules] maps a style to the patterns it covers: a prefix of the voice id (`vo:celebrate.`), or `*` and a suffix
+/// (`*.h3`). The first style that matches wins, in the order [rules] was written (a JSON map keeps its order).
 String? styleOf(String voId, Map<String, List<String>> rules) {
   for (final MapEntry<String, List<String>> r in rules.entries) {
-    if (r.value.any(voId.startsWith)) return r.key;
+    if (r.value.any((String pattern) => _matches(voId, pattern))) return r.key;
   }
   return null;
 }
@@ -392,9 +469,16 @@ class VoicePlan {
     String priceSource = '',
     bool inRun = false,
   }) {
+    final Map<String, int> perVoice = <String, int>{
+      for (final String ch in characters) ch: clips.where((PlannedClip c) => c.character == ch).length,
+    };
     final StringBuffer b = StringBuffer()
       ..writeln('Voices: ${characters.join(', ')}')
-      ..writeln('Lines per voice: ${lines.length}');
+      ..writeln(
+        perVoice.values.toSet().length <= 1
+            ? 'Lines per voice: ${perVoice.values.firstOrNull ?? 0}'
+            : 'Lines per voice: ${perVoice.entries.map((MapEntry<String, int> e) => '${e.key} ${e.value}').join(', ')}',
+      );
     for (final String ch in characters) {
       final List<PlannedClip> mine = clips.where((PlannedClip c) => c.character == ch).toList();
       if (mine.isEmpty) continue;
@@ -464,8 +548,8 @@ class VoicePlan {
   }
 }
 
-/// The plan for every character of [profiles] saying every line of [lines]. [stateOf] tells which clips exist already
-/// (none, when it is not given).
+/// The plan for every character of [profiles] saying its part of [lines] (all of them for a narrator, only its own for
+/// a friend: [VoiceProfile.linesOf]). [stateOf] tells which clips exist already (none, when it is not given).
 VoicePlan planVoices(
   Map<String, VoiceProfile> profiles,
   List<SpokenLine> lines, {
@@ -473,7 +557,7 @@ VoicePlan planVoices(
 }) {
   final List<PlannedClip> clips = <PlannedClip>[
     for (final MapEntry<String, VoiceProfile> p in profiles.entries)
-      for (final SpokenLine l in lines)
+      for (final SpokenLine l in p.value.linesOf(lines))
         () {
           final ClipRequest r = p.value.requestFor(l);
           return PlannedClip(p.key, l, r, stateOf?.call(p.key, l, r) ?? ClipState.newLine);
@@ -558,8 +642,8 @@ class _Silent implements Synthesizer {
 /// will send, prints the plan, refuses texts the pre-flight check refuses, asks the owner to type the total, and only
 /// then asks for the voice ([synth], which reads the key) and makes the pack. [heading] (where the texts come from) is
 /// printed above the plan, after the terminal check. When every clip is up to date it builds
-/// the pack without asking for the voice or the count.
-Future<BuiltPack> generateGated({
+/// the packs without asking for the voice or the count.
+Future<List<BuiltPack>> generateGated({
   required String characterId,
   required List<SpokenLine> lines,
   required VoiceProfile profile,
@@ -572,6 +656,7 @@ Future<BuiltPack> generateGated({
   String priceSource = '',
   String heading = '',
   String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
 }) async {
   requireTerminal(keyboard, 'generate');
   if (heading.isNotEmpty) write(heading);
@@ -589,6 +674,16 @@ Future<BuiltPack> generateGated({
       'the pre-flight check refuses ${refused.length} texts. Nothing was sent:\n${refused.join('\n')}',
     );
   }
+  // The lines must fit in packs before any money is spent on them.
+  write(
+    describeVoicePacks(
+      characterId,
+      voicePackLayout(characterId, profile, lines, maxLines: maxLines),
+      <String, int>{for (final PlannedClip c in plan.clips) c.line.voId: c.request.characters},
+      version: version,
+      maxLines: maxLines,
+    ),
+  );
   final Synthesizer voice;
   if (plan.total == 0) {
     voice = const _Silent();
@@ -604,6 +699,7 @@ Future<BuiltPack> generateGated({
     key: key,
     workDir: workDir,
     version: version,
+    maxLines: maxLines,
     progress: write,
   );
 }
@@ -850,13 +946,33 @@ void checkApiKey(String key) {
   }
 }
 
-// ---- making the voice pack ----
+// ---- making the voice packs ----
 
-/// Says every line in [lines] whose clip is new or changed, and builds the signed voice pack of [characterId]. Writes
-/// the sources to [workDir] first and records each clip's hash in its [ClipLedger], so that a run that stops can be
-/// continued, and a line whose text, voice, model, settings or format changed is said again. Refuses before sending
-/// anything if a text fails the pre-flight check.
-Future<BuiltPack> generateVoicePack({
+/// The oldest app that reads a voice split into several packs (`VoiceBank.fromPacks`). An older app keeps the voice pack it
+/// has instead of replacing it with the first of the new ones alone.
+const String voicePackMinAppVersion = '0.6.0';
+
+/// The packs [profile] makes of [lines]: a narrator's lines are shared among packs by land and band, while a friend's own
+/// few lines are one pack.
+List<VoicePackGroup> voicePackLayout(
+  String characterId,
+  VoiceProfile profile,
+  List<SpokenLine> lines, {
+  int maxLines = VoicePackLimits.maxLines,
+}) => layoutVoicePacks(
+  characterId,
+  <String>[for (final SpokenLine l in profile.linesOf(lines)) l.voId],
+  maxLines: maxLines,
+  onePack: profile.ownLines != null,
+);
+
+/// Says every line in [lines] that [profile] says (all of them, or a friend's own: [VoiceProfile.linesOf]) whose clip is
+/// new or changed, then builds the signed voice packs of [characterId] ([buildVoicePacks]). The clips go to [workDir] and
+/// each clip's hash is recorded in its [ClipLedger], so that a run that stops can be continued, and a line whose text,
+/// voice, model, settings or format changed is said again. Refuses before sending anything if a text fails the
+/// pre-flight check or the lines cannot be shared among packs. The clips are all saved before any pack is built, so a pack
+/// that is too big costs nothing: [repackVoicePacks] makes the packs again from the same clips.
+Future<List<BuiltPack>> generateVoicePack({
   required String characterId,
   required List<SpokenLine> lines,
   required Synthesizer synth,
@@ -864,17 +980,20 @@ Future<BuiltPack> generateVoicePack({
   required PackKey key,
   required Directory workDir,
   String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
   void Function(String)? progress,
 }) async {
-  final List<ClipRequest> requests = <ClipRequest>[for (final SpokenLine l in lines) profile.requestFor(l)];
+  final List<SpokenLine> mine = profile.linesOf(lines);
+  final List<ClipRequest> requests = <ClipRequest>[for (final SpokenLine l in mine) profile.requestFor(l)];
   final List<TextProblem> problems = <TextProblem>[
-    for (int i = 0; i < lines.length; i++) ...requests[i].problems(lines[i].voId),
+    for (int i = 0; i < mine.length; i++) ...requests[i].problems(mine[i].voId),
   ];
   if (problems.isNotEmpty) {
     throw VoiceGenFailed(
       'the pre-flight check refuses ${problems.length} texts. Nothing was sent:\n${problems.join('\n')}',
     );
   }
+  voicePackLayout(characterId, profile, lines, maxLines: maxLines);
   checkWorkFolder(workDir);
   final ClipLedger ledger = ClipLedger(workDir);
   if (isInsideFolder(ledger.file, workDir)) {
@@ -882,41 +1001,140 @@ Future<BuiltPack> generateVoicePack({
   }
   workDir.createSync(recursive: true);
   final Map<String, String> made = ledger.hashes();
-  final List<Map<String, String>> vo = <Map<String, String>>[];
-  for (int i = 0; i < lines.length; i++) {
-    final String id = lines[i].fileId;
+  for (int i = 0; i < mine.length; i++) {
+    final String id = mine[i].fileId;
     final ClipRequest request = requests[i];
-    if (clipState(workDir, id, request, made) != ClipState.unchanged) {
-      final Synthesis s = await synth.say(request);
-      // The old sound goes only once the new one is here (it may have had the other extension).
-      _audioOf(workDir, id)?.deleteSync();
-      File(_inFolder(workDir, 'vo.$id.${s.extension}')).writeAsBytesSync(s.audio);
-      File(_inFolder(workDir, 'cue.$id.json')).writeAsStringSync(
-        jsonEncode(<String, Object?>{
-          'schema': 'cue/v1',
-          'id': id,
-          'cues': <Object?>[
-            for (final (int, int) c in cuesFromAlignment(s.alignment))
-              <String, Object?>{'t': c.$1, 'o': c.$2},
-          ],
-        }),
-      );
-      ledger.record(id, 'vo.$id.${s.extension}', request);
-      progress?.call('said $id');
-    }
-    vo.add(<String, String>{'id': id, 'file': _audioOf(workDir, id)!.uri.pathSegments.last});
+    if (clipState(workDir, id, request, made) == ClipState.unchanged) continue;
+    final Synthesis s = await synth.say(request);
+    // The old sound goes only once the new one is here (it may have had the other extension).
+    _audioOf(workDir, id)?.deleteSync();
+    File(_inFolder(workDir, 'vo.$id.${s.extension}')).writeAsBytesSync(s.audio);
+    File(_inFolder(workDir, 'cue.$id.json')).writeAsStringSync(
+      jsonEncode(<String, Object?>{
+        'schema': 'cue/v1',
+        'id': id,
+        'cues': <Object?>[
+          for (final (int, int) c in cuesFromAlignment(s.alignment)) <String, Object?>{'t': c.$1, 'o': c.$2},
+        ],
+      }),
+    );
+    ledger.record(id, 'vo.$id.${s.extension}', request);
+    progress?.call('said $id');
   }
-  File(_inFolder(workDir, 'pack.json')).writeAsStringSync(
-    jsonEncode(<String, Object?>{
-      'schema': 'pack-source/v1',
-      'id': 'voice-$characterId',
-      'version': version,
-      'minAppVersion': '0.3.0',
-      'assets': <Object?>[],
-      'vo': vo,
-    }),
+  return buildVoicePacks(
+    characterId: characterId,
+    lines: lines,
+    profile: profile,
+    key: key,
+    workDir: workDir,
+    version: version,
+    maxLines: maxLines,
+    progress: progress,
   );
-  return buildPack(workDir, key);
+}
+
+/// Makes the voice packs again from the clips already in [workDir]. It has no voice to ask, so it cannot say a word or spend
+/// anything. For a pack that was too big (`--max-lines`), a new pack version, or a lost pack file. Refuses, and builds
+/// nothing, if any line has no clip made from its current request: that is what `generate` is for.
+Future<List<BuiltPack>> repackVoicePacks({
+  required String characterId,
+  required List<SpokenLine> lines,
+  required VoiceProfile profile,
+  required PackKey key,
+  required Directory workDir,
+  String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
+  void Function(String)? progress,
+}) async {
+  voicePackLayout(characterId, profile, lines, maxLines: maxLines);
+  checkWorkFolder(workDir);
+  final Map<String, String> made = ClipLedger(workDir).hashes();
+  final List<String> lacking = <String>[
+    for (final SpokenLine l in profile.linesOf(lines))
+      if (clipState(workDir, l.fileId, profile.requestFor(l), made) != ClipState.unchanged) l.voId,
+  ];
+  if (lacking.isNotEmpty) {
+    throw VoiceGenFailed(
+      '${lacking.length} lines have no clip made from their current text and settings (for example '
+      '${lacking.take(3).join(', ')}), so the packs would be incomplete. Nothing was built: run `generate` first.',
+    );
+  }
+  return buildVoicePacks(
+    characterId: characterId,
+    lines: lines,
+    profile: profile,
+    key: key,
+    workDir: workDir,
+    version: version,
+    maxLines: maxLines,
+    progress: progress,
+  );
+}
+
+/// Builds and signs the voice packs of [characterId] from the clips in [workDir], one pack for each of
+/// [voicePackLayout], and checks the size of every pack against [VoicePackLimits] before it signs any. A pack holds exactly
+/// the sound and cue files of its own lines; nothing else in the folder (an older pack file, the hashes) goes in.
+Future<List<BuiltPack>> buildVoicePacks({
+  required String characterId,
+  required List<SpokenLine> lines,
+  required VoiceProfile profile,
+  required PackKey key,
+  required Directory workDir,
+  String version = '1.0.0',
+  int maxLines = VoicePackLimits.maxLines,
+  void Function(String)? progress,
+}) async {
+  final List<VoicePackGroup> packs = voicePackLayout(characterId, profile, lines, maxLines: maxLines);
+  final Map<String, List<(String, File)>> sources = <String, List<(String, File)>>{};
+  final Map<String, int> bytes = <String, int>{};
+  for (final VoicePackGroup p in packs) {
+    final List<(String, File)> files = <(String, File)>[];
+    for (final String voId in p.voIds) {
+      final String id = voId.substring('vo:'.length);
+      final File? audio = _audioOf(workDir, id);
+      final File cue = File(_inFolder(workDir, 'cue.$id.json'));
+      if (audio == null || !cue.existsSync()) {
+        throw VoiceGenFailed(
+          '$voId has no clip in ${workDir.path}: run `generate` first. Nothing was built.',
+        );
+      }
+      files
+        ..add((audio.uri.pathSegments.last, audio))
+        ..add(('cue.$id.json', cue));
+    }
+    sources[p.packId] = files;
+    bytes[p.packId] = files.fold<int>(0, (int s, (String, File) f) => s + f.$2.lengthSync());
+  }
+  checkVoicePackSizes(characterId, packs, bytes);
+  final List<BuiltPack> built = <BuiltPack>[];
+  for (final VoicePackGroup p in packs) {
+    final Map<String, Uint8List> contents = <String, Uint8List>{
+      for (final (String name, File file) in sources[p.packId]!) name: file.readAsBytesSync(),
+    };
+    final BuiltPack pack = await buildPackFrom(
+      <String, Object?>{
+        'schema': 'pack-source/v1',
+        'id': p.packId,
+        'version': version,
+        'minAppVersion': voicePackMinAppVersion,
+        'assets': <Object?>[],
+        'vo': <Map<String, String>>[
+          for (final String voId in p.voIds)
+            <String, String>{
+              'id': voId.substring('vo:'.length),
+              'file': _audioOf(workDir, voId.substring('vo:'.length))!.uri.pathSegments.last,
+            },
+        ],
+      },
+      contents,
+      key,
+    );
+    // The files were under the limit; the zip adds only headers and the manifest, and it is the zip that is sent.
+    checkVoicePackSizes(characterId, <VoicePackGroup>[p], <String, int>{p.packId: pack.bytes.length});
+    built.add(pack);
+    progress?.call('built ${pack.fileName}: ${p.voIds.length} lines, ${pack.bytes.length} bytes');
+  }
+  return built;
 }
 
 /// Whether any file under [dir] contains [secret] (used by tests: the key must never be written anywhere).
@@ -935,6 +1153,15 @@ bool anyFileContains(Directory dir, String secret) {
   }
   return false;
 }
+
+/// The `vo:` ids of [release] that the character of [profile] says and that its voice pack ([packIds]) has no recording
+/// of: the release check of M9 (every `vo` id of the release has a recording in every shipped voice pack). A narrator
+/// says every line, so a narrator pack must hold all of them; a friend says only its own lines, so only those are
+/// required of it (the narrator's pack covers the rest). Empty when the pack is complete.
+List<String> missingVoLines(VoiceProfile profile, Set<String> release, Set<String> packIds) => <String>[
+  for (final String id in release)
+    if (profile.says(id) && !packIds.contains(id)) id,
+]..sort();
 
 /// Pack contents of a voice pack, for a quick look.
 Future<String> describeVoicePack(Uint8List bytes, Uint8List publicKey) async {
