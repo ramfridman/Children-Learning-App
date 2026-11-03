@@ -40,6 +40,13 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-3 | `settings-put` bounds the family's settings in characters, the table in bytes | low | fixed (`a399488`: 10,000 UTF-8 bytes at the gateway; Deno test green); closes when a pgTAP case stores the largest document the gateway takes | 2026-11-03 |
 | SEC-L0-4 | `content-publish` and `tutor-prewarm` do not refuse language-course skills under a core pack id (`tutor-turn` does) | info | closed (`a399488`: `content-publish` refuses them under any pack id; proof re-run) | 2026-11-03 |
 | SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
+| SEC-L1-1 | Lesson lines are outside the validator's new language-field rules | low | open | 2026-11-03 |
+| SEC-L1-2 | Hebrew frame lines: the script check is narrower than the language rule | low | open | 2026-11-03 |
+| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | open | 2026-11-03 |
+| SEC-L1-4 | The tutor hold keeps the previous line's language extras (not reachable) | info | open | 2026-11-03 |
+| SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
+| SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |
+| SEC-L1-7 | A language pack's clip ids are bound to the pack by naming only (for L2) | info | open | 2026-11-03 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -258,4 +265,23 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   only the pack's own rows into each language engine; a damaged language pack is left out without touching the others; packs
   are loaded only through the verifying installer and never bundled. `deno task check`: 198 passed, 0 failed, 7 ignored;
   `flutter analyze` clean. Not run by the security-engineer: `flutter test` (the QA pass follows).
+- **L1 Languages text, direction and LS01, `languages-l1` (`1967b1a`; 2026-11-03): safe to merge, no finding above low.**
+  Verified by reading and by a proof script run against the branch:
+  - The bundled starter pack still verifies (signature, hashes, schemas and the whole validator), and its bytes are not in
+    the diff.
+  - Every new clip reference is a bounded `vo:` id, checked against the pack and looked up only as a key in a verified voice
+    bank. No path, file or network read hangs on it.
+  - Target text is deny-by-default: direction controls, invisible characters, NFD forms, digits and look-alike letters of
+    other scripts are all refused.
+  - The validator runs again on every load, and `TargetText` keeps its own paragraph and direction.
+  - Nothing new reaches the microphone or the network.
+  - Model text can reach only the bubble, never a tile, caption or chip, and the tutor stays off for language items.
+
+  New: SEC-L1-1 and SEC-L1-2 (low), SEC-L1-3 to SEC-L1-7 (info), above. Also checked:
+  - gitleaks clean over `origin/main..HEAD`;
+  - `flutter analyze` clean for tracked code;
+  - OSV.dev: no advisory for flutter_svg 2.3.2, vector_graphics 1.2.4, crypto 3.0.8 or cryptography 2.9.0 (2026-11-03);
+  - no package, lock file, host, workflow or gateway change.
+
+  Not run by the security-engineer: `flutter test` (the qa-engineer's pass).
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.

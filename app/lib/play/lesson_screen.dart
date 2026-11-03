@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../app/companion.dart';
+import '../app/language_providers.dart';
 import '../app/providers.dart';
 import '../app/reward_providers.dart';
 import '../app/state.dart';
@@ -27,6 +28,7 @@ import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../parent/alert_scan.dart';
+import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
 import '../parent/time_rules.dart';
 import '../speech/voice_answer.dart';
@@ -46,6 +48,7 @@ import 'shop_pay_session.dart';
 import 'trace_session.dart';
 import 'tap_answer_session.dart';
 import 'balance_session.dart';
+import 'caption_policy.dart';
 import 'number_line_session.dart';
 import 'robot_path_session.dart';
 import 'shape_builder_session.dart';
@@ -307,10 +310,49 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     // A line is worth saying only until the child's next move; after that it would be about something already past.
     final int move = c.actionNonce;
     bool relevant() => c.actionNonce == move;
+    // A line of a language course is two clips: the Hebrew frame clip, then the target clip.
     unawaited(
-      c.voiceReplaces
-          ? _director.say(c.voice, owner: this, relevant: relevant)
-          : _director.sayNext(c.voice, owner: this, relevant: relevant),
+      _director.sayClips(
+        <String?>[c.voice, c.voiceTarget],
+        owner: this,
+        relevant: relevant,
+        replace: c.voiceReplaces,
+      ),
+    );
+  }
+
+  /// The sound of an answer, from its tile (a speaker, a sound button, a picture): the clips, at once when the child touched
+  /// to hear, after the line that is playing otherwise (a hint's own line).
+  void _playClips(List<String> voIds, {bool replace = false}) {
+    final LessonController? c = _controller;
+    if (c == null || !mounted) return;
+    if (_voice?.answer.state == MicState.listening) _voice?.hush();
+    final int move = c.actionNonce;
+    unawaited(
+      _director.sayClips(
+        voIds,
+        owner: this,
+        // A hint's sounds are worth hearing only until the child's next move; a touch's own sound is always worth hearing.
+        relevant: replace ? null : () => c.actionNonce == move,
+        replace: replace,
+      ),
+    );
+  }
+
+  /// Whether the word of the right picture shows after the answer, and whether it carries its stress marks: the child's route and
+  /// presentation band in the language, the parent's stress choice (docs/languages/frame.md, LS01 g). Never in a land.
+  ({bool captions, bool stress}) _captionsFor(Activity a) {
+    if (!a.isLanguage) return (captions: false, stress: true);
+    final LanguageSwitches s =
+        ref.read(languagesProvider).value?.of(widget.profileId, a.course) ?? const LanguageSwitches();
+    final int ageBand = ref.read(activeProfileProvider)?.ageBand ?? 1;
+    return (
+      captions: captionAfterAnswer(
+        course: a.course,
+        route: s.route,
+        presentationBand: s.presentationBand(ageBand),
+      ),
+      stress: showsStress(setting: s.stress, route: s.route),
     );
   }
 
@@ -319,9 +361,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     if (_session == null || _sessionIndex != c.index) {
       final TemplateSession? old = _session;
       final Activity a = c.current;
+      final ({bool captions, bool stress}) caption = _captionsFor(a);
       _session = switch (a) {
         CountTapActivity() => CountTapSession(c, a),
-        TapAnswerActivity() => TapAnswerSession(c, a),
+        TapAnswerActivity() => TapAnswerSession(c, a, captions: caption.captions, stress: caption.stress),
         FlashActivity() => FlashSession(c, a),
         SortDragActivity() => SortDragSession(c, a),
         BuildPatternActivity() => BuildPatternSession(c, a),
@@ -336,6 +379,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         TraceActivity() => TraceSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
       };
+      _session!.playClips = _playClips;
       _sessionIndex = c.index;
       // The old stage is still on screen for this frame; let it go afterwards.
       if (old != null) SchedulerBinding.instance.addPostFrameCallback((_) => old.dispose());
@@ -444,6 +488,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             voiceOf: guide.character.id,
           ),
           bubbleText: controller.bubble,
+          bubbleAboveTiles: controller.current.isLanguage,
+          bubbleTarget: controller.bubbleShow == null
+              ? null
+              : (
+                  text: withStress(controller.bubbleShow!, show: _captionsFor(controller.current).stress),
+                  course: controller.current.course,
+                ),
           trailTotal: controller.items.length,
           trailDone: controller.finished ? controller.items.length : controller.index,
           onHome: _home,

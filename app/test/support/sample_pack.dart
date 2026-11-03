@@ -307,21 +307,53 @@ class SamplePack {
       if (<String>['activity', 'lesson', 'skill', 'misconception'].any(d.key.startsWith)) {
         doc['course'] = course;
       }
+      // A language tag has a kind, and every distractor of a language item carries a tag (L1, the language checks).
+      if (d.key.startsWith('misconception')) doc['kind'] = 'diagnostic';
     }
+    // The count of a course is practice with a number word for each tap and sound buttons for "how many?" (frame section 2.2).
+    final Map<String, Object?> count =
+        docs['activity.$course.count.butterflies.3.json']! as Map<String, Object?>;
+    final List<String> numberClips = <String>['vo:n.one', 'vo:n.two', 'vo:n.three'];
+    ((count['scene']! as Map<String, Object?>)['objects']! as Map<String, Object?>)['clips'] = numberClips;
+    count['traceClassifiers'] = <Object?>[];
+    final List<Object?> countOptions =
+        (count['answer']! as Map<String, Object?>)['options']! as List<Object?>;
+    for (final (int i, Object? o) in countOptions.indexed) {
+      (o! as Map<String, Object?>)['clip'] = <String>['vo:n.two', 'vo:n.three', 'vo:n.four'][i];
+    }
+    final Map<String, Object?> pick = docs['activity.$course.pick.red.flower.json']! as Map<String, Object?>;
+    (((pick['answer']! as Map<String, Object?>)['options']! as List<Object?>)[1]!
+            as Map<String, Object?>)['misconception'] =
+        '$course.cnt.skip';
     final Map<String, Object?> manifest = walk(base.manifest)! as Map<String, Object?>;
     manifest['course'] = course;
+    (manifest['voPending']! as List<Object?>).addAll(<String>[
+      'vo:n.one',
+      'vo:n.two',
+      'vo:n.three',
+      'vo:n.four',
+    ]);
     return SamplePack._(manifest, docs, <String>{for (final String f in base.files) rename(f)});
   }
 
   /// The pack as the app holds one that passed `verifyPack`, but with no signature and no bytes: for tests of what is built
   /// from the documents (the models, the engine's catalogue), which never look at either.
-  VerifiedPack verified() => VerifiedPack(
+  /// With [pictures] every picture of the manifest is a small drawn square (a screen that draws the pack needs them).
+  VerifiedPack verified({bool pictures = false}) => VerifiedPack(
     manifestBytes: Uint8List.fromList(utf8.encode(jsonEncode(manifest))),
     signature: Uint8List(64),
     manifestSha256: '0' * 64,
     manifest: manifest,
     docs: docs,
-    files: const <String, Uint8List>{},
+    files: <String, Uint8List>{
+      if (pictures)
+        for (final Map<String, Object?> a in manifestList('assets'))
+          a['file']! as String: Uint8List.fromList(
+            utf8.encode(
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#E8A33D"/></svg>',
+            ),
+          ),
+    },
   );
 
   /// Adds a JSON document to the pack and to the manifest, under the list [entriesKey] of its kind (`skills`, `gates`, ...), as

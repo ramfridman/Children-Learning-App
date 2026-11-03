@@ -58,6 +58,7 @@ abstract final class He {
   static const Str switchChildSemantics = Str('החלפת ילד');
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);
   static const Str replaySemantics = Str('שמיעה חוזרת של השאלה');
+  static const Str optionSoundSemantics = Str('שמיעה של האפשרות');
   static const Str coinA10Semantics = Str('10 אגורות');
   static const Str coinH50Semantics = Str('חצי שקל');
   static const Str coinS1Semantics = Str('שקל');

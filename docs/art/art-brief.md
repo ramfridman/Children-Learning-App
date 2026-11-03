@@ -144,6 +144,10 @@ The lessons count and compare "things", so these simple pictures appear many tim
 
 More of these arrive with each new unit (the list is kept in `content/units/*.json` under `assets`).
 
+### 6.6c The Languages pictures (2026-11-03)
+
+The three language courses (English, Hebrew, Russian) share one set of **about 333 pictures**: one picture per real object, used by every course that names it, plus the friend Mika, one shared family, the hosts' poses, story pages and scenes. The list, the ids, which course uses each picture, the characters and their looks are in `docs/languages/pictures.md`. Canvas 256 by 256, 4 percent padding, a soft ground shadow; must read at 64 points. Colour sets (ball, balloon, boat) are one drawing in pure named hues, with a **medium-dark blue** (Russian си́ний is never light blue). Animals in side view face one way across the set. No letters or numerals on blocks, books or clocks. Today's files are our own drawings in `content/languages/pictures/` (made by `tools/make_language_pictures.py`, the first 40 objects drawn); redraw under the same ids.
+
 ### 6.7 Buttons and small signs
 
 The child's buttons are round "pebbles" with a clay lip, with a picture on them. Restyle only if your style asks for it; keep each picture one dark colour on a light disc (or white on orange): `ui/`: book, bottle, eye, hint, home (a palm island), lock, microphone, plus, spark, sticker, play, speaker, back. Also: a **bell flag** and a **dry leaf** for the revisit marker (today `world/bell_flag.svg`, `leaf_dry.svg`), a **golden star** and **fruit** (`world/star_gold.svg`, `fruit.svg`).

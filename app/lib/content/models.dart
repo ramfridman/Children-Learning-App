@@ -18,17 +18,26 @@ List<Map<String, Object?>> _maps(Object? o) => <Map<String, Object?>>[
 /// The Hebrew of a caption list (exactly one element, `t` is always `he`).
 String _caption(Object? o) => _map((o! as List<Object?>).single)['v']! as String;
 
-/// A line to be voiced and shown: the voice id (`vo:…`) and its caption.
+/// A line to be voiced and shown: the voice id (`vo:…`) and its caption. In a language course a line may also carry a second
+/// clip, the target-language clip that follows the Hebrew frame clip ([target]), and a target word to show in a chip under the
+/// caption ([show]); never inside it.
 class Spoken {
-  const Spoken({required this.vo, required this.caption});
+  const Spoken({required this.vo, required this.caption, this.target, this.show});
 
   factory Spoken.fromJson(Object? json) {
     final Map<String, Object?> m = _map(json);
-    return Spoken(vo: m['vo']! as String, caption: _caption(m['caption']));
+    return Spoken(
+      vo: m['vo']! as String,
+      caption: _caption(m['caption']),
+      target: m['target'] as String?,
+      show: m['show'] as String?,
+    );
   }
 
   final String vo;
   final String caption;
+  final String? target;
+  final String? show;
 }
 
 enum HintAction { replayPromptSlow, highlightObjectsSequentially, showFingers, workedExample }
@@ -180,6 +189,7 @@ sealed class Activity {
 
   /// `core` for every activity that exists today; a language pack's activities carry their language's course.
   final String course;
+  bool get isLanguage => Course.isLanguage(course);
   final List<Skill> skills;
   final Spoken promptLine;
   final ActivityFeedback feedback;
@@ -235,6 +245,9 @@ class ChoiceOption {
     this.label,
     this.misconception,
     this.speech = const <String>[],
+    this.text,
+    this.clip,
+    this.reveal,
   });
 
   final String id;
@@ -253,6 +266,15 @@ class ChoiceOption {
 
   /// Extra words a child may say for this option (see the `speech` list of the activity file).
   final List<String> speech;
+
+  /// A language course: the text of the tile (in the course's language), the option's own sound (a `vo:` reference), and the
+  /// word shown under the picture once the answer is accepted.
+  final String? text;
+  final String? clip;
+  final String? reveal;
+
+  /// A sound button: nothing to see on it, only a sound to hear (LS01 c).
+  bool get soundOnly => clip != null && text == null && sprite == null && numeral == null && set == null;
 }
 
 List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
@@ -268,6 +290,9 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
       speech: <String>[
         for (final Object? w in (o['speech'] as List<Object?>? ?? const <Object?>[])) w! as String,
       ],
+      text: o['text'] as String?,
+      clip: o['clip'] as String?,
+      reveal: o['reveal'] as String?,
     ),
 ];
 
@@ -297,6 +322,10 @@ class TapAnswerActivity extends Activity {
   final List<ChoiceOption> options;
   final String correctId;
 
+  /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
+  /// texts as words, all alike, whatever their length.
+  bool get letterFace => _map(this.json['answer'])['face'] == 'letter';
+
   /// The thing to count or compare, shown above the answers (1.1), and a second one beside it for a comparison.
   final SpriteSet? group;
   final SpriteSet? group2;
@@ -310,6 +339,14 @@ class TapAnswerActivity extends Activity {
   /// Numerals and sets are answered on tiles below the stage (it is too small for them); pictures stay on the stage.
   bool get optionsInTiles => _tilesFlag || options.any((ChoiceOption o) => o.sprite == null);
   final bool _tilesFlag;
+
+  /// The word that appears under the right picture once the answer is accepted (LS01 g), or null when there is none.
+  String? get revealedWord {
+    for (final ChoiceOption o in options) {
+      if (o.id == correctId) return o.reveal;
+    }
+    return null;
+  }
 
   @override
   int get optionCount => options.length;
@@ -835,6 +872,11 @@ class CountTapActivity extends Activity {
       seed = _map(_map(json['scene'])['objects'])['seed']! as int,
       sprite = _map(_map(json['scene'])['objects'])['sprite']! as String,
       litSprite = _map(_map(json['scene'])['objects'])['litSprite']! as String,
+      clips = <String>[
+        for (final Object? c
+            in (_map(_map(json['scene'])['objects'])['clips'] as List<Object?>? ?? const <Object?>[]))
+          c! as String,
+      ],
       targetSprite = _map(_map(json['scene'])['target'])['sprite']! as String,
       answerPrompt = Spoken.fromJson(json['answerPrompt']),
       traceTags = <String, String>{
@@ -856,6 +898,9 @@ class CountTapActivity extends Activity {
   final String sprite;
   final String litSprite;
   final String targetSprite;
+
+  /// A language course: the number word each counting tap plays, in counting order (practice, never scored).
+  final List<String> clips;
 
   /// Asked once every object has been counted: "how many?".
   final Spoken answerPrompt;
