@@ -291,7 +291,72 @@ def part_a():
     return out
 
 
-PARTS = {'batch4a': part_a}
+
+# ---- the Russian stories (RUS-A-16): a dog and a ball, a hedgehog and an apple, a girl and her hat --------------------
+
+def with_closed_eye(pic, x, y, r, skin):
+    """The same animal asleep: its eye closed (a skin patch and a curved lid line)."""
+    p = m.Pic()
+    p.parts = pic.parts + closed_eye(x, y, r, skin)
+    return p
+
+
+def bitten_apple():
+    p = m.apple()
+    p.parts = p.parts + ['<path d="M 196 96 C 172 104, 170 138, 196 150 C 210 140, 214 108, 196 96 Z" fill="#FFF6E8" stroke="%s" stroke-width="4"/>' % INK]
+    return p
+
+
+GIRL = pe.EXTRA['girl']
+GIRL_WINTER = dict(GIRL, dress=None, top='#E5484D', long=True, bottom='trousers', bottomc='#3B5FB8', shoes='#5E5A70')
+GIRL_WINTER.pop('dress')
+
+
+def warm_hat(sp):
+    r, hc = sp['hr'], -sp['H'] + sp['hr']
+    return [P('M %s %s C %s %s, %s %s, %s %s Z' % (f(-r * 1.0), f(hc - r * 0.45), f(-r * 0.9), f(hc - r * 1.5), f(r * 0.9), f(hc - r * 1.5),
+                                                   f(r * 1.0), f(hc - r * 0.45)), '#EF6F5E'),
+            RR(-r * 1.08, hc - r * 0.62, r * 2.16, r * 0.34, r * 0.14, CREAM), E(0, hc - r * 1.42, r * 0.22, r * 0.22, CREAM)]
+
+
+def girl(expr='smile', arms=((8, 0), (8, 0)), sp=None, hat=False):
+    sp = sp or GIRL_WINTER
+    parts = pe.posed(sp, expr=expr, arms=arms)
+    if hat:
+        parts = parts[:-1] + warm_hat(sp) + [parts[-1]]
+    return parts
+
+
+def ru_stories():
+    out = {}
+    dog_skin = '#D9A066'
+    out['st1-p1'] = page([obj(m.dog(), 150, 198, 0.5), red_ball(270, 200, 0.16, air=False)], garden())
+    run = obj(m.dog(), 170, 188, 0.5, rot=-10, air=True)
+    puffs = [E(x, y, rr, rr * 0.8, '#EADBB8', 2.5) for x, y, rr in ((262, 194, 9), (280, 188, 7), (294, 196, 5))]
+    out['st1-p2'] = page([shadow_at(176, 200, 50), run, red_ball(56, 200, 0.14, air=False)] + puffs + lines(270, 136, 3, 26), garden())
+    out['st1-p3'] = page([obj(m.dog(), 200, 198, 0.52), red_ball(166, 140, 0.11, air=False)] + hearts(236, 70) + hearts(262, 50), garden())
+    bed = ['<ellipse cx="200" cy="186" rx="96" ry="26" fill="#8A5CF0" stroke="%s" stroke-width="4"/>' % INK,
+           '<ellipse cx="200" cy="180" rx="78" ry="16" fill="#B9A2F7"/>']
+    out['st1-sleep'] = page(bed + [obj(with_closed_eye(b2.dog_2(), 80, 72, 7, dog_skin), 200, 196, 0.5)] + sleep_bubbles(250, 70), room())
+    out['st1-cat'] = page([obj(m.cat(), 170, 198, 0.5), red_ball(250, 200, 0.16, air=False)], garden())
+    out['st2-p1'] = page([obj(b2.hedgehog(), 200, 200, 0.5)] + lines(300, 160, 3, 24), garden())
+    out['st2-p2'] = page([obj(b2.hedgehog(), 230, 200, 0.5), obj(m.apple(), 110, 200, 0.26)]
+                         + [L('M 150 120 l -10 -14 M 162 114 l 0 -18 M 174 120 l 10 -14', '#F59E1B', 4)], garden())
+    out['st2-p3'] = page([obj(b2.hedgehog(), 230, 200, 0.5), obj(bitten_apple(), 150, 202, 0.2)] + hearts(190, 96), garden())
+    out['st2-sleep'] = page([obj(with_closed_eye(b2.hedgehog(), 68, 176, 6, '#E8D2B0'), 200, 200, 0.5)] + sleep_bubbles(140, 110), garden())
+    out['st2-bear'] = page([obj(b2.bear(), 220, 200, 0.6), obj(bitten_apple(), 150, 162, 0.16, air=True)], garden())
+    sky_flakes = flakes([(40, 40, 7), (110, 70, 6), (300, 40, 8), (350, 96, 6), (70, 120, 5), (250, 80, 5)])
+    out['st3-p1'] = page(sky_flakes + [person(girl(), 192, 192, 0.85)], snow())
+    out['st3-p2'] = page(sky_flakes + [person(girl('shiver', arms=((20, -100), (20, -100))), 192, 192, 0.85)]
+                         + [L('M 140 90 q -8 8 0 16 q 8 8 0 16 M 244 90 q 8 8 0 16 q -8 8 0 16', '#B8B0D0', 4)], snow())
+    out['st3-p3'] = page(sky_flakes + [person(girl('happy', hat=True), 192, 192, 0.85)] + hearts(250, 60), snow())
+    sun = obj(b2.sun(), 330, 90, 0.3, air=True)
+    out['st3-beach'] = page([sun, person(girl('happy', sp=GIRL), 160, 196, 0.85)], beach())
+    out['st3-boy'] = page([person(pe.posed(pe.EXTRA['boy'], expr='happy'), 170, 196, 0.85), red_ball(240, 200, 0.16, air=False)], garden())
+    return out
+
+
+PARTS = {'batch4a': part_a, 'batch4b': ru_stories}
 
 
 def main():

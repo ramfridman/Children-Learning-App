@@ -452,7 +452,7 @@ def posed(sp, view='front', arms=((8, 0), (8, 0)), legs=((3, 0), (3, 0)), lift=0
         ku, kf = k if isinstance(k, tuple) else (k, k)
         k = ku
         pts = chain(x0, y0, [(ua * ku, a1), (fa * kf, a2)], s, view)
-        long_sleeve = sp.get('adult') and not sp.get('vest')
+        long_sleeve = (sp.get('adult') or sp.get('long')) and not sp.get('vest')
         o = limb(pts, dimc(top if long_sleeve else skin, dim), aw)
         if not long_sleeve:
             t = 0.55 / k
