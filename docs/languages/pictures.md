@@ -194,7 +194,16 @@ teddy's face, nose lit), `kite-butterfly` (H), `present` (H מַתָּנָה **a
 **Colour patches (6).** `col-red`, `col-blue` (medium-dark), `col-yellow`, `col-green`, `col-white` (grey edge), `col-black`
 for R: a paint splash, the same shape in every colour. (drawn)
 
-### 4.2 People and characters (66)
+### 4.2 People and characters (66, all drawn)
+
+Drawn on 2026-11-03 from the approved model sheet by `tools/make_language_people.py` (contact sheets
+`docs/design/languages/pictures_batch3a.png`, `3b`, `3c`). File names: the mouth shapes are `mouth-lips`, `mouth-teeth`,
+`mouth-round`, `mouth-tongue`, `mouth-trill`, `mouth-smile`, `mouth-puzzled`; the English scenes are `mika-icecream`,
+`mika-present`, `mika-snow`, `mika-walk` (E `pic.scene-mika-*`); Pip's door pictures are `pip-arrive`, `pip-leave` (E
+`pic.greet-*-pip`); `act-sit` and `act-stand` are E `act-sitdown`, `act-standup` and R `act.sit`, `act.stand`. Mika has a
+small soft nose in every picture (the body words need one; the model sheet's faces had none). The tap areas of
+`mika-body.svg` are in `mika-body.hotspots.json` (canvas units), checked by the generator so that no two parts overlap.
+
 
 | Group | Pictures | Count |
 |---|---|---|
@@ -230,12 +239,12 @@ A-12; drawn by the app in Heebo), the windows of R A-12 (a component around obje
 | Group | Unique pictures | Drawn |
 |---|---|---|
 | Shared objects (4.1) | 173 (42 + 30 + 18 + 36 + 27 + 3 + 11 + 6) | 173 (batch 1: 51; batch 2: 122) |
-| People and characters (4.2) | 66 | 0 (the three hosts on the doors exist and are not counted) |
+| People and characters (4.2) | 66 | 66 (batch 3) |
 | Scenes, stories and course pieces (4.3) | 94 | 0 |
-| **Total** | **333** | **173** (176 files: `ball`, `balloon` and `boat` are aliases of their red pictures) |
+| **Total** | **333** | **239** (242 files: `ball`, `balloon` and `boat` are aliases of their red pictures) |
 
-Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**: **173 drawn, 144 left**
-(66 people and characters, 78 scenes and pieces), plus the 16 composites.
+Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**: **239 drawn, 78 left**
+(the scenes and pieces of 4.3), plus the 16 composites.
 
 ## 5. The next batches
 
