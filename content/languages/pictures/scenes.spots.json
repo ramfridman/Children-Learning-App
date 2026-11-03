@@ -1,0 +1,109 @@
+{
+ "note": "Places in the 384 x 216 scene backgrounds where the app puts pictures (x, y, w, h); the target is the drop place.",
+ "scenes": {
+  "scene-room": {
+   "spots": [
+    [
+     40,
+     20,
+     70,
+     50
+    ],
+    [
+     150,
+     120,
+     70,
+     70
+    ],
+    [
+     270,
+     120,
+     70,
+     70
+    ]
+   ],
+   "note": "three places for the object pictures: on the shelf, on the rug, by the window"
+  },
+  "scene-garden": {
+   "spots": [
+    [
+     70,
+     80,
+     70,
+     110
+    ],
+    [
+     160,
+     80,
+     70,
+     110
+    ],
+    [
+     250,
+     80,
+     70,
+     110
+    ]
+   ],
+   "note": "three places for the family pictures, standing on the path"
+  },
+  "scene-picnic": {
+   "spots": [
+    [
+     40,
+     140,
+     60,
+     60
+    ],
+    [
+     110,
+     140,
+     60,
+     60
+    ],
+    [
+     180,
+     140,
+     60,
+     60
+    ]
+   ],
+   "target": [
+    262,
+    150,
+    76,
+    50
+   ],
+   "note": "three foods on the cloth; the target is the friend's plate"
+  },
+  "scene-toybox": {
+   "spots": [
+    [
+     30,
+     130,
+     60,
+     60
+    ],
+    [
+     100,
+     130,
+     60,
+     60
+    ],
+    [
+     170,
+     130,
+     60,
+     60
+    ]
+   ],
+   "target": [
+    250,
+    100,
+    110,
+    90
+   ],
+   "note": "three toys on the floor; the target is the toy box"
+  }
+ }
+}
