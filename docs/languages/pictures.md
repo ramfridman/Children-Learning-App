@@ -216,7 +216,28 @@ The sad faces are a soft frown with no tear (art brief §2: no tears); **for the
 brief asks for "a small tear". The counting hints of R A-10 and A-11 (fingers) reuse `app/assets/art/hints/hand_*`.
 Pip, Mika and the family need the owner's eye on a model sheet before their poses are drawn (batch 3).
 
-### 4.3 Scenes, stories and course pieces (94)
+### 4.3 Scenes, stories and course pieces (94; 85 drawn, the 9 stroke scenes wait for F6)
+
+Drawn on 2026-11-03 by `tools/make_language_scenes.py` (contact sheets `docs/design/languages/pictures_batch4a.png` to `4d`),
+built from the set's own objects, the approved people and the app's cast (Nitzi, Kubi without his party hat and with the
+story's hat, Goni, Timi), so every page stays on model.
+- **Story pages are 384 x 216** (16:9; the story player fits them to its stage): `story-bounce-1` to `-6`; `s1-p1` to
+  `s3-p5`; `st1-p1` to `st3-p3` and the wrong frames `st1-sleep`, `st1-cat`, `st2-sleep`, `st2-bear`, `st3-beach`,
+  `st3-boy`. One plain sky and ground, the one or two things the line names, nothing more.
+- **Place pictures** (256): `place-ball-on-box`, `-box-on-ball`, `-ball-in-box`, `-cat-in-basket`, `-basket-on-cat`,
+  `-cat-by-basket`, `-dog-under-chair`, `-dog-on-chair`, `-dog-by-chair`, `-bird-on-boat`, `-boat-on-bird`,
+  `-bird-in-boat`, `-apple-in-bowl`, `-bowl-on-apple`, `-apple-by-bowl`.
+- **Russian scenes** are backgrounds (384 x 216: `scene-room`, `scene-garden`, `scene-picnic`, `scene-toybox`); the app
+  puts the item's pictures in the places listed in `scenes.spots.json` (and the drop target of the picnic and the toy box).
+- **New contexts** `ctx-bush-park`, `ctx-hat-snowman`, `ctx-wind-sail`; **pieces** `bin-box` (a blank panel on the front
+  for the member picture), `thumb-up`, `thumb-down`.
+- **Hebrew actions** are two key poses each (`act-he-kick-rabbit-a`/`-b`, `act-he-search-cat`, `act-he-stir-nitzi`,
+  `act-he-swim-fish`, and the check scenes `act-he-kick-boy`, `act-he-swim-duck`, `act-he-search-girl` (she, for
+  מְחַפֶּשֶׂת), `act-he-stir-mother` (she, for מְעַרְבֶּבֶת)): SVG in the app has no animation, so the app plays a 500 ms,
+  b 700 ms, three times with a 150 ms cross-fade, and rests on b; with reduce-motion, b only (`actions.anim.json`).
+- **Composites:** `set-balls-1` to `5` (dice patterns, 256), `set-ducks-1` to `5` and `drum-strip-1` to `4` (rows, 384 x
+  216, the same size in every set), `dog-big` (the big dog lit), `ball-pair`.
+
 
 | Group | Pictures | Count |
 |---|---|---|
@@ -240,11 +261,11 @@ A-12; drawn by the app in Heebo), the windows of R A-12 (a component around obje
 |---|---|---|
 | Shared objects (4.1) | 173 (42 + 30 + 18 + 36 + 27 + 3 + 11 + 6) | 173 (batch 1: 51; batch 2: 122) |
 | People and characters (4.2) | 66 | 66 (batch 3) |
-| Scenes, stories and course pieces (4.3) | 94 | 0 |
-| **Total** | **333** | **239** (242 files: `ball`, `balloon` and `boat` are aliases of their red pictures) |
+| Scenes, stories and course pieces (4.3) | 94 | 85 (the 9 stroke scenes wait for F6) |
+| **Total** | **333** | **324** (335 files: `ball`, `balloon` and `boat` are aliases of their red pictures; each action is two frames) |
 
-Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**: **239 drawn, 78 left**
-(the scenes and pieces of 4.3), plus the 16 composites.
+Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**: all drawn but the **9 stroke scenes**
+(Hebrew A-14), which wait for the stroke directions (F6); the 16 composites are made.
 
 ## 5. The next batches
 
