@@ -886,4 +886,865 @@ PART_A = {
     'balloon-big': balloon_big, 'pencil': pencil, 'top': top, 'stacker': stacker, 'manhole': manhole,
 }
 
-PARTS = {'batch2a': PART_A}
+
+
+# ---- part b: Hebrew animals -----------------------------------------------------------------------------------------
+# References looked at on 2026-11-03 for part b: Commons "dromedary camel" (one hump, long curved neck, long thin legs
+# with knobbly knees, a thin tufted tail); https://en.wikipedia.org/wiki/Donkey (grey-brown, large ears, a dark stripe
+# along the back, a pale muzzle and belly); Commons "Testudo graeca" (the spur-thighed tortoise of Israel: a high domed
+# shell of yellow-brown plates with dark borders, scaly stubby legs); Commons "Egyptian fruit bat" (Israel's fruit bat:
+# brown fur, a dog-like face, big dark eyes, dark membrane wings over long fingers); Commons "Messor ant" (Israel's
+# harvester ant: black, a big head, elbowed antennae, carries seeds); Commons "baby pram" (a deep body, a folding hood,
+# big spoked wheels, a handle). The rest (sheep, chick, butterfly; Israeli kitchen and home things) from everyday life.
+
+def camel():
+    c, s = '#D9A86A', '#B8874A'
+    p = Pic()
+    p.shadow(cx=140, rx=90)
+    p.line('M 212 118 C 222 138, 222 156, 218 166', INK, 3)
+    p.path('M 214 162 L 224 166 L 216 178 Z', '#8A6A3A', 2)
+    for x in (104, 186):
+        p.path(rrect(x, 150, 13, 78, 6), s)
+        p.path(ell(x + 6.5, 190, 8, 6), s, 2.5)
+    p.shaded('M 70 132 C 72 112, 96 104, 118 102 C 128 66, 178 64, 190 102 C 210 106, 220 126, 214 148 '
+             'C 208 166, 192 170, 176 170 L 96 170 C 78 170, 68 152, 70 132 Z', c, s)
+    for x in (88, 170):
+        p.path(rrect(x, 156, 15, 72, 7), c)
+        p.path(ell(x + 7.5, 192, 9, 7), c, 2.5)
+        p.path(ell(x + 7.5, 226, 12, 5), s, 2.5)
+    p.shaded('M 86 142 C 64 136, 50 120, 48 96 C 46 80, 50 66, 56 58 L 78 62 C 74 76, 74 92, 80 106 C 86 116, 96 122, 106 124 Z',
+             c, s, k=5)
+    p.shaded('M 62 50 C 54 42, 36 42, 24 50 C 16 56, 16 70, 26 72 C 40 74, 56 70, 70 64 Z', c, s, k=4)
+    p.path('M 62 46 L 70 38 L 72 50 Z', c, 3)
+    p.line('M 18 66 Q 24 70 32 68', INK, 2.5)
+    p.path(ell(22, 58, 2.5, 2), INK, 0)
+    p.eye(48, 54, 5)
+    p.hl('M 130 82 Q 150 70 172 80')
+    return facing(p)
+
+
+def donkey():
+    c, s, pale, dark = '#9C98A8', '#7E7A8C', '#E8E4EE', '#4A4458'
+    p = Pic()
+    p.shadow(cx=142, rx=88)
+    p.line('M 208 112 C 220 132, 220 156, 216 168', INK, 4)
+    p.path('M 210 162 L 224 164 L 216 186 Z', dark, 2.5)
+    legs(p, (106, 184), 152, 76, 15, s, dark)
+    cid = p.shaded('M 82 116 C 90 100, 118 96, 148 98 L 186 100 C 208 102, 216 122, 210 144 C 204 162, 190 168, 172 168 '
+                   'L 104 168 C 86 168, 76 142, 82 116 Z', c, s)
+    p.clipped(cid, '<path d="%s" fill="%s"/>' % (ell(140, 172, 56, 16), pale))
+    p.line('M 112 100 L 200 104', dark, 4)
+    legs(p, (90, 168), 154, 74, 17, c, dark)
+    p.shaded('M 84 128 C 76 108, 70 92, 68 76 L 98 68 C 102 86, 110 100, 118 114 Z', c, s, k=5)
+    p.path('M 96 64 C 104 80, 112 98, 118 112 C 110 110, 102 96, 92 76 Z', dark, 3)
+    p.path('M 70 64 C 64 36, 70 16, 78 14 C 88 18, 86 44, 82 66 Z', c)
+    p.fillp('M 74 58 C 70 38, 74 24, 78 22 C 82 28, 82 44, 80 58 Z', '#D8C0D0')
+    p.path('M 84 64 C 84 38, 94 22, 102 24 C 108 30, 100 52, 94 68 Z', c)
+    hid = p.shaded('M 96 70 C 94 56, 80 50, 68 54 C 52 58, 34 78, 28 94 C 24 106, 32 116, 46 114 C 60 112, 76 98, 86 88 '
+                   'C 94 82, 98 78, 96 70 Z', c, s, k=5)
+    p.clipped(hid, '<path d="%s" fill="%s"/>' % (ell(36, 104, 18, 16), pale))
+    p.path('M 96 70 C 94 56, 80 50, 68 54 C 52 58, 34 78, 28 94 C 24 106, 32 116, 46 114 C 60 112, 76 98, 86 88 '
+           'C 94 82, 98 78, 96 70 Z', 'none')
+    p.path(ell(30, 100, 3, 4), INK, 0)
+    p.eye(64, 70, 5.5)
+    p.line('M 32 110 Q 38 114 46 112', INK, 2.5)
+    p.hl('M 120 106 Q 150 98 184 104')
+    return facing(p)
+
+
+def butterfly():
+    p = Pic()
+    for sx in (1, -1):
+        p.add('<g transform="translate(128 0) scale(%d 1) translate(-128 0)">' % sx)
+        uid = p.shaded('M 124 112 C 108 60, 64 30, 36 44 C 14 56, 24 104, 60 124 C 84 136, 110 126, 124 112 Z',
+                       '#FF7A6E', '#E0524A', k=6)
+        p.clipped(uid, '<path d="M 124 112 C 108 60, 64 30, 36 44 C 14 56, 24 104, 60 124" fill="none" stroke="#B23A3A" stroke-width="10"/>')
+        p.path('M 124 112 C 108 60, 64 30, 36 44 C 14 56, 24 104, 60 124 C 84 136, 110 126, 124 112 Z', 'none')
+        lid = p.shaded('M 124 122 C 100 128, 60 140, 56 172 C 54 196, 86 206, 104 186 C 116 172, 124 146, 124 122 Z',
+                       '#FFD23F', '#E0A21A', k=5)
+        p.add('<circle cx="56" cy="70" r="9" fill="%s"/><circle cx="84" cy="96" r="6" fill="%s"/><circle cx="86" cy="172" r="8" fill="%s"/>'
+              % (WHITE, WHITE, '#FF7A6E'))
+        p.add('</g>')
+    p.line('M 122 64 C 114 42, 104 32, 94 30 M 134 64 C 142 42, 152 32, 162 30', INK, 4)
+    p.add('<circle cx="94" cy="30" r="5" fill="%s"/><circle cx="162" cy="30" r="5" fill="%s"/>' % (INK, INK))
+    p.shaded('M 128 62 C 140 62, 140 82, 136 100 C 140 140, 136 186, 128 196 C 120 186, 116 140, 120 100 C 116 82, 116 62, 128 62 Z',
+             '#4A4458', '#2E2A3E', k=3)
+    return p
+
+
+def tortoise():
+    sh, ss, line = '#C49A4A', '#9C7632', '#6B4E22'
+    p = Pic()
+    p.shadow(cx=136, rx=96)
+    for x in (82, 184):
+        p.path(rrect(x, 160, 26, 56, 11), '#B5A27A')
+        p.line('M %d 216 L %d 210 M %d 216 L %d 210' % (x + 7, x + 7, x + 17, x + 17), CREAM, 2.5)
+    p.path('M 216 168 L 236 176 L 216 182 Z', '#B5A27A', 3)
+    shell = 'M 56 172 C 58 110, 104 80, 146 80 C 194 80, 224 120, 222 172 Z'
+    cid = p.shaded(shell, sh, ss, k=10)
+    plates = ('M 112 92 L 124 128 L 168 128 L 180 92 M 124 128 L 112 172 M 168 128 L 180 172 M 124 128 L 84 132 '
+              'M 168 128 L 210 132 M 146 82 L 146 128 M 74 112 L 84 132 L 70 172 M 212 112 L 210 132 L 218 172')
+    p.clipped(cid, '<path d="%s" fill="none" stroke="%s" stroke-width="4"/>' % (plates, line))
+    p.path(shell, 'none')
+    p.path(rrect(48, 164, 182, 16, 8), '#A8823E')
+    p.line(''.join('M %d 164 L %d 180 ' % (x, x) for x in range(70, 220, 22)), line, 3)
+    for x in (100, 166):
+        p.path(rrect(x, 172, 26, 48, 11), '#B5A27A')
+        p.line('M %d 220 L %d 214 M %d 220 L %d 214' % (x + 7, x + 7, x + 17, x + 17), CREAM, 2.5)
+    p.shaded('M 70 168 C 54 150, 30 148, 22 162 C 16 174, 26 186, 42 184 L 70 182 Z', '#B5A27A', '#968461', k=4)
+    p.eye(38, 162, 5)
+    p.line('M 22 172 Q 28 176 36 174', INK, 2.5)
+    p.hl('M 84 116 Q 100 94 126 88', 7)
+    return facing(p)
+
+
+def ant():
+    blk, s = '#3A3650', '#22202F'
+    p = Pic()
+    p.shadow(cy=214, rx=96)
+    for x0, x1, x2 in ((92, 70, 58), (104, 104, 98), (114, 140, 160)):
+        p.line('M %d 140 L %d 170 L %d 208' % (x0, x1, x2), INK, 5)
+    p.line('M 50 116 C 50 92, 38 82, 26 84 L 18 96 M 60 112 C 66 88, 60 74, 48 70 L 40 78', INK, 4)
+    p.shaded(ell(170, 142, 50, 36), blk, s, k=8)
+    p.path(ell(126, 140, 8, 7), blk)
+    p.shaded(ell(100, 136, 24, 15), blk, s, k=4)
+    p.shaded(ell(58, 130, 26, 23), blk, s, k=5)
+    p.path('M 36 140 L 22 148 L 34 150 Z', blk, 3)
+    p.shaded(ell(14, 156, 12, 9), '#E8C76A', '#C9A646', k=3)
+    p.path(ell(48, 122, 7, 7), WHITE, 2.5)
+    p.path(ell(46, 123, 3.5, 3.5), INK, 0)
+    for x0, x1, x2 in ((92, 82, 70), (104, 118, 116), (114, 152, 184)):
+        p.line('M %d 144 L %d 176 L %d 210' % (x0, x1, x2), INK, 5)
+    p.hl('M 150 118 Q 166 110 186 114', 5)
+    p.hl('M 46 112 Q 54 106 64 108', 4)
+    return facing(p)
+
+
+def chick():
+    c, s = '#FFE24D', '#F0C02A'
+    p = Pic()
+    p.shadow(cx=130, rx=80)
+    p.line('M 112 192 L 108 222 M 140 192 L 142 222', '#FF9F43', 5)
+    p.line('M 96 224 L 120 224 M 132 224 L 154 224 M 108 222 L 102 214 M 142 222 L 138 214', '#FF9F43', 4)
+    p.path('M 150 228 C 150 200, 210 196, 214 226 Z', WHITE)
+    p.path('M 154 210 L 162 204 L 168 212 L 176 202 L 184 212 L 192 204 L 200 212 L 208 206', 'none', 3)
+    p.shaded(bumpy(126, 140, 66, 64, 22, 0.06), c, s, k=10)
+    p.shaded('M 158 136 C 176 128, 190 140, 184 160 C 172 170, 158 162, 158 136 Z', c, s, k=4)
+    p.line('M 120 76 C 116 62, 124 58, 128 66 C 130 56, 140 58, 136 72', INK, 3)
+    p.path('M 76 122 L 56 130 L 76 138 Z', '#FF9F43', 3)
+    p.eye(96, 116, 7)
+    p.eye(130, 116, 6)
+    p.cheek(92, 140)
+    p.cheek(140, 140)
+    p.hl('M 84 96 Q 96 82 116 80', 7)
+    return facing(p)
+
+
+def sheep():
+    wool, ws, face = '#FBF8F2', '#E6E0D4', '#4A4458'
+    p = Pic()
+    p.shadow(cx=140, rx=90)
+    for x in (104, 184):
+        p.path(rrect(x, 160, 13, 66, 6), '#3A3550')
+    p.shaded(bumpy(152, 140, 76, 54, 20, 0.1), wool, ws, k=10)
+    for x in (92, 166):
+        p.path(rrect(x, 168, 14, 60, 6), face)
+    p.path('M 70 100 C 54 94, 46 104, 52 110 C 58 114, 66 112, 72 108 Z', face, 3)
+    p.shaded('M 98 108 C 98 86, 82 76, 66 80 C 46 86, 30 110, 34 128 C 38 142, 56 144, 70 136 C 90 126, 98 120, 98 108 Z',
+             face, '#2E2A3E', k=4)
+    p.shaded(bumpy(84, 82, 22, 16, 9, 0.18), wool, ws, k=3)
+    p.path('M 96 98 C 112 92, 122 100, 116 108 C 108 110, 100 106, 96 98 Z', face, 3)
+    p.path(ell(64, 104, 7, 7), WHITE, 0)
+    p.path(ell(62, 105, 3.5, 3.5), INK, 0)
+    p.line('M 38 130 Q 44 134 52 132', '#B8B0D0', 2.5)
+    p.hl('M 100 104 Q 130 86 170 88')
+    return facing(p)
+
+
+def bat():
+    fur, fs, wing, ws = '#8A6A50', '#6E523C', '#5E4B5E', '#463848'
+    p = Pic()
+    for sx in (1, -1):
+        p.add('<g transform="translate(128 0) scale(%d 1) translate(-128 0)">' % sx)
+        d = ('M 116 104 C 92 76, 52 66, 16 82 C 26 92, 28 106, 22 118 C 38 112, 52 118, 56 132 C 68 122, 84 124, 92 136 '
+             'C 100 126, 110 122, 118 128 Z')
+        p.shaded(d, wing, ws, k=6)
+        p.line('M 116 104 L 22 118 M 108 110 L 56 132 M 104 118 L 92 136', '#7E6A7E', 2.5)
+        p.add('</g>')
+    p.shaded(ell(128, 136, 24, 34), fur, fs, k=5)
+    p.path('M 108 74 L 104 50 L 120 66 Z M 148 74 L 152 50 L 136 66 Z', fur, 3)
+    p.shaded(ell(128, 90, 26, 22), fur, fs, k=4)
+    p.path(ell(128, 102, 10, 7), '#B08A6C', 2.5)
+    p.path(ell(128, 99, 3, 2), INK, 0)
+    p.eye(116, 86, 6)
+    p.eye(140, 86, 6)
+    p.line('M 122 108 Q 128 112 134 108', INK, 2.5)
+    p.cheek(110, 98, 5, 3)
+    p.cheek(146, 98, 5, 3)
+    p.line('M 118 168 L 116 180 M 138 168 L 140 180', INK, 4)
+    return p
+
+
+# ---- part b: Hebrew food -------------------------------------------------------------------------------------------
+
+def pizza():
+    p = Pic()
+    p.shadow(cy=214, rx=104)
+    p.path(ell(128, 140, 112, 68), '#E2A85C')
+    p.fillp(ell(128, 140, 98, 58), '#E5484D')
+    cid = p.shaded(ell(128, 140, 92, 54), '#FFD76A', '#F2C04A', k=5, sw=0)
+    p.line('M 36 140 L 220 140 M 82 90 L 174 190 M 174 90 L 82 190', '#E2A85C', 4)
+    for x, y in ((92, 118), (160, 116), (120, 166), (178, 160), (70, 154)):
+        p.path(ell(x, y, 9, 6), '#3A3650', 3)
+        p.fillp(ell(x, y, 3.5, 2.2), '#FFD76A')
+    for x, y in ((126, 112), (96, 158), (150, 140), (190, 132)):
+        p.add('<ellipse cx="%d" cy="%d" rx="10" ry="5" fill="#4CAF50" stroke="%s" stroke-width="2" transform="rotate(-30 %d %d)"/>'
+              % (x, y, INK, x, y))
+    p.hl('M 40 120 Q 56 94 90 82', 6)
+    return p
+
+
+def pita():
+    p = Pic()
+    p.shadow(cy=214, rx=100)
+    body = 'M 22 142 C 22 98, 78 76, 128 76 C 178 76, 234 98, 234 142 C 234 186, 178 206, 128 206 C 78 206, 22 186, 22 142 Z'
+    cid = p.shaded(body, '#F2D3A0', '#DDB57C', k=9)
+    p.clipped(cid, ''.join('<ellipse cx="%d" cy="%d" rx="%d" ry="%d" fill="#D9A866" opacity="0.8"/>' % xy
+                           for xy in ((80, 118, 12, 7), (150, 104, 9, 5), (184, 150, 14, 8), (110, 168, 10, 6),
+                                      (62, 160, 7, 4), (196, 116, 7, 4), (140, 140, 6, 4))))
+    p.path(body, 'none')
+    p.path('M 196 112 C 214 124, 222 140, 216 160 C 206 150, 196 140, 186 132 Z', '#B88A50', 3)
+    p.hl('M 46 128 Q 70 96 116 88', 7)
+    return p
+
+
+def flour():
+    p = Pic()
+    p.shadow(cx=136, rx=104)
+    p.path(bumpy(66, 212, 52, 18, 12, 0.12), WHITE, 3)
+    p.add('<circle cx="34" cy="186" r="5" fill="%s" stroke="%s" stroke-width="2"/><circle cx="20" cy="200" r="3.5" fill="%s"/>'
+          % (WHITE, '#D8D3E6', '#D8D3E6'))
+    bag = 'M 94 54 L 206 54 L 214 216 C 214 222, 210 226, 204 226 L 96 226 C 90 226, 86 222, 86 216 Z'
+    cid = p.shaded(bag, '#F7EFE0', '#E3D6BE', k=8)
+    p.clipped(cid, '<rect x="80" y="150" width="140" height="20" fill="#4D9BE6"/>')
+    p.path(bag, 'none')
+    p.path('M 94 54 L 108 38 L 192 38 L 206 54 Z', '#E3D6BE')
+    p.line('M 112 46 L 188 46', '#C9B89A', 3)
+    p.line('M 150 140 L 150 76', '#C9962E', 4)
+    for k, y in enumerate((80, 92, 104, 116)):
+        p.add('<ellipse cx="143" cy="%d" rx="6" ry="9" fill="#E8B84A" stroke="%s" stroke-width="2" transform="rotate(-25 143 %d)"/>'
+              '<ellipse cx="157" cy="%d" rx="6" ry="9" fill="#E8B84A" stroke="%s" stroke-width="2" transform="rotate(25 157 %d)"/>'
+              % (y, INK, y, y, INK, y))
+    p.hl('M 102 76 L 104 200', 6)
+    return p
+
+
+def sugar():
+    p = Pic()
+    p.shadow(rx=94)
+
+    def cube(x, y, sz):
+        d = sz * 0.35
+        p.path('M %.1f %.1f L %.1f %.1f L %.1f %.1f L %.1f %.1f Z' % (x, y, x + d, y - d, x + sz + d, y - d, x + sz, y), WHITE, 3)
+        p.path('M %.1f %.1f L %.1f %.1f L %.1f %.1f L %.1f %.1f Z' % (x + sz, y, x + sz + d, y - d, x + sz + d, y + sz - d, x + sz, y + sz),
+               '#DCD5E8', 3)
+        p.path(rrect(x, y, sz, sz, 2), '#F4F1F9', 3)
+
+    for x, y in ((74, 96), (110, 90), (146, 96), (92, 70), (128, 66)):
+        cube(x, y, 30)
+    body = 'M 34 118 C 36 180, 84 212, 128 212 C 172 212, 220 180, 222 118 Z'
+    p.path(ell(128, 210, 40, 8), '#4FA98E')
+    cid = p.shaded(body, '#7FD1B9', '#4FA98E', k=10)
+    p.clipped(cid, '<path d="M 40 146 C 80 166, 176 166, 216 146" fill="none" stroke="%s" stroke-width="6" opacity="0.8"/>' % WHITE)
+    p.path(body, 'none')
+    p.path(ell(128, 118, 94, 18), 'none')
+    cube(178, 196, 26)
+    p.hl('M 46 140 Q 58 170 86 190', 6)
+    return p
+
+
+def olive():
+    p = Pic()
+    p.shadow(rx=84)
+    p.outlined_line('M 30 70 C 80 76, 150 90, 230 74', '#8A6A3A', 7)
+    for x, y, a in ((60, 60, -30), (96, 92, 30), (140, 64, -20), (186, 92, 25), (214, 60, -35)):
+        p.add('<ellipse cx="%d" cy="%d" rx="24" ry="7" fill="#8FA88A" stroke="%s" stroke-width="3" transform="rotate(%d %d %d)"/>'
+              % (x, y, INK, a, x, y))
+    p.outlined_line('M 112 84 L 112 108', '#8A6A3A', 4)
+    p.outlined_line('M 168 82 L 170 104', '#8A6A3A', 4)
+    for cx, cy in ((112, 150), (170, 146)):
+        p.shaded(ell(cx, cy, 34, 44), '#7FA33A', '#5E7E26', k=7)
+        p.add('<ellipse cx="%d" cy="%d" rx="6" ry="10" fill="%s" opacity="0.5" transform="rotate(-20 %d %d)"/>'
+              % (cx - 14, cy - 18, WHITE, cx - 14, cy - 18))
+    return p
+
+
+# ---- part b: Hebrew clothes ----------------------------------------------------------------------------------------
+
+def hat_cat_ears():
+    f, s = '#F48FB1', '#D8648F'
+    p = Pic()
+    p.shadow(cy=222, rx=92)
+    for x in (-1, 1):
+        p.add('<g transform="translate(128 0) scale(%d 1) translate(-128 0)">' % x)
+        p.path('M 66 96 L 64 36 L 112 72 Z', f)
+        p.fillp('M 74 86 L 72 52 L 100 74 Z', '#FFD0DF')
+        p.add('</g>')
+    dome = 'M 52 168 C 50 96, 84 60, 128 60 C 172 60, 206 96, 204 168 Z'
+    did = p.shaded(dome, f, s, k=12)
+    p.clipped(did, ''.join('<path d="M %d 168 Q %d 110 128 60" fill="none" stroke="#F7B3CB" stroke-width="3" opacity="0.8"/>'
+                           % (x, (x + 128) // 2) for x in (64, 84, 104, 152, 172, 192)))
+    p.path(dome, 'none')
+    cuff = rrect(38, 158, 180, 46, 10)
+    cid = p.shaded(cuff, s, '#B94C78', k=6)
+    p.clipped(cid, ''.join('<path d="M %d 160 L %d 202" stroke="#E07BA0" stroke-width="4"/>' % (x, x) for x in range(50, 214, 12)))
+    p.path(cuff, 'none')
+    p.hl('M 70 120 Q 80 84 110 70', 8)
+    return p
+
+
+SHIRT = 'M 92 40 C 104 54, 152 54, 164 40 L 214 64 L 196 114 L 176 106 L 176 218 L 80 218 L 80 106 L 60 114 L 42 64 Z'
+
+
+def shirt_striped():
+    p = Pic()
+    p.shadow(cy=230, rx=70)
+    cid = p.shaded(SHIRT, WHITE, '#E2DEEC', k=10)
+    p.clipped(cid, ''.join('<rect x="30" y="%d" width="200" height="12" fill="#2F7FE0"/>' % y for y in range(56, 220, 26)))
+    p.path(SHIRT, 'none')
+    p.path('M 92 40 C 104 66, 152 66, 164 40 C 152 54, 104 54, 92 40 Z', '#1F5FB0', 3)
+    return p
+
+
+DRESS = ('M 100 38 C 110 50, 146 50, 156 38 L 178 48 L 200 82 L 178 96 L 166 86 L 164 118 L 208 214 '
+         'C 168 230, 88 230, 48 214 L 92 118 L 90 86 L 78 96 L 56 82 L 78 48 Z')
+
+
+def dress_strawberries():
+    p = Pic()
+    p.shadow(cy=232, rx=86)
+    cid = p.shaded(DRESS, WHITE, '#E2DEEC', k=10)
+    berries = ((104, 74), (140, 70), (84, 150), (122, 140), (160, 152), (100, 190), (142, 186), (180, 196), (66, 196))
+    p.clipped(cid, '<path d="M 40 110 L 216 110 L 216 126 L 40 126 Z" fill="#E53935"/>'
+              + ''.join('<path d="M %d %d c -8 -2, -10 -12, -4 -16 c 3 -2, 6 0, 7 1 c 1 -1, 4 -3, 7 -1 c 6 4, 4 14, -4 16 c -2 1, -4 1, -6 0 Z" '
+                        'fill="#E53935" stroke="%s" stroke-width="1.5"/><path d="M %d %d l -5 -4 l 5 1 l 5 -1 Z" fill="#4CAF50"/>'
+                        % (x, y, INK, x + 3, y - 15) for x, y in berries))
+    p.path(DRESS, 'none')
+    p.path('M 100 38 C 108 58, 124 60, 128 52 C 132 60, 148 58, 156 38 C 146 50, 110 50, 100 38 Z', CREAM, 3)
+    return p
+
+
+def apron():
+    f, s = '#F46A5E', '#D04A40'
+    p = Pic()
+    p.shadow(cy=232, rx=86)
+    p.line('M 104 52 C 100 14, 156 14, 152 52', INK, 9)
+    p.line('M 104 52 C 100 14, 156 14, 152 52', f, 5)
+    p.line('M 62 120 C 40 128, 30 150, 26 176 M 194 120 C 216 128, 226 150, 230 176', INK, 9)
+    p.line('M 62 120 C 40 128, 30 150, 26 176 M 194 120 C 216 128, 226 150, 230 176', f, 5)
+    d = 'M 100 50 L 156 50 L 162 108 C 188 112, 200 130, 202 150 L 212 224 L 44 224 L 54 150 C 56 130, 68 112, 94 108 Z'
+    cid = p.shaded(d, f, s, k=8)
+    p.clipped(cid, '<rect x="40" y="212" width="180" height="14" fill="%s"/>' % CREAM)
+    p.path(d, 'none')
+    p.path(rrect(96, 150, 64, 42, 6), CREAM)
+    p.line('M 128 150 L 128 192', '#E3D6C6', 3)
+    p.line('M 62 116 L 194 116', s, 5)
+    p.hl('M 108 66 L 108 100', 5)
+    return p
+
+
+def sandal():
+    """A pair of children's sandals seen from above: foot-shaped soles, a toe strap, an instep strap with a buckle and a
+    heel strap (a pair reads as footwear at once)."""
+    p = Pic()
+    p.shadow(cy=232, rx=96)
+    sole = ('M 92 28 C 116 24, 126 52, 122 84 C 120 104, 126 128, 126 160 C 126 198, 114 224, 88 224 '
+            'C 62 224, 52 198, 54 160 C 56 128, 50 104, 52 80 C 54 48, 68 30, 92 28 Z')
+    for t in ('translate(-6 0)', 'translate(250 6) scale(-1 1)'):
+        p.add('<g transform="%s">' % t)
+        p.path(sole, '#7A4A24', 10)
+        p.shaded(sole, '#E8C08A', '#C9A06A', k=5, sw=0)
+        p.fillp(ell(84, 62, 10, 12), '#C9A06A', op=0.6)
+        for y in (74, 124, 186):
+            p.path('M 48 %d C 70 %d, 110 %d, 130 %d L 130 %d C 110 %d, 70 %d, 48 %d Z'
+                   % (y, y - 6, y - 6, y, y + 18, y + 12, y + 12, y + 18), '#2F7FE0', 3.5)
+        p.path(rrect(112, 124, 20, 18, 3), '#FFC83D', 3)
+        p.add('</g>')
+    return p
+
+
+def swimsuit():
+    f, s = '#F48FB1', '#D8648F'
+    p = Pic()
+    p.shadow(cy=232, rx=70)
+    d = ('M 96 24 L 106 24 C 108 58, 148 58, 150 24 L 160 24 C 160 60, 174 84, 180 104 C 172 132, 168 150, 174 178 '
+         'C 160 184, 146 198, 140 216 L 116 216 C 110 198, 96 184, 82 178 C 88 150, 84 132, 76 104 C 82 84, 96 60, 96 24 Z')
+    cid = p.shaded(d, f, s, k=8)
+    p.clipped(cid, ''.join('<circle cx="%d" cy="%d" r="6" fill="#FFE27A"/>' % xy
+                           for xy in ((100, 90), (140, 84), (120, 120), (160, 124), (96, 150), (136, 156), (114, 184), (158, 186))))
+    p.path(d, 'none')
+    p.hl('M 96 96 L 92 170', 6)
+    return p
+
+
+# ---- part b: Hebrew toys and things --------------------------------------------------------------------------------
+
+def teddy_nose():
+    """The teddy's face, close, with the nose lit (Hebrew af)."""
+    t = m.teddy()
+    p = Pic()
+    p.n = 50
+    p.add('<clipPath id="frame"><rect x="0" y="0" width="256" height="256"/></clipPath><g clip-path="url(#frame)">'
+          '<g transform="translate(128 146) scale(1.6) translate(-128 -90)">')
+    p.parts += t.parts
+    p.add('</g></g>')
+    p.add('<circle cx="128" cy="168" r="30" fill="#FFC83D" opacity="0.35"/>')
+    p.path(ell(128, 168, 30, 30), 'none', 5, stroke='#FFC83D')
+    return p
+
+
+def kite_butterfly():
+    p = Pic()
+    p.fillp('M 24 214 C 24 198, 42 192, 54 198 C 60 184, 84 184, 90 200 C 104 198, 110 214, 98 220 L 32 220 C 24 220, 24 218, 24 214 Z',
+            '#DEEBFC')
+    p.line('M 150 128 Q 90 170 40 246', INK, 2, op=0.6)
+    p.line('M 150 178 C 140 196, 160 206, 150 222 S 140 240, 152 252', INK, 3)
+    for x, y, col in ((146, 196, '#2F7FE0'), (152, 222, '#FFC83D')):
+        p.path('M %d %d L %d %d L %d %d Z M %d %d L %d %d L %d %d Z' % (x, y, x - 11, y - 7, x - 11, y + 7, x, y, x + 11, y - 7, x + 11, y + 7),
+               col, 2.5)
+    for sx in (1, -1):
+        p.add('<g transform="translate(150 0) scale(%d 1) translate(-150 0)">' % sx)
+        p.shaded('M 148 96 C 132 50, 92 26, 70 40 C 52 52, 64 92, 96 106 C 114 114, 136 108, 148 96 Z', '#FFC83D', '#E0A21A', k=5)
+        p.shaded('M 148 110 C 126 112, 96 124, 94 150 C 92 170, 118 176, 132 160 C 142 148, 148 128, 148 110 Z', '#2F7FE0', '#1F5FB0', k=4)
+        p.add('</g>')
+    p.line('M 74 46 L 226 46 M 150 40 L 150 176', INK, 3, op=0.55)
+    p.line('M 146 60 C 140 44, 132 36, 124 34 M 154 60 C 160 44, 168 36, 176 34', INK, 3)
+    p.path('M 150 58 C 158 58, 158 80, 155 100 C 158 130, 155 168, 150 176 C 145 168, 142 130, 145 100 C 142 80, 142 58, 150 58 Z',
+           '#E5484D', 3)
+    return p
+
+
+def present():
+    paper, s, rib = '#E04F9E', '#B8337C', '#FFC83D'
+    p = Pic()
+    p.shadow(cy=226, rx=96)
+    p.path('M 128 70 C 96 30, 66 48, 84 70 Z', rib)
+    p.path('M 128 70 C 160 30, 190 48, 172 70 Z', rib)
+    cid = p.shaded(rrect(46, 108, 164, 112, 8), paper, s, k=8)
+    p.clipped(cid, '<rect x="114" y="100" width="28" height="130" fill="%s"/>' % rib)
+    p.path(rrect(46, 108, 164, 112, 8), 'none')
+    lid = rrect(36, 74, 184, 40, 8)
+    lid_id = p.shaded(lid, paper, s, k=5)
+    p.clipped(lid_id, '<rect x="114" y="66" width="28" height="60" fill="%s"/>' % rib)
+    p.path(lid, 'none')
+    p.path(ell(128, 72, 12, 10), rib)
+    p.hl('M 58 130 L 58 200', 6)
+    return p
+
+
+def wool():
+    p = Pic()
+    p.shadow(rx=84)
+    p.line('M 190 190 C 220 200, 236 220, 214 236 C 198 246, 180 236, 196 226', INK, 9)
+    p.line('M 190 190 C 220 200, 236 220, 214 236 C 198 246, 180 236, 196 226', CREAM, 5)
+    cid = p.shaded(ell(122, 128, 92, 92), CREAM, '#E6DCCB', k=12)
+    p.clipped(cid, ''.join('<path d="%s" fill="none" stroke="#D8CBB4" stroke-width="5"/>' % d
+                           for d in ('M 40 100 C 90 150, 170 150, 210 96', 'M 36 130 C 90 180, 170 180, 214 126',
+                                     'M 50 70 C 100 112, 160 112, 196 64', 'M 80 40 C 60 100, 70 170, 110 220',
+                                     'M 140 36 C 110 100, 120 170, 170 214', 'M 186 60 C 150 110, 160 170, 206 190')))
+    p.path(ell(122, 128, 92, 92), 'none')
+    p.hl('M 54 104 Q 64 70 96 52', 8)
+    return p
+
+
+# ---- part b: house and kitchen -------------------------------------------------------------------------------------
+
+def cup():
+    f, s = '#FFC83D', '#E0A21A'
+    p = Pic()
+    p.shadow(cy=222, rx=86)
+    p.line('M 180 96 C 232 92, 234 168, 176 164', INK, 20)
+    p.line('M 180 96 C 232 92, 234 168, 176 164', f, 12)
+    body = 'M 46 70 L 190 70 L 182 196 C 180 212, 166 218, 150 218 L 86 218 C 70 218, 56 212, 54 196 Z'
+    p.shaded(body, f, s, k=10)
+    p.path(ell(118, 70, 72, 16), '#FFE08A')
+    p.fillp(ell(118, 74, 62, 11), '#7A5A2E', op=0.25)
+    p.hl('M 66 96 L 70 190', 7)
+    return p
+
+
+def chair():
+    w, s = '#C98F52', '#A8743C'
+    p = Pic()
+    p.shadow(cy=232, rx=84)
+    for x in (172, 198):
+        p.path(rrect(x, 140, 12, 90, 4), s)
+    p.path(rrect(166, 30, 16, 120, 6), w)
+    p.path(rrect(200, 40, 14, 110, 6), s)
+    p.path('M 170 52 L 208 60 L 208 76 L 170 68 Z M 170 92 L 208 100 L 208 116 L 170 108 Z', w, 3)
+    p.shaded('M 54 134 L 172 130 L 214 148 L 96 154 Z', w, s, k=4)
+    p.path('M 96 154 L 214 148 L 214 162 L 96 168 Z', s)
+    p.path('M 54 134 L 96 154 L 96 168 L 54 148 Z', '#8F6230')
+    for x, y in ((58, 148), (96, 166)):
+        p.path(rrect(x, y, 13, 228 - y, 4), w)
+    p.path(rrect(200, 160, 13, 68, 4), w)
+    p.hl('M 74 140 L 160 136', 5)
+    return p
+
+
+def table():
+    w, s = '#C98F52', '#A8743C'
+    p = Pic()
+    p.shadow(cy=232, rx=110)
+    for x in (66, 206):
+        p.path(rrect(x, 110, 14, 104, 5), s)
+    p.shaded('M 20 112 L 182 96 L 240 116 L 78 136 Z', w, s, k=5)
+    p.path('M 78 136 L 240 116 L 240 132 L 78 152 Z', s)
+    p.path('M 20 112 L 78 136 L 78 152 L 20 128 Z', '#8F6230')
+    for x, y in ((24, 126), (80, 150), (224, 130)):
+        p.path(rrect(x, y, 15, 228 - y, 5), w)
+    p.hl('M 50 114 L 170 102', 5)
+    return p
+
+
+def pot():
+    f, s = '#E5484D', '#B92B2B'
+    p = Pic()
+    p.shadow(cy=226, rx=100)
+    for x in (22, 206):
+        p.path(rrect(x, 112, 30, 14, 7), '#3A3550')
+    body = 'M 42 100 L 214 100 L 208 196 C 206 214, 190 220, 170 220 L 86 220 C 66 220, 50 214, 48 196 Z'
+    cid = p.shaded(body, f, s, k=10)
+    p.clipped(cid, '<rect x="30" y="100" width="200" height="12" fill="%s"/>' % CREAM)
+    p.path(body, 'none')
+    lid = 'M 34 100 C 40 64, 216 64, 222 100 Z'
+    p.shaded(lid, f, s, k=6)
+    p.path(rrect(30, 96, 196, 10, 5), CREAM)
+    p.path(rrect(114, 52, 28, 20, 8), '#3A3550')
+    p.hl('M 58 120 L 62 196', 7)
+    p.hl('M 64 86 Q 90 72 120 70', 5)
+    return p
+
+
+def fork():
+    f, s = '#D7DCE6', '#AEB5C6'
+    p = Pic()
+    p.shadow(cy=230, rx=76)
+    p.add('<g transform="rotate(-40 128 128)">')
+    p.shaded('M 122 104 C 120 140, 114 186, 114 212 C 114 228, 142 228, 142 212 C 142 186, 136 140, 134 104 Z', f, s, k=4)
+    head = ('M 104 20 L 112 20 L 112 64 L 120 64 L 120 20 L 128 20 L 128 64 L 136 64 L 136 20 L 144 20 L 144 64 '
+            'L 152 64 L 152 20 L 160 20 L 160 70 C 160 92, 146 104, 134 106 L 122 106 C 110 104, 96 92, 96 70 L 96 20 Z')
+    p.shaded(head, f, s, k=4)
+    p.hl('M 102 74 Q 104 90 118 98', 4)
+    p.hl('M 126 124 L 122 204', 4)
+    p.add('</g>')
+    return p
+
+
+def fridge():
+    f, s = '#F2F0F8', '#D8D3E6'
+    p = Pic()
+    p.shadow(cy=236, rx=76)
+    p.path(rrect(70, 222, 14, 10, 3), '#7A7490', 3)
+    p.path(rrect(172, 222, 14, 10, 3), '#7A7490', 3)
+    p.shaded(rrect(58, 14, 140, 212, 16), f, s, k=8)
+    p.line('M 58 82 L 198 82', INK, 4)
+    p.path(rrect(176, 34, 10, 34, 5), '#AEB5C6', 3)
+    p.path(rrect(176, 98, 10, 54, 5), '#AEB5C6', 3)
+    p.path(ell(98, 112, 10, 10), '#E5484D', 3)
+    p.path('M 130 100 L 134 110 L 145 110 L 136 117 L 140 128 L 130 121 L 120 128 L 124 117 L 115 110 L 126 110 Z', '#FFC83D', 2.5)
+    p.path(rrect(88, 140, 22, 22, 4), '#36A852', 3)
+    p.path('M 140 152 L 152 172 L 128 172 Z', '#2F7FE0', 2.5)
+    p.hl('M 72 30 L 72 210', 6)
+    return p
+
+
+def plate():
+    p = Pic()
+    p.shadow(cy=200, rx=104)
+    p.path(ell(128, 140, 112, 62), WHITE)
+    p.fillp(ell(128, 144, 72, 38), '#EDE6F7')
+    p.path(ell(128, 142, 74, 38), 'none', 3, stroke='#D8D3E6')
+    p.line('M 30 128 Q 46 100 90 88', '#D8D3E6', 4)
+    p.hl('M 60 124 Q 76 106 108 102', 6)
+    return p
+
+
+def towel_striped():
+    p = Pic()
+    p.shadow(cy=236, rx=70)
+    p.outlined_line('M 40 50 L 216 50', '#AEB5C6', 8)
+    for x in (40, 216):
+        p.path(ell(x, 50, 8, 8), '#7A7490', 3)
+    d = 'M 70 46 L 186 46 L 186 210 L 70 210 Z'
+    cid = p.shaded(d, WHITE, '#E2DEEC', k=8)
+    p.clipped(cid, ''.join('<rect x="60" y="%d" width="140" height="14" fill="#2F7FE0"/>' % y for y in (78, 112, 146, 180)))
+    p.path(d, 'none')
+    p.path('M 70 46 L 186 46 L 186 66 L 70 66 Z', '#E2DEEC')
+    p.line(''.join('M %d 210 L %d 226 ' % (x, x) for x in range(76, 186, 10)), '#2F7FE0', 4)
+    return p
+
+
+def umbrella():
+    p = Pic()
+    p.shadow(cy=236, rx=60)
+    p.outlined_line('M 128 60 L 128 212 C 128 236, 96 236, 96 216', '#7A4A24', 7)
+    canopy = 'M 16 140 C 20 70, 74 32, 128 32 C 182 32, 236 70, 240 140 Q 212 122 184 140 Q 156 122 128 140 Q 100 122 72 140 Q 44 122 16 140 Z'
+    cid = p.shaded(canopy, '#E53935', '#B8282A', k=8)
+    p.clipped(cid, '<path d="M 72 140 C 80 90, 100 50, 128 32 C 112 70, 106 110, 100 140 Z" fill="#FFC83D"/>'
+                   '<path d="M 184 140 C 176 90, 156 50, 128 32 C 144 70, 150 110, 156 140 Z" fill="#FFC83D"/>')
+    p.path(canopy, 'none')
+    p.line('M 128 32 C 112 70, 102 110, 100 140 M 128 32 C 144 70, 154 110, 156 140 M 128 32 C 90 60, 76 100, 72 140 '
+           'M 128 32 C 166 60, 180 100, 184 140', INK, 3)
+    p.path(ell(128, 26, 6, 8), '#7A4A24', 3)
+    p.hl('M 40 106 Q 56 66 96 46', 7)
+    return p
+
+
+def bed():
+    p = Pic()
+    p.shadow(cy=232, rx=112)
+    p.path(rrect(18, 70, 30, 158, 8), '#C98F52')
+    p.path(rrect(206, 120, 30, 108, 8), '#C98F52')
+    p.path(rrect(40, 150, 176, 30, 6), '#A8743C')
+    p.shaded(rrect(42, 124, 172, 34, 10), WHITE, '#E2DEEC', k=4)
+    p.shaded(ell(80, 118, 32, 18), WHITE, '#E2DEEC', k=4)
+    blanket = 'M 102 112 L 214 112 L 214 164 L 96 164 C 92 140, 94 120, 102 112 Z'
+    cid = p.shaded(blanket, '#4D9BE6', '#2F7FE0', k=6)
+    p.clipped(cid, ''.join('<circle cx="%d" cy="%d" r="5" fill="%s"/>' % (x, y, CREAM)
+                           for x in range(116, 214, 22) for y in (128, 150)))
+    p.path(blanket, 'none')
+    p.path(rrect(40, 176, 12, 52, 4), '#8F6230')
+    p.path(rrect(196, 176, 12, 52, 4), '#8F6230')
+    return p
+
+
+def box():
+    k, s, top = '#D9A866', '#B8874A', '#E8C08A'
+    p = Pic()
+    p.shadow(cy=226, rx=100)
+    d = 28
+    x, y, w, h = 40, 98, 140, 120
+    p.path('M %d %d L %d %d L %d %d L %d %d Z' % (x, y, x + d * 2, y - d, x + w + d * 2, y - d, x + w, y), top)
+    p.path('M %d %d L %d %d L %d %d L %d %d Z' % (x + w, y, x + w + d * 2, y - d, x + w + d * 2, y + h - d, x + w, y + h), s)
+    p.shaded(rrect(x, y, w, h, 4), k, s, k=6)
+    p.path('M 96 98 L 152 70 L 168 70 L 112 98 Z', '#C9B89A', 2.5)
+    p.path(rrect(96, 98, 16, 34, 2), '#C9B89A', 2.5)
+    p.hl('M 54 116 L 54 200', 6)
+    return p
+
+
+def basket():
+    p = Pic()
+    p.shadow(cy=226, rx=96)
+    p.line('M 54 120 C 54 30, 202 30, 202 120', INK, 16)
+    p.line('M 54 120 C 54 30, 202 30, 202 120', '#C98F52', 9)
+    body = 'M 32 116 L 224 116 L 204 214 C 202 220, 196 224, 190 224 L 66 224 C 60 224, 54 220, 52 214 Z'
+    cid = p.shaded(body, '#D9A866', '#B8874A', k=8)
+    weave = ''.join('<path d="M 20 %d L 236 %d" stroke="#B8874A" stroke-width="4"/>' % (y, y) for y in range(132, 224, 18))
+    weave += ''.join('<path d="M %d 116 L %d 224" stroke="#C9965A" stroke-width="5"/>' % (x, x + (128 - x) // 8) for x in range(44, 224, 18))
+    p.clipped(cid, weave)
+    p.path(body, 'none')
+    p.path(rrect(26, 108, 204, 16, 8), '#C98F52')
+    p.hl('M 46 132 L 62 206', 6)
+    return p
+
+
+def cupboard():
+    w, s = '#B98050', '#97643A'
+    p = Pic()
+    p.shadow(cy=236, rx=86)
+    p.path(rrect(54, 222, 14, 12, 3), '#6B4426', 3)
+    p.path(rrect(188, 222, 14, 12, 3), '#6B4426', 3)
+    p.shaded(rrect(46, 26, 164, 200, 6), w, s, k=8)
+    p.path(rrect(38, 18, 180, 16, 5), s)
+    for x in (58, 132):
+        p.path(rrect(x, 44, 66, 132, 5), '#C99566', 3)
+        p.path(rrect(x + 10, 54, 46, 112, 4), 'none', 2.5, stroke=s)
+    p.path(ell(116, 112, 5, 5), '#FFC83D', 2.5)
+    p.path(ell(140, 112, 5, 5), '#FFC83D', 2.5)
+    p.path(rrect(58, 184, 140, 32, 4), '#C99566', 3)
+    p.path(rrect(116, 196, 24, 8, 4), '#FFC83D', 2.5)
+    return p
+
+
+def window():
+    p = Pic()
+    p.shadow(cy=232, rx=104)
+    p.path(rrect(38, 30, 180, 170, 8), WHITE)
+    sid = p.shaded(rrect(50, 42, 156, 146, 4), '#BFE6F7', '#9DD3EE', k=6, sw=0)
+    p.clipped(sid, '<path d="M 60 112 C 60 98, 76 94, 86 100 C 92 88, 112 88, 116 102 C 128 100, 134 112, 124 118 L 66 118 C 60 118, 60 116, 60 112 Z" fill="%s"/>'
+              % WHITE + '<circle cx="174" cy="74" r="14" fill="#FFC83D"/>')
+    p.line('M 128 42 L 128 188 M 50 115 L 206 115', WHITE, 9)
+    p.path(rrect(38, 30, 180, 170, 8), 'none')
+    p.path(rrect(50, 42, 156, 146, 4), 'none', 3)
+    p.path('M 22 20 L 66 20 C 62 80, 56 150, 40 210 L 22 210 Z', '#F48FB1')
+    p.path('M 234 20 L 190 20 C 194 80, 200 150, 216 210 L 234 210 Z', '#F48FB1')
+    p.path(rrect(16, 12, 224, 12, 6), '#C98F52')
+    p.path(rrect(26, 200, 204, 16, 5), '#E3D6C6')
+    return p
+
+
+def clock():
+    p = Pic()
+    p.shadow(cy=236, rx=70)
+    p.shaded(ell(128, 124, 100, 100), '#2F7FE0', '#1F5FB0', k=8)
+    p.path(ell(128, 124, 84, 84), WHITE)
+    for k in range(12):
+        a = k * math.pi / 6
+        r0 = 68 if k % 3 else 62
+        p.line('M %.1f %.1f L %.1f %.1f' % (128 + r0 * math.cos(a), 124 + r0 * math.sin(a), 128 + 76 * math.cos(a), 124 + 76 * math.sin(a)),
+               INK, 5 if k % 3 == 0 else 3)
+    p.line('M 128 124 L 128 64', INK, 6)
+    p.line('M 128 124 L 168 148', '#E5484D', 8)
+    p.path(ell(128, 124, 7, 7), INK, 0)
+    p.hl('M 52 98 Q 62 60 96 42', 7)
+    return p
+
+
+def draw_house(lit=False):
+    p = Pic()
+    p.shadow(cy=232, rx=108)
+    p.path(rrect(166, 40, 22, 50, 3), '#B8452E')
+    roof = 'M 20 126 L 128 34 L 236 126 Z'
+    if lit:
+        p.add('<path d="%s" fill="none" stroke="#FFC83D" stroke-width="22" stroke-linejoin="round" opacity="0.7"/>' % roof)
+        p.line('M 128 10 L 128 0 M 60 52 L 50 42 M 196 52 L 206 42 M 20 92 L 6 88 M 236 92 L 250 88', '#E0A21A', 5)
+    rid = p.shaded(roof, '#E5484D', '#B8282A', k=8)
+    p.clipped(rid, ''.join('<path d="M 20 %d L 236 %d" stroke="#B8282A" stroke-width="3"/>' % (y, y) for y in (64, 88, 112)))
+    p.path(roof, 'none', 6 if lit else 4, stroke='#E0A21A' if lit else INK)
+    p.shaded(rrect(42, 124, 172, 104, 4), '#FFF0D6', '#EADBC0', k=6)
+    p.path(rrect(108, 156, 40, 72, 18), '#9C6B3C')
+    p.path(ell(138, 194, 4, 4), '#FFC83D', 2)
+    for x in (58, 166):
+        p.path(rrect(x, 146, 34, 34, 4), '#BFE6F7')
+        p.line('M %d 146 L %d 180 M %d 163 L %d 163' % (x + 17, x + 17, x, x + 34), INK, 3)
+    if lit:
+        p.path(roof, 'none', 4)
+    return p
+
+
+def house():
+    return draw_house()
+
+
+def house_roof():
+    return draw_house(lit=True)
+
+
+def tent():
+    p = Pic()
+    p.shadow(cy=226, rx=112)
+    p.line('M 128 34 L 128 18 M 22 214 L 8 226 M 234 214 L 248 226', INK, 4)
+    body = 'M 128 34 L 236 214 L 20 214 Z'
+    p.shaded(body, '#FF8A3D', '#D9692A', k=8)
+    p.path('M 128 34 L 170 214 L 86 214 Z', '#4A3A6A')
+    p.path('M 128 34 L 110 214 L 70 214 Z', '#FFB27A')
+    p.path('M 128 34 L 146 214 L 186 214 Z', '#FFB27A')
+    p.path(body, 'none')
+    p.add('<path d="M 128 18 L 150 26 L 128 32 Z" fill="#FFC83D" stroke="%s" stroke-width="2.5"/>' % INK)
+    return p
+
+
+def pram():
+    body, s = '#4D6FC4', '#3A55A0'
+    p = Pic()
+    p.shadow(cy=236, rx=100)
+    p.outlined_line('M 186 118 L 230 56 L 242 56', '#7A7490', 6)
+    for cx in (78, 176):
+        p.path(ell(cx, 206, 28, 28), '#3A3550')
+        p.path(ell(cx, 206, 18, 18), '#C9CFDD', 3)
+        p.line(''.join('M %d 206 L %.1f %.1f ' % (cx, cx + 18 * math.cos(k * math.pi / 3), 206 + 18 * math.sin(k * math.pi / 3))
+                       for k in range(6)), '#7A7490', 2.5)
+    p.line('M 78 206 L 128 168 L 176 206', '#7A7490', 5)
+    cid = p.shaded('M 30 110 L 206 110 C 204 154, 176 176, 128 176 C 80 176, 32 154, 30 110 Z', body, s, k=8)
+    p.clipped(cid, '<path d="M 30 126 L 210 126" stroke="%s" stroke-width="5"/>' % CREAM)
+    p.path('M 30 110 L 206 110 C 204 154, 176 176, 128 176 C 80 176, 32 154, 30 110 Z', 'none')
+    hood = 'M 30 112 C 26 54, 84 30, 124 40 L 120 112 Z'
+    hid = p.shaded(hood, s, '#2A4080', k=5)
+    p.clipped(hid, '<path d="M 40 90 C 50 60, 80 46, 122 50 M 34 104 C 40 80, 70 62, 122 74" fill="none" stroke="#5A7ED0" stroke-width="4"/>')
+    p.path(hood, 'none')
+    p.path(rrect(26, 104, 186, 12, 6), CREAM)
+    return p
+
+
+def soap_bubble():
+    p = Pic()
+
+    def bubble(cx, cy, r, w):
+        p.add('<circle cx="%d" cy="%d" r="%d" fill="#EAF6FF" opacity="0.7"/>' % (cx, cy, r))
+        p.add('<path d="M %.1f %.1f A %d %d 0 0 0 %.1f %.1f" fill="none" stroke="#F7B6C6" stroke-width="%s" opacity="0.8"/>'
+              % (cx + r * 0.95, cy + r * 0.3, r * 0.95, r * 0.95, cx - r * 0.3, cy + r * 0.95, w * 1.6))
+        p.add('<path d="M %.1f %.1f A %d %d 0 0 1 %.1f %.1f" fill="none" stroke="#FFE27A" stroke-width="%s" opacity="0.8"/>'
+              % (cx - r * 0.9, cy + r * 0.4, r * 0.9, r * 0.9, cx - r * 0.2, cy - r * 0.88, w * 1.4))
+        p.path(ell(cx, cy, r, r), 'none', w, stroke='#5BB8E0')
+        p.add('<path d="M %.1f %.1f Q %.1f %.1f %.1f %.1f" fill="none" stroke="%s" stroke-width="%s" stroke-linecap="round"/>'
+              % (cx - r * 0.55, cy - r * 0.2, cx - r * 0.5, cy - r * 0.6, cx - r * 0.15, cy - r * 0.62, WHITE, w * 2.2))
+
+    bubble(112, 130, 84, 4)
+    bubble(206, 66, 30, 3)
+    bubble(214, 196, 20, 2.5)
+    return p
+
+
+def needle():
+    p = Pic()
+    p.shadow(cy=232, rx=70)
+    thr = 'M 185 60 C 150 26, 96 38, 70 74 C 44 112, 62 160, 104 170 C 136 178, 160 190, 166 216'
+    p.line(thr, INK, 9)
+    p.line(thr, '#E5484D', 5)
+    p.add('<g transform="rotate(40 128 128)">')
+    d = 'M 120 22 C 120 14, 136 14, 136 22 L 136 196 L 128 238 L 120 196 Z'
+    p.shaded(d, '#D7DCE6', '#AEB5C6', k=3)
+    p.path(rrect(124, 26, 8, 26, 4), WHITE, 3)
+    p.hl('M 124 70 L 124 186', 3)
+    p.add('</g>')
+    p.line('M 185 60 C 204 66, 214 80, 208 98', INK, 9)
+    p.line('M 185 60 C 204 66, 214 80, 208 98', '#E5484D', 5)
+    return p
+
+
+def thread():
+    p = Pic()
+    p.shadow(cy=226, rx=80)
+    p.line('M 168 140 C 210 150, 230 190, 206 214 C 190 228, 170 214, 186 204', INK, 7)
+    p.line('M 168 140 C 210 150, 230 190, 206 214 C 190 228, 170 214, 186 204', '#E5484D', 3.5)
+    p.path(ell(128, 196, 64, 20), '#C98F52')
+    p.path(rrect(84, 66, 88, 130, 4), '#C98F52', 0)
+    cid = p.shaded(rrect(80, 70, 96, 124, 4), '#E5484D', '#B8282A', k=7)
+    p.clipped(cid, ''.join('<path d="M 76 %d L 180 %d" stroke="#F28084" stroke-width="2.5"/>' % (y, y + 6) for y in range(74, 196, 9)))
+    p.path(rrect(80, 70, 96, 124, 4), 'none')
+    p.path(ell(128, 66, 64, 20), '#E0B070')
+    p.path(ell(128, 66, 14, 5), '#7A4A24', 2.5)
+    p.hl('M 94 90 L 94 176', 6)
+    return p
+
+
+def ring():
+    p = Pic()
+    p.shadow(cy=222, rx=80)
+    p.path(ell(128, 150, 84, 56), 'none', 22, stroke=INK)
+    p.path(ell(128, 150, 84, 56), 'none', 15, stroke='#E6B422')
+    p.add('<path d="M 52 150 A 76 50 0 0 0 204 150" fill="none" stroke="#B88A10" stroke-width="7"/>')
+    p.path('M 100 98 L 112 74 L 144 74 L 156 98 L 128 126 Z', '#4D9BE6')
+    p.path('M 100 98 L 156 98 M 112 74 L 120 98 L 128 74 L 136 98 L 144 74 M 120 98 L 128 126 L 136 98', 'none', 2.5)
+    p.path(rrect(108, 94, 40, 12, 4), '#E6B422', 3)
+    p.add('<path d="M 164 64 l 4 10 l 10 4 l -10 4 l -4 10 l -4 -10 l -10 -4 l 10 -4 Z" fill="#FFE27A" stroke="%s" stroke-width="2"/>' % INK)
+    p.hl('M 60 132 Q 72 108 104 100', 5)
+    return p
+
+
+PART_B = {
+    'camel': camel, 'donkey': donkey, 'butterfly': butterfly, 'tortoise': tortoise, 'ant': ant, 'chick': chick,
+    'sheep': sheep, 'bat': bat,
+    'pizza': pizza, 'pita': pita, 'flour': flour, 'sugar': sugar, 'olive': olive,
+    'hat-cat-ears': hat_cat_ears, 'shirt-striped': shirt_striped, 'dress-strawberries': dress_strawberries,
+    'apron': apron, 'sandal': sandal, 'swimsuit': swimsuit,
+    'teddy-nose': teddy_nose, 'kite-butterfly': kite_butterfly, 'present': present, 'wool': wool,
+    'cup': cup, 'chair': chair, 'table': table, 'pot': pot, 'fork': fork, 'fridge': fridge, 'plate': plate,
+    'towel-striped': towel_striped, 'umbrella': umbrella, 'bed': bed, 'box': box, 'basket': basket,
+    'cupboard': cupboard, 'window': window, 'clock': clock, 'house': house, 'house-roof': house_roof, 'tent': tent,
+    'pram': pram, 'soap-bubble': soap_bubble, 'needle': needle, 'thread': thread, 'ring': ring,
+}
+
+PARTS = {'batch2a': PART_A, 'batch2b': PART_B}
