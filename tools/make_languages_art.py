@@ -334,9 +334,9 @@ def host_eng():
     """Budgerigar waving one wing."""
     green, green_d, belly, yellow = '#6CC24A', '#4E9F33', '#93D96B', '#FFD93D'
     out = [el('ellipse', cx=256, cy=466, rx=110, ry=11, fill=SHADOW)]
-    # tail, long and blue, behind
-    out += [el('path', d='M270 372 L372 470 Q364 486 346 482 L248 392 Z', fill='#3E6FD9'),
-            el('path', d='M272 382 L356 462 Q350 470 340 468 L258 396 Z', fill='#5B8BEF')]
+    # tail, long and blue, behind; it slants back so its tip ends above the ground line (y 462 of 466), never below the feet
+    out += [el('path', d='M270 372 L382 446 Q380 464 360 462 L248 392 Z', fill='#3E6FD9'),
+            el('path', d='M272 382 L366 442 Q362 452 352 451 L258 396 Z', fill='#5B8BEF')]
     # body
     out += [el('ellipse', cx=250, cy=314, rx=104, ry=124, fill=green_d),
             el('ellipse', cx=258, cy=308, rx=100, ry=122, fill=green),
@@ -433,7 +433,9 @@ def host_svg(course):
 
 
 # ---------------------------------------------------------------- the doors (240 x 300), each with its host in front
-HOST_IN_DOOR = {'eng': (120, 300, 0.36), 'heb': (120, 302, 0.38), 'rus': (120, 300, 0.40)}  # centre x, bottom y, scale
+# centre x, ground y (the host canvas's y 470), scale. The ground sits at 294 so the lowest drawn thing (the shadow's
+# bottom, canvas y 477) ends 3 inside the 300 high viewBox: nothing crosses it (QA-L0-3).
+HOST_IN_DOOR = {'eng': (120, 294, 0.36), 'heb': (120, 294, 0.38), 'rus': (120, 294, 0.40)}
 
 
 def door_svg(course, opened):

@@ -140,7 +140,7 @@ No locked, grey or "coming soon" door, ever (frame §1.2).
 - **Order of the doors, fixed** (frame §1.2): in Hebrew alphabetical order of the languages' names, read from the start
   (right): **English (אנגלית), Hebrew (עברית), Russian (רוסית)**. Not sorted by use. With two doors on, the same order.
 - Each door unit = its hello bubble above the door art (`door_<c>.svg`, 240 x 300 viewBox, drawn at width `door`, height
-  `1.25 x door`). The whole unit (bubble, door, host) is one tap target.
+  `1.25 x door`). The whole unit (bubble, door, host) is one tap target: the rectangle of §4.2.1.
 
 | Board | `door` (w x h) | gap (3 doors / 2) | bubble top, height | door top | companion | row |
 |---|---|---|---|---|---|---|
@@ -149,7 +149,53 @@ No locked, grey or "coming soon" door, ever (frame §1.2).
 | tablet landscape 1180 x 820 | 264 x 330 | 56 / 112 | 200, 68 | 278 | 160 | centred: x 138..1042 |
 | tablet portrait 820 x 1180 | 240 x 300 | 24 / 48 | 380, 72 | 462 | 160 | centred: x 26..794 |
 
-Every door unit is far above the band A target (96 / 112 pt) and the gaps above 24 / 32.
+Every door unit is far above the band A target (96 / 112 pt), and the gaps between the tap rectangles below are above band
+A's 24 / 32.
+
+### 4.2.1 The tap rectangle of a door (QA-L0-2)
+A door's tap area is **one rectangle: its bubble, its door and its host, and nothing round them**. The friend in the corner,
+the grass, the sand, the sea, the title chip and the space between two doors open no door. It replaces the L0 unit, which
+was a column as high as the board (its `Stack` had only positioned children). The art keeps its place (the door box of §4.2,
+`door` x `1.25 x door`, and the bubble above it); only the hit area is this rectangle, and the art may paint a little
+outside it (`Clip.none`).
+
+The rule, for each door, from its door box (left `L`, width `door`):
+- **Left and right:** the stone frame's visible edge plus band A's 12 slop. The door art is drawn from x 20 to 220 of its
+  240 viewBox, so the frame starts `door / 12` inside the box; the rectangle is the box inset by `round(door / 12) - 12` on
+  each side: **3** (phone), **1** (SE), **10** (tablet landscape), **8** (tablet portrait).
+- **Top:** the bubble's top (`bubbleTop`), with no slop upward, so the back pebble and the title chip stay clear (on the
+  phone the English rectangle is then 28 below the pebble; with a 12 slop it would be 16, under band A's 24).
+- **Bottom:** the door box's bottom (the host's shadow), but never in the bottom 24 band of the screen (§6.1 edge rule):
+  `min(doorTop + 1.25 x door, boardHeight - 24)`. On the phone that cuts only the shadow (the doorstep ends at y 368.3).
+- No door is edge-adjacent (the narrowest gutter is 34, on tablet portrait, more than 24), so none extends to the edge.
+- **The bubble stays inside its rectangle:** its maximum width is the rectangle's width (178 / 158 / 244 / 224) instead of
+  `door + gap - 8`; above that the word scales down (FittedBox), as today. At text scale 1.0 the widest bubble ("Привет")
+  is about 153 / 143 / 194 / 204 wide, so nothing scales down today.
+- The door's `Semantics` button has the same rectangle.
+
+The rectangles in board points, `left..right` and `top..bottom`, listed from the left of the screen. The doors read from the
+start (the right): **English is the rightmost**, then Hebrew, then Russian; with two doors on, the same order (the left one
+is Russian if Russian is on, otherwise Hebrew; the right one is English if English is on, otherwise Hebrew).
+
+| Board | 3 doors, x: Russian · Hebrew · English | 2 doors, x: left · right | y (all) | size w x h | gap between rectangles (3 / 2) |
+|---|---|---|---|---|---|
+| phone 852 x 393 | **177..355 · 393..571 · 609..787** | **269..447 · 517..695** | **84..369** | 178 x 285 | 38 / 70 |
+| phoneSE 667 x 375 | **118.5..276.5 · 302.5..460.5 · 486.5..644.5** | **198.5..356.5 · 406.5..564.5** | **80..338** | 158 x 258 | 26 / 50 |
+| tablet landscape 1180 x 820 | **148..392 · 468..712 · 788..1032** | **280..524 · 656..900** | **200..608** | 244 x 408 | 76 / 132 |
+| tablet portrait 820 x 1180 | **34..258 · 298..522 · 562..786** | **154..378 · 442..666** | **380..762** | 224 x 382 | 40 / 64 |
+
+What lies outside every rectangle, measured on each board:
+- **The friend** (`left 16, bottom 8`, the `companion` square): phone 16..120 x 281..385 is 57 left of the Russian
+  rectangle; SE 16..104 x 279..367 is 14.5 left of it (the friend is not a target, so band A's gap between targets does not
+  apply; a tap on the friend opens nothing); tablet landscape 16..176 x 652..812 is 44 below every rectangle; tablet
+  portrait 16..176 x 1012..1172 is 250 below.
+- **The back pebble** (`start 16, top 8`, 48): phone 788..836 x 8..56 is 28 above the English rectangle; SE 603..651 x
+  8..56 is 24 above it; on the tablets it is 144 or more above.
+- **The grass, sand and sea** above the bubbles, below the doors and between two rectangles.
+
+Tests (the app-developer's, then the qa-engineer's three QA-L0-2 proofs): on each board, with three and with two doors, a
+tap 1 point inside each corner of a rectangle opens that door; a tap 1 point outside each side opens none; a tap on the
+friend's centre, on the grass below the doors and on the sea above them opens none.
 
 ### 4.3 The hello bubble
 - `BoardBubble` style: paper, radius 20, padding 16 (start) / 14 (end), a tail 18 wide and 12 high centred under it,
@@ -161,13 +207,13 @@ Every door unit is far above the band A target (96 / 112 pt) and the gaps above 
   - Russian `Привет`: Nitznutz Letters 500, `Locale('ru')`, LTR, no stress mark (a greeting, not a reading item; the
     Russian teacher confirms).
 - Sizes: Hebrew 24 (phone), 22 (SE), 32 (landscape), 34 (portrait); English and Russian 1.1 x those (26.4, 24.2, 35.2,
-  37.4). The bubble is never wider than `door + gap - 8`; above that the word scales down (FittedBox), so two bubbles
-  never touch at text scale 1.3.
+  37.4). The bubble is never wider than its door's tap rectangle (§4.2.1: 178 / 158 / 244 / 224); above that the word
+  scales down (FittedBox), so two bubbles never touch at text scale 1.3.
 - The words are drafts: Hebrew → hebrew-text-editor, English → english-language-teacher, Russian →
   russian-language-teacher.
 
 ### 4.4 Taps, timing, motion
-- **Tap a door unit** (anywhere on it): at once the door art cross-fades to `door_<c>_open.svg` (200 ms), the bubble pulses
+- **Tap a door unit** (anywhere in its rectangle, §4.2.1): at once the door art cross-fades to `door_<c>_open.svg` (200 ms), the bubble pulses
   (scale 1 → 1.06 → 1, 240 ms, a gold ring `spark` 4 wide while the clip plays), and the course's teaching voice says the
   hello clip. When the clip ends, after 250 ms, the course opens with the usual route transition. If the clip is missing,
   the course opens 600 ms after the tap.
@@ -206,6 +252,13 @@ They stand in front of their doors in `door_*.svg`. Names, gender of speech and 
 voice to each course's teaching voice (the voice-and-sound-director's pilots), and the names go to the hebrew-text-editor.
 **Needs the owner:** `docs/design/languages/doors_tabletLandscape.png`: are these the three hosts you want? If the D6
 fallback (two characters per course) is chosen, the second one is a separate drawing.
+
+**Inside the viewBox (QA-L0-3, 2026-11-03):** every element of the six door SVGs, the three hosts, `speaker.svg` and
+`land_languages.svg` was measured (headless Chrome: paths sampled along their length, ellipses round their outline, through
+every transform, plus half the stroke): nothing crosses its viewBox. The budgerigar's tail now slants back and ends above
+the ground line (canvas y 462), and each host stands with its ground at y 294 of the door's 300, so the lowest thing drawn
+(the host's shadow) ends at 297 and the door's own shadow at 299. Before, the tail reached 304.6 and the three hosts'
+shadows (and the hyrax's feet) 302.8 to 304.7. The door goldens change a little (the hosts are 6 to 8 higher).
 
 Placeholder status: these hosts are drawn as finished cast art, not rigged; mouth shapes (visemes) and poses come later
 with the illustrator (P9) or Rive.
