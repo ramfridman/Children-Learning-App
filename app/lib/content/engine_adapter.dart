@@ -1,5 +1,6 @@
 import '../data/app_database.dart';
 import '../engine/engine.dart';
+import '../engine/gates.dart';
 import '../engine/state.dart';
 import '../engine/types.dart';
 import 'models.dart';
@@ -23,6 +24,10 @@ Catalog engineCatalog(PackContent content) {
           needDays: s.masteryRequires['days'] as int?,
           needRepresentations: s.masteryRequires['representations'] as int?,
           needChecks: s.masteryRequires['checks'] as int?,
+          bundle: s.bundle,
+          setCoverage: s.setCoverage,
+          soundRight: s.soundRight == 'accepts' ? SoundRightPolicy.accepts : SoundRightPolicy.teaches,
+          letters: s.letters,
         ),
     ],
     items: <ItemMeta>[
@@ -56,6 +61,30 @@ Catalog engineCatalog(PackContent content) {
     ],
   );
 }
+
+/// The gates of a pack as the engine reads them (docs/languages/frame.md section 3.3.6).
+List<CourseGate> courseGates(PackContent content) => <CourseGate>[
+  for (final GateDoc g in content.gates.values)
+    CourseGate(
+      id: g.id,
+      course: g.course,
+      requires: g.requires,
+      requireAtLeast: <SkillQuota>[
+        for (final q in g.requireAtLeast) SkillQuota(skills: q.skills, count: q.count),
+      ],
+      holds: g.holds,
+      minAge: g.minAge,
+      neverUnderBand: g.neverUnderBand,
+      durableBelowBand: g.durableBelowBand,
+      switchName: g.switchName,
+      switchEffect: switch (g.switchEffect) {
+        'closes' => SwitchEffect.closes,
+        'opens' => SwitchEffect.opens,
+        _ => null,
+      },
+      routeBypass: g.routeBypass,
+    ),
+];
 
 /// One row of the `attempt` table as the engine reads it.
 AttemptEvent eventOf(Attempt row) => AttemptEvent(

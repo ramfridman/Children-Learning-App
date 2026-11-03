@@ -15,6 +15,9 @@ abstract final class Course {
   static const List<String> languages = <String>[eng, heb, rus];
   static const List<String> all = <String>[core, eng, heb, rus];
 
+  /// The domain of every skill of a language course; the course itself says which language.
+  static const String languagesDomain = 'languages';
+
   static bool isKnown(String course) => all.contains(course);
 
   static bool isLanguage(String course) => languages.contains(course);

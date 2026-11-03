@@ -370,7 +370,7 @@ void main() {
           );
           await db.endSession(s, now, 'finished');
           finished[lesson.id] = (finished[lesson.id] ?? 0) + 1;
-          played.add(stop.land!);
+          played.add(stop.land! as TrophyLand);
         }
         // Never more than three lessons in a row in one land, and every land is visited within the 40.
         int run = 1;

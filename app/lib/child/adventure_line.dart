@@ -1,6 +1,7 @@
 import '../rewards/award.dart';
 import '../rewards/names.dart';
 import '../strings/he.dart';
+import '../world/adventure_land.dart';
 import '../world/todays_adventure.dart';
 
 /// What the companion says in the home island's bubble when the child taps the bottle (B-39, rule section 8): the line for
@@ -23,8 +24,10 @@ AdventureLine? adventureLine(TodaysAdventure stop) {
     AdventureReason.playAgain => (He.adventurePlayAgain, He.adventurePlayAgainSemantics),
     AdventureReason.nothing => null,
   };
-  final TrophyLand? land = stop.land;
-  if (pair == null || land == null) return null;
+  // A language the parent turned on has no line yet: its words come from the hebrew-text-editor with its door.
+  final AdventureLand? place = stop.land;
+  if (pair == null || place is! TrophyLand) return null;
+  final TrophyLand land = place;
   return (
     text: pair.$1.fill(<String, String>{'land': landName(land).text}),
     semantics: pair.$2.fill(<String, String>{'land': landSemanticsName(land).text}),

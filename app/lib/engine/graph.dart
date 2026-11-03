@@ -62,6 +62,8 @@ class SkillGraph {
   List<String> report() {
     final List<String> out = <String>[];
     for (final SkillNode s in catalog.skills.values) {
+      // A roll-up has no items and no estimate of its own: its groups are the skills.
+      if (catalog.isRollUp(s.id)) continue;
       if (s.prerequisites.isEmpty && dependantsOf(s.id).isEmpty && catalog.skills.length > 1) {
         out.add('${s.id} is not connected to any other skill');
       }

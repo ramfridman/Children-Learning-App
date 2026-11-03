@@ -313,6 +313,16 @@ class SamplePack {
     files: const <String, Uint8List>{},
   );
 
+  /// Adds a JSON document to the pack and to the manifest, under the list [entriesKey] of its kind (`skills`, `gates`, ...), as
+  /// the builder would.
+  void addDocument(String name, String entriesKey, String id, Map<String, Object?> doc) {
+    docs[name] = doc;
+    files.add(name);
+    (manifest['files']! as List<Object?>).add(<String, Object?>{'name': name, 'sha256': '9' * 64, 'size': 1});
+    final Map<String, Object?> entries = manifest['entries']! as Map<String, Object?>;
+    ((entries[entriesKey] ??= <Object?>[]) as List<Object?>).add(id);
+  }
+
   final Map<String, Object?> manifest;
 
   /// Each JSON file by name.

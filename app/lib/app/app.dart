@@ -358,7 +358,8 @@ class _HomeState extends ConsumerState<_Home> {
         final Lesson? mission = world.missionFor(stop.skillId!);
         if (mission != null) await _openLesson(mission: mission);
       case AdventureKind.lesson:
-        await _playLand(stop.land!.domain);
+        // A language is played from its own door (docs/languages/frame.md section 1.2), which comes with the island.
+        if (stop.land is TrophyLand) await _playLand(stop.land!.domain);
       case AdventureKind.replay:
         await _openLesson(lessonId: stop.lessonId);
       case AdventureKind.none:

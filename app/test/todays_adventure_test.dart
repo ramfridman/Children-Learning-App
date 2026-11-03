@@ -5,6 +5,7 @@ import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/rewards/award.dart';
+import 'package:nitznutz/world/adventure_land.dart';
 import 'package:nitznutz/world/lesson_path.dart';
 import 'package:nitznutz/world/todays_adventure.dart';
 
@@ -400,7 +401,7 @@ void main() {
       for (final Row r in rows()) {
         final AdventureInput a = r.$3;
         for (int i = 0; i < 5; i++) {
-          final List<TrophyLand> lands = a.enabledLands.toList()..shuffle(random);
+          final List<AdventureLand> lands = a.enabledLands.toList()..shuffle(random);
           final List<DueSkill> dues = a.due.toList()..shuffle(random);
           final List<String> ids = a.finished.keys.toList()..shuffle(random);
           final AdventureInput b = AdventureInput(
@@ -523,14 +524,26 @@ void main() {
     });
 
     test('the bottle never asks for a day count, a time or a random source: the file is pure', () {
-      for (final String name in <String>['todays_adventure.dart', 'lesson_path.dart']) {
+      for (final String name in <String>[
+        'todays_adventure.dart',
+        'lesson_path.dart',
+        'adventure_land.dart',
+      ]) {
         final String text = File('lib/world/$name').readAsStringSync();
         expect(text.contains('DateTime.now'), isFalse, reason: name);
         expect(text.contains('Random'), isFalse, reason: name);
         expect(
           RegExp(r'''^\s*import\s+['"]([^'"]+)['"]''', multiLine: true).allMatches(text).map((m) => m[1]),
-          everyElement(anyOf(startsWith('../rewards/award'), equals('lesson_path.dart'))),
-          reason: '$name imports only the pure award enum and the path function',
+          everyElement(
+            anyOf(
+              startsWith('../rewards/award'),
+              equals('lesson_path.dart'),
+              equals('adventure_land.dart'),
+              equals('../engine/course.dart'),
+            ),
+          ),
+          reason:
+              '$name imports only the pure award enum, the land type, the course ids and the path function',
         );
       }
     });

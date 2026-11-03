@@ -1,4 +1,4 @@
-import '../rewards/award.dart';
+import 'adventure_land.dart';
 import 'lesson_path.dart';
 
 /// Today's Adventure: the one stop the bottle in the child's home opens (B-26 step 5; the rule and its worked examples are
@@ -54,7 +54,7 @@ class Visit {
   });
 
   final VisitKind kind;
-  final TrophyLand land;
+  final AdventureLand land;
   final String id;
 
   /// `Engine.dayKey` of the visit's last answer.
@@ -75,7 +75,7 @@ class DueSkill {
   });
 
   final String skillId;
-  final TrophyLand land;
+  final AdventureLand land;
   final DateTime dueAt;
 
   /// The engine already took today's memory review of this skill, so a second check only feels like being asked again.
@@ -96,10 +96,10 @@ class AdventureInput {
   /// `Engine.dayKey` of now.
   final int today;
   final int band;
-  final Set<TrophyLand> enabledLands;
+  final Set<AdventureLand> enabledLands;
 
   /// Each land's lessons in path order.
-  final Map<TrophyLand, List<PathLesson>> paths;
+  final Map<AdventureLand, List<PathLesson>> paths;
 
   /// How many times each lesson was finished.
   final Map<String, int> finished;
@@ -115,19 +115,19 @@ class TodaysAdventure {
   const TodaysAdventure.none() : this._(AdventureKind.none, AdventureReason.nothing);
 
   /// A call for help: the revisit of [skillId].
-  const TodaysAdventure.revisit(TrophyLand land, String skillId)
+  const TodaysAdventure.revisit(AdventureLand land, String skillId)
     : this._(AdventureKind.revisit, AdventureReason.callForHelp, land: land, skillId: skillId);
 
   /// The land's next lesson, as the path offers it (before any warm-up).
-  const TodaysAdventure.lesson(TrophyLand land, String? lessonId, AdventureReason reason)
+  const TodaysAdventure.lesson(AdventureLand land, String? lessonId, AdventureReason reason)
     : this._(AdventureKind.lesson, reason, land: land, lessonId: lessonId);
 
-  const TodaysAdventure.replay(TrophyLand land, String lessonId)
+  const TodaysAdventure.replay(AdventureLand land, String lessonId)
     : this._(AdventureKind.replay, AdventureReason.playAgain, land: land, lessonId: lessonId);
 
   final AdventureKind kind;
   final AdventureReason reason;
-  final TrophyLand? land;
+  final AdventureLand? land;
 
   /// A lesson or a replay: the lesson to play.
   final String? lessonId;
@@ -154,15 +154,15 @@ class TodaysAdventure {
 /// The stop the bottle opens (rule section 4).
 TodaysAdventure todaysAdventure(AdventureInput input, {AdventureParams? params}) {
   final AdventureParams p = params ?? paramsFor(band: input.band);
-  // Map order, the order of `TrophyLand`: every sort below ends on it, so no input order can matter.
-  final List<TrophyLand> lands = <TrophyLand>[
-    for (final TrophyLand l in TrophyLand.values)
-      if (input.enabledLands.contains(l) && (input.paths[l] ?? const <PathLesson>[]).isNotEmpty) l,
-  ];
+  // Map order, the `order` of each land: every sort below ends on it, so no input order can matter.
+  final List<AdventureLand> lands = <AdventureLand>[
+    for (final AdventureLand l in input.enabledLands)
+      if ((input.paths[l] ?? const <PathLesson>[]).isNotEmpty) l,
+  ]..sort((AdventureLand a, AdventureLand b) => a.order.compareTo(b.order));
   if (lands.isEmpty) return const TodaysAdventure.none();
   final _View v = _View(input, lands);
 
-  final TrophyLand? newPick = _newLearning(v, p);
+  final AdventureLand? newPick = _newLearning(v, p);
   final bool revisitAllowed =
       v.visitsSinceRevisitToday == null || v.visitsSinceRevisitToday! >= p.newAfterRevisit;
   final DueSkill? revisit = _firstDue(v);
@@ -180,29 +180,29 @@ TodaysAdventure todaysAdventure(AdventureInput input, {AdventureParams? params})
   final TodaysAdventure? again = _playAgain(v);
   if (again != null) return again;
   // Only resting lessons are left: offered again from the start, an empty bottle would be worse.
-  final TrophyLand land = v.current ?? lands.first;
+  final AdventureLand land = v.current ?? lands.first;
   return TodaysAdventure.lesson(land, v.next(land), AdventureReason.sameLand);
 }
 
 /// The land that has new learning to offer, or null: stay in the current land for [AdventureParams.stayInLand]
 /// lessons, then the lowest level first, the land not played for the longest time, the map order.
-TrophyLand? _newLearning(_View v, AdventureParams p) {
-  final List<TrophyLand> fresh = <TrophyLand>[
-    for (final TrophyLand l in v.lands)
+AdventureLand? _newLearning(_View v, AdventureParams p) {
+  final List<AdventureLand> fresh = <AdventureLand>[
+    for (final AdventureLand l in v.lands)
       if (v.hasNewLearning(l)) l,
   ];
   if (fresh.isEmpty) return null;
   if (v.current != null && fresh.contains(v.current) && v.run < p.stayInLand) return v.current;
-  final List<TrophyLand> others = <TrophyLand>[
-    for (final TrophyLand l in fresh)
+  final List<AdventureLand> others = <AdventureLand>[
+    for (final AdventureLand l in fresh)
       if (l != v.current) l,
   ];
   if (others.isEmpty) return v.current;
-  others.sort((TrophyLand a, TrophyLand b) {
+  others.sort((AdventureLand a, AdventureLand b) {
     final int byLevel = v.levelOfNext(a).compareTo(v.levelOfNext(b));
     if (byLevel != 0) return byLevel;
     final int byRecency = v.recency(a).compareTo(v.recency(b));
-    return byRecency != 0 ? byRecency : a.index.compareTo(b.index);
+    return byRecency != 0 ? byRecency : a.order.compareTo(b.order);
   });
   return others.first;
 }
@@ -219,7 +219,7 @@ DueSkill? _firstDue(_View v) {
     if (byTime != 0) return byTime;
     final int byCurrent = (a.land == v.current ? 0 : 1).compareTo(b.land == v.current ? 0 : 1);
     if (byCurrent != 0) return byCurrent;
-    final int byLand = a.land.index.compareTo(b.land.index);
+    final int byLand = a.land.order.compareTo(b.land.order);
     return byLand != 0 ? byLand : a.skillId.compareTo(b.skillId);
   });
   return waiting.first;
@@ -227,20 +227,20 @@ DueSkill? _firstDue(_View v) {
 
 /// Nothing new and nothing due: the lesson played fewest times, in the land not played for the longest time.
 TodaysAdventure? _playAgain(_View v) {
-  final Map<TrophyLand, List<PathLesson>> known = <TrophyLand, List<PathLesson>>{
-    for (final TrophyLand l in v.lands)
+  final Map<AdventureLand, List<PathLesson>> known = <AdventureLand, List<PathLesson>>{
+    for (final AdventureLand l in v.lands)
       l: <PathLesson>[
         for (final PathLesson x in v.input.paths[l]!)
           if (v.count(x.id) >= 1 && !v.resting(x.id)) x,
       ],
-  }..removeWhere((TrophyLand _, List<PathLesson> ls) => ls.isEmpty);
+  }..removeWhere((AdventureLand _, List<PathLesson> ls) => ls.isEmpty);
   if (known.isEmpty) return null;
-  final List<TrophyLand> order = known.keys.toList()
-    ..sort((TrophyLand a, TrophyLand b) {
+  final List<AdventureLand> order = known.keys.toList()
+    ..sort((AdventureLand a, AdventureLand b) {
       final int byRecency = v.recency(a).compareTo(v.recency(b));
-      return byRecency != 0 ? byRecency : a.index.compareTo(b.index);
+      return byRecency != 0 ? byRecency : a.order.compareTo(b.order);
     });
-  final TrophyLand land = order.first;
+  final AdventureLand land = order.first;
   PathLesson best = known[land]!.first;
   for (final PathLesson x in known[land]!) {
     if (v.count(x.id) < v.count(best.id)) best = x;
@@ -260,7 +260,7 @@ class _View {
       if (x.kind != VisitKind.revisit) _lastPathAt[x.land] = i;
       if (x.kind == VisitKind.lesson) _lastLesson[x.id] = x;
     }
-    final TrophyLand? last = onPath.isEmpty ? null : onPath.last.land;
+    final AdventureLand? last = onPath.isEmpty ? null : onPath.last.land;
     current = last != null && lands.contains(last) ? last : null;
     if (current != null) {
       for (final Visit x in onPath.reversed) {
@@ -281,12 +281,12 @@ class _View {
   }
 
   final AdventureInput input;
-  final List<TrophyLand> lands;
-  final Map<TrophyLand, int> _lastPathAt = <TrophyLand, int>{};
+  final List<AdventureLand> lands;
+  final Map<AdventureLand, int> _lastPathAt = <AdventureLand, int>{};
   final Map<String, Visit> _lastLesson = <String, Visit>{};
 
   /// The land of the most recent lesson or warm-up, if it is open.
-  late final TrophyLand? current;
+  late final AdventureLand? current;
 
   /// Lessons finished in a row in the current land (warm-ups and unfinished visits neither count nor stop it).
   int run = 0;
@@ -297,7 +297,7 @@ class _View {
   int count(String lessonId) => input.finished[lessonId] ?? 0;
 
   /// Where the land's most recent lesson or warm-up sits in the visits; −1 for a land never played.
-  int recency(TrophyLand l) => _lastPathAt[l] ?? -1;
+  int recency(AdventureLand l) => _lastPathAt[l] ?? -1;
 
   /// Left today right after an incorrect answer: the bottle offers something else for the rest of the day.
   bool resting(String lessonId) {
@@ -305,15 +305,15 @@ class _View {
     return x != null && x.day == input.today && x.end == VisitEnd.home && x.lastIncorrect;
   }
 
-  String? next(TrophyLand l) =>
+  String? next(AdventureLand l) =>
       nextOnPath(<String>[for (final PathLesson x in input.paths[l]!) x.id], input.finished);
 
-  bool hasNewLearning(TrophyLand l) {
+  bool hasNewLearning(AdventureLand l) {
     final String? id = next(l);
     return id != null && count(id) == 0 && !resting(id);
   }
 
-  int levelOfNext(TrophyLand l) {
+  int levelOfNext(AdventureLand l) {
     final String? id = next(l);
     return input.paths[l]!.firstWhere((PathLesson x) => x.id == id).level;
   }

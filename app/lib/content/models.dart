@@ -962,6 +962,10 @@ class SkillDoc {
       worldObject = json['worldObject'] as String?,
       childLine = json['childLine'] == null ? null : _caption(json['childLine']),
       core = (json['core'] as bool?) ?? false,
+      bundle = json['bundle'] as String?,
+      setCoverage = (json['setCoverage'] as bool?) ?? false,
+      soundRight = (json['soundRight'] as String?) ?? 'teaches',
+      letters = (json['letters'] as bool?) ?? false,
       masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
       initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
       targetRetention = (_map(json['retention'])['targetRetention']! as num).toDouble();
@@ -982,9 +986,53 @@ class SkillDoc {
   /// One line for the child, with niqqud, of what they can do; or null.
   final String? childLine;
   final bool core;
+
+  /// Language courses: the letter bundle, whether the skill is a set of words or letters, what a spelling that is right by
+  /// sound counts as (`accepts` or `teaches`), and whether the skill is letter work.
+  final String? bundle;
+  final bool setCoverage;
+  final String soundRight;
+  final bool letters;
   final Map<String, Object?> masteryRequires;
   final double initialStabilityDays;
   final double targetRetention;
+}
+
+/// A gate of a language course (docs/languages/frame.md section 3.3.6): what must be mastered, what it holds back, and what
+/// the parent's switch and the child's age and route do to it.
+class GateDoc {
+  GateDoc._(Map<String, Object?> json)
+    : id = json['id']! as String,
+      course = (json['course'] as String?) ?? Course.core,
+      requires = <String>{for (final Object? s in json['requires']! as List<Object?>) s! as String},
+      requireAtLeast = <({Set<String> skills, int count})>[
+        for (final Map<String, Object?> q in _maps(json['requireAtLeast']))
+          (
+            skills: <String>{for (final Object? s in q['skills']! as List<Object?>) s! as String},
+            count: q['count']! as int,
+          ),
+      ],
+      holds = <String>{for (final Object? s in json['holds']! as List<Object?>) s! as String},
+      minAge = json['minAge'] as int?,
+      neverUnderBand = json['neverUnderBand'] as int?,
+      durableBelowBand = json['durableBelowBand'] as int?,
+      switchName = (json['parentSwitch'] as Map<String, Object?>?)?['name'] as String?,
+      switchEffect = (json['parentSwitch'] as Map<String, Object?>?)?['effect'] as String?,
+      routeBypass = <String>{
+        for (final Object? r in (json['routeBypass'] as List<Object?>?) ?? const <Object?>[]) r! as String,
+      };
+
+  final String id;
+  final String course;
+  final Set<String> requires;
+  final List<({Set<String> skills, int count})> requireAtLeast;
+  final Set<String> holds;
+  final int? minAge;
+  final int? neverUnderBand;
+  final int? durableBelowBand;
+  final String? switchName;
+  final String? switchEffect;
+  final Set<String> routeBypass;
 }
 
 /// A misconception of the pack.
@@ -1048,6 +1096,7 @@ class PackContent {
     required this.assets,
     required this.skills,
     required this.tags,
+    required this.gates,
   });
 
   factory PackContent.fromPack(VerifiedPack pack) {
@@ -1056,6 +1105,7 @@ class PackContent {
     final Map<String, Activity> activities = <String, Activity>{};
     final Map<String, SkillDoc> skills = <String, SkillDoc>{};
     final Map<String, TagDoc> tags = <String, TagDoc>{};
+    final Map<String, GateDoc> gates = <String, GateDoc>{};
     for (final MapEntry<String, Object?> d in pack.docs.entries) {
       final Map<String, Object?> doc = _map(d.value);
       if (d.key.startsWith('lesson.')) {
@@ -1064,6 +1114,9 @@ class PackContent {
       } else if (d.key.startsWith('skill.')) {
         final SkillDoc s = SkillDoc._(doc);
         skills[s.id] = s;
+      } else if (d.key.startsWith('gate.')) {
+        final GateDoc g = GateDoc._(doc);
+        gates[g.id] = g;
       } else if (d.key.startsWith('misconception.')) {
         final TagDoc t = TagDoc._(doc);
         tags[t.id] = t;
@@ -1081,6 +1134,7 @@ class PackContent {
       assets: assets,
       skills: skills,
       tags: tags,
+      gates: gates,
     );
   }
 
@@ -1094,6 +1148,9 @@ class PackContent {
   final PackAssets assets;
   final Map<String, SkillDoc> skills;
   final Map<String, TagDoc> tags;
+
+  /// The gates of the course (none in the lands that exist today).
+  final Map<String, GateDoc> gates;
 
   /// The activities of a lesson, in order.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[

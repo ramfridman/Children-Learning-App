@@ -213,6 +213,17 @@
           },
           "minItems": 0,
           "maxItems": 4000
+        },
+        "gates": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 24,
+            "pattern": "^(?:[a-z]{3}\\.[a-z0-9_]{1,19})$"
+          },
+          "minItems": 0,
+          "maxItems": 20
         }
       },
       "required": [

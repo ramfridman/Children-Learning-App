@@ -67,11 +67,13 @@ List<Problem> validatePack({
   final Map<String, Map<String, Object?>> lessons = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> skills = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> tags = <String, Map<String, Object?>>{};
+  final Map<String, Map<String, Object?>> gates = <String, Map<String, Object?>>{};
   // Every id that has a file, even one that failed its schema; only valid documents are cross-checked.
   final Set<String> activityIds = <String>{};
   final Set<String> lessonIds = <String>{};
   final Set<String> skillIds = <String>{};
   final Set<String> tagIds = <String>{};
+  final Set<String> gateIds = <String>{};
   final Map<String, Map<String, Object?>> characters = <String, Map<String, Object?>>{};
   final Set<String> characterIds = <String>{};
   final Map<String, Map<String, Object?>> cues = <String, Map<String, Object?>>{};
@@ -140,6 +142,14 @@ List<Problem> validatePack({
         }
         if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
         if (found.isEmpty) tags[middle] = doc;
+      case 'gate':
+        gateIds.add(middle);
+        final List<Problem> found = validate(gateSchema, doc);
+        for (final Problem p in found) {
+          add(name, p);
+        }
+        if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
+        if (found.isEmpty) gates[middle] = doc;
       case 'character':
         characterIds.add(middle);
         final List<Problem> found = validate(characterSchema, doc);
@@ -179,6 +189,7 @@ List<Problem> validatePack({
   sameSet('lessons', lessonIds);
   sameSet('skills', skillIds);
   sameSet('misconceptions', tagIds);
+  sameSet('gates', gateIds);
   sameSet('characters', characterIds);
   sameSet('cues', cueIds);
 
@@ -670,6 +681,7 @@ List<Problem> validatePack({
     skills: skills,
     tags: tags,
     skillIds: skillIds,
+    gates: gates,
     say: say,
   );
 
@@ -969,6 +981,7 @@ void _courseRules({
   required Map<String, Map<String, Object?>> skills,
   required Map<String, Map<String, Object?>> tags,
   required Set<String> skillIds,
+  required Map<String, Map<String, Object?>> gates,
   required void Function(String, String, String) say,
 }) {
   final bool language = Course.isLanguage(course);
@@ -1026,6 +1039,15 @@ void _courseRules({
     }
   });
 
+  _bundlesAndGates(
+    course: course,
+    skills: skills,
+    skillIds: skillIds,
+    rollUps: rollUps,
+    gates: gates,
+    say: say,
+  );
+
   tags.forEach((String id, Map<String, Object?> t) {
     final String file = 'misconception.$id.json';
     sameCourse(file, t);
@@ -1064,6 +1086,121 @@ void _courseRules({
     sameCourse(file, l);
     for (final (int i, Object? s) in (l['skills']! as List<Object?>).indexed) {
       if (s is String && !ownSkill(s)) say(file, 'skills[$i]', '$s is not a skill of the course $course');
+    }
+  });
+}
+
+/// Every skill below the given ones (their prerequisites, and theirs), where a prerequisite on a roll-up means all its groups.
+Set<String> _below(Iterable<String> from, Map<String, Map<String, Object?>> skills) {
+  final Set<String> out = <String>{};
+  List<String> groupsOf(String id) => <String>[
+    for (final String k in skills.keys)
+      if (SkillIds.parentOf(k) == id) k,
+  ];
+  final List<String> stack = <String>[
+    for (final String id in from) ...(groupsOf(id).isEmpty ? <String>[id] : groupsOf(id)),
+  ];
+  while (stack.isNotEmpty) {
+    final String id = stack.removeLast();
+    final List<String> needs = <String>[
+      for (final Map<String, Object?> p in _maps(skills[id]?['prerequisites'])) p['skill']! as String,
+    ];
+    for (final String need in needs) {
+      final List<String> groups = groupsOf(need);
+      for (final String n in groups.isEmpty ? <String>[need] : groups) {
+        if (out.add(n)) stack.add(n);
+      }
+    }
+  }
+  return out;
+}
+
+/// The rules for letter bundles and gates (docs/languages/frame.md sections 3.3.3 and 3.3.6).
+void _bundlesAndGates({
+  required String course,
+  required Map<String, Map<String, Object?>> skills,
+  required Set<String> skillIds,
+  required Set<String> rollUps,
+  required Map<String, Map<String, Object?>> gates,
+  required void Function(String, String, String) say,
+}) {
+  final Map<String, List<String>> bundles = <String, List<String>>{};
+  skills.forEach((String id, Map<String, Object?> s) {
+    final Object? b = s['bundle'];
+    if (b is! String) return;
+    final String file = 'skill.$id.json';
+    if (!b.startsWith('$course.')) say(file, 'bundle', '"$b" must begin with "$course."');
+    if (rollUps.contains(id)) say(file, 'bundle', 'a roll-up has no estimate, so it is no facet of a bundle');
+    (bundles[b] ??= <String>[]).add(id);
+  });
+  bundles.forEach((String bundle, List<String> members) {
+    if (members.length < 2) {
+      say('skill.${members.first}.json', 'bundle', 'a bundle has at least two facets; "$bundle" has one');
+    }
+    for (final String m in members) {
+      final Set<String> below = _below(<String>[m], skills);
+      for (final String other in members) {
+        if (other != m && below.contains(other)) {
+          say(
+            'skill.$m.json',
+            'prerequisites',
+            'a facet of "$bundle" cannot need another facet of it ($other)',
+          );
+        }
+      }
+    }
+  });
+
+  gates.forEach((String id, Map<String, Object?> g) {
+    final String file = 'gate.$id.json';
+    if (g['course'] != null && g['course'] != course) {
+      say(
+        file,
+        'course',
+        'is ${g['course']}, but the pack is of the course $course (a pack holds one course)',
+      );
+    }
+    if (!id.startsWith('$course.')) say(file, 'id', '"$id" must begin with "$course."');
+    final Set<String> requires = <String>{
+      for (final Object? s in g['requires']! as List<Object?>) s! as String,
+    };
+    final Set<String> holds = <String>{for (final Object? s in g['holds']! as List<Object?>) s! as String};
+    final Set<String> named = <String>{...requires, ...holds};
+    for (final Map<String, Object?> q in _maps(g['requireAtLeast'])) {
+      final List<Object?> quota = q['skills']! as List<Object?>;
+      named.addAll(<String>[for (final Object? s in quota) s! as String]);
+      if ((q['count']! as int) > quota.length) {
+        say(file, 'requireAtLeast', 'asks for ${q['count']} skills out of ${quota.length}');
+      }
+    }
+    for (final String s in named) {
+      if (Course.ofSkillId(s) != course) {
+        say(
+          file,
+          'skills',
+          '$s is not a skill of the course $course (a gate never reaches into another course)',
+        );
+      } else if (!skillIds.contains(s)) {
+        say(file, 'skills', 'the skill $s is not in this pack');
+      }
+    }
+    for (final String h in holds) {
+      if (rollUps.contains(h)) say(file, 'holds', '$h is a roll-up: hold its groups');
+      if (requires.contains(h)) {
+        say(file, 'holds', '$h is both required and held, so the gate could never open');
+      }
+    }
+    // A gate can never open if what it asks for needs something it holds back.
+    final Set<String> asked = <String>{
+      ...requires,
+      for (final Map<String, Object?> q in _maps(g['requireAtLeast']))
+        for (final Object? s in q['skills']! as List<Object?>) s! as String,
+    };
+    final Set<String> needed = <String>{...asked, ..._below(asked, skills)};
+    for (final String h in holds) {
+      if (needed.contains(h)) {
+        say(file, 'holds', '$h is needed by what the gate asks for, so the gate could never open');
+      }
     }
   });
 }

@@ -22,6 +22,10 @@ abstract final class Patterns {
   static const String sha256 = r'[0-9a-f]{64}';
   static const String optionId = r'o[0-9]{1,2}';
   static const String worldObject = r'[a-z][a-z0-9-]{1,23}';
+
+  // A letter bundle and a gate: the course, a dot and a short name (`eng.g1`, `eng.oral`).
+  static const String bundle = r'[a-z]{3}\.[a-z0-9_]{1,19}';
+  static const String gateId = r'[a-z]{3}\.[a-z0-9_]{1,19}';
 }
 
 /// The four kinds of document in a pack, by the `schema` field of the file.
@@ -32,6 +36,7 @@ abstract final class SchemaIds {
   static const String cue = 'cue/v1';
   static const String activity = 'activity/v1';
   static const String lesson = 'lesson/v1';
+  static const String gate = 'gate/v1';
   static const String skill = 'skill/v1';
   static const String misconception = 'misconception/v1';
 }
@@ -85,8 +90,15 @@ const Map<String, String> coinSprites = <String, String>{
 const List<String> domains = <String>['numbers', 'colors', 'shapes', 'logic', 'cs', 'math', languagesDomain];
 
 /// The domain of every skill of a language course; the course itself says which language.
-const String languagesDomain = 'languages';
+const String languagesDomain = Course.languagesDomain;
 const List<String> bands = <String>['A', 'B', 'C'];
+
+/// The parent switches a gate may name (docs/languages/frame.md section 1.4): the English "oral only" keeps its gate closed,
+/// the Russian "letters before 5" opens its gate.
+const List<String> gateSwitchNames = <String>['oralOnly', 'lettersBefore5'];
+
+/// The routes of a Russian child (docs/languages/frame.md section 3.3.7).
+const List<String> courseRoutes = <String>['new', 'heritage', 'reader'];
 const List<String> representations = <String>['concrete', 'pictorial', 'story', 'embodied', 'symbolic'];
 
 const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activityId);
@@ -179,6 +191,11 @@ const SObject manifestSchema = SObject(<String, SField>{
       'characters': SField(SArray(_characterId, maxItems: 20), required: false),
       'cues': SField(
         SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: 4000),
+        required: false,
+      ),
+      // The gates of a course (docs/languages/frame.md section 3.3.6); absent in packs that have none.
+      'gates': SField(
+        SArray(SString(minLength: 5, maxLength: 24, pattern: Patterns.gateId), maxItems: 20),
         required: false,
       ),
     }),
@@ -285,6 +302,12 @@ const SObject skillSchema = SObject(<String, SField>{
   'childLine': SField(_caption, required: false),
   // Learning engine (M3). A core skill (three or more skills depend on it) needs more evidence for mastery.
   'core': SField(SBool(), required: false),
+  // Language courses (docs/languages/frame.md section 3.3): the letter bundle the skill is a facet of; a set of words or
+  // letters whose every member must be answered right once; what a spelling that is right by sound counts as; letter work.
+  'bundle': SField(SString(minLength: 5, maxLength: 24, pattern: Patterns.bundle), required: false),
+  'setCoverage': SField(SBool(), required: false),
+  'soundRight': SField(SEnum(<String>['accepts', 'teaches']), required: false),
+  'letters': SField(SBool(), required: false),
   'masteryRequires': SField(
     SObject(<String, SField>{
       'successes': SField(SInt(min: 1, max: 20), required: false),
@@ -294,6 +317,40 @@ const SObject skillSchema = SObject(<String, SField>{
     }),
     required: false,
   ),
+});
+
+/// A gate of a language course: a condition on skills that holds other skills back (docs/languages/frame.md section 3.3.6).
+const SObject gateSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.gate)),
+  'id': SField(SString(minLength: 5, maxLength: 24, pattern: Patterns.gateId)),
+  'review': _review,
+  'course': _course,
+  // Every one of these needs the mastery the gate asks for (a roll-up means all its groups).
+  'requires': SField(SArray(_skill, maxItems: 60)),
+  // And of each of these groups, at least `count` skills.
+  'requireAtLeast': SField(
+    SArray(
+      SObject(<String, SField>{
+        'skills': SField(SArray(_skill, minItems: 2, maxItems: 40)),
+        'count': SField(SInt(min: 1, max: 40)),
+      }),
+      maxItems: 6,
+    ),
+    required: false,
+  ),
+  // The skills held back until the gate is open.
+  'holds': SField(SArray(_skill, minItems: 1, maxItems: 200)),
+  'minAge': SField(SInt(min: 3, max: 8), required: false),
+  'neverUnderBand': SField(SInt(min: 0, max: 2), required: false),
+  'durableBelowBand': SField(SInt(min: 1, max: 2), required: false),
+  'parentSwitch': SField(
+    SObject(<String, SField>{
+      'name': SField(SEnum(gateSwitchNames)),
+      'effect': SField(SEnum(<String>['closes', 'opens'])),
+    }),
+    required: false,
+  ),
+  'routeBypass': SField(SArray(SEnum(courseRoutes), maxItems: 3), required: false),
 });
 
 const SObject misconceptionSchema = SObject(<String, SField>{
@@ -998,6 +1055,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'skill': skillSchema,
   'misconception': misconceptionSchema,
   'lesson': lessonSchema,
+  'gate': gateSchema,
   'activity.tap_answer': activitySchemaFor('tap_answer')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,

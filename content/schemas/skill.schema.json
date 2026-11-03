@@ -176,6 +176,25 @@
     "core": {
       "type": "boolean"
     },
+    "bundle": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 24,
+      "pattern": "^(?:[a-z]{3}\\.[a-z0-9_]{1,19})$"
+    },
+    "setCoverage": {
+      "type": "boolean"
+    },
+    "soundRight": {
+      "type": "string",
+      "enum": [
+        "accepts",
+        "teaches"
+      ]
+    },
+    "letters": {
+      "type": "boolean"
+    },
     "masteryRequires": {
       "type": "object",
       "properties": {

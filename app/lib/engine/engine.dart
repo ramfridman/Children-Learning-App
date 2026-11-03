@@ -4,6 +4,7 @@ import 'graph.dart';
 import 'mastery.dart';
 import 'params.dart';
 import 'retention.dart';
+import 'rollup.dart';
 import 'state.dart';
 import 'types.dart';
 
@@ -142,6 +143,7 @@ class Engine {
       s.successes++;
       s.successDays.add(day);
       s.successItems.add(item.id);
+      if (item.variantGroup.isNotEmpty) s.successGroups.add(item.variantGroup);
       s.representationsPassed.add(item.representation);
       if (item.checkType != CheckType.practice) s.checksPassed.add(item.checkType);
     }
@@ -180,6 +182,9 @@ class Engine {
     if (s.checksPassed.length < (node.needChecks ?? (core ? params.freshChecksCore : params.freshChecks))) {
       return;
     }
+    // A set of words (or the letters of a group) is known when every one of them was answered right once, not when half of
+    // them were answered right often (docs/languages/frame.md section 3.3.4).
+    if (node.setCoverage && !catalog.variantGroupsOf(id).every(s.successGroups.contains)) return;
     s.freshAt = at;
     s.itemsAtFresh = Set<String>.of(s.successItems);
   }
@@ -420,12 +425,26 @@ class Engine {
 
   // ---- questions the rest of the app asks ----
 
-  /// True when every prerequisite of [id] has reached the unlock bar (or there are none).
+  /// True when every prerequisite of [id] has reached the unlock bar (or there are none). The facets of a letter bundle unlock
+  /// as one: when the prerequisites of all of them have reached it. They never require each other.
   bool isUnlocked(String id) {
-    for (final String p in graph.node(id).prerequisites.keys) {
-      if ((state.skills[p]?.p ?? _prior(p)) < params.unlockBar) return false;
+    final String? bundle = graph.node(id).bundle;
+    final List<String> members = bundle == null ? <String>[id] : catalog.bundles[bundle]!;
+    for (final String m in members) {
+      for (final String p in graph.node(m).prerequisites.keys) {
+        if (members.contains(p)) continue;
+        if ((state.skills[p]?.p ?? _prior(p)) < params.unlockBar) return false;
+      }
     }
     return true;
+  }
+
+  /// The variant groups (words, or letters) of a set skill that have not been answered right without a hint yet; empty for a
+  /// skill that is not a set. The session builder rotates its items through these until the set is covered.
+  Set<String> uncoveredGroups(String id) {
+    if (!graph.node(id).setCoverage) return const <String>{};
+    final Set<String> done = state.skills[id]?.successGroups ?? const <String>{};
+    return catalog.variantGroupsOf(id).difference(done);
   }
 
   double retrievability(String id, DateTime now) {
@@ -460,6 +479,8 @@ class Engine {
   }
 
   SkillStatus statusOf(String id, DateTime now) {
+    final List<String>? groups = catalog.subSkills[id];
+    if (groups != null) return rollUpStatus(<SkillStatus>[for (final String g in groups) statusOf(g, now)]);
     final SkillState? s = state.skills[id];
     if (state.gaps.any((Gap g) => !g.repaired && g.skill == id)) return SkillStatus.gap;
     if (s == null || !s.started) return isUnlocked(id) ? SkillStatus.ready : SkillStatus.notStarted;

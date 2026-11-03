@@ -1,14 +1,31 @@
 import '../content/models.dart';
 import '../data/app_database.dart';
+import '../engine/course.dart';
 import '../engine/engine.dart';
 import '../rewards/award.dart';
+import 'adventure_land.dart';
 import 'placement.dart';
 import 'todays_adventure.dart';
 import 'world_state.dart' show missionItemIds;
 
+/// A language course the child may play (docs/languages/frame.md section 3.7): its installed pack, and the child's engine on it
+/// (an engine built on that course's catalogue, so its due checks are the course's own).
+class LanguageCourse {
+  const LanguageCourse({required this.content, required this.engine});
+
+  final PackContent content;
+  final Engine engine;
+
+  String get course => content.course;
+}
+
 /// Feeds Today's Adventure from what the app has (rule section 2): the pack's paths, the finished lessons, the child's
 /// visits and the engine's due checks. This is the only place that turns a clock reading into a day number; the rule
 /// itself reads nothing but its input.
+///
+/// [languages] are the language packs that are installed and [enabledCourses] the courses the parent turned on for this
+/// child: each language that is both is a land of its own (docs/languages/frame.md section 3.7). One that is off is not a
+/// land, and its lessons, visits and due checks are left out as if it were not there.
 TodaysAdventure todaysAdventureFor({
   required PackContent content,
   required Engine engine,
@@ -17,6 +34,8 @@ TodaysAdventure todaysAdventureFor({
   required Map<String, int> finished,
   required DateTime now,
   required int band,
+  Iterable<LanguageCourse> languages = const <LanguageCourse>[],
+  Set<String> enabledCourses = const <String>{},
 }) => todaysAdventure(
   adventureInput(
     content: content,
@@ -26,6 +45,8 @@ TodaysAdventure todaysAdventureFor({
     finished: finished,
     now: now,
     band: band,
+    languages: languages,
+    enabledCourses: enabledCourses,
   ),
 );
 
@@ -38,52 +59,79 @@ AdventureInput adventureInput({
   required Map<String, int> finished,
   required DateTime now,
   required int band,
+  Iterable<LanguageCourse> languages = const <LanguageCourse>[],
+  Set<String> enabledCourses = const <String>{},
 }) {
   final int today = Engine.dayKey(now);
-  final Map<TrophyLand, List<PathLesson>> paths = <TrophyLand, List<PathLesson>>{
+  final List<LanguageCourse> playable = <LanguageCourse>[
+    for (final LanguageCourse l in languages)
+      if (Course.isLanguage(l.course) && enabledCourses.contains(l.course)) l,
+  ];
+  final Map<AdventureLand, List<PathLesson>> paths = <AdventureLand, List<PathLesson>>{
     for (final TrophyLand land in TrophyLand.values)
       land: <PathLesson>[
-        for (final Lesson l in landPath(content, land.domain)) PathLesson(l.id, _levelOf(content, l, land)),
+        for (final Lesson l in landPath(content, land.domain))
+          PathLesson(l.id, _levelOf(content, l, land.domain)),
+      ],
+    for (final LanguageCourse c in playable)
+      LanguageLand(c.course): <PathLesson>[
+        for (final Lesson l in landPath(c.content, Course.languagesDomain))
+          PathLesson(l.id, _levelOf(c.content, l, Course.languagesDomain)),
       ],
   };
   return AdventureInput(
     today: today,
     band: band,
-    enabledLands: <TrophyLand>{
-      for (final MapEntry<TrophyLand, List<PathLesson>> e in paths.entries)
+    enabledLands: <AdventureLand>{
+      for (final MapEntry<AdventureLand, List<PathLesson>> e in paths.entries)
         if (e.value.isNotEmpty) e.key,
     },
     paths: paths,
     finished: finished,
-    visits: visitsFrom(content, attempts, sessions),
+    visits: visitsFrom(content, attempts, sessions, languages: playable.map((LanguageCourse c) => c.content)),
     due: <DueSkill>[
       for (final String id in engine.dueChecks(now))
         if (_dueSkill(content, engine, id, now, today) case final DueSkill d) d,
+      for (final LanguageCourse c in playable)
+        for (final String id in c.engine.dueChecks(now))
+          if (_dueSkill(c.content, c.engine, id, now, today, land: LanguageLand(c.course))
+              case final DueSkill d)
+            d,
     ],
   );
 }
 
-/// A due check as the rule wants it, or null when its land is unknown or its mission would have nothing to ask.
-DueSkill? _dueSkill(PackContent content, Engine engine, String skillId, DateTime now, int today) {
+/// A due check as the rule wants it, or null when its land is unknown or its mission would have nothing to ask. A language
+/// skill's land is its course, given as [land]; a land's skill finds its land by its domain.
+DueSkill? _dueSkill(
+  PackContent content,
+  Engine engine,
+  String skillId,
+  DateTime now,
+  int today, {
+  AdventureLand? land,
+}) {
   final String? domain = content.skills[skillId]?.domain;
-  final TrophyLand? land = domain == null ? null : TrophyLand.ofDomain(domain);
-  if (land == null || missionItemIds(engine, skillId).isEmpty) return null;
+  final AdventureLand? place = land ?? (domain == null ? null : TrophyLand.ofDomain(domain));
+  if (place == null || content.skills[skillId] == null || missionItemIds(engine, skillId).isEmpty) {
+    return null;
+  }
   return DueSkill(
     skillId: skillId,
-    land: land,
+    land: place,
     dueAt: engine.nextCheckAt(skillId) ?? now,
     reviewedToday: engine.state.skills[skillId]?.lastReviewDay == today,
   );
 }
 
-final RegExp _skillBand = RegExp(r'^[A-Z]+-([ABC])-\d+$');
+final RegExp _skillBand = RegExp(r'^[A-Z]+-([ABC])-\d+(?:\.[A-Z]\d+)?$');
 
 /// A lesson's level on its land: the highest band among its skills of that land's domain (`NUM-A-03` is A, level 0),
-/// read from the skill id, which the pack's skill ids all follow.
-int _levelOf(PackContent content, Lesson lesson, TrophyLand land) {
+/// read from the skill id, which the pack's skill ids all follow (a group's dotted id too: `ENG-B-19.G1` is B).
+int _levelOf(PackContent content, Lesson lesson, String domain) {
   int level = 0;
   for (final String id in lesson.skillIds) {
-    if (content.skills[id]?.domain != land.domain) continue;
+    if (content.skills[id]?.domain != domain) continue;
     final String? band = _skillBand.firstMatch(id)?.group(1);
     if (band != null && band.codeUnitAt(0) - 0x41 > level) level = band.codeUnitAt(0) - 0x41;
   }
@@ -93,7 +141,12 @@ int _levelOf(PackContent content, Lesson lesson, TrophyLand land) {
 /// The child's attempts grouped into visits, oldest first (rule section 2.1). Attempts are grouped by session, answers
 /// from another device by their remote session, and older answers with neither by runs of the same lesson. A visit that
 /// is neither the warm-up, a revisit nor a lesson of the pack is left out, and so is one whose land is unknown.
-List<Visit> visitsFrom(PackContent content, Iterable<Attempt> attempts, Iterable<Session> sessions) {
+List<Visit> visitsFrom(
+  PackContent content,
+  Iterable<Attempt> attempts,
+  Iterable<Session> sessions, {
+  Iterable<PackContent> languages = const <PackContent>[],
+}) {
   final Map<int, Session> byId = <int, Session>{for (final Session s in sessions) s.id: s};
   final Map<String, Session> byRemote = <String, Session>{
     for (final Session s in sessions)
@@ -114,6 +167,7 @@ List<Visit> visitsFrom(PackContent content, Iterable<Attempt> attempts, Iterable
           before != null &&
           before.sessionId == null &&
           before.remoteSession == null &&
+          before.packId == a.packId &&
           before.lessonId == a.lessonId;
       if (!sameRun) legacy++;
       key = 'l$legacy';
@@ -130,7 +184,7 @@ List<Visit> visitsFrom(PackContent content, Iterable<Attempt> attempts, Iterable
         : first.remoteSession != null
         ? byRemote[first.remoteSession]
         : null;
-    final Visit? v = _visit(content, answers, session);
+    final Visit? v = _visit(content, languages, answers, session);
     if (v != null) visits.add((first, v));
   }
   visits.sort(((Attempt, Visit) a, (Attempt, Visit) b) {
@@ -140,29 +194,46 @@ List<Visit> visitsFrom(PackContent content, Iterable<Attempt> attempts, Iterable
   return <Visit>[for (final (Attempt, Visit) e in visits) e.$2];
 }
 
-Visit? _visit(PackContent content, List<Attempt> answers, Session? session) {
+Visit? _visit(PackContent content, Iterable<PackContent> languages, List<Attempt> answers, Session? session) {
   final Attempt first = answers.first;
   final Attempt last = answers.last;
   final VisitKind kind;
   final String id;
-  final String? domain;
-  if (first.lessonId == placementId) {
+  final AdventureLand? land;
+  // A visit belongs to one course: a language's answers carry the id of its pack, and its skills their course in the id.
+  final PackContent? language = languages.where((PackContent p) => p.packId == first.packId).firstOrNull;
+  AdventureLand? ofSkill(String skillId) {
+    final String course = Course.ofSkillId(skillId);
+    if (course != Course.core) {
+      return languages.any((PackContent p) => p.course == course) ? LanguageLand(course) : null;
+    }
+    final String? domain = content.skills[skillId]?.domain;
+    return domain == null ? null : TrophyLand.ofDomain(domain);
+  }
+
+  final String? placementCourse = courseOfPlacementId(first.lessonId);
+  if (placementCourse != null) {
     kind = VisitKind.warmUp;
     id = first.lessonId;
-    domain = content.skills[first.skillId]?.domain;
+    land = ofSkill(first.skillId);
   } else if (first.lessonId.startsWith('mission-')) {
     kind = VisitKind.revisit;
     id = first.skillId;
-    domain = content.skills[first.skillId]?.domain;
+    land = ofSkill(first.skillId);
+  } else if (Course.ofPackId(first.packId) != Course.core && language == null) {
+    return null; // a language that is not a land (turned off, or not installed) is left out whole
+  } else if (language != null && language.lessons[first.lessonId] != null) {
+    kind = VisitKind.lesson;
+    id = first.lessonId;
+    land = LanguageLand(language.course);
   } else if (content.lessons[first.lessonId] case final Lesson l) {
     kind = VisitKind.lesson;
     id = l.id;
     // The first skill decides, so `butterflies`, on both the numbers and the colours path, belongs to Counting Hills.
-    domain = l.skillIds.isEmpty ? null : content.skills[l.skillIds.first]?.domain;
+    land = l.skillIds.isEmpty ? null : ofSkill(l.skillIds.first);
   } else {
     return null;
   }
-  final TrophyLand? land = domain == null ? null : TrophyLand.ofDomain(domain);
   if (land == null) return null;
   return Visit(
     kind: kind,
