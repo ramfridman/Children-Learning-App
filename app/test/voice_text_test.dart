@@ -470,13 +470,7 @@ void main() {
       'a text with nothing to say is refused: only invisible characters, only a tag, only punctuation',
       () {
         final Set<Allowance> all = Allowance.values.toSet();
-        for (final String t in <String>[
-          u(0x200B),
-          '${u(0x200B)}${u(0x200B)}',
-          '[gently]',
-          '… — .',
-          '/ʃaˈve/',
-        ]) {
+        for (final String t in <String>[u(0x200B), '${u(0x200B)}${u(0x200B)}', '[gently]', '… — .']) {
           expect(
             preflight('x', t, allow: all).map((TextProblem p) => p.why),
             contains('there is nothing to say: the text has no Hebrew letter'),

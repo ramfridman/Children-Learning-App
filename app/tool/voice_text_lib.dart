@@ -391,18 +391,54 @@ class TextProblem {
   }
 }
 
-/// Every character a voice text may carry: the 27 Hebrew letters, the vowel points, dagesh and the shin and sin dots,
-/// maqaf, geresh and gershayim, the space, and the punctuation the voice texts use. An allowlist, so that a look-alike
-/// in any Unicode form (a fullwidth sign, a compatibility digit, a letter of another script, an invisible control) is
-/// refused without having to be named.
-final Set<int> _allowed = <int>{
+/// The languages a voice text may be in, by their ElevenLabs `language_code`. Hebrew is the default, so a file with no
+/// `language` key behaves as it always did.
+const String defaultVoiceLanguage = 'he';
+const List<String> voiceLanguages = <String>['he', 'en', 'ru'];
+
+void checkVoiceLanguage(String language) {
+  if (!voiceLanguages.contains(language)) {
+    throw VoiceGenFailed('the language "$language" is not one of ${voiceLanguages.join(', ')}');
+  }
+}
+
+/// The punctuation every language's voice texts use.
+final Set<int> _punctuation = <int>{
   0x20, 0x22, 0x27, 0x2C, 0x2D, 0x2E, 0x3A, 0x3B, 0x3F, // space " ' , - . : ; ?
   0x2013, 0x2014, 0x2026, // en dash, em dash, ellipsis
-  for (int r = 0x05D0; r <= 0x05EA; r++) r, // the letters
-  for (int r = 0x05B0; r <= 0x05BC; r++)
-    if (r != 0x05B3) r, // the points (not hataf qamats) and dagesh
-  0x05C1, 0x05C2, // shin and sin dots
-  0x05BE, 0x05F3, 0x05F4, // maqaf, geresh, gershayim
+};
+
+/// Every character a voice text may carry, by language: its punctuation, and then Hebrew (the 27 letters, the vowel
+/// points, dagesh and the shin and sin dots, maqaf, geresh and gershayim), English (a to z), or Russian (А to я, Ёё, and
+/// U+0301 the stress mark, which [preflight] lets follow a letter only). An allowlist, so that a look-alike in any
+/// Unicode form (a fullwidth sign, a compatibility digit, a letter of another script, an invisible control) is refused
+/// without having to be named, and so that a Latin or Cyrillic letter in a Hebrew clip (and the reverse) is refused.
+final Map<String, Set<int>> _allowedByLanguage = <String, Set<int>>{
+  'he': <int>{
+    ..._punctuation,
+    for (int r = 0x05D0; r <= 0x05EA; r++) r, // the letters
+    for (int r = 0x05B0; r <= 0x05BC; r++)
+      if (r != 0x05B3) r, // the points (not hataf qamats) and dagesh
+    0x05C1, 0x05C2, // shin and sin dots
+    0x05BE, 0x05F3, 0x05F4, // maqaf, geresh, gershayim
+  },
+  'en': <int>{..._punctuation, for (int r = 0x41; r <= 0x5A; r++) r, for (int r = 0x61; r <= 0x7A; r++) r},
+  'ru': <int>{
+    ..._punctuation,
+    0x0401, 0x0451, // Ё ё
+    for (int r = 0x0410; r <= 0x044F; r++) r, // А to я
+    _stressMark,
+  },
+};
+
+const int _stressMark = 0x0301;
+
+/// What a clip in each language is called in a refusal, and the letters it may carry.
+const Map<String, String> _languageName = <String, String>{'he': 'Hebrew', 'en': 'English', 'ru': 'Russian'};
+const Map<String, String> _lettersOf = <String, String>{
+  'he': 'Hebrew',
+  'en': 'English (a to z)',
+  'ru': 'Russian (А to я and Ёё)',
 };
 
 /// The letters of one IPA word (with [Allowance.ipa]): a to z, the IPA extensions, the few Latin-1 and Greek letters
@@ -413,6 +449,7 @@ final Set<int> _ipaLetters = <int>{
   for (int r = 0x0250; r <= 0x02AF; r++) r,
   0x02C8, 0x02CC, 0x02D0, 0x02D1, // ˈ ˌ ː ˑ
   0x03B2, 0x03B8, 0x03C7, // β θ χ
+  0x02B2, 0x0361, // ʲ (Russian soft consonants) and the tie bar (affricates)
 };
 
 /// The exclamation mark in its other forms: fullwidth, double, small, heavy, inverted, the click letter, and others.
@@ -434,23 +471,28 @@ final RegExp _letter = RegExp(r'\p{L}', unicode: true);
 final RegExp _invisible = RegExp(r'[\p{Cc}\p{Cf}\p{Z}]', unicode: true);
 final RegExp _bracket = RegExp(r'[\p{Ps}\p{Pe}]', unicode: true);
 
-bool _isHebrewLetter(int r) => r >= 0x05D0 && r <= 0x05EA;
+/// Whether [r] is a letter of [language] (what a clip must carry at least one of, unless it is only IPA).
+bool _isLetterOf(String language, int r) => switch (language) {
+  'en' => (r >= 0x41 && r <= 0x5A) || (r >= 0x61 && r <= 0x7A),
+  'ru' => r == 0x0401 || r == 0x0451 || (r >= 0x0410 && r <= 0x044F),
+  _ => r >= 0x05D0 && r <= 0x05EA,
+};
 
 /// Why [r] may not be sent, or null.
-String? _refusal(int r, Set<Allowance> allow) {
+String? _refusal(int r, Set<Allowance> allow, String language) {
   if (r == 0x21) {
     return allow.contains(Allowance.exclamation)
         ? null
         : 'an exclamation mark is never sent: it makes the voice shout';
   }
   if (r == 0x0A && allow.contains(Allowance.lineBreaks)) return null;
-  if (r == 0x05C7 || r == 0x05B3) {
+  if (language == 'he' && (r == 0x05C7 || r == 0x05B3)) {
     if (allow.contains(Allowance.rarePoints)) return null;
     return r == 0x05C7
         ? 'qamats qatan is never sent (the voice may say "kal"): write the plain word'
         : 'hataf qamats is never sent: write the plain word';
   }
-  if (_allowed.contains(r)) return null;
+  if (_allowedByLanguage[language]!.contains(r)) return null;
   final String c = String.fromCharCode(r);
   if (_exclamations.contains(r)) {
     return 'an exclamation mark is never sent, in any form: it makes the voice shout';
@@ -462,8 +504,11 @@ String? _refusal(int r, Set<Allowance> allow) {
   }
   if (r == 0x3C || r == 0x3E || r == 0xFF1C || r == 0xFF1E) return 'markup is never sent: v4 reads no SSML';
   if (_letter.hasMatch(c)) {
-    return 'a letter that is not Hebrew is never sent (Latin only as one IPA word /…/ in an audition clip that '
-        'allows it)';
+    return language == 'he'
+        ? 'a letter that is not Hebrew is never sent (Latin only as one IPA word /…/ in an audition clip that '
+              'allows it)'
+        : 'a letter that is not ${_lettersOf[language]} is never sent in a clip of this language: another language '
+              'is its own clip (Latin only as one IPA word /…/ in an audition clip that allows it)';
   }
   if (_invisible.hasMatch(c)) return 'an invisible or control character is never sent';
   if (_bracket.hasMatch(c)) {
@@ -472,49 +517,66 @@ String? _refusal(int r, Set<Allowance> allow) {
   return 'is not a character the voice texts use';
 }
 
-/// The runes of [text] that belong to an allowed audio tag or IPA word, which the character check skips.
-List<bool> _allowedSpans(List<int> runes, Set<Allowance> allow) {
+/// The runes of [text] that belong to an allowed audio tag or IPA word, which the character check skips, and whether
+/// there is an IPA word (which is something to say in any language).
+({List<bool> covered, bool hasIpa}) _allowedSpans(List<int> runes, Set<Allowance> allow) {
   final List<bool> covered = List<bool>.filled(runes.length, false);
-  void spans(int open, int close, bool Function(List<int> inner) ok) {
+  int spans(int open, int close, bool Function(List<int> inner) ok) {
+    int found = 0;
     for (int i = 0; i < runes.length; i++) {
       if (runes[i] != open || covered[i]) continue;
       final int end = runes.indexOf(close, i + 1);
-      if (end < 0) return;
+      if (end < 0) break;
       if (end - i - 1 >= 1 && end - i - 1 <= 40 && ok(runes.sublist(i + 1, end))) {
         covered.fillRange(i, end + 1, true);
         i = end;
+        found++;
       }
     }
+    return found;
   }
 
   if (allow.contains(Allowance.audioTags)) {
     spans(0x5B, 0x5D, (List<int> inner) => audioTags.contains(String.fromCharCodes(inner)));
   }
-  if (allow.contains(Allowance.ipa)) {
-    spans(0x2F, 0x2F, (List<int> inner) => inner.every(_ipaLetters.contains));
-  }
-  return covered;
+  final int ipaWords = allow.contains(Allowance.ipa)
+      ? spans(0x2F, 0x2F, (List<int> inner) => inner.every(_ipaLetters.contains))
+      : 0;
+  return (covered: covered, hasIpa: ipaWords > 0);
 }
 
 /// The characters of [text] that may not go to the voice, one problem for each distinct character, and a problem when
 /// nothing in it can be said. [id] names the line in the report. Packs allow nothing extra; an audition clip may allow
-/// what it sets out to test, and even then digits, placeholders, markup and look-alike signs never pass.
-List<TextProblem> preflight(String id, String text, {Set<Allowance> allow = const <Allowance>{}}) {
+/// what it sets out to test, and even then digits, placeholders, markup and look-alike signs never pass. [language] is
+/// the clip's `language_code` (`he`, `en` or `ru`): its letters pass and the letters of the others are refused. A text
+/// that is only an IPA word `/…/` (with [Allowance.ipa]) has something to say in any language.
+List<TextProblem> preflight(
+  String id,
+  String text, {
+  Set<Allowance> allow = const <Allowance>{},
+  String language = defaultVoiceLanguage,
+}) {
+  checkVoiceLanguage(language);
   if (text.trim().isEmpty) return <TextProblem>[TextProblem(id, '', 'the text is empty')];
   final List<int> runes = text.runes.toList();
-  final List<bool> covered = _allowedSpans(runes, allow);
+  final (:covered, :hasIpa) = _allowedSpans(runes, allow);
   final Map<int, String> found = <int, String>{};
-  bool speakable = false;
+  bool speakable = hasIpa;
   for (int i = 0; i < runes.length; i++) {
     if (covered[i]) continue;
     final int r = runes[i];
-    if (_isHebrewLetter(r)) speakable = true;
+    if (_isLetterOf(language, r)) speakable = true;
     if (found.containsKey(r)) continue;
-    final String? why = _refusal(r, allow);
+    final String? why = r == _stressMark && language == 'ru'
+        ? (i > 0 && _isLetterOf(language, runes[i - 1]) && !covered[i - 1]
+              ? null
+              : 'a stress mark goes right after the vowel it falls on')
+        : _refusal(r, allow, language);
     if (why != null) found[r] = why;
   }
   return <TextProblem>[
     for (final MapEntry<int, String> f in found.entries) TextProblem(id, String.fromCharCode(f.key), f.value),
-    if (!speakable) TextProblem(id, '', 'there is nothing to say: the text has no Hebrew letter'),
+    if (!speakable)
+      TextProblem(id, '', 'there is nothing to say: the text has no ${_languageName[language]} letter'),
   ];
 }

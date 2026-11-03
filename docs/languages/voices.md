@@ -225,6 +225,8 @@ Give `--out` for each: without it the folder is named after the file (`pilot`), 
 3. `Allowance.ipa`: a clip that is only an IPA word `/…/` must be accepted (today `speakable` needs a Hebrew letter), and U+02B2 (ʲ) and U+0361 (tie bar) join the IPA letters for Russian.
 4. The `plan` output shows the language of each clip. The default output folder includes the file's folder name (or `--out` is required), so three `pilot.json` do not share one folder.
 5. Candidate characters (`docs/languages/voices-candidates.json`) merged into `content/voices.json`; underscore notes in that file are dropped.
+**Done (app-developer, 2026-11-03):** all five parts, with tests (`app/test/voice_language_test.dart`). Details that differ from the text above: `en` allows a to z only; punctuation is the same set for the three languages (the Hebrew set, including quotes, colon and semicolon); U+0301 must follow a Cyrillic letter; `audition` also takes `--language`; the candidates carry `"candidate": true` and an `idStatus` (`OWNER-TO-FILL` for the four Russian voices, whose `voiceId` is empty; `plan` names them, `run` refuses until they are filled in); a Hebrew spec keeps the default folder it always had (`auditions/pilot`), so clips already made are found, and a non-Hebrew spec goes to `auditions/<language>-<name>` (`en-pilot`, `ru-pilot`). The `plan` output now prints `Clips go to <folder>`.
+
 Nothing else in the app changes. Later (not now): `voice_gen generate` and the packs need the same `language` support when the first real content is voiced.
 
 **Waiting for others**

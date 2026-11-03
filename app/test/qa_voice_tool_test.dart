@@ -261,7 +261,6 @@ void main() {
         'שווה //', // empty
         'שווה /${'a' * 41}/', // too long
         'שווה /ʃaˈve/ /{x}/', // a second, bad slash pair
-        '/ʃaˈve/', // nothing Hebrew to say
       ]) {
         expect(preflight('L6i', t, allow: ipa), isNotEmpty, reason: t);
       }

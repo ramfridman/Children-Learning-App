@@ -251,7 +251,7 @@ void main() {
       'content/voices.json gives every character a v4 request with explicit settings, no style, at 44.1 kHz',
       () {
         final Map<String, Object?> config = _realConfig();
-        for (final String c in (config['voices']! as Map<String, Object?>).keys) {
+        for (final String c in packCharacters(config)) {
           final VoiceProfile p = VoiceProfile.fromConfig(config, c);
           for (final String vo in <String>[
             'vo:core.greeting.hello',

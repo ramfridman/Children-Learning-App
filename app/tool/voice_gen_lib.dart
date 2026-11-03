@@ -113,6 +113,13 @@ Map<String, Object?> settingsToSend(
   };
 }
 
+/// The characters whose lines go into the packs: every voice of content/voices.json that is not an audition candidate.
+List<String> packCharacters(Map<String, Object?> config) => <String>[
+  for (final MapEntry<String, Object?> e
+      in ((config['voices'] ?? <String, Object?>{}) as Map<String, Object?>).entries)
+    if (!(e.value is Map<String, Object?> && (e.value! as Map<String, Object?>)['candidate'] == true)) e.key,
+]..sort();
+
 /// Exactly what is sent to ElevenLabs for one clip, the key aside.
 class ClipRequest {
   const ClipRequest({
@@ -121,7 +128,7 @@ class ClipRequest {
     required this.modelId,
     required this.settings,
     required this.outputFormat,
-    this.languageCode = 'he',
+    this.languageCode = defaultVoiceLanguage,
     this.allow = const <Allowance>{},
   });
 
@@ -151,7 +158,7 @@ class ClipRequest {
     utf8.encode(jsonEncode(<String, Object?>{'voice': voiceId, 'format': outputFormat, ...body})),
   );
 
-  List<TextProblem> problems(String id) => preflight(id, text, allow: allow);
+  List<TextProblem> problems(String id) => preflight(id, text, allow: allow, language: languageCode);
 }
 
 /// How one character's lines are said, from content/voices.json: the voice, the model, the format, the usual settings,
@@ -167,15 +174,27 @@ class VoiceProfile {
     this.pronunciation = const <String, String>{},
   });
 
-  /// The profile of [character]. [model] replaces the configured model (an audition compares two).
-  factory VoiceProfile.fromConfig(Map<String, Object?> config, String character, {String? model}) {
+  /// The profile of [character]. [model] replaces the configured model (an audition compares two). A voice marked
+  /// `"candidate": true` is for auditions only: it is refused unless [audition] is true, and then a voice with no id
+  /// yet is kept with an empty [voiceId], so that the audition plan can name it (nothing is sent for it).
+  factory VoiceProfile.fromConfig(
+    Map<String, Object?> config,
+    String character, {
+    String? model,
+    bool audition = false,
+  }) {
     final Object? voice = ((config['voices'] ?? <String, Object?>{}) as Map<String, Object?>)[character];
     if (voice is! Map<String, Object?>) {
       throw VoiceGenFailed('content/voices.json has no voice for "$character"');
     }
+    if (voice['candidate'] == true && !audition) {
+      throw VoiceGenFailed('"$character" is an audition candidate only, not a voice of the packs');
+    }
     final String voiceId = (voice['voiceId'] ?? '') as String;
-    if (voiceId.isEmpty) throw VoiceGenFailed('"$character" has no voiceId in content/voices.json yet');
-    checkVoiceId(voiceId);
+    if (voiceId.isEmpty && !audition) {
+      throw VoiceGenFailed('"$character" has no voiceId in content/voices.json yet');
+    }
+    if (voiceId.isNotEmpty) checkVoiceId(voiceId);
     final String modelId = model ?? (config['modelId'] ?? '') as String;
     if (modelId.isEmpty) throw const VoiceGenFailed('content/voices.json has no modelId yet');
     checkModel(modelId);
