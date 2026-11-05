@@ -324,13 +324,13 @@ Where the last letter equals the first, or has no look-alike, the item uses the 
 |---|---|---|---|
 | A-14.1 P | down | a raindrop falls from a cloud to a flower | top to bottom |
 | A-14.2 P | across, right to left | a car drives along a road to its house on the left side of the screen | from the right end to the left end |
-| A-14.3 P | arch | a rabbit hops over a hill | from the right foot, up and over, down to the left foot |
-| A-14.4 P | circle | a ladybird walks around a round pond | from the top, round to the left and back (counter-clockwise) |
+| A-14.3 P | arch | a rabbit hops over a hill | from the left foot, up and over, down to the right foot (the school arch, strokes.md §5.3) |
+| A-14.4 P | circle | a ladybird walks around a round pond | from the top, round to the right and back (clockwise, like print ס; strokes.md §5.3) |
 | A-14.5 P | down, start dot only | rain on another flower | as .1 |
 | A-14.6 P | across, start dot only | a boat to its jetty on the left | as .2 |
 | A-14.7 P | arch, start dot only | a ball bouncing over a fence | as .3 |
 | A-14.8 P | circle, start dot only | a fish around a stone | as .4 |
-| A-14.9 C | a combined stroke, start dot only | a door: down, across from right to left, down | each stroke from its start |
+| A-14.9 C | a combined stroke, start dot only | a door: across the top from left to right, then the right side down, then the left side down (like print ח) | each stroke from its start |
 
 **Direction notes.** Down and right to left are the two directions of Hebrew print (the Ministry: "right to left and top to bottom"). The arch from the right and the counter-clockwise circle from the top follow the reading direction; they are **to be confirmed** against the design-director's print stroke data (F6) and school references before the paths are drawn; the evidence for a pre-writing direction is thin.
 **Unscored play beside it:** scribble-writing a card for a friend (no check; the card is kept on the device only until the visit ends).
