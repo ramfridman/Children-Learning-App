@@ -171,6 +171,10 @@ sealed class Activity {
   /// and model text in a target language cannot be checked (docs/languages/frame.md section 1.6).
   bool get llmAllowed => course == Course.core && _map(json['tutor'])['llmAllowed'] == true;
 
+  /// A step that is never scored (a story only heard, a chant, the embodied "done", a personal turn): it writes no attempt of any
+  /// kind, not even an "unsure", and the child is offered no help in it (docs/languages/frame.md section 3.3.8 and 5.2).
+  bool get unscored => false;
+
   /// The misconception tags this activity's wrong answers can carry (what the tutor may be asked about).
   List<String> get misconceptionTags => <String>{
     for (final Map<String, Object?> o in _maps(_map(json['answer'])['options']))
@@ -444,6 +448,9 @@ class StoryActivity extends Activity implements ChoiceActivity {
   bool get dialogic => question != null;
 
   @override
+  bool get unscored => !dialogic;
+
+  @override
   int get optionCount => options.length;
 
   @override
@@ -488,6 +495,9 @@ class ListenDoActivity extends Activity implements ChoiceActivity {
   final String correctId;
 
   bool get embodied => mode == 'embodied';
+
+  @override
+  bool get unscored => embodied;
 
   @override
   int get optionCount => options.length;
@@ -547,6 +557,9 @@ class SingAlongActivity extends Activity implements ChoiceActivity {
   bool get rhyme => mode == 'rhyme';
 
   @override
+  bool get unscored => !rhyme;
+
+  @override
   int get optionCount => options.length;
 
   @override
@@ -586,6 +599,9 @@ class PuppetTalkActivity extends Activity implements ChoiceActivity {
   final String correctId;
 
   bool get personal => mode == 'personal';
+
+  @override
+  bool get unscored => personal;
 
   @override
   int get optionCount => personal ? 0 : options.length;

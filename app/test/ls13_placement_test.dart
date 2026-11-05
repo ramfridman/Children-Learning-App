@@ -85,7 +85,7 @@ class _Visit {
     flow = PlacementFlow(game, content.placement!);
     controller = LessonController(
       content: content,
-      lesson: placementLessonFor(content, flow),
+      lesson: placementLessonFor(content, flow)!,
       profileId: 'p-1',
       clock: FixedClock(1793000000000),
       flow: flow,
@@ -398,6 +398,49 @@ void main() {
       ]);
       expect(g.stairs('o')!.asked, 2);
       expect(g.stairs('o')!.level, 1);
+    });
+  });
+
+  group('the hardening of the replay and the visit (SEC-L4-3, SEC-L4-4)', () {
+    test('an answer recorded twice for one probe (two devices, a re-sent row) counts once, the first', () {
+      final PackContent c = _pack().content;
+      final PlacementGame g = placementGameOf(c)!;
+      final DateTime t0 = DateTime.utc(2026, 11, 3);
+      replayPlacement(g, 'eng', <Attempt>[
+        _row(_rec('eng.o_0_1', 'correct', 'placement-eng'), t0),
+        _row(_rec('eng.o_0_1', 'correct', 'placement-eng'), t0.add(const Duration(minutes: 1))),
+        _row(_rec('eng.o_0_1', 'incorrect', 'placement-eng'), t0.add(const Duration(minutes: 2))),
+      ]);
+      expect(g.stairs('o')!.asked, 1);
+      expect(g.stairs('o')!.level, 0, reason: 'one right answer does not go up a level');
+    });
+
+    test('an answer of the placement lesson that is an item of another course is not part of it', () {
+      final PackContent c = _pack().content;
+      final PlacementGame g = placementGameOf(c)!;
+      replayPlacement(g, 'eng', <Attempt>[
+        _row(_rec('rus.o_0_1', 'correct', 'placement-eng'), DateTime.utc(2026, 11, 3)),
+      ]);
+      expect(g.stairs('o')!.asked, 0);
+    });
+
+    test('a complete placement has no visit: the lesson is null and first() says why instead of failing on a null', () async {
+      final PackContent c = _pack().content;
+      final PlacementGame g = placementGameOf(c)!;
+      final _Visit v = _Visit(c, g);
+      await v.answer(false);
+      await v.answer(false);
+      expect(g.complete, isTrue);
+      final PlacementFlow again = PlacementFlow(g, c.placement!);
+      expect(again.due, isFalse);
+      expect(placementLessonFor(c, again), isNull);
+      expect(again.first, throwsA(isA<StateError>()));
+    });
+
+    test('a personal turn may not name a tag to repair', () {
+      final LangPack p = LangPack()..addPictures(_pictures);
+      p.add(puppetJson(id: 'mine', mode: 'personal', topic: 'name')..['contradicts'] = p.tag('lis.sem'));
+      expect(_messages(p), contains(contains('contradicts: a personal turn is never a repair item')));
     });
   });
 

@@ -153,8 +153,10 @@ class LessonController extends ChangeNotifier {
   /// How long the progress trail is: the lesson's items, or at most what the flow can give.
   int get trailLength => flow?.length ?? items.length;
 
-  /// The activity is a probe of the placement game: no lamp, no "show me", one answer, one neutral line (frame section 3.2).
-  bool get noHelp => !finished && current.purpose == 'probe';
+  /// No lamp and no "show me": a probe of the placement game (one answer, one neutral line, frame section 3.2) and a step that is never
+  /// scored (a personal turn, a story only heard, a chant, the embodied "done"), where "show me" would write an attempt that no such
+  /// step may leave behind (SEC-L4-1).
+  bool get noHelp => !finished && (current.purpose == 'probe' || current.unscored);
 
   final PackContent content;
   final Lesson lesson;

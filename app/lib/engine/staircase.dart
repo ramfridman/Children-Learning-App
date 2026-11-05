@@ -92,8 +92,10 @@ class Staircase {
 
   bool get stopped => next == null;
 
-  /// The probe [item] was answered, right or not. A probe the staircase did not hand out is still counted at its own level.
+  /// The probe [item] was answered, right or not. A probe the staircase did not hand out is still counted at its own level. A probe
+  /// answered before is not counted again: "a probe is never asked twice", whatever a replay of the recorded answers holds (SEC-L4-3).
   void record(String item, {required bool right}) {
+    if (_asked.any((({String item, int level, bool right}) a) => a.item == item)) return;
     final int own = _levelOf(item) ?? level;
     _asked.add((item: item, level: own, right: right));
     if (right) {

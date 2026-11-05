@@ -232,6 +232,25 @@ void main() {
     });
   });
 
+  test('a probe answered twice counts once (SEC-L4-3)', () {
+    final PlacementGame g = PlacementGame(
+      strands: <StrandPlan>[
+        const StrandPlan(
+          id: 'o',
+          levels: <List<String>>[
+            <String>['eng.a', 'eng.b'],
+            <String>['eng.c', 'eng.d'],
+          ],
+        ),
+      ],
+    );
+    g
+      ..record('eng.a', right: true)
+      ..record('eng.a', right: true);
+    expect(g.stairs('o')!.asked, 1);
+    expect(g.stairs('o')!.level, 0);
+  });
+
   group('the game: strands in order, about 8 probes a visit', () {
     PlacementGame game({int perVisit = 8}) => PlacementGame(
       perVisit: perVisit,

@@ -2,7 +2,13 @@
 // database: a child touches a card (or passes) and nothing is stored, logged or queued to be sent, whatever was touched; the parent's
 // switch for personal questions is read from the family's settings; and no personal turn can be scored or placed.
 import 'package:flutter/foundation.dart';
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
+import 'package:nitznutz/app/language_providers.dart';
+import 'package:nitznutz/parent/language_settings.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/pack_validation.dart';
 import 'package:nitznutz/data/app_database.dart';
@@ -83,6 +89,47 @@ void main() {
     expect(await rig.db.attemptsOf(langKid), isEmpty);
   });
 
+  testWidgets('"show me" before any card writes nothing: a personal turn offers no lamp and no eye at all', (
+    WidgetTester t,
+  ) async {
+    final rig = await openLesson(t, _pack(), 'mine', const Size(852, 393));
+    expect(find.byKey(const Key('lesson-show-me')), findsNothing);
+    expect(find.byKey(const Key('lesson-hint')), findsNothing);
+    final Finder eye = find.byKey(const Key('lesson-show-me'));
+    if (eye.evaluate().isNotEmpty) {
+      await t.tap(eye);
+      await waitFor(t, 500);
+    }
+    expect(
+      await rig.db.attemptsOf(langKid),
+      isEmpty,
+      reason: 'a personal turn leaves no attempt row, "unsure" included',
+    );
+  });
+
+  testWidgets('with the switch off there is no eye during the wait either, and nothing is written', (
+    WidgetTester t,
+  ) async {
+    final rig = await openLesson(t, _pack(), 'mine', const Size(852, 393), personal: false, settle: 300);
+    expect(find.byKey(const Key('lesson-show-me')), findsNothing);
+    await waitFor(t, 2500);
+    expect(await rig.db.attemptsOf(langKid), isEmpty);
+  });
+
+  testWidgets('the switch fails closed: while the family settings are loading, no card is asked', (
+    WidgetTester t,
+  ) async {
+    await openLesson(
+      t,
+      _pack(),
+      'mine',
+      const Size(852, 393),
+      overrides: <Override>[languagesProvider.overrideWith(_NeverLoaded.new)],
+    );
+    expect(find.byKey(const Key('card-o1')), findsNothing);
+    expect(find.byKey(const Key('personal-pass')), findsNothing);
+  });
+
   test('a personal turn can be neither scored nor placed: the validator refuses a probe that is one', () {
     final LangPack p = _pack();
     p.activity('mine')['purpose'] = 'probe';
@@ -92,4 +139,10 @@ void main() {
     ];
     expect(m, contains(contains('purpose: a personal turn is never scored')));
   });
+}
+
+/// The family's language settings, never read: the provider stays loading.
+class _NeverLoaded extends LanguagesNotifier {
+  @override
+  Future<FamilyLanguages> build() => Completer<FamilyLanguages>().future;
 }

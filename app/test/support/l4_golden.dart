@@ -1,6 +1,7 @@
 // The lesson screen with the companion, the bubble and the trail, opened on one activity of a fixture language pack, for the goldens of
 // the Band A templates (L4) on the four boards. Fake clips, the approved pictures of `content/languages/pictures`; not content.
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/parent/language_settings.dart';
@@ -46,12 +47,14 @@ Future<AppRig> openLesson(
   ItemFlow? flow,
   List<String>? itemIds,
   int settle = 2500,
+  List<Override> overrides = const <Override>[],
 }) async {
   final PackContent content = p.content;
   final AppRig rig = AppRig(
     content: content,
     characters: await languageVoiceSource(voRefsOf(p)),
     player: FakePlayer()..endsAfter = const Duration(milliseconds: 150),
+    extraOverrides: overrides,
   );
   await rig.seedFinishedSetup(name: 'נֹעָה', id: langKid);
   if (!personal) {

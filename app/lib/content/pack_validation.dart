@@ -1096,6 +1096,8 @@ void _unscored(String file, Map<String, Object?> a, void Function(String, String
   final Map<String, Object?> answer = _mapOf(a['answer']);
   if (a['purpose'] != 'practice') say(file, 'purpose', '$what is never scored: it is practice');
   if (answer['type'] != 'none') say(file, 'answer.type', '$what has no answer to choose: the type is "none"');
+  // Nothing is wrong in it, so no repair can be aimed at it (the session builder serves a `contradicts` item to repair a tag).
+  if (a.containsKey('contradicts')) say(file, 'contradicts', '$what is never a repair item');
   for (final String k in <String>['correct', 'pairWith', 'pole']) {
     if (answer.containsKey(k)) say(file, 'answer.$k', '$what has no right answer');
   }
