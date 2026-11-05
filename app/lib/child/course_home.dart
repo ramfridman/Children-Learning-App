@@ -13,7 +13,7 @@ import '../design/tokens.g.dart';
 import '../engine/course.dart';
 import '../strings/he.dart';
 import '../world/course_path.dart';
-import '../world/todays_adventure.dart' show AdventureKind;
+import '../world/todays_adventure.dart' show AdventureKind, TodaysAdventure;
 import 'land_screen.dart' show IslandPainter;
 import 'languages_doors.dart' show languageName, languagesColours;
 import 'play_button.dart';
@@ -123,11 +123,15 @@ class _HomeSpec {
 /// otherwise the stop of the rule (a revisit, the next lesson, a lesson again). A visit ends on its own celebration and the child is back
 /// here, with the path moved on.
 class CourseHomeScreen extends ConsumerStatefulWidget {
-  const CourseHomeScreen({super.key, required this.childId, required this.course, this.onBack});
+  const CourseHomeScreen({super.key, required this.childId, required this.course, this.onBack, this.start});
 
   final String childId;
   final String course;
   final VoidCallback? onBack;
+
+  /// A stop of Today's Adventure in this course: the home opens and plays it at once, so the bottle's stop starts the course's next visit
+  /// (the placement first when it is due). Null when the child came through a door or the island.
+  final TodaysAdventure? start;
 
   @override
   ConsumerState<CourseHomeScreen> createState() => _CourseHomeScreenState();
@@ -138,6 +142,24 @@ class _CourseHomeScreenState extends ConsumerState<CourseHomeScreen> {
   bool _busy = false;
 
   ({String childId, String course}) get _key => (childId: widget.childId, course: widget.course);
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.start != null) WidgetsBinding.instance.addPostFrameCallback((_) => _playStart());
+  }
+
+  /// The stop the bottle chose, played once when the home has read the course.
+  Future<void> _playStart() async {
+    final CourseHomeModel? model = await ref.read(courseHomeProvider(_key).future);
+    if (_busy || !mounted || model == null) return;
+    _busy = true;
+    try {
+      await _start(model, widget.start);
+    } finally {
+      _busy = false;
+    }
+  }
 
   Future<void> _play() async {
     final CourseHomeModel? model = ref.read(courseHomeProvider(_key)).value;
@@ -151,8 +173,15 @@ class _CourseHomeScreenState extends ConsumerState<CourseHomeScreen> {
   }
 
   /// Starts what the pebble stands for, and when the visit is over reads the child's history again.
-  Future<void> _start(CourseHomeModel model) async {
-    await startCourseVisit(context, ref, childId: widget.childId, course: widget.course, model: model);
+  Future<void> _start(CourseHomeModel model, [TodaysAdventure? stop]) async {
+    await startCourseVisit(
+      context,
+      ref,
+      childId: widget.childId,
+      course: widget.course,
+      model: model,
+      stop: stop,
+    );
     if (mounted) _refresh();
   }
 

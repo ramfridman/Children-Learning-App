@@ -359,11 +359,13 @@ class _HomeState extends ConsumerState<_Home> {
   }
 
   Future<void> _openStop(TodaysAdventure stop, WorldView world) async {
-    // A stop in a language opens that course, whatever its kind: the course screens are its own.
+    // A stop in a language opens that course and starts the stop there, whatever its kind (the placement visit first when it is due, as a
+    // land's warm-up goes first): the course home plays it, and the child is back on the home when the visit is over.
     if (stop.land case final LanguageLand language) {
       await Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (BuildContext c) => CourseHomeScreen(childId: widget.profile.id, course: language.course),
+          builder: (BuildContext c) =>
+              CourseHomeScreen(childId: widget.profile.id, course: language.course, start: stop),
         ),
       );
       return;
@@ -373,8 +375,7 @@ class _HomeState extends ConsumerState<_Home> {
         final Lesson? mission = world.missionFor(stop.skillId!);
         if (mission != null) await _openLesson(mission: mission);
       case AdventureKind.lesson:
-        // A language is played from its own door (docs/languages/frame.md section 1.2); the bottle has no words for one yet
-        // (`adventureLine` is null), so it never opens a language stop.
+        // A language stop never gets here: it opens its course above.
         if (stop.land is TrophyLand) await _playLand(stop.land!.domain);
       case AdventureKind.replay:
         await _openLesson(lessonId: stop.lessonId);

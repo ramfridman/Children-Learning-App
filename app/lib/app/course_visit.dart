@@ -7,7 +7,7 @@ import '../parent/language_settings.dart';
 import '../world/adventure_adapter.dart' show LanguageCourse;
 import '../world/course_path.dart';
 import '../world/language_placement.dart';
-import '../world/todays_adventure.dart' show AdventureKind;
+import '../world/todays_adventure.dart' show AdventureKind, TodaysAdventure;
 import 'language_providers.dart';
 import 'lesson_launch.dart';
 import 'state.dart';
@@ -15,13 +15,15 @@ import 'state.dart';
 /// Starts what the course home's pebble stands for (docs/milestones/L-course.md, D-5 and D-7): the next placement visit while the host is
 /// inviting, otherwise the stop of the rule: a revisit mission of the course's own, or its lesson. Every visit is of this course alone: the
 /// pack, the engine, the mission and the placement are the course's. The child's history is read afresh, so a visit goes on where the
-/// last one ended. How it went ([VisitOutcome]); `refused` also when there was nothing to start.
+/// last one ended. [stop] is the stop Today's Adventure chose, when the bottle sent the child here: it takes the place of the home's own
+/// (the placement visit still goes first when it is due, as a land's warm-up does). How it went ([VisitOutcome]); `refused` also when there was nothing to start.
 Future<VisitOutcome> startCourseVisit(
   BuildContext context,
   WidgetRef ref, {
   required String childId,
   required String course,
   required CourseHomeModel model,
+  TodaysAdventure? stop,
 }) async {
   final List<LanguageCourse> courses = await ref.read(languageCoursesProvider(childId).future);
   final LanguageCourse? own = courses.where((LanguageCourse c) => c.course == course).firstOrNull;
@@ -50,13 +52,14 @@ Future<VisitOutcome> startCourseVisit(
       flow: placement.flow,
     );
   }
-  if (model.stop.kind == AdventureKind.revisit) {
-    final Lesson? mission = courseMission(own, model.stop.skillId!);
+  final TodaysAdventure what = stop ?? model.stop;
+  if (what.kind == AdventureKind.revisit) {
+    final Lesson? mission = courseMission(own, what.skillId!);
     return mission == null
         ? VisitOutcome.refused
         : openVisit(context, ref, profileId: childId, ageBand: band, course: course, mission: mission);
   }
-  final String? lessonId = model.stop.lessonId;
+  final String? lessonId = what.lessonId;
   return lessonId == null
       ? VisitOutcome.refused
       : openVisit(context, ref, profileId: childId, ageBand: band, course: course, lessonId: lessonId);
