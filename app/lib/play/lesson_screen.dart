@@ -544,6 +544,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
               ? null
               : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
           tiles: controller.finished ? null : session.buildTiles(ctx, spec),
+          boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
           overlay: controller.finished
               ? LessonCelebration(
                   text: controller.endedForRest ? He.restGoodbye.text : controller.lesson.celebration.caption,

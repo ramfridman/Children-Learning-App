@@ -102,6 +102,13 @@ class SField {
   final bool required;
 }
 
+/// A value that fits any one of [options] (a place in a picture is one rectangle, or a list of them).
+class SAnyOf extends Schema {
+  const SAnyOf(this.options, {super.doc});
+
+  final List<Schema> options;
+}
+
 class SObject extends Schema {
   const SObject(this.fields, {super.doc});
 
@@ -198,6 +205,20 @@ void _check(Schema s, Object? v, String path, List<Problem> out) {
           _check(s.values, e.value, _join(path, k), out);
         }
       }
+    case SAnyOf():
+      // The alternative that has the value's own shape says what is wrong (a list is checked as a list, an object as an object).
+      final List<List<Problem>> tried = <List<Problem>>[];
+      for (final Schema o in s.options) {
+        final List<Problem> found = <Problem>[];
+        _check(o, v, path, found);
+        tried.add(found);
+      }
+      if (!tried.any((List<Problem> p) => p.isEmpty)) {
+        final int own = s.options.indexWhere(
+          (Schema o) => (o is SArray && v is List<Object?>) || (o is SObject && v is Map<Object?, Object?>),
+        );
+        out.addAll(tried[own < 0 ? 0 : own]);
+      }
     case SObject():
       if (v is! Map<Object?, Object?>) {
         out.add(Problem(path, 'expected an object, found ${_describe(v)}'));
@@ -248,6 +269,9 @@ Map<String, Object?> _export(Schema s) {
       'propertyNames': <String, Object?>{'pattern': '^(?:${s.keyPattern})\$'},
       'additionalProperties': _export(s.values),
       'maxProperties': s.maxEntries,
+    },
+    SAnyOf() => <String, Object?>{
+      'anyOf': <Object?>[for (final Schema o in s.options) _export(o)],
     },
     SObject() => <String, Object?>{
       'type': 'object',

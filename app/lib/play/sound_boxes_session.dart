@@ -1,11 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/components.dart';
+import '../design/board.dart' show BoardClass;
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
@@ -68,6 +67,20 @@ class SoundBoxesSession extends TemplateSession {
     if (controller.guided && taps != drum.beats) {
       taps = 0;
       notify();
+      return;
+    }
+    // A count off by two or more is a retry with no tag and no evidence (docs/languages/frame.md section 2.3): nothing is written and no
+    // help is escalated; the dots clear for another try. A probe has one answer, so it is written like any other (QA-L4-6).
+    if ((taps - drum.beats).abs() >= 2 && drum.purpose != 'probe') {
+      _busy = true;
+      state = AnswerState.notYet;
+      notify();
+      later(TemplateSession.notYetPause, () {
+        state = AnswerState.idle;
+        taps = 0;
+        _busy = false;
+        notify();
+      });
       return;
     }
     _busy = true;
@@ -170,6 +183,101 @@ class SoundBoxesSession extends TemplateSession {
   Widget? buildTiles(BuildContext context, ActivitySpec spec) => null;
 }
 
+/// The zones of the drum's stage on one board, in the stage's points, for a course that reads left to right; Hebrew mirrors every x
+/// (docs/design/languages-l4-layout.md section 5). The word's picture is at the start corner, the drum next to it, the hands and the dots
+/// in a band that stops before the check mark, and the check mark alone at the end corner, below the drum.
+class _Zones {
+  const _Zones({
+    required this.width,
+    required this.inset,
+    required this.picture,
+    required this.drum,
+    required this.handsY,
+    required this.handsH,
+    required this.dotsY,
+    required this.dot,
+    required this.gap,
+    required this.check,
+    required this.band,
+  });
+
+  final double width;
+
+  /// How far the stage's room lies inside the stage on a tablet (its card has a 16 point rim).
+  final double inset;
+  final Rect picture;
+  final Rect drum;
+  final double handsY;
+  final double handsH;
+  final double dotsY;
+  final double dot;
+  final double gap;
+  final Rect check;
+  final (double, double) band;
+
+  static _Zones of(BoardClass b) => switch (b) {
+    BoardClass.phone => const _Zones(
+      width: 330,
+      inset: 0,
+      picture: Rect.fromLTWH(8, 8, 96, 96),
+      drum: Rect.fromLTWH(159, 8, 116, 116),
+      handsY: 132,
+      handsH: 34,
+      dotsY: 182,
+      dot: 18,
+      gap: 8,
+      check: Rect.fromLTWH(246, 169, 72, 72),
+      band: (8, 234),
+    ),
+    BoardClass.phoneSE => const _Zones(
+      width: 270,
+      inset: 0,
+      picture: Rect.fromLTWH(8, 8, 80, 80),
+      drum: Rect.fromLTWH(129, 8, 100, 100),
+      handsY: 116,
+      handsH: 30,
+      dotsY: 158,
+      dot: 14,
+      gap: 4,
+      check: Rect.fromLTWH(186, 161, 72, 72),
+      band: (8, 174),
+    ),
+    BoardClass.tabletLandscape => const _Zones(
+      width: 584,
+      inset: 16,
+      picture: Rect.fromLTWH(12, 12, 150, 150),
+      drum: Rect.fromLTWH(253, 16, 240, 240),
+      handsY: 280,
+      handsH: 44,
+      dotsY: 350,
+      dot: 32,
+      gap: 12,
+      check: Rect.fromLTWH(476, 438, 96, 96),
+      band: (12, 464),
+    ),
+    BoardClass.tabletPortrait => const _Zones(
+      width: 772,
+      inset: 16,
+      picture: Rect.fromLTWH(12, 12, 180, 180),
+      drum: Rect.fromLTWH(332, 16, 300, 300),
+      handsY: 340,
+      handsH: 50,
+      dotsY: 420,
+      dot: 36,
+      gap: 12,
+      check: Rect.fromLTWH(664, 656, 96, 96),
+      band: (12, 652),
+    ),
+  };
+
+  /// [r] as the course reads: its x mirrored for a right-to-left course, and moved into the room the stage really has.
+  Rect at(Rect r, bool rtl) =>
+      Rect.fromLTWH((rtl ? width - r.left - r.width : r.left) - inset, r.top - inset, r.width, r.height);
+
+  (double, double) bandAt(bool rtl) =>
+      rtl ? (width - band.$2 - inset, width - band.$1 - inset) : (band.$1 - inset, band.$2 - inset);
+}
+
 class _DrumStage extends StatelessWidget {
   const _DrumStage(this.s, this.size);
 
@@ -179,92 +287,78 @@ class _DrumStage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SoundBoxesActivity a = s.drum;
-    final TextDirection dir = rowDirectionOf(a.course, TextDirection.rtl);
-    final double touch = AppLayout.of(context).touch.minControl;
-    final double picture = math.min(size.height * 0.4, size.width * 0.4);
-    final double dots = math.min(36, (size.width - 24) / (SoundBoxesSession.mostTaps * 1.4));
+    final bool rtl = rowDirectionOf(a.course, TextDirection.rtl) == TextDirection.rtl;
+    final _Zones z = _Zones.of(AppLayout.of(context).board);
+    final Rect picture = z.at(z.picture, rtl);
+    final Rect drum = z.at(z.drum, rtl);
+    final Rect check = z.at(z.check, rtl);
+    final (double, double) band = z.bandAt(rtl);
+    final double inset = z.inset;
     return Semantics(
       container: true,
       label: a.altText,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(TokenRadius.lg),
+        // On a tablet the zones were drawn on the whole card, whose rim is outside the room: nothing of them lies outside the card.
+        clipBehavior: inset > 0 ? Clip.none : Clip.antiAlias,
         child: Stack(
           key: const Key('drum-stage'),
+          clipBehavior: Clip.none,
           children: <Widget>[
             if (a.background != null)
               Positioned.fill(child: PackSvg(a.assets.svg(a.background!), fit: BoxFit.cover)),
-            // The word's picture, at the start corner; the drum in the middle of what is left.
-            Positioned(
-              left: 8,
-              top: 8,
-              width: picture,
-              height: picture,
+            Positioned.fromRect(
+              rect: picture,
               child: PackSvg(a.assets.svg(a.picture), key: const Key('drum-picture')),
             ),
-            Positioned(
-              left: picture * 0.5,
-              right: 0,
-              top: 0,
-              bottom: dots + 24,
-              child: Center(child: _drum(math.min(size.height * 0.5, size.width * 0.42))),
-            ),
-            // The hands of the second hint clap above the dots, one pair for each beat so far.
+            Positioned.fromRect(rect: drum, child: _drum(drum.width)),
+            // The hands of the second hint clap in a band that ends before the check mark.
             if (s.hands > 0)
               Positioned(
-                left: 0,
-                right: 0,
-                bottom: dots + 18,
-                child: Directionality(
-                  textDirection: dir,
-                  child: Row(
-                    key: const Key('drum-hands'),
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      for (int i = 0; i < s.hands; i++)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4),
-                          child: Icon(Icons.back_hand_rounded, size: 30, color: TokenColors.correctGlow),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 8,
-              child: Directionality(
-                textDirection: dir,
+                left: band.$1,
+                width: band.$2 - band.$1,
+                top: z.handsY - inset,
+                height: z.handsH,
                 child: Row(
-                  key: const Key('drum-dots'),
+                  key: const Key('drum-hands'),
+                  textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    for (int i = 0; i < s.taps; i++)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Container(
-                          key: Key('drum-dot-$i'),
-                          width: dots,
-                          height: dots,
-                          decoration: const BoxDecoration(
-                            color: TokenColors.correctGlow,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
+                    for (int i = 0; i < s.hands; i++)
+                      Icon(Icons.back_hand_rounded, size: z.handsH - 4, color: TokenColors.correctGlow),
                   ],
                 ),
               ),
-            ),
-            // "That's all": the check mark, at the end corner in the course's direction.
             Positioned(
-              left: dir == TextDirection.rtl ? 12 : null,
-              right: dir == TextDirection.rtl ? null : 12,
-              bottom: 12,
+              left: band.$1,
+              width: band.$2 - band.$1,
+              top: z.dotsY - inset,
+              height: z.dot,
+              child: Row(
+                key: const Key('drum-dots'),
+                textDirection: rtl ? TextDirection.rtl : TextDirection.ltr,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  for (int i = 0; i < s.taps; i++) ...<Widget>[
+                    if (i > 0) SizedBox(width: z.gap),
+                    Container(
+                      key: Key('drum-dot-$i'),
+                      width: z.dot,
+                      height: z.dot,
+                      decoration: const BoxDecoration(color: TokenColors.correctGlow, shape: BoxShape.circle),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            // "That's all": the check mark, alone at the end corner, below the drum.
+            Positioned.fromRect(
+              rect: check,
               child: PebbleButton(
                 key: const Key('drum-done'),
                 semanticLabel: He.drumDoneSemantics.text,
-                size: math.max(72, touch),
+                size: check.width - 8,
+                slop: 4,
                 onPressed: s.taps == 0 ? null : s.done,
                 child: const Icon(Icons.check_rounded, size: 40, color: TokenColors.ink),
               ),

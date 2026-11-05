@@ -89,6 +89,7 @@ class Rig<S extends TemplateSession> {
               stage: (Size room) => session.buildStage(c, room, spec),
               hands: (Size room) => session.buildHands(c, room, spec) ?? const SizedBox(),
               tiles: session.buildTiles(c, spec),
+              boardLayer: session.buildBoardLayer(c, spec),
               trailTotal: controller.trailLength,
               trailDone: controller.index,
               onHome: () {},

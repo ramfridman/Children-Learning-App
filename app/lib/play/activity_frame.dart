@@ -39,7 +39,12 @@ class ActivityFrame extends StatelessWidget {
     this.bubbleTarget,
     this.bubbleAboveTiles = false,
     this.showHelp = true,
+    this.boardLayer,
   });
+
+  /// Something a template draws in the board's own points, outside its stage (the close-up card of a command): a `Positioned` for the
+  /// board's stack. Drawn after the stage and the answer tiles, under the guide's hand and the controls.
+  final Widget? boardLayer;
 
   /// The hint lamp and "show me" are drawn. Off for a probe of the placement game, which has no help at all (docs/languages/frame.md
   /// section 3.2): the two buttons are not there, not merely dimmed.
@@ -181,6 +186,7 @@ class ActivityFrame extends StatelessWidget {
           ),
           if (tiles != null)
             Positioned(left: s.tilesLeft, top: s.tilesTop - 12, width: s.tilesWidth, child: tiles!),
+          ?boardLayer,
           // The hand is drawn after the answer tiles (and the stage, the bubble and the guide), so it is never behind what it points at.
           if (hands != null) _handLayer(s, room),
           Positioned(

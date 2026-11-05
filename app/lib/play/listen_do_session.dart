@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import '../child/activity_shell.dart';
 import '../content/hint_ladder.dart';
 import '../content/models.dart';
+import '../design/board.dart' show BoardClass;
 import '../design/components.dart';
+import '../design/layout.dart' show AppLayout;
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
 import 'choice_row.dart';
@@ -48,8 +50,21 @@ class ListenDoSession extends ChoiceSession {
 
   /// The friend does what the button said: the picture of the chosen action, while the choice stands.
   String? get reaction {
-    if (mode != 'buttons' || chosenId == null) return null;
-    return options.firstWhere((ChoiceOption o) => o.id == chosenId).sprite;
+    if (mode != 'buttons') return null;
+    // At level 2 the friend does the action on its own (a new representation), until the child touches a button.
+    final String? id = chosenId ?? (closeUp ? correctId : null);
+    return id == null ? null : options.firstWhere((ChoiceOption o) => o.id == id).sprite;
+  }
+
+  /// The face items of `cards` mode ring the part of the friend that a card names: the card touched, the one a hint lights, and at
+  /// level 2 the right one (both ears for "ears").
+  Set<String> get ringed {
+    if (mode != 'cards') return const <String>{};
+    return <String>{
+      ?chosenId,
+      if (litTile != null) options[litTile!].id,
+      if (closeUp && chosenId == null) correctId,
+    };
   }
 
   /// A thing is touched to be taken to the target.
@@ -104,9 +119,57 @@ class ListenDoSession extends ChoiceSession {
 
   // ---- layout ----
 
+  /// The answers are tiles under the stage: the action buttons, and the close-up cards of a face item (the friend stays on the stage).
+  bool get tiled => mode == 'buttons' || mode == 'cards';
+
   @override
-  ActivitySpec layoutFor(ActivitySpec base) =>
-      mode == 'buttons' ? super.layoutFor(base) : withTallStage(base);
+  bool get showsSpeakers => false;
+
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) => tiled ? base : withTallStage(base);
+
+  /// Where the close-up card of level 2 stands, in the board's points: a slot of its own outside the scene, so that it can never cover
+  /// a place the child must touch (docs/design/languages-l4-layout.md section 3). The tablet portrait's is in the band under the scene,
+  /// at the end corner in the course's direction.
+  static ({double x, double y, double side}) closeUpSlot(BoardClass board, bool rtl) => switch (board) {
+    BoardClass.phone => (x: 413, y: 248, side: 96),
+    BoardClass.phoneSE => (x: 300, y: 222, side: 96),
+    BoardClass.tabletLandscape => (x: 136, y: 300, side: 130),
+    BoardClass.tabletPortrait => (x: rtl ? 30 : 660, y: 998, side: 130),
+  };
+
+  /// The scene's side on the tablet portrait keeps a band of 150 under it for the card (the tall stage is 764 high).
+  static const double portraitBand = 150;
+
+  @override
+  Widget? buildBoardLayer(BuildContext context, ActivitySpec spec) {
+    if (tiled || doing.embodied) return null;
+    final BoardClass board = AppLayout.of(context).board;
+    final bool rtl = rowDirection == TextDirection.rtl;
+    // The layer listens to the session itself: the card appears when the hint's own pause is over, not with the controller's change.
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: ListenableBuilder(
+          listenable: this,
+          builder: (BuildContext c, Widget? _) {
+            if (!closeUp) return const SizedBox();
+            final ({double x, double y, double side}) slot = closeUpSlot(board, rtl);
+            return Stack(
+              children: <Widget>[
+                Positioned(
+                  left: slot.x,
+                  top: slot.y,
+                  width: slot.side,
+                  height: slot.side,
+                  child: closeUpCard(doing, correctId, slot.side),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) =>
@@ -114,7 +177,7 @@ class ListenDoSession extends ChoiceSession {
 
   @override
   Widget? buildTiles(BuildContext context, ActivitySpec spec) =>
-      mode == 'buttons' ? choiceTiles(context, spec, speakers: false) : null;
+      tiled ? choiceTiles(context, spec, speakers: false) : null;
 }
 
 class _DoStage extends StatelessWidget {
@@ -140,8 +203,7 @@ class _DoStage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(6),
                 child: LayoutBuilder(
-                  builder: (BuildContext context, BoxConstraints box) =>
-                      Center(child: _scene(context, math.min(box.maxWidth, box.maxHeight))),
+                  builder: (BuildContext context, BoxConstraints box) => _sceneBox(context, box),
                 ),
               ),
             ),
@@ -150,6 +212,18 @@ class _DoStage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// The scene's square in its room: centred, but on the tablet portrait it keeps the band under it for the close-up card.
+  Widget _sceneBox(BuildContext context, BoxConstraints box) {
+    final bool portrait =
+        AppLayout.of(context).board == BoardClass.tabletPortrait && !s.tiled && !s.doing.embodied;
+    final double side = math.min(
+      box.maxWidth,
+      portrait ? box.maxHeight - (ListenDoSession.portraitBand - 16) : box.maxHeight,
+    );
+    final Widget scene = _scene(context, side);
+    return portrait ? Align(alignment: Alignment.topCenter, child: scene) : Center(child: scene);
   }
 
   /// The square of the scene, [side] points wide: the picture, and what is in it.
@@ -165,8 +239,19 @@ class _DoStage extends StatelessWidget {
         clipBehavior: Clip.none,
         children: <Widget>[
           Positioned.fill(child: PackSvg(a.assets.svg(reaction ?? a.picture))),
+          if (a.mode == 'cards')
+            for (final ChoiceOption o in a.options)
+              if (s.ringed.contains(o.id))
+                for (final Rect r in o.ats)
+                  Positioned.fromRect(
+                    rect: px(r),
+                    child: const IgnorePointer(
+                      child: SkyRing(key: Key('do-part-ring'), radius: TokenRadius.xl),
+                    ),
+                  ),
           if (a.mode == 'hotspots')
-            for (final (int i, ChoiceOption o) in a.options.indexed) _hotspot(px(o.at!), o, i),
+            for (final (int i, ChoiceOption o) in a.options.indexed)
+              for (final (int k, Rect r) in o.ats.indexed) _hotspot(px(r), o, i, k),
           if (a.mode == 'drag') ...<Widget>[
             _zone(px(a.targetAt!), key: const Key('do-target'), sprite: a.targetSprite, onTap: _dropSelected),
             for (final (int i, ChoiceOption o) in a.options.indexed)
@@ -185,20 +270,19 @@ class _DoStage extends StatelessWidget {
               0,
             ),
           ],
-          if (s.closeUp) _closeUpCard(side),
         ],
       ),
     );
   }
 
   /// A glowing part of the picture that a touch takes as the answer.
-  Widget _hotspot(Rect r, ChoiceOption o, int i) => Positioned.fromRect(
+  Widget _hotspot(Rect r, ChoiceOption o, int i, int place) => Positioned.fromRect(
     rect: r,
     child: Semantics(
       button: true,
       label: o.label,
       child: GestureDetector(
-        key: Key('do-hot-${o.id}'),
+        key: Key(place == 0 ? 'do-hot-${o.id}' : 'do-hot-${o.id}-$place'),
         behavior: HitTestBehavior.opaque,
         onTap: () => s.choose(o.id),
         child: _ring(o, i),
@@ -335,48 +419,6 @@ class _DoStage extends StatelessWidget {
     if (id != null) s.drop(id);
   }
 
-  /// What the command names, close up, in a card at the end corner of the scene: the thing, the action, or the part of the picture.
-  Widget _closeUpCard(double side) {
-    final ListenDoActivity a = s.doing;
-    final ChoiceOption right = a.options.firstWhere((ChoiceOption o) => o.id == s.correctId);
-    final double card = math.min(side * 0.4, 130);
-    Widget content;
-    if (right.sprite != null) {
-      content = Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(right.sprite!)));
-    } else {
-      final Rect r = right.at!;
-      final double scale = card / math.max(r.width, r.height);
-      content = ClipRect(
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              left: -r.left * scale,
-              top: -r.top * scale,
-              width: scale,
-              height: scale,
-              child: PackSvg(a.assets.svg(a.picture)),
-            ),
-          ],
-        ),
-      );
-    }
-    return Positioned(
-      top: 6,
-      right: 6,
-      child: Container(
-        key: const Key('do-closeup'),
-        width: card,
-        height: card,
-        decoration: BoxDecoration(
-          color: TokenColors.paper,
-          borderRadius: BorderRadius.circular(TokenRadius.lg),
-          border: Border.all(color: TokenColors.hintHalo, width: 4),
-        ),
-        child: content,
-      ),
-    );
-  }
-
   /// "Done", for the embodied version: at the end corner of the stage.
   Widget _doneButton(BuildContext context) => Positioned(
     right: 12,
@@ -387,6 +429,51 @@ class _DoStage extends StatelessWidget {
       size: 72,
       onPressed: s.finish,
       child: const Icon(Icons.check_rounded, size: 40, color: TokenColors.ink),
+    ),
+  );
+}
+
+/// What the command names, close up: the thing or the action, or the part of the picture cropped to a square that keeps the picture's
+/// proportions and fills the card with the picture itself. A touch on it does nothing.
+Widget closeUpCard(ListenDoActivity a, String correctId, double card) {
+  final ChoiceOption right = a.options.firstWhere((ChoiceOption o) => o.id == correctId);
+  final Widget content;
+  if (right.sprite != null) {
+    content = Padding(padding: const EdgeInsets.all(6), child: PackSvg(a.assets.svg(right.sprite!)));
+  } else {
+    // The crop is the square round the part (its longer side, at least a seventh of the picture), kept inside the picture.
+    final Rect r = right.at!;
+    final double side = math.min(1, math.max(math.max(r.width, r.height), 0.15));
+    final double left = (r.center.dx - side / 2).clamp(0, 1 - side);
+    final double top = (r.center.dy - side / 2).clamp(0, 1 - side);
+    final double scale = (card - 8) / side;
+    content = ClipRRect(
+      borderRadius: BorderRadius.circular(TokenRadius.lg - 4),
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+            left: -left * scale,
+            top: -top * scale,
+            width: scale,
+            height: scale,
+            child: PackSvg(a.assets.svg(a.picture)),
+          ),
+        ],
+      ),
+    );
+  }
+  return IgnorePointer(
+    child: Container(
+      key: const Key('do-closeup'),
+      width: card,
+      height: card,
+      padding: const EdgeInsets.all(0),
+      decoration: BoxDecoration(
+        color: TokenColors.paper,
+        borderRadius: BorderRadius.circular(TokenRadius.lg),
+        border: Border.all(color: TokenColors.hintHalo, width: 4),
+      ),
+      child: content,
     ),
   );
 }

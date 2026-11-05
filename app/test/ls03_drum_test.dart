@@ -196,7 +196,14 @@ void main() {
       expect(r.session.taps, SoundBoxesSession.mostTaps);
       await t.tap(find.byKey(const Key('drum-done')));
       await r.wait(t, 100);
-      expect(r.attempts.single.response, 'n=9');
+      expect(r.attempts, isEmpty, reason: '9 for 3 beats is off by more than one: a retry, nothing written');
+      await r.wait(t, 1300);
+      expect(r.session.taps, 0);
+      // 4 (one more) is written
+      await _drum(t, r, 4);
+      await t.tap(find.byKey(const Key('drum-done')));
+      await r.wait(t, 100);
+      expect(r.attempts.single.response, 'n=4');
       await r.done(t);
     });
 
@@ -216,15 +223,18 @@ void main() {
           await r.wait(t, 1300);
           expect(r.session.taps, 0, reason: 'the child may drum it again');
         }
+        final int written = r.attempts.length;
         await _drum(t, r, 6);
         await t.tap(find.byKey(const Key('drum-done')));
         await r.wait(t, 100);
         expect(
-          r.attempts.last.misconceptionTag,
-          isEmpty,
-          reason: 'a count off by more than one is a retry with no tag',
+          r.attempts,
+          hasLength(written),
+          reason: 'off by two or more: a retry, no tag, no evidence, nothing written',
         );
-        expect(r.attempts.last.result, 'incorrect');
+        expect(r.controller.hintShown, 2, reason: 'and no help is escalated by it');
+        await r.wait(t, 1300);
+        expect(r.session.taps, 0, reason: 'the child may drum it again');
         await r.done(t);
       },
     );
@@ -266,7 +276,7 @@ void main() {
         expect(r.session.hands, 3);
         expect(find.byIcon(Icons.back_hand_rounded), findsNWidgets(3));
         // level 3: the friend drums it, the dots light one by one, and then they clear for the child
-        await _drum(t, r, 5);
+        await _drum(t, r, 4);
         await t.tap(find.byKey(const Key('drum-done')));
         await r.wait(t, 1300);
         expect(r.controller.hintShown, 3);

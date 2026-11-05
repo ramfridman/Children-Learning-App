@@ -66,37 +66,22 @@ List<String> _messages(LangPack p) => <String>[
     '${x.path}: ${x.message}',
 ];
 
-/// The areas of the design-director's hotspot map of `mika-body` (256 by 256), as shares of the picture. A part with two places
-/// (ears, hands) gives its first; a circle gives its bounding square.
+/// The areas of the design-director's hotspot map of `mika-body` (version 2), as shares of the picture. A part with two places (ears,
+/// hands) gives its first.
 Map<String, Map<String, Object?>> _bodyAreas() {
   final Map<String, Object?> json = jsonDecode(
     File('../content/languages/pictures/mika-body.hotspots.json').readAsStringSync(),
   ) as Map<String, Object?>;
-  final Map<String, Object?> areas = json['areas']! as Map<String, Object?>;
-  Map<String, Object?> share(double x, double y, double w, double h) =>
-      at(x / 256, y / 256, w / 256, h / 256);
-  final Map<String, Map<String, Object?>> out = <String, Map<String, Object?>>{};
-  for (final MapEntry<String, Object?> e in areas.entries) {
-    Object? a = e.value;
-    if (a is List<Object?>) a = a.first;
-    final Map<String, Object?> m = a! as Map<String, Object?>;
-    if (m['rect'] != null) {
-      final List<Object?> r = m['rect']! as List<Object?>;
-      out[e.key] = share(
-        (r[0]! as num).toDouble(),
-        (r[1]! as num).toDouble(),
-        (r[2]! as num).toDouble(),
-        (r[3]! as num).toDouble(),
-      );
-    } else {
-      final List<Object?> c = m['circle']! as List<Object?>;
-      final double cx = (c[0]! as num).toDouble(),
-          cy = (c[1]! as num).toDouble(),
-          r = (c[2]! as num).toDouble();
-      out[e.key] = share(cx - r, cy - r, 2 * r, 2 * r);
-    }
-  }
-  return out;
+  final Map<String, Object?> parts = json['parts']! as Map<String, Object?>;
+  return <String, Map<String, Object?>>{
+    for (final MapEntry<String, Object?> e in parts.entries)
+      e.key: at(
+        (((e.value! as List<Object?>).first! as List<Object?>)[0]! as num).toDouble(),
+        (((e.value! as List<Object?>).first! as List<Object?>)[1]! as num).toDouble(),
+        (((e.value! as List<Object?>).first! as List<Object?>)[2]! as num).toDouble(),
+        (((e.value! as List<Object?>).first! as List<Object?>)[3]! as num).toDouble(),
+      ),
+  };
 }
 
 // ---- LS08: the stories -------------------------------------------------------------------------------------------------------------
@@ -363,12 +348,12 @@ void main() {
   // ===============================================================================================================================
   group('real items: LS11 listen and do', () {
     testWidgets(
-      'ENG-A-06 i01, i02, i03 on the real hotspot map: each wrong part gives its tag, the right one ends the item',
+      'ENG-A-06 i01, i06, i07 (the items the design keeps on the body) on the real hotspot map: each wrong part gives its tag, the right one ends the item',
       (WidgetTester t) async {
         for (final (String id, String right, String near, String far) in <(String, String, String, String)>[
           ('i01', 'head', 'tummy', 'feet'),
-          ('i02', 'eyes', 'ears', 'mouth'),
-          ('i03', 'ears', 'eyes', 'mouth'),
+          ('i06', 'hands', 'feet', 'eyes'),
+          ('i07', 'feet', 'hands', 'head'),
         ]) {
           final LangPack p = _course('eng', <String>['mika_body']);
           p.add(_bodyItem(p, id, right, near, far));
@@ -919,11 +904,16 @@ void main() {
           await t.tap(find.byKey(const Key('lesson-hint')));
           await r.wait(t, 200);
           expect(r.controller.hintShown, 2, reason: id);
-          expect(
-            find.byKey(const Key('do-closeup')),
-            findsOneWidget,
-            reason: '$id level 2 changes the representation',
-          );
+          if (id == 'btn') {
+            // the friend does the action on its own (the stage shows the right action)
+            expect(r.session.reaction, isNotNull, reason: 'btn level 2 changes the representation');
+          } else {
+            expect(
+              find.byKey(const Key('do-closeup')),
+              findsOneWidget,
+              reason: '$id level 2 changes the representation',
+            );
+          }
           await t.tap(find.byKey(const Key('lesson-hint')));
           await r.wait(t, 1500);
           expect(r.controller.hintShown, 3, reason: id);
@@ -1047,8 +1037,8 @@ void main() {
         expect(r.controller.hintShown, 3);
         expect(
           r.controller.guided,
-          isFalse,
-          reason: 'the lamp does not make the help guided; only mistakes or "show me" do',
+          isTrue,
+          reason: 'level 3 asked for with the lamp marks the answer and takes only the right move, as three mistakes do (QA-L4-4)',
         );
         await r.done(t);
       },
@@ -1187,14 +1177,16 @@ void main() {
           expect(r.session.taps, n > 9 ? 9 : n);
           await t.tap(find.byKey(const Key('drum-done')));
           await r.wait(t, 100);
+          if (n != 2 && n != 4) {
+            // off by two or more: a retry with no tag and no evidence (QA-L4-6): nothing is written
+            expect(r.attempts, isEmpty, reason: 'count $n');
+            await r.done(t);
+            continue;
+          }
           final AttemptRecord a = r.attempts.single;
-          expect(a.response, 'n=${n > 9 ? 9 : n}');
+          expect(a.response, 'n=$n');
           expect(a.result, 'incorrect');
-          expect(
-            a.misconceptionTag,
-            n == 4 ? 'eng.pa.syll' : (n == 2 ? 'eng.pa.weak_syll' : ''),
-            reason: 'count $n',
-          );
+          expect(a.misconceptionTag, n == 4 ? 'eng.pa.syll' : 'eng.pa.weak_syll', reason: 'count $n');
           await r.done(t);
         }
       },

@@ -45,9 +45,9 @@ Map<String, Object?> _command(LangPack p, String mode, {String id = 'doit'}) {
         id: id,
         mode: mode,
         options: <Map<String, Object?>>[
-          partOption('o1', at(0.30, 0.05, 0.4, 0.3), label: 'head'),
-          partOption('o2', at(0.30, 0.45, 0.4, 0.25), tag: p.tag('lis.sem'), label: 'tummy'),
-          partOption('o3', at(0.25, 0.78, 0.5, 0.18), tag: p.tag('lis.guess'), label: 'feet'),
+          partOption('o1', at(0.30, 0.02, 0.4, 0.3), label: 'head'),
+          partOption('o2', at(0.30, 0.36, 0.4, 0.3), tag: p.tag('lis.sem'), label: 'tummy'),
+          partOption('o3', at(0.25, 0.7, 0.5, 0.3), tag: p.tag('lis.guess'), label: 'feet'),
         ],
         correct: 'o1',
       );
@@ -121,7 +121,7 @@ void main() {
         expect(a.llmAllowed, isFalse);
         if (mode == 'hotspots') {
           expect(a.options.every((ChoiceOption o) => o.at != null), isTrue);
-          expect(a.options.first.at, const Rect.fromLTWH(0.30, 0.05, 0.4, 0.3));
+          expect(a.options.first.at, const Rect.fromLTWH(0.30, 0.02, 0.4, 0.3));
         }
         if (mode == 'drag') expect(a.targetAt, const Rect.fromLTWH(0.58, 0.3, 0.38, 0.38));
         if (mode == 'place') expect(a.thingAt, const Rect.fromLTWH(0.04, 0.4, 0.22, 0.22));
@@ -298,6 +298,37 @@ void main() {
         await r.done(t);
       },
     );
+
+    testWidgets('a part with two places (both ears) is one option: a touch on either is the answer', (
+      WidgetTester t,
+    ) async {
+      final LangPack p = LangPack()..addPictures(_pictures);
+      p.add(
+        listenDoJson(
+          id: 'doit',
+          mode: 'hotspots',
+          options: <Map<String, Object?>>[
+            <String, Object?>{
+              'id': 'o1',
+              'label': 'ears',
+              'at': <Map<String, Object?>>[at(0.0, 0.05, 0.3, 0.3), at(0.7, 0.05, 0.3, 0.3)],
+            },
+            partOption('o2', at(0.35, 0.4, 0.3, 0.3), tag: p.tag('lis.sem'), label: 'tummy'),
+            partOption('o3', at(0.35, 0.71, 0.3, 0.29), tag: p.tag('lis.guess'), label: 'feet'),
+          ],
+          correct: 'o1',
+        ),
+      );
+      expect(_messages(p), isEmpty);
+      final Rig<ListenDoSession> r = _rig(p);
+      await r.pump(t);
+      expect(find.byKey(const Key('do-hot-o1')), findsOneWidget);
+      expect(find.byKey(const Key('do-hot-o1-1')), findsOneWidget);
+      await t.tap(find.byKey(const Key('do-hot-o1-1')));
+      await r.wait(t, 100);
+      expect(r.written, <String>['correct:o1']);
+      await r.done(t);
+    });
 
     testWidgets('the lamp lights the parts one after the other, and marks none', (WidgetTester t) async {
       final Rig<ListenDoSession> r = _rig(_pack('hotspots'));

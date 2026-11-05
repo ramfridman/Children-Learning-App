@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 
 import '../content/models.dart';
+import '../content/pack_validation.dart' show languageTemplates;
 import '../core/clock.dart';
 import '../core/log.dart';
 import '../strings/he.dart';
@@ -420,6 +421,9 @@ class LessonController extends ChangeNotifier {
     hintShown = level;
     hintNonce++;
     if (speak) _say(h.say);
+    // Level 3 is "show me": asked for with the lamp it marks the answer, as three mistakes do, and only the right move is taken (QA-L4-4).
+    // The Band A templates of the language courses; the lands and LS01 keep the path they have.
+    if (level >= 3 && languageTemplates.contains(current.template)) guided = true;
   }
 
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)

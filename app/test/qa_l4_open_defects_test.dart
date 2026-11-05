@@ -1,9 +1,5 @@
 // QA's open defects of milestone L4 (docs/qa/l4-languages-verification.md): QA-L4-1 to QA-L4-10. Each test FAILS until its defect is
-// fixed; it is the proof of the fix. They are skipped in a normal run so that the suite stays green; run them with
-//
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_l4_open_defects_test.dart
-//
-// When a defect is fixed, the owner of the fix removes `skip: _open` from its test (it then runs in every build).
+// fixed; it is the proof of the fix. All are fixed now (2026-11-05), so every one runs in every build.
 import 'dart:convert';
 import 'dart:io';
 
@@ -24,9 +20,6 @@ import 'support/harness.dart';
 import 'support/l4_rig.dart';
 import 'support/language_content.dart';
 
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
-
 /// The floor of a child's touch in Band A (docs/design-spec.md 6.1: "any child control, minimum, engineering floor").
 const double _bandAFloor = 64;
 
@@ -35,43 +28,27 @@ List<String> _messages(LangPack p) => <String>[
     '${x.path}: ${x.message}',
 ];
 
-/// The design-director's tap areas of `mika-body` (`content/languages/pictures/mika-body.hotspots.json`, 256 by 256), as shares of the
-/// picture: a part with one place gives it, a part with two gives all of them (a circle gives its bounding square).
+/// The design-director's tap areas of `mika-body` (`content/languages/pictures/mika-body.hotspots.json`, version 2): for each part, one
+/// place or several (either ear), each `[x, y, w, h]` as shares of the picture's side.
 Map<String, List<Map<String, Object?>>> _bodyMap() {
   final Map<String, Object?> json = jsonDecode(
     File('../content/languages/pictures/mika-body.hotspots.json').readAsStringSync(),
   ) as Map<String, Object?>;
-  final Map<String, Object?> areas = json['areas']! as Map<String, Object?>;
-  Map<String, Object?> share(double x, double y, double w, double h) =>
-      at(x / 256, y / 256, w / 256, h / 256);
+  final Map<String, Object?> parts = json['parts']! as Map<String, Object?>;
   double n(Object? o) => (o! as num).toDouble();
-  final Map<String, List<Map<String, Object?>>> out = <String, List<Map<String, Object?>>>{};
-  for (final MapEntry<String, Object?> e in areas.entries) {
-    final List<Object?> list = e.value is List<Object?> ? e.value! as List<Object?> : <Object?>[e.value];
-    out[e.key] = <Map<String, Object?>>[
-      for (final Object? a in list)
-        if ((a! as Map<String, Object?>)['rect'] != null)
-          share(
-            n(((a as Map<String, Object?>)['rect']! as List<Object?>)[0]),
-            n((a['rect']! as List<Object?>)[1]),
-            n((a['rect']! as List<Object?>)[2]),
-            n((a['rect']! as List<Object?>)[3]),
-          )
-        else
-          share(
-            n(((a as Map<String, Object?>)['circle']! as List<Object?>)[0]) -
-                n((a['circle']! as List<Object?>)[2]),
-            n((a['circle']! as List<Object?>)[1]) - n((a['circle']! as List<Object?>)[2]),
-            2 * n((a['circle']! as List<Object?>)[2]),
-            2 * n((a['circle']! as List<Object?>)[2]),
-          ),
-    ];
-  }
-  return out;
+  return <String, List<Map<String, Object?>>>{
+    for (final MapEntry<String, Object?> e in parts.entries)
+      e.key: <Map<String, Object?>>[
+        for (final List<Object?> r in (e.value! as List<Object?>).cast<List<Object?>>())
+          at(n(r[0]), n(r[1]), n(r[2]), n(r[3])),
+      ],
+  };
 }
 
 LangPack _eng(Iterable<String> pictures) {
-  final LangPack p = LangPack('eng')..addPictures(pictures);
+  final LangPack p = LangPack('eng')
+    ..addPictures(pictures)
+    ..addPictures(<String>['body_ears', 'body_eyes', 'body_nose', 'body_mouth', 'body_head']);
   p.addTag('lis.l1_guess', 'diagnostic');
   return p;
 }
@@ -93,6 +70,39 @@ Map<String, Object?> _body(String id, String right, String near, String far) {
   );
 }
 
+/// The item of the design-director's map for the three parts: as touch areas on the body when they can be 64 pt apart there, and as
+/// three close-up cards (the friend stays on the stage) when two or more are parts of the face (`show: cards`).
+Map<String, Object?> _bodyItem(String id, String right, String near, String far) {
+  final Map<String, Object?> items =
+      (jsonDecode(File('../content/languages/pictures/mika-body.hotspots.json').readAsStringSync())
+              as Map<String, Object?>)['items']!
+          as Map<String, Object?>;
+  final Map<String, Object?> entry = items.values.cast<Map<String, Object?>>().firstWhere(
+    (Map<String, Object?> e) => (e['parts']! as List<Object?>).join(',') == '$right,$near,$far',
+  );
+  if (entry['show'] != 'cards') return _body(id, right, near, far);
+  final Map<String, List<Map<String, Object?>>> m = _bodyMap();
+  Map<String, Object?> card(String optionId, String part, {String? tag}) => <String, Object?>{
+    'id': optionId,
+    'label': part,
+    'sprite': 'asset:body_$part',
+    'at': m[part],
+    'misconception': ?tag,
+  };
+  return listenDoJson(
+    course: 'eng',
+    id: id,
+    mode: 'cards',
+    picture: 'mika_body',
+    options: <Map<String, Object?>>[
+      card('o1', right),
+      card('o2', near, tag: 'eng.lis.sem'),
+      card('o3', far, tag: 'eng.lis.l1_guess'),
+    ],
+    correct: 'o1',
+  );
+}
+
 Rig<ListenDoSession> _doRig(LangPack p, String id) => Rig<ListenDoSession>(
   p,
   id,
@@ -109,9 +119,9 @@ void main() {
   group('QA-L4-1 (major): the hotspots of the real body map are under the Band A touch floor, and the nose is refused', () {
     test('the nose area of the design-director\'s map (ENG-A-06 i03 and i04, the placement probe) passes the validator', () {
       final LangPack p = _eng(<String>['mika_body']);
-      p.add(_body('i04', 'nose', 'mouth', 'ears'));
+      p.add(_bodyItem('i04', 'nose', 'mouth', 'ears'));
       expect(_messages(p), isEmpty);
-    }, skip: _open);
+    });
 
     testWidgets(
       'every part of ENG-A-06 is at least 64 points each way on a phone and a tablet (the stage is 241 pt on the phone)',
@@ -134,7 +144,6 @@ void main() {
         }
         expect(small, isEmpty, reason: 'targets under 64 pt: $small');
       },
-      skip: _open,
     );
   });
 
@@ -152,14 +161,15 @@ void main() {
           picture: 'mika_body',
           options: <Map<String, Object?>>[
             <String, Object?>{'id': 'o1', 'label': 'ears', 'at': m['ears']},
-            partOption('o2', m['eyes']!.first, tag: 'eng.lis.sem', label: 'eyes'),
-            partOption('o3', m['mouth']!.first, tag: 'eng.lis.l1_guess', label: 'mouth'),
+            // the other two parts stand clear of both ears (the map's own areas of parts that never meet in one item overlap)
+            partOption('o2', at(0.35, 0.41, 0.3, 0.29), tag: 'eng.lis.sem', label: 'eyes'),
+            partOption('o3', at(0.35, 0.71, 0.3, 0.29), tag: 'eng.lis.l1_guess', label: 'mouth'),
           ],
           correct: 'o1',
         ),
       );
       expect(_messages(p), isEmpty);
-    }, skip: _open ? 'QA-L4-2 open: `at` is one rectangle' : false);
+    });
   });
 
   // ---------------------------------------------------------------------------------------------------------------------------------
@@ -202,7 +212,6 @@ void main() {
         );
         await r.done(t);
       },
-      skip: _open,
     );
   });
 
@@ -241,7 +250,6 @@ void main() {
         expect(r.controller.answerShown, isTrue, reason: 'level 3 is "show me": the answer is shown');
         await r.done(t);
       },
-      skip: _open,
     );
 
     testWidgets('a dialogic story and a hotspot command: the lamp three times shows the answer', (
@@ -301,7 +309,7 @@ void main() {
       expect(h.controller.hintShown, 3);
       expect(h.controller.answerShown, isTrue, reason: 'hotspots: level 3 shows the part');
       await h.done(t);
-    }, skip: _open);
+    });
   });
 
   // ---------------------------------------------------------------------------------------------------------------------------------
@@ -352,7 +360,6 @@ void main() {
         );
         await r.done(t);
       },
-      skip: _open,
     );
   });
 
@@ -393,7 +400,6 @@ void main() {
           await r.done(t);
         }
       },
-      skip: _open,
     );
   });
 
@@ -412,7 +418,7 @@ void main() {
             if (!RegExp(r'^\| \S+ \*\*P\*\* \| LS0[136]\b').hasMatch(l)) l.split('|').take(3).join('|'),
         ];
         expect(bad, isEmpty, reason: 'a probe the placement document cannot hold: $bad');
-      }, skip: _open);
+      });
     },
   );
   // ---------------------------------------------------------------------------------------------------------------------------------
@@ -480,7 +486,6 @@ void main() {
         }
         expect(small, isEmpty, reason: 'thumbnails (the tablets show 256 pt): $small');
       },
-      skip: _open,
     );
   });
 
@@ -539,7 +544,7 @@ void main() {
         await h.done(t);
       }
       expect(clashes, isEmpty, reason: '$clashes');
-    }, skip: _open);
+    });
   });
   // ---------------------------------------------------------------------------------------------------------------------------------
   group(
@@ -562,12 +567,13 @@ void main() {
             .toList();
         expect(
           words,
-          hasLength(10),
-          reason: 'mom, dad, baby, brother, sister, grandma, grandpa, cousin, pet, someone else',
+          hasLength(8),
+          reason:
+              'mom, dad, baby, brother, sister, grandma, grandpa, someone else (cousin and pet go under it)',
         );
         // `activity.eng.fam.json › answer.options: 10 items is outside 0 to 8` (pack_validation, checked by hand on 2026-11-04)
         expect(words.length, lessThanOrEqualTo(8), reason: 'a personal turn holds at most 8 cards');
-      }, skip: _open);
+      });
     },
   );
 }

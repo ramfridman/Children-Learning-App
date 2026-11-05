@@ -85,6 +85,20 @@ ActivitySpec withSpeakerRoom(ActivitySpec base) {
   );
 }
 
+/// The board of a phone at a question whose options have speakers: the stage keeps its size (the SE's grows to 116 high) and each speaker
+/// stands beside its tile, so the picture the question is about is not made a thumbnail (docs/design/languages-l4-layout.md section 4).
+/// A tablet keeps [withSpeakerRoom] (the speaker under its tile).
+ActivitySpec withSideSpeakers(ActivitySpec base) {
+  if (base.boardHeight >= 500) return withSpeakerRoom(base);
+  if (base.boardHeight > 380) return base;
+  return base.withStageAndTiles(
+    stage: const Rect.fromLTWH(16, 86, 270, 116),
+    tilesLeft: 0,
+    tilesTop: 220,
+    tilesWidth: 520,
+  );
+}
+
 /// The board for a template that has no tiles under its stage (a story being told, a scene to touch or to drag in): the stage has the whole
 /// height under the guide's bubble, down to the edge where no hotspot may be, so that the picture is as large as the board lets it be.
 ActivitySpec withTallStage(ActivitySpec base) {
@@ -114,7 +128,11 @@ class ChoiceRow extends StatelessWidget {
     required this.onChoose,
     this.onSpeak,
     this.stress = true,
+    this.speakerBeside = false,
   });
+
+  /// Each speaker stands on the end side of its tile, on one soft pill with it (a phone at a question), not under it.
+  final bool speakerBeside;
 
   final List<ChoiceOption> options;
   final PackAssets assets;
@@ -138,9 +156,79 @@ class ChoiceRow extends StatelessWidget {
 
   bool get _hasSpeakers => onSpeak != null && options.any((ChoiceOption o) => o.clip != null);
 
+  /// One option on a phone: the tile and its speaker on a lilac pill, the speaker at the end side in the course's direction.
+  Widget _pill(BuildContext context, int i, ChoiceOption o, double inner) {
+    final Widget tile = _tile(context, i, o, slop: 0);
+    return DecoratedBox(
+      decoration: BoxDecoration(color: const Color(0xFFECE3FE), borderRadius: BorderRadius.circular(26)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          tile,
+          SizedBox(width: inner),
+          SizedBox(
+            width: 64,
+            height: 64,
+            child: o.clip == null
+                ? null
+                : SpeakerMark(key: Key('speaker-${o.id}'), touch: 64, onTap: () => onSpeak!(o)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tile(BuildContext context, int i, ChoiceOption o, {double slop = 12}) => Stack(
+    clipBehavior: Clip.none,
+    children: <Widget>[
+      Opacity(
+        opacity: answerShown && o.id != correctId ? 0.35 : 1,
+        child: AnswerTile(
+          key: Key('tile-${o.id}'),
+          semanticLabel: o.label ?? '',
+          slop: slop,
+          state: chosenId == o.id
+              ? chosenState
+              : (answerShown && o.id == correctId ? AnswerState.selected : AnswerState.idle),
+          onPressed: () => onChoose(o.id),
+          child: OptionFace(option: o, assets: assets, course: course, tileFont: tileFont, stress: stress),
+        ),
+      ),
+      if (litIndex == i)
+        Positioned.fill(
+          left: 6,
+          top: 6,
+          right: 6,
+          bottom: 6,
+          child: const IgnorePointer(
+            child: SkyRing(key: Key('hint-tile-glow'), round: false, radius: TokenRadius.xl + 6),
+          ),
+        ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     final bool speakers = _hasSpeakers;
+    if (speakers && speakerBeside) {
+      // Options 15 apart (8 on the smallest phone, whose tile and speaker are 4 apart instead of 6).
+      final bool narrow = MediaQuery.sizeOf(context).height < 380;
+      return Padding(
+        padding: const EdgeInsets.only(top: 12),
+        child: Directionality(
+          textDirection: direction,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              for (final (int i, ChoiceOption o) in options.indexed) ...<Widget>[
+                if (i > 0) SizedBox(width: narrow ? 8 : 15),
+                _pill(context, i, o, narrow ? 4 : 6),
+              ],
+            ],
+          ),
+        ),
+      );
+    }
     return Directionality(
       textDirection: direction,
       child: Row(
@@ -150,43 +238,7 @@ class ChoiceRow extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: <Widget>[
-                    Opacity(
-                      opacity: answerShown && o.id != correctId ? 0.35 : 1,
-                      child: AnswerTile(
-                        key: Key('tile-${o.id}'),
-                        semanticLabel: o.label ?? '',
-                        state: chosenId == o.id
-                            ? chosenState
-                            : (answerShown && o.id == correctId ? AnswerState.selected : AnswerState.idle),
-                        onPressed: () => onChoose(o.id),
-                        child: OptionFace(
-                          option: o,
-                          assets: assets,
-                          course: course,
-                          tileFont: tileFont,
-                          stress: stress,
-                        ),
-                      ),
-                    ),
-                    if (litIndex == i)
-                      Positioned.fill(
-                        left: 6,
-                        top: 6,
-                        right: 6,
-                        bottom: 6,
-                        child: const IgnorePointer(
-                          child: SkyRing(
-                            key: Key('hint-tile-glow'),
-                            round: false,
-                            radius: TokenRadius.xl + 6,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+                _tile(context, i, o),
                 if (speakers)
                   SizedBox(
                     height: SpeakerMark.room,
