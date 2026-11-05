@@ -1,0 +1,654 @@
+{
+ "schema": "nitznutz.strokes/1",
+ "set": "hebrew-print",
+ "courses": [
+  "heb"
+ ],
+ "review": "needs-teacher",
+ "reviewer": "hebrew-language-teacher",
+ "box": 100,
+ "ink": 9,
+ "em": 92.0,
+ "baseline": 76.0,
+ "guides": {
+  "ascender": 7.0,
+  "top": 21.4,
+  "base": 76.0,
+  "basement": 94.7
+ },
+ "solidGuides": [
+  "top",
+  "base"
+ ],
+ "inset": 5.2,
+ "direction": "rtl",
+ "generator": "tools/make_letter_strokes.py (paths: tools/strokes_hebrew.py)",
+ "font": {
+  "family": "Heebo",
+  "weight": 700,
+  "file": "app/assets/fonts/Heebo-Variable.ttf",
+  "css": "HB"
+ },
+ "count": 27,
+ "forms": [
+  {
+   "id": "hebrew-print.alef",
+   "char": "א",
+   "name": "alef",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 30.1 25.9 L 67.6 71.6",
+     "points": [[30, 26], [68, 72]],
+     "start": [30, 26],
+     "end": [68, 72],
+     "moves": ["down-right"]
+    },
+    {
+     "kind": "short",
+     "d": "M 68.5 25.9 C 68 33.7 64.8 38.3 57.9 42.9",
+     "points": [[68, 26], [68, 31], [66, 36], [62, 39], [58, 43]],
+     "start": [68, 26],
+     "end": [58, 43],
+     "moves": ["cw"]
+    },
+    {
+     "kind": "line",
+     "d": "M 45 43.6 C 36.8 48.4 31.7 53 31.4 59.4 L 31.4 72.3",
+     "points": [[45, 44], [37, 49], [33, 55], [31, 59], [31, 72]],
+     "start": [45, 44],
+     "end": [31, 72],
+     "moves": ["ccw", "down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.bet",
+   "char": "ב",
+   "name": "bet",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 32.2 27.8 L 53.4 27.8 C 58 27.8 60.1 30.5 60.1 35.1 L 60.1 69.6",
+     "points": [[32, 28], [54, 28], [57, 29], [59, 30], [60, 35], [60, 70]],
+     "start": [32, 28],
+     "end": [60, 70],
+     "moves": ["right", "cw", "down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 30.4 70.8 L 69.9 70.8",
+     "points": [[30, 71], [70, 71]],
+     "start": [30, 71],
+     "end": [70, 71],
+     "moves": ["right"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.gimel",
+   "char": "ג",
+   "name": "gimel",
+   "final": false,
+   "sits": ["top", null],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 41.7 27.8 L 56.7 27.8 L 56.7 48.4 L 61.6 72.3",
+     "points": [[42, 28], [57, 28], [57, 48], [62, 72]],
+     "start": [42, 28],
+     "end": [62, 72],
+     "moves": ["right", "down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 56.1 54.8 C 53.2 65 46.7 70.3 36.2 70.5",
+     "points": [[56, 55], [53, 62], [49, 67], [43, 69], [36, 70]],
+     "start": [56, 55],
+     "end": [36, 70],
+     "moves": ["cw"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.dalet",
+   "char": "ד",
+   "name": "dalet",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 30.4 27.8 L 69.5 27.8",
+     "points": [[30, 28], [69, 28]],
+     "start": [30, 28],
+     "end": [69, 28],
+     "moves": ["right"]
+    },
+    {
+     "kind": "line",
+     "d": "M 56.8 27.8 L 56.8 72.3",
+     "points": [[57, 28], [57, 72]],
+     "start": [57, 28],
+     "end": [57, 72],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.he",
+   "char": "ה",
+   "name": "he",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 30.9 27.8 L 54.3 27.8 C 60.8 27.8 65.2 31.8 65.2 38.3 L 65.2 72.3",
+     "points": [[31, 28], [56, 28], [60, 29], [63, 32], [65, 35], [65, 38], [65, 72]],
+     "start": [31, 28],
+     "end": [65, 72],
+     "moves": ["right", "cw", "down"]
+    },
+    {
+     "kind": "short",
+     "d": "M 34.1 49.3 L 34.1 72.3",
+     "points": [[34, 49], [34, 72]],
+     "start": [34, 49],
+     "end": [34, 72],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.vav",
+   "char": "ו",
+   "name": "vav",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 43.5 27.8 L 52.1 27.8 L 52.1 72.3",
+     "points": [[44, 28], [52, 28], [52, 72]],
+     "start": [44, 28],
+     "end": [52, 72],
+     "moves": ["right", "down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.zayin",
+   "char": "ז",
+   "name": "zayin",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "short",
+     "d": "M 39 27.8 L 61.5 27.8",
+     "points": [[39, 28], [62, 28]],
+     "start": [39, 28],
+     "end": [62, 28],
+     "moves": ["right"]
+    },
+    {
+     "kind": "line",
+     "d": "M 45.9 27.8 L 51.6 72.3",
+     "points": [[46, 28], [52, 72]],
+     "start": [46, 28],
+     "end": [52, 72],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.het",
+   "char": "ח",
+   "name": "het",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 33.6 27.8 L 54.8 27.8 C 60.3 27.8 64.7 31.8 64.7 37.4 L 64.7 72.3",
+     "points": [[34, 28], [56, 28], [60, 29], [63, 32], [65, 37], [65, 72]],
+     "start": [34, 28],
+     "end": [65, 72],
+     "moves": ["right", "cw", "down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 33.6 27.8 L 33.6 72.3",
+     "points": [[34, 28], [34, 72]],
+     "start": [34, 28],
+     "end": [34, 72],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.tet",
+   "char": "ט",
+   "name": "tet",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 48.2 31.7 C 48.7 27.2 53.1 25.9 57.7 25.9 C 63.2 25.9 66.3 30 66.3 36.4 L 66.3 53.9 C 66.3 65 59.6 71.6 49.6 71.6 C 39.8 71.6 33.1 65 33.1 57.1",
+     "points": [[48, 32], [49, 30], [50, 28], [56, 26], [61, 27], [65, 30], [66, 35], [66, 55], [66, 60], [64, 64], [61, 68], [56, 70], [51, 72], [45, 71], [40, 69], [36, 66], [34, 62], [33, 57]],
+     "start": [48, 32],
+     "end": [33, 57],
+     "moves": ["cw", "down", "cw"]
+    },
+    {
+     "kind": "line",
+     "d": "M 33.1 25.9 L 33.1 56.2",
+     "points": [[33, 26], [33, 56]],
+     "start": [33, 26],
+     "end": [33, 56],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.yod",
+   "char": "י",
+   "name": "yod",
+   "final": false,
+   "sits": ["top", null],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 42.5 27.8 L 54 27.8 L 54 49.3",
+     "points": [[43, 28], [54, 28], [54, 49]],
+     "start": [43, 28],
+     "end": [54, 49],
+     "moves": ["right", "down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.kaf",
+   "char": "כ",
+   "name": "kaf",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 34.6 27.8 L 62.6 27.8 L 62.6 55.8 C 62.6 65.9 56.7 70.8 46.5 70.8 L 33.2 70.8",
+     "points": [[35, 28], [63, 28], [63, 57], [62, 61], [61, 64], [58, 67], [55, 69], [49, 71], [33, 71]],
+     "start": [35, 28],
+     "end": [33, 71],
+     "moves": ["right", "down", "cw", "left"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.kaf-final",
+   "char": "ך",
+   "name": "kaf-final",
+   "final": true,
+   "sits": ["top", "basement"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 34.9 27.8 L 62 27.8 L 62 91.2",
+     "points": [[35, 28], [62, 28], [62, 91]],
+     "start": [35, 28],
+     "end": [62, 91],
+     "moves": ["right", "down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.lamed",
+   "char": "ל",
+   "name": "lamed",
+   "final": false,
+   "sits": ["ascender", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 34.1 10.2 L 34.1 27.8 L 66.2 27.8 L 46.1 72.3",
+     "points": [[34, 10], [34, 28], [66, 28], [46, 72]],
+     "start": [34, 10],
+     "end": [46, 72],
+     "moves": ["down", "right", "down-left"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.mem",
+   "char": "מ",
+   "name": "mem",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 26.3 30 C 33.6 26.3 42.8 24.8 50.2 24.8 C 61.2 24.8 67.8 31.8 67.8 41 L 67.8 70.8 L 55.7 70.8",
+     "points": [[26, 30], [38, 26], [51, 25], [59, 27], [65, 31], [67, 35], [68, 40], [68, 71], [56, 71]],
+     "start": [26, 30],
+     "end": [56, 71],
+     "moves": ["right", "cw", "down", "left"]
+    },
+    {
+     "kind": "line",
+     "d": "M 38.7 32.8 C 36.8 42.9 35 57.6 33.6 72.3",
+     "points": [[39, 33], [34, 72]],
+     "start": [39, 33],
+     "end": [34, 72],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.mem-final",
+   "char": "ם",
+   "name": "mem-final",
+   "final": true,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 33.8 27.8 L 65.8 27.8 L 65.8 70.8 L 35 70.8",
+     "points": [[34, 28], [66, 28], [66, 71], [35, 71]],
+     "start": [34, 28],
+     "end": [35, 71],
+     "moves": ["right", "down", "left"]
+    },
+    {
+     "kind": "line",
+     "d": "M 33.8 27.8 L 33.8 70.8",
+     "points": [[34, 28], [34, 71]],
+     "start": [34, 28],
+     "end": [34, 71],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.nun",
+   "char": "נ",
+   "name": "nun",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 42.9 27.8 L 56.5 27.8 L 56.5 60.4 C 56.5 67.7 52.6 70.8 46.1 70.8 L 39.7 70.8",
+     "points": [[43, 28], [57, 28], [56, 61], [55, 66], [52, 70], [48, 71], [40, 71]],
+     "start": [43, 28],
+     "end": [40, 71],
+     "moves": ["right", "down", "cw", "left"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.nun-final",
+   "char": "ן",
+   "name": "nun-final",
+   "final": true,
+   "sits": ["top", "basement"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 44.2 27.8 L 52.3 27.8 L 52.3 91.2",
+     "points": [[44, 28], [52, 28], [52, 91]],
+     "start": [44, 28],
+     "end": [52, 91],
+     "moves": ["right", "down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.samekh",
+   "char": "ס",
+   "name": "samekh",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 26.8 30.5 C 34.1 27.2 42.4 25.9 48.9 25.9 C 61.7 25.9 68.6 32.8 68.6 45.6 L 68.6 53 C 68.6 65 60.8 71.2 48.9 71.2 C 38.7 71.2 34.4 65 34.4 54.8 L 34.4 37.4",
+     "points": [[27, 30], [38, 27], [49, 26], [57, 27], [63, 30], [66, 35], [68, 40], [69, 46], [68, 57], [67, 62], [64, 66], [61, 69], [56, 70], [49, 71], [44, 71], [40, 69], [37, 66], [35, 62], [35, 57], [34, 37]],
+     "start": [27, 30],
+     "end": [34, 37],
+     "moves": ["right", "cw", "down", "cw", "up"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.ayin",
+   "char": "ע",
+   "name": "ayin",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 67.2 25.9 L 67.2 54.8 C 67.2 65.9 59.1 71.9 48 71.9 C 39.7 71.9 33.3 70.9 28.7 69.1",
+     "points": [[67, 26], [67, 57], [66, 62], [63, 66], [58, 70], [51, 72], [38, 71], [29, 69]],
+     "start": [67, 26],
+     "end": [29, 69],
+     "moves": ["down", "cw", "left"]
+    },
+    {
+     "kind": "line",
+     "d": "M 36.1 25.9 L 48.2 66.8",
+     "points": [[36, 26], [48, 67]],
+     "start": [36, 26],
+     "end": [48, 67],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.pe",
+   "char": "פ",
+   "name": "pe",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 29.3 27.8 L 57.3 27.8 C 62.8 27.8 66.8 31.8 66.8 37.4 L 66.8 55.8 C 66.8 65.9 60.1 70.8 48.1 70.8 L 30.6 70.8",
+     "points": [[29, 28], [60, 28], [62, 29], [65, 31], [66, 34], [67, 37], [67, 59], [65, 63], [63, 66], [59, 69], [53, 71], [31, 71]],
+     "start": [29, 28],
+     "end": [31, 71],
+     "moves": ["right", "cw", "down", "cw", "left"]
+    },
+    {
+     "kind": "line",
+     "d": "M 32 33 C 30.2 37.4 29.7 45.6 32.5 49.3 C 35.2 53 40.8 53.9 45.8 53.9",
+     "points": [[32, 33], [31, 42], [31, 46], [32, 49], [34, 51], [37, 53], [46, 54]],
+     "start": [32, 33],
+     "end": [46, 54],
+     "moves": ["ccw"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.pe-final",
+   "char": "ף",
+   "name": "pe-final",
+   "final": true,
+   "sits": ["top", "basement"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 31.1 27.8 L 65.2 27.8 L 65.2 91.2",
+     "points": [[31, 28], [65, 28], [65, 91]],
+     "start": [31, 28],
+     "end": [65, 91],
+     "moves": ["right", "down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 32.8 33 C 31.1 39.2 31 48.4 33 51.3 C 35.7 53.9 42.2 53.9 47.7 53.5",
+     "points": [[33, 33], [32, 44], [32, 48], [33, 51], [38, 53], [48, 53]],
+     "start": [33, 33],
+     "end": [48, 53],
+     "moves": ["ccw"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.tsadi",
+   "char": "צ",
+   "name": "tsadi",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 32.6 25.9 L 67.5 70.8 L 31.6 70.8",
+     "points": [[33, 26], [68, 71], [32, 71]],
+     "start": [33, 26],
+     "end": [32, 71],
+     "moves": ["down-right", "left"]
+    },
+    {
+     "kind": "line",
+     "d": "M 67 25.9 L 54.6 49.8",
+     "points": [[67, 26], [55, 50]],
+     "start": [67, 26],
+     "end": [55, 50],
+     "moves": ["down-left"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.tsadi-final",
+   "char": "ץ",
+   "name": "tsadi-final",
+   "final": true,
+   "sits": ["top", "basement"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 32.6 25.9 L 51 45.6 C 53.7 49.3 55 53 55 57.6 L 55 91.2",
+     "points": [[33, 26], [51, 46], [54, 51], [55, 57], [55, 91]],
+     "start": [33, 26],
+     "end": [55, 91],
+     "moves": ["down-right", "cw", "down"]
+    },
+    {
+     "kind": "short",
+     "d": "M 66.8 25.9 L 53.7 44.7",
+     "points": [[67, 26], [54, 45]],
+     "start": [67, 26],
+     "end": [54, 45],
+     "moves": ["down-left"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.qof",
+   "char": "ק",
+   "name": "qof",
+   "final": false,
+   "sits": ["top", "basement"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 30.4 27.8 L 56.6 27.8 C 62.1 27.8 65.1 31.8 65.1 37.4 L 65.1 53.9 C 65.1 65 58.5 70.8 49.3 70.8 L 46.5 70.8",
+     "points": [[30, 28], [58, 28], [62, 30], [64, 33], [65, 37], [65, 55], [63, 63], [61, 66], [57, 69], [52, 71], [47, 71]],
+     "start": [30, 28],
+     "end": [47, 71],
+     "moves": ["right", "cw", "down", "cw", "left"]
+    },
+    {
+     "kind": "line",
+     "d": "M 34.5 48.4 L 34.5 91.2",
+     "points": [[35, 48], [35, 91]],
+     "start": [35, 48],
+     "end": [35, 91],
+     "moves": ["down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.resh",
+   "char": "ר",
+   "name": "resh",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 34.2 27.8 L 52.1 27.8 C 57.6 27.8 61.6 31.8 61.6 37.4 L 61.6 72.3",
+     "points": [[34, 28], [54, 28], [58, 29], [60, 32], [62, 37], [62, 72]],
+     "start": [34, 28],
+     "end": [62, 72],
+     "moves": ["right", "cw", "down"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.shin",
+   "char": "ש",
+   "name": "shin",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 75.5 25.9 L 75.5 52.1 C 75.5 65 65.7 71.9 51.9 71.9 C 40.8 71.9 31.6 69.6 24.4 66.3",
+     "points": [[76, 26], [75, 56], [73, 62], [69, 67], [61, 71], [51, 72], [37, 70], [24, 66]],
+     "start": [76, 26],
+     "end": [24, 66],
+     "moves": ["down", "cw", "left"]
+    },
+    {
+     "kind": "line",
+     "d": "M 24.4 25.9 L 24.4 65.9",
+     "points": [[24, 26], [24, 66]],
+     "start": [24, 26],
+     "end": [24, 66],
+     "moves": ["down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 49.9 25.9 L 49.9 48.4 C 49.9 53 48.7 56.2 46.8 58.5",
+     "points": [[50, 26], [50, 51], [49, 55], [47, 59]],
+     "start": [50, 26],
+     "end": [47, 59],
+     "moves": ["down", "cw"]
+    }
+   ]
+  },
+  {
+   "id": "hebrew-print.tav",
+   "char": "ת",
+   "name": "tav",
+   "final": false,
+   "sits": ["top", "base"],
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 31.7 27.8 L 60.2 27.8 C 66.2 27.8 69.7 31.8 69.7 38.3 L 69.7 72.3",
+     "points": [[32, 28], [61, 28], [65, 29], [67, 31], [69, 34], [70, 37], [70, 72]],
+     "start": [32, 28],
+     "end": [70, 72],
+     "moves": ["right", "cw", "down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 45 31.8 C 41.4 36.9 39.8 42.9 39.8 48.4 L 39.8 60.4 C 39.8 67.7 36.3 70.8 31.7 70.8 L 27.6 70.8",
+     "points": [[45, 32], [42, 37], [40, 43], [40, 62], [39, 66], [37, 69], [35, 70], [28, 71]],
+     "start": [45, 32],
+     "end": [28, 71],
+     "moves": ["ccw", "down", "cw", "left"]
+    }
+   ]
+  }
+ ]
+}

@@ -216,7 +216,7 @@ The sad faces are a soft frown with no tear (art brief §2: no tears); **for the
 brief asks for "a small tear". The counting hints of R A-10 and A-11 (fingers) reuse `app/assets/art/hints/hand_*`.
 Pip, Mika and the family need the owner's eye on a model sheet before their poses are drawn (batch 3).
 
-### 4.3 Scenes, stories and course pieces (94; 85 drawn, the 9 stroke scenes wait for F6)
+### 4.3 Scenes, stories and course pieces (94; all drawn, the 9 stroke scenes on 2026-11-05 with F6)
 
 Drawn on 2026-11-03 by `tools/make_language_scenes.py` (contact sheets `docs/design/languages/pictures_batch4a.png` to `4d`),
 built from the set's own objects, the approved people and the app's cast (Nitzi, Kubi without his party hat and with the
@@ -261,11 +261,10 @@ A-12; drawn by the app in Heebo), the windows of R A-12 (a component around obje
 |---|---|---|
 | Shared objects (4.1) | 173 (42 + 30 + 18 + 36 + 27 + 3 + 11 + 6) | 173 (batch 1: 51; batch 2: 122) |
 | People and characters (4.2) | 66 | 66 (batch 3) |
-| Scenes, stories and course pieces (4.3) | 94 | 85 (the 9 stroke scenes wait for F6) |
-| **Total** | **333** | **324** (335 files: `ball`, `balloon` and `boat` are aliases of their red pictures; each action is two frames) |
+| Scenes, stories and course pieces (4.3) | 94 | 94 (the 9 stroke scenes: `tools/make_stroke_scenes.py`, `docs/languages/strokes.md` §6) |
+| **Total** | **333** | **333** (335 files, and the stroke scenes' 10 pictures and 7 movers: `ball`, `balloon` and `boat` are aliases of their red pictures; each action is two frames) |
 
-Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**: all drawn but the **9 stroke scenes**
-(Hebrew A-14), which wait for the stroke directions (F6); the 16 composites are made.
+Of the 333, 16 are composites the generator makes from drawn pictures, so **317 are drawings**, all drawn. The 9 stroke scenes (Hebrew A-14) were drawn on 2026-11-05 once the stroke directions (F6) were settled: each is a picture under the trace box (`stroke-*.svg`, and `stroke-door-done.svg`) and, but the door, a thing the finger takes along the path (`mover-*.svg`); see `docs/languages/strokes.md` §6.
 
 ## 5. The next batches
 
