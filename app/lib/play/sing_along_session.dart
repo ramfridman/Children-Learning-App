@@ -124,6 +124,10 @@ class SingAlongSession extends ChoiceSession {
         playClips?.call(song.verse.cue, replace: false);
       case HintPicture.endsAlone:
         _endsAlone();
+      case HintPicture.demonstration:
+        // "Show me": the whole verse is heard with the right picture lit (QA-L4-5).
+        playClips?.call(song.verse.full, replace: false);
+        endDemoIfShown();
       default:
         pulseTiles();
         endDemoIfShown();

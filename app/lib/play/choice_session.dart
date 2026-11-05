@@ -36,9 +36,13 @@ abstract class ChoiceSession extends TemplateSession {
   /// Some option has a clip that a speaker can play (the tiles then keep the room under them).
   bool get hasSpeakers => options.any((ChoiceOption o) => o.clip != null);
 
-  /// The tiles stand higher when they have speakers under them; a template with another stage overrides this.
+  /// The tiles carry speakers (the option's clip, played without answering). A template whose tiles have none overrides this.
+  bool get showsSpeakers => hasSpeakers;
+
+  /// A phone keeps the stage's size and puts each speaker beside its tile; a tablet puts it under (`withSideSpeakers`). A template with
+  /// another stage overrides this.
   @override
-  ActivitySpec layoutFor(ActivitySpec base) => hasSpeakers ? withSpeakerRoom(base) : base;
+  ActivitySpec layoutFor(ActivitySpec base) => showsSpeakers ? withSideSpeakers(base) : base;
 
   /// The child chose [id]: the controller scores it. A picture with a clip says its word as it is chosen.
   Future<void> choose(String id) async {
@@ -151,7 +155,7 @@ abstract class ChoiceSession extends TemplateSession {
   }
 
   /// The row of tiles of the choice, in the course's direction, with a speaker under each that has a clip when [speakers] is true.
-  Widget choiceTiles(BuildContext context, ActivitySpec spec, {bool speakers = true}) => ListenableBuilder(
+  Widget choiceTiles(BuildContext context, ActivitySpec spec, {bool? speakers}) => ListenableBuilder(
     listenable: this,
     builder: (BuildContext c, Widget? _) => ChoiceRow(
       options: options,
@@ -165,7 +169,8 @@ abstract class ChoiceSession extends TemplateSession {
       answerShown: controller.answerShown,
       litIndex: litTile,
       onChoose: choose,
-      onSpeak: speakers ? sayOption : null,
+      onSpeak: (speakers ?? showsSpeakers) ? sayOption : null,
+      speakerBeside: spec.boardHeight < 500,
       stress: stress,
     ),
   );

@@ -307,6 +307,25 @@ void main() {
     });
   });
 
+  group('the course of a lesson id in an answer (SEC-L4-4)', () {
+    test('an answer filed under another course placement or lesson is refused; a lesson that names none says nothing', () {
+      String? of(String lesson) => Course.ofAnswer(
+        skillId: 'ENG-A-01',
+        packId: 'lang-eng',
+        activityId: 'eng.greet.i01',
+        lessonId: lesson,
+      );
+      expect(of('placement-eng'), 'eng');
+      expect(of('eng.greet'), 'eng');
+      expect(of('placement-rus'), isNull);
+      expect(of('rus.greet'), isNull);
+      expect(of('mission:eng-a-01'), 'eng', reason: 'a revisit mission names no course');
+      expect(of(''), 'eng');
+      expect(Course.ofLessonId('placement'), isNull);
+      expect(Course.ofLessonId('butterflies'), isNull);
+    });
+  });
+
   group('placement ids', () {
     test('the lands keep `placement`; a language course has an id of its own', () {
       expect(placementId, 'placement');

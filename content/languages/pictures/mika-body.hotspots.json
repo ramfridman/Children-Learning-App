@@ -1,149 +1,399 @@
 {
  "picture": "mika-body",
- "note": "Tap areas of mika-body.svg in its 256 x 256 canvas. teeth = mouth (the picture grins), hands = fingers, tummy = belly (one place, two courses' words). Regions of different parts never overlap.",
- "areas": {
-  "hair": {
-   "rect": [
-    89.6,
-    8.2,
-    76.8,
-    21.3
+ "version": 2,
+ "note": "Touch areas of mika-body.svg as shares of the picture's side (x, y, w, h from the top left); a part with two places (ears, arms, hands, fingers) has two areas, either of which is the part. Every area is at least 72 of the 256 units (64 pt on the phone SE, the smallest board). Areas of parts that never meet in one item may overlap; the three parts of an item shown on the body never do. Items whose parts cannot be 64 pt apart on the body are shown as three close-up cards (the answer tiles). teeth = mouth, hands = fingers, tummy = belly: one place, two courses' words. docs/design/languages-l4-layout.md section 2.",
+ "minShare": 0.2812,
+ "sceneSide": {
+  "phoneSE": 233,
+  "phone": 241,
+  "tabletLandscape": 534,
+  "tabletPortrait": 752
+ },
+ "parts": {
+  "hair": [
+   [
+    0.3594,
+    0.0078,
+    0.2812,
+    0.2812
    ]
-  },
-  "head": {
-   "rect": [
-    96.0,
-    31.3,
-    64.0,
-    17.1
+  ],
+  "head": [
+   [
+    0.3516,
+    0.0641,
+    0.2969,
+    0.3359
    ]
-  },
-  "eyes": {
-   "rect": [
-    101.5,
-    54.3,
-    52.9,
-    13.2
+  ],
+  "eyes": [
+   [
+    0.3594,
+    0.1082,
+    0.2812,
+    0.2812
    ]
-  },
-  "nose": {
-   "circle": [
-    128.0,
-    72.2,
-    4.3
+  ],
+  "nose": [
+   [
+    0.3594,
+    0.1414,
+    0.2812,
+    0.2812
    ]
-  },
-  "mouth": {
-   "rect": [
-    110.9,
-    78.2,
-    34.1,
-    16.2
+  ],
+  "mouth": [
+   [
+    0.3594,
+    0.175,
+    0.2812,
+    0.2812
    ]
-  },
-  "teeth": {
-   "rect": [
-    110.9,
-    78.2,
-    34.1,
-    16.2
+  ],
+  "teeth": [
+   [
+    0.3594,
+    0.175,
+    0.2812,
+    0.2812
    ]
-  },
+  ],
   "ears": [
-   {
-    "circle": [
-     84.5,
-     64.5,
-     10.2
-    ]
-   },
-   {
-    "circle": [
-     171.5,
-     64.5,
-     10.2
-    ]
-   }
+   [
+    0.1926,
+    0.1113,
+    0.2812,
+    0.2812
+   ],
+   [
+    0.5262,
+    0.1113,
+    0.2812,
+    0.2812
+   ]
   ],
   "arms": [
-   {
-    "circle": [
-     90.6,
-     136.7,
-     14.7
-    ]
-   },
-   {
-    "circle": [
-     165.4,
-     136.7,
-     14.7
-    ]
-   }
+   [
+    0.0781,
+    0.4062,
+    0.2812,
+    0.2812
+   ],
+   [
+    0.6406,
+    0.4062,
+    0.2812,
+    0.2812
+   ]
   ],
   "hands": [
-   {
-    "circle": [
-     65.7,
-     176.8,
-     21.4
-    ]
-   },
-   {
-    "circle": [
-     190.3,
-     176.8,
-     21.4
-    ]
-   }
+   [
+    0.05,
+    0.4734,
+    0.2812,
+    0.2812
+   ],
+   [
+    0.6687,
+    0.4734,
+    0.2812,
+    0.2812
+   ]
   ],
   "fingers": [
-   {
-    "circle": [
-     65.7,
-     176.8,
-     21.4
-    ]
-   },
-   {
-    "circle": [
-     190.3,
-     176.8,
-     21.4
-    ]
-   }
+   [
+    0.05,
+    0.4734,
+    0.2812,
+    0.2812
+   ],
+   [
+    0.6687,
+    0.4734,
+    0.2812,
+    0.2812
+   ]
   ],
-  "tummy": {
-   "rect": [
-    107.3,
-    129.6,
-    41.5,
-    28.8
+  "tummy": [
+   [
+    0.3594,
+    0.4062,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "belly": [
+   [
+    0.3594,
+    0.4062,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "legs": [
+   [
+    0.3594,
+    0.6875,
+    0.2812,
+    0.2812
+   ]
+  ],
+  "feet": [
+   [
+    0.3594,
+    0.7188,
+    0.2812,
+    0.2812
+   ]
+  ]
+ },
+ "cards": {
+  "head": "body-head",
+  "hair": "body-hair",
+  "eyes": "body-eyes",
+  "ears": "body-ears",
+  "nose": "body-nose",
+  "mouth": "body-mouth",
+  "teeth": "body-teeth",
+  "arms": "body-arms",
+  "hands": "body-hands",
+  "fingers": "body-fingers",
+  "tummy": "body-tummy",
+  "belly": "body-tummy",
+  "legs": "body-legs",
+  "feet": "body-feet"
+ },
+ "items": {
+  "ENG-A-06 i01": {
+   "parts": [
+    "head",
+    "tummy",
+    "feet"
+   ],
+   "show": "body"
+  },
+  "ENG-A-06 i02": {
+   "parts": [
+    "eyes",
+    "ears",
+    "mouth"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-eyes",
+    "body-ears",
+    "body-mouth"
    ]
   },
-  "belly": {
-   "rect": [
-    107.3,
-    129.6,
-    41.5,
-    28.8
+  "ENG-A-06 i03": {
+   "parts": [
+    "ears",
+    "eyes",
+    "nose"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-ears",
+    "body-eyes",
+    "body-nose"
    ]
   },
-  "legs": {
-   "rect": [
-    94.8,
-    178.6,
-    66.4,
-    38.2
+  "ENG-A-06 i04": {
+   "parts": [
+    "nose",
+    "mouth",
+    "ears"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-nose",
+    "body-mouth",
+    "body-ears"
    ]
   },
-  "feet": {
-   "rect": [
-    85.1,
-    218.2,
-    85.7,
-    21.2
+  "ENG-A-06 i05": {
+   "parts": [
+    "mouth",
+    "nose",
+    "head"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-mouth",
+    "body-nose",
+    "body-head"
    ]
+  },
+  "ENG-A-06 i06": {
+   "parts": [
+    "hands",
+    "feet",
+    "eyes"
+   ],
+   "show": "body"
+  },
+  "ENG-A-06 i07": {
+   "parts": [
+    "feet",
+    "hands",
+    "head"
+   ],
+   "show": "body"
+  },
+  "ENG-A-06 i08": {
+   "parts": [
+    "tummy",
+    "head",
+    "hands"
+   ],
+   "show": "body"
+  },
+  "rus.a03.01": {
+   "parts": [
+    "nose",
+    "mouth",
+    "eyes"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-nose",
+    "body-mouth",
+    "body-eyes"
+   ]
+  },
+  "rus.a03.02": {
+   "parts": [
+    "mouth",
+    "nose",
+    "ears"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-mouth",
+    "body-nose",
+    "body-ears"
+   ]
+  },
+  "rus.a03.03": {
+   "parts": [
+    "eyes",
+    "ears",
+    "nose"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-eyes",
+    "body-ears",
+    "body-nose"
+   ]
+  },
+  "rus.a03.04": {
+   "parts": [
+    "ears",
+    "eyes",
+    "arms"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-ears",
+    "body-eyes",
+    "body-arms"
+   ]
+  },
+  "rus.a03.05": {
+   "parts": [
+    "arms",
+    "legs",
+    "ears"
+   ],
+   "show": "body"
+  },
+  "rus.a03.06": {
+   "parts": [
+    "legs",
+    "arms",
+    "nose"
+   ],
+   "show": "body"
+  },
+  "rus.a03.07": {
+   "parts": [
+    "belly",
+    "head",
+    "legs"
+   ],
+   "show": "body"
+  },
+  "rus.a03.08": {
+   "parts": [
+    "fingers",
+    "nose",
+    "hair"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-fingers",
+    "body-nose",
+    "body-hair"
+   ]
+  },
+  "rus.a03.09": {
+   "parts": [
+    "teeth",
+    "eyes",
+    "ears"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-teeth",
+    "body-eyes",
+    "body-ears"
+   ]
+  },
+  "rus.a03.10": {
+   "parts": [
+    "hair",
+    "belly",
+    "arms"
+   ],
+   "show": "body"
+  },
+  "rus.a03.11": {
+   "parts": [
+    "head",
+    "legs",
+    "belly"
+   ],
+   "show": "body"
+  },
+  "rus.a03.13": {
+   "parts": [
+    "ears",
+    "eyes",
+    "arms"
+   ],
+   "show": "cards",
+   "cards": [
+    "body-ears",
+    "body-eyes",
+    "body-arms"
+   ]
+  },
+  "rus.a03.14": {
+   "parts": [
+    "legs",
+    "arms",
+    "nose"
+   ],
+   "show": "body"
+  },
+  "rus.a03.15": {
+   "parts": [
+    "belly",
+    "head",
+    "legs"
+   ],
+   "show": "body"
   }
  }
 }

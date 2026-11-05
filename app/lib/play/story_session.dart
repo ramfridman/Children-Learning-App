@@ -239,21 +239,25 @@ class _StoryStage extends StatelessWidget {
       padding: const EdgeInsets.all(6),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints box) {
-          final double side = math.min(box.maxWidth, box.maxHeight);
+          // The page keeps its own proportions (a 16:9 picture is not made a square and then shrunk again); the touch boxes of its words
+          // are shares of its width and height.
+          final double aspect = svgAspect(a.assets.svg(p.picture));
+          final double width = math.min(box.maxWidth, box.maxHeight * aspect);
+          final double height = width / aspect;
           return Center(
             child: SizedBox(
               key: Key('story-page-${s.page}'),
-              width: side,
-              height: side,
+              width: width,
+              height: height,
               child: Stack(
                 children: <Widget>[
                   Positioned.fill(child: PackSvg(a.assets.svg(p.picture))),
                   for (final (int i, ({Rect at, String clip}) w) in p.words.indexed)
                     Positioned(
-                      left: w.at.left * side,
-                      top: w.at.top * side,
-                      width: w.at.width * side,
-                      height: w.at.height * side,
+                      left: w.at.left * width,
+                      top: w.at.top * height,
+                      width: w.at.width * width,
+                      height: w.at.height * height,
                       child: GestureDetector(
                         key: Key('story-word-$i'),
                         behavior: HitTestBehavior.opaque,
@@ -333,4 +337,13 @@ class _StoryStage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The width over the height of a picture, from the `viewBox` of its SVG text; 1 when it has none.
+double svgAspect(String svg) {
+  final RegExpMatch? m = RegExp(r'viewBox\s*=\s*"\s*[-\d.]+[ ,]+[-\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)')
+      .firstMatch(svg);
+  final double w = m == null ? 0 : double.tryParse(m[1]!) ?? 0;
+  final double h = m == null ? 0 : double.tryParse(m[2]!) ?? 0;
+  return w > 0 && h > 0 ? w / h : 1;
 }

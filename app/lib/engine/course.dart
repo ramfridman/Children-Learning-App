@@ -65,6 +65,18 @@ abstract final class Course {
     return core;
   }
 
+  /// The course a lesson id names: the placement visit of a course (`placement-eng`) and a lesson of a language pack (`eng.greet`) say
+  /// so; the lesson of a land and a lesson made on the spot (a revisit mission) name none, so null.
+  static String? ofLessonId(String lessonId) {
+    const String placement = 'placement-';
+    if (lessonId.startsWith(placement)) {
+      final String rest = lessonId.substring(placement.length);
+      return isLanguage(rest) ? rest : null;
+    }
+    final String c = ofActivityId(lessonId);
+    return c == core ? null : c;
+  }
+
   /// The course an answer belongs to, read from every field that names one: its skill, its pack, its activity, its misconception
   /// tag and the course it says itself. Null when they disagree: such an answer is damaged or forged, and evidence never crosses
   /// courses.
@@ -74,12 +86,16 @@ abstract final class Course {
     String activityId = '',
     String tag = '',
     String? course,
+    String lessonId = '',
   }) {
     final String own = ofSkillId(skillId);
     if (ofPackId(packId) != own) return null;
     if (activityId.isNotEmpty && ofActivityId(activityId) != own) return null;
     if (tag.isNotEmpty && ofTag(tag) != own) return null;
     if (course != null && course != own) return null;
+    // A lesson id that names a course (`placement-rus`, `eng.greet`) must name this one; any other lesson id says nothing.
+    final String? lesson = ofLessonId(lessonId);
+    if (lesson != null && lesson != own) return null;
     return own;
   }
 

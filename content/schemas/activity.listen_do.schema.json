@@ -353,6 +353,7 @@
           "enum": [
             "hotspots",
             "buttons",
+            "cards",
             "drag",
             "place",
             "embodied"
@@ -397,36 +398,77 @@
                 "maxLength": 80
               },
               "at": {
-                "type": "object",
-                "properties": {
-                  "x": {
-                    "type": "number",
-                    "minimum": 0.0,
-                    "maximum": 1.0
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0
+                      },
+                      "y": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0
+                      },
+                      "w": {
+                        "type": "number",
+                        "minimum": 0.04,
+                        "maximum": 1.0
+                      },
+                      "h": {
+                        "type": "number",
+                        "minimum": 0.04,
+                        "maximum": 1.0
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y",
+                      "w",
+                      "h"
+                    ],
+                    "additionalProperties": false
                   },
-                  "y": {
-                    "type": "number",
-                    "minimum": 0.0,
-                    "maximum": 1.0
-                  },
-                  "w": {
-                    "type": "number",
-                    "minimum": 0.04,
-                    "maximum": 1.0
-                  },
-                  "h": {
-                    "type": "number",
-                    "minimum": 0.04,
-                    "maximum": 1.0
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "x": {
+                          "type": "number",
+                          "minimum": 0.0,
+                          "maximum": 1.0
+                        },
+                        "y": {
+                          "type": "number",
+                          "minimum": 0.0,
+                          "maximum": 1.0
+                        },
+                        "w": {
+                          "type": "number",
+                          "minimum": 0.04,
+                          "maximum": 1.0
+                        },
+                        "h": {
+                          "type": "number",
+                          "minimum": 0.04,
+                          "maximum": 1.0
+                        }
+                      },
+                      "required": [
+                        "x",
+                        "y",
+                        "w",
+                        "h"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 4
                   }
-                },
-                "required": [
-                  "x",
-                  "y",
-                  "w",
-                  "h"
-                ],
-                "additionalProperties": false
+                ]
               },
               "misconception": {
                 "type": "string",

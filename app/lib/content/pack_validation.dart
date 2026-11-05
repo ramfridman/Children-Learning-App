@@ -1077,11 +1077,8 @@ void _l4Options(
         'must be exactly one of a sprite, a numeral or a text, or only a clip (a sound button)',
       );
     }
-    final Object? at = o['at'];
-    if (at is Map<String, Object?>) {
-      final double x = (at['x']! as num).toDouble() + (at['w']! as num).toDouble();
-      final double y = (at['y']! as num).toDouble() + (at['h']! as num).toDouble();
-      if (x > 1.001 || y > 1.001) say(file, '$path.at', 'reaches outside the picture');
+    for (final _Place r in _shares(o['at'])) {
+      if (r.right > 1.001 || r.bottom > 1.001) say(file, '$path.at', 'reaches outside the picture');
     }
   }
   // Parts of a picture are told apart by where they are (the overlap rule), not by a face of their own.
@@ -1096,6 +1093,8 @@ void _unscored(String file, Map<String, Object?> a, void Function(String, String
   final Map<String, Object?> answer = _mapOf(a['answer']);
   if (a['purpose'] != 'practice') say(file, 'purpose', '$what is never scored: it is practice');
   if (answer['type'] != 'none') say(file, 'answer.type', '$what has no answer to choose: the type is "none"');
+  // Nothing is wrong in it, so no repair can be aimed at it (the session builder serves a `contradicts` item to repair a tag).
+  if (a.containsKey('contradicts')) say(file, 'contradicts', '$what is never a repair item');
   for (final String k in <String>['correct', 'pairWith', 'pole']) {
     if (answer.containsKey(k)) say(file, 'answer.$k', '$what has no right answer');
   }
@@ -1110,6 +1109,12 @@ _Place? _share(Object? o) {
   final double y = (o['y']! as num).toDouble();
   return (left: x, top: y, right: x + (o['w']! as num).toDouble(), bottom: y + (o['h']! as num).toDouble());
 }
+
+/// The places of an option: one rectangle or a list of them.
+List<_Place> _shares(Object? o) => <_Place>[
+  for (final Object? r in o is List<Object?> ? o : <Object?>[o])
+    if (_share(r) case final _Place p) p,
+];
 
 bool _overlap(_Place a, _Place b) =>
     a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
@@ -1126,6 +1131,9 @@ void _noOverlap(String file, List<(String, _Place?)> places, void Function(Strin
     }
   }
 }
+
+/// The least share of a picture's side a touch area has in Band A (72 of 256 units, 65.5 pt on the scene of the smallest phone).
+const double minBandAHotspot = 0.2812;
 
 /// The templates a probe of the placement game may be: ordinary tap and drum items, never a story, a command, a song or a talk.
 const Set<String> probeTemplates = <String>{'tap_answer', 'sound_boxes'};
@@ -1410,14 +1418,41 @@ void _listenDo(
     faceless: mode == 'hotspots' || mode == 'place',
   );
   final List<(String, _Place?)> places = <(String, _Place?)>[
-    for (final (int i, Map<String, Object?> o) in options.indexed) ('answer.options[$i].at', _share(o['at'])),
+    for (final (int i, Map<String, Object?> o) in options.indexed)
+      for (final _Place r in _shares(o['at'])) ('answer.options[$i].at', r),
   ];
+  if (mode != 'hotspots' && mode != 'cards') {
+    for (final (int i, Map<String, Object?> o) in options.indexed) {
+      if (_shares(o['at']).length > 1) {
+        say(
+          file,
+          'answer.options[$i].at',
+          'only a part of a picture (hotspots, or the card of one) has more than one place',
+        );
+      }
+    }
+  }
   switch (mode) {
     case 'hotspots':
     case 'place':
       for (final (int i, Map<String, Object?> o) in options.indexed) {
         if (o['at'] == null) {
           say(file, 'answer.options[$i].at', 'a $mode option is a place in the picture: it needs `at`');
+        }
+      }
+      if (mode == 'hotspots' && a['band'] == 'A') {
+        // A touch of a child in Band A needs 64 pt: of the 233 pt scene of the smallest phone that is 0.2747; the design's own floor is
+        // 72 of 256 units (docs/design/languages-l4-layout.md section 2).
+        for (final (int i, Map<String, Object?> o) in options.indexed) {
+          for (final _Place r in _shares(o['at'])) {
+            if (r.right - r.left < minBandAHotspot - 0.001 || r.bottom - r.top < minBandAHotspot - 0.001) {
+              say(
+                file,
+                'answer.options[$i].at',
+                'is smaller than $minBandAHotspot of the picture: a Band A touch is 64 points at least, and the smallest scene is 233',
+              );
+            }
+          }
         }
       }
       if (mode == 'place') {
@@ -1427,6 +1462,7 @@ void _listenDo(
         _noOverlap(file, places, say);
       }
     case 'buttons':
+    case 'cards':
       for (final (int i, Map<String, Object?> o) in options.indexed) {
         if (o['sprite'] == null) {
           say(file, 'answer.options[$i].sprite', 'a button is the picture of an action');

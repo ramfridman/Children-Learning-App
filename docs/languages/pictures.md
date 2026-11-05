@@ -202,7 +202,7 @@ Drawn on 2026-11-03 from the approved model sheet by `tools/make_language_people
 `mika-present`, `mika-snow`, `mika-walk` (E `pic.scene-mika-*`); Pip's door pictures are `pip-arrive`, `pip-leave` (E
 `pic.greet-*-pip`); `act-sit` and `act-stand` are E `act-sitdown`, `act-standup` and R `act.sit`, `act.stand`. Mika has a
 small soft nose in every picture (the body words need one; the model sheet's faces had none). The tap areas of
-`mika-body.svg` are in `mika-body.hotspots.json` (canvas units), checked by the generator so that no two parts overlap.
+`mika-body.svg` are in `mika-body.hotspots.json` (version 2 since L4: shares, a list of rectangles per part, every area at least 64 pt on the phone SE, and per item whether it is shown on the body or as three close-up cards; `docs/design/languages-l4-layout.md` section 2). The close-up cards `body-hair`, `body-teeth`, `body-arms`, `body-fingers`, `body-legs` were added for it.
 
 
 | Group | Pictures | Count |

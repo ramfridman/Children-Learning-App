@@ -377,10 +377,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
-  /// The parent's switch for scripted personal questions in this language (docs/languages/frame.md section 1.4); on unless turned off.
-  bool _personalAllowed(Activity a) =>
-      (ref.read(languagesProvider).value?.of(widget.profileId, a.course) ?? const LanguageSwitches())
-          .personal;
+  /// The parent's switch for scripted personal questions in this language (docs/languages/frame.md section 1.4). It fails closed: while
+  /// the family's settings are loading, or could not be read, nothing personal is asked (SEC-L4-2); once they are read, a language the
+  /// parent never touched keeps the default, on.
+  bool _personalAllowed(Activity a) {
+    final FamilyLanguages? family = ref.read(languagesProvider).value;
+    return family != null && family.of(widget.profileId, a.course).personal;
+  }
 
   /// A fresh session whenever the lesson moves to the next activity.
   TemplateSession _sessionFor(LessonController c) {
@@ -573,6 +576,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
               ? null
               : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
           tiles: controller.finished ? null : session.buildTiles(ctx, spec),
+          boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
           overlay: controller.finished
               ? LessonCelebration(
                   text: controller.endedForRest ? He.restGoodbye.text : controller.lesson.celebration.caption,

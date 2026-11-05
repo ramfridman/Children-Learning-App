@@ -578,7 +578,8 @@ const Map<String, SField> _l4Option = <String, SField>{
   'text': SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
   'clip': _optionClip,
   'label': SField(SString(minLength: 1, maxLength: 80)),
-  'at': SField(_at, required: false),
+  // One place, or several for a part that has more than one (both ears, both hands): a touch on any of them is the option.
+  'at': SField(SAnyOf(<Schema>[_at, SArray(_at, minItems: 1, maxItems: 4)]), required: false),
   'misconception': SField(_tag, required: false),
 };
 
@@ -1257,7 +1258,9 @@ SObject? activitySchemaFor(String template) => switch (template) {
           ),
         }),
       ),
-      'answer': SField(_l4Answer(const <String>['hotspots', 'buttons', 'drag', 'place', 'embodied'])),
+      'answer': SField(
+        _l4Answer(const <String>['hotspots', 'buttons', 'cards', 'drag', 'place', 'embodied']),
+      ),
     }),
   ),
   // LS12: an original song, chant or rhyme. `chant`: the lines are said one after another, the pictures of a line light while it is said, a

@@ -34,9 +34,9 @@ LangPack _pack(String course, String mode) {
           id: 'doit',
           mode: mode,
           options: <Map<String, Object?>>[
-            partOption('o1', at(0.30, 0.05, 0.4, 0.3), label: 'head'),
-            partOption('o2', at(0.30, 0.45, 0.4, 0.25), tag: p.tag('lis.sem'), label: 'tummy'),
-            partOption('o3', at(0.25, 0.78, 0.5, 0.18), tag: p.tag('lis.guess'), label: 'feet'),
+            partOption('o1', at(0.30, 0.02, 0.4, 0.3), label: 'head'),
+            partOption('o2', at(0.30, 0.36, 0.4, 0.3), tag: p.tag('lis.sem'), label: 'tummy'),
+            partOption('o3', at(0.25, 0.7, 0.5, 0.3), tag: p.tag('lis.guess'), label: 'feet'),
           ],
           correct: 'o1',
         ),

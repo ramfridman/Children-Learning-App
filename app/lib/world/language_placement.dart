@@ -85,10 +85,15 @@ void replayPlacement(PlacementGame game, String course, Iterable<Attempt> attemp
   final String lesson = placementIdFor(course);
   final List<Attempt> mine = <Attempt>[
     for (final Attempt a in attempts)
-      if (a.lessonId == lesson && (a.result == 'correct' || a.result == 'incorrect')) a,
+      if (a.lessonId == lesson &&
+          Course.ofActivityId(a.activityId) == course &&
+          (a.result == 'correct' || a.result == 'incorrect'))
+        a,
   ]..sort((Attempt a, Attempt b) => a.at.compareTo(b.at));
+  // One answer for each probe, the first: a row sent twice (two devices, a re-sent event) must not move a strand (SEC-L4-3).
+  final Set<String> seen = <String>{};
   for (final Attempt a in mine) {
-    game.record(a.activityId, right: a.result == 'correct');
+    if (seen.add(a.activityId)) game.record(a.activityId, right: a.result == 'correct');
   }
 }
 
@@ -137,7 +142,13 @@ class PlacementFlow implements ItemFlow {
   bool get due => !game.complete;
 
   @override
-  String first() => game.next()!;
+  String first() {
+    final String? probe = game.next();
+    if (probe == null) {
+      throw StateError('the placement of this course is complete: check `due` before a visit');
+    }
+    return probe;
+  }
 
   @override
   String? after(String id, {required bool right}) {
@@ -173,14 +184,20 @@ class PlacementFlow implements ItemFlow {
   );
   if (doc == null || game == null || game.next() == null) return null;
   final PlacementFlow flow = PlacementFlow(game, doc);
-  return (lesson: placementLessonFor(content, flow), flow: flow);
+  final Lesson? lesson = placementLessonFor(content, flow);
+  if (lesson == null) return null;
+  return (lesson: lesson, flow: flow);
 }
 
 /// The lesson that carries a placement visit: its id is the course's placement id, so that the answers it writes are told apart from
 /// every other lesson's (and from every other course's), and the controller plays the flow's first probe.
-Lesson placementLessonFor(PackContent content, PlacementFlow flow) => Lesson.mission(
-  id: placementIdFor(content.course),
-  itemIds: <String>[flow.first()],
-  skillIds: <String>[content.activities[flow.first()]!.skillId],
-  celebration: flow.celebration,
-);
+Lesson? placementLessonFor(PackContent content, PlacementFlow flow) {
+  if (!flow.due) return null;
+  final String first = flow.first();
+  return Lesson.mission(
+    id: placementIdFor(content.course),
+    itemIds: <String>[first],
+    skillIds: <String>[content.activities[first]!.skillId],
+    celebration: flow.celebration,
+  );
+}

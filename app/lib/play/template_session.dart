@@ -138,6 +138,10 @@ abstract class TemplateSession extends ChangeNotifier {
   /// The row of answer tiles (or the single confirm button), or null when the template has none.
   Widget? buildTiles(BuildContext context, ActivitySpec spec);
 
+  /// A widget in the board's own points, outside the stage and the tiles (a `Positioned` of the board's stack), or null: where a template
+  /// puts something that must never lie on its stage (the close-up card of a command, docs/design/languages-l4-layout.md section 3).
+  Widget? buildBoardLayer(BuildContext context, ActivitySpec spec) => null;
+
   /// The layer of a hint's pointing hand, over the same room as the stage and above the speech bubble (so the hand that shows the
   /// way is never hidden by it), or null when the template draws no hand. The rest of a hint is drawn by [buildStage].
   Widget? buildHands(BuildContext context, Size size, ActivitySpec spec) => null;

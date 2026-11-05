@@ -974,6 +974,7 @@ class SyncEngine {
         skillId: d['skill_id']! as String,
         packId: d['pack_id']! as String,
         activityId: d['activity_id']! as String,
+        lessonId: d['lesson_id'] as String? ?? '',
         tag: d['misconception_tag'] as String? ?? '',
         course: d['course'] as String?,
       );
