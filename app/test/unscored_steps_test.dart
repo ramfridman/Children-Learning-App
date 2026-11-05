@@ -68,6 +68,31 @@ void main() {
       expect(c.hintShown, 0);
       expect(c.voiceNonce, nonce);
     });
+
+    test(
+      '$id: a second guard in the controller, an answer sent to it is refused and writes nothing (SEC-LC-2)',
+      () async {
+        final List<AttemptRecord> written = <AttemptRecord>[];
+        final LessonController c = LessonController(
+          content: _pack().content,
+          lesson: Lesson.mission(
+            id: 'one',
+            itemIds: <String>['eng.$id'],
+            skillIds: <String>['ENG-A-02'],
+            celebration: const Spoken(vo: 'vo:x.celebrate', caption: 'x'),
+          ),
+          profileId: 'p-1',
+          clock: FixedClock(1793000000000),
+          record: (AttemptRecord r) async => written.add(r),
+        );
+        final Outcome wrong = await c.submitPlacement(right: false, tag: 'eng.lis.sem', response: 'x');
+        final Outcome right = await c.submitPlacement(right: true);
+        expect(written, isEmpty);
+        expect(<bool>[wrong.correct, right.correct], <bool>[false, false]);
+        expect(c.solved, isFalse);
+        expect(c.errors, 0);
+      },
+    );
   }
 
   test('a scored item is not unscored: a dialogic story, a rhyme and a bubble keep their help', () {

@@ -1116,8 +1116,15 @@ List<_Place> _shares(Object? o) => <_Place>[
     if (_share(r) case final _Place p) p,
 ];
 
+/// Places that only touch edge to edge do not overlap: the shares are floating point (0.3594 + 0.2812 is not exactly 0.6406), so the
+/// tolerance is a thousandth of the picture's side, as for "reaches outside" (QA-L4-12).
+const double _touch = 0.001;
+
 bool _overlap(_Place a, _Place b) =>
-    a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    a.left < b.right - _touch &&
+    b.left < a.right - _touch &&
+    a.top < b.bottom - _touch &&
+    b.top < a.bottom - _touch;
 
 /// Two places that overlap cannot be told apart by a touch: each part of the picture is one thing.
 void _noOverlap(String file, List<(String, _Place?)> places, void Function(String, String, String) say) {
@@ -1359,6 +1366,21 @@ void _singAlong(
   _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
 }
 
+/// A touch area of a Band A command is 64 points at least: of the 233 pt scene of the smallest phone that is 0.2747; the design's own floor
+/// is 72 of 256 units (docs/design/languages-l4-layout.md section 2). It holds for a part to touch, a place, a thing to drag and the
+/// target of a drag, the same for all (QA-L4-1, QA-L4-11).
+void _floor(String file, String path, Iterable<_Place> places, void Function(String, String, String) say) {
+  for (final _Place r in places) {
+    if (r.right - r.left < minBandAHotspot - 0.001 || r.bottom - r.top < minBandAHotspot - 0.001) {
+      say(
+        file,
+        path,
+        'is smaller than $minBandAHotspot of the picture: a Band A touch is 64 points at least, and the smallest scene is 233',
+      );
+    }
+  }
+}
+
 /// LS11: what each mode needs of its scene and its options.
 void _listenDo(
   String file,
@@ -1421,6 +1443,13 @@ void _listenDo(
     for (final (int i, Map<String, Object?> o) in options.indexed)
       for (final _Place r in _shares(o['at'])) ('answer.options[$i].at', r),
   ];
+  if (a['band'] == 'A' && mode != 'cards') {
+    for (final (int i, Map<String, Object?> o) in options.indexed) {
+      _floor(file, 'answer.options[$i].at', _shares(o['at']), say);
+    }
+    _floor(file, 'scene.target.at', _shares(target?['at']), say);
+    _floor(file, 'scene.thing.at', _shares(thing?['at']), say);
+  }
   if (mode != 'hotspots' && mode != 'cards') {
     for (final (int i, Map<String, Object?> o) in options.indexed) {
       if (_shares(o['at']).length > 1) {
@@ -1438,21 +1467,6 @@ void _listenDo(
       for (final (int i, Map<String, Object?> o) in options.indexed) {
         if (o['at'] == null) {
           say(file, 'answer.options[$i].at', 'a $mode option is a place in the picture: it needs `at`');
-        }
-      }
-      if (mode == 'hotspots' && a['band'] == 'A') {
-        // A touch of a child in Band A needs 64 pt: of the 233 pt scene of the smallest phone that is 0.2747; the design's own floor is
-        // 72 of 256 units (docs/design/languages-l4-layout.md section 2).
-        for (final (int i, Map<String, Object?> o) in options.indexed) {
-          for (final _Place r in _shares(o['at'])) {
-            if (r.right - r.left < minBandAHotspot - 0.001 || r.bottom - r.top < minBandAHotspot - 0.001) {
-              say(
-                file,
-                'answer.options[$i].at',
-                'is smaller than $minBandAHotspot of the picture: a Band A touch is 64 points at least, and the smallest scene is 233',
-              );
-            }
-          }
         }
       }
       if (mode == 'place') {

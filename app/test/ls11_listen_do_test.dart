@@ -71,9 +71,9 @@ Map<String, Object?> _command(LangPack p, String mode, {String id = 'doit'}) {
         picture: 'table',
         target: <String, Object?>{'at': at(0.58, 0.3, 0.38, 0.38), 'sprite': 'asset:plate'},
         options: <Map<String, Object?>>[
-          thingOption('o1', 'apple', at(0.02, 0.05, 0.26, 0.26)),
-          thingOption('o2', 'banana', at(0.02, 0.37, 0.26, 0.26), tag: p.tag('lis.sem')),
-          thingOption('o3', 'bread', at(0.02, 0.69, 0.26, 0.26), tag: p.tag('lis.guess')),
+          thingOption('o1', 'apple', at(0.02, 0.05, 0.29, 0.29)),
+          thingOption('o2', 'banana', at(0.02, 0.355, 0.29, 0.29), tag: p.tag('lis.sem')),
+          thingOption('o3', 'bread', at(0.02, 0.66, 0.29, 0.29), tag: p.tag('lis.guess')),
         ],
         correct: 'o1',
       );
@@ -83,11 +83,11 @@ Map<String, Object?> _command(LangPack p, String mode, {String id = 'doit'}) {
         id: id,
         mode: mode,
         picture: 'table',
-        thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.22, 0.22)},
+        thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.29, 0.29)},
         options: <Map<String, Object?>>[
-          partOption('o1', at(0.4, 0.04, 0.5, 0.26), label: 'on'),
-          partOption('o2', at(0.4, 0.7, 0.5, 0.26), tag: p.tag('lis.sem'), label: 'under'),
-          partOption('o3', at(0.72, 0.36, 0.25, 0.26), tag: p.tag('lis.guess'), label: 'next to'),
+          partOption('o1', at(0.4, 0.04, 0.5, 0.29), label: 'on'),
+          partOption('o2', at(0.4, 0.7, 0.5, 0.29), tag: p.tag('lis.sem'), label: 'under'),
+          partOption('o3', at(0.71, 0.36, 0.29, 0.29), tag: p.tag('lis.guess'), label: 'next to'),
         ],
         correct: 'o1',
       );
@@ -124,7 +124,7 @@ void main() {
           expect(a.options.first.at, const Rect.fromLTWH(0.30, 0.02, 0.4, 0.3));
         }
         if (mode == 'drag') expect(a.targetAt, const Rect.fromLTWH(0.58, 0.3, 0.38, 0.38));
-        if (mode == 'place') expect(a.thingAt, const Rect.fromLTWH(0.04, 0.4, 0.22, 0.22));
+        if (mode == 'place') expect(a.thingAt, const Rect.fromLTWH(0.04, 0.4, 0.29, 0.29));
       });
     }
 

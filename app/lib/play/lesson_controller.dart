@@ -490,6 +490,8 @@ class LessonController extends ChangeNotifier {
   }) async {
     final Activity a = current;
     actionNonce++;
+    // A step that is not scored (a personal turn, an embodied command, a story with no question) writes no attempt, whatever calls (SEC-LC-2).
+    if (a.unscored) return const Outcome(correct: false, tag: '');
     if (a.purpose == 'probe') {
       // One answer, no help; the same warm line whatever it was, so that no result can be read from it (frame section 3.2).
       _missed = !right;

@@ -2,7 +2,7 @@
 // QA's re-verification of L4 after the fixes of QA-L4-1 to -10 (docs/qa/l4-languages-verification.md section 10). The developer's own proofs
 // (`qa_l4_open_defects_test.dart`, `l4_layout_test.dart`) play fixture items; these play every item of the design-director's real body map
 // (`content/languages/pictures/mika-body.hotspots.json`), measure every place and every board, and check the layout spec's numbers
-// (docs/design/languages-l4-layout.md) one by one. A test with `skip: _open` is an open defect (run with `--dart-define=QA_OPEN=true`).
+// (docs/design/languages-l4-layout.md) one by one.
 import 'dart:convert';
 import 'dart:io';
 
@@ -21,9 +21,6 @@ import 'support/golden_comparator.dart';
 import 'support/harness.dart';
 import 'support/l4_rig.dart';
 import 'support/language_content.dart';
-
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
 
 List<String> _messages(LangPack p) => <String>[
   for (final Problem x in validatePack(manifest: p.pack.manifest, docs: p.pack.docs, files: p.pack.files))
@@ -137,7 +134,7 @@ void main() {
       expect(bad, isEmpty);
     });
 
-    test('QA-L4-12 (open): RUS-A-03 items 06, 10 and 14 (areas that only touch) pass the pack validator', () {
+    test('QA-L4-12: RUS-A-03 items 06, 10 and 14 (areas that only touch) pass the pack validator', () {
       final List<String> bad = <String>[];
       for (final String k in abutting) {
         final List<String> m = _messages(_mapItem(k, items[k]! as Map<String, Object?>));
@@ -148,7 +145,7 @@ void main() {
         isEmpty,
         reason: 'the areas touch edge to edge and the float sum of the validator calls it an overlap',
       );
-    }, skip: _open ? 'QA-L4-12 open: `_overlap` has no tolerance' : false);
+    });
 
     test('every card of a cards item has its close-up picture in the set (body-<part>.svg)', () {
       final Map<String, Object?> cardOf = _json()['cards']! as Map<String, Object?>;
@@ -286,11 +283,11 @@ void main() {
           id: 'place1',
           mode: 'place',
           picture: 'table',
-          thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.22, 0.22)},
+          thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.29, 0.29)},
           options: <Map<String, Object?>>[
-            partOption('o1', at(0.4, 0.04, 0.5, 0.26), label: 'on'),
-            partOption('o2', at(0.4, 0.7, 0.5, 0.26), tag: p.tag('lis.sem'), label: 'under'),
-            partOption('o3', at(0.72, 0.36, 0.25, 0.26), tag: p.tag('lis.guess'), label: 'next to'),
+            partOption('o1', at(0.4, 0.04, 0.5, 0.29), label: 'on'),
+            partOption('o2', at(0.4, 0.7, 0.5, 0.29), tag: p.tag('lis.sem'), label: 'under'),
+            partOption('o3', at(0.71, 0.36, 0.29, 0.29), tag: p.tag('lis.guess'), label: 'next to'),
           ],
           correct: 'o1',
         ),
@@ -402,10 +399,10 @@ void main() {
               id: 'place1',
               mode: 'place',
               picture: 'table',
-              thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.22, 0.22)},
+              thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.29, 0.29)},
               options: <Map<String, Object?>>[
-                partOption('o1', at(0.4, 0.04, 0.5, 0.26), label: 'on'),
-                partOption('o2', at(0.4, 0.7, 0.5, 0.26), tag: p.tag('lis.sem'), label: 'under'),
+                partOption('o1', at(0.4, 0.04, 0.5, 0.29), label: 'on'),
+                partOption('o2', at(0.4, 0.7, 0.5, 0.29), tag: p.tag('lis.sem'), label: 'under'),
               ],
               correct: 'o1',
             ),
@@ -901,7 +898,7 @@ void main() {
   });
 
   // ---------------------------------------------------------------------------------------------------------------------------------
-  group('QA-L4-11 (open): a Band A place or drag area is held to the 64 pt floor as a hotspot is', () {
+  group('QA-L4-11: a Band A place or drag area is held to the 64 pt floor as a hotspot is', () {
     test('a `place` option of 0.1 of the picture (23 pt on the smallest phone) is refused in Band A', () {
       final LangPack p = LangPack('heb')..addPictures(<String>['table', 'ball']);
       p.add(
@@ -924,6 +921,6 @@ void main() {
         contains(contains('answer.options[0].at')),
         reason: 'a 23 pt target in Band A passes the validator',
       );
-    }, skip: _open ? 'QA-L4-11 open: only `hotspots` has the floor' : false);
+    });
   });
 }

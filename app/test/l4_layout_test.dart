@@ -123,6 +123,95 @@ void main() {
     });
   });
 
+  group('the Band A floor holds for a place, a thing to drag and the target of a drag (QA-L4-11)', () {
+    LangPack drag(Map<String, Object?> piece, Map<String, Object?> target, {String band = 'A'}) {
+      final LangPack p = LangPack()..addPictures(_pics);
+      p.add(
+        listenDoJson(
+          id: 'drag1',
+          mode: 'drag',
+          target: <String, Object?>{'at': target},
+          options: <Map<String, Object?>>[
+            thingOption('o1', 'cat', piece),
+            thingOption('o2', 'dog', at(0.02, 0.355, 0.29, 0.29), tag: p.tag('lis.sem')),
+            thingOption('o3', 'duck', at(0.02, 0.66, 0.29, 0.29), tag: p.tag('lis.guess')),
+          ],
+          correct: 'o1',
+        )..['band'] = band,
+      );
+      return p;
+    }
+
+    LangPack place(Map<String, Object?> thing, {String band = 'A'}) {
+      final LangPack p = LangPack()..addPictures(_pics);
+      p.add(
+        listenDoJson(
+          id: 'place1',
+          mode: 'place',
+          picture: 'table',
+          thing: <String, Object?>{'sprite': 'asset:ball', 'at': thing},
+          options: <Map<String, Object?>>[
+            partOption('o1', at(0.4, 0.04, 0.5, 0.29)),
+            partOption('o2', at(0.4, 0.7, 0.5, 0.29), tag: p.tag('lis.sem')),
+            partOption('o3', at(0.71, 0.36, 0.29, 0.29), tag: p.tag('lis.guess')),
+          ],
+          correct: 'o1',
+        )..['band'] = band,
+      );
+      return p;
+    }
+
+    test('a drag piece, the target and a place thing under the floor are refused in Band A, at the floor they pass', () {
+      expect(_messages(drag(at(0.02, 0.05, 0.29, 0.29), at(0.58, 0.3, 0.38, 0.38))), isEmpty);
+      expect(
+        _messages(drag(at(0.02, 0.05, 0.2, 0.2), at(0.58, 0.3, 0.38, 0.38))),
+        contains(contains('answer.options[0].at: is smaller than 0.2812')),
+      );
+      expect(
+        _messages(drag(at(0.02, 0.05, 0.29, 0.29), at(0.58, 0.3, 0.2, 0.2))),
+        contains(contains('scene.target.at: is smaller than 0.2812')),
+      );
+      expect(_messages(place(at(0.04, 0.4, 0.29, 0.29))), isEmpty);
+      expect(
+        _messages(place(at(0.04, 0.4, 0.2, 0.2))),
+        contains(contains('scene.thing.at: is smaller than 0.2812')),
+      );
+    });
+
+    test('the floor is a Band A rule: the same small areas pass in Band B', () {
+      expect(
+        _messages(drag(at(0.02, 0.05, 0.2, 0.2), at(0.58, 0.3, 0.2, 0.2), band: 'B')),
+        isNot(contains(contains('is smaller than'))),
+      );
+    });
+  });
+
+  group('areas that touch edge to edge do not overlap (QA-L4-12)', () {
+    LangPack hot(Map<String, Object?> second) {
+      final LangPack p = LangPack()..addPictures(_pics);
+      p.add(
+        listenDoJson(
+          id: 'touch',
+          mode: 'hotspots',
+          options: <Map<String, Object?>>[
+            partOption('o1', at(0.3594, 0.1414, 0.2812, 0.2812)),
+            partOption('o2', second, tag: p.tag('lis.sem')),
+            partOption('o3', at(0.0, 0.7, 0.3, 0.3), tag: p.tag('lis.guess')),
+          ],
+          correct: 'o1',
+        ),
+      );
+      return p;
+    }
+
+    test('0.3594 + 0.2812 against 0.6406 passes, and so do the sides above and beside; a real overlap is still refused', () {
+      expect(_messages(hot(at(0.6406, 0.1414, 0.2812, 0.2812))), isEmpty);
+      expect(_messages(hot(at(0.3594, 0.4226, 0.2812, 0.2812))), isEmpty);
+      expect(_messages(hot(at(0.0782, 0.1414, 0.2812, 0.2812))), isEmpty);
+      expect(_messages(hot(at(0.6, 0.1414, 0.2812, 0.2812))), contains(contains('overlap')));
+    });
+  });
+
   group('the face items as three close-up cards (the friend stays on the stage)', () {
     test('a cards item passes the validator, needs a picture on each card, and its parts may overlap (they are rings, not touches)', () {
       expect(_messages(_faceItem()), isEmpty);
@@ -181,11 +270,11 @@ void main() {
           id: 'place1',
           mode: 'place',
           picture: 'table',
-          thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.22, 0.22)},
+          thing: <String, Object?>{'sprite': 'asset:ball', 'at': at(0.04, 0.4, 0.29, 0.29)},
           options: <Map<String, Object?>>[
-            partOption('o1', at(0.4, 0.04, 0.5, 0.26), label: 'on'),
-            partOption('o2', at(0.4, 0.7, 0.5, 0.26), tag: p.tag('lis.sem'), label: 'under'),
-            partOption('o3', at(0.72, 0.36, 0.25, 0.26), tag: p.tag('lis.guess'), label: 'next to'),
+            partOption('o1', at(0.4, 0.04, 0.5, 0.29), label: 'on'),
+            partOption('o2', at(0.4, 0.7, 0.5, 0.29), tag: p.tag('lis.sem'), label: 'under'),
+            partOption('o3', at(0.71, 0.36, 0.29, 0.29), tag: p.tag('lis.guess'), label: 'next to'),
           ],
           correct: 'o1',
         ),
