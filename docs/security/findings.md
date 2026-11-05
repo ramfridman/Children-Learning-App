@@ -42,14 +42,16 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-L1-1 | Lesson lines are outside the validator's new language-field rules | low | open | 2026-11-03 |
 | SEC-L1-2 | Hebrew frame lines: the script check is narrower than the language rule | low | open | 2026-11-03 |
-| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | open | 2026-11-03 |
+| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | fixed on `languages-course-home` (`d82b337`: the mic also needs the language's own voice switch, closed while the settings load); closes when QA's run of `course_guards_test.dart` passes | 2026-11-03 |
 | SEC-L1-4 | The tutor hold keeps the previous line's language extras (not reachable) | info | open | 2026-11-03 |
 | SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
 | SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |
 | SEC-L1-7 | A language pack's clip ids are bound to the pack by naming only (for L2) | info | open | 2026-11-03 |
-| SEC-L4-2 | The parent's switch for personal questions fails open while the family's language settings are not loaded (not reachable today) | low | open | 2026-11-04 |
-| SEC-L4-3 | Placement replay counts a probe answered twice (two devices, or a re-sent row), so one probe can move a strand up | low | open | 2026-11-04 |
-| SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | open | 2026-11-04 |
+| SEC-L4-2 | The parent's switch for personal questions fails open while the family's language settings are not loaded (not reachable today) | low | fixed (`acdecdf`: no personal turn until the family's settings are read); closes when QA's run of `ls10_personal_safety_test.dart` passes | 2026-11-04 |
+| SEC-L4-3 | Placement replay counts a probe answered twice (two devices, or a re-sent row), so one probe can move a strand up | low | closed (`acdecdf`: the staircase and the replay count a probe once; proof re-run) | 2026-11-04 |
+| SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | closed (`acdecdf`: `Course.ofLessonId` in the pull guard, proof re-run; `contradicts` refused on unscored steps; a complete placement has no visit) | 2026-11-04 |
+| SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
+| SEC-LC-2 | The answer path of the lesson controller does not itself refuse an unscored step (not reachable; defence in depth) | info | open | 2026-11-05 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -308,6 +310,27 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   - OSV.dev: no advisory for crypto 3.0.8, cryptography 2.9.0, drift 2.35.3, flutter_riverpod 3.4.3,
     flutter_secure_storage 11.2.0, flutter_svg 2.3.2, http 1.6.0, vector_graphics 1.2.4 or xml 7.0.1 (2026-11-04);
   - no package, lock file, host, workflow or gateway change.
+
+  Not run by the security-engineer: `flutter test`.
+- **L4 fixes and the course screens, `languages-course-home` (`4c49c37`; 2026-11-05): safe to merge, nothing new above info.**
+  L4 fixes (`acdecdf`):
+  - SEC-L4-3 and SEC-L4-4 are closed; their proofs were re-run in pure Dart.
+  - SEC-L4-2 is fixed by reading and closes with QA's Flutter run of its test.
+  - The one L4 finding above low held privately is fixed by reading (an unscored step now offers no lamp or eye and writes
+    nothing). It is listed here once QA's run of its proof tests passes.
+  - SEC-L1-3 is fixed by the per-language mic switch.
+
+  Course screens (`7d60d57` to `6543cdf`), verified by reading:
+  - `openVisit` is the one way a child's visit starts. It refuses a language that is off or not installed (fails closed
+    while loading) and asks the time rules afresh (rest scene, no lesson). The lands now use it too.
+  - The microphone needs the language's own voice switch, and the tutor is never asked.
+  - Each visit, path, mission, placement and Today's Adventure stop is built from one course's pack and engine only.
+  - The parent's "we start here" level comes from that course's placement and is never shown to the child.
+  - The course home writes nothing.
+  - `Course.ofLessonId` names a course only for `placement-<language>` and `<language>.` ids (proof run).
+
+  New: SEC-LC-1 and SEC-LC-2 (info), above. Also checked: `flutter analyze` clean; no package, lock file, host, workflow or
+  gateway change, so the OSV result of 2026-11-04 stands.
 
   Not run by the security-engineer: `flutter test`.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
