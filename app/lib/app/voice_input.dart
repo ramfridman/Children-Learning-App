@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/misc.dart' show ProviderFamily;
+import 'package:flutter_riverpod/misc.dart' show FutureProviderFamily, ProviderFamily;
 
 import '../data/app_database.dart';
 import '../engine/course.dart';
@@ -37,8 +37,8 @@ final ProviderFamily<SpeechEngine, String> languageSpeechEngineProvider =
 
 /// What a say-it step may do now for one child and one course: the parent's voice switch for that language is on, and its model
 /// is on the phone. False in every other case, and then the step runs as echo. Nothing is loaded by asking.
-final ProviderFamily<Future<bool>, ({String childId, String course})> sayItAvailableProvider =
-    Provider.family<Future<bool>, ({String childId, String course})>((
+final FutureProviderFamily<bool, ({String childId, String course})> sayItAvailableProvider =
+    FutureProvider.family<bool, ({String childId, String course})>((
       Ref ref,
       ({String childId, String course}) k,
     ) async {

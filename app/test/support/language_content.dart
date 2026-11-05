@@ -3,6 +3,7 @@
 // there to give the text, the sound and the tags something to be.
 
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/content/schemas.dart' show supportedTemplates;
 
 import 'sample_pack.dart';
 
@@ -196,6 +197,52 @@ Map<String, Object?> countJson({
   'traceClassifiers': traceClassifiers,
 };
 
+/// A `say_it` 1.0 activity of [course] (LS09): the picture `asset:butterfly`, the word to say as [forms] against [foils], and the
+/// Hebrew frame lines "I heard:" and "let's say it together", each with the word's clip as its second clip.
+Map<String, Object?> sayJson({
+  String course = 'eng',
+  required String id,
+  String? skill,
+  List<String> forms = const <String>['cat', 'a cat'],
+  List<String> foils = const <String>['cut', 'hat'],
+  List<String>? keyWords,
+  bool scored = false,
+  String band = 'A',
+}) {
+  final String base = '$course.$id';
+  final Map<String, Object?> lines = _lines(base, target: 'vo:$base.word', show: forms.first);
+  return <String, Object?>{
+    ..._common(
+      course,
+      id,
+      skill ?? '${course.toUpperCase()}-A-02',
+      'say_it',
+      '1.0',
+      'learn',
+      band,
+      'embodied',
+    ),
+    ...lines,
+    'hints': <Object?>[],
+    'scene': <String, Object?>{
+      'picture': <String, Object?>{'sprite': 'asset:butterfly'},
+    },
+    'say': <String, Object?>{
+      'forms': forms,
+      'foils': foils,
+      'keyWords': ?keyWords,
+      'clip': 'vo:$base.word',
+      'heard': line(
+        'vo:$base.heard',
+        '\u05e9\u05b8\u05c1\u05de\u05b7\u05e2\u05b0\u05ea\u05b4\u05bc\u05d9:',
+        target: 'vo:$base.word',
+      ),
+      'together': line('vo:$base.together', 'בּוֹאוּ נֹאמַר יַחַד.', target: 'vo:$base.word'),
+    },
+    'answer': <String, Object?>{'type': 'say_it', 'scored': scored},
+  };
+}
+
 // ---- the pack ----
 
 /// The fixture pack of a language course with room for activities of its second skill: `ENG-A-02` and the tags
@@ -239,7 +286,7 @@ class LangPack {
     final String id = activity['id']! as String;
     pack.addDocument('activity.$id.json', 'activities', id, activity);
     final Map<String, Object?> templates = pack.manifest['templates']! as Map<String, Object?>;
-    templates[activity['template']! as String] = activity['template'] == 'count_tap' ? '1.1' : '1.3';
+    templates[activity['template']! as String] = supportedTemplates[activity['template']] ?? '1.3';
     final List<Object?> pending = pack.manifest['voPending']! as List<Object?>;
     void scan(Object? node) {
       if (node is String && node.startsWith('vo:') && !pending.contains(node)) pending.add(node);

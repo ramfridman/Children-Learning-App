@@ -59,6 +59,10 @@ abstract final class He {
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);
   static const Str replaySemantics = Str('שמיעה חוזרת של השאלה');
   static const Str optionSoundSemantics = Str('שמיעה של האפשרות');
+
+  /// LS09 say-it (needs-editor): the button of a child who says the word without the microphone ("I said it", the batches'
+  /// `he-ins-said-it`), practice only.
+  static const Str sayDone = Str('אָמַרְתִּי', nikud: true);
   static const Str coinA10Semantics = Str('10 אגורות');
   static const Str coinH50Semantics = Str('חצי שקל');
   static const Str coinS1Semantics = Str('שקל');

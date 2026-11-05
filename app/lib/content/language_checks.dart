@@ -129,6 +129,13 @@ List<({String path, String text, bool shown})> _targetTexts(Map<String, Object?>
       if (t is String) out.add((path: 'answer.options[$i].$key', text: t, shown: false));
     }
   }
+  // The words of a say-it item are target-language text too.
+  final Map<String, Object?> speak = _map(a['say']);
+  for (final String key in <String>['forms', 'foils', 'keyWords']) {
+    for (final (int i, Object? w) in ((speak[key] as List<Object?>?) ?? const <Object?>[]).indexed) {
+      if (w is String) out.add((path: 'say.$key[$i]', text: w, shown: false));
+    }
+  }
   void walk(Object? node, String path) {
     if (node is Map<String, Object?>) {
       node.forEach((String k, Object? v) {

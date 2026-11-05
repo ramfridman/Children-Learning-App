@@ -99,6 +99,7 @@ class Engine {
 
   void _updateSkill(String id, double w, ItemMeta item, AttemptEvent e, bool probe, int day) {
     final SkillState s = skill(id);
+    if (e.viaSpeech && !_speechCounts(id, s, e)) return;
     final bool first = !s.started;
     final bool correct = e.result == Result.correct;
     s.p = Bkt.update(
@@ -143,6 +144,7 @@ class Engine {
 
     if (correct && e.hintLevel == 0 && !probe) {
       s.successes++;
+      if (e.viaSpeech) s.speechSuccesses++;
       s.successDays.add(day);
       s.successItems.add(item.id);
       if (item.variantGroup.isNotEmpty) s.successGroups.add(item.variantGroup);
@@ -168,6 +170,15 @@ class Engine {
     if (e.result == Result.incorrect) s.lastFailedRepresentation = item.representation;
     s.lastAttemptAt = e.at;
     _checkFresh(id, s, e.at);
+  }
+
+  /// Whether a spoken answer counts for skill [id] (docs/languages/frame.md section 5.1): only a success counts, only for a speaking
+  /// skill, and only while speech stays at most half of the skill's successes. A spoken answer that does not count changes nothing
+  /// at all: not the estimate, not the number of answers, not a run.
+  bool _speechCounts(String id, SkillState s, AttemptEvent e) {
+    if (e.result != Result.correct || !graph.node(id).speaking) return false;
+    final int others = s.successes - s.speechSuccesses;
+    return s.speechSuccesses + 1 <= others;
   }
 
   void _checkFresh(String id, SkillState s, DateTime at) {

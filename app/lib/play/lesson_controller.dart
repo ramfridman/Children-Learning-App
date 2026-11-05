@@ -425,6 +425,47 @@ class LessonController extends ChangeNotifier {
   Future<Outcome> submitPlacement({required bool right, String tag = '', String response = ''}) =>
       _answered(right: right, tag: tag, response: response);
 
+  // ---- LS09 say it (docs/languages/frame.md section 5.1) ----
+
+  /// The per-word matcher heard the child. This is the one speech result that is written: a `correct` answer by `voice`, which
+  /// the engine reads as speech evidence (only for a speaking skill, and capped). The praise names the word; the activity goes
+  /// on when the child taps the picture.
+  Future<void> sayHeard() async {
+    final SayItActivity a = current as SayItActivity;
+    if (finished || solved) return;
+    actionNonce++;
+    await _write(result: 'correct', tag: '', response: ResponseCode.said, byVoice: true);
+    attemptNo++;
+    _say(a.heard);
+    notifyListeners();
+  }
+
+  /// Not heard clearly, or not at all: nothing is written (an unsure result is no evidence of any kind) and the voice says the
+  /// word with the child. Every cause gets this same kind line.
+  void sayTogether() {
+    final SayItActivity a = current as SayItActivity;
+    if (finished || solved) return;
+    actionNonce++;
+    _say(a.together);
+    notifyListeners();
+  }
+
+  /// The tap on the picture ends the activity. It is written only when the author scored it (a listening answer); otherwise the
+  /// activity was practice and leaves no attempt.
+  Future<void> sayItDone() async {
+    final SayItActivity a = current as SayItActivity;
+    if (finished || solved) return;
+    actionNonce++;
+    if (a.scored) {
+      await _write(result: 'correct', tag: '', response: ResponseCode.picture);
+      attemptNo++;
+    }
+    solved = true;
+    feedback = FeedbackKind.correct;
+    _say(a.feedback.correct);
+    notifyListeners();
+  }
+
   /// The child gave [taken] objects in a give-N activity.
   Future<Outcome> giveN(int taken) async {
     final GiveNActivity a = current as GiveNActivity;

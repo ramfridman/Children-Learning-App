@@ -119,6 +119,8 @@ void main() {
         final Activity a = c.current;
         for (int k = 0; k < a.maxAttempts; k++) {
           switch (a) {
+            case SayItActivity():
+              break;
             case TapAnswerActivity():
               await c.chooseOption(a.options.firstWhere((ChoiceOption o) => o.id != a.correctId).id);
             case CountTapActivity():
@@ -158,6 +160,8 @@ void main() {
       mixed.next();
       final Activity b = mixed.current;
       switch (b) {
+        case SayItActivity():
+          break;
         case TapAnswerActivity():
           await mixed.chooseOption(b.correctId);
         case CountTapActivity():

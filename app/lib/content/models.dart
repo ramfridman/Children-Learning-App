@@ -153,6 +153,7 @@ sealed class Activity {
     'shop_pay' => ShopPayActivity._(json, assets),
     'clock_set' => ClockSetActivity._(json, assets),
     'trace' => TraceActivity._(json, assets),
+    'say_it' => SayItActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
   };
 
@@ -861,6 +862,50 @@ class FlashActivity extends Activity {
       if (o.misconception != null) o.misconception!,
   };
 }
+
+/// LS09 say it with me (docs/languages/frame.md section 2.3): a picture and a word. The voice says the word; the child may say it
+/// (a say step, the per-word matcher answers confident or unsure); a tap on the picture goes on, and counts as a listening answer
+/// when [scored]. There is nothing to get wrong, so there are no options.
+class SayItActivity extends Activity {
+  SayItActivity._(super.json, super.assets)
+    : picture = _map(_map(json['scene'])['picture'])['sprite']! as String,
+      forms = _strings(_map(json['say'])['forms']),
+      foils = _strings(_map(json['say'])['foils']),
+      keyWords = _strings(_map(json['say'])['keyWords']),
+      wordClip = _map(json['say'])['clip']! as String,
+      heard = Spoken.fromJson(_map(json['say'])['heard']),
+      together = Spoken.fromJson(_map(json['say'])['together']),
+      scored = _map(json['answer'])['scored'] == true,
+      super._();
+
+  /// The picture (an `asset:` reference).
+  final String picture;
+
+  /// The target and the forms its teacher lists; the foils; for a chunk the key words that must each be heard.
+  final List<String> forms;
+  final List<String> foils;
+  final List<String> keyWords;
+
+  /// The voice line of the word itself.
+  final String wordClip;
+
+  /// "I heard:" and "let's say it together"; the word follows each as its own target clip.
+  final Spoken heard;
+  final Spoken together;
+
+  /// The tap on the picture is a scored listening answer.
+  final bool scored;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => const <String>{};
+}
+
+List<String> _strings(Object? o) => <String>[
+  for (final Object? e in (o as List<Object?>? ?? const <Object?>[])) e! as String,
+];
 
 class CountTapActivity extends Activity {
   CountTapActivity._(super.json, super.assets)

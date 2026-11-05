@@ -79,6 +79,7 @@ void main() {
   );
 
   TemplateSession sessionFor(LessonController c, Activity a) => switch (a) {
+    SayItActivity() => throw StateError('the lands have no say-it'),
     CountTapActivity() => CountTapSession(c, a),
     GiveNActivity() => GiveNSession(c, a),
     FlashActivity() => FlashSession(c, a),

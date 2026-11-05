@@ -64,9 +64,13 @@ class SkillNode {
     this.setCoverage = false,
     this.soundRight = SoundRightPolicy.teaches,
     this.letters = false,
+    this.speaking = false,
   });
 
   final String id;
+
+  /// A speaking skill (strand `spk`): the only kind that spoken answers count for.
+  final bool speaking;
 
   /// The course this skill belongs to (`core` for every land that exists today). A skill never relates to another course.
   final String course;
@@ -205,6 +209,7 @@ class AttemptEvent {
     this.attemptNo = 1,
     this.id = 0,
     this.course,
+    this.viaSpeech = false,
   });
 
   final int id;
@@ -220,6 +225,10 @@ class AttemptEvent {
   final String tag;
   final int? sessionId;
   final int attemptNo;
+
+  /// The answer is a word the child said and the per-word matcher heard (LS09, docs/languages/frame.md section 5.1). Speech is
+  /// evidence for a speaking skill only, and at most half of that skill's successes ([Engine] enforces both).
+  final bool viaSpeech;
 }
 
 /// Skills, items and misconceptions together.
