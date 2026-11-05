@@ -41,3 +41,11 @@ keywords = ["private_key_id"]
 description = "SHA-256 of the public ivrit.ai tokens.txt (model_spec.dart); a hash, not a key"
 regexTarget = "match"
 regexes = ['''e4ebb5e72a6aeef47437a55fa2308ebbedb7c51c557de7a89bf965c23ea9af4a''']
+
+[[allowlists]]
+description = "SHA-256 of the public tokens.txt of the English and Russian speech models (tools/make-asr-models.ps1, model_spec.dart); hashes, not keys"
+regexTarget = "match"
+regexes = [
+  '''49e3c2646595fd907228b3c6787069658f67b17377c60aeb8619c4551b2316fb''',
+  '''93bbbc0bae6b78c0bbb743d4aa9fded3bb5ff3aac5f0200e3a769a5a05e0fdf6''',
+]

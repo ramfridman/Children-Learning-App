@@ -12,7 +12,7 @@ void main() {
   const List<String> speechFiles = <String>[
     'lib/speech/word_matcher.dart',
     'lib/speech/word_text.dart',
-    'lib/speech/model_registry.dart',
+    'lib/models/model_installer.dart',
     'lib/play/say_step.dart',
     'lib/play/say_it_session.dart',
   ];
@@ -23,7 +23,7 @@ void main() {
     );
     for (final String f in speechFiles) {
       final String src = _code(f);
-      if (f.endsWith('model_registry.dart')) {
+      if (f.endsWith('model_installer.dart')) {
         // The installer writes model files (not audio), and only from a fetcher it is given.
         expect(src.contains('HttpClient'), isFalse, reason: f);
         expect(src.contains('package:http'), isFalse, reason: f);

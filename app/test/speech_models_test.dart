@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:nitznutz/speech/model_registry.dart';
+import 'package:nitznutz/models/model_installer.dart';
 import 'package:nitznutz/speech/model_spec.dart';
-import 'package:nitznutz/speech/sherpa_engine.dart' show hotwordList;
+import 'package:nitznutz/speech/sherpa_config.dart' show hotwordList;
 
 /// A model of two tiny files, to try the installer and the checks without 70 MB of weights.
 SpeechModelSpec tinySpec(Map<String, List<int>> files, {Decoding decoding = Decoding.open}) =>
@@ -224,7 +224,7 @@ void main() {
     });
 
     test('the registry has no network code and no address', () {
-      final String src = File('lib/speech/model_registry.dart').readAsStringSync();
+      final String src = File('lib/models/model_installer.dart').readAsStringSync();
       expect(src, isNot(contains('http')));
       expect(src, isNot(contains('dart:io\' show HttpClient')));
       expect(RegExp(r'''['"][a-z]+://''').hasMatch(src), isFalse);

@@ -42,7 +42,8 @@
         "match_pairs",
         "shop_pay",
         "clock_set",
-        "trace"
+        "trace",
+        "say_it"
       ]
     },
     "templateVersion": {

@@ -28,7 +28,7 @@ enum Decoding {
 
 /// A speech model of one course: where it came from, the files it is made of, and how it is run. The files are put in one
 /// folder under the app's private storage by `tools/make-asr-models.ps1` (an `adb push`, as for Hebrew) or, once the owner has
-/// chosen a host, by the installer in `model_registry.dart`.
+/// chosen a host, by the installer in `lib/models/model_installer.dart`.
 class SpeechModelSpec {
   const SpeechModelSpec({
     required this.course,

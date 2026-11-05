@@ -42,7 +42,7 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-L1-1 | Lesson lines are outside the validator's new language-field rules | low | open | 2026-11-03 |
 | SEC-L1-2 | Hebrew frame lines: the script check is narrower than the language rule | low | open | 2026-11-03 |
-| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | open | 2026-11-03 |
+| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | fixed on `languages-l3`: the validator refuses `voiceAnswer` in a language pack, and a language's speech exists only in `say_it`, through that language's own switch (`ls09_validation_test.dart`, `ls09_say_it_test.dart`); closes when the security-engineer has reviewed L3 | 2026-11-03 |
 | SEC-L1-4 | The tutor hold keeps the previous line's language extras (not reachable) | info | open | 2026-11-03 |
 | SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
 | SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'model_spec.dart';
+import '../speech/model_spec.dart';
 
 /// Where the bytes of a model file come from. The app has no model host yet (the owner has not chosen R2): [NoModelHost] is
 /// the only fetcher in the app, and a model comes onto a phone by `adb push` into its folder, as the Hebrew model does. When a
