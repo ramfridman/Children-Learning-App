@@ -29,20 +29,31 @@ final Provider<SpeechEngine> speechEngineProvider = Provider<SpeechEngine>(
 );
 
 /// The recogniser of a language course (`eng`, `heb`, `rus`). It is made here but not loaded: nothing is read from disk until a
-/// say-it step of a child whose parent turned that language's voice on asks it to prepare. Tests give a fake one.
+/// say-it step of a child whose parent turned that language's voice on asks it to prepare. It is freed (and its model with it)
+/// when the last child's voice switch for this language turns off: the provider watches that, so it is made again, empty, if a
+/// switch is turned on later. Tests give a fake one.
 final ProviderFamily<SpeechEngine, String> languageSpeechEngineProvider =
-    Provider.family<SpeechEngine, String>(
-      (Ref ref, String course) => _engineOf(ref, SpeechModels.forCourse(course)!),
-    );
+    Provider.family<SpeechEngine, String>((Ref ref, String course) {
+      ref.watch(
+        languagesProvider.select((AsyncValue<FamilyLanguages> f) => f.value?.anyVoice(course) ?? false),
+      );
+      return _engineOf(ref, SpeechModels.forCourse(course)!);
+    });
 
-/// What a say-it step may do now for one child and one course: the parent's voice switch for that language is on, and its model
-/// is on the phone. False in every other case, and then the step runs as echo. Nothing is loaded by asking.
+/// Whether a language's say-it has passed its release gate and may use the microphone ([SpeechModelSpec.released]). A test that
+/// needs the microphone overrides it.
+final ProviderFamily<bool, String> sayItReleasedProvider = Provider.family<bool, String>(
+  (Ref ref, String course) => SpeechModels.forCourse(course)?.released ?? false,
+);
+
+/// What a say-it step may do now for one child and one course: the language has passed its release gate, the parent's voice switch
+/// for that language is on, and its model is on the phone. False in every other case, and then the step runs as echo. Nothing is loaded by asking.
 final FutureProviderFamily<bool, ({String childId, String course})> sayItAvailableProvider =
     FutureProvider.family<bool, ({String childId, String course})>((
       Ref ref,
       ({String childId, String course}) k,
     ) async {
-      if (!Course.isLanguage(k.course)) return false;
+      if (!Course.isLanguage(k.course) || !ref.watch(sayItReleasedProvider(k.course))) return false;
       final FamilyLanguages family = await ref.watch(languagesProvider.future);
       if (!family.of(k.childId, k.course).voice) return false;
       return ref.read(languageSpeechEngineProvider(k.course)).modelInstalled();

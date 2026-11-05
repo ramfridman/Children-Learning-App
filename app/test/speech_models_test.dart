@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/app/language_providers.dart';
+import 'package:nitznutz/app/voice_input.dart';
 import 'package:nitznutz/models/model_installer.dart';
+import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/speech/model_spec.dart';
 import 'package:nitznutz/speech/sherpa_config.dart' show hotwordList;
 
@@ -231,6 +235,47 @@ void main() {
     });
   });
 
+  group('the release gate is enforced, and a recogniser is freed with its switch', () {
+    test('QA-L3-1: no language has passed its release gate: every course says released false', () {
+      for (final SpeechModelSpec m in SpeechModels.all) {
+        expect(m.released, isFalse, reason: m.id);
+      }
+      final ProviderContainer c = ProviderContainer();
+      addTearDown(c.dispose);
+      for (final String course in <String>['eng', 'heb', 'rus']) {
+        expect(c.read(sayItReleasedProvider(course)), isFalse, reason: course);
+      }
+    });
+
+    test(
+      'SEC-L3-4: the recogniser of a language is made again when the last voice switch for it turns off',
+      () async {
+        final _Languages languages = _Languages();
+        final ProviderContainer c = ProviderContainer(
+          overrides: [languagesProvider.overrideWith(() => languages)],
+        );
+        addTearDown(c.dispose);
+        await c.read(languagesProvider.future);
+        const String kid = 'child-lang-0001';
+        await languages.setSwitches(kid, 'eng', const LanguageSwitches(on: true, voice: true));
+        final Object first = c.read(languageSpeechEngineProvider('eng'));
+        // Other settings do not free it.
+        await languages.setSwitches(
+          kid,
+          'eng',
+          const LanguageSwitches(on: true, voice: true, personal: false),
+        );
+        expect(c.read(languageSpeechEngineProvider('eng')), same(first));
+        // Another language's switch does not either.
+        await languages.setSwitches(kid, 'rus', const LanguageSwitches(on: true, voice: true));
+        expect(c.read(languageSpeechEngineProvider('eng')), same(first));
+        // The switch turned off: the recogniser (and the model it holds) is dropped.
+        await languages.setSwitches(kid, 'eng', const LanguageSwitches(on: true));
+        expect(c.read(languageSpeechEngineProvider('eng')), isNot(same(first)));
+      },
+    );
+  });
+
   group('the hotword list of a listen', () {
     test(
       'English words are upper case, one line each with the boost, and the same word twice is one line',
@@ -265,4 +310,21 @@ void main() {
       }
     });
   });
+}
+
+/// The languages setting without a database: it holds the family's switches in memory.
+class _Languages extends LanguagesNotifier {
+  FamilyLanguages _family = const FamilyLanguages();
+
+  @override
+  Future<FamilyLanguages> build() async => _family;
+
+  @override
+  Future<bool> setSwitches(String childId, String course, LanguageSwitches switches) async {
+    final FamilyLanguages? next = _family.withSwitches(childId, course, switches);
+    if (next == null) return false;
+    _family = next;
+    state = AsyncData<FamilyLanguages>(next);
+    return true;
+  }
 }

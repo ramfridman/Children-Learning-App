@@ -1,7 +1,5 @@
-// QA's defects of milestone L3 (docs/qa/l3-languages-verification.md): QA-L3-1 to QA-L3-5. Each test is the failing proof of its
-// defect and is skipped until the fix. To see them fail:
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_l3_open_defects_test.dart
-// When a defect is fixed, delete the `skip:` of its test so that it runs in every build.
+// QA's defects of milestone L3 (docs/qa/l3-languages-verification.md): QA-L3-1 to QA-L3-5, each the proof of a defect that is now
+// fixed, so each runs in every build.
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -13,9 +11,8 @@ import 'package:nitznutz/engine/types.dart';
 import 'support/app_harness.dart';
 import 'support/fake_speech.dart';
 import 'support/harness.dart';
+import 'support/language_screens.dart' show langKid;
 import 'support/qa_l3_say.dart';
-
-const bool _qaOpen = bool.fromEnvironment('QA_OPEN');
 
 Finder get _mic => find.byKey(const Key('lesson-mic'));
 
@@ -28,7 +25,7 @@ void main() {
   testWidgets(
     'QA-L3-1: a language whose release gate has not passed runs its say-it in echo mode, switch on and model there',
     (WidgetTester t) async {
-      final AppRig rig = await qaOpenSay(t, voice: true, installed: true);
+      final AppRig rig = await qaOpenSay(t, voice: true, installed: true, released: false);
       expect(
         _mic,
         findsNothing,
@@ -41,7 +38,6 @@ void main() {
       );
       expect(<int>[rig.speech.prepares, rig.speech.listens], <int>[0, 0]);
     },
-    skip: !_qaOpen,
   );
 
   // QA-L3-2: the microphone must close when the app leaves the screen. The Hebrew voice path hushes on pause, inactive and hidden;
@@ -56,8 +52,15 @@ void main() {
       t.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
       await qaWait(t, 300);
       expect(rig.speech.micOpen, isFalse, reason: 'the app is not on screen: the microphone must be closed');
+      t.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await qaWait(t, 1500);
+      expect(
+        await rig.db.attemptsOf(langKid),
+        isEmpty,
+        reason: 'what a listen in the background heard is never applied',
+      );
+      expect(rig.speech.listens, 1);
     },
-    skip: !_qaOpen,
   );
 
   // QA-L3-3: a spoken success that the cap or the strand refuses must change nothing at all (Engine._speechCounts says so), but
@@ -119,7 +122,7 @@ void main() {
       final RepStats r = e.state.repStats('ENG-A', Representation.embodied);
       expect(<int>[r.tries, r.successes], <int>[0, 0]);
     });
-  }, skip: !_qaOpen);
+  });
 
   // QA-L3-4: the lamp is on screen in a say-it step and does nothing.
   testWidgets('QA-L3-4: the lamp of a say-it step does something (the word is said again) or is not there', (
@@ -134,7 +137,7 @@ void main() {
       await qaWait(t, 800);
       expect(rig.player.played.length, greaterThan(before), reason: 'a lamp that is shown must answer a tap');
     }
-  }, skip: !_qaOpen);
+  });
 
   // QA-L3-5: tool/say_eval.dart with --sweep reads every recording at the boosts 3, 5, 8, 12 and 16 and takes `boosts.first` (3) as
   // "the result", while its first line says "mode: biased (boost 8.0)". Evidence: the run of 2026-11-06 on 340 Speech Commands clips
@@ -146,5 +149,5 @@ void main() {
       isFalse,
       reason: 'the headline of a sweep must use spec.hotwordBoost, not the first (lowest) boost of the sweep',
     );
-  }, skip: !_qaOpen);
+  });
 }

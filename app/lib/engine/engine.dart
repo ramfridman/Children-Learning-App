@@ -60,7 +60,6 @@ class Engine {
     if (item == null) return;
     // Evidence never crosses courses, even when two packs use the same activity id.
     if (e.course != null && e.course != item.course) return;
-    state.lastEventAt = e.at;
     final bool probe = item.purpose == Purpose.probe;
     final int day = dayKey(e.at);
     // The probe this answer belongs to is decided on what was known before it (the answer itself changes the estimates).
@@ -68,6 +67,16 @@ class Engine {
     final String? expectedProbe = (probe && open != null)
         ? (open.target ?? (open.probes >= params.probeMaxPerSearch ? null : _nextTarget(open)))
         : null;
+    // A spoken answer counts only where the rules of speech say (see [_speechCounts]); if it counts for no skill it changes
+    // nothing at all: not the session's record, not the statistics of the item, not a gap. That is decided first.
+    final Set<String>? spoken = e.viaSpeech
+        ? <String>{
+            for (final String id in item.skills.keys)
+              if (catalog.skills.containsKey(id) && _speechCounts(id, state.skills[id], e, probe)) id,
+          }
+        : null;
+    if (spoken != null && spoken.isEmpty) return;
+    state.lastEventAt = e.at;
     final int? sid = e.sessionId;
     if (sid != null) {
       (state.sessions[sid] ??= <SessionAnswer>[]).add(
@@ -82,7 +91,8 @@ class Engine {
     // Free play makes no demands: it is neither evidence of knowing nor of not knowing.
     if (item.delight) return;
     for (final MapEntry<String, double> w in item.skills.entries) {
-      if (catalog.skills.containsKey(w.key)) _updateSkill(w.key, w.value, item, e, probe, day);
+      if (!catalog.skills.containsKey(w.key) || (spoken != null && !spoken.contains(w.key))) continue;
+      _updateSkill(w.key, w.value, item, e, probe, day);
     }
     _updateTags(item, e);
     if (!probe) {
@@ -99,7 +109,6 @@ class Engine {
 
   void _updateSkill(String id, double w, ItemMeta item, AttemptEvent e, bool probe, int day) {
     final SkillState s = skill(id);
-    if (e.viaSpeech && !_speechCounts(id, s, e)) return;
     final bool first = !s.started;
     final bool correct = e.result == Result.correct;
     s.p = Bkt.update(
@@ -173,12 +182,15 @@ class Engine {
   }
 
   /// Whether a spoken answer counts for skill [id] (docs/languages/frame.md section 5.1): only a success counts, only for a speaking
-  /// skill, and only while speech stays at most half of the skill's successes. A spoken answer that does not count changes nothing
-  /// at all: not the estimate, not the number of answers, not a run.
-  bool _speechCounts(String id, SkillState s, AttemptEvent e) {
-    if (e.result != Result.correct || !graph.node(id).speaking) return false;
-    final int others = s.successes - s.speechSuccesses;
-    return s.speechSuccesses + 1 <= others;
+  /// skill, only without a hint and outside a probe (a heard word after help, or in a search for a gap, is not the evidence the
+  /// cap is written for), and only while speech stays at most half of the skill's successes. A spoken answer that does not count
+  /// changes nothing at all: not the estimate, not the number of answers, not a run, not a review, not a gap, not the statistics
+  /// of a way of explaining. Every spoken answer that is applied counts toward the cap, because each one is a success without a
+  /// hint (`speechSuccesses`).
+  bool _speechCounts(String id, SkillState? s, AttemptEvent e, bool probe) {
+    if (e.result != Result.correct || e.hintLevel != 0 || probe || !graph.node(id).speaking) return false;
+    final int others = s == null ? 0 : s.successes - s.speechSuccesses;
+    return (s?.speechSuccesses ?? 0) + 1 <= others;
   }
 
   void _checkFresh(String id, SkillState s, DateTime at) {

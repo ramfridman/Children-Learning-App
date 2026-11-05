@@ -109,6 +109,7 @@ class AppRig {
     this.rules,
     this.extraOverrides = const <Override>[],
     this.content,
+    this.sayReleased = const <String>{},
     int? clockMs,
   }) : player = player ?? FakePlayer(),
        speech = speech ?? FakeSpeechEngine(),
@@ -122,6 +123,10 @@ class AppRig {
   }
 
   final bool dev;
+
+  /// The languages whose say-it has passed its release gate in this test (none in the real app until the owner says so): a test
+  /// that wants the microphone of a say-it step names its course here.
+  final Set<String> sayReleased;
 
   /// The characters and voices of the test; Nitzi alone, with a voice, when not given.
   final CharacterSource? characters;
@@ -214,6 +219,7 @@ class AppRig {
     }),
     voicePlayerProvider.overrideWithValue(player),
     speechEngineProvider.overrideWithValue(speech),
+    sayItReleasedProvider.overrideWith((Ref ref, String course) => sayReleased.contains(course)),
     // One fake serves every language, so a test can count what any say-it step asked of it.
     languageSpeechEngineProvider.overrideWith((Ref ref, String course) => speech),
     if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),

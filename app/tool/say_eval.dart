@@ -141,9 +141,13 @@ Future<void> main(List<String> args) async {
   final sherpa.OnlineRecognizer rec = sherpa.OnlineRecognizer(recognizerConfig(runSpec, model.path));
 
   // Read every recording once per boost (the model's own, or the boosts of the sweep); the way of deciding is tried on the readings.
-  final List<double?> boosts = !spec.biased || open
-      ? <double?>[null]
-      : (args.contains('--sweep') ? <double?>[3, 5, 8, 12, 16] : <double?>[null]);
+  final bool sweep = spec.biased && !open && args.contains('--sweep');
+  // The headline and the csv are those of the boost the header names: the model's own (`null` reads with it), also in a sweep, whose
+  // other boosts are only the table.
+  final double? headline = sweep ? spec.hotwordBoost : null;
+  final List<double?> boosts = sweep
+      ? (<double>{3, 5, 8, 12, 16, spec.hotwordBoost}.toList()..sort())
+      : <double?>[null];
   final Map<double?, List<(SayLabel, String)>> readings = <double?, List<(SayLabel, String)>>{
     for (final double? b in boosts) b: <(SayLabel, String)>[],
   };
@@ -180,7 +184,7 @@ Future<void> main(List<String> args) async {
   }
 
   final WordMatchConfig own = WordMatchConfig.of(course);
-  final SayTally main = tallyOf(boosts.first, own);
+  final SayTally main = tallyOf(headline, own);
   report('Result (accept ${own.accept}, margin ${own.margin})', main);
   if (args.contains('--sweep')) {
     stdout.writeln(
@@ -206,7 +210,7 @@ Future<void> main(List<String> args) async {
     stdout.writeln('\nConfident when it should not be: ${main.confidentFoils.take(20).join(', ')}');
   }
   final List<String> csv = <String>['file,band,said,heard_as,result'];
-  for (final (SayLabel l, String text) in readings[boosts.first]!) {
+  for (final (SayLabel l, String text) in readings[headline]!) {
     final SayResult r = WordMatcher(config: own).decide(<String>[text], l.targetOf(course)).result;
     // The text is written to the file you asked for, on your PC, to look at the misses; nothing else keeps it.
     csv.add('${l.file},${main.bandOf(l)},${l.said},"${text.replaceAll('"', '')}",${r.name}');

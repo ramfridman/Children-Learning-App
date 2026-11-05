@@ -47,10 +47,10 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
 | SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |
 | SEC-L1-7 | A language pack's clip ids are bound to the pack by naming only (for L2) | info | open | 2026-11-03 |
-| SEC-L3-1 | Speech-evidence cap: spoken answers given after a hint are not counted against the cap, and item-level statistics take spoken answers for any skill | low | open | 2026-11-06 |
-| SEC-L3-2 | A say-it listen is not stopped when the app leaves the foreground (bounded at 6 s; nothing is kept) | low | open | 2026-11-06 |
-| SEC-L3-3 | The English and Russian speech models (Apache-2.0) need their licence notice in the app's credits before they are distributed | info | open | 2026-11-06 |
-| SEC-L3-4 | Say-it switch details: only the language's own voice switch is needed (owner to confirm); a course recogniser is not freed when its switch turns off | info | open | 2026-11-06 |
+| SEC-L3-1 | Speech-evidence cap: spoken answers given after a hint are not counted against the cap, and item-level statistics take spoken answers for any skill | low | fixed on `languages-l3`: a spoken answer counts only without a hint, outside a probe, for a speaking skill and under the cap; one that counts for no skill changes nothing (`ls09_validation_test.dart`); closes when the security-engineer has run the proof again | 2026-11-06 |
+| SEC-L3-2 | A say-it listen is not stopped when the app leaves the foreground (bounded at 6 s; nothing is kept) | low | fixed on `languages-l3`: the say step stops on any lifecycle state but resumed, and what it heard is not applied (`qa_l3_open_defects_test.dart`) | 2026-11-06 |
+| SEC-L3-3 | The English and Russian speech models (Apache-2.0) need their licence notice in the app's credits before they are distributed | info | fixed on `languages-l3`: credit lines for both models and the full Apache-2.0 text in the parent area (`app_flow_test.dart`); the strings are `needs-editor` | 2026-11-06 |
+| SEC-L3-4 | Say-it switch details: only the language's own voice switch is needed (owner to confirm); a course recogniser is not freed when its switch turns off | info | item 2 fixed on `languages-l3` (the recogniser is made again when the last child's voice switch for the language turns off); item 1 stays as the owner decides (the language's own switch alone, L3.md D-5) | 2026-11-06 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 

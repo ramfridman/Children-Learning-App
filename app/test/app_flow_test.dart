@@ -321,6 +321,18 @@ void main() {
           findsOneWidget,
           reason: 'the credit of the model is shown',
         );
+        // SEC-L3-3: the English and Russian models are credited too, and the Apache-2.0 text that goes with their files is one tap away.
+        expect(find.text(He.areaVoiceCreditEng.text), findsOneWidget);
+        expect(find.text(He.areaVoiceCreditRus.text), findsOneWidget);
+        await tester.ensureVisible(find.byKey(const Key('voice-licence')));
+        await tester.tap(find.byKey(const Key('voice-licence')));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('voice-licence-text')), findsOneWidget);
+        expect(find.textContaining('Apache License'), findsOneWidget);
+        expect(find.textContaining('Version 2.0, January 2004'), findsOneWidget);
+        await tester.tap(find.text(He.areaVoiceLicenceClose.text));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(sw);
 
         await tester.tap(sw);
         await tester.pumpAndSettle();

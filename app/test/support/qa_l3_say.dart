@@ -33,11 +33,13 @@ Future<void> qaWait(WidgetTester t, int ms) async {
 }
 
 /// The say-it items of [items] (default one, `cat1`) on the screen. [voice] is the switch of the child [voiceFor] for the course
-/// [voiceCourse]; [installed] says whether the fake model is on the phone; [scored] marks the items as scored listening items.
+/// [voiceCourse]; [installed] says whether the fake model is on the phone; [released] whether the language has passed its release
+/// gate (as the voice switch is when not said: the real app has none released); [scored] marks the items as scored listening items.
 Future<AppRig> qaOpenSay(
   WidgetTester t, {
   bool voice = true,
   bool installed = true,
+  bool? released,
   String voiceFor = langKid,
   String voiceCourse = 'eng',
   int items = 1,
@@ -55,6 +57,7 @@ Future<AppRig> qaOpenSay(
     characters: await languageVoiceSource(qaRefs(p)),
     player: FakePlayer()..endsAfter = const Duration(milliseconds: 150),
     speech: FakeSpeechEngine(script)..installed = installed,
+    sayReleased: (released ?? voice) ? const <String>{'eng'} : const <String>{},
   );
   await rig.seedFinishedSetup(name: 'נֹעָה', id: langKid);
   await rig.db.putSetting(

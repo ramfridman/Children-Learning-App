@@ -282,6 +282,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) return;
     _voice?.hush();
+    _sayStep?.stop();
     unawaited(_director.stop());
   }
 
@@ -592,7 +593,10 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           trailTotal: controller.items.length,
           trailDone: controller.finished ? controller.items.length : controller.index,
           onHome: _home,
-          onHint: controller.finished ? null : controller.showHint,
+          // A say-it step has nothing to get wrong and so no hints: its lamp says the word again.
+          onHint: controller.finished
+              ? null
+              : (session is SayItSession ? session.onReplay : controller.showHint),
           hintGlow: helpOffered,
           onShowMe: controller.finished
               ? null

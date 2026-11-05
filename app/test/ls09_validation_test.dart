@@ -157,17 +157,34 @@ void main() {
             tags: const <String>{},
             revision: 1,
           ),
+          const ItemMeta(
+            id: 'eng.p',
+            course: 'eng',
+            skills: <String, double>{'ENG-A-12': 1},
+            purpose: Purpose.probe,
+            representation: Representation.embodied,
+            variantGroup: 'p',
+            revision: 1,
+          ),
         ],
       ),
     );
 
     int n = 0;
-    AttemptEvent event({bool speech = false, Result result = Result.correct}) => AttemptEvent(
+    AttemptEvent event({
+      bool speech = false,
+      Result result = Result.correct,
+      int hint = 0,
+      String item = 'eng.a',
+      int day = 5,
+    }) => AttemptEvent(
       id: ++n,
-      at: DateTime.utc(2026, 11, 5, 9, n),
-      activityId: 'eng.a',
+      at: DateTime.utc(2026, 11, day, 9, n),
+      activityId: item,
       result: result,
+      hintLevel: hint,
       course: 'eng',
+      sessionId: 1,
       viaSpeech: speech,
     );
 
@@ -205,6 +222,75 @@ void main() {
       e.apply(event(speech: true, result: Result.incorrect));
       final SkillState s = e.state.skills['ENG-A-12']!;
       expect(<Object>[s.p, s.n, s.nUnsure, s.failRun], <Object>[p, 1, 0, 0]);
+    });
+    // SEC-L3-1 and QA-L3-3: a spoken answer that does not count changes nothing at all.
+    test(
+      'SEC-L3-1: spoken answers after a hint are no evidence, however many (the cap cannot be walked round)',
+      () {
+        final Engine e = engineWith(speaking: true);
+        e.apply(event());
+        final SkillState s = e.state.skills['ENG-A-12']!;
+        final double p = s.p;
+        for (int i = 0; i < 10; i++) {
+          e.apply(event(speech: true, hint: 1));
+        }
+        expect(<Object>[s.n, s.nCorrect, s.p, s.speechSuccesses], <Object>[1, 1, p, 0]);
+        expect(e.state.sessions[1]!.length, 1, reason: 'not even the session remembers them');
+      },
+    );
+
+    test('a spoken answer that is refused leaves no review, no gap repair and no statistics of a way of explaining', () {
+      final Engine e = engineWith(speaking: true);
+      e.apply(event());
+      e.apply(event(speech: true)); // counted: speech 1 of 1 other
+      final SkillState s = e.state.skills['ENG-A-12']!;
+      final DateTime? reviewed = s.lastAttemptAt;
+      final RepStats r = e.state.repStats('ENG-A', Representation.embodied);
+      final List<int> before = <int>[r.tries, r.successes, s.n, s.successes, s.speechSuccesses];
+      final Gap gap = Gap(
+        origin: 'ENG-A-12',
+        skill: 'ENG-A-12',
+        foundAt: DateTime.utc(2026, 11, 5, 8),
+        probes: 0,
+        via: 'walk',
+      );
+      e.state.gaps.add(gap);
+      for (int i = 0; i < 10; i++) {
+        e.apply(event(speech: true, day: 6 + i)); // over the cap, on ten other days
+      }
+      expect(<int>[r.tries, r.successes, s.n, s.successes, s.speechSuccesses], before);
+      expect(s.lastAttemptAt, reviewed, reason: 'no retention review, however many days');
+      expect(<Object>[gap.repairSuccesses, gap.repaired], <Object>[0, false]);
+    });
+
+    test('a spoken answer in a probe is no evidence', () {
+      final Engine e = engineWith(speaking: true);
+      e.apply(event());
+      e.apply(event());
+      final SkillState s = e.state.skills['ENG-A-12']!;
+      final List<Object> before = <Object>[s.n, s.p];
+      e.apply(event(speech: true, item: 'eng.p'));
+      expect(<Object>[s.n, s.p], before);
+    });
+
+    test('every spoken answer that counts is counted toward the cap: speech never passes half', () {
+      final Engine e = engineWith(speaking: true);
+      for (int i = 0; i < 4; i++) {
+        e.apply(event());
+      }
+      for (int i = 0; i < 20; i++) {
+        e.apply(event(speech: true));
+      }
+      final SkillState s = e.state.skills['ENG-A-12']!;
+      expect(<int>[s.successes, s.speechSuccesses], <int>[8, 4]);
+      expect(s.successes - s.speechSuccesses, greaterThanOrEqualTo(s.speechSuccesses));
+    });
+
+    test('a refused spoken answer creates no state for a skill the child never answered by tap', () {
+      final Engine e = engineWith(speaking: true);
+      e.apply(event(speech: true));
+      expect(e.state.skills.containsKey('ENG-A-12'), isFalse);
+      expect(e.state.sessions, isEmpty);
     });
   });
 

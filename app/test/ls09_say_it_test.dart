@@ -61,6 +61,7 @@ Future<AppRig> _open(
     characters: await languageVoiceSource(_refs(p)),
     player: FakePlayer()..endsAfter = const Duration(milliseconds: 150),
     speech: FakeSpeechEngine(script)..installed = installed,
+    sayReleased: const <String>{'eng'},
   );
   await rig.seedFinishedSetup(name: 'נֹעָה', id: langKid);
   await rig.db.putSetting(

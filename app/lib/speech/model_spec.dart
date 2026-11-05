@@ -43,6 +43,7 @@ class SpeechModelSpec {
     this.hotwordBoost = 0,
     this.upperCaseWords = false,
     this.leadSilenceMs = 0,
+    this.released = false,
   });
 
   /// The course whose speech this is (`heb` also serves the lands).
@@ -70,6 +71,11 @@ class SpeechModelSpec {
 
   /// Silence put in front of the word: the streaming models read an isolated word only with a second of lead (section 7.3).
   final int leadSilenceMs;
+
+  /// This language's say-it has passed its release gate (docs/milestones/L3.md section 4) and may use the microphone. False for
+  /// every course until the owner says a language passed (the gate needs children of bands A, B and C): until then the say-it
+  /// runs as echo, whatever the parent's switch and the files on the phone say. Changing it is a decision, made here in one place.
+  final bool released;
 
   // The names the files have in the folder (the same for every model, so the engine reads any of them).
   static const String encoder = 'encoder.int8.onnx';
