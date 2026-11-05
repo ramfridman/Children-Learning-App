@@ -783,7 +783,7 @@ def grin(r, hc):
             L(''.join('M %s %s L %s %s ' % (f(x), f(my - 1), f(x), f(my + mw * 0.24)) for x in (-mw * 0.4, 0, mw * 0.4)), '#D8D3E6', 1.5)]
 
 
-BODY_ARMS = ((32, 4), (32, 4))
+BODY_ARMS = ((55, 6), (55, 6))   # arms well out from the body, so the hands and arms have their own 64 pt places (QA-L4-1)
 
 
 def mika_body():
@@ -796,10 +796,30 @@ def mika_body():
 
 BODY_CROP = (-84, -152, 168, 166)
 
+# The touch areas of the body map (docs/design/languages-l4-layout.md section 2). The listen_do scene is a square of 233 pt on the
+# phone SE, 241 on the phone, 534 and 752 on the tablets, so 72 of the picture's 256 units are 65.5 pt on the smallest board: every
+# area is at least 72 x 72 units (Band A's 64 pt floor, design-spec 6.1). An area is the place the child may touch for the part,
+# padded around the drawn part; areas of parts that never meet in one item may overlap, the three parts of an item never do.
+HIT = 72
+BOARD_SIDE = {'phoneSE': 233, 'phone': 241, 'tabletLandscape': 534, 'tabletPortrait': 752}
+# The items of the two courses that touch the friend (ENG-A-06 i01 to i08, RUS-A-03 01 to 15; 12 is the doll of a dress-up scene).
+BODY_ITEMS = {
+    'ENG-A-06 i01': ('head', 'tummy', 'feet'), 'ENG-A-06 i02': ('eyes', 'ears', 'mouth'), 'ENG-A-06 i03': ('ears', 'eyes', 'nose'),
+    'ENG-A-06 i04': ('nose', 'mouth', 'ears'), 'ENG-A-06 i05': ('mouth', 'nose', 'head'), 'ENG-A-06 i06': ('hands', 'feet', 'eyes'),
+    'ENG-A-06 i07': ('feet', 'hands', 'head'), 'ENG-A-06 i08': ('tummy', 'head', 'hands'),
+    'rus.a03.01': ('nose', 'mouth', 'eyes'), 'rus.a03.02': ('mouth', 'nose', 'ears'), 'rus.a03.03': ('eyes', 'ears', 'nose'),
+    'rus.a03.04': ('ears', 'eyes', 'arms'), 'rus.a03.05': ('arms', 'legs', 'ears'), 'rus.a03.06': ('legs', 'arms', 'nose'),
+    'rus.a03.07': ('belly', 'head', 'legs'), 'rus.a03.08': ('fingers', 'nose', 'hair'), 'rus.a03.09': ('teeth', 'eyes', 'ears'),
+    'rus.a03.10': ('hair', 'belly', 'arms'), 'rus.a03.11': ('head', 'legs', 'belly'), 'rus.a03.13': ('ears', 'eyes', 'arms'),
+    'rus.a03.14': ('legs', 'arms', 'nose'), 'rus.a03.15': ('belly', 'head', 'legs'),
+}
+CARDS = {'head': 'body-head', 'hair': 'body-hair', 'eyes': 'body-eyes', 'ears': 'body-ears', 'nose': 'body-nose', 'mouth': 'body-mouth',
+         'teeth': 'body-teeth', 'arms': 'body-arms', 'hands': 'body-hands', 'fingers': 'body-fingers', 'tummy': 'body-tummy',
+         'belly': 'body-tummy', 'legs': 'body-legs', 'feet': 'body-feet'}
 
-def hotspots():
-    """The tap areas of mika-body.svg in its 0..256 canvas: circles (cx, cy, r) or rectangles (x, y, w, h); no two
-    overlap, so any three of them can glow in an item (the Russian rule; English uses 8, Russian 11)."""
+
+def body_points():
+    """Where the parts of mika-body.svg are, in its 0..256 canvas."""
     sp = MIKA
     H, r, hc, body, sh, hip, tw, lw, aw, arm = ch.geometry(sp)
     x, y, w, h = BODY_CROP
@@ -807,63 +827,85 @@ def hotspots():
     tx, ty = (256 - w * k) / 2 - x * k, (256 - h * k) / 2 - y * k
 
     def pt(px, py):
-        return round(px * k + tx, 1), round(py * k + ty, 1)
-
-    def circ(px, py, rr):
-        cx, cy = pt(px, py)
-        return {'circle': [cx, cy, round(rr * k, 1)]}
-
-    def rect(px, py, pw, ph):
-        x0, y0 = pt(px, py)
-        return {'rect': [x0, y0, round(pw * k, 1), round(ph * k, 1)]}
+        return px * k + tx, py * k + ty
 
     ua, fa = arm * 0.52, arm * 0.5
-    hand_pts = []
-    for i, s in ((0, -1), (1, 1)):
-        pts = chain(s * (tw / 2 - aw * 0.25), sh + aw * 0.55, [(ua, BODY_ARMS[i][0]), (fa, BODY_ARMS[i][1])], s, 'front')
-        hand_pts.append(pts)
-    spots = {
-        'hair': rect(-r * 0.9, hc - r * 1.2, r * 1.8, r * 0.5),
-        'head': rect(-r * 0.75, hc - r * 0.66, r * 1.5, r * 0.4),
-        'eyes': rect(-r * 0.62, hc - r * 0.12, r * 1.24, r * 0.31),
-        'nose': circ(0, hc + r * 0.3, r * 0.1),
-        'mouth': rect(-r * 0.4, hc + r * 0.44, r * 0.8, r * 0.38),
-        'teeth': rect(-r * 0.4, hc + r * 0.44, r * 0.8, r * 0.38),
-        'ears': [circ(-r * 1.02, hc + r * 0.12, r * 0.24), circ(r * 1.02, hc + r * 0.12, r * 0.24)],
-        'arms': [circ((q[0][0] + q[1][0]) / 2, (q[0][1] + q[1][1]) / 2 + aw * 0.2, aw * 0.72) for q in hand_pts],
-        'hands': [circ(q[2][0], q[2][1] + aw * 0.4, aw * 1.05) for q in hand_pts],
-        'fingers': [circ(q[2][0], q[2][1] + aw * 0.4, aw * 1.05) for q in hand_pts],
-        'tummy': rect(-tw * 0.3, sh + body * 0.16, tw * 0.6, body * 0.22),
-        'belly': rect(-tw * 0.3, sh + body * 0.16, tw * 0.6, body * 0.22),
-        'legs': rect(-tw * 0.48, hip + lw * 0.6, tw * 0.96, (-hip) * 0.55),
-        'feet': rect(-tw * 0.62, -lw * 0.6, tw * 1.24, lw * 0.85),
+    arms = [chain(s * (tw / 2 - aw * 0.25), sh + aw * 0.55, [(ua, BODY_ARMS[i][0]), (fa, BODY_ARMS[i][1])], s, 'front') for i, s in ((0, -1), (1, 1))]
+    return {
+        'k': k, 'head': pt(0, hc), 'r': r * k, 'eyes': pt(0, hc + r * 0.1), 'nose': pt(0, hc + r * 0.3), 'mouth': pt(0, hc + r * 0.5),
+        'ears': [pt(-r * 1.0, hc + r * 0.12), pt(r * 1.0, hc + r * 0.12)],
+        'elbows': [pt(*q[1]) for q in arms], 'hands': [pt(q[2][0], q[2][1] + aw * 0.3) for q in arms],
+        'tummy': pt(0, sh + body * 0.28), 'legs': pt(0, hip + (-hip) * 0.45), 'feet': pt(0, -lw * 0.2),
     }
-    note_ = ('Tap areas of mika-body.svg in its 256 x 256 canvas. teeth = mouth (the picture grins), hands = fingers, '
-             'tummy = belly (one place, two courses\' words). Regions of different parts never overlap.')
-    check_apart(spots)
-    return {'picture': 'mika-body', 'note': note_, 'areas': spots}
 
 
-def check_apart(spots):
-    """No two body parts' tap areas overlap (their bounding boxes, a safe test); the alias pairs share one place."""
-    same = {frozenset(('mouth', 'teeth')), frozenset(('hands', 'fingers')), frozenset(('tummy', 'belly'))}
-    boxes = {}
-    for name, a in spots.items():
-        for one in (a if isinstance(a, list) else [a]):
-            if 'rect' in one:
-                x, y, w, h = one['rect']
-            else:
-                cx, cy, rr = one['circle']
-                x, y, w, h = cx - rr, cy - rr, 2 * rr, 2 * rr
-            boxes.setdefault(name, []).append((x, y, x + w, y + h))
-    names = sorted(boxes)
-    for i, a in enumerate(names):
-        for b in names[i + 1:]:
-            if frozenset((a, b)) in same:
-                continue
-            for p in boxes[a]:
-                for q in boxes[b]:
-                    assert p[2] <= q[0] or q[2] <= p[0] or p[3] <= q[1] or q[3] <= p[1], ('overlap', a, b, p, q)
+def box(cx, cy, w=HIT, h=HIT, xmin=0, xmax=256, ymin=0, ymax=256):
+    """A w x h area centred on (cx, cy), moved (not shrunk) to stay inside the given bounds."""
+    x0 = min(max(cx - w / 2, xmin), xmax - w)
+    y0 = min(max(cy - h / 2, ymin), ymax - h)
+    return [round(x0, 1), round(y0, 1), w, h]
+
+
+def body_areas():
+    """The touch area of each part of mika-body.svg, in canvas units (one or two rectangles)."""
+    q = body_points()
+    mid_l, mid_r = 128 - HIT / 2, 128 + HIT / 2           # the middle column: head, face, tummy, legs, feet
+
+    def side(c, i):
+        return box(c[0], c[1], xmax=mid_l, ymin=104) if i == 0 else box(c[0], c[1], xmin=mid_r, ymin=104)
+
+    return {
+        'hair': [box(128, 38, ymin=0)],
+        'head': [box(128, q['head'][1], w=76, h=86)],
+        'eyes': [box(*q['eyes'])], 'nose': [box(*q['nose'])], 'mouth': [box(*q['mouth'])], 'teeth': [box(*q['mouth'])],
+        'ears': [box(q['ears'][0][0], q['ears'][0][1], xmax=128 - 4), box(q['ears'][1][0], q['ears'][1][1], xmin=128 + 4)],
+        'arms': [side(c, i) for i, c in enumerate(q['elbows'])],
+        'hands': [side(c, i) for i, c in enumerate(q['hands'])], 'fingers': [side(c, i) for i, c in enumerate(q['hands'])],
+        'tummy': [[mid_l, 104, HIT, HIT]], 'belly': [[mid_l, 104, HIT, HIT]],
+        'legs': [[mid_l, 176, HIT, HIT]], 'feet': [[mid_l, 184, HIT, HIT]],
+    }
+
+
+def overlap(a, b):
+    return not (a[0] + a[2] <= b[0] or b[0] + b[2] <= a[0] or a[1] + a[3] <= b[1] or b[1] + b[3] <= a[1])
+
+
+def route(areas):
+    """Each item is shown on the whole body when its three parts' areas are apart, otherwise as three close-up cards."""
+    out = {}
+    for item, parts in BODY_ITEMS.items():
+        apart = all(not overlap(p, q) for i, a in enumerate(parts) for b in parts[i + 1:] for p in areas[a] for q in areas[b])
+        out[item] = {'parts': list(parts), 'show': 'body' if apart else 'cards'}
+        if not apart:
+            out[item]['cards'] = [CARDS[p] for p in parts]
+    return out
+
+
+def hotspots():
+    areas = body_areas()
+    for name, rects in areas.items():   # every area at least 72 x 72 and inside the picture
+        for x, y, w, h in rects:
+            assert w >= HIT and h >= HIT and x >= 0 and y >= 0 and x + w <= 256.01 and y + h <= 256.01, (name, x, y, w, h)
+    items = route(areas)
+
+    def share(rect):
+        return [round(v / 256.0, 4) for v in rect]
+
+    return {
+        'picture': 'mika-body',
+        'version': 2,
+        'note': ("Touch areas of mika-body.svg as shares of the picture's side (x, y, w, h from the top left); a part with two places "
+                 "(ears, arms, hands, fingers) has two areas, either of which is the part. Every area is at least 72 of the 256 units "
+                 "(64 pt on the phone SE, the smallest board). Areas of parts that never meet in one item may overlap; the three parts of "
+                 "an item shown on the body never do. Items whose parts cannot be 64 pt apart on the body are shown as three close-up "
+                 "cards (the answer tiles). teeth = mouth, hands = fingers, tummy = belly: one place, two courses' words. "
+                 "docs/design/languages-l4-layout.md section 2."),
+        'minShare': round(HIT / 256.0, 4),
+        'sceneSide': BOARD_SIDE,
+        'parts': {name: [share(r) for r in rects] for name, rects in areas.items()},
+        'cards': CARDS,
+        'items': items,
+    }
 
 
 def close_up(which):
@@ -890,6 +932,24 @@ def close_up(which):
                       crop=(-tw * 0.95, -tw * 1.15, tw * 1.9, tw * 1.4))
     if which == 'tummy':
         return canvas(base + glow(0, sh + body * 0.27, tw * 0.46, body * 0.15), crop=(-tw * 1.15, sh - body * 0.12, tw * 2.3, tw * 2.0))
+    if which == 'hair':
+        return canvas(base + glow(0, hc - r * 0.68, r * 1.12, r * 0.52), crop=(-r * 2.0, hc - r * 1.8, r * 4.0, r * 4.0))
+    if which == 'teeth':
+        grinning = base[:-1] + [E(0, hc + r * 0.5, r * 0.36, r * 0.2, ch.SKIN[sp['skin']], 0)] + grin(r, hc) + [base[-1]]
+        return canvas(grinning + glow(0, hc + r * 0.52, r * 0.42, r * 0.24), crop=(-r * 1.0, hc - r * 0.3, r * 2.0, r * 2.0))
+    if which == 'legs':
+        return canvas(base + glow(0, hip + (-hip) * 0.45, tw * 0.62, (-hip) * 0.42), crop=(-tw * 1.1, hip - tw * 0.4, tw * 2.2, tw * 2.2))
+    if which == 'arms':
+        out = base
+        for i, s in ((0, -1), (1, 1)):
+            pts = chain(s * (tw / 2 - aw * 0.25), sh + aw * 0.55, [(arm * 0.52, BODY_ARMS[i][0]), (arm * 0.5, BODY_ARMS[i][1])], s, 'front')
+            out = out + glow((pts[0][0] + pts[2][0]) / 2, (pts[0][1] + pts[2][1]) / 2, aw * 2.0, aw * 1.3)
+        return canvas(out, crop=(-tw * 1.45, sh - tw * 0.55, tw * 2.9, tw * 2.3))
+    if which == 'fingers':   # one open hand, big, palm to the viewer, the five fingers lit
+        skin = ch.SKIN[sp['skin']]
+        arm_ = limb([(0, aw * 3.2), (0, aw * 1.0)], skin, aw * 1.6)
+        hand_ = open_hand(0, aw * 0.6, 180, sp, scale=2.2)
+        return canvas(arm_ + hand_ + glow(0, -aw * 1.6, aw * 2.4, aw * 1.5), crop=(-aw * 3.2, -aw * 3.6, aw * 6.4, aw * 6.4))
 
 
 def face_card(expr, props_back=(), props_front=(), arms=((8, 0), (8, 0)), hat=False, scarf=False):
@@ -986,7 +1046,7 @@ MOUTHS = (('lips', 'mouth-lips'), ('teeth', 'mouth-teeth'), ('round', 'mouth-rou
 
 def part_c():
     out = {'mika-body': mika_body()}
-    for w in ('head', 'eyes', 'ears', 'nose', 'mouth', 'hands', 'feet', 'tummy'):
+    for w in ('head', 'eyes', 'ears', 'nose', 'mouth', 'hands', 'feet', 'tummy', 'hair', 'teeth', 'arms', 'fingers', 'legs'):
         out['body-' + w] = close_up(w)
     out.update(mika_faces())
     for kind, name in MOUTHS:
