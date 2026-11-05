@@ -1,0 +1,253 @@
+{
+ "schema": "nitznutz.strokes.scenes/1",
+ "skill": "HEB-A-14",
+ "review": "teacher-checked",
+ "reviewer": "hebrew-language-teacher",
+ "box": 100,
+ "directions": {
+  "down": "top to bottom",
+  "across": "right to left",
+  "arch": "from the left foot, up and over",
+  "circle": "clockwise from the top",
+  "door": "across the top left to right, the right side down, the left side down (as print ח)"
+ },
+ "orient": {
+  "none": "never turns",
+  "face": "mirrored to face the way the stroke goes, start to end (drawn facing left)",
+  "tangent": "turns with the path (seen from above, drawn head up)",
+  "tangent-upright": "turns with the path; mirrored instead of upside down (drawn facing left)"
+ },
+ "generator": "tools/make_stroke_scenes.py",
+ "items": [
+  {
+   "id": "A-14.1",
+   "skill": "HEB-A-14",
+   "picture": "stroke-rain-tulip",
+   "mover": "mover-raindrop",
+   "orient": "none",
+   "guide": "full",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 50 24 L 50 70",
+     "points": [[50, 24], [50, 70]],
+     "start": [50, 24],
+     "end": [50, 70],
+     "moves": [
+      "down"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[50, 24], [50, 70]]
+   ]
+  },
+  {
+   "id": "A-14.2",
+   "skill": "HEB-A-14",
+   "picture": "stroke-road-house",
+   "mover": "mover-car",
+   "orient": "face",
+   "guide": "full",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 86 72 L 26 72",
+     "points": [[86, 72], [26, 72]],
+     "start": [86, 72],
+     "end": [26, 72],
+     "moves": [
+      "left"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[86, 72], [26, 72]]
+   ]
+  },
+  {
+   "id": "A-14.3",
+   "skill": "HEB-A-14",
+   "picture": "stroke-hill",
+   "mover": "mover-rabbit",
+   "orient": "face",
+   "guide": "full",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 16 76 C 16 46 29 30 50 30 C 70 30 84 46 84 76",
+     "points": [[16, 76], [17, 66], [18, 57], [21, 49], [25, 42], [30, 37], [35, 33], [43, 31], [50, 30], [57, 31], [64, 33], [70, 37], [75, 42], [79, 49], [82, 57], [83, 66], [84, 76]],
+     "start": [16, 76],
+     "end": [84, 76],
+     "moves": [
+      "cw"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[16, 76], [17, 66], [18, 57], [21, 49], [25, 42], [30, 37], [35, 33], [43, 31], [50, 30], [57, 31], [64, 33], [70, 37], [75, 42], [79, 49], [82, 57], [83, 66], [84, 76]]
+   ]
+  },
+  {
+   "id": "A-14.4",
+   "skill": "HEB-A-14",
+   "picture": "stroke-pond",
+   "mover": "mover-ladybird",
+   "orient": "tangent",
+   "guide": "full",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 50 22 C 66.6 22 80 35.4 80 52 C 80 68.6 66.6 82 50 82 C 33.4 82 20 68.6 20 52 C 20 35.4 33.4 22 50 22",
+     "points": [[50, 22], [56, 23], [62, 24], [67, 27], [71, 31], [75, 35], [78, 40], [79, 46], [80, 52], [79, 58], [78, 64], [75, 69], [71, 73], [67, 77], [62, 80], [56, 81], [50, 82], [44, 81], [38, 80], [33, 77], [29, 73], [25, 69], [22, 64], [21, 58], [20, 52], [21, 46], [22, 40], [25, 35], [29, 31], [33, 27], [38, 24], [44, 23], [50, 22]],
+     "start": [50, 22],
+     "end": [50, 22],
+     "moves": [
+      "cw"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[50, 22], [56, 23], [62, 24], [67, 27], [71, 31], [75, 35], [78, 40], [79, 46], [80, 52], [79, 58], [78, 64], [75, 69], [71, 73], [67, 77], [62, 80], [56, 81], [50, 82], [44, 81], [38, 80], [33, 77], [29, 73], [25, 69], [22, 64], [21, 58], [20, 52], [21, 46], [22, 40], [25, 35], [29, 31], [33, 27], [38, 24], [44, 23], [50, 22]]
+   ]
+  },
+  {
+   "id": "A-14.5",
+   "skill": "HEB-A-14",
+   "picture": "stroke-rain-daisy",
+   "mover": "mover-raindrop",
+   "orient": "none",
+   "guide": "start",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 50 24 L 50 70",
+     "points": [[50, 24], [50, 70]],
+     "start": [50, 24],
+     "end": [50, 70],
+     "moves": [
+      "down"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[50, 24], [50, 70]]
+   ]
+  },
+  {
+   "id": "A-14.6",
+   "skill": "HEB-A-14",
+   "picture": "stroke-jetty",
+   "mover": "mover-boat",
+   "orient": "face",
+   "guide": "start",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 86 63 L 30 63",
+     "points": [[86, 63], [30, 63]],
+     "start": [86, 63],
+     "end": [30, 63],
+     "moves": [
+      "left"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[86, 63], [30, 63]]
+   ]
+  },
+  {
+   "id": "A-14.7",
+   "skill": "HEB-A-14",
+   "picture": "stroke-fence",
+   "mover": "mover-ball",
+   "orient": "none",
+   "guide": "start",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 16 76 C 16 46 29 30 50 30 C 70 30 84 46 84 76",
+     "points": [[16, 76], [17, 66], [18, 57], [21, 49], [25, 42], [30, 37], [35, 33], [43, 31], [50, 30], [57, 31], [64, 33], [70, 37], [75, 42], [79, 49], [82, 57], [83, 66], [84, 76]],
+     "start": [16, 76],
+     "end": [84, 76],
+     "moves": [
+      "cw"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[16, 76], [17, 66], [18, 57], [21, 49], [25, 42], [30, 37], [35, 33], [43, 31], [50, 30], [57, 31], [64, 33], [70, 37], [75, 42], [79, 49], [82, 57], [83, 66], [84, 76]]
+   ]
+  },
+  {
+   "id": "A-14.8",
+   "skill": "HEB-A-14",
+   "picture": "stroke-stone",
+   "mover": "mover-fish",
+   "orient": "tangent-upright",
+   "guide": "start",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 50 22 C 66.6 22 80 35.4 80 52 C 80 68.6 66.6 82 50 82 C 33.4 82 20 68.6 20 52 C 20 35.4 33.4 22 50 22",
+     "points": [[50, 22], [56, 23], [62, 24], [67, 27], [71, 31], [75, 35], [78, 40], [79, 46], [80, 52], [79, 58], [78, 64], [75, 69], [71, 73], [67, 77], [62, 80], [56, 81], [50, 82], [44, 81], [38, 80], [33, 77], [29, 73], [25, 69], [22, 64], [21, 58], [20, 52], [21, 46], [22, 40], [25, 35], [29, 31], [33, 27], [38, 24], [44, 23], [50, 22]],
+     "start": [50, 22],
+     "end": [50, 22],
+     "moves": [
+      "cw"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[50, 22], [56, 23], [62, 24], [67, 27], [71, 31], [75, 35], [78, 40], [79, 46], [80, 52], [79, 58], [78, 64], [75, 69], [71, 73], [67, 77], [62, 80], [56, 81], [50, 82], [44, 81], [38, 80], [33, 77], [29, 73], [25, 69], [22, 64], [21, 58], [20, 52], [21, 46], [22, 40], [25, 35], [29, 31], [33, 27], [38, 24], [44, 23], [50, 22]]
+   ]
+  },
+  {
+   "id": "A-14.9",
+   "skill": "HEB-A-14",
+   "picture": "stroke-door",
+   "mover": null,
+   "orient": null,
+   "guide": "start",
+   "strokes": [
+    {
+     "kind": "line",
+     "d": "M 31 31 L 69 31",
+     "points": [[31, 31], [69, 31]],
+     "start": [31, 31],
+     "end": [69, 31],
+     "moves": [
+      "right"
+     ]
+    },
+    {
+     "kind": "line",
+     "d": "M 69 31 L 69 82",
+     "points": [[69, 31], [69, 82]],
+     "start": [69, 31],
+     "end": [69, 82],
+     "moves": [
+      "down"
+     ]
+    },
+    {
+     "kind": "line",
+     "d": "M 31 31 L 31 82",
+     "points": [[31, 31], [31, 82]],
+     "start": [31, 31],
+     "end": [31, 82],
+     "moves": [
+      "down"
+     ]
+    }
+   ],
+   "scenePoints": [
+    [[31, 31], [69, 31]],
+    [[69, 31], [69, 82]],
+    [[31, 31], [31, 82]]
+   ],
+   "done": "stroke-door-done"
+  }
+ ]
+}
