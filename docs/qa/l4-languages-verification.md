@@ -12,6 +12,10 @@ leak or a child-safety break (no blocker).
 QA-L4-6 (a drum retry written as an incorrect attempt) and QA-L4-1, -2 (the body hotspots, which ENG-A-06 and RUS-A-03 need) should be
 fixed before any course content uses these templates; QA-L4-7 is a content change that costs nothing.
 
+**Update 2026-11-06 (section 10): QA-L4-1 to QA-L4-10 are all CLOSED** on `languages-course-home` (L4 with the fixes of `acdecdf`,
+`cbfca03` and `c589f54` merged). Two new defects came from playing the real body map: QA-L4-11 (minor) and QA-L4-12 (major, three Russian
+items refused by the validator).
+
 ## 1. What ran
 
 | Command | Result |
@@ -198,5 +202,94 @@ questionnaire screens; `read_along` and auto-advance (deferred); pgTAP and Deno 
 
 ## 9. Files
 
-New: `app/test/qa_l4_language_test.dart` (38 tests, all pass), `app/test/qa_l4_open_defects_test.dart` (12 tests, skipped until fixed),
+New: `app/test/qa_l4_language_test.dart` (38 tests, all pass), `app/test/qa_l4_open_defects_test.dart` (12 tests, all run since 2026-11-05), `app/test/qa_l4_reverify_test.dart` (2026-11-06, 30 tests),
 `tools/qa_check_language_pictures.py`, this record. No product file is touched.
+
+## 10. Re-verification, 2026-11-06 (branch `languages-course-home`, head `4c49c37`)
+
+Verified by: qa-engineer. The design spec is `docs/design/languages-l4-layout.md`; the body map is
+`content/languages/pictures/mika-body.hotspots.json` version 2. The developer's proofs of section 6 now run in every build (the
+`skip: _open` is gone from all 12; I checked the diff against `0d435c4`: the tests were adapted to the redrawn map, none was weakened,
+and QA-L4-10's test now asserts 8 cards and QA-L4-7's reads the corrected batch). I then played the real items and measured the spec's
+numbers in a new file, `app/test/qa_l4_reverify_test.dart` (30 tests: 28 run, 2 skipped as open defects).
+
+### 10.1 What ran
+
+| Command | Result |
+|---|---|
+| `flutter analyze` | No issues found |
+| `dart format --output=none --set-exit-if-changed .` | 462 files, 0 changed |
+| `dart run tool/pack_builder.dart schema --check` | "The JSON Schema files in ../content/schemas are up to date." |
+| `flutter test` (the whole suite, once, before my two new files; 19 min 34 s) | **+4073 passed, 0 failed, 3 skipped** (old: `mastery_reachable_test` 1 and `qa_open_defects_test` 2). Working tree clean afterwards: no golden was rewritten |
+| `deno task check` (fmt, lint, check, test) | exit 0, **198 passed, 0 failed, 7 ignored** |
+| The five SEC-L4 files, `qa_l4_open_defects_test.dart` and `l4_layout_test.dart` (run together) | **+112 passed, 0 failed** (`ls10_personal_safety`, `unscored_steps`, `staircase`, `ls13_placement`, `course`) |
+| `qa_l4_open_defects_test.dart` alone | **12 of 12 run and pass** (was 12 skipped) |
+| My new `qa_l4_reverify_test.dart` | **+28 passed, 2 skipped** (QA-L4-11 and QA-L4-12, open); with `--dart-define=QA_OPEN=true` both **fail**, as they must |
+| My new `qa_l_course_test.dart` (course screens, see `l-course-verification.md`) | +28 passed |
+
+### 10.2 The ten defects, one by one
+
+| Id | Verdict | Proof (what I checked beyond the developer's test) |
+|---|---|---|
+| QA-L4-1 | **CLOSED** | The map has every area of at least 72/256 (0.2812), inside the picture; the validator floor `minBandAHotspot` is 0.2812 for a Band A hotspot and refuses a smaller one. All 8 ENG-A-06 and 14 RUS-A-03 items built from the real JSON: every body item has every place of every option at least 64 pt each way and apart on all four boards (phone, SE, tablet landscape and portrait); the nose has an area; every cards item shows tiles of 96 pt on the phones and 112 on the tablets. The three parts of a `show: body` item never overlap (by the map's own numbers). Follow-up: QA-L4-12 (the validator refuses three items) |
+| QA-L4-2 | **CLOSED** | `at` takes one rectangle or 1 to 4; either ear, arm, hand or finger place answers `correct:o1` (every place of the right part touched on all four boards); several places are refused outside `hotspots` and `cards`; in cards mode a wrong card rings its own part and at level 2 the right card rings both ears |
+| QA-L4-3 | **CLOSED** | Hotspots, place and drag, on all four boards, English and Hebrew: after two mistakes the card (96 pt on the phones, 130 on the tablets) is on the board, outside the scene, and clear of the bubble, the lamp, the eye and every target. Goldens `ls11_closeup_*` read: phone (413, 248), SE (300, 222), tablet landscape left of the scene, tablet portrait in the band under the scene at the end corner. No white strip in the crop |
+| QA-L4-4 | **CLOSED** | The lamp three times marks the answer in `place`, `buttons` and `cards` (listen_do) as well as the three the developer tested (bubble, dialogic story, hotspots) |
+| QA-L4-5 | **CLOSED** | The rhyme at level 3 plays the whole verse (`full`) |
+| QA-L4-6 | **CLOSED** | 5 taps then "that's all": no attempt, no hint step, the dots clear; then the right count: one attempt, `correct`, hint 0; 4 keeps `eng.pa.syll`, 2 keeps `eng.pa.weak_syll`; five retries of 6 taps in a row write nothing and the lesson does not end |
+| QA-L4-7 | **CLOSED** | All ten probe rows of the English batch are LS01, LS03 or LS06 |
+| QA-L4-8 | **CLOSED** | Measured against section 4: the page is 206 x 116 on the phone and 185 x 104 on the SE (16:9 kept; 256 or more wide on the tablets), the stage keeps its height, each speaker is at the end of its tile in the course's direction (right in English, left in Hebrew), the last speaker stays clear of the guide; the tiles are 96 pt (phones) and 112 pt (tablets). Goldens `ls08_question_*`, `ls10_bubbles_heb_phone`, `ls12_rhyme_phoneSE` read |
+| QA-L4-9 | **CLOSED** | The drum's zones against the table of section 5, English and Hebrew (every x mirrored), on all four boards: picture, drum, hands row, dots row and check mark each within 2.5 pt of the spec; the check mark and the drum never overlap (the stage box on the tablets is the spec's stage less a 16 pt padding). Goldens `ls03_drum_*`, `ls03_hands_*` read. The Hebrew picture is at the start (right) corner: note N4 is answered |
+| QA-L4-10 | **CLOSED** | The family turn has 8 cards |
+
+### 10.3 The decision to confirm: `buttons` at level 2
+
+**CONFIRMED.** At level 0 and 1 the friend stands (no reaction), at level 2 (after two mistakes) the friend does the right action on the
+stage, there is no close-up card in `buttons` mode, the two wrong touches were written as `incorrect:o2`, `incorrect:o3` (the shown action
+is not an attempt) and a later touch on a button shows that button's action. It is the same information the old card gave (the right
+option's sprite), in the same place as the representation of the other templates' level 2 ("the friend does it"), so it changes the
+representation and gives the answer no earlier than the other templates do. Test: `qa_l4_reverify_test.dart` "the decision".
+
+### 10.4 New defects
+
+| Id | Severity | Title | Owner | Failing test (skipped until fixed; run with `--dart-define=QA_OPEN=true`) |
+|---|---|---|---|---|
+| QA-L4-11 | minor (validator gap) | A Band A `place` option (and a `drag` target or thing) can be any size from 0.04 of the picture: only `hotspots` has the 64 pt floor | app-developer (the floor in `_listenDo` for `place` and `drag`), with design-director (the value: 0.2812 as for hotspots, or 0.2747 = 64/233) | `qa_l4_reverify_test.dart` "QA-L4-11 (open)" |
+| QA-L4-12 | major (content blocked) | The pack validator refuses three real items of the real map, RUS-A-03 06, 10 and 14: the nose (or belly) and the right arm touch edge to edge (0.3594 + 0.2812 = 0.6406) and `_overlap` reads the float sum as an overlap | app-developer (a tolerance of 0.001 in `_overlap`, as `reaches outside` has) or design-director (move the areas by 0.001) | `qa_l4_reverify_test.dart` "QA-L4-12 (open)" |
+
+**QA-L4-11.** Evidence: `app/test/goldens/ls11_place_heb_phoneSE.png`: the "next to" place is 57 x 59 pt and the "under" place 115 x 60 pt on
+the SE, both under the 64 pt floor, and the validator takes them. Steps: a `place` item of band A with an option at `{x:0.5, y:0.04, w:0.1,
+h:0.1}` (23 pt on the SE). Expected: design-spec 6.1, any child control is 64 pt at least in Band A (QA-L4-1 holds hotspots to it). Actual:
+no message. No real item is built from this yet (HEB-A-04.1 uses `place`), so no child can meet it today.
+
+**QA-L4-12.** Steps: build `rus.a03.06`, `.10` or `.14` from the map (`arms` right place x 0.6406 beside `nose` or `belly` at x 0.3594, w 0.2812).
+Expected: the map's note says the areas of an item on the body "never overlap" and its generator counts touching as apart. Actual:
+`answer.options[2].at: overlaps answer.options[1].at: a touch must mean one thing`. The pack build would fail for these three items.
+
+### 10.5 The goldens read for this section (Read tool, each PNG opened)
+
+- All four boards: `ls11_closeup_*`.
+- Drum: `ls03_drum_phone`, `_phoneSE`, `_tabletLandscape`, `ls03_drum_heb_phone`, `_heb_tabletPortrait`, `ls03_hands_phoneSE`,
+  `_tabletLandscape`, `ls03_taps_tabletPortrait`.
+- Questions and pictures: `ls08_question_phone`, `_phoneSE`, `_tabletLandscape`, `ls08_row_phone`, `ls08_page_tabletPortrait`,
+  `ls08_heb_page_phoneSE`, `ls10_bubbles_heb_phone`, `ls10_personal_age_phone`, `ls10_personal_family_phoneSE`, `ls12_rhyme_phoneSE`,
+  `ls12_chant_heb_phone`, `ls12_ends_tabletLandscape`.
+- Commands: `ls11_hotspots_phoneSE`, `_tabletPortrait`, `ls11_place_heb_phoneSE`, `ls11_drag_phone`.
+
+That is 28 of the 62 L4 goldens that changed since my first record (the others are the same templates on the other boards;
+they were measured by the tests above, not opened).
+
+Found: no overflow stripe, no cut text or nikud, no red, no stretched picture; the check mark is alone at the end corner of the drum on
+every board; the cards stand outside the scenes. Noted, none a defect (design pass):
+- **N11.** On the tablet portrait the scene of `listen_do` stays 614 square at the top of its stage and leaves an empty white band of 150 pt
+  under it when no card is shown (`ls11_hotspots_tabletPortrait`): by design (section 3), but it looks unfinished.
+- **N12.** On the SE the question row starts 6 pt from the screen edge (`ls08_question_phoneSE`): the spec's number; tight.
+- **N5 (unchanged).** The page-turn arrow still overlaps the picture's corner (`ls08_heb_page_phoneSE`: over the ball's lower left).
+- The drum is still a plain disc; `drum.svg` exists (the other half of N4).
+- The personal cards on the phone are drawn as 56 pt circles inside a footprint of at least 64 (measured: every card and the pass are 64 pt or
+  more on all four boards, `qa_l4_reverify_test.dart`).
+
+### 10.6 Not checked
+
+The real phone and a child's hands (everything is measured on the test boards); sound; HEB-A-09's drum strip (N7) is still a deferred
+representation; whether a 3-year-old's random drumming writing nothing is enough evidence for the skill is a curriculum decision.
