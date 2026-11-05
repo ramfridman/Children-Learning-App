@@ -3,7 +3,7 @@ Band C: C-25 to C-27), on the hanging top line, with the ascender of ל and the 
 are centre lines inside Heebo 700 (the app's Hebrew letter tiles; fonts.md section 2). Script has no font: these paths ARE
 the script letters (fonts.md section 5), drawn once and used for the static letter, the print-script match, tracing and
 the stroke animation. Built by tools/make_letter_strokes.py; format in docs/languages/strokes.md.
-Status of both sets: needs-teacher (hebrew-language-teacher).
+Status of both sets: teacher-checked (hebrew-language-teacher, 2026-11-05; decisions in docs/languages/strokes.md 5.3).
 
 References looked at on 2026-11-04 (facts only; every path is our own, nothing traced):
   Print (direction and order):
@@ -25,7 +25,31 @@ References looked at on 2026-11-04 (facts only; every path is our own, nothing t
   - The teacher's direction groups (hebrew/syllabus.md, C-26): arch ר ה ת ח ק ב; falling י ו מ נ ן; "the rest (shapes
     from the design-director)". The arch letters start on the LEFT and go over the top clockwise (the sheet's start marks
     for ב and ה); the c-like curves (the right part of א, ס, ט) go anticlockwise, as the numerals do in the app.
-Choices the teacher checks are listed in docs/languages/strokes.md section 5.3.
+  Checked by the hebrew-language-teacher on 2026-11-05 (facts only; nothing traced):
+  - Print: Shlomit Oltchik's letter pages (shlomitoltchik.com, "לימוד אותיות הדפוס", a reading teacher's print-letter
+    lessons): "from the far to the near and from the ceiling to the floor"; ר is the base letter, "walk BACKWARDS along the
+    ceiling" (left to right) "and go down in the lift", and ב ח ה כ נ פ ק ת start like ר; ג starts "from the far (left)
+    at the top"; ס walks along the ceiling, then rounds and closes (clockwise); ט starts "from the peacock's beak" (the
+    hook); צ starts at the bird's head (the long arm), then the wing from top to bottom; ץ the left line, then the short
+    wing; ת like ר, then the left leg down and on to the left along the floor. Her מ alone starts at the bottom left (a
+    triangle-shaped model); the set keeps the top start of the three charts above.
+  - Print: walla! school, grade 1 "כתיבת האות ח": the line along the top first, left to right, then the two sides top
+    to bottom.
+  - Script: the Israeli school method by direction groups of Haya Kushnir, occupational therapist ("נהנים לכתוב",
+    "נעים לכתוב - ראשית לימוד הכתב", Ach publishers): five groups with a picture word, נופל ("an apple falls from the
+    tree"), קשת ("a rainbow"), כד ("a jug with a handle"), אריה ("a roaring lion") and טיול ("a hike in the hills").
+    Its קשת group is exactly ר ח ה ב ת ק and its נופל group י ו ן נ מ, as printed in "פשוט לכתוב, part 2, קבוצת קשת"
+    (Leah Ditchi and Efrat Yehezkel, occupational therapists, Ohel Sarah, 2020; anyflip.com/ykefx/dykv), built on
+    Kushnir's method: "all of us start like a rainbow from the sky and reach the ground"; ר "starts in the air and rolls
+    like a rainbow down to the ground" (the start dot drawn at the top left); ת "starts with the arch, then lifts the
+    pencil and adds a line falling from the sky and a small line lying on the ground"; ק "the arch, then lifts the
+    pencil and adds a line falling from the air to below the ground"; ב "the arch, then at once another small arch,
+    without lifting". Teachers' Wordwall activities (Shirahacmon10) put ס and צ in כד and ל and ע in אריה; the other
+    members of כד, אריה and טיול were not found and are proposed here (groupProposed).
+  - Script, general: "most script letters are written from top to bottom, final forms included, except two, ש and ט"
+    (et-lilmod.co.il, "אותיות כתב יד"); "a letter ends as far as possible on its left side" (Haya Kushnir, gkushnir.com).
+  No Ministry document with numbered script arrows was found; the decisions rest on the sources above.
+Decisions and the reasons: docs/languages/strokes.md section 5.3.
 """
 import types
 
@@ -51,7 +75,7 @@ SHORT = {'kind': 'short'}
 
 
 def _head(name, font, inset):
-    h = {'set': name, 'courses': ['heb'], 'review': 'needs-teacher', 'reviewer': 'hebrew-language-teacher', 'box': 100, 'ink': 9,
+    h = {'set': name, 'courses': ['heb'], 'review': 'teacher-checked', 'reviewer': 'hebrew-language-teacher', 'box': 100, 'ink': 9,
          'em': EM, 'baseline': BASE, 'guides': dict(GUIDES), 'solidGuides': ['top', 'base'], 'inset': inset,
          'direction': 'rtl', 'generator': 'tools/make_letter_strokes.py (paths: tools/strokes_hebrew.py)'}
     if font:
@@ -111,14 +135,17 @@ PRINT = types.SimpleNamespace(SET=_head('hebrew-print', True, 5.2), FORMS=PRINT_
 
 
 # ---------------------------------------------------------------------------------------------------- script (our model)
-ARCH = 'arch'          # the teacher's group: start on the left, over the top clockwise, down the right (ר ה ת ח ק ב)
-FALL = 'falling'       # the teacher's group: falling from the top (י ו מ נ ן)
-ROUND = 'round'        # proposed: a c-like curve, anticlockwise from the top (א ס ט ש ם)
-WAVE = 'wave'          # proposed: two bowls one under the other, like a 3 (ג ז ד צ)
-LOOP = 'loop'          # proposed: a loop or curl at the top or bottom (ל ע ף ץ)
-TEACHER_GROUPS = {ARCH: 'ר ה ת ח ק ב', FALL: 'י ו מ נ ן'}
-MIDDLE = 'ש is written like an e: it starts in the middle, goes up and round'
-FOOT = 'an arch letter that starts at its foot, bottom left, and goes up and over (the arch movement)'
+# The groups of the school method (Kushnir; "פשוט לכתוב"): the members the sources name are in TEACHER_GROUPS; the
+# rest are the teacher's proposal (groupProposed).
+ARCH = 'arch'          # קשת: start at the top left, over the top clockwise, down the right (ר ה ת ח ק ב)
+FALL = 'falling'       # נופל: fall from the top (י ו מ נ ן)
+JUG = 'jug'            # כד: a jug-handle curve, clockwise from the top left (ס צ named; כ ך פ ם ד proposed)
+LION = 'lion'          # אריה: a loop or a curl (ל ע named; ף ץ proposed)
+HIKE = 'hike'          # טיול: up and down, changing direction (members not found; א ג ז ט ש proposed)
+TEACHER_GROUPS = {ARCH: 'ר ה ת ח ק ב', FALL: 'י ו מ נ ן', JUG: 'ס צ', LION: 'ל ע'}
+MIDDLE = 'ש is written like an e: it starts in the middle, goes up and round (one of the two script letters not started at the top)'
+CURL = ('ט starts at the tip of its inner curl, as print ט starts at its hook, goes down the right, round the base and up, '
+        'to end on the left (one of the two script letters not started at the top)')
 
 
 def s(ch, group, sits, *strokes, **meta):
@@ -127,38 +154,39 @@ def s(ch, group, sits, *strokes, **meta):
 
 
 SCRIPT_FORMS = [
-    s('א', ROUND, (T, B), S('A 420 300 150 235 50 310'), S('M 235 575 L 115 55')),
+    s('א', HIKE, (T, B), S('A 420 300 150 235 50 310'), S('M 235 575 L 115 55')),
     s('ב', ARCH, (T, B), S('M 120 470 C 150 550 240 568 320 568 C 440 568 500 500 500 380 L 500 120 C 500 70 470 45 430 45 L 60 45')),
-    s('ג', WAVE, (T, B), S('M 170 520 C 230 575 380 580 400 500 C 420 420 280 360 200 300 C 120 240 100 120 180 70 C 260 30 420 40 540 70')),
-    s('ד', WAVE, (T, B), S('M 120 560 L 360 560 C 420 560 440 520 400 480 L 280 380 C 380 370 440 310 440 230 C 440 130 370 60 290 55')),
+    s('ג', HIKE, (T, B), S('M 170 520 C 230 575 380 580 400 500 C 420 420 280 360 200 300 C 120 240 100 120 180 70 C 260 30 420 40 540 70')),
+    s('ד', JUG, (T, B), S('M 120 560 L 360 560 C 420 560 440 520 400 480 L 280 380 C 380 370 440 310 440 230 C 440 130 370 60 290 55')),
     s('ה', ARCH, (T, B), S('M 110 480 C 140 550 230 568 310 568 C 430 568 490 500 490 380 L 490 45'), S('M 150 330 L 150 45')),
     s('ו', FALL, (T, B), S('M 320 568 L 290 45')),
-    s('ז', WAVE, (T, B), S('M 180 520 C 240 575 380 575 390 490 C 400 420 300 370 240 300 C 190 240 180 140 230 45')),
-    s('ח', ARCH, (T, B), S('M 120 45 L 120 400 C 120 510 200 568 300 568 C 420 568 480 500 480 380 L 480 45', startOk=FOOT)),
-    s('ט', ROUND, (T, B), S('M 260 568 C 160 450 110 300 150 160 C 190 50 380 30 450 130 C 490 190 480 280 440 330')),
+    s('ז', HIKE, (T, B), S('M 180 520 C 240 575 380 575 390 490 C 400 420 300 370 240 300 C 190 240 180 140 230 45')),
+    s('ח', ARCH, (T, B), S('M 120 480 C 150 550 220 568 300 568 C 420 568 480 500 480 380 L 480 45'), S('M 120 450 L 120 45')),
+    s('ט', HIKE, (T, B), S('M 440 330 C 480 280 490 190 450 130 C 380 30 190 50 150 160 C 110 300 160 450 260 568', startOk=CURL)),
     s('י', FALL, (T, None), S('M 300 568 L 280 390', **SHORT)),
-    s('כ', ARCH, (T, B), S('M 140 520 C 200 570 300 570 360 560 C 460 540 500 460 500 300 C 500 140 420 50 300 45 C 230 42 170 55 120 80')),
-    s('ך', ARCH, (T, BM), S('M 120 520 C 180 568 260 568 330 568 C 440 568 480 510 480 420 L 480 -165')),
-    s('ל', LOOP, (A, B), S('M 480 700 C 440 760 340 760 300 690 C 260 620 250 450 240 250 C 235 130 200 50 140 45 '
+    s('כ', JUG, (T, B), S('M 140 520 C 200 570 300 570 360 560 C 460 540 500 460 500 300 C 500 140 420 50 300 45 C 230 42 170 55 120 80')),
+    s('ך', JUG, (T, BM), S('M 120 520 C 180 568 260 568 330 568 C 440 568 480 510 480 420 L 480 -165')),
+    s('ל', LION, (A, B), S('M 480 700 C 440 760 340 760 300 690 C 260 620 250 450 240 250 C 235 130 200 50 140 45 '
                           'C 90 42 70 90 90 140 C 110 190 160 200 210 180')),
     s('מ', FALL, (T, B), S('M 480 568 L 360 45 L 220 568 L 100 45')),
-    s('ם', ROUND, (T, B), S('M 420 545 C 340 575 200 575 150 480 C 100 380 100 200 160 110 C 220 30 380 30 440 110 '
-                           'C 500 190 500 390 480 450 C 465 500 450 525 428 540')),
+    s('ם', JUG, (T, B), S('M 130 562 C 220 580 380 578 440 500 C 495 420 495 200 440 115 C 385 35 215 35 160 115 '
+                         'C 105 200 105 380 122 455 C 128 490 136 512 148 532')),
     s('נ', FALL, (T, B), S('M 220 540 C 260 570 320 560 330 520 L 330 140 C 330 70 280 45 200 45 L 100 45')),
     s('ן', FALL, (T, BM), S('M 300 568 L 290 -165')),
-    s('ס', ROUND, (T, B), S('A 300 306 190 262 90 450')),
-    s('ע', LOOP, (T, B), S('M 470 540 C 420 360 300 200 260 120 C 230 60 280 30 320 70 C 360 110 300 300 150 540', loop=True)),
-    s('פ', ARCH, (T, B), S('M 150 470 C 190 550 260 568 320 568 C 440 568 500 480 500 320 C 500 150 420 45 300 45 '
+    s('ס', JUG, (T, B), S('A 300 306 190 262 115 -240')),
+    s('ע', LION, (T, B), S('M 470 540 C 420 360 300 200 260 120 C 230 60 280 30 320 70 C 360 110 300 300 150 540', loop=True)),
+    s('פ', JUG, (T, B), S('M 150 470 C 190 550 260 568 320 568 C 440 568 500 480 500 320 C 500 150 420 45 300 45 '
                           'C 190 45 120 110 120 200 C 120 280 180 320 250 310 C 300 300 320 260 300 220')),
-    s('ף', LOOP, (T, BM), S('M 330 440 C 250 450 180 500 200 560 C 220 620 380 620 400 540 C 420 460 300 420 270 330 L 255 -165')),
-    s('צ', WAVE, (T, B), S('M 130 500 C 170 560 240 568 300 568 C 400 568 450 520 450 450 C 450 380 390 330 300 320 '
+    s('ף', LION, (T, BM), S('M 330 440 C 250 450 180 500 200 560 C 220 620 380 620 400 540 C 420 460 300 420 270 330 L 255 -165')),
+    s('צ', JUG, (T, B), S('M 130 500 C 170 560 240 568 300 568 C 400 568 450 520 450 450 C 450 380 390 330 300 320 '
                           'C 410 310 470 250 470 170 C 470 80 390 45 290 45 C 210 45 150 55 110 80')),
-    s('ץ', LOOP, (T, BM), S('M 160 560 C 180 440 250 380 330 360 C 420 340 460 420 420 480 C 380 540 300 470 290 380 L 270 -165', loop=True)),
+    s('ץ', LION, (T, BM), S('M 160 560 C 180 440 250 380 330 360 C 420 340 460 420 420 480 C 380 540 300 470 290 380 L 270 -165', loop=True)),
     s('ק', ARCH, (T, BM), S('M 120 520 C 170 568 250 568 320 568 C 430 568 490 500 490 400 L 490 200'), S('M 180 380 L 180 -165')),
     s('ר', ARCH, (T, B), S('M 110 500 C 160 560 230 568 300 568 C 420 568 480 500 480 400 L 480 45')),
-    s('ש', ROUND, (T, B), S('M 130 290 C 250 300 420 380 420 470 C 420 540 350 568 290 568 C 180 568 92 450 92 300 '
+    s('ש', HIKE, (T, B), S('M 130 290 C 250 300 420 380 420 470 C 420 540 350 568 290 568 C 180 568 92 450 92 300 '
                            'C 92 140 200 45 320 45 C 400 45 460 70 500 110', startOk=MIDDLE)),
-    s('ת', ARCH, (T, B), S('M 60 45 C 120 45 160 80 170 160 C 180 300 200 520 300 565 C 400 600 480 520 480 400 L 480 45', startOk=FOOT)),
+    s('ת', ARCH, (T, B), S('M 175 480 C 205 548 250 568 320 568 C 420 568 480 500 480 400 L 480 45'),
+      S('M 175 450 C 180 320 176 190 158 110 C 145 62 110 45 60 45')),
 ]
 
 
@@ -174,10 +202,10 @@ def script_start(form, i, st):
 
 
 SCRIPT = types.SimpleNamespace(SET=_head('hebrew-script', False, 3.5), FORMS=SCRIPT_FORMS, start_rule=script_start)
-SCRIPT.SET['groups'] = {ARCH: 'start on the left, over the top clockwise, down the right (the teacher\'s arch group)',
-                        FALL: 'fall from the top (the teacher\'s falling group)',
-                        ROUND: 'proposed: a c-like curve, anticlockwise from the top',
-                        WAVE: 'proposed: two bowls one under the other, like a 3',
-                        LOOP: 'proposed: a loop or a curl'}
+SCRIPT.SET['groups'] = {ARCH: 'קשת (a rainbow): start at the top left, over the top clockwise, down the right; school group ר ח ה ב ת ק',
+                        FALL: 'נופל (an apple falls): fall from the top; school group י ו ן נ מ',
+                        JUG: 'כד (a jug handle): a curve clockwise from the top left; ס צ from the school group, the rest proposed',
+                        LION: 'אריה (a roaring lion): a loop or a curl; ל ע from the school group, the rest proposed',
+                        HIKE: 'טיול (a hike in the hills): up and down, changing direction; members proposed'}
 
 SPECS = [PRINT, SCRIPT]

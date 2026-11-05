@@ -4,7 +4,7 @@
  "courses": [
   "heb"
  ],
- "review": "needs-teacher",
+ "review": "teacher-checked",
  "reviewer": "hebrew-language-teacher",
  "box": 100,
  "ink": 9,
@@ -24,11 +24,11 @@
  "direction": "rtl",
  "generator": "tools/make_letter_strokes.py (paths: tools/strokes_hebrew.py)",
  "groups": {
-  "arch": "start on the left, over the top clockwise, down the right (the teacher's arch group)",
-  "falling": "fall from the top (the teacher's falling group)",
-  "round": "proposed: a c-like curve, anticlockwise from the top",
-  "wave": "proposed: two bowls one under the other, like a 3",
-  "loop": "proposed: a loop or a curl"
+  "arch": "קשת (a rainbow): start at the top left, over the top clockwise, down the right; school group ר ח ה ב ת ק",
+  "falling": "נופל (an apple falls): fall from the top; school group י ו ן נ מ",
+  "jug": "כד (a jug handle): a curve clockwise from the top left; ס צ from the school group, the rest proposed",
+  "lion": "אריה (a roaring lion): a loop or a curl; ל ע from the school group, the rest proposed",
+  "hike": "טיול (a hike in the hills): up and down, changing direction; members proposed"
  },
  "count": 27,
  "forms": [
@@ -37,7 +37,7 @@
    "char": "א",
    "name": "alef",
    "final": false,
-   "group": "round",
+   "group": "hike",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
@@ -83,7 +83,7 @@
    "char": "ג",
    "name": "gimel",
    "final": false,
-   "group": "wave",
+   "group": "hike",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
@@ -102,7 +102,7 @@
    "char": "ד",
    "name": "dalet",
    "final": false,
-   "group": "wave",
+   "group": "jug",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
@@ -167,7 +167,7 @@
    "char": "ז",
    "name": "zayin",
    "final": false,
-   "group": "wave",
+   "group": "hike",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
@@ -192,12 +192,19 @@
    "strokes": [
     {
      "kind": "line",
-     "d": "M 33.4 71.9 L 33.4 39.2 C 33.4 29.1 40.8 23.7 50 23.7 C 61 23.7 66.6 30 66.6 41 L 66.6 71.9",
-     "points": [[33, 72], [33, 39], [34, 33], [37, 29], [40, 26], [44, 24], [50, 24], [55, 24], [60, 26], [63, 29], [65, 33], [67, 40], [67, 72]],
-     "start": [33, 72],
+     "d": "M 33.4 31.8 C 36.2 25.4 42.6 23.7 50 23.7 C 61 23.7 66.6 30 66.6 41 L 66.6 71.9",
+     "points": [[33, 32], [35, 29], [38, 26], [41, 25], [46, 24], [56, 24], [60, 26], [63, 29], [65, 33], [66, 38], [67, 72]],
+     "start": [33, 32],
      "end": [67, 72],
-     "moves": ["up", "cw", "down"],
-     "startOk": "an arch letter that starts at its foot, bottom left, and goes up and over (the arch movement)"
+     "moves": ["cw", "down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 33.4 34.6 L 33.4 71.9",
+     "points": [[33, 35], [33, 72]],
+     "start": [33, 35],
+     "end": [33, 72],
+     "moves": ["down"]
     }
    ]
   },
@@ -206,17 +213,18 @@
    "char": "ט",
    "name": "tet",
    "final": false,
-   "group": "round",
+   "group": "hike",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
     {
      "kind": "line",
-     "d": "M 45.8 23.7 C 36.6 34.6 32 48.4 35.7 61.3 C 39.3 71.4 56.8 73.2 63.3 64 C 66.9 58.5 66 50.2 62.3 45.6",
-     "points": [[46, 24], [39, 34], [35, 44], [35, 55], [36, 61], [37, 64], [42, 68], [48, 70], [55, 70], [60, 67], [64, 63], [66, 57], [65, 51], [62, 46]],
-     "start": [46, 24],
-     "end": [62, 46],
-     "moves": ["ccw"]
+     "d": "M 62.3 45.6 C 66 50.2 66.9 58.5 63.3 64 C 56.8 73.2 39.3 71.4 35.7 61.3 C 32 48.4 36.6 34.6 45.8 23.7",
+     "points": [[62, 46], [65, 51], [66, 57], [64, 63], [60, 67], [55, 70], [48, 70], [42, 68], [37, 64], [36, 61], [35, 55], [35, 44], [39, 34], [46, 24]],
+     "start": [62, 46],
+     "end": [46, 24],
+     "moves": ["cw"],
+     "startOk": "ט starts at the tip of its inner curl, as print ט starts at its hook, goes down the right, round the base and up, to end on the left (one of the two script letters not started at the top)"
     }
    ]
   },
@@ -244,7 +252,7 @@
    "char": "כ",
    "name": "kaf",
    "final": false,
-   "group": "arch",
+   "group": "jug",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
@@ -263,7 +271,7 @@
    "char": "ך",
    "name": "kaf-final",
    "final": true,
-   "group": "arch",
+   "group": "jug",
    "groupProposed": true,
    "sits": ["top", "basement"],
    "strokes": [
@@ -282,8 +290,8 @@
    "char": "ל",
    "name": "lamed",
    "final": false,
-   "group": "loop",
-   "groupProposed": true,
+   "group": "lion",
+   "groupProposed": false,
    "sits": ["ascender", "base"],
    "strokes": [
     {
@@ -320,17 +328,17 @@
    "char": "ם",
    "name": "mem-final",
    "final": true,
-   "group": "round",
+   "group": "jug",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
     {
      "kind": "line",
-     "d": "M 60.8 25.9 C 53.4 23.1 40.5 23.1 35.9 31.8 C 31.3 41 31.3 57.6 36.9 65.9 C 42.4 73.2 57.1 73.2 62.6 65.9 C 68.1 58.5 68.1 40.1 66.3 34.6 C 64.9 30 63.5 27.7 61.5 26.3",
-     "points": [[61, 26], [53, 24], [46, 25], [39, 28], [36, 32], [33, 42], [33, 54], [36, 64], [37, 67], [40, 69], [47, 71], [54, 71], [60, 68], [64, 64], [67, 54], [67, 41], [65, 32], [64, 29], [62, 26]],
-     "start": [61, 26],
-     "end": [62, 26],
-     "moves": ["ccw"]
+     "d": "M 34.7 24.3 C 42.9 22.6 57.7 22.8 63.2 30 C 68.2 37.4 68.2 57.6 63.2 65.4 C 58.1 72.8 42.5 72.8 37.4 65.4 C 32.4 57.6 32.4 41 33.9 34.1 C 34.5 30.9 35.2 28.9 36.3 27.1",
+     "points": [[35, 24], [44, 23], [53, 24], [59, 27], [64, 31], [66, 37], [67, 46], [67, 55], [65, 63], [62, 66], [59, 69], [53, 71], [48, 71], [42, 69], [39, 67], [36, 64], [35, 58], [33, 50], [33, 41], [34, 32], [36, 27]],
+     "start": [35, 24],
+     "end": [36, 27],
+     "moves": ["cw", "up"]
     }
    ]
   },
@@ -377,17 +385,17 @@
    "char": "ס",
    "name": "samekh",
    "final": false,
-   "group": "round",
-   "groupProposed": true,
+   "group": "jug",
+   "groupProposed": false,
    "sits": ["top", "base"],
    "strokes": [
     {
      "kind": "line",
-     "d": "M 50 23.7 C 40.3 23.7 32.5 34.5 32.5 47.8 C 32.5 61.2 40.3 72 50 72 C 59.7 72 67.5 61.2 67.5 47.8 C 67.5 34.5 59.7 23.7 50 23.7",
-     "points": [[50, 24], [47, 24], [43, 26], [38, 31], [34, 39], [33, 48], [34, 57], [38, 65], [43, 70], [47, 71], [50, 72], [53, 71], [57, 70], [62, 65], [66, 57], [67, 48], [66, 39], [62, 31], [57, 26], [53, 24], [50, 24]],
-     "start": [50, 24],
-     "end": [50, 24],
-     "moves": ["ccw"]
+     "d": "M 42.6 26 C 51.2 20.5 61.5 25.4 65.7 37.2 C 69.9 48.9 66.5 63.2 58.1 69.2 C 49.6 75.3 39.2 70.9 34.7 59.4 C 30.1 48 33 33.5 41.3 27",
+     "points": [[43, 26], [49, 24], [56, 25], [62, 30], [66, 37], [67, 46], [67, 55], [63, 63], [58, 69], [52, 72], [45, 71], [39, 67], [35, 59], [33, 50], [33, 41], [36, 33], [41, 27]],
+     "start": [43, 26],
+     "end": [41, 27],
+     "moves": ["cw"]
     }
    ]
   },
@@ -396,8 +404,8 @@
    "char": "ע",
    "name": "ayin",
    "final": false,
-   "group": "loop",
-   "groupProposed": true,
+   "group": "lion",
+   "groupProposed": false,
    "sits": ["top", "base"],
    "strokes": [
     {
@@ -416,7 +424,7 @@
    "char": "פ",
    "name": "pe",
    "final": false,
-   "group": "arch",
+   "group": "jug",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
@@ -435,7 +443,7 @@
    "char": "ף",
    "name": "pe-final",
    "final": true,
-   "group": "loop",
+   "group": "lion",
    "groupProposed": true,
    "sits": ["top", "basement"],
    "strokes": [
@@ -454,8 +462,8 @@
    "char": "צ",
    "name": "tsadi",
    "final": false,
-   "group": "wave",
-   "groupProposed": true,
+   "group": "jug",
+   "groupProposed": false,
    "sits": ["top", "base"],
    "strokes": [
     {
@@ -473,7 +481,7 @@
    "char": "ץ",
    "name": "tsadi-final",
    "final": true,
-   "group": "loop",
+   "group": "lion",
    "groupProposed": true,
    "sits": ["top", "basement"],
    "strokes": [
@@ -539,7 +547,7 @@
    "char": "ש",
    "name": "shin",
    "final": false,
-   "group": "round",
+   "group": "hike",
    "groupProposed": true,
    "sits": ["top", "base"],
    "strokes": [
@@ -550,7 +558,7 @@
      "start": [35, 49],
      "end": [69, 66],
      "moves": ["ccw"],
-     "startOk": "ש is written like an e: it starts in the middle, goes up and round"
+     "startOk": "ש is written like an e: it starts in the middle, goes up and round (one of the two script letters not started at the top)"
     }
    ]
   },
@@ -565,12 +573,19 @@
    "strokes": [
     {
      "kind": "line",
-     "d": "M 30.7 71.9 C 36.2 71.9 39.9 68.6 40.8 61.3 C 41.7 48.4 43.6 28.2 52.8 24 C 62 20.8 69.3 28.2 69.3 39.2 L 69.3 71.9",
-     "points": [[31, 72], [36, 70], [38, 68], [40, 66], [43, 42], [47, 30], [52, 25], [57, 23], [61, 24], [64, 26], [67, 30], [69, 34], [69, 39], [69, 72]],
-     "start": [31, 72],
+     "d": "M 41.3 31.8 C 44 25.6 48.2 23.7 54.6 23.7 C 63.8 23.7 69.3 30 69.3 39.2 L 69.3 71.9",
+     "points": [[41, 32], [43, 29], [45, 26], [48, 25], [52, 24], [57, 24], [61, 25], [64, 27], [66, 29], [68, 33], [69, 38], [69, 72]],
+     "start": [41, 32],
      "end": [69, 72],
-     "moves": ["ccw", "cw", "down"],
-     "startOk": "an arch letter that starts at its foot, bottom left, and goes up and over (the arch movement)"
+     "moves": ["cw", "down"]
+    },
+    {
+     "kind": "line",
+     "d": "M 41.3 34.6 C 41.7 46.6 41.4 58.5 39.7 65.9 C 38.5 70.3 35.3 71.9 30.7 71.9",
+     "points": [[41, 35], [41, 53], [40, 66], [39, 68], [37, 70], [34, 71], [31, 72]],
+     "start": [41, 35],
+     "end": [31, 72],
+     "moves": ["down", "cw"]
     }
    ]
   }

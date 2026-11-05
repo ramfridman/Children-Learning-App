@@ -21,8 +21,9 @@ shown when the three strokes are done.
 Directions (data, not pictures, so the teacher's answer changes one line): down; across from right to left; the arch
 from the LEFT foot, up and over to the right (ARCH_FROM; the brief's first guess was from the right, see strokes.md
 section 5.3: both school models start the arch letters on the left and draw the top lines left to right); the circle
-anticlockwise from the top (CIRCLE, as the brief and the app's numerals 0, 6, 8, 9); the door down, across right to
-left, down. A hill, a fence, a pond and a stone look the same from both sides, so a changed direction needs no new
+clockwise from the top (CIRCLE; the teacher's decision, 2026-11-05: print ס and the script curves go clockwise; the brief
+and the app's numerals 0, 6, 8, 9 go the other way); the door as print ח: across the top left to right, the right side
+down, the left side down (the teacher's decision, 2026-11-05). A hill, a fence, a pond and a stone look the same from both sides, so a changed direction needs no new
 picture; the house and the jetty stand on the left, where the right-to-left road and water lead.
 
 Style and rules: the approved house style of the Languages pictures (docs/art/art-brief.md; tools/make_language_pictures.py
@@ -56,7 +57,7 @@ K = 2.56                      # box units to picture pixels
 f = sc.f
 
 ARCH_FROM = 'left'            # 'left' (proposed, from the school models) or 'right' (the brief's first guess)
-CIRCLE = 'ccw'                # 'ccw' from the top (the brief) or 'cw'
+CIRCLE = 'cw'                 # 'cw' from the top (the teacher, 2026-11-05: the Hebrew round movement) or 'ccw' (the brief)
 
 SKY, GRASS, GRASS_D, WATER, WATER_D = '#DFF1FB', '#B5DFA0', '#8CC77A', '#8FD3F4', '#5BB8E0'
 
@@ -282,7 +283,7 @@ ITEMS = [
     ('A-14.6', 'stroke-jetty', 'boat', 'start', ['M 86 63 L 30 63']),
     ('A-14.7', 'stroke-fence', 'ball', 'start', [arch(30)]),
     ('A-14.8', 'stroke-stone', 'fish', 'start', [circle()]),
-    ('A-14.9', 'stroke-door', None, 'start', ['M 69 31 L 69 82', 'M 69 31 L 31 31', 'M 31 31 L 31 82']),
+    ('A-14.9', 'stroke-door', None, 'start', ['M 31 31 L 69 31', 'M 69 31 L 69 82', 'M 31 31 L 31 82']),
 ]
 
 
@@ -402,9 +403,9 @@ def main():
             fh.write(text)
     items = build_items()
     problems = check(items)
-    doc = {'schema': 'nitznutz.strokes.scenes/1', 'skill': 'HEB-A-14', 'review': 'needs-teacher', 'reviewer': 'hebrew-language-teacher',
+    doc = {'schema': 'nitznutz.strokes.scenes/1', 'skill': 'HEB-A-14', 'review': 'teacher-checked', 'reviewer': 'hebrew-language-teacher',
            'box': 100, 'directions': {'down': 'top to bottom', 'across': 'right to left', 'arch': 'from the %s foot, up and over' % ARCH_FROM,
-                                     'circle': ('anticlockwise' if CIRCLE == 'ccw' else 'clockwise') + ' from the top', 'door': 'down, across right to left, down'},
+                                     'circle': ('anticlockwise' if CIRCLE == 'ccw' else 'clockwise') + ' from the top', 'door': 'across the top left to right, the right side down, the left side down (as print ח)'},
            'orient': {'none': 'never turns', 'face': 'mirrored to face the way the stroke goes, start to end (drawn facing left)',
                       'tangent': 'turns with the path (seen from above, drawn head up)',
                       'tangent-upright': 'turns with the path; mirrored instead of upside down (drawn facing left)'},

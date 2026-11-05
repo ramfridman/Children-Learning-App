@@ -6,7 +6,7 @@
 * the counts: latin 52, cyrillic 66, hebrew-print 27, hebrew-script 27 (frame F6);
 * every stroke fits the trace template's format: whole box units 0 to 100, 2 to 60 points, its start is its first point,
   1 to 6 strokes a letter, and a line stroke is long enough to trace (a dot or a short mark says so);
-* each set is marked needs-teacher until its teacher has checked it;
+* each set is marked needs-teacher until its teacher has checked it (then teacher-checked: latin, cyrillic, hebrew-print, hebrew-script and the A-14 scenes, 2026-11-05);
 * the A-14 scenes: 9 items whose strokes drop into the existing `trace` activity as they are (1 to 3 strokes, the schema's
   limits), each with its picture and (but the door) its mover on disk.
 The --fit check against the fonts needs Chrome and is run by hand (python tools/make_letter_strokes.py --fit).
@@ -25,6 +25,8 @@ import make_letter_strokes as ls  # noqa: E402
 STROKES = os.path.join(ROOT, 'content', 'languages', 'strokes')
 PICTURES = os.path.join(ROOT, 'content', 'languages', 'pictures')
 COUNTS = {'latin': 52, 'cyrillic': 66, 'hebrew-print': 27, 'hebrew-script': 27}
+# the sets their teacher has checked (docs/languages/strokes.md section 5); every other set stays needs-teacher
+REVIEWED = {'latin': 'teacher-checked', 'cyrillic': 'teacher-checked', 'hebrew-print': 'teacher-checked', 'hebrew-script': 'teacher-checked'}
 
 
 def load(name):
@@ -46,7 +48,7 @@ class LetterStrokesTest(unittest.TestCase):
             self.assertEqual(d['schema'], ls.SCHEMA)
             self.assertEqual(len(d['forms']), n, name)
             self.assertEqual(d['count'], n)
-            self.assertEqual(d['review'], 'needs-teacher', name)
+            self.assertEqual(d['review'], REVIEWED.get(name, 'needs-teacher'), name)
             self.assertEqual(len({f['id'] for f in d['forms']}), n, 'ids are unique')
 
     def test_trace_format(self):
@@ -85,7 +87,7 @@ class StrokeScenesTest(unittest.TestCase):
     def test_items(self):
         d = load('prewriting-heb-a14')
         self.assertEqual(len(d['items']), 9)
-        self.assertEqual(d['review'], 'needs-teacher')
+        self.assertEqual(d['review'], 'teacher-checked')  # hebrew-language-teacher, 2026-11-05
         for it in d['items']:
             self.assertTrue(os.path.exists(os.path.join(PICTURES, it['picture'] + '.svg')), it['picture'])
             if it['mover']:
@@ -99,7 +101,7 @@ class StrokeScenesTest(unittest.TestCase):
                 self.assertGreaterEqual(sum(math.dist(pts[i - 1], pts[i]) for i in range(1, len(pts))), 25)
         self.assertEqual([it['guide'] for it in d['items']], ['full'] * 4 + ['start'] * 5)
         door = d['items'][8]
-        self.assertEqual([s['moves'] for s in door['strokes']], [['down'], ['left'], ['down']])
+        self.assertEqual([s['moves'] for s in door['strokes']], [['right'], ['down'], ['down']])
 
     def test_no_text_in_pictures(self):
         for name in os.listdir(PICTURES):

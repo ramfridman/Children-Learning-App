@@ -1,6 +1,7 @@
 """F6 for English: the 26 small and 26 capital print letters, drawn as centre lines inside Nitznutz Letters Bold (the app's
 Latin teaching font, Andika 7 with the single-storey a and g; docs/languages/fonts.md), on the four lines. Built by
-tools/make_letter_strokes.py; format in docs/languages/strokes.md. Status: needs-teacher (english-language-teacher).
+tools/make_letter_strokes.py; format in docs/languages/strokes.md. Status: teacher-checked (english-language-teacher,
+2026-11-05; the decisions and the models behind them are in docs/languages/strokes.md section 5.1).
 
 References looked at on 2026-11-04 (facts only; every path is our own, drawn on the font's measures, nothing traced):
   - The course itself: docs/languages/english/syllabus.md section 3.1 and section 5 (the formation families c a d g o q /
@@ -14,7 +15,13 @@ References looked at on 2026-11-04 (facts only; every path is our own, drawn on 
     formation charts (e.g. iblog.dearbornschools.org "Letter Formation Charts").
   - The font's own shapes: each glyph measured in Chrome (canvas measureText on app/assets/fonts/NitznutzLetters-Bold.ttf)
     and drawn on a 50-unit grid, so every centre line sits inside the letter the tile shows (checked with --fit).
-Choices the teacher checks are listed in docs/languages/strokes.md section 5.1.
+  - Learning Without Tears capital groups (Davie County Schools HWT page): Center Starters (C O Q G S A I T J) start at
+    the top centre, C O Q G with a Magic C; Frog Jump capitals (F E D P B R N M): big line down, frog jump back to the
+    starting corner, finish the letter.
+  - Oak National Academy KS1 handwriting lessons (thenational.academy, "Formation of c, a, d, o, g and q"; "Capital
+    letters C, G, O, Q, M, N, W and V"): c a d o g q start just below the x-height line and go anticlockwise.
+Teacher's check (2026-11-05): c a d g o q and the capitals C G O Q all start at 2 o'clock (one cue, small and capital);
+T is down first, then across; a d g q (one stroke, back up the stem), E (4), Y (2), N (2) and M (2) are kept.
 """
 from make_letter_strokes import Form, S, top_start
 
@@ -31,7 +38,7 @@ def _line(units):
 SET = {
     'set': 'latin',
     'courses': ['eng'],
-    'review': 'needs-teacher',
+    'review': 'teacher-checked',
     'reviewer': 'english-language-teacher',
     'box': 100,
     'ink': 9,
@@ -121,13 +128,13 @@ FORMS = [
     up('L', (C, 'base'), S('M 143 660 L 143 58 L 510 58')),
     up('M', (C, 'base'), S('M 143 660 L 143 40'), S('M 143 660 L 445 110 L 748 660 L 748 40')),
     up('N', (C, 'base'), S('M 143 660 L 143 40'), S('M 143 660 L 592 40 L 592 660')),
-    up('O', (C, 'base'), S('A 360 359 270 327 90 450')),
+    up('O', (C, 'base'), S('A 360 359 270 327 46 406')),
     up('P', (C, 'base'), S('M 143 660 L 143 40'), S('M 143 660 L 340 660 A 340 497 196 175 90 -90 L 143 322')),
-    up('Q', (C, None), S('A 384 359 296 327 90 450'), S('M 470 170 L 712 -78')),
+    up('Q', (C, None), S('A 384 359 296 327 46 406'), S('M 470 170 L 712 -78')),
     up('R', (C, 'base'), S('M 143 660 L 143 40'),
        S('M 143 660 L 330 660 C 450 660 510 605 510 505 C 510 405 450 338 330 338 L 160 338 L 572 40')),
     up('S', (C, 'base'), S('A 300 524 208 160 32 270 A 296 194 232 160 90 -148')),
-    up('T', (C, 'base'), S('M 58 660 L 552 660'), S('M 305 660 L 305 40')),
+    up('T', (C, 'base'), S('M 305 660 L 305 40'), S('M 58 660 L 552 660')),
     up('U', (C, 'base'), S('M 143 660 L 143 250 C 143 100 220 36 352 36 C 474 36 561 100 561 250 L 561 660')),
     up('V', (C, 'base'), S('M 62 660 L 352 42 L 642 660')),
     up('W', (C, 'base'), S('M 72 660 L 270 42 L 516 560 L 762 42 L 960 660')),
