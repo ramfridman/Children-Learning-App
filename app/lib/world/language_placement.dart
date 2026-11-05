@@ -156,6 +156,26 @@ class PlacementFlow implements ItemFlow {
   Spoken get celebration => doc.celebration;
 }
 
+/// The next placement visit of a course for one child, or null when there is nothing to ask (no placement document, no strand offered, or
+/// every strand has stopped). The game has the child's earlier answers replayed into it, so a visit goes on where the last one ended.
+({Lesson lesson, PlacementFlow flow})? placementVisitFor(
+  PackContent content,
+  Iterable<Attempt> attempts, {
+  Map<String, String> answers = const <String, String>{},
+  int presentationBand = 0,
+}) {
+  final PlacementDoc? doc = content.placement;
+  final PlacementGame? game = placementGameFor(
+    content,
+    attempts,
+    answers: answers,
+    presentationBand: presentationBand,
+  );
+  if (doc == null || game == null || game.next() == null) return null;
+  final PlacementFlow flow = PlacementFlow(game, doc);
+  return (lesson: placementLessonFor(content, flow), flow: flow);
+}
+
 /// The lesson that carries a placement visit: its id is the course's placement id, so that the answers it writes are told apart from
 /// every other lesson's (and from every other course's), and the controller plays the flow's first probe.
 Lesson placementLessonFor(PackContent content, PlacementFlow flow) => Lesson.mission(

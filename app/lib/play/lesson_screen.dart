@@ -27,6 +27,7 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
+import '../engine/course.dart';
 import '../parent/alert_scan.dart';
 import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
@@ -69,10 +70,15 @@ class LessonScreen extends ConsumerStatefulWidget {
     this.lessonId = 'butterflies',
     this.mission,
     this.flow,
+    this.course = Course.core,
   });
 
   final String profileId;
   final String lessonId;
+
+  /// The course the lesson is in: `core` plays the starter pack's lessons, a language course plays that course's own installed pack
+  /// (`languagePacksProvider`), so a visit never reads another course's content (docs/milestones/L-course.md, D-9).
+  final String course;
 
   /// An adaptive visit (the placement game of a language course): which activity comes next is the flow's to say.
   final ItemFlow? flow;
@@ -420,7 +426,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<PackContent> content = ref.watch(contentProvider);
+    final AsyncValue<PackContent> content = _contentOfCourse();
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
     final bool voiceOn = ref.watch(voiceAvailableProvider).value ?? false;
     final bool? tutorOn = ref.watch(tutorAvailableProvider).value;
@@ -443,6 +449,24 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         },
       ),
     );
+  }
+
+  /// The pack the lesson plays: the starter pack, or the installed pack of the lesson's language course. A course whose pack is not
+  /// installed (or no longer proves itself) is an error, which the screen shows as "the lesson is not ready", never another course's lesson.
+  AsyncValue<PackContent> _contentOfCourse() {
+    if (widget.course == Course.core) return ref.watch(contentProvider);
+    return ref
+        .watch(languagePacksProvider)
+        .when(
+          data: (Map<String, PackContent> packs) {
+            final PackContent? pack = packs[widget.course];
+            return pack == null
+                ? AsyncError<PackContent>(StateError('no pack for ${widget.course}'), StackTrace.current)
+                : AsyncData<PackContent>(pack);
+          },
+          loading: () => const AsyncLoading<PackContent>(),
+          error: (Object e, StackTrace s) => AsyncError<PackContent>(e, s),
+        );
   }
 
   /// The microphone, when a parent turned voice on and saying the answer is the answer (the activity's `voiceAnswer`,

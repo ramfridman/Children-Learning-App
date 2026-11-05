@@ -6,6 +6,7 @@ import 'language_placement.dart' show placedLanguageLessons;
 import 'lesson_path.dart';
 import 'next_lesson.dart' show finishedLessons;
 import 'placement.dart' show landPath;
+import 'world_state.dart' show missionItemIds;
 import 'todays_adventure.dart';
 
 // The course home's own facts (docs/milestones/L-course.md): the path of a course's lessons with where the child stands on it, and what
@@ -125,5 +126,22 @@ CourseHomeModel buildCourseHome({
       band: band,
     ),
     placementDue: course.placement != null && !course.placement!.complete,
+  );
+}
+
+/// The short revisit lesson of a course's skill (a check that fell due): three to five of the course's own items, built from the child's
+/// engine on the course, and ended by the celebration of a lesson of the course that teaches the skill (the course's own line; there is no
+/// line of the lands in a course). Null when the skill has no item to ask or the course has no lesson to borrow the line from.
+Lesson? courseMission(LanguageCourse course, String skillId) {
+  final List<String> items = missionItemIds(course.engine, skillId);
+  final List<Lesson> path = landPath(course.content, Course.languagesDomain);
+  final Lesson? from = path.where((Lesson l) => l.skillIds.contains(skillId)).firstOrNull ?? path.firstOrNull;
+  if (items.isEmpty || from == null) return null;
+  return Lesson.mission(
+    // A lesson id is lower case, as `sync-push` takes it.
+    id: 'mission-${skillId.toLowerCase()}',
+    itemIds: items,
+    skillIds: <String>[skillId],
+    celebration: from.celebration,
   );
 }

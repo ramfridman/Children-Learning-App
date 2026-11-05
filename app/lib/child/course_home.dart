@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show SliverLayoutDimensions;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/course_visit.dart';
 import '../app/language_providers.dart';
+import '../app/reward_providers.dart' show rewardsProvider;
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
@@ -117,8 +119,10 @@ class _HomeSpec {
 }
 
 /// The course home of one child. It reads the course from the installed pack and the child's answers ([courseHomeProvider]); a
-/// language that is not installed shows the host alone.
-class CourseHomeScreen extends ConsumerWidget {
+/// language that is not installed shows the host alone. The pebble starts what is next: the placement visit while the host is inviting,
+/// otherwise the stop of the rule (a revisit, the next lesson, a lesson again). A visit ends on its own celebration and the child is back
+/// here, with the path moved on.
+class CourseHomeScreen extends ConsumerStatefulWidget {
   const CourseHomeScreen({super.key, required this.childId, required this.course, this.onBack});
 
   final String childId;
@@ -126,9 +130,48 @@ class CourseHomeScreen extends ConsumerWidget {
   final VoidCallback? onBack;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final CourseHomeModel? model = ref.watch(courseHomeProvider((childId: childId, course: course))).value;
-    return CourseHomeView(course: course, model: model, onBack: onBack);
+  ConsumerState<CourseHomeScreen> createState() => _CourseHomeScreenState();
+}
+
+class _CourseHomeScreenState extends ConsumerState<CourseHomeScreen> {
+  /// A visit is on screen (or being set up): a second touch of the pebble starts nothing.
+  bool _busy = false;
+
+  ({String childId, String course}) get _key => (childId: widget.childId, course: widget.course);
+
+  Future<void> _play() async {
+    final CourseHomeModel? model = ref.read(courseHomeProvider(_key)).value;
+    if (_busy || model == null || !model.canPlay) return;
+    _busy = true;
+    try {
+      await _start(model);
+    } finally {
+      _busy = false;
+    }
+  }
+
+  /// Starts what the pebble stands for, and when the visit is over reads the child's history again.
+  Future<void> _start(CourseHomeModel model) async {
+    await startCourseVisit(context, ref, childId: widget.childId, course: widget.course, model: model);
+    if (mounted) _refresh();
+  }
+
+  /// A visit has ended (finished or left): the path, the engine and the awards are read again.
+  void _refresh() {
+    ref.invalidate(rewardsProvider(widget.childId));
+    ref.invalidate(languageCoursesProvider(widget.childId));
+    ref.invalidate(courseHomeProvider(_key));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final CourseHomeModel? model = ref.watch(courseHomeProvider(_key)).value;
+    return CourseHomeView(
+      course: widget.course,
+      model: model,
+      onPlay: model == null ? null : _play,
+      onBack: widget.onBack,
+    );
   }
 }
 
