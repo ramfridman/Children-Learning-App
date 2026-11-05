@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/course_home.dart';
 import 'package:nitznutz/child/home_screen.dart';
+import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/parent/parent_rules.dart';
 import 'package:nitznutz/tutor/tutor.dart';
@@ -26,6 +27,8 @@ Future<AppRig> courseApp(
   ParentRules? rules,
   TutorClient? tutor,
   int? clockMs,
+  bool voice = false,
+  Map<String, PackContent>? packs,
 }) async {
   final Set<String> refs = <String>{for (final String c in on) ...voRefsOf(courseFixture(c))};
   final AppRig rig = AppRig(
@@ -34,7 +37,8 @@ Future<AppRig> courseApp(
     rules: rules,
     tutor: tutor,
     clockMs: clockMs,
-  )..languagePacks = fixturePacks(on);
+    voice: voice,
+  )..languagePacks = packs ?? fixturePacks(on);
   await rig.seedFinishedSetup(id: courseKid);
   if (history != null) await history(rig);
   FamilyLanguages f = const FamilyLanguages();

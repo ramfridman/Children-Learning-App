@@ -9,7 +9,6 @@ import 'package:nitznutz/parent/language_progress.dart';
 import 'package:nitznutz/parent/language_settings.dart';
 import 'package:nitznutz/strings/he.dart';
 import 'package:nitznutz/world/adventure_adapter.dart';
-import 'package:nitznutz/world/language_placement.dart';
 import 'package:nitznutz/world/placement.dart' show placementIdFor;
 
 import 'support/course_history.dart';

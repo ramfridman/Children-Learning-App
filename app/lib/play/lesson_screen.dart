@@ -427,6 +427,8 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   @override
   Widget build(BuildContext context) {
     final AsyncValue<PackContent> content = _contentOfCourse();
+    // A course's voice switch is read before the lesson opens, so that the microphone is decided on what the parent chose for it.
+    if (widget.course != Course.core) ref.watch(languagesProvider);
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
     final bool voiceOn = ref.watch(voiceAvailableProvider).value ?? false;
     final bool? tutorOn = ref.watch(tutorAvailableProvider).value;
@@ -469,6 +471,12 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         );
   }
 
+  /// Whether the microphone may open in a lesson of [pack]: the lands need the parent's one switch; a language course needs that
+  /// language's own voice switch too (frame section 1.4: off until a parent turns it on for that language), whatever the global one says.
+  bool _voiceAllowedIn(PackContent pack) =>
+      pack.course == Course.core ||
+      (ref.read(languagesProvider).value?.of(widget.profileId, pack.course).voice ?? false);
+
   /// The microphone, when a parent turned voice on and saying the answer is the answer (the activity's `voiceAnswer`,
   /// board B-24): where the answer is a tap, a drag or a trace there is no mic at all, not even a faded one. It is never
   /// taken away because listening went badly: a young child is often misheard, and a missing mic would only teach them
@@ -507,7 +515,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   Widget _lesson(BuildContext context, PackContent c, Guide guide, bool voiceOn) {
     final LessonController controller = _controllerFor(c, guide);
-    if (voiceOn && _voice == null) _voice = _makeVoice(controller);
+    if (voiceOn && _voice == null && _voiceAllowedIn(c)) _voice = _makeVoice(controller);
     final ActivitySpec board = ActivitySpec.of(AppLayout.of(context).board);
     return ListenableBuilder(
       listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer]),

@@ -24,10 +24,10 @@ import '../world/placement.dart';
 import '../world/todays_adventure.dart';
 import '../child/adventure_line.dart' show AdventureLine, adventureLine;
 import 'bottle_hold.dart';
+import 'lesson_launch.dart';
 import 'language_providers.dart';
 import 'reward_providers.dart';
 import 'world_providers.dart';
-import '../child/rest_scene.dart';
 import '../child/companion_views.dart';
 import '../child/friends_beach.dart';
 import '../characters/character.dart';
@@ -41,13 +41,10 @@ import '../design/theme.dart';
 import '../design/token_types.dart';
 import '../design/tokens.g.dart';
 import '../parent/entry_flow.dart';
-import '../play/lesson_screen.dart';
 import '../parent/setup_flow.dart';
 import '../ui/dev/dev_strings.dart';
 import 'companion.dart';
 import 'providers.dart';
-import '../parent/time_rules.dart';
-import 'rules_providers.dart';
 import 'push_providers.dart';
 import 'sync_providers.dart';
 import 'state.dart';
@@ -424,27 +421,20 @@ class _HomeState extends ConsumerState<_Home> {
 
   /// Opens a lesson (or the rest scene when time is up). True when the child played it to its end.
   Future<bool> _openLesson({Lesson? mission, String? lessonId}) async {
-    // Time is up (rest hours, the schedule or the daily limit, with the lock on): a calm scene instead of the lesson.
-    final ({String id, int band}) child = (id: widget.profile.id, band: widget.profile.ageBand);
-    ref.invalidate(timeVerdictProvider(child));
-    final TimeVerdict verdict = await ref.read(timeVerdictProvider(child).future);
-    if (!mounted) return false;
-    if (verdict.locked) {
-      await Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (BuildContext c) => RestScene(onBack: () => Navigator.of(c).pop())),
-      );
-      return false;
-    }
-    final bool? finished = await Navigator.of(context).push(
-      MaterialPageRoute<bool>(
-        builder: (BuildContext c) =>
-            LessonScreen(profileId: widget.profile.id, mission: mission, lessonId: lessonId ?? 'butterflies'),
-      ),
+    final VisitOutcome outcome = await openVisit(
+      context,
+      ref,
+      profileId: widget.profile.id,
+      ageBand: widget.profile.ageBand,
+      mission: mission,
+      lessonId: lessonId,
     );
+    if (!mounted || outcome == VisitOutcome.rest || outcome == VisitOutcome.refused) return false;
+    final bool finished = outcome == VisitOutcome.played;
     if (mounted) _refreshWorld();
     // A trophy or a medal the visit earned gets its ceremony back on the map.
     if (mounted) await _maybeCeremony();
-    if (!mounted || finished != true) return false;
+    if (!mounted || !finished) return false;
     if (mission != null) return true;
     final AppDatabase db = await ref.read(databaseProvider.future);
     if (await db.setting(_offeredKey) != null) return true;
