@@ -42,12 +42,13 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-L1-1 | Lesson lines are outside the validator's new language-field rules | low | open | 2026-11-03 |
 | SEC-L1-2 | Hebrew frame lines: the script check is narrower than the language rule | low | open | 2026-11-03 |
-| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | fixed on `languages-course-home` (`d82b337`: the mic also needs the language's own voice switch, closed while the settings load); closes when QA's run of `course_guards_test.dart` passes | 2026-11-03 |
+| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | closed (`d82b337`: the mic also needs the language's own voice switch, closed while the settings load; QA's full run green, `218f63d`) | 2026-11-03 |
 | SEC-L1-4 | The tutor hold keeps the previous line's language extras (not reachable) | info | open | 2026-11-03 |
 | SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
 | SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |
 | SEC-L1-7 | A language pack's clip ids are bound to the pack by naming only (for L2) | info | open | 2026-11-03 |
-| SEC-L4-2 | The parent's switch for personal questions fails open while the family's language settings are not loaded (not reachable today) | low | fixed (`acdecdf`: no personal turn until the family's settings are read); closes when QA's run of `ls10_personal_safety_test.dart` passes | 2026-11-04 |
+| SEC-L4-1 | "Show me" on a step that is never scored (a personal turn, a story only heard, a chant, the embodied step) wrote an `unsure` attempt that was synced and counted by the engine; no answer content | medium | closed (`acdecdf`: such a step offers no lamp or eye and writes nothing; QA's full run green, `218f63d`) | 2026-11-04 |
+| SEC-L4-2 | The parent's switch for personal questions fails open while the family's language settings are not loaded (not reachable today) | low | closed (`acdecdf`: no personal turn until the family's settings are read; QA's full run green, `218f63d`) | 2026-11-04 |
 | SEC-L4-3 | Placement replay counts a probe answered twice (two devices, or a re-sent row), so one probe can move a strand up | low | closed (`acdecdf`: the staircase and the replay count a probe once; proof re-run) | 2026-11-04 |
 | SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | closed (`acdecdf`: `Course.ofLessonId` in the pull guard, proof re-run; `contradicts` refused on unscored steps; a complete placement has no visit) | 2026-11-04 |
 | SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
@@ -333,4 +334,14 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   gateway change, so the OSV result of 2026-11-04 stands.
 
   Not run by the security-engineer: `flutter test`.
+- **SEC-L4-1, L4 personal turns (closed 2026-11-06).** Before the fix, the lesson screen hid the hint lamp and "show me" only
+  for placement probes, and `LessonController.unsure()` wrote a `result: unsure` attempt for any activity. On a personal turn
+  (and on a story only heard, a chant or the embodied step), a touch of the eye therefore wrote an attempt row with the item's id,
+  skill, hint level and time. The row was synced to the server and the family's devices, and the engine counted it as weak evidence
+  that could start a repair. It held nothing of what the child would have picked.
+
+  The fix (`acdecdf`): `Activity.unscored`, and `noHelp` now covers unscored steps. `showHint` and `unsure` return early, and the
+  frame draws neither button. The proofs are `ls10_personal_safety_test.dart` (no eye or lamp before a card or during the
+  switched-off wait, no attempt row) and `unscored_steps_test.dart` (the four unscored kinds write nothing). Both are green in
+  QA's full run (4,073 passed, 0 failed, `218f63d`). SEC-L4-2 and SEC-L1-3 closed in the same run.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
