@@ -214,6 +214,8 @@ class AppRig {
     }),
     voicePlayerProvider.overrideWithValue(player),
     speechEngineProvider.overrideWithValue(speech),
+    // One fake serves every language, so a test can count what any say-it step asked of it.
+    languageSpeechEngineProvider.overrideWith((Ref ref, String course) => speech),
     if (tutor != null) tutorClientProvider.overrideWithValue(tutor!),
     // Nothing reaches for the network behind a test's back; sync tests give their own engine.
     syncEnabledProvider.overrideWithValue(false),

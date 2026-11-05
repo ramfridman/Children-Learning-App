@@ -47,8 +47,14 @@ abstract interface class SpeechEngine {
   Future<void> prepare();
 
   /// Opens the microphone and listens until the child stops (after [silence] without speech), until [maxLength],
-  /// or until [cancel]. The stream ends with exactly one [ListenDone]; the microphone is closed before it.
-  Stream<ListenEvent> listen({required Duration silence, required Duration maxLength});
+  /// or until [cancel]. The stream ends with exactly one [ListenDone]; the microphone is closed before it. [hotwords] are the
+  /// words of the item on screen (the target, its variants and the foils), from signed content only; an engine that decodes
+  /// openly ignores them.
+  Stream<ListenEvent> listen({
+    required Duration silence,
+    required Duration maxLength,
+    List<String> hotwords = const <String>[],
+  });
 
   /// Stops a listen now (the stream ends with a [ListenDone] of reason `cancelled`).
   Future<void> cancel();
