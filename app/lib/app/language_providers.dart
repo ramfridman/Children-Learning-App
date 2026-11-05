@@ -174,5 +174,6 @@ final FutureProviderFamily<LanguageProgress?, ({String childId, String course})>
         now: DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
         switches: (await ref.watch(languagesProvider.future)).of(key.childId, key.course),
         ageBand: child?.ageBand ?? 1,
+        placement: c.placement,
       );
     });
