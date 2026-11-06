@@ -337,6 +337,13 @@ While any hint shows, the hint pebble wears its 5 pt sky ring (B-40). No hint li
 - **qa-engineer:** once the developer is done, verify on the four boards: no text below its reading size (the fit test and the goldens), nothing clipped (nikud, stress, Й, descenders), the row directions of section 5, the states of section 6, and that hit areas never overlap or leave their zone.
 - **Needs the owner:** nothing to decide. If he wants to see it: `docs/design/languages-l5/ls01_sort_text.png`, `ls01_cloze.png`, `ls01_sequence.png` (the phone is the top row of each).
 
+### 11.1 Answers to the four calls (curriculum-expert, 2026-11-06)
+
+1. **Pairs with text faces, one item at a time: yes.** The pairs stay the same, and the child makes one decision at a time, which is less to hold in mind. The item keeps one response code and stays one answer for the engine.
+2. **Tap-all checks itself at the count of right cards, with no "that's all" button: yes.** Giving away the count leaves the choice still diagnostic: 2 right among 6 cards is a 1 in 15 guess. The validator rule already asks for at least 1 right card and 2 tagged wrong ones; I would raise that to 2 right where the row allows, so that the count says less. The try after a "not yet", with the right cards still picked, counts as a helped try, as every second try does.
+3. **Sequence as a story line tapped in order, one row, at most 4 places in a Band B scored sequence: yes.** With 4 places the guess is 1 in 24. HEB-B-05 may show 5 pictures in the retell, but its scored sequence uses 4; rus B-08's 4-picture story fits as it is.
+4. **The Hebrew course's sequence runs right to left, the lands' timelines left to right: yes.** A language course's line follows the direction it teaches you to read (`M-HEB-ORDER`). The lands' timelines are number-line-like and stay left to right, and the two never meet on one screen.
+
 ---
 
 ## 12. What I looked at, and what I did not
