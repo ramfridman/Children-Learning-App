@@ -109,6 +109,7 @@ class AppRig {
     this.rules,
     this.extraOverrides = const <Override>[],
     this.content,
+    this.butterfliesFirst = false,
     this.sayReleased = const <String>{},
     int? clockMs,
   }) : player = player ?? FakePlayer(),
@@ -151,6 +152,10 @@ class AppRig {
 
   /// The pack the app plays, when a test needs a different one (the bundled starter pack when null).
   final PackContent? content;
+
+  /// Play the starter pack with the butterflies lesson first in the Counting Hills, as before the path gate (`loadStarterButterfliesFirst`):
+  /// for the tests of how a lesson plays and looks, which open the land's first lesson. Ignored when [content] is given.
+  final bool butterfliesFirst;
 
   /// The language courses whose signed pack is installed and verified on this phone (the fixture pack of each). None by default:
   /// a language is on in the settings, but gets a door and an island only with its pack (L0, docs/languages/frame.md 1.1). A
@@ -216,7 +221,9 @@ class AppRig {
     platformProvider.overrideWithValue(platform),
     clockProvider.overrideWithValue(clock),
     databaseProvider.overrideWith((Ref ref) async => db),
-    contentProvider.overrideWith((Ref ref) async => content ?? await loadStarter()),
+    contentProvider.overrideWith(
+      (Ref ref) async => content ?? await (butterfliesFirst ? loadStarterButterfliesFirst() : loadStarter()),
+    ),
     characterSourceProvider.overrideWith((Ref ref) async {
       if (holdCharacters != null) await holdCharacters!.future;
       return characters ?? await makeSource();

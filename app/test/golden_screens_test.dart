@@ -23,7 +23,7 @@ const Size tabletL = Size(1180, 820);
 const Size tabletP = Size(820, 1180);
 
 Future<AppRig> _rig(WidgetTester tester, Size size, {String name = 'נֹעָה'}) async {
-  final AppRig rig = AppRig();
+  final AppRig rig = AppRig(butterfliesFirst: true);
   await rig.seedFinishedSetup(name: name);
   await rig.pump(tester, size: size);
   return rig;

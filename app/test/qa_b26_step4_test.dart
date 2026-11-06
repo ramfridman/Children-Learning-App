@@ -50,7 +50,7 @@ Future<AppRig> openMap(
   bool motion = false,
   Future<void> Function(AppRig rig)? seed,
 }) async {
-  final AppRig rig = AppRig();
+  final AppRig rig = AppRig(butterfliesFirst: true);
   await rig.seedFinishedSetup(name: name, warmUp: warmUp);
   if (seed != null) await seed(rig);
   await rig.pump(tester, size: size, reduceMotion: !motion);

@@ -261,10 +261,34 @@ def representation(template, scene, answer):
     if template == 'spot_error':
         return 'pictorial' if any(is_picture(c) for c in scene['cells']) else 'symbolic'
     assert template == 'tap_answer', template
-    drawn = (any(k in scene for k in ('group', 'group2', 'chart'))
-             or any('sprite' in o or 'set' in o for o in answer['options'])
+    drawn = (any(k in scene for k in ('group', 'group2', 'chart', 'picture'))
+             or any('sprite' in o or 'set' in o for o in answer.get('options', []))
              or any(is_picture(c) for c in scene.get('row', [])))
     return 'pictorial' if drawn else 'symbolic'
+
+
+def is_new_cell(cell):
+    """A row or spot cell that first came with tap_answer 1.4 and spot_error 1.1: a number of four digits or more, or one of the signs
+    < > ( )."""
+    kind, _, rest = cell.partition(':')
+    return (kind == 'n' and len(rest) >= 4) or (kind == 'op' and rest in ('<', '>', '(', ')'))
+
+
+def template_version(template, scene, answer):
+    """The version of the template an item needs: the oldest that has everything the item uses (the validator makes an item say
+    this or more). tap_answer: 1.1 numerals and sets, 1.2 charts, 1.4 stage pictures, the number answer, five choices, the signs
+    < > ( ) and numbers to 10,000, a row of more than eight cells. spot_error: 1.0, or 1.1 for the signs and numbers of 1.4."""
+    if template == 'spot_error':
+        return '1.1' if any(is_new_cell(c) for c in scene['cells']) else '1.0'
+    if template != 'tap_answer':
+        return '1.0'
+    row = scene.get('row', [])
+    options = answer.get('options', [])
+    if (scene.get('picture') or answer['type'] == 'number' or len(options) > 4 or len(row) > 8
+            or any(is_new_cell(c) for c in row) or scene.get('numeral', 0) > 100
+            or any(o.get('numeral', 0) > 100 for o in options)):
+        return '1.4'
+    return '1.2' if scene.get('chart') else '1.1'
 
 
 def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goal, extra=None, prompt=None,
@@ -276,7 +300,7 @@ def activity(a, template, skills, purpose, check, scene, answer, fb_tags, h, goa
     assert not voice or template in VOICE_TEMPLATES, '%s: a %s is never answered by voice' % (i, template)
     d = {
         'schema': 'activity/v1', 'id': i, 'review': 'needs-editor', 'revision': 1,
-        'template': template, 'templateVersion': ('1.2' if scene.get('chart') else '1.1') if template == 'tap_answer' else '1.0',
+        'template': template, 'templateVersion': template_version(template, scene, answer),
         'domain': a.get('domain', 'numbers'), 'band': a.get('band', 'A'),
         'skills': [{'id': s, 'weight': w} for s, w in skills],
         'purpose': purpose, 'checkType': a.get('check', check),
@@ -636,6 +660,39 @@ def k_pick(a, ctx):
               shared=('pick', None if a.get('h2') else 'pick')),
         a.get('goal', 'child picks the right picture'),
         prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right))
+
+
+NUMBER_RULES = ('smaller_from_larger', 'forgot_the_ten', 'added_instead', 'off_by_ten', 'face_value')
+NUMBER_MAX = 10000
+
+
+def k_number(a, ctx):
+    """Number entry (tap_answer 1.4, M10 X3): the child types the number on a keypad. The table gives the number (`value`), the
+    wrong numbers it expects with the tag each shows (`expected`, {number: tag}), the rules that classify any other wrong number
+    (`rules`, {rule: tag}), the question, both of the harder hints and the line for the right answer; the generator writes no
+    Hebrew of its own for a Band C item. `row` is a number sentence in tokens (`n:52`, `op:-`, `?`), and `picture` a stage picture."""
+    for need in ('value', 'prompt', 'correct_text', 'h2', 'h3'):
+        assert a.get(need) is not None, '%s: a number item needs %s' % (a['id'], need)
+    value, expected, rules = a['value'], a.get('expected', {}), a.get('rules', {})
+    assert 0 <= value <= NUMBER_MAX, '%s: %r is not a number to %d' % (a['id'], value, NUMBER_MAX)
+    for n in expected:
+        assert 0 <= int(n) <= NUMBER_MAX and int(n) != value, '%s: %r is not a wrong number to %d' % (a['id'], n, NUMBER_MAX)
+    assert set(rules) <= set(NUMBER_RULES), '%s: unknown rules %s' % (a['id'], sorted(set(rules) - set(NUMBER_RULES)))
+    scene = {'background': 'asset:' + a.get('background', 'meadow')}
+    if 'row' in a:
+        scene['row'] = list(a['row'])
+    if 'picture' in a:
+        scene['picture'] = a['picture']
+    answer = {'type': 'number', 'value': value,
+              'expected': [{'value': int(n), 'misconception': t} for n, t in sorted(expected.items(), key=lambda kv: int(kv[0]))],
+              'rules': [{'when': w, 'misconception': rules[w]} for w in NUMBER_RULES if w in rules]}
+    tags = set(expected.values()) | set(rules.values())
+    return activity(
+        a, 'tap_answer', skills_of(a), a.get('purpose', 'practice'), 'practice', scene, answer, tags,
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', a['h2'], a['h3'],
+              actions=('replay_prompt_slow', a.get('h2_action', 'highlight_objects_sequentially'), 'worked_example'),
+              shared=('pick', None)),
+        a.get('goal', 'child types the number'), prompt=a['prompt'], correct=a['correct_text'])
 
 
 def k_sort(a, ctx):

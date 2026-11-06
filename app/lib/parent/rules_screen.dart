@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/math_providers.dart';
 import '../app/rules_providers.dart';
 import '../app/tutor_providers.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../play/math_signs.dart';
 import '../strings/he.dart';
 import 'parent_rules.dart';
 
@@ -251,6 +253,28 @@ class RulesScreen extends ConsumerWidget {
                     onChanged: (bool on) => ref.read(warmUpProvider.notifier).set(on),
                   ),
                 ],
+              ),
+            ]),
+            _card(He.divisionHeading.text, <Widget>[
+              Text(He.divisionHelp.text, style: AppText.parent(TokenType.parentSmall)),
+              const SizedBox(height: 8),
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Wrap(
+                  spacing: 8,
+                  children: <Widget>[
+                    for (final (DivisionSign sign, String glyph) in <(DivisionSign, String)>[
+                      (DivisionSign.obelus, '÷'),
+                      (DivisionSign.colon, ':'),
+                    ])
+                      ChoiceChip(
+                        key: Key('division-${sign.name}'),
+                        label: Text(glyph, style: AppText.parent(TokenType.parentBody)),
+                        selected: (ref.watch(divisionSignProvider).value ?? DivisionSign.obelus) == sign,
+                        onSelected: (_) => ref.read(divisionSignProvider.notifier).set(sign),
+                      ),
+                  ],
+                ),
               ),
             ]),
             _card(He.aiHeading.text, <Widget>[

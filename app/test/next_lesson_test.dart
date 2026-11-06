@@ -8,20 +8,31 @@ void main() {
   late PackContent content;
   setUpAll(() async => content = await loadStarter());
 
+  /// Every lesson open: the path as the pack orders it, with no gate (the gate has its own tests, `path_gate_test.dart`).
+  bool allOpen(String skill, Set<String> together) => true;
+
   List<String> path() => <String>[
     for (final Lesson l in content.lessons.values)
       if (l.skillIds.any((String s) => content.skills[s]?.domain == 'numbers')) l.id,
   ]..sort((String a, String b) => content.lessons[a]!.sequence.compareTo(content.lessons[b]!.sequence));
 
   test('a child who has done nothing starts with the butterflies, the first adventure', () {
-    expect(nextLessonId(content: content, domain: 'numbers', finished: const <String, int>{}), 'butterflies');
+    expect(
+      nextLessonId(content: content, domain: 'numbers', finished: const <String, int>{}, unlocked: allOpen),
+      'butterflies',
+    );
   });
 
   test('each finished lesson moves the island on to the next one on the path, in order', () {
     final Map<String, int> done = <String, int>{};
     final List<String> seen = <String>[];
     for (int i = 0; i < path().length; i++) {
-      final String next = nextLessonId(content: content, domain: 'numbers', finished: done)!;
+      final String next = nextLessonId(
+        content: content,
+        domain: 'numbers',
+        finished: done,
+        unlocked: allOpen,
+      )!;
       seen.add(next);
       done[next] = 1;
     }
@@ -31,7 +42,7 @@ void main() {
 
   test('when everything is done the path goes round: the lesson finished fewest times comes next', () {
     final Map<String, int> done = <String, int>{for (final String id in path()) id: 2}..['giving'] = 1;
-    expect(nextLessonId(content: content, domain: 'numbers', finished: done), 'giving');
+    expect(nextLessonId(content: content, domain: 'numbers', finished: done, unlocked: allOpen), 'giving');
   });
 
   test('the pack gives every lesson a different place on the path, and the path leaves nothing out', () {
@@ -47,6 +58,9 @@ void main() {
   });
 
   test('a land with no lesson has no next lesson', () {
-    expect(nextLessonId(content: content, domain: 'none', finished: const <String, int>{}), isNull);
+    expect(
+      nextLessonId(content: content, domain: 'none', finished: const <String, int>{}, unlocked: allOpen),
+      isNull,
+    );
   });
 }

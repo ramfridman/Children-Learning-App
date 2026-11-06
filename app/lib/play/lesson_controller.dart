@@ -623,8 +623,10 @@ class LessonController extends ChangeNotifier {
     _struggles = guided ? _struggles + 1 : 0;
     final int stop = lesson.stopAfterStruggles;
     final ItemFlow? f = flow;
-    final String? following = f?.after(current.id, right: !_missed);
-    if (f != null ? following == null : index + 1 >= items.length || (stop > 0 && _struggles >= stop)) {
+    // Right is right at the first try with no help: a miss, a hint or a worked example is not (the warm-up's staircase reads it).
+    final String? following = f?.after(current.id, right: !_missed && errors == 0 && hintLevel == 0);
+    final bool struggled = stop > 0 && _struggles >= stop;
+    if (f != null ? following == null || struggled : index + 1 >= items.length || struggled) {
       finished = true;
       feedback = FeedbackKind.none;
       _say(f?.celebration ?? lesson.celebration);

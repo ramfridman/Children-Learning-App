@@ -20,6 +20,7 @@ import 'hints/hint_player.dart';
 import 'hints/tap_geometry.dart';
 import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
+import 'math_signs.dart';
 import '../design/layout.dart';
 import 'option_faces.dart';
 import 'sprite_group.dart';
@@ -585,7 +586,7 @@ class _TapStage extends StatelessWidget {
                               : FittedBox(
                                   child: Text(
                                     r.startsWith('op:')
-                                        ? r.substring(3).replaceAll('-', '−').replaceAll('x', '×')
+                                        ? signGlyph(r.substring(3), MathSigns.of(context))
                                         : r.substring(2),
                                     style: AppText.fixed(size: 40, weight: 800, lineHeight: 1),
                                   ),

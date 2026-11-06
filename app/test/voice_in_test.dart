@@ -33,7 +33,7 @@ Future<AppRig> start(
   List<Scripted> script = const <Scripted>[],
   List<String> items = const <String>[colourQuestion],
 }) async {
-  final AppRig rig = AppRig(voice: voice, speech: FakeSpeechEngine(script));
+  final AppRig rig = AppRig(butterfliesFirst: true, voice: voice, speech: FakeSpeechEngine(script));
   await rig.seedFinishedSetup();
   await rig.pump(tester);
   await tester.tap(find.text('נועה'));
@@ -69,7 +69,11 @@ void main() {
   testWidgets('the mic is never taken away, however badly listening went before', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = AppRig(voice: true, speech: FakeSpeechEngine(const <Scripted>[]));
+    final AppRig rig = AppRig(
+      butterfliesFirst: true,
+      voice: true,
+      speech: FakeSpeechEngine(const <Scripted>[]),
+    );
     await rig.seedFinishedSetup();
     for (final String type in <String>['number', 'word']) {
       for (int i = 0; i < 12; i++) {
@@ -202,7 +206,11 @@ void main() {
   testWidgets('a model that will not load leaves the cards to tap and nothing breaks', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = AppRig(voice: true, speech: FakeSpeechEngine()..failPrepare = true);
+    final AppRig rig = AppRig(
+      butterfliesFirst: true,
+      voice: true,
+      speech: FakeSpeechEngine()..failPrepare = true,
+    );
     await rig.seedFinishedSetup();
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
@@ -252,7 +260,11 @@ void main() {
     testWidgets('"where is the red flower?" is answered by a tap: no mic at all, even with voice on', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig(voice: true, speech: FakeSpeechEngine(const <Scripted>[]));
+      final AppRig rig = AppRig(
+        butterfliesFirst: true,
+        voice: true,
+        speech: FakeSpeechEngine(const <Scripted>[]),
+      );
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -338,6 +350,7 @@ void goldens() {
   ]) {
     testWidgets('mic states on the ${d.$1}', (WidgetTester tester) async {
       final AppRig rig = AppRig(
+        butterfliesFirst: true,
         voice: true,
         speech: FakeSpeechEngine(<Scripted>[
           Scripted.hangs(),

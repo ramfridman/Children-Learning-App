@@ -14,6 +14,7 @@ import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/right_cell.dart';
 import 'hints/spot_plans.dart';
+import 'math_signs.dart';
 import 'template_session.dart';
 
 /// The spot-the-mistake template (T21): a friend made a row (a pattern, a count, a program, a sum) and one cell of it is wrong.
@@ -207,7 +208,7 @@ class SpotErrorSession extends TemplateSession {
         SizedBox(
           width: inner,
           height: inner,
-          child: Center(child: _cellFace(activity, right, inner)),
+          child: Center(child: _CellFace(activity, right, inner)),
         ),
       ),
     ];
@@ -308,7 +309,7 @@ class _RowStage extends StatelessWidget {
             fit: StackFit.passthrough,
             alignment: Alignment.center,
             children: <Widget>[
-              Center(child: _cellFace(a, a.cells[i], side)),
+              Center(child: _CellFace(a, a.cells[i], side)),
               if (s.visited.contains(i) && s.hintCell != i)
                 const Positioned(top: 4, right: 4, child: SeenDot(key: Key('seen-dot'))),
             ],
@@ -319,20 +320,32 @@ class _RowStage extends StatelessWidget {
   }
 }
 
-/// What a cell shows: a picture of the pack, an arrow, a number or a sign, in a cell whose side is [side].
-Widget _cellFace(SpotErrorActivity a, String cell, double side) {
-  if (cell.startsWith('asset:')) {
-    return Padding(padding: const EdgeInsets.all(5), child: PackSvg(a.assets.svg(cell)));
+/// What a cell shows: a picture of the pack, an arrow, a number or a sign, in a cell whose side is [side]. A sign is drawn as the
+/// screen draws it (× for `op:x`, and the child's division sign for `op::`), which is why this is a widget and not a function.
+class _CellFace extends StatelessWidget {
+  const _CellFace(this.activity, this.cell, this.side);
+
+  final SpotErrorActivity activity;
+  final String cell;
+  final double side;
+
+  @override
+  Widget build(BuildContext context) {
+    if (cell.startsWith('asset:')) {
+      return Padding(padding: const EdgeInsets.all(5), child: PackSvg(activity.assets.svg(cell)));
+    }
+    if (cell.startsWith('dir:')) {
+      final IconData icon = switch (cell.substring(4)) {
+        'up' => Icons.arrow_upward_rounded,
+        'down' => Icons.arrow_downward_rounded,
+        'left' => Icons.arrow_back_rounded,
+        _ => Icons.arrow_forward_rounded,
+      };
+      return Icon(icon, size: side * 0.6, color: TokenColors.ink);
+    }
+    final String text = cell.startsWith('op:')
+        ? signGlyph(cell.substring(3), MathSigns.of(context))
+        : cell.substring(2);
+    return Text(text, style: AppText.fixed(size: side * 0.5, weight: 800, lineHeight: 1));
   }
-  if (cell.startsWith('dir:')) {
-    final IconData icon = switch (cell.substring(4)) {
-      'up' => Icons.arrow_upward_rounded,
-      'down' => Icons.arrow_downward_rounded,
-      'left' => Icons.arrow_back_rounded,
-      _ => Icons.arrow_forward_rounded,
-    };
-    return Icon(icon, size: side * 0.6, color: TokenColors.ink);
-  }
-  final String text = cell.startsWith('op:') ? cell.substring(3).replaceAll('-', '−') : cell.substring(2);
-  return Text(text, style: AppText.fixed(size: side * 0.5, weight: 800, lineHeight: 1));
 }
