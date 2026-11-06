@@ -40,7 +40,9 @@ import {
   LANGUAGE_COURSES,
   LANGUAGE_QUESTIONNAIRE,
   LANGUAGE_SWITCHES,
+  LOOK_LETTERS,
   MAX_LANGUAGE_CHILDREN,
+  MAX_LOOK_CHILDREN,
   MAX_RULES_BYTES,
   spec as settingsPut,
 } from "./settings-put/handler.ts";
@@ -802,4 +804,36 @@ Deno.test("settings-put: the document is bounded in bytes, so what the gateway t
   const both = await put({ ribbons, languages });
   assert.equal(both.status, 400);
   assert.equal(MAX_RULES_BYTES, 10_000);
+});
+
+Deno.test("settings-put: the look letter of each child travels in the rules as A, B or C, equal to testvectors/profile-sync.json", async () => {
+  const v = JSON.parse(
+    await Deno.readTextFile(new URL("../../testvectors/profile-sync.json", import.meta.url)),
+  ) as {
+    look_letters: string[];
+    max_look_children: number;
+    look_examples: unknown[];
+    look_refused: unknown[];
+  };
+  assert.deepEqual([...LOOK_LETTERS], v.look_letters);
+  assert.equal(MAX_LOOK_CHILDREN, v.max_look_children);
+
+  const { h, parent, child, j } = await setup();
+  let version = 0;
+  for (const looks of v.look_examples) {
+    const rules = { ceremonies: false, looks };
+    const json = JSON.stringify(rules);
+    assert.deepEqual(await j(await call(h.put, parent, "settings-put", { rules_json: json })), {
+      version: ++version,
+    });
+    assert.deepEqual((await j(await call(h.get, child, "settings-get", {}))).rules, rules);
+    assert.equal((await call(h.put, child, "settings-put", { rules_json: json })).status, 403);
+  }
+  for (const looks of v.look_refused) {
+    const rules_json = JSON.stringify({ looks });
+    assert.equal((await call(h.put, parent, "settings-put", { rules_json })).status, 400, rules_json);
+  }
+  // A look beside the languages and a school stage's band is the whole of what the age-fit work puts in the rules.
+  const both = { looks: { "child-aaaa-0001": "B" }, languages: { "child-aaaa-0001": { eng: { band: 1 } } } };
+  assert.equal((await call(h.put, parent, "settings-put", { rules_json: JSON.stringify(both) })).status, 200);
 });

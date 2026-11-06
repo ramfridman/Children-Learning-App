@@ -9,8 +9,10 @@ import '../core/errors.dart';
 import '../core/log.dart';
 import '../data/app_database.dart';
 import '../data/child_name.dart';
+import '../engine/age.dart' show SchoolStage;
 import '../engine/course.dart';
 import '../parent/language_settings.dart';
+import '../parent/look_settings.dart';
 import '../parent/parent_rules.dart';
 import '../play/response_code.dart';
 import '../rewards/ribbons.dart';
@@ -297,8 +299,15 @@ class SyncEngine {
     final Set<String> gone = await _tombstoned();
     for (final Profile p in await db.allProfiles()) {
       if (gone.contains(p.id)) continue;
-      final String fingerprint =
-          '${p.name}|${p.avatar}|${p.addressForm}|${p.ageBand}|${p.companionId ?? ''}|${p.outfitId ?? ''}';
+      final String fingerprint = _profileFingerprint(
+        p.name,
+        p.avatar,
+        p.addressForm,
+        p.ageBand,
+        p.companionId,
+        p.outfitId,
+        SchoolStage.fromWire(p.schoolStage),
+      );
       if (await db.setting('profile_pushed_${p.id}') == fingerprint) continue;
       // A name saved before B-28 could be longer than the server takes, or hold a character it refuses: it goes cut to
       // fit. One with nothing left would only be refused, so it is not sent (its answers are then refused like those of
@@ -314,6 +323,9 @@ class SyncEngine {
           'outfit_id': ?p.outfitId,
           'address_form': p.addressForm,
           'age_band': p.ageBand,
+          // The school stage a parent confirmed, as its word. Nothing else about the child's age is ever sent: the month and
+          // year of birth stay on this device (B-29).
+          if (SchoolStage.fromWire(p.schoolStage) case final SchoolStage stage) 'school_stage': stage.wire,
         });
       } on Object {
         // One child that cannot be saved (a deleted one, a bad value) must not stop the others or the answers.
@@ -322,6 +334,18 @@ class SyncEngine {
       await db.putSetting('profile_pushed_${p.id}', fingerprint);
     }
   }
+
+  /// What was last saved on the server for a child, as one string. The school stage is in it, so confirming one sends the child
+  /// again; the month and year of birth are not, because they are not sent.
+  static String _profileFingerprint(
+    String name,
+    String avatar,
+    String addressForm,
+    int ageBand,
+    String? companionId,
+    String? outfitId,
+    SchoolStage? stage,
+  ) => '$name|$avatar|$addressForm|$ageBand|${companionId ?? ''}|${outfitId ?? ''}|${stage?.wire ?? ''}';
 
   /// The children whose rows wait (B-32): on a parent device, the ones this device has not yet saved on the server (no
   /// `profile_pushed_<id>` key; a failed `child-put` leaves none). The server refuses the rows of a child it does not
@@ -809,10 +833,11 @@ class SyncEngine {
   static const String _fingerprintKey = 'settings_fingerprint';
 
   /// The family's rules as this device holds them: the time rules, whether the child's words are kept, the AI helper, and
-  /// (only when a parent has turned a language on or changed one) the language settings of each child. A family that never
-  /// touches a language syncs exactly the document it did before.
+  /// (only when a parent has turned a language on or changed one) the language settings of each child, and (only for a child
+  /// whose parent chose one) the look as a letter. A family that touches neither syncs exactly the document it did before.
   Future<Map<String, Object?>> _localRules() async {
     final FamilyLanguages languages = FamilyLanguages.decode(await db.setting(languagesSettingKey));
+    final FamilyLooks looks = FamilyLooks.decode(await db.setting(looksSettingKey));
     return <String, Object?>{
       ...ParentRules.decode(await db.setting('parent_rules')).toJson(),
       'keepWords': await db.setting('keep_words') != 'off',
@@ -820,6 +845,8 @@ class SyncEngine {
       'ceremonies': await db.setting('ceremonies') != 'off',
       'ribbons': decodeRibbons(await db.setting('ribbons')),
       if (!languages.isEmpty) 'languages': languages.toJson(),
+      // The look a parent chose for a child, one letter each (B-29).
+      if (!looks.isEmpty) 'looks': looks.toJson(),
     };
   }
 
@@ -854,6 +881,8 @@ class SyncEngine {
       );
       // The language settings are taken as the server has them, each value checked again here.
       await db.putSetting(languagesSettingKey, FamilyLanguages.fromJson(rules['languages']).encode());
+      // So are the looks: a letter for a child, or nothing.
+      await db.putSetting(looksSettingKey, FamilyLooks.fromJson(rules['looks']).encode());
       await db.putSetting(_versionKey, '$serverVersion');
       await db.putSetting(_fingerprintKey, jsonEncode(await _localRules()));
       return true;
@@ -919,6 +948,15 @@ class SyncEngine {
         final String name = here != null && (nickname.isEmpty || fitChildNameForServer(here.name) == nickname)
             ? here.name
             : nickname;
+        // The school stage is untrusted like the rest: one of the six words, and the band that goes with it; anything else is
+        // ignored (the stage here stays as it was). A server older than B-29 sends none, and that never wipes the one chosen here.
+        final SchoolStage? stage = SchoolStage.fromWire(m['school_stage']);
+        final bool stageFits = stage != null && stage.band == m['age_band'];
+        // A stage kept here for another band than the server's is wrong for the child now (another phone saved a new band,
+        // SEC-B29-1): it is cleared, so this phone never pushes a stage against the band, which the server refuses for ever.
+        final SchoolStage? local = SchoolStage.fromWire(here?.schoolStage);
+        final bool localFits = local != null && local.band == m['age_band'];
+        final bool clearLocal = !stageFits && local != null && !localFits;
         final ProfilesCompanion row = ProfilesCompanion(
           id: Value<String>(id),
           name: Value<String>(name),
@@ -930,6 +968,11 @@ class SyncEngine {
           outfitId: m['outfit_id'] is String
               ? Value<String?>(m['outfit_id']! as String)
               : const Value<String?>.absent(),
+          schoolStage: stageFits
+              ? Value<String?>(stage.wire)
+              : clearLocal
+              ? const Value<String?>(null)
+              : const Value<String?>.absent(),
           createdAt: Value<DateTime>(_now),
         );
         final bool known = here != null;
@@ -938,7 +981,16 @@ class SyncEngine {
         // What the server has is now what this device has: no need to push it back.
         await db.putSetting(
           'profile_pushed_$id',
-          '$name|${m['avatar_id']}|${m['address_form']}|${m['age_band']}|${m['companion_id'] ?? ''}|${m['outfit_id'] ?? ''}',
+          _profileFingerprint(
+            name,
+            m['avatar_id']! as String,
+            m['address_form']! as String,
+            m['age_band']! as int,
+            m['companion_id'] as String?,
+            m['outfit_id'] as String?,
+            // What this phone holds after the pull: the server's stage when it fits, else the one already here if it fits.
+            stageFits ? stage : (localFits ? local : null),
+          ),
         );
       }
 

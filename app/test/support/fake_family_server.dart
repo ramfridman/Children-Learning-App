@@ -62,6 +62,49 @@ final RegExp _nickname = RegExp(
       as String,
 );
 
+/// What `child-put` and `settings-put` take about a child's age (`testvectors/profile-sync.json`, tested equal to the server): the six
+/// school stages with their bands, the look letters and how many children may have one.
+final ({Map<String, int> bandOfStage, List<String> lookLetters, int maxLookChildren}) _profile = () {
+  final Map<String, Object?> v =
+      jsonDecode(File('../testvectors/profile-sync.json').readAsStringSync()) as Map<String, Object?>;
+  return (
+    bandOfStage: <String, int>{
+      for (final MapEntry<String, Object?> e in (v['band_of_stage']! as Map<String, Object?>).entries)
+        e.key: e.value! as int,
+    },
+    lookLetters: <String>[for (final Object? l in v['look_letters']! as List<Object?>) l! as String],
+    maxLookChildren: v['max_look_children']! as int,
+  );
+}();
+
+/// The keys `child-put` knows, each with the check of the real shape. The real one refuses a key it does not name, so a birth month
+/// (or anything else the app should not send) fails here as it would there.
+final Map<String, _Check> _childPutShape = <String, _Check>{
+  'avatar_id': (Object? v) => v is String && RegExp(r'^[a-z0-9_-]{2,40}$').hasMatch(v),
+  'companion_id': (Object? v) => v is String && RegExp(r'^[a-z0-9-]{2,40}$').hasMatch(v),
+  'outfit_id': (Object? v) => v is String && RegExp(r'^[a-z0-9-]{2,20}$').hasMatch(v),
+  'address_form': (Object? v) => v == 'f' || v == 'm' || v == 'n',
+  'age_band': (Object? v) => v is int && v >= 0 && v <= 2,
+  'school_stage': (Object? v) => v is String && _profile.bandOfStage.containsKey(v),
+};
+
+/// The top-level keys of the family's rules that `settings-put` names. Any other key is refused.
+const Set<String> _rulesKeys = <String>{
+  'limitByBand',
+  'limitByChild',
+  'ribbons',
+  'languages',
+  'looks',
+  'restOn',
+  'lockWhenDone',
+  'keepWords',
+  'aiHelper',
+  'ceremonies',
+  'restStartMinute',
+  'restEndMinute',
+  'schedule',
+};
+
 class FakeFamilyServer {
   FakeFamilyServer({this.checksFormat = false});
 
@@ -77,6 +120,10 @@ class FakeFamilyServer {
   final Map<String, Map<String, Object?>> children = <String, Map<String, Object?>>{};
   final List<String> tombstones = <String>[];
   final List<String> calls = <String>[];
+
+  /// Every request body this server was sent, as the JSON that went over the wire, and every answer it gave, so a test can look for
+  /// what must never be there (a birth month, an age in months).
+  final List<({String name, bool answer, String json})> wire = <({String name, bool answer, String json})>[];
   final List<Map<String, Object?>> alerts = <Map<String, Object?>>[];
   Map<String, Object?>? rules;
   int rulesVersion = 0;
@@ -108,7 +155,9 @@ class FakeFamilyServer {
       if (name == 'sync-pull') _pulls++;
       if (offline) throw StateError('offline');
       if (failing.contains(name)) throw StateError('server error');
+      wire.add((name: name, answer: false, json: jsonEncode(body)));
       final Map<String, Object?> answer = _handle(deviceId, name, body, parent);
+      wire.add((name: name, answer: true, json: jsonEncode(answer)));
       await afterCall?.call(name);
       if (loseAnswerOf == name) {
         loseAnswerOf = null;
@@ -124,10 +173,11 @@ class FakeFamilyServer {
         if (!parent) throw StateError('forbidden');
         final String id = body['child_id']! as String;
         if (tombstones.contains(id)) throw StateError('child_deleted');
-        final Object? nickname = body['nickname'];
-        if (nickname is! String || !_nickname.hasMatch(nickname)) {
-          throw const GatewayException('bad_request', status: 400);
-        }
+        _checkChildPut(body);
+        // As the table: a save without a school stage keeps the stored one (an older app cannot wipe it) while its band is the
+        // saved band; one of another band is dropped (SEC-B29-1).
+        final Object? kept = children[id]?['school_stage'];
+        final Object? keptIfFits = _profile.bandOfStage[kept] == body['age_band'] ? kept : null;
         children[id] = <String, Object?>{
           'id': id,
           'nickname': body['nickname'],
@@ -136,6 +186,7 @@ class FakeFamilyServer {
           'outfit_id': body['outfit_id'],
           'address_form': body['address_form'],
           'age_band': body['age_band'],
+          'school_stage': body['school_stage'] ?? keptIfFits,
         };
         return <String, Object?>{'ok': true};
       case 'child-delete':
@@ -214,6 +265,7 @@ class FakeFamilyServer {
       case 'settings-put':
         if (!parent) throw StateError('forbidden');
         rules = jsonDecode(body['rules_json']! as String) as Map<String, Object?>;
+        _checkRules(rules!);
         // As the server: turning "keep the words" off empties the words of every alert (SEC-28).
         if (!keepsWords) {
           for (final Map<String, Object?> a in alerts) {
@@ -225,6 +277,59 @@ class FakeFamilyServer {
         return <String, Object?>{'rules': rules, 'version': rulesVersion};
     }
     throw StateError('unknown function $name');
+  }
+
+  /// The shape check of the real `child-put`: only the keys it names, each with a value it takes, the nickname in its pattern, and a
+  /// school stage that agrees with the band. A key it does not name (a birth month, an age in months) is refused.
+  void _checkChildPut(Map<String, Object?> body) {
+    bool fits() {
+      for (final MapEntry<String, Object?> e in body.entries) {
+        if (e.key == 'nickname') {
+          if (e.value is! String || !_nickname.hasMatch(e.value! as String)) return false;
+          continue;
+        }
+        if (e.key == 'child_id') {
+          // The real pattern (8 to 64 letters, digits and hyphens) is enforced with [checksFormat]; the short ids that older tests
+          // give their children ('p-1') are taken without it.
+          if (e.value is! String ||
+              (checksFormat && !RegExp(r'^[A-Za-z0-9-]{8,64}$').hasMatch(e.value! as String))) {
+            return false;
+          }
+          continue;
+        }
+        final _Check? check = _childPutShape[e.key];
+        if (check == null || !check(e.value)) return false;
+      }
+      if (!<String>[
+        'child_id',
+        'nickname',
+        'avatar_id',
+        'address_form',
+        'age_band',
+      ].every(body.containsKey)) {
+        return false;
+      }
+      return !body.containsKey('school_stage') ||
+          _profile.bandOfStage[body['school_stage']] == body['age_band'];
+    }
+
+    if (!fits()) throw const GatewayException('bad_request', status: 400);
+  }
+
+  /// The check of the real `settings-put` on the keys of the rules (an unknown key is refused) and, in full, on the looks.
+  void _checkRules(Map<String, Object?> rules) {
+    bool fits() {
+      if (rules.keys.any((String k) => !_rulesKeys.contains(k))) return false;
+      final Object? looks = rules['looks'];
+      if (!rules.containsKey('looks')) return true;
+      if (looks is! Map<String, Object?> || looks.length > _profile.maxLookChildren) return false;
+      return looks.entries.every(
+        (MapEntry<String, Object?> e) =>
+            RegExp(r'^[A-Za-z0-9-]{8,64}$').hasMatch(e.key) && _profile.lookLetters.contains(e.value),
+      );
+    }
+
+    if (!fits()) throw const GatewayException('bad_request', status: 400);
   }
 
   /// Whether the family keeps the child's words (the default until a parent says no).

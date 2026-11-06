@@ -9,6 +9,7 @@ import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_verify.dart';
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/engine/age.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/play/lesson_controller.dart';
 import 'package:nitznutz/rewards/award.dart';
@@ -158,7 +159,7 @@ Future<bool> _warmUp(Kid kid, String domain, List<String> script) async {
     kid.content,
     domain,
     kid.rows,
-    ageBand: kid.ageBand,
+    stage: SchoolStage.middleOfBand(kid.ageBand),
   );
   if (visit == null) return true;
   final LessonController c = kid.controller(visit.lesson, flow: visit.flow);
@@ -514,7 +515,12 @@ void main() {
             for (final String rest in <String>['M', 'U', 'H', 'S']) {
               final Kid kid = Kid(starter, band, 2);
               await _warmUp(kid, domain, <String>['R', for (int i = 0; i < 9; i++) rest]);
-              final LandPlacement p = landPlacementOf(starter, domain, kid.rows, ageBand: band)!;
+              final LandPlacement p = landPlacementOf(
+                starter,
+                domain,
+                kid.rows,
+                stage: SchoolStage.middleOfBand(band),
+              )!;
               expect(p.placedLessons, isEmpty, reason: 'R then $rest: placed ${p.placedLessons}');
               expect(placedByWarmUp(starter, kid.rows).skills, isEmpty);
               expect(kid.finished, isEmpty, reason: 'nothing counts as finished after one lucky answer');
@@ -527,7 +533,12 @@ void main() {
           () async {
             final Kid kid = Kid(starter, band, 2);
             final bool over = await _warmUp(kid, domain, <String>['R', 'R', 'R']);
-            final LandPlacement p = landPlacementOf(starter, domain, kid.rows, ageBand: band)!;
+            final LandPlacement p = landPlacementOf(
+              starter,
+              domain,
+              kid.rows,
+              stage: SchoolStage.middleOfBand(band),
+            )!;
             if (over) return; // the staircase happened to stop within three answers
             expect(p.stopped, isFalse);
             expect(p.entry, isNull);
@@ -535,7 +546,12 @@ void main() {
             expect(placementDue(starter, domain, kid.rows), isTrue, reason: 'the visit comes back');
             expect(kid.finished, isEmpty);
             // It goes on where it stopped: the next probe is not one already asked.
-            final String next = placementVisit(starter, domain, kid.rows, ageBand: band)!.flow.first();
+            final String next = placementVisit(
+              starter,
+              domain,
+              kid.rows,
+              stage: SchoolStage.middleOfBand(band),
+            )!.flow.first();
             expect(kid.rows.map((Attempt a) => a.activityId), isNot(contains(next)));
           },
         );
@@ -551,7 +567,12 @@ void main() {
             final Kid kid = Kid(starter, band, 2);
             final bool over = await _warmUp(kid, domain, <String>[...head, 'S', 'S', 'R', 'R', 'R', 'R']);
             expect(over, isTrue);
-            final LandPlacement p = landPlacementOf(starter, domain, kid.rows, ageBand: band)!;
+            final LandPlacement p = landPlacementOf(
+              starter,
+              domain,
+              kid.rows,
+              stage: SchoolStage.middleOfBand(band),
+            )!;
             if (!p.stopped) {
               // The controller ended the visit; the staircase did not stop: nobody is placed.
               expect(p.entry, isNull, reason: 'head $head');
@@ -572,9 +593,19 @@ void main() {
           () async {
             final Kid kid = Kid(starter, band, 2);
             await _warmUp(kid, domain, <String>[for (int i = 0; i < 10; i++) 'R']);
-            final LandPlacement a = landPlacementOf(starter, domain, kid.rows, ageBand: band)!;
+            final LandPlacement a = landPlacementOf(
+              starter,
+              domain,
+              kid.rows,
+              stage: SchoolStage.middleOfBand(band),
+            )!;
             for (final int other in <int>[0, 1, 2]) {
-              final LandPlacement b = landPlacementOf(starter, domain, kid.rows, ageBand: other)!;
+              final LandPlacement b = landPlacementOf(
+                starter,
+                domain,
+                kid.rows,
+                stage: SchoolStage.middleOfBand(other),
+              )!;
               expect(b.entry, a.entry, reason: 'band $band -> $other');
               expect(b.placedLessons, a.placedLessons);
             }
@@ -595,8 +626,18 @@ void main() {
           await _warmUp(split, domain, <String>['R', 'R']);
           final Kid resumed = Kid(starter, 2, 2)..rows.addAll(split.rows);
           // The same two answers were given at the band-0 start; the first probe the band-2 reader gives next must follow from them.
-          final LandPlacement viaBand0 = landPlacementOf(starter, domain, split.rows, ageBand: 0)!;
-          final LandPlacement viaBand2 = landPlacementOf(starter, domain, resumed.rows, ageBand: 2)!;
+          final LandPlacement viaBand0 = landPlacementOf(
+            starter,
+            domain,
+            split.rows,
+            stage: SchoolStage.middleOfBand(0),
+          )!;
+          final LandPlacement viaBand2 = landPlacementOf(
+            starter,
+            domain,
+            resumed.rows,
+            stage: SchoolStage.middleOfBand(2),
+          )!;
           expect(
             viaBand2.stairs.level,
             viaBand0.stairs.level,
@@ -628,7 +669,7 @@ void main() {
             starter,
             domain,
             const <Attempt>[],
-            ageBand: band,
+            stage: SchoolStage.middleOfBand(band),
           )!;
           String? probe = visit.flow.first();
           int struggles = 0;
@@ -649,7 +690,12 @@ void main() {
               break;
             }
           }
-          final LandPlacement? p = landPlacementOf(starter, domain, rows, ageBand: band);
+          final LandPlacement? p = landPlacementOf(
+            starter,
+            domain,
+            rows,
+            stage: SchoolStage.middleOfBand(band),
+          );
           if (rows.isNotEmpty) {
             sequences++;
             if (p!.entry != null && p.entry! > 0) placedSome++;
@@ -683,7 +729,12 @@ void main() {
     test('lessons below the entry count as finished ONCE (a sticker for them says 1, not 2), and open the gate behind them', () async {
       final Kid kid = Kid(starter, 2, 4);
       await _warmUp(kid, 'numbers', <String>[for (int i = 0; i < 10; i++) 'R']);
-      final LandPlacement p = landPlacementOf(starter, 'numbers', kid.rows, ageBand: 2)!;
+      final LandPlacement p = landPlacementOf(
+        starter,
+        'numbers',
+        kid.rows,
+        stage: SchoolStage.middleOfBand(2),
+      )!;
       expect(p.entry, greaterThan(0), reason: 'a child who answers all right is placed above the floor');
       final Set<String> below = p.placedLessons;
       expect(below, isNotEmpty);

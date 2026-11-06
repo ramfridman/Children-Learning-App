@@ -37,6 +37,7 @@ import '../child/home_island_screen.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
 import '../data/app_database.dart';
+import '../data/profile_age.dart';
 import '../design/layout.dart';
 import '../design/theme.dart';
 import '../design/token_types.dart';
@@ -402,7 +403,7 @@ class _HomeState extends ConsumerState<_Home> {
         content,
         domain,
         history,
-        ageBand: widget.profile.ageBand,
+        stage: widget.profile.stage,
       );
       if (warmUp != null && !await _openLesson(mission: warmUp.lesson, flow: warmUp.flow)) return;
     }

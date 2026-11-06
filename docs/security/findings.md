@@ -62,6 +62,10 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-M10-3 | The 1.4 number range is not tied to Band C, and some hint plans grow with the size of the number | low | closed (numerals above 100 and `n:` cells of four digits or more only in Band C, in the validator; the hint plans fall back to the generic plan above 20 units, and a test holds every starter item with big numbers under 2,000 marks; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-4 | Number cells and column numbers take 10,001 to 99,999 and leading zeros | info | closed (the patterns take 0 to 10,000 with no leading zero; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-5 | An activity's `templateVersion` is not checked against the manifest's template version | info | closed (validator rule; proof `sec_m10s0_test.dart`) | 2026-11-06 |
+| SEC-B29-1 | School stage: a `child-put` with another band and no stage keeps the stored stage, so the server can hold and send a stage that disagrees with the band | low | fixed (`b29-profile`: the upsert keeps a stored stage only while its band is the saved band, a table check ties stage to band, the app clears a stage of another band on pull; proofs `sync_test.ts`, `11_school_stage.test.sql`, `profile_sync_test.dart`) | 2026-11-06 |
+| SEC-B29-2 | iOS local data: no backup-excluded data folder yet, and secure-storage items are not `ThisDeviceOnly` (not reachable: no iOS build can open the database today) | low | Dart part fixed (`b29-profile`: every item is `first_unlock_this_device`, not synchronizable; proof `secure_store_test.dart`); the Swift part (exclude the iOS database folder from backup) gates any iOS build and waits for the iOS platform channel | 2026-11-06 |
+| SEC-B29-3 | The birth-month source rule scans 7 of the `lib/` folders and misses some names (`childAgeProvider`, `ageInMonths`, `assumedMonths`) | low | fixed (`b29-profile`: an allowlist over all of `lib/`, and only `show SchoolStage` imports of `engine/age.dart` outside it; proof `profile_sync_test.dart`) | 2026-11-06 |
+| SEC-B29-4 | Rolling back `settings-put` or `child-put` while the B-29 app is in use stops its settings sync and the save of a child with a stage | info | open (a deploy note: roll back the app first) | 2026-11-06 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -390,4 +394,33 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     feature declare that version.
   - New findings: SEC-M10-1 to -3 (low) and SEC-M10-4 and -5 (info), in the table above. Their detail and proofs go to the
     orchestrator and stay out of the public file until they are fixed.
+- **B-29 steps 3 and 4, `b29-profile` (`e27f6824` against `origin/m10-step0`; 2026-11-06): safe to deploy in the order
+  migration, then `child-put`, `sync-pull` and `settings-put`, then the app. Nothing above low.** In scope: the migration, the
+  three changed functions and the shared store, the device-only birth month and year, `engine/age.dart`, the sync field and
+  fingerprint, `FamilyLooks`, the fake server, the canary and source-rule tests, iOS backup, and old and new app compatibility.
+  Not in scope: the warm-up and presentation stages as teaching or design logic.
+  - The four checks: all three functions are `device` specs (`child-put` and `settings-put` parent only, `sync-pull` parent and
+    child). The shared `makeHandler` is unchanged and runs token, signature, nonce and time, device, family and role before the
+    shape and the work. The shape refuses every key it does not name, so no birth key can be sent (Deno test over
+    `refused_keys_of_child_put`). Error answers carry only the code.
+  - The database: the migration adds a nullable `text` column with a check on the six words. `create or replace` keeps the
+    owner and the grants (PostgreSQL keeps a replaced function's ACL). `security definer` and `search_path = pg_catalog, app`
+    are written exactly as before, and the body is the 2026-11-03 body plus one `looks` statement. No grant was added. Default
+    privileges still revoke everything from `public`, `anon`, `authenticated` and `service_role`. pgTAP 05 (`execute`) and 11
+    (column privileges, RLS on) cover this.
+  - Birth data: it is only in `profile_births` in the encrypted database, and it is read only in `engine/age.dart`,
+    `data/tables.dart`, `data/app_database.dart` and `app/age_providers.dart` (nothing consumes it yet). `BirthMonth.toString`
+    hides it. Release builds print nothing. There is no crash reporter, and Android backup and transfer exclude every domain.
+    The canary test is sound for the sync functions (every request and answer of three rounds, numbers, dates and keys); see
+    SEC-B29-3 for the source rule.
+  - `looks`: at most 6 children, ids in the `child-put` pattern, the letter exactly `A`, `B` or `C`. The 10,000-byte bound is
+    unchanged. A stale parent phone could put a deleted child's letter back, which is SEC-L0-5 (info), now also for `looks`.
+  - Compatibility: an old app ignores `school_stage` and `looks`, and a save from it without a stage keeps the stored stage
+    (but see SEC-B29-1). An old-app parent phone that saves the settings drops `looks` (last write wins; not a security issue).
+  - New findings: SEC-B29-1 to -3 (low) and SEC-B29-4 (info), in the table above. Their detail goes to the orchestrator.
+  - Advisories (OSV.dev, 2026-11-06): none for drift 2.35.3, sqlite3 3.8.0, flutter_secure_storage 11.2.0 or
+    flutter_secure_storage_darwin 0.4.3. No lock file, workflow or host changed.
+  - Run by the security-engineer: `flutter test` on `profile_sync_test`, `birthday_changes_nothing_test`,
+    `profile_births_test` and `look_settings_test` (42 passed). CI run 42245546284 on `origin/b29-profile`: the gateway
+    (Deno tests), database (pgTAP), gitleaks (full history) and OSV jobs passed; the app test shards were still running.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
