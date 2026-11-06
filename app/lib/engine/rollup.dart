@@ -5,6 +5,8 @@ import 'state.dart';
 /// means all groups. [groups] must hold one status for every group of the roll-up, not only the ones the child has begun.
 SkillStatus rollUpStatus(List<SkillStatus> groups) {
   if (groups.isEmpty) return SkillStatus.notStarted;
+  // Trace nodes (E-1) are never mastered: a roll-up of them is practised when every group is.
+  if (groups.every((SkillStatus s) => s == SkillStatus.practised)) return SkillStatus.practised;
   if (groups.every((SkillStatus s) => s == SkillStatus.durableMastery)) return SkillStatus.durableMastery;
   const Set<SkillStatus> reached = <SkillStatus>{
     SkillStatus.freshMastery,
@@ -20,6 +22,7 @@ SkillStatus rollUpStatus(List<SkillStatus> groups) {
     SkillStatus.durableMastery,
     SkillStatus.needsRevisit,
     SkillStatus.gap,
+    SkillStatus.practised,
   };
   if (groups.any(begun.contains)) return SkillStatus.learning;
   return groups.contains(SkillStatus.ready) ? SkillStatus.ready : SkillStatus.notStarted;

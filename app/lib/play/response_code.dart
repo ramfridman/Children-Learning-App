@@ -21,6 +21,7 @@
 /// | shop_pay | the total paid in agorot, `350` | the total |
 /// | clock_set | the time set, `3.00` or `3.30` | the time |
 /// | trace | `trace` | `direction` (the right path from the other end) or `off` |
+/// | trace 2.0 (LS02, write a letter) | `ok` when the letter or the word is written; a trace keeps `trace` | an error it named: the stroke and what, `s2.dir` (`start`, `dir`, `lines`, `mirror`, `partner`), in a word the box first, `b2.s1.start`; a miss it cannot name writes nothing |
 /// | say_it | `said` (the child was heard, speech evidence) or `picture` (the scored tap on the picture) | (none: nothing is wrong) |
 /// | "I'm not sure" | (empty) | |
 ///
@@ -44,6 +45,9 @@ abstract final class ResponseCode {
   static const String built = 'built';
   static const String reached = 'reached';
   static const String traced = 'trace';
+
+  /// LS02: the letter or the word was written (copy and memory).
+  static const String written = 'ok';
   static const String tracedBackwards = 'direction';
   static const String tracedOff = 'off';
 
@@ -57,6 +61,12 @@ abstract final class ResponseCode {
   static const String move = 'move';
 
   static String count(int n) => 'n=$n';
+
+  /// LS02: the [stroke]th stroke (from 1) of the letter was an error that was named: `s2.dir`. Numbers and a short word, never a point.
+  static String strokeFault(int stroke, String what) => 's$stroke.$what';
+
+  /// LS02: the same in the [box]th letter (from 1) of a word: `b2.s1.start`.
+  static String boxStroke(int box, int stroke, String what) => 'b$box.s$stroke.$what';
 
   /// An item of a sort put into [bin].
   static String sortMove(String item, String bin) => '$item-$bin';

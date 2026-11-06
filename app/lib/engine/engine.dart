@@ -62,6 +62,8 @@ class Engine {
     if (e.course != null && e.course != item.course) return;
     final bool probe = item.purpose == Purpose.probe;
     final int day = dayKey(e.at);
+    // A word of a speaking skill's practice set was met, whatever becomes of the answer (frame section 3.3.8).
+    if (!probe && !item.delight) _meetWords(item);
     // The probe this answer belongs to is decided on what was known before it (the answer itself changes the estimates).
     final GapSearch? open = state.search;
     final String? expectedProbe = (probe && open != null)
@@ -90,18 +92,77 @@ class Engine {
     }
     // Free play makes no demands: it is neither evidence of knowing nor of not knowing.
     if (item.delight) return;
+    bool evidence = false;
     for (final MapEntry<String, double> w in item.skills.entries) {
       if (!catalog.skills.containsKey(w.key) || (spoken != null && !spoken.contains(w.key))) continue;
-      _updateSkill(w.key, w.value, item, e, probe, day);
+      if (_isPractice(w.key, item)) {
+        _practise(w.key, item, e, probe);
+      } else {
+        evidence = true;
+        _updateSkill(w.key, w.value, item, e, probe, day);
+      }
     }
+    // Practice is no evidence of anything: with the path in view a miss is motor control, not a misconception, so the tags, the
+    // statistics of the way of explaining, the search for a gap and the repair of one never hear of it.
+    if (!evidence) return;
+    final int eff = _effectiveHint(item, e);
     _updateTags(item, e);
     if (!probe) {
       final RepStats r = state.repStats(graph.node(_known(item)).family, item.representation);
       r.tries++;
-      if (e.result == Result.correct && e.hintLevel <= 1) r.successes++;
+      if (e.result == Result.correct && eff <= 1) r.successes++;
     }
     _updateSearch(item, e, probe, expectedProbe);
-    _updateGaps(item, e, probe);
+    _updateGaps(item, e, probe, eff);
+  }
+
+  // ---- writing (rule E-1) ----
+
+  /// Decided first, before any evidence (writing-mastery section 4.2): tracing, and every answer in a trace node, is practice. The
+  /// other two classes are told apart by [_effectiveHint]: a copy is read as an answer with one more hint, a memory answer as given.
+  bool _isPractice(String skillId, ItemMeta item) =>
+      graph.node(skillId).writing == WritingRule.practised ||
+      item.writingMode == WritingMode.trace ||
+      item.practiceOnly;
+
+  /// The hint level the rules read: what was shown, and for a copy one more (the model was in view).
+  int _effectiveHint(ItemMeta item, AttemptEvent e) =>
+      item.writingMode == WritingMode.copy ? math.min(e.hintLevel + 1, 3) : e.hintLevel;
+
+  /// A practice answer: counted, and when it is a right trace with the start dot only (level 0 or 1) its letter is practised.
+  void _practise(String id, ItemMeta item, AttemptEvent e, bool probe) {
+    final SkillState s = skill(id);
+    final bool first = !s.started;
+    s.practiceCount++;
+    if (first && e.sessionId != null) (state.newSkillsInSession[e.sessionId!] ??= <String>{}).add(id);
+    if (e.result == Result.correct &&
+        e.hintLevel <= 1 &&
+        !probe &&
+        item.startGuide &&
+        item.variantGroup.isNotEmpty) {
+      s.practisedGroups.add(item.variantGroup);
+    }
+  }
+
+  void _meetWords(ItemMeta item) {
+    if (item.variantGroup.isEmpty) return;
+    for (final String id in item.skills.keys) {
+      if (catalog.skills.containsKey(id) && graph.node(id).speaking) {
+        (state.metWords[id] ??= <String>{}).add(item.variantGroup);
+      }
+    }
+  }
+
+  bool _practised(String id) {
+    final Set<String> letters = catalog.practiceGroupsOf(id);
+    final Set<String> done = state.skills[id]?.practisedGroups ?? const <String>{};
+    return letters.isNotEmpty && letters.every(done.contains);
+  }
+
+  bool _practiceSetDone(String id) {
+    final Set<String> words = catalog.variantGroupsOf(id);
+    final Set<String> met = state.metWords[id] ?? const <String>{};
+    return words.isNotEmpty && words.every(met.contains);
   }
 
   String _known(ItemMeta item) =>
@@ -111,12 +172,15 @@ class Engine {
     final SkillState s = skill(id);
     final bool first = !s.started;
     final bool correct = e.result == Result.correct;
+    // A copy is read as an answer with one more hint (writing-mastery section 4.3); every other answer as it was given.
+    final int eff = _effectiveHint(item, e);
+    final bool copy = item.writingMode == WritingMode.copy;
     s.p = Bkt.update(
       s.p,
       correct: correct,
       weight: Bkt.weightOf(
         result: e.result,
-        hintLevel: e.hintLevel,
+        hintLevel: eff,
         skillWeight: w,
         optionCount: item.optionCount,
         params: params,
@@ -129,9 +193,9 @@ class Engine {
     if (e.result == Result.unsure) s.nUnsure++;
     if (first && e.sessionId != null) (state.newSkillsInSession[e.sessionId!] ??= <String>{}).add(id);
 
-    // Reviews: the first answer of a skill on a day is a look at what the child remembers.
-    if (!probe && s.lastReviewDay != day) {
-      final bool good = correct && e.hintLevel <= 1;
+    // Reviews: the first answer of a skill on a day is a look at what the child remembers. A copy is not one: the model is in view.
+    if (!probe && !copy && s.lastReviewDay != day) {
+      final bool good = correct && eff <= 1;
       final SkillNode node = graph.node(id);
       s.memory = s.memory == null
           ? Retention.first(at: e.at, initialStability: node.initialStabilityDays, good: good)
@@ -151,7 +215,7 @@ class Engine {
       }
     }
 
-    if (correct && e.hintLevel == 0 && !probe) {
+    if (correct && eff == 0 && !probe) {
       s.successes++;
       if (e.viaSpeech) s.speechSuccesses++;
       s.successDays.add(day);
@@ -159,6 +223,11 @@ class Engine {
       if (item.variantGroup.isNotEmpty) s.successGroups.add(item.variantGroup);
       s.representationsPassed.add(item.representation);
       if (item.checkType != CheckType.practice) s.checksPassed.add(item.checkType);
+      if (item.writingMode == WritingMode.memory) {
+        s.memorySuccessDays.add(day);
+        if (item.cue != null) s.memoryCues.add(item.cue!);
+        if (item.variantGroup.isNotEmpty) s.memoryGroups.add(item.variantGroup);
+      }
     }
     if (!probe) {
       if (correct) {
@@ -197,19 +266,32 @@ class Engine {
     if (s.freshAt != null || s.p < params.masteryBar) return;
     final bool core = graph.isCore(id);
     final SkillNode node = graph.node(id);
+    if (node.writing == WritingRule.practised) return; // a trace node is practised, never mastered
     if (s.successes < (node.needSuccesses ?? (core ? params.freshSuccessesCore : params.freshSuccesses))) {
       return;
     }
-    if (s.successDays.length < (node.needDays ?? params.freshDays)) return;
-    final int needReps =
-        node.needRepresentations ?? (core ? params.freshRepresentationsCore : params.freshRepresentations);
-    if (s.representationsPassed.length < needReps) return;
+    final int needDays = node.needDays ?? params.freshDays;
+    if (s.successDays.length < needDays) return;
+    final bool memoryWriting = node.writing == WritingRule.memory;
+    if (memoryWriting) {
+      // The cue condition replaces the representations (writing-mastery section 5): the sound and the name are the two ways of
+      // knowing a letter, and the memory successes must come on two days.
+      if (s.memorySuccessDays.length < math.max(2, needDays)) return;
+      if (!s.memoryCues.containsAll(WritingCue.values)) return;
+    } else {
+      final int needReps =
+          node.needRepresentations ?? (core ? params.freshRepresentationsCore : params.freshRepresentations);
+      if (s.representationsPassed.length < needReps) return;
+    }
     if (s.checksPassed.length < (node.needChecks ?? (core ? params.freshChecksCore : params.freshChecks))) {
       return;
     }
     // A set of words (or the letters of a group) is known when every one of them was answered right once, not when half of
     // them were answered right often (docs/languages/frame.md section 3.3.4).
     if (node.setCoverage && !catalog.variantGroupsOf(id).every(s.successGroups.contains)) return;
+    if (memoryWriting && node.setCoverage && !catalog.memoryGroupsOf(id).every(s.memoryGroups.contains)) {
+      return;
+    }
     s.freshAt = at;
     s.itemsAtFresh = Set<String>.of(s.successItems);
   }
@@ -334,10 +416,12 @@ class Engine {
     // Score every candidate: how weak it looks, along how strong a chain of prerequisites.
     final Map<String, double> scores = <String, double>{};
     for (final MapEntry<String, double> c in reach.entries) {
+      // A trace node is never probed: how well a child traces says nothing about what the child knows (writing-mastery section 6.4).
       if (s.cleared.contains(c.key) ||
           s.failed.contains(c.key) ||
           c.key == cur ||
-          demonstrated.contains(c.key)) {
+          demonstrated.contains(c.key) ||
+          graph.node(c.key).writing == WritingRule.practised) {
         continue;
       }
       final SkillState? st = state.skills[c.key];
@@ -382,9 +466,12 @@ class Engine {
       _probeDone(s, passed: true, at: e.at, sessionId: e.sessionId);
     } else {
       // A wrong answer in an item that is easy to guess is a slip as often as not: two are needed to fail,
-      // unless a right answer alone would have passed (open tasks).
+      // unless a right answer alone would have passed (open tasks). A letter written freely is the exception: mirrors and look-alikes
+      // are normal at five and six, and one stroke can stray, so a writing probe fails only on its second wrong answer.
       s.wrongRun++;
-      final int needed = probeRightsToPass(item.optionCount) == 1 ? 1 : params.probeWrongsToFail;
+      final int needed = item.writingMode != null || probeRightsToPass(item.optionCount) != 1
+          ? params.probeWrongsToFail
+          : 1;
       if (s.wrongRun < needed) return;
       _probeDone(s, passed: false, at: e.at, sessionId: e.sessionId);
     }
@@ -435,11 +522,11 @@ class Engine {
     state.search = null;
   }
 
-  void _updateGaps(ItemMeta item, AttemptEvent e, bool probe) {
+  void _updateGaps(ItemMeta item, AttemptEvent e, bool probe, int eff) {
     if (probe) return;
     for (final Gap g in state.gaps) {
       if (g.repaired || !item.skills.containsKey(g.skill)) continue;
-      if (e.result == Result.correct && e.hintLevel <= 1) {
+      if (e.result == Result.correct && eff <= 1) {
         g.repairSuccesses++;
         if (g.repairSuccesses >= params.repairSuccesses) g.repairedAt = e.at;
       } else if (e.result == Result.incorrect) {
@@ -458,16 +545,35 @@ class Engine {
     for (final String m in members) {
       for (final String p in graph.node(m).prerequisites.keys) {
         if (members.contains(p)) continue;
-        if ((state.skills[p]?.p ?? _prior(p)) < params.unlockBar) return false;
+        if (!isMet(p)) return false;
       }
     }
     return true;
   }
 
+  /// Whether the skill [id] counts as a met prerequisite, the one hook behind [isUnlocked]. A trace node (E-1) is met once
+  /// every letter of it was traced with the start dot only, or when placement assumed it; a speaking skill, whose mastery depends on
+  /// the microphone the parent chose, is met once its practice set is done (frame section 3.3.8). Neither can hold a child back.
+  /// Any other skill is met at the unlock bar.
+  bool isMet(String id) {
+    final SkillNode node = graph.node(id);
+    if (node.writing == WritingRule.practised) return _assumed.contains(id) || _practised(id);
+    if ((state.skills[id]?.p ?? _prior(id)) >= params.unlockBar) return true;
+    return node.speaking && _practiceSetDone(id);
+  }
+
   /// The variant groups (words, or letters) of a set skill that have not been answered right without a hint yet; empty for a
   /// skill that is not a set. The session builder rotates its items through these until the set is covered.
   Set<String> uncoveredGroups(String id) {
-    if (!graph.node(id).setCoverage) return const <String>{};
+    final SkillNode node = graph.node(id);
+    // A trace node rotates its items through the letters not practised yet; a writing node through the ones with no memory success.
+    if (node.writing == WritingRule.practised) {
+      return catalog.practiceGroupsOf(id).difference(state.skills[id]?.practisedGroups ?? const <String>{});
+    }
+    if (!node.setCoverage) return const <String>{};
+    if (node.writing == WritingRule.memory) {
+      return catalog.memoryGroupsOf(id).difference(state.skills[id]?.memoryGroups ?? const <String>{});
+    }
     final Set<String> done = state.skills[id]?.successGroups ?? const <String>{};
     return catalog.variantGroupsOf(id).difference(done);
   }
@@ -507,6 +613,12 @@ class Engine {
     final List<String>? groups = catalog.subSkills[id];
     if (groups != null) return rollUpStatus(<SkillStatus>[for (final String g in groups) statusOf(g, now)]);
     final SkillState? s = state.skills[id];
+    if (graph.node(id).writing == WritingRule.practised) {
+      // Never mastered, never a gap: practised, or on the way to it.
+      if (isMet(id)) return SkillStatus.practised;
+      if (s == null || !s.started) return isUnlocked(id) ? SkillStatus.ready : SkillStatus.notStarted;
+      return SkillStatus.learning;
+    }
     if (state.gaps.any((Gap g) => !g.repaired && g.skill == id)) return SkillStatus.gap;
     if (s == null || !s.started) return isUnlocked(id) ? SkillStatus.ready : SkillStatus.notStarted;
     if (s.freshAt != null) {

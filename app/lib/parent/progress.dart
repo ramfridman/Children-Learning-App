@@ -21,7 +21,7 @@ class SkillInfo {
 enum ParentStatus { understood, practising, needsRevisit, gap, notStartedYet }
 
 ParentStatus parentStatusOf(SkillStatus s) => switch (s) {
-  SkillStatus.freshMastery || SkillStatus.durableMastery => ParentStatus.understood,
+  SkillStatus.freshMastery || SkillStatus.durableMastery || SkillStatus.practised => ParentStatus.understood,
   SkillStatus.learning => ParentStatus.practising,
   SkillStatus.needsRevisit => ParentStatus.needsRevisit,
   SkillStatus.gap => ParentStatus.gap,

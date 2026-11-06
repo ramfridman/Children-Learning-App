@@ -3,8 +3,10 @@ import 'dart:typed_data';
 import 'dart:ui' show Offset, Rect;
 
 import '../engine/course.dart';
+import '../engine/types.dart' show WritingCue, WritingRule;
 import 'pack_verify.dart';
 import 'schemas.dart' show coinValues;
+import 'strokes.dart';
 
 // Typed views of the documents of a pack that has passed `verifyPack`. The documents were checked
 // against the schemas and the cross-file rules, so these classes read them without defending against
@@ -160,6 +162,7 @@ sealed class Activity {
     'match_pairs' => MatchPairsActivity._(json, assets),
     'shop_pay' => ShopPayActivity._(json, assets),
     'clock_set' => ClockSetActivity._(json, assets),
+    'trace' when (json['templateVersion']! as String).startsWith('2.') => LetterWriteActivity._(json, assets),
     'trace' => TraceActivity._(json, assets),
     'say_it' => SayItActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
@@ -1176,6 +1179,114 @@ class TraceActivity extends Activity {
   Set<String> get engineTags => <String>{?wrongTag, ?directionTag};
 }
 
+/// The modes of LS02, write a letter (docs/languages/writing-mastery.md section 3).
+enum LetterMode { intro, trace, copy, memory }
+
+LetterMode _letterMode(String s) => switch (s) {
+  'intro' => LetterMode.intro,
+  'copy' => LetterMode.copy,
+  'memory' => LetterMode.memory,
+  _ => LetterMode.trace,
+};
+
+/// The worked example of a letter (the `intro` mode): its sound, shown with a key word and a picture, and its name as a separate fact.
+class LetterIntro {
+  const LetterIntro({required this.sound, required this.name, this.keyword, this.picture});
+
+  factory LetterIntro.fromJson(Map<String, Object?> json) => LetterIntro(
+    sound: json['sound']! as String,
+    name: json['name']! as String,
+    keyword: json['keyword'] as String?,
+    picture: json['picture'] as String?,
+  );
+
+  final String sound;
+  final String name;
+  final String? keyword;
+
+  /// An `asset:` reference.
+  final String? picture;
+}
+
+/// LS02 write a letter (`trace` 2.0, docs/milestones/L5.md section 5.2): the worked example of a letter, then trace it, copy it, and write
+/// it from memory, on a canvas of one letter or of a word. The letters are forms of the stroke set of the course's script; their strokes
+/// are read from the pack's stroke document, never from the activity. Free response: nothing is a fixed option, and an error the
+/// free-stroke check can name maps to a tag of [classify], while any other miss is a retry that writes nothing.
+class LetterWriteActivity extends Activity {
+  LetterWriteActivity._(super.json, super.assets)
+    : mode = _letterMode(_map(json['scene'])['mode']! as String),
+      word = _map(json['scene'])['canvas'] == 'word',
+      forms = _strings(_map(json['scene'])['forms']),
+      ownName = _map(json['scene'])['source'] == 'own_name',
+      fullGuide = _map(json['scene'])['guide'] == 'full',
+      modelHidden = _map(json['scene'])['model'] == 'hide',
+      cue = switch (_map(json['scene'])['cue']) {
+        'sound' => WritingCue.sound,
+        'name' => WritingCue.name,
+        _ => null,
+      },
+      intro = _map(json['scene'])['intro'] == null
+          ? null
+          : LetterIntro.fromJson(_map(_map(json['scene'])['intro'])),
+      practiceOnly = _map(json['scene'])['practice'] == true,
+      classify = <String, String>{
+        for (final String k in const <String>['start', 'direction', 'lines', 'mirror'])
+          if (_maybe(_map(json['answer'])['classify'])[k] is String)
+            k: _maybe(_map(json['answer'])['classify'])[k]! as String,
+      },
+      partners = <String, String>{
+        for (final MapEntry<String, Object?> p in _maybe(
+          _maybe(_map(json['answer'])['classify'])['partners'],
+        ).entries)
+          p.key: p.value! as String,
+      },
+      super._();
+
+  final LetterMode mode;
+
+  /// A canvas of a word: a row of boxes in the course's direction. Otherwise one box with one letter.
+  final bool word;
+
+  /// The form ids to write: one for a letter canvas, two to six for a word.
+  final List<String> forms;
+
+  /// The letters come from the child's own name (heb B-27); [forms] is the fallback word when no name is set.
+  final bool ownName;
+
+  /// trace: the whole dotted path (otherwise only the start dot and the first direction).
+  final bool fullGuide;
+
+  /// copy: the model is shown and then covered (otherwise it stays beside the box).
+  final bool modelHidden;
+
+  /// memory: what the voice says (its clip is the prompt's target).
+  final WritingCue? cue;
+
+  /// intro: the sound, the key word and the name to say.
+  final LetterIntro? intro;
+
+  /// A handwriting step that is only practice, whatever skill it names.
+  final bool practiceOnly;
+
+  /// The tag of each error the free-stroke check can name: `start`, `direction`, `lines`, `mirror`.
+  final Map<String, String> classify;
+
+  /// A look-alike form the child may write instead (form id) and the tag of that mix-up.
+  final Map<String, String> partners;
+
+  /// The tracing of a letter with only its start dot: a success there marks the letter as practised (E-1).
+  bool get startGuide => mode == LetterMode.trace && !fullGuide && !word;
+
+  @override
+  bool get unscored => mode == LetterMode.intro;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{...classify.values, ...partners.values};
+}
+
 /// A place of the shape builder: the shape that belongs there, where it stands in the picture (shares of its width and height)
 /// and how it is turned.
 class ShapeSlot {
@@ -1511,6 +1622,11 @@ class SkillDoc {
       setCoverage = (json['setCoverage'] as bool?) ?? false,
       soundRight = (json['soundRight'] as String?) ?? 'teaches',
       letters = (json['letters'] as bool?) ?? false,
+      writing = switch (json['writing']) {
+        'memory' => WritingRule.memory,
+        'practised' => WritingRule.practised,
+        _ => null,
+      },
       strand = json['strand'] as String?,
       masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
       initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
@@ -1539,6 +1655,9 @@ class SkillDoc {
   final bool setCoverage;
   final String soundRight;
   final bool letters;
+
+  /// Letter writing (E-1): a writing node (memory) or a trace node (practised); null for every other skill.
+  final WritingRule? writing;
 
   /// The strand of the course (`lis`, `ph`, `rea` ...) the progress view groups the skill under; null in the lands.
   final String? strand;
@@ -1644,6 +1763,7 @@ class TagDoc {
     : id = json['id']! as String,
       course = (json['course'] as String?) ?? Course.core,
       parentText = json['parentText']! as String,
+      kind = json['kind'] as String?,
       homeActivity = json['homeActivity'] == null ? null : _caption(json['homeActivity']),
       skills = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       repairActivities = <String>[
@@ -1658,6 +1778,9 @@ class TagDoc {
 
   /// What a parent reads about this misunderstanding, in plain Hebrew.
   final String parentText;
+
+  /// `diagnostic`, `on_the_way`, `accent` or `practice` in a language course (frame section 4.1); null in the lands.
+  final String? kind;
 
   /// Something a parent can do at home in about five minutes, or null.
   final String? homeActivity;
@@ -1700,6 +1823,7 @@ class PackContent {
     required this.skills,
     required this.tags,
     required this.gates,
+    this.strokeSets = const <String, StrokeSet>{},
     this.placement,
   });
 
@@ -1710,6 +1834,7 @@ class PackContent {
     final Map<String, SkillDoc> skills = <String, SkillDoc>{};
     final Map<String, TagDoc> tags = <String, TagDoc>{};
     final Map<String, GateDoc> gates = <String, GateDoc>{};
+    final Map<String, StrokeSet> strokeSets = <String, StrokeSet>{};
     PlacementDoc? placement;
     for (final MapEntry<String, Object?> d in pack.docs.entries) {
       final Map<String, Object?> doc = _map(d.value);
@@ -1722,6 +1847,9 @@ class PackContent {
       } else if (d.key.startsWith('gate.')) {
         final GateDoc g = GateDoc._(doc);
         gates[g.id] = g;
+      } else if (d.key.startsWith('strokes.')) {
+        final StrokeSet set = StrokeSet.fromJson(doc);
+        strokeSets[set.name] = set;
       } else if (d.key.startsWith('placement.')) {
         placement = PlacementDoc._(doc);
       } else if (d.key.startsWith('misconception.')) {
@@ -1742,6 +1870,7 @@ class PackContent {
       skills: skills,
       tags: tags,
       gates: gates,
+      strokeSets: strokeSets,
       placement: placement,
     );
   }
@@ -1759,6 +1888,9 @@ class PackContent {
 
   /// The gates of the course (none in the lands that exist today).
   final Map<String, GateDoc> gates;
+
+  /// The stroke sets of the course's scripts by name (`latin`, `hebrew-print` ...); none in the lands.
+  final Map<String, StrokeSet> strokeSets;
 
   /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
   final PlacementDoc? placement;

@@ -65,6 +65,7 @@ import 'say_step.dart';
 import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
 import 'spot_error_session.dart';
+import 'letter_write_session.dart';
 import 'listen_do_session.dart';
 import 'puppet_talk_session.dart';
 import 'sing_along_session.dart';
@@ -534,6 +535,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         ShopPayActivity() => ShopPaySession(c, a),
         ClockSetActivity() => ClockSetSession(c, a),
         TraceActivity() => TraceSession(c, a),
+        LetterWriteActivity() => LetterWriteSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
         SayItActivity() => SayItSession(c, a, say: _makeSayStep(c, a)),
       };

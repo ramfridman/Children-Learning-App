@@ -2,7 +2,18 @@ import 'retention.dart';
 import 'types.dart';
 
 /// What the child sees of a skill (a seedling, a leafy plant, a tree) and what the parent reads.
-enum SkillStatus { notStarted, ready, learning, freshMastery, durableMastery, needsRevisit, gap }
+enum SkillStatus {
+  notStarted,
+  ready,
+  learning,
+  freshMastery,
+  durableMastery,
+  needsRevisit,
+  gap,
+
+  /// A trace node (E-1) with every letter traced once with the start dot: met, and never anything more.
+  practised,
+}
 
 /// Everything the engine knows about one skill of one child. Built by replaying the attempts.
 class SkillState {
@@ -49,7 +60,18 @@ class SkillState {
   int lastHintLevel = 0;
   bool assumed = false;
 
-  bool get started => n > 0;
+  /// Writing (E-1). Answers of a trace node and of a trace item are practice: they are counted here and nowhere else.
+  int practiceCount = 0;
+
+  /// The letters (variant groups) of a trace node traced once with the start dot only.
+  final Set<String> practisedGroups = <String>{};
+
+  /// For a memory writing node: the days, the cues and the letters of its memory successes.
+  final Set<int> memorySuccessDays = <int>{};
+  final Set<WritingCue> memoryCues = <WritingCue>{};
+  final Set<String> memoryGroups = <String>{};
+
+  bool get started => n > 0 || practiceCount > 0;
 }
 
 enum TagStatus { suspected, active, resolved }
@@ -136,6 +158,11 @@ class EngineState {
 
   /// Skills first attempted in each session.
   final Map<int, Set<String>> newSkillsInSession = <int, Set<String>>{};
+
+  /// The words (variant groups) of a speaking skill's practice set that have been met, by whatever answer, spoken or not and
+  /// counted as evidence or not. A speaking skill is met when its set is done (frame section 3.3.8). Kept apart from [skills]
+  /// so that a spoken answer that counts for nothing still changes nothing there.
+  final Map<String, Set<String>> metWords = <String, Set<String>>{};
 
   DateTime? lastEventAt;
 

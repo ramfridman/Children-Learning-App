@@ -1,6 +1,7 @@
 # Writing mastery (rule E-1): the spec for LS02 2.0
 
-**Status:** the rule was decided by the owner on 2026-11-06 (L5 Q1 and Q2, approved with every recommendation). This file is step **L5-2a**: the rule written so that the app-developer can build it in L5-2b without guessing, and the qa-engineer can test it. Written by the curriculum-expert, 2026-11-06, in `D:\nitznutz-l5` (branch `languages-l5`). Nothing here is built yet.
+**Status:** the rule was decided by the owner on 2026-11-06 (L5 Q1 and Q2, approved with every recommendation). This file is step **L5-2a**: the rule written so that the app-developer can build it in L5-2b without guessing, and the qa-engineer can test it. Written by the curriculum-expert, 2026-11-06, in `D:\nitznutz-l5` (branch `languages-l5`). **Built in L5-2b (2026-11-06)** in `D:
+itznutz-l5b`: sections 4 to 8 are `app/lib/engine/` (types, state, engine, rollup), `app/lib/content/ls02_checks.dart` and `engine_adapter.dart`, and the vectors of section 9 are `app/test/engine/writing_mastery_test.dart`; the PLAN.md paragraph "LS02, write a letter" says what differs.
 
 **Read with:** `docs/milestones/L5.md` §5.2 (LS02 2.0) and §6 (E-1), `docs/languages/frame.md` §3.3 (mastery, roll-ups, bundles, set coverage, speech), `docs/languages/strokes.md` (F6), `docs/milestones/L3.md` D-8 and §10 (how speech evidence was capped), and the engine: `app/lib/engine/engine.dart`, `state.dart`, `types.dart`, `mastery.dart`, `params.dart`, `rollup.dart`, `gates.dart`, `app/lib/content/engine_adapter.dart`.
 

@@ -9,6 +9,7 @@ import '../speech/word_text.dart' show normalizeWords;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
 import 'ls01_checks.dart';
+import 'ls02_checks.dart';
 import 'schema.dart';
 import 'schemas.dart';
 import 'scripts.dart';
@@ -84,6 +85,8 @@ List<Problem> validatePack({
   final Set<String> characterIds = <String>{};
   final Map<String, Map<String, Object?>> cues = <String, Map<String, Object?>>{};
   final Set<String> cueIds = <String>{};
+  final Map<String, Map<String, Object?>> strokeSets = <String, Map<String, Object?>>{};
+  final Set<String> strokeIds = <String>{};
 
   for (final String name in listedNames.intersection(files)) {
     final bool isJson = name.endsWith('.json');
@@ -112,7 +115,10 @@ List<Problem> validatePack({
     switch (kind) {
       case 'activity':
         final Object? template = doc['template'];
-        final Schema? s = template is String ? activitySchemaFor(template) : null;
+        final Object? version = doc['templateVersion'];
+        final Schema? s = template is String
+            ? activitySchemaFor(template, version: version is String ? version : null)
+            : null;
         activityIds.add(middle);
         if (s == null) {
           say(name, 'template', 'is not a template this version of the app can play');
@@ -172,6 +178,19 @@ List<Problem> validatePack({
         }
         if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
         if (found.isEmpty) characters[middle] = doc;
+      case 'strokes':
+        strokeIds.add(middle);
+        final List<Problem> found = validate(strokesSchema, doc);
+        for (final Problem p in found) {
+          add(name, p);
+        }
+        if (doc['set'] != middle) say(name, 'set', 'must equal "$middle", the middle of the file name');
+        if (!Course.isLanguage(course)) {
+          say(name, '', 'belongs to a language course: the lands have no stroke sets');
+        } else if (found.isEmpty) {
+          checkStrokeSet(name, doc, course: course, say: say);
+        }
+        if (found.isEmpty) strokeSets[middle] = doc;
       case 'cue':
         cueIds.add(middle);
         final List<Problem> found = validate(cueSchema, doc);
@@ -207,6 +226,7 @@ List<Problem> validatePack({
   sameSet('placements', placementIds);
   sameSet('characters', characterIds);
   sameSet('cues', cueIds);
+  sameSet('strokes', strokeIds);
 
   // ---- the manifest must promise every template an activity uses ----
   final Map<String, Object?> templates = manifest['templates']! as Map<String, Object?>;
@@ -552,6 +572,23 @@ List<Problem> validatePack({
         }
         checkTag(file, 'answer.misconception', answer['misconception']);
         checkTag(file, 'answer.handsMisconception', answer['handsMisconception']);
+      case 'trace' when isLetterWrite(a):
+        // LS02: the modes, forms and classifiers are `ls02_checks.dart`'s; here only what a file of the pack can point at.
+        final Object? intro = scene['intro'];
+        if (intro is Map<String, Object?>) {
+          checkAsset(file, 'scene.intro.picture', intro['picture']);
+          for (final String k in <String>['sound', 'keyword', 'name']) {
+            checkVo(file, 'scene.intro.$k', intro[k]);
+          }
+        }
+        final Map<String, Object?> classify = _mapOf(answer['classify']);
+        for (final String k in <String>['start', 'direction', 'lines', 'mirror']) {
+          checkTag(file, 'answer.classify.$k', classify[k]);
+        }
+        for (final MapEntry<String, Object?> p in _mapOf(classify['partners']).entries) {
+          checkTag(file, 'answer.classify.partners.${p.key}', p.value);
+        }
+        if (scene['mode'] == 'intro') _unscored(file, a, say, 'an introduction');
       case 'trace':
         checkAsset(file, 'scene.background', scene['background']);
         for (final (int i, Object? stroke) in (scene['strokes']! as List<Object?>).indexed) {
@@ -735,6 +772,19 @@ List<Problem> validatePack({
       checkTag: checkTag,
       familyOf: (String tag) => tags[tag]?['family'] as String?,
     );
+    checkLs02Activity(
+      file,
+      a,
+      language: Course.isLanguage(course),
+      course: course,
+      strokeSets: strokeSets,
+      skills: skills,
+      tags: <String, TagFacts>{
+        for (final MapEntry<String, Map<String, Object?>> t in tags.entries)
+          t.key: (family: t.value['family'] as String?, kind: t.value['kind'] as String?),
+      },
+      say: say,
+    );
     _languageOnlyTemplate(file, a, say, language: Course.isLanguage(course));
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
@@ -814,6 +864,14 @@ List<Problem> validatePack({
       lessons: lessons,
       skills: skills,
       tags: tags,
+      say: say,
+    );
+    checkLs02Pack(
+      course: course,
+      activities: activities,
+      lessons: lessons,
+      skills: skills,
+      gates: gates,
       say: say,
     );
   }

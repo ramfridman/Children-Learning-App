@@ -161,7 +161,8 @@ LanguageProgress buildLanguageProgress({
       switch (engine.statusOf(s.id, now)) {
         case SkillStatus.learning || SkillStatus.gap:
           learning++;
-        case SkillStatus.freshMastery:
+        // A trace node that was practised is finished: it is never mastered, so "practised" is as far as it goes (E-1).
+        case SkillStatus.freshMastery || SkillStatus.practised:
           understood++;
         case SkillStatus.durableMastery:
           remembered++;

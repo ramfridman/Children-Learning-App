@@ -230,6 +230,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'cues': <String>[],
     'gates': <String>[],
     'placements': <String>[],
+    'strokes': <String>[],
   };
   const Map<String, String> kinds = <String, String>{
     'activity': 'activities',
@@ -240,6 +241,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'cue': 'cues',
     'gate': 'gates',
     'placement': 'placements',
+    'strokes': 'strokes',
   };
   for (final String name in docs.keys) {
     final RegExpMatch? m = RegExp(r'^([a-z]+)\.(.+)\.json$').firstMatch(name);
@@ -303,7 +305,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'entries': <String, List<String>>{
       for (final MapEntry<String, List<String>> e in entries.entries)
         if (e.value.isNotEmpty ||
-            !const <String>{'characters', 'cues', 'gates', 'placements'}.contains(e.key))
+            !const <String>{'characters', 'cues', 'gates', 'placements', 'strokes'}.contains(e.key))
           e.key: e.value,
     },
   };
