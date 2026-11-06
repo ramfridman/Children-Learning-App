@@ -6,6 +6,16 @@ alter table app.child_profile
   add column school_stage text
   check (school_stage is null or school_stage in ('gan3', 'gan4', 'gan5', 'grade1', 'grade2', 'grade3'));
 
+-- A stage always agrees with the band it sets (gan3, gan4: 0; gan5, grade1: 1; grade2, grade3: 2), as `child-put` already requires.
+-- Without this a save with another band and no stage could leave the table holding both, and the app would refuse that child
+-- for ever (SEC-B29-1). Every row so far has no stage, so the check holds for all of them.
+alter table app.child_profile
+  add constraint child_profile_stage_band check (
+    school_stage is null
+    or (school_stage in ('gan3', 'gan4') and age_band = 0)
+    or (school_stage in ('gan5', 'grade1') and age_band = 1)
+    or (school_stage in ('grade2', 'grade3') and age_band = 2));
+
 -- Deleting a child takes that child's look letter out of the family's settings too, and counts the change as a new version, so
 -- every phone takes it (as the ribbons and the language settings already do).
 create or replace function app.delete_child(p_family uuid, p_child text) returns void

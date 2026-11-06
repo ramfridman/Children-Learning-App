@@ -1,6 +1,6 @@
 import '../content/models.dart';
 import '../data/app_database.dart';
-import '../engine/age.dart';
+import '../engine/age.dart' show SchoolStage;
 import '../engine/staircase.dart';
 import '../play/lesson_controller.dart' show ItemFlow;
 import '../strings/he.dart';

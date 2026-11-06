@@ -1,4 +1,4 @@
-import '../engine/age.dart';
+import '../engine/age.dart' show SchoolStage;
 import 'app_database.dart';
 
 /// What a stored profile says about the child's school stage (B-29).

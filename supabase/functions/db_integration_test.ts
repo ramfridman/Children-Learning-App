@@ -660,6 +660,13 @@ Deno.test({
     );
     await store.upsertChild(family, { ...profile, nickname: "נועה כהן", schoolStage: "grade2", ageBand: 2 });
     assert.equal((await store.listChildren(family))[0].schoolStage, "grade2", "a new stage replaces it");
+    // SEC-B29-1: a save with another band and no stage drops the stage that no longer fits (the table also refuses the pair).
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן", ageBand: 1 });
+    assert.equal(
+      (await store.listChildren(family))[0].schoolStage,
+      null,
+      "a stage of another band is dropped",
+    );
 
     const [a, b, c] = [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()];
     const first = await store.insertEvents(family, device, [

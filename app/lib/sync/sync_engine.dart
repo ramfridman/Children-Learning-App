@@ -9,7 +9,7 @@ import '../core/errors.dart';
 import '../core/log.dart';
 import '../data/app_database.dart';
 import '../data/child_name.dart';
-import '../engine/age.dart';
+import '../engine/age.dart' show SchoolStage;
 import '../engine/course.dart';
 import '../parent/language_settings.dart';
 import '../parent/look_settings.dart';
@@ -952,6 +952,11 @@ class SyncEngine {
         // ignored (the stage here stays as it was). A server older than B-29 sends none, and that never wipes the one chosen here.
         final SchoolStage? stage = SchoolStage.fromWire(m['school_stage']);
         final bool stageFits = stage != null && stage.band == m['age_band'];
+        // A stage kept here for another band than the server's is wrong for the child now (another phone saved a new band,
+        // SEC-B29-1): it is cleared, so this phone never pushes a stage against the band, which the server refuses for ever.
+        final SchoolStage? local = SchoolStage.fromWire(here?.schoolStage);
+        final bool localFits = local != null && local.band == m['age_band'];
+        final bool clearLocal = !stageFits && local != null && !localFits;
         final ProfilesCompanion row = ProfilesCompanion(
           id: Value<String>(id),
           name: Value<String>(name),
@@ -963,7 +968,11 @@ class SyncEngine {
           outfitId: m['outfit_id'] is String
               ? Value<String?>(m['outfit_id']! as String)
               : const Value<String?>.absent(),
-          schoolStage: stageFits ? Value<String?>(stage.wire) : const Value<String?>.absent(),
+          schoolStage: stageFits
+              ? Value<String?>(stage.wire)
+              : clearLocal
+              ? const Value<String?>(null)
+              : const Value<String?>.absent(),
           createdAt: Value<DateTime>(_now),
         );
         final bool known = here != null;
@@ -979,8 +988,8 @@ class SyncEngine {
             m['age_band']! as int,
             m['companion_id'] as String?,
             m['outfit_id'] as String?,
-            // What this phone holds after the pull: the server's stage when it fits, else the one already here.
-            stageFits ? stage : SchoolStage.fromWire(here?.schoolStage),
+            // What this phone holds after the pull: the server's stage when it fits, else the one already here if it fits.
+            stageFits ? stage : (localFits ? local : null),
           ),
         );
       }

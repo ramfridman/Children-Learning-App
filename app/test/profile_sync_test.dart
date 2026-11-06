@@ -146,6 +146,28 @@ void main() {
       expect((await p1.profile()).schoolStage, 'gan5');
     });
 
+    test('a pull with another band than the stage held here clears the stage, so the next save is accepted (SEC-B29-1)', () async {
+      await p1.addChild();
+      await p1.db.setSchoolStage(kid, SchoolStage.grade2);
+      await p1.engine.syncOnce();
+      // Another phone saved the child with band 1 (a server before the fix kept grade2 beside it).
+      server.children[kid] = <String, Object?>{
+        ...server.children[kid]!,
+        'age_band': 1,
+        'school_stage': 'grade2',
+      };
+      await p1.engine.syncOnce();
+      final Profile pulled = await p1.profile();
+      expect(pulled.ageBand, 1);
+      expect(pulled.schoolStage, isNull, reason: 'a stage against the band is cleared');
+      final int before = _childPuts(server);
+      await p1.db.setCompanion(kid, 'hero-son');
+      await p1.engine.syncOnce();
+      expect(_childPuts(server), before + 1, reason: 'the save went out and the fake server took it');
+      expect(server.children[kid]!['companion_id'], 'hero-son');
+      expect(server.children[kid]!['age_band'], 1);
+    });
+
     test('a child device never sends a child, so it cannot change a stage', () async {
       await p1.addChild();
       await p1.db.setSchoolStage(kid, SchoolStage.gan5);
@@ -368,24 +390,64 @@ void main() {
       expect(jsonEncode(row.toJson()).toLowerCase(), isNot(contains('birth')));
     });
 
-    test('the sync engine, the gateway client and the tutor cannot even name it (source rule)', () {
-      final RegExp names = RegExp(
-        r'BirthMonth|birthOf|setBirth|ProfileBirth|profile_births|birthYear|birthMonth|childAge\b|ChildAge',
-      );
-      for (final String dir in <String>[
-        'lib/sync',
-        'lib/net',
-        'lib/tutor',
-        'lib/core',
-        'lib/push',
-        'lib/auth',
-        'lib/device',
-      ]) {
-        for (final FileSystemEntity f in Directory(dir).listSync(recursive: true)) {
-          if (f is! File || !f.path.endsWith('.dart')) continue;
-          expect(names.hasMatch(f.readAsStringSync()), isFalse, reason: f.path);
-        }
-      }
+    test('only the age files can name a birth or an age in months, and everyone else imports just the stage (source rule)', () {
+      expect(ageRuleBreaks(Directory('lib')), isEmpty);
+    });
+
+    test('the source rule catches a stray name and a whole-file import', () {
+      final Directory root = Directory.systemTemp.createTempSync('age_rule_');
+      addTearDown(() => root.deleteSync(recursive: true));
+      Directory('${root.path}/play').createSync();
+      Directory('${root.path}/engine').createSync();
+      Directory('${root.path}/app').createSync();
+      File('${root.path}/engine/age.dart').writeAsStringSync('class ChildAge {}');
+      File('${root.path}/app/age_providers.dart')
+          .writeAsStringSync("import '../engine/age.dart';\nfinal childAgeProvider = 1;");
+      File('${root.path}/play/fine.dart').writeAsStringSync("import '../engine/age.dart' show SchoolStage;");
+      expect(ageRuleBreaks(root), isEmpty);
+
+      File('${root.path}/play/names.dart').writeAsStringSync('final x = childAgeProvider;');
+      File('${root.path}/play/whole.dart').writeAsStringSync("import 'package:nitznutz/engine/age.dart';");
+      File('${root.path}/play/more.dart')
+          .writeAsStringSync("import '../engine/age.dart' show SchoolStage, PresentationStage;");
+      final List<String> broken = ageRuleBreaks(root);
+      expect(broken.length, 3, reason: '$broken');
+      expect(broken.join('\n'), allOf(contains('names.dart'), contains('whole.dart'), contains('more.dart')));
     });
   });
+}
+
+/// The files under [root] that break the birth rule (B-29, SEC-B29-3): the names that carry a birth month or an age in months may
+/// appear only in the age files, and any other file may import `engine/age.dart` only as `show SchoolStage`. The report names files by
+/// their path under [root].
+List<String> ageRuleBreaks(Directory root) {
+  // The age files: the types, the tables and database that keep the month, the providers that read it, and the generated code.
+  const Set<String> allowed = <String>{
+    'engine/age.dart',
+    'data/tables.dart',
+    'data/app_database.dart',
+    'data/app_database.g.dart',
+    'app/age_providers.dart',
+  };
+  final RegExp names = RegExp(
+    r'BirthMonth|birthOf|setBirth|ProfileBirth|profile_births|birthYear|birthMonth|ChildAge|childAge|ageInMonths|assumedMonths',
+  );
+  final RegExp ageImport = RegExp(r'''\b(?:import|export)\s+['"]([^'"]*)['"]([^;]*);''');
+  final List<String> breaks = <String>[];
+  for (final FileSystemEntity f in root.listSync(recursive: true)) {
+    if (f is! File || !f.path.endsWith('.dart')) continue;
+    final String path = f.path.replaceAll(r'\', '/');
+    final String inside = path.substring(root.path.replaceAll(r'\', '/').length + 1);
+    if (allowed.contains(inside)) continue;
+    final String source = f.readAsStringSync();
+    if (names.hasMatch(source)) breaks.add('$inside names a birth or an age');
+    for (final RegExpMatch m in ageImport.allMatches(source)) {
+      final String uri = m.group(1)!;
+      if (uri != 'age.dart' && !uri.endsWith('/age.dart')) continue;
+      if (m.group(2)!.trim() != 'show SchoolStage') {
+        breaks.add('$inside imports all of $uri (use `show SchoolStage`)');
+      }
+    }
+  }
+  return breaks;
 }

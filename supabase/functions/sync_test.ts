@@ -16,7 +16,7 @@ import {
   USER_B,
 } from "./_shared/testkit.ts";
 import { spec as childDelete } from "./child-delete/handler.ts";
-import { BAND_OF_STAGE, SCHOOL_STAGES, spec as childPut } from "./child-put/handler.ts";
+import { BAND_OF_STAGE, SCHOOL_STAGES, type SchoolStage, spec as childPut } from "./child-put/handler.ts";
 import { PULL_LIMIT, spec as syncPull } from "./sync-pull/handler.ts";
 import {
   DATA,
@@ -530,6 +530,14 @@ Deno.test("child-put: a save without a school stage keeps the stored one, so an 
   const kid = (await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }))).children[0];
   assert.equal(kid.nickname, "נועה כהן");
   assert.equal(kid.school_stage, "grade1");
+});
+
+Deno.test("child-put: a save with another band and no stage never leaves a stage against the band (SEC-B29-1)", async () => {
+  const { h, parent, child, profile, j } = await setup();
+  await call(h.put, parent, "child-put", profile(KID, { school_stage: "grade2", age_band: 2 }));
+  assert.equal((await call(h.put, parent, "child-put", profile(KID, { age_band: 1 }))).status, 200);
+  const kid = (await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }))).children[0];
+  assert.ok(kid.school_stage === null || BAND_OF_STAGE[kid.school_stage as SchoolStage] === kid.age_band);
 });
 
 Deno.test("child-put: a school stage that is not one of the six, in another type, or against the band is refused", async () => {

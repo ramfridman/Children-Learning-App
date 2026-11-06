@@ -174,7 +174,10 @@ class FakeFamilyServer {
         final String id = body['child_id']! as String;
         if (tombstones.contains(id)) throw StateError('child_deleted');
         _checkChildPut(body);
-        // As the table: a save without a school stage keeps the stored one (an older app cannot wipe it).
+        // As the table: a save without a school stage keeps the stored one (an older app cannot wipe it) while its band is the
+        // saved band; one of another band is dropped (SEC-B29-1).
+        final Object? kept = children[id]?['school_stage'];
+        final Object? keptIfFits = _profile.bandOfStage[kept] == body['age_band'] ? kept : null;
         children[id] = <String, Object?>{
           'id': id,
           'nickname': body['nickname'],
@@ -183,7 +186,7 @@ class FakeFamilyServer {
           'outfit_id': body['outfit_id'],
           'address_form': body['address_form'],
           'age_band': body['age_band'],
-          'school_stage': body['school_stage'] ?? children[id]?['school_stage'],
+          'school_stage': body['school_stage'] ?? keptIfFits,
         };
         return <String, Object?>{'ok': true};
       case 'child-delete':

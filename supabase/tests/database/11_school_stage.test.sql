@@ -18,9 +18,22 @@ select lives_ok($$insert into app.child_profile (family_id, id, nickname, avatar
 select is((select school_stage from app.child_profile where id = 'child-dbdb-0000'), null, 'and has none');
 
 select lives_ok(format($$insert into app.child_profile (family_id, id, nickname, avatar_id, address_form, age_band, school_stage) values
-  ('dbdbdbdb-0000-4000-8000-000000000001', 'child-dbdb-%s', 'נועה', 'avatar-noa', 'f', 1, %L)$$, i, s),
-  format('%s is accepted', s))
-  from (values (1, 'gan3'), (2, 'gan4'), (3, 'gan5'), (4, 'grade1'), (5, 'grade2'), (6, 'grade3')) as t(i, s);
+  ('dbdbdbdb-0000-4000-8000-000000000001', 'child-dbdb-%s', 'נועה', 'avatar-noa', 'f', %s, %L)$$, i, b, s),
+  format('%s is accepted with band %s', s, b))
+  from (values (1, 'gan3', 0), (2, 'gan4', 0), (3, 'gan5', 1), (4, 'grade1', 1), (5, 'grade2', 2), (6, 'grade3', 2)) as t(i, s, b);
+
+-- ---- the stage always agrees with the band (SEC-B29-1) --------------------------------------------------------------------
+select has_check('app', 'child_profile', 'the child table has checks');
+select ok(exists (select 1 from pg_constraint where conrelid = 'app.child_profile'::regclass and conname = 'child_profile_stage_band' and contype = 'c'),
+  'a check ties the stage to the band');
+select throws_ok(format($$update app.child_profile set age_band = %s where id = %L$$, b, id), '23514', null,
+  format('%s cannot be saved with band %s', s, b))
+  from (values ('child-dbdb-1', 'gan3', 1), ('child-dbdb-2', 'gan4', 2), ('child-dbdb-3', 'gan5', 0), ('child-dbdb-4', 'grade1', 2),
+               ('child-dbdb-5', 'grade2', 1), ('child-dbdb-6', 'grade3', 0)) as t(id, s, b);
+select lives_ok($$update app.child_profile set age_band = 1, school_stage = null where id = 'child-dbdb-6'$$,
+  'a child with no stage can have any band');
+select lives_ok($$update app.child_profile set age_band = 2, school_stage = 'grade3' where id = 'child-dbdb-6'$$,
+  'and a stage with its own band is accepted');
 
 select throws_ok(format($$update app.child_profile set school_stage = %L where id = 'child-dbdb-0000'$$, s), '23514', null,
   format('%L is refused', s))
@@ -60,6 +73,11 @@ select is((select rules -> 'ceremonies' from app.family_settings where family_id
 select lives_ok($$select app.delete_child('dbdbdbdb-0000-4000-8000-000000000001', 'child-dbdb-0000')$$, 'a child with no look can be deleted');
 select is((select version from app.family_settings where family_id = 'dbdbdbdb-0000-4000-8000-000000000001'), 4::bigint,
   'and the version does not move');
+
+-- ---- the function that deletes a child runs as its owner with a fixed search path ----------------------------------------------
+select ok((select prosecdef from pg_proc where oid = 'app.delete_child(uuid, text)'::regprocedure), 'delete_child is security definer');
+select ok((select proconfig from pg_proc where oid = 'app.delete_child(uuid, text)'::regprocedure) @> array['search_path=pg_catalog, app'],
+  'and its search path is fixed to pg_catalog and app');
 
 select * from finish();
 rollback;

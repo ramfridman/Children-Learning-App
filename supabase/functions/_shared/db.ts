@@ -441,7 +441,13 @@ export function pgStore(sql: Sql): Store {
         on conflict (family_id, id) do update set nickname = excluded.nickname, avatar_id = excluded.avatar_id,
           companion_id = excluded.companion_id, outfit_id = excluded.outfit_id, address_form = excluded.address_form,
           age_band = excluded.age_band,
-          school_stage = coalesce(excluded.school_stage, app.child_profile.school_stage), updated_at = now()`;
+          school_stage = coalesce(excluded.school_stage,
+            -- A save without a stage keeps the stored one only while its band is the saved band (SEC-B29-1).
+            case when (case app.child_profile.school_stage
+                          when 'gan3' then 0 when 'gan4' then 0 when 'gan5' then 1
+                          when 'grade1' then 1 when 'grade2' then 2 when 'grade3' then 2 end) = excluded.age_band
+                 then app.child_profile.school_stage end),
+          updated_at = now()`;
       return "saved";
     },
 
