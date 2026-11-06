@@ -109,7 +109,7 @@ construct before 10); `מַטְבְּעוֹת` with a masculine number (`שְׁ�
 debugging step, `לֹא` is allowed there); the generic `כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב.` (967 rows, the owner has read it); the adult texts'
 generic "הילד" (owner question 5 of hebrew-notes §9.5, still open).
 
-## 5. Questions for the owner (numbered)
+## 5. Questions for the owner (numbered; all answered in chat on 2026-11-06, see section 7)
 
 1. **Nikud of `זֵהֶה` in an approved title.** The B-15 lesson title `זֶהֶה אוֹ שׁוֹנֶה?` (`lesson.same-and-different-again-1-b15.json`,
    `title.0.v`, owner-approved on 2026-10-30) still has the segol. Its own celebration line and the other two lessons now say
@@ -143,3 +143,20 @@ generic "הילד" (owner question 5 of hebrew-notes §9.5, still open).
 | `flutter analyze` | No issues found |
 | `flutter test` (the content, strings and voice text tests: `content_*`, `course_*`, `starter_pack`, `voice_text`, `word_alert_text`, `rest_rules`, `qa_l_course`, `source_rules_m1`, `home_island_name`, `target_text`) | 313 passed, 1 failed: "the pack was built from the sources in content/starter and nothing else" (expected, section 1) |
 | `flutter test` (full suite, 208 test files) | 4,273 passed, 6 skipped, **2 failed**. (1) `hall_ceremony_test` › "the Trophy Hall medals": the golden `hall_medals_phone.png` showed the old text of `medalExplainerHow`; the new text is shorter and now fits on one line (looked at both PNGs: nothing clipped). The golden was regenerated for that test; `--update-goldens` also rewrote four ceremony goldens by sub-pixel noise, which were reverted, so only `app/test/goldens/hall_medals_phone.png` changed; the test passes. (2) `starter_pack_test` › "the pack was built from the sources" (expected, section 1) |
+
+## 7. The owner's answers of 2026-11-06 (in chat), applied
+
+| # | Decision | Change | Rows | Status |
+|---|---|---|---|---|
+| 1 | Yes: the B-15 title is `זֵהֶה אוֹ שׁוֹנֶה?` | `content/units/logic.json` (title of `same-and-different-again-1-b15`); `OWNER_APPROVED` entry "owner, in chat, 2026-11-06" | 1 (`lesson.same-and-different-again-1-b15.json › title.0.v`) | `owner-approved` |
+| 2a | Yes: `גָּדוֹל לֹא תָּמִיד כָּבֵד…` | `tools/band_b.py` (tag `M-MEAS-BIG`) → `זֶה נִרְאֶה גָּדוֹל, אֲבָל מַה כָּבֵד יוֹתֵר? בּוֹאוּ נִשְׁקֹל וְנִרְאֶה.` (the log proposal was `הוּא גָּדוֹל, אֲבָל כַּמָּה הוּא שׁוֹקֵל?`; this one is gender-free for any object, and `מַה כָּבֵד` follows the dagesh rule) | 12 (`b.mathb13.*`) | `text-ready` |
+| 2b | Yes: `מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר.` | `content/units/{colours,logic,shapes}.json` (`tagFeedback`; the Band B units inherit it) → `מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה. בּוֹאוּ נִבְדֹּק.` | 29 | `text-ready` |
+| 2c | Yes: the cryptic `יוֹתֵר לֹא תָּמִיד…` on the chart item | `tools/band_b3.py`: an own line for the 4 chart items, new clip `vo:fb.size.chart` → `הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.` The shared `vo:fb.size` is untouched (the 10 Q2 drafts of NUM-A-07 and NUM-A-11 still use it and still wait) | 4 (`x.mathb19.1` to `.4`) | `text-ready` |
+| 2d | Yes: `הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ.` (V1-held) | `tools/author.py` (`M-ORD-CARD`) → `הַמָּקוֹם בַּתּוֹר אוֹמֵר מִי בָּא קֹדֶם. בּוֹאוּ נִסְפֹּר מֵהַהַתְחָלָה.` **Deviation from the log:** my proposal there (`לֹא אוֹמֵר כַּמָּה יֵשׁ`) still had `לֹא`, which is what Q2 forbids, so the wording has none. Source changed although the rows are held by the V1 decision | 9 (`activity.ordinal.*`, `b15.numa13.*`) | still `proposed` (V1: kept nikud in the voice text, the owner's pronunciation question); the screen text is final |
+| 3 | No `כִּמְעַט` anywhere: "if the child isn't close, don't say it; we don't want to mislead the child" | `tools/author.py` `ALMOST` → `בּוֹאוּ נְנַסֶּה שׁוּב.` (the id `vo:fb.almost` stays: tests and the voice plan key on it); 5 hand-made starter files with no spec (`count.butterflies.3/4/5`, `give.butterflies.4`, `pick.red.flower`) edited directly; the core line `core.encourage.almost` → `עוֹד לֹא — בּוֹאוּ נְנַסֶּה שׁוּב.` | 967 activity lines + 1 core line | `text-ready` |
+
+Regenerated as before; `tools/regen_content.py` changed the Band B units, the starter pack (976 files in `content/`, 967 of them the one line) and nothing else. The table's `changes` and `comment` columns record each item (`ROW_RULES`, "The owner's answers of 2026-11-06"). `tools/test_hebrew_sources.py`: the proposed pin is now 55 (9 V1 rows no longer differ from their source).
+
+**Where an app could honestly say "close" later (listed, nothing built).** No template computes closeness today, so no line can claim it. Candidates, if the engine ever passes the distance: count and give-N items and number picks whose wrong answer is the right count plus or minus one (they already have their own lines, `M-CNT-SKIP`: "אוּלַי פִּסְפַּסְנוּ אֶחָד?" and `M-CNT-DOUBLE`, which say what happened instead of "almost"); the missing-addend and chart-total picks (`n±1`, same tags); `number_line` (a jump one step off); `clock_set` (a hand within one mark); `trace` (stroke accuracy); `shape_builder` and `sort_drag` placements next to the right place. A "close" line would need a new clip and the owner's wording.
+
+Tests after section 7: `python -I tools/test_hebrew_sources.py` 10 OK; `dart format` 482 files, 0 changed; `flutter analyze` no issues; full `flutter test`: 4,274 passed, 6 skipped, 1 failed (`starter_pack_test` "the pack was built from the sources", expected until the pack is rebuilt). No Dart file and no golden changed in this round (the Hall golden of section 6 stays).

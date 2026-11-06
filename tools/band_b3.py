@@ -183,6 +183,7 @@ def extra_math():
             # B-15 §3: either other column (A4: never the bananas, which are always the answer here)
             u.act('MATH-B-19', 'pick', domain='math', chart=chart, options=[s for s, _ in cols] if i % 3 == 0 else [s for s, _ in cols][1:] + [cols[0][0]],
                   tags={s: 'M-CNT-SIZE' for s, _ in cols if s != pick[0]},
+                  tag_lines={'M-CNT-SIZE': ('vo:fb.size.chart', 'הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ? בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד.')},
                   correct=pick[0], prompt='%s' % ('מִמָּה יֵשׁ הֲכִי הַרְבֵּה?' if ask == 'most' else 'מִמָּה יֵשׁ הֲכִי מְעַט?'),
                   correct_text='כֵּן! בַּתַּרְשִׁים הָעַמּוּד שֶׁלּוֹ %s.' % ('הֲכִי גָּבוֹהַּ' if ask == 'most' else 'הֲכִי נָמוּךְ'),
                   h3='%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַנָּכוֹן.' % ('בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ הֲכִי הַרְבֵּה' if ask == 'most' else 'בָּעַמּוּד הַנָּמוּךְ יֵשׁ הֲכִי מְעַט'))

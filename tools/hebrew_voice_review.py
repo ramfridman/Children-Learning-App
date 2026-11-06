@@ -821,6 +821,8 @@ OWNER_APPROVED = [
     (r'^activity\.', r'^זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַגֹּדֶל\. בּוֹאוּ נִבְדֹּק\.$',
      'B-15 P5 (size rule): the owner approved it (owner-approved 2026-10-30). vo:fb.sort_shift.size.'),
     # (2) b15-hebrew.md section 7: the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints, COL-A-05 tick lines.
+    (r'^lesson\.same-and-different-again-1-b15\.json$', r'^זֵהֶה אוֹ שׁוֹנֶה\?$', 'owner, in chat, 2026-11-06: the title is "זֵהֶה אוֹ שׁוֹנֶה?" '
+     '(tsere; was "זֶהֶה", approved 2026-10-30). owner-approved 2026-11-06.', r'^title'),
     (r'^lesson\.[a-z0-9-]+-b15\.json$', r'', 'B-15 (b15-hebrew.md 7.1): the owner approved the title and the celebration line of the 15 '
      'spill lessons (owner-approved 2026-10-30).', r'^(title\.0\.v|celebration\.caption\.0\.v)$'),
     (r'^activity\.b\.numb08\.', r'^אֵיזֶה מִסְפָּר חָסֵר\?$', 'B-15 (b15-hebrew.md 7.2): the owner approved the prompt and its alt text '
@@ -1058,7 +1060,7 @@ ROW_RULES = [
      'Review 2026-11-06: was "זֹאת בָּנָנָה".'),
     (r'^lesson\.same-and-different(-again)?\.json$', r'^(title|celebration)', r'זֵהֶה', lambda r, ctx: r['text'],
      'spelling 2026-11-06: "זֵהֶה" (tsere, the Academy and Wiktionary), as "הַזֵּהֶה" already had it; "זֶהֶה" with a segol was a second pointing', TR,
-     'Review 2026-11-06: was "זֶהֶה". The owner-approved title of the B-15 lesson (lesson.same-and-different-again-1-b15) still has the segol: question 1.'),
+     'Review 2026-11-06: was "זֶהֶה". (The B-15 lesson title got the same fix on the owner word in chat, 2026-11-06.)'),
     (r'^activity\.x\.mathb19\.\d+\.json$', r'^(prompt|a11y)', r'^בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ יוֹתֵר', lambda r, ctx: r['text'],
      'register 2026-11-06: "מֵאֲשֶׁר" is written Hebrew; two short spoken sentences', TR,
      'Review 2026-11-06: was "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?".'),
@@ -1067,6 +1069,26 @@ ROW_RULES = [
      'Review 2026-11-06: was "לֹא הַגֹּדֶל אוֹמֵר כַּמָּה הַמַּטְבֵּעַ שָׁוֶה, אֶלָּא הַמִּסְפָּר שֶׁעָלָיו. בּוֹאוּ נִסְתַּכֵּל.".'),
     (r'^lesson\.mix-colours-more\.json$', r'^title', r'^מָה חָסֵר', lambda r, ctx: r['text'],
      'pointing 2026-11-06: "מָה" before ח (a guttural keeps the qamats)', TR, 'Review 2026-11-06: was "מַה חָסֵר בַּתַּעֲרוֹבֶת".'),
+
+    # The owner's answers of 2026-11-06 (in chat) to the review log's questions 2 and 4. The wording is the editor's; the owner saw
+    # the proposals by summary only, so the rows are `text-ready`.
+    (r'^activity\.x\.mathb19\.\d+\.json$', r'^feedback\.incorrect\.0', r'^הַצִּיּוּר גָּדוֹל, אֲבָל כַּמָּה יֵשׁ', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא"; names what the eye caught (a big picture) and ends in the strategy', TR,
+     'Owner 2026-11-06 (chat): yes. Was "יוֹתֵר לֹא תָּמִיד אוֹמֵר גָּדוֹל יוֹתֵר. בּוֹאוּ נַשְׁוֶה אֶחָד אֶחָד." (cryptic). Own clip vo:fb.size.chart; the shared vo:fb.size stays for the Q2 drafts.'),
+    (r'^activity\.', r'^feedback\.incorrect', r'^זֶה נִרְאֶה גָּדוֹל, אֲבָל מַה כָּבֵד יוֹתֵר', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא"; names what the eye caught (looks big) and ends in the strategy', TR,
+     'Owner 2026-11-06 (chat): yes. Was "גָּדוֹל לֹא תָּמִיד כָּבֵד. בּוֹאוּ נִשְׁקֹל וְנִרְאֶה.".'),
+    (r'^activity\.', r'^feedback\.incorrect', r'^מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא"', TR,
+     'Owner 2026-11-06 (chat): yes. Was "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, לֹא אוֹתוֹ דָּבָר. בּוֹאוּ נִבְדֹּק.".'),
+    (r'^activity\.', r'^feedback\.incorrect', r'^הַמָּקוֹם בַּתּוֹר אוֹמֵר מִי בָּא קֹדֶם', lambda r, ctx: r['text'],
+     'rule 2026-11-06 (owner Q2, extended): no "לֹא" and no "אֵינוֹ"; the place in the queue says who came first, then the strategy', TR,
+     'Owner 2026-11-06 (chat): yes. Was "הַמָּקוֹם בַּתּוֹר אֵינוֹ כַּמָּה יֵשׁ…" (table: "הוּא לֹא כַּמָּה יֵשׁ"). The proposal in the log kept "לֹא"; this wording drops it. Source changed although the rows were V1-held.'),
+    (r'^activity\.', r'^feedback\.incorrect\.\d', r'^בּוֹאוּ נְנַסֶּה שׁוּב\.$', lambda r, ctx: r['text'],
+     'owner 2026-11-06 (chat): no "כִּמְעַט" (the app does not know how close the answer was; it would mislead the child)', TR,
+     'Owner 2026-11-06 (chat). Was "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב." (vo:fb.almost; the id stays).'),
+    (r'core\.he\.json$', r'^core\.encourage\.almost$', r'^עוֹד לֹא — בּוֹאוּ נְנַסֶּה שׁוּב', lambda r, ctx: r['text'],
+     'owner 2026-11-06 (chat): no "כִּמְעַט"', TR, 'Owner 2026-11-06 (chat). Was "עוֹד לֹא — אֲבָל כִּמְעַט.".'),
 ]
 
 

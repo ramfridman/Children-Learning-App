@@ -136,7 +136,7 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 12777 since the editor's pass of 2026-11-06 (20 more he.dart rows: the Languages course screens, L1 to L4)
         self.assertEqual(len(self.rows), 12777)
         self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 55)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
