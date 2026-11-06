@@ -101,9 +101,10 @@ class TapAnswerSession extends TemplateSession {
     if ((controller.hintShown <= 1 || demonstrating) && marks.isNotEmpty) _hint.clear();
     final Outcome o = await controller.chooseOption(id, byVoice: byVoice);
     if (disposed) return;
-    if (o.correct) {
+    if (o.correct || o.settled) {
+      // A probe of the placement game ends on its one answer, right or not, and shows nothing "not yet".
       _hint.clear();
-      chosenState = AnswerState.correct;
+      chosenState = o.settled ? AnswerState.selected : AnswerState.correct;
       notify();
       later(TemplateSession.praisePause, controller.next);
     } else {
@@ -640,7 +641,11 @@ class _TapStage extends StatelessWidget {
     final bool guidedRight = s.controller.answerShown && o.id == a.correctId;
     final bool dimmed = s.controller.answerShown && o.id != a.correctId;
     final Color? ring = chosen
-        ? (s.chosenState == AnswerState.correct ? TokenColors.correctGlow : TokenColors.notYetRing)
+        ? (s.chosenState == AnswerState.correct
+              ? TokenColors.correctGlow
+              : s.chosenState == AnswerState.selected
+              ? TokenColors.hintHalo
+              : TokenColors.notYetRing)
         : (guidedRight || s.voiceLit == o.id ? TokenColors.hintHalo : null);
     return Semantics(
       button: true,

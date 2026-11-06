@@ -70,12 +70,14 @@ List<Problem> validatePack({
   final Map<String, Map<String, Object?>> skills = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> tags = <String, Map<String, Object?>>{};
   final Map<String, Map<String, Object?>> gates = <String, Map<String, Object?>>{};
+  final Map<String, Map<String, Object?>> placements = <String, Map<String, Object?>>{};
   // Every id that has a file, even one that failed its schema; only valid documents are cross-checked.
   final Set<String> activityIds = <String>{};
   final Set<String> lessonIds = <String>{};
   final Set<String> skillIds = <String>{};
   final Set<String> tagIds = <String>{};
   final Set<String> gateIds = <String>{};
+  final Set<String> placementIds = <String>{};
   final Map<String, Map<String, Object?>> characters = <String, Map<String, Object?>>{};
   final Set<String> characterIds = <String>{};
   final Map<String, Map<String, Object?>> cues = <String, Map<String, Object?>>{};
@@ -152,6 +154,14 @@ List<Problem> validatePack({
         }
         if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
         if (found.isEmpty) gates[middle] = doc;
+      case 'placement':
+        placementIds.add(middle);
+        final List<Problem> found = validate(placementSchema, doc);
+        for (final Problem p in found) {
+          add(name, p);
+        }
+        if (doc['id'] != middle) say(name, 'id', 'must equal "$middle", the middle of the file name');
+        if (found.isEmpty) placements[middle] = doc;
       case 'character':
         characterIds.add(middle);
         final List<Problem> found = validate(characterSchema, doc);
@@ -192,6 +202,7 @@ List<Problem> validatePack({
   sameSet('skills', skillIds);
   sameSet('misconceptions', tagIds);
   sameSet('gates', gateIds);
+  sameSet('placements', placementIds);
   sameSet('characters', characterIds);
   sameSet('cues', cueIds);
 
@@ -318,6 +329,34 @@ List<Problem> validatePack({
           for (final Map<String, Object?> o in _maps(answer['options'])) _look(o),
         ];
         if (looks.toSet().length != looks.length) say(file, 'answer.options', 'two options look the same');
+      case 'story':
+        checkAsset(file, 'scene.background', scene['background']);
+        _story(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'listen_do':
+        checkAsset(file, 'scene.background', scene['background']);
+        _listenDo(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'sing_along':
+        checkAsset(file, 'scene.background', scene['background']);
+        _singAlong(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'puppet_talk':
+        checkAsset(file, 'scene.background', scene['background']);
+        _puppetTalk(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
+      case 'sound_boxes':
+        checkAsset(file, 'scene.background', scene['background']);
+        checkAsset(file, 'scene.picture', scene['picture']);
+        for (final String k in <String>['word', 'slow']) {
+          for (final (int i, Object? c) in ((scene[k] as List<Object?>?) ?? const <Object?>[]).indexed) {
+            checkVo(file, 'scene.$k[$i]', c);
+          }
+        }
+        checkVo(file, 'scene.drum', scene['drum']);
+        for (final (int i, Map<String, Object?> c) in _maps(answer['classifiers']).indexed) {
+          checkTag(file, 'answer.classifiers[$i].misconception', c['misconception']);
+        }
+        // A free response is evidence of one thing only: whether the child can count the parts. It is never the check of a skill alone.
+        if (a['purpose'] == 'check') {
+          say(file, 'purpose', 'a drum item is never a check: its answer is free, with no distractors');
+        }
       case 'count_tap':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> objects = scene['objects']! as Map<String, Object?>;
@@ -637,6 +676,7 @@ List<Problem> validatePack({
         }
     }
     _targetClips(file, a, checkVo);
+    _languageOnlyTemplate(file, a, say, language: Course.isLanguage(course));
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
   });
@@ -680,6 +720,21 @@ List<Problem> validatePack({
         say(file, 'repairActivities[$i]', 'there is no activity "$r" in this pack');
       }
     }
+  });
+
+  // ---- the placement game of a language course (docs/languages/frame.md section 3.2) ----
+  placements.forEach((String id, Map<String, Object?> p) {
+    _placement(
+      'placement.$id.json',
+      id,
+      p,
+      course: course,
+      activities: activities,
+      skillIds: skillIds,
+      say: say,
+      checkVo: checkVo,
+    );
+    _hebrew('placement.$id.json', p, say, pointed: true);
   });
 
   // ---- courses never mix (docs/languages/frame.md section 1.5) ----
@@ -896,6 +951,8 @@ void _lengths(String file, Map<String, Object?> a, void Function(String, String,
   atMost('prompt.caption', prompt['caption'], 14);
   final Object? answerPrompt = a['answerPrompt'];
   if (answerPrompt is Map<String, Object?>) atMost('answerPrompt.caption', answerPrompt['caption'], 14);
+  final Object? question = _mapOf(a['answer'])['question'];
+  if (question is Map<String, Object?>) atMost('answer.question.caption', question['caption'], 14);
   final Map<String, Object?> fb = a['feedback']! as Map<String, Object?>;
   atMost('feedback.correct.caption', (fb['correct']! as Map<String, Object?>)['caption'], 24);
   for (final (int i, Map<String, Object?> r) in _maps(fb['incorrect']).indexed) {
@@ -972,6 +1029,532 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
   }
 
   walk(a, '');
+}
+
+/// The templates of the Band A wave of the language courses (L4) belong to a language course: a pack of the lands holds none.
+const Set<String> languageTemplates = <String>{
+  'story',
+  'listen_do',
+  'sing_along',
+  'puppet_talk',
+  'sound_boxes',
+};
+
+void _languageOnlyTemplate(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required bool language,
+}) {
+  if (!language && languageTemplates.contains(a['template'])) {
+    say(file, 'template', '${a['template']} belongs to a language course, not to the lands');
+  }
+}
+
+/// The options of a choice of a language template (a pause, a button, a bubble, a rhyme): between 2 and 3 of them, each a picture, a
+/// text or only a sound, with a label, and a hotspot (`at`) that lies inside its picture.
+void _l4Options(
+  String file,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkAsset,
+  void Function(String, String, Object?) checkVo,
+  void Function(String, String, Object?) checkTag, {
+  bool needCorrect = true,
+  bool faceless = false,
+}) {
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (needCorrect) _options(file, answer, say, checkTag, checkAsset: checkAsset);
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    final String path = 'answer.options[$i]';
+    checkAsset(file, '$path.sprite', o['sprite']);
+    checkVo(file, '$path.clip', o['clip']);
+    final int faces = <String>['sprite', 'numeral', 'text'].where(o.containsKey).length;
+    if (faces > 1 || (faces == 0 && !o.containsKey('clip') && !faceless)) {
+      say(
+        file,
+        path,
+        'must be exactly one of a sprite, a numeral or a text, or only a clip (a sound button)',
+      );
+    }
+    for (final _Place r in _shares(o['at'])) {
+      if (r.right > 1.001 || r.bottom > 1.001) say(file, '$path.at', 'reaches outside the picture');
+    }
+  }
+  // Parts of a picture are told apart by where they are (the overlap rule), not by a face of their own.
+  final List<String> looks = <String>[for (final Map<String, Object?> o in options) _look(o)];
+  if (!faceless && looks.toSet().length != looks.length) {
+    say(file, 'answer.options', 'two options look the same');
+  }
+}
+
+/// What an activity of a language template that is not scored must be: practice, with no options to choose and nothing right.
+void _unscored(String file, Map<String, Object?> a, void Function(String, String, String) say, String what) {
+  final Map<String, Object?> answer = _mapOf(a['answer']);
+  if (a['purpose'] != 'practice') say(file, 'purpose', '$what is never scored: it is practice');
+  if (answer['type'] != 'none') say(file, 'answer.type', '$what has no answer to choose: the type is "none"');
+  // Nothing is wrong in it, so no repair can be aimed at it (the session builder serves a `contradicts` item to repair a tag).
+  if (a.containsKey('contradicts')) say(file, 'contradicts', '$what is never a repair item');
+  for (final String k in <String>['correct', 'pairWith', 'pole']) {
+    if (answer.containsKey(k)) say(file, 'answer.$k', '$what has no right answer');
+  }
+}
+
+/// A rectangle of the scene as shares of its picture (the validator is plain Dart, which the pack builder runs: no `dart:ui`).
+typedef _Place = ({double left, double top, double right, double bottom});
+
+_Place? _share(Object? o) {
+  if (o is! Map<String, Object?>) return null;
+  final double x = (o['x']! as num).toDouble();
+  final double y = (o['y']! as num).toDouble();
+  return (left: x, top: y, right: x + (o['w']! as num).toDouble(), bottom: y + (o['h']! as num).toDouble());
+}
+
+/// The places of an option: one rectangle or a list of them.
+List<_Place> _shares(Object? o) => <_Place>[
+  for (final Object? r in o is List<Object?> ? o : <Object?>[o])
+    if (_share(r) case final _Place p) p,
+];
+
+/// Places that only touch edge to edge do not overlap: the shares are floating point (0.3594 + 0.2812 is not exactly 0.6406), so the
+/// tolerance is a thousandth of the picture's side, as for "reaches outside" (QA-L4-12).
+const double _touch = 0.001;
+
+bool _overlap(_Place a, _Place b) =>
+    a.left < b.right - _touch &&
+    b.left < a.right - _touch &&
+    a.top < b.bottom - _touch &&
+    b.top < a.bottom - _touch;
+
+/// Two places that overlap cannot be told apart by a touch: each part of the picture is one thing.
+void _noOverlap(String file, List<(String, _Place?)> places, void Function(String, String, String) say) {
+  for (int i = 0; i < places.length; i++) {
+    for (int j = i + 1; j < places.length; j++) {
+      final _Place? a = places[i].$2;
+      final _Place? b = places[j].$2;
+      if (a != null && b != null && _overlap(a, b)) {
+        say(file, places[j].$1, 'overlaps ${places[i].$1}: a touch must mean one thing');
+      }
+    }
+  }
+}
+
+/// The least share of a picture's side a touch area has in Band A (72 of 256 units, 65.5 pt on the scene of the smallest phone).
+const double minBandAHotspot = 0.2812;
+
+/// The templates a probe of the placement game may be: ordinary tap and drum items, never a story, a command, a song or a talk.
+const Set<String> probeTemplates = <String>{'tap_answer', 'sound_boxes'};
+
+/// LS13: the placement document of a language course. Its probes are ordinary items of the pack's own course with `purpose` probe (no
+/// hints, one answer), of a template a probe may be, answered by touch (speech is never a probe), scored (a personal turn or a step the
+/// child does is never one), and each in one place of one ladder.
+void _placement(
+  String file,
+  String id,
+  Map<String, Object?> p, {
+  required String course,
+  required Map<String, Map<String, Object?>> activities,
+  required Set<String> skillIds,
+  required void Function(String, String, String) say,
+  required void Function(String, String, Object?) checkVo,
+}) {
+  if (!Course.isLanguage(course)) {
+    say(
+      file,
+      '',
+      'belongs to a language course: the lands have no placement document (their warm-up is made on the spot)',
+    );
+  } else {
+    if (p['course'] != course) say(file, 'course', 'must be $course, the course of the pack');
+    if (id != '$course.placement') say(file, 'id', 'must be "$course.placement"');
+  }
+  checkVo(file, 'thanks.vo', (p['thanks']! as Map<String, Object?>)['vo']);
+  checkVo(file, 'celebration.vo', (p['celebration']! as Map<String, Object?>)['vo']);
+  final Set<String> used = <String>{};
+  for (final (int s, Map<String, Object?> strand) in _maps(p['strands']).indexed) {
+    final List<Map<String, Object?>> levels = _maps(strand['levels']);
+    final Object? offer = strand['offer'];
+    if (offer is Map<String, Object?> && (offer.containsKey('answer') != offer.containsKey('equals'))) {
+      say(
+        file,
+        'strands[$s].offer',
+        'names a questionnaire question and the answer that offers the strand, both or neither',
+      );
+    }
+    for (final (int r, Map<String, Object?> rule) in _maps(strand['start']).indexed) {
+      if ((rule['level']! as int) >= levels.length) {
+        say(file, 'strands[$s].start[$r].level', 'is not a level of the strand (0 to ${levels.length - 1})');
+      }
+    }
+    for (final (int l, Map<String, Object?> level) in levels.indexed) {
+      for (final (int i, Object? item) in ((level['items'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+        final String path = 'strands[$s].levels[$l].items[$i]';
+        final Map<String, Object?>? a = item is String ? activities[item] : null;
+        if (a == null) {
+          say(file, path, 'there is no activity "$item" in this pack');
+          continue;
+        }
+        final String probe = item! as String;
+        if (!used.add(probe)) {
+          say(file, path, '"$probe" is a probe of two places: each probe stands in one level of one strand');
+        }
+        if (a['purpose'] != 'probe') {
+          say(file, path, '"$probe" must be a probe (purpose: probe): no hints, one answer');
+        }
+        if (!probeTemplates.contains(a['template'])) {
+          say(file, path, '"$probe" is a ${a['template']}: a probe is a tap item or a drum item');
+        }
+        if (a['voiceAnswer'] == true) {
+          say(file, path, '"$probe" is answered by voice: speech is never a probe');
+        }
+        if (_mapOf(a['answer'])['type'] == 'none') {
+          say(file, path, '"$probe" is not scored, so it cannot be a probe');
+        }
+        if (Course.ofActivityId(probe) != course) {
+          say(file, path, '"$probe" is not an item of the course $course');
+        }
+      }
+      for (final (int i, Object? skill)
+          in ((level['assumes'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+        final String path = 'strands[$s].levels[$l].assumes[$i]';
+        if (skill is! String || !skillIds.contains(skill)) {
+          say(file, path, 'the skill $skill is not in this pack');
+        } else if (Course.ofSkillId(skill) != course) {
+          say(file, path, '$skill is not a skill of the course $course');
+        }
+      }
+    }
+  }
+}
+
+/// LS10: a bubble turn is a scored choice; a personal turn is the four things of frame section 5.2 and nothing else, answered by
+/// touch, never scored, never checked, with a pass.
+void _puppetTalk(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  checkAsset(file, 'scene.picture', scene['picture']);
+  final _Place? key = _share((scene['key'] as Map<String, Object?>?)?['at']);
+  if (key != null && (key.right > 1.001 || key.bottom > 1.001)) {
+    say(file, 'scene.key.at', 'reaches outside the picture');
+  }
+  final Object? pass = answer['pass'];
+  if (pass is Map<String, Object?>) checkVo(file, 'answer.pass.vo', pass['vo']);
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (answer['mode'] == 'bubble') {
+    for (final String k in <String>['topic', 'pass']) {
+      if (answer.containsKey(k)) say(file, 'answer.$k', 'only a personal turn has a $k');
+    }
+    if (answer['type'] != 'choice') {
+      say(file, 'answer.type', 'a bubble turn is a choice: the type is "choice"');
+    }
+    if (options.length < 2 || answer['correct'] == null) {
+      say(file, 'answer.options', 'a bubble turn needs 2 or 3 answer bubbles and the right one');
+      return;
+    }
+    if (options.length > 3) say(file, 'answer.options', 'Band A shows at most 3 bubbles');
+    _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
+    return;
+  }
+  // personal (frame section 5.2): never scored, never checked, never kept
+  _unscored(file, a, say, 'a personal turn');
+  if (a['voiceAnswer'] == true) {
+    say(
+      file,
+      'voiceAnswer',
+      'a personal turn is answered by touch: nothing the child says is taken, checked or kept',
+    );
+  }
+  if (answer['topic'] == null) {
+    say(
+      file,
+      'answer.topic',
+      'a personal turn says what it asks: the name, the age, the likes or the family',
+    );
+  }
+  if (pass is! Map<String, Object?>) {
+    say(file, 'answer.pass', 'a personal turn always has a pass, and the puppet\'s answer to it');
+  }
+  if (answer['topic'] != 'name' && options.length < 2) {
+    say(file, 'answer.options', 'a personal turn about the ${answer['topic']} needs cards to touch (2 to 8)');
+  }
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    if (o.containsKey('misconception')) {
+      say(
+        file,
+        'answer.options[$i].misconception',
+        'nothing is wrong in a personal turn: no tag, no evidence',
+      );
+    }
+  }
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag, needCorrect: false);
+}
+
+/// LS12: the pictures, the lines and what each mode needs.
+void _singAlong(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final List<Map<String, Object?>> pictures = _maps(scene['pictures']);
+  for (final (int i, Map<String, Object?> p) in pictures.indexed) {
+    checkAsset(file, 'scene.pictures[$i].picture', p['picture']);
+    checkVo(file, 'scene.pictures[$i].clip', p['clip']);
+  }
+  final List<Map<String, Object?>> lines = _maps(scene['lines']);
+  for (final (int i, Map<String, Object?> l) in lines.indexed) {
+    for (final (int k, Object? c) in ((l['clips'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+      checkVo(file, 'scene.lines[$i].clips[$k]', c);
+    }
+    for (final (int k, Object? n) in ((l['lights'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+      if (n is int && n >= pictures.length) {
+        say(file, 'scene.lines[$i].lights[$k]', 'is not one of the ${pictures.length} pictures of the song');
+      }
+    }
+  }
+  final Map<String, Object?>? verse = scene['verse'] as Map<String, Object?>?;
+  if (verse != null) {
+    for (final String k in <String>['whole', 'open', 'full', 'cue']) {
+      for (final (int i, Object? c) in ((verse[k] as List<Object?>?) ?? const <Object?>[]).indexed) {
+        checkVo(file, 'scene.verse.$k[$i]', c);
+      }
+    }
+  }
+  final Object? question = answer['question'];
+  if (question is Map<String, Object?>) checkVo(file, 'answer.question.vo', question['vo']);
+  if (answer['mode'] == 'chant') {
+    _unscored(file, a, say, 'a chant');
+    if (lines.length < 2) say(file, 'scene.lines', 'a chant has at least two lines');
+    for (final String k in <String>['options', 'question']) {
+      if (answer.containsKey(k)) say(file, 'answer.$k', 'a chant has no gap and no question');
+    }
+    if (verse != null) say(file, 'scene.verse', 'a chant is its lines; a verse with a gap is a rhyme');
+    return;
+  }
+  // rhyme
+  if (answer['type'] != 'choice') say(file, 'answer.type', 'a rhyme asks a choice: the type is "choice"');
+  if (verse == null) {
+    say(
+      file,
+      'scene.verse',
+      'a rhyme needs its verse: heard whole, up to the gap, whole again, and the end word of its first line',
+    );
+  }
+  if (lines.isNotEmpty) say(file, 'scene.lines', 'a rhyme is its verse; the lines of a chant are not used');
+  if (question is! Map<String, Object?>) say(file, 'answer.question', 'a rhyme asks which word fits the end');
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (options.length < 2 || answer['correct'] == null) {
+    say(file, 'answer.options', 'a rhyme needs 2 or 3 picture options and the right one');
+    return;
+  }
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    if (o['sprite'] == null) {
+      say(file, 'answer.options[$i].sprite', 'a rhyme is completed by choosing a picture');
+    }
+  }
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
+}
+
+/// A touch area of a Band A command is 64 points at least: of the 233 pt scene of the smallest phone that is 0.2747; the design's own floor
+/// is 72 of 256 units (docs/design/languages-l4-layout.md section 2). It holds for a part to touch, a place, a thing to drag and the
+/// target of a drag, the same for all (QA-L4-1, QA-L4-11).
+void _floor(String file, String path, Iterable<_Place> places, void Function(String, String, String) say) {
+  for (final _Place r in places) {
+    if (r.right - r.left < minBandAHotspot - 0.001 || r.bottom - r.top < minBandAHotspot - 0.001) {
+      say(
+        file,
+        path,
+        'is smaller than $minBandAHotspot of the picture: a Band A touch is 64 points at least, and the smallest scene is 233',
+      );
+    }
+  }
+}
+
+/// LS11: what each mode needs of its scene and its options.
+void _listenDo(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final String mode = answer['mode']! as String;
+  checkAsset(file, 'scene.picture', scene['picture']);
+  final Map<String, Object?>? target = scene['target'] as Map<String, Object?>?;
+  final Map<String, Object?>? thing = scene['thing'] as Map<String, Object?>?;
+  checkAsset(file, 'scene.target.sprite', target?['sprite']);
+  checkAsset(file, 'scene.thing.sprite', thing?['sprite']);
+  for (final (String path, Map<String, Object?>? m) in <(String, Map<String, Object?>?)>[
+    ('scene.target.at', target),
+    ('scene.thing.at', thing),
+  ]) {
+    final _Place? r = _share(m?['at']);
+    if (r != null && (r.right > 1.001 || r.bottom > 1.001)) say(file, path, 'reaches outside the picture');
+  }
+  if (mode == 'embodied') {
+    _unscored(file, a, say, 'a step the child does');
+    if (a['representation'] != 'embodied') {
+      say(
+        file,
+        'representation',
+        'what the child does is the representation "embodied", never counted alone',
+      );
+    }
+    if (answer.containsKey('options')) {
+      say(file, 'answer.options', 'a step the child does has nothing to choose');
+    }
+    for (final String k in <String>['target', 'thing']) {
+      if (scene.containsKey(k)) say(file, 'scene.$k', 'a step the child does moves nothing');
+    }
+    return;
+  }
+  if (answer['type'] != 'choice') {
+    say(file, 'answer.type', 'a command that is scored is a choice: the type is "choice"');
+  }
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  if (options.length < 2 || answer['correct'] == null) {
+    say(file, 'answer.options', 'needs 2 or 3 options and the right one');
+    return;
+  }
+  _l4Options(
+    file,
+    answer,
+    say,
+    checkAsset,
+    checkVo,
+    checkTag,
+    faceless: mode == 'hotspots' || mode == 'place',
+  );
+  final List<(String, _Place?)> places = <(String, _Place?)>[
+    for (final (int i, Map<String, Object?> o) in options.indexed)
+      for (final _Place r in _shares(o['at'])) ('answer.options[$i].at', r),
+  ];
+  if (a['band'] == 'A' && mode != 'cards') {
+    for (final (int i, Map<String, Object?> o) in options.indexed) {
+      _floor(file, 'answer.options[$i].at', _shares(o['at']), say);
+    }
+    _floor(file, 'scene.target.at', _shares(target?['at']), say);
+    _floor(file, 'scene.thing.at', _shares(thing?['at']), say);
+  }
+  if (mode != 'hotspots' && mode != 'cards') {
+    for (final (int i, Map<String, Object?> o) in options.indexed) {
+      if (_shares(o['at']).length > 1) {
+        say(
+          file,
+          'answer.options[$i].at',
+          'only a part of a picture (hotspots, or the card of one) has more than one place',
+        );
+      }
+    }
+  }
+  switch (mode) {
+    case 'hotspots':
+    case 'place':
+      for (final (int i, Map<String, Object?> o) in options.indexed) {
+        if (o['at'] == null) {
+          say(file, 'answer.options[$i].at', 'a $mode option is a place in the picture: it needs `at`');
+        }
+      }
+      if (mode == 'place') {
+        if (thing == null) say(file, 'scene.thing', 'a place mode moves one thing: the scene needs it');
+        _noOverlap(file, <(String, _Place?)>[...places, ('scene.thing.at', _share(thing?['at']))], say);
+      } else {
+        _noOverlap(file, places, say);
+      }
+    case 'buttons':
+    case 'cards':
+      for (final (int i, Map<String, Object?> o) in options.indexed) {
+        if (o['sprite'] == null) {
+          say(file, 'answer.options[$i].sprite', 'a button is the picture of an action');
+        }
+      }
+    case 'drag':
+      for (final (int i, Map<String, Object?> o) in options.indexed) {
+        if (o['sprite'] == null || o['at'] == null) {
+          say(
+            file,
+            'answer.options[$i]',
+            'a thing to drag is a picture with the place it starts at (`sprite` and `at`)',
+          );
+        }
+      }
+      if (target == null) say(file, 'scene.target', 'a drag mode needs the place the things are taken to');
+      _noOverlap(file, <(String, _Place?)>[...places, ('scene.target.at', _share(target?['at']))], say);
+  }
+}
+
+/// LS08: the pages, the hotspots, the clips, and what each mode needs.
+void _story(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say, {
+  required void Function(String, String, Object?) checkAsset,
+  required void Function(String, String, Object?) checkVo,
+  required void Function(String, String, Object?) checkTag,
+}) {
+  final Map<String, Object?> scene = a['scene']! as Map<String, Object?>;
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final List<Map<String, Object?>> pages = _maps(scene['pages']);
+  for (final (int i, Map<String, Object?> p) in pages.indexed) {
+    final String path = 'scene.pages[$i]';
+    checkAsset(file, '$path.picture', p['picture']);
+    for (final (int k, Object? c) in ((p['clips'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+      checkVo(file, '$path.clips[$k]', c);
+    }
+    for (final (int k, Map<String, Object?> w) in _maps(p['words']).indexed) {
+      checkVo(file, '$path.words[$k].clip', w['clip']);
+      final Map<String, Object?> at = w['at']! as Map<String, Object?>;
+      if ((at['x']! as num) + (at['w']! as num) > 1.001 || (at['y']! as num) + (at['h']! as num) > 1.001) {
+        say(file, '$path.words[$k].at', 'reaches outside the picture');
+      }
+    }
+  }
+  if (answer['mode'] == 'listen') {
+    _unscored(file, a, say, 'a story that is only heard');
+    for (final String k in <String>['options', 'pauseAfter', 'question']) {
+      if (answer.containsKey(k)) {
+        say(file, 'answer.$k', 'a story that is only heard has no pause and no question');
+      }
+    }
+    return;
+  }
+  // dialogic
+  if (answer['type'] != 'choice') {
+    say(file, 'answer.type', 'a dialogic story asks a choice: the type is "choice"');
+  }
+  final Object? pause = answer['pauseAfter'];
+  if (pause is! int || pause >= pages.length) {
+    say(
+      file,
+      'answer.pauseAfter',
+      'must be a page of the story (0 to ${pages.length - 1}): the page after which it asks',
+    );
+  }
+  final Object? question = answer['question'];
+  if (question is! Map<String, Object?>) {
+    say(file, 'answer.question', 'a dialogic story needs the question it asks at its pause');
+  } else {
+    checkVo(file, 'answer.question.vo', question['vo']);
+  }
+  if (_maps(answer['options']).length < 2 || answer['correct'] == null) {
+    say(file, 'answer.options', 'a dialogic story needs 2 or 3 options and the right one');
+    return;
+  }
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
 }
 
 /// The second clip of a spoken line (`target`) names a voice line of the pack, and only a language course has one.

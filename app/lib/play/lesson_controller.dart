@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 
 import '../content/models.dart';
+import '../content/pack_validation.dart' show languageTemplates;
 import '../core/clock.dart';
 import '../core/log.dart';
 import '../strings/he.dart';
@@ -86,13 +87,36 @@ class AttemptRecord {
 
 typedef AttemptSink = Future<void> Function(AttemptRecord record);
 
+/// Chooses the activities of an adaptive visit one after another (the placement game, LS13): which comes next depends on how the
+/// last one went. The lesson's own item list holds only the first.
+abstract interface class ItemFlow {
+  /// The id of the first activity.
+  String first();
+
+  /// After the activity [id] was answered ([right]: it was the right answer): the id of the next one, or null when the visit is over.
+  String? after(String id, {required bool right});
+
+  /// How many activities there can be at most in this visit (the length of the trail).
+  int get length;
+
+  /// The one warm line said after every probe, whatever the answer (a result is never shown to the child).
+  Spoken get thanks;
+
+  /// Said when the visit ends.
+  Spoken get celebration;
+}
+
 enum FeedbackKind { none, correct, notYet }
 
 /// What happened to an answer.
 class Outcome {
-  const Outcome({required this.correct, required this.tag});
+  const Outcome({required this.correct, required this.tag, this.settled = false});
 
   final bool correct;
+
+  /// The activity is over whatever the answer was (a probe of the placement game: one answer, no help, one neutral line): a session
+  /// shows nothing "not yet" and goes on after the pause.
+  final bool settled;
 
   /// The misconception evidence recorded with the answer, or empty.
   final String tag;
@@ -116,12 +140,24 @@ class LessonController extends ChangeNotifier {
     this.tutor,
     this.tutorContext,
     this.timeIsUp,
+    this.flow,
     Clock clock = const SystemClock(),
-  }) : items = content.itemsOf(lesson),
+  }) : items = flow == null ? content.itemsOf(lesson) : <Activity>[content.activities[flow.first()]!],
        _record = record,
        _clock = clock {
     _begin();
   }
+
+  /// An adaptive visit: the next activity is chosen by this after each one (see [ItemFlow]); null for every ordinary lesson.
+  final ItemFlow? flow;
+
+  /// How long the progress trail is: the lesson's items, or at most what the flow can give.
+  int get trailLength => flow?.length ?? items.length;
+
+  /// No lamp and no "show me": a probe of the placement game (one answer, one neutral line, frame section 3.2) and a step that is never
+  /// scored (a personal turn, a story only heard, a chant, the embodied "done"), where "show me" would write an attempt that no such
+  /// step may leave behind (SEC-L4-1).
+  bool get noHelp => !finished && (current.purpose == 'probe' || current.unscored);
 
   final PackContent content;
   final Lesson lesson;
@@ -186,6 +222,13 @@ class LessonController extends ChangeNotifier {
   /// the bubble's line. Null for every line of the lands.
   String? voiceTarget;
   String? bubbleShow;
+
+  /// The line asked after the first one (the question of a story's pause, "how many?" after the counting): the replay button says
+  /// it again instead of the activity's own prompt. Null while the activity's own prompt is the question.
+  Spoken? askedLine;
+
+  /// The replay button says no line of its own (a story being told: the session plays the page again itself).
+  bool replayQuiet = false;
 
   /// The newest line was asked for by a touch (the replay button): it replaces the line that is playing. Every other line
   /// waits for the one that is playing to end, so a sentence is never cut off.
@@ -307,6 +350,9 @@ class LessonController extends ChangeNotifier {
   int _markMs = 0;
   int _struggles = 0;
 
+  /// The first answer to the activity just finished was not the right one (read by an adaptive flow).
+  bool _missed = false;
+
   Activity get current => items[math.min(index, items.length - 1)];
 
   void _begin() {
@@ -317,10 +363,12 @@ class LessonController extends ChangeNotifier {
     guided = false;
     _demoDone = false;
     solved = false;
+    _missed = false;
     feedback = FeedbackKind.none;
     hintAction = null;
     hintShown = 0;
     _recent.clear();
+    askedLine = null;
     _say(a.promptLine);
     _markMs = _clock.nowMs();
     resetNonce++;
@@ -331,8 +379,10 @@ class LessonController extends ChangeNotifier {
   void replayPrompt() {
     if (finished) return;
     actionNonce++;
-    _say(current.promptLine);
-    voiceReplaces = true;
+    if (!replayQuiet) {
+      _say(askedLine ?? current.promptLine);
+      voiceReplaces = true;
+    }
     feedback = FeedbackKind.none;
     replayNonce++;
     notifyListeners();
@@ -348,6 +398,7 @@ class LessonController extends ChangeNotifier {
   /// A count template has seen every object touched: now it asks "how many?".
   void askAnswer(Spoken line) {
     if (finished || guided) return;
+    askedLine = line;
     _say(line);
     notifyListeners();
   }
@@ -355,7 +406,7 @@ class LessonController extends ChangeNotifier {
   /// The lamp: the next hint, never forced.
   void showHint() {
     // During the praise a touch is not a move: the praise is not cut and nothing is written.
-    if (solved) return;
+    if (solved || noHelp) return;
     actionNonce++;
     if (finished || current.hints.isEmpty) return;
     _applyHint(math.min(hintLevel + 1, current.hints.length));
@@ -370,12 +421,15 @@ class LessonController extends ChangeNotifier {
     hintShown = level;
     hintNonce++;
     if (speak) _say(h.say);
+    // Level 3 is "show me": asked for with the lamp it marks the answer, as three mistakes do, and only the right move is taken (QA-L4-4).
+    // The Band A templates of the language courses; the lands and LS01 keep the path they have.
+    if (level >= 3 && languageTemplates.contains(current.template)) guided = true;
   }
 
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)
   /// and welcomed with the next hint.
   Future<void> unsure() async {
-    if (solved) return;
+    if (solved || noHelp) return;
     actionNonce++;
     if (finished) return;
     await _write(result: 'unsure', tag: '', response: '');
@@ -400,19 +454,10 @@ class LessonController extends ChangeNotifier {
   /// The child chose answer [optionId] of a choice template. [traceTag] is misconception evidence seen
   /// while counting (the same object touched twice), kept with the answer.
   Future<Outcome> chooseOption(String optionId, {String? traceTag, bool byVoice = false}) async {
-    final Activity a = current;
-    final List<ChoiceOption> options = switch (a) {
-      CountTapActivity() => a.options,
-      TapAnswerActivity() => a.options,
-      FlashActivity() => a.options,
-      _ => throw StateError('${a.template} has no options'),
-    };
-    final String correctId = switch (a) {
-      CountTapActivity() => a.correctId,
-      TapAnswerActivity() => a.correctId,
-      FlashActivity() => a.correctId,
-      _ => '',
-    };
+    final Object a = current;
+    if (a is! ChoiceActivity) throw StateError('${current.template} has no options');
+    final List<ChoiceOption> options = a.options;
+    final String correctId = a.correctId;
     final ChoiceOption chosen = options.firstWhere((ChoiceOption o) => o.id == optionId);
     final bool right = optionId == correctId;
     final String tag = right ? (traceTag ?? '') : (chosen.misconception ?? traceTag ?? '');
@@ -445,6 +490,19 @@ class LessonController extends ChangeNotifier {
   }) async {
     final Activity a = current;
     actionNonce++;
+    // A step that is not scored (a personal turn, an embodied command, a story with no question) writes no attempt, whatever calls (SEC-LC-2).
+    if (a.unscored) return const Outcome(correct: false, tag: '');
+    if (a.purpose == 'probe') {
+      // One answer, no help; the same warm line whatever it was, so that no result can be read from it (frame section 3.2).
+      _missed = !right;
+      await _write(result: right ? 'correct' : 'incorrect', tag: tag, response: response, byVoice: byVoice);
+      attemptNo++;
+      solved = true;
+      feedback = FeedbackKind.correct;
+      _say(flow?.thanks ?? a.feedback.correct);
+      notifyListeners();
+      return Outcome(correct: right, tag: tag, settled: true);
+    }
     if (right) {
       await _write(result: 'correct', tag: tag, response: response, byVoice: byVoice);
       attemptNo++;
@@ -505,19 +563,34 @@ class LessonController extends ChangeNotifier {
     return Outcome(correct: false, tag: tag);
   }
 
+  /// A step that is never scored was done (a story heard to its end, a chant, the embodied "done", a personal turn): the item's
+  /// warm line is said, and **nothing is written**: no attempt, so no evidence, no log, no sync. The session moves on after the
+  /// praise, as for a right answer.
+  void completePractice({Spoken? line}) {
+    if (finished || solved) return;
+    actionNonce++;
+    solved = true;
+    feedback = FeedbackKind.correct;
+    _say(line ?? current.feedback.correct);
+    notifyListeners();
+  }
+
   /// Moves on after a correct answer. After the last activity the lesson is finished.
   void next() {
     if (finished) return;
     // The help ran all the way up on this activity: counted, so that a warm-up can end gently instead of going on.
     _struggles = guided ? _struggles + 1 : 0;
     final int stop = lesson.stopAfterStruggles;
-    if (index + 1 >= items.length || (stop > 0 && _struggles >= stop)) {
+    final ItemFlow? f = flow;
+    final String? following = f?.after(current.id, right: !_missed);
+    if (f != null ? following == null : index + 1 >= items.length || (stop > 0 && _struggles >= stop)) {
       finished = true;
       feedback = FeedbackKind.none;
-      _say(lesson.celebration);
+      _say(f?.celebration ?? lesson.celebration);
       notifyListeners();
       return;
     }
+    if (following != null) items.add(content.activities[following]!);
     if (timeIsUp?.call() ?? false) {
       endedForRest = true;
       finished = true;

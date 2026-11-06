@@ -139,6 +139,8 @@ void main() {
                 ClockSetActivity() ||
                 TraceActivity():
               await c.submitPlacement(right: false);
+            case _:
+              throw StateError('${a.template} is a template of the language courses');
           }
         }
         expect(c.guided, isTrue);
@@ -178,6 +180,8 @@ void main() {
             ClockSetActivity() ||
             TraceActivity():
           await mixed.submitPlacement(right: true);
+        case _:
+          throw StateError('${b.template} is a template of the language courses');
       }
       mixed.next();
       await struggle(mixed);

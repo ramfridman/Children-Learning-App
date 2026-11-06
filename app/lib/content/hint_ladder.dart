@@ -87,6 +87,28 @@ enum HintPicture {
   /// numbers, a sample beside each cell). No option and no cell is marked.
   anotherWay('another_way'),
 
+  /// The part of the question that answers it is said or played again: the page of a story, the end of a verse, the puppet's line and
+  /// then each bubble slowly (LS08, LS12, LS10). Nothing is marked.
+  replayPart('replay_part'),
+
+  /// The pages so far laid out in a row and played one after the other: the story another way, as a sequence (LS08).
+  pagesInRow('pages_in_row'),
+
+  /// The friend does the thing on its own, or the part is shown close up beside it: the command shown another way (LS11).
+  friendActs('friend_acts'),
+
+  /// The ends alone: the line-end word of the verse and then each option's word after it, so the child hears which ends the same (LS12).
+  endsAlone('ends_alone'),
+
+  /// The key picture of the scene glows and its word's gloss is said: the scene another way (LS10).
+  keyPicture('key_picture'),
+
+  /// The word said slowly, with a pause between the beats (LS03 drum).
+  slowBeats('slow_beats'),
+
+  /// Hands clap once for each beat while each beat lights: the beats as movement and light (LS03 drum).
+  clapEach('clap_each'),
+
   /// The worked example: the guide does the whole thing and the answer is marked as its last step. Level 3 only.
   demonstration('demonstration', marksAnswer: true);
 
@@ -289,6 +311,32 @@ class HintLadder {
       HintPicture.demonstration,
     ]),
     'tap_answer': _tapFamily,
+    // The Band A templates of the language courses (L4).
+    'story': HintLadder._(<HintPicture>[
+      HintPicture.replayPart,
+      HintPicture.pagesInRow,
+      HintPicture.demonstration,
+    ]),
+    'listen_do': HintLadder._(<HintPicture>[
+      HintPicture.lookHere,
+      HintPicture.friendActs,
+      HintPicture.demonstration,
+    ]),
+    'sing_along': HintLadder._(<HintPicture>[
+      HintPicture.replayPart,
+      HintPicture.endsAlone,
+      HintPicture.demonstration,
+    ]),
+    'puppet_talk': HintLadder._(<HintPicture>[
+      HintPicture.replayPart,
+      HintPicture.keyPicture,
+      HintPicture.demonstration,
+    ]),
+    'sound_boxes': HintLadder._(<HintPicture>[
+      HintPicture.slowBeats,
+      HintPicture.clapEach,
+      HintPicture.demonstration,
+    ]),
   };
 
   /// The share mode of sort and drag deals pictures, so it has its own ladder.

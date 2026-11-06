@@ -27,6 +27,7 @@ import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
+import '../engine/course.dart';
 import '../parent/alert_scan.dart';
 import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
@@ -54,14 +55,33 @@ import 'robot_path_session.dart';
 import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
 import 'spot_error_session.dart';
+import 'listen_do_session.dart';
+import 'puppet_talk_session.dart';
+import 'sing_along_session.dart';
+import 'sound_boxes_session.dart';
+import 'story_session.dart';
 import 'template_session.dart';
 
 /// Plays one lesson of the installed pack, activity after activity, until the celebration.
 class LessonScreen extends ConsumerStatefulWidget {
-  const LessonScreen({super.key, required this.profileId, this.lessonId = 'butterflies', this.mission});
+  const LessonScreen({
+    super.key,
+    required this.profileId,
+    this.lessonId = 'butterflies',
+    this.mission,
+    this.flow,
+    this.course = Course.core,
+  });
 
   final String profileId;
   final String lessonId;
+
+  /// The course the lesson is in: `core` plays the starter pack's lessons, a language course plays that course's own installed pack
+  /// (`languagePacksProvider`), so a visit never reads another course's content (docs/milestones/L-course.md, D-9).
+  final String course;
+
+  /// An adaptive visit (the placement game of a language course): which activity comes next is the flow's to say.
+  final ItemFlow? flow;
 
   /// A short revisit lesson made for one skill (the bell flag on the map). Null for the pack's own lesson.
   final Lesson? mission;
@@ -267,6 +287,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       tutor: _tutor,
       tutorContext: _tutor == null ? null : _tutorContext(guide, content),
       timeIsUp: _timeIsUp,
+      flow: widget.flow,
     );
     made.addListener(_speak);
     // The first question is spoken as soon as the lesson opens.
@@ -323,20 +344,20 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   /// The sound of an answer, from its tile (a speaker, a sound button, a picture): the clips, at once when the child touched
   /// to hear, after the line that is playing otherwise (a hint's own line).
-  void _playClips(List<String> voIds, {bool replace = false}) {
+  Future<void> _playClips(List<String> voIds, {bool replace = false}) async {
     final LessonController? c = _controller;
     if (c == null || !mounted) return;
     if (_voice?.answer.state == MicState.listening) _voice?.hush();
     final int move = c.actionNonce;
-    unawaited(
-      _director.sayClips(
-        voIds,
-        owner: this,
-        // A hint's sounds are worth hearing only until the child's next move; a touch's own sound is always worth hearing.
-        relevant: replace ? null : () => c.actionNonce == move,
-        replace: replace,
-      ),
+    await _director.sayClips(
+      voIds,
+      owner: this,
+      // A hint's sounds are worth hearing only until the child's next move; a touch's own sound is always worth hearing.
+      relevant: replace ? null : () => c.actionNonce == move,
+      replace: replace,
     );
+    // The future of the clips is that of their start: a session that goes on after the end of a line (a chant) waits for the voice.
+    await _director.untilQuiet();
   }
 
   /// Whether the word of the right picture shows after the answer, and whether it carries its stress marks: the child's route and
@@ -356,6 +377,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
+  /// The parent's switch for scripted personal questions in this language (docs/languages/frame.md section 1.4). It fails closed: while
+  /// the family's settings are loading, or could not be read, nothing personal is asked (SEC-L4-2); once they are read, a language the
+  /// parent never touched keeps the default, on.
+  bool _personalAllowed(Activity a) {
+    final FamilyLanguages? family = ref.read(languagesProvider).value;
+    return family != null && family.of(widget.profileId, a.course).personal;
+  }
+
   /// A fresh session whenever the lesson moves to the next activity.
   TemplateSession _sessionFor(LessonController c) {
     if (_session == null || _sessionIndex != c.index) {
@@ -365,6 +394,16 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       _session = switch (a) {
         CountTapActivity() => CountTapSession(c, a),
         TapAnswerActivity() => TapAnswerSession(c, a, captions: caption.captions, stress: caption.stress),
+        StoryActivity() => StorySession(c, a, stress: caption.stress),
+        ListenDoActivity() => ListenDoSession(c, a, stress: caption.stress),
+        SingAlongActivity() => SingAlongSession(c, a, stress: caption.stress),
+        SoundBoxesActivity() => SoundBoxesSession(c, a),
+        PuppetTalkActivity() => PuppetTalkSession(
+          c,
+          a,
+          personalAllowed: _personalAllowed(a),
+          stress: caption.stress,
+        ),
         FlashActivity() => FlashSession(c, a),
         SortDragActivity() => SortDragSession(c, a),
         BuildPatternActivity() => BuildPatternSession(c, a),
@@ -390,7 +429,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<PackContent> content = ref.watch(contentProvider);
+    final AsyncValue<PackContent> content = _contentOfCourse();
+    // A course's voice switch is read before the lesson opens, so that the microphone is decided on what the parent chose for it.
+    if (widget.course != Course.core) ref.watch(languagesProvider);
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
     final bool voiceOn = ref.watch(voiceAvailableProvider).value ?? false;
     final bool? tutorOn = ref.watch(tutorAvailableProvider).value;
@@ -414,6 +455,30 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       ),
     );
   }
+
+  /// The pack the lesson plays: the starter pack, or the installed pack of the lesson's language course. A course whose pack is not
+  /// installed (or no longer proves itself) is an error, which the screen shows as "the lesson is not ready", never another course's lesson.
+  AsyncValue<PackContent> _contentOfCourse() {
+    if (widget.course == Course.core) return ref.watch(contentProvider);
+    return ref
+        .watch(languagePacksProvider)
+        .when(
+          data: (Map<String, PackContent> packs) {
+            final PackContent? pack = packs[widget.course];
+            return pack == null
+                ? AsyncError<PackContent>(StateError('no pack for ${widget.course}'), StackTrace.current)
+                : AsyncData<PackContent>(pack);
+          },
+          loading: () => const AsyncLoading<PackContent>(),
+          error: (Object e, StackTrace s) => AsyncError<PackContent>(e, s),
+        );
+  }
+
+  /// Whether the microphone may open in a lesson of [pack]: the lands need the parent's one switch; a language course needs that
+  /// language's own voice switch too (frame section 1.4: off until a parent turns it on for that language), whatever the global one says.
+  bool _voiceAllowedIn(PackContent pack) =>
+      pack.course == Course.core ||
+      (ref.read(languagesProvider).value?.of(widget.profileId, pack.course).voice ?? false);
 
   /// The microphone, when a parent turned voice on and saying the answer is the answer (the activity's `voiceAnswer`,
   /// board B-24): where the answer is a tap, a drag or a trace there is no mic at all, not even a faded one. It is never
@@ -453,7 +518,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
 
   Widget _lesson(BuildContext context, PackContent c, Guide guide, bool voiceOn) {
     final LessonController controller = _controllerFor(c, guide);
-    if (voiceOn && _voice == null) _voice = _makeVoice(controller);
+    if (voiceOn && _voice == null && _voiceAllowedIn(c)) _voice = _makeVoice(controller);
     final ActivitySpec board = ActivitySpec.of(AppLayout.of(context).board);
     return ListenableBuilder(
       listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer]),
@@ -495,12 +560,13 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
                   text: withStress(controller.bubbleShow!, show: _captionsFor(controller.current).stress),
                   course: controller.current.course,
                 ),
-          trailTotal: controller.items.length,
-          trailDone: controller.finished ? controller.items.length : controller.index,
+          trailTotal: controller.trailLength,
+          trailDone: controller.finished ? controller.trailLength : controller.index,
           onHome: _home,
-          onHint: controller.finished ? null : controller.showHint,
+          showHelp: !controller.noHelp,
+          onHint: controller.finished || controller.noHelp ? null : controller.showHint,
           hintGlow: helpOffered,
-          onShowMe: controller.finished ? null : () => controller.unsure(),
+          onShowMe: controller.finished || controller.noHelp ? null : () => controller.unsure(),
           onReplay: controller.finished ? null : controller.replayPrompt,
           mic: controller.finished ? null : _mic(spec, session, controller.current),
           onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
@@ -510,6 +576,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
               ? null
               : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
           tiles: controller.finished ? null : session.buildTiles(ctx, spec),
+          boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
           overlay: controller.finished
               ? LessonCelebration(
                   text: controller.endedForRest ? He.restGoodbye.text : controller.lesson.celebration.caption,

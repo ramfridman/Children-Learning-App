@@ -5,6 +5,7 @@ import '../engine/engine.dart';
 import '../engine/gates.dart';
 import '../engine/state.dart';
 import '../strings/he.dart';
+import '../world/language_placement.dart' show PlacementStatus;
 import 'language_settings.dart';
 
 // The parent's progress in one language (docs/design/languages-island.md section 6.3): the skills of the course by strand and
@@ -103,6 +104,39 @@ const Map<String, List<(Str, Set<String>)>> languageStrands = <String, List<(Str
   ],
 };
 
+/// Which placement strand places each progress strand code (docs/milestones/L-course.md section 4; the placement strands are those of the
+/// syllabi, frame section 3.2). English: `o` oral, `l` literacy (letter sounds, reading; no probe asks writing, so writing has no level).
+/// Hebrew: `l` oral language and sounds, `c` the code (letters, reading, writing). Russian: `1` understanding, `2` sounds, `3` letters,
+/// `4` reading, `5` spelling. All the codes of one progress strand name the same placement strand (a test holds it).
+const Map<String, Map<String, String>> placementStrandOfCode = <String, Map<String, String>>{
+  Course.eng: <String, String>{'lis': 'o', 'spk': 'o', 'pa': 'l', 'ph': 'l', 'rd': 'l'},
+  Course.heb: <String, String>{'ol': 'l', 'pa': 'l', 'pk': 'c', 'dec': 'c', 'wr': 'c'},
+  Course.rus: <String, String>{
+    'lis': '1',
+    'spk': '1',
+    'voc': '1',
+    'grm': '1',
+    'num': '1',
+    'pho': '2',
+    'let': '3',
+    'rea': '4',
+    'wri': '5',
+  },
+};
+
+/// "We start here" for a progress strand of [course]: the level its placement strand found, counted from 1, or null while that strand has
+/// not stopped, was not offered, or no placement strand places this progress strand.
+int? startLevelOf(String course, Set<String> codes, PlacementStatus? placement) {
+  if (placement == null) return null;
+  final Map<String, String> map = placementStrandOfCode[course] ?? const <String, String>{};
+  for (final String code in codes) {
+    final String? strand = map[code];
+    final int? entry = strand == null ? null : placement.entryOf(strand);
+    if (entry != null) return entry + 1;
+  }
+  return null;
+}
+
 /// The strand codes that are speaking skills (shown only as "practised" or "said", never as a score).
 const Set<String> _speakingStrands = <String>{'spk'};
 
@@ -113,6 +147,7 @@ LanguageProgress buildLanguageProgress({
   required DateTime now,
   required LanguageSwitches switches,
   required int ageBand,
+  PlacementStatus? placement,
 }) {
   // The skills that carry evidence: a roll-up has none of its own, its groups are the skills.
   final List<SkillDoc> skills = <SkillDoc>[
@@ -120,7 +155,7 @@ LanguageProgress buildLanguageProgress({
       if (!engine.catalog.isRollUp(s.id)) s,
   ]..sort((SkillDoc a, SkillDoc b) => a.id.compareTo(b.id));
 
-  StrandProgress count(Str name, Iterable<SkillDoc> of) {
+  StrandProgress count(Str name, Iterable<SkillDoc> of, {int? startLevel}) {
     int learning = 0, understood = 0, remembered = 0, revisit = 0, notStarted = 0;
     for (final SkillDoc s in of) {
       switch (engine.statusOf(s.id, now)) {
@@ -143,6 +178,7 @@ LanguageProgress buildLanguageProgress({
       remembered: remembered,
       revisit: revisit,
       notStarted: notStarted,
+      startLevel: startLevel,
     );
   }
 
@@ -151,7 +187,11 @@ LanguageProgress buildLanguageProgress({
   final List<StrandProgress> strands = <StrandProgress>[
     for (final (Str name, Set<String> codes) in table)
       if (skills.any((SkillDoc s) => codes.contains(s.strand)))
-        count(name, skills.where((SkillDoc s) => codes.contains(s.strand))),
+        count(
+          name,
+          skills.where((SkillDoc s) => codes.contains(s.strand)),
+          startLevel: startLevelOf(content.course, codes, placement),
+        ),
   ];
   // Skills with no strand, or one the table does not know, stay together rather than vanish.
   final List<SkillDoc> rest = skills.where((SkillDoc s) => !known.contains(s.strand)).toList();
