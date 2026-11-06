@@ -67,6 +67,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'shop_pay': '1.0',
   'clock_set': '1.0',
   'trace': '1.0',
+  'say_it': '1.0',
 };
 
 /// What the coins and notes of the shop are worth, in agorot, and the picture each is drawn with.
@@ -132,6 +133,11 @@ const SString _skill = SString(minLength: 6, maxLength: 14, pattern: Patterns.sk
 /// its bytes; a language pack puts its course on the manifest and on every document, and the validator makes them agree.
 const SField _course = SField(SEnum(Course.all), required: false);
 const SString _vo = SString(minLength: 4, maxLength: 83, pattern: Patterns.voRef);
+
+/// A word the child is asked to say, as the recogniser will be told it: none of the characters that change a hotword list (`:`,
+/// `#`, `@`, `/`) and no control character.
+const SString _sayWord = SString(minLength: 1, maxLength: _targetTextMax, pattern: r'[^:#@/\x00-\x1f]+');
+
 const SString _asset = SString(minLength: 7, maxLength: 46, pattern: Patterns.assetRef);
 const SString _optionId = SString(minLength: 2, maxLength: 3, pattern: Patterns.optionId);
 const SInt _revision = SInt(min: 1, max: 9999);
@@ -672,6 +678,7 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'shop_pay',
       'clock_set',
       'trace',
+      'say_it',
     ]),
   ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
@@ -1408,6 +1415,36 @@ SObject? activitySchemaFor(String template) => switch (template) {
       ),
     }),
   ),
+  // LS09 say it with me (docs/languages/frame.md section 2.3): the voice says a word with its picture, the child may say it (the
+  // per-word matcher answers confident or unsure, never wrong), then taps the picture to go on. Language courses only.
+  'say_it' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{'background': SField(_asset, required: false), 'picture': SField(_sprite)}),
+      ),
+      'say': const SField(
+        SObject(<String, SField>{
+          // The target word and the forms its teacher lists, and the foils (the item's other options, the minimal-pair partner).
+          'forms': SField(SArray(_sayWord, minItems: 1, maxItems: 6)),
+          'foils': SField(SArray(_sayWord, minItems: 1, maxItems: 6)),
+          // A chunk: every one of these must be heard on its own.
+          'keyWords': SField(SArray(_sayWord, minItems: 1, maxItems: 4), required: false),
+          // The word said by the voice (the model, and the choral clip after an unsure result).
+          'clip': SField(_vo),
+          // "I heard:" and "let's say it together" (Hebrew frame lines; the word follows as the line's own target clip).
+          'heard': SField(_spoken),
+          'together': SField(_spoken),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('say_it')),
+          // The tap on the picture is a scored listening item when the author marks it; otherwise it is practice.
+          'scored': SField(SBool()),
+        }),
+      ),
+    }),
+  ),
   _ => null,
 };
 
@@ -1454,4 +1491,5 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.shop_pay': activitySchemaFor('shop_pay')!,
   'activity.clock_set': activitySchemaFor('clock_set')!,
   'activity.trace': activitySchemaFor('trace')!,
+  'activity.say_it': activitySchemaFor('say_it')!,
 };

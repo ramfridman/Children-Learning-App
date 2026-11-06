@@ -56,6 +56,7 @@ void main() {
 
   /// What a child can do on [a] that is wrong: each option, or each wrong number to give.
   List<Future<Outcome> Function(LessonController)> wrongMoves(Activity a) => switch (a) {
+    SayItActivity() => const <Future<Outcome> Function(LessonController)>[],
     TapAnswerActivity() => <Future<Outcome> Function(LessonController)>[
       for (final ChoiceOption o in a.options)
         if (o.id != a.correctId) (LessonController c) => c.chooseOption(o.id),
@@ -120,6 +121,7 @@ void main() {
   Future<Outcome> right(LessonController c) {
     final Activity a = c.current;
     return switch (a) {
+      SayItActivity() => throw StateError('the lands have no say-it'),
       TapAnswerActivity() => c.chooseOption(a.correctId),
       CountTapActivity() => c.chooseOption(a.correctId),
       FlashActivity() => c.chooseOption(a.correctId),
@@ -281,6 +283,7 @@ void main() {
             final LessonController c = start(lesson, i);
             final Activity a = c.current;
             final TemplateSession s = switch (a) {
+              SayItActivity() => throw StateError('the lands have no say-it'),
               CountTapActivity() => CountTapSession(c, a),
               TapAnswerActivity() => TapAnswerSession(c, a),
               FlashActivity() => FlashSession(c, a),

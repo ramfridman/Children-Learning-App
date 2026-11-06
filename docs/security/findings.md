@@ -42,11 +42,15 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-L1-1 | Lesson lines are outside the validator's new language-field rules | low | open | 2026-11-03 |
 | SEC-L1-2 | Hebrew frame lines: the script check is narrower than the language rule | low | open | 2026-11-03 |
-| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | closed (`d82b337`: the mic also needs the language's own voice switch, closed while the settings load; QA's full run green, `218f63d`) | 2026-11-03 |
+| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | closed (`d82b337`: the mic also needs the language's own voice switch, closed while the settings load; QA's full run green, `218f63d`; and on `languages-l3` the validator refuses `voiceAnswer` in a language pack, and a language's speech exists only in `say_it` under that language's own switch, reviewed 2026-11-06) | 2026-11-03 |
 | SEC-L1-4 | The tutor hold keeps the previous line's language extras (not reachable) | info | open | 2026-11-03 |
 | SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
 | SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |
 | SEC-L1-7 | A language pack's clip ids are bound to the pack by naming only (for L2) | info | open | 2026-11-03 |
+| SEC-L3-1 | Speech-evidence cap: spoken answers given after a hint are not counted against the cap, and item-level statistics take spoken answers for any skill | low | fixed on `languages-l3`: a spoken answer counts only without a hint, outside a probe, for a speaking skill and under the cap; one that counts for no skill changes nothing (`ls09_validation_test.dart`); closes when the security-engineer has run the proof again | 2026-11-06 |
+| SEC-L3-2 | A say-it listen is not stopped when the app leaves the foreground (bounded at 6 s; nothing is kept) | low | fixed on `languages-l3`: the say step stops on any lifecycle state but resumed, and what it heard is not applied (`qa_l3_open_defects_test.dart`) | 2026-11-06 |
+| SEC-L3-3 | The English and Russian speech models (Apache-2.0) need their licence notice in the app's credits before they are distributed | info | fixed on `languages-l3`: credit lines for both models and the full Apache-2.0 text in the parent area (`app_flow_test.dart`); the strings are `needs-editor` | 2026-11-06 |
+| SEC-L3-4 | Say-it switch details: only the language's own voice switch is needed (owner to confirm); a course recogniser is not freed when its switch turns off | info | item 2 fixed on `languages-l3` (the recogniser is made again when the last child's voice switch for the language turns off); item 1 decided by the owner on 2026-11-06: the language's own voice switch alone is enough (L3.md D-5) | 2026-11-06 |
 | SEC-L4-1 | "Show me" on a step that is never scored (a personal turn, a story only heard, a chant, the embodied step) wrote an `unsure` attempt that was synced and counted by the engine; no answer content | medium | closed (`acdecdf`: such a step offers no lamp or eye and writes nothing; QA's full run green, `218f63d`) | 2026-11-04 |
 | SEC-L4-2 | The parent's switch for personal questions fails open while the family's language settings are not loaded (not reachable today) | low | closed (`acdecdf`: no personal turn until the family's settings are read; QA's full run green, `218f63d`) | 2026-11-04 |
 | SEC-L4-3 | Placement replay counts a probe answered twice (two devices, or a re-sent row), so one probe can move a strand up | low | closed (`acdecdf`: the staircase and the replay count a probe once; proof re-run) | 2026-11-04 |
@@ -271,6 +275,25 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   only the pack's own rows into each language engine; a damaged language pack is left out without touching the others; packs
   are loaded only through the verifying installer and never bundled. `deno task check`: 198 passed, 0 failed, 7 ignored;
   `flutter analyze` clean. Not run by the security-engineer: `flutter test` (the QA pass follows).
+- **L3 Languages recognisers, the matcher and LS09 say-it, `languages-l3` (`bb53e0e`; 2026-11-06): safe to merge after the two
+  low findings, nothing above low.** Verified by reading:
+  - The microphone opens only on the child's tap of the say step, under the language's own voice switch, with at most one more
+    try. The OS permission is asked only on the parent page.
+  - No audio, transcript or partial result is stored, logged, synced or sent. Only an enum outcome and a `said` attempt are kept.
+  - The installer writes a temporary file, checks size and SHA-256, then renames it. It has no network fetcher.
+  - Every pinned model file matches Hugging Face at its pinned revision, and `bpe.vocab` was rebuilt byte for byte.
+  - The model load is hash-checked in an isolate.
+  - Hotwords come only from signed content. Three layers (schema, script purity, `hotwordList`) keep `/ : # @` and line breaks
+    out, so a pack cannot inject into the sherpa configuration.
+  - The Russian model is Apache-2.0: the pinned files are byte-identical to `alphacep/vosk-model-small-streaming-ru`, whose card
+    says Apache-2.0.
+  - The new gitleaks allowlist hides exactly the two public `tokens.txt` hashes.
+  - The source-rule changes tighten the microphone rule.
+
+  New: SEC-L3-1 and SEC-L3-2 (low; the proof of -1 was run in pure Dart) and SEC-L3-3 and -4 (info), above. SEC-L1-3 is closed.
+  Also checked: `flutter analyze` clean; no package, lock file, host, workflow or gateway change.
+
+  Not run by the security-engineer: `flutter test`.
 - **L1 Languages text, direction and LS01, `languages-l1` (`1967b1a`; 2026-11-03): safe to merge, no finding above low.**
   Verified by reading and by a proof script run against the branch:
   - The bundled starter pack still verifies (signature, hashes, schemas and the whole validator), and its bytes are not in

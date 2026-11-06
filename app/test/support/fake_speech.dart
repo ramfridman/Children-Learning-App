@@ -72,6 +72,7 @@ class FakeSpeechEngine implements SpeechEngine {
   bool micOpen = false;
   Duration? lastSilence;
   Duration? lastMax;
+  List<String> lastHotwords = const <String>[];
   StreamController<ListenEvent>? _live;
 
   void add(Scripted s) => _script.add(s);
@@ -81,12 +82,16 @@ class FakeSpeechEngine implements SpeechEngine {
 
   bool installed = true;
   bool permission = true;
+  int permissionRequests = 0;
 
   @override
   Future<bool> modelInstalled() async => installed;
 
   @override
-  Future<bool> requestPermission() async => permission;
+  Future<bool> requestPermission() async {
+    permissionRequests++;
+    return permission;
+  }
 
   @override
   Future<void> prepare() async {
@@ -97,8 +102,13 @@ class FakeSpeechEngine implements SpeechEngine {
   }
 
   @override
-  Stream<ListenEvent> listen({required Duration silence, required Duration maxLength}) {
+  Stream<ListenEvent> listen({
+    required Duration silence,
+    required Duration maxLength,
+    List<String> hotwords = const <String>[],
+  }) {
     listens++;
+    lastHotwords = hotwords;
     lastSilence = silence;
     lastMax = maxLength;
     log.add('listen');

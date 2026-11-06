@@ -223,6 +223,10 @@ class FamilyLanguages {
 
   bool get isEmpty => _byChild.isEmpty;
 
+  /// Some child has the voice switch of [course] on (the course's recogniser is wanted).
+  bool anyVoice(String course) =>
+      _byChild.values.any((Map<String, LanguageSwitches> m) => m[course]?.voice ?? false);
+
   /// What this child's parent chose for [course] (the defaults if nothing).
   LanguageSwitches of(String childId, String course) =>
       _byChild[childId]?[course] ?? const LanguageSwitches();

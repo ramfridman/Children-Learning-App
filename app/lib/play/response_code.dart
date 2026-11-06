@@ -19,6 +19,7 @@
 /// | shop_pay | the total paid in agorot, `350` | the total |
 /// | clock_set | the time set, `3.00` or `3.30` | the time |
 /// | trace | `trace` | `direction` (the right path from the other end) or `off` |
+/// | say_it | `said` (the child was heard, speech evidence) or `picture` (the scored tap on the picture) | (none: nothing is wrong) |
 /// | "I'm not sure" | (empty) | |
 ///
 /// [responsePattern] is the server's own pattern (`supabase/functions/sync-push/handler.ts`, kept equal through
@@ -43,6 +44,12 @@ abstract final class ResponseCode {
   static const String traced = 'trace';
   static const String tracedBackwards = 'direction';
   static const String tracedOff = 'off';
+
+  /// say_it: the per-word matcher heard the child (the only speech result that is written; an unsure one writes nothing).
+  static const String said = 'said';
+
+  /// say_it: the tap on the picture that ends the activity, when the author scored it.
+  static const String picture = 'picture';
 
   /// Said by the helper for a move whose code does not fit its pattern (a long program, a clock time).
   static const String move = 'move';

@@ -5,6 +5,7 @@ import '../speech/answer_matcher.dart';
 import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
 import '../speech/spoken_options.dart';
+import '../speech/word_text.dart' show normalizeWords;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
 import 'schema.dart';
@@ -288,10 +289,12 @@ List<Problem> validatePack({
     if (hints.length >= 3 && hints[2]['action'] == hints[1]['action']) {
       say(file, 'hints[2].action', 'level 3 must help in a different way than level 2');
     }
-    final String? ladder = HintLadder.problemWith(
-      a['template']! as String,
-      share: a['template'] == 'sort_drag' && (a['answer'] as Map<String, Object?>?)?['mode'] == 'share',
-    );
+    final String? ladder = a['template'] == 'say_it'
+        ? null
+        : HintLadder.problemWith(
+            a['template']! as String,
+            share: a['template'] == 'sort_drag' && (a['answer'] as Map<String, Object?>?)?['mode'] == 'share',
+          );
     if (ladder != null) say(file, 'hints', ladder);
     _lengths(file, a, say);
     final List<Object?> credit =
@@ -663,6 +666,17 @@ List<Problem> validatePack({
         if (numerals.toSet().length != numerals.length) {
           say(file, 'answer.options', 'two options show the same number');
         }
+      case 'say_it':
+        if (!Course.isLanguage(course)) {
+          say(file, 'template', 'say_it is the say-it of a language course; the lands have none');
+        }
+        checkAsset(file, 'scene.background', scene['background']);
+        checkAsset(file, 'scene.picture.sprite', (scene['picture']! as Map<String, Object?>)['sprite']);
+        final Map<String, Object?> speak = a['say']! as Map<String, Object?>;
+        checkVo(file, 'say.clip', speak['clip']);
+        checkVo(file, 'say.heard.vo', (speak['heard']! as Map<String, Object?>)['vo']);
+        checkVo(file, 'say.together.vo', (speak['together']! as Map<String, Object?>)['vo']);
+        _sayWords(file, a['course'] as String? ?? course, speak, say);
       case 'give_n':
         checkAsset(file, 'scene.background', scene['background']);
         final Map<String, Object?> source = scene['source']! as Map<String, Object?>;
@@ -827,6 +841,46 @@ List<Problem> packWarnings({required Map<String, Object?> docs}) {
   return out;
 }
 
+/// The words of a say-it item (`say.forms`, `say.foils`, `say.keyWords`): each is a word of the course's script, no foil is the target
+/// or one of its forms once spelling is brought to its plain form (a foil that is the target could never be told from it), and a
+/// key word is a word of one of the forms. These words are the hotword list of the recogniser, so they are signed content only.
+void _sayWords(
+  String file,
+  String course,
+  Map<String, Object?> speak,
+  void Function(String, String, String) say,
+) {
+  List<String> plain(String key) => <String>[
+    for (final Object? w in (speak[key] as List<Object?>? ?? const <Object?>[]))
+      normalizeWords(course, w! as String),
+  ];
+  final List<String> forms = plain('forms');
+  final List<String> foils = plain('foils');
+  final List<String> keys = plain('keyWords');
+  for (final (String key, List<String> words) in <(String, List<String>)>[
+    ('forms', forms),
+    ('foils', foils),
+    ('keyWords', keys),
+  ]) {
+    for (final (int i, String w) in words.indexed) {
+      if (w.isEmpty) {
+        say(file, 'say.$key[$i]', 'has no letters of the course\'s script, so nothing could be heard as it');
+      }
+    }
+  }
+  for (final (int i, String f) in foils.indexed) {
+    if (forms.contains(f)) {
+      say(file, 'say.foils[$i]', 'is the target or one of its forms, which no foil may be');
+    }
+  }
+  final Set<String> inForms = <String>{for (final String f in forms) ...f.split(' ')};
+  for (final (int i, String k) in keys.indexed) {
+    if (k.isNotEmpty && !k.split(' ').every(inForms.contains)) {
+      say(file, 'say.keyWords[$i]', 'is not a word of any of the forms');
+    }
+  }
+}
+
 /// The templates whose answer a child can say (board B-24); every other template is answered by hand.
 const Set<String> voiceTemplates = <String>{'tap_answer', 'count_tap', 'flash'};
 
@@ -862,6 +916,14 @@ void _voiceAnswer(
     return;
   }
   if (flag != true) return;
+  if (Course.isLanguage((a['course'] as String?) ?? Course.core)) {
+    say(
+      file,
+      'voiceAnswer',
+      'a language item is not answered by voice; its speech is the say step of the say_it template, under the language\'s own switch',
+    );
+    return;
+  }
   if (!voiceTemplates.contains(a['template'])) {
     say(
       file,

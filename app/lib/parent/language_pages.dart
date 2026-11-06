@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/language_providers.dart';
 import '../app/sync_providers.dart';
+import '../app/voice_input.dart' show microphonePermissionProvider;
 import '../child/languages_doors.dart' show languageName;
 import '../data/app_database.dart' show Profile;
 import '../data/child_name.dart';
@@ -261,7 +262,11 @@ class LanguagePage extends ConsumerWidget {
           title: He.areaVoice.text,
           help: course == Course.heb ? He.areaLangVoiceHelpHeb.text : _fill(He.areaLangVoiceHelp, byLang),
           value: s.voice,
-          onChanged: (bool v) => set(s.copyWith(voice: v)),
+          onChanged: (bool v) {
+            set(s.copyWith(voice: v));
+            // Android asks the parent, not the child, for the microphone; nothing is loaded and nothing listens yet.
+            if (v) unawaited(ref.read(microphonePermissionProvider)(course));
+          },
         ),
         const Divider(height: 1, color: TokenColors.hairline),
         _SwitchRow(

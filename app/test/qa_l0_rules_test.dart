@@ -91,7 +91,7 @@ void main() {
     });
 
     testWidgets(
-      'turning the voice switch of a language on only stores the choice: no recogniser, no permission',
+      'turning the voice switch of a language on stores the choice and asks the parent for the microphone: nothing is loaded, nothing listens',
       (WidgetTester tester) async {
         final AppRig rig = await langRig(
           languages: <String, LanguageSwitches>{'eng': const LanguageSwitches(on: true)},
@@ -108,6 +108,7 @@ void main() {
         await tester.pumpAndSettle();
         final FamilyLanguages f = FamilyLanguages.decode(await rig.db.setting(languagesSettingKey));
         expect(f.of(langKid, 'eng').voice, isTrue);
+        expect(rig.speech.permissionRequests, 1, reason: 'Android asks the parent, once');
         expect(rig.speech.log, isEmpty, reason: 'the model is not prepared, nothing listens');
         expect(<int>[rig.speech.prepares, rig.speech.listens], <int>[0, 0]);
         expect(rig.speech.micOpen, isFalse);

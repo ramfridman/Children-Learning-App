@@ -77,7 +77,7 @@ void main() {
           jsonDecode(File('test/fixtures/asr_token_chars.json').readAsStringSync()) as Map<String, Object?>;
       expect(
         f['tokens_sha256'],
-        SpeechModel.files.singleWhere((ModelFile m) => m.name == 'tokens.txt').sha256Hex,
+        SpeechModels.hebrew.files.singleWhere((ModelFile m) => m.name == 'tokens.txt').sha256Hex,
         reason: 'the fixture is of the model the app downloads',
       );
       final String all = String.fromCharCodes(<int>[
