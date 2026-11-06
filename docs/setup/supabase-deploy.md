@@ -260,3 +260,5 @@ the earlier ones are done. Never paste a key into the chat.
   the rows `tutor_enabled` / `live_voice_enabled` to `true` in `app.config` (section 8).
 - It does not enable the dev allowlist. Emulator enrolment works only on the local stack
   (`ALLOW_DEV_ENROLMENT=true`, needs Docker Desktop) or during a short, deliberate test window.
+
+**Done by Claude on 2026-11-06 (owner's OK in chat, B-29):** migrations `20261103120000_language_settings` (L0, merged 2026-11-03 but not pushed until now; B-29's `delete_child` builds on it) and `20261106120000_school_stage` (`npx supabase db push`), then `child-put`, `sync-pull` and `settings-put` (`npx supabase functions deploy <name> --use-api --project-ref ungkvkabqxssggttajfs`). Checked: each function answers 401 to an unauthenticated call, and `migration list --linked` shows both. Rollback order (SEC-B29-4): the app first, then the functions, then the migration.
