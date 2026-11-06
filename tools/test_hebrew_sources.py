@@ -133,7 +133,8 @@ class HebrewMasterTableTest(unittest.TestCase):
         # pinned at the regeneration of B-15 part 2 (200 new activities, the alert texts and word lists of main)
         # 12645 since B-39 (16 bottle and land-name rows added by the hebrew-text-editor)
         # 12757 since L0 (112 rows of he.dart added with the Languages screens: the island, the doors, the parent pages)
-        self.assertEqual(len(self.rows), 12757)
+        # 12777 since the editor's pass of 2026-11-06 (20 more he.dart rows: the Languages course screens, L1 to L4)
+        self.assertEqual(len(self.rows), 12777)
         self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1308)
         self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 64)
 

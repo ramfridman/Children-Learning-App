@@ -38,7 +38,7 @@ abstract final class He {
   static const Str restScene = Str('עַכְשָׁו נָחִים קְצָת. נִפָּגֵשׁ שׁוּב אַחַר כָּךְ!', nikud: true);
   static const Str restBackSemantics = Str('חזרה');
   static const Str restGoodbye = Str(
-    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׁחַק שׁוּב אַחַר כָּךְ.',
+    'הָיָה כֵּיף! עַכְשָׁו נָחִים קְצָת, וְנִשְׂחַק שׁוּב אַחַר כָּךְ.',
     nikud: true,
   );
   static const Str placementDone = Str('יָפֶה מְאֹד! עַכְשָׁו נֵדַע מֵאֵיפֹה לְהַתְחִיל.', nikud: true);
@@ -133,7 +133,7 @@ abstract final class He {
   );
   static const Str trophyNewSemantics = Str('גביע חדש מחכה');
   static const Str trophyReplaySemantics = Str('לראות שוב את הטקס');
-  static const Str trophyLockedSemantics = Str('גביע שעוד לא הרווחנו');
+  static const Str trophyLockedSemantics = Str('גביע שעוד לא זכינו בו');
   static const Str ceremonyBronze = Str('הִנֵּה גְּבִיעַ בְּרוֹנְזָה בִּשְׁבִילְכֶם!', nikud: true);
   static const Str ceremonySilver = Str('הִנֵּה גְּבִיעַ כֶּסֶף בִּשְׁבִילְכֶם!', nikud: true);
   static const Str ceremonyGold = Str('הִנֵּה גְּבִיעַ זָהָב בִּשְׁבִילְכֶם!', nikud: true);
@@ -149,9 +149,9 @@ abstract final class He {
     nikud: true,
   );
   static const Str medalTryAgainHow = Str('מְנַסִּים שׁוּב וּמַצְלִיחִים שָׁלוֹשׁ פְּעָמִים', nikud: true);
-  static const Str medalExplainerHow = Str('אֶפְשָׁר יִהְיֶה לְהַרְוִיחַ אוֹתָהּ בְּקָרוֹב', nikud: true);
-  static const Str medalBugFixerHow = Str('אֶפְשָׁר יִהְיֶה לְהַרְוִיחַ אוֹתָהּ בְּקָרוֹב', nikud: true);
-  static const Str medalLockedSemantics = Str('מדליה שעוד לא הרווחנו');
+  static const Str medalExplainerHow = Str('בְּקָרוֹב אֶפְשָׁר יִהְיֶה לִזְכּוֹת בָּהּ', nikud: true);
+  static const Str medalBugFixerHow = Str('בְּקָרוֹב אֶפְשָׁר יִהְיֶה לִזְכּוֹת בָּהּ', nikud: true);
+  static const Str medalLockedSemantics = Str('מדליה שעוד לא זכינו בה');
   static const Str outfitHoney = Str('צָעִיף דְּבַשׁ', nikud: true);
   static const Str outfitSky = Str('צָעִיף שָׁמַיִם', nikud: true);
   static const Str outfitRose = Str('צָעִיף וֶרֶד', nikud: true);
@@ -243,7 +243,7 @@ abstract final class He {
   static const Str courseInvite = Str('בּוֹאוּ נֵצֵא לְבִקּוּר קָטָן!', nikud: true);
   static const Str courseVisitSemantics = Str('ביקור קטן בבית השפה');
   static const Str courseNextSemantics = Str('להמשיך בשפה');
-  static const Str courseStoneDoneSemantics = Str('שיעור שהיה');
+  static const Str courseStoneDoneSemantics = Str('שיעור שכבר סיימנו');
   static const Str courseStoneNextSemantics = Str('השיעור הבא');
   static const Str courseStoneLaterSemantics = Str('שיעור בהמשך הדרך');
   static const Str coursePathSemantics = Str('דרך השיעורים');

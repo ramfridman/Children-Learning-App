@@ -788,31 +788,9 @@ B26 = 'B-26 (docs/agents/b26-hebrew.md, docs/milestones/B26.md): new, worded by 
 B39 = 'B-39 (docs/curriculum/todays-adventure-rule.md section 8, docs/agents/hebrew-notes.md): new, worded by the editor, not yet read by the owner. '
 B15 = 'B-15 part 2 (docs/knowledge/b15-hebrew.md): new, not yet read by the owner. '
 PENDING = [
-    ('1', r'^homeIsland(Mine)?$', r'he\.dart$', B26 + 'The island is named after the child (owner, 2026-10-29); the name '
-     'is shown as typed and is never voiced or sent to a vendor; no name: "my island" (b26-hebrew.md section 5, Q3, not answered yet).'),
-    ('1', r'^homeIsland(Mine)?Semantics$', r'he\.dart$', B26 + 'Screen-reader text, plain; the whole name, never shortened.'),
-    ('1', r'^nitziHomeTreasures$', r'he\.dart$', B26 + 'True once the Hall and the stickers live in the home (decision 1); '
-     'mixed group, so masculine plural "גָּרִים".'),
-    ('1', r'^nitziHomeBottle$', r'he\.dart$', B26 + 'The bottle holds a revisit or the next lesson (decision 3), so not '
-     '"new"; was "הַבַּקְבּוּק הֵבִיא הַרְפַּתְקָה חֲדָשָׁה.".'),
-    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)$', r'he\.dart$', B39 + 'The bottle line for one reason '
-     '(todays-adventure-rule.md section 8). "we" and "let us" only: no child name, no friend name, no gender, no time word. {land} follows '
-     'only a separate word (אֶל, אֶת, שֶׁל), so the construct and the pointing of the land name never change.'),
-    ('1', r'^adventure(Welcome|CallForHelp|SameLand|OtherLand|PlayAgain)Semantics$', r'he\.dart$', B39 + 'Screen-reader label of the '
-     'bottle for that reason, plain text; {land} is the plain land name (land*Semantics).'),
-    ('1', r'^land(Counting|Colors|Shapes|Logic|Robots|Market)Semantics$', r'he\.dart$', B39 + 'The plain land name for the '
-     'bottle screen-reader label (the pointed names are land*).'),
-    # B-15 part 2 (docs/knowledge/b15-hebrew.md): the editor's own strings are text-ready there. These are the lines the generator
-    # made from a pattern that the tables do not give, so the editor reads them; the last element is a regex on the text.
-    ('3', r'feedback\.correct', r'^activity\.b15\.matha04\.', B15 + 'The correct line of the fish and star size items (editor read it, 2026-10-30: correct, '
-     '"זֶה" agrees with "דָּג" and "כּוֹכָב"). The owner approved only the two hints (2026-10-30); this line waits.',
-     r'כֵּן! זֶה הַדָּג הַגָּדוֹל|כֵּן! זֶה הַכּוֹכָב הַקָּטָן'),
-    ('3', r'hints\.2', r'^activity\.b15\.cola05\.', B15 + 'The hint of a tick answer: "לִלְחֹץ עַל הַוִּי" (H7a, the editor) in the pattern of the other hints.',
-     r'לִלְחֹץ עַל הַוִּי'),
-    # 2026-10-30: the owner approved P3-P5, the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints and the COL-A-05
-    # correct lines (OWNER_APPROVED below), so they are no longer pending.
-    # Decided by the owner on 2026-10-29 and so no longer here (hebrew-notes.md D14): nitziHomeWelcome(NoName),
-    # nitziHomeBottleDone, homeBubble, homeBubbleNoName (ROW_RULES, text-ready) and nitziHomeHi (OWNER_APPROVED).
+    # 2026-11-06: the editor read the B-26, B-39 and B-15 part 2 rows that were here (the island, the bottle and land lines, the
+    # screen-reader labels, the fish and star correct line, the tick hint): all `text-ready`, waiting for the owner's approval.
+    # The 20 he.dart strings that arrived with the Languages screens (L1 to L4) were read in the same pass.
 ]
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
@@ -1052,6 +1030,43 @@ ROW_RULES = [
     (r'he\.dart$', r'^homeBubble(NoName)?$', r'', None, '', TR,
      'Q6 (owner 2026-10-29): a name clip per child (parent-reviewed first name, made and cached on the device only, never a '
      'repo file or a bundled pack, SEC-5) joined before the shared clip "מה בבקבוק?"; homeBubbleNoName plays the shared clip alone.'),
+
+    # Editor's second pass, 2026-11-06 (docs/review/hebrew-review-2026-11-06.md). The sources already hold the corrected text
+    # (B-3): these entries only record why a row changed (the `changes` and `comment` columns) and keep it `text-ready`.
+    # The match is on the corrected text, so a regeneration that brings the old text back makes the row differ from the table.
+    (r'he\.dart$', r'^restGoodbye$', 'וְנִשְׂחַק', lambda r, ctx: r['text'],
+     'spelling 2026-11-06: "נִשְׂחַק" (we will play) has the sin dot; "נִשְׁחַק" with the shin dot means "we will be worn down"', TR,
+     'Review 2026-11-06: was וְנִשְׁחַק (shin dot).'),
+    (r'he\.dart$', r'^(trophy|medal)LockedSemantics$', 'זכינו', lambda r, ctx: r['text'],
+     'vocabulary 2026-11-06: "זכינו בו/בה" (we won it), not "הרווחנו" (we profited), the word for money', TR,
+     'Review 2026-11-06: was "שעוד לא הרווחנו".'),
+    (r'he\.dart$', r'^medal(Explainer|BugFixer)How$', 'לִזְכּוֹת בָּהּ', lambda r, ctx: r['text'],
+     'vocabulary 2026-11-06: "לִזְכּוֹת בָּהּ" (to win it), not "לְהַרְוִיחַ" (to profit, a calque of "earn")', TR,
+     'Review 2026-11-06: was "אֶפְשָׁר יִהְיֶה לְהַרְוִיחַ אוֹתָהּ בְּקָרוֹב".'),
+    (r'he\.dart$', r'^courseStoneDoneSemantics$', 'שכבר סיימנו', lambda r, ctx: r['text'],
+     'clarity 2026-11-06: "שיעור שהיה" (a lesson that was) is ambiguous for a screen reader; "שיעור שכבר סיימנו"', TR,
+     'Review 2026-11-06: was "שיעור שהיה".'),
+    (r'^activity\.cs\.wrong\.(wash|teeth)', r'^feedback\.correct', r'^כֵּן! ל(ִרְחִיצַת יָדַיִם|ְצִחְצוּחַ שִׁנַּיִם)', lambda r, ctx: r['text'],
+     'meaning 2026-11-06: "צָרִיךְ" means "needs", so "מִבְרֶשֶׁת לֹא צְרִיכָה לִרְחִיצַת יָדַיִם" said that the brush needs nothing; '
+     'the item is turned round like its hint: "לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִבְרֶשֶׁת" (6 items)', TR,
+     'Review 2026-11-06: the correct line had the subject and the object of "צריך" the wrong way round.'),
+    (r'^activity\.col\.world\.(sun|grass|banana\.ripe)\.json$', r'^(prompt|a11y)', r'מַה צֶּבַע', lambda r, ctx: r['text'],
+     'grammar 2026-11-06: "מַה צֶּבַע הַשֶּׁמֶשׁ?" (the dagesh follows מַה); "אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?" has no verb or "יֵשׁ"', TR,
+     'Review 2026-11-06: was "אֵיזֶה צֶבַע …?".'),
+    (r'^activity\.col\.world\.banana\.json$', r'^hints\.2', r'^זוֹ בָּנָנָה', lambda r, ctx: r['text'],
+     'register 2026-11-06: "זוֹ" (spoken), as in every other line; "זֹאת" is written Hebrew', TR,
+     'Review 2026-11-06: was "זֹאת בָּנָנָה".'),
+    (r'^lesson\.same-and-different(-again)?\.json$', r'^(title|celebration)', r'זֵהֶה', lambda r, ctx: r['text'],
+     'spelling 2026-11-06: "זֵהֶה" (tsere, the Academy and Wiktionary), as "הַזֵּהֶה" already had it; "זֶהֶה" with a segol was a second pointing', TR,
+     'Review 2026-11-06: was "זֶהֶה". The owner-approved title of the B-15 lesson (lesson.same-and-different-again-1-b15) still has the segol: question 1.'),
+    (r'^activity\.x\.mathb19\.\d+\.json$', r'^(prompt|a11y)', r'^בָּעַמּוּד הַגָּבוֹהַּ יֵשׁ יוֹתֵר', lambda r, ctx: r['text'],
+     'register 2026-11-06: "מֵאֲשֶׁר" is written Hebrew; two short spoken sentences', TR,
+     'Review 2026-11-06: was "כַּמָּה יוֹתֵר בָּעַמּוּד הַגָּבוֹהַּ מֵאֲשֶׁר בָּעַמּוּד הַנָּמוּךְ?".'),
+    (r'^activity\.x\.mathb16\.\d+\.json$', r'^feedback\.incorrect\.0', r'^הַמַּטְבֵּעַ גָּדוֹל אוֹ קָטָן', lambda r, ctx: r['text'],
+     'register and rule 2026-11-06: "אֶלָּא" is written Hebrew, and a misconception line names what the eye caught and ends in the strategy without "לֹא" (owner Q2)', TR,
+     'Review 2026-11-06: was "לֹא הַגֹּדֶל אוֹמֵר כַּמָּה הַמַּטְבֵּעַ שָׁוֶה, אֶלָּא הַמִּסְפָּר שֶׁעָלָיו. בּוֹאוּ נִסְתַּכֵּל.".'),
+    (r'^lesson\.mix-colours-more\.json$', r'^title', r'^מָה חָסֵר', lambda r, ctx: r['text'],
+     'pointing 2026-11-06: "מָה" before ח (a guttural keeps the qamats)', TR, 'Review 2026-11-06: was "מַה חָסֵר בַּתַּעֲרוֹבֶת".'),
 ]
 
 

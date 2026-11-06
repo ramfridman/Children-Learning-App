@@ -559,3 +559,29 @@ Scope: the `needs-editor` drafts that the three Band A batches and the design-di
 **Counts.** Voice-text characters: English 52 lines 1,207 (+44; with the 68 glosses 1,667); Russian 40 lines 979 (+41); Hebrew Band A 4,035 (was 4,093: the three rows were counted pointed before they had a voice text). Checks: `tools/check_hebrew_course_words.py --text` on the four files (3,505 Hebrew words; the one note is the teacher's suffix in a grammar remark), `tools/test_hebrew_sources.py` (10 tests, OK).
 
 **Not decided here (the owner, `island-texts.md` §6):** the door line with or without the question, the Hebrew bottle line, the three route names of the Russian stress setting, how the Hebrew "parent check of reading aloud" works (the help text says only what is certain), and the status words of the parent progress page.
+
+## 11. The editor's full pass of 2026-11-06 (owner: "the Hebrew review now, voices later")
+
+Scope and counts, the 38 changed rows with before and after, the 5 questions for the owner and the verification are in
+`docs/review/hebrew-review-2026-11-06.md`. The sources were changed directly (`he.dart`, `content/units/{colours,logic,robots}.json`,
+`tools/band_b2.py`, `tools/band_b3.py`), the pack regenerated with `tools/regen_content.py`, and each change is recorded in
+`ROW_RULES` of `tools/hebrew_voice_review.py` ("Editor's second pass, 2026-11-06"). Everything is `text-ready`, waiting for the owner.
+
+**Rules learned in this pass** (add to sections 2 and 3 when the rules are next folded together):
+
+1. **`צָרִיךְ` is "needs", not "is needed".** `מִבְרֶשֶׁת לֹא צְרִיכָה לִרְחִיצַת יָדַיִם` says the brush needs nothing. Put the purpose first and
+   the thing after, as the hints do: `לִרְחִיצַת יָדַיִם לֹא צְרִיכָה מִבְרֶשֶׁת` (the verb agrees with the thing: `צָרִיךְ סַבּוֹן`, `צְרִיכָה מַגֶּבֶת`).
+2. **A question about a colour or a property of a thing needs a verb or `מַה`**: `מַה צֶּבַע הַשֶּׁמֶשׁ?`, not `אֵיזֶה צֶבַע הַשֶּׁמֶשׁ?`
+   (the dagesh follows `מַה`; `מָה` stays before א ה ח ע ר, as in the lesson title `מָה חָסֵר בַּתַּעֲרוֹבֶת`).
+3. **Sin or shin by the root.** `שׂחק` (play) is a sin everywhere: `לְשַׂחֵק`, `מִשְׂחָק`, `נִשְׂחַק`. A shin dot on it means "worn down". The
+   scan lists every sin-dot word of the table (30 words) and every shin-dot word of a sin root; run it when a verb of play is added.
+4. **Prizes are won, not earned**: `לִזְכּוֹת בָּהּ`, `שֶׁעוֹד לֹא זָכִינוּ בּוֹ`. `לְהַרְוִיחַ` is for money.
+5. **`זֵהֶה`** (tsere) is the one pointing for "identical" (`הַזֵּהֶה`, `זֵהָה`, `זֵהִים`).
+6. **Written words stay out of the pack**: `מֵאֲשֶׁר` (use two short sentences), `אֶלָּא`, `זֹאת` (use `זוֹ`). The register list of the scan: `האם`,
+   `אחרת` (as "otherwise"), `כאשר`, `בלבד`, `אינו`, `אולם`, `עליכם`, `ניתן`, `מאשר`, `אלא`, `זאת`.
+7. **A misconception line has no `לֹא`** (Q2) in all bands: what the eye caught, then the strategy (`הַמַּטְבֵּעַ גָּדוֹל אוֹ קָטָן, אֲבָל כַּמָּה הוּא שָׁוֶה?`).
+   Four lines in the pack still break this rule and wait for the owner (review log, question 2).
+
+**For the app-developer.** Nothing to bring in: the sources hold the corrected text and `tools/test_hebrew_sources.py` passes (pin: 12,777 rows).
+`content/starter` changed in 24 files, so `starter_pack_test` › "the pack was built from the sources" stays red until the owner builds the
+next pack version. **For the voice director.** The 21 changed texts need no direction; the spoken ones are re-voiced from `voice_text`.
