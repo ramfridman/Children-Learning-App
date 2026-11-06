@@ -20,7 +20,7 @@ def bad(msg): problems.append(msg)
 # --- reference sets -------------------------------------------------------
 rus_block = frame.split("<!-- catalogue:rus:start -->")[1].split("<!-- catalogue:rus:end -->")[0]
 catalogue = {m.group(1): m.group(2) for m in re.finditer(r"^\| (M-RUS-[A-Z-]+) \| `([a-z._]+)`", rus_block, re.M)}
-proposed = {"M-RUS-VOWEL-CONS": "rus.pho.vowel_cons", "M-RUS-STROKE": "rus.wri.stroke"}
+proposed = {}  # M-RUS-VOWEL-CONS and M-RUS-STROKE adopted 2026-11-06 (frame §4.6 P3, P4)
 accent = {t for t in catalogue if re.search(rf"^\| {t} \|[^\n]*\| accent \|", rus_block, re.M)}
 skills = set(re.findall(r"^\| RUS-([ABC]-\d\d) ", syl, re.M))
 subskills = set(re.findall(r"`B-(2[46])\.G(\d+)`", syl)) | set(re.findall(r"`B-(2[46])\.G(\d+)`", syl))
@@ -118,6 +118,14 @@ for sk, st in per_skill.items():
     if st["two"] * 2 > st["scored"]: bad(f"{sk}: 2-choice items over half")
 for sk in ("B-18", "B-19"):
     if per_skill[sk]["C"] < 3: bad(f"{sk}: a core skill needs 3 checks")
+# E-1 (writing-mastery §8): intros and traces in the trace node, no check there; the writing node has no trace, its checks are memory items
+for i in items:
+    tm = i["row"].split("|")[0]
+    if ("`intro`" in tm or "`trace`" in tm) and i["skill"] != "B-24.G1": bad(f"{i['id']}: an intro or trace item belongs to the trace node B-24.G1")
+    if i["skill"] == "B-24.G1" and i["mark"]: bad(f"{i['id']}: a trace node has no check or probe")
+    if i["skill"] == "B-26.G1" and i["mark"] == "C" and "`memory`" not in tm: bad(f"{i['id']}: a check of a writing node is a memory item")
+if per_skill["B-26.G1"]["C"] < 1: bad("B-26.G1: a writing node needs a memory check to reach fresh mastery")
+if "`B-18`" not in doc.split("### `RUS-B-26.G1`")[1].split("\n")[1]: bad("B-26.G1: its prerequisites must name B-18, the group's letter skill")
 # tags
 for t in used_tags:
     if t not in catalogue and t not in proposed: bad(f"tag {t} not in the catalogue or the proposed list")

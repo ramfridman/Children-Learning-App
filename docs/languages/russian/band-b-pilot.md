@@ -9,14 +9,14 @@
 
 | Skill | What | Templates | Items |
 |---|---|---|---|
-| RUS-B-18 ● | Letters А У О М (capital and small) whole: shape, sound, name | LS02 `intro` (unscored); LS01 text faces, sound buttons, text stem, **tap-all**, `match_pairs` with text faces | 4 intros + 18 |
-| `RUS-B-24.G1` | Tracing the 8 forms (bundled with B-18) | LS02 `trace` (`guide: start`) | 8 (practice, E-1) |
+| RUS-B-18 ● | Letters А У О М (capital and small) whole: shape, sound, name | LS01 text faces, sound buttons, text stem, **tap-all**, `match_pairs` with text faces | 18 |
+| `RUS-B-24.G1` | The four letter intros, and tracing the 8 forms (bundled with B-18) | LS02 `intro` (unscored); LS02 `trace` (`guide: start`) | 4 intros + 8 (practice, E-1) |
 | `RUS-B-26.G1` | Copy, then write from memory, cued by the sound or the name | LS02 `copy` (`model: beside`), `memory` (`cue: sound | name`) | 12 |
 | RUS-B-19 ● | Merge М with a vowel: ма мо му, and ом; read ма́ма, ау́, му | LS03 1.1 `boxes`; LS04 `merge`; LS01 (d) text stem | 9 |
 
 **Not in the slice:** B-25 (its prerequisites are B-14 and B-20, group 2); LS05 as an item (the Russian strip is B-21, group 3; here it appears only as the level-2 hint of B-19, L5 §5.9); LS06 and LS08 `echo` (RUS-2a and later sub-batches); B-02 and B-07 (RUS-2a; they use LS01 now and LS07 later, owner's Q5, so nothing of them is in this slice).
 
-**The bundle** (frame §3.3.3; L5 E-2). `B-18` and `B-24.G1` open together on B-18's prerequisite (B-12) and count as one new skill in a visit. The four `intro` items come first (А, У on the first visit, О, М on the next), then the facets mix. `B-26.G1` follows as the next skill of the same group (its prerequisite is `B-24.G1`); B-19 follows B-18.
+**The bundle** (frame §3.3.3; L5 E-2). `B-18` and `B-24.G1` open together on B-18's prerequisite (B-12) and count as one new skill in a visit. The four `intro` items come first (А, У on the first visit, О, М on the next), then the facets mix. `B-26.G1` follows as the next skill of the same group (its prerequisites are `B-24.G1`, practised, and `B-18`, the group's letter skill, added 2026-11-06: a memory cue must never ask for a sound or a name the child has not met); B-19 follows B-18.
 
 **Every letter is taught whole** (D16, frame §5.3). Each intro shows the letter big (capital and small), plays its **sound** and a key word with a picture, then its **name** as a separate fact with the syllabus carriers (`קוֹרְאִים לָהּ` + name, `וְהִיא אוֹמֶרֶת` + sound, §3.1, `text-ready`), then the dot walks the path and the child traces once. After the intro the four facets mix: sound → letter, letter → sound, name ↔ letter, letter → picture, plus find the letter in a row and capital ↔ small.
 - **Name = sound for А, У, О** (syllabus §3.1): for these three the name line plays the same clip as the sound (`snd-a` twice), which teaches that a vowel letter says its name. So their name facet is met by their sound items; only **М (эм)** has separate name items (b18.09, b18.10) and a NAME distractor (the name blend "эм-а", the picture э́му).
@@ -39,7 +39,7 @@
 
 **Coverage** (frame §3.3.4, L5 E-3). B-18 is fresh only when every letter of the group is right once without a hint in each facet: sound → letter (b18.01 to .04), letter → sound (.05 to .08), name ↔ letter (М: .09, .10; А У О through their sound items), letter → picture (.11 to .14), capital ↔ small (.18). B-19: ма, мо, му each right once (b19.03 to .05). B-26.G1: every form right once in memory mode (b26g1.05 to .12).
 
-**Writing and rule E-1** (L5 §6, owner's Q1). Trace answers (B-24.G1) are practice: `B-24.G1` counts as met when each of the 8 forms has been traced once with the start dot only (b24g1.01 to .08), and it never blocks. Copy successes count like a level-1 hint; memory successes count in full; `B-26.G1` is fresh only with memory successes on two days, one cued by the sound and one by the name. **For А, У, О the sound and the name are one clip**, so the two cues coincide; I propose that for a name = sound letter the two representations be met by its **two forms** (the capital and the small letter written from memory, on different days). For М the cues are separate (b26g1.11 sound, b26g1.12 name). → curriculum-expert, as part of the E-1 spec (L5-2a).
+**Writing and rule E-1** (L5 §6, owner's Q1; `docs/languages/writing-mastery.md`). Trace answers (B-24.G1) are practice: `B-24.G1` counts as met when each of the 8 forms has been traced once with the start dot only (b24g1.01 to .08), and it never blocks. Copy successes count like a level-1 hint; memory successes count in full; `B-26.G1` is fresh only with memory successes on two days, one cued by the sound and one by the name. **For А, У, О the sound and the name are one clip**, so each has one memory cue, written `sound`; the group meets the name cue through М (b26g1.12). The proposal to count the capital and the small form as the two representations of a name = sound letter was **not taken** (2026-11-06, writing-mastery §3.4): both forms answer the same cue by the same route, so they are two letters for coverage, not two ways of knowing.
 
 **Representations** (frame §3.3.1). B-18: `symbolic` (letter ↔ sound, name, tiles, pairs) and `pictorial` (letter → picture, where the choice is among pictures whose words play on tap). B-19: `symbolic` (the slide and the text stems) and `concrete` (LS03: the syllable laid out as two chips, the analysis the merge is built on, Zhurova's method). B-24.G1, B-26.G1: `embodied`, with E-1's cues as the two representations.
 
@@ -94,7 +94,7 @@ What each line must make clear (for the editor): FB03 and FB04 come before a Rus
 
 ## 3. Misconception tags used in the slice
 
-Kinds, families and engine ids as frame §4.2. The two **proposed** tags (L5 §14 item 3) are new; their rows go to syllabus §11 and the catalogue (curriculum-expert, L5-7). `parentText` and `homeActivity`: the Band A ones are `text-ready`; the others are drafts for the hebrew-text-editor (`needs-editor`; adult text, no nikud, "הילד").
+Kinds, families and engine ids as frame §4.2. The two tags proposed here (L5 §14 item 3) were **adopted on 2026-11-06** (frame §4.6 P3, P4) and are in syllabus §11 and the catalogue. `parentText` and `homeActivity`: the Band A ones are `text-ready`; the others are drafts for the hebrew-text-editor (`needs-editor`; adult text, no nikud, "הילד").
 
 | Tag | Engine id | Kind | Family | Signal in this slice | Level-2 re-teach | parentText | homeActivity | Review |
 |---|---|---|---|---|---|---|---|---|
@@ -106,10 +106,10 @@ Kinds, families and engine ids as frame §4.2. The two **proposed** tags (L5 §1
 | M-RUS-SEM | `rus.lis.sem` | diagnostic | MEANING | a picture of the same theme chosen in a text stem (ба́бушка for ма́ма): the word guessed from its theme, not read | the word read slowly by the voice while the slide lights each part (LS04 as the hint) | (Band A, final) הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות. | (Band A, final) הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו. | text-ready |
 | M-RUS-SYLL | `rus.pho.syll` | diagnostic | SEGMENT | LS03 count one more or one fewer than the sounds (L5 §5.3; see §9 item 4) | the word said slowly, each sound stretched, a hand tapping each box as it sounds | (Band A, final) בספירת חלקי מילה במחיאות כפיים, קורה שהילד מוחא פעם אחת יותר או פחות. | (Band A, final) מחאו כפיים יחד לכל חלק בשמות של צעצועים: ку-кла, ма-ши-на. | text-ready |
 | M-RUS-HARDSOFT | `rus.pho.hardsoft` | diagnostic | CONTRAST | LS03 colour: the hard м coloured green (soft) | the mouth: no smile for the hard м (a wide smile is for the soft one) | (Band A, final) | (Band A, final) | text-ready |
-| **M-RUS-VOWEL-CONS** (proposed) | `rus.pho.vowel_cons` | diagnostic | SEGMENT | LS03 colour: a vowel chip coloured as a consonant (blue or green), or a consonant chip coloured red | "can you sing it?" with the mouth picture (L5 §5.3): а and у are sung with the mouth open and the air free; at м the lips close | הילד עוד מתבלבל בין צליל שאפשר לשיר בפה פתוח (а, у, о) לבין צליל שהפה עוצר בו (м: השפתיים נסגרות). ההבחנה הזאת היא הבסיס לצבעים של תרשים הצלילים. | שירו יחד צליל ארוך: "аааа", "уууу". אחר כך אמרו "ммм", ושימו לב שהשפתיים סגורות. | needs-editor |
-| **M-RUS-STROKE** (proposed) | `rus.wri.stroke` | diagnostic | STROKE | LS02 copy and memory: a stroke started far from its start, drawn the other way, off its guide lines, or the whole letter mirrored (а, У, у) | the stroke drawn slowly once (motion), then the start dot and the arrow of that stroke | הילד כותב את האות כך שאפשר לזהות אותה, אבל מתחיל ממקום אחר, מצייר קו בכיוון ההפוך, או כותב אותה הפוכה כמו במראה. בספרי הכתיבה הרוסיים כותבים אות בחלקים: קודם הקווים מלמעלה למטה, ואחר כך הקווים לרוחב משמאל לימין. | כתבו יחד אות גדולה באצבע, באוויר או בחול, ואמרו את הסדר בקול: "מלמעלה למטה". | needs-editor |
+| **M-RUS-VOWEL-CONS** | `rus.pho.vowel_cons` | diagnostic | SEGMENT | LS03 colour: a vowel chip coloured as a consonant (blue or green), or a consonant chip coloured red | "can you sing it?" with the mouth picture (L5 §5.3): а and у are sung with the mouth open and the air free; at м the lips close | הילד עוד מתבלבל בין צליל שאפשר לשיר בפה פתוח (а, у, о) לבין צליל שהפה עוצר בו (м: השפתיים נסגרות). ההבחנה הזאת היא הבסיס לצבעים של תרשים הצלילים. | שירו יחד צליל ארוך: "аааа", "уууу". אחר כך אמרו "ммм", ושימו לב שהשפתיים סגורות. | needs-editor |
+| **M-RUS-STROKE** | `rus.wri.stroke` | diagnostic | STROKE | LS02 copy and memory: a stroke started far from its start, drawn the other way, off its guide lines, or the whole letter mirrored (а, У, у) | the stroke drawn slowly once (motion), then the start dot and the arrow of that stroke | הילד כותב את האות כך שאפשר לזהות אותה, אבל מתחיל ממקום אחר, מצייר קו בכיוון ההפוך, או כותב אותה הפוכה כמו במראה. בספרי הכתיבה הרוסיים כותבים אות בחלקים: קודם הקווים מלמעלה למטה, ואחר כך הקווים לרוחב משמאל לימין. | כתבו יחד אות גדולה באצבע, באוויר או בחול, ואמרו את הסדר בקול: "מלמעלה למטה". | needs-editor |
 
-**The two proposed tags, for syllabus §11 and the catalogue:**
+**The two tags adopted on 2026-11-06** (now in syllabus §11 and the catalogue, frame §4.2):
 - **M-RUS-VOWEL-CONS**: diagnostic, family SEGMENT (L5 §14 item 3). First skill **B-12** set by hand (its home skill: "tells a vowel from a consonant"), so the engine id is `rus.pho.vowel_cons`. By the §4.1 rule alone the pilot's first use (B-19) would make it `rus.rea.vowel_cons`, and ids are frozen once assigned, so the hand setting must be in the catalogue before this slice is packed. `skills`: B-12, B-14, B-19. Either direction is the same confusion, so it is one tag.
 - **M-RUS-STROKE**: diagnostic, family STROKE. First skill B-26 (its first item, b26g1.01; WRI), engine id `rus.wri.stroke`. It covers start, direction, guide lines and a mirrored letter: Russian has no LINES or MIRROR tag, and one formation tag is enough at this age (the English course splits it in three, the Hebrew course has STROKE and MIRROR). If the curriculum-expert prefers a mirror tag of family SHAPE as Hebrew does (`M-HEB-MIRROR`), mirror moves to a third tag; the items need only the classify map changed. `skills`: B-26, B-24. Trace items (B-24) do not use it: trace keeps today's path check, and a trace answer is practice (E-1).
 
@@ -118,22 +118,13 @@ Kinds, families and engine ids as frame §4.2. The two **proposed** tags (L5 §1
 ## 4. The skills
 
 ### RUS-B-18 ● Group 1 letters А У О М (bundled with `B-24.G1`)
-*Strand LET · prerequisite B-12 · templates: LS02 `intro`; LS01 (a) text faces, (b) a sound per option, (c) sound buttons, (d) text stem, tap-all, `match_pairs` with text faces*
+*Strand LET · prerequisite B-12 · templates (the intros are in `B-24.G1`): LS01 (a) text faces, (b) a sound per option, (c) sound buttons, (d) text stem, tap-all, `match_pairs` with text faces*
 
 | Route | How the skill is served |
 |---|---|
 | New learner | After the letters gate. Teach screens (LS09) for а́ист, о́блако, мак, му́ха, э́му before their first item. Visit 1: i01 А, i02 У, then 01, 02, 05, 06, 11, 12, 16 and the traces of А, а, У, у; visit 2: i03 О, i04 М, then 03, 04, 07 to 10, 13, 14, 17; later visits: 15, 18 and the rest mixed |
 | Heritage | No teach screens; the same order, two intros a visit, more items a visit |
 | Reader | Probes first (b18.04); if served, as heritage |
-
-**Intros** (LS02 `intro`, unscored, the worked example of the bundle; frame §5.3, L5 §5.2). Each intro: FB01 (the letter big, capital and small) → FB02 (each form lights) → FB03 + the sound clip → FB04 + the key word with its first sound held, its picture shown → F-NAME + the name clip → F-SAYS + the sound clip → FB05 (the dot walks the capital's path) → FB06 (one trace of the capital with the full guide). Response: nothing scored, nothing written.
-
-| Item | Template · mode | Form traced | Sound | Key word (picture) | Name | Notes |
-|---|---|---|---|---|---|---|
-| `rus.b18.i01` | LS02 `intro` | `cyrillic.a.cap` | `snd-a` | `sf-aist` а́ист `pic.stork` | `snd-a` (а: name = sound) | the stressed first а of а́ист is the letter's sound |
-| `rus.b18.i02` | LS02 `intro` | `cyrillic.u.cap` | `snd-u` | `sf-utka` у́тка `pic.duck` | `snd-u` (у) | |
-| `rus.b18.i03` | LS02 `intro` | `cyrillic.o.cap` | `snd-o` | `sf-oblako` о́блако `pic.cloud` | `snd-o` (о) | о́блако, not окно́ or оса́: their first о is unstressed, said [ɐ] |
-| `rus.b18.i04` | LS02 `intro` | `cyrillic.em.cap` | `snd-m` | `sf-mysh` мышь `pic.mouse` | `ln-em` (эм) | name ≠ sound: F-NAME + эм, F-SAYS + ммм. мышь, not мяч or мёд (soft м) |
 
 **Items.**
 
@@ -163,7 +154,17 @@ Kinds, families and engine ids as frame §4.2. The two **proposed** tags (L5 §1
 **Mastery and notes.** Core: 6 correct over 2 days, 3 checks (03, 15, 16), at least 2 representations (`symbolic`; `pictorial` in 11 to 15). Coverage per facet as §1. 2-choice items 05 to 07: 3 of 18, never a check. `revisitWith` SHAPE pairs.
 
 ### `RUS-B-24.G1` Tracing А а У у О о М м (bundled with B-18)
-*Strand WRI · no prerequisite inside the bundle · template: LS02 `trace` 2.0, letter canvas, three guide lines with the descender (у)*
+*Strand WRI · no prerequisite inside the bundle · templates: LS02 `intro` (the four intros); LS02 `trace` 2.0, letter canvas, three guide lines with the descender (у)*
+
+**Intros** (LS02 `intro`, unscored, the worked example of the bundle; frame §5.3, L5 §5.2). Filed under the trace node `B-24.G1` since 2026-11-06 (an `intro` names its group's trace node, because it carries the group's first trace: writing-mastery §8 rule 1); they open the whole bundle, `B-18` with `B-24.G1`, and come first in it (E-2). Each intro: FB01 (the letter big, capital and small) → FB02 (each form lights) → FB03 + the sound clip → FB04 + the key word with its first sound held, its picture shown → F-NAME + the name clip → F-SAYS + the sound clip → FB05 (the dot walks the capital's path) → FB06 (one trace of the capital with the full guide). Response: nothing scored, nothing written.
+
+| Item | Template · mode | Form traced | Sound | Key word (picture) | Name | Notes |
+|---|---|---|---|---|---|---|
+| `rus.b24g1.i01` | LS02 `intro` | `cyrillic.a.cap` | `snd-a` | `sf-aist` а́ист `pic.stork` | `snd-a` (а: name = sound) | the stressed first а of а́ист is the letter's sound |
+| `rus.b24g1.i02` | LS02 `intro` | `cyrillic.u.cap` | `snd-u` | `sf-utka` у́тка `pic.duck` | `snd-u` (у) | |
+| `rus.b24g1.i03` | LS02 `intro` | `cyrillic.o.cap` | `snd-o` | `sf-oblako` о́блако `pic.cloud` | `snd-o` (о) | о́блако, not окно́ or оса́: their first о is unstressed, said [ɐ] |
+| `rus.b24g1.i04` | LS02 `intro` | `cyrillic.em.cap` | `snd-m` | `sf-mysh` мышь `pic.mouse` | `ln-em` (эм) | name ≠ sound: F-NAME + эм, F-SAYS + ммм. мышь, not мяч or мёд (soft м) |
+
 
 | Item | Template · mode | Form | Guide | Frame → Russian clip | Classify | Routes | Notes |
 |---|---|---|---|---|---|---|---|
@@ -181,7 +182,7 @@ Kinds, families and engine ids as frame §4.2. The two **proposed** tags (L5 §1
 **Mastery and notes.** Trace answers are practice (E-1). The node counts as met ("practised") when each of the 8 forms has been traced once with the start dot only; it never blocks. The capital's first trace with the full guide is in its intro; a small form's full guide is hint level 3. Response: `ok`, or the stroke number.
 
 ### `RUS-B-26.G1` Copy, then write from memory
-*Strand WRI · prerequisite `B-24.G1` · templates: LS02 `copy` (`model: beside`), LS02 `memory`; the free-stroke check at the end of each stroke (L5 §5.2)*
+*Strand WRI · prerequisites `B-24.G1` (practised) and `B-18` (the group's letter skill; writing-mastery §11) · a writing node, after the bundle · templates: LS02 `copy` (`model: beside`), LS02 `memory`; the free-stroke check at the end of each stroke (L5 §5.2)*
 
 Every item's classify map: start, direction, lines → M-RUS-STROKE; mirror (only for the forms that are not symmetric: а, У, у) → M-RUS-STROKE; partners → M-RUS-SHAPE as listed. А О М о м are their own mirror images, so they have no mirror classifier. Anything else is a retry with no tag.
 
@@ -194,7 +195,7 @@ Every item's classify map: start, direction, lines → M-RUS-STROKE; mirror (onl
 | `rus.b26g1.05` | LS02 `memory` | `cyrillic.a.cap` | sound (= name) | FB15 → `snd-a` | `cyrillic.el.cap` (M-RUS-SHAPE) | NHR | А without its bar (thin, §9 item 6) |
 | `rus.b26g1.06` | LS02 `memory` | `cyrillic.a` | sound (= name) | FB16 → `snd-a` | — | NHR | mirror → M-RUS-STROKE |
 | `rus.b26g1.07` | LS02 `memory` | `cyrillic.u.cap` | sound (= name) | FB15 → `snd-u` | `cyrillic.che.cap` (M-RUS-SHAPE) | NHR | mirror → M-RUS-STROKE |
-| `rus.b26g1.08` | LS02 `memory` | `cyrillic.u` | sound (= name) | FB16 → `snd-u` | `cyrillic.che` (M-RUS-SHAPE) | NHR | mirror → M-RUS-STROKE |
+| `rus.b26g1.08` C | LS02 `memory` | `cyrillic.u` | sound (= name) | FB16 → `snd-u` | `cyrillic.che` (M-RUS-SHAPE) | NHR | mirror → M-RUS-STROKE |
 | `rus.b26g1.09` | LS02 `memory` | `cyrillic.o.cap` | sound (= name) | FB15 → `snd-o` | `cyrillic.es.cap` (M-RUS-SHAPE) | NHR | |
 | `rus.b26g1.10` | LS02 `memory` | `cyrillic.o` | sound (= name) | FB16 → `snd-o` | `cyrillic.es` (M-RUS-SHAPE) | NHR | |
 | `rus.b26g1.11` | LS02 `memory` | `cyrillic.em.cap` | sound | FB15 → `snd-m` | — | NHR | the sound cue of М |
@@ -202,7 +203,7 @@ Every item's classify map: start, direction, lines → M-RUS-STROKE; mirror (onl
 
 **Hint ladder.** 1: the start dot and the arrow of the stroke the child is on. 2: that stroke drawn slowly once, then the box clears (FB25; a new representation: motion). 3: this item as a trace with the start dot (FB26). After a success the model replays once in its order (order is not scored, owner's Q2).
 
-**Mastery and notes.** E-1: copy successes count like a level-1 hint, memory successes in full; fresh only with memory successes on two days, one with each cue. For А У О the sound and the name are one clip: I propose the capital and the small form as their two representations (§1, §9 item 2). Coverage: each form right once in memory (05 to 12). Response: `ok`, or the stroke number and the classifier (`s2.dir`); the child's points live only in the session.
+**Mastery and notes.** E-1: copy successes count like a level-1 hint, memory successes in full; fresh only with memory successes on two days, one with each cue. For А У О the sound and the name are one clip, so each has one cue, `sound`; the group's name cue is М's (12); the capital and the small form are separate letters for coverage (§1). **Check:** 08 (у, cued by its sound, with Ч as the partner: a confusable letter), a memory item, as every check of a writing node is (added 2026-11-06 so that the node can reach fresh mastery). Coverage: each form right once in memory (05 to 12). Response: `ok`, or the stroke number and the classifier (`s2.dir`); the child's points live only in the session.
 
 ### RUS-B-19 ● Merge: ма мо му (and ом); first reading
 *Strand REA · prerequisite B-18 · templates: LS03 1.1 `boxes` (unit `phoneme`; steps count, colour, which); LS04 `merge`; LS01 (d) text stem*
@@ -220,7 +221,7 @@ Every item's classify map: start, direction, lines → M-RUS-STROKE; mirror (onl
 | `rus.b19.01` | LS03 `boxes`, `phoneme` | FB18, FB19, FB20 → `snd-m` | му `pic.cow` · `w-mu` · `sl-mu` | м `snd-m` hard · у `snd-u` vowel | count, colour, which (м) | `n=2.c=br.w=1` | count ±1 → M-RUS-SYLL; a vowel coloured as a consonant or the reverse → M-RUS-VOWEL-CONS; м coloured green → M-RUS-HARDSOFT; the end box for [м] → M-RUS-NOTFIRST | NHR |
 | `rus.b19.02` | LS03 `boxes`, `phoneme` | FB18, FB19, FB20 → `snd-a` | ам `pic.act.eat` · `w-am` · `sl-am` | а `snd-a` vowel · м `snd-m` hard | count, colour, which (а) | `n=2.c=rb.w=1` | as 01; the end box for [а] → M-RUS-NOTFIRST | NHR |
 
-**LS04 `merge` (`symbolic`): slide, then choose the syllable heard.** The consonant tile slides to the vowel tile while the voice holds м ("ммм…"), and as they meet the merged syllable sounds (for ом, the vowel is held into м). The slide is practice; the choice from three sound buttons is scored. If a part has no clean clip of its own (the D2 pilot), the stretched whole (`mg-*`) plays while the parts light (L5 §5.5).
+**LS04 `merge` (`symbolic`): slide, then choose the syllable heard.** The consonant tile slides to the vowel tile while the voice holds м ("ммм…"), then the vowel sounds (for ом, the vowel is held into м). The slide is practice; the choice from three sound buttons is scored. **The merged syllable (`syl-*`) sounds after the choice, not before** (L5 §5.5, decided 2026-11-06): heard first, the choice would only match a clip, and its NAME and RTL distractors would show no reading error; teaching screens and level 3 keep the merge. If a part has no clean clip of its own (the D2 pilot), the parts light in silence and the stretched whole (`mg-*`) is the level-1 replay.
 
 | Item | Template · mode | Frame → Russian clip | Word (shown) | Parts (clip · stretch) | Whole · stretched | Right | Distractors (tag) | Routes |
 |---|---|---|---|---|---|---|---|---|
@@ -332,7 +333,7 @@ Before voicing, the listening check (pronunciation-spec §4) is mine for every c
 
 ## 9. Open points (to the curriculum-expert, through the orchestrator)
 1. **Untaught look-alikes as SHAPE distractors** (Л Д С Ч Н И in b18.01 to .04, .09, .16, .17): the validator's F5 decodable check must not refuse a single letter tile in a LET skill. If it must, these items take a group-1 letter instead and lose the SHAPE signal.
-2. **E-1 for letters whose name is their sound** (А У О, and later Ы И Е Ё Ю Я Э): the two cues are one clip. Proposed: the two representations are the capital and the small form, each written from memory, on different days.
+2. **E-1 for letters whose name is their sound** (А У О, and later Ы И Е Ё Ю Я Э). **Answered 2026-11-06** (writing-mastery §3.4): one memory cue, `sound`, for such a letter; the cue condition is met across the group through a letter whose name differs (М here); the two-forms proposal is not taken.
 3. **M-RUS-NAME in the other direction** (b18.10: the sound ммм chosen when the name is asked): the tag's signal names only "the name for the sound". Proposed: widen it to "the name and the sound mixed up, either way" (same family, same re-teach: both lines said). No new tag.
 4. **M-RUS-SYLL for a phoneme count** (LS03 in `phoneme` units, b19.01, .02): L5 §5.3 maps any count ±1 to M-RUS-SYLL, whose signal and parent text speak of syllables. Proposed: widen its signal to "one unit more or fewer, syllables or sounds"; the hebrew-text-editor adds one sentence to its `parentText` ("…או צליל אחד יותר או פחות במילה").
 5. **The first skill of M-RUS-VOWEL-CONS** set by hand to B-12 (§3), before the pack is built, so the frozen id is `rus.pho.vowel_cons`.
@@ -343,17 +344,17 @@ Before voicing, the listening check (pronunciation-spec §4) is mine for every c
 
 | Skill | Items | Scored | Checks (C) | 2-choice |
 |---|---|---|---|---|
-| RUS-B-18 ● (with the 4 intros) | 22 | 18 | 3 | 3 |
-| `RUS-B-24.G1` | 8 | 0 (practice, E-1) | 0 | 0 |
-| `RUS-B-26.G1` | 12 | 12 (copy counts as a level-1 hint) | 0 | 0 |
+| RUS-B-18 ● | 18 | 18 | 3 | 3 |
+| `RUS-B-24.G1` (with the 4 intros) | 12 | 0 (intros and practice traces, E-1) | 0 | 0 |
+| `RUS-B-26.G1` | 12 | 12 (copy counts as a level-1 hint) | 1 | 0 |
 | RUS-B-19 ● | 9 | 9 | 3 | 0 |
-| **Total** | **51** | **39** | **6** | **3** |
+| **Total** | **51** | **39** | **7** | **3** |
 
-The checks and figures below are from the script run on this file (`check_band_b_pilot.py`, run on 2026-11-06; it is not in the repository, and the catalogue test of L5-7 is where it belongs). It reads this file, `syllabus.md` (skills and sub-skills), frame §4.2 (the `catalogue:rus` block), `pronunciation.csv`, `content/languages/strokes/cyrillic.json` and the Band A batch's pictures, and checks: every skill, tag, clip, form, picture and frame line exists; the two proposed tags and their engine ids are new; each 3-choice item has 2 tagged distractors and each 2-choice item 1, 2-choice items at most half of a skill and never a check; core skills have 3 checks; the LS03 answers match their units; the LS04 parts join to the word; Russian text is pure Cyrillic (no Latin look-alike, also as a lone letter); no stress mark on screen or on ё. It was tested on a mutated copy (an unknown tag, a Latin O tile, a missing clip, a stress mark on a shown syllable): it caught all four.
+The checks and figures below are from the script run on this file (`tools/pilot_rus_band_b_check.py`, re-run on 2026-11-06 after the E-1 changes; the catalogue test of L5-7 is where it belongs). Since 2026-11-06 it also checks E-1: intros and traces sit in the trace node `B-24.G1`, which has no check; `B-26.G1` names `B-18` as a prerequisite and has a memory check, and every check there is a memory item. It reads this file, `syllabus.md` (skills and sub-skills), frame §4.2 (the `catalogue:rus` block), `pronunciation.csv`, `content/languages/strokes/cyrillic.json` and the Band A batch's pictures, and checks: every skill, tag, clip, form, picture and frame line exists; the two proposed tags and their engine ids are new; each 3-choice item has 2 tagged distractors and each 2-choice item 1, 2-choice items at most half of a skill and never a check; core skills have 3 checks; the LS03 answers match their units; the LS04 parts join to the word; Russian text is pure Cyrillic (no Latin look-alike, also as a lone letter); no stress mark on screen or on ё. It was tested on a mutated copy (an unknown tag, a Latin O tile, a missing clip, a stress mark on a shown syllable): it caught all four.
 
 <!-- script-results:start -->
-- Items: 51 (B-18 22, B-24.G1 8, B-26.G1 12, B-19 9); scored 39; checks 6; probes 2; 2-choice 3.
-- Tags used: 10 (M-RUS-HARDSOFT, M-RUS-NAME, M-RUS-NOTFIRST, M-RUS-RTL, M-RUS-SEM, M-RUS-SHAPE, M-RUS-SOUND, M-RUS-STROKE, M-RUS-SYLL, M-RUS-VOWEL-CONS); in the catalogue: 8; proposed: ['M-RUS-STROKE', 'M-RUS-VOWEL-CONS']; accent tags on items: 0.
+- Items: 51 (B-18 18, B-24.G1 12, B-26.G1 12, B-19 9); scored 39; checks 7; probes 2; 2-choice 3.
+- Tags used: 10 (M-RUS-HARDSOFT, M-RUS-NAME, M-RUS-NOTFIRST, M-RUS-RTL, M-RUS-SEM, M-RUS-SHAPE, M-RUS-SOUND, M-RUS-STROKE, M-RUS-SYLL, M-RUS-VOWEL-CONS); in the catalogue: 10; proposed: []; accent tags on items: 0.
 - Skills: ['RUS-B-18', 'RUS-B-19', 'RUS-B-24.G1', 'RUS-B-26.G1'], all in the syllabus (B-24.G1 and B-26.G1 as its sub-skills).
 - Stroke forms: 13 distinct (cyrillic.a, cyrillic.a.cap, cyrillic.che, cyrillic.che.cap, cyrillic.el.cap, cyrillic.em, cyrillic.em.cap, cyrillic.es, cyrillic.es.cap, cyrillic.o, cyrillic.o.cap, cyrillic.u, cyrillic.u.cap), all in `cyrillic.json` (`teacher-checked`).
 - Clips: 41 distinct used; 32 new rows in §8, none already in `pronunciation.csv`, each used; 9 reused (snd-a, snd-m, syl-ma, w-dom, w-kot, w-mama, w-mysh, w-nos, w-utka); referenced but in no table: [].

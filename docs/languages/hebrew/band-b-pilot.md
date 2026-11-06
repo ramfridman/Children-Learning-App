@@ -1,7 +1,7 @@
 # The Hebrew course: Band B pilot slice (HEB-2 pilot, L5 step L5-2c)
 
 Owner: hebrew-language-teacher. Date: 2026-11-06. Status: **draft**. Every new Hebrew line, word and parent text below is `"review": "needs-editor"` (the hebrew-text-editor makes it final); rows marked **(tr)** reuse text that is already `text-ready` (the syllabus lists, the Band A batch, the editor's cues in `hebrew-notes.md` §8.6, the letter names in `voice-brief.md` §2). Nothing is built, drawn or voiced (voices come later: owner, 2026-11-06; every line is written with its clip id and is listed as pending).
-Plan: `docs/milestones/L5.md` §8 (the pilot slice: `B-14.S1`, `B-15.S1`, `B-24.S1` to `B-26.S1`, `B-19`, `B-20`), approved by the owner on 2026-11-06 with every recommendation. Skills: `syllabus.md` §3 (step S1) and §6.2. Templates: L5 §5 (LS01 rest, LS02 2.0, LS05 1.0, LS06 1.0, and LS04 and LS05 as hints, §5.9). Tags: `syllabus.md` §5 and `frame.md` §4.2. Strokes: `content/languages/strokes/hebrew-print.json` (`teacher-checked`). Format: `band-a-content.md`.
+Plan: `docs/milestones/L5.md` §8 (the pilot slice: `B-14.S1`, `B-15.S1`, `B-24.S1`, `B-26.S1` (B-25.S1 was merged into it by rule E-1, 2026-11-06), `B-19`, `B-20`), approved by the owner on 2026-11-06 with every recommendation. Skills: `syllabus.md` §3 (step S1) and §6.2. Templates: L5 §5 (LS01 rest, LS02 2.0, LS05 1.0, LS06 1.0, and LS04 and LS05 as hints, §5.9). Tags: `syllabus.md` §5 and `frame.md` §4.2. Strokes: `content/languages/strokes/hebrew-print.json` (`teacher-checked`). Format: `band-a-content.md`.
 
 ## 0. The rules this slice keeps
 
@@ -23,8 +23,8 @@ Plan: `docs/milestones/L5.md` §8 (the pilot slice: `B-14.S1`, `B-15.S1`, `B-24.
 | Letters | 7 letters and 1 final form: **מ ל שׁ ר א בּ ת**, and **ם** | the whole of S1 (`syllabus.md` §3) |
 | Order of introduction | מ, ל, שׁ, ר (continuants, heard alone), then א (carries the vowel), then בּ, ת (stops, heard inside בָּ, תָּ), then ם | continuants first (syllabus §3 aims); א before the stops, because אָ is the purest "the sign says a"; ם last, just before the first word that ends in it |
 | Teaching screens (unscored) | 9: 8 LS02 `intro`, 1 LS05 `explore` | one introduction per letter (D16); the S1 wheel is the step's teaching screen (frame LS05) |
-| Scored items | **43**: B-14.S1 6 · B-15.S1 7 · B-24.S1 9 · B-25.S1 3 · B-26.S1 5 · B-19 6 · B-20 7 | about 40 (L5 §8). The three over: 7 letters and ם need one start-dot trace each before `B-24.S1` is "practised" (E-1), and every letter needs one name item and one sound item for set coverage (frame §3.3.4) |
-| Checks (C) | 9 | at least one per skill node; B-19 and B-20 two each |
+| Scored items | **34**: B-14.S1 6 · B-15.S1 7 · B-26.S1 8 · B-19 6 · B-20 7; and **9 practice traces** (B-24.S1, a trace node: practice under E-1) | about 40 (L5 §8). The 7 letters and ם need one start-dot trace each before `B-24.S1` is "practised" (E-1), and every letter needs one name item and one sound item for set coverage (frame §3.3.4) |
+| Checks (C) | 7 | at least one per node except the trace node `B-24.S1`, which has none (E-1); B-19 and B-20 two each |
 | Lessons | 7 visits (§7) | |
 | New pictures | 9, plus 4 mirrored letters (§8) | |
 
@@ -111,12 +111,11 @@ All new lines are `needs-editor` drafts; **(tr)** lines exist and are `text-read
 
 | Tag | Clip | Line |
 |---|---|---|
-| LETTER-MIX (proposed, §10) | `heb-b-d-letter-mix` | בּוֹאוּ נִפְגֹּשׁ שׁוּב אֶת שְׁתֵּי הָאוֹתִיּוֹת. |
+| LETTER-MIX (adopted, frame §4.6 P1) | `heb-b-d-letter-mix` | בּוֹאוּ נִפְגֹּשׁ שׁוּב אֶת שְׁתֵּי הָאוֹתִיּוֹת. |
 | MIRROR (tr, §8.6) | `heb-b-d-mirror` | הַפֶּתַח שֶׁל הָאוֹת פּוֹנֶה לְאָן שֶׁהַקְּרִיאָה נִמְשֶׁכֶת. |
 | NAMESOUND | `heb-b-ns-name` + name, `heb-b-ns-sound` + sound | "הַשֵּׁם הוּא: מֵם. וְהַצְּלִיל הוּא: מְמְמ." (for א: `heb-b-ns-alef`) |
 | VOWEL-SKIP | `heb-b-d-vowel-skip` | הִסְתַּכְּלוּ גַּם עַל הַסִּימָן שֶׁמִּתַּחַת לָאוֹת. |
-| BLEND-FIRST (reading) | `heb-b-d-read-end` | קִרְאוּ עַד הַסּוֹף. |
-| BLEND-LAST (reading) | `heb-b-d-read-start` | קִרְאוּ מֵהַהַתְחָלָה. |
+| READ-PART (adopted, frame §4.6 P2) | `heb-b-d-read-whole` | קראו את כל המילה, מההתחלה ועד הסוף. (a curriculum-expert draft, unpointed, for the editor: it replaces the teacher's two lines "read to the end" and "read from the start") |
 | SEM-READ | `heb-b-d-sem-read` | זֶה מַתְאִים. בּוֹאוּ נִקְרָא שׁוּב, חֵלֶק אַחַר חֵלֶק. |
 | CV-FOR-C | `heb-a-d-plural` (tr) + the final sound | "שִׁמְעוּ אֶת הַסּוֹף: רְרְר." |
 | ORDER, STROKE | `heb-a-d-start` (tr) | מַתְחִילִים כָּאן. |
@@ -176,7 +175,7 @@ Set coverage: ל (.1), ר (.2), שׁ (.3), ת (.4), א (.5), בּ (.6), מ (.7).
 
 ### 5.4 HEB-B-24.S1 Traces the S1 letters with the right start and direction (WR)
 
-**Template:** LS02 `trace` 2.0, `canvas: letter`, `guide: start` (the full guide is the introduction's trace, §5.1); the check is a `word` canvas. **Met when practised** (E-1): each letter of the group traced once with the start dot only (.1 to .8). Classifiers (`classify`): `start` and `direction` → `M-HEB-STROKE`; `mirror` → `M-HEB-MIRROR` (off for ם); `partners` as listed. Feedback only at the end of a stroke; a stroke that misses fades softly and the start dot returns, never red.
+**Template:** LS02 `trace` 2.0, `canvas: letter`, `guide: start` (the full guide is the introduction's trace, §5.1); .9 is a `word` canvas. **A trace node** (`writing: practised`, E-1): met once each letter of the group is traced once with the start dot only, at hint level 0 or 1 (.1 to .8); never mastered, probed or checked, and it never blocks. Classifiers (`classify`): `start` and `direction` → `M-HEB-STROKE`; `mirror` → `M-HEB-MIRROR` (off for ם); `partners` as listed. Here they only choose the feedback line: every answer of a trace node is practice, never misconception evidence. Feedback only at the end of a stroke; a stroke that misses fades softly and the start dot returns, never red.
 
 | Item | Template | Prompt | Target form | `partners` (classifier → tag) | Rep |
 |---|---|---|---|---|---|
@@ -188,40 +187,36 @@ Set coverage: ל (.1), ר (.2), שׁ (.3), ת (.4), א (.5), בּ (.6), מ (.7).
 | B-24.6 P | trace, start dot | `heb-b-i-write-trace` + `heb-b-n-bet` | `hebrew-print.bet` | `hebrew-print.kaf` [SHAPE-BK] | emb |
 | B-24.7 P | trace, start dot | `heb-b-i-write-trace` + `heb-b-n-tav` | `hebrew-print.tav` | `hebrew-print.het` [SHAPE-HXT] | emb |
 | B-24.8 P | trace, start dot; `mirror` off | `heb-b-i-write-trace` + `heb-b-n-mem-final` | `hebrew-print.mem-final` | `hebrew-print.samekh` [SHAPE-SM] | emb |
-| B-24.9 C | trace, start dot, `canvas: word`, 3 boxes right to left; the word shown pointed above the boxes | `heb-b-i-write-trace` + `heb-b-w-shabat` | `hebrew-print.shin`, `hebrew-print.bet`, `hebrew-print.tav` (the word `txt:שַׁבָּת`; nikud and dots are not traced) | as .3, .6, .7 | emb |
+| B-24.9 P | trace, start dot, `canvas: word`, 3 boxes right to left; the word shown pointed above the boxes | `heb-b-i-write-trace` + `heb-b-w-shabat` | `hebrew-print.shin`, `hebrew-print.bet`, `hebrew-print.tav` (the word `txt:שַׁבָּת`; nikud and dots are not traced) | as .3, .6, .7 | emb |
 
-The check (.9) is the syllabus's "the group's letters in a mixed order", inside a real word the child reads in B-20.
+Item .9 (the check before E-1) is the syllabus's "the group's letters in a mixed order", inside a real word the child reads in B-20; a trace node has no check, so it is practice.
 **Hint ladder** (templates.md §3). (1) The start dot pulses and the arrow of the stroke the child is on shows the way; diagnostic STROKE `heb-a-d-start`; MIRROR `heb-b-d-mirror`; a partner classifier `heb-b-d-shape-look`, with the part that makes the letter lit. (2) The stroke is drawn slowly once, then the box clears (motion: a new representation). (3) The full guide (trace with the dotted path), and the child traces.
 
-### 5.5 HEB-B-25.S1 Copies an S1 letter from a model (WR)
+### 5.5 HEB-B-25.S1: retired (merged into B-26.S1)
 
-**Template:** LS02 `copy`, `model: beside`, then `model: hide`. Copy-mode successes count like a level-1 hint (E-1). **Check:** a letter whose mirror is a common reversal, with `model: hide` (the syllabus's check, tag M-HEB-MIRROR).
+`HEB-B-25` was merged into `HEB-B-26` on 2026-11-06 (rule E-1, approved by the owner): a skill fed only by copies could never be mastered, since a copy is never a success under E-1. Its three copy items are now B-26.1 to B-26.3 (§5.6), and its confusable-letter check is a memory item there (B-26.8). The section number is kept so that the references to §5.6 stay right.
 
-| Item | Template | Prompt | Target form | `partners` | Rep |
-|---|---|---|---|---|---|
-| B-25.1 P | copy, `model: beside` | `heb-b-i-copy` | `hebrew-print.lamed` | none | emb |
-| B-25.2 P | copy, `model: hide` | `heb-b-i-copy-hide` | `hebrew-print.bet` | `hebrew-print.kaf` [SHAPE-BK] | emb |
-| B-25.3 C | copy, `model: hide` | `heb-b-i-copy-hide` | `hebrew-print.resh` | `hebrew-print.dalet` [SHAPE-DR] | emb |
+### 5.6 HEB-B-26.S1 Copies an S1 letter, then writes it from memory for a heard sound or name (WR)
 
-Classifiers as B-24 (`start`, `direction` → STROKE; `mirror` → MIRROR; the partners).
-**Hint ladder.** As B-24: (1) the start dot and arrow, with the tag's line; (2) the stroke drawn slowly once in the model box, then cleared; (3) trace mode for this item.
-
-### 5.6 HEB-B-26.S1 Writes the S1 letter for a heard sound or name, from memory (WR)
-
-**Template:** LS02 `memory`, no model; `cue: sound | name`. Memory-mode successes count in full; fresh mastery needs a sound-cued and a name-cued success on two days (E-1). The pilot gives each letter one cue, alternating; HEB-2b adds the other cue for every letter, and the items for א, בּ and ם.
+**Template:** LS02 `copy` (`model: beside`, then `model: hide`), then LS02 `memory`, no model, `cue: sound | name`. A writing node (`writing: memory`, E-1, `docs/languages/writing-mastery.md`), after the bundle: prerequisites `B-24.S1` (practised), `B-14.S1` (the name cue needs the names) and `B-15.S1`. A copy counts like a level-1 hint (never a success); a memory success counts in full; fresh mastery needs memory successes on two days, one cued by the sound and one by the name. **Checks are memory items** (a copy is never a check): B-26.8 is both kinds the syllabus asks for, a letter not practised that day and a confusable letter (ר, whose mirror and whose look-alike ד are the common errors, `M-HEB-MIRROR`, `M-HEB-SHAPE-DR`). The pilot gives each letter one memory cue, alternating; HEB-2b adds the other cue for every letter, and the items for א, בּ and ם.
 
 | Item | Template | Prompt | Target form | `partners` | Rep |
 |---|---|---|---|---|---|
-| B-26.1 P | memory, `cue: sound` | `heb-b-i-mem-sound` + `heb-b-s-mem` | `hebrew-print.mem` | `hebrew-print.tet` [SHAPE-TM] | emb |
-| B-26.2 P | memory, `cue: name` | `heb-b-i-mem-name` + `heb-b-n-lamed` | `hebrew-print.lamed` | none | emb |
-| B-26.3 P | memory, `cue: sound` | `heb-b-i-mem-sound` + `heb-b-s-shin` | `hebrew-print.shin` | none | emb |
-| B-26.4 P | memory, `cue: name` | `heb-b-i-mem-name` + `heb-b-n-tav` | `hebrew-print.tav` | `hebrew-print.het` [SHAPE-HXT] | emb |
-| B-26.5 C | memory, `cue: sound` (a letter not practised that day) | `heb-b-i-mem-sound` + `heb-b-s-resh` | `hebrew-print.resh` | `hebrew-print.dalet` [SHAPE-DR] | emb |
+| B-26.1 P | copy, `model: beside` | `heb-b-i-copy` | `hebrew-print.lamed` | none | emb |
+| B-26.2 P | copy, `model: hide` | `heb-b-i-copy-hide` | `hebrew-print.bet` | `hebrew-print.kaf` [SHAPE-BK] | emb |
+| B-26.3 P | copy, `model: hide` | `heb-b-i-copy-hide` | `hebrew-print.resh` | `hebrew-print.dalet` [SHAPE-DR] | emb |
+| B-26.4 P | memory, `cue: sound` | `heb-b-i-mem-sound` + `heb-b-s-mem` | `hebrew-print.mem` | `hebrew-print.tet` [SHAPE-TM] | emb |
+| B-26.5 P | memory, `cue: name` | `heb-b-i-mem-name` + `heb-b-n-lamed` | `hebrew-print.lamed` | none | emb |
+| B-26.6 P | memory, `cue: sound` | `heb-b-i-mem-sound` + `heb-b-s-shin` | `hebrew-print.shin` | none | emb |
+| B-26.7 P | memory, `cue: name` | `heb-b-i-mem-name` + `heb-b-n-tav` | `hebrew-print.tav` | `hebrew-print.het` [SHAPE-HXT] | emb |
+| B-26.8 C | memory, `cue: sound` (a letter not practised that day; a confusable letter) | `heb-b-i-mem-sound` + `heb-b-s-resh` | `hebrew-print.resh` | `hebrew-print.dalet` [SHAPE-DR] | emb |
+
+Classifiers in every item: `start`, `direction` → STROKE; `mirror` → MIRROR (off for ם); the partners as listed. B-26.1 to .3 were B-25.1 to .3; B-26.4 to .8 were B-26.1 to .5.
 
 - **The sound cue of a stop is its CV unit** (`heb-b-u-ba`, `heb-b-u-ta`): the child writes the letter, not the sign. The memory item for בּ (HEB-2b) says so in its row.
-- **א has no sound cue** (it has no sound of its own). Proposed (to the curriculum-expert, §16): for א the second E-1 cue is the key word, "the letter at the start of אַרְנָב" (a sound-based cue), instead of a bare sound.
+- **א has no sound cue** (it has no sound of its own): it is cued by its name only. The cue condition of E-1 is met across the group (a sound-cued success of another letter and a name-cued success on another day), so א needs no second cue (writing-mastery §3.4, answering the proposal of a key-word cue "the letter at the start of אַרְנָב"). Such an item may stay as an extra, written `cue: sound` with the key-word clip, only while no other letter met can open that word's sound; from S5 on, ע does, so it must then list ע as its partner.
 
-**Hint ladder.** (1) The start dot of the first stroke appears with its arrow (the cue clip again); diagnostic STROKE `heb-a-d-start`; MIRROR `heb-b-d-mirror`. (2) The letter is drawn slowly once in the box and cleared (motion). (3) Copy mode for this item (the model beside), then trace if needed. A memory success after a level-3 hint counts as a hinted answer, as everywhere.
+**Hint ladder** (the same for copy and memory, and the same level 3 in all three courses, L5 §5.2). (1) The start dot of the stroke the child is on appears with its arrow (in memory mode the cue clip plays again first); diagnostic STROKE `heb-a-d-start`; MIRROR `heb-b-d-mirror`; a partner `heb-b-d-shape-look`. (2) The stroke is drawn slowly once in the box (in copy: in the model box), then cleared (motion, a new representation). (3) Trace mode for this item (the dotted path), and the child traces. Each level takes one more step of credit: a memory success after level 1 is a hinted answer (0.8), and a copy counts one level higher than the level shown (E-1).
 
 ### 5.7 HEB-B-19 Reads CV units with a (DEC, S1)
 
@@ -248,42 +243,42 @@ Set coverage: מָ (.1), שָׁ (.2), בָּ (.3), לָ (.4), תָּ (.5), אָ 
 
 | Item | Template | Prompt | Right | Distractors | Rep |
 |---|---|---|---|---|---|
-| B-20.1 P | LS01 (d) stem `txt:אַבָּא` (stem clip `heb-a-w-aba`), 3 pictures | `heb-b-i-read-pic` | `pic.fam-father` (אַבָּא) | `pic.fam-grandfather` (`heb-a-w-saba`, סָבָא) [BLEND-LAST: shares בָּא] · `pic.teddy-nose` (`heb-a-w-af`, אַף) [BLEND-FIRST: shares אַ] | sym |
-| B-20.2 P | LS01 (d) stem `txt:שַׁבָּת` (`heb-b-w-shabat`), 3 pictures | `heb-b-i-read-pic` | `pic.shabbat-table` (new) | `pic.snail` (`heb-b-w-shablul`, שַׁבְּלוּל) [BLEND-FIRST: shares שַׁבּ] · `pic.frying-pan` (`heb-b-w-machvat`, מַחְבַּת) [BLEND-LAST: shares בַּת] | sym |
-| B-20.3 P | LS01 (d) stem `txt:שָׁר` (`heb-b-w-shar`), 3 pictures | `heb-b-i-read-pic` | `pic.boy-sing` (new) | `pic.bull` (`heb-b-w-shor`, שׁוֹר) [VOWEL-SKIP: the same letters, another vowel] · `pic.clock` (`heb-a-w-shaon`, שָׁעוֹן) [BLEND-FIRST: shares שָׁ] | sym |
-| B-20.4 P | LS01 (d) stem `txt:תָּמָר` (`heb-b-w-tamar`), 3 pictures | `heb-b-i-read-pic` | `pic.dates` (new) | `pic.apple` (`heb-a-w-tapuach`, תַּפּוּחַ) [BLEND-FIRST: shares תָּ] · `pic.banana` (`heb-a-w-banana`) [SEM-READ: another fruit, chosen from the picture] | sym |
+| B-20.1 P | LS01 (d) stem `txt:אַבָּא` (stem clip `heb-a-w-aba`), 3 pictures | `heb-b-i-read-pic` | `pic.fam-father` (אַבָּא) | `pic.fam-grandfather` (`heb-a-w-saba`, סָבָא) [READ-PART: shares בָּא] · `pic.teddy-nose` (`heb-a-w-af`, אַף) [READ-PART: shares אַ] | sym |
+| B-20.2 P | LS01 (d) stem `txt:שַׁבָּת` (`heb-b-w-shabat`), 3 pictures | `heb-b-i-read-pic` | `pic.shabbat-table` (new) | `pic.snail` (`heb-b-w-shablul`, שַׁבְּלוּל) [READ-PART: shares שַׁבּ] · `pic.frying-pan` (`heb-b-w-machvat`, מַחְבַּת) [READ-PART: shares בַּת] | sym |
+| B-20.3 P | LS01 (d) stem `txt:שָׁר` (`heb-b-w-shar`), 3 pictures | `heb-b-i-read-pic` | `pic.boy-sing` (new) | `pic.bull` (`heb-b-w-shor`, שׁוֹר) [VOWEL-SKIP: the same letters, another vowel] · `pic.clock` (`heb-a-w-shaon`, שָׁעוֹן) [READ-PART: shares שָׁ] | sym |
+| B-20.4 P | LS01 (d) stem `txt:תָּמָר` (`heb-b-w-tamar`), 3 pictures | `heb-b-i-read-pic` | `pic.dates` (new) | `pic.apple` (`heb-a-w-tapuach`, תַּפּוּחַ) [READ-PART: shares תָּ] · `pic.banana` (`heb-a-w-banana`) [SEM-READ: another fruit, chosen from the picture] | sym |
 | B-20.5 P | LS06 `units`, `word`: `pic.dates`, `heb-b-w-tamar`, `txt:תָּמָר`; tiles `txt:תָּ` `txt:מָ` `txt:ר` + extra `txt:רָ`; `finals: auto` | `heb-b-i-build` + `heb-b-w-tamar` | `exact` [0, 1, 2] | extra tile 3 used (תָּמָרָ) [CV-FOR-C: a CV tile for the last consonant] · the exact tiles reversed (computed) [ORDER]; `soundRight` none (a reading skill) | con |
-| B-20.6 C | LS01 (d) stem `txt:בָּמָה` (`heb-b-w-bama`), a word never shown; 3 pictures | `heb-b-i-read-pic` | `pic.stage` (new) | `pic.banana` [BLEND-FIRST: shares בָּ] · `pic.stone-wall` (`heb-b-w-choma`, חוֹמָה) [BLEND-LAST: shares מָה] | sym |
-| B-20.7 C | LS01 (a), 3 written words (no sound on the options) | `heb-b-i-where-written` + `heb-b-w-amar` | `txt:אָמַר` | `txt:שָׁמַר` [BLEND-LAST: shares מַר] · `txt:אַבָּא` [BLEND-FIRST: shares the opening [a]] | sym |
+| B-20.6 C | LS01 (d) stem `txt:בָּמָה` (`heb-b-w-bama`), a word never shown; 3 pictures | `heb-b-i-read-pic` | `pic.stage` (new) | `pic.banana` [READ-PART: shares בָּ] · `pic.stone-wall` (`heb-b-w-choma`, חוֹמָה) [READ-PART: shares מָה] | sym |
+| B-20.7 C | LS01 (a), 3 written words (no sound on the options) | `heb-b-i-where-written` + `heb-b-w-amar` | `txt:אָמַר` | `txt:שָׁמַר` [READ-PART: shares מַר] · `txt:אַבָּא` [READ-PART: shares the opening [a]] | sym |
 
 - **The final ָה** is met in בָּמָה (.6): the ה makes no sound and ends the word, "one package" with the qamats (syllabus §3 note). On the LS04 slide at hint level 3 the two letters מָה light as **one** unit.
-- **BLEND-FIRST and BLEND-LAST in reading.** These Band A tags name "takes the first part and guesses the rest" and "keeps only the last part"; a reader who decodes the first unit and guesses from the picture makes the same error, so the slice uses them, with the reading lines `heb-b-d-read-end` and `heb-b-d-read-start`. The curriculum-expert may prefer a GUESS tag for reading (§16).
+- **A part of the word read, the rest guessed: `M-HEB-READ-PART`** (decided 2026-11-06, frame §4.6 P2). The Band A tags BLEND-FIRST and BLEND-LAST stay for blending heard syllables; a reader who decodes one unit of a written word and takes a picture whose word shares it answers from part of the evidence (family GUESS), and the repair differs (read the whole word, unit by unit, with LS04 `units`). One tag serves both lures (a shared first unit, a shared last unit), with one line, `heb-b-d-read-whole`.
 - **Tile clips (LS06):** `txt:תָּ` `heb-b-u-ta`, `txt:מָ` `heb-b-u-ma`, `txt:ר` `heb-b-s-resh` (a stretchable last consonant can sound alone), `txt:רָ` `heb-b-u-ra`. A word for LS06 in S1 must end in a continuant, so its last tile can sound (§14 item 8).
 
-**Hint ladder.** (1) "Read it to me" (the stem's clip, credit 0.8), or the word again; the tag's line: BLEND-FIRST `heb-b-d-read-end`, BLEND-LAST `heb-b-d-read-start`, VOWEL-SKIP `heb-b-d-vowel-skip`, SEM-READ `heb-b-d-sem-read`. LS06: the word again slowly while the first empty slot sounds; CV-FOR-C `heb-a-d-plural` + `heb-b-s-resh`; ORDER `heb-a-d-start`. (2) LS05, the S1 wheel, on the unit missed (for LS06: the word split into its CV units as tokens above the slots, L5 §5.6). (3) LS04 `units`: the voice reads the word unit by unit while each lights, right to left, then whole; the child taps the picture (LS06: the friend builds the word, the slots empty, the child builds it).
+**Hint ladder.** (1) "Read it to me" (the stem's clip, credit 0.8), or the word again; the tag's line: READ-PART `heb-b-d-read-whole`, VOWEL-SKIP `heb-b-d-vowel-skip`, SEM-READ `heb-b-d-sem-read`. LS06: the word again slowly while the first empty slot sounds; CV-FOR-C `heb-a-d-plural` + `heb-b-s-resh`; ORDER `heb-a-d-start`. (2) LS05, the S1 wheel, on the unit missed (for LS06: the word split into its CV units as tokens above the slots, L5 §5.6). (3) LS04 `units`: the voice reads the word unit by unit while each lights, right to left, then whole; the child taps the picture (LS06: the friend builds the word, the slots empty, the child builds it).
 
 ## 6. Classifier and tag summary (per template)
 
 | Template | Tags it can record here |
 |---|---|
-| LS01 options, pairs, tap-all | LETTER-MIX (proposed), MIRROR, NAMESOUND, VOWEL-SKIP, BLEND-FIRST, BLEND-LAST, SEM-READ |
-| LS02 trace, copy, memory | STROKE (start, direction), MIRROR (not for ם), SHAPE-TM, SHAPE-DR, SHAPE-BK, SHAPE-HXT, SHAPE-SM (partners) |
+| LS01 options, pairs, tap-all | LETTER-MIX, MIRROR, NAMESOUND, VOWEL-SKIP, READ-PART, SEM-READ |
+| LS02 trace, copy, memory | (evidence only in copy and memory, B-26.S1; in tracing they pick the feedback line, E-1) STROKE (start, direction), MIRROR (not for ם), SHAPE-TM, SHAPE-DR, SHAPE-BK, SHAPE-HXT, SHAPE-SM (partners) |
 | LS05 make | LETTER-MIX, VOWEL-SKIP |
 | LS06 units | CV-FOR-C (extra tile), ORDER (reversed, computed) |
 
 ## 7. Lessons (visits) for the pilot
 
-Each Band B visit mixes one code activity, one listening or story activity and one writing activity (E-5, syllabus §10). The listening slot comes from HEB-2a (not written yet); for the pilot playthrough it is a Band A story heard in LS08 `listen` (no questions). A bundle counts as one new skill (E-2); inside the S1 bundle the eight introductions are spread over four visits, two a visit, each followed at once by its letters' items (see §16, a question on E-2). Every item shows only letters already introduced (checked by script, §13).
+Each Band B visit mixes one code activity, one listening or story activity and one writing activity (E-5, syllabus §10). The listening slot comes from HEB-2a (not written yet); for the pilot playthrough it is a Band A story heard in LS08 `listen` (no questions). A bundle counts as one new skill (E-2); inside the S1 bundle the eight introductions are spread over four visits, two a visit, each followed at once by its letters' items (E-2 inside a group, decided 2026-11-06: at most 2 new letters a visit in Hebrew, and a visit that introduces letters counts the bundle as one of its 2 new skills; frame §4.6 P6). `B-26.S1` (copy, then memory) opens in V5, after V4 has finished the start-dot traces that make `B-24.S1` practised. Every item shows only letters already introduced (checked by script, §13).
 
 | Visit | Code | Writing | Listening |
 |---|---|---|---|
 | V1 | B-24.i1 מ, B-24.i2 ל; B-14.5 | B-24.1, B-24.2 | Band A story 1, `listen` |
 | V2 | B-24.i3 שׁ, B-24.i4 ר; B-14.4, B-15.2, B-15.3 | B-24.3, B-24.4 | Band A story 2, `listen` |
-| V3 | B-24.i5 א, B-24.i6 בּ; B-14.2, B-15.1, B-15.5 | B-24.5, B-24.6, B-25.1 | Band A story 3, `listen` |
+| V3 | B-24.i5 א, B-24.i6 בּ; B-14.2, B-15.1, B-15.5 | B-24.5, B-24.6 | Band A story 3, `listen` |
 | V4 | B-24.i7 ת, B-24.i8 ם; B-14.1, B-14.3, B-15.4, B-15.6; B-19.0, B-19.1, B-19.2 | B-24.7, B-24.8 | HEB-2a story |
-| V5 | B-19.3, B-19.4, B-14.6 C | B-24.9 C, B-25.2, B-25.3 C | HEB-2a story |
-| V6 | B-19.5 C, B-19.6 C, B-20.1, B-20.2, B-20.3 | B-26.1, B-26.2, B-26.3 | HEB-2a story |
-| V7 | B-20.4, B-20.5, B-20.6 C, B-20.7 C, B-15.7 C | B-26.4, B-26.5 C | HEB-2a story |
+| V5 | B-19.3, B-19.4, B-14.6 C | B-24.9, B-26.1, B-26.2, B-26.3 | HEB-2a story |
+| V6 | B-19.5 C, B-19.6 C, B-20.1, B-20.2, B-20.3 | B-26.4, B-26.5, B-26.6 | HEB-2a story |
+| V7 | B-20.4, B-20.5, B-20.6 C, B-20.7 C, B-15.7 C | B-26.7, B-26.8 C | HEB-2a story |
 
 Each visit opens with retrieval (the letters of the visit before) and ends on success. B-19 and B-20 also need B-12 (blend CV units, HEB-2a), and B-15 needs B-11: for the pilot playthrough these are assumed (the dev placement override), §15.
 
@@ -368,15 +363,17 @@ Reused (Band A, `text-ready`, in `pronunciation.csv`): `heb-a-w-matos`, `-lechem
 
 ## 10. Tags
 
-**One new tag is proposed** (to the curriculum-expert, for the catalogue, frame §4.2):
+**One new tag, adopted on 2026-11-06** (frame §4.2 and §4.6 P1; the curriculum-expert chose SHAPE):
 
 | Tag | Engine id (by the §4.1 rule) | Kind | Family | First skill | Reveals | Signal | Re-teach (level 2) | `revisitWith` |
 |---|---|---|---|---|---|---|---|---|
-| **M-HEB-LETTER-MIX** | `heb.pk.letter_mix` | diagnostic | SHAPE (proposed; NAME is the alternative, see below) | B-14 | mixes two letters of the same new group: the name or the sound is not yet bound to its shape | another letter of the group already introduced; where possible the one whose sound is heard inside the target's name (בֵּית/ת, אָלֶף/ל, רֵישׁ/שׁ, לָמֶד/מ) | the two letters side by side, each with its key-word picture, its sound and its name; then trace both (LS02) | none (a group, not a pair) |
+| **M-HEB-LETTER-MIX** | `heb.pk.letter_mix` | diagnostic | SHAPE | B-14 | mixes two letters of the same new group: the name or the sound is not yet bound to its shape | another letter of the group already introduced; where possible the one whose sound is heard inside the target's name (בֵּית/ת, אָלֶף/ל, רֵישׁ/שׁ, לָמֶד/מ) | the two letters side by side, each with its key-word picture, its sound and its name; then trace both (LS02) | none (a group, not a pair) |
 
-**Why it is needed.** S1 was built with no look-alike pair inside it (the binding rule), so a wrong letter of the group is neither a SHAPE pair nor a NAME error, and the catalogue has no tag for it. Without it, no 3-choice letter item of S1 could carry two tagged distractors. The English course has the same kind of tag (`M-ENG-LOOKALIKE`, SHAPE, first skill B-16). **The alternative:** the four "sound heard inside the name" lures could carry `M-HEB-NAMESOUND` instead (the child uses a sound from the name); I chose LETTER-MIX because the child's choice is a group neighbour, and NAMESOUND keeps its exact signal (the name for the sound, or the reverse). 26 distractor uses in this slice (counted by the script, §13), against 30 uses of the existing tags.
+**Why it is needed.** S1 was built with no look-alike pair inside it (the binding rule), so a wrong letter of the group is neither a SHAPE pair nor a NAME error, and the catalogue has no tag for it. Without it, no 3-choice letter item of S1 could carry two tagged distractors. The English course has the same kind of tag (`M-ENG-LOOKALIKE`, SHAPE, first skill B-16). **The alternative:** the four "sound heard inside the name" lures could carry `M-HEB-NAMESOUND` instead (the child uses a sound from the name); I chose LETTER-MIX because the child's choice is a group neighbour, and NAMESOUND keeps its exact signal (the name for the sound, or the reverse). 26 distractor uses in this slice (counted by the script, §13), against 30 uses of the existing tags. **Decided** (frame §4.6 P1): family SHAPE, and the four lures keep LETTER-MIX.
 
-**Existing tags used for the first time in Band B here:** M-HEB-MIRROR, M-HEB-NAMESOUND, M-HEB-VOWEL-SKIP, M-HEB-CV-FOR-C, M-HEB-SEM-READ (its first skill stays C-10: the id is frozen), and the Band A tags M-HEB-BLEND-FIRST, M-HEB-BLEND-LAST, M-HEB-ORDER, M-HEB-STROKE, and the pair tags as stroke classifiers.
+**A second new tag, `M-HEB-READ-PART`** (diagnostic, GUESS, `heb.dec.read_part`, first skill B-20; frame §4.6 P2), replaces the Band A BLEND-FIRST and BLEND-LAST on the reading items of B-20 (10 uses). Its `skills`: B-20, then B-12.
+
+**Existing tags used for the first time in Band B here:** M-HEB-MIRROR, M-HEB-NAMESOUND, M-HEB-VOWEL-SKIP, M-HEB-CV-FOR-C, M-HEB-SEM-READ (its first skill stays C-10: the id is frozen), and the Band A tags M-HEB-ORDER, M-HEB-STROKE (evidence only in B-26.S1), and the pair tags as stroke classifiers.
 
 **`parentText` and `homeActivity` drafts** (adult, unpointed, `needs-editor`; gap G6 of the frame), for the tags this slice uses first in Band B:
 
@@ -387,7 +384,7 @@ Reused (Band A, `text-ready`, in `pronunciation.csv`): `heb-a-w-matos`, `-lechem
 | M-HEB-NAMESOUND | מבלבל בין השם של האות לצליל שלה. | כשקוראים יחד, אמרו מדי פעם: "השם הוא מם, והצליל הוא ממממ." |
 | M-HEB-VOWEL-SKIP | קורא את האות ומדלג על סימן הניקוד שמתחתיה. | כשקוראים יחד צירוף כמו מָ, הצביעו גם על הסימן שמתחת לאות. |
 | M-HEB-STROKE | מתחיל את האות ממקום אחר, או כותב אותה בכיוון אחר. | כתבו יחד אותיות גדולות באוויר או בחול, מלמעלה למטה. |
-| M-HEB-BLEND-FIRST (reading) | קורא את החלק הראשון של המילה ומנחש את השאר. | כשקוראים מילה, עברו עם האצבע על כל החלקים עד הסוף. |
+| M-HEB-READ-PART | קורא חלק מהמילה (את ההתחלה או את הסוף) ומנחש את השאר. | כשקוראים מילה, עברו עם האצבע על כל החלקים, מההתחלה ועד הסוף. |
 | M-HEB-CV-FOR-C | שומע צירוף שלם במקום שבו יש רק עיצור. | אמרו מילה לאט ומתחו את הצליל האחרון: תָּמָררר. |
 
 ## 11. Pencil cards (D23; `card/v1`, `kind: pencil`, parent area only, never voiced; `needs-editor`)
@@ -395,27 +392,27 @@ Reused (Band A, `text-ready`, in `pronunciation.csv`): `heb-a-w-matos`, `-lechem
 | Card | Skills | Text |
 |---|---|---|
 | `card.heb.pencil.s1-trace` | B-24.S1 | כתבו יחד את האותיות מ, ל, ש, ר, א, ב, ת בעיפרון עבה על דף גדול. מתחילים תמיד מלמעלה. אמרו את הצליל של האות בזמן שכותבים. אפשר גם לכתוב עם האצבע בחול או בקמח. |
-| `card.heb.pencil.s1-copy` | B-25.S1 | כתבו אות אחת גדולה, והילד כותב אחת כמוה לידה. אחר כך כסו את האות שלכם, והילד כותב אותה שוב. |
+| `card.heb.pencil.s1-copy` | B-26.S1 | כתבו אות אחת גדולה, והילד כותב אחת כמוה לידה. אחר כך כסו את האות שלכם, והילד כותב אותה שוב. |
 | `card.heb.pencil.s1-memory` | B-26.S1 | אמרו צליל (ממממ) או שם של אות (מם), והילד כותב את האות. אחר כך מתחלפים: הילד אומר, ואתם כותבים. |
 
 ## 12. Counts
 
 | What | Count |
 |---|---|
-| Skill nodes | 7: `HEB-B-14.S1`, `-15.S1`, `-24.S1`, `-25.S1`, `-26.S1`, `HEB-B-19`, `HEB-B-20` |
+| Skill nodes | 6: `HEB-B-14.S1`, `-15.S1`, `-24.S1` (trace node), `-26.S1` (writing node), `HEB-B-19`, `HEB-B-20` |
 | Letters and vowels | 7 letters and 1 final form (מ ל שׁ ר א בּ ת ם); 1 vowel (a: ָ ַ), and the final ָה |
-| Items | **43 scored** (B-14.S1 6, B-15.S1 7, B-24.S1 9, B-25.S1 3, B-26.S1 5, B-19 6, B-20 7), of them 9 checks; **9 unscored** teaching screens (8 introductions, 1 wheel `explore`) |
+| Items | **34 scored** (B-14.S1 6, B-15.S1 7, B-26.S1 8, B-19 6, B-20 7), of them 7 checks; **9 practice traces** (B-24.S1); **9 unscored** teaching screens (8 introductions, 1 wheel `explore`) |
 | Templates driven | LS01 (a) 10, (b) 2, (c) 3, (d) 7 (each with a sound on every picture), `match_pairs` 1, tap-all 1; LS02 `intro` 8, `trace` 9 (one `word` canvas), `copy` 3, `memory` 5; LS05 `explore` 1, `make` 1; LS06 `units` 1; LS04 and LS05 as hint levels 3 and 2 of the 13 decoding items |
 | Written faces | 7 letters, 7 CV units, 5 words read (אַבָּא, שַׁבָּת, שָׁר, תָּמָר, בָּמָה), 2 written options (אָמַר, שָׁמַר), 4 tiles |
 | Words heard | 27 picture or prompt words: 17 reused from Band A, 10 new clips (§9) |
 | Pictures | 17 reused, 9 new, 4 mirrored letters (ב, ר, מ, and ר in Secular One) |
-| Clips | 69 new ids (8 names, 4 sounds, 7 units, 10 words, 25 instruction and carrier lines, 8 introduction lines, 7 diagnostic lines) and 26 reused Band A ids (17 words, 9 lines and praise). Text-ready among the new: the 8 names and `heb-b-d-mirror`; the other 60 are `needs-editor` |
-| Tags | 1 new proposed (LETTER-MIX, 26 uses); 14 existing used (BLEND-FIRST 6, BLEND-LAST 4, CV-FOR-C 1, MIRROR 4 as distractors and on every LS02 item but ם's, NAMESOUND 3, ORDER 1, SEM-READ 1, VOWEL-SKIP 7, STROKE on every LS02 item, and the pair tags as stroke classifiers: SHAPE-BK 2, -DR 3, -HXT 2, -SM 1, -TM 2) |
+| Clips | 68 new ids (8 names, 4 sounds, 7 units, 10 words, 25 instruction and carrier lines, 8 introduction lines, 6 diagnostic lines) and 26 reused Band A ids (17 words, 9 lines and praise). Text-ready among the new: the 8 names and `heb-b-d-mirror`; the other 59 are `needs-editor` |
+| Tags | 2 new, adopted 2026-11-06 (LETTER-MIX 26 uses, READ-PART 10); 12 existing used (CV-FOR-C 1, MIRROR 4 as distractors and on every LS02 item but ם's, NAMESOUND 3, ORDER 1, SEM-READ 1, VOWEL-SKIP 7, STROKE on every LS02 item, and the pair tags as stroke classifiers: SHAPE-BK 2, -DR 3, -HXT 2, -SM 1, -TM 2) |
 | Parent texts | 7 tag texts (parentText and homeActivity), 3 pencil cards |
 
 ## 13. What the script checked
 
-`python -I <scratchpad>/check_heb_pilot.py docs/languages/hebrew/band-b-pilot.md` (the script is in the session's scratchpad; standard library only; it reads this file, `syllabus.md`, `frame.md`, `content/languages/strokes/hebrew-print.json`, `content/languages/pictures/` and `pronunciation.csv`). It checks: every skill id is a Band B node of the syllabus (with the dotted group nodes of frame §3.3.2); every tag in an item is in the syllabus §5 table and in the frame's Hebrew catalogue, except the proposed one, which it reports; every template id and mode is one of L5 §5; every form id is in the stroke set; every picture exists or is in the §8 new list; every clip id is defined in §4 or §9 or exists in `pronunciation.csv`; every written face (`txt:`) uses only S1 letters and signs (final ָה only at the end of a word, a silent א only at the end after a vowel); every choice item has 3 options and two tagged distractors; the tap-all has at least 1 right card, 2 tagged wrong cards and at most 6; every item shows only letters introduced in an earlier or the same visit (§7); and the item counts of §12. **Run on 2026-11-06: 52 entries (43 scored, 9 unscored, 9 checks), 0 errors**; 14 existing tags, all in the syllabus and the frame's Hebrew catalogue; 1 tag reported as not in the catalogue, `M-HEB-LETTER-MIX` (proposed, §10); 24 distinct written faces (23 letters, units and words, all S1-decodable, and the wheel's lone sign ָ); 30 pictures (17 drawn, 13 in the §8 list); 69 new clip ids and 26 reused, none undefined; 33 instruction lines with no singular address. A negative test of the S1 check refuses שֵׁם (a later vowel), סַל (a later letter), a soft ב, שׂ, a shva and an unpointed letter inside a word. Also run: `python -I tools/check_hebrew_course_words.py --text docs/languages/hebrew/band-b-pilot.md` (hygiene of the Hebrew: canonical order, final forms, the shin dot): 836 Hebrew words, 8 notes, all deliberate: the sign ָה written alone in prose (as in the syllabus), and a held [m] written מְמְמ or ממממ (a sound, not a word, so no final form).
+`python -I tools/pilot_heb_band_b_check.py .` (standard library only; it reads this file, `syllabus.md`, `frame.md`, `content/languages/strokes/hebrew-print.json`, `content/languages/pictures/` and `pronunciation.csv`). It checks: every skill id is a Band B node of the syllabus (with the dotted group nodes of frame §3.3.2); every tag in an item is in the syllabus §5 table and in the frame's Hebrew catalogue; the E-1 structure (since 2026-11-06): the trace node B-24.S1 holds only trace items, no check, and a start-dot trace for every letter, and its items are practice, not scored; the writing node B-26.S1 holds no trace item, its checks are memory items, and its memory items carry both cues; every template id and mode is one of L5 §5; every form id is in the stroke set; every picture exists or is in the §8 new list; every clip id is defined in §4 or §9 or exists in `pronunciation.csv`; every written face (`txt:`) uses only S1 letters and signs (final ָה only at the end of a word, a silent א only at the end after a vowel); every choice item has 3 options and two tagged distractors; the tap-all has at least 1 right card, 2 tagged wrong cards and at most 6; every item shows only letters introduced in an earlier or the same visit (§7); and the item counts of §12. **Run on 2026-11-06 after the E-1 changes: 52 entries (34 scored, 9 practice traces, 9 teaching screens, 7 checks), 0 errors**; 13 tags, all in the syllabus and the frame's Hebrew catalogue (LETTER-MIX and READ-PART adopted the same day); 24 distinct written faces (23 letters, units and words, all S1-decodable, and the wheel's lone sign ָ); 30 pictures (17 drawn, 13 in the §8 list); 68 new clip ids and 26 reused, none undefined; 33 instruction lines with no singular address. A negative test of the S1 check refuses שֵׁם (a later vowel), סַל (a later letter), a soft ב, שׂ, a shva and an unpointed letter inside a word. Also run: `python -I tools/check_hebrew_course_words.py --text docs/languages/hebrew/band-b-pilot.md` (hygiene of the Hebrew: canonical order, final forms, the shin dot): 853 Hebrew words, 11 notes, all deliberate: the sign ָה written alone in prose (as in the syllabus), and a held [m] written מְמְמ or ממממ (a sound, not a word, so no final form).
 
 ## 14. What the templates must allow (to the app-developer and the design-director)
 
@@ -439,8 +436,8 @@ Nothing here blocks the authoring of an item. Items 1 to 4 block nothing once L5
 
 ## 16. Hand-offs
 
-- **hebrew-text-editor:** every `needs-editor` line of §4 (25 instruction and carrier lines, 8 introduction lines, 6 diagnostic lines), the 10 new words of §9 with their nikud and stress, the 7 parent texts and the 3 pencil cards (§10, §11); then the §9 rows into `pronunciation.csv` with `say` and the master table. Done when every row is `text-ready`.
-- **curriculum-expert:** the proposed tag M-HEB-LETTER-MIX (§10: family SHAPE or NAME); BLEND-FIRST and BLEND-LAST in reading items (or a GUESS tag); the E-1 cue for א (the key word instead of a sound, §5.6); **E-2 inside a letter group:** the S1 bundle has 8 introductions, which cannot all open one visit, so this slice spreads them two a visit (§7): please confirm that the bundle opens as one skill while its introductions are paced by letter.
+- **hebrew-text-editor:** every `needs-editor` line of §4 (25 instruction and carrier lines, 8 introduction lines, 5 diagnostic lines, one of them the curriculum-expert's unpointed draft `heb-b-d-read-whole`), the 10 new words of §9 with their nikud and stress, the 7 parent texts and the 3 pencil cards (§10, §11); then the §9 rows into `pronunciation.csv` with `say` and the master table. Done when every row is `text-ready`.
+- **curriculum-expert:** answered on 2026-11-06: M-HEB-LETTER-MIX adopted in family SHAPE (frame §4.6 P1); reading items use the new `M-HEB-READ-PART`, not the oral BLEND tags (P2); the E-1 cue for א is its name only, the key-word cue not needed (§5.6, writing-mastery §3.4); E-2 inside a group: the bundle opens as one skill, at most 2 new letters a visit (P6). B-25.S1 merged into B-26.S1 and the level-3 hint is trace mode (§5.6).
 - **design-director:** the 9 new pictures and the mirrored letters (§8), from real references; the stop-letter qamats in the introduction; the word canvas of B-24.9.
 - **app-developer:** §14 items 1 to 8 (the authoring and validator points); the stroke classifiers exactly as §5.4 (`mirror` off for ם).
 - **voice-and-sound-director:** the free count of §9 (`voice_gen plan` only); the D2 rows for the four continuant sounds.

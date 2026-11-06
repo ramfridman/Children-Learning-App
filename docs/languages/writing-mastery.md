@@ -298,7 +298,7 @@ It never has `freshMastery`, `durableMastery`, `needsRevisit` or `gap`.
 
 ## 8. Validator rules (pack, L5-2b)
 
-1. An LS02 2.0 item names exactly one skill. A letter-canvas item names a skill with a `writing` field; a word-canvas item names a skill of strand `wr` or `wri`.
+1. An LS02 2.0 item names exactly one skill. A letter-canvas item names a skill with a `writing` field; a word-canvas item names a skill of strand `wr` or `wri`. An `intro` item names the trace node of its group: it carries the group's first trace and opens the bundle (added 2026-11-06 while applying §11: the English and Russian slices had filed their intros under the letter skill).
 2. A letter-canvas item has one form, and its `variantGroup` is that form id.
 3. A `writing: practised` node has only `intro` and `trace` items (heb B-27: also own-name items). Every letter in it has at least one `trace` item with `guide: start`. It has no `probe` or `check` item, it is not in a gate's `requires`, and it has no `masteryRequires`.
 4. A `writing: memory` node has no `trace` items, and at least one non-probe memory item for each cue. Every letter in it has at least one non-probe memory item. Every `check` and `probe` item in it is a memory item. It has `setCoverage: true` (E-3: every letter of the group). It has no `masteryRequires.representations`. It is not a bundle member.
@@ -497,6 +497,15 @@ These are lists, not edits made. Each teacher changes their own `syllabus.md` (a
 - Roediger, H. L. and Karpicke, J. D. (2006). Test-enhanced learning. *Psychological Science* 17(3), 249–255: retrieval, not re-study, strengthens memory (why copying is neither a success nor a review). Studied with students, not young children.
 - **Thin evidence, said plainly:** no study compares trace, copy and memory credit in an adaptive app. The credit steps are the owner's rule set on these findings. Whether mirror errors should need two probe misses is a judgement from how common reversals are at 5 and 6, not a measured number.
 
-## 12. Owner decision (2026-11-06)
+## 13. Owner decision (2026-11-06)
 
 The owner approved, in chat, all five structure changes of §2 and §11: split ENG-B-18 into B-18.G1 and B-18.G2 (the English teacher's proposal); add ENG-B-23 (trace nodes, `.G1` to `.G4`); retire HEB-B-25 into HEB-B-26; HEB-A-14 met once practised; HEB-B-27 met once practised.
+
+## 14. Applied (2026-11-06)
+
+§11 was applied the same day by the curriculum-expert in `D:
+itznutz-l5`, as the owner approved:
+- **Syllabi:** `english/syllabus.md` (B-18 split into `.G1` and `.G2`; new `B-23` with `.G1` to `.G4`; B-19 and C-15 as writing nodes; the b/d taps moved to C-01 and C-02; counts 66 skills, 10 sub-skill nodes), `hebrew/syllabus.md` (A-14, B-24, B-27 and C-26 practised; B-25 retired into B-26, which now needs B-14.Sn; C-27 takes the copy; counts 68 skills, 24 sub-skill nodes), `russian/syllabus.md` (B-24 practised; B-26.Gn needs its group's letter skill); the templates files and the Hebrew Band A A-14 items.
+- **Frame:** §2.3 (LS02: order out of the check, E-1, the level-3 ladder; checks in free-response modes), §3.3.1 (letter → picture is pictorial), §3.3.3 (trace nodes in the bundle, writing after it, pacing inside a group), §3.3.6, §3.3.8 (`isMet`), §4.2 (first skills; four new tags) and the new §4.6 (the pilot decisions).
+- **Pilots:** the English trace items and intros are in `B-23.G1` (with a start-dot trace for every letter, so the node can be practised), the reading items in `B-18.G1`; the Hebrew B-25.S1 items are B-26.S1 items and the level-3 hint is trace mode; the Russian intros are in `B-24.G1` and `B-26.G1` needs `B-18`. The three check scripts pass.
+- **Prerequisite graph:** re-checked by script on the three syllabi: every id exists, no cycle, no bundle member requires another.

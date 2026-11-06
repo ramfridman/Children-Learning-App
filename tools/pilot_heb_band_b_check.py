@@ -19,14 +19,14 @@ def err(m): errors.append(m)
 # ---- reference sets
 syl_skills = set(re.findall(r'^\| (HEB-[ABC]-\d\d) \|', syl, re.M))
 groups = ['S1', 'S2', 'S4', 'S5', 'S6', 'S7']
-for b in ('14', '15', '24', '25', '26'):
+for b in ('14', '15', '24', '26'):  # B-25 retired 2026-11-06 (E-1)
     for g in groups:
         syl_skills.add(f'HEB-B-{b}.{g}')
 syl_tags = set(re.findall(r'^\| (M-HEB-[A-Z-]+) \|', syl, re.M))
 heb_block = frame.split('<!-- catalogue:heb:start -->')[1].split('<!-- catalogue:heb:end -->')[0]
 frame_tags = set(re.findall(r'^\| (M-HEB-[A-Z-]+) \|', heb_block, re.M))
 forms = {f['id'] for f in strokes['forms']}
-PROPOSED = {'M-HEB-LETTER-MIX'}
+PROPOSED = set()  # LETTER-MIX and READ-PART adopted 2026-11-06 (frame §4.6)
 
 # ---- split the doc into sections
 sections = re.split(r'^(#{2,3} .*)$', doc, flags=re.M)
@@ -120,13 +120,16 @@ def decodable_s1(w):
 
 # ---- items
 SKILL_OF = {'5.1': 'HEB-B-24.S1', '5.2': 'HEB-B-14.S1', '5.3': 'HEB-B-15.S1', '5.4': 'HEB-B-24.S1',
-            '5.5': 'HEB-B-25.S1', '5.6': 'HEB-B-26.S1', '5.7': 'HEB-B-19', '5.8': 'HEB-B-20'}
+            '5.5': None, '5.6': 'HEB-B-26.S1', '5.7': 'HEB-B-19', '5.8': 'HEB-B-20'}  # 5.5 B-25.S1 retired
 items = {}
 for k, body in sec.items():
     m = re.match(r'### (5\.\d) ', k)
     if not m:
         continue
     skill = SKILL_OF[m.group(1)]
+    if skill is None:
+        if re.search(r'^\| B-\d\d\.', body, re.M): err(f'section {k} is retired but holds items')
+        continue
     if skill not in syl_skills:
         err(f'skill {skill} not in the syllabus')
     hdr = re.search(r'HEB-B-\d\d(\.S1)?', k)
@@ -240,7 +243,9 @@ missing = set(items) - seen_items
 if missing: err('items in no visit: ' + ', '.join(sorted(missing)))
 
 # counts
-scored = [i for i in items if '.i' not in i and items[i]['cells'][1].find('explore') < 0]
+# a trace node's items are practice under E-1, not scored
+scored = [i for i in items if '.i' not in i and items[i]['cells'][1].find('explore') < 0 and items[i]['sec'] != '5.4']
+practice = [i for i in items if items[i]['sec'] == '5.4']
 by_skill = Counter(items[i]['skill'] for i in scored)
 checks = [i for i in scored if items[i]['kind'] == 'C']
 new_clips = sorted(c for c in defined if c.startswith('heb-b-'))
@@ -275,7 +280,7 @@ for i, it in items.items():
         if k in t: tmpl[t.split()[0] + ' ' + k] += 1
 print('templates:', dict(sorted(tmpl.items())))
 print('new clips by kind:', dict(Counter(c.split('-')[2] for c in new_clips)))
-print('items:', len(items), '| scored:', len(scored), '| unscored:', len(items) - len(scored), '| checks:', len(checks))
+print('items:', len(items), '| scored:', len(scored), '| practice traces (B-24.S1):', len(practice), '| teaching screens:', len(items) - len(scored) - len(practice), '| checks:', len(checks))
 print('by skill:', dict(sorted(by_skill.items())))
 print('tags used:', dict(sorted(tag_uses.items())))
 print('tags not in the catalogue (proposed):', sorted(t for t in tag_uses if t in PROPOSED))
@@ -284,7 +289,19 @@ print('clip ids in the whole doc:', len(all_ids_in_doc), '| undefined:', undefin
 print('new clips not used anywhere in §5:', unused)
 print('pictures used:', len({p for it in items.values() for p in re.findall(r"pic\.([a-z0-9-]+)", it["line"])}),
       '| new listed:', len(new_pics), sorted(new_pics))
-open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'faces.txt'),'w',encoding='utf-8').write(chr(10).join(sorted({w for it in items.values() for w in it['faces']})))
+# E-1 (writing-mastery §8): the trace node has no check and a start-dot trace for every letter; the writing node has no trace item
+trace_forms = {f for i in practice for f in re.findall(r'hebrew-print\.([a-z-]+)', items[i]['cells'][3]) if 'start dot' in items[i]['cells'][1] and 'word' not in items[i]['cells'][1]}
+if trace_forms != set(FORM_L): err(f'B-24.S1: no start-dot trace for {sorted(set(FORM_L) - trace_forms)}')
+for i in practice:
+    if items[i]['kind'] == 'C': err(f'{i}: a trace node has no check (E-1)')
+    if not items[i]['cells'][1].startswith('trace'): err(f'{i}: a trace node holds only trace items')
+for i, it in items.items():
+    if it['sec'] == '5.6':
+        mode = it['cells'][1].split(',')[0].strip()
+        if mode == 'trace': err(f'{i}: a writing node has no trace item (E-1)')
+        if it['kind'] == 'C' and mode != 'memory': err(f'{i}: a check of a writing node is a memory item (E-1)')
+cues = {re.search(r'cue: (sound|name)', items[i]['cells'][1]).group(1) for i in items if items[i]['sec'] == '5.6' and 'memory' in items[i]['cells'][1]}
+if cues != {'sound', 'name'}: err('B-26.S1: memory items need both cues (E-1)')
 print('instruction lines checked for plural address:', len(lines4))
 print('ERRORS:', len(errors))
 for e in errors: print('  -', e)

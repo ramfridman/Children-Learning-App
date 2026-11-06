@@ -74,9 +74,9 @@ LADDERS = [
     ("HL-LTR2PIC", "Letter to picture (LS01 text stem: a letter). H1: the letter's sound (en-snd), then each picture's word, slowly. H2 (a new representation, the mouth): he-hint-mouth + the sound, with the mouth picture of the sound (pic.mouth-<x>) beside the letter; then the words again. H3: he-hint-showme; the friend taps the picture and its word plays with the first sound stretched; the child taps it."),
     ("HL-TAPALL", "Tap-all (LS01, a row of letter tiles). H1: he-hint-look-letter; the target letter appears big above the row and its sound plays. H2 (a new representation, the shape laid over): the big letter glides over each tile in turn and fits only on the right ones; the look-alikes are left uncovered. H3: he-hint-showme; the friend taps the first right tile; the child taps the rest."),
     ("HL-HOP", "LS11 place (Pip to the letter stone). H1: he-hint-again + the sound, slowly. H2: he-ltr-keyword + the key word, with the key-word picture on the far bank. H3: he-hint-showme; Pip hops to the right stone and the sound plays; the child drags Pip there."),
-    ("HL-WRITE", "LS02 trace, copy and memory (L5 §5.2). H1: he-hint-start; the start dot and the arrow of the stroke the child is on (in memory mode the cue clip plays again first). H2 (a new representation, motion): he-hint-watch-try; the stroke is drawn slowly once, then the box clears. H3: he-hint-trace-together; the item turns into trace mode with the full guide for this try. A missed stroke fades softly and the start dot comes back: never red, no buzzer."),
-    ("HL-BLEND", "LS04 graphemes (B-18). H1: he-hint-slide-again; the slide replays slowly, each letter lit as its sound plays. H2 (a new representation, tokens with mouths): he-hint-mouth; each sound becomes a token with its mouth picture, left to right; for an M-ENG-DIR error the green start dot on the left and he-fb-left-start come first. H3: he-hint-showme; the friend slides, says the word and points to its picture; the child taps it."),
-    ("HL-STEM", "LS01 text stem, a word (B-18). H1 'read it to me': he-hint-listen-word + the word clip; the credit drops to 0.8 (L5 §5.1). H2 (a new representation, borrowed from LS04, L5 §5.9): `hints.level2: { \"show\": \"blend_slide\" }` on the stem word, the slide with each sound lit. H3: he-hint-showme; the friend reads the word aloud with the slide and taps its picture; the child taps it."),
+    ("HL-WRITE", "LS02 trace, copy and memory (L5 §5.2). H1: he-hint-start; the start dot and the arrow of the stroke the child is on (in memory mode the cue clip plays again first). H2 (a new representation, motion): he-hint-watch-try; the stroke is drawn slowly once, then the box clears. H3: he-hint-trace-together; the item turns into trace mode with the full guide for this try (the same level 3 in all three courses). A missed stroke fades softly and the start dot comes back: never red, no buzzer. In a trace, only an answer at H0 or H1 marks the letter as practised; in copy, each level takes one more step of credit (copy alone counts as H1, E-1)."),
+    ("HL-BLEND", "LS04 graphemes (B-18.G1). Before the choice only the sounds play, never the whole word (L5 §5.5). H1: he-hint-slide-again; the slide replays slowly, each letter lit as its sound plays (if a sound has no clip yet, the stretched whole is the H1 replay). H2 (a new representation, tokens with mouths): he-hint-mouth; each sound becomes a token with its mouth picture, left to right; for an M-ENG-DIR error the green start dot on the left and he-fb-left-start come first. H3: he-hint-showme; the friend slides, says the word and points to its picture; the child taps it. After any choice the whole word plays."),
+    ("HL-STEM", "LS01 text stem, a word (B-18.G1). H1 'read it to me': he-hint-listen-word + the word clip; the credit drops to 0.8 (L5 §5.1). H2 (a new representation, borrowed from LS04, L5 §5.9): `hints.level2: { \"show\": \"blend_slide\" }` on the stem word, the slide with each sound lit. H3: he-hint-showme; the friend reads the word aloud with the slide and taps its picture; the child taps it."),
     ("HL-BOXES", "LS03 boxes (B-15). H1: he-hint-again + en-robot-<word>, the sounds one by one with a pause, then the word. H2 (a new representation, the mouth): he-hint-mouth; each token gets the mouth picture of its sound as it plays (not hand claps: a clap per syllable would teach M-ENG-SEG-SYLL in a one-syllable word). In the `which` step the tokens light one by one with their sounds, left to right. H3: he-hint-showme; the friend lays the tokens (or taps the box); then the child does it."),
 ]
 
@@ -177,7 +177,7 @@ for w, (ipa, st, tr, ck) in WORDS.items():
 BLENDS = {"pan": "p-aaa-nnn… pan.", "nap": "nnn-aaa-p… nap.", "tap": "t-aaa-p… tap.", "pat": "p-aaa-t… pat.", "pin": "p-iii-nnn… pin."}
 for w, say in BLENDS.items():
     CLIPS.append((f"en-blend-{w}", w, say, WORDS[w][0], w, "an added vowel after a stop ('puh'); the vowel too short to hear",
-                  "LS04 'whole stretched' clip (L5 §5.5): the continuous sounds (a, i, n, s) stretched into the next one, the stops clipped, no 'uh'; then the word said normally after a short pause. It plays while the letters light when a part has no clip of its own"))
+                  "LS04 'whole stretched' clip (L5 §5.5): the continuous sounds (a, i, n, s) stretched into the next one, the stops clipped, no 'uh'; then the word said normally after a short pause. In a scored item it never plays before the first choice: it is the H1 replay when a part has no clip of its own (D2)"))
 ROBOT = {"pin": "p. ih. nnn. … pin.", "sit": "sss. ih. t. … sit.", "nap": "nnn. aa. p. … nap."}
 for w, say in ROBOT.items():
     CLIPS.append((f"en-robot-{w}", w, say, WORDS[w][0], w, "an added vowel on a stop; gaps too short",
@@ -197,11 +197,11 @@ def item(**k):
 
 INTRO_ORDER = ["s", "a", "t", "p", "i", "n"]
 for n, x in enumerate(INTRO_ORDER, 1):
-    item(skill="ENG-B-16", id=f"n{n:02d}", tmpl="LS02", mode="intro", scored=False,
+    item(skill="ENG-B-23.G1", id=f"n{n:02d}", tmpl="LS02", mode="intro", scored=False,
          frame=["he-ins-letter-new", "he-ltr-sound", "he-ltr-keyword", "he-ltr-name", "he-ltr-watch", "he-ins-trace"],
          prompt=[f"en-snd-{x}", f"en-{KEY[x]}", f"en-name-{x}"], pics=[f"pic.{KEY[x]}"],
          options=[f"form latin.{x}"], right="-", dist=[], hints="HL-WRITE", rep="embodied",
-         note=(f"Bundle opener (E-2). Sequence: the letter big → he-ltr-sound + en-snd-{x} → he-ltr-keyword + en-{KEY[x]} with pic.{KEY[x]} → "
+         note=(f"Bundle opener (E-2), filed under the trace node B-23.G1 (writing-mastery §8 rule 1). Sequence: the letter big → he-ltr-sound + en-snd-{x} → he-ltr-keyword + en-{KEY[x]} with pic.{KEY[x]} → "
                f"he-ltr-name + en-name-{x} → he-ltr-watch while the dot walks the path → he-ins-trace, one trace with the full guide (unscored)."
                + (" The name does not carry the sound (a vowel's name is its long sound), so this intro says both slowly, twice." if x in "ai" else "")),
          spec={"type": "trace", "templateVersion": "2.0", "mode": "intro", "canvas": "letter", "forms": [f"latin.{x}"],
@@ -237,10 +237,10 @@ for iid, x in (("i09", "s"), ("i10", "t"), ("i11", "p"), ("i12", "a")):
          [(f"snd:en-snd-{x}", "M-ENG-LETTERNAME")], "HL-LTR2SND", "symbolic", stem={"text": x},
          note="2 choices: the name or the sound; the same name-sound mix-up seen from the other side (family NAME). On the error: he-fb-check, then he-fb-sound-not-name + the name.")
 ls01(S, "i13", "text stem + picture options", ["he-ins-letter-pic"], [], ["pic.ant", "pic.acorn", "pic.egg"], "pic.ant",
-     [("pic.acorn", "M-ENG-LETTERNAME"), ("pic.egg", "M-ENG-AE-E")], "HL-LTR2PIC", "symbolic", stem={"text": "a"},
+     [("pic.acorn", "M-ENG-LETTERNAME"), ("pic.egg", "M-ENG-AE-E")], "HL-LTR2PIC", "pictorial", stem={"text": "a"},
      note="ant, not the key word apple, so the child applies the sound to a new word. acorn starts with the name /eɪ/; egg with /ɛ/, the vowel a Hebrew speaker takes for /æ/. Each picture plays its word on a tap (en-ant, en-acorn, en-egg).")
 ls01(S, "i14", "text stem + picture options", ["he-ins-letter-pic"], [], ["pic.igloo", "pic.ice-cream", "pic.eagle"], "pic.igloo",
-     [("pic.ice-cream", "M-ENG-LETTERNAME"), ("pic.eagle", "M-ENG-IH")], "HL-LTR2PIC", "symbolic", "C", stem={"text": "i"},
+     [("pic.ice-cream", "M-ENG-LETTERNAME"), ("pic.eagle", "M-ENG-IH")], "HL-LTR2PIC", "pictorial", "C", stem={"text": "i"},
      note="ice cream starts with the name /aɪ/; eagle with /i/, the Hebrew vowel a child hears for /ɪ/ (igloo /ˈɪɡlu/ and eagle /ˈiɡəl/ differ only in that vowel's quality).")
 ls01(S, "i15", "tap-all", ["he-ins-tap-all"], ["en-snd-t"], ["tile:t", "tile:i", "tile:t", "tile:f", "tile:l", "tile:t"],
      "tile:t ×3 (cards 1, 3, 6)", [("tile:i", "M-ENG-LOOKALIKE"), ("tile:f", "M-ENG-LOOKALIKE"), ("tile:l", "M-ENG-LOOKALIKE")],
@@ -253,6 +253,7 @@ item(skill=S, id="i16", tmpl="LS11", mode="place", scored=True, frame=["he-ins-h
      spec={"type": "listen_do", "mode": "place", "scene": "pic.stones-path", "targets": ["txt:n", "txt:h", "txt:m"], "answer": {"correct": "txt:n"}})
 
 W = "ENG-B-19.G1"
+T = "ENG-B-23.G1"
 CLASSIFY = {
     "s": {"start": "M-ENG-STROKE-RTL", "direction": "M-ENG-STROKE-CW", "lines": "M-ENG-LINES", "mirror": "M-ENG-STROKE-CW"},
     "a": {"start": "M-ENG-STROKE-RTL", "direction": "M-ENG-STROKE-CW", "lines": "M-ENG-LINES"},
@@ -273,14 +274,15 @@ def ls02(iid, x, mode, scored, flags="", **extra):
     spec["prompt"] = {"vo": "vo:" + frame[0]} | ({"target": "vo:" + prompt[0]} if prompt else {})
     spec["classify"] = CLASSIFY[x]
     opt = f"form latin.{x}; " + "; ".join(f"{k} {v}" for k, v in extra.items())
-    item(skill=W, id=iid, tmpl="LS02", mode=mode, scored=scored, frame=frame, prompt=prompt, pics=[], options=[opt], right="ok",
+    item(skill=T if mode == "trace" else W, id=iid, tmpl="LS02", mode=mode, scored=scored, frame=frame, prompt=prompt, pics=[], options=[opt], right="ok",
          dist=[(k, v) for k, v in CLASSIFY[x].items() if k != "partners"] + [(f"partner {p}", t) for p, t in CLASSIFY[x].get("partners", {}).items()],
          hints="HL-WRITE", rep="embodied", flags=flags, spec=spec, form=x, cue=extra.get("cue"),
-         note={"trace": "Practice in a language course (E-1): written, never counted as writing evidence.",
+         note={"trace": ("Lead-up practice (E-1): never writing evidence, and a full-guide trace does not count toward 'practised'." if extra.get("guide") == "full" else "Practice (E-1): never writing evidence; right with the start dot at hint level 0 or 1, it marks this letter as practised for B-23.G1."),
                "copy": "Counts like a level-1 hinted answer (E-1).",
                "memory": "Counts in full (E-1)."}[mode])
-ls02("w01", "s", "trace", False, guide="full")
-ls02("w02", "p", "trace", False, guide="start")
+ls02("t01", "s", "trace", False, guide="full")
+for k, x in enumerate(GROUP1):
+    ls02(f"t{2 + k:02d}", x, "trace", False, guide="start")
 ls02("w03", "a", "copy", True, model="beside")
 ls02("w04", "n", "copy", True, model="beside")
 for k, x in enumerate(GROUP1):
@@ -288,7 +290,7 @@ for k, x in enumerate(GROUP1):
 for k, x in enumerate(GROUP1):
     ls02(f"w{11 + k:02d}", x, "memory", True, flags="C" if x == "p" else "", cue="name")
 
-R = "ENG-B-18"
+R = "ENG-B-18.G1"
 item(skill=R, id="s01", tmpl="LS08", mode="listen + dialogic", scored=False, frame=["he-ins-story"],
      prompt=[f"en-st-tap-{n}" for n in range(1, 7)], pics=[f"pic.story-tap-{n}" for n in range(1, 7)],
      options=["tap a picture: its word (pan, tap, pin, sit, pat, nap)"], right="-", dist=[], hints="-", rep="story",
@@ -302,7 +304,7 @@ def ls04(iid, word, options, dist, flags=""):
     item(skill=R, id=iid, tmpl="LS04", mode="graphemes", scored=True, frame=["he-ins-slide", "he-ins-slide-pick"],
          prompt=[f"en-snd-{c}" for c in word] + [f"en-blend-{word}", f"en-{word}"], pics=options, options=options,
          right=f"pic.{word}", dist=dist, hints="HL-BLEND", rep="symbolic", flags=flags, spec=spec, word=word,
-         note="The slide is practice; only the picture choice is scored (L5 §5.5). Parts: " + " · ".join(f"{c} ({'stretched' if c in 'asin' else 'clipped'})" for c in word) + ".")
+         note="The slide is practice; only the picture choice is scored (L5 §5.5). Before the choice only the sounds play; the whole word plays after it. Parts: " + " · ".join(f"{c} ({'stretched' if c in 'asin' else 'clipped'})" for c in word) + ".")
 ls04("r01", "pan", ["pic.pan", "pic.nap", "pic.pin"], [("pic.nap", "M-ENG-DIR"), ("pic.pin", "M-ENG-FIRSTLETTER-GUESS")], "C")
 ls04("r02", "nap", ["pic.nap", "pic.pan", "pic.net"], [("pic.pan", "M-ENG-DIR"), ("pic.net", "M-ENG-FIRSTLETTER-GUESS")])
 ls04("r03", "tap", ["pic.tap", "pic.pat", "pic.tape"], [("pic.pat", "M-ENG-DIR"), ("pic.tape", "M-ENG-LETTERNAME")], "C")
@@ -336,13 +338,13 @@ ls03("b03", "nap", "a", 2)
 
 # ------------------------------------------------------------------ lessons (visits)
 LESSONS = [
-    ("V1", "the bundle opens (s a t)", "n01 n02 n03 · i10 · i06 · i02 · i01 · w01", "he-ltr-ltr before w01. The bundle counts as one new skill (E-2)."),
-    ("V2", "the bundle continues (p i n)", "n04 n05 n06 · i04 · i07 · i11 · i05 · i08 · i16 · w02", "No new word set (E-5). The co-play card is shown to the parent after this visit."),
-    ("V3", "the four facets mixed; copy and the first memory writing", "i03 · i12 · i09 · i13 · i14 · i15 · w03 · w04 · w05 w06 w07", "Memory with the sound cue, day 1 (E-1)."),
+    ("V1", "the bundle opens (s a t)", "n01 n02 n03 · i10 · i06 · i02 · i01 · t01 t02 t03 t04", "he-ltr-ltr before t01. The bundle (B-16 with B-23.G1) counts as one new skill (E-2); three new letters, within the ceiling of 3 (frame §4.6 P6)."),
+    ("V2", "the bundle continues (p i n)", "n04 n05 n06 · i04 · i07 · i11 · i05 · i08 · i16 · t05 t06 t07", "No new word set (E-5). With t02 to t07 right at hint level 0 or 1, B-23.G1 is practised, so B-19.G1 can open next. The co-play card is shown to the parent after this visit."),
+    ("V3", "the four facets mixed; B-19.G1 opens: copy and the first memory writing", "i03 · i12 · i09 · i13 · i14 · i15 · w03 · w04 · w05 w06 w07", "B-19.G1 is the visit's new skill, after the bundle (E-1). Memory with the sound cue, day 1."),
     ("V4", "the word meet (a new word set, no new letters) and sound boxes", "s01 · b01 b02 b03 · w08 w09 w10 · w11 w12 w13", "Memory with the sound cue for p i n, and with the name cue for s a t: each letter meets its two cues on two different days (E-1)."),
     ("V5", "the first reading", "he-ltr-ltr · r01 r02 r03 r04 r05 · r06 · r07 · w14 w15 w16", "Reading words only from s a t p i n; memory with the name cue for p i n (their sound cue was V4)."),
 ]
-COPLAY = {"id": "card.eng.b16.g1", "course": "eng", "skills": ["ENG-B-16", "ENG-B-19.G1"], "kind": "coplay",
+COPLAY = {"id": "card.eng.b16.g1", "course": "eng", "skills": ["ENG-B-16", "ENG-B-23.G1"], "kind": "coplay",
           "text": "היום הכירו הילדים שש אותיות באנגלית: s a t p i n. לכל אות יש צליל ויש שם, ובקריאה משתמשים בצליל. משחק לבית: בחרו אות אחת, ומצאו יחד בבית דברים שמתחילים בצליל שלה. אמרו את הצליל עצמו, קצר ונקי, בלי תנועה אחריו.",
           "meaning": "Today the children met six letters in English: s a t p i n. Every letter has a sound and a name, and in reading we use the sound. A game for home: choose one letter, and together find things at home that start with its sound. Say the sound itself, short and clean, with no vowel after it.",
           "review": "needs-editor"}
@@ -463,7 +465,7 @@ def checks(src, items):
             w = it["spec"]["word"]
             need("".join(p["text"] for p in w["parts"]) == w["text"], f"{key}: parts join to the word")
         # decodable: every word read in B-18 uses only group-1 graphemes
-        if it["skill"] == "ENG-B-18" and it["spec"]:
+        if it["skill"] == "ENG-B-18.G1" and it["spec"]:
             sc = it["spec"].get("scene")
             words = [it["spec"].get("word", {}).get("text")] + [sc.get("stem", {}).get("text") if isinstance(sc, dict) else None]
             for w in filter(None, words):
@@ -485,7 +487,14 @@ def checks(src, items):
                 need(i["tmpl"] != "LS03", f"{sk} {i['id']}: an LS03 item is not a check")
             if "P" in i["flags"]:
                 need(i["tmpl"] == "LS01" and not i["mode"].startswith("tap-all"), f"{sk} {i['id']}: a probe is a plain LS01 item")
-        if sk != "ENG-B-15":
+        if sk == "ENG-B-23.G1":
+            need(all(i["mode"] in ("intro", "trace") for i in its), f"{sk}: a trace node holds only intro and trace items (E-1)")
+            need(not any(c in i["flags"] for i in its for c in "CP"), f"{sk}: a trace node has no check and no probe (E-1)")
+            need({i["form"] for i in its if i["mode"] == "trace" and i["spec"].get("guide") == "start"} == set(GROUP1), f"{sk}: every letter has a start-dot trace (practised needs it)")
+        if sk == "ENG-B-19.G1":
+            need(not any(i["mode"] == "trace" for i in its), f"{sk}: a writing node has no trace item (E-1)")
+            need(all(i["mode"] == "memory" for i in its if "C" in i["flags"]), f"{sk}: every check of a writing node is a memory item")
+        if sk not in ("ENG-B-15", "ENG-B-23.G1"):
             checks_ = [i for i in its if "C" in i["flags"]]
             need(len(checks_) >= 2 and len({i["right"] if i["tmpl"] != "LS02" else i["form"] for i in checks_}) >= 2,
                  f"{sk}: at least two checks with different answers")
@@ -502,19 +511,19 @@ def checks(src, items):
     name = {letter_of(i) for i in b16 if i["scored"] and (any("en-name" in c for c in i["prompt"]) or "snd:en-name" in i["right"])}
     need(snd == set(GROUP1), f"B-16 sound facet covers every letter ({sorted(snd)})")
     need(name == set(GROUP1), f"B-16 name facet covers every letter ({sorted(name)})")
-    intro = {i["spec"]["forms"][0][-1] for i in b16 if i["mode"] == "intro"}
-    need(intro == set(GROUP1), "B-16 has an intro for every letter")
+    intro = {i["spec"]["forms"][0][-1] for i in by_skill["ENG-B-23.G1"] if i["mode"] == "intro"}
+    need(intro == set(GROUP1), "B-23.G1 has an intro for every letter (the bundle opener)")
     w = by_skill["ENG-B-19.G1"]
     for cue in ("sound", "name"):
         cov = {i["form"] for i in w if i["mode"] == "memory" and i["cue"] == cue}
         need(cov == set(GROUP1), f"B-19.G1 memory with the {cue} cue covers every letter")
-    rset = {i["word"] for i in by_skill["ENG-B-18"] if i.get("word")} | {i["spec"]["scene"]["stem"]["text"] for i in by_skill["ENG-B-18"] if i["tmpl"] == "LS01"}
-    need(rset == {"pan", "nap", "tap", "pat", "pin", "sit"}, f"B-18 every word of the set is read once ({sorted(rset)})")
+    rset = {i["word"] for i in by_skill["ENG-B-18.G1"] if i.get("word")} | {i["spec"]["scene"]["stem"]["text"] for i in by_skill["ENG-B-18.G1"] if i["tmpl"] == "LS01"}
+    need(rset == {"pan", "nap", "tap", "pat", "pin", "sit"}, f"B-18.G1 every word of the set is read once ({sorted(rset)})")
     # lessons reference only real items, every item once
     ids = [i["id"] for i in items]
     used = []
     for _, _, seq, _ in LESSONS:
-        used += [t for t in re.findall(r"\b[nirswb]\d\d\b", seq)]
+        used += [t for t in re.findall(r"\b[nirswbt]\d\d\b", seq)]
     need(sorted(used) == sorted(ids), "every item is in exactly one visit")
     need(not re.search(r"[A-Za-z]{2,}", COPLAY["text"].replace("s a t p i n", "")), "co-play card text is Hebrew (bar the letters)")
     return errs, ok
@@ -533,13 +542,13 @@ def render(src):
     A("")
     A("Owner: english-language-teacher. Date: 2026-11-06. Step L5-2c of `docs/milestones/L5.md` (approved by the owner on 2026-11-06 with every recommendation). Status: **draft for the team. Nothing is built or voiced.** The English is the teacher's (final after the listening check). Every Hebrew line here is a **draft, `\"review\": \"needs-editor\"`**, written without nikud for the hebrew-text-editor, who adds the nikud and the voice text. Every picture is a brief for the design-director. **Voices come later (owner, 2026-11-06):** every line is text with its clip id, listed as pending; nothing is paid.")
     A("")
-    A("Built on: `syllabus.md` §2 (ENG-B-15, B-16, B-18, B-19.G1), §3.1 to §3.4 (group 1, blending, names), §5 (writing), §7 (sessions, Hebrew around the English), §8 (tags); `L5.md` §3.1, §5.1 to §5.5, §5.8, §5.9, §6 (E-1 to E-6), §7, §8; `frame.md` §2.3, §3.3, §4.2, §5.3; `strokes.md` (the `latin` set, teacher-checked); the format of `band-a-content.md`. Made and checked by a script (§12).")
+    A("Built on: `syllabus.md` §2 (ENG-B-15, B-16, B-18.G1, B-19.G1, B-23.G1), §3.1 to §3.4 (group 1, blending, names), §5 (writing), §7 (sessions, Hebrew around the English), §8 (tags); `L5.md` §3.1, §5.1 to §5.5, §5.8, §5.9, §6 (E-1 to E-6), §7, §8; `frame.md` §2.3, §3.3, §4.2, §5.3; `strokes.md` (the `latin` set, teacher-checked); the format of `band-a-content.md`. Made and checked by a script (§12).")
     A("")
     A("## 1. What the slice holds, and why")
-    A("- **L5 §8:** the pilot slice of English is group 1 (s a t p i n): **ENG-B-16** (the letters, whole), **ENG-B-19.G1** (writing them) and **the first ENG-B-18 words**. It drives the new templates on real content before the full ENG-2b batch: LS01's new modes (letter tiles, text stem with sound or picture options, tap-all), **LS02 2.0** (intro, trace, copy, memory), LS04 `graphemes`, and **LS03 1.1** `boxes` (three ENG-B-15 items on group-1 words, so LS03 1.1 is tried on the words it must carry; they belong to ENG-2a and move there with it).")
+    A("- **L5 §8:** the pilot slice of English is group 1 (s a t p i n): **ENG-B-16** (the letters, whole), **ENG-B-23.G1** (tracing them, in the bundle), **ENG-B-19.G1** (copying and writing them from memory, after the bundle) and **ENG-B-18.G1** (the first words read; B-18 was split by group on 2026-11-06). It drives the new templates on real content before the full ENG-2b batch: LS01's new modes (letter tiles, text stem with sound or picture options, tap-all), **LS02 2.0** (intro, trace, copy, memory), LS04 `graphemes`, and **LS03 1.1** `boxes` (three ENG-B-15 items on group-1 words, so LS03 1.1 is tried on the words it must carry; they belong to ENG-2a and move there with it).")
     A("- **Every letter is taught whole (D16, frame §5.3):** each letter opens with an LS02 `intro` (shape, sound in a key word with a picture, name as a separate fact, the dot walks the path, one trace); then practice mixes the four facets: sound ↔ letter both ways, name ↔ letter both ways, letter → picture by its sound, and writing (copy, then memory cued by the sound **and** by the name). Blending uses sounds, never names.")
     A("- **Order inside the group:** s a t p i n (syllabus §3.1, the order that gives words from the first days: at, sat, tap). The writing items keep that order; each letter's start and direction cue comes from its formation family in the stroke data (strokes.md §5.1, Handwriting Without Tears): a is a Magic c letter (start at 2 o'clock, anticlockwise), s starts at 2 o'clock too, t and i are down strokes, p and n go down, then up and over.")
-    A("- **Key words** (syllabus §3.1): s sun · a apple · t tent · p pan · i igloo · n net. Reading words (B-18 set, each its own `variantGroup`): **pan, nap, tap, pat, pin, sit**, all decodable with s a t p i n, all CVC with one short vowel, none with a flapped t in its isolated form. They are first heard in an original story (s01) before any is read (syllabus §4.3: meaning first).")
+    A("- **Key words** (syllabus §3.1): s sun · a apple · t tent · p pan · i igloo · n net. Reading words (B-18.G1 set, each its own `variantGroup`): **pan, nap, tap, pat, pin, sit**, all decodable with s a t p i n, all CVC with one short vowel, none with a flapped t in its isolated form. They are first heard in an original story (s01) before any is read (syllabus §4.3: meaning first).")
     A("- **Everyday words stay** (owner: do not over-sanitise): a push pin, a frying pan, tape and a nap are ordinary things a child sees at home.")
     A("")
     A("## 2. The rules every item here follows (what differs from Band A)")
@@ -549,9 +558,9 @@ def render(src):
     A("- **Look-alike letters outside the group** (f l o d q b h m j) appear only as wrong tiles that test the shape; they are never an answer and never read. Their tiles have no clip: a tap on one gets he-fb-look-alike, not its name, so no untaught letter is taught by accident.")
     A("- **2-choice items** are the 'sound or name?' items (i06 to i12): one tagged distractor, one retry only, never a check; B-16 also has 3-choice items, and 2-choice items are 7 of its 16 scored items.")
     A("- **Free response** (LS02, LS03): classifiers instead of distractors (L5 §5.2, §5.3); an error they cannot name is a retry with no tag and no evidence. LS02 feedback comes only at the end of a stroke; a missed stroke fades softly and the start dot comes back; never red.")
-    A("- **Writing mastery (E-1, Q1 approved):** trace is practice; copy counts like a level-1 hint; memory counts in full; ENG-B-19.G1 is fresh only with memory successes on two days, one cued by the sound and one by the name. So every letter has a memory item with each cue (w05 to w16).")
-    A("- **Set coverage (E-3):** every letter is the right answer of at least one item in each facet (sound, name, writing); every reading word of B-18 is read once.")
-    A("- **Checks (C):** at least two per skill, with different answers, never a 2-choice item, never a probe. For ENG-B-19.G1 the checks are memory items (w07, w14): a writing skill has no choice item, and E-1 makes memory writing the evidence (see §13, item 3). ENG-B-15's three items here are not checks (free response); its checks come in ENG-2a.")
+    A("- **Writing mastery (E-1, Q1 approved; `docs/languages/writing-mastery.md`):** trace is practice, in the trace node ENG-B-23.G1, which is met once every letter is traced once with the start dot only (t02 to t07); copy counts like a level-1 hint; memory counts in full; ENG-B-19.G1 is fresh only with memory successes on two days, one cued by the sound and one by the name. So every letter has a memory item with each cue (w05 to w16).")
+    A("- **Set coverage (E-3):** every letter is the right answer of at least one item in each facet (sound, name, writing); every reading word of B-18.G1 is read once; every letter has a start-dot trace in B-23.G1.")
+    A("- **Checks (C):** at least two per skill, with different answers, never a 2-choice item, never a probe. For ENG-B-19.G1 the checks are memory items (w07, w14): in a writing node every check is a memory item (frame §2.3, §4.6 P5). The trace node ENG-B-23.G1 has no check and no probe. ENG-B-15's three items here are not checks (free response); its checks come in ENG-2a.")
     A("- **Feedback** (curriculum §9.1, §9.2): right → he-fb-right-1 … 8 + the English clip of the answer (the sound, the name or the word). First error → he-fb-check, then the line the error names: he-fb-look-alike (a look-alike tile), he-fb-name-not-sound or he-fb-sound-not-name (LETTERNAME), he-fb-thats + the chosen picture's word + he-fb-listen-again + the target (a picture foil), he-fb-left-start (DIR). Every picture option plays its own word on a tap (LS01 (b)) and in that diagnostic line: en-ant, en-acorn, en-egg, en-igloo, en-ice-cream, en-eagle, en-pan, en-nap, en-net, en-tap, en-pat, en-tape, en-pot, en-pin, en-pine, en-sit, en-sun, en-sock; on a story page, its page line. LS02: he-fb-stroke-again, he-fb-round-way, he-fb-lines, he-fb-tail, he-fb-faces; after a success he-fb-watch-order and the model replays once in its order (stroke order is not scored, Q2).")
     A("- **Voices later (L5 §7):** every clip below is `voPending`; a pending clip is silent, the line's bubble shows, and a template that waits for a clip's end waits the fixed pause. **No family release of this slice before its sounds are voiced (Q7).**")
     A("- **Characters:** Pip and Mika, as in Band A (working names, design-director).")
@@ -574,11 +583,12 @@ def render(src):
     A("")
     A("## 5. Items per skill")
     A("Columns as in the Band A batch: the item; the template and mode; the Hebrew frame; the English prompt (clip ids, §9); the options (tiles, sound buttons, pictures, §10); the right answer; the distractors or classifiers with their tags; the hint ladder; the representation (frame §3.3.1). *not scored* marks practice. **C** an understanding or delayed check; **P** a placement probe (§8). Under each table, the item's template data in the shape of L5 §5 (for the app-developer's generator; clip ids are `vo:` ids).")
-    sec = {"ENG-B-16": ("ENG-B-16 Group 1 letters, whole (bundle with ENG-B-19.G1)", "Set (each letter a `variantGroup`): s, a, t, p, i, n. Facets: sound, name, writing (B-19.G1); the shape is in every item."),
-           "ENG-B-19.G1": ("ENG-B-19.G1 Writing s a t p i n (bundled with ENG-B-16)", "Set: s, a, t, p, i, n. Forms from `content/languages/strokes/latin.json` (`teacher-checked`, 2026-11-05). Canvas `letter`, the four lines. Classifiers per letter, from the stroke data: **start** (the stroke begun at its other end) → `M-ENG-STROKE-RTL`; **direction** (a round part the other way: s, a) → `M-ENG-STROKE-CW`, (a straight stroke drawn from the wrong end or the bar right to left: t i n p) → `M-ENG-STROKE-RTL`; **lines** (off the guide lines; p's tail not below the base line) → `M-ENG-LINES`; **mirror** (s mirrored, drawn clockwise first) → `M-ENG-STROKE-CW`; (p mirrored, or a q or b instead) → `M-ENG-BD`. A missing i dot, or anything else, is a retry with no tag."),
-           "ENG-B-18": ("ENG-B-18 The first words read (group 1 only)", "Set (each a `variantGroup`): pan, nap, tap, pat, pin, sit. Decodable with s a t p i n only (checked by script). The contrast line he-ltr-ltr plays once before r01."),
+    sec = {"ENG-B-16": ("ENG-B-16 Group 1 letters, whole (bundle with ENG-B-23.G1)", "Set (each letter a `variantGroup`): s, a, t, p, i, n. Facets: sound, name (here), tracing (B-23.G1, in the bundle), writing (B-19.G1, after it); the shape is in every item."),
+           "ENG-B-23.G1": ("ENG-B-23.G1 Tracing s a t p i n (the trace node, bundled with ENG-B-16)", "`writing: practised` (E-1). Set: s, a, t, p, i, n. The bundle's six intros (the worked example of each letter, with one full-guide trace) and the traces. Met once every letter is traced once with the start dot only, at hint level 0 or 1 (t02 to t07); never mastered, probed or checked, and it never blocks. Every answer here is practice: the classifiers below only choose the feedback line, never misconception evidence."),
+           "ENG-B-19.G1": ("ENG-B-19.G1 Copying, then writing s a t p i n from memory (after the bundle)", "`writing: memory` (E-1); prerequisites B-23.G1 and B-16. Set: s, a, t, p, i, n. Forms from `content/languages/strokes/latin.json` (`teacher-checked`, 2026-11-05). Canvas `letter`, the four lines. Classifiers per letter, from the stroke data: **start** (the stroke begun at its other end) → `M-ENG-STROKE-RTL`; **direction** (a round part the other way: s, a) → `M-ENG-STROKE-CW`, (a straight stroke drawn from the wrong end or the bar right to left: t i n p) → `M-ENG-STROKE-RTL`; **lines** (off the guide lines; p's tail not below the base line) → `M-ENG-LINES`; **mirror** (s mirrored, drawn clockwise first) → `M-ENG-STROKE-CW`; (p mirrored, or a q or b instead) → `M-ENG-BD`. A missing i dot, or anything else, is a retry with no tag."),
+           "ENG-B-18.G1": ("ENG-B-18.G1 The first words read (group 1)", "Set (each a `variantGroup`): pan, nap, tap, pat, pin, sit. Decodable with s a t p i n only (checked by script). The contrast line he-ltr-ltr plays once before r01."),
            "ENG-B-15": ("ENG-B-15 Split a word into its sounds (LS03 1.1 on group-1 words; ENG-2a items)", "Words: pin, sit, nap (3 sounds each). Unit `phoneme`, steps `count` then `which`. Classifiers (L5 §5.3, eng): one token for the whole word (the syllable count) → `M-ENG-SEG-SYLL`; 4 tokens (a vowel added after a stop, 'puh-i-n') → `M-ENG-ADDVOWEL`; in `which`, the mirror box (counting from the right, the Hebrew direction) → `M-ENG-DIR`.")}
-    for sk in ("ENG-B-16", "ENG-B-19.G1", "ENG-B-18", "ENG-B-15"):
+    for sk in ("ENG-B-16", "ENG-B-23.G1", "ENG-B-19.G1", "ENG-B-18.G1", "ENG-B-15"):
         t, s = sec[sk]
         A("")
         A(f"### {t}")
@@ -656,7 +666,7 @@ def render(src):
     A("| Skill | Items | Scored | 2-choice | Checks | Probes |")
     A("|---|---|---|---|---|---|")
     tot = [0] * 5
-    for sk in ("ENG-B-16", "ENG-B-19.G1", "ENG-B-18", "ENG-B-15"):
+    for sk in ("ENG-B-16", "ENG-B-23.G1", "ENG-B-19.G1", "ENG-B-18.G1", "ENG-B-15"):
         its = [i for i in ITEMS if i["skill"] == sk]
         row = [len(its), sum(i["scored"] for i in its), sum(1 for i in its if i["scored"] and i["tmpl"] in ("LS01", "LS04", "LS11") and len(i["options"]) == 2),
                sum("C" in i["flags"] for i in its), sum("P" in i["flags"] for i in its)]
@@ -680,21 +690,23 @@ def render(src):
 
 def render_checks(errs, ok, broken_ok):
     L = ["## 12. Checked by script, and not checked",
-         f"Checked ({len(ok)} checks, **{'all pass' if not errs else str(len(errs)) + ' FAIL'}**, run 2026-11-06 by the generator of this file): every skill id is in `syllabus.md` §2; every tag is defined in syllabus §8 and is in the frame §4.2 catalogue, and none is an accent tag; LS02 classifiers are of family STROKE or SHAPE; every template and mode is specified in `L5.md`; every form id is in `content/languages/strokes/latin.json` and the set is `teacher-checked`, with 1 to 6 strokes; every Hebrew line referenced exists (new here, or `text-ready` in the Band A batch) and has no Latin letter and no singular or first-person address; every English clip referenced has a pronunciation row (here, or in `pronunciation.csv`) and is Latin only, with no id clash; every picture referenced has a brief (here, or in the Band A batch); one right answer among the options and every distractor tagged once; tap-all has at least 1 right and 2 tagged wrong cards and at most 6 cards; at most 4 choices elsewhere; the 2-choice rule (at most half of a skill's scored items, a skill with 2-choice items also has 3-choice items, a 2-choice item is never a check); at least two checks per skill with different answers, never a probe, never LS03; probes are plain LS01 items; at least two representations per scored skill (B-19.G1 by the E-1 cue rule instead); intro items unscored, memory items with their cue clip, copy with `model: beside`, trace with a guide; LS03 units equal the count and `which` is inside it; LS04 parts join to the word; every B-18 word and every text stem is decodable with s a t p i n; set coverage: an intro for each letter, each letter right in the sound facet and in the name facet, memory with the sound cue and with the name cue for each letter, each B-18 word read once; every item in exactly one visit; the co-play text is Hebrew.",
+         f"Checked ({len(ok)} checks, **{'all pass' if not errs else str(len(errs)) + ' FAIL'}**, run 2026-11-06 by the generator of this file): every skill id is in `syllabus.md` §2; every tag is defined in syllabus §8 and is in the frame §4.2 catalogue, and none is an accent tag; LS02 classifiers are of family STROKE or SHAPE; every template and mode is specified in `L5.md`; every form id is in `content/languages/strokes/latin.json` and the set is `teacher-checked`, with 1 to 6 strokes; every Hebrew line referenced exists (new here, or `text-ready` in the Band A batch) and has no Latin letter and no singular or first-person address; every English clip referenced has a pronunciation row (here, or in `pronunciation.csv`) and is Latin only, with no id clash; every picture referenced has a brief (here, or in the Band A batch); one right answer among the options and every distractor tagged once; tap-all has at least 1 right and 2 tagged wrong cards and at most 6 cards; at most 4 choices elsewhere; the 2-choice rule (at most half of a skill's scored items, a skill with 2-choice items also has 3-choice items, a 2-choice item is never a check); at least two checks per skill with different answers, never a probe, never LS03 (the trace node B-23.G1 has none: it holds only intro and trace items, with a start-dot trace for every letter; the writing node B-19.G1 has no trace item, and its checks are memory items); probes are plain LS01 items; at least two representations per scored skill (B-19.G1 by the E-1 cue rule instead); intro items unscored, memory items with their cue clip, copy with `model: beside`, trace with a guide; LS03 units equal the count and `which` is inside it; LS04 parts join to the word; every B-18.G1 word and every text stem is decodable with s a t p i n; set coverage: an intro for each letter (in B-23.G1), each letter right in the sound facet and in the name facet, memory with the sound cue and with the name cue for each letter, each B-18.G1 word read once; every item in exactly one visit; the co-play text is Hebrew.",
          f"Self-test: a deliberately broken copy (an accent tag on a distractor, an unknown form id, a 2-choice check, a word with an untaught letter, a missing Hebrew line, one letter missing from the name facet) **{'fails as it should' if broken_ok else 'DID NOT FAIL'}**.",
          "",
          "**Not checked** (cannot be, or not by me): how any clip sounds (nothing is voiced; the listening check comes after voicing, pronunciation-spec §4), whether the isolated sounds are clean (the D2 pilot); the Hebrew wording and nikud (the hebrew-text-editor); the pictures (not drawn yet); that LS01 text faces, tap-all, LS02 2.0, LS03 1.1 and LS04 accept these exact data shapes (they are being built in L5-1 to L5-5; the shapes follow L5 §5 and may need small renames); the free-stroke tolerances (the qa-engineer tunes them); a playthrough; mastery in the simulator.",
          ""]
     return "\n".join(L)
 
-FINDINGS = """## 13. Findings for the plan (to the curriculum-expert and the orchestrator)
-1. **ENG-B-18 is gated behind group 2.** Its prerequisites are B-14 and **B-17**, so the engine cannot serve these group-1 reading items until group 2 reaches 0.8, but L5 §8 puts "the first B-18 words" in the group-1 slice (and syllabus §3.1 says group 1 unlocks words). Proposal (a syllabus change, for the owner): split B-18 like B-19 into **B-18.G1** (prerequisites B-14, B-16) and **B-18.G2** (B-17, B-18.G1), with B-18 as the roll-up. Until then these items are tagged `ENG-B-18` and wait for B-17.
-2. **LS04 `graphemes`: when the whole word plays.** L5 §5.5 plays each part and then the whole word, and then asks for the picture. If the whole word is heard before the choice, the choice is a listening item, and its DIR and LETTERNAME distractors no longer show a reading error. Proposal: in a scored item the parts play during the slide, the child chooses, and the whole word plays as feedback (or at H1). The data above work either way (`whole` and `stretched` are both named).
-3. **Checks for a writing skill.** The frame says a free-response item is never a check (written for the drum). A writing skill has no choice items, and E-1 makes memory writing its evidence, so this slice marks two memory items as checks (w07, w14). The curriculum-expert should confirm (or name another check for B-19.G1).
-4. **LS03 H2 for English phonemes:** L5 §5.3 gives "hands clap each unit" for the count step. For English phoneme boxes in one-syllable words a clap per unit would model the M-ENG-SEG-SYLL error; HL-BOXES uses mouth pictures instead.
-5. **LS01 diagnostic feedback for a tile with no clip.** The Band A pattern "he-fb-thats + the chosen word" needs a clip for the chosen option. Look-alike tiles of untaught letters have none on purpose; they get he-fb-look-alike. The app needs a feedback branch for an option with no clip.
-6. **Text faces on LS11 targets** (i16, letter stones): L5-1 lists text faces for sort, match, spot and order, not for LS11 `place`. If LS11 cannot take a text face in L5-1, i16 becomes an LS01 tap with the stones as tiles (and B-16 loses its embodied item; the intro and B-19.G1 stay embodied).
-7. **B-22 and the chant** (L5 §14 item 4) are in ENG-2b, not in this slice; the syllabus line "the melody needs the owner's OK" is still to be changed to the chant (owner, 2026-11-05) when I next edit the syllabus.
+FINDINGS = """## 13. Findings for the plan, and how they were settled (2026-11-06)
+The teacher's findings went to the curriculum-expert and the orchestrator; the owner approved the structure changes on 2026-11-06, and the curriculum-expert settled the rest the same day.
+1. **ENG-B-18 was gated behind group 2.** Settled (owner, 2026-11-06): B-18 is split into **B-18.G1** (prerequisites B-14, B-16) and **B-18.G2** (B-17, B-18.G1), with B-18 as the roll-up. These reading items are `ENG-B-18.G1`.
+2. **LS04 `graphemes`: when the whole word plays.** Settled (L5 §5.5): in a scored item only the parts play during the slide; the child chooses; the whole word plays **after** the choice. Heard first, the choice would be a listening item, and its DIR and LETTERNAME distractors would no longer show a reading error. If a part has no clip (D2), the parts light in silence and the stretched whole is the H1 replay (credit 0.8). In teaching screens and at H3 the whole word follows the parts. The data above need no change (`whole` and `stretched` are both named).
+3. **Checks for a writing skill.** Confirmed (frame §2.3, §4.6 P5): in a writing node every check is a memory item, so w07 and w14 stand. A trace node (B-23.G1) has no check and no probe.
+4. **LS03 H2 for English phonemes.** Adopted (L5 §5.3): for phoneme units the level-2 hint is the mouth picture of each sound as its token lights; claps stay for syllable and CV units. A clap per sound in a one-syllable word would model `M-ENG-SEG-SYLL`; articulation pictures help beginners segment phonemes (Castiglioni-Spalten and Ehri 2003; Boyer and Ehri 2011).
+5. **LS01 feedback for a tile with no clip.** Settled (L5 §5.1, built in L5-1): an untaught look-alike tile has no clip and no speaker; its first-error feedback skips "that is ..." and plays the tag's line (he-fb-look-alike), then the target again. The validator allows a clip-less option only as a SHAPE-tagged distractor.
+6. **Text faces on LS11 targets** (i16). Settled: LS11 `place` targets take LS01's text face in L5-1. B-16 no longer depends on it for two representations, since letter → picture items (i13, i14) are `pictorial` (frame §4.6 P7).
+7. **B-22 and the chant** (L5 §14 item 4) are in ENG-2b, not in this slice; the syllabus line "the melody needs the owner's OK" is still to be changed to the chant (owner, 2026-11-05) when the teacher next edits the syllabus.
+8. **Applied with E-1 (curriculum-expert, 2026-11-06):** the intros (n01 to n06) and the traces moved to the trace node **ENG-B-23.G1** (an `intro` names its group's trace node, writing-mastery §8 rule 1); a start-dot trace was added for every letter (t02 to t07), since B-23.G1 is met only when each letter is traced once with the start dot; the old w01 and w02 are t01 and t05. ENG-B-19.G1 keeps the copy and memory items and opens after the bundle (prerequisites B-23.G1, B-16).
 """
 
 def main():
