@@ -118,6 +118,23 @@ Future<void> _write(LetterWriteSession s, {int strokes = 99}) async {
 Future<void> _scribble(LetterWriteSession s) =>
     _draw(s, <Offset>[for (int i = 0; i < 24; i++) Offset(30 + (i * 7) % 40, 20 + (i * 13) % 60)]);
 
+/// A copy item of the Hebrew bet, the letter the owner asked to see written (2026-11-06): the model on the right where reading begins, the
+/// box on the left, both strokes written.
+Ls02Pack _betPack() {
+  final Ls02Pack p = Ls02Pack('heb');
+  p.add(
+    letterJson(
+      course: 'heb',
+      id: 'bet',
+      skill: p.skills.write,
+      mode: 'copy',
+      forms: <String>['hebrew-print.bet'],
+      classify: p.classify(),
+    ),
+  );
+  return p;
+}
+
 Future<void> _shot(WidgetTester t, String name, String board) =>
     expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/${name}_$board.png'));
 
@@ -178,6 +195,17 @@ void main() {
           }
           await r.wait(t, 14000);
           await _shot(t, 'ls02_memory3_$course', b.key);
+          await r.done(t);
+        });
+      }
+
+      if (b.key == 'phoneSE' || b.key == 'tabletPortrait') {
+        testWidgets('heb: a bet written in the box, its model beside it (ב written)', (WidgetTester t) async {
+          final LetterRig r = _rig(_betPack(), 'bet');
+          await r.pump(t, size: b.value);
+          await _write(r.session);
+          await r.wait(t, 500);
+          await _shot(t, 'ls02_written_bet', b.key);
           await r.done(t);
         });
       }

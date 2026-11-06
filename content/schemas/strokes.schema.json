@@ -306,6 +306,68 @@
             },
             "minItems": 1,
             "maxItems": 6
+          },
+          "alternates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "how": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40,
+                  "pattern": "^(?:[a-z ,-]+)$"
+                },
+                "strokes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "line",
+                          "dot",
+                          "short"
+                        ]
+                      },
+                      "points": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 100
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "minItems": 2,
+                        "maxItems": 60
+                      },
+                      "retrace": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "points"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "maxItems": 6
+                }
+              },
+              "required": [
+                "how",
+                "strokes"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 4
           }
         },
         "required": [

@@ -225,37 +225,34 @@ void main() {
           'QA hand level 1 ${board.$1}: ${report.length} of ${forms.length} forms have the hand rectangle over the path\n${report.join('\n')}',
         );
         expect(report, isEmpty, reason: report.join('\n'));
-      }, skip: false);
+      });
 
-      testWidgets(
-        'level 3 on the ${board.$1}: the hand is not over the dotted path while it rests',
-        (WidgetTester t) async {
-          final List<String> report = <String>[];
-          for (final (String, String) f in forms) {
-            final LetterRig r = _rig(_pack(f.$1, f.$2), 'item');
-            await r.pump(t, size: board.$2);
-            for (int i = 0; i < 3; i++) {
-              await _scribble(r.session);
-              await r.wait(t, i < 2 ? 4500 : 60);
-            }
-            final Set<String> hits = <String>{};
-            for (int k = 0; k < 14; k++) {
-              await r.wait(t, 100);
-              hits.addAll(under(t, r, fraction: 1));
-            }
-            if (hits.isNotEmpty) report.add('${f.$2}: ${hits.take(4).join('; ')}');
-            await r.wait(t, 16000);
-            await r.done(t);
+      testWidgets('level 3 on the ${board.$1}: the hand is not over the dotted path while it rests', (
+        WidgetTester t,
+      ) async {
+        final List<String> report = <String>[];
+        for (final (String, String) f in forms) {
+          final LetterRig r = _rig(_pack(f.$1, f.$2), 'item');
+          await r.pump(t, size: board.$2);
+          for (int i = 0; i < 3; i++) {
+            await _scribble(r.session);
+            await r.wait(t, i < 2 ? 4500 : 60);
           }
-          // ignore: avoid_print
-          print(
-            'QA hand level 3 ${board.$1}: ${report.length} of ${forms.length} forms have the hand rectangle over the path\n${report.join('\n')}',
-          );
-          expect(report, isEmpty, reason: report.join('\n'));
-        },
-        // QA-L52-5 open: on the SE the resting hand of level 3 lies over the bowl of the e.
-        skip: board.$1 == 'phoneSE',
-      );
+          final Set<String> hits = <String>{};
+          for (int k = 0; k < 14; k++) {
+            await r.wait(t, 100);
+            hits.addAll(under(t, r, fraction: 1));
+          }
+          if (hits.isNotEmpty) report.add('${f.$2}: ${hits.take(4).join('; ')}');
+          await r.wait(t, 16000);
+          await r.done(t);
+        }
+        // ignore: avoid_print
+        print(
+          'QA hand level 3 ${board.$1}: ${report.length} of ${forms.length} forms have the hand rectangle over the path\n${report.join('\n')}',
+        );
+        expect(report, isEmpty, reason: report.join('\n'));
+      });
     }
   });
 

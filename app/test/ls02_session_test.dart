@@ -141,7 +141,12 @@ void main() {
       final LetterRig r = rig(pack('eng'), 'm_sound');
       await r.pump(t);
       await writeLetter(r.session);
-      await t.pump();
+      expect(
+        r.written,
+        isEmpty,
+        reason: 'the letter is whole, and the session waits a moment for another stroke before it counts',
+      );
+      await r.wait(t, 1100);
       expect(r.written, <String>['correct:ok']);
       expect(r.attempts.single.hintLevel, 0);
       expect(r.session.ring, AnswerState.correct);
@@ -161,13 +166,13 @@ void main() {
     });
 
     testWidgets('a stroke is read at its end, never during it', (WidgetTester t) async {
-      final LetterRig r = rig(pack('eng'), 'm_sound');
+      final LetterRig r = rig(pack('eng', x: 'p'), 'm_sound');
       await r.pump(t);
       final LetterWriteSession s = r.session;
       final List<Offset> stroke = along(s.box.form, 0);
-      s.begin(stroke.first);
+      s.begin(mirror(stroke.first));
       for (final Offset p in stroke.skip(1)) {
-        s.extend(Offset(100 - p.dx, p.dy)); // the mirror, wrong all the way
+        s.extend(mirror(p)); // the mirror, wrong all the way
         expect(r.attempts, isEmpty, reason: 'nothing is said while the finger is down');
         expect(s.ring, AnswerState.idle);
       }
@@ -206,6 +211,7 @@ void main() {
       await r.wait(t, 1500);
       // The retry, now with the start dot, is right: one row, at level 1 (a hinted answer, never a full success).
       await writeLetter(s);
+      await r.wait(t, 1100);
       expect(r.written, <String>['correct:ok']);
       expect(r.attempts.single.hintLevel, 1);
       await r.wait(t, 4000);
@@ -265,6 +271,7 @@ void main() {
       await r.pump(t);
       expect(r.session.modelShown, isTrue);
       await writeLetter(r.session);
+      await r.wait(t, 1100);
       expect(r.written, <String>['correct:ok']);
       expect(r.attempts.single.hintLevel, 0);
       await r.wait(t, 4000);
@@ -458,6 +465,7 @@ void main() {
       await r.pump(t);
       final LetterWriteSession s = r.session;
       await writeLetter(s);
+      await r.wait(t, 1100);
       expect(s.active, 1);
       await draw(s, along(s.box.form, 0).reversed.toList());
       expect(r.written, <String>['incorrect:b2.s1.start']);

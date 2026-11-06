@@ -9,6 +9,7 @@ import '../content/strokes.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
 import 'choice_row.dart' show withTallStage;
+import 'hint_hand.dart' show PointingHand;
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart';
 import 'response_code.dart';
@@ -54,7 +55,7 @@ class LetterWriteSession extends TemplateSession {
   /// The letter being written (a word canvas goes through its boxes in the course's direction).
   int active = 0;
   List<Offset> current = <Offset>[];
-  List<Offset> fading = <Offset>[];
+  List<List<Offset>> fading = <List<Offset>>[];
   AnswerState ring = AnswerState.idle;
   bool _busy = false;
 
@@ -76,6 +77,10 @@ class LetterWriteSession extends TemplateSession {
 
   /// How many misses that wrote nothing a probe has had.
   int _silentMisses = 0;
+
+  /// The letter is whole and the wait for another stroke is on (see [_settleBox]); the number cancels a wait that a later stroke replaced.
+  bool _settling = false;
+  int _settleId = 0;
 
   LetterMode get mode => activity.mode;
   bool get intro => mode == LetterMode.intro;
@@ -165,7 +170,7 @@ class LetterWriteSession extends TemplateSession {
 
   void begin(Offset p) {
     if (!_canDraw) return;
-    fading = <Offset>[];
+    fading = <List<Offset>>[];
     current = <Offset>[p];
     notify();
   }
@@ -186,28 +191,77 @@ class LetterWriteSession extends TemplateSession {
   Future<void> end() async {
     if (!_canDraw || current.length < 2) {
       current = <Offset>[];
+      if (_settling) _settleBox(); // a touch that drew nothing: the wait for another stroke begins again
       notify();
       return;
     }
     final List<Offset> drawn = current;
     current = <Offset>[];
     _stopDemo();
+    box.drawn.add(drawn);
+    if (_settling) {
+      // The letter was whole and the child writes on: the stroke is read with the rest when the wait is over.
+      box.ink.add(drawn);
+      _settleBox();
+      notify();
+      return;
+    }
     final LetterChecker c = box.checker;
     final StrokeVerdict v = traceMode ? c.traceCheck(drawn, traceTolerance) : c.check(drawn);
     if (v.right) {
       box.ink.add(drawn);
-      if (c.complete) {
+      if (!c.complete) {
+        notify();
+      } else if (traceMode) {
         await _boxDone();
       } else {
+        _settleBox();
         notify();
       }
       return;
     }
-    await _miss(v, drawn);
+    await _miss(v, <List<Offset>>[drawn]);
   }
 
   /// How far from the dotted path a finger may be when it traces, in box units.
   static const double traceTolerance = 9;
+
+  /// The letter is whole: wait for another stroke before it counts (QA-L52-4). The stem of a t is a whole l and the first stroke of a bet a whole
+  /// resh, so a child who has written the target's last stroke may be on the way to another letter; each stroke that comes begins the wait
+  /// again, and when it ends everything drawn is read once more against the whole script ([LetterChecker.otherLetter]).
+  void _settleBox() {
+    _settling = true;
+    final int id = ++_settleId;
+    later(settleWindow, () => _settled(id));
+  }
+
+  /// How long after the last needed stroke the child may start another before the letter is read.
+  static const Duration settleWindow = Duration(milliseconds: 1000);
+
+  Future<void> _settled(int id) async {
+    if (id != _settleId || !_settling) return;
+    if (current.isNotEmpty) {
+      _settleBox(); // a finger is down: it is still writing
+      return;
+    }
+    _settling = false;
+    final StrokeForm? other = box.checker.otherLetter(set.forms.values, box.drawn);
+    if (other == null) {
+      await _boxDone();
+      return;
+    }
+    // Everything drawn is another letter: the item is not a success. The box is clear for a new try; a look-alike the course lists is named,
+    // any other letter is a retry that writes nothing and moves the help one step.
+    final List<List<Offset>> shown = <List<Offset>>[...box.ink];
+    box.ink.clear();
+    box.drawn.clear();
+    box.checker.reset();
+    final bool listed = !activity.word && activity.partners.containsKey(other.id);
+    await _miss(
+      listed ? StrokeVerdict.fault(StrokeFault.partner, partner: other.id) : const StrokeVerdict.unnamed(),
+      shown,
+    );
+  }
 
   Future<void> _boxDone() async {
     if (active < boxes.length - 1) {
@@ -267,13 +321,13 @@ class LetterWriteSession extends TemplateSession {
         : ResponseCode.strokeFault(stroke, what);
   }
 
-  Future<void> _miss(StrokeVerdict v, List<Offset> drawn) async {
+  Future<void> _miss(StrokeVerdict v, List<List<Offset>> drawn) async {
     fading = drawn;
     if (intro) {
       // Nothing in the worked example is wrong: the stroke fades and the start dot is there again.
       notify();
       later(const Duration(milliseconds: 700), () {
-        fading = <Offset>[];
+        fading = <List<Offset>>[];
         notify();
       });
       return;
@@ -296,7 +350,7 @@ class LetterWriteSession extends TemplateSession {
       ring = AnswerState.notYet;
       notify();
       later(TemplateSession.notYetPause, () {
-        fading = <Offset>[];
+        fading = <List<Offset>>[];
         ring = AnswerState.idle;
         _busy = false;
         notify();
@@ -307,7 +361,7 @@ class LetterWriteSession extends TemplateSession {
     if (controller.current.purpose == 'probe') {
       // A probe has no help: a second miss that cannot be named ends the item with no row, and nothing is held against the child.
       later(const Duration(milliseconds: 700), () {
-        fading = <Offset>[];
+        fading = <List<Offset>>[];
         notify();
         if (_silentMisses >= 2) {
           _busy = true;
@@ -320,7 +374,7 @@ class LetterWriteSession extends TemplateSession {
     }
     controller.showHint();
     later(const Duration(milliseconds: 700), () {
-      fading = <Offset>[];
+      fading = <List<Offset>>[];
       notify();
     });
     notify();
@@ -340,9 +394,10 @@ class LetterWriteSession extends TemplateSession {
   void _walk({double fraction = 1, int msPerPoint = 70, bool allStrokes = false, bool trail = false}) {
     _stopDemo();
     final int id = _demoId;
+    final List<StrokeModel> model = box.checker.strokes;
     final List<int> order = <int>[
-      for (int i = 0; i < box.form.strokes.length; i++)
-        if (!box.checker.done[i] && box.form.strokes[i].kind != StrokeKind.dot) i,
+      for (int i = 0; i < model.length; i++)
+        if (!box.checker.done[i] && model[i].kind != StrokeKind.dot) i,
     ];
     if (order.isEmpty) return;
     // The hand rests on the start dot while the dot waits there, then goes: it never rides the path over the letter.
@@ -350,7 +405,7 @@ class LetterWriteSession extends TemplateSession {
     notify();
     int at = 14;
     for (final int k in allStrokes ? order : <int>[order.first]) {
-      final List<Offset> path = resampleStroke(box.form.strokes[k].points, 24);
+      final List<Offset> path = resampleStroke(model[k].points, 24);
       final int shown = math.max(2, (path.length * fraction).round());
       later(Duration(milliseconds: msPerPoint * at), () {
         if (_demoId != id) return;
@@ -410,11 +465,14 @@ class LetterWriteSession extends TemplateSession {
   void onReset() {
     for (final LetterBox b in boxes) {
       b.ink.clear();
+      b.drawn.clear();
       b.checker.reset();
     }
     active = 0;
+    _settling = false;
+    _settleId++;
     current = <Offset>[];
-    fading = <Offset>[];
+    fading = <List<Offset>>[];
     ring = AnswerState.idle;
     _busy = false;
     _stopDemo();
@@ -510,7 +568,7 @@ class LetterWriteSession extends TemplateSession {
     final int? i = box.checker.next;
     if (i == null) return null;
     final Rect r = layout(size).box;
-    final Offset p = box.form.strokes[i].start;
+    final Offset p = box.checker.strokes[i].start;
     return r.topLeft + p / 100 * r.width;
   }
 
@@ -525,18 +583,52 @@ class LetterWriteSession extends TemplateSession {
     builder: (BuildContext c, Widget? _) {
       final Offset? tip = _handShown ? startPoint(size) : null;
       if (tip == null) return const SizedBox();
-      final int? i = box.checker.next;
-      // From the guide's side above the dot where the stroke starts high (most letters), and from below where it starts low, so that the
-      // hand never lies over the letter it points at.
-      final bool low = i != null && box.form.strokes[i].start.dy > 55;
       return HintOverlay(
-        marks: <HintMark>[HandMark(tip, from: low ? HandFrom.below : HandFrom.guide)],
+        marks: <HintMark>[HandMark(tip, from: _handSide(size, tip, handClearOf(spec)))],
         size: size,
+        scale: _handScale(size),
         clearOf: handClearOf(spec),
         layer: HintLayer.hands,
       );
     },
   );
+
+  /// The size of the hand's pictures: its height is a third of the writing box at most (on the small phone the box is as tall as the
+  /// stage, and the hand of a stage-high scale would lie over half the letter), as big as the other templates' hand on a tablet.
+  double _handScale(Size size) => (layout(size).box.width * 0.3 / 72).clamp(0.55, hintScale(size)).toDouble();
+
+  /// Which side of the fingertip the hand's body lies (QA-L52-5): the guide's side above it, unless the letter still to be written lies
+  /// under that part of the hand and not under the other. With the same on both sides, a stroke that starts low points from below, as the
+  /// hand never lies over the letter it points at.
+  HandFrom _handSide(Size size, Offset tip, double? clearOf) {
+    final Rect field = layout(size).box;
+    final double h = (72 * _handScale(size)).clamp(40, 96).toDouble();
+    final double w = PointingHand.widthAt(h);
+    final Offset t = PointingHand.tipAt(h);
+    // The hand from the guide's side lies to the right of the fingertip, and turns to lie to its left where it would reach the speech
+    // bubble (HintOverlay); the hand from below has its body to the left.
+    final bool turned = clearOf != null && tip.dx + (w - t.dx) > clearOf;
+    final Rect above = Rect.fromLTWH(tip.dx - (turned ? w - t.dx : t.dx), tip.dy - t.dy, w, h);
+    final Rect below = Rect.fromLTWH(tip.dx - (w - t.dx), tip.dy - (h - t.dy), w, h);
+    final double near = 20 / 100 * field.width; // the fingertip's own surroundings are the start dot
+    final List<StrokeModel> model = box.checker.strokes;
+    int under(Rect hand) {
+      int n = 0;
+      for (final (int i, StrokeModel m) in model.indexed) {
+        if (box.checker.done[i] || m.kind == StrokeKind.dot) continue;
+        for (final Offset p in resampleStroke(m.points, 40)) {
+          final Offset g = field.topLeft + p / 100 * field.width;
+          if ((g - tip).distance >= near && hand.contains(g)) n++;
+        }
+      }
+      return n;
+    }
+
+    final int a = under(above);
+    final int b = under(below);
+    if (a != b) return a < b ? HandFrom.guide : HandFrom.below;
+    return model[box.checker.next!].start.dy > 55 ? HandFrom.below : HandFrom.guide;
+  }
 
   @override
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) => ListenableBuilder(
@@ -671,7 +763,13 @@ class LetterBox {
 
   final StrokeForm form;
   final LetterChecker checker;
+
+  /// The strokes the checker took.
   final List<List<Offset>> ink = <List<Offset>>[];
+
+  /// Every stroke made in the box since it was last cleared, the ones the checker took and the ones it did not: what is read as a whole
+  /// when the letter is complete.
+  final List<List<Offset>> drawn = <List<Offset>>[];
 }
 
 /// Where everything stands on a stage, in the stage's points.
@@ -700,29 +798,41 @@ Path _letterPath(StrokeForm form, double k, {Offset origin = Offset.zero}) {
   return path;
 }
 
-/// Adds an SVG-like path (M, L and C in box units) scaled by [k].
+/// Adds an SVG-like path (M, L and C in box units) scaled by [k]. A path the validator passed (`strokePathFault`) is whole; one that is
+/// not is drawn as far as its whole commands go and then stops, so a bad token never throws in a paint.
 void _addD(Path path, String d, double k, Offset origin) {
   final List<String> t = d.split(' ');
   int i = 0;
-  Offset pt() {
-    final Offset o = Offset(double.parse(t[i]) * k, double.parse(t[i + 1]) * k) + origin;
-    i += 2;
-    return o;
+  // The point at [t] from [at], or null when the tokens end or are not numbers.
+  Offset? pt(int at) {
+    if (at + 1 >= t.length) return null;
+    final double? x = double.tryParse(t[at]);
+    final double? y = double.tryParse(t[at + 1]);
+    return x == null || y == null ? null : Offset(x * k, y * k) + origin;
   }
 
   while (i < t.length) {
-    switch (t[i++]) {
+    final String cmd = t[i++];
+    final int count = switch (cmd) {
+      'M' || 'L' => 1,
+      'C' => 3,
+      _ => 0,
+    };
+    if (count == 0) return;
+    final List<Offset> p = <Offset>[];
+    for (int n = 0; n < count; n++) {
+      final Offset? o = pt(i);
+      if (o == null) return;
+      p.add(o);
+      i += 2;
+    }
+    switch (cmd) {
       case 'M':
-        final Offset p = pt();
-        path.moveTo(p.dx, p.dy);
+        path.moveTo(p[0].dx, p[0].dy);
       case 'L':
-        final Offset p = pt();
-        path.lineTo(p.dx, p.dy);
+        path.lineTo(p[0].dx, p[0].dy);
       case 'C':
-        final Offset a = pt();
-        final Offset b = pt();
-        final Offset e = pt();
-        path.cubicTo(a.dx, a.dy, b.dx, b.dy, e.dx, e.dy);
+        path.cubicTo(p[0].dx, p[0].dy, p[1].dx, p[1].dy, p[2].dx, p[2].dy);
     }
   }
 }
@@ -792,7 +902,7 @@ class _StagePainter extends CustomPainter {
     }
     final Paint dot = Paint()..color = TokenColors.ink.withValues(alpha: 0.4);
     final int? next = b.checker.next;
-    for (final (int i, StrokeModel m) in b.form.strokes.indexed) {
+    for (final (int i, StrokeModel m) in b.checker.strokes.indexed) {
       final bool done = b.checker.done[i];
       if (s.fullGuide && !done && m.kind == StrokeKind.line) {
         for (final Offset p in resampleStroke(m.points, math.max(6, (strokeLength(m.points) / 5).round()))) {
@@ -802,7 +912,7 @@ class _StagePainter extends CustomPainter {
     }
     // The start dot and the first of the way: a ring, so that the letter beneath it stays in view.
     if (next != null && (s.intro ? s.introStep == 2 : s.startDotShown)) {
-      final StrokeModel m = b.form.strokes[next];
+      final StrokeModel m = b.checker.strokes[next];
       final Paint ringPaint = Paint()
         ..color = TokenColors.correctGlow
         ..style = PaintingStyle.stroke
@@ -819,8 +929,8 @@ class _StagePainter extends CustomPainter {
     for (final List<Offset> stroke in b.ink) {
       _line(canvas, stroke.map(px).toList(), TokenColors.ink, set.ink * k * 0.5);
     }
-    if (s.fading.length > 1) {
-      _line(canvas, s.fading.map(px).toList(), TokenColors.notYetRing, set.ink * k * 0.5);
+    for (final List<Offset> stroke in s.fading.where((List<Offset> f) => f.length > 1)) {
+      _line(canvas, stroke.map(px).toList(), TokenColors.notYetRing, set.ink * k * 0.5);
     }
     if (s.current.length > 1) _line(canvas, s.current.map(px).toList(), TokenColors.ink, set.ink * k * 0.5);
     // The demonstration: what the dot has drawn, and the dot.

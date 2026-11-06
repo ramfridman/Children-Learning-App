@@ -1580,7 +1580,8 @@ const List<String> strokeMoves = <String>[
 
 const SObject _strokeSchema = SObject(<String, SField>{
   'kind': SField(SEnum(<String>['line', 'dot', 'short'])),
-  // The smooth path (M, L and C in box units) for the model letter and the "watch it drawn" motion: numbers and three letters only.
+  // The smooth path (M, L and C in box units) for the model letter and the "watch it drawn" motion. The schema keeps it to numbers and
+  // three letters; its grammar (an M first, then L with 2 numbers and C with 6, each number from 0 to 100) is `checkStrokeSet`'s rule.
   'd': SField(SString(minLength: 5, maxLength: 500, pattern: r'[MLC0-9 .\-]+')),
   // The bounds of docs/milestones/L5.md section 11: points inside the box, 2 to 60 of them.
   'points': SField(SArray(_boxPoint, minItems: 2, maxItems: 60)),
@@ -1590,6 +1591,20 @@ const SObject _strokeSchema = SObject(<String, SField>{
   'retrace': SField(SBool(), required: false),
   'loop': SField(SBool(), required: false),
   'startOk': SField(SString(minLength: 1, maxLength: 400), required: false),
+});
+
+/// A stroke of another right build of a letter (QA-L52-1): only compared with what the child writes, never drawn, so it has no path
+/// and no words for the way it goes.
+const SObject _buildStrokeSchema = SObject(<String, SField>{
+  'kind': SField(SEnum(<String>['line', 'dot', 'short'])),
+  'points': SField(SArray(_boxPoint, minItems: 2, maxItems: 60)),
+  'retrace': SField(SBool(), required: false),
+});
+
+/// Another way to write the letter that is right: a few strokes, read in any order like the model's (`tools/strokes_alternates.py`).
+const SObject _buildSchema = SObject(<String, SField>{
+  'how': SField(SString(minLength: 1, maxLength: 40, pattern: r'[a-z ,-]+')),
+  'strokes': SField(SArray(_buildStrokeSchema, minItems: 1, maxItems: 6)),
 });
 
 const SObject _strokeFormSchema = SObject(<String, SField>{
@@ -1610,11 +1625,13 @@ const SObject _strokeFormSchema = SObject(<String, SField>{
   ),
   // At most six strokes a form (Yo has six).
   'strokes': SField(SArray(_strokeSchema, minItems: 1, maxItems: 6)),
+  // The other builds of the letter that are right (a ball and a stick for a): at most four, within the same caps.
+  'alternates': SField(SArray(_buildSchema, minItems: 1, maxItems: 4), required: false),
 });
 
 /// The stroke data of one script (`nitznutz.strokes/1`), as `content/languages/strokes/<set>.json` and as the pack document
-/// `strokes.<set>.json`. Parsed content: every number is bounded, nothing in it is a path or a command, and the validator refuses a set
-/// that is not `teacher-checked` (`ls02_checks.dart`).
+/// `strokes.<set>.json`. Parsed content: every number is bounded and the only commands are the M, L and C of a stroke's drawing path
+/// (`d`), whose grammar `checkStrokeSet` holds; the validator refuses a set that is not `teacher-checked` (`ls02_checks.dart`).
 const SObject strokesSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.strokes)),
   'set': SField(SString(minLength: 5, maxLength: 20, pattern: Patterns.strokeSet)),

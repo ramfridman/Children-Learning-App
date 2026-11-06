@@ -22,6 +22,11 @@ StrokeKind _kind(String s) => switch (s) {
   _ => StrokeKind.line,
 };
 
+List<Offset> _points(Object? json) => <Offset>[
+  for (final Object? p in json! as List<Object?>)
+    Offset(((p! as List<Object?>)[0]! as num).toDouble(), ((p as List<Object?>)[1]! as num).toDouble()),
+];
+
 /// One stroke of a letter.
 class StrokeModel {
   const StrokeModel({
@@ -34,12 +39,18 @@ class StrokeModel {
 
   factory StrokeModel.fromJson(Map<String, Object?> json) => StrokeModel(
     kind: _kind(json['kind']! as String),
-    points: <Offset>[
-      for (final Object? p in json['points']! as List<Object?>)
-        Offset(((p! as List<Object?>)[0]! as num).toDouble(), ((p as List<Object?>)[1]! as num).toDouble()),
-    ],
+    points: _points(json['points']),
     moves: <String>[for (final Object? m in json['moves']! as List<Object?>) m! as String],
     d: json['d']! as String,
+    retrace: json['retrace'] == true,
+  );
+
+  /// A stroke of another right build of a letter: only its kind and its centre line are kept, it is never drawn.
+  factory StrokeModel.fromBuildJson(Map<String, Object?> json) => StrokeModel(
+    kind: _kind(json['kind']! as String),
+    points: _points(json['points']),
+    moves: const <String>[],
+    d: '',
     retrace: json['retrace'] == true,
   );
 
@@ -72,7 +83,12 @@ class StrokeModel {
 
 /// One letter (a form): a capital and a small letter are two forms, and so is a Hebrew final.
 class StrokeForm {
-  const StrokeForm({required this.id, required this.char, required this.strokes});
+  const StrokeForm({
+    required this.id,
+    required this.char,
+    required this.strokes,
+    this.alternates = const <List<StrokeModel>>[],
+  });
 
   factory StrokeForm.fromJson(Map<String, Object?> json) => StrokeForm(
     id: json['id']! as String,
@@ -81,13 +97,29 @@ class StrokeForm {
       for (final Object? s in json['strokes']! as List<Object?>)
         StrokeModel.fromJson(s! as Map<String, Object?>),
     ],
+    alternates: <List<StrokeModel>>[
+      for (final Object? b in (json['alternates'] as List<Object?>?) ?? const <Object?>[])
+        <StrokeModel>[
+          for (final Object? s in (b! as Map<String, Object?>)['strokes']! as List<Object?>)
+            StrokeModel.fromBuildJson(s! as Map<String, Object?>),
+        ],
+    ],
   );
 
   final String id;
 
   /// The letter as text (for a screen reader and a model drawn in the font's place).
   final String char;
+
+  /// The model: the strokes in the order the school chart writes them. This is what is drawn, walked and traced.
   final List<StrokeModel> strokes;
+
+  /// The other builds of the letter that are right (a ball and a stick for a; at most four, in the same box). The free-stroke check
+  /// accepts a letter built from the model or from any of these; nothing else uses them.
+  final List<List<StrokeModel>> alternates;
+
+  /// The model and then the other builds.
+  Iterable<List<StrokeModel>> get builds => <List<StrokeModel>>[strokes, ...alternates];
 }
 
 /// The forms of one script, with the lines they sit on.

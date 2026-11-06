@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:nitznutz/content/ls02_checks.dart' show strokePathFault;
 import 'package:nitznutz/content/pack_validation.dart';
 import 'package:nitznutz/content/schema.dart';
 import 'package:nitznutz/content/schemas.dart';
@@ -197,6 +198,35 @@ void main() {
         d = latin();
         d['unknown'] = 1;
         expect(validate(strokesSchema, d).isNotEmpty, isTrue);
+
+        // SEC-L5-1: the schema keeps `d` to numbers and three letters; the grammar is the pack check's. Each of these passes the schema and is
+        // refused by the pack: a command without its numbers, a stray space, a lone minus, a number outside the box.
+        for (final (String path, String message) in <(String, String)>[
+          ('M 5 5 L', 'the command L needs 2 numbers'),
+          ('M 50 ', 'where a number is wanted'),
+          ('M 1  2', 'where a number is wanted'),
+          ('M - 5 5', 'where a number is wanted'),
+          ('M 5 5 L 900 5', 'from 0 to 100'),
+          ('M 5 5 C 1 2 3 4 5', 'the command C needs 6 numbers'),
+          ('L 5 5', 'starts with M'),
+          ('M 5 5 L -1 5', 'from 0 to 100'),
+        ]) {
+          final Ls02Pack p = clean();
+          final Map<String, Object?> set = p.pack.pack.doc('strokes.latin.json');
+          expect(validate(strokesSchema, set), isEmpty);
+          (((set['forms']! as List<Object?>).first! as Map<String, Object?>)['strokes']! as List<Object?>)
+                  .cast<Map<String, Object?>>()
+                  .first['d'] =
+              path;
+          expect(
+            validate(strokesSchema, set),
+            isEmpty,
+            reason: '"$path" passes the schema, it is the pack check that holds the grammar',
+          );
+          refused(p, message);
+        }
+        expect(strokePathFault('M 5 5 L 90 90 C 1 2 3 4 5 6'), isNull);
+        expect(strokePathFault('M 0 100 L 12.5 99.5'), isNull);
       },
     );
   });

@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'dart:ui' show Offset;
+import 'dart:ui' show Offset, Rect;
 
 // The small geometry of a stroke, shared by the tracing of the lands (T04) and by LS02: a finger path made dense, a path resampled to a
 // fixed number of points, the distance from a point to a path. Everything is in the box of 100 by 100 units, y down. Pure functions.
@@ -96,4 +96,70 @@ PathVerdict pathVerdict(List<Offset> drawn, List<Offset> target, double tol) {
     startsRight: (dense.first - goal.first).distance <= tol * 2.2,
     startsAtEnd: (dense.first - goal.last).distance <= tol * 2.2,
   );
+}
+
+/// The box round a polyline.
+Rect strokeBounds(List<Offset> pts) {
+  double left = pts.first.dx, top = pts.first.dy, right = left, bottom = top;
+  for (final Offset p in pts) {
+    left = math.min(left, p.dx);
+    top = math.min(top, p.dy);
+    right = math.max(right, p.dx);
+    bottom = math.max(bottom, p.dy);
+  }
+  return Rect.fromLTRB(left, top, right, bottom);
+}
+
+/// The angle between two directions, in degrees from 0 to 180 (180 when either has no length).
+double turnBetween(Offset a, Offset b) {
+  if (a.distance == 0 || b.distance == 0) return 180;
+  final double d = (math.atan2(a.dy, a.dx) - math.atan2(b.dy, b.dx)).abs() * 180 / math.pi;
+  return d > 180 ? 360 - d : d;
+}
+
+/// How many places a path turns by [degrees] or more within a short run (eight units either side of the place): a sharp corner (60
+/// degrees) or a turn back on its own line (100 degrees, the n, the stem of an a). A run of such places is one. A smooth bowl of the
+/// size of a letter never reaches 60 degrees over eight units, and a wobble of a shaking hand does not either.
+int sharpTurns(List<Offset> pts, double degrees) {
+  final double length = strokeLength(pts);
+  if (length < 20) return 0;
+  final int n = (length / 2).ceil() + 1;
+  final List<Offset> p = resampleStroke(pts, n);
+  final int w = math.max(2, (8 / (length / (n - 1))).round());
+  int count = 0;
+  int last = -1000;
+  for (int i = w; i < n - w; i++) {
+    if (turnBetween(p[i] - p[i - w], p[i + w] - p[i]) >= degrees) {
+      if (i - last > w) count++;
+      last = i;
+    }
+  }
+  return count;
+}
+
+/// How many times a path crosses its own line at a real angle (55 to 125 degrees): the loops of a scribble. A path that goes back over
+/// its line (the n) runs nearly alongside itself, and its wobble crosses at a shallow angle, which is no loop. Crossings next to each
+/// other count once.
+int selfCrossings(List<Offset> pts) {
+  final double length = strokeLength(pts);
+  if (length < 20) return 0;
+  final List<Offset> p = resampleStroke(pts, math.min(80, (length / 3).ceil() + 1));
+  int count = 0;
+  int lastI = -100;
+  for (int i = 0; i < p.length - 1; i++) {
+    for (int j = i + 2; j < p.length - 1; j++) {
+      if (_crossAtAngle(p[i], p[i + 1], p[j], p[j + 1])) {
+        if (i - lastI > 3) count++;
+        lastI = i;
+      }
+    }
+  }
+  return count;
+}
+
+bool _crossAtAngle(Offset a, Offset b, Offset c, Offset d) {
+  double side(Offset p, Offset q, Offset r) => (q.dx - p.dx) * (r.dy - p.dy) - (q.dy - p.dy) * (r.dx - p.dx);
+  if (side(a, b, c) * side(a, b, d) >= 0 || side(c, d, a) * side(c, d, b) >= 0) return false;
+  final double angle = turnBetween(b - a, d - c);
+  return angle >= 55 && angle <= 125;
 }

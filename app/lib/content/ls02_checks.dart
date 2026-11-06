@@ -250,14 +250,52 @@ void checkStrokeSet(String file, Map<String, Object?> doc, {required String cour
     if (!id.startsWith('$set.')) say(file, 'forms[$i].id', '"$id" is not named by its set "$set"');
   }
   if (doc['count'] != _maps(doc['forms']).length) say(file, 'count', 'is not the number of forms');
-  // The bounds are the schema's; this is the one rule a number cannot say: the 'dot' kind is a tap, two points one unit apart.
+  // The bounds are the schema's; the rules a number cannot say: the 'dot' kind is a tap, two points one unit apart, and the drawing
+  // path of a stroke (`d`) is a path the model drawing can read.
   for (final (int i, Map<String, Object?> f) in _maps(doc['forms']).indexed) {
     for (final (int k, Map<String, Object?> s) in _maps(f['strokes']).indexed) {
       if (s['kind'] == 'dot' && (s['points']! as List<Object?>).length != 2) {
         say(file, 'forms[$i].strokes[$k]', 'a dot has two points');
       }
+      final String? fault = strokePathFault(s['d']! as String);
+      if (fault != null) say(file, 'forms[$i].strokes[$k].d', fault);
+    }
+    for (final (int b, Map<String, Object?> build) in _maps(f['alternates']).indexed) {
+      for (final (int k, Map<String, Object?> s) in _maps(build['strokes']).indexed) {
+        if (s['kind'] == 'dot' && (s['points']! as List<Object?>).length != 2) {
+          say(file, 'forms[$i].alternates[$b].strokes[$k]', 'a dot has two points');
+        }
+      }
     }
   }
+}
+
+final RegExp _pathNumber = RegExp(r'^-?\d+(\.\d+)?$');
+
+/// What is wrong with the drawing path [d] of a stroke, or null when it is right: it starts with M, each command is one letter and its
+/// numbers (M and L two, C six) with single spaces between, and each number is written as `-?\d+(\.\d+)?` and lies from 0 to 100.
+/// The app draws the path with the same grammar, so a path that passes here can not make it read past the end or parse a bad number.
+String? strokePathFault(String d) {
+  final List<String> t = d.split(' ');
+  if (t.first != 'M') return 'a stroke path starts with M';
+  int i = 0;
+  while (i < t.length) {
+    final int count = switch (t[i]) {
+      'M' || 'L' => 2,
+      'C' => 6,
+      _ => -1,
+    };
+    if (count < 0) return 'a stroke path has only M, L and C commands, not "${t[i]}"';
+    if (i + count >= t.length) return 'the command ${t[i]} needs $count numbers';
+    for (int k = 1; k <= count; k++) {
+      final String n = t[i + k];
+      if (!_pathNumber.hasMatch(n)) return 'a stroke path has "$n" where a number is wanted';
+      final double v = double.parse(n);
+      if (v < 0 || v > 100) return 'a stroke path number is from 0 to 100, not $n';
+    }
+    i += count + 1;
+  }
+  return null;
 }
 
 /// The structure rules of the writing skills and of the pacing over the visits. [activities], [lessons], [skills] and [gates] are the valid

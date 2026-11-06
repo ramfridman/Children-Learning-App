@@ -3,8 +3,8 @@
 // shapes it was not tuned on. Three kinds: a neat hand, a "sloppy child" (the same shapes sheared, shifted, wobbled, with the start a little
 // off), and the other ways a child really builds a letter (ball and stick, one stroke where the model has two). Then what must be refused.
 //
-// The rates are printed (run with -r expanded to read them). Proofs of the open defects are `skip`ped with the defect id, so the suite stays
-// green; remove the skip when the owner has fixed it.
+// The rates are printed (run with -r expanded to read them). The proofs of the defects QA-L52-1 to 4 were `skip`ped with the defect id until the
+// developer fixed them (L5-2b fixes, 2026-11-06); they run now.
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
@@ -12,6 +12,8 @@ import 'dart:math' as math;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/strokes.dart';
 import 'package:nitznutz/play/stroke_check.dart';
+
+import 'support/stroke_hands.dart' show countedForTarget;
 
 StrokeSet _load(String name) => StrokeSet.fromJson(
   jsonDecode(File('../content/languages/strokes/$name.json').readAsStringSync())! as Map<String, Object?>,
@@ -371,6 +373,48 @@ void main() {
     });
   });
 
+  group('the sloppy child, by script and by build style', () {
+    test('how many are refused and how many are named, before the fix and after (printed)', () {
+      // Each sample is written 20 times by the sloppy hand. "Refused": the letter is not whole at the end. "Named": any of its strokes was
+      // named a start, direction, lines, mirror or partner error, which writes a row with a tag against the child.
+      final Map<String, List<int>> tally = <String, List<int>>{};
+      final List<String> named = <String>[];
+      void run(List<_Sample> samples, String style) {
+        for (final _Sample s in samples) {
+          for (int seed = 0; seed < 20; seed++) {
+            final math.Random r = math.Random(seed * 31 + 7);
+            final res = _play(_form(s.form), <List<Offset>>[
+              for (final List<Offset> st in s.strokes) _sloppy(st, r),
+            ]);
+            final List<int> t = tally.putIfAbsent(
+              '${StrokeSet.setOf(s.form)} / $style',
+              () => <int>[0, 0, 0],
+            );
+            t[2]++;
+            if (!res.whole) t[0]++;
+            if (res.said.any((String v) => v != 'ok' && v != 'unnamed')) {
+              t[1]++;
+              if (named.length < 12) named.add('${s.what} seed $seed: ${res.said}');
+            }
+          }
+        }
+      }
+
+      run(_neat, 'the school model');
+      run(_alternates, 'another right build');
+      for (final MapEntry<String, List<int>> e
+          in (tally.entries.toList()..sort((a, b) => a.key.compareTo(b.key)))) {
+        // ignore: avoid_print
+        print(
+          'QA rates ${e.key}: ${e.value[0]} of ${e.value[2]} refused (${(100 * e.value[0] / e.value[2]).toStringAsFixed(1)}%), '
+          '${e.value[1]} named (${(100 * e.value[1] / e.value[2]).toStringAsFixed(1)}%)',
+        );
+      }
+      // ignore: avoid_print
+      print('QA named examples: ${named.join('; ')}');
+    });
+  });
+
   group('other ways a child builds a right letter', () {
     test('which are accepted (printed)', () {
       final List<String> out = <String>[];
@@ -392,7 +436,7 @@ void main() {
       test('QA-L52-1: ${s.what} is a right letter and is accepted', () {
         final res = _play(_form(s.form), s.strokes);
         expect(res.whole, isTrue, reason: '${res.said}');
-      }, skip: 'QA-L52-1 open: a letter built from the strokes in another way (ball and stick) is refused');
+      });
     }
   });
 
@@ -474,15 +518,15 @@ void main() {
     test('QA-L52-2a: a random scribble never completes a letter', () {
       final s = scribbles();
       expect(s.completedForms, isEmpty);
-    }, skip: 'QA-L52-2 open: a scribble completes latin.d (and loops complete a, d, m)');
+    });
 
     test(
       'QA-L52-2b: a scribble is named nothing (no row against the child), on the letters of the pilot groups',
       () {
         final s = scribbles();
         expect(s.namedPilot, isEmpty);
+        expect(s.named, 0, reason: 'a scribble is named nothing on any letter');
       },
-      skip: 'QA-L52-2 open: a scribble is named start or direction on pilot letters',
     );
 
     test('a round scribble (loops): printed', () {
@@ -525,7 +569,7 @@ void main() {
         }
       }
       expect(bad, isEmpty);
-    }, skip: 'QA-L52-2 open: a spiral completes latin.a, latin.d and latin.m');
+    });
 
     test('dots anywhere complete no letter that has no dot, and name nothing', () {
       final List<String> bad = <String>[];
@@ -583,7 +627,7 @@ void main() {
       for (final String id in <String>['latin.s', 'hebrew-print.resh', 'hebrew-print.nun']) {
         expect(accepted.any((String a) => a.startsWith('$id ')), isFalse, reason: id);
       }
-    }, skip: 'QA-L52-3 open: a straight line down the middle of s, resh and nun is accepted as the letter');
+    });
 
     test('a neat letter taken for another letter: the targets of the three pilot groups, printed', () {
       final List<String> swapped = <String>[];
@@ -600,23 +644,43 @@ void main() {
       print('QA cross-acceptance on the pilot targets: ${swapped.length}\n${swapped.join('\n')}');
     });
 
-    test(
-      'QA-L52-4: a letter that begins like the target is not taken for it at its first stroke (the stem of a t is not an l)',
-      () {
-        // After the target's last stroke is matched the item ends at once (LetterWriteSession._boxDone), so the strokes the child goes on to write
-        // are never read. A wrong letter whose first stroke fits a simpler target is a full success.
-        final _Sample t = _neat.firstWhere((_Sample s) => s.form == 'latin.t');
-        final LetterChecker forL = LetterChecker(_form('latin.l'));
-        final StrokeVerdict v = forL.check(t.strokes.first);
-        expect(v.right && forL.complete, isFalse, reason: 'the stem of a t completed an l');
-        // The same in Hebrew: the first stroke of a bet (top, down) is a whole resh, so a bet written for resh is a success.
-        final _Sample bet = _neat.firstWhere((_Sample s) => s.form == 'hebrew-print.bet');
-        final LetterChecker forResh = LetterChecker(_form('hebrew-print.resh'));
-        forResh.check(bet.strokes.first);
-        expect(forResh.complete, isFalse, reason: 'the first stroke of a bet completed a resh');
-      },
-      skip: 'QA-L52-4 open: the item ends at the first stroke that completes the target; the rest of what the child writes is never read',
-    );
+    test('QA-L52-4: a neat letter is not counted for another letter, all pairs among the pilot targets', () {
+      // The checker alone still completes the target at the first stroke that fits (the stem of a t is a whole l): what is new is that the
+      // session waits for another stroke and reads everything drawn against the whole script. The pairs are those the print above lists.
+      final List<String> counted = <String>[];
+      int pairs = 0;
+      for (final _Sample s in _neat) {
+        final StrokeSet script = _sets[StrokeSet.setOf(s.form)]!;
+        for (final StrokeForm other in script.forms.values) {
+          if (other.id == s.form || !pilot.contains(other.id)) continue;
+          if (_play(other, s.strokes).whole) pairs++;
+          if (countedForTarget(other, script.forms.values, s.strokes)) {
+            counted.add('${s.form} written, counted for the target ${other.id}');
+          }
+        }
+      }
+      expect(counted, isEmpty, reason: '$pairs pairs fit by strokes alone: ${counted.join('; ')}');
+    });
+
+    test('QA-L52-4: the stem of a t is not an l, and the first stroke of a bet is not a resh', () {
+      final StrokeSet latin = _sets['latin']!;
+      final _Sample t = _neat.firstWhere((_Sample s) => s.form == 'latin.t');
+      final LetterChecker forL = LetterChecker(_form('latin.l'));
+      expect(
+        forL.check(t.strokes.first).right && forL.complete,
+        isTrue,
+        reason: 'the check sees a whole l in the stem',
+      );
+      expect(countedForTarget(_form('latin.l'), latin.forms.values, t.strokes), isFalse);
+      expect(
+        countedForTarget(_form('latin.l'), latin.forms.values, <List<Offset>>[t.strokes.first]),
+        isTrue,
+        reason: 'a plain l is an l',
+      );
+      final StrokeSet hebrew = _sets['hebrew-print']!;
+      final _Sample bet = _neat.firstWhere((_Sample s) => s.form == 'hebrew-print.bet');
+      expect(countedForTarget(_form('hebrew-print.resh'), hebrew.forms.values, bet.strokes), isFalse);
+    });
   });
 
   group('a mirror and a listed look-alike are named, written by hand', () {
