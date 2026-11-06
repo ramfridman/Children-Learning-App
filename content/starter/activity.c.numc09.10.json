@@ -21,7 +21,7 @@
     "authored": 0.6
   },
   "prompt": {
-    "vo": "vo:c.numc09.10.prompt",
+    "vo": "vo:c.numc09.9.prompt",
     "caption": [
       {
         "t": "he",
@@ -114,7 +114,7 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.numc09.10.h3",
+      "vo": "vo:c.numc09.9.h3",
       "caption": [
         {
           "t": "he",

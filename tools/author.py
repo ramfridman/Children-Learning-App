@@ -174,8 +174,29 @@ UNSURE = ('vo:fb.unsure', 'שְׁאֵלָה טוֹבָה! בּוֹאוּ נִר�
 
 lines = {}  # voice id -> caption: one text for every id, checked below
 
+# M10: one voice id for one text. A Band C line (an activity's own id `vo:c.<activity>.<part>`, or the celebration of a Band C
+# lesson) that says what an earlier Band C line already says takes that line's id, so the voicing makes one clip for it. The pool
+# (text to id) is a file because every unit is its own run; tools/regen_content.py empties it before the Band C units run, and the
+# first unit to say a text names its id, so the same specs always give the same ids. Lines that are shared by design (`vo:fb.`,
+# `vo:hint.`) and every Band A and Band B id are never pooled or renamed: some of them are voiced already, and a clip is found by its id.
+POOL_PATH = os.path.join(ROOT, 'content', 'voice-pool.c.json')
+CHEER_PREFIXES = ('vo:celebrate.', 'vo:core.celebrate.', 'vo:core.ceremony.')  # voices.json styleRules: said in another voice
+try:
+    pool = json.load(open(POOL_PATH, encoding='utf-8'))
+except FileNotFoundError:
+    pool = {}
 
-def say(vo, text):
+
+def pool_key(vo, text):
+    """The pool key of a text: the same text said as a celebration and as a question are two clips (two voice styles)."""
+    return ('cheer\t' if vo.startswith(CHEER_PREFIXES) else '') + text
+
+
+def say(vo, text, pooled=None):
+    """A spoken line with its caption. `pooled` (default: the id is a Band C activity's own, `vo:c.`) lets the line take the id of an
+    earlier identical Band C line."""
+    if vo.startswith('vo:c.') if pooled is None else pooled:
+        vo = pool.setdefault(pool_key(vo, text), vo)
     assert vo not in lines or lines[vo] == text, 'the line %s has two texts: %r and %r' % (vo, lines[vo], text)
     lines[vo] = text
     return {'vo': vo, 'caption': [{'t': 'he', 'v': text}]}
@@ -1286,7 +1307,7 @@ def lesson_file(l, sequence):
     return {
         'schema': 'lesson/v1', 'id': l['id'], 'review': 'needs-editor', 'revision': 1, 'band': l.get('band', 'A'),
         'title': [{'t': 'he', 'v': l['title']}], 'skills': l['skills'], 'items': l['items'],
-        'estimatedMinutes': l.get('minutes', 4), 'sequence': sequence, 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done']),
+        'estimatedMinutes': l.get('minutes', 4), 'sequence': sequence, 'celebration': say('vo:celebrate.%s' % l['id'].replace('-', '_'), l['done'], pooled=l.get('band', 'A') == 'C'),
     }
 
 
@@ -1369,6 +1390,10 @@ def main(path):
             have.add(aid)
     json.dump(pack, open(pack_path, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=2)
     open(pack_path, 'a', encoding='utf-8', newline='\n').write('\n')
+    if spec.get('band') == 'C':
+        with open(POOL_PATH, 'w', encoding='utf-8', newline='\n') as fh:
+            json.dump(dict(sorted(pool.items())), fh, ensure_ascii=False, indent=1)
+            fh.write('\n')
     print('wrote', made, 'and', len(lines), 'voice lines')
 
 

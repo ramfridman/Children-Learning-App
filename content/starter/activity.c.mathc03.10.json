@@ -21,7 +21,7 @@
     "authored": 0.6
   },
   "prompt": {
-    "vo": "vo:c.mathc03.10.prompt",
+    "vo": "vo:c.mathc03.9.prompt",
     "caption": [
       {
         "t": "he",
@@ -76,7 +76,7 @@
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.mathc03.10.correct",
+      "vo": "vo:c.mathc03.9.correct",
       "caption": [
         {
           "t": "he",
@@ -141,7 +141,7 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.mathc03.10.h2",
+      "vo": "vo:c.mathc03.9.h2",
       "caption": [
         {
           "t": "he",
@@ -152,7 +152,7 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.mathc03.10.h3",
+      "vo": "vo:c.mathc03.9.h3",
       "caption": [
         {
           "t": "he",

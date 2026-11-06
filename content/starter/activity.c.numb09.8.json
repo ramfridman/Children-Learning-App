@@ -65,7 +65,7 @@
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.numb09.8.correct",
+      "vo": "vo:c.numb09.3.correct",
       "caption": [
         {
           "t": "he",
@@ -130,7 +130,7 @@
     {
       "level": 2,
       "action": "show_fingers",
-      "vo": "vo:c.numb09.8.h2",
+      "vo": "vo:c.numb09.3.h2",
       "caption": [
         {
           "t": "he",

@@ -21,7 +21,7 @@
     "authored": 0.9
   },
   "prompt": {
-    "vo": "vo:c.numc04.10.prompt",
+    "vo": "vo:c.numc04.7.prompt",
     "caption": [
       {
         "t": "he",
@@ -132,7 +132,7 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:c.numc04.10.h2",
+      "vo": "vo:c.numc04.7.h2",
       "caption": [
         {
           "t": "he",

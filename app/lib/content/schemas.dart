@@ -1,4 +1,5 @@
 import '../engine/course.dart';
+import 'pack_limits.dart';
 import 'schema.dart';
 
 // The schemas of a content pack. Ids, tags and references use fixed shapes so that a file can never
@@ -187,7 +188,7 @@ const SArray _fileList = SArray(
     'size': SField(SInt(min: 0, max: 16 * 1024 * 1024)),
   }),
   minItems: 1,
-  maxItems: 8000,
+  maxItems: PackLimits.files,
   uniqueKey: 'name',
 );
 
@@ -198,7 +199,7 @@ const SArray _assetFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 40, pattern: Patterns.assetId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 2000,
+  maxItems: PackLimits.assets,
   uniqueKey: 'id',
 );
 
@@ -207,7 +208,7 @@ const SArray _voFiles = SArray(
     'id': SField(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId)),
     'file': SField(_fileRef),
   }),
-  maxItems: 4000,
+  maxItems: PackLimits.voiceLines,
   uniqueKey: 'id',
 );
 
@@ -229,18 +230,18 @@ const SObject manifestSchema = SObject(<String, SField>{
   'files': SField(_fileList),
   'assets': SField(_assetFiles),
   'vo': SField(_voFiles),
-  // M10: Band C adds lines that wait for their voice (B-45, text only now); batch C1 took the pack past 4000.
-  'voPending': SField(SArray(_vo, maxItems: 12000)),
+  // M10: Band C adds lines that wait for their voice (B-45, text only now).
+  'voPending': SField(SArray(_vo, maxItems: PackLimits.voiceLines)),
   'entries': SField(
     SObject(<String, SField>{
-      'activities': SField(SArray(_id, maxItems: 1500)),
-      'lessons': SField(SArray(_lessonId, maxItems: 400)),
-      'skills': SField(SArray(_skill, maxItems: 600)),
-      'misconceptions': SField(SArray(_tag, maxItems: 400)),
+      'activities': SField(SArray(_id, maxItems: PackLimits.activities)),
+      'lessons': SField(SArray(_lessonId, maxItems: PackLimits.lessons)),
+      'skills': SField(SArray(_skill, maxItems: PackLimits.skills)),
+      'misconceptions': SField(SArray(_tag, maxItems: PackLimits.misconceptions)),
       // Characters and mouth cues (M4); absent in packs that have none.
       'characters': SField(SArray(_characterId, maxItems: 20), required: false),
       'cues': SField(
-        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: 4000),
+        SArray(SString(minLength: 1, maxLength: 80, pattern: Patterns.voId), maxItems: PackLimits.voiceLines),
         required: false,
       ),
       // The gates of a course (docs/languages/frame.md section 3.3.6); absent in packs that have none.

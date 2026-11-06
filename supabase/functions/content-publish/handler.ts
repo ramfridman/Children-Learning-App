@@ -6,7 +6,11 @@ import type { FunctionSpec } from "../_shared/handler.ts";
 import type { Shape } from "../_shared/schema.ts";
 import type { PublishedItem, PublishedPack } from "../_shared/store.ts";
 
-export const MAX_PUBLISH_BYTES = 1024 * 1024;
+/** The index of the starter pack is about 640 bytes an item (1,135 items, 725 KB, in November 2026); Band C takes it to about 2,500 items, 1.6 MB. */
+export const MAX_PUBLISH_BYTES = 4 * 1024 * 1024;
+
+/** The activities one pack may hold: the same number as `PackLimits.activities` in the app (app/lib/content/pack_limits.dart). */
+export const MAX_PUBLISH_ITEMS = 3000;
 
 const id = (max: number) => ({ t: "string", max, pattern: /^[a-z0-9][a-z0-9._-]{0,63}$/ }) as const;
 const text = (max: number) => ({ t: "string", max, pattern: /^[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}]+$/u }) as const;
@@ -69,7 +73,7 @@ export const spec: FunctionSpec = {
     pack_id: { t: "string", max: 41, pattern: /^[a-z0-9-]{3,41}$/ },
     pack_version: { t: "string", max: 14, pattern: /^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$/ },
     manifest_sha256: { t: "string", max: 64, pattern: /^[0-9a-f]{64}$/ },
-    items: { t: "array", of: { t: "object", shape: item }, maxItems: 1000 },
+    items: { t: "array", of: { t: "object", shape: item }, maxItems: MAX_PUBLISH_ITEMS },
     misconceptions: { t: "array", of: { t: "object", shape: misconception }, maxItems: 200 },
     characters: { t: "array", of: { t: "object", shape: character }, maxItems: 40 },
   },

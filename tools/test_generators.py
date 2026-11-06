@@ -398,6 +398,76 @@ class BandCTest(unittest.TestCase):
             band_b.UNITS = saved[1]
             band_b.MADE[:] = saved[2]
 
+    def test_a_band_c_line_takes_the_id_of_an_earlier_identical_line(self):
+        saved = (dict(author.pool), dict(author.lines))
+        try:
+            author.pool.clear()
+            author.lines.clear()
+            first = author.say('vo:c.test.1.prompt', 'כַּמָּה זֶה?')
+            second = author.say('vo:c.test.2.prompt', 'כַּמָּה זֶה?')
+            other = author.say('vo:c.test.3.prompt', 'כַּמָּה יֵשׁ?')
+            self.assertEqual((first['vo'], second['vo']), ('vo:c.test.1.prompt', 'vo:c.test.1.prompt'))
+            self.assertEqual(second['caption'], first['caption'], 'nothing changes on the screen')
+            self.assertEqual(other['vo'], 'vo:c.test.3.prompt')
+            self.assertNotIn('vo:c.test.2.prompt', author.lines)
+        finally:
+            author.pool.clear()
+            author.pool.update(saved[0])
+            author.lines.clear()
+            author.lines.update(saved[1])
+
+    def test_a_band_a_or_b_id_and_a_shared_id_are_never_renamed(self):
+        saved = (dict(author.pool), dict(author.lines))
+        try:
+            author.pool.clear()
+            author.lines.clear()
+            author.say('vo:c.test.1.prompt', 'כַּמָּה זֶה?')
+            for vo in ('vo:count.apples.7.prompt', 'vo:b.test.1.prompt', 'vo:fb.test', 'vo:hint.test.h1'):
+                self.assertEqual(author.say(vo, 'כַּמָּה זֶה?')['vo'], vo)
+        finally:
+            author.pool.clear()
+            author.pool.update(saved[0])
+            author.lines.clear()
+            author.lines.update(saved[1])
+
+    def test_a_celebration_is_another_clip_than_the_same_words_asked(self):
+        saved = (dict(author.pool), dict(author.lines))
+        try:
+            author.pool.clear()
+            author.lines.clear()
+            asked = author.say('vo:c.test.1.prompt', 'כׇּל הַכָּבוֹד!')
+            cheered = author.say('vo:celebrate.test_one', 'כׇּל הַכָּבוֹד!', pooled=True)
+            again = author.say('vo:celebrate.test_two', 'כׇּל הַכָּבוֹד!', pooled=True)
+            self.assertEqual(asked['vo'], 'vo:c.test.1.prompt')
+            self.assertEqual((cheered['vo'], again['vo']), ('vo:celebrate.test_one', 'vo:celebrate.test_one'))
+        finally:
+            author.pool.clear()
+            author.pool.update(saved[0])
+            author.lines.clear()
+            author.lines.update(saved[1])
+
+    def test_the_starter_pack_has_one_band_c_id_for_each_text(self):
+        """Band C ids of activities (`vo:c.`) never share a text with another such id, and the pool names the id that is used."""
+        texts = {}
+
+        def walk(node, doc):
+            if isinstance(node, dict):
+                if isinstance(node.get('vo'), str) and node['vo'].startswith('vo:c.') and 'caption' in node:
+                    texts.setdefault(json.dumps(node['caption'], ensure_ascii=False), set()).add(node['vo'])
+                for v in node.values():
+                    walk(v, doc)
+            elif isinstance(node, list):
+                for v in node:
+                    walk(v, doc)
+
+        for f in glob.glob(os.path.join(STARTER, 'activity.c.*.json')):
+            walk(json.load(open(f, encoding='utf-8')), f)
+        self.assertGreater(len(texts), 300)
+        self.assertEqual({t: ids for t, ids in texts.items() if len(ids) > 1}, {})
+        pool = json.load(open(os.path.join(ROOT, 'content', 'voice-pool.c.json'), encoding='utf-8'))
+        used = {next(iter(ids)) for ids in texts.values()}
+        self.assertTrue(used <= set(pool.values()), 'every Band C activity id is in the pool')
+
 
 if __name__ == '__main__':
     unittest.main()

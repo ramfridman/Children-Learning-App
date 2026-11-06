@@ -56,7 +56,7 @@
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.numb01.1.correct",
+      "vo": "vo:c.mathc01.25.correct",
       "caption": [
         {
           "t": "he",

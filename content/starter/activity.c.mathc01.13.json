@@ -21,7 +21,7 @@
     "authored": 0.9
   },
   "prompt": {
-    "vo": "vo:c.mathc01.13.prompt",
+    "vo": "vo:c.mathb04.1.prompt",
     "caption": [
       {
         "t": "he",
@@ -175,7 +175,7 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.mathc01.13.h3",
+      "vo": "vo:c.mathc01.1.h3",
       "caption": [
         {
           "t": "he",
