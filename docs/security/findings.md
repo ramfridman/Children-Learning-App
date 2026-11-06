@@ -4,8 +4,8 @@ While the repository is public, open findings of medium severity or higher, and 
 
 | Id | Title | Severity | Status | Since |
 |---|---|---|---|---|
-| SEC-6 | Pack reader: cap the manifest size before the signature check; header room for 8,002 entries | low | open | 2026-10-28 |
-| SEC-7 | A pack is proven three times per app start, on the UI isolate | low | open | 2026-10-28 |
+| SEC-6 | Pack reader: cap the manifest size before the signature check; header room for 24,002 entries (8,002 before M10) | low | open (grew with the M10 C1 caps; measured again 2026-11-06) | 2026-10-28 |
+| SEC-7 | A pack is proven three times per app start, on the UI isolate | low | open (grows with Band C; measured on a PC 2026-11-06, not on a phone) | 2026-10-28 |
 | SEC-8 | A deployed Edge Function differs from `main` (branch deploy not recorded) | low | open | 2026-10-28 |
 | SEC-9 | Secret scanning: add rules for the pack-signing key file and the publish secret | low | open | 2026-10-28 |
 | SEC-10 | Voice tool: validate the voice id and output format before building the request URL | low | open | 2026-10-28 |
@@ -62,6 +62,8 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-M10-3 | The 1.4 number range is not tied to Band C, and some hint plans grow with the size of the number | low | closed (numerals above 100 and `n:` cells of four digits or more only in Band C, in the validator; the hint plans fall back to the generic plan above 20 units, and a test holds every starter item with big numbers under 2,000 marks; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-4 | Number cells and column numbers take 10,001 to 99,999 and leading zeros | info | closed (the patterns take 0 to 10,000 with no leading zero; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-5 | An activity's `templateVersion` is not checked against the manifest's template version | info | closed (validator rule; proof `sec_m10s0_test.dart`) | 2026-11-06 |
+| SEC-M10-6 | `content-publish` caps are not tied to `PackLimits` (items by comment only; misconceptions 200 against the pack's 400) | info | open | 2026-11-06 |
+| SEC-M10-7 | PLAN.md still gives the pack reader's old limits in the pack format section | info | open | 2026-11-06 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -372,6 +374,19 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   frame draws neither button. The proofs are `ls10_personal_safety_test.dart` (no eye or lamp before a card or during the
   switched-off wait, no attempt row) and `unscored_steps_test.dart` (the four unscored kinds write nothing). Both are green in
   QA's full run (4,073 passed, 0 failed, `218f63d`). SEC-L4-2 and SEC-L1-3 closed in the same run.
+- **M10 C1 pack limits, `m10-c1` (`bd4ae981`; 2026-11-06): the raised caps are still bounded. Nothing above low.** In
+  scope: `app/lib/content/pack_limits.dart`, the caps in `schemas.dart` and `zip_store.dart`, the exported JSON schemas, and
+  `content-publish` at 3,000 items and 4 MB. Not in scope: the C1 Hebrew content and `tools/`, and timing on a phone.
+  - Every cap is still finite. The memory bound is the 64 MB byte cap, which did not change. A zip bomb is still impossible:
+    stored files only, compressed size must equal size, files in order with no gaps, and the canonical re-write. The u16 entry
+    count of the zip still has room (24,002 against 65,535). The exported JSON schemas match the Dart caps.
+  - Before the signature is checked, the reader does one Ed25519 check over `manifest.json`, so the work an unsigned pack can
+    cause does not grow with the entry caps. Unsigned packs still reach the app only through the dev page (dev flavour, adb).
+  - `content-publish` checks the publish secret before it reads the body. The reader stops at the cap. A 4 MB index is far
+    below the Edge Function's 256 MB and 2 s CPU limits (Supabase limits page, read 2026-11-06).
+  - Open findings SEC-6 and SEC-7 grow with these caps and were measured again; SEC-M10-6 and -7 are new (info). Their detail
+    goes to the orchestrator and stays out of this file until they are fixed. No package, lock file, host, workflow or
+    database change, so no advisory check was needed. gitleaks was not on this PC's PATH, so CI is the scan for this commit.
 - **M10 step 0, `m10-step0` (PR 41, `f8a99ff4` against `origin/main`; 2026-11-06): a light review. Nothing above low; fix
   SEC-M10-1 to -3 before this build goes on the phones.** In scope: the device setting `division_sign`, the `tap_answer` 1.4 and
   `spot_error` 1.1 schemas, the validator's rules for them, size caps, hiding from older apps, and how today's sessions handle the
