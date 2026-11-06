@@ -939,9 +939,13 @@ def k_shape(a, ctx):
         sh = sp.split('_')[1]
         names.setdefault(sp, {'one': SHAPE_NAME[sh][0], 'g': 'm'})
     tags = dict(a.get('tags', {}))
-    if a['shape'] in ('square', 'rect'):
+    # A rectangle offered for "the square" is M-SHP-SQRECT (a long rectangle taken for a square). A square is never
+    # wrong for "the rectangle" (owner, W3 of docs/knowledge/maths/check-2026-11-06.md): a square is a rectangle.
+    assert not (a['shape'] == 'rect' and any(sp.split('_')[1] == 'square' for sp in wrong)), (
+        '%s: a square is a rectangle, so it cannot be the wrong answer to "where is the rectangle?"' % a['id'])
+    if a['shape'] == 'square':
         for sp in wrong:
-            if sp.split('_')[1] in ('square', 'rect') and sp not in tags:
+            if sp.split('_')[1] == 'rect' and sp not in tags:
                 tags[sp] = 'M-SHP-SQRECT'
     if a['mode'] == 'match':
         ref = 'shape_%s_%s' % (a['shape'], a['refColour'])

@@ -90,8 +90,9 @@ def extra_numbers():
                   prompt='עוֹקְבִים בָּאֶצְבַּע אַחֲרֵי הַמִּסְפָּר %s.' % F[n] if guide == 'full' else 'כּוֹתְבִים אֶת הַמִּסְפָּר %s. מַתְחִילִים מֵהַנְּקֻדָּה.' % F[n],
                   dirTag='M-NUM-WRITE', h3='מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה וְהוֹלְכִים לְאַט אַחֲרֵי הַנְּקֻדּוֹת. עַכְשָׁו תּוֹרְכֶם.',
                   correct_text='כֵּן! כְּתַבְתֶּם אֶת הַמִּסְפָּר %s.' % F[n], difficulty=0.3 if guide == 'full' else 0.5)
+    # NUM-A-07 matches numerals 1 to 5 (curriculum §4; check-2026-11-06 §4: two sets had a 6)
     sets = [([1, 2, 3], 'apple', [1, 2, 0]), ([2, 3, 4], 'star', [2, 0, 1]), ([3, 4, 5], 'fish', [1, 2, 0]), ([1, 3, 5], 'duck', [2, 1, 0]),
-            ([2, 4, 6], 'apple', [1, 0, 2]), ([4, 5, 6], 'star', [0, 2, 1]), ([1, 2, 3, 4], 'fish', [2, 3, 0, 1])]
+            ([2, 4, 5], 'apple', [1, 0, 2]), ([1, 4, 5], 'star', [0, 2, 1]), ([1, 2, 3, 4], 'fish', [2, 3, 0, 1])]
     for ns, obj, order in sets:
         o = OBJECTS[obj]
         u.act('NUM-A-07', 'match', band='A', domain='numbers', pairs=[['n:%d' % n, '%s*%d' % (obj, n)] for n in ns], order=order, tag='M-CNT-SIZE',
@@ -243,10 +244,11 @@ def extra_shapes():
                   prompt='עוֹקְבִים בָּאֶצְבַּע אַחֲרֵי %s.' % name if guide == 'full' else 'מְצַיְּרִים אֶת %s. מַתְחִילִים מֵהַנְּקֻדָּה.' % name,
                   h3='מַתְחִילִים מֵהַנְּקֻדָּה הַיְרֻקָּה וְהוֹלְכִים לְאַט. עַכְשָׁו תּוֹרְכֶם.', correct_text='כֵּן! צִיַּרְתֶּם אֶת %s.' % name)
     u.skill('SHP-B-09', 'גוף וצורה שלו', 'כׇּל גּוּף וְהַצּוּרָה שֶׁעָלָיו', 'cone-tree', ['SHP-B-08', 'SHP-A-03'], ['pictorial', 'concrete'], ['M-SHP-FACE'])
+    # W1 of check-2026-11-06: a sphere has no flat face (a stamp leaves a point), so the fourth set has the cone, not the sphere
     pairs = [[('solid_cylinder', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')],
              [('solid_cone', 'shape_circle'), ('solid_box', 'shape_rect'), ('solid_pyramid', 'shape_triangle')],
              [('solid_cylinder', 'shape_circle'), ('solid_box', 'shape_rect')],
-             [('solid_sphere', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
+             [('solid_cone', 'shape_circle'), ('solid_pyramid', 'shape_triangle'), ('solid_box', 'shape_rect')]]
     for i, ps in enumerate(pairs):
         order = list(range(len(ps)))
         order = order[1:] + order[:1] if i % 2 == 0 else order[::-1]

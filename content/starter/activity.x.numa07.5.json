@@ -45,8 +45,8 @@
       },
       {
         "id": "a3",
-        "numeral": 6,
-        "label": "שֵׁשׁ"
+        "numeral": 5,
+        "label": "חָמֵשׁ"
       }
     ],
     "right": [
@@ -65,8 +65,8 @@
       {
         "id": "b3",
         "sprite": "asset:apple",
-        "count": 6,
-        "label": "שִׁשָּׁה תַּפּוּחִים"
+        "count": 5,
+        "label": "חֲמִשָּׁה תַּפּוּחִים"
       }
     ]
   },

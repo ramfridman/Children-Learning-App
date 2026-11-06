@@ -52,7 +52,7 @@
         "id": "o3",
         "sprite": "asset:shape_rect",
         "label": "מַלְבֵּן",
-        "misconception": "M-SHP-ORIENT"
+        "misconception": "M-SHP-SQRECT"
       }
     ],
     "correct": "o2",
@@ -78,6 +78,16 @@
           {
             "t": "he",
             "v": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-SHP-SQRECT",
+        "vo": "vo:fb.shp_sqrect",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת."
           }
         ]
       },

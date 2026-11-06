@@ -51,11 +51,6 @@
         "id": "o2",
         "sprite": "asset:rule_shape",
         "label": "הַצּוּרָה"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:rule_size",
-        "label": "הַגֹּדֶל"
       }
     ],
     "correct": "o1",

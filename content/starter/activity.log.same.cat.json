@@ -54,12 +54,6 @@
         "id": "o2",
         "sprite": "asset:cat",
         "label": "חָתוּל"
-      },
-      {
-        "id": "o3",
-        "sprite": "asset:duck",
-        "label": "בַּרְוָז",
-        "misconception": "M-COL-ONEATTR"
       }
     ],
     "correct": "o2",

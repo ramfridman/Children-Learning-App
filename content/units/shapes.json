@@ -215,7 +215,7 @@
     "M-SHP-ORIENT": "צוּרָה נִשְׁאֶרֶת אוֹתָהּ צוּרָה גַּם כְּשֶׁמְּסֹבְבִים אוֹתָהּ. בּוֹאוּ נִבְדֹּק.",
     "M-SHP-PROTO": "אוֹתָהּ צוּרָה יְכוֹלָה לְהֵרָאוֹת קְצָת אַחֶרֶת. בּוֹאוּ נִסְפֹּר צְלָעוֹת.",
     "M-SHP-SIZE": "צוּרָה גְּדוֹלָה וְצוּרָה קְטַנָּה יְכוֹלוֹת לִהְיוֹת אוֹתָהּ צוּרָה. בּוֹאוּ נִבְדֹּק.",
-    "M-SHP-SQRECT": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.",
+    "M-SHP-SQRECT": "בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.",
     "M-SPACE-WORD": "הַמִּלָּה אוֹמֶרֶת אֵיפֹה הַכַּדּוּר. בּוֹאוּ נִסְתַּכֵּל שׁוּב.",
     "M-COL-ONEATTR": "יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.",
     "M-SHP-CLOSED": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק.",
@@ -540,7 +540,7 @@
       ],
       "correct": "shape_square_tilt",
       "tags": {
-        "shape_rect": "M-SHP-ORIENT",
+        "shape_rect": "M-SHP-SQRECT",
         "shape_circle": "M-SHP-ORIENT"
       },
       "difficulty": 0.35
@@ -551,13 +551,13 @@
       "skill": "SHP-A-03",
       "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
       "options": [
-        "shape_rect",
+        "shape_open",
         "shape_circle",
         "shape_triangle_thin"
       ],
       "correct": "shape_triangle_thin",
       "tags": {
-        "shape_rect": "M-SHP-PROTO",
+        "shape_open": "M-SHP-CLOSED",
         "shape_circle": "M-SHP-PROTO"
       },
       "difficulty": 0.4
@@ -569,12 +569,12 @@
       "prompt": "אֵיפֹה הַמְּשֻׁלָּשׁ?",
       "options": [
         "shape_triangle_down",
-        "shape_square",
+        "shape_open",
         "shape_circle"
       ],
       "correct": "shape_triangle_down",
       "tags": {
-        "shape_square": "M-SHP-ORIENT",
+        "shape_open": "M-SHP-CLOSED",
         "shape_circle": "M-SHP-ORIENT"
       },
       "difficulty": 0.4
@@ -587,12 +587,12 @@
       "options": [
         "shape_circle*1",
         "shape_triangle*1@0.55",
-        "shape_square*1"
+        "shape_curved*1"
       ],
       "correct": "shape_triangle*1@0.55",
       "tags": {
         "shape_circle*1": "M-SHP-SIZE",
-        "shape_square*1": "M-SHP-SIZE"
+        "shape_curved*1": "M-SHP-CLOSED"
       },
       "difficulty": 0.35
     },
@@ -603,13 +603,10 @@
       "prompt": "אֵיפֹה הַמַּלְבֵּן?",
       "options": [
         "shape_rect",
-        "shape_square",
+        "shape_triangle",
         "shape_circle"
       ],
       "correct": "shape_rect",
-      "tags": {
-        "shape_square": "M-SHP-SQRECT"
-      },
       "difficulty": 0.3
     },
     {
@@ -635,14 +632,11 @@
       "skill": "SHP-A-04",
       "prompt": "אֵיזוֹ צוּרָה אֲרֻכָּה?",
       "options": [
-        "shape_square",
+        "shape_triangle",
         "shape_circle",
         "shape_rect"
       ],
       "correct": "shape_rect",
-      "tags": {
-        "shape_square": "M-SHP-SQRECT"
-      },
       "difficulty": 0.35,
       "correct_text": "כֵּן! הַמַּלְבֵּן אָרֹךְ."
     },
@@ -936,12 +930,12 @@
       "options": [
         "shape_circle_red*1",
         "shape_square_blue*1@0.55",
-        "shape_triangle_green*1"
+        "shape_rect_green*1"
       ],
       "correct": "shape_square_blue*1@0.55",
       "tags": {
         "shape_circle_red*1": "M-SHP-SIZE",
-        "shape_triangle_green*1": "M-SHP-SIZE"
+        "shape_rect_green*1": "M-SHP-SQRECT"
       },
       "difficulty": 0.35
     },
@@ -957,7 +951,6 @@
       ],
       "correct": "shape_circle_red*1@1.5",
       "tags": {
-        "shape_triangle_green*1": "M-SHP-SIZE",
         "shape_square_blue*1": "M-SHP-SIZE"
       },
       "difficulty": 0.35
@@ -971,7 +964,7 @@
       "colour": "blue",
       "others": [
         [
-          "square",
+          "triangle",
           "blue"
         ],
         [
@@ -1015,7 +1008,7 @@
           "green"
         ],
         [
-          "square",
+          "circle",
           "green"
         ]
       ],
@@ -1430,14 +1423,13 @@
         "count": 1
       },
       "options": [
-        "shape_square_green",
+        "shape_square_tilt",
         "shape_circle_green",
         "shape_triangle_green"
       ],
       "correct": "shape_triangle_green",
       "tags": {
-        "shape_square_green": "M-SHP-ORIENT",
-        "shape_circle_green": "M-SHP-ORIENT"
+        "shape_square_tilt": "M-SHP-ORIENT"
       },
       "difficulty": 0.45
     },
@@ -1663,7 +1655,7 @@
       "colour": "yellow",
       "others": [
         [
-          "square",
+          "circle",
           "yellow"
         ]
       ],
@@ -1680,7 +1672,7 @@
       "colour": "red",
       "others": [
         [
-          "square",
+          "triangle",
           "red"
         ]
       ],

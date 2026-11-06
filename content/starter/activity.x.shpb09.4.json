@@ -35,8 +35,8 @@
     "left": [
       {
         "id": "a1",
-        "sprite": "asset:solid_sphere",
-        "label": "כַּדּוּר"
+        "sprite": "asset:solid_cone",
+        "label": "חָרוּט"
       },
       {
         "id": "a2",

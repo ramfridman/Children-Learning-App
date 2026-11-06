@@ -344,11 +344,10 @@
         2
       ],
       "goal": [
-        3,
+        2,
         1
       ],
       "solution": [
-        "right",
         "right",
         "right",
         "up"
@@ -509,11 +508,10 @@
         0
       ],
       "goal": [
-        2,
+        1,
         2
       ],
       "solution": [
-        "right",
         "right",
         "down",
         "down"
@@ -556,11 +554,10 @@
         2
       ],
       "goal": [
-        3,
+        2,
         0
       ],
       "solution": [
-        "right",
         "right",
         "up",
         "up"

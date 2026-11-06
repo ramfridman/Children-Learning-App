@@ -40,8 +40,7 @@
       {
         "id": "o1",
         "sprite": "asset:day_7",
-        "label": "שַׁבָּת",
-        "misconception": "M-CNT-SEQ"
+        "label": "שַׁבָּת"
       },
       {
         "id": "o2",

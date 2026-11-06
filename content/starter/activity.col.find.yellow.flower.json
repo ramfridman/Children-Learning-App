@@ -51,16 +51,11 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:ball_red",
-        "label": "כַּדּוּר אָדֹם"
-      },
-      {
-        "id": "o4",
         "sprite": "asset:bloom_yellow",
         "label": "פֶּרַח צָהֹב"
       }
     ],
-    "correct": "o4",
+    "correct": "o3",
     "shuffle": false,
     "unsureAllowed": true
   },

@@ -40,7 +40,8 @@
       {
         "id": "o1",
         "sprite": "asset:fish",
-        "label": "דָּג"
+        "label": "דָּג",
+        "misconception": "M-ORD-CARD"
       },
       {
         "id": "o2",
@@ -51,12 +52,6 @@
         "id": "o3",
         "sprite": "asset:cat",
         "label": "חָתוּל"
-      },
-      {
-        "id": "o4",
-        "sprite": "asset:duck",
-        "label": "בַּרְוָז",
-        "misconception": "M-ORD-CARD"
       }
     ],
     "correct": "o3",

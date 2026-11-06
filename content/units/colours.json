@@ -625,7 +625,6 @@
       "options": [
         "ball_red",
         "balloon_blue",
-        "bloom_green",
         "balloon_red"
       ],
       "correct": "balloon_red",
@@ -643,7 +642,6 @@
       "options": [
         "balloon_blue",
         "ball_yellow",
-        "bloom_red",
         "ball_blue"
       ],
       "correct": "ball_blue",
@@ -661,7 +659,6 @@
       "options": [
         "bloom_green",
         "balloon_yellow",
-        "ball_red",
         "bloom_yellow"
       ],
       "correct": "bloom_yellow",
@@ -679,8 +676,7 @@
       "options": [
         "balloon_green",
         "ball_green",
-        "balloon_red",
-        "bloom_blue"
+        "balloon_red"
       ],
       "correct": "balloon_green",
       "tags": {

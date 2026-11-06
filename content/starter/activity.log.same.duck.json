@@ -51,12 +51,6 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:bird",
-        "label": "צִפּוֹר",
-        "misconception": "M-COL-ONEATTR"
-      },
-      {
-        "id": "o3",
         "sprite": "asset:ball_yellow",
         "label": "כַּדּוּר צָהֹב",
         "misconception": "M-COL-ONEATTR"

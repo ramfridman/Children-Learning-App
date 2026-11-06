@@ -40,8 +40,7 @@
       {
         "id": "o1",
         "sprite": "asset:day_4",
-        "label": "יוֹם רְבִיעִי",
-        "misconception": "M-CNT-SEQ"
+        "label": "יוֹם רְבִיעִי"
       },
       {
         "id": "o2",

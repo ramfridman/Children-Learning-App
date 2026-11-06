@@ -53,9 +53,9 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 71,
-        "label": "שִׁבְעִים וְאַחַת",
-        "misconception": "M-NUM-REV"
+        "numeral": 10,
+        "label": "עֶשֶׂר",
+        "misconception": "M-PART-MISS"
       },
       {
         "id": "o2",
@@ -64,8 +64,8 @@
       },
       {
         "id": "o3",
-        "numeral": 10,
-        "label": "עֶשֶׂר",
+        "numeral": 7,
+        "label": "שֶׁבַע",
         "misconception": "M-PART-MISS"
       }
     ],
@@ -85,16 +85,6 @@
       ]
     },
     "incorrect": [
-      {
-        "when": "misconception:M-NUM-REV",
-        "vo": "vo:fb.num_rev",
-        "caption": [
-          {
-            "t": "he",
-            "v": "הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
-          }
-        ]
-      },
       {
         "when": "misconception:M-PART-MISS",
         "vo": "vo:fb.part_miss",

@@ -46,15 +46,14 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_square_green",
+        "sprite": "asset:shape_square_tilt",
         "label": "רִבּוּעַ",
         "misconception": "M-SHP-ORIENT"
       },
       {
         "id": "o2",
         "sprite": "asset:shape_circle_green",
-        "label": "עִגּוּל",
-        "misconception": "M-SHP-ORIENT"
+        "label": "עִגּוּל"
       },
       {
         "id": "o3",

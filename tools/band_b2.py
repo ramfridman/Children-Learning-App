@@ -186,17 +186,24 @@ def shapes():
 
     u.skill('SHP-B-03', 'ריבוע ומלבן', 'רִבּוּעַ וּמַלְבֵּן', 'cone-tree', ['SHP-A-04', 'SHP-B-02'], ['pictorial'], ['M-SHP-SQRECT'])
     for i in range(3):
-        u.act('SHP-B-03', 'pick', prompt='לְאֵיזוֹ צוּרָה כׇּל הַצְּלָעוֹת שָׁווֹת?', options=place('shape_square', ['shape_rect', 'shape_triangle'], i),
+        # A2 of check-2026-11-06: the plain triangle's sides (82, 82, 80) look equal, so the thin one is the distractor
+        u.act('SHP-B-03', 'pick', prompt='לְאֵיזוֹ צוּרָה כׇּל הַצְּלָעוֹת שָׁווֹת?', options=place('shape_square', ['shape_rect', 'shape_triangle_thin'], i),
               correct='shape_square', tags={'shape_rect': 'M-SHP-SQRECT'}, domain='shapes', voice=True,
               correct_text='כֵּן! בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת.', h3='בְּרִבּוּעַ כׇּל אַרְבַּע הַצְּלָעוֹת שָׁווֹת. עַכְשָׁו תּוֹרְכֶם.')
+        # A square is a rectangle (owner, W3 of check-2026-11-06): here the question asks for a rectangle whose sides are not
+        # all equal, so the square is wrong, but it is not tagged M-SHP-SQRECT (that tag is "a square is not a rectangle"),
+        # and the lines speak of this rectangle, not of every rectangle
         u.act('SHP-B-03', 'pick', prompt='אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת.',
-              options=place('shape_rect', ['shape_square', 'shape_circle'], i), correct='shape_rect', tags={'shape_square': 'M-SHP-SQRECT'},
-              domain='shapes', correct_text='כֵּן! בְּמַלְבֵּן יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּצְלָעוֹת קְצָרוֹת.',
-              h3='בְּמַלְבֵּן שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם.')
+              options=place('shape_rect', ['shape_square', 'shape_circle'], i), correct='shape_rect', tags={},
+              domain='shapes', correct_text='כֵּן! בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּצְלָעוֹת קְצָרוֹת.',
+              h3='בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם.')
 
     # B-15 §1 (H6): the square is a rectangle, so a tap on it is the M-SHP-SQRECT signal
+    # its own line: the shared M-SHP-SQRECT line is about a rectangle taken for a square, and here the square was taken out
     u.act('SHP-B-03', 'spot', cells=['shape_rect', 'shape_square', 'shape_rect', 'shape_triangle'], wrong=3, tag='M-SHP-SQRECT', domain='shapes',
-          check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק מַלְבֵּנִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?')
+          check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק מַלְבֵּנִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?',
+          tag_lines={'M-SHP-SQRECT': ('vo:fb.sqrect.square_is_rect',
+                                      'גַּם רִבּוּעַ הוּא מַלְבֵּן: מַלְבֵּן שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה.')})
 
     u.skill('SHP-B-04', 'צורה סגורה', 'צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת', 'cone-tree', ['SHP-B-01', 'SHP-A-10'], ['pictorial'], ['M-SHP-CLOSED'])
     for i, (sp, closed) in enumerate([('shape_triangle', True), ('shape_open', False), ('shape_pentagon', True), ('shape_curved', False),
@@ -283,7 +290,8 @@ def logic():
     pattern_row(9, 'AAB', 'frog', 'chick', 'bird', check='transfer', difficulty=0.6)
 
     u.skill('LOG-B-02', 'מוצאים את החלק החוזר', 'מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר', 'pattern-door', ['LOG-B-01'], ['pictorial'], ['M-PAT-UNIT'])
-    for i, (form, w) in enumerate([('AAB', 4), ('ABB', 3), ('ABC', 5), ('AAB', 6), ('ABB', 4), ('ABC', 2)]):
+    # A1 of check-2026-11-06: an ABC row breaks only after the unit was shown twice (cells 6 and 7), so one reading is left
+    for i, (form, w) in enumerate([('AAB', 4), ('ABB', 3), ('ABC', 6), ('AAB', 6), ('ABB', 4), ('ABC', 7)]):
         x, y, z = P[i % len(P)]
         sym = {'A': x, 'B': y, 'C': z}
         seq = ([sym[c] for c in form] * 3)[:8]
@@ -318,7 +326,9 @@ def logic():
             (['apple_size_l', 'star_size_l', 'fish_size_l'], 'rule_size', 'אוֹתוֹ גֹּדֶל'),
             (['apple_size_s', 'fish_size_s', 'star_size_s'], 'rule_size', 'אוֹתוֹ גֹּדֶל')]
     for i, (row, rule, text) in enumerate(sets):
-        others = [r for r in ('rule_colour', 'rule_shape', 'rule_size') if r != rule]
+        # W2 of check-2026-11-06: the shapes are drawn the same size, so "the size" is right too where the rule is the colour
+        # or the shape; those items offer colour and shape only (until shapes in three sizes are drawn)
+        others = [r for r in ('rule_colour', 'rule_shape', 'rule_size') if r != rule and (rule == 'rule_size' or r != 'rule_size')]
         u.act('LOG-B-06', 'pick', prompt='מַה מְשֻׁתָּף לְכֻלָּם?', row=row, options=place(rule, others, i % 3), correct=rule,
               domain='logic', correct_text='כֵּן! כֻּלָּם %s.' % text, h3='נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם %s. עַכְשָׁו תּוֹרְכֶם.' % text)
 
@@ -414,8 +424,9 @@ def robots():
     u.skill('CS-B-01', 'תכנון דרך ארוכה', 'מְתַכְנְנִים דֶּרֶךְ שֶׁל כַּמָּה צְעָדִים', 'dock', ['CS-A-04'], ['embodied'], ['M-CS-OFF1'])
     paths = [(4, 4, (0, 3), ['up', 'up', 'right', 'right', 'up']), (4, 4, (3, 3), ['left', 'left', 'up', 'up', 'left']),
              (5, 3, (0, 2), ['right', 'right', 'up', 'right', 'right', 'up']), (4, 4, (0, 0), ['down', 'down', 'right', 'right', 'down']),
-             (5, 4, (4, 3), ['left', 'left', 'up', 'up', 'left', 'up']), (4, 4, (1, 3), ['up', 'right', 'up', 'right', 'up', 'left']),
+             (5, 4, (4, 3), ['left', 'left', 'up', 'up', 'left', 'up']), (4, 4, (1, 3), ['up', 'right', 'up', 'up']),
              (5, 4, (0, 3), ['right', 'up', 'right', 'up', 'right', 'up']), (4, 4, (3, 0), ['down', 'left', 'down', 'left', 'down', 'left'])]
+    # R1 of check-2026-11-06: b.csb01.6 went up, right, up, right, up, left (6 steps where 4 reach the flag); now a shortest way
     delta = {'up': (0, -1), 'down': (0, 1), 'left': (-1, 0), 'right': (1, 0)}
     for i, (cols, rows, start, sol) in enumerate(paths):
         c, r = start

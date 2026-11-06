@@ -792,6 +792,73 @@ PENDING = [
     # screen-reader labels, the fish and star correct line, the tick hint): all `text-ready`, waiting for the owner's approval.
     # The 20 he.dart strings that arrived with the Languages screens (L1 to L4) were read in the same pass.
 ]
+# The maths check of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): the rows whose text the Maths and CS teachers'
+# fixes made new (other numbers in a template the editor read, the "this rectangle" lines of W3, the own line of b.shpb03.7) or
+# moved (the MATH-B-09 caption of MATH-B-03). They wait for the editor's read; remove them from here when it is done.
+MATHS_CHECK = ('Maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): new text from the Maths and '
+               'CS teachers, needs-editor. ')
+MATHS_CHECK_ROWS = [
+    ('activity.b.csb01.6.json', 'hints.2.caption.0.v'),
+    ('activity.b.mathb07.6.json', 'prompt.caption.0.v'),
+    ('activity.b.mathb07.6.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.mathb07.6.json', 'a11y.altText'),
+    ('activity.b.mathb08.13.json', 'prompt.caption.0.v'),
+    ('activity.b.mathb08.13.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.mathb08.13.json', 'feedback.incorrect.1.caption.0.v'),
+    ('activity.b.mathb08.13.json', 'hints.1.caption.0.v'),
+    ('activity.b.mathb08.13.json', 'hints.2.caption.0.v'),
+    ('activity.b.mathb08.13.json', 'a11y.altText'),
+    ('activity.b.mathb08.14.json', 'prompt.caption.0.v'),
+    ('activity.b.mathb08.14.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.mathb08.14.json', 'feedback.incorrect.1.caption.0.v'),
+    ('activity.b.mathb08.14.json', 'hints.1.caption.0.v'),
+    ('activity.b.mathb08.14.json', 'hints.2.caption.0.v'),
+    ('activity.b.mathb08.14.json', 'a11y.altText'),
+    ('activity.b.mathb09.10.json', 'prompt.caption.0.v'),
+    ('activity.b.mathb09.10.json', 'a11y.altText'),
+    ('activity.b.mathb09.11.json', 'prompt.caption.0.v'),
+    ('activity.b.mathb09.11.json', 'a11y.altText'),
+    ('activity.b.mathb09.12.json', 'prompt.caption.0.v'),
+    ('activity.b.mathb09.12.json', 'a11y.altText'),
+    ('activity.b.mathb09.9.json', 'prompt.caption.0.v'),
+    ('activity.b.mathb09.9.json', 'a11y.altText'),
+    ('activity.b.numb05.8.json', 'prompt.caption.0.v'),
+    ('activity.b.numb05.8.json', 'hints.0.caption.0.v'),
+    ('activity.b.numb05.8.json', 'a11y.altText'),
+    ('activity.b.numb10.10.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.numb10.10.json', 'hints.2.caption.0.v'),
+    ('activity.b.numb10.3.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.numb10.3.json', 'hints.2.caption.0.v'),
+    ('activity.b.numb10.4.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.numb10.4.json', 'hints.2.caption.0.v'),
+    ('activity.b.numb10.7.json', 'hints.2.caption.0.v'),
+    ('activity.b.numb10.8.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.numb10.8.json', 'hints.2.caption.0.v'),
+    ('activity.b.numb10.9.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.numb10.9.json', 'hints.2.caption.0.v'),
+    ('activity.b.shpb03.1.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.b.shpb03.2.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.shpb03.2.json', 'hints.2.caption.0.v'),
+    ('activity.b.shpb03.3.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.b.shpb03.4.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.shpb03.4.json', 'hints.2.caption.0.v'),
+    ('activity.b.shpb03.5.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.b.shpb03.6.json', 'feedback.correct.caption.0.v'),
+    ('activity.b.shpb03.6.json', 'hints.2.caption.0.v'),
+    ('activity.b.shpb03.7.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.b15.shpa01.2.json', 'feedback.incorrect.1.caption.0.v'),
+    ('activity.b15.shpa02.2.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.cs.robot.plan.6.json', 'hints.2.caption.0.v'),
+    ('activity.shp.any.small.square.json', 'feedback.incorrect.1.caption.0.v'),
+    ('activity.shp.any.tilt.json', 'feedback.incorrect.1.caption.0.v'),
+    ('activity.shp.match.square.json', 'feedback.incorrect.1.caption.0.v'),
+    ('activity.shp.match.square.orange.json', 'feedback.incorrect.1.caption.0.v'),
+    ('activity.shp.name.square.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.shp.name.square.yellow.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.shp.rect.square.json', 'feedback.incorrect.0.caption.0.v'),
+    ('activity.shp.square.orange.json', 'feedback.incorrect.0.caption.0.v'),
+]
+PENDING += [('3', '^%s$' % re.escape(rid), '^%s$' % re.escape(src), MATHS_CHECK) for src, rid in MATHS_CHECK_ROWS]
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
 DOUBT = [

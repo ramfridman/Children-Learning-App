@@ -52,17 +52,11 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:balloon_red",
-        "label": "בָּלוֹן אָדֹם",
-        "misconception": "M-COL-ONEATTR"
-      },
-      {
-        "id": "o3",
         "sprite": "asset:apple",
         "label": "תַּפּוּחַ"
       }
     ],
-    "correct": "o3",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },

@@ -39,9 +39,9 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:shape_rect",
-        "label": "מַלְבֵּן",
-        "misconception": "M-SHP-PROTO"
+        "sprite": "asset:shape_open",
+        "label": "צוּרָה פְּתוּחָה",
+        "misconception": "M-SHP-CLOSED"
       },
       {
         "id": "o2",
@@ -71,6 +71,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-SHP-CLOSED",
+        "vo": "vo:fb.shp_closed",
+        "caption": [
+          {
+            "t": "he",
+            "v": "לְצוּרָה סְגוּרָה אֵין פֶּתַח. וְצָרִיךְ גַּם שֶׁכׇּל הַצְּלָעוֹת יִהְיוּ יְשָׁרוֹת. בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-SHP-PROTO",
         "vo": "vo:fb.shp_proto",

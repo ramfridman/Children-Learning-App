@@ -40,8 +40,7 @@
       {
         "id": "o1",
         "sprite": "asset:day_2",
-        "label": "יוֹם שֵׁנִי",
-        "misconception": "M-CNT-SEQ"
+        "label": "יוֹם שֵׁנִי"
       },
       {
         "id": "o2",

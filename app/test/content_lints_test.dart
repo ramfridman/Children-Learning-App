@@ -185,11 +185,15 @@ void main() {
       expect(_knownNewGaps.length, 21);
     });
 
-    test('no other new item falls short: the old gaps are pinned at 310', () {
+    // 320 since the maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026-11-06-fixes.md): +14 where a second
+    // tag was false and came off (b.mathb14.1 to .11, b.numb08.10, b15.shpa01.1, shp.any.big.circle; the catalogue has no
+    // honest tag for them yet, a proposal to the curriculum-expert), -4 where LOG-B-06 now offers two options (b.logb06.1
+    // to .4)
+    test('no other new item falls short: the old gaps are pinned at 320', () {
       final List<String> older = gaps.where((String id) => !_knownNewGaps.containsKey(id)).toList();
       expect(
         older.length,
-        310,
+        320,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

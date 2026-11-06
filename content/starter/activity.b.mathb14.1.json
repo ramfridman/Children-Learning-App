@@ -45,8 +45,7 @@
       {
         "id": "o2",
         "sprite": "asset:day_3",
-        "label": "יוֹם שְׁלִישִׁי",
-        "misconception": "M-CNT-SEQ"
+        "label": "יוֹם שְׁלִישִׁי"
       },
       {
         "id": "o3",

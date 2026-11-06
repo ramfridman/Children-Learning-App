@@ -49,16 +49,11 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:rule_size",
-        "label": "הַגֹּדֶל"
-      },
-      {
-        "id": "o3",
         "sprite": "asset:rule_shape",
         "label": "הַצּוּרָה"
       }
     ],
-    "correct": "o3",
+    "correct": "o2",
     "shuffle": false,
     "unsureAllowed": true
   },

@@ -484,14 +484,12 @@
       },
       "options": [
         "dog",
-        "cat",
-        "duck"
+        "cat"
       ],
       "correct": "cat",
       "difficulty": 0.05,
       "tags": {
-        "dog": "M-COL-ONEATTR",
-        "duck": "M-COL-ONEATTR"
+        "dog": "M-COL-ONEATTR"
       }
     },
     {
@@ -505,14 +503,12 @@
       },
       "options": [
         "ball_yellow",
-        "balloon_yellow",
         "star"
       ],
       "correct": "star",
       "difficulty": 0.05,
       "tags": {
-        "ball_yellow": "M-COL-ONEATTR",
-        "balloon_yellow": "M-COL-ONEATTR"
+        "ball_yellow": "M-COL-ONEATTR"
       }
     },
     {
@@ -526,13 +522,11 @@
       },
       "options": [
         "duck",
-        "bird",
         "ball_yellow"
       ],
       "correct": "duck",
       "difficulty": 0.1,
       "tags": {
-        "bird": "M-COL-ONEATTR",
         "ball_yellow": "M-COL-ONEATTR"
       }
     },
@@ -1295,14 +1289,12 @@
       "skill": "LOG-A-01",
       "ref": "apple",
       "others": [
-        "ball_red",
-        "balloon_red"
+        "ball_red"
       ],
-      "pos": 2,
+      "pos": 1,
       "difficulty": 0.1,
       "tags": {
-        "ball_red": "M-COL-ONEATTR",
-        "balloon_red": "M-COL-ONEATTR"
+        "ball_red": "M-COL-ONEATTR"
       }
     },
     {
@@ -1311,13 +1303,11 @@
       "skill": "LOG-A-01",
       "ref": "bird",
       "others": [
-        "duck",
         "ball_blue"
       ],
       "pos": 0,
       "difficulty": 0.15,
       "tags": {
-        "duck": "M-COL-ONEATTR",
         "ball_blue": "M-COL-ONEATTR"
       }
     },
@@ -1327,13 +1317,11 @@
       "skill": "LOG-A-01",
       "ref": "balloon_red",
       "others": [
-        "balloon_blue",
         "ball_red"
       ],
       "pos": 1,
       "difficulty": 0.2,
       "tags": {
-        "balloon_blue": "M-COL-ONEATTR",
         "ball_red": "M-COL-ONEATTR"
       }
     },

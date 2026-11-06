@@ -62,12 +62,12 @@
         "id": "o3",
         "set": {
           "sprite": "asset:star",
-          "count": 1,
+          "count": 4,
           "arrangement": "line",
-          "seed": 1
+          "seed": 4
         },
-        "label": "כּוֹכָב אֶחָד",
-        "misconception": "M-CNT-SKIP"
+        "label": "אַרְבָּעָה כּוֹכָבִים",
+        "misconception": "M-CNT-DOUBLE"
       }
     ],
     "correct": "o1",
@@ -86,6 +86,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-DOUBLE",
+        "vo": "vo:fb.double_set",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "misconception:M-CNT-SKIP",
         "vo": "vo:fb.skip_set",

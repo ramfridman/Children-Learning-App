@@ -50,12 +50,7 @@
       {
         "id": "o3",
         "sprite": "asset:cat",
-        "label": "חָתוּל"
-      },
-      {
-        "id": "o4",
-        "sprite": "asset:dog",
-        "label": "כֶּלֶב",
+        "label": "חָתוּל",
         "misconception": "M-ORD-CARD"
       }
     ],

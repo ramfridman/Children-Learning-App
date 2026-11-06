@@ -35,17 +35,17 @@
     "cells": [
       "asset:cat",
       "asset:dog",
-      "asset:cat",
+      "asset:star",
       "asset:cat",
       "asset:dog",
       "asset:star",
       "asset:cat",
-      "asset:dog"
+      "asset:star"
     ]
   },
   "answer": {
     "type": "spot",
-    "wrong": 2,
+    "wrong": 7,
     "misconception": "M-PAT-UNIT"
   },
   "voiceAnswer": false,
