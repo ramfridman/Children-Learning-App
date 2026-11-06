@@ -490,6 +490,12 @@
       "difficulty": 0.05,
       "tags": {
         "dog": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.same_similar",
+          "זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -509,6 +515,12 @@
       "difficulty": 0.05,
       "tags": {
         "ball_yellow": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -528,6 +540,12 @@
       "difficulty": 0.1,
       "tags": {
         "ball_yellow": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1295,6 +1313,12 @@
       "difficulty": 0.1,
       "tags": {
         "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1309,6 +1333,12 @@
       "difficulty": 0.15,
       "tags": {
         "ball_blue": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1323,6 +1353,12 @@
       "difficulty": 0.2,
       "tags": {
         "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       }
     },
     {
@@ -1680,6 +1716,12 @@
       "tags": {
         "ball_red": "M-COL-ONEATTR"
       },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
+      },
       "difficulty": 0.4
     },
     {
@@ -1699,6 +1741,12 @@
       "correct": "balloon_blue",
       "tags": {
         "ball_red": "M-COL-ONEATTR"
+      },
+      "tag_lines": {
+        "M-COL-ONEATTR": [
+          "vo:fb.sort_shift.kind",
+          "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+        ]
       },
       "difficulty": 0.4
     },

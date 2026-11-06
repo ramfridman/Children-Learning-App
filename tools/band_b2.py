@@ -196,14 +196,14 @@ def shapes():
         u.act('SHP-B-03', 'pick', prompt='אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת.',
               options=place('shape_rect', ['shape_square', 'shape_circle'], i), correct='shape_rect', tags={},
               domain='shapes', correct_text='כֵּן! בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּצְלָעוֹת קְצָרוֹת.',
-              h3='בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם.')
+              h3='בַּמַּלְבֵּן הַזֶּה יֵשׁ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם.')
 
     # B-15 §1 (H6): the square is a rectangle, so a tap on it is the M-SHP-SQRECT signal
     # its own line: the shared M-SHP-SQRECT line is about a rectangle taken for a square, and here the square was taken out
     u.act('SHP-B-03', 'spot', cells=['shape_rect', 'shape_square', 'shape_rect', 'shape_triangle'], wrong=3, tag='M-SHP-SQRECT', domain='shapes',
           check='error_spotting', difficulty=0.6, prompt='חָבֵר אוֹסֵף רַק מַלְבֵּנִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?',
           tag_lines={'M-SHP-SQRECT': ('vo:fb.sqrect.square_is_rect',
-                                      'גַּם רִבּוּעַ הוּא מַלְבֵּן: מַלְבֵּן שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה.')})
+                                      'רִבּוּעַ הוּא גַּם מַלְבֵּן: מַלְבֵּן מְיֻחָד, שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה.')})
 
     u.skill('SHP-B-04', 'צורה סגורה', 'צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת', 'cone-tree', ['SHP-B-01', 'SHP-A-10'], ['pictorial'], ['M-SHP-CLOSED'])
     for i, (sp, closed) in enumerate([('shape_triangle', True), ('shape_open', False), ('shape_pentagon', True), ('shape_curved', False),

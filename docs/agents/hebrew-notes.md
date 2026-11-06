@@ -587,3 +587,36 @@ Scope and counts, the 38 changed rows with before and after, the 5 questions for
 next pack version. **For the voice director.** The 21 changed texts need no direction; the spoken ones are re-voiced from `voice_text`.
 
 **Update, 2026-11-06 (the owner's answers, in chat).** Rule 7 now holds in the pack: the four `לֹא` misconception lines are reworded (`M-MEAS-BIG`, `M-SORT-SHIFT` colour line, the chart `M-CNT-SIZE` line with its own clip `vo:fb.size.chart`, `M-ORD-CARD`); the B-15 title is `זֵהֶה אוֹ שׁוֹנֶה?` (owner-approved in chat). **No line says `כִּמְעַט`** (owner: do not mislead a child who is not close): the default wrong-answer line is `בּוֹאוּ נְנַסֶּה שׁוּב.` (id `vo:fb.almost` kept) and `core.encourage.almost` is `עוֹד לֹא — בּוֹאוּ נְנַסֶּה שׁוּב.`. Add `כִּמְעַט` and `כמעט` to the register scan as "only when the app knows the answer was close". Details: `docs/review/hebrew-review-2026-11-06.md` section 7.
+
+## 12. The editor's read of the 59 maths-check rows, 2026-11-06
+
+Scope: the 59 rows that the Maths and CS teachers' fixes left `proposed` (`docs/knowledge/maths/check-2026-11-06-fixes.md` section 8.8), read for grammar,
+nikud, the plural address rule (9.1), the owner's decision that a square is a rectangle, and clarity at ages 3 to 8. All are `text-ready`, waiting for the owner;
+`MATHS_CHECK_ROWS` in `tools/hebrew_voice_review.py` is empty. Sources changed: `tools/band_b2.py`, `content/units/logic.json`; the pack and the tables regenerated.
+
+**Read and kept (57 rows).** The new numbers in reviewed templates (`b.numb05.8` with `תִּשְׁעָה עָשָׂר דָּגִים` and the bare `תְּשַׁע עֶשְׂרֵה`; `b.numb10.*` with bare
+feminine numbers and `וְשֵׁשׁ` / `וּשְׁמוֹנֶה`; `b.mathb08.13` and `.14`, where the finger count in the hint is true: 7 to 11 is five, 9 to 12 is four, with `חָמֵשׁ` and
+`אַרְבַּע אֶצְבָּעוֹת`; `b.mathb07.6`; the robot hints of `b.csb01.6` and `cs.robot.plan.6`), the MATH-B-09 caption `חָבֵר כָּתַב תַּרְגִּיל, וְהַתְּשׁוּבָה לֹא נְכוֹנָה. אֵיפֹה הַטָּעוּת?`
+(MATH-B-03's reviewed caption; it reads right with the answer written first, because the correct line and the hint say `שֶׁבַע שָׁוֶה שָׁלוֹשׁ וְעוֹד אַרְבַּע`) and the
+shared M-SHP-SQRECT line `בְּרִבּוּעַ כׇּל הַצְּלָעוֹת שָׁווֹת. בַּמַּלְבֵּן הַזֶּה יֵשׁ צְלָעוֹת אֲרֻכּוֹת וּקְצָרוֹת.` (13 rows). The W3 lines never say that a rectangle has long and
+short sides in general, and never that a square is not a rectangle: `הַזֶּה` points at the picture the child touched. No row addresses one child.
+
+**Changed (2 texts, 4 rows).**
+
+| Row | Was | Now | Why |
+|---|---|---|---|
+| `b.shpb03.7` › wrong tap (`vo:fb.sqrect.square_is_rect`) | גַּם רִבּוּעַ הוּא מַלְבֵּן: מַלְבֵּן שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | רִבּוּעַ הוּא גַּם מַלְבֵּן: מַלְבֵּן מְיֻחָד, שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | "a square is also a rectangle" is the natural order; `מְיֻחָד` is the owner's "special rectangle" in a word a child knows |
+| `b.shpb03.2/.4/.6` › hint 3 | בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. | בַּמַּלְבֵּן הַזֶּה **יֵשׁ** שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. | a verbless sentence with `הַזֶּה` reads like a label; the correct line already has `יֵשׁ` |
+
+**LOG-A-01 has its own feedback line.** M-COL-ONEATTR says `יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע.` That is right for COL-A (find the red ball), but in LOG-A-01 colour does not
+matter (a green apple is "the same thing"), so the line sent the child to a check that can make a right answer look wrong. The 7 items whose lure has the colour of the
+picture (`log.same.star`, `.duck`, `.apple`, `.bird`, `.balloon`, `b15.loga01.3`, `.4`) now say the owner-approved kind line `זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.`
+(`vo:fb.sort_shift.kind`, one clip, no new text). `log.same.cat` offers a brown dog for a grey cat, so "same colour" would be false there; it says the new
+`זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק.` (`vo:fb.same_similar`, the wording of the approved size line). Done with `tag_lines` in `content/units/logic.json`.
+Open for the maths teacher: the dog is not a same-colour lure, so M-COL-ONEATTR on it is not honest; an untagged dog or a grey animal would be.
+
+**Square and rectangle, wording rule.** Say "this rectangle" for the picture shown, and "a square is also a rectangle" only where the item teaches it (SHP-B-03 spot, Band B).
+Never "a rectangle has long and short sides" as a general claim, and never `רִבּוּעַ וּמַלְבֵּן` or `רִבּוּעַ אוֹ מַלְבֵּן` as a title (two kinds). The proposal for the SHP-B-03
+lesson title and celebration is in the review report for the owner (not applied).
+
+**Pins.** `tools/test_hebrew_sources.py`: done-and-changed rows 1,290 (was 1,296: six LOG-A-01 rows whose corrected text is now the text the pack gives). Rows 12,751 and proposed 55 are unchanged.

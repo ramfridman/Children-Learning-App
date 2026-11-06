@@ -5355,7 +5355,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.shpb03.2.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b.shpb03.2.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.b.shpb03.2.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
-| activity.b.shpb03.2.json | hints.2.caption.0.v | בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.b.shpb03.2.json | hints.2.caption.0.v | בַּמַּלְבֵּן הַזֶּה יֵשׁ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
 | activity.b.shpb03.2.json | a11y.altText | אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת. | needs-editor |
 | activity.b.shpb03.3.json | prompt.caption.0.v | לְאֵיזוֹ צוּרָה כׇּל הַצְּלָעוֹת שָׁווֹת? | needs-editor |
 | activity.b.shpb03.3.json | answer.options.0.label | מַלְבֵּן | needs-editor |
@@ -5378,7 +5378,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.shpb03.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b.shpb03.4.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.b.shpb03.4.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
-| activity.b.shpb03.4.json | hints.2.caption.0.v | בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.b.shpb03.4.json | hints.2.caption.0.v | בַּמַּלְבֵּן הַזֶּה יֵשׁ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
 | activity.b.shpb03.4.json | a11y.altText | אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת. | needs-editor |
 | activity.b.shpb03.5.json | prompt.caption.0.v | לְאֵיזוֹ צוּרָה כׇּל הַצְּלָעוֹת שָׁווֹת? | needs-editor |
 | activity.b.shpb03.5.json | answer.options.0.label | מַלְבֵּן | needs-editor |
@@ -5401,11 +5401,11 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b.shpb03.6.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b.shpb03.6.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
 | activity.b.shpb03.6.json | hints.1.caption.0.v | נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד. | needs-editor |
-| activity.b.shpb03.6.json | hints.2.caption.0.v | בַּמַּלְבֵּן הַזֶּה שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
+| activity.b.shpb03.6.json | hints.2.caption.0.v | בַּמַּלְבֵּן הַזֶּה יֵשׁ שְׁתֵּי צְלָעוֹת אֲרֻכּוֹת וּשְׁתֵּי צְלָעוֹת קְצָרוֹת. עַכְשָׁו תּוֹרְכֶם. | needs-editor |
 | activity.b.shpb03.6.json | a11y.altText | אֵיפֹה הַמַּלְבֵּן? לֹא כׇּל הַצְּלָעוֹת שָׁווֹת. | needs-editor |
 | activity.b.shpb03.7.json | prompt.caption.0.v | חָבֵר אוֹסֵף רַק מַלְבֵּנִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת? | needs-editor |
 | activity.b.shpb03.7.json | feedback.correct.caption.0.v | כֵּן! מְצָאתֶם אֶת הַטָּעוּת. | needs-editor |
-| activity.b.shpb03.7.json | feedback.incorrect.0.caption.0.v | גַּם רִבּוּעַ הוּא מַלְבֵּן: מַלְבֵּן שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | needs-editor |
+| activity.b.shpb03.7.json | feedback.incorrect.0.caption.0.v | רִבּוּעַ הוּא גַּם מַלְבֵּן: מַלְבֵּן מְיֻחָד, שֶׁכׇּל הַצְּלָעוֹת שֶׁלּוֹ שָׁווֹת. בּוֹאוּ נִסְפֹּר אֶת הַצְּלָעוֹת בְּכׇל צוּרָה. | needs-editor |
 | activity.b.shpb03.7.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.b.shpb03.7.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b.shpb03.7.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -5956,7 +5956,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b15.loga01.3.json | answer.options.0.label | כַּדּוּר אָדֹם | needs-editor |
 | activity.b15.loga01.3.json | answer.options.1.label | תַּפּוּחַ יָרֹק | needs-editor |
 | activity.b15.loga01.3.json | feedback.correct.caption.0.v | כֵּן! זֶה תַּפּוּחַ יָרֹק. | needs-editor |
-| activity.b15.loga01.3.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.b15.loga01.3.json | feedback.incorrect.0.caption.0.v | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.b15.loga01.3.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.b15.loga01.3.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b15.loga01.3.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -5967,7 +5967,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.b15.loga01.4.json | answer.options.0.label | בָּלוֹן כָּחֹל | needs-editor |
 | activity.b15.loga01.4.json | answer.options.1.label | כַּדּוּר אָדֹם | needs-editor |
 | activity.b15.loga01.4.json | feedback.correct.caption.0.v | כֵּן! זֶה בָּלוֹן כָּחֹל. | needs-editor |
-| activity.b15.loga01.4.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.b15.loga01.4.json | feedback.incorrect.0.caption.0.v | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.b15.loga01.4.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.b15.loga01.4.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.b15.loga01.4.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -8558,7 +8558,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.log.same.apple.json | answer.options.0.label | כַּדּוּר אָדֹם | needs-editor |
 | activity.log.same.apple.json | answer.options.1.label | תַּפּוּחַ | needs-editor |
 | activity.log.same.apple.json | feedback.correct.caption.0.v | כֵּן! זֶה תַּפּוּחַ. | needs-editor |
-| activity.log.same.apple.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.log.same.apple.json | feedback.incorrect.0.caption.0.v | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.log.same.apple.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.log.same.apple.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.log.same.apple.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -8569,7 +8569,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.log.same.balloon.json | answer.options.0.label | כַּדּוּר אָדֹם | needs-editor |
 | activity.log.same.balloon.json | answer.options.1.label | בָּלוֹן אָדֹם | needs-editor |
 | activity.log.same.balloon.json | feedback.correct.caption.0.v | כֵּן! זֶה בָּלוֹן אָדֹם. | needs-editor |
-| activity.log.same.balloon.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.log.same.balloon.json | feedback.incorrect.0.caption.0.v | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.log.same.balloon.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.log.same.balloon.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.log.same.balloon.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -8580,7 +8580,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.log.same.bird.json | answer.options.0.label | צִפּוֹר | needs-editor |
 | activity.log.same.bird.json | answer.options.1.label | כַּדּוּר כָּחֹל | needs-editor |
 | activity.log.same.bird.json | feedback.correct.caption.0.v | כֵּן! זוֹ צִפּוֹר. | needs-editor |
-| activity.log.same.bird.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.log.same.bird.json | feedback.incorrect.0.caption.0.v | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.log.same.bird.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.log.same.bird.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.log.same.bird.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -8591,7 +8591,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.log.same.cat.json | answer.options.0.label | כֶּלֶב | needs-editor |
 | activity.log.same.cat.json | answer.options.1.label | חָתוּל | needs-editor |
 | activity.log.same.cat.json | feedback.correct.caption.0.v | כֵּן! זֶה חָתוּל. | needs-editor |
-| activity.log.same.cat.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.log.same.cat.json | feedback.incorrect.0.caption.0.v | זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.log.same.cat.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.log.same.cat.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.log.same.cat.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -8602,7 +8602,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.log.same.duck.json | answer.options.0.label | בַּרְוָז | needs-editor |
 | activity.log.same.duck.json | answer.options.1.label | כַּדּוּר צָהֹב | needs-editor |
 | activity.log.same.duck.json | feedback.correct.caption.0.v | כֵּן! זֶה בַּרְוָז. | needs-editor |
-| activity.log.same.duck.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.log.same.duck.json | feedback.incorrect.0.caption.0.v | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.log.same.duck.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.log.same.duck.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.log.same.duck.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
@@ -8613,7 +8613,7 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | activity.log.same.star.json | answer.options.0.label | כַּדּוּר צָהֹב | needs-editor |
 | activity.log.same.star.json | answer.options.1.label | כּוֹכָב | needs-editor |
 | activity.log.same.star.json | feedback.correct.caption.0.v | כֵּן! זֶה כּוֹכָב. | needs-editor |
-| activity.log.same.star.json | feedback.incorrect.0.caption.0.v | יֵשׁ שְׁנֵי דְּבָרִים לִבְדֹּק: מַה זֶּה, וְאֵיזֶה צֶבַע. | needs-editor |
+| activity.log.same.star.json | feedback.incorrect.0.caption.0.v | זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק. | needs-editor |
 | activity.log.same.star.json | feedback.incorrect.1.caption.0.v | בּוֹאוּ נְנַסֶּה שׁוּב. | needs-editor |
 | activity.log.same.star.json | feedback.unsure.caption.0.v | שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד. | needs-editor |
 | activity.log.same.star.json | hints.0.caption.0.v | בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה. | needs-editor |
