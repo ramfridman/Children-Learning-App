@@ -57,6 +57,7 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | closed (`acdecdf`: `Course.ofLessonId` in the pull guard, proof re-run; `contradicts` refused on unscored steps; a complete placement has no visit) | 2026-11-04 |
 | SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
 | SEC-LC-2 | The answer path of the lesson controller does not itself refuse an unscored step (not reachable; defence in depth) | info | open | 2026-11-05 |
+| SEC-L5-1 | Stroke sets: the `d` path is checked by its characters only, not by its grammar or the range of its numbers | low | open | 2026-11-06 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -367,4 +368,25 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   frame draws neither button. The proofs are `ls10_personal_safety_test.dart` (no eye or lamp before a card or during the
   switched-off wait, no attempt row) and `unscored_steps_test.dart` (the four unscored kinds write nothing). Both are green in
   QA's full run (4,073 passed, 0 failed, `218f63d`). SEC-L4-2 and SEC-L1-3 closed in the same run.
+- **L5-2b LS02 write a letter, `languages-l5-2b` (`12fb249a`; 2026-11-06): a light review. Safe to merge, one low finding.**
+  Verified by reading:
+  - Stroke sets are a signed-pack document, read only after the signature, the hashes, the schema and the cross-file rules.
+  - Every number is bounded: whole-unit points in the box, 2 to 60 a stroke, 6 strokes a form, 80 forms a set, 4 sets a pack.
+  - Unknown fields are refused at every level.
+  - A set that is not `teacher-checked`, a set of another course and any set in a pack of the lands are refused.
+  - The free-stroke check is linear in the child's stroke. Its work on the model side is bounded by the schema (at most 6 forms
+    of 6 strokes of 60 points), so a hostile set cannot make it unbounded.
+  - `trace` 2.0 has its own closed schema and belongs to a language course only.
+  - An older app refuses a pack that lists stroke sets at its manifest check. It does not store such a pack hidden, so it fails
+    closed.
+  - The child's drawn points stay in the session's memory. They are never stored, logged, synced or sent.
+  - The answer codes are short codes (`ok`, `s2.dir`, `b2.s1.start`). They fit the sync pattern, and the tutor gets `move` in
+    their place.
+  - The engine changes are pure and use only what the device has, and nothing new leaves the device.
+
+  New: SEC-L5-1 (low), above. Also checked: no package, lock-file, host, workflow or gateway change, so the OSV result of
+  2026-11-04 stands.
+
+  Not run by the security-engineer: `flutter test` and gitleaks (not installed here). A grep of the diff found no secret-shaped
+  string.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.
