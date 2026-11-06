@@ -267,7 +267,7 @@ def logic():
           ['concrete', 'pictorial'], 'בַּסֵּדֶר הַזֶּה כׇּל מִגְדָּל גָּבוֹהַּ בְּאֶחָד מֵהַמִּגְדָּל שֶׁלְּפָנָיו. בּוֹאוּ נִסְפֹּר.')
     u.tag('M-LOG-NOT', ['LOG-B-09'], 'הילד מתעלם מאחד התנאים ("לא אדום ולא עיגול") ובוחר לפי אחד בלבד.',
           'לשחק "ניחוש מי": להסתיר חפץ ולתת רמזים "זה לא אדום", "זה לא עגול", ולהקטין את האפשרויות יחד.',
-          ['concrete', 'symbolic'], 'צָרִיךְ לְהַקְשִׁיב לִשְׁנֵי הָרְמָזִים יַחַד: לֹא זֶה וְגַם לֹא זֶה. בּוֹאוּ נִבְדֹּק.')
+          ['concrete', 'symbolic'], 'הַתְּשׁוּבָה צְרִיכָה לְהַתְאִים לִשְׁנֵי הָרְמָזִים. בּוֹאוּ נִבְדֹּק אֶת שְׁנֵיהֶם.')
 
     P = [('ball_red', 'ball_blue', 'ball_yellow'), ('cat', 'dog', 'star'), ('apple', 'fish', 'star'), ('ball_green', 'ball_red', 'ball_blue')]
     u.skill('LOG-B-01', 'מרחיבים סדר', 'מַמְשִׁיכִים סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים', 'pattern-door', ['LOG-A-06'], ['pictorial'], ['M-PAT-NEXT'])
@@ -305,8 +305,8 @@ def logic():
         near = {seq[w - 1], seq[w + 1] if w + 1 < len(seq) else None, seq[w]}
         seq[w] = next(e for e in (z, x, y) if e not in near)
         u.act('LOG-B-02', 'spot', cells=seq, wrong=w, tag='M-PAT-UNIT', domain='logic',
-              prompt='הַסֵּדֶר חוֹזֵר, אֲבָל אֶחָד מֵהֶם לֹא מַתְאִים. אֵיזֶה?',
-              h3='הַחֵלֶק הַחוֹזֵר הוּא: %s. אֶחָד מֵהֶם שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(NAMES[sym[c]]['one'] for c in form))
+              prompt='הַסֵּדֶר חוֹזֵר, אֲבָל אֶחָד לֹא בַּמָּקוֹם. אֵיזֶה?',
+              h3='הַחֵלֶק הַחוֹזֵר הוּא: %s. אֶחָד בַּשּׁוּרָה לֹא בַּמָּקוֹם. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(NAMES[sym[c]]['one'] for c in form))
 
     u.skill('LOG-B-04', 'סדר שגדל', 'מִגְדָּלִים שֶׁגְּדֵלִים', 'pattern-door', ['LOG-B-01'], ['pictorial', 'concrete'], ['M-PAT-GROW'])
     for i, (shown, gap) in enumerate([((1, 2, None, 4), 3), ((None, 2, 3, 4), 1), ((1, 2, 3, None), 4), ((2, 3, None, 5), 4),
@@ -349,8 +349,8 @@ def logic():
             (['shape_triangle_green', 'shape_square_green', 'shape_circle_green'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
             (['shape_triangle_blue', 'shape_triangle_red', 'shape_triangle_green'], 'rule_shape', 'אוֹתָהּ צוּרָה')]
     # D46: the wrong rule card is the other attribute, the one that differs here (M-COL-ONEATTR, looks at one attribute only)
-    wrong_line = {'rule_colour': ('vo:fb.oneattr.rule_shape', 'כָּאן הַצּוּרוֹת שׁוֹנוֹת. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?'),
-                  'rule_shape': ('vo:fb.oneattr.rule_colour', 'כָּאן הַצְּבָעִים שׁוֹנִים. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?')}
+    wrong_line = {'rule_colour': ('vo:fb.oneattr.rule_shape', 'כָּאן הַצּוּרוֹת שׁוֹנוֹת, אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם?'),
+                  'rule_shape': ('vo:fb.oneattr.rule_colour', 'כָּאן הַצְּבָעִים שׁוֹנִים, אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם?')}
     for i, (row, rule, text) in enumerate(sets):
         # W2 of check-2026-11-06: the shapes are drawn the same size, so "the size" is right too where the rule is the colour
         # or the shape; those items offer colour and shape only (until shapes in three sizes are drawn)
@@ -360,41 +360,55 @@ def logic():
               domain='logic', correct_text='כֵּן! כֻּלָּם %s.' % text, h3='נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם %s. עַכְשָׁו תּוֹרְכֶם.' % text)
 
     # B-15 §1 (H9a, H9b): a friend sorted one way and one shape is in the wrong place
-    for cells, rule, how in ((['shape_circle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_rect_red'], 'colour', 'לְפִי צֶבַע'),
-                             (['shape_circle_red', 'shape_circle_blue', 'shape_square_green', 'shape_circle_yellow'], 'shape', 'לְפִי צוּרָה')):
+    # D27 of the logic sweep: no unnamed "friend"; the prompt says what the shapes have in common, except one
+    for cells, rule, how in ((['shape_circle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_rect_red'], 'colour', 'בְּאוֹתוֹ צֶבַע'),
+                             (['shape_circle_red', 'shape_circle_blue', 'shape_square_green', 'shape_circle_yellow'], 'shape', 'אוֹתָהּ צוּרָה')):
         u.act('LOG-B-06', 'spot', cells=cells, wrong=2, tag='M-SORT-SHIFT', rule=rule, domain='logic', check='error_spotting', difficulty=0.6,
-              prompt='חָבֵר מִיֵּן %s, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?' % how)
+              prompt='הַצּוּרוֹת כֻּלָּן %s, חוּץ מֵאַחַת. אֵיזוֹ?' % how)
 
     u.skill('LOG-B-08', 'אם אז', 'אִם… אָז…', 'sprout', ['LOG-B-06'], ['concrete'], ['M-SORT-SHIFT'])
     # the prompts wait for the owner (V1 rows, proposed): "אַחֶרֶת" → "אִם לֹא" and "הַצּוּרָה הִיא עִגּוּל" are not in yet
-    ifs = [('אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.endswith('_red')),
-           ('אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.endswith('_blue')),
-           ('אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_circle')),
-           ('אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_square'))]
+    # D30 of the logic sweep: "שָׂמִים כׇּל צוּרָה אֲדֻמָּה בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הָעֵשֶׂב" says where each goes, with no "אַחֶרֶת"
+    # (written register) and no "if"; hint 3 asks the same question of every shape (is it the rule? basket, else grass)
+    def basket(what):
+        return 'שָׂמִים %s בַּסַּל, וְאֶת כׇּל הַשְּׁאָר עַל הָעֵשֶׂב.' % what
+
+    def ask(it):
+        return 'לְכׇל צוּרָה שׁוֹאֲלִים: הִיא %s? אִם כֵּן — בַּסַּל, וְאִם לֹא — עַל הָעֵשֶׂב. עַכְשָׁו תּוֹרְכֶם.' % it
+
+    ifs = [(basket('כׇּל צוּרָה אֲדֻמָּה'), ask('אֲדֻמָּה'), lambda s: s.endswith('_red')),
+           (basket('כׇּל צוּרָה כְּחֻלָּה'), ask('כְּחֻלָּה'), lambda s: s.endswith('_blue')),
+           (basket('כׇּל עִגּוּל'), ask('עִגּוּל'), lambda s: s.startswith('shape_circle')),
+           (basket('כׇּל רִבּוּעַ'), ask('רִבּוּעַ'), lambda s: s.startswith('shape_square'))]
     # D4 and D30 of the logic sweep: bin-sized pictures (the design-director's bin_basket and bin_grass) in place of the shrunk
     # basket scene and the grass comb; the basket is called a basket (סַל), never a box
     BINS = [{'sprite': 'bin_basket', 'label': 'הַסַּל'}, {'sprite': 'bin_grass', 'label': 'הָעֵשֶׂב'}]
     pool = ['shape_circle_red', 'shape_square_blue', 'shape_triangle_red', 'shape_circle_blue', 'shape_square_red', 'shape_triangle_blue']
-    for i, (text, test) in enumerate(ifs):
+    for i, (text, h3, test) in enumerate(ifs):
         order = pool[i:] + pool[:i]
         # A5: the colour rules keep the shared M-SORT-SHIFT line; the shape rules have theirs
         u.act('LOG-B-08', 'sort', rule='colour' if i < 2 else 'shape', bins=BINS,
-              items=[(s, 1 if test(s) else 2) for s in order[:5]], prompt=text + ' אַחֶרֶת — לָעֵשֶׂב.', domain='logic',
-              h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַסַּל. עַכְשָׁו תּוֹרְכֶם.',
+              items=[(s, 1 if test(s) else 2) for s in order[:5]], prompt=text, domain='logic',
+              h3=h3,
               correct_text='כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.')
 
     # B-15 addendum A3: the rule on a triangle and on a rectangle; a square is also a rectangle, so that pool has none
-    for text, test, order in (('אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_triangle'),
-                               ['shape_circle_blue', 'shape_triangle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_circle_red']),
-                              ('אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_rect'),
-                               ['shape_rect_red', 'shape_circle_blue', 'shape_triangle_red', 'shape_rect_blue', 'shape_circle_red'])):
+    for text, h3, test, order in ((basket('כׇּל מְשֻׁלָּשׁ'), ask('מְשֻׁלָּשׁ'), lambda s: s.startswith('shape_triangle'),
+                                   ['shape_circle_blue', 'shape_triangle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_circle_red']),
+                                  (basket('כׇּל מַלְבֵּן'), ask('מַלְבֵּן'), lambda s: s.startswith('shape_rect'),
+                                   ['shape_rect_red', 'shape_circle_blue', 'shape_triangle_red', 'shape_rect_blue', 'shape_circle_red'])):
         u.act('LOG-B-08', 'sort', rule='shape', bins=BINS,
-              items=[(s, 1 if test(s) else 2) for s in order], prompt=text + ' אַחֶרֶת — לָעֵשֶׂב.', domain='logic', check='transfer', difficulty=0.6,
-              h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַסַּל. עַכְשָׁו תּוֹרְכֶם.',
+              items=[(s, 1 if test(s) else 2) for s in order], prompt=text, domain='logic', check='transfer', difficulty=0.6,
+              h3=h3,
               correct_text='כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.')
 
     u.skill('LOG-B-09', 'חושבים ומסיקים', 'לֹא זֶה וְלֹא זֶה', 'sprout', ['LOG-B-06'], ['concrete', 'symbolic'], ['M-LOG-NOT'])
     clues = lambda nc, ns: ['clue_not_%s' % nc, 'clue_not_%s' % ns]
+    # D29 of the logic sweep: the question names what is asked (a shape, feminine), so "הוּא" has nothing to refer to no more; the
+    # correct line names the answer
+    CF = {'red': 'אֲדֻמָּה', 'blue': 'כְּחֻלָּה', 'green': 'יְרֻקָּה', 'yellow': 'צְהֻבָּה', 'orange': 'כְּתֻמָּה'}
+    ask_not = lambda nc, ns: 'אֵיזוֹ צוּרָה לֹא %s וְגַם לֹא %s?' % (CF[nc], SHAPE_ONE[ns])
+    said = lambda right, nc, ns: 'כֵּן! זֶה %s: לֹא %s וְלֹא %s.' % (NAMES[right]['one'], C[nc], SHAPE_ONE[ns])
     cases = [('red', 'circle', 'blue', 'square'), ('blue', 'square', 'green', 'triangle'), ('green', 'triangle', 'red', 'circle'),
              ('red', 'square', 'blue', 'triangle'), ('blue', 'circle', 'green', 'square'), ('green', 'circle', 'red', 'triangle')]
     for i, (nc, ns, rc, rs) in enumerate(cases):
@@ -403,17 +417,17 @@ def logic():
         w2 = 'shape_%s_%s' % (rs, nc)  # the colour that it must not be
         # D15 of the logic sweep: the two clues are on the stage as cards (the design-director's clue_not_<colour> and
         # clue_not_<shape>), not only in the voice
-        u.act('LOG-B-09', 'pick', prompt='הוּא לֹא %s וְלֹא %s. אֵיזֶה הוּא?' % (C[nc], SHAPE_ONE[ns]), row=clues(nc, ns),
+        u.act('LOG-B-09', 'pick', prompt=ask_not(nc, ns), row=clues(nc, ns),
               options=place(right, [w1, w2], i % 3), correct=right, tags={w1: 'M-LOG-NOT', w2: 'M-LOG-NOT'}, domain='logic',
-              correct_text='כֵּן! הוּא לֹא %s וְלֹא %s.' % (C[nc], SHAPE_ONE[ns]),
+              correct_text=said(right, nc, ns),
               h3='מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא %s וְגַם לֹא %s. עַכְשָׁו תּוֹרְכֶם.' % (C[nc], SHAPE_ONE[ns]))
 
     # B-15 addendum A3: not yellow and not square; not orange and not triangle
     for i, (nc, ns, right, w1, w2) in enumerate([('yellow', 'square', 'shape_circle_green', 'shape_square_green', 'shape_circle_yellow'),
                                                  ('orange', 'triangle', 'shape_square_red', 'shape_triangle_red', 'shape_square_orange')]):
-        u.act('LOG-B-09', 'pick', prompt='הוּא לֹא %s וְלֹא %s. אֵיזֶה הוּא?' % (C[nc], SHAPE_ONE[ns]), row=clues(nc, ns),
+        u.act('LOG-B-09', 'pick', prompt=ask_not(nc, ns), row=clues(nc, ns),
               options=place(right, [w1, w2], i + 1), correct=right, tags={w1: 'M-LOG-NOT', w2: 'M-LOG-NOT'}, domain='logic',
-              check='transfer', difficulty=0.6, correct_text='כֵּן! הוּא לֹא %s וְלֹא %s.' % (C[nc], SHAPE_ONE[ns]),
+              check='transfer', difficulty=0.6, correct_text=said(right, nc, ns),
               h3='מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא %s וְגַם לֹא %s. עַכְשָׁו תּוֹרְכֶם.' % (C[nc], SHAPE_ONE[ns]))
 
     u.skill('LOG-B-11', 'מסדרים חמישה', 'מְסַדְּרִים מִנָּמוּךְ לְגָבוֹהַּ', 'sprout', ['LOG-A-10'], ['concrete', 'pictorial'], ['M-SER-ENDS'])
@@ -437,7 +451,7 @@ def logic():
     for shown, h3 in (([1, 2, 6, 4, 5], 'מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.'),
                       ([5, 4, 6, 2, 1], 'מַתְחִילִים בַּגָּבוֹהַּ וְגוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם.')):
         u.act('LOG-B-11', 'spot', cells=['tower_%d' % v for v in shown], wrong=2, tag='M-SER-ENDS', domain='logic', check='error_spotting',
-              difficulty=0.6, prompt='חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?', h3=h3, tag_lines=neighbour)
+              difficulty=0.6, prompt='אֶחָד מֵהַמִּגְדָּלִים לֹא בַּמָּקוֹם שֶׁלּוֹ. אֵיזֶה?', h3=h3, tag_lines=neighbour)
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('longer-patterns', 'סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים', ['LOG-B-01'], ids('LOG-B-01', 0, 4), 'כׇּל הַכָּבוֹד! הִמְשַׁכְתֶּם סֵדֶר.')

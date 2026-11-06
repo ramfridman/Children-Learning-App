@@ -58,7 +58,7 @@ for _k, _d in enumerate(DAYS, start=1):
 for _h in range(1, 13):
     NAMES['clock_%d' % _h] = {'one': 'הַשָּׁעוֹן שֶׁמַּרְאֶה %s' % F[_h], 'g': 'm'}
 for _t in range(1, 9):  # tower_7 and tower_8 for the +2 towers of LOG-B-04 (logic sweep 2026-11-06)
-    NAMES['tower_%d' % _t] = {'one': 'מִגְדָּל מִסְפָּר %s' % F[_t], 'g': 'm'}
+    NAMES['tower_%d' % _t] = {'one': 'מִגְדָּל שֶׁל %s' % qty(_t, {'g': 'f', 'one': 'קֻבִּיָּה', 'many': 'קֻבִּיּוֹת'}), 'g': 'm'}  # D31: by its cubes
 for _c, _adj in COLOURS.items():
     NAMES['ball_' + _c] = {'one': 'כַּדּוּר ' + _adj, 'g': 'm'}
 for _s, (_one, _) in {'circle': ('עִגּוּל', 0), 'square': ('רִבּוּעַ', 0), 'triangle': ('מְשֻׁלָּשׁ', 0), 'rect': ('מַלְבֵּן', 0)}.items():

@@ -30,8 +30,8 @@ def _first(word):
 
 def vav(word):
     """The conjunctive vav before a word (the editor's rules, docs/agents/hebrew-notes.md §4.1 G2, G3, G5): וּ before a
-    letter with a shva (וּשְׁתַּיִם), וַ / וֶ before a hataf (וַחֲמִשָּׁה), וִי for a yod with a shva, and no dagesh in a
-    בגדכפת letter after it (וְתֵשַׁע, וְכָחֹל)."""
+    letter with a shva (וּשְׁתַּיִם) or a labial ב ו מ פ (וּבִשְׁלוֹשִׁים), וַ / וֶ before a hataf (וַחֲמִשָּׁה), וִי for a yod
+    with a shva, and no dagesh in a בגדכפת letter after it (וְתֵשַׁע, וְכָחֹל)."""
     letter, marks, rest = _first(word)
     for hataf, full in HATAF.items():
         if hataf in marks:
@@ -40,6 +40,10 @@ def vav(word):
         if letter == 'י':
             return 'וִי' + rest
         return 'וּ' + letter + SHVA + marks.replace(SHVA, '').replace(DAGESH, '') + rest
+    if letter in 'בומפ':  # a labial takes the shureq whatever its vowel (וּבִשְׁלוֹשִׁים, וּמַטְבֵּעַ); ב and פ are soft after it
+        if letter in 'בפ':
+            marks = marks.replace(DAGESH, '')
+        return 'וּ' + letter + marks + rest
     if letter in BGDKPT:
         marks = marks.replace(DAGESH, '')
     return 'וְ' + letter + marks + rest
@@ -211,11 +215,11 @@ def tagged_feedback(tags, size_cue=None, own=None, rule=None):
 # D41 of the logic sweep (docs/knowledge/logic/sweep-2026-11-06.md): the spoken level-2 hint of a logic item says how to think
 # for its family (one shared clip each), unless the item has its own `h2`. needs-editor.
 FAMILY_H2 = {
-    'log_pattern': 'נֹאמַר אֶת הַסֵּדֶר בְּקוֹל וְנִמְחָא כַּף עַל כׇּל אֶחָד.',
+    'log_pattern': 'נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם עִם כׇּל אֶחָד.',
     'log_seriation': 'נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ.',
-    'log_odd': 'מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?',
-    'log_clues': 'קֹדֶם הָרֶמֶז הָרִאשׁוֹן, אַחַר כָּךְ הַשֵּׁנִי.',
-    'log_pairs': 'אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?',
+    'log_odd': 'נִסְתַּכֵּל עַל כֻּלָּם: מַה דּוֹמֶה, וּמַה שּׁוֹנֶה?',
+    'log_clues': 'נִסְתַּכֵּל קֹדֶם בָּרֶמֶז הָרִאשׁוֹן, וְאַחַר כָּךְ בָּרֶמֶז הַשֵּׁנִי.',
+    'log_pairs': 'נַחְשֹׁב: מָה עוֹשִׂים עִם זֶה?',
 }
 FAMILY_OF_SKILL = {
     **{s: 'log_pattern' for s in ('LOG-A-04', 'LOG-A-06', 'LOG-A-07', 'LOG-B-01', 'LOG-B-02')},
@@ -878,18 +882,21 @@ def k_pat(a, ctx):
     if mode == 'fix':
         row = [x, y, '?', y, x, y]
         full = [x, y, x, y, x, y]
-        return k_pick(pick_spec(a, prompt='הַסֵּדֶר נִשְׁבַּר. מָה חָסֵר?', row=row, options=place(x, [y, a['c']], a.get('pos', 1)),
+        return k_pick(pick_spec(a, prompt='חָסֵר אֶחָד בַּסֵּדֶר. מַה צָּרִיךְ לָבוֹא כָּאן?', row=row, options=place(x, [y, a['c']], a.get('pos', 1)),
                                 correct=x, tags={y: 'M-PAT-NEXT'}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
                                 h3='%s — בַּמָּקוֹם הֶחָסֵר בָּא %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, [x, y]), n(x))), ctx)
     if mode == 'yes':
         row = [x, y, x, y, x, y]
-        return k_pick(pick_spec(a, prompt='הַסֵּדֶר חוֹזֵר?', row=row, options=['cross', 'tick'], correct='tick',
+        return k_pick(pick_spec(a, prompt='הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב?', row=row, options=['cross', 'tick'], correct='tick',
                                 correct_text='כֵּן, הַסֵּדֶר חוֹזֵר: %s.' % seq_words(ctx, [x, y, x, y]),
                                 h3='%s — כֵּן, הוּא חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.' % seq_words(ctx, [x, y, x, y])), ctx)
     row = [x, y, a['c'], x, a['d'], y]
-    return k_pick(pick_spec(a, prompt='הַסֵּדֶר חוֹזֵר?', row=row, options=['tick', 'cross'], correct='cross',
+    return k_pick(pick_spec(a, prompt='הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב?', row=row, options=['tick', 'cross'], correct='cross',
                             correct_text='לֹא, כָּאן הַסֵּדֶר לֹא חוֹזֵר.',
                             h3='%s — לֹא, הוּא לֹא חוֹזֵר. עַכְשָׁו תּוֹרְכֶם.' % seq_words(ctx, row[:5])), ctx)
+
+
+ANIMAL_SPRITES = frozenset(('cat', 'dog', 'duck', 'fish', 'bird', 'frog', 'chick', 'mouse'))
 
 
 def k_odd(a, ctx):
@@ -899,13 +906,17 @@ def k_odd(a, ctx):
     row = [x] * 4
     row[at] = y
     verb = 'שׁוֹנֶה' if names[y]['g'] == 'm' else 'שׁוֹנָה'
-    return k_pick(pick_spec(a, prompt='מִי שׁוֹנֶה?', row=row, options=[x, y] if a.get('pos', 1) else [y, x], correct=y,
+    # D26 of the logic sweep: "who" is for an animal, "what" for a thing
+    who = y in ANIMAL_SPRITES
+    return k_pick(pick_spec(a, prompt='מִי שׁוֹנֶה מֵהָאֲחֵרִים?' if who else 'מַה שּׁוֹנֶה מֵהָאֲחֵרִים?', row=row, options=[x, y] if a.get('pos', 1) else [y, x], correct=y,
                             h3='%s %s מֵהָאֲחֵרִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % (
                                 a.get('the') or names[y]['one'], verb, on_it(names[y]['g']))), ctx)
 
 
 def k_same(a, ctx):
-    return k_pick(pick_spec(a, prompt='אֵיפֹה אוֹתוֹ הַדָּבָר?', group={'sprite': a['ref'], 'count': 1},
+    # D25 of the logic sweep: the question names the thing ("אֵיפֹה עוֹד תַּפּוּחַ?"), `noun` when the sprite is a coloured thing
+    return k_pick(pick_spec(a, prompt='אֵיפֹה עוֹד %s?' % (a.get('noun') or ctx['names'][a['ref']]['one']),
+                            group={'sprite': a['ref'], 'count': 1},
                             options=place(a['ref'], a['others'], a.get('pos', 1)), correct=a['ref'], tags=a.get('tags', {})), ctx)
 
 
@@ -919,7 +930,7 @@ def k_story(a, ctx):
     common = dict(rep='story', tags={})
     # D14 of the logic sweep: the story is on the screen as a strip with the asked step as "?" (as the middle question has it)
     if ask == 'first':
-        return k_pick(pick_spec(a, prompt='מָה בָּא רִאשׁוֹן?', row=['?', s2, s3], options=place(s1, [s3, s2], a.get('pos', 1)),
+        return k_pick(pick_spec(a, prompt='מַה בָּא רִאשׁוֹן?', row=['?', s2, s3], options=place(s1, [s3, s2], a.get('pos', 1)),
                                 correct=s1,
                                 tags={s3: 'M-SEQ-CAUSE'}, correct_text='כֵּן! קֹדֶם %s.' % n(s1), h3=story + ' עַכְשָׁו תּוֹרְכֶם.',
                                 rep='story'), ctx)
@@ -946,6 +957,9 @@ def k_size3(a, ctx):
     own = {}
     if ask == 'middle':
         traps = {sp: 'M-SER-ENDS' for sp in order if sp != right}
+        # the line of the middle question says where the middle is (it is the shared M-SER-ENDS line, which says "not the
+        # smallest and not the biggest", that the colour shades of COL-B-02 use; a misconception line has no לֹא, owner Q2)
+        own = {'M-SER-ENDS': ['vo:fb.ser.middle', 'הָאֶמְצַע בָּא בֵּין הַקָּטָן לַגָּדוֹל. בּוֹאוּ נִבְדֹּק.']}
     else:
         # D36 and D45 of the logic sweep: the middle one (the neighbour repeated) hears where this end is, never "look for the
         # middle"; the far end is a direction mistake, not M-SER-ENDS, and stays untagged until the catalogue has a direction tag
@@ -953,7 +967,7 @@ def k_size3(a, ctx):
         end = words[gap]
         own = {'M-PAT-NEXT': ['vo:fb.ser.%s_%s' % (ask, {'קָטָן': 'smallest', 'גָּדוֹל': 'biggest'}[end]),
                               '%s בָּא הֲכִי %s. בּוֹאוּ נַשְׁוֶה.' % ('בַּסּוֹף' if ask == 'last' else 'בַּהַתְחָלָה', end)]}
-    prompt = {'middle': 'מַה בָּאֶמְצַע?', 'last': 'מַה בָּא בַּסּוֹף?', 'first': 'מַה בָּא קֹדֶם?'}[ask]
+    prompt = {'middle': 'מַה בָּאֶמְצַע?', 'last': 'מַה בָּא בַּסּוֹף?', 'first': 'מַה בָּא רִאשׁוֹן?'}[ask]
     return k_pick(pick_spec(a, prompt=prompt, row=row, options=place(right, [x for x in order if x != right], a.get('pos', 1)),
                             correct=right, tags=traps, tag_lines=own or None, correct_text='כֵּן! ' + ', '.join(words) + '.',
                             h3=', '.join(words) + ' — ' + {'middle': 'בָּאֶמְצַע בָּא הַבֵּינוֹנִי', 'last': 'בַּסּוֹף בָּא ' + words[2],

@@ -88,11 +88,11 @@
     "incorrect": [
       {
         "when": "misconception:M-SORT-SHIFT",
-        "vo": "vo:fb.sort_shift",
+        "vo": "vo:fb.sort_shift.colour_only",
         "caption": [
           {
             "t": "he",
-            "v": "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה. בּוֹאוּ נִבְדֹּק."
+            "v": "מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },

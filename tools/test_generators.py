@@ -240,9 +240,11 @@ class StarterPackTest(unittest.TestCase):
             for f in a['feedback']['incorrect']:
                 if f['when'] == 'misconception:M-SORT-SHIFT' and f['vo'] != 'vo:fb.sort_shift':
                     # D39 of the logic sweep: the kind rule where no wrong move shares a colour, and the two "only apples / only
-                    # ducks" spot items, whose only wrong tap is on a cell of the right kind
+                    # ducks" spot items, whose only wrong tap is on a cell of the right kind; and the colour sorts of one kind of
+                    # thing (D40 of the same sweep, read by the editor 2026-11-07)
                     self.assertIn(f['vo'], ('vo:fb.sort_shift.shape', 'vo:fb.sort_shift.kind', 'vo:fb.sort_shift.size',
-                                            'vo:fb.sort_shift.kind_other', 'vo:fb.spot.not_apple', 'vo:fb.spot.not_duck'), a['id'])
+                                            'vo:fb.sort_shift.kind_other', 'vo:fb.sort_shift.colour_only', 'vo:fb.spot.not_apple',
+                                            'vo:fb.spot.not_duck'), a['id'])
 
     def test_a_tagged_option_is_never_the_right_one(self):
         for a in self.acts:

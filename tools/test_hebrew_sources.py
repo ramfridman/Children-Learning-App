@@ -133,9 +133,12 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 12746 since the logic sweep of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): one option fewer in LOG-B-06 .5
         # and .6 and other reshaped items; 207 new rows are proposed (needs-editor, LOGIC_SWEEP_ROWS of hebrew_voice_review.py),
         # so 1267 done rows differ and 81 proposed ones
+        # the editor's read of the logic land, 2026-11-07 (hebrew-notes section 13): the 207 rows and the rest are text-ready (the
+        # list is empty), and the sources already hold the corrected wording; 1262 done rows differ (the rows now at the pack's text
+        # no more differ) and 49 proposed ones (the V1 rows). The count of rows is the same
         self.assertEqual(len(self.rows), 12746)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1267)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 81)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1262)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 49)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
@@ -182,6 +185,18 @@ class PrefixHelpersTest(unittest.TestCase):
         self.assertEqual(v('יְדַעְתֶּם'), 'וִידַעְתֶּם')     # וִי for a yod with a shva
         self.assertEqual(v('אַרְבַּע'), 'וְאַרְבַּע')
         self.assertEqual(self.a.F[29], 'עֶשְׂרִים וְתֵשַׁע')
+
+    def test_vav_before_a_labial(self):
+        # the logic sweep, 2026-11-07: a labial ב ו מ פ takes the shureq whatever its vowel, and ב and פ are soft after it
+        v = self.a.vav
+        self.assertEqual(v('מִשְׁחָה'), 'וּמִשְׁחָה')
+        self.assertEqual(v('מַנְעוּל'), 'וּמַנְעוּל')
+        self.assertEqual(v('מַטְבֵּעַ'), 'וּמַטְבֵּעַ')
+        self.assertEqual(v('בָּלוֹן'), 'וּבָלוֹן')
+        self.assertEqual(v('בַּרְוָז'), 'וּבַרְוָז')
+        self.assertEqual(v('פֶּרַח'), 'וּפֶרַח')
+        self.assertEqual(v('כּוֹכָב'), 'וְכוֹכָב')  # a letter that is not a labial keeps וְ
+        self.assertEqual(v('דָּג'), 'וְדָג')
 
     def test_prefix(self):
         p = self.a.prefix
