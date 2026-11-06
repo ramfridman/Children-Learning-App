@@ -832,6 +832,8 @@ OWNER_APPROVED = [
     # (2) b15-hebrew.md section 7: the 15 spill lessons, NUM-B-08, NUM-B-18, the size and odd-one hints, COL-A-05 tick lines.
     (r'^lesson\.same-and-different-again-1-b15\.json$', r'^זֵהֶה אוֹ שׁוֹנֶה\?$', 'owner, in chat, 2026-11-06: the title is "זֵהֶה אוֹ שׁוֹנֶה?" '
      '(tsere; was "זֶהֶה", approved 2026-10-30). owner-approved 2026-11-06.', r'^title'),
+    (r'^(lesson\.square-or-rectangle|skill\.SHP-B-03)\.json$', r'רִבּוּעַ הוּא מַלְבֵּן מְיֻחָד', 'owner, in chat, 2026-11-06: a square is a '
+     'special rectangle; the SHP-B-03 title, child line and celebration say so (owner-approved 2026-11-06).'),
     (r'^lesson\.[a-z0-9-]+-b15\.json$', r'', 'B-15 (b15-hebrew.md 7.1): the owner approved the title and the celebration line of the 15 '
      'spill lessons (owner-approved 2026-10-30).', r'^(title\.0\.v|celebration\.caption\.0\.v)$'),
     (r'^activity\.b\.numb08\.', r'^אֵיזֶה מִסְפָּר חָסֵר\?$', 'B-15 (b15-hebrew.md 7.2): the owner approved the prompt and its alt text '

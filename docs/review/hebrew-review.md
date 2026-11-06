@@ -11594,8 +11594,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | lesson.split-numbers-more.json | celebration.caption.0.v | מְצֻיָּן! כׇּל חֵלֶק בִּמְקוֹמוֹ. | needs-editor |
 | lesson.split-numbers.json | title.0.v | מְפָרְקִים מִסְפָּרִים | needs-editor |
 | lesson.split-numbers.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים לְפָרֵק. | needs-editor |
-| lesson.square-or-rectangle.json | title.0.v | רִבּוּעַ אוֹ מַלְבֵּן | needs-editor |
-| lesson.square-or-rectangle.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם מַבְחִינִים בֵּין רִבּוּעַ לְמַלְבֵּן. | needs-editor |
+| lesson.square-or-rectangle.json | title.0.v | רִבּוּעַ הוּא מַלְבֵּן מְיֻחָד | needs-editor |
+| lesson.square-or-rectangle.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים שֶׁרִבּוּעַ הוּא מַלְבֵּן מְיֻחָד. | needs-editor |
 | lesson.step-by-step-again-1-b15.json | title.0.v | שִׁנַּיִם וְיָדַיִם | needs-editor |
 | lesson.step-by-step-again-1-b15.json | celebration.caption.0.v | כׇּל הַכָּבוֹד! יְדַעְתֶּם אֵיךְ מְצַחְצְחִים וְאֵיךְ רוֹחֲצִים. | needs-editor |
 | lesson.step-by-step-again.json | title.0.v | עוֹד צַעַד אַחַר צַעַד | needs-editor |
@@ -11936,8 +11936,8 @@ What to look at: spelling and niqqud; grammar and agreement (plural, neutral, no
 | skill.SHP-B-01.json | childLine.0.v | מַכִּירִים מְשֻׁלָּשׁ, מְרֻבָּע, מְחֻמָּשׁ וּמְשֻׁשֶּׁה | needs-editor |
 | skill.SHP-B-02.json | title.0.v | סופרים צלעות | needs-editor |
 | skill.SHP-B-02.json | childLine.0.v | סוֹפְרִים צְלָעוֹת | needs-editor |
-| skill.SHP-B-03.json | title.0.v | ריבוע ומלבן | needs-editor |
-| skill.SHP-B-03.json | childLine.0.v | רִבּוּעַ וּמַלְבֵּן | needs-editor |
+| skill.SHP-B-03.json | title.0.v | ריבוע הוא מלבן מיוחד | needs-editor |
+| skill.SHP-B-03.json | childLine.0.v | רִבּוּעַ הוּא מַלְבֵּן מְיֻחָד | needs-editor |
 | skill.SHP-B-04.json | title.0.v | צורה סגורה | needs-editor |
 | skill.SHP-B-04.json | childLine.0.v | צוּרָה סְגוּרָה עִם צְלָעוֹת יְשָׁרוֹת | needs-editor |
 | skill.SHP-B-08.json | title.0.v | גופים | needs-editor |

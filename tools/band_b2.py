@@ -184,7 +184,7 @@ def shapes():
                 domain='shapes', group={'sprite': sp, 'count': 1}, text='%s! %s צְלָעוֹת.' % (F[n], F[n]), check='transfer', difficulty=0.6,
                 h3='נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), F[n]))
 
-    u.skill('SHP-B-03', 'ריבוע ומלבן', 'רִבּוּעַ וּמַלְבֵּן', 'cone-tree', ['SHP-A-04', 'SHP-B-02'], ['pictorial'], ['M-SHP-SQRECT'])
+    u.skill('SHP-B-03', 'ריבוע הוא מלבן מיוחד', 'רִבּוּעַ הוּא מַלְבֵּן מְיֻחָד', 'cone-tree', ['SHP-A-04', 'SHP-B-02'], ['pictorial'], ['M-SHP-SQRECT'])
     for i in range(3):
         # A2 of check-2026-11-06: the plain triangle's sides (82, 82, 80) look equal, so the thin one is the distractor
         u.act('SHP-B-03', 'pick', prompt='לְאֵיזוֹ צוּרָה כׇּל הַצְּלָעוֹת שָׁווֹת?', options=place('shape_square', ['shape_rect', 'shape_triangle_thin'], i),
@@ -238,7 +238,7 @@ def shapes():
     u.lesson('polygon-detectives-more', 'עוֹד צוּרוֹת', ['SHP-B-01'], ids('SHP-B-01', 4), 'מְצֻיָּן! עוֹד צוּרוֹת בָּרְשִׁימָה.')
     u.lesson('count-sides', 'סוֹפְרִים צְלָעוֹת', ['SHP-B-02'], ids('SHP-B-02', 0, 4), 'כׇּל הַכָּבוֹד! סְפַרְתֶּם צְלָעוֹת.')
     u.lesson('count-sides-more', 'עוֹד צְלָעוֹת', ['SHP-B-02'], ids('SHP-B-02', 4), 'יָפֶה! כׇּל צֶלַע פַּעַם אַחַת.')
-    u.lesson('square-or-rectangle', 'רִבּוּעַ אוֹ מַלְבֵּן', ['SHP-B-03'], ids('SHP-B-03'), 'כׇּל הַכָּבוֹד! אַתֶּם מַבְחִינִים בֵּין רִבּוּעַ לְמַלְבֵּן.')
+    u.lesson('square-or-rectangle', 'רִבּוּעַ הוּא מַלְבֵּן מְיֻחָד', ['SHP-B-03'], ids('SHP-B-03'), 'כׇּל הַכָּבוֹד! אַתֶּם יוֹדְעִים שֶׁרִבּוּעַ הוּא מַלְבֵּן מְיֻחָד.')
     u.lesson('closed-shapes', 'צוּרָה סְגוּרָה', ['SHP-B-04'], ids('SHP-B-04', 0, 4), 'כׇּל הַכָּבוֹד! אַתֶּם מַכִּירִים צוּרָה סְגוּרָה.')
     u.lesson('closed-shapes-more', 'עוֹד צוּרוֹת סְגוּרוֹת', ['SHP-B-04'], ids('SHP-B-04', 4), 'מְצֻיָּן! שַׂמְתֶּם לֵב לִצְלָעוֹת הַיְשָׁרוֹת.')
     u.lesson('solids', 'גּוּפִים', ['SHP-B-08'], ids('SHP-B-08', 0, 5), 'כׇּל הַכָּבוֹד! הִכַּרְתֶּם גּוּפִים.')
