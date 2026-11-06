@@ -29,6 +29,7 @@ Catalog engineCatalog(PackContent content) {
           setCoverage: s.setCoverage,
           soundRight: s.soundRight == 'accepts' ? SoundRightPolicy.accepts : SoundRightPolicy.teaches,
           letters: s.letters,
+          speaking: s.strand == 'spk',
         ),
     ],
     items: <ItemMeta>[
@@ -99,6 +100,8 @@ AttemptEvent eventOf(Attempt row) => AttemptEvent(
   attemptNo: row.attemptNo,
   // The course of the pack the answer was given in; a `lang-` id that names no course matches no item at all.
   course: Course.ofPackId(row.packId) ?? '',
+  // A heard word of a say-it activity (written only for a confident result); a spoken choice answer is a plain answer.
+  viaSpeech: row.template == 'say_it' && row.input == 'voice',
 );
 
 /// What the engine concluded about one child, as plain text for the developer page.

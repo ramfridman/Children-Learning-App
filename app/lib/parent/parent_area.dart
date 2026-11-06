@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../app/alerts_provider.dart';
@@ -84,6 +85,31 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
         VoiceSwitch.permissionDenied => He.areaVoiceNoPermission.text,
         _ => null,
       },
+    );
+  }
+
+  /// The licence of the English and Russian speech models, in full (Apache-2.0 section 4: a copy goes with the files).
+  Future<void> _showApacheLicence() async {
+    final String text = await rootBundle.loadString('assets/licenses/apache-2.0.txt');
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext c) => AlertDialog(
+        key: const Key('voice-licence-text'),
+        title: Text(He.areaVoiceLicence.text),
+        content: SizedBox(
+          width: 560,
+          child: SingleChildScrollView(
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: Text(text, style: AppText.parent(TokenType.parentSmall)),
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(onPressed: () => Navigator.of(c).pop(), child: Text(He.areaVoiceLicenceClose.text)),
+        ],
+      ),
     );
   }
 
@@ -385,9 +411,19 @@ class _ParentAreaState extends ConsumerState<ParentArea> {
                 ),
                 if (_voiceNote != null) Text(_voiceNote!, style: AppText.parent(TokenType.parentSmall)),
                 const SizedBox(height: 4),
-                Text(
-                  He.areaVoiceCredit.text,
-                  style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft),
+                for (final Str credit in <Str>[
+                  He.areaVoiceCredit,
+                  He.areaVoiceCreditEng,
+                  He.areaVoiceCreditRus,
+                ])
+                  Text(credit.text, style: AppText.parent(TokenType.parentSmall, color: TokenColors.inkSoft)),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton(
+                    key: const Key('voice-licence'),
+                    onPressed: _showApacheLicence,
+                    child: Text(He.areaVoiceLicence.text),
+                  ),
                 ),
               ]),
               if (ref.watch(isParentDeviceProvider).value ?? true)

@@ -21,18 +21,19 @@ import '../child/activity_shell.dart';
 import '../child/companion_views.dart';
 import '../app/rules_providers.dart';
 import '../content/models.dart';
+import '../engine/course.dart';
 import '../data/app_database.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
 import '../design/tokens.g.dart';
-import '../engine/course.dart';
 import '../parent/alert_scan.dart';
 import '../parent/language_settings.dart';
 import '../parent/parent_rules.dart';
 import '../parent/time_rules.dart';
 import '../speech/voice_answer.dart';
+import '../speech/word_matcher.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
 import '../voice/voice_director.dart';
@@ -52,6 +53,8 @@ import 'balance_session.dart';
 import 'caption_policy.dart';
 import 'number_line_session.dart';
 import 'robot_path_session.dart';
+import 'say_it_session.dart';
+import 'say_step.dart';
 import 'shape_builder_session.dart';
 import 'sort_drag_session.dart';
 import 'spot_error_session.dart';
@@ -103,6 +106,16 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   late final Future<int> _visit;
   late final VoiceDirector _director;
   LessonVoice? _voice;
+
+  /// LS09: the quiet fallback of this visit (too many unsure turns switch the rest of the visit's say-it steps to echo, silently),
+  /// and whether a say step may use the microphone at all (the parent's switch for this language, and its model on the phone).
+  final QuietFallback _quiet = QuietFallback();
+  bool _sayOn = false;
+  SayStepController? _sayStep;
+
+  /// Changes whenever the say step on screen does, so that the microphone is drawn again (the step is made with its session,
+  /// after the screen has built its listener list).
+  final ValueNotifier<int> _sayTick = ValueNotifier<int>(0);
 
   /// For each kind of answer, whether voice has been working for this child (the mic is not offered when it has not).
   int? _visitId;
@@ -210,6 +223,49 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
+  /// The microphone side of a say-it activity, or null when it runs as echo: the parent's voice is off for this language, its model is
+  /// not on the phone, or too many turns of this visit came out unsure. The microphone opens only on a tap of the child.
+  SayStepController? _makeSayStep(LessonController controller, SayItActivity a) {
+    _sayStep?.removeListener(_sayChanged);
+    _sayStep?.dispose();
+    _sayStep = null;
+    if (!_sayOn || _quiet.echoOnly) return null;
+    final bool bandA = ref.read(activeProfileProvider)?.ageBand == 0;
+    final SayStepController step = SayStepController(
+      engine: ref.read(languageSpeechEngineProvider(a.course)),
+      target: WordTarget(course: a.course, forms: a.forms, foils: a.foils, keyWords: a.keyWords),
+      silence: bandA ? const Duration(seconds: 2) : const Duration(milliseconds: 1500),
+      beforeListen: _director.stop,
+      onOutcome: (String outcome) => unawaited(_recordListen('say', outcome)),
+      onResult: (SayResult r) async {
+        _quiet.record(r);
+        if (r == SayResult.confident) {
+          await controller.sayHeard();
+        } else {
+          controller.sayTogether();
+        }
+      },
+    );
+    step.addListener(_sayChanged);
+    return _sayStep = step;
+  }
+
+  void _sayChanged() => _sayTick.value++;
+
+  Future<void> _recordListen(String type, String outcome) async {
+    try {
+      final AppDatabase db = await ref.read(databaseProvider.future);
+      await db.recordListen(
+        widget.profileId,
+        DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true),
+        type,
+        outcome,
+      );
+    } on Object {
+      // Keeping how a listen went is a note for the parent; a failure never reaches the child.
+    }
+  }
+
   void _endVisit(String reason) {
     final int? id = _visitId;
     if (id == null || _visitEnded) return;
@@ -245,6 +301,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) return;
     _voice?.hush();
+    _sayStep?.stop();
     unawaited(_director.stop());
   }
 
@@ -259,6 +316,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     }
     _voice?.dispose();
     _session?.dispose();
+    _sayStep?.removeListener(_sayChanged);
+    _sayStep?.dispose();
+    _sayTick.dispose();
     _controller?.removeListener(_speak);
     _controller?.dispose();
     super.dispose();
@@ -417,6 +477,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
         ClockSetActivity() => ClockSetSession(c, a),
         TraceActivity() => TraceSession(c, a),
         GiveNActivity() => GiveNSession(c, a),
+        SayItActivity() => SayItSession(c, a, say: _makeSayStep(c, a)),
       };
       _session!.playClips = _playClips;
       _sessionIndex = c.index;
@@ -438,21 +499,29 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     return content.when(
       loading: () => const ColoredBox(color: TokenColors.cream),
       error: (Object e, StackTrace s) => _Unavailable(onHome: _home),
-      data: (PackContent c) => FutureBuilder<int>(
-        future: _visit,
-        builder: (BuildContext context, AsyncSnapshot<int> visit) {
-          // The guide and its voice load before the first question, so that the first line is heard too.
-          final Guide? g = guide.value;
-          if (!visit.hasData || g == null || tutorOn == null) {
-            return const ColoredBox(color: TokenColors.cream);
-          }
-          if (tutorOn) _tutor ??= TutorSession(client: ref.read(tutorClientProvider));
-          Log.d('helper: lesson opens, tutorOn=$tutorOn');
-          final LessonController? open = _controller;
-          if (tutorOn && open != null && open.tutor == null) open.attachTutor(_tutor!, _tutorContext(g, c));
-          return _lesson(context, c, g, voiceOn);
-        },
-      ),
+      data: (PackContent c) {
+        // A say-it step needs to know, before its first item, whether the microphone may be offered.
+        final bool? sayOn = Course.isLanguage(c.course)
+            ? ref.watch(sayItAvailableProvider((childId: widget.profileId, course: c.course))).value
+            : false;
+        _sayOn = sayOn ?? false;
+        if (sayOn == null) return const ColoredBox(color: TokenColors.cream);
+        return FutureBuilder<int>(
+          future: _visit,
+          builder: (BuildContext context, AsyncSnapshot<int> visit) {
+            // The guide and its voice load before the first question, so that the first line is heard too.
+            final Guide? g = guide.value;
+            if (!visit.hasData || g == null || tutorOn == null) {
+              return const ColoredBox(color: TokenColors.cream);
+            }
+            if (tutorOn) _tutor ??= TutorSession(client: ref.read(tutorClientProvider));
+            Log.d('helper: lesson opens, tutorOn=$tutorOn');
+            final LessonController? open = _controller;
+            if (tutorOn && open != null && open.tutor == null) open.attachTutor(_tutor!, _tutorContext(g, c));
+            return _lesson(context, c, g, voiceOn);
+          },
+        );
+      },
     );
   }
 
@@ -485,6 +554,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   /// taken away because listening went badly: a young child is often misheard, and a missing mic would only teach them
   /// that voice does not work.
   Widget? _mic(ActivitySpec spec, TemplateSession session, Activity activity) {
+    if (activity is SayItActivity && session is SayItSession) return _sayMic(spec, session);
     final LessonVoice? v = _voice;
     if (v == null || !activity.voiceAnswer) return null;
     final VoiceAnswerController a = v.answer;
@@ -516,12 +586,36 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
+  /// The microphone of a say-it step: there only when the step has one (a parent's switch for this language is on and its model is on
+  /// the phone), and then it opens on a tap of the child, never by itself. It fades after the one more try, and is never taken away
+  /// otherwise.
+  Widget? _sayMic(ActivitySpec spec, SayItSession session) {
+    final SayStepController? step = session.say;
+    if (step == null || !session.hasMic) return null;
+    final MicLook look = switch (step.state) {
+      SayState.listening => MicLook.listening,
+      SayState.thinking => MicLook.thinking,
+      SayState.heard => MicLook.understood,
+      SayState.together => step.canListen ? MicLook.ready : MicLook.faded,
+      SayState.ready => MicLook.ready,
+      SayState.unavailable => MicLook.faded,
+    };
+    return MicButton(
+      key: const Key('lesson-mic'),
+      size: spec.micSize,
+      semanticLabel: (look == MicLook.listening ? He.micListeningSemantics : He.micSemantics).text,
+      look: look,
+      level: step.level,
+      onPressed: step.canListen ? step.tap : null,
+    );
+  }
+
   Widget _lesson(BuildContext context, PackContent c, Guide guide, bool voiceOn) {
     final LessonController controller = _controllerFor(c, guide);
     if (voiceOn && _voice == null && _voiceAllowedIn(c)) _voice = _makeVoice(controller);
     final ActivitySpec board = ActivitySpec.of(AppLayout.of(context).board);
     return ListenableBuilder(
-      listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer]),
+      listenable: Listenable.merge(<Listenable?>[controller, _voice?.answer, _sayTick]),
       builder: (BuildContext ctx, Widget? _) {
         final TemplateSession session = _sessionFor(controller);
         final ActivitySpec spec = session.layoutFor(board);
@@ -564,9 +658,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           trailDone: controller.finished ? controller.trailLength : controller.index,
           onHome: _home,
           showHelp: !controller.noHelp,
-          onHint: controller.finished || controller.noHelp ? null : controller.showHint,
+          // A say-it step has nothing to get wrong and so no hints: its lamp says the word again.
+          onHint: controller.finished || controller.noHelp
+              ? null
+              : (session is SayItSession ? session.onReplay : controller.showHint),
           hintGlow: helpOffered,
-          onShowMe: controller.finished || controller.noHelp ? null : () => controller.unsure(),
+          onShowMe: controller.finished || controller.noHelp
+              ? null
+              : (controller.current is SayItActivity ? controller.replayPrompt : () => controller.unsure()),
           onReplay: controller.finished ? null : controller.replayPrompt,
           mic: controller.finished ? null : _mic(spec, session, controller.current),
           onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,

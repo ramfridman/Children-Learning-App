@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ffi' show Pointer;
 import 'dart:io';
+import 'dart:isolate';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -8,15 +10,29 @@ import 'package:sherpa_onnx/sherpa_onnx.dart' as sherpa;
 
 import 'answer_matcher.dart';
 import 'model_spec.dart';
+import 'sherpa_config.dart';
 import 'speech_engine.dart';
 
-/// The real recogniser: ivrit.ai's streaming Hebrew model run by sherpa-onnx on the device, fed from the microphone.
+/// Runs in a short isolate: checks every file of the model against its pinned hash, then builds the recogniser, which is the
+/// slow part. Returns the address of the native recogniser, which the main isolate wraps again; the main isolate never blocks
+/// on the load.
+int _loadInIsolate(SpeechModelSpec spec, String dir) {
+  final List<String> bad = spec.verifySync(Directory(dir));
+  if (bad.isNotEmpty) throw StateError('the speech model is not the trusted one: ${bad.join(', ')}');
+  sherpa.initBindings();
+  return sherpa.OnlineRecognizer(recognizerConfig(spec, dir)).ptr.address;
+}
+
+/// The real recogniser: a streaming zipformer run by sherpa-onnx on the device, fed from the microphone. Which model it is,
+/// and whether it decodes openly or against the hotwords of the item, is the [spec]'s.
 ///
 /// The audio is read in small pieces, held in memory only while the child speaks, and dropped: nothing is written to a
 /// file and nothing leaves the phone. The microphone is closed before the last words are decoded.
 class SherpaEngine implements SpeechEngine {
-  SherpaEngine({required this.modelDir, AudioRecorder Function()? recorder})
+  SherpaEngine({required this.spec, required this.modelDir, AudioRecorder Function()? recorder})
     : _newRecorder = recorder ?? AudioRecorder.new;
+
+  final SpeechModelSpec spec;
 
   /// The folder of the model files.
   final Future<Directory> Function() modelDir;
@@ -34,7 +50,7 @@ class SherpaEngine implements SpeechEngine {
   bool get ready => _recognizer != null;
 
   @override
-  Future<bool> modelInstalled() async => SpeechModel.looksInstalled(await modelDir());
+  Future<bool> modelInstalled() async => spec.looksInstalled(await modelDir());
 
   @override
   Future<bool> requestPermission() async {
@@ -49,34 +65,25 @@ class SherpaEngine implements SpeechEngine {
   @override
   Future<void> prepare() async {
     if (_recognizer != null) return;
-    final Directory dir = await modelDir();
-    final List<String> bad = await SpeechModel.verify(dir);
-    if (bad.isNotEmpty) throw StateError('the speech model is not the trusted one: ${bad.join(', ')}');
+    final String dir = (await modelDir()).path;
+    final SpeechModelSpec model = spec;
+    // The hash check and the native load (a second or more on a phone) run in their own isolate.
+    final int address = await Isolate.run(() => _loadInIsolate(model, dir));
     sherpa.initBindings();
-    String path(String name) => '${dir.path}${Platform.pathSeparator}$name';
-    _recognizer = sherpa.OnlineRecognizer(
-      sherpa.OnlineRecognizerConfig(
-        model: sherpa.OnlineModelConfig(
-          transducer: sherpa.OnlineTransducerModelConfig(
-            encoder: path('encoder.int8.onnx'),
-            decoder: path('decoder.int8.onnx'),
-            joiner: path('joiner.int8.onnx'),
-          ),
-          tokens: path('tokens.txt'),
-          numThreads: 2,
-          modelType: 'zipformer2',
-          debug: false,
-        ),
-        // The app decides when the child has finished, not the model.
-        enableEndpoint: false,
-      ),
+    _recognizer = sherpa.OnlineRecognizer.fromPtr(
+      ptr: Pointer.fromAddress(address),
+      config: recognizerConfig(model, dir),
     );
   }
 
   @override
-  Stream<ListenEvent> listen({required Duration silence, required Duration maxLength}) {
+  Stream<ListenEvent> listen({
+    required Duration silence,
+    required Duration maxLength,
+    List<String> hotwords = const <String>[],
+  }) {
     final StreamController<ListenEvent> out = StreamController<ListenEvent>();
-    unawaited(_run(out, silence, maxLength));
+    unawaited(_run(out, silence, maxLength, hotwordList(spec, hotwords)));
     return out.stream;
   }
 
@@ -86,7 +93,12 @@ class SherpaEngine implements SpeechEngine {
     if (c != null && !c.isCompleted) c.complete();
   }
 
-  Future<void> _run(StreamController<ListenEvent> out, Duration silence, Duration maxLength) async {
+  Future<void> _run(
+    StreamController<ListenEvent> out,
+    Duration silence,
+    Duration maxLength,
+    String hotwords,
+  ) async {
     final sherpa.OnlineRecognizer? rec = _recognizer;
     final AudioRecorder recorder = _newRecorder();
     final Completer<void> cancelled = _cancel = Completer<void>();
@@ -98,7 +110,11 @@ class SherpaEngine implements SpeechEngine {
       if (rec == null || !await recorder.hasPermission(request: false)) {
         throw StateError('voice is not ready');
       }
-      stream = rec.createStream();
+      stream = rec.createStream(hotwords: hotwords);
+      // An isolated word is read only with silence in front of it (docs/milestones/L3.md section 7.3).
+      if (spec.leadSilenceMs > 0) {
+        stream.acceptWaveform(samples: Float32List(_rate * spec.leadSilenceMs ~/ 1000), sampleRate: _rate);
+      }
       final Stream<Uint8List> pcm = await recorder.startStream(
         const RecordConfig(
           encoder: AudioEncoder.pcm16bits,

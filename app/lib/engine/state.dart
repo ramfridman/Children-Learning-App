@@ -16,6 +16,9 @@ class SkillState {
 
   /// Answers right without any hint, outside probes.
   int successes = 0;
+
+  /// How many of the successes were spoken (LS09). At most half of a speaking skill's successes may be.
+  int speechSuccesses = 0;
   final Set<int> successDays = <int>{};
   final Set<Representation> representationsPassed = <Representation>{};
   final Set<CheckType> checksPassed = <CheckType>{};

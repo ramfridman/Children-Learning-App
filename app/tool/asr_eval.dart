@@ -127,7 +127,7 @@ Future<void> main(List<String> args) async {
 
   final Directory folder = Directory(args.first);
   final Directory model = Directory(option('--model') ?? '../out/speech-model');
-  final List<String> bad = await SpeechModel.verify(model);
+  final List<String> bad = await SpeechModels.hebrew.verify(model);
   if (bad.isNotEmpty) {
     stderr.writeln(
       'The model in ${model.path} is not the trusted one (wrong or missing: ${bad.join(', ')}).',
@@ -231,7 +231,7 @@ Future<void> main(List<String> args) async {
 
   final int total = labels.length;
   times.sort();
-  stdout.writeln('Recordings: $total   model: ${SpeechModel.id}');
+  stdout.writeln('Recordings: $total   model: ${SpeechModels.hebrew.id}');
   stdout.writeln(
     'Accepted: $accepted (${pct(accepted, total)})   right among accepted: $right of $accepted = ${pct(right, accepted)}   (the goal is 97% or more)',
   );

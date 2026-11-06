@@ -46,7 +46,13 @@ void main() {
         for (final File f in dartFiles('lib'))
           if (RegExp(r'package:(record|sherpa_onnx)/').hasMatch(code(f))) slashed(f),
       ];
-      expect(users, <String>['lib/speech/sherpa_engine.dart']);
+      // The recogniser's configuration is shared with the PC tool, so it has a file of its own that never touches the microphone.
+      expect(users, <String>['lib/speech/sherpa_config.dart', 'lib/speech/sherpa_engine.dart']);
+      final List<String> recorders = <String>[
+        for (final File f in dartFiles('lib'))
+          if (code(f).contains('package:record/')) slashed(f),
+      ];
+      expect(recorders, <String>['lib/speech/sherpa_engine.dart'], reason: 'the microphone is in one file');
       for (final File f in dartFiles('lib')) {
         if (slashed(f) == 'lib/speech/sherpa_engine.dart') continue;
         expect(

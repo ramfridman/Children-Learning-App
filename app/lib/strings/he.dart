@@ -59,6 +59,10 @@ abstract final class He {
   static const Str activityQuestion = Str('כַּמָּה פְּרָחִים יֵשׁ?', nikud: true);
   static const Str replaySemantics = Str('שמיעה חוזרת של השאלה');
   static const Str optionSoundSemantics = Str('שמיעה של האפשרות');
+
+  /// LS09 say-it (needs-editor): the button of a child who says the word without the microphone ("I said it", the batches'
+  /// `he-ins-said-it`), practice only.
+  static const Str sayDone = Str('אָמַרְתִּי', nikud: true);
   // L4: screen-reader labels of the Band A templates of the language courses (adult text, no nikud; all needs-editor).
   static const Str storyNextSemantics = Str('העמוד הבא בסיפור');
   static const Str storyEndSemantics = Str('סוף הסיפור');
@@ -604,6 +608,16 @@ abstract final class He {
   static const Str areaVoiceNoModel = Str('מודל הזיהוי עוד לא הותקן במכשיר הזה.');
   static const Str areaVoiceNoPermission = Str('לא ניתנה הרשאת מיקרופון. אפשר לתת אותה בהגדרות המכשיר.');
   static const Str areaVoiceCredit = Str('זיהוי דיבור: ivrit.ai Zipformer מאת יעקב קולני, רישיון CC-BY-4.0.');
+
+  /// The credits of the English and Russian models (needs-editor): Apache-2.0 asks for the notice and a copy of the licence.
+  static const Str areaVoiceCreditEng = Str(
+    'זיהוי דיבור באנגלית: Zipformer 20M של k2-fsa ו-icefall (Next-gen Kaldi), רישיון Apache-2.0.',
+  );
+  static const Str areaVoiceCreditRus = Str(
+    'זיהוי דיבור ברוסית: Vosk small streaming Zipformer של Alpha Cephei (alphacep), רישיון Apache-2.0.',
+  );
+  static const Str areaVoiceLicence = Str('הטקסט המלא של הרישיון Apache-2.0');
+  static const Str areaVoiceLicenceClose = Str('סגירה');
   static const Str areaPush = Str('התראות בטלפון הזה');
   static const Str areaPushHelp = Str(
     'כשנוצרת התראה חדשה, הטלפון הזה מקבל הודעה קצרה שאומרת רק "יש התראה חדשה". שמות, מילים ופרטים על הילדים לא נשלחים בהודעה, והם נפתחים רק באפליקציה, מאחורי הקוד שלכם.',
