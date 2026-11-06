@@ -10,6 +10,7 @@ pack is built, and is the same every time it runs. Every text it writes is `need
 import json
 import os
 import sys
+import unicodedata
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 OUT = os.path.join(ROOT, 'content', 'starter')
@@ -30,8 +31,8 @@ def _first(word):
 
 def vav(word):
     """The conjunctive vav before a word (the editor's rules, docs/agents/hebrew-notes.md §4.1 G2, G3, G5): וּ before a
-    letter with a shva (וּשְׁתַּיִם), וַ / וֶ before a hataf (וַחֲמִשָּׁה), וִי for a yod with a shva, and no dagesh in a
-    בגדכפת letter after it (וְתֵשַׁע, וְכָחֹל)."""
+    letter with a shva (וּשְׁתַּיִם) or a labial ב ו מ פ (וּבִשְׁלוֹשִׁים), וַ / וֶ before a hataf (וַחֲמִשָּׁה), וִי for a yod
+    with a shva, and no dagesh in a בגדכפת letter after it (וְתֵשַׁע, וְכָחֹל)."""
     letter, marks, rest = _first(word)
     for hataf, full in HATAF.items():
         if hataf in marks:
@@ -40,6 +41,10 @@ def vav(word):
         if letter == 'י':
             return 'וִי' + rest
         return 'וּ' + letter + SHVA + marks.replace(SHVA, '').replace(DAGESH, '') + rest
+    if letter in 'בומפ':  # a labial takes the shureq whatever its vowel (וּבִשְׁלוֹשִׁים, וּמַטְבֵּעַ); ב and פ are soft after it
+        if letter in 'בפ':
+            marks = marks.replace(DAGESH, '')
+        return 'וּ' + letter + marks + rest
     if letter in BGDKPT:
         marks = marks.replace(DAGESH, '')
     return 'וְ' + letter + marks + rest
@@ -61,14 +66,20 @@ def prefix(p, word):
     return base + SHVA + dagesh + letter + marks + rest
 
 
-# The words the reviewed table writes with מֵ (hebrew-notes G9, G10). It keeps "מִאַרְבַּע" (activity.b.numb13.14), which
-# G9 would write "מֵאַרְבַּע": a question for the hebrew-text-editor; until it is answered the generator follows the table.
-FROM_TSERE = ('אֶפֶס', 'אַחַת')
+GUTTURAL = 'אהחער'
 
 
 def from_(word):
-    """מִ before a word; מֵ before the article and the words of FROM_TSERE (מֵאֶפֶס, מֵאַחַת, מֵהַמִּסְפָּר)."""
-    return ('מֵ' if word.startswith(FROM_TSERE) or word.startswith('ה') else 'מִ') + word
+    """מִ before a word (the editor's rule G9/G10, decided 2026-11-06 for the number words too). Before a guttural, which cannot
+    take the doubling, מֵ (מֵאֶפֶס, מֵאַרְבַּע, מֵחֲמִשִּׁים, מֵעֶשְׂרִים, מֵהַמִּסְפָּר). Before any other letter מִ doubles it, with a
+    dagesh (מִשֵּׁשׁ, מִשֶּׁבַע, מִשִּׁבְעִים, מִתֵּשַׁע), except before a shva, which cannot be doubled (מִשְׁלוֹשִׁים,
+    מִשְׁמוֹנֶה)."""
+    letter, marks, rest = _first(word)
+    if letter in GUTTURAL:
+        return 'מֵ' + word
+    if SHVA in marks or DAGESH in marks:
+        return 'מִ' + word
+    return 'מִ' + letter + ''.join(sorted(marks + DAGESH, key=unicodedata.combining)) + rest
 
 
 # Counting words with niqqud. F: the abstract count and the numeral on a tile; M: with a masculine noun.

@@ -559,3 +559,67 @@ Scope: the `needs-editor` drafts that the three Band A batches and the design-di
 **Counts.** Voice-text characters: English 52 lines 1,207 (+44; with the 68 glosses 1,667); Russian 40 lines 979 (+41); Hebrew Band A 4,035 (was 4,093: the three rows were counted pointed before they had a voice text). Checks: `tools/check_hebrew_course_words.py --text` on the four files (3,505 Hebrew words; the one note is the teacher's suffix in a grammar remark), `tools/test_hebrew_sources.py` (10 tests, OK).
 
 **Not decided here (the owner, `island-texts.md` §6):** the door line with or without the question, the Hebrew bottle line, the three route names of the Russian stress setting, how the Hebrew "parent check of reading aloud" works (the help text says only what is certain), and the status words of the parent progress page.
+
+## 11. M10 batch C1 (numbers to 100, facts): the editor's pass, 2026-11-06
+
+Branch `m10-c1`. The math-teacher's 168 activities (`content/units/band-c1-numbers.json`, `band-c1-math.json`, from `tools/band_c.py`), 18 lessons, 12 skills and 6 new misconception records: 2,201 new rows of the
+master table in group 3 (and 40 Band B rows that changed with the shared helpers), 702 distinct texts. Every distinct text was read as a sentence, not as a template: 76 prompts, 118 option labels, 150 correct lines,
+19 wrong-answer lines, 82 + 156 hints, the lesson, skill and parent texts. The corrections are in the sources (`tools/band_c.py`, `tools/author.py`, `tools/band_b.py`) and `python -I tools/regen_content.py` was run.
+
+### 11.1 The `from_` decision (the math-teacher's question)
+
+`from_` (`tools/author.py`) is one helper for every band. `מֵ` before a guttural (א ה ח ע ר): `מֵאַרְבַּע`, `מֵאַרְבָּעִים`, `מֵחָמֵשׁ`, `מֵחֲמִשִּׁים`, `מֵעֶשֶׂר`, `מֵאֶפֶס`, `מֵהַמִּסְפָּר`. `מִ` before any other
+letter doubles it: `מִשֵּׁשׁ`, `מִשֶּׁבַע`, `מִשָּׁלוֹשׁ`, `מִשִּׁבְעִים`, `מִתֵּשַׁע`; except before a shva, which cannot be doubled: `מִשְׁלוֹשִׁים`, `מִשְׁמוֹנֶה`. The old helper wrote `מִאַרְבַּע` and `מִחָמֵשׁ` and left the shin
+undoubled (`מִשֶׁבַע`, `מִשָׁלוֹשׁ`) in 7 Band B hints (`numb13.*`, `mathb01.18`, `mathb03.13/14`); the regeneration corrects them. `band_c.py` no longer has its own `from_num`. `vav()` was fixed in the same pass: a labial takes
+the shureq whatever its vowel (`וּבִשְׁלוֹשִׁים`, not `וְבִשְׁלוֹשִׁים`; `וּמַטְבֵּעַ`), and ב / פ are soft after it. Tests: `PrefixHelpersTest.test_from` and `test_vav_before_a_prefixed_number`.
+
+### 11.2 What was wrong in the draft, and what it is now
+
+| Where | Before | After |
+|---|---|---|
+| M-CNT-DECADE line (Band B and C, 18 rows) | `אַחֲרֵי הַתֵּשַׁע בָּא עֶשֶׂר חָדָשׁ` (no agreement) | `אַחֲרֵי הַתֵּשַׁע מַתְחִילָה עֲשָׂרָה חֲדָשָׁה` ("a ten" is feminine, as in `בְּסוֹף כׇּל עֲשָׂרָה מַגִּיעָה עֲשָׂרָה חֲדָשָׁה`) |
+| M-NL-SPACE line (Band B and C, 49 rows) | `כׇּל קְפִיצָה שָׁוָה` (nobody says it) | `כׇּל הַקְּפִיצוֹת בְּאוֹתוֹ אֹרֶךְ` |
+| M-PV-ZERO line | `… שְׁתֵּי סְפָרוֹת בִּלְבַד` (written register, section 2.5) | `… יֵשׁ רַק שְׁתֵּי סְפָרוֹת` |
+| M-PV-FACE line | `בּוֹאוּ נִבְדֹּק כַּמָּה הִיא שָׁוָה` (a voice reads `שָׁוָה` as `שָׁוֶה`, the equals word) | `בּוֹאוּ נִבְדֹּק כַּמָּה עֲשָׂרוֹת יֵשׁ` |
+| NUM-C-04 correct line for `58 > ?` and `? < 47` | `הַצַּד הַפָּתוּחַ פּוֹנֶה אֶל חֲמִשִּׁים וּשְׁמוֹנֶה, הַמִּסְפָּר הַגָּדוֹל` (the sign was never read) | `כֵּן! חֲמִשִּׁים וּשְׁמוֹנֶה גָּדוֹל מֵאַרְבָּעִים וְשָׁלוֹשׁ. הַצַּד הַפָּתוּחַ פּוֹנֶה אֶל הַגָּדוֹל.` `>` is `גָּדוֹל מִ`, `<` is `קָטָן מִ`, the `מִ` pointed by `from_`. No other text of the batch reads a sign aloud, and the app never speaks the tiles of a row. |
+| NUM-C-04 hint 3 | `וְבִשְׁלוֹשִׁים וְתֵשַׁע יֵשׁ …` | `וּבִשְׁלוֹשִׁים וְתֵשַׁע יֵשׁ …` (the `vav()` fix) |
+| NUM-C-09 hint 3 (spot the error, 2 rows) | `סִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת אוֹתוֹ דָּבָר` | `מִשּׁוּרָה לְשׁוּרָה הַמִּסְפָּר גָּדֵל אוֹ קָטָן בְּעֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת כְּמוֹ שֶׁהִיא. אֶחָד מֵהַמִּסְפָּרִים לֹא מַתְאִים.` |
+| NUM-B-06 hint 2 (8 rows) | `… וְנַצְבִּיעַ עַל הַקַּו וְעַל הָעִגּוּל שֶׁבּוֹ` (1, 2, 3, 5, 7 have no circle) | `… וְנַעֲבֹר עִם הָאֶצְבַּע עַל הַצּוּרָה שֶׁלּוֹ` |
+| NUM-B-06 hint 3 (8 rows) | `שֵׁשׁ נִרְאֶה כָּךְ: שֵׁשׁ.` (names the number twice, says nothing) | `הִנֵּה הַמִּסְפָּר שֵׁשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שֵׁשׁ.` |
+| NUM-B-06 prompt (6 rows) | `אֵיפֹה יֵשׁ כְּמוֹ הַמִּסְפָּר?` | `אֵיזוֹ קְבוּצָה מַתְאִימָה לַמִּסְפָּר?` |
+| NUM-B-09 hint 3 (3 rows) | `שְׁמוֹנֶה, וְעוֹד תֵּשַׁע, עֶשֶׂר — עֶשֶׂר.` | `שְׁמוֹנֶה… תֵּשַׁע, עֶשֶׂר. הוֹסַפְנוּ שְׁתַּיִם.` |
+| NUM-B-09 hint 2 (3 rows) | `נְדַמְיֵן מִסְגֶּרֶת …` (high register; the voice rule wrote `נדמין`) | `חִשְׁבוּ עַל מִסְגֶּרֶת …` |
+| MATH-C-02 balance prompt (2 rows) | `בַּצַּד הַשְּׂמָאלִי … וּבַצַּד הַיְמָנִי …` (the Band B rule "no right and left before SHP-B-12" rewrote it to `שֶׁלְּמַעְלָה`, wrong for a flat scale; MATH-C-02 does not depend on SHP-B-12) | `בְּצַד אֶחָד … וּבַצַּד הַשֵּׁנִי …` |
+| coin lines (2) | `אַרְבָּעִים! אַרְבָּעִים שְׁקָלִים.` | `אַרְבָּעִים! יֵשׁ כָּאן אַרְבָּעִים שְׁקָלִים.` |
+| lessons | `עוֹד עוּבְדוֹת` / `הָעוּבְדוֹת מִתְחַזְּקוֹת`; `נִפְלָא! כׇּל הַמִּשְׁפָּחוֹת.` | `עוֹד תַּרְגִּילִים` / `עֲשִׂיתֶם הַרְבֵּה תַּרְגִּילִים`; `נִפְלָא! עֲבַרְתֶּם אֶת כׇּל הַמִּשְׁפָּחוֹת.` |
+| skill MATH-C-01 (child line) | `חִבּוּר וְחִסּוּר עַד תֵּשַׁע וְעוֹד תֵּשַׁע` | `חִבּוּר וְחִסּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה` (as the lesson title) |
+| parent texts (adult, no nikud) | `יש שבעה כפיות`; `עשרים ושלוש הן שתי ספרות`; `סימני גדול מ- וקטן מ-`; `לפרוט עשר: לשים 15 כפיות כעשר בערמה` | `יש שבע כפיות`; `המספר עשרים ושלוש כתוב בשתי ספרות`; `הסימנים "גדול מ" ו"קטן מ"`; `לסדר 15 כפיות בערמה של עשר ועוד חמש לבד` |
+
+Checked and kept: the plural address everywhere (`בּוֹאוּ`, `נִסְתַּכֵּל`, `קִרְאוּ`, `חִשְׁבוּ`, `עַכְשָׁו תּוֹרְכֶם`; no singular "you", no personal question); `=` always `שָׁוֶה` (and `שָׁוִים` for the two sides),
+`+` `וְעוֹד`, `-` `פָּחוֹת`; a bare number feminine, a number before its noun in the noun's gender (`שִׁבְעָה דָּגִים`, `אַרְבַּע צִפֳּרִים`, `שְׁנֵי צְעָדִים`, `חֲמִשִּׁים וּשְׁנַיִם שְׁקָלִים`: the end of a
+compound number keeps `שְׁנַיִם`); the hundreds in the option labels (`שְׁלֹשׁ מֵאוֹת וְאַרְבַּע`, `מָאתַיִם וְשֵׁשׁ`, `מֵאָה וּשְׁלוֹשִׁים`: they are wrong answers such as 203 and 409, shown as numerals, not said); `עֲשָׂרָה אַחַת`,
+`יְחִידָה אַחַת`, `שְׁתֵּי עֲשָׂרוֹת`; the vav before a shva or a hataf (`וּשְׁמוֹנֶה`, `וְחָמֵשׁ`, `וִיחִידָה`); the school words (`סִפְרַת הָעֲשָׂרוֹת`, `לוּחַ הַמֵּאָה`, `טוּר`, `שׁוּרָה`, `מִשְׁבָּצוֹת`, `מַשְׁוִים`).
+A question is at most 14 words (the frog's prompt is exactly 14).
+
+### 11.3 The voice text
+
+Rules added to `tools/hebrew_voice_review.py`; they also correct 42 older rows (34 `text-ready`, 8 `proposed`, none owner-approved): a number word keeps its nikud whatever dagesh it carries or prefix it takes
+(`וְתֵשַׁע`, `מִשָּׁלוֹשׁ`, `בְּתִשְׁעִים`, `וּמֵעֶשֶׂר`, `הָעֶשֶׂר`; before, `ותשע` was plain in 65 lines and `משבע` / `משש` could be misread); `וְהַיְּחִידוֹת` is `והיחידות` (not `והייחידות`);
+`מִשָּׁם` is `משם` (not `מישם`); `נְדַמְיֵן` is `נדמיין`; the end of a compound number is not turned into `שְׁנֵי`; `עֲשָׂרָה` as "a ten" is not flagged as a masculine number.
+36 of the C1 voice texts are `proposed` for the same reason as their Band B twins (V1: `אֵלֶּה`, `גְּדֵלִים`, `שָׂמִים` kept pointed).
+
+### 11.4 The review guard, and the rewritten rows
+
+`REVIEWED` makes every row of a reviewed group `text-ready` on the first run, so the new rows were `text-ready` before anyone read them. `tools/hebrew_voice_review.py` now has a guard: a row that is not in the last table
+is `proposed` with the comment `NOT READ` until a `READ` entry names it (`READ`, `C1`); the entries of this run are the C1 sources and the 40 Band B rows that changed with the shared helpers. The 22 new `he.dart` rows
+(`sayDone`, `courseInvite`, `divisionHeading` …, from other branches) have no entry and stay `proposed / NOT READ`: they are not part of C1.
+The rewrites: at `HEAD` the rules changed the screen text of 29 new rows: 24 copies of the M-NL-DIR line (`הַשְּׂמֹאלִי` to `הַשְּׂמָאלִי`: a V1 row in Band B too, so it stays `proposed` and the source keeps the old
+nikud like its Band B twins), 4 balance prompts (wrong for Band C, now reworded at the source) and 1 coin line (`וּשְׁנַיִם` to `וּשְׁנֵי`, wrong, fixed in the rule). After this pass the rules rewrite 24 rows: only the M-NL-DIR line.
+
+### 11.5 For the owner (numbered)
+
+1. Approve or change the C1 texts: the table rows are `text-ready` (comment `M10 batch C1 …`); none is `owner-approved`.
+2. M-NL-DIR (`הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמֹאלִי …`), 44 rows in Band B and C, is still V1: the rule writes `הַשְּׂמָאלִי` and the source keeps `הַשְּׂמֹאלִי` until you confirm V1.
+3. M-NUM-REV line `הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת` (Band B, text-ready, also in C1): "first" is the left digit, but on a right-to-left screen a child may count from the right. The editor suggests
+   `הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל …`; not changed here because the Band B rows are approved.
+4. `עֲשָׂרָה אַחַת` for "one ten": confirm with the children's teacher if in doubt.

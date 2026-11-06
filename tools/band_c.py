@@ -109,11 +109,6 @@ BLOCK = NAMES['block'] | {'many': 'קֻבִּיּוֹת'}
 NOW = 'עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.'
 
 
-def from_num(word):
-    """מִ before a number word, מֵ before a guttural (מֵאַרְבָּעִים, מֵחֲמִשִּׁים, מֵעֶשְׂרִים): the editor's question on from_ stays open."""
-    return 'מֵ' + word if word[0] in 'אהחער' else from_(word)
-
-
 def tens_words(t):
     """'three tens' (עֲשָׂרוֹת is feminine): שְׁתֵּי עֲשָׂרוֹת, שָׁלוֹשׁ עֲשָׂרוֹת …; one ten is עֲשָׂרָה אַחַת."""
     return {1: 'עֲשָׂרָה אַחַת', 2: 'שְׁתֵּי עֲשָׂרוֹת'}.get(t, '%s עֲשָׂרוֹת' % F[t])
@@ -164,7 +159,7 @@ def jump(u, skill, frm, to, start, hop, labels=None, **kw):
                  check=kw.pop('check', 'predict'),
                  prompt='הַצְּפַרְדֵּעַ עוֹמֶדֶת עַל %s וְקוֹפֶצֶת %s %s. עַל אֵיזֶה מִסְפָּר הִיא תִּנְחַת?' % (F[start], steps, way),
                  h3='מַתְחִילִים %s וְקוֹפְצִים %s %s: %s. עַכְשָׁו תּוֹרְכֶם.' % (
-                     from_num(F[start]), steps, way, ', '.join(F[start + (d if hop > 0 else -d)] for d in range(1, k + 1))
+                     from_(F[start]), steps, way, ', '.join(F[start + (d if hop > 0 else -d)] for d in range(1, k + 1))
                      if k <= 6 else F[end]),
                  correct_text='%s! הַצְּפַרְדֵּעַ נָחֲתָה עַל %s.' % (F[end], F[end]), **kw)
 
@@ -174,13 +169,13 @@ def place_on(u, skill, frm, to, target, labels, **kw):
     near = max(v for v in labels if v <= target)
     via = ''
     if target - near > 6:  # only the ends are marked: ten steps first, then count on
-        via = '%s עֲשָׂרָה צְעָדִים קָדִימָה הֵם %s, וּמִשָּׁם ' % (from_num(F[near]), F[near + 10])
+        via = '%s עֲשָׂרָה צְעָדִים קָדִימָה הֵם %s, וּמִשָּׁם ' % (from_(F[near]), F[near + 10])
         near += 10
     walk = ', '.join(F[v] for v in range(near + 1, target + 1))
     return u.act(skill, 'numline', mode='place', **{'from': frm}, to=to, target=target, labels=labels,
                  prompt='הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל %s. נוֹגְעִים בַּמָּקוֹם.' % F[target],
                  h3=('%sסוֹפְרִים קָדִימָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (via, walk) if via else
-                     'מַתְחִילִים %s וְסוֹפְרִים קָדִימָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_num(F[near]), walk)) if walk else
+                     'מַתְחִילִים %s וְסוֹפְרִים קָדִימָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[near]), walk)) if walk else
                  'הַמִּסְפָּר כְּתוּב עַל הַצִּיר. עַכְשָׁו תּוֹרְכֶם.',
                  correct_text='%s! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן.' % F[target], **kw)
 
@@ -193,13 +188,13 @@ def numbers_c1(u):
     u.tag('M-PV-FACE', ['NUM-C-03', 'NUM-C-04', 'MATH-C-03'],
           'הילד קורא כל ספרה לפי הערך שלה לבד ולא לפי המקום שלה: ב-34 ה-3 הוא "שלוש" ולא שלושים, ו-41 נראה לו קטן מ-39 כי 1 קטן מ-9.',
           'לשחק בחנות עם מטבעות של עשר ושל שקל: לבנות יחד 34 בשלושה מטבעות של עשר וארבעה של שקל, ולשאול כמה שווים המטבעות של העשר.',
-          ['concrete', 'pictorial'], 'הַסִּפְרָה הַזֹּאת עוֹמֶדֶת בַּמָּקוֹם שֶׁל הָעֲשָׂרוֹת. בּוֹאוּ נִבְדֹּק כַּמָּה הִיא שָׁוָה.')
+          ['concrete', 'pictorial'], 'הַסִּפְרָה הַזֹּאת עוֹמֶדֶת בַּמָּקוֹם שֶׁל הָעֲשָׂרוֹת. בּוֹאוּ נִבְדֹּק כַּמָּה עֲשָׂרוֹת יֵשׁ.')
     u.tag('M-PV-ZERO', ['NUM-C-02', 'NUM-C-03', 'MATH-C-03'],
           'הילד כותב מספר כמו שהוא שומע אותו, חלק אחרי חלק (עשרים ושלוש נכתב 203), או מוסיף ומשמיט אפסים (70 נכתב 7 או 700).',
-          'לכתוב יחד על פתקים: פתק של עשרים ופתק של שלוש, ולהניח את פתק השלוש על האפס של העשרים. כך רואים שעשרים ושלוש הן שתי ספרות.',
-          ['concrete', 'symbolic'], 'בְּמִסְפָּר עִם עֲשָׂרוֹת וִיחִידוֹת יֵשׁ שְׁתֵּי סְפָרוֹת בִּלְבַד. בּוֹאוּ נִבְדֹּק אֶת הַמָּקוֹם שֶׁל כׇּל סִפְרָה.')
+          'לכתוב יחד על פתקים: פתק של עשרים ופתק של שלוש, ולהניח את פתק השלוש על האפס של העשרים. כך רואים שהמספר עשרים ושלוש כתוב בשתי ספרות.',
+          ['concrete', 'symbolic'], 'בְּמִסְפָּר עִם עֲשָׂרוֹת וִיחִידוֹת יֵשׁ רַק שְׁתֵּי סְפָרוֹת. בּוֹאוּ נִבְדֹּק אֶת הַמָּקוֹם שֶׁל כׇּל סִפְרָה.')
     u.tag('M-SIGN-DIR', ['NUM-C-04'],
-          'הילד קורא את סימני גדול מ- וקטן מ- הפוך, או בוחר את הסימן לפי המקום של המספר הגדול ולא לפי הכיוון של הסימן.',
+          'הילד קורא את הסימנים "גדול מ" ו"קטן מ" הפוך, או בוחר את הסימן לפי המקום של המספר הגדול ולא לפי הצד הפתוח של הסימן.',
           'לצייר תנין רעב שהפה שלו פתוח תמיד אל הערמה הגדולה יותר של עוגיות, ואז להפוך את התנין לסימן.',
           ['pictorial', 'concrete'], 'הַצַּד הַפָּתוּחַ שֶׁל הַסִּימָן פּוֹנֶה תָּמִיד אֶל הַמִּסְפָּר הַגָּדוֹל. בּוֹאוּ נִבְדֹּק.')
     u.tag('M-HC-ROW', ['NUM-C-09'],
@@ -208,7 +203,7 @@ def numbers_c1(u):
           ['pictorial', 'concrete'], 'עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה, בְּאוֹתוֹ טוּר. בּוֹאוּ נִרְאֶה.')
     u.tag('M-OP-SWAP', ['NUM-C-09', 'MATH-C-01', 'MATH-C-02', 'MATH-C-03'],
           'הילד עושה את הפעולה ההפוכה: מחבר כשצריך לחסר, או מחסר כשצריך לחבר.',
-          'לספר סיפור קטן לכל תרגיל עם חפצים אמיתיים: יש שבעה כפיות, לוקחים שלוש. ואז לשאול: האם היו לנו יותר או פחות?',
+          'לספר סיפור קטן לכל תרגיל עם חפצים אמיתיים: יש שבע כפיות, לוקחים שלוש. ואז לשאול: נשארו לנו יותר כפיות או פחות?',
           ['concrete', 'story'], 'רֶגַע, מוֹסִיפִים כָּאן אוֹ מוֹרִידִים? בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַסִּימָן.')
 
     # ---- NUM-B-06 (bridge, core): reads the numerals 0 to 10
@@ -219,18 +214,18 @@ def numbers_c1(u):
     # distractors, both M-NUM-REV, the one tag the skill watches (the E1 rule of B-15).
     for i, (n, look) in enumerate([(6, (9, 0)), (2, (5, 7)), (9, (6, 4)), (1, (7, 4)), (3, (8, 5)), (5, (2, 3))]):
         choose(u, 'NUM-B-06', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, {v: 'M-NUM-REV' for v in look}, i, band='B',
-               h2='הַמִּסְפָּרִים הָאֵלֶּה דּוֹמִים. נִסְתַּכֵּל לְאַט עַל כׇּל אֶחָד, וְנַצְבִּיעַ עַל הַקַּו וְעַל הָעִגּוּל שֶׁבּוֹ.',
-               h3='%s נִרְאֶה כָּךְ: %s. %s' % (F[n], F[n], NOW % F[n]), ok='כֵּן! זֶה %s.' % F[n])
+               h2='הַמִּסְפָּרִים הָאֵלֶּה דּוֹמִים. נִסְתַּכֵּל עַל כׇּל אֶחָד לְאַט, וְנַעֲבֹר עִם הָאֶצְבַּע עַל הַצּוּרָה שֶׁלּוֹ.',
+               h3='הִנֵּה הַמִּסְפָּר %s. %s' % (F[n], NOW % F[n]), ok='כֵּן! זֶה %s.' % F[n])
     for i, (n, look, where) in enumerate([(8, (3, 0), 'הַבַּיִת'), (7, (1, 4), 'הָאוֹטוֹבּוּס')]):
         choose(u, 'NUM-B-06', 'עַל %s כָּתוּב מִסְפָּר %s. אֵיפֹה הַמִּסְפָּר?' % (where, F[n]), n, {v: 'M-NUM-REV' for v in look}, i,
                band='B', check='transfer', difficulty=0.5,
-               h2='הַמִּסְפָּרִים הָאֵלֶּה דּוֹמִים. נִסְתַּכֵּל לְאַט עַל כׇּל אֶחָד, וְנַצְבִּיעַ עַל הַקַּו וְעַל הָעִגּוּל שֶׁבּוֹ.',
-               h3='%s נִרְאֶה כָּךְ: %s. %s' % (F[n], F[n], NOW % F[n]), ok='כֵּן! זֶה %s.' % F[n])
+               h2='הַמִּסְפָּרִים הָאֵלֶּה דּוֹמִים. נִסְתַּכֵּל עַל כׇּל אֶחָד לְאַט, וְנַעֲבֹר עִם הָאֶצְבַּע עַל הַצּוּרָה שֶׁלּוֹ.',
+               h3='הִנֵּה הַמִּסְפָּר %s. %s' % (F[n], NOW % F[n]), ok='כֵּן! זֶה %s.' % F[n])
     # The numeral is shown, never said: the child reads it and finds the set (reverse of "how many?")
     for i, (n, obj) in enumerate([(4, 'apple'), (7, 'star'), (9, 'fish'), (6, 'duck'), (10, 'ladybug'), (3, 'bird')]):
         sets = placed('%s*%d' % (obj, n), ['%s*%d' % (obj, n - 1), '%s*%d' % (obj, n + 1) if n < 10 else '%s*%d' % (obj, n - 2)], i)
         tags = {'%s*%d' % (obj, n - 1): 'M-CNT-SKIP', '%s*%d' % (obj, n + 1): 'M-CNT-DOUBLE', '%s*%d' % (obj, n - 2): 'M-CNT-SKIP'}
-        u.act('NUM-B-06', 'pick', band='B', check='reverse', numeral=n, prompt='קִרְאוּ אֶת הַמִּסְפָּר. אֵיפֹה יֵשׁ כְּמוֹ הַמִּסְפָּר?',
+        u.act('NUM-B-06', 'pick', band='B', check='reverse', numeral=n, prompt='קִרְאוּ אֶת הַמִּסְפָּר. אֵיזוֹ קְבוּצָה מַתְאִימָה לַמִּסְפָּר?',
               options=sets, correct='%s*%d' % (obj, n), tags={s: tags[s] for s in sets if s in tags},
               h2='קֹדֶם קוֹרְאִים אֶת הַמִּסְפָּר, וְאַחַר כָּךְ סוֹפְרִים כׇּל קְבוּצָה עַד הַסּוֹף.',
               h3='הַמִּסְפָּר הוּא %s. סוֹפְרִים: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַקְּבוּצָה הַזֹּאת.' % (
@@ -251,12 +246,12 @@ def numbers_c1(u):
         choose(u, 'NUM-B-09', 'כַּמָּה חֲסֵרִים כְּדֵי שֶׁיִּהְיוּ עֶשֶׂר?', 10 - n, {9 - n: 'M-CNT-SKIP', 11 - n: 'M-CNT-DOUBLE'}, i,
                band='B', check='reverse', group={'sprite': obj, 'count': n, 'arrangement': 'ten_frame'},
                h2='בַּמִּסְגֶּרֶת יֵשׁ עֶשֶׂר מִשְׁבָּצוֹת. נִסְפֹּר רַק אֶת הַמִּשְׁבָּצוֹת הָרֵיקוֹת.',
-               h3='%s, וְעוֹד %s — עֶשֶׂר. %s' % (F[n], ', '.join(F[k] for k in range(n + 1, 11)), NOW % F[10 - n]),
+               h3='%s… %s. הוֹסַפְנוּ %s. %s' % (F[n], ', '.join(F[k] for k in range(n + 1, 11)), F[10 - n], NOW % F[10 - n]),
                ok='%s! %s וְעוֹד %s הֵם עֶשֶׂר.' % (F[10 - n], F[n], F[10 - n]))
     for i, n in enumerate([7, 4, 9]):  # the same make-ten, in a number sentence
         choose(u, 'NUM-B-09', 'אֵיזֶה מִסְפָּר חָסֵר?', 10 - n, {10 + n: 'M-EQ-OPER', 11 - n: 'M-CNT-DOUBLE'}, i, band='B',
                row=[n, '+', '?', '=', 10],
-               h2='נְדַמְיֵן מִסְגֶּרֶת שֶׁל עֶשֶׂר עִם %s בִּפְנִים. כַּמָּה מִשְׁבָּצוֹת רֵיקוֹת?' % F[n],
+               h2='חִשְׁבוּ עַל מִסְגֶּרֶת שֶׁל עֶשֶׂר עִם %s בִּפְנִים. כַּמָּה מִשְׁבָּצוֹת רֵיקוֹת?' % F[n],
                h3='%s וְעוֹד %s שָׁוֶה עֶשֶׂר. %s' % (F[n], F[10 - n], NOW % F[10 - n]),
                ok='%s! %s וְעוֹד %s שָׁוֶה עֶשֶׂר.' % (F[10 - n], F[n], F[10 - n]))
 
@@ -328,7 +323,7 @@ def numbers_c1(u):
                group={'sprite': 'coin_s10', 'count': t}, **({'group2': {'sprite': 'coin_s1', 'count': o}} if o else {}),
                h2='כׇּל מַטְבֵּעַ גָּדוֹל שָׁוֶה עֲשָׂרָה שְׁקָלִים, וְכׇל מַטְבֵּעַ קָטָן שֶׁקֶל אֶחָד. סוֹפְרִים קֹדֶם בַּעֲשָׂרוֹת.',
                h3=('%s, וּמַמְשִׁיכִים: %s. %s' % (tens_count, ones_count, NOW % F[n])) if o else '%s. %s' % (tens_count, NOW % F[n]),
-               ok='%s! %s.' % (F[n], qty(n, SHEKEL)))
+               ok='%s! יֵשׁ כָּאן %s.' % (F[n], qty(n, SHEKEL)))
     for i, (t, o, ones_first) in enumerate([(3, 4, False), (6, 8, False), (2, 7, True), (8, 1, False)]):  # said in words
         n = 10 * t + o
         said = ('%s %s' % (ones_words(o), vav(tens_words(t)))) if ones_first else '%s %s' % (tens_words(t), vav(ones_words(o)))
@@ -356,11 +351,13 @@ def numbers_c1(u):
                                                 (['?', '>', 64], 72, 59, 53), ([45, '>', '?'], 38, 51, 57), ([83, '>', '?'], 79, 91, 86)]):
         other = row[0] if row[0] != '?' else row[2]
         big = max(other, ans)
+        left, right = (row[0], ans) if row[0] != '?' else (ans, row[2])
         choose(u, 'NUM-C-04', 'אֵיזֶה מִסְפָּר מַתְאִים לַמָּקוֹם הָרֵיק?', ans, {face: 'M-PV-FACE', sign: 'M-SIGN-DIR'}, i, row=row,
                h2='הַצַּד הַפָּתוּחַ שֶׁל הַסִּימָן פּוֹנֶה אֶל הַמִּסְפָּר הַגָּדוֹל יוֹתֵר. מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת.',
                h3='%s יֵשׁ %s, %s יֵשׁ %s. הַצַּד הַפָּתוּחַ פּוֹנֶה אֶל %s. %s' % (
                    prefix('ב', F[other]), tens_words(other // 10), vav(prefix('ב', F[ans])), tens_words(ans // 10), F[big], NOW % F[ans]),
-               ok='כֵּן! הַצַּד הַפָּתוּחַ פּוֹנֶה אֶל %s, הַמִּסְפָּר הַגָּדוֹל.' % F[big])
+               ok='כֵּן! %s %s %s. הַצַּד הַפָּתוּחַ פּוֹנֶה אֶל הַגָּדוֹל.' % (
+                   F[left], 'גָּדוֹל' if row[1] == '>' else 'קָטָן', from_(F[right])))
 
     # ---- NUM-C-06: places numbers on the line between the tens (a window of twenty; the 0 to 100 line waits for X5)
     u.skill('NUM-C-06', 'מספרים על ציר עד 100', 'שָׂמִים מִסְפָּרִים עַל הַצִּיר', 'dock', ['NUM-C-03', 'NUM-B-13'], ['pictorial'],
@@ -384,7 +381,7 @@ def numbers_c1(u):
                row=[n, '+' if d > 0 else '-', 10, '=', '?'],
                h2='בְּלוּחַ הַמֵּאָה, עֶשֶׂר %s זוֹ שׁוּרָה %s בְּאוֹתוֹ טוּר. הַיְּחִידוֹת לֹא מִשְׁתַּנּוֹת, רַק הָעֲשָׂרוֹת.' % (
                    'יוֹתֵר' if d > 0 else 'פָּחוֹת', way),
-               h3='%s %s שׁוּרָה %s: %s. %s' % (from_num(F[n]), 'יוֹרְדִים' if d > 0 else 'עוֹלִים', way, F[ans], NOW % F[ans]),
+               h3='%s %s שׁוּרָה %s: %s. %s' % (from_(F[n]), 'יוֹרְדִים' if d > 0 else 'עוֹלִים', way, F[ans], NOW % F[ans]),
                ok='%s! %s %s עֶשֶׂר שָׁוֶה %s.' % (F[ans], F[n], 'וְעוֹד' if d > 0 else 'פָּחוֹת', F[ans]))
     for i, (col, gap) in enumerate([((6, 16, 26, 36, 46), 3), ((14, 24, 34, 44, 54), 2), ((49, 59, 69, 79, 89), 4)]):
         ans = col[gap]
@@ -396,7 +393,7 @@ def numbers_c1(u):
         right = cells[w - 1] + (cells[1] - cells[0])
         u.act('NUM-C-09', 'spot', cells=['n:%d' % v for v in cells], wrong=w, tag='M-HC-ROW', check='error_spotting', difficulty=0.6,
               prompt='חָבֵר כָּתַב מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
-              h3='בְּכׇל שׁוּרָה הַמִּסְפָּר מִשְׁתַּנֶּה בְּעֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת אוֹתוֹ דָּבָר. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
+              h3='מִשּׁוּרָה לְשׁוּרָה הַמִּסְפָּר גָּדֵל אוֹ קָטָן בְּעֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת כְּמוֹ שֶׁהִיא. אֶחָד מֵהַמִּסְפָּרִים לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת %s.' % F[right])
     jump(u, 'NUM-C-09', 20, 40, 23, 10, labels=[20, 30, 40])
     jump(u, 'NUM-C-09', 30, 50, 47, -10, labels=[30, 40, 50])
@@ -441,7 +438,7 @@ START_LINE = {'M-CNT-DOUBLE': ('vo:fb.count_on_start', 'כְּשֶׁמַּמְש
 def math_c1(u):
     u.tag('M-SUB-SMALLBIG', ['MATH-C-01'],
           'הילד מחסר בכל טור את הספרה הקטנה מהגדולה, בלי לשים לב מי למעלה: 15 פחות 7 נראה לו 12, כי 7 פחות 5 הם 2.',
-          'לפרוט עשר: לשים 15 כפיות כעשר בערמה וחמש לבד, ולהוריד שבע. רואים שצריך לפתוח את העשר.',
+          'לסדר 15 כפיות בערמה של עשר ועוד חמש לבד, ולהוריד שבע. כך רואים שצריך לפתוח את הערמה של העשר.',
           ['concrete', 'pictorial'], 'רֶגַע, מוֹרִידִים מֵהַמִּסְפָּר הַגָּדוֹל. בּוֹאוּ נִפְתַּח אֶת הָעֶשֶׂר וְנִרְאֶה.')
 
     # ---- MATH-B-04 (bridge): counts on from the larger number
@@ -460,7 +457,7 @@ def math_c1(u):
         jump(u, 'MATH-B-04', 0, 20, start, hop, labels=[0, 10, 20], band='B')
 
     # ---- MATH-C-01 (core): the facts to 9 + 9, with fact coverage (E1)
-    u.skill('MATH-C-01', 'עובדות חיבור וחיסור עד 9 ועוד 9', 'חִבּוּר וְחִסּוּר עַד תֵּשַׁע וְעוֹד תֵּשַׁע', 'stall', ['MATH-B-08'],
+    u.skill('MATH-C-01', 'עובדות חיבור וחיסור עד 9 ועוד 9', 'חִבּוּר וְחִסּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה', 'stall', ['MATH-B-08'],
             ['symbolic', 'pictorial'], ['M-CNT-DOUBLE', 'M-CNT-CARD', 'M-OP-SWAP', 'M-SUB-SMALLBIG', 'M-EQ-OPER'], core=True)
     u.d['skills'][-1]['setCoverage'] = True
     sprites = ['apple', 'star', 'fish', 'duck', 'ladybug', 'bird']
@@ -477,7 +474,7 @@ def math_c1(u):
         if i % 2 == 0:  # the missing addend (reverse)
             choose(u, 'MATH-C-01', 'אֵיזֶה מִסְפָּר חָסֵר?', b, {a + s: 'M-EQ-OPER', s: 'M-EQ-OPER', b + 1: 'M-CNT-DOUBLE'}, i,
                    row=[a, '+', '?', '=', s], variantGroup=group, check='reverse', tag_lines=START_LINE,
-                   h2='%s לְעֶשֶׂר חֲסֵרִים %s, וּמֵעֶשֶׂר %s עוֹד %s.' % (from_num(F[a]), F[10 - a], prefix('ל', F[s]), F[s - 10]),
+                   h2='%s לְעֶשֶׂר חֲסֵרִים %s, וּמֵעֶשֶׂר %s עוֹד %s.' % (from_(F[a]), F[10 - a], prefix('ל', F[s]), F[s - 10]),
                    h3='%s וְעוֹד %s שָׁוֶה %s. %s' % (F[a], F[b], F[s], NOW % F[b]), ok='%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[b], F[a], F[b], F[s]))
         else:  # the take-away fact of the same family
             choose(u, 'MATH-C-01', 'כַּמָּה זֶה?', a, {s + b: 'M-OP-SWAP', a + 1: 'M-CNT-DOUBLE', smallbig(s, b): 'M-SUB-SMALLBIG'}, i,
@@ -504,7 +501,7 @@ def math_c1(u):
     for (la, lb, r) in [(9, 6, 7), (8, 5, 6)]:  # the balance: 9 + 6 on the left, 7 on the right; add blocks until level (15 − 7)
         u.act('MATH-C-02', 'scale', mode='balance', left=[('block', la, 1), ('block', lb, 1)], right=[('block', r, 1)], block='block',
               result=la + lb - r, tag='M-EQ-OPER', difficulty=0.6,
-              prompt='בַּצַּד הַשְּׂמָאלִי %s וְעוֹד %s, וּבַצַּד הַיְמָנִי %s. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַצְּדָדִים שָׁוִים.' % (
+              prompt='בְּצַד אֶחָד %s וְעוֹד %s, וּבַצַּד הַשֵּׁנִי %s. מוֹסִיפִים קֻבִּיּוֹת עַד שֶׁהַצְּדָדִים שָׁוִים.' % (
                   qty(la, BLOCK), F[lb], F[r]),
               h3='%s וְעוֹד %s שָׁוֶה %s. %s וְעוֹד %s שָׁוֶה %s, אָז מוֹסִיפִים %s.' % (
                   F[la], F[lb], F[la + lb], F[r], F[la + lb - r], F[la + lb], qty(la + lb - r, BLOCK)),
@@ -529,7 +526,7 @@ def math_c1(u):
         choose(u, 'MATH-C-03', 'כַּמָּה שְׁקָלִים יֵשׁ בְּסַךְ הַכֹּל?', ans, {a + b: 'M-MONEY-COUNT', ans * 10: 'M-PV-ZERO'}, i,
                check='transfer', difficulty=0.6, group={'sprite': 'coin_s10', 'count': a}, group2={'sprite': 'coin_s10', 'count': b},
                h2='כׇּל מַטְבֵּעַ שָׁוֶה עֲשָׂרָה שְׁקָלִים. סוֹפְרִים אֶת הַמַּטְבְּעוֹת בַּעֲשָׂרוֹת.',
-               h3='%s. %s' % (', '.join(F[10 * k] for k in range(1, a + b + 1)), NOW % F[ans]), ok='%s! %s.' % (F[ans], qty(ans, SHEKEL)))
+               h3='%s. %s' % (', '.join(F[10 * k] for k in range(1, a + b + 1)), NOW % F[ans]), ok='%s! יֵשׁ כָּאן %s.' % (F[ans], qty(ans, SHEKEL)))
     for i, (a, s) in enumerate([(40, 90), (30, 70)]):  # the missing tens (reverse)
         b = s - a
         choose(u, 'MATH-C-03', 'אֵיזֶה מִסְפָּר חָסֵר?', b, {b // 10: 'M-PV-FACE', a + s: 'M-EQ-OPER'}, i, row=[a, '+', '?', '=', s],
@@ -540,8 +537,8 @@ def math_c1(u):
     # ---- lessons
     lesson_of(u, 'count-on-big', 'מַמְשִׁיכִים מֵהַגָּדוֹל', 'MATH-B-04', 'כׇּל הַכָּבוֹד! הִתְחַלְתֶּם מֵהַמִּסְפָּר הַגָּדוֹל.', band='B')
     lesson_of(u, 'facts-to-18', 'חִבּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה', 'MATH-C-01', 'כׇּל הַכָּבוֹד! הִשְׁלַמְתֶּם לְעֶשֶׂר.', 0, 9, minutes=7)
-    lesson_of(u, 'facts-to-18-more', 'עוֹד עוּבְדוֹת', 'MATH-C-01', 'מְצֻיָּן! הָעוּבְדוֹת מִתְחַזְּקוֹת.', 9, 18, minutes=7)
-    lesson_of(u, 'facts-to-18-again', 'שׁוּב חִבּוּר וְחִסּוּר', 'MATH-C-01', 'נִפְלָא! כׇּל הַמִּשְׁפָּחוֹת.', 18, minutes=7)
+    lesson_of(u, 'facts-to-18-more', 'עוֹד תַּרְגִּילִים', 'MATH-C-01', 'מְצֻיָּן! עֲשִׂיתֶם הַרְבֵּה תַּרְגִּילִים.', 9, 18, minutes=7)
+    lesson_of(u, 'facts-to-18-again', 'שׁוּב חִבּוּר וְחִסּוּר', 'MATH-C-01', 'נִפְלָא! עֲבַרְתֶּם אֶת כׇּל הַמִּשְׁפָּחוֹת.', 18, minutes=7)
     lesson_of(u, 'fact-families', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'MATH-C-02', 'כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה.', minutes=8)
     lesson_of(u, 'whole-tens', 'עֲשָׂרוֹת שְׁלֵמוֹת', 'MATH-C-03', 'מְצֻיָּן! חֲשַׁבְתֶּם בַּעֲשָׂרוֹת.', minutes=8)
 
