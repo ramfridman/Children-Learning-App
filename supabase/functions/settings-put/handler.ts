@@ -1,6 +1,6 @@
 // The parent's rules for the family (time limits, rest hours, the weekly windows, the lock, whether the child's words
 // are kept in alerts, whether the AI helper is on, whether trophy ceremonies play, the promises a parent attached to a
-// trophy, and for each child which languages are on with their switches). One document; the last write wins and the server
+// trophy, for each child which languages are on with their switches, and for each child the look a parent chose, as a letter). One document; the last write wins and the server
 // counts the versions. Parent devices only.
 // The document is checked field by field: anything it does not name is refused.
 import { GatewayError } from "../_shared/errors.ts";
@@ -58,6 +58,24 @@ export const LANGUAGE_QUESTIONNAIRE: Record<string, Record<string, readonly stri
     reads: ["no", "syllables", "words", "sentences"],
   },
 };
+
+/** The look a parent may choose for a child (B-29): the presentation band as a letter, like a language's level. */
+export const LOOK_LETTERS = ["A", "B", "C"] as const;
+/** At most this many children have a look (the same six as the language settings). */
+export const MAX_LOOK_CHILDREN = 6;
+
+/** Throws unless [value] is the family's looks: child id, then one of the letters. Nothing else rides here. */
+function checkLooks(value: unknown, bad: (why: string) => GatewayError): void {
+  if (!isObject(value) || Object.keys(value).length > MAX_LOOK_CHILDREN) throw bad("looks");
+  for (const [id, letter] of Object.entries(value)) {
+    if (
+      !CHILD_ID.test(id) || typeof letter !== "string" ||
+      !(LOOK_LETTERS as readonly string[]).includes(letter)
+    ) {
+      throw bad("looks");
+    }
+  }
+}
 
 /** Throws unless [value] is the family's language settings: child id, then course, then known switches with known values. */
 function checkLanguages(value: unknown, bad: (why: string) => GatewayError): void {
@@ -140,6 +158,9 @@ export function checkRules(rules: unknown): Record<string, unknown> {
       }
       case "languages":
         checkLanguages(value, bad);
+        break;
+      case "looks":
+        checkLooks(value, bad);
         break;
       case "restOn":
       case "lockWhenDone":

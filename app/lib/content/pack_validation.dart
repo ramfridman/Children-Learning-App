@@ -6,10 +6,12 @@ import '../speech/hebrew_text.dart';
 import '../speech/lexicon.dart';
 import '../speech/spoken_options.dart';
 import '../speech/word_text.dart' show normalizeWords;
+import 'capabilities.dart' show compareTemplateVersion;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
 import 'ls01_checks.dart';
 import 'ls02_checks.dart';
+import 'row_width.dart';
 import 'schema.dart';
 import 'schemas.dart';
 import 'scripts.dart';
@@ -232,8 +234,16 @@ List<Problem> validatePack({
   final Map<String, Object?> templates = manifest['templates']! as Map<String, Object?>;
   activities.forEach((String id, Map<String, Object?> a) {
     final String t = a['template']! as String;
-    if (!templates.containsKey(t)) {
+    final Object? promised = templates[t];
+    if (promised == null) {
       say('manifest.json', 'templates', 'does not list "$t", which activity $id uses');
+    } else if (promised is String && compareTemplateVersion('${a['templateVersion']}', promised) > 0) {
+      // SEC-M10-5: an app that has the manifest's version must be able to play what the activity says it needs.
+      say(
+        'activity.$id.json',
+        'templateVersion',
+        'is ${a['templateVersion']}, above the $promised the manifest lists for "$t"',
+      );
     }
   });
 
@@ -331,7 +341,16 @@ List<Problem> validatePack({
     switch (a['template']) {
       case 'tap_answer':
         checkAsset(file, 'scene.background', scene['background']);
-        _options(file, answer, say, checkTag, checkAsset: checkAsset);
+        if (answer['type'] == 'number') {
+          _numberAnswer(file, answer, say, checkTag);
+        } else {
+          _choiceAnswer(file, a, answer, say);
+          _options(file, answer, say, checkTag, checkAsset: checkAsset);
+        }
+        _stagePictureOf(file, scene['picture'], say);
+        _tapVersion(file, a, scene, answer, say);
+        _tapBigNumbers(file, a, scene, answer, say);
+        _tapRowWidth(file, scene, say);
         for (final (int i, Object? r) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
           if (r is String && r.startsWith('asset:')) checkAsset(file, 'scene.row[$i]', r);
         }
@@ -491,6 +510,8 @@ List<Problem> validatePack({
         }
         if ((answer['wrong']! as int) >= cells.length) say(file, 'answer.wrong', 'is not a cell of the row');
         checkTag(file, 'answer.misconception', answer['misconception']);
+        _spotVersion(file, a, scene, cells, say);
+        _spotBigNumbers(file, a, cells, say);
       case 'match_pairs':
         checkAsset(file, 'scene.background', scene['background']);
         final List<Map<String, Object?>> leftFaces = _maps(scene['left']);
@@ -1078,6 +1099,210 @@ Map<String, Object?>? _correctOption(Map<String, Object?> answer) {
     if (o['id'] == answer['correct']) return o;
   }
   return null;
+}
+
+/// A choice of a `tap_answer` has its options, the right one, and the two switches; a number answer's fields are not its own.
+void _choiceAnswer(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+) {
+  for (final String f in <String>['options', 'correct', 'shuffle', 'unsureAllowed']) {
+    if (answer[f] == null) say(file, 'answer.$f', 'a choice needs it');
+  }
+  for (final String f in <String>['value', 'expected', 'rules']) {
+    if (answer[f] != null) say(file, 'answer.$f', 'belongs to a number answer, not to a choice');
+  }
+  // Up to five choices, only in Band C (curriculum: Band A and B keep their caps); a tap-all of a language course has up to five cards in
+  // any band (ls01_checks.dart holds it to its own rule, and refuses it in the lands).
+  if (_maps(answer['options']).length > 4 && a['band'] != 'C' && answer['all'] != true) {
+    say(file, 'answer.options', 'more than four choices belong to Band C');
+  }
+}
+
+/// A number answer (M10, X3): the child types the number. It has the number itself, and no options; every wrong number the author
+/// expects is another number than the right one, listed once, and names a tag; a rule names a tag.
+void _numberAnswer(
+  String file,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkTag,
+) {
+  if (answer['value'] == null) say(file, 'answer.value', 'a number answer needs the number');
+  for (final String f in <String>['options', 'correct', 'shuffle', 'unsureAllowed']) {
+    if (answer[f] != null) {
+      say(file, 'answer.$f', 'a number answer has no options: the child types it');
+    }
+  }
+  final Set<Object?> seen = <Object?>{};
+  for (final (int i, Map<String, Object?> e) in _maps(answer['expected']).indexed) {
+    if (e['value'] == answer['value']) say(file, 'answer.expected[$i].value', 'is the right answer');
+    if (!seen.add(e['value'])) say(file, 'answer.expected[$i].value', 'is listed twice');
+    checkTag(file, 'answer.expected[$i].misconception', e['misconception']);
+  }
+  final Set<Object?> rules = <Object?>{};
+  for (final (int i, Map<String, Object?> r) in _maps(answer['rules']).indexed) {
+    if (!rules.add(r['when'])) say(file, 'answer.rules[$i].when', 'is listed twice');
+    checkTag(file, 'answer.rules[$i].misconception', r['misconception']);
+  }
+}
+
+/// What each kind of stage picture (`scene.picture`, X1) must say, and what belongs to no other kind.
+const Map<String, ({Set<String> needs, Set<String> may})> _pictureFields =
+    <String, ({Set<String> needs, Set<String> may})>{
+      'base_ten': (needs: <String>{}, may: <String>{'thousands', 'hundreds', 'tens', 'ones'}),
+      'array': (needs: <String>{'rows', 'columns'}, may: <String>{}),
+      'hundred_chart': (needs: <String>{}, may: <String>{'lit', 'blank'}),
+      'clock': (needs: <String>{'hour', 'minute'}, may: <String>{'digital'}),
+      'ruler': (needs: <String>{'length'}, may: <String>{'from'}),
+      'column': (needs: <String>{'op', 'top', 'bottom'}, may: <String>{'marks'}),
+      'fraction': (needs: <String>{'parts', 'shaded'}, may: <String>{}),
+    };
+
+void _stagePictureOf(String file, Object? picture, void Function(String, String, String) say) {
+  if (picture is! Map<String, Object?>) return;
+  final ({Set<String> needs, Set<String> may})? fields = _pictureFields[picture['kind']];
+  if (fields == null) return;
+  final Object? kind = picture['kind'];
+  final Set<String> given = picture.keys.toSet()..remove('kind');
+  for (final String f in fields.needs.difference(given)) {
+    say(file, 'scene.picture.$f', 'a $kind picture needs it');
+  }
+  for (final String f in given.difference(fields.needs).difference(fields.may)) {
+    say(file, 'scene.picture.$f', 'does not belong to a $kind picture');
+  }
+  if (kind == 'base_ten' && given.isEmpty) {
+    say(file, 'scene.picture', 'a base_ten picture needs at least one of thousands, hundreds, tens or ones');
+  }
+  if (kind == 'hundred_chart') {
+    final Set<Object?> lit = <Object?>{...?(picture['lit'] as List<Object?>?)};
+    final Set<Object?> blank = <Object?>{...?(picture['blank'] as List<Object?>?)};
+    if (lit.intersection(blank).isNotEmpty) {
+      say(file, 'scene.picture.blank', 'a cell is lit or blank, not both');
+    }
+  }
+  // The fields a kind needs are reported above when missing, so a missing or odd one is skipped here (SEC-M10-2).
+  final Object? parts = picture['parts'];
+  final Object? shaded = picture['shaded'];
+  if (kind == 'fraction' && parts is int && shaded is int && shaded > parts) {
+    say(file, 'scene.picture.shaded', 'is more than the parts');
+  }
+  final Object? top = picture['top'];
+  final Object? bottom = picture['bottom'];
+  if (kind == 'column' && top is String && bottom is String && top.length < bottom.length) {
+    say(file, 'scene.picture.bottom', 'a column sum has the longer number on top');
+  }
+}
+
+final RegExp _bigNumberCell = RegExp(r'^n:[0-9]{4,}$');
+final RegExp _newSignCell = RegExp(r'^op:[<>()]$');
+
+/// A `tap_answer` that uses a 1.4 feature (a stage picture, the number answer, five choices, the signs `<` `>` `(` `)`, a number of
+/// four digits or more, a row of more than eight cells; in a language course a text stem, a cloze or a tap-all) says
+/// `templateVersion` 1.4 or later.
+void _tapVersion(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> scene,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+) {
+  final List<Object?> row = (scene['row'] as List<Object?>?) ?? const <Object?>[];
+  final String? feature = scene['picture'] != null
+      ? 'a stage picture'
+      : answer['type'] == 'number'
+      ? 'a number answer'
+      : scene['stem'] != null
+      ? 'a text stem'
+      : scene['cloze'] != null
+      ? 'a cloze'
+      : answer['all'] == true
+      ? 'a tap-all'
+      : _maps(answer['options']).length > 4
+      ? 'more than four choices'
+      : row.length > 8
+      ? 'a row of more than eight cells'
+      : row.any((Object? c) => c is String && (_bigNumberCell.hasMatch(c) || _newSignCell.hasMatch(c)))
+      ? 'a number of four digits or a sign `<` `>` `(` `)`'
+      : ((scene['numeral'] as int?) ?? 0) > 100 ||
+            _maps(answer['options']).any((Map<String, Object?> o) => ((o['numeral'] as int?) ?? 0) > 100)
+      ? 'a number above 100'
+      : null;
+  if (feature != null && compareTemplateVersion('${a['templateVersion']}', '1.4') < 0) {
+    say(file, 'templateVersion', 'is ${a['templateVersion']}, but $feature needs tap_answer 1.4');
+  }
+}
+
+/// SEC-M10-3: a number above 100 (a numeral on the stage or on a tile) and a number of four digits or more in a row belong to Band C.
+/// Band A and B items stay small, as their hint pictures are drawn one mark for each unit.
+void _tapBigNumbers(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> scene,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+) {
+  if (a['band'] == 'C') return;
+  if (((scene['numeral'] as int?) ?? 0) > 100) {
+    say(file, 'scene.numeral', 'a number above 100 belongs to Band C');
+  }
+  for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
+    if (((o['numeral'] as int?) ?? 0) > 100) {
+      say(file, 'answer.options[$i].numeral', 'a number above 100 belongs to Band C');
+    }
+  }
+  for (final (int i, Object? c) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+    if (c is String && _bigNumberCell.hasMatch(c)) {
+      say(file, 'scene.row[$i]', 'a number of four digits belongs to Band C');
+    }
+  }
+}
+
+/// A row the stage can show at a size a child can read: no wider than [maxRowEm] (see `row_width.dart`).
+void _tapRowWidth(String file, Map<String, Object?> scene, void Function(String, String, String) say) {
+  final List<String> row = <String>[
+    for (final Object? c in (scene['row'] as List<Object?>?) ?? const <Object?>[])
+      if (c is String) c,
+  ];
+  if (rowEm(row) > maxRowEm) {
+    say(file, 'scene.row', 'is too wide to read on a small phone (shorten a number or drop a cell)');
+  }
+}
+
+/// SEC-M10-3 for a `spot_error`: a number of four digits or more in a cell belongs to Band C.
+void _spotBigNumbers(
+  String file,
+  Map<String, Object?> a,
+  List<Object?> cells,
+  void Function(String, String, String) say,
+) {
+  if (a['band'] == 'C') return;
+  for (final (int i, Object? c) in cells.indexed) {
+    if (c is String && _bigNumberCell.hasMatch(c)) {
+      say(file, 'scene.cells[$i]', 'a number of four digits belongs to Band C');
+    }
+  }
+}
+
+/// A `spot_error` with a sign `<` `>` `(` `)`, a number of four digits or more, or (in a language course) a text cell or a model
+/// picture says `templateVersion` 1.1 or later.
+void _spotVersion(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> scene,
+  List<Object?> cells,
+  void Function(String, String, String) say,
+) {
+  final bool uses =
+      scene['model'] != null ||
+      cells.any(
+        (Object? c) =>
+            c is String && (_bigNumberCell.hasMatch(c) || _newSignCell.hasMatch(c) || c.startsWith('txt:')),
+      );
+  if (uses && compareTemplateVersion('${a['templateVersion']}', '1.1') < 0) {
+    say(file, 'templateVersion', 'is ${a['templateVersion']}, but these cells need spot_error 1.1');
+  }
 }
 
 void _options(

@@ -649,6 +649,24 @@ Deno.test({
     assert.equal(kids[0].nickname, "נועה כהן", "saving again changed the child, it did not add one");
     assert.equal(kids[0].companionId, "hero-son");
     assert.deepEqual(await store.listChildren(other), [], "another family sees none");
+    // B-29: a school stage is kept, and a save without one (an older app) does not wipe it.
+    assert.equal(kids[0].schoolStage, null, "a child nobody placed has no stage");
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן", schoolStage: "grade1" });
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן" });
+    assert.equal(
+      (await store.listChildren(family))[0].schoolStage,
+      "grade1",
+      "saving without a stage keeps it",
+    );
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן", schoolStage: "grade2", ageBand: 2 });
+    assert.equal((await store.listChildren(family))[0].schoolStage, "grade2", "a new stage replaces it");
+    // SEC-B29-1: a save with another band and no stage drops the stage that no longer fits (the table also refuses the pair).
+    await store.upsertChild(family, { ...profile, nickname: "נועה כהן", ageBand: 1 });
+    assert.equal(
+      (await store.listChildren(family))[0].schoolStage,
+      null,
+      "a stage of another band is dropped",
+    );
 
     const [a, b, c] = [crypto.randomUUID(), crypto.randomUUID(), crypto.randomUUID()];
     const first = await store.insertEvents(family, device, [

@@ -40,10 +40,9 @@ LangPack _tapAllPack({String course = 'eng'}) {
         _letters('o2', 'i', tag: lm),
         _letters('o3', 't'),
         _letters('o4', 'f', tag: lm),
-        _letters('o5', 'l', tag: lm),
-        _letters('o6', 't'),
+        _letters('o5', 't'),
       ],
-      correct: <String>['o1', 'o3', 'o6'],
+      correct: <String>['o1', 'o3', 'o5'],
     ),
   );
   return p;
@@ -105,9 +104,38 @@ void main() {
       expect(cloze.cloze!.text, 'The cat is _ the bed.');
       final TapAnswerActivity all = _tapAllPack().content.activities['eng.tall']! as TapAnswerActivity;
       expect(all.ls01Mode, Ls01TapMode.tapAll);
-      expect(all.correctIds, <String>['o1', 'o3', 'o6']);
-      expect(all.optionCount, 6);
+      expect(all.correctIds, <String>['o1', 'o3', 'o5']);
+      expect(all.optionCount, 5);
       expect(all.engineTags, <String>{'eng.lis.sem'});
+    });
+
+    // tap_answer 1.4 and spot_error 1.1 carry the language fields of L5-1 and the Band C fields of M10 step 0: the gates ask for the
+    // version on a feature of either side.
+    test('a stem, a cloze and a tap-all say tap_answer 1.4', () {
+      for (final (String name, LangPack Function() pack) in <(String, LangPack Function())>[
+        ('stem', _stemPack),
+        ('cloze', _clozePack),
+        ('tall', _tapAllPack),
+      ]) {
+        expect(_messages(pack()), isEmpty, reason: name);
+        final LangPack old = pack();
+        (old.pack.docs['activity.eng.$name.json']! as Map<String, Object?>)['templateVersion'] = '1.3';
+        expect(_messages(old), contains(contains('needs tap_answer 1.4')), reason: name);
+      }
+    });
+
+    test('a tap-all of five cards is allowed in Band A and B, five plain choices only in Band C', () {
+      final LangPack p = _tapAllPack();
+      final Map<String, Object?> doc = p.pack.docs['activity.eng.tall.json']! as Map<String, Object?>;
+      final List<Object?> options = (doc['answer']! as Map<String, Object?>)['options']! as List<Object?>;
+      options.removeLast();
+      (doc['answer']! as Map<String, Object?>)['correct'] = <String>['o1', 'o3'];
+      for (final String band in <String>['A', 'B']) {
+        doc['band'] = band;
+        // (The fixture's skill is in Band A, so Band B is also told "its skill is in band A"; only the count is in question.)
+        expect(_messages(p), isNot(contains(contains('more than four'))), reason: band);
+        if (band == 'A') expect(_messages(p), isEmpty);
+      }
     });
 
     test('a plain tap of L1 has no L5 mode', () {
@@ -217,7 +245,7 @@ void main() {
       final Map<String, Object?> doc = p.pack.docs['activity.eng.tall.json']! as Map<String, Object?>;
       (doc['answer']! as Map<String, Object?>)['all'] = false;
       expect(_messages(p), contains(contains('is a tap-all: say `"all": true`')));
-      // Seven cards are more than the schema lets a tap-all have; six untagged ones are not each a mistake with a tag.
+      // Six cards are more than a tap-all may have (the phone SE holds 5); five untagged ones are not each a mistake with a tag.
       p = _tapAllPack();
       List<Map<String, Object?>> cards(int n) => <Map<String, Object?>>[
         for (int i = 0; i < n; i++) _letters('o${i + 1}', 'abcdefg'[i]),
@@ -225,17 +253,17 @@ void main() {
       p.pack.docs['activity.eng.tall.json'] = tapAllJson(
         id: 'tall',
         face: 'letter',
-        options: cards(7),
-        correct: <String>['o1'],
-      );
-      expect(_messages(p), contains(contains('7 items is outside 2 to 6')));
-      p.pack.docs['activity.eng.tall.json'] = tapAllJson(
-        id: 'tall',
-        face: 'letter',
         options: cards(6),
         correct: <String>['o1'],
       );
-      expect(_messages(p).where((String x) => x.contains('every distractor is tagged')), hasLength(5));
+      expect(_messages(p), contains(contains('6 items is outside 2 to 5')));
+      p.pack.docs['activity.eng.tall.json'] = tapAllJson(
+        id: 'tall',
+        face: 'letter',
+        options: cards(5),
+        correct: <String>['o1'],
+      );
+      expect(_messages(p).where((String x) => x.contains('every distractor is tagged')), hasLength(4));
     });
 
     test('the lands refuse the new modes', () {
@@ -434,9 +462,9 @@ void main() {
       await r.wait(t, 100);
       expect(find.byKey(const Key('picked-dot')), findsOneWidget);
       await t.tap(r.tile('o3'));
-      await t.tap(r.tile('o6'));
+      await t.tap(r.tile('o5'));
       await r.wait(t, 200);
-      expect(r.written, <String>['correct:0.2.5']);
+      expect(r.written, <String>['correct:0.2.4']);
       await r.done(t);
     });
 
@@ -456,9 +484,9 @@ void main() {
         expect(r.session.picked, <String>['o1', 'o3']);
         expect(r.session.notYetPicks, isEmpty);
         // The child goes on: the last right card completes the set.
-        await t.tap(r.tile('o6'));
+        await t.tap(r.tile('o5'));
         await r.wait(t, 200);
-        expect(r.written.last, 'correct:0.2.5');
+        expect(r.written.last, 'correct:0.2.4');
         await r.done(t);
       },
     );
@@ -490,10 +518,11 @@ void main() {
     ) async {
       final Rig<Ls01TapSession> r = _rig(_tapAllPack(), 'tall');
       await r.pump(t);
+      // One right card stays picked; the two wrong ones complete a set of three each time (the wrong cards un-pick).
+      await t.tap(r.tile('o1'));
       for (int k = 0; k < 3; k++) {
         await t.tap(r.tile('o2'));
         await t.tap(r.tile('o4'));
-        await t.tap(r.tile('o5'));
         await r.wait(t, 1500);
       }
       expect(r.controller.guided, isTrue);

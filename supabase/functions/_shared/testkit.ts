@@ -27,6 +27,9 @@ import { rawToDer, utf8 } from "./testutil.ts";
 
 export const NOW = 1_800_000_000_000;
 
+/** The band each school stage sets (as `child-put` and the table check): the fake store drops a kept stage that disagrees. */
+const STAGE_BAND = { gan3: 0, gan4: 0, gan5: 1, grade1: 1, grade2: 2, grade3: 2 } as const;
+
 /** The publish secret of the fake services (long enough to be accepted). */
 export const PUBLISH_SECRET = ["fake", "value", "for", "tests", "only", "abcdefghijklmnop"].join("-");
 
@@ -356,7 +359,10 @@ export class FakeStore implements Store {
   upsertChild(familyId: string, c: ChildProfile) {
     if (this.tombstones.get(familyId)?.has(c.id)) return Promise.resolve("deleted" as const);
     const m = this.children.get(familyId) ?? new Map<string, ChildProfile>();
-    m.set(c.id, { ...c });
+    // As the table: a save without a school stage keeps the stored one only while its band is the saved band (SEC-B29-1).
+    const kept = m.get(c.id)?.schoolStage ?? null;
+    const keptBand = kept === null ? null : STAGE_BAND[kept];
+    m.set(c.id, { ...c, schoolStage: c.schoolStage ?? (keptBand === c.ageBand ? kept : null) });
     this.children.set(familyId, m);
     return Promise.resolve("saved" as const);
   }

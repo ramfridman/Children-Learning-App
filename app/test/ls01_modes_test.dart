@@ -243,6 +243,14 @@ void main() {
       expect(_messages(p), contains(contains('is an accent tag')));
     });
 
+    // spot_error 1.1 carries the text cells and the model of L5-1 and the signs and big numbers of M10 step 0.
+    test('a spot with text cells or a model says spot_error 1.1', () {
+      expect(_messages(_spotPack()), isEmpty);
+      final LangPack old = _spotPack();
+      (old.pack.docs['activity.eng.spot.json']! as Map<String, Object?>)['templateVersion'] = '1.0';
+      expect(_messages(old), contains(contains('need spot_error 1.1')));
+    });
+
     test('the broken pairs, spots and orders', () {
       LangPack p = _pairsPack(n: 4);
       expect(

@@ -538,13 +538,15 @@ class Engine {
   // ---- questions the rest of the app asks ----
 
   /// True when every prerequisite of [id] has reached the unlock bar (or there are none). The facets of a letter bundle unlock
-  /// as one: when the prerequisites of all of them have reached it. They never require each other.
-  bool isUnlocked(String id) {
+  /// as one: when the prerequisites of all of them have reached it. They never require each other. A prerequisite in
+  /// [taughtWith] is taken as met: the skills that one lesson teaches together do not wait for each other (the path gate asks
+  /// this way for the skills of a lesson).
+  bool isUnlocked(String id, [Set<String> taughtWith = const <String>{}]) {
     final String? bundle = graph.node(id).bundle;
     final List<String> members = bundle == null ? <String>[id] : catalog.bundles[bundle]!;
     for (final String m in members) {
       for (final String p in graph.node(m).prerequisites.keys) {
-        if (members.contains(p)) continue;
+        if (members.contains(p) || taughtWith.contains(p)) continue;
         if (!isMet(p)) return false;
       }
     }

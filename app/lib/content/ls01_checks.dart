@@ -55,8 +55,9 @@ void _clipless(
   }
 }
 
-/// The most cards of a tap-all, whatever the board: a row of 6 fits all four (docs/design/languages-l5-ls01.md section 7.7).
-const int tapAllMaxCards = 6;
+/// The most cards of a tap-all, whatever the board: the phone SE holds 4 in the answer zone and 1 beside the target's speaker
+/// (docs/design/languages-l5-ls01.md section 7.7, corrected 2026-11-06).
+const int tapAllMaxCards = 5;
 
 /// The most places of a scored story line, by the band of the item: 3 in Band A (HEB-A-13), 4 in Bands B and C (a page of 16:9 is
 /// 105 by 59 points on the phone SE with four of them, and a fifth would be 80 by 45; section 7.10).
@@ -125,7 +126,10 @@ void _refuseInLands(
       }
       if (answer.containsKey('all')) say(file, 'answer.all', why);
       if (answer['correct'] is List<Object?>) say(file, 'answer.correct', 'a list of right options $why');
-      if (_maps(answer['options']).length > 4) say(file, 'answer.options', 'more than four options $why');
+      // Five choices belong to Band C of the lands (pack_validation.dart); anywhere else more than four are a language course's.
+      if (_maps(answer['options']).length > 4 && a['band'] != 'C') {
+        say(file, 'answer.options', 'more than four options $why');
+      }
     case 'sort_drag':
       for (final (String list, List<Map<String, Object?>> faces) in <(String, List<Map<String, Object?>>)>[
         ('bins', _maps(scene['bins'])),

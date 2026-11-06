@@ -9,6 +9,7 @@ import '../engine/engine.dart';
 import '../parent/progress.dart' show SkillInfo;
 import '../rewards/award.dart';
 import '../strings/he.dart';
+import '../world/land_placement.dart' show placedByWarmUp;
 import '../world/world_state.dart';
 import 'providers.dart';
 import 'reward_providers.dart';
@@ -55,8 +56,12 @@ final FutureProviderFamily<WorldView, String> worldProvider = FutureProvider.fam
   });
   final List<Reward> given = await ref.watch(rewardsProvider(childId).future);
   final DateTime now = DateTime.fromMillisecondsSinceEpoch(ref.read(clockProvider).nowMs(), isUtc: true);
+  final List<Attempt> attempts = await db.attemptsOf(childId);
+  // The skills the lands' warm-ups put behind the child are taken as probably known (0.85) before the answers are replayed, as the
+  // language courses do; the path gate reads them as unlocked.
   final Engine engine = Engine(catalog: engineCatalog(content))
-    ..replay((await db.attemptsOf(childId)).map(eventOf).toList()..sort((a, b) => a.at.compareTo(b.at)));
+    ..assume(placedByWarmUp(content, attempts).skills)
+    ..replay(attempts.map(eventOf).toList()..sort((a, b) => a.at.compareTo(b.at)));
   return WorldView(
     engine: engine,
     now: now,

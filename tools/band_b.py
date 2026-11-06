@@ -97,8 +97,12 @@ def write_all():
 
 
 class Unit:
+    BAND = 'B'
+    # The specs on disk that hold the lines of the last run of this band's generator: never read back (an old text would come back).
+    OWN_SPECS = 'band-b-'
+
     def __init__(self, name, domain, note, first_seq, assets=(), globs=(), prefix='b'):
-        self.d = {'unit': name, 'domain': domain, 'band': 'B', 'note': note, 'firstSequence': first_seq,
+        self.d = {'unit': name, 'domain': domain, 'band': self.BAND, 'note': note, 'firstSequence': first_seq,
                   'assetGlobs': list(globs), 'assets': list(assets), 'objects': OBJECTS, 'names': NAMES,
                   'tagFeedback': {}, 'misconceptions': [], 'skills': [], 'activities': [], 'lessons': []}
         self.name = name
@@ -136,12 +140,12 @@ class Unit:
         MADE.append(self)
 
     def write(self):
-        # the lines of every Band B unit of this run, then those of the hand-written Band A specs; never the Band B specs
-        # on disk, which hold the lines of the last run (an old text would come back)
+        # the lines of every unit of this run, then those of the specs of the other bands (the hand-written Band A, and Band B for Band C);
+        # never this band's own specs on disk, which hold the lines of the last run (an old text would come back)
         for t, line in SHARED_FB.items():
             self.d['tagFeedback'].setdefault(t, line)
         for other in sorted(os.listdir(UNITS)):
-            if other.endswith('.json') and not other.startswith('band-b-'):
+            if other.endswith('.json') and not other.startswith(self.OWN_SPECS):
                 for t, line in load(other[:-5]).get('tagFeedback', {}).items():
                     self.d['tagFeedback'].setdefault(t, line)
         path = os.path.join(UNITS, self.name + '.json')

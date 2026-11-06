@@ -54,6 +54,8 @@ abstract final class SchemaIds {
 
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
+  // 1.4: the language fields of LS01 (L5-1: stem, cloze, tap-all, text faces) and, for M10 step 0.4, stage pictures, the row signs `<` `>`
+  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer. One version carries both.
   'tap_answer': '1.4',
   'story': '1.0',
   'listen_do': '1.0',
@@ -69,6 +71,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'shape_builder': '1.0',
   'number_line': '1.0',
   'balance': '1.0',
+  // 1.1: the language fields of L5-1 (text cells, the model picture) and, for M10, the signs `<` `>` `(` `)` and numbers to 10,000 in a cell.
   'spot_error': '1.1',
   'match_pairs': '1.1',
   'shop_pay': '1.0',
@@ -620,6 +623,111 @@ const SString _cellFace = SString(
 /// An option's own sound (a `vo:` reference), played by a speaker on its tile or by the tile itself (LS01 b and c).
 const SField _optionClip = SField(_vo, required: false);
 
+/// The pictures a `tap_answer` 1.4 can draw on its stage for a number skill (M10, X1). The scene says which and how many; the session
+/// draws it. Each kind has its own fields, and the validator makes the scene say all of its kind's and none of another's.
+const List<String> stagePictureKinds = <String>[
+  'base_ten',
+  'array',
+  'hundred_chart',
+  'clock',
+  'ruler',
+  'column',
+  'fraction',
+];
+
+/// A whole number from 0 to 10,000 written with no leading zero (a column number; the row cells say the same after `n:`).
+const String _columnNumber = r'0|[1-9][0-9]{0,3}|10000';
+
+const SObject _stagePicture = SObject(<String, SField>{
+  'kind': SField(SEnum(stagePictureKinds)),
+  // base_ten: hundreds flats, tens rods and ones cubes; thousands are drawn as a stack.
+  'thousands': SField(SInt(min: 0, max: 9), required: false),
+  'hundreds': SField(SInt(min: 0, max: 9), required: false),
+  'tens': SField(SInt(min: 0, max: 9), required: false),
+  'ones': SField(SInt(min: 0, max: 9), required: false),
+  // array: rows by columns of objects.
+  'rows': SField(SInt(min: 1, max: 12), required: false),
+  'columns': SField(SInt(min: 1, max: 12), required: false),
+  // hundred_chart: the numbers of the cells that are lit, and those left blank to be found.
+  'lit': SField(SArray(SInt(min: 1, max: 100), maxItems: 100), required: false),
+  'blank': SField(SArray(SInt(min: 1, max: 100), maxItems: 100), required: false),
+  // clock: any time, analog, with the digital reading beside it when asked.
+  'hour': SField(SInt(min: 1, max: 12), required: false),
+  'minute': SField(SInt(min: 0, max: 59), required: false),
+  'digital': SField(SBool(), required: false),
+  // ruler: a strip of `length` cm laid on the ruler at `from` cm.
+  'length': SField(SInt(min: 1, max: 30), required: false),
+  'from': SField(SInt(min: 0, max: 10), required: false),
+  // column: two numbers in their places with an operation, and the carry and borrow marks.
+  'op': SField(SEnum(<String>['+', '-']), required: false),
+  // A number to 10,000 with no leading zero (SEC-M10-4).
+  'top': SField(SString(minLength: 1, maxLength: 5, pattern: _columnNumber), required: false),
+  'bottom': SField(SString(minLength: 1, maxLength: 5, pattern: _columnNumber), required: false),
+  'marks': SField(
+    SArray(
+      SObject(<String, SField>{
+        // The place the mark stands over, counted from the ones (0) up to the ten-thousands (4).
+        'place': SField(SInt(min: 0, max: 4)),
+        'kind': SField(SEnum(<String>['carry', 'borrow'])),
+      }),
+      maxItems: 5,
+    ),
+    required: false,
+  ),
+  // fraction (batch C9): a shape cut into `parts` equal parts with `shaded` of them shaded.
+  'parts': SField(SInt(min: 2, max: 12), required: false),
+  'shaded': SField(SInt(min: 0, max: 12), required: false),
+});
+
+/// The rules that tell what kind of mistake a wrong number is (M10, X3): the smaller digit taken from the larger, the ten forgotten, the
+/// other operation done, a ten too many or too few, and a digit read at its face value. Each names the tag it is evidence for.
+const List<String> numberRules = <String>[
+  'smaller_from_larger',
+  'forgot_the_ten',
+  'added_instead',
+  'off_by_ten',
+  'face_value',
+];
+
+/// The number answer of a `tap_answer` 1.4 (M10, X3): the child types the number on a calm keypad, read left to right. Every wrong
+/// number the author expects names the tag it shows; any other wrong number is classified by the item's rules, or is just wrong.
+const Map<String, SField> _numberAnswerFields = <String, SField>{
+  'value': SField(SInt(min: 0, max: 10000), required: false),
+  'expected': SField(
+    SArray(
+      SObject(<String, SField>{'value': SField(SInt(min: 0, max: 10000)), 'misconception': SField(_tag)}),
+      maxItems: 8,
+    ),
+    required: false,
+  ),
+  'rules': SField(
+    SArray(
+      SObject(<String, SField>{'when': SField(SEnum(numberRules)), 'misconception': SField(_tag)}),
+      maxItems: 5,
+    ),
+    required: false,
+  ),
+};
+
+/// The `answer` of a `tap_answer`: `choice` (two to five options and the right one, or the list of right ones of a tap-all) or
+/// `number` (the number itself). The validator checks that the rest fits the type.
+SObject _tapAnswer(
+  Map<String, SField> optionFields, {
+  Map<String, SField> answerFields = const <String, SField>{},
+  SField correct = const SField(_optionId, required: false),
+}) => SObject(<String, SField>{
+  'type': const SField(SEnum(<String>['choice', 'number'])),
+  'options': SField(
+    SArray(SObject(optionFields), minItems: 2, maxItems: 5, uniqueKey: 'id'),
+    required: false,
+  ),
+  'correct': correct,
+  'shuffle': const SField(SBool(), required: false),
+  'unsureAllowed': const SField(SBool(), required: false),
+  ..._numberAnswerFields,
+  ...answerFields,
+});
+
 SObject _answerOptions(
   Map<String, SField> optionFields, {
   Map<String, SField> answerFields = const <String, SField>{},
@@ -815,7 +923,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           // Two groups side by side, for a comparison (1.1).
           'group2': SField(_spriteSet, required: false),
           // A numeral shown large on the stage, for "find the set that has this many" (1.1).
-          'numeral': SField(SInt(min: 0, max: 100), required: false),
+          'numeral': SField(SInt(min: 0, max: 10000), required: false),
+          // A picture of a number or a measure, drawn on the stage (1.4): blocks, an array, a hundred chart, a clock, a ruler, a column sum.
+          'picture': SField(_stagePicture, required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
           // A written word, unit or letter on the stage that the child reads (1.4, LS01 d): the clip is what "read it to me" plays.
@@ -840,30 +950,31 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             ),
             required: false,
           ),
-          // A row of pictures with an optional gap ("?") to fill, for patterns and order (1.1). A cell may also be a number (`n:7`)
-          // or a sign (`op:+`), for a number sentence.
+          // A row of pictures with an optional gap ("?") to fill, for patterns and order (1.1). A cell may also be a number (`n:7`, to
+          // 10,000) or a sign (`op:+`; `op:<`, `op:>`, `op:(` and `op:)` from 1.4), for a number sentence.
           'row': SField(
             SArray(
               SString(
                 minLength: 1,
                 maxLength: 46,
-                pattern: r'asset:[a-z0-9_]{1,40}|\?|n:[0-9]{1,3}|op:[+=x:-]',
+                pattern: r'asset:[a-z0-9_]{1,40}|\?|n:(?:0|[1-9][0-9]{0,3}|10000)|op:[+=x:<>()-]',
               ),
               minItems: 2,
-              maxItems: 8,
+              maxItems: 11,
             ),
             required: false,
           ),
         }),
       ),
       'answer': SField(
-        _answerOptions(
+        _tapAnswer(
           <String, SField>{
             'id': const SField(_optionId),
-            // An option is a picture, a numeral, or a set (1.1): exactly one of the three. In a language course it may also be
-            // a text (1.3), or only a sound (a `clip` and nothing else, a sound button); the validator allows both there only.
+            // An option is a picture, a numeral (to 10,000 from 1.4), or a set (1.1): exactly one of the three. In a language course
+            // it may also be a text (1.3), or only a sound (a `clip` and nothing else, a sound button); the validator allows both
+            // there only.
             'sprite': const SField(_asset, required: false),
-            'numeral': const SField(SInt(min: 0, max: 100), required: false),
+            'numeral': const SField(SInt(min: 0, max: 10000), required: false),
             'set': const SField(_spriteSet, required: false),
             'text': const SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
             'clip': _optionClip,
@@ -884,8 +995,10 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             // itself once as many cards are picked as there are right ones.
             'all': const SField(SBool(), required: false),
           },
-          maxOptions: 6,
-          correct: const SField(SAnyOf(<Schema>[_optionId, SArray(_optionId, minItems: 1, maxItems: 5)])),
+          correct: const SField(
+            SAnyOf(<Schema>[_optionId, SArray(_optionId, minItems: 1, maxItems: 5)]),
+            required: false,
+          ),
         ),
       ),
     }),
@@ -1099,14 +1212,14 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
       'scene': const SField(
         SObject(<String, SField>{
           'background': SField(_asset, required: false),
-          // Each cell is a picture (`asset:`), a number (`n:7`), an arrow (`dir:up`), a sign (`op:+`) or, in a language course (1.1), a
-          // text (`txt:` and a letter, a unit or a word).
+          // Each cell is a picture (`asset:`), a number (`n:7`, to 10,000 from 1.1), an arrow (`dir:up`) or a sign (`op:+`; `op:<`,
+          // `op:>`, `op:(` and `op:)` from 1.1) or, in a language course (1.1), a text (`txt:` and a letter, a unit or a word).
           'cells': SField(
             SArray(
               SString(
                 minLength: 3,
                 maxLength: 46,
-                pattern: r'asset:[a-z0-9_]{1,40}|n:[0-9]{1,3}|dir:(up|down|left|right)|op:[+=x:-]|txt:[^ -]{1,40}',
+                pattern: r'asset:[a-z0-9_]{1,40}|n:(?:0|[1-9][0-9]{0,3}|10000)|dir:(up|down|left|right)|op:[+=x:<>()-]|txt:[^ -]{1,40}',
               ),
               minItems: 3,
               maxItems: 9,

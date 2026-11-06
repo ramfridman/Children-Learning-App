@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../child/activity_shell.dart';
 import '../../content/models.dart';
+import '../../content/row_width.dart';
 import '../../design/course_text.dart';
 import '../sprite_group.dart';
 
@@ -99,16 +100,34 @@ class TapGeometry {
   /// The top of the drawn cells of the row (a cell is as tall as the row; a numeral in it may reach above [rowCells]' square).
   double get rowTop => 13 + rowLiftOf(a, h);
 
-  /// The squares of the cells of the stage's row, left to right.
-  List<Rect> rowCells() {
+  /// The room kept free at each end of a row that has numbers or signs in it, so that it never touches the stage's rounded edge.
+  static const double rowEdge = 16;
+
+  /// How the row of [a] is laid out on a stage of [stage]: the width of each cell, left to right, and the size of the numbers and
+  /// signs. A row with a number or a sign in it is laid out by what its cells hold (`rowCellEm`): every number and sign is one size,
+  /// the biggest at which the whole row fits between the two [rowEdge]s (never above the height of the row), and the row is centred.
+  /// A row of pictures only has cells of one width, filling the stage but for 10 points at each end.
+  static ({List<double> widths, double textSize}) rowLayoutOf(TapAnswerActivity a, Size stage) {
     final int n = a.row.length;
+    final bool text = a.row.any((String r) => r.startsWith('n:') || r.startsWith('op:'));
+    if (!text) return (widths: List<double>.filled(n, (stage.width - 20) / n), textSize: 0);
+    final double height = stage.height - 20 - rowLiftOf(a, stage.height) - 6;
+    final double size = math.min(height, (stage.width - 2 * rowEdge) / rowEm(a.row));
+    return (widths: <double>[for (final String r in a.row) size * rowCellEm(r)], textSize: size);
+  }
+
+  /// The squares of the cells of the stage's row, left to right (the same places the stage draws the row's cells in).
+  List<Rect> rowCells() {
     final double lift = rowLiftOf(a, h);
-    final double cellW = (w - 20) / n;
-    final double side = math.min(cellW - 6, h - 26 - lift);
-    return <Rect>[
-      for (int i = 0; i < n; i++)
-        Rect.fromCenter(center: Offset(10 + (i + 0.5) * cellW, (h + lift) / 2), width: side, height: side),
-    ];
+    final List<double> widths = rowLayoutOf(a, size).widths;
+    double left = (w - widths.fold<double>(0, (double sum, double x) => sum + x)) / 2;
+    final List<Rect> cells = <Rect>[];
+    for (final double cellW in widths) {
+      final double side = math.min(cellW - 6, h - 26 - lift);
+      cells.add(Rect.fromCenter(center: Offset(left + cellW / 2, (h + lift) / 2), width: side, height: side));
+      left += cellW;
+    }
+    return cells;
   }
 
   /// The cells of the columns of the stage's chart, each column from the bottom up, the same as the stage draws them (columns

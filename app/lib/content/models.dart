@@ -351,12 +351,42 @@ abstract interface class ChoiceActivity {
 /// The modes of LS01 that `tap_answer` 1.4 adds to the plain tap of L1 (docs/design/languages-l5-ls01.md sections 7.7 to 7.9).
 enum Ls01TapMode { stem, cloze, tapAll }
 
+/// The answer of a number-entry item (`tap_answer` 1.4, M10 X3): the number, the wrong numbers the author expects with the tag each
+/// shows, and the rules that classify any other wrong number (`smaller_from_larger`, `forgot_the_ten`, ...) with their tags.
+class NumberAnswer {
+  const NumberAnswer({required this.value, required this.expected, required this.rules});
+
+  factory NumberAnswer.fromJson(Map<String, Object?> answer) => NumberAnswer(
+    value: answer['value']! as int,
+    expected: <int, String>{
+      for (final Map<String, Object?> e in _maps(answer['expected']))
+        e['value']! as int: e['misconception']! as String,
+    },
+    rules: <String, String>{
+      for (final Map<String, Object?> r in _maps(answer['rules']))
+        r['when']! as String: r['misconception']! as String,
+    },
+  );
+
+  final int value;
+
+  /// A wrong number the author expects, to the tag it shows.
+  final Map<int, String> expected;
+
+  /// A rule (`when`) to the tag it is evidence for.
+  final Map<String, String> rules;
+}
+
 class TapAnswerActivity extends Activity implements ChoiceActivity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctIds = _correctIds(_map(json['answer'])['correct']),
-      correctId = _correctIds(_map(json['answer'])['correct']).first,
+      correctId = _correctIds(_map(json['answer'])['correct']).firstOrNull ?? '',
       all = _map(json['answer'])['all'] == true,
+      numberAnswer = _map(json['answer'])['type'] == 'number'
+          ? NumberAnswer.fromJson(_map(json['answer']))
+          : null,
+      picture = _map(json['scene'])['picture'] as Map<String, Object?>?,
       stem = _map(json['scene'])['stem'] == null
           ? null
           : (
@@ -391,16 +421,24 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   @override
   final List<ChoiceOption> options;
 
-  /// The right answer (the first of [correctIds] in a tap-all, whose right answer is a set).
+  /// The right answer (the first of [correctIds] in a tap-all, whose right answer is a set); empty for a number answer, which has no
+  /// options.
   @override
   final String correctId;
 
-  /// Every right option: one, or the set of a tap-all.
+  /// Every right option: one, or the set of a tap-all; none for a number answer.
   final List<String> correctIds;
 
   /// Tap-all (LS01, L5-1): several right cards in one row, each tapped; the item checks itself once as many cards are picked as there are right
   /// ones, and is right when they are exactly the right ones.
   final bool all;
+
+  /// The number the child types (1.4), or null for a choice. The session that draws the keypad comes with the first batch that uses it.
+  final NumberAnswer? numberAnswer;
+
+  /// A picture of a number or a measure for the stage (1.4): its `kind` and the fields of that kind (see `stagePictureKinds`), or
+  /// null. The sessions draw each kind as the batch that needs it lands.
+  final Map<String, Object?>? picture;
 
   /// A text stem (LS01 d): a written word, unit or letter on the stage, and the clip that "read it to me" plays; null when the item has none.
   final ({String text, String? clip})? stem;
@@ -417,9 +455,10 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
       ? Ls01TapMode.stem
       : null;
 
+  /// The right ids of an `answer.correct`: a string, a list of them (tap-all), or nothing (a number answer).
   static List<String> _correctIds(Object? correct) => correct is List<Object?>
       ? <String>[for (final Object? c in correct) c! as String]
-      : <String>[correct! as String];
+      : <String>[?(correct as String?)];
 
   /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
   /// texts as words, all alike, whatever their length.
@@ -454,6 +493,8 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   Set<String> get engineTags => <String>{
     for (final ChoiceOption o in options)
       if (o.misconception != null) o.misconception!,
+    ...?numberAnswer?.expected.values,
+    ...?numberAnswer?.rules.values,
   };
 }
 
@@ -1857,6 +1898,9 @@ class PackContent {
         tags[t.id] = t;
       } else if (d.key.startsWith('activity.')) {
         final Activity a = Activity.fromJson(doc, assets);
+        // SEC-M10-1: the build claims `tap_answer` 1.4, but no session draws a number answer or a stage picture yet (the first batch
+        // that does removes this line for what it draws). Until then such an item is hidden, as a pack of a newer version is.
+        if (a is TapAnswerActivity && (a.numberAnswer != null || a.picture != null)) continue;
         activities[a.id] = a;
       }
     }
@@ -1895,8 +1939,8 @@ class PackContent {
   /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
   final PlacementDoc? placement;
 
-  /// The activities of a lesson, in order.
+  /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[
-    for (final String id in lesson.itemIds) activities[id]!,
+    for (final String id in lesson.itemIds) ?activities[id],
   ];
 }

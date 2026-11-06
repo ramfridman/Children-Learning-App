@@ -26,6 +26,7 @@ sys.path.insert(0, TOOLS)
 _argv = sys.argv[:]
 import author  # noqa: E402
 import band_b  # noqa: E402  (it sets sys.argv for author.py, which is imported and never run)
+import band_c  # noqa: E402
 sys.argv = _argv
 
 
@@ -246,6 +247,156 @@ class StarterPackTest(unittest.TestCase):
             for o in a['answer'].get('options', []) if a['answer'].get('type') == 'choice' else []:
                 if o['id'] == a['answer']['correct']:
                     self.assertNotIn('misconception', o, a['id'])
+
+
+SCHEMAS = os.path.join(ROOT, 'content', 'schemas')
+
+
+def schema_props(name, *path):
+    """The property names a JSON schema file allows at [path] (it is generated from the app's own schemas)."""
+    node = json.load(open(os.path.join(SCHEMAS, name), encoding='utf-8'))
+    for key in path:
+        node = node['properties'][key]
+    return node['properties']
+
+
+class BandCTest(unittest.TestCase):
+    """M10 step 0.4: the Band C generator skeleton, the number-entry kind and the template version rule (the app's validator makes an
+    item say the same version)."""
+
+    def number(self, **kw):
+        a = {'kind': 'number', 'id': 'c.numc01.1', 'skill': 'NUM-C-02', 'band': 'C', 'prompt': 'q', 'row': band_c.tokens(52, '-', 27, '=', '?'),
+             'value': 25, 'expected': {35: 'M-SUB-SMALLBIG', 29: 'M-REGROUP-FORGET'}, 'rules': {'smaller_from_larger': 'M-SUB-SMALLBIG'},
+             'h2': 'two', 'h3': 'three', 'correct_text': 'right'}
+        a.update(kw)
+        for tag in ('M-SUB-SMALLBIG', 'M-REGROUP-FORGET'):
+            author.TAG_FEEDBACK.setdefault(tag, ('vo:fb.' + tag[2:].lower().replace('-', '_'), 'line for ' + tag))
+        return author.k_number(a, {'names': {}, 'objects': {}})
+
+    def test_tokens_are_numbers_signs_and_the_gap(self):
+        self.assertEqual(band_c.tokens(52, '-', 27, '=', '?'), ['n:52', 'op:-', 'n:27', 'op:=', '?'])
+        self.assertEqual(band_c.tokens('(', 2, '+', 3, ')', 'x', 4), ['op:(', 'n:2', 'op:+', 'n:3', 'op:)', 'op:x', 'n:4'])
+        self.assertEqual(band_c.tokens(10000, ':', 4), ['n:10000', 'op::', 'n:4'])
+        with self.assertRaises(AssertionError):
+            band_c.tokens(10001)
+        with self.assertRaises(AssertionError):
+            band_c.tokens(-1)
+        with self.assertRaises(AssertionError):
+            band_c.tokens(1, '%', 2)
+        with self.assertRaises(AssertionError):
+            band_c.tokens(True)
+
+    def test_a_number_item_is_a_tap_answer_1_4_with_a_number_answer(self):
+        d = self.number()
+        self.assertEqual((d['template'], d['templateVersion']), ('tap_answer', '1.4'))
+        self.assertEqual(d['answer'], {
+            'type': 'number', 'value': 25,
+            'expected': [{'value': 29, 'misconception': 'M-REGROUP-FORGET'}, {'value': 35, 'misconception': 'M-SUB-SMALLBIG'}],
+            'rules': [{'when': 'smaller_from_larger', 'misconception': 'M-SUB-SMALLBIG'}]})
+        self.assertEqual(d['scene']['row'], ['n:52', 'op:-', 'n:27', 'op:=', '?'])
+        self.assertFalse(d['voiceAnswer'], 'a number above 20 is not a spoken answer yet (M10 section 11)')
+        self.assertEqual(d['representation'], 'symbolic')
+        self.assertEqual([f['when'] for f in d['feedback']['incorrect']],
+                         ['misconception:M-REGROUP-FORGET', 'misconception:M-SUB-SMALLBIG', 'default'])
+        self.assertEqual([h['level'] for h in d['hints']], [1, 2, 3])
+        self.assertNotEqual(d['hints'][1]['action'], d['hints'][0]['action'])
+
+    def test_a_stage_picture_makes_it_pictorial(self):
+        d = self.number(picture={'kind': 'array', 'rows': 3, 'columns': 4})
+        self.assertEqual(d['scene']['picture'], {'kind': 'array', 'rows': 3, 'columns': 4})
+        self.assertEqual(d['representation'], 'pictorial')
+
+    def test_what_a_number_item_must_say_and_may_not(self):
+        for missing in ('value', 'prompt', 'correct_text', 'h2', 'h3'):
+            with self.assertRaises(AssertionError, msg=missing):
+                self.number(**{missing: None})
+        with self.assertRaises(AssertionError):
+            self.number(value=10001)
+        with self.assertRaises(AssertionError):
+            self.number(expected={25: 'M-SUB-SMALLBIG'})  # the right answer is not a wrong one
+        with self.assertRaises(AssertionError):
+            self.number(rules={'guessed': 'M-SUB-SMALLBIG'})
+
+    def test_the_item_only_uses_what_the_schema_allows(self):
+        d = self.number(picture={'kind': 'clock', 'hour': 2, 'minute': 30})
+        self.assertLessEqual(set(d['answer']), set(schema_props('activity.tap_answer.schema.json', 'answer')))
+        self.assertLessEqual(set(d['scene']), set(schema_props('activity.tap_answer.schema.json', 'scene')))
+        self.assertIn(d['answer']['type'], schema_props('activity.tap_answer.schema.json', 'answer')['type']['enum'])
+        self.assertEqual(set(author.NUMBER_RULES),
+                         set(schema_props('activity.tap_answer.schema.json', 'answer')['rules']['items']['properties']['when']['enum']))
+        self.assertEqual(author.NUMBER_MAX, schema_props('activity.tap_answer.schema.json', 'answer')['value']['maximum'])
+
+    def test_the_template_version_follows_what_an_item_uses(self):
+        tv = author.template_version
+        plain = {'type': 'choice', 'options': [{'numeral': 7}, {'numeral': 4}]}
+        self.assertEqual(tv('tap_answer', {'row': ['n:3', 'op:+', 'n:4', 'op:=', '?']}, plain), '1.1')
+        self.assertEqual(tv('tap_answer', {'chart': [1, 2]}, plain), '1.2')
+        self.assertEqual(tv('tap_answer', {'row': ['n:3', 'op:<', 'n:4']}, plain), '1.4')
+        self.assertEqual(tv('tap_answer', {'row': ['n:1000']}, plain), '1.4')
+        self.assertEqual(tv('tap_answer', {'row': ['n:999', 'op::', 'n:3']}, plain), '1.1')
+        self.assertEqual(tv('tap_answer', {'row': ['n:1'] * 9}, plain), '1.4')
+        self.assertEqual(tv('tap_answer', {'numeral': 101}, plain), '1.4')
+        self.assertEqual(tv('tap_answer', {}, {'type': 'choice', 'options': [{'numeral': 4050}, {'numeral': 4500}]}), '1.4')
+        self.assertEqual(tv('tap_answer', {}, {'type': 'choice', 'options': [{}] * 5}), '1.4')
+        self.assertEqual(tv('tap_answer', {'picture': {'kind': 'array'}}, plain), '1.4')
+        self.assertEqual(tv('spot_error', {'cells': ['n:3', 'op:+', 'n:4']}, {'type': 'spot'}), '1.0')
+        self.assertEqual(tv('spot_error', {'cells': ['n:4050', 'op:<', 'n:4500']}, {'type': 'spot'}), '1.1')
+        self.assertEqual(tv('count_tap', {}, {'type': 'choice'}), '1.0')
+
+    def test_every_activity_of_the_starter_pack_that_needs_a_new_version_says_it(self):
+        def ver(v):
+            return tuple(int(x) for x in v.split('.'))
+        for a in load('activity.*.json'):
+            if a['template'] in ('tap_answer', 'spot_error'):
+                needs = ver(author.template_version(a['template'], a['scene'], a['answer']))
+                if needs >= (1, 4) or a['template'] == 'spot_error':
+                    self.assertGreaterEqual(ver(a['templateVersion']), needs, a['id'])
+
+    def test_a_unit_is_band_c_named_by_its_batch_with_its_lessons_after_band_b(self):
+        u = band_c.UnitC('C2', 'numbers', 'a note')
+        self.assertEqual((u.name, u.d['band'], u.d['domain']), ('band-c2-numbers', 'C', 'numbers'))
+        self.assertEqual(u.d['firstSequence'], 130)
+        self.assertGreater(band_c.first_sequence('C1'), 65, 'after the last lesson of Band A and B on any path')
+        self.assertEqual(u.act('NUM-C-01', 'number', value=1), 'c.numc01.1')
+        self.assertEqual(u.act('NUM-C-01', 'number', value=2), 'c.numc01.2')
+        self.assertEqual([band_c.first_sequence(b) for b in band_c.BATCHES], sorted(band_c.first_sequence(b) for b in band_c.BATCHES))
+        with self.assertRaises(AssertionError):
+            band_c.UnitC('C0', 'numbers', 'x')
+
+    def test_a_registered_table_is_written_as_a_spec_that_author_reads(self):
+        import tempfile
+        saved = (band_c.TABLES[:], band_b.UNITS, list(band_b.MADE))
+        tmp = tempfile.mkdtemp()
+        try:
+            band_b.UNITS = tmp
+            band_b.MADE.clear()
+            del band_c.TABLES[:]
+
+            @band_c.table('C1', 'numbers', note='n')
+            def numbers_c1(u):
+                u.skill('NUM-C-02', 'title', 'child', 'cone-tree', ['NUM-C-01'], ['symbolic'], tags=['M-SUB-SMALLBIG'])
+                band_c.number_item(u, 'NUM-C-02', 'q', [52, '-', 27, '=', '?'], 25, {35: 'M-SUB-SMALLBIG'},
+                                   {'smaller_from_larger': 'M-SUB-SMALLBIG'}, h2='two', h3='three', ok='right')
+                u.lesson('take-away-1', 'title', ['NUM-C-02'], ['c.numc02.1'], 'done')
+
+            self.assertEqual([u.name for u in band_c.make(['C2'])], [])
+            made = band_c.make(['C1'])
+            self.assertEqual([u.name for u in made], ['band-c1-numbers'])
+            band_c.write_all()
+            spec = json.load(open(os.path.join(tmp, 'band-c1-numbers.json'), encoding='utf-8'))
+            self.assertEqual((spec['band'], spec['firstSequence']), ('C', 100))
+            self.assertEqual(spec['activities'][0]['kind'], 'number')
+            self.assertEqual(spec['activities'][0]['row'], ['n:52', 'op:-', 'n:27', 'op:=', '?'])
+            # the spec is what tools/author.py turns into a pack file
+            ctx = {'names': spec['names'], 'objects': spec['objects']}
+            author.TAG_FEEDBACK.setdefault('M-SUB-SMALLBIG', ('vo:fb.sub_smallbig', 'line'))
+            doc = author.KINDS[spec['activities'][0]['kind']]({**spec['activities'][0], 'domain': 'numbers', 'band': 'C'}, ctx)
+            self.assertEqual(doc['templateVersion'], '1.4')
+            self.assertEqual(doc['band'], 'C')
+        finally:
+            band_c.TABLES[:] = saved[0]
+            band_b.UNITS = saved[1]
+            band_b.MADE[:] = saved[2]
 
 
 if __name__ == '__main__':

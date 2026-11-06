@@ -12,6 +12,7 @@ import '../child/land_screen.dart';
 import '../child/languages_doors.dart';
 import '../child/sticker_island.dart';
 import '../child/trophy_hall.dart';
+import '../play/lesson_controller.dart' show ItemFlow;
 import '../rewards/ceremony.dart';
 import '../rewards/outfits.dart' show Outfit;
 import '../content/models.dart' show Lesson, PackContent;
@@ -20,7 +21,7 @@ import '../rewards/sticker_design.dart';
 import '../world/next_lesson.dart';
 import '../world/adventure_adapter.dart';
 import '../world/adventure_land.dart';
-import '../world/placement.dart';
+import '../world/land_placement.dart';
 import '../world/todays_adventure.dart';
 import '../child/adventure_line.dart' show AdventureLine, adventureLine;
 import 'bottle_hold.dart';
@@ -36,6 +37,7 @@ import '../child/home_island_screen.dart';
 import '../child/home_screen.dart';
 import '../child/profile_picker.dart';
 import '../data/app_database.dart';
+import '../data/profile_age.dart';
 import '../design/layout.dart';
 import '../design/theme.dart';
 import '../design/token_types.dart';
@@ -397,15 +399,21 @@ class _HomeState extends ConsumerState<_Home> {
     if (widget.profile.ageBand >= 1 &&
         (await ref.read(warmUpProvider.future)) &&
         placementDue(content, domain, history)) {
-      final Lesson? warmUp = placementLesson(content, domain);
-      if (warmUp != null && !await _openLesson(mission: warmUp)) return;
+      final ({Lesson lesson, ItemFlow flow})? warmUp = placementVisit(
+        content,
+        domain,
+        history,
+        stage: widget.profile.stage,
+      );
+      if (warmUp != null && !await _openLesson(mission: warmUp.lesson, flow: warmUp.flow)) return;
     }
     if (!mounted) return;
     await _openLesson(lessonId: await _nextLesson(domain));
   }
 
   /// The lesson the child plays next in a land: the first one on its path that they have not finished, or that the
-  /// warm-up showed they already know.
+  /// warm-up showed they already know, and whose skills are unlocked (the path gate: a lesson that stands on skills the child
+  /// has not reached is skipped, and comes back).
   Future<String?> _nextLesson(String domain) async {
     final PackContent? content = ref.read(contentProvider).value;
     if (content == null) return null;
@@ -417,11 +425,17 @@ class _HomeState extends ConsumerState<_Home> {
       await db.attemptsOf(id),
       rewards.map((Reward r) => r.awardKey),
     );
-    return nextLessonId(content: content, domain: domain, finished: finished);
+    final WorldView world = await ref.read(worldProvider(id).future);
+    return nextLessonId(
+      content: content,
+      domain: domain,
+      finished: finished,
+      unlocked: world.engine.isUnlocked,
+    );
   }
 
   /// Opens a lesson (or the rest scene when time is up). True when the child played it to its end.
-  Future<bool> _openLesson({Lesson? mission, String? lessonId}) async {
+  Future<bool> _openLesson({Lesson? mission, String? lessonId, ItemFlow? flow}) async {
     final VisitOutcome outcome = await openVisit(
       context,
       ref,
@@ -429,6 +443,7 @@ class _HomeState extends ConsumerState<_Home> {
       ageBand: widget.profile.ageBand,
       mission: mission,
       lessonId: lessonId,
+      flow: flow,
     );
     if (!mounted || outcome == VisitOutcome.rest || outcome == VisitOutcome.refused) return false;
     final bool finished = outcome == VisitOutcome.played;

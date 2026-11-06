@@ -298,6 +298,11 @@ export interface ChildProfile {
   outfitId?: string | null;
   addressForm: "f" | "m" | "n";
   ageBand: 0 | 1 | 2;
+  /**
+   * The school stage a parent confirmed (B-29), or null when none was ever given. On a save, null means "not sent" and keeps
+   * the stored stage while its band is the saved band (otherwise it is dropped); there is no way to clear it. Never the school's name or year, and no birth month.
+   */
+  schoolStage?: "gan3" | "gan4" | "gan5" | "grade1" | "grade2" | "grade3" | null;
 }
 
 /** One thing a child did, as a device sends it: ids, numbers and fixed words only. */
