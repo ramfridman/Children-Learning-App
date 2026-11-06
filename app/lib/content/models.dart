@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:ui' show Offset;
+import 'dart:ui' show Offset, Rect;
 
 import '../engine/course.dart';
 import 'pack_verify.dart';
@@ -11,6 +11,9 @@ import 'schemas.dart' show coinValues;
 // a wrong shape; they are never built from anything that has not been verified.
 
 Map<String, Object?> _map(Object? o) => o! as Map<String, Object?>;
+
+/// A part of a document that may be absent: an empty map when it is.
+Map<String, Object?> _maybe(Object? o) => o == null ? const <String, Object?>{} : _map(o);
 List<Map<String, Object?>> _maps(Object? o) => <Map<String, Object?>>[
   for (final Object? e in (o as List<Object?>? ?? const <Object?>[])) _map(e),
 ];
@@ -141,6 +144,11 @@ sealed class Activity {
   factory Activity.fromJson(Map<String, Object?> json, PackAssets assets) => switch (json['template']) {
     'count_tap' => CountTapActivity._(json, assets),
     'tap_answer' => TapAnswerActivity._(json, assets),
+    'story' => StoryActivity._(json, assets),
+    'listen_do' => ListenDoActivity._(json, assets),
+    'sing_along' => SingAlongActivity._(json, assets),
+    'puppet_talk' => PuppetTalkActivity._(json, assets),
+    'sound_boxes' => SoundBoxesActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
@@ -163,6 +171,10 @@ sealed class Activity {
   /// May the AI tutor speak in this activity (the author's choice)? Never in a language course: its lines are authored,
   /// and model text in a target language cannot be checked (docs/languages/frame.md section 1.6).
   bool get llmAllowed => course == Course.core && _map(json['tutor'])['llmAllowed'] == true;
+
+  /// A step that is never scored (a story only heard, a chant, the embodied "done", a personal turn): it writes no attempt of any
+  /// kind, not even an "unsure", and the child is offered no help in it (docs/languages/frame.md section 3.3.8 and 5.2).
+  bool get unscored => false;
 
   /// The misconception tags this activity's wrong answers can carry (what the tutor may be asked about).
   List<String> get misconceptionTags => <String>{
@@ -249,6 +261,7 @@ class ChoiceOption {
     this.text,
     this.clip,
     this.reveal,
+    this.ats = const <Rect>[],
   });
 
   final String id;
@@ -274,6 +287,13 @@ class ChoiceOption {
   final String? clip;
   final String? reveal;
 
+  /// Where the option is in the picture of the scene, as shares of its width and height (a part of a body, a thing in a room, a
+  /// place to put something): LS11. Several for a part that has more than one place (both ears). Empty for an option that is a tile.
+  final List<Rect> ats;
+
+  /// The first place of the option, or null when it has none.
+  Rect? get at => ats.isEmpty ? null : ats.first;
+
   /// A sound button: nothing to see on it, only a sound to hear (LS01 c).
   bool get soundOnly => clip != null && text == null && sprite == null && numeral == null && set == null;
 }
@@ -294,10 +314,38 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
       text: o['text'] as String?,
       clip: o['clip'] as String?,
       reveal: o['reveal'] as String?,
+      ats: _rects(o['at']),
     ),
 ];
 
-class TapAnswerActivity extends Activity {
+/// The places of an option in the picture: one rectangle or a list of them; none when it has none.
+List<Rect> _rects(Object? o) {
+  if (o == null) return const <Rect>[];
+  return <Rect>[
+    for (final Object? r in o is List<Object?> ? o : <Object?>[o]) _rect(r)!,
+  ];
+}
+
+/// A rectangle written `{x, y, w, h}` as shares of the picture it is in, or null when there is none.
+Rect? _rect(Object? o) {
+  if (o == null) return null;
+  final Map<String, Object?> m = _map(o);
+  return Rect.fromLTWH(
+    (m['x']! as num).toDouble(),
+    (m['y']! as num).toDouble(),
+    (m['w']! as num).toDouble(),
+    (m['h']! as num).toDouble(),
+  );
+}
+
+/// An activity whose answer is a choice among options, one of them right (`tap_answer`, `count_tap`, `flash` and every template of
+/// a language course whose answer is a choice): the lesson controller scores it by option id.
+abstract interface class ChoiceActivity {
+  List<ChoiceOption> get options;
+  String get correctId;
+}
+
+class TapAnswerActivity extends Activity implements ChoiceActivity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctId = _map(json['answer'])['correct']! as String,
@@ -320,7 +368,9 @@ class TapAnswerActivity extends Activity {
   /// The columns of a chart to read (1.2): each a picture and how many of it; empty when the scene has none.
   final List<({String sprite, int count})> chart;
 
+  @override
   final List<ChoiceOption> options;
+  @override
   final String correctId;
 
   /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
@@ -357,6 +407,269 @@ class TapAnswerActivity extends Activity {
     for (final ChoiceOption o in options)
       if (o.misconception != null) o.misconception!,
   };
+}
+
+/// One page of a story: its picture, the clips of its narration, what a screen reader says, and the things in it that say their word
+/// when touched.
+class StoryPage {
+  const StoryPage({required this.picture, required this.clips, required this.alt, required this.words});
+
+  final String picture;
+  final List<String> clips;
+  final String alt;
+  final List<({Rect at, String clip})> words;
+}
+
+/// The story template (LS08, docs/languages/frame.md section 2.3): a picture book. In `listen` mode it is heard to its end and is
+/// never scored. In `dialogic` mode it stops after the page [pauseAfter] and asks [question], a choice that is scored (the item's
+/// `feedback.correct` is the recast), and then goes on to the last page.
+class StoryActivity extends Activity implements ChoiceActivity {
+  StoryActivity._(super.json, super.assets)
+    : pages = <StoryPage>[
+        for (final Map<String, Object?> p in _maps(_map(json['scene'])['pages']))
+          StoryPage(
+            picture: p['picture']! as String,
+            clips: <String>[for (final Object? c in p['clips']! as List<Object?>) c! as String],
+            alt: p['alt']! as String,
+            words: <({Rect at, String clip})>[
+              for (final Map<String, Object?> w in _maps(p['words']))
+                (at: _rect(w['at'])!, clip: w['clip']! as String),
+            ],
+          ),
+      ],
+      pauseAfter = _map(json['answer'])['pauseAfter'] as int?,
+      question = _map(json['answer'])['question'] == null
+          ? null
+          : Spoken.fromJson(_map(json['answer'])['question']),
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  final List<StoryPage> pages;
+
+  /// The page (from 0) after which a dialogic story stops to ask; null for a story that is only heard.
+  final int? pauseAfter;
+
+  /// What a dialogic story asks at its pause.
+  final Spoken? question;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get dialogic => question != null;
+
+  @override
+  bool get unscored => !dialogic;
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The listen-and-do template (LS11, docs/languages/frame.md section 2.3): the child carries out a command in a scene. In `hotspots`
+/// mode the options are the glowing parts of the picture ([ChoiceOption.at]); in `buttons` they are action pictures and the friend
+/// does the one chosen; in `drag` they are things that go to [targetAt]; in `place` they are places for [thingAt]'s one thing; in
+/// `embodied` mode there is nothing to choose: the child does it and touches "done", and nothing is scored.
+class ListenDoActivity extends Activity implements ChoiceActivity {
+  ListenDoActivity._(super.json, super.assets)
+    : mode = _map(json['answer'])['mode']! as String,
+      picture = _map(json['scene'])['picture']! as String,
+      targetAt = _rect(_maybe(_map(json['scene'])['target'])['at']),
+      targetSprite = _maybe(_map(json['scene'])['target'])['sprite'] as String?,
+      thingAt = _rect(_maybe(_map(json['scene'])['thing'])['at']),
+      thingSprite = _maybe(_map(json['scene'])['thing'])['sprite'] as String?,
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  /// `hotspots`, `buttons`, `drag`, `place` or `embodied`.
+  final String mode;
+
+  /// The scene's picture (an `asset:` reference).
+  final String picture;
+
+  /// Where a dragged thing is dropped, and its picture if it has one (`drag`).
+  final Rect? targetAt;
+  final String? targetSprite;
+
+  /// The one thing that is moved, and where it starts (`place`).
+  final Rect? thingAt;
+  final String? thingSprite;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get embodied => mode == 'embodied';
+
+  @override
+  bool get unscored => embodied;
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The sing-along template (LS12, docs/languages/frame.md section 2.3): a chant, or a rhyme with a gap. In `chant` mode the [lines] are
+/// said one after another and the [pictures] of a line light while it is said; it is practice and writes nothing. In `rhyme` mode the
+/// [verse] is heard, stops before its last word, and the child chooses the picture that ends it (scored); then the verse is heard whole.
+class SingAlongActivity extends Activity implements ChoiceActivity {
+  SingAlongActivity._(super.json, super.assets)
+    : mode = _map(json['answer'])['mode']! as String,
+      pictures = <({String picture, String label, String? clip})>[
+        for (final Map<String, Object?> p in _maps(_map(json['scene'])['pictures']))
+          (picture: p['picture']! as String, label: p['label']! as String, clip: p['clip'] as String?),
+      ],
+      lines = <({List<String> clips, List<int> lights})>[
+        for (final Map<String, Object?> l in _maps(_map(json['scene'])['lines']))
+          (
+            clips: <String>[for (final Object? c in l['clips']! as List<Object?>) c! as String],
+            lights: <int>[for (final Object? i in l['lights']! as List<Object?>) i! as int],
+          ),
+      ],
+      verse = _verse(_maybe(_map(json['scene'])['verse'])),
+      question = _map(json['answer'])['question'] == null
+          ? null
+          : Spoken.fromJson(_map(json['answer'])['question']),
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  static ({List<String> whole, List<String> open, List<String> full, List<String> cue}) _verse(
+    Map<String, Object?> v,
+  ) {
+    List<String> clips(String k) => <String>[
+      for (final Object? c in (v[k] as List<Object?>?) ?? const <Object?>[]) c! as String,
+    ];
+    return (whole: clips('whole'), open: clips('open'), full: clips('full'), cue: clips('cue'));
+  }
+
+  /// `chant` or `rhyme`.
+  final String mode;
+  final List<({String picture, String label, String? clip})> pictures;
+  final List<({List<String> clips, List<int> lights})> lines;
+  final ({List<String> whole, List<String> open, List<String> full, List<String> cue}) verse;
+  final Spoken? question;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get rhyme => mode == 'rhyme';
+
+  @override
+  bool get unscored => !rhyme;
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The puppet-talk template (LS10, docs/languages/frame.md section 2.3 and 5.2): a puppet speaks one turn and the child answers. In
+/// `bubble` mode the options are answer bubbles, one fits the scene (scored). In `personal` mode there is nothing right: the [topic]
+/// (the name, the age, the likes or the family) is answered by touching a card, or [pass] is touched; nothing is written.
+class PuppetTalkActivity extends Activity implements ChoiceActivity {
+  PuppetTalkActivity._(super.json, super.assets)
+    : mode = _map(json['answer'])['mode']! as String,
+      picture = _map(json['scene'])['picture']! as String,
+      keyAt = _rect(_maybe(_map(json['scene'])['key'])['at']),
+      topic = _map(json['answer'])['topic'] as String?,
+      pass = _map(json['answer'])['pass'] == null ? null : Spoken.fromJson(_map(json['answer'])['pass']),
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  /// `bubble` or `personal`.
+  final String mode;
+
+  /// The scene's picture (an `asset:` reference), and the place in it that glows at the second hint.
+  final String picture;
+  final Rect? keyAt;
+
+  /// The thing a personal turn asks (`name`, `age`, `likes` or `family`), and what the puppet says to a pass.
+  final String? topic;
+  final Spoken? pass;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get personal => mode == 'personal';
+
+  @override
+  bool get unscored => personal;
+
+  @override
+  int get optionCount => personal ? 0 : options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    if (!personal)
+      for (final ChoiceOption o in options)
+        if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// The sound-boxes template in drum mode (LS03, docs/languages/frame.md section 2.3): a word is heard with its picture and the child taps
+/// a drum once for each part. A free response: a count of [beats] is right; one more and one fewer map to a tag ([moreTag],
+/// [fewerTag]); any other count is a retry with no tag.
+class SoundBoxesActivity extends Activity {
+  SoundBoxesActivity._(super.json, super.assets)
+    : picture = _map(json['scene'])['picture']! as String,
+      word = <String>[for (final Object? c in _map(json['scene'])['word']! as List<Object?>) c! as String],
+      slow = <String>[
+        for (final Object? c in (_map(json['scene'])['slow'] as List<Object?>?) ?? const <Object?>[])
+          c! as String,
+      ],
+      drumClip = _map(json['scene'])['drum'] as String?,
+      beats = _map(json['answer'])['beats']! as int,
+      moreTag = _classified(json, 'one_more'),
+      fewerTag = _classified(json, 'one_fewer'),
+      super._();
+
+  static String? _classified(Map<String, Object?> json, String when) {
+    for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers'])) {
+      if (c['when'] == when) return c['misconception']! as String;
+    }
+    return null;
+  }
+
+  /// The word's picture (an `asset:` reference), the clips of the word, the same slowly, and the sound of a tap on the drum.
+  final String picture;
+  final List<String> word;
+  final List<String> slow;
+  final String? drumClip;
+
+  /// How many parts the word has.
+  final int beats;
+  final String? moreTag;
+  final String? fewerTag;
+
+  /// The tag for a count of [taps], or empty: one more and one fewer are named, any other count is not.
+  String tagFor(int taps) =>
+      taps == beats + 1 ? (moreTag ?? '') : (taps == beats - 1 ? (fewerTag ?? '') : '');
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{?moreTag, ?fewerTag};
 }
 
 /// A bin of the sort-and-drag template: a picture (or a set of them) that shows the rule, and its name.
@@ -840,7 +1153,7 @@ class RobotPathActivity extends Activity {
 }
 
 /// The flash template (T14): a group is shown for [flashMs] and covered, and the child picks how many.
-class FlashActivity extends Activity {
+class FlashActivity extends Activity implements ChoiceActivity {
   FlashActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctId = _map(json['answer'])['correct']! as String,
@@ -848,7 +1161,9 @@ class FlashActivity extends Activity {
       flashMs = _map(json['scene'])['flashMs']! as int,
       super._();
 
+  @override
   final List<ChoiceOption> options;
+  @override
   final String correctId;
   final SpriteSet group;
   final int flashMs;
@@ -907,7 +1222,7 @@ List<String> _strings(Object? o) => <String>[
   for (final Object? e in (o as List<Object?>? ?? const <Object?>[])) e! as String,
 ];
 
-class CountTapActivity extends Activity {
+class CountTapActivity extends Activity implements ChoiceActivity {
   CountTapActivity._(super.json, super.assets)
     : options = _options(json['answer']),
       correctId = _map(json['answer'])['correct']! as String,
@@ -930,7 +1245,9 @@ class CountTapActivity extends Activity {
       },
       super._();
 
+  @override
   final List<ChoiceOption> options;
+  @override
   final String correctId;
   final int count;
 
@@ -1129,6 +1446,60 @@ class GateDoc {
   final Set<String> routeBypass;
 }
 
+/// One strand of a course's placement game: a ladder of levels of probe items, where a questionnaire answer starts it, and when it is
+/// offered at all.
+class PlacementStrandDoc {
+  PlacementStrandDoc._(Map<String, Object?> json)
+    : id = json['id']! as String,
+      offerAnswer = _maybe(json['offer'])['answer'] as String?,
+      offerEquals = _maybe(json['offer'])['equals'] as String?,
+      offerMinBand = (_maybe(json['offer'])['minBand'] as int?) ?? 0,
+      start = <({String answer, String equals, int level})>[
+        for (final Map<String, Object?> s in _maps(json['start']))
+          (answer: s['answer']! as String, equals: s['equals']! as String, level: s['level']! as int),
+      ],
+      levels = <({List<String> items, List<String> assumes})>[
+        for (final Map<String, Object?> l in _maps(json['levels']))
+          (
+            items: <String>[for (final Object? i in l['items']! as List<Object?>) i! as String],
+            assumes: <String>[
+              for (final Object? i in (l['assumes'] as List<Object?>?) ?? const <Object?>[]) i! as String,
+            ],
+          ),
+      ];
+
+  final String id;
+
+  /// The strand is offered only when the questionnaire answered [offerAnswer] with [offerEquals] (both null: always) and the child's
+  /// presentation band is at least [offerMinBand].
+  final String? offerAnswer;
+  final String? offerEquals;
+  final int offerMinBand;
+  final List<({String answer, String equals, int level})> start;
+  final List<({List<String> items, List<String> assumes})> levels;
+}
+
+/// The placement game of a language course (docs/languages/frame.md section 3.2, LS13): its strands, the one warm line after each probe,
+/// the line that ends a visit, and how many probes one visit may hold.
+class PlacementDoc {
+  PlacementDoc._(Map<String, Object?> json)
+    : id = json['id']! as String,
+      course = (json['course'] as String?) ?? Course.core,
+      thanks = Spoken.fromJson(json['thanks']),
+      celebration = Spoken.fromJson(json['celebration']),
+      perVisit = json['perVisit']! as int,
+      strands = <PlacementStrandDoc>[
+        for (final Map<String, Object?> s in _maps(json['strands'])) PlacementStrandDoc._(s),
+      ];
+
+  final String id;
+  final String course;
+  final Spoken thanks;
+  final Spoken celebration;
+  final int perVisit;
+  final List<PlacementStrandDoc> strands;
+}
+
 /// A misconception of the pack.
 class TagDoc {
   TagDoc._(Map<String, Object?> json)
@@ -1191,6 +1562,7 @@ class PackContent {
     required this.skills,
     required this.tags,
     required this.gates,
+    this.placement,
   });
 
   factory PackContent.fromPack(VerifiedPack pack) {
@@ -1200,6 +1572,7 @@ class PackContent {
     final Map<String, SkillDoc> skills = <String, SkillDoc>{};
     final Map<String, TagDoc> tags = <String, TagDoc>{};
     final Map<String, GateDoc> gates = <String, GateDoc>{};
+    PlacementDoc? placement;
     for (final MapEntry<String, Object?> d in pack.docs.entries) {
       final Map<String, Object?> doc = _map(d.value);
       if (d.key.startsWith('lesson.')) {
@@ -1211,6 +1584,8 @@ class PackContent {
       } else if (d.key.startsWith('gate.')) {
         final GateDoc g = GateDoc._(doc);
         gates[g.id] = g;
+      } else if (d.key.startsWith('placement.')) {
+        placement = PlacementDoc._(doc);
       } else if (d.key.startsWith('misconception.')) {
         final TagDoc t = TagDoc._(doc);
         tags[t.id] = t;
@@ -1229,6 +1604,7 @@ class PackContent {
       skills: skills,
       tags: tags,
       gates: gates,
+      placement: placement,
     );
   }
 
@@ -1245,6 +1621,9 @@ class PackContent {
 
   /// The gates of the course (none in the lands that exist today).
   final Map<String, GateDoc> gates;
+
+  /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
+  final PlacementDoc? placement;
 
   /// The activities of a lesson, in order.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[

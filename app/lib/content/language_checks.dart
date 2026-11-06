@@ -81,6 +81,7 @@ void checkLanguageContent({
       );
     }
     _distractors(file, a, tags, say);
+    _classifiers(file, a, tags, say);
     _face(file, a, say);
     _countInCourse(file, a, say);
     _decodable(file, a, texts, skills, taughtCache, say);
@@ -247,6 +248,8 @@ void _decodable(
 /// tagged distractors and a 2-choice item one (frame section 2.3).
 void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, Object?>> tags, Say say) {
   final Map<String, Object?> answer = _map(a['answer']);
+  // A step that is not scored has no right answer, so no distractor: a personal turn's cards are none of them wrong.
+  if (answer['type'] == 'none') return;
   for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
     if (o['id'] == answer['correct']) continue;
     final Object? tag = o['misconception'];
@@ -258,6 +261,20 @@ void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, O
         file,
         path,
         '$tag is an accent tag: a difference of accent is never marked, so it is never on a distractor',
+      );
+    }
+  }
+}
+
+/// The tag a classifier of a free response (the drum) maps a count to is never an accent tag: a difference of accent is never marked.
+void _classifiers(String file, Map<String, Object?> a, Map<String, Map<String, Object?>> tags, Say say) {
+  for (final (int i, Map<String, Object?> c) in _maps(_map(a['answer'])['classifiers']).indexed) {
+    final Object? tag = c['misconception'];
+    if (tag is String && tags[tag]?['kind'] == 'accent') {
+      say(
+        file,
+        'answer.classifiers[$i].misconception',
+        '$tag is an accent tag: a difference of accent is never marked, so it is never on a classifier',
       );
     }
   }
@@ -342,7 +359,12 @@ const Map<String, String> _opposite = <String, String>{
   'different': 'same',
 };
 
-int _choices(Map<String, Object?> a) => _maps(_map(a['answer'])['options']).length;
+/// How many choices the item has: only an answer that is a choice is scored, so a personal turn's cards or a story's pictures do not
+/// count (`type` is `none` for them).
+int _choices(Map<String, Object?> a) {
+  final Map<String, Object?> answer = _map(a['answer']);
+  return answer['type'] == 'none' ? 0 : _maps(answer['options']).length;
+}
 
 String _skillOf(Map<String, Object?> a) {
   final List<Map<String, Object?>> s = _maps(a['skills']);

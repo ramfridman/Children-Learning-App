@@ -95,6 +95,7 @@ void main() {
     BalanceActivity() => BalanceSession(c, a),
     SpotErrorActivity() => SpotErrorSession(c, a),
     TapAnswerActivity() => TapAnswerSession(c, a),
+    _ => throw StateError('${a.template} is a template of the language courses'),
   };
 
   /// The stage, the hand's layer over it and the tiles, as the lesson screen places them (phone board).

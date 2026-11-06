@@ -1,10 +1,10 @@
 // The Languages island on the map and the door screen (docs/design/languages-island.md sections 1 to 4): the 8-land map is used
 // only when a language is on (the 7-land map is untouched when all are off), a door for each language that is on in the fixed
-// order from the right, no locked door, one language on opens its course at once, and a door opens a course home that lists
-// nothing. The real app with the real pack.
+// order from the right, no locked door, one language on opens its course at once, and a door opens the course home. The real app with the real pack.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/child/home_screen.dart';
+import 'package:nitznutz/child/course_home.dart';
 import 'package:nitznutz/child/languages_doors.dart';
 import 'package:nitznutz/parent/language_settings.dart';
 
@@ -230,7 +230,7 @@ void main() {
     }
 
     testWidgets(
-      'a tap on a door opens it, then the course home, which lists nothing; back comes to the doors',
+      'a tap on a door opens it, then the course home with its host and path; back comes to the doors',
       (WidgetTester tester) async {
         await toDoors(tester, boards['phone']!, const <String>['eng', 'heb', 'rus']);
         await tester.tap(find.byKey(const Key('door-heb')));
@@ -241,7 +241,12 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(CourseHomeScreen), findsOneWidget);
         expect(tester.widget<CourseHomeScreen>(find.byType(CourseHomeScreen)).course, 'heb');
-        expect(find.byType(Text), findsNothing, reason: 'a course home lists nothing: a host and a way back');
+        expect(
+          find.byKey(const Key('course-host')),
+          findsOneWidget,
+          reason: 'the course home is its own course: the host and the path',
+        );
+        expect(find.byKey(const Key('course-path')), findsOneWidget);
         await tester.tap(find.byKey(const Key('course-back')));
         await tester.pumpAndSettle();
         expect(doorScreen, findsOneWidget, reason: 'the door screen is as it was');

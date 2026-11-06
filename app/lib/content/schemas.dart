@@ -26,6 +26,9 @@ abstract final class Patterns {
   // A letter bundle and a gate: the course, a dot and a short name (`eng.g1`, `eng.oral`).
   static const String bundle = r'[a-z]{3}\.[a-z0-9_]{1,19}';
   static const String gateId = r'[a-z]{3}\.[a-z0-9_]{1,19}';
+
+  // The placement document of a course: `eng.placement`.
+  static const String placementId = r'[a-z]{3}\.placement';
 }
 
 /// The four kinds of document in a pack, by the `schema` field of the file.
@@ -37,6 +40,7 @@ abstract final class SchemaIds {
   static const String activity = 'activity/v1';
   static const String lesson = 'lesson/v1';
   static const String gate = 'gate/v1';
+  static const String placement = 'placement/v1';
   static const String skill = 'skill/v1';
   static const String misconception = 'misconception/v1';
 }
@@ -44,6 +48,11 @@ abstract final class SchemaIds {
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
   'tap_answer': '1.3',
+  'story': '1.0',
+  'listen_do': '1.0',
+  'sing_along': '1.0',
+  'puppet_talk': '1.0',
+  'sound_boxes': '1.0',
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
@@ -105,6 +114,10 @@ const List<String> representations = <String>['concrete', 'pictorial', 'story', 
 /// The kinds of misconception tag of a language course (docs/languages/frame.md section 4.1).
 const List<String> tagKinds = <String>['diagnostic', 'on_the_way', 'accent', 'practice'];
 
+/// The only four things a scripted personal turn may ask (docs/languages/frame.md section 5.2): the child's name, age, likes and family.
+/// Never where the child lives, an address, a city, the gan or school, a phone number, photos or feelings about home.
+const List<String> personalTopics = <String>['name', 'age', 'likes', 'family'];
+
 /// The sides of a two-way skill (yes or no, same or different), and the pairs they come in.
 const List<String> poles = <String>['yes', 'no', 'same', 'different'];
 
@@ -148,6 +161,14 @@ const Map<String, SField> _lineExtras = <String, SField>{
 
 /// The most characters of the text of a tile, a word on show or a revealed word.
 const int _targetTextMax = 40;
+
+/// A rectangle in a picture, as shares of the picture's width and height (a hotspot, a place, a thing in a room).
+const SObject _at = SObject(<String, SField>{
+  'x': SField(SNum(min: 0, max: 1)),
+  'y': SField(SNum(min: 0, max: 1)),
+  'w': SField(SNum(min: 0.04, max: 1)),
+  'h': SField(SNum(min: 0.04, max: 1)),
+});
 
 const SObject _spoken = SObject(<String, SField>{
   'vo': SField(_vo),
@@ -222,6 +243,11 @@ const SObject manifestSchema = SObject(<String, SField>{
       // The gates of a course (docs/languages/frame.md section 3.3.6); absent in packs that have none.
       'gates': SField(
         SArray(SString(minLength: 5, maxLength: 24, pattern: Patterns.gateId), maxItems: 20),
+        required: false,
+      ),
+      // The placement game of a course (docs/languages/frame.md section 3.2): one document, absent in packs that have none.
+      'placements': SField(
+        SArray(SString(minLength: 13, maxLength: 13, pattern: Patterns.placementId), maxItems: 1),
         required: false,
       ),
     }),
@@ -389,6 +415,67 @@ const SObject gateSchema = SObject(<String, SField>{
   'routeBypass': SField(SArray(SEnum(courseRoutes), maxItems: 3), required: false),
 });
 
+/// A questionnaire answer a placement rule reads: the question and the answer it takes (enums, as the parent's questionnaire keeps them).
+const SString _answerKey = SString(minLength: 2, maxLength: 24, pattern: r'[a-z][A-Za-z0-9]{1,23}');
+
+/// The placement game of a language course (docs/languages/frame.md section 3.2, LS13): its strands, each a ladder of levels of probe
+/// items. The rules of the staircase (two right up, one wrong down, 2 reversals or 8 items, 2/3 right minus one, two misses at the
+/// floor stop it) are the app's and not data, so a pack can only choose the ladders, where a questionnaire answer starts them, and which
+/// strand is offered only on an answer.
+const SObject placementSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.placement)),
+  'id': SField(SString(minLength: 13, maxLength: 13, pattern: Patterns.placementId)),
+  'review': _review,
+  'course': _course,
+  // The one warm line said after every probe, whatever the answer (no result is shown to the child), and the line that ends a visit.
+  'thanks': SField(_spoken),
+  'celebration': SField(_spoken),
+  // Never more than about this many probes in one visit (frame section 3.2: about 8).
+  'perVisit': SField(SInt(min: 4, max: 10)),
+  'strands': SField(
+    SArray(
+      SObject(<String, SField>{
+        'id': SField(SString(minLength: 1, maxLength: 4, pattern: r'[a-z0-9]{1,4}')),
+        // The strand is offered only when the questionnaire says so and the presentation band is at least `minBand` (eng literacy).
+        'offer': SField(
+          SObject(<String, SField>{
+            'answer': SField(_answerKey, required: false),
+            'equals': SField(_answerKey, required: false),
+            'minBand': SField(SInt(min: 0, max: 2), required: false),
+          }),
+          required: false,
+        ),
+        // Where the staircase starts when the questionnaire gave this answer: never where it ends.
+        'start': SField(
+          SArray(
+            SObject(<String, SField>{
+              'answer': SField(_answerKey),
+              'equals': SField(_answerKey),
+              'level': SField(SInt(min: 0, max: 7)),
+            }),
+            maxItems: 8,
+          ),
+          required: false,
+        ),
+        // The levels from the floor up: probe items (activities with `purpose` probe), and the skills a placement above the level takes as known.
+        'levels': SField(
+          SArray(
+            SObject(<String, SField>{
+              'items': SField(SArray(_id, minItems: 1, maxItems: 6)),
+              'assumes': SField(SArray(_skill, maxItems: 20), required: false),
+            }),
+            minItems: 2,
+            maxItems: 8,
+          ),
+        ),
+      }),
+      minItems: 1,
+      maxItems: 6,
+      uniqueKey: 'id',
+    ),
+  ),
+});
+
 const SObject misconceptionSchema = SObject(<String, SField>{
   'schema': SField(SConst(SchemaIds.misconception)),
   'id': SField(_tag),
@@ -488,6 +575,43 @@ SObject _answerOptions(
   ...answerFields,
 });
 
+/// The fields of one option of a choice in the language templates of L4 (story, listen and do, sing along, puppet talk): a picture or
+/// a text or only a sound, its own clip, a label for screen readers, where it is in the scene (`at`) and the tag a wrong choice carries.
+const Map<String, SField> _l4Option = <String, SField>{
+  'id': SField(_optionId),
+  'sprite': SField(_asset, required: false),
+  'numeral': SField(SInt(min: 0, max: 100), required: false),
+  'text': SField(SString(minLength: 1, maxLength: _targetTextMax), required: false),
+  'clip': _optionClip,
+  'label': SField(SString(minLength: 1, maxLength: 80)),
+  // One place, or several for a part that has more than one (both ears, both hands): a touch on any of them is the option.
+  'at': SField(SAnyOf(<Schema>[_at, SArray(_at, minItems: 1, maxItems: 4)]), required: false),
+  'misconception': SField(_tag, required: false),
+};
+
+/// The `answer` of a template of L4: `type` is `choice` (options and the right one) or `none` (a step that is not scored). The mode
+/// says which; the validator checks that the rest fits it. [extra] are the fields of the template itself.
+SObject _l4Answer(
+  List<String> modes, {
+  Map<String, SField> extra = const <String, SField>{},
+  int minOptions = 2,
+  int maxOptions = 3,
+}) => SObject(<String, SField>{
+  'type': const SField(SEnum(<String>['choice', 'none'])),
+  'mode': SField(SEnum(modes)),
+  'options': SField(
+    SArray(SObject(_l4Option), minItems: minOptions, maxItems: maxOptions, uniqueKey: 'id'),
+    required: false,
+  ),
+  'correct': const SField(_optionId, required: false),
+  'shuffle': const SField(SBool(), required: false),
+  'unsureAllowed': const SField(SBool(), required: false),
+  // Which side of a two-way skill the item is, as in `tap_answer`.
+  'pole': const SField(SEnum(poles), required: false),
+  'pairWith': const SField(_id, required: false),
+  ...extra,
+});
+
 const SObject _feedback = SObject(<String, SField>{
   'correct': SField(_spoken),
   'incorrect': SField(
@@ -535,6 +659,11 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   'template': const SField(
     SEnum(<String>[
       'tap_answer',
+      'story',
+      'listen_do',
+      'sing_along',
+      'puppet_talk',
+      'sound_boxes',
       'count_tap',
       'give_n',
       'flash',
@@ -1074,6 +1203,191 @@ SObject? activitySchemaFor(String template) => switch (template) {
     }),
   ),
   // T04: trace a numeral or a shape. Points are in a 100 x 100 box; a stroke is read from its first point to its last.
+  // LS08: a picture book of 2 to 10 pages, narrated page by page; the child turns the pages and may touch a picture to hear its word.
+  // `listen` is heard to its end and is never scored. `dialogic` stops after the page `pauseAfter` and asks `question`, a choice that
+  // is scored; the item's `feedback.correct` is the recast, and the story then goes on to its last page.
+  'story' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          'pages': SField(
+            SArray(
+              SObject(<String, SField>{
+                'picture': SField(_asset),
+                // The page's narration: the clip (and the second clip of a two-clip line). It is never shown as text.
+                'clips': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+                // What a screen reader says of the page (Hebrew, for the adult).
+                'alt': SField(SString(minLength: 1, maxLength: 240)),
+                // The things in the picture that say their word when touched.
+                'words': SField(
+                  SArray(SObject(<String, SField>{'at': SField(_at), 'clip': SField(_vo)}), maxItems: 4),
+                  required: false,
+                ),
+              }),
+              minItems: 2,
+              maxItems: 10,
+            ),
+          ),
+        }),
+      ),
+      'answer': SField(
+        _l4Answer(
+          const <String>['listen', 'dialogic'],
+          extra: const <String, SField>{
+            // The page after which the story stops to ask (counted from 0), and what it asks.
+            'pauseAfter': SField(SInt(min: 0, max: 9), required: false),
+            'question': SField(_spoken, required: false),
+          },
+        ),
+      ),
+    }),
+  ),
+  // LS11: the child carries out a command in a scene. `hotspots`: touch one of the glowing parts of the picture (a body, a room);
+  // `buttons`: one of 2 or 3 action pictures, and the friend does it; `drag`: one of 2 or 3 things goes to the target (a plate, a box,
+  // the friend); `place`: the one thing goes to one of 2 or 3 places; `embodied`: the child does it and touches "done" (never scored).
+  'listen_do' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The picture of the scene: the friend, the body, the room.
+          'picture': SField(_asset),
+          // Where things are dropped (`drag`).
+          'target': SField(
+            SObject(<String, SField>{'at': SField(_at), 'sprite': SField(_asset, required: false)}),
+            required: false,
+          ),
+          // The one thing that is moved (`place`).
+          'thing': SField(
+            SObject(<String, SField>{'at': SField(_at), 'sprite': SField(_asset)}),
+            required: false,
+          ),
+        }),
+      ),
+      'answer': SField(
+        _l4Answer(const <String>['hotspots', 'buttons', 'cards', 'drag', 'place', 'embodied']),
+      ),
+    }),
+  ),
+  // LS12: an original song, chant or rhyme. `chant`: the lines are said one after another, the pictures of a line light while it is said, a
+  // touch on a picture says its word; joining in is practice and writes nothing. `rhyme`: the verse is heard whole, stops before its last
+  // word, the child chooses among 2 or 3 pictures (scored), and the whole verse is heard again. No melody: the lines are spoken to a beat.
+  'sing_along' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The pictures of the song: they light on their key words, and say their word when touched.
+          'pictures': SField(
+            SArray(
+              SObject(<String, SField>{
+                'picture': SField(_asset),
+                'label': SField(SString(minLength: 1, maxLength: 80)),
+                'clip': SField(_vo, required: false),
+              }),
+              minItems: 1,
+              maxItems: 6,
+            ),
+          ),
+          // `chant`: the lines, each with the pictures (by index) that light while it is said.
+          'lines': SField(
+            SArray(
+              SObject(<String, SField>{
+                'clips': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+                'lights': SField(SArray(SInt(min: 0, max: 5), maxItems: 3)),
+              }),
+              maxItems: 8,
+            ),
+            required: false,
+          ),
+          // `rhyme`: the verse heard whole, up to its gap, and whole again after the answer; `cue` is the end word of the first line
+          // (the hints say it, alone and before each option).
+          'verse': SField(
+            SObject(<String, SField>{
+              'whole': SField(SArray(_vo, minItems: 1, maxItems: 4)),
+              'open': SField(SArray(_vo, minItems: 1, maxItems: 4)),
+              'full': SField(SArray(_vo, minItems: 1, maxItems: 4)),
+              'cue': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+            }),
+            required: false,
+          ),
+        }),
+      ),
+      'answer': SField(
+        _l4Answer(
+          const <String>['chant', 'rhyme'],
+          extra: const <String, SField>{'question': SField(_spoken, required: false)},
+        ),
+      ),
+    }),
+  ),
+  // LS10: a puppet speaks one turn (the prompt, two clips), and the child answers. `bubble`: one of 2 or 3 answer bubbles that fit the
+  // scene (a picture or a text, each with a speaker), scored; the puppet answers with the item's right line. `personal` (docs/languages/
+  // frame.md section 5.2): one of the four things a lesson may ask (`topic`), the puppet goes first, the child touches a card or passes;
+  // the reply is generic and warm; the answer is never checked, kept, logged, synced or used, and nothing is written.
+  'puppet_talk' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The scene of the turn: the puppet, the friend, the thing in the room.
+          'picture': SField(_asset),
+          // The key picture of the scene: it glows at the second hint (a place in `picture`).
+          'key': SField(SObject(<String, SField>{'at': SField(_at)}), required: false),
+        }),
+      ),
+      'answer': SField(
+        _l4Answer(
+          const <String>['bubble', 'personal'],
+          minOptions: 0,
+          maxOptions: 8,
+          extra: const <String, SField>{
+            'topic': SField(SEnum(personalTopics), required: false),
+            // The puppet's reply to a pass ("That's OK!").
+            'pass': SField(_spoken, required: false),
+          },
+        ),
+      ),
+    }),
+  ),
+  // LS03, drum mode (Band A; the boxes and colours of Bands B and C are L5): the word is heard with its picture and the child taps a drum
+  // once for each part. Free response: there are no options, so no fixed distractors; a count one more or one fewer than `beats` is
+  // mapped to a tag (`classifiers`), any other count is a retry with no tag. The response is the count (`n=3`).
+  'sound_boxes' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'background': SField(_asset, required: false),
+          // The picture of the word.
+          'picture': SField(_asset),
+          // The word, heard with its picture; the same word slowly, with a pause between the beats; and the sound of a tap on the drum.
+          'word': SField(SArray(_vo, minItems: 1, maxItems: 2)),
+          'slow': SField(SArray(_vo, minItems: 1, maxItems: 2), required: false),
+          'drum': SField(_vo, required: false),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('drum')),
+          'mode': SField(SConst('drum')),
+          // How many parts the word has: the right number of taps (1 to 6).
+          'beats': SField(SInt(min: 1, max: 6)),
+          // `one_more` and `one_fewer` to the tag each one is evidence for. Any other count is a retry with no tag.
+          'classifiers': SField(
+            SArray(
+              SObject(<String, SField>{
+                'when': SField(SEnum(<String>['one_more', 'one_fewer'])),
+                'misconception': SField(_tag),
+              }),
+              maxItems: 2,
+              uniqueKey: 'when',
+            ),
+          ),
+        }),
+      ),
+    }),
+  ),
   'trace' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1156,7 +1470,13 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'misconception': misconceptionSchema,
   'lesson': lessonSchema,
   'gate': gateSchema,
+  'placement': placementSchema,
   'activity.tap_answer': activitySchemaFor('tap_answer')!,
+  'activity.story': activitySchemaFor('story')!,
+  'activity.listen_do': activitySchemaFor('listen_do')!,
+  'activity.sing_along': activitySchemaFor('sing_along')!,
+  'activity.puppet_talk': activitySchemaFor('puppet_talk')!,
+  'activity.sound_boxes': activitySchemaFor('sound_boxes')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,

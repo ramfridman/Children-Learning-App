@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/app/language_providers.dart';
 import 'package:nitznutz/child/calm_loading.dart';
 import 'package:nitznutz/child/home_screen.dart';
+import 'package:nitznutz/child/course_home.dart';
 import 'package:nitznutz/child/languages_doors.dart';
 import 'package:nitznutz/parent/language_pages.dart';
 import 'package:nitznutz/parent/language_settings.dart';

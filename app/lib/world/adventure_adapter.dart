@@ -4,6 +4,7 @@ import '../engine/course.dart';
 import '../engine/engine.dart';
 import '../rewards/award.dart';
 import 'adventure_land.dart';
+import 'language_placement.dart' show PlacementStatus, placedLanguageLessons;
 import 'placement.dart';
 import 'todays_adventure.dart';
 import 'world_state.dart' show missionItemIds;
@@ -11,10 +12,22 @@ import 'world_state.dart' show missionItemIds;
 /// A language course the child may play (docs/languages/frame.md section 3.7): its installed pack, and the child's engine on it
 /// (an engine built on that course's catalogue, so its due checks are the course's own).
 class LanguageCourse {
-  const LanguageCourse({required this.content, required this.engine});
+  const LanguageCourse({
+    required this.content,
+    required this.engine,
+    this.assumed = const <String>{},
+    this.placement,
+  });
 
   final PackContent content;
   final Engine engine;
+
+  /// The skills the child's placement took as known (those below each strand's entry point). A lesson whose skills are all in it counts
+  /// as passed on the path ([placedLanguageLessons]).
+  final Set<String> assumed;
+
+  /// Where the placement stands, or null when the pack has no placement game.
+  final PlacementStatus? placement;
 
   String get course => content.course;
 }
@@ -87,7 +100,7 @@ AdventureInput adventureInput({
         if (e.value.isNotEmpty) e.key,
     },
     paths: paths,
-    finished: finished,
+    finished: withPlaced(finished, playable),
     visits: visitsFrom(content, attempts, sessions, languages: playable.map((LanguageCourse c) => c.content)),
     due: <DueSkill>[
       for (final String id in engine.dueChecks(now))
@@ -98,6 +111,55 @@ AdventureInput adventureInput({
               case final DueSkill d)
             d,
     ],
+  );
+}
+
+/// [finished] with the lessons that each course's placement showed the child already knows counted once, as a land's warm-up does
+/// ([placedLanguageLessons]): the path opens at the placed level, and the bottle and the course home agree on it.
+Map<String, int> withPlaced(Map<String, int> finished, Iterable<LanguageCourse> courses) {
+  final Map<String, int> out = <String, int>{...finished};
+  for (final LanguageCourse c in courses) {
+    for (final String id in placedLanguageLessons(c.content, c.assumed)) {
+      if ((out[id] ?? 0) == 0) out[id] = 1;
+    }
+  }
+  return out;
+}
+
+/// What the course home offers next: Today's Adventure run on this course alone (docs/languages/frame.md sections 3.5 and 3.7), so
+/// the rule is the bottle's and the two can never disagree. A visit is one course: only this course's lessons, due checks and visits
+/// are read. [attempts], [sessions] and [finished] are the child's (other courses' are left out here).
+TodaysAdventure courseStopFor({
+  required LanguageCourse course,
+  required Iterable<Attempt> attempts,
+  required Iterable<Session> sessions,
+  required Map<String, int> finished,
+  required DateTime now,
+  required int band,
+}) {
+  final int today = Engine.dayKey(now);
+  final LanguageLand land = LanguageLand(course.course);
+  final List<PathLesson> path = <PathLesson>[
+    for (final Lesson l in landPath(course.content, Course.languagesDomain))
+      PathLesson(l.id, _levelOf(course.content, l, Course.languagesDomain)),
+  ];
+  if (path.isEmpty) return const TodaysAdventure.none();
+  return todaysAdventure(
+    AdventureInput(
+      today: today,
+      band: band,
+      enabledLands: <AdventureLand>{land},
+      paths: <AdventureLand, List<PathLesson>>{land: path},
+      finished: withPlaced(finished, <LanguageCourse>[course]),
+      visits: <Visit>[
+        for (final Visit v in visitsFrom(null, attempts, sessions, languages: <PackContent>[course.content]))
+          if (v.land == land) v,
+      ],
+      due: <DueSkill>[
+        for (final String id in course.engine.dueChecks(now))
+          if (_dueSkill(course.content, course.engine, id, now, today, land: land) case final DueSkill d) d,
+      ],
+    ),
   );
 }
 
@@ -142,7 +204,7 @@ int _levelOf(PackContent content, Lesson lesson, String domain) {
 /// from another device by their remote session, and older answers with neither by runs of the same lesson. A visit that
 /// is neither the warm-up, a revisit nor a lesson of the pack is left out, and so is one whose land is unknown.
 List<Visit> visitsFrom(
-  PackContent content,
+  PackContent? content,
   Iterable<Attempt> attempts,
   Iterable<Session> sessions, {
   Iterable<PackContent> languages = const <PackContent>[],
@@ -194,7 +256,12 @@ List<Visit> visitsFrom(
   return <Visit>[for (final (Attempt, Visit) e in visits) e.$2];
 }
 
-Visit? _visit(PackContent content, Iterable<PackContent> languages, List<Attempt> answers, Session? session) {
+Visit? _visit(
+  PackContent? content,
+  Iterable<PackContent> languages,
+  List<Attempt> answers,
+  Session? session,
+) {
   final Attempt first = answers.first;
   final Attempt last = answers.last;
   final VisitKind kind;
@@ -207,7 +274,7 @@ Visit? _visit(PackContent content, Iterable<PackContent> languages, List<Attempt
     if (course != Course.core) {
       return languages.any((PackContent p) => p.course == course) ? LanguageLand(course) : null;
     }
-    final String? domain = content.skills[skillId]?.domain;
+    final String? domain = content?.skills[skillId]?.domain;
     return domain == null ? null : TrophyLand.ofDomain(domain);
   }
 
@@ -226,7 +293,7 @@ Visit? _visit(PackContent content, Iterable<PackContent> languages, List<Attempt
     kind = VisitKind.lesson;
     id = first.lessonId;
     land = LanguageLand(language.course);
-  } else if (content.lessons[first.lessonId] case final Lesson l) {
+  } else if (content?.lessons[first.lessonId] case final Lesson l) {
     kind = VisitKind.lesson;
     id = l.id;
     // The first skill decides, so `butterflies`, on both the numbers and the colours path, belongs to Counting Hills.

@@ -63,6 +63,14 @@ abstract final class He {
   /// LS09 say-it (needs-editor): the button of a child who says the word without the microphone ("I said it", the batches'
   /// `he-ins-said-it`), practice only.
   static const Str sayDone = Str('אָמַרְתִּי', nikud: true);
+  // L4: screen-reader labels of the Band A templates of the language courses (adult text, no nikud; all needs-editor).
+  static const Str storyNextSemantics = Str('העמוד הבא בסיפור');
+  static const Str storyEndSemantics = Str('סוף הסיפור');
+  static const Str listenDoneSemantics = Str('סיימנו');
+  static const Str personalSaidSemantics = Str('אמרתי');
+  static const Str personalPassSemantics = Str('דילוג');
+  static const Str drumSemantics = Str('תוף');
+  static const Str drumDoneSemantics = Str('זה הכול');
   static const Str coinA10Semantics = Str('10 אגורות');
   static const Str coinH50Semantics = Str('חצי שקל');
   static const Str coinS1Semantics = Str('שקל');
@@ -230,6 +238,15 @@ abstract final class He {
   static const Str helloHeb = Str('שָׁלוֹם', nikud: true);
   static const Str doorsSemantics = Str('הדלתות של השפות');
   static const Str courseHomeSemantics = Str('בית השפה');
+  // The course home (L-course; all drafts for the editor). The host's invitation to the placement visit, said as a bubble: the
+  // placement is framed as a visit and shows no result (docs/languages/frame.md section 1.2); the labels of the path for a screen reader.
+  static const Str courseInvite = Str('בּוֹאוּ נֵצֵא לְבִקּוּר קָטָן!', nikud: true);
+  static const Str courseVisitSemantics = Str('ביקור קטן בבית השפה');
+  static const Str courseNextSemantics = Str('להמשיך בשפה');
+  static const Str courseStoneDoneSemantics = Str('שיעור שהיה');
+  static const Str courseStoneNextSemantics = Str('השיעור הבא');
+  static const Str courseStoneLaterSemantics = Str('שיעור בהמשך הדרך');
+  static const Str coursePathSemantics = Str('דרך השיעורים');
   // What the bottle says for a stop in a language (the owner picked these on 2026-11-03, including "with words" for the Hebrew
   // course): one line for each language, whatever the reason, with no variable, so a child with three doors hears which one
   // the bottle opens.

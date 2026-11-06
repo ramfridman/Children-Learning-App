@@ -251,7 +251,11 @@ class VoiceDirector extends ChangeNotifier {
     _mouthOpen = false;
     if (was) notifyListeners();
     _forgetStale();
-    if (_waiting.isEmpty) return;
+    if (_waiting.isEmpty) {
+      // Nothing more is coming: whoever waits for the end of the lines (see [untilQuiet]) is told.
+      if (!_disposed) notifyListeners();
+      return;
+    }
     final _Waiting next = _waiting.first;
     // The line that was waiting goes now (after a short pause). It stays "waiting" until it starts, so that a line that
     // arrives meanwhile finds it there.
@@ -269,6 +273,23 @@ class VoiceDirector extends ChangeNotifier {
       _gapTimer?.cancel();
       _gapTimer = Timer(gap, start);
     }
+  }
+
+  /// Completes when nothing is playing and nothing is waiting: the lines that were asked for have been said, or cut off. A session
+  /// that must go on only after a line has ended (a chant says its lines one after another) waits for it; [sayClips] itself returns
+  /// when the lines are started or queued. It has no limit of its own: the caller bounds the wait.
+  Future<void> untilQuiet() {
+    bool quiet() => !(_speaking || _starting || _waiting.isNotEmpty);
+    if (quiet()) return Future<void>.value();
+    final Completer<void> done = Completer<void>();
+    void check() {
+      if (!quiet() || done.isCompleted) return;
+      removeListener(check);
+      done.complete();
+    }
+
+    addListener(check);
+    return done.future;
   }
 
   /// Stops the line now, and forgets any line waiting.

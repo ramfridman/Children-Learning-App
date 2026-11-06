@@ -157,6 +157,10 @@ class AppRig {
   /// test that wants the island sets this before it pumps.
   List<String> installedLanguages = const <String>[];
 
+  /// The installed language packs themselves, when a test brings its own (the fixture courses of the course screens); they win over
+  /// [installedLanguages].
+  Map<String, PackContent>? languagePacks;
+
   /// While set and not completed, the phone is still looking at its installed language packs.
   Completer<void>? holdLanguagePacks;
 
@@ -255,9 +259,11 @@ class AppRig {
     // The language packs are the rig's own, never the installer's folder (that needs the platform's files).
     languagePacksProvider.overrideWith((Ref ref) async {
       if (holdLanguagePacks != null) await holdLanguagePacks!.future;
-      return <String, PackContent>{
-        for (final String c in installedLanguages) c: PackContent.fromPack(SamplePack.language(c).verified()),
-      };
+      return languagePacks ??
+          <String, PackContent>{
+            for (final String c in installedLanguages)
+              c: PackContent.fromPack(SamplePack.language(c).verified()),
+          };
     }),
     ...extraOverrides,
   ];

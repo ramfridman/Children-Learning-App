@@ -115,6 +115,7 @@ void main() {
       }..remove(a.n))
         (LessonController c) => c.giveN(n),
     ],
+    _ => throw StateError('${a.template} is a template of the language courses'),
   };
 
   Future<Outcome> right(LessonController c) {
@@ -136,6 +137,7 @@ void main() {
       ShopPayActivity() => c.submitPlacement(right: true),
       ClockSetActivity() => c.submitPlacement(right: true),
       TraceActivity() => c.submitPlacement(right: true),
+      _ => throw StateError('${a.template} is a template of the language courses'),
     };
   }
 
@@ -297,6 +299,7 @@ void main() {
               ShopPayActivity() => ShopPaySession(c, a),
               ClockSetActivity() => ClockSetSession(c, a),
               TraceActivity() => TraceSession(c, a),
+              _ => throw StateError('${a.template} is a template of the language courses'),
             };
             await tester.pumpWidget(
               MaterialApp(

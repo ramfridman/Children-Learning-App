@@ -42,7 +42,7 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L0-5 | A child deleted mid-round can have its settings put back once by a parent phone that synced just before | info | open | 2026-11-03 |
 | SEC-L1-1 | Lesson lines are outside the validator's new language-field rules | low | open | 2026-11-03 |
 | SEC-L1-2 | Hebrew frame lines: the script check is narrower than the language rule | low | open | 2026-11-03 |
-| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | closed (`languages-l3`: the validator refuses `voiceAnswer` in a language pack, and a language's speech exists only in `say_it` under that language's own switch; reviewed 2026-11-06) | 2026-11-03 |
+| SEC-L1-3 | Voice answers on a language item are not yet tied to that language's own switch (not reachable today) | info | closed (`d82b337`: the mic also needs the language's own voice switch, closed while the settings load; QA's full run green, `218f63d`; and on `languages-l3` the validator refuses `voiceAnswer` in a language pack, and a language's speech exists only in `say_it` under that language's own switch, reviewed 2026-11-06) | 2026-11-03 |
 | SEC-L1-4 | The tutor hold keeps the previous line's language extras (not reachable) | info | open | 2026-11-03 |
 | SEC-L1-5 | Hebrew target text does not bound its nikud | info | open | 2026-11-03 |
 | SEC-L1-6 | `isolateLtr` does not neutralise controls inside its run (not used yet) | info | open | 2026-11-03 |
@@ -50,7 +50,13 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L3-1 | Speech-evidence cap: spoken answers given after a hint are not counted against the cap, and item-level statistics take spoken answers for any skill | low | fixed on `languages-l3`: a spoken answer counts only without a hint, outside a probe, for a speaking skill and under the cap; one that counts for no skill changes nothing (`ls09_validation_test.dart`); closes when the security-engineer has run the proof again | 2026-11-06 |
 | SEC-L3-2 | A say-it listen is not stopped when the app leaves the foreground (bounded at 6 s; nothing is kept) | low | fixed on `languages-l3`: the say step stops on any lifecycle state but resumed, and what it heard is not applied (`qa_l3_open_defects_test.dart`) | 2026-11-06 |
 | SEC-L3-3 | The English and Russian speech models (Apache-2.0) need their licence notice in the app's credits before they are distributed | info | fixed on `languages-l3`: credit lines for both models and the full Apache-2.0 text in the parent area (`app_flow_test.dart`); the strings are `needs-editor` | 2026-11-06 |
-| SEC-L3-4 | Say-it switch details: only the language's own voice switch is needed (owner to confirm); a course recogniser is not freed when its switch turns off | info | item 2 fixed on `languages-l3` (the recogniser is made again when the last child's voice switch for the language turns off); item 1 stays as the owner decides (the language's own switch alone, L3.md D-5) | 2026-11-06 |
+| SEC-L3-4 | Say-it switch details: only the language's own voice switch is needed (owner to confirm); a course recogniser is not freed when its switch turns off | info | item 2 fixed on `languages-l3` (the recogniser is made again when the last child's voice switch for the language turns off); item 1 decided by the owner on 2026-11-06: the language's own voice switch alone is enough (L3.md D-5) | 2026-11-06 |
+| SEC-L4-1 | "Show me" on a step that is never scored (a personal turn, a story only heard, a chant, the embodied step) wrote an `unsure` attempt that was synced and counted by the engine; no answer content | medium | closed (`acdecdf`: such a step offers no lamp or eye and writes nothing; QA's full run green, `218f63d`) | 2026-11-04 |
+| SEC-L4-2 | The parent's switch for personal questions fails open while the family's language settings are not loaded (not reachable today) | low | closed (`acdecdf`: no personal turn until the family's settings are read; QA's full run green, `218f63d`) | 2026-11-04 |
+| SEC-L4-3 | Placement replay counts a probe answered twice (two devices, or a re-sent row), so one probe can move a strand up | low | closed (`acdecdf`: the staircase and the replay count a probe once; proof re-run) | 2026-11-04 |
+| SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | closed (`acdecdf`: `Course.ofLessonId` in the pull guard, proof re-run; `contradicts` refused on unscored steps; a complete placement has no visit) | 2026-11-04 |
+| SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
+| SEC-LC-2 | The answer path of the lesson controller does not itself refuse an unscored step (not reachable; defence in depth) | info | open | 2026-11-05 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -307,4 +313,58 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   - no package, lock file, host, workflow or gateway change.
 
   Not run by the security-engineer: `flutter test` (the qa-engineer's pass).
+- **L4 Languages, the Band A templates, `languages-l4` (`117769e`; 2026-11-04): one finding above low is held privately and
+  must be fixed before merge.** Scope: the six templates (LS08, LS11, LS12, LS10, LS03 drum, LS13), the shared choice base,
+  `completePractice`, `untilQuiet`, the new schemas and validator rules, and the placement replay into `Engine.assume`.
+  Verified by reading:
+  - A personal turn's card, "I said it" and pass write nothing, log nothing and reach no vendor or tutor.
+  - The microphone stays closed: no new template can be voice-answered.
+  - The validator refuses a scored, voiced or tagged personal turn, and a probe that is voiced, personal, unscored, of
+    another course or of a story, command, song or talk template.
+  - Every new picture and clip field is a pack-manifest key, never a path.
+  - Hit areas and counts are bounded by the schema.
+  - Answers of another lesson or course cannot move a placement.
+  - A probe looks the same for a right and a wrong answer.
+  - There is no timer, streak or red.
+  - Rules 2 and 5 hold: the gateway is unchanged, and the tutor is off in every language item.
+
+  New: SEC-L4-2 and SEC-L4-3 (low, proof of -3 run in pure Dart) and SEC-L4-4 (info), above. Also checked:
+  - gitleaks clean over `origin/main..HEAD`;
+  - `flutter analyze` clean;
+  - OSV.dev: no advisory for crypto 3.0.8, cryptography 2.9.0, drift 2.35.3, flutter_riverpod 3.4.3,
+    flutter_secure_storage 11.2.0, flutter_svg 2.3.2, http 1.6.0, vector_graphics 1.2.4 or xml 7.0.1 (2026-11-04);
+  - no package, lock file, host, workflow or gateway change.
+
+  Not run by the security-engineer: `flutter test`.
+- **L4 fixes and the course screens, `languages-course-home` (`4c49c37`; 2026-11-05): safe to merge, nothing new above info.**
+  L4 fixes (`acdecdf`):
+  - SEC-L4-3 and SEC-L4-4 are closed; their proofs were re-run in pure Dart.
+  - SEC-L4-2 is fixed by reading and closes with QA's Flutter run of its test.
+  - The one L4 finding above low held privately is fixed by reading (an unscored step now offers no lamp or eye and writes
+    nothing). It is listed here once QA's run of its proof tests passes.
+  - SEC-L1-3 is fixed by the per-language mic switch.
+
+  Course screens (`7d60d57` to `6543cdf`), verified by reading:
+  - `openVisit` is the one way a child's visit starts. It refuses a language that is off or not installed (fails closed
+    while loading) and asks the time rules afresh (rest scene, no lesson). The lands now use it too.
+  - The microphone needs the language's own voice switch, and the tutor is never asked.
+  - Each visit, path, mission, placement and Today's Adventure stop is built from one course's pack and engine only.
+  - The parent's "we start here" level comes from that course's placement and is never shown to the child.
+  - The course home writes nothing.
+  - `Course.ofLessonId` names a course only for `placement-<language>` and `<language>.` ids (proof run).
+
+  New: SEC-LC-1 and SEC-LC-2 (info), above. Also checked: `flutter analyze` clean; no package, lock file, host, workflow or
+  gateway change, so the OSV result of 2026-11-04 stands.
+
+  Not run by the security-engineer: `flutter test`.
+- **SEC-L4-1, L4 personal turns (closed 2026-11-06).** Before the fix, the lesson screen hid the hint lamp and "show me" only
+  for placement probes, and `LessonController.unsure()` wrote a `result: unsure` attempt for any activity. On a personal turn
+  (and on a story only heard, a chant or the embodied step), a touch of the eye therefore wrote an attempt row with the item's id,
+  skill, hint level and time. The row was synced to the server and the family's devices, and the engine counted it as weak evidence
+  that could start a repair. It held nothing of what the child would have picked.
+
+  The fix (`acdecdf`): `Activity.unscored`, and `noHelp` now covers unscored steps. `showHint` and `unsure` return early, and the
+  frame draws neither button. The proofs are `ls10_personal_safety_test.dart` (no eye or lamp before a card or during the
+  switched-off wait, no attempt row) and `unscored_steps_test.dart` (the four unscored kinds write nothing). Both are green in
+  QA's full run (4,073 passed, 0 failed, `218f63d`). SEC-L4-2 and SEC-L1-3 closed in the same run.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.

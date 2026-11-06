@@ -38,7 +38,17 @@ class ActivityFrame extends StatelessWidget {
     this.onConfirmAgain,
     this.bubbleTarget,
     this.bubbleAboveTiles = false,
+    this.showHelp = true,
+    this.boardLayer,
   });
+
+  /// Something a template draws in the board's own points, outside its stage (the close-up card of a command): a `Positioned` for the
+  /// board's stack. Drawn after the stage and the answer tiles, under the guide's hand and the controls.
+  final Widget? boardLayer;
+
+  /// The hint lamp and "show me" are drawn. Off for a probe of the placement game, which has no help at all (docs/languages/frame.md
+  /// section 3.2): the two buttons are not there, not merely dimmed.
+  final bool showHelp;
 
   /// The board numbers to lay out on, when the template's are not the board's own (see `TemplateSession.layoutFor`).
   final ActivitySpec? spec;
@@ -176,6 +186,7 @@ class ActivityFrame extends StatelessWidget {
           ),
           if (tiles != null)
             Positioned(left: s.tilesLeft, top: s.tilesTop - 12, width: s.tilesWidth, child: tiles!),
+          ?boardLayer,
           // The hand is drawn after the answer tiles (and the stage, the bubble and the guide), so it is never behind what it points at.
           if (hands != null) _handLayer(s, room),
           Positioned(
@@ -196,28 +207,30 @@ class ActivityFrame extends StatelessWidget {
               child: const BoardSvg('assets/art/ui/home_palm.svg', width: 32, height: 32),
             ),
           ),
-          boardAt(
-            left: s.hintLeft,
-            top: s.controlsTop,
-            child: PebbleButton(
-              key: const Key('lesson-hint'),
-              semanticLabel: He.hintSemantics.text,
-              fill: hintGlow ? TokenColors.skyTint : TokenColors.paper,
-              lip: hintGlow ? TokenColors.hintHalo : TokenColors.cardLip,
-              onPressed: onHint,
-              child: const BoardSvg('assets/art/ui/hint.svg', width: 32, height: 32),
+          if (showHelp)
+            boardAt(
+              left: s.hintLeft,
+              top: s.controlsTop,
+              child: PebbleButton(
+                key: const Key('lesson-hint'),
+                semanticLabel: He.hintSemantics.text,
+                fill: hintGlow ? TokenColors.skyTint : TokenColors.paper,
+                lip: hintGlow ? TokenColors.hintHalo : TokenColors.cardLip,
+                onPressed: onHint,
+                child: const BoardSvg('assets/art/ui/hint.svg', width: 32, height: 32),
+              ),
             ),
-          ),
-          boardAt(
-            left: s.eyeLeft,
-            top: s.controlsTop,
-            child: PebbleButton(
-              key: const Key('lesson-show-me'),
-              semanticLabel: He.showMeSemantics.text,
-              onPressed: onShowMe,
-              child: const BoardSvg('assets/art/ui/eye.svg', width: 32, height: 32),
+          if (showHelp)
+            boardAt(
+              left: s.eyeLeft,
+              top: s.controlsTop,
+              child: PebbleButton(
+                key: const Key('lesson-show-me'),
+                semanticLabel: He.showMeSemantics.text,
+                onPressed: onShowMe,
+                child: const BoardSvg('assets/art/ui/eye.svg', width: 32, height: 32),
+              ),
             ),
-          ),
           ?overlay,
         ],
       ),

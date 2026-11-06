@@ -229,6 +229,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'characters': <String>[],
     'cues': <String>[],
     'gates': <String>[],
+    'placements': <String>[],
   };
   const Map<String, String> kinds = <String, String>{
     'activity': 'activities',
@@ -238,6 +239,7 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     'character': 'characters',
     'cue': 'cues',
     'gate': 'gates',
+    'placement': 'placements',
   };
   for (final String name in docs.keys) {
     final RegExpMatch? m = RegExp(r'^([a-z]+)\.(.+)\.json$').firstMatch(name);
@@ -300,7 +302,8 @@ Future<BuiltPack> buildPack(Directory source, PackKey key) async {
     // Lists of the kinds that M2 packs know are always there; characters and cues only when the pack has some.
     'entries': <String, List<String>>{
       for (final MapEntry<String, List<String>> e in entries.entries)
-        if (e.value.isNotEmpty || !const <String>{'characters', 'cues', 'gates'}.contains(e.key))
+        if (e.value.isNotEmpty ||
+            !const <String>{'characters', 'cues', 'gates', 'placements'}.contains(e.key))
           e.key: e.value,
     },
   };
