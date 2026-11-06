@@ -47,7 +47,7 @@ void main() {
     testWidgets('setup: sign in, register the device, choose the PIN, then add the first child', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.pump(tester);
       expect(find.byType(SetupFlow), findsOneWidget);
 
@@ -106,7 +106,7 @@ void main() {
     });
 
     testWidgets('an interrupted setup resumes at the PIN, not at the start', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.store.write('device_id', 'aaaa');
       await rig.store.write('device_role', 'parent');
       await rig.pump(tester);
@@ -114,7 +114,7 @@ void main() {
     });
 
     testWidgets('a finished setup goes straight to the picker', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       expect(find.byType(ProfilePicker), findsOneWidget);
@@ -124,7 +124,7 @@ void main() {
 
   group('the child space', () {
     testWidgets('pick a child, see the home with their name, switch back', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
 
@@ -142,7 +142,7 @@ void main() {
     testWidgets('the counting hills open the activity frame, and its home button comes back', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -164,7 +164,7 @@ void main() {
     testWidgets('a child cannot add a profile: the plus card only leads to the gate', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.byKey(const Key('picker-add')));
@@ -178,7 +178,7 @@ void main() {
     testWidgets(
       'gate, then PIN, then the area; the screen is secure while it is open; locking returns to the child',
       (WidgetTester tester) async {
-        final AppRig rig = AppRig();
+        final AppRig rig = AppRig(butterfliesFirst: true);
         await rig.seedFinishedSetup();
         await rig.pump(tester);
         await tester.tap(find.text('נועה'));
@@ -197,7 +197,7 @@ void main() {
     );
 
     testWidgets('a wrong gate answer gives a new question and nothing opens', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -216,7 +216,7 @@ void main() {
     testWidgets('a wrong PIN is refused, and five wrong PINs lock the keypad with a countdown', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -247,7 +247,7 @@ void main() {
     });
 
     testWidgets('the area closes by itself after 5 idle minutes', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -263,7 +263,7 @@ void main() {
     });
 
     testWidgets('the area closes the moment the app goes to the background', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -279,7 +279,7 @@ void main() {
     });
 
     testWidgets('the system back button locks the area as well', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -295,7 +295,7 @@ void main() {
 
   group('inside the parent area', () {
     Future<AppRig> openArea(WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -307,7 +307,7 @@ void main() {
     testWidgets(
       'the voice switch is off, needs the model and the microphone permission, and turns on only with both',
       (WidgetTester tester) async {
-        final AppRig rig = AppRig(speech: FakeSpeechEngine()..installed = false);
+        final AppRig rig = AppRig(butterfliesFirst: true, speech: FakeSpeechEngine()..installed = false);
         await rig.seedFinishedSetup();
         await rig.pump(tester);
         await tester.tap(find.text('נועה'));
@@ -395,7 +395,7 @@ void main() {
     });
 
     testWidgets('offline, it says so and does not crash', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       rig.devices.offline = true;
       await rig.seedFinishedSetup();
       await rig.pump(tester);
@@ -437,7 +437,7 @@ void main() {
     testWidgets('dev flavour: the dev page opens any lesson for a child, here the clock (QA-10)', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig(dev: true);
+      final AppRig rig = AppRig(butterfliesFirst: true, dev: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -474,7 +474,7 @@ void main() {
     testWidgets('prod flavour: the lesson list shows no lesson even if it were reached', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       final BuildContext context = tester.element(find.byType(Navigator).first);
@@ -509,7 +509,7 @@ void main() {
     ];
     for (final (String name, Size size) in devices) {
       testWidgets('picker, home, activity frame, gate, PIN and area at $name', (WidgetTester tester) async {
-        final AppRig rig = AppRig();
+        final AppRig rig = AppRig(butterfliesFirst: true);
         await rig.seedFinishedSetup(name: 'שִׁירָה-עם-שם-ארוך-מאוד');
         await rig.pump(tester, size: size);
         expect(tester.takeException(), isNull);
@@ -545,7 +545,7 @@ void main() {
         () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null),
       );
 
-      final AppRig phone = AppRig();
+      final AppRig phone = AppRig(butterfliesFirst: true);
       await phone.seedFinishedSetup();
       await phone.pump(tester);
       final String phoneArgs = calls
@@ -557,7 +557,7 @@ void main() {
       expect(phoneArgs, isNot(contains('portraitUp')));
 
       calls.clear();
-      final AppRig tablet = AppRig();
+      final AppRig tablet = AppRig(butterfliesFirst: true);
       await tablet.seedFinishedSetup();
       await tablet.pump(tester, size: const Size(820, 1180));
       final String tabletArgs = calls

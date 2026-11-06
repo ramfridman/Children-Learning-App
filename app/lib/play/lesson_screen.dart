@@ -10,6 +10,7 @@ import 'package:uuid/uuid.dart';
 
 import '../app/companion.dart';
 import '../app/language_providers.dart';
+import '../app/math_providers.dart';
 import '../app/providers.dart';
 import '../app/reward_providers.dart';
 import '../app/state.dart';
@@ -52,6 +53,7 @@ import 'ls01_tap_session.dart';
 import 'lesson_controller.dart';
 import 'clock_set_session.dart';
 import 'lesson_voice.dart';
+import 'math_signs.dart';
 import 'match_pairs_session.dart';
 import 'shop_pay_session.dart';
 import 'trace_session.dart';
@@ -554,6 +556,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     final AsyncValue<Guide> guide = ref.watch(guideProvider);
     final bool voiceOn = ref.watch(voiceAvailableProvider).value ?? false;
     final bool? tutorOn = ref.watch(tutorAvailableProvider).value;
+    final DivisionSign division = ref.watch(divisionSignProvider).value ?? DivisionSign.obelus;
     return content.when(
       loading: () => const ColoredBox(color: TokenColors.cream),
       error: (Object e, StackTrace s) => _Unavailable(onHome: _home),
@@ -576,7 +579,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             Log.d('helper: lesson opens, tutorOn=$tutorOn');
             final LessonController? open = _controller;
             if (tutorOn && open != null && open.tutor == null) open.attachTutor(_tutor!, _tutorContext(g, c));
-            return _lesson(context, c, g, voiceOn);
+            return MathSigns(division: division, child: _lesson(context, c, g, voiceOn));
           },
         );
       },

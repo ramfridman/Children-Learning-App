@@ -10,6 +10,8 @@ import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/engine/types.dart';
 import 'package:nitznutz/rewards/award.dart';
 import 'package:nitznutz/world/adventure_adapter.dart';
+import 'package:nitznutz/play/lesson_controller.dart' show ItemFlow;
+import 'package:nitznutz/world/land_placement.dart';
 import 'package:nitznutz/world/next_lesson.dart';
 import 'package:nitznutz/world/placement.dart';
 import 'package:nitznutz/world/todays_adventure.dart';
@@ -321,7 +323,7 @@ void main() {
   });
 
   group('the whole chain on the real pack', () {
-    test('a brand-new child is invited to the first lesson of Counting Hills', () {
+    test('a brand-new child is invited to the first open lesson of Counting Hills (the path gate)', () {
       expect(
         todaysAdventureFor(
           content: content,
@@ -332,7 +334,7 @@ void main() {
           now: morning,
           band: 0,
         ),
-        TodaysAdventure.lesson(TrophyLand.counting, 'butterflies', AdventureReason.welcome),
+        TodaysAdventure.lesson(TrophyLand.counting, 'counting-words', AdventureReason.welcome),
       );
     });
 
@@ -343,10 +345,14 @@ void main() {
         final List<TrophyLand> played = <TrophyLand>[];
         for (int i = 0; i < 40; i++) {
           final DateTime now = morning.add(Duration(days: i ~/ 4, minutes: i * 10));
+          final List<Attempt> history = await db.attemptsOf(kid);
+          // The engine learns from the answers, so the lessons that stand on what the child has just learned open as they go.
+          final Engine learned = Engine(catalog: engineCatalog(content))
+            ..replay(history.map(eventOf).toList());
           final TodaysAdventure stop = todaysAdventureFor(
             content: content,
-            engine: emptyEngine(),
-            attempts: await db.attemptsOf(kid),
+            engine: learned,
+            attempts: history,
             sessions: await db.sessionsOf(kid),
             finished: finished,
             now: now,
@@ -355,19 +361,26 @@ void main() {
           expect(stop.kind, AdventureKind.lesson, reason: 'step $i: new learning is left in every land');
           expect(
             stop.lessonId,
-            nextLessonId(content: content, domain: stop.land!.domain, finished: finished),
+            nextLessonId(
+              content: content,
+              domain: stop.land!.domain,
+              finished: finished,
+              unlocked: learned.isUnlocked,
+            ),
             reason: 'step $i: ${stop.land}',
           );
-          // The child plays it to the end.
+          // The child plays it to the end, every answer right at the first try.
           final Lesson lesson = content.lessons[stop.lessonId]!;
           final int s = await db.startSession(kid, now, plan: 'lesson:${lesson.id}');
-          await answer(
-            lesson.id,
-            session: s,
-            skill: lesson.skillIds.first,
-            activity: lesson.itemIds.first,
-            at: now,
-          );
+          for (final (int k, String item) in lesson.itemIds.indexed) {
+            await answer(
+              lesson.id,
+              session: s,
+              skill: content.activities[item]!.skillId,
+              activity: item,
+              at: now.add(Duration(seconds: k)),
+            );
+          }
           await db.endSession(s, now, 'finished');
           finished[lesson.id] = (finished[lesson.id] ?? 0) + 1;
           played.add(stop.land! as TrophyLand);
@@ -384,12 +397,26 @@ void main() {
     );
 
     test('lessons the warm-up placed count as finished, as the pebble counts them', () async {
-      final List<Lesson> path = landPath(content, 'numbers');
-      final Lesson known = path[1];
+      // A child who answers every probe of the Counting Hills warm-up right: the staircase climbs to the top and stops.
+      final ({Lesson lesson, ItemFlow flow}) visit = placementVisit(content, 'numbers', const <Attempt>[])!;
       final int s = await db.startSession(kid, morning);
-      await answer(placementId, session: s, activity: known.itemIds.first, skill: known.skillIds.first);
-      final Map<String, int> finished = finishedLessons(content, await db.attemptsOf(kid), const <String>[]);
-      expect(finished[known.id], 1);
+      String? probe = visit.flow.first();
+      while (probe != null) {
+        await answer(placementId, session: s, activity: probe, skill: content.activities[probe]!.skillId);
+        probe = visit.flow.after(probe, right: true);
+      }
+      final List<Attempt> attempts = await db.attemptsOf(kid);
+      final Set<String> placed = placedLessons(content, attempts);
+      expect(placed, isNotEmpty);
+      expect(
+        placed,
+        contains(landPath(content, 'numbers').first.id),
+        reason: 'the units below the entry are placed',
+      );
+      final Map<String, int> finished = finishedLessons(content, attempts, const <String>[]);
+      for (final String id in placed) {
+        expect(finished[id], 1, reason: id);
+      }
       expect(finishedLessons(content, const <Attempt>[], const <String>['sticker:giving:2'])['giving'], 2);
     });
   });

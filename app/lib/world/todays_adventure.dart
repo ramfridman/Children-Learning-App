@@ -34,12 +34,14 @@ const List<AdventureParams> _paramsByBand = <AdventureParams>[
 
 AdventureParams paramsFor({required int band}) => _paramsByBand[band.clamp(0, _paramsByBand.length - 1)];
 
-/// A lesson on a land's path with its level: 0, 1 or 2 for the bands A, B and C.
+/// A lesson on a land's path with its level: 0, 1 or 2 for the bands A, B and C. A [locked] lesson has a skill that is not unlocked
+/// yet (the path gate, `path_gate.dart`): the path skips it and comes back to it.
 class PathLesson {
-  const PathLesson(this.id, this.level);
+  const PathLesson(this.id, this.level, {this.locked = false});
 
   final String id;
   final int level;
+  final bool locked;
 }
 
 /// One visit of the child, built from their answers: [id] is the lesson id (a revisit: the skill id).
@@ -305,8 +307,14 @@ class _View {
     return x != null && x.day == input.today && x.end == VisitEnd.home && x.lastIncorrect;
   }
 
-  String? next(AdventureLand l) =>
-      nextOnPath(<String>[for (final PathLesson x in input.paths[l]!) x.id], input.finished);
+  String? next(AdventureLand l) => nextOnPath(
+    <String>[for (final PathLesson x in input.paths[l]!) x.id],
+    input.finished,
+    locked: <String>{
+      for (final PathLesson x in input.paths[l]!)
+        if (x.locked) x.id,
+    },
+  );
 
   bool hasNewLearning(AdventureLand l) {
     final String? id = next(l);

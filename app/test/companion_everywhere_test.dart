@@ -66,7 +66,7 @@ void main() {
     Size size = phone,
     CharacterSource? source,
   }) async {
-    final AppRig rig = AppRig(characters: source ?? two);
+    final AppRig rig = AppRig(butterfliesFirst: true, characters: source ?? two);
     await rig.seedFinishedSetup();
     if (companion != null) await rig.db.setCompanion('p-1', companion);
     await rig.pump(tester, size: size);

@@ -4,12 +4,14 @@ committed files:
     python tools/regen_content.py
 
 1. tools/band_b.py writes the Band B specs (content/units/band-b-*.json; it runs band_b2.py and band_b3.py too);
-2. tools/author.py turns each unit spec into content/starter, Band A first (Band B reads lines and assets the Band A
-   files already wrote).
+2. tools/band_c.py writes the Band C specs (content/units/band-c*.json; none until the batches add their tables, M10);
+3. tools/author.py turns each unit spec into content/starter, Band A first, then Band B, then Band C (each reads lines and
+   assets the files before it already wrote).
 
 A handful of the oldest starter files (the M2 butterflies lesson and its skills and misconceptions) have no spec and
 are edited by hand. Nothing is published or voiced here.
 """
+import glob
 import os
 import subprocess
 import sys
@@ -27,7 +29,9 @@ def run(root=ROOT, quiet=False):
     out = subprocess.DEVNULL if quiet else None
     tools = os.path.join(root, 'tools')
     subprocess.run([sys.executable, '-s', os.path.join(tools, 'band_b.py')], cwd=root, env=env, check=True, stdout=out)
-    for u in UNITS:
+    subprocess.run([sys.executable, '-s', os.path.join(tools, 'band_c.py')], cwd=root, env=env, check=True, stdout=out)
+    band_c = sorted(os.path.basename(f)[:-5] for f in glob.glob(os.path.join(root, 'content', 'units', 'band-c*.json')))
+    for u in UNITS + band_c:
         spec = os.path.join(root, 'content', 'units', u + '.json')
         subprocess.run([sys.executable, '-s', os.path.join(tools, 'author.py'), spec], cwd=root, env=env, check=True,
                        stdout=out)

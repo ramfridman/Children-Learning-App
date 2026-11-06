@@ -279,6 +279,8 @@ extension _BandB on _Plans {
   }
 
   HintPlan _bars(int level, List<double> values, {List<String>? heads}) {
+    // A cube for each unit of a bar (Band B compares numbers to 99): a longer bar gets the generic hint (SEC-M10-3).
+    if (values.any((double v) => v > _mostBarUnits)) return generic(level);
     if (level == 1) return tilesInTurn();
     final int n = values.length;
     final double startX = (heads == null ? 34 : 62) * k;
@@ -479,6 +481,8 @@ extension _BandB on _Plans {
         ], hold: _ms(2400)),
       ]);
     }
+    // A cube for each unit: a sentence with a number above the limit gets the generic hint (SEC-M10-3).
+    if (s.value.values.any((int v) => v > _mostUnits)) return generic(level);
     final int av = s.value[s.a]!;
     final int bv = s.value[s.b]!;
     final int rv = s.value[s.r]!;

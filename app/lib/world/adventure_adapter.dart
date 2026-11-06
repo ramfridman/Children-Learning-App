@@ -5,6 +5,7 @@ import '../engine/engine.dart';
 import '../rewards/award.dart';
 import 'adventure_land.dart';
 import 'language_placement.dart' show PlacementStatus, placedLanguageLessons;
+import 'path_gate.dart';
 import 'placement.dart';
 import 'todays_adventure.dart';
 import 'world_state.dart' show missionItemIds;
@@ -82,14 +83,11 @@ AdventureInput adventureInput({
   ];
   final Map<AdventureLand, List<PathLesson>> paths = <AdventureLand, List<PathLesson>>{
     for (final TrophyLand land in TrophyLand.values)
-      land: <PathLesson>[
-        for (final Lesson l in landPath(content, land.domain))
-          PathLesson(l.id, _levelOf(content, l, land.domain)),
-      ],
+      land: _pathOf(content, land.domain, lockedLessons(content, land.domain, engine.isUnlocked)),
     for (final LanguageCourse c in playable)
       LanguageLand(c.course): <PathLesson>[
         for (final Lesson l in landPath(c.content, Course.languagesDomain))
-          PathLesson(l.id, _levelOf(c.content, l, Course.languagesDomain)),
+          PathLesson(l.id, lessonLevel(c.content, l, Course.languagesDomain)),
       ],
   };
   return AdventureInput(
@@ -113,6 +111,12 @@ AdventureInput adventureInput({
     ],
   );
 }
+
+/// A land's path for the rule: its lessons in order, each with its level, and the ones the path gate holds back marked [locked].
+List<PathLesson> _pathOf(PackContent content, String domain, Set<String> locked) => <PathLesson>[
+  for (final Lesson l in landPath(content, domain))
+    PathLesson(l.id, lessonLevel(content, l, domain), locked: locked.contains(l.id)),
+];
 
 /// [finished] with the lessons that each course's placement showed the child already knows counted once, as a land's warm-up does
 /// ([placedLanguageLessons]): the path opens at the placed level, and the bottle and the course home agree on it.
@@ -141,7 +145,7 @@ TodaysAdventure courseStopFor({
   final LanguageLand land = LanguageLand(course.course);
   final List<PathLesson> path = <PathLesson>[
     for (final Lesson l in landPath(course.content, Course.languagesDomain))
-      PathLesson(l.id, _levelOf(course.content, l, Course.languagesDomain)),
+      PathLesson(l.id, lessonLevel(course.content, l, Course.languagesDomain)),
   ];
   if (path.isEmpty) return const TodaysAdventure.none();
   return todaysAdventure(
@@ -184,20 +188,6 @@ DueSkill? _dueSkill(
     dueAt: engine.nextCheckAt(skillId) ?? now,
     reviewedToday: engine.state.skills[skillId]?.lastReviewDay == today,
   );
-}
-
-final RegExp _skillBand = RegExp(r'^[A-Z]+-([ABC])-\d+(?:\.[A-Z]\d+)?$');
-
-/// A lesson's level on its land: the highest band among its skills of that land's domain (`NUM-A-03` is A, level 0),
-/// read from the skill id, which the pack's skill ids all follow (a group's dotted id too: `ENG-B-19.G1` is B).
-int _levelOf(PackContent content, Lesson lesson, String domain) {
-  int level = 0;
-  for (final String id in lesson.skillIds) {
-    if (content.skills[id]?.domain != domain) continue;
-    final String? band = _skillBand.firstMatch(id)?.group(1);
-    if (band != null && band.codeUnitAt(0) - 0x41 > level) level = band.codeUnitAt(0) - 0x41;
-  }
-  return level;
 }
 
 /// The child's attempts grouped into visits, oldest first (rule section 2.1). Attempts are grouped by session, answers

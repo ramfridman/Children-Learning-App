@@ -63,7 +63,7 @@ void main() {
     testWidgets('the scripted child plays the whole butterflies lesson by touch on a ${device.$1}', (
       WidgetTester tester,
     ) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup();
       // Two trophies are waiting for their ceremony (earned on another phone, say): the lesson's end gets only one.
       for (final String key in <String>['trophy:counting:bronze', 'trophy:counting:silver']) {
@@ -270,7 +270,7 @@ void main() {
   testWidgets('"show me" is welcomed, never counted as a mistake, and gives the next help', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = AppRig();
+    final AppRig rig = AppRig(butterfliesFirst: true);
     await rig.seedFinishedSetup();
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
@@ -296,7 +296,7 @@ void main() {
     WidgetTester tester,
   ) async {
     // A line ends only when the test says so, to see the next one wait for it.
-    final AppRig rig = AppRig(player: FakePlayer());
+    final AppRig rig = AppRig(butterfliesFirst: true, player: FakePlayer());
     await rig.seedFinishedSetup();
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
@@ -327,6 +327,7 @@ void main() {
     'a child who races hears what is still true: no question that is already answered, no old congratulation',
     (WidgetTester tester) async {
       final AppRig rig = AppRig(
+        butterfliesFirst: true,
         player: FakePlayer(),
       ); // no line ends by itself: the child is faster than every sentence
       await rig.seedFinishedSetup();
@@ -359,7 +360,7 @@ void main() {
   testWidgets('the guide repeats the question when touched, and leaving the lesson stops everything', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = AppRig();
+    final AppRig rig = AppRig(butterfliesFirst: true);
     await rig.seedFinishedSetup();
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));

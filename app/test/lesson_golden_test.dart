@@ -46,7 +46,7 @@ void main() {
     ('tablet_portrait', const Size(820, 1180)),
   ]) {
     testWidgets('the butterflies lesson, step by step, ${device.$1}', (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup(name: 'נֹעָה');
       await rig.pump(tester, size: device.$2);
       await tester.tap(find.text('נֹעָה'));
@@ -106,7 +106,7 @@ void main() {
   testWidgets('help on screen: a mistake with the fingers, phone', (WidgetTester tester) async {
     // The hands are art files; they come from the asset bundle, which needs the real clock.
     await tester.runAsync(warmHintHands);
-    final AppRig rig = AppRig();
+    final AppRig rig = AppRig(butterfliesFirst: true);
     await rig.seedFinishedSetup(name: 'נֹעָה');
     await rig.pump(tester);
     await tester.tap(find.text('נֹעָה'));

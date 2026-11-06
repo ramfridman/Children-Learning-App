@@ -35,7 +35,7 @@ void main() {
   testWidgets('in rest hours the map shows a calm scene instead of the lesson, and the way back works', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = await toMap(tester, AppRig(clockMs: at(22)));
+    final AppRig rig = await toMap(tester, AppRig(butterfliesFirst: true, clockMs: at(22)));
     await openCountingLesson(tester);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('rest-scene')), findsOneWidget);
@@ -49,7 +49,10 @@ void main() {
   });
 
   testWidgets('with the lock off, rest hours do not stop the child', (WidgetTester tester) async {
-    await toMap(tester, AppRig(clockMs: at(22), rules: const ParentRules(lockWhenDone: false)));
+    await toMap(
+      tester,
+      AppRig(butterfliesFirst: true, clockMs: at(22), rules: const ParentRules(lockWhenDone: false)),
+    );
     await openCountingLesson(tester);
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('rest-scene')), findsNothing);
@@ -57,7 +60,7 @@ void main() {
   });
 
   testWidgets('at noon with time left, the lesson opens as usual', (WidgetTester tester) async {
-    await toMap(tester, AppRig(clockMs: at(12)));
+    await toMap(tester, AppRig(butterfliesFirst: true, clockMs: at(12)));
     await openCountingLesson(tester);
     await tester.pumpAndSettle();
     expect(find.byType(ActivityFrame), findsOneWidget);
@@ -69,6 +72,7 @@ void main() {
       final AppRig rig = await toMap(
         tester,
         AppRig(
+          butterfliesFirst: true,
           clockMs: at(12),
           rules: const ParentRules(limitByChild: <String, int>{'p-1': 5}),
         ),
@@ -93,6 +97,7 @@ void main() {
     final AppRig rig = await toMap(
       tester,
       AppRig(
+        butterfliesFirst: true,
         clockMs: at(12),
         rules: const ParentRules(limitByChild: <String, int>{'p-1': 5}),
       ),

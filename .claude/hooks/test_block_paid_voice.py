@@ -42,6 +42,7 @@ ALLOWED = [
     "dart run tool/voice_gen.dart audition-batch plan ../docs/audio/audition/round1.json",
     "dart run tool/voice_gen.dart mock nitzi --out C:\\tmp\\mock",
     "dart run tool/voice_gen.dart list",
+    "dart run tool/voice_gen.dart pack nitzi --max-lines 400",
     "dart compile exe tool/voice_gen.dart -o build/voice_gen.exe",
     "dart analyze tool/voice_gen.dart",
     "dart format tool/voice_gen.dart",

@@ -597,6 +597,10 @@ abstract final class He {
   static const Str warmUpHelp = Str(
     'בביקור הראשון בכל אי, הילד משחק כמה דקות כדי שנתחיל מהמקום הנכון. אין בו ציון ולא טעויות. אפשר לכבות.',
   );
+  static const Str divisionHeading = Str('סימן החילוק');
+  static const Str divisionHelp = Str(
+    'איך מצויר חילוק בתרגילים: ÷ (ברירת המחדל) או נקודתיים (:). ההגדרה נשמרת במכשיר הזה.',
+  );
   static const Str aiHeading = Str('עוזר מילולי');
   static const Str aiHelp = Str(
     'אחרי טעות שנייה הדמות יכולה להגיד משפט עזרה בקולה. המשפטים נבדקים לפני שהילד שומע אותם, ואם משהו לא עובד נשמעת ההודעה הרגילה. כבוי כברירת מחדל.',

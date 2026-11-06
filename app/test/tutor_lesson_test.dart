@@ -67,7 +67,10 @@ void main() {
 
   testWidgets('with the helper off nothing is ever asked', (WidgetTester tester) async {
     final FakeTutorClient client = FakeTutorClient();
-    final AppRig rig = await toCounting(tester, AppRig(tutor: client, aiHelper: false));
+    final AppRig rig = await toCounting(
+      tester,
+      AppRig(butterfliesFirst: true, tutor: client, aiHelper: false),
+    );
     await wrongFour(tester);
     await wait(tester, 2000);
     await wrongFour(tester);
@@ -79,7 +82,11 @@ void main() {
     'a server switch that answers late still gives the helper to the lesson that was already open',
     (WidgetTester tester) async {
       final FakeTutorClient client = FakeTutorClient();
-      final AppRig rig = AppRig(tutor: client, switchAnswersAfter: const Duration(milliseconds: 2500));
+      final AppRig rig = AppRig(
+        butterfliesFirst: true,
+        tutor: client,
+        switchAnswersAfter: const Duration(milliseconds: 2500),
+      );
       await rig.seedFinishedSetup();
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -101,7 +108,7 @@ void main() {
     WidgetTester tester,
   ) async {
     final FakeTutorClient client = FakeTutorClient();
-    await toCounting(tester, AppRig(tutor: client, tutorEnabledOnServer: false));
+    await toCounting(tester, AppRig(butterfliesFirst: true, tutor: client, tutorEnabledOnServer: false));
     await wrongFour(tester);
     expect(client.asked, isEmpty);
   });
@@ -110,7 +117,7 @@ void main() {
     WidgetTester tester,
   ) async {
     final FakeTutorClient client = FakeTutorClient();
-    await toCounting(tester, AppRig(tutor: client));
+    await toCounting(tester, AppRig(butterfliesFirst: true, tutor: client));
     final List<TutorAsk> ahead = client.asked
         .where((TutorAsk a) => a.itemId == 'count.butterflies.3')
         .toList();
@@ -140,7 +147,7 @@ void main() {
     'the first, expected mistake gets the authored line; the second gets the line made ahead, at once',
     (WidgetTester tester) async {
       final FakeTutorClient client = FakeTutorClient();
-      final AppRig rig = await toCounting(tester, AppRig(tutor: client));
+      final AppRig rig = await toCounting(tester, AppRig(butterfliesFirst: true, tutor: client));
       await wrongFour(tester);
       expect(
         heard(rig).last,
@@ -172,7 +179,7 @@ void main() {
     WidgetTester tester,
   ) async {
     final FakeTutorClient client = FakeTutorClient();
-    final AppRig rig = await toCounting(tester, AppRig(tutor: client));
+    final AppRig rig = await toCounting(tester, AppRig(butterfliesFirst: true, tutor: client));
     await wrongFour(tester);
     await wait(tester, 2000);
     client.delay = const Duration(seconds: 10);
@@ -186,7 +193,7 @@ void main() {
     'a line that was not made ahead and is slow: thinking, then the recorded "hmm", then the authored line',
     (WidgetTester tester) async {
       final FakeTutorClient client = FakeTutorClient()..gate = Completer<void>();
-      final AppRig rig = await toCounting(tester, AppRig(tutor: client));
+      final AppRig rig = await toCounting(tester, AppRig(butterfliesFirst: true, tutor: client));
       // Nothing was made ahead (the service answers only when the test lets it), so the second mistake has to wait.
       await wrongFour(tester);
       await wait(tester, 2000);
@@ -220,7 +227,7 @@ void main() {
     'a service that refuses, three times, ends the helper for the lesson: the authored lines carry on',
     (WidgetTester tester) async {
       final FakeTutorClient client = FakeTutorClient()..rule = 'model_failed';
-      final AppRig rig = await toCounting(tester, AppRig(tutor: client));
+      final AppRig rig = await toCounting(tester, AppRig(butterfliesFirst: true, tutor: client));
       await wrongFour(tester);
       await wait(tester, 2000);
       await wrongFour(tester);
@@ -234,7 +241,7 @@ void main() {
     'the helper never reaches a child as an error: the screen shows no error text whatever the service says',
     (WidgetTester tester) async {
       final FakeTutorClient client = FakeTutorClient()..rule = 'kill_switch';
-      final AppRig rig = await toCounting(tester, AppRig(tutor: client));
+      final AppRig rig = await toCounting(tester, AppRig(butterfliesFirst: true, tutor: client));
       await wrongFour(tester);
       await wait(tester, 2000);
       await wrongFour(tester);

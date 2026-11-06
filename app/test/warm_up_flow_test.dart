@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
+import 'package:nitznutz/world/land_placement.dart';
 import 'package:nitznutz/world/placement.dart';
 
 import 'support/app_harness.dart';
@@ -21,7 +22,7 @@ void main() {
   testWidgets(
     'the first visit to the counting hills starts with the warm-up, and the answers are written as the warm-up',
     (WidgetTester tester) async {
-      final AppRig rig = AppRig();
+      final AppRig rig = AppRig(butterfliesFirst: true);
       await rig.seedFinishedSetup(warmUp: true);
       await rig.pump(tester);
       await tester.tap(find.text('נועה'));
@@ -29,7 +30,7 @@ void main() {
       await openCountingLesson(tester);
       await tester.pumpAndSettle();
       expect(find.byType(LessonScreen), findsOneWidget);
-      final Lesson warm = placementLesson(content, 'numbers')!;
+      final Lesson warm = placementVisit(content, 'numbers', const <Attempt>[])!.lesson;
       final Activity first = content.activities[warm.itemIds.first]!;
       expect(tester.widget<Text>(_bubble()).data, first.promptLine.caption);
       // "I'm not sure" is written against the warm-up, not against a lesson of the path.
@@ -43,7 +44,7 @@ void main() {
   testWidgets('a child who turned the warm-up off in the parent area goes straight to the first lesson', (
     WidgetTester tester,
   ) async {
-    final AppRig rig = AppRig();
+    final AppRig rig = AppRig(butterfliesFirst: true);
     await rig.seedFinishedSetup();
     await rig.pump(tester);
     await tester.tap(find.text('נועה'));
