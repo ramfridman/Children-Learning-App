@@ -101,11 +101,22 @@ class NumWords(dict):
             w = teens[n]
         elif n in self.TENS:
             w = self.TENS[n]
+        elif 100 < n < 1000:
+            # M10: the hundreds (feminine מֵאָה, so the construct of the feminine count: שְׁלֹשׁ מֵאוֹת); the vav joins the last part only
+            # (מָאתַיִם וְשָׁלוֹשׁ, שְׁלֹשׁ מֵאוֹת אַרְבָּעִים וְחָמֵשׁ, מֵאָה וְעֶשְׂרִים). Band C labels; the editor checks them.
+            h, rest = n // 100, n % 100
+            w = self.HUNDREDS[h]
+            if rest:
+                part = NumWords(self.f)[rest]
+                w += ' ' + (part if rest > 20 and rest % 10 else self.vav(part))
         else:
             tens, one = n - n % 10, n % 10
             w = self.TENS[tens] + ' ' + self.vav(units[one])
         self[n] = w
         return w
+
+    HUNDREDS = {1: 'מֵאָה', 2: 'מָאתַיִם', 3: 'שְׁלֹשׁ מֵאוֹת', 4: 'אַרְבַּע מֵאוֹת', 5: 'חֲמֵשׁ מֵאוֹת', 6: 'שֵׁשׁ מֵאוֹת', 7: 'שְׁבַע מֵאוֹת',
+                8: 'שְׁמוֹנֶה מֵאוֹת', 9: 'תְּשַׁע מֵאוֹת'}
 
 
 F = NumWords(True)
@@ -1246,6 +1257,8 @@ def skill_file(s):
     }
     if s.get('core'):
         d['core'] = True
+    if s.get('setCoverage'):  # M10 E1: fresh mastery also needs every variantGroup (a fact family) answered right once
+        d['setCoverage'] = True
     return d
 
 

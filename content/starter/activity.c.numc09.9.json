@@ -1,0 +1,143 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc09.9",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "spot_error",
+  "templateVersion": "1.0",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "error_spotting",
+  "representation": "symbolic",
+  "variantGroup": "spot",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:c.numc09.9.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "חָבֵר כָּתַב מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "cells": [
+      "n:5",
+      "n:15",
+      "n:25",
+      "n:36",
+      "n:45"
+    ]
+  },
+  "answer": {
+    "type": "spot",
+    "wrong": 3,
+    "misconception": "M-HC-ROW"
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc09.9.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כֵּן! כָּאן הָיָה צָרִיךְ לִהְיוֹת שְׁלוֹשִׁים וְחָמֵשׁ."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-HC-ROW",
+        "vo": "vo:fb.hc_row",
+        "caption": [
+          {
+            "t": "he",
+            "v": "עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה, בְּאוֹתוֹ טוּר. בּוֹאוּ נִרְאֶה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:hint.spot.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc09.9.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בְּכׇל שׁוּרָה הַמִּסְפָּר מִשְׁתַּנֶּה בְּעֶשֶׂר, וְסִפְרַת הַיְּחִידוֹת נִשְׁאֶרֶת אוֹתוֹ דָּבָר. אֶחָד מֵהֶם לֹא מַתְאִים. עַכְשָׁו תּוֹרְכֶם."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child finds the one that does not fit",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "חָבֵר כָּתַב מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?"
+  }
+}

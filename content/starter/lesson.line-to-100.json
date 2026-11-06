@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "line-to-100",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַצִּיר הַגָּדוֹל"
+    }
+  ],
+  "skills": [
+    "NUM-C-06"
+  ],
+  "items": [
+    "c.numc06.1",
+    "c.numc06.2",
+    "c.numc06.3",
+    "c.numc06.4",
+    "c.numc06.5",
+    "c.numc06.6",
+    "c.numc06.7",
+    "c.numc06.8",
+    "c.numc06.9",
+    "c.numc06.10",
+    "c.numc06.11",
+    "c.numc06.12"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 110,
+  "celebration": {
+    "vo": "vo:celebrate.line_to_100",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן."
+      }
+    ]
+  }
+}

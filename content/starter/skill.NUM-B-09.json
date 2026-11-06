@@ -1,0 +1,39 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-09",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "רואים כמויות במסגרת של עשר"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "רוֹאִים כַּמָּה בַּמִּסְגֶּרֶת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-10",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial",
+    "symbolic"
+  ],
+  "misconceptions": [
+    "M-CNT-SKIP",
+    "M-CNT-DOUBLE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "core": true
+}

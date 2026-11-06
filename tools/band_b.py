@@ -145,7 +145,8 @@ class Unit:
         for t, line in SHARED_FB.items():
             self.d['tagFeedback'].setdefault(t, line)
         for other in sorted(os.listdir(UNITS)):
-            if other.endswith('.json') and not other.startswith(self.OWN_SPECS):
+            # a band never reads the specs of a later band (Band B does not take the lines of Band C, M10 C1)
+            if other.endswith('.json') and not other.startswith(self.OWN_SPECS) and not (self.BAND == 'B' and other.startswith('band-c')):
                 for t, line in load(other[:-5]).get('tagFeedback', {}).items():
                     self.d['tagFeedback'].setdefault(t, line)
         path = os.path.join(UNITS, self.name + '.json')

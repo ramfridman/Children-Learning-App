@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-numerals-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מִסְפָּרִים לִקְרֹא"
+    }
+  ],
+  "skills": [
+    "NUM-B-06"
+  ],
+  "items": [
+    "c.numb06.8",
+    "c.numb06.9",
+    "c.numb06.10",
+    "c.numb06.11",
+    "c.numb06.12",
+    "c.numb06.13",
+    "c.numb06.14"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 101,
+  "celebration": {
+    "vo": "vo:celebrate.read_numerals_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הַמִּסְפָּרִים כְּבָר מוּכָּרִים."
+      }
+    ]
+  }
+}

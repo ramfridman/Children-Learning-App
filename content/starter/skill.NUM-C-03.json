@@ -1,0 +1,40 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-C-03",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עשרות ויחידות"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "עֲשָׂרוֹת וִיחִידוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-C-02",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-PV-FACE",
+    "M-PV-ZERO",
+    "M-NUM-REV"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "core": true
+}

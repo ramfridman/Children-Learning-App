@@ -1,0 +1,173 @@
+{
+  "schema": "activity/v1",
+  "id": "c.numc01.10",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.1",
+  "domain": "numbers",
+  "band": "C",
+  "skills": [
+    {
+      "id": "NUM-C-01",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.9
+  },
+  "prompt": {
+    "vo": "vo:c.numc01.10.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיזֶה מִסְפָּר חָסֵר?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "row": [
+      "n:88",
+      "n:89",
+      "?",
+      "n:91"
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 80,
+        "label": "שְׁמוֹנִים",
+        "misconception": "M-CNT-DECADE"
+      },
+      {
+        "id": "o2",
+        "numeral": 92,
+        "label": "תִּשְׁעִים וּשְׁתַּיִם",
+        "misconception": "M-CNT-SEQ"
+      },
+      {
+        "id": "o3",
+        "numeral": 90,
+        "label": "תִּשְׁעִים"
+      }
+    ],
+    "correct": "o3",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.numc01.10.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "תִּשְׁעִים! שְׁמוֹנִים וּשְׁמוֹנֶה, שְׁמוֹנִים וְתֵשַׁע, תִּשְׁעִים, תִּשְׁעִים וְאַחַת."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-CNT-DECADE",
+        "vo": "vo:fb.cnt_decade",
+        "caption": [
+          {
+            "t": "he",
+            "v": "אַחֲרֵי הַתֵּשַׁע בָּא עֶשֶׂר חָדָשׁ. בּוֹאוּ נִסְפֹּר יַחַד."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-CNT-SEQ",
+        "vo": "vo:fb.seq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.numc01.10.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "סוֹפְרִים מֵהַמִּסְפָּר הָרִאשׁוֹן, צַעַד אַחַר צַעַד, וְעוֹצְרִים בַּמָּקוֹם הָרֵיק."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.numc01.10.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמוֹנִים וּשְׁמוֹנֶה, שְׁמוֹנִים וְתֵשַׁע, תִּשְׁעִים, תִּשְׁעִים וְאַחַת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל תִּשְׁעִים."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "אֵיזֶה מִסְפָּר חָסֵר?"
+  }
+}

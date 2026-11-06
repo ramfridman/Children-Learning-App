@@ -1,0 +1,85 @@
+# M10 batch C1: the items that wait for batch step 3
+
+The maths teacher, 2026-11-06. Batch C1 (docs/milestones/M10.md §4.1, §4.2, §7) is in content with only the items that today's sessions
+draw. The items below need a mode that no session draws yet (security review of step 0: `qa_m10s0_undrawn_modes_test.dart` fails on
+any `scene.picture` or `answer.type: number` in content). They are specified here, and none of them is in `content/`. When batch step 3
+builds a mode, the app-developer takes its check off the undrawn list and the maths teacher adds its items to `tools/band_c.py`
+(table `numbers_c1` or `math_c1`), in the same commit. Each item still goes through `tools/check_maths.py --band C --strict`.
+
+Hebrew in the specs is a draft in the plural address, `needs-editor`; = is read שָׁוֶה.
+
+## 1. `scene.picture` `base_ten` (X1): hundreds flats, tens rods, ones cubes
+
+The R1/R2 of place value (P13 in the hint ladders). Tens are drawn left of ones (LTR isolate); the digits are never on the picture.
+
+| Skill | Picture (`tens`, `ones`) | Question | Answer | Wrong options and tags |
+|---|---|---|---|---|
+| NUM-C-03 | 3, 4 | כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן? | 34 | 7 M-PV-FACE (counts rods as ones), 43 M-NUM-REV, 304 M-PV-ZERO |
+| NUM-C-03 | 5, 0 (zero holds a place) | כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן? | 50 | 5 M-PV-ZERO, 500 M-PV-ZERO (see below) |
+| NUM-C-03 | 2, 7, one rod lit | כַּמָּה שָׁוֶה הַמּוֹט הַזֶּה? | 10 | 1 M-PV-FACE (the rod is "one"), 100 M-PV-ZERO |
+| NUM-C-03 | 6, 2 | אֵיזֶה מִסְפָּר בָּנוּ? (U2, blocks → digits; check `transfer`) | 62 | 26 M-NUM-REV, 602 M-PV-ZERO, 8 M-PV-FACE |
+| NUM-C-03 | 4, 3 vs 3, 4 (two pictures, choice of pictures) | אֵיפֹה שְׁלוֹשִׁים וְאַרְבַּע? | the picture 3, 4 | the picture 4, 3 M-NUM-REV |
+| NUM-C-04 | 4, 1 and 3, 9 (two towers) | אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? | 41 | 39 M-PV-FACE |
+| NUM-C-04 | 5, 8 and 4, 3 (the lucky-right pair) | אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר? | 58 | 43 M-PV-FACE |
+| MATH-C-03 | 4 rods + 3 rods | כַּמָּה זֶה? (row `40 + 30 = ?`) | 70 | 7 M-PV-FACE, 700 M-PV-ZERO, 10 M-OP-SWAP |
+| MATH-C-03 | 7 rods, 4 crossed out | כַּמָּה נִשְׁאַר? (row `70 − 40 = ?`) | 30 | 3 M-PV-FACE, 300 M-PV-ZERO, 110 M-OP-SWAP |
+
+For the base_ten items, `check_maths` needs a recogniser of the picture (the number is 10 × tens + ones) and an M-PV-FACE rule
+that also gives tens + ones (each rod counted as one: 7 for 34); both come with the step that draws the picture.
+
+The 50 row needs a decision: both honest distractors (5 and 500) carry M-PV-ZERO, and NUM-C-03 watches three tags, so the B-15 E1
+rule asks for two distinct tags. I recommend allowing the same tag twice on a zero-holds-a-place item (an exception listed in
+`content_lints_test.dart`, as for the other one-tag items), or making it a 2-option item; the curriculum-expert decides.
+
+## 2. `scene.picture` `hundred_chart` (X1): a 10 × 10 chart, cells `lit` or `blank`
+
+| Skill | Picture | Question | Answer | Wrong options and tags |
+|---|---|---|---|---|
+| NUM-C-09 | lit 34, blank 44 | עֶשֶׂר יוֹתֵר מִשְּׁלוֹשִׁים וְאַרְבַּע. אֵיזֶה מִסְפָּר בַּמִּשְׁבֶּצֶת הָרֵיקָה? | 44 | 35 M-HC-ROW, 24 M-OP-SWAP, 43 M-NUM-REV |
+| NUM-C-09 | lit 57, blank 47 | עֶשֶׂר פָּחוֹת. אֵיזֶה מִסְפָּר בַּמִּשְׁבֶּצֶת הָרֵיקָה? | 47 | 56 M-HC-ROW, 67 M-OP-SWAP |
+| NUM-C-09 | lit 6, 16, 26, blank 36 | מָה הַמִּסְפָּר הַבָּא בַּטּוּר? | 36 | 27 M-HC-ROW, 63 M-NUM-REV |
+| NUM-C-09 | blank 58 between lit 48 and 68 (predict) | מָה מִסְתַּתֵּר כָּאן? | 58 | 49 M-HC-ROW, 85 M-NUM-REV |
+| NUM-C-01 | a row 31 … 40 with 37 blank | אֵיזֶה מִסְפָּר חָסֵר? | 37 | 36 M-CNT-SEQ, 47 M-CNT-DECADE |
+| NUM-C-01 | the end of a row, 40 lit, the next row's first cell blank | מַה בָּא אַחֲרֵי אַרְבָּעִים? | 41 | 50 M-CNT-DECADE, 42 M-CNT-SEQ |
+
+Hint L2 of the family (M10 §7.2): a ten-rod laid down the column. The pointer of L3 moves one row down saying "ten more".
+
+## 3. `answer.type: number` (X3): the keypad, read left to right
+
+Every item lists its expected wrong numbers with tags and the rule classifiers (`tools/band_c.py` `number_item`).
+
+| Skill | Row or question | Value | `expected` | `rules` |
+|---|---|---|---|---|
+| NUM-C-02 | כִּתְבוּ אֶת הַמִּסְפָּר עֶשְׂרִים וְשָׁלוֹשׁ | 23 | 32 M-NUM-REV, 203 M-PV-ZERO | |
+| NUM-C-02 | כִּתְבוּ אֶת הַמִּסְפָּר שִׁשִּׁים | 60 | 6 M-PV-ZERO, 600 M-PV-ZERO | |
+| NUM-C-02 | כִּתְבוּ אֶת הַמִּסְפָּר אַרְבָּעִים וָשֶׁבַע | 47 | 74 M-NUM-REV, 407 M-PV-ZERO | |
+| NUM-C-03 | `? = 30 + 4` | 34 | 304 M-PV-ZERO, 43 M-NUM-REV | face_value M-PV-FACE |
+| NUM-C-03 | `58 = ? + 8` | 50 | 5 M-PV-FACE, 66 M-EQ-OPER | |
+| MATH-C-01 | `8 + 7 = ?` | 15 | 14 M-CNT-DOUBLE, 8 M-CNT-CARD, 1 M-OP-SWAP | |
+| MATH-C-01 | `9 + 6 = ?` | 15 | 14 M-CNT-DOUBLE, 9 M-CNT-CARD, 3 M-OP-SWAP | |
+| MATH-C-01 | `15 − 7 = ?` | 8 | 22 M-OP-SWAP, 9 M-CNT-DOUBLE, 12 M-SUB-SMALLBIG | smaller_from_larger M-SUB-SMALLBIG, added_instead M-OP-SWAP |
+| MATH-C-01 | `13 − 6 = ?` | 7 | 19 M-OP-SWAP, 8 M-CNT-DOUBLE, 13 M-SUB-SMALLBIG | smaller_from_larger, added_instead |
+| MATH-C-01 | `7 + ? = 16` (reverse) | 9 | 23 M-EQ-OPER, 16 M-EQ-OPER, 10 M-CNT-DOUBLE | |
+| MATH-C-02 | `15 − ? = 9` | 6 | 24 M-OP-SWAP, 15 M-EQ-OPER | added_instead M-OP-SWAP |
+| MATH-C-02 | `? − 6 = 9` | 15 | 3 M-OP-SWAP, 9 M-EQ-OPER | |
+| MATH-C-03 | `40 + 30 = ?` | 70 | 7 M-PV-FACE, 700 M-PV-ZERO, 10 M-OP-SWAP | off_by_ten M-REGROUP-FORGET is not used (no regrouping) |
+| MATH-C-03 | `90 − 50 = ?` | 40 | 4 M-PV-FACE, 400 M-PV-ZERO, 140 M-OP-SWAP | added_instead M-OP-SWAP |
+
+Number entry is also the place for the M-SUB-ORDER diagnostic of MATH-C-02 (M10 §4.2: "6 − 15 = 9 accepted"). A choice item cannot
+show it without a true-or-false sentence card; I recommend a keypad item `9 = 15 − ?` with 24 M-OP-SWAP and a `spot_error` sentence
+`6 − 15 = 9` once T25 or a true/false card exists. Until then MATH-C-02 watches M-OP-SWAP and M-EQ-OPER only (its skill file says so).
+
+## 4. `number_line` 0 to 100 with a tolerance (X5)
+
+NUM-C-06 in content places numbers on windows of twenty (40 to 60, labels at the ends and the middle ten), because today's line takes
+only an exact tick and 101 ticks do not fit a phone. The skill as written (curriculum §4: "error ≤ 8") needs X5:
+
+| Item | Line | Labels | Target | Tolerance | Tags |
+|---|---|---|---|---|---|
+| place | 0 to 100, ticks of 10 | 0, 100 | 70 | 8 | 30 M-NL-DIR (mirrored), 7 M-PV-FACE |
+| place | 0 to 100 | 0, 50, 100 | 23 | 8 | 77 M-NL-DIR |
+| place | 0 to 100 | 0, 100 | 45 | 8 | 55 M-NL-DIR |
+| place | 0 to 100 | 0, 100 | 88 | 8 | 12 M-NL-DIR, 8 M-PV-FACE |
+| estimate (predict) | 0 to 100, the frog stands on an unlabelled tick near 60 | 0, 100 | 60 | 8 | 40 M-NL-DIR |
+
+When X5 is drawn, these replace four of the window items (keep two windows for the transfer check).

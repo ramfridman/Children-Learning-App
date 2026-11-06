@@ -1,0 +1,38 @@
+{
+  "schema": "lesson/v1",
+  "id": "facts-to-18-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד עוּבְדוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-C-01"
+  ],
+  "items": [
+    "c.mathc01.10",
+    "c.mathc01.11",
+    "c.mathc01.12",
+    "c.mathc01.13",
+    "c.mathc01.14",
+    "c.mathc01.15",
+    "c.mathc01.16",
+    "c.mathc01.17",
+    "c.mathc01.18"
+  ],
+  "estimatedMinutes": 7,
+  "sequence": 102,
+  "celebration": {
+    "vo": "vo:celebrate.facts_to_18_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! הָעוּבְדוֹת מִתְחַזְּקוֹת."
+      }
+    ]
+  }
+}

@@ -143,7 +143,7 @@
         "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
       },
       "minItems": 0,
-      "maxItems": 4000
+      "maxItems": 12000
     },
     "entries": {
       "type": "object",

@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "whole-tens",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עֲשָׂרוֹת שְׁלֵמוֹת"
+    }
+  ],
+  "skills": [
+    "MATH-C-03"
+  ],
+  "items": [
+    "c.mathc03.1",
+    "c.mathc03.2",
+    "c.mathc03.3",
+    "c.mathc03.4",
+    "c.mathc03.5",
+    "c.mathc03.6",
+    "c.mathc03.7",
+    "c.mathc03.8",
+    "c.mathc03.9",
+    "c.mathc03.10",
+    "c.mathc03.11",
+    "c.mathc03.12"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 105,
+  "celebration": {
+    "vo": "vo:celebrate.whole_tens",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מְצֻיָּן! חֲשַׁבְתֶּם בַּעֲשָׂרוֹת."
+      }
+    ]
+  }
+}

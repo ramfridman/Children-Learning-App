@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "read-numerals",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים מִסְפָּרִים"
+    }
+  ],
+  "skills": [
+    "NUM-B-06"
+  ],
+  "items": [
+    "c.numb06.1",
+    "c.numb06.2",
+    "c.numb06.3",
+    "c.numb06.4",
+    "c.numb06.5",
+    "c.numb06.6",
+    "c.numb06.7"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 100,
+  "celebration": {
+    "vo": "vo:celebrate.read_numerals",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! קְרָאתֶם אֶת הַמִּסְפָּרִים."
+      }
+    ]
+  }
+}

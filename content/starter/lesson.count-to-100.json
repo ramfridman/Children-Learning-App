@@ -1,0 +1,41 @@
+{
+  "schema": "lesson/v1",
+  "id": "count-to-100",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "סוֹפְרִים עַד מֵאָה"
+    }
+  ],
+  "skills": [
+    "NUM-C-01"
+  ],
+  "items": [
+    "c.numc01.1",
+    "c.numc01.2",
+    "c.numc01.3",
+    "c.numc01.4",
+    "c.numc01.5",
+    "c.numc01.6",
+    "c.numc01.7",
+    "c.numc01.8",
+    "c.numc01.9",
+    "c.numc01.10",
+    "c.numc01.11",
+    "c.numc01.12"
+  ],
+  "estimatedMinutes": 8,
+  "sequence": 105,
+  "celebration": {
+    "vo": "vo:celebrate.count_to_100",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! עֲבַרְתֶּם אֶת הָעֲשָׂרוֹת."
+      }
+    ]
+  }
+}

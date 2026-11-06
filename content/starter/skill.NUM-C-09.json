@@ -1,0 +1,38 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-C-09",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "עשר יותר, עשר פחות"
+    }
+  ],
+  "worldObject": "cone-tree",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "עֶשֶׂר יוֹתֵר וְעֶשֶׂר פָּחוֹת"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-C-03",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-HC-ROW",
+    "M-OP-SWAP"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

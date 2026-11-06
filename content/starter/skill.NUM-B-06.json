@@ -1,0 +1,38 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-B-06",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "קוראים 0–10"
+    }
+  ],
+  "worldObject": "pool",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "קוֹרְאִים מִסְפָּרִים עַד עֶשֶׂר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-A-08",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "symbolic",
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-NUM-REV"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  },
+  "core": true
+}

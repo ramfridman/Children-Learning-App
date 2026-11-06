@@ -117,10 +117,13 @@ void main() {
   final Map<String, Map<String, Object?>> acts = _load('activity.');
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
-  test('the sources are the 967 activities and 100 skills of pack 0.10.0', () {
-    expect(acts.length, 967);
-    expect(skills.length, 100);
-  });
+  test(
+    'the sources are the 967 activities and 100 skills of pack 0.10.0, and the 168 and 12 of M10 batch C1',
+    () {
+      expect(acts.length, 967 + 168);
+      expect(skills.length, 100 + 12);
+    },
+  );
 
   test('the representation label of every activity follows the rule of spec section 2', () {
     final List<String> wrong = <String>[];

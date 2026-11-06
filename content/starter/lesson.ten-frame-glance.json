@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "ten-frame-glance",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִסְגֶּרֶת שֶׁל עֶשֶׂר"
+    }
+  ],
+  "skills": [
+    "NUM-B-09"
+  ],
+  "items": [
+    "c.numb09.1",
+    "c.numb09.2",
+    "c.numb09.3",
+    "c.numb09.4",
+    "c.numb09.5",
+    "c.numb09.6",
+    "c.numb09.7"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 102,
+  "celebration": {
+    "vo": "vo:celebrate.ten_frame_glance",
+    "caption": [
+      {
+        "t": "he",
+        "v": "יָפֶה מְאֹד! רְאִיתֶם בְּלִי לִסְפֹּר."
+      }
+    ]
+  }
+}

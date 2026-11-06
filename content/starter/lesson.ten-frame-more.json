@@ -1,0 +1,36 @@
+{
+  "schema": "lesson/v1",
+  "id": "ten-frame-more",
+  "review": "needs-editor",
+  "revision": 1,
+  "band": "B",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד מִסְגָּרוֹת"
+    }
+  ],
+  "skills": [
+    "NUM-B-09"
+  ],
+  "items": [
+    "c.numb09.8",
+    "c.numb09.9",
+    "c.numb09.10",
+    "c.numb09.11",
+    "c.numb09.12",
+    "c.numb09.13",
+    "c.numb09.14"
+  ],
+  "estimatedMinutes": 6,
+  "sequence": 103,
+  "celebration": {
+    "vo": "vo:celebrate.ten_frame_more",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד! הַמִּסְגֶּרֶת מְלֵאָה."
+      }
+    ]
+  }
+}

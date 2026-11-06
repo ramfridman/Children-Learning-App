@@ -1,0 +1,41 @@
+{
+  "schema": "skill/v1",
+  "id": "NUM-C-06",
+  "review": "needs-editor",
+  "domain": "numbers",
+  "band": "C",
+  "title": [
+    {
+      "t": "he",
+      "v": "מספרים על ציר עד 100"
+    }
+  ],
+  "worldObject": "dock",
+  "childLine": [
+    {
+      "t": "he",
+      "v": "שָׂמִים מִסְפָּרִים עַל הַצִּיר"
+    }
+  ],
+  "prerequisites": [
+    {
+      "skill": "NUM-C-03",
+      "weight": 1
+    },
+    {
+      "skill": "NUM-B-13",
+      "weight": 1
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "M-NL-DIR",
+    "M-NL-SPACE"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

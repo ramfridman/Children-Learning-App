@@ -1,0 +1,181 @@
+{
+  "schema": "activity/v1",
+  "id": "c.mathc03.10",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.4",
+  "domain": "math",
+  "band": "C",
+  "skills": [
+    {
+      "id": "MATH-C-03",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "transfer",
+  "representation": "pictorial",
+  "variantGroup": "pick",
+  "difficulty": {
+    "authored": 0.6
+  },
+  "prompt": {
+    "vo": "vo:c.mathc03.10.prompt",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כַּמָּה שְׁקָלִים יֵשׁ בְּסַךְ הַכֹּל?"
+      }
+    ],
+    "replayButton": true
+  },
+  "scene": {
+    "background": "asset:meadow",
+    "optionsOnTiles": true,
+    "group": {
+      "sprite": "asset:coin_s10",
+      "count": 2,
+      "arrangement": "line",
+      "seed": 3,
+      "scale": 1
+    },
+    "group2": {
+      "sprite": "asset:coin_s10",
+      "count": 5,
+      "arrangement": "line",
+      "seed": 8,
+      "scale": 1
+    }
+  },
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "numeral": 7,
+        "label": "שֶׁבַע",
+        "misconception": "M-MONEY-COUNT"
+      },
+      {
+        "id": "o2",
+        "numeral": 70,
+        "label": "שִׁבְעִים"
+      },
+      {
+        "id": "o3",
+        "numeral": 700,
+        "label": "שְׁבַע מֵאוֹת",
+        "misconception": "M-PV-ZERO"
+      }
+    ],
+    "correct": "o2",
+    "shuffle": false,
+    "unsureAllowed": true
+  },
+  "voiceAnswer": false,
+  "feedback": {
+    "correct": {
+      "vo": "vo:c.mathc03.10.correct",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שִׁבְעִים! שִׁבְעִים שְׁקָלִים."
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:M-MONEY-COUNT",
+        "vo": "vo:fb.money_count",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כׇּל מַטְבֵּעַ שָׁוֶה כַּמָּה שֶׁכָּתוּב עָלָיו. בּוֹאוּ נְחַבֵּר אֶת מַה שֶּׁכָּתוּב."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-PV-ZERO",
+        "vo": "vo:fb.pv_zero",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בְּמִסְפָּר עִם עֲשָׂרוֹת וִיחִידוֹת יֵשׁ שְׁתֵּי סְפָרוֹת בִּלְבַד. בּוֹאוּ נִבְדֹּק אֶת הַמָּקוֹם שֶׁל כׇּל סִפְרָה."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:fb.almost",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:fb.unsure",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁאֵלָה טוֹבָה! בּוֹאוּ נִרְאֶה יַחַד."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:hint.pick.h1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:c.mathc03.10.h2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל מַטְבֵּעַ שָׁוֶה עֲשָׂרָה שְׁקָלִים. סוֹפְרִים אֶת הַמַּטְבְּעוֹת בַּעֲשָׂרוֹת."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:c.mathc03.10.h3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, אַרְבָּעִים, חֲמִשִּׁים, שִׁשִּׁים, שִׁבְעִים. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שִׁבְעִים."
+        }
+      ]
+    }
+  ],
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.8,
+      0.5,
+      0
+    ]
+  },
+  "tutor": {
+    "llmAllowed": true,
+    "goal": "child picks the right picture",
+    "mustNotRevealBeforeHint": 3
+  },
+  "a11y": {
+    "altText": "כַּמָּה שְׁקָלִים יֵשׁ בְּסַךְ הַכֹּל?"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "misconception/v1",
+  "id": "M-SUB-SMALLBIG",
+  "review": "needs-editor",
+  "skills": [
+    "MATH-C-01"
+  ],
+  "parentText": "הילד מחסר בכל טור את הספרה הקטנה מהגדולה, בלי לשים לב מי למעלה: 15 פחות 7 נראה לו 12, כי 7 פחות 5 הם 2.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "לפרוט עשר: לשים 15 כפיות כעשר בערמה וחמש לבד, ולהוריד שבע. רואים שצריך לפתוח את העשר."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

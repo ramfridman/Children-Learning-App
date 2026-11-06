@@ -229,7 +229,8 @@ const SObject manifestSchema = SObject(<String, SField>{
   'files': SField(_fileList),
   'assets': SField(_assetFiles),
   'vo': SField(_voFiles),
-  'voPending': SField(SArray(_vo, maxItems: 4000)),
+  // M10: Band C adds lines that wait for their voice (B-45, text only now); batch C1 took the pack past 4000.
+  'voPending': SField(SArray(_vo, maxItems: 12000)),
   'entries': SField(
     SObject(<String, SField>{
       'activities': SField(SArray(_id, maxItems: 1500)),
