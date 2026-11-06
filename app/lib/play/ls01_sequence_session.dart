@@ -90,9 +90,10 @@ class Ls01SequenceSession extends Ls01Session {
   ActivitySpec layoutFor(ActivitySpec base) {
     final ActivitySpec zone = super.layoutFor(base);
     if (zone.stageIsCard) return zone;
-    // The line stands so that its path ends above the bottom band: a tall place (3 squares) lifts it, and the stage gives way.
-    final double bottom = zone.boardHeight < 380 ? 319 : 337;
-    final double top = math.min(zone.tilesTop, bottom - placeSize(zone).height);
+    // The line stands so that its beads end 2 above the bottom band (their centres at y 341 on the SE, 359 on the phone): a tall place (3
+    // squares) lifts it, and the stage gives way. Under the top of the places lie their 12 of room, the 22 to the path and 11 to a bead's middle.
+    final double beadCentre = zone.boardHeight < 380 ? 341 : 359;
+    final double top = math.min(zone.tilesTop, beadCentre - (12 + 22 + 11) - placeSize(zone).height);
     return zone.withStageAndTiles(
       stage: Rect.fromLTWH(
         zone.stage.left,
@@ -187,10 +188,11 @@ class Ls01SequenceSession extends Ls01Session {
   void playHint(int level) {
     switch (level) {
       case 1:
-        // The story again, short: each picture lights in turn while its line plays.
+        // The story again, short: the places light one after the other, first to last, while the lines of the story play in its order. The
+        // lit place is the k-th place of the line, not the picture that stands in it: no picture is lit before level 3 (spec section 8).
         for (int k = 0; k < n; k++) {
           step(900 * k, () {
-            litPlace = placeOf(story.order[k]);
+            litPlace = k;
             if (story.clips.length == n) {
               playClips?.call(<String>[story.clips[story.order[k]]], replace: false);
             }

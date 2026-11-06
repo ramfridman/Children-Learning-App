@@ -9,6 +9,8 @@ import '../design/components.dart';
 import '../design/course_text.dart';
 import '../design/tokens.g.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
+import 'ls01_chips.dart';
+import 'ls01_hand.dart';
 import 'ls01_metrics.dart';
 import 'ls01_session.dart';
 import 'ls01_tiles.dart';
@@ -47,6 +49,9 @@ class Ls01SortSession extends Ls01Session {
   String? demoItem;
   String? haloBin;
   bool altSigns = false;
+
+  /// The card a hint has lifted from the tray and is sending to its bin (it stands dimmed in the tray while its copy flies).
+  String? liftedItem;
 
   late final List<Ls01Face> faces = <Ls01Face>[
     for (final SortItem i in sort.items)
@@ -116,9 +121,15 @@ class Ls01SortSession extends Ls01Session {
     if (placed.length == sort.items.length) _check();
   }
 
-  /// A kept chip is touched: it goes back to the tray (the child may change their mind), and a sound chip is heard.
+  /// A kept chip is touched: it goes back to the tray (the child may change their mind), and a sound chip is heard. When a card is chosen and
+  /// waits for a bin, the touch is on the bin that chip stands in, and the card goes in.
   void takeBack(String itemId) {
     if (busy || done) return;
+    final String? chosen = selected;
+    if (chosen != null) {
+      drop(chosen, placed[itemId]!);
+      return;
+    }
     final SortItem item = sort.items.firstWhere((SortItem i) => i.id == itemId);
     if (item.clip != null && faceOf(itemId).soundOnly) playClips?.call(<String>[item.clip!], replace: true);
     placed.remove(itemId);
@@ -191,6 +202,7 @@ class Ls01SortSession extends Ls01Session {
     demoItem = null;
     haloBin = null;
     altSigns = false;
+    liftedItem = null;
   }
 
   @override
@@ -228,23 +240,42 @@ class Ls01SortSession extends Ls01Session {
     }
   }
 
-  /// "Watch me": the hand takes the next card to its bin, the card stays there a moment, and then it is the child's turn with the bin lit.
+  /// "Watch me": the hand touches the next card in the tray, and the card then goes to its bin by itself and stays there a moment, the bin lit.
+  /// The hand does not go up to the bins: held over them it would hide the sign (docs/design/languages-l5-ls01.md section 7.2).
   void _demonstrate() {
     if (tray.isEmpty) return demoOver(300);
     final SortItem item = tray.first;
     final int bin = sort.bins.indexWhere((SortBin b) => b.id == item.bin);
-    step(200, () => handTip = _trayRect(0).topCenter + const Offset(0, 6));
-    step(1500, () => handTip = _binRect(bin).center + Offset(0, _binRect(bin).height * 0.25));
-    step(2700, () {
+    final Rect from = _trayRect(0);
+    step(200, () => handTip = ls01TipBelowStage(zones, from));
+    step(1300, () {
+      handTip = null;
+      liftedItem = item.id;
+      flightChild = _flyingCard(item.id);
+      flightRect = from;
+    });
+    step(1400, () => flightRect = _chipRect(bin, item.id));
+    step(2200, () {
+      flightChild = null;
+      flightRect = null;
+      liftedItem = null;
       demoItem = item.id;
       haloBin = sort.bins[bin].id;
     });
-    step(4100, () {
-      demoItem = null;
-      handTip = null;
-    });
-    demoOver(4300);
+    step(3600, () => demoItem = null);
+    demoOver(3800);
   }
+
+  /// The copy of a card that flies from the tray to its bin: the card's own look.
+  Widget _flyingCard(String itemId) => DecoratedBox(
+    key: const Key('sort-flight'),
+    decoration: BoxDecoration(
+      color: TokenColors.paper,
+      borderRadius: BorderRadius.circular(TokenRadius.xl),
+      border: Border.all(color: TokenColors.selectedRing, width: 4),
+    ),
+    child: Ls01FaceView(face: faceOf(itemId), metrics: metrics, kind: _kind),
+  );
 
   // ---- geometry ----
 
@@ -280,21 +311,47 @@ class Ls01SortSession extends Ls01Session {
     return Rect.fromLTWH(x, zones.tilesTop, p.tileWidth, p.tileHeight);
   }
 
+  BinGeometry get _geo => BinGeometry(room: stageRoom, tablet: zones.stageIsCard, bins: sort.bins.length);
+
   /// Where bin [i] stands on the board.
   Rect _binRect(int i) {
-    final Size room = stageRoom;
-    final bool tablet = zones.stageIsCard;
-    final double pad = tablet ? 0 : 6;
-    final double gap = tablet ? 16 : 8;
     final int n = sort.bins.length;
-    final double w = (room.width - 2 * pad - (n - 1) * gap) / n;
     final int slot = rowDirection == TextDirection.ltr ? i : n - 1 - i;
-    return Rect.fromLTWH(
-      stageOrigin.dx + pad + slot * (w + gap),
-      stageOrigin.dy + pad,
-      w,
-      room.height - 2 * pad,
-    );
+    return _geo.binRect(slot).shift(stageOrigin);
+  }
+
+  /// The cards in bin [binId] as kept chips: the ones put there, and the one a hint's demonstration has just put there.
+  List<SortItem> _chipItems(String binId) => <SortItem>[
+    ...chipsOf(binId),
+    if (demoItem != null && haloBin == binId) sort.items.firstWhere((SortItem i) => i.id == demoItem),
+  ];
+
+  List<double> _chipWidths(List<SortItem> items) => <double>[
+    for (final SortItem i in items) keptChipWidth(metrics, faceOf(i.id).text, square: _geo.chipMax),
+  ];
+
+  ChipPlan _chipPlan(List<SortItem> items) => ChipPlan.of(
+    _chipWidths(items),
+    width: _geo.chipRoom.width,
+    height: _geo.chipRoom.height,
+    maxHeight: _geo.chipMax,
+  );
+
+  /// Where the card [itemId] will stand in its bin [bin] once it is there (after the chips already there), on the board.
+  Rect _chipRect(int bin, String itemId) {
+    final BinGeometry g = _geo;
+    final List<SortItem> items = <SortItem>[
+      ...chipsOf(sort.bins[bin].id),
+      sort.items.firstWhere((SortItem i) => i.id == itemId),
+    ];
+    final ChipPlan plan = _chipPlan(items);
+    final double w = _chipWidths(items).last;
+    final Offset off = plan.offsets.last;
+    final Rect b = _binRect(bin);
+    final double left = b.left + BinGeometry.chrome;
+    final double top = b.top + BinGeometry.chrome + g.signHeight + BinGeometry.between;
+    final double x = rowDirection == TextDirection.ltr ? left + off.dx : left + g.chipRoom.width - off.dx - w;
+    return Rect.fromLTWH(x, top + off.dy, w, plan.height);
   }
 
   // ---- drawing ----
@@ -313,13 +370,13 @@ class Ls01SortSession extends Ls01Session {
           clipBehavior: Clip.none,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(spec.stageIsCard ? 0 : 6),
+              padding: EdgeInsets.symmetric(horizontal: _geo.padX, vertical: _geo.padY),
               child: Row(
                 textDirection: rowDirection,
                 children: <Widget>[
                   for (final (int i, SortBin b) in sort.bins.indexed) ...<Widget>[
-                    if (i > 0) SizedBox(width: spec.stageIsCard ? 16 : 8),
-                    Expanded(child: _bin(i, b, spec)),
+                    if (i > 0) SizedBox(width: _geo.gap),
+                    Expanded(child: _bin(i, b)),
                   ],
                 ],
               ),
@@ -333,10 +390,11 @@ class Ls01SortSession extends Ls01Session {
 
   Widget _ghost() {
     final Rect r = _binRect(ghostBin!);
-    final double side = metrics.tileHeight * 0.55;
+    final double side = math.min(metrics.tileHeight * 0.55, _geo.chipRoom.height);
+    // It glides in the chips' room under the sign, so that it never covers a sign.
     return Positioned(
       left: r.center.dx - stageOrigin.dx - side / 2,
-      top: r.top - stageOrigin.dy + 6,
+      top: r.top - stageOrigin.dy + BinGeometry.chrome + _geo.signHeight + BinGeometry.between,
       width: side,
       height: side,
       child: IgnorePointer(
@@ -353,11 +411,12 @@ class Ls01SortSession extends Ls01Session {
     );
   }
 
-  Widget _bin(int index, SortBin b, ActivitySpec spec) {
-    final bool tablet = spec.stageIsCard;
-    final double signHeight = tablet ? 84 : 58;
-    final double chip = tablet ? 56 : 44;
+  Widget _bin(int index, SortBin b) {
+    final BinGeometry g = _geo;
     final Ls01Metrics m = metrics;
+    final List<SortItem> chips = _chipItems(b.id);
+    final ChipPlan plan = _chipPlan(chips);
+    final List<double> widths = _chipWidths(chips);
     return DragTarget<String>(
       onWillAcceptWithDetails: (DragTargetDetails<String> d) => !busy && !done,
       onAcceptWithDetails: (DragTargetDetails<String> d) => drop(d.data, b.id),
@@ -372,7 +431,7 @@ class Ls01SortSession extends Ls01Session {
             clipBehavior: Clip.none,
             children: <Widget>[
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(BinGeometry.chrome - 4),
                 decoration: BoxDecoration(
                   color: over.isNotEmpty ? TokenColors.skyTint : TokenColors.paper.withValues(alpha: 0.85),
                   borderRadius: BorderRadius.circular(24),
@@ -380,31 +439,40 @@ class Ls01SortSession extends Ls01Session {
                 ),
                 child: Column(
                   children: <Widget>[
-                    _sign(b, signHeight, m),
-                    const SizedBox(height: 6),
+                    // The sign, and its speaker in a place of its own at the end of the same row: it is never on a chip.
+                    Row(
+                      textDirection: rowDirection,
+                      children: <Widget>[
+                        Expanded(child: _sign(b, g.signHeight, m)),
+                        if (b.clip != null) ...<Widget>[
+                          const SizedBox(width: 4),
+                          SpeakerMark(
+                            key: Key('bin-speaker-${b.id}'),
+                            touch: g.speakerTouch,
+                            onTap: () => playSign(b),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: BinGeometry.between),
                     Expanded(
-                      child: ClipRect(
-                        child: Wrap(
-                          spacing: 4,
-                          runSpacing: 4,
-                          alignment: WrapAlignment.start,
-                          children: <Widget>[
-                            for (final SortItem i in chipsOf(b.id)) _chip(c, i, chip, m),
-                            if (demoItem != null && haloBin == b.id)
-                              _chip(c, sort.items.firstWhere((SortItem i) => i.id == demoItem), chip, m),
-                          ],
-                        ),
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: <Widget>[
+                          for (final (int k, SortItem i) in chips.indexed)
+                            PositionedDirectional(
+                              start: plan.offsets[k].dx,
+                              top: plan.offsets[k].dy,
+                              width: widths[k],
+                              height: plan.height,
+                              child: _chip(c, i, plan.height, m),
+                            ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-              if (b.clip != null)
-                PositionedDirectional(
-                  end: 2,
-                  bottom: 2,
-                  child: SpeakerMark(key: Key('bin-speaker-${b.id}'), touch: 56, onTap: () => playSign(b)),
-                ),
               if (litBin == index || haloBin == b.id)
                 const Positioned.fill(
                   child: IgnorePointer(child: SkyRing(key: Key('bin-glow'), round: false, radius: 28)),
@@ -439,7 +507,6 @@ class Ls01SortSession extends Ls01Session {
     return Container(
       key: Key('sign-${b.id}'),
       height: height,
-      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 6),
       decoration: BoxDecoration(
         color: TokenColors.paper,
@@ -465,15 +532,19 @@ class Ls01SortSession extends Ls01Session {
     );
   }
 
-  /// A card already sorted: a small mist chip at the caption size, with its picture or its speaker.
+  /// A card already sorted: a small mist chip at the kept size, with its picture or its speaker. It is [height] tall, as the bin's room allows.
   Widget _chip(BuildContext context, SortItem i, double height, Ls01Metrics m) {
     final Ls01Face f = faceOf(i.id);
     final Widget inner = f.text != null
-        ? CourseText(
-            f.text!,
-            course: m.course,
-            size: m.size(FaceKind.kept),
-            lineHeight: lineHeightFor(f.text!, hebrew: m.hebrew),
+        // A bigger system text scale would grow the word out of its chip: the chip holds it at the kept size and no larger.
+        ? FittedBox(
+            fit: BoxFit.scaleDown,
+            child: CourseText(
+              f.text!,
+              course: m.course,
+              size: m.size(FaceKind.kept),
+              lineHeight: math.min(lineHeightFor(f.text!, hebrew: m.hebrew), height / m.size(FaceKind.kept)),
+            ),
           )
         : (f.svg != null
               ? PackSvg(f.svg!, width: height - 10, height: height - 10)
@@ -485,9 +556,6 @@ class Ls01SortSession extends Ls01Session {
         behavior: HitTestBehavior.opaque,
         onTap: () => takeBack(i.id),
         child: Container(
-          height: height,
-          constraints: BoxConstraints(minWidth: height),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: TokenColors.mist,
@@ -554,7 +622,7 @@ class Ls01SortSession extends Ls01Session {
                     ),
                   ),
                   childWhenDragging: Opacity(opacity: 0.25, child: tile),
-                  child: tile,
+                  child: liftedItem == visible[k].id ? Opacity(opacity: 0.25, child: tile) : tile,
                 ),
               ),
               if (left.length > visible.length)

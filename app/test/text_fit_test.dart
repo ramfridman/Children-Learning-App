@@ -205,6 +205,38 @@ void main() {
       expect(card, isNotEmpty);
     });
 
+    test('a sort: the speaker of a bin takes room from its sign, and the right cards of a bin must fit its room for chips', () {
+      final LangPack p = LangPack()..addPictures(_pictures);
+      Map<String, Object?> sort(
+        String id, {
+        String? clip,
+        List<String> cards = const <String>['pan', 'nap'],
+      }) => sortJson(
+        id: id,
+        band: 'B',
+        bins: <Map<String, Object?>>[
+          sortFace('b1', text: 'sh', clip: clip),
+          sortFace('b2', text: 'i'),
+        ],
+        items: <Map<String, Object?>>[
+          for (final (int k, String c) in cards.indexed)
+            sortFace('i${k + 1}', text: c, bin: k.isEven ? 'b1' : 'b2', tag: p.tag('lis.sem')),
+        ],
+      );
+      // The sign "sh" fits the bin alone; beside the speaker of its sound it does not (QA-L51-1b).
+      expect(_problems(_item(sort('so1'), into: p)), isEmpty);
+      final List<String> beside = _problems(_item(sort('so2', clip: 'vo:eng.sh'), into: p));
+      expect(beside.first, contains('the sign "sh" of b1'));
+      expect(beside.first, contains('beside its speaker'));
+      // Two short words in a bin have two rows of chips on the SE (QA-L51-1a); a third and fourth in the same bin would have to overlap.
+      expect(_problems(_item(sort('so3', cards: <String>['pan', 'nap', 'pin', 'sit']), into: p)), isEmpty);
+      final List<String> crowded = _problems(
+        _item(sort('so4', cards: <String>['pan', 'pin', 'nap', 'sit', 'pit', 'tap', 'pat', 'nip']), into: p),
+      );
+      expect(crowded, isNotEmpty);
+      expect(crowded.first, contains('do not fit its room for kept chips'));
+    });
+
     test('order tiles: the row of the stage holds 4 cells on the phone SE', () {
       final LangPack p = LangPack()..addPictures(_pictures);
       Map<String, Object?> order(String id, List<String> model, List<String> seq) => orderJson(

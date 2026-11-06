@@ -110,7 +110,7 @@ Target text is English or Russian in Nitznutz Letters through `TargetText` (Medi
 1. **A tile holds one line.** A word, a unit or a short phrase never wraps inside a tile, is never hyphenated, never cut, never ends in an ellipsis and is never shrunk below its reading size. `OptionTextFace`'s `FittedBox(scaleDown)` stays only as the last safety net of section 4.5.
 2. **All text tiles of one row have one width**: the widest text plus the padding on both sides, and at least the square tile. The row does not tell which word is long by giving it a longer tile than its neighbours need, and it looks calm.
 3. **A row is centred in its zone** and runs in the course's direction. It fits when *n* x (tile width + gap) is no more than the zone's width (the outer tiles' hit areas stay in the zone).
-4. **Sentences wrap only at spaces** (the stem, the cloze): never inside a word, never with a hyphen, at the line size, start-aligned (left in English and Russian, right in Hebrew), the block centred in its column. The cloze gap is one unbreakable piece that is as wide as the widest option plus 16. Hebrew punctuation stays at the end of its own line (the sentence is one right-to-left run); an English or Russian sentence is one isolated left-to-right run (`TargetText`), never inline with Hebrew.
+4. **Sentences wrap only at spaces** (the stem, the cloze): never inside a word, never with a hyphen, at the line size, start-aligned (left in English and Russian, right in Hebrew), the block centred in its column. The cloze gap is one unbreakable piece that is as wide as the widest option plus 16; **in the Hebrew course the gap and the word after it break together** (one unbreakable unit, 2026-11-06), so that the gap lands in the middle of a line when it can. **A sentence is held to its zone** (2026-11-06): the system's text scale lowers the sentence in steps of 0.05 until it fits the stage in width and height, never below its reading size and never over the answer zone; a word's reading bar lies on the foot of its own line box and takes no room, so a sentence is as tall with the bars as without. Hebrew punctuation stays at the end of its own line (the sentence is one right-to-left run); an English or Russian sentence is one isolated left-to-right run (`TargetText`), never inline with Hebrew.
 5. **A text that does not fit is a content error**, found by the fit check (section 4.3) before a pack is built. The author then uses fewer options, a shorter word, or two options of a binary skill.
 
 ### 4.2 The fit table (Band B; the widest text a tile can hold, in em of the word size)
@@ -145,6 +145,8 @@ A Flutter test (proposal: `app/test/content/text_fit_test.dart`) lays out every 
 | Cloze with its picture, Hebrew | **2 lines** | 2 lines | 3 lines |
 
 The mockups show "The dog is ___ the chair." in 3 lines on the phone, 2 on the tablet landscape and 1 on the tablet portrait, and "הַכֶּלֶב ___ עַל הַכִּסֵּא." in 2 lines on the phone, the SE and the tablet landscape.
+
+**Height (2026-11-06, QA-L51-2):** the line limits above are also a height limit: the sentence must fit the stage. A phone SE stage is 144 high (136 at Band A), so 3 lines of 34 pt English (3 x 44 + 2 x 3) fit, and the fit check refuses a sentence that is taller than the stage whatever its lines.
 
 ### 4.5 Runtime safety net (should never fire)
 
@@ -205,16 +207,17 @@ The L1 row (`ChoiceRow`) takes the reading sizes of section 3 and the fit rules 
 |---|---|---|---|---|
 | Bins (2 or 3) in S | 2: 178 x 136 each, 8 apart; 3: 116 x 136 | 2: 121 x 132; 3: 78 x 132 | 2: 268 x 268, 16 apart; 3: 173 x 268 | 2: 362 x 268; 3: 236 x 268 |
 | Sign on the bin's top (a white pill, the clay lip 3) | 58 high | 58 | 84 | 84 |
-| Kept chips (under the sign, in one row, caption size, `mist` fill, radius 14) | 44 high | 44 | 56 | 56 |
+| Kept chips (under the sign, in rows from the start side, caption size, `mist` fill, radius 14) | 28 to 44 high | 28 to 44 | 56 | 56 |
 | Cards in A (letter or word, at reading size) | up to 5 squares, or 4 words of up to 2.66 em | up to 4 squares, or 3 words of up to 3.09 em | up to 6 | up to 6 a row |
 
 - **The sign** is a letter at the letter size (no marks: line height 1.2), a pointed unit or a word of up to 4 letters at the word size, a picture, or a sound button. A sign wider than its bin less 12 is refused by the fit check. With 3 bins on the SE a sign is one letter or a picture.
-- **The bin's sound**: a bin with a clip has a 44 pt speaker disc at its bottom end corner (touch 56); a touch on it plays the sign's clip and does not drop anything.
+- **The bin's sound** (2026-11-06, QA-L51-1b): a bin with a clip has a 44 pt speaker disc **at the end of the sign's row** (its box 52 on the phones, 56 on the tablets), never on a kept chip; a touch on it plays the sign's clip and does not drop anything. It takes room from the sign: a sign beside a speaker is at most the bin's inner width less 12 less the speaker's 56 (41 on the SE with 2 bins), and the fit check counts it.
 - **The tray shows as many cards as fit** in A after the pile's place (56 wide) is kept; **the rest wait in a pile at the row's end side** (two card edges, not a target). When a card is sorted, the next slides in from the pile (280 ms). Today's sort shows every card at 44 to 84 points; at reading size they cannot all show on a phone, and one fewer thing to look at is calmer.
 - **Playing:** drag a card to a bin, or tap the card (chosen) and then tap the bin (`tap-then-tap`); the drop snap radius is 1.25 x the card (Band B). A card dropped in a bin becomes a kept chip there. A chip touched again comes back to the tray (the child may change their mind; the response code is the last state).
 - **Not yet** (the item is checked when the last card is sorted, as today): the chips that are in the wrong bin wobble and fly back to the tray; the right ones stay.
-- **Hints:** level 1, the signs light one after the other while each sign's clip plays; level 2, each sign changes in place to the new representation (a letter sign shows its key-word picture beside it, a sound sign its mouth picture), so no card covers a bin; level 3, the hand carries one card to its bin from below, then the halo stays on that bin.
+- **Hints:** level 1, the signs light one after the other while each sign's clip plays; level 2, each sign changes in place to the new representation (a letter sign shows its key-word picture beside it, a sound sign its mouth picture), so no card covers a bin; level 3, the hand touches the next card in the tray, the card then goes to its bin by itself (a copy glides there in 600 ms) and the halo stays on that bin (2026-11-06, QA-L51-3a: the hand never goes up over the bins, it would hide a sign; the first reading, "from below", would have put it on the tray).
 - **Response code**: the card index per bin, as today.
+- **Room for the kept chips (2026-11-06, QA-L51-1a):** every card sorted into a bin stays in view and under a finger. Chosen of the two ways: **both a second row and smaller chips, at the kept size**. The bins on the phones are 2 taller (the stage keeps 2 above and below, was 6), a bin's border is 4 and its padding 2 (was 6), the sign stays 58, and the chips have what is left: on the SE 109 x 68 at Band B (60 at Band A, whose stage is 136 high). The chips stand in rows from the start side, **each row as tall as the room allows** (44 at most, 56 on a tablet; 28 at least, which is the kept text on one line), so two words of a SE bin have two rows of 32. Only when even rows of 28 do not fit (a third word in one SE bin) do the rows overlap, by as little as they must, so that no chip is ever lost. A chip touched while a card is chosen drops that card in the chip's bin; otherwise it goes back to the tray. The fit check refuses an item whose right cards of one bin would need the rows to overlap, and counts the speaker (above).
 
 ### 7.3 Sound cards in a sort (`ls01_more_modes_phones.png`, last board)
 
@@ -250,7 +253,7 @@ The L1 row (`ChoiceRow`) takes the reading sizes of section 3 and the fit rules 
 - Cards (letters, numerals, shapes, a mirrored-letter picture) are square tiles at the band's size. **A is filled first**; cards that do not fit go to **S's end side**, and **S's start side holds the "what to find" sound** (a 64 pt speaker: the instruction's target again). Capacity at Band B: phone 5 in A + 2 in S; SE 4 + 1; tablets 6 a row. Band A (96 tiles): phone 4 + 2, SE 4 + 1. **The SE holds 5 at both bands, so a tap-all has at most 5 cards** (corrected 2026-11-06 after the L5-1 build: this section said a row of 6 fits every board, and the fit test showed it does not fit the SE).
 - **Playing:** a tap picks a card (picked state); a second tap un-picks it. **When as many cards are picked as there are right ones, the item checks itself**: right if exactly the right ones are picked; otherwise the wrong picked cards wobble and un-pick, the right picked ones stay, and the child goes on. No "done" button (a meta-decision a 3- or 4-year-old does not need; A-10 is Band A). This gives away how many to find; it does not give away which (section 11, to confirm).
 - **Response code**: the indexes picked, in the order picked.
-- **Hints:** level 1, the target lights big in S's start corner (the pilot's HL-TAPALL: "the target letter appears big above the row"); level 2, that letter glides over each card in turn and settles only on the right ones (the look-alikes are left uncovered); level 3, the hand picks the first right card, then the child picks the rest.
+- **Hints:** level 1, the target lights big in S's start corner (the pilot's HL-TAPALL: "the target letter appears big above the row"); level 2, that letter glides over **every** card in turn, the right ones and the look-alikes alike, and comes back: it **settles on none** (2026-11-06: the house rule wins, no option is lit or named before level 3; the first reading, "settles only on the right ones", said the answer at level 2); level 3, the hand picks the first right card, then the child picks the rest.
 
 ### 7.8 Text stem (`tap_answer` with `scene.stem`; `ls01_more_modes_phones.png`, first two boards)
 
@@ -263,7 +266,7 @@ The L1 row (`ChoiceRow`) takes the reading sizes of section 3 and the fit rules 
 - **S**: the picture (square, framed white, radius 18) at the course's start side, **88 on the phone, 64 on the SE, 200 on the tablets**, and the sentence beside it in the rest of S at the line size, start-aligned, vertically centred, with the **gap** in place of the missing word (section 6). Without a picture the sentence takes the whole of S, centred.
 - **A**: the 3 word tiles (fit rules; each the gap's word size).
 - **Playing:** a tap on a tile (or a drag to the gap) puts its word in the gap, and the tile stays dimmed in the row. The item checks at once. Not yet: the word wobbles in the gap and flies back; the gap is empty again.
-- **Hints:** level 1, the sentence is read with a short pause at the gap and the gap lights (each word's bar, as the stem); level 2, the picture grows to fill S (the sentence fades) with the part the gap is about ringed in sky (the dog and the seat of the chair), then the sentence comes back; level 3, the hand carries the right word to the gap.
+- **Hints:** level 1, the sentence is read with a short pause at the gap and the gap lights (each word's bar, as the stem); level 2, the picture grows to fill S (the sentence fades) with the part the gap is about ringed in sky (the dog and the seat of the chair), then the sentence comes back; level 3, the hand taps the right tile and stays at the tile, and the right word then stands in the gap, lit (2026-11-06, QA-L51-3b: the hand never goes up into the sentence, it would hide its words; the tap is also what the child does, so the hand does it). The hand rests on the tile as far down as it needs not to reach up into the stage.
 - The SE's 64 picture is the smallest picture in these modes; it carries meaning only together with the sentence and grows to the whole of S at hint level 2.
 
 ### 7.10 Sequence: the story line (`build_pattern` slots with `answer.order`; `ls01_sequence.png`)
@@ -271,12 +274,12 @@ The L1 row (`ChoiceRow`) takes the reading sizes of section 3 and the fit rules 
 **Why one row:** a row of slots and a tray of the same pictures cannot both fit on a phone at a size a child can read a picture at (the bubble takes the phones' upper right). One row of places, already holding the pictures in a shuffled order, uses the whole width of A. It matches "first, then, at the end", the words the course already has (`i-first`, `seq-1` to `seq-3`).
 - **The line**: n places in A (A-wide on the tablet landscape), each holding one picture at its own aspect (a story page is 16:9, a picture 1:1, a letter tile square), all the same size, centred; under them a 6 pt `mist` path with a 16 pt bead under each place, and the **start flag** (a short `ink` pole with a `sea` pennant) standing on the path at the start end.
 - **Sizes, 16:9 pages, Band B (4 places):** phone 129 x 73, SE 105 x 59, tablet landscape 212 x 119, tablet portrait 169 x 95. With 3 places: phone 156 x 88, SE 145 x 82. Picture tiles may be up to 120 high on the tablets.
-- **Where the line stands:** the path is 22 below the pictures. On the phones the line is placed so the path's beads end at least 2 above the bottom band (path at most at y 359 on the phone, 341 on the SE); with 3 places of 88 that puts the pictures at y 252 on the phone and 240 on the SE, so **S ends at 236 (phone) and 224 (SE) in this mode** (it holds only the replay and the level 2 card). The mockups show 4 places, drawn at the standard row.
+- **Where the line stands** (2026-11-06, QA-L51 minor): the path is 22 below the pictures, and its **beads' centres stand at most at y 359 on the phone and 341 on the SE**, so that the beads end 2 above the bottom band. The path's box is 22 under the pictures and a bead's middle 11 into it, so the pictures end at most 33 above the bead line (326 on the phone, 308 on the SE): with 3 places of 88 the pictures are at y 238 on the phone and with 3 of 82 at y 226 on the SE (the first reading, 252 and 240, put the beads on the bottom band), so **S ends at 214 (phone) and 202 (SE) in this mode** (it holds only the replay and the level 2 card). The mockups show 4 places, drawn at the standard row.
 - **Playing:** the voice asks what happened first. **A tap on a picture moves it to the first place that is not set** (it swaps with the picture there) and sets that place (section 6). The next tap sets the next place. When one place is left, it sets itself and the order is checked. A drag of a picture to the next place does the same; a drop anywhere else springs back. A tap on a set picture un-sets it and every place after it (they keep their pictures).
 - **Not yet:** the whole line wobbles once and every place is unset; the pictures stay where they are (nothing reshuffles).
 - **Right:** the places turn correct one by one from the start, with the voice's "first, then, at the end".
 - **S** holds the story's replay (a 64 or 80 pt speaker: hear the story again) and, at hint level 2, the sky card "first, then, at the end": three beads on a path with the course's direction, each lighting with its line.
-- **Hints:** level 1, each picture lights in turn while its page's key line plays (the story again, short); level 2, the card in S as above, and the first picture lights; level 3, the hand taps the pictures in story order, the line is checked as right, then every place is unset and the child does it.
+- **Hints:** level 1, the **places** light one after the other, first to last, while the key lines of the story play in the story's order (the story again, short); **no picture is lit in story order** (2026-11-06: the house rule wins, no option is lit or named before level 3; the first reading, "each picture lights with its line", said the order at level 1); level 2, the card in S as above, and the first picture lights; level 3, the hand taps the pictures in story order, the line is checked as right, then every place is unset and the child does it.
 - **Response code**: the picture ids in the order set.
 - **The limit:** in Band B a scored sequence of story pages has **at most 4 places** (5 would be 80 x 45 on the SE). Square pictures and letter tiles may have 5 on the tablets, 4 on the phones. Band A: 3 places (A-13). See section 11.
 
@@ -286,16 +289,18 @@ The L1 row (`ChoiceRow`) takes the reading sizes of section 3 and the fit rules 
 
 | Mode | Level 1 (look here) | Level 2 (another way) | Level 3 (watch me) |
 |---|---|---|---|
-| sort, text | the signs light in turn | each sign shows its other representation in place | the hand carries one card |
-| sort, sound | the held card again, the signs light | the matching sign's picture grows | the hand plays and carries |
+| sort, text | the signs light in turn | each sign shows its other representation in place | the hand touches a card, the card goes to its bin |
+| sort, sound | the held card again, the signs light | the matching sign's picture grows | the hand plays the card, the card goes to its bin |
 | pairs | the item now lights and plays | the item's other representation beside it, in S | the hand brings the partner |
 | spot | sound beads over the cells | the model's spelling in a sky card over S | the hand touches the wrong cell |
-| tap-all | the target big at S's start | the target glides over each card | the hand picks the first |
+| tap-all | the target big at S's start | the target glides over every card and comes back, settling on none | the hand picks the first |
 | text stem | read it to me, a bar under each word (credit 0.8) | the borrowed screen takes S's place | the borrowed demonstration, then the hand |
-| cloze | the sentence read, the gap lit | the picture fills S, the part ringed | the hand carries the word |
-| sequence | each picture lights with its line | the "first, then, at the end" card in S | the hand taps the order |
+| cloze | the sentence read, the gap lit | the picture fills S, the part ringed | the hand taps the right tile, the word stands in the gap |
+| sequence | the places light in turn with the story's lines | the "first, then, at the end" card in S | the hand taps the order |
 
 While any hint shows, the hint pebble wears its 5 pt sky ring (B-40). No hint lights or dims an option before level 3.
+
+**The house rule, restated 2026-11-06 (the orchestrator's decision on QA-L51-4a and 4b):** no option, card or picture is lit, named or marked before level 3. At level 1 and 2 only the question, a sign, a place, the stage and the target's own copy light; the story line lights **places** (not the pictures in them), and the tap-all's target glides over every card and settles on none. Sections 7.7 and 7.10 were written the other way round (the answer said at level 1 and 2) and are corrected above. The hand never covers a sign of a bin or a word of a sentence.
 
 ---
 

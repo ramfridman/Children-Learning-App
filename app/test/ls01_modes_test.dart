@@ -457,10 +457,23 @@ void main() {
       expect(find.byKey(const Key('sort-ghost')), findsOneWidget);
       await r.wait(t, 2000);
       r.controller.showHint();
-      await r.wait(t, 1800);
-      expect(r.session.handTip, isNotNull);
+      await r.wait(t, 800);
+      expect(r.session.handTip, isNotNull, reason: 'the hand touches the card in the tray');
+      await r.wait(t, 1000);
+      expect(
+        r.session.handTip,
+        isNull,
+        reason: 'the hand stays out of the stage: the card goes to its bin by itself',
+      );
+      expect(find.byKey(const Key('sort-flight')), findsOneWidget);
+      await r.wait(t, 1000);
+      expect(find.byKey(const Key('sort-flight')), findsNothing);
+      expect(
+        find.byKey(const Key('bin-glow')),
+        findsOneWidget,
+        reason: 'the card sits in its bin, the bin lit',
+      );
       await r.wait(t, 3000);
-      expect(r.session.handTip, isNull);
       expect(r.session.placed, isEmpty, reason: 'the card goes back: the child does it');
       await r.done(t);
     });

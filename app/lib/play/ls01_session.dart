@@ -25,6 +25,11 @@ abstract class Ls01Session extends TemplateSession {
   /// A hint's hand: where its fingertip is, a point of the board; null when there is no hand.
   Offset? handTip;
 
+  /// A card a hint sends on its way (the copy that flies from the tray to its bin): what it looks like and where it is now, a rectangle of
+  /// the board. The board layer moves it there; null when nothing flies.
+  Widget? flightChild;
+  Rect? flightRect;
+
   /// Changes whenever a hint starts or stops, so that the steps of an earlier hint do nothing.
   int run = 0;
 
@@ -54,6 +59,8 @@ abstract class Ls01Session extends TemplateSession {
   void endHint() {
     run++;
     handTip = null;
+    flightChild = null;
+    flightRect = null;
     clearHintMarks();
   }
 
@@ -106,7 +113,9 @@ abstract class Ls01Session extends TemplateSession {
     seen(spec);
     return ListenableBuilder(
       listenable: this,
-      builder: (BuildContext c, Widget? _) => ls01HandLayer(handTip, spec) ?? const SizedBox.shrink(),
+      builder: (BuildContext c, Widget? _) =>
+          ls01HandLayer(handTip, spec, flight: flightChild, flightRect: flightRect) ??
+          const SizedBox.shrink(),
     );
   }
 

@@ -233,7 +233,10 @@ void _tap(
     if (options.length > tapAllMaxCards) {
       say(file, 'answer.options', 'a tap-all has at most $tapAllMaxCards cards (found ${options.length})');
     }
-    if (right.isEmpty) say(file, 'answer.correct', 'a tap-all has at least one right card');
+    // With one right card the item would check itself at the first tap: that is a plain choice, not a tap-all (curriculum section 11.1, answer 2).
+    if (right.length < 2) {
+      say(file, 'answer.correct', 'a tap-all has at least two right cards (found ${right.length})');
+    }
     if (options.length - right.length < 2) {
       say(file, 'answer.options', 'a tap-all has at least two wrong cards, each with its tag');
     }

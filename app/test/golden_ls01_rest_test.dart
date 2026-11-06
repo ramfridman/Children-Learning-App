@@ -364,7 +364,7 @@ void main() {
 
     for (final (String course, String text) in <(String, String)>[
       ('eng', 'A big dog is _ the red chair.'),
-      ('heb', 'הַכֶּלֶב _ עַל הַכִּסֵּא.'),
+      ('heb', 'הַכֶּלֶב הַקָּטָן _ שָׁם.'),
     ]) {
       testWidgets('a cloze sentence at the most lines in $course', (WidgetTester t) async {
         final LangPack p = _base(course);

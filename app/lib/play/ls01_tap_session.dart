@@ -53,8 +53,9 @@ class Ls01TapSession extends ChoiceSession {
   final Set<String> notYetPicks = <String>{};
   bool _checked = false;
 
-  /// Cloze: the word tile whose word stands in the gap now.
+  /// Cloze: the word tile whose word stands in the gap now, and the right word a hint's demonstration has put there.
   String? gapId;
+  String? demoGapId;
 
   /// A hint's marks: the bar under a word, the lit page or gap, the stem's pieces, the target made big, the card the target glides over.
   int? litWord;
@@ -65,7 +66,6 @@ class Ls01TapSession extends ChoiceSession {
   bool pictureFull = false;
   bool targetBig = false;
   int? ghostAt;
-  final Set<int> ghostSettled = <int>{};
   final Set<int> litSet = <int>{};
 
   /// Where the hand's fingertip is, a point of the board; null when there is no hand.
@@ -98,6 +98,7 @@ class Ls01TapSession extends ChoiceSession {
   void onChosen(ChoiceOption o) {
     if (mode == Ls01TapMode.cloze) {
       gapId = o.id;
+      demoGapId = null;
       notify();
     }
   }
@@ -179,7 +180,7 @@ class Ls01TapSession extends ChoiceSession {
     pictureFull = false;
     targetBig = false;
     ghostAt = null;
-    ghostSettled.clear();
+    demoGapId = null;
     litSet.clear();
     handTip = null;
   }
@@ -255,7 +256,7 @@ class Ls01TapSession extends ChoiceSession {
         });
       default:
         gapLit = true;
-        _demonstrate(<int>[_rightIndex()], toGap: true);
+        _demonstrate(<int>[_rightIndex()], intoGap: true);
     }
   }
 
@@ -265,20 +266,19 @@ class Ls01TapSession extends ChoiceSession {
       case 1:
         targetBig = true;
       case 2:
-        // The target glides over each card in turn and settles only on the right ones: the look-alikes are left uncovered.
+        // The target glides over every card in turn, the right ones and the look-alikes alike, and comes back: it settles on none, so that
+        // nothing is marked before level 3.
         targetBig = true;
         for (int i = 0; i < options.length; i++) {
           later(Duration(milliseconds: 650 * i), () {
             if (run != _run) return;
             ghostAt = i;
-            if (_right.contains(options[i].id)) ghostSettled.add(i);
             notify();
           });
         }
-        later(Duration(milliseconds: 650 * options.length + 1200), () {
+        later(Duration(milliseconds: 650 * options.length), () {
           if (run != _run) return;
           ghostAt = null;
-          ghostSettled.clear();
           notify();
         });
       default:
@@ -287,25 +287,28 @@ class Ls01TapSession extends ChoiceSession {
     }
   }
 
-  /// Level 3, "watch me": the hand goes to the right tile (and then to the gap of a cloze), a tap-all's first right card is picked for the
-  /// child, and the answer carries its halo only after that (`demoDone`).
-  void _demonstrate(List<int> tiles, {bool toGap = false, bool pick = false}) {
+  /// Level 3, "watch me": the hand goes to the right tile and stays there (the child taps it, so the hand does); the right word then stands in
+  /// the gap of a cloze, a tap-all's first right card is picked for the child, and the answer carries its halo only after that (`demoDone`).
+  /// The hand never goes up into the sentence: it would hide the words.
+  void _demonstrate(List<int> tiles, {bool intoGap = false, bool pick = false}) {
     final int run = _run;
     final List<Rect> rects = _tileRects();
     later(const Duration(milliseconds: 300), () {
       if (run != _run) return;
-      handTip = rects[tiles.first].topCenter + const Offset(0, 6);
+      // A cloze's hand stays out of the stage: its sentence reaches down to the tiles.
+      handTip = intoGap
+          ? ls01TipBelowStage(_spec ?? ActivitySpec.phone, rects[tiles.first])
+          : rects[tiles.first].topCenter + const Offset(0, 6);
       notify();
     });
     int at = 1400;
-    if (toGap) {
+    if (intoGap) {
       later(Duration(milliseconds: at), () {
         if (run != _run) return;
-        final Rect? gap = _gapRect();
-        if (gap != null) handTip = gap.topCenter + const Offset(0, 6);
+        demoGapId = options[tiles.first].id;
         notify();
       });
-      at += 1300;
+      at += 1000;
     }
     if (pick) {
       later(Duration(milliseconds: at), () {
@@ -431,22 +434,6 @@ class Ls01TapSession extends ChoiceSession {
     return rects;
   }
 
-  Rect? _gapRect() {
-    final ActivitySpec s = _spec ?? ActivitySpec.phone;
-    final Size room = _stageRoom;
-    // The gap stands in the sentence's column; its exact place is the sentence's own, so the hand points at the middle of the column.
-    final double picture = _pictureSide(s);
-    final double left = tap.cloze!.picture == null
-        ? 0
-        : (rowDirection == TextDirection.ltr ? picture + 20 : 0);
-    return Rect.fromLTWH(
-      _stageOrigin.dx + left,
-      _stageOrigin.dy + room.height / 2 - 20,
-      room.width - picture - 20,
-      40,
-    );
-  }
-
   double _pictureSide(ActivitySpec s) {
     if (tap.cloze?.picture == null) return 0;
     if (s.stageIsCard) return 200;
@@ -550,11 +537,14 @@ class Ls01TapSession extends ChoiceSession {
     final double widest = options
         .map((ChoiceOption o) => o.text == null ? 0.0 : m.textWidth(o.text!, FaceKind.line))
         .fold(0, math.max);
-    final ChoiceOption? inGap = gapId == null ? null : options.firstWhere((ChoiceOption o) => o.id == gapId);
-    final bool right = inGap != null && chosenState == AnswerState.correct;
+    final String? inGapId = gapId ?? demoGapId;
+    final ChoiceOption? inGap = inGapId == null
+        ? null
+        : options.firstWhere((ChoiceOption o) => o.id == inGapId);
+    final bool right = inGap != null && gapId != null && chosenState == AnswerState.correct;
     final Widget gap = GapBox(
-      width: widest + 16,
-      height: m.size(FaceKind.line) * lineHeightFor('x', hebrew: m.hebrew) + 4,
+      textWidth: widest,
+      textHeight: m.size(FaceKind.line) * lineHeightFor('x', hebrew: m.hebrew),
       right: right,
       lit: gapLit,
       child: inGap == null
@@ -574,6 +564,7 @@ class Ls01TapSession extends ChoiceSession {
       direction: rowDirection,
       litWord: litWord,
       gap: gap,
+      gapTextWidth: widest,
     );
     final Widget art = picture == null
         ? const SizedBox.shrink()
@@ -679,8 +670,6 @@ class Ls01TapSession extends ChoiceSession {
         Positioned.fill(child: speaker),
         Positioned.fill(child: rest),
         if (ghostAt != null) _ghost(ghostAt!, target, m),
-        for (final int i in ghostSettled)
-          if (i != ghostAt) _ghost(i, target, m),
       ],
     );
   }

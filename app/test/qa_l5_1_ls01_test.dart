@@ -1,8 +1,8 @@
 // QA of L5-1, the rest of LS01 (docs/design/languages-l5-ls01.md, docs/milestones/L5.md section 5.1): what the developer's tests do not
 // prove. The measure with the real fonts; the directions of every mode in the three courses; the hint ladders (no option lit before level 3,
 // the hand last, `demoDone`, only the right move at the top of the help); the scoring of the tap-all; "I'm not sure" never a mistake; the
-// kept chips of a sort; the text at scale 1.3. A test marked `skip` is the proof of an open defect (QA report of L5-1): it fails today,
-// and the line `skip:` goes when the owner of the fix reports it done. Fixture course and fake clips, not content.
+// kept chips of a sort; the text at scale 1.3. The last group is the proofs of the defects of the QA report of L5-1 (QA-L51-1a to 4b), kept as
+// regression tests now that they are fixed. Fixture course and fake clips, not content.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
@@ -33,10 +33,6 @@ const List<String> _pictures = <String>[
   'story-bounce-3',
 ];
 const Size _se = Size(667, 375);
-
-/// An open defect's proof test is skipped so that the suite stays green; `flutter test --dart-define=QA_OPEN=true test/qa_l5_1_ls01_test.dart` runs
-/// them and shows each one fail.
-const bool _skipOpen = !bool.fromEnvironment('QA_OPEN');
 
 LangPack _base(String course) => LangPack(course)..addPictures(_pictures);
 
@@ -840,9 +836,9 @@ void main() {
     );
   });
 
-  // ---------------------------------------------------------------------------------------------------------------- open defects
+  // ---------------------------------------------------------------------------------------------------------------- the defects of the QA report
 
-  group('open defects (skipped until the fix; `--dart-define=QA_OPEN=true` runs them and shows each fail)', () {
+  group('the defects of the QA report of L5-1, fixed', () {
     /// A sort on the phone SE with [cards] put in bin b1 (i1 and i3 belong there).
     Future<Rig<Ls01SortSession>> sortWithChips(WidgetTester t, String course, List<String> cards) async {
       final Rig<Ls01SortSession> r = _sortRig(_sort(course));
@@ -857,150 +853,244 @@ void main() {
     }
 
     for (final String course in <String>['eng', 'heb']) {
-      testWidgets(
-        'QA-L51-1a: $course, every card sorted into a bin stays in view in it (phone SE)',
-        (WidgetTester t) async {
-          final Rig<Ls01SortSession> r = await sortWithChips(t, course, <String>['i1', 'i3']);
-          final Rect bin = t.getRect(find.byKey(const Key('bin-b1')));
-          for (final String chip in <String>['chip-i1', 'chip-i3']) {
-            final Rect c = t.getRect(find.byKey(Key(chip)));
-            expect(
-              bin.contains(c.topLeft) && bin.contains(c.bottomRight),
-              isTrue,
-              reason: '$chip stands at $c outside its bin $bin: the bin clips it away',
-            );
-          }
-          await r.done(t);
-        },
-        skip: _skipOpen, // QA-L51-1a: remove when the kept chips are laid out so that none is lost
-      );
+      testWidgets('QA-L51-1a: $course, every card sorted into a bin stays in view in it (phone SE)', (
+        WidgetTester t,
+      ) async {
+        final Rig<Ls01SortSession> r = await sortWithChips(t, course, <String>['i1', 'i3']);
+        final Rect bin = t.getRect(find.byKey(const Key('bin-b1')));
+        for (final String chip in <String>['chip-i1', 'chip-i3']) {
+          final Rect c = t.getRect(find.byKey(Key(chip)));
+          expect(
+            bin.contains(c.topLeft) && bin.contains(c.bottomRight),
+            isTrue,
+            reason: '$chip stands at $c outside its bin $bin: the bin clips it away',
+          );
+        }
+        await r.done(t);
+      });
 
-      testWidgets(
-        'QA-L51-1b: $course, the bin speaker does not sit on a kept chip (phone SE)',
-        (WidgetTester t) async {
-          final Rig<Ls01SortSession> r = await sortWithChips(t, course, <String>['i1']);
-          final Rect speaker = t.getRect(find.byKey(const Key('bin-speaker-b1'))).deflate(6);
-          final Rect chip = t.getRect(find.byKey(const Key('chip-i1')));
-          expect(chip.overlaps(speaker), isFalse, reason: 'the chip $chip is under the speaker $speaker');
-          await r.done(t);
-        },
-        skip: _skipOpen, // QA-L51-1b: remove when the speaker and the chips have their own places
-      );
+      testWidgets('QA-L51-1b: $course, the bin speaker does not sit on a kept chip (phone SE)', (
+        WidgetTester t,
+      ) async {
+        final Rig<Ls01SortSession> r = await sortWithChips(t, course, <String>['i1']);
+        final Rect speaker = t.getRect(find.byKey(const Key('bin-speaker-b1'))).deflate(6);
+        final Rect chip = t.getRect(find.byKey(const Key('chip-i1')));
+        expect(chip.overlaps(speaker), isFalse, reason: 'the chip $chip is under the speaker $speaker');
+        await r.done(t);
+      });
     }
 
     testWidgets(
-      'QA-L51-2: at text scale 1.3 the sentence of a cloze stays above the answer tiles (phone and phone SE)',
+      'QA-L51-2: at text scale 1 and 1.3 the whole sentence of a cloze stays above the answer zone, never over its tiles (three courses, three boards)',
+      (WidgetTester t) async {
+        addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
+        for (final double scale in <double>[1, 1.3]) {
+          t.platformDispatcher.textScaleFactorTestValue = scale;
+          for (final String course in <String>['eng', 'heb', 'rus']) {
+            for (final Size size in <Size>[_se, const Size(852, 393), const Size(1180, 820)]) {
+              final Rig<Ls01TapSession> r = _tapRig(_clozePack(course));
+              await r.pump(t, size: size);
+              double bottom = 0;
+              for (int i = 0; i < 8; i++) {
+                final Finder w = find.byKey(Key('sentence-word-$i'));
+                if (w.evaluate().isNotEmpty) {
+                  bottom = bottom > t.getRect(w).bottom ? bottom : t.getRect(w).bottom;
+                }
+              }
+              final double top = t
+                  .getRect(r.tile('o1'))
+                  .top; // the tile's hit area, which begins 12 above the drawn tile
+              expect(
+                bottom,
+                lessThanOrEqualTo(top),
+                reason:
+                    '$course at $size, scale $scale: the sentence ends at $bottom and the answer zone starts at $top',
+              );
+              await r.done(t);
+            }
+          }
+        }
+      },
+    );
+
+    testWidgets(
+      'QA-L51-2b: at text scale 1.3 every mode of the three courses lays out without an overflow, and the kept chips stay in their bin',
       (WidgetTester t) async {
         t.platformDispatcher.textScaleFactorTestValue = 1.3;
         addTearDown(t.platformDispatcher.clearTextScaleFactorTestValue);
         for (final Size size in <Size>[_se, const Size(852, 393)]) {
-          final Rig<Ls01TapSession> r = _tapRig(_clozePack('eng'));
-          await r.pump(t, size: size);
-          double bottom = 0;
-          for (int i = 0; i < 5; i++) {
-            final Finder w = find.byKey(Key('sentence-word-$i'));
-            if (w.evaluate().isNotEmpty) bottom = bottom > t.getRect(w).bottom ? bottom : t.getRect(w).bottom;
+          for (final String course in <String>['eng', 'heb', 'rus']) {
+            for (final LangPack p in <LangPack>[_stem(course), _tapAll(course)]) {
+              final Rig<Ls01TapSession> r = _tapRig(p);
+              await r.pump(t, size: size);
+              expect(t.takeException(), isNull, reason: '${r.session.mode.name} in $course at $size');
+              await r.done(t);
+            }
+            final Rig<Ls01SortSession> sort = _sortRig(_sort(course));
+            await sort.pump(t, size: size);
+            for (final String card in <String>['i1', 'i3']) {
+              await t.tap(sort.tile(card));
+              await sort.wait(t, 100);
+              await t.tap(find.byKey(const Key('sign-b1')));
+              await sort.wait(t, 400);
+            }
+            final Rect bin = t.getRect(find.byKey(const Key('bin-b1')));
+            for (final String chip in <String>['chip-i1', 'chip-i3']) {
+              final Rect c = t.getRect(find.byKey(Key(chip)));
+              expect(
+                bin.contains(c.topLeft) && bin.contains(c.bottomRight),
+                isTrue,
+                reason: '$chip of $course at $size',
+              );
+            }
+            expect(t.takeException(), isNull, reason: 'sort in $course at $size');
+            await sort.done(t);
+            final Rig<Ls01PairsSession> pairs = _pairsRig(_pairs(course));
+            await pairs.pump(t, size: size);
+            expect(t.takeException(), isNull, reason: 'pairs in $course at $size');
+            await pairs.done(t);
+            final Rig<Ls01SpotSession> spot = _spotRig(_spot(course));
+            await spot.pump(t, size: size);
+            expect(t.takeException(), isNull, reason: 'spot in $course at $size');
+            await spot.done(t);
+            final Rig<Ls01OrderSession> order = _orderRig(_order(course));
+            await order.pump(t, size: size);
+            expect(t.takeException(), isNull, reason: 'order in $course at $size');
+            await order.done(t);
+            final Rig<Ls01SequenceSession> story = _storyRig(_story(course));
+            await story.pump(t, size: size);
+            expect(t.takeException(), isNull, reason: 'story in $course at $size');
+            await story.done(t);
           }
-          final double top = t.getRect(r.tile('o1')).top;
-          expect(
-            bottom,
-            lessThanOrEqualTo(top),
-            reason: 'at $size the sentence ends at $bottom and the tiles start at $top',
-          );
-          await r.done(t);
         }
       },
-      skip: _skipOpen, // QA-L51-2: remove when the stage text is held to the board
     );
 
+    /// The hand of level 3, looked at every 100 ms while the demonstration runs: [covers] is asked at each moment the hand is on the board.
+    Future<int> handSeen<S extends TemplateSession>(
+      WidgetTester t,
+      Rig<S> r,
+      void Function(Rect hand) covers,
+    ) async {
+      for (int k = 0; k < 3; k++) {
+        r.controller.showHint();
+        await r.wait(t, 300);
+      }
+      int seen = 0;
+      for (int k = 0; k < 45; k++) {
+        await r.wait(t, 100);
+        final Finder hand = find.byKey(const Key('hint-p12'));
+        if (hand.evaluate().isEmpty) continue;
+        seen++;
+        covers(t.getRect(hand));
+      }
+      return seen;
+    }
+
     testWidgets(
-      'QA-L51-3a: the hand of level 3 does not cover the sign of the bin it points at (phone SE)',
+      'QA-L51-3a: the hand of level 3 never covers the sign of a bin, nor the flying card the sign it lands under (phone SE)',
       (WidgetTester t) async {
         final Rig<Ls01SortSession> s = _sortRig(_sort('eng'));
         await s.pump(t, size: _se);
-        for (int k = 0; k < 3; k++) {
-          s.controller.showHint();
-          await s.wait(t, 300);
-        }
-        await s.wait(t, 2300);
-        final Finder hand = find.byKey(const Key('hint-p12'));
-        expect(hand, findsOneWidget);
+        final int seen = await handSeen(t, s, (Rect hand) {
+          for (final String sign in <String>['sign-b1', 'sign-b2']) {
+            expect(
+              hand.overlaps(t.getRect(find.byKey(Key(sign))).deflate(4)),
+              isFalse,
+              reason: 'the hand sits on $sign',
+            );
+          }
+        });
+        expect(seen, greaterThan(3), reason: 'the hand was there to be looked at');
+        // The card goes to its bin by itself and is a chip there at the end, the bin lit.
         expect(
-          t.getRect(hand).overlaps(t.getRect(find.byKey(const Key('sign-b1'))).deflate(4)),
-          isFalse,
-          reason: 'the hand sits on the sign of the bin',
+          find.byKey(const Key('chip-i1')),
+          findsNothing,
+          reason: 'the demonstration put nothing in the bin for good',
         );
         await s.done(t);
       },
-      skip: _skipOpen, // QA-L51-3a: remove when the hand points from where it hides no sign
     );
 
     testWidgets(
-      'QA-L51-3b: the hand of level 3 does not cover the words of the cloze sentence (phone SE)',
+      'QA-L51-3b: the hand of level 3 never covers a word of the cloze sentence (phone SE and phone)',
       (WidgetTester t) async {
-        final Rig<Ls01TapSession> c = _tapRig(_clozePack('eng'));
-        await c.pump(t, size: _se);
-        for (int k = 0; k < 3; k++) {
-          c.controller.showHint();
-          await c.wait(t, 300);
+        for (final Size size in <Size>[_se, const Size(852, 393)]) {
+          final Rig<Ls01TapSession> c = _tapRig(_clozePack('eng'));
+          await c.pump(t, size: size);
+          final int seen = await handSeen(t, c, (Rect hand) {
+            for (final String w in <String>[
+              'sentence-word-0',
+              'sentence-word-1',
+              'sentence-word-2',
+              'sentence-word-4',
+              'sentence-word-5',
+            ]) {
+              expect(
+                hand.overlaps(t.getRect(find.byKey(Key(w))).deflate(4)),
+                isFalse,
+                reason: 'at $size the hand covers $w of the sentence',
+              );
+            }
+          });
+          expect(seen, greaterThan(3));
+          // The demonstration puts the right word in the gap, so the child sees where it goes.
+          expect(c.session.demoGapId, 'o1', reason: 'the right word stands in the gap');
+          await c.done(t);
         }
-        await c.wait(t, 1700);
-        final Rect h = t.getRect(find.byKey(const Key('hint-p12')));
-        for (final String w in <String>[
-          'sentence-word-0',
-          'sentence-word-1',
-          'sentence-word-2',
-          'sentence-word-4',
-          'sentence-word-5',
-        ]) {
-          expect(
-            h.overlaps(t.getRect(find.byKey(Key(w))).deflate(4)),
-            isFalse,
-            reason: 'the hand covers $w of the sentence',
-          );
-        }
-        await c.done(t);
       },
-      skip: _skipOpen, // QA-L51-3b: remove when the hand points from where it hides no word
     );
 
-    testWidgets(
-      'QA-L51-4a: level 1 of the story line does not light the pictures in the answer order',
-      (WidgetTester t) async {
-        final Rig<Ls01SequenceSession> q = _storyRig(_story('eng'));
-        await q.pump(t);
-        q.controller.showHint();
-        final List<int?> seen = <int?>[];
-        for (int k = 0; k < 40; k++) {
-          await q.wait(t, 100);
-          if (seen.isEmpty || seen.last != q.session.litPlace) seen.add(q.session.litPlace);
-        }
-        // The pictures stand in their shuffled places and the story is [1, 2, 0]: lit in that order, the hint has said the answer.
-        final List<int> lit = <int>[for (final int? p in seen) ?p];
-        expect(lit.length, greaterThan(1));
-        expect(
-          lit,
-          isNot(<int>[1, 2, 0].map((int k) => q.session.placeOf(k)).toList()),
-          reason: 'level 1 lit the pictures in story order: $lit',
-        );
-        await q.done(t);
-      },
-      skip: _skipOpen, // QA-L51-4a: a decision first (curriculum-expert, design-director): spec 7.10 says it, spec 8 says no option is lit before level 3
-    );
+    testWidgets('QA-L51-4a: level 1 of the story line does not light the pictures in the answer order', (
+      WidgetTester t,
+    ) async {
+      final Rig<Ls01SequenceSession> q = _storyRig(_story('eng'));
+      await q.pump(t);
+      q.controller.showHint();
+      final List<int?> seen = <int?>[];
+      for (int k = 0; k < 40; k++) {
+        await q.wait(t, 100);
+        if (seen.isEmpty || seen.last != q.session.litPlace) seen.add(q.session.litPlace);
+      }
+      // The pictures stand in their shuffled places and the story is [1, 2, 0]: lit in that order, the hint has said the answer.
+      final List<int> lit = <int>[for (final int? p in seen) ?p];
+      expect(lit.length, greaterThan(1));
+      expect(
+        lit,
+        isNot(<int>[1, 2, 0].map((int k) => q.session.placeOf(k)).toList()),
+        reason: 'level 1 lit the pictures in story order: $lit',
+      );
+      await q.done(t);
+    });
 
     testWidgets(
-      'QA-L51-4b: level 2 of a tap-all does not settle on the right cards',
+      'QA-L51-4b: level 2 of a tap-all glides over every card, the right ones and the look-alikes alike, and settles on none',
       (WidgetTester t) async {
         final Rig<Ls01TapSession> a = _tapRig(_tapAll('eng'));
         await a.pump(t);
         a.controller.showHint();
         await a.wait(t, 200);
         a.controller.showHint();
-        await a.wait(t, 4000);
-        expect(a.session.ghostSettled, isEmpty, reason: 'level 2 marked the right cards before level 3');
+        final Set<int> over = <int>{};
+        for (int k = 0; k < 50; k++) {
+          await a.wait(t, 100);
+          final List<int> now = <int>[
+            for (int i = 0; i < 6; i++)
+              if (find.byKey(Key('ghost-$i')).evaluate().isNotEmpty) i,
+          ];
+          expect(
+            now.length,
+            lessThanOrEqualTo(1),
+            reason: 'one copy of the target at a time: nothing is left marked ($now)',
+          );
+          over.addAll(now);
+        }
+        expect(over, <int>{0, 1, 2, 3, 4, 5}, reason: 'it went over every card');
+        for (int i = 0; i < 6; i++) {
+          expect(find.byKey(Key('ghost-$i')), findsNothing, reason: 'it came back: nothing stays on card $i');
+        }
         await a.done(t);
       },
-      skip: _skipOpen, // QA-L51-4b: a decision first (curriculum-expert, design-director): spec 7.7 says it, spec 8 says no option is lit before level 3
     );
   });
 }

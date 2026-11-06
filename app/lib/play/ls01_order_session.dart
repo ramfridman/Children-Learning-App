@@ -7,6 +7,7 @@ import '../design/course_text.dart';
 import '../design/tokens.g.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
 import 'ls01_metrics.dart';
+import 'ls01_sentence.dart' show DashedBoxPainter;
 import 'ls01_session.dart';
 import 'ls01_tiles.dart';
 import 'response_code.dart';
@@ -262,22 +263,32 @@ class Ls01OrderSession extends Ls01Session {
         child: Stack(
           clipBehavior: Clip.none,
           children: <Widget>[
-            Container(
-              width: w,
-              height: h,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: tile == null ? TokenColors.paper.withValues(alpha: 0.6) : TokenColors.paper,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: wobbling.contains(i)
-                      ? TokenColors.notYetRing
-                      : (tile == null ? TokenColors.lilacDeep : TokenColors.hairline),
-                  width: 3,
+            // The empty place is dashed (docs/design/languages-l5-ls01.md section 7.6); a place with a tile in it, or in its "not yet", is solid.
+            if (tile == null && !wobbling.contains(i))
+              CustomPaint(
+                key: Key('order-slot-dashed-$i'),
+                size: Size(w, h),
+                painter: DashedBoxPainter(
+                  dashed: true,
+                  color: TokenColors.lilacDeep,
+                  fill: TokenColors.paper.withValues(alpha: 0.6),
                 ),
+              )
+            else
+              Container(
+                width: w,
+                height: h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: TokenColors.paper,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: wobbling.contains(i) ? TokenColors.notYetRing : TokenColors.hairline,
+                    width: 3,
+                  ),
+                ),
+                child: tile == null ? null : _inside(palette[tile], m, w, h),
               ),
-              child: tile == null ? null : _inside(palette[tile], m, w, h),
-            ),
             if (lit)
               const Positioned.fill(
                 child: IgnorePointer(child: SkyRing(key: Key('order-slot-glow'), round: false, radius: 18)),

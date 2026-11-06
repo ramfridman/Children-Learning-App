@@ -6,7 +6,9 @@ import '../content/scripts.dart' show isSingleLetter;
 import '../design/token_types.dart';
 import '../engine/course.dart';
 import 'choice_row.dart';
+import 'ls01_chips.dart';
 import 'ls01_metrics.dart';
+import 'ls01_sentence.dart';
 
 // The fit check of the text faces of LS01 (docs/design/languages-l5-ls01.md section 4): every text of every language item must fit the
 // phone SE, the binding board, at the reading size of each band the course allows. A text that does not fit is a content error, found here
@@ -137,30 +139,27 @@ class _Fit {
   /// the widest option and 16 more; at most 3 lines in English and Russian and 2 in Hebrew; its three word tiles in a row.
   void _cloze(({String text, String? picture}) cloze, List<String> options) {
     final double column = zones.stage.width - (cloze.picture == null ? 0 : 64 + 32);
-    final double gapWidth = options.map((String o) => _w(o, FaceKind.line)).fold<double>(0, math.max) + 16;
-    // The pieces of the sentence: its words, and the gap (with the punctuation that stuck to it) as one piece as wide as the gap.
-    final List<double> pieces = <double>[
-      for (final String w in cloze.text.split(' '))
-        if (w.isNotEmpty)
-          if (w.contains('_'))
-            _w(w.substring(0, w.indexOf('_')), FaceKind.line) +
-                gapWidth +
-                _w(w.substring(w.indexOf('_') + 1), FaceKind.line)
-          else
-            _w(w, FaceKind.line),
-    ];
-    final ({int lines, double widestWord}) l = (
-      lines: Ls01Metrics.wrapLines(pieces, column, m.size(FaceKind.line) * 0.3),
-      widestWord: pieces.fold<double>(0, math.max),
+    final double gapText = options.map((String o) => _w(o, FaceKind.line)).fold<double>(0, math.max);
+    // The layout of the widget itself: the words and the gap as unbreakable units (in Hebrew the gap with the word after it).
+    final SentenceMeasure l = measureSentence(
+      m,
+      cloze.text,
+      FaceKind.line,
+      gapTextWidth: gapText,
+      column: column,
     );
     final int most = m.hebrew ? 2 : 3;
-    if (l.widestWord > column) {
+    if (l.widest > column) {
       _say(
-        'the cloze "${cloze.text}": its widest piece is ${l.widestWord.toStringAsFixed(0)} points and the column ${column.toStringAsFixed(0)}',
+        'the cloze "${cloze.text}": its widest piece is ${l.widest.toStringAsFixed(0)} points and the column ${column.toStringAsFixed(0)}',
       );
     } else if (l.lines > most) {
       _say(
         'the cloze "${cloze.text}" takes ${l.lines} lines in a column of ${column.toStringAsFixed(0)} (at most $most)',
+      );
+    } else if (l.height > zones.stage.height) {
+      _say(
+        'the cloze "${cloze.text}" is ${l.height.toStringAsFixed(0)} points tall and the stage has ${zones.stage.height.toStringAsFixed(0)}',
       );
     }
   }
@@ -168,15 +167,16 @@ class _Fit {
   // ---- sort ----
 
   void sort(SortDragActivity a) {
-    final int n = a.bins.length;
-    final double binWidth = (zones.stage.width - 12 - (n - 1) * 8) / n;
+    final BinGeometry g = BinGeometry(room: zones.stage.size, tablet: false, bins: a.bins.length);
     for (final SortBin b in a.bins) {
       final String? t = b.text;
       if (t == null) continue;
+      // A bin with a sound has its speaker beside the sign, and the speaker takes room from the sign.
+      final double limit = g.signLimit(speaker: b.clip != null);
       final double w = _w(t, isSingleLetter(t) ? FaceKind.letter : FaceKind.word);
-      if (w > binWidth - 12 - 12) {
+      if (w > limit) {
         _say(
-          'the sign "$t" of ${b.id} is ${w.toStringAsFixed(0)} points wide and the bin has ${(binWidth - 24).toStringAsFixed(0)} for it',
+          'the sign "$t" of ${b.id} is ${w.toStringAsFixed(0)} points wide and the bin has ${limit.toStringAsFixed(0)} for it${b.clip != null ? ' beside its speaker' : ''}',
         );
       }
     }
@@ -186,10 +186,28 @@ class _Fit {
     ];
     _row('the cards', cards, _kindOf(cards), count: 1, reserve: 56);
     for (final String c in cards) {
-      final double chip = _w(c, FaceKind.kept) + 16;
-      if (chip > binWidth - 12) {
+      final double chip = keptChipWidth(m, c, square: g.chipMax);
+      if (chip > g.chipRoom.width) {
         _say(
-          'the kept chip "$c" is ${chip.toStringAsFixed(0)} points wide and the bin has ${(binWidth - 12).toStringAsFixed(0)}',
+          'the kept chip "$c" is ${chip.toStringAsFixed(0)} points wide and the bin has ${g.chipRoom.width.toStringAsFixed(0)}',
+        );
+      }
+    }
+    // The cards that belong in a bin all stand there as chips, each in view: none may need the rows to overlap.
+    for (final SortBin b in a.bins) {
+      final List<SortItem> mine = <SortItem>[
+        for (final SortItem i in a.items)
+          if (i.bin == b.id) i,
+      ];
+      final ChipPlan plan = ChipPlan.of(
+        <double>[for (final SortItem i in mine) keptChipWidth(m, i.text, square: g.chipMax)],
+        width: g.chipRoom.width,
+        height: g.chipRoom.height,
+        maxHeight: g.chipMax,
+      );
+      if (plan.overlaps) {
+        _say(
+          'the ${mine.length} cards of ${b.id} do not fit its room for kept chips (${g.chipRoom.width.toStringAsFixed(0)} by ${g.chipRoom.height.toStringAsFixed(0)}) without covering each other',
         );
       }
     }

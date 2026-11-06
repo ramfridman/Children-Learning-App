@@ -177,6 +177,31 @@ void main() {
         correct: <String>['o1'],
       );
       expect(_messages(p), contains(contains('at least two wrong cards')));
+      // One right card is a plain choice: a tap-all needs at least two (curriculum section 11.1, answer 2); two is enough.
+      p.pack.docs['activity.eng.tall.json'] = tapAllJson(
+        id: 'tall',
+        face: 'letter',
+        options: <Map<String, Object?>>[
+          _letters('o1', 't'),
+          _letters('o2', 'f', tag: p.tag('lis.sem')),
+          _letters('o3', 'l', tag: p.tag('lis.sem')),
+          _letters('o4', 'i', tag: p.tag('lis.sem')),
+        ],
+        correct: <String>['o1'],
+      );
+      expect(_messages(p), contains(contains('a tap-all has at least two right cards (found 1)')));
+      p.pack.docs['activity.eng.tall.json'] = tapAllJson(
+        id: 'tall',
+        face: 'letter',
+        options: <Map<String, Object?>>[
+          _letters('o1', 't'),
+          _letters('o2', 'f', tag: p.tag('lis.sem')),
+          _letters('o3', 'l', tag: p.tag('lis.sem')),
+          _letters('o4', 't'),
+        ],
+        correct: <String>['o1', 'o4'],
+      );
+      expect(_messages(p), isEmpty);
       p.pack.docs['activity.eng.tall.json'] = tapAllJson(
         id: 'tall',
         face: 'letter',
