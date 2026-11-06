@@ -32,7 +32,7 @@
             "type": "command",
             "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/block_paid_voice.py\"",
             "shell": "bash",
-            "timeout": 10,
+            "timeout": 30,
             "onFailure": "block",
             "statusMessage": "Checking for paid voice commands"
           }
