@@ -320,6 +320,46 @@
         "optionsOnTiles": {
           "type": "boolean"
         },
+        "stem": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "clip": {
+              "type": "string",
+              "minLength": 4,
+              "maxLength": 83,
+              "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
+            }
+          },
+          "required": [
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        "cloze": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 120
+            },
+            "picture": {
+              "type": "string",
+              "minLength": 7,
+              "maxLength": 46,
+              "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+            }
+          },
+          "required": [
+            "text"
+          ],
+          "additionalProperties": false
+        },
         "chart": {
           "type": "array",
           "items": {
@@ -474,13 +514,28 @@
             "additionalProperties": false
           },
           "minItems": 2,
-          "maxItems": 4
+          "maxItems": 6
         },
         "correct": {
-          "type": "string",
-          "minLength": 2,
-          "maxLength": 3,
-          "pattern": "^(?:o[0-9]{1,2})$"
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 3,
+              "pattern": "^(?:o[0-9]{1,2})$"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 3,
+                "pattern": "^(?:o[0-9]{1,2})$"
+              },
+              "minItems": 1,
+              "maxItems": 5
+            }
+          ]
         },
         "shuffle": {
           "type": "boolean"
@@ -509,6 +564,9 @@
             "letter",
             "word"
           ]
+        },
+        "all": {
+          "type": "boolean"
         }
       },
       "required": [

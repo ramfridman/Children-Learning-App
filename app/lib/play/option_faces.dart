@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../design/course_text.dart';
+import '../engine/course.dart';
+import 'ls01_metrics.dart' show lineHeightFor;
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
 
@@ -18,10 +20,15 @@ class OptionTextFace extends StatelessWidget {
     required this.course,
     required this.tileFont,
     required this.letter,
+    this.readingSize,
   });
 
   final String text;
   final String course;
+
+  /// The size the text is read at, from the band, the course and the board (docs/design/languages-l5-ls01.md section 3.2). When it is given
+  /// the text is drawn at it; the scale-down below stays only as the last safety net, for a text the fit test would have refused.
+  final double? readingSize;
 
   /// The numeral size of the board's tiles (`ActivitySpec.tileFont`).
   final double tileFont;
@@ -36,20 +43,35 @@ class OptionTextFace extends StatelessWidget {
       child: Center(
         child: FittedBox(
           fit: BoxFit.scaleDown,
-          child: CourseText(text, course: course, size: letter ? tileFont : tileFont * 0.55, bold: letter),
+          child: CourseText(
+            text,
+            course: course,
+            size: readingSize ?? (letter ? tileFont : tileFont * 0.55),
+            bold: letter,
+            lineHeight: readingSize == null ? null : lineHeightFor(text, hebrew: !_latinCourse(course)),
+          ),
         ),
       ),
     );
   }
 }
 
-/// A sound button's face: a speaker and nothing else.
+bool _latinCourse(String course) => course == Course.eng || course == Course.rus;
+
+/// A sound button's face: a speaker and nothing else. A sound card of a sort that has not been played yet ([heard] false) shows the
+/// speaker without its waves, so that the child can tell which cards are still unknown (docs/design/languages-l5-ls01.md section 6).
 class SoundFace extends StatelessWidget {
-  const SoundFace({super.key});
+  const SoundFace({super.key, this.heard = true});
+
+  final bool heard;
 
   @override
-  Widget build(BuildContext context) =>
-      const Icon(Icons.volume_up_rounded, key: Key('sound-face'), size: 52, color: TokenColors.ink);
+  Widget build(BuildContext context) => Icon(
+    heard ? Icons.volume_up_rounded : Icons.volume_mute_rounded,
+    key: const Key('sound-face'),
+    size: 52,
+    color: TokenColors.ink,
+  );
 }
 
 /// A speaker under a text tile: a tap plays the tile's own clip and does not answer. Its disc is 44 points; its touch area is

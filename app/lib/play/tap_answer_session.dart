@@ -20,6 +20,8 @@ import 'hints/hint_player.dart';
 import 'hints/tap_geometry.dart';
 import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
+import 'ls01_metrics.dart';
+import '../design/token_types.dart' show Band;
 import '../design/layout.dart';
 import 'option_faces.dart';
 import 'sprite_group.dart';
@@ -32,9 +34,13 @@ import 'template_session.dart';
 /// direction, with a speaker that plays its own clip without answering, or a sound button; a picture or a sound button says its
 /// word as it is chosen; and, when [captions] is on, the word appears under the right picture once the answer is accepted.
 class TapAnswerSession extends TemplateSession {
-  TapAnswerSession(super.controller, this.activity, {this.captions = false, this.stress = true});
+  TapAnswerSession(super.controller, this.activity, {this.captions = false, this.stress = true, this.band});
 
   final TapAnswerActivity activity;
+
+  /// The presentation band of a language course: its text tiles are read at the reading size of the band (docs/design/languages-l5-ls01.md
+  /// section 3.2). Null for a land, and for a test that does not say: the text keeps the size the tile gives it.
+  final Band? band;
 
   /// The word of the right picture appears under it after the answer (`captionAfterAnswer`), with its stress marks if [stress].
   final bool captions;
@@ -268,7 +274,21 @@ class TapAnswerSession extends TemplateSession {
                                   padding: const EdgeInsets.all(6),
                                   child: _face(activity, o, 96, spec.tileFont, stress, letter: letterItem),
                                 )
-                              : _face(activity, o, 96, spec.tileFont, stress, letter: letterItem),
+                              : _face(
+                                  activity,
+                                  o,
+                                  96,
+                                  spec.tileFont,
+                                  stress,
+                                  letter: letterItem,
+                                  reading: band == null
+                                      ? null
+                                      : Ls01Metrics.of(
+                                          band: band!,
+                                          spec: spec,
+                                          course: activity.course,
+                                        ).size(letterItem ? FaceKind.letter : FaceKind.word),
+                                ),
                         ),
                       ),
                       // The word of the right picture, under its tile, once the answer is accepted.
@@ -363,6 +383,7 @@ Widget _face(
   double font,
   bool stress, {
   bool letter = false,
+  double? reading,
 }) {
   if (o.text != null) {
     return OptionTextFace(
@@ -370,6 +391,7 @@ Widget _face(
       course: a.course,
       tileFont: font,
       letter: letter,
+      readingSize: reading,
     );
   }
   if (o.soundOnly) return const SoundFace();

@@ -115,6 +115,21 @@ Map<String, Object?> _common(
   'a11y': <String, Object?>{'altText': 'שָׁלוֹשׁ תְּמוּנוֹת'},
 };
 
+/// The fields every activity has, and its prompt, feedback and hints (for the fixtures of other files).
+Map<String, Object?> commonJson(
+  String course,
+  String id,
+  String skill,
+  String template,
+  String version,
+  String purpose,
+  String band,
+  String representation,
+) => _common(course, id, skill, template, version, purpose, band, representation);
+
+Map<String, Object?> linesJson(String id, {String? target, String? show, String? promptText}) =>
+    _lines(id, target: target, show: show, promptText: promptText);
+
 /// A `tap_answer` 1.3 activity of [course]: its id is `<course>.<id>`, the skill the second skill of the fixture pack unless
 /// [skill] says one. [target] and [show] go on the prompt line (the second clip, and the word in the chip).
 Map<String, Object?> tapJson({
@@ -261,6 +276,8 @@ class LangPack {
     ]) {
       addTag(t.$1, t.$2);
     }
+    // A look-alike letter (docs/languages/frame.md section 4.1, the family SHAPE).
+    addTag('lis.lookalike', 'diagnostic', family: 'SHAPE');
   }
 
   final String course;
@@ -270,13 +287,14 @@ class LangPack {
 
   String get skill => '${course.toUpperCase()}-A-02';
 
-  void addTag(String slug, String kind) {
+  void addTag(String slug, String kind, {String? family}) {
     final String id = tag(slug);
     pack.addDocument('misconception.$id.json', 'misconceptions', id, <String, Object?>{
       'schema': 'misconception/v1',
       'id': id,
       'course': course,
       'kind': kind,
+      'family': ?family,
       'skills': <Object?>[skill],
       'parentText': 'The child is still learning this word.',
       'repairActivities': <Object?>[],

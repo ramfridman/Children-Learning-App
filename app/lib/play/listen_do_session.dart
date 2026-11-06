@@ -7,13 +7,18 @@ import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/board.dart' show BoardClass;
 import '../design/components.dart';
+import '../content/scripts.dart' show isSingleLetter;
+import '../design/course_text.dart';
 import '../design/layout.dart' show AppLayout;
+import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import '../strings/he.dart';
 import 'choice_row.dart';
 import 'choice_session.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
+import 'caption_policy.dart' show withStress;
 import 'lesson_controller.dart' show LessonController;
+import 'ls01_metrics.dart';
 import 'template_session.dart';
 
 /// The listen-and-do template (LS11, docs/languages/frame.md section 2.3): the command is heard and the child carries it out in a
@@ -26,11 +31,14 @@ import 'template_session.dart';
 /// The hints: level 1 lights the parts one after the other; level 2 shows what the command names in a close-up card beside the scene
 /// (a new representation); level 3 shows it done: the right thing is carried to its place, and then only the right move is taken.
 class ListenDoSession extends ChoiceSession {
-  ListenDoSession(LessonController controller, ListenDoActivity activity, {super.stress})
+  ListenDoSession(LessonController controller, ListenDoActivity activity, {this.band = Band.b, super.stress})
     : doing = activity,
       super(controller, activity, activity);
 
   final ListenDoActivity doing;
+
+  /// The presentation band of the course: a letter stone of a `place` item (a text face, LS01 a) is read at the reading size of the band.
+  final Band band;
 
   /// The thing the child touched, waiting for the target to be touched (the tap path of a drag).
   String? selectedId;
@@ -319,6 +327,33 @@ class _DoStage extends StatelessWidget {
     );
   }
 
+  /// The letter, unit or word on a place (a letter stone, L5-1): LS01's text face at the reading size of the band, in the course's font. The
+  /// place has no sound of its own; the stone says nothing when it is touched.
+  Widget _stoneText(BuildContext context, ChoiceOption o) {
+    final Ls01Metrics m = Ls01Metrics(
+      band: s.band,
+      tablet: AppLayout.of(context).isTablet,
+      course: s.doing.course,
+    );
+    final String text = withStress(o.text!, show: s.stress);
+    final bool letter = isSingleLetter(text);
+    return IgnorePointer(
+      child: Center(
+        key: Key('do-place-text-${o.id}'),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: CourseText(
+            text,
+            course: m.course,
+            size: m.size(letter ? FaceKind.letter : FaceKind.word),
+            bold: letter,
+            lineHeight: lineHeightFor(text, hebrew: m.hebrew),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Where a thing is put down: the target of a drag or one place of a `place`. A touch on it, with a thing selected, puts it there.
   Widget _zone(
     Rect r, {
@@ -342,7 +377,13 @@ class _DoStage extends StatelessWidget {
             behavior: HitTestBehavior.opaque,
             onTap: onTap,
             child: option != null
-                ? _ring(option, index)
+                ? Stack(
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      _ring(option, index),
+                      if (option.text != null) _stoneText(context, option),
+                    ],
+                  )
                 : DecoratedBox(
                     decoration: BoxDecoration(
                       color: TokenColors.skyTint.withValues(alpha: over.isEmpty ? 0.4 : 0.9),

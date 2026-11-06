@@ -236,9 +236,9 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 7,
+            "minLength": 5,
             "maxLength": 46,
-            "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+            "pattern": "^(?:asset:[a-z0-9_]{1,40}|txt:[^\u0000-\u001f]{1,40})$"
           },
           "minItems": 0,
           "maxItems": 8
@@ -252,9 +252,20 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 7,
+            "minLength": 5,
             "maxLength": 46,
-            "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+            "pattern": "^(?:asset:[a-z0-9_]{1,40}|txt:[^\u0000-\u001f]{1,40})$"
+          },
+          "minItems": 2,
+          "maxItems": 6
+        },
+        "clips": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 83,
+            "pattern": "^(?:vo:[a-z0-9_.]{1,80})$"
           },
           "minItems": 2,
           "maxItems": 6
@@ -276,12 +287,22 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 7,
+            "minLength": 5,
             "maxLength": 46,
-            "pattern": "^(?:asset:[a-z0-9_]{1,40})$"
+            "pattern": "^(?:asset:[a-z0-9_]{1,40}|txt:[^\u0000-\u001f]{1,40})$"
           },
           "minItems": 2,
           "maxItems": 8
+        },
+        "order": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "minItems": 2,
+          "maxItems": 6
         },
         "misconception": {
           "type": "string",
@@ -291,8 +312,7 @@
         }
       },
       "required": [
-        "type",
-        "sequence"
+        "type"
       ],
       "additionalProperties": false
     },

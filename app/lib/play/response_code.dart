@@ -10,6 +10,8 @@
 /// | sort_drag (sort) | `sorted` | the item and the bin it was put in, `i1-b2` |
 /// | sort_drag (share) | `sorted` | how many each friend got, `b1=3.b2=1` |
 /// | build_pattern | the palette index of each place, `0101` | the same, `0110` |
+/// | tap_answer (tap-all, L5-1) | the cards picked, in order, `0.2.5` | the same |
+/// | sort_drag (a language sort, L5-1) | `sorted` | the cards of each bin when the last is sorted, `b1=02-b2=13` |
 /// | robot_path (direct) | `reached` | (no wrong move: a bump is not a mistake) |
 /// | robot_path (plan) | the first letter of each step, `uurd` | the same |
 /// | shape_builder | `built` | the tray piece's index and the place, `p3-s1` |
@@ -78,6 +80,13 @@ abstract final class ResponseCode {
 
   static String pairs(Iterable<(int, int)> joined) =>
       <String>[for (final (int top, int bottom) in joined) pair(top, bottom)].join('.');
+
+  /// A tap-all: the index of each card picked, in the order picked (`0.2.5`).
+  static String picks(Iterable<int> indexes) => indexes.join('.');
+
+  /// A sort checked when its last card is put in a bin: for each bin the indexes of its cards, digits run together (`b1=02-b2=13`).
+  static String sortCheck(Iterable<(String, List<int>)> bins) =>
+      <String>[for (final (String bin, List<int> cards) in bins) '$bin=${cards.join()}'].join('-');
 
   /// The time a clock was set to.
   static String clock(int hour, {required bool half}) => '$hour.${half ? '30' : '00'}';

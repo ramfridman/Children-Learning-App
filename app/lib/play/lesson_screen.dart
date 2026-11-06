@@ -27,6 +27,7 @@ import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
 import '../design/layout.dart';
+import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import '../parent/alert_scan.dart';
 import '../parent/language_settings.dart';
@@ -42,6 +43,12 @@ import 'count_tap_session.dart';
 import 'flash_session.dart';
 import 'build_pattern_session.dart';
 import 'give_n_session.dart';
+import 'ls01_order_session.dart';
+import 'ls01_pairs_session.dart';
+import 'ls01_sequence_session.dart';
+import 'ls01_sort_session.dart';
+import 'ls01_spot_session.dart';
+import 'ls01_tap_session.dart';
 import 'lesson_controller.dart';
 import 'clock_set_session.dart';
 import 'lesson_voice.dart';
@@ -437,6 +444,15 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     );
   }
 
+  /// The presentation band of the child in the activity's course (docs/design/languages-l5-ls01.md section 3): the sizes of a tile and of a
+  /// text face follow it, not the band letter of the skill.
+  Band _presentationBand(Activity a) {
+    final LanguageSwitches s =
+        ref.read(languagesProvider).value?.of(widget.profileId, a.course) ?? const LanguageSwitches();
+    final int ageBand = ref.read(activeProfileProvider)?.ageBand ?? 1;
+    return Band.values[s.presentationBand(ageBand)];
+  }
+
   /// The parent's switch for scripted personal questions in this language (docs/languages/frame.md section 1.4). It fails closed: while
   /// the family's settings are loading, or could not be read, nothing personal is asked (SEC-L4-2); once they are read, a language the
   /// parent never touched keeps the default, on.
@@ -453,9 +469,21 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       final ({bool captions, bool stress}) caption = _captionsFor(a);
       _session = switch (a) {
         CountTapActivity() => CountTapSession(c, a),
-        TapAnswerActivity() => TapAnswerSession(c, a, captions: caption.captions, stress: caption.stress),
+        TapAnswerActivity() when a.ls01Mode != null => Ls01TapSession(
+          c,
+          a,
+          band: _presentationBand(a),
+          stress: caption.stress,
+        ),
+        TapAnswerActivity() => TapAnswerSession(
+          c,
+          a,
+          captions: caption.captions,
+          stress: caption.stress,
+          band: a.isLanguage ? _presentationBand(a) : null,
+        ),
         StoryActivity() => StorySession(c, a, stress: caption.stress),
-        ListenDoActivity() => ListenDoSession(c, a, stress: caption.stress),
+        ListenDoActivity() => ListenDoSession(c, a, band: _presentationBand(a), stress: caption.stress),
         SingAlongActivity() => SingAlongSession(c, a, stress: caption.stress),
         SoundBoxesActivity() => SoundBoxesSession(c, a),
         PuppetTalkActivity() => PuppetTalkSession(
@@ -465,13 +493,43 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           stress: caption.stress,
         ),
         FlashActivity() => FlashSession(c, a),
+        SortDragActivity() when a.isLanguage => Ls01SortSession(
+          c,
+          a,
+          band: _presentationBand(a),
+          stress: caption.stress,
+        ),
         SortDragActivity() => SortDragSession(c, a),
+        BuildPatternActivity() when a.isLanguage && a.isSequence => Ls01SequenceSession(
+          c,
+          a,
+          band: _presentationBand(a),
+          stress: caption.stress,
+        ),
+        BuildPatternActivity() when a.isLanguage => Ls01OrderSession(
+          c,
+          a,
+          band: _presentationBand(a),
+          stress: caption.stress,
+        ),
         BuildPatternActivity() => BuildPatternSession(c, a),
         RobotPathActivity() => RobotPathSession(c, a),
         ShapeBuilderActivity() => ShapeBuilderSession(c, a),
         NumberLineActivity() => NumberLineSession(c, a),
         BalanceActivity() => BalanceSession(c, a),
+        SpotErrorActivity() when a.isLanguage => Ls01SpotSession(
+          c,
+          a,
+          band: _presentationBand(a),
+          stress: caption.stress,
+        ),
         SpotErrorActivity() => SpotErrorSession(c, a),
+        MatchPairsActivity() when a.isLanguage => Ls01PairsSession(
+          c,
+          a,
+          band: _presentationBand(a),
+          stress: caption.stress,
+        ),
         MatchPairsActivity() => MatchPairsSession(c, a),
         ShopPayActivity() => ShopPaySession(c, a),
         ClockSetActivity() => ClockSetSession(c, a),

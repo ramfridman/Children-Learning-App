@@ -456,6 +456,13 @@
           "maxLength": 81,
           "pattern": "^(?:[a-z0-9][a-z0-9._-]{2,80})$"
         },
+        "face": {
+          "type": "string",
+          "enum": [
+            "letter",
+            "word"
+          ]
+        },
         "topic": {
           "type": "string",
           "enum": [

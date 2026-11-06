@@ -414,8 +414,9 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
       ? Ls01TapMode.stem
       : null;
 
-  static List<String> _correctIds(Object? correct) =>
-      correct is List<Object?> ? <String>[for (final Object? c in correct) c! as String] : <String>[correct! as String];
+  static List<String> _correctIds(Object? correct) => correct is List<Object?>
+      ? <String>[for (final Object? c in correct) c! as String]
+      : <String>[correct! as String];
 
   /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
   /// texts as words, all alike, whatever their length.
@@ -723,11 +724,15 @@ class SortBin {
     this.sprite,
     this.text,
     this.clip,
+    this.alt,
     required this.count,
     required this.label,
   });
 
   final String id;
+
+  /// A picture beside the sign at hint level 2 (the other form of the sign), or null.
+  final String? alt;
 
   /// The sign of the bin: a picture (the lands), or in a language course a picture, a text (a letter, a unit, a word), or a sound.
   final String? sprite;
@@ -775,6 +780,7 @@ class SortDragActivity extends Activity {
             sprite: b['sprite'] as String?,
             text: b['text'] as String?,
             clip: b['clip'] as String?,
+            alt: b['alt'] as String?,
             count: (b['count'] as int?) ?? 1,
             label: b['label']! as String,
           ),
@@ -806,10 +812,7 @@ class SortDragActivity extends Activity {
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{
-    ?wrongTag,
-    for (final SortItem i in items) ?i.misconception,
-  };
+  Set<String> get engineTags => <String>{?wrongTag, for (final SortItem i in items) ?i.misconception};
 }
 
 /// The build-a-pattern template (T05): fill the places from a palette.
@@ -831,6 +834,10 @@ class BuildPatternActivity extends Activity {
         for (final Object? o in (_map(json['answer'])['order'] as List<Object?>? ?? const <Object?>[]))
           o! as int,
       ],
+      clips = <String>[
+        for (final Object? c in (_map(json['scene'])['clips'] as List<Object?>? ?? const <Object?>[]))
+          c! as String,
+      ],
       wrongTag = _map(json['answer'])['misconception'] as String?,
       super._();
 
@@ -845,6 +852,9 @@ class BuildPatternActivity extends Activity {
   /// right order of the story. Empty for every other item.
   final List<int> order;
   bool get isSequence => order.isNotEmpty;
+
+  /// A story line: the line of each picture as a clip, in the order of [palette] (hint level 1 plays them as it lights the pictures).
+  final List<String> clips;
   final String? wrongTag;
 
   @override
@@ -955,6 +965,12 @@ class SpotErrorActivity extends Activity {
           : (
               sprite: _map(_map(json['scene'])['model'])['sprite']! as String,
               clip: _map(_map(json['scene'])['model'])['clip'] as String?,
+              spelling: <String>[
+                for (final Object? c
+                    in (_map(_map(json['scene'])['model'])['spelling'] as List<Object?>?) ??
+                        const <Object?>[])
+                  c! as String,
+              ],
             ),
       wrong = _map(json['answer'])['wrong']! as int,
       wrongTag = _map(json['answer'])['misconception'] as String?,
@@ -964,7 +980,7 @@ class SpotErrorActivity extends Activity {
   final List<String> cells;
 
   /// A language course: the picture (and its word, heard on a touch) the cells are to match; null in the lands.
-  final ({String sprite, String? clip})? model;
+  final ({String sprite, String? clip, List<String> spelling})? model;
 
   /// The index of the cell that is wrong.
   final int wrong;
@@ -988,6 +1004,7 @@ class MatchFace {
     this.coin,
     this.text,
     this.clip,
+    this.alt,
     this.misconception,
   });
 
@@ -1000,11 +1017,15 @@ class MatchFace {
     coin: m['coin'] as String?,
     text: m['text'] as String?,
     clip: m['clip'] as String?,
+    alt: m['alt'] as String?,
     misconception: m['misconception'] as String?,
   );
 
   final String id;
   final String label;
+
+  /// A picture beside the face at hint level 2 (the other form of the face), or null.
+  final String? alt;
 
   /// A language course: a face may be a text (a letter, a unit, a word), or only a sound (a sound card), as well as a picture.
   final String? text;

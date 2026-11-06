@@ -7,6 +7,7 @@ import '../content/models.dart';
 import '../design/components.dart';
 import '../design/course_text.dart';
 import '../design/layout.dart';
+import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
 import 'caption_policy.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
@@ -96,6 +97,45 @@ ActivitySpec withSideSpeakers(ActivitySpec base) {
     tilesLeft: 0,
     tilesTop: 220,
     tilesWidth: 520,
+  );
+}
+
+/// The board of the modes that L5-1 adds to LS01 (docs/design/languages-l5-ls01.md section 2): two zones, the **stage zone S** (what the question
+/// is about: bins, a stem, a sentence, the item now) and the **answer zone A** (what the child touches or moves). On the phones both are wider
+/// than the stage and the tile box of L1, because a text at its reading size needs the room; the frame (controls, trail, bubble, guide and
+/// microphone) does not move. The tablets keep their card; A stands centred under it, and [wide] is the zone of the story line, which uses the
+/// width of the tablet landscape; [secondRow] makes the stage 12 shorter so that a second row of tiles fits (tap-all of 6, a tray of 6 words).
+ActivitySpec withLs01Zones(ActivitySpec base, Band band, {bool wide = false, bool secondRow = false}) {
+  final bool bandA = band == Band.a;
+  if (base.stageIsCard) {
+    final bool landscape = base.boardHeight < 1000;
+    return base.withStageAndTiles(
+      stage: Rect.fromLTWH(
+        base.stage.left,
+        base.stage.top,
+        base.stage.width,
+        secondRow && landscape ? base.stage.height - 12 : base.stage.height,
+      ),
+      tilesLeft: landscape ? (wide ? 24 : 194) : 24,
+      tilesTop: landscape ? (secondRow ? 548 : 566) : 696,
+      tilesWidth: landscape ? (wide ? 942 : 772) : 772,
+    );
+  }
+  if (base.boardHeight > 380) {
+    // The phone: S from x 24 (was 71) and 148 high; A under it, to the guide at x 617 and the microphone at 661 (it ends at 605).
+    return base.withStageAndTiles(
+      stage: const Rect.fromLTWH(24, 96, 377, 148),
+      tilesLeft: 24,
+      tilesTop: bandA ? 258 : 264,
+      tilesWidth: 581,
+    );
+  }
+  // The smallest phone: S 144 high (136 in Band A, whose tiles are taller), A to the microphone at x 521 (it ends at 508).
+  return base.withStageAndTiles(
+    stage: Rect.fromLTWH(24, 86, 262, bandA ? 136 : 144),
+    tilesLeft: 24,
+    tilesTop: bandA ? 240 : 250,
+    tilesWidth: 484,
   );
 }
 

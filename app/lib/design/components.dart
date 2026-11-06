@@ -296,10 +296,15 @@ class AnswerTile extends StatelessWidget {
     this.size = 96,
     this.width,
     this.slop = 12,
+    this.hitPadding,
   });
 
   /// A tile that is wider than it is tall (a set of things to choose) gives its [width]; the default is square.
   final double? width;
+
+  /// The room around the tile that still counts as touching it, when it is not the same on every side (LS01: half the gap beside it, the
+  /// band's slop above and below, so that the hit areas of neighbours meet in the middle of the gap). Overrides [slop].
+  final EdgeInsets? hitPadding;
 
   /// A row of tiles uses no gap: the tap margins of neighbours add up to the board's 24 point gap.
   final Widget child;
@@ -333,7 +338,7 @@ class AnswerTile extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: onPressed,
         child: Padding(
-          padding: EdgeInsets.all(slop),
+          padding: hitPadding ?? EdgeInsets.all(slop),
           child: Transform.translate(
             offset: Offset(0, selected ? -6 : 0),
             child: Stack(

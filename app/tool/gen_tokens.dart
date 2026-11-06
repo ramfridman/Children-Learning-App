@@ -151,7 +151,9 @@ String generateTokens(Map<String, Object?> t) {
 
   // ---- the reading sizes of the text faces of LS01 ----
   final Map<String, Object?> target = _map(kid['target']);
-  o.writeln('/// The size a text face of a language course is never drawn below (docs/design/languages-l5-ls01.md section 3.2).');
+  o.writeln(
+    '/// The size a text face of a language course is never drawn below (docs/design/languages-l5-ls01.md section 3.2).',
+  );
   o.writeln('abstract final class TokenReading {');
   o.writeln('  static const Map<String, Map<Band, ReadingSize>> sizes = <String, Map<Band, ReadingSize>>{');
   for (final MapEntry<String, Object?> kind in target.entries) {
