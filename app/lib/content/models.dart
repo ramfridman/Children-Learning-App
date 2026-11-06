@@ -345,10 +345,27 @@ abstract interface class ChoiceActivity {
   String get correctId;
 }
 
+/// The modes of LS01 that `tap_answer` 1.4 adds to the plain tap of L1 (docs/design/languages-l5-ls01.md sections 7.7 to 7.9).
+enum Ls01TapMode { stem, cloze, tapAll }
+
 class TapAnswerActivity extends Activity implements ChoiceActivity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
-      correctId = _map(json['answer'])['correct']! as String,
+      correctIds = _correctIds(_map(json['answer'])['correct']),
+      correctId = _correctIds(_map(json['answer'])['correct']).first,
+      all = _map(json['answer'])['all'] == true,
+      stem = _map(json['scene'])['stem'] == null
+          ? null
+          : (
+              text: _map(_map(json['scene'])['stem'])['text']! as String,
+              clip: _map(_map(json['scene'])['stem'])['clip'] as String?,
+            ),
+      cloze = _map(json['scene'])['cloze'] == null
+          ? null
+          : (
+              text: _map(_map(json['scene'])['cloze'])['text']! as String,
+              picture: _map(_map(json['scene'])['cloze'])['picture'] as String?,
+            ),
       group = _map(json['scene'])['group'] == null ? null : SpriteSet.fromJson(_map(json['scene'])['group']),
       group2 = _map(json['scene'])['group2'] == null
           ? null
@@ -370,8 +387,35 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
 
   @override
   final List<ChoiceOption> options;
+
+  /// The right answer (the first of [correctIds] in a tap-all, whose right answer is a set).
   @override
   final String correctId;
+
+  /// Every right option: one, or the set of a tap-all.
+  final List<String> correctIds;
+
+  /// Tap-all (LS01, L5-1): several right cards in one row, each tapped; the item checks itself once as many cards are picked as there are right
+  /// ones, and is right when they are exactly the right ones.
+  final bool all;
+
+  /// A text stem (LS01 d): a written word, unit or letter on the stage, and the clip that "read it to me" plays; null when the item has none.
+  final ({String text, String? clip})? stem;
+
+  /// A cloze (LS01 e): a sentence with one gap (`_`), and an optional picture beside it; null when the item has none.
+  final ({String text, String? picture})? cloze;
+
+  /// The LS01 mode this item plays in, or null for the plain tap of L1 (pictures, texts or sounds on tiles).
+  Ls01TapMode? get ls01Mode => all
+      ? Ls01TapMode.tapAll
+      : cloze != null
+      ? Ls01TapMode.cloze
+      : stem != null
+      ? Ls01TapMode.stem
+      : null;
+
+  static List<String> _correctIds(Object? correct) =>
+      correct is List<Object?> ? <String>[for (final Object? c in correct) c! as String] : <String>[correct! as String];
 
   /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
   /// texts as words, all alike, whatever their length.
@@ -674,10 +718,21 @@ class SoundBoxesActivity extends Activity {
 
 /// A bin of the sort-and-drag template: a picture (or a set of them) that shows the rule, and its name.
 class SortBin {
-  const SortBin({required this.id, required this.sprite, required this.count, required this.label});
+  const SortBin({
+    required this.id,
+    this.sprite,
+    this.text,
+    this.clip,
+    required this.count,
+    required this.label,
+  });
 
   final String id;
-  final String sprite;
+
+  /// The sign of the bin: a picture (the lands), or in a language course a picture, a text (a letter, a unit, a word), or a sound.
+  final String? sprite;
+  final String? text;
+  final String? clip;
 
   /// How many of the picture to draw in the bin (a bin that shows its rule with three of them), at least 1.
   final int count;
@@ -686,11 +741,27 @@ class SortBin {
 
 /// A picture to be sorted, and the bin it belongs in (null in share mode, where any bin may be right).
 class SortItem {
-  const SortItem({required this.id, required this.sprite, required this.bin});
+  const SortItem({
+    required this.id,
+    this.sprite,
+    this.text,
+    this.clip,
+    this.misconception,
+    required this.bin,
+    this.label = '',
+  });
 
   final String id;
-  final String sprite;
+
+  /// A picture (the lands), or in a language course a picture, a text, or only a sound (a sound card).
+  final String? sprite;
+  final String? text;
+  final String? clip;
+
+  /// The tag of the misconception that putting this card in a wrong bin shows (a language course; the item's own tag otherwise).
+  final String? misconception;
   final String? bin;
+  final String label;
 }
 
 /// The sort-and-drag template (T03): pictures go into bins by touch or by drag; in `share` mode they are dealt between
@@ -701,14 +772,24 @@ class SortDragActivity extends Activity {
         for (final Map<String, Object?> b in _maps(_map(json['scene'])['bins']))
           SortBin(
             id: b['id']! as String,
-            sprite: b['sprite']! as String,
+            sprite: b['sprite'] as String?,
+            text: b['text'] as String?,
+            clip: b['clip'] as String?,
             count: (b['count'] as int?) ?? 1,
             label: b['label']! as String,
           ),
       ],
       items = <SortItem>[
         for (final Map<String, Object?> i in _maps(_map(json['scene'])['items']))
-          SortItem(id: i['id']! as String, sprite: i['sprite']! as String, bin: i['bin'] as String?),
+          SortItem(
+            id: i['id']! as String,
+            sprite: i['sprite'] as String?,
+            text: i['text'] as String?,
+            clip: i['clip'] as String?,
+            misconception: i['misconception'] as String?,
+            bin: i['bin'] as String?,
+            label: (i['label'] as String?) ?? '',
+          ),
       ],
       share = _map(json['answer'])['mode'] == 'share',
       wrongTag = _map(json['answer'])['misconception'] as String?,
@@ -725,7 +806,10 @@ class SortDragActivity extends Activity {
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag};
+  Set<String> get engineTags => <String>{
+    ?wrongTag,
+    for (final SortItem i in items) ?i.misconception,
+  };
 }
 
 /// The build-a-pattern template (T05): fill the places from a palette.
@@ -740,16 +824,27 @@ class BuildPatternActivity extends Activity {
         for (final Object? p in _map(json['scene'])['palette']! as List<Object?>) p! as String,
       ],
       sequence = <String>[
-        for (final Object? s in _map(json['answer'])['sequence']! as List<Object?>) s! as String,
+        for (final Object? s in (_map(json['answer'])['sequence'] as List<Object?>? ?? const <Object?>[]))
+          s! as String,
+      ],
+      order = <int>[
+        for (final Object? o in (_map(json['answer'])['order'] as List<Object?>? ?? const <Object?>[]))
+          o! as int,
       ],
       wrongTag = _map(json['answer'])['misconception'] as String?,
       super._();
 
   /// The pattern to copy (may be empty), the number of places, the pictures to choose from and the right order.
+  /// A face is `asset:id` (a picture) or, in a language course, `txt:` and a letter, a unit or a word (LS01 order tiles).
   final List<String> model;
   final int slots;
   final List<String> palette;
   final List<String> sequence;
+
+  /// A sequence (LS01 f, the story line of a language course): the picture indexes of [palette], which stands in a shuffled order, in the
+  /// right order of the story. Empty for every other item.
+  final List<int> order;
+  bool get isSequence => order.isNotEmpty;
   final String? wrongTag;
 
   @override
@@ -855,12 +950,21 @@ class BalanceActivity extends Activity {
 class SpotErrorActivity extends Activity {
   SpotErrorActivity._(super.json, super.assets)
     : cells = <String>[for (final Object? c in _map(json['scene'])['cells']! as List<Object?>) c! as String],
+      model = _map(json['scene'])['model'] == null
+          ? null
+          : (
+              sprite: _map(_map(json['scene'])['model'])['sprite']! as String,
+              clip: _map(_map(json['scene'])['model'])['clip'] as String?,
+            ),
       wrong = _map(json['answer'])['wrong']! as int,
       wrongTag = _map(json['answer'])['misconception'] as String?,
       super._();
 
-  /// Each cell is `asset:id`, `n:7`, `dir:up` or `op:+`.
+  /// Each cell is `asset:id`, `n:7`, `dir:up`, `op:+` or, in a language course, `txt:` and a letter, a unit or a word.
   final List<String> cells;
+
+  /// A language course: the picture (and its word, heard on a touch) the cells are to match; null in the lands.
+  final ({String sprite, String? clip})? model;
 
   /// The index of the cell that is wrong.
   final int wrong;
@@ -882,6 +986,9 @@ class MatchFace {
     this.count = 1,
     this.numeral,
     this.coin,
+    this.text,
+    this.clip,
+    this.misconception,
   });
 
   factory MatchFace.fromJson(Map<String, Object?> m) => MatchFace(
@@ -891,10 +998,20 @@ class MatchFace {
     count: (m['count'] as int?) ?? 1,
     numeral: m['numeral'] as int?,
     coin: m['coin'] as String?,
+    text: m['text'] as String?,
+    clip: m['clip'] as String?,
+    misconception: m['misconception'] as String?,
   );
 
   final String id;
   final String label;
+
+  /// A language course: a face may be a text (a letter, a unit, a word), or only a sound (a sound card), as well as a picture.
+  final String? text;
+  final String? clip;
+
+  /// The tag of the misconception that choosing this face as a partner of a wrong one shows (a face of the bottom row).
+  final String? misconception;
   final String? sprite;
   final int count;
   final int? numeral;
@@ -930,7 +1047,7 @@ class MatchPairsActivity extends Activity {
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag};
+  Set<String> get engineTags => <String>{?wrongTag, for (final MatchFace f in right) ?f.misconception};
 }
 
 /// A kind of coin or note in the purse and how many of it there are.

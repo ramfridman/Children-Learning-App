@@ -496,3 +496,7 @@ These are lists, not edits made. Each teacher changes their own `syllabus.md` (a
 - Piasta, S. B. and Wagner, R. K. (2010). *Reading Research Quarterly* 45(1), 8–38: names taught with sounds (the two cues).
 - Roediger, H. L. and Karpicke, J. D. (2006). Test-enhanced learning. *Psychological Science* 17(3), 249–255: retrieval, not re-study, strengthens memory (why copying is neither a success nor a review). Studied with students, not young children.
 - **Thin evidence, said plainly:** no study compares trace, copy and memory credit in an adaptive app. The credit steps are the owner's rule set on these findings. Whether mirror errors should need two probe misses is a judgement from how common reversals are at 5 and 6, not a measured number.
+
+## 12. Owner decision (2026-11-06)
+
+The owner approved, in chat, all five structure changes of §2 and §11: split ENG-B-18 into B-18.G1 and B-18.G2 (the English teacher's proposal); add ENG-B-23 (trace nodes, `.G1` to `.G4`); retire HEB-B-25 into HEB-B-26; HEB-A-14 met once practised; HEB-B-27 met once practised.

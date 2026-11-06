@@ -52,6 +52,25 @@ class BandTouch {
   final int maxChoices;
 }
 
+/// The reading size of one kind of text face of a language course in one band, in points: the Hebrew course (Heebo) and English or
+/// Russian (the teaching font), on a phone and on a tablet.
+class ReadingSize {
+  const ReadingSize({
+    required this.hePhone,
+    required this.heTablet,
+    required this.targetPhone,
+    required this.targetTablet,
+  });
+
+  final double hePhone;
+  final double heTablet;
+  final double targetPhone;
+  final double targetTablet;
+
+  double of({required bool hebrew, required bool tablet}) =>
+      hebrew ? (tablet ? heTablet : hePhone) : (tablet ? targetTablet : targetPhone);
+}
+
 /// Layout numbers of a window size class.
 class LayoutClass {
   const LayoutClass({
