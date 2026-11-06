@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/math_providers.dart';
 import '../app/rules_providers.dart';
 import '../app/tutor_providers.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
 import '../design/tokens.g.dart';
+import '../play/math_signs.dart';
 import '../strings/he.dart';
 import 'parent_rules.dart';
 
@@ -77,6 +79,25 @@ class RulesScreen extends ConsumerWidget {
       ],
     ),
   );
+
+  Widget _divisionChip(
+    BuildContext context,
+    DivisionSign sign,
+    String glyph, {
+    required bool chosen,
+    required VoidCallback onSelected,
+  }) {
+    final ThemeData theme = Theme.of(context);
+    return ChoiceChip(
+      key: Key('division-${sign.name}'),
+      label: Text(glyph),
+      selected: chosen,
+      selectedColor: theme.colorScheme.primary,
+      checkmarkColor: theme.colorScheme.onPrimary,
+      labelStyle: chosen ? theme.textTheme.labelLarge?.copyWith(color: theme.colorScheme.onPrimary) : null,
+      onSelected: (_) => onSelected(),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -250,6 +271,29 @@ class RulesScreen extends ConsumerWidget {
                     value: ref.watch(warmUpProvider).value ?? true,
                     onChanged: (bool on) => ref.read(warmUpProvider.notifier).set(on),
                   ),
+                ],
+              ),
+            ]),
+            _card(He.divisionHeading.text, <Widget>[
+              Text(He.divisionHelp.text, style: AppText.parent(TokenType.parentSmall)),
+              const SizedBox(height: 8),
+              // The chips follow the page (right to left, ÷ first at the right), as the other chips of the parent area do. The chosen
+              // one is the theme's primary colour with its on-primary glyph (white on night blue, well above 4.5:1), at the size of
+              // the other chips' labels, which is the size of the body text; the other is the plain chip.
+              Wrap(
+                spacing: 8,
+                children: <Widget>[
+                  for (final (DivisionSign sign, String glyph) in <(DivisionSign, String)>[
+                    (DivisionSign.obelus, '÷'),
+                    (DivisionSign.colon, ':'),
+                  ])
+                    _divisionChip(
+                      context,
+                      sign,
+                      glyph,
+                      chosen: (ref.watch(divisionSignProvider).value ?? DivisionSign.obelus) == sign,
+                      onSelected: () => ref.read(divisionSignProvider.notifier).set(sign),
+                    ),
                 ],
               ),
             ]),

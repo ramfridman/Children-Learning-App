@@ -57,6 +57,11 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | closed (`acdecdf`: `Course.ofLessonId` in the pull guard, proof re-run; `contradicts` refused on unscored steps; a complete placement has no visit) | 2026-11-04 |
 | SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
 | SEC-LC-2 | The answer path of the lesson controller does not itself refuse an unscored step (not reachable; defence in depth) | info | open | 2026-11-05 |
+| SEC-M10-1 | The app says it plays `tap_answer` 1.4, but no session draws a number answer or a stage picture yet | low | closed (`PackContent.fromPack` hides every item with a number answer or a stage picture until a session draws it, `itemsOf` leaves a hidden id out, `tapHintPlan` gives no plan when there is no right option; proof `sec_m10s0_test.dart`) | 2026-11-06 |
+| SEC-M10-2 | The validator throws instead of refusing some incomplete stage pictures | low | closed (null-guarded reads in `_stagePictureOf`; proof `sec_m10s0_test.dart`) | 2026-11-06 |
+| SEC-M10-3 | The 1.4 number range is not tied to Band C, and some hint plans grow with the size of the number | low | closed (numerals above 100 and `n:` cells of four digits or more only in Band C, in the validator; the hint plans fall back to the generic plan above 20 units, and a test holds every starter item with big numbers under 2,000 marks; proof `sec_m10s0_test.dart`) | 2026-11-06 |
+| SEC-M10-4 | Number cells and column numbers take 10,001 to 99,999 and leading zeros | info | closed (the patterns take 0 to 10,000 with no leading zero; proof `sec_m10s0_test.dart`) | 2026-11-06 |
+| SEC-M10-5 | An activity's `templateVersion` is not checked against the manifest's template version | info | closed (validator rule; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -367,4 +372,22 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   frame draws neither button. The proofs are `ls10_personal_safety_test.dart` (no eye or lamp before a card or during the
   switched-off wait, no attempt row) and `unscored_steps_test.dart` (the four unscored kinds write nothing). Both are green in
   QA's full run (4,073 passed, 0 failed, `218f63d`). SEC-L4-2 and SEC-L1-3 closed in the same run.
+- **M10 step 0, `m10-step0` (PR 41, `f8a99ff4` against `origin/main`; 2026-11-06): a light review. Nothing above low; fix
+  SEC-M10-1 to -3 before this build goes on the phones.** In scope: the device setting `division_sign`, the `tap_answer` 1.4 and
+  `spot_error` 1.1 schemas, the validator's rules for them, size caps, hiding from older apps, and how today's sessions handle the
+  new shapes. Not in scope: the warm-up staircase and the path gate as teaching logic.
+  - No change to the gateway, auth, crypto, logs, sync, the database, network hosts, packages, lock files, Android or iOS
+    config, or CI (checked in the diff). gitleaks ran over the branch's 4 commits and found nothing. No dependency changed, so
+    the advisory check was not run again.
+  - `division_sign` is kept in the local settings table like `warm_up`. It is set only from the rules screen in the parent
+    area, any stored value other than `colon` reads as ÷, sync never reads the key, and nothing logs it.
+  - The schema is strict: patterns match the whole value, unknown fields are refused, and every list and number has a cap (row
+    11 cells, cells 9, options 5, hundred-chart lists 100, marks 5, expected answers 8, rules 5, numbers up to 10,000). Each
+    picture kind's fields are checked both ways (what the kind needs, and nothing that belongs to another kind). Number and
+    choice answers are mutually exclusive, both ways.
+  - An app that plays only 1.3 hides a 1.4 pack before reading it (the manifest's template version). If an item is mislabelled,
+    the old app's schema refuses the new shapes, so it fails closed. The validator also makes an item that uses a 1.4 or 1.1
+    feature declare that version.
+  - New findings: SEC-M10-1 to -3 (low) and SEC-M10-4 and -5 (info), in the table above. Their detail and proofs go to the
+    orchestrator and stay out of the public file until they are fixed.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.

@@ -14,6 +14,7 @@ import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/rewards/award.dart';
 import 'package:nitznutz/rewards/names.dart';
 import 'package:nitznutz/strings/he.dart';
+import 'package:nitznutz/world/land_placement.dart';
 import 'package:nitznutz/world/placement.dart';
 
 import 'support/bottle.dart';
@@ -206,13 +207,13 @@ void main() {
   testWidgets('B-39: the bottle sends a band B child on to a second land, and its warm-up comes first', (
     WidgetTester tester,
   ) async {
-    final Lesson countingHills = placementLesson(content, 'numbers')!;
-    final Lesson colourBay = placementLesson(content, 'colors')!;
+    final String countingHillsProbe = placementVisit(content, 'numbers', const <Attempt>[])!.flow.first();
+    final String colourBayProbe = placementVisit(content, 'colors', const <Attempt>[])!.flow.first();
     final AppRig rig = AppRig();
     await rig.seedFinishedSetup(ageBand: 1, warmUp: true);
     // The child did the Counting Hills warm-up, then three lessons there (not the first one, which Colour Bay shares).
     int n = 0;
-    for (final String item in countingHills.itemIds) {
+    for (final String item in <String>[countingHillsProbe]) {
       await rig.db.recordAttempt(
         AttemptsCompanion.insert(
           at: DateTime.utc(2026, 10, 24, 9, n++),
@@ -240,8 +241,8 @@ void main() {
     final LessonScreen lesson = await tapBottle(tester);
     expect(lesson.mission, isNotNull, reason: 'the second land begins with its warm-up');
     expect(lesson.mission!.id, placementId);
-    expect(lesson.mission!.itemIds, colourBay.itemIds);
-    expect(lesson.mission!.itemIds, isNot(countingHills.itemIds));
+    expect(lesson.mission!.itemIds, <String>[colourBayProbe]);
+    expect(lesson.mission!.itemIds, isNot(<String>[countingHillsProbe]));
   });
 
   testWidgets('B-39: a band A child gets no warm-up from the bottle, in any land', (

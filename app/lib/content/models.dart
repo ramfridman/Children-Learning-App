@@ -345,10 +345,40 @@ abstract interface class ChoiceActivity {
   String get correctId;
 }
 
+/// The answer of a number-entry item (`tap_answer` 1.4, M10 X3): the number, the wrong numbers the author expects with the tag each
+/// shows, and the rules that classify any other wrong number (`smaller_from_larger`, `forgot_the_ten`, ...) with their tags.
+class NumberAnswer {
+  const NumberAnswer({required this.value, required this.expected, required this.rules});
+
+  factory NumberAnswer.fromJson(Map<String, Object?> answer) => NumberAnswer(
+    value: answer['value']! as int,
+    expected: <int, String>{
+      for (final Map<String, Object?> e in _maps(answer['expected']))
+        e['value']! as int: e['misconception']! as String,
+    },
+    rules: <String, String>{
+      for (final Map<String, Object?> r in _maps(answer['rules']))
+        r['when']! as String: r['misconception']! as String,
+    },
+  );
+
+  final int value;
+
+  /// A wrong number the author expects, to the tag it shows.
+  final Map<int, String> expected;
+
+  /// A rule (`when`) to the tag it is evidence for.
+  final Map<String, String> rules;
+}
+
 class TapAnswerActivity extends Activity implements ChoiceActivity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
-      correctId = _map(json['answer'])['correct']! as String,
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      numberAnswer = _map(json['answer'])['type'] == 'number'
+          ? NumberAnswer.fromJson(_map(json['answer']))
+          : null,
+      picture = _map(json['scene'])['picture'] as Map<String, Object?>?,
       group = _map(json['scene'])['group'] == null ? null : SpriteSet.fromJson(_map(json['scene'])['group']),
       group2 = _map(json['scene'])['group2'] == null
           ? null
@@ -370,8 +400,17 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
 
   @override
   final List<ChoiceOption> options;
+
+  /// The right option's id; empty for a number answer, which has no options.
   @override
   final String correctId;
+
+  /// The number the child types (1.4), or null for a choice. The session that draws the keypad comes with the first batch that uses it.
+  final NumberAnswer? numberAnswer;
+
+  /// A picture of a number or a measure for the stage (1.4): its `kind` and the fields of that kind (see `stagePictureKinds`), or
+  /// null. The sessions draw each kind as the batch that needs it lands.
+  final Map<String, Object?>? picture;
 
   /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
   /// texts as words, all alike, whatever their length.
@@ -406,6 +445,8 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   Set<String> get engineTags => <String>{
     for (final ChoiceOption o in options)
       if (o.misconception != null) o.misconception!,
+    ...?numberAnswer?.expected.values,
+    ...?numberAnswer?.rules.values,
   };
 }
 
@@ -1591,6 +1632,9 @@ class PackContent {
         tags[t.id] = t;
       } else if (d.key.startsWith('activity.')) {
         final Activity a = Activity.fromJson(doc, assets);
+        // SEC-M10-1: the build claims `tap_answer` 1.4, but no session draws a number answer or a stage picture yet (the first batch
+        // that does removes this line for what it draws). Until then such an item is hidden, as a pack of a newer version is.
+        if (a is TapAnswerActivity && (a.numberAnswer != null || a.picture != null)) continue;
         activities[a.id] = a;
       }
     }
@@ -1625,8 +1669,8 @@ class PackContent {
   /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
   final PlacementDoc? placement;
 
-  /// The activities of a lesson, in order.
+  /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[
-    for (final String id in lesson.itemIds) activities[id]!,
+    for (final String id in lesson.itemIds) ?activities[id],
   ];
 }

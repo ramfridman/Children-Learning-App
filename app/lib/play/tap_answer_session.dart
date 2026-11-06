@@ -20,6 +20,7 @@ import 'hints/hint_player.dart';
 import 'hints/tap_geometry.dart';
 import 'hints/tap_plans.dart';
 import 'lesson_controller.dart';
+import 'math_signs.dart';
 import '../design/layout.dart';
 import 'option_faces.dart';
 import 'sprite_group.dart';
@@ -452,7 +453,7 @@ class _TapStage extends StatelessWidget {
               height: a.optionsInTiles ? size.height : top,
               child: _groups(a),
             ),
-          if (a.row.isNotEmpty) Positioned.fill(child: _row(a, TapGeometry.rowLiftOf(a, size.height))),
+          if (a.row.isNotEmpty) Positioned.fill(child: _row(a, size)),
           if (a.chart.isNotEmpty) Positioned.fill(child: _chart(a)),
           if (a.stageNumeral != null)
             Positioned.fill(
@@ -552,52 +553,73 @@ class _TapStage extends StatelessWidget {
   );
 
   /// The row of pictures of a pattern or an order; a `?` is the gap the child fills in. Left to right, whatever the language.
-  /// A number sentence stands [lift] lower, so that the cubes of a hint fit over its numbers (see [TapGeometry.rowLiftOf]).
-  Widget _row(TapAnswerActivity a, double lift) => Padding(
-    padding: EdgeInsets.fromLTRB(10, 10 + lift, 10, 10),
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      // The cells come one by one from the left, so the child sees where the row starts; the "?" is last.
-      child: RowEntrance(
-        count: a.row.length,
-        builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
-          key: const Key('tap-row'),
-          children: <Widget>[
-            for (final (int i, String r) in a.row.indexed)
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(3),
-                  child: cell(
-                    i,
-                    r == '?'
-                        ? DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: TokenColors.paper.withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(TokenRadius.lg),
-                              border: Border.all(color: TokenColors.hairline, width: 3),
-                            ),
-                            child: Center(
-                              child: Text('?', style: AppText.fixed(size: 36, weight: 800, lineHeight: 1)),
-                            ),
-                          )
-                        : (r.startsWith('asset:')
-                              ? PackSvg(a.assets.svg(r))
-                              : FittedBox(
-                                  child: Text(
-                                    r.startsWith('op:')
-                                        ? r.substring(3).replaceAll('-', '−').replaceAll('x', '×')
-                                        : r.substring(2),
-                                    style: AppText.fixed(size: 40, weight: 800, lineHeight: 1),
-                                  ),
-                                )),
+  /// A number sentence stands lower, so that the cubes of a hint fit over its numbers (see [TapGeometry.rowLiftOf]). The cells are
+  /// laid out by [TapGeometry.rowLayoutOf] (the hints stand on the same places): every number and sign one size, the whole row
+  /// centred and clear of the stage's edge.
+  Widget _row(TapAnswerActivity a, Size stage) {
+    final ({List<double> widths, double textSize}) layout = TapGeometry.rowLayoutOf(a, stage);
+    final bool fitted = layout.textSize > 0;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 10 + TapGeometry.rowLiftOf(a, stage.height), 0, 10),
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        // The cells come one by one from the left, so the child sees where the row starts; the "?" is last.
+        child: RowEntrance(
+          count: a.row.length,
+          builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
+            key: const Key('tap-row'),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              for (final (int i, String r) in a.row.indexed)
+                SizedBox(
+                  width: layout.widths[i],
+                  child: Padding(
+                    padding: const EdgeInsets.all(3),
+                    child: cell(i, _rowCell(a, r, context, fitted ? layout.textSize : null)),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
+
+  /// One cell of the row: the gap, a picture of the pack, or a number or sign. With a [textSize] (a row of numbers and signs) the
+  /// numbers and signs are drawn at that size and the gap is as wide as a number; without it they fill their cell.
+  Widget _rowCell(TapAnswerActivity a, String r, BuildContext context, double? textSize) {
+    if (r == '?') {
+      final Widget gap = DecoratedBox(
+        decoration: BoxDecoration(
+          color: TokenColors.paper.withValues(alpha: 0.7),
+          borderRadius: BorderRadius.circular(TokenRadius.lg),
+          border: Border.all(color: TokenColors.hairline, width: 3),
+        ),
+        child: Center(
+          child: Text(
+            '?',
+            textScaler: TextScaler.noScaling,
+            style: AppText.fixed(size: textSize == null ? 36 : textSize * 0.8, weight: 800, lineHeight: 1),
+          ),
+        ),
+      );
+      return textSize == null
+          ? gap
+          : Center(
+              child: SizedBox(width: textSize, height: textSize * 1.4, child: gap),
+            );
+    }
+    if (r.startsWith('asset:')) return PackSvg(a.assets.svg(r));
+    final String text = r.startsWith('op:')
+        ? signGlyph(r.substring(3), MathSigns.of(context))
+        : r.substring(2);
+    final TextStyle style = AppText.fixed(size: textSize ?? 40, weight: 800, lineHeight: 1);
+    return textSize == null
+        ? FittedBox(child: Text(text, style: style))
+        : Center(
+            child: Text(text, textScaler: TextScaler.noScaling, maxLines: 1, softWrap: false, style: style),
+          );
+  }
 
   /// The group (or the two groups, side by side) that the question is about. Not tappable.
   Widget _groups(TapAnswerActivity a) {
