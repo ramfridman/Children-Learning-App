@@ -125,7 +125,8 @@ String generateTokens(Map<String, Object?> t) {
   o.writeln('abstract final class TokenType {');
   final Map<String, Object?> kid = _map(type['kid']);
   for (final MapEntry<String, Object?> e in kid.entries) {
-    if (e.key.startsWith(r'$')) continue;
+    // The reading sizes of LS01 have their own class below.
+    if (e.key.startsWith(r'$') || e.key == 'target') continue;
     final Map<String, Object?> s = _map(e.value);
     if (s.containsKey('A')) {
       o.writeln('  static const Map<Band, TypeToken> ${_camel(e.key)} = <Band, TypeToken>{');
@@ -145,6 +146,32 @@ String generateTokens(Map<String, Object?> t) {
       'weight: ${s['weight']}, size: ${_num(s['size'])}, lineHeight: ${_num(s['lineHeight'])});',
     );
   }
+  o.writeln('}');
+  o.writeln();
+
+  // ---- the reading sizes of the text faces of LS01 ----
+  final Map<String, Object?> target = _map(kid['target']);
+  o.writeln(
+    '/// The size a text face of a language course is never drawn below (docs/design/languages-l5-ls01.md section 3.2).',
+  );
+  o.writeln('abstract final class TokenReading {');
+  o.writeln('  static const Map<String, Map<Band, ReadingSize>> sizes = <String, Map<Band, ReadingSize>>{');
+  for (final MapEntry<String, Object?> kind in target.entries) {
+    if (kind.key.startsWith(r'$')) continue;
+    final Map<String, Object?> bands = _map(kind.value);
+    o.writeln("    '${kind.key}': <Band, ReadingSize>{");
+    for (final String b in <String>['A', 'B', 'C']) {
+      final Map<String, Object?> s = _map(bands[b]);
+      final List<Object?> he = s['he']! as List<Object?>;
+      final List<Object?> t = s['t']! as List<Object?>;
+      o.writeln(
+        '      Band.${b.toLowerCase()}: ReadingSize(hePhone: ${_num(he[0])}, heTablet: ${_num(he[1])}, '
+        'targetPhone: ${_num(t[0])}, targetTablet: ${_num(t[1])}),',
+      );
+    }
+    o.writeln('    },');
+  }
+  o.writeln('  };');
   o.writeln('}');
   o.writeln();
 

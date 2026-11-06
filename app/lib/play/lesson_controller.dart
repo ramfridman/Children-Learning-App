@@ -464,6 +464,30 @@ class LessonController extends ChangeNotifier {
     return _answered(right: right, tag: tag, response: optionId, byVoice: byVoice);
   }
 
+  /// The child picked the cards [pickedIds] of a tap-all (LS01), as many as there are right ones: right when they are exactly the right
+  /// ones. A wrong one carries its own tag (the first picked that has one); the response is the indexes of the cards in the order picked.
+  Future<Outcome> chooseSet(List<String> pickedIds) async {
+    final Object a = current;
+    if (a is! TapAnswerActivity || !a.all) throw StateError('${current.template} is not a tap-all');
+    final Set<String> right = a.correctIds.toSet();
+    final bool correct = pickedIds.toSet().length == right.length && pickedIds.toSet().containsAll(right);
+    String tag = '';
+    if (!correct) {
+      for (final String id in pickedIds) {
+        if (right.contains(id)) continue;
+        tag = a.options.firstWhere((ChoiceOption o) => o.id == id).misconception ?? '';
+        if (tag.isNotEmpty) break;
+      }
+    }
+    return _answered(
+      right: correct,
+      tag: tag,
+      response: ResponseCode.picks(<int>[
+        for (final String id in pickedIds) a.options.indexWhere((ChoiceOption o) => o.id == id),
+      ]),
+    );
+  }
+
   /// The child made a move in a drag template (sort, share, build a pattern): [right] says whether it was the right one, [tag]
   /// the misconception it shows if not. A right move ends the activity (it is written once, as `correct`); every wrong
   /// move is written as `incorrect`, and after the third the help is at its top and only the right move is taken.

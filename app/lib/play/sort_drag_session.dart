@@ -270,7 +270,7 @@ class SortDragSession extends TemplateSession {
     if (withItem && tray.isNotEmpty && _canDraw) {
       // P9: a copy of the next picture glides past the sample of each bin, and stops at none (the bins are compared, none is chosen).
       final double side = 34 * hintScale(_size);
-      final String svg = activity.assets.svg(tray.first.sprite);
+      final String svg = activity.assets.svg(tray.first.sprite!);
       final int n = activity.bins.length;
       _hint.play(
         HintPlan(<HintFrame>[
@@ -422,7 +422,7 @@ class SortDragSession extends TemplateSession {
               feedback: SizedBox(
                 width: side,
                 height: side,
-                child: Opacity(opacity: 0.9, child: PackSvg(activity.assets.svg(i.sprite))),
+                child: Opacity(opacity: 0.9, child: PackSvg(activity.assets.svg(i.sprite!))),
               ),
               childWhenDragging: Opacity(opacity: 0.25, child: _tile(i, side)),
               child: _tile(i, side),
@@ -438,7 +438,7 @@ class SortDragSession extends TemplateSession {
     slop: 4,
     state: selected == i.id || hintItem == i.id ? AnswerState.selected : AnswerState.idle,
     onPressed: () => select(i.id),
-    child: Padding(padding: const EdgeInsets.all(6), child: PackSvg(activity.assets.svg(i.sprite))),
+    child: Padding(padding: const EdgeInsets.all(6), child: PackSvg(activity.assets.svg(i.sprite!))),
   );
 }
 
@@ -515,7 +515,7 @@ class _SortStage extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: SpriteGroup(
-                            svg: a.assets.svg(b.sprite),
+                            svg: a.assets.svg(b.sprite!),
                             count: b.count,
                             arrangement: 'line',
                           ),
@@ -538,7 +538,7 @@ class _SortStage extends StatelessWidget {
                       runSpacing: 2,
                       children: <Widget>[
                         for (final SortItem i in inside)
-                          SizedBox(width: 26, height: 26, child: PackSvg(a.assets.svg(i.sprite))),
+                          SizedBox(width: 26, height: 26, child: PackSvg(a.assets.svg(i.sprite!))),
                       ],
                     ),
                   ),

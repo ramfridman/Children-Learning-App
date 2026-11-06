@@ -9,6 +9,7 @@ import '../speech/word_text.dart' show normalizeWords;
 import 'capabilities.dart' show compareTemplateVersion;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
+import 'ls01_checks.dart';
 import 'row_width.dart';
 import 'schema.dart';
 import 'schemas.dart';
@@ -350,7 +351,10 @@ List<Problem> validatePack({
         final List<String> looks = <String>[
           for (final Map<String, Object?> o in _maps(answer['options'])) _look(o),
         ];
-        if (looks.toSet().length != looks.length) say(file, 'answer.options', 'two options look the same');
+        // A tap-all repeats a card (three t's among other letters); ls01_checks.dart holds it to its own rule.
+        if (answer['all'] != true && looks.toSet().length != looks.length) {
+          say(file, 'answer.options', 'two options look the same');
+        }
       case 'story':
         checkAsset(file, 'scene.background', scene['background']);
         _story(file, a, say, checkAsset: checkAsset, checkVo: checkVo, checkTag: checkTag);
@@ -486,7 +490,7 @@ List<Problem> validatePack({
         }
         if ((answer['wrong']! as int) >= cells.length) say(file, 'answer.wrong', 'is not a cell of the row');
         checkTag(file, 'answer.misconception', answer['misconception']);
-        _spotVersion(file, a, cells, say);
+        _spotVersion(file, a, scene, cells, say);
         _spotBigNumbers(file, a, cells, say);
       case 'match_pairs':
         checkAsset(file, 'scene.background', scene['background']);
@@ -499,10 +503,26 @@ List<Problem> validatePack({
         ]) {
           for (final (int i, Map<String, Object?> f) in faces.indexed) {
             if (!faceIds.add(f['id'])) say(file, 'scene.$side[$i].id', 'is used twice');
-            if (<Object?>[f['sprite'], f['numeral'], f['coin']].where((Object? x) => x != null).length != 1) {
-              say(file, 'scene.$side[$i]', 'needs exactly one of a picture, a numeral or a coin');
+            // A face of a language course may also be a text, or only a sound (a sound card); the lands have neither (ls01_checks.dart).
+            final int shown = <Object?>[
+              f['sprite'],
+              f['numeral'],
+              f['coin'],
+              f['text'],
+            ].where((Object? x) => x != null).length;
+            final bool soundCard = shown == 0 && f['clip'] != null && Course.isLanguage(course);
+            if (shown > 1 || (shown == 0 && !soundCard)) {
+              say(
+                file,
+                'scene.$side[$i]',
+                Course.isLanguage(course)
+                    ? 'needs exactly one of a picture, a numeral, a coin or a text, or only a clip (a sound card)'
+                    : 'needs exactly one of a picture, a numeral or a coin',
+              );
             }
             if (f['sprite'] != null) checkAsset(file, 'scene.$side[$i].sprite', f['sprite']);
+            checkVo(file, 'scene.$side[$i].clip', f['clip']);
+            checkTag(file, 'scene.$side[$i].misconception', f['misconception']);
           }
         }
         if (leftFaces.length != rightFaces.length) {
@@ -651,19 +671,34 @@ List<Problem> validatePack({
       case 'build_pattern':
         checkAsset(file, 'scene.background', scene['background']);
         final List<Object?> palette = scene['palette']! as List<Object?>;
+        // A tile of a language course may be a text (`txt:`) as well as a picture (`asset:`).
+        void asset(String path, Object? ref) {
+          if (ref is String && ref.startsWith('asset:')) checkAsset(file, path, ref);
+        }
+
         for (final (int i, Object? p) in palette.indexed) {
-          checkAsset(file, 'scene.palette[$i]', p);
+          asset('scene.palette[$i]', p);
         }
         for (final (int i, Object? m) in ((scene['model'] as List<Object?>?) ?? const <Object?>[]).indexed) {
-          checkAsset(file, 'scene.model[$i]', m);
+          asset('scene.model[$i]', m);
         }
-        final List<Object?> sequence = answer['sequence']! as List<Object?>;
-        if (sequence.length != scene['slots']) {
-          say(
-            file,
-            'answer.sequence',
-            'must have exactly as many pictures as there are places (${scene['slots']})',
-          );
+        final List<Object?> sequence = (answer['sequence'] as List<Object?>?) ?? const <Object?>[];
+        if (answer['order'] == null) {
+          if (sequence.isEmpty) {
+            say(
+              file,
+              'answer.sequence',
+              'needs the pictures in their right order (`sequence`), or a story line (`order`)',
+            );
+          } else if (sequence.length != scene['slots']) {
+            say(
+              file,
+              'answer.sequence',
+              'must have exactly as many pictures as there are places (${scene['slots']})',
+            );
+          }
+        } else if (sequence.isNotEmpty) {
+          say(file, 'answer.sequence', 'a story line is given by `order`: it has no `sequence`');
         }
         for (final (int i, Object? p) in sequence.indexed) {
           if (!palette.contains(p)) say(file, 'answer.sequence[$i]', 'is not in the palette');
@@ -711,6 +746,16 @@ List<Problem> validatePack({
         }
     }
     _targetClips(file, a, checkVo);
+    checkLs01(
+      file,
+      a,
+      language: Course.isLanguage(course),
+      say: say,
+      checkAsset: checkAsset,
+      checkVo: checkVo,
+      checkTag: checkTag,
+      familyOf: (String tag) => tags[tag]?['family'] as String?,
+    );
     _languageOnlyTemplate(file, a, say, language: Course.isLanguage(course));
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');
@@ -1011,8 +1056,9 @@ void _choiceAnswer(
   for (final String f in <String>['value', 'expected', 'rules']) {
     if (answer[f] != null) say(file, 'answer.$f', 'belongs to a number answer, not to a choice');
   }
-  // Up to five choices, only in Band C (curriculum: Band A and B keep their caps).
-  if (_maps(answer['options']).length > 4 && a['band'] != 'C') {
+  // Up to five choices, only in Band C (curriculum: Band A and B keep their caps); a tap-all of a language course has up to five cards in
+  // any band (ls01_checks.dart holds it to its own rule, and refuses it in the lands).
+  if (_maps(answer['options']).length > 4 && a['band'] != 'C' && answer['all'] != true) {
     say(file, 'answer.options', 'more than four choices belong to Band C');
   }
 }
@@ -1095,7 +1141,8 @@ final RegExp _bigNumberCell = RegExp(r'^n:[0-9]{4,}$');
 final RegExp _newSignCell = RegExp(r'^op:[<>()]$');
 
 /// A `tap_answer` that uses a 1.4 feature (a stage picture, the number answer, five choices, the signs `<` `>` `(` `)`, a number of
-/// four digits or more, a row of more than eight cells) says `templateVersion` 1.4 or later.
+/// four digits or more, a row of more than eight cells; in a language course a text stem, a cloze or a tap-all) says
+/// `templateVersion` 1.4 or later.
 void _tapVersion(
   String file,
   Map<String, Object?> a,
@@ -1108,6 +1155,12 @@ void _tapVersion(
       ? 'a stage picture'
       : answer['type'] == 'number'
       ? 'a number answer'
+      : scene['stem'] != null
+      ? 'a text stem'
+      : scene['cloze'] != null
+      ? 'a cloze'
+      : answer['all'] == true
+      ? 'a tap-all'
       : _maps(answer['options']).length > 4
       ? 'more than four choices'
       : row.length > 8
@@ -1174,16 +1227,21 @@ void _spotBigNumbers(
   }
 }
 
-/// A `spot_error` with a sign `<` `>` `(` `)` or a number of four digits or more says `templateVersion` 1.1 or later.
+/// A `spot_error` with a sign `<` `>` `(` `)`, a number of four digits or more, or (in a language course) a text cell or a model
+/// picture says `templateVersion` 1.1 or later.
 void _spotVersion(
   String file,
   Map<String, Object?> a,
+  Map<String, Object?> scene,
   List<Object?> cells,
   void Function(String, String, String) say,
 ) {
-  final bool uses = cells.any(
-    (Object? c) => c is String && (_bigNumberCell.hasMatch(c) || _newSignCell.hasMatch(c)),
-  );
+  final bool uses =
+      scene['model'] != null ||
+      cells.any(
+        (Object? c) =>
+            c is String && (_bigNumberCell.hasMatch(c) || _newSignCell.hasMatch(c) || c.startsWith('txt:')),
+      );
   if (uses && compareTemplateVersion('${a['templateVersion']}', '1.1') < 0) {
     say(file, 'templateVersion', 'is ${a['templateVersion']}, but these cells need spot_error 1.1');
   }
@@ -1196,11 +1254,16 @@ void _options(
   void Function(String, String, Object?) checkTag, {
   void Function(String, String, Object?)? checkAsset,
 }) {
-  if (_correctOption(answer) == null) say(file, 'answer.correct', 'is not the id of any option');
+  final Set<Object?> ids = <Object?>{for (final Map<String, Object?> o in _maps(answer['options'])) o['id']};
+  final Object? correct = answer['correct'];
+  // A tap-all has a list of right options (L5-1); every other choice has one.
+  final List<Object?> right = correct is List<Object?> ? correct : <Object?>[correct];
+  if (right.any((Object? r) => !ids.contains(r))) say(file, 'answer.correct', 'is not the id of any option');
+  if (right.toSet().length != right.length) say(file, 'answer.correct', 'names an option twice');
   for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
     checkTag(file, 'answer.options[$i].misconception', o['misconception']);
     checkAsset?.call(file, 'answer.options[$i].sprite', o['sprite']);
-    if (o['id'] == answer['correct'] && o['misconception'] != null) {
+    if (right.contains(o['id']) && o['misconception'] != null) {
       say(file, 'answer.options[$i].misconception', 'the correct option cannot carry a misconception');
     }
   }

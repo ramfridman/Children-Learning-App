@@ -148,6 +148,7 @@ Every template keeps the rules of curriculum §6.1, without exception:
   3. a 2-choice item is **never a check on its own**. An understanding check or a delayed check uses a 3-choice item, or, in a binary skill, a **balanced pair** (one item of each answer) that passes only if both are right (chance 1 in 4, not 1 in 2).
 - A 2-choice item allows one retry only (curriculum §9.2), and a guided 2-choice item (the Hebrew "hidden second distractor") is a scaffold step that the engine credits as a 2-choice item.
 - **Free-response modes** (LS02 trace, LS03 drum, LS06 build) have no fixed distractors. Their classifiers map each error they can name to a tag; an error they cannot name (a beat count off by 2, leaving a trace path) is a retry with no tag and no misconception evidence.
+- **Checks in free-response modes** (decided 2026-11-06, §4.6 P5): a free-response item may be a check when a lucky right answer is unlikely: an LS02 **memory** item (in a writing node every check is one, E-1) and an LS06 build. An LS02 trace or copy item is never a check (tracing is practice; a copy has the model in view).
 
 Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
 
@@ -173,16 +174,16 @@ Inactivity prompts (§10.4) never fire while a clip or a story page is playing.
   - **trace**: the path shown, as today, with the full guide or the start dot;
   - **copy**: the model beside an empty box, no path in the box;
   - **memory**: no model; the voice says the sound or the name.
-- **A free-stroke check for copy and memory.** The child's strokes are compared with the letter's stroke data (F6). The check covers the start, the direction, the order and the shape within a tolerance that the qa-engineer tunes on adult and child-like samples. Feedback comes at the **end of a stroke**, never during it.
+- **A free-stroke check for copy and memory.** The child's strokes are compared with the letter's stroke data (F6). The check covers the start, the direction and the shape within a tolerance that the qa-engineer tunes on adult and child-like samples. **Stroke order is not scored** (owner, Q2, 2026-11-06): a stroke matched out of order still counts, and after a success the model replays once in its order. Feedback comes at the **end of a stroke**, never during it.
 - **A word canvas** for short words: larger, for a landscape phone or a tablet.
-- **The ladder:** level 1 the start dot and arrow; level 2 the stroke drawn slowly once (a new representation: motion); level 3 trace mode.
-- **Mastery of a writing skill** requires evidence in memory mode (D4: trace alone teaches little).
+- **The ladder:** level 1 the start dot and arrow; level 2 the stroke drawn slowly once (a new representation: motion); level 3 trace mode for this item, the same in all three courses.
+- **Mastery of writing: rule E-1** (owner, 2026-11-06; the spec is `docs/languages/writing-mastery.md`). Tracing is practice; a copy counts like a level-1 hint; writing from memory counts in full. Each letter group has a **trace node** (`writing: practised`, in the letter bundle, met once every letter is traced once with the start dot only; never blocks) and a **writing node** (`writing: memory`, after the bundle, fresh only with memory successes on two days, one cued by the sound and one by the name: these two cues replace the two representations). The `intro` item of a letter names its group's trace node.
 - **Per language.**
   - eng: four lines, families c a d g o / s e f / l i t j / r n m h b p k / u y / v w x z, and the "2 o'clock" start.
   - rus: print only (D13), three lines with descenders (д щ ц у р).
   - heb: print in Band B, script in Band C (D23), the top line, final forms below the line, and a parent pencil card for every handwriting skill.
   - Pre-writing strokes (heb A-14, eng W1) use trace mode with shapes.
-- **Courses.** All three: eng B-19, C-13, C-15, C-16, C-23; heb A-14, B-24 to B-27, C-26, C-27; rus B-24, B-26, C-22, C-23. It replaces eng T04+S8, heb H4 and rus T04+R10.
+- **Courses.** All three: eng B-23 (trace), B-19, C-15 (copy and memory), C-13, C-16, C-23; heb A-14, B-24 (trace), B-26 (copy and memory), B-27, C-26 (trace), C-27; rus B-24 (trace), B-26 (copy and memory), C-22, C-23. It replaces eng T04+S8, heb H4 and rus T04+R10.
 
 #### LS03 Sound boxes (new, `sound_boxes`)
 - **What the child does.** Hears a word (with its picture). Drags one token per **unit** into boxes in the course's direction. Then, depending on the mode:
@@ -333,7 +334,7 @@ The qa-engineer verifies once per finished template (the owner's rule, 2026-10-3
 
 ### 3.1 Two bands: presentation and content
 - **The presentation band** comes from the child's age bracket. It sets how a screen looks and paces:
-  - targets and choices (Band A presentation: at most 3 choices, one instruction, no reading demand, no left and right words);
+  - targets and choices (Band A presentation: at most 3 choices, one instruction, no reading demand, no left and right words; Band B at most 4 choices; a tap-all row at most 5 cards in every band, the most the phone SE holds: 4 in the answer zone and 1 beside the target's speaker, L5 §5.1);
   - items per activity (3–5 / 5–8 / up to 12);
   - session length (8 / 12 / 15 minutes; a course may set a shorter default, as English Band A does with 6–8);
   - hint speed.
@@ -372,13 +373,13 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 | Representation | In a language course |
 |---|---|
 | `concrete` | Something the child moves: tokens (LS03), letter or word tiles (LS06, LS07), a wheel or strip (LS05) |
-| `pictorial` | Hear, then choose a picture (LS01) |
+| `pictorial` | Hear, then choose a picture (LS01); see one letter, then choose the picture whose word starts with its sound (LS01 (b), the pictures play their words; §4.6 P7) |
 | `story` | Inside a story, song, scene or dialogue (LS08, LS10, LS12) |
 | `embodied` | Act it (LS11), trace or write it (LS02), say it (LS09) |
-| `symbolic` | Written text: read and choose, a text stem, letter ↔ sound (LS01 text modes, LS04) |
+| `symbolic` | Written text: read a word or sentence and choose, a text stem with a word, letter ↔ sound, letter ↔ name (LS01 text modes, LS04) |
 
 **3.3.2 Per-group sub-skills and roll-ups** (the Hebrew Q1):
-- A skill taught "group by group" is split into **real skill nodes with dotted ids**, one per group: `HEB-B-14.S1`, `.S2`, `.S4` … `.S7`; `RUS-B-24.G1` … `.G10`; `ENG-B-19.G1`, `.G2`; `ENG-C-15.G3` ….
+- A skill taught "group by group" is split into **real skill nodes with dotted ids**, one per group: `HEB-B-14.S1`, `.S2`, `.S4` … `.S7`; `RUS-B-24.G1` … `.G10`; `ENG-B-18.G1`, `.G2`; `ENG-B-19.G1`, `.G2`; `ENG-B-23.G1` … `.G4`; `ENG-C-15.G3` ….
 - Each sub-skill has its own BKT, revisits and prerequisites. A decoding skill "for step Sn" depends on the sub-skills of S1 to Sn.
 - The plain id (`HEB-B-14`) becomes a **roll-up**:
   - it has no BKT of its own;
@@ -388,7 +389,7 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 
 **3.3.3 Letter bundles (D16).**
 - **What a bundle is.** The facets of one letter group that are introduced together form one bundle:
-  - eng: `B-16` with `B-19.G1`; `B-17` with `B-19.G2`; `C-01` with `C-15.G3`; and so on;
+  - eng: `B-16` with `B-23.G1`; `B-17` with `B-23.G2`; `C-01` with `B-23.G3`; `C-02` with `B-23.G4`;
   - heb: `B-14.Sn`, `B-15.Sn` and `B-24.Sn`;
   - rus: `B-18` with `B-24.G1`; `B-20` with `B-24.G2`; and so on.
 - **How the engine treats it.**
@@ -396,7 +397,8 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
   - Its members never require each other.
   - A bundle counts as **one** new skill against the limit of 2 per session.
   - Mastery is still tracked per member.
-- **Copy and memory writing** (heb B-25 and B-26, rus B-26, eng memory mode) follow the bundle as ordinary next skills of the same group.
+- **The trace nodes are in the bundle; copy and memory writing follow it** (rule E-1, owner 2026-11-06): heb `B-26.Sn`, rus `B-26.Gn`, eng `B-19.Gn` and `C-15.Gn` are ordinary next skills of the same group, never bundle members, so the slow motor part holds back only more writing, never the letters themselves.
+- **Pacing inside a bundle (E-2 inside a group, §4.6 P6):** the bundle opens as one skill, and its letters are introduced over several visits: at most 2 new letters a visit in Hebrew, at most 3 in the other courses. A visit that introduces letters counts the bundle as one of its 2 new skills; an item of a letter is served only in or after the visit of its introduction.
 
 **3.3.4 Set coverage.**
 - **The problem.** A word-set skill ("knows eight animals") could reach P(L) ≥ 0.95 on half the set.
@@ -413,7 +415,7 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 **3.3.6 Course gates.**
 - **What a gate is.** A named condition on a set of skills, with fields: `skills` (fresh mastery required), `minAge` (a default), and a parent override switch.
 - **The gates:**
-  - **eng oral gate** (syllabus §6.2): A-01 to A-11, A-16, B-01, B-02, B-05, B-06, and B-12 to B-14 onset-rime. Fresh mastery is enough with Band C presentation. Never under Band A presentation. The parent's "oral only" switch keeps it closed (D6).
+  - **eng oral gate** (syllabus §6.2): A-01 to A-11, A-16, B-01, B-02, B-05, B-06, and B-12 to B-14 onset-rime. It holds B-16 to B-23 (letters, reading, building, writing and tracing). Fresh mastery is enough with Band C presentation. Never under Band A presentation. The parent's "oral only" switch keeps it closed (D6).
   - **rus letters gate** for new learners (D17): A-12 and three themes, and age 5 or more. The parent can override.
   - heb has no gate.
 - **How gates act.** They hold back skills; they are never shown to the child as locks.
@@ -423,8 +425,10 @@ Curriculum §10.2 applies unchanged: BKT, credit by hint level, fresh mastery (P
 - **What it changes:** skill priority weights (heritage: speaking, B-03, B-07, C-26, C-28); the gate (heritage and reader: no age gate); display defaults (stress marks, per D15 and rus §7.1).
 - **What it never changes:** mastery rules.
 
-**3.3.8 Speech evidence** (§5.1): limited, positive-only evidence for speaking skills, and none for any reading skill.
+**3.3.8 Speech evidence** (§5.1): limited, positive-only evidence for speaking skills, and none for any reading skill. **Two kinds of skill that never block:** speaking skills and trace nodes (below).
 - **A speaking skill never blocks progress** (added 2026-11-03). The microphone is the parent's privacy choice, so a child must not be held back by it. When a speaking (SPK) skill is a prerequisite (eng A-12 → B-11; eng A-17 → B-08; rus A-01 → A-03, A-14, A-17; rus B-08 → C-27, C-30; checked by script on the three syllabi), it counts as met at **"practised"**: its practice set done (every word of its set met at least once in LS09, or by the "I said it" tap), whatever the microphone setting. Its own mastery is unchanged (§5.1).
+
+- **A trace node never blocks progress either** (rule E-1, owner 2026-11-06; writing-mastery §6). A `writing: practised` node (eng `B-23.Gn`; heb A-14, `B-24.Sn`, B-27, C-26; rus `B-24.Gn`) counts as met once practised (every letter of its group traced once with the start dot only, or for heb B-27 the name built and written once), or when placement assumed it. Fine-motor control matures at its own pace, and letter knowledge must not wait for it. The two rules share one hook: `Engine.isMet(id)` (a speaking skill: its practice set done; a trace node: practised or assumed; any other skill: p ≥ 0.8), which `isUnlocked` uses for every prerequisite. **Not in the code today:** `isUnlocked` reads only p, so the speaking rule above is not built either; both are handed to the app-developer with the E-1 spec (L5-2b).
 
 **3.3.9 Two-choice items:** the rule of §2.3. The engine's 2-choice guard (curriculum §10.2) is unchanged; a check in a binary skill is a balanced pair.
 
@@ -493,7 +497,7 @@ Every tag of every course becomes one record with these fields.
 |---|---|
 | **DIR** | direction |
 | **NAME** | name for sound |
-| **SHAPE** | look-alike letters |
+| **SHAPE** | look-alike letters, and letters of a new group not yet told apart (§4.6 P1) |
 | **STROKE** | letter formation |
 | **CONTRAST** | sounds new to a Hebrew speaker |
 | **SEGMENT** | counting and splitting units |
@@ -510,7 +514,7 @@ Every tag of every course becomes one record with these fields.
 ### 4.2 The catalogue (kind, family and engine id of every tag)
 **Settled 2026-11-03**, after the three Band A batches (decisions and reasons in §4.4). The teachers' tables remain the source for each tag's signal, re-teach and `revisitWith` (eng syllabus §8, heb syllabus §5, rus syllabus §11); these tables add the kind, the family and the engine id. Each tag is defined **exactly once**.
 
-**How the tables are made and checked.** A script reads the three syllabi and Band A batches, finds every tag a skill row or a batch item uses (the Hebrew batch's short tags, `[SEM]`, are `M-HEB-SEM`; `M-HEB-SHAPE-*` is the eight pair tags), works out each engine id by the §4.1 rule, and checks: every tag used is in exactly one row; every engine id is unique; every kind and family is in §4.1; no accent tag sits on a batch distractor. Run on 2026-11-03: **127 tags** (eng 56, heb 45, rus 26), **49 of them used in the Band A batches**; no duplicate, no unknown tag, no accent tag on a distractor. One finding: `M-RUS-COUNT` (20 uses in the Russian batch) is not adopted (§4.4), so those items change (§4.5). The script is to become a qa-engineer test over the content packs (§4.5).
+**How the tables are made and checked.** A script reads the three syllabi and Band A batches, finds every tag a skill row or a batch item uses (the Hebrew batch's short tags, `[SEM]`, are `M-HEB-SEM`; `M-HEB-SHAPE-*` is the eight pair tags), works out each engine id by the §4.1 rule, and checks: every tag used is in exactly one row; every engine id is unique; every kind and family is in §4.1; no accent tag sits on a batch distractor. Run on 2026-11-03: **127 tags** (eng 56, heb 45, rus 26), **49 of them used in the Band A batches**; four added on 2026-11-06 with the Band B pilots (§4.6), so **131 tags** (eng 56, heb 47, rus 28); no duplicate, no unknown tag, no accent tag on a distractor. One finding: `M-RUS-COUNT` (20 uses in the Russian batch) is not adopted (§4.4), so those items change (§4.5). The script is to become a qa-engineer test over the content packs (§4.5).
 
 "First skill" is the skill that fixes the engine id's strand. "Band A batch" marks the tags the batches use today. Rows are grouped by family.
 
@@ -577,14 +581,15 @@ Every tag of every course becomes one record with these fields.
 | M-ENG-WORD-BY-WORD | `eng.rd.word_by_word` | practice | FLUENCY | C-24 |  |
 <!-- catalogue:eng:end -->
 
-**Hebrew** (45 tags: 26 from the first syllabus, 18 added for Band A, and `M-HEB-SEM-READ` split from `M-HEB-SEM`; syllabus §5):
+**Hebrew** (47 tags: 26 from the first syllabus, 18 added for Band A, `M-HEB-SEM-READ` split from `M-HEB-SEM`, and `M-HEB-LETTER-MIX` and `M-HEB-READ-PART` added with the Band B pilot, §4.6; syllabus §5):
 
 <!-- catalogue:heb:start -->
 | Tag | Engine id | Kind | Family | First skill | Band A batch |
 |---|---|---|---|---|---|
 | M-HEB-ORDER | `heb.pk.order` | diagnostic | DIR | A-11 | yes |
 | M-HEB-NAMESOUND | `heb.pk.namesound` | diagnostic | NAME | B-14 |  |
-| M-HEB-MIRROR | `heb.wr.mirror` | diagnostic | SHAPE | B-25 |  |
+| M-HEB-MIRROR | `heb.wr.mirror` | diagnostic | SHAPE | B-26 |  |
+| M-HEB-LETTER-MIX | `heb.pk.letter_mix` | diagnostic | SHAPE | B-14 |  |
 | M-HEB-SHAPE-AZ | `heb.pk.shape_az` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
 | M-HEB-SHAPE-BK | `heb.pk.shape_bk` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
 | M-HEB-SHAPE-DR | `heb.pk.shape_dr` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
@@ -593,7 +598,7 @@ Every tag of every course becomes one record with these fields.
 | M-HEB-SHAPE-SM | `heb.pk.shape_sm` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
 | M-HEB-SHAPE-TM | `heb.pk.shape_tm` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
 | M-HEB-SHAPE-VZN | `heb.pk.shape_vzn` | diagnostic (`revisitWith` the pair) | SHAPE | A-11 | yes |
-| M-HEB-STROKE | `heb.wr.stroke` | diagnostic | STROKE | A-14 | yes |
+| M-HEB-STROKE | `heb.wr.stroke` | diagnostic | STROKE | B-26 | yes |
 | M-HEB-BLEND-FIRST | `heb.pa.blend_first` | diagnostic | SEGMENT | A-09 | yes |
 | M-HEB-BLEND-LAST | `heb.pa.blend_last` | diagnostic | SEGMENT | A-09 | yes |
 | M-HEB-CV-FOR-C | `heb.pa.cv_for_c` | diagnostic | SEGMENT | B-11 |  |
@@ -617,6 +622,7 @@ Every tag of every course becomes one record with these fields.
 | M-HEB-PRINT-SHAPE | `heb.pk.print_shape` | diagnostic | PRINT | A-10 | yes |
 | M-HEB-NAME-FIRST | `heb.pk.name_first` | diagnostic | GUESS | A-11 | yes |
 | M-HEB-NAME-LENGTH | `heb.pk.name_length` | diagnostic | GUESS | A-11 | yes |
+| M-HEB-READ-PART | `heb.dec.read_part` | diagnostic | GUESS | B-20 |  |
 | M-HEB-SEM-READ | `heb.dec.sem_read` | diagnostic | GUESS | C-10 |  |
 | M-HEB-SOUNDALIKE | `heb.ol.soundalike` | diagnostic | GUESS | A-02 | yes |
 | M-HEB-CAT-ATYPICAL | `heb.ol.cat_atypical` | diagnostic | MEANING | A-03 | yes |
@@ -629,7 +635,7 @@ Every tag of every course becomes one record with these fields.
 | M-HEB-STORY-WORLD | `heb.ol.story_world` | diagnostic | MEANING | A-01 | yes |
 <!-- catalogue:heb:end -->
 
-**Russian** (26 tags: 16 of syllabus §11 and 10 of the 11 proposed with the Band A batch):
+**Russian** (28 tags: 16 of syllabus §11, 10 of the 11 proposed with the Band A batch, and the 2 proposed with the Band B pilot, §4.6):
 
 <!-- catalogue:rus:start -->
 | Tag | Engine id | Kind | Family | First skill | Band A batch |
@@ -638,10 +644,12 @@ Every tag of every course becomes one record with these fields.
 | M-RUS-NAME | `rus.let.name` | diagnostic | NAME | B-18 |  |
 | M-RUS-LATIN | `rus.let.latin` | diagnostic | SHAPE | B-18 |  |
 | M-RUS-SHAPE | `rus.let.shape` | diagnostic (`revisitWith` the pair) | SHAPE | B-18 |  |
+| M-RUS-STROKE | `rus.wri.stroke` | diagnostic | STROKE | B-26 |  |
 | M-RUS-HARDSOFT | `rus.pho.hardsoft` | diagnostic | CONTRAST | A-20 | yes |
 | M-RUS-STRESS | `rus.pho.stress` | diagnostic | CONTRAST | B-17 |  |
 | M-RUS-YI | `rus.pho.yi` | diagnostic | CONTRAST | A-20 | yes |
 | M-RUS-NOTFIRST | `rus.pho.notfirst` | diagnostic | SEGMENT | A-19 | yes |
+| M-RUS-VOWEL-CONS | `rus.pho.vowel_cons` | diagnostic | SEGMENT | B-12 |  |
 | M-RUS-SYLL | `rus.pho.syll` | diagnostic | SEGMENT | A-18 | yes |
 | M-RUS-RHYME-ONSET | `rus.pho.rhyme_onset` | diagnostic | RHYME | A-17 | yes |
 | M-RUS-DEVOICE | `rus.wri.devoice` | on-the-way → diagnostic from C-20 | CODE | B-25 |  |
@@ -662,7 +670,7 @@ Every tag of every course becomes one record with these fields.
 | M-RUS-R | `rus.lis.r` | accent | ACCENT | A-01 |  |
 <!-- catalogue:rus:end -->
 
-First skills set by hand (no skill row names these tags): `M-RUS-REDUCE`, `-DEVOICE`, `-HUSH` B-25 (the first LS06 skill that meets them as sound-right spellings); `-STRESS` B-17 (the "calling" skill of its re-teach); `-SHAPE`, `-LATIN`, `-NAME` B-18 (the first letter group); `-RTL` B-19 (the first LS04 slide); `-YOT`, `-SOFTSIGN` C-02 (я and ь are taught there); `-GENDER` B-03; `-ACC` B-07; `-NUMNOUN` C-28 (the skills of their re-teach); `-R` A-01 (the first say step); `M-HEB-SEM-READ` C-10 (the first reading item that uses it).
+First skills set by hand (no skill row names these tags): `M-RUS-REDUCE`, `-DEVOICE`, `-HUSH` B-25 (the first LS06 skill that meets them as sound-right spellings); `-STRESS` B-17 (the "calling" skill of its re-teach); `-SHAPE`, `-LATIN`, `-NAME` B-18 (the first letter group); `-RTL` B-19 (the first LS04 slide); `-YOT`, `-SOFTSIGN` C-02 (я and ь are taught there); `-GENDER` B-03; `-ACC` B-07; `-NUMNOUN` C-28 (the skills of their re-teach); `-R` A-01 (the first say step); `-VOWEL-CONS` B-12 (its home skill; set before any pack, 2026-11-06); `M-HEB-SEM-READ` C-10 (the first reading item that uses it). **First skill moved, id kept** (2026-11-06, E-1): `M-HEB-STROKE` A-14 → B-26 (tracing is practice, so it is first evidenced where the child draws without a path) and `M-HEB-MIRROR` B-25 → B-26 (B-25 retired); both stay `heb.wr.*`, since ids are frozen and the strand is the same.
 
 **Rules for every record.**
 - **Accent tags** are never attached to a distractor and never reached by speech evidence (§5.1).
@@ -732,6 +740,17 @@ The three teachers sent their Band A batches with tag proposals and rule questio
 | rus | band-a-content RUS-A-19, A-20 | 2-choice items at most half of each skill. The wrong answer on a "same" pair is `M-RUS-YESNO` (a20.11, .14, .16, and the a19 "same" pairs) |
 | rus | band-a-content §1 "Distractors" | Point to frame §2.3. Mark the checks; no check is a single 2-choice item |
 | all | the batch scripts | Use the catalogue check of §4.2 (the qa-engineer turns it into a content test) |
+
+### 4.6 Decisions on the Band B pilot slices (2026-11-06)
+The three pilot slices of L5-2c proposed tags and asked about rules. Each decision gives the reason, and the evidence where there is some.
+
+- **P1. `M-HEB-LETTER-MIX`: adopted, diagnostic, family SHAPE, `heb.pk.letter_mix`, first skill B-14.** S1 was built with no look-alike pair inside it, so a wrong letter of the same group is neither a pair tag nor a NAME error, and without a tag no 3-choice S1 item could carry two tagged distractors. The child's state is that a new letter's name or sound is not yet bound to its shape; the shape is what the child fails to pick, so the family is SHAPE (widened in §4.1 to "letters not yet told apart"), not NAME, which keeps its exact signal (the name for the sound, or the reverse). The teacher's "sound heard inside the name" lures (בֵּית / ת, אָלֶף / ל, רֵישׁ / שׁ, לָמֶד / מ) keep this tag, not NAMESOUND. English has the same kind of tag (`M-ENG-LOOKALIKE`).
+- **P2. Hebrew reading items do not use the oral BLEND tags: `M-HEB-READ-PART` is adopted instead** (diagnostic, family GUESS, `heb.dec.read_part`, first skill B-20). A reader who decodes the first unit of a written word and takes a picture whose word shares it (or keeps only the last unit) is answering from part of the evidence, which is the GUESS family's definition, and is the partial-cue reading that beginning readers go through (Ehri 2005); the English twin is `M-ENG-FIRSTLETTER-GUESS`. The oral `M-HEB-BLEND-FIRST` and `-BLEND-LAST` (SEGMENT, A-09) stay for blending heard syllables. Same reason as H3 (`M-HEB-SEM` and `-SEM-READ`): one tag has one repair and one parent text, and the repairs differ (oral: the syllables said closer together; reading: the whole word read unit by unit with LS04 `units`). One reading tag covers both lures, because the repair is the same; its level-1 line says "read the whole word, from the start to the end". `skills`: B-20, then B-12 (blending CV units), so repeated evidence first probes the blending.
+- **P3. `M-RUS-STROKE`: adopted, diagnostic, family STROKE, `rus.wri.stroke`, first skill B-26.** Russian had no formation tag (L5 §14 item 3). One tag for start, direction, guide lines and a mirrored letter is enough at this age; a separate mirror tag can be split off later if the parent texts need it (the teacher's mapping of the И and Я mirrors, which look like N and R, to `M-RUS-LATIN` stays her call). It is evidence only in copy and memory (`B-26.Gn`), never in tracing (E-1).
+- **P4. `M-RUS-VOWEL-CONS`: adopted, diagnostic, family SEGMENT, `rus.pho.vowel_cons`, first skill B-12 set by hand** (its home skill, "tells a vowel from a consonant"). By the §4.1 rule alone the pilot's first use (B-19) would freeze it as `rus.rea.vowel_cons`; the hand setting fixes the id before any pack is built.
+- **P5. Checks in a writing node** (the English teacher's question): a memory item may be a check, and in a writing node every check is one (writing-mastery §7.2). A free-response item may be a check when a lucky right answer is unlikely (LS02 memory, LS06 build); an LS02 trace or copy item never is.
+- **P6. A letter bundle with many letters is paced by letter (E-2 inside a group).** The bundle opens as **one** skill, but its introductions are spread over visits: **at most 2 new letters a visit in the Hebrew course** (S1 has 8 forms, so 4 visits, as the pilot does); the English and Russian pilots stay within a ceiling of 3. A visit that introduces letters counts the bundle as one of its 2 new skills, even when the engine sees no new member start, so such a visit has room for one other new skill at most; an item of a letter is served only in or after the visit of its introduction. Reason: each new letter brings a shape, a name, a sound and a key word at once, and a Hebrew Band B visit also carries a listening and a writing activity (E-5), so its code slot is short. A faster pace than one letter a week is not harmful: in Norwegian first grades a faster introduction went with better letter knowledge, reading and spelling, most of all for the weakest children (Sunde, Furnes and Lundetræ 2020, a natural experiment, not a trial); the limit here is per visit, not per week, and every visit opens with retrieval of the letters before. The authored lessons carry the rule and each batch script checks it; an engine-planned visit would need it as a parameter (L5 §12).
+- **P7. Letter → picture is `pictorial`.** An item that shows one letter and asks for the picture whose word starts with its sound (the pictures play their words on a tap) is classed `pictorial` (§3.3.1), as the Hebrew and Russian slices already do; reading a written **word** is `symbolic`. Without this, the English B-16 had one representation besides its LS11 item.
 
 ---
 
@@ -861,7 +880,7 @@ I do not edit the syllabus files. Each line below is for its teacher, through th
 | 41 (A-12) | "Practised (LT04 echo; unscored)" | LS09 say-it, per-word recognition when voice is on (frame §5.1) |
 | 46 (A-17), 60 (B-08), 99 (C-19) | "echoes … (unscored)", "speaking practised" | The echo step is LS09 with per-word feedback. The bubble choice stays the scored evidence |
 | 68 (B-16), 69 (B-17), 81 to 83 (C-01 to C-03) | Sounds only ("sees the letter and says or picks its sound") | Each letter is taught whole: shape, sound, **name** and writing together (D16, frame §5.3). Name ↔ letter items join the mastery evidence. Digraphs are named by their letters |
-| 71 (B-19) | Prerequisite "B-16"; "Mastered when … from the start dot only on 2 days" | Split per group (`B-19.G1`, `.G2`) and bundled with B-16 and B-17 (no prerequisite between them). Mastery needs **memory mode** (D4); the start dot is hint level 1 |
+| 71 (B-19) | Prerequisite "B-16"; "Mastered when … from the start dot only on 2 days" | Split per group (`B-19.G1`, `.G2`) and bundled with B-16 and B-17 (no prerequisite between them). Mastery needs **memory mode** (D4); the start dot is hint level 1. *Superseded on 2026-11-06 (E-1): the tracing moved to the trace node `B-23.Gn`, which is the bundle member; `B-19.Gn` follows the bundle (§3.3.3)* |
 | 74 (B-22) | "matches some letter names to letters (receptive) … only letters already known by sound" | The alphabet song and alphabet order. Names are already taught with each group |
 | 93 (C-13) | "Names are of characters, not the child." | Character names in scored items. The child's own first name may be written with its capital, on the device only, with a character name as the fallback (as heb A-11, D25) |
 | 95 (C-15) | "T04 from the start dot only" | LS02 trace → copy → memory per group (`C-15.G3` …); bundled with C-01 to C-03 |

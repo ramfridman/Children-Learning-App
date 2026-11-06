@@ -318,7 +318,7 @@ Where the last letter equals the first, or has no look-alike, the item uses the 
 **Hint ladder.** (1) "מַה קָּרָה קֹדֶם?" and the first picture's page line replayed. (2) The three pages replayed in order with the seq clips ("קֹדֶם… אַחַר כָּךְ… בַּסּוֹף") (a new representation: the story told, not the pictures). (3) Show me: the first picture moves into the first slot; the child places the other two.
 
 ### HEB-A-14 Traces the pre-writing strokes (WR)
-**Template:** LS02 trace mode (`emb`): the full dotted path with the start dot, then the start dot only. Each stroke is a picture path: the finger takes something along it. Classifiers (the existing ones of `trace`): a stroke started at the far end or drawn the other way → **M-HEB-STROKE** (both are its signals); leaving the path is not a tag, only a retry.
+**Template:** LS02 trace mode (`emb`): the full dotted path with the start dot, then the start dot only. Each stroke is a picture path: the finger takes something along it. Classifiers (the existing ones of `trace`): a stroke started at the far end or drawn the other way → **M-HEB-STROKE** (both are its signals); leaving the path is not a tag, only a retry. **A trace-only node (rule E-1, 2026-11-06; `writing-mastery.md` §2.2):** every answer here is practice, so M-HEB-STROKE only picks the feedback line and is never misconception evidence; A-14 is **met once** .5 to .8 (each stroke with the start dot only) are done at hint level 0 or 1, it is never mastered, probed or checked, and it never holds back the S1 letters.
 
 | Item | Stroke | The picture path | Right |
 |---|---|---|---|
@@ -330,7 +330,7 @@ Where the last letter equals the first, or has no look-alike, the item uses the 
 | A-14.6 P | across, start dot only | a boat to its jetty on the left | as .2 |
 | A-14.7 P | arch, start dot only | a ball bouncing over a fence | as .3 |
 | A-14.8 P | circle, start dot only | a fish around a stone | as .4 |
-| A-14.9 C | a combined stroke, start dot only | a door: across the top from left to right, then the right side down, then the left side down (like print ח) | each stroke from its start |
+| A-14.9 P | a combined stroke, start dot only (practice; was the check before E-1) | a door: across the top from left to right, then the right side down, then the left side down (like print ח) | each stroke from its start |
 
 **Direction notes.** Down and right to left are the two directions of Hebrew print (the Ministry: "right to left and top to bottom"). The arch from the right and the counter-clockwise circle from the top follow the reading direction; they are **to be confirmed** against the design-director's print stroke data (F6) and school references before the paths are drawn; the evidence for a pre-writing direction is thin.
 **Unscored play beside it:** scribble-writing a card for a friend (no check; the card is kept on the device only until the visit ends).
@@ -446,7 +446,7 @@ A visit (8 minutes) has: a warm-up (a verse the child knows, A-06), one focus (o
 | What | Count |
 |---|---|
 | Skills | 14 (A-01 to A-14) |
-| Items | 125: A-01 8 · A-02 18 · A-03 9 · A-04 10 · A-05 9 · A-06 8 · A-07 10 · A-08 12 · A-09 9 · A-10 6 · A-11 5 · A-12 7 · A-13 5 · A-14 9; of them 28 checks (C), every skill with at least one, none a single 2-choice item; A-03's two checks per child are A-03.8 (a sort) and A-03.7 or .9 |
+| Items | 125: A-01 8 · A-02 18 · A-03 9 · A-04 10 · A-05 9 · A-06 8 · A-07 10 · A-08 12 · A-09 9 · A-10 6 · A-11 5 · A-12 7 · A-13 5 · A-14 9; of them 27 checks (C), every skill but A-14 (a trace-only node, E-1) with at least one, none a single 2-choice item; A-03's two checks per child are A-03.8 (a sort) and A-03.7 or .9 |
 | Pictures | 91 objects (§2) + 14 plural sets + 8 action animations + 15 story pages + 9 stroke scenes |
 | Word clips | 131 (words, plurals, verbs, bin labels, place and sequence words); 57 are `text-ready` (the syllabus lists and the editor's notes), 74 new |
 | Stories | 3 (3 titles, 15 pages, 6 questions, 6 recasts, 11 word cards, 3 parent cards) |
