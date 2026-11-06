@@ -334,7 +334,7 @@ The qa-engineer verifies once per finished template (the owner's rule, 2026-10-3
 
 ### 3.1 Two bands: presentation and content
 - **The presentation band** comes from the child's age bracket. It sets how a screen looks and paces:
-  - targets and choices (Band A presentation: at most 3 choices, one instruction, no reading demand, no left and right words);
+  - targets and choices (Band A presentation: at most 3 choices, one instruction, no reading demand, no left and right words; Band B at most 4 choices; a tap-all row at most 5 cards in every band, the most the phone SE holds: 4 in the answer zone and 1 beside the target's speaker, L5 §5.1);
   - items per activity (3–5 / 5–8 / up to 12);
   - session length (8 / 12 / 15 minutes; a course may set a shorter default, as English Band A does with 6–8);
   - hint speed.

@@ -188,7 +188,7 @@ for iid, it in items.items():
             if n < 2: err(f'{iid}: fewer than 2 tagged wrong choices')
             if 'tap-all' in tmpl:
                 m = re.search(r'a row of (\d)', tmpl)
-                if not m or int(m.group(1)) > 6: err(f'{iid}: tap-all row size')
+                if not m or int(m.group(1)) > 5: err(f'{iid}: tap-all row size')
             continue
         segs = [s for s in dis.split(' · ') if s.strip()]
         if len(segs) != 2: err(f'{iid}: {len(segs)} distractors, expected 2 (3 choices)')

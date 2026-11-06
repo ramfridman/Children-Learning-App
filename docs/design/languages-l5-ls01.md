@@ -44,7 +44,7 @@ All values are board points (`BoardClass`). The frame's own pieces are `Activity
 - **Edges:** every drag source and drop target is inside the 24 pt edge band (`edgeNoDrag`) and above the bottom band (`bottomNoHotspot`). The phones' zones start at x 24 for that reason.
 - **The stage on the phones** is drawn as it is today (the scene directly, sky tint, radius 24); on the tablets it is the white card with its 16 pt lip padding. Inside S the content keeps 6 pt (phones) or 16 pt (tablets) from the edge.
 - **Band A** has taller tiles (96 and 112): on the phone the row is drawn at y 258 and S ends at 244; on the SE the row is at 240 and **S is 136 high** (to 222) so the hit area of the row clears it. Band C (80 and 96) uses the Band B rows.
-- **A second row on the tablet landscape** (tap-all of 6 Band A cards, a sort tray of 6 words) needs S 12 shorter (230 to 518): rows at 548 and 676. The phones never get a second row in A.
+- **A second row on the tablet landscape** (a sort tray of 6 words; a tap-all, at most 5 cards since 2026-11-06, never needs one) needs S 12 shorter (230 to 518): rows at 548 and 676. The phones never get a second row in A.
 - For the developer: these are a new board variant, **`withLs01Zones(ActivitySpec base, Band band)`**, next to `withSideSpeakers` and `withTallStage` in `choice_row.dart`. It returns the stage S and the tiles box A above (for the tablet landscape the A-wide box when the template asks for it). `withSideSpeakers` stays for a row whose options have speakers (section 7.1).
 
 ---
@@ -247,7 +247,7 @@ The L1 row (`ChoiceRow`) takes the reading sizes of section 3 and the fit rules 
 
 ### 7.7 Tap-all (`ls01_more_modes_phones.png`, Hebrew A-10.3 on the phone and the SE)
 
-- Cards (letters, numerals, shapes, a mirrored-letter picture) are square tiles at the band's size. **A is filled first**; cards that do not fit go to **S's end side**, and **S's start side holds the "what to find" sound** (a 64 pt speaker: the instruction's target again). Capacity at Band B: phone 5 in A + 2 in S; SE 4 + 1; tablets 6 a row. A row of 6 (the most L5 allows) fits every board. Band A (96 tiles): phone 4 + 2, SE 4 + 1.
+- Cards (letters, numerals, shapes, a mirrored-letter picture) are square tiles at the band's size. **A is filled first**; cards that do not fit go to **S's end side**, and **S's start side holds the "what to find" sound** (a 64 pt speaker: the instruction's target again). Capacity at Band B: phone 5 in A + 2 in S; SE 4 + 1; tablets 6 a row. Band A (96 tiles): phone 4 + 2, SE 4 + 1. **The SE holds 5 at both bands, so a tap-all has at most 5 cards** (corrected 2026-11-06 after the L5-1 build: this section said a row of 6 fits every board, and the fit test showed it does not fit the SE).
 - **Playing:** a tap picks a card (picked state); a second tap un-picks it. **When as many cards are picked as there are right ones, the item checks itself**: right if exactly the right ones are picked; otherwise the wrong picked cards wobble and un-pick, the right picked ones stay, and the child goes on. No "done" button (a meta-decision a 3- or 4-year-old does not need; A-10 is Band A). This gives away how many to find; it does not give away which (section 11, to confirm).
 - **Response code**: the indexes picked, in the order picked.
 - **Hints:** level 1, the target lights big in S's start corner (the pilot's HL-TAPALL: "the target letter appears big above the row"); level 2, that letter glides over each card in turn and settles only on the right ones (the look-alikes are left uncovered); level 3, the hand picks the first right card, then the child picks the rest.
@@ -304,7 +304,7 @@ While any hint shows, the hint pebble wears its 5 pt sky ring (B-40). No hint li
 - **Phones:** S and A as in section 2 (both wider than today's stage and tile box). The guide's bubble, the guide, the controls and the microphone keep their places. Everything is one row in A.
 - **Phone SE:** the binding board for the fit check; the cloze picture is 64; a story line of 4 pages is 105 x 59.
 - **Tablet landscape:** S is the card as today; A is centred under it (772 wide), and the story line uses A-wide (24 to 966). A second row needs S 12 shorter.
-- **Tablet portrait:** S as today; A has room for 3 rows, used only by the sort tray and tap-all of 6 when a row is full.
+- **Tablet portrait:** S as today; A has room for 3 rows, used only by the sort tray when a row is full.
 - **Split screen:** the board follows the window (`boardClassFor`), so a half-width tablet is laid out as a phone or a phone SE.
 
 ---
@@ -340,7 +340,7 @@ While any hint shows, the hint pebble wears its 5 pt sky ring (B-40). No hint li
 ### 11.1 Answers to the four calls (curriculum-expert, 2026-11-06)
 
 1. **Pairs with text faces, one item at a time: yes.** The pairs stay the same, and the child makes one decision at a time, which is less to hold in mind. The item keeps one response code and stays one answer for the engine.
-2. **Tap-all checks itself at the count of right cards, with no "that's all" button: yes.** Giving away the count leaves the choice still diagnostic: 2 right among 6 cards is a 1 in 15 guess. The validator rule already asks for at least 1 right card and 2 tagged wrong ones; I would raise that to 2 right where the row allows, so that the count says less. The try after a "not yet", with the right cards still picked, counts as a helped try, as every second try does.
+2. **Tap-all checks itself at the count of right cards, with no "that's all" button: yes.** Giving away the count leaves the choice still diagnostic: 2 right among 5 cards (the most a tap-all holds, 7.7) is a 1 in 10 guess. The validator rule already asks for at least 1 right card and 2 tagged wrong ones; I would raise that to 2 right where the row allows, so that the count says less. The try after a "not yet", with the right cards still picked, counts as a helped try, as every second try does.
 3. **Sequence as a story line tapped in order, one row, at most 4 places in a Band B scored sequence: yes.** With 4 places the guess is 1 in 24. HEB-B-05 may show 5 pictures in the retell, but its scored sequence uses 4; rus B-08's 4-picture story fits as it is.
 4. **The Hebrew course's sequence runs right to left, the lands' timelines left to right: yes.** A language course's line follows the direction it teaches you to read (`M-HEB-ORDER`). The lands' timelines are number-line-like and stay left to right, and the two never meet on one screen.
 

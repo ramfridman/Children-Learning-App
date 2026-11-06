@@ -13,6 +13,7 @@ CHECK_ONLY = "--check" in sys.argv
 BROKEN = "--broken" in sys.argv
 OUT = os.path.join(ROOT, "docs/languages/english/band-b-pilot.md")
 
+TAPALL_MAX = 5  # the phone SE holds 4 cards in the answer zone and 1 beside the speaker (L5-1 build, layout spec §7.7)
 GROUP1 = ["s", "a", "t", "p", "i", "n"]
 KEY = {"s": "sun", "a": "apple", "t": "tent", "p": "pan", "i": "igloo", "n": "net"}
 SND_IPA = {"s": "/s/", "a": "/æ/", "t": "/t/", "p": "/p/", "i": "/ɪ/", "n": "/n/"}
@@ -242,10 +243,10 @@ ls01(S, "i13", "text stem + picture options", ["he-ins-letter-pic"], [], ["pic.a
 ls01(S, "i14", "text stem + picture options", ["he-ins-letter-pic"], [], ["pic.igloo", "pic.ice-cream", "pic.eagle"], "pic.igloo",
      [("pic.ice-cream", "M-ENG-LETTERNAME"), ("pic.eagle", "M-ENG-IH")], "HL-LTR2PIC", "pictorial", "C", stem={"text": "i"},
      note="ice cream starts with the name /aɪ/; eagle with /i/, the Hebrew vowel a child hears for /ɪ/ (igloo /ˈɪɡlu/ and eagle /ˈiɡəl/ differ only in that vowel's quality).")
-ls01(S, "i15", "tap-all", ["he-ins-tap-all"], ["en-snd-t"], ["tile:t", "tile:i", "tile:t", "tile:f", "tile:l", "tile:t"],
-     "tile:t ×3 (cards 1, 3, 6)", [("tile:i", "M-ENG-LOOKALIKE"), ("tile:f", "M-ENG-LOOKALIKE"), ("tile:l", "M-ENG-LOOKALIKE")],
-     "HL-TAPALL", "symbolic", all_right=[0, 2, 5],
-     note="A row of 6 tiles, left to right (at most 6 under Band B, L5 §5.1). Right only when the three t and no other tile are tapped. i is a taught letter: a tall stick with a mark, the t look-alike inside group 1.")
+ls01(S, "i15", "tap-all", ["he-ins-tap-all"], ["en-snd-t"], ["tile:t", "tile:i", "tile:f", "tile:t", "tile:l"],
+     "tile:t ×2 (cards 1, 4)", [("tile:i", "M-ENG-LOOKALIKE"), ("tile:f", "M-ENG-LOOKALIKE"), ("tile:l", "M-ENG-LOOKALIKE")],
+     "HL-TAPALL", "symbolic", all_right=[0, 3],
+     note="A row of 5 tiles, left to right (a tap-all holds at most 5 cards: the phone SE has 4 in the answer zone and 1 beside the speaker, L5 §5.1, layout spec §7.7). Right only when the two t and no other tile are tapped: 2 right among 5 is a 1 in 10 guess, and the item checks itself at the count of 2, so the child still looks past the first t. The three wrong cards are the three tall-stick look-alikes of t: i (a taught letter, a stick with a mark, the look-alike inside group 1), f and l.")
 item(skill=S, id="i16", tmpl="LS11", mode="place", scored=True, frame=["he-ins-hop"], prompt=["en-snd-n"],
      pics=["pic.stones-path"], options=["stone:n", "stone:h", "stone:m"], right="stone:n",
      dist=[("stone:h", "M-ENG-LOOKALIKE"), ("stone:m", "M-ENG-LOOKALIKE")], hints="HL-HOP", rep="embodied",
@@ -445,7 +446,10 @@ def checks(src, items):
             need(it["mode"] != "intro" or not it["scored"], f"{key}: intro is unscored")
         if it["tmpl"] in ("LS01", "LS04", "LS11") and it["scored"]:
             opts = it["options"]
-            need(len(opts) <= (6 if it["mode"] == "tap-all" else 4), f"{key}: Band B choice limit")
+            if it["mode"] == "tap-all":
+                need(len(opts) <= TAPALL_MAX, f"{key}: tap-all has at most {TAPALL_MAX} cards (the phone SE: 4 in A + 1 beside the speaker)")
+            else:
+                need(len(opts) <= 4, f"{key}: Band B choice limit")
             if it.get("all_right") is not None:
                 rights = [opts[i] for i in it["all_right"]]
                 wrong = [o for i, o in enumerate(opts) if i not in it["all_right"]]
@@ -552,7 +556,7 @@ def render(src):
     A("- **Everyday words stay** (owner: do not over-sanitise): a push pin, a frying pan, tape and a nap are ordinary things a child sees at home.")
     A("")
     A("## 2. The rules every item here follows (what differs from Band A)")
-    A("- **Band B presentation:** up to 4 choices (tap-all up to 6 cards), 5 to 8 items an activity, short English letters and words on tiles in the teaching font (Nitznutz Letters, lowercase), left to right in isolated runs (F1, F2).")
+    A("- **Band B presentation:** up to 4 choices (tap-all up to 5 cards, the most the phone SE holds), 5 to 8 items an activity, short English letters and words on tiles in the teaching font (Nitznutz Letters, lowercase), left to right in isolated runs (F1, F2).")
     A("- **Hebrew frame, English target (D7, F3):** the Hebrew instruction is its own clip, then the English clip. A line ending in a colon is a carrier before an English clip. The Hebrew lines speak to the children in the plural, with no gendered first person (`hebrew-notes.md` §9.1).")
     A("- **Every distractor tagged, with the 2-choice rule (frame §2.3, L5 §5).** The tags of this slice: `M-ENG-LOOKALIKE` and `M-ENG-BD` (SHAPE: a look-alike letter), `M-ENG-LETTERNAME` (NAME: the name taken for the sound, or the sound for the name), `M-ENG-AE-E` and `M-ENG-IH` (CONTRAST: the vowel a Hebrew speaker hears instead), `M-ENG-DIR` (read right to left), `M-ENG-FIRSTLETTER-GUESS` (the first letter only), and in the free-response modes `M-ENG-STROKE-RTL`, `M-ENG-STROKE-CW`, `M-ENG-LINES`, `M-ENG-SEG-SYLL`, `M-ENG-ADDVOWEL`. No accent tag is on a distractor.")
     A("- **Look-alike letters outside the group** (f l o d q b h m j) appear only as wrong tiles that test the shape; they are never an answer and never read. Their tiles have no clip: a tap on one gets he-fb-look-alike, not its name, so no untaught letter is taught by accident.")
@@ -690,8 +694,8 @@ def render(src):
 
 def render_checks(errs, ok, broken_ok):
     L = ["## 12. Checked by script, and not checked",
-         f"Checked ({len(ok)} checks, **{'all pass' if not errs else str(len(errs)) + ' FAIL'}**, run 2026-11-06 by the generator of this file): every skill id is in `syllabus.md` §2; every tag is defined in syllabus §8 and is in the frame §4.2 catalogue, and none is an accent tag; LS02 classifiers are of family STROKE or SHAPE; every template and mode is specified in `L5.md`; every form id is in `content/languages/strokes/latin.json` and the set is `teacher-checked`, with 1 to 6 strokes; every Hebrew line referenced exists (new here, or `text-ready` in the Band A batch) and has no Latin letter and no singular or first-person address; every English clip referenced has a pronunciation row (here, or in `pronunciation.csv`) and is Latin only, with no id clash; every picture referenced has a brief (here, or in the Band A batch); one right answer among the options and every distractor tagged once; tap-all has at least 1 right and 2 tagged wrong cards and at most 6 cards; at most 4 choices elsewhere; the 2-choice rule (at most half of a skill's scored items, a skill with 2-choice items also has 3-choice items, a 2-choice item is never a check); at least two checks per skill with different answers, never a probe, never LS03 (the trace node B-23.G1 has none: it holds only intro and trace items, with a start-dot trace for every letter; the writing node B-19.G1 has no trace item, and its checks are memory items); probes are plain LS01 items; at least two representations per scored skill (B-19.G1 by the E-1 cue rule instead); intro items unscored, memory items with their cue clip, copy with `model: beside`, trace with a guide; LS03 units equal the count and `which` is inside it; LS04 parts join to the word; every B-18.G1 word and every text stem is decodable with s a t p i n; set coverage: an intro for each letter (in B-23.G1), each letter right in the sound facet and in the name facet, memory with the sound cue and with the name cue for each letter, each B-18.G1 word read once; every item in exactly one visit; the co-play text is Hebrew.",
-         f"Self-test: a deliberately broken copy (an accent tag on a distractor, an unknown form id, a 2-choice check, a word with an untaught letter, a missing Hebrew line, one letter missing from the name facet) **{'fails as it should' if broken_ok else 'DID NOT FAIL'}**.",
+         f"Checked ({len(ok)} checks, **{'all pass' if not errs else str(len(errs)) + ' FAIL'}**, run 2026-11-06 by the generator of this file): every skill id is in `syllabus.md` §2; every tag is defined in syllabus §8 and is in the frame §4.2 catalogue, and none is an accent tag; LS02 classifiers are of family STROKE or SHAPE; every template and mode is specified in `L5.md`; every form id is in `content/languages/strokes/latin.json` and the set is `teacher-checked`, with 1 to 6 strokes; every Hebrew line referenced exists (new here, or `text-ready` in the Band A batch) and has no Latin letter and no singular or first-person address; every English clip referenced has a pronunciation row (here, or in `pronunciation.csv`) and is Latin only, with no id clash; every picture referenced has a brief (here, or in the Band A batch); one right answer among the options and every distractor tagged once; tap-all has at least 1 right and 2 tagged wrong cards and at most 5 cards; at most 4 choices elsewhere; the 2-choice rule (at most half of a skill's scored items, a skill with 2-choice items also has 3-choice items, a 2-choice item is never a check); at least two checks per skill with different answers, never a probe, never LS03 (the trace node B-23.G1 has none: it holds only intro and trace items, with a start-dot trace for every letter; the writing node B-19.G1 has no trace item, and its checks are memory items); probes are plain LS01 items; at least two representations per scored skill (B-19.G1 by the E-1 cue rule instead); intro items unscored, memory items with their cue clip, copy with `model: beside`, trace with a guide; LS03 units equal the count and `which` is inside it; LS04 parts join to the word; every B-18.G1 word and every text stem is decodable with s a t p i n; set coverage: an intro for each letter (in B-23.G1), each letter right in the sound facet and in the name facet, memory with the sound cue and with the name cue for each letter, each B-18.G1 word read once; every item in exactly one visit; the co-play text is Hebrew.",
+         f"Self-test: a deliberately broken copy (an accent tag on a distractor, an unknown form id, a 2-choice check, a word with an untaught letter, a missing Hebrew line, one letter missing from the name facet, a tap-all of 6 cards) **{'fails as it should' if broken_ok else 'DID NOT FAIL'}**.",
          "",
          "**Not checked** (cannot be, or not by me): how any clip sounds (nothing is voiced; the listening check comes after voicing, pronunciation-spec §4), whether the isolated sounds are clean (the D2 pilot); the Hebrew wording and nikud (the hebrew-text-editor); the pictures (not drawn yet); that LS01 text faces, tap-all, LS02 2.0, LS03 1.1 and LS04 accept these exact data shapes (they are being built in L5-1 to L5-5; the shapes follow L5 §5 and may need small renames); the free-stroke tolerances (the qa-engineer tunes them); a playthrough; mastery in the simulator.",
          ""]
@@ -721,8 +725,9 @@ def main():
     bad[0]["frame"] = bad[0]["frame"] + ["he-missing-line"]
     for b in bad:
         if b["id"] == "i10": b["right"] = "snd:en-snd-t"; b["prompt"] = []
+        if b["id"] == "i15": b["options"] = b["options"] + ["tile:t"]; b["all_right"] = b["all_right"] + [5]  # a tap-all of 6
     berrs, _ = checks(src, bad)
-    broken_ok = len(berrs) >= 6
+    broken_ok = len(berrs) >= 7 and any("at most" in e and "i15" in e for e in berrs)
     if BROKEN:
         print("broken copy errors:", len(berrs)); [print("  ", e) for e in berrs]
         return

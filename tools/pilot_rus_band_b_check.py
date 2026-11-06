@@ -83,7 +83,7 @@ for i in items:
         if "tap-all" in tmpl:
             if n_tags < 2: bad(f"{i['id']}: tap-all needs 2 tagged wrong cards")
             row_letters = re.search(r"the row ([^|]+?) \|", row).group(1).split()
-            if len(row_letters) > 6: bad(f"{i['id']}: more than 6 cards")
+            if len(row_letters) > 5: bad(f"{i['id']}: more than 5 cards")
         elif "match_pairs" in tmpl:
             if n_tags < 1: bad(f"{i['id']}: pairs need a mismatch tag")
         else:
