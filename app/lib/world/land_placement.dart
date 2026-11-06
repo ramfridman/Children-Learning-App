@@ -1,5 +1,6 @@
 import '../content/models.dart';
 import '../data/app_database.dart';
+import '../engine/age.dart';
 import '../engine/staircase.dart';
 import '../play/lesson_controller.dart' show ItemFlow;
 import '../strings/he.dart';
@@ -128,13 +129,13 @@ List<String> _probesOf(PackContent content, String domain, List<Lesson> lessons,
   return probes;
 }
 
-/// The unit the staircase starts at for a child of presentation band [ageBand] (the school stage's prior, B-29): the middle unit of the
-/// band, minus one unit (curriculum section 10.1). A band the ladder does not have starts in the highest band it has below it, or the
-/// lowest it has.
-int startLevelFor(List<PlacementLevel> levels, int ageBand) {
+/// The unit the staircase starts at for a child at school [stage] (its prior, B-29): the middle unit of the stage's band, minus one unit
+/// (curriculum section 10.1). The stage reaches the staircase only through its band, never through an age. A band the ladder does not
+/// have starts in the highest band it has below it, or the lowest it has.
+int startLevelFor(List<PlacementLevel> levels, SchoolStage stage) {
   if (levels.isEmpty) return 0;
   final List<int> bands = <int>{for (final PlacementLevel l in levels) l.band}.toList()..sort();
-  final int want = ageBand.clamp(0, 2);
+  final int want = stage.band;
   final int band = bands.lastWhere((int b) => b <= want, orElse: () => bands.first);
   final int first = levels.indexWhere((PlacementLevel l) => l.band == band);
   final int count = levels.where((PlacementLevel l) => l.band == band).length;
@@ -183,14 +184,14 @@ class LandPlacement {
 /// The warm-up of [domain] for one child, with the answers they gave in it replayed into the staircase; null when the land has none.
 /// [attempts] may hold any answers: only those given in the warm-up to a probe of this land count. The staircase starts where the
 /// child's first answer was (the first probe is the start unit's, so the replay does not depend on the band the child has now);
-/// without an answer it starts at the prior of [ageBand].
+/// without an answer it starts at the prior of the school [stage] (a child with no confirmed stage has the middle one of their band).
 ///
 /// A probe is right when it was answered right at the first try with no help; a miss, a hint or a second try is not right.
 LandPlacement? landPlacementOf(
   PackContent content,
   String domain,
   Iterable<Attempt> attempts, {
-  int ageBand = 1,
+  SchoolStage stage = SchoolStage.gan5,
 }) {
   final List<PlacementLevel> levels = placementLevels(content, domain);
   if (levels.isEmpty) return null;
@@ -206,7 +207,7 @@ LandPlacement? landPlacementOf(
   for (final Attempt a in mine) {
     (byProbe[a.activityId] ??= <Attempt>[]).add(a);
   }
-  final int start = mine.isEmpty ? startLevelFor(levels, ageBand) : unitOf[mine.first.activityId]!;
+  final int start = mine.isEmpty ? startLevelFor(levels, stage) : unitOf[mine.first.activityId]!;
   final PlacementGame game = PlacementGame(
     strands: <StrandPlan>[
       StrandPlan(
@@ -266,9 +267,9 @@ bool placementDue(PackContent content, String domain, Iterable<Attempt> attempts
   PackContent content,
   String domain,
   Iterable<Attempt> attempts, {
-  int ageBand = 1,
+  SchoolStage stage = SchoolStage.gan5,
 }) {
-  final LandPlacement? p = landPlacementOf(content, domain, attempts, ageBand: ageBand);
+  final LandPlacement? p = landPlacementOf(content, domain, attempts, stage: stage);
   if (p == null || p.stopped) return null;
   final LandPlacementFlow flow = LandPlacementFlow(p.game);
   final Activity first = content.activities[flow.first()]!;

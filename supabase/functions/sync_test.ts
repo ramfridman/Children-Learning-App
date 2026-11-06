@@ -16,7 +16,7 @@ import {
   USER_B,
 } from "./_shared/testkit.ts";
 import { spec as childDelete } from "./child-delete/handler.ts";
-import { spec as childPut } from "./child-put/handler.ts";
+import { BAND_OF_STAGE, SCHOOL_STAGES, spec as childPut } from "./child-put/handler.ts";
 import { PULL_LIMIT, spec as syncPull } from "./sync-pull/handler.ts";
 import {
   DATA,
@@ -106,6 +106,7 @@ Deno.test("child-put: a parent saves a child with a nickname and every device of
     outfit_id: null,
     address_form: "f",
     age_band: 1,
+    school_stage: null,
   });
   const theirs = await j(await call(h.pull, other, "sync-pull", { after: 0, limit: 10 }));
   assert.equal(theirs.children.length, 0, "another family sees nothing of it");
@@ -488,5 +489,80 @@ Deno.test("child-put: the prize the companion wears is an id, goes to every devi
       400,
       bad,
     );
+  }
+});
+
+const PROFILE_VECTORS = JSON.parse(
+  await Deno.readTextFile(new URL("../../testvectors/profile-sync.json", import.meta.url)),
+) as {
+  school_stages: string[];
+  band_of_stage: Record<string, number>;
+  refused_keys_of_child_put: string[];
+};
+
+Deno.test("child-put: the school stage is the six words of testvectors/profile-sync.json and each one has its band", () => {
+  assert.deepEqual([...SCHOOL_STAGES], PROFILE_VECTORS.school_stages);
+  assert.deepEqual(BAND_OF_STAGE, PROFILE_VECTORS.band_of_stage);
+});
+
+Deno.test("child-put: the school stage is saved, every device gets it, and a child without one has null", async () => {
+  const { h, parent, child, other, profile, j } = await setup();
+  const pull = async (who: typeof child) =>
+    (await j(await call(h.pull, who, "sync-pull", { after: 0, limit: 10 }))).children;
+  for (const stage of PROFILE_VECTORS.school_stages) {
+    const band = PROFILE_VECTORS.band_of_stage[stage];
+    const r = await call(h.put, parent, "child-put", profile(KID, { school_stage: stage, age_band: band }));
+    assert.equal(r.status, 200, stage);
+    const kids = await pull(child);
+    assert.equal(kids[0].school_stage, stage);
+    assert.equal(kids[0].age_band, band);
+  }
+  assert.deepEqual(await pull(other), [], "another family sees nothing of it");
+  const none = await call(h.put, parent, "child-put", profile(KID2, { nickname: "גלעד", age_band: 0 }));
+  assert.equal(none.status, 200);
+  assert.equal((await pull(child)).find((c: { id: string }) => c.id === KID2).school_stage, null);
+});
+
+Deno.test("child-put: a save without a school stage keeps the stored one, so an older app cannot wipe it", async () => {
+  const { h, parent, child, profile, j } = await setup();
+  await call(h.put, parent, "child-put", profile(KID, { school_stage: "grade1", age_band: 1 }));
+  assert.equal((await call(h.put, parent, "child-put", profile(KID, { nickname: "נועה כהן" }))).status, 200);
+  const kid = (await j(await call(h.pull, child, "sync-pull", { after: 0, limit: 10 }))).children[0];
+  assert.equal(kid.nickname, "נועה כהן");
+  assert.equal(kid.school_stage, "grade1");
+});
+
+Deno.test("child-put: a school stage that is not one of the six, in another type, or against the band is refused", async () => {
+  const { h, parent, profile } = await setup();
+  const bad: Array<Record<string, unknown>> = [
+    { school_stage: "grade4" },
+    { school_stage: "Grade1" },
+    { school_stage: "" },
+    { school_stage: null },
+    { school_stage: 1 },
+    { school_stage: ["gan3"] },
+    { school_stage: "gan3", age_band: 1 },
+    { school_stage: "grade2", age_band: 1 },
+    { school_stage: "gan5", age_band: 0 },
+  ];
+  for (const over of bad) {
+    assert.equal(
+      (await call(h.put, parent, "child-put", profile(KID, over))).status,
+      400,
+      JSON.stringify(over),
+    );
+  }
+});
+
+Deno.test("child-put: nothing about a birth, an age in months or a look can be sent (the month and year stay on the device)", async () => {
+  const { h, parent, profile } = await setup();
+  for (const key of PROFILE_VECTORS.refused_keys_of_child_put) {
+    for (const value of [2020, 5, "2020-05", "2020-05-17", "A"]) {
+      assert.equal(
+        (await call(h.put, parent, "child-put", profile(KID, { [key]: value }))).status,
+        400,
+        `${key}=${value}`,
+      );
+    }
   }
 });

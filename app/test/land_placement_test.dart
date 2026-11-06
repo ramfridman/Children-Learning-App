@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/data/app_database.dart';
+import 'package:nitznutz/engine/age.dart';
 import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/engine/staircase.dart';
 import 'package:nitznutz/play/lesson_controller.dart' show ItemFlow;
@@ -54,12 +55,12 @@ List<Attempt> _play(
   PackContent content,
   String domain,
   bool Function(String probe, int level) knows, {
-  int ageBand = 1,
+  SchoolStage stage = SchoolStage.gan5,
   List<Attempt> before = const <Attempt>[],
 }) {
-  final ({Lesson lesson, ItemFlow flow})? visit = placementVisit(content, domain, before, ageBand: ageBand);
+  final ({Lesson lesson, ItemFlow flow})? visit = placementVisit(content, domain, before, stage: stage);
   expect(visit, isNotNull);
-  final LandPlacement shape = landPlacementOf(content, domain, before, ageBand: ageBand)!;
+  final LandPlacement shape = landPlacementOf(content, domain, before, stage: stage)!;
   final List<Attempt> rows = <Attempt>[...before];
   String? probe = visit!.flow.first();
   int guard = 0;
@@ -160,15 +161,27 @@ void main() {
         'C2',
         'C3',
       ]);
-      expect(levels[startLevelFor(levels, 0)].label, 'A1');
-      expect(levels[startLevelFor(levels, 1)].label, 'B1');
-      expect(levels[startLevelFor(levels, 2)].label, 'C1');
+      expect(levels[startLevelFor(levels, SchoolStage.gan4)].label, 'A1');
+      expect(levels[startLevelFor(levels, SchoolStage.gan5)].label, 'B1');
+      expect(levels[startLevelFor(levels, SchoolStage.grade2)].label, 'C1');
     });
+
+    test(
+      'the stage decides through its band: gan 3 and gan 4 start alike, gan 5 and grade 1, grades 2 and 3',
+      () {
+        final List<PlacementLevel> levels = placementLevels(land, 'numbers');
+        String at(SchoolStage s) => levels[startLevelFor(levels, s)].label;
+        expect(
+          <String>[for (final SchoolStage s in SchoolStage.values) at(s)],
+          <String>['A1', 'A1', 'B1', 'B1', 'C1', 'C1'],
+        );
+      },
+    );
 
     test('a band the pack does not have yet starts in the highest band it has', () {
       final List<PlacementLevel> levels = placementLevels(starter, 'numbers');
-      expect(levels[startLevelFor(levels, 2)].label, 'B2');
-      expect(levels[startLevelFor(levels, 0)].label, 'A2');
+      expect(levels[startLevelFor(levels, SchoolStage.grade2)].label, 'B2');
+      expect(levels[startLevelFor(levels, SchoolStage.gan4)].label, 'A2');
     });
 
     test('the first probe the child is given is in the start unit', () {
@@ -177,9 +190,9 @@ void main() {
         land,
         'numbers',
         const <Attempt>[],
-        ageBand: 2,
+        stage: SchoolStage.grade2,
       )!;
-      expect(levels[startLevelFor(levels, 2)].probes, contains(visit.flow.first()));
+      expect(levels[startLevelFor(levels, SchoolStage.grade2)].probes, contains(visit.flow.first()));
       expect(visit.lesson.id, placementId);
       expect(visit.lesson.itemIds, <String>[visit.flow.first()]);
     });
@@ -194,9 +207,9 @@ void main() {
           land,
           'numbers',
           (String probe, int level) => level <= 5,
-          ageBand: 2,
+          stage: SchoolStage.grade2,
         );
-        final LandPlacement p = landPlacementOf(land, 'numbers', rows, ageBand: 2)!;
+        final LandPlacement p = landPlacementOf(land, 'numbers', rows, stage: SchoolStage.grade2)!;
         expect(p.stopped, isTrue);
         expect(levels[p.best!].label, 'B3');
         expect(
@@ -224,8 +237,13 @@ void main() {
 
     test('a child who knows all of Band B climbs into Band C within the warm-up', () {
       final List<PlacementLevel> levels = placementLevels(land, 'numbers');
-      final List<Attempt> rows = _play(land, 'numbers', (String probe, int level) => level <= 6, ageBand: 1);
-      final LandPlacement p = landPlacementOf(land, 'numbers', rows, ageBand: 1)!;
+      final List<Attempt> rows = _play(
+        land,
+        'numbers',
+        (String probe, int level) => level <= 6,
+        stage: SchoolStage.gan5,
+      );
+      final LandPlacement p = landPlacementOf(land, 'numbers', rows, stage: SchoolStage.gan5)!;
       expect(p.stopped, isTrue);
       expect(levels[p.best!].band, 2, reason: 'the best unit is in Band C');
       expect(levels[p.entry!].label, 'B3', reason: 'and the child starts one unit below it');
@@ -258,7 +276,7 @@ void main() {
 
     test('a right answer that needed a hint or a second try is not a right answer here', () {
       final List<PlacementLevel> levels = placementLevels(land, 'numbers');
-      final String probe = levels[startLevelFor(levels, 1)].probes.first;
+      final String probe = levels[startLevelFor(levels, SchoolStage.gan5)].probes.first;
       final List<Attempt> asked = <Attempt>[..._answer(probe, right: false)];
       final LandPlacement p = landPlacementOf(land, 'numbers', asked)!;
       expect(p.answered, 1);
@@ -278,19 +296,28 @@ void main() {
     });
 
     test('replaying the recorded answers gives the same placement as playing did', () {
-      final List<Attempt> rows = _play(land, 'numbers', (String probe, int level) => level <= 4, ageBand: 2);
-      final LandPlacement once = landPlacementOf(land, 'numbers', rows, ageBand: 2)!;
+      final List<Attempt> rows = _play(
+        land,
+        'numbers',
+        (String probe, int level) => level <= 4,
+        stage: SchoolStage.grade2,
+      );
+      final LandPlacement once = landPlacementOf(land, 'numbers', rows, stage: SchoolStage.grade2)!;
       // The child\'s band changed after the warm-up: the placement does not move, it was read from the answers.
-      final LandPlacement later = landPlacementOf(land, 'numbers', rows, ageBand: 0)!;
+      final LandPlacement later = landPlacementOf(land, 'numbers', rows, stage: SchoolStage.gan4)!;
       expect(later.entry, once.entry);
       expect(later.placedLessons, once.placedLessons);
-      expect(landPlacementOf(land, 'numbers', rows.reversed.toList(), ageBand: 2)!.entry, once.entry);
+      expect(
+        landPlacementOf(land, 'numbers', rows.reversed.toList(), stage: SchoolStage.grade2)!.entry,
+        once.entry,
+      );
     });
 
     test('a warm-up that was left before it stopped places nobody', () {
       final List<PlacementLevel> levels = placementLevels(land, 'numbers');
       final List<Attempt> rows = <Attempt>[
-        for (final String id in levels[startLevelFor(levels, 1)].probes.take(2)) ..._answer(id, right: true),
+        for (final String id in levels[startLevelFor(levels, SchoolStage.gan5)].probes.take(2))
+          ..._answer(id, right: true),
       ];
       final LandPlacement p = landPlacementOf(land, 'numbers', rows)!;
       expect(p.stopped, isFalse);
@@ -301,7 +328,12 @@ void main() {
 
   group('what the placement does to the path and to the engine', () {
     test('the lessons below the entry unit count as finished once, and their skills are assumed known', () {
-      final List<Attempt> rows = _play(land, 'numbers', (String probe, int level) => level <= 5, ageBand: 2);
+      final List<Attempt> rows = _play(
+        land,
+        'numbers',
+        (String probe, int level) => level <= 5,
+        stage: SchoolStage.grade2,
+      );
       final Map<String, int> finished = finishedLessons(land, rows, const <String>[]);
       expect(finished['a1'], 1);
       expect(finished['b3'], 1);
@@ -312,7 +344,12 @@ void main() {
     });
 
     test('the first lesson offered after the warm-up is the entry unit\'s, and Band C waits until the unit is learned', () {
-      final List<Attempt> rows = _play(land, 'numbers', (String probe, int level) => level <= 5, ageBand: 2);
+      final List<Attempt> rows = _play(
+        land,
+        'numbers',
+        (String probe, int level) => level <= 5,
+        stage: SchoolStage.grade2,
+      );
       final ({Set<String> lessons, Set<String> skills}) placed = placedByWarmUp(land, rows);
       final Engine engine = Engine(catalog: engineCatalog(land))..assume(placed.skills);
       final Map<String, int> finished = finishedLessons(land, rows, const <String>[]);

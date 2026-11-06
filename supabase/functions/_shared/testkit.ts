@@ -356,7 +356,8 @@ export class FakeStore implements Store {
   upsertChild(familyId: string, c: ChildProfile) {
     if (this.tombstones.get(familyId)?.has(c.id)) return Promise.resolve("deleted" as const);
     const m = this.children.get(familyId) ?? new Map<string, ChildProfile>();
-    m.set(c.id, { ...c });
+    // As the table: a save without a school stage keeps the stored one.
+    m.set(c.id, { ...c, schoolStage: c.schoolStage ?? m.get(c.id)?.schoolStage ?? null });
     this.children.set(familyId, m);
     return Promise.resolve("saved" as const);
   }

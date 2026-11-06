@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
 
+import '../engine/age.dart';
 import '../parent/language_settings.dart';
+import '../parent/look_settings.dart';
 import '../rewards/ribbons.dart';
 import 'tables.dart';
 
@@ -17,6 +19,7 @@ part 'app_database.g.dart';
     VoiceListens,
     Alerts,
     Rewards,
+    ProfileBirths,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -24,7 +27,7 @@ class AppDatabase extends _$AppDatabase {
 
   /// Bump with every table change and add a step to [migration]; `test/data_database_test.dart`
   /// fails if this number and the migration code drift apart.
-  static const int currentSchemaVersion = 9;
+  static const int currentSchemaVersion = 10;
 
   @override
   int get schemaVersion => currentSchemaVersion;
@@ -73,6 +76,12 @@ class AppDatabase extends _$AppDatabase {
       if (from < 8) await m.createTable(rewards);
       // 8 to 9 (M8b): the prize the companion wears.
       if (from < 9) await m.addColumn(profiles, profiles.outfitId);
+      // 9 to 10 (B-29): the school stage a parent confirms, and the month and year of birth, kept on this device only. A profile
+      // made before this has neither: its band stands for both (the middle of the band), and its progress is not touched.
+      if (from < 10) {
+        await m.addColumn(profiles, profiles.schoolStage);
+        await m.createTable(profileBirths);
+      }
     },
     beforeOpen: (OpeningDetails details) async {
       await customStatement('PRAGMA foreign_keys = ON');
@@ -113,7 +122,45 @@ class AppDatabase extends _$AppDatabase {
         ProfilesCompanion(outfitId: Value<String?>(outfitId)),
       );
 
-  Future<void> removeProfile(String id) => (delete(profiles)..where((Profiles t) => t.id.equals(id))).go();
+  Future<void> removeProfile(String id) => transaction(() async {
+    await (delete(profileBirths)..where(($ProfileBirthsTable t) => t.profileId.equals(id))).go();
+    await (delete(profiles)..where((Profiles t) => t.id.equals(id))).go();
+  });
+
+  // ---- age (B-29) ----
+
+  /// The school stage a parent confirmed, or null when none was.
+  Future<SchoolStage?> schoolStageOf(String profileId) async {
+    final Profile? row = await (select(
+      profiles,
+    )..where((Profiles t) => t.id.equals(profileId))).getSingleOrNull();
+    return SchoolStage.fromWire(row?.schoolStage);
+  }
+
+  /// Confirms [stage]. The band is set with it in the same write: the band comes from the stage, never from an age.
+  Future<void> setSchoolStage(String profileId, SchoolStage stage) =>
+      (update(profiles)..where((Profiles t) => t.id.equals(profileId))).write(
+        ProfilesCompanion(schoolStage: Value<String?>(stage.wire), ageBand: Value<int>(stage.band)),
+      );
+
+  /// The month and year of birth kept for this child on this device, or null when none was given.
+  Future<BirthMonth?> birthOf(String profileId) async {
+    final ProfileBirth? row = await (select(
+      profileBirths,
+    )..where(($ProfileBirthsTable t) => t.profileId.equals(profileId))).getSingleOrNull();
+    return row == null ? null : BirthMonth(row.birthYear, row.birthMonth);
+  }
+
+  /// Keeps [birth] for this child, or forgets it when null. Never leaves the device.
+  Future<void> setBirth(String profileId, BirthMonth? birth) async {
+    if (birth == null) {
+      await (delete(profileBirths)..where(($ProfileBirthsTable t) => t.profileId.equals(profileId))).go();
+      return;
+    }
+    await into(profileBirths).insertOnConflictUpdate(
+      ProfileBirthsCompanion.insert(profileId: profileId, birthYear: birth.year, birthMonth: birth.month),
+    );
+  }
 
   // ---- settings ----
 
@@ -457,6 +504,7 @@ class AppDatabase extends _$AppDatabase {
         ageBand: row.ageBand,
         companionId: row.companionId,
         outfitId: row.outfitId,
+        schoolStage: row.schoolStage,
       ),
     );
   }
@@ -490,6 +538,7 @@ class AppDatabase extends _$AppDatabase {
     await (delete(voiceListens)..where(($VoiceListensTable t) => t.profileId.equals(profileId))).go();
     await (delete(alerts)..where(($AlertsTable t) => t.profileId.equals(profileId))).go();
     await (delete(rewards)..where(($RewardsTable t) => t.profileId.equals(profileId))).go();
+    await (delete(profileBirths)..where(($ProfileBirthsTable t) => t.profileId.equals(profileId))).go();
     await (delete(profiles)..where(($ProfilesTable t) => t.id.equals(profileId))).go();
     // The parents' promises for this child go with the child.
     final String? promises = await setting('ribbons');
@@ -500,6 +549,11 @@ class AppDatabase extends _$AppDatabase {
     final String? languages = await setting(languagesSettingKey);
     if (languages != null) {
       await putSetting(languagesSettingKey, FamilyLanguages.decode(languages).without(profileId).encode());
+    }
+    // And the look the parent chose.
+    final String? looks = await setting(looksSettingKey);
+    if (looks != null) {
+      await putSetting(looksSettingKey, FamilyLooks.decode(looks).without(profileId).encode());
     }
   });
 
