@@ -29,8 +29,10 @@ part 'tap_plans_b.dart';
 // activity as it is: the sprite names and counts of its options and groups, and for a number sequence the word "after" or
 // "before" of its question. A plan that cannot find what it needs falls back to the generic one, so a hint is never empty.
 
-/// The plan of [a] at [level] (1 to 3), or null when the activity's family has no pictures yet.
+/// The plan of [a] at [level] (1 to 3), or null when the activity's family has no pictures yet, or when it has no right option
+/// (a number answer, 1.4, which no session draws yet): every plan below names the right option, so none can be made for it.
 HintPlan? tapHintPlan(TapAnswerActivity a, TapGeometry g, int level) {
+  if (g.correctIndex < 0) return null;
   final TapFamily? family = tapFamilyOf(a.skillId, numeralOnStage: a.stageNumeral != null);
   if (family == null) return null;
   final _Plans p = _Plans(a, g);
@@ -287,6 +289,13 @@ String cropToInk(String svg, Rect part) {
 });
 
 final Map<String, (String, double)> _inked = <String, (String, double)>{};
+
+/// The most units (cubes, dots, hops) a hint draws one by one (SEC-M10-3). The numbers of Band C go to 10,000, and a picture made of a
+/// mark for each unit would then be thousands of marks; above this the plan is the generic one, whatever the number.
+const int _mostUnits = 20;
+
+/// The same for a bar of cubes, which Band B draws for numbers to 99 (the cubes are as small as the stage needs).
+const int _mostBarUnits = 100;
 
 class _Plans {
   _Plans(this.a, this.g) : k = hintScale(g.size);
@@ -895,8 +904,10 @@ class _Plans {
     final int? c = _right.numeral;
     final int? given = c == null ? null : _givenFor(c);
     if (c == null || given == null) return generic(level);
-    final bool before = given > c;
     final bool bandB = a.skillId.contains('-B-');
+    // Band B draws ten squares around the numbers whatever they are; Band A hops from 1 to the number, one square each.
+    if (!bandB && math.max(c, given) > _mostUnits) return generic(level);
+    final bool before = given > c;
     // Band A counts from 1 on a path of five or ten squares; Band B shows ten squares around the two numbers.
     final int m = bandB || given > 5 || c > 5 || a.options.any((ChoiceOption o) => (o.numeral ?? 0) > 5)
         ? 10
@@ -1240,7 +1251,7 @@ class _Plans {
 
   HintPlan numerals(int level) {
     final int? n = a.stageNumeral ?? _right.numeral;
-    if (n == null || n < 1) return generic(level);
+    if (n == null || n < 1 || n > _mostUnits) return generic(level);
     final Rect path = Rect.fromCenter(
       center: Offset(g.w / 2, g.h / 2 + 6 * k),
       width: math.min(g.w - 20, 5 * 40 * k),

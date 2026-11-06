@@ -1,9 +1,13 @@
 // How a number sentence draws its signs (CLAUDE.md, Hebrew rules; M10 X2): `op::` is drawn ÷ unless a parent chose the colon in the
 // parent area, and `op:x` is drawn × in every template (spot_error drew the letter x). The setting is kept on this device, with the
 // other settings of the app.
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/content/pack_verify.dart' show VerifiedPack;
 import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/play/math_signs.dart';
 
@@ -44,9 +48,50 @@ PackContent signsPack() {
     'cells': <Object?>['n:6', 'op:x', 'n:3', 'op:=', 'n:9'],
   };
   spot['answer'] = <String, Object?>{'type': 'spot', 'wrong': 4};
+  // The longest rows of Band C: eleven cells with numbers of five digits, and nine cells in a spot_error.
+  final Map<String, Object?> big = Map<String, Object?>.of(tap)
+    ..['id'] = 'big.row'
+    ..['band'] = 'C'
+    ..['templateVersion'] = '1.4'
+    ..['scene'] = <String, Object?>{
+      'background': 'asset:meadow',
+      'optionsOnTiles': true,
+      'row': <Object?>[
+        'op:(',
+        'n:10000',
+        'op:+',
+        'n:2500',
+        'op:)',
+        'op:x',
+        'n:3',
+        'op:<',
+        'n:9999',
+        'op:=',
+        '?',
+      ],
+    };
+  final Map<String, Object?> bigSpot = Map<String, Object?>.of(spot)
+    ..['id'] = 'big.spot'
+    ..['band'] = 'C'
+    ..['templateVersion'] = '1.1'
+    ..['scene'] = <String, Object?>{
+      'background': 'asset:meadow',
+      'cells': <Object?>['n:4050', 'op:<', 'n:4500', 'op:+', 'n:10000', 'op:=', 'n:9999', 'op:x', 'n:3'],
+    };
   p.addDocument('activity.div.row.json', 'activities', 'div.row', tap);
   p.addDocument('activity.times.spot.json', 'activities', 'times.spot', spot);
-  return PackContent.fromPack(p.verified(pictures: true));
+  p.addDocument('activity.big.row.json', 'activities', 'big.row', big);
+  p.addDocument('activity.big.spot.json', 'activities', 'big.spot', bigSpot);
+  final VerifiedPack pack = p.verified(pictures: true);
+  // The backdrop of the stage is a plain meadow that fills it (a real scene does), not the sample's round stand-in, so that a picture
+  // shows where the stage's edge is.
+  pack.files['meadow.svg'] = Uint8List.fromList(
+    utf8.encode(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">'
+      '<rect width="100" height="100" fill="#E8A33D"/></svg>',
+    ),
+  );
+  return PackContent.fromPack(pack);
 }
 
 Future<void> _wait(WidgetTester t, int ms) async {

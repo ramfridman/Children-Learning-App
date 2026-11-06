@@ -238,6 +238,11 @@ class _RowStage extends StatelessWidget {
     final SpotErrorActivity a = s.activity;
     final double side = math.min(size.height - 16, (size.width - 16) / a.cells.length - 6);
     final double rowWidth = (side + 6) * a.cells.length;
+    // Every number and sign of the row is one size: the common half of a cell, or less when the longest number would not fit one.
+    double textSize = side * 0.5;
+    for (final String c in a.cells) {
+      if (c.startsWith('n:')) textSize = math.min(textSize, (side - 12) / ((c.length - 2) * 0.6));
+    }
     return Semantics(
       container: true,
       label: a.altText,
@@ -256,7 +261,9 @@ class _RowStage extends StatelessWidget {
                   count: a.cells.length,
                   builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[for (int i = 0; i < a.cells.length; i++) cell(i, _cell(a, i, side))],
+                    children: <Widget>[
+                      for (int i = 0; i < a.cells.length; i++) cell(i, _cell(a, i, side, textSize)),
+                    ],
                   ),
                 ),
               ),
@@ -284,7 +291,7 @@ class _RowStage extends StatelessWidget {
     );
   }
 
-  Widget _cell(SpotErrorActivity a, int i, double side) {
+  Widget _cell(SpotErrorActivity a, int i, double side, double textSize) {
     final Color? ring = s.wrongCell == i
         ? TokenColors.notYetRing
         : (s.ring == AnswerState.correct && i == a.wrong
@@ -309,7 +316,7 @@ class _RowStage extends StatelessWidget {
             fit: StackFit.passthrough,
             alignment: Alignment.center,
             children: <Widget>[
-              Center(child: _CellFace(a, a.cells[i], side)),
+              Center(child: _CellFace(a, a.cells[i], side, textSize: textSize)),
               if (s.visited.contains(i) && s.hintCell != i)
                 const Positioned(top: 4, right: 4, child: SeenDot(key: Key('seen-dot'))),
             ],
@@ -323,11 +330,14 @@ class _RowStage extends StatelessWidget {
 /// What a cell shows: a picture of the pack, an arrow, a number or a sign, in a cell whose side is [side]. A sign is drawn as the
 /// screen draws it (× for `op:x`, and the child's division sign for `op::`), which is why this is a widget and not a function.
 class _CellFace extends StatelessWidget {
-  const _CellFace(this.activity, this.cell, this.side);
+  const _CellFace(this.activity, this.cell, this.side, {this.textSize});
 
   final SpotErrorActivity activity;
   final String cell;
   final double side;
+
+  /// The size of a number or sign when the row sets one for all its cells; half the cell's side otherwise.
+  final double? textSize;
 
   @override
   Widget build(BuildContext context) {
@@ -346,6 +356,6 @@ class _CellFace extends StatelessWidget {
     final String text = cell.startsWith('op:')
         ? signGlyph(cell.substring(3), MathSigns.of(context))
         : cell.substring(2);
-    return Text(text, style: AppText.fixed(size: side * 0.5, weight: 800, lineHeight: 1));
+    return Text(text, style: AppText.fixed(size: textSize ?? side * 0.5, weight: 800, lineHeight: 1));
   }
 }

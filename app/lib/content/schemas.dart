@@ -577,6 +577,9 @@ const List<String> stagePictureKinds = <String>[
   'fraction',
 ];
 
+/// A whole number from 0 to 10,000 written with no leading zero (a column number; the row cells say the same after `n:`).
+const String _columnNumber = r'0|[1-9][0-9]{0,3}|10000';
+
 const SObject _stagePicture = SObject(<String, SField>{
   'kind': SField(SEnum(stagePictureKinds)),
   // base_ten: hundreds flats, tens rods and ones cubes; thousands are drawn as a stack.
@@ -599,8 +602,9 @@ const SObject _stagePicture = SObject(<String, SField>{
   'from': SField(SInt(min: 0, max: 10), required: false),
   // column: two numbers in their places with an operation, and the carry and borrow marks.
   'op': SField(SEnum(<String>['+', '-']), required: false),
-  'top': SField(SString(minLength: 1, maxLength: 5, pattern: r'[0-9]{1,5}'), required: false),
-  'bottom': SField(SString(minLength: 1, maxLength: 5, pattern: r'[0-9]{1,5}'), required: false),
+  // A number to 10,000 with no leading zero (SEC-M10-4).
+  'top': SField(SString(minLength: 1, maxLength: 5, pattern: _columnNumber), required: false),
+  'bottom': SField(SString(minLength: 1, maxLength: 5, pattern: _columnNumber), required: false),
   'marks': SField(
     SArray(
       SObject(<String, SField>{
@@ -875,7 +879,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
               SString(
                 minLength: 1,
                 maxLength: 46,
-                pattern: r'asset:[a-z0-9_]{1,40}|\?|n:[0-9]{1,5}|op:[+=x:<>()-]',
+                pattern: r'asset:[a-z0-9_]{1,40}|\?|n:(?:0|[1-9][0-9]{0,3}|10000)|op:[+=x:<>()-]',
               ),
               minItems: 2,
               maxItems: 11,
@@ -1119,7 +1123,7 @@ SObject? activitySchemaFor(String template) => switch (template) {
               SString(
                 minLength: 3,
                 maxLength: 46,
-                pattern: r'asset:[a-z0-9_]{1,40}|n:[0-9]{1,5}|dir:(up|down|left|right)|op:[+=x:<>()-]',
+                pattern: r'asset:[a-z0-9_]{1,40}|n:(?:0|[1-9][0-9]{0,3}|10000)|dir:(up|down|left|right)|op:[+=x:<>()-]',
               ),
               minItems: 3,
               maxItems: 9,

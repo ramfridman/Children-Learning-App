@@ -416,13 +416,13 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 5,
-              "pattern": "^(?:[0-9]{1,5})$"
+              "pattern": "^(?:0|[1-9][0-9]{0,3}|10000)$"
             },
             "bottom": {
               "type": "string",
               "minLength": 1,
               "maxLength": 5,
-              "pattern": "^(?:[0-9]{1,5})$"
+              "pattern": "^(?:0|[1-9][0-9]{0,3}|10000)$"
             },
             "marks": {
               "type": "array",
@@ -502,7 +502,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 46,
-            "pattern": "^(?:asset:[a-z0-9_]{1,40}|\\?|n:[0-9]{1,5}|op:[+=x:<>()-])$"
+            "pattern": "^(?:asset:[a-z0-9_]{1,40}|\\?|n:(?:0|[1-9][0-9]{0,3}|10000)|op:[+=x:<>()-])$"
           },
           "minItems": 2,
           "maxItems": 11

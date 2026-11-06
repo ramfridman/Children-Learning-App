@@ -9,6 +9,7 @@ import '../speech/word_text.dart' show normalizeWords;
 import 'capabilities.dart' show compareTemplateVersion;
 import 'hint_ladder.dart';
 import 'language_checks.dart';
+import 'row_width.dart';
 import 'schema.dart';
 import 'schemas.dart';
 import 'scripts.dart';
@@ -212,8 +213,16 @@ List<Problem> validatePack({
   final Map<String, Object?> templates = manifest['templates']! as Map<String, Object?>;
   activities.forEach((String id, Map<String, Object?> a) {
     final String t = a['template']! as String;
-    if (!templates.containsKey(t)) {
+    final Object? promised = templates[t];
+    if (promised == null) {
       say('manifest.json', 'templates', 'does not list "$t", which activity $id uses');
+    } else if (promised is String && compareTemplateVersion('${a['templateVersion']}', promised) > 0) {
+      // SEC-M10-5: an app that has the manifest's version must be able to play what the activity says it needs.
+      say(
+        'activity.$id.json',
+        'templateVersion',
+        'is ${a['templateVersion']}, above the $promised the manifest lists for "$t"',
+      );
     }
   });
 
@@ -319,6 +328,8 @@ List<Problem> validatePack({
         }
         _stagePictureOf(file, scene['picture'], say);
         _tapVersion(file, a, scene, answer, say);
+        _tapBigNumbers(file, a, scene, answer, say);
+        _tapRowWidth(file, scene, say);
         for (final (int i, Object? r) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
           if (r is String && r.startsWith('asset:')) checkAsset(file, 'scene.row[$i]', r);
         }
@@ -476,6 +487,7 @@ List<Problem> validatePack({
         if ((answer['wrong']! as int) >= cells.length) say(file, 'answer.wrong', 'is not a cell of the row');
         checkTag(file, 'answer.misconception', answer['misconception']);
         _spotVersion(file, a, cells, say);
+        _spotBigNumbers(file, a, cells, say);
       case 'match_pairs':
         checkAsset(file, 'scene.background', scene['background']);
         final List<Map<String, Object?>> leftFaces = _maps(scene['left']);
@@ -1046,8 +1058,9 @@ const Map<String, ({Set<String> needs, Set<String> may})> _pictureFields =
 
 void _stagePictureOf(String file, Object? picture, void Function(String, String, String) say) {
   if (picture is! Map<String, Object?>) return;
-  final String kind = picture['kind']! as String;
-  final ({Set<String> needs, Set<String> may}) fields = _pictureFields[kind]!;
+  final ({Set<String> needs, Set<String> may})? fields = _pictureFields[picture['kind']];
+  if (fields == null) return;
+  final Object? kind = picture['kind'];
   final Set<String> given = picture.keys.toSet()..remove('kind');
   for (final String f in fields.needs.difference(given)) {
     say(file, 'scene.picture.$f', 'a $kind picture needs it');
@@ -1065,10 +1078,15 @@ void _stagePictureOf(String file, Object? picture, void Function(String, String,
       say(file, 'scene.picture.blank', 'a cell is lit or blank, not both');
     }
   }
-  if (kind == 'fraction' && (picture['shaded']! as int) > (picture['parts']! as int)) {
+  // The fields a kind needs are reported above when missing, so a missing or odd one is skipped here (SEC-M10-2).
+  final Object? parts = picture['parts'];
+  final Object? shaded = picture['shaded'];
+  if (kind == 'fraction' && parts is int && shaded is int && shaded > parts) {
     say(file, 'scene.picture.shaded', 'is more than the parts');
   }
-  if (kind == 'column' && (picture['top']! as String).length < (picture['bottom']! as String).length) {
+  final Object? top = picture['top'];
+  final Object? bottom = picture['bottom'];
+  if (kind == 'column' && top is String && bottom is String && top.length < bottom.length) {
     say(file, 'scene.picture.bottom', 'a column sum has the longer number on top');
   }
 }
@@ -1102,6 +1120,57 @@ void _tapVersion(
       : null;
   if (feature != null && compareTemplateVersion('${a['templateVersion']}', '1.4') < 0) {
     say(file, 'templateVersion', 'is ${a['templateVersion']}, but $feature needs tap_answer 1.4');
+  }
+}
+
+/// SEC-M10-3: a number above 100 (a numeral on the stage or on a tile) and a number of four digits or more in a row belong to Band C.
+/// Band A and B items stay small, as their hint pictures are drawn one mark for each unit.
+void _tapBigNumbers(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> scene,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+) {
+  if (a['band'] == 'C') return;
+  if (((scene['numeral'] as int?) ?? 0) > 100) {
+    say(file, 'scene.numeral', 'a number above 100 belongs to Band C');
+  }
+  for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
+    if (((o['numeral'] as int?) ?? 0) > 100) {
+      say(file, 'answer.options[$i].numeral', 'a number above 100 belongs to Band C');
+    }
+  }
+  for (final (int i, Object? c) in ((scene['row'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+    if (c is String && _bigNumberCell.hasMatch(c)) {
+      say(file, 'scene.row[$i]', 'a number of four digits belongs to Band C');
+    }
+  }
+}
+
+/// A row the stage can show at a size a child can read: no wider than [maxRowEm] (see `row_width.dart`).
+void _tapRowWidth(String file, Map<String, Object?> scene, void Function(String, String, String) say) {
+  final List<String> row = <String>[
+    for (final Object? c in (scene['row'] as List<Object?>?) ?? const <Object?>[])
+      if (c is String) c,
+  ];
+  if (rowEm(row) > maxRowEm) {
+    say(file, 'scene.row', 'is too wide to read on a small phone (shorten a number or drop a cell)');
+  }
+}
+
+/// SEC-M10-3 for a `spot_error`: a number of four digits or more in a cell belongs to Band C.
+void _spotBigNumbers(
+  String file,
+  Map<String, Object?> a,
+  List<Object?> cells,
+  void Function(String, String, String) say,
+) {
+  if (a['band'] == 'C') return;
+  for (final (int i, Object? c) in cells.indexed) {
+    if (c is String && _bigNumberCell.hasMatch(c)) {
+      say(file, 'scene.cells[$i]', 'a number of four digits belongs to Band C');
+    }
   }
 }
 

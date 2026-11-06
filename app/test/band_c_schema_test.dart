@@ -12,18 +12,23 @@ import 'support/sample_pack.dart';
 
 Map<String, Object?> _m(Object? v) => v! as Map<String, Object?>;
 
-/// A copy of the sample's `tap_answer` item, edited by [edit].
+/// A copy of the sample's `tap_answer` item, edited by [edit]. The item is Band C (the numbers above 100 and of four digits belong
+/// there, SEC-M10-3) and the manifest promises tap_answer 1.4 (an item may not ask for more than it, SEC-M10-5).
 SamplePack _tap(void Function(Map<String, Object?> doc) edit, {String version = '1.4'}) {
   final SamplePack p = SamplePack();
   final Map<String, Object?> doc = _m(p.docs[tapFile]);
   doc['templateVersion'] = version;
+  doc['band'] = 'C';
+  _m(p.manifest['templates'])['tap_answer'] = '1.4';
   edit(doc);
   return p;
 }
 
+/// The problems of one document. The sample's skill is in Band A, so "the item is Band C but its skill is not" is left out: these
+/// tests are about the rules of the new modes.
 List<String> _problems(SamplePack p, {String file = tapFile}) => <String>[
   for (final Problem x in validatePack(manifest: p.manifest, docs: p.docs, files: p.files))
-    if (x.path.startsWith(file)) x.toString(),
+    if (x.path.startsWith(file) && !x.toString().contains('but its skill')) x.toString(),
 ];
 
 List<String> _schema(SamplePack p, {String template = 'tap_answer', String file = tapFile}) => <String>[
@@ -154,6 +159,7 @@ void main() {
           ..['id'] = 'spot.one'
           ..['template'] = 'spot_error'
           ..['templateVersion'] = version
+          ..['band'] = 'C'
           ..['scene'] = <String, Object?>{'background': 'asset:meadow', 'cells': cells}
           ..['answer'] = <String, Object?>{'type': 'spot', 'wrong': 1};
         p.addDocument('activity.spot.one.json', 'activities', 'spot.one', doc);
@@ -434,8 +440,9 @@ void main() {
         _numberItem(d);
         _m(d['scene'])['picture'] = <String, Object?>{'kind': 'array', 'rows': 3, 'columns': 4};
       });
-      final PackContent content = PackContent.fromPack(p.verified());
-      final TapAnswerActivity a = content.activities['pick.red.flower']! as TapAnswerActivity;
+      // The pack content hides such an item until a session draws it (SEC-M10-1), so the model is read from the document.
+      final PackAssets assets = PackContent.fromPack(p.verified()).assets;
+      final TapAnswerActivity a = Activity.fromJson(_m(p.docs[tapFile]), assets) as TapAnswerActivity;
       expect(a.options, isEmpty);
       expect(a.optionCount, 0);
       expect(a.correctId, '');

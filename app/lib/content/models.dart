@@ -1632,6 +1632,9 @@ class PackContent {
         tags[t.id] = t;
       } else if (d.key.startsWith('activity.')) {
         final Activity a = Activity.fromJson(doc, assets);
+        // SEC-M10-1: the build claims `tap_answer` 1.4, but no session draws a number answer or a stage picture yet (the first batch
+        // that does removes this line for what it draws). Until then such an item is hidden, as a pack of a newer version is.
+        if (a is TapAnswerActivity && (a.numberAnswer != null || a.picture != null)) continue;
         activities[a.id] = a;
       }
     }
@@ -1666,8 +1669,8 @@ class PackContent {
   /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
   final PlacementDoc? placement;
 
-  /// The activities of a lesson, in order.
+  /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[
-    for (final String id in lesson.itemIds) activities[id]!,
+    for (final String id in lesson.itemIds) ?activities[id],
   ];
 }

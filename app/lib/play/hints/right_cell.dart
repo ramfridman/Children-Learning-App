@@ -12,12 +12,15 @@ String? rightCellOf(List<String> cells, int wrong) {
   return _sentence(cells, wrong) ?? _counting(cells, wrong) ?? _repeating(cells, wrong);
 }
 
-/// A number sentence (`6 + 2 = 9` or `7 = 5 + 3`): the one number or sign that makes it true.
+/// The numbers a wrong cell may be put right with (to the top of the range of M10); a sentence is solved by trying each.
+const int _mostNumber = 10000;
+
+/// A number sentence (`6 + 2 = 9`, `6 x 3 = 9`, `12 : 3 = 5` or `7 = 5 + 3`): the one number or sign that makes it true.
 String? _sentence(List<String> cells, int wrong) {
   if (!cells.contains('op:=')) return null;
   final List<String> candidates = cells[wrong].startsWith('op:')
-      ? <String>['op:+', 'op:-']
-      : <String>[for (int x = 0; x <= 99; x++) 'n:$x'];
+      ? <String>['op:+', 'op:-', 'op:x', 'op::']
+      : <String>[for (int x = 0; x <= _mostNumber; x++) 'n:$x'];
   final List<String> fits = <String>[
     for (final String c in candidates)
       if (_holds(<String>[...cells.sublist(0, wrong), c, ...cells.sublist(wrong + 1)])) c,
@@ -32,7 +35,8 @@ bool _holds(List<String> cells) {
   return left != null && left == right;
 }
 
-/// The value of one side of a sentence: a number, or a number, a sign and a number.
+/// The value of one side of a sentence: a number, or a number, a sign and a number. A division is exact or it has no value (a
+/// remainder is never the right answer of a sentence in a row).
 int? _value(List<String> side) {
   int? n(String c) => c.startsWith('n:') ? int.tryParse(c.substring(2)) : null;
   if (side.length == 1) return n(side[0]);
@@ -43,6 +47,8 @@ int? _value(List<String> side) {
   return switch (side[1]) {
     'op:+' => a + b,
     'op:-' => a - b,
+    'op:x' => a * b,
+    'op::' => b != 0 && a % b == 0 ? a ~/ b : null,
     _ => null,
   };
 }

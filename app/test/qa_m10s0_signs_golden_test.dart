@@ -1,9 +1,12 @@
 // QA of M10 step 0, the signs (2026-11-06): the developer's goldens cover the phone (852 x 393) and the tablet in landscape. These add the
 // small phone (667 x 375) and the tablet in portrait for ÷, : and ×, check that maths reads left to right on every size, and draw the
 // parent's division chips at text scale 1.3 (phone, small phone, tablet in portrait). Each PNG is opened by the QA agent (docs/qa).
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/design/tokens.g.dart';
 import 'package:nitznutz/parent/rules_screen.dart';
 import 'package:nitznutz/play/lesson_screen.dart';
 import 'package:nitznutz/strings/he.dart';
@@ -40,6 +43,19 @@ Future<void> _open(WidgetTester tester, PackContent content, String activity) as
   );
   await tester.pump(const Duration(milliseconds: 600));
   await _wait(tester, 900);
+}
+
+/// The style a glyph of a chip is drawn in: the chip's default text style with the glyph's own on top.
+TextStyle _glyphStyle(WidgetTester tester, Finder chip, String glyph) {
+  final Finder text = find.descendant(of: chip, matching: find.text(glyph));
+  return DefaultTextStyle.of(tester.element(text)).style.merge(tester.widget<Text>(text).style);
+}
+
+/// The WCAG contrast ratio of two opaque colours.
+double _contrast(Color a, Color b) {
+  final double x = a.computeLuminance();
+  final double y = b.computeLuminance();
+  return (math.max(x, y) + 0.05) / (math.min(x, y) + 0.05);
 }
 
 /// The x of the centre of the text [t] inside [scope].
@@ -120,6 +136,37 @@ void main() {
     });
   }
 
+  // The row is fitted as a whole: every number and sign of an equation is drawn at one size, and 12 is no smaller than 3.
+  for (final (String, Size) device in <(String, Size)>[
+    ('phone', const Size(852, 393)),
+    ('phone_se', _phoneSE),
+    ('tablet_landscape', const Size(1180, 820)),
+    ('tablet_portrait', _tabletP),
+  ]) {
+    testWidgets('the numbers and signs of one equation row are one size, ${device.$1}', (
+      WidgetTester tester,
+    ) async {
+      final PackContent content = signsPack();
+      final AppRig rig = AppRig(content: content);
+      await rig.seedFinishedSetup(name: 'נֹעָה');
+      await rig.pump(tester, size: device.$2);
+      await tester.tap(find.text('נֹעָה'));
+      await tester.pumpAndSettle();
+      await _open(tester, content, 'div.row');
+      final Finder row = find.byKey(const Key('tap-row'));
+      final Rect stage = tester.getRect(row);
+      final Map<String, double> sizes = <String, double>{
+        for (final String t in <String>['12', '÷', '3', '='])
+          t: tester.widget<Text>(find.descendant(of: row, matching: find.text(t))).style!.fontSize!,
+      };
+      expect(sizes.values.toSet(), hasLength(1), reason: 'sizes: $sizes');
+      // The first number stands inside the row with room to spare, not against its left edge.
+      final Rect twelve = tester.getRect(find.descendant(of: row, matching: find.text('12')));
+      expect(twelve.left, greaterThan(stage.left + 6));
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   for (final (String, Size, double) c in <(String, Size, double)>[
     ('phone', const Size(852, 393), 1.3),
     ('phone_se', _phoneSE, 1.3),
@@ -157,10 +204,40 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text(He.divisionHeading.text), findsOneWidget);
       expect(find.text(He.divisionHelp.text), findsOneWidget);
-      // The chips are LTR: ÷ first (left), then : (right); both are at least 40 high, and neither is cut by the screen.
-      final Rect a = tester.getRect(find.byKey(const Key('division-obelus')));
+      // The chips run in the page's order (right to left): ÷ first, at the right, then : at its left. Both are at least 40 high, and
+      // neither is cut by the screen.
+      final Finder obelus = find.byKey(const Key('division-obelus'));
+      final Rect a = tester.getRect(obelus);
       final Rect b = tester.getRect(colon);
-      expect(a.center.dx, lessThan(b.center.dx), reason: 'the ÷ chip is the left one');
+      expect(
+        a.center.dx,
+        greaterThan(b.center.dx),
+        reason: 'the ÷ chip is the right one, first in reading order',
+      );
+      // ÷ is chosen at first: its glyph is the theme's on-primary colour on its primary colour, at least 4.5:1 (QA-M10S0-1), and at
+      // least the size of the body text. The other chip is the plain chip (no style of its own), so it looks like the other chips of
+      // the parent area.
+      final ThemeData theme = Theme.of(tester.element(obelus));
+      void expectChosen(Finder chip, String glyph) {
+        final TextStyle style = _glyphStyle(tester, chip, glyph);
+        expect(style.color, theme.colorScheme.onPrimary, reason: 'the chosen glyph is on-primary');
+        final Color? fill = tester.widget<ChoiceChip>(chip).selectedColor;
+        expect(fill, theme.colorScheme.primary, reason: 'the chosen chip is primary');
+        expect(_contrast(style.color!, fill!), greaterThanOrEqualTo(4.5));
+        expect(style.fontSize, greaterThanOrEqualTo(TokenType.parentBody.size));
+      }
+
+      void expectPlain(Finder chip, String glyph) {
+        expect(
+          tester.widget<ChoiceChip>(chip).labelStyle,
+          isNull,
+          reason: 'the plain chip has the theme label',
+        );
+        expect(_glyphStyle(tester, chip, glyph).fontSize, greaterThanOrEqualTo(TokenType.parentBody.size));
+      }
+
+      expectChosen(obelus, '÷');
+      expectPlain(colon, ':');
       expect(a.height, greaterThanOrEqualTo(40));
       expect(b.height, greaterThanOrEqualTo(40));
       expect(a.left, greaterThanOrEqualTo(0));
