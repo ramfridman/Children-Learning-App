@@ -106,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_odd.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?"
         }
       ]
     },

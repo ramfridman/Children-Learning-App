@@ -56,8 +56,7 @@
       {
         "id": "o3",
         "sprite": "asset:tower_1",
-        "label": "מִגְדָּל מִסְפָּר אַחַת",
-        "misconception": "M-SER-ENDS"
+        "label": "מִגְדָּל מִסְפָּר אַחַת"
       }
     ],
     "correct": "o2",
@@ -78,21 +77,11 @@
     "incorrect": [
       {
         "when": "misconception:M-PAT-NEXT",
-        "vo": "vo:fb.pat_next",
+        "vo": "vo:fb.ser.last_tallest",
         "caption": [
           {
             "t": "he",
-            "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-SER-ENDS",
-        "vo": "vo:fb.ser_ends",
-        "caption": [
-          {
-            "t": "he",
-            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+            "v": "בַּסּוֹף בָּא הֲכִי גָּבוֹהַּ. בּוֹאוּ נַשְׁוֶה."
           }
         ]
       },
@@ -132,11 +121,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_seriation.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ."
         }
       ]
     },

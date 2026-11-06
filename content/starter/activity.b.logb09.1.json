@@ -32,7 +32,11 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "optionsOnTiles": true,
+    "row": [
+      "asset:clue_not_red",
+      "asset:clue_not_circle"
+    ]
   },
   "answer": {
     "type": "choice",
@@ -117,11 +121,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_clues.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "קֹדֶם הָרֶמֶז הָרִאשׁוֹן, אַחַר כָּךְ הַשֵּׁנִי."
         }
       ]
     },

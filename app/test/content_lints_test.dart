@@ -189,11 +189,16 @@ void main() {
     // tag was false and came off (b.mathb14.1 to .11, b.numb08.10, b15.shpa01.1, shp.any.big.circle; the catalogue has no
     // honest tag for them yet, a proposal to the curriculum-expert), -4 where LOG-B-06 now offers two options (b.logb06.1
     // to .4)
-    test('no other new item falls short: the old gaps are pinned at 320', () {
+    // 326 since the logic sweep of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): +4 where picking the
+    // wrong end was tagged M-SER-ENDS (b15.loga10.1, .2, log.size.apples.last, log.size.fish.first; a direction
+    // tag, M-SER-DIR, is proposed to the curriculum-expert), +2 where the false M-PAT-UNIT lure became an untagged
+    // same-size lure (b15.loga06.1, .2), +2 for the "+1" tower of b.logb04.7 and .8 (growth by two; no honest
+    // tag yet), -2 where LOG-B-06 .5 and .6 now offer two options
+    test('no other new item falls short: the old gaps are pinned at 326', () {
       final List<String> older = gaps.where((String id) => !_knownNewGaps.containsKey(id)).toList();
       expect(
         older.length,
-        320,
+        326,
         reason: 'a new gap, or an old one fixed: update the pin with the curriculum-expert',
       );
     });

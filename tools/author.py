@@ -208,6 +208,32 @@ def tagged_feedback(tags, size_cue=None, own=None, rule=None):
     return out
 
 
+# D41 of the logic sweep (docs/knowledge/logic/sweep-2026-11-06.md): the spoken level-2 hint of a logic item says how to think
+# for its family (one shared clip each), unless the item has its own `h2`. needs-editor.
+FAMILY_H2 = {
+    'log_pattern': 'נֹאמַר אֶת הַסֵּדֶר בְּקוֹל וְנִמְחָא כַּף עַל כׇּל אֶחָד.',
+    'log_seriation': 'נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ.',
+    'log_odd': 'מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?',
+    'log_clues': 'קֹדֶם הָרֶמֶז הָרִאשׁוֹן, אַחַר כָּךְ הַשֵּׁנִי.',
+    'log_pairs': 'אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?',
+}
+FAMILY_OF_SKILL = {
+    **{s: 'log_pattern' for s in ('LOG-A-04', 'LOG-A-06', 'LOG-A-07', 'LOG-B-01', 'LOG-B-02')},
+    **{s: 'log_seriation' for s in ('LOG-A-10', 'LOG-B-04', 'LOG-B-11')},
+    'LOG-A-02': 'log_odd', 'LOG-B-09': 'log_clues', 'LOG-A-09': 'log_pairs',
+}
+
+
+def family_h2(a, default, shared):
+    """The level-2 hint and its shared clip: the item's own `h2` (its own clip), else its family's line, else the default."""
+    if a.get('h2'):
+        return a['h2'], None
+    fam = FAMILY_OF_SKILL.get(a['skill'])
+    if fam:
+        return FAMILY_H2[fam], fam
+    return default, shared
+
+
 def hints(act_id, h1, h2, h3, actions=('replay_prompt_slow', 'show_fingers', 'worked_example'), shared=()):
     out = []
     for level, (text, action) in enumerate(zip((h1, h2, h3), actions), start=1):
@@ -628,13 +654,14 @@ def k_pick(a, ctx):
     tick = a['correct'] == 'tick'
     h3_default = '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % ('כֵּן', 'עַל הַוִּי') if tick else (
         '%s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ %s.' % (right, on_it(gender)))
+    h2, h2_shared = family_h2(a, 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.', 'pick')
     return activity(
         a, 'tap_answer', skills_of(a), a.get('purpose', 'practice'),
         'practice', scene, choice(opts, cid), tags,
-        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', a.get('h2') or 'נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד.',
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', h2,
               a.get('h3') or h3_default,
               actions=('replay_prompt_slow', a.get('h2_action', 'highlight_objects_sequentially'), 'worked_example'),
-              shared=('pick', None if a.get('h2') else 'pick')),
+              shared=('pick', h2_shared)),
         a.get('goal', 'child picks the right picture'),
         prompt=a['prompt'], correct=a.get('correct_text') or ('כֵּן! %s.' % right))
 
@@ -684,14 +711,17 @@ def k_build(a, ctx):
     scene = {'background': 'asset:meadow', 'slots': len(seq), 'palette': ['asset:' + p for p in a['palette']]}
     if a.get('model'):
         scene['model'] = ['asset:' + m for m in a['model']]
+    # an ordering item (no model) names its own tag: D38 of the logic sweep, ordering towers is not copying
+    tag = a.get('tag', 'M-PAT-COPY')
+    h2, h2_shared = family_h2(a, 'נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד.', 'build')
     return activity(
         a, 'build_pattern', skills_of(a), 'practice', 'practice',
-        scene, {'type': 'build', 'sequence': ['asset:' + p for p in seq], 'misconception': 'M-PAT-COPY'}, {'M-PAT-COPY'},
-        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', 'נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד.',
+        scene, {'type': 'build', 'sequence': ['asset:' + p for p in seq], 'misconception': tag}, {tag},
+        hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', h2,
               a.get('h3') or 'נַעֲתִיק אֶת הַסֵּדֶר מֵהַהַתְחָלָה, תְּמוּנָה אַחַר תְּמוּנָה. עַכְשָׁו תּוֹרְכֶם.',
               actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
-              shared=('pick', 'build')),
-        'child copies the pattern in the same order',
+              shared=('pick', h2_shared)),
+        a.get('goal', 'child copies the pattern in the same order'),
         prompt=a['prompt'], correct=a.get('correct_text') or 'כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר.')
 
 
@@ -887,12 +917,15 @@ def k_story(a, ctx):
     story = 'קֹדֶם %s, אַחַר כָּךְ %s, וּבַסּוֹף %s.' % (n(s1), n(s2), n(s3))
     ask = a['ask']
     common = dict(rep='story', tags={})
+    # D14 of the logic sweep: the story is on the screen as a strip with the asked step as "?" (as the middle question has it)
     if ask == 'first':
-        return k_pick(pick_spec(a, prompt='מַה קּוֹרֶה קֹדֶם?', options=place(s1, [s3, s2], a.get('pos', 1)), correct=s1,
+        return k_pick(pick_spec(a, prompt='מָה בָּא רִאשׁוֹן?', row=['?', s2, s3], options=place(s1, [s3, s2], a.get('pos', 1)),
+                                correct=s1,
                                 tags={s3: 'M-SEQ-CAUSE'}, correct_text='כֵּן! קֹדֶם %s.' % n(s1), h3=story + ' עַכְשָׁו תּוֹרְכֶם.',
                                 rep='story'), ctx)
     if ask == 'last':
-        return k_pick(pick_spec(a, prompt='מַה קּוֹרֶה בַּסּוֹף?', options=place(s3, [s1, s2], a.get('pos', 1)), correct=s3,
+        return k_pick(pick_spec(a, prompt='מַה בָּא בַּסּוֹף?', row=[s1, s2, '?'], options=place(s3, [s1, s2], a.get('pos', 1)),
+                                correct=s3,
                                 tags={s1: 'M-SEQ-CAUSE'}, correct_text='כֵּן! בַּסּוֹף %s.' % n(s3), h3=story + ' עַכְשָׁו תּוֹרְכֶם.',
                                 rep='story'), ctx)
     return k_pick(pick_spec(a, prompt='מַה בָּאֶמְצַע?', row=[s1, '?', s3], options=place(s2, [s3, s1], a.get('pos', 1)), correct=s2,
@@ -910,22 +943,30 @@ def k_size3(a, ctx):
     gap = {'middle': 1, 'last': 2, 'first': 0}[ask]
     row = ['?' if i == gap else sp for i, sp in enumerate(order)]
     right = order[gap]
+    own = {}
     if ask == 'middle':
         traps = {sp: 'M-SER-ENDS' for sp in order if sp != right}
     else:
-        traps = {order[1]: 'M-PAT-NEXT', order[2 - gap]: 'M-SER-ENDS'}
+        # D36 and D45 of the logic sweep: the middle one (the neighbour repeated) hears where this end is, never "look for the
+        # middle"; the far end is a direction mistake, not M-SER-ENDS, and stays untagged until the catalogue has a direction tag
+        traps = {order[1]: 'M-PAT-NEXT'}
+        end = words[gap]
+        own = {'M-PAT-NEXT': ['vo:fb.ser.%s_%s' % (ask, {'קָטָן': 'smallest', 'גָּדוֹל': 'biggest'}[end]),
+                              '%s בָּא הֲכִי %s. בּוֹאוּ נַשְׁוֶה.' % ('בַּסּוֹף' if ask == 'last' else 'בַּהַתְחָלָה', end)]}
     prompt = {'middle': 'מַה בָּאֶמְצַע?', 'last': 'מַה בָּא בַּסּוֹף?', 'first': 'מַה בָּא קֹדֶם?'}[ask]
     return k_pick(pick_spec(a, prompt=prompt, row=row, options=place(right, [x for x in order if x != right], a.get('pos', 1)),
-                            correct=right, tags=traps, correct_text='כֵּן! ' + ', '.join(words) + '.',
+                            correct=right, tags=traps, tag_lines=own or None, correct_text='כֵּן! ' + ', '.join(words) + '.',
                             h3=', '.join(words) + ' — ' + {'middle': 'בָּאֶמְצַע בָּא הַבֵּינוֹנִי', 'last': 'בַּסּוֹף בָּא ' + words[2],
                                                           'first': 'קֹדֶם בָּא ' + words[0]}[ask] + '. עַכְשָׁו תּוֹרְכֶם.'), ctx)
 
 
 def k_pair(a, ctx):
     names = ctx['names']
-    return k_pick(pick_spec(a, prompt='מָה הוֹלֵךְ עִם %s?' % names[a['ref']]['def'], group={'sprite': a['ref'], 'count': 1},
+    # D23 of the logic sweep: the thing to match is drawn at least as large as a tile
+    return k_pick(pick_spec(a, prompt='מָה הוֹלֵךְ עִם %s?' % names[a['ref']]['def'],
+                            group={'sprite': a['ref'], 'count': 1, 'scale': 1.6},
                             options=place(a['partner'], a['others'], a.get('pos', 1)), correct=a['partner'],
-                            h3='%s %s %s יַחַד. עַכְשָׁו תּוֹרְכֶם.' % (
+                            h3=a.get('h3') or '%s %s %s יַחַד. עַכְשָׁו תּוֹרְכֶם.' % (
                                     names[a['ref']]['one'], vav(names[a['partner']]['one']),
                                     'הוֹלְכוֹת' if names[a['ref']]['g'] == names[a['partner']]['g'] == 'f' else 'הוֹלְכִים')), ctx)
 
@@ -994,9 +1035,11 @@ def k_shop(a, ctx):
 
 
 def hint_set(a, h3, shared=None):
-    return hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', a.get('h2') or 'נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד.', h3,
+    shared = list(shared or ('pick', None))
+    h2, shared[1] = family_h2(a, 'נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד.', shared[1])
+    return hints(a['id'], 'בּוֹאוּ נַקְשִׁיב שׁוּב לַשְּׁאֵלָה.', h2, h3,
                  actions=('replay_prompt_slow', 'highlight_objects_sequentially', 'worked_example'),
-                 shared=shared or ('pick', None))
+                 shared=tuple(shared))
 
 
 def k_numline(a, ctx):

@@ -25,14 +25,19 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה קּוֹרֶה בַּסּוֹף?"
+        "v": "מַה בָּא בַּסּוֹף?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "optionsOnTiles": true,
+    "row": [
+      "asset:plant_seed",
+      "asset:plant_sprout",
+      "?"
+    ]
   },
   "answer": {
     "type": "choice",
@@ -151,6 +156,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה קּוֹרֶה בַּסּוֹף?"
+    "altText": "מַה בָּא בַּסּוֹף?"
   }
 }

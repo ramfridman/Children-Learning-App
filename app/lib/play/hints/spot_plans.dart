@@ -51,18 +51,19 @@ const Map<String, SpotFamily> _familyOfSkill = <String, SpotFamily>{
 /// The colours of the rainbow, in its order.
 const List<String> rainbowOrder = <String>['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
 
-/// The plan of level 2 for [a] in a stage of [size], whose [n] cells are centred at [centres] and [side] wide; null when the row has
-/// no picture of its own. [svgOf] reads a picture of the pack.
+/// The plan of level 2 for [a] in a stage of [size], whose [n] cells are centred at [centres], [side] wide and [height] high; null when the row has
+/// no picture of its own. A row cut in two lines (the phones, for 6 cells and more) has each picture line by line. [svgOf] reads a picture of the pack.
 HintPlan? spotAnotherWay(
   SpotErrorActivity a,
   Size size,
   List<Offset> centres,
   double side,
+  double height,
   String Function(String sprite) svgOf,
 ) {
   final SpotFamily? family = _familyOfSkill[a.skillId];
   if (family == null || centres.isEmpty) return null;
-  final _Row row = _Row(a, size, centres, side);
+  final _Row row = _Row(a, size, centres, side, height);
   return switch (family) {
     SpotFamily.numbers => row.path(),
     SpotFamily.sentence => row.cubes(),
@@ -75,12 +76,13 @@ HintPlan? spotAnotherWay(
 
 /// A row of cells in a stage, and the pictures that go with it.
 class _Row {
-  _Row(this.a, this.size, this.centres, this.side) : k = math.max(0.85, size.height / 128) {
+  _Row(this.a, this.size, this.centres, this.side, this.height)
+    : multi = centres.any((Offset c) => c.dy != centres.first.dy),
+      // A row in two lines is on a tall phone stage, where the pictures keep a phone's size.
+      k = centres.any((Offset c) => c.dy != centres.first.dy) ? 1 : math.max(0.85, size.height / 128) {
     cells = a.cells;
     n = cells.length;
     pitch = side + 6;
-    top = centres.first.dy - side / 2;
-    bottom = centres.first.dy + side / 2;
     final String? right = rightCellOf(cells, a.wrong);
     fixed = right == null
         ? null
@@ -91,15 +93,51 @@ class _Row {
   final Size size;
   final List<Offset> centres;
   final double side;
+  final double height;
   final double k;
+
+  /// The row stands in more than one line.
+  final bool multi;
   late final List<String> cells;
   late final int n;
   late final double pitch;
-  late final double top;
-  late final double bottom;
 
   /// The row as it would be with its mistake put right (null where the row alone does not tell).
   late final List<String>? fixed;
+
+  double _bottomOf(int i) => centres[i].dy + height / 2;
+  double _topOf(int i) => centres[i].dy - height / 2;
+
+  /// The free room under cell [i]: down to the line of cells under it, or to the stage's foot.
+  double _roomBelow(int i) {
+    final Iterable<double> lower = <int>[
+      for (int j = 0; j < n; j++)
+        if (centres[j].dy > centres[i].dy + 1) j,
+    ].map(_topOf);
+    return (lower.isEmpty ? size.height : lower.reduce(math.min)) - _bottomOf(i);
+  }
+
+  /// The free room over cell [i]: up to the line of cells over it, or to the stage's top.
+  double _roomAbove(int i) {
+    final Iterable<double> upper = <int>[
+      for (int j = 0; j < n; j++)
+        if (centres[j].dy < centres[i].dy - 1) j,
+    ].map(_bottomOf);
+    return _topOf(i) - (upper.isEmpty ? 0 : upper.reduce(math.max));
+  }
+
+  /// The runs of cells [from] to [to] that stand on one line, as (first, last) pairs.
+  List<(int, int)> _runs(int from, int to) {
+    final List<(int, int)> runs = <(int, int)>[];
+    for (int i = from; i <= to; i++) {
+      if (runs.isNotEmpty && (centres[i].dy - centres[runs.last.$2].dy).abs() < 1) {
+        runs[runs.length - 1] = (runs.last.$1, i);
+      } else {
+        runs.add((i, i));
+      }
+    }
+    return runs;
+  }
 
   static const Duration _step = Duration(milliseconds: 450);
 
@@ -119,12 +157,30 @@ class _Row {
     for (int i = 1; i < n; i++) {
       if (v[i]! - v[i - 1]! != step) return null; // only a row that counts by one step has a path
     }
-    final double height = math.min(26 * k, size.height - bottom - 8 * k - 4);
+    // A row in two lines has a path under each line, the second going on where the first ends.
+    final List<(int, int)> runs = _runs(0, n - 1);
+    final double height = runs
+        .map(((int, int) r) => math.min(26 * k, _roomBelow(r.$1) - 8 * k - 4))
+        .reduce(math.min);
     if (height < 16) return null;
-    final Rect rect = Rect.fromLTWH(centres.first.dx - pitch / 2, bottom + 8 * k, pitch * n, height);
     return _growing(<List<HintMark>>[
       for (int i = 1; i <= n; i++)
-        <HintMark>[PathMark(rect: rect, count: n, upTo: i, from: v.first!, step: step)],
+        <HintMark>[
+          for (final (int first, int last) in runs)
+            if (i > first)
+              PathMark(
+                rect: Rect.fromLTWH(
+                  centres[first].dx - pitch / 2,
+                  _bottomOf(first) + 8 * k,
+                  pitch * (last - first + 1),
+                  height,
+                ),
+                count: last - first + 1,
+                upTo: math.min(i - first, last - first + 1),
+                from: v[first]!,
+                step: step,
+              ),
+        ],
     ]);
   }
 
@@ -137,7 +193,7 @@ class _Row {
     if (at.length < 3) return null;
     // As big as the room over the row lets them be: a row of five may be a little wider than its cell (the cells beside a number
     // are signs, with nothing over them), and the tallest pile of rows still fits under the stage's top edge.
-    final double room = top - 6 * k;
+    final double room = at.map(_roomAbove).reduce(math.min) - 6 * k;
     final int rows = at.fold(1, (int m, int i) => math.max(m, (_number(cells[i])! / 5).ceil()));
     final double cs = math.min(math.min(13 * k, (side + 18 * k) / 5 - 2), room / rows - 2);
     if (cs < 4 || room < cs) return null;
@@ -151,7 +207,7 @@ class _Row {
           BlockMark(
             Rect.fromLTWH(
               centres[i].dx - w / 2 + (j % 5) * (cs + 2),
-              top - 4 * k - cs - (j ~/ 5) * (cs + 2),
+              _topOf(i) - 4 * k - cs - (j ~/ 5) * (cs + 2),
               cs,
               cs,
             ),
@@ -172,12 +228,15 @@ class _Row {
     final List<List<HintMark>> steps = <List<HintMark>>[];
     final List<HintMark> shown = <HintMark>[];
     for (int c = 0; c < n ~/ unit; c++) {
-      shown.add(
-        BracketMark(
-          Offset(centres[c * unit].dx - side / 2 + 2, bottom + 5 * k),
-          Offset(centres[c * unit + unit - 1].dx + side / 2 - 2, bottom + 5 * k),
-        ),
-      );
+      // A copy that runs over the end of a line is a bracket on each line.
+      for (final (int first, int last) in _runs(c * unit, c * unit + unit - 1)) {
+        shown.add(
+          BracketMark(
+            Offset(centres[first].dx - side / 2 + 2, _bottomOf(first) + 5 * k),
+            Offset(centres[last].dx + side / 2 - 2, _bottomOf(first) + 5 * k),
+          ),
+        );
+      }
       steps.add(List<HintMark>.of(shown));
     }
     return _growing(steps, hold: const Duration(milliseconds: 650));
@@ -186,10 +245,11 @@ class _Row {
   /// Towers that grow: a dotted floor under the row, so that the heights line up from one start line.
   HintPlan baseline() {
     final List<HintMark> floor = <HintMark>[
-      LineMark(
-        Offset(centres.first.dx - side / 2, bottom + 3 * k),
-        Offset(centres.last.dx + side / 2, bottom + 3 * k),
-      ),
+      for (final (int first, int last) in _runs(0, n - 1))
+        LineMark(
+          Offset(centres[first].dx - side / 2, _bottomOf(first) + 3 * k),
+          Offset(centres[last].dx + side / 2, _bottomOf(first) + 3 * k),
+        ),
     ];
     return HintPlan(<HintFrame>[HintFrame(floor, hold: const Duration(milliseconds: 2400))], rest: floor);
   }
@@ -197,14 +257,21 @@ class _Row {
   /// A rainbow: the paint of each place of the rainbow's order under its cell, from the left, one after the other.
   HintPlan? rainbow() {
     if (n != rainbowOrder.length) return null;
-    final double d = math.min(30 * k, math.min(side, size.height - bottom - 8 * k - 4));
+    // Each paint stands under its cell, as large as the room under that cell lets it be.
+    final double d = <double>[
+      for (int i = 0; i < n; i++) math.min(30 * k, math.min(side, _roomBelow(i) - 8 * k - 4)),
+    ].reduce(math.min);
     if (d < 16) return null;
     return _growing(<List<HintMark>>[
       for (int i = 1; i <= n; i++)
         <HintMark>[
           for (int j = 0; j < i; j++)
             SwatchMark(
-              Rect.fromCenter(center: Offset(centres[j].dx, bottom + 8 * k + d / 2), width: d, height: d),
+              Rect.fromCenter(
+                center: Offset(centres[j].dx, _bottomOf(j) + 8 * k + d / 2),
+                width: d,
+                height: d,
+              ),
               rainbowOrder[j],
             ),
         ],
@@ -256,13 +323,16 @@ class _Row {
     final HintMark? Function(Rect)? make = _sampleOf(svgOf);
     // The sample is as big as a child can read on a phone: it stands over the top of each cell, its foot on the cell's white
     // margin (the cell's own picture starts lower), so that a row that fills the stage still leaves it room.
-    final double foot = top + math.min(10 * k, side * 0.14);
-    final double d = math.min(34 * k, foot - 3);
+    final double lift = math.min(10 * k, side * 0.14);
+    final double d = <double>[for (int i = 0; i < n; i++) math.min(34 * k, _roomAbove(i) + lift - 3)]
+        .reduce(math.min);
     if (make == null || d < 18) return null;
     return HintPlan(<HintFrame>[
       for (int i = 0; i < n; i++)
         HintFrame(<HintMark>[
-          make(Rect.fromCenter(center: Offset(centres[i].dx, foot - d / 2), width: d, height: d))!,
+          make(
+            Rect.fromCenter(center: Offset(centres[i].dx, _topOf(i) + lift - d / 2), width: d, height: d),
+          )!,
         ], hold: const Duration(milliseconds: 700)),
     ]);
   }

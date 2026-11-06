@@ -58,9 +58,8 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:star_size_m",
-        "label": "כּוֹכָב בֵּינוֹנִי",
-        "misconception": "M-PAT-UNIT"
+        "sprite": "asset:apple_size_l",
+        "label": "תַּפּוּחַ גָּדוֹל"
       }
     ],
     "correct": "o1",
@@ -86,16 +85,6 @@
           {
             "t": "he",
             "v": "בּוֹאוּ נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִרְאֶה מַה בָּא."
-          }
-        ]
-      },
-      {
-        "when": "misconception:M-PAT-UNIT",
-        "vo": "vo:fb.pat_unit",
-        "caption": [
-          {
-            "t": "he",
-            "v": "יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ."
           }
         ]
       },
@@ -135,11 +124,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_pattern.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל וְנִמְחָא כַּף עַל כׇּל אֶחָד."
         }
       ]
     },

@@ -45,8 +45,8 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:tower_5",
-        "label": "מִגְדָּל מִסְפָּר חָמֵשׁ",
+        "sprite": "asset:tower_2",
+        "label": "מִגְדָּל מִסְפָּר שְׁתַּיִם",
         "misconception": "M-PAT-GROW"
       },
       {
@@ -56,8 +56,8 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:tower_6",
-        "label": "מִגְדָּל מִסְפָּר שֵׁשׁ"
+        "sprite": "asset:tower_5",
+        "label": "מִגְדָּל מִסְפָּר חָמֵשׁ"
       }
     ],
     "correct": "o2",
@@ -122,11 +122,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_seriation.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ."
         }
       ]
     },

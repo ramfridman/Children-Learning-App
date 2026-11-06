@@ -58,11 +58,11 @@
     "incorrect": [
       {
         "when": "misconception:M-SORT-SHIFT",
-        "vo": "vo:fb.sort_shift.kind",
+        "vo": "vo:fb.spot.not_apple",
         "caption": [
           {
             "t": "he",
-            "v": "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+            "v": "זֶה תַּפּוּחַ, הוּא בַּמָּקוֹם. מָה לֹא תַּפּוּחַ?"
           }
         ]
       },

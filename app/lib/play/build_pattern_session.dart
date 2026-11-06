@@ -16,6 +16,7 @@ import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
 import 'lesson_controller.dart';
 import 'response_code.dart';
+import 'size_scale.dart';
 import 'template_session.dart';
 
 /// The build-a-pattern template (T05): the pattern to copy is shown above, empty places below, and the pictures to put in
@@ -53,6 +54,18 @@ class BuildPatternSession extends TemplateSession {
 
   bool get _canDraw => _spec != null && !_size.isEmpty;
 
+  /// The look of the size pictures of the pattern (towers), cut to one part of their box: where they are tall, their tiles are taller
+  /// and their margins smaller, so that the cubes can be counted (see `size_scale.dart`).
+  late final SizeLook? look = sizeLookOf(<String>[
+    ...activity.model,
+    ...activity.palette,
+    ...activity.sequence,
+  ], activity.assets.svg);
+  bool get tall => look?.tall ?? false;
+
+  /// The picture of [ref], as the pattern draws it.
+  String svg(String ref) => look?.svg(ref) ?? activity.assets.svg(ref);
+
   /// The cell [i] of a row of [n] cells in the row whose top is [top] and whose height is [height]: the row fills the stage 8 in,
   /// each cell has 3 around it, and the rows are drawn left to right (a pattern is read from the left, whatever the language).
   static Rect cell(Size size, int n, int i, {required double top, required double height}) {
@@ -60,12 +73,17 @@ class BuildPatternSession extends TemplateSession {
     return Rect.fromLTWH(8 + i * w + 3, top + 3, w - 6, height - 6);
   }
 
-  /// The cells of the model row (above), and of the row of places (below it, or alone when there is no model).
-  static Rect modelCell(Size size, int n, int i) => cell(size, n, i, top: 8, height: (size.height - 16) / 2);
+  /// The room under the row that shows the start dot (with "reduce motion"): the dot is 8 under its first cell, inside the stage.
+  static const double dotRoom = 8;
+
+  /// The cells of the model row (above), and of the row of places (below it, or alone when there is no model). The start dot stands
+  /// under the first cell of one row only, the model's (the places alone when there is no model), and that row is [dotRoom] shorter.
+  static Rect modelCell(Size size, int n, int i) =>
+      cell(size, n, i, top: 8, height: (size.height - 16) / 2 - dotRoom);
 
   static Rect slotCell(Size size, int slots, int i, {required bool hasModel}) {
     final double row = hasModel ? (size.height - 16) / 2 : size.height - 16;
-    return cell(size, slots, i, top: hasModel ? 8 + row : 8, height: row);
+    return cell(size, slots, i, top: hasModel ? 8 + row : 8, height: hasModel ? row : row - dotRoom);
   }
 
   /// The length of the unit that repeats in [row] (the smallest one that is repeated at least once), or null when none does.
@@ -366,7 +384,7 @@ class BuildPatternSession extends TemplateSession {
               key: Key('palette-$i'),
               data: p,
               maxSimultaneousDrags: _busy ? 0 : 1,
-              feedback: SizedBox(width: side, height: side, child: PackSvg(activity.assets.svg(p))),
+              feedback: SizedBox(width: side, height: tall ? tallTileHeight : side, child: PackSvg(svg(p))),
               childWhenDragging: Opacity(opacity: 0.3, child: _tile(p, side)),
               child: _tile(p, side),
             ),
@@ -377,11 +395,12 @@ class BuildPatternSession extends TemplateSession {
 
   Widget _tile(String p, double side) => AnswerTile(
     semanticLabel: p,
-    size: side,
+    size: tall ? tallTileHeight : side,
+    width: tall ? side : null,
     slop: 6,
     state: hintSprite == p ? AnswerState.selected : AnswerState.idle,
     onPressed: () => place(p),
-    child: Padding(padding: const EdgeInsets.all(8), child: PackSvg(activity.assets.svg(p))),
+    child: Padding(padding: EdgeInsets.all(tall ? 2 : 8), child: PackSvg(svg(p))),
   );
 }
 
@@ -411,17 +430,28 @@ class _PatternStage extends StatelessWidget {
                   textDirection: TextDirection.ltr,
                   child: Column(
                     children: <Widget>[
-                      if (a.model.isNotEmpty) Expanded(child: _modelRow(a)),
+                      if (a.model.isNotEmpty)
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: BuildPatternSession.dotRoom),
+                            child: _modelRow(a),
+                          ),
+                        ),
                       Expanded(
-                        // The places come after the model, so that the child reads the model first.
-                        child: RowEntrance(
-                          count: a.slots,
-                          startAfter: RowEntrance.step * a.model.length,
-                          builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
-                            key: const Key('pattern-slots'),
-                            children: <Widget>[
-                              for (int i = 0; i < a.slots; i++) Expanded(child: cell(i, _slot(i))),
-                            ],
+                        // The places come after the model, so that the child reads the model first. The start dot is under the model
+                        // (counting starts once), or under the places when there is no model.
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: a.model.isEmpty ? BuildPatternSession.dotRoom : 0),
+                          child: RowEntrance(
+                            count: a.slots,
+                            startAfter: RowEntrance.step * a.model.length,
+                            startDot: a.model.isEmpty,
+                            builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
+                              key: const Key('pattern-slots'),
+                              children: <Widget>[
+                                for (int i = 0; i < a.slots; i++) Expanded(child: cell(i, _slot(i))),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -455,7 +485,7 @@ class _PatternStage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(TokenRadius.lg),
                     border: s.litModel == i ? Border.all(color: TokenColors.hintHalo, width: 5) : null,
                   ),
-                  child: Padding(padding: const EdgeInsets.all(2), child: PackSvg(a.assets.svg(m))),
+                  child: Padding(padding: const EdgeInsets.all(2), child: PackSvg(s.svg(m))),
                 ),
               ),
             ),
@@ -465,7 +495,6 @@ class _PatternStage extends StatelessWidget {
   );
 
   Widget _slot(int i) {
-    final BuildPatternActivity a = s.activity;
     final String? picture = s.filled[i];
     return DragTarget<String>(
       onWillAcceptWithDetails: (DragTargetDetails<String> d) => true,
@@ -490,7 +519,7 @@ class _PatternStage extends StatelessWidget {
               ),
               child: picture == null
                   ? Center(child: Text('?', style: AppText.fixed(size: 26, weight: 800, lineHeight: 1)))
-                  : Padding(padding: const EdgeInsets.all(4), child: PackSvg(a.assets.svg(picture))),
+                  : Padding(padding: EdgeInsets.all(s.tall ? 1 : 4), child: PackSvg(s.svg(picture))),
             ),
           ),
         );

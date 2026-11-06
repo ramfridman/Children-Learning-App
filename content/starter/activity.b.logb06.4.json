@@ -50,7 +50,8 @@
       {
         "id": "o2",
         "sprite": "asset:rule_colour",
-        "label": "הַצֶּבַע"
+        "label": "הַצֶּבַע",
+        "misconception": "M-COL-ONEATTR"
       }
     ],
     "correct": "o1",
@@ -69,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.oneattr.rule_colour",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּאן הַצְּבָעִים שׁוֹנִים. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?"
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

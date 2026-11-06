@@ -25,14 +25,19 @@
     "caption": [
       {
         "t": "he",
-        "v": "מַה קּוֹרֶה קֹדֶם?"
+        "v": "מָה בָּא רִאשׁוֹן?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "optionsOnTiles": true,
+    "row": [
+      "?",
+      "asset:plant_sprout",
+      "asset:plant_flower"
+    ]
   },
   "answer": {
     "type": "choice",
@@ -151,6 +156,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מַה קּוֹרֶה קֹדֶם?"
+    "altText": "מָה בָּא רִאשׁוֹן?"
   }
 }

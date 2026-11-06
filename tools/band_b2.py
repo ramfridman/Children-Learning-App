@@ -254,10 +254,11 @@ def logic():
              'Band B of Logic: longer patterns, the broken pattern, growing patterns, the sorting rule, if-then, deduction, order of five. '
              'Hebrew is a draft by Claude, needs-editor.',
              30, assets=['ball_red', 'ball_blue', 'ball_yellow', 'ball_green', 'cat', 'dog', 'star', 'apple', 'fish'] + [
-                 'tower_%d' % k for k in range(1, 7)] + ['rule_colour', 'rule_shape', 'rule_size'] + [
+                 'tower_%d' % k for k in range(1, 9)] + ['rule_colour', 'rule_shape', 'rule_size'] + [
                  'shape_%s_%s' % (s, c) for s in ('circle', 'square', 'triangle') for c in ('red', 'blue', 'green')] + [
                  'shape_circle_yellow', 'shape_square_yellow', 'shape_square_orange', 'shape_rect_red', 'shape_rect_blue', 'frog', 'chick',
-                 'apple_size_l', 'star_size_l', 'fish_size_l', 'apple_size_s', 'star_size_s', 'fish_size_s', 'basket_empty', 'grass'])
+                 'apple_size_l', 'star_size_l', 'fish_size_l', 'apple_size_s', 'star_size_s', 'fish_size_s', 'bin_basket', 'bin_grass'] + [
+                 'clue_not_%s' % k for k in ('red', 'blue', 'green', 'yellow', 'orange', 'circle', 'square', 'triangle')])
     u.tag('M-PAT-UNIT', ['LOG-B-02'], 'הילד לא מזהה איזה חלק חוזר בסדר, ולכן לא רואה איפה הוא נשבר.',
           'לשיר שיר עם תנועות חוזרות, למשל טפיחה-טפיחה-מחיאה, ולעצור ולשאול: מה החלק שחוזר?',
           ['embodied', 'pictorial'], 'יֵשׁ חֵלֶק קָטָן שֶׁחוֹזֵר שׁוּב וְשׁוּב. בּוֹאוּ נִמְצָא אוֹתוֹ.')
@@ -273,12 +274,16 @@ def logic():
     def pattern_row(i, form, x, y, z, **kw):
         sym = {'A': x, 'B': y, 'C': z}
         unit = [sym[c] for c in form]
-        seq = (unit * 4)[:8]
-        row = seq[:7] + ['?']
-        right = seq[7]
+        # D16 of the logic sweep (docs/knowledge/logic/sweep-2026-11-06.md): at least two whole units before the "?", so a unit
+        # of four shows 8 cells (a unit of three keeps its 7)
+        shown = max(7, 2 * len(unit))
+        seq = (unit * 4)[:shown + 1]
+        row = seq[:shown] + ['?']
+        right = seq[shown]
         others = [e for e in dict.fromkeys(unit + [z, x, y]) if e != right][:2]
         # B-15 §3: the last one shown, repeated; another element of the core, in the wrong place
-        tags = {e: 'M-PAT-NEXT' if e == seq[6] else 'M-PAT-UNIT' for e in others if e == seq[6] or e in unit}
+        last = seq[shown - 1]
+        tags = {e: 'M-PAT-NEXT' if e == last else 'M-PAT-UNIT' for e in others if e == last or e in unit}
         u.act('LOG-B-01', 'pick', prompt='מַה בָּא אַחַר כָּךְ?', row=row, options=place(right, others, i % 3), correct=right,
               tags=tags, domain='logic',
               correct_text='כֵּן! הַסֵּדֶר חוֹזֵר.', h3='הַחֵלֶק שֶׁחוֹזֵר הוּא: %s. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(NAMES[e]['one'] for e in unit), **kw)
@@ -291,11 +296,14 @@ def logic():
 
     u.skill('LOG-B-02', 'מוצאים את החלק החוזר', 'מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר', 'pattern-door', ['LOG-B-01'], ['pictorial'], ['M-PAT-UNIT'])
     # A1 of check-2026-11-06: an ABC row breaks only after the unit was shown twice (cells 6 and 7), so one reading is left
-    for i, (form, w) in enumerate([('AAB', 4), ('ABB', 3), ('ABC', 6), ('AAB', 6), ('ABB', 4), ('ABC', 7)]):
+    # D19 of the logic sweep: the wrong cell never equals a neighbour (no run of alike cells to tap by mistake), so the ABC row
+    # of .3 breaks at cell 7, where a third element fits between its neighbours
+    for i, (form, w) in enumerate([('AAB', 4), ('ABB', 3), ('ABC', 7), ('AAB', 6), ('ABB', 4), ('ABC', 7)]):
         x, y, z = P[i % len(P)]
         sym = {'A': x, 'B': y, 'C': z}
         seq = ([sym[c] for c in form] * 3)[:8]
-        seq[w] = z if seq[w] != z else x
+        near = {seq[w - 1], seq[w + 1] if w + 1 < len(seq) else None, seq[w]}
+        seq[w] = next(e for e in (z, x, y) if e not in near)
         u.act('LOG-B-02', 'spot', cells=seq, wrong=w, tag='M-PAT-UNIT', domain='logic',
               prompt='הַסֵּדֶר חוֹזֵר, אֲבָל אֶחָד מֵהֶם לֹא מַתְאִים. אֵיזֶה?',
               h3='הַחֵלֶק הַחוֹזֵר הוּא: %s. אֶחָד מֵהֶם שׁוֹנֶה. עַכְשָׁו תּוֹרְכֶם.' % ', '.join(NAMES[sym[c]]['one'] for c in form))
@@ -304,32 +312,51 @@ def logic():
     for i, (shown, gap) in enumerate([((1, 2, None, 4), 3), ((None, 2, 3, 4), 1), ((1, 2, 3, None), 4), ((2, 3, None, 5), 4),
                                       ((3, 4, None, 6), 5), ((1, 2, 3, 4, None), 5)]):
         row = ['?' if v is None else 'tower_%d' % v for v in shown]
-        others = ['tower_%d' % (gap - 1 if gap > 1 else gap + 2), 'tower_%d' % (gap + 1 if gap < 6 else gap - 2)]
+        # the first wrong tower repeats the neighbour (M-PAT-GROW); D44 of the logic sweep: where the gap is the first tower the
+        # neighbour is the one after it, and the far tower (continuing at the wrong end) carries no tag
+        others = ['tower_%d' % (gap - 1 if gap > 1 else gap + 1), 'tower_%d' % (gap + 1 if gap < 6 else gap - 2)]
         if gap == 1:
-            others = ['tower_5', 'tower_6']
+            others = ['tower_2', 'tower_5']
         u.act('LOG-B-04', 'pick', prompt='הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?', row=row, options=place('tower_%d' % gap, others, i % 3),
               correct='tower_%d' % gap, tags={others[0]: 'M-PAT-GROW'}, domain='logic',
               correct_text='כֵּן! כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת.', h3='כׇּל מִגְדָּל גָּבוֹהַּ בְּקֻבִּיָּה אַחַת מֵהַמִּגְדָּל שֶׁלְּפָנָיו. עַכְשָׁו תּוֹרְכֶם.')
 
-    # B-15 §1: a pattern that grows by two (the hint that says "one more" would be wrong here, so these use the plain ones)
-    for i, (shown, gap, tags) in enumerate([((1, 3, None), 5, ('tower_1', 'tower_4')), ((2, 4, None), 6, ('tower_2', 'tower_5'))]):
+    # B-15 §1: a pattern that grows by two. The owner kept it in Band B (2026-11-06, logic sweep D11, D37, D44), with the
+    # ambiguity fixed: three towers before the gap (1, 3, 5, ? and 2, 4, 6, ?), so +2 is the only fair reading; the lines say
+    # "two more" (the shared M-PAT-GROW line says "one more" and is not used); the last tower repeated is M-PAT-GROW (treats the
+    # growing pattern as repeating), and the "+1" tower carries no tag (the catalogue has none for it; proposed to the
+    # curriculum-expert). tower_7 and tower_8 are the design-director's.
+    two = {'M-PAT-GROW': ['vo:fb.pat_grow.two', 'כׇּל פַּעַם מוֹסִיפִים שְׁתֵּי קֻבִּיּוֹת. בּוֹאוּ נִסְפֹּר.']}
+    for i, (shown, gap) in enumerate([((1, 3, 5, None), 7), ((2, 4, 6, None), 8)]):
         row = ['?' if v is None else 'tower_%d' % v for v in shown]
+        repeat, plus_one = 'tower_%d' % (gap - 2), 'tower_%d' % (gap - 1)
         u.act('LOG-B-04', 'pick', prompt='הַמִּגְדָּלִים גְּדֵלִים. אֵיזֶה מִגְדָּל חָסֵר?', row=row,
-              options=place('tower_%d' % gap, list(tags), i + 1), correct='tower_%d' % gap,
-              tags={tags[0]: 'M-PAT-GROW', tags[1]: 'M-PAT-NEXT'}, domain='logic', check='transfer', difficulty=0.6)
+              options=place('tower_%d' % gap, [repeat, plus_one], i + 1), correct='tower_%d' % gap,
+              tags={repeat: 'M-PAT-GROW'}, tag_lines=two, domain='logic', check='transfer', difficulty=0.6,
+              correct_text='כֵּן! כׇּל פַּעַם עוֹד שְׁתֵּי קֻבִּיּוֹת.',
+              h3='כׇּל מִגְדָּל גָּבוֹהַּ בִּשְׁתֵּי קֻבִּיּוֹת מֵהַמִּגְדָּל שֶׁלְּפָנָיו. עַכְשָׁו תּוֹרְכֶם.')
 
-    u.skill('LOG-B-06', 'מוצאים את הכלל', 'מוֹצְאִים מַה מְשֻׁתָּף', 'sprout', ['LOG-A-03'], ['pictorial'], [])
+    u.skill('LOG-B-06', 'מוצאים את הכלל', 'מוֹצְאִים מַה מְשֻׁתָּף', 'sprout', ['LOG-A-03'], ['pictorial'], ['M-COL-ONEATTR'])
+    # D12 of the logic sweep: "they are all big" cannot be seen with nothing small beside them (and the three big things are not
+    # drawn the same size), so .5 and .6 ask for the colour and the shape with other shapes, until shapes come in three sizes or
+    # the stage can show a contrast. The size specs, as they were (both offered all three rule cards):
+    #     (['apple_size_l', 'star_size_l', 'fish_size_l'], 'rule_size', 'אוֹתוֹ גֹּדֶל'),
+    #     (['apple_size_s', 'fish_size_s', 'star_size_s'], 'rule_size', 'אוֹתוֹ גֹּדֶל')
     sets = [(['shape_circle_red', 'shape_square_red', 'shape_triangle_red'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
             (['shape_circle_blue', 'shape_triangle_blue', 'shape_square_blue'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
             (['shape_circle_red', 'shape_circle_blue', 'shape_circle_green'], 'rule_shape', 'אוֹתָהּ צוּרָה'),
             (['shape_square_green', 'shape_square_red', 'shape_square_blue'], 'rule_shape', 'אוֹתָהּ צוּרָה'),
-            (['apple_size_l', 'star_size_l', 'fish_size_l'], 'rule_size', 'אוֹתוֹ גֹּדֶל'),
-            (['apple_size_s', 'fish_size_s', 'star_size_s'], 'rule_size', 'אוֹתוֹ גֹּדֶל')]
+            (['shape_triangle_green', 'shape_square_green', 'shape_circle_green'], 'rule_colour', 'אוֹתוֹ צֶבַע'),
+            (['shape_triangle_blue', 'shape_triangle_red', 'shape_triangle_green'], 'rule_shape', 'אוֹתָהּ צוּרָה')]
+    # D46: the wrong rule card is the other attribute, the one that differs here (M-COL-ONEATTR, looks at one attribute only)
+    wrong_line = {'rule_colour': ('vo:fb.oneattr.rule_shape', 'כָּאן הַצּוּרוֹת שׁוֹנוֹת. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?'),
+                  'rule_shape': ('vo:fb.oneattr.rule_colour', 'כָּאן הַצְּבָעִים שׁוֹנִים. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?')}
     for i, (row, rule, text) in enumerate(sets):
         # W2 of check-2026-11-06: the shapes are drawn the same size, so "the size" is right too where the rule is the colour
         # or the shape; those items offer colour and shape only (until shapes in three sizes are drawn)
-        others = [r for r in ('rule_colour', 'rule_shape', 'rule_size') if r != rule and (rule == 'rule_size' or r != 'rule_size')]
-        u.act('LOG-B-06', 'pick', prompt='מַה מְשֻׁתָּף לְכֻלָּם?', row=row, options=place(rule, others, i % 3), correct=rule,
+        others = [r for r in ('rule_colour', 'rule_shape') if r != rule]
+        u.act('LOG-B-06', 'pick', prompt='מַה מְשֻׁתָּף לְכֻלָּם?', row=row, options=place(rule, others, i % 3 if i < 4 else i - 4), correct=rule,
+              tags={others[0]: 'M-COL-ONEATTR'}, tag_lines={'M-COL-ONEATTR': list(wrong_line[rule])},
               domain='logic', correct_text='כֵּן! כֻּלָּם %s.' % text, h3='נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם %s. עַכְשָׁו תּוֹרְכֶם.' % text)
 
     # B-15 §1 (H9a, H9b): a friend sorted one way and one shape is in the wrong place
@@ -340,37 +367,43 @@ def logic():
 
     u.skill('LOG-B-08', 'אם אז', 'אִם… אָז…', 'sprout', ['LOG-B-06'], ['concrete'], ['M-SORT-SHIFT'])
     # the prompts wait for the owner (V1 rows, proposed): "אַחֶרֶת" → "אִם לֹא" and "הַצּוּרָה הִיא עִגּוּל" are not in yet
-    ifs = [('אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.endswith('_red')),
-           ('אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.endswith('_blue')),
-           ('אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_circle')),
-           ('אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_square'))]
+    ifs = [('אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.endswith('_red')),
+           ('אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.endswith('_blue')),
+           ('אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_circle')),
+           ('אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_square'))]
+    # D4 and D30 of the logic sweep: bin-sized pictures (the design-director's bin_basket and bin_grass) in place of the shrunk
+    # basket scene and the grass comb; the basket is called a basket (סַל), never a box
+    BINS = [{'sprite': 'bin_basket', 'label': 'הַסַּל'}, {'sprite': 'bin_grass', 'label': 'הָעֵשֶׂב'}]
     pool = ['shape_circle_red', 'shape_square_blue', 'shape_triangle_red', 'shape_circle_blue', 'shape_square_red', 'shape_triangle_blue']
     for i, (text, test) in enumerate(ifs):
         order = pool[i:] + pool[:i]
         # A5: the colour rules keep the shared M-SORT-SHIFT line; the shape rules have theirs
-        u.act('LOG-B-08', 'sort', rule='colour' if i < 2 else 'shape', bins=[{'sprite': 'basket_empty', 'label': 'הַקֻּפְסָה'}, {'sprite': 'grass', 'label': 'הָעֵשֶׂב'}],
+        u.act('LOG-B-08', 'sort', rule='colour' if i < 2 else 'shape', bins=BINS,
               items=[(s, 1 if test(s) else 2) for s in order[:5]], prompt=text + ' אַחֶרֶת — לָעֵשֶׂב.', domain='logic',
-              h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.',
+              h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַסַּל. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.')
 
     # B-15 addendum A3: the rule on a triangle and on a rectangle; a square is also a rectangle, so that pool has none
-    for text, test, order in (('אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_triangle'),
+    for text, test, order in (('אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_triangle'),
                                ['shape_circle_blue', 'shape_triangle_red', 'shape_square_red', 'shape_triangle_blue', 'shape_circle_red']),
-                              ('אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה.', lambda s: s.startswith('shape_rect'),
+                              ('אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּסַּל.', lambda s: s.startswith('shape_rect'),
                                ['shape_rect_red', 'shape_circle_blue', 'shape_triangle_red', 'shape_rect_blue', 'shape_circle_red'])):
-        u.act('LOG-B-08', 'sort', rule='shape', bins=[{'sprite': 'basket_empty', 'label': 'הַקֻּפְסָה'}, {'sprite': 'grass', 'label': 'הָעֵשֶׂב'}],
+        u.act('LOG-B-08', 'sort', rule='shape', bins=BINS,
               items=[(s, 1 if test(s) else 2) for s in order], prompt=text + ' אַחֶרֶת — לָעֵשֶׂב.', domain='logic', check='transfer', difficulty=0.6,
-              h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַקֻּפְסָה. עַכְשָׁו תּוֹרְכֶם.',
+              h3='לְכׇל צוּרָה שׁוֹאֲלִים: זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַסַּל. עַכְשָׁו תּוֹרְכֶם.',
               correct_text='כֵּן! עֲשִׂיתֶם לְפִי הַכְּלָל.')
 
     u.skill('LOG-B-09', 'חושבים ומסיקים', 'לֹא זֶה וְלֹא זֶה', 'sprout', ['LOG-B-06'], ['concrete', 'symbolic'], ['M-LOG-NOT'])
+    clues = lambda nc, ns: ['clue_not_%s' % nc, 'clue_not_%s' % ns]
     cases = [('red', 'circle', 'blue', 'square'), ('blue', 'square', 'green', 'triangle'), ('green', 'triangle', 'red', 'circle'),
              ('red', 'square', 'blue', 'triangle'), ('blue', 'circle', 'green', 'square'), ('green', 'circle', 'red', 'triangle')]
     for i, (nc, ns, rc, rs) in enumerate(cases):
         right = 'shape_%s_%s' % (rs, rc)
         w1 = 'shape_%s_%s' % (ns, rc)  # the shape that it must not be
         w2 = 'shape_%s_%s' % (rs, nc)  # the colour that it must not be
-        u.act('LOG-B-09', 'pick', prompt='הוּא לֹא %s וְלֹא %s. אֵיזֶה הוּא?' % (C[nc], SHAPE_ONE[ns]),
+        # D15 of the logic sweep: the two clues are on the stage as cards (the design-director's clue_not_<colour> and
+        # clue_not_<shape>), not only in the voice
+        u.act('LOG-B-09', 'pick', prompt='הוּא לֹא %s וְלֹא %s. אֵיזֶה הוּא?' % (C[nc], SHAPE_ONE[ns]), row=clues(nc, ns),
               options=place(right, [w1, w2], i % 3), correct=right, tags={w1: 'M-LOG-NOT', w2: 'M-LOG-NOT'}, domain='logic',
               correct_text='כֵּן! הוּא לֹא %s וְלֹא %s.' % (C[nc], SHAPE_ONE[ns]),
               h3='מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא %s וְגַם לֹא %s. עַכְשָׁו תּוֹרְכֶם.' % (C[nc], SHAPE_ONE[ns]))
@@ -378,25 +411,33 @@ def logic():
     # B-15 addendum A3: not yellow and not square; not orange and not triangle
     for i, (nc, ns, right, w1, w2) in enumerate([('yellow', 'square', 'shape_circle_green', 'shape_square_green', 'shape_circle_yellow'),
                                                  ('orange', 'triangle', 'shape_square_red', 'shape_triangle_red', 'shape_square_orange')]):
-        u.act('LOG-B-09', 'pick', prompt='הוּא לֹא %s וְלֹא %s. אֵיזֶה הוּא?' % (C[nc], SHAPE_ONE[ns]),
+        u.act('LOG-B-09', 'pick', prompt='הוּא לֹא %s וְלֹא %s. אֵיזֶה הוּא?' % (C[nc], SHAPE_ONE[ns]), row=clues(nc, ns),
               options=place(right, [w1, w2], i + 1), correct=right, tags={w1: 'M-LOG-NOT', w2: 'M-LOG-NOT'}, domain='logic',
               check='transfer', difficulty=0.6, correct_text='כֵּן! הוּא לֹא %s וְלֹא %s.' % (C[nc], SHAPE_ONE[ns]),
               h3='מְחַפְּשִׂים מַשֶּׁהוּ שֶׁהוּא לֹא %s וְגַם לֹא %s. עַכְשָׁו תּוֹרְכֶם.' % (C[nc], SHAPE_ONE[ns]))
 
     u.skill('LOG-B-11', 'מסדרים חמישה', 'מְסַדְּרִים מִנָּמוּךְ לְגָבוֹהַּ', 'sprout', ['LOG-A-10'], ['concrete', 'pictorial'], ['M-SER-ENDS'])
-    towers = ['tower_%d' % k for k in range(1, 7)]
-    u.act('LOG-B-11', 'build', palette=towers[:5], sequence=towers[:5], prompt='מְסַדְּרִים אֶת הַמִּגְדָּלִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.',
-          domain='logic', h3='מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.')
-    u.act('LOG-B-11', 'build', palette=towers[:5], sequence=towers[:5][::-1], prompt='מְסַדְּרִים אֶת הַמִּגְדָּלִים מֵהַגָּבוֹהַּ אֶל הַנָּמוּךְ.',
-          domain='logic', h3='מַתְחִילִים בַּגָּבוֹהַּ וְגוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם.')
-    u.act('LOG-B-11', 'build', palette=towers, sequence=towers, prompt='מְסַדְּרִים שִׁשָּׁה מִגְדָּלִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.',
-          domain='logic', h3='מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.')
+    T = lambda *ks: ['tower_%d' % k for k in ks]
+    # D36 and D38 of the logic sweep: ordering is seriation, not copying; a wrong order hears "compare each tower with its
+    # neighbour" (M-SER-ENDS, the middle out of order), never "look for the middle"
+    neighbour = {'M-SER-ENDS': ['vo:fb.ser_ends.neighbour', 'בּוֹאוּ נַשְׁוֶה כׇּל מִגְדָּל לַשָּׁכֵן שֶׁלּוֹ.']}
+    # D9: the palette is a fixed scrambled order, never sorted either way, and the first slot's tower is never first in it
+    for palette, sequence, prompt, h3, text in (
+            (T(3, 5, 1, 4, 2), T(1, 2, 3, 4, 5), 'מְסַדְּרִים אֶת הַמִּגְדָּלִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.',
+             'מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.', 'כֵּן! מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.'),
+            (T(2, 4, 1, 5, 3), T(5, 4, 3, 2, 1), 'מְסַדְּרִים אֶת הַמִּגְדָּלִים מֵהַגָּבוֹהַּ אֶל הַנָּמוּךְ.',
+             'מַתְחִילִים בַּגָּבוֹהַּ וְגוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם.', 'כֵּן! מֵהַגָּבוֹהַּ אֶל הַנָּמוּךְ.'),
+            (T(4, 1, 6, 3, 5, 2), T(1, 2, 3, 4, 5, 6), 'מְסַדְּרִים שִׁשָּׁה מִגְדָּלִים מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.',
+             'מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.', 'כֵּן! מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ.')):
+        u.act('LOG-B-11', 'build', palette=palette, sequence=sequence, prompt=prompt, domain='logic', h3=h3, correct_text=text,
+              tag='M-SER-ENDS', tag_lines=neighbour, goal='child orders the towers by height, comparing each with its neighbour')
 
-    # B-15 §1 (H18): a friend ordered the towers and one is in the wrong place
-    for shown, h3 in (([1, 2, 2, 4, 5], 'מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.'),
-                      ([5, 4, 4, 2, 1], 'מַתְחִילִים בַּגָּבוֹהַּ וְגוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם.')):
+    # B-15 §1 (H18): a friend ordered the towers and one is in the wrong place. D19: the wrong tower is one that is not in the row
+    # (no two towers alike), so only one cell can be wrong
+    for shown, h3 in (([1, 2, 6, 4, 5], 'מַתְחִילִים בַּנָּמוּךְ וְגוֹמְרִים בַּגָּבוֹהַּ. עַכְשָׁו תּוֹרְכֶם.'),
+                      ([5, 4, 6, 2, 1], 'מַתְחִילִים בַּגָּבוֹהַּ וְגוֹמְרִים בַּנָּמוּךְ. עַכְשָׁו תּוֹרְכֶם.')):
         u.act('LOG-B-11', 'spot', cells=['tower_%d' % v for v in shown], wrong=2, tag='M-SER-ENDS', domain='logic', check='error_spotting',
-              difficulty=0.6, prompt='חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?', h3=h3)
+              difficulty=0.6, prompt='חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?', h3=h3, tag_lines=neighbour)
 
     ids = lambda skill, a=0, b=None: lesson_ids(u, skill, a, b)
     u.lesson('longer-patterns', 'סֵדֶר שֶׁל שְׁלוֹשָׁה דְּבָרִים', ['LOG-B-01'], ids('LOG-B-01', 0, 4), 'כׇּל הַכָּבוֹד! הִמְשַׁכְתֶּם סֵדֶר.')

@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "מָה הוֹלֵךְ עִם הֶעָנָן?"
+        "v": "מָה הוֹלֵךְ עִם הַגֶּשֶׁם?"
       }
     ],
     "replayButton": true
@@ -34,11 +34,11 @@
     "background": "asset:meadow",
     "optionsOnTiles": true,
     "group": {
-      "sprite": "asset:cloud",
+      "sprite": "asset:rain",
       "count": 1,
       "arrangement": "line",
       "seed": 3,
-      "scale": 1
+      "scale": 1.6
     }
   },
   "answer": {
@@ -56,8 +56,8 @@
       },
       {
         "id": "o3",
-        "sprite": "asset:rain",
-        "label": "גֶּשֶׁם"
+        "sprite": "asset:umbrella",
+        "label": "מִטְרִיָּה"
       }
     ],
     "correct": "o3",
@@ -71,7 +71,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה גֶּשֶׁם."
+          "v": "כֵּן! זוֹ מִטְרִיָּה."
         }
       ]
     },
@@ -112,11 +112,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_pairs.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?"
         }
       ]
     },
@@ -127,7 +127,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "עָנָן וְגֶשֶׁם הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם."
+          "v": "גֶּשֶׁם וּמִטְרִיָּה הוֹלְכִים יַחַד. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }
@@ -147,6 +147,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מָה הוֹלֵךְ עִם הֶעָנָן?"
+    "altText": "מָה הוֹלֵךְ עִם הַגֶּשֶׁם?"
   }
 }

@@ -225,4 +225,5 @@ abstract final class TokenComponent {
   static const double captionPaddingX = 16.0;
   static const double captionPaddingY = 8.0;
   static const double parentButtonHeight = 44.0;
+  static const double stagePictureMin = 40.0;
 }

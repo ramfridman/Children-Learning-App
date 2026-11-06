@@ -34,12 +34,12 @@
     "background": "asset:meadow",
     "slots": 6,
     "palette": [
-      "asset:tower_1",
-      "asset:tower_2",
-      "asset:tower_3",
       "asset:tower_4",
+      "asset:tower_1",
+      "asset:tower_6",
+      "asset:tower_3",
       "asset:tower_5",
-      "asset:tower_6"
+      "asset:tower_2"
     ]
   },
   "answer": {
@@ -52,7 +52,7 @@
       "asset:tower_5",
       "asset:tower_6"
     ],
-    "misconception": "M-PAT-COPY"
+    "misconception": "M-SER-ENDS"
   },
   "voiceAnswer": false,
   "feedback": {
@@ -61,18 +61,18 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! הֶעְתַּקְתֶּם אֶת הַסֵּדֶר."
+          "v": "כֵּן! מֵהַנָּמוּךְ אֶל הַגָּבוֹהַּ."
         }
       ]
     },
     "incorrect": [
       {
-        "when": "misconception:M-PAT-COPY",
-        "vo": "vo:fb.pat_copy",
+        "when": "misconception:M-SER-ENDS",
+        "vo": "vo:fb.ser_ends.neighbour",
         "caption": [
           {
             "t": "he",
-            "v": "בּוֹאוּ נִסְתַּכֵּל בַּסֵּדֶר: מָה הָרִאשׁוֹן, וּמָה הַשֵּׁנִי?"
+            "v": "בּוֹאוּ נַשְׁוֶה כׇּל מִגְדָּל לַשָּׁכֵן שֶׁלּוֹ."
           }
         ]
       },
@@ -112,11 +112,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.build.h2",
+      "vo": "vo:hint.log_seriation.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל בַּסֵּדֶר מֵהַהַתְחָלָה, אֶחָד אֶחָד."
+          "v": "נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ."
         }
       ]
     },
@@ -143,7 +143,7 @@
   },
   "tutor": {
     "llmAllowed": true,
-    "goal": "child copies the pattern in the same order",
+    "goal": "child orders the towers by height, comparing each with its neighbour",
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {

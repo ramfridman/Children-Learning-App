@@ -267,13 +267,23 @@ class SeenDot extends StatelessWidget {
 /// there at once and a small sky dot sits under the first one. The row is always left to right; the caller draws the row itself
 /// (inside a left-to-right [Directionality]) and wraps each cell with the `cell` function it is given.
 class RowEntrance extends StatefulWidget {
-  const RowEntrance({super.key, required this.count, required this.builder, this.startAfter = Duration.zero});
+  const RowEntrance({
+    super.key,
+    required this.count,
+    required this.builder,
+    this.startAfter = Duration.zero,
+    this.startDot = true,
+  });
 
   /// The number of cells.
   final int count;
 
   /// The delay before the first cell (a second row may wait for the first one).
   final Duration startAfter;
+
+  /// Whether the row shows the start dot under its first cell with "reduce motion". Where two rows stand one under the other, only
+  /// the first has it: counting starts once.
+  final bool startDot;
 
   /// Builds the row. `cell(i, child)` returns the cell [i] (from 0, the leftmost) as it should be drawn now.
   final Widget Function(BuildContext context, Widget Function(int index, Widget child) cell) builder;
@@ -315,7 +325,7 @@ class _RowEntranceState extends State<RowEntrance> with SingleTickerProviderStat
     final double from = (widget.startAfter + RowEntrance.step * index).inMilliseconds / _total.inMilliseconds;
     final double to =
         (widget.startAfter + RowEntrance.step * (index + 1)).inMilliseconds / _total.inMilliseconds;
-    final Widget shown = still && index == 0
+    final Widget shown = still && widget.startDot && index == 0
         ? Stack(
             clipBehavior: Clip.none,
             fit: StackFit.passthrough,

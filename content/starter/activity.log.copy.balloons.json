@@ -32,12 +32,15 @@
   },
   "scene": {
     "background": "asset:meadow",
-    "slots": 3,
+    "slots": 6,
     "palette": [
       "asset:balloon_green",
       "asset:balloon_yellow"
     ],
     "model": [
+      "asset:balloon_yellow",
+      "asset:balloon_yellow",
+      "asset:balloon_green",
       "asset:balloon_yellow",
       "asset:balloon_yellow",
       "asset:balloon_green"
@@ -46,6 +49,9 @@
   "answer": {
     "type": "build",
     "sequence": [
+      "asset:balloon_yellow",
+      "asset:balloon_yellow",
+      "asset:balloon_green",
       "asset:balloon_yellow",
       "asset:balloon_yellow",
       "asset:balloon_green"
@@ -125,7 +131,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "צָהֹב, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
+          "v": "צָהֹב, צָהֹב, יָרֹק, צָהֹב, צָהֹב, יָרֹק. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }

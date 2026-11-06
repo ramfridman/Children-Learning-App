@@ -104,11 +104,11 @@
     "incorrect": [
       {
         "when": "misconception:M-SORT-SHIFT",
-        "vo": "vo:fb.sort_shift.kind",
+        "vo": "vo:fb.sort_shift.kind_other",
         "caption": [
           {
             "t": "he",
-            "v": "זֶה אוֹתוֹ צֶבַע, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
+            "v": "זֶה לֹא אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },

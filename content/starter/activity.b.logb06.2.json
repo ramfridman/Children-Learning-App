@@ -45,7 +45,8 @@
       {
         "id": "o1",
         "sprite": "asset:rule_shape",
-        "label": "הַצּוּרָה"
+        "label": "הַצּוּרָה",
+        "misconception": "M-COL-ONEATTR"
       },
       {
         "id": "o2",
@@ -69,6 +70,16 @@
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.oneattr.rule_shape",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּאן הַצּוּרוֹת שׁוֹנוֹת. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?"
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",

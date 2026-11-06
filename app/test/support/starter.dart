@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/content/pack_verify.dart';
@@ -10,4 +12,36 @@ Future<PackContent> loadStarter() async {
     publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
   );
   return PackContent.fromPack(pack);
+}
+
+/// The starter pack's manifest, with the docs and pictures read from the sources in content/starter.
+Future<PackContent> loadSourcePack() async {
+  final VerifiedPack signed = await verifyPack(
+    File('assets/packs/starter-0.10.0.nnpack').readAsBytesSync(),
+    publicKey: unhex(File('assets/pack_signing_public_key.txt').readAsStringSync()),
+  );
+  final Map<String, Object?> docs = <String, Object?>{};
+  final Map<String, Uint8List> files = <String, Uint8List>{};
+  final List<Map<String, Object?>> assets = <Map<String, Object?>>[];
+  for (final FileSystemEntity e in Directory('../content/starter').listSync()) {
+    if (e is! File) continue;
+    final String name = e.uri.pathSegments.last;
+    final Uint8List bytes = e.readAsBytesSync();
+    files[name] = bytes;
+    if (name.endsWith('.json')) docs[name] = jsonDecode(utf8.decode(bytes));
+    if (name.endsWith('.svg')) {
+      assets.add(<String, Object?>{'id': name.substring(0, name.length - 4), 'file': name});
+    }
+  }
+  final Map<String, Object?> manifest = Map<String, Object?>.of(signed.manifest)..['assets'] = assets;
+  return PackContent.fromPack(
+    VerifiedPack(
+      manifestBytes: signed.manifestBytes,
+      signature: signed.signature,
+      manifestSha256: signed.manifestSha256,
+      manifest: manifest,
+      docs: docs,
+      files: files,
+    ),
+  );
 }
