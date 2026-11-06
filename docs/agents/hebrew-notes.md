@@ -623,3 +623,10 @@ nikud like its Band B twins), 4 balance prompts (wrong for Band C, now reworded 
 3. M-NUM-REV line `הַסִּפְרָה הָרִאשׁוֹנָה אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת` (Band B, text-ready, also in C1): "first" is the left digit, but on a right-to-left screen a child may count from the right. The editor suggests
    `הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל …`; not changed here because the Band B rows are approved.
 4. `עֲשָׂרָה אַחַת` for "one ten": confirm with the children's teacher if in doubt.
+
+### 11.6 The owner's answers to 11.5 (2026-11-06, in chat)
+
+- **Question 2 (V1 for M-NL-DIR): yes.** `הַשְּׂמֹאלִי` is `הַשְּׂמָאלִי` in the source (`tools/band_b.py`, the tag line); 44 rows of Band B and C are `owner-approved`. The rule in `hebrew_voice_review.py` that rewrote it stays as a safety net and no longer fires.
+- **Question 3 (first digit): yes.** `הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב.` (the only "first digit" wording in the sources; 63 rows, `owner-approved`).
+- **Question 4 ("one ten"): the school pattern, the owner's words** ("אחד עשרות ו5 יחידות בחמש עשרה. This is the right way to say it."): the digit, then always the plural. `tens_words` and `ones_words` in `tools/band_c.py`: one is `אֶחָד עֲשָׂרוֹת` / `אֶחָד יְחִידוֹת` (the owner's `אֶחָד`), two stays `שְׁתֵּי`, three to nine and zero as before. `עֲשָׂרָה אַחַת` and `יְחִידָה אַחַת` are gone. Today only ones = 1 occurs in the items (81: `שְׁמוֹנֶה עֲשָׂרוֹת וְאֶחָד יְחִידוֹת`, 3 rows, `owner-approved`); a number such as 15 will read `אֶחָד עֲשָׂרוֹת וְחָמֵשׁ יְחִידוֹת`.
+  The "a new ten" line (`עֲשָׂרָה חֲדָשָׁה`, a group of ten as a noun) is a different use and is unchanged.

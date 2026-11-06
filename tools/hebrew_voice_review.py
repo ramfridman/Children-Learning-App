@@ -444,7 +444,7 @@ Q8_NOUN = 'number (owner Q8, 2026-10-29): never a masculine number without its n
 
 
 ONE_MORE = {'עוֹד', 'קְחוּ'}
-TEN_AS_NOUN_NEXT = {canon(x) for x in ('חֲדָשָׁה', 'מַגִּיעָה', 'מַתְחִילָה', 'אַחַת')}
+TEN_AS_NOUN_NEXT = {canon(x) for x in ('חֲדָשָׁה', 'מַגִּיעָה', 'מַתְחִילָה')}
 FEM_NUM = {w for _i in range(2, 21) for w in F[_i].split()} - {'עֶשְׂרֵה'}
 
 
@@ -474,7 +474,7 @@ def numbers_alone(t):
         # alone ("אֶחָד יוֹתֵר, אֶחָד פָּחוֹת", "עוֹד אֶחָד הָלַךְ") it stays (owner Q12, 2026-10-29)
         one_num = w == 'אֶחָד' and (pw in ONE_MORE or nw in ('פָּחוֹת', 'יוֹתֵר')) and numeric(t, m)
         if w == 'עֲשָׂרָה' and (canon(nw or '') in TEN_AS_NOUN_NEXT or pw == 'כׇּל'):
-            continue  # "a ten" (a group of ten, feminine): כׇּל עֲשָׂרָה, עֲשָׂרָה חֲדָשָׁה, עֲשָׂרָה אַחַת (M10 C1)
+            continue  # "a ten" (a group of ten, feminine): כׇּל עֲשָׂרָה, עֲשָׂרָה חֲדָשָׁה (M10 C1; "one ten" in tens-and-ones is אֶחָד עֲשָׂרוֹת, owner 2026-11-06)
         if nw and nw not in NOT_A_NOUN and not one_num:
             if nw in MASC_PL or nw == 'עָשָׂר' or w == 'אֶחָד':
                 continue  # before its noun, or "אֶחָד" before anything that is not a sum word
@@ -907,6 +907,17 @@ OWNER_APPROVED = [
     (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּמִלִּים\.$',
      'L0 (island-texts.md section 6, question 2): the owner approved "with words" for the Hebrew stop (owner-approved 2026-11-03).',
      r'^adventureLangHebrew$'),
+    # The owner's decisions of 2026-11-06 (in chat) for M10 batch C1; docs/agents/hebrew-notes.md section 11.5.
+    # (1) V1 for the M-NL-DIR line: yes. The source now has `שְּׂמָאלִי` (the rule below is no longer needed for it).
+    (r'', r'הַמִּסְפָּרִים הַקְּטַנִּים בַּצַּד הַשְּׂמָאלִי, וְהֵם גְּדֵלִים',
+     'M10 C1 (notes 11.5, question 2): the owner confirmed V1, "הַשְּׂמָאלִי" (owner-approved 2026-11-06).'),
+    # (2) "first digit from the left", so a child who counts from the right on a right-to-left screen knows which digit.
+    (r'', r'הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת',
+     'M10 C1 (notes 11.5, question 3): the owner approved adding "מִשְּׂמֹאל" to the first-digit line (owner-approved 2026-11-06).'),
+    # (3) tens and ones in the school pattern: the digit, then always the plural; "one ten" is "אֶחָד עֲשָׂרוֹת" (the owner's word).
+    (r'', r'(^|[ ,.:])וְ?אֶחָד (עֲשָׂרוֹת|יְחִידוֹת)',
+     'M10 C1 (notes 11.5, question 4): the owner chose the school pattern for tens and ones, "אֶחָד עֲשָׂרוֹת וְחָמֵשׁ יְחִידוֹת" '
+     '(owner-approved 2026-11-06).'),
 ]
 
 
