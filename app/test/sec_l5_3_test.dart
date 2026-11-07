@@ -123,12 +123,14 @@ void main() {
     });
     p.add(a);
     final List<String> m = _messages(p);
-    for (final String path in <String>[
-      'hints[1].screen.frame.text',
-      'hints[1].screen.results[0].text',
-      'hints[2].screen.word.parts[1].text',
-    ]) {
+    for (final String path in <String>['hints[1].screen.frame.text', 'hints[2].screen.word.parts[1].text']) {
       expect(m.any((String x) => x.contains(path)), isTrue, reason: '$path in $m');
     }
+    // The result text is also judged by checkChangeData, so match the face rule's own message, not just the path.
+    expect(
+      m.any((String x) => x.contains('hints[1].screen.results[0].text') && x.contains('has no niqqud')),
+      isTrue,
+      reason: m.join('\n'),
+    );
   });
 }

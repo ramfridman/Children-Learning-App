@@ -632,10 +632,17 @@ class ChangePartLayer extends StatelessWidget {
   List<Widget> _wheel(BuildContext context, ChangePartSession s) {
     final WheelSpec w = s.wheelFor(board);
     final double panelBottom = board.size.height - ChangePartSession._panelMargin;
-    final WheelSpec full = w.copyWith(panelHeight: panelBottom - (w.centre.dy - 4));
     final List<ChangePart> ring = s.ringParts;
     final List<ChangePart> signs = s.signParts;
     final (Rect, Rect) controls = _controls(w, signs.length);
+    // On the wide tablet the pebble stands beyond a long row of signs, and the panel runs 8 points past it.
+    final double panelEnd = board == BoardClass.tabletLandscape
+        ? math.max(w.centre.dx + w.panelSpan / 2, controls.$2.right + _pebbleRoom)
+        : w.centre.dx + w.panelSpan / 2;
+    final WheelSpec full = w.copyWith(
+      panelHeight: panelBottom - (w.centre.dy - 4),
+      panelWidth: 2 * (panelEnd - w.centre.dx),
+    );
     return <Widget>[
       Positioned.fill(
         child: GestureDetector(
@@ -691,6 +698,8 @@ class ChangePartLayer extends StatelessWidget {
     }
     return any;
   }
+
+  static const double _pebbleRoom = 8;
 
   /// The target and "that's it" pebbles: under the bubble on the phones, at the panel's ends on the tablets. On the wide tablet a row of four signs
   /// reaches the right end, so the pebble there stands 8 points beyond the row.

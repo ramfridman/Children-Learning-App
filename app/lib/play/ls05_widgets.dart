@@ -49,7 +49,10 @@ class WheelSpec {
 
   int get slots => (180 ~/ step) + 1;
 
-  WheelSpec copyWith({Offset? centre, double? signY, double? panelHeight}) => WheelSpec(
+  /// The panel's width: set by the spec, or the dial's disc (ring, bead and the 8 points round it) with 14 points at each end.
+  double get panelSpan => panelWidth ?? (2 * (ring + bead / 2 + 8) + 28);
+
+  WheelSpec copyWith({Offset? centre, double? signY, double? panelHeight, double? panelWidth}) => WheelSpec(
     centre: centre ?? this.centre,
     ring: ring,
     bead: bead,
@@ -61,7 +64,7 @@ class WheelSpec {
     signY: signY ?? this.signY,
     signGap: signGap,
     panelHeight: panelHeight ?? this.panelHeight,
-    panelWidth: panelWidth,
+    panelWidth: panelWidth ?? this.panelWidth,
   );
 
   /// The wheel for a row of [signCount] signs. A row that reaches out under the lowest letter beads (the ones at 0 and 180 degrees) would lie over
@@ -471,7 +474,7 @@ class _DialPainter extends CustomPainter {
     );
     canvas.restore();
     if (showPanel) {
-      final double pw = w.panelWidth ?? (2 * radius + 28);
+      final double pw = w.panelSpan;
       final RRect panel = RRect.fromRectAndRadius(
         Rect.fromLTWH(c.dx - pw / 2, c.dy - 4, pw, w.panelHeight),
         const Radius.circular(16),
