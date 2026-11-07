@@ -155,7 +155,7 @@ BLOCK_TILES = {
     'M-PV-ZERO': ('vo:fb.pv_face_cubes', 'הָעֲשָׂרוֹת הֵן מוֹטוֹת שֶׁל עֶשֶׂר, לֹא קֻבִּיּוֹת בּוֹדְדוֹת. בּוֹאוּ נִבְדֹּק.'),
 }
 # The lines of the middle of two marks: the two ends added is no "=" here, so its line is its own
-MIDDLE = {'M-EQ-OPER': ('vo:fb.middle_not_added', 'בָּאֶמְצַע לֹא מְחַבְּרִים. מְחַפְּשִׂים מִסְפָּר שֶׁנִּמְצָא בֵּין שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִבְדֹּק.')}
+MIDDLE = {'M-EQ-OPER': ('vo:fb.middle_not_added', 'כְּשֶׁמְּחַפְּשִׂים אֶת הָאֶמְצַע, לֹא מְחַבְּרִים. הָאֶמְצַע נִמְצָא בֵּין שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִבְדֹּק.')}
 
 
 # M-NUM-REV on a single digit (6 for 9, 5 for 2): the shared line speaks of the tens digit, so these items say their own (QA-C1-9)
@@ -468,14 +468,14 @@ def numbers_c1(u):
         for i, (vals, ask) in enumerate([((41, 39, 14), 'big'), ((27, 31, 72), 'small'), ((52, 48, 25), 'big'), ((64, 59, 46), 'big')]):
             right, other, rev = vals
             word = 'גָּדוֹל' if ask == 'big' else 'קָטָן'
-            choose(u, 'NUM-C-04', 'אֵיזֶה מִסְפָּר %s יוֹתֵר? מִסְתַּכְּלִים עַל הַקֻּבִּיּוֹת.' % word, right,
+            choose(u, 'NUM-C-04', 'אֵיזֶה מִסְפָּר %s יוֹתֵר? מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת.' % word, right,
                    {other: 'M-PV-FACE', rev: 'M-NUM-REV'}, i, picture=blocks_of(right // 10, right % 10),
                    picture2=blocks_of(other // 10, other % 10), variantGroup='compare-blocks',
                    **({'check': 'transfer', 'difficulty': 0.6} if i == 3 else {}),
-                   h2='מַשְׁוִים קֹדֶם אֶת הַמּוֹטוֹת שֶׁל הָעֲשָׂרוֹת. רַק אִם יֵשׁ אוֹתוֹ מִסְפָּר, מַשְׁוִים קֻבִּיּוֹת.',
-                   h3=fit('%s %s, %s %s. %s' % (prefix('ב', F[right]), rods(right // 10), vav(prefix('ב', F[other])),
+                   h2='מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת — הַמּוֹטוֹת. רַק אִם יֵשׁ אוֹתוֹ מִסְפָּר מוֹטוֹת, מַשְׁוִים קֻבִּיּוֹת.',
+                   h3=fit('%s יֵשׁ %s, %s יֵשׁ %s. %s' % (prefix('ב', F[right]), rods(right // 10), vav(prefix('ב', F[other])),
                                                 rods(other // 10), NOW % F[right]),
-                          '%s %s, %s %s. %s' % (prefix('ב', F[right]), rods(right // 10), vav(prefix('ב', F[other])),
+                          '%s יֵשׁ %s, %s יֵשׁ %s. %s' % (prefix('ב', F[right]), rods(right // 10), vav(prefix('ב', F[other])),
                                                 rods(other // 10), TURN)),
                    ok='כֵּן! %s %s יוֹתֵר.' % (F[right], word))
 
@@ -499,7 +499,7 @@ def numbers_c1(u):
         mid, half = (lo + hi) // 2, (hi - lo) // 2
         choose(u, 'NUM-C-06', 'עַל הַצִּיר, אֵיזֶה מִסְפָּר נִמְצָא בְּדִיּוּק בָּאֶמְצַע?', mid, {lo + 1: 'M-NL-SPACE', lo + hi: 'M-EQ-OPER'},
                i, row=[lo, '?', hi], variantGroup='middle', tag_lines=MIDDLE, **({'check': 'predict', 'difficulty': 0.6} if i == 2 else {}),
-               h2='בָּאֶמְצַע — אוֹתוֹ מֶרְחָק מִשְּׁנֵי הַצְּדָדִים. %s עַד %s יֵשׁ %s.' % (from_(F[lo]), F[hi], step_words(hi - lo)),
+               h2='הָאֶמְצַע הוּא אוֹתוֹ מֶרְחָק מִשְּׁנֵי הַמִּסְפָּרִים. %s עַד %s יֵשׁ %s.' % (from_(F[lo]), F[hi], step_words(hi - lo)),
                h3=fit('%s %s קָדִימָה הֵם %s, וְעוֹד %s הֵם %s. %s' % (from_(F[lo]), step_words(half), F[mid], step_words(half),
                                                                     F[hi], NOW % F[mid]),
                       '%s %s קָדִימָה הֵם %s, וְעוֹד %s הֵם %s.' % (from_(F[lo]), step_words(half), F[mid], step_words(half), F[hi])),

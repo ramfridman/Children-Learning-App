@@ -78,7 +78,7 @@ FEM_PL = {'חִפּוּשִׁיּוֹת', 'צִפֳּרִים', 'צִפּוֹר�
           'אֲבָנִים', 'נוֹצוֹת', 'מַדְבֵּקוֹת', 'תְּמוּנוֹת', 'דְּרָכִים', 'אֲגוֹרוֹת', 'קְבוּצוֹת', 'נְקֻדּוֹת', 'שָׁעוֹת'}
 MASC_PL = {'תַּפּוּחִים', 'דָּגִים', 'כּוֹכָבִים', 'בַּרְוָזִים', 'צְעָדִים', 'מִגְדָּלִים', 'מִסְפָּרִים', 'מַטְבְּעוֹת', 'מַקְלוֹת',
            'כַּדּוּרִים', 'בָּלוֹנִים', 'פְּרָחִים', 'דְּבָרִים', 'פַּרְפָּרִים', 'צְדָדִים', 'שְׁקָלִים', 'גַּרְבַּיִם', 'עִגּוּלִים',
-           'רִבּוּעִים', 'מְשֻׁלָּשִׁים', 'חֲלָקִים', 'חֲתוּלִים', 'כְּלָבִים'}
+           'רִבּוּעִים', 'מְשֻׁלָּשִׁים', 'חֲלָקִים', 'חֲתוּלִים', 'כְּלָבִים', 'מוֹטוֹת'}
 FEM_SG, MASC_SG = set(), set()
 for _o in OBJECTS.values():
     (FEM_PL if _o['g'] == 'f' else MASC_PL).add(_o['many'])
@@ -511,7 +511,7 @@ KTIV_NO_PREFIX = {'ואו', 'הממ', 'שנים', 'שתים'}  # never looked up
 NO_YOD = set()
 YES_YOD_M = {'מילה', 'מילים', 'מידה', 'מיטה', 'מילון'}
 WATER_SKY = {p + w for p in ('', 'ב', 'ה', 'ל', 'ו', 'מ', 'וה', 'מה', 'וב') for w in ('מים', 'שמים')}
-NUMBER_PREFIX = ('וּבִ', 'וּבְ', 'וּלְ', 'וּמִ', 'וּמֵ', 'וְ', 'וּ', 'וַ', 'לְ', 'לַ', 'לִ', 'בְּ', 'בַּ', 'בִּ', 'מִ', 'מֵ', 'שֶׁ', 'כְּ', 'כִּ', 'הַ', 'הָ')
+NUMBER_PREFIX = ('וּבִ', 'וּבַ', 'וּבְ', 'וּלְ', 'וּמִ', 'וּמֵ', 'וְ', 'וּ', 'וַ', 'לְ', 'לַ', 'לִ', 'בְּ', 'בַּ', 'בִּ', 'מִ', 'מֵ', 'שֶׁ', 'כְּ', 'כִּ', 'הַ', 'הָ')
 
 
 _ND = lambda w: w.replace(DAGESH, '')  # a dagesh never tells one number word from another (וְתֵשַׁע, מִשָּׁלוֹשׁ, בְּתִשְׁעִים)
@@ -836,13 +836,13 @@ C1 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor
       'number and gender agreement, plural address, = as שָׁוֶה, < and > as גָּדוֹל מִ / קָטָן מִ, age 6 to 8). Draft of the math-teacher; waits for the owner.')
 _C1_UNITS = ('blocks-tens-and-ones|compare-to-100|count-and-compare-again|count-on-big|count-to-100|fact-families|facts-to-18-again|'
              'facts-to-18-more|facts-to-18|hundred-chart|line-to-100|read-numerals-more|read-numerals|read-to-100|ten-frame-glance|'
-             'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens|write-numbers')
+             'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens-more|whole-tens|write-numbers|compare-to-100-more|line-to-100-more')
 _C1_SKILLS = 'MATH-B-04|MATH-C-01|MATH-C-02|MATH-C-03|NUM-B-06|NUM-B-09|NUM-C-01|NUM-C-02|NUM-C-03|NUM-C-04|NUM-C-06|NUM-C-09'
 _C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG'
 # A row that is new in a table run (its text is not in the last table) and is covered by a READ entry gets READ_NEW in place of the day of
 # the first reading, because the editor read it in the pass that made the row: change this when a new pass is done (notes 11.8).
 READ_OLD_DAY = '2026-11-06'
-READ_NEW = "2026-11-07 (the math-teacher's QA changes and the hints shortened to 14 words, hebrew-notes.md section 11.8)"
+READ_NEW = "2026-11-07 (the 35 C1 items of commit 98f57707, blocks, keypad, pay and the middle of two marks; hebrew-notes.md section 11.9)"
 READ = [
     ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
      '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
@@ -1265,7 +1265,7 @@ def master(rows, result, rules):
                                                             'voice cannot misread it; please confirm. ') + read_batch(r)
                 else:
                     status, comment = 'text-ready', EDITOR + read_batch(r)
-                    if before is None:  # new in this run: read in the pass of READ_NEW
+                    if before is None or before['comment'].startswith(EDITOR + 'NOT READ'):  # new in this run (or unread until now): read in the pass of READ_NEW
                         comment = comment.replace(READ_OLD_DAY, READ_NEW, 1)
             elif reviewed(r):
                 doubt, note = first_match(DOUBT, r['text']), first_match(NOTE, r['text'])

@@ -658,3 +658,30 @@ Also `c.mathc02.13`/`.14` hint 2 `מָה עוֹשֶׂה אֶת הַתַּרְג�
 
 **For the voice director.** The four NUM-B-06 count hints (`c.numb06.10`-`.13`) have an ellipsis before the last number: `סוֹפְרִים: אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… שֵׁשׁ.` (a short pause, then the number). The shortened walk hints (`וְעוֹד שִׁשָּׁה צְעָדִים`) are plain. `docs/audio/voice-direction.csv` still holds the old
 hint texts of the changed ids.
+
+### 11.9 The 35 C1 items of commit 98f57707 (2026-11-07, hebrew-text-editor)
+
+**Read:** all 99 new texts of the 35 items (lit rod `c.numc03.24`, blocks on the tiles `c.numc02.18`-`.20` and `c.numc03.25`, two block numbers `c.numc04.13`-`.16`, `9 = 15 - ?` `c.mathc02.15`, pay `c.numc03.26`-`.28`, balances `c.mathc01.32`-`.33`,
+counting by touch `c.numb06.15`-`.16` and `c.numb09.15`-`.16`, the frog `c.numb01.3`-`.4`, the middle of two marks `c.numc06.14`-`.16`, the whole tens `c.mathc03.15`-`.18`, the hundred chart `c.numc01.15` and `c.numc09.17`, the keypad items), the four new shared lines
+(`vo:fb.num_rev_rods`, `vo:fb.pv_face_cubes`, `vo:fb.rod_is_ten`, `vo:fb.middle_not_added`), the three lesson titles and celebrations (`compare-to-100-more`, `line-to-100-more`, `whole-tens-more`) and the two keypad labels in `he.dart`.
+Correct as written: numbers agree with their nouns (`שְׁלוֹשָׁה מוֹטוֹת`, `שְׁנֵי מוֹטוֹת`, `שֶׁבַע קֻבִּיּוֹת`, `חֲמִשִּׁים וּשְׁנַיִם שְׁקָלִים`: a compound number keeps `שְׁנַיִם`; a bare numeral is feminine: `כּוֹתְבִים שֵׁשׁ`, `עֶשֶׂר`, `חֲמֵשׁ עֶשְׂרֵה`),
+the address is plural (`סְפַרְתֶּם`, `שִׁלַּמְתֶּם`, `הִשְׁוִיתֶם`), the pointing of the prefixes (`בְּשִׁשִּׁים`, `וּבִשְׁלוֹשִׁים`, `וּבַחֲמִשִּׁים`, `מִשִּׁשִּׁים`), `הַמּוֹט שֶׁזּוֹהֵר` (the dagesh in the zayin after `שֶׁ` is right; "the rod that glows" is plain and the picture lights the rod),
+`שֶׁ` and `הַוִּי` as in the Band B pay items. The tens-and-units forms of 11.5-11.8 are kept (`חָמֵשׁ עֲשָׂרוֹת, וּשְׁמוֹנֶה יְחִידוֹת`; `שְׁמוֹנֶה עֲשָׂרוֹת, וִיחִידָה אַחַת`). No hint is longer than 14 words.
+The keypad labels (`למחוק ספרה`, `זה המספר`) are plain adult screen-reader text and correct (an infinitive for the key that deletes, the same register as `חזרה למפה`); not changed.
+
+**Changed (6 sources, 7 activities and one shared line):**
+1. `vo:fb.middle_not_added` (`c.numc06.14`-`.16`, wrong answers): `בָּאֶמְצַע לֹא מְחַבְּרִים. מְחַפְּשִׂים מִסְפָּר שֶׁנִּמְצָא בֵּין שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִבְדֹּק.`
+   to `כְּשֶׁמְּחַפְּשִׂים אֶת הָאֶמְצַע, לֹא מְחַבְּרִים. הָאֶמְצַע נִמְצָא בֵּין שְׁנֵי הַמִּסְפָּרִים. בּוֹאוּ נִבְדֹּק.` The first line could be heard as "in the middle we do not add" (a place), not "to find the middle we do not add the two numbers".
+2. Hint 2 of `c.numc06.14`-`.16`: `בָּאֶמְצַע — אוֹתוֹ מֶרְחָק מִשְּׁנֵי הַצְּדָדִים.` to `הָאֶמְצַע הוּא אוֹתוֹ מֶרְחָק מִשְּׁנֵי הַמִּסְפָּרִים.` (a whole definition; the two marks of the line are numbers, not "sides").
+3. Prompt of `c.numc04.13`-`.16`: `מִסְתַּכְּלִים עַל הַקֻּבִּיּוֹת.` to `מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת.` The picture is rods and cubes; "look at the cubes" tells a child to count a rod as one cube (the face-value mistake the item tests).
+4. Hint 2 of `c.numc04.13`-`.16`: `מַשְׁוִים קֹדֶם אֶת הַמּוֹטוֹת שֶׁל הָעֲשָׂרוֹת. רַק אִם יֵשׁ אוֹתוֹ מִסְפָּר, מַשְׁוִים קֻבִּיּוֹת.` to
+   `מַשְׁוִים קֹדֶם אֶת הָעֲשָׂרוֹת — הַמּוֹטוֹת. רַק אִם יֵשׁ אוֹתוֹ מִסְפָּר מוֹטוֹת, מַשְׁוִים קֻבִּיּוֹת.` ("the same number" of what?).
+5. Hint 3 of `c.numc04.13`-`.16`: `בְּאַרְבָּעִים וְאַחַת אַרְבָּעָה מוֹטוֹת, וּבִשְׁלוֹשִׁים וְתֵשַׁע שְׁלוֹשָׁה מוֹטוֹת.` gets `יֵשׁ` in both halves (`בְּאַרְבָּעִים וְאַחַת יֵשׁ אַרְבָּעָה מוֹטוֹת, וּבִשְׁלוֹשִׁים וְתֵשַׁע יֵשׁ שְׁלוֹשָׁה מוֹטוֹת.`):
+   spoken, two number words side by side (`אַרְבָּעִים וְאַחַת אַרְבָּעָה`) run together. With `יֵשׁ` the hint is 12 words, so `fit()` takes the form that ends `עַכְשָׁו תּוֹרְכֶם.` (the same ending as the NUM-C-04 hint the owner approved).
+
+**Left as is, for the owner (optional):** the form `מֵעֶשְׂרִים עֲשָׂרָה צְעָדִים קָדִימָה הֵם שְׁלוֹשִׁים` (hint 3 of the number-line items, since Band B/C1) says "ten steps forward ARE thirty"; it is understandable and consistent in 6 rows,
+a more natural wording would be `מֵעֶשְׂרִים עֲשָׂרָה צְעָדִים קָדִימָה — מַגִּיעִים לִשְׁלוֹשִׁים`. Not changed without the owner. Likewise `שְׁמוֹנֶה וְעוֹד שֶׁבַע הֵם עֶשֶׂר וְעוֹד חָמֵשׁ` (hint 3 of `c.mathc01.32`-`.33`) says `הֵם` where the correct line says `שָׁוֶה`; the same pattern is in the older `עֶשֶׂר וְעוֹד … הֵם …` hints.
+
+**Rules in `tools/hebrew_voice_review.py`:** `מוֹטוֹת` is a known masculine plural (no more `REVIEW number` on `שְׁלוֹשָׁה מוֹטוֹת`: 10 rows were held `proposed`); `וּבַ` is a number prefix (the voice text of `וּבַחֲמִשִּׁים` keeps its nikud);
+the three new lessons (`compare-to-100-more`, `line-to-100-more`, `whole-tens-more`) are in `_C1_UNITS` (they were `proposed / NOT READ`); `READ_NEW` names this pass, and a row that was `NOT READ` takes it too.
+Table: 15704 rows, 416 new since the last table, all `text-ready`; none `owner-approved`.
