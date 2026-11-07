@@ -1,0 +1,80 @@
+# The Russian routes in Band A: three decisions (2026-11-07)
+
+*Owner: curriculum-expert. Asked by the orchestrator after the second build step of Band A (`docs/languages/band-a-build.md` §2.4 and §2.6). The spec the app-developer builds from is `band-a-build.md` §2.6.1; this note gives the decisions and the reasons. No skill, prerequisite, band or order of the syllabus changes. Item 2 trims the teachers' route plan for Band A, so the orchestrator may want to show its "not needed" list to the owner and the russian-language-teacher.*
+
+Read for it: `syllabus.md` §7 (routes, entry points, placement), `band-a-content.md` (the "Routes" table of every skill), `frame.md` §3.3.7 (what a route is and what it never changes) and §2.3 (free-response classifiers), the 20 unit files' `routes` records, the generated pack (`content/languages/rus/pack`: 117 teach screens, 28 say steps that are not teach screens, `placement.json`) and the app code that uses a route (`PackContent.itemsFor`, `SayItSession`, `languageCourseOf`, `buildCourseHome`).
+
+## 1. Should a reader see teach screens?
+
+**Decision: a reader is served by its oral route.** For a skill of A-01 to A-15, it is served as a heritage speaker (no teach screens, the say step picture first) when strand 1 of the placement has put it past its first level, that is, the placement assumed every skill of that level (A-01, A-02, A-05, A-07, A-08). Otherwise it is served as a new learner, with the teach screens. That includes the time before strand 1 has stopped. For A-16 to A-20 a reader is served as a heritage speaker, as the teachers' records say. This replaces the fixed `"reader": {"as": "new"}` of units 01 to 15.
+
+Reasons:
+
+1. **It is what the syllabus says.** Syllabus §7.1: "Oral strands placed separately (a reader may be heritage or not)". `band-a-content.md`, every skill: "As heritage or new, by strand 1". `"as": "new"` stood in for "by strand 1" because nothing read the placement then. The placement result is now on the phone (`LanguageCourse.assumed`), so the rule can be applied as written.
+2. **The usual reader is a heritage child.** A child aged 3 to 8 in Israel who already reads Russian almost always hears Russian at home (research report §3.3: literacy in Russian is a minority even among heritage children). Serving every reader as a new learner gives that child 4 to 6 teach screens before a lesson for words it knows. Worse, it gives it echo-first say steps, and producing speech is the centre of the heritage route (syllabus §7.1; KD01 and PK07 in `docs/research/russian-course-2026-11-03.md`: heritage speakers understand far more than they produce).
+3. **When we do not know, we show the screens.** The two mistakes cost different amounts. A teach screen shown to a child who knows the word costs a few seconds of easy, passive play. The expertise-reversal effect (Kalyuga, Ayres, Chandler and Sweller 2003) warns that guidance can hurt experts, but here the guidance is short and makes no demand. A teach screen not shown to a child who does not know the word turns the first meeting with it into a guess. It also writes a `sem` error for a word the child has never heard. So the rule shows the screens unless the placement has shown the child understands everyday Russian.
+4. **The placement already did most of the work.** A reader past level 1 never reaches the lessons of A-01, A-02, A-05, A-07 and A-08 (they are placed). A lesson that it does reach belongs to a skill that the placement did not credit, or did not probe (A-11, A-14, A-15). In that lesson it plays like a heritage child, and the hint ladder gives the meaning at level 2 when a word is unknown (`@gloss`).
+
+What does not change: the stress marks, the caption after the answer (frame §2.3 (g)) and the letters gate still read the parent's route itself (`reader`).
+
+## 2. Which heritage features does Band A need?
+
+Here, "complete" means three things. Every item measures what its tags say it measures. Every route can reach and master every skill. No route plays something that contradicts the route's own definition in a way that harms learning. By that test, three things are needed and the rest are not.
+
+### 2.1 Needed
+
+**(a) The single hearing of RUS-A-20 for a heritage speaker (and a reader, who is served as one in A-20).** Today neither of them hears the six words before the minimal-pair items. Items 01, 02, 05 and 06, and the checks 19 and 20, ask the child to touch the picture of лук or люк, рысь or рис. A child who does not know that the manhole is люк or that the lynx is рысь cannot answer by hearing. Then a wrong touch writes `hardsoft` or `yi` for what is really a missing word. That is a perception error tag on a vocabulary gap. It is construct-irrelevant variance (Messick 1989), and it gives the parent a "what we noticed" card that is not true. Low-frequency words are exactly where heritage vocabulary is thin when Hebrew dominates (SCH12, PK07); люк and рысь are low-frequency. The teacher asked for this ("teach screens shortened to one hearing"). It is one screen per word: the picture and the word, once, with no demand. The spec is in `band-a-build.md` §2.6.1 R2 and R3. Each word is heard before the first lesson that asks it: лук, люк, мышка and мишка before `pairs-1`; рысь and рис before `pairs-2`.
+
+**(b) The say step "picture first".** The child sees the picture, is asked to say the word, and hears the model only after the pause. For a heritage speaker this is every say step. For every child it is every say step of A-15. Reasons:
+* It is the heritage route's own definition (syllabus §7.1, `band-a-content.md` §1 "say-it is picture first"). A-15 is defined as "names a picture with one Russian word (first echo, then alone)", and the "alone" half is built for no child today.
+* Trying to recall a word before hearing it is retrieval practice, which helps memory more than hearing it again (Roediger and Karpicke 2006; Karpicke and Roediger 2008). This holds when the child tries silently too (Smith, Roediger and Karpicke 2013), so it works with the microphone off.
+* **A-15 picture first for the new learner as well, with no "third encounter" counter.** The teacher's rule was "echo first, from the third encounter picture first". By the time a new learner reaches A-15 on the path (file order 15, after A-12, which needs A-05 and A-08), every one of its 24 words has had a teach screen and at least one item in its own theme unit (A-02, A-03, A-05, A-07, A-08, A-09, A-10). So the A-15 say step is the third encounter or later for every word. A word of a placed skill is one the placement credited. The counter would be code that always gives the same answer. The model still comes after the pause, so a child who cannot recall the word yet simply echoes it. The quiet fallback (more than 60% unsure in a visit) turns the rest of the visit back to echo.
+* **It also fixes content that teaches the wrong thing today.** All 28 say steps that are not teach screens (A-01 04s and 05s, A-14 10s and 11s, A-15 01 to 24) open with f06 "מַה זֶּה? נַסּוּ לְהַגִּיד בְּרוּסִית." and then play the word at once. The child is asked to try and is given the answer in the same breath. In the spec, echo order opens with f03 "בּוֹאוּ נֹאמַר יַחַד." and the word (as the teach screens do), and picture-first order opens with the question alone.
+* Mastery and evidence do not change (frame §3.3.7: a route never changes mastery rules). The order of the clips is presentation only.
+
+**(c) One invariant instead of a route-aware path.** In Band A, a route only adds screens before a lesson's items (teach or hearing) and sets the order of a say step. It never removes, adds or reorders a lesson's items. So no lesson can be empty for any route, and the path, its stones, "what is next" and the finished counts stay the same for every route. The developer's worry was that a lesson skipped by a route would be empty. With this invariant that cannot happen, and Band A needs no route-aware path. A guard test holds the rule (§2.6.1 R6).
+
+### 2.2 Not needed for Band A (stay in the teachers' files as notes; not built)
+
+| Record | Skills | Why not |
+|---|---|---|
+| `from` (start at a later item) | A-01 (from 04), A-02 (from 05) | Placement already skips at the level of the skill: strand 1 level 1 assumes A-01 and A-02. A heritage child who reaches these lessons is one whom the placement did *not* credit with the words, so skipping the first items would skip exactly the items that child needs. It would also empty `greet-1` (items 01 to 03), the case the developer feared. |
+| `order` (later items first, or "mixed") | A-03 to A-11, A-13, A-20 | The same items are played and only the order changes, so validity and mastery are untouched. The idea, "start at the second representation", serves children who know the words, and placement keeps those children out of these skills. A child who is served the skill has not shown the words, so the first representation fits. |
+| `weight` (weight items up) | A-01 06 and 07 (grown-up forms), A-12 05 to 08 (кто / что) | The diagnose-and-repair loop already serves more of what the child gets wrong (curriculum §5.3: a tag becomes active after repeated evidence across 2 items, then the repair). A fixed weight before any evidence repeats the loop's job. The heritage skill weights of frame §3.3.7 are for Band B and C (B-03, B-07, C-26, C-28). |
+| `embodied` after each right tap | A-03 (heritage) | Practice with no evidence. Every route already gets the embodied step `e01` in `body-more`. Gestures help preschool L2 vocabulary (Mavilidi and colleagues 2015), but adding them after every tap belongs to the English and Russian embodied work that is still open (§2.4: "the English embodied steps play the first two clips of their list"), not to the routes. |
+| A-16: dialogic on the first reading (skip 01, 04, 07) | A-16 (heritage, reader) | Hearing a story before it is asked about costs a minute or two and harms nothing. Repeated reading helps word learning (Biemiller and Boote 2006). It is the first item to build if heritage children find the stories slow (it removes one item from a lesson, never all of it, so the invariant would need an exception). |
+| Chant and gap in the same visit; "all items mixed" | A-17, A-18, A-19 | A-17 already plays the chant and its gap item in the same lesson for every child (the heritage version). The others only change the order. |
+| A-15 extended to every word of A-02 to A-09 (heritage) | A-15 | This is an amount of content (about 80 more say items), not a validity question. It is also the one heritage feature that would need lessons for a single route, so it is the place a route-aware path would first be needed. It is proposed for after the family release, with B-08 (the heritage speaking skill of Band B). |
+
+## 3. LS03 boxes: is a count off by two, named by an exact `classify` key, tagged?
+
+**Decision: yes. An exact key is checked first and wins over the distance.** In order:
+1. A count that equals an exact key (`count=N`) is written with that key's tag. It is an ordinary wrong attempt (evidence, hint ladder, `byTag` line), however far N is from the answer.
+2. Otherwise a count one more or one fewer gets the course's one-off tag (`M-RUS-SYLL` and the others).
+3. Otherwise it is a retry that writes nothing (QA-L4-6, as built for the drum).
+
+Reasons. The principle of frame §2.3 is "an error the classifier can name is tagged; an error it cannot name is a retry". "Off by two" was given there as an example of an error it cannot name, not as a rule over a named one. An exact key names a strategy, not a distance. In the English pilot, b01 and b02 put 1 token for the three sounds of "pin" and "sit" (`count=1`, `M-ENG-SEG-SYLL`): the child treated the word as one syllable, which is the misconception the item is built to show. A single accident (a child who stops after one token) is cheap. A tag becomes active only at a score of at least 1.5 across at least 2 independent items (curriculum §5.3), so one slip never puts a card in front of the parent.
+
+Conditions for the validator and the teachers: an exact key's N is not the answer, is at least 1, and is at most the box cap. An exact key that is one off replaces the generic one-off tag for that count. A key two or more away must be a count that another way of splitting *that* word gives: the syllables of a phoneme item, onset and rime (2), or the whole word (1). The teacher's table says which way it is, so the classifier stays a named error. Russian Band A has only the drum (one more or one fewer), so nothing in the Russian pack changes now. The rule matters when LS03 1.1 boxes is built (L5 §5.3).
+
+**For the orchestrator:** `docs/milestones/L5.md` §5.3 ("Off by two or more: a retry, no tag.") and the L5 acceptance list item 3 ("a count off by two is a retry with no tag") should read: "A count named by an exact classifier key is tagged with it, at any distance; any other count off by two or more is a retry with no tag and no evidence." I did not edit L5.md (outside this task's files).
+
+## 4. Smaller findings from the same reading
+
+| Severity | What | For |
+|---|---|---|
+| Wrong content (medium) | The 28 say steps play f06 ("try to say it") and then the word at once (§2.1 (b)). Fixed by R4 of the spec. | app-developer (generator) |
+| Order (low) | A-10 and A-11: the teacher's new learner was to "teach by counting along" first, but the pack plays the ten-frame and set taps (`numbers-1`, `numbers-2`) before the counting along (`numbers-1-5-more`, `numbers-6-10-more`) for every route. That is the heritage order. It does no harm for a new learner who has had the teach screens, but the count-along is the richer first meeting with the number words. | russian-language-teacher (lesson order in units 10 and 11) |
+| Text (low) | Picture first after a puppet bubble uses f07 "מָה עוֹנִים לֶחָבֵר?". That fits A-01 04s and 05s and A-14 10s (на). For A-14 11s (asking for juice) "what do we answer" is a little off: the child asks, it does not answer. | hebrew-text-editor, with the teacher |
+| Watch (low) | A heritage child hears люк and рысь once, possibly weeks before the A-20 checks come back as a revisit (a revisit has no screens). The praise of items 01 to 06 says the word again while its picture is shown (`feedback.correct.target`), which should hold the meaning. If revisit errors on 19 and 20 show `yi` mostly on the lynx and rice pictures, add the two hear screens to the revisit. | curriculum-expert, after the first data |
+
+## Sources
+
+* Kalyuga, S., Ayres, P., Chandler, P. and Sweller, J. (2003). The expertise reversal effect. *Educational Psychologist*, 38(1), 23–31.
+* Roediger, H. L. and Karpicke, J. D. (2006). Test-enhanced learning. *Psychological Science*, 17(3), 249–255.
+* Karpicke, J. D. and Roediger, H. L. (2008). The critical importance of retrieval for learning. *Science*, 319, 966–968.
+* Smith, M. A., Roediger, H. L. and Karpicke, J. D. (2013). Covert retrieval practice benefits retention as much as overt retrieval practice. *Journal of Experimental Psychology: Learning, Memory, and Cognition*, 39(6), 1712–1725.
+* Messick, S. (1989). Validity. In R. L. Linn (Ed.), *Educational Measurement* (3rd ed.), 13–103.
+* Mavilidi, M.-F., Okely, A. D., Chandler, P., Cliff, D. P. and Paas, F. (2015). Effects of integrated physical exercises and gestures on preschool children's foreign language vocabulary learning. *Educational Psychology Review*, 27, 413–426.
+* Biemiller, A. and Boote, C. (2006). An effective method for building meaning vocabulary in primary grades. *Journal of Educational Psychology*, 98(1), 44–62.
+* KD01, PK07, SCH12: `docs/research/russian-course-2026-11-03.md` (heritage learners understand more than they produce; their vocabulary is thinner where Hebrew dominates). The evidence on heritage children aged 3 to 8 is thin (that report, §3.3: no researched heritage curriculum for this age). Item 1's "the usual reader is a heritage child" rests on a second-hand survey figure, so it is a judgement, not a measured fact.

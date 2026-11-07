@@ -109,7 +109,7 @@ Probes are ordinary `tap` items with `"purpose": "probe"`, written as `<skill sl
 Every Band A template has a recipe (§2.2). What is still not in the packs, and why:
 
 * **Built the same day (2026-11-07, second step):** Hebrew **A-11** (the child's own name, 5 items) and **A-12** (print direction, 7 items) are in the Hebrew pack (sections 2.5 and 2.7); the Russian **teach screens** (117) and the route filter (section 2.6); **a font per item** (section 2.8); the hotspots of a listen-and-do are no longer drawn at rest (section 2.9); the shapes of A-10 are pictures (two stand-ins, below).
-* **What a route still cannot do** (Russian). Only the teach screens follow the route. The rest of the teachers' route records stays in the unit files and is not read: the item a heritage child starts from (`from`), the order of the lessons for a route (`order`), what is weighted up (`weight`), the say step *picture first* for a heritage child (`say`; the app's say step is echo first for every child), the embodied step after each right tap (`embodied`), and the single hearing of the six words of RUS-A-20 for a heritage child (no teach screen is shown to it, and nothing replaces it). They need a path and a lesson builder that know the route; a lesson that a route skips would be an empty lesson today.
+* **What a route still cannot do** (Russian). Only the teach screens follow the route. **Decided 2026-11-07 (curriculum-expert, `docs/languages/russian/routes-band-a.md`; spec in section 2.6.1):** to build for Band A are the reader served by its oral route (R1), the single hearing of RUS-A-20 for a heritage speaker and a reader (R2, R3), and the say step *picture first* (R4). That last one also fixes the 28 say steps that today ask "try to say it" and then play the word at once. A route never removes or reorders a lesson's items (R5), so no lesson can be empty and **no route-aware path is needed in Band A**. Not needed for Band A, and staying in the unit files as the teachers' notes, not read: `from`, `order`, `weight`, `embodied`, the A-16 to A-19 pacing notes and the extension of A-15 to every word of A-02 to A-09 (reasons in the note, §2.2).
 * **Heart and flower of Hebrew A-10** (items t05 and s06): Heebo has neither the heart nor the flower, and Secular One has no flower (it drew an empty box), so **no card of A-10 is a text character any more**: the star of s02 is the picture `star`, and the two cards that wanted ♥ and ✿ are the picture `shape-triangle` (t05) and `star` (s06) **as stand-ins**. The two pictures `shape-heart` and `shape-flower` are for the design-director (the same ink and weight as `shape-dot`, 256 by 256); the day they are in `content/languages/pictures` the two cards go back to the teacher's shapes (`units/08-letters-or-not.json`, then `python tools/lang_pack.py heb`).
 * **Items left out of the packs because a clip or a picture is missing**, for the voice-and-sound-director and the design-director: the ten animal-sound items of RUS-A-05 (23 to 32) need the clips `sfx-cat` … `sfx-wolf` in the Russian clip table; the six "find it in the room" items of RUS-A-13 (01 to 06, they stay LS01 taps) need the scene `scene-room` with the three things drawn into it (the table has the places, not the things).
 * **Things the teachers asked for that the schema holds only in part:** the two pauses of one Hebrew story are two items (each plays the story to its own pause; the teacher's one item with two pauses has no place in `story`); a story's word cards and the parent card are not in the pack; the A-02 action pictures play as their second frame only (the two-frame animation has no activity field); `box opens` in the English guessing game and Pip holding the object (`pip-holds` with a picture in his hands) are not drawn; the Hebrew story-order item has one tag, not two (`order` for a reversed line and `story_order` for a swap; the document takes one); the Russian rhymes are heard twice as chants (the chant clip is one line and a chant has two lines at least), and the word-pair hint of their gap items (two target clips after one Hebrew clip, a pair for each option) is not built; the English embodied steps play the first two clips of their list; the Russian same-or-different buttons are the friend nodding and shaking the head (no same / different icons are drawn); the Russian yes-or-no items show the thing the friend holds or points at without the friend; Hebrew A-10 has no text character left (see above): the shapes are pictures.
@@ -135,9 +135,73 @@ The teachers' unit files carry `teach` (the new words of the skill, in sets of 4
 * `course.json` says the picture of each teach word (`teachPictures`, 116 words, from the pictures the course's own items use for them) and the lines of a teach screen (`defaults.teach`: `frame` f03, `heard`, `together`).
 * The generator makes **a teach screen for each word**: a `say_it` activity (LS09, echo: the picture, the word, a pause, the word again) with `answer.teach`, id `<course>.<skill>.tcNN`. It is **unscored, writes nothing, has no microphone and no help** ("I said it" goes on), is not an item of any lesson, and **the engine does not see it** (not in its catalogue, no representation counted for the skill).
 * A lesson has `teach`: the sets, each with the routes that are shown it. A set goes before the first lesson whose prompts ask one of its words (a set no lesson asks by word, the body parts, goes before the lesson of its own number). `lesson.teach[].routes` may name only `new` and `reader`: **a heritage speaker is never shown a teach screen**: the schema refuses the route, the generator never writes it, and `PackContent.itemsFor` refuses it as well.
-* Lesson building: `PackContent.itemsFor(lesson, route:)` gives the teach screens of the sets the route is shown, then the lesson's items; `LessonController(route:)` plays that. A route not set yet counts as a new learner. A record `"reader": {"as": "new"}` serves the reader as the new learner (a reader placed past the skill never reaches its lessons; the others have not met the words); `"as": "heritage"` serves it as a heritage speaker (RUS-A-16 to A-20 and A-20's pairs).
+* Lesson building: `PackContent.itemsFor(lesson, route:)` gives the teach screens of the sets the route is shown, then the lesson's items; `LessonController(route:)` plays that. A route not set yet counts as a new learner. A record `"reader": {"as": "new"}` serves the reader as the new learner (a reader placed past the skill never reaches its lessons; the others have not met the words); `"as": "heritage"` serves it as a heritage speaker (RUS-A-16 to A-20 and A-20's pairs). *(As built; section 2.6.1 R1 replaces `"as": "new"` by `"as": "oral"`, the reader served by strand 1 of its placement.)*
 
 The routes record is now structured (`{"new": {...}, "heritage": {"teach": false, "from": "04", ...}, "reader": {"as": "new"}}`; the teachers' prose is in `note`). What of it the app does not read is in section 2.4.
+
+#### 2.6.1 Routes: what is built next (decided 2026-11-07)
+
+Decided by the curriculum-expert; the reasons and sources are in `docs/languages/russian/routes-band-a.md`. For the app-developer, in this order. Nothing here changes mastery or evidence (frame §3.3.7), and nothing is voiced except the one new line of R3.
+
+**R1. The served route.** A pure function decides how the child is served in a skill:
+
+```
+servedRoute(route, skill, assumed, placement) -> "new" | "heritage"
+  "heritage"        -> "heritage"
+  "new" or null     -> "new"
+  "reader"          -> skill.readerAs == "heritage"  -> "heritage"
+                       otherwise ("oral")            -> strand1PastFirstLevel ? "heritage" : "new"
+strand1PastFirstLevel = the placement has a strand "1", and every skill in its levels[0].assumes is in LanguageCourse.assumed
+```
+
+* Data: a skill field `readerAs`, either `"oral"` (the default) or `"heritage"`. The generator writes it from the unit's `routes.reader.as`. The teachers' files change `"as": "new"` to `"as": "oral"` in units 01 to 15 (russian-language-teacher, or the developer with the teacher's OK), and units 16 to 20 keep `"heritage"`. After that the generator refuses `"new"` there. The validator allows `readerAs` only in `rus`.
+* Before strand 1 has stopped, and in a pack with no placement, a reader is served `new`.
+* The served route is used by `PackContent.itemsFor` and by the say step (R4), and nowhere else. The stress marks, the caption after the answer (`caption_policy.dart`) and the letters gate (`routeBypass`) keep reading the parent's route itself.
+* A lesson's skill is the skill of its first item (every Russian Band A lesson has one skill). A say step's skill is its activity's first skill. Revisit lessons (`courseMission`) have no screens and are not affected.
+
+**R2. Teach sets get a mode.** `lesson.teach[]` becomes `{"items": [...], "routes": [...], "mode": "teach" | "hear"}`, with `mode` defaulting to `teach`.
+
+* A `teach` set holds teach screens (`tcNN`, echo, as built). Its `routes` may name only `new` (`reader` is no longer a value: R1 resolves a reader before the lesson is built).
+* A `hear` set holds hearing screens (`thNN`, R3). Its `routes` may name only `heritage`.
+* The rule "a heritage speaker is never shown a teach screen" stays, in the schema, the generator and `itemsFor`. A hearing screen is not a teach screen.
+* `itemsFor(lesson, route: served)` gives the screens of every set whose `routes` holds the served route, then the lesson's items.
+* Authoring: the unit's `routes.heritage` says `"hear": true` (RUS-A-20 only; today it says `"teach": false` with a note). The generator then makes one hearing screen per teach word. **Each one goes before the first lesson whose prompts ask its word**, not all before the first lesson: лук, люк, мышка and мишка before `pairs-1`; рысь and рис before `pairs-2`. In A-20 that is 6 screens.
+
+**R3. The hearing screen.**
+
+* Id: `<course>.<skill>.thNN` (the number of the teach screen of the same word).
+* Template `say_it`, with `answer` set to `{"type": "say_it", "scored": false, "teach": true, "hear": true}`. The scene is the word's teach picture (`teachPictures`).
+* Prompt: the new line `defaults.hear.frame`, then the word clip. The line is `f41`: `{"he": "הַקְשִׁיבוּ:", "voice": "הקשיבו:", "review": "needs-editor"}`, a draft for the hebrew-text-editor, then one clip for the voice-and-sound-director.
+* What it does: the line and the word play once. There is no microphone, no "I said it" and no second hearing after the pause. The replay button plays the word again, as often as the child likes. The picture goes on once the word has finished playing. Like a teach screen it writes nothing, is not an item of any lesson, and is not in the engine's catalogue.
+* Validator: `hear` is allowed only with `teach: true`, only in `rus`, and only in a `hear` set.
+
+**R4. The say step's order.** Every `say_it` activity that is not a teach or hearing screen gets two more fields:
+
+```json
+"say": { "...": "as now",
+         "order": {"new": "echo", "heritage": "picture"},
+         "pictureFirst": {"vo": "vo:rus.f06", "caption": [{"t": "he", "v": "מַה זֶּה? נַסּוּ לְהַגִּיד בְּרוּסִית."}]} }
+```
+
+* **The echo prompt becomes the `together` line (f03) and the word**, as on a teach screen. Today all 28 of these steps open with f06 and the word, which asks the child to try and gives the answer in the same breath.
+* Generator: the course default is `defaults.sayOrder = {"new": "echo", "heritage": "picture"}`. A unit may override it with `routes.<route>.say`, `"echo"` or `"picture"`. **RUS-A-15 sets `new` to `picture`**, so all of A-15 is picture first for every child. The teachers' strings "picture first" in A-01 and A-14 become `"picture"`. `pictureFirst` is f06 by default, and f07 ("מָה עוֹנִים לֶחָבֵר?") for a say step that is the `then` of a puppet bubble (A-01 04s and 05s, A-14 10s and 11s). An item may name its own line.
+* Player: the order is echo while the visit's quiet fallback is on. Otherwise it is `say.order[served]`, or echo when that is missing.
+* **Picture first:**
+  1. The `pictureFirst` line plays alone, with no target clip.
+  2. The microphone (when on) and the "I said it" button are there from the start.
+  3. After `SayItSession.pause` the voice says the word, unless the child has already been heard (the heard line says the word itself).
+  4. From then on the step is the echo step as built: the child may say it, and the picture goes on.
+* **Echo** stays as built. Teach screens are always echo. Evidence is the same in both orders.
+
+**R5. The invariant (no code).** A route adds screens before a lesson's items and sets the order of a say step. It never removes, adds or reorders a lesson's items. So every lesson has the same items for every route, the path, its stones, "what is next" and the finished counts do not depend on the route, and Band A needs no route-aware path. The unit fields `from`, `order`, `weight`, `embodied` and the pacing notes of A-16 to A-19 stay as the teachers' notes. The generator reads them as notes, and the teacher may fold them into `note` at the next edit. Building one of them later (the first candidate is the A-16 heritage skip of the listen-first readings) means an exception to this invariant and its own guard.
+
+**R6. Guards (for the qa-engineer, with the feature).**
+1. For every lesson of the Russian pack and each served route, `itemsFor` is that route's screens followed by `itemsOf(lesson)`. The `itemsOf` part is the same for both routes, and it is never empty.
+2. A heritage child gets no `teach` screen anywhere, and gets hearing screens only before `pairs-1` (4) and `pairs-2` (2).
+3. `servedRoute` table: a reader with strand 1 not stopped, stopped at its first level, or past it, crossed with an `oral` skill (A-03) and a `heritage` skill (A-17).
+4. No say step's echo prompt is f06. No `pictureFirst` has a target clip. A-15 is `picture` for both routes. A-01 and A-14 are `echo` for `new` and `picture` for `heritage`. The quiet fallback turns picture first into echo.
+5. A hearing screen writes nothing, has no microphone, and plays the word once unless the child replays it.
+6. When LS03 1.1 boxes is built: a count named by an exact `classify` key is tagged with it at any distance, and any other count off by two or more writes nothing (the note, §3).
 
 ### 2.7 Print direction (Hebrew A-12, `story` 1.1 modes `zones` and `follow`)
 
