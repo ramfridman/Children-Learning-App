@@ -64,13 +64,15 @@ const Map<String, String> supportedTemplates = <String, String>{
   'puppet_talk': '1.0',
   'sound_boxes': '1.0',
   'count_tap': '1.1',
-  'give_n': '1.0',
+  // 1.1: `scene.frame`, the target as a ten-frame (M10).
+  'give_n': '1.1',
   'flash': '1.0',
   'sort_drag': '1.1',
   'build_pattern': '1.1',
   'robot_path': '1.0',
   'shape_builder': '1.0',
-  'number_line': '1.0',
+  // 1.1: `tickStep` and a `tolerance` for a line placed by estimate (M10, X5).
+  'number_line': '1.1',
   'balance': '1.0',
   // 1.1: the language fields of L5-1 (text cells, the model picture) and, for M10, the signs `<` `>` `(` `)` and numbers to 10,000 in a cell.
   'spot_error': '1.1',
@@ -1176,6 +1178,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'hops': SField(SArray(SInt(min: -20, max: 20), maxItems: 6), required: false),
           // The numbers that carry a written numeral; the other ticks are plain marks.
           'labels': SField(SArray(SInt(min: 0, max: 100), maxItems: 21)),
+          // Ticks only at every `tickStep`th number from `from` (a line of 0 to 100 with ticks of 10); the child may still touch any
+          // number between them. Missing is 1: a tick for every number.
+          'tickStep': SField(SInt(min: 1, max: 25), required: false),
         }),
       ),
       'answer': const SField(
@@ -1183,6 +1188,8 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'type': SField(SConst('line')),
           'mode': SField(SEnum(<String>['place', 'jump'])),
           'target': SField(SInt(min: 0, max: 100)),
+          // `place` only (M10, X5): a touch within this many of the target is right ("about 70", an error of 8 or less). Missing is 0.
+          'tolerance': SField(SInt(min: 0, max: 20), required: false),
           'misconception': SField(_tag, required: false),
           // The tag for a child who runs the line from right to left (the mirror of the right answer).
           'mirrorMisconception': SField(_tag, required: false),
@@ -1328,6 +1335,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             SObject(<String, SField>{'sprite': SField(_asset), 'count': SField(SInt(min: 1, max: 20))}),
           ),
           'target': SField(_sprite),
+          // The target is a ten-frame (two for more than ten) instead of the picture: the objects given sit in its cells, row by row
+          // from the left (M10, NUM-B-09: fill the ten-frame). The `target` picture is then only the frame's name for the pack.
+          'frame': SField(SBool(), required: false),
         }),
       ),
       'answer': const SField(

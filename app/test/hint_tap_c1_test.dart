@@ -8,6 +8,7 @@ import 'package:nitznutz/content/models.dart';
 import 'package:nitznutz/play/hints/hint_marks.dart';
 import 'package:nitznutz/play/hints/tap_geometry.dart';
 import 'package:nitznutz/play/hints/tap_plans.dart';
+import 'package:nitznutz/play/stage_pictures.dart';
 
 import 'support/c1_screens.dart';
 import 'support/harness.dart';
@@ -144,5 +145,54 @@ void main() {
       expect(k3.difference(k2).isNotEmpty, isTrue, reason: '${a.id}: $k2 vs $k3');
       expect(k1.contains('HandMark') || k2.contains('HandMark'), isFalse, reason: a.id);
     }
+  });
+
+  test('blocks are as large as the stage allows: a cube is at least 9 points on a stage with no row, 5 with one, 7 in a hint', () {
+    for (final ActivitySpec board in boards) {
+      final Size room = stageOf(board);
+      for (final TapAnswerActivity a in items) {
+        final TapGeometry g = TapGeometry(a, room, board);
+        final Map<String, Object?>? picture = a.picture;
+        if (picture != null && a.drawnPictureKind == 'base_ten') {
+          final Size area = a.picture2 == null
+              ? g.pictureArea.size
+              : Size(g.pictureArea.width / 2 - 2 * TapGeometry.cellInsetOf(a), g.pictureArea.height - 4);
+          final double unit = BaseTenLayout.forBox(BaseTen.fromScene(picture), area).unit;
+          final double least = TapGeometry.groupAndRow(a) ? 5 : 9;
+          expect(
+            unit,
+            greaterThanOrEqualTo(least),
+            reason: '${a.id} on ${board.stage}: a cube is $unit points',
+          );
+        }
+        for (int level = 2; level <= 3; level++) {
+          for (final HintMark m in marksOf(planOf(a, level, board)!)) {
+            if (m is! BlocksMark || m.full.blocks == 0) continue;
+            final double unit = BaseTenLayout.forBox(m.full, m.rect.size).unit;
+            expect(unit, greaterThanOrEqualTo(7), reason: '${a.id} level $level on ${board.stage}: $unit');
+          }
+        }
+      }
+    }
+  });
+
+  test('SEC-M10-8: a coin sprite with a long run of digits is no coin, and the hint is the generic one, not an exception', () async {
+    final PackContent hostile = await loadSourcePack(
+      edit: (Map<String, Object?> docs) {
+        final Map<String, Object?> scene =
+            (docs['activity.c.numc03.12.json']! as Map<String, Object?>)['scene']! as Map<String, Object?>;
+        (scene['group']! as Map<String, Object?>)['sprite'] = 'asset:coin_s${'9' * 30}';
+      },
+    );
+    final TapAnswerActivity a = hostile.activities['c.numc03.12']! as TapAnswerActivity;
+    expect(a.group!.sprite, endsWith('9' * 30));
+    for (final ActivitySpec board in boards) {
+      for (int level = 1; level <= 3; level++) {
+        late HintPlan? p;
+        expect(() => p = planOf(a, level, board), returnsNormally, reason: 'level $level');
+        expect(p, isNotNull);
+      }
+    }
+    expect(planOf(a, 3, ActivitySpec.phone)!.endsDemo, isTrue);
   });
 }

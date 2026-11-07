@@ -12,11 +12,19 @@ import 'pack_fixtures.dart';
 
 /// The pack as the source folder builds it, signed with a throw-away key (as `mastery_reachable_test.dart` does): the Band C
 /// activities of batch C1 are in it before any signed pack is published.
-Future<PackContent> loadSourcePack() async {
+///
+/// [edit] may change the documents before the pack is read (a test that needs an item no content has yet).
+Future<PackContent> loadSourcePack({void Function(Map<String, Object?> docs)? edit}) async {
+  final VerifiedPack pack = await loadSourceVerified();
+  edit?.call(pack.docs);
+  return PackContent.fromPack(pack);
+}
+
+/// The source folder built and verified, its documents still open to a test's edit.
+Future<VerifiedPack> loadSourceVerified() async {
   final PackKey key = await newTestKey();
   final BuiltPack built = await buildPack(Directory('../content/starter'), key);
-  final VerifiedPack pack = await verifyPack(built.bytes, publicKey: key.publicKey);
-  return PackContent.fromPack(pack);
+  return verifyPack(built.bytes, publicKey: key.publicKey);
 }
 
 /// The four boards the child's screens are laid out on (design/board.dart), with the name each is reported under.

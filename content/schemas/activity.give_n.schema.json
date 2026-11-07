@@ -267,6 +267,9 @@
             "sprite"
           ],
           "additionalProperties": false
+        },
+        "frame": {
+          "type": "boolean"
         }
       },
       "required": [

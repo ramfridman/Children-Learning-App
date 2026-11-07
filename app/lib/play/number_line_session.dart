@@ -76,7 +76,7 @@ class NumberLineSession extends TemplateSession {
   Future<void> choose(int n) async {
     if (_busy || ring == AnswerState.correct) return;
     _stopWay();
-    if (controller.guided && n != activity.target) {
+    if (controller.guided && !activity.isRight(n)) {
       _showWay();
       return;
     }
@@ -85,10 +85,10 @@ class NumberLineSession extends TemplateSession {
     markerAt = n;
     trail.clear();
     notify();
-    final bool right = n == activity.target;
+    final bool right = activity.isRight(n);
     String tag = '';
     if (!right) {
-      final bool mirror = n == activity.from + activity.to - activity.target;
+      final bool mirror = (n - (activity.from + activity.to - activity.target)).abs() <= activity.tolerance;
       tag = (mirror && activity.mirrorTag != null) ? activity.mirrorTag! : (activity.wrongTag ?? '');
     }
     await controller.submitPlacement(right: right, tag: tag, response: '$n');
@@ -131,12 +131,23 @@ class NumberLineSession extends TemplateSession {
       hopDots = activity.hops.isEmpty ? 0 : activity.hops.first.abs();
     } else {
       trail.add(activity.from);
-      for (int n = activity.from; n <= activity.to; n++) {
-        if (n % 5 == 0 && n != activity.target) trail.add(n);
+      if (activity.tickStep > 1) {
+        // A line of ticks of ten: the two ends and the middle are the landmarks.
+        trail.addAll(<int>[activity.to, ..._middleTicks()]);
+      } else {
+        for (int n = activity.from; n <= activity.to; n++) {
+          if (n % 5 == 0 && n != activity.target) trail.add(n);
+        }
       }
     }
     trail.remove(activity.target);
     notify();
+  }
+
+  /// The tick in the middle of the line, when there is one (a line of ticks of ten from 0 to 100 has 50).
+  List<int> _middleTicks() {
+    final int mid = (activity.from + activity.to) ~/ 2;
+    return (mid - activity.from) % activity.tickStep == 0 ? <int>[mid] : const <int>[];
   }
 
   /// Hint 2: the guide hops the marker one unit from the start (counting back when the line is walked back) and stops. A hop that
@@ -145,7 +156,7 @@ class NumberLineSession extends TemplateSession {
     _stopWay();
     final int from = activity.start ?? activity.from;
     final int dir = activity.jump && activity.hops.isNotEmpty && activity.hops.first < 0 ? -1 : 1;
-    final int one = from + dir;
+    final int one = from + dir * (activity.jump ? 1 : activity.tickStep);
     markerAt = from;
     trail.add(from);
     if (activity.jump && activity.hops.isNotEmpty) {
@@ -159,7 +170,7 @@ class NumberLineSession extends TemplateSession {
     _hint.play(
       HintPlan(<HintFrame>[
         const HintFrame(<HintMark>[], hold: Duration(milliseconds: 700)),
-      ], rest: _hop(_size, from, one, 1)),
+      ], rest: _hop(_size, from, one, (one - from).abs())),
     );
     later(const Duration(milliseconds: 700), () {
       if (_demo != id) return;
@@ -189,7 +200,7 @@ class NumberLineSession extends TemplateSession {
       if (activity.jump)
         for (int i = 0; i < upTo; i++) ..._hop(_size, i == 0 ? from : way[i - 1], way[i], i + 1)
       else if (upTo > 0)
-        BadgeMark(Offset(_tickX(_size, way[upTo - 1]) - 30 * k, room), upTo),
+        BadgeMark(Offset(_tickX(_size, way[upTo - 1]) - 30 * k, room), (way[upTo - 1] - from).abs()),
     ];
     _hint.play(
       handTourPlan(<HandStop>[
@@ -221,9 +232,12 @@ class NumberLineSession extends TemplateSession {
   }
 
   /// Every number from [from] to [to], one unit at a time (counting back when [to] is the smaller), without [from] itself.
-  List<int> _unitWay(int from, int to) => <int>[
-    for (int n = from; n != to; n += to > from ? 1 : -1) n + (to > from ? 1 : -1),
-  ];
+  List<int> _unitWay(int from, int to) {
+    // A line with ticks of ten is walked from tick to tick (the hops of ten), ending on the tick of the answer.
+    final int unit = activity.jump ? 1 : activity.tickStep;
+    final int dir = to > from ? 1 : -1;
+    return <int>[for (int n = from; n != to;) n = dir > 0 ? math.min(to, n + unit) : math.max(to, n - unit)];
+  }
 
   @override
   void onReset() {
@@ -329,7 +343,8 @@ class _LineStage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    for (int n = a.from; n <= a.to; n++) _tick(a, n, lineY),
+                    for (int n = a.from; n <= a.to; n++)
+                      if ((n - a.from) % a.tickStep == 0 || n == a.to) _tick(a, n, lineY),
                     if (s.hopDots > 0)
                       Positioned(
                         right: 8,
@@ -387,9 +402,9 @@ class _LineStage extends StatelessWidget {
         ? TokenColors.notYetRing
         : (right ? TokenColors.correctGlow : (lit ? TokenColors.hintHalo : TokenColors.ink));
     return Positioned(
-      left: _x(n) - 14,
+      left: _x(n) - 22,
       top: lineY - 12,
-      width: 28,
+      width: 44,
       height: 64,
       child: Column(
         children: <Widget>[

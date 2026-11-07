@@ -51,6 +51,7 @@ const List<_Kind> _kinds = <_Kind>[
   _Kind('keypad_row', 'c.numc03.21', levels: <int>[2, 3], boards: _all),
   _Kind('keypad_words', 'c.numc02.13', levels: <int>[3], boards: _all),
   _Kind('keypad_facts', 'c.mathc01.27', levels: <int>[]),
+  _Kind('blocks_on_tiles', 'c.numc03.25', levels: <int>[2, 3]),
 ];
 
 Future<void> _wait(WidgetTester t, int ms) async {

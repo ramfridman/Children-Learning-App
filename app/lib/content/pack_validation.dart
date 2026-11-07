@@ -455,6 +455,28 @@ List<Problem> validatePack({
         bool onLine(int n) => n >= lineFrom && n <= lineTo;
         final int target = answer['target']! as int;
         if (!onLine(target)) say(file, 'answer.target', 'is not on the line');
+        if ((scene['tickStep'] != null || answer['tolerance'] != null) &&
+            compareTemplateVersion('${a['templateVersion']}', '1.1') < 0) {
+          say(
+            file,
+            'templateVersion',
+            'is ${a['templateVersion']}, but a tick step or a tolerance needs number_line 1.1',
+          );
+        }
+        final int step = (scene['tickStep'] as int?) ?? 1;
+        if ((lineTo - lineFrom) % step != 0) {
+          say(file, 'scene.tickStep', 'the line from $lineFrom to $lineTo does not end on a tick of $step');
+        }
+        final int tolerance = (answer['tolerance'] as int?) ?? 0;
+        if (tolerance > 0 && answer['mode'] == 'jump') {
+          say(file, 'answer.tolerance', 'only a place item has a tolerance');
+        }
+        if (tolerance >= lineTo - lineFrom) say(file, 'answer.tolerance', 'is as wide as the line');
+        if (tolerance > 0 &&
+            answer['mirrorMisconception'] != null &&
+            (lineFrom + lineTo - target - target).abs() <= 2 * tolerance) {
+          say(file, 'answer.mirrorMisconception', 'the mirror of the answer is inside the tolerance');
+        }
         for (final (int i, Object? l) in (scene['labels']! as List<Object?>).indexed) {
           if (!onLine(l! as int)) say(file, 'scene.labels[$i]', 'is not on the line');
         }
@@ -784,6 +806,9 @@ List<Problem> validatePack({
         checkAsset(file, 'scene.target.sprite', (scene['target']! as Map<String, Object?>)['sprite']);
         if ((answer['n']! as int) > (source['count']! as int)) {
           say(file, 'answer.n', 'cannot be more than the ${source['count']} objects in the jar');
+        }
+        if (scene['frame'] == true && compareTemplateVersion('${a['templateVersion']}', '1.1') < 0) {
+          say(file, 'templateVersion', 'is ${a['templateVersion']}, but a ten-frame target needs give_n 1.1');
         }
         for (final (int i, Map<String, Object?> c) in _maps(answer['classifiers']).indexed) {
           checkTag(file, 'answer.classifiers[$i].misconception', c['misconception']);

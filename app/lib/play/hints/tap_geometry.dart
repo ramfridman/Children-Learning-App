@@ -48,12 +48,12 @@ class TapGeometry {
   static String? stagePictureOf(TapAnswerActivity a) => a.drawnPictureKind;
 
   /// The share of the stage's height the pictures take when a row stands under them (see [groupAndRow]).
-  static const double pictureShare = 0.56;
+  static const double pictureShare = 0.6;
 
   /// The room kept round the pictures of a group and round each picture's cell: a stage that holds a row under them has little height
   /// to spare, so it takes less.
-  static double groupInsetOf(TapAnswerActivity a) => groupAndRow(a) ? 4 : 12;
-  static double cellInsetOf(TapAnswerActivity a) => groupAndRow(a) ? 2 : 6;
+  static double groupInsetOf(TapAnswerActivity a) => groupAndRow(a) || stagePictureOf(a) != null ? 4 : 12;
+  static double cellInsetOf(TapAnswerActivity a) => groupAndRow(a) || stagePictureOf(a) != null ? 2 : 6;
 
   /// The box the group (or the two groups) is drawn in.
   Rect get groupArea => Rect.fromLTWH(

@@ -559,10 +559,14 @@ extension _BandB on _Plans {
   List<Rect> _virtualCells(Rect card, _Sentence s) {
     final ({int left, int right, int strip}) r = _roles(s);
     final Rect inner = card.deflate(8 * k);
-    final double half = (inner.width - 8 * k) / 2;
+    // The two halves share the width by what each number needs (a number of nine rods needs more than a few cubes), never under a quarter.
+    final double need = BaseTenLayout.extentOf(BaseTen.of(s.value[r.left] ?? 0)).width;
+    final double other = BaseTenLayout.extentOf(BaseTen.of(s.value[r.right] ?? 0)).width;
+    final double share = (need / math.max(1, need + other)).clamp(0.25, 0.75);
+    final double usable = inner.width - 8 * k;
     final List<Rect> cells = List<Rect>.filled(a.row.length, card);
-    cells[r.left] = Rect.fromLTWH(inner.left, inner.top, half, inner.height);
-    cells[r.right] = Rect.fromLTWH(inner.right - half, inner.top, half, inner.height);
+    cells[r.left] = Rect.fromLTWH(inner.left, inner.top, usable * share, inner.height);
+    cells[r.right] = Rect.fromLTRB(inner.right - usable * (1 - share), inner.top, inner.right, inner.bottom);
     cells[r.strip] = Rect.fromLTWH(inner.left, inner.bottom - 22 * k, inner.width, 22 * k);
     return cells;
   }

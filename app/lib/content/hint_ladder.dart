@@ -230,6 +230,7 @@ const Map<String, TapFamily> _tapFamilyOfSkill = <String, TapFamily>{
   'NUM-C-02': TapFamily.numerals,
   'NUM-C-03': TapFamily.numerals,
   'NUM-C-04': TapFamily.compare,
+  'NUM-C-06': TapFamily.sequence,
   'NUM-C-09': TapFamily.sequence,
 };
 

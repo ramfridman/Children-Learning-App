@@ -131,7 +131,7 @@ class BaseTenLayout {
 
   /// The layout [BaseTenPicture] draws in a box of [size] (a bigger unit on a tablet's stage): the stage and the hints call this one.
   factory BaseTenLayout.forBox(BaseTen n, Size size) =>
-      BaseTenLayout(n, size, maxUnit: size.shortestSide >= 200 ? 18 : 16);
+      BaseTenLayout(n, size, maxUnit: size.shortestSide >= 200 ? 28 : 24);
 
   final double unit;
   final List<Rect> thousands;
@@ -247,17 +247,24 @@ class _BlocksPainter extends CustomPainter {
       final bool lit = i < shown.litRods;
       final bool crossed = i >= shown.tens - shown.crossedRods;
       if (lit) {
-        // A lit rod: the one the question is about, in a golden halo.
-        canvas.drawRRect(r(rod.inflate(u * 0.45), u * 0.6), fill(TokenColors.spark.withValues(alpha: 0.55)));
+        // A lit rod: the one the question is about, in a wide golden glow with a golden body and a dark golden edge.
+        canvas.drawRRect(r(rod.inflate(u * 0.9), u * 0.9), fill(TokenColors.spark.withValues(alpha: 0.35)));
+        canvas.drawRRect(r(rod.inflate(u * 0.5), u * 0.6), fill(TokenColors.spark.withValues(alpha: 0.75)));
       }
-      canvas.drawRRect(r(rod, u * 0.25), fill(crossed ? _rod.withValues(alpha: 0.35) : _rod));
+      canvas.drawRRect(
+        r(rod, u * 0.25),
+        fill(lit ? TokenColors.spark : (crossed ? _rod.withValues(alpha: 0.35) : _rod)),
+      );
       if (u >= 3.5) {
-        final Paint seg = edge(_rodEdge.withValues(alpha: 0.6), 0.7);
+        final Paint seg = edge((lit ? TokenColors.sparkDeep : _rodEdge).withValues(alpha: 0.6), 0.7);
         for (int k = 1; k < 10; k++) {
           canvas.drawLine(Offset(rod.left, rod.top + k * u), Offset(rod.right, rod.top + k * u), seg);
         }
       }
-      canvas.drawRRect(r(rod, u * 0.25), edge(_rodEdge, line));
+      canvas.drawRRect(
+        r(rod, u * 0.25),
+        lit ? edge(TokenColors.sparkDeep, math.max(2, u * 0.3)) : edge(_rodEdge, line),
+      );
       if (crossed) {
         // Taken away: a cross over the rod, in the ink of the page.
         final Paint cross = edge(TokenColors.ink, math.max(1.5, u * 0.22))..strokeCap = StrokeCap.round;

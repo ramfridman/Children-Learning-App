@@ -317,7 +317,11 @@ class _Plans {
   ChoiceOption get _right => a.options[_ci];
 
   /// The number the answer is: the right tile's numeral, or the number a keypad item asks for. Null for an answer that is no number.
-  int? get _answerValue => a.numberAnswer?.value ?? (_ci < 0 ? null : _right.numeral);
+  int? get _answerValue =>
+      a.numberAnswer?.value ??
+      (_ci < 0
+          ? null
+          : (_right.numeral ?? (_right.picture == null ? null : BaseTen.fromScene(_right.picture!).value)));
 
   String? _svg(String? ref) => ref == null ? null : a.assets.svgOrNull(ref);
 

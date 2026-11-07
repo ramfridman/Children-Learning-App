@@ -58,7 +58,8 @@ String _expectedRepresentation(Map<String, Object?> a) {
           scene['picture'] != null) {
         return 'pictorial';
       }
-      if (_l(answer['options']).any((Object? o) => _m(o)['sprite'] != null || _m(o)['set'] != null)) {
+      if (_l(answer['options'])
+          .any((Object? o) => _m(o)['sprite'] != null || _m(o)['set'] != null || _m(o)['picture'] != null)) {
         return 'pictorial';
       }
       if (_l(scene['row']).any((Object? c) => '$c'.startsWith('asset:'))) return 'pictorial';
@@ -122,8 +123,8 @@ void main() {
   final Map<String, Map<String, Object?>> acts = _load('activity.');
   final Map<String, Map<String, Object?>> skills = _load('skill.');
 
-  test('the sources are the 967 activities and 100 skills of pack 0.10.0, and the 193 and 12 of M10 batch C1 (170 for the sessions of 2026-11-06 and 23 for the block, chart and keypad modes)', () {
-    expect(acts.length, 967 + 193);
+  test('the sources are the 967 activities and 100 skills of pack 0.10.0, and the 228 and 12 of M10 batch C1 (170 of the first sessions, and 58 for the block, chart, keypad and tolerance modes)', () {
+    expect(acts.length, 967 + 228);
     expect(skills.length, 100 + 12);
   });
 

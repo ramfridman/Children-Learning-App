@@ -945,6 +945,8 @@ class NumberLineActivity extends Activity {
       labels = <int>[for (final Object? l in _map(json['scene'])['labels']! as List<Object?>) l! as int],
       jump = _map(json['answer'])['mode'] == 'jump',
       target = _map(json['answer'])['target']! as int,
+      tolerance = (_map(json['answer'])['tolerance'] as int?) ?? 0,
+      tickStep = (_map(json['scene'])['tickStep'] as int?) ?? 1,
       wrongTag = _map(json['answer'])['misconception'] as String?,
       mirrorTag = _map(json['answer'])['mirrorMisconception'] as String?,
       super._();
@@ -963,6 +965,16 @@ class NumberLineActivity extends Activity {
   final List<int> labels;
   final bool jump;
   final int target;
+
+  /// How far a touch may be from [target] and still be right (a line placed by estimate, M10 X5); 0 asks for the exact tick.
+  final int tolerance;
+
+  /// A tick is drawn at every [tickStep]th number from [from] (1: every number), and at [to].
+  final int tickStep;
+
+  /// Whether number [n] is within the tolerance of the right place.
+  bool isRight(int n) => (n - target).abs() <= tolerance;
+
   final String? wrongTag;
 
   /// The tag for the mirror of the right answer: the child who runs the line from right to left.
@@ -1600,6 +1612,7 @@ class GiveNActivity extends Activity {
       sourceCount = _map(_map(_map(json['scene'])['source']))['count']! as int,
       sourceSprite = _map(_map(json['scene'])['source'])['sprite']! as String,
       targetSprite = _map(_map(json['scene'])['target'])['sprite']! as String,
+      frame = _map(json['scene'])['frame'] == true,
       classifiers = <String, String>{
         for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
           c['when']! as String: c['misconception']! as String,
@@ -1611,6 +1624,9 @@ class GiveNActivity extends Activity {
   final int sourceCount;
   final String sourceSprite;
   final String targetSprite;
+
+  /// The target is a ten-frame (two above ten objects) and the objects sit in its cells.
+  final bool frame;
 
   /// `took_all`, `took_more` or `took_fewer` to the tag each one is evidence for.
   final Map<String, String> classifiers;

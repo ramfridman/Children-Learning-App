@@ -20,6 +20,7 @@ extension _BandC on _Plans {
     'NUM-B-06' => _numeralDots(level),
     'NUM-C-01' => TapGeometry.stagePictureOf(a) == 'hundred_chart' ? _hundredChart(level) : sequence(level),
     'NUM-C-04' => _towers(level),
+    'NUM-C-06' => _middle(level),
     'NUM-C-09' => _hundredChart(level),
     _ => null,
   };
@@ -36,7 +37,7 @@ extension _BandC on _Plans {
   // ---- the shared pieces of the blocks ----
 
   /// The card the blocks of a sentence or of a number in words stand in: the middle of the stage, as high as it lets it be.
-  Rect get _blocksCard => g.centre(math.min(g.w - 16, 300 * k), g.h * 0.88);
+  Rect get _blocksCard => g.centre(math.min(g.w - 16, 300 * k), g.h * 0.94);
 
   /// Level 1 of a sentence: the signs are lit, as in Band B.
   HintPlan _signsLit(_Sentence s) => HintPlan(<HintFrame>[
@@ -227,10 +228,15 @@ extension _BandC on _Plans {
     ]);
   }
 
-  /// The worth of one coin of [sprite] in shekels (`coin_s10`: 10), or null for anything that is not a coin of shekels.
+  /// The shekels that are in the Israeli coins and notes (1, 2, 5 and 10 are coins, 20, 50, 100 and 200 notes).
+  static const Set<int> _shekelValues = <int>{1, 2, 5, 10, 20, 50, 100, 200};
+
+  /// The worth of one coin of [sprite] in shekels (`coin_s10`: 10), or null for anything that is not a coin or note of shekels, and for a
+  /// worth that no coin has (a long run of digits in a sprite's name is no number, SEC-M10-8).
   int? _shekels(String sprite) {
-    final RegExpMatch? m = RegExp(r'coin_s(\d+)$').firstMatch(sprite);
-    return m == null ? null : int.parse(m[1]!);
+    final RegExpMatch? m = RegExp(r'coin_s(\d{1,3})$').firstMatch(sprite);
+    final int? worth = m == null ? null : int.tryParse(m[1]!);
+    return worth != null && _shekelValues.contains(worth) ? worth : null;
   }
 
   /// Coins of tens and of ones on the stage (how many shekels are here?): level 1 lights each group, level 2 shows the blocks of the
@@ -248,8 +254,10 @@ extension _BandC on _Plans {
           HintFrame(<HintMark>[VeilMark(_groupRects(g, i))], hold: _ms(1500)),
       ]);
     }
-    final TapGeometry g2 = g.withReserve(_reserve);
-    final Rect card = _card;
+    // A card wider than the usual end card, so that the blocks of a sum of a few notes are big enough to count.
+    final Rect card = Rect.fromLTWH(6, g.endCard.top, math.min(130 * k, g.w * 0.4), g.endCard.height);
+    final double reserve = card.right + 6;
+    final TapGeometry g2 = g.withReserve(reserve);
     final Rect inner = card.deflate(8 * k);
     final BaseTen n = BaseTen.of(total);
     List<HintMark> blocks(BaseTen shown) => <HintMark>[
@@ -263,12 +271,12 @@ extension _BandC on _Plans {
           HintFrame(
             blocks(BaseTen(tens: n.tens)),
             hold: _ms(1300),
-            reserve: _reserve,
+            reserve: reserve,
           ),
-          HintFrame(all, hold: _ms(1900), reserve: _reserve),
+          HintFrame(all, hold: _ms(1900), reserve: reserve),
         ],
         rest: all,
-        restReserve: _reserve,
+        restReserve: reserve,
       );
     }
     final List<(Rect, int)> coins = <(Rect, int)>[];
@@ -293,9 +301,9 @@ extension _BandC on _Plans {
         HintFrame(
           <HintMark>[BadgeMark(at.topRight, n), HandMark(at.center, press: true)],
           hold: hold,
-          reserve: _reserve,
+          reserve: reserve,
         ),
-      ..._answerSteps(<HintMark>[whole], reserve: _reserve),
+      ..._answerSteps(<HintMark>[whole], reserve: reserve),
     ]);
   }
 
@@ -374,39 +382,108 @@ extension _BandC on _Plans {
               .map((String c) => c.startsWith('n:') ? int.tryParse(c.substring(2)) : null)
               .whereType<int>()
               .firstOrNull;
-    final List<int> towerValues = <int>[?given, for (final int i in order) values[i]];
+    final List<int> seq = <int>[for (final int i in order) values[i]];
+    // Two towers at a time, as big as the stage lets them be: the number the sentence gives against each answer in turn, or each answer
+    // against the next. A tower of several numbers side by side would be only a few points to a block on a phone.
+    final List<(int, int)> pairs = given != null
+        ? <(int, int)>[for (final int v in seq) (given, v)]
+        : <(int, int)>[for (int i = 0; i + 1 < seq.length; i++) (seq[i], seq[i + 1])];
     final Rect card = g.centre(g.w - 12 * k, g.h - 8 * k);
     final Rect inner = card.deflate(8 * k);
-    final double slotW = inner.width / towerValues.length;
-    // One unit for all the towers, so that a bigger number is a wider tower and nothing else: the least any of them is given.
-    double unit = double.infinity;
-    for (final int v in towerValues) {
-      unit = math.min(unit, BaseTenLayout.forBox(BaseTen.of(v), Size(slotW - 6 * k, inner.height)).unit);
+    final double slotW = inner.width / 2;
+    List<Rect> boxes((int, int) p) {
+      final List<BaseTen> n = <BaseTen>[BaseTen.of(p.$1), BaseTen.of(p.$2)];
+      // One unit for both towers, so that a bigger number is a wider tower and nothing else.
+      final double unit = n
+          .map((BaseTen b) => BaseTenLayout.forBox(b, Size(slotW - 8 * k, inner.height)).unit)
+          .reduce(math.min);
+      return <Rect>[
+        for (int side = 0; side < 2; side++)
+          () {
+            final Size e = BaseTenLayout.extentOf(n[side]);
+            return Rect.fromLTWH(
+              inner.left + slotW * side + (slotW - e.width * unit) / 2,
+              inner.bottom - e.height * unit,
+              e.width * unit,
+              e.height * unit,
+            );
+          }(),
+      ];
     }
-    final List<Rect> boxes = <Rect>[
-      for (final (int i, int v) in towerValues.indexed)
-        () {
-          final Size e = BaseTenLayout.extentOf(BaseTen.of(v));
-          final double w = e.width * unit;
-          final double h = e.height * unit;
-          return Rect.fromLTWH(inner.left + slotW * i + (slotW - w) / 2, inner.bottom - h, w, h);
-        }(),
-    ];
-    List<HintMark> towers(int upTo) => <HintMark>[
-      CardMark(card, const SizedBox.shrink()),
-      for (int i = 0; i < upTo; i++) BlocksMark(boxes[i], BaseTen.of(towerValues[i])),
-    ];
+
+    List<HintMark> pairMarks((int, int) p) {
+      final List<Rect> b = boxes(p);
+      return <HintMark>[
+        CardMark(card, const SizedBox.shrink()),
+        BlocksMark(b[0], BaseTen.of(p.$1)),
+        BlocksMark(b[1], BaseTen.of(p.$2)),
+      ];
+    }
+
+    Offset secondTop((int, int) p) => boxes(p)[1].topCenter + Offset(0, 4 * k);
+
     if (level == 2) {
       return HintPlan(<HintFrame>[
-        for (int i = 1; i < towerValues.length; i++) HintFrame(towers(i), hold: _ms(900)),
-        HintFrame(towers(towerValues.length), hold: _ms(1800)),
-      ], rest: towers(towerValues.length));
+        for (final (int, int) p in pairs) HintFrame(pairMarks(p), hold: _ms(1300)),
+      ], rest: pairMarks(pairs.last));
     }
-    final List<HintMark> all = towers(towerValues.length);
     return _demo(<HintFrame>[
-      for (final Rect b in boxes)
-        HintFrame(<HintMark>[...all, HandMark(b.topCenter + Offset(0, 4 * k), press: true)], hold: _ms(850)),
-      ..._answerSteps(all),
+      for (final (int, int) p in pairs)
+        HintFrame(<HintMark>[...pairMarks(p), HandMark(secondTop(p), press: true)], hold: _ms(900)),
+      ..._answerSteps(pairMarks(pairs.last)),
+    ]);
+  }
+
+  // ---- NUM-C-06: the number in the middle of two marks ----
+
+  /// "Which number is exactly in the middle of 40 and 50?" (a row `n:40 ? n:50`): level 1 lights the two marks; level 2 draws the path of
+  /// the three places with equal hops from the first to the middle and from the middle to the last (the middle place is empty); level 3
+  /// hops the two halves with the hand, each with the number of units, and the number fills the place last.
+  HintPlan _middle(int level) {
+    final int? mid = _answerValue;
+    final int gap = a.row.indexOf('?');
+    final int? lo = gap > 0 ? int.tryParse(a.row[gap - 1].replaceFirst('n:', '')) : null;
+    final int? hi = gap >= 0 && gap + 1 < a.row.length
+        ? int.tryParse(a.row[gap + 1].replaceFirst('n:', ''))
+        : null;
+    if (mid == null || lo == null || hi == null || mid - lo != hi - mid || mid == lo) return sequence(level);
+    if (level == 1) {
+      final List<Rect> cells = g.rowCells();
+      return HintPlan(<HintFrame>[
+        HintFrame(<HintMark>[
+          VeilMark(<Rect>[cells[gap - 1], cells[gap + 1]]),
+        ], hold: _ms(2400)),
+      ]);
+    }
+    final int half = mid - lo;
+    final Rect card = g.centre(math.min(g.w - 16, 300 * k), g.h * 0.8);
+    final Rect path = Rect.fromCenter(
+      center: card.center + Offset(0, 4 * k),
+      width: math.min(card.width - 24 * k, 3 * 56 * k),
+      height: 40 * k,
+    );
+    Offset top(int i) => Offset(path.left + (i + 0.5) * path.width / 3, path.top + 2 * k);
+    PathMark strip({bool filled = false}) =>
+        PathMark(rect: path, count: 3, from: lo, step: half, gap: filled ? null : mid);
+    List<HintMark> hops(int upTo) => <HintMark>[
+      CardMark(card, const SizedBox.shrink()),
+      for (int i = 0; i < upTo; i++) ...<HintMark>[
+        ArcMark(top(i), top(i + 1)),
+        BadgeMark(Offset((top(i).dx + top(i + 1).dx) / 2, path.top - 12 * k), half),
+      ],
+    ];
+    if (level == 2) {
+      final List<HintMark> shown = <HintMark>[...hops(2), strip()];
+      return HintPlan(<HintFrame>[
+        HintFrame(<HintMark>[...hops(1), strip()], hold: _ms(1300)),
+        HintFrame(shown, hold: _ms(1800)),
+      ], rest: shown);
+    }
+    return _demo(<HintFrame>[
+      HintFrame(<HintMark>[...hops(0), strip(), HandMark(top(0), press: true)], hold: _ms(800)),
+      HintFrame(<HintMark>[...hops(1), strip(), HandMark(top(1), press: true)], hold: _ms(1000)),
+      HintFrame(<HintMark>[...hops(2), strip(), HandMark(top(2), press: true)], hold: _ms(1000)),
+      ..._answerSteps(<HintMark>[...hops(2), strip(filled: true)]),
     ]);
   }
 
