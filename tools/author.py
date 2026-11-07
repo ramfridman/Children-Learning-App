@@ -247,6 +247,14 @@ def hint_fit(*options):
     return options[-1]
 
 
+def counts(n):
+    """The forms of count_words(n), the full one first, for hint_fit."""
+    return (count_words(n), count_short(n), count_short(n, 2))
+
+
+TURN = 'עַכְשָׁו תּוֹרְכֶם.'  # the end of a hint whose last number is already in it (as in band_c.py)
+
+
 def tag_line(tag, size_cue=None, own=None, rule=None):
     """The line said for a tag: the item's own (G4, `tag_lines`), the cue line of M-CNT-SIZE, the rule line of
     M-SORT-SHIFT for a shape or kind rule (A5), else the shared line."""
@@ -449,9 +457,10 @@ def k_next_number(a, ctx):
         {'background': 'asset:meadow'}, choice(opts, cid), tags,
         hints(a['id'], 'בּוֹאוּ נִסְפֹּר יַחַד מֵהַהַתְחָלָה: %s.' % count_words(min(n, 5)),
               'נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: %s.' % count_words(min(n, 5)),
-              '%s, וְאַחֲרֵי %s בָּא %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), F[n], F[ans], F[ans])
-              if not before else '%s. לִפְנֵי %s בָּא %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
-                  count_words(n), F[n], F[ans], F[ans])),
+              hint_fit(*['%s, וְאַחֲרֵי %s בָּא %s. %s' % (c, F[n], F[ans], end) for end in ('עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % F[ans], TURN)
+                         for c in counts(n)])
+              if not before else hint_fit(*['%s. לִפְנֵי %s בָּא %s. %s' % (c, F[n], F[ans], end) for end in (
+                  'עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % F[ans], TURN) for c in counts(n)])),
         'child says the number that comes %s %d' % ('before' if before else 'after', n),
         prompt=prompt, correct='%s! כָּךְ סוֹפְרִים.' % F[ans])
 
@@ -510,8 +519,8 @@ def k_count_tap(a, ctx):
         choice(opts, cid), tags,
         hints(a['id'], 'נוֹגְעִים %s %s, וְאוֹמְרִים מִסְפָּר אֶחָד.' % (prefix('ב', obj['one']), F[1] if obj['g'] == 'f' else M[1]),
               'בּוֹאוּ נִסְפֹּר גַּם עִם הָאֶצְבָּעוֹת: %s…' % count_words(3),
-              a.get('h3') or hint_fit(*['%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (
-                  c, F[n], F[n]) for c in (count_words(n), count_short(n))]),
+              a.get('h3') or hint_fit(*['%s. הַמִּסְפָּר הָאַחֲרוֹן אוֹמֵר כַּמָּה: %s! %s' % (c, F[n], end) for end in (
+                  'עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % F[n], TURN) for c in counts(n)]),
               shared=(None, 'ucount')),
         'child touches each one once and answers with the last number counted',
         extra={'traceClassifiers': [{'when': 'same_object_tapped_twice', 'misconception': 'M-CNT-DOUBLE'},
@@ -990,7 +999,7 @@ def k_pat(a, ctx):
         full = [x, y, x, y, x, y]
         return k_pick(pick_spec(a, prompt='מַה בָּא אַחַר כָּךְ?', row=row, options=place(y, [x, a['c']], a.get('pos', 1)), correct=y,
                                 tags={x: 'M-PAT-NEXT', **a.get('tags', {})}, correct_text='כֵּן! ' + seq_words(ctx, full) + '.',
-                                h3='%s — וְאָז %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, full[:5]), n(y))), ctx)
+                                h3=hint_fit(*['%s — וְאָז %s. עַכְשָׁו תּוֹרְכֶם.' % (seq_words(ctx, full[k:5]), n(y)) for k in (0, 1)])), ctx)
     if mode == 'fix':
         row = [x, y, '?', y, x, y]
         full = [x, y, x, y, x, y]
@@ -1109,7 +1118,8 @@ def k_madd(a, ctx):
                             group={'sprite': a['obj'], 'count': x}, group2={'sprite': a['obj'], 'count': y},
                             options=['n:%d' % v for v in opts], correct='n:%d' % r, tags={'n:%d' % (r + 1): 'M-CNT-DOUBLE'},
                             correct_text='%s! %s וְעוֹד %s.' % (F[r], F[x], F[y]),
-                            h3=a.get('h3') or '%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], count_words(r), F[r])), ctx)
+                            h3=a.get('h3') or hint_fit(*['%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], c, F[r])
+                                                         for c in counts(r)])), ctx)
 
 
 def k_mtake(a, ctx):
@@ -1225,7 +1235,7 @@ def k_sum(a, ctx):
         prompt = 'יֵשׁ %s. מוֹסִיפִים עוֹד %s. כַּמָּה יֵשׁ עַכְשָׁו?' % (qty(x, obj), qty(y, obj))
         extra = {'group': {'sprite': a['obj'], 'count': x}, 'group2': {'sprite': a['obj'], 'count': y}}
         text = '%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r])
-        h3 = '%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], count_words(r), F[r])
+        h3 = hint_fit(*['%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], c, F[r]) for c in counts(r)])
         others = [x, r + 1] if x != r + 1 else [r + 1, r + 2]
         tags = {'n:%d' % (r + 1): 'M-CNT-DOUBLE'}  # x is M-CNT-CARD, untagged as in k_madd
     elif mode == 'take':
@@ -1233,7 +1243,7 @@ def k_sum(a, ctx):
         prompt = 'יֵשׁ %s. לוֹקְחִים %s. כַּמָּה נִשְׁאֲרוּ?' % (qty(x, obj), qty(y, obj))
         extra = {'group': {'sprite': a['obj'], 'count': x}}
         text = '%s! %s פָּחוֹת %s שָׁוֶה %s.' % (F[r], F[x], F[y], F[r])
-        h3 = '%s פָּחוֹת %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], count_words(max(r, 1)), F[r])
+        h3 = hint_fit(*['%s פָּחוֹת %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[y], c, F[r]) for c in counts(max(r, 1))])
         # B-15 §3: the start (M-CNT-CARD, untagged as in k_madd) and the part taken away
         others = [x, y] if y not in (r, x) else [x, r + 1]
         tags = {'n:%d' % y: 'M-PART-MISS'} if y in others else {'n:%d' % (r + 1): 'M-CNT-DOUBLE'}

@@ -12,7 +12,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.argv = sys.argv[:1] + ['-']  # author.py is imported, never run
-from author import F, M, count_short, count_words, from_, hint_fit, place, prefix, qty, vav  # noqa: E402
+from author import F, M, TURN, count_short, count_words, counts, from_, hint_fit, place, prefix, qty, vav  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 UNITS = os.path.join(ROOT, 'content', 'units')
@@ -198,7 +198,7 @@ def basket_total(u, skill, obj, a, b, tagged, i, **kw):
                  options=tri('n:%d' % r, i, ['n:%d' % tagged, 'n:%d' % (r + 1)]), correct='n:%d' % r,
                  tags={'n:%d' % tagged: 'M-PART-MISS', 'n:%d' % (r + 1): 'M-CNT-DOUBLE'},
                  correct_text='%s! %s וְעוֹד %s הֵם %s.' % (F[r], F[a], F[b], F[r]),
-                 h3='%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[a], F[b], count_words(r), F[r]), **kw)
+                 h3=hint_fit(*['%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[a], F[b], c, F[r]) for c in counts(r)]), **kw)
 
 
 def part_miss_line(x, total):
@@ -413,7 +413,8 @@ def numbers():
                  check='reverse', difficulty=0.6, group={'sprite': obj, 'count': 10, 'arrangement': 'ten_frame'},
                  group2={'sprite': obj, 'count': k, 'arrangement': 'ten_frame'},
                  correct_text='%s! עֶשֶׂר וְעוֹד %s הֵם %s.' % (F[n], F[k], F[n]),
-                 h3='%s. עֶשֶׂר, וְעוֹד %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), count_words(k), F[n]))
+                 h3=hint_fit(*['%s. עֶשֶׂר, וְעוֹד %s. %s' % (count_words(n), c, end) for end in ('עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % F[n], TURN)
+                               for c in counts(k)]))
 
     # ---- NUM-B-17: by tens and twos
     u.skill('NUM-B-17', 'סופרים בעשרות ובזוגות', 'סוֹפְרִים בַּעֲשָׂרוֹת וּבִשְׁתַּיִם', 'cone-tree', ['NUM-B-02'], ['symbolic'],
@@ -523,7 +524,7 @@ def math():
         numpick3(u, 'MATH-B-01', 'יֵשׁ %s. מוֹסִיפִים עוֹד, וְעַכְשָׁו יֵשׁ %s. כַּמָּה הוֹסַפְנוּ?' % (qty(x, OBJECTS[obj]), qty(t, OBJECTS[obj])), r,
                  {t: 'M-PART-MISS', x: 'M-CNT-DOUBLE'}, i, check='reverse', difficulty=0.6, voice=True, group={'sprite': obj, 'count': x},
                  correct_text='%s! %s וְעוֹד %s הֵם %s.' % (F[r], F[x], F[r], F[t]),
-                 h3='%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[r], count_words(t), F[r]))
+                 h3=hint_fit(*['%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], F[r], c, F[r]) for c in counts(t)]))
     for start, hop in ((3, 2), (4, 3)):
         jump_item(u, 'MATH-B-01', start, hop, check='transfer', difficulty=0.6)
 
@@ -537,7 +538,7 @@ def math():
         u.act('MATH-B-02', 'pick', prompt='%s זֶה %s וְעוֹד כַּמָּה?' % (F[total], F[part]),
               options=tri('n:%d' % r, i, ['n:%d' % total, 'n:%d' % (r + 1)]), correct='n:%d' % r, tags={'n:%d' % total: 'M-PART-MISS'},
               correct_text='%s! %s וְעוֹד %s הֵם %s.' % (F[r], F[part], F[r], F[total]),
-              h3='%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[part], F[r], count_words(total), F[r]))
+              h3=hint_fit(*['%s וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[part], F[r], c, F[r]) for c in counts(total)]))
 
     # B-15 §1 (H4): the parts put back together, outside the basket this time
     for i, (obj, a, b) in enumerate([('star', 2, 5), ('duck', 3, 6)]):
@@ -557,7 +558,7 @@ def math():
         u.act('MATH-B-03', 'pick', prompt='%s %s %s. כַּמָּה זֶה?' % (F[x], word, F[y]),
               row=['n:%d' % x, opcell, 'n:%d' % y, 'op:=', '?'], options=tri('n:%d' % r, i, ['n:%d' % o for o in others]),
               correct='n:%d' % r, tags={'n:%d' % near: 'M-CNT-DOUBLE'}, correct_text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]),
-              h3='%s %s %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], word, F[y], count_words(r), F[r]))
+              h3=hint_fit(*['%s %s %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], word, F[y], c, F[r]) for c in counts(r)]))
     for x, op, y, r, bad, w in [(3, '+', 4, 7, 8, 4), (6, '+', 2, 8, 9, 4), (9, '-', 4, 5, 6, 4), (7, '-', 2, 5, 4, 4)]:
         cells = ['n:%d' % x, 'op:' + op, 'n:%d' % y, 'op:=', 'n:%d' % bad]
         u.act('MATH-B-03', 'spot', cells=cells, wrong=w, tag='M-EQ-OPER',
@@ -574,7 +575,7 @@ def math():
         numpick3(u, 'MATH-B-03', 'כַּמָּה שָׁוֶה %s %s %s?' % (F[x], word, F[y]), r,
                  {max(x, y) if op == '+' else x: None, r - 1 if op == '+' else r + 1: 'M-CNT-DOUBLE'}, i, check='reverse', difficulty=0.6,
                  row=['?', 'op:=', 'n:%d' % x, 'op:' + op, 'n:%d' % y], correct_text='%s! %s %s %s שָׁוֶה %s.' % (F[r], F[x], word, F[y], F[r]),
-                 h3='%s %s %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], word, F[y], count_words(r), F[r]))
+                 h3=hint_fit(*['%s %s %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[x], word, F[y], c, F[r]) for c in counts(r)]))
 
     # ---- MATH-B-06: make ten
     u.skill('MATH-B-06', 'משלימים לעשר', 'מַשְׁלִימִים לְעֶשֶׂר', 'dock', ['MATH-B-02'], ['concrete', 'symbolic'], [])
@@ -586,14 +587,14 @@ def math():
                 list(others), i, tags={k: v for k, v in others.items() if v},
                 group={'sprite': obj, 'count': n, 'arrangement': 'ten_frame' if i % 2 == 0 else 'line'},
                 text='%s! %s וְעוֹד %s הֵם עֶשֶׂר.' % (F[10 - n], F[n], F[10 - n]),
-                h3='%s, וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[n], F[10 - n], count_words(10), F[10 - n]))
+                h3=hint_fit(*['%s, וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[n], F[10 - n], c, F[10 - n]) for c in counts(10)]))
 
     # B-15 §1 (H26): the same question with shekels (the transfer)
     for i, n in enumerate((7, 6)):
         numpick3(u, 'MATH-B-06', 'יֵשׁ לָנוּ %s. כַּמָּה עוֹד צָרִיךְ כְּדֵי שֶׁיִּהְיוּ לָנוּ עֲשָׂרָה שְׁקָלִים?' % qty(n, SHEKEL), 10 - n,
                  {10: 'M-PART-MISS', n: None}, i, check='transfer', difficulty=0.6, group={'sprite': 'coin_s1', 'count': n},
                  correct_text='%s! %s וְעוֹד %s הֵם עֶשֶׂר.' % (F[10 - n], F[n], F[10 - n]),
-                 h3='%s, וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[n], F[10 - n], count_words(10), F[10 - n]))
+                 h3=hint_fit(*['%s, וְעוֹד %s: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (F[n], F[10 - n], c, F[10 - n]) for c in counts(10)]))
 
     # ---- MATH-B-07: zero in sums
     u.skill('MATH-B-07', 'אפס בחיבור ובחיסור', 'אֶפֶס לֹא מְשַׁנֶּה', 'dock', ['MATH-B-03', 'NUM-A-14'], ['symbolic'], ['M-NUM-ZERO'])
@@ -615,7 +616,8 @@ def math():
                  difficulty=0.6, row=['n:%d' % n, 'op:+', '?', 'op:=', 'n:%d' % n], tag_lines=part_miss_line(n, n),
                  correct_text='%s! %s וְעוֹד %s שָׁוֶה %s.' % (F[0], F[n], F[0], F[n]),
                  h2='%s כְּבָר יֵשׁ. כַּמָּה צָרִיךְ לְהוֹסִיף כְּדֵי לְהַגִּיעַ %s?' % (F[n], prefix('ל', F[n])),
-                 h3='%s כְּבָר יֵשׁ, אָז לֹא מוֹסִיפִים כְּלוּם. אֵין כְּלוּם — זֶה אֶפֶס. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אֶפֶס.' % F[n])
+                 h3=hint_fit('%s כְּבָר יֵשׁ, אָז לֹא מוֹסִיפִים כְּלוּם. אֵין כְּלוּם — זֶה אֶפֶס. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אֶפֶס.' % F[n],
+                             '%s כְּבָר יֵשׁ, אָז לֹא מוֹסִיפִים כְּלוּם — זֶה אֶפֶס. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אֶפֶס.' % F[n]))
 
     # ---- MATH-B-08: within twenty
     u.skill('MATH-B-08', 'מחברים ומחסרים עד 20', 'מְחַבְּרִים עַד עֶשְׂרִים', 'dock', ['MATH-B-06', 'NUM-B-16'], ['symbolic', 'concrete'],
@@ -647,7 +649,8 @@ def math():
         u.act('MATH-B-09', 'scale', mode='compare', hideTilt=True, left=[('apple', la), ('star', lb)], right=[('fish', ra), ('duck', rb)],
               result=res, tag='M-EQ-OPER',
               prompt='%s וְעוֹד %s, מוּל %s וְעוֹד %s. אֵיזֶה צַד כָּבֵד יוֹתֵר?' % (F[la], F[lb], F[ra], F[rb]),
-              h3='%s וְעוֹד %s הֵם %s, %s וְעוֹד %s הֵם %s. הַצַּד שֶׁיֵּשׁ בּוֹ יוֹתֵר כָּבֵד יוֹתֵר.' % (F[la], F[lb], F[la + lb], vav(F[ra]), F[rb], F[ra + rb]),
+              h3=hint_fit('%s וְעוֹד %s הֵם %s, %s וְעוֹד %s הֵם %s. הַצַּד שֶׁיֵּשׁ בּוֹ יוֹתֵר כָּבֵד יוֹתֵר.' % (F[la], F[lb], F[la + lb], vav(F[ra]), F[rb], F[ra + rb]),
+                          '%s וְעוֹד %s: %s. %s וְעוֹד %s: %s. הַצַּד שֶׁיֵּשׁ בּוֹ יוֹתֵר כָּבֵד יוֹתֵר.' % (F[la], F[lb], F[la + lb], F[ra], F[rb], F[ra + rb])),
               correct_text='כֵּן! %s בְּצַד אֶחָד, %s בַּצַּד הַשֵּׁנִי.' % (F[la + lb], F[ra + rb]))
     for i, (x, y, z) in enumerate([(3, 4, 7), (5, 2, 7), (6, 3, 9), (4, 5, 9)]):
         u.act('MATH-B-09', 'spot', cells=['n:%d' % z, 'op:=', 'n:%d' % x, 'op:+', 'n:%d' % (y + 1)], wrong=4, tag='M-EQ-OPER',

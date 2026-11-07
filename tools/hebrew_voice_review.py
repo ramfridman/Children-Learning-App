@@ -852,6 +852,11 @@ READ = [
      'the editor read it (the count keeps its first three numbers, an ellipsis and the last; number agreement, plural address and the '
      'teaching move are as before); waits for the owner.',
      r'^(אַחַת, שְׁתַּיִם, שָׁלוֹשׁ… |מֵאַחַת עַד \S+ עֶשְׂרֵה\. עֶשֶׂר, וְעוֹד אַחַת, שְׁתַּיִם… |\S+… וּמַמְשִׁיכִים עַד )'),
+    # The second pass (hebrew-notes.md section 11.14): 85 more hints of Band A and B over 14 words; only a row that is new in the run takes it.
+    ('3', r'^hints\.2\.caption', r'^activity\.(b\.(mathb0[1-3679]|numb0[1-4]|numb14|numb16|shpb02)\.|b15\.loga0[467]\.|count\.butterflies\.|log\.next\.|math\.add\.|next\.(after|before)\.)',
+     'Hint 3 shortened to 14 words or fewer, second pass (QA, 2026-11-07; hebrew-notes.md section 11.14): the editor read it (a count keeps its first '
+     'three numbers, an ellipsis and the last, or ends at the number the hint already says with "עַכְשָׁו תּוֹרְכֶם."; the zero line keeps its move; '
+     'the scale line computes both sides in a colon form; the two-ball patterns show two turns; agreement and plural address as before); waits for the owner.'),
     ('1', r'^keypad(Delete|Done)Semantics$', r'he\.dart$', 'M10 C1 keypad (read by the editor on 2026-11-07): the screen-reader labels of the number keypad, plain adult text '
      '(an infinitive for the key that deletes a digit, "זה המספר" for the key that sends the number); correct as written.'),
     # The pass of 2026-11-07 (hebrew-notes.md 11.12). The first 60 characters of each comment are the same as C1's, so a row that was

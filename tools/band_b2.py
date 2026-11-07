@@ -1,6 +1,6 @@
 """The second half of the Band B specs (colours, shapes, logic, computer science). See band_b.py."""
 from band_b import COLOURS, NAMES, Unit, clean, numpick, rot, steps, tri  # noqa: E402
-from author import F, count_words, place, vav  # noqa: E402
+from author import F, TURN, counts, hint_fit, place, vav  # noqa: E402
 
 SHAPE_ONE = {'circle': 'עִגּוּל', 'square': 'רִבּוּעַ', 'triangle': 'מְשֻׁלָּשׁ'}
 SIDES_DEF = {'triangle': 'הַמְּשֻׁלָּשׁ', 'quad': 'הַמְּרֻבָּע', 'pentagon': 'הַמְּחֻמָּשׁ', 'hexagon': 'הַמְּשֻׁשֶּׁה'}
@@ -176,13 +176,15 @@ def shapes():
                                  ('shape_rect', 4), ('shape_pentagon', 5), ('shape_hexagon', 6)]):
         numpick(u, 'SHP-B-02', 'כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?', n, [n + 1, n - 1], i, tags={n + 1: 'M-CNT-DOUBLE', n - 1: 'M-CNT-SKIP'},
                 domain='shapes', group={'sprite': sp, 'count': 1}, text='%s! %s צְלָעוֹת.' % (F[n], F[n]),
-                h3='נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), F[n]))
+                h3=hint_fit(*['נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: %s. %s' % (c, end) for end in (
+                    'עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % F[n], TURN) for c in counts(n)]))
 
     # B-15 §1: turned shapes have the same sides
     for i, (sp, n) in enumerate([('shape_square_tilt', 4), ('shape_triangle_down', 3)]):
         numpick(u, 'SHP-B-02', 'כַּמָּה צְלָעוֹת יֵשׁ לַצּוּרָה הַזֹּאת?', n, [n + 1, n - 1], i, tags={n + 1: 'M-CNT-DOUBLE', n - 1: 'M-CNT-SKIP'},
                 domain='shapes', group={'sprite': sp, 'count': 1}, text='%s! %s צְלָעוֹת.' % (F[n], F[n]), check='transfer', difficulty=0.6,
-                h3='נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % (count_words(n), F[n]))
+                h3=hint_fit(*['נִסְפֹּר צֶלַע אַחַר צֶלַע, וְלֹא נִסְפֹּר אוֹתָהּ פַּעֲמַיִם: %s. %s' % (c, end) for end in (
+                    'עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.' % F[n], TURN) for c in counts(n)]))
 
     u.skill('SHP-B-03', 'ריבוע ומלבן', 'רִבּוּעַ וּמַלְבֵּן', 'cone-tree', ['SHP-A-04', 'SHP-B-02'], ['pictorial'], ['M-SHP-SQRECT'])
     for i in range(3):
