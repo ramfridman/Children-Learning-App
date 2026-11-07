@@ -83,6 +83,18 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _schoolStageMeta = const VerificationMeta('schoolStage');
+  @override
+  late final GeneratedColumn<String> schoolStage = GeneratedColumn<String>(
+    'school_stage',
+    aliasedName,
+    true,
+    check: () =>
+        schoolStage.isNull() |
+        schoolStage.isIn(<String>['gan3', 'gan4', 'gan5', 'grade1', 'grade2', 'grade3']),
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -93,6 +105,7 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     createdAt,
     companionId,
     outfitId,
+    schoolStage,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -145,6 +158,12 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     if (data.containsKey('outfit_id')) {
       context.handle(_outfitIdMeta, outfitId.isAcceptableOrUnknown(data['outfit_id']!, _outfitIdMeta));
     }
+    if (data.containsKey('school_stage')) {
+      context.handle(
+        _schoolStageMeta,
+        schoolStage.isAcceptableOrUnknown(data['school_stage']!, _schoolStageMeta),
+      );
+    }
     return context;
   }
 
@@ -171,6 +190,10 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         data['${effectivePrefix}companion_id'],
       ),
       outfitId: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}outfit_id']),
+      schoolStage: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}school_stage'],
+      ),
     );
   }
 
@@ -201,6 +224,10 @@ class Profile extends DataClass implements Insertable<Profile> {
   /// The prize (an accessory colour set) the companion wears, by id (for example `sky`), or null for none. It names an
   /// outfit of the app and holds nothing else.
   final String? outfitId;
+
+  /// The school stage a parent confirmed (`gan3`, `gan4`, `gan5`, `grade1`, `grade2` or `grade3`), or null when none was
+  /// (B-29). It sets [ageBand] and travels to the family's other phones. It is a word, never a date.
+  final String? schoolStage;
   const Profile({
     required this.id,
     required this.name,
@@ -210,6 +237,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     required this.createdAt,
     this.companionId,
     this.outfitId,
+    this.schoolStage,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -226,6 +254,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     if (!nullToAbsent || outfitId != null) {
       map['outfit_id'] = Variable<String>(outfitId);
     }
+    if (!nullToAbsent || schoolStage != null) {
+      map['school_stage'] = Variable<String>(schoolStage);
+    }
     return map;
   }
 
@@ -239,6 +270,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       createdAt: Value(createdAt),
       companionId: companionId == null && nullToAbsent ? const Value.absent() : Value(companionId),
       outfitId: outfitId == null && nullToAbsent ? const Value.absent() : Value(outfitId),
+      schoolStage: schoolStage == null && nullToAbsent ? const Value.absent() : Value(schoolStage),
     );
   }
 
@@ -253,6 +285,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       companionId: serializer.fromJson<String?>(json['companionId']),
       outfitId: serializer.fromJson<String?>(json['outfitId']),
+      schoolStage: serializer.fromJson<String?>(json['schoolStage']),
     );
   }
   @override
@@ -267,6 +300,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'companionId': serializer.toJson<String?>(companionId),
       'outfitId': serializer.toJson<String?>(outfitId),
+      'schoolStage': serializer.toJson<String?>(schoolStage),
     };
   }
 
@@ -279,6 +313,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     DateTime? createdAt,
     Value<String?> companionId = const Value.absent(),
     Value<String?> outfitId = const Value.absent(),
+    Value<String?> schoolStage = const Value.absent(),
   }) => Profile(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -288,6 +323,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     createdAt: createdAt ?? this.createdAt,
     companionId: companionId.present ? companionId.value : this.companionId,
     outfitId: outfitId.present ? outfitId.value : this.outfitId,
+    schoolStage: schoolStage.present ? schoolStage.value : this.schoolStage,
   );
   Profile copyWithCompanion(ProfilesCompanion data) {
     return Profile(
@@ -299,6 +335,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       companionId: data.companionId.present ? data.companionId.value : this.companionId,
       outfitId: data.outfitId.present ? data.outfitId.value : this.outfitId,
+      schoolStage: data.schoolStage.present ? data.schoolStage.value : this.schoolStage,
     );
   }
 
@@ -312,13 +349,15 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('ageBand: $ageBand, ')
           ..write('createdAt: $createdAt, ')
           ..write('companionId: $companionId, ')
-          ..write('outfitId: $outfitId')
+          ..write('outfitId: $outfitId, ')
+          ..write('schoolStage: $schoolStage')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, avatar, addressForm, ageBand, createdAt, companionId, outfitId);
+  int get hashCode =>
+      Object.hash(id, name, avatar, addressForm, ageBand, createdAt, companionId, outfitId, schoolStage);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -330,7 +369,8 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.ageBand == this.ageBand &&
           other.createdAt == this.createdAt &&
           other.companionId == this.companionId &&
-          other.outfitId == this.outfitId);
+          other.outfitId == this.outfitId &&
+          other.schoolStage == this.schoolStage);
 }
 
 class ProfilesCompanion extends UpdateCompanion<Profile> {
@@ -342,6 +382,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<DateTime> createdAt;
   final Value<String?> companionId;
   final Value<String?> outfitId;
+  final Value<String?> schoolStage;
   final Value<int> rowid;
   const ProfilesCompanion({
     this.id = const Value.absent(),
@@ -352,6 +393,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.createdAt = const Value.absent(),
     this.companionId = const Value.absent(),
     this.outfitId = const Value.absent(),
+    this.schoolStage = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ProfilesCompanion.insert({
@@ -363,6 +405,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     required DateTime createdAt,
     this.companionId = const Value.absent(),
     this.outfitId = const Value.absent(),
+    this.schoolStage = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -379,6 +422,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<DateTime>? createdAt,
     Expression<String>? companionId,
     Expression<String>? outfitId,
+    Expression<String>? schoolStage,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -390,6 +434,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (createdAt != null) 'created_at': createdAt,
       if (companionId != null) 'companion_id': companionId,
       if (outfitId != null) 'outfit_id': outfitId,
+      if (schoolStage != null) 'school_stage': schoolStage,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -403,6 +448,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<DateTime>? createdAt,
     Value<String?>? companionId,
     Value<String?>? outfitId,
+    Value<String?>? schoolStage,
     Value<int>? rowid,
   }) {
     return ProfilesCompanion(
@@ -414,6 +460,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       createdAt: createdAt ?? this.createdAt,
       companionId: companionId ?? this.companionId,
       outfitId: outfitId ?? this.outfitId,
+      schoolStage: schoolStage ?? this.schoolStage,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -445,6 +492,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (outfitId.present) {
       map['outfit_id'] = Variable<String>(outfitId.value);
     }
+    if (schoolStage.present) {
+      map['school_stage'] = Variable<String>(schoolStage.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -462,6 +512,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('createdAt: $createdAt, ')
           ..write('companionId: $companionId, ')
           ..write('outfitId: $outfitId, ')
+          ..write('schoolStage: $schoolStage, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4083,6 +4134,244 @@ class RewardsCompanion extends UpdateCompanion<Reward> {
   }
 }
 
+class $ProfileBirthsTable extends ProfileBirths with TableInfo<$ProfileBirthsTable, ProfileBirth> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProfileBirthsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _profileIdMeta = const VerificationMeta('profileId');
+  @override
+  late final GeneratedColumn<String> profileId = GeneratedColumn<String>(
+    'profile_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _birthYearMeta = const VerificationMeta('birthYear');
+  @override
+  late final GeneratedColumn<int> birthYear = GeneratedColumn<int>(
+    'birth_year',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(birthYear).isBetweenValues(2000, 2100),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _birthMonthMeta = const VerificationMeta('birthMonth');
+  @override
+  late final GeneratedColumn<int> birthMonth = GeneratedColumn<int>(
+    'birth_month',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(birthMonth).isBetweenValues(1, 12),
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [profileId, birthYear, birthMonth];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'profile_births';
+  @override
+  VerificationContext validateIntegrity(Insertable<ProfileBirth> instance, {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('profile_id')) {
+      context.handle(_profileIdMeta, profileId.isAcceptableOrUnknown(data['profile_id']!, _profileIdMeta));
+    } else if (isInserting) {
+      context.missing(_profileIdMeta);
+    }
+    if (data.containsKey('birth_year')) {
+      context.handle(_birthYearMeta, birthYear.isAcceptableOrUnknown(data['birth_year']!, _birthYearMeta));
+    } else if (isInserting) {
+      context.missing(_birthYearMeta);
+    }
+    if (data.containsKey('birth_month')) {
+      context.handle(
+        _birthMonthMeta,
+        birthMonth.isAcceptableOrUnknown(data['birth_month']!, _birthMonthMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_birthMonthMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {profileId};
+  @override
+  ProfileBirth map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProfileBirth(
+      profileId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}profile_id'],
+      )!,
+      birthYear: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}birth_year'])!,
+      birthMonth: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}birth_month'])!,
+    );
+  }
+
+  @override
+  $ProfileBirthsTable createAlias(String alias) {
+    return $ProfileBirthsTable(attachedDatabase, alias);
+  }
+}
+
+class ProfileBirth extends DataClass implements Insertable<ProfileBirth> {
+  final String profileId;
+  final int birthYear;
+  final int birthMonth;
+  const ProfileBirth({required this.profileId, required this.birthYear, required this.birthMonth});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['profile_id'] = Variable<String>(profileId);
+    map['birth_year'] = Variable<int>(birthYear);
+    map['birth_month'] = Variable<int>(birthMonth);
+    return map;
+  }
+
+  ProfileBirthsCompanion toCompanion(bool nullToAbsent) {
+    return ProfileBirthsCompanion(
+      profileId: Value(profileId),
+      birthYear: Value(birthYear),
+      birthMonth: Value(birthMonth),
+    );
+  }
+
+  factory ProfileBirth.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProfileBirth(
+      profileId: serializer.fromJson<String>(json['profileId']),
+      birthYear: serializer.fromJson<int>(json['birthYear']),
+      birthMonth: serializer.fromJson<int>(json['birthMonth']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'profileId': serializer.toJson<String>(profileId),
+      'birthYear': serializer.toJson<int>(birthYear),
+      'birthMonth': serializer.toJson<int>(birthMonth),
+    };
+  }
+
+  ProfileBirth copyWith({String? profileId, int? birthYear, int? birthMonth}) => ProfileBirth(
+    profileId: profileId ?? this.profileId,
+    birthYear: birthYear ?? this.birthYear,
+    birthMonth: birthMonth ?? this.birthMonth,
+  );
+  ProfileBirth copyWithCompanion(ProfileBirthsCompanion data) {
+    return ProfileBirth(
+      profileId: data.profileId.present ? data.profileId.value : this.profileId,
+      birthYear: data.birthYear.present ? data.birthYear.value : this.birthYear,
+      birthMonth: data.birthMonth.present ? data.birthMonth.value : this.birthMonth,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfileBirth(')
+          ..write('profileId: $profileId, ')
+          ..write('birthYear: $birthYear, ')
+          ..write('birthMonth: $birthMonth')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(profileId, birthYear, birthMonth);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProfileBirth &&
+          other.profileId == this.profileId &&
+          other.birthYear == this.birthYear &&
+          other.birthMonth == this.birthMonth);
+}
+
+class ProfileBirthsCompanion extends UpdateCompanion<ProfileBirth> {
+  final Value<String> profileId;
+  final Value<int> birthYear;
+  final Value<int> birthMonth;
+  final Value<int> rowid;
+  const ProfileBirthsCompanion({
+    this.profileId = const Value.absent(),
+    this.birthYear = const Value.absent(),
+    this.birthMonth = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ProfileBirthsCompanion.insert({
+    required String profileId,
+    required int birthYear,
+    required int birthMonth,
+    this.rowid = const Value.absent(),
+  }) : profileId = Value(profileId),
+       birthYear = Value(birthYear),
+       birthMonth = Value(birthMonth);
+  static Insertable<ProfileBirth> custom({
+    Expression<String>? profileId,
+    Expression<int>? birthYear,
+    Expression<int>? birthMonth,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (profileId != null) 'profile_id': profileId,
+      if (birthYear != null) 'birth_year': birthYear,
+      if (birthMonth != null) 'birth_month': birthMonth,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ProfileBirthsCompanion copyWith({
+    Value<String>? profileId,
+    Value<int>? birthYear,
+    Value<int>? birthMonth,
+    Value<int>? rowid,
+  }) {
+    return ProfileBirthsCompanion(
+      profileId: profileId ?? this.profileId,
+      birthYear: birthYear ?? this.birthYear,
+      birthMonth: birthMonth ?? this.birthMonth,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (profileId.present) {
+      map['profile_id'] = Variable<String>(profileId.value);
+    }
+    if (birthYear.present) {
+      map['birth_year'] = Variable<int>(birthYear.value);
+    }
+    if (birthMonth.present) {
+      map['birth_month'] = Variable<int>(birthMonth.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProfileBirthsCompanion(')
+          ..write('profileId: $profileId, ')
+          ..write('birthYear: $birthYear, ')
+          ..write('birthMonth: $birthMonth, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4095,6 +4384,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $VoiceListensTable voiceListens = $VoiceListensTable(this);
   late final $AlertsTable alerts = $AlertsTable(this);
   late final $RewardsTable rewards = $RewardsTable(this);
+  late final $ProfileBirthsTable profileBirths = $ProfileBirthsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4109,6 +4399,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     voiceListens,
     alerts,
     rewards,
+    profileBirths,
   ];
 }
 
@@ -4121,6 +4412,7 @@ typedef $$ProfilesTableCreateCompanionBuilder = ProfilesCompanion Function({
   required DateTime createdAt,
   Value<String?> companionId,
   Value<String?> outfitId,
+  Value<String?> schoolStage,
   Value<int> rowid,
 });
 typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
@@ -4132,6 +4424,7 @@ typedef $$ProfilesTableUpdateCompanionBuilder = ProfilesCompanion Function({
   Value<DateTime> createdAt,
   Value<String?> companionId,
   Value<String?> outfitId,
+  Value<String?> schoolStage,
   Value<int> rowid,
 });
 
@@ -4166,6 +4459,9 @@ class $$ProfilesTableFilterComposer extends Composer<_$AppDatabase, $ProfilesTab
 
   ColumnFilters<String> get outfitId =>
       $composableBuilder(column: $table.outfitId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get schoolStage =>
+      $composableBuilder(column: $table.schoolStage, builder: (column) => ColumnFilters(column));
 }
 
 class $$ProfilesTableOrderingComposer extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -4199,6 +4495,9 @@ class $$ProfilesTableOrderingComposer extends Composer<_$AppDatabase, $ProfilesT
 
   ColumnOrderings<String> get outfitId =>
       $composableBuilder(column: $table.outfitId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get schoolStage =>
+      $composableBuilder(column: $table.schoolStage, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ProfilesTableAnnotationComposer extends Composer<_$AppDatabase, $ProfilesTable> {
@@ -4229,6 +4528,9 @@ class $$ProfilesTableAnnotationComposer extends Composer<_$AppDatabase, $Profile
 
   GeneratedColumn<String> get outfitId =>
       $composableBuilder(column: $table.outfitId, builder: (column) => column);
+
+  GeneratedColumn<String> get schoolStage =>
+      $composableBuilder(column: $table.schoolStage, builder: (column) => column);
 }
 
 class $$ProfilesTableTableManager
@@ -4264,6 +4566,7 @@ class $$ProfilesTableTableManager
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<String?> companionId = const Value.absent(),
                 Value<String?> outfitId = const Value.absent(),
+                Value<String?> schoolStage = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion(
                 id: id,
@@ -4274,6 +4577,7 @@ class $$ProfilesTableTableManager
                 createdAt: createdAt,
                 companionId: companionId,
                 outfitId: outfitId,
+                schoolStage: schoolStage,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -4286,6 +4590,7 @@ class $$ProfilesTableTableManager
                 required DateTime createdAt,
                 Value<String?> companionId = const Value.absent(),
                 Value<String?> outfitId = const Value.absent(),
+                Value<String?> schoolStage = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ProfilesCompanion.insert(
                 id: id,
@@ -4296,6 +4601,7 @@ class $$ProfilesTableTableManager
                 createdAt: createdAt,
                 companionId: companionId,
                 outfitId: outfitId,
+                schoolStage: schoolStage,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -6019,6 +6325,147 @@ typedef $$RewardsTableProcessedTableManager =
       Reward,
       PrefetchHooks Function()
     >;
+typedef $$ProfileBirthsTableCreateCompanionBuilder = ProfileBirthsCompanion Function({
+  required String profileId,
+  required int birthYear,
+  required int birthMonth,
+  Value<int> rowid,
+});
+typedef $$ProfileBirthsTableUpdateCompanionBuilder = ProfileBirthsCompanion Function({
+  Value<String> profileId,
+  Value<int> birthYear,
+  Value<int> birthMonth,
+  Value<int> rowid,
+});
+
+class $$ProfileBirthsTableFilterComposer extends Composer<_$AppDatabase, $ProfileBirthsTable> {
+  $$ProfileBirthsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get birthYear =>
+      $composableBuilder(column: $table.birthYear, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get birthMonth =>
+      $composableBuilder(column: $table.birthMonth, builder: (column) => ColumnFilters(column));
+}
+
+class $$ProfileBirthsTableOrderingComposer extends Composer<_$AppDatabase, $ProfileBirthsTable> {
+  $$ProfileBirthsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get birthYear =>
+      $composableBuilder(column: $table.birthYear, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get birthMonth =>
+      $composableBuilder(column: $table.birthMonth, builder: (column) => ColumnOrderings(column));
+}
+
+class $$ProfileBirthsTableAnnotationComposer extends Composer<_$AppDatabase, $ProfileBirthsTable> {
+  $$ProfileBirthsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get profileId =>
+      $composableBuilder(column: $table.profileId, builder: (column) => column);
+
+  GeneratedColumn<int> get birthYear =>
+      $composableBuilder(column: $table.birthYear, builder: (column) => column);
+
+  GeneratedColumn<int> get birthMonth =>
+      $composableBuilder(column: $table.birthMonth, builder: (column) => column);
+}
+
+class $$ProfileBirthsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProfileBirthsTable,
+          ProfileBirth,
+          $$ProfileBirthsTableFilterComposer,
+          $$ProfileBirthsTableOrderingComposer,
+          $$ProfileBirthsTableAnnotationComposer,
+          $$ProfileBirthsTableCreateCompanionBuilder,
+          $$ProfileBirthsTableUpdateCompanionBuilder,
+          (ProfileBirth, BaseReferences<_$AppDatabase, $ProfileBirthsTable, ProfileBirth>),
+          ProfileBirth,
+          PrefetchHooks Function()
+        > {
+  $$ProfileBirthsTableTableManager(_$AppDatabase db, $ProfileBirthsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () => $$ProfileBirthsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () => $$ProfileBirthsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () => $$ProfileBirthsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> profileId = const Value.absent(),
+                Value<int> birthYear = const Value.absent(),
+                Value<int> birthMonth = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => ProfileBirthsCompanion(
+                profileId: profileId,
+                birthYear: birthYear,
+                birthMonth: birthMonth,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String profileId,
+                required int birthYear,
+                required int birthMonth,
+                Value<int> rowid = const Value.absent(),
+              }) => ProfileBirthsCompanion.insert(
+                profileId: profileId,
+                birthYear: birthYear,
+                birthMonth: birthMonth,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ProfileBirthsTable, ProfileBirth>(table),
+                  BaseReferences<_$AppDatabase, $ProfileBirthsTable, ProfileBirth>(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProfileBirthsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProfileBirthsTable,
+      ProfileBirth,
+      $$ProfileBirthsTableFilterComposer,
+      $$ProfileBirthsTableOrderingComposer,
+      $$ProfileBirthsTableAnnotationComposer,
+      $$ProfileBirthsTableCreateCompanionBuilder,
+      $$ProfileBirthsTableUpdateCompanionBuilder,
+      (ProfileBirth, BaseReferences<_$AppDatabase, $ProfileBirthsTable, ProfileBirth>),
+      ProfileBirth,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6033,4 +6480,6 @@ class $AppDatabaseManager {
   $$VoiceListensTableTableManager get voiceListens => $$VoiceListensTableTableManager(_db, _db.voiceListens);
   $$AlertsTableTableManager get alerts => $$AlertsTableTableManager(_db, _db.alerts);
   $$RewardsTableTableManager get rewards => $$RewardsTableTableManager(_db, _db.rewards);
+  $$ProfileBirthsTableTableManager get profileBirths =>
+      $$ProfileBirthsTableTableManager(_db, _db.profileBirths);
 }

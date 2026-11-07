@@ -195,6 +195,13 @@
     "letters": {
       "type": "boolean"
     },
+    "writing": {
+      "type": "string",
+      "enum": [
+        "memory",
+        "practised"
+      ]
+    },
     "graphemes": {
       "type": "array",
       "items": {

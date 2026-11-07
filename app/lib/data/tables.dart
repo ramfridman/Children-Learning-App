@@ -32,8 +32,34 @@ class Profiles extends Table {
   /// outfit of the app and holds nothing else.
   TextColumn get outfitId => text().nullable()();
 
+  /// The school stage a parent confirmed (`gan3`, `gan4`, `gan5`, `grade1`, `grade2` or `grade3`), or null when none was
+  /// (B-29). It sets [ageBand] and travels to the family's other phones. It is a word, never a date.
+  // The self-reference is how Drift writes a column check; it is not a real recursion.
+  // ignore: recursive_getters
+  TextColumn get schoolStage => text().nullable().check(
+    // ignore: recursive_getters
+    schoolStage.isNull() | schoolStage.isIn(<String>['gan3', 'gan4', 'gan5', 'grade1', 'grade2', 'grade3']),
+  )();
+
   @override
   Set<Column<Object>> get primaryKey => <Column<Object>>{id};
+}
+
+/// The month and year a child was born (never the day), on this device only (B-29). Not on [Profiles], because sync, the
+/// child picker and the tutor read that. Nothing here is ever synced, logged, sent to a vendor or exported; deleting the
+/// child deletes the row. The age in months and the presentation stage are worked out from it when asked for, never stored.
+class ProfileBirths extends Table {
+  TextColumn get profileId => text()();
+
+  // The self-reference is how Drift writes a column check; it is not a real recursion.
+  // ignore: recursive_getters
+  IntColumn get birthYear => integer().check(birthYear.isBetweenValues(2000, 2100))();
+
+  // ignore: recursive_getters
+  IntColumn get birthMonth => integer().check(birthMonth.isBetweenValues(1, 12))();
+
+  @override
+  Set<Column<Object>> get primaryKey => <Column<Object>>{profileId};
 }
 
 /// Small settings that belong to this device (not to a child), as text key and value.

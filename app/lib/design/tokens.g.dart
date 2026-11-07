@@ -139,6 +139,37 @@ abstract final class TokenType {
   static const ParentTypeToken parentButton = ParentTypeToken(weight: 700, size: 16.0, lineHeight: 1.3);
 }
 
+/// The size a text face of a language course is never drawn below (docs/design/languages-l5-ls01.md section 3.2).
+abstract final class TokenReading {
+  static const Map<String, Map<Band, ReadingSize>> sizes = <String, Map<Band, ReadingSize>>{
+    'letter': <Band, ReadingSize>{
+      Band.a: ReadingSize(hePhone: 56.0, heTablet: 72.0, targetPhone: 56.0, targetTablet: 72.0),
+      Band.b: ReadingSize(hePhone: 48.0, heTablet: 64.0, targetPhone: 48.0, targetTablet: 64.0),
+      Band.c: ReadingSize(hePhone: 40.0, heTablet: 56.0, targetPhone: 40.0, targetTablet: 56.0),
+    },
+    'word': <Band, ReadingSize>{
+      Band.a: ReadingSize(hePhone: 40.0, heTablet: 48.0, targetPhone: 44.0, targetTablet: 54.0),
+      Band.b: ReadingSize(hePhone: 34.0, heTablet: 40.0, targetPhone: 38.0, targetTablet: 44.0),
+      Band.c: ReadingSize(hePhone: 30.0, heTablet: 36.0, targetPhone: 34.0, targetTablet: 40.0),
+    },
+    'line': <Band, ReadingSize>{
+      Band.a: ReadingSize(hePhone: 34.0, heTablet: 40.0, targetPhone: 38.0, targetTablet: 44.0),
+      Band.b: ReadingSize(hePhone: 30.0, heTablet: 36.0, targetPhone: 34.0, targetTablet: 40.0),
+      Band.c: ReadingSize(hePhone: 26.0, heTablet: 32.0, targetPhone: 30.0, targetTablet: 36.0),
+    },
+    'stem': <Band, ReadingSize>{
+      Band.a: ReadingSize(hePhone: 48.0, heTablet: 56.0, targetPhone: 54.0, targetTablet: 62.0),
+      Band.b: ReadingSize(hePhone: 42.0, heTablet: 50.0, targetPhone: 48.0, targetTablet: 56.0),
+      Band.c: ReadingSize(hePhone: 38.0, heTablet: 46.0, targetPhone: 42.0, targetTablet: 50.0),
+    },
+    'kept': <Band, ReadingSize>{
+      Band.a: ReadingSize(hePhone: 26.0, heTablet: 32.0, targetPhone: 28.0, targetTablet: 36.0),
+      Band.b: ReadingSize(hePhone: 26.0, heTablet: 32.0, targetPhone: 28.0, targetTablet: 36.0),
+      Band.c: ReadingSize(hePhone: 24.0, heTablet: 28.0, targetPhone: 26.0, targetTablet: 32.0),
+    },
+  };
+}
+
 /// Spacing scale in logical points (s4 = 16).
 abstract final class TokenSpace {
   static const double s0 = 0.0;
@@ -178,7 +209,7 @@ abstract final class TokenBorder {
 abstract final class TokenTouch {
   static const Map<Band, BandTouch> band = <Band, BandTouch>{
     Band.a: BandTouch(minControl: 64.0, answerPhone: 96.0, answerTablet: 112.0, gapPhone: 24.0, gapTablet: 32.0, hitSlop: 12.0, maxChoices: 3),
-    Band.b: BandTouch(minControl: 56.0, answerPhone: 80.0, answerTablet: 96.0, gapPhone: 16.0, gapTablet: 24.0, hitSlop: 10.0, maxChoices: 4),
+    Band.b: BandTouch(minControl: 56.0, answerPhone: 88.0, answerTablet: 104.0, gapPhone: 16.0, gapTablet: 24.0, hitSlop: 12.0, maxChoices: 4),
     Band.c: BandTouch(minControl: 56.0, answerPhone: 64.0, answerTablet: 80.0, gapPhone: 12.0, gapTablet: 16.0, hitSlop: 8.0, maxChoices: 5),
   };
   static const double edgeNoDrag = 24.0;

@@ -3,8 +3,10 @@ import 'dart:typed_data';
 import 'dart:ui' show Offset, Rect;
 
 import '../engine/course.dart';
+import '../engine/types.dart' show WritingCue, WritingRule;
 import 'pack_verify.dart';
 import 'schemas.dart' show coinValues;
+import 'strokes.dart';
 
 // Typed views of the documents of a pack that has passed `verifyPack`. The documents were checked
 // against the schemas and the cross-file rules, so these classes read them without defending against
@@ -160,6 +162,7 @@ sealed class Activity {
     'match_pairs' => MatchPairsActivity._(json, assets),
     'shop_pay' => ShopPayActivity._(json, assets),
     'clock_set' => ClockSetActivity._(json, assets),
+    'trace' when (json['templateVersion']! as String).startsWith('2.') => LetterWriteActivity._(json, assets),
     'trace' => TraceActivity._(json, assets),
     'say_it' => SayItActivity._(json, assets),
     _ => GiveNActivity._(json, assets),
@@ -345,6 +348,9 @@ abstract interface class ChoiceActivity {
   String get correctId;
 }
 
+/// The modes of LS01 that `tap_answer` 1.4 adds to the plain tap of L1 (docs/design/languages-l5-ls01.md sections 7.7 to 7.9).
+enum Ls01TapMode { stem, cloze, tapAll }
+
 /// The answer of a number-entry item (`tap_answer` 1.4, M10 X3): the number, the wrong numbers the author expects with the tag each
 /// shows, and the rules that classify any other wrong number (`smaller_from_larger`, `forgot_the_ten`, ...) with their tags.
 class NumberAnswer {
@@ -374,11 +380,25 @@ class NumberAnswer {
 class TapAnswerActivity extends Activity implements ChoiceActivity {
   TapAnswerActivity._(super.json, super.assets)
     : options = _options(json['answer']),
-      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      correctIds = _correctIds(_map(json['answer'])['correct']),
+      correctId = _correctIds(_map(json['answer'])['correct']).firstOrNull ?? '',
+      all = _map(json['answer'])['all'] == true,
       numberAnswer = _map(json['answer'])['type'] == 'number'
           ? NumberAnswer.fromJson(_map(json['answer']))
           : null,
       picture = _map(json['scene'])['picture'] as Map<String, Object?>?,
+      stem = _map(json['scene'])['stem'] == null
+          ? null
+          : (
+              text: _map(_map(json['scene'])['stem'])['text']! as String,
+              clip: _map(_map(json['scene'])['stem'])['clip'] as String?,
+            ),
+      cloze = _map(json['scene'])['cloze'] == null
+          ? null
+          : (
+              text: _map(_map(json['scene'])['cloze'])['text']! as String,
+              picture: _map(_map(json['scene'])['cloze'])['picture'] as String?,
+            ),
       group = _map(json['scene'])['group'] == null ? null : SpriteSet.fromJson(_map(json['scene'])['group']),
       group2 = _map(json['scene'])['group2'] == null
           ? null
@@ -401,9 +421,17 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   @override
   final List<ChoiceOption> options;
 
-  /// The right option's id; empty for a number answer, which has no options.
+  /// The right answer (the first of [correctIds] in a tap-all, whose right answer is a set); empty for a number answer, which has no
+  /// options.
   @override
   final String correctId;
+
+  /// Every right option: one, or the set of a tap-all; none for a number answer.
+  final List<String> correctIds;
+
+  /// Tap-all (LS01, L5-1): several right cards in one row, each tapped; the item checks itself once as many cards are picked as there are right
+  /// ones, and is right when they are exactly the right ones.
+  final bool all;
 
   /// The number the child types (1.4), or null for a choice. The session that draws the keypad comes with the first batch that uses it.
   final NumberAnswer? numberAnswer;
@@ -411,6 +439,26 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   /// A picture of a number or a measure for the stage (1.4): its `kind` and the fields of that kind (see `stagePictureKinds`), or
   /// null. The sessions draw each kind as the batch that needs it lands.
   final Map<String, Object?>? picture;
+
+  /// A text stem (LS01 d): a written word, unit or letter on the stage, and the clip that "read it to me" plays; null when the item has none.
+  final ({String text, String? clip})? stem;
+
+  /// A cloze (LS01 e): a sentence with one gap (`_`), and an optional picture beside it; null when the item has none.
+  final ({String text, String? picture})? cloze;
+
+  /// The LS01 mode this item plays in, or null for the plain tap of L1 (pictures, texts or sounds on tiles).
+  Ls01TapMode? get ls01Mode => all
+      ? Ls01TapMode.tapAll
+      : cloze != null
+      ? Ls01TapMode.cloze
+      : stem != null
+      ? Ls01TapMode.stem
+      : null;
+
+  /// The right ids of an `answer.correct`: a string, a list of them (tap-all), or nothing (a number answer).
+  static List<String> _correctIds(Object? correct) => correct is List<Object?>
+      ? <String>[for (final Object? c in correct) c! as String]
+      : <String>[?(correct as String?)];
 
   /// The item's text tiles are letters (`answer.face` is `letter`): square, large and bold, all alike. Any other item shows its
   /// texts as words, all alike, whatever their length.
@@ -715,10 +763,25 @@ class SoundBoxesActivity extends Activity {
 
 /// A bin of the sort-and-drag template: a picture (or a set of them) that shows the rule, and its name.
 class SortBin {
-  const SortBin({required this.id, required this.sprite, required this.count, required this.label});
+  const SortBin({
+    required this.id,
+    this.sprite,
+    this.text,
+    this.clip,
+    this.alt,
+    required this.count,
+    required this.label,
+  });
 
   final String id;
-  final String sprite;
+
+  /// A picture beside the sign at hint level 2 (the other form of the sign), or null.
+  final String? alt;
+
+  /// The sign of the bin: a picture (the lands), or in a language course a picture, a text (a letter, a unit, a word), or a sound.
+  final String? sprite;
+  final String? text;
+  final String? clip;
 
   /// How many of the picture to draw in the bin (a bin that shows its rule with three of them), at least 1.
   final int count;
@@ -727,11 +790,27 @@ class SortBin {
 
 /// A picture to be sorted, and the bin it belongs in (null in share mode, where any bin may be right).
 class SortItem {
-  const SortItem({required this.id, required this.sprite, required this.bin});
+  const SortItem({
+    required this.id,
+    this.sprite,
+    this.text,
+    this.clip,
+    this.misconception,
+    required this.bin,
+    this.label = '',
+  });
 
   final String id;
-  final String sprite;
+
+  /// A picture (the lands), or in a language course a picture, a text, or only a sound (a sound card).
+  final String? sprite;
+  final String? text;
+  final String? clip;
+
+  /// The tag of the misconception that putting this card in a wrong bin shows (a language course; the item's own tag otherwise).
+  final String? misconception;
   final String? bin;
+  final String label;
 }
 
 /// The sort-and-drag template (T03): pictures go into bins by touch or by drag; in `share` mode they are dealt between
@@ -742,14 +821,25 @@ class SortDragActivity extends Activity {
         for (final Map<String, Object?> b in _maps(_map(json['scene'])['bins']))
           SortBin(
             id: b['id']! as String,
-            sprite: b['sprite']! as String,
+            sprite: b['sprite'] as String?,
+            text: b['text'] as String?,
+            clip: b['clip'] as String?,
+            alt: b['alt'] as String?,
             count: (b['count'] as int?) ?? 1,
             label: b['label']! as String,
           ),
       ],
       items = <SortItem>[
         for (final Map<String, Object?> i in _maps(_map(json['scene'])['items']))
-          SortItem(id: i['id']! as String, sprite: i['sprite']! as String, bin: i['bin'] as String?),
+          SortItem(
+            id: i['id']! as String,
+            sprite: i['sprite'] as String?,
+            text: i['text'] as String?,
+            clip: i['clip'] as String?,
+            misconception: i['misconception'] as String?,
+            bin: i['bin'] as String?,
+            label: (i['label'] as String?) ?? '',
+          ),
       ],
       share = _map(json['answer'])['mode'] == 'share',
       wrongTag = _map(json['answer'])['misconception'] as String?,
@@ -766,7 +856,7 @@ class SortDragActivity extends Activity {
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag};
+  Set<String> get engineTags => <String>{?wrongTag, for (final SortItem i in items) ?i.misconception};
 }
 
 /// The build-a-pattern template (T05): fill the places from a palette.
@@ -781,16 +871,34 @@ class BuildPatternActivity extends Activity {
         for (final Object? p in _map(json['scene'])['palette']! as List<Object?>) p! as String,
       ],
       sequence = <String>[
-        for (final Object? s in _map(json['answer'])['sequence']! as List<Object?>) s! as String,
+        for (final Object? s in (_map(json['answer'])['sequence'] as List<Object?>? ?? const <Object?>[]))
+          s! as String,
+      ],
+      order = <int>[
+        for (final Object? o in (_map(json['answer'])['order'] as List<Object?>? ?? const <Object?>[]))
+          o! as int,
+      ],
+      clips = <String>[
+        for (final Object? c in (_map(json['scene'])['clips'] as List<Object?>? ?? const <Object?>[]))
+          c! as String,
       ],
       wrongTag = _map(json['answer'])['misconception'] as String?,
       super._();
 
   /// The pattern to copy (may be empty), the number of places, the pictures to choose from and the right order.
+  /// A face is `asset:id` (a picture) or, in a language course, `txt:` and a letter, a unit or a word (LS01 order tiles).
   final List<String> model;
   final int slots;
   final List<String> palette;
   final List<String> sequence;
+
+  /// A sequence (LS01 f, the story line of a language course): the picture indexes of [palette], which stands in a shuffled order, in the
+  /// right order of the story. Empty for every other item.
+  final List<int> order;
+  bool get isSequence => order.isNotEmpty;
+
+  /// A story line: the line of each picture as a clip, in the order of [palette] (hint level 1 plays them as it lights the pictures).
+  final List<String> clips;
   final String? wrongTag;
 
   @override
@@ -896,12 +1004,27 @@ class BalanceActivity extends Activity {
 class SpotErrorActivity extends Activity {
   SpotErrorActivity._(super.json, super.assets)
     : cells = <String>[for (final Object? c in _map(json['scene'])['cells']! as List<Object?>) c! as String],
+      model = _map(json['scene'])['model'] == null
+          ? null
+          : (
+              sprite: _map(_map(json['scene'])['model'])['sprite']! as String,
+              clip: _map(_map(json['scene'])['model'])['clip'] as String?,
+              spelling: <String>[
+                for (final Object? c
+                    in (_map(_map(json['scene'])['model'])['spelling'] as List<Object?>?) ??
+                        const <Object?>[])
+                  c! as String,
+              ],
+            ),
       wrong = _map(json['answer'])['wrong']! as int,
       wrongTag = _map(json['answer'])['misconception'] as String?,
       super._();
 
-  /// Each cell is `asset:id`, `n:7`, `dir:up` or `op:+`.
+  /// Each cell is `asset:id`, `n:7`, `dir:up`, `op:+` or, in a language course, `txt:` and a letter, a unit or a word.
   final List<String> cells;
+
+  /// A language course: the picture (and its word, heard on a touch) the cells are to match; null in the lands.
+  final ({String sprite, String? clip, List<String> spelling})? model;
 
   /// The index of the cell that is wrong.
   final int wrong;
@@ -923,6 +1046,10 @@ class MatchFace {
     this.count = 1,
     this.numeral,
     this.coin,
+    this.text,
+    this.clip,
+    this.alt,
+    this.misconception,
   });
 
   factory MatchFace.fromJson(Map<String, Object?> m) => MatchFace(
@@ -932,10 +1059,24 @@ class MatchFace {
     count: (m['count'] as int?) ?? 1,
     numeral: m['numeral'] as int?,
     coin: m['coin'] as String?,
+    text: m['text'] as String?,
+    clip: m['clip'] as String?,
+    alt: m['alt'] as String?,
+    misconception: m['misconception'] as String?,
   );
 
   final String id;
   final String label;
+
+  /// A picture beside the face at hint level 2 (the other form of the face), or null.
+  final String? alt;
+
+  /// A language course: a face may be a text (a letter, a unit, a word), or only a sound (a sound card), as well as a picture.
+  final String? text;
+  final String? clip;
+
+  /// The tag of the misconception that choosing this face as a partner of a wrong one shows (a face of the bottom row).
+  final String? misconception;
   final String? sprite;
   final int count;
   final int? numeral;
@@ -971,7 +1112,7 @@ class MatchPairsActivity extends Activity {
   int get optionCount => 0;
 
   @override
-  Set<String> get engineTags => <String>{?wrongTag};
+  Set<String> get engineTags => <String>{?wrongTag, for (final MatchFace f in right) ?f.misconception};
 }
 
 /// A kind of coin or note in the purse and how many of it there are.
@@ -1077,6 +1218,114 @@ class TraceActivity extends Activity {
 
   @override
   Set<String> get engineTags => <String>{?wrongTag, ?directionTag};
+}
+
+/// The modes of LS02, write a letter (docs/languages/writing-mastery.md section 3).
+enum LetterMode { intro, trace, copy, memory }
+
+LetterMode _letterMode(String s) => switch (s) {
+  'intro' => LetterMode.intro,
+  'copy' => LetterMode.copy,
+  'memory' => LetterMode.memory,
+  _ => LetterMode.trace,
+};
+
+/// The worked example of a letter (the `intro` mode): its sound, shown with a key word and a picture, and its name as a separate fact.
+class LetterIntro {
+  const LetterIntro({required this.sound, required this.name, this.keyword, this.picture});
+
+  factory LetterIntro.fromJson(Map<String, Object?> json) => LetterIntro(
+    sound: json['sound']! as String,
+    name: json['name']! as String,
+    keyword: json['keyword'] as String?,
+    picture: json['picture'] as String?,
+  );
+
+  final String sound;
+  final String name;
+  final String? keyword;
+
+  /// An `asset:` reference.
+  final String? picture;
+}
+
+/// LS02 write a letter (`trace` 2.0, docs/milestones/L5.md section 5.2): the worked example of a letter, then trace it, copy it, and write
+/// it from memory, on a canvas of one letter or of a word. The letters are forms of the stroke set of the course's script; their strokes
+/// are read from the pack's stroke document, never from the activity. Free response: nothing is a fixed option, and an error the
+/// free-stroke check can name maps to a tag of [classify], while any other miss is a retry that writes nothing.
+class LetterWriteActivity extends Activity {
+  LetterWriteActivity._(super.json, super.assets)
+    : mode = _letterMode(_map(json['scene'])['mode']! as String),
+      word = _map(json['scene'])['canvas'] == 'word',
+      forms = _strings(_map(json['scene'])['forms']),
+      ownName = _map(json['scene'])['source'] == 'own_name',
+      fullGuide = _map(json['scene'])['guide'] == 'full',
+      modelHidden = _map(json['scene'])['model'] == 'hide',
+      cue = switch (_map(json['scene'])['cue']) {
+        'sound' => WritingCue.sound,
+        'name' => WritingCue.name,
+        _ => null,
+      },
+      intro = _map(json['scene'])['intro'] == null
+          ? null
+          : LetterIntro.fromJson(_map(_map(json['scene'])['intro'])),
+      practiceOnly = _map(json['scene'])['practice'] == true,
+      classify = <String, String>{
+        for (final String k in const <String>['start', 'direction', 'lines', 'mirror'])
+          if (_maybe(_map(json['answer'])['classify'])[k] is String)
+            k: _maybe(_map(json['answer'])['classify'])[k]! as String,
+      },
+      partners = <String, String>{
+        for (final MapEntry<String, Object?> p in _maybe(
+          _maybe(_map(json['answer'])['classify'])['partners'],
+        ).entries)
+          p.key: p.value! as String,
+      },
+      super._();
+
+  final LetterMode mode;
+
+  /// A canvas of a word: a row of boxes in the course's direction. Otherwise one box with one letter.
+  final bool word;
+
+  /// The form ids to write: one for a letter canvas, two to six for a word.
+  final List<String> forms;
+
+  /// The letters come from the child's own name (heb B-27); [forms] is the fallback word when no name is set.
+  final bool ownName;
+
+  /// trace: the whole dotted path (otherwise only the start dot and the first direction).
+  final bool fullGuide;
+
+  /// copy: the model is shown and then covered (otherwise it stays beside the box).
+  final bool modelHidden;
+
+  /// memory: what the voice says (its clip is the prompt's target).
+  final WritingCue? cue;
+
+  /// intro: the sound, the key word and the name to say.
+  final LetterIntro? intro;
+
+  /// A handwriting step that is only practice, whatever skill it names.
+  final bool practiceOnly;
+
+  /// The tag of each error the free-stroke check can name: `start`, `direction`, `lines`, `mirror`.
+  final Map<String, String> classify;
+
+  /// A look-alike form the child may write instead (form id) and the tag of that mix-up.
+  final Map<String, String> partners;
+
+  /// The tracing of a letter with only its start dot: a success there marks the letter as practised (E-1).
+  bool get startGuide => mode == LetterMode.trace && !fullGuide && !word;
+
+  @override
+  bool get unscored => mode == LetterMode.intro;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{...classify.values, ...partners.values};
 }
 
 /// A place of the shape builder: the shape that belongs there, where it stands in the picture (shares of its width and height)
@@ -1414,6 +1663,11 @@ class SkillDoc {
       setCoverage = (json['setCoverage'] as bool?) ?? false,
       soundRight = (json['soundRight'] as String?) ?? 'teaches',
       letters = (json['letters'] as bool?) ?? false,
+      writing = switch (json['writing']) {
+        'memory' => WritingRule.memory,
+        'practised' => WritingRule.practised,
+        _ => null,
+      },
       strand = json['strand'] as String?,
       masteryRequires = (json['masteryRequires'] as Map<String, Object?>?) ?? const <String, Object?>{},
       initialStabilityDays = (_map(json['retention'])['initialStabilityDays']! as num).toDouble(),
@@ -1442,6 +1696,9 @@ class SkillDoc {
   final bool setCoverage;
   final String soundRight;
   final bool letters;
+
+  /// Letter writing (E-1): a writing node (memory) or a trace node (practised); null for every other skill.
+  final WritingRule? writing;
 
   /// The strand of the course (`lis`, `ph`, `rea` ...) the progress view groups the skill under; null in the lands.
   final String? strand;
@@ -1547,6 +1804,7 @@ class TagDoc {
     : id = json['id']! as String,
       course = (json['course'] as String?) ?? Course.core,
       parentText = json['parentText']! as String,
+      kind = json['kind'] as String?,
       homeActivity = json['homeActivity'] == null ? null : _caption(json['homeActivity']),
       skills = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       repairActivities = <String>[
@@ -1561,6 +1819,9 @@ class TagDoc {
 
   /// What a parent reads about this misunderstanding, in plain Hebrew.
   final String parentText;
+
+  /// `diagnostic`, `on_the_way`, `accent` or `practice` in a language course (frame section 4.1); null in the lands.
+  final String? kind;
 
   /// Something a parent can do at home in about five minutes, or null.
   final String? homeActivity;
@@ -1603,6 +1864,7 @@ class PackContent {
     required this.skills,
     required this.tags,
     required this.gates,
+    this.strokeSets = const <String, StrokeSet>{},
     this.placement,
   });
 
@@ -1613,6 +1875,7 @@ class PackContent {
     final Map<String, SkillDoc> skills = <String, SkillDoc>{};
     final Map<String, TagDoc> tags = <String, TagDoc>{};
     final Map<String, GateDoc> gates = <String, GateDoc>{};
+    final Map<String, StrokeSet> strokeSets = <String, StrokeSet>{};
     PlacementDoc? placement;
     for (final MapEntry<String, Object?> d in pack.docs.entries) {
       final Map<String, Object?> doc = _map(d.value);
@@ -1625,6 +1888,9 @@ class PackContent {
       } else if (d.key.startsWith('gate.')) {
         final GateDoc g = GateDoc._(doc);
         gates[g.id] = g;
+      } else if (d.key.startsWith('strokes.')) {
+        final StrokeSet set = StrokeSet.fromJson(doc);
+        strokeSets[set.name] = set;
       } else if (d.key.startsWith('placement.')) {
         placement = PlacementDoc._(doc);
       } else if (d.key.startsWith('misconception.')) {
@@ -1648,6 +1914,7 @@ class PackContent {
       skills: skills,
       tags: tags,
       gates: gates,
+      strokeSets: strokeSets,
       placement: placement,
     );
   }
@@ -1665,6 +1932,9 @@ class PackContent {
 
   /// The gates of the course (none in the lands that exist today).
   final Map<String, GateDoc> gates;
+
+  /// The stroke sets of the course's scripts by name (`latin`, `hebrew-print` ...); none in the lands.
+  final Map<String, StrokeSet> strokeSets;
 
   /// The placement game of the course (LS13), or null: the lands have none, and a language pack may not have one yet.
   final PlacementDoc? placement;

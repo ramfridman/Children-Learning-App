@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:nitznutz:schema:strokes",
+  "title": "Nitznutz strokes",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "nitznutz.strokes/1"
+    },
+    "set": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 20,
+      "pattern": "^(?:[a-z]+(?:-[a-z]+)?)$"
+    },
+    "courses": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "eng",
+          "heb",
+          "rus"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 3
+    },
+    "review": {
+      "type": "string",
+      "enum": [
+        "needs-teacher",
+        "teacher-checked"
+      ]
+    },
+    "reviewer": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "pattern": "^(?:[a-z-]+)$"
+    },
+    "box": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 100
+    },
+    "ink": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 20
+    },
+    "em": {
+      "type": "number",
+      "minimum": 1.0,
+      "maximum": 200.0
+    },
+    "baseline": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 100.0
+    },
+    "guides": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^(?:[a-z]{1,12})$"
+      },
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 100.0
+      },
+      "maxProperties": 8
+    },
+    "solidGuides": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 12,
+        "pattern": "^(?:[a-z]+)$"
+      },
+      "minItems": 0,
+      "maxItems": 8
+    },
+    "inset": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 20.0
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "ltr",
+        "rtl"
+      ]
+    },
+    "generator": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "font": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "weight": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 900
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "css": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        }
+      },
+      "required": [
+        "family",
+        "weight",
+        "file",
+        "css"
+      ],
+      "additionalProperties": false
+    },
+    "groups": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^(?:[a-z]{1,12})$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240
+      },
+      "maxProperties": 8
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 80
+    },
+    "forms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 40,
+            "pattern": "^(?:[a-z]+(?:-[a-z]+)?\\.[a-z0-9]+(?:-[a-z0-9]+)*(?:\\.[a-z]+)?)$"
+          },
+          "char": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16,
+            "pattern": "^(?:[A-Za-z0-9-]+)$"
+          },
+          "case": {
+            "type": "string",
+            "enum": [
+              "lower",
+              "upper"
+            ]
+          },
+          "final": {
+            "type": "boolean"
+          },
+          "group": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16,
+            "pattern": "^(?:[a-z-]+)$"
+          },
+          "groupProposed": {
+            "type": "boolean"
+          },
+          "sits": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12,
+                  "pattern": "^(?:[a-z]+)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "strokes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "line",
+                    "dot",
+                    "short"
+                  ]
+                },
+                "d": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 500,
+                  "pattern": "^(?:[MLC0-9 .\\-]+)$"
+                },
+                "points": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 100
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "minItems": 2,
+                  "maxItems": 60
+                },
+                "start": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "end": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "moves": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "down",
+                      "up",
+                      "left",
+                      "right",
+                      "down-left",
+                      "down-right",
+                      "up-left",
+                      "up-right",
+                      "cw",
+                      "ccw",
+                      "dot"
+                    ]
+                  },
+                  "minItems": 1,
+                  "maxItems": 12
+                },
+                "retrace": {
+                  "type": "boolean"
+                },
+                "loop": {
+                  "type": "boolean"
+                },
+                "startOk": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 400
+                }
+              },
+              "required": [
+                "kind",
+                "d",
+                "points",
+                "start",
+                "end",
+                "moves"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 6
+          },
+          "alternates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "how": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40,
+                  "pattern": "^(?:[a-z ,-]+)$"
+                },
+                "strokes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "line",
+                          "dot",
+                          "short"
+                        ]
+                      },
+                      "points": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 100
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "minItems": 2,
+                        "maxItems": 60
+                      },
+                      "retrace": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "points"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "minItems": 1,
+                  "maxItems": 6
+                }
+              },
+              "required": [
+                "how",
+                "strokes"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 4
+          }
+        },
+        "required": [
+          "id",
+          "char",
+          "name",
+          "sits",
+          "strokes"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 80
+    }
+  },
+  "required": [
+    "schema",
+    "set",
+    "courses",
+    "review",
+    "reviewer",
+    "box",
+    "ink",
+    "em",
+    "baseline",
+    "guides",
+    "solidGuides",
+    "inset",
+    "direction",
+    "generator",
+    "count",
+    "forms"
+  ],
+  "additionalProperties": false
+}

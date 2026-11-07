@@ -30,6 +30,10 @@ abstract final class Patterns {
 
   // The placement document of a course: `eng.placement`.
   static const String placementId = r'[a-z]{3}\.placement';
+
+  // A stroke set (`latin`, `cyrillic`, `hebrew-print`, `hebrew-script`) and a form of one (`latin.a.cap`, `hebrew-print.mem-final`).
+  static const String strokeSet = r'[a-z]+(?:-[a-z]+)?';
+  static const String strokeForm = r'[a-z]+(?:-[a-z]+)?\.[a-z0-9]+(?:-[a-z0-9]+)*(?:\.[a-z]+)?';
 }
 
 /// The four kinds of document in a pack, by the `schema` field of the file.
@@ -44,11 +48,15 @@ abstract final class SchemaIds {
   static const String placement = 'placement/v1';
   static const String skill = 'skill/v1';
   static const String misconception = 'misconception/v1';
+
+  /// The stroke data of a script (docs/languages/strokes.md); a pack document `strokes.<set>.json`.
+  static const String strokes = 'nitznutz.strokes/1';
 }
 
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
-  // 1.4 (M10 step 0.4): stage pictures, the row signs `<` `>` `(` `)`, numbers to 10,000, five choices in Band C and the number answer.
+  // 1.4: the language fields of LS01 (L5-1: stem, cloze, tap-all, text faces) and, for M10 step 0.4, stage pictures, the row signs `<` `>`
+  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer. One version carries both.
   'tap_answer': '1.4',
   'story': '1.0',
   'listen_do': '1.0',
@@ -58,18 +66,18 @@ const Map<String, String> supportedTemplates = <String, String>{
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
-  'sort_drag': '1.0',
-  'build_pattern': '1.0',
+  'sort_drag': '1.1',
+  'build_pattern': '1.1',
   'robot_path': '1.0',
   'shape_builder': '1.0',
   'number_line': '1.0',
   'balance': '1.0',
-  // 1.1: the signs `<` `>` `(` `)` and numbers to 10,000 in a cell.
+  // 1.1: the language fields of L5-1 (text cells, the model picture) and, for M10, the signs `<` `>` `(` `)` and numbers to 10,000 in a cell.
   'spot_error': '1.1',
-  'match_pairs': '1.0',
+  'match_pairs': '1.1',
   'shop_pay': '1.0',
   'clock_set': '1.0',
-  'trace': '1.0',
+  'trace': '2.0',
   'say_it': '1.0',
 };
 
@@ -116,6 +124,25 @@ const List<String> representations = <String>['concrete', 'pictorial', 'story', 
 
 /// The kinds of misconception tag of a language course (docs/languages/frame.md section 4.1).
 const List<String> tagKinds = <String>['diagnostic', 'on_the_way', 'accent', 'practice'];
+
+/// The families of misconception tags of a language course (docs/languages/frame.md section 4.1).
+const List<String> tagFamilies = <String>[
+  'DIR',
+  'NAME',
+  'SHAPE',
+  'STROKE',
+  'CONTRAST',
+  'SEGMENT',
+  'RHYME',
+  'VOWEL',
+  'CODE',
+  'GRAMMAR',
+  'PRINT',
+  'GUESS',
+  'MEANING',
+  'ACCENT',
+  'FLUENCY',
+];
 
 /// The only four things a scripted personal turn may ask (docs/languages/frame.md section 5.2): the child's name, age, likes and family.
 /// Never where the child lives, an address, a city, the gan or school, a phone number, photos or feelings about home.
@@ -254,6 +281,12 @@ const SObject manifestSchema = SObject(<String, SField>{
         SArray(SString(minLength: 13, maxLength: 13, pattern: Patterns.placementId), maxItems: 1),
         required: false,
       ),
+      // The stroke sets of a language course (docs/languages/strokes.md): the scripts its letters are written in; absent in packs that
+      // have none.
+      'strokes': SField(
+        SArray(SString(minLength: 5, maxLength: 20, pattern: Patterns.strokeSet), maxItems: 4),
+        required: false,
+      ),
     }),
   ),
 });
@@ -364,6 +397,9 @@ const SObject skillSchema = SObject(<String, SField>{
   'setCoverage': SField(SBool(), required: false),
   'soundRight': SField(SEnum(<String>['accepts', 'teaches']), required: false),
   'letters': SField(SBool(), required: false),
+  // Letter writing (rule E-1, docs/languages/writing-mastery.md): `memory` is a writing node (copy and memory writing, mastered by
+  // memory successes on two days with both cues), `practised` a trace node (met once every letter was traced with the start dot).
+  'writing': SField(SEnum(<String>['memory', 'practised']), required: false),
   // The graphemes this skill teaches (a letter, a digraph, a vowel sign), and the whole words it teaches as they are. A skill
   // that is letter work may offer only words made of the graphemes taught by it and by the skills below it, and its tricky
   // words (the decodable check, docs/languages/frame.md F5).
@@ -489,6 +525,9 @@ const SObject misconceptionSchema = SObject(<String, SField>{
   // `on_the_way` is accepted as success in early skills, `accent` is speech only (never on a distractor), `practice` gives no signal.
   // Optional in the lands; a language pack must give it (the validator).
   'kind': SField(SEnum(tagKinds), required: false),
+  // The family of the tag (frame section 4.1), for the parent view and for the rules that look at a kind of mistake: only a tag of the family
+  // SHAPE may stand on an option that has no sound of its own (L5-1). Optional: the lands have none.
+  'family': SField(SEnum(tagFamilies), required: false),
   'skills': SField(SArray(_skill, minItems: 1, maxItems: 10)),
   'parentText': SField(SString(minLength: 1, maxLength: 240)),
   // Something a parent can do at home in about five minutes (M7, pack 0.3.0). Plain Hebrew for the parent.
@@ -538,6 +577,13 @@ const SObject _pan = SObject(<String, SField>{
 const SObject _face = SObject(<String, SField>{
   'id': SField(SString(minLength: 1, maxLength: 8, pattern: r'[a-z][a-z0-9]{0,7}')),
   'sprite': SField(_asset, required: false),
+  // A language course (1.1): a text, or only a sound (a sound card), is a face as well; a face of the bottom row may carry the tag that
+  // taking it for a wrong one shows.
+  'text': SField(_faceText, required: false),
+  'clip': _optionClip,
+  // Hint level 2 (1.1): the face in another form, a picture beside it (a letter's key word).
+  'alt': SField(_asset, required: false),
+  'misconception': SField(_tag, required: false),
   'count': SField(SInt(min: 1, max: 20), required: false),
   'numeral': SField(SInt(min: 0, max: 100), required: false),
   // A coin or a note of the shop, drawn with its value (the money template's kinds).
@@ -562,6 +608,18 @@ const SObject _spriteSet = SObject(<String, SField>{
 const SField _speechWords = SField(
   SArray(SString(minLength: 1, maxLength: 40), minItems: 1, maxItems: 8),
   required: false,
+);
+
+/// A face of an LS01 mode that has text (L5-1): a letter, a unit, a syllable or a word, on a sort card, a bin sign, a match face, an order
+/// tile or a cell. The validator holds it to the rules of a language course (script, nikud, decodable words) and the fit check to the
+/// phone SE; the text is shown as plain text only.
+const SString _faceText = SString(minLength: 1, maxLength: _targetTextMax);
+
+/// A picture (`asset:id`) or a text (`txt:` and the text) on a cell of an order row or of a story line.
+const SString _cellFace = SString(
+  minLength: 5,
+  maxLength: 46,
+  pattern: r'asset:[a-z0-9_]{1,40}|txt:[^ -]{1,40}',
 );
 
 /// An option's own sound (a `vo:` reference), played by a speaker on its tile or by the tile itself (LS01 b and c).
@@ -653,18 +711,19 @@ const Map<String, SField> _numberAnswerFields = <String, SField>{
   ),
 };
 
-/// The `answer` of a `tap_answer`: `choice` (two to five options and the right one) or `number` (the number itself). The validator
-/// checks that the rest fits the type.
+/// The `answer` of a `tap_answer`: `choice` (two to five options and the right one, or the list of right ones of a tap-all) or
+/// `number` (the number itself). The validator checks that the rest fits the type.
 SObject _tapAnswer(
   Map<String, SField> optionFields, {
   Map<String, SField> answerFields = const <String, SField>{},
+  SField correct = const SField(_optionId, required: false),
 }) => SObject(<String, SField>{
   'type': const SField(SEnum(<String>['choice', 'number'])),
   'options': SField(
     SArray(SObject(optionFields), minItems: 2, maxItems: 5, uniqueKey: 'id'),
     required: false,
   ),
-  'correct': const SField(_optionId, required: false),
+  'correct': correct,
   'shuffle': const SField(SBool(), required: false),
   'unsureAllowed': const SField(SBool(), required: false),
   ..._numberAnswerFields,
@@ -674,10 +733,12 @@ SObject _tapAnswer(
 SObject _answerOptions(
   Map<String, SField> optionFields, {
   Map<String, SField> answerFields = const <String, SField>{},
+  int maxOptions = 4,
+  SField correct = const SField(_optionId),
 }) => SObject(<String, SField>{
   'type': const SField(SConst('choice')),
-  'options': SField(SArray(SObject(optionFields), minItems: 2, maxItems: 4, uniqueKey: 'id')),
-  'correct': const SField(_optionId),
+  'options': SField(SArray(SObject(optionFields), minItems: 2, maxItems: maxOptions, uniqueKey: 'id')),
+  'correct': correct,
   'shuffle': const SField(SBool()),
   'unsureAllowed': const SField(SBool()),
   ...answerFields,
@@ -717,6 +778,8 @@ SObject _l4Answer(
   // Which side of a two-way skill the item is, as in `tap_answer`.
   'pole': const SField(SEnum(poles), required: false),
   'pairWith': const SField(_id, required: false),
+  // What the text options are, as in `tap_answer`: `letter` (square, large, bold) or `word`; a place of LS11 may be a letter stone (L5-1).
+  'face': const SField(SEnum(<String>['letter', 'word']), required: false),
   ...extra,
 });
 
@@ -848,8 +911,10 @@ const SArray _traceClassifiers = SArray(
   maxItems: 4,
 );
 
-/// The schema of an activity of the given template, or null for a template this app does not know.
-SObject? activitySchemaFor(String template) => switch (template) {
+/// The schema of an activity of the given template, or null for a template this app does not know. [version] is the activity's
+/// `templateVersion`: `trace` 2.0 (LS02, write a letter) is another document from the tracing of the lands (1.0).
+SObject? activitySchemaFor(String template, {String? version}) => switch (template) {
+  'trace' when version != null && version.startsWith('2.') => letterWriteSchema,
   'tap_answer' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -865,6 +930,19 @@ SObject? activitySchemaFor(String template) => switch (template) {
           'picture': SField(_stagePicture, required: false),
           // Picture answers on tiles below the stage instead of on it (1.1): when the pictures are the whole point.
           'optionsOnTiles': SField(SBool(), required: false),
+          // A written word, unit or letter on the stage that the child reads (1.4, LS01 d): the clip is what "read it to me" plays.
+          'stem': SField(
+            SObject(<String, SField>{'text': SField(_faceText), 'clip': SField(_vo, required: false)}),
+            required: false,
+          ),
+          // A sentence with one gap, marked `_`, that a word tile fills (1.4, LS01 e); the picture stands beside it.
+          'cloze': SField(
+            SObject(<String, SField>{
+              'text': SField(SString(minLength: 3, maxLength: 120)),
+              'picture': SField(_asset, required: false),
+            }),
+            required: false,
+          ),
           // A chart to read (1.2): columns of pictures, each a category with how many it has (a pictograph).
           'chart': SField(
             SArray(
@@ -915,7 +993,14 @@ SObject? activitySchemaFor(String template) => switch (template) {
             // What the text tiles are: `letter` (square, large, bold) or `word` (Medium, as wide as the row allows). The text never
             // decides: an item whose options are all one or two letters must say which it is (the validator). Missing is `word`.
             'face': const SField(SEnum(<String>['letter', 'word']), required: false),
+            // Tap-all (1.4, LS01): several right cards in one row. `correct` is then the list of the right options, and the item checks
+            // itself once as many cards are picked as there are right ones.
+            'all': const SField(SBool(), required: false),
           },
+          correct: const SField(
+            SAnyOf(<Schema>[_optionId, SArray(_optionId, minItems: 1, maxItems: 5)]),
+            required: false,
+          ),
         ),
       ),
     }),
@@ -986,7 +1071,12 @@ SObject? activitySchemaFor(String template) => switch (template) {
             SArray(
               SObject(<String, SField>{
                 'id': SField(SString(minLength: 2, maxLength: 2, pattern: r'b[0-9]')),
-                'sprite': SField(_asset),
+                // The sign of the bin: a picture; in a language course (1.1) a text or a sound (`clip`) may be it instead.
+                'sprite': SField(_asset, required: false),
+                'text': SField(_faceText, required: false),
+                'clip': _optionClip,
+                // Hint level 2 (1.1): the sign in another form, a picture beside it (a letter's key word).
+                'alt': SField(_asset, required: false),
                 'count': SField(SInt(min: 1, max: 6), required: false),
                 'label': SField(SString(minLength: 1, maxLength: 40)),
               }),
@@ -999,7 +1089,13 @@ SObject? activitySchemaFor(String template) => switch (template) {
             SArray(
               SObject(<String, SField>{
                 'id': SField(SString(minLength: 2, maxLength: 3, pattern: r'i[0-9]{1,2}')),
-                'sprite': SField(_asset),
+                // A card: a picture; in a language course (1.1) a text, or only a sound (a sound card, `clip`).
+                'sprite': SField(_asset, required: false),
+                'text': SField(_faceText, required: false),
+                'clip': _optionClip,
+                'label': SField(SString(minLength: 1, maxLength: 80), required: false),
+                // The tag of the mistake of putting this card in a wrong bin (a language course; the item's `answer.misconception` otherwise).
+                'misconception': SField(_tag, required: false),
                 'bin': SField(SString(minLength: 2, maxLength: 2, pattern: r'b[0-9]'), required: false),
               }),
               minItems: 2,
@@ -1119,17 +1215,27 @@ SObject? activitySchemaFor(String template) => switch (template) {
         SObject(<String, SField>{
           'background': SField(_asset, required: false),
           // Each cell is a picture (`asset:`), a number (`n:7`, to 10,000 from 1.1), an arrow (`dir:up`) or a sign (`op:+`; `op:<`,
-          // `op:>`, `op:(` and `op:)` from 1.1).
+          // `op:>`, `op:(` and `op:)` from 1.1) or, in a language course (1.1), a text (`txt:` and a letter, a unit or a word).
           'cells': SField(
             SArray(
               SString(
                 minLength: 3,
                 maxLength: 46,
-                pattern: r'asset:[a-z0-9_]{1,40}|n:(?:0|[1-9][0-9]{0,3}|10000)|dir:(up|down|left|right)|op:[+=x:<>()-]',
+                pattern: r'asset:[a-z0-9_]{1,40}|n:(?:0|[1-9][0-9]{0,3}|10000)|dir:(up|down|left|right)|op:[+=x:<>()-]|txt:[^ -]{1,40}',
               ),
               minItems: 3,
               maxItems: 9,
             ),
+          ),
+          // A language course (1.1): the picture the cells are to match, and its word (heard on a touch).
+          'model': SField(
+            SObject(<String, SField>{
+              'sprite': SField(_asset),
+              'clip': SField(_vo, required: false),
+              // The model's own spelling, cell for cell with the row (hint levels 2 and 3 show it against the row).
+              'spelling': SField(SArray(_cellFace, minItems: 3, maxItems: 9), required: false),
+            }),
+            required: false,
           ),
         }),
       ),
@@ -1185,16 +1291,21 @@ SObject? activitySchemaFor(String template) => switch (template) {
       'scene': const SField(
         SObject(<String, SField>{
           'background': SField(_asset, required: false),
-          // The pattern to copy, shown above the places.
-          'model': SField(SArray(_asset, maxItems: 8), required: false),
+          // The pattern to copy, shown above the places. In a language course (1.1) a cell may be a text (`txt:`), as may a tile.
+          'model': SField(SArray(_cellFace, maxItems: 8), required: false),
           'slots': SField(SInt(min: 2, max: 8)),
-          'palette': SField(SArray(_asset, minItems: 2, maxItems: 6)),
+          'palette': SField(SArray(_cellFace, minItems: 2, maxItems: 6)),
+          // A story line (1.1): the line of each picture as a clip, in the order of the palette (hint level 1 plays them as it lights them).
+          'clips': SField(SArray(_vo, minItems: 2, maxItems: 6), required: false),
         }),
       ),
       'answer': const SField(
         SObject(<String, SField>{
           'type': SField(SConst('build')),
-          'sequence': SField(SArray(_asset, minItems: 2, maxItems: 8)),
+          'sequence': SField(SArray(_cellFace, minItems: 2, maxItems: 8), required: false),
+          // A sequence, the story line of a language course (1.1, LS01 f): the palette stands in a shuffled order, and this is the index
+          // of each place's picture in the right order.
+          'order': SField(SArray(SInt(min: 0, max: 5), minItems: 2, maxItems: 6), required: false),
           'misconception': SField(_tag, required: false),
         }),
       ),
@@ -1560,6 +1671,216 @@ SObject? activitySchemaFor(String template) => switch (template) {
   _ => null,
 };
 
+// ---- LS02: write a letter, and the stroke data it reads ----
+
+const SString _strokeFormId = SString(minLength: 3, maxLength: 40, pattern: Patterns.strokeForm);
+
+/// A point of a stroke: whole units of the box of 100 by 100.
+const SArray _boxPoint = SArray(SInt(min: 0, max: 100), minItems: 2, maxItems: 2);
+
+/// The ways a stroke goes, in words (docs/languages/strokes.md section 2): a straight run, or a curve as seen on the screen.
+const List<String> strokeMoves = <String>[
+  'down',
+  'up',
+  'left',
+  'right',
+  'down-left',
+  'down-right',
+  'up-left',
+  'up-right',
+  'cw',
+  'ccw',
+  'dot',
+];
+
+const SObject _strokeSchema = SObject(<String, SField>{
+  'kind': SField(SEnum(<String>['line', 'dot', 'short'])),
+  // The smooth path (M, L and C in box units) for the model letter and the "watch it drawn" motion. The schema keeps it to numbers and
+  // three letters; its grammar (an M first, then L with 2 numbers and C with 6, each number from 0 to 100) is `checkStrokeSet`'s rule.
+  'd': SField(SString(minLength: 5, maxLength: 500, pattern: r'[MLC0-9 .\-]+')),
+  // The bounds of docs/milestones/L5.md section 11: points inside the box, 2 to 60 of them.
+  'points': SField(SArray(_boxPoint, minItems: 2, maxItems: 60)),
+  'start': SField(_boxPoint),
+  'end': SField(_boxPoint),
+  'moves': SField(SArray(SEnum(strokeMoves), minItems: 1, maxItems: 12)),
+  'retrace': SField(SBool(), required: false),
+  'loop': SField(SBool(), required: false),
+  'startOk': SField(SString(minLength: 1, maxLength: 400), required: false),
+});
+
+/// A stroke of another right build of a letter (QA-L52-1): only compared with what the child writes, never drawn, so it has no path
+/// and no words for the way it goes.
+const SObject _buildStrokeSchema = SObject(<String, SField>{
+  'kind': SField(SEnum(<String>['line', 'dot', 'short'])),
+  'points': SField(SArray(_boxPoint, minItems: 2, maxItems: 60)),
+  'retrace': SField(SBool(), required: false),
+});
+
+/// Another way to write the letter that is right: a few strokes, read in any order like the model's (`tools/strokes_alternates.py`).
+const SObject _buildSchema = SObject(<String, SField>{
+  'how': SField(SString(minLength: 1, maxLength: 40, pattern: r'[a-z ,-]+')),
+  'strokes': SField(SArray(_buildStrokeSchema, minItems: 1, maxItems: 6)),
+});
+
+const SObject _strokeFormSchema = SObject(<String, SField>{
+  'id': SField(_strokeFormId),
+  'char': SField(SString(minLength: 1, maxLength: 2)),
+  'name': SField(SString(minLength: 1, maxLength: 16, pattern: r'[A-Za-z0-9-]+')),
+  'case': SField(SEnum(<String>['lower', 'upper']), required: false),
+  'final': SField(SBool(), required: false),
+  'group': SField(SString(minLength: 1, maxLength: 16, pattern: r'[a-z-]+'), required: false),
+  'groupProposed': SField(SBool(), required: false),
+  // The upper and lower guide line the body of the letter sits on (null where it is not on one, like t's top).
+  'sits': SField(
+    SArray(
+      SAnyOf(<Schema>[SString(minLength: 1, maxLength: 12, pattern: r'[a-z]+'), SNull()]),
+      minItems: 2,
+      maxItems: 2,
+    ),
+  ),
+  // At most six strokes a form (Yo has six).
+  'strokes': SField(SArray(_strokeSchema, minItems: 1, maxItems: 6)),
+  // The other builds of the letter that are right (a ball and a stick for a): at most four, within the same caps.
+  'alternates': SField(SArray(_buildSchema, minItems: 1, maxItems: 4), required: false),
+});
+
+/// The stroke data of one script (`nitznutz.strokes/1`), as `content/languages/strokes/<set>.json` and as the pack document
+/// `strokes.<set>.json`. Parsed content: every number is bounded and the only commands are the M, L and C of a stroke's drawing path
+/// (`d`), whose grammar `checkStrokeSet` holds; the validator refuses a set that is not `teacher-checked` (`ls02_checks.dart`).
+const SObject strokesSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.strokes)),
+  'set': SField(SString(minLength: 5, maxLength: 20, pattern: Patterns.strokeSet)),
+  'courses': SField(SArray(SEnum(Course.languages), minItems: 1, maxItems: 3)),
+  'review': SField(SEnum(<String>['needs-teacher', 'teacher-checked'])),
+  'reviewer': SField(SString(minLength: 1, maxLength: 40, pattern: r'[a-z-]+')),
+  'box': SField(SInt(min: 100, max: 100)),
+  'ink': SField(SInt(min: 2, max: 20)),
+  'em': SField(SNum(min: 1, max: 200)),
+  'baseline': SField(SNum(min: 0, max: 100)),
+  // The lines letters sit on, as y in the box, and which of them are drawn solid.
+  'guides': SField(SMap(SNum(min: 0, max: 100), keyPattern: r'[a-z]{1,12}', maxEntries: 8)),
+  'solidGuides': SField(SArray(SString(minLength: 1, maxLength: 12, pattern: r'[a-z]+'), maxItems: 8)),
+  'inset': SField(SNum(min: 0, max: 20)),
+  'direction': SField(SEnum(<String>['ltr', 'rtl'])),
+  'generator': SField(SString(minLength: 1, maxLength: 120)),
+  'font': SField(
+    SObject(<String, SField>{
+      'family': SField(SString(minLength: 1, maxLength: 40)),
+      'weight': SField(SInt(min: 100, max: 900)),
+      'file': SField(SString(minLength: 1, maxLength: 80)),
+      'css': SField(SString(minLength: 1, maxLength: 8)),
+    }),
+    required: false,
+  ),
+  'groups': SField(
+    SMap(SString(minLength: 1, maxLength: 240), keyPattern: r'[a-z]{1,12}', maxEntries: 8),
+    required: false,
+  ),
+  'count': SField(SInt(min: 1, max: 80)),
+  'forms': SField(SArray(_strokeFormSchema, minItems: 1, maxItems: 80, uniqueKey: 'id')),
+});
+
+/// LS02 write a letter, `trace` 2.0 (docs/milestones/L5.md section 5.2): an `intro` (the worked example of a letter, unscored) and the
+/// three modes `trace`, `copy` and `memory`, on a canvas of one letter or of a word. The letters are form ids of the stroke set of the
+/// course's script. The classifiers map the errors the free-stroke check can name to the course's tags; an error it cannot name is a
+/// retry with no tag and no evidence.
+const SObject letterWriteSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.activity)),
+  'id': SField(_id),
+  'review': _review,
+  'revision': SField(_revision),
+  'template': SField(SConst('trace')),
+  'templateVersion': SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
+  'course': _course,
+  'domain': SField(SEnum(domains)),
+  'band': SField(SEnum(bands)),
+  'skills': SField(
+    SArray(
+      SObject(<String, SField>{'id': SField(_skill), 'weight': SField(SNum(min: 0, max: 1))}),
+      minItems: 1,
+      maxItems: 4,
+      uniqueKey: 'id',
+    ),
+  ),
+  'purpose': SField(SEnum(<String>['learn', 'practice', 'probe', 'repair', 'check'])),
+  'contradicts': SField(_tag, required: false),
+  'checkType': SField(
+    SEnum(<String>['practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict']),
+  ),
+  'representation': SField(SEnum(representations)),
+  'variantGroup': SField(SString(minLength: 3, maxLength: 60, pattern: r'[a-z0-9._-]+')),
+  'difficulty': SField(SObject(<String, SField>{'authored': SField(SNum(min: 0, max: 1))})),
+  'prompt': SField(
+    SObject(<String, SField>{
+      'vo': SField(_vo),
+      'caption': SField(_caption),
+      'replayButton': SField(SBool()),
+      ..._lineExtras,
+    }),
+  ),
+  'scene': SField(
+    SObject(<String, SField>{
+      'mode': SField(SEnum(<String>['intro', 'trace', 'copy', 'memory'])),
+      'canvas': SField(SEnum(<String>['letter', 'word'])),
+      // One form for a letter canvas; two to six for a word canvas (the boxes, in the course's direction).
+      'forms': SField(SArray(_strokeFormId, minItems: 1, maxItems: 6)),
+      // `own_name`: the letters of the child's name, made on the device from the parent-typed name; nothing of it is in the pack.
+      'source': SField(SEnum(<String>['forms', 'own_name']), required: false),
+      // trace: the whole dotted path, or only the start dot and the first direction.
+      'guide': SField(SEnum(<String>['full', 'start']), required: false),
+      // copy: the model beside the box, or shown and then covered.
+      'model': SField(SEnum(<String>['beside', 'hide']), required: false),
+      // memory: what the voice says, the sound of the letter or its name (the clip is the prompt's `target`).
+      'cue': SField(SEnum(<String>['sound', 'name']), required: false),
+      // intro: the sound in a key word with its picture, and the name as a separate fact.
+      'intro': SField(
+        SObject(<String, SField>{
+          'sound': SField(_vo),
+          'keyword': SField(_vo, required: false),
+          'name': SField(_vo),
+          'picture': SField(_asset, required: false),
+        }),
+        required: false,
+      ),
+      // A handwriting step that is only practice, whatever skill it names (a word canvas of eng C-23 and rus C-23).
+      'practice': SField(SBool(), required: false),
+    }),
+  ),
+  'answer': SField(
+    SObject(<String, SField>{
+      'type': SField(SEnum(<String>['trace', 'none'])),
+      'classify': SField(
+        SObject(<String, SField>{
+          'start': SField(_tag, required: false),
+          'direction': SField(_tag, required: false),
+          'lines': SField(_tag, required: false),
+          'mirror': SField(_tag, required: false),
+          // A look-alike form the child may write instead of the target, and the tag of that mix-up.
+          'partners': SField(SMap(_tag, keyPattern: Patterns.strokeForm, maxEntries: 6), required: false),
+        }),
+        required: false,
+      ),
+    }),
+  ),
+  'voiceAnswer': SField(SBool(), required: false),
+  'feedback': SField(_feedback),
+  'hints': SField(_hints),
+  'scoring': SField(
+    SObject(<String, SField>{
+      'maxAttempts': SField(SInt(min: 1, max: 5)),
+      'creditByHintLevel': SField(SArray(SNum(min: 0, max: 1), minItems: 4, maxItems: 4)),
+    }),
+  ),
+  'tutor': SField(
+    SObject(<String, SField>{
+      'llmAllowed': SField(SBool()),
+      'goal': SField(SString(minLength: 5, maxLength: 200)),
+      'mustNotRevealBeforeHint': SField(SInt(min: 0, max: 3)),
+    }),
+  ),
+  'a11y': SField(SObject(<String, SField>{'altText': SField(SString(minLength: 1, maxLength: 240))})),
+});
+
 /// The file an author writes next to the content files of a pack (`pack.json`); the pack builder reads
 /// it, works out the rest of the manifest (files, hashes, entries, template versions) and signs.
 const SObject packSourceSchema = SObject(<String, SField>{
@@ -1603,5 +1924,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.shop_pay': activitySchemaFor('shop_pay')!,
   'activity.clock_set': activitySchemaFor('clock_set')!,
   'activity.trace': activitySchemaFor('trace')!,
+  'activity.trace_write': letterWriteSchema,
+  'strokes': strokesSchema,
   'activity.say_it': activitySchemaFor('say_it')!,
 };

@@ -38,6 +38,26 @@
         "practice"
       ]
     },
+    "family": {
+      "type": "string",
+      "enum": [
+        "DIR",
+        "NAME",
+        "SHAPE",
+        "STROKE",
+        "CONTRAST",
+        "SEGMENT",
+        "RHYME",
+        "VOWEL",
+        "CODE",
+        "GRAMMAR",
+        "PRINT",
+        "GUESS",
+        "MEANING",
+        "ACCENT",
+        "FLUENCY"
+      ]
+    },
     "skills": {
       "type": "array",
       "items": {

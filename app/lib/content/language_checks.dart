@@ -82,9 +82,10 @@ void checkLanguageContent({
     }
     _distractors(file, a, tags, say);
     _classifiers(file, a, tags, say);
+    _ls01Tags(file, a, tags, say);
     _face(file, a, say);
     _countInCourse(file, a, say);
-    _decodable(file, a, texts, skills, taughtCache, say);
+    _decodable(file, a, texts, skills, taughtCache, tags, say);
     _pairs(file, id, a, activities, skills, say);
   });
   _twoChoiceLimits(activities, skills, say);
@@ -129,6 +130,33 @@ List<({String path, String text, bool shown})> _targetTexts(Map<String, Object?>
       final Object? t = o[key];
       if (t is String) out.add((path: 'answer.options[$i].$key', text: t, shown: false));
     }
+  }
+  // The faces of the modes of L5-1 are target-language text too: the sign and the cards of a sort, the faces of a pair, the cells of a
+  // spot or an order row, the tiles of an order, the stem and the sentence of a cloze (its gap taken out).
+  final Map<String, Object?> scene = _map(a['scene']);
+  void face(String path, Object? text) {
+    if (text is String) out.add((path: path, text: text, shown: false));
+  }
+
+  for (final String list in <String>['bins', 'items', 'left', 'right']) {
+    for (final (int i, Map<String, Object?> f) in _maps(scene[list]).indexed) {
+      face('scene.$list[$i].text', f['text']);
+    }
+  }
+  for (final String list in <String>['cells', 'model', 'palette']) {
+    final Object? cells = scene[list];
+    for (final (int i, Object? c) in (cells is List<Object?> ? cells : const <Object?>[]).indexed) {
+      if (c is String && c.startsWith('txt:')) face('scene.$list[$i]', c.substring('txt:'.length));
+    }
+  }
+  for (final (int i, Object? c)
+      in ((_map(a['answer'])['sequence'] as List<Object?>?) ?? const <Object?>[]).indexed) {
+    if (c is String && c.startsWith('txt:')) face('answer.sequence[$i]', c.substring('txt:'.length));
+  }
+  face('scene.stem.text', _map(scene['stem'])['text']);
+  final Object? cloze = _map(scene['cloze'])['text'];
+  if (cloze is String) {
+    face('scene.cloze.text', cloze.replaceAll('_', ' ').replaceAll(RegExp(r' {2,}'), ' ').trim());
   }
   // The words of a say-it item are target-language text too.
   final Map<String, Object?> speak = _map(a['say']);
@@ -195,6 +223,7 @@ void _decodable(
   List<({String path, String text, bool shown})> texts,
   Map<String, Map<String, Object?>> skills,
   Map<String, ({Set<String> graphemes, Set<String> tricky})> cache,
+  Map<String, Map<String, Object?>> tags,
   Say say,
 ) {
   final List<Map<String, Object?>> named = _maps(a['skills']);
@@ -225,7 +254,11 @@ void _decodable(
     );
     return;
   }
+  // A lone letter tile that is a look-alike distractor (a tag of the family SHAPE) may be a letter of a later group: it is never the answer,
+  // never read and never voiced, and the check is for words and units (L5-1).
+  final Set<String> lookAlikes = _lookAlikeTiles(a, tags);
   for (final ({String path, String text, bool shown}) t in texts) {
+    if (lookAlikes.contains(t.path)) continue;
     for (final String word in wordsOf(t.text)) {
       if (taught.tricky.contains(plainWord(word)) || decodes(word, taught.graphemes)) continue;
       final String missing = <String>{
@@ -242,6 +275,21 @@ void _decodable(
   }
 }
 
+/// The paths of the texts of the lone letter tiles that are wrong options with a tag of the family SHAPE.
+Set<String> _lookAlikeTiles(Map<String, Object?> a, Map<String, Map<String, Object?>> tags) {
+  final Map<String, Object?> answer = _map(a['answer']);
+  final Object? correct = answer['correct'];
+  final List<Object?> right = correct is List<Object?> ? correct : <Object?>[correct];
+  return <String>{
+    for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed)
+      if (!right.contains(o['id']) &&
+          o['text'] is String &&
+          isSingleLetter(o['text']! as String) &&
+          tags[o['misconception']]?['family'] == 'SHAPE')
+        'answer.options[$i].text',
+  };
+}
+
 // ---- distractors ----
 
 /// Every distractor is tagged with the misconception it shows, and never with an accent tag. A 3-choice item thereby has two
@@ -250,8 +298,11 @@ void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, O
   final Map<String, Object?> answer = _map(a['answer']);
   // A step that is not scored has no right answer, so no distractor: a personal turn's cards are none of them wrong.
   if (answer['type'] == 'none') return;
+  // A tap-all has several right options (L5-1); every other choice has one.
+  final Object? correct = answer['correct'];
+  final List<Object?> right = correct is List<Object?> ? correct : <Object?>[correct];
   for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
-    if (o['id'] == answer['correct']) continue;
+    if (right.contains(o['id'])) continue;
     final Object? tag = o['misconception'];
     final String path = 'answer.options[$i].misconception';
     if (tag is! String) {
@@ -263,6 +314,28 @@ void _distractors(String file, Map<String, Object?> a, Map<String, Map<String, O
         '$tag is an accent tag: a difference of accent is never marked, so it is never on a distractor',
       );
     }
+  }
+}
+
+/// The tags of the modes of L5-1 (a sort, a pair, a spot, an order): the card's, the partner's or the item's, none of them an accent tag.
+void _ls01Tags(String file, Map<String, Object?> a, Map<String, Map<String, Object?>> tags, Say say) {
+  final Map<String, Object?> scene = _map(a['scene']);
+  void accent(String path, Object? tag) {
+    if (tag is String && tags[tag]?['kind'] == 'accent') {
+      say(
+        file,
+        path,
+        '$tag is an accent tag: a difference of accent is never marked, so it is never on a mistake',
+      );
+    }
+  }
+
+  accent('answer.misconception', _map(a['answer'])['misconception']);
+  for (final (int i, Map<String, Object?> it) in _maps(scene['items']).indexed) {
+    accent('scene.items[$i].misconception', it['misconception']);
+  }
+  for (final (int i, Map<String, Object?> f) in _maps(scene['right']).indexed) {
+    accent('scene.right[$i].misconception', f['misconception']);
   }
 }
 

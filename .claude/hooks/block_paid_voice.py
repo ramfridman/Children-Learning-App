@@ -3,7 +3,8 @@
 
 The owner's rule (2026-10-29): no voice is generated, no ElevenLabs call is made and the ElevenLabs key is not used
 without the owner doing it himself, in his own terminal. This hook reads the command text and refuses:
-  - `voice_gen` paid commands: `generate`, `audition`, `audition-batch` anything but `plan` (free: `plan`, `mock`, `list`);
+  - `voice_gen` paid commands: `generate`, `audition`, `audition-batch` anything but `plan` (free: `plan`, `mock`, `list`, and `pack`, which
+    re-packs clips already on disk and has no path to ElevenLabs; the owner allowed it on 2026-11-02);
   - the tutor prewarm tool and live tutor calls through the gateway (they voice lines on ElevenLabs);
   - any direct call to api.elevenlabs.io or the `xi-api-key` header;
   - any mention of ELEVENLABS_API_KEY (reading, printing, setting).
@@ -20,7 +21,7 @@ READ_ONLY = {
     "git", "grep", "egrep", "fgrep", "rg", "cat", "ls", "dir", "head", "tail", "wc", "type", "get-content", "gc",
     "select-string", "sls", "findstr", "less", "more", "diff", "get-childitem", "gci", "test-path", "stat",
 }
-FREE_VOICE_GEN = {"plan", "mock", "list", "help", "--help", "-h"}
+FREE_VOICE_GEN = {"plan", "mock", "list", "pack", "help", "--help", "-h"}
 
 GUARDED_WORDS = (
     "api.elevenlabs.io",
@@ -35,7 +36,7 @@ GUARDED_WORDS = (
 REASON = (
     "Blocked: paid ElevenLabs voicing is the owner's to run himself, in his own terminal "
     "(CLAUDE.md, 'Characters and money'). Free commands are allowed: `voice_gen plan`, `audition-batch plan`, "
-    "`mock`, `list`. Ask the owner to run the paid command and type the character count."
+    "`mock`, `list`, `pack`. Ask the owner to run the paid command and type the character count."
 )
 
 

@@ -57,6 +57,7 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | closed (`acdecdf`: `Course.ofLessonId` in the pull guard, proof re-run; `contradicts` refused on unscored steps; a complete placement has no visit) | 2026-11-04 |
 | SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
 | SEC-LC-2 | The answer path of the lesson controller does not itself refuse an unscored step (not reachable; defence in depth) | info | open | 2026-11-05 |
+| SEC-L5-1 | Stroke sets: the `d` path is checked by its characters only, not by its grammar or the range of its numbers | low | fixed on `languages-l5-2b`: `strokePathFault` in `checkStrokeSet` holds the grammar (M first, M and L two numbers, C six, each number `-?\d+(\.\d+)?` from 0 to 100), `_addD` stops at the first bad token (tryParse, an index check), the `strokesSchema` comment says what the schema does not (`ls02_validation_test.dart` "the bounds of a stroke", `ls02_whole_letter_session_test.dart` paints a bad path without an exception); closes when the security-engineer has run the proof again | 2026-11-06 |
 | SEC-M10-1 | The app says it plays `tap_answer` 1.4, but no session draws a number answer or a stage picture yet | low | closed (`PackContent.fromPack` hides every item with a number answer or a stage picture until a session draws it, `itemsOf` leaves a hidden id out, `tapHintPlan` gives no plan when there is no right option; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-2 | The validator throws instead of refusing some incomplete stage pictures | low | closed (null-guarded reads in `_stagePictureOf`; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-3 | The 1.4 number range is not tied to Band C, and some hint plans grow with the size of the number | low | closed (numerals above 100 and `n:` cells of four digits or more only in Band C, in the validator; the hint plans fall back to the generic plan above 20 units, and a test holds every starter item with big numbers under 2,000 marks; proof `sec_m10s0_test.dart`) | 2026-11-06 |
@@ -64,6 +65,10 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-M10-5 | An activity's `templateVersion` is not checked against the manifest's template version | info | closed (validator rule; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-6 | `content-publish` caps are not tied to `PackLimits` (items by comment only; misconceptions 200 against the pack's 400) | info | open | 2026-11-06 |
 | SEC-M10-7 | PLAN.md still gives the pack reader's old limits in the pack format section | info | open | 2026-11-06 |
+| SEC-B29-1 | School stage: a `child-put` with another band and no stage keeps the stored stage, so the server can hold and send a stage that disagrees with the band | low | fixed (`b29-profile`: the upsert keeps a stored stage only while its band is the saved band, a table check ties stage to band, the app clears a stage of another band on pull; proofs `sync_test.ts`, `11_school_stage.test.sql`, `profile_sync_test.dart`) | 2026-11-06 |
+| SEC-B29-2 | iOS local data: no backup-excluded data folder yet, and secure-storage items are not `ThisDeviceOnly` (not reachable: no iOS build can open the database today) | low | Dart part fixed (`b29-profile`: every item is `first_unlock_this_device`, not synchronizable; proof `secure_store_test.dart`); the Swift part (exclude the iOS database folder from backup) gates any iOS build and waits for the iOS platform channel | 2026-11-06 |
+| SEC-B29-3 | The birth-month source rule scans 7 of the `lib/` folders and misses some names (`childAgeProvider`, `ageInMonths`, `assumedMonths`) | low | fixed (`b29-profile`: an allowlist over all of `lib/`, and only `show SchoolStage` imports of `engine/age.dart` outside it; proof `profile_sync_test.dart`) | 2026-11-06 |
+| SEC-B29-4 | Rolling back `settings-put` or `child-put` while the B-29 app is in use stops its settings sync and the save of a child with a stage | info | open (a deploy note: roll back the app first) | 2026-11-06 |
 | SEC-9a | gitleaks hit in a local stash: a fake JWT-shaped test string, never pushed; no rotation needed | low | closed | 2026-10-28 |
 | SEC-1 | Answer codes of six M9 templates were outside `sync-push`'s pattern, so a device's sync stopped for good | high | closed (`dd040cd`) | 2026-10-28 |
 
@@ -387,6 +392,27 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   - Open findings SEC-6 and SEC-7 grow with these caps and were measured again; SEC-M10-6 and -7 are new (info). Their detail
     goes to the orchestrator and stays out of this file until they are fixed. No package, lock file, host, workflow or
     database change, so no advisory check was needed. gitleaks was not on this PC's PATH, so CI is the scan for this commit.
+- **L5-2b LS02 write a letter, `languages-l5-2b` (`12fb249a`; 2026-11-06): a light review. Safe to merge, one low finding.**
+  Verified by reading:
+  - Stroke sets are a signed-pack document, read only after the signature, the hashes, the schema and the cross-file rules.
+  - Every number is bounded: whole-unit points in the box, 2 to 60 a stroke, 6 strokes a form, 80 forms a set, 4 sets a pack.
+  - Unknown fields are refused at every level.
+  - A set that is not `teacher-checked`, a set of another course and any set in a pack of the lands are refused.
+  - The free-stroke check is linear in the child's stroke. Its work on the model side is bounded by the schema (at most 6 forms
+    of 6 strokes of 60 points), so a hostile set cannot make it unbounded.
+  - `trace` 2.0 has its own closed schema and belongs to a language course only.
+  - An older app refuses a pack that lists stroke sets at its manifest check. It does not store such a pack hidden, so it fails
+    closed.
+  - The child's drawn points stay in the session's memory. They are never stored, logged, synced or sent.
+  - The answer codes are short codes (`ok`, `s2.dir`, `b2.s1.start`). They fit the sync pattern, and the tutor gets `move` in
+    their place.
+  - The engine changes are pure and use only what the device has, and nothing new leaves the device.
+
+  New: SEC-L5-1 (low), above. Also checked: no package, lock-file, host, workflow or gateway change, so the OSV result of
+  2026-11-04 stands.
+
+  Not run by the security-engineer: `flutter test` and gitleaks (not installed here). A grep of the diff found no secret-shaped
+  string.
 - **M10 step 0, `m10-step0` (PR 41, `f8a99ff4` against `origin/main`; 2026-11-06): a light review. Nothing above low; fix
   SEC-M10-1 to -3 before this build goes on the phones.** In scope: the device setting `division_sign`, the `tap_answer` 1.4 and
   `spot_error` 1.1 schemas, the validator's rules for them, size caps, hiding from older apps, and how today's sessions handle the
@@ -405,4 +431,33 @@ this check, a format mismatch between a deployed gateway and an installed app, i
     feature declare that version.
   - New findings: SEC-M10-1 to -3 (low) and SEC-M10-4 and -5 (info), in the table above. Their detail and proofs go to the
     orchestrator and stay out of the public file until they are fixed.
+- **B-29 steps 3 and 4, `b29-profile` (`e27f6824` against `origin/m10-step0`; 2026-11-06): safe to deploy in the order
+  migration, then `child-put`, `sync-pull` and `settings-put`, then the app. Nothing above low.** In scope: the migration, the
+  three changed functions and the shared store, the device-only birth month and year, `engine/age.dart`, the sync field and
+  fingerprint, `FamilyLooks`, the fake server, the canary and source-rule tests, iOS backup, and old and new app compatibility.
+  Not in scope: the warm-up and presentation stages as teaching or design logic.
+  - The four checks: all three functions are `device` specs (`child-put` and `settings-put` parent only, `sync-pull` parent and
+    child). The shared `makeHandler` is unchanged and runs token, signature, nonce and time, device, family and role before the
+    shape and the work. The shape refuses every key it does not name, so no birth key can be sent (Deno test over
+    `refused_keys_of_child_put`). Error answers carry only the code.
+  - The database: the migration adds a nullable `text` column with a check on the six words. `create or replace` keeps the
+    owner and the grants (PostgreSQL keeps a replaced function's ACL). `security definer` and `search_path = pg_catalog, app`
+    are written exactly as before, and the body is the 2026-11-03 body plus one `looks` statement. No grant was added. Default
+    privileges still revoke everything from `public`, `anon`, `authenticated` and `service_role`. pgTAP 05 (`execute`) and 11
+    (column privileges, RLS on) cover this.
+  - Birth data: it is only in `profile_births` in the encrypted database, and it is read only in `engine/age.dart`,
+    `data/tables.dart`, `data/app_database.dart` and `app/age_providers.dart` (nothing consumes it yet). `BirthMonth.toString`
+    hides it. Release builds print nothing. There is no crash reporter, and Android backup and transfer exclude every domain.
+    The canary test is sound for the sync functions (every request and answer of three rounds, numbers, dates and keys); see
+    SEC-B29-3 for the source rule.
+  - `looks`: at most 6 children, ids in the `child-put` pattern, the letter exactly `A`, `B` or `C`. The 10,000-byte bound is
+    unchanged. A stale parent phone could put a deleted child's letter back, which is SEC-L0-5 (info), now also for `looks`.
+  - Compatibility: an old app ignores `school_stage` and `looks`, and a save from it without a stage keeps the stored stage
+    (but see SEC-B29-1). An old-app parent phone that saves the settings drops `looks` (last write wins; not a security issue).
+  - New findings: SEC-B29-1 to -3 (low) and SEC-B29-4 (info), in the table above. Their detail goes to the orchestrator.
+  - Advisories (OSV.dev, 2026-11-06): none for drift 2.35.3, sqlite3 3.8.0, flutter_secure_storage 11.2.0 or
+    flutter_secure_storage_darwin 0.4.3. No lock file, workflow or host changed.
+  - Run by the security-engineer: `flutter test` on `profile_sync_test`, `birthday_changes_nothing_test`,
+    `profile_births_test` and `look_settings_test` (42 passed). CI run 42245546284 on `origin/b29-profile`: the gateway
+    (Deno tests), database (pgTAP), gitleaks (full history) and OSV jobs passed; the app test shards were still running.
 - **B-40 visual hints (2026-10-31).** Reviewed: the A7 validator rule (fails closed, cannot throw), the hint readers of pack text and SVG, the 13 hand SVGs (no script, href, image, style or URL), no new package or host, gitleaks clean over the branch. Two low findings, SEC-34 and SEC-35, fixed on the branch with proof tests (`hint_svg_hostile_test.dart`). OSV.dev: no advisory for flutter_svg 2.3.0, vector_graphics 1.2.4, vector_graphics_compiler 1.3.2, xml 7.0.1.

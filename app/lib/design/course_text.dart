@@ -47,6 +47,7 @@ class CourseText extends StatelessWidget {
     this.color = TokenColors.ink,
     this.textAlign,
     this.maxLines,
+    this.lineHeight,
   });
 
   final String text;
@@ -56,6 +57,10 @@ class CourseText extends StatelessWidget {
   final Color color;
   final TextAlign? textAlign;
   final int? maxLines;
+
+  /// The line height, when it is not the script's own (1.7 for pointed Hebrew, 1.3 for English and Russian): a single letter with no marks
+  /// has none to keep apart and is set at 1.2 (LS01).
+  final double? lineHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +74,7 @@ class CourseText extends StatelessWidget {
         color: color,
         textAlign: textAlign,
         maxLines: maxLines,
+        lineHeight: lineHeight ?? 1.3,
       );
     }
     return Directionality(
@@ -79,7 +85,12 @@ class CourseText extends StatelessWidget {
         textDirection: TextDirection.rtl,
         textAlign: textAlign,
         maxLines: maxLines,
-        style: AppText.fixed(size: size, weight: bold ? 700 : 500, color: color),
+        style: AppText.fixed(
+          size: size,
+          weight: bold ? 700 : 500,
+          color: color,
+          lineHeight: lineHeight ?? 1.7,
+        ),
       ),
     );
   }

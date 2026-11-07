@@ -433,19 +433,27 @@ export function pgStore(sql: Sql): Store {
         await sql`select 1 from app.deleted_child where family_id = ${familyId} and child_id = ${c.id}`;
       if (gone) return "deleted";
       await sql`
-        insert into app.child_profile (family_id, id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band)
+        insert into app.child_profile
+          (family_id, id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band, school_stage)
         values (${familyId}, ${c.id}, ${c.nickname}, ${c.avatarId}, ${c.companionId}, ${
         c.outfitId ?? null
-      }, ${c.addressForm}, ${c.ageBand})
+      }, ${c.addressForm}, ${c.ageBand}, ${c.schoolStage ?? null})
         on conflict (family_id, id) do update set nickname = excluded.nickname, avatar_id = excluded.avatar_id,
           companion_id = excluded.companion_id, outfit_id = excluded.outfit_id, address_form = excluded.address_form,
-          age_band = excluded.age_band, updated_at = now()`;
+          age_band = excluded.age_band,
+          school_stage = coalesce(excluded.school_stage,
+            -- A save without a stage keeps the stored one only while its band is the saved band (SEC-B29-1).
+            case when (case app.child_profile.school_stage
+                          when 'gan3' then 0 when 'gan4' then 0 when 'gan5' then 1
+                          when 'grade1' then 1 when 'grade2' then 2 when 'grade3' then 2 end) = excluded.age_band
+                 then app.child_profile.school_stage end),
+          updated_at = now()`;
       return "saved";
     },
 
     async listChildren(familyId) {
       const rows = await sql`
-        select id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band
+        select id, nickname, avatar_id, companion_id, outfit_id, address_form, age_band, school_stage
           from app.child_profile where family_id = ${familyId} order by created_at, id`;
       return rows.map((r): ChildProfile => ({
         id: r.id,
@@ -455,6 +463,7 @@ export function pgStore(sql: Sql): Store {
         outfitId: r.outfit_id,
         addressForm: r.address_form,
         ageBand: r.age_band,
+        schoolStage: r.school_stage,
       }));
     },
 

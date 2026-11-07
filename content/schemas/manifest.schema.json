@@ -235,6 +235,17 @@
           },
           "minItems": 0,
           "maxItems": 1
+        },
+        "strokes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 20,
+            "pattern": "^(?:[a-z]+(?:-[a-z]+)?)$"
+          },
+          "minItems": 0,
+          "maxItems": 4
         }
       },
       "required": [

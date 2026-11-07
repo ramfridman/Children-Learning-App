@@ -43,6 +43,7 @@ export const spec: FunctionSpec = {
         outfit_id: c.outfitId ?? null,
         address_form: c.addressForm,
         age_band: c.ageBand,
+        school_stage: c.schoolStage ?? null,
       })),
       tombstones,
     };

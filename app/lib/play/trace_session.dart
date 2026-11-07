@@ -10,6 +10,7 @@ import '../design/tokens.g.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart';
 import 'response_code.dart';
+import 'stroke_geometry.dart';
 import 'template_session.dart';
 
 /// The tracing template (T04): a numeral or a shape is shown as a dotted path, and the child follows it with a finger. Each stroke
@@ -54,20 +55,10 @@ class TraceSession extends TemplateSession {
       notify();
       return;
     }
-    final List<Offset> drawn = _dense(current);
-    final List<Offset> target = _resample(activity.strokes[strokeIndex], 32);
-    final double tol = activity.tolerance;
-    int covered = 0;
-    for (final Offset t in target) {
-      if (drawn.any((Offset d) => (d - t).distance <= tol)) covered++;
-    }
-    int near = 0;
-    for (final Offset d in drawn) {
-      if (target.any((Offset t) => (d - t).distance <= tol * 1.6)) near++;
-    }
-    final bool onPath = covered / target.length >= 0.85 && near / drawn.length >= 0.85;
-    final bool startsRight = (drawn.first - target.first).distance <= tol * 2.2;
-    final bool startsAtEnd = (drawn.first - target.last).distance <= tol * 2.2;
+    final PathVerdict v = pathVerdict(current, activity.strokes[strokeIndex], activity.tolerance);
+    final bool onPath = v.onPath;
+    final bool startsRight = v.startsRight;
+    final bool startsAtEnd = v.startsAtEnd;
     final bool right = onPath && startsRight;
     if (right) {
       finished.add(List<Offset>.of(current));
@@ -113,40 +104,6 @@ class TraceSession extends TemplateSession {
     });
   }
 
-  /// A finger path with a point at least every two units, so that a fast stroke still covers the path.
-  static List<Offset> _dense(List<Offset> pts) {
-    final List<Offset> out = <Offset>[pts.first];
-    for (int i = 1; i < pts.length; i++) {
-      final Offset a = pts[i - 1];
-      final Offset b = pts[i];
-      final int n = math.max(1, ((b - a).distance / 2).ceil());
-      for (int k = 1; k <= n; k++) {
-        out.add(Offset.lerp(a, b, k / n)!);
-      }
-    }
-    return out;
-  }
-
-  /// [count] points spread evenly along the polyline.
-  static List<Offset> _resample(List<Offset> pts, int count) {
-    final List<double> cum = <double>[0];
-    for (int i = 1; i < pts.length; i++) {
-      cum.add(cum.last + (pts[i] - pts[i - 1]).distance);
-    }
-    final double total = cum.last;
-    final List<Offset> out = <Offset>[];
-    int seg = 1;
-    for (int k = 0; k < count; k++) {
-      final double d = total * k / (count - 1);
-      while (seg < pts.length - 1 && cum[seg] < d) {
-        seg++;
-      }
-      final double span = cum[seg] - cum[seg - 1];
-      out.add(Offset.lerp(pts[seg - 1], pts[seg], span == 0 ? 0 : ((d - cum[seg - 1]) / span).clamp(0, 1))!);
-    }
-    return out;
-  }
-
   void _stopDemo() {
     _demoId++;
     demo = null;
@@ -186,7 +143,7 @@ class TraceSession extends TemplateSession {
     final int first = math.min(strokeIndex, activity.strokes.length - 1);
     final int last = allStrokes ? activity.strokes.length - 1 : first;
     for (int k = first; k <= last; k++) {
-      final List<Offset> path = _resample(activity.strokes[k], 24);
+      final List<Offset> path = resampleStroke(activity.strokes[k], 24);
       final int shown = math.max(2, (path.length * fraction).round());
       for (int i = 0; i < shown; i++) {
         later(Duration(milliseconds: msPerPoint * (++at)), () {
@@ -298,7 +255,7 @@ class _TracePainter extends CustomPainter {
     for (final (int i, List<Offset> stroke) in a.strokes.indexed) {
       final bool done = i < s.finished.length;
       if (s.guideShown && !done) {
-        for (final Offset p in TraceSession._resample(stroke, math.max(6, (_length(stroke) / 5).round()))) {
+        for (final Offset p in resampleStroke(stroke, math.max(6, (strokeLength(stroke) / 5).round()))) {
           canvas.drawCircle(px(p), 2.3 * k, dot);
         }
       }
@@ -306,7 +263,7 @@ class _TracePainter extends CustomPainter {
         // the starting dot, and (when only the start is shown) the first direction
         canvas.drawCircle(px(stroke.first), 4.5 * k, Paint()..color = TokenColors.correctGlow);
         if (!s.guideShown) {
-          final List<Offset> lead = TraceSession._resample(stroke, 12).take(4).toList();
+          final List<Offset> lead = resampleStroke(stroke, 12).take(4).toList();
           for (final Offset p in lead.skip(1)) {
             canvas.drawCircle(px(p), 2.3 * k, dot);
           }
@@ -334,14 +291,6 @@ class _TracePainter extends CustomPainter {
       line(s.current, s.ring == AnswerState.notYet ? TokenColors.notYetRing : TokenColors.ink);
     }
     if (s.demo != null) canvas.drawCircle(px(s.demo!), 5 * k, Paint()..color = TokenColors.hintHalo);
-  }
-
-  static double _length(List<Offset> pts) {
-    double d = 0;
-    for (int i = 1; i < pts.length; i++) {
-      d += (pts[i] - pts[i - 1]).distance;
-    }
-    return d;
   }
 
   @override

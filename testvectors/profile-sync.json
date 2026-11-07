@@ -1,0 +1,24 @@
+{
+  "note": "B-29 step 3: what the gateway takes and gives about a child's school stage and the look letter, mirrored by supabase/functions/child-put and settings-put and read by supabase/functions/sync_test.ts and, in the app, by test/age_fit_test.dart, test/look_settings_test.dart and test/support/fake_family_server.dart. The month and year of birth are NOT here: they never leave the device.",
+  "school_stages": ["gan3", "gan4", "gan5", "grade1", "grade2", "grade3"],
+  "band_of_stage": { "gan3": 0, "gan4": 0, "gan5": 1, "grade1": 1, "grade2": 2, "grade3": 2 },
+  "look_letters": ["A", "B", "C"],
+  "max_look_children": 6,
+  "look_examples": [
+    {},
+    { "child-aaaa-0001": "A" },
+    { "child-aaaa-0001": "A", "child-aaaa-0002": "B", "child-aaaa-0003": "C", "child-aaaa-0004": "A", "child-aaaa-0005": "B", "child-aaaa-0006": "C" }
+  ],
+  "look_refused": [
+    [],
+    "A",
+    { "child-aaaa-0001": "D" },
+    { "child-aaaa-0001": "a" },
+    { "child-aaaa-0001": 1 },
+    { "child-aaaa-0001": null },
+    { "child-aaaa-0001": "AB" },
+    { "short": "A" },
+    { "child-aaaa-0001": "A", "child-aaaa-0002": "A", "child-aaaa-0003": "A", "child-aaaa-0004": "A", "child-aaaa-0005": "A", "child-aaaa-0006": "A", "child-aaaa-0007": "A" }
+  ],
+  "refused_keys_of_child_put": ["birth_year", "birth_month", "birth", "born", "age_months", "presentation_stage", "stage", "look"]
+}

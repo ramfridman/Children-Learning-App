@@ -423,7 +423,10 @@ class LessonController extends ChangeNotifier {
     if (speak) _say(h.say);
     // Level 3 is "show me": asked for with the lamp it marks the answer, as three mistakes do, and only the right move is taken (QA-L4-4).
     // The Band A templates of the language courses; the lands and LS01 keep the path they have.
-    if (level >= 3 && languageTemplates.contains(current.template)) guided = true;
+    // Writing a letter (LS02) is the same template as the tracing of the lands: its level 3 is trace mode and only the right stroke is taken.
+    if (level >= 3 && (languageTemplates.contains(current.template) || current is LetterWriteActivity)) {
+      guided = true;
+    }
   }
 
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)
@@ -462,6 +465,30 @@ class LessonController extends ChangeNotifier {
     final bool right = optionId == correctId;
     final String tag = right ? (traceTag ?? '') : (chosen.misconception ?? traceTag ?? '');
     return _answered(right: right, tag: tag, response: optionId, byVoice: byVoice);
+  }
+
+  /// The child picked the cards [pickedIds] of a tap-all (LS01), as many as there are right ones: right when they are exactly the right
+  /// ones. A wrong one carries its own tag (the first picked that has one); the response is the indexes of the cards in the order picked.
+  Future<Outcome> chooseSet(List<String> pickedIds) async {
+    final Object a = current;
+    if (a is! TapAnswerActivity || !a.all) throw StateError('${current.template} is not a tap-all');
+    final Set<String> right = a.correctIds.toSet();
+    final bool correct = pickedIds.toSet().length == right.length && pickedIds.toSet().containsAll(right);
+    String tag = '';
+    if (!correct) {
+      for (final String id in pickedIds) {
+        if (right.contains(id)) continue;
+        tag = a.options.firstWhere((ChoiceOption o) => o.id == id).misconception ?? '';
+        if (tag.isNotEmpty) break;
+      }
+    }
+    return _answered(
+      right: correct,
+      tag: tag,
+      response: ResponseCode.picks(<int>[
+        for (final String id in pickedIds) a.options.indexWhere((ChoiceOption o) => o.id == id),
+      ]),
+    );
   }
 
   /// The child made a move in a drag template (sort, share, build a pattern): [right] says whether it was the right one, [tag]

@@ -183,6 +183,8 @@ void main() {
       await v2.customStatement('DROP TABLE voice_listens');
       await v2.customStatement('ALTER TABLE profiles DROP COLUMN companion_id');
       await v2.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v2.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+      await v2.customStatement('DROP TABLE profile_births');
       await v2.customStatement('PRAGMA user_version = 1');
       await v2.close();
 
@@ -226,7 +228,7 @@ void main() {
       expect(await db.allInstalledPacks(), isEmpty);
       expect(await db.attemptsOf('nobody'), isEmpty);
       expect(await db.sessionsOf('nobody'), isEmpty);
-      expect(AppDatabase.currentSchemaVersion, 9);
+      expect(AppDatabase.currentSchemaVersion, 10);
     });
 
     test('an attempt holds ids, numbers and fixed words only (no column can carry a name or free text of any size)', () async {
@@ -273,6 +275,8 @@ void main() {
       await v3.customStatement('ALTER TABLE attempts DROP COLUMN synced_at');
       await v3.customStatement('ALTER TABLE attempts DROP COLUMN remote_session');
       await v3.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v3.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+      await v3.customStatement('DROP TABLE profile_births');
       await v3.customStatement('PRAGMA user_version = 2');
       await v3.close();
 
@@ -328,6 +332,8 @@ void main() {
       await v4.customStatement('ALTER TABLE sessions DROP COLUMN synced_at');
       await v4.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
       await v4.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v4.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+      await v4.customStatement('DROP TABLE profile_births');
       await v4.customStatement('PRAGMA user_version = 3');
       await v4.close();
 
@@ -387,6 +393,8 @@ void main() {
       await v5.customStatement('ALTER TABLE sessions DROP COLUMN synced_at');
       await v5.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
       await v5.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v5.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+      await v5.customStatement('DROP TABLE profile_births');
       await v5.customStatement('PRAGMA user_version = 4');
       await v5.close();
 
@@ -447,6 +455,8 @@ void main() {
       await v6.customStatement('ALTER TABLE sessions DROP COLUMN synced_at');
       await v6.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
       await v6.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v6.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+      await v6.customStatement('DROP TABLE profile_births');
       await v6.customStatement('PRAGMA user_version = 5');
       await v6.close();
 
@@ -553,6 +563,8 @@ void main() {
         await v7.customStatement('ALTER TABLE sessions DROP COLUMN remote_key');
         await v7.customStatement('ALTER TABLE alerts DROP COLUMN synced_at');
         await v7.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+        await v7.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+        await v7.customStatement('DROP TABLE profile_births');
         await v7.customStatement('PRAGMA user_version = 6');
         await v7.close();
 
@@ -579,6 +591,8 @@ void main() {
       await v8.endSession(session, DateTime.utc(2026, 11, 1, 0, 5), 'finished');
       await v8.customStatement('DROP TABLE rewards');
       await v8.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v8.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+      await v8.customStatement('DROP TABLE profile_births');
       await v8.customStatement('PRAGMA user_version = 7');
       await v8.close();
 
@@ -629,6 +643,8 @@ void main() {
         ),
       );
       await v9.customStatement('ALTER TABLE profiles DROP COLUMN outfit_id');
+      await v9.customStatement('ALTER TABLE profiles DROP COLUMN school_stage');
+      await v9.customStatement('DROP TABLE profile_births');
       await v9.customStatement('PRAGMA user_version = 8');
       await v9.close();
 
