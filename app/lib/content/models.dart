@@ -55,11 +55,14 @@ HintAction _hintAction(String s) => switch (s) {
 };
 
 class Hint {
-  const Hint({required this.level, required this.action, required this.say});
+  const Hint({required this.level, required this.action, required this.say, this.show});
 
   final int level;
   final HintAction action;
   final Spoken say;
+
+  /// The other template's screen this hint opens as its picture (L5 section 5.9), or null for the hint of the template's own ladder.
+  final HintShow? show;
 }
 
 /// A rule of `feedback.incorrect`: `when` is `default` or `misconception:<tag>`.
@@ -138,6 +141,7 @@ sealed class Activity {
             level: h['level']! as int,
             action: _hintAction(h['action']! as String),
             say: Spoken.fromJson(h),
+            show: h['screen'] == null ? null : HintShow.fromJson(_map(h['screen'])),
           ),
       ],
       maxAttempts = _map(json['scoring'])['maxAttempts']! as int,
@@ -150,7 +154,13 @@ sealed class Activity {
     'listen_do' => ListenDoActivity._(json, assets),
     'sing_along' => SingAlongActivity._(json, assets),
     'puppet_talk' => PuppetTalkActivity._(json, assets),
+    'sound_boxes' when (json['templateVersion']! as String).startsWith('1.1') => BoxesActivity._(
+      json,
+      assets,
+    ),
     'sound_boxes' => SoundBoxesActivity._(json, assets),
+    'change_part' => ChangePartActivity._(json, assets),
+    'blend_slide' => BlendSlideActivity._(json, assets),
     'flash' => FlashActivity._(json, assets),
     'sort_drag' => SortDragActivity._(json, assets),
     'build_pattern' => BuildPatternActivity._(json, assets),
@@ -759,6 +769,312 @@ class SoundBoxesActivity extends Activity {
 
   @override
   Set<String> get engineTags => <String>{?moreTag, ?fewerTag};
+}
+
+// ---- L5-3 to L5-5: LS03 boxes, LS05 change one part, LS04 blend slide (docs/milestones/L5.md sections 5.3 to 5.5) ----
+
+/// The steps of an LS03 `boxes` item, in the only order they come in.
+enum BoxStep { count, colour, stress, which }
+
+/// One sound, syllable or CV unit of the word of a `boxes` item: its clip, its kind (the Russian scheme's colours read it), and the mouth picture of
+/// a phoneme (an `asset:` reference) that the level-2 hint shows.
+class BoxUnit {
+  const BoxUnit({required this.clip, required this.kind, this.mouth});
+
+  final String clip;
+
+  /// `vowel`, `hard`, `soft`, `cv` or `c`.
+  final String kind;
+  final String? mouth;
+
+  bool get vowel => kind == 'vowel';
+}
+
+/// LS03 in `boxes` mode (`sound_boxes` 1.1): a word is heard with its picture and the child lays one counter for each unit, then, by the item's
+/// steps, colours them (the Russian scheme), marks the stressed vowel, or taps the box of a sound. A free response: nothing is a fixed option, a
+/// count one more or one fewer is named by the item's `classify`, and any other count is a retry with no tag (frame section 2.3). The response is
+/// numbers and colour letters only (`n=3.c=brb.s=1.w=2`).
+class BoxesActivity extends Activity {
+  BoxesActivity._(super.json, super.assets)
+    : unit = _map(json['scene'])['unit']! as String,
+      picture = _map(_map(json['scene'])['word'])['sprite']! as String,
+      wordClip = _map(_map(json['scene'])['word'])['clip']! as String,
+      slow = _map(_map(json['scene'])['word'])['slow'] as String?,
+      units = <BoxUnit>[
+        for (final Map<String, Object?> u in _maps(_map(_map(json['scene'])['word'])['units']))
+          BoxUnit(clip: u['clip']! as String, kind: u['kind']! as String, mouth: u['mouth'] as String?),
+      ],
+      steps = <BoxStep>[
+        for (final Object? s in _map(json['scene'])['steps']! as List<Object?>)
+          BoxStep.values.byName(s! as String),
+      ],
+      tok = _map(json['scene'])['tok'] as String?,
+      count = _map(json['answer'])['count']! as int,
+      colours = _map(json['answer'])['colours'] as String?,
+      stress = _map(json['answer'])['stress'] as int?,
+      which = _map(json['answer'])['which'] as int?,
+      classify = <String, String>{
+        for (final MapEntry<String, Object?> e in _maybe(_map(json['answer'])['classify']).entries)
+          e.key: e.value! as String,
+      },
+      super._();
+
+  /// `syllable`, `cv` or `phoneme`: what a counter stands for.
+  final String unit;
+
+  /// The word's picture (an `asset:` reference), its clip, the same slowly (units stretched, a pause between them), and the soft sound of a laid counter.
+  final String picture;
+  final String wordClip;
+  final String? slow;
+  final String? tok;
+  final List<BoxUnit> units;
+  final List<BoxStep> steps;
+
+  /// The right answers: how many units; the colours as letters in place order (`brb`: `r` vowel, `b` hard, `g` soft); the place of the stressed vowel
+  /// and the place of the sound to find, both counted from 1 at the course's start.
+  final int count;
+  final String? colours;
+  final int? stress;
+  final int? which;
+
+  /// The tag of a named mistake, by the name of the mistake (`count=1`, `count=more`, `colour=hard_soft`, `which=1`, ...).
+  final Map<String, String> classify;
+
+  bool has(BoxStep s) => steps.contains(s);
+
+  /// The clip of the sound to find in a `which` step: the unit at [which].
+  String? get whichClip => which == null ? null : units[which! - 1].clip;
+
+  /// The tag for a count of [n] that is not the right one: a count named exactly, else one more or one fewer, else null (a retry with no tag).
+  String? countTag(int n) =>
+      classify['count=$n'] ??
+      (n == count + 1 ? classify['count=more'] : (n == count - 1 ? classify['count=fewer'] : null));
+
+  /// The colours kind of each unit as the response letters, from the unit kinds (what the colouring should be).
+  String get kindLetters => <String>[
+    for (final BoxUnit u in units)
+      switch (u.kind) {
+        'vowel' => 'r',
+        'soft' => 'g',
+        _ => 'b',
+      },
+  ].join();
+
+  @override
+  Set<String> get engineTags => classify.values.toSet();
+
+  /// A stress step on a word with two vowels is a two-choice item (frame section 2.3: one retry, never a check on its own); otherwise a free response.
+  @override
+  int get optionCount => has(BoxStep.stress) ? units.where((BoxUnit u) => u.vowel).length : 0;
+}
+
+/// The frame of an LS05 item: its fixed text with a `_` for each place that changes, and how many places that is (1 or 2).
+class ChangeFrame {
+  const ChangeFrame({required this.text, required this.slots});
+
+  final String text;
+  final int slots;
+}
+
+/// One thing that can stand in a place of the frame: a letter or a sign of the Hebrew wheel, a vowel of the Russian strip. [tag] is on a part that
+/// is a distractor of `make`.
+class ChangePart {
+  const ChangePart({required this.id, required this.slot, required this.text, this.tag});
+
+  final String id;
+  final int slot;
+  final String text;
+  final String? tag;
+}
+
+/// What one combination of parts makes: the unit or word, its clip, and the picture of a word that has one (a Russian strip's kot and kit).
+class ChangeResult {
+  const ChangeResult({required this.parts, required this.text, this.clip, this.sprite});
+
+  /// The part id for each place, in order of the places.
+  final List<String> parts;
+  final String text;
+  final String? clip;
+  final String? sprite;
+}
+
+List<ChangePart> _changeParts(Object? o) => <ChangePart>[
+  for (final Map<String, Object?> p in _maps(o))
+    ChangePart(
+      id: p['id']! as String,
+      slot: p['slot']! as int,
+      text: p['text']! as String,
+      tag: p['tag'] as String?,
+    ),
+];
+
+List<ChangeResult> _changeResults(Object? o) => <ChangeResult>[
+  for (final Map<String, Object?> r in _maps(o))
+    ChangeResult(
+      parts: <String>[for (final Object? id in r['parts']! as List<Object?>) id! as String],
+      text: r['text']! as String,
+      clip: r['clip'] as String?,
+      sprite: r['sprite'] as String?,
+    ),
+];
+
+ChangeFrame _changeFrame(Object? o) =>
+    ChangeFrame(text: _map(o)['text']! as String, slots: _map(o)['slots']! as int);
+
+/// LS05 change one part (`change_part` 1.0): a frame with one or two places that change. `explore` is the unscored teaching screen (turn the wheel or
+/// slide the strip and hear each result); `make` is scored ("make the one you hear"). The Hebrew course turns a wheel of letters with a row of signs,
+/// the Russian a strip of vowels in a frame.
+class ChangePartActivity extends Activity {
+  ChangePartActivity._(super.json, super.assets)
+    : mode = _map(json['scene'])['mode']! as String,
+      frame = _changeFrame(_map(json['scene'])['frame']),
+      parts = _changeParts(_map(json['scene'])['parts']),
+      results = _changeResults(_map(json['scene'])['results']),
+      answerParts = <String>[
+        for (final Object? p in (_map(json['answer'])['parts'] as List<Object?>?) ?? const <Object?>[])
+          p! as String,
+      ],
+      super._();
+
+  /// `explore` or `make`.
+  final String mode;
+  final ChangeFrame frame;
+  final List<ChangePart> parts;
+  final List<ChangeResult> results;
+
+  /// The part id for each place that makes what the child hears (`make` only).
+  final List<String> answerParts;
+
+  bool get make => mode == 'make';
+
+  /// The parts of place [slot], in the order the item gives them.
+  List<ChangePart> partsOf(int slot) => <ChangePart>[
+    for (final ChangePart p in parts)
+      if (p.slot == slot) p,
+  ];
+
+  ChangePart part(String id) => parts.firstWhere((ChangePart p) => p.id == id);
+
+  /// What the parts [ids] (one for each place) make, or null when that combination makes no sound (a stop with no vowel).
+  ChangeResult? resultFor(List<String> ids) {
+    for (final ChangeResult r in results) {
+      if (r.parts.length == ids.length &&
+          <int>[for (int i = 0; i < ids.length; i++) i].every((int i) => r.parts[i] == ids[i])) {
+        return r;
+      }
+    }
+    return null;
+  }
+
+  ChangeResult? get target => answerParts.isEmpty ? null : resultFor(answerParts);
+
+  /// The response: the part ids that were made (`p1.p4`), never a text.
+  static String code(List<String> ids) => ids.join('.');
+
+  @override
+  bool get unscored => !make;
+
+  @override
+  int get optionCount => 0;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChangePart p in parts)
+      if (p.tag != null) p.tag!,
+  };
+}
+
+/// One part of a word to slide through: its text, its own clip (null: it lights in silence), and whether it can be held (a continuant) or is a stop.
+class BlendPart {
+  const BlendPart({required this.text, this.clip, this.stretch = true, this.mouth});
+
+  final String text;
+  final String? clip;
+  final bool stretch;
+
+  /// The mouth picture of the sound (an `asset:` reference), for the level-2 hint of English graphemes.
+  final String? mouth;
+}
+
+/// The written word of an LS04 item with its parts, the clip of the whole word, and the same word with its sounds stretched into each other.
+class BlendWord {
+  const BlendWord({required this.text, required this.parts, this.whole, this.stretched});
+
+  factory BlendWord.fromJson(Object? json) {
+    final Map<String, Object?> m = _map(json);
+    return BlendWord(
+      text: m['text']! as String,
+      parts: <BlendPart>[
+        for (final Map<String, Object?> p in _maps(m['parts']))
+          BlendPart(
+            text: p['text']! as String,
+            clip: p['clip'] as String?,
+            stretch: p['stretch'] != false,
+            mouth: p['mouth'] as String?,
+          ),
+      ],
+      whole: m['whole'] as String?,
+      stretched: m['stretched'] as String?,
+    );
+  }
+
+  final String text;
+  final List<BlendPart> parts;
+  final String? whole;
+  final String? stretched;
+}
+
+/// LS04 blend slide (`blend_slide` 1.0): a written word or syllable with a mark under each part; the child slides a finger in the course's direction
+/// and each part sounds as it passes; then a choice, the only thing scored. In a scored item the whole word plays after the choice, never before it.
+class BlendSlideActivity extends Activity implements ChoiceActivity {
+  BlendSlideActivity._(super.json, super.assets)
+    : mode = _map(json['scene'])['mode']! as String,
+      word = BlendWord.fromJson(_map(json['scene'])['word']),
+      options = _options(json['answer']),
+      correctId = (_map(json['answer'])['correct'] as String?) ?? '',
+      super._();
+
+  /// `graphemes` (English), `merge` (Russian) or `units` (Hebrew).
+  final String mode;
+  final BlendWord word;
+  @override
+  final List<ChoiceOption> options;
+  @override
+  final String correctId;
+
+  bool get merge => mode == 'merge';
+
+  @override
+  int get optionCount => options.length;
+
+  @override
+  Set<String> get engineTags => <String>{
+    for (final ChoiceOption o in options)
+      if (o.misconception != null) o.misconception!,
+  };
+}
+
+/// A hint that opens another template's screen as its picture (docs/milestones/L5.md section 5.9): the small wheel or strip of LS05, or the slide of
+/// LS04, inside the stage of the item that borrows it. The data are optional: an item that gives none gets the screen worked out from its own stem.
+class HintShow {
+  const HintShow({required this.template, this.frame, this.parts, this.results, this.word, this.mode});
+
+  factory HintShow.fromJson(Map<String, Object?> m) => HintShow(
+    template: m['template']! as String,
+    frame: m['frame'] == null ? null : _changeFrame(m['frame']),
+    parts: m['parts'] == null ? null : _changeParts(m['parts']),
+    results: m['results'] == null ? null : _changeResults(m['results']),
+    word: m['word'] == null ? null : BlendWord.fromJson(m['word']),
+    mode: m['mode'] as String?,
+  );
+
+  /// `change_part` or `blend_slide`.
+  final String template;
+  final ChangeFrame? frame;
+  final List<ChangePart>? parts;
+  final List<ChangeResult>? results;
+  final BlendWord? word;
+  final String? mode;
 }
 
 /// A bin of the sort-and-drag template: a picture (or a set of them) that shows the rule, and its name.

@@ -29,7 +29,7 @@ class SayItSession extends TemplateSession {
   final SayStepController? say;
 
   /// How long the child has to say the word before the voice says it again.
-  static const Duration pause = Duration(milliseconds: 3200);
+  static const Duration listenPause = Duration(milliseconds: 3200);
 
   bool _practiced = false;
   bool _done = false;
@@ -44,7 +44,7 @@ class SayItSession extends TemplateSession {
 
   void _sayAgainLater() {
     final int mine = ++_round;
-    later(pause, () {
+    later(listenPause, () {
       // The voice says the word again unless the child has already gone on.
       if (mine == _round && !canGoOn && !_done) playClips?.call(<String>[activity.wordClip]);
     });

@@ -61,7 +61,8 @@ const Map<String, String> supportedTemplates = <String, String>{
   'listen_do': '1.0',
   'sing_along': '1.0',
   'puppet_talk': '1.0',
-  'sound_boxes': '1.0',
+  // 1.1: the `boxes` mode of LS03 (L5-3): a counter for each unit, then the colour, stress and which-box steps.
+  'sound_boxes': '1.1',
   'count_tap': '1.1',
   'give_n': '1.0',
   'flash': '1.0',
@@ -78,6 +79,9 @@ const Map<String, String> supportedTemplates = <String, String>{
   'clock_set': '1.0',
   'trace': '2.0',
   'say_it': '1.0',
+  // LS05 change one part (L5-4) and LS04 blend slide (L5-5).
+  'change_part': '1.0',
+  'blend_slide': '1.0',
 };
 
 /// What the coins and notes of the shop are worth, in agorot, and the picture each is drawn with.
@@ -395,6 +399,8 @@ const SObject skillSchema = SObject(<String, SField>{
   'setCoverage': SField(SBool(), required: false),
   'soundRight': SField(SEnum(<String>['accepts', 'teaches']), required: false),
   'letters': SField(SBool(), required: false),
+  // A skill of the stress of a word (rus B-17, C-10, C-21): the only one that may have a stress step in LS03.
+  'stress': SField(SBool(), required: false),
   // Letter writing (rule E-1, docs/languages/writing-mastery.md): `memory` is a writing node (copy and memory writing, mastered by
   // memory successes on two days with both cues), `practised` a trace node (met once every letter was traced with the start dot).
   'writing': SField(SEnum(<String>['memory', 'practised']), required: false),
@@ -815,10 +821,85 @@ const SArray _hints = SArray(
     'vo': SField(_vo),
     'caption': SField(_caption),
     ..._lineExtras,
+    // A hint that opens another template's screen as its picture (L5 section 5.9): the small wheel or strip of LS05, or the slide of LS04.
+    'screen': SField(_hintShow, required: false),
   }),
   maxItems: 3,
   uniqueKey: 'level',
 );
+
+// ---- L5-3 to L5-5: sound boxes (boxes), change one part and blend slide ----
+
+/// One unit of the word of a `boxes` item: its clip, its kind (the Russian scheme reads it), and the mouth picture of a sound.
+const SObject _boxUnit = SObject(<String, SField>{
+  'clip': SField(_vo),
+  'kind': SField(SEnum(<String>['vowel', 'hard', 'soft', 'cv', 'c'])),
+  'mouth': SField(_asset, required: false),
+});
+
+/// The frame of an LS05 screen: its fixed text with a `_` for each place that changes, and how many places that is.
+const SObject _changeFrame = SObject(<String, SField>{
+  'text': SField(SString(minLength: 1, maxLength: 12)),
+  'slots': SField(SInt(min: 1, max: 2)),
+});
+
+const SString _partId = SString(minLength: 2, maxLength: 3, pattern: r'p[0-9]{1,2}');
+
+/// What can stand in a place: a letter or a sign of the wheel, a vowel of the strip; `tag` is on a distractor of `make`.
+const SArray _changeParts = SArray(
+  SObject(<String, SField>{
+    'id': SField(_partId),
+    'slot': SField(SInt(min: 0, max: 1)),
+    'text': SField(SString(minLength: 0, maxLength: 4)),
+    'tag': SField(_tag, required: false),
+  }),
+  minItems: 2,
+  maxItems: 11,
+  uniqueKey: 'id',
+);
+
+/// What each combination of parts makes: the unit or word, its clip, and the picture of a word that has one.
+const SArray _changeResults = SArray(
+  SObject(<String, SField>{
+    'parts': SField(SArray(_partId, minItems: 1, maxItems: 2)),
+    'text': SField(SString(minLength: 1, maxLength: _targetTextMax)),
+    'clip': SField(_vo, required: false),
+    'sprite': SField(_asset, required: false),
+  }),
+  minItems: 1,
+  maxItems: 60,
+);
+
+/// The written word of an LS04 item, in its parts; each part has its own clip (or lights in silence) and says whether it can be held.
+const SObject _blendWord = SObject(<String, SField>{
+  'text': SField(_faceText),
+  'parts': SField(
+    SArray(
+      SObject(<String, SField>{
+        'text': SField(_faceText),
+        'clip': SField(_vo, required: false),
+        'stretch': SField(SBool(), required: false),
+        // The mouth picture of the sound, for the level-2 hint of English graphemes.
+        'mouth': SField(_asset, required: false),
+      }),
+      minItems: 2,
+      maxItems: 6,
+    ),
+  ),
+  'whole': SField(_vo, required: false),
+  'stretched': SField(_vo, required: false),
+});
+
+/// A hint's borrowed screen (L5 section 5.9). Its data are the template's own and optional: an item that gives none gets the screen worked out
+/// from its own stem.
+const SObject _hintShow = SObject(<String, SField>{
+  'template': SField(SEnum(<String>['change_part', 'blend_slide'])),
+  'frame': SField(_changeFrame, required: false),
+  'parts': SField(_changeParts, required: false),
+  'results': SField(_changeResults, required: false),
+  'word': SField(_blendWord, required: false),
+  'mode': SField(SEnum(<String>['graphemes', 'merge', 'units']), required: false),
+});
 
 Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>{
   'schema': const SField(SConst(SchemaIds.activity)),
@@ -848,6 +929,8 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
       'clock_set',
       'trace',
       'say_it',
+      'change_part',
+      'blend_slide',
     ]),
   ),
   'templateVersion': const SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
@@ -913,6 +996,84 @@ const SArray _traceClassifiers = SArray(
 /// `templateVersion`: `trace` 2.0 (LS02, write a letter) is another document from the tracing of the lands (1.0).
 SObject? activitySchemaFor(String template, {String? version}) => switch (template) {
   'trace' when version != null && version.startsWith('2.') => letterWriteSchema,
+  // LS03 `boxes` (sound_boxes 1.1, L5-3): a counter for each unit, then the colour, stress and which-box steps. A free response: the answer is the
+  // count, the colours as letters (`r` vowel, `b` hard, `g` soft), the place of the stress and the place of the sound, and `classify` names the
+  // mistakes of each step (`count=1`, `count=more`, `colour=hard_soft`, `stress=2`, `which=1`) with their tags. Any other mistake is a retry with no tag.
+  'sound_boxes' when version != null && version.startsWith('1.1') => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'mode': SField(SConst('boxes')),
+          'unit': SField(SEnum(<String>['syllable', 'cv', 'phoneme'])),
+          'background': SField(_asset, required: false),
+          'word': SField(
+            SObject(<String, SField>{
+              'sprite': SField(_asset),
+              'clip': SField(_vo),
+              'slow': SField(_vo, required: false),
+              'units': SField(SArray(_boxUnit, minItems: 1, maxItems: 6)),
+            }),
+          ),
+          'steps': SField(
+            SArray(SEnum(<String>['count', 'colour', 'stress', 'which']), minItems: 1, maxItems: 4),
+          ),
+          // The soft sound of a laid counter: the same for every counter.
+          'tok': SField(_vo, required: false),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SConst('boxes')),
+          'count': SField(SInt(min: 1, max: 6)),
+          'colours': SField(SString(minLength: 1, maxLength: 6, pattern: '[rbg]{1,6}'), required: false),
+          'stress': SField(SInt(min: 1, max: 6), required: false),
+          'which': SField(SInt(min: 1, max: 6), required: false),
+          'classify': SField(
+            SMap(
+              _tag,
+              keyPattern: r'count=(?:[0-9]|more|fewer)|colour=(?:vowel_cons|hard_soft)|stress=(?:[1-6]|other)|which=(?:[1-6]|other)',
+              maxEntries: 12,
+            ),
+            required: false,
+          ),
+        }),
+      ),
+    }),
+  ),
+  // LS05 change one part (L5-4): `explore` (the unscored teaching screen) and `make` (scored). A frame with one or two places that change, the parts
+  // that can stand in them, and what each combination makes.
+  'change_part' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'mode': SField(SEnum(<String>['explore', 'make'])),
+          'background': SField(_asset, required: false),
+          'frame': SField(_changeFrame),
+          'parts': SField(_changeParts),
+          'results': SField(_changeResults),
+        }),
+      ),
+      'answer': const SField(
+        SObject(<String, SField>{
+          'type': SField(SEnum(<String>['parts', 'none'])),
+          'parts': SField(SArray(_partId, minItems: 1, maxItems: 2), required: false),
+        }),
+      ),
+    }),
+  ),
+  // LS04 blend slide (L5-5): a written word with a mark under each part; the child slides, then chooses. Only the choice is scored.
+  'blend_slide' => SObject(
+    _base(<String, SField>{
+      'scene': const SField(
+        SObject(<String, SField>{
+          'mode': SField(SEnum(<String>['graphemes', 'merge', 'units'])),
+          'background': SField(_asset, required: false),
+          'word': SField(_blendWord),
+        }),
+      ),
+      'answer': SField(_answerOptions(_l4Option)),
+    }),
+  ),
   'tap_answer' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1908,6 +2069,9 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.sing_along': activitySchemaFor('sing_along')!,
   'activity.puppet_talk': activitySchemaFor('puppet_talk')!,
   'activity.sound_boxes': activitySchemaFor('sound_boxes')!,
+  'activity.sound_boxes_boxes': activitySchemaFor('sound_boxes', version: '1.1')!,
+  'activity.change_part': activitySchemaFor('change_part')!,
+  'activity.blend_slide': activitySchemaFor('blend_slide')!,
   'activity.count_tap': activitySchemaFor('count_tap')!,
   'activity.give_n': activitySchemaFor('give_n')!,
   'activity.flash': activitySchemaFor('flash')!,

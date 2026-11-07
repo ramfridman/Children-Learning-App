@@ -88,7 +88,9 @@ void main() {
     });
 
     test('the template is known, versioned, and its ladder changes the representation at level 2', () {
-      expect(supportedTemplates['sound_boxes'], '1.0');
+      // 1.1 is the boxes mode (L5-3); the drum is the 1.0 document, which the schema of its own version still validates.
+      expect(supportedTemplates['sound_boxes'], '1.1');
+      expect(activitySchemaFor('sound_boxes'), isNotNull);
       expect(allSchemas.containsKey('activity.sound_boxes'), isTrue);
       expect(HintLadder.problemWith('sound_boxes'), isNull);
       expect(HintLadder.of('sound_boxes')!.pictures, <HintPicture>[

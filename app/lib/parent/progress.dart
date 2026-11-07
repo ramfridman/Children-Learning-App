@@ -272,6 +272,7 @@ Progress buildProgress(ProgressSource src) {
   int kept = 0;
   for (final AttemptEvent e in events) {
     if (e.at.isBefore(fourWeeks)) continue;
+    if (e.secondary) continue; // the second tag of one move is no second answer (SEC-L5-3)
     if (e.result == Result.unsure) unsure++;
     if (e.hintLevel > 0) hints++;
     if (e.result == Result.correct && e.attemptNo > 1) kept++;

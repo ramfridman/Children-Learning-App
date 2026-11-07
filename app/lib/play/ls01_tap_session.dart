@@ -4,19 +4,25 @@ import 'package:flutter/material.dart';
 
 import '../child/activity_shell.dart';
 import '../content/models.dart';
+import '../design/board.dart' show BoardClass;
 import '../design/components.dart';
 import '../design/course_text.dart';
+import '../design/layout.dart';
 import '../design/token_types.dart';
 import '../design/tokens.g.dart';
+import 'blend_layer.dart' show SlideArt;
+import 'borrowed_screens.dart';
 import 'choice_row.dart';
 import 'choice_session.dart';
 import 'hints/hint_pictures.dart' show SkyRing;
+import 'l5_art.dart' show SkyCard;
 import 'lesson_controller.dart';
 import 'ls01_hand.dart';
 import 'ls01_metrics.dart';
 import 'ls01_sentence.dart';
 import 'ls01_tiles.dart';
 import 'option_faces.dart';
+import 'slide_geometry.dart';
 import 'template_session.dart';
 
 /// The three modes that `tap_answer` 1.4 adds to the tap of L1 (docs/design/languages-l5-ls01.md sections 7.7 to 7.9):
@@ -68,6 +74,22 @@ class Ls01TapSession extends ChoiceSession {
   int? ghostAt;
   final Set<int> litSet = <int>{};
 
+  /// A screen that level 2 or 3 of a decoding item borrows from another template (L5 section 5.9): the small wheel or the compact strip (LS05), or the slide
+  /// of the word (LS04, the friend slides the knob). The slide's state is the knob's progress, the part that sounds, the parts passed, and whether the bars
+  /// have joined into one under the word.
+  BorrowedPlan? borrowed;
+  int borrowedStep = 0;
+  SlidePlan? slidePlan;
+  double slideT = 0;
+  int? slideLit;
+  final Set<int> slidePassed = <int>{};
+  bool slideJoined = false;
+
+  /// The text of the option the child chose last (the unit she took for this one), when it has a text.
+  String? lastChosen;
+  BoardClass _board = BoardClass.phone;
+  Size _stageSize = Size.zero;
+
   /// Where the hand's fingertip is, a point of the board; null when there is no hand.
   Offset? handTip;
   int _run = 0;
@@ -96,6 +118,7 @@ class Ls01TapSession extends ChoiceSession {
 
   @override
   void onChosen(ChoiceOption o) {
+    lastChosen = o.text;
     if (mode == Ls01TapMode.cloze) {
       gapId = o.id;
       demoGapId = null;
@@ -183,6 +206,13 @@ class Ls01TapSession extends ChoiceSession {
     demoGapId = null;
     litSet.clear();
     handTip = null;
+    borrowed = null;
+    borrowedStep = 0;
+    slidePlan = null;
+    slideT = 0;
+    slideLit = null;
+    slidePassed.clear();
+    slideJoined = false;
   }
 
   /// The replay button says the question again and the tiles pulse; the stem is not read to the child unasked ("read it to me" is a hint).
@@ -207,6 +237,9 @@ class Ls01TapSession extends ChoiceSession {
 
   int get _stemWords => sentencePieces(tap.stem!.text).length;
 
+  /// The screen hint [level] of this item borrows from another template, or null.
+  HintShow? _screenOf(int level) => level - 1 < tap.hints.length ? tap.hints[level - 1].show : null;
+
   void _stemHint(int level) {
     final int run = _run;
     switch (level) {
@@ -221,7 +254,9 @@ class Ls01TapSession extends ChoiceSession {
           _replayOptions(run);
         }
       case 2:
-        // The stem in pieces, each lit in turn with its sound (the borrowed screens of LS04 and LS05 take this place when they are built).
+        // The screen the hint names (the small wheel, the compact strip, the slide), when it names one and there is something to show.
+        if (_borrowedHint(_screenOf(2), run)) return;
+        // Otherwise the stem in pieces, each lit in turn with its sound.
         splitStem = true;
         stemLit = true;
         final int pieces = _pieces(tap.stem!.text).length;
@@ -235,7 +270,101 @@ class Ls01TapSession extends ChoiceSession {
         final String? clip = tap.stem!.clip;
         if (clip != null) playClips?.call(<String>[clip], replace: false);
       default:
+        if (_slideDemonstration(_screenOf(3), run)) return;
         _demonstrate(<int>[_rightIndex()]);
+    }
+  }
+
+  // ---- the screens a hint borrows (L5 section 5.9) ----
+
+  /// Level 2 opens the wheel or strip the hint names (or the slide, lit part by part, for a reader of English); false when it has nothing to show.
+  bool _borrowedHint(HintShow? show, int run) {
+    if (show == null) return false;
+    final BorrowedPlan? plan = BorrowedPlan.forStem(tap, show, chosen: lastChosen);
+    if (plan == null) return false;
+    if (plan is SlidePlan) {
+      _slideRun(plan, run, finish: false);
+      return true;
+    }
+    borrowed = plan;
+    borrowedStep = 0;
+    _walkBorrowed(plan, run);
+    return true;
+  }
+
+  /// The friend turns the wheel or slides the strip step by step, each position heard, and the stage comes back.
+  Future<void> _walkBorrowed(BorrowedPlan plan, int run) async {
+    for (int i = 0; i < plan.steps; i++) {
+      if (run != _run || disposed) return;
+      borrowedStep = i;
+      notify();
+      await sayAndWait(<String>[?plan.clipAt(i)], replace: true, without: const Duration(milliseconds: 1000));
+    }
+    if (run != _run || disposed) return;
+    await pause(const Duration(milliseconds: 600));
+    if (run != _run || disposed) return;
+    borrowed = null;
+    notify();
+  }
+
+  /// Level 3 of a decoding item that names the slide: the stem page becomes the slide page, the friend slides through the word part by part, the whole
+  /// plays and the bars join, and then the hand points to the right picture (the demonstration of B-40, which ends in the halo).
+  bool _slideDemonstration(HintShow? show, int run) {
+    if (show == null || show.template != 'blend_slide') return false;
+    final BorrowedPlan? plan = BorrowedPlan.forStem(tap, show, chosen: lastChosen);
+    if (plan is! SlidePlan) return false;
+    _slideRun(plan, run, finish: true);
+    return true;
+  }
+
+  SlideGeometry _slideGeometry(SlidePlan plan) => SlideGeometry.of(
+    page: Rect.fromLTWH(0, 0, _stageSize.width, _stageSize.height),
+    course: tap.course,
+    word: BlendWord(text: plan.text, parts: plan.parts, whole: plan.whole),
+    board: _board,
+    band: band,
+  );
+
+  Future<void> _slideRun(SlidePlan plan, int run, {required bool finish}) async {
+    slidePlan = plan;
+    slideT = 0;
+    slideLit = null;
+    slidePassed.clear();
+    slideJoined = false;
+    notify();
+    await pause(const Duration(milliseconds: 400));
+    if (run != _run || disposed) return;
+    final SlideGeometry geo = _slideGeometry(plan);
+    for (int i = 0; i < plan.parts.length; i++) {
+      if (run != _run || disposed) return;
+      slideT = geo.tOfPart(i);
+      slideLit = i;
+      slidePassed.add(i);
+      if (finish) handTip = _stageOrigin + Offset(geo.xAt(slideT), geo.trackY + 4);
+      notify();
+      await sayAndWait(
+        <String>[?plan.parts[i].clip],
+        replace: true,
+        without: const Duration(milliseconds: 700),
+      );
+    }
+    if (run != _run || disposed) return;
+    slideLit = null;
+    if (finish) {
+      final String? whole = plan.whole;
+      slideJoined = true;
+      handTip = null;
+      notify();
+      if (whole != null) {
+        await sayAndWait(<String>[whole], replace: true, without: const Duration(milliseconds: 800));
+      }
+      if (run != _run || disposed) return;
+      _demonstrate(<int>[_rightIndex()]);
+    } else {
+      await pause(const Duration(milliseconds: 600));
+      if (run != _run || disposed) return;
+      slidePlan = null;
+      notify();
     }
   }
 
@@ -445,6 +574,8 @@ class Ls01TapSession extends ChoiceSession {
   @override
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {
     _spec = spec;
+    _board = AppLayout.of(context).board;
+    _stageSize = size;
     return Ls01StageBuilder(
       direction: rowDirection,
       listenable: this,
@@ -484,6 +615,54 @@ class Ls01TapSession extends ChoiceSession {
   );
 
   Widget _stemStage(Size size) {
+    final SlidePlan? slide = slidePlan;
+    if (slide != null && _stageSize != Size.zero) {
+      // The stem's page becomes the slide page, in place: the word at the slide size, the marks and the wire, the knob that the friend slides.
+      return Stack(
+        clipBehavior: Clip.none,
+        children: <Widget>[
+          Container(
+            key: const Key('stem-page'),
+            width: size.width,
+            height: size.height,
+            decoration: BoxDecoration(
+              color: TokenColors.paper,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: TokenColors.hairline, width: 3),
+            ),
+          ),
+          Positioned.fill(
+            child: SlideArt(
+              key: const Key('stem-slide'),
+              geo: _slideGeometry(slide),
+              word: BlendWord(text: slide.text, parts: slide.parts, whole: slide.whole),
+              knobT: slideT,
+              litPart: slideLit,
+              passed: slidePassed,
+              stepMs: 600,
+              joinedBar: slideJoined,
+            ),
+          ),
+        ],
+      );
+    }
+    final BorrowedPlan? screen = borrowed;
+    if (screen != null) {
+      return SizedBox(
+        width: size.width,
+        height: size.height,
+        child: SkyCard(
+          key: const Key('stem-borrowed'),
+          child: BorrowedPanel(
+            plan: screen,
+            step: borrowedStep,
+            board: _board,
+            course: tap.course,
+            assets: tap.assets,
+          ),
+        ),
+      );
+    }
     final String text = tap.stem!.text;
     final bool oneWord = sentencePieces(text).length == 1;
     final Ls01Metrics m = metrics;
