@@ -880,7 +880,8 @@ def recognise_choice(it, svg):
         if vals.count(x) > 1:
             out.append(('WRONG', 'second-right', 'two sets have %d' % x))
         return Choice('compare-sets', lambda o: opt_value(o) == x, {'sets': it.options}, vals), out
-    if it.has('איפה יש') and (nums or isinstance(sc.get('numeral'), int)) and \
+    # 'איפה יש כמו המספר', reworded by the Hebrew review to 'איזו קבוצה מתאימה למספר' (C1)
+    if it.has('איפה יש', 'מתאימה למספר') and (nums or isinstance(sc.get('numeral'), int)) and \
             all(isinstance(o.get('set'), dict) for o in it.options):
         n = nums[0] if nums else sc['numeral']
         picture(n, sc.get('numeral'), 'the numeral shown')
