@@ -63,12 +63,12 @@
         "id": "o3",
         "set": {
           "sprite": "asset:ladybug",
-          "count": 8,
+          "count": 1,
           "arrangement": "line",
           "seed": 3
         },
         "label": "חִפּוּשִׁית",
-        "misconception": "M-CNT-SKIP"
+        "misconception": "M-NUM-REV"
       }
     ],
     "correct": "o2",
@@ -94,6 +94,16 @@
           {
             "t": "he",
             "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
           }
         ]
       },

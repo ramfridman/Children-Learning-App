@@ -315,6 +315,230 @@ class BatchC1(unittest.TestCase):
         self.assertNotIn(('RULE', 'tag-rule'), codes(self.c1run(doc)))
 
 
+class C1Gate(unittest.TestCase):
+    """QA-C1-10: the gate of batch C1 is every c.* id (its Band A and B bridge items too), and the rules QA-C1-9 asked for."""
+
+    def test_ids_select_by_prefix_whatever_the_band(self):
+        bridge = c1_item('אֵיפֹה הַמִּסְפָּר שֵׁשׁ?', [(6, None), (9, 'M-NUM-REV'), (7, 'M-CNT-SEQ')], skill='NUM-B-06')
+        bridge.update(id='c.numb06.1', band='B')
+        other = copy.deepcopy(bridge)
+        other['id'] = 'b.numb06.1'
+        it = [cm.Item(bridge), cm.Item(other)]
+        self.assertEqual([cm.selected(i, 'C') for i in it], [False, False], '--band C misses the bridge items')
+        self.assertEqual([cm.selected(i, ids=['c.']) for i in it], [True, False])
+        self.assertEqual([cm.selected(i, 'B', ['c.']) for i in it], [True, False])
+
+    def test_the_gate_counts_the_bridges_and_fails_on_them(self):
+        folder = tempfile.mkdtemp()
+        try:
+            bad = c1_item('אֵיפֹה הַמִּסְפָּר שֵׁשׁ?', [(6, None), (9, 'M-NUM-REV'), (0, 'M-NUM-REV')], skill='NUM-B-06')
+            bad.update(id='c.numb06.1', band='B')
+            with open(os.path.join(folder, 'activity.c.numb06.1.json'), 'w', encoding='utf-8') as fh:
+                json.dump(bad, fh, ensure_ascii=False)
+            with open(os.path.join(folder, 'skill.NUM-B-06.json'), 'w', encoding='utf-8') as fh:
+                json.dump({'id': 'NUM-B-06', 'misconceptions': ['M-NUM-REV']}, fh)
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(cm.main(['--dir', folder, '--band', 'C', '--strict']), 0, 'the old gate saw nothing')
+                self.assertEqual(cm.main(['--dir', folder, '--ids', 'c.', '--strict']), 1, '0 is not 6 turned round')
+        finally:
+            shutil.rmtree(folder)
+
+    def test_a_single_digit_reversal_is_the_turned_or_mirrored_numeral(self):
+        self.assertEqual(cm.tag_candidates('M-NUM-REV', {'x': 6}), {9})
+        self.assertEqual(cm.tag_candidates('M-NUM-REV', {'x': 2}), {5})
+        self.assertEqual(cm.tag_candidates('M-NUM-REV', {'x': 8}), set())
+        self.assertEqual(cm.tag_candidates('M-NUM-REV', {'x': 10}), {1})
+
+    def test_one_tag_twice_only_when_the_skill_watches_it(self):
+        skills = {'NUM-B-06': {'misconceptions': ['M-NUM-REV']}}
+        twice = c1_item('אֵיפֹה הַמִּסְפָּר שֵׁשׁ?', [(6, None), (9, 'M-NUM-REV'), (9, 'M-NUM-REV')], skill='NUM-B-06')
+        other = c1_item('אֵיפֹה הַמִּסְפָּר שֵׁשׁ?', [(6, None), (5, 'M-CNT-SEQ'), (7, 'M-CNT-SEQ')], skill='NUM-B-06')
+        folder = tempfile.mkdtemp()
+        try:
+            rows = lambda d: cm.check_docs([d], RECORDS | {'M-NUM-REV', 'M-CNT-SEQ'}, skills, CATALOGUE, cm.Svg(folder))[0].rows
+            self.assertNotIn(('RULE', 'tag-distinct'), codes(rows(twice)))
+            self.assertIn(('RULE', 'tag-distinct'), codes(rows(other)))
+        finally:
+            shutil.rmtree(folder)
+
+    def test_coverage_finds_diagnostic_and_lucky_right_items(self):
+        docs = [c1_item('אֵיזֶה מִסְפָּר מַתְאִים לַמָּקוֹם הָרֵיק?', [(43, None), (61, 'M-PV-FACE'), (79, 'M-SIGN-DIR')],
+                        row=['n:58', 'op:>', '?']),
+                c1_item('אֵיזֶה מִסְפָּר גָּדוֹל יוֹתֵר?', [(41, None), (39, 'M-PV-FACE'), (14, 'M-NUM-REV')])]
+        docs[1]['id'] = 'plant.c1b'
+        folder = tempfile.mkdtemp()
+        try:
+            cov = cm.coverage(folder, docs=docs, skills={'NUM-C-04': {'misconceptions': ['M-PV-FACE', 'M-SIGN-DIR']}})
+        finally:
+            shutil.rmtree(folder)
+        self.assertEqual(cov['NUM-C-04']['M-PV-FACE'], (['plant.c1', 'plant.c1b'], ['plant.c1']), '58 > 43 is right by the ones too')
+        self.assertEqual(cov['NUM-C-04']['M-SIGN-DIR'], (['plant.c1'], None), 'a sign read backwards is never right')
+
+
+def base_ten_item(t, o, options, skill='NUM-C-03'):
+    d = c1_item('כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', options, skill=skill)
+    d['scene']['picture'] = {'kind': 'base_ten', 'tens': t, 'ones': o}
+    return d
+
+
+def chart_item(caption, lit, blank, options, skill='NUM-C-09'):
+    d = c1_item(caption, options, skill=skill)
+    d['scene']['picture'] = {'kind': 'hundred_chart', 'lit': lit, 'blank': blank}
+    return d
+
+
+def number_doc(caption, value, expected, row=None, rules=(), skill='MATH-C-01', picture=None):
+    sc = {} if row is None else {'row': row}
+    if picture:
+        sc['picture'] = picture
+    return {'schema': 'activity/v1', 'id': 'plant.num', 'template': 'tap_answer', 'domain': 'math', 'band': 'C',
+            'skills': [{'id': skill, 'weight': 1}], 'prompt': {'caption': [{'t': 'he', 'v': caption}]}, 'scene': sc,
+            'answer': {'type': 'number', 'value': value,
+                       'expected': [{'value': v, 'misconception': t} for v, t in expected],
+                       'rules': [{'when': w, 'misconception': t} for w, t in rules]}}
+
+
+class Pictures(BatchC1):
+    """QA-C1-5: the recognisers of base-ten blocks (10 x tens + ones; M-PV-FACE also counts every block as one), the hundred chart
+    (the blank cell) and the number answer (the keypad)."""
+    TAGS = BatchC1.TAGS | {'M-HC-ROW', 'M-OP-SWAP', 'M-CNT-DECADE', 'M-CNT-SEQ'}
+
+    def test_base_ten_blocks(self):
+        good = base_ten_item(3, 4, [(34, None), (7, 'M-PV-FACE'), (43, 'M-NUM-REV'), (304, 'M-PV-ZERO')])
+        self.assertEqual(self.failing(good), [])
+        fifty = base_ten_item(5, 0, [(50, None), (5, 'M-PV-FACE'), (500, 'M-PV-ZERO')])
+        self.assertEqual(self.failing(fifty), [])
+        wrong = copy.deepcopy(good)
+        wrong['scene']['picture']['tens'] = 4  # the blocks make 44
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(wrong)))
+        face = copy.deepcopy(good)
+        face['answer']['options'][1]['numeral'] = 8  # 3 rods and 4 cubes counted as ones are 7, not 8
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(face)))
+
+    def test_the_hundred_chart(self):
+        good = chart_item('עֶשֶׂר יוֹתֵר מִשְּׁלוֹשִׁים וְאַרְבַּע. אֵיזֶה מִסְפָּר בַּמִּשְׁבֶּצֶת הָרֵיקָה?', [34], [44],
+                          [(44, None), (35, 'M-HC-ROW'), (24, 'M-OP-SWAP')])
+        self.assertEqual(self.failing(good), [])
+        lit = copy.deepcopy(good)
+        lit['scene']['picture']['lit'] = [33]  # ten more than 34, but 33 is lit
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(lit)))
+        row = copy.deepcopy(good)
+        row['answer']['options'][1]['numeral'] = 36
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(row)))
+        after = chart_item('מַה בָּא אַחֲרֵי אַרְבָּעִים?', [40], [41], [(41, None), (50, 'M-CNT-DECADE'), (42, 'M-CNT-SEQ')],
+                           skill='NUM-C-01')
+        self.assertEqual(self.failing(after), [])
+        two = chart_item('מָה מִסְתַּתֵּר כָּאן?', [48, 68], [58, 59], [(58, None), (49, 'M-HC-ROW')])
+        self.assertIn(('WRONG', 'unsolvable'), codes(self.c1run(two)))
+
+    def test_a_number_answer(self):
+        good = number_doc('כַּמָּה זֶה?', 8, [(22, 'M-OP-SWAP'), (9, 'M-CNT-DOUBLE'), (12, 'M-SUB-SMALLBIG')],
+                          row=['n:15', 'op:-', 'n:7', 'op:=', '?'],
+                          rules=[('smaller_from_larger', 'M-SUB-SMALLBIG'), ('added_instead', 'M-OP-SWAP')])
+        self.assertEqual(self.failing(good), [])
+        said = number_doc('כִּתְבוּ אֶת הַמִּסְפָּר עֶשְׂרִים וְשָׁלוֹשׁ.', 23, [(32, 'M-NUM-REV'), (203, 'M-PV-ZERO')], skill='NUM-C-02')
+        self.assertEqual(self.failing(said), [])
+        off = copy.deepcopy(good)
+        off['answer']['value'] = 9
+        self.assertIn(('WRONG', 'answer'), codes(self.c1run(off)))
+        right = copy.deepcopy(good)
+        right['answer']['expected'][0]['value'] = 8
+        self.assertIn(('WRONG', 'second-right'), codes(self.c1run(right)))
+        small = copy.deepcopy(good)
+        small['answer']['expected'][2]['value'] = 11  # 15 - 7, the smaller digit from the larger, is 12
+        self.assertIn(('RULE', 'tag-rule'), codes(self.c1run(small)))
+        rule = copy.deepcopy(good)
+        rule['answer']['rules'][0]['misconception'] = 'M-OP-SWAP'
+        self.assertIn(('RULE', 'number-rule'), codes(self.c1run(rule)))
+        plus = number_doc('כַּמָּה זֶה?', 15, [(14, 'M-CNT-DOUBLE')], row=['n:8', 'op:+', 'n:7', 'op:=', '?'],
+                          rules=[('smaller_from_larger', 'M-SUB-SMALLBIG')])
+        self.assertIn(('RULE', 'number-rule'), codes(self.c1run(plus)), 'no smaller-from-larger in an addition')
+        blocks = number_doc('כַּמָּה זֶה?', 70, [(7, 'M-PV-FACE')], row=['n:40', 'op:+', 'n:30', 'op:=', '?'],
+                            picture={'kind': 'base_ten', 'tens': 6, 'ones': 0}, skill='MATH-C-03')
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(blocks)), '60 is no number of 40 + 30')
+
+
+def c1_waiting_docs():
+    """The items of tools/band_c.py that wait for a mode (DRAWN), built in memory with every mode on, as tools/author.py would write
+    them; nothing is written to content. Returns (documents of the waiting items only, ids whose picture the test carried, units)."""
+    argv = sys.argv[:]
+    import author  # noqa: E402
+    import band_b  # noqa: E402  (it sets sys.argv for author.py, which is imported and never run)
+    import band_c  # noqa: E402
+    sys.argv = argv
+    drawn, made = dict(band_c.DRAWN), list(band_b.MADE)
+    units = {}
+    try:
+        for on in (False, True):
+            band_c.DRAWN.update(dict.fromkeys(band_c.DRAWN, on))
+            for batch, domain, build, unit in band_c.TABLES:
+                if batch == 'C1':
+                    own = dict(unit)
+                    u = band_c.UnitC(batch, domain, own.pop('note', ''), **own)
+                    build(u)
+                    units.setdefault(on, []).append(u)
+    finally:
+        band_c.DRAWN.update(drawn)
+        band_b.MADE[:] = made
+    drawn_ids = {a['id'] for u in units[False] for a in u.d['activities']}
+    # the shared lines of the tags, as the starter pack says them (author.py reads them from the unit specs)
+    for d in cm.load(cm.STARTER)[0]:
+        for fb in (d.get('feedback') or {}).get('incorrect', []):
+            if fb.get('when', '').startswith('misconception:'):
+                author.TAG_FEEDBACK.setdefault(fb['when'][len('misconception:'):], (fb['vo'], fb['caption'][0]['v']))
+    for u in units[True]:
+        for t, line in u.d['tagFeedback'].items():
+            author.TAG_FEEDBACK.setdefault(t, ('vo:fb.' + t[2:].lower().replace('-', '_'), line))
+    docs, carried = [], []
+    for u in units[True]:
+        ctx = {'objects': u.d['objects'], 'names': u.d['names']}
+        for a in u.d['activities']:
+            if a['id'] in drawn_ids:
+                continue
+            a = dict(a, domain=u.d['domain'], band=a.get('band', 'C'))
+            doc = author.KINDS[a['kind']](a, ctx)
+            if 'picture' in a and 'picture' not in doc['scene']:
+                # author.k_pick does not carry `picture` into the scene yet (one line, with the step that draws the pictures)
+                doc['scene']['picture'] = a['picture']
+                carried.append(a['id'])
+            docs.append(doc)
+    return docs, carried, units[True]
+
+
+class C1Deferred(unittest.TestCase):
+    """QA-C1-5: the items of docs/knowledge/maths/c1-deferred.md are in tools/band_c.py behind DRAWN, out of content, and pass the
+    gate (check_maths --strict) the moment a mode is switched on."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.docs, cls.carried, cls.units = c1_waiting_docs()
+
+    def test_no_waiting_item_is_in_content(self):
+        on_disk = {p[len('activity.'):-len('.json')] for p in os.listdir(cm.STARTER) if p.startswith('activity.c.')}
+        self.assertEqual(sorted(d['id'] for d in self.docs if d['id'] in on_disk), [])
+
+    def test_every_mode_has_its_items(self):
+        kinds = {(d['scene'].get('picture') or {}).get('kind') or d['answer']['type'] for d in self.docs}
+        self.assertEqual(kinds, {'base_ten', 'hundred_chart', 'number'})
+        self.assertGreaterEqual(len(self.docs), 20)
+
+    def test_the_waiting_items_pass_the_gate(self):
+        _, records, skills = cm.load(cm.STARTER)
+        records |= {t['id'] for u in self.units for t in u.d['misconceptions']}
+        f, counts = cm.check_docs(self.docs, records, skills, CATALOGUE, cm.Svg(cm.STARTER))
+        self.assertEqual([r for r in f.rows if r[0] in cm.STRICT_FAILING], [])
+        self.assertEqual(counts['checked'], len(self.docs))
+
+    def test_switching_a_mode_on_renumbers_no_drawn_item(self):
+        on = {a['id']: a for u in self.units for a in u.d['activities']}
+        for p in os.listdir(cm.STARTER):
+            if p.startswith('activity.c.'):
+                with open(os.path.join(cm.STARTER, p), encoding='utf-8') as fh:
+                    doc = json.load(fh)
+                self.assertIn(doc['id'], on)
+                self.assertEqual(on[doc['id']]['skill'], doc['skills'][0]['id'], doc['id'])
+
+
 class RealPack(unittest.TestCase):
     def test_every_maths_item_is_read_by_a_rule(self):
         rows, counts = cm.check()

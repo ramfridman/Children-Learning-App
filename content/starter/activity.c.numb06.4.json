@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמִּסְפָּר אַחַת?"
+        "v": "אֵיפֹה הַמִּסְפָּר עֶשֶׂר?"
       }
     ],
     "replayButton": true
@@ -39,20 +39,20 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 1,
-        "label": "אַחַת"
+        "numeral": 10,
+        "label": "עֶשֶׂר"
       },
       {
         "id": "o2",
-        "numeral": 7,
-        "label": "שֶׁבַע",
+        "numeral": 1,
+        "label": "אַחַת",
         "misconception": "M-NUM-REV"
       },
       {
         "id": "o3",
-        "numeral": 4,
-        "label": "אַרְבַּע",
-        "misconception": "M-NUM-REV"
+        "numeral": 9,
+        "label": "תֵּשַׁע",
+        "misconception": "M-CNT-SEQ"
       }
     ],
     "correct": "o1",
@@ -66,11 +66,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה אַחַת."
+          "v": "כֵּן! זֶה עֶשֶׂר."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-CNT-SEQ",
+        "vo": "vo:fb.seq",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+          }
+        ]
+      },
       {
         "when": "misconception:M-NUM-REV",
         "vo": "vo:fb.num_rev",
@@ -132,7 +142,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "הִנֵּה הַמִּסְפָּר אַחַת. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל אַחַת."
+          "v": "הִנֵּה הַמִּסְפָּר עֶשֶׂר. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל עֶשֶׂר."
         }
       ]
     }
@@ -152,6 +162,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמִּסְפָּר אַחַת?"
+    "altText": "אֵיפֹה הַמִּסְפָּר עֶשֶׂר?"
   }
 }

@@ -21,11 +21,11 @@
     "authored": 0.72
   },
   "prompt": {
-    "vo": "vo:c.numb06.6.prompt",
+    "vo": "vo:c.numb06.2.prompt",
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה הַמִּסְפָּר חָמֵשׁ?"
+        "v": "אֵיפֹה הַמִּסְפָּר שְׁתַּיִם?"
       }
     ],
     "replayButton": true
@@ -39,20 +39,20 @@
     "options": [
       {
         "id": "o1",
-        "numeral": 2,
-        "label": "שְׁתַּיִם",
+        "numeral": 5,
+        "label": "חָמֵשׁ",
         "misconception": "M-NUM-REV"
       },
       {
         "id": "o2",
-        "numeral": 3,
-        "label": "שָׁלוֹשׁ",
-        "misconception": "M-NUM-REV"
+        "numeral": 1,
+        "label": "אַחַת",
+        "misconception": "M-CNT-SEQ"
       },
       {
         "id": "o3",
-        "numeral": 5,
-        "label": "חָמֵשׁ"
+        "numeral": 2,
+        "label": "שְׁתַּיִם"
       }
     ],
     "correct": "o3",
@@ -62,22 +62,32 @@
   "voiceAnswer": false,
   "feedback": {
     "correct": {
-      "vo": "vo:c.numb06.6.correct",
+      "vo": "vo:c.numb06.2.correct",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! זֶה חָמֵשׁ."
+          "v": "כֵּן! זֶה שְׁתַּיִם."
         }
       ]
     },
     "incorrect": [
       {
-        "when": "misconception:M-NUM-REV",
-        "vo": "vo:fb.num_rev",
+        "when": "misconception:M-CNT-SEQ",
+        "vo": "vo:fb.seq",
         "caption": [
           {
             "t": "he",
-            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev_digit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים כְּשֶׁהוֹפְכִים אוֹתָם. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַצּוּרָה."
           }
         ]
       },
@@ -128,11 +138,11 @@
     {
       "level": 3,
       "action": "worked_example",
-      "vo": "vo:c.numb06.6.h3",
+      "vo": "vo:c.numb06.2.h3",
       "caption": [
         {
           "t": "he",
-          "v": "הִנֵּה הַמִּסְפָּר חָמֵשׁ. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל חָמֵשׁ."
+          "v": "הִנֵּה הַמִּסְפָּר שְׁתַּיִם. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל שְׁתַּיִם."
         }
       ]
     }
@@ -152,6 +162,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה הַמִּסְפָּר חָמֵשׁ?"
+    "altText": "אֵיפֹה הַמִּסְפָּר שְׁתַּיִם?"
   }
 }

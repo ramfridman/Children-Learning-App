@@ -50,9 +50,9 @@
       },
       {
         "id": "o3",
-        "numeral": 0,
-        "label": "אֶפֶס",
-        "misconception": "M-NUM-REV"
+        "numeral": 7,
+        "label": "שֶׁבַע",
+        "misconception": "M-CNT-SEQ"
       }
     ],
     "correct": "o1",
@@ -72,12 +72,22 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-NUM-REV",
-        "vo": "vo:fb.num_rev",
+        "when": "misconception:M-CNT-SEQ",
+        "vo": "vo:fb.seq",
         "caption": [
           {
             "t": "he",
-            "v": "הַסִּפְרָה הָרִאשׁוֹנָה מִשְּׂמֹאל אוֹמֶרֶת כַּמָּה עֲשָׂרוֹת. בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+            "v": "הַמְּמ… בּוֹאוּ נִסְפֹּר לְאַט, מִסְפָּר אַחֲרֵי מִסְפָּר."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev_digit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים כְּשֶׁהוֹפְכִים אוֹתָם. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַצּוּרָה."
           }
         ]
       },

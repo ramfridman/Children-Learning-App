@@ -63,12 +63,12 @@
         "id": "o3",
         "set": {
           "sprite": "asset:duck",
-          "count": 7,
+          "count": 9,
           "arrangement": "line",
           "seed": 3
         },
         "label": "בַּרְוָז",
-        "misconception": "M-CNT-DOUBLE"
+        "misconception": "M-NUM-REV"
       }
     ],
     "correct": "o1",
@@ -88,22 +88,22 @@
     },
     "incorrect": [
       {
-        "when": "misconception:M-CNT-DOUBLE",
-        "vo": "vo:fb.double_set",
-        "caption": [
-          {
-            "t": "he",
-            "v": "אוּלַי סָפַרְנוּ אֶחָד פַּעֲמַיִם? בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
-      {
         "when": "misconception:M-CNT-SKIP",
         "vo": "vo:fb.skip_set",
         "caption": [
           {
             "t": "he",
             "v": "אוּלַי פִּסְפַּסְנוּ אֶחָד? בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:M-NUM-REV",
+        "vo": "vo:fb.num_rev_digit",
+        "caption": [
+          {
+            "t": "he",
+            "v": "יֵשׁ מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים כְּשֶׁהוֹפְכִים אוֹתָם. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַצּוּרָה."
           }
         ]
       },

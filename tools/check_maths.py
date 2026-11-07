@@ -1,7 +1,9 @@
 """The Maths Teacher's checker: recomputes every maths activity of the pack from the item's own data (M10 step 0.5).
 
     python -I tools/check_maths.py                 # every maths item of content/starter
-    python -I tools/check_maths.py --band C --strict   # the gate of a Band C batch (ambiguous or unchecked items fail too)
+    python -I tools/check_maths.py --band C --strict   # every Band C item, strict (ambiguous or unchecked items fail too)
+    python -I tools/check_maths.py --ids c. --strict   # the gate of the Band C batches: every c.* id, its Band A and B bridge items too
+    python -I tools/check_maths.py --coverage --ids c.  # each watched tag of the skills: its diagnostic and its lucky-right items
     python -I tools/check_maths.py --list          # also print every finding, not only the table
     python -I tools/check_maths.py --dir <folder>  # another folder of activity.*.json (a next-pack, a test)
 
@@ -561,6 +563,10 @@ def smallbig(a, b):
     return int(''.join(str(abs(int(x) - int(y))) for x, y in zip(da, db)))
 
 
+# M-NUM-REV on one digit: the numerals that are another numeral turned round (6, 9) or mirrored (2, 5). QA-C1-9.
+TURNED = {6: (9,), 9: (6,), 2: (5,), 5: (2,)}
+
+
 def tag_candidates(tag, ctx):
     """The wrong values a tag's rule produces for an item (ctx: x the answer, a and b the numbers, op, whole); None: no rule."""
     x = ctx.get('x')
@@ -597,7 +603,10 @@ def tag_candidates(tag, ctx):
         return near(1, -1, 2, -2) if tag == 'M-CNT-SEQ' else near(1, -1)
     if tag == 'M-CNT-DECADE':
         prev = ctx.get('prev', x - 1)
-        return near(10, -10) | {prev // 10 * 10, prev - 9, prev + 1, (prev // 10) * 10 + 10 * 10}
+        out = near(10, -10) | {prev // 10 * 10, prev - 9, prev + 1, (prev // 10) * 10 + 10 * 10}
+        if prev % 10 == 0:  # after a whole ten the next ten word comes out (… 39, 40, 50)
+            out.add(prev + 10)
+        return out
     if tag in ('M-PART-MISS', 'M-PPW'):
         out = set(given)
         if len(given) >= 2:
@@ -614,7 +623,8 @@ def tag_candidates(tag, ctx):
     if tag == 'M-NUM-REV':
         if x >= 10:
             return {int(str(int(x))[::-1])}
-        return None
+        # a single digit: the numeral turned (6 and 9) or mirrored (2 and 5); no other digit is a turned or mirrored digit
+        return set(TURNED.get(int(x), ()))
     if tag == 'M-NUM-TEEN':
         out = set(given)
         if 10 < x < 20 or 10 <= ctx.get('whole', 0) < 20:
@@ -642,7 +652,11 @@ def tag_candidates(tag, ctx):
     if tag == 'M-RULER-1':
         return near(1)
     if tag == 'M-PV-FACE' and x is not None:
-        return {int(d) for d in str(int(x))}
+        # a digit for its own value; on base-ten blocks every block counted as one (3 rods and 4 cubes: 7)
+        return {int(d) for d in str(int(x))} | ({ctx['face']} if ctx.get('face') is not None else set())
+    if tag == 'M-HC-ROW' and ctx.get('hc') is not None:
+        # on the hundred chart: the next cell in the row instead of the next row (34 and ten more: 35)
+        return {v + d for v in list(ctx['hc']) + [x] for d in (1, -1)}
     if tag == 'M-PV-ZERO':
         s = str(int(x))
         out = {int(s.replace('0', '') or 0), int(s + '0')}
@@ -737,6 +751,130 @@ def periodic(row):
     return None
 
 
+def base_ten(pic):
+    """The number base-ten blocks show: 1000 a cube of thousands, 100 a flat, 10 a rod, 1 a cube (X1)."""
+    return 1000 * pic.get('thousands', 0) + 100 * pic.get('hundreds', 0) + 10 * pic.get('tens', 0) + pic.get('ones', 0)
+
+
+def picture_value(it, pic):
+    """(the number a stage picture asks for, the tag context, findings) for the pictures that carry a number: base-ten blocks
+    (the number is 10 x tens + ones; M-PV-FACE also gives every block counted as one) and the hundred chart (the answer is the one
+    blank cell: the chart's cells are 1 to 100 in rows of ten, so its place is its number; the caption must fit the lit cells)."""
+    out = []
+    kind = pic.get('kind')
+    if kind == 'base_ten':
+        blocks = [pic.get(k, 0) for k in ('thousands', 'hundreds', 'tens', 'ones')]
+        x = base_ten(pic)
+        if not x:
+            out.append(('WRONG', 'picture', 'the base-ten picture shows no blocks'))
+        nums = [v for v in numbers(it.caption) if v != x]
+        if nums:
+            out.append(('WRONG', 'picture', 'the caption says %s, the blocks show %d' % (nums, x)))
+        return x, {'face': sum(blocks), 'given': [x]}, out
+    if kind == 'hundred_chart':
+        lit, blank = list(pic.get('lit') or []), list(pic.get('blank') or [])
+        if len(blank) != 1:
+            out.append(('WRONG', 'unsolvable', 'the hundred chart has %d blank cells; the item asks for one' % len(blank)))
+            return None, {}, out
+        x = blank[0]
+        if x in lit:
+            out.append(('WRONG', 'picture', 'the cell %d is both lit and blank' % x))
+        col = len(lit) >= 2 and all(v % 10 == x % 10 for v in lit)
+        if it.has('עשר יותר'):
+            if x - 10 not in lit:
+                out.append(('WRONG', 'picture', 'ten more: %d is not lit above the blank %d' % (x - 10, x)))
+        elif it.has('עשר פחות'):
+            if x + 10 not in lit:
+                out.append(('WRONG', 'picture', 'ten less: %d is not lit below the blank %d' % (x + 10, x)))
+        elif it.has('בטור'):
+            if not (col and (x - 10 in lit or x + 10 in lit)):
+                out.append(('WRONG', 'picture', 'the lit cells %s are not the column of %d' % (lit, x)))
+        elif it.has('אחרי'):
+            said = numbers(it.caption)
+            if not said or said[-1] + 1 != x or said[-1] not in lit:
+                out.append(('WRONG', 'picture', 'the caption says after %s, the blank is %d' % (said, x)))
+        elif not ({x - 1, x + 1} & set(lit) or {x - 10, x + 10} <= set(lit)):
+            out.append(('AMBIG', 'hc-cue', 'no lit cell next to the blank %d shows the child where it is' % x))
+        prev = max([v for v in lit if v < x], default=x - 1)
+        return x, {'hc': [v for v in lit if abs(v - x) in (1, 10)], 'prev': prev, 'given': lit}, out
+    out.append(('UNCHECKED', 'picture', 'no rule reads a %s picture' % kind))
+    return None, {}, out
+
+
+def sentence_ctx(seq):
+    """The tag context of a number sentence with a gap (what the sentence branch of recognise_choice builds)."""
+    given = [t for t in seq if isinstance(t, (int, float))]
+    ops = [t for t in seq if isinstance(t, str) and t != '=']
+    ctx = {'given': given, 'op': ops[0] if ops else None, 'sentence': True}
+    if len(given) >= 2 and seq.index(None) == len(seq) - 1:
+        ctx['a'], ctx['b'] = given[0], given[1]
+    return ctx
+
+
+# The classifiers of a number answer (author.NUMBER_RULES): the tag each one names, and the sign of the sentence it needs.
+NUMBER_RULE_TAGS = {'smaller_from_larger': ('M-SUB-SMALLBIG', '-'), 'added_instead': ('M-OP-SWAP', '-'),
+                    'forgot_the_ten': ('M-REGROUP-FORGET', None), 'off_by_ten': ('M-REGROUP-FORGET', None),
+                    'face_value': ('M-PV-FACE', None)}
+
+
+def number_ctx(it):
+    """(the number, the tag context, the kind, findings) of a number answer; the number is None when no rule reads the item."""
+    sc = it.scene
+    row = sc.get('row') if isinstance(sc.get('row'), list) else None
+    seq = parse_cells(row) if row else None
+    pic = sc.get('picture') if isinstance(sc.get('picture'), dict) else None
+    found = []
+    if seq and None in seq:
+        sols = solve_gap(seq, top=10000)
+        if len(sols) != 1:
+            return None, {}, 'number-sentence', [('WRONG', 'unsolvable', 'the number sentence %s has %d solutions' % (row, len(sols)))]
+        x, ctx = sols[0], sentence_ctx(seq)
+        if pic and pic.get('kind') == 'base_ten' and base_ten(pic) not in ctx['given'] + [x]:
+            found.append(('WRONG', 'picture', 'the blocks show %d, the sentence %s has %s' % (base_ten(pic), row, ctx['given'] + [x])))
+        return x, ctx, 'number-sentence', found
+    if pic:
+        x, ctx, found = picture_value(it, pic)
+        return x, ctx, (None if x is None else 'number-' + pic['kind'].replace('_', '-')), found
+    said = numbers(it.caption)
+    if len(said) != 1:
+        return None, {}, None, []
+    return said[0], {'given': []}, 'number-said', []
+
+
+def check_number(f, it):
+    """A number answer (tap_answer 1.4, X3, the keypad): the value is recomputed from the row (its gap), else the stage picture, else
+    the one number of the caption ("write the number twenty-three"); every expected wrong number is wrong and reproduces its tag;
+    every rule names the tag it classifies and fits the sentence. Returns (kind, numbers); kind None: not understood."""
+    a = it.answer
+    value = a.get('value')
+    x, ctx, kind, found = number_ctx(it)
+    for sev, code, msg in found:
+        f.add(sev, it, code, msg)
+    if x is None:
+        return kind, []
+    ctx['x'] = x
+    if value != x:
+        f.add('WRONG', it, 'answer', 'the number answer is %s; the item gives %s' % (x, value))
+    for e in a.get('expected') or []:
+        v, t = e.get('value'), e.get('misconception')
+        if v == x:
+            f.add('WRONG', it, 'second-right', 'the expected wrong number %s is the answer' % v)
+            continue
+        cand = tag_candidates(t, ctx)
+        if cand is not None and not any(abs(v - c) < 1e-9 for c in cand):
+            f.add('RULE', it, 'tag-rule', 'the expected %s = %s is not what %s gives here (%s)' %
+                  (t, v, t, ', '.join(str(int(c) if c == int(c) else c) for c in sorted(cand))))
+    for r in a.get('rules') or []:
+        want = NUMBER_RULE_TAGS.get(r.get('when'))
+        if want is None:
+            f.add('RULE', it, 'number-rule', 'no such rule %s' % r.get('when'))
+        elif r.get('misconception') != want[0]:
+            f.add('RULE', it, 'number-rule', 'the rule %s names %s, not %s' % (r['when'], want[0], r.get('misconception')))
+        elif want[1] and ctx.get('op') not in (want[1], '−'):
+            f.add('RULE', it, 'number-rule', 'the rule %s needs a subtraction; the item has %s' % (r['when'], ctx.get('op')))
+    return kind, list(ctx.get('given', [])) + [x]  # the expected wrong numbers may be bigger (203 for twenty-three)
+
+
 def recognise_choice(it, svg):
     """The recogniser of a choice item (tap_answer, count_tap, flash), or None."""
     cap, sc = it.cap, it.scene
@@ -762,6 +900,15 @@ def recognise_choice(it, svg):
             return numeric('story-sum-count', n, {'given': nums[:2]}, nums[:2]), out
         return numeric('count', n, {}, [n]), out
 
+    # --- a stage picture (X1): base-ten blocks and the hundred chart (M10 C1, QA-C1-5)
+    pic = sc.get('picture') if isinstance(sc.get('picture'), dict) else None
+    if pic and not (seq and None in seq):
+        x, ctx, found = picture_value(it, pic)
+        out.extend(found)
+        if x is None:
+            return None, out
+        return numeric(pic['kind'].replace('_', '-'), x, ctx, ctx.get('given', [])), out
+
     # --- an inequality with a gap (M10 C1): every option is tried in the sentence, read left to right
     if seq and None in seq and any(t in RELATIONS for t in seq):
         given = [t for t in seq if isinstance(t, (int, float))]
@@ -785,6 +932,10 @@ def recognise_choice(it, svg):
         plus, minus = cap.count('ועוד'), cap.count('פחות')
         if plus + minus and (plus != seq.count('+') or minus != seq.count('-') + seq.count('−')):
             out.append(('WRONG', 'picture', 'the caption reads %d plus and %d minus, the row has %s' % (plus, minus, row)))
+        if pic and pic.get('kind') == 'base_ten':
+            shown = base_ten(pic)
+            if shown not in given + [x]:
+                out.append(('WRONG', 'picture', 'the blocks show %d, the sentence %s has %s' % (shown, row, given + [x])))
         rev = list(reversed(seq))
         ops = [t for t in seq if isinstance(t, str) and t != '=']
         ctx = {'given': given, 'op': ops[0] if ops else None, 'sentence': True}
@@ -833,7 +984,7 @@ def recognise_choice(it, svg):
             return None
         tens, ones = said_with('עשרות'), said_with('יחידות', 'יחידה')
         if tens is not None and ones is not None:
-            return numeric('place-words', 10 * tens + ones, {'given': [tens, ones]}, [10 * tens + ones]), out
+            return numeric('place-words', 10 * tens + ones, {'given': [tens, ones], 'face': tens + ones}, [10 * tens + ones]), out
 
     # --- stories with pictures
     if g and g2 and it.has('מוסיפים עוד', 'ובא עוד', 'ובאו עוד', 'בחוץ. כמה יש בסך הכל', 'ועוד') and it.has('כמה') \
@@ -1206,9 +1357,10 @@ def check_tags(f, it, known_tags, catalogue, skills, choice):
     for t in (it.answer.get(k) for k in it.answer if 'isconception' in k):
         if isinstance(t, str):
             tags.append(t)
-    for c in it.answer.get('classifiers') or []:
-        if c.get('misconception'):
-            tags.append(c['misconception'])
+    for key in ('classifiers', 'expected', 'rules'):  # a number answer (X3): the expected wrong numbers and the rules
+        for c in it.answer.get(key) or []:
+            if isinstance(c, dict) and c.get('misconception'):
+                tags.append(c['misconception'])
     for o in it.options:
         if o.get('misconception'):
             tags.append(o['misconception'])
@@ -1237,6 +1389,10 @@ def check_tags(f, it, known_tags, catalogue, skills, choice):
         if len(tagged) >= 2 and len(distinct) < 2 and len(watch) != 1:
             f.add('RULE', it, 'tag-distinct', 'two distractors share %s, and %s watches %d tags' %
                   (next(iter(distinct)), it.skill, len(watch)))
+        elif len(tagged) >= 2 and len(distinct) < 2 and next(iter(distinct)) not in watch:
+            # the one-tag exception is for the tag the skill watches (QA-C1-9: M-CNT-SKIP twice on NUM-B-06, which watches M-NUM-REV)
+            f.add('RULE', it, 'tag-distinct', 'two distractors share %s, which %s does not watch (it watches %s)' %
+                  (next(iter(distinct)), it.skill, ', '.join(watch)))
     if choice is not None:
         for o in tagged:
             v = opt_value(o)
@@ -1627,17 +1783,23 @@ def app_ltr(root=ROOT):
 # ---------------------------------------------------------------- the run
 
 
-def check(folder=STARTER, band=None, root=ROOT):
-    """(findings, counts) for the maths items of [folder]; counts: items, checked, by kind."""
+def check(folder=STARTER, band=None, root=ROOT, ids=None):
+    """(findings, counts) for the maths items of [folder]; counts: items, checked, by kind. [ids]: only the items whose id starts
+    with one of these prefixes (`c.`: every item of the Band C batches, with the bridge items of Band A and B they hold)."""
     docs, records, skills = load(folder)
     catalogue = catalogue_tags(os.path.join(root, 'docs', 'curriculum.md'))
-    f, counts = check_docs(docs, records, skills, catalogue, Svg(folder), band)
+    f, counts = check_docs(docs, records, skills, catalogue, Svg(folder), band, ids)
     for name in app_ltr(root):
         f.add('WRONG', 'app/lib/play/' + name, 'ltr', 'the renderer has no left-to-right isolate')
     return f.rows, counts
 
 
-def check_docs(docs, records, skills, catalogue, svg, band=None):
+def selected(it, band=None, ids=None):
+    """An item of the run: of [band] (its own band: a bridge item of Band B says B) and with an id that starts with one of [ids]."""
+    return (not band or it.band == band) and (not ids or any(it.id.startswith(p) for p in ids))
+
+
+def check_docs(docs, records, skills, catalogue, svg, band=None, ids=None):
     """The findings and counts of a list of activity documents."""
     f = Findings()
     counts = Counter()
@@ -1645,7 +1807,7 @@ def check_docs(docs, records, skills, catalogue, svg, band=None):
         if doc.get('domain') not in MATHS_DOMAINS:
             continue
         it = Item(doc)
-        if band and it.band != band:
+        if not selected(it, band, ids):
             continue
         counts['items'] += 1
         choice = None
@@ -1675,6 +1837,8 @@ def check_docs(docs, records, skills, catalogue, svg, band=None):
                                       (o.get('misconception') for o in it.options if o['id'] in incl), '')))
                 for o in it.options:
                     check_label(f, it, o)
+            elif it.template == 'tap_answer' and it.answer.get('type') == 'number':
+                kind, nums = check_number(f, it)
             elif it.template == 'spot_error':
                 kind = check_spot(f, it)
                 cells = parse_cells(it.scene.get('cells') or []) or []
@@ -1722,6 +1886,118 @@ def check_docs(docs, records, skills, catalogue, svg, band=None):
     return f, counts
 
 
+# ---------------------------------------------------------------- the coverage of the watched tags (QA-C1-9)
+
+
+def item_tags(it):
+    """Every tag an item can record: its options' and expected numbers', and the item's own (a line, a spot, a balance)."""
+    out = {o.get('misconception') for o in it.options} | {e.get('misconception') for e in it.answer.get('expected') or []}
+    out |= {it.answer.get(k) for k in it.answer if 'isconception' in k and isinstance(it.answer.get(k), str)}
+    return out - {None}
+
+
+def heard(x):
+    """A number written as it is heard, place by place (23: 20 and 3 = 203); a whole ten stays itself."""
+    s = str(int(x))
+    parts = [int(d) * 10 ** (len(s) - 1 - i) for i, d in enumerate(s) if d != '0']
+    return int(''.join(str(p) for p in parts)) if parts else 0
+
+
+# The tags whose error can give the right answer, so that an item can be lucky-right on them (lucky() says when).
+LUCKY_TAGS = ('M-PV-FACE', 'M-NUM-REV', 'M-PV-ZERO', 'M-CNT-DECADE', 'M-SUB-SMALLBIG', 'M-EQ-OPER', 'M-NL-DIR')
+
+
+def lucky(tag, it, ctx):
+    """Whether the child who has [tag] still gives the right answer to the item (a lucky-right item: a right answer there is no
+    evidence that the misconception is gone): True or False, or None when the item is not one the tag's error could get right."""
+    if tag not in LUCKY_TAGS:
+        return None
+    x, rel, op = ctx.get('x'), ctx.get('relation'), ctx.get('op')
+    if it.template == 'number_line':
+        if tag != 'M-NL-DIR':
+            return None
+        lo, hi, t = it.scene.get('from'), it.scene.get('to'), it.answer.get('target')
+        return None if None in (lo, hi, t) else t * 2 == lo + hi  # the middle of the line, mirrored, is the middle
+    if not isinstance(x, (int, float)):
+        return None
+    if tag == 'M-PV-FACE':  # in a comparison: the ones-first reading picks the right number too (58 vs 43)
+        if rel is not None:
+            return x in (tag_candidates(tag, ctx) or ())
+        if ctx.get('compare') is not None:
+            return tag_candidates(tag, ctx) == {x}
+        return None
+    if tag == 'M-NUM-REV':  # the number read the other way round is itself (33; a turned 0, 1 or 8)
+        return int(str(int(x))[::-1]) == x if x >= 10 else x in (0, 1, 8)
+    if tag == 'M-PV-ZERO':  # written as heard it is right: a whole ten (40)
+        return heard(x) == x if x >= 10 else None
+    if tag == 'M-CNT-DECADE':  # counting with no ten to cross
+        if 'prev' not in ctx and rel is None and not ctx.get('sentence') and it.has('אחרי', 'לפני', 'חסר'):
+            return x % 10 not in (0, 9)
+        return None
+    if tag == 'M-SUB-SMALLBIG':  # no ten to trade: the smaller digit from the larger is right (58 - 23)
+        a, b = ctx.get('a'), ctx.get('b')
+        return smallbig(a, b) == a - b if op in ('-', '−') and None not in (a, b) else None
+    if tag == 'M-EQ-OPER':  # the gap after =: "the answer comes next" is right here
+        return ctx.get('a') is not None if ctx.get('sentence') else None
+    return None
+
+
+def coverage(folder=STARTER, band=None, ids=None, docs=None, skills=None):
+    """{skill: {watched tag: (diagnostic item ids, lucky-right item ids or None)}} over the selected items. A diagnostic item can
+    record the tag (a distractor, an expected number or the item's own tag carries it); a lucky-right item is one the child with the
+    tag still answers right; None: the tag's error never gives a right answer, so no item can be lucky-right."""
+    if docs is None:
+        docs, _, skills = load(folder)
+    svg = Svg(folder)
+    out, can = {}, set()
+    for doc in docs:
+        if doc.get('domain') not in MATHS_DOMAINS:
+            continue
+        it = Item(doc)
+        if not selected(it, band, ids):
+            continue
+        watch = (skills.get(it.skill) or {}).get('misconceptions') or []
+        if not watch:
+            continue
+        ctx = {}
+        try:
+            if it.options:
+                choice, _ = recognise_choice(it, svg)
+                if choice is not None:
+                    ctx = dict(choice.ctx)
+                    right = next((o for o in it.options if o['id'] == it.correct), None)
+                    if 'x' not in ctx and right is not None:
+                        ctx['x'] = opt_value(right)
+            elif it.answer.get('type') == 'number':
+                x, ctx, _, _ = number_ctx(it)
+                ctx = dict(ctx or {}, x=x)
+            elif it.template == 'number_line':
+                ctx = {'x': it.answer.get('target')}
+        except (KeyError, IndexError, TypeError, ValueError, ZeroDivisionError):
+            ctx = {}
+        tags = item_tags(it)
+        for t in watch:
+            diag, luck = out.setdefault(it.skill, {}).setdefault(t, ([], []))
+            if t in tags:
+                diag.append(it.id)
+            verdict = lucky(t, it, ctx)
+            if verdict is not None:
+                can.add((it.skill, t))
+            if verdict:
+                luck.append(it.id)
+    return {sk: {t: (d, l if (sk, t) in can else None) for t, (d, l) in by.items()} for sk, by in out.items()}
+
+
+def coverage_table(cov):
+    lines = ['%-10s %-16s %10s %12s  %s' % ('skill', 'watched tag', 'diagnostic', 'lucky-right', 'missing')]
+    for sk in sorted(cov):
+        for t in sorted(cov[sk]):
+            diag, luck = cov[sk][t]
+            miss = ([] if diag else ['a diagnostic item']) + ([] if luck is None or luck else ['a lucky-right item'])
+            lines.append('%-10s %-16s %10d %12s  %s' % (sk, t, len(diag), 'n/a' if luck is None else len(luck), ', '.join(miss)))
+    return '\n'.join(lines)
+
+
 def table(rows, counts):
     lines = []
     sev = Counter(r[0] for r in rows)
@@ -1744,7 +2020,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--dir', default=STARTER, help='the folder of activity, skill and misconception files')
     ap.add_argument('--band', choices=('A', 'B', 'C'))
+    ap.add_argument('--ids', action='append', metavar='PREFIX',
+                    help='only the items whose id starts with PREFIX (repeatable); --ids c. is every item of the Band C batches')
     ap.add_argument('--strict', action='store_true', help='ambiguous and unchecked items fail too (the Band C gate)')
+    ap.add_argument('--coverage', action='store_true',
+                    help="also print each skill's watched tags with their diagnostic and lucky-right items")
     ap.add_argument('--list', action='store_true', help='print every finding')
     ap.add_argument('--json', help='also write the findings to this file')
     args = ap.parse_args(argv)
@@ -1752,13 +2032,16 @@ def main(argv=None):
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
-    rows, counts = check(args.dir, args.band)
+    rows, counts = check(args.dir, args.band, ids=args.ids)
     rows.sort(key=lambda r: (SEVERITIES.index(r[0]), str(r[1]), r[2]))
     if args.list:
         for s, i, c, m in rows:
             print('%-9s %-24s %-14s %s' % (s, i, c, m))
         print()
     print(table(rows, counts))
+    if args.coverage:
+        print()
+        print(coverage_table(coverage(args.dir, args.band, args.ids)))
     if args.json:
         with open(args.json, 'w', encoding='utf-8') as fh:
             json.dump([dict(zip(('severity', 'id', 'code', 'message'), r)) for r in rows], fh, ensure_ascii=False,

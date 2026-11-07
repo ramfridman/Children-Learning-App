@@ -33,11 +33,11 @@
   "scene": {
     "background": "asset:meadow",
     "cells": [
-      "n:73",
-      "n:63",
-      "n:52",
+      "n:33",
       "n:43",
-      "n:33"
+      "n:52",
+      "n:63",
+      "n:73"
     ]
   },
   "answer": {

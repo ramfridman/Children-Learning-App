@@ -96,17 +96,30 @@ def number_item(u, skill, prompt, row, value, expected=None, rules=None, h2=None
 
 # ======================================================================================== C1: numbers to 100, facts
 #
+# The modes that no session draws yet (QA-C1-5; docs/knowledge/maths/c1-deferred.md). Their items are written in the tables below but
+# reach content only when the mode is switched on here: the app-developer sets a mode True in the commit whose sessions draw it and that
+# takes its check off app/test/qa_m10s0_undrawn_modes_test.dart, then runs tools/regen_content.py. Until then the items are built only
+# by the tests (tools/test_check_maths.py, C1Deferred), which run tools/check_maths.py over them.
+DRAWN = {
+    'base_ten': False,       # scene.picture kind base_ten (X1): tens rods and ones cubes
+    'hundred_chart': False,  # scene.picture kind hundred_chart (X1): cells lit or blank
+    'number': False,         # answer.type number (X3): the keypad
+}
+#
 # The tables of batch C1 (docs/milestones/M10.md §4.1, §4.2, §4.7 and §7; the maths teacher, 2026-11-06). Every item is one that
 # today's sessions draw: tap_answer rows and choices, number_line, flash, balance and spot_error. The items that need a stage picture
-# (base_ten, hundred_chart) or the keypad (answer type number) wait for batch step 3 and are specified in
-# docs/knowledge/maths/c1-deferred.md; none of them is in content. Every answer and every tag rule is recomputed by
-# tools/check_maths.py. Hebrew: drafts, `needs-editor`, plural address, = read שָׁוֶה.
+# (base_ten, hundred_chart) or the keypad (answer type number) are specified in docs/knowledge/maths/c1-deferred.md and written below
+# (numbers_c1_waiting, math_c1_waiting) behind DRAWN; none of them is in content until its mode is switched on. Every answer and every
+# tag rule is recomputed by tools/check_maths.py (the gate: --ids c. --strict). Hebrew: drafts, `needs-editor`, plural address, = read
+# שָׁוֶה.
 
 from author import F, from_, prefix, qty, vav  # noqa: E402
 from band_b import NAMES, SHEKEL, steps as step_words  # noqa: E402
 
 BLOCK = NAMES['block'] | {'many': 'קֻבִּיּוֹת'}
 NOW = 'עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל %s.'
+# M-NUM-REV on a single digit (6 for 9, 5 for 2): the shared line speaks of the tens digit, so these items say their own (QA-C1-9)
+DIGIT_TURN = {'M-NUM-REV': ('vo:fb.num_rev_digit', 'יֵשׁ מִסְפָּרִים שֶׁנִּרְאִים דּוֹמִים כְּשֶׁהוֹפְכִים אוֹתָם. בּוֹאוּ נִסְתַּכֵּל שׁוּב עַל הַצּוּרָה.')}
 
 
 def tens_words(t):
@@ -171,15 +184,20 @@ def place_on(u, skill, frm, to, target, labels, **kw):
     """Put the frog on `target` on a line from `frm` to `to` (ticks of one; the labels are the landmarks)."""
     near = max(v for v in labels if v <= target)
     via = ''
-    if target - near > 6:  # only the ends are marked: ten steps first, then count on
+    if target - near > 6 and near + 10 <= target:  # only the ends are marked: ten steps first, then count on
         via = '%s עֲשָׂרָה צְעָדִים קָדִימָה הֵם %s, וּמִשָּׁם ' % (from_(F[near]), F[near + 10])
         near += 10
     walk = ', '.join(F[v] for v in range(near + 1, target + 1))
+    above = min((v for v in labels if v >= target), default=None)
+    if not via and above is not None and 0 < above - target < target - near:  # the nearer landmark is above: count back from it
+        kw.setdefault('h3', 'מַתְחִילִים %s וְסוֹפְרִים אֲחוֹרָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (
+            from_(F[above]), ', '.join(F[v] for v in range(above - 1, target - 1, -1))))
     return u.act(skill, 'numline', mode='place', **{'from': frm}, to=to, target=target, labels=labels,
                  prompt='הַצְּפַרְדֵּעַ רוֹצָה לַעֲמֹד עַל %s. נוֹגְעִים בַּמָּקוֹם.' % F[target],
-                 h3=('%sסוֹפְרִים קָדִימָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (via, walk) if via else
-                     'מַתְחִילִים %s וְסוֹפְרִים קָדִימָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[near]), walk)) if walk else
-                 'הַמִּסְפָּר כְּתוּב עַל הַצִּיר. עַכְשָׁו תּוֹרְכֶם.',
+                 h3=kw.pop('h3', None) or ('%s. עַכְשָׁו תּוֹרְכֶם.' % via[:-len(', וּמִשָּׁם ')] if via and not walk else  # ten steps land on it
+                     ('%sסוֹפְרִים קָדִימָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (via, walk) if via else
+                      'מַתְחִילִים %s וְסוֹפְרִים קָדִימָה: %s. עַכְשָׁו תּוֹרְכֶם.' % (from_(F[near]), walk)) if walk else
+                     'הַמִּסְפָּר כְּתוּב עַל הַצִּיר. עַכְשָׁו תּוֹרְכֶם.'),
                  correct_text='%s! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן.' % F[target], **kw)
 
 
@@ -213,23 +231,30 @@ def numbers_c1(u):
     u.skill('NUM-B-06', 'קוראים 0–10', 'קוֹרְאִים מִסְפָּרִים עַד עֶשֶׂר', 'pool', ['NUM-A-08'], ['symbolic', 'pictorial'], ['M-NUM-REV'],
             core=True)
     bridge(u)
-    # Two numerals that look alike to a young reader (turned or mirrored: 6 and 9, 2 and 5, 1 and 7, 3 and 8) are the
-    # distractors, both M-NUM-REV, the one tag the skill watches (the E1 rule of B-15).
-    for i, (n, look) in enumerate([(6, (9, 0)), (2, (5, 7)), (9, (6, 4)), (1, (7, 4)), (3, (8, 5)), (5, (2, 3))]):
-        choose(u, 'NUM-B-06', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, {v: 'M-NUM-REV' for v in look}, i, band='B',
+    # QA-C1-9 (2026-11-07): a distractor tagged M-NUM-REV is the numeral turned or mirrored (6 and 9 turned, 2 and 5 mirrored) or,
+    # for 10, its digits read the other way round (01, the precedent of b.numb08.9: 2 for 20); the other distractor is a neighbour
+    # in the counting order, M-CNT-SEQ (the precedent of b.numb08.13). 0, 1, 3, 4, 7 and 8 have no turned or mirrored partner among
+    # the numerals, so they are not asked here. A single digit gets its own M-NUM-REV line (the shared one speaks of tens).
+    for i, (n, rev, seq) in enumerate([(6, 9, 7), (2, 5, 3), (9, 6, 8), (10, 1, 9), (5, 2, 4), (2, 5, 1)]):
+        choose(u, 'NUM-B-06', 'אֵיפֹה הַמִּסְפָּר %s?' % F[n], n, {rev: 'M-NUM-REV', seq: 'M-CNT-SEQ'}, i, band='B',
+               **({} if n >= 10 else {'tag_lines': DIGIT_TURN}),
                h2='הַמִּסְפָּרִים הָאֵלֶּה דּוֹמִים. נִסְתַּכֵּל עַל כׇּל אֶחָד לְאַט, וְנַעֲבֹר עִם הָאֶצְבַּע עַל הַצּוּרָה שֶׁלּוֹ.',
                h3='הִנֵּה הַמִּסְפָּר %s. %s' % (F[n], NOW % F[n]), ok='כֵּן! זֶה %s.' % F[n])
-    for i, (n, look, where) in enumerate([(8, (3, 0), 'הַבַּיִת'), (7, (1, 4), 'הָאוֹטוֹבּוּס')]):
-        choose(u, 'NUM-B-06', 'עַל %s כָּתוּב מִסְפָּר %s. אֵיפֹה הַמִּסְפָּר?' % (where, F[n]), n, {v: 'M-NUM-REV' for v in look}, i,
-               band='B', check='transfer', difficulty=0.5,
+    for i, (n, rev, seq, where) in enumerate([(6, 9, 7, 'הַבַּיִת'), (9, 6, 8, 'הָאוֹטוֹבּוּס')]):
+        choose(u, 'NUM-B-06', 'עַל %s כָּתוּב מִסְפָּר %s. אֵיפֹה הַמִּסְפָּר?' % (where, F[n]), n, {rev: 'M-NUM-REV', seq: 'M-CNT-SEQ'}, i,
+               band='B', check='transfer', difficulty=0.5, tag_lines=DIGIT_TURN,
                h2='הַמִּסְפָּרִים הָאֵלֶּה דּוֹמִים. נִסְתַּכֵּל עַל כׇּל אֶחָד לְאַט, וְנַעֲבֹר עִם הָאֶצְבַּע עַל הַצּוּרָה שֶׁלּוֹ.',
                h3='הִנֵּה הַמִּסְפָּר %s. %s' % (F[n], NOW % F[n]), ok='כֵּן! זֶה %s.' % F[n])
     # The numeral is shown, never said: the child reads it and finds the set (reverse of "how many?")
+    # The other distractor is the set of the numeral turned or mirrored (M-NUM-REV) where the numeral has one (6, 9 and 10, read 01),
+    # else the set of one more (M-CNT-DOUBLE); never one tag twice (QA-C1-9: c.numb06.13 had M-CNT-SKIP twice).
     for i, (n, obj) in enumerate([(4, 'apple'), (7, 'star'), (9, 'fish'), (6, 'duck'), (10, 'ladybug'), (3, 'bird')]):
-        sets = placed('%s*%d' % (obj, n), ['%s*%d' % (obj, n - 1), '%s*%d' % (obj, n + 1) if n < 10 else '%s*%d' % (obj, n - 2)], i)
-        tags = {'%s*%d' % (obj, n - 1): 'M-CNT-SKIP', '%s*%d' % (obj, n + 1): 'M-CNT-DOUBLE', '%s*%d' % (obj, n - 2): 'M-CNT-SKIP'}
+        other = {6: 9, 9: 6, 10: 1}.get(n)
+        tags = {n - 1: 'M-CNT-SKIP', (other if other else n + 1): ('M-NUM-REV' if other else 'M-CNT-DOUBLE')}
+        sets = placed('%s*%d' % (obj, n), ['%s*%d' % (obj, v) for v in tags], i)
         u.act('NUM-B-06', 'pick', band='B', check='reverse', numeral=n, prompt='קִרְאוּ אֶת הַמִּסְפָּר. אֵיזוֹ קְבוּצָה מַתְאִימָה לַמִּסְפָּר?',
-              options=sets, correct='%s*%d' % (obj, n), tags={s: tags[s] for s in sets if s in tags},
+              options=sets, correct='%s*%d' % (obj, n), tags={'%s*%d' % (obj, v): t for v, t in tags.items()},
+              **({'tag_lines': DIGIT_TURN} if other and n < 10 else {}),
               h2='קֹדֶם קוֹרְאִים אֶת הַמִּסְפָּר, וְאַחַר כָּךְ סוֹפְרִים כׇּל קְבוּצָה עַד הַסּוֹף.',
               h3='הַמִּסְפָּר הוּא %s. סוֹפְרִים: %s. עַכְשָׁו תּוֹרְכֶם — לִלְחֹץ עַל הַקְּבוּצָה הַזֹּאת.' % (
                   F[n], ', '.join(F[k] for k in range(1, n + 1))),
@@ -333,6 +358,11 @@ def numbers_c1(u):
         choose(u, 'NUM-C-03', '%s. אֵיזֶה מִסְפָּר זֶה?' % said, n, {int(str(n)[::-1]): 'M-NUM-REV', heard(n): 'M-PV-ZERO'}, i,
                h2='אֶת הָעֲשָׂרוֹת כּוֹתְבִים קֹדֶם, מִשְּׂמֹאל, וְאֶת הַיְּחִידוֹת אַחֲרֵיהֶן — גַּם אִם שׁוֹמְעִים אוֹתָן קֹדֶם.',
                h3='%s הֵן %s, וְעוֹד %s: %s. %s' % (tens_words(t), F[10 * t], F[o], F[n], NOW % F[n]), ok='כֵּן! %s.' % F[n])
+    # The lucky-right item of M-NUM-REV (QA-C1-9): 33 read the other way round is 33, so a right answer here says nothing about
+    # reversing; 6 is every block counted as one (M-PV-FACE), 303 the number written as heard (M-PV-ZERO).
+    choose(u, 'NUM-C-03', '%s %s. אֵיזֶה מִסְפָּר זֶה?' % (tens_words(3), vav(ones_words(3))), 33, {303: 'M-PV-ZERO', 6: 'M-PV-FACE'}, 1,
+           h2='אֶת הָעֲשָׂרוֹת כּוֹתְבִים קֹדֶם, מִשְּׂמֹאל, וְאֶת הַיְּחִידוֹת אַחֲרֵיהֶן — גַּם אִם שׁוֹמְעִים אוֹתָן קֹדֶם.',
+           h3='%s הֵן %s, וְעוֹד %s: %s. %s' % (tens_words(3), F[30], F[3], F[33], NOW % F[33]), ok='כֵּן! %s.' % F[33])
 
     # ---- NUM-C-04: compares and orders numbers to 100, with < and >
     u.skill('NUM-C-04', 'משווים מספרים עד 100', 'מַשְׁוִים מִסְפָּרִים עַד מֵאָה', 'pool', ['NUM-C-03', 'NUM-B-10'], ['symbolic'],
@@ -373,6 +403,8 @@ def numbers_c1(u):
     jump(u, 'NUM-C-06', 60, 80, 71, -4, labels=[60, 70, 80])
     jump(u, 'NUM-C-06', 30, 50, 35, 6, labels=[30, 40, 50])
     jump(u, 'NUM-C-06', 80, 100, 92, -3, labels=[80, 90, 100])
+    # The lucky-right item of M-NL-DIR (QA-C1-9): the middle of a line with only its ends marked is the middle read either way
+    place_on(u, 'NUM-C-06', 20, 40, 30, [20, 40], check='transfer', difficulty=0.6)
 
     # ---- NUM-C-09: ten more and ten less (the hundred chart: one row down or up, the same column)
     u.skill('NUM-C-09', 'עשר יותר, עשר פחות', 'עֶשֶׂר יוֹתֵר וְעֶשֶׂר פָּחוֹת', 'cone-tree', ['NUM-C-03'], ['symbolic', 'pictorial'],
@@ -392,7 +424,7 @@ def numbers_c1(u):
                {col[gap - 1] + 1: 'M-HC-ROW', int(str(ans)[::-1]): 'M-NUM-REV'}, i, row=['?' if k == gap else v for k, v in enumerate(col)],
                h2='בְּטוּר שֶׁל לוּחַ הַמֵּאָה כׇּל מִסְפָּר גָּדוֹל בְּעֶשֶׂר מֵהַמִּסְפָּר שֶׁמֵּעָלָיו. סִפְרַת הַיְּחִידוֹת לֹא מִשְׁתַּנָּה.',
                h3='%s. %s' % (', '.join(F[v] for v in col), NOW % F[ans]), ok='%s! עֶשֶׂר יוֹתֵר, שׁוּרָה לְמַטָּה.' % F[ans])
-    for cells, w in (([5, 15, 25, 36, 45], 3), ([73, 63, 52, 43, 33], 2)):
+    for cells, w in (([5, 15, 25, 36, 45], 3), ([33, 43, 52, 63, 73], 2)):  # read left to right, growing (QA-C1-8)
         right = cells[w - 1] + (cells[1] - cells[0])
         u.act('NUM-C-09', 'spot', cells=['n:%d' % v for v in cells], wrong=w, tag='M-HC-ROW', check='error_spotting', difficulty=0.6,
               prompt='חָבֵר כָּתַב מִסְפָּרִים מֵאוֹתוֹ טוּר שֶׁל לוּחַ הַמֵּאָה, וְיֵשׁ בָּהֶם טָעוּת. אֵיפֹה הַטָּעוּת?',
@@ -427,6 +459,99 @@ def numbers_c1(u):
     lesson_of(u, 'compare-to-100', 'מַשְׁוִים מִסְפָּרִים', 'NUM-C-04', 'יָפֶה מְאֹד! הַסִּימָן פּוֹנֶה לַגָּדוֹל.', minutes=8)
     lesson_of(u, 'line-to-100', 'הַצִּיר הַגָּדוֹל', 'NUM-C-06', 'כׇּל הַכָּבוֹד! הַצְּפַרְדֵּעַ בַּמָּקוֹם הַנָּכוֹן.', minutes=8)
     lesson_of(u, 'ten-more-ten-less', 'עֶשֶׂר יוֹתֵר, עֶשֶׂר פָּחוֹת', 'NUM-C-09', 'מְצֻיָּן! שׁוּרָה לְמַטָּה, שׁוּרָה לְמַעְלָה.', minutes=8)
+    numbers_c1_waiting(u)
+
+
+def tens_then_ones(t, o):
+    """Counting blocks: the rods by tens, then on by ones ("עֶשֶׂר, עֶשְׂרִים, שְׁלוֹשִׁים, וּמַמְשִׁיכִים: …")."""
+    tens = ', '.join(F[10 * k] for k in range(1, t + 1))
+    if not o:
+        return '%s. אֵין קֻבִּיּוֹת בּוֹדְדוֹת' % tens
+    return '%s, וּמַמְשִׁיכִים: %s' % (tens, ', '.join(F[10 * t + k] for k in range(1, o + 1)))
+
+
+def chart(lit=(), blank=()):
+    return {'kind': 'hundred_chart', 'lit': sorted(lit), 'blank': list(blank)}
+
+
+# The line of M-PV-FACE on blocks: the child counted every block as one (the shared line speaks of the digit in the tens place)
+RODS = {'M-PV-FACE': ('vo:fb.pv_face_rods', 'כׇּל מוֹט הוּא עֶשֶׂר קֻבִּיּוֹת, לֹא אַחַת. בּוֹאוּ נִסְפֹּר אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת.')}
+
+
+def numbers_c1_waiting(u):
+    """The Counting Hills items of c1-deferred.md §1 to §3 that wait for a mode (DRAWN). Each one is added after every drawn item of its
+    skill, so switching a mode on adds ids and never renumbers one; they get lessons of their own."""
+    blocks, hundred, typed = [], [], []
+    if DRAWN['base_ten']:
+        # §1. 34 and 62: 7 and 8 are every block counted as one (M-PV-FACE). 50: 5 is the rods counted as ones (M-PV-FACE, so the
+        # two distractors carry two tags and the B-15 E1 rule holds with no exception; the maths teacher, 2026-11-07) and 500 the
+        # zero written twice (M-PV-ZERO).
+        for i, (t, o, wrong, prompt, check) in enumerate([
+                (3, 4, {7: 'M-PV-FACE', 43: 'M-NUM-REV', 304: 'M-PV-ZERO'}, 'כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', 'practice'),
+                (5, 0, {5: 'M-PV-FACE', 500: 'M-PV-ZERO'}, 'כַּמָּה קֻבִּיּוֹת יֵשׁ כָּאן?', 'practice'),
+                (6, 2, {26: 'M-NUM-REV', 602: 'M-PV-ZERO', 8: 'M-PV-FACE'}, 'אֵיזֶה מִסְפָּר בָּנוּ מֵהַקֻּבִּיּוֹת?', 'transfer')]):
+            n = 10 * t + o
+            blocks.append(choose(
+                u, 'NUM-C-03', prompt, n, wrong, i, picture={'kind': 'base_ten', 'tens': t, 'ones': o}, tag_lines=RODS,
+                **({'check': 'transfer', 'difficulty': 0.6} if check == 'transfer' else {}),
+                h2='כׇּל מוֹט הוּא עֶשֶׂר קֻבִּיּוֹת. סוֹפְרִים קֹדֶם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת, וְאַחַר כָּךְ אֶת הַקֻּבִּיּוֹת הַבּוֹדְדוֹת.',
+                h3='%s. %s' % (tens_then_ones(t, o), NOW % F[n]), ok='%s! יֵשׁ כָּאן %s.' % (F[n], qty(n, BLOCK))))
+    if DRAWN['hundred_chart']:
+        # §2. The answer is the blank cell; the lit cells are what the child sees. 43 (the reversal of the lit 34) is not a likely
+        # error for "ten more than 34" and is left out of the first item (QA-C1-2 review).
+        for i, (pic, ask, ans, wrong, check) in enumerate([
+                (chart([34], [44]), 'עֶשֶׂר יוֹתֵר %s. אֵיזֶה מִסְפָּר בַּמִּשְׁבֶּצֶת הָרֵיקָה?' % from_(F[34]), 44,
+                 {35: 'M-HC-ROW', 24: 'M-OP-SWAP'}, None),
+                (chart([57], [47]), 'עֶשֶׂר פָּחוֹת %s. אֵיזֶה מִסְפָּר בַּמִּשְׁבֶּצֶת הָרֵיקָה?' % from_(F[57]), 47,
+                 {56: 'M-HC-ROW', 67: 'M-OP-SWAP'}, 'reverse'),
+                (chart([6, 16, 26], [36]), 'מָה הַמִּסְפָּר הַבָּא בַּטּוּר?', 36, {27: 'M-HC-ROW', 63: 'M-NUM-REV'}, None),
+                (chart([48, 68], [58]), 'מָה מִסְתַּתֵּר בַּמִּשְׁבֶּצֶת הָרֵיקָה?', 58, {49: 'M-HC-ROW', 85: 'M-NUM-REV'}, 'predict')]):
+            less = ans + 10 in pic['lit'] and ans - 10 not in pic['lit']  # ten less: from the lit cell one row up
+            near = ans + 10 if less else ans - 10
+            hundred.append(choose(
+                u, 'NUM-C-09', ask, ans, wrong, i, picture=pic, **({'check': check, 'difficulty': 0.6} if check else {}),
+                h2='בְּלוּחַ הַמֵּאָה, עֶשֶׂר יוֹתֵר זוֹ שׁוּרָה לְמַטָּה בְּאוֹתוֹ טוּר, וְעֶשֶׂר פָּחוֹת שׁוּרָה לְמַעְלָה.',
+                h3='%s %s, בְּאוֹתוֹ טוּר: %s. %s' % (from_(F[near]), 'עוֹלִים שׁוּרָה לְמַעְלָה' if less else 'יוֹרְדִים שׁוּרָה לְמַטָּה',
+                                                     F[ans], NOW % F[ans]),
+                ok='%s! %s %s עֶשֶׂר שָׁוֶה %s.' % (F[ans], F[near], 'פָּחוֹת' if less else 'וְעוֹד', F[ans])))
+        for i, (pic, ask, ans, wrong, h3) in enumerate([
+                (chart([v for v in range(31, 41) if v != 37], [37]), 'אֵיזֶה מִסְפָּר חָסֵר בַּשּׁוּרָה?', 37,
+                 {36: 'M-CNT-SEQ', 47: 'M-CNT-DECADE'}, '%s, %s, %s. ' % (F[35], F[36], F[37])),
+                (chart([40], [41]), 'מַה בָּא אַחֲרֵי %s?' % F[40], 41, {50: 'M-CNT-DECADE', 42: 'M-CNT-SEQ'},
+                 '%s, וְאַחֲרָיו %s, בַּשּׁוּרָה הַבָּאָה. ' % (F[40], F[41]))]):
+            hundred.append(choose(
+                u, 'NUM-C-01', ask, ans, wrong, i, picture=pic,
+                h2='בְּלוּחַ הַמֵּאָה סוֹפְרִים בַּשּׁוּרָה מִשְּׂמֹאל לְיָמִין, וּבְסוֹף הַשּׁוּרָה מַמְשִׁיכִים בַּמִּשְׁבֶּצֶת הָרִאשׁוֹנָה שֶׁל הַשּׁוּרָה הַבָּאָה.',
+                h3=h3 + NOW % F[ans], ok='%s! %s.' % (F[ans], h3.strip().rstrip('.'))))
+    if DRAWN['number']:
+        # §3. The keypad: the number is typed, left to right
+        for n, wrong in [(23, {32: 'M-NUM-REV', 203: 'M-PV-ZERO'}), (60, {6: 'M-PV-ZERO', 600: 'M-PV-ZERO'}),
+                         (47, {74: 'M-NUM-REV', 407: 'M-PV-ZERO'})]:
+            typed.append(u.act(  # no row: the number is only heard
+                'NUM-C-02', 'number', prompt='כִּתְבוּ אֶת הַמִּסְפָּר %s.' % F[n], value=n, expected=wrong, rules={},
+                h2='כּוֹתְבִים רַק שְׁתֵּי סְפָרוֹת: קֹדֶם אֶת סִפְרַת הָעֲשָׂרוֹת, מִשְּׂמֹאל, וְאַחֲרֶיהָ אֶת סִפְרַת הַיְּחִידוֹת.',
+                h3='%s: %s, %s. כּוֹתְבִים %s וְאַחַר כָּךְ %s.' % (F[n], tens_words(n // 10), vav(ones_words(n % 10)), F[n // 10], F[n % 10]),
+                correct_text='כֵּן! %s.' % F[n]))
+        for row, value, wrong, rules, h3 in [
+                (['?', '=', 30, '+', 4], 34, {304: 'M-PV-ZERO', 43: 'M-NUM-REV'}, {'face_value': 'M-PV-FACE'},
+                 '%s וְעוֹד %s שָׁוֶה %s.' % (F[30], F[4], F[34])),
+                ([58, '=', '?', '+', 8], 50, {5: 'M-PV-FACE', 66: 'M-EQ-OPER'}, {},
+                 '%s שָׁוֶה %s וְעוֹד %s.' % (F[58], F[50], F[8]))]:
+            typed.append(number_item(
+                u, 'NUM-C-03', 'אֵיזֶה מִסְפָּר חָסֵר?', row, value, wrong, rules, check='reverse',
+                h2='מְפָרְקִים לַעֲשָׂרוֹת וְלִיחִידוֹת. כּוֹתְבִים קֹדֶם אֶת סִפְרַת הָעֲשָׂרוֹת, מִשְּׂמֹאל.',
+                h3=h3 + ' כּוֹתְבִים %s.' % F[value], ok='%s! %s' % (F[value], h3)))
+    # their lessons, after the drawn ones (only the modes that are on)
+    for lid, title, items, done in [
+            ('blocks-tens-and-ones', 'קֻבִּיּוֹת שֶׁל עֲשָׂרוֹת', blocks, 'כׇּל הַכָּבוֹד! סְפַרְתֶּם אֶת הַמּוֹטוֹת בַּעֲשָׂרוֹת.'),
+            ('hundred-chart', 'לוּחַ הַמֵּאָה', hundred, 'מְצֻיָּן! מְצָאתֶם אֶת הַמִּשְׁבָּצוֹת.'),
+            ('write-numbers', 'כּוֹתְבִים מִסְפָּרִים', typed, 'כׇּל הַכָּבוֹד! כׇּל סִפְרָה בִּמְקוֹמָהּ.')]:
+        if items:
+            skills = []
+            for x in u.d['activities']:
+                if x['id'] in items and x['skill'] not in skills:
+                    skills.append(x['skill'])
+            u.lesson(lid, title, skills, items, done, minutes=6)
 
 
 # The fact families of MATH-C-01 (a ≥ b, a + b > 10: every one crosses ten). Each is one variantGroup: with setCoverage, fresh mastery
@@ -544,6 +669,48 @@ def math_c1(u):
     lesson_of(u, 'facts-to-18-again', 'שׁוּב חִבּוּר וְחִסּוּר', 'MATH-C-01', 'נִפְלָא! עֲבַרְתֶּם אֶת כׇּל הַמִּשְׁפָּחוֹת.', 18, minutes=7)
     lesson_of(u, 'fact-families', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'MATH-C-02', 'כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה.', minutes=8)
     lesson_of(u, 'whole-tens', 'עֲשָׂרוֹת שְׁלֵמוֹת', 'MATH-C-03', 'מְצֻיָּן! חֲשַׁבְתֶּם בַּעֲשָׂרוֹת.', minutes=8)
+    math_c1_waiting(u)
+
+
+def math_c1_waiting(u):
+    """The Market items of c1-deferred.md §3 that wait for the keypad (DRAWN['number']); a fact item joins its fact family."""
+    if not DRAWN['number']:
+        return
+    typed = []
+    word = lambda op: 'וְעוֹד' if op == '+' else 'פָּחוֹת'
+    # (skill, row, value, expected, rules, family): 9 + 6 of the draft is 9 + 5, so that every fact item is in a family (setCoverage)
+    for skill, row, value, wrong, rules, fam in [
+            ('MATH-C-01', [8, '+', 7, '=', '?'], 15, {14: 'M-CNT-DOUBLE', 8: 'M-CNT-CARD', 1: 'M-OP-SWAP'}, {}, (8, 7)),
+            ('MATH-C-01', [9, '+', 5, '=', '?'], 14, {13: 'M-CNT-DOUBLE', 9: 'M-CNT-CARD', 4: 'M-OP-SWAP'}, {}, (9, 5)),
+            ('MATH-C-01', [15, '-', 7, '=', '?'], 8, {22: 'M-OP-SWAP', 9: 'M-CNT-DOUBLE', 12: 'M-SUB-SMALLBIG'},
+             {'smaller_from_larger': 'M-SUB-SMALLBIG', 'added_instead': 'M-OP-SWAP'}, (8, 7)),
+            ('MATH-C-01', [13, '-', 6, '=', '?'], 7, {19: 'M-OP-SWAP', 8: 'M-CNT-DOUBLE', 13: 'M-SUB-SMALLBIG'},
+             {'smaller_from_larger': 'M-SUB-SMALLBIG', 'added_instead': 'M-OP-SWAP'}, (7, 6)),
+            ('MATH-C-01', [7, '+', '?', '=', 16], 9, {23: 'M-EQ-OPER', 16: 'M-EQ-OPER', 10: 'M-CNT-DOUBLE'}, {}, (9, 7)),
+            ('MATH-C-02', [15, '-', '?', '=', 9], 6, {24: 'M-OP-SWAP', 15: 'M-EQ-OPER'}, {'added_instead': 'M-OP-SWAP'}, None),
+            ('MATH-C-02', ['?', '-', 6, '=', 9], 15, {3: 'M-OP-SWAP', 9: 'M-EQ-OPER'}, {}, None),
+            ('MATH-C-03', [40, '+', 30, '=', '?'], 70, {7: 'M-PV-FACE', 700: 'M-PV-ZERO', 10: 'M-OP-SWAP'}, {}, None),
+            ('MATH-C-03', [90, '-', 50, '=', '?'], 40, {4: 'M-PV-FACE', 400: 'M-PV-ZERO', 140: 'M-OP-SWAP'},
+             {'added_instead': 'M-OP-SWAP'}, None)]:
+        a, op, b, c = (row[0] if row[0] != '?' else value), row[1], (row[2] if row[2] != '?' else value), (row[4] if row[4] != '?' else value)
+        said = '%s %s %s שָׁוֶה %s.' % (F[a], word(op), F[b], F[c])
+        if skill == 'MATH-C-03':
+            h2 = 'חוֹשְׁבִים בַּעֲשָׂרוֹת: %s %s %s — כְּמוֹ %s %s %s.' % (
+                tens_words(a // 10), word(op), tens_words(b // 10), F[a // 10], word(op), F[b // 10])
+        elif skill == 'MATH-C-02':
+            h2 = 'חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה. מָה עוֹשֶׂה אֶת הַתַּרְגִּיל נָכוֹן מִשְּׂמֹאל לְיָמִין?'
+        else:
+            h2 = 'עוֹבְרִים דֶּרֶךְ הָעֶשֶׂר: קֹדֶם עַד עֶשֶׂר, וְאַחַר כָּךְ מָה שֶׁנִּשְׁאַר.'
+        kw = {'variantGroup': 'fact-%d-%d' % fam} if fam else {}
+        if '?' in row[:3]:
+            kw['check'] = 'reverse'
+        typed.append(number_item(u, skill, 'אֵיזֶה מִסְפָּר חָסֵר?' if row[-1] != '?' else 'כַּמָּה זֶה?', row, value, wrong, rules,
+                                 h2=h2, h3='%s כּוֹתְבִים %s.' % (said, F[value]), ok='%s! %s' % (F[value], said), **kw))
+    skills = []
+    for x in u.d['activities']:
+        if x['id'] in typed and x['skill'] not in skills:
+            skills.append(x['skill'])
+    u.lesson('type-the-answer', 'כּוֹתְבִים אֶת הַתְּשׁוּבָה', skills, typed, 'כׇּל הַכָּבוֹד! כְּתַבְתֶּם אֶת הַתְּשׁוּבוֹת.', minutes=7)
 
 
 def smallbig(a, b):
