@@ -503,7 +503,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     }
   }
 
-  String get _demoKey => 'blocks.demo.${widget.profileId}';
+  String get _demoKey => blockDemoKey(widget.profileId);
 
   /// A fresh session whenever the lesson moves to the next activity.
   TemplateSession _sessionFor(LessonController c) {

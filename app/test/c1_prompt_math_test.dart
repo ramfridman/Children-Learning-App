@@ -80,8 +80,11 @@ void main() {
         ActivityFrame.bubbleHeight(line, 26, 190, scaler: big),
         greaterThan(ActivityFrame.bubbleHeight(line, 26, 190)),
       );
-      final ({double font, double height}) plain = ActivityFrame.fitBubble(line * 3, ActivitySpec.phone);
-      final ({double font, double height}) scaled = ActivityFrame.fitBubble(
+      final ({double font, double height, double width}) plain = ActivityFrame.fitBubble(
+        line * 3,
+        ActivitySpec.phone,
+      );
+      final ({double font, double height, double width}) scaled = ActivityFrame.fitBubble(
         line * 3,
         ActivitySpec.phone,
         scaler: big,
@@ -92,7 +95,7 @@ void main() {
         greaterThanOrEqualTo(14 - 1e-9),
         reason: 'and is drawn at 14 points at least',
       );
-      final ({double font, double height}) tiny = ActivityFrame.fitBubble(
+      final ({double font, double height, double width}) tiny = ActivityFrame.fitBubble(
         line * 30,
         ActivitySpec.phone,
         scaler: big,

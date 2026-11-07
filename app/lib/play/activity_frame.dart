@@ -135,24 +135,56 @@ class ActivityFrame extends StatelessWidget {
     return height;
   }
 
+  /// The least room a phone's stage keeps beside a bubble that widens to the left (the same as the hint card's in `BlockLayout`).
+  static const double minStageRoom = 150;
+
+  /// The smallest the font ever goes, in points as drawn: the last resort when a line still does not fit its widest bubble at [fitBubble]'s
+  /// own minimum. A line this long is a defect of the content (the audit of every land names it); the bubble still keeps clear of the tiles.
+  static const double hardMinFont = 11;
+
   /// The largest font, down to [min] points as drawn (with [scaler], so a font of 14 / 1.3 is drawn at 14), at which [text] (and
   /// [reserve], the room of a chip under it) fits in [maxHeight] (the board's own limit when null), and the height of the bubble at that
   /// font. The font is the nominal one: the bubble draws it through [scaler].
-  static ({double font, double height}) fitBubble(
+  ///
+  /// The board's limit is a wish, the [room] (the space between the trail and the tiles; [maxHeight] when null) is a wall: a line that is
+  /// taller than the limit at [min] but fits the room stays as it is, at [min] and the board's width. A line that does not fit the room at
+  /// [min] widens the bubble, [widest] at most (a width; the bubble grows to the side away from the guide), and only if the widest bubble
+  /// is still too short does the font go on down to [hardMinFont]. The width is the board's own when [widest] is null (and then the font
+  /// stops at [min]) or not wider. [ActivityFrame.build] gives the room it has.
+  static ({double font, double height, double width}) fitBubble(
     String text,
     ActivitySpec s, {
     double min = 14,
     double reserve = 0,
     double? maxHeight,
+    double? room,
+    double? widest,
     TextScaler scaler = TextScaler.noScaling,
   }) {
     final double factor = scaler.scale(1);
-    double heightAt(double size) => bubbleHeight(text, size, s.bubbleMaxWidth, scaler: scaler) + reserve;
+    final double limit = maxHeight ?? s.bubbleMaxHeight;
+    final double wall = room ?? limit;
+    final double wide = math.max(s.bubbleMaxWidth, widest ?? 0);
+    double heightAt(double size, double width) => bubbleHeight(text, size, width, scaler: scaler) + reserve;
     for (double size = s.bubbleFont; size * factor > min; size -= 1) {
-      final double height = heightAt(size);
-      if (height <= (maxHeight ?? s.bubbleMaxHeight)) return (font: size, height: height);
+      final double height = heightAt(size, s.bubbleMaxWidth);
+      if (height <= limit) return (font: size, height: height, width: s.bubbleMaxWidth);
     }
-    return (font: min / factor, height: heightAt(min / factor));
+    final double floor = min / factor;
+    for (double width = s.bubbleMaxWidth; width <= wide; width += 4) {
+      final double height = heightAt(floor, width);
+      if (height <= wall) return (font: floor, height: height, width: width);
+    }
+    // Without a room to widen the caller only measures (the layout of a block item): the line stays at the floor.
+    if (widest == null) {
+      return (font: floor, height: heightAt(floor, s.bubbleMaxWidth), width: s.bubbleMaxWidth);
+    }
+    for (double size = floor - 1; size * factor >= hardMinFont; size -= 1) {
+      final double height = heightAt(size, wide);
+      if (height <= wall) return (font: size, height: height, width: wide);
+    }
+    final double last = hardMinFont / factor;
+    return (font: last, height: heightAt(last, wide), width: wide);
   }
 
   @override
@@ -172,11 +204,19 @@ class ActivityFrame extends StatelessWidget {
     final double floorTop = s.trailTop + 36 + 4;
     final bool clear = (bubbleAboveTiles || target != null || tiles != null) && s.tilesTop > s.bubbleTop;
     final double ceiling = clear ? s.tilesTop - tileClear : double.infinity;
-    final ({double font, double height}) fit = fitBubble(
+    // Where the bubble ends on its right (the guide's side), and how far to the left it may widen when its line does not fit at the
+    // smallest size: a tablet to its stage's card, a phone to leave the stage the room of a hint's drawing.
+    final double rightEdge = s.bubbleLeft != null
+        ? s.bubbleLeft! + s.bubbleMaxWidth
+        : board.size.width - (s.bubbleRight ?? 0);
+    final double? widest = clear ? rightEdge - s.stage.left - (s.stageIsCard ? 0 : minStageRoom) : null;
+    final ({double font, double height, double width}) fit = fitBubble(
       bubbleText,
       s,
       reserve: (target == null ? 0 : 6 + TargetChip.heightFor(chipSize)) + mathRoom,
       maxHeight: math.min(s.bubbleMaxHeight + mathRoom, ceiling - floorTop),
+      room: ceiling - floorTop,
+      widest: widest,
       scaler: scaler,
     );
     final double font = fit.font;
@@ -197,7 +237,8 @@ class ActivityFrame extends StatelessWidget {
           // The celebration says its own line; the bubble stays quiet behind it.
           if (overlay == null && bubbleText.isNotEmpty)
             Positioned(
-              left: s.bubbleLeft,
+              // A bubble held by its left edge keeps its right edge (the guide's side) when it widens.
+              left: s.bubbleLeft == null ? null : s.bubbleLeft! - (fit.width - s.bubbleMaxWidth),
               right: s.bubbleRight,
               top: bubbleTop,
               child: BoardBubble(
@@ -206,7 +247,7 @@ class ActivityFrame extends StatelessWidget {
                 fontSize: font,
                 // Measured and drawn with the same scaler (the system's, up to 1.3), so the room worked out for the line is the room it takes.
                 textScaler: scaler,
-                maxWidth: s.bubbleMaxWidth,
+                maxWidth: fit.width,
                 chip: target == null ? null : TargetChip(target.text, course: target.course, size: chipSize),
                 math: run == null
                     ? null

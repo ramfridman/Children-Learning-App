@@ -193,7 +193,7 @@ abstract final class BlockLayout {
   }
 
   /// The least room a hint's card keeps beside a widened bubble.
-  static const double minHintRoom = 150;
+  static const double minHintRoom = ActivityFrame.minStageRoom;
 
   /// The side of one cube that item [a] is drawn with on the board [base], or null when it has no blocks: the largest that fits every
   /// picture of the item (the stage's, or the tiles') in its box, at most the board's cap. The stage and the tiles draw with this one.
