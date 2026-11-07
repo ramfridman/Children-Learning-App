@@ -49,6 +49,49 @@ class WheelSpec {
 
   int get slots => (180 ~/ step) + 1;
 
+  WheelSpec copyWith({Offset? centre, double? signY, double? panelHeight}) => WheelSpec(
+    centre: centre ?? this.centre,
+    ring: ring,
+    bead: bead,
+    font: font,
+    step: step,
+    hub: hub,
+    unitFont: unitFont,
+    signBead: signBead,
+    signY: signY ?? this.signY,
+    signGap: signGap,
+    panelHeight: panelHeight ?? this.panelHeight,
+    panelWidth: panelWidth,
+  );
+
+  /// The wheel for a row of [signCount] signs. A row that reaches out under the lowest letter beads (the ones at 0 and 180 degrees) would lie over
+  /// them, so it stands just under them (QA-8: 7 letters and 4 signs); where that would take its bottom below [bottom], the whole dial rises by the
+  /// difference. A shorter row passes between those beads and the wheel stays as designed.
+  WheelSpec fitted(int signCount, {required double bottom}) {
+    if (signCount == 0) return this;
+    if (signRowReach(signCount) <= ring - bead / 2) return this;
+    final double under = bead / 2 + 4;
+    final double lift = math.max(0, centre.dy + under + signBead - bottom);
+    final Offset raised = Offset(centre.dx, centre.dy - lift);
+    return copyWith(centre: raised, signY: raised.dy + under);
+  }
+
+  /// Half the width of a row of [signCount] signs.
+  double signRowReach(int signCount) => (signCount * signBead + (signCount - 1) * signGap) / 2;
+
+  /// The rectangles of the beads of a full half dial, one per place (the 0, 30, ... 180 degree ones), in board points.
+  List<Rect> beadRects() => <Rect>[
+    for (int i = 0; i < slots; i++)
+      Rect.fromCenter(
+        center: Offset(
+          centre.dx + ring * math.cos(i * step * math.pi / 180),
+          centre.dy - ring * math.sin(i * step * math.pi / 180),
+        ),
+        width: bead,
+        height: bead,
+      ),
+  ];
+
   /// The wheel of the full template on [board] (board points).
   static WheelSpec of(BoardClass board) => switch (board) {
     BoardClass.phone => const WheelSpec(
@@ -644,6 +687,15 @@ class StripSpec {
   final double tile;
   final double inPair;
   final double betweenPairs;
+
+  /// The same sizes with smaller frame cells (the letter shrinks with them), for a frame that must fit a narrow room.
+  StripSpec withCell(double newCell) => StripSpec(
+    cell: newCell,
+    font: math.min(font, newCell * 0.8),
+    tile: tile,
+    inPair: inPair,
+    betweenPairs: betweenPairs,
+  );
 
   static StripSpec of(BoardClass board) => switch (board) {
     BoardClass.phone => const StripSpec(cell: 88, font: 48, tile: 88, inPair: 4, betweenPairs: 16),

@@ -18,6 +18,7 @@ LangPack _heb() {
   p.addTag('dec.vowel_skip', 'diagnostic');
   p.add(s1Explore());
   p.add(s1Make(p));
+  p.add(widestWheel());
   return p;
 }
 
@@ -27,6 +28,7 @@ LangPack _rus() {
   p.addTag('dec.hard_soft', 'diagnostic');
   p.add(stripExplore());
   p.add(stripMake(p));
+  p.add(sixVowelStrip());
   return p;
 }
 
@@ -65,6 +67,30 @@ void main() {
         await shot(t, 'ls05_wheel_silent_heb', b.key, wait: 100);
       });
 
+      testWidgets('the Hebrew wheel, explore: seven letters and four signs (S3), the widest', (
+        WidgetTester t,
+      ) async {
+        await openLesson(t, _heb(), 'whl2', b.value);
+        await _tap(t, 'wheel-bead-5');
+        await _tap(t, 'wheel-sign-3');
+        await shot(t, 'ls05_wheel_widest_heb', b.key, wait: 300);
+      });
+
+      if (b.key == 'phoneSE') {
+        // QA-3: a three-line bubble on the smallest board stands higher and keeps clear of the dial's bead at 30 degrees.
+        testWidgets(
+          'the Hebrew wheel, explore: a three-line bubble on the phone SE stays clear of the dial',
+          (WidgetTester t) async {
+            final LangPack p = _heb();
+            (p.activity('whl0')['prompt']! as Map<String, Object?>)['caption'] = he(
+              'הַקְשִׁיבוּ לַמִּלָּה, וְסוֹבְבוּ אֶת הַגַּלְגַּל עַד שֶׁתִּשְׁמְעוּ אֶת אוֹתָהּ מִלָּה.',
+            );
+            await openLesson(t, p, 'whl0', b.value);
+            await shot(t, 'ls05_wheel_bubble3_heb', b.key, wait: 200);
+          },
+        );
+      }
+
       testWidgets('the Hebrew wheel, make: the target and "that\'s it"', (WidgetTester t) async {
         await openLesson(t, _heb(), 'whl1', b.value);
         await shot(t, 'ls05_wheel_make_heb', b.key);
@@ -101,6 +127,15 @@ void main() {
         await _tap(t, 'strip-tile-1');
         await shot(t, 'ls05_strip_explore_rus', b.key, wait: 300);
       });
+
+      testWidgets(
+        'the Russian strip, explore: six vowels with pictures, the check and the picture in the stage',
+        (WidgetTester t) async {
+          await openLesson(t, _rus(), 'str2', b.value);
+          await _tap(t, 'strip-tile-3');
+          await shot(t, 'ls05_strip_six_rus', b.key, wait: 300);
+        },
+      );
 
       testWidgets('the Russian strip, make: the target and "that\'s it"', (WidgetTester t) async {
         await openLesson(t, _rus(), 'str1', b.value);

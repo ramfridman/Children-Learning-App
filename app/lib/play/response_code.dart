@@ -25,6 +25,7 @@
 /// | sound_boxes 1.1 (LS03 boxes) | the steps' right values, `n=3.c=brb.s=1.w=2` (the count, the colours as `r` vowel `b` hard `g` soft, the place of the stress, the place of the sound; only the steps the item has) | the same up to the step that was wrong, with the wrong value in its place, `n=4`, `n=3.c=bbb`, `n=3.s=2` |
 /// | change_part (LS05, make) | the parts that made it, `p1.p4` (one id for each place) | the parts the child made |
 /// | say_it | `said` (the child was heard, speech evidence) or `picture` (the scored tap on the picture) | (none: nothing is wrong) |
+/// | the second tag of one move (LS03 colour, a vowel and a hard consonant mixed in one colouring) | | the code of the move and `.also`, `n=3.c=bbbr.also`: evidence of that misconception only, not a second mistake (SEC-L5-3) |
 /// | "I'm not sure" | (empty) | |
 ///
 /// [responsePattern] is the server's own pattern (`supabase/functions/sync-push/handler.ts`, kept equal through
@@ -63,6 +64,14 @@ abstract final class ResponseCode {
   static const String move = 'move';
 
   static String count(int n) => 'n=$n';
+
+  /// The mark of the row that carries the second misconception of one move (the move itself is the row before it): its engine event is evidence of that
+  /// misconception and nothing else, so one move is one error in the runs, the stuck check and the parent's alerts (SEC-L5-3).
+  static const String alsoSuffix = '.also';
+
+  static String also(String code) => '$code$alsoSuffix';
+
+  static bool isAlso(String code) => code.endsWith(alsoSuffix);
 
   /// LS03 boxes: the count, the colours, the place of the stress and the place of the sound, each only when the step has one: `n=3.c=brb.s=1.w=2`.
   /// Numbers and three colour letters, never a word.

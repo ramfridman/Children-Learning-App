@@ -848,7 +848,14 @@ List<Problem> validatePack({
     checkLs03Activity(file, a, language: Course.isLanguage(course), course: course, skills: skills, say: say);
     checkLs04Activity(file, a, language: Course.isLanguage(course), course: course, say: say);
     checkLs05Activity(file, a, language: Course.isLanguage(course), course: course, say: say);
-    checkBorrowedHints(file, a, language: Course.isLanguage(course), course: course, say: say);
+    checkBorrowedHints(
+      file,
+      a,
+      language: Course.isLanguage(course),
+      course: course,
+      say: say,
+      checkVo: checkVo,
+    );
     _languageOnlyTemplate(file, a, say, language: Course.isLanguage(course));
     _hebrew(file, a, say, pointed: a['band'] != 'C');
     _voiceAnswer(file, a, say, starter: manifest['id'] == 'starter');

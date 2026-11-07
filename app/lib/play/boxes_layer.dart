@@ -327,64 +327,72 @@ class BoxesLayer extends StatelessWidget {
       child: Semantics(
         button: true,
         label: He.boxPlaceSemantics.text,
-        child: GestureDetector(
-          key: Key('box-place-$i'),
-          behavior: HitTestBehavior.opaque,
-          onTap: () => s.tapChip(i),
-          child: Wobble(
-            on: wobbling,
-            child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: <Widget>[
-                Positioned.fromRect(
-                  rect: r.shift(-hit.topLeft),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: right ? TokenColors.sparkTint : Colors.white,
-                      borderRadius: BorderRadius.circular(22),
-                      border: Border.all(
-                        color: bad
-                            ? TokenColors.notYetRing
-                            : chosen
-                            ? TokenColors.selectedRing
-                            : right
-                            ? TokenColors.correctGlow
-                            : TokenColors.hairline,
-                        width: bad || chosen || right ? 4 : 4,
-                      ),
-                      boxShadow: clayShadows(TokenColors.cardLip, lipHeight: 4),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: r.center.dx - hit.left - g.token / 2,
-                  top: r.center.dy - hit.top - g.token / 2 - (raised ? 5 : 0),
-                  width: g.token,
-                  height: g.token,
-                  // A counter that is laid comes in with a small grow and fade (a fade in place with reduce-motion).
-                  child: Appear(
-                    scaleFrom: 0.5,
-                    child: Opacity(opacity: dim ? 0.4 : 1, child: token),
-                  ),
-                ),
-                if (lit)
+        // A stamp dragged from the colour step's row and dropped on the chip colours it, as a tap on the stamp and then on the chip does (LS03 3.3).
+        child: DragTarget<SchemeKind>(
+          onWillAcceptWithDetails: (DragTargetDetails<SchemeKind> _) => s.canStamp(i),
+          onAcceptWithDetails: (DragTargetDetails<SchemeKind> d) => s.dropStamp(i, d.data),
+          builder: (BuildContext c, List<SchemeKind?> over, List<dynamic> rejected) => GestureDetector(
+            key: Key('box-place-$i'),
+            behavior: HitTestBehavior.opaque,
+            onTap: () => s.tapChip(i),
+            child: Wobble(
+              on: wobbling,
+              child: Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.none,
+                children: <Widget>[
                   Positioned.fromRect(
-                    rect: r.shift(-hit.topLeft).inflate(6),
-                    child: const IgnorePointer(child: SkyRing(round: false, radius: 26)),
-                  ),
-                if (right && i == s.laid - 1)
-                  Positioned(
-                    left: r.right - hit.left - 22,
-                    top: r.top - hit.top - 10,
+                    rect: r.shift(-hit.topLeft),
                     child: Container(
-                      width: 28,
-                      height: 28,
-                      decoration: const BoxDecoration(color: TokenColors.correctGlow, shape: BoxShape.circle),
-                      child: const Icon(Icons.check_rounded, size: 20, color: TokenColors.ink),
+                      decoration: BoxDecoration(
+                        color: right ? TokenColors.sparkTint : Colors.white,
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(
+                          color: bad
+                              ? TokenColors.notYetRing
+                              : chosen
+                              ? TokenColors.selectedRing
+                              : right
+                              ? TokenColors.correctGlow
+                              : TokenColors.hairline,
+                          width: bad || chosen || right ? 4 : 4,
+                        ),
+                        boxShadow: clayShadows(TokenColors.cardLip, lipHeight: 4),
+                      ),
                     ),
                   ),
-              ],
+                  Positioned(
+                    left: r.center.dx - hit.left - g.token / 2,
+                    top: r.center.dy - hit.top - g.token / 2 - (raised ? 5 : 0),
+                    width: g.token,
+                    height: g.token,
+                    // A counter that is laid comes in with a small grow and fade (a fade in place with reduce-motion).
+                    child: Appear(
+                      scaleFrom: 0.5,
+                      child: Opacity(opacity: dim ? 0.4 : 1, child: token),
+                    ),
+                  ),
+                  if (lit || over.isNotEmpty)
+                    Positioned.fromRect(
+                      rect: r.shift(-hit.topLeft).inflate(6),
+                      child: const IgnorePointer(child: SkyRing(round: false, radius: 26)),
+                    ),
+                  if (right && i == s.laid - 1)
+                    Positioned(
+                      left: r.right - hit.left - 22,
+                      top: r.top - hit.top - 10,
+                      child: Container(
+                        width: 28,
+                        height: 28,
+                        decoration: const BoxDecoration(
+                          color: TokenColors.correctGlow,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.check_rounded, size: 20, color: TokenColors.ink),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),
@@ -509,33 +517,39 @@ class _Stamp extends StatelessWidget {
         SchemeKind.hard => He.boxStampHardSemantics.text,
         SchemeKind.soft => He.boxStampSoftSemantics.text,
       },
-      child: GestureDetector(
-        key: Key('stamp-${kind.letter}'),
-        behavior: HitTestBehavior.opaque,
-        onTap: () => session.tapStamp(kind),
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.center,
-          children: <Widget>[
-            if (chosen)
-              Positioned(
-                left: -5,
-                top: -11,
-                width: size + 10,
-                height: size + 10,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: TokenColors.selectedRing, width: 4),
+      child: Draggable<SchemeKind>(
+        data: kind,
+        maxSimultaneousDrags: 1,
+        feedback: SchemeChip(kind, size: size, lifted: true),
+        childWhenDragging: Opacity(opacity: 0.4, child: SchemeChip(kind, size: size)),
+        child: GestureDetector(
+          key: Key('stamp-${kind.letter}'),
+          behavior: HitTestBehavior.opaque,
+          onTap: () => session.tapStamp(kind),
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: <Widget>[
+              if (chosen)
+                Positioned(
+                  left: -5,
+                  top: -11,
+                  width: size + 10,
+                  height: size + 10,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: TokenColors.selectedRing, width: 4),
+                    ),
                   ),
                 ),
+              Positioned(
+                left: 0,
+                top: chosen ? -6 : 0,
+                child: SchemeChip(kind, size: size, lifted: chosen),
               ),
-            Positioned(
-              left: 0,
-              top: chosen ? -6 : 0,
-              child: SchemeChip(kind, size: size, lifted: chosen),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

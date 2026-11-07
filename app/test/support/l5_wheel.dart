@@ -86,3 +86,43 @@ Map<String, Object?> stripMake(LangPack p, {String id = 'str1'}) => changeJson(
   ],
   answer: <String>['p2'],
 );
+
+/// The widest wheel the validator allows: seven letters and four signs (S3 and later: qamats, patah, hiriq, shva), every combination heard.
+Map<String, Object?> widestWheel({String id = 'whl2'}) {
+  final List<String> signs = <String>[qamats, patah, hiriq, shva];
+  return changeJson(
+    id: id,
+    mode: 'explore',
+    frame: '__',
+    parts: <PartSpec>[
+      for (int i = 0; i < s1Letters.length; i++) part('p${i + 1}', 0, s1Letters[i]),
+      for (int j = 0; j < signs.length; j++) part('p${8 + j}', 1, signs[j]),
+    ],
+    results: <ResultSpec>[
+      for (int i = 0; i < s1Letters.length; i++)
+        for (int j = 0; j < signs.length; j++)
+          made(<String>['p${i + 1}', 'p${8 + j}'], s1Letters[i] + signs[j], clip: 'vo:heb.u.$i$j'),
+    ],
+  );
+}
+
+/// The longest strip: the six vowels of the Russian pilot's B-21, each with a picture, so that the check and the picture compete for the strip's room.
+Map<String, Object?> sixVowelStrip({String id = 'str2', bool pictures = true}) {
+  const List<String> v = <String>['а', 'я', 'о', 'ё', 'у', 'ю'];
+  return changeJson(
+    course: 'rus',
+    id: id,
+    mode: 'explore',
+    frame: 'м_',
+    parts: <PartSpec>[for (int i = 0; i < v.length; i++) part('p${i + 1}', 0, v[i])],
+    results: <ResultSpec>[
+      for (int i = 0; i < v.length; i++)
+        made(
+          <String>['p${i + 1}'],
+          'м${v[i]}',
+          clip: 'vo:rus.sy.m${i + 1}',
+          sprite: pictures ? (i.isEven ? 'cat' : 'whale') : null,
+        ),
+    ],
+  );
+}

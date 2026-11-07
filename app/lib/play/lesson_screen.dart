@@ -38,6 +38,7 @@ import '../speech/voice_answer.dart';
 import '../speech/word_matcher.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
+import '../voice/voice_bank.dart';
 import '../voice/voice_director.dart';
 import 'activity_frame.dart';
 import 'count_tap_session.dart';
@@ -416,10 +417,18 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
   }
 
   /// The sound of an answer, from its tile (a speaker, a sound button, a picture): the clips, at once when the child touched
-  /// to hear, after the line that is playing otherwise (a hint's own line).
-  Future<void> _playClips(List<String> voIds, {bool replace = false}) async {
+  /// to hear, after the line that is playing otherwise (a hint's own line). When none of the clips has a recording (every clip is
+  /// still pending) nothing is played and the result is null, so that a session that waits for the end of a clip takes its own
+  /// fixed pause instead (`TemplateSession.sayAndWait`, L5 section 7).
+  FutureOr<void> _playClips(List<String> voIds, {bool replace = false}) {
     final LessonController? c = _controller;
-    if (c == null || !mounted) return;
+    if (c == null || !mounted) return null;
+    final VoiceBank? bank = _director.bank;
+    if (bank == null || !voIds.any((String id) => bank.clip(id) != null)) return null;
+    return _speakClips(c, voIds, replace: replace);
+  }
+
+  Future<void> _speakClips(LessonController c, List<String> voIds, {required bool replace}) async {
     if (_voice?.answer.state == MicState.listening) _voice?.hush();
     final int move = c.actionNonce;
     await _director.sayClips(

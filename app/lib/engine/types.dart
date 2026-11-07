@@ -244,6 +244,7 @@ class AttemptEvent {
     this.id = 0,
     this.course,
     this.viaSpeech = false,
+    this.secondary = false,
   });
 
   final int id;
@@ -263,6 +264,10 @@ class AttemptEvent {
   /// The answer is a word the child said and the per-word matcher heard (LS09, docs/languages/frame.md section 5.1). Speech is
   /// evidence for a speaking skill only, and at most half of that skill's successes ([Engine] enforces both).
   final bool viaSpeech;
+
+  /// The second misconception that one move showed (LS03: a colouring that mixes up a vowel and a hard consonant is written as two rows): it is evidence
+  /// of its tag and is no second answer, so it counts in no run, no estimate and no session record (SEC-L5-3).
+  final bool secondary;
 }
 
 /// Skills, items and misconceptions together.

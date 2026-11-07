@@ -182,6 +182,13 @@ class BoxesSession extends TemplateSession {
     notify();
   }
 
+  /// A stamp dragged onto chip [i] (the colour step): whether it takes it, and the stamp it lays.
+  bool canStamp(int i) => !(busy || demo || step != BoxStep.colour || allDone || i >= laid);
+
+  void dropStamp(int i, SchemeKind kind) {
+    if (canStamp(i)) _stamp(i, kind);
+  }
+
   void tapChip(int i) {
     if (busy || demo || allDone || i >= laid) return;
     switch (step) {
@@ -697,7 +704,18 @@ class BoxesSession extends TemplateSession {
   BoardClass _boardOrPhone = BoardClass.phone;
 
   @override
-  ActivitySpec layoutFor(ActivitySpec base) => _spec = withLs01Zones(base, band);
+  ActivitySpec layoutFor(ActivitySpec base) {
+    final ActivitySpec zones = withLs01Zones(base, band);
+    if (!zones.stageIsCard || !a.has(BoxStep.stress)) return _spec = zones;
+    // The stress sign stands above its place, in the points between the stage card's lip and the rail: on a tablet an item with a stress step has the
+    // card 12 points shorter (the same cut as a second row of tiles), so that the sign never sits on the lip.
+    return _spec = zones.withStageAndTiles(
+      stage: Rect.fromLTWH(zones.stage.left, zones.stage.top, zones.stage.width, zones.stage.height - 12),
+      tilesLeft: zones.tilesLeft,
+      tilesTop: zones.tilesTop,
+      tilesWidth: zones.tilesWidth,
+    );
+  }
 
   @override
   Widget buildStage(BuildContext context, Size size, ActivitySpec spec) {

@@ -19,6 +19,7 @@ void checkBorrowedHints(
   required bool language,
   required String course,
   required Say say,
+  required void Function(String file, String path, Object? ref) checkVo,
 }) {
   final List<Map<String, Object?>> hints = _maps(a['hints']);
   for (final (int i, Map<String, Object?> h) in hints.indexed) {
@@ -51,6 +52,10 @@ void checkBorrowedHints(
           );
         }
         if (course != 'heb' && show['parts'] == null) say(file, path, 'a strip needs its parts');
+        // The voice lines a borrowed screen plays are held to the pack's, like the same fields of an activity (SEC-L5-2).
+        for (final (int j, Map<String, Object?> r) in _maps(show['results']).indexed) {
+          checkVo(file, '$path.results[$j].clip', r['clip']);
+        }
         checkChangeData(
           file,
           path,
@@ -76,6 +81,11 @@ void checkBorrowedHints(
           say(file, '$path.mode', 'the course $course slides in the mode ${blendModeOf[course]}');
         }
         checkBlendWord(file, path, word: word, mode: mode, say: say);
+        checkVo(file, '$path.word.whole', word['whole']);
+        checkVo(file, '$path.word.stretched', word['stretched']);
+        for (final (int j, Map<String, Object?> part) in _maps(word['parts']).indexed) {
+          checkVo(file, '$path.word.parts[$j].clip', part['clip']);
+        }
       }
     }
   }

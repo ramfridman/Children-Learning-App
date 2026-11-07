@@ -154,14 +154,30 @@ List<({String path, String text, bool shown})> _targetTexts(Map<String, Object?>
     if (c is String && c.startsWith('txt:')) face('answer.sequence[$i]', c.substring('txt:'.length));
   }
   face('scene.stem.text', _map(scene['stem'])['text']);
-  // LS04 and LS05 (L5-4, L5-5): the word to slide through and its parts, and what each combination of the wheel or strip makes.
-  final Map<String, Object?> slideWord = _map(scene['word']);
-  face('scene.word.text', slideWord['text']);
-  for (final (int i, Map<String, Object?> p) in _maps(slideWord['parts']).indexed) {
-    face('scene.word.parts[$i].text', p['text']);
+  // LS04 and LS05 (L5-4, L5-5): the word to slide through and its parts, and what each combination of the wheel or strip makes; a hint that borrows
+  // such a screen carries the same data (and the frame of its wheel or strip) in `hints[].screen`, held to the same rules (SEC-L5-2).
+  void slideFaces(String at, Map<String, Object?> data) {
+    final Map<String, Object?> slideWord = _map(data['word']);
+    face('$at.word.text', slideWord['text']);
+    for (final (int i, Map<String, Object?> p) in _maps(slideWord['parts']).indexed) {
+      face('$at.word.parts[$i].text', p['text']);
+    }
+    for (final (int i, Map<String, Object?> r) in _maps(data['results']).indexed) {
+      face('$at.results[$i].text', r['text']);
+    }
   }
-  for (final (int i, Map<String, Object?> r) in _maps(scene['results']).indexed) {
-    face('scene.results[$i].text', r['text']);
+
+  slideFaces('scene', scene);
+  for (final (int i, Map<String, Object?> h) in _maps(a['hints']).indexed) {
+    final Map<String, Object?> screen = _map(h['screen']);
+    slideFaces('hints[$i].screen', screen);
+    final Object? frame = _map(screen['frame'])['text'];
+    if (frame is String) {
+      face(
+        'hints[$i].screen.frame.text',
+        frame.replaceAll('_', ' ').replaceAll(RegExp(r' {2,}'), ' ').trim(),
+      );
+    }
   }
   final Object? cloze = _map(scene['cloze'])['text'];
   if (cloze is String) {

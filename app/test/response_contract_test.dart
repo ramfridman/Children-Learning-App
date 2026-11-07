@@ -69,6 +69,25 @@ void main() {
     }
   });
 
+  // SEC-L5-4: the longest codes of the L5-3 and L5-4 templates are pinned, so that a change of the shape cannot outgrow the server's 40 characters.
+  test(
+    'the longest codes of LS03 boxes and LS05 change_part fit sync-push, with the mark of a second tag too',
+    () {
+      final String boxes = ResponseCode.boxes(n: 7, colours: 'rbgrbg', stress: 6, which: 6);
+      expect(boxes, 'n=7.c=rbgrbg.s=6.w=6');
+      final String parts = ResponseCode.parts(<String>['p99', 'p99']);
+      expect(parts, 'p99.p99');
+      for (final String code in <String>[boxes, parts, ResponseCode.also(boxes)]) {
+        expect(ResponseCode.fits(code), isTrue, reason: code);
+        expect(code.length, lessThanOrEqualTo(40), reason: code);
+      }
+      expect(ResponseCode.isAlso(ResponseCode.also(boxes)), isTrue);
+      expect(ResponseCode.isAlso(boxes) || ResponseCode.isAlso(parts), isFalse);
+      // The helper is never told the second tag's code: it has a dot, so it is the fixed word.
+      expect(ResponseCode.tutorOption(ResponseCode.also(boxes)), ResponseCode.move);
+    },
+  );
+
   test('the helper is told a code only when it fits its own pattern, else the fixed word "move"', () {
     final RegExp option = RegExp(tutorOptionPattern);
     for (final String code in <String>['o2', 'n=4', 'i1-b2', 't0-b1', 'p3-s1', 'uurd', '7', 'left']) {

@@ -8,7 +8,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/design/components.dart' show AnswerState;
+import 'package:nitznutz/content/engine_adapter.dart';
 import 'package:nitznutz/content/models.dart';
+import 'package:nitznutz/data/app_database.dart' show Attempt;
+import 'package:nitznutz/engine/engine.dart';
 import 'package:nitznutz/design/token_types.dart' show Band;
 import 'package:nitznutz/play/boxes_session.dart';
 import 'package:nitznutz/play/l5_art.dart';
@@ -45,6 +48,29 @@ LangPack _pack(String course) {
   }
   return p;
 }
+
+/// The row of the `attempt` table that [a] becomes, in session 1.
+Attempt _row(int id, AttemptRecord a) => Attempt(
+  id: id,
+  at: a.at,
+  profileId: a.profileId,
+  packId: a.packId,
+  packVersion: a.packVersion,
+  lessonId: a.lessonId,
+  activityId: a.activityId,
+  activityRevision: a.activityRevision,
+  template: a.template,
+  templateVersion: a.templateVersion,
+  skillId: a.skillId,
+  result: a.result,
+  attemptNo: a.attemptNo,
+  hintLevel: a.hintLevel,
+  misconceptionTag: a.misconceptionTag,
+  response: a.response,
+  durationMs: a.durationMs,
+  sessionId: 1,
+  input: a.input,
+);
 
 /// English "sun": count three, then the box of /n/ (the last one).
 LangPack _sun({String purpose = 'learn', List<String> steps = const <String>['count', 'which']}) {
@@ -465,6 +491,64 @@ void main() {
       expect(r.controller.errors, 1, reason: 'one move, one step up the help');
       await r.done(t);
     });
+
+    testWidgets(
+      'a stamp dragged onto a chip colours it, like a tap on the stamp and then on the chip (3.3)',
+      (WidgetTester t) async {
+        final Rig<BoxesSession> r = _rig(_rus());
+        await r.pump(t);
+        await _countRight(t, r, 4);
+        expect(r.session.chipColour(1), isNull);
+        final Offset from = t.getCenter(find.byKey(const Key('stamp-b')));
+        final Offset to = t.getCenter(find.byKey(const Key('box-place-1')));
+        final TestGesture g = await t.startGesture(from);
+        await g.moveBy(const Offset(20, 0));
+        await t.pump();
+        await g.moveTo(to);
+        await t.pump();
+        await g.up();
+        await r.wait(t, 100);
+        expect(r.session.chipColour(1), SchemeKind.hard);
+        expect(r.session.chipColour(0), isNull, reason: 'only the chip it was dropped on');
+        await r.done(t);
+      },
+    );
+
+    // SEC-L5-3: the second row of a two-tag colouring is evidence of its misconception and no second mistake: the engine's run counts one error, the
+    // child is not "stuck" after two moves, and both misconceptions are known.
+    testWidgets(
+      'a colouring with both kinds of mistake is one error for the engine, and both tags are evidence',
+      (WidgetTester t) async {
+        final LangPack p = _rus();
+        final Rig<BoxesSession> r = _rig(p);
+        await r.pump(t);
+        await _countRight(t, r, 4);
+        await _stamp(t, r, 'b', <int>[1]);
+        await _stamp(t, r, 'g', <int>[2]);
+        await _stamp(t, r, 'b', <int>[0]);
+        await _stamp(t, r, 'r', <int>[3]);
+        expect(
+          <String>[for (final AttemptRecord a in r.attempts) a.response],
+          <String>['n=4.c=bbgr', 'n=4.c=bbgr.also'],
+        );
+        expect(r.attempts.every((AttemptRecord a) => ResponseCode.fits(a.response)), isTrue);
+        final Engine engine = Engine(catalog: engineCatalog(p.content));
+        int id = 0;
+        for (final AttemptRecord a in r.attempts) {
+          engine.apply(eventOf(_row(++id, a)));
+        }
+        expect(engine.state.skills['RUS-A-02']!.failRun, 1, reason: 'one move is one error in the run');
+        expect(engine.state.skills['RUS-A-02']!.n, 1, reason: 'and one answer');
+        expect(engine.state.sessions[1], hasLength(1));
+        expect(engine.state.tags.keys, containsAll(<String>['rus.pa.vowel_cons', 'rus.pa.hard_soft']));
+        // Two such moves are four rows, but two errors: not yet "stuck" (three wrong answers in a row).
+        for (final AttemptRecord a in r.attempts) {
+          engine.apply(eventOf(_row(++id, a)));
+        }
+        expect(engine.isStuck(1), isFalse);
+        await r.done(t);
+      },
+    );
 
     testWidgets(
       'the first complete colouring is the answer: the retry is credited by the hint level and is not a second scored answer',

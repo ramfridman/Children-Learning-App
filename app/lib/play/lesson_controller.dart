@@ -496,7 +496,8 @@ class LessonController extends ChangeNotifier {
   /// move is written as `incorrect`, and after the third the help is at its top and only the right move is taken.
   ///
   /// [alsoTag] is a second misconception that the same wrong move shows (a colouring that mixes up a vowel and a hard consonant, LS03): it is written as
-  /// one more `incorrect` attempt with the same response, and does not escalate the help again.
+  /// one more `incorrect` attempt with the same response marked [ResponseCode.also]: the engine reads it as evidence of that misconception only, so
+  /// the one move is one error, and it does not escalate the help again.
   Future<Outcome> submitPlacement({
     required bool right,
     String tag = '',
@@ -590,7 +591,12 @@ class LessonController extends ChangeNotifier {
     }
     await _write(result: 'incorrect', tag: tag, response: response, byVoice: byVoice);
     if (alsoTag.isNotEmpty && alsoTag != tag) {
-      await _write(result: 'incorrect', tag: alsoTag, response: response, byVoice: byVoice);
+      await _write(
+        result: 'incorrect',
+        tag: alsoTag,
+        response: ResponseCode.also(response),
+        byVoice: byVoice,
+      );
     }
     attemptNo++;
     errors++;

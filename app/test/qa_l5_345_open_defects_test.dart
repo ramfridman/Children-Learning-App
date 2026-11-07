@@ -1,9 +1,5 @@
-// QA's open defects on the L5-3, L5-4 and L5-5 templates (docs/qa/l5-3-5.md is not written; the report of the run lists them). Each test FAILS until its
-// defect is fixed and is the proof of the fix. They are skipped in a normal run so that the suite stays green; run them with
-//
-//   flutter test --no-pub --dart-define=QA_OPEN=true test/qa_l5_345_open_defects_test.dart
-//
-// When a defect is fixed, the owner of the fix removes `skip: _open` from its test.
+// QA's defects on the L5-3, L5-4 and L5-5 templates (QA-1 to QA-8). Each test was written failing and is the proof of its fix; all are fixed and run in the
+// normal suite.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitznutz/content/models.dart';
@@ -28,9 +24,6 @@ import 'support/language_screens.dart' show langKid;
 import 'support/l4_rig.dart' show Rig;
 import 'support/language_voice.dart';
 import 'support/voice_fixtures.dart';
-
-const bool _runOpen = bool.fromEnvironment('QA_OPEN');
-const bool _open = !_runOpen;
 
 const List<String> _pictures = <String>['sun', 'pot', 'top', 'pig', 'cat', 'whale', 'fish', 'banana'];
 
@@ -103,7 +96,7 @@ void main() {
       1,
       2,
     }, reason: 'each unit lights for a fixed pause (500 ms) when its clip is pending');
-  }, skip: _open);
+  });
 
   // The control of QA-1: with the clips in the bank the same moves light every place in turn, so the failure above is the pending case and not the test.
   testWidgets('control: with the clips in the voice bank the places light one after another', (
@@ -144,7 +137,7 @@ void main() {
       2,
     }, reason: 'each part lights for the slow pace (700 ms) when its clip is pending');
     await t.pumpWidget(const SizedBox());
-  }, skip: _open);
+  });
 
   // QA-4 (coverage, not a defect): L5 section 5.5 says a slide's graphemes are taught by the skill or below it (F5). The check runs on the new faces
   // (`language_checks.dart`), but no test of the L5 suites shows it for LS04 or LS05; this one does.
@@ -218,7 +211,6 @@ void main() {
         expect(r.session.hubShake, isTrue);
         await r.done(t);
       },
-      skip: row ? _open : false,
     );
   }
 
@@ -250,7 +242,6 @@ void main() {
       }
       await r.done(t);
     },
-    skip: _open,
   );
 
   // QA-7: the validator allows 6 parts in a strip's `explore` (the Russian pilot's B-21 has 6 vowels), but the "go on" check stands at A's start and covers the
@@ -291,7 +282,6 @@ void main() {
           }
         }
       },
-      skip: _open,
     );
   }
 
@@ -333,7 +323,7 @@ void main() {
           expect(x.width > 1 && x.height > 1, isFalse, reason: 'sign $j $sign over bead $bead');
         }
       }
-    }, skip: _open);
+    });
   }
 
   // QA-2: the hint-2 key-word card of the Hebrew wheel (phone, phone SE) stands over the bubble and hides its second line (judged from the golden
@@ -356,7 +346,7 @@ void main() {
       final Rect card = t.getRect(find.byKey(const Key('change-key-card')));
       final Rect bubble = t.getRect(find.byKey(const Key('bubble-body')));
       expect(card.overlaps(bubble), isFalse, reason: 'card $card over bubble $bubble');
-    }, skip: _open);
+    });
   }
 
   // QA-3: a 3-line bubble on the phone SE reaches the 30-degree bead of the Hebrew wheel (design spec section 4.1 says the line "must stay at 2 lines"; nothing
@@ -380,7 +370,7 @@ void main() {
     for (final Rect bead in beads) {
       expect(bubble.overlaps(bead), isFalse, reason: 'bubble $bubble over bead $bead');
     }
-  }, skip: _open);
+  });
 }
 
 /// [openLesson] (test/support/l4_golden.dart) with no clip in the voice bank at all: every clip pending, as the app is today (L5 section 7).

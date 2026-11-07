@@ -140,9 +140,17 @@ class ChangePartSession extends TemplateSession {
     _hear();
   }
 
+  /// A wheel with as many letters as the dial has places (7) or more is a loop: what turns past the panel comes back on the other side. A shorter one
+  /// only shifts its letters (see `ringOffset`), so its `turn` stays between 0 and its last letter and the letter picked stands at the top.
+  bool get _loops => ringParts.length >= WheelSpec.of(board).slots;
+
   void _turnTo(int index) {
     final int n = ringParts.length;
     if (n == 0) return;
+    if (!_loops) {
+      turn = index.toDouble();
+      return;
+    }
     // The short way round.
     double d = (index - turn) % n;
     if (d < 0) d += n;
@@ -154,14 +162,15 @@ class ChangePartSession extends TemplateSession {
   void dragTurn(double delta) {
     if (busy || demo || state == AnswerState.correct) return;
     turn += delta;
+    if (!_loops) turn = turn.clamp(0.0, ringParts.length - 1.0);
     notify();
   }
 
   void dragEnd() {
     final int n = ringParts.length;
     if (n == 0) return;
-    final int index = ((turn.round() % n) + n) % n;
-    turn = turn.roundToDouble();
+    final int index = _loops ? ((turn.round() % n) + n) % n : turn.round().clamp(0, n - 1);
+    turn = _loops ? turn.roundToDouble() : index.toDouble();
     pick(0, ringParts[index].id);
   }
 
@@ -170,8 +179,8 @@ class ChangePartSession extends TemplateSession {
     heard.add(current.join('.'));
     if (r?.clip != null) {
       playClips?.call(<String>[r!.clip!], replace: true);
-    } else if (r == null) {
-      // A unit with no sound: the hub swings gently, and nothing is played.
+    } else {
+      // A unit with no sound (no result at all, or a result written with no clip): the hub swings gently, and nothing is played.
       hubShake = true;
       later(const Duration(milliseconds: 300), () {
         hubShake = false;
@@ -332,10 +341,17 @@ class ChangePartSession extends TemplateSession {
     controller.demoDone();
   }
 
+  /// The wheel on [b], with the dial raised where a row of four signs would not fit under the lowest letter beads (`WheelSpec.fitted`).
+  WheelSpec wheelFor(BoardClass b) =>
+      WheelSpec.of(b).fitted(signParts.length, bottom: b.size.height - _panelMargin + 1);
+
+  /// The panel runs to the bottom band less 8 (board 24 + 8 points from the bottom).
+  static const double _panelMargin = 24 + 8;
+
   /// Where the friend's fingertip goes for part [id] of place [slot], in board points.
   Offset _partTip(int slot, String id) {
     if (wheel) {
-      final WheelSpec w = WheelSpec.of(board);
+      final WheelSpec w = wheelFor(board);
       if (slot == 0) return Offset(w.centre.dx, w.centre.dy - w.ring - w.bead * 0.2);
       final int j = signParts.indexWhere((ChangePart p) => p.id == id);
       final int n = signParts.length;
@@ -357,10 +373,38 @@ class ChangePartSession extends TemplateSession {
 
   // ---- layout ----
 
+  /// The board class a spec was made for (the specs are the boards' own, told apart by their height).
+  static BoardClass boardOfSpec(ActivitySpec s) => s.boardHeight > 1000
+      ? BoardClass.tabletPortrait
+      : s.boardHeight > 500
+      ? BoardClass.tabletLandscape
+      : s.boardHeight < 380
+      ? BoardClass.phoneSE
+      : BoardClass.phone;
+
+  /// Where the bubble must end on the wheel's board: above the dial's beads that stand under it and, in `make` on a phone, above the hint's key-word
+  /// card. The activity frame shrinks the line's text to the room above this (it ends 4 points higher), so a line never lies on a bead or the card; the
+  /// phone SE has room for 2 lines at the board's font and shrinks a third (QA-2, QA-3).
+  double bubbleFloor(ActivitySpec base, BoardClass b) {
+    final double left = base.bubbleLeft ?? b.size.width - base.bubbleRight! - base.bubbleMaxWidth;
+    double floor = base.tilesTop;
+    for (final Rect r in wheelFor(b).beadRects()) {
+      if (r.right > left && r.left < left + base.bubbleMaxWidth && r.bottom > base.bubbleTop) {
+        floor = math.min(floor, r.top);
+      }
+    }
+    if (a.make) {
+      final Rect? key = ChangePartLayer.keyCardOver(b);
+      if (key != null) floor = math.min(floor, key.top);
+    }
+    return floor;
+  }
+
   @override
   ActivitySpec layoutFor(ActivitySpec base) {
     if (!wheel) return withLs01Zones(base, band);
     // The wheel stands on the left of the board, from the stage's top to the bottom band: a tall stage with no card on a tablet.
+    final BoardClass b = boardOfSpec(base);
     final bool tablet = base.stageIsCard;
     final Rect stage = tablet
         ? Rect.fromLTWH(194, base.stage.top, 792, base.boardHeight - 24 - 8 - base.stage.top)
@@ -373,7 +417,7 @@ class ChangePartSession extends TemplateSession {
     return base.withStageAndTiles(
       stage: stage,
       tilesLeft: base.tilesLeft,
-      tilesTop: base.tilesTop,
+      tilesTop: bubbleFloor(base, b),
       tilesWidth: base.tilesWidth,
       card: false,
     );
@@ -402,9 +446,15 @@ class ChangePartSession extends TemplateSession {
 }
 
 /// Where the strip's pieces stand on a board, in board points (Russian: always left to right).
+///
+/// In `explore` the strip may be so long (6 vowels fill the answer zone on a phone) that the "go on" check and the word's picture would stand over
+/// its first and last tiles. Such a screen is [crowded]: the strip is centred in the answer zone and the check, the card and the picture stand in a
+/// row in the stage zone instead, so that the strip never hides a vowel (docs/design/l5-templates.md section 4.3). The picture is dropped when
+/// not even 48 points are left for it.
 class StripGeometry {
   StripGeometry._(
     this.spec,
+    this.cardSpec,
     this.card,
     this.rowLeft,
     this.rowY,
@@ -412,8 +462,10 @@ class StripGeometry {
     this.picture,
     this.target,
     this.check,
+    this.goOn,
     this.zoneA,
     this.texts,
+    this.crowded,
   );
 
   factory StripGeometry.of(BoardClass board, ChangePartActivity a, List<String> texts, bool make) {
@@ -449,50 +501,100 @@ class StripGeometry {
       BoardClass.tabletPortrait => 700,
     };
     final double total = VowelStrip.widthOf(texts, s);
+    final double controlY = rowY + (s.tile - ctl) / 2;
+    final Rect target = Rect.fromLTWH(zoneA.left + 8, controlY, ctl, ctl);
+    final Rect check = Rect.fromLTWH(zoneA.right - 8 - ctl, controlY, ctl, ctl);
+    final Rect picture = Rect.fromLTWH(
+      zoneA.right - pic - 4,
+      math.max(zoneA.top + 10, rowY + (s.tile - pic) / 2),
+      pic,
+      pic,
+    );
+    final bool pictured = a.results.any((ChangeResult r) => r.sprite != null);
     double left;
     if (make) {
       final double from = zoneA.left + ctl + 24;
       final double room = zoneA.width - 2 * (ctl + 24);
       left = from + (room - total) / 2;
-    } else if (!tablet && a.results.any((ChangeResult r) => r.sprite != null)) {
+    } else if (!tablet && pictured) {
       left = zoneA.left + (zoneA.width - pic - 24 - total) / 2;
     } else {
       left = zoneA.left + (zoneA.width - total) / 2;
     }
+    final bool crowded =
+        !make && (left < target.right + 16 || (pictured && left + total + 16 > picture.left));
     // The card is its cells and the 8 points of its border and padding round them.
-    final double cardW = a.frame.text.length * s.cell + 16;
-    final double cardH = s.cell * 0.92 + 16;
-    final Rect card = Rect.fromLTWH(
+    final int cells = a.frame.text.length;
+    StripSpec cardSpec = s;
+    double cardW = cells * s.cell + 16;
+    double cardH = s.cell * 0.92 + 16;
+    Rect card = Rect.fromLTWH(
       stage.left + (stage.width - cardW) / 2,
       stage.top + (stage.height - cardH) / 2,
       cardW,
       cardH,
     );
-    final double controlY = rowY + (s.tile - ctl) / 2;
+    Rect goOn = target;
+    Rect pictureAt = picture;
+    if (crowded) {
+      left = zoneA.left + (zoneA.width - total) / 2;
+      const double gap = 16;
+      const double margin = 8;
+      final double room = stage.width - 2 * margin;
+      // The check and the card must both fit the stage; a long frame's cells shrink to what is left.
+      final double cardRoom = room - ctl - gap;
+      if (cardW > cardRoom) {
+        cardSpec = s.withCell(math.max(48, (cardRoom - 16) / cells));
+        cardW = cells * cardSpec.cell + 16;
+        cardH = cardSpec.cell * 0.92 + 16;
+      }
+      double pw = pictured ? math.min(pic, room - ctl - cardW - 2 * gap) : 0;
+      if (pw < 48) pw = 0;
+      final double rowW = ctl + gap + cardW + (pw > 0 ? gap + pw : 0);
+      final double x0 = stage.left + (stage.width - rowW) / 2;
+      final double mid = stage.center.dy;
+      goOn = Rect.fromLTWH(x0, mid - ctl / 2, ctl, ctl);
+      card = Rect.fromLTWH(goOn.right + gap, mid - cardH / 2, cardW, cardH);
+      pictureAt = pw > 0 ? Rect.fromLTWH(card.right + gap, mid - pw / 2, pw, pw) : Rect.zero;
+    }
     return StripGeometry._(
       s,
+      cardSpec,
       card,
       left,
       rowY,
       ctl,
-      Rect.fromLTWH(zoneA.right - pic - 4, math.max(zoneA.top + 10, rowY + (s.tile - pic) / 2), pic, pic),
-      Rect.fromLTWH(zoneA.left + 8, controlY, ctl, ctl),
-      Rect.fromLTWH(zoneA.right - 8 - ctl, controlY, ctl, ctl),
+      pictureAt,
+      target,
+      check,
+      goOn,
       zoneA,
       texts,
+      crowded,
     );
   }
 
   final StripSpec spec;
+
+  /// The sizes of the frame card: the strip's, with the cells shrunk when a crowded screen needs the room.
+  final StripSpec cardSpec;
   final Rect card;
   final double rowLeft;
   final double rowY;
   final double control;
+
+  /// The word's picture (empty when a crowded screen has no room for it).
   final Rect picture;
   final Rect target;
   final Rect check;
+
+  /// The "go on" check of `explore`: at the start of the answer zone, or in the stage zone when the screen is [crowded].
+  final Rect goOn;
   final Rect zoneA;
   final List<String> texts;
+  final bool crowded;
+
+  bool get hasPicture => !picture.isEmpty;
 
   /// Tile [i] of the strip (the pairs' gaps are in it).
   Rect tile(int i) {
@@ -528,24 +630,12 @@ class ChangePartLayer extends StatelessWidget {
   }
 
   List<Widget> _wheel(BuildContext context, ChangePartSession s) {
-    final WheelSpec w = WheelSpec.of(board);
-    final double panelBottom = board.size.height - 24 - 8;
-    final WheelSpec full = WheelSpec(
-      centre: w.centre,
-      ring: w.ring,
-      bead: w.bead,
-      font: w.font,
-      step: w.step,
-      hub: w.hub,
-      unitFont: w.unitFont,
-      signBead: w.signBead,
-      signY: w.signY,
-      signGap: w.signGap,
-      panelHeight: panelBottom - (w.centre.dy - 4),
-    );
+    final WheelSpec w = s.wheelFor(board);
+    final double panelBottom = board.size.height - ChangePartSession._panelMargin;
+    final WheelSpec full = w.copyWith(panelHeight: panelBottom - (w.centre.dy - 4));
     final List<ChangePart> ring = s.ringParts;
     final List<ChangePart> signs = s.signParts;
-    final (Rect, Rect) controls = _controls();
+    final (Rect, Rect) controls = _controls(w, signs.length);
     return <Widget>[
       Positioned.fill(
         child: GestureDetector(
@@ -602,8 +692,16 @@ class ChangePartLayer extends StatelessWidget {
     return any;
   }
 
-  /// The target and "that's it" pebbles: under the bubble on the phones, at the panel's ends on the tablets.
-  (Rect, Rect) _controls() => switch (board) {
+  /// The target and "that's it" pebbles: under the bubble on the phones, at the panel's ends on the tablets. On the wide tablet a row of four signs
+  /// reaches the right end, so the pebble there stands 8 points beyond the row.
+  (Rect, Rect) _controls(WheelSpec w, int signs) {
+    final (Rect, Rect) c = _controlsAt();
+    if (board != BoardClass.tabletLandscape || signs == 0) return c;
+    final double right = math.max(c.$2.left, w.centre.dx + w.signRowReach(signs) + 8);
+    return (c.$1, c.$2.shift(Offset(right - c.$2.left, 0)));
+  }
+
+  (Rect, Rect) _controlsAt() => switch (board) {
     BoardClass.phone => (const Rect.fromLTWH(429, 262, 72, 72), const Rect.fromLTWH(521, 262, 72, 72)),
     BoardClass.phoneSE => (const Rect.fromLTWH(352, 262, 64, 64), const Rect.fromLTWH(436, 262, 64, 64)),
     BoardClass.tabletLandscape => (
@@ -643,16 +741,23 @@ class ChangePartLayer extends StatelessWidget {
     if (s.card) ..._keyCard(s),
   ];
 
+  /// The phones have no free corner: the card stands under the bubble, between its text and the make controls, and the layout keeps the bubble's text
+  /// above it (`ChangePartSession.bubbleFloor`). A tablet has room beside the dial (null here).
+  static Rect? keyCardOver(BoardClass board) => switch (board) {
+    BoardClass.phone => const Rect.fromLTWH(421, 186, 174, 66),
+    BoardClass.phoneSE => const Rect.fromLTWH(330, 184, 146, 68),
+    _ => null,
+  };
+
+  static Rect _keyCardBeside(BoardClass board) => switch (board) {
+    BoardClass.tabletLandscape => const Rect.fromLTWH(40, 330, 230, 200),
+    _ => const Rect.fromLTWH(40, 376, 220, 92),
+  };
+
   /// Level 2: the key word of the target unit with its picture, in a sky card at the stage's free corner.
   List<Widget> _keyCard(ChangePartSession s) {
     final ChangeResult? t = s.a.target;
-    final Rect r = switch (board) {
-      // The phones have no free corner: the card stands over the lower part of the bubble's box (the line is voiced as well); a tablet has room beside the dial.
-      BoardClass.phone => const Rect.fromLTWH(421, 150, 174, 86),
-      BoardClass.phoneSE => const Rect.fromLTWH(308, 140, 160, 66),
-      BoardClass.tabletLandscape => const Rect.fromLTWH(40, 330, 230, 200),
-      BoardClass.tabletPortrait => const Rect.fromLTWH(40, 376, 220, 92),
-    };
+    final Rect r = keyCardOver(board) ?? _keyCardBeside(board);
     return <Widget>[
       Positioned.fromRect(
         rect: r,
@@ -675,8 +780,9 @@ class ChangePartLayer extends StatelessWidget {
     final List<String> texts = <String>[for (final ChangePart p in parts) p.text];
     final StripGeometry g = StripGeometry.of(board, s.a, texts, s.a.make);
     final ChangeResult? r = s.result;
-    // A teaching screen's picture stands at the end of the zone where "that's it" stands in make, so its go-on pebble takes the start side.
-    final (Rect, Rect) controls = (g.target, s.a.make ? g.check : g.target);
+    // A teaching screen's picture stands at the end of the zone where "that's it" stands in make, so its go-on pebble takes the start side (or the stage's,
+    // on a crowded screen).
+    final (Rect, Rect) controls = (g.target, s.a.make ? g.check : g.goOn);
     return <Widget>[
       Positioned.fromRect(
         rect: g.card,
@@ -684,7 +790,7 @@ class ChangePartLayer extends StatelessWidget {
           course: s.a.course,
           frame: s.a.frame.text,
           window: s.windowText,
-          spec: g.spec,
+          spec: g.cardSpec,
           lit: s.hubLit,
           onTap: s.hubTapped,
         ),
@@ -704,7 +810,7 @@ class ChangePartLayer extends StatelessWidget {
         ),
       ),
       // A result that is a word with a picture (kot, kit): the picture stands at the end of the answer zone, and changes with the vowel.
-      if (!s.a.make && r?.sprite != null)
+      if (!s.a.make && r?.sprite != null && g.hasPicture)
         Positioned.fromRect(
           rect: g.picture,
           child: Container(
