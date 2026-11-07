@@ -836,9 +836,9 @@ C1 = ('M10 batch C1 (docs/agents/hebrew-notes.md section 10): read by the editor
       'number and gender agreement, plural address, = as שָׁוֶה, < and > as גָּדוֹל מִ / קָטָן מִ, age 6 to 8). Draft of the math-teacher; waits for the owner.')
 _C1_UNITS = ('blocks-tens-and-ones|compare-to-100|count-and-compare-again|count-on-big|count-to-100|fact-families|facts-to-18-again|'
              'facts-to-18-more|facts-to-18|hundred-chart|line-to-100|read-numerals-more|read-numerals|read-to-100|ten-frame-glance|'
-             'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens-more|whole-tens|write-numbers|compare-to-100-more|line-to-100-more')
+             'ten-frame-more|ten-more-ten-less|tens-and-ones-more|tens-and-ones|type-the-answer|whole-tens-more|whole-tens|write-numbers|compare-to-100-more|line-to-100-more|fact-families-more')
 _C1_SKILLS = 'MATH-B-04|MATH-C-01|MATH-C-02|MATH-C-03|NUM-B-06|NUM-B-09|NUM-C-01|NUM-C-02|NUM-C-03|NUM-C-04|NUM-C-06|NUM-C-09'
-_C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG'
+_C1_TAGS = 'M-HC-ROW|M-OP-SWAP|M-PV-FACE|M-PV-ZERO|M-SIGN-DIR|M-SUB-SMALLBIG|M-SUB-ORDER'
 # A row that is new in a table run (its text is not in the last table) and is covered by a READ entry gets READ_NEW in place of the day of
 # the first reading, because the editor read it in the pass that made the row: change this when a new pass is done (notes 11.8).
 READ_OLD_DAY = '2026-11-06'

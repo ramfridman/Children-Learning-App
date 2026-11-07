@@ -685,3 +685,23 @@ a more natural wording would be `מֵעֶשְׂרִים עֲשָׂרָה צְע�
 **Rules in `tools/hebrew_voice_review.py`:** `מוֹטוֹת` is a known masculine plural (no more `REVIEW number` on `שְׁלוֹשָׁה מוֹטוֹת`: 10 rows were held `proposed`); `וּבַ` is a number prefix (the voice text of `וּבַחֲמִשִּׁים` keeps its nikud);
 the three new lessons (`compare-to-100-more`, `line-to-100-more`, `whole-tens-more`) are in `_C1_UNITS` (they were `proposed / NOT READ`); `READ_NEW` names this pass, and a row that was `NOT READ` takes it too.
 Table: 15704 rows, 416 new since the last table, all `text-ready`; none `owner-approved`.
+
+### 11.10 The last C1 items of commit 2805fbf1 (2026-11-07, hebrew-text-editor)
+
+**Read:** the estimation line (`c.numc06.3`-`.6`, `.17`: rewritten under the same ids), the true-or-false cards (`c.mathc02.16`-`.19`), the ten-frames (`c.numb09.15`/`.16`), the lucky-right items (`c.numc01.16`, `c.numc02.21`, `c.numb06.17`, `c.mathc01.34`),
+`vo:celebrate.fact_families_more`, `vo:fb.sub_order` and the M-SUB-ORDER parent texts: 144 new rows, 42 gone. Correct as written: the numbers agree with their nouns (`שֵׁשׁ סֻכָּרִיּוֹת`, `שְׁמוֹנָה כּוֹכָבִים`, `שִׁבְעָה בַּרְוָזִים`, `צִפּוֹר אַחַת`, `חָמֵשׁ מִשְׁבָּצוֹת`),
+the address is plural, `מֵחֲמִשִּׁים`, `מֵעֶשְׂרִים`, `מִתִּשְׁעִים`, `בֵּין שְׁלוֹשִׁים לְאַרְבָּעִים`, `אִי אֶפְשָׁר לָתֵת מֵהֶן`, `כָּאן לֹא עוֹבְרִים דֶּרֶךְ הָעֶשֶׂר` (the same words as `עוֹבְרִים דֶּרֶךְ הָעֶשֶׂר` of the older hint), every hint is 14 words or fewer.
+`בְּעֵרֶךְ` ("about") and `הַקַּוִּים` (the ticks) are plain, spoken words for age 6 to 8.
+
+**Owner-approved text that is gone.** The old hint 3 of `c.numc06.6` (`מַתְחִילִים מִשְּׁמוֹנִים וְסוֹפְרִים אֲחוֹרָה: שִׁבְעִים וְתֵשַׁע, שִׁבְעִים וּשְׁמוֹנֶה. עַכְשָׁו תּוֹרְכֶם.`, `owner-approved` since the 11.8 dagesh answer) is no longer a text of the pack:
+the item is now the estimate of 88 and its hint 3 is `סוֹפְרִים אֶת הַקַּוִּים בַּעֲשָׂרוֹת עַד שְׁמוֹנִים. שְׁמוֹנִים וּשְׁמוֹנֶה הוּא קְצָת פָּחוֹת מִתִּשְׁעִים. עַכְשָׁו תּוֹרְכֶם.` It has no `מִשְּׁ`, so the rule of 11.8 does not cover it: `text-ready`, not the owner's.
+The same for hints 3 of `c.numc06.3`-`.5` (they were `מַתְחִילִים מִ… וְסוֹפְרִים קָדִימָה`). The owner-approved row count is unchanged (266): the only new `owner-approved` row is the M-NL-DIR line (`c.numc06.17`, V1 of 11.6).
+
+**Changed (band_c.py):**
+1. The true-or-false prompt (`c.mathc02.16`-`.19`): `…אִם לֹא, עַל הָאִיקְס.` to `…אִם לֹא, לוֹחֲצִים עַל הָאִיקְס.` (the verb is said twice; the elliptical half is easy to lose when read aloud).
+2. `מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים` to `מִשְׁפָּחוֹת שֶׁל תַּרְגִּילִים` (title of the lesson `fact-families` and `childLine` of `MATH-C-02`, both `text-ready`): the construct form `מִשְׁפְּחוֹת` is wrong before `שֶׁל`; the plural is `מִשְׁפָּחוֹת`
+   (as in the new title `עוֹד מִשְׁפָּחוֹת`). Voice text unchanged (`משפחות`).
+3. `hebrew_voice_review.py`: `fact-families-more` is in `_C1_UNITS` and `M-SUB-ORDER` in `_C1_TAGS` (they were `proposed / NOT READ`).
+
+**Left as is (see 11.9):** the `הֵם` of `שֶׁבַע פָּחוֹת אַרְבַּע הֵם שָׁלוֹשׁ` (hint 3 of `c.mathc01.34`) follows the older hints; `שְׁמוֹנֶה וְעוֹד שֵׁשׁ שָׁוֶה אַרְבַּע עֶשְׂרֵה, וְגַם שֵׁשׁ וְעוֹד שְׁמוֹנֶה` (hint 3 of `c.mathc02.19`) leaves the second sum without its result, to stay in 14 words; understandable.
+Table: 15806 rows (15704 + 144 new - 42 gone), 143 new rows `text-ready`, 1 `owner-approved` (M-NL-DIR), none `proposed`.

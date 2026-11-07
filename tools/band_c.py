@@ -854,7 +854,7 @@ def math_c1(u):
     jump(u, 'MATH-C-01', 0, 20, 9, 6, labels=[0, 10, 20])
 
     # ---- MATH-C-02: the inverse relation; fact families
-    u.skill('MATH-C-02', 'חיבור וחיסור הם משפחה', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'stall', ['MATH-C-01'], ['symbolic', 'concrete', 'pictorial'],
+    u.skill('MATH-C-02', 'חיבור וחיסור הם משפחה', 'מִשְׁפָּחוֹת שֶׁל תַּרְגִּילִים', 'stall', ['MATH-C-01'], ['symbolic', 'concrete', 'pictorial'],
             ['M-OP-SWAP', 'M-EQ-OPER', 'M-SUB-ORDER'])
     for i, (s, a) in enumerate([(15, 8), (13, 9), (17, 8), (14, 6), (16, 9)]):  # s − ? = a
         b = s - a
@@ -910,7 +910,7 @@ def math_c1(u):
     lesson_of(u, 'facts-to-18', 'חִבּוּר עַד שְׁמוֹנֶה עֶשְׂרֵה', 'MATH-C-01', 'כׇּל הַכָּבוֹד! הִשְׁלַמְתֶּם לְעֶשֶׂר.', 0, 9, minutes=7)
     lesson_of(u, 'facts-to-18-more', 'עוֹד תַּרְגִּילִים', 'MATH-C-01', 'מְצֻיָּן! עֲשִׂיתֶם הַרְבֵּה תַּרְגִּילִים.', 9, 18, minutes=7)
     lesson_of(u, 'facts-to-18-again', 'שׁוּב חִבּוּר וְחִסּוּר', 'MATH-C-01', 'נִפְלָא! עֲבַרְתֶּם אֶת כׇּל הַמִּשְׁפָּחוֹת.', 18, minutes=7)
-    lesson_of(u, 'fact-families', 'מִשְׁפְּחוֹת שֶׁל תַּרְגִּילִים', 'MATH-C-02', 'כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה.', 0, 8,
+    lesson_of(u, 'fact-families', 'מִשְׁפָּחוֹת שֶׁל תַּרְגִּילִים', 'MATH-C-02', 'כׇּל הַכָּבוֹד! חִבּוּר וְחִסּוּר הֵם מִשְׁפָּחָה.', 0, 8,
               minutes=8)
     lesson_of(u, 'whole-tens', 'עֲשָׂרוֹת שְׁלֵמוֹת', 'MATH-C-03', 'מְצֻיָּן! חֲשַׁבְתֶּם בַּעֲשָׂרוֹת.', 0, 8, minutes=8)
     math_c1_waiting(u)
@@ -958,7 +958,7 @@ def true_or_false(u):
             ok = 'כֵּן! הַתַּרְגִּיל לֹא נָכוֹן: %s פָּחוֹת %s שָׁוֶה %s.' % (F[b], F[a], F[c])
             h2 = fit(SWEETS % (F[a], F[b]))
         cards.append(u.act(
-            'MATH-C-02', 'pick', prompt='הַתַּרְגִּיל נָכוֹן? אִם כֵּן, לוֹחֲצִים עַל הַוִּי. אִם לֹא, עַל הָאִיקְס.', row=tokens(*row),
+            'MATH-C-02', 'pick', prompt='הַתַּרְגִּיל נָכוֹן? אִם כֵּן, לוֹחֲצִים עַל הַוִּי. אִם לֹא, לוֹחֲצִים עַל הָאִיקְס.', row=tokens(*row),
             options=['cross', 'tick'] if i % 2 else ['tick', 'cross'], correct='tick' if right else 'cross',
             tags={'cross': 'M-EQ-OPER'} if right else {'tick': 'M-SUB-ORDER'}, variantGroup='true-or-false', check='error_spotting',
             difficulty=0.6, h2=fit(h2), h3=h3, correct_text=ok))
