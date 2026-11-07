@@ -520,6 +520,30 @@ class Pictures(BatchC1):
                            picture={'kind': 'base_ten', 'tens': 7, 'crossedRods': 2}, skill='MATH-C-03')
         self.assertIn(('WRONG', 'picture'), codes(self.c1run(typed)), 'the keypad reads the crossed rods too')
 
+    def test_blocks_with_the_sentence_said(self):
+        """The sentence said in the question over its blocks, no row (the cube keeps 12 pt): read from the caption, checked against
+        the pictures like a row; M-OP-SWAP is the other operation done."""
+        plus = c1_item('אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה?', [(70, None), (7, 'M-PV-FACE'), (700, 'M-PV-ZERO'), (10, 'M-OP-SWAP')],
+                       scene={'picture': {'kind': 'base_ten', 'tens': 4}, 'picture2': {'kind': 'base_ten', 'tens': 3}},
+                       skill='MATH-C-03')
+        self.assertEqual(self.failing(plus), [])
+        off = copy.deepcopy(plus)
+        off['scene']['picture2']['tens'] = 2  # 4 rods and 2 rods are not 40 + 30
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(off)))
+        swap = copy.deepcopy(plus)
+        swap['answer']['options'][3]['numeral'] = 20  # not 40 - 30
+        self.assertTrue(self.failing(swap), 'an M-OP-SWAP tile that is not the other operation')
+        minus = c1_item('שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה נִשְׁאַר?',
+                        [(30, None), (3, 'M-PV-FACE'), (300, 'M-PV-ZERO'), (110, 'M-OP-SWAP')],
+                        scene={'picture': {'kind': 'base_ten', 'tens': 7, 'crossedRods': 4}}, skill='MATH-C-03')
+        self.assertEqual(self.failing(minus), [])
+        three = copy.deepcopy(minus)
+        three['scene']['picture']['crossedRods'] = 3
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(three)))
+        asked = copy.deepcopy(minus)
+        asked['prompt']['caption'][0]['v'] = 'שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה זֶה?'
+        self.assertIn(('WRONG', 'picture'), codes(self.c1run(asked)), 'a take-away asks how many are left')
+
     def test_blocks_on_the_tiles(self):
         """answer.options[].picture: "where is thirty-four?" with blocks on the tiles; the label names the blocks' number;
         M-NUM-REV is the rods and cubes swapped, M-PV-FACE the digits taken as loose cubes (7)."""

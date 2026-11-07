@@ -501,7 +501,9 @@ def numbers_c1(u):
         # child who compares the ones first picks the other number (M-PV-FACE); the third tile is the right number read the other
         # way round (M-NUM-REV). Not the 58 and 43 of the table: the ones-first reading picks 58 too, so its wrong tile would carry no
         # tag; the lucky-right item of M-PV-FACE stays 58 > ? above.
-        for i, (vals, ask) in enumerate([((41, 39, 14), 'big'), ((27, 31, 72), 'small'), ((52, 48, 25), 'big'), ((64, 59, 46), 'big')]):
+        # Each picture fits the compare layout at a 12-pt cube on the smallest phone (docs/design/c1-blocks.md 5.1: at most 4 tens, or 5
+        # tens with 5 ones or fewer), so the transfer item is 53 against 49, not the 64 against 59 it was (six rods beside five, 11 pt).
+        for i, (vals, ask) in enumerate([((41, 39, 14), 'big'), ((27, 31, 72), 'small'), ((52, 48, 25), 'big'), ((53, 49, 35), 'big')]):
             right, other, rev = vals
             word = 'גָּדוֹל' if ask == 'big' else 'קָטָן'
             choose(u, 'NUM-C-04', 'אֵיזֶה מִסְפָּר %s יוֹתֵר? מִסְתַּכְּלִים עַל הַמּוֹטוֹת וְעַל הַקֻּבִּיּוֹת.' % word, right,
@@ -1059,7 +1061,9 @@ def math_c1_waiting(u):
     again = next(x for x in u.d['lessons'] if x['id'] == 'facts-to-18-again')
     again['items'] += balance
     # MATH-C-03 with blocks (c1-deferred.md §1, the fields of step 3): two groups of rods (picture, picture2) and rods crossed out
-    # (crossedRods), each with its number sentence; the distractors of the keypad rows (M-PV-FACE, M-PV-ZERO, M-OP-SWAP)
+    # (crossedRods), each with its number sentence; the distractors of the keypad rows (M-PV-FACE, M-PV-ZERO, M-OP-SWAP). The sentence
+    # is said in the question, not drawn in a row under the rods: a row takes the stage's height and the cubes fall to 8 pt on a phone
+    # (docs/design/c1-blocks.md section 5); the same sentences are written in symbols in the lesson before (whole-tens: 40 + 30, 70 - 40).
     pictured = []
     for i, (a, op, b) in enumerate([(40, '+', 30), (30, '+', 50), (70, '-', 40), (60, '-', 20)]):
         ans = a + b if op == '+' else a - b
@@ -1068,8 +1072,8 @@ def math_c1_waiting(u):
                 {'picture': blocks_of(a // 10, crossedRods=b // 10)})
         count = ', '.join(F[10 * k] for k in range(1, ans // 10 + 1))
         pictured.append(choose(
-            u, 'MATH-C-03', 'כַּמָּה זֶה?' if op == '+' else 'כַּמָּה נִשְׁאַר?', ans,
-            {ans // 10: 'M-PV-FACE', ans * 10: 'M-PV-ZERO', swap: 'M-OP-SWAP'}, i, row=[a, op, b, '=', '?'], variantGroup='tens-blocks',
+            u, 'MATH-C-03', '%s %s %s. %s' % (F[a], word(op), F[b], 'כַּמָּה זֶה?' if op == '+' else 'כַּמָּה נִשְׁאַר?'), ans,
+            {ans // 10: 'M-PV-FACE', ans * 10: 'M-PV-ZERO', swap: 'M-OP-SWAP'}, i, variantGroup='tens-blocks',
             tag_lines=RODS,
             **({'check': 'transfer', 'difficulty': 0.6} if i == 3 else {}), **pics,
             h2='חוֹשְׁבִים בַּעֲשָׂרוֹת: %s %s %s — כְּמוֹ %s %s %s.' % (

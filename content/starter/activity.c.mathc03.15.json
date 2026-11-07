@@ -21,11 +21,11 @@
     "authored": 0.9
   },
   "prompt": {
-    "vo": "vo:c.mathb04.1.prompt",
+    "vo": "vo:c.mathc03.15.prompt",
     "caption": [
       {
         "t": "he",
-        "v": "כַּמָּה זֶה?"
+        "v": "אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה?"
       }
     ],
     "replayButton": true
@@ -42,14 +42,7 @@
       "kind": "base_ten",
       "tens": 3,
       "ones": 0
-    },
-    "row": [
-      "n:40",
-      "op:+",
-      "n:30",
-      "op:=",
-      "?"
-    ]
+    }
   },
   "answer": {
     "type": "choice",
@@ -195,6 +188,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "כַּמָּה זֶה?"
+    "altText": "אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה?"
   }
 }

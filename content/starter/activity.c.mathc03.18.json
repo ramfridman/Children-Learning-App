@@ -21,11 +21,11 @@
     "authored": 0.6
   },
   "prompt": {
-    "vo": "vo:c.mathc03.17.prompt",
+    "vo": "vo:c.mathc03.18.prompt",
     "caption": [
       {
         "t": "he",
-        "v": "כַּמָּה נִשְׁאַר?"
+        "v": "שִׁשִּׁים פָּחוֹת עֶשְׂרִים. כַּמָּה נִשְׁאַר?"
       }
     ],
     "replayButton": true
@@ -38,14 +38,7 @@
       "tens": 6,
       "ones": 0,
       "crossedRods": 2
-    },
-    "row": [
-      "n:60",
-      "op:-",
-      "n:20",
-      "op:=",
-      "?"
-    ]
+    }
   },
   "answer": {
     "type": "choice",
@@ -191,6 +184,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "כַּמָּה נִשְׁאַר?"
+    "altText": "שִׁשִּׁים פָּחוֹת עֶשְׂרִים. כַּמָּה נִשְׁאַר?"
   }
 }

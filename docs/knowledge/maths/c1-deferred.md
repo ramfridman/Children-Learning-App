@@ -120,9 +120,9 @@ row, and M-NL-SPACE is the mark next to an end.
 | c.numc03.24 | NUM-C-03 | blocks 2, 7 with one rod lit: כַּמָּה שָׁוֶה הַמּוֹט שֶׁזּוֹהֵר? | 10 | 1 M-PV-FACE, 100 M-PV-ZERO |
 | c.numc03.25 | NUM-C-03 | blocks on the tiles: אֵיפֹה הַמִּסְפָּר שְׁלוֹשִׁים וְאַרְבַּע? | 3 rods 4 cubes | 4 rods 3 cubes M-NUM-REV, 7 cubes M-PV-FACE |
 | c.numc02.18 to .20 | NUM-C-02 | blocks on the tiles: 37, 60 and 52 (transfer) | the blocks of the number | 73 M-NUM-REV; 6 cubes M-PV-ZERO; 25 M-NUM-REV and 7 cubes M-PV-FACE |
-| c.numc04.13 to .16 | NUM-C-04 | two numbers of blocks side by side, numerals on the tiles (`compare-blocks`) | 41; 27 (smaller); 52; 64 (transfer) | 39, 31, 48, 59 M-PV-FACE; 14, 72, 25, 46 M-NUM-REV |
-| c.mathc03.15, .16 | MATH-C-03 | 4 rods beside 3 rods, `40 + 30 = ?`; 3 beside 5, `30 + 50 = ?` (`tens-blocks`) | 70; 80 | 7, 8 M-PV-FACE; 700, 800 M-PV-ZERO; 10, 20 M-OP-SWAP |
-| c.mathc03.17, .18 | MATH-C-03 | 7 rods, 4 crossed out, `70 − 40 = ?`; 6 rods, 2 crossed, `60 − 20 = ?` (transfer) | 30; 40 | 3, 4 M-PV-FACE; 300, 400 M-PV-ZERO; 110, 80 M-OP-SWAP |
+| c.numc04.13 to .16 | NUM-C-04 | two numbers of blocks side by side, numerals on the tiles (`compare-blocks`) | 41; 27 (smaller); 52; 53 (transfer, was 64, section 8) | 39, 31, 48, 49 M-PV-FACE; 14, 72, 25, 35 M-NUM-REV |
+| c.mathc03.15, .16 | MATH-C-03 | 4 rods beside 3 rods, said אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים; 3 beside 5, `30 + 50` (`tens-blocks`; no row since section 8) | 70; 80 | 7, 8 M-PV-FACE; 700, 800 M-PV-ZERO; 10, 20 M-OP-SWAP |
+| c.mathc03.17, .18 | MATH-C-03 | 7 rods, 4 crossed out, said שִׁבְעִים פָּחוֹת אַרְבָּעִים; 6 rods, 2 crossed, `60 − 20` (transfer; no row since section 8) | 30; 40 | 3, 4 M-PV-FACE; 300, 400 M-PV-ZERO; 110, 80 M-OP-SWAP |
 | c.mathc02.15 | MATH-C-02 | keypad `9 = 15 − ?` (= first) | 6 | 24 M-OP-SWAP, 15 M-EQ-OPER; rule added_instead |
 | c.numc03.26 to .28 | NUM-C-03 | pay 34, 52, 60 shekels with tens and ones coins (concrete; the purse allows no other way) | the price | M-MONEY-COUNT |
 | c.mathc01.32, .33 | MATH-C-01 | the balance: 8 + 7 against 10, 9 + 5 against 10, add blocks (concrete; families 8-7 and 9-5) | 5; 4 | M-EQ-OPER |
@@ -211,3 +211,28 @@ both; Band B generator), and MATH-B-10 watches M-SHARE-UNEQ with no item. NUM-B-
 items (b.numb01.*).
 
 Not C1: the place-value mat (T26) of NUM-C-03 and X5's `open` mode are batch C2.
+
+## 8. Every cube countable (2026-11-07): the compare transfer and the sentences over rods
+
+The owner's rule for the C1 blocks is a cube of at least 12 pt on every board (`docs/design/c1-blocks.md` sections 2 and 5). Two cases
+broke it, and the content changed, not the rule:
+
+- **c.numc04.16** compared 64 with 59 (six rods beside five, 11.0 pt on the phone SE, waived). Now **53 against 49** (5 rods and 3 cubes,
+  4 rods and 9 cubes): each picture keeps the compare limit (at most 4 tens, or 5 tens with 5 ones or fewer). What it checks is the
+  same: the ones-first reading picks 49 (9 > 3, M-PV-FACE, the tens tell first), 35 is 53 read the other way round (M-NUM-REV, smaller
+  than the answer as 46 was), and the tens differ by one with the ones pulling the other way, as 64/59 did. 12.7 pt on SE, 14.9 on the
+  phone, 24.9 on tablets. The waiver list is empty.
+- **c.mathc03.15 to .18** drew a number sentence row under the rods, which left the cubes about 8 pt on phones. The row is gone; the
+  blocks have the stage (Layout S) and the sentence is **said in the question**: אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה זֶה? and
+  שִׁבְעִים פָּחוֹת אַרְבָּעִים. כַּמָּה נִשְׁאַר? (the Band B form "x וְעוֹד y. כַּמָּה זֶה?"). The child hears the sentence while
+  looking at its rods (the first number left, as it is written), and the right answer says it back with שָׁוֶה. The written sentence is
+  not lost: the same sentences 40 + 30 and 70 − 40 are the symbolic items c.mathc03.1 and .5 of the lesson before (whole-tens), so the
+  link between the rods and the symbols runs across the two lessons. A split (a blocks item, then a sentence item) was not chosen: it
+  would only repeat .1 and .5. 13.9 pt on SE, 14.9 on the phone, 24.9 on tablets. The tags and options did not change.
+
+`check_maths` reads a sentence said over blocks with no row (`said_sentence`: one וְעוֹד or פָּחוֹת between the only two numbers of the
+question) and checks it against the pictures as it checks a row (`sentence_blocks`), and a take-away must ask כַּמָּה נִשְׁאַר; M-OP-SWAP
+now has a rule (the other operation: 40 + 30 gives 10, 70 − 40 gives 110), which every tagged item of the pack keeps.
+
+Proposal, not built: a bubble that can show a short LTR sentence beside the spoken question (`40 + 30 = ?` in an isolated maths run) would
+let the blocks item show the symbols too; that is a template change for the app-developer and the design-director, the owner's call.

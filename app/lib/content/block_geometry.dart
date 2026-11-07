@@ -62,7 +62,7 @@ abstract final class BlockGeometry {
 
 /// Item ids that break the limits of [blockLimits] and are waived until their content is changed (the curriculum's call): each of them is
 /// still reported by a test as long as it does break them, so a fixed item must leave this list.
-const Set<String> blockLimitWaivers = <String>{'c.numc04.16'};
+const Set<String> blockLimitWaivers = <String>{};
 
 /// What is wrong with the blocks of a tap-the-answer item (`scene.picture`, `scene.picture2`, `answer.options[].picture`), or nothing: the
 /// limits that keep the cube at 12 points or more on the smallest phone (docs/design/c1-blocks.md section 5): at most three options with

@@ -650,6 +650,8 @@ def tag_candidates(tag, ctx):
         return {ctx['seen']} if ctx.get('seen') is not None else set()
     if tag == 'M-REGROUP-FORGET':
         return near(-10, 10)
+    if tag == 'M-OP-SWAP' and a is not None and b is not None and op in ('+', '-', '−'):  # the other operation done (70 - 40: 110)
+        return {abs(a - b)} if op == '+' else {a + b}
     if tag == 'M-MUL-ADD' and a is not None and b is not None:
         return {a + b}
     if tag == 'M-MUL-ZERO' and a is not None and b is not None:
@@ -821,6 +823,16 @@ def picture_value(it, pic):
     return None, {}, out
 
 
+def said_sentence(it, pic):
+    """(a, op, b) of a number sentence said in the question over base-ten blocks with no row ('אַרְבָּעִים וְעוֹד שְׁלוֹשִׁים. כַּמָּה
+    זֶה?'), or None: one plus or one minus said, between the only two numbers of the question."""
+    plus, minus = it.cap.count('ועוד'), it.cap.count('פחות')
+    if plus + minus != 1 or pic.get('kind') != 'base_ten':
+        return None
+    nums = numbers(it.caption)
+    return (nums[0], '+' if plus else '-', nums[1]) if len(nums) == 2 else None
+
+
 def sentence_blocks(pic, pic2, seq, row, given, x):
     """The findings of base-ten blocks over a number sentence: the blocks show a number of the sentence; a second picture is the
     second number of a sum (40 + 30: 4 rods beside 3); rods crossed out are the number taken away (70 - 40: 7 rods, the last 4
@@ -982,6 +994,16 @@ def recognise_choice(it, svg):
     if pic2 is not None and pic2.get('kind') != 'base_ten' or pic2 is not None and (pic or {}).get('kind') != 'base_ten':
         out.append(('WRONG', 'picture', 'a second picture is blocks beside blocks'))
         return None, out
+    said = said_sentence(it, pic) if pic and not seq else None
+    if said:  # a number sentence said in the question over its blocks, no row (40 + 30: 4 rods beside 3; 70 - 40: 7, 4 crossed)
+        a, op, b = said
+        seq = [a, op, b, '=', None]
+        x = a + b if op == '+' else a - b
+        out.extend(sentence_blocks(pic, pic2, seq, '%d %s %d = ?' % (a, op, b), [a, b], x))
+        ask = 'כמה זה' if op == '+' else 'כמה נשאר'
+        if not it.has(ask):
+            out.append(('WRONG', 'picture', 'a sentence with %s asks "%s"' % (op, ask)))
+        return numeric('sentence', x, {'given': [a, b], 'op': op, 'sentence': True, 'a': a, 'b': b}, [a, b]), out
     if pic2 and not (seq and None in seq):  # two numbers of blocks side by side: which is bigger (or smaller)?
         shown = [base_ten(pic), base_ten(pic2)]
         for p in (pic, pic2):

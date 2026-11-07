@@ -1,5 +1,6 @@
-// The pictures of blocks on the four boards that the design note (docs/design/c1-blocks.md) mocked up: the lit rod, the crossed rods under a
-// number sentence, and two numbers to compare (the how-many and where-is items are in `golden_c1_test.dart` and `c1_qa_fixes_test.dart`).
+// The pictures of blocks on the four boards that the design note (docs/design/c1-blocks.md) mocked up: the lit rod, the crossed rods
+// (the sentence said in the question), and two numbers to compare (the how-many and where-is items are in `golden_c1_test.dart` and
+// `c1_qa_fixes_test.dart`).
 // The worst case, 98 (nine rods and eight cubes), is not in the pack; its cube is computed here.
 //
 // Regenerate after a deliberate visual change:  flutter test --update-goldens test/c1_block_boards_test.dart

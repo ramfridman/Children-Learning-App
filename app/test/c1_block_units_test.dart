@@ -22,17 +22,9 @@ const Map<String, ActivitySpec> _boards = <String, ActivitySpec>{
 };
 
 /// Items whose cube is still under the floor on a phone, with the reason; an item is taken off this list when its content is changed, and a
-/// test fails when a listed item is no longer under (so the list never keeps a fixed item).
-///
-/// The four number sentences with rods (`70 - 40 = ?`) keep a row of numbers under the picture on the stage; a stage 155 or 165 points
-/// tall cannot hold ten cubes of 12 points and a row (the design note's mockup of the crossed rods has no row).
-const Map<String, String> _knownUnder = <String, String>{
-  'c.mathc03.15': 'a number sentence under the rods',
-  'c.mathc03.16': 'a number sentence under the rods',
-  'c.mathc03.17': 'a number sentence under the rods',
-  'c.mathc03.18': 'a number sentence under the rods',
-  'c.numc04.16': 'six rods beside five: two pictures side by side are too wide',
-};
+/// test fails when a listed item is no longer under (so the list never keeps a fixed item). It is empty:
+/// every block item keeps the floor on every board.
+const Map<String, String> _knownUnder = <String, String>{};
 
 void main() {
   late List<TapAnswerActivity> items;
