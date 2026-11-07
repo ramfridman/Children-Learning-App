@@ -7,13 +7,17 @@ import '../content/hint_ladder.dart';
 import '../content/models.dart';
 import '../design/app_text.dart';
 import '../design/components.dart';
+import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
+import 'choice_row.dart' show withTallStage;
 import 'hint_widgets.dart';
 import 'hints/hint_marks.dart';
 import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/right_cell.dart';
 import 'hints/spot_plans.dart';
+import 'size_scale.dart';
+import 'stage_picture.dart';
 import 'template_session.dart';
 
 /// The spot-the-mistake template (T21): a friend made a row (a pattern, a count, a program, a sum) and one cell of it is wrong.
@@ -43,17 +47,94 @@ class SpotErrorSession extends TemplateSession {
   late final HintPlayer _hint = HintPlayer(this);
   Size _size = Size.zero;
 
-  /// The side of a cell of a row of [n] in a stage of [size].
-  static double cellSide(Size size, int n) => math.min(size.height - 16, (size.width - 16) / n - 6);
+  /// The look of the size pictures of the row, and their aspect (under 1 for towers), which sets the height of its cells.
+  late final SizeLook? look = lookOf(activity);
+  late final double aspect = look != null && look!.tall ? look!.aspect : 1;
 
-  /// Where the cells of a row of [n] stand in a stage of [size], left to right: the same numbers the stage draws with.
-  static List<Offset> cellCentres(Size size, int n) {
-    final double side = cellSide(size, n);
-    final double row = (side + 6) * n;
+  /// The least a cell is: the token `touch.minControl` of band A (64: a child of 3 to 5 is wide and unsure with a finger) in the
+  /// logic land, whose sweep this is; none elsewhere, where the picture's own least (see [linesOf]) rules until the land's own sweep.
+  late final double minCell = activity.band == 'A' && activity.domain == 'logic'
+      ? TokenTouch.band[Band.a]!.minControl
+      : 0;
+
+  /// The room a cell takes round its picture: the border (3 each side) and the margin inside it (5 each side).
+  static const double _frame = 16;
+
+  /// The space between two cells, and the most that a row leaves between two lines of cells for the guide's card.
+  static const double _gap = 6;
+  static const double _lineGapMax = 44;
+
+  /// How many lines the [n] cells of a stage of [size] stand in: one, unless its picture would be smaller than the token
+  /// `stagePictureMin` (the 8 cells of a pattern on a phone), and then two. The picture is what the child reads, so the cell is
+  /// made as large as the stage's width allows before the row is cut.
+  ///
+  /// A cell is also never smaller than [minCell], the least a control may be (the token `touch.minControl` of band A, 64): four cells
+  /// on the small phone's stage of 270 are 57 in one line, and stand in two of two.
+  static int linesOf(Size size, int n, {double minCell = 0}) {
+    if (n < 2) return 1;
+    final double one = math.min(size.height - 16, (size.width - 16) / n - _gap);
+    return one - _frame >= minPictureOf(size) && one >= minCell ? 1 : 2;
+  }
+
+  /// How many cells stand on one line, the first lines full.
+  static int _perLine(Size size, int n, double minCell) => (n / linesOf(size, n, minCell: minCell)).ceil();
+
+  /// The side of a cell of a row of [n] in a stage of [size].
+  static double cellSide(Size size, int n, {double minCell = 0}) {
+    final int lines = linesOf(size, n, minCell: minCell);
+    final double fit = math.min(
+      (size.height - 10) / lines - _gap,
+      (size.width - 16) / _perLine(size, n, minCell) - _gap,
+    );
+    // Two lines are given a limit, so that the room between them holds what the hints draw there (a path, a paint, a sample).
+    return lines == 1 ? fit : math.min(fit, 1.8 * minPictureOf(size));
+  }
+
+  /// The height of a cell: its side, or, for a row of tall pictures (towers, of [aspect] width over height under 1), as tall as the
+  /// stage leaves, so that the picture is as large as its width allows and its cubes can be counted.
+  static double cellHeight(Size size, int n, {double aspect = 1, double minCell = 0}) {
+    final double side = cellSide(size, n, minCell: minCell);
+    if (aspect >= 1) return side;
+    final double fit = (size.height - 10) / linesOf(size, n, minCell: minCell) - _gap;
+    return math.min(fit, (side - _frame) / aspect + _frame);
+  }
+
+  /// The look of the size pictures of the row (towers, balls of three sizes), cut to one part of their box; null for any other row.
+  static SizeLook? lookOf(SpotErrorActivity a) => sizeLookOf(<String>[
+    for (final String c in a.cells)
+      if (c.startsWith('asset:')) c,
+  ], a.assets.svg);
+
+  /// Where the cells of a row of [n] stand in a stage of [size], left to right and line by line from the top: the same numbers the
+  /// stage draws with. Every line starts at the same place, so the lines read as one row cut in two; the room that two lines leave
+  /// over is shared out between them (a little, for the guide's card) and the stage's top and bottom.
+  static List<Offset> cellCentres(Size size, int n, {double aspect = 1, double minCell = 0}) {
+    final double side = cellSide(size, n, minCell: minCell);
+    final double height = cellHeight(size, n, aspect: aspect, minCell: minCell);
+    final int lines = linesOf(size, n, minCell: minCell);
+    final int per = _perLine(size, n, minCell);
+    final double pitch = side + _gap;
+    final double pitchY = height + _gap;
+    final double lineGap = lines == 1
+        ? 0
+        : ((size.height - lines * pitchY) / (lines + 1)).clamp(0, _lineGapMax);
+    final double block = lines * pitchY + (lines - 1) * lineGap;
     return <Offset>[
-      for (int i = 0; i < n; i++) Offset((size.width - row) / 2 + (side + 6) * (i + 0.5), size.height / 2),
+      for (int i = 0; i < n; i++)
+        Offset(
+          (size.width - per * pitch) / 2 + pitch * (i % per + 0.5),
+          (size.height - block) / 2 + (pitchY + lineGap) * (i ~/ per) + pitchY / 2,
+        ),
     ];
   }
+
+  /// A row that stands in two lines wants a stage as tall as the board lets it be (the phones: the stage's own 104 or 128 points
+  /// are too low for two lines of cells that a child can read); the tablets' stage is a card with room already.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) =>
+      !base.stageIsCard && linesOf(base.stage.size, activity.cells.length, minCell: minCell) > 1
+      ? withTallStage(base)
+      : base;
 
   Future<void> choose(int i) async {
     if (_busy || ring == AnswerState.correct) return;
@@ -139,8 +220,9 @@ class SpotErrorSession extends TemplateSession {
         : spotAnotherWay(
             activity,
             _size,
-            cellCentres(_size, activity.cells.length),
-            cellSide(_size, activity.cells.length),
+            cellCentres(_size, activity.cells.length, aspect: aspect, minCell: minCell),
+            cellSide(_size, activity.cells.length, minCell: minCell),
+            cellHeight(_size, activity.cells.length, aspect: aspect, minCell: minCell),
             (String sprite) => activity.assets.svg(sprite),
           );
     if (plan == null) {
@@ -158,7 +240,7 @@ class SpotErrorSession extends TemplateSession {
     hintCell = null;
     if (stopOnWrong && !_size.isEmpty) {
       // The hand reads the row from the left with the light, and stops on the mistake where the light stops.
-      final List<Offset> at = cellCentres(_size, activity.cells.length);
+      final List<Offset> at = cellCentres(_size, activity.cells.length, aspect: aspect, minCell: minCell);
       _hint.play(
         HintPlan(<HintFrame>[
           for (int i = 0; i <= to; i++)
@@ -196,10 +278,16 @@ class SpotErrorSession extends TemplateSession {
     final String? right = rightCellOf(activity.cells, activity.wrong);
     if (right == null) return const <HintMark>[];
     final double k = hintScale(_size);
-    final double side = cellSide(_size, activity.cells.length);
-    final double room = mistake.dy - side / 2;
+    final double height = cellHeight(_size, activity.cells.length, aspect: aspect, minCell: minCell);
+    // In a row of two lines the card stands in the room between them, over the cell above only where that is too narrow.
+    final double above = <double>[
+      0,
+      for (final Offset o in cellCentres(_size, activity.cells.length, aspect: aspect, minCell: minCell))
+        if ((o.dx - mistake.dx).abs() < 1 && o.dy < mistake.dy - 1) o.dy + height / 2,
+    ].reduce(math.max);
+    final double room = mistake.dy - height / 2 - above;
     final double card = (room + 10 * k).clamp(40 * k, 56 * k);
-    final double top = math.max(2, mistake.dy - side / 2 - card - 2);
+    final double top = math.max(above + 2, mistake.dy - height / 2 - card - 2);
     final double inner = card - 12 * k - 6;
     return <HintMark>[
       CardMark(
@@ -207,7 +295,7 @@ class SpotErrorSession extends TemplateSession {
         SizedBox(
           width: inner,
           height: inner,
-          child: Center(child: _cellFace(activity, right, inner)),
+          child: Center(child: _cellFace(activity, right, inner, look)),
         ),
       ),
     ];
@@ -235,8 +323,14 @@ class _RowStage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SpotErrorActivity a = s.activity;
-    final double side = math.min(size.height - 16, (size.width - 16) / a.cells.length - 6);
-    final double rowWidth = (side + 6) * a.cells.length;
+    final int n = a.cells.length;
+    final double side = SpotErrorSession.cellSide(size, n, minCell: s.minCell);
+    final double height = SpotErrorSession.cellHeight(size, n, aspect: s.aspect, minCell: s.minCell);
+    final List<Offset> at = SpotErrorSession.cellCentres(size, n, aspect: s.aspect, minCell: s.minCell);
+    final bool oneLine = SpotErrorSession.linesOf(size, n, minCell: s.minCell) == 1;
+    // A cell has 3 of room round it that its touch counts (the cell is [side] and the room is part of the pitch).
+    final double box = side + 6;
+    final double boxHeight = height + 6;
     return Semantics(
       container: true,
       label: a.altText,
@@ -252,23 +346,32 @@ class _RowStage extends StatelessWidget {
                 textDirection: TextDirection.ltr,
                 // The cells come one by one from the left, so the child sees where the row starts.
                 child: RowEntrance(
-                  count: a.cells.length,
-                  builder: (BuildContext context, Widget Function(int, Widget) cell) => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[for (int i = 0; i < a.cells.length; i++) cell(i, _cell(a, i, side))],
+                  count: n,
+                  builder: (BuildContext context, Widget Function(int, Widget) cell) => Stack(
+                    children: <Widget>[
+                      for (int i = 0; i < n; i++)
+                        Positioned(
+                          left: at[i].dx - box / 2,
+                          top: at[i].dy - boxHeight / 2,
+                          width: box,
+                          height: boxHeight,
+                          child: cell(i, _cell(a, i, side, height)),
+                        ),
+                    ],
                   ),
                 ),
               ),
             ),
             // Hint 2: a sky bar under the row grows from the left as the light goes by. It points the way and picks out no cell.
-            if (s.barTo != null)
+            // It runs along one line only: a row in two lines has the light alone.
+            if (s.barTo != null && oneLine)
               Positioned(
-                left: (size.width - rowWidth) / 2 + 3,
+                left: at.first.dx - side / 2,
                 bottom: 2,
                 child: AnimatedContainer(
                   key: const Key('spot-bar'),
                   duration: const Duration(milliseconds: 500),
-                  width: (side + 6) * (s.barTo! + 1) - 6,
+                  width: box * (s.barTo! + 1) - 6,
                   height: 5,
                   decoration: BoxDecoration(
                     color: TokenColors.hintHalo,
@@ -283,7 +386,7 @@ class _RowStage extends StatelessWidget {
     );
   }
 
-  Widget _cell(SpotErrorActivity a, int i, double side) {
+  Widget _cell(SpotErrorActivity a, int i, double side, double height) {
     final Color? ring = s.wrongCell == i
         ? TokenColors.notYetRing
         : (s.ring == AnswerState.correct && i == a.wrong
@@ -297,7 +400,7 @@ class _RowStage extends StatelessWidget {
         padding: const EdgeInsets.all(3),
         child: Container(
           width: side,
-          height: side,
+          height: height,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: TokenColors.paper.withValues(alpha: 0.92),
@@ -308,7 +411,7 @@ class _RowStage extends StatelessWidget {
             fit: StackFit.passthrough,
             alignment: Alignment.center,
             children: <Widget>[
-              Center(child: _cellFace(a, a.cells[i], side)),
+              Center(child: _cellFace(a, a.cells[i], side, s.look)),
               if (s.visited.contains(i) && s.hintCell != i)
                 const Positioned(top: 4, right: 4, child: SeenDot(key: Key('seen-dot'))),
             ],
@@ -320,9 +423,9 @@ class _RowStage extends StatelessWidget {
 }
 
 /// What a cell shows: a picture of the pack, an arrow, a number or a sign, in a cell whose side is [side].
-Widget _cellFace(SpotErrorActivity a, String cell, double side) {
+Widget _cellFace(SpotErrorActivity a, String cell, double side, SizeLook? look) {
   if (cell.startsWith('asset:')) {
-    return Padding(padding: const EdgeInsets.all(5), child: PackSvg(a.assets.svg(cell)));
+    return Padding(padding: const EdgeInsets.all(5), child: PackSvg(look?.svg(cell) ?? a.assets.svg(cell)));
   }
   if (cell.startsWith('dir:')) {
     final IconData icon = switch (cell.substring(4)) {

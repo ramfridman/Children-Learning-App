@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?"
+        "v": "אֶחָד מֵהַמִּגְדָּלִים לֹא בַּמָּקוֹם שֶׁלּוֹ. אֵיזֶה?"
       }
     ],
     "replayButton": true
@@ -35,7 +35,7 @@
     "cells": [
       "asset:tower_5",
       "asset:tower_4",
-      "asset:tower_4",
+      "asset:tower_6",
       "asset:tower_2",
       "asset:tower_1"
     ]
@@ -59,11 +59,11 @@
     "incorrect": [
       {
         "when": "misconception:M-SER-ENDS",
-        "vo": "vo:fb.ser_ends",
+        "vo": "vo:fb.ser_ends.neighbour",
         "caption": [
           {
             "t": "he",
-            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+            "v": "בּוֹאוּ נַשְׁוֶה כׇּל מִגְדָּל לַשָּׁכֵן שֶׁלּוֹ."
           }
         ]
       },
@@ -103,11 +103,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.spot.h2",
+      "vo": "vo:hint.log_seriation.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+          "v": "נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ."
         }
       ]
     },
@@ -138,6 +138,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?"
+    "altText": "אֶחָד מֵהַמִּגְדָּלִים לֹא בַּמָּקוֹם שֶׁלּוֹ. אֵיזֶה?"
   }
 }

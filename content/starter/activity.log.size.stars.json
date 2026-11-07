@@ -78,11 +78,11 @@
     "incorrect": [
       {
         "when": "misconception:M-SER-ENDS",
-        "vo": "vo:fb.ser_ends",
+        "vo": "vo:fb.ser.middle",
         "caption": [
           {
             "t": "he",
-            "v": "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל."
+            "v": "הָאֶמְצַע בָּא בֵּין הַקָּטָן לַגָּדוֹל. בּוֹאוּ נִבְדֹּק."
           }
         ]
       },
@@ -122,11 +122,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_seriation.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נַשְׁוֶה כׇּל אֶחָד לַשָּׁכֵן שֶׁלּוֹ."
         }
       ]
     },

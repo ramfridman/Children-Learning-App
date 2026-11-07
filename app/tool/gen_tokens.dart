@@ -246,6 +246,7 @@ String generateTokens(Map<String, Object?> t) {
   o.writeln('  static const double captionPaddingX = ${_num(caption['paddingX'])};');
   o.writeln('  static const double captionPaddingY = ${_num(caption['paddingY'])};');
   o.writeln('  static const double parentButtonHeight = ${_num(_map(comp['parentButton'])['height'])};');
+  o.writeln('  static const double stagePictureMin = ${_num(_map(comp['stagePicture'])['min'])};');
   o.writeln('}');
   return o.toString();
 }

@@ -36,7 +36,7 @@
       "asset:ball_red",
       "asset:ball_blue",
       "asset:ball_red",
-      "asset:ball_red",
+      "asset:ball_green",
       "asset:ball_red",
       "asset:ball_blue"
     ]
@@ -104,11 +104,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.spot.h2",
+      "vo": "vo:hint.log_pattern.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט, צַעַד אַחַר צַעַד."
+          "v": "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם עִם כׇּל אֶחָד."
         }
       ]
     },

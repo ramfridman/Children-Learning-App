@@ -28,16 +28,8 @@ DONE = ('text-ready', 'owner-approved')
 # Done rows whose source text is, on purpose, not the table's ui_text yet: (source, id) -> (the text the source has, why).
 # Each is checked exactly; remove an entry when its reason is gone.
 HELD = {
-    **{('activity.b.logb08.%d.json' % k, 'a11y.altText'): (
-        alt, 'the alt text is the prompt, and the prompt row is proposed (V1, waits for the owner)')
-       for k, alt in enumerate([
-           'אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה כְּחֻלָּה, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה עִגּוּל, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה רִבּוּעַ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           # B-15 part 2: the triangle and the rectangle, in the form of the other four until the owner decides V1
-           'אִם הַצּוּרָה מְשֻׁלָּשׁ, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.',
-           'אִם הַצּוּרָה מַלְבֵּן, שָׂמִים אוֹתָהּ בַּקֻּפְסָה. אַחֶרֶת — לָעֵשֶׂב.'], start=1)},
+    # (the six b.logb08 alt texts held here until the logic sweep of 2026-11-06 changed the prompt to the basket, בַּסַּל: their
+    # rows are new and proposed, needs-editor, so nothing is held now)
 }
 
 
@@ -138,9 +130,16 @@ class HebrewMasterTableTest(unittest.TestCase):
         # 26 option rows fewer; 12 corrected rows of NUM-B-05, NUM-B-08, NUM-B-10 and CS-A-04 now have a new text that the
         # corrected templates give, so the done-and-changed count was 1296; 1290 since the editor's read of the 59 rows: the 6
         # LOG-A-01 rows with an M-COL-ONEATTR line now carry the line as the pack gives it (a correction no more))
-        self.assertEqual(len(self.rows), 12751)
-        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1290)
-        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 55)
+        # 12746 since the logic sweep of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): one option fewer in LOG-B-06 .5
+        # and .6 and other reshaped items; 207 new rows are proposed (needs-editor, LOGIC_SWEEP_ROWS of hebrew_voice_review.py),
+        # so 1267 done rows differ and 81 proposed ones
+        # the editor's read of the logic land, 2026-11-07 (hebrew-notes section 13): the 207 rows and the rest are text-ready (the
+        # list is empty), and the sources already hold the corrected wording; 1262 done rows differ (the rows now at the pack's text
+        # no more differ) and 49 proposed ones (the V1 rows). The count of rows is the same
+        # 1260 done rows since the owner's LOG-B-02 title (2026-11-07): the skill child line and the lesson title are now the pack's own text
+        self.assertEqual(len(self.rows), 12746)
+        self.assertEqual(sum(1 for r in changed if r['status'] in DONE), 1260)
+        self.assertEqual(sum(1 for r in changed if r['status'] == 'proposed'), 49)
 
     def test_done_rows_have_ui_text(self):
         want = lambda r: HELD[(r['source'], r['id'])][0] if (r['source'], r['id']) in HELD else r['ui_text']
@@ -187,6 +186,18 @@ class PrefixHelpersTest(unittest.TestCase):
         self.assertEqual(v('יְדַעְתֶּם'), 'וִידַעְתֶּם')     # וִי for a yod with a shva
         self.assertEqual(v('אַרְבַּע'), 'וְאַרְבַּע')
         self.assertEqual(self.a.F[29], 'עֶשְׂרִים וְתֵשַׁע')
+
+    def test_vav_before_a_labial(self):
+        # the logic sweep, 2026-11-07: a labial ב ו מ פ takes the shureq whatever its vowel, and ב and פ are soft after it
+        v = self.a.vav
+        self.assertEqual(v('מִשְׁחָה'), 'וּמִשְׁחָה')
+        self.assertEqual(v('מַנְעוּל'), 'וּמַנְעוּל')
+        self.assertEqual(v('מַטְבֵּעַ'), 'וּמַטְבֵּעַ')
+        self.assertEqual(v('בָּלוֹן'), 'וּבָלוֹן')
+        self.assertEqual(v('בַּרְוָז'), 'וּבַרְוָז')
+        self.assertEqual(v('פֶּרַח'), 'וּפֶרַח')
+        self.assertEqual(v('כּוֹכָב'), 'וְכוֹכָב')  # a letter that is not a labial keeps וְ
+        self.assertEqual(v('דָּג'), 'וְדָג')
 
     def test_prefix(self):
         p = self.a.prefix

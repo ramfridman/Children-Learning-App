@@ -13,9 +13,14 @@ import 'hints/hint_pictures.dart' show hintScale;
 import 'hints/hint_player.dart';
 import 'hints/pointer_plans.dart';
 import 'hints/tile_points.dart';
+import 'choice_row.dart' show withStageAtLeast;
+import 'size_scale.dart';
 import 'sprite_group.dart';
 import 'response_code.dart';
 import 'template_session.dart';
+
+/// The heights of the parts of a bin's inside, and the side of a picture that lies in it (see [SortDragSession.binBands]).
+typedef BinBands = ({double sample, double label, double items, double itemSide});
 
 /// The sort-and-drag template (T03). Pictures wait below the stage; the bins stand on the stage. A picture is dragged into
 /// a bin, or touched and then the bin is touched (the same move, for a hand that does not drag yet). A wrong bin is a gentle
@@ -87,17 +92,43 @@ class SortDragSession extends TemplateSession {
     return Rect.fromLTWH(size.width - 8 - (i + 1) * w + 4, 8, w - 8, size.height - 16);
   }
 
-  /// The middle of the sample picture of a bin: the top 5/9 of what the border, the padding and the label leave.
-  static Offset sampleCentre(Size size, int n, int i) {
-    final Rect r = binRect(size, n, i);
-    final double room = r.height - 6 - 12 - 17;
-    return Offset(r.center.dx, r.top + 9 + room * 5 / 18);
+  /// The room a bin leaves inside its border (3) and its margin ([_binMargin]), top to bottom: the label, the sample picture of its
+  /// rule, and the pictures that lie in it (the label stands first, clear of the hand that reaches down to the tray). The pictures take what [most] of them need (one line of them, two where they are
+  /// many) and the sample the rest, so it is as large as the bin lets it be: a picture of at least `TokenComponent.stagePictureMin`
+  /// on a phone, though a small phone's bin leaves it a little less. The label and the pictures are smaller where the bin is low.
+  static BinBands binBands(Rect bin, int most) {
+    final double inner = bin.height - 6 - 2 * _binMargin;
+    final bool low = inner < 90;
+    final double itemSide = low ? 22 : 26;
+    final double label = low ? 15 : 17;
+    final int perLine = math.max(1, ((bin.width - 6 - 2 * _binMargin + 2) / (itemSide + 2)).floor());
+    final double items = math.min(3, math.max(1, (most / perLine).ceil())) * (itemSide + 2);
+    return (sample: math.max(0, inner - label - items), label: label, items: items, itemSide: itemSide);
   }
 
-  /// Where the hand puts a picture into bin [i] of [n]: the lower middle, where the sorted pictures lie.
+  static const double _binMargin = 4;
+
+  /// The most pictures any bin takes: those that belong in it, or an equal share of them where any bin takes any picture.
+  int get mostPerBin => activity.share
+      ? (activity.items.length / math.max(1, activity.bins.length)).ceil()
+      : activity.bins.fold(
+          1,
+          (int m, SortBin b) => math.max(m, activity.items.where((SortItem i) => i.bin == b.id).length),
+        );
+
+  /// The middle of the sample picture of bin [i] of [n] (a bin that takes [most] pictures).
+  static Offset sampleCentre(Size size, int n, int i, {int most = 1}) {
+    final Rect r = binRect(size, n, i);
+    final BinBands band = binBands(r, most);
+    return Offset(r.center.dx, r.top + 3 + _binMargin + band.label + band.sample / 2);
+  }
+
+  /// Where the hand puts a picture into bin [i] of [n]: the foot of the bin, in the band where the sorted pictures lie. The hand's
+  /// body lies under its fingertip and its finger reaches a little over it (about a quarter of the hand's height), so the tip is as
+  /// low as the band lets it be.
   static Offset dropPlace(Size size, int n, int i) {
     final Rect r = binRect(size, n, i);
-    return Offset(r.center.dx, r.bottom - 24 * hintScale(size));
+    return Offset(r.center.dx, r.bottom - 3 - _binMargin - 4);
   }
 
   /// The stop of the hand at the drop place of bin [i] of [n]. The hand comes from below, so that its body lies under the fingertip
@@ -113,7 +144,19 @@ class SortDragSession extends TemplateSession {
     return spec.tileTip(n, i, slot: _traySide(spec) + 8, slop: 4);
   }
 
+  /// How much of its room the sample picture of each bin takes (see [sampleBoxSharesOf]): the small sample of a size rule is drawn larger
+  /// than its sprite's own third, so that it is not a dot beside the big one.
+  late final List<double> sampleBoxShares = sampleBoxSharesOf(<double>[
+    for (final SortBin b in activity.bins) sizeShareOf(activity.assets.svg(b.sprite)),
+  ]);
+
   bool get _canDraw => _spec != null && !_size.isEmpty;
+
+  /// A small phone's stage is as tall as a phone's, so that the sample picture of a bin is at least what its label and the pictures
+  /// that lie in the bin leave on a phone (see [binBands]); the tray stands lower by what it takes.
+  @override
+  ActivitySpec layoutFor(ActivitySpec base) =>
+      withStageAtLeast(base, ActivitySpec.phone.stage.height, tilesBox: _traySide(base) + 8);
 
   void select(String itemId) {
     _endDemo();
@@ -278,7 +321,7 @@ class SortDragSession extends TemplateSession {
             HintFrame(<HintMark>[
               CopyMark(
                 Rect.fromCenter(
-                  center: sampleCentre(_size, n, i) - Offset(0, side * 0.2),
+                  center: sampleCentre(_size, n, i, most: mostPerBin) - Offset(0, side * 0.2),
                   width: side,
                   height: side,
                 ),
@@ -442,6 +485,9 @@ class SortDragSession extends TemplateSession {
   );
 }
 
+/// The largest a bin's sample picture is drawn (a tablet's bin has room for more; the answer tile's side is the measure).
+const double _sampleMax = 96;
+
 class _SortStage extends StatelessWidget {
   const _SortStage(this.s, this.size);
 
@@ -451,6 +497,10 @@ class _SortStage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SortDragActivity a = s.activity;
+    final BinBands band = SortDragSession.binBands(
+      SortDragSession.binRect(size, a.bins.length, 0),
+      s.mostPerBin,
+    );
     return Semantics(
       container: true,
       label: a.altText,
@@ -466,9 +516,12 @@ class _SortStage extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Row(
                   children: <Widget>[
-                    for (final SortBin b in a.bins)
+                    for (final (int i, SortBin b) in a.bins.indexed)
                       Expanded(
-                        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: _bin(b)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: _bin(b, band, s.sampleBoxShares[i]),
+                        ),
                       ),
                   ],
                 ),
@@ -481,7 +534,7 @@ class _SortStage extends StatelessWidget {
     );
   }
 
-  Widget _bin(SortBin b) {
+  Widget _bin(SortBin b, BinBands band, double boxShare) {
     final SortDragActivity a = s.activity;
     final List<SortItem> inside = <SortItem>[
       for (final SortItem i in a.items)
@@ -506,31 +559,40 @@ class _SortStage extends StatelessWidget {
               border: Border.all(color: ring ?? TokenColors.hairline, width: ring == null ? 3 : 5),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(SortDragSession._binMargin),
               child: Column(
                 children: <Widget>[
-                  Expanded(
-                    flex: 5,
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: SpriteGroup(
+                  SizedBox(
+                    height: band.label,
+                    child: Text(
+                      b.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.fixed(size: band.label - 4, weight: 700),
+                    ),
+                  ),
+                  SizedBox(
+                    height: band.sample,
+                    width: double.infinity,
+                    // The rule's picture fills its band (one of it as large as the band, a few of them in a line, each no larger than
+                    // its place), so the picture is read at a glance.
+                    child: b.count == 1
+                        ? Center(
+                            child: SizedBox.square(
+                              key: const Key('bin-sample'),
+                              dimension: math.min(band.sample, _sampleMax) * boxShare,
+                              child: PackSvg(a.assets.svg(b.sprite)),
+                            ),
+                          )
+                        : SpriteGroup(
                             svg: a.assets.svg(b.sprite),
                             count: b.count,
                             arrangement: 'line',
+                            lineSlots: b.count,
                           ),
-                        ),
-                      ],
-                    ),
                   ),
-                  Text(
-                    b.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.fixed(size: 13, weight: 700),
-                  ),
-                  Expanded(
-                    flex: 4,
+                  SizedBox(
+                    height: band.items,
                     child: Wrap(
                       alignment: WrapAlignment.center,
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -538,7 +600,11 @@ class _SortStage extends StatelessWidget {
                       runSpacing: 2,
                       children: <Widget>[
                         for (final SortItem i in inside)
-                          SizedBox(width: 26, height: 26, child: PackSvg(a.assets.svg(i.sprite))),
+                          SizedBox(
+                            width: band.itemSide,
+                            height: band.itemSide,
+                            child: PackSvg(a.assets.svg(i.sprite)),
+                          ),
                       ],
                     ),
                   ),

@@ -25,14 +25,19 @@
     "caption": [
       {
         "t": "he",
-        "v": "יָצָא אֶפְרוֹחַ. מָה הָיָה מִיָּד לִפְנֵי זֶה?"
+        "v": "מָה חָסֵר בֵּין הַבֵּיצָה לָאֶפְרוֹחַ?"
       }
     ],
     "replayButton": true
   },
   "scene": {
     "background": "asset:meadow",
-    "optionsOnTiles": true
+    "optionsOnTiles": true,
+    "row": [
+      "asset:egg",
+      "?",
+      "asset:chick"
+    ]
   },
   "answer": {
     "type": "choice",
@@ -152,6 +157,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "יָצָא אֶפְרוֹחַ. מָה הָיָה מִיָּד לִפְנֵי זֶה?"
+    "altText": "מָה חָסֵר בֵּין הַבֵּיצָה לָאֶפְרוֹחַ?"
   }
 }

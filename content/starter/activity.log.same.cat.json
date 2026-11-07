@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "אֵיפֹה אוֹתוֹ הַדָּבָר?"
+        "v": "אֵיפֹה עוֹד חָתוּל?"
       }
     ],
     "replayButton": true
@@ -47,8 +47,7 @@
       {
         "id": "o1",
         "sprite": "asset:dog",
-        "label": "כֶּלֶב",
-        "misconception": "M-COL-ONEATTR"
+        "label": "כֶּלֶב"
       },
       {
         "id": "o2",
@@ -72,16 +71,6 @@
       ]
     },
     "incorrect": [
-      {
-        "when": "misconception:M-COL-ONEATTR",
-        "vo": "vo:fb.same_similar",
-        "caption": [
-          {
-            "t": "he",
-            "v": "זֶה דּוֹמֶה, אֲבָל מְחַפְּשִׂים אֶת אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק."
-          }
-        ]
-      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -153,6 +142,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "אֵיפֹה אוֹתוֹ הַדָּבָר?"
+    "altText": "אֵיפֹה עוֹד חָתוּל?"
   }
 }

@@ -41,6 +41,8 @@ void main() {
 
   /// The stage, the hand's layer over it and the tiles, placed as the lesson screen places them.
   Future<void> host(WidgetTester tester, TemplateSession s, {ActivitySpec on = ActivitySpec.phone}) async {
+    // The board the lesson screen gives the session: a row of many cells on a phone has a tall stage.
+    on = s.layoutFor(on);
     await tester.pumpWidget(
       MaterialApp(
         builder: (BuildContext context, Widget? child) =>
@@ -443,8 +445,16 @@ void main() {
         // 3 + 4 = 8: 15 cubes. Red red blue, red yellow blue, red red: two whole copies of a unit of three.
         for (final (String id, Key shown, int count) in <(String, Key, int)>[
           ('b.mathb03.9', const Key('hint-block'), 3 + 4 + 8),
-          ('b.logb02.1', const Key('hint-bracket'), 2),
-          ('b.csb04.1', const Key('hint-bracket'), 3),
+          (
+            'b.logb02.1',
+            const Key('hint-bracket'),
+            3,
+          ), // the 8 cells are two lines, and the second copy runs over the end of the first
+          (
+            'b.csb04.1',
+            const Key('hint-bracket'),
+            4,
+          ), // 6 cells in two lines of 3: the second copy of 2 runs over the end of the line
         ]) {
           final SpotErrorActivity a = content.activities[id]! as SpotErrorActivity;
           final LessonController c = controllerFor(a);

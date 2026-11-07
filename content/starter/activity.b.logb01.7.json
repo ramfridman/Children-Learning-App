@@ -41,6 +41,7 @@
       "asset:apple",
       "asset:fish",
       "asset:fish",
+      "asset:star",
       "?"
     ]
   },
@@ -49,19 +50,19 @@
     "options": [
       {
         "id": "o1",
-        "sprite": "asset:star",
-        "label": "כּוֹכָב"
+        "sprite": "asset:apple",
+        "label": "תַּפּוּחַ"
       },
       {
         "id": "o2",
-        "sprite": "asset:apple",
-        "label": "תַּפּוּחַ",
+        "sprite": "asset:fish",
+        "label": "דָּג",
         "misconception": "M-PAT-UNIT"
       },
       {
         "id": "o3",
-        "sprite": "asset:fish",
-        "label": "דָּג",
+        "sprite": "asset:star",
+        "label": "כּוֹכָב",
         "misconception": "M-PAT-NEXT"
       }
     ],
@@ -137,11 +138,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_pattern.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם עִם כׇּל אֶחָד."
         }
       ]
     },

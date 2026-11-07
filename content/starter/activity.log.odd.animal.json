@@ -25,7 +25,7 @@
     "caption": [
       {
         "t": "he",
-        "v": "מִי שׁוֹנֶה?"
+        "v": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?"
       }
     ],
     "replayButton": true
@@ -106,11 +106,11 @@
     {
       "level": 2,
       "action": "highlight_objects_sequentially",
-      "vo": "vo:hint.pick.h2",
+      "vo": "vo:hint.log_odd.h2",
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל לְאַט עַל כֻּלָּם, אֶחָד אֶחָד."
+          "v": "נִסְתַּכֵּל עַל כֻּלָּם: מַה דּוֹמֶה, וּמַה שּׁוֹנֶה?"
         }
       ]
     },
@@ -141,6 +141,6 @@
     "mustNotRevealBeforeHint": 3
   },
   "a11y": {
-    "altText": "מִי שׁוֹנֶה?"
+    "altText": "מִי שׁוֹנֶה מֵהָאֲחֵרִים?"
   }
 }

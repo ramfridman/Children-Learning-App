@@ -34,9 +34,9 @@
     "background": "asset:meadow",
     "optionsOnTiles": true,
     "row": [
-      "asset:apple_size_l",
-      "asset:star_size_l",
-      "asset:fish_size_l"
+      "asset:shape_triangle_green",
+      "asset:shape_square_green",
+      "asset:shape_circle_green"
     ]
   },
   "answer": {
@@ -49,16 +49,12 @@
       },
       {
         "id": "o2",
-        "sprite": "asset:rule_size",
-        "label": "הַגֹּדֶל"
-      },
-      {
-        "id": "o3",
         "sprite": "asset:rule_shape",
-        "label": "הַצּוּרָה"
+        "label": "הַצּוּרָה",
+        "misconception": "M-COL-ONEATTR"
       }
     ],
-    "correct": "o2",
+    "correct": "o1",
     "shuffle": false,
     "unsureAllowed": true
   },
@@ -69,11 +65,21 @@
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן! כֻּלָּם אוֹתוֹ גֹּדֶל."
+          "v": "כֵּן! כֻּלָּם אוֹתוֹ צֶבַע."
         }
       ]
     },
     "incorrect": [
+      {
+        "when": "misconception:M-COL-ONEATTR",
+        "vo": "vo:fb.oneattr.rule_shape",
+        "caption": [
+          {
+            "t": "he",
+            "v": "כָּאן הַצּוּרוֹת שׁוֹנוֹת, אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם?"
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:fb.almost",
@@ -125,7 +131,7 @@
       "caption": [
         {
           "t": "he",
-          "v": "נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם אוֹתוֹ גֹּדֶל. עַכְשָׁו תּוֹרְכֶם."
+          "v": "נִסְתַּכֵּל עַל כֻּלָּם: כֻּלָּם אוֹתוֹ צֶבַע. עַכְשָׁו תּוֹרְכֶם."
         }
       ]
     }

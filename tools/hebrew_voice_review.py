@@ -801,6 +801,14 @@ MATHS_CHECK = ('Maths check fixes of 2026-11-06 (docs/knowledge/maths/check-2026
                'CS teachers, needs-editor. ')
 MATHS_CHECK_ROWS = []
 PENDING += [('3', '^%s$' % re.escape(rid), '^%s$' % re.escape(src), MATHS_CHECK) for src, rid in MATHS_CHECK_ROWS]
+# The logic land sweep of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): the rows whose text the Maths Teacher's fixes made
+# new or moved (the story strips, the family hints of D41, the seriation, sort and +2 tower lines, the basket bins, the LOG-B-06
+# cards). They waited for the editor's read; DONE 2026-11-07 (docs/agents/hebrew-notes.md section 13), so the list is empty and the rows
+# are `text-ready`, waiting for the owner. A new row of this kind goes here as (source file, row id) until it has been read.
+LOGIC_SWEEP = ('Logic sweep fixes of 2026-11-06 (docs/knowledge/logic/sweep-2026-11-06.md): new text from the Maths Teacher, '
+               'needs-editor. ')
+LOGIC_SWEEP_ROWS = []  # DONE 2026-11-07: the editor read all 207 rows and the rest of the logic land (hebrew-notes section 13)
+PENDING += [('3', '^%s$' % re.escape(rid), '^%s$' % re.escape(src), LOGIC_SWEEP) for src, rid in LOGIC_SWEEP_ROWS]
 # Texts the editor is not sure of, or drafts the owner must pick: (regex on the original text, the comment). The row stays
 # proposed for the owner. (Q2-Q8, Q11, Q12 were decided by the owner on 2026-10-29: ROW_RULES, SUBS, MANUAL, OWNER_APPROVED.)
 DOUBT = [
@@ -865,6 +873,27 @@ OWNER_APPROVED = [
     (r'he\.dart$', r'^בּוֹאוּ נְשַׂחֵק בְּמִלִּים\.$',
      'L0 (island-texts.md section 6, question 2): the owner approved "with words" for the Hebrew stop (owner-approved 2026-11-03).',
      r'^adventureLangHebrew$'),
+    # The owner's answers of 2026-11-07 to the riddles-island (logic land) sweep, hebrew-notes.md section 13 ("For the owner" 1 to 3).
+    (r'^skill\.LOG-A-07\.json$', r'^(מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ\?|מה לא במקום שלו\?)$',
+     'Logic sweep, owner Q1 (2026-11-07): the owner chose "מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?" for the LOG-A-07 title and child line, '
+     'in place of "מְתַקְּנִים סֵדֶר שֶׁנִּשְׁבַּר" (owner-approved 2026-11-07). Dagesh in the ל after מַה; the same phrase as the LOG-B-02 prompts.'),
+    (r'^activity\.b\.logb08\.', r'הַדֶּשֶׁא',
+     'Logic sweep, owner Q2 (2026-11-07): the second bin is "הַדֶּשֶׁא" (was "הָעֵשֶׂב"); the prompt, hint 3, the bin label and the alt text '
+     'say it (owner-approved 2026-11-07).'),
+    (r'^activity\.(b15\.(cola0[236]|shpa0[23])|b\.shpb0[1348])\.', r'^אוֹסְפִים רַק',
+     'Logic sweep, owner Q3 (2026-11-07): "חָבֵר אוֹסֵף רַק …" becomes "אוֹסְפִים רַק …" in the colours and shapes lands as in the logic land, '
+     'with the owner-approved question; where the old line named only a colour, the thing is named (כַּדּוּרִים, פְּרָחִים, דְּבָרִים) '
+     '(owner-approved 2026-11-07).'),
+    # The owner's second answers of 2026-11-07 (logic sweep follow-up): LOG-B-02 says "מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?" as LOG-A-07 does, and no
+    # unnamed "friend" does anything in any land.
+    (r'^(skill\.LOG-B-02|lesson\.broken-pattern)\.json$', r'^(מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ\?|מה לא במקום שלו\?)$',
+     'Logic sweep follow-up, owner (2026-11-07): the LOG-B-02 skill title and child line and the lesson "broken-pattern" title say '
+     '"מַה לֹּא בַּמָּקוֹם שֶׁלּוֹ?", in place of "מוֹצְאִים מַה נִּשְׁבַּר בַּסֵּדֶר" and "מַה נִּשְׁבַּר" (owner-approved 2026-11-07).', r'^(title|childLine)'),
+    (r'^activity\.(b15\.numa0[1238]|b\.numb(03|11)|b\.mathb(03|09)|b\.colb0[46])\.',
+     r'^(סוֹפְרִים מִסְפָּרִים|כָּתוּבִים כָּאן מִסְפָּרִים|כָּתוּב כָּאן תַּרְגִּיל|הַצּוּרוֹת כֻּלָּן|בַּקֶּשֶׁת יֵשׁ טָעוּת)',
+     'Logic sweep follow-up, owner (2026-11-07): no unnamed "friend" (חָבֵר סָפַר / כָּתַב / מִיֵּן / בָּנָה) in any land; the line says what is on '
+     'the screen (an impersonal present or a participle, or what the shapes have in common), with the same question, "אֵיפֹה הַטָּעוּת?" '
+     '(owner-approved 2026-11-07).'),
 ]
 
 
@@ -1100,6 +1129,105 @@ ROW_RULES = [
      'Owner 2026-11-06 (chat). Was "כִּמְעַט! בּוֹאוּ נְנַסֶּה שׁוּב." (vo:fb.almost; the id stays).'),
     (r'core\.he\.json$', r'^core\.encourage\.almost$', r'^עוֹד לֹא — בּוֹאוּ נְנַסֶּה שׁוּב', lambda r, ctx: r['text'],
      'owner 2026-11-06 (chat): no "כִּמְעַט"', TR, 'Owner 2026-11-06 (chat). Was "עוֹד לֹא — אֲבָל כִּמְעַט.".'),
+]
+
+
+# The editor's read of the logic land sweep, 2026-11-07 (docs/agents/hebrew-notes.md section 13): the sources already hold the corrected
+# wording (content/units/logic.json, tools/band_b2.py, tools/author.py); these entries record why each family changed (the `changes`
+# and `comment` columns) and keep the rows `text-ready`, waiting for the owner. The match is on the corrected text.
+LOGIC_READ = 'logic sweep 2026-11-07: '
+
+
+def _logic(src, rid, txt, why, was):
+    return (src, rid, txt, lambda r, ctx: r['text'], LOGIC_READ + why, TR, 'Logic sweep, read 2026-11-07. ' + was)
+
+
+ROW_RULES += [
+    _logic(r'^activity\.log\.same\.', r'^(prompt|a11y)', r'^אֵיפֹה עוֹד',
+           'D25: the question names the thing, as the B-15 items already did; "the same thing" is not how a child is asked for a match',
+           'Was "אֵיפֹה אוֹתוֹ הַדָּבָר?".'),
+    _logic(r'^activity\.(log\.odd|b15\.loga02)\.', r'^(prompt|a11y)', r'שּׁוֹנֶה מֵהָאֲחֵרִים\?$',
+           'D26: "מִי" is for an animal, "מַה" for a thing (balls, stars, balloons); "מֵהָאֲחֵרִים" is the owner-approved hint phrase',
+           'Was "מִי שׁוֹנֶה?" for every item.'),
+    _logic(r'^activity\.b15\.loga01\.[56]\.', r'^(prompt|a11y)', r'^אוֹסְפִים רַק',
+           'D27: no unnamed "friend" who is not on the screen ("חָבֵר אוֹסֵף"); the rule is said in the impersonal present, then the '
+           'owner-approved question', 'Was "חָבֵר אוֹסֵף רַק תַּפּוּחִים. מָה הִגִּיעַ לְכָאן בְּטָעוּת?".'),
+    _logic(r'^activity\.b15\.loga01\.[56]\.', r'^feedback\.incorrect\.0', r'וְהוּא בַּמָּקוֹם',
+           'D39 and the Band A rule (curriculum 8.3: no "not" question; Q2: no "לֹא" in a misconception line): says the tap was right, then asks '
+           'the owner-approved question', 'Was "זֶה תַּפּוּחַ, הוּא בַּמָּקוֹם. מָה לֹא תַּפּוּחַ?".'),
+    _logic(r'^activity\.log\.fix\.', r'^(prompt|a11y)', r'^חָסֵר אֶחָד בַּסֵּדֶר',
+           'D28: nothing is broken, one piece is missing; "מַה צָּרִיךְ לָבוֹא כָּאן?" points at the "?"; the dagesh follows מַה',
+           'Was "הַסֵּדֶר נִשְׁבַּר. מָה חָסֵר?".'),
+    _logic(r'^activity\.log\.pat\.(yes|no)\.', r'^(prompt|a11y)', r'^הַסֵּדֶר חוֹזֵר שׁוּב וְשׁוּב\?$',
+           'D35: "שׁוּב וְשׁוּב" says what repeating is, for ages 3 and 4; the word סֵדֶר stays (skill and lesson titles use it)',
+           'Was "הַסֵּדֶר חוֹזֵר?".'),
+    _logic(r'^activity\.(b15\.loga01\.[12]|log\.sortdrag\.three)\.', r'^(prompt|a11y)', r'^שָׂמִים כׇּל אֶחָד עִם הַדּוֹמִים לוֹ',
+           'D34: says by what (the ones like it); "אֶת אוֹתוֹ הַדָּבָר" was vague',
+           'Was "שָׂמִים יַחַד אֶת אוֹתוֹ הַדָּבָר: …" and "מְמַיְּנִים לְשָׁלוֹשׁ קְבוּצוֹת.".'),
+    _logic(r'^activity\.(b15\.loga01\.[12]|log\.sort\.animal|log\.sortdrag\.(animals|three))\.', r'^feedback\.incorrect\.0',
+           r'^בּוֹאוּ נִסְתַּכֵּל שׁוּב: מַה זֶּה',
+           'D39 and Q2: no "לֹא" in a misconception line; no wrong move here shares a colour, so "same colour" would be false; it names the '
+           'strategy (what is it, which group)', 'Was "זֶה לֹא אוֹתוֹ הַדָּבָר. בּוֹאוּ נִבְדֹּק." (the maths teacher\'s draft).'),
+    _logic(r'^activity\.log\.sort(drag)?\.(balloon|colour)\.', r'^feedback\.incorrect\.0', r'^מְחַפְּשִׂים אֶת אוֹתוֹ הַצֶּבַע\.',
+           'D40: here every thing is of one kind (balloons, balls), so "even if the thing differs" is false; own clip vo:fb.sort_shift.colour_only',
+           'Was "מְחַפְּשִׂים אֶת אוֹתוֹ צֶבַע, גַּם אִם הַדָּבָר שׁוֹנֶה. בּוֹאוּ נִבְדֹּק.".'),
+    _logic(r'^activity\.(b15\.loga05|log\.copy)\.', r'^(prompt|a11y)', r'^מַעֲתִיקִים אֶת הַסֵּדֶר לְמַטָּה',
+           'the model is the top row and the places are below it (phone and tablet); "לְמַטָּה" says where',
+           'Was "מַעֲתִיקִים אֶת הַסֵּדֶר.".'),
+    _logic(r'^activity\.(b15\.loga08\.[12])\.', r'^(prompt|a11y)', r'^מָה חָסֵר בֵּין',
+           'D29: "בֵּין … לְ…" says which step is missing (the egg also came "before the chick", so "לִפְנֵי" had two answers); no "מִיָּד לִפְנֵי"',
+           'Was "מָה הָיָה מִיָּד לִפְנֵי זֶה?" (the maths teacher\'s draft: "מָה חָסֵר לִפְנֵי הָאֶפְרוֹחַ?").'),
+    _logic(r'^activity\.(log\.story\.(egg|plant)\.first|log\.size\.fish\.first|b15\.loga10\.2)\.', r'^(prompt|a11y)', r'^מַה בָּא רִאשׁוֹן\?$',
+           'D29: "רִאשׁוֹן" (as the story items), not "קֹדֶם", which asks "before what?"; and מַה before ב (was מָה)',
+           'Was "מָה בָּא רִאשׁוֹן?" and "מַה בָּא קֹדֶם?".'),
+    _logic(r'^activity\.(b\.logb04|b15\.loga10)\.', r'^(answer\.options\.\d\.label|feedback\.correct|hints\.2)', r'מִגְדָּל שֶׁל',
+           'D31: a tower is named by its cubes (its height), not "מִגְדָּל מִסְפָּר שָׁלוֹשׁ", which sounds like the third tower in a line',
+           'Was "מִגְדָּל מִסְפָּר שָׁלוֹשׁ".'),
+    _logic(r'^activity\.log\.pair\.', r'^(prompt|a11y|answer\.options\.\d\.label|feedback\.correct|hints\.2)', r'שִׁנַּיִם',
+           'D32: "מִשְׁחָה" and "מִבְרֶשֶׁת" alone are an ointment and any brush; the toothpaste and the toothbrush are named',
+           'Was "מִשְׁחָה" and "מִבְרֶשֶׁת".'),
+    _logic(r'^activity\.b\.logb02\.', r'^(prompt|a11y|hints\.2)', r'אֶחָד (לֹא בַּמָּקוֹם|בַּשּׁוּרָה לֹא בַּמָּקוֹם)',
+           'D33: "אֶחָד מֵהֶם לֹא מַתְאִים" did not say fits what, and "מֵהֶם" pointed at the three pieces of the unit; "לֹא בַּמָּקוֹם"',
+           'Was "הַסֵּדֶר חוֹזֵר, אֲבָל אֶחָד מֵהֶם לֹא מַתְאִים. אֵיזֶה?" and "…אֶחָד מֵהֶם שׁוֹנֶה." in the hint.'),
+    _logic(r'^activity\.b\.logb06\.[78]\.', r'^(prompt|a11y)', r'^הַצּוּרוֹת כֻּלָּן',
+           'D27: no unnamed "friend" and no long clause; it says what the shapes share, and asks which one',
+           'Was "חָבֵר מִיֵּן לְפִי צֶבַע, וְצוּרָה אַחַת לֹא בַּמָּקוֹם שֶׁלָּהּ. אֵיפֹה הַטָּעוּת?".'),
+    _logic(r'^activity\.b\.logb06\.[1-6]\.', r'^feedback\.incorrect\.0', r'אֲבָל מַה דּוֹמֶה אֵצֶל כֻּלָּם',
+           'pointing and speech: "מַה" before ד (was "מָה כֵּן דּוֹמֶה"); "אֲבָל" as in the approved lines ("זֶה דּוֹמֶה, אֲבָל …")',
+           'Was "כָּאן הַצּוּרוֹת שׁוֹנוֹת. מָה כֵּן דּוֹמֶה אֵצֶל כֻּלָּם?".'),
+    _logic(r'^activity\.b\.logb08\.', r'^(prompt|a11y|hints\.2)', r'(בַּסַּל, וְאֶת כׇּל הַשְּׁאָר|אִם כֵּן — בַּסַּל)',
+           'D30: says where each goes (the basket, the grass), with no "אַחֶרֶת" (written register) and no "if"; the bin is the basket (D4); '
+           'hint 3 asks the same question of every shape, whatever the rule',
+           'Was "אִם הַצּוּרָה אֲדֻמָּה, שָׂמִים אוֹתָהּ בַּסַּל. אַחֶרֶת — לָעֵשֶׂב." and "זֶה מַתְאִים לַכְּלָל? אִם כֵּן — לַסַּל.".'),
+    _logic(r'^activity\.b\.logb09\.', r'^(prompt|a11y)', r'^אֵיזוֹ צוּרָה לֹא',
+           'D29: names what is asked (a shape), so "הוּא" has no one to refer to no more; צוּרָה is feminine, so the colour is too (אֲדֻמָּה)',
+           'Was "הוּא לֹא אָדֹם וְלֹא עִגּוּל. אֵיזֶה הוּא?".'),
+    _logic(r'^activity\.b\.logb09\.', r'^feedback\.correct', r'^כֵּן! זֶה .*: לֹא',
+           'D29: names the right answer (it is on a tile), then both clues; no "הוּא" with nothing to refer to',
+           'Was "כֵּן! הוּא לֹא אָדֹם וְלֹא עִגּוּל.".'),
+    _logic(r'^activity\.b\.logb09\.', r'^feedback\.incorrect\.0', r'^הַתְּשׁוּבָה צְרִיכָה לְהַתְאִים',
+           'the clues are cards on the screen now, so not "listen"; a misconception line has no "לֹא" (owner Q2); it ends in the strategy (check both)',
+           'Was "צָרִיךְ לְהַקְשִׁיב לִשְׁנֵי הָרְמָזִים יַחַד: לֹא זֶה וְגַם לֹא זֶה. בּוֹאוּ נִבְדֹּק." (shared M-LOG-NOT line).'),
+    _logic(r'^activity\.b\.logb11\.[45]\.', r'^(prompt|a11y)', r'^אֶחָד מֵהַמִּגְדָּלִים לֹא בַּמָּקוֹם שֶׁלּוֹ',
+           'D27: no unnamed "friend"; the direction (up or down) is for the child to see, as hint 3 says it',
+           'Was "חָבֵר סִדֵּר אֶת הַמִּגְדָּלִים, וְיֵשׁ טָעוּת. אֵיפֹה הַטָּעוּת?".'),
+    _logic(r'^activity\.log\.size\.(stars|middle)', r'^feedback\.incorrect\.0', r'^הָאֶמְצַע בָּא בֵּין',
+           'Q2 (no "לֹא") and D36: the middle question says where the middle is; the shared M-SER-ENDS line is kept for the colour shades of COL-B-02',
+           'Was "מְחַפְּשִׂים אֶת הָאֶמְצַע: לֹא הֲכִי קָטָן וְלֹא הֲכִי גָּדוֹל.".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נֹאמַר אֶת הַסֵּדֶר בְּקוֹל, וְנִמְחָא כַּפַּיִם',
+           'D41: "נִמְחָא כַּף עַל כׇּל אֶחָד" was literary and the preposition was wrong; "מוֹחֲאִים כַּפַּיִם" is what a child hears at gan',
+           'Was "נֹאמַר אֶת הַסֵּדֶר בְּקוֹל וְנִמְחָא כַּף עַל כׇּל אֶחָד.".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נִסְתַּכֵּל עַל כֻּלָּם: מַה דּוֹמֶה, וּמַה שּׁוֹנֶה\?$',
+           'D41: "מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?" asks for a thing all have and one lacks, which is not true of size or kind; "דּוֹמֶה / שׁוֹנֶה" is',
+           'Was "מָה יֵשׁ לְכֻלָּם, וְלָאֶחָד אֵין?".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נִסְתַּכֵּל קֹדֶם בָּרֶמֶז הָרִאשׁוֹן',
+           'D41: a whole sentence; the cards are on the screen', 'Was "קֹדֶם הָרֶמֶז הָרִאשׁוֹן, אַחַר כָּךְ הַשֵּׁנִי.".'),
+    _logic(r'^activity\.', r'^hints\.1\.caption', r'^נַחְשֹׁב: מָה עוֹשִׂים עִם זֶה\?$',
+           'D41: "אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?" asked where, which is odd for rain; "what do we do with it" leads to the partner',
+           'Was "אֵיפֹה מִשְׁתַּמְּשִׁים בָּזֶה?".'),
+    _logic(r'^(skill\.LOG-A-02|lesson\.same-and-different(-again)?)\.json$', r'^(childLine|celebration)', r'הַשּׁוֹנֶה',
+           'D26: "מִי שׁוֹנֶה / מִי זֵהֶה" is "who", said of balls and stars; "אֶת הַזֵּהֶה וְאֶת הַשּׁוֹנֶה" is the B-15 lesson line',
+           'Was "מוֹצְאִים מִי שׁוֹנֶה" and "מְצָאתֶם מִי זֵהֶה וּמִי שׁוֹנֶה.".'),
 ]
 
 
