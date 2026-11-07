@@ -210,7 +210,7 @@ SIZE_RANK = {'s': 1, 'm': 2, 'l': 3}
 OBJECT_COLOUR = {'apple': 'red', 'sun': 'yellow', 'grass': 'green', 'banana_yellow': 'yellow'}
 WORLD_SHAPE = {'window': 'rect', 'plate': 'circle', 'sign': 'triangle'}
 PAIRS = {'plate': {'spoon'}, 'bowl': {'spoon'}, 'brush': {'paste'}, 'sock': {'shoe'}, 'shoe': {'sock'},
-         'key': {'lock'}, 'lock': {'key'}, 'pencil': {'paper'}, 'cloud': {'rain'}}
+         'key': {'lock'}, 'lock': {'key'}, 'pencil': {'paper'}, 'cloud': {'rain'}, 'rain': {'umbrella'}}
 STORIES = [['egg', 'egg_crack', 'chick'], ['plant_seed', 'plant_sprout', 'plant_flower'], ['cloud', 'rain', 'rainbow']]
 ROLLS = {'sphere', 'cylinder', 'cone', 'ball'}
 STACKS = {'box', 'cube', 'cylinder'}
@@ -286,6 +286,65 @@ def sprite_info(s):
     return info
 
 
+def path_corners(d):
+    """The corners of an outline drawn as an absolute path (M, L, H, V, C, Z): where each straight side meets the next one, so a
+    rounded corner (a C curve between two sides) counts as the corner of its sides. None for a relative path or fewer than 3 sides."""
+    if 'Z' not in d:
+        return None  # an open line is not a closed shape
+    toks = re.findall(r'[A-Za-z]|-?\d+(?:\.\d+)?', d)
+    segs, cur, start, cmd, i = [], None, None, None, 0
+    while i < len(toks):
+        t = toks[i]
+        if t.isalpha():
+            if t.islower() or t not in 'MLHVCZ':
+                return None  # a relative path, or an arc (A) or other curve: not a polygon this reads
+            cmd, i = t, i + 1
+            if cmd == 'Z':
+                if cur and start and cur != start:
+                    segs.append((cur, start))
+                cur = start
+            continue
+        v = [float(x) for x in toks[i:i + {'M': 2, 'L': 2, 'H': 1, 'V': 1, 'C': 6}.get(cmd, 99)]]
+        if cmd == 'M':
+            cur = start = (v[0], v[1]); i += 2; cmd = 'L'; continue
+        if cmd == 'L':
+            nxt = (v[0], v[1]); i += 2
+        elif cmd == 'H':
+            nxt = (v[0], cur[1]); i += 1
+        elif cmd == 'V':
+            nxt = (cur[0], v[0]); i += 1
+        elif cmd == 'C':
+            cur = (v[4], v[5]); i += 6; continue
+        else:
+            return None
+        if nxt != cur:
+            segs.append((cur, nxt))
+        cur = nxt
+    def direction(sg):
+        (x0, y0), (x1, y1) = sg
+        return x1 - x0, y1 - y0
+    merged = []
+    for sg in segs:  # one side drawn in two straight pieces is one side
+        if merged:
+            (ax, ay), (bx, by) = direction(merged[-1]), direction(sg)
+            if abs(ax * by - ay * bx) < 1e-6 * (abs(ax) + abs(ay)) * (abs(bx) + abs(by)):
+                merged[-1] = (merged[-1][0], sg[1])
+                continue
+        merged.append(sg)
+    if len(merged) < 3:
+        return None
+    pts = []
+    for k in range(len(merged)):
+        (p, r), (q, s2) = merged[k - 1], merged[k]
+        (dx1, dy1), (dx2, dy2) = direction(merged[k - 1]), direction(merged[k])
+        den = dx1 * dy2 - dy1 * dx2
+        if abs(den) < 1e-9:
+            return None
+        t = ((q[0] - p[0]) * dy2 - (q[1] - p[1]) * dx2) / den
+        pts.append((p[0] + t * dx1, p[1] + t * dy1))
+    return pts
+
+
 class Svg:
     """The drawn geometry of a shape sprite: the corners of its outline (a polygon or a rect), from the SVG in the folder."""
 
@@ -311,6 +370,9 @@ class Svg:
                 if m and '<circle' not in src:
                     w, h = float(m[1]), float(m[2])
                     pts = [(0, 0), (w, 0), (w, h), (0, h)]
+                else:
+                    m = re.search(r'<path[^>]*\sd="([^"]+)"', src)
+                    pts = path_corners(m[1]) if m and '<circle' not in src else None
         self.cache[name] = pts
         return pts
 
@@ -1464,7 +1526,7 @@ def check_sort(f, it):
             f.add('WRONG', it, 'unsolvable', '%d items do not share fairly between %d' % (len(items), len(bins)))
         return [len(items)]
     binfo = {b['id']: sprite_info(b.get('sprite')) for b in bins}
-    if it.has('אם הצורה'):
+    if it.has('אם הצורה', 'כל השאר'):
         cs, ss = colours_in(it.cap), shapes_in(it.cap)
         rule = (lambda i: i.get('colour') == cs[0]) if cs else ((lambda i: shape_member(i, ss[0], True)) if ss else None)
         if rule is None:
