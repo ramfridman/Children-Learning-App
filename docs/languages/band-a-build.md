@@ -721,9 +721,31 @@ What was built for 7.13, and what the build found. The PLAN.md bullet "Build det
 
 **What the build found, beyond 7.1 to 7.13.**
 1. **Items that write no answer were counted as words of a set.** A chant, a story only heard, a personal turn, a movement and a say step of a skill that is not a speaking one are no evidence, but their variant groups counted in the set coverage, so RUS-A-01 to A-04 and ENG-A-17 could never be fresh for a real child (QA's first test answered those items, which the real app never records). The engine catalogue no longer holds them (`engine_adapter.dart`). A word that only the say steps of a *speaking* skill ask (ENG-A-17's "how are you" answers) is not one that fresh mastery waits for either: without the microphone nothing could cover it (`Catalog.coverageGroupsOf`).
-2. **The two-choice half counted probes** (frame 2.3), which refused ENG-A-16 once its two yes and no probes were added (8 of 14). Probes are not evidence of mastery, so the half is counted over the other items (`language_checks.dart`; frame 2.3 says so). **Decision for the curriculum-expert to confirm**; the other way is two more three-choice items in ENG-A-16.
+2. **The two-choice half counted probes** (frame 2.3), which refused ENG-A-16 once its two yes and no probes were added (8 of 14). Probes are not evidence of mastery, so the half is counted over the other items (`language_checks.dart`; frame 2.3 says so). **Confirmed by the curriculum-expert (7.16).** The other way would have been two more three-choice items in ENG-A-16.
 3. **Counts of 5 to 10, the SE's bins and the print page** are built as the design-director specified (`docs/design/languages-band-a-qa.md`), with one limit: the corner speaker is Band A's and for cards that are pictures or letters.
 4. **QA's flow test follows the course stop** (7.13): every skill fresh, HEB-A-14 met, in 19, 27 and 36 days of three visits (Hebrew, English, Russian; about one check visit a day). It also needed the engine facts above.
+
+### 7.16 Confirmations (curriculum-expert, 2026-11-08)
+
+1. **The two-choice half counts non-probe items only: confirmed.** No three-choice items are added to ENG-A-16.
+   - The rule exists to keep two-choice items to at most half of a skill's *evidence*: frame §2.3 calls it "the authoring side of the engine's 2-choice guard, which caps them at 50% of the success evidence".
+   - A probe is never evidence: the engine counts no probe as a success. It is played only in placement, never in a lesson, a check visit or a revisit.
+   - Counted over the items that are evidence, ENG-A-16 has 6 two-choice items of 12, exactly half, and balanced: 3 "yes" and 3 "no" among i01 to i06, plus the pair pr1 / pr2.
+   - Two more three-choice items would add screen time for a counting artefact and teach nothing new.
+   - Guard for this: a two-choice **probe** still needs its balanced partner in the same placement level (pr1 with pr2), so a strand never moves on one coin-flip.
+2. **The "unsure" step of a reverse item never plays the right word: confirmed.** All 17 reverse items in the packs pass, checked on the generated activities:
+   - English (8 items): `he-hint-again` with no target clip;
+   - Russian (8 items): `f38` with no target clip;
+   - `rus.a12.04`: `f17` with no target clip.
+
+   The course default ("listen again" plus the target) would give the answer away, so the override is right. Taps never return "unsure" today (only speech does), but the item must hold for when it can. The generator's `check_reverse` should refuse a reverse item whose `unsure` names the right clip, as it already does for the prompt, hints 1 and 2 and the first-error line (a one-line addition for the app-developer, if not already there).
+3. **The developer's choices in the check visit: both accepted.**
+   - **A placed child gets the check visit of an assumed skill the day after placement.** This is the earliest day C-1.3 allows, since the probes were answered that day. It is the retrieval check that frame §3.2 asks for within 2 weeks.
+     - With one check visit a day per course, a child who was placed high and has more than about 14 assumed skills cannot have them all checked within 2 weeks.
+     - That is acceptable: an assumed skill keeps its prior (0.85), and nothing waits for the check. No change is needed. If it shows up in use, the first thing to try is to allow a second check visit on a day when the child plays a second visit.
+   - **"Ends on a success" is planned, not reactive.** When the plan would end on a check, its last item is a learn item the child has already answered right. This keeps curriculum §10.3 as closely as a fixed list can, because the easiest known item comes last.
+     - If even that item is answered wrong, the visit still ends with the course's celebration and no failure signal. Nothing is added after it: no loop, and no "one more".
+     - One condition: the closing item is a learn item the child already got right with no hint, and never a check.
 
 ### 7.14 Sources
 
