@@ -1,0 +1,15 @@
+{
+  "skill": {
+    "id": "RUS-A-01",
+    "strand": "lis",
+    "title": "בְּרָכוֹת"
+  },
+  "items": [
+    {"id": "01", "kind": "tap", "frame": "f39", "target": "w-privet", "options": ["mika-arrive", "mika-leave", "mika-gift"], "wrong": {"mika-leave": "sem", "mika-gift": "sem"}},
+    {"id": "02", "kind": "tap", "frame": "f39", "target": "w-poka", "options": ["mika-leave", "mika-arrive", "mika-gift"], "wrong": {"mika-arrive": "sem", "mika-gift": "sem"}},
+    {"id": "03", "kind": "tap", "frame": "f39", "purpose": "check", "target": "w-do-svidanija", "options": ["mika-leave", "mika-arrive", "mika-gift"], "wrong": {"mika-arrive": "sem", "mika-gift": "sem"}}
+  ],
+  "lessons": [
+    {"id": "greet-1", "title": "בְּרָכוֹת", "items": ["01", "02", "03"]}
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-02",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִלִּים חֲדָשׁוֹת מִסִּפּוּרִים"
+    }
+  ],
+  "strand": "ol",
+  "prerequisites": [],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "heb.ol.sem",
+    "heb.ol.soundalike"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

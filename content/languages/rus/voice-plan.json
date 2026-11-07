@@ -1,0 +1,85 @@
+{
+  "course": "rus",
+  "pack": "lang-rus",
+  "frameLines": [
+    {
+      "id": "f02",
+      "vo": "vo:rus.f02",
+      "he": "הַקְשִׁיבוּ שׁוּב.",
+      "voice": "הקשיבו שוב.",
+      "review": "text-ready"
+    },
+    {
+      "id": "f39",
+      "vo": "vo:rus.f39",
+      "he": "מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ?",
+      "voice": "מישהו בא, או הולך?",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-check",
+      "vo": "vo:rus.he_fb_check",
+      "he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.",
+      "voice": "המממ… בואו נבדוק.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-1",
+      "vo": "vo:rus.he_fb_right_1",
+      "he": "נָכוֹן!",
+      "voice": "נכון.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-2",
+      "vo": "vo:rus.he_fb_right_2",
+      "he": "כֵּן!",
+      "voice": "כן.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-3",
+      "vo": "vo:rus.he_fb_right_3",
+      "he": "יָפֶה מְאֹד!",
+      "voice": "יפה מאוד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-8",
+      "vo": "vo:rus.he_fb_right_8",
+      "he": "כׇּל הַכָּבוֹד!",
+      "voice": "כל הכבוד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-hint-showme",
+      "vo": "vo:rus.he_hint_showme",
+      "he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.",
+      "voice": "הסתכלו איך עוֹשִׂים.",
+      "review": "text-ready"
+    }
+  ],
+  "targetClips": [
+    {
+      "id": "w-do-svidanija",
+      "vo": "vo:rus.w_do_svidanija",
+      "shown": "До свидания!",
+      "say": "До свида́ния!",
+      "ipa": "[də svʲɪˈdanʲɪjə]"
+    },
+    {
+      "id": "w-poka",
+      "vo": "vo:rus.w_poka",
+      "shown": "Пока!",
+      "say": "Пока́!",
+      "ipa": "[pɐˈka]"
+    },
+    {
+      "id": "w-privet",
+      "vo": "vo:rus.w_privet",
+      "shown": "Привет!",
+      "say": "Приве́т!",
+      "ipa": "[prʲɪˈvʲet]"
+    }
+  ]
+}

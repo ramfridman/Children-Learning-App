@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import '../data/app_database.dart' show InstalledPack;
 import '../engine/course.dart';
+import 'bundled_packs.dart';
+import 'capabilities.dart' show compareSemver;
 import 'models.dart';
 import 'pack_installer.dart';
 import 'pack_verify.dart';
@@ -36,9 +38,9 @@ class ContentRepository {
   }
 
   /// The pack of a language course, ready to play, or null when it is not installed or this app cannot play it yet. There is
-  /// one signed pack per course, named `lang-<course>`; a language pack is downloaded when its language is turned on and is
-  /// never part of the app (`docs/languages/frame.md` section 1.5). Throws [PackRejected] if the installed copy is not genuine,
-  /// so one damaged course can be told apart from one that is simply not there.
+  /// one signed pack per course, named `lang-<course>` (`docs/languages/frame.md` section 1.5): it ships inside the app and is
+  /// installed when its language is first turned on ([languagePacks]), or arrives later as an update. Throws [PackRejected] if
+  /// the installed copy is not genuine, so one damaged course can be told apart from one that is simply not there.
   Future<PackContent?> languagePack(String course) async {
     final String? id = Course.packIdOf(course);
     if (id == null) throw ArgumentError.value(course, 'course', 'is not a language course');
@@ -56,6 +58,57 @@ class ContentRepository {
     for (final String c in Course.languages)
       if (await _playable(Course.packIdOf(c)!)) c,
   ];
+
+  /// The language packs on this device, by course. First the bundled copy of each course in [wanted] (a language some child has
+  /// turned on) is installed through the verifying installer, unless this phone already holds that version or a newer one (an
+  /// update that arrived first): a family that has turned no language on installs and reads nothing. Then every installed course is
+  /// read back and proven again. A copy that no longer proves itself is put right from the bundle once; a course that still does
+  /// not prove itself is left out, and never hurts another (the child's other courses and the lands play on).
+  Future<Map<String, PackContent>> languagePacks({
+    required Iterable<String> wanted,
+    required Map<String, BundledLanguagePack> bundled,
+    required Future<Uint8List> Function(String asset) read,
+  }) async {
+    for (final String course in wanted) {
+      final BundledLanguagePack? pack = bundled[course];
+      if (pack != null) await _installBundled(pack, read, repair: false);
+    }
+    final Map<String, PackContent> out = <String, PackContent>{};
+    for (final String course in await installedLanguages()) {
+      PackContent? content = await _proven(course);
+      final BundledLanguagePack? pack = bundled[course];
+      if (content == null && pack != null && await _installBundled(pack, read, repair: true)) {
+        content = await _proven(course);
+      }
+      if (content != null) out[course] = content;
+    }
+    return out;
+  }
+
+  Future<PackContent?> _proven(String course) async {
+    try {
+      return await languagePack(course);
+    } on PackRejected {
+      return null;
+    }
+  }
+
+  /// Installs the bundled copy. Without [repair] only when nothing, or something older, is installed. A file the installer refuses
+  /// (a build defect the tests catch) or a newer copy already there changes nothing. True if the copy is now installed.
+  Future<bool> _installBundled(
+    BundledLanguagePack pack,
+    Future<Uint8List> Function(String asset) read, {
+    required bool repair,
+  }) async {
+    final InstalledPack? row = await installer.registry.find(Course.packIdOf(pack.course)!);
+    if (!repair && row != null && compareSemver(row.version, pack.version) >= 0) return false;
+    try {
+      await installer.install(await read(pack.asset));
+      return true;
+    } on PackRejected {
+      return false;
+    }
+  }
 
   Future<bool> _playable(String id) async {
     final InstalledPack? row = await installer.registry.find(id);

@@ -4,6 +4,7 @@
 //   dart run tool/pack_builder.dart build <source folder> [--key <key file>] [--out <folder>]
 //   dart run tool/pack_builder.dart verify <pack file> [--public-key <file>]
 //   dart run tool/pack_builder.dart inspect <pack file> [--public-key <file>]
+//   dart run tool/pack_builder.dart build-language <eng|heb|rus|all> [--key <key file>] [--out <folder>]
 //   dart run tool/pack_builder.dart build-character <character folder> [--key <key file>] [--out <folder>]
 //   dart run tool/pack_builder.dart publish <pack file>... [--voices <voices.json>] [--url <project url>] [--dry-run]
 //   dart run tool/pack_builder.dart schema [--out <folder>] [--check]
@@ -37,6 +38,8 @@ Future<void> main(List<String> args) async {
         await _keygen(rest);
       case 'build':
         await _build(rest);
+      case 'build-language':
+        await _buildLanguage(rest);
       case 'build-character':
         await _buildCharacter(rest);
       case 'verify':
@@ -113,6 +116,38 @@ Future<void> _build(List<String> args) async {
     stdout.writeln('WARNING: $w');
   }
   stdout.writeln('Built ${file.path}: ${built.bytes.length} bytes, manifest sha256 ${built.manifestSha256}');
+}
+
+/// Builds and signs the pack of one language course, or of all three, from `content/languages/<course>/pack` (what
+/// `python tools/lang_pack.py all` writes), into the app's bundle folder (`assets/packs`) unless `--out` says another. An older
+/// version of the same course in the output folder is removed, so the bundle holds one pack per course.
+Future<void> _buildLanguage(List<String> args) async {
+  final List<String> pos = _positional(args);
+  if (pos.length != 1) throw const BuildFailed('build-language needs a course: eng, heb, rus or all');
+  final List<String> courses = pos.single == 'all' ? languageCourses : <String>[pos.single];
+  final PackKey key = readKeyFile(_option(args, '--key') ?? defaultKeyPath());
+  final Directory out = Directory(_option(args, '--out') ?? 'assets/packs')..createSync(recursive: true);
+  for (final String course in courses) {
+    final BuiltPack built = await buildPack(languageSource(course, '../content/languages'), key);
+    final File file = File('${out.path}${Platform.pathSeparator}${built.fileName}');
+    for (final FileSystemEntity old in out.listSync()) {
+      final String name = old.uri.pathSegments.last;
+      if (old is File &&
+          name.startsWith('lang-$course-') &&
+          name.endsWith('.nnpack') &&
+          name != built.fileName) {
+        old.deleteSync();
+        stdout.writeln('Removed the older ${old.path}');
+      }
+    }
+    file.writeAsBytesSync(built.bytes);
+    for (final Problem w in built.warnings) {
+      stdout.writeln('WARNING: $course: $w');
+    }
+    stdout.writeln(
+      'Built ${file.path}: ${built.bytes.length} bytes, manifest sha256 ${built.manifestSha256}',
+    );
+  }
 }
 
 Future<void> _buildCharacter(List<String> args) async {

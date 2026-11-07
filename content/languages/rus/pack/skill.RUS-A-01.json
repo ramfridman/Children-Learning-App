@@ -1,0 +1,26 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-01",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "בְּרָכוֹת"
+    }
+  ],
+  "strand": "lis",
+  "prerequisites": [],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "rus.lis.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

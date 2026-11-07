@@ -2,6 +2,8 @@
 
 **Status:** in the plan, not built (owner, 2026-11-03). Plan first: research, then a milestone plan per language, each with the owner's OK before any code.
 
+**Band A packs (2026-11-07):** how the teachers' content becomes the signed `lang-eng`, `lang-heb` and `lang-rus` packs (the authoring files, the generator, signing, bundling, tests) is in `band-a-build.md`.
+
 ## What the owner asked for
 - A **Languages** category in the child's space with three languages: **English**, **Hebrew** and **Russian**. More may follow.
 - The child **chooses which language to learn now**. Each language keeps its own path, progress and mastery; switching never loses anything.

@@ -1,0 +1,79 @@
+{
+  "course": "heb",
+  "pack": {"version": "0.1.0", "minAppVersion": "0.5.0"},
+  "note": "HEB-1 pilot: HEB-A-02 (new everyday words from stories), one lesson, text only (every clip pending). The lines are those of docs/languages/hebrew/band-a-content.md sections 3 and 5; the word clips are rows of docs/languages/hebrew/pronunciation.csv.",
+  "defaults": {
+    "frame": "i-find",
+    "ladder": "HL-WORD",
+    "celebration": "ok-8",
+    "rep": "pictorial",
+    "minutes": 4
+  },
+  "feedback": {
+    "right": [
+      {"line": "ok-1", "target": "@target"},
+      {"line": "ok-2", "target": "@target"},
+      {"line": "ok-3", "target": "@target"},
+      {"line": "ok-4", "target": "@target"},
+      {"line": "ok-5", "target": "@target"},
+      {"line": "ok-6", "target": "@target"},
+      {"line": "ok-7", "target": "@target"},
+      {"line": "ok-8", "target": "@target"}
+    ],
+    "wrong": {"line": "try-1"},
+    "unsure": {"line": "try-2", "target": "@target"},
+    "byTag": {
+      "sem": {"line": "fb-sem", "target": "@target"},
+      "soundalike": {"line": "fb-soundalike", "target": "@target"}
+    }
+  },
+  "ladders": {
+    "HL-WORD": [
+      {"line": "try-2", "action": "replay_prompt_slow", "target": "@target"},
+      {"line": "@gloss", "action": "highlight_objects_sequentially"},
+      {"line": "show", "action": "worked_example", "target": "@target"}
+    ]
+  },
+  "glosses": {
+    "heb-a-w-siach": "m-siach",
+    "heb-a-w-kemach": "m-kemach",
+    "heb-a-w-keara": "m-keara",
+    "heb-a-w-tanur": "m-tanur"
+  },
+  "tags": {
+    "sem": {
+      "id": "heb.ol.sem",
+      "tag": "M-HEB-SEM",
+      "kind": "diagnostic",
+      "family": "MEANING",
+      "parentText": "הילד מכיר את הנושא, ומילים קרובות (כמו כלב וחתול) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות."
+    },
+    "soundalike": {
+      "id": "heb.ol.soundalike",
+      "tag": "M-HEB-SOUNDALIKE",
+      "kind": "diagnostic",
+      "family": "GUESS",
+      "parentText": "הילד שומע רק חלק מהמילה, ולכן מילים שנשמעות דומות (כמו כדור וכף) מתחלפות לפעמים. כדאי להקשיב יחד עד הסוף."
+    }
+  },
+  "lines": {
+    "i-find": {"he": "בּוֹאוּ נִמְצָא:", "voice": "בואו נמצא:", "review": "text-ready"},
+    "ok-1": {"he": "נָכוֹן!", "review": "text-ready"},
+    "ok-2": {"he": "כֵּן, זֶהוּ זֶה!", "review": "text-ready"},
+    "ok-3": {"he": "שְׁמַעְתֶּם טוֹב!", "review": "text-ready"},
+    "ok-4": {"he": "הִקְשַׁבְתֶּם עַד הַסּוֹף!", "review": "text-ready"},
+    "ok-5": {"he": "מְצָאתֶם!", "review": "text-ready"},
+    "ok-6": {"he": "יוֹפִי שֶׁל הַקְשָׁבָה!", "review": "text-ready"},
+    "ok-7": {"he": "בְּדִיּוּק!", "review": "text-ready"},
+    "ok-8": {"he": "כׇּל הַכָּבוֹד!", "review": "text-ready"},
+    "try-1": {"he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.", "review": "text-ready"},
+    "try-2": {"he": "בּוֹאוּ נִשְׁמַע שׁוּב.", "review": "text-ready"},
+    "show": {"he": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד.", "review": "text-ready"},
+    "fb-sem": {"he": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב.", "review": "text-ready"},
+    "fb-soundalike": {"he": "שִׁמְעוּ עַד הַסּוֹף.", "review": "text-ready"},
+    "m-siach": {"he": "שִׂיחַ הוּא כְּמוֹ עֵץ קָטָן וְנָמוּךְ, עִם הַרְבֵּה עָלִים.", "voice": "שִׂיחַ הוא כמו עץ קטן ונמוך, עם הרבה עלים.", "review": "text-ready"},
+    "m-kemach": {"he": "קֶמַח הוּא אֲבָקָה לְבָנָה. מִמֶּנּוּ אוֹפִים לֶחֶם וְעוּגוֹת.", "voice": "קמח הוא אבקה לבנה. ממנו אופים לחם ועוגות.", "review": "text-ready"},
+    "m-keara": {"he": "קְעָרָה הִיא כְּלִי עָגֹל וְעָמֹק.", "voice": "קערה היא כלי עגול ועמוק.", "review": "text-ready"},
+    "m-tanur": {"he": "בַּתַּנּוּר חַם מְאֹד. בּוֹ אוֹפִים עוּגוֹת.", "voice": "בתנור חם מאוד. בו אופים עוגות.", "review": "text-ready"}
+  }
+}

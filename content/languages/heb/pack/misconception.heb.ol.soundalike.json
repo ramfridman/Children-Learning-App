@@ -1,0 +1,16 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.soundalike",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GUESS",
+  "skills": [
+    "HEB-A-02"
+  ],
+  "parentText": "הילד שומע רק חלק מהמילה, ולכן מילים שנשמעות דומות (כמו כדור וכף) מתחלפות לפעמים. כדאי להקשיב יחד עד הסוף.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

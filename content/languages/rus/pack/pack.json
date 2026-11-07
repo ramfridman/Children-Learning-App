@@ -1,0 +1,22 @@
+{
+  "schema": "pack-source/v1",
+  "id": "lang-rus",
+  "version": "0.1.0",
+  "minAppVersion": "0.5.0",
+  "course": "rus",
+  "assets": [
+    {
+      "id": "mika_arrive",
+      "file": "mika_arrive.svg"
+    },
+    {
+      "id": "mika_gift",
+      "file": "mika_gift.svg"
+    },
+    {
+      "id": "mika_leave",
+      "file": "mika_leave.svg"
+    }
+  ],
+  "vo": []
+}

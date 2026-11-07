@@ -1,0 +1,176 @@
+{
+  "course": "eng",
+  "pack": "lang-eng",
+  "frameLines": [
+    {
+      "id": "he-bye",
+      "vo": "vo:eng.he_bye",
+      "he": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית.",
+      "voice": "להתראות, היה כיף לְשַׂחֵק באנגלית.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-check",
+      "vo": "vo:eng.he_fb_check",
+      "he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.",
+      "voice": "המממ… בואו נבדוק.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-listen-again",
+      "vo": "vo:eng.he_fb_listen_again",
+      "he": "בּוֹאוּ נַקְשִׁיב שׁוּב:",
+      "voice": "בואו נקשיב שוב:",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-1",
+      "vo": "vo:eng.he_fb_right_1",
+      "he": "נָכוֹן!",
+      "voice": "נכון.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-2",
+      "vo": "vo:eng.he_fb_right_2",
+      "he": "כֵּן!",
+      "voice": "כן.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-3",
+      "vo": "vo:eng.he_fb_right_3",
+      "he": "יָפֶה מְאֹד!",
+      "voice": "יפה מאוד.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-4",
+      "vo": "vo:eng.he_fb_right_4",
+      "he": "מְצָאתֶם!",
+      "voice": "מצאתם.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-5",
+      "vo": "vo:eng.he_fb_right_5",
+      "he": "בְּדִיּוּק!",
+      "voice": "בדיוק.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-fb-right-6",
+      "vo": "vo:eng.he_fb_right_6",
+      "he": "שְׁמַעְתֶּם טוֹב!",
+      "voice": "שמעתם טוב.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-bye",
+      "vo": "vo:eng.he_gl_bye",
+      "he": "בַּיי",
+      "voice": "בַּיי",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-goodbye",
+      "vo": "vo:eng.he_gl_goodbye",
+      "he": "לְהִתְרָאוֹת",
+      "voice": "לְהִתְרָאוֹת",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-hello",
+      "vo": "vo:eng.he_gl_hello",
+      "he": "שָׁלוֹם",
+      "voice": "שָׁלוֹם",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-gl-hi",
+      "vo": "vo:eng.he_gl_hi",
+      "he": "הַיי",
+      "voice": "הַיי",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-hint-again",
+      "vo": "vo:eng.he_hint_again",
+      "he": "הַקְשִׁיבוּ שׁוּב, לְאַט.",
+      "voice": "הקשיבו שוב, לאט.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-hint-showme",
+      "vo": "vo:eng.he_hint_showme",
+      "he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.",
+      "voice": "הסתכלו איך עוֹשִׂים.",
+      "review": "text-ready"
+    },
+    {
+      "id": "he-ins-listen-tap",
+      "vo": "vo:eng.he_ins_listen_tap",
+      "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.",
+      "voice": "הקשיבו, וגעו בתמונה.",
+      "review": "text-ready"
+    }
+  ],
+  "targetClips": [
+    {
+      "id": "en-bye",
+      "vo": "vo:eng.en_bye",
+      "shown": "Bye!",
+      "say": "Bye!",
+      "ipa": "/baɪ/"
+    },
+    {
+      "id": "en-bye-slow",
+      "vo": "vo:eng.en_bye_slow",
+      "shown": "Bye!",
+      "say": "Bye!",
+      "ipa": "/baɪ/"
+    },
+    {
+      "id": "en-goodbye",
+      "vo": "vo:eng.en_goodbye",
+      "shown": "Goodbye!",
+      "say": "Goodbye!",
+      "ipa": "/ɡʊdˈbaɪ/"
+    },
+    {
+      "id": "en-goodbye-slow",
+      "vo": "vo:eng.en_goodbye_slow",
+      "shown": "Goodbye!",
+      "say": "Goodbye!",
+      "ipa": "/ɡʊdˈbaɪ/"
+    },
+    {
+      "id": "en-hello",
+      "vo": "vo:eng.en_hello",
+      "shown": "Hello!",
+      "say": "Hello!",
+      "ipa": "/həˈloʊ/"
+    },
+    {
+      "id": "en-hello-slow",
+      "vo": "vo:eng.en_hello_slow",
+      "shown": "Hello!",
+      "say": "Hello!",
+      "ipa": "/həˈloʊ/"
+    },
+    {
+      "id": "en-hi",
+      "vo": "vo:eng.en_hi",
+      "shown": "Hi!",
+      "say": "Hi!",
+      "ipa": "/haɪ/"
+    },
+    {
+      "id": "en-hi-slow",
+      "vo": "vo:eng.en_hi_slow",
+      "shown": "Hi!",
+      "say": "Hi!",
+      "ipa": "/haɪ/"
+    }
+  ]
+}

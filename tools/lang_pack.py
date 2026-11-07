@@ -1,0 +1,731 @@
+"""Turns a language course's authoring files into the flat pack source that `pack_builder build` signs.
+
+    python tools/lang_pack.py eng            # one course (eng, heb or rus)
+    python tools/lang_pack.py all            # the three courses
+    python tools/lang_pack.py all --check    # writes nothing; exits 1 if the committed files differ from what the spec gives
+
+A course is written by its teacher in two kinds of file (the format is in docs/languages/band-a-build.md):
+
+    content/languages/<course>/course.json     the pack's id and version, the Hebrew lines, the feedback and hint ladders,
+                                               the tags (the misconception catalogue) and the course defaults
+    content/languages/<course>/units/*.json    one unit per skill (or a few): the skill, its items and its lessons
+    content/languages/<course>/placement.json  the placement game (optional)
+    docs/languages/<course>/pronunciation.csv  the clip table: every target-language clip an item plays
+
+and this script writes, next to them:
+
+    content/languages/<course>/pack/           the flat pack source (pack.json, skill.*, lesson.*, activity.*, misconception.*,
+                                               placement.*, gate.*, the pictures it uses), committed like content/starter
+    content/languages/<course>/voice-plan.json every clip the pack names, with its text, for the voice-and-sound-director
+
+The script holds what is the same for every item of a kind (the file shape, the hint ladder, the scoring, the tutor switched off,
+the voice ids); the teacher's files hold what only a teacher can decide. It checks what it can before the pack builder does, and says
+every problem it finds at once. Pictures are copied from content/languages/pictures; nothing is voiced or paid here. Every Hebrew
+text it writes is `needs-editor` until a person approves it. Standard library only.
+"""
+import csv
+import glob
+import json
+import os
+import re
+import sys
+
+TOOLS = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
+
+COURSES = ('eng', 'heb', 'rus')
+DOMAIN = 'languages'
+# The template versions the recipes write (app/lib/content/schemas.dart `supportedTemplates` must be at least these).
+TEMPLATE_VERSIONS = {'tap_answer': '1.3'}
+REPRESENTATIONS = ('concrete', 'pictorial', 'story', 'embodied', 'symbolic')
+PURPOSES = ('learn', 'practice', 'probe', 'repair', 'check')
+CHECK_TYPES = ('practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict')
+TAG_KINDS = ('diagnostic', 'on_the_way', 'accent', 'practice')
+FAMILIES = ('DIR', 'NAME', 'SHAPE', 'STROKE', 'CONTRAST', 'SEGMENT', 'RHYME', 'VOWEL', 'CODE', 'GRAMMAR', 'PRINT', 'GUESS',
+            'MEANING', 'ACCENT', 'FLUENCY')
+HINT_ACTIONS = ('replay_prompt_slow', 'highlight_objects_sequentially', 'show_fingers', 'worked_example')
+# What a skill file may carry beyond the fields the generator derives (frame section 3 and D-6 of docs/milestones/L0.md).
+SKILL_EXTRAS = ('worldObject', 'childLine', 'core', 'bundle', 'setCoverage', 'soundRight', 'letters', 'writing', 'graphemes',
+                'tricky', 'binary', 'masteryRequires')
+VO_PART = re.compile(r'^[a-z0-9_.]{1,80}$')
+ASSET_ID = re.compile(r'^[a-z0-9_]{1,40}$')
+SKILL_ID = re.compile(r'^(ENG|HEB|RUS)-([ABC])-(\d{2})(\.[A-Z][0-9]{1,2})?$')
+
+
+class SpecError(Exception):
+    """The course's files have problems; [problems] lists all of them."""
+
+    def __init__(self, problems):
+        super().__init__('\n'.join(problems))
+        self.problems = problems
+
+
+def he(text):
+    """A Hebrew caption as the schemas hold it."""
+    return [{'t': 'he', 'v': text}]
+
+
+def slug(text):
+    return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
+
+
+class Course:
+    """One course's spec, read and checked, and the files it makes."""
+
+    def __init__(self, course, root=ROOT):
+        self.id = course
+        self.root = root
+        self.dir = os.path.join(root, 'content', 'languages', course)
+        self.problems = []
+        self.files = {}  # name -> bytes, the pack source
+        self.used_lines = set()
+        self.used_clips = set()
+        self.used_pictures = {}  # asset id -> picture file id
+        self.skills = {}  # id -> skill info
+        self.items = {}  # activity id (with the course) -> info
+        self.lessons = []
+        self._load()
+
+    # ------------------------------------------------------------ reading
+    def problem(self, where, message):
+        text = '%s: %s' % (where, message)
+        if text not in self.problems:
+            self.problems.append(text)
+
+    def _json(self, path):
+        try:
+            with open(path, encoding='utf-8') as fh:
+                return json.load(fh)
+        except (OSError, ValueError) as e:
+            self.problem(os.path.relpath(path, self.root), 'cannot be read: %s' % e)
+            return None
+
+    def _load(self):
+        self.spec = self._json(os.path.join(self.dir, 'course.json')) or {}
+        if self.spec.get('course') != self.id:
+            self.problem('course.json', 'course must be "%s"' % self.id)
+        self.lines = self.spec.get('lines', {})
+        for line_id in self.lines:
+            if not re.match(r'^[a-z0-9][a-z0-9-]{0,60}$', line_id):
+                self.problem('course.json lines', 'the id "%s" must be lower case letters, digits and hyphens' % line_id)
+        self.tags = self.spec.get('tags', {})
+        self.ladders = self.spec.get('ladders', {})
+        self.glosses = self.spec.get('glosses', {})
+        self.defaults = self.spec.get('defaults', {})
+        self.pronunciation = {}
+        csv_path = os.path.join(self.root, 'docs', 'languages', {'eng': 'english', 'heb': 'hebrew', 'rus': 'russian'}[self.id],
+                                'pronunciation.csv')
+        try:
+            with open(csv_path, encoding='utf-8', newline='') as fh:
+                self.pronunciation = {r['id']: r for r in csv.DictReader(fh)}
+        except OSError as e:
+            self.problem('pronunciation.csv', 'cannot be read: %s' % e)
+        self.units = []
+        for path in sorted(glob.glob(os.path.join(self.dir, 'units', '*.json'))):
+            unit = self._json(path)
+            if unit is not None:
+                self.units.append((os.path.basename(path), unit))
+        self.placement = None
+        placement = os.path.join(self.dir, 'placement.json')
+        if os.path.exists(placement):
+            self.placement = self._json(placement)
+
+    # ------------------------------------------------------------ ids and lines
+    def vo(self, clip):
+        """`vo:<course>.<id>`: the clip's id with its hyphens turned into underscores (the same id, as the voice plan lists it)."""
+        ref = '%s.%s' % (self.id, clip.replace('-', '_'))
+        if not VO_PART.match(ref) or len('vo:' + ref) > 83:
+            self.problem(clip, 'is not a usable clip id (lower case letters, digits, hyphens; at most 77 characters)')
+        return 'vo:' + ref
+
+    def line_text(self, line_id, where):
+        entry = self.lines.get(line_id)
+        if not isinstance(entry, dict) or not isinstance(entry.get('he'), str) or not entry['he']:
+            self.problem(where, 'the line "%s" is not in course.json "lines" (it needs "he", the Hebrew with nikud)' % line_id)
+            return None
+        return entry['he']
+
+    def clip_row(self, clip, where):
+        row = self.pronunciation.get(clip)
+        if row is None:
+            self.problem(where, 'the clip "%s" has no row in docs/languages/%s/pronunciation.csv' % (clip, self.id))
+        return row
+
+    def spoken(self, step, where, item=None):
+        """A Spoken (vo, caption, optional target and show) from a step: a line id, or {"line", "target", "show"}.
+
+        A target is a clip id, or `@target` (the item's own word) or `@slow` (its slow clip if there is one). A line is a line id, or
+        `@frame` (the item's own question) or `@gloss` (the line that says what the word means, from "glosses")."""
+        if isinstance(step, str):
+            step = {'line': step}
+        line_id = self.resolve_line(step.get('line'), item, where)
+        if line_id is None:
+            return None
+        text = self.line_text(line_id, where)
+        if text is None:
+            return None
+        self.used_lines.add(line_id)
+        out = {'vo': self.vo(line_id), 'caption': he(text)}
+        target = self.resolve_target(step.get('target'), item, where)
+        if target:
+            out['target'] = self.vo(target)
+            self.used_clips.add(target)
+            if step.get('show'):
+                row = self.clip_row(target, where)
+                if row and row.get('shown'):
+                    out['show'] = row['shown']
+        return out
+
+    def resolve_line(self, line, item, where):
+        if line == '@frame':
+            line = (item or {}).get('frame') or self.defaults.get('frame')
+        if line == '@gloss':
+            clip = item.get('target') if item else None
+            line = (item or {}).get('h2') or self.glosses.get(clip)
+            if not line:
+                self.problem(where, 'the ladder asks for a gloss, and course.json "glosses" has none for "%s"' % clip)
+        return line
+
+    def resolve_target(self, target, item, where):
+        if not target:
+            return None
+        own = (item or {}).get('target')
+        if target == '@target':
+            return own
+        if target == '@slow':
+            return own + '-slow' if own and own + '-slow' in self.pronunciation else own
+        if target.startswith('@'):
+            self.problem(where, 'unknown target "%s"' % target)
+            return None
+        return target
+
+    # ------------------------------------------------------------ building
+    def build(self):
+        self._tags_used = {}
+        self._skill_reps = {}
+        self.assets = {}
+        for name, unit in self.units:
+            self._unit(name, unit)
+        self._lessons()
+        self._skills()
+        self._tag_docs()
+        self._placement()
+        self._pack_json()
+        self._voice_plan()
+        if self.problems:
+            raise SpecError(self.problems)
+        return self.files
+
+    def put(self, name, doc):
+        self.files[name] = (json.dumps(doc, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
+
+    # ---- units, skills and items
+    def _unit(self, fname, unit):
+        skill = unit.get('skill', {})
+        sid = skill.get('id', '')
+        m = SKILL_ID.match(sid)
+        if not m or m.group(1) != self.id.upper():
+            self.problem(fname, 'skill.id "%s" must look like %s-A-01 (the prefix is the course in capitals)' % (sid, self.id.upper()))
+            return
+        if sid in self.skills:
+            self.problem(fname, 'the skill %s is defined twice' % sid)
+        sk = {'doc': skill, 'file': fname, 'band': m.group(2), 'slug': (m.group(2) + m.group(3) + (m.group(4) or '')).lower(),
+              'items': []}
+        self.skills[sid] = sk
+        for i, item in enumerate(unit.get('items', [])):
+            self._item(fname, sk, sid, item, '%s items[%d]' % (fname, i))
+        for i, doc in enumerate(unit.get('docs', [])):
+            self._raw(fname, doc, '%s docs[%d]' % (fname, i))
+        sk['lessons'] = unit.get('lessons', [])
+        sk['lessonFile'] = fname
+
+    def _item(self, fname, sk, sid, item, where):
+        item_id = item.get('id', '')
+        if not re.match(r'^[a-z0-9][a-z0-9-]{0,19}$', item_id):
+            self.problem(where, 'id "%s" must be lower case letters, digits and hyphens (at most 20 characters)' % item_id)
+            return
+        where = '%s (%s)' % (where, item_id)
+        aid = '%s.%s.%s' % (self.id, sk['slug'], item_id)
+        if aid in self.items:
+            self.problem(where, 'the id %s is used twice' % aid)
+        kind = item.get('kind')
+        if kind == 'tap':
+            doc = self._tap(sk, sid, aid, item, where)
+        elif kind == 'raw':
+            doc = self._raw_activity(sid, aid, item, where)
+        else:
+            self.problem(where, 'unknown kind "%s" (tap or raw)' % kind)
+            return
+        if doc is None:
+            return
+        sk['items'].append(aid)
+        self.items[aid] = {'doc': doc, 'skill': sid, 'purpose': doc.get('purpose', 'learn'), 'short': '%s.%s' % (sk['slug'], item_id)}
+        if doc.get('representation') in REPRESENTATIONS:
+            self._skill_reps.setdefault(sid, set()).add(doc['representation'])
+        self.put('activity.%s.json' % aid, doc)
+
+    def _picture(self, picture, where):
+        asset = picture.replace('-', '_')
+        if not ASSET_ID.match(asset):
+            self.problem(where, 'the picture id "%s" gives no usable asset id' % picture)
+            return asset
+        have = self.used_pictures.get(asset)
+        if have is not None and have != picture:
+            self.problem(where, 'the pictures "%s" and "%s" would share the asset id %s' % (have, picture, asset))
+        self.used_pictures[asset] = picture
+        if not os.path.exists(os.path.join(self.root, 'content', 'languages', 'pictures', picture + '.svg')):
+            self.problem(where, 'the picture "%s" is not in content/languages/pictures (the design-director draws it)' % picture)
+        return asset
+
+    def _tap(self, sk, sid, aid, item, where):
+        """LS01 tap (`tap_answer`): the clip is heard, the child touches the picture (or letter) it names."""
+        raw_options = item.get('options', [])
+        if not 2 <= len(raw_options) <= 3:
+            self.problem(where, 'a Band A tap item has 2 or 3 options (it has %d)' % len(raw_options))
+            return None
+        keys = [o if isinstance(o, str) else o.get('pic', '') for o in raw_options]
+        right = item.get('right', keys[0] if keys else None)
+        wrong = item.get('wrong', {})
+        options = []
+        correct = None
+        text_face = False
+        names = []
+        for n, opt in enumerate(raw_options, start=1):
+            entry = {'id': 'o%d' % n}
+            key = keys[n - 1]
+            names.append(key)
+            if key.startswith('text:'):
+                text = key[5:]
+                text_face = True
+                entry.update({'text': text, 'label': text})
+            else:
+                asset = self._picture(key, where)
+                entry.update({'sprite': 'asset:' + asset, 'label': (self.defaults.get('pictureLabel') or 'תְּמוּנָה')})
+            if isinstance(opt, dict):
+                if opt.get('clip'):
+                    self.clip_row(opt['clip'], where)
+                    self.used_clips.add(opt['clip'])
+                    entry['clip'] = self.vo(opt['clip'])
+                if opt.get('label'):
+                    entry['label'] = opt['label']
+            if key == right:
+                correct = entry['id']
+            else:
+                slug_ = wrong.get(key)
+                if slug_ is None:
+                    self.problem(where, 'the distractor "%s" has no tag in "wrong" (every distractor carries the error it reveals)' % key)
+                else:
+                    entry['misconception'] = self._tag(slug_, sid, where)
+            options.append(entry)
+        if len(set(names)) != len(names):
+            self.problem(where, 'an option is listed twice')
+        if correct is None:
+            self.problem(where, 'the right answer "%s" is not among the options' % right)
+        for key in wrong:
+            if key not in names or key == right:
+                self.problem(where, '"wrong" names "%s", which is not a distractor of this item' % key)
+        purpose = item.get('purpose', 'learn')
+        if purpose not in PURPOSES:
+            self.problem(where, 'purpose "%s" is not one of %s' % (purpose, ', '.join(PURPOSES)))
+        check = item.get('check', 'transfer' if purpose == 'check' else 'practice')
+        if check not in CHECK_TYPES:
+            self.problem(where, 'check "%s" is not one of %s' % (check, ', '.join(CHECK_TYPES)))
+        rep = item.get('rep', self.defaults.get('rep', 'pictorial'))
+        if rep not in REPRESENTATIONS:
+            self.problem(where, 'rep "%s" is not one of %s' % (rep, ', '.join(REPRESENTATIONS)))
+        target = item.get('target')
+        if target:
+            self.clip_row(target, where)
+            self.used_clips.add(target)
+        ladder = self.ladders.get(item.get('ladder', self.defaults.get('ladder')))
+        if not ladder:
+            self.problem(where, 'the ladder "%s" is not in course.json "ladders"' % item.get('ladder', self.defaults.get('ladder')))
+            ladder = []
+        frame_id = item.get('frame', self.defaults.get('frame'))
+        frame = {'line': frame_id, 'target': target, 'show': item.get('show', False)}
+        prompt = self.spoken(frame, where + ' prompt', item)
+        feedback = self._feedback(item, options, where)
+        hints = []
+        for level, step in enumerate(ladder, start=1):
+            line = self.spoken(step, '%s hint %d' % (where, level), item)
+            action = step.get('action') if isinstance(step, dict) else None
+            if action not in HINT_ACTIONS:
+                self.problem(where, 'the ladder step %d has action "%s" (one of %s)' % (level, action, ', '.join(HINT_ACTIONS)))
+            if line:
+                hints.append(dict([('level', level), ('action', action)] + list(line.items())))
+        if len(ladder) != 3:
+            self.problem(where, 'a ladder has exactly 3 steps')
+        if prompt is None or feedback is None:
+            return None
+        two = len(options) == 2
+        count_word = {2: 'שְׁתֵּי', 3: 'שָׁלוֹשׁ'}[len(options)]
+        alt = item.get('alt') or '%s %s' % (count_word, 'אֶפְשָׁרֻיּוֹת' if text_face else 'תְּמוּנוֹת')
+        variant = item.get('variant') or slug(target or '%s-%s' % (sk['slug'], item['id']))
+        answer = {'type': 'choice', 'options': options, 'correct': correct, 'shuffle': True, 'unsureAllowed': True}
+        if text_face:
+            answer['face'] = 'letter'
+        doc = {
+            'schema': 'activity/v1',
+            'id': aid,
+            'review': 'needs-editor',
+            'revision': item.get('revision', 1),
+            'template': 'tap_answer',
+            'templateVersion': TEMPLATE_VERSIONS['tap_answer'],
+            'course': self.id,
+            'domain': DOMAIN,
+            'band': sk['band'],
+            'skills': [{'id': sid, 'weight': 1}],
+            'purpose': purpose,
+            'checkType': check,
+            'representation': rep,
+            'variantGroup': variant,
+            'difficulty': {'authored': item.get('difficulty', 0.2)},
+            # A two-choice item allows one retry only (frame section 2.3).
+            'scoring': {'maxAttempts': 2 if two else 3, 'creditByHintLevel': [1, 0.75, 0.5, 0.25]},
+            # The AI tutor is off for every language item (frame section 1.6): RuleTutor plays these hints.
+            'tutor': {'llmAllowed': False, 'goal': 'listen and choose', 'mustNotRevealBeforeHint': 2},
+            'a11y': {'altText': alt},
+            'prompt': dict(prompt, replayButton=True),
+            'feedback': feedback,
+            'hints': hints,
+            'scene': {},
+            'answer': answer,
+        }
+        if item.get('contradicts'):
+            doc['contradicts'] = self._tag(item['contradicts'], sid, where)
+        return doc
+
+    def _feedback(self, item, options, where):
+        fb = self.spec.get('feedback', {})
+        right = fb.get('right') or []
+        if not right or not fb.get('wrong') or not fb.get('unsure'):
+            self.problem('course.json', 'feedback needs "right" (a list of lines), "wrong" and "unsure"')
+            return None
+        # The praise is chosen by the item's place in the course (the same item always says the same line).
+        number = len(self.items)
+        correct = self.spoken(right[number % len(right)], where + ' feedback.correct', item)
+        rules = []
+        for option in options:
+            tag_id = option.get('misconception')
+            if not tag_id:
+                continue
+            tag = next((k for k, v in self.tags.items() if v.get('id') == tag_id), None)
+            by_tag = fb.get('byTag', {}).get(tag)
+            if by_tag and not any(r['when'] == 'misconception:' + tag_id for r in rules):
+                line = self.spoken(by_tag, '%s feedback.%s' % (where, tag), item)
+                if line:
+                    rules.append(dict([('when', 'misconception:' + tag_id)] + list(line.items())))
+        default = self.spoken(fb['wrong'], where + ' feedback.wrong', item)
+        if default:
+            rules.append(dict([('when', 'default')] + list(default.items())))
+        unsure = self.spoken(fb['unsure'], where + ' feedback.unsure', item)
+        if correct is None or default is None or unsure is None:
+            return None
+        return {'correct': correct, 'incorrect': rules, 'unsure': unsure}
+
+    def _tag(self, slug_, sid, where):
+        tag = self.tags.get(slug_)
+        if tag is None:
+            self.problem(where, 'the tag "%s" is not in course.json "tags"' % slug_)
+            return 'x.x.x'
+        self._tags_used.setdefault(slug_, [])
+        if sid not in self._tags_used[slug_]:
+            self._tags_used[slug_].append(sid)
+        return tag.get('id', 'x.x.x')
+
+    def _raw_activity(self, sid, aid, item, where):
+        """Any other template: the teacher or the app-developer writes the activity's own fields (everything but the id, the course,
+        the domain, the band and the review mark, which are set here); the checks of the pack builder apply as to any activity."""
+        body = item.get('activity')
+        if not isinstance(body, dict) or 'template' not in body:
+            self.problem(where, 'a raw item has "activity": the activity document (with its template)')
+            return None
+        doc = {'schema': 'activity/v1', 'id': aid, 'review': 'needs-editor'}
+        doc.update(body)
+        doc.update({'id': aid, 'course': self.id, 'domain': DOMAIN})
+        doc.setdefault('band', self.skills[sid]['band'])
+        doc.setdefault('revision', 1)
+        doc['review'] = 'needs-editor'
+        doc.setdefault('skills', [{'id': sid, 'weight': 1}])
+        if doc.get('representation') not in REPRESENTATIONS:
+            self.problem(where, 'a raw activity names its "representation"')
+        return doc
+
+    def _raw(self, fname, doc, where):
+        """A gate, or any other document kind of the pack: {"kind": "gate", "id": "eng.oral", "doc": {...}}."""
+        kind, did, body = doc.get('kind'), doc.get('id'), doc.get('doc')
+        if kind not in ('gate',) or not isinstance(did, str) or not isinstance(body, dict):
+            self.problem(where, 'a doc is {"kind": "gate", "id": ..., "doc": {...}}')
+            return
+        full = {'schema': '%s/v1' % kind, 'id': did, 'review': 'needs-editor', 'course': self.id}
+        full.update(body)
+        full['id'] = did
+        self.put('%s.%s.json' % (kind, did), full)
+
+    # ---- lessons
+    def _lessons(self):
+        number = 0
+        seen = set()
+        for fname, unit in self.units:
+            sid = unit.get('skill', {}).get('id')
+            if sid not in self.skills:
+                continue
+            for i, lesson in enumerate(unit.get('lessons', [])):
+                where = '%s lessons[%d]' % (fname, i)
+                lid = lesson.get('id', '')
+                if not re.match(r'^[a-z0-9][a-z0-9-]{1,30}$', lid):
+                    self.problem(where, 'id "%s" must be lower case letters, digits and hyphens (2 to 31 characters)' % lid)
+                    continue
+                full = '%s.%s' % (self.id, lid)
+                if full in seen:
+                    self.problem(where, 'the lesson id %s is used twice' % full)
+                seen.add(full)
+                ids = []
+                for ref in lesson.get('items', []):
+                    qualified = '%s.%s.%s' % (self.id, self.skills[sid]['slug'], ref) if '.' not in ref else '%s.%s' % (self.id, ref)
+                    if qualified not in self.items:
+                        self.problem(where, 'the item "%s" is not in this course' % ref)
+                    ids.append(qualified)
+                skills = []
+                for aid in ids:
+                    s = self.items.get(aid, {}).get('skill')
+                    if s and s not in skills:
+                        skills.append(s)
+                celebration = self.spoken(lesson.get('celebration', self.defaults.get('celebration')), where + ' celebration')
+                title = lesson.get('title')
+                if not title:
+                    self.problem(where, 'needs a title (Hebrew)')
+                if not ids or not skills or celebration is None or not title:
+                    continue
+                number += 1
+                self.lessons.append(full)
+                self.put('lesson.%s.json' % full, {
+                    'schema': 'lesson/v1',
+                    'id': full,
+                    'review': 'needs-editor',
+                    'revision': lesson.get('revision', 1),
+                    'course': self.id,
+                    'band': self.skills[sid]['band'],
+                    'title': he(title),
+                    'skills': skills,
+                    'items': ids,
+                    'estimatedMinutes': lesson.get('minutes', self.defaults.get('minutes', 4)),
+                    'celebration': celebration,
+                    'sequence': lesson.get('sequence', number),
+                })
+
+    # ---- skills, tags, placement, pack
+    def _skills(self):
+        for sid, sk in sorted(self.skills.items()):
+            d = sk['doc']
+            where = '%s skill' % sk['file']
+            if not d.get('title'):
+                self.problem(where, 'needs a title (Hebrew)')
+            if not d.get('strand') or not re.match(r'^[a-z]{2,4}$', d.get('strand', '')):
+                self.problem(where, 'needs a "strand" (2 to 4 lower case letters, the parent page groups skills by it)')
+            if not sk['items']:
+                self.problem(where, 'has no items')
+            tags = [self.tags[t]['id'] for t in sorted(self._tags_used) if sid in self._tags_used[t] and t in self.tags]
+            doc = {
+                'schema': 'skill/v1',
+                'id': sid,
+                'review': 'needs-editor',
+                'course': self.id,
+                'domain': DOMAIN,
+                'band': sk['band'],
+                'title': he(d.get('title', '')),
+                'strand': d.get('strand', ''),
+                'prerequisites': [{'skill': p['skill'], 'weight': p.get('weight', 0.8)} for p in d.get('prerequisites', [])],
+                'representations': sorted(self._skill_reps.get(sid, ()), key=REPRESENTATIONS.index),
+                'misconceptions': tags,
+                'retention': d.get('retention', self.defaults.get('retention', {'targetRetention': 0.9, 'initialStabilityDays': 1})),
+            }
+            for key in SKILL_EXTRAS:
+                if key in d:
+                    doc[key] = he(d[key]) if key == 'childLine' else d[key]
+            for p in d.get('prerequisites', []):
+                if p['skill'] not in self.skills:
+                    self.problem(where, 'the prerequisite %s is not a skill of this course pack' % p['skill'])
+            self.put('skill.%s.json' % sid, doc)
+
+    def _tag_docs(self):
+        for key, t in sorted(self.tags.items()):
+            where = 'course.json tags.%s' % key
+            if not re.match(r'^%s\.[a-z]{2,4}\.[a-z0-9_]{1,24}$' % self.id, t.get('id', '')):
+                self.problem(where, 'id must be <course>.<strand>.<slug>, for example %s.lis.sem' % self.id)
+            if t.get('kind') not in TAG_KINDS:
+                self.problem(where, 'kind must be one of %s' % ', '.join(TAG_KINDS))
+            if t.get('family') is not None and t['family'] not in FAMILIES:
+                self.problem(where, 'family must be one of %s' % ', '.join(FAMILIES))
+            if not t.get('parentText'):
+                self.problem(where, 'needs "parentText" (Hebrew, for the parent)')
+            if key not in self._tags_used:
+                continue  # a tag no item of this pack uses is not in the pack
+            doc = {'schema': 'misconception/v1', 'id': t['id'], 'review': 'needs-editor', 'course': self.id, 'kind': t['kind']}
+            if t.get('family'):
+                doc['family'] = t['family']
+            doc['skills'] = sorted(self._tags_used[key])
+            doc['parentText'] = t.get('parentText', '')
+            if t.get('homeActivity'):
+                doc['homeActivity'] = he(t['homeActivity'])
+            doc['repairActivities'] = [self.id + '.' + r for r in t.get('repair', [])]
+            doc['preferredRepresentations'] = t.get('preferredRepresentations', ['pictorial'])
+            self.put('misconception.%s.json' % t['id'], doc)
+
+    def _placement(self):
+        if self.placement is None:
+            return
+        p = self.placement
+        where = 'placement.json'
+        strands = []
+        for s in p.get('strands', []):
+            levels = []
+            for n, level in enumerate(s.get('levels', []), start=1):
+                probes = []
+                for ref in level.get('items', []):
+                    aid = '%s.%s' % (self.id, ref)
+                    if aid not in self.items:
+                        self.problem(where, 'the probe "%s" is not an item (write it as <skill slug>.<item id>, e.g. a01.p01)' % ref)
+                    elif self.items[aid]['purpose'] != 'probe':
+                        self.problem(where, 'the probe "%s" must have "purpose": "probe"' % ref)
+                    probes.append(aid)
+                for a in level.get('assumes', []):
+                    if a not in self.skills:
+                        self.problem(where, 'strand %s level %d assumes %s, which is not a skill of this pack' % (s.get('id'), n, a))
+                entry = {'items': probes}
+                if level.get('assumes'):
+                    entry['assumes'] = level['assumes']
+                levels.append(entry)
+            strand = {'id': s.get('id')}
+            for key in ('offer', 'start'):
+                if key in s:
+                    strand[key] = s[key]
+            strand['levels'] = levels
+            strands.append(strand)
+        thanks = self.spoken(p.get('thanks'), where + ' thanks')
+        celebration = self.spoken(p.get('celebration'), where + ' celebration')
+        if thanks is None or celebration is None:
+            return
+        self.put('placement.%s.placement.json' % self.id, {
+            'schema': 'placement/v1',
+            'id': '%s.placement' % self.id,
+            'review': 'needs-editor',
+            'course': self.id,
+            'thanks': thanks,
+            'celebration': celebration,
+            'perVisit': p.get('perVisit', 8),
+            'strands': strands,
+        })
+
+    def _pack_json(self):
+        pack = self.spec.get('pack', {})
+        for asset, picture in sorted(self.used_pictures.items()):
+            path = os.path.join(self.root, 'content', 'languages', 'pictures', picture + '.svg')
+            if os.path.exists(path):
+                with open(path, 'rb') as fh:
+                    self.files[asset + '.svg'] = fh.read().replace(b'\r\n', b'\n')
+        self.put('pack.json', {
+            'schema': 'pack-source/v1',
+            'id': 'lang-%s' % self.id,
+            'version': pack.get('version', ''),
+            'minAppVersion': pack.get('minAppVersion', '0.5.0'),
+            'course': self.id,
+            'assets': [{'id': a, 'file': a + '.svg'} for a in sorted(self.used_pictures)],
+            'vo': [],
+        })
+        if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}$', pack.get('version', '')):
+            self.problem('course.json', 'pack.version must look like 0.1.0')
+
+    def _voice_plan(self):
+        """Every clip the pack names and has no recording for, with the text the voice-and-sound-director needs."""
+        frame = []
+        for line_id in sorted(self.used_lines):
+            entry = self.lines.get(line_id, {})
+            frame.append({'id': line_id, 'vo': 'vo:%s.%s' % (self.id, line_id.replace('-', '_')), 'he': entry.get('he'),
+                          'voice': entry.get('voice'), 'review': entry.get('review', 'needs-editor')})
+        target = []
+        for clip in sorted(self.used_clips):
+            row = self.pronunciation.get(clip, {})
+            target.append({'id': clip, 'vo': 'vo:%s.%s' % (self.id, clip.replace('-', '_')), 'shown': row.get('shown'),
+                           'say': row.get('say'), 'ipa': row.get('ipa')})
+        self.voice_plan = {'course': self.id, 'pack': 'lang-%s' % self.id, 'frameLines': frame, 'targetClips': target}
+
+    def plan_bytes(self):
+        return (json.dumps(self.voice_plan, ensure_ascii=False, indent=2) + '\n').encode('utf-8')
+
+
+# ------------------------------------------------------------------ writing
+
+
+def outputs(course, root=ROOT):
+    """(pack folder, {relative path: bytes}) of a course; raises SpecError."""
+    c = Course(course, root)
+    files = c.build()
+    base = os.path.join(root, 'content', 'languages', course)
+    out = {os.path.join(base, 'pack', name): data for name, data in files.items()}
+    out[os.path.join(base, 'voice-plan.json')] = c.plan_bytes()
+    return os.path.join(base, 'pack'), out
+
+
+def run(courses=COURSES, root=ROOT, check=False, quiet=False):
+    """Writes (or with check=True only compares) the generated files of each course that has a course.json. Returns the files that
+    are out of date (always empty after a write)."""
+    stale = []
+    for course in courses:
+        if not os.path.exists(os.path.join(root, 'content', 'languages', course, 'course.json')):
+            continue
+        pack_dir, out = outputs(course, root)
+        existing = set(glob.glob(os.path.join(pack_dir, '*'))) if os.path.isdir(pack_dir) else set()
+        for path in sorted(existing - set(out)):
+            if check:
+                stale.append(path)
+            else:
+                os.remove(path)
+        for path, data in sorted(out.items()):
+            current = None
+            if os.path.exists(path):
+                with open(path, 'rb') as fh:
+                    current = fh.read()
+            if current == data:
+                continue
+            if check:
+                stale.append(path)
+                continue
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            with open(path, 'wb') as fh:
+                fh.write(data)
+        if not quiet:
+            print('%s: %d files in %s' % (course, len(out) - 1, os.path.relpath(pack_dir, root)))
+    return stale
+
+
+def main(argv, root=ROOT):
+    # A problem may quote Hebrew; a Windows console that is not UTF-8 must not stop the report.
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    args = [a for a in argv if not a.startswith('--')]
+    if not args:
+        print(__doc__)
+        return 2
+    courses = COURSES if args[0] == 'all' else tuple(args)
+    for c in courses:
+        if c not in COURSES:
+            print('unknown course "%s" (eng, heb, rus or all)' % c)
+            return 2
+    try:
+        stale = run(courses, root=root, check='--check' in argv)
+    except SpecError as e:
+        print('The course files have %d problem(s):' % len(e.problems))
+        for p in e.problems:
+            print('  ' + p)
+        return 1
+    if stale:
+        print('Out of date (run `python tools/lang_pack.py all`):')
+        for p in stale:
+            print('  ' + os.path.relpath(p, root))
+        return 1
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

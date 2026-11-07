@@ -83,7 +83,7 @@ The view has no streaks, no "you haven't practised", and no comparison between l
   - Values: `eng`, `heb`, `rus`. The existing lands are `core`.
   - The skill id prefix already matches the course (`ENG-`, `HEB-`, `RUS-`). The validator checks that the two agree.
 - Misconception engine ids are `<course>.<strand>.<slug>` (§4.2), so `M-ENG-DIR` becomes `eng.ph.dir`.
-- Each course is **its own signed pack** (`lang-eng`, `lang-heb`, `lang-rus`). A pack contains its skills, items, tags, Hebrew frame clips, target clips, stroke data and pictures, and validates alone. It may use only app-wide assets (fonts, the shared picture library, the UI strings of the shell). The infrastructure-engineer decides whether packs are bundled or downloaded when a language is turned on. Recogniser models are downloaded only when that language's voice is turned on (§5.1).
+- Each course is **its own signed pack** (`lang-eng`, `lang-heb`, `lang-rus`). A pack contains its skills, items, tags, Hebrew frame clips, target clips, stroke data and pictures, and validates alone. It may use only app-wide assets (fonts, the shared picture library, the UI strings of the shell). **Decided 2026-11-07 (owner's request, built in `band-a-build.md`): the packs are bundled in the app** (`assets/packs/lang-<course>-<version>.nnpack`, signed with the starter pack's key) and installed the first time a language is turned on for a child; nothing is downloaded. Recogniser models are downloaded only when that language's voice is turned on (§5.1).
 
 **Invariants.** The validator refuses a pack, and a qa-engineer test guards each rule.
 1. A prerequisite never crosses courses, nor goes between a course and `core`.

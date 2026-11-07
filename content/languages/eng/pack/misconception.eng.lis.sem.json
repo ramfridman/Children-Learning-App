@@ -1,0 +1,16 @@
+{
+  "schema": "misconception/v1",
+  "id": "eng.lis.sem",
+  "review": "needs-editor",
+  "course": "eng",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "ENG-A-01"
+  ],
+  "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות באנגלית (כמו hello ו־goodbye) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

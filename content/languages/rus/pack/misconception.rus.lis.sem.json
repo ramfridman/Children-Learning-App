@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.lis.sem",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "RUS-A-01"
+  ],
+  "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

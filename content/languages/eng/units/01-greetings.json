@@ -1,0 +1,18 @@
+{
+  "skill": {
+    "id": "ENG-A-01",
+    "strand": "lis",
+    "title": "בְּרָכוֹת"
+  },
+  "items": [
+    {"id": "i01", "kind": "tap", "target": "en-hello", "options": ["pip-arrive", "pip-leave"], "wrong": {"pip-leave": "sem"}},
+    {"id": "i02", "kind": "tap", "target": "en-goodbye", "options": ["pip-leave", "pip-arrive", "mika-eat"], "wrong": {"pip-arrive": "sem", "mika-eat": "l1_guess"}},
+    {"id": "i03", "kind": "tap", "purpose": "check", "target": "en-hi", "options": ["mika-arrive", "mika-leave", "mika-eat"], "wrong": {"mika-leave": "sem", "mika-eat": "l1_guess"}},
+    {"id": "i04", "kind": "tap", "target": "en-bye", "options": ["mika-leave", "mika-arrive"], "wrong": {"mika-arrive": "sem"}},
+    {"id": "i05", "kind": "tap", "target": "en-hello", "options": ["mika-arrive", "mika-leave", "mika-eat"], "wrong": {"mika-leave": "sem", "mika-eat": "l1_guess"}},
+    {"id": "i06", "kind": "tap", "purpose": "check", "target": "en-goodbye", "options": ["mika-leave", "mika-arrive", "mika-eat"], "wrong": {"mika-arrive": "sem", "mika-eat": "l1_guess"}}
+  ],
+  "lessons": [
+    {"id": "greet-1", "title": "בְּרָכוֹת", "items": ["i01", "i02", "i03", "i04", "i05"]}
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "course": "heb",
+  "pack": "lang-heb",
+  "frameLines": [
+    {
+      "id": "fb-sem",
+      "vo": "vo:heb.fb_sem",
+      "he": "זֶה דּוֹמֶה. בּוֹאוּ נִשְׁמַע שׁוּב.",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "fb-soundalike",
+      "vo": "vo:heb.fb_soundalike",
+      "he": "שִׁמְעוּ עַד הַסּוֹף.",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "i-find",
+      "vo": "vo:heb.i_find",
+      "he": "בּוֹאוּ נִמְצָא:",
+      "voice": "בואו נמצא:",
+      "review": "text-ready"
+    },
+    {
+      "id": "m-keara",
+      "vo": "vo:heb.m_keara",
+      "he": "קְעָרָה הִיא כְּלִי עָגֹל וְעָמֹק.",
+      "voice": "קערה היא כלי עגול ועמוק.",
+      "review": "text-ready"
+    },
+    {
+      "id": "m-kemach",
+      "vo": "vo:heb.m_kemach",
+      "he": "קֶמַח הוּא אֲבָקָה לְבָנָה. מִמֶּנּוּ אוֹפִים לֶחֶם וְעוּגוֹת.",
+      "voice": "קמח הוא אבקה לבנה. ממנו אופים לחם ועוגות.",
+      "review": "text-ready"
+    },
+    {
+      "id": "m-siach",
+      "vo": "vo:heb.m_siach",
+      "he": "שִׂיחַ הוּא כְּמוֹ עֵץ קָטָן וְנָמוּךְ, עִם הַרְבֵּה עָלִים.",
+      "voice": "שִׂיחַ הוא כמו עץ קטן ונמוך, עם הרבה עלים.",
+      "review": "text-ready"
+    },
+    {
+      "id": "m-tanur",
+      "vo": "vo:heb.m_tanur",
+      "he": "בַּתַּנּוּר חַם מְאֹד. בּוֹ אוֹפִים עוּגוֹת.",
+      "voice": "בתנור חם מאוד. בו אופים עוגות.",
+      "review": "text-ready"
+    },
+    {
+      "id": "ok-1",
+      "vo": "vo:heb.ok_1",
+      "he": "נָכוֹן!",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "ok-2",
+      "vo": "vo:heb.ok_2",
+      "he": "כֵּן, זֶהוּ זֶה!",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "ok-3",
+      "vo": "vo:heb.ok_3",
+      "he": "שְׁמַעְתֶּם טוֹב!",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "ok-4",
+      "vo": "vo:heb.ok_4",
+      "he": "הִקְשַׁבְתֶּם עַד הַסּוֹף!",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "ok-8",
+      "vo": "vo:heb.ok_8",
+      "he": "כׇּל הַכָּבוֹד!",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "show",
+      "vo": "vo:heb.show",
+      "he": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד.",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "try-1",
+      "vo": "vo:heb.try_1",
+      "he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.",
+      "voice": null,
+      "review": "text-ready"
+    },
+    {
+      "id": "try-2",
+      "vo": "vo:heb.try_2",
+      "he": "בּוֹאוּ נִשְׁמַע שׁוּב.",
+      "voice": null,
+      "review": "text-ready"
+    }
+  ],
+  "targetClips": [
+    {
+      "id": "heb-a-w-keara",
+      "vo": "vo:heb.heb_a_w_keara",
+      "shown": "קְעָרָה",
+      "say": "",
+      "ipa": "[keaˈʁa]"
+    },
+    {
+      "id": "heb-a-w-kemach",
+      "vo": "vo:heb.heb_a_w_kemach",
+      "shown": "קֶמַח",
+      "say": "",
+      "ipa": "[ˈkemaχ]"
+    },
+    {
+      "id": "heb-a-w-siach",
+      "vo": "vo:heb.heb_a_w_siach",
+      "shown": "שִׂיחַ",
+      "say": "",
+      "ipa": "[ˈsiaχ]"
+    },
+    {
+      "id": "heb-a-w-tanur",
+      "vo": "vo:heb.heb_a_w_tanur",
+      "shown": "תַּנּוּר",
+      "say": "",
+      "ipa": "[taˈnuʁ]"
+    }
+  ]
+}

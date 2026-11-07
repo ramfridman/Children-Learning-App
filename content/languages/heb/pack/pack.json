@@ -1,0 +1,58 @@
+{
+  "schema": "pack-source/v1",
+  "id": "lang-heb",
+  "version": "0.1.0",
+  "minAppVersion": "0.5.0",
+  "course": "heb",
+  "assets": [
+    {
+      "id": "ball",
+      "file": "ball.svg"
+    },
+    {
+      "id": "bowl",
+      "file": "bowl.svg"
+    },
+    {
+      "id": "bush",
+      "file": "bush.svg"
+    },
+    {
+      "id": "cave",
+      "file": "cave.svg"
+    },
+    {
+      "id": "flour",
+      "file": "flour.svg"
+    },
+    {
+      "id": "fridge",
+      "file": "fridge.svg"
+    },
+    {
+      "id": "oven",
+      "file": "oven.svg"
+    },
+    {
+      "id": "plate",
+      "file": "plate.svg"
+    },
+    {
+      "id": "pot",
+      "file": "pot.svg"
+    },
+    {
+      "id": "rainbow",
+      "file": "rainbow.svg"
+    },
+    {
+      "id": "sugar",
+      "file": "sugar.svg"
+    },
+    {
+      "id": "tree",
+      "file": "tree.svg"
+    }
+  ],
+  "vo": []
+}

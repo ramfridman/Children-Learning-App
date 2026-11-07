@@ -1,0 +1,59 @@
+{
+  "course": "rus",
+  "pack": {"version": "0.1.0", "minAppVersion": "0.5.0"},
+  "note": "RUS-1 pilot: RUS-A-01 (greetings), one lesson, text only (every clip pending). The lines are those of docs/languages/russian/band-a-content.md section 2; the Russian clips are rows of docs/languages/russian/pronunciation.csv. The praise lines are the app's existing ones (the batch says 'the app's existing praise line'): the same eight lines as the English course.",
+  "defaults": {
+    "frame": "f01",
+    "ladder": "HL-1",
+    "celebration": "he-fb-right-8",
+    "rep": "pictorial",
+    "minutes": 4
+  },
+  "feedback": {
+    "right": [
+      {"line": "he-fb-right-1", "target": "@target"},
+      {"line": "he-fb-right-2", "target": "@target"},
+      {"line": "he-fb-right-3", "target": "@target"},
+      {"line": "he-fb-right-4", "target": "@target"},
+      {"line": "he-fb-right-5", "target": "@target"},
+      {"line": "he-fb-right-6", "target": "@target"},
+      {"line": "he-fb-right-7", "target": "@target"},
+      {"line": "he-fb-right-8", "target": "@target"}
+    ],
+    "wrong": {"line": "he-fb-check"},
+    "unsure": {"line": "f02", "target": "@target"}
+  },
+  "ladders": {
+    "HL-1": [
+      {"line": "f02", "action": "replay_prompt_slow", "target": "@slow"},
+      {"line": "@frame", "action": "highlight_objects_sequentially", "target": "@target"},
+      {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}
+    ]
+  },
+  "glosses": {},
+  "tags": {
+    "sem": {
+      "id": "rus.lis.sem",
+      "tag": "M-RUS-SEM",
+      "kind": "diagnostic",
+      "family": "MEANING",
+      "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
+      "homeActivity": "הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו."
+    }
+  },
+  "lines": {
+    "f01": {"he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.", "voice": "הקשיבו, וגעו בתמונה.", "review": "text-ready"},
+    "f02": {"he": "הַקְשִׁיבוּ שׁוּב.", "voice": "הקשיבו שוב.", "review": "text-ready"},
+    "f39": {"he": "מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ?", "voice": "מישהו בא, או הולך?", "review": "text-ready"},
+    "he-hint-showme": {"he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.", "voice": "הסתכלו איך עוֹשִׂים.", "review": "text-ready"},
+    "he-fb-check": {"he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.", "voice": "המממ… בואו נבדוק.", "review": "text-ready"},
+    "he-fb-right-1": {"he": "נָכוֹן!", "voice": "נכון.", "review": "text-ready"},
+    "he-fb-right-2": {"he": "כֵּן!", "voice": "כן.", "review": "text-ready"},
+    "he-fb-right-3": {"he": "יָפֶה מְאֹד!", "voice": "יפה מאוד.", "review": "text-ready"},
+    "he-fb-right-4": {"he": "מְצָאתֶם!", "voice": "מצאתם.", "review": "text-ready"},
+    "he-fb-right-5": {"he": "בְּדִיּוּק!", "voice": "בדיוק.", "review": "text-ready"},
+    "he-fb-right-6": {"he": "שְׁמַעְתֶּם טוֹב!", "voice": "שמעתם טוב.", "review": "text-ready"},
+    "he-fb-right-7": {"he": "הִקְשַׁבְתֶּם יָפֶה!", "voice": "הקשבתם יפה.", "review": "text-ready"},
+    "he-fb-right-8": {"he": "כׇּל הַכָּבוֹד!", "voice": "כל הכבוד.", "review": "text-ready"}
+  }
+}
