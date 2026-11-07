@@ -39,6 +39,7 @@ EDGE = 4          # a centre line keeps this far from the box edge, so the ink s
 MIN_TRACE = 25    # the trace validator's shortest stroke (app/lib/content/pack_validation.dart)
 MAX_POINTS = 60   # the trace schema's longest polyline (app/lib/content/schemas.dart)
 MAX_STROKES = 6
+MAX_BUILDS = 4    # the other right builds of a letter (tools/strokes_alternates.py), besides the model's own
 
 sys.path.insert(0, TOOLS)
 
@@ -305,10 +306,35 @@ def build_set(spec):
                 form[key] = f.meta[key]
         form['sits'] = list(f.sits)
         form['strokes'] = strokes
+        builds = alternates(f.id)
+        if builds:
+            form['alternates'] = builds
         form['_mid'] = mid
         problems += ['%s %s: %s' % (spec.SET['set'], f.id, m) for m in check_form(form, head, spec)]
         forms.append(form)
     return forms, problems
+
+
+def alternates(form_id):
+    """The other right builds of a letter (tools/strokes_alternates.py): each a few strokes of whole box units, with the retrace
+    flag worked out from the line itself. No `d`, no `moves`: a build is only compared with the child's strokes, never drawn."""
+    from strokes_alternates import ALTERNATES
+    out = []
+    for how, strokes in ALTERNATES.get(form_id, []):
+        built = []
+        for pts in strokes:
+            st = {'kind': 'line', 'points': [list(p) for p in pts]}
+            if retraces([tuple(p) for p in dense_points(pts)]) >= 3:
+                st['retrace'] = True
+            built.append(st)
+        out.append({'how': how, 'strokes': built})
+    return out
+
+
+def dense_points(pts, step=0.5):
+    """Points every `step` units along a polyline of box units."""
+    segs = [('L', tuple(pts[i - 1]), tuple(pts[i])) for i in range(1, len(pts))]
+    return dense(segs, step)
 
 
 def dense_font(segs):
@@ -337,6 +363,7 @@ def check_form(form, head, spec):
         out.append('has %d strokes (1 to %d allowed)' % (len(st), MAX_STROKES))
     guides = head['guides']
     body = []
+    out += check_alternates(form)
     for i, s in enumerate(st):
         pts = s['_dense']
         tag = 'stroke %d' % (i + 1)
@@ -376,6 +403,31 @@ def check_form(form, head, spec):
             out.append('top of the letter at %.1f, its line %s is at %.1f' % (top, top_line, guides[top_line]))
         if bottom_line and abs(bottom - (guides[bottom_line] - inset)) > head.get('lineTolerance', 4.5):
             out.append('bottom of the letter at %.1f, its line %s is at %.1f' % (bottom, bottom_line, guides[bottom_line]))
+    return out
+
+
+def check_alternates(form):
+    """The other builds of a letter keep the model's caps: at most MAX_BUILDS, 1 to MAX_STROKES strokes, whole units inside the
+    box, 2 to MAX_POINTS points, a line long enough to trace, and never the model's own strokes again."""
+    out = []
+    builds = form.get('alternates', [])
+    if len(builds) > MAX_BUILDS:
+        out.append('has %d other builds (%d allowed)' % (len(builds), MAX_BUILDS))
+    model = [s['points'] for s in form['strokes']]
+    for b, build in enumerate(builds):
+        tag = 'build %d (%s)' % (b + 1, build['how'])
+        if not 1 <= len(build['strokes']) <= MAX_STROKES:
+            out.append('%s has %d strokes (1 to %d allowed)' % (tag, len(build['strokes']), MAX_STROKES))
+        if [s['points'] for s in build['strokes']] == model:
+            out.append('%s is the model itself' % tag)
+        for i, s in enumerate(build['strokes']):
+            pts = s['points']
+            if not 2 <= len(pts) <= MAX_POINTS:
+                out.append('%s stroke %d has %d points' % (tag, i + 1, len(pts)))
+            if any(not (EDGE <= x <= 100 - EDGE and EDGE <= y <= 100 - EDGE) for x, y in pts):
+                out.append('%s stroke %d leaves the box (keep %d units from the edge)' % (tag, i + 1, EDGE))
+            if s['kind'] == 'line' and length(pts) < MIN_TRACE:
+                out.append('%s stroke %d is %.1f long: shorter than %d' % (tag, i + 1, length(pts), MIN_TRACE))
     return out
 
 

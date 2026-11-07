@@ -68,6 +68,28 @@ class LetterStrokesTest(unittest.TestCase):
                         self.assertGreaterEqual(long, ls.MIN_TRACE - 1, f['id'])
                     self.assertTrue(s['moves'], f['id'])
 
+    def test_alternates(self):
+        """The other right builds of a letter (tools/strokes_alternates.py): at most MAX_BUILDS a form, within the same caps, no path and no
+        moves (a build is only compared with the child's strokes), never the model again, and only for the forms listed there."""
+        from strokes_alternates import ALTERNATES
+        found = {}
+        for name in COUNTS:
+            for f in load(name)['forms']:
+                builds = f.get('alternates', [])
+                if not builds:
+                    continue
+                found[f['id']] = len(builds)
+                self.assertLessEqual(len(builds), ls.MAX_BUILDS, f['id'])
+                for b in builds:
+                    self.assertTrue(1 <= len(b['strokes']) <= ls.MAX_STROKES, f['id'])
+                    self.assertNotEqual([s['points'] for s in b['strokes']], [s['points'] for s in f['strokes']], f['id'])
+                    for s in b['strokes']:
+                        self.assertEqual(set(s) - {'retrace'}, {'kind', 'points'}, f['id'])
+                        self.assertTrue(2 <= len(s['points']) <= ls.MAX_POINTS, f['id'])
+                        for x, y in s['points']:
+                            self.assertTrue(isinstance(x, int) and isinstance(y, int) and 0 <= x <= 100 and 0 <= y <= 100, f['id'])
+        self.assertEqual(found, {k: len(v) for k, v in ALTERNATES.items()})
+
     def test_hebrew_groups_and_finals(self):
         script = load('hebrew-script')['forms']
         groups = {f['char']: f['group'] for f in script}

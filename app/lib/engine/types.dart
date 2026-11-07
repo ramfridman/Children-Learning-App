@@ -45,6 +45,18 @@ CheckType checkTypeOf(String s) => switch (s) {
 /// been taught, or teaches the convention and counts it as a mistake.
 enum SoundRightPolicy { accepts, teaches }
 
+/// How a skill of letter writing is mastered (docs/languages/writing-mastery.md, rule E-1). A `memory` node (copy and memory writing)
+/// is fresh only with memory successes on two days, one cued by the sound and one by the name. A `practised` node (tracing, the
+/// pre-writing strokes, the own name) is never mastered: it is met once every letter of it was traced with the start dot only.
+enum WritingRule { memory, practised }
+
+/// What an LS02 item asks of the child. Tracing is practice, a copy counts like an answer with one more hint, and a memory answer
+/// counts in full.
+enum WritingMode { trace, copy, memory }
+
+/// What the voice says in a memory item: the letter's sound, or its name.
+enum WritingCue { sound, name }
+
 /// A skill of the graph.
 class SkillNode {
   const SkillNode({
@@ -65,9 +77,13 @@ class SkillNode {
     this.soundRight = SoundRightPolicy.teaches,
     this.letters = false,
     this.speaking = false,
+    this.writing,
   });
 
   final String id;
+
+  /// A skill of letter writing (E-1), or null for every other skill.
+  final WritingRule? writing;
 
   /// A speaking skill (strand `spk`): the only kind that spoken answers count for.
   final bool speaking;
@@ -125,6 +141,8 @@ class SkillNode {
     setCoverage: setCoverage,
     soundRight: soundRight,
     letters: letters,
+    speaking: speaking,
+    writing: writing,
   );
 
   /// The family of a skill for the representation statistics: its id without the number (`NUM-A`).
@@ -147,9 +165,25 @@ class ItemMeta {
     this.contradicts,
     this.delight = false,
     this.revision = 1,
+    this.writingMode,
+    this.cue,
+    this.startGuide = false,
+    this.practiceOnly = false,
   });
 
   final String id;
+
+  /// The mode of an LS02 2.0 item; null for every item that is not one (the tracing of the lands keeps its behaviour).
+  final WritingMode? writingMode;
+
+  /// The cue of a memory item.
+  final WritingCue? cue;
+
+  /// A trace with the start dot only (or an own-name item): its success marks the letter as practised.
+  final bool startGuide;
+
+  /// A handwriting step that is only practice, whatever skill it names (`"practice": true` on a word canvas).
+  final bool practiceOnly;
 
   /// The course of the item: the course of every skill, tag and repair it names.
   final String course;
@@ -292,6 +326,29 @@ class Catalog {
   }();
 
   Set<String> variantGroupsOf(String skillId) => _groups[skillId] ?? const <String>{};
+
+  /// The letters of a writing skill that a memory success must cover: the variant groups of its memory items, probes aside.
+  late final Map<String, Set<String>> _memoryGroups = _groupsWhere(
+    (ItemMeta i) => i.writingMode == WritingMode.memory && i.purpose != Purpose.probe,
+  );
+
+  /// The letters of a trace node that must each be traced once with the start dot: the groups of its start-dot items.
+  late final Map<String, Set<String>> _practiceGroups = _groupsWhere((ItemMeta i) => i.startGuide);
+
+  Map<String, Set<String>> _groupsWhere(bool Function(ItemMeta) test) {
+    final Map<String, Set<String>> out = <String, Set<String>>{};
+    for (final ItemMeta i in items.values) {
+      if (i.delight || i.variantGroup.isEmpty || !test(i)) continue;
+      for (final String skill in i.skills.keys) {
+        (out[skill] ??= <String>{}).add(i.variantGroup);
+      }
+    }
+    return out;
+  }
+
+  Set<String> memoryGroupsOf(String skillId) => _memoryGroups[skillId] ?? const <String>{};
+
+  Set<String> practiceGroupsOf(String skillId) => _practiceGroups[skillId] ?? const <String>{};
 
   static Map<String, SkillNode> _resolveRollUps(Iterable<SkillNode> raw) {
     final Map<String, SkillNode> byId = <String, SkillNode>{for (final SkillNode s in raw) s.id: s};

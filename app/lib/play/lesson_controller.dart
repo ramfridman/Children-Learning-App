@@ -423,7 +423,10 @@ class LessonController extends ChangeNotifier {
     if (speak) _say(h.say);
     // Level 3 is "show me": asked for with the lamp it marks the answer, as three mistakes do, and only the right move is taken (QA-L4-4).
     // The Band A templates of the language courses; the lands and LS01 keep the path they have.
-    if (level >= 3 && languageTemplates.contains(current.template)) guided = true;
+    // Writing a letter (LS02) is the same template as the tracing of the lands: its level 3 is trace mode and only the right stroke is taken.
+    if (level >= 3 && (languageTemplates.contains(current.template) || current is LetterWriteActivity)) {
+      guided = true;
+    }
   }
 
   /// "I'm not sure" or "show me": recorded as unsure (weak evidence, no misconception, not a mistake)

@@ -30,6 +30,7 @@ Catalog engineCatalog(PackContent content) {
           soundRight: s.soundRight == 'accepts' ? SoundRightPolicy.accepts : SoundRightPolicy.teaches,
           letters: s.letters,
           speaking: s.strand == 'spk',
+          writing: s.writing,
         ),
     ],
     items: <ItemMeta>[
@@ -47,6 +48,10 @@ Catalog engineCatalog(PackContent content) {
           tags: a.engineTags,
           contradicts: a.contradicts,
           revision: a.revision,
+          writingMode: a is LetterWriteActivity ? writingModeOf(a) : null,
+          cue: a is LetterWriteActivity ? a.cue : null,
+          startGuide: a is LetterWriteActivity && a.startGuide,
+          practiceOnly: a is LetterWriteActivity && a.practiceOnly,
         ),
     ],
     tags: <TagInfo>[
@@ -63,6 +68,15 @@ Catalog engineCatalog(PackContent content) {
     ],
   );
 }
+
+/// How the engine reads the mode of an LS02 item: a trace is practice, a copy a hinted answer, a memory answer a full one. An intro is
+/// never answered, so it has no mode.
+WritingMode? writingModeOf(LetterWriteActivity a) => switch (a.mode) {
+  LetterMode.intro => null,
+  LetterMode.trace => WritingMode.trace,
+  LetterMode.copy => WritingMode.copy,
+  LetterMode.memory => WritingMode.memory,
+};
 
 /// The gates of a pack as the engine reads them (docs/languages/frame.md section 3.3.6).
 List<CourseGate> courseGates(PackContent content) => <CourseGate>[

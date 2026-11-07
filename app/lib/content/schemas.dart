@@ -29,6 +29,10 @@ abstract final class Patterns {
 
   // The placement document of a course: `eng.placement`.
   static const String placementId = r'[a-z]{3}\.placement';
+
+  // A stroke set (`latin`, `cyrillic`, `hebrew-print`, `hebrew-script`) and a form of one (`latin.a.cap`, `hebrew-print.mem-final`).
+  static const String strokeSet = r'[a-z]+(?:-[a-z]+)?';
+  static const String strokeForm = r'[a-z]+(?:-[a-z]+)?\.[a-z0-9]+(?:-[a-z0-9]+)*(?:\.[a-z]+)?';
 }
 
 /// The four kinds of document in a pack, by the `schema` field of the file.
@@ -43,6 +47,9 @@ abstract final class SchemaIds {
   static const String placement = 'placement/v1';
   static const String skill = 'skill/v1';
   static const String misconception = 'misconception/v1';
+
+  /// The stroke data of a script (docs/languages/strokes.md); a pack document `strokes.<set>.json`.
+  static const String strokes = 'nitznutz.strokes/1';
 }
 
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
@@ -69,7 +76,7 @@ const Map<String, String> supportedTemplates = <String, String>{
   'match_pairs': '1.1',
   'shop_pay': '1.0',
   'clock_set': '1.0',
-  'trace': '1.0',
+  'trace': '2.0',
   'say_it': '1.0',
 };
 
@@ -272,6 +279,12 @@ const SObject manifestSchema = SObject(<String, SField>{
         SArray(SString(minLength: 13, maxLength: 13, pattern: Patterns.placementId), maxItems: 1),
         required: false,
       ),
+      // The stroke sets of a language course (docs/languages/strokes.md): the scripts its letters are written in; absent in packs that
+      // have none.
+      'strokes': SField(
+        SArray(SString(minLength: 5, maxLength: 20, pattern: Patterns.strokeSet), maxItems: 4),
+        required: false,
+      ),
     }),
   ),
 });
@@ -382,6 +395,9 @@ const SObject skillSchema = SObject(<String, SField>{
   'setCoverage': SField(SBool(), required: false),
   'soundRight': SField(SEnum(<String>['accepts', 'teaches']), required: false),
   'letters': SField(SBool(), required: false),
+  // Letter writing (rule E-1, docs/languages/writing-mastery.md): `memory` is a writing node (copy and memory writing, mastered by
+  // memory successes on two days with both cues), `practised` a trace node (met once every letter was traced with the start dot).
+  'writing': SField(SEnum(<String>['memory', 'practised']), required: false),
   // The graphemes this skill teaches (a letter, a digraph, a vowel sign), and the whole words it teaches as they are. A skill
   // that is letter work may offer only words made of the graphemes taught by it and by the skills below it, and its tricky
   // words (the decodable check, docs/languages/frame.md F5).
@@ -893,8 +909,10 @@ const SArray _traceClassifiers = SArray(
   maxItems: 4,
 );
 
-/// The schema of an activity of the given template, or null for a template this app does not know.
-SObject? activitySchemaFor(String template) => switch (template) {
+/// The schema of an activity of the given template, or null for a template this app does not know. [version] is the activity's
+/// `templateVersion`: `trace` 2.0 (LS02, write a letter) is another document from the tracing of the lands (1.0).
+SObject? activitySchemaFor(String template, {String? version}) => switch (template) {
+  'trace' when version != null && version.startsWith('2.') => letterWriteSchema,
   'tap_answer' => SObject(
     _base(<String, SField>{
       'scene': const SField(
@@ -1651,6 +1669,216 @@ SObject? activitySchemaFor(String template) => switch (template) {
   _ => null,
 };
 
+// ---- LS02: write a letter, and the stroke data it reads ----
+
+const SString _strokeFormId = SString(minLength: 3, maxLength: 40, pattern: Patterns.strokeForm);
+
+/// A point of a stroke: whole units of the box of 100 by 100.
+const SArray _boxPoint = SArray(SInt(min: 0, max: 100), minItems: 2, maxItems: 2);
+
+/// The ways a stroke goes, in words (docs/languages/strokes.md section 2): a straight run, or a curve as seen on the screen.
+const List<String> strokeMoves = <String>[
+  'down',
+  'up',
+  'left',
+  'right',
+  'down-left',
+  'down-right',
+  'up-left',
+  'up-right',
+  'cw',
+  'ccw',
+  'dot',
+];
+
+const SObject _strokeSchema = SObject(<String, SField>{
+  'kind': SField(SEnum(<String>['line', 'dot', 'short'])),
+  // The smooth path (M, L and C in box units) for the model letter and the "watch it drawn" motion. The schema keeps it to numbers and
+  // three letters; its grammar (an M first, then L with 2 numbers and C with 6, each number from 0 to 100) is `checkStrokeSet`'s rule.
+  'd': SField(SString(minLength: 5, maxLength: 500, pattern: r'[MLC0-9 .\-]+')),
+  // The bounds of docs/milestones/L5.md section 11: points inside the box, 2 to 60 of them.
+  'points': SField(SArray(_boxPoint, minItems: 2, maxItems: 60)),
+  'start': SField(_boxPoint),
+  'end': SField(_boxPoint),
+  'moves': SField(SArray(SEnum(strokeMoves), minItems: 1, maxItems: 12)),
+  'retrace': SField(SBool(), required: false),
+  'loop': SField(SBool(), required: false),
+  'startOk': SField(SString(minLength: 1, maxLength: 400), required: false),
+});
+
+/// A stroke of another right build of a letter (QA-L52-1): only compared with what the child writes, never drawn, so it has no path
+/// and no words for the way it goes.
+const SObject _buildStrokeSchema = SObject(<String, SField>{
+  'kind': SField(SEnum(<String>['line', 'dot', 'short'])),
+  'points': SField(SArray(_boxPoint, minItems: 2, maxItems: 60)),
+  'retrace': SField(SBool(), required: false),
+});
+
+/// Another way to write the letter that is right: a few strokes, read in any order like the model's (`tools/strokes_alternates.py`).
+const SObject _buildSchema = SObject(<String, SField>{
+  'how': SField(SString(minLength: 1, maxLength: 40, pattern: r'[a-z ,-]+')),
+  'strokes': SField(SArray(_buildStrokeSchema, minItems: 1, maxItems: 6)),
+});
+
+const SObject _strokeFormSchema = SObject(<String, SField>{
+  'id': SField(_strokeFormId),
+  'char': SField(SString(minLength: 1, maxLength: 2)),
+  'name': SField(SString(minLength: 1, maxLength: 16, pattern: r'[A-Za-z0-9-]+')),
+  'case': SField(SEnum(<String>['lower', 'upper']), required: false),
+  'final': SField(SBool(), required: false),
+  'group': SField(SString(minLength: 1, maxLength: 16, pattern: r'[a-z-]+'), required: false),
+  'groupProposed': SField(SBool(), required: false),
+  // The upper and lower guide line the body of the letter sits on (null where it is not on one, like t's top).
+  'sits': SField(
+    SArray(
+      SAnyOf(<Schema>[SString(minLength: 1, maxLength: 12, pattern: r'[a-z]+'), SNull()]),
+      minItems: 2,
+      maxItems: 2,
+    ),
+  ),
+  // At most six strokes a form (Yo has six).
+  'strokes': SField(SArray(_strokeSchema, minItems: 1, maxItems: 6)),
+  // The other builds of the letter that are right (a ball and a stick for a): at most four, within the same caps.
+  'alternates': SField(SArray(_buildSchema, minItems: 1, maxItems: 4), required: false),
+});
+
+/// The stroke data of one script (`nitznutz.strokes/1`), as `content/languages/strokes/<set>.json` and as the pack document
+/// `strokes.<set>.json`. Parsed content: every number is bounded and the only commands are the M, L and C of a stroke's drawing path
+/// (`d`), whose grammar `checkStrokeSet` holds; the validator refuses a set that is not `teacher-checked` (`ls02_checks.dart`).
+const SObject strokesSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.strokes)),
+  'set': SField(SString(minLength: 5, maxLength: 20, pattern: Patterns.strokeSet)),
+  'courses': SField(SArray(SEnum(Course.languages), minItems: 1, maxItems: 3)),
+  'review': SField(SEnum(<String>['needs-teacher', 'teacher-checked'])),
+  'reviewer': SField(SString(minLength: 1, maxLength: 40, pattern: r'[a-z-]+')),
+  'box': SField(SInt(min: 100, max: 100)),
+  'ink': SField(SInt(min: 2, max: 20)),
+  'em': SField(SNum(min: 1, max: 200)),
+  'baseline': SField(SNum(min: 0, max: 100)),
+  // The lines letters sit on, as y in the box, and which of them are drawn solid.
+  'guides': SField(SMap(SNum(min: 0, max: 100), keyPattern: r'[a-z]{1,12}', maxEntries: 8)),
+  'solidGuides': SField(SArray(SString(minLength: 1, maxLength: 12, pattern: r'[a-z]+'), maxItems: 8)),
+  'inset': SField(SNum(min: 0, max: 20)),
+  'direction': SField(SEnum(<String>['ltr', 'rtl'])),
+  'generator': SField(SString(minLength: 1, maxLength: 120)),
+  'font': SField(
+    SObject(<String, SField>{
+      'family': SField(SString(minLength: 1, maxLength: 40)),
+      'weight': SField(SInt(min: 100, max: 900)),
+      'file': SField(SString(minLength: 1, maxLength: 80)),
+      'css': SField(SString(minLength: 1, maxLength: 8)),
+    }),
+    required: false,
+  ),
+  'groups': SField(
+    SMap(SString(minLength: 1, maxLength: 240), keyPattern: r'[a-z]{1,12}', maxEntries: 8),
+    required: false,
+  ),
+  'count': SField(SInt(min: 1, max: 80)),
+  'forms': SField(SArray(_strokeFormSchema, minItems: 1, maxItems: 80, uniqueKey: 'id')),
+});
+
+/// LS02 write a letter, `trace` 2.0 (docs/milestones/L5.md section 5.2): an `intro` (the worked example of a letter, unscored) and the
+/// three modes `trace`, `copy` and `memory`, on a canvas of one letter or of a word. The letters are form ids of the stroke set of the
+/// course's script. The classifiers map the errors the free-stroke check can name to the course's tags; an error it cannot name is a
+/// retry with no tag and no evidence.
+const SObject letterWriteSchema = SObject(<String, SField>{
+  'schema': SField(SConst(SchemaIds.activity)),
+  'id': SField(_id),
+  'review': _review,
+  'revision': SField(_revision),
+  'template': SField(SConst('trace')),
+  'templateVersion': SField(SString(minLength: 3, maxLength: 5, pattern: Patterns.templateVersion)),
+  'course': _course,
+  'domain': SField(SEnum(domains)),
+  'band': SField(SEnum(bands)),
+  'skills': SField(
+    SArray(
+      SObject(<String, SField>{'id': SField(_skill), 'weight': SField(SNum(min: 0, max: 1))}),
+      minItems: 1,
+      maxItems: 4,
+      uniqueKey: 'id',
+    ),
+  ),
+  'purpose': SField(SEnum(<String>['learn', 'practice', 'probe', 'repair', 'check'])),
+  'contradicts': SField(_tag, required: false),
+  'checkType': SField(
+    SEnum(<String>['practice', 'transfer', 'reverse', 'error_spotting', 'explain_back', 'predict']),
+  ),
+  'representation': SField(SEnum(representations)),
+  'variantGroup': SField(SString(minLength: 3, maxLength: 60, pattern: r'[a-z0-9._-]+')),
+  'difficulty': SField(SObject(<String, SField>{'authored': SField(SNum(min: 0, max: 1))})),
+  'prompt': SField(
+    SObject(<String, SField>{
+      'vo': SField(_vo),
+      'caption': SField(_caption),
+      'replayButton': SField(SBool()),
+      ..._lineExtras,
+    }),
+  ),
+  'scene': SField(
+    SObject(<String, SField>{
+      'mode': SField(SEnum(<String>['intro', 'trace', 'copy', 'memory'])),
+      'canvas': SField(SEnum(<String>['letter', 'word'])),
+      // One form for a letter canvas; two to six for a word canvas (the boxes, in the course's direction).
+      'forms': SField(SArray(_strokeFormId, minItems: 1, maxItems: 6)),
+      // `own_name`: the letters of the child's name, made on the device from the parent-typed name; nothing of it is in the pack.
+      'source': SField(SEnum(<String>['forms', 'own_name']), required: false),
+      // trace: the whole dotted path, or only the start dot and the first direction.
+      'guide': SField(SEnum(<String>['full', 'start']), required: false),
+      // copy: the model beside the box, or shown and then covered.
+      'model': SField(SEnum(<String>['beside', 'hide']), required: false),
+      // memory: what the voice says, the sound of the letter or its name (the clip is the prompt's `target`).
+      'cue': SField(SEnum(<String>['sound', 'name']), required: false),
+      // intro: the sound in a key word with its picture, and the name as a separate fact.
+      'intro': SField(
+        SObject(<String, SField>{
+          'sound': SField(_vo),
+          'keyword': SField(_vo, required: false),
+          'name': SField(_vo),
+          'picture': SField(_asset, required: false),
+        }),
+        required: false,
+      ),
+      // A handwriting step that is only practice, whatever skill it names (a word canvas of eng C-23 and rus C-23).
+      'practice': SField(SBool(), required: false),
+    }),
+  ),
+  'answer': SField(
+    SObject(<String, SField>{
+      'type': SField(SEnum(<String>['trace', 'none'])),
+      'classify': SField(
+        SObject(<String, SField>{
+          'start': SField(_tag, required: false),
+          'direction': SField(_tag, required: false),
+          'lines': SField(_tag, required: false),
+          'mirror': SField(_tag, required: false),
+          // A look-alike form the child may write instead of the target, and the tag of that mix-up.
+          'partners': SField(SMap(_tag, keyPattern: Patterns.strokeForm, maxEntries: 6), required: false),
+        }),
+        required: false,
+      ),
+    }),
+  ),
+  'voiceAnswer': SField(SBool(), required: false),
+  'feedback': SField(_feedback),
+  'hints': SField(_hints),
+  'scoring': SField(
+    SObject(<String, SField>{
+      'maxAttempts': SField(SInt(min: 1, max: 5)),
+      'creditByHintLevel': SField(SArray(SNum(min: 0, max: 1), minItems: 4, maxItems: 4)),
+    }),
+  ),
+  'tutor': SField(
+    SObject(<String, SField>{
+      'llmAllowed': SField(SBool()),
+      'goal': SField(SString(minLength: 5, maxLength: 200)),
+      'mustNotRevealBeforeHint': SField(SInt(min: 0, max: 3)),
+    }),
+  ),
+  'a11y': SField(SObject(<String, SField>{'altText': SField(SString(minLength: 1, maxLength: 240))})),
+});
+
 /// The file an author writes next to the content files of a pack (`pack.json`); the pack builder reads
 /// it, works out the rest of the manifest (files, hashes, entries, template versions) and signs.
 const SObject packSourceSchema = SObject(<String, SField>{
@@ -1694,5 +1922,7 @@ Map<String, Schema> get allSchemas => <String, Schema>{
   'activity.shop_pay': activitySchemaFor('shop_pay')!,
   'activity.clock_set': activitySchemaFor('clock_set')!,
   'activity.trace': activitySchemaFor('trace')!,
+  'activity.trace_write': letterWriteSchema,
+  'strokes': strokesSchema,
   'activity.say_it': activitySchemaFor('say_it')!,
 };

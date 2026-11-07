@@ -61,6 +61,11 @@ class SBool extends Schema {
   const SBool({super.doc});
 }
 
+/// Only `null`: the empty half of a value that may be absent (`sits: ["top", null]`), inside an [SAnyOf].
+class SNull extends Schema {
+  const SNull({super.doc});
+}
+
 class SEnum extends Schema {
   const SEnum(this.values, {super.doc});
 
@@ -167,6 +172,8 @@ void _check(Schema s, Object? v, String path, List<Problem> out) {
       }
     case SBool():
       if (v is! bool) out.add(Problem(path, 'expected true or false, found ${_describe(v)}'));
+    case SNull():
+      if (v != null) out.add(Problem(path, 'expected null, found ${_describe(v)}'));
     case SEnum():
       if (v is! String || !s.values.contains(v)) {
         out.add(Problem(path, 'must be one of ${s.values.join(', ')}'));
@@ -256,6 +263,7 @@ Map<String, Object?> _export(Schema s) {
     SInt() => <String, Object?>{'type': 'integer', 'minimum': s.min, 'maximum': s.max},
     SNum() => <String, Object?>{'type': 'number', 'minimum': s.min, 'maximum': s.max},
     SBool() => <String, Object?>{'type': 'boolean'},
+    SNull() => <String, Object?>{'type': 'null'},
     SEnum() => <String, Object?>{'type': 'string', 'enum': s.values},
     SConst() => <String, Object?>{'const': s.value},
     SArray() => <String, Object?>{

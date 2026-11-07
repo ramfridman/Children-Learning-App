@@ -57,6 +57,7 @@ While the repository is public, open findings of medium severity or higher, and 
 | SEC-L4-4 | Hardening: the course of a lesson id is not part of the pull guard; a personal turn may carry `contradicts`; the placement flow assumes a probe is due | info | closed (`acdecdf`: `Course.ofLessonId` in the pull guard, proof re-run; `contradicts` refused on unscored steps; a complete placement has no visit) | 2026-11-04 |
 | SEC-LC-1 | The microphone is decided once per lesson: a language's voice switch turned off mid-lesson takes effect at the next lesson | info | open | 2026-11-05 |
 | SEC-LC-2 | The answer path of the lesson controller does not itself refuse an unscored step (not reachable; defence in depth) | info | open | 2026-11-05 |
+| SEC-L5-1 | Stroke sets: the `d` path is checked by its characters only, not by its grammar or the range of its numbers | low | fixed on `languages-l5-2b`: `strokePathFault` in `checkStrokeSet` holds the grammar (M first, M and L two numbers, C six, each number `-?\d+(\.\d+)?` from 0 to 100), `_addD` stops at the first bad token (tryParse, an index check), the `strokesSchema` comment says what the schema does not (`ls02_validation_test.dart` "the bounds of a stroke", `ls02_whole_letter_session_test.dart` paints a bad path without an exception); closes when the security-engineer has run the proof again | 2026-11-06 |
 | SEC-M10-1 | The app says it plays `tap_answer` 1.4, but no session draws a number answer or a stage picture yet | low | closed (`PackContent.fromPack` hides every item with a number answer or a stage picture until a session draws it, `itemsOf` leaves a hidden id out, `tapHintPlan` gives no plan when there is no right option; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-2 | The validator throws instead of refusing some incomplete stage pictures | low | closed (null-guarded reads in `_stagePictureOf`; proof `sec_m10s0_test.dart`) | 2026-11-06 |
 | SEC-M10-3 | The 1.4 number range is not tied to Band C, and some hint plans grow with the size of the number | low | closed (numerals above 100 and `n:` cells of four digits or more only in Band C, in the validator; the hint plans fall back to the generic plan above 20 units, and a test holds every starter item with big numbers under 2,000 marks; proof `sec_m10s0_test.dart`) | 2026-11-06 |
@@ -376,6 +377,27 @@ this check, a format mismatch between a deployed gateway and an installed app, i
   frame draws neither button. The proofs are `ls10_personal_safety_test.dart` (no eye or lamp before a card or during the
   switched-off wait, no attempt row) and `unscored_steps_test.dart` (the four unscored kinds write nothing). Both are green in
   QA's full run (4,073 passed, 0 failed, `218f63d`). SEC-L4-2 and SEC-L1-3 closed in the same run.
+- **L5-2b LS02 write a letter, `languages-l5-2b` (`12fb249a`; 2026-11-06): a light review. Safe to merge, one low finding.**
+  Verified by reading:
+  - Stroke sets are a signed-pack document, read only after the signature, the hashes, the schema and the cross-file rules.
+  - Every number is bounded: whole-unit points in the box, 2 to 60 a stroke, 6 strokes a form, 80 forms a set, 4 sets a pack.
+  - Unknown fields are refused at every level.
+  - A set that is not `teacher-checked`, a set of another course and any set in a pack of the lands are refused.
+  - The free-stroke check is linear in the child's stroke. Its work on the model side is bounded by the schema (at most 6 forms
+    of 6 strokes of 60 points), so a hostile set cannot make it unbounded.
+  - `trace` 2.0 has its own closed schema and belongs to a language course only.
+  - An older app refuses a pack that lists stroke sets at its manifest check. It does not store such a pack hidden, so it fails
+    closed.
+  - The child's drawn points stay in the session's memory. They are never stored, logged, synced or sent.
+  - The answer codes are short codes (`ok`, `s2.dir`, `b2.s1.start`). They fit the sync pattern, and the tutor gets `move` in
+    their place.
+  - The engine changes are pure and use only what the device has, and nothing new leaves the device.
+
+  New: SEC-L5-1 (low), above. Also checked: no package, lock-file, host, workflow or gateway change, so the OSV result of
+  2026-11-04 stands.
+
+  Not run by the security-engineer: `flutter test` and gitleaks (not installed here). A grep of the diff found no secret-shaped
+  string.
 - **M10 step 0, `m10-step0` (PR 41, `f8a99ff4` against `origin/main`; 2026-11-06): a light review. Nothing above low; fix
   SEC-M10-1 to -3 before this build goes on the phones.** In scope: the device setting `division_sign`, the `tap_answer` 1.4 and
   `spot_error` 1.1 schemas, the validator's rules for them, size caps, hiding from older apps, and how today's sessions handle the

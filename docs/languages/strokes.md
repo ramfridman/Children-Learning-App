@@ -14,7 +14,7 @@ Asked for by: frame.md §2.1 F6 and §2.3 LS02 (trace, copy, memory), §5.3 (eve
 | `hebrew-script` | 27: 22 letters and 5 finals, by direction group | 32 (1 short mark) | none: these paths are the script letters | `content/languages/strokes/hebrew-script.json` | `docs/design/languages/strokes_hebrew-script.png` |
 | A-14 scenes | 9 items, 10 pictures, 7 movers | 11 | | `content/languages/strokes/prewriting-heb-a14.json`, `content/languages/pictures/stroke-*.svg`, `mover-*.svg` | `docs/design/languages/strokes_scenes_a14.png` |
 
-Generators: `tools/make_letter_strokes.py` (the format, the checks, the sheets, the font fit), with the paths and their references in `tools/strokes_latin.py`, `tools/strokes_cyrillic.py` and `tools/strokes_hebrew.py`; `tools/make_stroke_scenes.py` for A-14. Test: `python tools/test_letter_strokes.py` (regenerates every set and compares it with the files; counts; the trace format). Deterministic, standard library only; Chrome for the sheets and `--fit`.
+Generators: `tools/make_letter_strokes.py` (the format, the checks, the sheets, the font fit), with the paths and their references in `tools/strokes_latin.py`, `tools/strokes_cyrillic.py` and `tools/strokes_hebrew.py`, and the other right builds of a letter in `tools/strokes_alternates.py` (section 5.4); `tools/make_stroke_scenes.py` for A-14. Test: `python tools/test_letter_strokes.py` (regenerates every set and compares it with the files; counts; the trace format). Deterministic, standard library only; Chrome for the sheets and `--fit`.
 
 ## 2. The format (`nitznutz.strokes/1`)
 
@@ -22,7 +22,7 @@ It extends the existing `trace` activity (T04, `app/lib/play/trace_session.dart`
 
 **The file** (one per set): `schema`, `set`, `courses`, `review` (`needs-teacher`), `reviewer`, `box` (100), `ink` (9: the ink width in box units), `em` and `baseline` (how the font sits in the box), `guides` (the lines, as y in the box), `solidGuides`, `inset` (half a stem: how far a centre line sits inside its guide line), `direction` (ltr or rtl, of the course), `font` (family, weight, file; print sets only), `generator`, `count`, `forms`. The script set adds `groups`.
 
-**A form:** `id` (`latin.a`, `latin.a.cap`, `cyrillic.yo.cap`, `hebrew-print.kaf-final`), `char`, `name`, `case` (latin, cyrillic) or `final` (hebrew), `group` (the formation family or direction group; hebrew-script also `groupProposed`), `sits` (its upper and lower guide line; `null` where a letter is not on one, like t's top), `strokes` in the order they are written.
+**A form:** `id` (`latin.a`, `latin.a.cap`, `cyrillic.yo.cap`, `hebrew-print.kaf-final`), `char`, `name`, `case` (latin, cyrillic) or `final` (hebrew), `group` (the formation family or direction group; hebrew-script also `groupProposed`), `sits` (its upper and lower guide line; `null` where a letter is not on one, like t's top), `strokes` in the order they are written, `alternates` (optional: the other builds of the letter that are right, section 5.4: at most 4, each `{how, strokes}` of 1 to 6 strokes of `kind`, `points` and `retrace` only, within the same caps; a build is only compared with what the child writes, never drawn, so it has no `d` and no `moves`).
 
 **A stroke:**
 
@@ -66,7 +66,7 @@ The sheets show every form at 150 px: the guide lines, the faint font letter und
 3. **Retrace**: a stroke with `retrace` covers its stem twice; the coverage check is unchanged, but the "traced from the wrong end" test must compare the start only, because such a stroke ends near where it began (b, h).
 4. **Guide lines**: draw `guides` (solid for `solidGuides`, dashed otherwise) under the path, in the box.
 5. **Drawing**: the model letter, copy mode's model and the "watch it drawn" animation use `d` with the ink width (9 units, round caps); the trace guide stays the dotted `points`.
-6. **The free-stroke check** (copy, memory) compares the child's strokes in order with `points`, `start` and the first move; the tolerances are the qa-engineer's to tune.
+6. **The free-stroke check** (copy, memory) compares each of the child's strokes with the strokes of the letter not matched yet, in any order, by `points`, `start` and the first move; a letter is whole when the model or any build of `alternates` is. After the last stroke the session waits a second for another and reads everything drawn against the whole script (the stem of a t is not an l). The tolerances are the qa-engineer's to tune (`StrokeTolerance` in `app/lib/play/stroke_check.dart`).
 7. **A-14 scenes** (`prewriting-heb-a14.json`): `scenePoints` drop into `scene.strokes` as they are. Two things are new: the trace box must draw `scene.background` (the picture, at the inner square's full size, under the dotted path; today `TraceSession` paints a white square), and a `mover` sprite (22 box units square) sits on the start dot, follows the finger and walks the path at hint 2, turning by its `orient`: `none`; `face` (drawn facing left, mirrored when the stroke ends to the right of its start); `tangent` (drawn head up, turned with the path); `tangent-upright` (turned with the path, mirrored instead of upside down). The door has no mover and shows `stroke-door-done` when its three strokes are done.
 Golden to add: the trace box with a scene, a mover and a letter with guide lines, on the phone (the stage is 330 × 128, so the box is about 122 points) and both tablets.
 
@@ -176,6 +176,27 @@ Golden to add: the trace box with a scene, a mover and a letter with guide lines
 - **The circle anticlockwise from the top**, as the brief and the app's numerals 0, 6, 8 and 9. Print ס is drawn clockwise, so the evidence is split; kept as the brief.
 - **Across from right to left**, as the brief: it matches the bases of print (כ נ פ צ ש). The top lines of print go the other way, so an across stroke **left to right** is the other half of print; a second across item may be worth adding.
 - The door: down (right side), across right to left, down (left side), as the brief. Print ח, which is the same shape, starts with its top **left to right**, then the right side, then the left side; should the door follow ח?
+
+### 5.4 The other right builds (`alternates`): added 2026-11-06, for the three teachers to confirm
+
+Why: the qa-engineer's break-it samples (QA-L52-1) showed that a letter built the common way, not as the model's strokes, was refused and a stroke tag was written against the child: the check read the strokes in any order but only the model's own strokes. A form may now list a few other builds (at most 4, `tools/strokes_alternates.py`); the free-stroke check accepts a letter that matches the model or any of them. A build is on this list only when no other form of the script is counted for it (`app/test/stroke_alternates_test.dart` reads each one against the whole script), and each is within the model's box, caps and guide lines. The model is still what is shown, walked, traced and replayed. **The teachers confirm or strike each line; the curriculum-expert decides what the course teaches.**
+
+| Form | Build | Why it is there | Teacher |
+|---|---|---|---|
+| `latin.a` | a closed ball, then a stick at its right | the commonest way a 5-year-old writes a: ball and stick (HWT and Zaner-Bloser teach it in one stroke, but the ball and the stick are what the child sees) | english |
+| `latin.a` | an open c, then the stick | the same, the ball left open like the first stroke of the model | english |
+| `latin.d` | a closed ball, then a tall stick | as a | english |
+| `latin.d` | an open c, then the tall stick | as a | english |
+| `latin.n` | a stick, then an arch that starts on it | "stick, then arch" is how many classrooms teach n, m, h, r (HWT "big line down, up and over" is one stroke) | english |
+| `latin.b`, `latin.p` | a stick, then a bowl that starts on it | as n | english |
+| `latin.t` | a plain stem and a bar, no foot | the "plus" t: the model's foot is a hook that many first-grade charts leave out, and the check now asks for the shape of the model (a stem with no foot would otherwise be refused) | english |
+| `cyrillic.a` | a closed ball, then a stick; an open c, then the stick | the small а as a ball and a stick (the model is the arch with its stem and the bowl) | russian |
+| `cyrillic.a.cap` | the roof in one stroke (up and down), then the bar | А as "кровелька" and a bar; the model writes the two sticks | russian |
+| `cyrillic.em.cap`, `cyrillic.em` | one zig-zag from the bottom left; two sticks and a v; a stick, then the rest in one stroke | М and м in one, three and two strokes | russian |
+| `hebrew-print.bet` | the top and the right side, then the base from the right | the base of a ב written from the right, the way the hand goes in Hebrew | hebrew |
+| `hebrew-print.shin` | the cup (right arm, base, left arm) in one stroke, then the middle prong | ש as a cup and a prong | hebrew |
+
+**Not added, and why.** The Hebrew ב in one stroke (the top, the right side, then the base back to the left): it is the way a כ is written, so a כ written for a ב would count as the ב and the look-alike pair the course lists (the partner כ) could no longer be told apart. The hebrew-language-teacher decides: either ב in one stroke is not taught (then it is refused, and no tag is written: the help moves one step), or the ב has a sharp bottom corner that the check can ask for. The two-storey a of some English schools, and any build that lifts the pen where the models do not, are not listed. A build a teacher adds goes in `tools/strokes_alternates.py` and `python tools/make_letter_strokes.py` writes the files; `python tools/test_letter_strokes.py` and `flutter test test/stroke_alternates_test.dart` hold the caps and the cross-reading.
 
 ## 6. The A-14 scenes
 
