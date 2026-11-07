@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.verses-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "עוֹד חֲרוּזִים"
+    }
+  ],
+  "skills": [
+    "HEB-A-06"
+  ],
+  "items": [
+    "heb.a06.05",
+    "heb.a06.06",
+    "heb.a06.07"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 6
+}

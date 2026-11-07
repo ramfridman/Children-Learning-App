@@ -1,0 +1,208 @@
+{
+  "skill": {
+    "id": "HEB-A-02",
+    "strand": "ol",
+    "title": "מילים חדשות מסיפורים"
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "target": "heb-a-w-siach",
+      "options": [
+        "bush",
+        "tree",
+        "pot"
+      ],
+      "wrong": {
+        "tree": "sem",
+        "pot": "soundalike"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "target": "heb-a-w-kemach",
+      "options": [
+        "flour",
+        "sugar",
+        "rainbow"
+      ],
+      "wrong": {
+        "sugar": "sem",
+        "rainbow": "soundalike"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "target": "heb-a-w-keara",
+      "options": [
+        "bowl",
+        "plate",
+        "cave"
+      ],
+      "wrong": {
+        "plate": "sem",
+        "cave": "soundalike"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "target": "heb-a-w-tanur",
+      "options": [
+        "oven",
+        "fridge",
+        "ball"
+      ],
+      "wrong": {
+        "fridge": "sem",
+        "ball": "soundalike"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "target": "heb-a-w-sira",
+      "options": [
+        "boat",
+        "plane",
+        "teacher-sing"
+      ],
+      "wrong": {
+        "plane": "sem",
+        "teacher-sing": "soundalike"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "target": "heb-a-w-kova",
+      "options": [
+        "hat",
+        "shirt",
+        "star"
+      ],
+      "wrong": {
+        "shirt": "sem",
+        "star": "soundalike"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "target": "heb-a-w-ruach",
+      "options": [
+        "wind",
+        "rain",
+        "apple"
+      ],
+      "wrong": {
+        "rain": "sem",
+        "apple": "soundalike"
+      }
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "target": "heb-a-w-kadur",
+      "options": [
+        "ball",
+        "doll",
+        "oven"
+      ],
+      "wrong": {
+        "doll": "sem",
+        "oven": "soundalike"
+      },
+      "h2": "m-kadur"
+    },
+    {
+      "id": "13",
+      "kind": "tap",
+      "target": "heb-a-w-siach",
+      "options": [
+        "ctx-bush-park",
+        "tree",
+        "boat-2"
+      ],
+      "wrong": {
+        "tree": "sem",
+        "boat-2": "soundalike"
+      },
+      "purpose": "check",
+      "difficulty": 0.4
+    },
+    {
+      "id": "14",
+      "kind": "tap",
+      "target": "heb-a-w-keara",
+      "options": [
+        "soup",
+        "cup",
+        "cave"
+      ],
+      "wrong": {
+        "cup": "sem",
+        "cave": "soundalike"
+      },
+      "purpose": "check",
+      "difficulty": 0.4
+    },
+    {
+      "id": "15",
+      "kind": "tap",
+      "target": "heb-a-w-kova",
+      "options": [
+        "ctx-hat-snowman",
+        "scarf",
+        "cup"
+      ],
+      "wrong": {
+        "scarf": "sem",
+        "cup": "soundalike"
+      },
+      "purpose": "check",
+      "difficulty": 0.4
+    },
+    {
+      "id": "16",
+      "kind": "tap",
+      "target": "heb-a-w-ruach",
+      "options": [
+        "ctx-wind-sail",
+        "clouds",
+        "moon"
+      ],
+      "wrong": {
+        "clouds": "sem",
+        "moon": "soundalike"
+      },
+      "purpose": "check",
+      "difficulty": 0.4
+    }
+  ],
+  "lessons": [
+    {
+      "id": "words-1",
+      "title": "מִלִּים מֵהַסִּפּוּר",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "words-2",
+      "title": "עוֹד מִלִּים מֵהַסִּפּוּר",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "08"
+      ]
+    }
+  ]
+}

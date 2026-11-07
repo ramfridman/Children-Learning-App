@@ -1,15 +1,179 @@
 {
-  "skill": {
-    "id": "RUS-A-01",
-    "strand": "lis",
-    "title": "בְּרָכוֹת"
+ "skill": {
+  "id": "RUS-A-01",
+  "strand": "lis",
+  "title": "בְּרָכוֹת",
+  "setCoverage": true
+ },
+ "items": [
+  {
+   "id": "01",
+   "kind": "tap",
+   "frame": "f39",
+   "target": "w-privet",
+   "options": [
+    "mika-arrive",
+    "mika-leave",
+    "mika-gift"
+   ],
+   "wrong": {
+    "mika-leave": "sem",
+    "mika-gift": "sem"
+   }
   },
-  "items": [
-    {"id": "01", "kind": "tap", "frame": "f39", "target": "w-privet", "options": ["mika-arrive", "mika-leave", "mika-gift"], "wrong": {"mika-leave": "sem", "mika-gift": "sem"}},
-    {"id": "02", "kind": "tap", "frame": "f39", "target": "w-poka", "options": ["mika-leave", "mika-arrive", "mika-gift"], "wrong": {"mika-arrive": "sem", "mika-gift": "sem"}},
-    {"id": "03", "kind": "tap", "frame": "f39", "purpose": "check", "target": "w-do-svidanija", "options": ["mika-leave", "mika-arrive", "mika-gift"], "wrong": {"mika-arrive": "sem", "mika-gift": "sem"}}
-  ],
-  "lessons": [
-    {"id": "greet-1", "title": "בְּרָכוֹת", "items": ["01", "02", "03"]}
+  {
+   "id": "02",
+   "kind": "tap",
+   "frame": "f39",
+   "target": "w-poka",
+   "options": [
+    "mika-leave",
+    "mika-arrive",
+    "mika-gift"
+   ],
+   "wrong": {
+    "mika-arrive": "sem",
+    "mika-gift": "sem"
+   }
+  },
+  {
+   "id": "03",
+   "kind": "tap",
+   "frame": "f39",
+   "target": "w-do-svidanija",
+   "options": [
+    "mika-leave",
+    "mika-arrive",
+    "mika-gift"
+   ],
+   "wrong": {
+    "mika-arrive": "sem",
+    "mika-gift": "sem"
+   },
+   "purpose": "check"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f39",
+   "target": "w-privet",
+   "options": [
+    "mika-arrive",
+    "mika-leave",
+    "mika-gift"
+   ],
+   "wrong": {
+    "mika-leave": "sem",
+    "mika-gift": "sem"
+   },
+   "purpose": "probe"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "greet-1",
+   "title": "בְּרָכוֹת",
+   "items": [
+    "01",
+    "02",
+    "03"
+   ]
+  }
+ ],
+ "teach": [
+  [
+   "w-privet",
+   "w-poka",
+   "w-zdravstvujte",
+   "w-do-svidanija"
   ]
+ ],
+ "routes": {
+  "new": "teach set 1, then items 01 to 07 in order; the say step echo first",
+  "heritage": {
+   "teach": false,
+   "from": "04",
+   "weight": [
+    "06",
+    "07"
+   ],
+   "say": "picture first"
+  },
+  "reader": "as heritage or new, by placement strand 1"
+ },
+ "waiting": [
+  {
+   "id": "04",
+   "template": "puppet_talk",
+   "mode": "bubble",
+   "frame": "f07",
+   "target": "w-privet",
+   "scene": "mika-arrive",
+   "right": "rus.arrive",
+   "wrong": {
+    "rus.leave": "sem",
+    "rus.gift": "sem"
+   },
+   "then": "the say step (LS09)",
+   "why": "LS10 recipe"
+  },
+  {
+   "id": "05",
+   "template": "puppet_talk",
+   "mode": "bubble",
+   "frame": "f07",
+   "target": "w-poka",
+   "scene": "mika-leave",
+   "right": "rus.leave",
+   "wrong": {
+    "rus.arrive": "sem",
+    "clip:w-zdravstvujte": "sem"
+   },
+   "then": "the say step (LS09)",
+   "why": "LS10 recipe"
+  },
+  {
+   "id": "06",
+   "template": "puppet_talk",
+   "mode": "bubble",
+   "frame": "f07",
+   "target": "w-zdravstvuj",
+   "scene": "neighbour-arrive",
+   "right": "clip:w-zdravstvujte",
+   "wrong": {
+    "rus.arrive": "tyvy",
+    "rus.leave": "sem"
+   },
+   "check": false,
+   "why": "LS10 recipe"
+  },
+  {
+   "id": "07",
+   "template": "puppet_talk",
+   "mode": "bubble",
+   "frame": "f07",
+   "target": "w-do-svidanija",
+   "scene": "neighbour-leave",
+   "right": "clip:w-do-svidanija",
+   "wrong": {
+    "rus.leave": "tyvy",
+    "rus.arrive": "sem"
+   },
+   "check": true,
+   "why": "LS10 recipe"
+  },
+  {
+   "id": "08",
+   "template": "puppet_talk",
+   "mode": "personal",
+   "topic": "name",
+   "puppet": [
+    "ch-menja-zovut",
+    "ch-kak-tebja-zovut"
+   ],
+   "reply": "ch-ochen-prijatno",
+   "afterPass": "ch-horosho",
+   "why": "LS10 personal recipe (never scored, frame 5.2)"
+  }
+ ]
 }

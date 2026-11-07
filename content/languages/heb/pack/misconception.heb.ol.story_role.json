@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.story_role",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-01"
+  ],
+  "parentText": "הילד מבין את הסיפור, ולפעמים עוד מתבלבל מי עשה מה. כדאי לשאול בזמן הקריאה: מי עשה את זה?",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

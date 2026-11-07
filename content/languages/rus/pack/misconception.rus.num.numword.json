@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.num.numword",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "RUS-A-10"
+  ],
+  "parentText": "כשהילד מתבלבל בין מספרים סמוכים (три ו־четыре), ייתכן שמילת המספר ברוסית עדיין חדשה לו, או שהכמות עצמה עדיין חדשה לו. זה רגיל בגיל הזה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "ספרו יחד ברוסית דברים בבית: מדרגות, כפיות, צעצועים."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete"
+  ]
+}

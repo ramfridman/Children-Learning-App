@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.letters-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֵיפֹה הָאוֹת?"
+    }
+  ],
+  "skills": [
+    "HEB-A-10"
+  ],
+  "items": [
+    "heb.a10.01",
+    "heb.a10.02",
+    "heb.a10.03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 13
+}

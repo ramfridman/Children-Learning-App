@@ -1,0 +1,408 @@
+{
+ "skill": {
+  "id": "RUS-A-09",
+  "strand": "voc",
+  "title": "בְּגָדִים",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-08"
+   }
+  ],
+  "setCoverage": true
+ },
+ "items": [
+  {
+   "id": "01",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-shapka",
+   "options": [
+    {
+     "pic": "hat-warm",
+     "clip": "w-shapka"
+    },
+    {
+     "pic": "scarf",
+     "clip": "w-sharf"
+    },
+    {
+     "pic": "jacket",
+     "clip": "w-kurtka"
+    }
+   ],
+   "wrong": {
+    "scarf": "sound",
+    "jacket": "sem"
+   }
+  },
+  {
+   "id": "02",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-kurtka",
+   "options": [
+    {
+     "pic": "jacket",
+     "clip": "w-kurtka"
+    },
+    {
+     "pic": "doll",
+     "clip": "w-kukla"
+    },
+    {
+     "pic": "dress",
+     "clip": "w-platje"
+    }
+   ],
+   "wrong": {
+    "doll": "sound",
+    "dress": "sem"
+   }
+  },
+  {
+   "id": "03",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-platje",
+   "options": [
+    {
+     "pic": "dress",
+     "clip": "w-platje"
+    },
+    {
+     "pic": "shirt",
+     "clip": "w-futbolka"
+    },
+    {
+     "pic": "trousers",
+     "clip": "w-shtany"
+    }
+   ],
+   "wrong": {
+    "shirt": "sem",
+    "trousers": "sem"
+   }
+  },
+  {
+   "id": "04",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-futbolka",
+   "options": [
+    {
+     "pic": "shirt",
+     "clip": "w-futbolka"
+    },
+    {
+     "pic": "jacket",
+     "clip": "w-kurtka"
+    },
+    {
+     "pic": "dress",
+     "clip": "w-platje"
+    }
+   ],
+   "wrong": {
+    "jacket": "sem",
+    "dress": "sem"
+   }
+  },
+  {
+   "id": "05",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-shtany",
+   "options": [
+    {
+     "pic": "trousers",
+     "clip": "w-shtany"
+    },
+    {
+     "pic": "socks",
+     "clip": "w-noski"
+    },
+    {
+     "pic": "shirt",
+     "clip": "w-futbolka"
+    }
+   ],
+   "wrong": {
+    "socks": "sem",
+    "shirt": "sem"
+   }
+  },
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-noski",
+   "options": [
+    {
+     "pic": "socks",
+     "clip": "w-noski"
+    },
+    {
+     "pic": "shoes",
+     "clip": "w-botinki"
+    },
+    {
+     "pic": "body-nose",
+     "clip": "w-nos"
+    }
+   ],
+   "wrong": {
+    "shoes": "sem",
+    "body-nose": "sound"
+   }
+  },
+  {
+   "id": "07",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-botinki",
+   "options": [
+    {
+     "pic": "shoes",
+     "clip": "w-botinki"
+    },
+    {
+     "pic": "boots",
+     "clip": "w-sapogi"
+    },
+    {
+     "pic": "socks",
+     "clip": "w-noski"
+    }
+   ],
+   "wrong": {
+    "boots": "sem",
+    "socks": "sem"
+   }
+  },
+  {
+   "id": "08",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-sapogi",
+   "options": [
+    {
+     "pic": "boots",
+     "clip": "w-sapogi"
+    },
+    {
+     "pic": "shoes",
+     "clip": "w-botinki"
+    },
+    {
+     "pic": "hat-warm",
+     "clip": "w-shapka"
+    }
+   ],
+   "wrong": {
+    "shoes": "sem",
+    "hat-warm": "sem"
+   }
+  },
+  {
+   "id": "09",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-sharf",
+   "options": [
+    {
+     "pic": "scarf",
+     "clip": "w-sharf"
+    },
+    {
+     "pic": "hat-warm",
+     "clip": "w-shapka"
+    },
+    {
+     "pic": "mittens",
+     "clip": "w-varezhki"
+    }
+   ],
+   "wrong": {
+    "hat-warm": "sound",
+    "mittens": "sem"
+   }
+  },
+  {
+   "id": "10",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-varezhki",
+   "options": [
+    {
+     "pic": "mittens",
+     "clip": "w-varezhki"
+    },
+    {
+     "pic": "scarf",
+     "clip": "w-sharf"
+    },
+    {
+     "pic": "socks",
+     "clip": "w-noski"
+    }
+   ],
+   "wrong": {
+    "scarf": "sem",
+    "socks": "sem"
+   }
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-sharf",
+   "options": [
+    {
+     "pic": "scarf",
+     "clip": "w-sharf"
+    },
+    {
+     "pic": "hat-warm",
+     "clip": "w-shapka"
+    },
+    {
+     "pic": "mittens",
+     "clip": "w-varezhki"
+    }
+   ],
+   "wrong": {
+    "hat-warm": "sound",
+    "mittens": "sem"
+   },
+   "purpose": "probe"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "clothes-1",
+   "title": "בְּגָדִים",
+   "items": [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05"
+   ]
+  },
+  {
+   "id": "clothes-2",
+   "title": "בְּגָדִים",
+   "items": [
+    "06",
+    "07",
+    "08",
+    "09",
+    "10"
+   ]
+  }
+ ],
+ "teach": [
+  [
+   "w-shapka",
+   "w-kurtka",
+   "w-platje",
+   "w-futbolka",
+   "w-shtany"
+  ],
+  [
+   "w-noski",
+   "w-botinki",
+   "w-sapogi",
+   "w-sharf",
+   "w-varezhki"
+  ]
+ ],
+ "routes": {
+  "new": "teach in two sets; items 01 to 15",
+  "heritage": {
+   "teach": false,
+   "order": [
+    "11-15",
+    "01-10"
+   ]
+  },
+  "reader": "as heritage or new"
+ },
+ "waiting": [
+  {
+   "id": "11",
+   "template": "listen_do",
+   "mode": "drag",
+   "frame": "f13",
+   "target": "w-shapka",
+   "scene": "mika-body",
+   "right": "hat",
+   "wrong": {
+    "scarf": "sound",
+    "jacket": "sem"
+   },
+   "check": false,
+   "why": "LS11 recipe (dress the friend: drag the clothing onto mika)"
+  },
+  {
+   "id": "12",
+   "template": "listen_do",
+   "mode": "drag",
+   "frame": "f13",
+   "target": "w-platje",
+   "scene": "mika-body",
+   "right": "dress",
+   "wrong": {
+    "tshirt": "sem",
+    "trousers": "sem"
+   },
+   "check": false,
+   "why": "LS11 recipe (dress the friend: drag the clothing onto mika)"
+  },
+  {
+   "id": "13",
+   "template": "listen_do",
+   "mode": "drag",
+   "frame": "f13",
+   "target": "w-noski",
+   "scene": "mika-body",
+   "right": "socks",
+   "wrong": {
+    "shoes": "sem",
+    "hot.nose": "sound"
+   },
+   "check": false,
+   "why": "LS11 recipe (dress the friend: drag the clothing onto mika)"
+  },
+  {
+   "id": "14",
+   "template": "listen_do",
+   "mode": "drag",
+   "frame": "f13",
+   "target": "w-sharf",
+   "scene": "mika-body",
+   "right": "scarf",
+   "wrong": {
+    "hat": "sound",
+    "mittens": "sem"
+   },
+   "check": true,
+   "why": "LS11 recipe (dress the friend: drag the clothing onto mika)"
+  },
+  {
+   "id": "15",
+   "template": "listen_do",
+   "mode": "drag",
+   "frame": "f13",
+   "target": "w-varezhki",
+   "scene": "mika-body",
+   "right": "mittens",
+   "wrong": {
+    "scarf": "sem",
+    "socks": "sem"
+   },
+   "check": true,
+   "why": "LS11 recipe (dress the friend: drag the clothing onto mika)"
+  }
+ ]
+}

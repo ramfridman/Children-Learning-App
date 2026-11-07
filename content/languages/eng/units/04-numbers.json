@@ -1,0 +1,23 @@
+{
+  "skill": {"id": "ENG-A-04", "strand": "lis", "title": "מִסְפָּרִים", "prerequisites": [{"skill": "ENG-A-01"}], "setCoverage": true},
+  "items": [
+    {"id": "i01", "kind": "tap", "target": "en-one", "options": ["set-ducks-1", "set-ducks-2", "set-ducks-3"], "wrong": {"set-ducks-2": "sem", "set-ducks-3": "sem"}, "ladder": "HL-SET"},
+    {"id": "i02", "kind": "tap", "target": "en-two", "options": ["set-balls-2", "set-balls-1", "set-balls-3"], "wrong": {"set-balls-1": "sem", "set-balls-3": "sem"}, "ladder": "HL-SET"},
+    {"id": "i03", "kind": "tap", "target": "en-three", "options": ["set-ducks-3", "set-ducks-2", "set-ducks-4"], "wrong": {"set-ducks-2": "sem", "set-ducks-4": "sem"}, "ladder": "HL-SET"},
+    {"id": "i04", "kind": "tap", "target": "en-four", "options": ["set-balls-4", "set-balls-3", "set-balls-5"], "wrong": {"set-balls-3": "sem", "set-balls-5": "sem"}, "ladder": "HL-SET"},
+    {"id": "i05", "kind": "tap", "target": "en-five", "options": ["set-ducks-5", "set-ducks-3", "set-ducks-4"], "wrong": {"set-ducks-3": "sem", "set-ducks-4": "sem"}, "ladder": "HL-SET"},
+    {"id": "i08", "kind": "tap", "target": "en-four", "options": ["set-ducks-4", "set-ducks-5", "set-ducks-3"], "wrong": {"set-ducks-5": "sem", "set-ducks-3": "sem"}, "ladder": "HL-SET"},
+    {"id": "i06", "kind": "tap", "purpose": "check", "target": "en-three", "options": ["set-balls-3", "set-balls-2", "set-balls-4"], "wrong": {"set-balls-2": "sem", "set-balls-4": "sem"}, "ladder": "HL-SET"},
+    {"id": "i07", "kind": "tap", "purpose": "check", "target": "en-five", "options": ["set-balls-5", "set-balls-4", "set-balls-3"], "wrong": {"set-balls-4": "sem", "set-balls-3": "sem"}, "ladder": "HL-SET"},
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-four", "options": ["set-ducks-4", "set-ducks-5", "set-ducks-3"], "wrong": {"set-ducks-5": "sem", "set-ducks-3": "sem"}, "ladder": "HL-SET"}
+  ],
+  "lessons": [
+    {"id": "num-1", "title": "סוֹפְרִים עַד שָׁלוֹשׁ", "items": ["i01", "i02", "i03"]},
+    {"id": "num-2", "title": "סוֹפְרִים עַד חָמֵשׁ", "items": ["i04", "i05", "i08"]}
+  ],
+  "waiting": [
+    {"id": "i06", "template": "T02 count_tap (language)", "purpose": "check", "replaces": "i06", "frame": "he-ins-count", "objects": "duck", "count": 3, "clips": ["en-one", "en-two", "en-three"], "answerPrompt": "he-ins-how-many", "options": [{"clip": "en-three", "value": 3}, {"clip": "en-two", "value": 2}, {"clip": "en-four", "value": 4}], "wrong": {"en-two": "sem", "en-four": "sem"}, "ladder": "HL-COUNT", "rep": "concrete", "note": "The counting taps are practice, never scored (frame 2.2); the scored step is \"how many?\" on three sound buttons."},
+    {"id": "i07", "template": "T02 count_tap (language)", "purpose": "check", "replaces": "i07", "frame": "he-ins-count", "objects": "ball", "count": 5, "clips": ["en-one", "en-two", "en-three", "en-four", "en-five"], "answerPrompt": "he-ins-how-many", "options": [{"clip": "en-five", "value": 5}, {"clip": "en-four", "value": 4}, {"clip": "en-three", "value": 3}], "wrong": {"en-four": "sem", "en-three": "sem"}, "ladder": "HL-COUNT", "rep": "concrete"},
+    {"id": "p01", "template": "LS10 puppet_talk personal", "topic": "age", "frame": "he-ins-personal", "picture": "pip-happy", "prompt": ["en-im-five-how-old"], "cards": ["n:3", "n:4", "n:5", "n:6", "n:7", "n:8", "n:9"], "cardClips": ["en-three", "en-four", "en-five", "en-six", "en-seven", "en-eight", "en-nine"], "reply": ["@card", "en-wow"], "pass": "en-thats-ok", "note": "Pip answers first. Never scored, stored or sent; the age cards are drawn by the app (numeral and dots)."}
+  ]
+}

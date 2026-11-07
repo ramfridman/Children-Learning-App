@@ -1,0 +1,20 @@
+{
+  "skill": {"id": "ENG-A-10", "strand": "lis", "title": "הֲפָכִים", "prerequisites": [{"skill": "ENG-A-03"}, {"skill": "ENG-A-05"}], "setCoverage": true},
+  "items": [
+    {"id": "i05", "kind": "tap", "target": "en-hot", "options": ["tea", "cup-cold", "mika-sad"], "wrong": {"cup-cold": "sem", "mika-sad": "l1_guess"}},
+    {"id": "i06", "kind": "tap", "target": "en-cold", "options": ["mika-cold", "mika-hot", "pip-happy"], "wrong": {"mika-hot": "sem", "pip-happy": "l1_guess"}},
+    {"id": "i07", "kind": "tap", "target": "en-happy", "options": ["mika-happy", "mika-sad", "tea"], "wrong": {"mika-sad": "sem", "tea": "l1_guess"}},
+    {"id": "i08", "kind": "tap", "target": "en-sad", "options": ["pip-sad", "pip-happy", "cup-cold"], "wrong": {"pip-happy": "sem", "cup-cold": "l1_guess"}},
+    {"id": "i09", "kind": "tap", "purpose": "check", "target": "en-hot", "options": ["mika-hot", "mika-cold", "cup-cold"], "wrong": {"mika-cold": "sem", "cup-cold": "l1_guess"}},
+    {"id": "i10", "kind": "tap", "purpose": "check", "target": "en-cold", "options": ["cup-cold", "tea", "mika-happy"], "wrong": {"tea": "sem", "mika-happy": "l1_guess"}}
+  ],
+  "lessons": [
+    {"id": "adj-1", "title": "חַם, קַר, שָׂמֵחַ, עָצוּב", "items": ["i05", "i06", "i07", "i08"]}
+  ],
+  "waiting": [
+    {"id": "i01", "template": "LS11 listen_do hotspots (two places in one picture)", "target": "en-big", "picture": "dog-big", "options": ["the big dog", "the small dog"], "wrong": {"the small dog": "sem"}, "ladder": "HL-PIC", "rep": "pictorial", "note": "Big and small are only seen side by side, so the two choices are two places of one picture (its \"at\" areas are the design-director's)."},
+    {"id": "i02", "template": "LS11 listen_do hotspots (two places in one picture)", "target": "en-small", "picture": "dog-big", "options": ["the small dog", "the big dog"], "wrong": {"the big dog": "sem"}, "ladder": "HL-PIC", "rep": "pictorial", "note": "Big and small are only seen side by side, so the two choices are two places of one picture (its \"at\" areas are the design-director's)."},
+    {"id": "i03", "template": "LS11 listen_do hotspots (two places in one picture)", "target": "en-big", "picture": "ball-pair", "options": ["the big ball", "the small ball"], "wrong": {"the small ball": "sem"}, "ladder": "HL-PIC", "rep": "pictorial", "note": "Big and small are only seen side by side, so the two choices are two places of one picture (its \"at\" areas are the design-director's)."},
+    {"id": "i04", "template": "LS11 listen_do hotspots (two places in one picture)", "target": "en-small", "picture": "ball-pair", "options": ["the small ball", "the big ball"], "wrong": {"the big ball": "sem"}, "ladder": "HL-PIC", "rep": "pictorial", "note": "Big and small are only seen side by side, so the two choices are two places of one picture (its \"at\" areas are the design-director's)."}
+  ]
+}

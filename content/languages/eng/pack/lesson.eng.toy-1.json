@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.toy-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "צַעֲצוּעִים"
+    }
+  ],
+  "skills": [
+    "ENG-A-09"
+  ],
+  "items": [
+    "eng.a09.i01",
+    "eng.a09.i02",
+    "eng.a09.i03",
+    "eng.a09.i04"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 16
+}

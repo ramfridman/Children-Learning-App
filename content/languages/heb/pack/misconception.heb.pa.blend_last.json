@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.blend_last",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "HEB-A-09"
+  ],
+  "parentText": "הילד זוכר רק את החלק האחרון של המילה. כדאי לומר את החלקים שוב, מההתחלה.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

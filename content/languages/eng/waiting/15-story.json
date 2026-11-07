@@ -1,0 +1,15 @@
+{
+  "skill": {"id": "ENG-A-15", "strand": "lis", "title": "סִפּוּר", "prerequisites": [{"skill": "ENG-A-05"}, {"skill": "ENG-A-03"}]},
+  "lessons": [
+    {"id": "story-1", "title": "הַכַּדּוּר הַקּוֹפֵץ", "items": ["s01", "d01", "q02", "q04"]}
+  ],
+  "waiting": [
+    {"id": "s01", "template": "LS08 story listen", "purpose": "practice", "frame": "he-ins-story", "rep": "story", "pages": [{"picture": "story-bounce-1", "clips": ["en-st-bounce-1"]}, {"picture": "story-bounce-2", "clips": ["en-st-bounce-2"]}, {"picture": "story-bounce-3", "clips": ["en-st-bounce-3"]}, {"picture": "story-bounce-4", "clips": ["en-st-bounce-4"]}, {"picture": "story-bounce-5", "clips": ["en-st-bounce-5"]}, {"picture": "story-bounce-6", "clips": ["en-st-bounce-6"]}], "words": {"story-bounce-2": ["en-cat", "en-ball"], "story-bounce-3": ["en-duck"], "story-bounce-4": ["en-frog"], "story-bounce-5": ["en-dog", "en-ball"]}, "note": "\"Bounce, Ball!\" (original): six pages, the repeated line \"Bounce, bounce, bounce!\"; the words are touched in the pictures (their \"at\" areas are the design-director's)."},
+    {"id": "d01", "template": "LS08 story dialogic", "pauseAfter": 1, "question": "he-q-who", "options": ["duck", "cat", "frog"], "wrong": {"cat": "story_recall", "frog": "sem"}, "ladder": "HL-STORY", "rep": "story", "note": "Before page 3; after the tap, page 3 plays (\"Hello, duck!\") as the recast."},
+    {"id": "q01", "kind": "tap", "purpose": "check", "frame": "he-q-ball-end", "options": ["dog", "cat", "frog"], "wrong": {"cat": "story_recall", "frog": "story_recall"}, "ladder": "HL-STORY", "rep": "story"},
+    {"id": "q02", "kind": "tap", "purpose": "learn", "frame": "he-q-ball-which", "options": [{"pic": "ball-red", "clip": "en-red"}, {"pic": "ball-blue", "clip": "en-blue"}, {"pic": "ball-yellow", "clip": "en-yellow"}], "wrong": {"ball-blue": "sem", "ball-yellow": "l1_guess"}, "ladder": "HL-STORY", "rep": "story"},
+    {"id": "q03", "kind": "tap", "purpose": "check", "frame": "he-q-ball-first", "options": ["cat", "duck", "dog"], "wrong": {"duck": "story_recall", "dog": "story_recall"}, "ladder": "HL-STORY", "rep": "story"},
+    {"id": "q04", "kind": "tap", "purpose": "learn", "frame": "he-ins-listen-tap", "target": "en-frog", "options": ["frog", "fish", "duck"], "wrong": {"fish": "sem", "duck": "story_recall"}, "ladder": "HL-PIC", "rep": "story", "stage": "story-bounce-4"}
+  ],
+  "note": "The four questions are taps, but they ask about the story just heard: they wait for the LS08 recipe with it."
+}

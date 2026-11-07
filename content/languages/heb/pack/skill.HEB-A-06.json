@@ -1,0 +1,27 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-06",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "משלים חרוז בשיר מוכר"
+    }
+  ],
+  "strand": "pa",
+  "prerequisites": [],
+  "representations": [
+    "story"
+  ],
+  "misconceptions": [
+    "heb.pa.allit",
+    "heb.ol.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

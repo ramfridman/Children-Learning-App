@@ -1,0 +1,312 @@
+{
+ "skill": {
+  "id": "RUS-A-14",
+  "strand": "grm",
+  "title": "בְּבַקָּשָׁה וְתוֹדָה",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-01"
+   },
+   {
+    "skill": "RUS-A-07"
+   }
+  ]
+ },
+ "items": [
+  {
+   "id": "01",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-daj-mjach",
+   "options": [
+    {
+     "pic": "ball",
+     "clip": "w-mjach"
+    },
+    {
+     "pic": "balloon",
+     "clip": "w-sharik"
+    },
+    {
+     "pic": "doll",
+     "clip": "w-kukla"
+    }
+   ],
+   "wrong": {
+    "balloon": "also-sem",
+    "doll": "also-sem"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "02",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-daj-sok",
+   "options": [
+    {
+     "pic": "juice",
+     "clip": "w-sok"
+    },
+    {
+     "pic": "soup",
+     "clip": "w-sup"
+    },
+    {
+     "pic": "milk",
+     "clip": "w-moloko"
+    }
+   ],
+   "wrong": {
+    "soup": "also-sound",
+    "milk": "also-sem"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "03",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-daj-hleb",
+   "options": [
+    {
+     "pic": "bread",
+     "clip": "w-hleb"
+    },
+    {
+     "pic": "cheese",
+     "clip": "w-syr"
+    },
+    {
+     "pic": "apple",
+     "clip": "w-yabloko"
+    }
+   ],
+   "wrong": {
+    "cheese": "also-sem",
+    "apple": "also-sem"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "04",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-daj-jabloko",
+   "options": [
+    {
+     "pic": "apple",
+     "clip": "w-yabloko"
+    },
+    {
+     "pic": "banana",
+     "clip": "w-banan"
+    },
+    {
+     "pic": "milk",
+     "clip": "w-moloko"
+    }
+   ],
+   "wrong": {
+    "banana": "also-sem",
+    "milk": "also-sound"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "05",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-daj-banan",
+   "options": [
+    {
+     "pic": "banana",
+     "clip": "w-banan"
+    },
+    {
+     "pic": "orange",
+     "clip": "w-apelsin"
+    },
+    {
+     "pic": "apple",
+     "clip": "w-yabloko"
+    }
+   ],
+   "wrong": {
+    "orange": "also-sem",
+    "apple": "also-sem"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-daj-karandash",
+   "options": [
+    {
+     "pic": "pencil",
+     "clip": "w-karandash"
+    },
+    {
+     "pic": "book",
+     "clip": "w-kniga"
+    },
+    {
+     "pic": "ball",
+     "clip": "w-mjach"
+    }
+   ],
+   "wrong": {
+    "book": "also-sem",
+    "ball": "also-sem"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "07",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-hochu-syr",
+   "options": [
+    {
+     "pic": "cheese",
+     "clip": "w-syr"
+    },
+    {
+     "pic": "juice",
+     "clip": "w-sok"
+    },
+    {
+     "pic": "bread",
+     "clip": "w-hleb"
+    }
+   ],
+   "wrong": {
+    "juice": "also-sound",
+    "bread": "also-sem"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "08",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-hochu-apelsin",
+   "options": [
+    {
+     "pic": "orange",
+     "clip": "w-apelsin"
+    },
+    {
+     "pic": "watermelon",
+     "clip": "w-arbuz"
+    },
+    {
+     "pic": "banana",
+     "clip": "w-banan"
+    }
+   ],
+   "wrong": {
+    "watermelon": "also-sound",
+    "banana": "also-sem"
+   },
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  },
+  {
+   "id": "09",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-hochu-moloko",
+   "options": [
+    {
+     "pic": "milk",
+     "clip": "w-moloko"
+    },
+    {
+     "pic": "water",
+     "clip": "w-voda"
+    },
+    {
+     "pic": "apple",
+     "clip": "w-yabloko"
+    }
+   ],
+   "wrong": {
+    "water": "also-sem",
+    "apple": "also-sound"
+   },
+   "purpose": "check",
+   "then": "listen_do give (f20: drag the thing to the friend's hands; the friend says w-spasibo) when the recipe exists; until then the three pictures"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "please-1",
+   "title": "בְּבַקָּשָׁה וְתוֹדָה",
+   "items": [
+    "01",
+    "02",
+    "03"
+   ]
+  },
+  {
+   "id": "please-2",
+   "title": "בְּבַקָּשָׁה וְתוֹדָה",
+   "items": [
+    "04",
+    "05",
+    "06"
+   ]
+  },
+  {
+   "id": "please-3",
+   "title": "בְּבַקָּשָׁה וְתוֹדָה",
+   "items": [
+    "07",
+    "08"
+   ]
+  }
+ ],
+ "routes": {
+  "new": "all items",
+  "heritage": {
+   "teach": false,
+   "say": "picture first in 10 and 11"
+  },
+  "reader": "as heritage or new"
+ },
+ "waiting": [
+  {
+   "id": "10",
+   "template": "puppet_talk",
+   "mode": "bubble",
+   "frame": "f07",
+   "target": "w-na",
+   "scene": "mika hands the child an apple",
+   "right": "rus.gift",
+   "wrong": {
+    "rus.leave": "sem",
+    "rus.arrive": "sem"
+   },
+   "reply": "w-pozhalujsta",
+   "then": "the say step (LS09)",
+   "why": "LS10 recipe"
+  },
+  {
+   "id": "11",
+   "template": "puppet_talk",
+   "mode": "bubble",
+   "frame": "f07",
+   "scene": "a thought bubble with juice",
+   "right": "clip:ch-daj-sok",
+   "wrong": {
+    "clip:ch-daj-sup": "sound",
+    "rus.gift": "sem"
+   },
+   "check": true,
+   "then": "the say step: key words пожа́луйста, сок",
+   "why": "LS10 recipe (text-free bubbles that play a clip)"
+  }
+ ]
+}

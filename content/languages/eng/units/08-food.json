@@ -1,0 +1,27 @@
+{
+  "skill": {"id": "ENG-A-08", "strand": "lis", "title": "אֹכֶל", "prerequisites": [{"skill": "ENG-A-01"}], "setCoverage": true},
+  "items": [
+    {"id": "i01", "kind": "tap", "target": "en-apple", "options": ["apple", "banana", "bread"], "wrong": {"banana": "sem", "bread": "l1_guess"}},
+    {"id": "i02", "kind": "tap", "target": "en-banana", "options": ["banana", "apple", "milk"], "wrong": {"apple": "sem", "milk": "l1_guess"}},
+    {"id": "i03", "kind": "tap", "target": "en-milk", "options": ["milk", "water", "cake"], "wrong": {"water": "sem", "cake": "l1_guess"}},
+    {"id": "i04", "kind": "tap", "target": "en-water", "options": ["water", "juice", "egg"], "wrong": {"juice": "sem", "egg": "l1_guess"}},
+    {"id": "i05", "kind": "tap", "target": "en-bread", "options": ["bread", "cake", "juice"], "wrong": {"cake": "sem", "juice": "l1_guess"}},
+    {"id": "i06", "kind": "tap", "target": "en-egg", "options": ["egg", "bread", "apple"], "wrong": {"bread": "sem", "apple": "l1_guess"}},
+    {"id": "i07", "kind": "tap", "target": "en-cake", "options": ["cake", "bread", "water"], "wrong": {"bread": "sem", "water": "l1_guess"}},
+    {"id": "i08", "kind": "tap", "target": "en-juice", "options": ["juice", "milk", "banana"], "wrong": {"milk": "sem", "banana": "l1_guess"}},
+    {"id": "i11", "kind": "tap", "purpose": "check", "target": "en-give-bread", "options": ["bread", "cake", "milk"], "wrong": {"cake": "sem", "milk": "l1_guess"}, "variant": "en-bread"},
+    {"id": "i12", "kind": "tap", "purpose": "check", "target": "en-give-juice", "options": ["juice", "water", "apple"], "wrong": {"water": "sem", "apple": "l1_guess"}, "variant": "en-juice"},
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-banana", "options": ["banana", "apple", "milk"], "wrong": {"apple": "sem", "milk": "l1_guess"}}
+  ],
+  "lessons": [
+    {"id": "food-1", "title": "פֵּרוֹת וּשְׁתִיָּה", "items": ["i01", "i02", "i03", "i04"]},
+    {"id": "food-2", "title": "אֹכֶל טָעִים", "items": ["i05", "i06", "i07", "i08"]}
+  ],
+  "waiting": [
+    {"id": "i09", "template": "LS11 listen_do drag", "purpose": "learn", "frame": "he-ins-give", "target": "en-give-apple", "picture": "pip-happy", "options": ["apple", "banana", "bread"], "wrong": {"banana": "sem", "bread": "l1_guess"}, "ladder": "HL-PIC", "rep": "embodied", "note": "The food is dragged to Pip."},
+    {"id": "i10", "template": "LS11 listen_do drag", "purpose": "learn", "frame": "he-ins-give", "target": "en-give-milk", "picture": "pip-happy", "options": ["milk", "water", "cake"], "wrong": {"water": "sem", "cake": "l1_guess"}, "ladder": "HL-PIC", "rep": "embodied", "note": "The food is dragged to Pip."},
+    {"id": "i11", "template": "LS11 listen_do drag", "purpose": "check", "frame": "he-ins-give", "target": "en-give-bread", "picture": "pip-happy", "options": ["bread", "cake", "juice"], "wrong": {"cake": "sem", "juice": "l1_guess"}, "ladder": "HL-PIC", "rep": "embodied", "note": "The food is dragged to Pip.", "replaces": "i11"},
+    {"id": "i12", "template": "LS11 listen_do drag", "purpose": "check", "frame": "he-ins-give", "target": "en-give-juice", "picture": "pip-happy", "options": ["juice", "milk", "banana"], "wrong": {"milk": "sem", "banana": "l1_guess"}, "ladder": "HL-PIC", "rep": "embodied", "note": "The food is dragged to Pip.", "replaces": "i12"},
+    {"id": "p01", "template": "LS10 puppet_talk personal", "topic": "likes", "frame": "he-ins-personal", "picture": "pip-happy", "prompt": ["en-i-like-bananas"], "cards": [{"pic": "apple", "clip": "en-apple"}, {"pic": "banana", "clip": "en-banana"}, {"pic": "bread", "clip": "en-bread"}, {"pic": "egg", "clip": "en-egg"}, {"pic": "cake", "clip": "en-cake"}, {"pic": "juice", "clip": "en-juice"}], "reply": ["@card", "en-yum"], "pass": "en-thats-ok", "note": "Never used to choose content; never stored."}
+  ]
+}

@@ -6,7 +6,10 @@
   "kind": "diagnostic",
   "family": "MEANING",
   "skills": [
-    "HEB-A-02"
+    "HEB-A-02",
+    "HEB-A-06",
+    "HEB-A-07",
+    "HEB-A-09"
   ],
   "parentText": "הילד מכיר את הנושא, ומילים קרובות (כמו כלב וחתול) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
   "repairActivities": [],

@@ -1,0 +1,35 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.toys-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "צַעֲצוּעִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-08"
+  ],
+  "items": [
+    "rus.a08.06",
+    "rus.a08.07",
+    "rus.a08.08",
+    "rus.a08.09",
+    "rus.a08.10"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 24
+}

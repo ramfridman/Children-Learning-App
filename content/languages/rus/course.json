@@ -1,7 +1,10 @@
 {
   "course": "rus",
-  "pack": {"version": "0.1.0", "minAppVersion": "0.5.0"},
-  "note": "RUS-1 pilot: RUS-A-01 (greetings), one lesson, text only (every clip pending). The lines are those of docs/languages/russian/band-a-content.md section 2; the Russian clips are rows of docs/languages/russian/pronunciation.csv. The praise lines are the app's existing ones (the batch says 'the app's existing praise line'): the same eight lines as the English course.",
+  "pack": {
+    "version": "0.1.0",
+    "minAppVersion": "0.5.0"
+  },
+  "note": "RUS-1 Band A (docs/languages/russian/band-a-content.md): the skills, items and lessons the generator can express (LS01 tap) are in units/; the items that wait for a recipe (LS08, LS09, LS10, LS11, LS12, LS03 drum, count_tap, audio options, yes / no, same / different) are kept as data in each unit's \"waiting\" list, and the three skills that have no expressible item (A-11, A-15, A-16) in pending/. The lines f01 to f40 are those of section 2, text-ready from the hebrew-text-editor (2026-11-03); new lines are needs-editor. Text only: every clip is pending.",
   "defaults": {
     "frame": "f01",
     "ladder": "HL-1",
@@ -11,23 +14,98 @@
   },
   "feedback": {
     "right": [
-      {"line": "he-fb-right-1", "target": "@target"},
-      {"line": "he-fb-right-2", "target": "@target"},
-      {"line": "he-fb-right-3", "target": "@target"},
-      {"line": "he-fb-right-4", "target": "@target"},
-      {"line": "he-fb-right-5", "target": "@target"},
-      {"line": "he-fb-right-6", "target": "@target"},
-      {"line": "he-fb-right-7", "target": "@target"},
-      {"line": "he-fb-right-8", "target": "@target"}
+      {
+        "line": "he-fb-right-1",
+        "target": "@target"
+      },
+      {
+        "line": "he-fb-right-2",
+        "target": "@target"
+      },
+      {
+        "line": "he-fb-right-3",
+        "target": "@target"
+      },
+      {
+        "line": "he-fb-right-4",
+        "target": "@target"
+      },
+      {
+        "line": "he-fb-right-5",
+        "target": "@target"
+      },
+      {
+        "line": "he-fb-right-6",
+        "target": "@target"
+      },
+      {
+        "line": "he-fb-right-7",
+        "target": "@target"
+      },
+      {
+        "line": "he-fb-right-8",
+        "target": "@target"
+      }
     ],
-    "wrong": {"line": "he-fb-check"},
-    "unsure": {"line": "f02", "target": "@target"}
+    "wrong": {
+      "line": "he-fb-check"
+    },
+    "unsure": {
+      "line": "f02",
+      "target": "@target"
+    }
   },
   "ladders": {
     "HL-1": [
-      {"line": "f02", "action": "replay_prompt_slow", "target": "@slow"},
-      {"line": "@frame", "action": "highlight_objects_sequentially", "target": "@target"},
-      {"line": "he-hint-showme", "action": "worked_example", "target": "@target"}
+      {
+        "line": "f02",
+        "action": "replay_prompt_slow",
+        "target": "@slow"
+      },
+      {
+        "line": "@frame",
+        "action": "highlight_objects_sequentially",
+        "target": "@target"
+      },
+      {
+        "line": "he-hint-showme",
+        "action": "worked_example",
+        "target": "@target"
+      }
+    ],
+    "HL-NUM": [
+      {
+        "line": "f02",
+        "action": "replay_prompt_slow",
+        "target": "@slow"
+      },
+      {
+        "line": "@frame",
+        "action": "show_fingers",
+        "target": "@target"
+      },
+      {
+        "line": "he-hint-showme",
+        "action": "worked_example",
+        "target": "@target"
+      }
+    ],
+    "HL-MOUTH": [
+      {
+        "line": "f02",
+        "action": "replay_prompt_slow",
+        "target": "@slow"
+      },
+      {
+        "line": "f36",
+        "action": "highlight_objects_sequentially",
+        "target": "@target"
+      },
+      {
+        "line": "he-hint-showme",
+        "action": "worked_example",
+        "target": "@target"
+      }
     ]
   },
   "glosses": {},
@@ -38,22 +116,412 @@
       "kind": "diagnostic",
       "family": "MEANING",
       "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
-      "homeActivity": "הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו."
+      "homeActivity": "הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו.",
+      "preferredRepresentations": [
+        "story"
+      ]
+    },
+    "sound": {
+      "id": "rus.voc.sound",
+      "tag": "M-RUS-SOUND",
+      "kind": "diagnostic",
+      "family": "GUESS",
+      "parentText": "מילים שנשמעות דומה (сок ו־суп) עדיין מתחלפות לילד. זה שלב רגיל בלמידת שפה חדשה.",
+      "homeActivity": "אמרו לאט שתי מילים דומות, אחת אחרי השנייה, והצביעו על התמונה של כל אחת.",
+      "preferredRepresentations": [
+        "pictorial"
+      ]
+    },
+    "kto": {
+      "id": "rus.grm.kto",
+      "tag": "M-RUS-KTO",
+      "kind": "diagnostic",
+      "family": "GRAMMAR",
+      "parentText": "ברוסית שואלים кто (\"מי\") על אנשים ועל בעלי חיים, ו־что (\"מה\") על חפצים. בעברית אומרים \"מה זה?\" גם על חתול, ולכן זה מבלבל בהתחלה.",
+      "homeActivity": "בספר תמונות: על חיה או על אדם שאלו \"Кто это?\", ועל חפץ שאלו \"Что это?\".",
+      "preferredRepresentations": [
+        "story"
+      ]
+    },
+    "tyvy": {
+      "id": "rus.lis.tyvy",
+      "tag": "M-RUS-TYVY",
+      "kind": "diagnostic",
+      "family": "GRAMMAR",
+      "parentText": "למבוגר שאינו מהמשפחה אומרים ברוסית здравствуйте ו־до свидания, ולחבר привет ו־пока. זו הצורה המנומסת; במשפחה ובין חברים מדברים כרגיל.",
+      "homeActivity": "כשפוגשים מבוגר שמדבר רוסית, אמרו יחד \"здравствуйте\".",
+      "preferredRepresentations": [
+        "story"
+      ]
+    },
+    "yesno": {
+      "id": "rus.grm.yesno",
+      "tag": "M-RUS-YESNO",
+      "kind": "diagnostic",
+      "family": "GUESS",
+      "parentText": "אם הילד עונה כל פעם אותה תשובה בשאלות של כן ולא, או בשאלות של אותו דבר או לא, כנראה שהשאלה עדיין לא ברורה לו עד הסוף. זה נורמלי בהתחלה.",
+      "homeActivity": "שאלו בצחוק \"Это кот?\" על דברים בבית, לפעמים נכון ולפעמים לא, וענו יחד да או нет.",
+      "preferredRepresentations": [
+        "pictorial"
+      ]
+    },
+    "numword": {
+      "id": "rus.num.numword",
+      "tag": "M-RUS-NUMWORD",
+      "kind": "diagnostic",
+      "family": "MEANING",
+      "parentText": "כשהילד מתבלבל בין מספרים סמוכים (три ו־четыре), ייתכן שמילת המספר ברוסית עדיין חדשה לו, או שהכמות עצמה עדיין חדשה לו. זה רגיל בגיל הזה.",
+      "homeActivity": "ספרו יחד ברוסית דברים בבית: מדרגות, כפיות, צעצועים.",
+      "preferredRepresentations": [
+        "concrete"
+      ]
+    },
+    "rhyme_onset": {
+      "id": "rus.pho.rhyme_onset",
+      "tag": "M-RUS-RHYME-ONSET",
+      "kind": "diagnostic",
+      "family": "RHYME",
+      "parentText": "כשמחפשים חרוז, ילדים בוחרים לפעמים מילה שמתחילה אותו דבר (нос ו־ноги) במקום מילה שנגמרת אותו דבר.",
+      "homeActivity": "אמרו שתי מילים מתחרזות ברוסית (кот – рот) ושאלו: נשמע דומה בסוף?",
+      "preferredRepresentations": [
+        "pictorial"
+      ]
+    },
+    "syll": {
+      "id": "rus.pho.syll",
+      "tag": "M-RUS-SYLL",
+      "kind": "diagnostic",
+      "family": "SEGMENT",
+      "parentText": "בספירת חלקי מילה במחיאות כפיים, קורה שהילד מוחא פעם אחת יותר או פחות.",
+      "homeActivity": "מחאו כפיים יחד לכל חלק בשמות של צעצועים: ку-кла, ма-ши-на.",
+      "preferredRepresentations": [
+        "embodied"
+      ]
+    },
+    "notfirst": {
+      "id": "rus.pho.notfirst",
+      "tag": "M-RUS-NOTFIRST",
+      "kind": "diagnostic",
+      "family": "SEGMENT",
+      "parentText": "הילד שומע את הצליל במילה, אבל עוד לא ברור לו שהוא בהתחלה.",
+      "homeActivity": "משחק \"מה מתחיל ב־ммм?\": משכו את הצליל הראשון של מילה, ומצאו עוד דבר שמתחיל כך.",
+      "preferredRepresentations": [
+        "pictorial"
+      ]
+    },
+    "seq": {
+      "id": "rus.lis.seq",
+      "tag": "M-RUS-SEQ",
+      "kind": "diagnostic",
+      "family": "MEANING",
+      "parentText": "אחרי הסיפור הילד בחר תמונה שלא הייתה בו. כדאי להקשיב לסיפור שוב, עם התמונות.",
+      "homeActivity": "קראו יחד ספר תמונות ושאלו \"מה יקרה עכשיו?\" לפני שמדפדפים.",
+      "preferredRepresentations": [
+        "story"
+      ]
+    },
+    "hardsoft": {
+      "id": "rus.pho.hardsoft",
+      "tag": "M-RUS-HARDSOFT",
+      "kind": "diagnostic",
+      "family": "CONTRAST",
+      "parentText": "ברוסית יש עיצורים \"רכים\" ו\"קשים\" (лук \"בצל\", люк \"מכסה בכביש\"). בעברית אין הבדל כזה, ולכן לוקח זמן לשמוע אותו.",
+      "homeActivity": "אמרו את הזוג лук – люк, עם חיוך רחב ב־люк, ושחקו \"איזו מילה שמעתם?\".",
+      "preferredRepresentations": [
+        "pictorial"
+      ]
+    },
+    "yi": {
+      "id": "rus.pho.yi",
+      "tag": "M-RUS-YI",
+      "kind": "diagnostic",
+      "family": "CONTRAST",
+      "parentText": "הצליל ы לא קיים בעברית, ולכן мышка (\"עכבר\") ו־мишка (\"דובי\") נשמעות דומה.",
+      "homeActivity": "עשו יחד \"פרצוף מתלבט\" ואמרו ы…, ואחר כך мышка ו־мишка.",
+      "preferredRepresentations": [
+        "pictorial"
+      ]
+    },
+    "also-sem": {
+      "id": "rus.lis.sem",
+      "tag": "M-RUS-SEM",
+      "kind": "diagnostic",
+      "family": "MEANING",
+      "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
+      "homeActivity": "הניחו שני חפצים מאותו נושא, אמרו ברוסית את השם של אחד מהם, ובקשו מהילד להצביע עליו.",
+      "preferredRepresentations": [
+        "story"
+      ],
+      "note": "the same tag as \"sem\", for the skills beyond the 10 a misconception document may list (A-13, A-14, A-17); the pack keeps the document of \"sem\""
+    },
+    "also-sound": {
+      "id": "rus.voc.sound",
+      "tag": "M-RUS-SOUND",
+      "kind": "diagnostic",
+      "family": "GUESS",
+      "parentText": "מילים שנשמעות דומה (сок ו־суп) עדיין מתחלפות לילד. זה שלב רגיל בלמידת שפה חדשה.",
+      "homeActivity": "אמרו לאט שתי מילים דומות, אחת אחרי השנייה, והצביעו על התמונה של כל אחת.",
+      "preferredRepresentations": [
+        "pictorial"
+      ],
+      "note": "the same tag as \"sound\", for the skills beyond the 10 a misconception document may list (A-13, A-14); the pack keeps the document of \"sound\""
     }
   },
   "lines": {
-    "f01": {"he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.", "voice": "הקשיבו, וגעו בתמונה.", "review": "text-ready"},
-    "f02": {"he": "הַקְשִׁיבוּ שׁוּב.", "voice": "הקשיבו שוב.", "review": "text-ready"},
-    "f39": {"he": "מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ?", "voice": "מישהו בא, או הולך?", "review": "text-ready"},
-    "he-hint-showme": {"he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.", "voice": "הסתכלו איך עוֹשִׂים.", "review": "text-ready"},
-    "he-fb-check": {"he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.", "voice": "המממ… בואו נבדוק.", "review": "text-ready"},
-    "he-fb-right-1": {"he": "נָכוֹן!", "voice": "נכון.", "review": "text-ready"},
-    "he-fb-right-2": {"he": "כֵּן!", "voice": "כן.", "review": "text-ready"},
-    "he-fb-right-3": {"he": "יָפֶה מְאֹד!", "voice": "יפה מאוד.", "review": "text-ready"},
-    "he-fb-right-4": {"he": "מְצָאתֶם!", "voice": "מצאתם.", "review": "text-ready"},
-    "he-fb-right-5": {"he": "בְּדִיּוּק!", "voice": "בדיוק.", "review": "text-ready"},
-    "he-fb-right-6": {"he": "שְׁמַעְתֶּם טוֹב!", "voice": "שמעתם טוב.", "review": "text-ready"},
-    "he-fb-right-7": {"he": "הִקְשַׁבְתֶּם יָפֶה!", "voice": "הקשבתם יפה.", "review": "text-ready"},
-    "he-fb-right-8": {"he": "כׇּל הַכָּבוֹד!", "voice": "כל הכבוד.", "review": "text-ready"}
+    "f01": {
+      "he": "הַקְשִׁיבוּ, וּגְעוּ בַּתְּמוּנָה.",
+      "voice": "הקשיבו, וגעו בתמונה.",
+      "review": "text-ready"
+    },
+    "f02": {
+      "he": "הַקְשִׁיבוּ שׁוּב.",
+      "voice": "הקשיבו שוב.",
+      "review": "text-ready"
+    },
+    "f03": {
+      "he": "בּוֹאוּ נֹאמַר יַחַד.",
+      "voice": "בואו נגיד יחד.",
+      "review": "text-ready"
+    },
+    "f04": {
+      "he": "שָׁמַעְתִּי:",
+      "voice": "שמעתי:",
+      "review": "text-ready"
+    },
+    "f05": {
+      "he": "עַכְשָׁו אַתֶּם.",
+      "voice": "עכשיו אתם.",
+      "review": "text-ready"
+    },
+    "f06": {
+      "he": "מַה זֶּה? נַסּוּ לְהַגִּיד בְּרוּסִית.",
+      "voice": "מה זה? נסו להגיד ברוסית.",
+      "review": "text-ready"
+    },
+    "f07": {
+      "he": "מָה עוֹנִים לֶחָבֵר?",
+      "voice": "מה עונים לֶחָבֵר?",
+      "review": "text-ready"
+    },
+    "f08": {
+      "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה אֵצֶל הֶחָבֵר.",
+      "voice": "הקשיבו, ומצאו את זה אצל החבר.",
+      "review": "text-ready"
+    },
+    "f09": {
+      "he": "הַקְשִׁיבוּ, וְעִזְרוּ לֶחָבֵר לַעֲשׂוֹת אֶת זֶה.",
+      "voice": "הקשיבו, ועזרו לֶחָבֵר לַעֲשׂוֹת את זה.",
+      "review": "text-ready"
+    },
+    "f10": {
+      "he": "עַכְשָׁו אַתֶּם! עֲשׂוּ אֶת זֶה, וְאָז גְּעוּ בַּכַּפְתּוֹר.",
+      "voice": "עכשיו אתם, עֲשׂוּ את זה, ואז געו בכפתור.",
+      "review": "text-ready"
+    },
+    "f11": {
+      "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּצַּלַּחַת שֶׁל הֶחָבֵר.",
+      "voice": "הקשיבו, וְשִׂימוּ את זה בצלחת של החבר.",
+      "review": "text-ready"
+    },
+    "f12": {
+      "he": "הַקְשִׁיבוּ, וְשִׂימוּ אֶת זֶה בַּקֻּפְסָה.",
+      "voice": "הקשיבו, וְשִׂימוּ את זה בקופסה.",
+      "review": "text-ready"
+    },
+    "f13": {
+      "he": "הַקְשִׁיבוּ, וְהַלְבִּישׁוּ אֶת הֶחָבֵר.",
+      "voice": "הקשיבו, והלבישו את החבר.",
+      "review": "text-ready"
+    },
+    "f14": {
+      "he": "הַקְשִׁיבוּ, וּגְעוּ בַּצֶּבַע.",
+      "voice": "הקשיבו, וגעו בצבע.",
+      "review": "text-ready"
+    },
+    "f15": {
+      "he": "בּוֹאוּ נִסְפֹּר יַחַד.",
+      "voice": "בואו נספור יחד.",
+      "review": "text-ready"
+    },
+    "f16": {
+      "he": "הַקְשִׁיבוּ לַמִּסְפָּר, וּגְעוּ בַּתְּמוּנָה.",
+      "voice": "הקשיבו למספר, וגעו בתמונה.",
+      "review": "text-ready"
+    },
+    "f17": {
+      "he": "הַקְשִׁיבוּ לַשְּׁאֵלָה, וּגְעוּ בַּתְּשׁוּבָה.",
+      "voice": "הקשיבו לשאלה, וגעו בתשובה.",
+      "review": "text-ready"
+    },
+    "f18": {
+      "he": "זֶה נָכוֹן?",
+      "voice": "זה נכון?",
+      "review": "text-ready"
+    },
+    "f19": {
+      "he": "הַקְשִׁיבוּ, וּמִצְאוּ אֶת זֶה בַּחֶדֶר.",
+      "voice": "הקשיבו, ומצאו את זה בחדר.",
+      "review": "text-ready"
+    },
+    "f20": {
+      "he": "הַקְשִׁיבוּ לַבַּקָּשָׁה, וּתְנוּ לֶחָבֵר אֶת מַה שֶּׁמְּבַקְשִׁים.",
+      "voice": "הקשיבו לבקשה, ותנו לֶחָבֵר את מה שמבקשים.",
+      "review": "text-ready"
+    },
+    "f21": {
+      "he": "בּוֹאוּ נַקְשִׁיב לְסִפּוּר.",
+      "voice": "בואו נקשיב לסיפור.",
+      "review": "text-ready"
+    },
+    "f22": {
+      "he": "מַה יִּקְרֶה עַכְשָׁו?",
+      "voice": "מה יקרה עכשיו?",
+      "review": "text-ready"
+    },
+    "f23": {
+      "he": "מִי הָיָה בַּסִּפּוּר?",
+      "voice": "מי היה בסיפור?",
+      "review": "text-ready"
+    },
+    "f24": {
+      "he": "מַה מָּצָא הַקִּפּוֹד?",
+      "voice": "מה מצא הקיפוד?",
+      "review": "text-ready"
+    },
+    "f25": {
+      "he": "מָה חִפְּשָׂה הַיַּלְדָּה?",
+      "voice": "מה חִפְּשָׂה הילדה?",
+      "review": "text-ready"
+    },
+    "f26": {
+      "he": "הַקְשִׁיבוּ לַשִּׁיר.",
+      "voice": "הקשיבו לשיר.",
+      "review": "text-ready"
+    },
+    "f27": {
+      "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַסּוֹף?",
+      "voice": "איזו מילה מתאימה לסוף?",
+      "review": "text-ready"
+    },
+    "f28": {
+      "he": "תּוֹפְפוּ עַל הַתֹּף: פַּעַם אַחַת לְכׇל חֵלֶק בַּמִּלָּה.",
+      "voice": "תופפו על התוף: פעם אַחַת לכל חלק במילה.",
+      "review": "text-ready"
+    },
+    "f29": {
+      "he": "בְּאֵיזוֹ תְּמוּנָה יֵשׁ שָׁלוֹשׁ מְחִיאוֹת כַּפַּיִם?",
+      "voice": "באיזו תמונה יש שָׁלוֹשׁ מחיאות כפיים?",
+      "review": "text-ready"
+    },
+    "f30": {
+      "he": "בְּאֵיזוֹ תְּמוּנָה יֵשׁ שְׁתֵּי מְחִיאוֹת כַּפַּיִם?",
+      "voice": "באיזו תמונה יש שְׁתֵּי מחיאות כפיים?",
+      "review": "text-ready"
+    },
+    "f31": {
+      "he": "בְּאֵיזוֹ תְּמוּנָה יֵשׁ מְחִיאַת כַּפַּיִם אַחַת?",
+      "voice": "באיזו תמונה יש מחיאת כפיים אַחַת?",
+      "review": "text-ready"
+    },
+    "f32": {
+      "he": "בְּאֵיזוֹ תְּמוּנָה הַמִּלָּה מַתְחִילָה אוֹתוֹ דָּבָר?",
+      "voice": "באיזו תמונה המילה מתחילה אותו דבר?",
+      "review": "text-ready"
+    },
+    "f33": {
+      "he": "הַמִּלִּים מַתְחִילוֹת אוֹתוֹ דָּבָר?",
+      "voice": "המילים מתחילות אותו דבר?",
+      "review": "text-ready"
+    },
+    "f34": {
+      "he": "הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים. אוֹתוֹ דָּבָר, אוֹ לֹא?",
+      "voice": "הקשיבו לִשְׁתֵּי המילים. אותו דבר, או לא?",
+      "review": "text-ready"
+    },
+    "f35": {
+      "he": "אֵיזוֹ מִלָּה שְׁמַעְתֶּם?",
+      "voice": "איזו מילה שמעתם?",
+      "review": "text-ready"
+    },
+    "f36": {
+      "he": "הִסְתַּכְּלוּ עַל הַפֶּה.",
+      "voice": "הסתכלו על הפה.",
+      "review": "text-ready"
+    },
+    "f37": {
+      "he": "מִי עוֹשֶׂה אֶת הַקּוֹל הַזֶּה? הַקְשִׁיבוּ לִשְׁתֵּי הַמִּלִּים.",
+      "voice": "מי עוֹשֶׂה את הקול הזה? הקשיבו לִשְׁתֵּי המילים.",
+      "review": "text-ready"
+    },
+    "f38": {
+      "he": "אֵיזוֹ מִלָּה מַתְאִימָה לַתְּמוּנָה?",
+      "voice": "איזו מילה מתאימה לתמונה?",
+      "review": "text-ready"
+    },
+    "f39": {
+      "he": "מִישֶׁהוּ בָּא, אוֹ הוֹלֵךְ?",
+      "voice": "מישהו בא, או הולך?",
+      "review": "text-ready"
+    },
+    "f40": {
+      "he": "כַּמָּה יֵשׁ? הַקְשִׁיבוּ לַכַּפְתּוֹרִים, וּגְעוּ בַּמִּסְפָּר הַנָּכוֹן.",
+      "voice": "כמה יש? הקשיבו לכפתורים, וגעו במספר הנכון.",
+      "review": "text-ready"
+    },
+    "he-pl-thanks": {
+      "he": "תּוֹדָה!",
+      "voice": "תודה.",
+      "review": "needs-editor"
+    },
+    "he-hint-showme": {
+      "he": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים.",
+      "voice": "הסתכלו איך עוֹשִׂים.",
+      "review": "text-ready"
+    },
+    "he-fb-check": {
+      "he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.",
+      "voice": "המממ… בואו נבדוק.",
+      "review": "text-ready"
+    },
+    "he-fb-right-1": {
+      "he": "נָכוֹן!",
+      "voice": "נכון.",
+      "review": "text-ready"
+    },
+    "he-fb-right-2": {
+      "he": "כֵּן!",
+      "voice": "כן.",
+      "review": "text-ready"
+    },
+    "he-fb-right-3": {
+      "he": "יָפֶה מְאֹד!",
+      "voice": "יפה מאוד.",
+      "review": "text-ready"
+    },
+    "he-fb-right-4": {
+      "he": "מְצָאתֶם!",
+      "voice": "מצאתם.",
+      "review": "text-ready"
+    },
+    "he-fb-right-5": {
+      "he": "בְּדִיּוּק!",
+      "voice": "בדיוק.",
+      "review": "text-ready"
+    },
+    "he-fb-right-6": {
+      "he": "שְׁמַעְתֶּם טוֹב!",
+      "voice": "שמעתם טוב.",
+      "review": "text-ready"
+    },
+    "he-fb-right-7": {
+      "he": "הִקְשַׁבְתֶּם יָפֶה!",
+      "voice": "הקשבתם יפה.",
+      "review": "text-ready"
+    },
+    "he-fb-right-8": {
+      "he": "כׇּל הַכָּבוֹד!",
+      "voice": "כל הכבוד.",
+      "review": "text-ready"
+    }
   }
 }

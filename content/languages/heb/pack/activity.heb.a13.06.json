@@ -1,0 +1,157 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a13.06",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.3",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-13",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "story",
+  "variantGroup": "a13-06",
+  "difficulty": {
+    "authored": 0.4
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen and choose",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שָׁלוֹשׁ תְּמוּנוֹת"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_first",
+    "caption": [
+      {
+        "t": "he",
+        "v": "מַה קָּרָה קֹדֶם?"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_1",
+      "caption": [
+        {
+          "t": "he",
+          "v": "נָכוֹן!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.ol.story_order",
+        "vo": "vo:heb.i_first",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַה קָּרָה קֹדֶם?"
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.i_first",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַה קָּרָה קֹדֶם?"
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.fb_story_world",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִרְאֶה מַה קָּרָה בַּסִּפּוּר שֶׁלָּנוּ."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ]
+    }
+  ],
+  "scene": {},
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "sprite": "asset:s3_p2",
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_s3_p2"
+      },
+      {
+        "id": "o2",
+        "sprite": "asset:s3_p4",
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_s3_p4",
+        "misconception": "heb.ol.story_order"
+      },
+      {
+        "id": "o3",
+        "sprite": "asset:s3_p5",
+        "label": "תְּמוּנָה",
+        "clip": "vo:heb.heb_a_s3_p5",
+        "misconception": "heb.ol.story_order"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true
+  }
+}

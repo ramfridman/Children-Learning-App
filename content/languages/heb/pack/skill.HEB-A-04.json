@@ -1,0 +1,27 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-04",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "ממלא הוראה עם מילת מקום (על, מתחת, בתוך, ליד)"
+    }
+  ],
+  "strand": "ol",
+  "prerequisites": [],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "heb.ol.prep",
+    "heb.ol.role_swap"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

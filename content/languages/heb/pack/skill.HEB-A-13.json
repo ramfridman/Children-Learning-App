@@ -1,0 +1,31 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-13",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מסדר 3 תמונות מסיפור לפי הסדר"
+    }
+  ],
+  "strand": "ol",
+  "prerequisites": [
+    {
+      "skill": "HEB-A-01",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "story"
+  ],
+  "misconceptions": [
+    "heb.ol.story_order"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

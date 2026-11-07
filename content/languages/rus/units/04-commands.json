@@ -1,0 +1,354 @@
+{
+ "skill": {
+  "id": "RUS-A-04",
+  "strand": "lis",
+  "title": "עוֹשִׂים מַה שֶּׁאוֹמְרִים",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-03"
+   }
+  ],
+  "core": true,
+  "setCoverage": true
+ },
+ "items": [
+  {
+   "id": "01",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-idi",
+   "options": [
+    {
+     "pic": "act-walk",
+     "clip": "w-idi"
+    },
+    {
+     "pic": "act-run",
+     "clip": "w-begi"
+    },
+    {
+     "pic": "act-sit",
+     "clip": "w-sjad"
+    }
+   ],
+   "wrong": {
+    "act-run": "sem",
+    "act-sit": "sem"
+   }
+  },
+  {
+   "id": "02",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-begi",
+   "options": [
+    {
+     "pic": "act-run",
+     "clip": "w-begi"
+    },
+    {
+     "pic": "act-walk",
+     "clip": "w-idi"
+    },
+    {
+     "pic": "act-jump",
+     "clip": "w-prygaj"
+    }
+   ],
+   "wrong": {
+    "act-walk": "sem",
+    "act-jump": "sem"
+   }
+  },
+  {
+   "id": "03",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-prygaj",
+   "options": [
+    {
+     "pic": "act-jump",
+     "clip": "w-prygaj"
+    },
+    {
+     "pic": "act-clap",
+     "clip": "w-hlopaj"
+    },
+    {
+     "pic": "act-run",
+     "clip": "w-begi"
+    }
+   ],
+   "wrong": {
+    "act-clap": "sound",
+    "act-run": "sem"
+   }
+  },
+  {
+   "id": "04",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-hlopaj",
+   "options": [
+    {
+     "pic": "act-clap",
+     "clip": "w-hlopaj"
+    },
+    {
+     "pic": "act-jump",
+     "clip": "w-prygaj"
+    },
+    {
+     "pic": "act-stand",
+     "clip": "w-vstan"
+    }
+   ],
+   "wrong": {
+    "act-jump": "sound",
+    "act-stand": "sem"
+   }
+  },
+  {
+   "id": "05",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-sjad",
+   "options": [
+    {
+     "pic": "act-sit",
+     "clip": "w-sjad"
+    },
+    {
+     "pic": "act-stand",
+     "clip": "w-vstan"
+    },
+    {
+     "pic": "act-walk",
+     "clip": "w-idi"
+    }
+   ],
+   "wrong": {
+    "act-stand": "sem",
+    "act-walk": "sem"
+   }
+  },
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-vstan",
+   "options": [
+    {
+     "pic": "act-stand",
+     "clip": "w-vstan"
+    },
+    {
+     "pic": "act-sit",
+     "clip": "w-sjad"
+    },
+    {
+     "pic": "act-clap",
+     "clip": "w-hlopaj"
+    }
+   ],
+   "wrong": {
+    "act-sit": "sem",
+    "act-clap": "sem"
+   }
+  },
+  {
+   "id": "07",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "ch-vozmi-mjach",
+   "options": [
+    {
+     "pic": "act-take",
+     "clip": "ch-vozmi-mjach"
+    },
+    {
+     "pic": "act-sit",
+     "clip": "w-sjad"
+    },
+    {
+     "pic": "act-clap",
+     "clip": "w-hlopaj"
+    }
+   ],
+   "wrong": {
+    "act-sit": "sem",
+    "act-clap": "sem"
+   },
+   "purpose": "check"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-prygaj",
+   "options": [
+    {
+     "pic": "act-jump",
+     "clip": "w-prygaj"
+    },
+    {
+     "pic": "act-clap",
+     "clip": "w-hlopaj"
+    },
+    {
+     "pic": "act-run",
+     "clip": "w-begi"
+    }
+   ],
+   "wrong": {
+    "act-clap": "sound",
+    "act-run": "sem"
+   },
+   "purpose": "probe"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "actions-1",
+   "title": "עוֹשִׂים מַה שֶּׁאוֹמְרִים",
+   "items": [
+    "01",
+    "02",
+    "03"
+   ]
+  },
+  {
+   "id": "actions-2",
+   "title": "עוֹשִׂים מַה שֶּׁאוֹמְרִים",
+   "items": [
+    "04",
+    "05",
+    "06"
+   ]
+  }
+ ],
+ "teach": [
+  [
+   "w-idi",
+   "w-begi",
+   "w-prygaj"
+  ],
+  [
+   "w-sjad",
+   "w-vstan",
+   "w-hlopaj",
+   "ch-vozmi-mjach"
+  ]
+ ],
+ "routes": {
+  "new": "teach in two sets; items 01 to 13; the embodied step after each LS11 item",
+  "heritage": {
+   "teach": false,
+   "order": [
+    "08-13",
+    "01-07"
+   ]
+  },
+  "reader": "as heritage or new"
+ },
+ "waiting": [
+  {
+   "id": "08",
+   "template": "listen_do",
+   "mode": "buttons",
+   "frame": "f09",
+   "target": "w-idi",
+   "scene": "mika in a playground",
+   "right": "act.walk",
+   "wrong": {
+    "act.run": "sem",
+    "act.sit": "sem"
+   },
+   "check": false,
+   "why": "LS11 recipe"
+  },
+  {
+   "id": "09",
+   "template": "listen_do",
+   "mode": "buttons",
+   "frame": "f09",
+   "target": "w-begi",
+   "scene": "mika in a playground",
+   "right": "act.run",
+   "wrong": {
+    "act.walk": "sem",
+    "act.jump": "sem"
+   },
+   "check": false,
+   "why": "LS11 recipe"
+  },
+  {
+   "id": "10",
+   "template": "listen_do",
+   "mode": "buttons",
+   "frame": "f09",
+   "target": "w-prygaj",
+   "scene": "mika in a playground",
+   "right": "act.jump",
+   "wrong": {
+    "act.clap": "sound",
+    "act.run": "sem"
+   },
+   "check": false,
+   "why": "LS11 recipe"
+  },
+  {
+   "id": "11",
+   "template": "listen_do",
+   "mode": "buttons",
+   "frame": "f09",
+   "target": "w-hlopaj",
+   "scene": "mika in a playground",
+   "right": "act.clap",
+   "wrong": {
+    "act.jump": "sound",
+    "act.stand": "sem"
+   },
+   "check": false,
+   "why": "LS11 recipe"
+  },
+  {
+   "id": "12",
+   "template": "listen_do",
+   "mode": "buttons",
+   "frame": "f09",
+   "target": "w-sjad",
+   "scene": "mika in a playground",
+   "right": "act.sit",
+   "wrong": {
+    "act.stand": "sem",
+    "act.walk": "sem"
+   },
+   "check": true,
+   "why": "LS11 recipe"
+  },
+  {
+   "id": "13",
+   "template": "listen_do",
+   "mode": "buttons",
+   "frame": "f09",
+   "target": "w-vstan",
+   "scene": "mika in a playground",
+   "right": "act.stand",
+   "wrong": {
+    "act.sit": "sem",
+    "act.clap": "sem"
+   },
+   "check": true,
+   "why": "LS11 recipe"
+  },
+  {
+   "id": "e01",
+   "template": "listen_do",
+   "mode": "embodied",
+   "frame": "f10",
+   "note": "after each LS11 item",
+   "why": "LS11 recipe (unscored)"
+  }
+ ]
+}

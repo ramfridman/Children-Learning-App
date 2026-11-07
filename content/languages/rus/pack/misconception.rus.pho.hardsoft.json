@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.pho.hardsoft",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "CONTRAST",
+  "skills": [
+    "RUS-A-20"
+  ],
+  "parentText": "ברוסית יש עיצורים \"רכים\" ו\"קשים\" (лук \"בצל\", люк \"מכסה בכביש\"). בעברית אין הבדל כזה, ולכן לוקח זמן לשמוע אותו.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "אמרו את הזוג лук – люк, עם חיוך רחב ב־люк, ושחקו \"איזו מילה שמעתם?\"."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "pictorial"
+  ]
+}

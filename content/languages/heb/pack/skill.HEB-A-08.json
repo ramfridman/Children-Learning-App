@@ -1,0 +1,26 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-08",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מוחא כף וסופר את ההברות של מילה"
+    }
+  ],
+  "strand": "pa",
+  "prerequisites": [],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "heb.pa.syll"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

@@ -6,9 +6,25 @@
   "kind": "diagnostic",
   "family": "GUESS",
   "skills": [
-    "ENG-A-01"
+    "ENG-A-01",
+    "ENG-A-02",
+    "ENG-A-03",
+    "ENG-A-05",
+    "ENG-A-06",
+    "ENG-A-07",
+    "ENG-A-08",
+    "ENG-A-09",
+    "ENG-A-10",
+    "ENG-A-11",
+    "ENG-A-17"
   ],
   "parentText": "לפעמים הילד בוחר את התמונה המוכרת לו ביותר, ולא את מה ששמע באנגלית. כדאי להקשיב יחד שוב, עם התמונה.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "כשמקשיבים יחד, אפשר לעצור לפני שבוחרים ולשאול: \"מה שמענו?\", ורק אז לגעת."
+    }
+  ],
   "repairActivities": [],
   "preferredRepresentations": [
     "pictorial"

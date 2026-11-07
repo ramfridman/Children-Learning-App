@@ -1,0 +1,135 @@
+{
+  "schema": "placement/v1",
+  "id": "rus.placement",
+  "review": "needs-editor",
+  "course": "rus",
+  "thanks": {
+    "vo": "vo:rus.he_pl_thanks",
+    "caption": [
+      {
+        "t": "he",
+        "v": "תּוֹדָה!"
+      }
+    ]
+  },
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "perVisit": 8,
+  "strands": [
+    {
+      "id": "1",
+      "start": [
+        {
+          "answer": "understands",
+          "equals": "some",
+          "level": 1
+        },
+        {
+          "answer": "understands",
+          "equals": "most",
+          "level": 2
+        }
+      ],
+      "levels": [
+        {
+          "items": [
+            "rus.a02.p01",
+            "rus.a05.p01",
+            "rus.a07.p01",
+            "rus.a08.p01"
+          ],
+          "assumes": [
+            "RUS-A-01",
+            "RUS-A-02",
+            "RUS-A-05",
+            "RUS-A-07",
+            "RUS-A-08"
+          ]
+        },
+        {
+          "items": [
+            "rus.a03.p01",
+            "rus.a06.p01",
+            "rus.a09.p01",
+            "rus.a10.p01"
+          ],
+          "assumes": [
+            "RUS-A-03",
+            "RUS-A-06",
+            "RUS-A-09",
+            "RUS-A-10"
+          ]
+        },
+        {
+          "items": [
+            "rus.a01.p01",
+            "rus.a04.p01",
+            "rus.a12.p01",
+            "rus.a12.p02",
+            "rus.a13.p01"
+          ],
+          "assumes": [
+            "RUS-A-04",
+            "RUS-A-12",
+            "RUS-A-13"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "start": [
+        {
+          "answer": "understands",
+          "equals": "most",
+          "level": 1
+        }
+      ],
+      "levels": [
+        {
+          "items": [
+            "rus.a17.p01",
+            "rus.a17.p02"
+          ],
+          "assumes": [
+            "RUS-A-17"
+          ]
+        },
+        {
+          "items": [
+            "rus.a18.p01",
+            "rus.a18.p02"
+          ],
+          "assumes": [
+            "RUS-A-18"
+          ]
+        },
+        {
+          "items": [
+            "rus.a19.p01",
+            "rus.a19.p02"
+          ],
+          "assumes": [
+            "RUS-A-19"
+          ]
+        },
+        {
+          "items": [
+            "rus.a20.p01",
+            "rus.a20.p02"
+          ],
+          "assumes": [
+            "RUS-A-20"
+          ]
+        }
+      ]
+    }
+  ]
+}

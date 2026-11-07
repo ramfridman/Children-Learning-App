@@ -6,6 +6,326 @@
   "course": "rus",
   "assets": [
     {
+      "id": "act_clap",
+      "file": "act_clap.svg"
+    },
+    {
+      "id": "act_jump",
+      "file": "act_jump.svg"
+    },
+    {
+      "id": "act_run",
+      "file": "act_run.svg"
+    },
+    {
+      "id": "act_sit",
+      "file": "act_sit.svg"
+    },
+    {
+      "id": "act_stand",
+      "file": "act_stand.svg"
+    },
+    {
+      "id": "act_take",
+      "file": "act_take.svg"
+    },
+    {
+      "id": "act_walk",
+      "file": "act_walk.svg"
+    },
+    {
+      "id": "apple",
+      "file": "apple.svg"
+    },
+    {
+      "id": "ball",
+      "file": "ball.svg"
+    },
+    {
+      "id": "ball_black",
+      "file": "ball_black.svg"
+    },
+    {
+      "id": "ball_blue",
+      "file": "ball_blue.svg"
+    },
+    {
+      "id": "ball_green",
+      "file": "ball_green.svg"
+    },
+    {
+      "id": "ball_red",
+      "file": "ball_red.svg"
+    },
+    {
+      "id": "ball_white",
+      "file": "ball_white.svg"
+    },
+    {
+      "id": "ball_yellow",
+      "file": "ball_yellow.svg"
+    },
+    {
+      "id": "balloon",
+      "file": "balloon.svg"
+    },
+    {
+      "id": "balloon_big",
+      "file": "balloon_big.svg"
+    },
+    {
+      "id": "banana",
+      "file": "banana.svg"
+    },
+    {
+      "id": "bear",
+      "file": "bear.svg"
+    },
+    {
+      "id": "beetle",
+      "file": "beetle.svg"
+    },
+    {
+      "id": "bird",
+      "file": "bird.svg"
+    },
+    {
+      "id": "blocks",
+      "file": "blocks.svg"
+    },
+    {
+      "id": "body_arms",
+      "file": "body_arms.svg"
+    },
+    {
+      "id": "body_ears",
+      "file": "body_ears.svg"
+    },
+    {
+      "id": "body_eyes",
+      "file": "body_eyes.svg"
+    },
+    {
+      "id": "body_fingers",
+      "file": "body_fingers.svg"
+    },
+    {
+      "id": "body_hair",
+      "file": "body_hair.svg"
+    },
+    {
+      "id": "body_head",
+      "file": "body_head.svg"
+    },
+    {
+      "id": "body_legs",
+      "file": "body_legs.svg"
+    },
+    {
+      "id": "body_mouth",
+      "file": "body_mouth.svg"
+    },
+    {
+      "id": "body_nose",
+      "file": "body_nose.svg"
+    },
+    {
+      "id": "body_teeth",
+      "file": "body_teeth.svg"
+    },
+    {
+      "id": "body_tummy",
+      "file": "body_tummy.svg"
+    },
+    {
+      "id": "book",
+      "file": "book.svg"
+    },
+    {
+      "id": "boots",
+      "file": "boots.svg"
+    },
+    {
+      "id": "boy",
+      "file": "boy.svg"
+    },
+    {
+      "id": "bread",
+      "file": "bread.svg"
+    },
+    {
+      "id": "car",
+      "file": "car.svg"
+    },
+    {
+      "id": "carrot",
+      "file": "carrot.svg"
+    },
+    {
+      "id": "cat",
+      "file": "cat.svg"
+    },
+    {
+      "id": "cat_tomcat",
+      "file": "cat_tomcat.svg"
+    },
+    {
+      "id": "cheese",
+      "file": "cheese.svg"
+    },
+    {
+      "id": "col_black",
+      "file": "col_black.svg"
+    },
+    {
+      "id": "col_blue",
+      "file": "col_blue.svg"
+    },
+    {
+      "id": "col_green",
+      "file": "col_green.svg"
+    },
+    {
+      "id": "col_red",
+      "file": "col_red.svg"
+    },
+    {
+      "id": "col_white",
+      "file": "col_white.svg"
+    },
+    {
+      "id": "col_yellow",
+      "file": "col_yellow.svg"
+    },
+    {
+      "id": "cookie",
+      "file": "cookie.svg"
+    },
+    {
+      "id": "cow",
+      "file": "cow.svg"
+    },
+    {
+      "id": "cucumber",
+      "file": "cucumber.svg"
+    },
+    {
+      "id": "dog",
+      "file": "dog.svg"
+    },
+    {
+      "id": "doll",
+      "file": "doll.svg"
+    },
+    {
+      "id": "dress",
+      "file": "dress.svg"
+    },
+    {
+      "id": "duck",
+      "file": "duck.svg"
+    },
+    {
+      "id": "egg",
+      "file": "egg.svg"
+    },
+    {
+      "id": "elephant",
+      "file": "elephant.svg"
+    },
+    {
+      "id": "fam_all",
+      "file": "fam_all.svg"
+    },
+    {
+      "id": "fam_baby",
+      "file": "fam_baby.svg"
+    },
+    {
+      "id": "fam_brother",
+      "file": "fam_brother.svg"
+    },
+    {
+      "id": "fam_father",
+      "file": "fam_father.svg"
+    },
+    {
+      "id": "fam_grandfather",
+      "file": "fam_grandfather.svg"
+    },
+    {
+      "id": "fam_grandmother",
+      "file": "fam_grandmother.svg"
+    },
+    {
+      "id": "fam_mother",
+      "file": "fam_mother.svg"
+    },
+    {
+      "id": "fam_sister",
+      "file": "fam_sister.svg"
+    },
+    {
+      "id": "fish",
+      "file": "fish.svg"
+    },
+    {
+      "id": "fox",
+      "file": "fox.svg"
+    },
+    {
+      "id": "giraffe",
+      "file": "giraffe.svg"
+    },
+    {
+      "id": "girl",
+      "file": "girl.svg"
+    },
+    {
+      "id": "goat",
+      "file": "goat.svg"
+    },
+    {
+      "id": "grapes",
+      "file": "grapes.svg"
+    },
+    {
+      "id": "hat_warm",
+      "file": "hat_warm.svg"
+    },
+    {
+      "id": "hedgehog",
+      "file": "hedgehog.svg"
+    },
+    {
+      "id": "hen",
+      "file": "hen.svg"
+    },
+    {
+      "id": "horse",
+      "file": "horse.svg"
+    },
+    {
+      "id": "house",
+      "file": "house.svg"
+    },
+    {
+      "id": "jacket",
+      "file": "jacket.svg"
+    },
+    {
+      "id": "juice",
+      "file": "juice.svg"
+    },
+    {
+      "id": "lynx",
+      "file": "lynx.svg"
+    },
+    {
+      "id": "manhole",
+      "file": "manhole.svg"
+    },
+    {
       "id": "mika_arrive",
       "file": "mika_arrive.svg"
     },
@@ -16,6 +336,170 @@
     {
       "id": "mika_leave",
       "file": "mika_leave.svg"
+    },
+    {
+      "id": "milk",
+      "file": "milk.svg"
+    },
+    {
+      "id": "mittens",
+      "file": "mittens.svg"
+    },
+    {
+      "id": "mouse",
+      "file": "mouse.svg"
+    },
+    {
+      "id": "onion",
+      "file": "onion.svg"
+    },
+    {
+      "id": "orange",
+      "file": "orange.svg"
+    },
+    {
+      "id": "pear",
+      "file": "pear.svg"
+    },
+    {
+      "id": "pencil",
+      "file": "pencil.svg"
+    },
+    {
+      "id": "pig",
+      "file": "pig.svg"
+    },
+    {
+      "id": "porridge",
+      "file": "porridge.svg"
+    },
+    {
+      "id": "potato",
+      "file": "potato.svg"
+    },
+    {
+      "id": "rabbit",
+      "file": "rabbit.svg"
+    },
+    {
+      "id": "rice",
+      "file": "rice.svg"
+    },
+    {
+      "id": "rooster",
+      "file": "rooster.svg"
+    },
+    {
+      "id": "scarf",
+      "file": "scarf.svg"
+    },
+    {
+      "id": "set_balls_1",
+      "file": "set_balls_1.svg"
+    },
+    {
+      "id": "set_balls_2",
+      "file": "set_balls_2.svg"
+    },
+    {
+      "id": "set_balls_3",
+      "file": "set_balls_3.svg"
+    },
+    {
+      "id": "set_balls_4",
+      "file": "set_balls_4.svg"
+    },
+    {
+      "id": "set_balls_5",
+      "file": "set_balls_5.svg"
+    },
+    {
+      "id": "set_ducks_1",
+      "file": "set_ducks_1.svg"
+    },
+    {
+      "id": "set_ducks_2",
+      "file": "set_ducks_2.svg"
+    },
+    {
+      "id": "set_ducks_3",
+      "file": "set_ducks_3.svg"
+    },
+    {
+      "id": "set_ducks_4",
+      "file": "set_ducks_4.svg"
+    },
+    {
+      "id": "set_ducks_5",
+      "file": "set_ducks_5.svg"
+    },
+    {
+      "id": "shirt",
+      "file": "shirt.svg"
+    },
+    {
+      "id": "shoes",
+      "file": "shoes.svg"
+    },
+    {
+      "id": "sock",
+      "file": "sock.svg"
+    },
+    {
+      "id": "socks",
+      "file": "socks.svg"
+    },
+    {
+      "id": "soup",
+      "file": "soup.svg"
+    },
+    {
+      "id": "squirrel",
+      "file": "squirrel.svg"
+    },
+    {
+      "id": "stacker",
+      "file": "stacker.svg"
+    },
+    {
+      "id": "strawberry",
+      "file": "strawberry.svg"
+    },
+    {
+      "id": "tea",
+      "file": "tea.svg"
+    },
+    {
+      "id": "teddy",
+      "file": "teddy.svg"
+    },
+    {
+      "id": "tomato",
+      "file": "tomato.svg"
+    },
+    {
+      "id": "top",
+      "file": "top.svg"
+    },
+    {
+      "id": "trousers",
+      "file": "trousers.svg"
+    },
+    {
+      "id": "water",
+      "file": "water.svg"
+    },
+    {
+      "id": "watermelon",
+      "file": "watermelon.svg"
+    },
+    {
+      "id": "whale",
+      "file": "whale.svg"
+    },
+    {
+      "id": "wolf",
+      "file": "wolf.svg"
     }
   ],
   "vo": []

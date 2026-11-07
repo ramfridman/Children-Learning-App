@@ -1,0 +1,24 @@
+{
+  "skill": {"id": "ENG-A-09", "strand": "lis", "title": "צַעֲצוּעִים", "prerequisites": [{"skill": "ENG-A-01"}], "setCoverage": true},
+  "items": [
+    {"id": "i01", "kind": "tap", "target": "en-ball", "options": ["ball", "drum", "book"], "wrong": {"drum": "sem", "book": "l1_guess"}},
+    {"id": "i02", "kind": "tap", "target": "en-car", "options": ["car", "bike", "teddy"], "wrong": {"bike": "sem", "teddy": "l1_guess"}},
+    {"id": "i03", "kind": "tap", "target": "en-teddy", "options": ["teddy", "ball", "kite"], "wrong": {"ball": "sem", "kite": "l1_guess"}},
+    {"id": "i04", "kind": "tap", "target": "en-book", "options": ["book", "teddy", "boat"], "wrong": {"teddy": "sem", "boat": "l1_guess"}},
+    {"id": "i05", "kind": "tap", "target": "en-bike", "options": ["bike", "car", "drum"], "wrong": {"car": "sem", "drum": "l1_guess"}},
+    {"id": "i06", "kind": "tap", "target": "en-boat", "options": ["boat", "car", "ball"], "wrong": {"car": "sem", "ball": "l1_guess"}},
+    {"id": "i07", "kind": "tap", "target": "en-drum", "options": ["drum", "ball", "bike"], "wrong": {"ball": "sem", "bike": "l1_guess"}},
+    {"id": "i08", "kind": "tap", "target": "en-kite", "options": ["kite", "boat", "car"], "wrong": {"boat": "sem", "car": "l1_guess"}},
+    {"id": "m01", "kind": "tap", "purpose": "check", "target": "en-ball", "options": ["ball-2", "drum-2", "kite-2"], "wrong": {"drum-2": "sem", "kite-2": "l1_guess"}},
+    {"id": "m02", "kind": "tap", "purpose": "check", "target": "en-car", "options": ["car-2", "bike-2", "boat-2"], "wrong": {"bike-2": "sem", "boat-2": "l1_guess"}},
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-kite", "options": ["kite", "boat", "car"], "wrong": {"boat": "sem", "car": "l1_guess"}}
+  ],
+  "lessons": [
+    {"id": "toy-1", "title": "צַעֲצוּעִים", "items": ["i01", "i02", "i03", "i04"]},
+    {"id": "toy-2", "title": "עוֹד צַעֲצוּעִים", "items": ["i05", "i06", "i07", "i08"]}
+  ],
+  "waiting": [
+    {"id": "m01", "template": "LS01 pairs (match_pairs)", "purpose": "check", "replaces": "m01", "frame": "he-ins-pairs", "pairs": [["ball", "ball-2", "en-ball"], ["drum", "drum-2", "en-drum"], ["kite", "kite-2", "en-kite"]], "wrong": {"ball+drum": "sem", "kite+ball": "l1_guess"}, "ladder": "HL-PAIRS", "rep": "pictorial"},
+    {"id": "m02", "template": "LS01 pairs (match_pairs)", "purpose": "check", "replaces": "m02", "frame": "he-ins-pairs", "pairs": [["car", "car-2", "en-car"], ["bike", "bike-2", "en-bike"], ["boat", "boat-2", "en-boat"]], "wrong": {"car+bike": "sem", "boat+car": "l1_guess"}, "ladder": "HL-PAIRS", "rep": "pictorial"}
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "skill": {
+    "id": "HEB-A-01",
+    "strand": "ol",
+    "title": "מקשיב לסיפור קצר ועונה \"מי\" ו\"מה\""
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "target": "heb-a-s1-p4",
+      "options": [
+        "cat",
+        "rabbit",
+        "dog"
+      ],
+      "wrong": {
+        "rabbit": "story_role",
+        "dog": "story_world"
+      },
+      "frame": "s1-q2",
+      "ladder": "HL-STORY",
+      "rep": "story"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "target": "heb-a-s1-p3",
+      "options": [
+        "bush",
+        "tree",
+        "window"
+      ],
+      "wrong": {
+        "tree": "story_seen",
+        "window": "story_world"
+      },
+      "frame": "s1-q1",
+      "ladder": "HL-STORY",
+      "rep": "story"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "target": "heb-a-s2-p2",
+      "options": [
+        "egg",
+        "spoon",
+        "apple"
+      ],
+      "wrong": {
+        "spoon": "story_seen",
+        "apple": "story_world"
+      },
+      "frame": "s2-q1",
+      "ladder": "HL-STORY",
+      "rep": "story"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "target": "heb-a-s2-p4",
+      "options": [
+        "oven",
+        "bowl",
+        "fridge"
+      ],
+      "wrong": {
+        "bowl": "story_seen",
+        "fridge": "story_world"
+      },
+      "frame": "s2-q2",
+      "ladder": "HL-STORY",
+      "rep": "story"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "target": "heb-a-s1-p4",
+      "options": [
+        {
+          "pic": "cat",
+          "clip": "heb-a-w-chatula"
+        },
+        {
+          "pic": "rabbit",
+          "clip": "heb-a-w-arnav"
+        },
+        {
+          "pic": "dog",
+          "clip": "heb-a-w-kelev"
+        }
+      ],
+      "wrong": {
+        "rabbit": "story_role",
+        "dog": "story_world"
+      },
+      "frame": "s1-q2",
+      "ladder": "HL-STORY",
+      "rep": "pictorial"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "target": "heb-a-s2-p2",
+      "options": [
+        {
+          "pic": "egg",
+          "clip": "heb-a-w-beitsa"
+        },
+        {
+          "pic": "spoon",
+          "clip": "heb-a-w-kaf"
+        },
+        {
+          "pic": "apple",
+          "clip": "heb-a-w-tapuach"
+        }
+      ],
+      "wrong": {
+        "spoon": "story_seen",
+        "apple": "story_world"
+      },
+      "frame": "s2-q1",
+      "ladder": "HL-STORY",
+      "rep": "pictorial"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "target": "heb-a-s3-p4",
+      "options": [
+        "fish",
+        "tortoise",
+        "bird"
+      ],
+      "wrong": {
+        "tortoise": "story_role",
+        "bird": "story_world"
+      },
+      "frame": "s3-q2",
+      "purpose": "check",
+      "difficulty": 0.4,
+      "ladder": "HL-STORY",
+      "rep": "story"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "target": "heb-a-s3-p2",
+      "options": [
+        "hat",
+        "boat",
+        "kite"
+      ],
+      "wrong": {
+        "boat": "story_seen",
+        "kite": "story_world"
+      },
+      "frame": "s3-q1",
+      "purpose": "check",
+      "difficulty": 0.4,
+      "ladder": "HL-STORY",
+      "rep": "story"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "story-1",
+      "title": "הַכַּדּוּר שֶׁל הָאַרְנָב",
+      "items": [
+        "02",
+        "01",
+        "05"
+      ]
+    },
+    {
+      "id": "story-2",
+      "title": "נִיצִי אוֹפָה עוּגָה",
+      "items": [
+        "03",
+        "04",
+        "06"
+      ]
+    }
+  ]
+}

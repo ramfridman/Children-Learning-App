@@ -1,0 +1,68 @@
+{
+  "recipe": "a sequence: three picture tiles into three slots right to left (the first slot is the rightmost, with a start arrow); the order laid left to right is order, two pictures swapped is story_order.",
+  "source": "docs/languages/hebrew/band-a-content.md A-13",
+  "skill": "HEB-A-13",
+  "items": [
+    {
+      "id": "01",
+      "kind": "sequence",
+      "frame": "heb-a-i-order",
+      "tiles": [
+        "s1-p2",
+        "s1-p4",
+        "s1-p5"
+      ],
+      "wrong": {
+        "reversed": "order",
+        "swap": "story_order"
+      },
+      "rep": "pictorial"
+    },
+    {
+      "id": "02",
+      "kind": "sequence",
+      "frame": "heb-a-i-order",
+      "tiles": [
+        "s2-p2",
+        "s2-p4",
+        "s2-p5"
+      ],
+      "wrong": {
+        "reversed": "order",
+        "swap": "story_order"
+      },
+      "rep": "pictorial"
+    },
+    {
+      "id": "05",
+      "kind": "sequence",
+      "frame": "heb-a-i-order",
+      "tiles": [
+        "s3-p2",
+        "s3-p4",
+        "s3-p5"
+      ],
+      "purpose": "check",
+      "wrong": {
+        "reversed": "order",
+        "swap": "story_order"
+      },
+      "rep": "pictorial"
+    }
+  ],
+  "ladder": [
+    "heb-a-i-first + the first picture's page clip",
+    "the three pages in order with heb-a-seq-1, -2, -3",
+    "show: the first picture moves into the first slot"
+  ],
+  "lessons": [
+    {
+      "id": "order-1",
+      "title": "סַדְּרוּ אֶת הַסִּפּוּר",
+      "items": [
+        "01",
+        "02"
+      ]
+    }
+  ]
+}

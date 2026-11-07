@@ -1,0 +1,228 @@
+{
+  "skill": {
+    "id": "HEB-A-10",
+    "strand": "pk",
+    "title": "מבחין בין אותיות לספרות, לצורות ולציורים"
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "options": [
+        "text:ב",
+        "text:5",
+        "text:●"
+      ],
+      "wrong": {
+        "text:5": "print_num",
+        "text:●": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "options": [
+        "text:ש",
+        "text:7",
+        "text:▲"
+      ],
+      "wrong": {
+        "text:7": "print_num",
+        "text:▲": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "options": [
+        "text:א",
+        "text:2",
+        "text:○"
+      ],
+      "wrong": {
+        "text:2": "print_num",
+        "text:○": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "options": [
+        "text:ו",
+        "text:1",
+        "text:△"
+      ],
+      "wrong": {
+        "text:1": "print_num",
+        "text:△": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "options": [
+        "text:ז",
+        "text:7",
+        "text:●"
+      ],
+      "wrong": {
+        "text:7": "print_num",
+        "text:●": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "options": [
+        "text:ס",
+        "text:0",
+        "text:○"
+      ],
+      "wrong": {
+        "text:0": "print_num",
+        "text:○": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "options": [
+        "text:ק",
+        "text:9",
+        "text:▲"
+      ],
+      "wrong": {
+        "text:9": "print_num",
+        "text:▲": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic",
+      "purpose": "check",
+      "difficulty": 0.4
+    },
+    {
+      "id": "p1",
+      "kind": "tap",
+      "options": [
+        "text:מ",
+        "text:3",
+        "text:▲"
+      ],
+      "wrong": {
+        "text:3": "print_num",
+        "text:▲": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic",
+      "purpose": "probe"
+    },
+    {
+      "id": "p2",
+      "kind": "tap",
+      "options": [
+        "text:ל",
+        "text:5",
+        "text:○"
+      ],
+      "wrong": {
+        "text:5": "print_num",
+        "text:○": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic",
+      "purpose": "probe"
+    },
+    {
+      "id": "p3",
+      "kind": "tap",
+      "options": [
+        "text:ז",
+        "text:7",
+        "text:△"
+      ],
+      "wrong": {
+        "text:7": "print_num",
+        "text:△": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic",
+      "purpose": "probe"
+    },
+    {
+      "id": "p4",
+      "kind": "tap",
+      "options": [
+        "text:ס",
+        "text:0",
+        "text:○"
+      ],
+      "wrong": {
+        "text:0": "print_num",
+        "text:○": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic",
+      "purpose": "probe"
+    },
+    {
+      "id": "p5",
+      "kind": "tap",
+      "options": [
+        "text:ו",
+        "text:1",
+        "text:●"
+      ],
+      "wrong": {
+        "text:1": "print_num",
+        "text:●": "print_shape"
+      },
+      "frame": "i-letter",
+      "ladder": "HL-PRINT",
+      "rep": "symbolic",
+      "purpose": "probe"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "letters-1",
+      "title": "אֵיפֹה הָאוֹת?",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "letters-2",
+      "title": "עוֹד אוֹתִיּוֹת",
+      "items": [
+        "04",
+        "05",
+        "07"
+      ]
+    }
+  ]
+}

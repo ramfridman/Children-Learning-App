@@ -1,0 +1,188 @@
+{
+ "skill": {
+  "id": "RUS-A-11",
+  "strand": "num",
+  "title": "מִסְפָּרִים עַד עֶשֶׂר",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-10"
+   }
+  ],
+  "setCoverage": true
+ },
+ "why": "every item needs either the count_tap recipe (01 to 05) or the ten-frame set pictures 6 to 10 (06 to 10), not drawn",
+ "teach": [
+  [
+   "n-6",
+   "n-7",
+   "n-8",
+   "n-9",
+   "n-10"
+  ]
+ ],
+ "routes": {
+  "new": "teach by counting along; items 01 to 10",
+  "heritage": {
+   "teach": false,
+   "order": [
+    "06-10",
+    "01-05"
+   ]
+  },
+  "reader": "as heritage or new"
+ },
+ "waiting": [
+  {
+   "id": "01",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 6,
+   "right": "clip:n-6",
+   "wrong": {
+    "clip:n-7": "sound",
+    "clip:n-5": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe (f15 counting taps in a ten-frame, then f40 + ch-skolko)"
+  },
+  {
+   "id": "02",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 7,
+   "right": "clip:n-7",
+   "wrong": {
+    "clip:n-8": "sound",
+    "clip:n-6": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe (f15 counting taps in a ten-frame, then f40 + ch-skolko)"
+  },
+  {
+   "id": "03",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 8,
+   "right": "clip:n-8",
+   "wrong": {
+    "clip:n-7": "sound",
+    "clip:n-9": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe (f15 counting taps in a ten-frame, then f40 + ch-skolko)"
+  },
+  {
+   "id": "04",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 9,
+   "right": "clip:n-9",
+   "wrong": {
+    "clip:n-10": "sound",
+    "clip:n-8": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe (f15 counting taps in a ten-frame, then f40 + ch-skolko)"
+  },
+  {
+   "id": "05",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 10,
+   "right": "clip:n-10",
+   "wrong": {
+    "clip:n-9": "sound",
+    "clip:n-8": "numword"
+   },
+   "check": true,
+   "why": "count_tap recipe (f15 counting taps in a ten-frame, then f40 + ch-skolko)"
+  },
+  {
+   "id": "06",
+   "template": "tap_answer",
+   "mode": "number-to-set",
+   "frame": "f16",
+   "target": "n-6",
+   "right": "set-tenframe-6",
+   "wrong": {
+    "set-tenframe-7": "sound",
+    "set-tenframe-5": "numword"
+   },
+   "ladder": "HL-NUM",
+   "check": false,
+   "why": "the pictures set-tenframe-6 to -10 (ten-frames, one kind of object) are not drawn"
+  },
+  {
+   "id": "07",
+   "template": "tap_answer",
+   "mode": "number-to-set",
+   "frame": "f16",
+   "target": "n-7",
+   "right": "set-tenframe-7",
+   "wrong": {
+    "set-tenframe-8": "sound",
+    "set-tenframe-6": "numword"
+   },
+   "ladder": "HL-NUM",
+   "check": false,
+   "why": "the pictures set-tenframe-6 to -10 (ten-frames, one kind of object) are not drawn"
+  },
+  {
+   "id": "08",
+   "template": "tap_answer",
+   "mode": "number-to-set",
+   "frame": "f16",
+   "target": "n-8",
+   "right": "set-tenframe-8",
+   "wrong": {
+    "set-tenframe-7": "sound",
+    "set-tenframe-9": "numword"
+   },
+   "ladder": "HL-NUM",
+   "check": false,
+   "why": "the pictures set-tenframe-6 to -10 (ten-frames, one kind of object) are not drawn"
+  },
+  {
+   "id": "09",
+   "template": "tap_answer",
+   "mode": "number-to-set",
+   "frame": "f16",
+   "target": "n-9",
+   "right": "set-tenframe-9",
+   "wrong": {
+    "set-tenframe-10": "sound",
+    "set-tenframe-8": "numword"
+   },
+   "ladder": "HL-NUM",
+   "check": false,
+   "why": "the pictures set-tenframe-6 to -10 (ten-frames, one kind of object) are not drawn"
+  },
+  {
+   "id": "10",
+   "template": "tap_answer",
+   "mode": "number-to-set",
+   "frame": "f16",
+   "target": "n-10",
+   "right": "set-tenframe-10",
+   "wrong": {
+    "set-tenframe-9": "sound",
+    "set-tenframe-8": "numword"
+   },
+   "ladder": "HL-NUM",
+   "check": true,
+   "why": "the pictures set-tenframe-6 to -10 (ten-frames, one kind of object) are not drawn"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "numbers-2",
+   "title": "מִסְפָּרִים עַד עֶשֶׂר",
+   "items": [
+    "06",
+    "07",
+    "08",
+    "09"
+   ]
+  }
+ ]
+}

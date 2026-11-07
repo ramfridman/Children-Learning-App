@@ -1,0 +1,783 @@
+{
+ "skill": {
+  "id": "RUS-A-05",
+  "strand": "voc",
+  "title": "חַיּוֹת",
+  "setCoverage": true
+ },
+ "items": [
+  {
+   "id": "01",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-koshka",
+   "options": [
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    },
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "mouse",
+     "clip": "w-mysh"
+    }
+   ],
+   "wrong": {
+    "dog": "sem",
+    "mouse": "sem"
+   }
+  },
+  {
+   "id": "02",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-kot",
+   "options": [
+    {
+     "pic": "cat-tomcat",
+     "clip": "w-kot"
+    },
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "whale",
+     "clip": "w-kit"
+    }
+   ],
+   "wrong": {
+    "dog": "sem",
+    "whale": "sound"
+   }
+  },
+  {
+   "id": "03",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-sobaka",
+   "options": [
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    },
+    {
+     "pic": "cow",
+     "clip": "w-korova"
+    }
+   ],
+   "wrong": {
+    "cat": "sem",
+    "cow": "sem"
+   }
+  },
+  {
+   "id": "04",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-mysh",
+   "options": [
+    {
+     "pic": "mouse",
+     "clip": "w-mysh"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    },
+    {
+     "pic": "teddy",
+     "clip": "w-mishka"
+    }
+   ],
+   "wrong": {
+    "cat": "sem",
+    "teddy": "sound"
+   }
+  },
+  {
+   "id": "05",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-ryba",
+   "options": [
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    },
+    {
+     "pic": "bird",
+     "clip": "w-ptitsa"
+    },
+    {
+     "pic": "whale",
+     "clip": "w-kit"
+    }
+   ],
+   "wrong": {
+    "bird": "sem",
+    "whale": "sem"
+   }
+  },
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-ptitsa",
+   "options": [
+    {
+     "pic": "bird",
+     "clip": "w-ptitsa"
+    },
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    },
+    {
+     "pic": "squirrel",
+     "clip": "w-belka"
+    }
+   ],
+   "wrong": {
+    "fish": "sem",
+    "squirrel": "sem"
+   }
+  },
+  {
+   "id": "07",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-korova",
+   "options": [
+    {
+     "pic": "cow",
+     "clip": "w-korova"
+    },
+    {
+     "pic": "goat",
+     "clip": "w-koza"
+    },
+    {
+     "pic": "horse",
+     "clip": "w-loshad"
+    }
+   ],
+   "wrong": {
+    "goat": "sound",
+    "horse": "sem"
+   }
+  },
+  {
+   "id": "08",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-loshad",
+   "options": [
+    {
+     "pic": "horse",
+     "clip": "w-loshad"
+    },
+    {
+     "pic": "cow",
+     "clip": "w-korova"
+    },
+    {
+     "pic": "pig",
+     "clip": "w-svinja"
+    }
+   ],
+   "wrong": {
+    "cow": "sem",
+    "pig": "sem"
+   }
+  },
+  {
+   "id": "09",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-svinja",
+   "options": [
+    {
+     "pic": "pig",
+     "clip": "w-svinja"
+    },
+    {
+     "pic": "cow",
+     "clip": "w-korova"
+    },
+    {
+     "pic": "fam-all",
+     "clip": "w-semja"
+    }
+   ],
+   "wrong": {
+    "cow": "sem",
+    "fam-all": "sound"
+   }
+  },
+  {
+   "id": "10",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-koza",
+   "options": [
+    {
+     "pic": "goat",
+     "clip": "w-koza"
+    },
+    {
+     "pic": "cow",
+     "clip": "w-korova"
+    },
+    {
+     "pic": "pig",
+     "clip": "w-svinja"
+    }
+   ],
+   "wrong": {
+    "cow": "sound",
+    "pig": "sem"
+   }
+  },
+  {
+   "id": "11",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-utka",
+   "options": [
+    {
+     "pic": "duck",
+     "clip": "w-utka"
+    },
+    {
+     "pic": "hen",
+     "clip": "w-kuritsa"
+    },
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    }
+   ],
+   "wrong": {
+    "hen": "sem",
+    "fish": "sem"
+   }
+  },
+  {
+   "id": "12",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-kuritsa",
+   "options": [
+    {
+     "pic": "hen",
+     "clip": "w-kuritsa"
+    },
+    {
+     "pic": "rooster",
+     "clip": "w-petuh"
+    },
+    {
+     "pic": "duck",
+     "clip": "w-utka"
+    }
+   ],
+   "wrong": {
+    "rooster": "sem",
+    "duck": "sem"
+   }
+  },
+  {
+   "id": "13",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-petuh",
+   "options": [
+    {
+     "pic": "rooster",
+     "clip": "w-petuh"
+    },
+    {
+     "pic": "hen",
+     "clip": "w-kuritsa"
+    },
+    {
+     "pic": "duck",
+     "clip": "w-utka"
+    }
+   ],
+   "wrong": {
+    "hen": "sem",
+    "duck": "sem"
+   }
+  },
+  {
+   "id": "14",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-zajats",
+   "options": [
+    {
+     "pic": "rabbit",
+     "clip": "w-zajats"
+    },
+    {
+     "pic": "squirrel",
+     "clip": "w-belka"
+    },
+    {
+     "pic": "hedgehog",
+     "clip": "w-yozh"
+    }
+   ],
+   "wrong": {
+    "squirrel": "sem",
+    "hedgehog": "sem"
+   }
+  },
+  {
+   "id": "15",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-medved",
+   "options": [
+    {
+     "pic": "bear",
+     "clip": "w-medved"
+    },
+    {
+     "pic": "wolf",
+     "clip": "w-volk"
+    },
+    {
+     "pic": "elephant",
+     "clip": "w-slon"
+    }
+   ],
+   "wrong": {
+    "wolf": "sem",
+    "elephant": "sem"
+   }
+  },
+  {
+   "id": "16",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-volk",
+   "options": [
+    {
+     "pic": "wolf",
+     "clip": "w-volk"
+    },
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "fox",
+     "clip": "w-lisa"
+    }
+   ],
+   "wrong": {
+    "dog": "sem",
+    "fox": "sem"
+   }
+  },
+  {
+   "id": "17",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-lisa",
+   "options": [
+    {
+     "pic": "fox",
+     "clip": "w-lisa"
+    },
+    {
+     "pic": "wolf",
+     "clip": "w-volk"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    }
+   ],
+   "wrong": {
+    "wolf": "sem",
+    "cat": "sem"
+   }
+  },
+  {
+   "id": "18",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-yozh",
+   "options": [
+    {
+     "pic": "hedgehog",
+     "clip": "w-yozh"
+    },
+    {
+     "pic": "rabbit",
+     "clip": "w-zajats"
+    },
+    {
+     "pic": "mouse",
+     "clip": "w-mysh"
+    }
+   ],
+   "wrong": {
+    "rabbit": "sem",
+    "mouse": "sem"
+   }
+  },
+  {
+   "id": "19",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-belka",
+   "options": [
+    {
+     "pic": "squirrel",
+     "clip": "w-belka"
+    },
+    {
+     "pic": "rabbit",
+     "clip": "w-zajats"
+    },
+    {
+     "pic": "fox",
+     "clip": "w-lisa"
+    }
+   ],
+   "wrong": {
+    "rabbit": "sem",
+    "fox": "sem"
+   }
+  },
+  {
+   "id": "20",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-slon",
+   "options": [
+    {
+     "pic": "elephant",
+     "clip": "w-slon"
+    },
+    {
+     "pic": "bear",
+     "clip": "w-medved"
+    },
+    {
+     "pic": "giraffe",
+     "clip": "w-zhiraf"
+    }
+   ],
+   "wrong": {
+    "bear": "sem",
+    "giraffe": "sem"
+   }
+  },
+  {
+   "id": "21",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-zhiraf",
+   "options": [
+    {
+     "pic": "giraffe",
+     "clip": "w-zhiraf"
+    },
+    {
+     "pic": "elephant",
+     "clip": "w-slon"
+    },
+    {
+     "pic": "scarf",
+     "clip": "w-sharf"
+    }
+   ],
+   "wrong": {
+    "elephant": "sem",
+    "scarf": "sound"
+   },
+   "purpose": "check"
+  },
+  {
+   "id": "22",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-kit",
+   "options": [
+    {
+     "pic": "whale",
+     "clip": "w-kit"
+    },
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    },
+    {
+     "pic": "cat-tomcat",
+     "clip": "w-kot"
+    }
+   ],
+   "wrong": {
+    "fish": "sem",
+    "cat-tomcat": "sound"
+   },
+   "purpose": "check"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f01",
+   "target": "w-sobaka",
+   "options": [
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    },
+    {
+     "pic": "cow",
+     "clip": "w-korova"
+    }
+   ],
+   "wrong": {
+    "cat": "sem",
+    "cow": "sem"
+   },
+   "purpose": "probe"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "animals-1",
+   "title": "חַיּוֹת",
+   "items": [
+    "01",
+    "03",
+    "04",
+    "05",
+    "06"
+   ]
+  },
+  {
+   "id": "animals-2",
+   "title": "חַיּוֹת",
+   "items": [
+    "07",
+    "08",
+    "09",
+    "10"
+   ]
+  },
+  {
+   "id": "animals-3",
+   "title": "חַיּוֹת",
+   "items": [
+    "11",
+    "12",
+    "13"
+   ]
+  },
+  {
+   "id": "animals-4",
+   "title": "חַיּוֹת",
+   "items": [
+    "14",
+    "15",
+    "16",
+    "17"
+   ]
+  },
+  {
+   "id": "animals-5",
+   "title": "חַיּוֹת",
+   "items": [
+    "18",
+    "19",
+    "20",
+    "02"
+   ]
+  }
+ ],
+ "teach": [
+  [
+   "w-koshka",
+   "w-sobaka",
+   "w-mysh",
+   "w-ryba",
+   "w-ptitsa"
+  ],
+  [
+   "w-korova",
+   "w-loshad",
+   "w-svinja",
+   "w-koza"
+  ],
+  [
+   "w-utka",
+   "w-kuritsa",
+   "w-petuh"
+  ],
+  [
+   "w-zajats",
+   "w-medved",
+   "w-volk",
+   "w-lisa"
+  ],
+  [
+   "w-yozh",
+   "w-belka",
+   "w-slon",
+   "w-zhiraf"
+  ],
+  [
+   "w-kot",
+   "w-kit"
+  ]
+ ],
+ "routes": {
+  "new": "teach in six sets; items of two sets at a time",
+  "heritage": {
+   "teach": false,
+   "order": "mixed"
+  },
+  "reader": "as heritage or new"
+ },
+ "waiting": [
+  {
+   "id": "23",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-cat",
+   "right": "clip:w-koshka",
+   "wrong": {
+    "clip:w-sobaka": "sem"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "24",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-dog",
+   "right": "clip:w-sobaka",
+   "wrong": {
+    "clip:w-koshka": "sem"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "25",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-cow",
+   "right": "clip:w-korova",
+   "wrong": {
+    "clip:w-koza": "sound"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "26",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-horse",
+   "right": "clip:w-loshad",
+   "wrong": {
+    "clip:w-korova": "sem"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "27",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-pig",
+   "right": "clip:w-svinja",
+   "wrong": {
+    "clip:w-korova": "sem"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "28",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-goat",
+   "right": "clip:w-koza",
+   "wrong": {
+    "clip:w-korova": "sound"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "29",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-duck",
+   "right": "clip:w-utka",
+   "wrong": {
+    "clip:w-petuh": "sem"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "30",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-rooster",
+   "right": "clip:w-petuh",
+   "wrong": {
+    "clip:w-kuritsa": "sem"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "31",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-mouse",
+   "right": "clip:w-mysh",
+   "wrong": {
+    "clip:w-mishka": "sound"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  },
+  {
+   "id": "32",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f37",
+   "sound": "sfx-wolf",
+   "right": "clip:w-volk",
+   "wrong": {
+    "clip:w-sobaka": "sem"
+   },
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face, and a real animal sound effect before it (voice-and-sound-director)"
+  }
+ ]
+}

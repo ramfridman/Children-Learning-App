@@ -1,0 +1,23 @@
+{
+  "schema": "misconception/v1",
+  "id": "eng.pa.weak_syll",
+  "review": "needs-editor",
+  "course": "eng",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "ENG-A-14"
+  ],
+  "parentText": "הילד מדלג לפעמים על החלק השקט של המילה (banana נשמעת לו כשתי פעימות). אוזן צעירה שומעת קודם את החלקים החזקים.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "אמרו את המילה לאט, וגעו באצבע לכל חלק: ba-na-na. אחר כך מתופפים יחד על השולחן."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "embodied"
+  ]
+}

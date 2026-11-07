@@ -1,0 +1,199 @@
+{
+  "skill": {
+    "id": "HEB-A-09",
+    "strand": "pa",
+    "title": "מחבר הברות ששומעים למילה",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-08"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "target": "heb-a-u-buba",
+      "options": [
+        "doll",
+        "soap-bubble",
+        "fam-grandfather"
+      ],
+      "wrong": {
+        "soap-bubble": "blend_first",
+        "fam-grandfather": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "target": "heb-a-u-pitsa",
+      "options": [
+        "pizza",
+        "elephant",
+        "egg"
+      ],
+      "wrong": {
+        "elephant": "blend_first",
+        "egg": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "target": "heb-a-u-sira",
+      "options": [
+        "boat",
+        "pot",
+        "teacher-sing"
+      ],
+      "wrong": {
+        "pot": "blend_first",
+        "teacher-sing": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "target": "heb-a-u-aba",
+      "options": [
+        "fam-father",
+        "teddy-nose",
+        "fam-grandfather"
+      ],
+      "wrong": {
+        "teddy-nose": "blend_first",
+        "fam-grandfather": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "target": "heb-a-u-banana",
+      "options": [
+        "banana",
+        "house",
+        "present"
+      ],
+      "wrong": {
+        "house": "blend_first",
+        "present": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "target": "heb-a-u-matana",
+      "options": [
+        "present",
+        "plane",
+        "banana"
+      ],
+      "wrong": {
+        "plane": "blend_first",
+        "banana": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "target": "heb-a-u-chatula",
+      "options": [
+        "cat",
+        "milk",
+        "pram"
+      ],
+      "wrong": {
+        "milk": "blend_first",
+        "pram": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "target": "heb-a-u-agala",
+      "options": [
+        "pram",
+        "clouds",
+        "cat"
+      ],
+      "wrong": {
+        "clouds": "blend_first",
+        "cat": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "target": "heb-a-u-atalef",
+      "options": [
+        "bat",
+        "clouds",
+        "bird"
+      ],
+      "wrong": {
+        "clouds": "blend_first",
+        "bird": "sem"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND",
+      "purpose": "check",
+      "difficulty": 0.45
+    },
+    {
+      "id": "p1",
+      "kind": "tap",
+      "target": "heb-a-u-onia",
+      "options": [
+        "ship",
+        "tent",
+        "umbrella"
+      ],
+      "wrong": {
+        "tent": "blend_first",
+        "umbrella": "blend_last"
+      },
+      "frame": "i-blend",
+      "ladder": "HL-BLEND",
+      "purpose": "probe"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "blend-1",
+      "title": "מָה אָמַר הַתֻּכִּי?",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "blend-2",
+      "title": "עוֹד מִלִּים שֶׁל הַתֻּכִּי",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "08"
+      ]
+    }
+  ]
+}

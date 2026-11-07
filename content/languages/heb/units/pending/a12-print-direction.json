@@ -1,0 +1,138 @@
+{
+  "recipe": "story listen mode with the page text shown, and tap zones on the page: the right end of a line, its left end, the picture; i-follow reads one word and waits for a tap on it (the word clips cut from the page clip by word timing).",
+  "source": "docs/languages/hebrew/band-a-content.md A-12",
+  "skill": {
+    "id": "HEB-A-12",
+    "strand": "pk",
+    "title": "יודע שכתוב קוראים מימין לשמאל, ושבו נמצאות המילים",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-10"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "page-zones",
+      "page": "s1-p1",
+      "clip": "heb-a-s1-p1",
+      "frame": "heb-a-i-start",
+      "zones": {
+        "right": "line1-start",
+        "left": "line1-end",
+        "picture": "picture"
+      },
+      "wrong": {
+        "line1-end": "order",
+        "picture": "print_picture"
+      }
+    },
+    {
+      "id": "02",
+      "kind": "page-zones",
+      "page": "s1-p2",
+      "clip": "heb-a-s1-p2",
+      "frame": "heb-a-i-start",
+      "zones": {
+        "right": "line1-start",
+        "left": "line2-end",
+        "picture": "picture"
+      },
+      "wrong": {
+        "line2-end": "order",
+        "picture": "print_picture"
+      }
+    },
+    {
+      "id": "03",
+      "kind": "page-zones",
+      "page": "s2-p1",
+      "clip": "heb-a-s2-p1",
+      "frame": "heb-a-i-start",
+      "zones": {
+        "right": "line1-start",
+        "left": "line1-end",
+        "picture": "picture"
+      },
+      "wrong": {
+        "line1-end": "order",
+        "picture": "print_picture"
+      }
+    },
+    {
+      "id": "04",
+      "kind": "follow",
+      "page": "s1-p5",
+      "clip": "heb-a-s1-p5",
+      "frame": "heb-a-i-follow",
+      "wrong": {
+        "a word to the left of the next one": "order",
+        "picture": "print_picture"
+      }
+    },
+    {
+      "id": "05",
+      "kind": "follow",
+      "page": "s2-p4",
+      "clip": "heb-a-s2-p4",
+      "frame": "heb-a-i-follow",
+      "wrong": {
+        "a word to the left of the next one": "order",
+        "picture": "print_picture"
+      }
+    },
+    {
+      "id": "06",
+      "kind": "page-zones",
+      "page": "s3-p3",
+      "clip": "heb-a-s3-p3",
+      "frame": "heb-a-i-start",
+      "purpose": "check",
+      "zones": {
+        "right": "line1-start",
+        "left": "line1-end",
+        "picture": "picture"
+      },
+      "wrong": {
+        "line1-end": "order",
+        "picture": "print_picture"
+      }
+    },
+    {
+      "id": "07",
+      "kind": "follow",
+      "page": "s3-p5",
+      "clip": "heb-a-s3-p5",
+      "frame": "heb-a-i-follow",
+      "purpose": "check",
+      "wrong": {
+        "a word to the left of the next one": "order",
+        "picture": "print_picture"
+      }
+    }
+  ],
+  "feedback": {
+    "order": "heb-a-d-start",
+    "print_picture": "heb-a-d-print-picture"
+  },
+  "lessons": [
+    {
+      "id": "print-1",
+      "title": "אֵיפֹה מַתְחִילִים?",
+      "items": [
+        "01",
+        "02",
+        "03"
+      ]
+    },
+    {
+      "id": "print-2",
+      "title": "מִלָּה אַחֲרֵי מִלָּה",
+      "items": [
+        "04",
+        "05"
+      ]
+    }
+  ]
+}

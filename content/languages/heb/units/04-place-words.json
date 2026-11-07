@@ -1,0 +1,98 @@
+{
+  "skill": {
+    "id": "HEB-A-04",
+    "strand": "ol",
+    "title": "ממלא הוראה עם מילת מקום (על, מתחת, בתוך, ליד)"
+  },
+  "items": [
+    {
+      "id": "05",
+      "kind": "tap",
+      "target": "heb-a-pl-5",
+      "options": [
+        "place-ball-on-box",
+        "place-box-on-ball",
+        "place-ball-in-box"
+      ],
+      "wrong": {
+        "place-box-on-ball": "role_swap",
+        "place-ball-in-box": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "target": "heb-a-pl-6",
+      "options": [
+        "place-cat-in-basket",
+        "place-basket-on-cat",
+        "place-cat-by-basket"
+      ],
+      "wrong": {
+        "place-basket-on-cat": "role_swap",
+        "place-cat-by-basket": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "target": "heb-a-pl-7",
+      "options": [
+        "place-dog-under-chair",
+        "place-dog-on-chair",
+        "place-dog-by-chair"
+      ],
+      "wrong": {
+        "place-dog-on-chair": "role_swap",
+        "place-dog-by-chair": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "target": "heb-a-pl-8",
+      "options": [
+        "place-bird-on-boat",
+        "place-boat-on-bird",
+        "place-bird-in-boat"
+      ],
+      "wrong": {
+        "place-boat-on-bird": "role_swap",
+        "place-bird-in-boat": "prep"
+      },
+      "ladder": "HL-PLACE"
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "target": "heb-a-pl-10",
+      "options": [
+        "place-apple-in-bowl",
+        "place-bowl-on-apple",
+        "place-apple-by-bowl"
+      ],
+      "wrong": {
+        "place-bowl-on-apple": "role_swap",
+        "place-apple-by-bowl": "prep"
+      },
+      "purpose": "check",
+      "difficulty": 0.4,
+      "ladder": "HL-PLACE"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "places-1",
+      "title": "אֵיפֹה זֶה?",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "08"
+      ]
+    }
+  ]
+}

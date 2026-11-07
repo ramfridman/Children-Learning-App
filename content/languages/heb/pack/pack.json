@@ -6,8 +6,40 @@
   "course": "heb",
   "assets": [
     {
+      "id": "apple",
+      "file": "apple.svg"
+    },
+    {
       "id": "ball",
       "file": "ball.svg"
+    },
+    {
+      "id": "balloon",
+      "file": "balloon.svg"
+    },
+    {
+      "id": "banana",
+      "file": "banana.svg"
+    },
+    {
+      "id": "basket",
+      "file": "basket.svg"
+    },
+    {
+      "id": "bat",
+      "file": "bat.svg"
+    },
+    {
+      "id": "bird",
+      "file": "bird.svg"
+    },
+    {
+      "id": "boat",
+      "file": "boat.svg"
+    },
+    {
+      "id": "boat_2",
+      "file": "boat_2.svg"
     },
     {
       "id": "bowl",
@@ -18,20 +50,212 @@
       "file": "bush.svg"
     },
     {
+      "id": "cake",
+      "file": "cake.svg"
+    },
+    {
+      "id": "camel",
+      "file": "camel.svg"
+    },
+    {
+      "id": "cat",
+      "file": "cat.svg"
+    },
+    {
       "id": "cave",
       "file": "cave.svg"
+    },
+    {
+      "id": "clouds",
+      "file": "clouds.svg"
+    },
+    {
+      "id": "ctx_bush_park",
+      "file": "ctx_bush_park.svg"
+    },
+    {
+      "id": "ctx_hat_snowman",
+      "file": "ctx_hat_snowman.svg"
+    },
+    {
+      "id": "ctx_wind_sail",
+      "file": "ctx_wind_sail.svg"
+    },
+    {
+      "id": "cup",
+      "file": "cup.svg"
+    },
+    {
+      "id": "cupboard",
+      "file": "cupboard.svg"
+    },
+    {
+      "id": "dog",
+      "file": "dog.svg"
+    },
+    {
+      "id": "doll",
+      "file": "doll.svg"
+    },
+    {
+      "id": "drum_strip_1",
+      "file": "drum_strip_1.svg"
+    },
+    {
+      "id": "drum_strip_2",
+      "file": "drum_strip_2.svg"
+    },
+    {
+      "id": "drum_strip_3",
+      "file": "drum_strip_3.svg"
+    },
+    {
+      "id": "drum_strip_4",
+      "file": "drum_strip_4.svg"
+    },
+    {
+      "id": "egg",
+      "file": "egg.svg"
+    },
+    {
+      "id": "elephant",
+      "file": "elephant.svg"
+    },
+    {
+      "id": "fam_father",
+      "file": "fam_father.svg"
+    },
+    {
+      "id": "fam_grandfather",
+      "file": "fam_grandfather.svg"
+    },
+    {
+      "id": "fish",
+      "file": "fish.svg"
     },
     {
       "id": "flour",
       "file": "flour.svg"
     },
     {
+      "id": "fork",
+      "file": "fork.svg"
+    },
+    {
       "id": "fridge",
       "file": "fridge.svg"
     },
     {
+      "id": "girl_sing",
+      "file": "girl_sing.svg"
+    },
+    {
+      "id": "hat",
+      "file": "hat.svg"
+    },
+    {
+      "id": "horse",
+      "file": "horse.svg"
+    },
+    {
+      "id": "house",
+      "file": "house.svg"
+    },
+    {
+      "id": "house_roof",
+      "file": "house_roof.svg"
+    },
+    {
+      "id": "kite",
+      "file": "kite.svg"
+    },
+    {
+      "id": "milk",
+      "file": "milk.svg"
+    },
+    {
+      "id": "moon",
+      "file": "moon.svg"
+    },
+    {
+      "id": "needle",
+      "file": "needle.svg"
+    },
+    {
+      "id": "olive",
+      "file": "olive.svg"
+    },
+    {
       "id": "oven",
       "file": "oven.svg"
+    },
+    {
+      "id": "pizza",
+      "file": "pizza.svg"
+    },
+    {
+      "id": "place_apple_by_bowl",
+      "file": "place_apple_by_bowl.svg"
+    },
+    {
+      "id": "place_apple_in_bowl",
+      "file": "place_apple_in_bowl.svg"
+    },
+    {
+      "id": "place_ball_in_box",
+      "file": "place_ball_in_box.svg"
+    },
+    {
+      "id": "place_ball_on_box",
+      "file": "place_ball_on_box.svg"
+    },
+    {
+      "id": "place_basket_on_cat",
+      "file": "place_basket_on_cat.svg"
+    },
+    {
+      "id": "place_bird_in_boat",
+      "file": "place_bird_in_boat.svg"
+    },
+    {
+      "id": "place_bird_on_boat",
+      "file": "place_bird_on_boat.svg"
+    },
+    {
+      "id": "place_boat_on_bird",
+      "file": "place_boat_on_bird.svg"
+    },
+    {
+      "id": "place_bowl_on_apple",
+      "file": "place_bowl_on_apple.svg"
+    },
+    {
+      "id": "place_box_on_ball",
+      "file": "place_box_on_ball.svg"
+    },
+    {
+      "id": "place_cat_by_basket",
+      "file": "place_cat_by_basket.svg"
+    },
+    {
+      "id": "place_cat_in_basket",
+      "file": "place_cat_in_basket.svg"
+    },
+    {
+      "id": "place_dog_by_chair",
+      "file": "place_dog_by_chair.svg"
+    },
+    {
+      "id": "place_dog_on_chair",
+      "file": "place_dog_on_chair.svg"
+    },
+    {
+      "id": "place_dog_under_chair",
+      "file": "place_dog_under_chair.svg"
+    },
+    {
+      "id": "plane",
+      "file": "plane.svg"
     },
     {
       "id": "plate",
@@ -42,16 +266,164 @@
       "file": "pot.svg"
     },
     {
+      "id": "pram",
+      "file": "pram.svg"
+    },
+    {
+      "id": "present",
+      "file": "present.svg"
+    },
+    {
+      "id": "rabbit",
+      "file": "rabbit.svg"
+    },
+    {
+      "id": "rabbit_tail",
+      "file": "rabbit_tail.svg"
+    },
+    {
+      "id": "rain",
+      "file": "rain.svg"
+    },
+    {
       "id": "rainbow",
       "file": "rainbow.svg"
+    },
+    {
+      "id": "ring",
+      "file": "ring.svg"
+    },
+    {
+      "id": "rocket",
+      "file": "rocket.svg"
+    },
+    {
+      "id": "rooster",
+      "file": "rooster.svg"
+    },
+    {
+      "id": "s1_p2",
+      "file": "s1_p2.svg"
+    },
+    {
+      "id": "s1_p3",
+      "file": "s1_p3.svg"
+    },
+    {
+      "id": "s1_p4",
+      "file": "s1_p4.svg"
+    },
+    {
+      "id": "s1_p5",
+      "file": "s1_p5.svg"
+    },
+    {
+      "id": "s2_p2",
+      "file": "s2_p2.svg"
+    },
+    {
+      "id": "s2_p3",
+      "file": "s2_p3.svg"
+    },
+    {
+      "id": "s2_p4",
+      "file": "s2_p4.svg"
+    },
+    {
+      "id": "s2_p5",
+      "file": "s2_p5.svg"
+    },
+    {
+      "id": "s3_p2",
+      "file": "s3_p2.svg"
+    },
+    {
+      "id": "s3_p4",
+      "file": "s3_p4.svg"
+    },
+    {
+      "id": "s3_p5",
+      "file": "s3_p5.svg"
+    },
+    {
+      "id": "scarf",
+      "file": "scarf.svg"
+    },
+    {
+      "id": "sea",
+      "file": "sea.svg"
+    },
+    {
+      "id": "ship",
+      "file": "ship.svg"
+    },
+    {
+      "id": "shirt",
+      "file": "shirt.svg"
+    },
+    {
+      "id": "soap_bubble",
+      "file": "soap_bubble.svg"
+    },
+    {
+      "id": "soup",
+      "file": "soup.svg"
+    },
+    {
+      "id": "spoon",
+      "file": "spoon.svg"
+    },
+    {
+      "id": "star",
+      "file": "star.svg"
     },
     {
       "id": "sugar",
       "file": "sugar.svg"
     },
     {
+      "id": "sun",
+      "file": "sun.svg"
+    },
+    {
+      "id": "teacher_sing",
+      "file": "teacher_sing.svg"
+    },
+    {
+      "id": "teddy",
+      "file": "teddy.svg"
+    },
+    {
+      "id": "teddy_nose",
+      "file": "teddy_nose.svg"
+    },
+    {
+      "id": "tent",
+      "file": "tent.svg"
+    },
+    {
+      "id": "thread",
+      "file": "thread.svg"
+    },
+    {
+      "id": "tortoise",
+      "file": "tortoise.svg"
+    },
+    {
       "id": "tree",
       "file": "tree.svg"
+    },
+    {
+      "id": "umbrella",
+      "file": "umbrella.svg"
+    },
+    {
+      "id": "wind",
+      "file": "wind.svg"
+    },
+    {
+      "id": "window",
+      "file": "window.svg"
     }
   ],
   "vo": []

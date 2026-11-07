@@ -1,0 +1,22 @@
+{
+  "schema": "misconception/v1",
+  "id": "rus.pho.syll",
+  "review": "needs-editor",
+  "course": "rus",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "RUS-A-18"
+  ],
+  "parentText": "בספירת חלקי מילה במחיאות כפיים, קורה שהילד מוחא פעם אחת יותר או פחות.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "מחאו כפיים יחד לכל חלק בשמות של צעצועים: ку-кла, ма-ши-на."
+    }
+  ],
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied"
+  ]
+}

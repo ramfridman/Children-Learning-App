@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.blend_first",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "HEB-A-09"
+  ],
+  "parentText": "הילד שומע את החלק הראשון של המילה ומנחש את השאר. כדאי לומר את החלקים לאט, ואז מהר יותר.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "concrete",
+    "pictorial"
+  ]
+}

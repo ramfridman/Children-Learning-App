@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.prep",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GRAMMAR",
+  "skills": [
+    "HEB-A-04"
+  ],
+  "parentText": "הילד עוד מתבלבל בין המילים על, מתחת, בתוך וליד. כדאי לשחק בהחבאת צעצוע ולומר איפה הוא.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "pictorial"
+  ]
+}

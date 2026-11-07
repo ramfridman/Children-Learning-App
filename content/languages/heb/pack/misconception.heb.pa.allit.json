@@ -1,0 +1,18 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.allit",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "RHYME",
+  "skills": [
+    "HEB-A-06",
+    "HEB-A-07"
+  ],
+  "parentText": "הילד בוחר מילה שמתחילה כמו המילה, ולא מילה שנגמרת כמוה. כדאי לשחק בחרוזים ולהקשיב יחד לסוף.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

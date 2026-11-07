@@ -1,0 +1,389 @@
+{
+ "skill": {
+  "id": "RUS-A-06",
+  "strand": "voc",
+  "title": "צְבָעִים",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-05"
+   }
+  ],
+  "setCoverage": true
+ },
+ "items": [
+  {
+   "id": "01",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-krasnyj",
+   "options": [
+    {
+     "pic": "col-red",
+     "clip": "w-krasnyj"
+    },
+    {
+     "pic": "col-yellow",
+     "clip": "w-zholtyj"
+    },
+    {
+     "pic": "col-blue",
+     "clip": "w-sinij"
+    }
+   ],
+   "wrong": {
+    "col-yellow": "sem",
+    "col-blue": "sem"
+   }
+  },
+  {
+   "id": "02",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-sinij",
+   "options": [
+    {
+     "pic": "col-blue",
+     "clip": "w-sinij"
+    },
+    {
+     "pic": "col-green",
+     "clip": "w-zeljonyj"
+    },
+    {
+     "pic": "col-black",
+     "clip": "w-chornyj"
+    }
+   ],
+   "wrong": {
+    "col-green": "sem",
+    "col-black": "sem"
+   }
+  },
+  {
+   "id": "03",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-zholtyj",
+   "options": [
+    {
+     "pic": "col-yellow",
+     "clip": "w-zholtyj"
+    },
+    {
+     "pic": "col-green",
+     "clip": "w-zeljonyj"
+    },
+    {
+     "pic": "col-white",
+     "clip": "w-belyj"
+    }
+   ],
+   "wrong": {
+    "col-green": "sound",
+    "col-white": "sem"
+   }
+  },
+  {
+   "id": "04",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-zeljonyj",
+   "options": [
+    {
+     "pic": "col-green",
+     "clip": "w-zeljonyj"
+    },
+    {
+     "pic": "col-yellow",
+     "clip": "w-zholtyj"
+    },
+    {
+     "pic": "col-blue",
+     "clip": "w-sinij"
+    }
+   ],
+   "wrong": {
+    "col-yellow": "sound",
+    "col-blue": "sem"
+   }
+  },
+  {
+   "id": "05",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-belyj",
+   "options": [
+    {
+     "pic": "col-white",
+     "clip": "w-belyj"
+    },
+    {
+     "pic": "col-black",
+     "clip": "w-chornyj"
+    },
+    {
+     "pic": "col-yellow",
+     "clip": "w-zholtyj"
+    }
+   ],
+   "wrong": {
+    "col-black": "sem",
+    "col-yellow": "sem"
+   }
+  },
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-chornyj",
+   "options": [
+    {
+     "pic": "col-black",
+     "clip": "w-chornyj"
+    },
+    {
+     "pic": "col-white",
+     "clip": "w-belyj"
+    },
+    {
+     "pic": "col-red",
+     "clip": "w-krasnyj"
+    }
+   ],
+   "wrong": {
+    "col-white": "sem",
+    "col-red": "sound"
+   }
+  },
+  {
+   "id": "07",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-krasnyj",
+   "options": [
+    {
+     "pic": "ball-red",
+     "clip": "w-krasnyj"
+    },
+    {
+     "pic": "ball-yellow",
+     "clip": "w-zholtyj"
+    },
+    {
+     "pic": "ball-blue",
+     "clip": "w-sinij"
+    }
+   ],
+   "wrong": {
+    "ball-yellow": "sem",
+    "ball-blue": "sem"
+   },
+   "variant": "krasnyj-ball"
+  },
+  {
+   "id": "08",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-sinij",
+   "options": [
+    {
+     "pic": "ball-blue",
+     "clip": "w-sinij"
+    },
+    {
+     "pic": "ball-green",
+     "clip": "w-zeljonyj"
+    },
+    {
+     "pic": "ball-black",
+     "clip": "w-chornyj"
+    }
+   ],
+   "wrong": {
+    "ball-green": "sem",
+    "ball-black": "sem"
+   },
+   "variant": "sinij-ball"
+  },
+  {
+   "id": "09",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-zholtyj",
+   "options": [
+    {
+     "pic": "ball-yellow",
+     "clip": "w-zholtyj"
+    },
+    {
+     "pic": "ball-green",
+     "clip": "w-zeljonyj"
+    },
+    {
+     "pic": "ball-white",
+     "clip": "w-belyj"
+    }
+   ],
+   "wrong": {
+    "ball-green": "sound",
+    "ball-white": "sem"
+   },
+   "variant": "zholtyj-ball"
+  },
+  {
+   "id": "10",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-zeljonyj",
+   "options": [
+    {
+     "pic": "ball-green",
+     "clip": "w-zeljonyj"
+    },
+    {
+     "pic": "ball-yellow",
+     "clip": "w-zholtyj"
+    },
+    {
+     "pic": "ball-blue",
+     "clip": "w-sinij"
+    }
+   ],
+   "wrong": {
+    "ball-yellow": "sound",
+    "ball-blue": "sem"
+   },
+   "variant": "zeljonyj-ball"
+  },
+  {
+   "id": "11",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-belyj",
+   "options": [
+    {
+     "pic": "ball-white",
+     "clip": "w-belyj"
+    },
+    {
+     "pic": "ball-black",
+     "clip": "w-chornyj"
+    },
+    {
+     "pic": "ball-yellow",
+     "clip": "w-zholtyj"
+    }
+   ],
+   "wrong": {
+    "ball-black": "sem",
+    "ball-yellow": "sem"
+   },
+   "purpose": "check",
+   "variant": "belyj-ball"
+  },
+  {
+   "id": "12",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-chornyj",
+   "options": [
+    {
+     "pic": "ball-black",
+     "clip": "w-chornyj"
+    },
+    {
+     "pic": "ball-white",
+     "clip": "w-belyj"
+    },
+    {
+     "pic": "ball-red",
+     "clip": "w-krasnyj"
+    }
+   ],
+   "wrong": {
+    "ball-white": "sem",
+    "ball-red": "sound"
+   },
+   "purpose": "check",
+   "variant": "chornyj-ball"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f14",
+   "target": "w-zeljonyj",
+   "options": [
+    {
+     "pic": "col-green",
+     "clip": "w-zeljonyj"
+    },
+    {
+     "pic": "col-yellow",
+     "clip": "w-zholtyj"
+    },
+    {
+     "pic": "col-blue",
+     "clip": "w-sinij"
+    }
+   ],
+   "wrong": {
+    "col-yellow": "sound",
+    "col-blue": "sem"
+   },
+   "purpose": "probe"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "colours-1",
+   "title": "צְבָעִים",
+   "items": [
+    "01",
+    "02",
+    "03"
+   ]
+  },
+  {
+   "id": "colours-2",
+   "title": "צְבָעִים",
+   "items": [
+    "04",
+    "05",
+    "06"
+   ]
+  },
+  {
+   "id": "colours-3",
+   "title": "צְבָעִים",
+   "items": [
+    "07",
+    "08",
+    "09",
+    "10"
+   ]
+  }
+ ],
+ "teach": [
+  [
+   "w-krasnyj",
+   "w-sinij",
+   "w-zholtyj"
+  ],
+  [
+   "w-zeljonyj",
+   "w-belyj",
+   "w-chornyj"
+  ]
+ ],
+ "routes": {
+  "new": "teach in two sets; items 01 to 12",
+  "heritage": {
+   "teach": false,
+   "order": [
+    "07-12",
+    "01-06"
+   ]
+  },
+  "reader": "as heritage or new"
+ }
+}

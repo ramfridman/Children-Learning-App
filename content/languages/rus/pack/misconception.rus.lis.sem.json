@@ -6,7 +6,15 @@
   "kind": "diagnostic",
   "family": "MEANING",
   "skills": [
-    "RUS-A-01"
+    "RUS-A-01",
+    "RUS-A-02",
+    "RUS-A-03",
+    "RUS-A-04",
+    "RUS-A-05",
+    "RUS-A-06",
+    "RUS-A-07",
+    "RUS-A-08",
+    "RUS-A-09"
   ],
   "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות (כמו שתי חיות) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
   "homeActivity": [
@@ -17,6 +25,6 @@
   ],
   "repairActivities": [],
   "preferredRepresentations": [
-    "pictorial"
+    "story"
   ]
 }

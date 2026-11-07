@@ -1,0 +1,32 @@
+{
+  "schema": "skill/v1",
+  "id": "RUS-A-17",
+  "review": "needs-editor",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חֲרוּזִים"
+    }
+  ],
+  "strand": "pho",
+  "prerequisites": [
+    {
+      "skill": "RUS-A-01",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "rus.lis.sem",
+    "rus.pho.rhyme_onset"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}

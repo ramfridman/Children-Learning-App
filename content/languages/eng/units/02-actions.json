@@ -1,0 +1,28 @@
+{
+  "skill": {"id": "ENG-A-02", "strand": "lis", "title": "פְּעֻלּוֹת", "prerequisites": [{"skill": "ENG-A-01"}], "setCoverage": true},
+  "items": [
+    {"id": "i01", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-stand-up", "options": ["act-stand", "act-sit", "act-clap"], "wrong": {"act-sit": "sem", "act-clap": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i02", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-sit-down", "options": ["act-sit", "act-stand", "act-jump"], "wrong": {"act-stand": "sem", "act-jump": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i03", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-clap", "options": ["act-clap", "act-wave", "act-look"], "wrong": {"act-wave": "sem", "act-look": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i04", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-jump", "options": ["act-jump", "act-stop", "act-listen"], "wrong": {"act-stop": "sem", "act-listen": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i05", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-stop", "options": ["act-stop", "act-jump", "act-wave"], "wrong": {"act-jump": "sem", "act-wave": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i06", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-look", "options": ["act-look", "act-listen", "act-stand"], "wrong": {"act-listen": "sem", "act-stand": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i07", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-listen", "options": ["act-listen", "act-look", "act-stop"], "wrong": {"act-look": "sem", "act-stop": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i08", "kind": "tap", "frame": "he-ins-who-doing", "target": "en-wave", "options": ["act-wave", "act-clap", "act-sit"], "wrong": {"act-clap": "sem", "act-sit": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i11", "kind": "tap", "purpose": "check", "frame": "he-ins-who-doing", "target": "en-sit-down", "options": ["act-sit", "act-stand", "act-wave"], "wrong": {"act-stand": "sem", "act-wave": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "i12", "kind": "tap", "purpose": "check", "frame": "he-ins-who-doing", "target": "en-wave", "options": ["act-wave", "act-clap", "act-look"], "wrong": {"act-clap": "sem", "act-look": "l1_guess"}, "ladder": "HL-ACT"},
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "frame": "he-ins-who-doing", "target": "en-jump", "options": ["act-jump", "act-stop", "act-listen"], "wrong": {"act-stop": "sem", "act-listen": "l1_guess"}, "ladder": "HL-ACT"}
+  ],
+  "lessons": [
+    {"id": "act-1", "title": "קָמִים וְיוֹשְׁבִים", "items": ["i01", "i02", "i03", "i04"]},
+    {"id": "act-2", "title": "עוֹצְרִים וּמַקְשִׁיבִים", "items": ["i05", "i06", "i07", "i08"]}
+  ],
+  "waiting": [
+    {"id": "i09", "template": "LS11 listen_do buttons", "purpose": "learn", "frame": "he-ins-make-do", "target": "en-jump", "picture": "mika-body", "options": ["act-jump", "act-stop", "act-listen"], "wrong": {"act-stop": "sem", "act-listen": "l1_guess"}, "ladder": "HL-ACT", "rep": "embodied"},
+    {"id": "i10", "template": "LS11 listen_do buttons", "purpose": "learn", "frame": "he-ins-make-do", "target": "en-clap", "picture": "mika-body", "options": ["act-clap", "act-wave", "act-look"], "wrong": {"act-wave": "sem", "act-look": "l1_guess"}, "ladder": "HL-ACT", "rep": "embodied"},
+    {"id": "i11", "template": "LS11 listen_do buttons", "purpose": "check", "frame": "he-ins-make-do", "target": "en-sit-down", "picture": "mika-body", "options": ["act-sit", "act-stand", "act-jump"], "wrong": {"act-stand": "sem", "act-jump": "l1_guess"}, "ladder": "HL-ACT", "rep": "embodied", "replaces": "i11"},
+    {"id": "i12", "template": "LS11 listen_do buttons", "purpose": "check", "frame": "he-ins-make-do", "target": "en-wave", "picture": "mika-body", "options": ["act-wave", "act-clap", "act-sit"], "wrong": {"act-clap": "sem", "act-sit": "l1_guess"}, "ladder": "HL-ACT", "rep": "embodied", "replaces": "i12"},
+    {"id": "e01", "template": "LS11 listen_do embodied", "purpose": "practice", "frame": "he-ins-do-too", "clips": ["en-stand-up", "en-sit-down"], "note": "Self-report (\"done\"); never counted alone."},
+    {"id": "e02", "template": "LS11 listen_do embodied", "purpose": "practice", "frame": "he-ins-do-too", "clips": ["en-jump", "en-stop"], "note": "Self-report (\"done\"); never counted alone."}
+  ]
+}

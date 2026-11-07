@@ -1,0 +1,266 @@
+{
+ "skill": {
+  "id": "RUS-A-10",
+  "strand": "num",
+  "title": "מִסְפָּרִים עַד חָמֵשׁ",
+  "setCoverage": true
+ },
+ "items": [
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f16",
+   "target": "n-1",
+   "options": [
+    {
+     "pic": "set-balls-1",
+     "clip": "n-1"
+    },
+    {
+     "pic": "set-balls-2",
+     "clip": "n-2"
+    },
+    {
+     "pic": "set-balls-3",
+     "clip": "n-3"
+    }
+   ],
+   "wrong": {
+    "set-balls-2": "numword",
+    "set-balls-3": "numword"
+   },
+   "ladder": "HL-NUM"
+  },
+  {
+   "id": "07",
+   "kind": "tap",
+   "frame": "f16",
+   "target": "n-2",
+   "options": [
+    {
+     "pic": "set-ducks-2",
+     "clip": "n-2"
+    },
+    {
+     "pic": "set-ducks-1",
+     "clip": "n-1"
+    },
+    {
+     "pic": "set-ducks-3",
+     "clip": "n-3"
+    }
+   ],
+   "wrong": {
+    "set-ducks-1": "numword",
+    "set-ducks-3": "numword"
+   },
+   "ladder": "HL-NUM"
+  },
+  {
+   "id": "08",
+   "kind": "tap",
+   "frame": "f16",
+   "target": "n-3",
+   "options": [
+    {
+     "pic": "set-balls-3",
+     "clip": "n-3"
+    },
+    {
+     "pic": "set-balls-2",
+     "clip": "n-2"
+    },
+    {
+     "pic": "set-balls-4",
+     "clip": "n-4"
+    }
+   ],
+   "wrong": {
+    "set-balls-2": "numword",
+    "set-balls-4": "numword"
+   },
+   "ladder": "HL-NUM"
+  },
+  {
+   "id": "09",
+   "kind": "tap",
+   "frame": "f16",
+   "target": "n-4",
+   "options": [
+    {
+     "pic": "set-ducks-4",
+     "clip": "n-4"
+    },
+    {
+     "pic": "set-ducks-3",
+     "clip": "n-3"
+    },
+    {
+     "pic": "set-ducks-5",
+     "clip": "n-5"
+    }
+   ],
+   "wrong": {
+    "set-ducks-3": "numword",
+    "set-ducks-5": "numword"
+   },
+   "ladder": "HL-NUM"
+  },
+  {
+   "id": "10",
+   "kind": "tap",
+   "frame": "f16",
+   "target": "n-5",
+   "options": [
+    {
+     "pic": "set-balls-5",
+     "clip": "n-5"
+    },
+    {
+     "pic": "set-balls-4",
+     "clip": "n-4"
+    },
+    {
+     "pic": "set-balls-3",
+     "clip": "n-3"
+    }
+   ],
+   "wrong": {
+    "set-balls-4": "numword",
+    "set-balls-3": "numword"
+   },
+   "purpose": "check",
+   "ladder": "HL-NUM"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f16",
+   "target": "n-4",
+   "options": [
+    {
+     "pic": "set-ducks-4",
+     "clip": "n-4"
+    },
+    {
+     "pic": "set-ducks-3",
+     "clip": "n-3"
+    },
+    {
+     "pic": "set-ducks-5",
+     "clip": "n-5"
+    }
+   ],
+   "wrong": {
+    "set-ducks-3": "numword",
+    "set-ducks-5": "numword"
+   },
+   "purpose": "probe",
+   "ladder": "HL-NUM"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "numbers-1",
+   "title": "מִסְפָּרִים עַד חָמֵשׁ",
+   "items": [
+    "06",
+    "07",
+    "08",
+    "09"
+   ]
+  }
+ ],
+ "teach": [
+  [
+   "n-1",
+   "n-2",
+   "n-3",
+   "n-4",
+   "n-5"
+  ]
+ ],
+ "routes": {
+  "new": "teach by counting along (f15); items 01 to 10",
+  "heritage": {
+   "teach": false,
+   "order": [
+    "06-10",
+    "01-05"
+   ]
+  },
+  "reader": "as heritage or new"
+ },
+ "waiting": [
+  {
+   "id": "01",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 2,
+   "objects": "apple",
+   "right": "clip:n-2",
+   "wrong": {
+    "clip:n-1": "numword",
+    "clip:n-3": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe: the counting taps (practice, f15, one number clip per tap), then \"how many?\" (f40 + ch-skolko) on 3 sound buttons with no numeral and no picture"
+  },
+  {
+   "id": "02",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 3,
+   "objects": "ball",
+   "right": "clip:n-3",
+   "wrong": {
+    "clip:n-2": "numword",
+    "clip:n-4": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe: the counting taps (practice, f15, one number clip per tap), then \"how many?\" (f40 + ch-skolko) on 3 sound buttons with no numeral and no picture"
+  },
+  {
+   "id": "03",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 4,
+   "objects": "duck",
+   "right": "clip:n-4",
+   "wrong": {
+    "clip:n-3": "numword",
+    "clip:n-5": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe: the counting taps (practice, f15, one number clip per tap), then \"how many?\" (f40 + ch-skolko) on 3 sound buttons with no numeral and no picture"
+  },
+  {
+   "id": "04",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 5,
+   "objects": "apple",
+   "right": "clip:n-5",
+   "wrong": {
+    "clip:n-4": "numword",
+    "clip:n-3": "numword"
+   },
+   "check": false,
+   "why": "count_tap recipe: the counting taps (practice, f15, one number clip per tap), then \"how many?\" (f40 + ch-skolko) on 3 sound buttons with no numeral and no picture"
+  },
+  {
+   "id": "05",
+   "template": "count_tap",
+   "mode": "count-then-how-many",
+   "count": 3,
+   "objects": "car (in a row)",
+   "right": "clip:n-3",
+   "wrong": {
+    "clip:n-4": "numword",
+    "clip:n-2": "numword"
+   },
+   "check": true,
+   "why": "count_tap recipe: the counting taps (practice, f15, one number clip per tap), then \"how many?\" (f40 + ch-skolko) on 3 sound buttons with no numeral and no picture"
+  }
+ ]
+}

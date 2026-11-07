@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.body-3",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַגּוּף"
+    }
+  ],
+  "skills": [
+    "RUS-A-03"
+  ],
+  "items": [
+    "rus.a03.08",
+    "rus.a03.09",
+    "rus.a03.10"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 6
+}

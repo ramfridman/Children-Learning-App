@@ -1,0 +1,115 @@
+{
+  "perVisit": 8,
+  "thanks": "he-pl-thanks",
+  "celebration": "he-fb-right-8",
+  "strands": [
+    {
+      "id": "1",
+      "start": [
+        {
+          "answer": "understands",
+          "equals": "some",
+          "level": 1
+        },
+        {
+          "answer": "understands",
+          "equals": "most",
+          "level": 2
+        }
+      ],
+      "levels": [
+        {
+          "items": [
+            "a02.p01",
+            "a05.p01",
+            "a07.p01",
+            "a08.p01"
+          ],
+          "assumes": [
+            "RUS-A-01",
+            "RUS-A-02",
+            "RUS-A-05",
+            "RUS-A-07",
+            "RUS-A-08"
+          ]
+        },
+        {
+          "items": [
+            "a03.p01",
+            "a06.p01",
+            "a09.p01",
+            "a10.p01"
+          ],
+          "assumes": [
+            "RUS-A-03",
+            "RUS-A-06",
+            "RUS-A-09",
+            "RUS-A-10"
+          ]
+        },
+        {
+          "items": [
+            "a01.p01",
+            "a04.p01",
+            "a12.p01",
+            "a12.p02",
+            "a13.p01"
+          ],
+          "assumes": [
+            "RUS-A-04",
+            "RUS-A-12",
+            "RUS-A-13"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "start": [
+        {
+          "answer": "understands",
+          "equals": "most",
+          "level": 1
+        }
+      ],
+      "levels": [
+        {
+          "items": [
+            "a17.p01",
+            "a17.p02"
+          ],
+          "assumes": [
+            "RUS-A-17"
+          ]
+        },
+        {
+          "items": [
+            "a18.p01",
+            "a18.p02"
+          ],
+          "assumes": [
+            "RUS-A-18"
+          ]
+        },
+        {
+          "items": [
+            "a19.p01",
+            "a19.p02"
+          ],
+          "assumes": [
+            "RUS-A-19"
+          ]
+        },
+        {
+          "items": [
+            "a20.p01",
+            "a20.p02"
+          ],
+          "assumes": [
+            "RUS-A-20"
+          ]
+        }
+      ]
+    }
+  ]
+}

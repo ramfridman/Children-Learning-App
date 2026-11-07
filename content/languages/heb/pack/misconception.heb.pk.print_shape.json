@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.print_shape",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "PRINT",
+  "skills": [
+    "HEB-A-10"
+  ],
+  "parentText": "הילד עוד מתבלבל בין אות לבין צורה או ציור. כדאי להצביע יחד על אותיות בספרים ובשלטים.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic",
+    "concrete"
+  ]
+}

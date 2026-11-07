@@ -1,0 +1,153 @@
+{
+  "skill": {
+    "id": "HEB-A-13",
+    "strand": "ol",
+    "title": "מסדר 3 תמונות מסיפור לפי הסדר",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-01"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "03",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "s1-p2",
+          "clip": "heb-a-s1-p2"
+        },
+        {
+          "pic": "s1-p4",
+          "clip": "heb-a-s1-p4"
+        },
+        {
+          "pic": "s1-p5",
+          "clip": "heb-a-s1-p5"
+        }
+      ],
+      "wrong": {
+        "s1-p4": "story_order",
+        "s1-p5": "story_order"
+      },
+      "frame": "i-first",
+      "ladder": "HL-ORDER",
+      "rep": "story"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "s2-p3",
+          "clip": "heb-a-s2-p3"
+        },
+        {
+          "pic": "s2-p4",
+          "clip": "heb-a-s2-p4"
+        },
+        {
+          "pic": "s2-p5",
+          "clip": "heb-a-s2-p5"
+        }
+      ],
+      "wrong": {
+        "s2-p4": "story_order",
+        "s2-p5": "story_order"
+      },
+      "frame": "i-first",
+      "ladder": "HL-ORDER",
+      "rep": "story"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "s1-p3",
+          "clip": "heb-a-s1-p3"
+        },
+        {
+          "pic": "s1-p4",
+          "clip": "heb-a-s1-p4"
+        },
+        {
+          "pic": "s1-p5",
+          "clip": "heb-a-s1-p5"
+        }
+      ],
+      "wrong": {
+        "s1-p4": "story_order",
+        "s1-p5": "story_order"
+      },
+      "frame": "i-first",
+      "ladder": "HL-ORDER",
+      "rep": "story"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "s2-p2",
+          "clip": "heb-a-s2-p2"
+        },
+        {
+          "pic": "s2-p3",
+          "clip": "heb-a-s2-p3"
+        },
+        {
+          "pic": "s2-p5",
+          "clip": "heb-a-s2-p5"
+        }
+      ],
+      "wrong": {
+        "s2-p3": "story_order",
+        "s2-p5": "story_order"
+      },
+      "frame": "i-first",
+      "ladder": "HL-ORDER",
+      "rep": "story"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "s3-p2",
+          "clip": "heb-a-s3-p2"
+        },
+        {
+          "pic": "s3-p4",
+          "clip": "heb-a-s3-p4"
+        },
+        {
+          "pic": "s3-p5",
+          "clip": "heb-a-s3-p5"
+        }
+      ],
+      "wrong": {
+        "s3-p4": "story_order",
+        "s3-p5": "story_order"
+      },
+      "frame": "i-first",
+      "ladder": "HL-ORDER",
+      "rep": "story",
+      "purpose": "check",
+      "difficulty": 0.4
+    }
+  ],
+  "lessons": [
+    {
+      "id": "first-1",
+      "title": "מַה קָּרָה קֹדֶם?",
+      "items": [
+        "03",
+        "04",
+        "07",
+        "08"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pa.syll",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SEGMENT",
+  "skills": [
+    "HEB-A-08"
+  ],
+  "parentText": "הילד עוד סופר יותר מדי או פחות מדי חלקים במילה (הברות). כדאי למחוא כף יחד על כל חלק.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "embodied",
+    "concrete"
+  ]
+}

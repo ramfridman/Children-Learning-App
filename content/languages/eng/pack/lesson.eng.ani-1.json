@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "eng.ani-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "eng",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חַיּוֹת"
+    }
+  ],
+  "skills": [
+    "ENG-A-05"
+  ],
+  "items": [
+    "eng.a05.i01",
+    "eng.a05.i02",
+    "eng.a05.i03",
+    "eng.a05.i04"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:eng.he_bye",
+    "caption": [
+      {
+        "t": "he",
+        "v": "לְהִתְרָאוֹת! הָיָה כֵּיף לְשַׂחֵק בְּאַנְגְּלִית."
+      }
+    ]
+  },
+  "sequence": 8
+}

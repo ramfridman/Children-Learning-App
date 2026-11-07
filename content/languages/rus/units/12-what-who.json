@@ -1,0 +1,328 @@
+{
+ "skill": {
+  "id": "RUS-A-12",
+  "strand": "grm",
+  "title": "מִי זֶה? מַה זֶּה?",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-05"
+   },
+   {
+    "skill": "RUS-A-08"
+   }
+  ],
+  "core": true
+ },
+ "items": [
+  {
+   "id": "05",
+   "kind": "tap",
+   "frame": "f17",
+   "target": "ch-kto-eto",
+   "options": [
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "ball",
+     "clip": "w-mjach"
+    },
+    {
+     "pic": "car",
+     "clip": "w-mashina"
+    }
+   ],
+   "wrong": {
+    "ball": "kto",
+    "car": "kto"
+   },
+   "variant": "kto-sobaka",
+   "then": "windows (a component); recast ch-eto-sobaka"
+  },
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f17",
+   "target": "ch-kto-eto",
+   "options": [
+    {
+     "pic": "fam-grandmother",
+     "clip": "w-babushka"
+    },
+    {
+     "pic": "bread",
+     "clip": "w-hleb"
+    },
+    {
+     "pic": "hat-warm",
+     "clip": "w-shapka"
+    }
+   ],
+   "wrong": {
+    "bread": "kto",
+    "hat-warm": "kto"
+   },
+   "variant": "kto-babushka",
+   "then": "recast ch-eto-babushka"
+  },
+  {
+   "id": "07",
+   "kind": "tap",
+   "frame": "f17",
+   "target": "ch-chto-eto",
+   "options": [
+    {
+     "pic": "car",
+     "clip": "w-mashina"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    },
+    {
+     "pic": "boy",
+     "clip": "w-malchik"
+    }
+   ],
+   "wrong": {
+    "cat": "kto",
+    "boy": "kto"
+   },
+   "purpose": "check",
+   "variant": "chto-mashina",
+   "then": "recast ch-eto-mashina"
+  },
+  {
+   "id": "08",
+   "kind": "tap",
+   "frame": "f17",
+   "target": "ch-chto-eto",
+   "options": [
+    {
+     "pic": "apple",
+     "clip": "w-yabloko"
+    },
+    {
+     "pic": "hedgehog",
+     "clip": "w-yozh"
+    },
+    {
+     "pic": "girl",
+     "clip": "w-devochka"
+    }
+   ],
+   "wrong": {
+    "hedgehog": "kto",
+    "girl": "kto"
+   },
+   "purpose": "check",
+   "variant": "chto-jabloko",
+   "then": "recast ch-eto-jabloko"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f17",
+   "target": "ch-kto-eto",
+   "options": [
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    },
+    {
+     "pic": "car",
+     "clip": "w-mashina"
+    },
+    {
+     "pic": "book",
+     "clip": "w-kniga"
+    }
+   ],
+   "wrong": {
+    "car": "kto",
+    "book": "kto"
+   },
+   "purpose": "probe",
+   "variant": "kto-koshka"
+  },
+  {
+   "id": "p02",
+   "kind": "tap",
+   "frame": "f17",
+   "target": "ch-chto-eto",
+   "options": [
+    {
+     "pic": "ball",
+     "clip": "w-mjach"
+    },
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "girl",
+     "clip": "w-devochka"
+    }
+   ],
+   "wrong": {
+    "dog": "kto",
+    "girl": "kto"
+   },
+   "purpose": "probe",
+   "variant": "chto-mjach"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "what-who-1",
+   "title": "מִי זֶה? מַה זֶּה?",
+   "items": [
+    "05",
+    "06"
+   ]
+  }
+ ],
+ "routes": {
+  "new": "all items; кто / что first with the animals and people of A-02 and A-05",
+  "heritage": {
+   "teach": false,
+   "weight": [
+    "05",
+    "06",
+    "07",
+    "08"
+   ]
+  },
+  "reader": "as heritage or new"
+ },
+ "waiting": [
+  {
+   "id": "01",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f17",
+   "ask": "ch-chto-eto",
+   "scene": "ball",
+   "right": "clip:ch-eto-mjach",
+   "wrong": {
+    "clip:ch-eto-kukla": "sem",
+    "clip:sen-2": "sem"
+   },
+   "check": false,
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (three spoken answers)"
+  },
+  {
+   "id": "02",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f17",
+   "ask": "ch-kto-eto",
+   "scene": "cat",
+   "right": "clip:ch-eto-koshka",
+   "wrong": {
+    "clip:ch-eto-sobaka": "sem",
+    "clip:ch-eto-mjach": "sem"
+   },
+   "check": false,
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (three spoken answers)"
+  },
+  {
+   "id": "03",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f17",
+   "ask": "ch-chto-eto",
+   "scene": "apple",
+   "right": "clip:ch-eto-jabloko",
+   "wrong": {
+    "clip:ch-eto-banan": "sem",
+    "clip:ch-eto-moloko": "sound"
+   },
+   "check": false,
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (three spoken answers)"
+  },
+  {
+   "id": "04",
+   "template": "tap_answer",
+   "mode": "audio-options",
+   "frame": "f17",
+   "ask": "ch-kto-eto",
+   "scene": "fam-mother",
+   "right": "clip:ch-eto-mama",
+   "wrong": {
+    "clip:ch-eto-papa": "sound",
+    "clip:ch-eto-babushka": "sem"
+   },
+   "check": true,
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (three spoken answers)"
+  },
+  {
+   "id": "09",
+   "template": "tap_answer",
+   "mode": "yes-no",
+   "frame": "f18",
+   "ask": "ch-eto-kot-q",
+   "scene": "dog",
+   "right": "no",
+   "wrong": {
+    "yes": "yesno"
+   },
+   "recast": [
+    "w-net",
+    "ch-eto-sobaka"
+   ],
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the picture asked about, and the yes / no faces mika-yes, mika-no)"
+  },
+  {
+   "id": "10",
+   "template": "tap_answer",
+   "mode": "yes-no",
+   "frame": "f18",
+   "ask": "ch-eto-mjach-q",
+   "scene": "ball",
+   "right": "yes",
+   "wrong": {
+    "no": "yesno"
+   },
+   "recast": [
+    "w-da",
+    "ch-eto-mjach"
+   ],
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the picture asked about, and the yes / no faces mika-yes, mika-no)"
+  },
+  {
+   "id": "11",
+   "template": "tap_answer",
+   "mode": "yes-no",
+   "frame": "f18",
+   "ask": "ch-eto-ryba-q",
+   "scene": "bird",
+   "right": "no",
+   "wrong": {
+    "yes": "yesno"
+   },
+   "recast": [
+    "w-net"
+   ],
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the picture asked about, and the yes / no faces mika-yes, mika-no)"
+  },
+  {
+   "id": "12",
+   "template": "tap_answer",
+   "mode": "yes-no",
+   "frame": "f18",
+   "ask": "ch-eto-kukla-q",
+   "scene": "doll",
+   "right": "yes",
+   "wrong": {
+    "no": "yesno"
+   },
+   "recast": [
+    "w-da",
+    "ch-eto-kukla"
+   ],
+   "why": "the tap recipe has no stimulus picture (scene.picture) and a 2-sound-button face (the picture asked about, and the yes / no faces mika-yes, mika-no)"
+  }
+ ]
+}

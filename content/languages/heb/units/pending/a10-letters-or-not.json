@@ -1,0 +1,132 @@
+{
+  "recipe": "sort_drag with text cards (Heebo 700) into the bins אוֹתִיּוֹת / דְּבָרִים אֲחֵרִים, and tap_answer 1.4 tap-all (\"touch all the letters\"); 06 in Secular One (a font per item). In the pack today A-10 is a one-tap \"where is the letter?\".",
+  "source": "docs/languages/hebrew/band-a-content.md A-10",
+  "skill": "HEB-A-10",
+  "items": [
+    {
+      "id": "s01",
+      "kind": "sort-text",
+      "cards": [
+        "ב",
+        "ר",
+        "ת",
+        "5",
+        "●"
+      ],
+      "letters": [
+        "ב",
+        "ר",
+        "ת"
+      ],
+      "wrong": {
+        "5": "print_num",
+        "●": "print_shape"
+      }
+    },
+    {
+      "id": "s02",
+      "kind": "sort-text",
+      "cards": [
+        "ש",
+        "מ",
+        "ל",
+        "7",
+        "⭐"
+      ],
+      "letters": [
+        "ש",
+        "מ",
+        "ל"
+      ],
+      "wrong": {
+        "7": "print_num",
+        "⭐": "print_shape"
+      }
+    },
+    {
+      "id": "t03",
+      "kind": "tap-all",
+      "frame": "heb-a-i-letters",
+      "cards": [
+        "א",
+        "2",
+        "ס",
+        "○",
+        "ל"
+      ],
+      "letters": [
+        "א",
+        "ס",
+        "ל"
+      ],
+      "wrong": {
+        "2": "print_num",
+        "○": "print_shape"
+      }
+    },
+    {
+      "id": "t04",
+      "kind": "tap-all",
+      "frame": "heb-a-i-letters",
+      "cards": [
+        "ו",
+        "1",
+        "ד",
+        "△",
+        "נ"
+      ],
+      "letters": [
+        "ו",
+        "ד",
+        "נ"
+      ],
+      "wrong": {
+        "1": "print_num",
+        "△": "print_shape"
+      }
+    },
+    {
+      "id": "t05",
+      "kind": "tap-all",
+      "frame": "heb-a-i-letters",
+      "cards": [
+        "ז",
+        "7",
+        "ס",
+        "0",
+        "♥"
+      ],
+      "letters": [
+        "ז",
+        "ס"
+      ],
+      "wrong": {
+        "7": "print_num",
+        "0": "print_num",
+        "♥": "print_shape"
+      }
+    },
+    {
+      "id": "s06",
+      "kind": "sort-text",
+      "font": "Secular One",
+      "purpose": "check",
+      "cards": [
+        "ק",
+        "פ",
+        "ה",
+        "9",
+        "✿"
+      ],
+      "letters": [
+        "ק",
+        "פ",
+        "ה"
+      ],
+      "wrong": {
+        "9": "print_num",
+        "✿": "print_shape"
+      }
+    }
+  ]
+}

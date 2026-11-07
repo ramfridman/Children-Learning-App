@@ -1,0 +1,342 @@
+{
+  "skill": {
+    "id": "HEB-A-07",
+    "strand": "pa",
+    "title": "מזהה איזו מילה מתחרזת עם מילה",
+    "prerequisites": [
+      {
+        "skill": "HEB-A-06"
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "01",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "house-roof",
+          "clip": "heb-a-w-gag"
+        },
+        {
+          "pic": "teddy",
+          "clip": "heb-a-w-dubi"
+        },
+        {
+          "pic": "sea",
+          "clip": "heb-a-w-yam"
+        }
+      ],
+      "wrong": {
+        "teddy": "allit",
+        "sea": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-dag"
+    },
+    {
+      "id": "02",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "rocket",
+          "clip": "heb-a-w-til"
+        },
+        {
+          "pic": "pizza",
+          "clip": "heb-a-w-pitsa"
+        },
+        {
+          "pic": "camel",
+          "clip": "heb-a-w-gamal"
+        }
+      ],
+      "wrong": {
+        "pizza": "allit",
+        "camel": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-pil"
+    },
+    {
+      "id": "03",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "teddy-nose",
+          "clip": "heb-a-w-af"
+        },
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "fork",
+          "clip": "heb-a-w-mazleg"
+        }
+      ],
+      "wrong": {
+        "ball": "allit",
+        "fork": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-kaf"
+    },
+    {
+      "id": "04",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "rabbit-tail",
+          "clip": "heb-a-w-zanav"
+        },
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        },
+        {
+          "pic": "moon",
+          "clip": "heb-a-w-yareach"
+        }
+      ],
+      "wrong": {
+        "cup": "allit",
+        "moon": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-kochav"
+    },
+    {
+      "id": "05",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "cupboard",
+          "clip": "heb-a-w-aron"
+        },
+        {
+          "pic": "doll",
+          "clip": "heb-a-w-buba"
+        },
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        }
+      ],
+      "wrong": {
+        "doll": "allit",
+        "ball": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-balon"
+    },
+    {
+      "id": "06",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "thread",
+          "clip": "heb-a-w-chut"
+        },
+        {
+          "pic": "rooster",
+          "clip": "heb-a-w-tarnegol"
+        },
+        {
+          "pic": "banana",
+          "clip": "heb-a-w-banana"
+        }
+      ],
+      "wrong": {
+        "rooster": "allit",
+        "banana": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-tut"
+    },
+    {
+      "id": "07",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "olive",
+          "clip": "heb-a-w-zayit"
+        },
+        {
+          "pic": "egg",
+          "clip": "heb-a-w-beitsa"
+        },
+        {
+          "pic": "tent",
+          "clip": "heb-a-w-ohel"
+        }
+      ],
+      "wrong": {
+        "egg": "allit",
+        "tent": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-bayit"
+    },
+    {
+      "id": "08",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "ball",
+          "clip": "heb-a-w-kadur"
+        },
+        {
+          "pic": "apple",
+          "clip": "heb-a-w-tapuach"
+        },
+        {
+          "pic": "cake",
+          "clip": "heb-a-w-uga"
+        }
+      ],
+      "wrong": {
+        "apple": "allit",
+        "cake": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-tanur"
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "teacher-sing",
+          "clip": "heb-a-w-mora"
+        },
+        {
+          "pic": "horse",
+          "clip": "heb-a-w-sus"
+        },
+        {
+          "pic": "ship",
+          "clip": "heb-a-w-onia"
+        }
+      ],
+      "wrong": {
+        "horse": "allit",
+        "ship": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-sira",
+      "purpose": "check",
+      "difficulty": 0.4
+    },
+    {
+      "id": "12",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "cup",
+          "clip": "heb-a-w-kos"
+        },
+        {
+          "pic": "fork",
+          "clip": "heb-a-w-mazleg"
+        },
+        {
+          "pic": "rocket",
+          "clip": "heb-a-w-til"
+        }
+      ],
+      "wrong": {
+        "fork": "allit",
+        "rocket": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-matos",
+      "purpose": "check",
+      "difficulty": 0.4
+    },
+    {
+      "id": "p1",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "elephant",
+          "clip": "heb-a-w-pil"
+        },
+        {
+          "pic": "ring",
+          "clip": "heb-a-w-tabaat"
+        },
+        {
+          "pic": "moon",
+          "clip": "heb-a-w-yareach"
+        }
+      ],
+      "wrong": {
+        "ring": "allit",
+        "moon": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-til",
+      "purpose": "probe"
+    },
+    {
+      "id": "p2",
+      "kind": "tap",
+      "options": [
+        {
+          "pic": "balloon",
+          "clip": "heb-a-w-balon"
+        },
+        {
+          "pic": "milk",
+          "clip": "heb-a-w-chalav"
+        },
+        {
+          "pic": "house",
+          "clip": "heb-a-w-bayit"
+        }
+      ],
+      "wrong": {
+        "milk": "allit",
+        "house": "sem"
+      },
+      "ladder": "HL-RHYME",
+      "rep": "pictorial",
+      "frame": "r-chalon",
+      "purpose": "probe"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "rhymes-1",
+      "title": "מִלִּים מִתְחָרְזוֹת",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "id": "rhymes-2",
+      "title": "עוֹד מִלִּים מִתְחָרְזוֹת",
+      "items": [
+        "05",
+        "06",
+        "07",
+        "08"
+      ]
+    }
+  ]
+}

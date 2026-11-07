@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.rhyme-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "חֲרוּזִים"
+    }
+  ],
+  "skills": [
+    "RUS-A-17"
+  ],
+  "items": [
+    "rus.a17.01",
+    "rus.a17.02",
+    "rus.a17.03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 33
+}

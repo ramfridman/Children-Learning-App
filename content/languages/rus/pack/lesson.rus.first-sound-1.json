@@ -1,0 +1,34 @@
+{
+  "schema": "lesson/v1",
+  "id": "rus.first-sound-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "rus",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַצְּלִיל הָרִאשׁוֹן"
+    }
+  ],
+  "skills": [
+    "RUS-A-19"
+  ],
+  "items": [
+    "rus.a19.01",
+    "rus.a19.02",
+    "rus.a19.03",
+    "rus.a19.04"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:rus.he_fb_right_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 35
+}

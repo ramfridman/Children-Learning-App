@@ -1,0 +1,517 @@
+{
+ "skill": {
+  "id": "RUS-A-20",
+  "strand": "pho",
+  "title": "צְלִילִים דּוֹמִים",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-19"
+   }
+  ],
+  "core": true
+ },
+ "items": [
+  {
+   "id": "01",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "mp-luk",
+   "options": [
+    {
+     "pic": "onion",
+     "clip": "mp-luk"
+    },
+    {
+     "pic": "manhole",
+     "clip": "mp-ljuk"
+    },
+    {
+     "pic": "beetle",
+     "clip": "w-zhuk"
+    }
+   ],
+   "wrong": {
+    "manhole": "hardsoft",
+    "beetle": "sound"
+   },
+   "ladder": "HL-MOUTH"
+  },
+  {
+   "id": "02",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "mp-ljuk",
+   "options": [
+    {
+     "pic": "manhole",
+     "clip": "mp-ljuk"
+    },
+    {
+     "pic": "onion",
+     "clip": "mp-luk"
+    },
+    {
+     "pic": "beetle",
+     "clip": "w-zhuk"
+    }
+   ],
+   "wrong": {
+    "onion": "hardsoft",
+    "beetle": "sound"
+   },
+   "ladder": "HL-MOUTH"
+  },
+  {
+   "id": "03",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-myshka",
+   "options": [
+    {
+     "pic": "mouse",
+     "clip": "w-myshka"
+    },
+    {
+     "pic": "teddy",
+     "clip": "w-mishka"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    }
+   ],
+   "wrong": {
+    "teddy": "yi",
+    "cat": "sound"
+   },
+   "ladder": "HL-MOUTH"
+  },
+  {
+   "id": "04",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-mishka",
+   "options": [
+    {
+     "pic": "teddy",
+     "clip": "w-mishka"
+    },
+    {
+     "pic": "mouse",
+     "clip": "w-myshka"
+    },
+    {
+     "pic": "book",
+     "clip": "w-knizhka"
+    }
+   ],
+   "wrong": {
+    "mouse": "yi",
+    "book": "sound"
+   },
+   "ladder": "HL-MOUTH"
+  },
+  {
+   "id": "05",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-rys",
+   "options": [
+    {
+     "pic": "lynx",
+     "clip": "w-rys"
+    },
+    {
+     "pic": "rice",
+     "clip": "w-ris"
+    },
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    }
+   ],
+   "wrong": {
+    "rice": "yi",
+    "fish": "sound"
+   },
+   "ladder": "HL-MOUTH"
+  },
+  {
+   "id": "06",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-ris",
+   "options": [
+    {
+     "pic": "rice",
+     "clip": "w-ris"
+    },
+    {
+     "pic": "lynx",
+     "clip": "w-rys"
+    },
+    {
+     "pic": "whale",
+     "clip": "w-kit"
+    }
+   ],
+   "wrong": {
+    "lynx": "yi",
+    "whale": "sound"
+   },
+   "ladder": "HL-MOUTH"
+  },
+  {
+   "id": "17",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-myshka",
+   "options": [
+    {
+     "pic": "mouse",
+     "clip": "w-myshka"
+    },
+    {
+     "pic": "teddy",
+     "clip": "w-mishka"
+    },
+    {
+     "pic": "book",
+     "clip": "w-knizhka"
+    }
+   ],
+   "wrong": {
+    "teddy": "yi",
+    "book": "sound"
+   },
+   "ladder": "HL-MOUTH",
+   "variant": "w-myshka-2"
+  },
+  {
+   "id": "18",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-mishka",
+   "options": [
+    {
+     "pic": "teddy",
+     "clip": "w-mishka"
+    },
+    {
+     "pic": "mouse",
+     "clip": "w-myshka"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    }
+   ],
+   "wrong": {
+    "mouse": "yi",
+    "cat": "sound"
+   },
+   "purpose": "check",
+   "ladder": "HL-MOUTH",
+   "variant": "w-mishka-2"
+  },
+  {
+   "id": "19",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-rys",
+   "options": [
+    {
+     "pic": "lynx",
+     "clip": "w-rys"
+    },
+    {
+     "pic": "rice",
+     "clip": "w-ris"
+    },
+    {
+     "pic": "mouse",
+     "clip": "w-mysh"
+    }
+   ],
+   "wrong": {
+    "rice": "yi",
+    "mouse": "sound"
+   },
+   "purpose": "check",
+   "ladder": "HL-MOUTH",
+   "variant": "w-rys-2"
+  },
+  {
+   "id": "20",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-ris",
+   "options": [
+    {
+     "pic": "rice",
+     "clip": "w-ris"
+    },
+    {
+     "pic": "lynx",
+     "clip": "w-rys"
+    },
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    }
+   ],
+   "wrong": {
+    "lynx": "yi",
+    "fish": "sound"
+   },
+   "purpose": "check",
+   "ladder": "HL-MOUTH",
+   "variant": "w-ris-2"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "mp-ljuk",
+   "options": [
+    {
+     "pic": "manhole",
+     "clip": "mp-ljuk"
+    },
+    {
+     "pic": "onion",
+     "clip": "mp-luk"
+    },
+    {
+     "pic": "beetle",
+     "clip": "w-zhuk"
+    }
+   ],
+   "wrong": {
+    "onion": "hardsoft",
+    "beetle": "sound"
+   },
+   "purpose": "probe",
+   "ladder": "HL-MOUTH",
+   "variant": "mp-ljuk-p"
+  },
+  {
+   "id": "p02",
+   "kind": "tap",
+   "frame": "f35",
+   "target": "w-myshka",
+   "options": [
+    {
+     "pic": "mouse",
+     "clip": "w-myshka"
+    },
+    {
+     "pic": "teddy",
+     "clip": "w-mishka"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    }
+   ],
+   "wrong": {
+    "teddy": "yi",
+    "cat": "sound"
+   },
+   "purpose": "probe",
+   "ladder": "HL-MOUTH",
+   "variant": "w-myshka-p"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "pairs-1",
+   "title": "צְלִילִים דּוֹמִים",
+   "items": [
+    "01",
+    "02",
+    "03",
+    "04"
+   ]
+  },
+  {
+   "id": "pairs-2",
+   "title": "צְלִילִים דּוֹמִים",
+   "items": [
+    "05",
+    "06",
+    "17"
+   ]
+  }
+ ],
+ "teach": [
+  [
+   "mp-luk",
+   "mp-ljuk",
+   "w-myshka",
+   "w-mishka",
+   "w-rys",
+   "w-ris"
+  ]
+ ],
+ "routes": {
+  "new": "teach all six words; items 01 to 06 and 17 to 20, then 07 to 16 on later visits",
+  "heritage": {
+   "teach": "one hearing",
+   "order": "mixed"
+  },
+  "reader": "as heritage"
+ },
+ "waiting": [
+  {
+   "id": "07",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "syl-my",
+    "syl-mi"
+   ],
+   "right": "different",
+   "wrong": {
+    "same": "yi"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "08",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "mp-luk",
+    "mp-ljuk"
+   ],
+   "right": "different",
+   "wrong": {
+    "same": "hardsoft"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "09",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "syl-ly",
+    "syl-li"
+   ],
+   "right": "different",
+   "wrong": {
+    "same": "yi"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "10",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "syl-la",
+    "syl-lja"
+   ],
+   "right": "different",
+   "wrong": {
+    "same": "hardsoft"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "11",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "syl-my",
+    "syl-my"
+   ],
+   "right": "same",
+   "wrong": {
+    "different": "yesno"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "12",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "syl-sy",
+    "syl-sy"
+   ],
+   "right": "same",
+   "wrong": {
+    "different": "yesno"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "13",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "syl-no",
+    "syl-njo"
+   ],
+   "right": "different",
+   "wrong": {
+    "same": "hardsoft"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "14",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "mp-luk",
+    "mp-luk"
+   ],
+   "right": "same",
+   "wrong": {
+    "different": "yesno"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "15",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "w-rys",
+    "w-rys"
+   ],
+   "right": "same",
+   "wrong": {
+    "different": "yesno"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  },
+  {
+   "id": "16",
+   "template": "tap_answer",
+   "mode": "same-different",
+   "frame": "f34",
+   "clips": [
+    "syl-mi",
+    "syl-mi"
+   ],
+   "right": "same",
+   "wrong": {
+    "different": "yesno"
+   },
+   "why": "the prompt plays two Russian clips in a row (one Hebrew clip, then two target clips), and the buttons are \"same\" / \"different\" (audio only)"
+  }
+ ]
+}

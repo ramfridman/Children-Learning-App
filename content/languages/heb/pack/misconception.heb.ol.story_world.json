@@ -1,0 +1,17 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.ol.story_world",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "MEANING",
+  "skills": [
+    "HEB-A-01"
+  ],
+  "parentText": "הילד עונה לפעמים ממה שקורה בדרך כלל, ולא ממה שקרה בסיפור. כדאי לחזור לעמוד ולבדוק יחד מה קרה בו.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "story",
+    "pictorial"
+  ]
+}

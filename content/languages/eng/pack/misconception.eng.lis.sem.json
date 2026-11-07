@@ -6,11 +6,29 @@
   "kind": "diagnostic",
   "family": "MEANING",
   "skills": [
-    "ENG-A-01"
+    "ENG-A-01",
+    "ENG-A-02",
+    "ENG-A-03",
+    "ENG-A-04",
+    "ENG-A-05",
+    "ENG-A-06",
+    "ENG-A-07",
+    "ENG-A-08",
+    "ENG-A-09",
+    "ENG-A-10",
+    "ENG-A-11",
+    "ENG-A-17"
   ],
   "parentText": "הילד כבר מכיר את הנושא, ומילים קרובות באנגלית (כמו hello ו־goodbye) עדיין מתחלפות לפעמים. זה רגיל בלמידת מילים חדשות.",
+  "homeActivity": [
+    {
+      "t": "he",
+      "v": "שחקו \"מה אני עושה?\": אחד אומר מילה באנגלית (cat, dog), השני מראה את התמונה או התנועה. כדאי לשים שתי מילים קרובות זו ליד זו."
+    }
+  ],
   "repairActivities": [],
   "preferredRepresentations": [
-    "pictorial"
+    "pictorial",
+    "embodied"
   ]
 }

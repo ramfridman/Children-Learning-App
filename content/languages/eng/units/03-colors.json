@@ -1,0 +1,19 @@
+{
+  "skill": {"id": "ENG-A-03", "strand": "lis", "title": "צְבָעִים", "prerequisites": [{"skill": "ENG-A-01"}], "setCoverage": true},
+  "items": [
+    {"id": "i01", "kind": "tap", "target": "en-red", "options": ["balloon-red", "balloon-blue", "balloon-yellow"], "wrong": {"balloon-blue": "sem", "balloon-yellow": "l1_guess"}},
+    {"id": "i02", "kind": "tap", "target": "en-blue", "options": ["balloon-blue", "balloon-green", "balloon-red"], "wrong": {"balloon-green": "sem", "balloon-red": "l1_guess"}},
+    {"id": "i03", "kind": "tap", "target": "en-yellow", "options": ["balloon-yellow", "balloon-red", "balloon-blue"], "wrong": {"balloon-red": "sem", "balloon-blue": "l1_guess"}},
+    {"id": "i04", "kind": "tap", "target": "en-green", "options": ["balloon-green", "balloon-yellow", "balloon-blue"], "wrong": {"balloon-yellow": "sem", "balloon-blue": "l1_guess"}},
+    {"id": "i05", "kind": "tap", "target": "en-red", "options": ["boat-red", "boat-yellow", "boat-blue"], "wrong": {"boat-yellow": "sem", "boat-blue": "l1_guess"}},
+    {"id": "i06", "kind": "tap", "target": "en-blue", "options": ["boat-blue", "boat-red", "boat-green"], "wrong": {"boat-red": "sem", "boat-green": "l1_guess"}},
+    {"id": "i07", "kind": "tap", "purpose": "check", "target": "en-yellow", "options": ["boat-yellow", "boat-blue", "boat-red"], "wrong": {"boat-blue": "sem", "boat-red": "l1_guess"}},
+    {"id": "i08", "kind": "tap", "purpose": "check", "target": "en-green", "options": ["boat-green", "boat-blue", "boat-yellow"], "wrong": {"boat-blue": "sem", "boat-yellow": "l1_guess"}},
+    {"id": "pr1", "kind": "tap", "purpose": "probe", "target": "en-red", "options": ["balloon-red", "balloon-blue", "balloon-yellow"], "wrong": {"balloon-blue": "sem", "balloon-yellow": "l1_guess"}}
+  ],
+  "lessons": [
+    {"id": "col-1", "title": "צִבְעֵי הַבָּלוֹנִים", "items": ["i01", "i02", "i03", "i04"]},
+    {"id": "col-2", "title": "צִבְעֵי הַסִּירוֹת", "items": ["i05", "i06"]}
+  ],
+  "waiting": []
+}

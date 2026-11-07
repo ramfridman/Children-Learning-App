@@ -1,0 +1,104 @@
+{
+  "recipe": "listen_do place mode: the sentence is heard, the child drags the thing to one of three drop zones (the place words), each wrong zone tagged prep; the thing never changes. Hint 2: the companion acts the place word out with a box.",
+  "source": "docs/languages/hebrew/band-a-content.md A-04",
+  "skill": "HEB-A-04",
+  "items": [
+    {
+      "id": "01",
+      "kind": "listen_do",
+      "mode": "place",
+      "frame": "heb-a-pl-1",
+      "thing": "ball",
+      "place": "chair",
+      "zones": [
+        "on",
+        "under",
+        "by"
+      ],
+      "right": "on",
+      "wrong": "prep",
+      "rep": "embodied",
+      "purpose": "learn"
+    },
+    {
+      "id": "02",
+      "kind": "listen_do",
+      "mode": "place",
+      "frame": "heb-a-pl-2",
+      "thing": "teddy",
+      "place": "box",
+      "zones": [
+        "in",
+        "on",
+        "under"
+      ],
+      "right": "in",
+      "wrong": "prep",
+      "rep": "embodied",
+      "purpose": "learn"
+    },
+    {
+      "id": "03",
+      "kind": "listen_do",
+      "mode": "place",
+      "frame": "heb-a-pl-3",
+      "thing": "cat",
+      "place": "table",
+      "zones": [
+        "under",
+        "on",
+        "by"
+      ],
+      "right": "under",
+      "wrong": "prep",
+      "rep": "embodied",
+      "purpose": "learn"
+    },
+    {
+      "id": "04",
+      "kind": "listen_do",
+      "mode": "place",
+      "frame": "heb-a-pl-4",
+      "thing": "doll",
+      "place": "bed",
+      "zones": [
+        "by",
+        "on",
+        "under"
+      ],
+      "right": "by",
+      "wrong": "prep",
+      "rep": "embodied",
+      "purpose": "learn"
+    },
+    {
+      "id": "09",
+      "kind": "listen_do",
+      "mode": "place",
+      "frame": "heb-a-pl-9",
+      "thing": "hat",
+      "place": "table",
+      "zones": [
+        "on",
+        "under",
+        "by"
+      ],
+      "right": "on",
+      "wrong": "prep",
+      "rep": "embodied",
+      "purpose": "check"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "places-2",
+      "title": "שִׂימוּ בַּמָּקוֹם",
+      "items": [
+        "01",
+        "02",
+        "03",
+        "04"
+      ]
+    }
+  ]
+}

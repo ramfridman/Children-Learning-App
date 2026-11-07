@@ -1,0 +1,165 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a10.p4",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "tap_answer",
+  "templateVersion": "1.3",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-10",
+      "weight": 1
+    }
+  ],
+  "purpose": "probe",
+  "checkType": "practice",
+  "representation": "symbolic",
+  "variantGroup": "a10-p4",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "listen and choose",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "שָׁלוֹשׁ אֶפְשָׁרֻיּוֹת"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_letter",
+    "caption": [
+      {
+        "t": "he",
+        "v": "אֵיפֹה הָאוֹת?"
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_3",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שְׁמַעְתֶּם טוֹב!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.pk.print_num",
+        "vo": "vo:heb.fb_print_num",
+        "caption": [
+          {
+            "t": "he",
+            "v": "בָּזֶה סוֹפְרִים."
+          }
+        ]
+      },
+      {
+        "when": "misconception:heb.pk.print_shape",
+        "vo": "vo:heb.fb_print_shape",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זֶה צִיּוּר."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.d_letters",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בָּאוֹתִיּוֹת קוֹרְאִים וְכוֹתְבִים."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.h_look",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.show",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נַעֲשֶׂה אֶת זֶה יַחַד."
+        }
+      ]
+    }
+  ],
+  "scene": {},
+  "answer": {
+    "type": "choice",
+    "options": [
+      {
+        "id": "o1",
+        "text": "ס",
+        "label": "ס"
+      },
+      {
+        "id": "o2",
+        "text": "0",
+        "label": "0",
+        "misconception": "heb.pk.print_num"
+      },
+      {
+        "id": "o3",
+        "text": "○",
+        "label": "○",
+        "misconception": "heb.pk.print_shape"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": true,
+    "unsureAllowed": true,
+    "face": "letter"
+  }
+}

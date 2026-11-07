@@ -1,0 +1,416 @@
+{
+ "skill": {
+  "id": "RUS-A-18",
+  "strand": "pho",
+  "title": "הֲבָרוֹת",
+  "prerequisites": [
+   {
+    "skill": "RUS-A-17"
+   }
+  ]
+ },
+ "items": [
+  {
+   "id": "14",
+   "kind": "tap",
+   "frame": "f29",
+   "options": [
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    },
+    {
+     "pic": "cat",
+     "clip": "w-koshka"
+    },
+    {
+     "pic": "cheese",
+     "clip": "w-syr"
+    }
+   ],
+   "wrong": {
+    "cat": "syll",
+    "cheese": "syll"
+   }
+  },
+  {
+   "id": "15",
+   "kind": "tap",
+   "frame": "f29",
+   "options": [
+    {
+     "pic": "car",
+     "clip": "w-mashina"
+    },
+    {
+     "pic": "doll",
+     "clip": "w-kukla"
+    },
+    {
+     "pic": "ball",
+     "clip": "w-mjach"
+    }
+   ],
+   "wrong": {
+    "doll": "syll",
+    "ball": "syll"
+   }
+  },
+  {
+   "id": "16",
+   "kind": "tap",
+   "frame": "f29",
+   "options": [
+    {
+     "pic": "milk",
+     "clip": "w-moloko"
+    },
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    },
+    {
+     "pic": "cheese",
+     "clip": "w-syr"
+    }
+   ],
+   "wrong": {
+    "fish": "syll",
+    "cheese": "syll"
+   }
+  },
+  {
+   "id": "17",
+   "kind": "tap",
+   "frame": "f30",
+   "options": [
+    {
+     "pic": "fam-mother",
+     "clip": "w-mama"
+    },
+    {
+     "pic": "cat-tomcat",
+     "clip": "w-kot"
+    },
+    {
+     "pic": "fam-grandmother",
+     "clip": "w-babushka"
+    }
+   ],
+   "wrong": {
+    "cat-tomcat": "syll",
+    "fam-grandmother": "syll"
+   }
+  },
+  {
+   "id": "18",
+   "kind": "tap",
+   "frame": "f30",
+   "options": [
+    {
+     "pic": "fish",
+     "clip": "w-ryba"
+    },
+    {
+     "pic": "body-nose",
+     "clip": "w-nos"
+    },
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    }
+   ],
+   "wrong": {
+    "body-nose": "syll",
+    "dog": "syll"
+   },
+   "purpose": "check"
+  },
+  {
+   "id": "19",
+   "kind": "tap",
+   "frame": "f31",
+   "options": [
+    {
+     "pic": "body-nose",
+     "clip": "w-nos"
+    },
+    {
+     "pic": "body-arms",
+     "clip": "w-ruki"
+    },
+    {
+     "pic": "body-head",
+     "clip": "w-golova"
+    }
+   ],
+   "wrong": {
+    "body-arms": "syll",
+    "body-head": "syll"
+   },
+   "purpose": "check"
+  },
+  {
+   "id": "p01",
+   "kind": "tap",
+   "frame": "f29",
+   "options": [
+    {
+     "pic": "fam-grandmother",
+     "clip": "w-babushka"
+    },
+    {
+     "pic": "cat-tomcat",
+     "clip": "w-kot"
+    },
+    {
+     "pic": "doll",
+     "clip": "w-kukla"
+    }
+   ],
+   "wrong": {
+    "cat-tomcat": "syll",
+    "doll": "syll"
+   },
+   "purpose": "probe"
+  },
+  {
+   "id": "p02",
+   "kind": "tap",
+   "frame": "f30",
+   "options": [
+    {
+     "pic": "duck",
+     "clip": "w-utka"
+    },
+    {
+     "pic": "mouse",
+     "clip": "w-mysh"
+    },
+    {
+     "pic": "dog",
+     "clip": "w-sobaka"
+    }
+   ],
+   "wrong": {
+    "mouse": "syll",
+    "dog": "syll"
+   },
+   "purpose": "probe"
+  }
+ ],
+ "lessons": [
+  {
+   "id": "claps-1",
+   "title": "הֲבָרוֹת",
+   "items": [
+    "14",
+    "15",
+    "16",
+    "17"
+   ]
+  }
+ ],
+ "routes": {
+  "new": "drum items 01 to 13 first, the claps items 14 to 19 on a later visit",
+  "heritage": "all items mixed",
+  "reader": "as heritage"
+ },
+ "waiting": [
+  {
+   "id": "01",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "tomcat",
+   "word": "w-kot",
+   "slow": null,
+   "beats": 1,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "02",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "ball",
+   "word": "w-mjach",
+   "slow": null,
+   "beats": 1,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "03",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "cheese",
+   "word": "w-syr",
+   "slow": null,
+   "beats": 1,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "04",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "fam.mother",
+   "word": "w-mama",
+   "slow": "sy-mama",
+   "beats": 2,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "05",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "fish",
+   "word": "w-ryba",
+   "slow": "sy-ryba",
+   "beats": 2,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "06",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "doll",
+   "word": "w-kukla",
+   "slow": "sy-kukla",
+   "beats": 2,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "07",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "duck",
+   "word": "w-utka",
+   "slow": "sy-utka",
+   "beats": 2,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "08",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "cat",
+   "word": "w-koshka",
+   "slow": "sy-koshka",
+   "beats": 2,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "09",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "dog",
+   "word": "w-sobaka",
+   "slow": "sy-sobaka",
+   "beats": 3,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "10",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "car",
+   "word": "w-mashina",
+   "slow": "sy-mashina",
+   "beats": 3,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "11",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "milk",
+   "word": "w-moloko",
+   "slow": "sy-moloko",
+   "beats": 3,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "12",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "fam.grandmother",
+   "word": "w-babushka",
+   "slow": "sy-babushka",
+   "beats": 3,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  },
+  {
+   "id": "13",
+   "template": "sound_boxes",
+   "mode": "drum",
+   "frame": "f28",
+   "picture": "pencil",
+   "word": "w-karandash",
+   "slow": "sy-karandash",
+   "beats": 3,
+   "classifiers": {
+    "one_more": "syll",
+    "one_fewer": "syll"
+   },
+   "why": "LS03 drum recipe (and the build test reads answer.correct of every activity)"
+  }
+ ]
+}

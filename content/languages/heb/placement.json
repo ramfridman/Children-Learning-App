@@ -1,0 +1,57 @@
+{
+  "note": "Band A floor of the staircase (syllabus 9: P0 -> P1). L: rhyme and syllables, then rhyme pick and blending. C: a letter among a numeral and a shape, then among look-alikes. Oral-language skills (A-01, A-02, A-04, A-13) are never placed.",
+  "perVisit": 8,
+  "thanks": "plc-thanks",
+  "celebration": "plc-bye",
+  "strands": [
+    {
+      "id": "l",
+      "levels": [
+        {
+          "items": [
+            "a06.p1",
+            "a08.p1",
+            "a08.p2"
+          ],
+          "assumes": [
+            "HEB-A-06",
+            "HEB-A-08"
+          ]
+        },
+        {
+          "items": [
+            "a06.p2",
+            "a07.p1",
+            "a07.p2",
+            "a09.p1"
+          ],
+          "assumes": [
+            "HEB-A-07",
+            "HEB-A-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "levels": [
+        {
+          "items": [
+            "a10.p1",
+            "a10.p2"
+          ]
+        },
+        {
+          "items": [
+            "a10.p3",
+            "a10.p4",
+            "a10.p5"
+          ],
+          "assumes": [
+            "HEB-A-10"
+          ]
+        }
+      ]
+    }
+  ]
+}

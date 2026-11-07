@@ -1,0 +1,33 @@
+{
+  "schema": "skill/v1",
+  "id": "HEB-A-09",
+  "review": "needs-editor",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מחבר הברות ששומעים למילה"
+    }
+  ],
+  "strand": "pa",
+  "prerequisites": [
+    {
+      "skill": "HEB-A-08",
+      "weight": 0.8
+    }
+  ],
+  "representations": [
+    "pictorial"
+  ],
+  "misconceptions": [
+    "heb.pa.blend_first",
+    "heb.pa.blend_last",
+    "heb.ol.sem"
+  ],
+  "retention": {
+    "targetRetention": 0.9,
+    "initialStabilityDays": 1
+  }
+}
