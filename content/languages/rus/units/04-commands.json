@@ -179,7 +179,7 @@
         "act-sit": "sem",
         "act-clap": "sem"
       },
-      "purpose": "check"
+      "variant": "vozmi-mjach"
     },
     {
       "id": "p01",
@@ -323,6 +323,73 @@
       "rep": "embodied"
     },
     {
+      "id": "14",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "act-jump",
+      "options": [
+        {
+          "clip": "w-prygaj"
+        },
+        {
+          "clip": "w-hlopaj"
+        },
+        {
+          "clip": "w-begi"
+        }
+      ],
+      "wrong": {
+        "w-hlopaj": "sound",
+        "w-begi": "sem"
+      },
+      "hintWord": "w-prygaj",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "15",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "act-sit",
+      "options": [
+        {
+          "clip": "w-sjad"
+        },
+        {
+          "clip": "w-vstan"
+        },
+        {
+          "clip": "w-idi"
+        }
+      ],
+      "wrong": {
+        "w-vstan": "sem",
+        "w-idi": "sem"
+      },
+      "hintWord": "w-sjad",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
       "id": "e01",
       "kind": "listen_do",
       "frame": "f10",
@@ -347,7 +414,8 @@
       "items": [
         "04",
         "05",
-        "06"
+        "06",
+        "07"
       ]
     },
     {

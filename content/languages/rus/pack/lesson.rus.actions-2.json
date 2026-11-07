@@ -17,7 +17,8 @@
   "items": [
     "rus.a04.04",
     "rus.a04.05",
-    "rus.a04.06"
+    "rus.a04.06",
+    "rus.a04.07"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -29,7 +30,7 @@
       }
     ]
   },
-  "sequence": 11,
+  "sequence": 12,
   "teach": [
     {
       "items": [

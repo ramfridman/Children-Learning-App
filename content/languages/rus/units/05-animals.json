@@ -537,6 +537,76 @@
       "purpose": "check"
     },
     {
+      "id": "23",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-zhiraf",
+      "options": [
+        {
+          "pic": "giraffe",
+          "clip": "w-zhiraf"
+        },
+        {
+          "pic": "horse",
+          "clip": "w-loshad"
+        },
+        {
+          "pic": "bear",
+          "clip": "w-medved"
+        }
+      ],
+      "wrong": {
+        "horse": "sem",
+        "bear": "sem"
+      },
+      "variant": "zhiraf-learn"
+    },
+    {
+      "id": "24",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-kit",
+      "options": [
+        {
+          "pic": "whale",
+          "clip": "w-kit"
+        },
+        {
+          "pic": "cat-tomcat",
+          "clip": "w-kot"
+        },
+        {
+          "pic": "bird",
+          "clip": "w-ptitsa"
+        }
+      ],
+      "wrong": {
+        "cat-tomcat": "sound",
+        "bird": "sem"
+      },
+      "variant": "kit-learn"
+    },
+    {
+      "id": "25",
+      "kind": "tap",
+      "frame": "f38",
+      "options": [
+        {
+          "clip": "w-kit"
+        },
+        {
+          "clip": "w-kot"
+        }
+      ],
+      "wrong": {
+        "w-kot": "sound"
+      },
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "stage": "whale",
+      "hintWord": "w-kit"
+    },
+    {
       "id": "p01",
       "kind": "tap",
       "frame": "f01",
@@ -610,7 +680,16 @@
         "18",
         "19",
         "20",
-        "02"
+        "23"
+      ]
+    },
+    {
+      "id": "animals-6",
+      "title": "חַיּוֹת",
+      "items": [
+        "02",
+        "24",
+        "25"
       ]
     }
   ],

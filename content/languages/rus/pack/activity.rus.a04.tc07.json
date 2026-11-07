@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_4",
+      "vo": "vo:rus.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "מְצָאתֶם!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
       "target": "vo:rus.ch_vozmi_mjach"

@@ -18,7 +18,7 @@
     "rus.a02.05",
     "rus.a02.06",
     "rus.a02.07",
-    "rus.a02.08"
+    "rus.a02.17"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -38,16 +38,6 @@
         "rus.a02.tc06",
         "rus.a02.tc07",
         "rus.a02.tc08"
-      ],
-      "routes": [
-        "new"
-      ],
-      "mode": "teach"
-    },
-    {
-      "items": [
-        "rus.a02.tc09",
-        "rus.a02.tc10"
       ],
       "routes": [
         "new"

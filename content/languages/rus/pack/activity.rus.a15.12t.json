@@ -14,8 +14,8 @@
       "weight": 1
     }
   ],
-  "purpose": "check",
-  "checkType": "transfer",
+  "purpose": "learn",
+  "checkType": "practice",
   "representation": "pictorial",
   "variantGroup": "w-mishka",
   "difficulty": {
@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_6",
+      "vo": "vo:rus.he_fb_right_3",
       "caption": [
         {
           "t": "he",
-          "v": "שְׁמַעְתֶּם טוֹב!"
+          "v": "יָפֶה מְאֹד!"
         }
       ],
       "target": "vo:rus.w_mishka"

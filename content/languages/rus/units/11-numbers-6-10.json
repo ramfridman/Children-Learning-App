@@ -292,6 +292,24 @@
       },
       "ladder": "HL-NUM",
       "rep": "pictorial"
+    },
+    {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f16",
+      "target": "n-10",
+      "options": [
+        "set-tenframe-10",
+        "set-tenframe-9",
+        "set-tenframe-6"
+      ],
+      "wrong": {
+        "set-tenframe-9": "sound",
+        "set-tenframe-6": "numword"
+      },
+      "ladder": "HL-NUM",
+      "rep": "pictorial",
+      "variant": "n-10-learn"
     }
   ],
   "lessons": [
@@ -302,7 +320,8 @@
         "06",
         "07",
         "08",
-        "09"
+        "09",
+        "11"
       ]
     },
     {

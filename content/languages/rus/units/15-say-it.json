@@ -300,7 +300,7 @@
       "rep": "embodied",
       "then": {
         "kind": "tap",
-        "purpose": "check",
+        "purpose": "learn",
         "frame": "f01",
         "options": [
           {
@@ -523,7 +523,7 @@
       "rep": "embodied",
       "then": {
         "kind": "tap",
-        "purpose": "check",
+        "purpose": "learn",
         "frame": "f01",
         "options": [
           {
@@ -922,7 +922,7 @@
       "rep": "embodied",
       "then": {
         "kind": "tap",
-        "purpose": "check",
+        "purpose": "learn",
         "frame": "f01",
         "options": [
           {
@@ -1074,6 +1074,116 @@
         "ladder": "HL-1",
         "rep": "pictorial",
         "target": "n-5"
+      }
+    },
+    {
+      "id": "25",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "purpose": "check",
+      "picture": "scene-room-ball",
+      "target": "w-mjach",
+      "options": [
+        "ball",
+        "balloon",
+        "doll"
+      ],
+      "right": "ball",
+      "wrong": {
+        "balloon": "sem",
+        "doll": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "26",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "purpose": "check",
+      "picture": "scene-room-cat",
+      "target": "w-koshka",
+      "options": [
+        "cat",
+        "dog",
+        "porridge"
+      ],
+      "right": "cat",
+      "wrong": {
+        "dog": "sem",
+        "porridge": "sem"
+      },
+      "ladder": "HL-1",
+      "rep": "embodied"
+    },
+    {
+      "id": "27",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "teddy",
+      "options": [
+        {
+          "clip": "w-mishka"
+        },
+        {
+          "clip": "w-mysh"
+        },
+        {
+          "clip": "w-kukla"
+        }
+      ],
+      "wrong": {
+        "w-mysh": "sound",
+        "w-kukla": "sem"
+      },
+      "hintWord": "w-mishka",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "28",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "hat-warm",
+      "options": [
+        {
+          "clip": "w-shapka"
+        },
+        {
+          "clip": "w-sharf"
+        },
+        {
+          "clip": "w-kurtka"
+        }
+      ],
+      "wrong": {
+        "w-sharf": "sound",
+        "w-kurtka": "sem"
+      },
+      "hintWord": "w-shapka",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
       }
     }
   ],

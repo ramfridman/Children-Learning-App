@@ -308,6 +308,56 @@
       "variant": "chornyj-ball"
     },
     {
+      "id": "13",
+      "kind": "tap",
+      "frame": "f14",
+      "target": "w-belyj",
+      "options": [
+        {
+          "pic": "ball-white",
+          "clip": "w-belyj"
+        },
+        {
+          "pic": "ball-red",
+          "clip": "w-krasnyj"
+        },
+        {
+          "pic": "ball-blue",
+          "clip": "w-sinij"
+        }
+      ],
+      "wrong": {
+        "ball-red": "sem",
+        "ball-blue": "sem"
+      },
+      "variant": "belyj-ball"
+    },
+    {
+      "id": "14",
+      "kind": "tap",
+      "frame": "f14",
+      "target": "w-chornyj",
+      "options": [
+        {
+          "pic": "ball-black",
+          "clip": "w-chornyj"
+        },
+        {
+          "pic": "ball-yellow",
+          "clip": "w-zholtyj"
+        },
+        {
+          "pic": "ball-blue",
+          "clip": "w-sinij"
+        }
+      ],
+      "wrong": {
+        "ball-yellow": "sem",
+        "ball-blue": "sem"
+      },
+      "variant": "chornyj-ball"
+    },
+    {
       "id": "p01",
       "kind": "tap",
       "frame": "f14",
@@ -358,8 +408,16 @@
       "items": [
         "07",
         "08",
-        "09",
-        "10"
+        "09"
+      ]
+    },
+    {
+      "id": "colours-4",
+      "title": "צְבָעִים",
+      "items": [
+        "10",
+        "13",
+        "14"
       ]
     }
   ],

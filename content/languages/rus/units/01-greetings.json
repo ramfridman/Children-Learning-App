@@ -53,6 +53,21 @@
       "purpose": "check"
     },
     {
+      "id": "11",
+      "kind": "tap",
+      "frame": "f39",
+      "target": "w-do-svidanija",
+      "options": [
+        "neighbour-leave",
+        "neighbour-arrive",
+        "mika-gift"
+      ],
+      "wrong": {
+        "neighbour-arrive": "sem",
+        "mika-gift": "sem"
+      }
+    },
+    {
       "id": "p01",
       "kind": "tap",
       "frame": "f39",
@@ -161,7 +176,6 @@
       "id": "07",
       "kind": "puppet",
       "frame": "f07",
-      "purpose": "check",
       "mode": "bubble",
       "picture": "neighbour-leave",
       "prompt": [
@@ -196,6 +210,73 @@
       "frame": "personal",
       "pass": "ch-horosho",
       "purpose": "practice"
+    },
+    {
+      "id": "09",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "neighbour-leave",
+      "options": [
+        {
+          "clip": "w-do-svidanija"
+        },
+        {
+          "clip": "w-privet"
+        },
+        {
+          "clip": "w-poka"
+        }
+      ],
+      "wrong": {
+        "w-privet": "sem",
+        "w-poka": "tyvy"
+      },
+      "hintWord": "w-do-svidanija",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check",
+          "tyvy": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "10",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "mika-arrive",
+      "options": [
+        {
+          "clip": "w-privet"
+        },
+        {
+          "clip": "w-poka"
+        },
+        {
+          "clip": "w-do-svidanija"
+        }
+      ],
+      "wrong": {
+        "w-poka": "sem",
+        "w-do-svidanija": "sem"
+      },
+      "hintWord": "w-privet",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sem": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
     }
   ],
   "lessons": [
@@ -205,7 +286,7 @@
       "items": [
         "01",
         "02",
-        "03"
+        "11"
       ]
     },
     {
@@ -215,6 +296,7 @@
         "04",
         "05",
         "06",
+        "07",
         "08"
       ]
     }

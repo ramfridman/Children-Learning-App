@@ -18,7 +18,6 @@
     "rus.a02.11",
     "rus.a02.12",
     "rus.a02.13",
-    "rus.a02.14",
     "rus.a02.15"
   ],
   "estimatedMinutes": 4,
@@ -31,5 +30,5 @@
       }
     ]
   },
-  "sequence": 5
+  "sequence": 6
 }

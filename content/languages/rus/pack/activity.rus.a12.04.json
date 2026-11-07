@@ -15,7 +15,7 @@
     }
   ],
   "purpose": "check",
-  "checkType": "transfer",
+  "checkType": "reverse",
   "representation": "pictorial",
   "variantGroup": "ch-kto-eto",
   "difficulty": {
@@ -51,16 +51,36 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:rus.he_fb_right_2",
+      "vo": "vo:rus.he_fb_right_7",
       "caption": [
         {
           "t": "he",
-          "v": "כֵּן!"
+          "v": "הִקְשַׁבְתֶּם יָפֶה!"
         }
       ],
-      "target": "vo:rus.ch_kto_eto"
+      "target": "vo:rus.ch_eto_mama"
     },
     "incorrect": [
+      {
+        "when": "misconception:rus.voc.sound",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
+      {
+        "when": "misconception:rus.lis.sem",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      },
       {
         "when": "default",
         "vo": "vo:rus.he_fb_check",
@@ -73,40 +93,37 @@
       }
     ],
     "unsure": {
-      "vo": "vo:rus.f02",
-      "caption": [
-        {
-          "t": "he",
-          "v": "הַקְשִׁיבוּ שׁוּב."
-        }
-      ],
-      "target": "vo:rus.ch_kto_eto"
-    }
-  },
-  "hints": [
-    {
-      "level": 1,
-      "action": "replay_prompt_slow",
-      "vo": "vo:rus.f02",
-      "caption": [
-        {
-          "t": "he",
-          "v": "הַקְשִׁיבוּ שׁוּב."
-        }
-      ],
-      "target": "vo:rus.ch_kto_eto"
-    },
-    {
-      "level": 2,
-      "action": "highlight_objects_sequentially",
       "vo": "vo:rus.f17",
       "caption": [
         {
           "t": "he",
           "v": "הַקְשִׁיבוּ לַשְּׁאֵלָה, וּגְעוּ בַּתְּשׁוּבָה."
         }
-      ],
-      "target": "vo:rus.ch_kto_eto"
+      ]
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "replay_prompt_slow",
+      "vo": "vo:rus.gl_zot_ima",
+      "caption": [
+        {
+          "t": "he",
+          "v": "זֹאת אִמָּא."
+        }
+      ]
     },
     {
       "level": 3,
@@ -118,7 +135,7 @@
           "v": "הִסְתַּכְּלוּ אֵיךְ עוֹשִׂים."
         }
       ],
-      "target": "vo:rus.ch_kto_eto"
+      "target": "vo:rus.ch_eto_mama"
     }
   ],
   "scene": {

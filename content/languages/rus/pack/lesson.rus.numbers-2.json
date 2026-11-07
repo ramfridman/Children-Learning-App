@@ -18,7 +18,8 @@
     "rus.a11.06",
     "rus.a11.07",
     "rus.a11.08",
-    "rus.a11.09"
+    "rus.a11.09",
+    "rus.a11.11"
   ],
   "estimatedMinutes": 4,
   "celebration": {
@@ -30,7 +31,7 @@
       }
     ]
   },
-  "sequence": 36,
+  "sequence": 39,
   "teach": [
     {
       "items": [

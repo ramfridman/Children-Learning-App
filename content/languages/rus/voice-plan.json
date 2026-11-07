@@ -276,6 +276,90 @@
       "review": "needs-editor"
     },
     {
+      "id": "gl-batsal",
+      "vo": "vo:rus.gl_batsal",
+      "he": "בָּצָל.",
+      "voice": "בצל.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-dubi",
+      "vo": "vo:rus.gl_dubi",
+      "he": "דֻּבִּי.",
+      "voice": "דובי.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-kiftsu",
+      "vo": "vo:rus.gl_kiftsu",
+      "he": "קִפְצוּ.",
+      "voice": "קִפְצוּ.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-kova",
+      "vo": "vo:rus.gl_kova",
+      "he": "כּוֹבַע.",
+      "voice": "כובע.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-lehitraot",
+      "vo": "vo:rus.gl_lehitraot",
+      "he": "לְהִתְרָאוֹת.",
+      "voice": "להתראות.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-livjatan",
+      "vo": "vo:rus.gl_livjatan",
+      "he": "לִוְיָתָן.",
+      "voice": "לִוְיָתָן.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-shalom",
+      "vo": "vo:rus.gl_shalom",
+      "he": "שָׁלוֹם.",
+      "voice": "שלום.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-shvu",
+      "vo": "vo:rus.gl_shvu",
+      "he": "שְׁבוּ.",
+      "voice": "שְׁבוּ.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-ze-kadur",
+      "vo": "vo:rus.gl_ze_kadur",
+      "he": "זֶה כַּדּוּר.",
+      "voice": "זה כדור.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-ze-tapuach",
+      "vo": "vo:rus.gl_ze_tapuach",
+      "he": "זֶה תַּפּוּחַ.",
+      "voice": "זה תפוח.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-zot-chatula",
+      "vo": "vo:rus.gl_zot_chatula",
+      "he": "זֹאת חֲתוּלָה.",
+      "voice": "זאת חתולה.",
+      "review": "needs-editor"
+    },
+    {
+      "id": "gl-zot-ima",
+      "vo": "vo:rus.gl_zot_ima",
+      "he": "זֹאת אִמָּא.",
+      "voice": "זאת אמא.",
+      "review": "needs-editor"
+    },
+    {
       "id": "he-fb-check",
       "vo": "vo:rus.he_fb_check",
       "he": "הַמְּמ… בּוֹאוּ נִבְדֹּק.",

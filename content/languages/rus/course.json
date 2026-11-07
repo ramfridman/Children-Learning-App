@@ -124,9 +124,54 @@
         "action": "worked_example",
         "target": "@target"
       }
+    ],
+    "HL-REV": [
+      {
+        "line": "f02",
+        "action": "highlight_objects_sequentially"
+      },
+      {
+        "line": "@gloss",
+        "orLine": "f02",
+        "action": "replay_prompt_slow"
+      },
+      {
+        "line": "he-hint-showme",
+        "action": "worked_example",
+        "target": "@target"
+      }
+    ],
+    "HL-GLOSS": [
+      {
+        "line": "f02",
+        "action": "replay_prompt_slow"
+      },
+      {
+        "line": "@gloss",
+        "orLine": "f02",
+        "action": "highlight_objects_sequentially"
+      },
+      {
+        "line": "he-hint-showme",
+        "action": "worked_example",
+        "target": "@target"
+      }
     ]
   },
-  "glosses": {},
+  "glosses": {
+    "w-do-svidanija": "gl-lehitraot",
+    "w-privet": "gl-shalom",
+    "w-prygaj": "gl-kiftsu",
+    "w-sjad": "gl-shvu",
+    "w-mishka": "gl-dubi",
+    "w-shapka": "gl-kova",
+    "mp-luk": "gl-batsal",
+    "ch-eto-mama": "gl-zot-ima",
+    "ch-eto-mjach": "gl-ze-kadur",
+    "ch-eto-koshka": "gl-zot-chatula",
+    "ch-eto-jabloko": "gl-ze-tapuach",
+    "w-kit": "gl-livjatan"
+  },
   "tags": {
     "sem": {
       "id": "rus.lis.sem",
@@ -530,6 +575,66 @@
     "f41": {
       "he": "הַקְשִׁיבוּ:",
       "voice": "הקשיבו:",
+      "review": "needs-editor"
+    },
+    "gl-lehitraot": {
+      "he": "לְהִתְרָאוֹת.",
+      "voice": "להתראות.",
+      "review": "needs-editor"
+    },
+    "gl-shalom": {
+      "he": "שָׁלוֹם.",
+      "voice": "שלום.",
+      "review": "needs-editor"
+    },
+    "gl-kiftsu": {
+      "he": "קִפְצוּ.",
+      "voice": "קִפְצוּ.",
+      "review": "needs-editor"
+    },
+    "gl-shvu": {
+      "he": "שְׁבוּ.",
+      "voice": "שְׁבוּ.",
+      "review": "needs-editor"
+    },
+    "gl-dubi": {
+      "he": "דֻּבִּי.",
+      "voice": "דובי.",
+      "review": "needs-editor"
+    },
+    "gl-kova": {
+      "he": "כּוֹבַע.",
+      "voice": "כובע.",
+      "review": "needs-editor"
+    },
+    "gl-batsal": {
+      "he": "בָּצָל.",
+      "voice": "בצל.",
+      "review": "needs-editor"
+    },
+    "gl-zot-ima": {
+      "he": "זֹאת אִמָּא.",
+      "voice": "זאת אמא.",
+      "review": "needs-editor"
+    },
+    "gl-ze-kadur": {
+      "he": "זֶה כַּדּוּר.",
+      "voice": "זה כדור.",
+      "review": "needs-editor"
+    },
+    "gl-zot-chatula": {
+      "he": "זֹאת חֲתוּלָה.",
+      "voice": "זאת חתולה.",
+      "review": "needs-editor"
+    },
+    "gl-ze-tapuach": {
+      "he": "זֶה תַּפּוּחַ.",
+      "voice": "זה תפוח.",
+      "review": "needs-editor"
+    },
+    "gl-livjatan": {
+      "he": "לִוְיָתָן.",
+      "voice": "לִוְיָתָן.",
       "review": "needs-editor"
     }
   },

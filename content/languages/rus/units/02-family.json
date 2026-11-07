@@ -374,6 +374,56 @@
         "fam-someone"
       ],
       "purpose": "practice"
+    },
+    {
+      "id": "16",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-devochka",
+      "options": [
+        {
+          "pic": "girl",
+          "clip": "w-devochka"
+        },
+        {
+          "pic": "boy",
+          "clip": "w-malchik"
+        },
+        {
+          "pic": "fam-baby",
+          "clip": "w-malysh"
+        }
+      ],
+      "wrong": {
+        "boy": "sem",
+        "fam-baby": "sem"
+      },
+      "variant": "devochka-learn"
+    },
+    {
+      "id": "17",
+      "kind": "tap",
+      "frame": "f01",
+      "target": "w-semja",
+      "options": [
+        {
+          "pic": "fam-all",
+          "clip": "w-semja"
+        },
+        {
+          "pic": "fam-father",
+          "clip": "w-papa"
+        },
+        {
+          "pic": "fam-brother",
+          "clip": "w-brat"
+        }
+      ],
+      "wrong": {
+        "fam-father": "sem",
+        "fam-brother": "sem"
+      },
+      "variant": "semja-learn"
     }
   ],
   "lessons": [
@@ -394,7 +444,16 @@
         "05",
         "06",
         "07",
-        "08"
+        "17"
+      ]
+    },
+    {
+      "id": "family-3",
+      "title": "מִשְׁפָּחָה",
+      "items": [
+        "08",
+        "16",
+        "14"
       ]
     },
     {
@@ -404,7 +463,6 @@
         "11",
         "12",
         "13",
-        "14",
         "15"
       ]
     }

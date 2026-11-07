@@ -191,7 +191,8 @@
         "ball": "seq"
       },
       "ladder": "HL-1",
-      "rep": "story"
+      "rep": "story",
+      "inLesson": true
     },
     {
       "id": "07",
@@ -276,7 +277,8 @@
         "ball": "seq"
       },
       "ladder": "HL-1",
-      "rep": "story"
+      "rep": "story",
+      "inLesson": true
     }
   ],
   "lessons": [

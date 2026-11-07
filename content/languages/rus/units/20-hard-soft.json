@@ -323,6 +323,116 @@
       "variant": "w-myshka-p"
     },
     {
+      "id": "21",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "onion",
+      "options": [
+        {
+          "clip": "mp-luk"
+        },
+        {
+          "clip": "mp-ljuk"
+        },
+        {
+          "clip": "w-zhuk"
+        }
+      ],
+      "wrong": {
+        "mp-ljuk": "hardsoft",
+        "w-zhuk": "sound"
+      },
+      "hintWord": "mp-luk",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "hardsoft": "he-fb-check",
+          "sound": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "22",
+      "kind": "tap",
+      "frame": "f38",
+      "purpose": "check",
+      "check": "reverse",
+      "stage": "teddy",
+      "options": [
+        {
+          "clip": "w-mishka"
+        },
+        {
+          "clip": "w-myshka"
+        },
+        {
+          "clip": "w-knizhka"
+        }
+      ],
+      "wrong": {
+        "w-myshka": "yi",
+        "w-knizhka": "sound"
+      },
+      "hintWord": "w-mishka",
+      "ladder": "HL-REV",
+      "rep": "pictorial",
+      "feedback": {
+        "wrong": "he-fb-check",
+        "byTag": {
+          "sound": "he-fb-check",
+          "yi": "he-fb-check"
+        },
+        "unsure": "f38"
+      }
+    },
+    {
+      "id": "23",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-mouse",
+      "target": "w-mishka",
+      "options": [
+        "teddy",
+        "mouse",
+        "cat"
+      ],
+      "right": "teddy",
+      "wrong": {
+        "mouse": "yi",
+        "cat": "sound"
+      },
+      "ladder": "HL-MOUTH",
+      "rep": "embodied",
+      "variant": "w-mishka-room"
+    },
+    {
+      "id": "24",
+      "kind": "listen_do",
+      "mode": "hotspots",
+      "frame": "f19",
+      "picture": "scene-room-mouse",
+      "target": "w-myshka",
+      "options": [
+        "mouse",
+        "teddy",
+        "cat"
+      ],
+      "right": "mouse",
+      "wrong": {
+        "teddy": "yi",
+        "cat": "sound"
+      },
+      "ladder": "HL-MOUTH",
+      "rep": "embodied",
+      "variant": "w-myshka-room"
+    },
+    {
       "id": "07",
       "kind": "tap",
       "frame": "f34",
@@ -510,7 +620,9 @@
       "items": [
         "05",
         "06",
-        "17"
+        "17",
+        "23",
+        "24"
       ]
     },
     {
