@@ -51,11 +51,11 @@
   },
   "feedback": {
     "correct": {
-      "vo": "vo:heb.ok_1",
+      "vo": "vo:heb.ok_5",
       "caption": [
         {
           "t": "he",
-          "v": "נָכוֹן!"
+          "v": "מְצָאתֶם!"
         }
       ],
       "target": "vo:heb.heb_a_w_kadurim"

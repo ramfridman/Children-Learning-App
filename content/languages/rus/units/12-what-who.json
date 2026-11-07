@@ -382,7 +382,9 @@
     }
   ],
   "routes": {
-    "new": "all items; кто / что first with the animals and people of A-02 and A-05",
+    "new": {
+      "note": "all items; кто / что first with the animals and people of A-02 and A-05"
+    },
     "heritage": {
       "teach": false,
       "weight": [
@@ -392,6 +394,9 @@
         "08"
       ]
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }

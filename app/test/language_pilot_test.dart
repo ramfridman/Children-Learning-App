@@ -27,12 +27,29 @@ import 'support/pack_fixtures.dart';
 const String _languages = '../content/languages';
 
 /// The first lesson of each course's pilot: its id, how many items it plays and the skill it teaches.
-const Map<String, ({String lesson, int items, String skill})> _first =
-    <String, ({String lesson, int items, String skill})>{
-      'eng': (lesson: 'eng.greet-1', items: 5, skill: 'ENG-A-01'),
-      'heb': (lesson: 'heb.words-1', items: 4, skill: 'HEB-A-02'),
-      'rus': (lesson: 'rus.greet-1', items: 3, skill: 'RUS-A-01'),
+/// [teach] is how many teach screens a new learner is shown first (a child with no route set is one): the Russian lesson opens on the four new
+/// words, each shown and said, and they write nothing.
+const Map<String, ({String lesson, int items, String skill, int teach})> _first =
+    <String, ({String lesson, int items, String skill, int teach})>{
+      'eng': (lesson: 'eng.greet-1', items: 5, skill: 'ENG-A-01', teach: 0),
+      'heb': (lesson: 'heb.words-1', items: 4, skill: 'HEB-A-02', teach: 0),
+      'rus': (lesson: 'rus.greet-1', items: 3, skill: 'RUS-A-01', teach: 4),
     };
+
+/// The teach screens of a lesson, one after the other: "I said it", then the picture. Nothing is asked and nothing is written.
+Future<void> passTeachScreens(WidgetTester tester, int count) async {
+  for (int i = 0; i < count; i++) {
+    expect(
+      find.byKey(const Key('say-picture')),
+      findsOneWidget,
+      reason: 'teach screen ${i + 1} is on screen',
+    );
+    await tester.tap(find.byKey(const Key('say-done')));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.tap(find.byKey(const Key('say-picture')));
+    await settle(tester, ms: 3000);
+  }
+}
 
 /// The course has a placement game, so its first visit is the placement (frame 3.2): the child plays the probes, touching a wrong
 /// picture each time (so that the staircase stays on the floor and the first lesson is still the next one), until the visit ends with
@@ -87,7 +104,7 @@ void main() {
       testWidgets('from the door to the celebration, every answer written under the course', (
         WidgetTester tester,
       ) async {
-        final ({String lesson, int items, String skill}) first = _first[course]!;
+        final ({String lesson, int items, String skill, int teach}) first = _first[course]!;
         final AppRig rig = await courseApp(tester, <String>[course], packs: packs);
         await openCourse(tester, course);
         expect(find.byType(CourseHomeScreen), findsOneWidget);
@@ -98,6 +115,7 @@ void main() {
         expect(find.byType(LessonScreen), findsOneWidget);
         expect(tester.widget<LessonScreen>(find.byType(LessonScreen)).course, course);
         expect(find.byKey(const Key('lesson-celebration')), findsNothing);
+        await passTeachScreens(tester, first.teach);
         for (int i = 0; i < first.items; i++) {
           expect(find.byKey(const Key('option-o1')), findsOneWidget, reason: 'item ${i + 1} is on screen');
           await answer(tester);
@@ -138,6 +156,7 @@ void main() {
           final int before = (await rig.db.attemptsOf(courseKid)).length;
           await tester.tap(find.byKey(const Key('course-play')));
           await settle(tester);
+          await passTeachScreens(tester, _first[course]!.teach);
           await answer(tester, right: false);
           final List<Attempt> rows = (await rig.db.attemptsOf(courseKid)).skip(before).toList();
           expect(rows, hasLength(1));

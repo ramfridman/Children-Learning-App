@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.print-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "אֵיפֹה מַתְחִילִים?"
+    }
+  ],
+  "skills": [
+    "HEB-A-12"
+  ],
+  "items": [
+    "heb.a12.01",
+    "heb.a12.02",
+    "heb.a12.03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 22
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "activity/v1",
+  "id": "rus.a09.tc09",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "say_it",
+  "templateVersion": "1.0",
+  "course": "rus",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "RUS-A-09",
+      "weight": 1
+    }
+  ],
+  "purpose": "practice",
+  "checkType": "practice",
+  "representation": "embodied",
+  "variantGroup": "a09-tc09",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 1,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "say the word with the voice",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "תְּמוּנָה וּמִלָּה לוֹמַר"
+  },
+  "prompt": {
+    "vo": "vo:rus.f03",
+    "caption": [
+      {
+        "t": "he",
+        "v": "בּוֹאוּ נֹאמַר יַחַד."
+      }
+    ],
+    "target": "vo:rus.w_sharf",
+    "show": "шарф",
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:rus.he_fb_right_4",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מְצָאתֶם!"
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    },
+    "incorrect": [
+      {
+        "when": "default",
+        "vo": "vo:rus.he_fb_check",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:rus.f02",
+      "caption": [
+        {
+          "t": "he",
+          "v": "הַקְשִׁיבוּ שׁוּב."
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    }
+  },
+  "hints": [],
+  "scene": {
+    "picture": {
+      "sprite": "asset:scarf"
+    }
+  },
+  "say": {
+    "forms": [
+      "шарф"
+    ],
+    "foils": [
+      "носки",
+      "ботинки"
+    ],
+    "clip": "vo:rus.w_sharf",
+    "heard": {
+      "vo": "vo:rus.f04",
+      "caption": [
+        {
+          "t": "he",
+          "v": "שָׁמַעְתִּי:"
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    },
+    "together": {
+      "vo": "vo:rus.f03",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נֹאמַר יַחַד."
+        }
+      ],
+      "target": "vo:rus.w_sharf"
+    }
+  },
+  "answer": {
+    "type": "say_it",
+    "scored": false,
+    "teach": true
+  }
+}

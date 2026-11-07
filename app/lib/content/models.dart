@@ -179,6 +179,13 @@ sealed class Activity {
   /// and model text in a target language cannot be checked (docs/languages/frame.md section 1.6).
   bool get llmAllowed => course == Course.core && _map(json['tutor'])['llmAllowed'] == true;
 
+  /// The item's text is set in the display face (Secular One) and not in the course's usual one: a transfer check of the same letters in
+  /// another face (docs/languages/hebrew/band-a-content.md, A-10.6 and A-11.4). Hebrew only.
+  bool get displayFont => json['font'] == 'display';
+
+  /// A teach screen: shown before a lesson to a route that needs the words, never an item of the engine's catalogue.
+  bool get teachScreen => false;
+
   /// A step that is never scored (a story only heard, a chant, the embodied "done", a personal turn): it writes no attempt of any
   /// kind, not even an "unsure", and the child is offered no help in it (docs/languages/frame.md section 3.3.8 and 5.2).
   bool get unscored => false;
@@ -190,6 +197,9 @@ sealed class Activity {
     if (_map(json['answer'])['misconception'] is String) _map(json['answer'])['misconception']! as String,
     for (final Map<String, Object?> c in _maps(_map(json['answer'])['classifiers']))
       if (c['misconception'] is String) c['misconception']! as String,
+    // The look-alike pairs of the own-name answer: the tag a touch on the look-alike of the child's first letter carries.
+    for (final Map<String, Object?> p in _maps(_map(json['answer'])['pairs']))
+      if (p['misconception'] is String) p['misconception']! as String,
   }.toList();
 
   /// What the learning engine needs to know about the activity.
@@ -268,6 +278,7 @@ class ChoiceOption {
     this.text,
     this.clip,
     this.reveal,
+    this.zone,
     this.ats = const <Rect>[],
   });
 
@@ -293,6 +304,9 @@ class ChoiceOption {
   final String? text;
   final String? clip;
   final String? reveal;
+
+  /// Where a touch is this option on a page that shows its text (`picture`, `line1-start`, `word`, `other` ...); null for any other option.
+  final String? zone;
 
   /// Where the option is in the picture of the scene, as shares of its width and height (a part of a body, a thing in a room, a
   /// place to put something): LS11. Several for a part that has more than one place (both ears). Empty for an option that is a tile.
@@ -321,6 +335,7 @@ List<ChoiceOption> _options(Object? answer) => <ChoiceOption>[
       text: o['text'] as String?,
       clip: o['clip'] as String?,
       reveal: o['reveal'] as String?,
+      zone: o['zone'] as String?,
       ats: _rects(o['at']),
     ),
 ];
@@ -450,6 +465,10 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
   /// A cloze (LS01 e): a sentence with one gap (`_`), and an optional picture beside it; null when the item has none.
   final ({String text, String? picture})? cloze;
 
+  /// The own-name answer of Hebrew Band A (`answer.type` `name`): the options are not in the pack, they are made on the device from the
+  /// child's first name when the lesson opens (`play/name_options.dart`). Until then the item has no face to draw.
+  bool get ownName => _map(this.json['answer'])['type'] == 'name';
+
   /// The LS01 mode this item plays in, or null for the plain tap of L1 (pictures, texts or sounds on tiles).
   Ls01TapMode? get ls01Mode => all
       ? Ls01TapMode.tapAll
@@ -499,18 +518,30 @@ class TapAnswerActivity extends Activity implements ChoiceActivity {
       if (o.misconception != null) o.misconception!,
     ...?numberAnswer?.expected.values,
     ...?numberAnswer?.rules.values,
+    for (final Map<String, Object?> p in _maps(_map(this.json['answer'])['pairs']))
+      if (p['misconception'] is String) p['misconception']! as String,
   };
 }
 
 /// One page of a story: its picture, the clips of its narration, what a screen reader says, and the things in it that say their word
 /// when touched.
 class StoryPage {
-  const StoryPage({required this.picture, required this.clips, required this.alt, required this.words});
+  const StoryPage({
+    required this.picture,
+    required this.clips,
+    required this.alt,
+    required this.words,
+    this.lines = const <List<({String text, String? clip})>>[],
+  });
 
   final String picture;
   final List<String> clips;
   final String alt;
   final List<({Rect at, String clip})> words;
+
+  /// The text of the page, shown, line by line and word by word, each word with the clip of the voice saying it alone when the story is a
+  /// `follow`. Empty for a page that shows only its picture.
+  final List<List<({String text, String? clip})>> lines;
 }
 
 /// The story template (LS08, docs/languages/frame.md section 2.3): a picture book. In `listen` mode it is heard to its end and is
@@ -528,8 +559,16 @@ class StoryActivity extends Activity implements ChoiceActivity {
               for (final Map<String, Object?> w in _maps(p['words']))
                 (at: _rect(w['at'])!, clip: w['clip']! as String),
             ],
+            lines: <List<({String text, String? clip})>>[
+              for (final Object? line in (p['lines'] as List<Object?>? ?? const <Object?>[]))
+                <({String text, String? clip})>[
+                  for (final Map<String, Object?> w in _maps(line))
+                    (text: w['text']! as String, clip: w['clip'] as String?),
+                ],
+            ],
           ),
       ],
+      mode = _map(json['answer'])['mode'] as String,
       pauseAfter = _map(json['answer'])['pauseAfter'] as int?,
       question = _map(json['answer'])['question'] == null
           ? null
@@ -550,10 +589,17 @@ class StoryActivity extends Activity implements ChoiceActivity {
   @override
   final String correctId;
 
+  /// `listen`, `dialogic`, or one of the two print-direction modes: `zones` (where does reading start?) and `follow` (touch each word as the
+  /// voice reads it), which show the page's text.
+  final String mode;
+
   bool get dialogic => question != null;
 
+  /// A page that shows its text and asks where to touch it (Hebrew Band A, HEB-A-12).
+  bool get reads => mode == 'zones' || mode == 'follow';
+
   @override
-  bool get unscored => !dialogic;
+  bool get unscored => mode == 'listen';
 
   @override
   int get optionCount => options.length;
@@ -1485,7 +1531,12 @@ class SayItActivity extends Activity {
       heard = Spoken.fromJson(_map(json['say'])['heard']),
       together = Spoken.fromJson(_map(json['say'])['together']),
       scored = _map(json['answer'])['scored'] == true,
+      teach = _map(json['answer'])['teach'] == true,
       super._();
+
+  /// A teach screen (`answer.teach`): the word is shown and said twice, the child may say it with the voice. It is never scored, writes no
+  /// attempt, has no microphone and no help (nothing can be got wrong), and the engine does not see it.
+  final bool teach;
 
   /// The picture (an `asset:` reference).
   final String picture;
@@ -1504,6 +1555,12 @@ class SayItActivity extends Activity {
 
   /// The tap on the picture is a scored listening answer.
   final bool scored;
+
+  @override
+  bool get unscored => teach;
+
+  @override
+  bool get teachScreen => teach;
 
   @override
   int get optionCount => 0;
@@ -1612,6 +1669,13 @@ class Lesson {
       itemIds = <String>[for (final Object? i in json['items']! as List<Object?>) i! as String],
       skillIds = <String>[for (final Object? s in json['skills']! as List<Object?>) s! as String],
       sequence = (json['sequence'] as int?) ?? 1000,
+      teach = <TeachSet>[
+        for (final Map<String, Object?> t in _maps(json['teach']))
+          TeachSet(
+            itemIds: <String>[for (final Object? i in t['items']! as List<Object?>) i! as String],
+            routes: <String>{for (final Object? r in t['routes']! as List<Object?>) r! as String},
+          ),
+      ],
       stopAfterStruggles = 0,
       celebration = Spoken.fromJson(json['celebration']);
 
@@ -1624,6 +1688,7 @@ class Lesson {
     this.stopAfterStruggles = 0,
   }) : revision = 1,
        sequence = 1000,
+       teach = const <TeachSet>[],
        course = skillIds.isEmpty ? Course.core : Course.ofSkillId(skillIds.first),
        title = '';
 
@@ -1637,10 +1702,22 @@ class Lesson {
   /// Where the lesson sits on the path of its land (smaller comes first); 1000 for a lesson that has no place.
   final int sequence;
 
+  /// The teach screens that come before the lesson's items, each set for the routes that are shown it (see [PackContent.itemsFor]).
+  final List<TeachSet> teach;
+
   /// A lesson that ends gently, with its celebration, once the child has needed the full help on this many activities in a
   /// row (the placement warm-up: it must never become a string of failures). 0 means it never stops early.
   final int stopAfterStruggles;
   final Spoken celebration;
+}
+
+/// A set of new words to be shown before a lesson asks them (LS09, echo): the teach screens, in order, and the routes of a language course
+/// that are shown them. A heritage speaker already knows the words and is never shown them.
+class TeachSet {
+  const TeachSet({required this.itemIds, required this.routes});
+
+  final List<String> itemIds;
+  final Set<String> routes;
 }
 
 /// A skill of the pack, for the learning engine.
@@ -1946,5 +2023,16 @@ class PackContent {
   /// The activities of a lesson, in order. An item that is hidden (see [PackContent.fromPack]) is left out.
   List<Activity> itemsOf(Lesson lesson) => <Activity>[
     for (final String id in lesson.itemIds) ?activities[id],
+  ];
+
+  /// What a child on [route] plays in [lesson]: the teach screens of the sets that route is shown, then the lesson's items. A route that
+  /// is not set yet counts as a new learner (the stress marks do the same). A heritage speaker is never shown a teach screen: the schema
+  /// does not let a set name that route, and this refuses it as well, whatever a pack says.
+  List<Activity> itemsFor(Lesson lesson, {String? route}) => <Activity>[
+    if (route != 'heritage')
+      for (final TeachSet set in lesson.teach)
+        if (set.routes.contains(route ?? 'new'))
+          for (final String id in set.itemIds) ?activities[id],
+    ...itemsOf(lesson),
   ];
 }

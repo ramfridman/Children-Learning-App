@@ -11,10 +11,11 @@ import re
 from lang_recipes_base import (ALT, CHECK_TYPES, DOMAIN, HINT_ACTIONS, PICTURE_LABEL, PLACE_LABELS, PURPOSES, RAIL, RAIL_SIDE, derived_svg,
                                REPRESENTATIONS, SOUND_LABEL, overlap, rect, slug)
 from lang_recipes_more import More
+from lang_recipes_print import Print
 from lang_recipes_talk import Talk
 
 
-class Recipes(Talk, More):
+class Recipes(Talk, More, Print):
     """The recipes. `self` is a Course: it reads lines, clips, pictures, tags, ladders and feedback through it."""
 
     # ------------------------------------------------------------ what every recipe shares
@@ -56,6 +57,12 @@ class Recipes(Talk, More):
         }
         if item.get('contradicts'):
             doc['contradicts'] = self.tag(item['contradicts'], sid, where)
+        if item.get('font'):
+            # The display face (Secular One) for one item, a Hebrew course only: a check of the same letters in another face.
+            if item['font'] != 'display' or self.id != 'heb':
+                self.problem(where, 'font "%s": only "display" (Secular One), and only in the Hebrew course' % item['font'])
+            else:
+                doc['font'] = 'display'
         return doc
 
     def lines_of(self, doc, item, where, tag_ids=(), *, frame=None, target=None, target2=None, show=None, hints=True):
@@ -82,7 +89,7 @@ class Recipes(Talk, More):
             self.problem('course.json', 'feedback needs "right" (a list of lines), "wrong" and "unsure"')
             return None
         # The praise is chosen by the item's place in the course (the same item always says the same line).
-        step = own.get('right') or right[len(self.items) % len(right)]
+        step = own.get('right') or right[(len(self.items) - self.teach_count) % len(right)]
         step = dict({'line': step} if isinstance(step, str) else step)
         after = item.get('after')
         if after:

@@ -376,7 +376,9 @@
     ]
   ],
   "routes": {
-    "new": "teach in two sets; items 01 to 13; the embodied step after each LS11 item",
+    "new": {
+      "note": "teach in two sets; items 01 to 13; the embodied step after each LS11 item"
+    },
     "heritage": {
       "teach": false,
       "order": [
@@ -384,6 +386,9 @@
         "01-07"
       ]
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }

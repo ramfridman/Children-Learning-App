@@ -1,0 +1,18 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.order",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "DIR",
+  "skills": [
+    "HEB-A-11",
+    "HEB-A-12"
+  ],
+  "parentText": "הילד מתחיל לפעמים משמאל. בעברית קוראים מימין לשמאל: כדאי להעביר אצבע מתחת לשורה מימין.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic",
+    "embodied"
+  ]
+}

@@ -280,6 +280,10 @@ List<Problem> validatePack({
     if (taughtBand != null && taughtBand != a['band']) {
       say(file, 'band', 'is ${a['band']}, but its skill ${taught.first['id']} is in band $taughtBand');
     }
+    // Only a Hebrew item may ask for the display face: English and Russian have their one teaching font (docs/languages/fonts.md).
+    if (a['font'] != null && a['course'] != Course.heb) {
+      say(file, 'font', 'belongs to a Hebrew course (the other courses have one teaching font)');
+    }
     final Map<String, Object?> prompt = a['prompt']! as Map<String, Object?>;
     checkVo(file, 'prompt.vo', prompt['vo']);
     checkTag(file, 'contradicts', a['contradicts']);
@@ -346,6 +350,7 @@ List<Problem> validatePack({
         } else {
           _choiceAnswer(file, a, answer, say);
           _options(file, answer, say, checkTag, checkAsset: checkAsset);
+          if (answer['type'] == 'name') _nameAnswer(file, a, answer, say, checkTag, course: course);
         }
         _stagePictureOf(file, scene['picture'], say);
         _tapVersion(file, a, scene, answer, say);
@@ -362,7 +367,10 @@ List<Problem> validatePack({
           if (group is Map<String, Object?>) checkAsset(file, 'scene.$g.sprite', group['sprite']);
         }
         for (final (int i, Map<String, Object?> o) in _maps(answer['options']).indexed) {
-          _optionKind(file, 'answer.options[$i]', o, say, language: Course.isLanguage(course));
+          // An option of the own-name answer has no face: it is made on the device (`_nameAnswer` holds it to its own rules).
+          if (answer['type'] != 'name') {
+            _optionKind(file, 'answer.options[$i]', o, say, language: Course.isLanguage(course));
+          }
           checkVo(file, 'answer.options[$i].clip', o['clip']);
           final Object? set = o['set'];
           if (set is Map<String, Object?>) checkAsset(file, 'answer.options[$i].set.sprite', set['sprite']);
@@ -372,7 +380,7 @@ List<Problem> validatePack({
           for (final Map<String, Object?> o in _maps(answer['options'])) _look(o),
         ];
         // A tap-all repeats a card (three t's among other letters); ls01_checks.dart holds it to its own rule.
-        if (answer['all'] != true && looks.toSet().length != looks.length) {
+        if (answer['all'] != true && answer['type'] != 'name' && looks.toSet().length != looks.length) {
           say(file, 'answer.options', 'two options look the same');
         }
       case 'story':
@@ -823,6 +831,23 @@ List<Problem> validatePack({
         say(file, 'skills[$i]', 'the skill $s is in band $band, but the lesson is in band ${l['band']}');
       }
     }
+    for (final (int i, Map<String, Object?> set) in _maps(l['teach']).indexed) {
+      for (final (int j, Object? item) in (set['items']! as List<Object?>).indexed) {
+        final Map<String, Object?>? doc = activities[item];
+        if (doc == null) {
+          say(file, 'teach[$i].items[$j]', 'there is no activity "$item" in this pack');
+        } else if (doc['template'] != 'say_it' ||
+            (doc['answer'] as Map<String, Object?>?)?['teach'] != true) {
+          say(file, 'teach[$i].items[$j]', '"$item" is not a teach screen (a say_it with answer.teach)');
+        } else if (l['items'] is List<Object?> && (l['items']! as List<Object?>).contains(item)) {
+          say(
+            file,
+            'teach[$i].items[$j]',
+            '"$item" is a teach screen, so it is not one of the lesson\'s items as well',
+          );
+        }
+      }
+    }
     final Map<String, Object?> cel = l['celebration']! as Map<String, Object?>;
     checkVo(file, 'celebration.vo', cel['vo']);
     _targetClips(file, l, say, checkVo);
@@ -1219,6 +1244,8 @@ void _tapVersion(
       ? 'a cloze'
       : answer['all'] == true
       ? 'a tap-all'
+      : answer['type'] == 'name'
+      ? 'the own-name answer'
       : _maps(answer['options']).length > 4
       ? 'more than four choices'
       : row.length > 8
@@ -1231,6 +1258,85 @@ void _tapVersion(
       : null;
   if (feature != null && compareTemplateVersion('${a['templateVersion']}', '1.4') < 0) {
     say(file, 'templateVersion', 'is ${a['templateVersion']}, but $feature needs tap_answer 1.4');
+  }
+  if (answer['type'] == 'name' && compareTemplateVersion('${a['templateVersion']}', '1.5') < 0) {
+    say(file, 'templateVersion', 'is ${a['templateVersion']}, but the own-name answer needs tap_answer 1.5');
+  }
+}
+
+/// The own-name answer of Hebrew Band A (HEB-A-11, `answer.type` `name`): the options are made on the device, at run time, from the child's
+/// first name, so a pack holds only the rules and the closed list of names, never a name. [unit] `name` is a choice of names (the child's
+/// own, a name of the same first letter, a name of the same length); `letter` is a row of three letters of the name (its first letter, its
+/// look-alike, its last). An option has a source and no face of its own: a name is never recorded, voiced, shown to a voice or sent anywhere.
+void _nameAnswer(
+  String file,
+  Map<String, Object?> a,
+  Map<String, Object?> answer,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkTag, {
+  required String course,
+}) {
+  if (course != Course.heb) say(file, 'answer.type', 'the own-name answer belongs to the Hebrew course');
+  if (a['band'] != 'A') say(file, 'band', 'the own-name answer is a Band A item');
+  if (a['voiceAnswer'] == true) {
+    say(file, 'voiceAnswer', 'a name is never spoken or heard: the answer is a touch');
+  }
+  final Object? unit = answer['unit'];
+  if (unit != 'name' && unit != 'letter') {
+    say(file, 'answer.unit', 'is `name` (a choice of names) or `letter` (a row of letters of the name)');
+    return;
+  }
+  final Set<String> allowed = unit == 'name'
+      ? const <String>{'own', 'first', 'length'}
+      : const <String>{'first', 'lookalike', 'last'};
+  final String rightSource = unit == 'name' ? 'own' : 'first';
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  for (final (int i, Map<String, Object?> o) in options.indexed) {
+    final String path = 'answer.options[$i]';
+    final Object? source = o['source'];
+    if (source is! String || !allowed.contains(source)) {
+      say(file, '$path.source', 'is one of ${allowed.join(', ')} in a unit of $unit');
+    }
+    for (final String face in const <String>[
+      'sprite',
+      'numeral',
+      'set',
+      'text',
+      'clip',
+      'reveal',
+      'at',
+      'speech',
+    ]) {
+      if (o.containsKey(face)) {
+        say(file, '$path.$face', 'an option of the own-name answer has no $face: it is made on the device');
+      }
+    }
+    if ((o['id'] == answer['correct']) != (source == rightSource)) {
+      say(
+        file,
+        '$path.source',
+        'the right option is the child\'s own ${unit == 'name' ? 'name' : 'first letter'} ($rightSource), no other is',
+      );
+    }
+  }
+  final List<Object?> sources = <Object?>[for (final Map<String, Object?> o in options) o['source']];
+  if (sources.toSet().length != sources.length) {
+    say(file, 'answer.options', 'two options are made the same way');
+  }
+  final List<String> names = <String>[
+    for (final Object? n in (answer['names'] as List<Object?>? ?? const <Object?>[])) n! as String,
+  ];
+  if (unit == 'name' && names.isEmpty) {
+    say(file, 'answer.names', 'the closed list the distractor names come from is needed');
+  }
+  if (names.toSet().length != names.length) say(file, 'answer.names', 'a name is in the list twice');
+  final List<Map<String, Object?>> pairs = _maps(answer['pairs']);
+  if (pairs.isEmpty && (unit == 'letter' || sources.contains('lookalike'))) {
+    say(file, 'answer.pairs', 'the look-alike pairs of letters are needed');
+  }
+  for (final (int i, Map<String, Object?> p) in pairs.indexed) {
+    if (p['a'] == p['b']) say(file, 'answer.pairs[$i]', 'a letter is not its own look-alike');
+    checkTag(file, 'answer.pairs[$i].misconception', p['misconception']);
   }
 }
 
@@ -1407,7 +1513,7 @@ void _languageFieldsInLands(String file, Map<String, Object?> a, void Function(S
         final String here = path.isEmpty ? k : '$path.$k';
         final bool option = RegExp(r'^answer\.options\[\d+\]$').hasMatch(path);
         final bool own =
-            const <String>{'show', 'clips', 'pole', 'pairWith'}.contains(k) ||
+            const <String>{'show', 'clips', 'pole', 'pairWith', 'teach'}.contains(k) ||
             ((k == 'target' || k == 'target2') && v is String) ||
             (option && const <String>{'text', 'clip', 'reveal'}.contains(k));
         if (own) {
@@ -1918,6 +2024,17 @@ void _story(
       }
     }
   }
+  if (answer['mode'] == 'zones' || answer['mode'] == 'follow') {
+    _readPage(file, a, say, checkVo, checkTag, checkAsset);
+    return;
+  }
+  if (pages.length < 2) {
+    say(
+      file,
+      'scene.pages',
+      'a story has 2 or more pages (a page that shows its text is a `zones` or a `follow`)',
+    );
+  }
   if (answer['mode'] == 'listen') {
     _unscored(file, a, say, 'a story that is only heard');
     for (final String k in <String>['options', 'pauseAfter', 'question']) {
@@ -1950,6 +2067,73 @@ void _story(
     return;
   }
   _l4Options(file, answer, say, checkAsset, checkVo, checkTag);
+}
+
+/// A page that shows its text and asks where to touch it (Hebrew Band A, HEB-A-12): one page, its text in lines of words, and 2 or 3 zones.
+/// `zones`: the child touches the end of a line the reading starts at (the right end in Hebrew); the wrong zones are the other end of a line
+/// and the picture. `follow`: the voice reads a word and waits for a touch on it, word by word (every word has its clip); the wrong zones are
+/// another word and the picture. Always scored, every wrong zone with its tag, and no face on the options (a zone is a place on the page).
+void _readPage(
+  String file,
+  Map<String, Object?> a,
+  void Function(String, String, String) say,
+  void Function(String, String, Object?) checkVo,
+  void Function(String, String, Object?) checkTag,
+  void Function(String, String, Object?) checkAsset,
+) {
+  final Map<String, Object?> answer = a['answer']! as Map<String, Object?>;
+  final String mode = answer['mode']! as String;
+  final List<Map<String, Object?>> pages = _maps((a['scene']! as Map<String, Object?>)['pages']);
+  if (pages.length != 1) say(file, 'scene.pages', 'a page that shows its text is one page');
+  if (a['course'] != Course.heb) {
+    say(file, 'answer.mode', 'the print-direction modes belong to the Hebrew course');
+  }
+  if (a['band'] != 'A') say(file, 'band', 'the print-direction modes are Band A items');
+  if (answer['type'] != 'choice') {
+    say(file, 'answer.type', 'a $mode page asks a choice: the type is "choice"');
+  }
+  final List<List<Map<String, Object?>>> lines = <List<Map<String, Object?>>>[
+    if (pages.isNotEmpty)
+      for (final Object? l in (pages.first['lines'] as List<Object?>? ?? const <Object?>[])) _maps(l),
+  ];
+  if (lines.isEmpty) say(file, 'scene.pages[0].lines', 'a $mode page shows its text: it needs `lines`');
+  final List<Map<String, Object?>> words = <Map<String, Object?>>[
+    for (final List<Map<String, Object?>> l in lines) ...l,
+  ];
+  for (final (int i, Map<String, Object?> w) in words.indexed) {
+    checkVo(file, 'scene.pages[0].lines.word[$i].clip', w['clip']);
+    if (mode == 'follow' && w['clip'] == null) {
+      say(
+        file,
+        'scene.pages[0].lines.word[$i].clip',
+        'a word of a `follow` page has the clip of the voice saying it alone',
+      );
+    }
+  }
+  if (mode == 'follow' && words.length < 2) {
+    say(file, 'scene.pages[0].lines', 'a `follow` page has two or more words to follow');
+  }
+  final List<Map<String, Object?>> options = _maps(answer['options']);
+  _l4Options(file, answer, say, checkAsset, checkVo, checkTag, faceless: true);
+  final Set<String> allowed = mode == 'zones'
+      ? <String>{
+          'picture',
+          for (int n = 1; n <= lines.length; n++) ...<String>['line$n-start', 'line$n-end'],
+        }
+      : const <String>{'word', 'other', 'picture'};
+  final List<Object?> zones = <Object?>[for (final Map<String, Object?> o in options) o['zone']];
+  for (final (int i, Object? z) in zones.indexed) {
+    if (z is! String || !allowed.contains(z)) {
+      say(file, 'answer.options[$i].zone', 'is a place of the page: one of ${allowed.join(', ')}');
+    }
+  }
+  if (zones.toSet().length != zones.length) say(file, 'answer.options', 'two options are the same zone');
+  final Object? right = options
+      .where((Map<String, Object?> o) => o['id'] == answer['correct'])
+      .firstOrNull?['zone'];
+  final String start = mode == 'zones' ? 'line1-start' : 'word';
+  if (right != start) say(file, 'answer.correct', 'the right zone of a $mode page is "$start"');
+  if (a['purpose'] == 'practice') say(file, 'purpose', 'a $mode page is scored: it is not practice');
 }
 
 /// The second clip of a spoken line (`target`) names a voice line of the pack, and only a language course has one.

@@ -123,6 +123,9 @@ void main() {
               (c! as Map<String, Object?>)['vo']! as String,
             for (final Object? c in plan['targetClips']! as List<Object?>)
               (c! as Map<String, Object?>)['vo']! as String,
+            // The clips of single words cut from the clip of their page (a `follow` page): pending too, never voiced of their own.
+            for (final Object? c in (plan['cutClips'] as List<Object?>? ?? const <Object?>[]))
+              (c! as Map<String, Object?>)['vo']! as String,
           };
           expect((pack.manifest['voPending']! as List<Object?>).cast<String>().toSet(), planned);
         },

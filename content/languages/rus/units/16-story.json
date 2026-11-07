@@ -309,8 +309,15 @@
     }
   ],
   "routes": {
-    "new": "listen first (01, 04, 07), then dialogic on a later visit",
-    "heritage": "dialogic on the first reading (skip 01, 04, 07)",
-    "reader": "as heritage"
+    "new": {
+      "note": "listen first (01, 04, 07), then dialogic on a later visit"
+    },
+    "heritage": {
+      "note": "dialogic on the first reading (skip 01, 04, 07)"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
   }
 }

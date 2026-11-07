@@ -33,6 +33,6 @@ All the sets of HEB-A-05 exist now (batch 5); the skill is in the pack. Still wa
 
 | Needed | For | What |
 |---|---|---|
-| a heart, a flower and a star as pictures (`shape-heart`, `shape-flower`; `star` exists) | HEB-A-10 s02, t05, s06 | the batch asked for ⭐ ♥ ✿ as cards; Heebo has none of them, so they are text for now |
+| a heart and a flower as pictures (`shape-heart`, `shape-flower`: ink, the weight of `shape-dot`, centred, 256 by 256) | HEB-A-10 t05 (♥) and s06 (✿) | Heebo has neither (Secular One has no flower), so the cards are stand-ins for now: t05 uses `shape-triangle` and s06 uses `star`; the star of s02 is the picture `star`. When the two files are in `content/languages/pictures`, change the two cards in `units/08-letters-or-not.json` to `{"pic": "shape-heart"}` and `{"pic": "shape-flower"}` (and their `wrong` keys), then `python tools/lang_pack.py heb` |
 | a check of the touch areas of `chair`, `box`, `table` and `bed` (on, under, by, in) | HEB-A-04 | measured by the app-developer in `scenes.areas.json`; refine them |
 | the two frames of the A-02 actions as a stage | HEB-A-02 09 to 18 | the item shows the second frame only |

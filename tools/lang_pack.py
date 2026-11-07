@@ -39,6 +39,7 @@ ROOT = os.path.normpath(os.path.join(TOOLS, '..'))
 if TOOLS not in sys.path:  # `python -I` keeps the script's own folder off the path
     sys.path.insert(0, TOOLS)
 import lang_recipes  # noqa: E402
+import lang_routes  # noqa: E402
 
 COURSES = ('eng', 'heb', 'rus')
 DOMAIN = 'languages'
@@ -49,7 +50,7 @@ TEMPLATE_VERSIONS = {'tap_answer': '1.3', 'story': '1.0', 'listen_do': '1.0', 's
 REPRESENTATIONS = lang_recipes.REPRESENTATIONS
 # The kinds of item a unit file may hold, and the recipe each one has (tools/lang_recipes*.py).
 RECIPES = {'tap': 'tap', 'listen_do': 'listen_do', 'puppet': 'puppet', 'say': 'say', 'chant': 'chant', 'drum': 'drum', 'story': 'story',
-           'count': 'count', 'pairs': 'pairs', 'sort': 'sort', 'sequence': 'sequence', 'trace': 'trace'}
+           'count': 'count', 'pairs': 'pairs', 'sort': 'sort', 'sequence': 'sequence', 'trace': 'trace', 'name': 'name', 'name-letter': 'name_letter', 'page-zones': 'page_zones', 'follow': 'follow'}
 TAG_KINDS = ('diagnostic', 'on_the_way', 'accent', 'practice')
 FAMILIES = ('DIR', 'NAME', 'SHAPE', 'STROKE', 'CONTRAST', 'SEGMENT', 'RHYME', 'VOWEL', 'CODE', 'GRAMMAR', 'PRINT', 'GUESS',
             'MEANING', 'ACCENT', 'FLUENCY')
@@ -78,7 +79,7 @@ def slug(text):
     return re.sub(r'[^a-z0-9]+', '-', text.lower()).strip('-')
 
 
-class Course(lang_recipes.Recipes):
+class Course(lang_recipes.Recipes, lang_routes.Routes):
     """One course's spec, read and checked, and the files it makes."""
 
     def __init__(self, course, root=ROOT):
@@ -93,6 +94,8 @@ class Course(lang_recipes.Recipes):
         self.skills = {}  # id -> skill info
         self.items = {}  # activity id (with the course) -> info
         self.groups = {}  # an item that makes two activities (a say step and its tap): its id -> [the activity ids, in order]
+        self.cut_clips = {}  # the clip of a word cut from the clip of its page (follow): id -> {id, from, text}
+        self.teach_count = 0  # the teach screens among self.items (they do not move the praise the other items say)
         self.derived = {}  # asset id -> how the generator makes the picture (a lit copy of a picture, a blank one)
         self.template_versions = TEMPLATE_VERSIONS
         self.lessons = []
@@ -288,12 +291,15 @@ class Course(lang_recipes.Recipes):
         if sid in self.skills:
             self.problem(fname, 'the skill %s is defined twice' % sid)
         sk = {'doc': skill, 'file': fname, 'band': m.group(2), 'slug': (m.group(2) + m.group(3) + (m.group(4) or '')).lower(),
-              'items': []}
+              'items': [], 'ownName': unit.get('ownName')}
         self.skills[sid] = sk
         for i, item in enumerate(unit.get('items', [])):
             self._item(fname, sk, sid, item, '%s items[%d]' % (fname, i))
         for i, doc in enumerate(unit.get('docs', [])):
             self._raw(fname, doc, '%s docs[%d]' % (fname, i))
+        self.check_routes(fname, unit)
+        sk['routes'] = unit.get('routes')
+        self.teach_items(fname, sk, sid, unit)
         sk['lessons'] = unit.get('lessons', [])
         sk['lessonFile'] = fname
 
@@ -381,6 +387,16 @@ class Course(lang_recipes.Recipes):
         self.put('%s.%s.json' % (kind, did), full)
 
     # ---- lessons
+    def _lesson_ids(self, sid, lesson):
+        """The activity ids of a lesson's items, in order (an item that makes two activities, a say step and its tap, gives both)."""
+        ids = []
+        for ref in lesson.get('items', []):
+            qualified = '%s.%s.%s' % (self.id, self.skills[sid]['slug'], ref) if '.' not in ref else '%s.%s' % (self.id, ref)
+            if qualified not in self.items:
+                self.problem('lesson %s' % lesson.get('id'), 'the item "%s" is not in this course' % ref)
+            ids.extend(self.groups.get(qualified, [qualified]))
+        return ids
+
     def _lessons(self):
         number = 0
         seen = set()
@@ -388,6 +404,7 @@ class Course(lang_recipes.Recipes):
             sid = unit.get('skill', {}).get('id')
             if sid not in self.skills:
                 continue
+            unit_ids = [self._lesson_ids(sid, lesson) for lesson in unit.get('lessons', [])]
             for i, lesson in enumerate(unit.get('lessons', [])):
                 where = '%s lessons[%d]' % (fname, i)
                 lid = lesson.get('id', '')
@@ -398,12 +415,7 @@ class Course(lang_recipes.Recipes):
                 if full in seen:
                     self.problem(where, 'the lesson id %s is used twice' % full)
                 seen.add(full)
-                ids = []
-                for ref in lesson.get('items', []):
-                    qualified = '%s.%s.%s' % (self.id, self.skills[sid]['slug'], ref) if '.' not in ref else '%s.%s' % (self.id, ref)
-                    if qualified not in self.items:
-                        self.problem(where, 'the item "%s" is not in this course' % ref)
-                    ids.extend(self.groups.get(qualified, [qualified]))
+                ids = unit_ids[i]
                 skills = []
                 for aid in ids:
                     s = self.items.get(aid, {}).get('skill')
@@ -417,7 +429,11 @@ class Course(lang_recipes.Recipes):
                     continue
                 number += 1
                 self.lessons.append(full)
-                self.put('lesson.%s.json' % full, {
+                extra = {}
+                teach = self.lesson_teach(self.skills[sid], i, unit_ids)
+                if teach:
+                    extra['teach'] = teach
+                self.put('lesson.%s.json' % full, dict({
                     'schema': 'lesson/v1',
                     'id': full,
                     'review': 'needs-editor',
@@ -430,7 +446,7 @@ class Course(lang_recipes.Recipes):
                     'estimatedMinutes': lesson.get('minutes', self.defaults.get('minutes', 4)),
                     'celebration': celebration,
                     'sequence': lesson.get('sequence', number),
-                })
+                }, **extra))
 
     # ---- skills, tags, placement, pack
     def _skills(self):
@@ -570,6 +586,9 @@ class Course(lang_recipes.Recipes):
             target.append({'id': clip, 'vo': 'vo:%s.%s' % (self.id, clip.replace('-', '_')), 'shown': row.get('shown'),
                            'say': row.get('say'), 'ipa': row.get('ipa')})
         self.voice_plan = {'course': self.id, 'pack': 'lang-%s' % self.id, 'frameLines': frame, 'targetClips': target}
+        if self.cut_clips:
+            # The clips of single words, cut from the clip of the page by word timing: nothing of them is voiced, so nothing is paid.
+            self.voice_plan['cutClips'] = [dict(c, vo='vo:%s.%s' % (self.id, c['id'].replace('-', '_'))) for _, c in sorted(self.cut_clips.items())]
 
     def plan_bytes(self):
         return (json.dumps(self.voice_plan, ensure_ascii=False, indent=2) + '\n').encode('utf-8')

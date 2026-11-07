@@ -35,24 +35,25 @@ Catalog engineCatalog(PackContent content) {
     ],
     items: <ItemMeta>[
       for (final Activity a in content.activities.values)
-        ItemMeta(
-          id: a.id,
-          course: a.course,
-          skills: <String, double>{for (final Skill s in a.skills) s.id: s.weight},
-          purpose: purposeOf(a.purpose),
-          checkType: checkTypeOf(a.checkType),
-          representation: rep(a.representation),
-          variantGroup: a.variantGroup,
-          difficulty: a.difficulty,
-          optionCount: a.optionCount,
-          tags: a.engineTags,
-          contradicts: a.contradicts,
-          revision: a.revision,
-          writingMode: a is LetterWriteActivity ? writingModeOf(a) : null,
-          cue: a is LetterWriteActivity ? a.cue : null,
-          startGuide: a is LetterWriteActivity && a.startGuide,
-          practiceOnly: a is LetterWriteActivity && a.practiceOnly,
-        ),
+        if (!a.teachScreen)
+          ItemMeta(
+            id: a.id,
+            course: a.course,
+            skills: <String, double>{for (final Skill s in a.skills) s.id: s.weight},
+            purpose: purposeOf(a.purpose),
+            checkType: checkTypeOf(a.checkType),
+            representation: rep(a.representation),
+            variantGroup: a.variantGroup,
+            difficulty: a.difficulty,
+            optionCount: a.optionCount,
+            tags: a.engineTags,
+            contradicts: a.contradicts,
+            revision: a.revision,
+            writingMode: a is LetterWriteActivity ? writingModeOf(a) : null,
+            cue: a is LetterWriteActivity ? a.cue : null,
+            startGuide: a is LetterWriteActivity && a.startGuide,
+            practiceOnly: a is LetterWriteActivity && a.practiceOnly,
+          ),
     ],
     tags: <TagInfo>[
       for (final TagDoc t in content.tags.values)

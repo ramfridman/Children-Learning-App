@@ -38,6 +38,7 @@
   "a11y": {
     "altText": "תְּמוּנוֹת וְקֻפְסָאוֹת לְמִיּוּן"
   },
+  "font": "display",
   "prompt": {
     "vo": "vo:heb.i_sort_cat",
     "caption": [
@@ -174,7 +175,7 @@
       },
       {
         "id": "i5",
-        "text": "✿",
+        "sprite": "asset:star",
         "bin": "b2",
         "misconception": "heb.pk.print_shape"
       }

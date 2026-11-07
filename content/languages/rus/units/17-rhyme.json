@@ -292,9 +292,16 @@
     }
   ],
   "routes": {
-    "new": "each chant heard whole on one visit, its gap item on the next",
-    "heritage": "chant and gap item in the same visit",
-    "reader": "as heritage"
+    "new": {
+      "note": "each chant heard whole on one visit, its gap item on the next"
+    },
+    "heritage": {
+      "note": "chant and gap item in the same visit"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
   },
   "docs": [
     {

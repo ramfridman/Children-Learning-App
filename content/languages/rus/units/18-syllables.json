@@ -409,8 +409,15 @@
     }
   ],
   "routes": {
-    "new": "drum items 01 to 13 first, the claps items 14 to 19 on a later visit",
-    "heritage": "all items mixed",
-    "reader": "as heritage"
+    "new": {
+      "note": "drum items 01 to 13 first, the claps items 14 to 19 on a later visit"
+    },
+    "heritage": {
+      "note": "all items mixed"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
   }
 }

@@ -1,0 +1,196 @@
+{
+  "schema": "activity/v1",
+  "id": "heb.a12.07",
+  "review": "needs-editor",
+  "revision": 1,
+  "template": "story",
+  "templateVersion": "1.1",
+  "course": "heb",
+  "domain": "languages",
+  "band": "A",
+  "skills": [
+    {
+      "id": "HEB-A-12",
+      "weight": 1
+    }
+  ],
+  "purpose": "check",
+  "checkType": "transfer",
+  "representation": "symbolic",
+  "variantGroup": "a12-07",
+  "difficulty": {
+    "authored": 0.2
+  },
+  "scoring": {
+    "maxAttempts": 3,
+    "creditByHintLevel": [
+      1,
+      0.75,
+      0.5,
+      0.25
+    ]
+  },
+  "tutor": {
+    "llmAllowed": false,
+    "goal": "touch each word as it is read",
+    "mustNotRevealBeforeHint": 2
+  },
+  "a11y": {
+    "altText": "עַמּוּד בַּסִּפּוּר"
+  },
+  "prompt": {
+    "vo": "vo:heb.i_follow",
+    "caption": [
+      {
+        "t": "he",
+        "v": "הַקְשִׁיבוּ לְכׇל מִלָּה, וּגְעוּ בָּהּ."
+      }
+    ],
+    "replayButton": true
+  },
+  "feedback": {
+    "correct": {
+      "vo": "vo:heb.ok_8",
+      "caption": [
+        {
+          "t": "he",
+          "v": "כׇּל הַכָּבוֹד!"
+        }
+      ]
+    },
+    "incorrect": [
+      {
+        "when": "misconception:heb.pk.order",
+        "vo": "vo:heb.d_start",
+        "caption": [
+          {
+            "t": "he",
+            "v": "מַתְחִילִים כָּאן."
+          }
+        ]
+      },
+      {
+        "when": "misconception:heb.pk.print_picture",
+        "vo": "vo:heb.d_print_picture",
+        "caption": [
+          {
+            "t": "he",
+            "v": "זוֹ תְּמוּנָה. קוֹרְאִים אֶת הַמִּלִּים."
+          }
+        ]
+      },
+      {
+        "when": "default",
+        "vo": "vo:heb.try_1",
+        "caption": [
+          {
+            "t": "he",
+            "v": "הַמְּמ… בּוֹאוּ נִבְדֹּק."
+          }
+        ]
+      }
+    ],
+    "unsure": {
+      "vo": "vo:heb.try_2",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִשְׁמַע שׁוּב."
+        }
+      ],
+      "target": "vo:heb.heb_a_s3_p5"
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "action": "replay_prompt_slow",
+      "vo": "vo:heb.d_start",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַתְחִילִים כָּאן."
+        }
+      ]
+    },
+    {
+      "level": 2,
+      "action": "highlight_objects_sequentially",
+      "vo": "vo:heb.h_look",
+      "caption": [
+        {
+          "t": "he",
+          "v": "בּוֹאוּ נִסְתַּכֵּל שׁוּב."
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "action": "worked_example",
+      "vo": "vo:heb.d_start",
+      "caption": [
+        {
+          "t": "he",
+          "v": "מַתְחִילִים כָּאן."
+        }
+      ]
+    }
+  ],
+  "scene": {
+    "pages": [
+      {
+        "picture": "asset:s3_p5",
+        "clips": [
+          "vo:heb.heb_a_s3_p5"
+        ],
+        "alt": "עַמּוּד בַּסִּפּוּר",
+        "lines": [
+          [
+            {
+              "text": "\"תּוֹדָה,",
+              "clip": "vo:heb.heb_a_s3_p5_w1"
+            },
+            {
+              "text": "דָּג!\"",
+              "clip": "vo:heb.heb_a_s3_p5_w2"
+            },
+            {
+              "text": "אוֹמֵר",
+              "clip": "vo:heb.heb_a_s3_p5_w3"
+            },
+            {
+              "text": "קוּבִּי.",
+              "clip": "vo:heb.heb_a_s3_p5_w4"
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "answer": {
+    "type": "choice",
+    "mode": "follow",
+    "options": [
+      {
+        "id": "o1",
+        "label": "הַמִּלָּה",
+        "zone": "word"
+      },
+      {
+        "id": "o2",
+        "label": "מִלָּה אַחֶרֶת",
+        "zone": "other",
+        "misconception": "heb.pk.order"
+      },
+      {
+        "id": "o3",
+        "label": "הַתְּמוּנָה",
+        "zone": "picture",
+        "misconception": "heb.pk.print_picture"
+      }
+    ],
+    "correct": "o1",
+    "shuffle": false,
+    "unsureAllowed": true
+  }
+}

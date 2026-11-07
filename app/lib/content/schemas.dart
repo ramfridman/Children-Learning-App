@@ -55,9 +55,11 @@ abstract final class SchemaIds {
 /// Templates this app can play, and the version of each (what `templateVersion` must not exceed).
 const Map<String, String> supportedTemplates = <String, String>{
   // 1.4: the language fields of LS01 (L5-1: stem, cloze, tap-all, text faces) and, for M10 step 0.4, stage pictures, the row signs `<` `>`
-  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer. One version carries both.
-  'tap_answer': '1.4',
-  'story': '1.0',
+  // `(` `)`, numbers to 10,000, five choices in Band C and the number answer. One version carries both. 1.5: the own-name answer of Hebrew
+  // Band A (`answer.type` `name`): the options are made on the device from the child's first name.
+  'tap_answer': '1.5',
+  // 1.1: the print-direction modes of Hebrew Band A, `zones` and `follow` (a page that shows its text).
+  'story': '1.1',
   'listen_do': '1.0',
   'sing_along': '1.0',
   'puppet_talk': '1.0',
@@ -149,6 +151,13 @@ const List<String> personalTopics = <String>['name', 'age', 'likes', 'family'];
 
 /// The sides of a two-way skill (yes or no, same or different), and the pairs they come in.
 const List<String> poles = <String>['yes', 'no', 'same', 'different'];
+
+/// The routes of a child in a language course (the parent's setting): a new learner, a heritage speaker, a reader. A child whose route is
+/// not set yet is served as a new learner.
+const List<String> languageRoutes = <String>['new', 'heritage', 'reader'];
+
+/// The routes a teach set may name: a heritage speaker already knows the words and is never shown a teach screen (the syllabus's rule).
+const List<String> teachRoutes = <String>['new', 'reader'];
 
 const SString _id = SString(minLength: 3, maxLength: 81, pattern: Patterns.activityId);
 
@@ -554,6 +563,20 @@ const SObject lessonSchema = SObject(<String, SField>{
   // The place of the lesson on the path of its land (M9): the island plays the first lesson, in this order, that the
   // child has not finished yet. Lessons without one come last.
   'sequence': SField(SInt(min: 1, max: 500), required: false),
+  // The teach screens of a language lesson (LS09, echo), each set with the routes that are shown it: a new learner is shown the new
+  // words before the lesson asks them; a heritage speaker, who knows them, is never shown them. The ids are activities of the pack
+  // that are teach screens (`say_it` with `answer.teach`) and are not in `items`.
+  'teach': SField(
+    SArray(
+      SObject(<String, SField>{
+        'items': SField(SArray(_id, minItems: 1, maxItems: 8)),
+        'routes': SField(SArray(SEnum(teachRoutes), minItems: 1, maxItems: 2)),
+      }),
+      minItems: 1,
+      maxItems: 6,
+    ),
+    required: false,
+  ),
 });
 
 // ---- activities ----
@@ -714,14 +737,47 @@ const Map<String, SField> _numberAnswerFields = <String, SField>{
   ),
 };
 
-/// The `answer` of a `tap_answer`: `choice` (two to five options and the right one, or the list of right ones of a tap-all) or
-/// `number` (the number itself). The validator checks that the rest fits the type.
+/// What an option of the own-name answer is made of at run time (docs/languages/hebrew/band-a-content.md, HEB-A-11): the child's name, a
+/// name of the closed list with the same first letter (NAME-FIRST) or the same number of letters (NAME-LENGTH); or, in a row of letters,
+/// the first letter of the name, its look-alike and its last letter.
+const List<String> nameSources = <String>['own', 'first', 'length', 'lookalike', 'last'];
+
+/// A letter of the Hebrew alphabet and a name made of them (print, no marks): the closed list of names holds nothing else.
+const String _hebrewName = r'[\u05D0-\u05EA]{2,8}';
+
+/// The fields of the own-name answer (`tap_answer` 1.5, HEB-A-11). A pack holds only the rules and the closed list of names, never a name:
+/// the options are made on the device from the child's profile and are never sent, logged, stored or voiced.
+const Map<String, SField> _nameAnswerFields = <String, SField>{
+  // `name`: the options are names; `letter`: a row of three letters of the name.
+  'unit': SField(SEnum(<String>['name', 'letter']), required: false),
+  // The closed list the distractor names come from (never made up at run time).
+  'names': SField(
+    SArray(SString(minLength: 2, maxLength: 8, pattern: _hebrewName), minItems: 20, maxItems: 60),
+    required: false,
+  ),
+  // The look-alike pairs of letters, and the tag a touch on the look-alike carries.
+  'pairs': SField(
+    SArray(
+      SObject(<String, SField>{
+        'a': SField(SString(minLength: 1, maxLength: 1, pattern: r'[\u05D0-\u05EA]')),
+        'b': SField(SString(minLength: 1, maxLength: 1, pattern: r'[\u05D0-\u05EA]')),
+        'misconception': SField(_tag),
+      }),
+      minItems: 1,
+      maxItems: 12,
+    ),
+    required: false,
+  ),
+};
+
+/// The `answer` of a `tap_answer`: `choice` (two to five options and the right one, or the list of right ones of a tap-all), `number` (the
+/// number itself) or `name` (options made on the device from the child's first name). The validator checks that the rest fits the type.
 SObject _tapAnswer(
   Map<String, SField> optionFields, {
   Map<String, SField> answerFields = const <String, SField>{},
   SField correct = const SField(_optionId, required: false),
 }) => SObject(<String, SField>{
-  'type': const SField(SEnum(<String>['choice', 'number'])),
+  'type': const SField(SEnum(<String>['choice', 'number', 'name'])),
   'options': SField(
     SArray(SObject(optionFields), minItems: 2, maxItems: 5, uniqueKey: 'id'),
     required: false,
@@ -759,6 +815,12 @@ const Map<String, SField> _l4Option = <String, SField>{
   // One place, or several for a part that has more than one (both ears, both hands): a touch on any of them is the option.
   'at': SField(SAnyOf(<Schema>[_at, SArray(_at, minItems: 1, maxItems: 4)]), required: false),
   'misconception': SField(_tag, required: false),
+  // Where a touch is taken as this option on a page that shows its text (`story` modes `zones` and `follow`): the picture, the start or the end of
+  // a line (`line1-start`: the end the reading starts at, the right end in Hebrew), the word that is due, or any other word.
+  'zone': SField(
+    SString(minLength: 4, maxLength: 16, pattern: r'picture|word|other|line[1-3]-(?:start|end)'),
+    required: false,
+  ),
 };
 
 /// The `answer` of a template of L4: `type` is `choice` (options and the right one) or `none` (a step that is not scored). The mode
@@ -875,6 +937,9 @@ Map<String, SField> _base(Map<String, SField> templateParts) => <String, SField>
   ),
   'representation': const SField(SEnum(representations)),
   'variantGroup': const SField(SString(minLength: 3, maxLength: 60, pattern: r'[a-z0-9._-]+')),
+  // The face the item's Hebrew text is set in when it is not the course's usual one: `display` is Secular One (a transfer check of the
+  // same letters or names in the display face). A Hebrew course only; the validator refuses it elsewhere.
+  'font': const SField(SEnum(<String>['display']), required: false),
   'difficulty': const SField(SObject(<String, SField>{'authored': SField(SNum(min: 0, max: 1))})),
   'prompt': const SField(
     SObject(<String, SField>{
@@ -988,8 +1053,11 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
             'label': const SField(SString(minLength: 1, maxLength: 80)),
             'speech': _speechWords,
             'misconception': const SField(_tag, required: false),
+            // The own-name answer (`answer.type` `name`): what the option is made of at run time, from the child's first name.
+            'source': const SField(SEnum(nameSources), required: false),
           },
           answerFields: <String, SField>{
+            ..._nameAnswerFields,
             // Which side of a two-way skill this item is, and the item it is paired with in a check (frame section 2.3).
             'pole': const SField(SEnum(poles), required: false),
             'pairWith': const SField(_id, required: false),
@@ -1450,8 +1518,25 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
                   SArray(SObject(<String, SField>{'at': SField(_at), 'clip': SField(_vo)}), maxItems: 4),
                   required: false,
                 ),
+                // The text of the page, shown (modes `zones` and `follow`, Hebrew Band A, where the child reads nothing and the voice reads):
+                // up to three lines of up to eight words. In `follow` every word has the clip of the voice saying it alone.
+                'lines': SField(
+                  SArray(
+                    SArray(
+                      SObject(<String, SField>{
+                        'text': SField(SString(minLength: 1, maxLength: _targetTextMax)),
+                        'clip': SField(_vo, required: false),
+                      }),
+                      minItems: 1,
+                      maxItems: 8,
+                    ),
+                    minItems: 1,
+                    maxItems: 3,
+                  ),
+                  required: false,
+                ),
               }),
-              minItems: 2,
+              minItems: 1,
               maxItems: 10,
             ),
           ),
@@ -1459,7 +1544,7 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
       ),
       'answer': SField(
         _l4Answer(
-          const <String>['listen', 'dialogic'],
+          const <String>['listen', 'dialogic', 'zones', 'follow'],
           extra: const <String, SField>{
             // The page after which the story stops to ask (counted from 0), and what it asks.
             'pauseAfter': SField(SInt(min: 0, max: 9), required: false),
@@ -1667,6 +1752,9 @@ SObject? activitySchemaFor(String template, {String? version}) => switch (templa
           'type': SField(SConst('say_it')),
           // The tap on the picture is a scored listening item when the author marks it; otherwise it is practice.
           'scored': SField(SBool()),
+          // A teach screen of a lesson (`lesson.teach`): the word is shown, not asked. It is never scored, writes nothing, has no
+          // microphone, and the engine does not see it.
+          'teach': SField(SBool(), required: false),
         }),
       ),
     }),

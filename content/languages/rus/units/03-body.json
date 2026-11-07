@@ -407,12 +407,17 @@
     ]
   ],
   "routes": {
-    "new": "teach in three sets; items 01 to 15",
+    "new": {
+      "note": "teach in three sets; items 01 to 15"
+    },
     "heritage": {
       "teach": false,
       "order": "mixed",
       "embodied": "after each right tap"
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }

@@ -9,6 +9,7 @@ import '../core/clock.dart';
 import '../core/log.dart';
 import '../strings/he.dart';
 import '../tutor/tutor.dart';
+import 'name_options.dart';
 import 'response_code.dart';
 
 /// What the tutor needs to know about the lesson: ids and enums only.
@@ -87,6 +88,8 @@ class AttemptRecord {
 
 typedef AttemptSink = Future<void> Function(AttemptRecord record);
 
+Activity _ownNameWithoutAName(Activity a) => OwnName().apply(a);
+
 /// Chooses the activities of an adaptive visit one after another (the placement game, LS13): which comes next depends on how the
 /// last one went. The lesson's own item list holds only the first.
 abstract interface class ItemFlow {
@@ -141,8 +144,17 @@ class LessonController extends ChangeNotifier {
     this.tutorContext,
     this.timeIsUp,
     this.flow,
+    this.route,
+    Activity Function(Activity)? personalise,
     Clock clock = const SystemClock(),
-  }) : items = flow == null ? content.itemsOf(lesson) : <Activity>[content.activities[flow.first()]!],
+  }) : _personalise = personalise ?? _ownNameWithoutAName,
+       items = <Activity>[
+         for (final Activity a
+             in flow == null
+                 ? content.itemsFor(lesson, route: route)
+                 : <Activity>[content.activities[flow.first()]!])
+           (personalise ?? _ownNameWithoutAName)(a),
+       ],
        _record = record,
        _clock = clock {
     _begin();
@@ -150,6 +162,14 @@ class LessonController extends ChangeNotifier {
 
   /// An adaptive visit: the next activity is chosen by this after each one (see [ItemFlow]); null for every ordinary lesson.
   final ItemFlow? flow;
+
+  /// Makes the options of the items that are made on the device (the own-name items of Hebrew Band A): the child's first name goes on a tile
+  /// here and nowhere else. A controller built with no personaliser makes them from no name, so the item still has a face to draw.
+  final Activity Function(Activity) _personalise;
+
+  /// The child's route in a language course (`new`, `heritage` or `reader`), or null: it decides which teach screens come before the items
+  /// ([PackContent.itemsFor]). A heritage speaker is never shown one.
+  final String? route;
 
   /// How long the progress trail is: the lesson's items, or at most what the flow can give.
   int get trailLength => flow?.length ?? items.length;
@@ -666,7 +686,7 @@ class LessonController extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    if (following != null) items.add(content.activities[following]!);
+    if (following != null) items.add(_personalise(content.activities[following]!));
     if (timeIsUp?.call() ?? false) {
       endedForRest = true;
       finished = true;

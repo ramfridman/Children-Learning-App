@@ -429,7 +429,9 @@
     ]
   ],
   "routes": {
-    "new": "teach in two sets; items 01 to 15",
+    "new": {
+      "note": "teach in two sets; items 01 to 15"
+    },
     "heritage": {
       "teach": false,
       "order": [
@@ -437,6 +439,9 @@
         "01-10"
       ]
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }

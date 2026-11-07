@@ -522,6 +522,10 @@
       "file": "shape_ring.svg"
     },
     {
+      "id": "shape_triangle",
+      "file": "shape_triangle.svg"
+    },
+    {
       "id": "shape_triangle_open",
       "file": "shape_triangle_open.svg"
     },

@@ -1587,6 +1587,13 @@
       "ipa": "[ɐɡʊˈrʲet͡s]"
     },
     {
+      "id": "w-paltsy",
+      "vo": "vo:rus.w_paltsy",
+      "shown": "пальцы",
+      "say": "па́льцы",
+      "ipa": "[ˈpalʲt͡sɨ]"
+    },
+    {
       "id": "w-papa",
       "vo": "vo:rus.w_papa",
       "shown": "папа",
@@ -1860,6 +1867,13 @@
       "ipa": "[voɫk]"
     },
     {
+      "id": "w-volosy",
+      "vo": "vo:rus.w_volosy",
+      "shown": "волосы",
+      "say": "во́лосы",
+      "ipa": "[ˈvoɫəsɨ]"
+    },
+    {
       "id": "w-vstan",
       "vo": "vo:rus.w_vstan",
       "shown": "Встань!",
@@ -1916,6 +1930,13 @@
       "ipa": "[ʐɨˈraf]"
     },
     {
+      "id": "w-zhivot",
+      "vo": "vo:rus.w_zhivot",
+      "shown": "живот",
+      "say": "живо́т",
+      "ipa": "[ʐɨˈvot]"
+    },
+    {
       "id": "w-zholtyj",
       "vo": "vo:rus.w_zholtyj",
       "shown": "жёлтый",
@@ -1928,6 +1949,13 @@
       "shown": "жук",
       "say": "жук",
       "ipa": "[ʐuk]"
+    },
+    {
+      "id": "w-zuby",
+      "vo": "vo:rus.w_zuby",
+      "shown": "зубы",
+      "say": "зу́бы",
+      "ipa": "[ˈzubɨ]"
     }
   ]
 }

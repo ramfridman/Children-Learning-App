@@ -163,8 +163,8 @@
       },
       {
         "id": "o5",
-        "text": "♥",
-        "label": "♥",
+        "sprite": "asset:shape_triangle",
+        "label": "תְּמוּנָה",
         "misconception": "heb.pk.print_shape"
       }
     ],

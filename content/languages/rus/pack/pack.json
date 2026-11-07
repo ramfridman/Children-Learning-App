@@ -146,6 +146,10 @@
       "file": "body_teeth.svg"
     },
     {
+      "id": "body_tummy",
+      "file": "body_tummy.svg"
+    },
+    {
       "id": "book",
       "file": "book.svg"
     },

@@ -251,7 +251,9 @@ class PilotInvariantsTest(unittest.TestCase):
         for course in lang_pack.COURSES:
             with open(os.path.join(ROOT, 'content', 'languages', course, 'voice-plan.json'), encoding='utf-8') as fh:
                 plan = json.load(fh)
-            planned = {c['vo'] for c in plan['frameLines']} | {c['vo'] for c in plan['targetClips']}
+            # The clips of single words of a `follow` page are cut from the clip of their page: they are named, and never voiced of their own.
+            cut = {c['vo'] for c in plan.get('cutClips', [])}
+            planned = {c['vo'] for c in plan['frameLines']} | {c['vo'] for c in plan['targetClips']} | cut
             named = set()
 
             def scan(n):
@@ -269,6 +271,9 @@ class PilotInvariantsTest(unittest.TestCase):
                 self.assertTrue(c['shown'], c)
             for c in plan['frameLines']:
                 self.assertTrue(c['he'], c)
+            for c in plan.get('cutClips', []):
+                self.assertTrue(c['from'] and c['text'], c)
+                self.assertNotIn(c['vo'], {t['vo'] for t in plan['targetClips']}, 'a cut clip is not a clip to voice')
 
 
 class DerivedTest(Base):
@@ -738,4 +743,6 @@ class RecipesTest(RecipeBase):
 
 
 if __name__ == '__main__':
+    # The tests of test_lang_pack_more.py run with these (it imports this file, so it is imported only when this one is the script).
+    from test_lang_pack_more import FontTest, OwnNameTest, PrintTest, TeachTest  # noqa: F401
     unittest.main()

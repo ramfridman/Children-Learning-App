@@ -345,8 +345,15 @@
     }
   ],
   "routes": {
-    "new": "items 01 to 05 and 12 first; 06 to 11 on a later visit",
-    "heritage": "all items mixed",
-    "reader": "as heritage"
+    "new": {
+      "note": "items 01 to 05 and 12 first; 06 to 11 on a later visit"
+    },
+    "heritage": {
+      "note": "all items mixed"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
   }
 }

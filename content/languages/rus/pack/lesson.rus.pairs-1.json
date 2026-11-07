@@ -30,5 +30,20 @@
       }
     ]
   },
-  "sequence": 63
+  "sequence": 63,
+  "teach": [
+    {
+      "items": [
+        "rus.a20.tc01",
+        "rus.a20.tc02",
+        "rus.a20.tc03",
+        "rus.a20.tc04",
+        "rus.a20.tc05",
+        "rus.a20.tc06"
+      ],
+      "routes": [
+        "new"
+      ]
+    }
+  ]
 }

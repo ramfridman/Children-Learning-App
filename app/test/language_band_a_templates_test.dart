@@ -58,6 +58,12 @@ String _kind(Map<String, Object?> a) {
         ),
       );
   final String mode = answer['mode'] is String ? answer['mode']! as String : '';
+  // The own-name answer (a row of letters or a choice of names), a teach screen and an item in the display face look different too.
+  final String special = <String>[
+    if (answer['type'] == 'name') 'name-${answer['unit']}',
+    if (answer['teach'] == true) 'teach',
+    if (a['font'] == 'display') 'display',
+  ].join(' ');
   final String extra = t == 'tap_answer'
       ? (answer['all'] == true
             ? 'all'
@@ -71,7 +77,7 @@ String _kind(Map<String, Object?> a) {
       : t == 'trace'
       ? 'path'
       : '';
-  return '$t $mode $extra'.trim();
+  return '$t $mode $extra $special'.trim();
 }
 
 Set<String> _refs(Object? n) {

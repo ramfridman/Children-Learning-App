@@ -1,0 +1,16 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.shape_dr",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "SHAPE",
+  "skills": [
+    "HEB-A-11"
+  ],
+  "parentText": "הילד מבלבל בין האותיות ד ו-ר. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic"
+  ]
+}

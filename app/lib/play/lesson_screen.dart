@@ -27,6 +27,7 @@ import '../data/app_database.dart';
 import '../design/app_text.dart';
 import '../design/board.dart';
 import '../design/components.dart';
+import '../design/course_text.dart' show DisplayFontScope;
 import '../design/layout.dart';
 import '../design/token_types.dart' show Band;
 import '../design/tokens.g.dart';
@@ -51,6 +52,7 @@ import 'ls01_sort_session.dart';
 import 'ls01_spot_session.dart';
 import 'ls01_tap_session.dart';
 import 'lesson_controller.dart';
+import 'name_options.dart';
 import 'clock_set_session.dart';
 import 'lesson_voice.dart';
 import 'math_signs.dart';
@@ -70,6 +72,7 @@ import 'spot_error_session.dart';
 import 'letter_write_session.dart';
 import 'listen_do_session.dart';
 import 'puppet_talk_session.dart';
+import 'read_page_session.dart';
 import 'sing_along_session.dart';
 import 'sound_boxes_session.dart';
 import 'story_session.dart';
@@ -239,7 +242,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
     _sayStep?.removeListener(_sayChanged);
     _sayStep?.dispose();
     _sayStep = null;
-    if (!_sayOn || _quiet.echoOnly) return null;
+    if (!_sayOn || _quiet.echoOnly || a.teach) return null;
     final bool bandA = ref.read(activeProfileProvider)?.ageBand == 0;
     final SayStepController step = SayStepController(
       engine: ref.read(languageSpeechEngineProvider(a.course)),
@@ -358,6 +361,14 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
       tutorContext: _tutor == null ? null : _tutorContext(guide, content),
       timeIsUp: _timeIsUp,
       flow: widget.flow,
+      route: Course.isLanguage(content.course)
+          ? ref.read(languagesProvider).value?.of(widget.profileId, content.course).route
+          : null,
+      // The child's first name goes on the tiles of an own-name item on this phone and nowhere else (decision 25).
+      personalise: OwnName(
+        childName: ref.read(activeProfileProvider)?.name,
+        companionName: guide.character.nameHe,
+      ).apply,
     );
     made.addListener(_speak);
     // The first question is spoken as soon as the lesson opens.
@@ -485,6 +496,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
           stress: caption.stress,
           band: a.isLanguage ? _presentationBand(a) : null,
         ),
+        StoryActivity() when a.reads => ReadPageSession(c, a, stress: caption.stress),
         StoryActivity() => StorySession(c, a, stress: caption.stress),
         ListenDoActivity() => ListenDoSession(c, a, band: _presentationBand(a), stress: caption.stress),
         SingAlongActivity() => SingAlongSession(c, a, stress: caption.stress),
@@ -701,57 +713,62 @@ class _LessonScreenState extends ConsumerState<LessonScreen> with WidgetsBinding
             : controller.feedback == FeedbackKind.notYet
             ? CharacterState.encourage
             : CharacterState.idle;
-        return ActivityFrame(
-          spec: spec,
-          guide: SpeakingCharacter(
-            character: guide.character,
-            director: _director,
-            resting: resting,
-            voiceOf: guide.character.id,
-          ),
-          bubbleText: controller.bubble,
-          bubbleAboveTiles: controller.current.isLanguage,
-          bubbleTarget: controller.bubbleShow == null
-              ? null
-              : (
-                  text: withStress(controller.bubbleShow!, show: _captionsFor(controller.current).stress),
-                  course: controller.current.course,
-                ),
-          trailTotal: controller.trailLength,
-          trailDone: controller.finished ? controller.trailLength : controller.index,
-          onHome: _home,
-          showHelp: !controller.noHelp,
-          // A say-it step has nothing to get wrong and so no hints: its lamp says the word again.
-          onHint: controller.finished || controller.noHelp
-              ? null
-              : (session is SayItSession ? session.onReplay : controller.showHint),
-          hintGlow: helpOffered,
-          onShowMe: controller.finished || controller.noHelp
-              ? null
-              : (controller.current is SayItActivity ? controller.replayPrompt : () => controller.unsure()),
-          onReplay: controller.finished ? null : controller.replayPrompt,
-          mic: controller.finished ? null : _mic(spec, session, controller.current),
-          onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
-          onConfirmAgain: heard == MicState.confirming ? _voice?.answer.confirmNo : null,
-          stage: (Size room) => session.buildStage(ctx, room, spec),
-          hands: controller.finished
-              ? null
-              : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
-          tiles: controller.finished ? null : session.buildTiles(ctx, spec),
-          boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
-          overlay: controller.finished
-              ? LessonCelebration(
-                  text: controller.endedForRest ? He.restGoodbye.text : controller.lesson.celebration.caption,
-                  sticker: controller.endedForRest ? null : _sticker,
-                  onDone: _home,
-                  cameo: SpeakingCharacter(
-                    character: guide.character,
-                    director: _director,
-                    resting: controller.endedForRest ? CharacterState.idle : CharacterState.celebrate,
-                    voiceOf: guide.character.id,
+        return DisplayFontScope(
+          display: controller.current.displayFont,
+          child: ActivityFrame(
+            spec: spec,
+            guide: SpeakingCharacter(
+              character: guide.character,
+              director: _director,
+              resting: resting,
+              voiceOf: guide.character.id,
+            ),
+            bubbleText: controller.bubble,
+            bubbleAboveTiles: controller.current.isLanguage,
+            bubbleTarget: controller.bubbleShow == null
+                ? null
+                : (
+                    text: withStress(controller.bubbleShow!, show: _captionsFor(controller.current).stress),
+                    course: controller.current.course,
                   ),
-                )
-              : null,
+            trailTotal: controller.trailLength,
+            trailDone: controller.finished ? controller.trailLength : controller.index,
+            onHome: _home,
+            showHelp: !controller.noHelp,
+            // A say-it step has nothing to get wrong and so no hints: its lamp says the word again.
+            onHint: controller.finished || controller.noHelp
+                ? null
+                : (session is SayItSession ? session.onReplay : controller.showHint),
+            hintGlow: helpOffered,
+            onShowMe: controller.finished || controller.noHelp
+                ? null
+                : (controller.current is SayItActivity ? controller.replayPrompt : () => controller.unsure()),
+            onReplay: controller.finished ? null : controller.replayPrompt,
+            mic: controller.finished ? null : _mic(spec, session, controller.current),
+            onConfirmYes: heard == MicState.confirming ? _voice?.answer.confirmYes : null,
+            onConfirmAgain: heard == MicState.confirming ? _voice?.answer.confirmNo : null,
+            stage: (Size room) => session.buildStage(ctx, room, spec),
+            hands: controller.finished
+                ? null
+                : (Size room) => session.buildHands(ctx, room, spec) ?? const SizedBox(),
+            tiles: controller.finished ? null : session.buildTiles(ctx, spec),
+            boardLayer: controller.finished ? null : session.buildBoardLayer(ctx, spec),
+            overlay: controller.finished
+                ? LessonCelebration(
+                    text: controller.endedForRest
+                        ? He.restGoodbye.text
+                        : controller.lesson.celebration.caption,
+                    sticker: controller.endedForRest ? null : _sticker,
+                    onDone: _home,
+                    cameo: SpeakingCharacter(
+                      character: guide.character,
+                      director: _director,
+                      resting: controller.endedForRest ? CharacterState.idle : CharacterState.celebrate,
+                      voiceOf: guide.character.id,
+                    ),
+                  )
+                : null,
+          ),
         );
       },
     );

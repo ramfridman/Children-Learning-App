@@ -228,7 +228,9 @@
     ]
   ],
   "routes": {
-    "new": "teach set 1, then items 01 to 07 in order; the say step echo first",
+    "new": {
+      "note": "teach set 1, then items 01 to 07 in order; the say step echo first"
+    },
     "heritage": {
       "teach": false,
       "from": "04",
@@ -238,6 +240,9 @@
       ],
       "say": "picture first"
     },
-    "reader": "as heritage or new, by placement strand 1"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new, by placement strand 1"
+    }
   }
 }

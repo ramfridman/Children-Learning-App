@@ -315,11 +315,16 @@
     }
   ],
   "routes": {
-    "new": "all items",
+    "new": {
+      "note": "all items"
+    },
     "heritage": {
       "teach": false,
       "say": "picture first in 10 and 11"
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }

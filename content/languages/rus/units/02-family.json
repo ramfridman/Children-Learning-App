@@ -428,11 +428,16 @@
     ]
   ],
   "routes": {
-    "new": "teach in three sets; items 01 to 14, two sets at a time",
+    "new": {
+      "note": "teach in three sets; items 01 to 14, two sets at a time"
+    },
     "heritage": {
       "teach": false,
       "from": "05"
     },
-    "reader": "as heritage or new; the word under the picture after the answer (Band B or C presentation)"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new; the word under the picture after the answer (Band B or C presentation)"
+    }
   }
 }

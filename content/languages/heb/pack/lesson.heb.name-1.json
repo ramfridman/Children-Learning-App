@@ -1,0 +1,33 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.name-1",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "הַשֵּׁם שֶׁלִּי"
+    }
+  ],
+  "skills": [
+    "HEB-A-11"
+  ],
+  "items": [
+    "heb.a11.01",
+    "heb.a11.02",
+    "heb.a11.03"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 21
+}

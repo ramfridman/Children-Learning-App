@@ -1,0 +1,32 @@
+{
+  "schema": "lesson/v1",
+  "id": "heb.print-2",
+  "review": "needs-editor",
+  "revision": 1,
+  "course": "heb",
+  "band": "A",
+  "title": [
+    {
+      "t": "he",
+      "v": "מִלָּה אַחֲרֵי מִלָּה"
+    }
+  ],
+  "skills": [
+    "HEB-A-12"
+  ],
+  "items": [
+    "heb.a12.04",
+    "heb.a12.05"
+  ],
+  "estimatedMinutes": 4,
+  "celebration": {
+    "vo": "vo:heb.ok_8",
+    "caption": [
+      {
+        "t": "he",
+        "v": "כׇּל הַכָּבוֹד!"
+      }
+    ]
+  },
+  "sequence": 23
+}

@@ -126,6 +126,18 @@
       },
       "stroke": {
         "line": "d-start"
+      },
+      "name_first": {
+        "line": "d-name-first"
+      },
+      "name_length": {
+        "line": "d-name-length"
+      },
+      "order": {
+        "line": "d-start"
+      },
+      "print_picture": {
+        "line": "d-print-picture"
       }
     }
   },
@@ -284,6 +296,34 @@
       },
       {
         "line": "show",
+        "action": "worked_example"
+      }
+    ],
+    "HL-NAME": [
+      {
+        "line": "d-name-start",
+        "action": "replay_prompt_slow"
+      },
+      {
+        "line": "h-look",
+        "action": "highlight_objects_sequentially"
+      },
+      {
+        "line": "show",
+        "action": "worked_example"
+      }
+    ],
+    "HL-PRINT-DIR": [
+      {
+        "line": "d-start",
+        "action": "replay_prompt_slow"
+      },
+      {
+        "line": "h-look",
+        "action": "highlight_objects_sequentially"
+      },
+      {
+        "line": "d-start",
         "action": "worked_example"
       }
     ]
@@ -538,6 +578,86 @@
       "parentText": "הילד מתחיל לפעמים קו מהקצה השני. זה תרגול בלבד; כדאי לצייר יחד ולהתחיל מהנקודה.",
       "preferredRepresentations": [
         "embodied"
+      ]
+    },
+    "shape_bk": {
+      "id": "heb.pk.shape_bk",
+      "tag": "M-HEB-SHAPE-BK",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ב ו-כ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
+      ]
+    },
+    "shape_dr": {
+      "id": "heb.pk.shape_dr",
+      "tag": "M-HEB-SHAPE-DR",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ד ו-ר. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
+      ]
+    },
+    "shape_hxt": {
+      "id": "heb.pk.shape_hxt",
+      "tag": "M-HEB-SHAPE-HXT",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ה ו-ח. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
+      ]
+    },
+    "shape_vzn": {
+      "id": "heb.pk.shape_vzn",
+      "tag": "M-HEB-SHAPE-VZN",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ו ו-ז. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
+      ]
+    },
+    "shape_sm": {
+      "id": "heb.pk.shape_sm",
+      "tag": "M-HEB-SHAPE-SM",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ס ו-ם. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
+      ]
+    },
+    "shape_az": {
+      "id": "heb.pk.shape_az",
+      "tag": "M-HEB-SHAPE-AZ",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ע ו-צ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
+      ]
+    },
+    "shape_gn": {
+      "id": "heb.pk.shape_gn",
+      "tag": "M-HEB-SHAPE-GN",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ג ו-נ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
+      ]
+    },
+    "shape_tm": {
+      "id": "heb.pk.shape_tm",
+      "tag": "M-HEB-SHAPE-TM",
+      "kind": "diagnostic",
+      "family": "SHAPE",
+      "parentText": "הילד מבלבל בין האותיות ט ו-מ. כדאי להניח אותן זו לצד זו ולהצביע על מה ששונה בהן.",
+      "preferredRepresentations": [
+        "symbolic"
       ]
     }
   },
@@ -1047,6 +1167,46 @@
     "d-plural": {
       "he": "שִׁמְעוּ אֶת הַסּוֹף:",
       "voice": "שמעו את הסוף:",
+      "review": "text-ready"
+    },
+    "i-name": {
+      "he": "אֵיפֹה הַשֵּׁם שֶׁלָּכֶם?",
+      "voice": "איפה השם שלכם?",
+      "review": "text-ready"
+    },
+    "i-name-letter": {
+      "he": "אֵיפֹה הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם?",
+      "voice": "איפה האות הראשונה של השם?",
+      "review": "text-ready"
+    },
+    "i-start": {
+      "he": "אֵיפֹה מַתְחִילִים לִקְרֹא?",
+      "voice": "איפה מתחילים לקרוא?",
+      "review": "text-ready"
+    },
+    "i-follow": {
+      "he": "הַקְשִׁיבוּ לְכׇל מִלָּה, וּגְעוּ בָּהּ.",
+      "voice": "הקשיבו לכל מילה, וגעו בה.",
+      "review": "text-ready"
+    },
+    "d-print-picture": {
+      "he": "זוֹ תְּמוּנָה. קוֹרְאִים אֶת הַמִּלִּים.",
+      "voice": "זו תמונה. קוראים את המילים.",
+      "review": "text-ready"
+    },
+    "d-name-first": {
+      "he": "גַּם זֶה מַתְחִיל כָּךְ. בּוֹאוּ נִרְאֶה אֶת כׇּל הַשֵּׁם.",
+      "voice": "גם זה מתחיל כך. בואו נראה את כל השם.",
+      "review": "text-ready"
+    },
+    "d-name-length": {
+      "he": "זֶה אָרֹךְ כְּמוֹ הַשֵּׁם שֶׁלָּכֶם, אֲבָל הָאוֹתִיּוֹת אֲחֵרוֹת.",
+      "voice": "זה ארוך כמו השם שלכם, אבל האותיות אחרות.",
+      "review": "text-ready"
+    },
+    "d-name-start": {
+      "he": "הַשֵּׁם שֶׁלָּכֶם מַתְחִיל בָּאוֹת הַזֹּאת.",
+      "voice": "השם שלכם מתחיל באות הזאת.",
       "review": "text-ready"
     }
   }

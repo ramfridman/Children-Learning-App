@@ -155,6 +155,12 @@
       "maxLength": 60,
       "pattern": "^(?:[a-z0-9._-]+)$"
     },
+    "font": {
+      "type": "string",
+      "enum": [
+        "display"
+      ]
+    },
     "difficulty": {
       "type": "object",
       "properties": {

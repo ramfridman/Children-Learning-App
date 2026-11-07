@@ -547,11 +547,17 @@
     ]
   ],
   "routes": {
-    "new": "teach all six words; items 01 to 06 and 17 to 20, then 07 to 16 on later visits",
-    "heritage": {
-      "teach": "one hearing",
-      "order": "mixed"
+    "new": {
+      "note": "teach all six words; items 01 to 06 and 17 to 20, then 07 to 16 on later visits"
     },
-    "reader": "as heritage"
+    "heritage": {
+      "teach": false,
+      "order": "mixed",
+      "note": "teach: one hearing (a single hearing of the words; not built, so no teach screen)"
+    },
+    "reader": {
+      "as": "heritage",
+      "note": "as heritage"
+    }
   }
 }

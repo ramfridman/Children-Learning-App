@@ -31,10 +31,38 @@
       "review": "text-ready"
     },
     {
+      "id": "d-name-first",
+      "vo": "vo:heb.d_name_first",
+      "he": "גַּם זֶה מַתְחִיל כָּךְ. בּוֹאוּ נִרְאֶה אֶת כׇּל הַשֵּׁם.",
+      "voice": "גם זה מתחיל כך. בואו נראה את כל השם.",
+      "review": "text-ready"
+    },
+    {
+      "id": "d-name-length",
+      "vo": "vo:heb.d_name_length",
+      "he": "זֶה אָרֹךְ כְּמוֹ הַשֵּׁם שֶׁלָּכֶם, אֲבָל הָאוֹתִיּוֹת אֲחֵרוֹת.",
+      "voice": "זה ארוך כמו השם שלכם, אבל האותיות אחרות.",
+      "review": "text-ready"
+    },
+    {
+      "id": "d-name-start",
+      "vo": "vo:heb.d_name_start",
+      "he": "הַשֵּׁם שֶׁלָּכֶם מַתְחִיל בָּאוֹת הַזֹּאת.",
+      "voice": "השם שלכם מתחיל באות הזאת.",
+      "review": "text-ready"
+    },
+    {
       "id": "d-plural",
       "vo": "vo:heb.d_plural",
       "he": "שִׁמְעוּ אֶת הַסּוֹף:",
       "voice": "שמעו את הסוף:",
+      "review": "text-ready"
+    },
+    {
+      "id": "d-print-picture",
+      "vo": "vo:heb.d_print_picture",
+      "he": "זוֹ תְּמוּנָה. קוֹרְאִים אֶת הַמִּלִּים.",
+      "voice": "זו תמונה. קוראים את המילים.",
       "review": "text-ready"
     },
     {
@@ -178,6 +206,13 @@
       "review": "text-ready"
     },
     {
+      "id": "i-follow",
+      "vo": "vo:heb.i_follow",
+      "he": "הַקְשִׁיבוּ לְכׇל מִלָּה, וּגְעוּ בָּהּ.",
+      "voice": "הקשיבו לכל מילה, וגעו בה.",
+      "review": "text-ready"
+    },
+    {
       "id": "i-letter",
       "vo": "vo:heb.i_letter",
       "he": "אֵיפֹה הָאוֹת?",
@@ -189,6 +224,20 @@
       "vo": "vo:heb.i_letters",
       "he": "אֵיפֹה הָאוֹתִיּוֹת? גְּעוּ בְּכׇל הָאוֹתִיּוֹת.",
       "voice": "איפה האותיות? געו בכל האותיות.",
+      "review": "text-ready"
+    },
+    {
+      "id": "i-name",
+      "vo": "vo:heb.i_name",
+      "he": "אֵיפֹה הַשֵּׁם שֶׁלָּכֶם?",
+      "voice": "איפה השם שלכם?",
+      "review": "text-ready"
+    },
+    {
+      "id": "i-name-letter",
+      "vo": "vo:heb.i_name_letter",
+      "he": "אֵיפֹה הָאוֹת הָרִאשׁוֹנָה שֶׁל הַשֵּׁם?",
+      "voice": "איפה האות הראשונה של השם?",
       "review": "text-ready"
     },
     {
@@ -231,6 +280,13 @@
       "vo": "vo:heb.i_sort_cat",
       "he": "שִׂימוּ כׇּל תְּמוּנָה בַּמָּקוֹם שֶׁלָּהּ.",
       "voice": "שִׂימוּ כל תמונה במקום שלה.",
+      "review": "text-ready"
+    },
+    {
+      "id": "i-start",
+      "vo": "vo:heb.i_start",
+      "he": "אֵיפֹה מַתְחִילִים לִקְרֹא?",
+      "voice": "איפה מתחילים לקרוא?",
       "review": "text-ready"
     },
     {
@@ -1599,6 +1655,80 @@
       "shown": "זוֹרֵק",
       "say": "",
       "ipa": "[zoˈʁek]"
+    }
+  ],
+  "cutClips": [
+    {
+      "id": "heb-a-s1-p5-w1",
+      "from": "heb-a-s1-p5",
+      "text": "עַכְשָׁו",
+      "vo": "vo:heb.heb_a_s1_p5_w1"
+    },
+    {
+      "id": "heb-a-s1-p5-w2",
+      "from": "heb-a-s1-p5",
+      "text": "הָאַרְנָב",
+      "vo": "vo:heb.heb_a_s1_p5_w2"
+    },
+    {
+      "id": "heb-a-s1-p5-w3",
+      "from": "heb-a-s1-p5",
+      "text": "וְהַחֲתוּלָה",
+      "vo": "vo:heb.heb_a_s1_p5_w3"
+    },
+    {
+      "id": "heb-a-s1-p5-w4",
+      "from": "heb-a-s1-p5",
+      "text": "מְשַׂחֲקִים",
+      "vo": "vo:heb.heb_a_s1_p5_w4"
+    },
+    {
+      "id": "heb-a-s1-p5-w5",
+      "from": "heb-a-s1-p5",
+      "text": "יַחַד.",
+      "vo": "vo:heb.heb_a_s1_p5_w5"
+    },
+    {
+      "id": "heb-a-s2-p4-w1",
+      "from": "heb-a-s2-p4",
+      "text": "הָעוּגָה",
+      "vo": "vo:heb.heb_a_s2_p4_w1"
+    },
+    {
+      "id": "heb-a-s2-p4-w2",
+      "from": "heb-a-s2-p4",
+      "text": "נִכְנֶסֶת",
+      "vo": "vo:heb.heb_a_s2_p4_w2"
+    },
+    {
+      "id": "heb-a-s2-p4-w3",
+      "from": "heb-a-s2-p4",
+      "text": "לַתַּנּוּר.",
+      "vo": "vo:heb.heb_a_s2_p4_w3"
+    },
+    {
+      "id": "heb-a-s3-p5-w1",
+      "from": "heb-a-s3-p5",
+      "text": "\"תּוֹדָה,",
+      "vo": "vo:heb.heb_a_s3_p5_w1"
+    },
+    {
+      "id": "heb-a-s3-p5-w2",
+      "from": "heb-a-s3-p5",
+      "text": "דָּג!\"",
+      "vo": "vo:heb.heb_a_s3_p5_w2"
+    },
+    {
+      "id": "heb-a-s3-p5-w3",
+      "from": "heb-a-s3-p5",
+      "text": "אוֹמֵר",
+      "vo": "vo:heb.heb_a_s3_p5_w3"
+    },
+    {
+      "id": "heb-a-s3-p5-w4",
+      "from": "heb-a-s3-p5",
+      "text": "קוּבִּי.",
+      "vo": "vo:heb.heb_a_s3_p5_w4"
     }
   ]
 }

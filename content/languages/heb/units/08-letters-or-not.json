@@ -278,13 +278,13 @@
           "bin": "other"
         },
         {
-          "text": "⭐",
+          "pic": "star",
           "bin": "other"
         }
       ],
       "wrong": {
         "7": "print_num",
-        "⭐": "print_shape"
+        "star": "print_shape"
       },
       "ladder": "HL-PRINT"
     },
@@ -343,7 +343,7 @@
         "text:7",
         "text:ס",
         "text:0",
-        "text:♥"
+        "shape-triangle"
       ],
       "letters": [
         "text:ז",
@@ -352,7 +352,7 @@
       "wrong": {
         "text:7": "print_num",
         "text:0": "print_num",
-        "text:♥": "print_shape"
+        "shape-triangle": "print_shape"
       },
       "face": "letter",
       "ladder": "HL-PRINT"
@@ -390,13 +390,13 @@
           "bin": "other"
         },
         {
-          "text": "✿",
+          "pic": "star",
           "bin": "other"
         }
       ],
       "wrong": {
         "9": "print_num",
-        "✿": "print_shape"
+        "star": "print_shape"
       },
       "ladder": "HL-PRINT",
       "font": "display"

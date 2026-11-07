@@ -651,11 +651,16 @@
     ]
   ],
   "routes": {
-    "new": "teach in six sets; items of two sets at a time",
+    "new": {
+      "note": "teach in six sets; items of two sets at a time"
+    },
     "heritage": {
       "teach": false,
       "order": "mixed"
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }

@@ -279,7 +279,9 @@
     }
   ],
   "routes": {
-    "new": "all items",
+    "new": {
+      "note": "all items"
+    },
     "heritage": {
       "teach": false,
       "order": [
@@ -287,6 +289,9 @@
         "01-06"
       ]
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }

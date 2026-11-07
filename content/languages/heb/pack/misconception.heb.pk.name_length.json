@@ -1,0 +1,16 @@
+{
+  "schema": "misconception/v1",
+  "id": "heb.pk.name_length",
+  "review": "needs-editor",
+  "course": "heb",
+  "kind": "diagnostic",
+  "family": "GUESS",
+  "skills": [
+    "HEB-A-11"
+  ],
+  "parentText": "הילד מזהה את השם שלו לפי האורך. כדאי להשוות יחד את האותיות של השם, אחת אחת.",
+  "repairActivities": [],
+  "preferredRepresentations": [
+    "symbolic"
+  ]
+}

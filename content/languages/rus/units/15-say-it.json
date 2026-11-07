@@ -1134,8 +1134,15 @@
     }
   ],
   "routes": {
-    "new": "echo first (picture, the model, f05, the model again); from the third encounter, picture first (f06)",
-    "heritage": "picture first from the start, then the model; extended to every word of A-02 to A-09",
-    "reader": "as heritage or new, by strand 1"
+    "new": {
+      "note": "echo first (picture, the model, f05, the model again); from the third encounter, picture first (f06)"
+    },
+    "heritage": {
+      "note": "picture first from the start, then the model; extended to every word of A-02 to A-09"
+    },
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new, by strand 1"
+    }
   }
 }

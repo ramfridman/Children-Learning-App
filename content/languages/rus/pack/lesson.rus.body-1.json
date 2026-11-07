@@ -30,5 +30,19 @@
       }
     ]
   },
-  "sequence": 6
+  "sequence": 6,
+  "teach": [
+    {
+      "items": [
+        "rus.a03.tc01",
+        "rus.a03.tc02",
+        "rus.a03.tc03",
+        "rus.a03.tc04"
+      ],
+      "routes": [
+        "new",
+        "reader"
+      ]
+    }
+  ]
 }

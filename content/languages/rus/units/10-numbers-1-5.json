@@ -364,7 +364,9 @@
     ]
   ],
   "routes": {
-    "new": "teach by counting along (f15); items 01 to 10",
+    "new": {
+      "note": "teach by counting along (f15); items 01 to 10"
+    },
     "heritage": {
       "teach": false,
       "order": [
@@ -372,6 +374,9 @@
         "01-05"
       ]
     },
-    "reader": "as heritage or new"
+    "reader": {
+      "as": "new",
+      "note": "as heritage or new"
+    }
   }
 }
